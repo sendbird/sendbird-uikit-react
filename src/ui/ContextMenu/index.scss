@@ -1,0 +1,76 @@
+@import '../../styles/variables';
+
+.sendbird__offline {
+  .sendbird-dropdown__menu .sendbird-dropdown__menu-item {
+    cursor: not-allowed;
+  }
+}
+
+.sendbird-dropdown__menu {
+  z-index: 99999;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 140px;
+  margin: 0px;
+  padding: 8px 0px;
+  border-radius: 4px;
+  list-style: none;
+  @include themed() {
+    box-shadow: t(shadow-gradient-2);
+    background-color: t(bg--0-5);
+  }
+
+  .sendbird-dropdown__menu-item {
+    cursor: pointer;
+    white-space: nowrap;
+    padding: 8px 16px;
+
+    &:hover {
+      @include themed() {
+        background-color: t(bg--1-4);
+      }
+    }
+  }
+}
+
+.sendbird-dropdown__reaction-bar {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 44px;
+  max-width: 352px;
+  max-height: 208px;
+  overflow-y: scroll;
+  margin: 0px;
+  padding: 8px;
+  border-radius: 8px;
+  list-style: none;
+
+  @include themed() {
+    box-shadow: t(shadow-gradient-2);
+    background-color: t(bg--0-5);
+  }
+
+  .sendbird-dropdown__reaction-bar__row {
+    .sendbird-reaction-button, .sendbird-reaction-button--selected {
+      margin: 4px;
+    }
+  }
+}
+
+.sendbird-dropdown__menu-backdrop {
+  background-color: transparent;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sendbird-reactions--pressed {
+  display: block !important;
+}
+.sendbird-icon--pressed {
+  display: block !important;
+}

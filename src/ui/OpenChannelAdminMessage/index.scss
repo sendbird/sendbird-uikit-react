@@ -1,0 +1,21 @@
+@import '../../styles/variables';
+
+.sendbird-openchannel-admin-message {
+  position: relative;
+  margin: 16px 24px;
+  padding: 12px 16px;
+  border-radius: 4px;
+  @include themed() {
+    background-color: t(bg-1);
+  }
+  &:hover {
+    @include themed() {
+      background-color: t(bg--1-4);
+    }
+  }
+
+  .sendbird-openchannel-admin-message__text {
+    // word-break: break-all;
+    word-wrap: break-word;
+  }
+}

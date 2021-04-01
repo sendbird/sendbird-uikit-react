@@ -1,0 +1,103 @@
+@import '../../styles/variables';
+
+.sendbird-openchannel-file-message {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  &:hover {
+    @include themed() {
+      background-color: t(bg--1-4);
+    }
+    .sendbird-openchannel-file-message__context-menu {
+      display: block;
+    }
+  }
+
+  .sendbird-openchannel-file-message__left {
+    position: relative;
+    display: flex;
+    width: 52px;
+    min-width: 52px;
+
+    .sendbird-openchannel-file-message__left__avatar {
+      position: absolute;
+      display: block;
+      margin-top: 8px;
+      margin-left: 24px;
+    }
+  }
+
+  .sendbird-openchannel-file-message__right {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-left: 12px;
+    margin-bottom: 4px;
+
+    .sendbird-openchannel-file-message__right__title {
+      position: relative;
+      display: flex;
+      margin-top: 8px;
+
+      .sendbird-openchannel-file-message__right__title__sender-name {
+        position: relative;
+        display: flex;
+      }
+      .sendbird-openchannel-file-message__right__title__sent-at {
+        position: relative;
+        display: flex;
+        margin-left: 4px;
+      }
+    }
+    .sendbird-openchannel-file-message__right__body {
+      position: relative;
+      display: flex;
+      margin-top: 4px;
+      margin-bottom: 4px;
+      border-radius: 8px;
+      @include themed() {
+        background-color: t(bg-1);
+        border: solid 1px t(on-bg-4);
+      }
+
+      .sendbird-openchannel-file-message__right__body__icon {
+        position: relative;
+        display: inline-block;
+        margin: 8px;
+        border-radius: 8.6px;
+        @include themed() {
+          background-color: t(bg-0);
+        }
+      }
+      .sendbird-openchannel-file-message__right__body__file-name {
+        position: relative;
+        display: flex;
+        margin-top: 22px;
+        margin-right: 16px;
+        margin-left: 4px;
+        overflow: hidden;
+        height: 20px;
+        max-height: 20px;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  .sendbird-openchannel-file-message__context-menu {
+    position: absolute;
+    display: none;
+    top: 8px;
+    right: 16px;
+
+    .sendbird-openchannel-file-message__context-menu__icon {
+      @include themed() {
+        background-color: t(bg--2-5);
+      }
+      &:hover {
+        @include themed() {
+          background-color: t(primary--1-bg--7);
+        }
+      }
+    }
+  }
+}

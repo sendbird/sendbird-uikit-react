@@ -1,0 +1,49 @@
+@import '../../styles/variables';
+
+.sendbird-iconbutton {
+  color: var(--sendbird-iconbutton-color);
+  display: inline-block;
+  padding: 3px;
+  background-color: transparent;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  outline: 0px;
+  .sendbird-iconbutton__inner {
+    svg {
+      @include themed() {
+        fill: t(on-bg-1);
+      }
+    }
+  }
+
+  &:hover {
+    @include themed() {
+      background-color: t(bg-1);
+    }
+  }
+
+  &:active {
+    @include themed() {
+      background-color: t(bg-2);
+    }
+  }
+
+  &:disabled {
+    cursor: not-allowed !important;
+    .sendbird-iconbutton__inner {
+      svg, path {
+        @include themed() {
+          fill: t(on-bg-2);
+        }
+      }
+    }
+  }
+}
+
+.sendbird-iconbutton--pressed {
+  @include themed() {
+    background-color: t(primary--1-bg--7);
+  }
+}

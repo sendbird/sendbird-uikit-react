@@ -1,0 +1,67 @@
+@import '../../styles/variables';
+
+.sendbird-user-list-item {
+  display: block;
+  position: relative;
+  box-sizing: border-box;
+  width: 432px;
+  height: 56px;
+  @include themed() {
+    border-bottom: 1px solid t(on-bg-4);
+    background-color: t(bg--0-5);
+  }
+
+  &__avatar {
+    position: absolute;
+    top: 8px;
+    left: 0px;
+    z-index: 1;
+    cursor: pointer;
+  }
+
+  .sendbird-muted-avatar {
+    position: absolute;
+    top: 8px;
+    left: 0px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  &__title {
+    position: absolute;
+    top: 17px;
+    left: 56px;
+    max-width: 280px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__subtitle {
+    position: absolute;
+    top: 23px;
+    left: 140px;
+    max-width: 237px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__checkbox {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+  }
+
+  &__action {
+    position: absolute;
+    right: 0;
+    top: 10px;
+  }
+
+  &__operator {
+    position: absolute;
+    right: 40px;
+    top: 22px;
+  }
+}

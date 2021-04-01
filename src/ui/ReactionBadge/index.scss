@@ -1,0 +1,83 @@
+@import '../../styles/variables';
+
+.sendbird-reaction-badge {
+  display: inline-block;
+  border-radius: 15px;
+  width: 50px;
+  height: 24px;
+
+  @include themed() {
+    background-color: t(bg--1-5);
+    border: solid 1px t(bg--1-5);
+  }
+
+  &:hover {
+    cursor: pointer;
+    @include themed() {
+      border: solid 1px t(primary-3);
+    }
+  }
+}
+
+.sendbird-reaction-badge--is-add {
+  display: inline-block;
+  border-radius: 15px;
+  width: 36px;
+  height: 24px;
+
+  @include themed() {
+    background-color: t(bg--1-5);
+    border: solid 1px t(bg--1-5);
+  }
+
+  &:hover {
+    cursor: pointer;
+    border: solid 1px var(--sendbird-add-reaction-button-border-hover);
+  }
+
+  .sendbird-reaction-badge__inner {
+    .sendbird-reaction-badge__inner__icon {
+      left: 8px;
+    }
+  }
+}
+
+.sendbird-reaction-badge--selected {
+  display: inline-block;
+  border-radius: 15px;
+  width: 50px;
+  height: 24px;
+
+  @include themed() {
+    background-color: t(primary--1-4);
+    border: solid 1px t(primary--1-4);
+  }
+
+  &:hover {
+    cursor: pointer;
+    @include themed() {
+      border: solid 1px t(primary-3);
+    }
+  }
+}
+
+.sendbird-reaction-badge__inner {
+  position: relative;
+  display: flex;
+  height: 24px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-left: 20px;
+  padding-right: 4px;
+
+  .sendbird-reaction-badge__inner__icon {
+    position: absolute;
+    top: 2px;
+    left: 4px;
+  }
+
+  .sendbird-reaction-badge__inner__count {
+    margin-left: 4px;
+  }
+}

@@ -1,0 +1,70 @@
+@import '../../styles/variables';
+
+.sendbird-accordion {
+  padding: 8px 0px 16px 0px;
+  position: relative;
+  box-sizing: border-box;
+  @include themed() {
+    border-bottom: 1px solid t(on-bg-4);
+    background-color: t(bg-0);
+  }
+
+  .sendbird-accordion__member {
+    position: relative;
+    padding: 12px 0px 12px 44px;
+    height: 40px;
+    box-sizing: border-box;
+  }
+
+  .sendbird-accordion__footer {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 8px;
+  }
+}
+
+.sendbird-accordion__panel-header {
+  cursor: pointer;
+  position: relative;
+  padding: 12px 22px 10px 56px;
+  @include themed() {
+    background-color: t(bg-0);
+    border-bottom: 1px solid t(on-bg-4);
+  }
+  &:focus {
+    outline: none;
+  }
+  &.sendbird-accordion__panel-item__disabled {
+    cursor: not-allowed;
+  }
+}
+
+.sendbird-accordion__panel-icon-left,
+.sendbird-accordion__panel-icon-right {
+  position: absolute;
+  top: 10px;
+}
+
+.sendbird-accordion__panel-icon-left {
+  left: 16px;
+}
+.sendbird-accordion__panel-icon-right {
+  right: 16px;
+}
+.sendbird-accordion__panel-icon--open {
+  transform: rotate(90deg);
+}
+.sendbird-accordion__panel-icon--chevron {
+  path {
+    @include themed() {
+      fill: t(on-bg-1);
+    }
+  }
+}
+.sendbird-accordion__panel-icon__leave {
+  path {
+    @include themed() {
+      fill: t(error-3);
+    }
+  }
+}

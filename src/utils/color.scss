@@ -1,0 +1,78 @@
+@import '../styles/variables';
+
+.sendbird-color--onbackground-1 {
+  @include themed() {
+    color: t(on-bg-1);
+  }
+  &--background-color {
+    @include themed() {
+      background-color: t(on-bg-1);
+    }
+  }
+}
+
+.sendbird-color--onbackground-2 {
+  @include themed() {
+    color: t(on-bg-2);
+  }
+  &--background-color {
+    @include themed() {
+      background-color: t(on-bg-2);
+    }
+  }
+}
+
+.sendbird-color--onbackground-3 {
+  @include themed() {
+    color: t(on-bg-3);
+  }
+  &--background-color {
+    @include themed() {
+      background-color: t(on-bg-3);
+    }
+  }
+}
+
+.sendbird-color--onbackground-4 {
+  @include themed() {
+    color: t(on-bg-4);
+  }
+  &--background-color {
+    @include themed() {
+      background-color: t(on-bg-4);
+    }
+  }
+}
+
+.sendbird-color--oncontent-1 {
+  @include themed() {
+    color: t(on-content-1);
+  }
+  &--background-color {
+    @include themed() {
+      background-color: t(on-content-1);
+    }
+  }
+}
+
+.sendbird-color--primary {
+  @include themed() {
+    color: t(primary-3);
+  }
+  &--background-color {
+    @include themed() {
+      background-color: t(primary-3);
+    }
+  }
+}
+
+.sendbird-color--error {
+  @include themed() {
+    color: t(error--3-2);
+  }
+  &--background-color {
+    @include themed() {
+      background-color: t(error-3);
+    }
+  }
+}

@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReactionBadge should do a snapshot test of the ReactionBadge DOM 1`] = `
+<div
+  className="example-text sendbird-reaction-badge"
+  onClick={[Function]}
+  onKeyDown={[Function]}
+  role="button"
+  tabIndex={0}
+>
+  <div
+    className="sendbird-reaction-badge__inner"
+  >
+    <div
+      className="sendbird-reaction-badge__inner__icon"
+    >
+      <div
+        className=" sendbird-icon "
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        role="button"
+        style={
+          Object {
+            "height": "20px",
+            "minHeight": "20px",
+            "minWidth": "20px",
+            "width": "20px",
+          }
+        }
+        tabIndex="0"
+      >
+        <test-file-stub />
+      </div>
+    </div>
+    <span
+      className="sendbird-reaction-badge__inner__count sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-1"
+    >
+      +99
+    </span>
+  </div>
+</div>
+`;

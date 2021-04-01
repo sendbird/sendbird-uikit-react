@@ -1,0 +1,19 @@
+@import '../../styles/variables';
+
+.sendbird-tooltip-wrapper {
+  position: relative;
+  display: inline-flex;
+
+  &__hover-tooltip {
+    position: absolute;
+    display: inline-flex;
+    width: 200px;
+
+    &__inner {
+      &__tooltip-container {
+        position: relative;
+        display: inline-flex;
+      }
+    }
+  }
+}

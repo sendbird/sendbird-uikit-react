@@ -1,0 +1,67 @@
+@import '../../styles/variables';
+
+.sendbird-checkbox {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  user-select: none;
+}
+
+.sendbird-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.sendbird-checkbox--checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 18px;
+  width: 18px;
+  border-radius: 2px;
+  background-color: inherit;
+  @include themed() {
+    border: 2px solid t(bg-4);
+  }
+}
+
+.sendbird-checkbox input:focus ~ .sendbird-checkbox--checkmark {
+  @include themed() {
+    box-shadow: 0px 0px 0px 2px t(primary-3);
+  }
+}
+
+.sendbird-checkbox input:checked ~ .sendbird-checkbox--checkmark {
+  @include themed() {
+    background-color: t(primary-3);
+    border: 2px solid t(primary-3);
+  }
+}
+
+.sendbird-checkbox--checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.sendbird-checkbox input:checked ~ .sendbird-checkbox--checkmark:after {
+  display: block;
+}
+
+.sendbird-checkbox .sendbird-checkbox--checkmark:after {
+  @include themed() {
+    left: 5px;
+    top: -0.5px;
+    width: 7px;
+    height: 12px;
+    border: solid t(bg-0);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+}

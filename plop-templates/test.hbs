@@ -1,0 +1,16 @@
+import React from 'react';
+import {shallow} from 'enzyme';
+import renderer from 'react-test-renderer';
+
+import {{ name }} from "../index";
+
+describe('{{ name }}', () => {
+  it('should do a snapshot test of the {{ name }} DOM', function() {
+    const text = "example-text";
+    const component = renderer.create(
+      <{{ name }} />,
+    );
+    let tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+});

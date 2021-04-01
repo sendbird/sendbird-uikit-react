@@ -1,0 +1,36 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs|Components/App" />
+
+# App
+
+App component combines all the other components to provide a complete full page chat experience.
+You dont need to configure anything except provinging your appId and userId as minimum requirements.
+
+## Usage
+
+```js
+import { App } from "sendbird-uikit-react";
+
+const MyApp = () => {
+  <Route id={'/chat'}>
+    <App userId=? appId=? />
+  </div>
+}
+```
+
+## Available Props
+
+```js
+{
+  appId: String
+  userId: String
+  accessToken: String
+  theme: String <'light' | 'dark'>
+  userListQuery: Function
+  nickname: String
+  config: {
+    logLevel: (String or Array of String)
+  }
+}
+```

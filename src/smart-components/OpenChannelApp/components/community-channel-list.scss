@@ -1,0 +1,49 @@
+.community-channel-list {
+  width: 264px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .community-channel-list__list {
+    height: 100%;
+    overflow-y: scroll;
+    flex: 1;
+  }
+
+  .channel-preview__name {
+    position: absolute;
+    top: 16px;
+  }
+
+  .community-channel-list__title {
+    padding: 20px 24px;
+    box-sizing: border-box;
+    font-size: 18px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: -0.2px;
+    color: var(--gray-0);
+    border-bottom: 1px solid var(--gray-1);
+  }
+
+  .community-channel-list__placeholder {
+    width: 200px;
+    height: 16px;
+    text-align: center;
+    margin-left: 32px;
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    color: var(--gray-2);
+  }
+
+  .community-channel-list__footer {
+    padding: 16px;
+    box-sizing: border-box;
+    display: flex;
+  }
+}

@@ -1,0 +1,19 @@
+@import '../../styles/variables';
+
+.sendbird-textbutton {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+
+.sendbird-textbutton--not-underline {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.sendbird-textbutton--disabled {
+  cursor: not-allowed;
+  @include themed() {
+    color: t(on-bg-3);
+  }
+}

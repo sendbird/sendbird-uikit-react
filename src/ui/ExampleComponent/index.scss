@@ -1,0 +1,7 @@
+@import '../../styles/variables';
+
+.sendbird-text {
+  @include themed() {
+    color: t(primary-1);
+  }
+}

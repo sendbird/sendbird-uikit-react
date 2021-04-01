@@ -1,0 +1,30 @@
+@import '../../../styles/variables';
+
+.sendbird-add-channel__rectangle-wrap {
+  margin-top: 26px;
+}
+
+.sendbird-add-channel__rectangle-footer {
+  text-align: right;
+  margin-top: 32px;
+}
+
+.sendbird-add-channel__rectangle {
+  width: 432px;
+  height: 72px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  padding: 25px 72px;
+  position: relative;
+  box-sizing: border-box;
+  cursor: pointer;
+  @include themed() {
+    border: 1px solid t(on-bg-4);
+  }
+
+  .sendbird-icon {
+    position: absolute;
+    left: 22px;
+    top: 24px;
+  }
+}

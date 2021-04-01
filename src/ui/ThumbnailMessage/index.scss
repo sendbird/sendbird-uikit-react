@@ -1,0 +1,359 @@
+@import '../../styles/variables';
+
+.sendbird-thumbnail {
+  text-align: right;
+  position: relative;
+
+  .sendbird-thumbnail__body {
+    position: relative;
+    display: inline-block;
+  }
+
+  .sendbird-thumbnail__more {
+    display: none;
+    position: absolute;
+    top: 10px;
+  }
+
+  &:hover {
+    .sendbird-thumbnail__more {
+      display: block;
+    }
+  }
+
+  .sendbird-thumbnail__wrap {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+    margin: 8px 0px;
+    @include themed() {
+      background-color: t(bg-1);
+    }
+    &:focus {
+      outline: none;
+    }
+    &:hover {
+      @include themed() {
+        background-color: t(bg-2);
+      }
+      .sendbird-thumbnail__wrap__inner {
+        cursor: pointer;
+        .sendbird-thumbnail__wrap__overlay {
+          opacity: 1;
+        }
+      }
+      .sendbird-thumbnail__wrap__emoji-reactions {
+        @include themed() {
+          border: solid 1px t(bg-2);
+        }
+      }
+    }
+
+    .sendbird-thumbnail__wrap__inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      .sendbird-thumbnail__wrap__overlay {
+        position: absolute;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        border-radius: 16px;
+        @include themed() {
+          background-color: t(overlay-2);
+        }
+      }
+    }
+
+    .sendbird-thumbnail__wrap__emoji-reactions {
+      @include themed() {
+        border: solid 1px t(bg-1);
+      }
+    }
+  }
+
+  .sendbird-thumbnail__avatar {
+    position: absolute;
+    bottom: 30px;
+    left: 0px;
+  }
+
+  .sendbird-thumbnail__sender-name {
+    margin-left: 12px;
+  }
+
+  &.sendbird-thumbnail--incoming {
+    text-align: left;
+    padding-left: 40px;
+    box-sizing: border-box;
+  }
+
+  .sendbird-thumbnail__video-icon {
+    position: absolute;
+    top: calc(50% - 28px);
+    left: calc(50% - 28px);
+  }
+
+  .sendbird-thumbnail__video,
+  .sendbird-thumbnail__img {
+    // https://www.tutorialrepublic.com/faq/how-to-remove-white-space-under-an-image-using-css.php
+    display: block;
+    max-width: var(--sendbird-message-balloon-width);
+    max-height: 360px;
+    border-radius: 16px;
+  }
+}
+
+// outgoing
+.sendbird-outgoing-thumbnail-message {
+  position: relative;
+  text-align: right;
+  line-height: 0px;
+
+  .sendbird-outgoing-thumbnail-message--inner {
+    display: inline-flex;
+    flex-direction: row;
+  }
+
+  .sendbird-outgoing-thumbnail-message__left-padding {
+    position: relative;
+    width: 68px;
+
+    .sendbird-outgoing-thumbnail-message-left-padding__more {
+      display: none;
+      position: absolute;
+      top: 4px;
+      right: 4px;
+    }
+    .sendbird-outgoing-thumbnail-message-left-padding__status {
+      position: absolute;
+      right: 4px;
+      bottom: 4px;
+    }
+  }
+
+  &:hover {
+    .sendbird-outgoing-thumbnail-message__left-padding {
+      .sendbird-outgoing-thumbnail-message-left-padding__more {
+        display: block;
+      }
+    }
+  }
+
+  .sendbird-outgoing-thumbnail-message__body {
+    position: relative;
+
+    .sendbird-outgoing-thumbnail-message-body__wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      border-radius: 16px;
+      @include themed() {
+        background-color: t(bg-1);
+      }
+      &:focus {
+        outline: none;
+      }
+      &:hover {
+        @include themed() {
+          background-color: t(bg-2);
+        }
+        .sendbird-outgoing-thumbnail-message-body__wrap--inner {
+          cursor: pointer;
+          .sendbird-outgoing-thumbnail-message-body__wrap__overlay {
+            opacity: 1;
+          }
+        }
+        .sendbird-outgoing-thumbnail-message-body__wrap__emoji-reactions {
+          @include themed() {
+            border: solid 1px t(bg-2);
+          }
+        }
+      }
+
+      .sendbird-outgoing-thumbnail-message-body__wrap--inner {
+        width: 100%;
+        height: 100%;
+        position: relative;
+
+        .sendbird-outgoing-thumbnail-message-body__wrap__overlay {
+          position: absolute;
+          opacity: 0;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          border-radius: 16px;
+          @include themed() {
+            background-color: t(overlay-2);
+          }
+        }
+      }
+
+      .sendbird-outgoing-thumbnail-message-body__wrap__emoji-reactions {
+        @include themed() {
+          border: solid 1px t(bg-1);
+        }
+      }
+    }
+  }
+
+  .sendbird-outgoing-thumbnail-message-body__video,
+  .sendbird-outgoing-thumbnail-message-body__img {
+    // https://www.tutorialrepublic.com/faq/how-to-remove-white-space-under-an-image-using-css.php
+    display: block;
+    max-width: var(--sendbird-message-balloon-width);
+    max-height: 360px;
+    border-radius: 16px;
+  }
+  .sendbird-outgoing-thumbnail-message-body__video-icon {
+    position: absolute;
+    top: calc(50% - 28px);
+    left: calc(50% - 28px);
+  }
+}
+
+// incoming
+.sendbird-incoming-thumbnail-message {
+  position: relative;
+  text-align: left;
+  padding-left: 40px;
+
+  .sendbird-incoming-thumbnail-message__sender-name {
+    position: relative;
+    box-sizing: border-box;
+    left: 12px;
+    height: 12px;
+    margin-bottom: 4px;
+  }
+
+  .sendbird-incoming-thumbnail-message__avatar {
+    position: absolute;
+    left: -40px;
+    bottom: 4px;
+    cursor: pointer;
+  }
+
+  .sendbird-incoming-thumbnail-message--inner {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .sendbird-incoming-thumbnail-message__body {
+    position: relative;
+
+    .sendbird-incoming-thumbnail-message-body__wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      border-radius: 16px;
+      @include themed() {
+        background-color: t(bg-1);
+      }
+      &:focus {
+        outline: none;
+      }
+      &:hover {
+        @include themed() {
+          background-color: t(bg-2);
+        }
+        .sendbird-incoming-thumbnail-message-body__wrap--inner {
+          cursor: pointer;
+          .sendbird-incoming-thumbnail-message-body__wrap-overlay {
+            opacity: 1;
+          }
+        }
+        .sendbird-incoming-thumbnail-message-body__wrap__emoji-reactions {
+          @include themed() {
+            border: solid 1px t(bg-2);
+          }
+        }
+      }
+
+      .sendbird-incoming-thumbnail-message-body__wrap--inner {
+        width: 100%;
+        height: 100%;
+        position: relative;
+
+        .sendbird-incoming-thumbnail-message-body__wrap-overlay {
+          position: absolute;
+          opacity: 0;
+          width: 100%;
+          height: 100%;
+          top: 0px;
+          left: 0px;
+          border-radius: 16px;
+          @include themed() {
+            background-color: t(overlay-2);
+          }
+        }
+      }
+      .sendbird-incoming-thumbnail-message__wrap__emoji-reactions {
+        @include themed() {
+          border: solid 1px t(bg-1);
+        }
+      }
+    }
+  }
+
+  .sendbird-incoming-thumbnail-message__video,
+  .sendbird-incoming-thumbnail-message__img {
+    // https://www.tutorialrepublic.com/faq/how-to-remove-white-space-under-an-image-using-css.php
+    display: block;
+    max-width: var(--sendbird-message-balloon-width);
+    max-height: 360px;
+    border-radius: 16px;
+  }
+  .sendbird-incoming-thumbnail-message__video-icon {
+    position: absolute;
+    top: calc(50% - 28px);
+    left: calc(50% - 28px);
+  }
+
+  .sendbird-incoming-thumbnail-message__right-padding {
+    position: relative;
+    width: 68px;
+
+    .sendbird-incoming-thumbnail-message__sent-at {
+      position: absolute;
+      left: 4px;
+      bottom: 4px;
+    }
+
+    .sendbird-incoming-thumbnail-message__more {
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      display: none;
+    }
+  }
+
+  &:hover {
+    .sendbird-incoming-thumbnail-message__right-padding {
+      .sendbird-incoming-thumbnail-message__more {
+        display: block;
+      }
+    }
+  }
+
+  [class*=thumbnail-placeholder] {
+    width: 404px;
+    height: 208px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @include themed() {
+      background-color: t(bg-1);
+    }
+
+    .sendbird-icon {
+      @include themed() {
+        border-radius: 50%;
+        background-color: t(bg-0);
+      }
+    }
+  }
+}

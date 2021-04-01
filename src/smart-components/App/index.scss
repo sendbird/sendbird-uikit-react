@@ -1,0 +1,63 @@
+@import '../../styles/variables';
+
+.sendbird-app__wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  box-sizing: border-box;
+
+  .sendbird-app__searchpanel-wrap {
+    width: 320px;
+    overflow-y: scroll;
+    box-sizing: border-box;
+    @include themed() {
+      border-top: 1px solid t(on-bg-4--bg-6);
+      border-right: 1px solid t(on-bg-4--bg-6);
+      border-bottom: 1px solid t(on-bg-4--bg-6);
+    }
+  }
+  .sendbird-app__conversation-wrap {
+    flex: 1;
+    position: relative;
+  }
+  .sendbird-app__channellist-wrap {
+    max-width: 320px;
+    @include themed() {
+      border-top: 1px solid t(on-bg-4--bg-6);
+      border-left: 1px solid t(on-bg-4--bg-6);
+      border-bottom: 1px solid t(on-bg-4--bg-6);
+    }
+  }
+
+  .sendbird-app__conversation--settings-open {
+    .sendbird-chat-header__info {
+      @include themed() {
+        background-color: t(primary--1-bg--7);
+      }
+    }
+  }
+
+  .sendbird-chat-header__search {
+    margin-right: 16px;
+  }
+
+  .sendbird-app__conversation--search-open {
+    .sendbird-chat-header__search {
+      @include themed() {
+        background-color: t(primary--1-bg--7);
+      }
+    }
+  }
+
+  .sendbird-channel-settings {
+    border-left: none;
+    @include themed() {
+      border-top: 1px solid t(on-bg-4--bg-6);
+      border-right: 1px solid t(on-bg-4--bg-6);
+      border-bottom: 1px solid t(on-bg-4--bg-6);
+    }
+    .sendbird-channel-settings__header {
+      height: 64px;
+    }
+  }
+}

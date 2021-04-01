@@ -1,0 +1,33 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs|Components/Channel" />
+
+# Channel
+
+Use the channel component to display conversations inside a channel
+
+Similar to ChannelList, the Channel component must also be wrapped inside SendbirdProvider for it to work well. If you place SendbirdProvider on the top level, you can use  Channel anywhere in your application without worrying about hierarchies. Please note that  Channel has no minimum height and takes the height of the container, so it is recommended to specify the height of the wrapper element to fit your needs
+
+## Usage
+
+```js
+import { Channel, SendbirdProvider, ModalRoot, MenuRoot } from "sendbird-uikit-react";
+
+const App = () => {
+  <SendbirdProvider>
+    <div style={{ height: '100vh' }}>
+      <Channel />
+    </div>
+    <ModalRoot />
+    <MenuRoot />
+  </SendbirdProvider>
+}
+```
+
+## Available Props
+
+```js
+{
+  channelUrl: String <Url of current channel>
+}
+```

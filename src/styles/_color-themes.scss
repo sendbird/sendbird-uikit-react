@@ -1,0 +1,175 @@
+// @thanks https://medium.com/@katiemctigue/how-to-create-a-dark-mode-in-sass-609f131a3995
+
+$themes: (
+  light: (
+    primary-5: var(--sendbird-light-primary-500),
+    primary-4: var(--sendbird-light-primary-400),
+    primary-3: var(--sendbird-light-primary-300),
+    primary-2: var(--sendbird-light-primary-200), // didnt see usage yet
+    primary-1: var(--sendbird-light-primary-100),
+
+    // didnt see usage yet
+    secondary-5: var(--sendbird-light-secondary-500),
+    secondary-4: var(--sendbird-light-secondary-400),
+    secondary-3: var(--sendbird-light-secondary-300),
+    secondary-2: var(--sendbird-light-secondary-200),
+    secondary-1: var(--sendbird-light-secondary-100),
+
+    information-1: var(--sendbird-light-information-100),
+    on-information-1: var(--sendbird-light-onlight-01),
+
+    error-5: var(--sendbird-light-error-500),
+    error-4: var(--sendbird-light-error-400),
+    error-3: var(--sendbird-light-error-300),
+    error-2: var(--sendbird-light-error-200),
+    error-1: var(--sendbird-light-error-100),
+
+    bg-8: var(--sendbird-light-primary-100),
+    bg-7: var(--sendbird-light-background-700),
+    bg-6: var(--sendbird-light-background-600),
+    bg-5: var(--sendbird-light-background-500),
+    bg-4: var(--sendbird-light-background-400),
+    bg-3: var(--sendbird-light-background-300),
+    bg-2: var(--sendbird-light-background-200),
+    bg-1: var(--sendbird-light-background-100),
+    bg-0: var(--sendbird-light-background-50),
+
+    overlay-1: var(--sendbird-light-overlay-01),
+    overlay-2: var(--sendbird-light-overlay-02),
+
+    on-bg-1: var(--sendbird-light-onlight-01),
+    on-bg-2: var(--sendbird-light-onlight-02),
+    on-bg-3: var(--sendbird-light-onlight-03),
+    on-bg-4: var(--sendbird-light-onlight-04),
+
+    on-content-1: var(--sendbird-light-ondark-01),
+    on-content-2: var(--sendbird-light-ondark-02),
+    on-content-3: var(--sendbird-light-ondark-03),
+    on-content-4: var(--sendbird-light-ondark-04),
+    inverse-on-content-1: var(--sendbird-light-onlight-01),
+    inverse-on-content-3: var(--sendbird-light-onlight-03),
+
+    shadow-gradient-1: var(--sendbird-light-shadow-01),
+    shadow-gradient-2: var(--sendbird-light-shadow-02),
+    shadow-gradient-3: var(--sendbird-light-shadow-03),
+    shadow-gradient-4: var(--sendbird-light-shadow-04),
+    shadow-gradient-5: var(--sendbird-light-shadow-05),
+
+    shadow-message-input: var(--sendbird-light-shadow-message-input),
+
+    on-light-4: var(--sendbird-light-onlight-04),
+
+    primary--1-4: var(--sendbird-light-primary-100),
+    primary--1-7: var(--sendbird-light-primary-100),
+    primary--3-2: var(--sendbird-light-primary-300),
+
+    bg--0-4: var(--sendbird-light-background-50),
+    bg--0-5: var(--sendbird-light-background-50),
+    bg--0-6: var(--sendbird-light-background-50),
+    bg--1-5: var(--sendbird-light-background-100),
+    bg--1-4: var(--sendbird-light-background-100),
+    bg--1-3: var(--sendbird-light-background-100),
+    bg--2-5: var(--sendbird-light-background-200),
+    bg--2-7: var(--sendbird-light-background-200),
+    bg--3-3: var(--sendbird-light-background-300),
+
+    primary--1-bg--7: var(--sendbird-light-primary-100),
+    secondary--3-2: var(--sendbird-light-secondary-300),
+    error--3-2: var(--sendbird-light-error-300),
+    on-bg-4--bg-6: var(--sendbird-light-onlight-04),
+  ),
+  dark: (
+    primary-5: var(--sendbird-dark-primary-400),
+    primary-4: var(--sendbird-dark-primary-300),
+    primary-3: var(--sendbird-dark-primary-200),
+    primary-2: var(--sendbird-dark-primary-400),
+    primary-1: var(--sendbird-dark-primary-300),
+
+    secondary-5: var(--sendbird-dark-secondary-500),
+    secondary-4: var(--sendbird-dark-secondary-400),
+    secondary-3: var(--sendbird-dark-secondary-200),
+    secondary-2: var(--sendbird-dark-secondary-200),
+    secondary-1: var(--sendbird-dark-secondary-100),
+
+    information-1: var(--sendbird-dark-information-100),
+    on-information-1: var(--sendbird-dark-onlight-01),
+
+    error-5: var(--sendbird-dark-error-500),
+    error-4: var(--sendbird-dark-error-400),
+    error-3: var(--sendbird-dark-error-300),
+    error-2: var(--sendbird-dark-error-200),
+    error-1: var(--sendbird-dark-error-100),
+
+    bg-8: var(--sendbird-dark-background-700),
+    bg-7: var(--sendbird-dark-background-50),
+    bg-6: var(--sendbird-dark-background-100),
+    bg-5: var(--sendbird-dark-background-200),
+    bg-4: var(--sendbird-dark-background-300),
+    bg-3: var(--sendbird-dark-background-400),
+    bg-2: var(--sendbird-dark-background-400),
+    bg-1: var(--sendbird-dark-background-500),
+    bg-0: var(--sendbird-dark-background-600),
+
+    overlay-1: var(--sendbird-dark-overlay-01),
+    overlay-2: var(--sendbird-dark-overlay-02),
+
+    on-bg-1: var(--sendbird-dark-ondark-01),
+    on-bg-2: var(--sendbird-dark-ondark-02),
+    on-bg-3: var(--sendbird-dark-ondark-03),
+    on-bg-4: var(--sendbird-dark-ondark-04),
+
+    on-content-1: var(--sendbird-dark-onlight-01),
+    on-content-2: var(--sendbird-dark-onlight-02),
+    on-content-3: var(--sendbird-dark-onlight-03),
+    on-content-4: var(--sendbird-dark-onlight-04),
+    inverse-on-content-1: var(--sendbird-dark-ondark-01),
+    inverse-on-content-3: var(--sendbird-dark-ondark-03),
+
+    shadow-gradient-1: var(--sendbird-dark-shadow-01),
+    shadow-gradient-2: var(--sendbird-dark-shadow-02),
+    shadow-gradient-3: var(--sendbird-dark-shadow-03),
+    shadow-gradient-4: var(--sendbird-dark-shadow-04),
+    shadow-gradient-5: var(--sendbird-dark-shadow-05),
+
+    shadow-message-input: var(--sendbird-dark-shadow-message-input),
+
+    on-light-4: var(--sendbird-dark-onlight-04),
+
+    primary--1-4: var(--sendbird-dark-primary-400),
+    primary--1-7: var(--sendbird-dark-background-700),
+    primary--3-2: var(--sendbird-dark-primary-200),
+
+    bg--0-4: var(--sendbird-dark-background-400),
+    bg--0-5: var(--sendbird-dark-background-500),
+    bg--0-6: var(--sendbird-dark-background-600),
+    bg--1-5: var(--sendbird-dark-background-500),
+    bg--1-4: var(--sendbird-dark-background-400),
+    bg--1-3: var(--sendbird-dark-background-300),
+    bg--2-5: var(--sendbird-dark-background-500),
+    bg--2-7: var(--sendbird-dark-background-700),
+    bg--3-3: var(--sendbird-dark-background-300),
+
+    primary--1-bg--7: var(--sendbird-dark-background-700),
+    secondary--3-2: var(--sendbird-dark-secondary-200),
+    error--3-2: var(--sendbird-dark-error-200),
+    on-bg-4--bg-6: var(--sendbird-dark-background-600),
+  ),
+);
+
+@mixin themed() {
+  @each $theme, $map in $themes {
+    .sendbird-theme--#{$theme} & {
+      $theme-map: () !global;
+      @each $key, $submap in $map {
+        $value: map-get(map-get($themes, $theme), '#{$key}');
+        $theme-map: map-merge($theme-map, ($key: $value)) !global;
+      }
+      @content;
+      $theme-map: null !global;
+    }
+  }
+}
+
+@function t($key) {
+  @return map-get($theme-map, $key);
+}

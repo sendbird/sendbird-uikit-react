@@ -1,0 +1,34 @@
+@import '../../styles/variables';
+
+.sendbird-emoji-reactions {
+  display: inline-block;
+  border-radius: 16px;
+  max-width: var(--sendbird-message-balloon-width);
+  box-sizing: border-box;
+  min-height: 24px;
+  padding: 7px 5px 3px 5px;
+
+  @include themed() {
+    background-color: t(bg-0);
+  }
+
+  .sendbird-emoji-reactions--inner {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .sendbird-emoji-reactions__emoji-reaction {
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 4px;
+  }
+
+  .sendbird-emoji-reactions__emoji-reaction-add {
+    width: 36px;
+    height: 24px;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}

@@ -1,0 +1,33 @@
+.sendbird-theme--dark {
+  --gray-0: rgba(255, 255, 255, 0.88);
+  --gray-1: rgba(255, 255, 255, 0.12);
+  --gray-2: rgba(255, 255, 255, 0.5);
+  --bg-0: #161616;
+  --selected-bg-0: #000;
+  --selected-text-0: #9e8cf5;
+  --selected-sub-text: rgba(255, 255, 255, 0.5);
+  --preview-hover: #2c2c2c;
+  --stream-bg: #000;
+  --stream-panel-bg: #161616;
+  --stream-tag-bg: #2c2c2c;
+  --icon-fill-solid: #fff;
+}
+
+.sendbird-theme--light {
+  --gray-0: rgba(0, 0, 0, 0.88);
+  --gray-1: rgba(0, 0, 0, 0.12);
+  --gray-2: rgba(0, 0, 0, 0.5);
+  --bg-0: #fff;
+  --selected-bg-0: #e2dfff;
+  --selected-text-0: #7b53ef;
+  --selected-sub-text: rgba(0, 0, 0, 0.5);
+  --preview-hover: #f0f0f0;
+  --stream-bg: #f0f0f0;
+  --stream-panel-bg: #fff;
+  --stream-tag-bg: #f0f0f0;
+  --icon-fill-solid: rgba(0, 0, 0, 0.88);
+}
+
+body {
+  margin: 0;
+}

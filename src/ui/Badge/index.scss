@@ -1,0 +1,15 @@
+@import '../../styles/variables';
+
+.sendbird-badge {
+  height: 20px;
+  min-width: 20px;
+  border-radius: 10px;
+  display: inline-block;
+  @include themed() {
+    background-color: t(primary-3);
+  }
+
+  .sendbird-badge__text {
+    margin: 0px 6px;
+  }
+}

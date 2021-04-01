@@ -1,0 +1,16 @@
+# common files to ignore
+__test__/*/**.js
+__test__/*/**.jsx
+*.spec.js
+*.mock.js
+
+__snapshots__/**/*
+*.spec.js.snap
+
+*.stories.js
+
+*.css
+*.scss
+
+*.svg
+*.md

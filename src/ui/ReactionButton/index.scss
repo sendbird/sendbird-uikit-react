@@ -1,0 +1,41 @@
+@import '../../styles/variables';
+
+.sendbird-reaction-button {
+  border-radius: 8px;
+  display: inline-block;
+  border: solid 1px transparent;
+  cursor: pointer;
+
+  &:hover {
+    @include themed() {
+      border: solid 1px t(bg--1-4);
+      background-color: t(bg--1-4);
+    }
+  }
+
+  &__inner {
+    margin: 3px;
+  }
+}
+
+.sendbird-reaction-button--selected {
+  cursor: pointer;
+  border-radius: 8px;
+  display: inline-block;
+  @include themed() {
+    border: solid 1px t(primary--1-4);
+    background-color: t(primary--1-4);
+  }
+
+  &:hover {
+    border: solid 1px var(--sendbird-selected-reaction-button-border-hover);
+  }
+
+  &__inner {
+    margin: 3px;
+  }
+
+  &.sendbird-reactions--pressed {
+    display: block !important;
+  }
+}

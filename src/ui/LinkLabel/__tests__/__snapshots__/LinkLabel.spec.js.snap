@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LinkLabel should do a snapshot test of the LinkLabel DOM 1`] = `
+<a
+  className=" sendbird-link-label sendbird-label--color-primary"
+  href="https://www.sendbird.com"
+  rel="noopener noreferrer"
+  target="_blank"
+>
+  <span
+    className="sendbird-link-label__label sendbird-label sendbird-label--body-1 sendbird-label--color-primary"
+  >
+    example-text
+  </span>
+</a>
+`;

@@ -1,0 +1,27 @@
+@import '../../styles/variables';
+
+.sendbird-separator {
+  width: 100%;
+  display: flex;
+  align-items: center;
+
+  .sendbird-separator__left {
+    border: none;
+    height: 1px;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .sendbird-separator__right {
+    border: none;
+    height: 1px;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .sendbird-separator__text {
+    margin: 0px 16px;
+    display: flex;
+    white-space: nowrap;
+  }
+}

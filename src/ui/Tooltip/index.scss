@@ -1,0 +1,32 @@
+@import '../../styles/variables';
+
+.sendbird-tooltip {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  max-width: 200px;
+  border-radius: 8px;
+  padding: 8px 16px;
+  background-color: var(--sendbird-tooltip-background);
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    width: 8px;
+    height: 8px;
+    transform: rotate(45deg);
+    background-color: var(--sendbird-tooltip-background);
+  }
+
+  &__text {
+    font-family: var(--sendbird-font-family-default);
+    font-size: 12px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    color: var(--sendbird-tooltip-text-color);
+  }
+}

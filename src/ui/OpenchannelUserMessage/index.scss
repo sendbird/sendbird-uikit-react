@@ -1,0 +1,103 @@
+@import '../../styles/variables';
+
+.sendbird-openchannel-user-message {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  &:hover {
+    @include themed() {
+      background-color: t(bg--1-4);
+    }
+    .sendbird-openchannel-user-message__context-menu {
+      display: block;
+    }
+  }
+
+  .sendbird-openchannel-user-message__left {
+    position: relative;
+    display: flex;
+    width: 52px;
+    min-width: 52px;
+
+    .sendbird-openchannel-user-message__left__avatar {
+      position: relative;
+      display: flex;
+      margin-top: 8px;
+      margin-left: 24px;
+    }
+  }
+
+  .sendbird-openchannel-user-message__right {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 8px 24px 8px 12px;
+
+    .sendbird-openchannel-user-message__right__top {
+      position: relative;
+      display: flex;
+      margin-bottom: 2px;
+
+      .sendbird-openchannel-user-message__right__top__sender-name {
+        position: relative;
+        display: flex;
+      }
+      .sendbird-openchannel-user-message__right__top__sent-at {
+        position: relative;
+        display: flex;
+        margin-left: 4px;
+      }
+    }
+
+    .sendbird-openchannel-user-message__right__bottom {
+      position: relative;
+      display: flex;
+      width: 100%;
+
+      .sendbird-openchannel-user-message__right__bottom__message {
+        position: relative;
+        word-break: break-all;
+      }
+    }
+
+    .sendbird-openchannel-user-message__right__tail {
+      position: relative;
+      top: 2px;
+    }
+  }
+
+  .sendbird-openchannel-user-message__context-menu {
+    position: absolute;
+    right: 16px;
+    display: none;
+
+    .sendbird-openchannel-user-message__context-menu--icon {
+      @include themed() {
+        background-color: t(bg--2-5);
+      }
+      &:hover {
+        @include themed() {
+          background-color: t(primary--1-bg--7);
+        }
+      }
+    }
+  }
+}
+
+// .sendbird-openchannel-user-message__context-menu__copy {
+
+// }
+
+// .sendbird-openchannel-user-message__context-menu__edit {
+
+// }
+
+// .sendbird-openchannel-user-message__context-menu__resend {
+
+// }
+
+// .sendbird-openchannel-user-message__context-menu__delete {
+
+// }

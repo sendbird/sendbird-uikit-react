@@ -1,0 +1,63 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs|Components/SendbirdProvider" />
+
+# SendbirdProvider
+
+SendbirdProvider is the most important piece in the architecture of sendbird uikit
+
+To make passing data through component hierarchies easier, we use the react context API. The SendbirdProvider is the context provider for passing down SDK to the children components. Using the higher order component withSendbird, you can consume the SDK inside any component under the hierarchy of SendbirdProvider.  Please note that all components except ModalRoot and MenuRoot must live under SendbirdProvider for them to work well
+
+## Usage
+
+For example if you want to always show channel list on sidebar and change channels based on routes -
+
+```js
+import {
+  SendbirdProvider,
+  ChannelList,
+  Channel,
+  ModalRoot,
+  MenuRoot,
+} from "sendbird-uikit-react";
+
+const App = () => {
+  <SendbirdProvider userId=? appId=? ...>
+    <Router>
+      <Route>
+        <Sidebar>
+          <Channel />
+        </Sidebar>
+        <Route id={yourapp/channelUrl1}>
+          <MainPanel>
+            <Channel channelUrl={yourapp/channelUrl1} />
+          </MainPanel>
+        </Route>
+        <Route id={yourapp/channelUrl2}>
+          <MainPanel>
+            <Channel channelUrl={yourapp/channelUrl2} />
+          </MainPanel>
+        </Route>
+      </Route>
+      ....
+    </Router>
+    <ModalRoot />
+    <MenuRoot />
+  </SendbirdProvider>
+}
+```
+
+## Available Props
+
+```js
+{
+  appId: String <Your sendbird AppId>
+  userId: String <Your user's Id that has been registered with sendbird>
+  accessToken: String <Your user's access token>
+  theme: String <'light' or 'dark'>
+  nickname: String<To configure a new nickname for your user>
+  config: {
+    logLevel: (String or Array of String)
+  }
+}
+```

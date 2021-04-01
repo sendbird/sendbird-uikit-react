@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserListItem should do a snapshot test of the UserListItem DOM 1`] = `
+<div
+  className="sendbird-user-list-item "
+>
+  <div
+    className="sendbird-context-menu"
+    style={
+      Object {
+        "display": "inline",
+      }
+    }
+  >
+    <div
+      className="sendbird-user-list-item__avatar sendbird-avatar"
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+      style={
+        Object {
+          "height": "40px",
+          "width": "40px",
+        }
+      }
+      tabIndex="0"
+    >
+      <img
+        alt=""
+        className="sendbird-image-renderer--hidden-placeholder"
+        onError={[Function]}
+        onLoad={[Function]}
+        src="https://static.sendbird.com/sample/profiles/profile_12_512px.png"
+      />
+    </div>
+  </div>
+  <span
+    className="sendbird-label sendbird-user-list-item__title sendbird-label--subtitle-1 sendbird-label--color-onbackground-1"
+  >
+    Topy
+  </span>
+  <label
+    className="sendbird-user-list-item__checkbox"
+    htmlFor="userid-1"
+  >
+    <label
+      className="sendbird-checkbox"
+      htmlFor="userid-1"
+    >
+      <input
+        checked={true}
+        id="userid-1"
+        onChange={[Function]}
+        onClick={[Function]}
+        type="checkbox"
+      />
+      <span
+        className="sendbird-checkbox--checkmark"
+      />
+    </label>
+  </label>
+</div>
+`;

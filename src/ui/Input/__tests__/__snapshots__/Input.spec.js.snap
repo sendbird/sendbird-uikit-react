@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Input should do a snapshot test of the Input DOM 1`] = `
+<div
+  className="sendbird-input"
+>
+  <input
+    className="sendbird-input__input"
+    disabled={false}
+    name="name"
+    onChange={[Function]}
+    required={false}
+    value="value"
+  />
+</div>
+`;

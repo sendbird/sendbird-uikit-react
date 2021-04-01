@@ -1,0 +1,10 @@
+@import '../../styles/variables';
+
+.sendbird-message-search {
+  position: relative;
+  height: 100%;
+  overflow: scroll;
+  @include themed() {
+    background-color: t(bg-0);
+  }
+}

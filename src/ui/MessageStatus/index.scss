@@ -1,0 +1,22 @@
+@import '../../styles/variables';
+
+.sendbird-message-status {
+  display: inline;
+  text-align: right;
+
+  .sendbird-message-status__text {
+    .sendbird-message-status__text__try-again {
+      text-decoration: underline;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    .sendbird-message-status__text__delete {
+      text-decoration: underline;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}

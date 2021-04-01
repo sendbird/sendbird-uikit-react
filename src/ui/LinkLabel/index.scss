@@ -1,0 +1,65 @@
+@import '../../styles/variables';
+
+.sendbird-link-label {
+  text-decoration: unset;
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  &:focus {
+    outline: none;
+  }
+
+  &__label {
+    display: inline;
+  }
+}
+
+// colors
+.sendbird-link-label .sendbird-label--color-onbackground-1 {
+  @include themed() {
+    color: t(on-bg-1);
+  }
+}
+
+.sendbird-link-label .sendbird-label--color-onbackground-2 {
+  @include themed() {
+    color: t(on-bg-2);
+  }
+}
+
+.sendbird-link-label .sendbird-label--color-onbackground-3 {
+  @include themed() {
+    color: t(on-bg-3);
+  }
+}
+
+.sendbird-link-label .sendbird-label--color-oncontent-1 {
+  @include themed() {
+    color: t(on-content-1);
+  }
+}
+
+.sendbird-link-label .sendbird-label--color-oncontent-2 {
+  @include themed() {
+    color: t(on-content-2);
+  }
+}
+
+.sendbird-link-label .sendbird-label--color-primary {
+  @include themed() {
+    color: t(primary-3);
+  }
+}
+
+.sendbird-link-label .sendbird-label--color-error {
+  @include themed() {
+    color: t(error--3-2);
+  }
+}
+
+.sendbird-link-label .sendbird-label--color-secondary-3 {
+  @include themed() {
+    color: t(secondary-3);
+  }
+}

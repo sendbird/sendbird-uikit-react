@@ -1,0 +1,124 @@
+@import '../../styles/variables';
+
+.sendbird-message-input {
+  display: inline-block;
+  width: 100%;
+  position: relative;
+
+  .sendbird-message-input--textarea {
+    width: 100%;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    height: 56px;
+    overflow-y: hidden;
+    letter-spacing: normal;
+    padding: 18px 64px 18px 16px;;
+    box-sizing: border-box;
+    resize: none;
+    font-family: var(--sendbird-font-family-default);
+    background-color: inherit;
+    @include themed() {
+      color: t(on-bg-1);
+      caret-color: t(primary-3);
+      border: solid 1px t(on-bg-3);
+      background-color: t(bg--0-5);
+    }
+
+    &:focus {
+      outline: none;
+      @include themed() {
+        color: t(on-bg-1);
+        border: solid 1px t(primary--3-2);
+        box-shadow: t(shadow-message-input);
+      }
+    }
+
+    &:active {
+      @include themed() {
+        border: solid 1px var(--sendbird-message-input-border-active);
+        color: t(on-bg-1);
+      }
+    }
+  }
+
+  .sendbird-message-input--placeholder {
+    position: absolute;
+    pointer-events: none;
+    top: 18px;
+    left: 16px;
+    font-family: var(--sendbird-font-family-default);
+    font-size: 14px;
+    line-height: 1.43;
+    @include themed() {
+      color: t(on-bg-3);
+    }
+  }
+
+  .sendbird-message-input--attach {
+    position: absolute;
+    right: 12px;
+    bottom: 18px;
+    padding: 6px;
+  }
+
+  .sendbird-message-input--send {
+    position: absolute;
+    padding: 6px;
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .sendbird-message-input--attach-input {
+    display: none;
+  }
+}
+
+.sendbird-message-input__edit {
+  padding: 16px;
+  box-sizing: border-box;
+  @include themed() {
+    background-color: t(primary--1-bg--7);
+  }
+}
+
+.sendbird-message-input--edit-action {
+  text-align: right;
+  margin-top: 4px;
+  button:last-child {
+    margin-left: 8px;
+  }
+
+  .sendbird-message-input--edit-action__cancel {
+    width: 80px;
+    @include themed() {
+      border: solid 1px t(on-bg-3);
+    }
+  }
+
+  .sendbird-message-input--edit-action__save {
+    width: 80px;
+  }
+}
+
+.sendbird-message-input-form__disabled {
+  cursor: not-allowed;
+}
+
+.sendbird-message-input__disabled {
+  pointer-events: none;
+  cursor: disabled;
+  .sendbird-message-input--textarea {
+    @include themed() {
+      background-color: t(bg-1);
+    }
+  }
+  svg {
+    @include themed() {
+      fill: t(on-bg-3);
+    }
+  }
+}

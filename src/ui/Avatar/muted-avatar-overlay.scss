@@ -1,0 +1,24 @@
+@import '../../styles/variables';
+
+.sendbird-muted-avatar {
+  border-radius: 50%;
+  display: inline-block;
+  .sendbird-muted-avatar__icon {
+    position: relative;
+    .sendbird-icon {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+    }
+  }
+  .sendbird-muted-avatar__bg {
+    opacity: .5;
+    position: absolute;
+    border-radius: 50%;
+    top: 0;
+    left: 0;
+    @include themed() {
+      background-color: t(primary-4);
+    }
+  }
+}

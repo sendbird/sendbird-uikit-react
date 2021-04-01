@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReactionButton should do a snapshot test of the ReactionButton DOM 1`] = `
+<div
+  className="example-text sendbird-reaction-button"
+  onClick={[Function]}
+  onKeyDown={[Function]}
+  role="button"
+  style={
+    Object {
+      "height": "34px",
+      "width": "34px",
+    }
+  }
+  tabIndex={0}
+>
+  <div
+    className="sendbird-reaction-button__inner"
+  >
+    <div
+      className=" sendbird-icon "
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+      style={
+        Object {
+          "height": "28px",
+          "minHeight": "28px",
+          "minWidth": "28px",
+          "width": "28px",
+        }
+      }
+      tabIndex="0"
+    >
+      <test-file-stub />
+    </div>
+  </div>
+</div>
+`;

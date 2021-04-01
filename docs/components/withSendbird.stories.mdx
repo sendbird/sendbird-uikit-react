@@ -1,0 +1,63 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs|Components/withSendbird" />
+
+# withSendbird
+
+Since we use react context API to store the data in a top level component(see SendbirdProvider).
+If you want to access any data from the SendbirdProvider states, please use withSendbird HOC.
+We will also provide sendbirdSelectors with a bunch of useful selectors for performing various operations.
+You can also write your own custom memoized selectors
+
+# sendbirdSelectors
+
+Sendbird selectors will give you various common functionalities related to the SDK such as:
+
+* sendbirdSelectors.getConnect - To connect to Sendbird
+* sendbirdSelectors.getDisconnect - To disconnect the SDK
+* sendbirdSelectors.getUpdateUserInfo - To update current userInfo
+
+...
+
+## Specs
+
+```js
+* withSendbird(Component, <Optional MapContextToProps>)
+* getConnect @Returns fn(userId, accessToken<optional>) -> returns Promise(resolve, reject)
+* getDisconnect @Returns fn() -> returns Promise(resolve, reject)
+* getUpdateUserInfo @Returns fn(nickName, profileUrl) -> returns Promise(resolve, reject)
+```
+
+## Usage
+
+```js
+import {
+  SendbirdProvider,
+  withSendbird,
+  sendbirdSelectors,
+} from "sendbird-uikit-react";
+
+const MyButton = (props) => {
+  <button
+    onClick={() =>
+      props.disconnect().then((reject, response) => { ... });
+    }
+  >
+    Disconnect
+  </button>
+}
+
+const ButtonWithSendbird = withSendbird(MyButton, (state) => {
+  disconnect: sendbirdSelectors.getDisconnect(state),
+});
+
+const App = () => {
+  <SendbirdProvider userId=? appId=? ...>
+    <div>
+      ...
+      ...
+      <ButtonWithSendbird />
+    </div>
+  </SendbirdProvider>
+}
+```

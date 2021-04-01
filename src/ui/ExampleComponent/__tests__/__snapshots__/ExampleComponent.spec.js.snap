@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ExampleComponent should do a snapshot test of the ExampleComponent DOM 1`] = `
+<div>
+  This is an example :
+  <span
+    className="sendbird-text"
+  >
+    example-text
+  </span>
+</div>
+`;

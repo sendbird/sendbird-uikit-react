@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextButton should do a snapshot test of the TextButton DOM 1`] = `
+<div
+  className=" sendbird-color--onbackground-1 sendbird-textbutton "
+  onClick={[Function]}
+  onKeyPress={[Function]}
+  role="button"
+  tabIndex={0}
+>
+  Textbutton
+</div>
+`;

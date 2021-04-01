@@ -1,0 +1,114 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ChatHeader should do a snapshot test of the ChatHeader DOM 1`] = `
+<div
+  className="sendbird-chat-header"
+>
+  <div
+    className="sendbird-chat-header__left"
+  >
+    <div
+      className="sendbird-chat-header--avatar--group-channel sendbird-avatar"
+      role="button"
+      style={
+        Object {
+          "height": "32px",
+          "width": "32px",
+        }
+      }
+      tabIndex={0}
+    >
+      <div
+        className="sendbird-avatar-img sendbird-image-renderer"
+      >
+        <div
+          className="sendbird-image-renderer__image"
+          style={
+            Object {
+              "backgroundImage": "url()",
+              "backgroundPosition": "center",
+              "backgroundRepeat": "no-repeat",
+              "backgroundSize": "cover",
+              "borderRadius": null,
+              "height": "32px",
+              "width": "32px",
+            }
+          }
+        />
+        <img
+          alt=""
+          className="sendbird-image-renderer__hidden-image-loader"
+          onError={[Function]}
+          src=""
+        />
+      </div>
+    </div>
+    <span
+      className="sendbird-chat-header__left__title sendbird-label sendbird-label--h-2 sendbird-label--color-onbackground-1"
+    >
+      Headline 2
+    </span>
+    <span
+      className="sendbird-chat-header__left__subtitle sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-2"
+    >
+      Body text 2
+    </span>
+  </div>
+  <div
+    className="sendbird-chat-header__right"
+  >
+    <div
+      className="sendbird-chat-header__right__mute sendbird-icon "
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+      style={
+        Object {
+          "height": "24px",
+          "minHeight": "24px",
+          "minWidth": "24px",
+          "width": "24px",
+        }
+      }
+      tabIndex="0"
+    >
+      <test-file-stub />
+    </div>
+    <button
+      className="sendbird-chat-header__right__info sendbird-iconbutton "
+      disabled={false}
+      onBlur={[Function]}
+      onClick={[Function]}
+      style={
+        Object {
+          "height": "32px",
+          "width": "32px",
+        }
+      }
+      type="button"
+    >
+      <span
+        className="sendbird-iconbutton__inner"
+      >
+        <div
+          className=" sendbird-icon sendbird-icon-color--primary"
+          onClick={[Function]}
+          onKeyDown={[Function]}
+          role="button"
+          style={
+            Object {
+              "height": "24px",
+              "minHeight": "24px",
+              "minWidth": "24px",
+              "width": "24px",
+            }
+          }
+          tabIndex="0"
+        >
+          <test-file-stub />
+        </div>
+      </span>
+    </button>
+  </div>
+</div>
+`;

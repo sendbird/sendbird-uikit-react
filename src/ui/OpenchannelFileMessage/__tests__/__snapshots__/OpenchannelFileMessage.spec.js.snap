@@ -1,0 +1,159 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OpenchannelFileMessage should do a snapshot test of the OpenchannelFileMessage DOM 1`] = `
+<div
+  className=" sendbird-openchannel-file-message"
+>
+  <div
+    className="sendbird-openchannel-file-message__left"
+  >
+    <div
+      className="sendbird-context-menu"
+      style={
+        Object {
+          "display": "inline",
+        }
+      }
+    >
+      <div
+        className="sendbird-openchannel-file-message__left__avatar sendbird-avatar"
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        role="button"
+        style={
+          Object {
+            "height": "28px",
+            "width": "28px",
+          }
+        }
+        tabIndex={0}
+      >
+        <div
+          className="sendbird-avatar-img sendbird-image-renderer"
+        >
+          <div
+            className="sendbird-image-renderer__image"
+            style={
+              Object {
+                "backgroundImage": "url(https://static.sendbird.com/sample/profiles/profile_19_512px.png)",
+                "backgroundPosition": "center",
+                "backgroundRepeat": "no-repeat",
+                "backgroundSize": "cover",
+                "borderRadius": null,
+                "height": "28px",
+                "width": "28px",
+              }
+            }
+          />
+          <img
+            alt=""
+            className="sendbird-image-renderer__hidden-image-loader"
+            onError={[Function]}
+            src="https://static.sendbird.com/sample/profiles/profile_19_512px.png"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="sendbird-openchannel-file-message__right"
+  >
+    <div
+      className="sendbird-openchannel-file-message__right__title"
+    >
+      <span
+        className="sendbird-openchannel-file-message__right__title__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-secondary-3"
+      >
+        ME
+      </span>
+      <span
+        className="sendbird-openchannel-file-message__right__title__sent-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-3"
+      >
+        mock-date
+      </span>
+    </div>
+    <div
+      className="sendbird-openchannel-file-message__right__body"
+    >
+      <div
+        className="sendbird-openchannel-file-message__right__body__icon sendbird-icon sendbird-icon-color--primary"
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        role="button"
+        style={
+          Object {
+            "height": "48px",
+            "minHeight": "48px",
+            "minWidth": "48px",
+            "width": "48px",
+          }
+        }
+        tabIndex="0"
+      >
+        <test-file-stub />
+      </div>
+      <div
+        className="sendbird-openchannel-file-message__right__body__file-name sendbird-color--onbackground-1 sendbird-textbutton "
+        onClick={[Function]}
+        onKeyPress={[Function]}
+        role="button"
+        tabIndex={0}
+      >
+        <span
+          className="sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
+        >
+          72b35fef-acda-4e32-...4-37e1226b0615.pdf
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    className="sendbird-openchannel-file-message__context-menu"
+  >
+    <div
+      className="sendbird-context-menu"
+      style={
+        Object {
+          "display": "inline",
+        }
+      }
+    >
+      <button
+        className="sendbird-openchannel-file-message__context-menu__icon sendbird-iconbutton "
+        disabled={false}
+        onBlur={[Function]}
+        onClick={[Function]}
+        style={
+          Object {
+            "height": "32px",
+            "width": "32px",
+          }
+        }
+        type="button"
+      >
+        <span
+          className="sendbird-iconbutton__inner"
+        >
+          <div
+            className=" sendbird-icon "
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            role="button"
+            style={
+              Object {
+                "height": "24px",
+                "minHeight": "24px",
+                "minWidth": "24px",
+                "width": "24px",
+              }
+            }
+            tabIndex="0"
+          >
+            <test-file-stub />
+          </div>
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;

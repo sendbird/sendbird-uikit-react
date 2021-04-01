@@ -1,0 +1,33 @@
+.profile-component {
+  display: flex;
+  .profile-avatar {
+    height: 32px;
+    width: 32px;
+    img {
+      border-radius: 50%;
+      height: 100%;
+      width: 100%;
+    }
+  }
+  .profile-text {
+    margin-left: 12px;
+    .profile-name {
+      color: var(--gray-0);
+      font-size: 14px;
+      font-weight: 600;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.14;
+      letter-spacing: -0.2px;
+    }
+    .profile-nickname {
+      color: var(--gray-2);
+      font-size: 12px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.33;
+      letter-spacing: normal;
+    }
+  }
+}

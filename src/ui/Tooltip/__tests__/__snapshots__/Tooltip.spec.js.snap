@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tooltip should do a snapshot test of the ReactedUsers DOM 1`] = `
+<div
+  className="example-text sendbird-tooltip"
+>
+  <span
+    className="sendbird-tooltip__text sendbird-label sendbird-label--caption-2 sendbird-label--color-oncontent-1"
+  >
+    Sravan S, Hoon Baek, Chong Bu, Mickey, Leo Shin, Doo Rim, Tez Park, Harry Kim, and you
+  </span>
+</div>
+`;

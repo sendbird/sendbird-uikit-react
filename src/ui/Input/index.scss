@@ -1,0 +1,66 @@
+@import '../../styles/variables';
+
+.sendbird-input {
+  display: inline-block;
+  width: 100%;
+  height: 40px;
+  position: relative;
+  .sendbird-input__input {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    font-family: var(--sendbird-font-family-default);
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    padding: 10px 16px;
+    box-sizing: border-box;
+    background-color: inherit;
+    @include themed() {
+      color: t(on-bg-1);
+      caret-color: t(primary-3);
+      border: solid 1px t(on-bg-3);
+    }
+    &:focus {
+      outline: none;
+      @include themed() {
+        box-shadow: 0 1px 5px 0 t(on-bg-4), 0 0 1px 0 rgba(0, 0, 0, 0.16), 0 2px 1px 0 rgba(0, 0, 0, 0.08);
+        color: t(on-bg-1);
+        border: solid 2px t(primary-3);
+      }
+    }
+    &:active {
+      @include themed() {
+        box-shadow: 0 1px 5px 0 t(on-bg-4), 0 0 1px 0 rgba(0, 0, 0, 0.16), 0 2px 1px 0 rgba(0, 0, 0, 0.08);
+        color: t(on-bg-1);
+        border: solid 1px t(primary-3);
+      }
+    }
+    &:disabled {
+      cursor: not-allowed;
+      @include themed() {
+        background-color: t(bg-1);
+        color: t(on-bg-3);
+      }
+    }
+  }
+  .sendbird-input__placeholder {
+    position: absolute;
+    pointer-events: none;
+    top: 10px;
+    left: 16px;
+    font-family: var(--sendbird-font-family-default);
+    font-size: 14px;
+    line-height: 1.43;
+    @include themed() {
+      color: t(on-bg-3);
+    }
+  }
+}
+
+.sendbird-input-label {
+  margin: 4px 0;
+}

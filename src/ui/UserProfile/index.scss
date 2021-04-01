@@ -1,0 +1,51 @@
+@import '../../styles/variables';
+
+.sendbird__user-profile {
+  width: 320px;
+  border-radius: 4px;
+  padding: 24px;
+  box-sizing: border-box;
+  text-align: center;
+
+  @include themed() {
+    box-shadow: t(shadow-gradient-2);
+    background-color: t(bg--0-5);
+  }
+
+  .sendbird__user-profile-avatar {
+    margin: 8px 0px;
+  }
+
+  .sendbird__user-profile-name {
+    max-width: 270px;
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+  }
+
+
+  .sendbird__user-profile-message {
+    margin-top: 20px;
+    button {
+      width: 272px;
+    }
+  }
+
+  .sendbird__user-profile-seperator {
+    margin: 24px 0px;
+    height: 1px;
+    @include themed() {
+      background-color: t(on-bg-4);
+    }
+  }
+
+  .sendbird__user-profile-userId--label,
+  .sendbird__user-profile-userId--value {
+    display: block;
+    text-align: left;
+  }
+
+  .sendbird__user-profile-userId--label {
+    margin-bottom: 8px;
+  }
+}

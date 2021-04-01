@@ -1,0 +1,63 @@
+@import '../../styles/variables';
+
+.sendbird-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sendbird-modal__content {
+  width: 480px;
+  border-radius: 4px;
+  z-index: 10001;
+  padding: 18px 24px 24px 24px;
+  position: relative;
+  box-sizing: border-box;
+  @include themed() {
+    background-color: t(bg--0-5);
+    box-shadow: t(shadow-gradient-4);
+  }
+
+  .sendbird-modal__close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    cursor: pointer;
+    path {
+      @include themed() {
+        fill: t(on-bg-1);
+      }
+    }
+  }
+
+  .sendbird-modal__header {
+    margin-bottom: 16px;
+  }
+  // .sendbird-modal__body {}
+  .sendbird-modal__footer {
+    margin-top: 32px;
+    text-align: right;
+    .sendbird-button:last-child {
+      margin-left: 8px;
+      width: 80px;
+      height: 40px;
+    }
+  }
+}
+
+.sendbird-modal__backdrop {
+  position: fixed;
+  z-index: 10000;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  @include themed() {
+    background-color: t(overlay-2);
+  }
+}

@@ -1,0 +1,13 @@
+@import '../../styles/variables';
+
+.sendbird-chat-header--default-avatar {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  @include themed() {
+    background-color: t(secondary-3);
+  }
+}

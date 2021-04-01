@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SortByRow should do a snapshot test of the SortByRow DOM 1`] = `
+Array [
+  <div
+    className="exam-classname sendbird-sort-by-row"
+    style={
+      Object {
+        "height": 40,
+        "width": 352,
+      }
+    }
+  >
+    one
+    two
+    three
+    four
+    five
+    six
+    seven
+    eight
+  </div>,
+  <div
+    className="exam-classname sendbird-sort-by-row"
+    style={
+      Object {
+        "height": 40,
+        "width": 352,
+      }
+    }
+  >
+    nine
+  </div>,
+]
+`;

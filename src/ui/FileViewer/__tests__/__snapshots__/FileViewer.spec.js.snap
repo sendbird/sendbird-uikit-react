@@ -1,0 +1,149 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
+<div
+  className="sendbird-fileviewer"
+>
+  <div
+    className="sendbird-fileviewer__header"
+  >
+    <div
+      className="sendbird-fileviewer__header__left"
+    >
+      <div
+        className="sendbird-fileviewer__header__left__avatar"
+      >
+        <div
+          className=" sendbird-avatar"
+          role="button"
+          style={
+            Object {
+              "height": "32px",
+              "width": "32px",
+            }
+          }
+          tabIndex={0}
+        >
+          <div
+            className="sendbird-avatar-img sendbird-image-renderer"
+          >
+            <div
+              className="sendbird-image-renderer__image"
+              style={
+                Object {
+                  "backgroundImage": "url(https://static.sendbird.com/sample/profiles/profile_15_512px.png)",
+                  "backgroundPosition": "center",
+                  "backgroundRepeat": "no-repeat",
+                  "backgroundSize": "cover",
+                  "borderRadius": null,
+                  "height": "32px",
+                  "width": "32px",
+                }
+              }
+            />
+            <img
+              alt=""
+              className="sendbird-image-renderer__hidden-image-loader"
+              onError={[Function]}
+              src="https://static.sendbird.com/sample/profiles/profile_15_512px.png"
+            />
+          </div>
+        </div>
+      </div>
+      <span
+        className="sendbird-fileviewer__header__left__filename sendbird-label sendbird-label--h-2 sendbird-label--color-onbackground-1"
+      >
+        sent-mail (1).png
+      </span>
+      <span
+        className="sendbird-fileviewer__header__left__sender-name sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-2"
+      >
+        hoon102
+      </span>
+    </div>
+    <div
+      className="sendbird-fileviewer__header__right"
+    >
+      <div
+        className="sendbird-fileviewer__header__right__actions"
+      >
+        <a
+          className="sendbird-fileviewer__header__right__actions__download"
+          href="https://sendbird-staging.s3.amazonaws.com/26FA710D-A7F6-4483-ABEA-1F07A07A112E/upload/n/e49e0a4111d4445a8840bd51f3c9d933.png"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <div
+            className=" sendbird-icon "
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            role="button"
+            style={
+              Object {
+                "height": "24px",
+                "minHeight": "24px",
+                "minWidth": "24px",
+                "width": "24px",
+              }
+            }
+            tabIndex="0"
+          >
+            <test-file-stub />
+          </div>
+        </a>
+        <div
+          className="sendbird-fileviewer__header__right__actions__delete"
+        >
+          <div
+            className=" sendbird-icon "
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            role="button"
+            style={
+              Object {
+                "height": "24px",
+                "minHeight": "24px",
+                "minWidth": "24px",
+                "width": "24px",
+              }
+            }
+            tabIndex="0"
+          >
+            <test-file-stub />
+          </div>
+        </div>
+      </div>
+      <div
+        className="sendbird-fileviewer__header__right__actions__close"
+      >
+        <div
+          className=" sendbird-icon "
+          onClick={[Function]}
+          onKeyDown={[Function]}
+          role="button"
+          style={
+            Object {
+              "height": "24px",
+              "minHeight": "24px",
+              "minWidth": "24px",
+              "width": "24px",
+            }
+          }
+          tabIndex="0"
+        >
+          <test-file-stub />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="sendbird-fileviewer__content"
+  >
+    <img
+      alt="sent-mail (1).png"
+      className="sendbird-fileviewer__content__img"
+      src="https://sendbird-staging.s3.amazonaws.com/26FA710D-A7F6-4483-ABEA-1F07A07A112E/upload/n/e49e0a4111d4445a8840bd51f3c9d933.png"
+    />
+  </div>
+</div>
+`;

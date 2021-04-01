@@ -1,0 +1,95 @@
+@import '../../styles/variables';
+
+.sendbird-conversation {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+  @include themed() {
+    background-color: t(bg-0);
+    border: 1px solid t(on-bg-4);
+  }
+}
+
+.sendbird-conversation__messages {
+  overflow-y: auto;
+  flex: 1 1 0;
+  order: 2;
+}
+
+.sendbird-conversation__messages-list {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.sendbird-conversation__footer {
+  order: 3;
+  padding: 0px 24px 24px 24px;
+}
+
+@keyframes sbHighlight {
+  0% {
+    background-color: #FFF2B6;
+  }
+  99% {
+    background-color: #FFF2B6;
+  }
+}
+
+@keyframes sbTextHighlight {
+  0% {
+    color: var(--sendbird-dark-onlight-01);
+  }
+  99% {
+    color: var(--sendbird-dark-onlight-01);
+  }
+}
+
+.sendbird-msg-hoc__animated {
+  .sendbird-user-message__text-balloon {
+    .sendbird-user-message__text-balloon__inner {
+      animation-name: sbHighlight;
+      animation-duration: 1.6s;
+      animation-fill-mode: forwards;
+    }
+    .sendbird-user-message__text-balloon__inner__text-place {
+      .sendbird-label {
+        animation-name: sbTextHighlight;
+        animation-duration: 1.6s;
+        animation-fill-mode: forwards;
+      }
+    }
+  }
+
+  .sendbird-file-message__tooltip {
+    animation-name: sbHighlight;
+    animation-duration: 1.6s;
+    animation-fill-mode: forwards;
+    .sendbird-file-message__tooltip__inner .sendbird-label {
+      animation-name: sbTextHighlight;
+      animation-duration: 1.6s;
+      animation-fill-mode: forwards;
+    }
+  }
+}
+
+.sendbird-conversation__scroll-container {
+  display: flex;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex-direction: column;
+  .sendbird-conversation__padding {
+    flex: 1 1 0;
+  }
+}
+
+.sendbird-conversation__footer {
+  position: relative;
+  .sendbird-conversation__typing-indicator {
+    position: absolute;
+    bottom: 8px;
+  }
+}

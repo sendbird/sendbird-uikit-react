@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConnectionStatus should render ConnectionStatus 1`] = `
+<div
+  className="sendbird-connection-status"
+>
+  <span
+    className="sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-2"
+  >
+    Trying to connect…
+  </span>
+  <div
+    className=" sendbird-icon sendbird-icon-color--sent"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    role="button"
+    style={
+      Object {
+        "height": "14px",
+        "minHeight": "14px",
+        "minWidth": "14px",
+        "width": "14px",
+      }
+    }
+    tabIndex="0"
+  >
+    <test-file-stub />
+  </div>
+</div>
+`;

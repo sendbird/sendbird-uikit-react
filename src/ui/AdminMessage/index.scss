@@ -1,0 +1,11 @@
+@import '../../styles/variables';
+
+.sendbird-admin-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .sendbird-admin-message__text {
+    display: flex;
+  }
+}

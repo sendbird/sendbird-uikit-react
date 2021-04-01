@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IconButton should do a snapshot test of the icon button DOM 1`] = `
+<button
+  className=" sendbird-iconbutton "
+  disabled={false}
+  onBlur={[Function]}
+  onClick={[Function]}
+  style={
+    Object {
+      "height": "56px",
+      "width": "56px",
+    }
+  }
+  type="button"
+>
+  <span
+    className="sendbird-iconbutton__inner"
+  >
+    <test-file-stub />
+  </span>
+</button>
+`;

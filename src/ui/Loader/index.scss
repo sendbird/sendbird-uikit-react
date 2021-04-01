@@ -1,0 +1,14 @@
+@import '../../styles/variables';
+
+.sendbird-loader {
+  display: inline-block;
+  animation: 1s infinite linear;
+  animation-name: rotate;
+}
+
+@keyframes rotate {
+  from {
+      transform: rotate(0)
+   }
+  to {transform: rotate(360deg)}
+}
