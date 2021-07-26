@@ -48,9 +48,95 @@ export const darkTheme = () => fitPageSize(
     appId={appId}
     userId={'leo.sub'}
     theme={'dark'}
-    showSearchIcon config={{ logLevel: 'all' }}
+    showSearchIcon
+    config={{ logLevel: 'all' }}
   />
 );
+
+export const login = () => {
+  const [isLoginPage, setIsLoginPage] = useState(true);
+  const [userId, setUserId] = useState('hoon100');
+  const [nickname, setNickname] = useState('hoon100');
+  const [theme, setTheme] = useState('light');
+  const [messageSearch, setMessageSearch] = useState(true);
+  const [profileEdit, setProfileEdit] = useState(true);
+  return isLoginPage
+    ? fitPageSize(
+      <div
+        className="login-container"
+        style={{
+          height: '100%',
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+        }}
+      >
+        <h1>LogIn</h1>
+        <input
+          className="input__user-id"
+          type="text"
+          placeholder="user id"
+          onChange={(e) => setUserId(e.target.value)}
+        />
+        <input
+          className="input__nickname"
+          type="text"
+          placeholder="nickname"
+          onChange={(e) => setNickname(e.target.value)}
+        />
+        <input
+          className="input__toggle-theme"
+          type="button"
+          value={`Use ${theme} theme`}
+          onClick={() => {
+            if (theme === 'light') {
+              setTheme('dark');
+            } else {
+              setTheme('light');
+            }
+          }}
+        />
+        <input
+          className="input__toggle-message-search"
+          type="button"
+          value={
+            messageSearch
+            ? 'Use MessageSearch'
+            : 'Not use MessageSearch'
+          }
+          onClick={() => setMessageSearch(!messageSearch)}
+        />
+        <input
+          className="input__toggle-profile-edit"
+          type="button"
+          value={
+            profileEdit
+            ? 'Use ProfileEdit'
+            : 'Not use ProfileEdit'
+          }
+          onClick={() => setProfileEdit(!profileEdit)}
+        />
+        <input
+          className="login-submit"
+          type="submit"
+          value="Submit"
+          onClick={() => setIsLoginPage(false)}
+        />
+      </div>
+    )
+    : fitPageSize(
+      <App
+        appId={appId}
+        userId={userId}
+        nickname={nickname}
+        theme={theme}
+        showSearchIcon={messageSearch}
+        allowProfileEdit={profileEdit}
+      />
+    )
+};
 
 export const updateProfile = () => {
   return fitPageSize(

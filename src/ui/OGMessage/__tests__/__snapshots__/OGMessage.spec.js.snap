@@ -155,6 +155,12 @@ exports[`OGMessage should do a snapshot test of the OGMessage DOM 1`] = `
         >
           <div
             className="sendbird-outgoing-og-message__thumbnail__image sendbird-image-renderer"
+            style={
+              Object {
+                "height": "180px",
+                "width": "320px",
+              }
+            }
           >
             <div
               className="sendbird-image-renderer__image"
@@ -166,6 +172,7 @@ exports[`OGMessage should do a snapshot test of the OGMessage DOM 1`] = `
                   "backgroundSize": "cover",
                   "borderRadius": null,
                   "height": "180px",
+                  "position": "absolute",
                   "width": "320px",
                 }
               }
@@ -174,6 +181,7 @@ exports[`OGMessage should do a snapshot test of the OGMessage DOM 1`] = `
               alt="test"
               className="sendbird-image-renderer__hidden-image-loader"
               onError={[Function]}
+              onLoad={[Function]}
               src="https://static.sendbird.com/sample/profiles/profile_12_512px.png"
             />
           </div>

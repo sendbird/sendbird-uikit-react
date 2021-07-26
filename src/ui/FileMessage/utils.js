@@ -17,7 +17,15 @@ export const getIsSentFromStatus = (status) => (
   || status === MessageStatusType.READ
 );
 
+export const getIsSentFromSendingStatus = (message = {}) => {
+  if (message.sendingStatus && typeof message.sendingStatus === 'string') {
+    return message.sendingStatus === 'none' || message.sendingStatus === 'succeeded';
+  }
+  return false;
+};
+
 export default {
   truncate,
   getIsSentFromStatus,
+  getIsSentFromSendingStatus,
 };

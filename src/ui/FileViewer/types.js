@@ -18,6 +18,7 @@ const SUPPORTED_MIMES = {
 
 export const isImage = (type) => SUPPORTED_MIMES.IMAGE.indexOf(type) >= 0;
 export const isVideo = (type) => SUPPORTED_MIMES.VIDEO.indexOf(type) >= 0;
+export const isGif = (type) => type === 'image/gif';
 export const unSupported = (type) => !(isImage(type) || isVideo(type));
 
 export default SUPPORTED_MIMES;

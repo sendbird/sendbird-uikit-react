@@ -42,6 +42,12 @@ exports[`Message should do a snapshot test of the Message DOM 1`] = `
           >
             <div
               className="sendbird-avatar-img sendbird-image-renderer"
+              style={
+                Object {
+                  "height": "28px",
+                  "width": "28px",
+                }
+              }
             >
               <div
                 className="sendbird-image-renderer__image"
@@ -53,6 +59,7 @@ exports[`Message should do a snapshot test of the Message DOM 1`] = `
                     "backgroundSize": "cover",
                     "borderRadius": null,
                     "height": "28px",
+                    "position": "absolute",
                     "width": "28px",
                   }
                 }
@@ -61,6 +68,7 @@ exports[`Message should do a snapshot test of the Message DOM 1`] = `
                 alt=""
                 className="sendbird-image-renderer__hidden-image-loader"
                 onError={[Function]}
+                onLoad={[Function]}
                 src="https://static.sendbird.com/sample/profiles/profile_33_512px.png"
               />
             </div>
@@ -117,6 +125,12 @@ exports[`Message should do a snapshot test of the Message DOM 1`] = `
                         >
                           <div
                             className=" sendbird-image-renderer"
+                            style={
+                              Object {
+                                "height": "20px",
+                                "width": "20px",
+                              }
+                            }
                           >
                             <div
                               className="sendbird-image-renderer__image"
@@ -128,6 +142,7 @@ exports[`Message should do a snapshot test of the Message DOM 1`] = `
                                   "backgroundSize": "cover",
                                   "borderRadius": "50%",
                                   "height": "20px",
+                                  "position": "absolute",
                                   "width": "20px",
                                 }
                               }
@@ -136,6 +151,7 @@ exports[`Message should do a snapshot test of the Message DOM 1`] = `
                               alt=""
                               className="sendbird-image-renderer__hidden-image-loader"
                               onError={[Function]}
+                              onLoad={[Function]}
                               src="virtual-url-001"
                             />
                           </div>
@@ -174,6 +190,12 @@ exports[`Message should do a snapshot test of the Message DOM 1`] = `
                         >
                           <div
                             className=" sendbird-image-renderer"
+                            style={
+                              Object {
+                                "height": "20px",
+                                "width": "20px",
+                              }
+                            }
                           >
                             <div
                               className="sendbird-image-renderer__image"
@@ -185,6 +207,7 @@ exports[`Message should do a snapshot test of the Message DOM 1`] = `
                                   "backgroundSize": "cover",
                                   "borderRadius": "50%",
                                   "height": "20px",
+                                  "position": "absolute",
                                   "width": "20px",
                                 }
                               }
@@ -193,6 +216,7 @@ exports[`Message should do a snapshot test of the Message DOM 1`] = `
                               alt=""
                               className="sendbird-image-renderer__hidden-image-loader"
                               onError={[Function]}
+                              onLoad={[Function]}
                               src="virtual-url-002"
                             />
                           </div>

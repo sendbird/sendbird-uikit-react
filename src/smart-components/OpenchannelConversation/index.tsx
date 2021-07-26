@@ -61,12 +61,13 @@ interface Props extends OpenChannelProps {
 }
 
 export const OpenchannelConversation = (props: Props): JSX.Element => {
-  // props
   const {
-    useMessageGrouping,
-    channelUrl,
+    // internal props
     stores,
     config,
+    // normal props
+    useMessageGrouping,
+    channelUrl,
     queries = {},
     disableUserProfile,
     fetchingParticipants = false, // We didn't decide to support fetching participant list

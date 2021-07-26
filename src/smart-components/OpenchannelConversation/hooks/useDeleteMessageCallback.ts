@@ -33,7 +33,11 @@ function useDeleteMessageCallback(
         callback();
       }
     } else {
-      currentOpenChannel.deleteMessage(message, (error) => {
+      if (!(message.messageType ==='file' || message.messageType === 'user')) {
+        return;
+      }
+      const messageToDelete = message as SendBird.UserMessage;
+      currentOpenChannel.deleteMessage(messageToDelete, (error) => {
         logger.info('OpenChannel | useDeleteMessageCallback: Deleting message on server', sendingStatus);
         if (callback) {
           callback();

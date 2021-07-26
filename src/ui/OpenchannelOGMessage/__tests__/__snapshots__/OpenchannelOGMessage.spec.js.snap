@@ -33,6 +33,12 @@ exports[`OpenchannelOGMessage should do a snapshot test of the OpenchannelOGMess
         >
           <div
             className="sendbird-avatar-img sendbird-image-renderer"
+            style={
+              Object {
+                "height": "28px",
+                "width": "28px",
+              }
+            }
           >
             <div
               className="sendbird-image-renderer__image"
@@ -44,6 +50,7 @@ exports[`OpenchannelOGMessage should do a snapshot test of the OpenchannelOGMess
                   "backgroundSize": "cover",
                   "borderRadius": null,
                   "height": "28px",
+                  "position": "absolute",
                   "width": "28px",
                 }
               }
@@ -52,6 +59,7 @@ exports[`OpenchannelOGMessage should do a snapshot test of the OpenchannelOGMess
               alt=""
               className="sendbird-image-renderer__hidden-image-loader"
               onError={[Function]}
+              onLoad={[Function]}
               src="https://static.sendbird.com/sample/profiles/profile_12_512px.png"
             />
           </div>
@@ -191,6 +199,12 @@ exports[`OpenchannelOGMessage should do a snapshot test of the OpenchannelOGMess
       >
         <div
           className="sendbird-openchannel-og-message__bottom__og-tag__thumbnail__image sendbird-image-renderer"
+          style={
+            Object {
+              "height": "189px",
+              "width": null,
+            }
+          }
         >
           <div
             className="sendbird-image-renderer__image"
@@ -202,6 +216,7 @@ exports[`OpenchannelOGMessage should do a snapshot test of the OpenchannelOGMess
                 "backgroundSize": "cover",
                 "borderRadius": null,
                 "height": "189px",
+                "position": "absolute",
                 "width": null,
               }
             }
@@ -210,6 +225,7 @@ exports[`OpenchannelOGMessage should do a snapshot test of the OpenchannelOGMess
             alt="test"
             className="sendbird-image-renderer__hidden-image-loader"
             onError={[Function]}
+            onLoad={[Function]}
             src="https://static.sendbird.com/sample/profiles/profile_12_512px.png"
           />
         </div>

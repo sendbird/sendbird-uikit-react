@@ -26,6 +26,12 @@ exports[`FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
         >
           <div
             className="sendbird-avatar-img sendbird-image-renderer"
+            style={
+              Object {
+                "height": "32px",
+                "width": "32px",
+              }
+            }
           >
             <div
               className="sendbird-image-renderer__image"
@@ -37,6 +43,7 @@ exports[`FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
                   "backgroundSize": "cover",
                   "borderRadius": null,
                   "height": "32px",
+                  "position": "absolute",
                   "width": "32px",
                 }
               }
@@ -45,6 +52,7 @@ exports[`FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
               alt=""
               className="sendbird-image-renderer__hidden-image-loader"
               onError={[Function]}
+              onLoad={[Function]}
               src="https://static.sendbird.com/sample/profiles/profile_15_512px.png"
             />
           </div>

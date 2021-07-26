@@ -1,4 +1,10 @@
-import React, { useContext, useRef } from 'react';
+import React, {
+  useRef,
+  useMemo,
+  useState,
+  useEffect,
+  useContext,
+} from 'react';
 import format from 'date-fns/format';
 import './index.scss';
 import { SUPPORTING_TYPES, getSupportingFileType } from './utils';
@@ -58,8 +64,21 @@ export default function OpenchannelThumbnailMessage({
   const thumbnailUrl = (thumbnails && thumbnails.length > 0 && thumbnails[0].url) || null;
   const { stringSet } = useContext(LocalizationContext);
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
+  const [messageWidth, setMessageWidth] = useState(360);
+  const messageRef = useRef(null);
   const contextMenuRef = useRef(null);
   const avatarRef = useRef(null);
+
+  const memorizedThumbnailPlaceHolder = useMemo(() => (type) => ({ style }) => ( // eslint-disable-line
+    <div style={style}>
+      <Icon
+        type={type}
+        fillColor={IconColors.ON_BACKGROUND_2}
+        width="56px"
+        height="56px"
+        />
+    </div>
+  ), []);
 
   const isByMe = checkIsByMe(message, userId);
   const isMessageSent = checkIsSent(status);
@@ -67,11 +86,19 @@ export default function OpenchannelThumbnailMessage({
   const isFailed = checkIsFailed(status);
   const sender = getSenderFromMessage(message);
 
+  useEffect(() => {
+    const thumbnailWidth = messageRef?.current?.clientWidth - 80;
+    setMessageWidth(thumbnailWidth > 360 ? 360 : thumbnailWidth);
+  }, []);
+
   return (
-    <div className={[
-      ...(Array.isArray(className) ? className : [className]),
-      'sendbird-openchannel-thumbnail-message',
-    ].join(' ')}>
+    <div
+      className={[
+        ...(Array.isArray(className) ? className : [className]),
+        'sendbird-openchannel-thumbnail-message',
+      ].join(' ')}
+      ref={messageRef}
+    >
       <div className="sendbird-openchannel-thumbnail-message__left">
         {
           !chainTop && (
@@ -179,8 +206,10 @@ export default function OpenchannelThumbnailMessage({
                               <ImageRenderer
                                 className="sendbird-openchannel-thumbnail-message__right__body__wrap__video"
                                 url={thumbnailUrl}
-                                alt="image"
+                                width={messageWidth}
                                 height="270px"
+                                alt="image"
+                                placeHolder={memorizedThumbnailPlaceHolder(IconTypes.PLAY)}
                               />
                             )
                             : (
@@ -192,6 +221,7 @@ export default function OpenchannelThumbnailMessage({
                         <Icon
                           className="sendbird-openchannel-thumbnail-message__right__body__wrap__video__icon"
                           type={IconTypes.PLAY}
+                          fillColor={IconColors.ON_BACKGROUND_2}
                           width="56px"
                           height="56px"
                         />
@@ -214,8 +244,9 @@ export default function OpenchannelThumbnailMessage({
                         className="sendbird-openchannel-thumbnail-message__right__body__wrap__image"
                         url={thumbnailUrl || url || localUrl}
                         alt="image"
-                        width="360px"
+                        width={messageWidth}
                         height="270px"
+                        placeHolder={memorizedThumbnailPlaceHolder(IconTypes.PHOTO)}
                       />
                     )
                     : (

@@ -4,7 +4,6 @@ import { LocalizationContext } from '../../lib/LocalizationContext';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import uuidv4 from '../../utils/uuid';
 
-
 export default function useMemoizedMessageText({
   message,
   updatedAt,

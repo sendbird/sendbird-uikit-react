@@ -211,16 +211,7 @@ interface SendBirdStateStore {
   userStore: UserStore;
 }
 
-export type MessageSearchQueryType = {
-  limit: number,
-  reverse: boolean,
-  exactMatch: boolean,
-  channelUrl: string,
-  channelCustomType: string,
-  messageTimestampFrom: number,
-  messageTimestampTo: number,
-  order: 'ts' | 'score',
-};
+export type MessageSearchQueryType = Sendbird.MessageSearchQueryOptions;
 
 export type Sdk = Sendbird.SendBirdInstance;
 

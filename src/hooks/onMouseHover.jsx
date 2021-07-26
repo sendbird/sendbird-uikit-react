@@ -20,11 +20,15 @@ const useMouseHover = ({
 
   useEffect(() => {
     const { current } = ref;
-    current.addEventListener(MOUSE_ENTER, handleMouseOver);
-    current.addEventListener(MOUSE_LEAVE, handleMouseOut);
+    if (current) {
+      current.addEventListener(MOUSE_ENTER, handleMouseOver);
+      current.addEventListener(MOUSE_LEAVE, handleMouseOut);
+    }
     return () => {
-      current.removeEventListener(MOUSE_ENTER, handleMouseOver);
-      current.removeEventListener(MOUSE_LEAVE, handleMouseOut);
+      if (current) {
+        current.removeEventListener(MOUSE_ENTER, handleMouseOver);
+        current.removeEventListener(MOUSE_LEAVE, handleMouseOut);
+      }
     };
   });
 };

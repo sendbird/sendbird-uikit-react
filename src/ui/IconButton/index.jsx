@@ -28,7 +28,7 @@ const IconButton = React.forwardRef((props, ref) => {
       ].join(' ')}
       disabled={disabled}
       ref={ref}
-      type={type}
+      type={type} // eslint-disable-line react/button-has-type
       style={{
         ...style,
         height,

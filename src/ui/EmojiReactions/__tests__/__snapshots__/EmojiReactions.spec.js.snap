@@ -32,6 +32,12 @@ exports[`EmojiReactions should do a snapshot test of the EmojiReactions DOM 1`] 
             >
               <div
                 className=" sendbird-image-renderer"
+                style={
+                  Object {
+                    "height": "20px",
+                    "width": "20px",
+                  }
+                }
               >
                 <div
                   className="sendbird-image-renderer__image"
@@ -43,6 +49,7 @@ exports[`EmojiReactions should do a snapshot test of the EmojiReactions DOM 1`] 
                       "backgroundSize": "cover",
                       "borderRadius": "50%",
                       "height": "20px",
+                      "position": "absolute",
                       "width": "20px",
                     }
                   }
@@ -51,6 +58,7 @@ exports[`EmojiReactions should do a snapshot test of the EmojiReactions DOM 1`] 
                   alt=""
                   className="sendbird-image-renderer__hidden-image-loader"
                   onError={[Function]}
+                  onLoad={[Function]}
                   src="https://static.sendbird.com/sample/profiles/profile_12_512px.png"
                 />
               </div>

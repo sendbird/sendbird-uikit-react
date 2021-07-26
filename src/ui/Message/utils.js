@@ -41,6 +41,13 @@ export const getIsSentFromStatus = (status) => (
   || status === MessageStatusType.READ
 );
 
+export const getIsSentFromSendingStatus = (message = {}) => {
+  if (message.sendingStatus && typeof message.sendingStatus === 'string') {
+    return message.sendingStatus === 'none' || message.sendingStatus === 'succeeded';
+  }
+  return false;
+};
+
 export const createUrlTester = (regexp) => (text) => regexp.test(text);
 
 export default {
@@ -49,5 +56,6 @@ export default {
   getSenderName,
   getSenderProfileUrl,
   getIsSentFromStatus,
+  getIsSentFromSendingStatus,
   createUrlTester,
 };

@@ -2,7 +2,9 @@
 
 .sendbird-iconbutton {
   color: var(--sendbird-iconbutton-color);
-  display: inline-block;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   padding: 3px;
   background-color: transparent;
   cursor: pointer;

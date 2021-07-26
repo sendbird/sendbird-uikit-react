@@ -14,10 +14,7 @@ interface DefaultComponentProps {
   height: string | number,
 }
 
-const defaultComponent = ({
-  width,
-  height,
-}: DefaultComponentProps) => (): ReactElement => {
+const DefaultComponent = (width, height): ReactElement => {
   let iconWidth = pxToNumber(width);
   let iconHeight = pxToNumber(height);
   if (typeof iconWidth === 'number') {
@@ -39,11 +36,19 @@ const defaultComponent = ({
   );
 };
 
+const _defaultComponent = ({
+  width,
+  height,
+}: DefaultComponentProps) => (
+  <DefaultComponent width={width} height={height} />
+)
+
 interface AvatarInnerProps {
   height: string | number,
   width: string | number,
   src?: string | Array<string>,
   alt?: string,
+  customDefaultComponent?({ width, height }: { width: number | string, height: number | string }): ReactElement;
 }
 
 export const AvatarInner = ({
@@ -51,7 +56,10 @@ export const AvatarInner = ({
   alt = '',
   height,
   width,
+  customDefaultComponent,
 }: AvatarInnerProps): ReactElement => {
+  const defaultComponent = () => customDefaultComponent ? customDefaultComponent({ width, height }) : _defaultComponent({ width, height });
+
   if (typeof src === 'string') {
     return (
       <ImageRenderer
@@ -60,7 +68,7 @@ export const AvatarInner = ({
         height={height}
         width={width}
         alt={alt}
-        defaultComponent={defaultComponent({ height, width })}
+        defaultComponent={defaultComponent}
       />
     );
   }
@@ -74,7 +82,7 @@ export const AvatarInner = ({
           height={height}
           width={width}
           alt={alt}
-          defaultComponent={defaultComponent({ height, width })}
+          defaultComponent={defaultComponent}
         />
       );
     }
@@ -88,7 +96,7 @@ export const AvatarInner = ({
             height={height}
             width={width}
             alt={alt}
-            defaultComponent={defaultComponent({ height, width })}
+            defaultComponent={defaultComponent}
           />
           <ImageRenderer
             className={imageRendererClassName}
@@ -96,7 +104,7 @@ export const AvatarInner = ({
             height={height}
             width={width}
             alt={alt}
-            defaultComponent={defaultComponent({ height, width })}
+            defaultComponent={defaultComponent}
           />
         </div>
       );
@@ -112,7 +120,7 @@ export const AvatarInner = ({
               height={height}
               width={width}
               alt={alt}
-              defaultComponent={defaultComponent({ height, width })}
+              defaultComponent={defaultComponent}
             />
           </div>
           <div className="sendbird-avatar--inner__three-child--lower">
@@ -122,7 +130,7 @@ export const AvatarInner = ({
               height={height}
               width={width}
               alt={alt}
-              defaultComponent={defaultComponent({ height, width })}
+              defaultComponent={defaultComponent}
             />
             <ImageRenderer
               className={imageRendererClassName}
@@ -130,7 +138,7 @@ export const AvatarInner = ({
               height={height}
               width={width}
               alt={alt}
-              defaultComponent={defaultComponent({ height, width })}
+              defaultComponent={defaultComponent}
             />
           </div>
         </>
@@ -149,7 +157,7 @@ export const AvatarInner = ({
                 width={width}
                 alt={alt}
                 key={uuidv4()}
-                defaultComponent={defaultComponent({ height, width })}
+                defaultComponent={defaultComponent}
               />
             ))
         }
@@ -164,28 +172,30 @@ export const AvatarInner = ({
       height={height}
       width={width}
       alt={alt}
-      defaultComponent={defaultComponent({ height, width })}
+      defaultComponent={defaultComponent}
     />
   );
 };
 
 interface AvatarProps {
+  className?: string | Array<string>,
   height?: string | number,
   width?: string | number,
   src?: string | Array<string>,
   alt?: string,
   onClick?(): void,
-  className?: string | Array<string>,
+  customDefaultComponent?({ width, height }: { width: number | string, height: number | string }): ReactElement;
 }
 
 function Avatar(
   {
+    className = '',
     src = '',
     alt = '',
     width = '56px',
     height = '56px',
     onClick,
-    className = '',
+    customDefaultComponent,
   }: AvatarProps,
   ref: React.Ref<HTMLDivElement>,
 ): ReactElement {
@@ -207,6 +217,7 @@ function Avatar(
         width={width}
         height={height}
         alt={alt}
+        customDefaultComponent={customDefaultComponent}
       />
     </div>
   );

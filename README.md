@@ -1,4 +1,4 @@
-# sendbird-uikit-react
+# sendbird-uikit
 
 > React based UI kit based on sendbird javascript SDK
 
@@ -27,17 +27,24 @@ With Sendbird UI Kit React, we export these components:
 ### Prerequisites
 
 You need to install:
-* nodejs 12.xx LTS https://nodejs.org/en/download/
-* npm 6.8 or above
+* nodejs 14 LTS https://nodejs.org/en/download/
+* npm 7 or above
+
+```
+npm 14 deprecated warnings for fsevents& chokidar@2.1.8 will be fixed when storybook is updated to webpack 5
+https://github.com/storybookjs/storybook/issues/12425#issuecomment-723043137
+```
 
 We tried development on Mac OS / Linux systems. You might encounter problems in running `npm run build` in Windows machines
 
- ### Development
-We use storybook for development and rollup for building bundled JS file
-Make sure you have nodejs and npm installed and follow these steps:
+### Development
+
+We use storybook for development and rollup for building the npm distribution(bundled JS file)
+Make sure you have nodejs and npm installed and run
+
 ```
 Make a copy of env.example and save it as .env
-Inside the .env file, set your appId  `STORYBOOK_APP_ID=appId (no quotes)`
+Set your appId STORYBOOK_APP_ID
 npm install
 npm run storybook
 ```
@@ -53,6 +60,11 @@ npm run storybook
 We use rollupJS for building the production bundle script that you want to use inside your applications.
 
 We have both esm and commonjs output
+
+```
+rollup -c
+```
+or
 
 ```
 npm run build
@@ -90,4 +102,3 @@ npm run lint
   `export NewComponent from './src/location/of/NewComponent';`
 3. Add the following line to './rollup.config.js' `input`
   `NewComponent: 'src/location/of/NewComponent',`
-

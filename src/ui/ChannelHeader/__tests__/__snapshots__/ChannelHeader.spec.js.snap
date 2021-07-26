@@ -27,6 +27,12 @@ exports[`ChannelHeader should create a snapshot of a default ChannelHeader compo
       >
         <div
           className="sendbird-avatar-img sendbird-image-renderer"
+          style={
+            Object {
+              "height": "32px",
+              "width": "32px",
+            }
+          }
         >
           <div
             className="sendbird-image-renderer__image"
@@ -38,6 +44,7 @@ exports[`ChannelHeader should create a snapshot of a default ChannelHeader compo
                 "backgroundSize": "cover",
                 "borderRadius": null,
                 "height": "32px",
+                "position": "absolute",
                 "width": "32px",
               }
             }
@@ -46,6 +53,7 @@ exports[`ChannelHeader should create a snapshot of a default ChannelHeader compo
             alt=""
             className="sendbird-image-renderer__hidden-image-loader"
             onError={[Function]}
+            onLoad={[Function]}
             src=""
           />
         </div>

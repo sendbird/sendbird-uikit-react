@@ -131,7 +131,7 @@ export default function OpenchannelOGMessage({
 
   // place conxt menu top depending clientHeight of message component
   useEffect(() => {
-    if (messageComponentRef.current.clientHeight > 36) {
+    if (messageComponentRef?.current?.clientHeight > 36) {
       setContextStyle({ top: '8px ' });
     } else {
       setContextStyle({ top: '2px' });

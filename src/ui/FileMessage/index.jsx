@@ -14,7 +14,11 @@ import ContextMenu, { MenuItem, MenuItems } from '../ContextMenu';
 import EmojiReactions from '../EmojiReactions';
 
 import { getSenderProfileUrl, getSenderName, getMessageCreatedAt } from '../../utils/utils';
-import { truncate, getIsSentFromStatus } from './utils';
+import {
+  truncate,
+  getIsSentFromStatus,
+  getIsSentFromSendingStatus,
+} from './utils';
 import useMouseHover from '../../hooks/onMouseHover';
 
 const MAX_TRUNCATE_LENGTH = 40;
@@ -143,11 +147,17 @@ export function OutgoingFileMessage({
   const [mousehover, setMousehover] = useState(false);
   const [moreActive, setMoreActive] = useState(false);
   const [menuDisplaying, setMenuDisplaying] = useState(false);
-  const showReactionAddButton = useReaction && emojiAllMap && (emojiAllMap.size > 0);
   const MemoizedEmojiListItems = memoizedEmojiListItems;
   const isMessageSent = getIsSentFromStatus(status);
-  const showEmojiReactions = isMessageSent && useReaction && message.reactions
-    && (message.reactions.length > 0);
+  const showReactionAddButton = useReaction
+    && emojiAllMap
+    && (emojiAllMap.size > 0)
+    && getIsSentFromSendingStatus(message);
+  const showEmojiReactions = isMessageSent
+    && useReaction
+    && message.reactions
+    && (message.reactions.length > 0)
+    && getIsSentFromSendingStatus(message);
 
   const handleMoreIconClick = () => {
     setMoreActive(true);

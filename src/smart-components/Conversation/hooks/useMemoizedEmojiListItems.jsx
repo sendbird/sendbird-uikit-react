@@ -13,6 +13,7 @@ export default function useMemoizedEmojiListItems({
   userId,
   emojiAllList,
 }) {
+  /* eslint-disable react/prop-types */
   return useMemo(() => ({
     parentRef,
     parentContainRef,
