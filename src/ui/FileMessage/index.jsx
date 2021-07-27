@@ -138,7 +138,7 @@ export function OutgoingFileMessage({
   chainTop,
   chainBottom,
 }) {
-  const url = message.plainUrl || message.url;
+  const { url } = message;
   const openFileUrl = () => { window.open(url); };
   const messageRef = useRef(null);
   const parentContainRef = useRef(null);

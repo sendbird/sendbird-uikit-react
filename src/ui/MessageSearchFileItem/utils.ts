@@ -17,8 +17,8 @@ export function getCreatedAt(createdAt: number): string {
 }
 
 export function getIconOfFileType(message: SendbirdUIKit.ClientFileMessage): string {
-  const { plainUrl, url } = message;
-  const fileMessageUrl = plainUrl || url;
+  const { url } = message;
+  const fileMessageUrl = url;
   const fileExtension = (fileMessageUrl.match(/\.([^.]*?)(?=\?|#|$)/))[1];
 
   if (/(jpg|jpeg|png)$/i.test(fileExtension)) {
