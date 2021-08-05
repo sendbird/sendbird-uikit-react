@@ -39,6 +39,7 @@ export default function Sendbird(props) {
     colorSet,
     stringSet,
     imageCompression,
+    useReaction,
   } = props;
 
   const {
@@ -164,6 +165,7 @@ export default function Sendbird(props) {
           logger,
           pubSub,
           imageCompression,
+          useReaction,
         },
       }}
     >
@@ -203,6 +205,7 @@ Sendbird.propTypes = {
   }),
   stringSet: PropTypes.objectOf(PropTypes.string),
   colorSet: PropTypes.objectOf(PropTypes.string),
+  useReaction: PropTypes.bool,
   imageCompression: PropTypes.shape({
     compressionRate: PropTypes.number,
     resizingWidth: PropTypes.oneOfType([
@@ -229,4 +232,5 @@ Sendbird.defaultProps = {
   stringSet: null,
   colorSet: null,
   imageCompression: {},
+  useReaction: true,
 };

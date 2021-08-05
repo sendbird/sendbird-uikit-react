@@ -33,7 +33,9 @@ exports[`OpenchannelThumbnailMessage should do a snapshot test of the Openchanne
           style={
             Object {
               "height": "28px",
-              "width": "28px",
+              "maxWidth": "400px",
+              "minWidth": "28px",
+              "width": "100%",
             }
           }
         >
@@ -47,8 +49,10 @@ exports[`OpenchannelThumbnailMessage should do a snapshot test of the Openchanne
                 "backgroundSize": "cover",
                 "borderRadius": null,
                 "height": "28px",
+                "maxWidth": "400px",
+                "minWidth": "28px",
                 "position": "absolute",
-                "width": "28px",
+                "width": "100%",
               }
             }
           />
@@ -98,7 +102,9 @@ exports[`OpenchannelThumbnailMessage should do a snapshot test of the Openchanne
           style={
             Object {
               "height": "270px",
-              "width": 360,
+              "maxWidth": "400px",
+              "minWidth": 360,
+              "width": "100%",
             }
           }
         >
@@ -109,8 +115,10 @@ exports[`OpenchannelThumbnailMessage should do a snapshot test of the Openchanne
                 "display": "flex",
                 "height": "270px",
                 "justifyContent": "center",
+                "maxWidth": "400px",
+                "minWidth": 360,
                 "position": "absolute",
-                "width": 360,
+                "width": "100%",
               }
             }
           >
@@ -142,8 +150,10 @@ exports[`OpenchannelThumbnailMessage should do a snapshot test of the Openchanne
                 "backgroundSize": "cover",
                 "borderRadius": null,
                 "height": "270px",
+                "maxWidth": "400px",
+                "minWidth": 360,
                 "position": "absolute",
-                "width": 360,
+                "width": "100%",
               }
             }
           />

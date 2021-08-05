@@ -23,7 +23,9 @@ exports[`OpenchannelConversationHeader should do a snapshot test of the Openchan
         style={
           Object {
             "height": "32px",
-            "width": "32px",
+            "maxWidth": "400px",
+            "minWidth": "32px",
+            "width": "100%",
           }
         }
       >
@@ -37,8 +39,10 @@ exports[`OpenchannelConversationHeader should do a snapshot test of the Openchan
               "backgroundSize": "cover",
               "borderRadius": null,
               "height": "32px",
+              "maxWidth": "400px",
+              "minWidth": "32px",
               "position": "absolute",
-              "width": "32px",
+              "width": "100%",
             }
           }
         />

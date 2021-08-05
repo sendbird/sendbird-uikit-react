@@ -1,12 +1,12 @@
 import format from 'date-fns/format';
-import MessageStatusType from '../../ui/MessageStatus/type';
 import * as channelActions from './dux/actionTypes';
 import * as topics from '../../lib/pubSub/topics';
 
-import { SendingMessageStatus } from './types';
+import { getSendingMessageStatus, getOutgoingMessageStates } from '../../utils';
 
+const MessageStatusType = getOutgoingMessageStates();
 const UNDEFINED = 'undefined';
-const { SUCCEEDED, FAILED, PENDING } = SendingMessageStatus;
+const { SUCCEEDED, FAILED, PENDING } = getSendingMessageStatus();
 
 export const scrollIntoLast = (intialTry = 0) => {
   const MAX_TRIES = 10;

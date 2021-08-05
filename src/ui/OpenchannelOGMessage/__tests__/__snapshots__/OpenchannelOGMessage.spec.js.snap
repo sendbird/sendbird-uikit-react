@@ -36,7 +36,9 @@ exports[`OpenchannelOGMessage should do a snapshot test of the OpenchannelOGMess
             style={
               Object {
                 "height": "28px",
-                "width": "28px",
+                "maxWidth": "400px",
+                "minWidth": "28px",
+                "width": "100%",
               }
             }
           >
@@ -50,8 +52,10 @@ exports[`OpenchannelOGMessage should do a snapshot test of the OpenchannelOGMess
                   "backgroundSize": "cover",
                   "borderRadius": null,
                   "height": "28px",
+                  "maxWidth": "400px",
+                  "minWidth": "28px",
                   "position": "absolute",
-                  "width": "28px",
+                  "width": "100%",
                 }
               }
             />
@@ -202,7 +206,9 @@ exports[`OpenchannelOGMessage should do a snapshot test of the OpenchannelOGMess
           style={
             Object {
               "height": "189px",
-              "width": null,
+              "maxWidth": "400px",
+              "minWidth": null,
+              "width": "100%",
             }
           }
         >
@@ -216,8 +222,10 @@ exports[`OpenchannelOGMessage should do a snapshot test of the OpenchannelOGMess
                 "backgroundSize": "cover",
                 "borderRadius": null,
                 "height": "189px",
+                "maxWidth": "400px",
+                "minWidth": null,
                 "position": "absolute",
-                "width": null,
+                "width": "100%",
               }
             }
           />

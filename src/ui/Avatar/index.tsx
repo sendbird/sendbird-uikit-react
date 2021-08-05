@@ -14,7 +14,7 @@ interface DefaultComponentProps {
   height: string | number,
 }
 
-const DefaultComponent = (width, height): ReactElement => {
+const DefaultComponent = ({ width, height }: DefaultComponentProps): ReactElement => {
   let iconWidth = pxToNumber(width);
   let iconHeight = pxToNumber(height);
   if (typeof iconWidth === 'number') {
@@ -41,7 +41,7 @@ const _defaultComponent = ({
   height,
 }: DefaultComponentProps) => (
   <DefaultComponent width={width} height={height} />
-)
+);
 
 interface AvatarInnerProps {
   height: string | number,

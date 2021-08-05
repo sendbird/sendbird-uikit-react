@@ -46,7 +46,7 @@ export default function EmojiReactions({
               const nicknames = userIds
                 .filter((currentUserId) => currentUserId !== userId)
                 .map((currentUserId) => (
-                  membersMap.get(currentUserId) || stringSet.TOOLTIP__UNKOWN_USER
+                  membersMap.get(currentUserId) || stringSet.TOOLTIP__UNKNOWN_USER
                 ));
               const stringSetForMe = (nicknames.length > 0)
                 ? stringSet.TOOLTIP__AND_YOU : stringSet.TOOLTIP__YOU;

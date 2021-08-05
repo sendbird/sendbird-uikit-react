@@ -45,7 +45,9 @@ exports[`UnknownMessage should do a snapshot test of the UnknownMessage DOM 1`] 
               style={
                 Object {
                   "height": "28px",
-                  "width": "28px",
+                  "maxWidth": "400px",
+                  "minWidth": "28px",
+                  "width": "100%",
                 }
               }
             >
@@ -59,8 +61,10 @@ exports[`UnknownMessage should do a snapshot test of the UnknownMessage DOM 1`] 
                     "backgroundSize": "cover",
                     "borderRadius": null,
                     "height": "28px",
+                    "maxWidth": "400px",
+                    "minWidth": "28px",
                     "position": "absolute",
-                    "width": "28px",
+                    "width": "100%",
                   }
                 }
               />

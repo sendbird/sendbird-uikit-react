@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OpenChannelMessageContent should do a snapshot test of the OpenChannelMessageContent DOM 1`] = `<div />`;

@@ -1,5 +1,7 @@
 import format from 'date-fns/format';
-import MessageStatusType from '../MessageStatus/type';
+import { getOutgoingMessageStates } from '../../utils';
+
+const MessageStatusType = getOutgoingMessageStates();
 
 export const copyToClipboard = (text) => {
   if (window.clipboardData && window.clipboardData.setData) {

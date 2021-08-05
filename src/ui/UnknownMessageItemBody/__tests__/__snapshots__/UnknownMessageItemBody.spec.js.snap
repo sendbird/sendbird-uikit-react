@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UnknownMessageItemBody should do a snapshot test of the UnknownMessageItemBody DOM 1`] = `
+<div
+  className=" sendbird-unknown-message-item-body incoming "
+>
+  <span
+    className="sendbird-unknown-message-item-body__header sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
+  >
+    (Unknown message type)
+  </span>
+  <span
+    className="sendbird-unknown-message-item-body__description sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-2"
+  >
+    Cannot read this message.
+  </span>
+</div>
+`;

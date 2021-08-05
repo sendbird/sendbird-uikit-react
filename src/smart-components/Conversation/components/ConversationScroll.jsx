@@ -178,6 +178,7 @@ export default class ConversationScroll extends Component {
                       chainTop={chainTop}
                       useReaction={useReaction}
                       emojiAllMap={emojiAllMap}
+                      emojiContainer={emojiContainer}
                       editDisabled={editDisabled}
                       hasSeperator={hasSeperator}
                       chainBottom={chainBottom}

@@ -1,0 +1,60 @@
+@import '../../styles/variables';
+
+.sendbird-replying_message_attachment {
+  position: relative;
+  padding: 16px 80px 16px 40px;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+
+  .sendbird-replying_message_attachment__avatar {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
+    position: relative;
+    margin-right: 8px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @include themed() {
+      background-color: t(bg-1);
+    }
+  }
+
+  .sendbird-replying_message_attachment__body {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    overflow: hidden;
+
+    .sendbird-replying_message_attachment__body__sender-name {
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      box-sizing: border-box;
+      margin-bottom: 8px;
+    }
+    .sendbird-replying_message_attachment__body__message-content {
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      box-sizing: border-box;
+    }
+  }
+
+  .sendbird-replying_message_attachment__close-button {
+    position: absolute;
+    top: 26px;
+    right: 40px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

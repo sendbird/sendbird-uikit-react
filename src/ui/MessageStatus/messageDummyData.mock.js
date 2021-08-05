@@ -30,6 +30,8 @@ export function generateNormalMessage(pretreatment) {
     requestState: "succeeded",
     requestedMentionUserIds: [],
     errorCode: 0,
+    getUnreadMemberCount: () => 10,
+    getUndeliveredMemberCount: () => 10,
   }
   if (pretreatment) {
     return pretreatment(message);

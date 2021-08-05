@@ -32,7 +32,9 @@
 
   &:hover {
     cursor: pointer;
-    border: solid 1px var(--sendbird-add-reaction-button-border-hover);
+    @include themed() {
+      border: solid 1px t(primary-3);
+    }
   }
 
   .sendbird-reaction-badge__inner {

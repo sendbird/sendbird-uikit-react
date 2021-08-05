@@ -2,8 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import renderer from 'react-test-renderer';
 
-import MessageStatus from "../index";
-import MessageStatusType from '../type';
+import MessageStatus, { MessageStatusTypes } from "../index";
 import dummyMessage from '../messageDummyData.mock';
 
 // mock date-fns to avoid problems from snapshot timestamping
@@ -24,7 +23,7 @@ describe('MessageStatus', () => {
   it('should do a snapshot test of the MessageStatus DOM', function () {
     const text = "example-text";
     const component = renderer.create(
-      <MessageStatus className={text} status={MessageStatusType.SENT} message={dummyMessage} />,
+      <MessageStatus className={text} status={MessageStatusTypes.SENT} message={dummyMessage} />,
     );
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
@@ -37,7 +36,7 @@ describe('MessageStatus', () => {
       isResendable: () => { return true; },
     };
     const component = renderer.create(
-      <MessageStatus className={text} status={MessageStatusType.FAILED} message={failedMsg} />,
+      <MessageStatus className={text} status={MessageStatusTypes.FAILED} message={failedMsg} />,
     );
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
@@ -49,7 +48,7 @@ describe('MessageStatus', () => {
       ...dummyMessage,
     };
     const component = renderer.create(
-      <MessageStatus className={text} status={MessageStatusType.FAILED} message={failedMsg} />,
+      <MessageStatus className={text} status={MessageStatusTypes.FAILED} message={failedMsg} />,
     );
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();

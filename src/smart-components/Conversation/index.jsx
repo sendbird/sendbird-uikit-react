@@ -123,18 +123,18 @@ export const ConversationPanel = (props) => {
   const userDefinedDisableUserProfile = disableUserProfile || config.disableUserProfile;
   const userDefinedRenderProfile = renderUserProfile || config.renderUserProfile;
   const showScrollBot = hasMoreToBottom;
+
+  // TODO: emojiAllMap, emoijAllList, nicknamesMap => should be moved to messagesStore
   const emojiAllMap = useMemo(() => (
     usingReaction
       ? utils.getAllEmojisMapFromEmojiContainer(emojiContainer)
       : new Map()
   ), [emojiContainer]);
-
   const emojiAllList = useMemo(() => (
     usingReaction
       ? utils.getAllEmojisFromEmojiContainer(emojiContainer)
       : []
   ), [emojiContainer]);
-
   const nicknamesMap = useMemo(() => (
     usingReaction
       ? utils.getNicknamesMapFromMembers(currentGroupChannel.members)

@@ -1,4 +1,6 @@
-import MessageStatusType from '../MessageStatus/type';
+import { getOutgoingMessageStates } from '../../utils';
+
+const MessageStatusType = getOutgoingMessageStates();
 
 export const truncate = (fullStr, strLen) => {
   if (fullStr === null || fullStr === undefined) return '';

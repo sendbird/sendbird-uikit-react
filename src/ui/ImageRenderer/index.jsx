@@ -10,6 +10,8 @@ import './index.scss';
   and those properties switch img tag to real purposing element
 */
 
+// TODO: Set up the official constant of width and height with DesignTeam
+
 export default function ImageRenderer({
   className,
   url,
@@ -34,7 +36,9 @@ export default function ImageRenderer({
     if (placeHolder && typeof placeHolder === 'function') {
       return placeHolder({
         style: {
-          width,
+          width: '100%',
+          minWidth: width,
+          maxWidth: '400px',
           height,
           position: 'absolute',
           display: 'flex',
@@ -66,7 +70,12 @@ export default function ImageRenderer({
         ...(Array.isArray(className) ? className : [className]),
         'sendbird-image-renderer',
       ].join(' ')}
-      style={{ width, height }}
+      style={{
+        width: '100%',
+        minWidth: width,
+        maxWidth: '400px',
+        height,
+      }}
     >
       {showPlaceHolder && PlaceHolder}
       {
@@ -76,7 +85,9 @@ export default function ImageRenderer({
             <div
               className="sendbird-image-renderer__image"
               style={{
-                width,
+                width: '100%',
+                minWidth: width,
+                maxWidth: '400px',
                 height,
                 position: 'absolute',
                 backgroundRepeat: 'no-repeat',

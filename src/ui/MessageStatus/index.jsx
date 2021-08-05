@@ -5,91 +5,30 @@ import './index.scss';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import Loader from '../Loader';
-import MessageStatusType from './type';
 
-import { getMessageCreatedAt } from '../../utils/utils';
+import {
+  getMessageCreatedAt,
+  getOutgoingMessageStates,
+  isSentStatus,
+} from '../../utils';
 
-const MessageStatusTypes = MessageStatusType;
-export { MessageStatusTypes };
+export const MessageStatusTypes = getOutgoingMessageStates();
 export default function MessageStatus({
   className,
   message,
   status,
 }) {
-  const label = () => {
-    switch (status) {
-      case MessageStatusType.FAILED:
-      case MessageStatusType.PENDING: {
-        return null;
-      }
-      case MessageStatusType.SENT:
-      case MessageStatusType.DELIVERED:
-      case MessageStatusType.READ: {
-        return (
-          <Label
-            className="sendbird-message-status__text"
-            type={LabelTypography.CAPTION_3}
-            color={LabelColors.ONBACKGROUND_2}
-          >
-            {getMessageCreatedAt(message)}
-          </Label>
-        );
-      }
-      default: return null;
-    }
+  const iconType = {
+    [MessageStatusTypes.SENT]: IconTypes.DONE,
+    [MessageStatusTypes.DELIVERED]: IconTypes.DONE_ALL,
+    [MessageStatusTypes.READ]: IconTypes.DONE_ALL,
+    [MessageStatusTypes.FAILED]: IconTypes.ERROR,
   };
-
-  const icon = {
-    PENDING: (
-      <Loader
-        className="sendbird-message-status__icon"
-        width="16px"
-        height="16px"
-      >
-        <Icon
-          type={IconTypes.SPINNER}
-          fillColor={IconColors.PRIMARY}
-          width="16px"
-          height="16px"
-        />
-      </Loader>
-    ),
-    SENT: (
-      <Icon
-        className="sendbird-message-status__icon"
-        type={IconTypes.DONE}
-        fillColor={IconColors.SENT}
-        width="16px"
-        height="16px"
-      />
-    ),
-    DELIVERED: (
-      <Icon
-        className="sendbird-message-status__icon"
-        type={IconTypes.DONE_ALL}
-        fillColor={IconColors.SENT}
-        width="16px"
-        height="16px"
-      />
-    ),
-    READ: (
-      <Icon
-        className="sendbird-message-status__icon"
-        type={IconTypes.DONE_ALL}
-        fillColor={IconColors.READ}
-        width="16px"
-        height="16px"
-      />
-    ),
-    FAILED: (
-      <Icon
-        className="sendbird-message-status__icon"
-        type={IconTypes.ERROR}
-        fillColor={IconColors.ERROR}
-        width="16px"
-        height="16px"
-      />
-    ),
+  const iconColor = {
+    [MessageStatusTypes.SENT]: IconColors.SENT,
+    [MessageStatusTypes.DELIVERED]: IconColors.SENT,
+    [MessageStatusTypes.READ]: IconColors.READ,
+    [MessageStatusTypes.FAILED]: IconColors.ERROR,
   };
 
   return (
@@ -99,9 +38,39 @@ export default function MessageStatus({
         'sendbird-message-status',
       ].join(' ')}
     >
-      {icon[status]}
-      <br />
-      {label(status)}
+      {(status === MessageStatusTypes.PENDING)
+        ? (
+          <Loader
+            className="sendbird-message-status__icon"
+            width="16px"
+            height="16px"
+          >
+            <Icon
+              type={IconTypes.SPINNER}
+              fillColor={IconColors.PRIMARY}
+              width="16px"
+              height="16px"
+            />
+          </Loader>
+        )
+        : (
+          <Icon
+            className="sendbird-message-status__icon"
+            type={iconType[status]}
+            fillColor={iconColor[status]}
+            width="16px"
+            height="16px"
+          />
+        )}
+      {isSentStatus(status) && (
+        <Label
+          className="sendbird-message-status__text"
+          type={LabelTypography.CAPTION_3}
+          color={LabelColors.ONBACKGROUND_2}
+        >
+          {getMessageCreatedAt(message)}
+        </Label>
+      )}
     </div>
   );
 }
@@ -119,6 +88,7 @@ MessageStatus.propTypes = {
       userId: PropTypes.string,
       profileUrl: PropTypes.string,
     }),
+    sendingStatus: PropTypes.string,
   }),
   status: PropTypes.string,
 };

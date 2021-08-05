@@ -21,7 +21,6 @@ exports[`MessageStatus should do a snapshot test of the MessageStatus DOM 1`] = 
   >
     <test-file-stub />
   </div>
-  <br />
   <span
     className="sendbird-message-status__text sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
   >
@@ -51,7 +50,6 @@ exports[`MessageStatus should do a snapshot test of the failed MessageStatus DOM
   >
     <test-file-stub />
   </div>
-  <br />
 </div>
 `;
 
@@ -76,6 +74,5 @@ exports[`MessageStatus should do a snapshot test of the failed MessageStatus DOM
   >
     <test-file-stub />
   </div>
-  <br />
 </div>
 `;

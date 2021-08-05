@@ -35,7 +35,9 @@ exports[`EmojiReactions should do a snapshot test of the EmojiReactions DOM 1`] 
                 style={
                   Object {
                     "height": "20px",
-                    "width": "20px",
+                    "maxWidth": "400px",
+                    "minWidth": "20px",
+                    "width": "100%",
                   }
                 }
               >
@@ -49,8 +51,10 @@ exports[`EmojiReactions should do a snapshot test of the EmojiReactions DOM 1`] 
                       "backgroundSize": "cover",
                       "borderRadius": "50%",
                       "height": "20px",
+                      "maxWidth": "400px",
+                      "minWidth": "20px",
                       "position": "absolute",
-                      "width": "20px",
+                      "width": "100%",
                     }
                   }
                 />

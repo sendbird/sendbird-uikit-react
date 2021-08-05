@@ -1,10 +1,20 @@
 @import '../../styles/variables';
 
 .sendbird-message-status {
-  display: inline;
-  text-align: right;
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+
+  .sendbird-message-status__icon {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+  }
 
   .sendbird-message-status__text {
+    position: relative;
+    margin-top: 18px;
+
     .sendbird-message-status__text__try-again {
       text-decoration: underline;
       &:hover {

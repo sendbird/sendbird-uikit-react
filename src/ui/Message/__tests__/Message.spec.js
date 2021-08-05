@@ -4,17 +4,18 @@ import renderer from 'react-test-renderer';
 
 import Message from "../index";
 import { generateNormalMessage } from '../messageDummyData.mock';
-import MessageStatusType from '../../MessageStatus/type';
 import useMemoizedMessageText from '../memoizedMessageText';
 
 import { LabelColors } from '../../Label';
 import { changeColorToClassName } from '../../Label/utils';
+import { getOutgoingMessageStates } from '../../../utils';
 
 // mock date-fns to avoid problems from snapshot timestamping
 // between testing in different locations
 // ideally we want to mock date-fns globally - needs more research
 jest.mock('date-fns/format', () => () => ('mock-date'));
 
+const MessageStatusType = getOutgoingMessageStates();
 let realUseContext;
 let useContextMock;
 

@@ -317,10 +317,10 @@ function OutgoingUserMessage({
                       }}
                     >
                       <Icon
-                        width="24px"
-                        height="24px"
                         type={IconTypes.EMOJI_MORE}
                         fillColor={IconColors.CONTENT_INVERSE}
+                        width="24px"
+                        height="24px"
                       />
                     </IconButton>
                   )}

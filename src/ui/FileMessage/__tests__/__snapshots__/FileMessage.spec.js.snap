@@ -87,7 +87,6 @@ exports[`FileMessage should do a snapshot test of the FileMessage DOM 1`] = `
           >
             <test-file-stub />
           </div>
-          <br />
           <span
             className="sendbird-message-status__text sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
           >

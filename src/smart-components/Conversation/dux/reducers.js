@@ -5,13 +5,13 @@ import initialState from './initialState';
 
 import compareIds from '../../../utils/compareIds';
 import { passUnsuccessfullMessages, hasOwnProperty } from '../utils';
-import { SendingMessageStatus } from '../types';
+import { getSendingMessageStatus } from '../../../utils';
 
 const {
   SUCCEEDED,
   FAILED,
   PENDING,
-} = SendingMessageStatus;
+} = getSendingMessageStatus();
 
 export default function reducer(state, action) {
   switch (action.type) {

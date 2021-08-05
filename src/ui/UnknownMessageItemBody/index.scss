@@ -1,0 +1,25 @@
+@import '../../styles/variables';
+
+.sendbird-unknown-message-item-body {
+  position: relative;
+  display: inline-block;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  border-radius: 16px;
+  &.reactions {
+    border-radius: 16px 16px 0px 0px;
+  }
+  &.outgoing {
+    @include themed() { background-color: t(primary-3) }
+  }
+  &.incoming {
+    @include themed() { background-color: t(bg-1) }
+  }
+
+  .sendbird-unknown-message-item-body__header {
+    display: block;
+  }
+  .sendbird-unknown-message-item-body__description {
+    display: block;
+  }
+}

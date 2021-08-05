@@ -73,7 +73,23 @@ exports[`OGMessage should do a snapshot test of the OGMessage DOM 1`] = `
           <div
             className=" sendbird-message-status"
           >
-            <br />
+            <div
+              className="sendbird-message-status__icon sendbird-icon "
+              onClick={[Function]}
+              onKeyDown={[Function]}
+              role="button"
+              style={
+                Object {
+                  "height": "16px",
+                  "minHeight": "16px",
+                  "minWidth": "16px",
+                  "width": "16px",
+                }
+              }
+              tabIndex="0"
+            >
+              icon
+            </div>
           </div>
         </div>
       </div>
@@ -158,7 +174,9 @@ exports[`OGMessage should do a snapshot test of the OGMessage DOM 1`] = `
             style={
               Object {
                 "height": "180px",
-                "width": "320px",
+                "maxWidth": "400px",
+                "minWidth": "320px",
+                "width": "100%",
               }
             }
           >
@@ -172,8 +190,10 @@ exports[`OGMessage should do a snapshot test of the OGMessage DOM 1`] = `
                   "backgroundSize": "cover",
                   "borderRadius": null,
                   "height": "180px",
+                  "maxWidth": "400px",
+                  "minWidth": "320px",
                   "position": "absolute",
-                  "width": "320px",
+                  "width": "100%",
                 }
               }
             />

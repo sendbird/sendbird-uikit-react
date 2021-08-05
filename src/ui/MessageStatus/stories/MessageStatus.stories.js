@@ -1,18 +1,31 @@
 import React from 'react';
-import MessageStatus from '../index.jsx';
-import MessageStatusType from '../type.js';
-import dummyMessage from '../messageDummyData.mock';
+import MessageStatus, { MessageStatusTypes } from '../index.jsx';
+import { generateNormalMessage } from '../messageDummyData.mock';
 
 export default { title: 'UI Components/MessageStatus' };
 
+const pendingMessage = generateNormalMessage((message) => {
+  message.sendingStatus = 'pending';
+  return message;
+});
+
+const sentMessage = generateNormalMessage((message) => {
+  message.sendingStatus = 'succeeded';
+  return message;
+});
+const failedMessage = generateNormalMessage((message) => {
+  message.sendingStatus = 'failed';
+  return message;
+});
+
 export const messageStatus = () => [
-  <MessageStatus status={MessageStatusType.PENDING} message={dummyMessage} />,
+  <MessageStatus status={MessageStatusTypes.PENDING} message={pendingMessage} />,
   <p />,
-  <MessageStatus status={MessageStatusType.SENT} message={dummyMessage} />,
+  <MessageStatus status={MessageStatusTypes.SENT} message={sentMessage} />,
   <p />,
-  <MessageStatus status={MessageStatusType.DELIVERED} message={dummyMessage} />,
+  <MessageStatus status={MessageStatusTypes.DELIVERED} message={sentMessage} />,
   <p />,
-  <MessageStatus status={MessageStatusType.READ} message={dummyMessage} />,
+  <MessageStatus status={MessageStatusTypes.READ} message={sentMessage} />,
   <p />,
-  <MessageStatus status={MessageStatusType.FAILED} message={dummyMessage} />,
+  <MessageStatus status={MessageStatusTypes.FAILED} message={failedMessage} />,
 ];

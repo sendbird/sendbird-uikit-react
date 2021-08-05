@@ -45,7 +45,9 @@ exports[`Message should do a snapshot test of the Message DOM 1`] = `
               style={
                 Object {
                   "height": "28px",
-                  "width": "28px",
+                  "maxWidth": "400px",
+                  "minWidth": "28px",
+                  "width": "100%",
                 }
               }
             >
@@ -59,8 +61,10 @@ exports[`Message should do a snapshot test of the Message DOM 1`] = `
                     "backgroundSize": "cover",
                     "borderRadius": null,
                     "height": "28px",
+                    "maxWidth": "400px",
+                    "minWidth": "28px",
                     "position": "absolute",
-                    "width": "28px",
+                    "width": "100%",
                   }
                 }
               />
@@ -128,7 +132,9 @@ exports[`Message should do a snapshot test of the Message DOM 1`] = `
                             style={
                               Object {
                                 "height": "20px",
-                                "width": "20px",
+                                "maxWidth": "400px",
+                                "minWidth": "20px",
+                                "width": "100%",
                               }
                             }
                           >
@@ -142,8 +148,10 @@ exports[`Message should do a snapshot test of the Message DOM 1`] = `
                                   "backgroundSize": "cover",
                                   "borderRadius": "50%",
                                   "height": "20px",
+                                  "maxWidth": "400px",
+                                  "minWidth": "20px",
                                   "position": "absolute",
-                                  "width": "20px",
+                                  "width": "100%",
                                 }
                               }
                             />
@@ -193,7 +201,9 @@ exports[`Message should do a snapshot test of the Message DOM 1`] = `
                             style={
                               Object {
                                 "height": "20px",
-                                "width": "20px",
+                                "maxWidth": "400px",
+                                "minWidth": "20px",
+                                "width": "100%",
                               }
                             }
                           >
@@ -207,8 +217,10 @@ exports[`Message should do a snapshot test of the Message DOM 1`] = `
                                   "backgroundSize": "cover",
                                   "borderRadius": "50%",
                                   "height": "20px",
+                                  "maxWidth": "400px",
+                                  "minWidth": "20px",
                                   "position": "absolute",
-                                  "width": "20px",
+                                  "width": "100%",
                                 }
                               }
                             />

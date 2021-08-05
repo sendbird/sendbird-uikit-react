@@ -8,7 +8,7 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import Icon, { IconTypes } from '../Icon';
 import { MODAL_ROOT } from '../../hooks/useModal/ModalRoot';
 
-import { isImage, isVideo, unSupported } from './types';
+import { isImage, isVideo, isSupportedFileView } from '../../utils';
 
 export const FileViewerComponent = ({
   // sender
@@ -46,7 +46,7 @@ export const FileViewerComponent = ({
       </div>
       <div className="sendbird-fileviewer__header__right">
         {
-          !unSupported(type) && (
+          isSupportedFileView(type) && (
             <div className="sendbird-fileviewer__header__right__actions">
               <a
                 className="sendbird-fileviewer__header__right__actions__download"
@@ -102,7 +102,7 @@ export const FileViewerComponent = ({
         )
       }
       {
-        unSupported(type) && (
+        !isSupportedFileView(type) && (
           <div className="sendbird-fileviewer__content__unsupported">
             <Label type={LabelTypography.H_1} color={LabelColors.ONBACKGROUND_1}>
               Unsupoprted message
