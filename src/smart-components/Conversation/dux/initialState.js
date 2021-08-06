@@ -13,7 +13,6 @@ export default {
   hasMoreToBottom: false,
   latestFetchedMessageTimeStamp: 0,
   emojiContainer: {},
-  readStatus: {},
   unreadCount: 0,
   unreadSince: null,
   isInvalid: false,

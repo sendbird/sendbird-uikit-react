@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es6: true,
   },
-  ignorePatterns: ['**/*.ts', '**/*.tsx', 'node_modules'],
+  ignorePatterns: ['**/*.ts', '**/*.tsx', 'node_modules', 'src/legacy'],
   extends: [
     'plugin:react/recommended',
     'airbnb',

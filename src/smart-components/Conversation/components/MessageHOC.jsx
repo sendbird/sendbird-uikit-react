@@ -13,7 +13,6 @@ import Label, { LabelTypography, LabelColors } from '../../../ui/Label';
 import MessageInput from '../../../ui/MessageInput';
 import FileViewer from '../../../ui/FileViewer';
 import RemoveMessageModal from './RemoveMessage';
-import UnknownMessage from '../../../ui/UnknownMessage';
 
 export default function MessageHoc({
   message,
@@ -23,7 +22,6 @@ export default function MessageHoc({
   hasSeperator,
   deleteMessage,
   updateMessage,
-  status,
   resendMessage,
   useReaction,
   chainTop,
@@ -171,22 +169,6 @@ export default function MessageHoc({
           />
         )
       }
-      {
-        !((message.isFileMessage && message.isFileMessage()) || message.messageType === 'file')
-        && !(message.isAdminMessage && message.isAdminMessage())
-        && !(((message.isUserMessage && message.isUserMessage()) || message.messageType === 'user'))
-        && !(showFileViewer)
-        && (
-          <UnknownMessage
-            message={message}
-            status={status}
-            isByMe={isByMe}
-            showRemove={setShowRemove}
-            chainTop={chainTop}
-            chainBottom={chainBottom}
-          />
-        )
-      }
     </div>
   );
 }
@@ -220,7 +202,6 @@ MessageHoc.propTypes = {
   deleteMessage: PropTypes.func.isRequired,
   updateMessage: PropTypes.func.isRequired,
   resendMessage: PropTypes.func.isRequired,
-  status: PropTypes.string,
   useReaction: PropTypes.bool.isRequired,
   chainTop: PropTypes.bool.isRequired,
   chainBottom: PropTypes.bool.isRequired,
@@ -245,7 +226,6 @@ MessageHoc.defaultProps = {
   hasSeperator: false,
   disabled: false,
   highLightedMessageId: null,
-  status: '',
   toggleReaction: () => { },
   emojiContainer: {},
 };

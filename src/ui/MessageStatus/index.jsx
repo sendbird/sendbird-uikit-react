@@ -56,7 +56,7 @@ export default function MessageStatus({
         : (
           <Icon
             className="sendbird-message-status__icon"
-            type={iconType[status]}
+            type={iconType[status] || IconTypes.ERROR}
             fillColor={iconColor[status]}
             width="16px"
             height="16px"

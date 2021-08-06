@@ -252,12 +252,6 @@ export default function reducer(state, action) {
         emojiContainer: action.payload,
       };
     }
-    case actionTypes.SET_READ_STATUS: {
-      return {
-        ...state,
-        readStatus: action.payload,
-      };
-    }
     case actionTypes.ON_REACTION_UPDATED: {
       return {
         ...state,

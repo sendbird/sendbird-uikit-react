@@ -6,10 +6,7 @@ import './conversation-scroll.scss';
 import * as messageActionTypes from '../dux/actionTypes';
 
 import MessageHOC from './MessageHOC';
-import {
-  getParsedStatus,
-  compareMessagesForGrouping,
-} from '../utils';
+import { compareMessagesForGrouping } from '../utils';
 import PlaceHolder, { PlaceHolderTypes } from '../../../ui/PlaceHolder';
 import Icon, { IconTypes, IconColors } from '../../../ui/Icon';
 
@@ -80,7 +77,6 @@ export default class ConversationScroll extends Component {
       userId,
       disabled,
       scrollRef,
-      readStatus,
       membersMap,
       allMessages,
       useReaction,
@@ -169,7 +165,6 @@ export default class ConversationScroll extends Component {
                       renderCustomMessage={renderCustomMessage}
                       key={m.messageId || m.reqId}
                       userId={userId}
-                      status={readStatus[m.messageId] || getParsedStatus(m, currentGroupChannel)}
                       // show status for pending/failed messages
                       message={m}
                       currentGroupChannel={currentGroupChannel}

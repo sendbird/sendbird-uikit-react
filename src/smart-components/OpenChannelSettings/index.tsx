@@ -10,7 +10,7 @@ import { LocalizationContext } from '../../lib/LocalizationContext';
 import withSendbirdContext from '../../lib/SendbirdSdkContext';
 import selectors from '../../lib/selectors';
 
-import { copyToClipboard } from '../../ui/Message/utils.js'
+import { copyToClipboard } from '../../utils'
 
 import './index.scss';
 import Label, { LabelTypography, LabelColors } from '../../ui/Label';
