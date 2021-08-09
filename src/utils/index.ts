@@ -1,5 +1,5 @@
 import format from 'date-fns/format';
-import { AdminMessage, Emoji, EmojiCategory, EmojiContainer, FileMessage, GroupChannel, OpenChannel, Reaction, UserMessage } from "sendbird";
+import { AdminMessage, Emoji, EmojiCategory, EmojiContainer, FileMessage, GroupChannel, OpenChannel, Reaction, SendBirdInstance, User, UserMessage } from "sendbird";
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 const SUPPORTED_MIMES = {
@@ -216,9 +216,22 @@ export const getEmojiTooltipString = (reaction: Reaction, userId: string, member
     .join(', ')}${you}`);
 };
 
-// TODO: Define type for whole Sendbird UIKit store
-export const getCurrentUserId = (store: any): string => (store?.stores?.userStore?.user?.userId);
-export const getUseReaction = (store: any, channel: GroupChannel | OpenChannel): boolean => {
+// TODO: Use the interface after language tranlsatation of Sendbird.js
+interface UIKitStore {
+  stores: {
+    sdkStore: {
+      sdk: SendBirdInstance,
+    },
+    userStore: {
+      user: User,
+    },
+  },
+  config: {
+    useReaction: boolean,
+  }
+}
+export const getCurrentUserId = (store: UIKitStore): string => (store?.stores?.userStore?.user?.userId);
+export const getUseReaction = (store: UIKitStore, channel: GroupChannel | OpenChannel): boolean => {
   if (!store?.config?.useReaction)
     return false;
   if (!store?.stores?.sdkStore?.sdk?.appInfo?.isUsingReaction)

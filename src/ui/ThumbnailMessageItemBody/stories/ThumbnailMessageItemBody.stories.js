@@ -1,7 +1,7 @@
 import React from 'react';
 import ThumbnailMessageItemBody from '../index.tsx';
 
-import mockMessage from '../../ThumbnailMessage/dummyData.mock';
+import mockMessage from '../../../legacy/message-refactor/ThumbnailMessage/dummyData.mock';
 
 export default { title: 'UI Components/ThumbnailMessageItemBody' };
 

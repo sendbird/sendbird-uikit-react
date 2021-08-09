@@ -6,7 +6,7 @@ import {
   dummyFileMessageAudio,
   dummyFileMessageVideo,
   dummyFileMessageDocument,
-} from '../../FileMessage/dummyFileMessage.mock';
+} from '../../../legacy/message-refactor/FileMessage/dummyFileMessage.mock';
 
 export default { title: 'UI Components/FileMessageItemBody' };
 
