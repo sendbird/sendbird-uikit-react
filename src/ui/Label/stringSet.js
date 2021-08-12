@@ -88,6 +88,7 @@ const getStringSet = (lang = 'en') => {
       REPLYING_ATTACHMENT__FILE_TYPE__IMAGE: 'Photo',
       REPLYING_ATTACHMENT__FILE_TYPE__GIF: 'GIF',
       REPLYING_ATTACHMENT__FILE_TYPE__VIDEO: 'Video',
+      REPLIED_TO: 'replied to',
     },
   };
   return stringSet[lang];

@@ -295,11 +295,6 @@ export const getEmojiMapAll = (emojiContainer: EmojiContainer): Map<string, Emoj
   return emojiMap;
 };
 
-export const getSenderName = (message: UserMessage | FileMessage): string => (
-  message.sender && (
-    message.sender.friendName
-    || message.sender.nickname
-    || message.sender.userId
-  )
-);
+export const getUserName = (user: User): string => (user?.friendName || user?.nickname || user?.userId);
+export const getSenderName = (message: UserMessage | FileMessage): string => (message.sender && getUserName(message.sender));
 export const getMessageCreatedAt = (message: UserMessage | FileMessage): string => format(message.createdAt || 0, 'p');

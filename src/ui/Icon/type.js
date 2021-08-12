@@ -43,6 +43,7 @@ export default {
   PLUS: 'PLUS',
   QUESTION: 'QUESTION',
   REFRESH: 'REFRESH',
+  REPLY: 'REPLY',
   REMOVE: 'REMOVE',
   SEARCH: 'SEARCH',
   SEND: 'SEND',
