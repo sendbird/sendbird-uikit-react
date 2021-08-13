@@ -255,3 +255,15 @@ const handleOnBeforeCreateChannel = (selectedUsers) => {
 ```
 
 Find out more about `GroupChannelParams` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.github.io/core-sdk-javascript/module-model_params_groupChannelParams-GroupChannelParams.html).
+
+## Open Channel Samples
+
+We also provide open channels. Check below to see how you can use and cusomize open channel to implement in your proper case.
+
+### Live Streaming Sample
+
+See the [Live Streaming Sample](https://codesandbox.io/s/openchannel-1-bvxl9?file=/src/App.js) here.
+
+### Community Sample
+
+See the [Community Sample](https://codesandbox.io/s/openchannel-2-h7x3b?file=/src/App.js) here.
