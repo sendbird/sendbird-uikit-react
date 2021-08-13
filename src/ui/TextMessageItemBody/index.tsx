@@ -13,12 +13,14 @@ interface Props {
   className?: string | Array<string>;
   message: UserMessage;
   isByMe?: boolean;
+  mouseHover?: boolean;
 }
 
 export default function TextMessageItemBody({
   className,
   message,
   isByMe = false,
+  mouseHover = false,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   return (
@@ -26,6 +28,7 @@ export default function TextMessageItemBody({
       className,
       'sendbird-text-message-item-body',
       isByMe ? 'outgoing' : 'incoming',
+      mouseHover ? 'mouse-hover' : '',
       message?.reactions?.length > 0 ? 'reactions' : '',
     ])}>
       {

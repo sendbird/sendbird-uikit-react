@@ -2,6 +2,6 @@
 
 exports[`TextMessageItemBody should do a snapshot test of the TextMessageItemBody DOM 1`] = `
 <div
-  className=" sendbird-text-message-item-body incoming "
+  className=" sendbird-text-message-item-body incoming  "
 />
 `;

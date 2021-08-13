@@ -15,6 +15,14 @@
   &.incoming {
     @include themed() { background-color: t(bg-1) }
   }
+  &.mouse-hover, &:hover {
+    &.outgoing {
+      @include themed() { background-color: t(primary-4) }
+    }
+    &.incoming {
+      @include themed() { background-color: t(bg-2) }
+    }
+  }
 
   .sendbird-unknown-message-item-body__header {
     display: block;

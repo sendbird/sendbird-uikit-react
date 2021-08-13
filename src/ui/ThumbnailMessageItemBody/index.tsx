@@ -10,12 +10,14 @@ interface Props {
   className?: string | Array<string>;
   message: FileMessage;
   isByMe?: boolean;
+  mouseHover?: boolean;
 }
 
 export default function ThumbnailMessageItemBody({
   className,
   message,
   isByMe = false,
+  mouseHover = false,
 }: Props): ReactElement {
   const { thumbnails = [] } = message;
   const thumbnailUrl: string = thumbnails.length > 0 ? thumbnails[0]?.url : '';
@@ -25,6 +27,7 @@ export default function ThumbnailMessageItemBody({
       className,
       'sendbird-thumbnail-message-item-body',
       isByMe ? 'outgoing' : 'incoming',
+      mouseHover ? 'mouse-hover' : '',
       message?.reactions?.length > 0 ? 'reactions' : '',
     ])}>
       <ImageRenderer
@@ -56,6 +59,7 @@ export default function ThumbnailMessageItemBody({
           </video>
         )
       }
+      <div className="sendbird-thumbnail-message-item-body__image-cover" />
       {
         (isVideoMessage(message) || isGifMessage(message)) && (
           <div className="sendbird-thumbnail-message-item-body__icon-wrapper">

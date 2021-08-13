@@ -19,8 +19,8 @@ interface Props {
   message: UserMessage | FileMessage;
   emojiContainer: EmojiContainer;
   memberNicknamesMap: Map<string, string>;
-  isByMe?: boolean;
   spaceFromTrigger?: Record<string, unknown>;
+  isByMe?: boolean;
   toggleReaction?: (message: UserMessage | FileMessage, key: string, byMe: boolean) => void;
 }
 
@@ -30,8 +30,8 @@ export default function EmojiReactions2({
   message,
   emojiContainer,
   memberNicknamesMap,
-  isByMe = false,
   spaceFromTrigger = {},
+  isByMe = false,
   toggleReaction,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);

@@ -2,7 +2,7 @@
 
 exports[`UnknownMessageItemBody should do a snapshot test of the UnknownMessageItemBody DOM 1`] = `
 <div
-  className=" sendbird-unknown-message-item-body incoming "
+  className=" sendbird-unknown-message-item-body incoming  "
 >
   <span
     className="sendbird-unknown-message-item-body__header sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"

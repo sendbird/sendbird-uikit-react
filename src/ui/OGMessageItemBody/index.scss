@@ -77,4 +77,19 @@
       @include themed() { background-color: t(bg-1) }
     }
   }
+  &.mouse-hover, &:hover {
+    .sendbird-og-message-item-body__description {
+      @include themed() { background-color: t(bg-2) }
+    }
+    &.outgoing {
+      .sendbird-og-message-item-body__text-bubble {
+        @include themed() { background-color: t(primary-4) }
+      }
+    }
+    &.incoming {
+      .sendbird-og-message-item-body__text-bubble {
+        @include themed() { background-color: t(bg-2) }
+      }
+    }
+  }
 }

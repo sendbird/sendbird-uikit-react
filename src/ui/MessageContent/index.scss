@@ -95,6 +95,9 @@
       right: 4px;
       white-space: nowrap;
       display: flex;
+      box-sizing: content-box;
+      min-width: 16px;
+      min-height: 16px;
       &.supposed-hover {
         display: none;
       }
@@ -142,5 +145,11 @@
   @include themed() { background-color: t(bg-1) }
   &.primary {
     @include themed() { background-color: t(primary-3) }
+  }
+  &.mouse-hover, &:hover {
+    @include themed() { background-color: t(bg-2) }
+    &.primary {
+      @include themed() { background-color: t(primary-4) }
+    }
   }
 }

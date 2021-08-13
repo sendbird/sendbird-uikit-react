@@ -9,12 +9,14 @@ interface Props {
   className?: string | Array<string>;
   isByMe?: boolean;
   message: CoreMessageType;
+  mouseHover?: boolean;
 }
 
 export default function UnknownMessageItemBody({
   className,
   message,
   isByMe = false,
+  mouseHover = false,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   return (
@@ -22,6 +24,7 @@ export default function UnknownMessageItemBody({
       className,
       'sendbird-unknown-message-item-body',
       isByMe ? 'outgoing' : 'incoming',
+      mouseHover ? 'mouse-hover' : '',
       message?.reactions?.length > 0 ? 'reactions' : '',
     ])}>
       <Label

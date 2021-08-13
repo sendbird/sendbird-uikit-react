@@ -9,7 +9,7 @@ import MessageItemMenu from '../MessageItemMenu';
 import MessageItemReactionMenu from '../MessageItemReactionMenu';
 import ContextMenu, { MenuItems } from '../ContextMenu';
 import Label, { LabelTypography, LabelColors } from '../Label';
-import EmojiReactions from '../EmojiReactions2';
+import EmojiReactions from '../EmojiReactions';
 
 import ClientAdminMessage from '../AdminMessage';
 import TextMessageItemBody from '../TextMessageItemBody';
@@ -29,6 +29,7 @@ import {
   getOutgoingMessageState,
   getSenderName,
   getMessageCreatedAt,
+  isSentMessage,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 
@@ -76,9 +77,10 @@ export default function MessageContent({
   const messageTypes = getUIKitMessageTypes();
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const avatarRef = useRef(null);
+  const [mouseHover, setMouseHover] = useState(false);
   const [supposedHover, setSupposedHover] = useState(false);
 
-  const isByMe: boolean = isMessageSentByMe(userId, message as UserMessage | FileMessage);
+  const isByMe: boolean = isSentMessage(channel, message as UserMessage | FileMessage) || isMessageSentByMe(userId, message as UserMessage | FileMessage);
 
   const isByMeClassName = isByMe ? 'outgoing' : 'incoming';
   const chainTopClassName = chainTop ? 'chain-top' : '';
@@ -89,7 +91,11 @@ export default function MessageContent({
     return (<ClientAdminMessage message={message} />);
   }
   return (
-    <div className={getClassName([className, 'sendbird-message-content', isByMeClassName])}>
+    <div
+      className={getClassName([className, 'sendbird-message-content', isByMeClassName])}
+      onMouseOver={() => setMouseHover(true)}
+      onMouseLeave={() => setMouseHover(false)}
+    >
       {/* left */}
       <div className={getClassName(['sendbird-message-content__left', useReactionClassName, isByMeClassName])}>
         {(!isByMe && !chainBottom) && (
@@ -178,26 +184,28 @@ export default function MessageContent({
           A ReplyingMessage should have an another interface
           because it won't be perfect mesasge instance, it will be from properties of message
         */}
+        {/* message item body components */}
         {isTextMessage(message as UserMessage) && (
-          <TextMessageItemBody message={message as UserMessage} isByMe={isByMe} />
+          <TextMessageItemBody message={message as UserMessage} isByMe={isByMe} mouseHover={mouseHover} />
         )}
         {(isOGMessage(message as UserMessage)) && (
-          <OGMessageItemBody message={message as UserMessage} isByMe={isByMe} />
+          <OGMessageItemBody message={message as UserMessage} isByMe={isByMe} mouseHover={mouseHover} />
         )}
         {(getUIKitMessageType((message as FileMessage)) === messageTypes.FILE) && (
-          <FileMessageItemBody message={message as FileMessage} isByMe={isByMe} />
+          <FileMessageItemBody message={message as FileMessage} isByMe={isByMe} mouseHover={mouseHover} />
         )}
         {(isThumbnailMessage(message as FileMessage)) && (
-          <ThumbnailMessageItemBody message={message as FileMessage} isByMe={isByMe} />
+          <ThumbnailMessageItemBody message={message as FileMessage} isByMe={isByMe} mouseHover={mouseHover} />
         )}
         {(getUIKitMessageType((message as FileMessage)) === messageTypes.UNKNOWN) && (
-          <UnknownMessageItemBody message={message} isByMe={isByMe} />
+          <UnknownMessageItemBody message={message} isByMe={isByMe} mouseHover={mouseHover} />
         )}
         {/* reactions */}
         {(useReaction && message?.reactions?.length > 0) && (
           <div className={getClassName([
             'sendbird-message-content-reactions',
-            (!isByMe || isThumbnailMessage(message as FileMessage)) ? '' : 'primary',
+            (!isByMe || isThumbnailMessage(message as FileMessage) || isOGMessage(message as UserMessage)) ? '' : 'primary',
+            mouseHover ? 'mouse-hover' : '',
           ])}>
             <EmojiReactions
               userId={userId}

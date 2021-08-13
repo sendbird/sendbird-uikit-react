@@ -16,6 +16,15 @@
     @include themed() { background-color: t(primary-3) }
   }
 
+  &.mouse-hover, &:hover {
+    &.incoming {
+      @include themed() { background-color: t(bg-2) }
+    }
+    &.outgoing {
+      @include themed() { background-color: t(primary-4) }
+    }
+  }
+
   .sendbird-text-message-item-body__message {
     white-space: pre-wrap;
     word-break: break-all;

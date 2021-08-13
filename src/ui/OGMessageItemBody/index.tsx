@@ -18,12 +18,14 @@ interface Props {
   className?: string | Array<string>;
   message: UserMessage;
   isByMe?: boolean;
+  mouseHover?: boolean;
 }
 
 export default function OGMessageItemBody({
   className,
   message,
   isByMe = false,
+  mouseHover = false,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   const openOGUrl = (): void => {
@@ -35,6 +37,7 @@ export default function OGMessageItemBody({
       className,
       'sendbird-og-message-item-body',
       isByMe ? 'outgoing' : 'incoming',
+      mouseHover ? 'mouse-hover' : '',
       message?.reactions?.length > 0 ? 'reactions' : '',
     ])}>
       <div className="sendbird-og-message-item-body__text-bubble">

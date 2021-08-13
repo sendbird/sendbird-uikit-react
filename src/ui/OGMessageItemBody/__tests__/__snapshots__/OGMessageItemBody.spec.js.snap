@@ -2,7 +2,7 @@
 
 exports[`OGMessageItemBody should do a snapshot test of the OGMessageItemBody DOM 1`] = `
 <div
-  className=" sendbird-og-message-item-body incoming "
+  className=" sendbird-og-message-item-body incoming  "
 >
   <div
     className="sendbird-og-message-item-body__text-bubble"

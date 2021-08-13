@@ -11,12 +11,14 @@ interface Props {
   className?: string | Array<string>;
   message: FileMessage;
   isByMe?: boolean;
+  mouseHover?: boolean;
 }
 
 export default function FileMessageItemBody({
   className,
   message,
   isByMe = false,
+  mouseHover = false,
 }: Props): ReactElement {
 
   return (
@@ -24,6 +26,7 @@ export default function FileMessageItemBody({
       className,
       'sendbird-file-message-item-body',
       isByMe ? 'outgoing' : 'incoming',
+      mouseHover ? 'mouse-hover' : '',
       message?.reactions?.length > 0 ? 'reactions' : '',
     ])}>
       <div className="sendbird-file-message-item-body__file-icon">
