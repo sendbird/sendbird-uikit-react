@@ -140,6 +140,9 @@ export const isReadMessage = (channel: GroupChannel, message: UserMessage | File
 export const isFailedMessage = (channel: GroupChannel | OpenChannel, message: UserMessage | FileMessage): boolean => (
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.FAILED
 );
+export const isPendingMessage = (channel: GroupChannel | OpenChannel, message: UserMessage | FileMessage): boolean => (
+  getOutgoingMessageState(channel, message) === OutgoingMessageStates.PENDING
+);
 export const isSentStatus = (state: string): boolean => (
   state === OutgoingMessageStates.SENT
   || state === OutgoingMessageStates.DELIVERED

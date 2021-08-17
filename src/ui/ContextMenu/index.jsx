@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import './index.scss';
 
 import Label, { LabelTypography, LabelColors } from '../Label';
+import { getClassName } from '../../utils';
 
 import MenuItems_ from './items/MenuItems';
 import EmojiListItems_ from './items/EmojiListItems';
@@ -17,30 +18,27 @@ export const MenuItem = ({
   className,
   children,
   onClick,
-}) => (
-  <li
-    className={[
-      ...(Array.isArray(className) ? className : [className]),
-      'sendbird-dropdown__menu-item',
-    ].join(' ')}
-    role="menuitem"
-    onClick={onClick}
-    onKeyPress={(e) => {
-      if (e.keyCode === ENTER) {
-        onClick(e);
-      }
-    }}
-    tabIndex={0}
-  >
-    <Label
-      className="sendbird-dropdown__menu-item__text"
-      type={LabelTypography.SUBTITLE_2}
-      color={LabelColors.ONBACKGROUND_1}
+  disable,
+}) => {
+  const handleClickEvent = (e) => { if (!disable) onClick(e); };
+  return (
+    <li
+      className={getClassName([className, 'sendbird-dropdown__menu-item', disable ? 'disable' : ''])}
+      role="menuitem"
+      onClick={handleClickEvent}
+      onKeyPress={(e) => { if (e.keyCode === ENTER) handleClickEvent(e); }}
+      tabIndex={0}
     >
-      {children}
-    </Label>
-  </li>
-);
+      <Label
+        className="sendbird-dropdown__menu-item__text"
+        type={LabelTypography.SUBTITLE_2}
+        color={disable ? LabelColors.ONBACKGROUND_4 : LabelColors.ONBACKGROUND_1}
+      >
+        {children}
+      </Label>
+    </li>
+  );
+};
 
 MenuItem.propTypes = {
   className: PropTypes.oneOfType([
@@ -52,10 +50,12 @@ MenuItem.propTypes = {
     PropTypes.element,
   ]).isRequired,
   onClick: PropTypes.func.isRequired,
+  disable: PropTypes.func,
 };
 
 MenuItem.defaultProps = {
   className: '',
+  disable: false,
 };
 
 // Root components should be appended before ContextMenu is rendered

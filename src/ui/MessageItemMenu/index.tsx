@@ -10,6 +10,7 @@ import {
   isUserMessage,
   isSentMessage,
   isFailedMessage,
+  isPendingMessage,
 } from '../../utils/index';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 
@@ -41,6 +42,7 @@ export default function MessageItemMenu({
   const containerRef = useRef(null);
 
   const showMenuItemCopy: boolean = isUserMessage(message as UserMessage);
+  const showMenuItemReply: boolean = !isFailedMessage(channel, message) && !isPendingMessage(channel, message);
   const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(channel, message) && isByMe);
   const showMenuItemResend: boolean = (isFailedMessage(channel, message) && message.isResendable() && isByMe);
   const showMenuItemDelete: boolean = (isSentMessage(channel, message) && isByMe);
@@ -101,6 +103,18 @@ export default function MessageItemMenu({
                   {stringSet.MESSAGE_MENU__COPY}
                 </MenuItem>
               )}
+              {showMenuItemReply && (
+                <MenuItem
+                  className="sendbird-message-item-menu__list__menu-item"
+                  onClick={() => {
+                    // TODO: Add replying message logic
+                    closeDropdown();
+                  }}
+                  disable={message?.parentMessageId > 0}
+                >
+                  {stringSet.MESSAGE_MENU__REPLY}
+                </MenuItem>
+              )}
               {showMenuItemEdit && (
                 <MenuItem
                   className="sendbird-message-item-menu__list__menu-item"
@@ -136,6 +150,7 @@ export default function MessageItemMenu({
                       closeDropdown();
                     }
                   }}
+                  disable={message?.threadInfo?.replyCount > 0}
                 >
                   {stringSet.MESSAGE_MENU__DELETE}
                 </MenuItem>
