@@ -35,44 +35,40 @@ import { UserProfileContext } from '../../lib/UserProfileContext';
 
 interface Props {
   className?: string | Array<string>;
-  message: AdminMessage | UserMessage | FileMessage;
-  channel: GroupChannel;
   userId: string;
-  optionalProps?: MessageContentOptionalProps;
-}
-export interface MessageContentOptionalProps {
+  channel: GroupChannel;
+  message: AdminMessage | UserMessage | FileMessage;
   disabled?: boolean;
   chainTop?: boolean;
   chainBottom?: boolean;
   useReaction?: boolean;
   useReplying?: boolean;
   nicknamesMap?: Map<string, string>;
-  resendMessage?: () => void;
-  showEdit?: () => void;
-  showRemove?: () => void;
-  toggleReaction?: () => void;
   emojiContainer?: EmojiContainer;
+  showEdit?: (bool: boolean) => void;
+  showRemove?: (bool: boolean) => void;
+  showFileViewer?: (bool: boolean) => void;
+  resendMessage?: (message: UserMessage | FileMessage) => void;
+  toggleReaction?: (message: UserMessage | FileMessage, reactionKey: string, isReacted: boolean) => void;
 }
 export default function MessageContent({
   className,
-  message,
-  channel,
   userId,
-  optionalProps = {},
+  channel,
+  message,
+  disabled = false,
+  chainTop = false,
+  chainBottom = false,
+  useReaction,
+  // useReplying,
+  nicknamesMap,
+  emojiContainer,
+  showEdit,
+  showRemove,
+  showFileViewer,
+  resendMessage,
+  toggleReaction,
 }: Props): ReactElement {
-  const {
-    disabled = false,
-    chainTop = false,
-    chainBottom = false,
-    useReaction,
-    // useReplying,
-    resendMessage,
-    showEdit,
-    showRemove,
-    emojiContainer,
-    nicknamesMap,
-    toggleReaction,
-  } = optionalProps as MessageContentOptionalProps;
   // const useReplying: boolean = false; // FIXME: Open replying feature // message?.parentMessageId && getUseReplying(context)
   const messageTypes = getUIKitMessageTypes();
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
@@ -195,7 +191,7 @@ export default function MessageContent({
           <FileMessageItemBody message={message as FileMessage} isByMe={isByMe} mouseHover={mouseHover} />
         )}
         {(isThumbnailMessage(message as FileMessage)) && (
-          <ThumbnailMessageItemBody message={message as FileMessage} isByMe={isByMe} mouseHover={mouseHover} />
+          <ThumbnailMessageItemBody message={message as FileMessage} isByMe={isByMe} mouseHover={mouseHover} showFileViewer={showFileViewer} />
         )}
         {(getUIKitMessageType((message as FileMessage)) === messageTypes.UNKNOWN) && (
           <UnknownMessageItemBody message={message} isByMe={isByMe} mouseHover={mouseHover} />

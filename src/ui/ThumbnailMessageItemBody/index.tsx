@@ -11,6 +11,7 @@ interface Props {
   message: FileMessage;
   isByMe?: boolean;
   mouseHover?: boolean;
+  showFileViewer?: (bool: boolean) => void;
 }
 
 export default function ThumbnailMessageItemBody({
@@ -18,18 +19,22 @@ export default function ThumbnailMessageItemBody({
   message,
   isByMe = false,
   mouseHover = false,
+  showFileViewer,
 }: Props): ReactElement {
   const { thumbnails = [] } = message;
   const thumbnailUrl: string = thumbnails.length > 0 ? thumbnails[0]?.url : '';
 
   return (
-    <div className={getClassName([
-      className,
-      'sendbird-thumbnail-message-item-body',
-      isByMe ? 'outgoing' : 'incoming',
-      mouseHover ? 'mouse-hover' : '',
-      message?.reactions?.length > 0 ? 'reactions' : '',
-    ])}>
+    <div
+      className={getClassName([
+        className,
+        'sendbird-thumbnail-message-item-body',
+        isByMe ? 'outgoing' : 'incoming',
+        mouseHover ? 'mouse-hover' : '',
+        message?.reactions?.length > 0 ? 'reactions' : '',
+      ])}
+      onClick={() => showFileViewer(true)}
+    >
       <ImageRenderer
         className="sendbird-thumbnail-message-item-body__thumbnail"
         url={thumbnailUrl || message?.url}

@@ -128,21 +128,21 @@ export default function MessageHoc({
       {/* Message */}
       <MessageContent
         className="sendbird-message-hoc__message-content"
-        message={message}
-        channel={currentGroupChannel}
         userId={userId}
-        optionalProps={{
-          disabled,
-          chainTop,
-          chainBottom,
-          useReaction,
-          resendMessage,
-          showEdit: setShowEdit,
-          showRemove: setShowRemove,
-          toggleReaction,
-          emojiContainer,
-          nicknamesMap: membersMap,
-        }}
+        channel={currentGroupChannel}
+        message={message}
+        disabled={disabled}
+        chainTop={chainTop}
+        chainBottom={chainBottom}
+        useReaction={useReaction}
+        // useReplying={} TODO: Set useReplying
+        nicknamesMap={membersMap}
+        emojiContainer={emojiContainer}
+        showEdit={setShowEdit}
+        showRemove={setShowRemove}
+        showFileViewer={setShowFileViewer}
+        resendMessage={resendMessage}
+        toggleReaction={toggleReaction}
       />
       {/* Modal */}
       {
