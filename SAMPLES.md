@@ -258,12 +258,12 @@ Find out more about `GroupChannelParams` on the [API reference of Sendbird Chat 
 
 ## Open Channel Samples
 
-We also provide open channels. Check below to see how you can use and cusomize open channel to implement in your proper case.
+We also provide samples for open channels. Check below to see how you can implement and customize open channels.
 
 ### Live Streaming Sample
 
-See the [Live Streaming Sample](https://codesandbox.io/s/openchannel-1-bvxl9?file=/src/App.js) here.
+See how open channel on live stream works on [CodeSandBox](https://codesandbox.io/s/openchannel-1-bvxl9?file=/src/App.js).
 
 ### Community Sample
 
-See the [Community Sample](https://codesandbox.io/s/openchannel-2-h7x3b?file=/src/App.js) here.
+See how you can create community channels on [CodeSandBox](https://codesandbox.io/s/openchannel-2-h7x3b?file=/src/App.js).
