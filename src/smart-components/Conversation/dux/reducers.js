@@ -5,7 +5,7 @@ import initialState from './initialState';
 
 import compareIds from '../../../utils/compareIds';
 import { passUnsuccessfullMessages, hasOwnProperty } from '../utils';
-import { getSendingMessageStatus } from '../../../utils';
+import { filterMessageListParams, getSendingMessageStatus } from '../../../utils';
 
 const {
   SUCCEEDED,
@@ -179,11 +179,13 @@ export default function reducer(state, action) {
       let unreadCount = 0;
       const { currentGroupChannel = {}, unreadSince } = state;
       const currentGroupChannelUrl = currentGroupChannel.url;
-      if (!compareIds(channel.url, currentGroupChannelUrl)) {
-        return state;
-      }
-      // Excluded overlapping messages
-      if (!(state.allMessages.map((msg) => msg.messageId).indexOf(message.messageId) < 0)) {
+
+      if (!compareIds(channel.url, currentGroupChannelUrl)
+        || (!(state.allMessages.map((msg) => msg.messageId).indexOf(message.messageId) < 0))
+        // Excluded overlapping messages
+        || (state.messageListParams && !filterMessageListParams(state.messageListParams, message))
+        // Filter by userFilledQuery
+      ) {
         return state;
       }
 
@@ -208,7 +210,17 @@ export default function reducer(state, action) {
         allMessages: passUnsuccessfullMessages(state.allMessages, message),
       };
     }
-    case actionTypes.ON_MESSAGE_UPDATED:
+    case actionTypes.ON_MESSAGE_UPDATED: {
+      const { message } = action.payload;
+      if (state.messageListParams && !filterMessageListParams(state.messageListParams, message)) {
+        // Delete the message if it doesn't match to the params anymore
+        return {
+          ...state,
+          allMessages: state.allMessages.filter((m) => (
+            !compareIds(m.messageId, action.payload)
+          )),
+        };
+      }
       return {
         ...state,
         allMessages: state.allMessages.map((m) => (
@@ -217,6 +229,7 @@ export default function reducer(state, action) {
             : m
         )),
       };
+    }
     case actionTypes.RESEND_MESSAGEGE_START:
       return {
         ...state,
@@ -264,6 +277,12 @@ export default function reducer(state, action) {
           }
           return m;
         }),
+      };
+    }
+    case actionTypes.MESSAGE_LIST_PARAMS_CHANGED: {
+      return {
+        ...state,
+        messageListParams: action.payload,
       };
     }
     default:

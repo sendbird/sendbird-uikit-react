@@ -38,7 +38,13 @@ function useInitialMessagesFetch({
         Object.keys(userFilledMessageListQuery).forEach((key) => {
           messageListParams[key] = userFilledMessageListQuery[key];
         });
+        logger.info('Channel useInitialMessagesFetch: Setup messageListParams', messageListParams);
+        messagesDispatcher({
+          type: messageActionTypes.MESSAGE_LIST_PARAMS_CHANGED,
+          payload: messageListParams,
+        });
       }
+
       logger.info('Channel: Fetching messages', { currentGroupChannel, userFilledMessageListQuery });
       messagesDispatcher({
         type: messageActionTypes.GET_PREV_MESSAGES_START,

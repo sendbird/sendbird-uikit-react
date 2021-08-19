@@ -98,7 +98,7 @@ const createEventHandler = ({
     logger.info('ChannelList: onChannelHidden', channel);
     channelListDispatcher({
       type: channelActions.ON_CHANNEL_ARCHIVED,
-      payload: channel.url,
+      payload: channel,
     });
   };
 
@@ -168,6 +168,17 @@ function setupChannelList({
   channelListDispatcher({
     type: channelActions.INIT_CHANNELS_START,
   });
+
+  if (userFilledChannelListQuery) {
+    logger.info('ChannelList - setting up channelListQuery', channelListQuery);
+    channelListDispatcher({
+      type: channelActions.CHANNEL_LIST_PARAMS_UPDATED,
+      payload: {
+        channelListQuery,
+        currentUserId: sdk && sdk.currentUser && sdk.currentUser.userId,
+      },
+    });
+  }
 
   logger.info('ChannelList - fetching channels');
   if (channelListQuery.hasNext) {

@@ -1,5 +1,5 @@
 import format from 'date-fns/format';
-import { AdminMessage, Emoji, EmojiCategory, EmojiContainer, FileMessage, GroupChannel, OpenChannel, Reaction, SendBirdInstance, User, UserMessage } from "sendbird";
+import { AdminMessage, Emoji, EmojiCategory, EmojiContainer, FileMessage, GroupChannel, GroupChannelListQuery, Member, MessageListParams, OpenChannel, Reaction, SendBirdInstance, User, UserMessage } from "sendbird";
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 const SUPPORTED_MIMES = {
@@ -301,3 +301,252 @@ export const getEmojiMapAll = (emojiContainer: EmojiContainer): Map<string, Emoj
 export const getUserName = (user: User): string => (user?.friendName || user?.nickname || user?.userId);
 export const getSenderName = (message: UserMessage | FileMessage): string => (message.sender && getUserName(message.sender));
 export const getMessageCreatedAt = (message: UserMessage | FileMessage): string => format(message.createdAt || 0, 'p');
+
+export const hasSameMembers = <T>(a: T[], b: T[]): boolean => {
+  if (a === b) {
+    return true;
+  }
+  if (a == null || b == null) {
+    return false;
+  }
+  if (a.length !== b.length) {
+    return false;
+  }
+
+  const sortedA = [...a].sort();
+  const sortedB = [...b].sort();
+
+  for (let i = 0; i < sortedA.length; ++i) {
+    if (sortedA[i] !== sortedB[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+export const isFriend = (user: User): boolean => !!(user.friendDiscoveryKey || user.friendName);
+
+export const filterMessageListParams = (params: MessageListParams, message: UserMessage | FileMessage | AdminMessage): boolean => {
+  if (params?.messageType && params.messageType !== message.messageType) {
+    return false;
+  }
+  if (params?.customTypes?.length > 0 && !params.customTypes.includes(message.customType)) {
+    return false;
+  }
+  if (params?.senderUserIds?.length > 0) {
+    if (message?.isUserMessage() || message.isFileMessage()) {
+      if (!params?.senderUserIds?.includes((message as UserMessage | FileMessage).sender.userId)) {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+  return true;
+};
+
+interface SDKChannelListParamsPrivateProps extends GroupChannelListQuery {
+  _searchFilter: {
+    search_query: string,
+    search_fields: Array<'member_nickname' | 'channel_name'>,
+  };
+  _userIdsFilter: {
+    userIds: Array<string>,
+    includeMode: boolean,
+    queryType: 'AND' | 'OR',
+  };
+}
+export const filterChannelListParams = (params: SDKChannelListParamsPrivateProps, channel: GroupChannel, currentUserId: string): boolean => {
+  if (!params?.includeEmpty && channel?.lastMessage && channel.lastMessage === null) {
+    return false;
+  }
+  if (params?._searchFilter?.search_query && params._searchFilter.search_fields?.length > 0) {
+    const searchFilter = params._searchFilter;
+    const searchQuery = searchFilter.search_query;
+    const searchFields = searchFilter.search_fields;
+    if (searchQuery && searchFields && searchFields.length > 0) {
+      if (!searchFields.some((searchField) => {
+        switch (searchField) {
+          case 'channel_name': {
+            return channel.name.toLowerCase().includes(searchQuery.toLowerCase());
+          }
+          case 'member_nickname': {
+            return channel.members.some((member: Member) => member.nickname.toLowerCase().includes(searchQuery.toLowerCase()));
+          }
+          default: {
+            return true;
+          }
+        }
+      })) {
+        return false;
+      }
+    }
+  }
+  if (params?._userIdsFilter?.userIds?.length > 0) {
+    const userIdsFilter = params._userIdsFilter;
+    const { includeMode, queryType } = userIdsFilter;
+    const userIds: string[] = userIdsFilter.userIds;
+    const memberIds = channel.members.map((member: Member) => member.userId);
+    if (!includeMode) { // exact match
+      if (!userIds.includes(currentUserId)) {
+        userIds.push(currentUserId); // add the caller's userId if not added already.
+      }
+      if (channel.members.length > userIds.length) {
+        return false; // userIds may contain one or more non-member(s).
+      }
+      if (!hasSameMembers(userIds, memberIds)) {
+        return false;
+      }
+    } else if (userIds.length > 0) { // inclusive
+      switch (queryType) {
+        case 'AND':
+          if (userIds.some((userId: string) => !memberIds.includes(userId))) {
+            return false;
+          }
+          break;
+        case 'OR':
+          if (userIds.every((userId: string) => !memberIds.includes(userId))) {
+            return false;
+          }
+          break;
+      }
+    }
+  }
+  if (params?.includeEmpty === false && channel?.lastMessage === null) {
+    return false;
+  }
+  if (params?.includeFrozen === false && channel?.isFrozen === true) {
+    return false;
+  }
+  if (params?.customTypesFilter?.length > 0 && !params.customTypesFilter.includes(channel?.customType)) {
+    return false;
+  }
+  if (params?.customTypeStartsWithFilter && !new RegExp(`^${params.customTypeStartsWithFilter}`).test(channel?.customType)) {
+    return false;
+  }
+  if (params?.channelNameContainsFilter && !channel?.name?.toLowerCase().includes(params.channelNameContainsFilter.toLowerCase())) {
+    return false;
+  }
+  if (params?.nicknameContainsFilter) {
+    const lowerCasedSubString = params.nicknameContainsFilter.toLowerCase();
+    if (channel?.members?.every((member: Member) => !member.nickname.toLowerCase().includes(lowerCasedSubString))) {
+      return false;
+    }
+  }
+  if (params?.channelUrlsFilter?.length > 0 && !params.channelUrlsFilter.includes(channel?.url)) {
+    return false;
+  }
+  if (params?.memberStateFilter) {
+    switch (params.memberStateFilter) {
+      case 'joined_only':
+        if (channel?.myMemberState !== 'joined') {
+          return false;
+        }
+        break;
+      case 'invited_only':
+        if (channel?.myMemberState !== 'invited') {
+          return false;
+        }
+        break;
+      case 'invited_by_friend':
+        if (channel?.myMemberState !== 'invited' || !isFriend(channel.inviter)) {
+          return false;
+        }
+        break;
+      case 'invited_by_non_friend':
+        if (channel?.myMemberState !== 'invited' || isFriend(channel.inviter)) {
+          return false;
+        }
+        break;
+    }
+  }
+  if (params?.hiddenChannelFilter) {
+    switch (params.hiddenChannelFilter) {
+      case 'unhidden_only':
+        if (channel?.isHidden || channel?.hiddenState !== 'unhidden') {
+          return false;
+        }
+        break;
+      case 'hidden_only':
+        if (!channel?.isHidden) {
+          return false;
+        }
+        break;
+      case 'hidden_allow_auto_unhide':
+        if (!channel?.isHidden || channel?.hiddenState !== 'hidden_allow_auto_unhide') {
+          return false;
+        }
+        break;
+      case 'hidden_prevent_auto_unhide':
+        if (!channel?.isHidden || channel?.hiddenState !== 'hidden_prevent_auto_unhide') {
+          return false;
+        }
+        break;
+    }
+  }
+  if (params?.unreadChannelFilter) {
+    switch (params.unreadChannelFilter) {
+      case 'unread_message':
+        if (channel?.unreadMessageCount === 0) {
+          return false;
+        }
+        break;
+    }
+  }
+  if (params?.publicChannelFilter) {
+    switch (params.publicChannelFilter) {
+      case 'public':
+        if (!channel?.isPublic) {
+          return false;
+        }
+        break;
+      case 'private':
+        if (channel?.isPublic) {
+          return false;
+        }
+        break;
+    }
+  }
+  if (params?.superChannelFilter) {
+    switch (params.superChannelFilter) {
+      case 'super':
+        if (!channel?.isSuper) {
+          return false;
+        }
+        break;
+      case 'nonsuper':
+        if (channel?.isSuper) {
+          return false;
+        }
+        break;
+    }
+  }
+  return true;
+};
+
+const binarySearch = (list: Array<number>, number: number): number => {// [100, 99, 98, 97, ...]
+  const pivot = Math.floor(list.length / 2);
+  if (list[pivot] === number) {
+    return pivot;
+  }
+  const leftList = list.slice(0, pivot);
+  const rightList = list.slice(pivot + 1, list.length);
+  if (list[pivot] > number) {
+    if (rightList.length === 0) {
+      return pivot + 1;
+    }
+    return pivot + binarySearch(rightList, number);
+  } else {
+    if (leftList.length === 0) {
+      return pivot;
+    }
+    return binarySearch(leftList, number);
+  }
+};
+// This is required when channel is displayed on channel list by filter
+export const getChannelsWithUpsertedChannel = (channels: Array<GroupChannel>, channel: GroupChannel): Array<GroupChannel> => {
+  if (channels.some((ch: GroupChannel) => ch.url === channel.url)) {
+    return channels.map((ch: GroupChannel) => (ch.url === channel.url ? channel : ch));
+  }
+  const targetIndex = binarySearch(channels.map((channel: GroupChannel) => channel?.lastMessage?.createdAt), channel?.lastMessage?.createdAt);
+  return [...channels.slice(0, targetIndex + 1), channel, ...channels.slice(targetIndex + 1, channels.length)];
+};

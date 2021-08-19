@@ -1,6 +1,8 @@
 export default {
   "initialized": true,
   "loading": false,
+  "currentUserId": "kl;",
+  "channelListQuery": null,
   "allChannels": [
     {
       "url": "sendbird_group_channel_13883929_89ea0faddf24ba6328e95ff56b0b37960f400c83",

@@ -16,4 +16,5 @@ export default {
   unreadCount: 0,
   unreadSince: null,
   isInvalid: false,
+  messageListParams: null,
 };
