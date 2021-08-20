@@ -30,6 +30,12 @@ exports[`OpenchannelUserMessage should do a snapshot test of the OpenchannelUser
       >
         <div
           className="sendbird-avatar-img sendbird-image-renderer"
+          style={
+            Object {
+              "height": "28px",
+              "width": "28px",
+            }
+          }
         >
           <div
             className="sendbird-image-renderer__image"
@@ -41,6 +47,7 @@ exports[`OpenchannelUserMessage should do a snapshot test of the OpenchannelUser
                 "backgroundSize": "cover",
                 "borderRadius": null,
                 "height": "28px",
+                "position": "absolute",
                 "width": "28px",
               }
             }
@@ -49,6 +56,7 @@ exports[`OpenchannelUserMessage should do a snapshot test of the OpenchannelUser
             alt=""
             className="sendbird-image-renderer__hidden-image-loader"
             onError={[Function]}
+            onLoad={[Function]}
             src="https://static.sendbird.com/sample/profiles/profile_12_512px.png"
           />
         </div>

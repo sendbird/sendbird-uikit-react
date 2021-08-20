@@ -71,8 +71,8 @@ export function EditUserProfile({
           </InputLabel>
           <div className="sendbird-edit-user-profile__img__avatar">
             <Avatar
-              height="80px"
               width="80px"
+              height="80px"
               src={currentImg || user.profileUrl}
             />
           </div>
@@ -89,8 +89,8 @@ export function EditUserProfile({
           />
           <TextButton
             className="sendbird-edit-user-profile__img__avatar-button"
-            onClick={() => hiddenInputRef.current.click()}
             notUnderline
+            onClick={() => hiddenInputRef.current.click()}
           >
             <Label type={LabelTypography.BUTTON_1} color={LabelColors.PRIMARY}>
               {stringSet.EDIT_PROFILE__IMAGE_UPLOAD}

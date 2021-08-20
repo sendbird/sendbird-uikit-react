@@ -17,6 +17,7 @@ import {
   getSenderName,
   getSenderProfileUrl,
   getIsSentFromStatus,
+  getIsSentFromSendingStatus,
 } from './utils';
 import useMemoizedMessageText from './memoizedMessageText';
 import useMouseHover from '../../hooks/onMouseHover';
@@ -176,11 +177,14 @@ function OutgoingUserMessage({
   const parentRefReactions = useRef(null);
   const parentRefMenus = useRef(null);
   const parentContainRef = useRef(null);
-  const isMessageSent = getIsSentFromStatus(status);
   const [mousehover, setMousehover] = useState(false);
   const [moreActive, setMoreActive] = useState(false);
   const [menuDisplaying, setMenuDisplaying] = useState(false);
 
+  const isMessageSent = getIsSentFromStatus(status);
+  const showReactionAddButton = useReaction
+    && (emojiAllMap.size > 0)
+    && getIsSentFromSendingStatus(message);
   const handleMoreIconClick = () => {
     setMoreActive(true);
   };
@@ -294,7 +298,7 @@ function OutgoingUserMessage({
               }}
             />
             {
-              (isMessageSent && useReaction && (emojiAllMap.size > 0))
+              (isMessageSent && showReactionAddButton)
               && (
                 <ContextMenu
                   menuTrigger={(toggleDropdown) => (

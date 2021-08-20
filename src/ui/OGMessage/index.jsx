@@ -8,6 +8,7 @@ import {
   getMessageCreatedAt,
   getIsSentFromStatus,
   getSenderProfileUrl,
+  getIsSentFromSendingStatus,
 } from './utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 import useMemoizedMessageText from './memoizedMessageText';
@@ -147,7 +148,10 @@ function OutgoingOGMessage(props) {
   const MemoizedEmojiListItems = memoizedEmojiListItems;
   const { stringSet } = useContext(LocalizationContext);
   const isMessageSent = getIsSentFromStatus(status);
-  const showEmojiReactions = (useReaction && message.reactions && message.reactions.length > 0);
+  const showEmojiReactions = useReaction
+    && message.reactions
+    && message.reactions.length > 0
+    && getIsSentFromSendingStatus(message);
 
   const messageRef = useRef(null);
   const parentContainRef = useRef(null);

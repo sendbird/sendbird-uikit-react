@@ -1,20 +1,13 @@
+@import '../../../styles/color-themes';
+
 .community-channel-list {
   width: 264px;
   height: 100%;
   display: flex;
   flex-direction: column;
-  .community-channel-list__list {
-    height: 100%;
-    overflow-y: scroll;
-    flex: 1;
-  }
 
-  .channel-preview__name {
-    position: absolute;
-    top: 16px;
-  }
-
-  .community-channel-list__title {
+  .community-channel-list__header {
+    position: relative;
     padding: 20px 24px;
     box-sizing: border-box;
     font-size: 18px;
@@ -25,6 +18,25 @@
     letter-spacing: -0.2px;
     color: var(--gray-0);
     border-bottom: 1px solid var(--gray-1);
+    height: 64px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+
+    // .community-channel-list__header__title {}
+    .community-channel-list__header__create-channel {
+      position: absolute;
+      top: 16px;
+      right: 10px;
+      // .community-channel-list__header__create-channel__icon {}
+    }
+  }
+
+  .community-channel-list__list {
+    height: 100%;
+    overflow-y: scroll;
+    flex: 1;
   }
 
   .community-channel-list__placeholder {
@@ -45,5 +57,57 @@
     padding: 16px;
     box-sizing: border-box;
     display: flex;
+  }
+}
+
+// modal
+.community-channel__add-channel {
+  position: relative;
+  box-sizing: border-box;
+  border-radius: 4px;
+
+  .community-channel__add-channel__image-box {
+
+    .community-channel__add-channel__image-box__title {
+      margin-top: 2px;
+    }
+    .community-channel__add-channel__image-box__body {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .community-channel__add-channel__image-box__body__profile--default {
+        @include themed() {
+          background-color: t(bg-3);
+        }
+      }
+      .community-channel__add-channel__image-box__body__upload {
+        margin-left: 16px;
+      }
+    }
+  }
+
+  .community-channel__add-channel__name-box {
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    margin-top: 16px;
+
+    .community-channel__add-channel__name-box__title {
+      margin-top: 4px;
+    }
+    .community-channel__add-channel__name-box__input {
+      box-sizing: border-box;
+      margin-top: 8px;
+      height: 40px;
+      padding: 10px 16px;
+      border-radius: 4px;
+      font-size: 14px;
+      @include themed() {
+        border: 1px solid t(on-bg-3);
+      }
+    }
   }
 }

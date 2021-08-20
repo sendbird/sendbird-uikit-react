@@ -171,7 +171,6 @@ UserListItem.propTypes = {
   onChange: PropTypes.func,
 };
 
-
 UserListItem.defaultProps = {
   className: '',
   currentUser: '',

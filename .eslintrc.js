@@ -37,6 +37,7 @@ module.exports = {
         "tsx": "never",
       },
     ],
+    "react/forbid-prop-types": 0,
   },
   settings: {
     "import/resolver": {

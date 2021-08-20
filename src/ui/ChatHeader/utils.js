@@ -3,7 +3,6 @@ import { LabelStringSet } from '../Label';
 
 export const prettyDate = (date) => formatDistanceToNowStrict(date, { addSuffix: true });
 
-
 export const getChannelTitle = (channel = {}, currentUserId, stringSet = LabelStringSet) => {
   if (!channel || (!channel.name && !channel.members)) {
     return stringSet.NO_TITLE;

@@ -42,6 +42,12 @@ exports[`UnknownMessage should do a snapshot test of the UnknownMessage DOM 1`] 
           >
             <div
               className="sendbird-avatar-img sendbird-image-renderer"
+              style={
+                Object {
+                  "height": "28px",
+                  "width": "28px",
+                }
+              }
             >
               <div
                 className="sendbird-image-renderer__image"
@@ -53,6 +59,7 @@ exports[`UnknownMessage should do a snapshot test of the UnknownMessage DOM 1`] 
                     "backgroundSize": "cover",
                     "borderRadius": null,
                     "height": "28px",
+                    "position": "absolute",
                     "width": "28px",
                   }
                 }
@@ -61,6 +68,7 @@ exports[`UnknownMessage should do a snapshot test of the UnknownMessage DOM 1`] 
                 alt="sender-profile-image"
                 className="sendbird-image-renderer__hidden-image-loader"
                 onError={[Function]}
+                onLoad={[Function]}
                 src="https://static.sendbird.com/sample/profiles/profile_33_512px.png"
               />
             </div>

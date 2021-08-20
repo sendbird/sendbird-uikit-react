@@ -12,14 +12,18 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [v12.16]
+        node-version: [14]
 
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2.2.0
       with:
         node-version: ${{ matrix.node-version }}
+
+    - name: Upgrade npm
+      run: npm install -g npm@7
+
     - run: npm install
     - run: npm run eslint
     - run: npm run eslint-ts

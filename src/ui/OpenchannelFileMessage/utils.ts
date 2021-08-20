@@ -1,15 +1,15 @@
 import { IconTypes } from '../Icon';
 
 export const checkFileType = (fileUrl: string): string => {
-  let result = null;
-  const imageFile = /(\.gif|\.jpg|\.jpeg|\.txt|\.pdf)$/i;
   const audioFile = /(\.mp3)$/i;
-  if (imageFile.test(fileUrl)) {
-    result = IconTypes.FILE_DOCUMENT;
-  } else if (audioFile.test(fileUrl)) {
-    result = IconTypes.FILE_AUDIO;
+  const gifFile = /(\.gif)$/i;
+  if (audioFile.test(fileUrl)) {
+    return IconTypes.FILE_AUDIO;
   }
-  return result;
+  if (gifFile.test(fileUrl)) {
+    return IconTypes.GIF
+  }
+  return IconTypes.FILE_DOCUMENT;
 }
 
 export const truncate = (fullStr:string, strLen: number): string => {

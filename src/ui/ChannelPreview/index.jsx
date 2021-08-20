@@ -50,16 +50,16 @@ export default function ChannelPreview({
           <div className="sendbird-channel-preview__content__upper__header">
             {
               isBroadcast
-                && (
-                  <div className="sendbird-channel-preview__content__upper__header__broadcast-icon">
-                    <Icon
-                      type={IconTypes.BROADCAST}
-                      fillColor={IconColors.SECONDARY}
-                      height="16px"
-                      width="16px"
-                    />
-                  </div>
-                )
+              && (
+                <div className="sendbird-channel-preview__content__upper__header__broadcast-icon">
+                  <Icon
+                    type={IconTypes.BROADCAST}
+                    fillColor={IconColors.SECONDARY}
+                    height="16px"
+                    width="16px"
+                  />
+                </div>
+              )
             }
             <Label
               className="sendbird-channel-preview__content__upper__header__channel-name"
@@ -77,16 +77,16 @@ export default function ChannelPreview({
             </Label>
             {
               isFrozen
-                && (
-                  <div title="Frozen" className="sendbird-channel-preview__content__upper__header__frozen-icon">
-                    <Icon
-                      type={IconTypes.FREEZE}
-                      fillColor={IconColors.PRIMARY}
-                      height={12}
-                      width={12}
-                    />
-                  </div>
-                )
+              && (
+                <div title="Frozen" className="sendbird-channel-preview__content__upper__header__frozen-icon">
+                  <Icon
+                    type={IconTypes.FREEZE}
+                    fillColor={IconColors.PRIMARY}
+                    height={12}
+                    width={12}
+                  />
+                </div>
+              )
             }
           </div>
           <Label
@@ -107,9 +107,9 @@ export default function ChannelPreview({
           </Label>
           <div className="sendbird-channel-preview__content__lower__unread-message-count">
             {
-              utils.getChannelUnreadMessageCount(channel) && (
-                <Badge count={utils.getChannelUnreadMessageCount(channel)} />
-              )
+              utils.getChannelUnreadMessageCount(channel) // return number
+                ? <Badge count={utils.getChannelUnreadMessageCount(channel)} />
+                : null
             }
           </div>
         </div>

@@ -1,12 +1,13 @@
 const { JSDOM } = require('jsdom');
 const Enzyme = require('enzyme');
-let Adapter = require('enzyme-adapter-react-16');
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 
-// for react-16
+// for react-17
+// https://github.com/enzymejs/enzyme/issues/2429#issuecomment-679265564
 Enzyme.configure({ adapter: new Adapter() });
 
 // for mount
-const jsdom = new JSDOM('<!doctype html><html><body></body></html>');
+const jsdom = new JSDOM('<!doctype html><html><body></body></html>', { url: 'http://localhost' });
 const { window } = jsdom;
 
 function copyProps(src, target) {

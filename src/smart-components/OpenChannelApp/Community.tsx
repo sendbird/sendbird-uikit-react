@@ -1,16 +1,11 @@
-import React, {
-  ReactElement,
-  useState,
-} from 'react';
+import React, { ReactElement, useState } from 'react';
 
 import './community.scss';
 import './theme.scss';
 
 import Sendbird from '../../lib/Sendbird';
-
 import OpenChannel from '../OpenchannelConversation';
 import OpenChannelSettings from '../OpenChannelSettings';
-
 import CommunityChannelList from './components/CommunityChannelList';
 
 interface Props {
@@ -20,7 +15,7 @@ interface Props {
   theme?: string;
 }
 
-export default function Streaming({
+export default function Community({
   appId,
   userId,
   theme,
@@ -74,6 +69,7 @@ export default function Streaming({
           )
         }
       </div>
+      <div className="sendbird-modal-root" />
     </Sendbird>
   );
 }

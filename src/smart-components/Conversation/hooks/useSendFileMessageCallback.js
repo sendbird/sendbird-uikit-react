@@ -79,7 +79,7 @@ export default function useSendFileMessageCallback({
                   if (error) {
                     // sending params instead of pending message
                     // to make sure that we can resend the message once it fails
-                    logger.error('Channel: Sending file message failed!', message);
+                    logger.error('Channel: Sending file message failed!', { message, error });
                     message.localUrl = URL.createObjectURL(compressedFile);
                     message.file = compressedFile;
                     messagesDispatcher({
@@ -113,7 +113,7 @@ export default function useSendFileMessageCallback({
           );
         };
       } catch (error) {
-        logger.error('Channel: Sending file message failed!');
+        logger.error('Channel: Sending file message failed!', error);
       }
     } else { // Not using image compression
       if (createCustomParams) {
@@ -130,7 +130,7 @@ export default function useSendFileMessageCallback({
         if (error) {
           // sending params instead of pending message
           // to make sure that we can resend the message once it fails
-          logger.error('Channel: Sending file message failed!', message);
+          logger.error('Channel: Sending file message failed!', { message, error });
           message.localUrl = URL.createObjectURL(file);
           message.file = file;
           messagesDispatcher({

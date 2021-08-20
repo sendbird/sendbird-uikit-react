@@ -4,6 +4,8 @@ import './open-channel-preview.scss';
 
 import { ChannelMeta } from './DummyStream';
 import { Freeze } from '../assets/Icons.jsx';
+import Avatar from '../../../ui/Avatar';
+import Icon, { IconTypes, IconColors } from '../../../ui/Icon';
 
 interface Props {
   channel: SendBird.OpenChannel;
@@ -48,9 +50,23 @@ export default function OpenChannelPreview({
       >
       <div className="channel-preview__selection" />
       <div className="channel-preview__inner-left">
-        <div className="channel-preview__avatar">
-          <img src={channel.coverUrl} alt={channel.name} />
-        </div>
+          <Avatar
+            className="channel-preview__avatar"
+            src={channel.coverUrl}
+            alt={channel.name}
+            width="32px"
+            height="32px"
+            customDefaultComponent={(style) => (
+              <div style={{ ...style }}>
+                <Icon
+                  type={IconTypes.CHANNELS}
+                  fillColor={IconColors.CONTENT}
+                  width="18px"
+                  height="18px"
+                />
+              </div>
+            )}
+          />
       </div>
       <div className="channel-preview__inner-right">
         <div className="channel-preview__name">

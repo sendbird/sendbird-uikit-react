@@ -6,5 +6,5 @@ import Accordion from "../index";
 
 // todo: tests
 describe.skip('Accordion', () => {
-  it('should render an accordion');
+  it('should render an accordion', () => {});
 });

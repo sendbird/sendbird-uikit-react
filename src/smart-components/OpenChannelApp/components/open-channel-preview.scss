@@ -85,17 +85,6 @@
     background-color: #9e8cf5;
   }
 
-  .channel-preview__avatar {
-    height: 32px;
-    width: 32px;
-
-    img {
-      height: 100%;
-      width: 100%;
-      border-radius: 50%;
-    }
-  }
-
   .channel-preview__name {
     white-space: nowrap;
     overflow: hidden;
@@ -122,8 +111,10 @@
 
   .channel-preview__inner-right {
     position: relative;
-    width: 230px;
-    margin: 0px 12px;
+    width: calc(100% - 44px);
+    padding: 0px 12px;
     box-sizing: border-box;
+    display: flex;
+    align-items: center;
   }
 }

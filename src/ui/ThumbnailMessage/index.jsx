@@ -1,10 +1,16 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, {
+  useContext,
+  useState,
+  useRef,
+  useMemo,
+} from 'react';
 import PropTypes from 'prop-types';
 
 import './index.scss';
 import {
   getMessageCreatedAt,
   getIsSentFromStatus,
+  getIsSentFromSendingStatus,
 } from './util';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 import Avatar from '../Avatar/index';
@@ -17,6 +23,7 @@ import ImageRenderer from '../ImageRenderer';
 import MessageStatus from '../MessageStatus';
 import EmojiReactions from '../EmojiReactions';
 import {
+  isGif,
   isImage,
   isVideo,
   unSupported,
@@ -121,8 +128,22 @@ export function OutgoingThumbnailMessage({
   const [mousehover, setMousehover] = useState(false);
   const [moreActive, setMoreActive] = useState(false);
   const [menuDisplaying, setMenuDisplaying] = useState(false);
+  /* eslint-disable react/prop-types */
+  const memorizedThumbnailPlaceHolder = useMemo(() => (iconType) => ({ style }) => (
+    <div style={style}>
+      <Icon
+        type={iconType}
+        fillColor={IconColors.ON_BACKGROUND_2}
+        width="56px"
+        height="56px"
+      />
+    </div>
+  ), []);
 
-  const showReactionAddButton = (useReaction && emojiAllMap && emojiAllMap.size > 0);
+  const showReactionAddButton = useReaction
+    && emojiAllMap
+    && (emojiAllMap.size > 0)
+    && getIsSentFromSendingStatus(message);
   const MemoizedEmojiListItems = memoizedEmojiListItems;
   const isMessageSent = getIsSentFromStatus(status);
 
@@ -304,6 +325,7 @@ export function OutgoingThumbnailMessage({
                                 />
                               </div>
                             )}
+                            placeHolder={memorizedThumbnailPlaceHolder(IconTypes.PLAY)}
                           />
                         )
                         : (
@@ -313,34 +335,53 @@ export function OutgoingThumbnailMessage({
                           </video>
                         )
                     }
-                    <Icon
-                      className={`${OUTGOING_THUMBNAIL_MESSAGE}-body__video-icon`}
-                      type={IconTypes.PLAY}
-                      width="56px"
-                      height="56px"
-                    />
+                    <div className={`${OUTGOING_THUMBNAIL_MESSAGE}-body__video-icon--wrap`}>
+                      <Icon
+                        className={`${OUTGOING_THUMBNAIL_MESSAGE}-body__video-icon`}
+                        type={IconTypes.PLAY}
+                        fillColor={IconColors.ON_BACKGROUND_2}
+                        width="34px"
+                        height="34px"
+                      />
+                    </div>
                   </>
                 )
               }
               {
                 isImage(type) && (
-                  <ImageRenderer
-                    className={`${OUTGOING_THUMBNAIL_MESSAGE}-body__img`}
-                    url={thumbnailUrl || url || localUrl}
-                    alt="image/thumbnail"
-                    width="404px"
-                    height="280px"
-                    defaultComponent={(
-                      <div className={`${OUTGOING_THUMBNAIL_MESSAGE}__thumbnail-placeholder--video`}>
-                        <Icon
-                          type={IconTypes.PHOTO}
-                          fillColor={IconColors.ON_BACKGROUND_2}
-                          width="56px"
-                          height="56px"
-                        />
-                      </div>
-                    )}
-                  />
+                  <>
+                    <ImageRenderer
+                      className={`${OUTGOING_THUMBNAIL_MESSAGE}-body__img`}
+                      url={thumbnailUrl || url || localUrl}
+                      alt="image/thumbnail"
+                      width="404px"
+                      height="280px"
+                      defaultComponent={(
+                        <div className={`${OUTGOING_THUMBNAIL_MESSAGE}__thumbnail-placeholder--image`}>
+                          <Icon
+                            type={IconTypes.PHOTO}
+                            fillColor={IconColors.ON_BACKGROUND_2}
+                            width="56px"
+                            height="56px"
+                          />
+                        </div>
+                      )}
+                      placeHolder={memorizedThumbnailPlaceHolder(IconTypes.PHOTO)}
+                    />
+                    {
+                      isGif(type) && (
+                        <div className={`${OUTGOING_THUMBNAIL_MESSAGE}-body__gif-icon--wrap`}>
+                          <Icon
+                            className={`${OUTGOING_THUMBNAIL_MESSAGE}-body__gif-icon`}
+                            type={IconTypes.GIF}
+                            fillColor={IconColors.ON_BACKGROUND_2}
+                            width="34px"
+                            height="34px"
+                          />
+                        </div>
+                      )
+                    }
+                  </>
                 )
               }
               {
@@ -405,6 +446,17 @@ export function IncomingThumbnailMessage({
   const [mousehover, setMousehover] = useState(false);
   const [moreActive, setMoreActive] = useState(false);
   const [menuDisplaying, setMenuDisplaying] = useState(false);
+  /* eslint-disable react/prop-types */
+  const memorizedThumbnailPlaceHolder = useMemo(() => (iconType) => ({ style }) => (
+    <div style={style}>
+      <Icon
+        type={iconType}
+        fillColor={IconColors.ON_BACKGROUND_2}
+        width="56px"
+        height="56px"
+      />
+    </div>
+  ), []);
 
   const showReactionAddButton = (useReaction && emojiAllMap && emojiAllMap.size > 0);
   const MemoizedEmojiListItems = memoizedEmojiListItems;
@@ -520,6 +572,7 @@ export function IncomingThumbnailMessage({
                                 />
                               </div>
                             )}
+                            placeHolder={memorizedThumbnailPlaceHolder(IconTypes.PLAY)}
                           />
                         )
                         : (
@@ -529,34 +582,53 @@ export function IncomingThumbnailMessage({
                           </video>
                         )
                     }
-                    <Icon
-                      type={IconTypes.PLAY}
-                      className={`${INCOMING_THUMBNAIL_MESSAGE}__video-icon`}
-                      width="56px"
-                      height="56px"
-                    />
+                    <div className={`${INCOMING_THUMBNAIL_MESSAGE}__video-icon--wrap`}>
+                      <Icon
+                        className={`${INCOMING_THUMBNAIL_MESSAGE}__video-icon`}
+                        type={IconTypes.PLAY}
+                        fillColor={IconColors.ON_BACKGROUND_2}
+                        width="34px"
+                        height="34px"
+                      />
+                    </div>
                   </>
                 )
               }
               {
                 isImage(type) && (
-                  <ImageRenderer
-                    className={`${INCOMING_THUMBNAIL_MESSAGE}__img`}
-                    url={thumbnailUrl || url || localUrl}
-                    alt="image/thumbnail"
-                    width="404px"
-                    height="280px"
-                    defaultComponent={(
-                      <div className={`${INCOMING_THUMBNAIL_MESSAGE}__thumbnail-placeholder--image`}>
-                        <Icon
-                          type={IconTypes.PHOTO}
-                          fillColor={IconColors.ON_BACKGROUND_2}
-                          width="56px"
-                          height="56px"
-                        />
-                      </div>
-                    )}
-                  />
+                  <>
+                    <ImageRenderer
+                      className={`${INCOMING_THUMBNAIL_MESSAGE}__img`}
+                      url={thumbnailUrl || url || localUrl}
+                      alt="image/thumbnail"
+                      width="404px"
+                      height="280px"
+                      defaultComponent={(
+                        <div className={`${INCOMING_THUMBNAIL_MESSAGE}__thumbnail-placeholder--image`}>
+                          <Icon
+                            type={IconTypes.PHOTO}
+                            fillColor={IconColors.ON_BACKGROUND_2}
+                            width="56px"
+                            height="56px"
+                          />
+                        </div>
+                      )}
+                      placeHolder={memorizedThumbnailPlaceHolder(IconTypes.PHOTO)}
+                    />
+                    {
+                      isGif(type) && (
+                        <div className={`${INCOMING_THUMBNAIL_MESSAGE}__gif-icon--wrap`}>
+                          <Icon
+                            className={`${INCOMING_THUMBNAIL_MESSAGE}__gif-icon`}
+                            type={IconTypes.GIF}
+                            fillColor={IconColors.ON_BACKGROUND_2}
+                            width="34px"
+                            height="34px"
+                          />
+                        </div>
+                      )
+                    }
+                  </>
                 )
               }
               {

@@ -30,6 +30,12 @@ exports[`OpenchannelThumbnailMessage should do a snapshot test of the Openchanne
       >
         <div
           className="sendbird-avatar-img sendbird-image-renderer"
+          style={
+            Object {
+              "height": "28px",
+              "width": "28px",
+            }
+          }
         >
           <div
             className="sendbird-image-renderer__image"
@@ -41,6 +47,7 @@ exports[`OpenchannelThumbnailMessage should do a snapshot test of the Openchanne
                 "backgroundSize": "cover",
                 "borderRadius": null,
                 "height": "28px",
+                "position": "absolute",
                 "width": "28px",
               }
             }
@@ -49,6 +56,7 @@ exports[`OpenchannelThumbnailMessage should do a snapshot test of the Openchanne
             alt=""
             className="sendbird-image-renderer__hidden-image-loader"
             onError={[Function]}
+            onLoad={[Function]}
             src="https://static.sendbird.com/sample/profiles/profile_15_512px.png"
           />
         </div>
@@ -87,7 +95,43 @@ exports[`OpenchannelThumbnailMessage should do a snapshot test of the Openchanne
         />
         <div
           className="sendbird-openchannel-thumbnail-message__right__body__wrap__image sendbird-image-renderer"
+          style={
+            Object {
+              "height": "270px",
+              "width": 360,
+            }
+          }
         >
+          <div
+            style={
+              Object {
+                "alignItems": "center",
+                "display": "flex",
+                "height": "270px",
+                "justifyContent": "center",
+                "position": "absolute",
+                "width": 360,
+              }
+            }
+          >
+            <div
+              className=" sendbird-icon sendbird-icon-color--on-background-2"
+              onClick={[Function]}
+              onKeyDown={[Function]}
+              role="button"
+              style={
+                Object {
+                  "height": "56px",
+                  "minHeight": "56px",
+                  "minWidth": "56px",
+                  "width": "56px",
+                }
+              }
+              tabIndex="0"
+            >
+              <test-file-stub />
+            </div>
+          </div>
           <div
             className="sendbird-image-renderer__image"
             style={
@@ -98,7 +142,8 @@ exports[`OpenchannelThumbnailMessage should do a snapshot test of the Openchanne
                 "backgroundSize": "cover",
                 "borderRadius": null,
                 "height": "270px",
-                "width": "360px",
+                "position": "absolute",
+                "width": 360,
               }
             }
           />
@@ -106,6 +151,7 @@ exports[`OpenchannelThumbnailMessage should do a snapshot test of the Openchanne
             alt="image"
             className="sendbird-image-renderer__hidden-image-loader"
             onError={[Function]}
+            onLoad={[Function]}
             src="https://sendbird-staging.s3.amazonaws.com/26FA710D-A7F6-4483-ABEA-1F07A07A112E/upload/n/e49e0a4111d4445a8840bd51f3c9d933.png"
           />
         </div>

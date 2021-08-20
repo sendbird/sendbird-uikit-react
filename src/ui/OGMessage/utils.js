@@ -60,6 +60,13 @@ export const checkOGIsEnalbed = (message) => {
   return true;
 };
 
+export const getIsSentFromSendingStatus = (message = {}) => {
+  if (message.sendingStatus && typeof message.sendingStatus === 'string') {
+    return message.sendingStatus === 'none' || message.sendingStatus === 'succeeded';
+  }
+  return false;
+};
+
 export default {
   getSenderName,
   createUrlTester,
@@ -68,4 +75,5 @@ export default {
   getMessageCreatedAt,
   getIsSentFromStatus,
   getSenderProfileUrl,
+  getIsSentFromSendingStatus,
 };
