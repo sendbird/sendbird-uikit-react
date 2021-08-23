@@ -63,7 +63,7 @@ module.exports = ({
         autoprefixer,
       ],
       sourceMap: true,
-      extract: 'release/dist/index.css',
+      extract: 'dist/index.css',
       extensions: ['.sass', '.scss', '.css'],
     }),
     replace({
