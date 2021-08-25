@@ -119,6 +119,11 @@ module.exports = ({
           src: 'src/CHANGELOG.md',
           dest: 'release',
         },
+        // todo: deprecate in v3.0.0
+        {
+          src: 'release/dist/index.css',
+          dest: 'dist/index.css',
+        },
       ],
     }),
   ],
