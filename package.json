@@ -1,6 +1,6 @@
 {
   "name": "sendbird-uikit",
-  "version": "2.4.0-alpha.5",
+  "version": "2.4.0-alpha.6",
   "description": "React based UI kit for sendbird",
   "main": "release/index.js",
   "style": "release/dist/index.css",
@@ -18,8 +18,9 @@
   "scripts": {
     "test": "jest",
     "test-update-snapshot": "jest -u",
+    "cp": "./scripts/copy-css.sh",
     "clean-release": "rm -rf ./release; rm -rf ./dist",
-    "build": "npm run clean-release; rollup -c",
+    "build": "npm run clean-release; rollup -c; npm run cp",
     "start": "rollup -c -w",
     "prepublishOnly": "npm run build",
     "predeploy": "cd example && npm install && npm run build",

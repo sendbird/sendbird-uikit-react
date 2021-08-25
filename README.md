@@ -62,11 +62,6 @@ We use rollupJS for building the production bundle script that you want to use i
 We have both esm and commonjs output
 
 ```
-rollup -c
-```
-or
-
-```
 npm run build
 ```
 

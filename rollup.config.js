@@ -110,22 +110,11 @@ module.exports = ({
     commonjs(),
     sizeSnapshot(),
     copy({
+      verbose: true,
       targets: [
         {
-          src: pkg.typings,
+          src: './src/index.d.ts',
           dest: 'release',
-        },
-        {
-          src: 'src/CHANGELOG.md',
-          dest: 'release',
-        },
-        // todo: deprecate in v3.0.0
-        {
-          src: [
-            'release/dist/index.css',
-            'release/dist/index.css.map',
-          ],
-          dest: 'dist',
         },
       ],
     }),
