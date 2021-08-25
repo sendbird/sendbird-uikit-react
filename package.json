@@ -1,6 +1,6 @@
 {
   "name": "sendbird-uikit",
-  "version": "2.4.0-alpha.4",
+  "version": "2.4.0-alpha.5",
   "description": "React based UI kit for sendbird",
   "main": "release/index.js",
   "style": "release/dist/index.css",
@@ -18,7 +18,7 @@
   "scripts": {
     "test": "jest",
     "test-update-snapshot": "jest -u",
-    "clean-release": "rm -rf ./release",
+    "clean-release": "rm -rf ./release; rm -rf ./dist",
     "build": "npm run clean-release; rollup -c",
     "start": "rollup -c -w",
     "prepublishOnly": "npm run build",
@@ -41,6 +41,14 @@
   "author": "SendBird <support@sendbird.com>",
   "license": "SEE LICENSE IN LICENSE.md",
   "peerDependencies": {
+    "css-vars-ponyfill": "^2.3.2",
+    "date-fns": "^2.16.1",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6 || ^17.0.0",
+    "react-dom": "^16.8.6 || ^17.0.0",
+    "sendbird": "^3.0.154"
+  },
+  "dependencies": {
     "css-vars-ponyfill": "^2.3.2",
     "date-fns": "^2.16.1",
     "prop-types": "^15.7.2",
@@ -94,6 +102,7 @@
     "jest": "^27.0.6",
     "jsdom": "^16.1.0",
     "node-sass": "^6.0.1",
+    "np": "^7.5.0",
     "plop": "^2.5.3",
     "postcss": "^8.3.5",
     "react-test-renderer": "^17.0.2",

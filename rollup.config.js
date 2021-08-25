@@ -121,8 +121,11 @@ module.exports = ({
         },
         // todo: deprecate in v3.0.0
         {
-          src: 'release/dist/index.css',
-          dest: 'dist/index.css',
+          src: [
+            'release/dist/index.css',
+            'release/dist/index.css.map',
+          ],
+          dest: 'dist',
         },
       ],
     }),
