@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.4.0-alpha.x]
+## [2.4.0]
 
 Move source code to new repo
 
