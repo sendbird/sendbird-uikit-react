@@ -32,7 +32,7 @@ The minimum requirements for UIKit for React are:
 
 ### Implement Chat with App component
 
-The `App` component is a collection of all UIKit components you need to implement chat. This is included in all core component samples, so be sure to set your own APP_ID, USER_ID, and NICKNAME in  `const.js` in each to customize your sample. On the [CodeSandbox](https://codesandbox.io/s/1-1-using-sendbird-app-9xum5) link, you will see that the props of the `App` component refer to use the values of the correspondings of `const.js` for initialization. 
+The `App` component is a collection of all UIKit components you need to implement chat. This is included in all core component samples, so be sure to set your own APP_ID, USER_ID, and NICKNAME in  `const.js` in each to customize your sample. On the [CodeSandbox](https://codesandbox.io/s/1-1-using-sendbird-app-9xum5) link, you will see that the props of the `App` component refer to use the values of the correspondings of `const.js` for initialization.
 
 Try setting your own by downloading the Sendbird sample.
 
@@ -42,7 +42,7 @@ import { App as SendbirdApp } from 'sendbird-uikit'
 
 ### Import components to customize UIKit
 
-Here is a list of the essential components that you need to import before you start customizing chat. Note that the names of the components are changed as shown in the code below. 
+Here is a list of the essential components that you need to import before you start customizing chat. Note that the names of the components are changed as shown in the code below.
 
 Try [importing components on CodeSandbox](https://codesandbox.io/s/1-2-customization-basic-format-q4e6c).
 
@@ -54,15 +54,15 @@ import {
 } from 'sendbird-uikit'
 ```
 
-### Referring to CodeSandbox 
+### Referring to CodeSandbox
 
 Each CodeSandbox sample has `App.js` and `CustomizedApp.js` which operate based on the imported `const.js`. CodeSandbox is a code editor that provides an instant live preview. The preview has two buttons placed at the top center. If you click the left button, you will see unaltered `App.js`. If you click the right button, you will see the customized component from `CustomizedApp.js`, and any changes you make on them applied and rendered on the live preview.
 
-If you would like to get a deeper understanding of how CodeSandbox works, refer to **CustomizedMessageItems**, **CustomizedHeader**, **CustomizedMessageInput**, and **CustomizedChannelPreviewItem** which you can find on corresponding CodeSandbox samples. 
+If you would like to get a deeper understanding of how CodeSandbox works, refer to **CustomizedMessageItems**, **CustomizedHeader**, **CustomizedMessageInput**, and **CustomizedChannelPreviewItem** which you can find on corresponding CodeSandbox samples.
 
 <br />
 
-## Getting Started 
+## Getting Started
 
 This section explains what you need to know before testing the sample app.
 
@@ -86,15 +86,15 @@ Try your [message item on CodeSandbox](https://codesandbox.io/s/2-1-customizing-
 >
 ```
 
-> Note: You can try making your own customized message item by using `<CustomizedMessageItem />` on the CodeSandbox sample. 
+> Note: You can try making your own customized message item by using `<CustomizedMessageItem />` on the CodeSandbox sample.
 
 ### Message list params
 
-The **queries.messageListParams** is an `instance` prop in the **channel** component which you can use to retrieve a list of messages by specifying the properties of `MessageListParams`. 
+The **queries.messageListParams** is an `instance` prop in the **channel** component which you can use to retrieve a list of messages by specifying the properties of `MessageListParams`.
 
 Try your [message list params on CodeSandbox](https://codesandbox.io/s/2-2-customizing-messagelistparams-45573).
 
-> Note: On CodeSandbox’s preview, only the messages you sent will be displayed. 
+> Note: On CodeSandbox’s preview, only the messages you sent will be displayed.
 
 ```javascript
 // Pass arguments in JSON data input format to the query instance.
@@ -110,9 +110,9 @@ Try your [message list params on CodeSandbox](https://codesandbox.io/s/2-2-custo
 >
 ```
 
-### Message params 
+### Message params
 
-The **onBeforeSendUserMessage**, **onBeforeSendFileMessage**, and **onBeforeUpdateUserMessage** are `callback function` props in the **channel** component. The first two execute additional operations for a user message and a file message respectively; the corresponding modified messages are returned through the **text** and the **file** arguments respectively. The **onBeforeUpdateUserMessage** executes additional operations for a user message before updating it. 
+The **onBeforeSendUserMessage**, **onBeforeSendFileMessage**, and **onBeforeUpdateUserMessage** are `callback function` props in the **channel** component. The first two execute additional operations for a user message and a file message respectively; the corresponding modified messages are returned through the **text** and the **file** arguments respectively. The **onBeforeUpdateUserMessage** executes additional operations for a user message before updating it.
 
 Try your [message params on CodeSandbox](https://codesandbox.io/s/2-3-customizing-messageparams-phqii)
 
@@ -152,7 +152,7 @@ Try your [chat header on CodeSandbox](https://codesandbox.io/s/2-4-customizing-c
 >
 ```
 
-> Note: You can try making your own customized chat header item by using `<CustomizedHeader />` on the CodeSandbox sample. 
+> Note: You can try making your own customized chat header item by using `<CustomizedHeader />` on the CodeSandbox sample.
 
 ### Message input
 
@@ -169,11 +169,11 @@ Try your [message input on CodeSandbox](https://codesandbox.io/s/2-5-customizing
 >
 ```
 
-> Note: You can try making your own customized message input item by using `<CustomizedMessageInput />` on the CodeSandbox sample. 
+> Note: You can try making your own customized message input item by using `<CustomizedMessageInput />` on the CodeSandbox sample.
 
 ### Channel preview item
 
-The **renderChannelPreview** is a `ReactElement` prop in the **ChannelList** component which allows you to customize channel preview by setting a function. This prop provides two arguments: **channel** and **onLeaveChannel**. The **channel** refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **onLeaveChannel** has a callback function as an argument which can be implemented with custom code for events related to the corresponding user action. 
+The **renderChannelPreview** is a `ReactElement` prop in the **ChannelList** component which allows you to customize channel preview by setting a function. This prop provides two arguments: **channel** and **onLeaveChannel**. The **channel** refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **onLeaveChannel** has a callback function as an argument which can be implemented with custom code for events related to the corresponding user action.
 
 Try your [channel preview item on CodeSandbox](https://codesandbox.io/s/3-1-customizing-channelpreviewitem-ycsvs)
 
@@ -193,18 +193,17 @@ You can make your own customized channel preview item component in this file. Yo
 function CustomizedChannelPreviewItem(props) {
     const { channel, onLeaveChannel } = props;
     ...
-    
     onLeaveChannel(channel);
 }
 ```
 
-> Note: You can try making your own customized channel preview item by using `<CustomizedMessageItem />` and using the **onLeaveChannel** function in the component on the CodeSandbox sample.  
+> Note: You can try making your own customized channel preview item by using `<CustomizedMessageItem />` and using the **onLeaveChannel** function in the component on the CodeSandbox sample.
 
 ### Channel list query
 
-The **queries.channelListQuery** is an `instance` prop in the **ChannelList** component which filters channels by using its options.  
+The **queries.channelListQuery** is an `instance` prop in the **ChannelList** component which filters channels by using its options.
 
-Try your [channel list query item on CodeSandbox](https://codesandbox.io/s/3-2-customizing-channellistquery-z2y89?file=) 
+Try your [channel list query item on CodeSandbox](https://codesandbox.io/s/3-2-customizing-channellistquery-z2y89?file=)
 
 > Note: On the CodeSandbox’s preview, the empty channels that you see means that the channels are successfully created and there are no messages sent by users.
 
@@ -230,7 +229,7 @@ Find out more about `ChannelListQuery` and `ApplicationUserListQuery` on the [AP
 
 The **onBeforeCreateChannel** is a prop of the **ChannelList** component which can be implemented with custom code for events related to the corresponding user actions.
 
-Try your [channel param on CodeSandbox](https://codesandbox.io/s/3-3-customizing-channellist-sg9kx) 
+Try your [channel param on CodeSandbox](https://codesandbox.io/s/3-3-customizing-channellist-sg9kx)
 
 > Note: you can create a channel using `GroupChannelParams`.
 
@@ -239,7 +238,7 @@ Try your [channel param on CodeSandbox](https://codesandbox.io/s/3-3-customizing
     onBeforeCreateChannel={handleOnBeforeCreateChannel}
 >
 ```
-You can get an array of **selectedUsers** in a function argument. In order to complete an operation you intend to carry out with the function, you should return a `GroupchannelParams` object after specifying its properties. 
+You can get an array of **selectedUsers** in a function argument. In order to complete an operation you intend to carry out with the function, you should return a `GroupchannelParams` object after specifying its properties.
 
 ```javascript
 const handleOnBeforeCreateChannel = (selectedUsers) => {
@@ -249,7 +248,7 @@ const handleOnBeforeCreateChannel = (selectedUsers) => {
     channelParams.overUrl = null;
     channelParams.coverImage = null;
     channelParams.customType = HIGHLIGHT;
-    
+
     return channelParams;
 }
 ```

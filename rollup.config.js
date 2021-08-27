@@ -63,7 +63,7 @@ module.exports = ({
         autoprefixer,
       ],
       sourceMap: true,
-      extract: 'release/dist/index.css',
+      extract: 'dist/index.css',
       extensions: ['.sass', '.scss', '.css'],
     }),
     replace({
@@ -110,13 +110,10 @@ module.exports = ({
     commonjs(),
     sizeSnapshot(),
     copy({
+      verbose: true,
       targets: [
         {
-          src: pkg.typings,
-          dest: 'release',
-        },
-        {
-          src: 'src/CHANGELOG.md',
+          src: './src/index.d.ts',
           dest: 'release',
         },
       ],

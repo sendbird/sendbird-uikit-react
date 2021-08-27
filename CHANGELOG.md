@@ -1,5 +1,31 @@
 # Changelog
 
+## [2.4.0]
+
+Move source code to new repo
+
+## [2.3.2] (Aug 19 2021)
+
+- Bugfix:
+ * Add filtering logics for channel events by custom message list params
+ * Add filtering logics for channel list events by custom channel list query
+
+## [2.3.0](Jul 27 2021)
+
+- Bugfix:
+  * Thumbnail image url fix
+
+## [2.3.0.alpha](Jul 27 2021)
+
+- Internal tooling changes:
+  * npm v7 peer dependency fix
+  * storybook 6
+  * jest 27
+  * typescript 4
+  * React 17
+  * rollup 2
+
+
 ## [2.2.1](Mar 19 2021)
 
 - Features:

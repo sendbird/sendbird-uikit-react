@@ -1,16 +1,27 @@
 {
-  "name": "sendbird-uikit-src",
-  "version": "2.3.0.alpha-1",
+  "name": "sendbird-uikit",
+  "version": "2.4.0-alpha.8",
   "description": "React based UI kit for sendbird",
-  "main": "release/dist/esm/index.js",
-  "style": "release/dist/styles.css",
-  "typings": "src/index.d.ts",
-  "module": "dist/esm/index.js",
+  "main": "release/index.js",
+  "style": "release/dist/index.css",
+  "typings": "release/index.d.ts",
+  "module": "release/index.js",
+  "files": [
+    "release/**/*",
+    "dist/**/*",
+    "package-lock.json",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "devEngines": {
+    "node": "14.x || 15.x || 16.x"
+  },
   "scripts": {
     "test": "jest",
     "test-update-snapshot": "jest -u",
-    "clean-release": "rm -rf ./release/**/*.js; rm -rf ./release/**/*.js.map",
-    "build": "npm run clean-release; rollup -c",
+    "cp-css": "./scripts/copy-css.sh",
+    "clean-release": "rm -rf ./release; rm -rf ./dist",
+    "build": "npm run clean-release; rollup -c; npm run cp-css",
     "start": "rollup -c -w",
     "prepublishOnly": "npm run build",
     "predeploy": "cd example && npm install && npm run build",
@@ -27,7 +38,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com:sendbird/SendBird-UIKIT-JavaScript.git"
+    "url": "git+git@github.com:sendbird/sendbird-uikit-react-sources.git"
   },
   "author": "SendBird <support@sendbird.com>",
   "license": "SEE LICENSE IN LICENSE.md",
@@ -37,10 +48,18 @@
     "prop-types": "^15.7.2",
     "react": "^16.8.6 || ^17.0.0",
     "react-dom": "^16.8.6 || ^17.0.0",
-    "sendbird": "^3.0.140"
+    "sendbird": "^3.0.154"
+  },
+  "dependencies": {
+    "css-vars-ponyfill": "^2.3.2",
+    "date-fns": "^2.16.1",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6 || ^17.0.0",
+    "react-dom": "^16.8.6 || ^17.0.0",
+    "sendbird": "^3.0.154"
   },
   "bugs": {
-    "url": "https://github.com/sendbird/uikit-js/issues"
+    "url": "https://community.sendbird.com"
   },
   "homepage": "https://sendbird.com",
   "devDependencies": {
@@ -85,6 +104,7 @@
     "jest": "^27.0.6",
     "jsdom": "^16.1.0",
     "node-sass": "^6.0.1",
+    "np": "^7.5.0",
     "plop": "^2.5.3",
     "postcss": "^8.3.5",
     "react-test-renderer": "^17.0.2",
@@ -104,12 +124,5 @@
   "browserslist": [
     "defaults",
     "IE 11"
-  ],
-  "dependencies": {
-    "css-vars-ponyfill": "^2.3.2",
-    "date-fns": "^2.16.1",
-    "react": "^16.8.6 || ^17.0.0",
-    "react-dom": "^16.8.6 || ^17.0.0",
-    "sendbird": "^3.0.140"
-  }
+  ]
 }
