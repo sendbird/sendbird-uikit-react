@@ -7,19 +7,12 @@ import React, {
 import PropTypes from 'prop-types';
 import format from 'date-fns/format';
 
-import Message from '../../../ui/Message';
-import AdminMessage from '../../../ui/AdminMessage';
-import ThumbnailMessage from '../../../ui/ThumbnailMessage';
-import FileMessage from '../../../ui/FileMessage';
+import MessageContent from '../../../ui/MessageContent';
 import DateSeparator from '../../../ui/DateSeparator';
 import Label, { LabelTypography, LabelColors } from '../../../ui/Label';
 import MessageInput from '../../../ui/MessageInput';
 import FileViewer from '../../../ui/FileViewer';
 import RemoveMessageModal from './RemoveMessage';
-import UnknownMessage from '../../../ui/UnknownMessage';
-import OGMessage from '../../../ui/OGMessage';
-
-import { MessageTypes, getMessageType } from '../types';
 
 export default function MessageHoc({
   message,
@@ -29,16 +22,14 @@ export default function MessageHoc({
   hasSeperator,
   deleteMessage,
   updateMessage,
-  status,
   resendMessage,
   useReaction,
   chainTop,
   chainBottom,
-  emojiAllMap,
   membersMap,
+  emojiContainer,
   highLightedMessageId,
   toggleReaction,
-  memoizedEmojiListItems,
   renderCustomMessage,
   currentGroupChannel,
 }) {
@@ -122,6 +113,7 @@ export default function MessageHoc({
         sendbird-msg-hoc sendbird-msg--scroll-ref
         ${isAnimated ? 'sendbird-msg-hoc__animated' : ''}
       `}
+      style={{ marginBottom: '2px' }}
     >
       {/* date-seperator */}
       {
@@ -134,86 +126,24 @@ export default function MessageHoc({
         )
       }
       {/* Message */}
-      {
-        {
-          [MessageTypes.ADMIN]: <AdminMessage message={message} />,
-          [MessageTypes.FILE]: (
-            <FileMessage
-              message={message}
-              userId={userId}
-              disabled={disabled}
-              isByMe={isByMe}
-              showRemove={setShowRemove}
-              resendMessage={resendMessage}
-              status={status}
-              useReaction={useReaction}
-              emojiAllMap={emojiAllMap}
-              membersMap={membersMap}
-              toggleReaction={toggleReaction}
-              memoizedEmojiListItems={memoizedEmojiListItems}
-              chainTop={chainTop}
-              chainBottom={chainBottom}
-            />
-          ),
-          [MessageTypes.OG]: (
-            <OGMessage
-              message={message}
-              status={status}
-              isByMe={isByMe}
-              userId={userId}
-              showEdit={setShowEdit}
-              disabled={disabled}
-              showRemove={setShowRemove}
-              resendMessage={resendMessage}
-              useReaction={useReaction}
-              emojiAllMap={emojiAllMap}
-              membersMap={membersMap}
-              toggleReaction={toggleReaction}
-              memoizedEmojiListItems={memoizedEmojiListItems}
-              chainTop={chainTop}
-              chainBottom={chainBottom}
-            />
-          ),
-          [MessageTypes.THUMBNAIL]: (
-            <ThumbnailMessage
-              disabled={disabled}
-              message={message}
-              userId={userId}
-              isByMe={isByMe}
-              showRemove={setShowRemove}
-              resendMessage={resendMessage}
-              onClick={setShowFileViewer}
-              status={status}
-              useReaction={useReaction}
-              emojiAllMap={emojiAllMap}
-              membersMap={membersMap}
-              toggleReaction={toggleReaction}
-              memoizedEmojiListItems={memoizedEmojiListItems}
-              chainTop={chainTop}
-              chainBottom={chainBottom}
-            />
-          ),
-          [MessageTypes.USER]: (
-            <Message
-              message={message}
-              disabled={disabled}
-              isByMe={isByMe}
-              userId={userId}
-              showEdit={setShowEdit}
-              showRemove={setShowRemove}
-              resendMessage={resendMessage}
-              status={status}
-              useReaction={useReaction}
-              emojiAllMap={emojiAllMap}
-              membersMap={membersMap}
-              toggleReaction={toggleReaction}
-              memoizedEmojiListItems={memoizedEmojiListItems}
-              chainTop={chainTop}
-              chainBottom={chainBottom}
-            />
-          ),
-        }[getMessageType(message)]
-      }
+      <MessageContent
+        className="sendbird-message-hoc__message-content"
+        userId={userId}
+        channel={currentGroupChannel}
+        message={message}
+        disabled={disabled}
+        chainTop={chainTop}
+        chainBottom={chainBottom}
+        useReaction={useReaction}
+        // useReplying={} TODO: Set useReplying
+        nicknamesMap={membersMap}
+        emojiContainer={emojiContainer}
+        showEdit={setShowEdit}
+        showRemove={setShowRemove}
+        showFileViewer={setShowFileViewer}
+        resendMessage={resendMessage}
+        toggleReaction={toggleReaction}
+      />
       {/* Modal */}
       {
         showRemove && (
@@ -236,22 +166,6 @@ export default function MessageHoc({
               });
             }}
             isByMe={isByMe}
-          />
-        )
-      }
-      {
-        !((message.isFileMessage && message.isFileMessage()) || message.messageType === 'file')
-        && !(message.isAdminMessage && message.isAdminMessage())
-        && !(((message.isUserMessage && message.isUserMessage()) || message.messageType === 'user'))
-        && !(showFileViewer)
-        && (
-          <UnknownMessage
-            message={message}
-            status={status}
-            isByMe={isByMe}
-            showRemove={setShowRemove}
-            chainTop={chainTop}
-            chainBottom={chainBottom}
           />
         )
       }
@@ -288,14 +202,19 @@ MessageHoc.propTypes = {
   deleteMessage: PropTypes.func.isRequired,
   updateMessage: PropTypes.func.isRequired,
   resendMessage: PropTypes.func.isRequired,
-  status: PropTypes.string,
   useReaction: PropTypes.bool.isRequired,
   chainTop: PropTypes.bool.isRequired,
   chainBottom: PropTypes.bool.isRequired,
-  emojiAllMap: PropTypes.instanceOf(Map).isRequired,
   membersMap: PropTypes.instanceOf(Map).isRequired,
+  emojiContainer: PropTypes.shape({
+    emojiCategories: PropTypes.arrayOf(PropTypes.shape({
+      emojis: PropTypes.arrayOf(PropTypes.shape({
+        key: PropTypes.string,
+        url: PropTypes.string,
+      })),
+    })),
+  }),
   toggleReaction: PropTypes.func,
-  memoizedEmojiListItems: PropTypes.func,
 };
 
 MessageHoc.defaultProps = {
@@ -307,7 +226,6 @@ MessageHoc.defaultProps = {
   hasSeperator: false,
   disabled: false,
   highLightedMessageId: null,
-  status: '',
   toggleReaction: () => { },
-  memoizedEmojiListItems: () => '',
+  emojiContainer: {},
 };

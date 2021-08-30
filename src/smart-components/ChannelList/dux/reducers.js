@@ -1,3 +1,4 @@
+import { filterChannelListParams, getChannelsWithUpsertedChannel } from '../../../utils';
 import * as actions from './actionTypes';
 import initialState from './initialState';
 
@@ -34,61 +35,82 @@ export default function reducer(state, action) {
       };
     }
     case actions.CREATE_CHANNEL: {
+      const channel = action.payload;
+      if (state.channelListQuery) {
+        if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
+          return {
+            ...state,
+            ...getChannelsWithUpsertedChannel(state.allChannels, channel),
+          };
+        }
+        return {
+          ...state,
+          currentChannel: channel.url,
+        };
+      }
       return {
         ...state,
-        allChannels: [
-          action.payload,
-          ...state.allChannels.filter(
-            (channel) => channel.url !== action.payload.url,
-          )],
-        currentChannel: action.payload.url,
+        currentChannel: channel.url,
+        allChannels: [channel, ...state.allChannels.filter((ch) => ch.url !== channel.url)],
       };
     }
-    case actions.ON_CHANNEL_ARCHIVED:
+    case actions.ON_CHANNEL_ARCHIVED: {
+      const channel = action.payload;
+      if (state.channelListQuery) {
+        if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
+          return {
+            ...state,
+            allChannels: getChannelsWithUpsertedChannel(state.allChannels, channel),
+          };
+        }
+      }
+      return {
+        ...state,
+        currentChannel: (channel.url === state.currentChannel)
+          ? state.allChannels[state.allChannels[0].url === channel.url ? 1 : 0].url
+          : state.currentChannel,
+        allChannels: state.allChannels.filter(({ url }) => url !== channel.url),
+      };
+    }
     case actions.LEAVE_CHANNEL_SUCCESS:
     case actions.ON_CHANNEL_DELETED: {
       const channelUrl = action.payload;
-      const leftCurrentChannel = (state.currentChannel === channelUrl);
-      const newAllChannels = state.allChannels.filter(({ url }) => url !== channelUrl);
-      const currentChannel = leftCurrentChannel
-        ? (() => (
-          (newAllChannels.length > 0)
-            ? newAllChannels[0].url
-            : ''
-        ))()
-        : state.currentChannel;
-
       return {
         ...state,
-        currentChannel,
-        allChannels: newAllChannels,
+        currentChannel: (channelUrl === state.currentChannel)
+          ? state.allChannels[0].url
+          : state.currentChannel,
+        allChannels: state.allChannels.filter(({ url }) => url !== channelUrl),
       };
     }
     case actions.ON_USER_LEFT: {
       const { channel, isMe } = action.payload;
-      const { url } = channel;
-      if (isMe) {
-        const leftCurrentChannel = (url === state.currentChannel);
-        const newAllChannels = state.allChannels.filter((c) => (c.url !== url));
-        const currentChannel = leftCurrentChannel
-          ? (() => (
-            (newAllChannels.length > 0)
-              ? newAllChannels[0].url
-              : ''
-          ))()
-          : state.currentChannel;
-
+      if (state.channelListQuery) {
+        if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
+          const filteredChannels = getChannelsWithUpsertedChannel(state.allChannels, channel);
+          return {
+            ...state,
+            currentChannel: (isMe && (channel.url === state.currentChannel))
+              ? filteredChannels[0].url
+              : state.currentChannel,
+            allChannels: filteredChannels,
+          };
+        }
         return {
           ...state,
-          currentChannel,
-          allChannels: newAllChannels,
+          currentChannel: (channel.url === state.currentChannel)
+            ? state.allChannels[0].url
+            : state.currentChannel,
+          allChannels: state.allChannels.filter(({ url }) => url !== channel.url),
         };
       }
-      // other user left
-      const newAllChannels = state.allChannels.map((c) => ((c.url === url) ? channel : c));
+      const filteredChannels = state.allChannels.filter((c) => c.url !== channel.url);
       return {
         ...state,
-        allChannels: newAllChannels,
+        currentChannel: (isMe && (channel.url === state.currentChannel))
+          ? filteredChannels[0].url
+          : state.currentChannel,
+        allChannels: filteredChannels,
       };
     }
     case actions.ON_USER_JOINED:
@@ -96,31 +118,47 @@ export default function reducer(state, action) {
     case actions.ON_READ_RECEIPT_UPDATED:
     case actions.ON_DELIVERY_RECEIPT_UPDATED: {
       const { allChannels = [] } = state;
-      const { unreadMessageCount } = action.payload;
       const channel = action.payload;
-      if (!channel.lastMessage) {
-        return state;
+      const { unreadMessageCount } = channel;
+      if (!channel.lastMessage) return state;
+      if (state.channelListQuery) {
+        if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
+          // if its only an unread message count change, dont push to top
+          if (unreadMessageCount === 0) {
+            const currentChannel = allChannels.find(({ url }) => url === channel.url);
+            const currentUnreadCount = currentChannel && currentChannel.unreadMessageCount;
+            if (currentUnreadCount === 0) {
+              return {
+                ...state,
+                allChannels: getChannelsWithUpsertedChannel(allChannels, channel),
+              };
+            }
+          }
+        }
+        return {
+          ...state,
+          currentChannel: (channel.url === state.currentChannel)
+            ? state.allChannels[state.allChannels[0].url === channel.url ? 1 : 0].url
+            // if coming channel is first of channel list, current channel will be the next one
+            : state.currentChannel,
+          allChannels: state.allChannels.filter(({ url }) => url !== channel.url),
+        };
       }
       // if its only an unread message count change, dont push to top
       if (unreadMessageCount === 0) {
         const currentChannel = allChannels.find(({ url }) => url === channel.url);
-        const currentUnReadCount = currentChannel && currentChannel.unreadMessageCount;
-        if (currentUnReadCount === 0) {
+        const currentUnreadCount = currentChannel && currentChannel.unreadMessageCount;
+        if (currentUnreadCount === 0) {
           return {
             ...state,
-            allChannels: allChannels.map((c) => {
-              if (c.url === channel.url) {
-                return channel;
-              }
-              return c;
-            }),
+            allChannels: state.allChannels.map((ch) => (ch.url === channel.url ? channel : ch)),
           };
         }
       }
       return {
         ...state,
         allChannels: [
-          action.payload,
+          channel,
           ...state.allChannels.filter(({ url }) => url !== action.payload.url),
         ],
       };
@@ -143,44 +181,83 @@ export default function reducer(state, action) {
     case actions.ON_LAST_MESSAGE_UPDATED:
       return {
         ...state,
-        allChannels: state.allChannels.map((channel) => {
-          if (channel.url === action.payload.url) {
-            return action.payload;
-          }
-          return channel;
-        }),
+        allChannels: state.allChannels.map((channel) => (
+          channel.url === action.payload.url ? action.payload : channel)),
       };
-    case actions.ON_CHANNEL_FROZEN:
+    case actions.ON_CHANNEL_FROZEN: {
+      const channel = action.payload;
+      if (state.channelListQuery) {
+        if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
+          return {
+            ...state,
+            allChannels: getChannelsWithUpsertedChannel(state.allChannels, channel),
+          };
+        }
+        return {
+          ...state,
+          currentChannel: (channel.url === state.currentChannel)
+            ? state.allChannels[state.allChannels[0].url === channel.url ? 1 : 0].url
+            // if coming channel is first of channel list, current channel will be the next one
+            : state.currentChannel,
+          allChannels: state.allChannels.filter(({ url }) => url !== channel.url),
+        };
+      }
       return {
         ...state,
-        allChannels: state.allChannels.map((channel) => {
-          if (channel.url === action.payload.url) {
+        allChannels: state.allChannels.map((ch) => {
+          if (ch.url === channel.url) {
             // eslint-disable-next-line no-param-reassign
-            channel.isFrozen = true;
-            return channel;
+            ch.isFrozen = true;
+            return ch;
           }
-          return channel;
+          return ch;
         }),
       };
-    case actions.ON_CHANNEL_UNFROZEN:
+    }
+    case actions.ON_CHANNEL_UNFROZEN: {
+      const channel = action.payload;
+      if (state.channelListQuery) {
+        if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
+          return {
+            ...state,
+            allChannels: getChannelsWithUpsertedChannel(state.allChannels, channel),
+          };
+        }
+        return {
+          ...state,
+          currentChannel: (channel.url === state.currentChannel)
+            ? state.allChannels[state.allChannels[0].url === channel.url ? 1 : 0].url
+            // if coming channel is first of channel list, current channel will be the next one
+            : state.currentChannel,
+          allChannels: state.allChannels.filter(({ url }) => url !== channel.url),
+        };
+      }
       return {
         ...state,
-        allChannels: state.allChannels.map((channel) => {
-          if (channel.url === action.payload.url) {
+        allChannels: state.allChannels.map((ch) => {
+          if (ch.url === channel.url) {
             // eslint-disable-next-line no-param-reassign
-            channel.isFrozen = false;
-            return channel;
+            ch.isFrozen = false;
+            return ch;
           }
-          return channel;
+          return ch;
         }),
       };
-    case actions.CHANNEL_REPLACED_TO_TOP:
+    }
+    case actions.CHANNEL_REPLACED_TO_TOP: {
       return {
         ...state,
         allChannels: [
           action.payload,
           ...state.allChannels.filter((channel) => channel.url !== action.payload.url),
         ],
+      };
+    }
+    case actions.CHANNEL_LIST_PARAMS_UPDATED:
+      return {
+        ...state,
+        currentUserId: action.payload.currentUserId,
+        channelListQuery: action.payload.channelListQuery,
       };
     default:
       return state;

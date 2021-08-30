@@ -21,8 +21,8 @@ export default function MessageSearchFileItem(props: Props): ReactElement {
     selected,
     onClick,
   } = props;
-  const { createdAt, plainUrl, url, name } = message;
-  const fileMessageUrl = plainUrl || url;
+  const { createdAt, url, name } = message;
+  const fileMessageUrl = url;
   const sender = message.sender || message._sender;
   const { profileUrl, nickname } = sender;
   const { stringSet } = useContext(LocalizationContext);

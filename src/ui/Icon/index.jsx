@@ -49,6 +49,7 @@ import IconPlus from '../../svgs/icon-plus.svg';
 import IconQuestion from '../../svgs/icon-question.svg';
 import IconRefresh from '../../svgs/icon-refresh.svg';
 import IconRemove from '../../svgs/icon-remove.svg';
+import IconReply from '../../svgs/icon-reply-filled.svg';
 import IconSearch from '../../svgs/icon-search.svg';
 import IconSend from '../../svgs/icon-send.svg';
 import IconSettingsFilled from '../../svgs/icon-settings-filled.svg';
@@ -140,6 +141,7 @@ function changeTypeToIconComponent(type) {
     case Type.QUESTION: return <IconQuestion />;
     case Type.REFRESH: return <IconRefresh />;
     case Type.REMOVE: return <IconRemove />;
+    case Type.REPLY: return <IconReply />;
     case Type.SEARCH: return <IconSearch />;
     case Type.SEND: return <IconSend />;
     case Type.SETTINGS_FILLED: return <IconSettingsFilled />;

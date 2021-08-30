@@ -5,4 +5,6 @@ export default {
   allChannels: [],
   currentChannel: null,
   showSettings: false,
+  channelListQuery: null,
+  currentUserId: '',
 };

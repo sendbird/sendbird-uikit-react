@@ -120,6 +120,12 @@
   }
 }
 
+.sendbird-label--color-onbackground-4 {
+  @include themed() {
+    color: t(on-bg-4);
+  }
+}
+
 .sendbird-label--color-oncontent-1 {
   @include themed() {
     color: t(on-content-1);

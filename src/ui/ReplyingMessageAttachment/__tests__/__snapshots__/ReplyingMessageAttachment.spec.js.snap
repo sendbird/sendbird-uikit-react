@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReplyingMessageAttachment should do a snapshot test of the ReplyingMessageAttachment DOM 1`] = `
+<div
+  className="sendbird-replying_message_attachment "
+>
+  <div
+    className="sendbird-replying_message_attachment__avatar"
+  >
+    <div
+      className=" sendbird-icon sendbird-icon-color--on-background-2"
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+      style={
+        Object {
+          "height": "24px",
+          "minHeight": "24px",
+          "minWidth": "24px",
+          "width": "24px",
+        }
+      }
+      tabIndex="0"
+    >
+      <test-file-stub />
+    </div>
+  </div>
+  <div
+    className="sendbird-replying_message_attachment__body"
+  >
+    <span
+      className="sendbird-replying_message_attachment__body__sender-name sendbird-label sendbird-label--caption-1 sendbird-label--color-onbackground-1"
+    >
+      Reply to ME
+    </span>
+    <span
+      className="sendbird-replying_message_attachment__body__message-content sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-3"
+    >
+      72b35fef-acda-4e32-123323456789973567890dfvgbhnjmkiytdxbna0e4-37e1226b0615.mp3
+    </span>
+  </div>
+  <div
+    className="sendbird-replying_message_attachment__close-button sendbird-icon sendbird-icon-color--on-background-2"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    role="button"
+    style={
+      Object {
+        "height": "24px",
+        "minHeight": "24px",
+        "minWidth": "24px",
+        "width": "24px",
+      }
+    }
+    tabIndex="0"
+  >
+    <test-file-stub />
+  </div>
+</div>
+`;

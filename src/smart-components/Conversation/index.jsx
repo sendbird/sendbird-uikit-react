@@ -27,7 +27,6 @@ import useUpdateMessageCallback from './hooks/useUpdateMessageCallback';
 import useResendMessageCallback from './hooks/useResendMessageCallback';
 import useSendMessageCallback from './hooks/useSendMessageCallback';
 import useSendFileMessageCallback from './hooks/useSendFileMessageCallback';
-import useSetReadStatus from './hooks/useSetReadStatus';
 import useMemoizedEmojiListItems from './hooks/useMemoizedEmojiListItems';
 import useToggleReactionCallback from './hooks/useToggleReactionCallback';
 
@@ -123,18 +122,18 @@ export const ConversationPanel = (props) => {
   const userDefinedDisableUserProfile = disableUserProfile || config.disableUserProfile;
   const userDefinedRenderProfile = renderUserProfile || config.renderUserProfile;
   const showScrollBot = hasMoreToBottom;
+
+  // TODO: emojiAllMap, emoijAllList, nicknamesMap => should be moved to messagesStore
   const emojiAllMap = useMemo(() => (
     usingReaction
       ? utils.getAllEmojisMapFromEmojiContainer(emojiContainer)
       : new Map()
   ), [emojiContainer]);
-
   const emojiAllList = useMemo(() => (
     usingReaction
       ? utils.getAllEmojisFromEmojiContainer(emojiContainer)
       : []
   ), [emojiContainer]);
-
   const nicknamesMap = useMemo(() => (
     usingReaction
       ? utils.getNicknamesMapFromMembers(currentGroupChannel.members)
@@ -215,12 +214,6 @@ export const ConversationPanel = (props) => {
       utils.pubSubHandleRemover(subScriber);
     };
   }, [channelUrl, sdkInit]);
-
-  // to create initial read status
-  useSetReadStatus(
-    { allMessages, currentGroupChannel },
-    { messagesDispatcher, sdk, logger },
-  );
 
   // handling connection breaks
   useHandleReconnect({ isOnline }, {

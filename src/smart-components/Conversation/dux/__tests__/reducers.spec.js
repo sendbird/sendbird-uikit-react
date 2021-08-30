@@ -261,15 +261,4 @@ describe('Messages-Reducers', () => {
     });
     expect(nextState.emojiContainer).toEqual(emojiContainer);
   });
-
-  it('should handle SET_READ_STATUS', () => {
-    const mockData = generateMockChannel();
-    const readStatus = { key: 'value' };
-    const nextState = reducers(mockData, {
-      type: actionTypes.SET_READ_STATUS,
-      payload: readStatus,
-    });
-    expect(nextState.readStatus).toEqual(readStatus);
-  });
-
 });

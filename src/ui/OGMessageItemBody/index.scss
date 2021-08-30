@@ -1,0 +1,95 @@
+@import '../../styles/variables';
+
+.sendbird-og-message-item-body {
+  position: relative;
+  display: inline-block;
+  // TODO: Change fixing width and height lengths
+  width: 100%;
+  min-width: 320px;
+  max-width: 400px;
+
+  .sendbird-og-message-item-body__text-bubble {
+    position: relative;
+    padding: 8px 12px;
+    box-sizing: border-box;
+    border-radius: 16px 16px 0px 0px;
+    word-break: break-all;
+
+    .sendbird-og-message-item-body__text-bubble__message {
+      display: inline;
+      margin: 0px 2px;
+    }
+  }
+
+  .sendbird-og-message-item-body__og-thumbnail {
+    position: relative;
+    overflow: hidden;
+    .sendbird-og-message-item-body__og-thumbnail__image {
+      width: 100%;
+    }
+  }
+
+  &.reactions .sendbird-og-message-item-body__description {
+    border-radius: 0px;
+  }
+  .sendbird-og-message-item-body__description {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0px 0px 16px 16px;
+    @include themed() {
+      background-color: t(bg-1);
+    }
+    .sendbird-og-message-item-body__description__title,
+    .sendbird-og-message-item-body__description__description {
+      margin-bottom: 4px;
+      width: 100%;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      display: inline-block;
+    }
+    .sendbird-og-message-item-body__description__url {
+      width: 100%;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      display: inline-block;
+      margin: 4px 0px;
+    }
+  }
+
+  .sendbird-og-message-item-body__og-thumbnail:hover,
+  .sendbird-og-message-item-body__description:hover {
+    cursor: pointer;
+  }
+
+  &.outgoing {
+    .sendbird-og-message-item-body__text-bubble {
+      @include themed() { background-color: t(primary-3) }
+    }
+  }
+  &.incoming {
+    .sendbird-og-message-item-body__text-bubble {
+      @include themed() { background-color: t(bg-1) }
+    }
+  }
+  &.mouse-hover, &:hover {
+    .sendbird-og-message-item-body__description {
+      @include themed() { background-color: t(bg-2) }
+    }
+    &.outgoing {
+      .sendbird-og-message-item-body__text-bubble {
+        @include themed() { background-color: t(primary-4) }
+      }
+    }
+    &.incoming {
+      .sendbird-og-message-item-body__text-bubble {
+        @include themed() { background-color: t(bg-2) }
+      }
+    }
+  }
+}

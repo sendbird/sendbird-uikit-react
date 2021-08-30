@@ -1,0 +1,32 @@
+@import '../../styles/variables';
+
+.sendbird-text-message-item-body {
+  position: relative;
+  display: inline-block;
+  box-sizing: content-box;
+  padding: 8px 12px;
+  border-radius: 16px;
+  &.reactions {
+    border-radius: 16px 16px 0px 0px;
+  }
+  &.incoming {
+    @include themed() { background-color: t(bg-1) }
+  }
+  &.outgoing {
+    @include themed() { background-color: t(primary-3) }
+  }
+
+  &.mouse-hover, &:hover {
+    &.incoming {
+      @include themed() { background-color: t(bg-2) }
+    }
+    &.outgoing {
+      @include themed() { background-color: t(primary-4) }
+    }
+  }
+
+  .sendbird-text-message-item-body__message {
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+}

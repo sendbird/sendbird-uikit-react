@@ -57,6 +57,7 @@ export default function App(props) {
       disableUserProfile={disableUserProfile}
       renderUserProfile={renderUserProfile}
       imageCompression={imageCompression}
+      useReaction={useReaction}
     >
       <div className="sendbird-app__wrap">
         <div className="sendbird-app__channellist-wrap">

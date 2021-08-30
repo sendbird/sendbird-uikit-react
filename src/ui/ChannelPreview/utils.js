@@ -2,7 +2,7 @@ import isToday from 'date-fns/isToday';
 import format from 'date-fns/format';
 import isYesterday from 'date-fns/isYesterday';
 
-import { truncate } from '../FileMessage/utils';
+import { truncateString } from '../../utils';
 import { LabelStringSet } from '../Label';
 
 export const getChannelTitle = (channel = {}, currentUserId, stringSet = LabelStringSet) => {
@@ -48,7 +48,7 @@ const getPrettyLastMessage = (message = {}) => {
   const MAXLEN = 30;
   const { messageType, name } = message;
   if (messageType === 'file') {
-    return truncate(name, MAXLEN);
+    return truncateString(name, MAXLEN);
   }
   return message.message;
 };
