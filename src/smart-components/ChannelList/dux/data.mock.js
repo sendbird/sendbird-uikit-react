@@ -66,7 +66,7 @@ export default {
         "channelUrl": "sendbird_group_channel_13883929_89ea0faddf24ba6328e95ff56b0b37960f400c83",
         "data": "",
         "customType": "",
-        "createdAt": 1579767478896,
+        "createdAt": 1003,
         "updatedAt": 0,
         "channelType": "group",
         "metaArrays": [],
@@ -124,7 +124,7 @@ export default {
       "channelType": "group",
       "name": "",
       "coverUrl": "",
-      "createdAt": 1581326202000,
+      "createdAt": 1002,
       "data": "",
       "customType": "",
       "isFrozen": false,
@@ -243,7 +243,7 @@ export default {
         "isBlockingMe": false
       }],
       "memberMap": {},
-      "lastMessage": null,
+      "lastMessage": { createdAt: 1001 },
       "memberCount": 2,
       "joinedMemberCount": 2,
       "cachedReadReceiptStatus": {
@@ -388,4 +388,26 @@ export const channel1 = {
   "myRole": "none",
   "myMutedState": "unmuted",
   "invitedAt": 1518733880178
+};
+
+export const users = [
+  {
+    userId: 'hoon001',
+    nickname: 'hoon',
+  },
+  {
+    userId: 'hoon002',
+    nickname: '훈',
+  },
+  {
+    userId: 'hoon003',
+    nickname: 'honey',
+  },
+];
+export const creatingChannel = {
+  url: 'channel1010',
+  name: 'home party',
+  members: users,
+  lastMessage: { createdAt: 1004 },
+  customType: '',
 };

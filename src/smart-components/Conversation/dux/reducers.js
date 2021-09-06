@@ -180,12 +180,15 @@ export default function reducer(state, action) {
       const { currentGroupChannel = {}, unreadSince } = state;
       const currentGroupChannelUrl = currentGroupChannel.url;
 
-      if (!compareIds(channel.url, currentGroupChannelUrl)
-        || (!(state.allMessages.map((msg) => msg.messageId).indexOf(message.messageId) < 0))
-        // Excluded overlapping messages
-        || (state.messageListParams && !filterMessageListParams(state.messageListParams, message))
-        // Filter by userFilledQuery
-      ) {
+      if (!compareIds(channel.url, currentGroupChannelUrl)) {
+        return state;
+      }
+      // Excluded overlapping messages
+      if (state.allMessages.some((msg) => msg.messageId === message.messageId)) {
+        return state;
+      }
+      // Filter by userFilledQuery
+      if (state.messageListParams && !filterMessageListParams(state.messageListParams, message)) {
         return state;
       }
 
@@ -217,7 +220,7 @@ export default function reducer(state, action) {
         return {
           ...state,
           allMessages: state.allMessages.filter((m) => (
-            !compareIds(m.messageId, action.payload)
+            !compareIds(m.messageId, action.payload.message.messageId)
           )),
         };
       }

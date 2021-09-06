@@ -3,7 +3,11 @@ import React, { useEffect, useState } from 'react';
 import pkg from '../../../../package-lock.json'
 
 import App from '../index';
+import Sendbird from '../../../lib/Sendbird';
+import ChannelList from '../../ChannelList';
+import Conversation from '../../Conversation';
 import { fitPageSize } from './utils';
+
 const appId = process.env.STORYBOOK_APP_ID;
 // const userId = 'leo.sub';
 const userId = 'sendbird';
@@ -159,6 +163,7 @@ const array = [
   `hoon${age}1`,
   `hoon${age}2`,
   `hoon${age}3`,
+  `eunseo${age}1`,
 ];
 const addProfile = null; // 'https://static.sendbird.com/sample/profiles/profile_12_512px.png';
 
@@ -186,6 +191,7 @@ export const user1 = () => fitPageSize(
     allowProfileEdit
     profileUrl={addProfile}
     config={{ logLevel: 'all' }}
+    queries={{}}
   />
 );
 export const user2 = () => fitPageSize(
@@ -215,6 +221,38 @@ export const user3 = () => fitPageSize(
     }}
   />
 );
+
+const CustomApp = () => {
+  const [channelUrl, setChannelUrl] = useState('');
+  return (
+    <Sendbird
+      appId={appId}
+      userId={array[3]}
+      nickname={array[3]}
+      theme="dark"
+      showSearchIcon
+      allowProfileEdit
+      profileUrl={addProfile}
+      imageCompression={{
+        compressionRate: 0.5,
+        resizingWidth: 100,
+        resizingHeight: '100px',
+      }}
+    >
+      <div style={{ display: 'flex', flexDirection: 'row', width: '100%', height: '100%' }}>
+        <ChannelList
+          onChannelSelect={(channel) => { setChannelUrl(channel.url) }}
+          queries={{ channelListQuery: { superChannelFilter: 'super' } }}
+        />
+        <Conversation
+          channelUrl={channelUrl}
+          // queries={{ messageListParams: { senderUserIds: ['eunseo601'] } }}
+        />
+      </div>
+    </Sendbird>
+  );
+};
+export const customer1 = () => fitPageSize(<CustomApp />);
 
 export const disableUserProfile = () => fitPageSize(
   <App

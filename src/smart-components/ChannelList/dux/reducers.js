@@ -40,7 +40,7 @@ export default function reducer(state, action) {
         if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
           return {
             ...state,
-            ...getChannelsWithUpsertedChannel(state.allChannels, channel),
+            allChannels: getChannelsWithUpsertedChannel(state.allChannels, channel),
           };
         }
         return {
@@ -123,17 +123,10 @@ export default function reducer(state, action) {
       if (!channel.lastMessage) return state;
       if (state.channelListQuery) {
         if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
-          // if its only an unread message count change, dont push to top
-          if (unreadMessageCount === 0) {
-            const currentChannel = allChannels.find(({ url }) => url === channel.url);
-            const currentUnreadCount = currentChannel && currentChannel.unreadMessageCount;
-            if (currentUnreadCount === 0) {
-              return {
-                ...state,
-                allChannels: getChannelsWithUpsertedChannel(allChannels, channel),
-              };
-            }
-          }
+          return {
+            ...state,
+            allChannels: getChannelsWithUpsertedChannel(allChannels, channel),
+          };
         }
         return {
           ...state,

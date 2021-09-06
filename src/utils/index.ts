@@ -332,9 +332,10 @@ export const filterMessageListParams = (params: MessageListParams, message: User
   if (params?.customTypes?.length > 0 && !params.customTypes.includes(message.customType)) {
     return false;
   }
-  if (params?.senderUserIds?.length > 0) {
+  if (params?.senderUserIds && params?.senderUserIds?.length > 0) {
     if (message?.isUserMessage() || message.isFileMessage()) {
-      if (!params?.senderUserIds?.includes((message as UserMessage | FileMessage).sender.userId)) {
+      const messageSender = (message as UserMessage | FileMessage).sender || message['_sender'];
+      if (!params?.senderUserIds?.includes(messageSender?.userId)) {
         return false;
       }
     } else {
@@ -390,7 +391,7 @@ export const filterChannelListParams = (params: SDKChannelListParamsPrivateProps
       if (!userIds.includes(currentUserId)) {
         userIds.push(currentUserId); // add the caller's userId if not added already.
       }
-      if (channel.members.length > userIds.length) {
+      if (channel.members.length !== userIds.length) {
         return false; // userIds may contain one or more non-member(s).
       }
       if (!hasSameMembers(userIds, memberIds)) {
@@ -398,16 +399,21 @@ export const filterChannelListParams = (params: SDKChannelListParamsPrivateProps
       }
     } else if (userIds.length > 0) { // inclusive
       switch (queryType) {
-        case 'AND':
+        case 'AND': {
           if (userIds.some((userId: string) => !memberIds.includes(userId))) {
             return false;
           }
           break;
-        case 'OR':
+        }
+        case 'OR': {
           if (userIds.every((userId: string) => !memberIds.includes(userId))) {
             return false;
           }
           break;
+        }
+        default: {
+          break;
+        }
       }
     }
   }
@@ -547,6 +553,9 @@ export const getChannelsWithUpsertedChannel = (channels: Array<GroupChannel>, ch
   if (channels.some((ch: GroupChannel) => ch.url === channel.url)) {
     return channels.map((ch: GroupChannel) => (ch.url === channel.url ? channel : ch));
   }
-  const targetIndex = binarySearch(channels.map((channel: GroupChannel) => channel?.lastMessage?.createdAt), channel?.lastMessage?.createdAt);
-  return [...channels.slice(0, targetIndex + 1), channel, ...channels.slice(targetIndex + 1, channels.length)];
+  const targetIndex = binarySearch(
+    channels.map((channel: GroupChannel) => channel?.lastMessage?.createdAt || channel?.createdAt),
+    channel?.lastMessage?.createdAt || channel?.createdAt
+  );
+  return [...channels.slice(0, targetIndex), channel, ...channels.slice(targetIndex, channels.length)];
 };
