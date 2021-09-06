@@ -391,7 +391,7 @@ export const filterChannelListParams = (params: SDKChannelListParamsPrivateProps
       if (!userIds.includes(currentUserId)) {
         userIds.push(currentUserId); // add the caller's userId if not added already.
       }
-      if (channel.members.length !== userIds.length) {
+      if (channel.members.length > userIds.length) {
         return false; // userIds may contain one or more non-member(s).
       }
       if (!hasSameMembers(userIds, memberIds)) {
