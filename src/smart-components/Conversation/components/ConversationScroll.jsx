@@ -153,6 +153,7 @@ export default class ConversationScroll extends Component {
                             emojiContainer,
                             chainTop,
                             chainBottom,
+                            hasSeperator,
                           })
                         }
                       </div>
