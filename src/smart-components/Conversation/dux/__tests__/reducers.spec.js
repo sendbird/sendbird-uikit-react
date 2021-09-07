@@ -3,7 +3,6 @@ import * as actionTypes from '../actionTypes';
 import reducers from '../reducers';
 import initialState from '../initialState';
 import uuid from '../../../../utils/uuid';
-import { expect } from '@jest/globals';
 
 const randomBoolean = () => Math.random() >= 0.5;
 describe('Messages-Reducers', () => {
