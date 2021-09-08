@@ -154,7 +154,7 @@ export default class ConversationScroll extends Component {
                             chainTop,
                             chainBottom,
                             hasSeparator,
-                            menuDisabled,
+                            menuDisabled: disabled,
                           })
                         }
                       </div>
