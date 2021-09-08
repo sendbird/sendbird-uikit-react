@@ -220,7 +220,7 @@ export default function reducer(state, action) {
         return {
           ...state,
           allMessages: state.allMessages.filter((m) => (
-            !compareIds(m.messageId, action.payload.message.messageId)
+            !compareIds(m.messageId, message?.messageId)
           )),
         };
       }
