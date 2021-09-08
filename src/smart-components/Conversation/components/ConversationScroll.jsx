@@ -133,7 +133,7 @@ export default class ConversationScroll extends Component {
                   const previousMessageCreatedAt = previousMessage && previousMessage.createdAt;
                   const currentCreatedAt = m.createdAt;
                   // https://stackoverflow.com/a/41855608
-                  const hasSeperator = !(previousMessageCreatedAt && (
+                  const hasSeparator = !(previousMessageCreatedAt && (
                     isSameDay(currentCreatedAt, previousMessageCreatedAt)
                   ));
                   if (renderChatItem) {
@@ -153,7 +153,7 @@ export default class ConversationScroll extends Component {
                             emojiContainer,
                             chainTop,
                             chainBottom,
-                            hasSeperator,
+                            hasSeparator,
                             menuDisabled,
                           })
                         }
@@ -177,7 +177,7 @@ export default class ConversationScroll extends Component {
                       emojiAllMap={emojiAllMap}
                       emojiContainer={emojiContainer}
                       editDisabled={editDisabled}
-                      hasSeperator={hasSeperator}
+                      hasSeparator={hasSeparator}
                       chainBottom={chainBottom}
                       updateMessage={updateMessage}
                       deleteMessage={deleteMessage}

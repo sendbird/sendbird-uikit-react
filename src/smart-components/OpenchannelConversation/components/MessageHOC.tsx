@@ -33,7 +33,7 @@ interface Props {
   userId: string;
   disabled: boolean;
   editDisabled: boolean;
-  hasSeperator: boolean;
+  hasSeparator: boolean;
   channel: OpenChannel;
   renderCustomMessage?: types.RenderCustomMessage,
   deleteMessage(message: types.ClientUserMessage | types.ClientFileMessage, callback?: () => void): void;
@@ -49,7 +49,7 @@ export default function MessageHoc({
   userId,
   disabled,
   editDisabled,
-  hasSeperator,
+  hasSeparator,
   channel,
   renderCustomMessage,
   deleteMessage,
@@ -109,9 +109,9 @@ export default function MessageHoc({
 
   return (
     <div className="sendbird-msg-hoc sendbird-msg--scroll-ref">
-      {/* date-seperator */}
+      {/* date-separator */}
       {
-        hasSeperator && (
+        hasSeparator && (
           <DateSeparator>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
               {format(message.createdAt, 'MMMM dd, yyyy')}
