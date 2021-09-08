@@ -6,6 +6,10 @@ import App from '../index';
 import Sendbird from '../../../lib/Sendbird';
 import ChannelList from '../../ChannelList';
 import Conversation from '../../Conversation';
+import ChannelSettings from '../../ChannelSettings';
+import MessageSearch from '../../MessageSearch';
+import { withSendBird } from '../../..';
+import { sendBirdSelectors } from '../../..';
 import { fitPageSize } from './utils';
 
 const appId = process.env.STORYBOOK_APP_ID;
@@ -222,8 +226,30 @@ export const user3 = () => fitPageSize(
   />
 );
 
+const UseSendbirdChannelList = (props) => {
+  const [queries] = useState({ channelListQuery: { customTypesFilter: ['apple'] } });
+  const sdk = sendBirdSelectors.getSdk(props);
+  const { setChannelUrl } = props;
+
+  return (
+    <ChannelList
+      onChannelSelect={(channel) => channel && setChannelUrl(channel.url)}
+      queries={queries}
+      onBeforeCreateChannel={(selectedUserIds) => {
+        const params = new sdk.GroupChannelParams();
+        params.addUserIds(selectedUserIds);
+        params.isDistinct = false;
+        params.customType = 'apple';
+        return params;
+      }}
+    />
+  );
+};
+const SBChannelList = withSendBird(UseSendbirdChannelList);
 const CustomApp = () => {
   const [channelUrl, setChannelUrl] = useState('');
+  const [channelSettings, setChannelSettings] = useState(false);
+  const [channelSearch, setChannelSearch] = useState(false);
   return (
     <Sendbird
       appId={appId}
@@ -233,25 +259,48 @@ const CustomApp = () => {
       showSearchIcon
       allowProfileEdit
       profileUrl={addProfile}
-      imageCompression={{
-        compressionRate: 0.5,
-        resizingWidth: 100,
-        resizingHeight: '100px',
-      }}
+      imageCompression={{ compressionRate: 0.5, resizingWidth: 100, resizingHeight: '100px' }}
     >
-      <div style={{ display: 'flex', flexDirection: 'row', width: '100%', height: '100%' }}>
-        <ChannelList
-          onChannelSelect={(channel) => { setChannelUrl(channel.url) }}
-          queries={{ channelListQuery: { superChannelFilter: 'super' } }}
-        />
-        <Conversation
-          channelUrl={channelUrl}
-          // queries={{ messageListParams: { senderUserIds: ['eunseo601'] } }}
-        />
-      </div>
+      <div style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'row' }}>
+          <SBChannelList setChannelUrl={setChannelUrl} />
+          <div style={{ height: '100%', width: '100%', display: 'inline-flex', flexDirection: 'row' }}>
+            <div style={{ width: '100%' }}>
+              <Conversation
+                channelUrl={channelUrl}
+                onChatHeaderActionClick={() => {
+                  setChannelSearch(false);
+                  setChannelSettings(true);
+                }}
+                showSearchIcon
+                onSearchClick={() => {
+                  setChannelSettings(false);
+                  setChannelSearch(true);
+                }}
+              />
+            </div>
+            {channelSearch && (
+              <div style={{ width: '100%' }}>
+                <MessageSearch
+                  channelUrl={channelUrl}
+                  searchString="hello"
+                  onResultClick={() => {}}
+                />
+              </div>
+            )}
+            {channelSettings && (
+              <div style={{ display: 'inline-flex'}}>
+                <ChannelSettings
+                  channelUrl={channelUrl}
+                  onCloseClick={() => setChannelSettings(false)}
+                />
+              </div>
+            )}
+          </div>
+        </div>
     </Sendbird>
   );
 };
+
 export const customer1 = () => fitPageSize(<CustomApp />);
 
 export const disableUserProfile = () => fitPageSize(
