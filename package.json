@@ -1,5 +1,5 @@
 {
-  "name": "sendbird-uikit",
+  "name": "@withmehealth/sendbird-uikit",
   "version": "2.4.0",
   "description": "React based UI kit for sendbird",
   "main": "release/index.js",
@@ -38,7 +38,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+git@github.com:sendbird/sendbird-uikit-react-sources.git"
+    "url": "git+https://github.com/withmehealth/sendbird-uikit-react.git"
   },
   "author": "SendBird <support@sendbird.com>",
   "license": "SEE LICENSE IN LICENSE.md",
