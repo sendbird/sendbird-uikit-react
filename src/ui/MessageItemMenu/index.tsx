@@ -42,7 +42,7 @@ export default function MessageItemMenu({
   const containerRef = useRef(null);
 
   const showMenuItemCopy: boolean = isUserMessage(message as UserMessage);
-  const showMenuItemReply: boolean = !isFailedMessage(channel, message) && !isPendingMessage(channel, message);
+  const showMenuItemReply: boolean = false && !isFailedMessage(channel, message) && !isPendingMessage(channel, message);
   const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(channel, message) && isByMe);
   const showMenuItemResend: boolean = (isFailedMessage(channel, message) && message.isResendable() && isByMe);
   const showMenuItemDelete: boolean = (isSentMessage(channel, message) && isByMe);
