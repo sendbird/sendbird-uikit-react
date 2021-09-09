@@ -71,7 +71,7 @@ function UserProfile({
           </section>
         )
       }
-      <div className="sendbird__user-profile-seperator" />
+      <div className="sendbird__user-profile-separator" />
       <section className="sendbird__user-profile-userId">
         <Label
           className="sendbird__user-profile-userId--label"

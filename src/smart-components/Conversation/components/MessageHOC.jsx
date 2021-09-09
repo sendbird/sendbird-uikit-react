@@ -19,7 +19,7 @@ export default function MessageHoc({
   userId,
   disabled,
   editDisabled,
-  hasSeperator,
+  hasSeparator,
   deleteMessage,
   updateMessage,
   resendMessage,
@@ -59,7 +59,8 @@ export default function MessageHoc({
   const RenderedMessage = useMemo(() => {
     if (renderCustomMessage) {
       return renderCustomMessage(message, currentGroupChannel, chainTop, chainBottom);
-      // Let's change this to object type on next major version up
+      // TODO: Let's change this to object type on next major version up
+      // and add params 'hasSeparator' and 'menuDisabled'
     }
     return null;
   }, [message, message.message, renderCustomMessage]);
@@ -77,9 +78,9 @@ export default function MessageHoc({
           ${isAnimated ? 'sendbird-msg-hoc__highlighted' : ''}
         `}
       >
-        {/* date-seperator */}
+        {/* date-separator */}
         {
-          hasSeperator && (
+          hasSeparator && (
             <DateSeparator>
               <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
                 {format(message.createdAt, 'MMMM dd, yyyy')}
@@ -115,9 +116,9 @@ export default function MessageHoc({
       `}
       style={{ marginBottom: '2px' }}
     >
-      {/* date-seperator */}
+      {/* date-separator */}
       {
-        hasSeperator && (
+        hasSeparator && (
           <DateSeparator>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
               {format(message.createdAt, 'MMMM dd, yyyy')}
@@ -179,7 +180,7 @@ MessageHoc.propTypes = {
     isFileMessage: PropTypes.func,
     isAdminMessage: PropTypes.func,
     isUserMessage: PropTypes.func,
-    isDateSeperator: PropTypes.func,
+    isDateseparator: PropTypes.func,
     // should be a number, but there's a bug in SDK shich returns string
     messageId: PropTypes.number,
     type: PropTypes.string,
@@ -196,7 +197,7 @@ MessageHoc.propTypes = {
   ]),
   renderCustomMessage: PropTypes.func,
   currentGroupChannel: PropTypes.shape({}),
-  hasSeperator: PropTypes.bool,
+  hasSeparator: PropTypes.bool,
   disabled: PropTypes.bool,
   editDisabled: PropTypes.bool,
   deleteMessage: PropTypes.func.isRequired,
@@ -223,7 +224,7 @@ MessageHoc.defaultProps = {
   renderCustomMessage: null,
   currentGroupChannel: {},
   message: {},
-  hasSeperator: false,
+  hasSeparator: false,
   disabled: false,
   highLightedMessageId: null,
   toggleReaction: () => { },

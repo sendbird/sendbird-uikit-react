@@ -112,7 +112,7 @@ function OpenchannelConversationScroll(
                   const previousMessageCreatedAt = previousMessage && previousMessage.createdAt;
                   const currentCreatedAt = message.createdAt;
                   // https://stackoverflow.com/a/41855608
-                  const hasSeperator = !(previousMessageCreatedAt && (
+                  const hasSeparator = !(previousMessageCreatedAt && (
                     isSameDay(currentCreatedAt, previousMessageCreatedAt)
                   ));
 
@@ -129,7 +129,7 @@ function OpenchannelConversationScroll(
                       userId={user.userId}
                       disabled={!isOnline}
                       editDisabled={openchannel.isFrozen}
-                      hasSeperator={hasSeperator}
+                      hasSeparator={hasSeparator}
                       chainTop={chainTop}
                       chainBottom={chainBottom}
                       deleteMessage={deleteMessage}

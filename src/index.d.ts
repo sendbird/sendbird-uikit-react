@@ -322,6 +322,8 @@ interface RenderChatItemProps {
   emojiContainer: EmojiContainer;
   chainTop: boolean;
   chainBottom: boolean;
+  hasSeparator: boolean;
+  menuDisabled: boolean;
 }
 interface RenderChatHeaderProps {
   channel: Sendbird.GroupChannel;

@@ -137,7 +137,7 @@ function ChannelList(props) {
   }
 
   useEffect(() => {
-    if (!sdk || !sdk.GroupChannel) { return; }
+    if (!sdk || !sdk.GroupChannel || !currentChannel) { return; }
     sdk.GroupChannel.getChannel(currentChannel, (groupChannel) => {
       if (groupChannel) {
         onChannelSelect(groupChannel);
