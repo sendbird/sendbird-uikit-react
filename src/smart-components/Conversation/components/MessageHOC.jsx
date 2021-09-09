@@ -59,7 +59,8 @@ export default function MessageHoc({
   const RenderedMessage = useMemo(() => {
     if (renderCustomMessage) {
       return renderCustomMessage(message, currentGroupChannel, chainTop, chainBottom);
-      // TODO: Let's change this to object type on next major version up (hasSeparator, menuDisabled)
+      // TODO: Let's change this to object type on next major version up
+      // and add params 'hasSeparator' and 'menuDisabled'
     }
     return null;
   }, [message, message.message, renderCustomMessage]);
