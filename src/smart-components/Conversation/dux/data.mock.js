@@ -100,7 +100,6 @@ export const generateMockChannel = () => ({
       "_preferredLanguages": null,
       "isBlockedByMe": false
     },
-
     "reqId": "1582004210491",
     "translations": {},
     "requestState": "succeeded",
@@ -127,6 +126,7 @@ export const generateMockMessage = (id) => {
     "mentionedUsers": [],
     "message": "146",
     "_sender": {},
+    sender: {},
     "reqId": "1582004949355",
     "translations": {},
     "requestState": "succeeded",
@@ -136,6 +136,7 @@ export const generateMockMessage = (id) => {
       // mock for SDK
       mockMessage.reactions = reactionEvent.reactions;
     },
+    isUserMessage: () => true,
   };
   return mockMessage;
 }

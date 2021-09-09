@@ -2,6 +2,7 @@ import { mockMessage1, generateMockMessage, generateMockChannel } from '../data.
 import * as actionTypes from '../actionTypes';
 import reducers from '../reducers';
 import initialState from '../initialState';
+import uuid from '../../../../utils/uuid';
 
 const randomBoolean = () => Math.random() >= 0.5;
 describe('Messages-Reducers', () => {
@@ -11,7 +12,6 @@ describe('Messages-Reducers', () => {
     });
     expect(nextState.loading).toEqual(true);
   });
-
 
   it('should set messages GET_PREV_MESSAGES_SUCESS', () => {
     const mockData = generateMockChannel();
@@ -260,5 +260,232 @@ describe('Messages-Reducers', () => {
       payload: emojiContainer,
     });
     expect(nextState.emojiContainer).toEqual(emojiContainer);
+  });
+
+  describe('filter by messageType of messageListParams when message received', () => {
+    const mockData = generateMockChannel();
+    const messageTypes = { ADMIN: 'admin', USER: 'user', FILE: 'file' };
+    test('messageType filter is ADMIN', () => {
+      const appliedParamsState = reducers(mockData, {
+        type: actionTypes.MESSAGE_LIST_PARAMS_CHANGED,
+        payload: { messageType: messageTypes.ADMIN },
+      });
+      expect(appliedParamsState.messageListParams.messageType).toEqual(messageTypes.ADMIN);
+      ['admin', 'user', 'file'].forEach((messageType) => {
+        const receivedMessage = generateMockMessage(1010);
+        receivedMessage.messageType = messageType;
+        const receivedMessageState = reducers(appliedParamsState, {
+          type: actionTypes.ON_MESSAGE_RECEIVED,
+          payload: { message: receivedMessage, channel: { url: mockMessage1.channelUrl } },
+        });
+        if (messageTypes.ADMIN === messageType) {
+          expect(
+            receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+          ).toEqual(receivedMessage.messageId);
+        } else {
+          expect(
+            receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+          ).not.toEqual(receivedMessage.messageId);
+        }
+      });
+    });
+    test('messageType filter is USER', () => {
+      const appliedParamsState = reducers(mockData, {
+        type: actionTypes.MESSAGE_LIST_PARAMS_CHANGED,
+        payload: { messageType: messageTypes.USER },
+      });
+      expect(appliedParamsState.messageListParams.messageType).toEqual(messageTypes.USER);
+      ['admin', 'user', 'file'].forEach((messageType) => {
+        const receivedMessage = generateMockMessage(1010);
+        receivedMessage.messageType = messageType;
+        const receivedMessageState = reducers(appliedParamsState, {
+          type: actionTypes.ON_MESSAGE_RECEIVED,
+          payload: { message: receivedMessage, channel: { url: mockMessage1.channelUrl } },
+        });
+        if (messageTypes.USER === messageType) {
+          expect(
+            receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+          ).toEqual(receivedMessage.messageId);
+        } else {
+          expect(
+            receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+          ).not.toEqual(receivedMessage.messageId);
+        }
+      });
+    });
+    test('messageType filter is FILE', () => {
+      const appliedParamsState = reducers(mockData, {
+        type: actionTypes.MESSAGE_LIST_PARAMS_CHANGED,
+        payload: { messageType: messageTypes.FILE },
+      });
+      expect(appliedParamsState.messageListParams.messageType).toEqual(messageTypes.FILE);
+      ['admin', 'user', 'file'].forEach((messageType) => {
+        const receivedMessage = generateMockMessage(1010);
+        receivedMessage.messageType = messageType;
+        const receivedMessageState = reducers(appliedParamsState, {
+          type: actionTypes.ON_MESSAGE_RECEIVED,
+          payload: { message: receivedMessage, channel: { url: mockMessage1.channelUrl } },
+        });
+        if (messageTypes.FILE === messageType) {
+          expect(
+            receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+          ).toEqual(receivedMessage.messageId);
+        } else {
+          expect(
+            receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+          ).not.toEqual(receivedMessage.messageId);
+        }
+      });
+    });
+  });
+
+  it('should filter by customType of messageListParams when message received', () => {
+    const mockData = generateMockChannel();
+    const paramsCustomTypes = ['a', 'b', 'c'];
+    const appliedParamsState = reducers(mockData, {
+      type: actionTypes.MESSAGE_LIST_PARAMS_CHANGED,
+      payload: { customTypes: paramsCustomTypes },
+    });
+    expect(appliedParamsState.messageListParams.customTypes).toEqual(paramsCustomTypes);
+    ['a', 'd'].forEach((customType) => {
+      const receivedMessage = generateMockMessage(1010);
+      receivedMessage.customType = customType;
+      const receivedMessageState = reducers(appliedParamsState, {
+        type: actionTypes.ON_MESSAGE_RECEIVED,
+        payload: { message: receivedMessage, channel: { url: mockMessage1.channelUrl } },
+      });
+      if (paramsCustomTypes.some((paramsCustomType) => paramsCustomType === customType)) {
+        expect(
+          receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+        ).toEqual(receivedMessage.messageId);
+      } else {
+        expect(
+          receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+        ).not.toEqual(receivedMessage.messageId);
+      }
+    });
+  });
+
+  it('should filter by senderUserIds of messageListParams when message received', () => {
+    const mockData = generateMockChannel();
+    const paramsSenderUserIds = ['mark-1', 'mark-2', 'mark-3'];
+    const appliedParamsState = reducers(mockData, {
+      type: actionTypes.MESSAGE_LIST_PARAMS_CHANGED,
+      payload: { senderUserIds: paramsSenderUserIds },
+    });
+    expect(appliedParamsState.messageListParams.senderUserIds).toEqual(paramsSenderUserIds);
+    ['mark-1', 'mark-4'].forEach((messageSenderId) => {
+      const receivedMessage = generateMockMessage(1010);
+      receivedMessage.sender = { userId: messageSenderId };
+      const receivedMessageState = reducers(appliedParamsState, {
+        type: actionTypes.ON_MESSAGE_RECEIVED,
+        payload: { message: receivedMessage, channel: { url: mockMessage1.channelUrl } },
+      });
+      if (paramsSenderUserIds.some((paramsSenderUserId) => paramsSenderUserId === messageSenderId)) {
+        expect(
+          receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+        ).toEqual(receivedMessage.messageId);
+      } else {
+        expect(
+          receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+        ).not.toEqual(receivedMessage.messageId);
+      }
+    });
+  });
+
+  it('should filter by MESSAGE_LIST_PARAMS_CHANGED when ON_MESSAGE_UPDATED', () => {
+    const mockData = generateMockChannel();
+    const changingMessage = uuid();
+    const updatingMessage = {
+      ...mockData.allMessages[0],
+      messageId: 1010,
+      messageType: 'user',
+      customType: 'apple',
+      sender: { userId: 'John' },
+      isUserMessage: () => true,
+    };
+    mockData.allMessages.unshift(updatingMessage);
+
+    const appliedParamsState = reducers(mockData, {
+      type: actionTypes.MESSAGE_LIST_PARAMS_CHANGED,
+      payload: {
+        messageType: 'user',
+        customTypes: ['apple', 'banana'],
+        senderUserIds: ['John', 'Mark'],
+      },
+    });
+    expect(appliedParamsState.messageListParams.messageType).toEqual('user');
+    expect(appliedParamsState.messageListParams.customTypes).toEqual(['apple', 'banana']);
+    expect(appliedParamsState.messageListParams.senderUserIds).toEqual(['John', 'Mark']);
+
+    const updatedMessageState = reducers(appliedParamsState, {
+      type: actionTypes.ON_MESSAGE_UPDATED,
+      payload: {
+        channel: appliedParamsState.currentGroupChannel,
+        message: { ...updatingMessage, message: changingMessage },
+      },
+    });
+    expect(updatedMessageState.allMessages[0].messageId).toEqual(updatingMessage.messageId);
+    expect(updatedMessageState.allMessages[0].message).toEqual(changingMessage);
+    expect(updatedMessageState.allMessages[0].message).not.toEqual(appliedParamsState.allMessages[0].message);
+
+    const updatedWrongWithMessageTypeState = reducers(appliedParamsState, {
+      type: actionTypes.ON_MESSAGE_UPDATED,
+      payload: {
+        channel: appliedParamsState.currentGroupChannel,
+        message: { ...updatingMessage, messageType: 'file', message: changingMessage },
+      },
+    });
+    expect(updatedWrongWithMessageTypeState.allMessages.map((message) => message.messageId)).not.toContain(updatingMessage.messageId);
+    expect(updatedWrongWithMessageTypeState.allMessages[0].messageId).toEqual(appliedParamsState.allMessages[1].messageId);
+
+    const updatedWrongWithCustomTypeState = reducers(appliedParamsState, {
+      type: actionTypes.ON_MESSAGE_UPDATED,
+      payload: {
+        channel: appliedParamsState.currentGroupChannel,
+        message: { ...updatingMessage, customType: 'cherry', message: changingMessage },
+      },
+    });
+    expect(updatedWrongWithCustomTypeState.allMessages.map((message) => message.messageId)).not.toContain(updatingMessage.messageId);
+    expect(updatedWrongWithCustomTypeState.allMessages[0].messageId).toEqual(appliedParamsState.allMessages[1].messageId)
+
+    const updatedWrongWithSenderIdState = reducers(appliedParamsState, {
+      type: actionTypes.ON_MESSAGE_UPDATED,
+      payload: {
+        channel: appliedParamsState.currentGroupChannel,
+        message: { ...updatingMessage, sender: { userId: 'hoon' }, message: changingMessage },
+      },
+    });
+    expect(updatedWrongWithSenderIdState.allMessages.map((message) => message.messageId)).not.toContain(updatingMessage.messageId);
+    expect(updatedWrongWithSenderIdState.allMessages[0].messageId).toEqual(appliedParamsState.allMessages[1].messageId);
+  });
+
+  it('should not update with coming message when received message already exsits', () => {
+    const mockData = generateMockChannel();
+    const changingMessage = uuid();
+    const updatingMessage = {
+      ...mockData.allMessages[0],
+      messageId: 1010,
+      messageType: 'user',
+      customType: 'apple',
+      sender: { userId: 'John' },
+      isUserMessage: () => true,
+    };
+    const onMessageUpdatedState = reducers(
+      {
+        ...mockData,
+        allMessages: [updatingMessage, ...mockData.allMessages],
+      },
+      {
+        type: actionTypes.ON_MESSAGE_RECEIVED,
+        payload: {
+          channel: { url: mockMessage1.channelUrl },
+          message: { ...updatingMessage, message: changingMessage },
+        },
+      }
+    );
+    expect(onMessageUpdatedState.allMessages[0].messageId).toEqual(updatingMessage.messageId);
+    expect(onMessageUpdatedState.allMessages[0].message).toEqual(updatingMessage.message);
+    expect(onMessageUpdatedState.allMessages[0].message).not.toEqual(changingMessage);
   });
 });

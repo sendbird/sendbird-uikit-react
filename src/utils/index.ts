@@ -332,9 +332,10 @@ export const filterMessageListParams = (params: MessageListParams, message: User
   if (params?.customTypes?.length > 0 && !params.customTypes.includes(message.customType)) {
     return false;
   }
-  if (params?.senderUserIds?.length > 0) {
+  if (params?.senderUserIds && params?.senderUserIds?.length > 0) {
     if (message?.isUserMessage() || message.isFileMessage()) {
-      if (!params?.senderUserIds?.includes((message as UserMessage | FileMessage).sender.userId)) {
+      const messageSender = (message as UserMessage | FileMessage).sender || message['_sender'];
+      if (!params?.senderUserIds?.includes(messageSender?.userId)) {
         return false;
       }
     } else {
@@ -398,16 +399,21 @@ export const filterChannelListParams = (params: SDKChannelListParamsPrivateProps
       }
     } else if (userIds.length > 0) { // inclusive
       switch (queryType) {
-        case 'AND':
+        case 'AND': {
           if (userIds.some((userId: string) => !memberIds.includes(userId))) {
             return false;
           }
           break;
-        case 'OR':
+        }
+        case 'OR': {
           if (userIds.every((userId: string) => !memberIds.includes(userId))) {
             return false;
           }
           break;
+        }
+        default: {
+          break;
+        }
       }
     }
   }
@@ -523,7 +529,7 @@ export const filterChannelListParams = (params: SDKChannelListParamsPrivateProps
   return true;
 };
 
-const binarySearch = (list: Array<number>, number: number): number => {// [100, 99, 98, 97, ...]
+export const binarySearch = (list: Array<number>, number: number): number => {// [100, 99, 98, 97, ...]
   const pivot = Math.floor(list.length / 2);
   if (list[pivot] === number) {
     return pivot;
@@ -531,15 +537,9 @@ const binarySearch = (list: Array<number>, number: number): number => {// [100, 
   const leftList = list.slice(0, pivot);
   const rightList = list.slice(pivot + 1, list.length);
   if (list[pivot] > number) {
-    if (rightList.length === 0) {
-      return pivot + 1;
-    }
-    return pivot + binarySearch(rightList, number);
+    return pivot + 1 + (rightList.length === 0 ? 0 : binarySearch(rightList, number));
   } else {
-    if (leftList.length === 0) {
-      return pivot;
-    }
-    return binarySearch(leftList, number);
+    return (leftList.length === 0) ? pivot : binarySearch(leftList, number);
   }
 };
 // This is required when channel is displayed on channel list by filter
@@ -547,6 +547,9 @@ export const getChannelsWithUpsertedChannel = (channels: Array<GroupChannel>, ch
   if (channels.some((ch: GroupChannel) => ch.url === channel.url)) {
     return channels.map((ch: GroupChannel) => (ch.url === channel.url ? channel : ch));
   }
-  const targetIndex = binarySearch(channels.map((channel: GroupChannel) => channel?.lastMessage?.createdAt), channel?.lastMessage?.createdAt);
-  return [...channels.slice(0, targetIndex + 1), channel, ...channels.slice(targetIndex + 1, channels.length)];
+  const targetIndex = binarySearch(
+    channels.map((channel: GroupChannel) => channel?.lastMessage?.createdAt || channel?.createdAt),
+    channel?.lastMessage?.createdAt || channel?.createdAt
+  );
+  return [...channels.slice(0, targetIndex), channel, ...channels.slice(targetIndex, channels.length)];
 };
