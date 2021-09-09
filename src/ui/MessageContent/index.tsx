@@ -30,6 +30,7 @@ import {
   getSenderName,
   getMessageCreatedAt,
   isSentMessage,
+  isPendingMessage,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 
@@ -76,7 +77,9 @@ export default function MessageContent({
   const [mouseHover, setMouseHover] = useState(false);
   const [supposedHover, setSupposedHover] = useState(false);
 
-  const isByMe: boolean = isSentMessage(channel, message as UserMessage | FileMessage) || isMessageSentByMe(userId, message as UserMessage | FileMessage);
+  const isByMe: boolean = isPendingMessage(channel, message as UserMessage | FileMessage)
+    || isSentMessage(channel, message as UserMessage | FileMessage)
+    || isMessageSentByMe(userId, message as UserMessage | FileMessage);
 
   const isByMeClassName = isByMe ? 'outgoing' : 'incoming';
   const chainTopClassName = chainTop ? 'chain-top' : '';
