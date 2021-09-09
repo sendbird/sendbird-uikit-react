@@ -529,7 +529,7 @@ export const filterChannelListParams = (params: SDKChannelListParamsPrivateProps
   return true;
 };
 
-const binarySearch = (list: Array<number>, number: number): number => {// [100, 99, 98, 97, ...]
+export const binarySearch = (list: Array<number>, number: number): number => {// [100, 99, 98, 97, ...]
   const pivot = Math.floor(list.length / 2);
   if (list[pivot] === number) {
     return pivot;
@@ -537,15 +537,9 @@ const binarySearch = (list: Array<number>, number: number): number => {// [100, 
   const leftList = list.slice(0, pivot);
   const rightList = list.slice(pivot + 1, list.length);
   if (list[pivot] > number) {
-    if (rightList.length === 0) {
-      return pivot + 1;
-    }
-    return pivot + binarySearch(rightList, number);
+    return pivot + 1 + (rightList.length === 0 ? 0 : binarySearch(rightList, number));
   } else {
-    if (leftList.length === 0) {
-      return pivot;
-    }
-    return binarySearch(leftList, number);
+    return (leftList.length === 0) ? pivot : binarySearch(leftList, number);
   }
 };
 // This is required when channel is displayed on channel list by filter
