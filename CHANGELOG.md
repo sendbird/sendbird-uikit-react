@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.4.1](Sep 9 2021)
+
+- Bugfix:
+ * Fix issues of the event filter and add tests
+ * Add checking current channel condition before get channel
+ * Add hasSeparator and menuDisabled props to renderChatItem
+ * Fix alignment of pending message
+
 ## [2.4.0]
 
 Move source code to new repo
