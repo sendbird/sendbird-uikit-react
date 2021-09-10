@@ -75,7 +75,7 @@ export default function MessageHoc({
         ref={useMessageScrollRef}
         className={`
           sendbird-msg-hoc sendbird-msg--scroll-ref
-          ${isAnimated ? 'sendbird-msg-hoc__highlighted' : ''}
+          ${isAnimated ? 'sendbird-msg-hoc__animated' : ''}
         `}
       >
         {/* date-separator */}
