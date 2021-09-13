@@ -52,5 +52,8 @@ exports[`OGMessageItemBody should do a snapshot test of the OGMessageItemBody DO
     className="sendbird-og-message-item-body__description"
     onClick={[Function]}
   />
+  <div
+    className="sendbird-og-message-item-body__cover"
+  />
 </div>
 `;
