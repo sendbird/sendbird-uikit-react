@@ -22,6 +22,7 @@ export default function MessageHoc({
   hasSeparator,
   deleteMessage,
   updateMessage,
+  scrollToMessage,
   resendMessage,
   useReaction,
   chainTop,
@@ -60,7 +61,7 @@ export default function MessageHoc({
     if (renderCustomMessage) {
       return renderCustomMessage(message, currentGroupChannel, chainTop, chainBottom);
       // TODO: Let's change this to object type on next major version up
-      // and add params 'hasSeparator' and 'menuDisabled'
+      // and add params 'hasSeparator' and 'menuDisabled', scrollToMessage
     }
     return null;
   }, [message, message.message, renderCustomMessage]);
@@ -130,6 +131,7 @@ export default function MessageHoc({
       <MessageContent
         className="sendbird-message-hoc__message-content"
         userId={userId}
+        scrollToMessage={scrollToMessage}
         channel={currentGroupChannel}
         message={message}
         disabled={disabled}
@@ -201,6 +203,7 @@ MessageHoc.propTypes = {
   disabled: PropTypes.bool,
   editDisabled: PropTypes.bool,
   deleteMessage: PropTypes.func.isRequired,
+  scrollToMessage: PropTypes.func,
   updateMessage: PropTypes.func.isRequired,
   resendMessage: PropTypes.func.isRequired,
   useReaction: PropTypes.bool.isRequired,
@@ -228,5 +231,6 @@ MessageHoc.defaultProps = {
   disabled: false,
   highLightedMessageId: null,
   toggleReaction: () => { },
+  scrollToMessage: () => { },
   emojiContainer: {},
 };

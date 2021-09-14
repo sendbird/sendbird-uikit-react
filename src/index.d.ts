@@ -316,6 +316,10 @@ interface RenderChatItemProps {
       message: Sendbird.UserMessage
     ) => void,
   );
+  onScrollToMessage(
+    createdAt: number,
+    messageId: number,
+  );
   onResendMessage: (
     failedMessage: SendBird.AdminMessage | SendBird.UserMessage | SendBird.FileMessage
   ) => void;

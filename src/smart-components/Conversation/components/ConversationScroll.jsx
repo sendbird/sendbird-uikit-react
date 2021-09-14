@@ -79,6 +79,7 @@ export default class ConversationScroll extends Component {
       scrollRef,
       membersMap,
       allMessages,
+      scrollToMessage,
       useReaction,
       emojiAllMap,
       editDisabled,
@@ -150,6 +151,7 @@ export default class ConversationScroll extends Component {
                             onDeleteMessage: deleteMessage,
                             onUpdateMessage: updateMessage,
                             onResendMessage: resendMessage,
+                            onScrollToMessage: scrollToMessage,
                             emojiContainer,
                             chainTop,
                             chainBottom,
@@ -169,6 +171,7 @@ export default class ConversationScroll extends Component {
                       userId={userId}
                       // show status for pending/failed messages
                       message={m}
+                      scrollToMessage={scrollToMessage}
                       currentGroupChannel={currentGroupChannel}
                       disabled={disabled}
                       membersMap={membersMap}
@@ -246,6 +249,7 @@ ConversationScroll.propTypes = {
   ]),
   renderChatItem: PropTypes.element,
   renderCustomMessage: PropTypes.func,
+  scrollToMessage: PropTypes.func,
   useReaction: PropTypes.bool,
   showScrollBot: PropTypes.bool,
   onClickScrollBot: PropTypes.func,
@@ -271,6 +275,7 @@ ConversationScroll.defaultProps = {
   emojiContainer: {},
   showScrollBot: false,
   onClickScrollBot: () => {},
+  scrollToMessage: () => {},
   emojiAllMap: new Map(),
   membersMap: new Map(),
   useMessageGrouping: true,
