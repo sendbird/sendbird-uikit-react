@@ -31,7 +31,7 @@ export default function ReplyingMessageAttachment({
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   const fileMessage = replyingMessage as FileMessage;
-  const sender = replyingMessage && (replyingMessage as UserMessage | FileMessage).sender;
+  const sender = (replyingMessage as UserMessage | FileMessage)?.sender;
 
   return (
     <div className={getClassName(['sendbird-replying_message_attachment', className])}>

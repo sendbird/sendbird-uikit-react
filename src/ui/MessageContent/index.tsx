@@ -46,6 +46,7 @@ interface Props {
   useReplying?: boolean;
   nicknamesMap?: Map<string, string>;
   emojiContainer?: EmojiContainer;
+  scrollToMessage?: (createdAt: number, messageId: number) => void;
   showEdit?: (bool: boolean) => void;
   showRemove?: (bool: boolean) => void;
   showFileViewer?: (bool: boolean) => void;
@@ -61,6 +62,7 @@ export default function MessageContent({
   chainTop = false,
   chainBottom = false,
   useReaction,
+  // scrollToMessage,
   // useReplying,
   nicknamesMap,
   emojiContainer,
@@ -177,7 +179,7 @@ export default function MessageContent({
           </Label>
         )}
         {/* {useReplying && (
-          <ReplyingMessageAttachment replyingMessage={replyingMessage} />
+          <ReplyingMessageAttachment scrollToMessage={scrollToMessage} replyingMessage={replyingMessage} />
         )} */}
         {/*
           A ReplyingMessage should have an another interface

@@ -29,6 +29,7 @@ import useSendMessageCallback from './hooks/useSendMessageCallback';
 import useSendFileMessageCallback from './hooks/useSendFileMessageCallback';
 import useMemoizedEmojiListItems from './hooks/useMemoizedEmojiListItems';
 import useToggleReactionCallback from './hooks/useToggleReactionCallback';
+import useScrollToMessage from './hooks/useScrollToMessage';
 
 import ConversationScroll from './components/ConversationScroll';
 import Notification from './components/Notification';
@@ -149,6 +150,12 @@ export const ConversationPanel = (props) => {
     messagesDispatcher,
     sdk,
   });
+
+  const scrollToMessage = useScrollToMessage({
+    setIntialTimeStamp,
+    setHighLightedMessageId,
+    allMessages,
+  }, { logger });
 
   // onScrollDownCallback is added for navigation to different timestamps on messageSearch
   // hasMoreToBottom, onScrollDownCallback -> scroll down
@@ -344,6 +351,7 @@ export const ConversationPanel = (props) => {
               readStatus={readStatus}
               useReaction={usingReaction}
               allMessages={allMessages}
+              scrollToMessage={scrollToMessage}
               emojiAllMap={emojiAllMap}
               membersMap={nicknamesMap}
               editDisabled={utils.isDisabledBecauseFrozen(currentGroupChannel)}

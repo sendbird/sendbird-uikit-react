@@ -134,6 +134,7 @@ export default function OGMessageItemBody({
           </Label>
         )}
       </div>
+      <div className="sendbird-og-message-item-body__cover" />
     </div>
   );
 }
