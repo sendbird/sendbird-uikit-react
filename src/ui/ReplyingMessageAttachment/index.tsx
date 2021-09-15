@@ -21,7 +21,6 @@ import './index.scss';
 interface Props {
   className: string | Array<string>;
   replyingMessage: CoreMessageType;
-  ReplyingMessageAttachment: () => {};
   onClose?: (message: CoreMessageType) => void;
 }
 
