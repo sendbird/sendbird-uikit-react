@@ -1,5 +1,6 @@
 import React, { ReactElement, useContext, useRef, useState } from 'react';
-import { GroupChannel, AdminMessage, UserMessage, FileMessage, EmojiContainer } from 'sendbird';
+// import { GroupChannel, AdminMessage, UserMessage, FileMessage, EmojiContainer } from 'sendbird';
+import { GroupChannel, AdminMessage, UserMessage, FileMessage, EmojiContainer } from '../../sendbird.min.js';
 import './index.scss';
 
 import Avatar from '../Avatar';

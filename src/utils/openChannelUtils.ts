@@ -1,4 +1,5 @@
-import Sendbird from 'sendbird';
+// import Sendbird from 'sendbird';
+import Sendbird from '../sendbird.min.js';
 import { ClientUserMessage, ClientFileMessage } from '../index';
 
 const OpenChannelMessageStatusTypes = {
