@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
-import Sendbird from 'sendbird';
+// import Sendbird from 'sendbird';
+import Sendbird from '../../../sendbird.min.js';
 import { RenderOpenChannelMessageInputProps } from '../../../index';
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 import MessageInput from '../../../ui/MessageInput';

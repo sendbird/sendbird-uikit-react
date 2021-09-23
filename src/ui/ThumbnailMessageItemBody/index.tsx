@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react';
-import { FileMessage } from 'sendbird';
+// import { FileMessage } from 'sendbird';
+import { FileMessage } from '../../sendbird.min.js';
 import './index.scss';
 
 import Icon, { IconTypes, IconColors } from '../Icon';

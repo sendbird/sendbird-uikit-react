@@ -1,5 +1,6 @@
 import format from 'date-fns/format';
-import Sendbird from 'sendbird';
+// import Sendbird from 'sendbird';
+import Sendbird from '../../sendbird.min.js';
 import SendbirdUIKit from '../../index';
 
 export const getMessageCreatedAt = (message: SendbirdUIKit.EveryMessage): string => format(message.createdAt, 'p');

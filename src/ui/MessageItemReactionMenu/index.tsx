@@ -1,5 +1,6 @@
 import React, { ReactElement, useRef } from 'react';
-import { FileMessage, UserMessage, Emoji, Reaction, EmojiContainer } from 'sendbird';
+// import { FileMessage, UserMessage, Emoji, Reaction, EmojiContainer } from 'sendbird';
+import { FileMessage, UserMessage, Emoji, Reaction, EmojiContainer } from '../../sendbird.min.js';
 import './index.scss';
 
 import ContextMenu, { EmojiListItems } from '../ContextMenu';

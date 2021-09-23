@@ -1,4 +1,5 @@
-import Sendbird from 'sendbird';
+// import Sendbird from 'sendbird';
+import Sendbird from '../../../sendbird.min.js';
 import { EveryMessage } from '../../../index';
 
 export interface State {
