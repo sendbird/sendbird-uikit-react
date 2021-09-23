@@ -13,6 +13,7 @@ import {
   isPendingMessage,
 } from '../../utils/index';
 import { LocalizationContext } from '../../lib/LocalizationContext';
+import { ReplyType } from '../../index';
 
 interface Props {
   className?: string | Array<string>;
@@ -20,6 +21,7 @@ interface Props {
   channel: GroupChannel | OpenChannel;
   isByMe?: boolean;
   disabled?: boolean;
+  replyType?: ReplyType;
   showEdit?: (bool: boolean) => void;
   showRemove?: (bool: boolean) => void;
   resendMessage?: (message: UserMessage | FileMessage) => void;
@@ -32,6 +34,7 @@ export default function MessageItemMenu({
   channel,
   isByMe,
   disabled,
+  replyType,
   showEdit,
   showRemove,
   resendMessage,
@@ -42,7 +45,7 @@ export default function MessageItemMenu({
   const containerRef = useRef(null);
 
   const showMenuItemCopy: boolean = isUserMessage(message as UserMessage);
-  const showMenuItemReply: boolean = false && !isFailedMessage(channel, message) && !isPendingMessage(channel, message);
+  const showMenuItemReply: boolean = !isFailedMessage(channel, message) && !isPendingMessage(channel, message);
   const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(channel, message) && isByMe);
   const showMenuItemResend: boolean = (isFailedMessage(channel, message) && message.isResendable() && isByMe);
   const showMenuItemDelete: boolean = (isSentMessage(channel, message) && isByMe);

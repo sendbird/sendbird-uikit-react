@@ -108,6 +108,7 @@ export type Logger = {
 };
 
 export type SendbirdError = Sendbird.SendBirdError;
+export type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
 
 export interface RenderOpenChannelTitleProps {
   channel: Sendbird.OpenChannel;
