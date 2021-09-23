@@ -1,4 +1,5 @@
-import Sendbird from 'sendbird';
+// import Sendbird from 'sendbird';
+import Sendbird from '../../../sendbird.min.js';
 import { useCallback } from 'react';
 import * as messageActionTypes from '../dux/actionTypes';
 

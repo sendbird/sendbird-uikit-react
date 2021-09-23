@@ -1,5 +1,6 @@
 import React, { ReactElement, useContext } from 'react';
-import { FileMessage, User, UserMessage } from 'sendbird';
+// import { FileMessage, User, UserMessage } from 'sendbird';
+import { FileMessage, User, UserMessage } from '../../sendbird.min.js';
 import './index.scss';
 
 import Icon, { IconTypes, IconColors } from '../Icon';

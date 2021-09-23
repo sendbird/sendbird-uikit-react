@@ -1,5 +1,6 @@
 import React, { ReactElement, useContext } from 'react';
-import { UserMessage } from 'sendbird';
+// import { UserMessage } from 'sendbird';
+import { UserMessage } from '../../sendbird.min.js';
 import './index.scss';
 
 import Label, { LabelTypography, LabelColors } from '../Label';
