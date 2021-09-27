@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Sendbird from '../../../lib/Sendbird';
 import OpenchannelConversation from '../index';
 import { MenuRoot } from '../../../ui/ContextMenu';
+import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
+import sendbirdSelectors from '../../../lib/selectors';
 
 export default { title: 'OpenChannel' };
 
@@ -26,6 +28,34 @@ export const defaultConversation = () => {
   );
 };
 
+const CustomInput = (params) => {
+  const { channel } = params;
+  const [inputText, setInputText] = useState("");
+  const context = useSendbirdStateContext();
+  const sdk = sendbirdSelectors.getSdk(context);
+  const sendUserMessage = sendbirdSelectors.getOpenChannelSendUserMessage(context);
+
+  return (
+    <div>
+      <input value={inputText} onChange={(event) => {
+        setInputText(event.target.value);
+      }}/>
+      <button onClick={() => {
+        const params = new sdk.UserMessageParams();
+        params.message = inputText;
+        sendUserMessage(channel.url, params)
+          .then((message) => {
+            console.log(message);
+            setInputText("");
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
+      }}>send</button>
+    </div>
+  );
+}
+
 export const RenderCustomMessage = () => {
   return (
     <Sendbird
@@ -43,6 +73,9 @@ export const RenderCustomMessage = () => {
                 <div style={{ color: 'red' }}>{message.message}</div>
               )
             }
+          }}
+          renderMessageInput={(props) => {
+            return (<CustomInput {...props} />);
           }}
         />
       </div>
