@@ -1,11 +1,13 @@
 import React from 'react';
-import ReplyingMessageItemBody from '../index.tsx';
+import QuoteMessage from '../index.tsx';
 
-export default { title: 'UI Components/ReplyingMessageItemBody' };
+export default { title: 'UI Components/QuoteMessage' };
+
+export const withText = () => <QuoteMessage text="example" />;
 
 export const withText = () => (
   <div style={{ display: 'flex', flexDirection: 'column' }}>
-    <ReplyingMessageItemBody
+    <QuoteMessage
       message={{ sender: { nickname: 'Simon' } }}
       parentMessageType={null}
       parentMessageText="Hello nice to meet you. Katherine and I are baking cupcakes this Sunday if anyone else wants to join?atherine and I are baking cupcakes this Sunday if anyone else can join. Welcome."
@@ -14,7 +16,7 @@ export const withText = () => (
       isByMe
     />
     <br />
-    <ReplyingMessageItemBody
+    <QuoteMessage
       message={{ sender: { nickname: 'Simon00000000000000000000' } }}
       parentMessageType={null}
       parentMessageText="Hello nice to meet you"
@@ -23,7 +25,7 @@ export const withText = () => (
       isByMe
     />
     <br />
-    <ReplyingMessageItemBody
+    <QuoteMessage
       message={{ sender: { nickname: 'Simon' } }}
       parentMessageType={null}
       parentMessageText="Hello nice to meet you"
@@ -32,7 +34,7 @@ export const withText = () => (
       isByMe={false}
     />
     <br />
-    <ReplyingMessageItemBody
+    <QuoteMessage
       message={{ sender: { nickname: 'Simon00000000000000000000' } }}
       parentMessageType={null}
       parentMessageText="Hello nice to meet you"
@@ -41,7 +43,7 @@ export const withText = () => (
       isByMe={false}
     />
     <br />
-    <ReplyingMessageItemBody
+    <QuoteMessage
       message={{ sender: { nickname: 'Simon00000000000000000000' } }}
       parentMessageText=""
       parentMessageType="image/jpg"
@@ -50,7 +52,7 @@ export const withText = () => (
       isByMe
     />
     <br />
-    <ReplyingMessageItemBody
+    <QuoteMessage
       message={{ sender: { nickname: 'Simon' } }}
       parentMessageText=""
       parentMessageType="image/png"
@@ -59,7 +61,7 @@ export const withText = () => (
       isByMe={false}
     />
     <br />
-    <ReplyingMessageItemBody
+    <QuoteMessage
       message={{ sender: { nickname: 'Simon00000000000000000000' } }}
       parentMessageText=""
       parentMessageType="image/fdfd"
@@ -68,7 +70,7 @@ export const withText = () => (
       isByMe
     />
     <br />
-    <ReplyingMessageItemBody
+    <QuoteMessage
       message={{ sender: { nickname: 'Simon' } }}
       parentMessageText=""
       parentMessageType="video/djfldfs"

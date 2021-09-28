@@ -1,13 +1,12 @@
 import React from 'react';
 // import {shallow} from 'enzyme';
 import renderer from 'react-test-renderer';
-
-import ReplyingMessageItemBody from "../index";
+import QuoteMessageItemBody from '../index';
 
 describe('ReplyingMessageItemBody', () => {
   it('should do a snapshot test of the ReplyingMessageItemBody DOM', function() {
     const component = renderer.create(
-      <ReplyingMessageItemBody
+      <QuoteMessageItemBody
         message={{ sender: { nickname: 'Simon' } }}
         parentMessageType={null}
         parentMessageText="Hello nice to meet you"

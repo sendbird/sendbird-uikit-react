@@ -18,7 +18,7 @@ interface Props {
   className?: string | Array<string>;
 }
 
-export default function ReplyingMessageItemBody({
+export default function QuoteMessageItemBody({
   message,
   parentMessageType,
   parentMessageText,
@@ -34,29 +34,29 @@ export default function ReplyingMessageItemBody({
   const splitUrl = parentMessageUrl.split('/');
 
   return (
-    <div className={getClassName([className, 'sendbird-replying-message-item-body', isByMe ? 'outgoing' : 'incoming'])}>
-      <div className="sendbird-replying-message-item-body__replied-to">
+    <div className={getClassName([className, 'sendbird-quote-message-item-body', isByMe ? 'outgoing' : 'incoming'])}>
+      <div className="sendbird-quote-message-item-body__replied-to">
         <Icon
-          className="sendbird-replying-message-item-body__replied-to__icon"
+          className="sendbird-quote-message-item-body__replied-to__icon"
           type={IconTypes.REPLY}
           fillColor={IconColors.ON_BACKGROUND_3}
           width="12px"
           height="12px"
         />
         <Label
-          className="sendbird-replying-message-item-body__replied-to__text"
+          className="sendbird-quote-message-item-body__replied-to__text"
           type={LabelTypography.CAPTION_2}
           color={LabelColors.ONBACKGROUND_3}
         >
           {`${currentMessageSenderNickname} ${stringSet.REPLIED_TO} ${parentMessageSenderNickname}`}
         </Label>
       </div>
-      <div className="sendbird-replying-message-item-body__replied-message">
+      <div className="sendbird-quote-message-item-body__replied-message">
         {/* text message */}
         {(!parentMessageType && parentMessageText?.length > 0) && (
-          <div className="sendbird-replying-message-item-body__replied-message__text-message">
+          <div className="sendbird-quote-message-item-body__replied-message__text-message">
             <Label
-              className="sendbird-replying-message-item-body__replied-message__text-message__word"
+              className="sendbird-quote-message-item-body__replied-message__text-message__word"
               type={LabelTypography.BODY_2}
               color={LabelColors.ONBACKGROUND_3}
             >
@@ -66,16 +66,16 @@ export default function ReplyingMessageItemBody({
         )}
         {/* thumbnail message */}
         {(parentMessageType && isSupportedFileView(parentMessageType) && parentMessageUrl) && (
-          <div className="sendbird-replying-message-item-body__replied-message__thumbnail-message">
+          <div className="sendbird-quote-message-item-body__replied-message__thumbnail-message">
             <ImageRenderer
-              className="sendbird-replying-message-item-body__replied-message__thumbnail-message__image"
+              className="sendbird-quote-message-item-body__replied-message__thumbnail-message__image"
               url={parentMessageUrl}
               alt={parentMessageType}
               width="144px"
               height="108px"
               placeHolder={(style) => {
-                <div className="sendbird-replying-message-item-body__replied-message__thumbnail-message__placeholder" style={style}>
-                  <div className="sendbird-replying-message-item-body__replied-message__thumbnail-message__placeholder__icon">
+                <div className="sendbird-quote-message-item-body__replied-message__thumbnail-message__placeholder" style={style}>
+                  <div className="sendbird-quote-message-item-body__replied-message__thumbnail-message__placeholder__icon">
                     <Icon
                       type={isVideo(parentMessageType) ? IconTypes.PLAY : IconTypes.PHOTO}
                       fillColor={IconColors.ON_BACKGROUND_2}
@@ -86,8 +86,8 @@ export default function ReplyingMessageItemBody({
                 </div>
               }}
             />
-            <div className="sendbird-replying-message-item-body__replied-message__thumbnail-message__cover">
-              <div className="sendbird-replying-message-item-body__replied-message__thumbnail-message__cover__icon">
+            <div className="sendbird-quote-message-item-body__replied-message__thumbnail-message__cover">
+              <div className="sendbird-quote-message-item-body__replied-message__thumbnail-message__cover__icon">
                 <Icon
                   type={isVideo(parentMessageType) ? IconTypes.PLAY : IconTypes.PHOTO}
                   fillColor={IconColors.ON_BACKGROUND_2}
@@ -100,9 +100,9 @@ export default function ReplyingMessageItemBody({
         )}
         {/* file message */}
         {((parentMessageType && !isSupportedFileView(parentMessageType) && parentMessageUrl) && (
-          <div className="sendbird-replying-message-item-body__replied-message__file-message">
+          <div className="sendbird-quote-message-item-body__replied-message__file-message">
             <Icon
-              className="sendbird-replying-message-item-body__replied-message__file-message__type-icon"
+              className="sendbird-quote-message-item-body__replied-message__file-message__type-icon"
               type={{
                 [uikitFileTypes.IMAGE]: IconTypes.PHOTO,
                 [uikitFileTypes.VIDEO]: IconTypes.PLAY,
@@ -115,7 +115,7 @@ export default function ReplyingMessageItemBody({
               height="16px"
             />
             <Label
-              className="sendbird-replying-message-item-body__replied-message__file-message__file-name"
+              className="sendbird-quote-message-item-body__replied-message__file-message__file-name"
               type={LabelTypography.BODY_2}
               color={LabelColors.ONBACKGROUND_3}
             >
