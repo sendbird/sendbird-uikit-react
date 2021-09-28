@@ -10,9 +10,9 @@ interface Props {
   message: FileMessage;
 }
 
-const componentClassname = 'sendbird-replying_message_attachment__avatar';
+const componentClassname = 'sendbird-quote_message_input__avatar';
 
-export default function ReplyingMessageThumbnail({ message }: Props): ReactElement {
+export default function QuoteMessageThumbnail({ message }: Props): ReactElement {
   if (!isFileMessage(message)) {
     return null;
   }

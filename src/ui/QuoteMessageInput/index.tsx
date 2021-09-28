@@ -16,7 +16,7 @@ import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 
-import ReplyingMessageThumbnail from './ReplyingMessageThumbnail';
+import QuoteMessageThumbnail from './QuoteMessageThumbnail';
 import './index.scss';
 
 interface Props {
@@ -25,7 +25,7 @@ interface Props {
   onClose?: (message: CoreMessageType) => void;
 }
 
-export default function ReplyingMessageAttachment({
+export default function QuoteMessageInput({
   className,
   replyingMessage,
   onClose,
@@ -35,18 +35,18 @@ export default function ReplyingMessageAttachment({
   const sender = (replyingMessage as UserMessage | FileMessage)?.sender;
 
   return (
-    <div className={getClassName(['sendbird-replying_message_attachment', className])}>
-      <ReplyingMessageThumbnail message={fileMessage} />
-      <div className="sendbird-replying_message_attachment__body">
+    <div className={getClassName(['sendbird-quote_message_input', className])}>
+      <QuoteMessageThumbnail message={fileMessage} />
+      <div className="sendbird-quote_message_input__body">
         <Label
-          className="sendbird-replying_message_attachment__body__sender-name"
+          className="sendbird-quote_message_input__body__sender-name"
           type={LabelTypography.CAPTION_1}
           color={LabelColors.ONBACKGROUND_1}
         >
           {`${stringSet.REPLYING_ATTACHMENT__REPLY_TO} ${(sender && sender.nickname) ? sender.nickname : stringSet.NO_NAME}`}
         </Label>
         <Label
-          className="sendbird-replying_message_attachment__body__message-content"
+          className="sendbird-quote_message_input__body__message-content"
           type={LabelTypography.BODY_2}
           color={LabelColors.ONBACKGROUND_3}
         >
@@ -58,7 +58,7 @@ export default function ReplyingMessageAttachment({
         </Label>
       </div>
       <Icon
-        className="sendbird-replying_message_attachment__close-button"
+        className="sendbird-quote_message_input__close-button"
         type={IconTypes.CLOSE}
         fillColor={IconColors.ON_BACKGROUND_2}
         width="24px"
