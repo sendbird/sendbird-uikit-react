@@ -1,7 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`QuoteMessage should do a snapshot test of the QuoteMessage DOM 1`] = `<div />`;
-
 exports[`ReplyingMessageItemBody should do a snapshot test of the ReplyingMessageItemBody DOM 1`] = `
 <div
   className=" sendbird-quote-message-item-body outgoing"
