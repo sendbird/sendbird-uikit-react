@@ -1,6 +1,6 @@
 @import '../../styles/variables';
 
-.sendbird-replying-message-item-body {
+.sendbird-quote-message-item-body {
   position: relative;
   display: inline-flex;
   box-sizing: border-box;
@@ -9,19 +9,19 @@
   &.outgoing { align-items: flex-end; }
   max-width: 400px;
 
-  .sendbird-replying-message-item-body__replied-to {
+  .sendbird-quote-message-item-body__replied-to {
     position: relative;
     display: inline-flex;
     flex-direction: row;
     align-items: center;
     height: 16px;
     padding: 0px 12px;
-    .sendbird-replying-message-item-body__replied-to__icon {
+    .sendbird-quote-message-item-body__replied-to__icon {
       position: relative;
       margin-bottom: 4px;
       margin-right: 4px;
     }
-    .sendbird-replying-message-item-body__replied-to__text {
+    .sendbird-quote-message-item-body__replied-to__text {
       position: relative;
       max-width: 360px;
       overflow: hidden;
@@ -33,12 +33,12 @@
     }
   }
 
-  .sendbird-replying-message-item-body__replied-message {
+  .sendbird-quote-message-item-body__replied-message {
     position: relative;
     display: inline-flex;
 
     // text message
-    .sendbird-replying-message-item-body__replied-message__text-message {
+    .sendbird-quote-message-item-body__replied-message__text-message {
       position: relative;
       white-space: pre-wrap;
       word-break: break-all;
@@ -48,27 +48,27 @@
       @include themed() {
         background-color: t(bg-1);
       }
-      .sendbird-replying-message-item-body__replied-message__text-message__word {
+      .sendbird-quote-message-item-body__replied-message__text-message__word {
         max-height: 32px;
         overflow: hidden;
         text-overflow: ellipsis;
       }
     }
     // thumbnail message
-    .sendbird-replying-message-item-body__replied-message__thumbnail-message {
+    .sendbird-quote-message-item-body__replied-message__thumbnail-message {
       position: relative;
       width: 144px;
       height: 108px;
       border-radius: 6.4px;
       overflow: hidden;
-      .sendbird-replying-message-item-body__replied-message__thumbnail-message__placeholder {
+      .sendbird-quote-message-item-body__replied-message__thumbnail-message__placeholder {
         position: absolute;
         display: inline-flex;
         width: 100%;
         height: 100%;
         justify-content: center;
         align-items: center;
-        .sendbird-replying-message-item-body__replied-message__thumbnail-message__placeholder__icon {
+        .sendbird-quote-message-item-body__replied-message__thumbnail-message__placeholder__icon {
           display: inline-flex;
           justify-content: center;
           align-items: center;
@@ -78,7 +78,7 @@
           background-color: var(--sendbird-light-background-50);
         }
       }
-      .sendbird-replying-message-item-body__replied-message__thumbnail-message__cover {
+      .sendbird-quote-message-item-body__replied-message__thumbnail-message__cover {
         position: absolute;
         display: inline-flex;
         width: 100%;
@@ -87,7 +87,7 @@
         align-items: center;
         top: 0px;
         background-color: rgba(256, 256, 256, 0.4);
-        .sendbird-replying-message-item-body__replied-message__thumbnail-message__cover__icon {
+        .sendbird-quote-message-item-body__replied-message__thumbnail-message__cover__icon {
           position: relative;
           display: inline-flex;
           justify-content: center;
@@ -100,7 +100,7 @@
       }
     }
     // file message
-    .sendbird-replying-message-item-body__replied-message__file-message {
+    .sendbird-quote-message-item-body__replied-message__file-message {
       position: relative;
       display: inline-flex;
       flex-direction: row;
@@ -110,10 +110,10 @@
       @include themed() {
         background-color: t(bg-1);
       }
-      .sendbird-replying-message-item-body__replied-message__file-message__type-icon {
+      .sendbird-quote-message-item-body__replied-message__file-message__type-icon {
         margin-right: 2px;
       }
-      .sendbird-replying-message-item-body__replied-message__file-message__file-name {
+      .sendbird-quote-message-item-body__replied-message__file-message__file-name {
 
       }
     }
