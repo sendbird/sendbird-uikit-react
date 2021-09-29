@@ -85,7 +85,7 @@
     position: relative;
     box-sizing: border-box;
     display: inline-flex;
-    justify-content: end;
+    justify-content: flex-end;
     width: 50px;
     &.use-reactions { width: 70px }
 
