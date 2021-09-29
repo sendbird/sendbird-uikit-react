@@ -202,7 +202,7 @@ export const OpenchannelConversation = (props: Props): JSX.Element => {
       if (channel && (channelUrl === channel.url)) {
         messagesDispatcher({
           type: messageActionTypes.SENDING_MESSAGE_START,
-          payload: message,
+          payload: { message, channel },
         });
       }
     }));
@@ -212,7 +212,7 @@ export const OpenchannelConversation = (props: Props): JSX.Element => {
       if (channel && (channelUrl === channel.url)) {
         messagesDispatcher({
           type: messageActionTypes.SENDING_MESSAGE_SUCCEEDED,
-          payload: message,
+          payload: { message, channel },
         });
       }
     }));
@@ -306,11 +306,15 @@ export const OpenchannelConversation = (props: Props): JSX.Element => {
       {
         renderMessageInput
           ? (
-            renderMessageInput({
-              channel: currentOpenChannel,
-              user: user,
-              disabled: disabled,
-            })
+            <div className="sendbird-openchannel-footer">
+              {
+                renderMessageInput({
+                  channel: currentOpenChannel,
+                  user: user,
+                  disabled: disabled,
+                })
+              }
+            </div>
           )
           : (
             <MessageInputWrapper
