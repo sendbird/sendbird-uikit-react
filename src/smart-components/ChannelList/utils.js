@@ -152,12 +152,16 @@ function setupChannelList({
   logger,
   sortChannelList,
 }) {
-  createEventHandler({
-    sdk,
-    channelListDispatcher,
-    sdkChannelHandlerId,
-    logger,
-  });
+  if (sdk && sdk.ChannelHandler) {
+    createEventHandler({
+      sdk,
+      channelListDispatcher,
+      sdkChannelHandlerId,
+      logger,
+    });
+  } else {
+    logger.console.warning('ChannelList - createEventHandler: sdk or sdk.ChannelHandler does not exist', sdk);
+  }
 
   logger.info('ChannelList - creating query', { userFilledChannelListQuery });
   const channelListQuery = createChannelListQuery({ sdk, userFilledChannelListQuery });
