@@ -25,12 +25,9 @@ import {
   isTextMessage,
   isOGMessage,
   isThumbnailMessage,
-  isMessageSentByMe,
   getOutgoingMessageState,
   getSenderName,
   getMessageCreatedAt,
-  isPendingMessage,
-  isFailedMessage,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 
