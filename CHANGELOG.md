@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.2](Sep 30 2021)
+- Bugfix
+  *Use simple logic to calculate isByMe
+  *Use flex-end instead of end
+  *Add null check for sdk and sdk.ChannelHandler before createEventHandler
+  *Fix SENDING_MESSAGE_START payload mismatch
+
 ## [2.4.1](Sep 9 2021)
 
 - Bugfix:
