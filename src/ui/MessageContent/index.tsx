@@ -29,6 +29,8 @@ import {
   getOutgoingMessageState,
   getSenderName,
   getMessageCreatedAt,
+  isPendingMessage,
+  isFailedMessage,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 
@@ -77,7 +79,9 @@ export default function MessageContent({
   const [mouseHover, setMouseHover] = useState(false);
   const [supposedHover, setSupposedHover] = useState(false);
 
-  const isByMe: boolean = isMessageSentByMe(userId, message as UserMessage | FileMessage);
+  const isByMe = (userId === (message as UserMessage | FileMessage)?.sender?.userId)
+    || ((message as UserMessage | FileMessage).sendingStatus === 'pending')
+    || ((message as UserMessage | FileMessage).sendingStatus === 'failed');
   const isByMeClassName = isByMe ? 'outgoing' : 'incoming';
   const chainTopClassName = chainTop ? 'chain-top' : '';
   const useReactionClassName = useReaction ? 'use-reactions' : '';

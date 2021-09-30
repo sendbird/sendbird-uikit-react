@@ -131,15 +131,14 @@ export const isSentStatus = (state: string): boolean => (
   || state === OutgoingMessageStates.READ
 );
 export const isSentMessage = (channel: GroupChannel | OpenChannel, message: UserMessage | FileMessage): boolean => (
-  isSentStatus(getOutgoingMessageState(channel, message))
+  getOutgoingMessageState(channel, message) === OutgoingMessageStates.SENT
+  || getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
+  || getOutgoingMessageState(channel, message) === OutgoingMessageStates.DELIVERED
 );
-export const isDeliveredMessage = (channel: GroupChannel, message: UserMessage | FileMessage): boolean => {
-  const state = getOutgoingMessageState(channel, message);
-  return (
-    state === OutgoingMessageStates.DELIVERED
-    || state === OutgoingMessageStates.READ
-  );
-};
+export const isDeliveredMessage = (channel: GroupChannel, message: UserMessage | FileMessage): boolean => (
+  getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
+  || getOutgoingMessageState(channel, message) === OutgoingMessageStates.DELIVERED
+);
 export const isReadMessage = (channel: GroupChannel, message: UserMessage | FileMessage): boolean => (
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
 );
