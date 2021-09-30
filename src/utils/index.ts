@@ -125,19 +125,14 @@ export const getOutgoingMessageState = (channel: GroupChannel | OpenChannel, mes
   if (message.sendingStatus === 'succeeded') return OutgoingMessageStates.SENT;
   return OutgoingMessageStates.NONE;
 };
-export const isSentStatus = (state: string): boolean => (
-  state === OutgoingMessageStates.SENT
-  || state === OutgoingMessageStates.DELIVERED
-  || state === OutgoingMessageStates.READ
-);
 export const isSentMessage = (channel: GroupChannel | OpenChannel, message: UserMessage | FileMessage): boolean => (
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.SENT
-  || getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
   || getOutgoingMessageState(channel, message) === OutgoingMessageStates.DELIVERED
+  || getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
 );
 export const isDeliveredMessage = (channel: GroupChannel, message: UserMessage | FileMessage): boolean => (
-  getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
-  || getOutgoingMessageState(channel, message) === OutgoingMessageStates.DELIVERED
+  getOutgoingMessageState(channel, message) === OutgoingMessageStates.DELIVERED
+  || getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
 );
 export const isReadMessage = (channel: GroupChannel, message: UserMessage | FileMessage): boolean => (
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
@@ -148,8 +143,10 @@ export const isFailedMessage = (channel: GroupChannel | OpenChannel, message: Us
 export const isPendingMessage = (channel: GroupChannel | OpenChannel, message: UserMessage | FileMessage): boolean => (
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.PENDING
 );
-export const isMessageSentByMe = (userId: string, message: UserMessage | FileMessage): boolean => (
-  (userId && message?.sender?.userId) && userId === message.sender.userId
+export const isSentStatus = (state: string): boolean => (
+  state === OutgoingMessageStates.SENT
+  || state === OutgoingMessageStates.DELIVERED
+  || state === OutgoingMessageStates.READ
 );
 
 export const isAdminMessage = (message: AdminMessage): boolean => (
@@ -246,6 +243,10 @@ export const getUseReaction = (store: UIKitStore, channel: GroupChannel | OpenCh
     return !((channel as GroupChannel).isBroadcast || (channel as GroupChannel).isSuper);
   return store?.config?.useReaction;
 };
+
+export const isMessageSentByMe = (userId: string, message: UserMessage | FileMessage): boolean => (
+  (userId && message?.sender?.userId) && userId === message.sender.userId
+);
 
 const URL_REG = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
 export const isUrl = (text: string): boolean => URL_REG.test(text);
