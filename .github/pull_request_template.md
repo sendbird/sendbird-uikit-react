@@ -1,6 +1,8 @@
 ## Jira Ticket
 [<TICKET_ID>](https://sendbird.atlassian.net/browse/<TICKET_ID>)
 
+Note - We are not accpeting external PRs for now
+
 ## Description Of Changes
 
 Add a brief description of the changes that you have involved in this PR
