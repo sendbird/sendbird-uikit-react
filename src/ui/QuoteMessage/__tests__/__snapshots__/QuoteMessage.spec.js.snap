@@ -2,13 +2,13 @@
 
 exports[`ReplyingMessageItemBody should do a snapshot test of the ReplyingMessageItemBody DOM 1`] = `
 <div
-  className=" sendbird-quote-message-item-body outgoing"
+  className=" sendbird-quote-message outgoing"
 >
   <div
-    className="sendbird-quote-message-item-body__replied-to"
+    className="sendbird-quote-message__replied-to"
   >
     <div
-      className="sendbird-quote-message-item-body__replied-to__icon sendbird-icon sendbird-icon-color--on-background-3"
+      className="sendbird-quote-message__replied-to__icon sendbird-icon sendbird-icon-color--on-background-3"
       onClick={[Function]}
       onKeyDown={[Function]}
       role="button"
@@ -25,23 +25,13 @@ exports[`ReplyingMessageItemBody should do a snapshot test of the ReplyingMessag
       <test-file-stub />
     </div>
     <span
-      className="sendbird-quote-message-item-body__replied-to__text sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-3"
+      className="sendbird-quote-message__replied-to__text sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-3"
     >
-      Simon replied to Gabie
+      Simon replied to undefined
     </span>
   </div>
   <div
-    className="sendbird-quote-message-item-body__replied-message"
-  >
-    <div
-      className="sendbird-quote-message-item-body__replied-message__text-message"
-    >
-      <span
-        className="sendbird-quote-message-item-body__replied-message__text-message__word sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-3"
-      >
-        Hello nice to meet you
-      </span>
-    </div>
-  </div>
+    className="sendbird-quote-message__replied-message"
+  />
 </div>
 `;

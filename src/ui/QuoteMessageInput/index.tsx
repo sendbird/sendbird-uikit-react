@@ -20,7 +20,7 @@ import QuoteMessageThumbnail from './QuoteMessageThumbnail';
 import './index.scss';
 
 interface Props {
-  className: string | Array<string>;
+  className?: string | Array<string>;
   replyingMessage: CoreMessageType;
   onClose?: (message: CoreMessageType) => void;
 }

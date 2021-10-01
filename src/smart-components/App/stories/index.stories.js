@@ -162,7 +162,7 @@ export const updateProfile = () => {
   );
 };
 
-const age = 60;
+const age = 70;
 const array = [
   `hoon${age}1`,
   `hoon${age}2`,
