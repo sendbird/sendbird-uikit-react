@@ -81,11 +81,13 @@ const MessageInput = React.forwardRef((props, ref) => {
     if (inputValue && inputValue.trim().length > 0) {
       const trimmedInputValue = inputValue.trim();
       if (isEdit) {
+        // useUpdateMessageCallback
         onSendMessage(name, trimmedInputValue, () => {
           onCancelEdit();
         });
       } else {
-        onSendMessage(trimmedInputValue);
+        // useSendMessageCallback
+        onSendMessage();
         setInputValue('');
       }
     }
