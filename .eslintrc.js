@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es6: true,
   },
-  ignorePatterns: ['**/*.ts', '**/*.tsx', 'node_modules', 'src/legacy'],
+  ignorePatterns: ['**/*.ts', '**/*.tsx', 'node_modules', 'src/legacy', 'sendbird.min.js'],
   extends: [
     'plugin:react/recommended',
     'airbnb',
