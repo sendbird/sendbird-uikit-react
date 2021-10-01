@@ -1,6 +1,6 @@
 @import '../../styles/variables';
 
-.sendbird-quote_message-input {
+.sendbird-quote_message_input {
   position: relative;
   padding: 16px 80px 16px 40px;
   width: 100%;
@@ -9,7 +9,7 @@
   flex-direction: row;
   box-sizing: border-box;
 
-  .sendbird-quote_message-input__avatar {
+  .sendbird-quote_message_input__avatar {
     width: 44px;
     min-width: 44px;
     height: 44px;
@@ -25,14 +25,14 @@
     }
   }
 
-  .sendbird-quote_message-input__body {
+  .sendbird-quote_message_input__body {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     overflow: hidden;
 
-    .sendbird-quote_message-input__body__sender-name {
+    .sendbird-quote_message_input__body__sender-name {
       width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -40,7 +40,7 @@
       box-sizing: border-box;
       margin-bottom: 8px;
     }
-    .sendbird-quote_message-input__body__message-content {
+    .sendbird-quote_message_input__body__message-content {
       width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -49,7 +49,7 @@
     }
   }
 
-  .sendbird-quote_message-input__close-button {
+  .sendbird-quote_message_input__close-button {
     position: absolute;
     top: 26px;
     right: 40px;
