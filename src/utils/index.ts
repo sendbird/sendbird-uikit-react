@@ -325,7 +325,22 @@ export const hasSameMembers = <T>(a: T[], b: T[]): boolean => {
 }
 export const isFriend = (user: User): boolean => !!(user.friendDiscoveryKey || user.friendName);
 
-export const filterMessageListParams = (params: MessageListParams, message: UserMessage | FileMessage | AdminMessage): boolean => {
+interface SubsitutionMessageListParams extends MessageListParams {
+  // FIXME: Remove me, after SDK is released including this prop
+  includeParentMessageInfo: boolean;
+}
+interface SubsitutionMessage extends UserMessage {
+  // FIXME: Remove me, after SDK is released including this prop
+  parentMessage?: {
+    id?: number;
+    message?: string;
+    url?: string;
+    messageType?: 'user' | 'file' | 'admin';
+    sender?: User;
+    createdAt?: number;
+  }
+}
+export const filterMessageListParams = (params: SubsitutionMessageListParams, message: SubsitutionMessage): boolean => {
   if (params?.messageType && params.messageType !== message.messageType) {
     return false;
   }
@@ -341,6 +356,9 @@ export const filterMessageListParams = (params: MessageListParams, message: User
     } else {
       return false;
     }
+  }
+  if (!params?.includeParentMessageInfo && (message?.parentMessageId || message?.parentMessage)) {
+    return false;
   }
   return true;
 };
