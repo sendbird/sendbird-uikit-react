@@ -14,7 +14,7 @@ export default function useSendFileMessageCallback({
   pubSub,
   messagesDispatcher,
 }) {
-  const sendMessage = useCallback((file) => {
+  const sendMessage = useCallback((file, quoteMessage = null) => {
     const {
       compressionRate,
       resizingWidth,
@@ -33,6 +33,10 @@ export default function useSendFileMessageCallback({
     const createParamsDefault = (file_) => {
       const params = new sdk.FileMessageParams();
       params.file = file_;
+      if (quoteMessage) {
+        params.isReplyTochannel = true;
+        params.parentMessageId = quoteMessage.messageId;
+      }
       return params;
     };
 
