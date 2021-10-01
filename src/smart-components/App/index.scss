@@ -19,6 +19,7 @@
   .sendbird-app__conversation-wrap {
     flex: 1;
     position: relative;
+    width: calc(100% - 320px);
   }
   .sendbird-app__channellist-wrap {
     max-width: 320px;
