@@ -1,0 +1,14 @@
+@import '../../../styles/variables';
+
+.sendbird-message-input-wrapper {
+  position: relative;
+  width: 100%;
+
+  .sendbird-message-input-wrapper__quote-message-input {
+    position: relative;
+    width: 100%;
+    @include themed() {
+      border-top: solid 1px t(on-bg-4);
+    }
+  }
+}
