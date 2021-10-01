@@ -61,6 +61,7 @@ export const ConversationPanel = (props) => {
     startingPoint,
     highlightedMessage,
     useReaction,
+    replyType,
     showSearchIcon,
     onSearchClick,
     renderChatItem,
@@ -95,6 +96,7 @@ export const ConversationPanel = (props) => {
     setHighLightedMessageId(highlightedMessage);
   }, [highlightedMessage]);
   const userFilledMessageListQuery = queries.messageListParams;
+  const [quoteMessage, setQuoteMessage] = useState(null);
 
   const [messagesStore, messagesDispatcher] = useReducer(messagesReducer, messagesInitialState);
   const scrollRef = useRef(null);
@@ -118,6 +120,7 @@ export const ConversationPanel = (props) => {
   const { appInfo = {} } = sdk;
   const usingReaction = (
     appInfo.isUsingReaction && !isBroadcast && !isSuper && useReaction
+    // TODO: Make useReaction independent from appInfo.isUsingReaction
   );
 
   const userDefinedDisableUserProfile = disableUserProfile || config.disableUserProfile;
@@ -208,6 +211,7 @@ export const ConversationPanel = (props) => {
     currentGroupChannel,
     userFilledMessageListQuery,
     intialTimeStamp,
+    replyType,
   }, {
     sdk,
     logger,
@@ -350,6 +354,7 @@ export const ConversationPanel = (props) => {
               scrollRef={scrollRef}
               readStatus={readStatus}
               useReaction={usingReaction}
+              replyType={replyType}
               allMessages={allMessages}
               scrollToMessage={scrollToMessage}
               emojiAllMap={emojiAllMap}
@@ -361,6 +366,7 @@ export const ConversationPanel = (props) => {
               toggleReaction={toggleReaction}
               emojiContainer={emojiContainer}
               renderChatItem={renderChatItem}
+              setQuoteMessage={setQuoteMessage}
               showScrollBot={showScrollBot}
               onClickScrollBot={() => {
                 setIntialTimeStamp(null);
@@ -379,11 +385,13 @@ export const ConversationPanel = (props) => {
           channel={currentGroupChannel}
           user={user}
           ref={messageInputRef}
-          onSendMessage={onSendMessage}
-          onFileUpload={onSendFileMessage}
-          renderMessageInput={renderMessageInput}
           isOnline={isOnline}
           initialized={initialized}
+          quoteMessage={quoteMessage}
+          onSendMessage={onSendMessage}
+          onFileUpload={onSendFileMessage}
+          setQuoteMessage={setQuoteMessage}
+          renderMessageInput={renderMessageInput}
         />
         <div className="sendbird-conversation__typing-indicator">
           <TypingIndicator channelUrl={channelUrl} sb={sdk} logger={logger} />
@@ -487,6 +495,7 @@ ConversationPanel.propTypes = {
   onSearchClick: PropTypes.func,
   onChatHeaderActionClick: PropTypes.func,
   useReaction: PropTypes.bool,
+  replyType: PropTypes.oneOf(['NONE', 'QUOTE_REPLY', 'THREAD']),
   disableUserProfile: PropTypes.bool,
   renderUserProfile: PropTypes.func,
   useMessageGrouping: PropTypes.bool,
@@ -505,6 +514,7 @@ ConversationPanel.defaultProps = {
   renderMessageInput: null,
   renderChatHeader: null,
   useReaction: true,
+  replyType: 'NONE',
   showSearchIcon: false,
   onSearchClick: noop,
   disableUserProfile: false,

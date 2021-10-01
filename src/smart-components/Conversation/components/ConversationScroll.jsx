@@ -81,6 +81,7 @@ export default class ConversationScroll extends Component {
       allMessages,
       scrollToMessage,
       useReaction,
+      replyType,
       emojiAllMap,
       editDisabled,
       deleteMessage,
@@ -96,6 +97,7 @@ export default class ConversationScroll extends Component {
       memoizedEmojiListItems,
       showScrollBot,
       onClickScrollBot,
+      setQuoteMessage,
     } = this.props;
 
     if (allMessages.length < 1) {
@@ -152,6 +154,7 @@ export default class ConversationScroll extends Component {
                             onUpdateMessage: updateMessage,
                             onResendMessage: resendMessage,
                             onScrollToMessage: scrollToMessage,
+                            onReplyMessage: setQuoteMessage,
                             emojiContainer,
                             chainTop,
                             chainBottom,
@@ -177,6 +180,7 @@ export default class ConversationScroll extends Component {
                       membersMap={membersMap}
                       chainTop={chainTop}
                       useReaction={useReaction}
+                      replyType={replyType}
                       emojiAllMap={emojiAllMap}
                       emojiContainer={emojiContainer}
                       editDisabled={editDisabled}
@@ -186,6 +190,7 @@ export default class ConversationScroll extends Component {
                       deleteMessage={deleteMessage}
                       resendMessage={resendMessage}
                       toggleReaction={toggleReaction}
+                      setQuoteMessage={setQuoteMessage}
                       memoizedEmojiListItems={memoizedEmojiListItems}
                     />
                   );
@@ -251,6 +256,7 @@ ConversationScroll.propTypes = {
   renderCustomMessage: PropTypes.func,
   scrollToMessage: PropTypes.func,
   useReaction: PropTypes.bool,
+  replyType: PropTypes.oneOf(['NONE', 'QUOTE_REPLY', 'THREAD']),
   showScrollBot: PropTypes.bool,
   onClickScrollBot: PropTypes.func,
   emojiContainer: PropTypes.shape({}),
@@ -259,6 +265,7 @@ ConversationScroll.propTypes = {
   useMessageGrouping: PropTypes.bool,
   toggleReaction: PropTypes.func,
   memoizedEmojiListItems: PropTypes.func,
+  setQuoteMessage: PropTypes.func.isRequired,
 };
 
 ConversationScroll.defaultProps = {
@@ -272,6 +279,7 @@ ConversationScroll.defaultProps = {
   onScroll: null,
   onScrollDown: null,
   useReaction: true,
+  replyType: 'NONE',
   emojiContainer: {},
   showScrollBot: false,
   onClickScrollBot: () => {},

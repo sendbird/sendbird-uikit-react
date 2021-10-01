@@ -26,6 +26,7 @@ interface Props {
   showEdit?: (bool: boolean) => void;
   showRemove?: (bool: boolean) => void;
   resendMessage?: (message: UserMessage | FileMessage) => void;
+  setQuoteMessage?: (message: UserMessage | FileMessage) => void;
   setSupposedHover?: (bool: boolean) => void;
 }
 
@@ -39,6 +40,7 @@ export default function MessageItemMenu({
   showEdit,
   showRemove,
   resendMessage,
+  setQuoteMessage,
   setSupposedHover,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
@@ -46,12 +48,12 @@ export default function MessageItemMenu({
   const containerRef = useRef(null);
 
   const showMenuItemCopy: boolean = isUserMessage(message as UserMessage);
-  const showMenuItemReply: boolean = !isFailedMessage(channel, message) && !isPendingMessage(channel, message);
+  const showMenuItemReply: boolean = replyType === 'QUOTE_REPLY' && !isFailedMessage(channel, message) && !isPendingMessage(channel, message);
   const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(channel, message) && isByMe);
   const showMenuItemResend: boolean = (isFailedMessage(channel, message) && message.isResendable() && isByMe);
   const showMenuItemDelete: boolean = (isSentMessage(channel, message) && isByMe);
 
-  if (!(showMenuItemCopy || showMenuItemEdit || showMenuItemResend || showMenuItemDelete)) {
+  if (!(showMenuItemCopy || showMenuItemReply || showMenuItemEdit || showMenuItemResend || showMenuItemDelete)) {
     return null;
   }
   return (
@@ -111,7 +113,7 @@ export default function MessageItemMenu({
                 <MenuItem
                   className="sendbird-message-item-menu__list__menu-item"
                   onClick={() => {
-                    // TODO: Add replying message logic
+                    setQuoteMessage(message);
                     closeDropdown();
                   }}
                   disable={message?.parentMessageId > 0}

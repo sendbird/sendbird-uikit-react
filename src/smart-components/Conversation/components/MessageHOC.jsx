@@ -6,6 +6,7 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import format from 'date-fns/format';
+import './message-hoc.scss';
 
 import MessageContent from '../../../ui/MessageContent';
 import DateSeparator from '../../../ui/DateSeparator';
@@ -13,6 +14,8 @@ import Label, { LabelTypography, LabelColors } from '../../../ui/Label';
 import MessageInput from '../../../ui/MessageInput';
 import FileViewer from '../../../ui/FileViewer';
 import RemoveMessageModal from './RemoveMessage';
+import QuoteMessage from '../../../ui/QuoteMessage';
+import { getClassName } from '../../../utils';
 
 export default function MessageHoc({
   message,
@@ -25,12 +28,14 @@ export default function MessageHoc({
   scrollToMessage,
   resendMessage,
   useReaction,
+  replyType,
   chainTop,
   chainBottom,
   membersMap,
   emojiContainer,
   highLightedMessageId,
   toggleReaction,
+  setQuoteMessage,
   renderCustomMessage,
   currentGroupChannel,
 }) {
@@ -127,9 +132,18 @@ export default function MessageHoc({
           </DateSeparator>
         )
       }
+      {/* Quote Message */}
+      {(replyType === 'QUOTE_REPLY' && message?.parentMessageId) ? (
+        <div className={getClassName(['sendbird-message-hoc__quote-message', isByMe ? 'outgoing' : 'incoming'])}>
+          <QuoteMessage message={message} isByMe={isByMe} />
+        </div>
+      ) : null}
       {/* Message */}
       <MessageContent
-        className="sendbird-message-hoc__message-content"
+        className={[
+          'sendbird-message-hoc__message-content',
+          replyType === 'QUOTE_REPLY' ? 'use-quote' : '',
+        ]}
         userId={userId}
         scrollToMessage={scrollToMessage}
         channel={currentGroupChannel}
@@ -138,7 +152,7 @@ export default function MessageHoc({
         chainTop={chainTop}
         chainBottom={chainBottom}
         useReaction={useReaction}
-        // useReplying={} TODO: Set useReplying
+        replyType={replyType}
         nicknamesMap={membersMap}
         emojiContainer={emojiContainer}
         showEdit={setShowEdit}
@@ -146,6 +160,7 @@ export default function MessageHoc({
         showFileViewer={setShowFileViewer}
         resendMessage={resendMessage}
         toggleReaction={toggleReaction}
+        setQuoteMessage={setQuoteMessage}
       />
       {/* Modal */}
       {
@@ -192,6 +207,7 @@ MessageHoc.propTypes = {
     messageType: PropTypes.string,
     sender: PropTypes.shape({ userId: PropTypes.string }),
     ogMetaData: PropTypes.shape({}),
+    parentMessageId: PropTypes.number,
   }),
   highLightedMessageId: PropTypes.oneOfType([
     PropTypes.string,
@@ -207,6 +223,7 @@ MessageHoc.propTypes = {
   updateMessage: PropTypes.func.isRequired,
   resendMessage: PropTypes.func.isRequired,
   useReaction: PropTypes.bool.isRequired,
+  replyType: PropTypes.oneOf(['NONE', 'QUOTE_REPLY', 'THREAD']).isRequired,
   chainTop: PropTypes.bool.isRequired,
   chainBottom: PropTypes.bool.isRequired,
   membersMap: PropTypes.instanceOf(Map).isRequired,
@@ -219,6 +236,7 @@ MessageHoc.propTypes = {
     })),
   }),
   toggleReaction: PropTypes.func,
+  setQuoteMessage: PropTypes.func.isRequired,
 };
 
 MessageHoc.defaultProps = {

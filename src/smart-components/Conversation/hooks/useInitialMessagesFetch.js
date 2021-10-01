@@ -15,6 +15,7 @@ function useInitialMessagesFetch({
   currentGroupChannel,
   userFilledMessageListQuery,
   intialTimeStamp,
+  replyType,
 }, {
   sdk,
   logger,
@@ -34,10 +35,16 @@ function useInitialMessagesFetch({
       messageListParams.isInclusive = true;
       messageListParams.includeReplies = false;
       messageListParams.includeReaction = true;
+      if (replyType && replyType === 'QUOTE_REPLY') {
+        messageListParams.includeParentMessageInfo = true;
+        messageListParams.replyTypeFilter = 'all';
+      }
       if (userFilledMessageListQuery) {
         Object.keys(userFilledMessageListQuery).forEach((key) => {
           messageListParams[key] = userFilledMessageListQuery[key];
         });
+      }
+      if ((replyType && replyType === 'QUOTE_REPLY') || userFilledMessageListQuery) {
         logger.info('Channel useInitialMessagesFetch: Setup messageListParams', messageListParams);
         messagesDispatcher({
           type: messageActionTypes.MESSAGE_LIST_PARAMS_CHANGED,
