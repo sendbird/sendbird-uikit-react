@@ -31,6 +31,7 @@ import {
   getMessageCreatedAt,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
+import { ReplyType } from '../../index.js';
 
 interface Props {
   className?: string | Array<string>;
@@ -41,7 +42,7 @@ interface Props {
   chainTop?: boolean;
   chainBottom?: boolean;
   useReaction?: boolean;
-  useReplying?: boolean;
+  replyType?: ReplyType;
   nicknamesMap?: Map<string, string>;
   emojiContainer?: EmojiContainer;
   scrollToMessage?: (createdAt: number, messageId: number) => void;
@@ -50,6 +51,7 @@ interface Props {
   showFileViewer?: (bool: boolean) => void;
   resendMessage?: (message: UserMessage | FileMessage) => void;
   toggleReaction?: (message: UserMessage | FileMessage, reactionKey: string, isReacted: boolean) => void;
+  setQuoteMessage?: (message: UserMessage | FileMessage) => void;
 }
 export default function MessageContent({
   className,
@@ -60,8 +62,8 @@ export default function MessageContent({
   chainTop = false,
   chainBottom = false,
   useReaction = false,
+  replyType,
   // scrollToMessage,
-  // useReplying,
   nicknamesMap,
   emojiContainer,
   showEdit,
@@ -69,8 +71,8 @@ export default function MessageContent({
   showFileViewer,
   resendMessage,
   toggleReaction,
+  setQuoteMessage,
 }: Props): ReactElement {
-  // const useReplying: boolean = false; // FIXME: Open replying feature // message?.parentMessageId && getUseReplying(context)
   const messageTypes = getUIKitMessageTypes();
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const avatarRef = useRef(null);
@@ -144,10 +146,12 @@ export default function MessageContent({
               channel={channel}
               message={message as UserMessage | FileMessage}
               isByMe={isByMe}
+              replyType={replyType}
               disabled={disabled}
               showEdit={showEdit}
               showRemove={showRemove}
               resendMessage={resendMessage}
+              setQuoteMessage={setQuoteMessage}
               setSupposedHover={setSupposedHover}
             />
             {useReaction && (
@@ -175,13 +179,6 @@ export default function MessageContent({
             {getSenderName(message)}
           </Label>
         )}
-        {/* {useReplying && (
-          <ReplyingMessageAttachment scrollToMessage={scrollToMessage} replyingMessage={replyingMessage} />
-        )} */}
-        {/*
-          A ReplyingMessage should have an another interface
-          because it won't be perfect mesasge instance, it will be from properties of message
-        */}
         {/* message item body components */}
         {isTextMessage(message as UserMessage) && (
           <TextMessageItemBody message={message as UserMessage} isByMe={isByMe} mouseHover={mouseHover} />
@@ -246,10 +243,12 @@ export default function MessageContent({
               channel={channel}
               message={message as UserMessage | FileMessage}
               isByMe={isByMe}
+              replyType={replyType}
               disabled={disabled}
               showEdit={showEdit}
               showRemove={showRemove}
               resendMessage={resendMessage}
+              setQuoteMessage={setQuoteMessage}
               setSupposedHover={setSupposedHover}
             />
           </div>
