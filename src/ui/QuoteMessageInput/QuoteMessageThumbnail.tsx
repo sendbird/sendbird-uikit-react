@@ -4,7 +4,7 @@ import { FileMessage } from '../../sendbird.min.js';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
 import ImageRenderer from '../ImageRenderer';
-import { isAudioMessage, isFileMessage, isThumbnailMessage } from '../../utils';
+import { isAudioMessage, isFileMessage, isImageMessage, isThumbnailMessage } from '../../utils';
 
 interface Props {
   message: FileMessage;
@@ -17,7 +17,8 @@ export default function QuoteMessageThumbnail({ message }: Props): ReactElement 
     return null;
   }
 
-  const thumbnailUrl: string = message.thumbnails && message.thumbnails.length > 0 && message.thumbnails[0].url;
+  const thumbnailUrl: string = (message.thumbnails && message.thumbnails.length > 0 && message.thumbnails[0].url)
+    || (isImageMessage(message) && message.url);
   if (isThumbnailMessage(message) && thumbnailUrl) {
     return (
       <ImageRenderer
@@ -26,6 +27,7 @@ export default function QuoteMessageThumbnail({ message }: Props): ReactElement 
         alt={message.type}
         width="44px"
         height="44px"
+        fixedSize
       />
     );
   } else if (isAudioMessage(message)) {
