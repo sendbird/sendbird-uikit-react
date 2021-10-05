@@ -90,6 +90,11 @@ const getStringSet = (lang = 'en') => {
       REPLYING_ATTACHMENT__FILE_TYPE__GIF: 'GIF',
       REPLYING_ATTACHMENT__FILE_TYPE__VIDEO: 'Video',
       REPLIED_TO: 'replied to',
+      // FIXME: get back legacy, remove after refactoring open channel messages
+      CONTEXT_MENU_DROPDOWN__COPY: 'Copy',
+      CONTEXT_MENU_DROPDOWN__EDIT: 'Edit',
+      CONTEXT_MENU_DROPDOWN__RESEND: 'Resend',
+      CONTEXT_MENU_DROPDOWN__DELETE: 'Delete',
     },
   };
   return stringSet[lang];
