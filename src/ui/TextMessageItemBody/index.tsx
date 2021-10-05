@@ -34,9 +34,10 @@ export default function TextMessageItemBody({
       {
         message?.message.split(/\r/).map((word) => (
           (word === '')
-            ? <br />
+            ? <br key={word} />
             : (
               <Label
+                key={word}
                 className="sendbird-text-message-item-body__message"
                 type={LabelTypography.BODY_1}
                 color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
@@ -49,7 +50,7 @@ export default function TextMessageItemBody({
       {
         isEditedMessage(message) && (
           <Label
-            className="sendbird-text-message-item-body__message"
+            className="sendbird-text-message-item-body__message edited"
             type={LabelTypography.BODY_1}
             color={isByMe ? LabelColors.ONCONTENT_2 : LabelColors.ONBACKGROUND_2}
           >
