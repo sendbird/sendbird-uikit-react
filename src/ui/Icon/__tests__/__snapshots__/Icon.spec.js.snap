@@ -2,7 +2,7 @@
 
 exports[`Icon should do a snapshot test of the defualt Icon DOM 1`] = `
 <div
-  className=" sendbird-icon "
+  className=" sendbird-icon sendbird-icon-add "
   onClick={[Function]}
   onKeyDown={[Function]}
   role="button"

@@ -58,7 +58,7 @@ export default function MessageContent({
   disabled = false,
   chainTop = false,
   chainBottom = false,
-  useReaction,
+  useReaction = false,
   // scrollToMessage,
   // useReplying,
   nicknamesMap,
@@ -137,7 +137,7 @@ export default function MessageContent({
         )}
         {/* outgoing menu */}
         {isByMe && (
-          <div className={getClassName(['sendbird-message-content-menu', useReactionClassName, supposedHoverClassName])}>
+          <div className={getClassName(['sendbird-message-content-menu', useReactionClassName, supposedHoverClassName, isByMeClassName])}>
             <MessageItemMenu
               className="sendbird-message-content-menu__normal-menu"
               channel={channel}
@@ -228,7 +228,7 @@ export default function MessageContent({
         )}
         {/* incoming menu */}
         {!isByMe && (
-          <div className={getClassName(['sendbird-message-content-menu', chainTopClassName, supposedHoverClassName])}>
+          <div className={getClassName(['sendbird-message-content-menu', chainTopClassName, supposedHoverClassName, isByMeClassName])}>
             {useReaction && (
               <MessageItemReactionMenu
                 className="sendbird-message-content-menu__reaction-menu"

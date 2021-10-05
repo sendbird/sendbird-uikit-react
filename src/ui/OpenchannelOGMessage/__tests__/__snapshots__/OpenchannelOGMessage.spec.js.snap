@@ -145,7 +145,7 @@ exports[`OpenchannelOGMessage should do a snapshot test of the OpenchannelOGMess
             className="sendbird-iconbutton__inner"
           >
             <div
-              className=" sendbird-icon sendbird-icon-color--content-inverse"
+              className=" sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
               onClick={[Function]}
               onKeyDown={[Function]}
               role="button"

@@ -2,15 +2,15 @@
 
 exports[`UnknownMessageItemBody should do a snapshot test of the UnknownMessageItemBody DOM 1`] = `
 <div
-  className=" sendbird-unknown-message-item-body incoming  "
+  className="class-name-for-snapshot sendbird-unknown-message-item-body outgoing mouse-hover reactions"
 >
   <span
-    className="sendbird-unknown-message-item-body__header sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
+    className="sendbird-unknown-message-item-body__header sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-1"
   >
     (Unknown message type)
   </span>
   <span
-    className="sendbird-unknown-message-item-body__description sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-2"
+    className="sendbird-unknown-message-item-body__description sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-2"
   >
     Cannot read this message.
   </span>

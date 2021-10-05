@@ -8,7 +8,7 @@ exports[`ReplyingMessageItemBody should do a snapshot test of the ReplyingMessag
     className="sendbird-replying-message-item-body__replied-to"
   >
     <div
-      className="sendbird-replying-message-item-body__replied-to__icon sendbird-icon sendbird-icon-color--on-background-3"
+      className="sendbird-replying-message-item-body__replied-to__icon sendbird-icon sendbird-icon-reply sendbird-icon-color--on-background-3"
       onClick={[Function]}
       onKeyDown={[Function]}
       role="button"

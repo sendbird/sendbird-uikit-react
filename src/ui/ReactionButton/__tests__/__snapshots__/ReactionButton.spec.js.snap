@@ -18,7 +18,7 @@ exports[`ReactionButton should do a snapshot test of the ReactionButton DOM 1`] 
     className="sendbird-reaction-button__inner"
   >
     <div
-      className=" sendbird-icon "
+      className=" sendbird-icon sendbird-icon-create "
       onClick={[Function]}
       onKeyDown={[Function]}
       role="button"

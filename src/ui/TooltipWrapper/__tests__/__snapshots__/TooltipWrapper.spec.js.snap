@@ -12,7 +12,7 @@ exports[`TooltipWrapper should do a snapshot test of the TooltipWrapper DOM 1`] 
     className="sendbird-tooltip-wrapper__children"
   >
     <div
-      className=" sendbird-icon sendbird-icon-color--primary"
+      className=" sendbird-icon sendbird-icon-add sendbird-icon-color--primary"
       onClick={[Function]}
       onKeyDown={[Function]}
       role="button"

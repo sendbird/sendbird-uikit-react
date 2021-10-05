@@ -70,7 +70,7 @@ exports[`ChatHeader should do a snapshot test of the ChatHeader DOM 1`] = `
     className="sendbird-chat-header__right"
   >
     <div
-      className="sendbird-chat-header__right__mute sendbird-icon "
+      className="sendbird-chat-header__right__mute sendbird-icon sendbird-icon-notifications-off-filled "
       onClick={[Function]}
       onKeyDown={[Function]}
       role="button"
@@ -103,7 +103,7 @@ exports[`ChatHeader should do a snapshot test of the ChatHeader DOM 1`] = `
         className="sendbird-iconbutton__inner"
       >
         <div
-          className=" sendbird-icon sendbird-icon-color--primary"
+          className=" sendbird-icon sendbird-icon-info sendbird-icon-color--primary"
           onClick={[Function]}
           onKeyDown={[Function]}
           role="button"

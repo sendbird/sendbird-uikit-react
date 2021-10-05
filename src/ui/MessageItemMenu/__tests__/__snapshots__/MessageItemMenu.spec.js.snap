@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`MessageItemReactionMenu should do a snapshot test of the MessageItemReactionMenu DOM 1`] = `
+exports[`MessageItemMenu should do a snapshot test of the MessageItemMenu DOM 1`] = `
 <div
-  className=" sendbird-message-item-reaction-menu"
+  className="classname-for-snapshot sendbird-message-item-menu"
 >
   <div
     className="sendbird-context-menu"
@@ -13,7 +13,7 @@ exports[`MessageItemReactionMenu should do a snapshot test of the MessageItemRea
     }
   >
     <button
-      className="sendbird-message-item-reaction-menu__trigger sendbird-iconbutton "
+      className="sendbird-message-item-menu__trigger sendbird-iconbutton "
       disabled={false}
       onBlur={[Function]}
       onClick={[Function]}
@@ -29,7 +29,7 @@ exports[`MessageItemReactionMenu should do a snapshot test of the MessageItemRea
         className="sendbird-iconbutton__inner"
       >
         <div
-          className="sendbird-message-item-reaction-menu__trigger__icon sendbird-icon sendbird-icon-emoji-more sendbird-icon-color--content-inverse"
+          className="sendbird-message-item-menu__trigger__icon sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
           onClick={[Function]}
           onKeyDown={[Function]}
           role="button"

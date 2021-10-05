@@ -123,7 +123,7 @@ exports[`OpenchannelThumbnailMessage should do a snapshot test of the Openchanne
             }
           >
             <div
-              className=" sendbird-icon sendbird-icon-color--on-background-2"
+              className=" sendbird-icon sendbird-icon-photo sendbird-icon-color--on-background-2"
               onClick={[Function]}
               onKeyDown={[Function]}
               role="button"
@@ -196,7 +196,7 @@ exports[`OpenchannelThumbnailMessage should do a snapshot test of the Openchanne
           className="sendbird-iconbutton__inner"
         >
           <div
-            className=" sendbird-icon sendbird-icon-color--content-inverse"
+            className=" sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
             onClick={[Function]}
             onKeyDown={[Function]}
             role="button"

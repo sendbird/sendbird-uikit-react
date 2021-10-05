@@ -86,7 +86,7 @@ exports[`OpenchannelConversationHeader should do a snapshot test of the Openchan
         className="sendbird-iconbutton__inner"
       >
         <div
-          className=" sendbird-icon sendbird-icon-color--primary"
+          className=" sendbird-icon sendbird-icon-members sendbird-icon-color--primary"
           onClick={[Function]}
           onKeyDown={[Function]}
           role="button"

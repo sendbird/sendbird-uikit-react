@@ -72,7 +72,7 @@ exports[`MessageSearchFileItem should do a snapshot test of the MessageSearchFil
         className="sendbird-message-search-file-item__right__content__type-icon"
       >
         <div
-          className=" sendbird-icon sendbird-icon-color--primary"
+          className=" sendbird-icon sendbird-icon-file-document sendbird-icon-color--primary"
           onClick={[Function]}
           onKeyDown={[Function]}
           role="button"
