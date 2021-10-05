@@ -1,0 +1,152 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MessageContent should do a snapshot test of the MessageContent DOM 1`] = `
+<div
+  className="classname-for-snapshot sendbird-message-content incoming"
+  onMouseLeave={[Function]}
+  onMouseOver={[Function]}
+>
+  <div
+    className="sendbird-message-content__left  incoming"
+  >
+    <div
+      className="sendbird-context-menu"
+      style={
+        Object {
+          "display": "inline",
+        }
+      }
+    >
+      <div
+        className="sendbird-message-content__left__avatar sendbird-avatar"
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        role="button"
+        style={
+          Object {
+            "height": "28px",
+            "width": "28px",
+          }
+        }
+        tabIndex={0}
+      >
+        <div
+          className="sendbird-avatar-img sendbird-image-renderer"
+          style={
+            Object {
+              "height": "28px",
+              "maxWidth": "400px",
+              "minWidth": "28px",
+              "width": "100%",
+            }
+          }
+        >
+          <div
+            className="sendbird-image-renderer__image"
+            style={
+              Object {
+                "backgroundImage": "url()",
+                "backgroundPosition": "center",
+                "backgroundRepeat": "no-repeat",
+                "backgroundSize": "cover",
+                "borderRadius": null,
+                "height": "28px",
+                "maxWidth": "400px",
+                "minWidth": "28px",
+                "position": "absolute",
+                "width": "100%",
+              }
+            }
+          />
+          <img
+            alt=""
+            className="sendbird-image-renderer__hidden-image-loader"
+            onError={[Function]}
+            onLoad={[Function]}
+            src=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="sendbird-message-content__middle"
+  >
+    <span
+      className="sendbird-message-content__middle__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
+    >
+      Mathew
+    </span>
+    <div
+      className=" sendbird-text-message-item-body incoming  "
+    >
+      <span
+        className="sendbird-text-message-item-body__message sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
+      >
+        First second third
+      </span>
+    </div>
+  </div>
+  <div
+    className="sendbird-message-content__right  "
+  >
+    <span
+      className="sendbird-message-content__right__created-at  sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
+    >
+      9:00 AM
+    </span>
+    <div
+      className="sendbird-message-content-menu   incoming"
+    >
+      <div
+        className="sendbird-message-content-menu__normal-menu sendbird-message-item-menu"
+      >
+        <div
+          className="sendbird-context-menu"
+          style={
+            Object {
+              "display": "inline",
+            }
+          }
+        >
+          <button
+            className="sendbird-message-item-menu__trigger sendbird-iconbutton "
+            disabled={false}
+            onBlur={[Function]}
+            onClick={[Function]}
+            style={
+              Object {
+                "height": "32px",
+                "width": "32px",
+              }
+            }
+            type="button"
+          >
+            <span
+              className="sendbird-iconbutton__inner"
+            >
+              <div
+                className="sendbird-message-item-menu__trigger__icon sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
+                onClick={[Function]}
+                onKeyDown={[Function]}
+                role="button"
+                style={
+                  Object {
+                    "height": "24px",
+                    "minHeight": "24px",
+                    "minWidth": "24px",
+                    "width": "24px",
+                  }
+                }
+                tabIndex="0"
+              >
+                <test-file-stub />
+              </div>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
