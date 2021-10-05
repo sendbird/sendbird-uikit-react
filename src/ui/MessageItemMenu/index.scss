@@ -2,14 +2,16 @@
 
 .sendbird-message-item-menu {
   .sendbird-message-item-menu__trigger {
-    .sendbird-message-item-menu__trigger__icon {
-
-    }
+    .sendbird-message-item-menu__trigger__icon {}
   }
 }
 
 .sendbird-message-item-menu__list {
   .sendbird-message-item-menu__list__menu-item {
-
+    &.copy {}
+    &.reply {}
+    &.edit {}
+    &.resend {}
+    &.delete {}
   }
 }
