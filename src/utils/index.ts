@@ -104,10 +104,10 @@ export const isAudio = (type: string): boolean => SUPPORTED_MIMES.AUDIO.indexOf(
 
 export const getUIKitFileTypes = (): UIKitFileTypes => ({ ...UIKitFileTypes });
 export const getUIKitFileType = (type: string): string => {
+  if (isGif(type)) return UIKitFileTypes.GIF;
   if (isImage(type)) return UIKitFileTypes.IMAGE;
   if (isVideo(type)) return UIKitFileTypes.VIDEO;
   if (isAudio(type)) return UIKitFileTypes.AUDIO;
-  if (isGif(type)) return UIKitFileTypes.GIF;
   return UIKitFileTypes.OTHERS;
 };
 export const getOutgoingMessageStates = (): OutgoingMessageStates => ({ ...OutgoingMessageStates });

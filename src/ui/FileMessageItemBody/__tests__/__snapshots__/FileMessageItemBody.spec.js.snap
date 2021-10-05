@@ -2,7 +2,7 @@
 
 exports[`FileMessageItemBody should do a snapshot test of the FileMessageItemBody DOM 1`] = `
 <div
-  className=" sendbird-file-message-item-body incoming  "
+  className="classname-for-snapshot sendbird-file-message-item-body outgoing mouse-hover reactions"
 >
   <div
     className="sendbird-file-message-item-body__file-icon"
@@ -26,16 +26,16 @@ exports[`FileMessageItemBody should do a snapshot test of the FileMessageItemBod
     </div>
   </div>
   <div
-    className="sendbird-file-message-item-body__file-name sendbird-color--onbackground-1 sendbird-textbutton "
+    className="sendbird-file-message-item-body__file-name sendbird-color--oncontent-1 sendbird-textbutton "
     onClick={[Function]}
     onKeyPress={[Function]}
     role="button"
     tabIndex={0}
   >
     <span
-      className="sendbird-file-message-item-body__file-name__text sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
+      className="sendbird-file-message-item-body__file-name__text sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-1"
     >
-      
+      My name is name
     </span>
   </div>
 </div>

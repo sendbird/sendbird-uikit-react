@@ -155,6 +155,67 @@ function changeTypeToIconComponent(type) {
   }
 }
 
+export function changeTypeToIconClassName(type) {
+  switch (type) {
+    case Type.ADD: return 'sendbird-icon-add';
+    case Type.ARROW_LEFT: return 'sendbird-icon-arrow-left';
+    case Type.ATTACH: return 'sendbird-icon-attach';
+    case Type.BAN: return 'sendbird-icon-ban';
+    case Type.BROADCAST: return 'sendbird-icon-broadcast';
+    case Type.CAMERA: return 'sendbird-icon-camera';
+    case Type.CHANNELS: return 'sendbird-icon-channels';
+    case Type.CHAT: return 'sendbird-icon-chat';
+    case Type.CHAT_FILLED: return 'sendbird-icon-chat-filled';
+    case Type.CHEVRON_DOWN: return 'sendbird-icon-chevron-down';
+    case Type.CHEVRON_RIGHT: return 'sendbird-icon-chevron-right';
+    case Type.CLOSE: return 'sendbird-icon-close';
+    case Type.COLLAPSE: return 'sendbird-icon-collapse';
+    case Type.COPY: return 'sendbird-icon-copy';
+    case Type.CREATE: return 'sendbird-icon-create';
+    case Type.DELETE: return 'sendbird-icon-delete';
+    case Type.DISCONNECTED: return 'sendbird-icon-disconnected';
+    case Type.DOCUMENT: return 'sendbird-icon-document';
+    case Type.DONE: return 'sendbird-icon-done';
+    case Type.DONE_ALL: return 'sendbird-icon-done-all';
+    case Type.DOWNLOAD: return 'sendbird-icon-down-load';
+    case Type.EDIT: return 'sendbird-icon-edit';
+    case Type.EMOJI_MORE: return 'sendbird-icon-emoji-more';
+    case Type.ERROR: return 'sendbird-icon-error';
+    case Type.EXPAND: return 'sendbird-icon-expand';
+    case Type.FILE_AUDIO: return 'sendbird-icon-file-audio';
+    case Type.FILE_DOCUMENT: return 'sendbird-icon-file-document';
+    case Type.FREEZE: return 'sendbird-icon-freeze';
+    case Type.GIF: return 'sendbird-icon-gif';
+    case Type.INFO: return 'sendbird-icon-info';
+    case Type.LEAVE: return 'sendbird-icon-leave';
+    case Type.MEMBERS: return 'sendbird-icon-members';
+    case Type.MESSAGE: return 'sendbird-icon-message';
+    case Type.MODERATIONS: return 'sendbird-icon-moderations';
+    case Type.MORE: return 'sendbird-icon-more';
+    case Type.MUTE: return 'sendbird-icon-mute';
+    case Type.NOTIFICATIONS: return 'sendbird-icon-notifications';
+    case Type.NOTIFICATIONS_OFF_FILLED: return 'sendbird-icon-notifications-off-filled';
+    case Type.OPERATOR: return 'sendbird-icon-operator';
+    case Type.PHOTO: return 'sendbird-icon-photo';
+    case Type.PLAY: return 'sendbird-icon-play';
+    case Type.PLUS: return 'sendbird-iconn-plus';
+    case Type.QUESTION: return 'sendbird-icon-question';
+    case Type.REFRESH: return 'sendbird-icon-refresh';
+    case Type.REMOVE: return 'sendbird-icon-remove';
+    case Type.REPLY: return 'sendbird-icon-reply';
+    case Type.SEARCH: return 'sendbird-icon-search';
+    case Type.SEND: return 'sendbird-icon-send';
+    case Type.SETTINGS_FILLED: return 'sendbird-icon-settings-filled';
+    case Type.SPINNER: return 'sendbird-icon-spinner';
+    case Type.SUPERGROUP: return 'sendbird-icon-supergroup';
+    case Type.THUMBNAIL_NONE: return 'sendbird-icon-thumbnail-none';
+    case Type.TOGGLE_OFF: return 'sendbird-icon-toggle-off';
+    case Type.TOGGLE_ON: return 'sendbird-icon-toggle-on';
+    case Type.USER: return 'sendbird-icon-user';
+    default: return 'sendbird-icon-unknown'; // If you see this text 'icon' replace icon for it
+  }
+}
+
 export default function Icon({
   className,
   type,
@@ -175,6 +236,7 @@ export default function Icon({
       className={[
         ...Array.isArray(className) ? className : [className],
         'sendbird-icon',
+        changeTypeToIconClassName(type),
         changeColorToClassName(fillColor),
       ].join(' ')}
       role="button"
