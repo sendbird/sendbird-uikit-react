@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MessageItemMenu should do a snapshot test of the MessageItemMenu DOM 1`] = `
+<div
+  className="classname-for-snapshot sendbird-message-item-menu"
+>
+  <div
+    className="sendbird-context-menu"
+    style={
+      Object {
+        "display": "inline",
+      }
+    }
+  >
+    <button
+      className="sendbird-message-item-menu__trigger sendbird-iconbutton "
+      disabled={false}
+      onBlur={[Function]}
+      onClick={[Function]}
+      style={
+        Object {
+          "height": "32px",
+          "width": "32px",
+        }
+      }
+      type="button"
+    >
+      <span
+        className="sendbird-iconbutton__inner"
+      >
+        <div
+          className="sendbird-message-item-menu__trigger__icon sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
+          onClick={[Function]}
+          onKeyDown={[Function]}
+          role="button"
+          style={
+            Object {
+              "height": "24px",
+              "minHeight": "24px",
+              "minWidth": "24px",
+              "width": "24px",
+            }
+          }
+          tabIndex="0"
+        >
+          <test-file-stub />
+        </div>
+      </span>
+    </button>
+  </div>
+</div>
+`;
