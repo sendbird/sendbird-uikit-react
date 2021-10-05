@@ -29,7 +29,7 @@ exports[`MessageItemReactionMenu should do a snapshot test of the MessageItemRea
         className="sendbird-iconbutton__inner"
       >
         <div
-          className="sendbird-message-item-reaction-menu__trigger__icon sendbird-icon sendbird-icon-color--content-inverse"
+          className="sendbird-message-item-reaction-menu__trigger__icon sendbird-icon sendbird-icon-emoji-more sendbird-icon-color--content-inverse"
           onClick={[Function]}
           onKeyDown={[Function]}
           role="button"

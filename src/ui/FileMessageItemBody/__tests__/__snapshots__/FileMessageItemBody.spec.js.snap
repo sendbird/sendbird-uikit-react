@@ -8,7 +8,7 @@ exports[`FileMessageItemBody should do a snapshot test of the FileMessageItemBod
     className="sendbird-file-message-item-body__file-icon"
   >
     <div
-      className="sendbird-file-message-item-body__file-icon__icon sendbird-icon sendbird-icon-color--primary"
+      className="sendbird-file-message-item-body__file-icon__icon sendbird-icon sendbird-icon-photo sendbird-icon-color--primary"
       onClick={[Function]}
       onKeyDown={[Function]}
       role="button"

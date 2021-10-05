@@ -8,7 +8,7 @@ exports[`PlaceHolder should do a snapshot test of the PlaceHolder DOM 1`] = `
     className="sendbird-place-holder__body"
   >
     <div
-      className="sendbird-place-holder__body__icon sendbird-icon sendbird-icon-color--on-background-3"
+      className="sendbird-place-holder__body__icon sendbird-icon sendbird-icon-error sendbird-icon-color--on-background-3"
       onClick={[Function]}
       onKeyDown={[Function]}
       role="button"

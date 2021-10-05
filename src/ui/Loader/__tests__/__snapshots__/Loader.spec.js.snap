@@ -11,7 +11,7 @@ exports[`Loader should do a snapshot test of the default Loader DOM 1`] = `
   }
 >
   <div
-    className=" sendbird-icon "
+    className=" sendbird-icon sendbird-icon-spinner "
     onClick={[Function]}
     onKeyDown={[Function]}
     role="button"

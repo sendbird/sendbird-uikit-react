@@ -10,7 +10,7 @@ exports[`ConnectionStatus should render ConnectionStatus 1`] = `
     Trying to connect…
   </span>
   <div
-    className=" sendbird-icon sendbird-icon-color--sent"
+    className=" sendbird-icon sendbird-icon-disconnected sendbird-icon-color--sent"
     onClick={[Function]}
     onKeyDown={[Function]}
     role="button"

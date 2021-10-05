@@ -15,7 +15,7 @@ exports[`ReactionBadge should do a snapshot test of the ReactionBadge DOM 1`] = 
       className="sendbird-reaction-badge__inner__icon"
     >
       <div
-        className=" sendbird-icon "
+        className=" sendbird-icon sendbird-icon-create "
         onClick={[Function]}
         onKeyDown={[Function]}
         role="button"

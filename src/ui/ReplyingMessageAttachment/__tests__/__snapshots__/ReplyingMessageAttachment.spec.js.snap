@@ -8,7 +8,7 @@ exports[`ReplyingMessageAttachment should do a snapshot test of the ReplyingMess
     className="sendbird-replying_message_attachment__avatar"
   >
     <div
-      className=" sendbird-icon sendbird-icon-color--on-background-2"
+      className=" sendbird-icon sendbird-icon-file-audio sendbird-icon-color--on-background-2"
       onClick={[Function]}
       onKeyDown={[Function]}
       role="button"
@@ -40,7 +40,7 @@ exports[`ReplyingMessageAttachment should do a snapshot test of the ReplyingMess
     </span>
   </div>
   <div
-    className="sendbird-replying_message_attachment__close-button sendbird-icon sendbird-icon-color--on-background-2"
+    className="sendbird-replying_message_attachment__close-button sendbird-icon sendbird-icon-close sendbird-icon-color--on-background-2"
     onClick={[Function]}
     onKeyDown={[Function]}
     role="button"

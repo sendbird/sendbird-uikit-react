@@ -88,7 +88,7 @@ exports[`OpenchannelFileMessage should do a snapshot test of the OpenchannelFile
       className="sendbird-openchannel-file-message__right__body"
     >
       <div
-        className="sendbird-openchannel-file-message__right__body__icon sendbird-icon sendbird-icon-color--primary"
+        className="sendbird-openchannel-file-message__right__body__icon sendbird-icon sendbird-icon-file-document sendbird-icon-color--primary"
         onClick={[Function]}
         onKeyDown={[Function]}
         role="button"
@@ -147,7 +147,7 @@ exports[`OpenchannelFileMessage should do a snapshot test of the OpenchannelFile
           className="sendbird-iconbutton__inner"
         >
           <div
-            className=" sendbird-icon "
+            className=" sendbird-icon sendbird-icon-more "
             onClick={[Function]}
             onKeyDown={[Function]}
             role="button"
