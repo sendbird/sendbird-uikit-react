@@ -3,6 +3,7 @@ import { mount } from 'enzyme';
 import renderer from 'react-test-renderer';
 
 import MessageContent from "../index";
+jest.mock('date-fns/format', () => () => ('mock-date'));
 
 const createMockChannel = (process) => {
   const mockChannel = {
@@ -42,7 +43,6 @@ const createMockMessage = (process) => {
 };
 
 describe('MessageContent', () => {
-  jest.mock('date-fns/format', () => () => ('mock-date'));
   // TODO: Add tests after message threading is applied
   // useReplying <-> replyType
   // it('should render components by replyType', () => {});
