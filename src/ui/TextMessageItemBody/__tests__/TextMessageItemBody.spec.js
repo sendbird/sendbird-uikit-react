@@ -16,7 +16,7 @@ const createMockMessage = (process) => {
 };
 
 describe('TextMessageItemBody', () => {
-  it('should have own className', () => {
+  it('should have class names of own basic status', () => {
     const insertingClassName = 'test-class-name';
     const component = mount(
       <TextMessageItemBody
