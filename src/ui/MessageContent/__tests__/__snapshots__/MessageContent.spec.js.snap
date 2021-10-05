@@ -93,7 +93,7 @@ exports[`MessageContent should do a snapshot test of the MessageContent DOM 1`] 
     <span
       className="sendbird-message-content__right__created-at  sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
     >
-      9:00 AM
+      mock-date
     </span>
     <div
       className="sendbird-message-content-menu   incoming"
