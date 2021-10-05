@@ -43,6 +43,7 @@ const createMockMessage = (process) => {
 };
 
 describe('MessageItemMenu', () => {
+  jest.mock('date-fns/format', () => () => ('mock-date'));
   it('should have components by own basic status', () => {
     const className="class-name-for-test";
     const component = mount(

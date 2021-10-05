@@ -42,6 +42,7 @@ const createMockMessage = (process) => {
 };
 
 describe('MessageContent', () => {
+  jest.mock('date-fns/format', () => () => ('mock-date'));
   // TODO: Add tests after message threading is applied
   // useReplying <-> replyType
   // it('should render components by replyType', () => {});
