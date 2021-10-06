@@ -1,0 +1,28 @@
+name: Check version on the release PR
+
+on:
+  pull_request:
+    types: [labeled, synchronize]
+
+jobs:
+  check-version:
+    # Only run the job if the PR contains "release" label
+    if: contains(github.event.pull_request.labels.*.name, 'release')
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14]
+    steps:
+      - name: Check package version
+        id: check
+        uses: EndBug/version-check@v1
+
+      - name: Log
+        if: steps.check.outputs.changed == 'false'
+        run: |
+          'echo "Release PR should contains a version change in package.json"'
+          exit 1
+
+      - name: Finish checking
+        if: steps.check.outputs.changed == 'true'
+        run: 'echo "Version change found in commit ${{ steps.check.outputs.commit }}! New version: ${{ steps.check.outputs.version }} (${{ steps.check.outputs.type }})"'
