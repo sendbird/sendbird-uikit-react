@@ -19,7 +19,6 @@ jobs:
       - name: Check package version
         id: check
         uses: EndBug/version-check@v1
-          with: package.json
 
       - name: Log
         if: steps.check.outputs.changed == 'false'
