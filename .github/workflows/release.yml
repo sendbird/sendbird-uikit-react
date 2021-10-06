@@ -5,7 +5,7 @@ on:
     types: [ closed ]
 
 jobs:
-  shouldbuild:
+  build-release:
     # Only run the job if the PR has been merged and contains "release" label
     if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'release')
     runs-on: ubuntu-latest
@@ -16,13 +16,3 @@ jobs:
     steps:
       - name: Start
         run: echo Building...
-
-  shouldrun:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [14]
-    steps:
-      - name: Start
-        run: echo Whatever should start...
