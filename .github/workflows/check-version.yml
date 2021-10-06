@@ -13,6 +13,13 @@ jobs:
       matrix:
         node-version: [14]
     steps:
+      - uses: MontyD/package-json-updated-action
+        id: check
+        with:
+          path: package.json
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Check out Git repository
         uses: actions/checkout@v2
 
@@ -20,17 +27,13 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-        
-      - name: Check package version
-        id: check
-        uses: EndBug/version-check@v1
 
       - name: Log
-        if: steps.check.outputs.changed == 'false'
+        if: !steps.check.outputs.has-updated
         run: |
           'echo "Release PR should contains a version change in package.json"'
           exit 1
 
       - name: Finish checking
-        if: steps.check.outputs.changed == 'true'
-        run: 'echo "Version change found in commit ${{ steps.check.outputs.commit }}! New version: ${{ steps.check.outputs.version }} (${{ steps.check.outputs.type }})"'
+        if: steps.check.outputs.has-updated
+        run: 'echo "Version change found: ${{ steps.check.outputs.current-package-version }}"'
