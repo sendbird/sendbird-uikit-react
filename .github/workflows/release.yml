@@ -2,7 +2,7 @@ name: Release
 
 on:
   pull_request:
-    types: [closed, labeled]
+    types: [ closed ]
 
 jobs:
   build-release:
