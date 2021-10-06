@@ -1,5 +1,7 @@
 # Changelog
 
+## [3.0.0]
+
 ## [2.4.2](Sep 30 2021)
 - Bugfix
   *Use simple logic to calculate isByMe
