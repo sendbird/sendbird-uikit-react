@@ -13,13 +13,6 @@ jobs:
       matrix:
         node-version: [14]
     steps:
-      - uses: MontyD/package-json-updated-action
-        id: check
-        with:
-          path: package.json
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Check out Git repository
         uses: actions/checkout@v2
 
@@ -27,6 +20,14 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+
+      - name: Check version change
+        uses: MontyD/package-json-updated-action
+        id: check
+        with:
+          path: package.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Log
         if: !steps.check.outputs.has-updated
