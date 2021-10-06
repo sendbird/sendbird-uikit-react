@@ -7,7 +7,7 @@ on:
 jobs:
   shouldbuild:
     # Only run the job if the PR has been merged and contains "release" label
-    if: github.event.pull_request.merged == true && contains(github.event.issue.labels.*.name, 'release')
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'release')
     runs-on: ubuntu-latest
 
     strategy:
