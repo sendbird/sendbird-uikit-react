@@ -22,9 +22,21 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: get-npm-version
+      - name: Get package version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@master
 
-      - name: Log
-        run: echo Version updated to ${{ steps.package-version.outputs.current-version}}
+      - name: Install depedencies
+        run: npm install
+
+      - name: Build artifact
+        run: npm run build
+
+      - name: Push artifact
+        uses: test-room-7/action-update-file@v1
+        with:
+          file-path: |
+            release/*
+            dist/*
+          commit-msg: "release: v${{ steps.package-version.outputs.current-version}} ${{ GITHUB_REF }}"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
