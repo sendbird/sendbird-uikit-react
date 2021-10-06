@@ -13,9 +13,13 @@ jobs:
       matrix:
         node-version: [14]
     steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+        
       - name: Check package version
         id: check
         uses: EndBug/version-check@v1
+          with: package.json
 
       - name: Log
         if: steps.check.outputs.changed == 'false'
