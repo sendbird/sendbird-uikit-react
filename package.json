@@ -6,13 +6,6 @@
   "style": "release/dist/index.css",
   "typings": "release/index.d.ts",
   "module": "release/index.js",
-  "files": [
-    "release/**/*",
-    "dist/**/*",
-    "package-lock.json",
-    "LICENSE",
-    "CHANGELOG.md"
-  ],
   "devEngines": {
     "node": "14.x || 15.x || 16.x"
   },
