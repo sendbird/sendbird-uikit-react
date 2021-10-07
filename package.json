@@ -8,8 +8,7 @@
   "module": "release/index.js",
   "files": [
     "release/**/*",
-    "dist/**/*",
-    "package-lock.json",
+    "package.json",
     "LICENSE",
     "CHANGELOG.md"
   ],
@@ -46,16 +45,16 @@
     "css-vars-ponyfill": "^2.3.2",
     "date-fns": "^2.16.1",
     "prop-types": "^15.7.2",
-    "react": "^16.8.6 || ^17.0.0",
-    "react-dom": "^16.8.6 || ^17.0.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "sendbird": "^3.0.154"
   },
   "dependencies": {
     "css-vars-ponyfill": "^2.3.2",
     "date-fns": "^2.16.1",
     "prop-types": "^15.7.2",
-    "react": "^16.8.6 || ^17.0.0",
-    "react-dom": "^16.8.6 || ^17.0.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "sendbird": "^3.0.154"
   },
   "bugs": {
