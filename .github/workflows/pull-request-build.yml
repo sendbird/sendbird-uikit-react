@@ -1,0 +1,72 @@
+name: Build on Merged Pull Request
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - "rogu/v*"
+
+jobs:
+  build-release:
+    # Only run the job if the PR has been merged
+    if: github.event.pull_request.merged == true
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14]
+
+    steps:
+      - name: Checkout to ${{ github.base_ref }}
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.base_ref }}
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Get package version
+        id: package_version
+        uses: martinbeentjes/npm-get-version-action@master
+
+      - name: Install depedencies
+        run: npm install
+
+      - name: Build release artifacts
+        run: npm run build
+
+      # If there is no 'release' label, commit `./release` as non-release artifacts
+      - name: Commit artifacts for non-release PR
+        if: contains(github.event.pull_request.labels.*.name , 'release') == false
+        uses: test-room-7/action-update-file@v1
+        with:
+          file-path: release/**/*
+          branch: ${{ github.base_ref }}
+          commit-msg: "📦 build: #${{ github.event.pull_request.number }}"
+          github-token: ${{ secrets.AUTH_TOKEN }}
+
+      # If there is 'release' label, commit `./release` as release artifacts
+      - name: Commit artifacts for release PR
+        id: commit_release_artifact
+        if: contains(github.event.pull_request.labels.*.name, 'release') == true
+        uses: test-room-7/action-update-file@v1
+        with:
+          file-path: release/**/*
+          branch: ${{ github.base_ref }}
+          commit-msg: "📦 release: v${{ steps.package_version.outputs.current-version }} (#${{ github.event.pull_request.number }})"
+          github-token: ${{ secrets.AUTH_TOKEN }}
+
+      # If there is 'release' label, create and publish release tag
+      - name: Create and publish release tag
+        if: contains(github.event.pull_request.labels.*.name, 'release') == true
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: false
+          prerelease: false
+          body: "See CHANGELOG.md" # TODO: add auto generated changelog
+          target_commitish: ${{ steps.commit_release_artifact.outputs.commit-sha }}
+          tag_name: v${{ steps.package_version.outputs.current-version }}
+          token: ${{ secrets.AUTH_TOKEN }}
