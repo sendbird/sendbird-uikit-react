@@ -46,7 +46,7 @@ jobs:
           file-path: release/**/*
           branch: ${{ github.base_ref }}
           commit-msg: "📦 build: #${{ github.event.pull_request.number }}"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.AUTH_TOKEN }}
 
       # If there is 'release' label, commit `./release` as release artifacts
       - name: Commit artifacts for release PR
@@ -57,7 +57,7 @@ jobs:
           file-path: release/**/*
           branch: ${{ github.base_ref }}
           commit-msg: "📦 release: v${{ steps.package_version.outputs.current-version }} (#${{ github.event.pull_request.number }})"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.AUTH_TOKEN }}
 
       # If there is 'release' label, create and publish release tag
       - name: Create and publish release tag
@@ -69,4 +69,4 @@ jobs:
           body: "See CHANGELOG.md" # TODO: add auto generated changelog
           target_commitish: ${{ steps.commit_release_artifact.outputs.commit-sha }}
           tag_name: v${{ steps.package_version.outputs.current-version }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.AUTH_TOKEN }}
