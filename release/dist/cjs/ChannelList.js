@@ -1,18 +1,18 @@
 'use strict';
 
-var LocalizationContext = require('./LocalizationContext-b6101212.js');
+var LocalizationContext = require('./LocalizationContext-c8e4e0ab.js');
 var React = require('react');
 var PropTypes = require('prop-types');
-var actionTypes = require('./actionTypes-e30bc513.js');
-var index = require('./index-1de9b9c4.js');
-var index$3 = require('./index-2eaae8e3.js');
-var LeaveChannel = require('./LeaveChannel-66e3f2fb.js');
-var index$2 = require('./index-5915cc00.js');
-var index$1 = require('./index-ef1de680.js');
-var index$4 = require('./index-170156c5.js');
+var actionTypes = require('./actionTypes-fce6d16c.js');
+var index = require('./index-b8242fdf.js');
+var index$3 = require('./index-2ac10863.js');
+var LeaveChannel = require('./LeaveChannel-709de35d.js');
+var index$2 = require('./index-811934c3.js');
+var index$1 = require('./index-32d6feb4.js');
+var index$4 = require('./index-3cd8a0b1.js');
 require('react-dom');
-require('./utils-f5ff29aa.js');
-require('./index-64e17745.js');
+require('./utils-e50ef5da.js');
+require('./index-537575d1.js');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
