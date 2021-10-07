@@ -2,6 +2,8 @@
 
 > React based UI kit based on sendbird javascript SDK
 
+> **ℹ️ NOTE**: This project is a forked version of the [Sendbird UI Kit](https://github.com/sendbird/sendbird-uikit-react) to match with the Ruangguru's internal requirements. Therefore, it is not yet set up to accept pull requests from external contributors. Please also be aware that we are not going to respond to any issues created from external contributors. The repository is here and you can always freely create a forked version from this repository to match with your own requirements.
+
 ## Getting Started
 
 With Sendbird UI Kit React, we export these components:
