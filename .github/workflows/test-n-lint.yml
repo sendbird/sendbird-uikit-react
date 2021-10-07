@@ -7,7 +7,7 @@ on: push
 
 jobs:
 
-  build:
+  test-lint:
     runs-on: ubuntu-latest
 
     strategy:
