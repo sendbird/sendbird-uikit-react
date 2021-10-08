@@ -1,6 +1,6 @@
-@import '../../../styles/variables';
+@import "../../../styles/variables";
 
-.sendbird-message-input__container{
+.sendbird-message-input__container {
   padding: 12px 16px;
 }
 
@@ -10,7 +10,7 @@
   position: relative;
 
   .sendbird-message-input--textarea {
-   // width: 100%;
+    // width: 100%;
     width: calc(100% - 48px);
     border-radius: 42px;
     font-size: 14px;
@@ -21,11 +21,12 @@
     height: 36px;
     overflow-y: hidden;
     letter-spacing: normal;
-    padding: 9px 64px 9px 16px;;
+    padding: 9px 64px 9px 16px;
     box-sizing: border-box;
     resize: none;
     font-family: var(--sendbird-font-family-default);
     background-color: inherit;
+
     @include themed() {
       color: t(on-bg-1);
       caret-color: t(primary-3);
@@ -35,6 +36,7 @@
 
     &:focus {
       outline: none;
+
       @include themed() {
         color: t(on-bg-1);
         border: solid 1px t(primary--3-2);
@@ -58,6 +60,7 @@
     font-family: var(--sendbird-font-family-default);
     font-size: 14px;
     line-height: 1.43;
+
     @include themed() {
       color: t(on-bg-3);
     }
@@ -70,7 +73,7 @@
     padding: 0;
   }
 
-  .sendbird-message-input--send-container{
+  .sendbird-message-input--send-container {
     width: 36px;
     height: 36px;
   }
@@ -82,9 +85,10 @@
     height: 36px;
     padding: 0;
     border-radius: 50%;
+
     @include themed() {
       background-color: t(primary-4);
-      box-shadow: 0px 2px 12px t(overlay-2);
+      box-shadow: 0 2px 12px t(overlay-2);
     }
   }
 
@@ -96,6 +100,7 @@
 .sendbird-message-input__edit {
   padding: 16px;
   box-sizing: border-box;
+
   @include themed() {
     background-color: t(primary--1-bg--7);
   }
@@ -104,12 +109,14 @@
 .sendbird-message-input--edit-action {
   text-align: right;
   margin-top: 4px;
+
   button:last-child {
     margin-left: 8px;
   }
 
   .sendbird-message-input--edit-action__cancel {
     width: 80px;
+
     @include themed() {
       border: solid 1px t(on-bg-3);
     }
@@ -124,19 +131,22 @@
   cursor: not-allowed;
 }
 
-.sendbird-message-input__disabled {
+.sendbird-message-input.sendbird-message-input__disabled {
   pointer-events: none;
   cursor: disabled;
+
   .sendbird-message-input--textarea {
     @include themed() {
       background-color: t(bg-1);
     }
   }
-  .sendbird-message-input--send{
+
+  .sendbird-message-input--send {
     @include themed() {
       background-color: t(bg-3);
     }
   }
+
   svg {
     @include themed() {
       fill: t(on-bg-3);
