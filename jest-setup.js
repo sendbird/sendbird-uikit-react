@@ -1,9 +1,7 @@
 const { JSDOM } = require('jsdom');
 const Enzyme = require('enzyme');
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import Adapter from 'enzyme-adapter-react-16';
 
-// for react-17
-// https://github.com/enzymejs/enzyme/issues/2429#issuecomment-679265564
 Enzyme.configure({ adapter: new Adapter() });
 
 // for mount
