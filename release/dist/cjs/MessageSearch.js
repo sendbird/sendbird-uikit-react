@@ -1,11 +1,11 @@
 'use strict';
 
 var React = require('react');
-var LocalizationContext = require('./LocalizationContext-2e2551bf.js');
-var index$1 = require('./index-55e4848c.js');
-var index = require('./index-3bd0e789.js');
+var LocalizationContext = require('./LocalizationContext-268fddf9.js');
+var index$1 = require('./index-74786eb0.js');
+var index = require('./index-0bd55ee3.js');
 require('prop-types');
-require('./index-795806c4.js');
+require('./index-e1691af4.js');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -501,7 +501,7 @@ function MessageSearch(props) {
     return /*#__PURE__*/React__default["default"].createElement("div", {
       className: COMPONENT_CLASS_NAME
     }, /*#__PURE__*/React__default["default"].createElement(index$1.PlaceHolder, {
-      type: index$1.PlaceHolderTypes$1.WRONG,
+      type: index$1.PlaceHolderTypes.WRONG,
       retryToConnect: handleRetryToConnect
     }));
   }
@@ -510,7 +510,7 @@ function MessageSearch(props) {
     return /*#__PURE__*/React__default["default"].createElement("div", {
       className: COMPONENT_CLASS_NAME
     }, /*#__PURE__*/React__default["default"].createElement(index$1.PlaceHolder, {
-      type: index$1.PlaceHolderTypes$1.SEARCHING
+      type: index$1.PlaceHolderTypes.SEARCHING
     }));
   }
 
@@ -518,7 +518,7 @@ function MessageSearch(props) {
     return /*#__PURE__*/React__default["default"].createElement("div", {
       className: COMPONENT_CLASS_NAME
     }, /*#__PURE__*/React__default["default"].createElement(index$1.PlaceHolder, {
-      type: index$1.PlaceHolderTypes$1.SEARCH_IN,
+      type: index$1.PlaceHolderTypes.SEARCH_IN,
       searchInString: getChannelName()
     }));
   }
@@ -559,7 +559,7 @@ function MessageSearch(props) {
       }
     });
   }) : /*#__PURE__*/React__default["default"].createElement(index$1.PlaceHolder, {
-    type: index$1.PlaceHolderTypes$1.NO_RESULTS
+    type: index$1.PlaceHolderTypes.NO_RESULTS
   }));
 }
 

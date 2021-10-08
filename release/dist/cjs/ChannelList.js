@@ -1,18 +1,18 @@
 'use strict';
 
-var LocalizationContext = require('./LocalizationContext-2e2551bf.js');
+var LocalizationContext = require('./LocalizationContext-268fddf9.js');
 var React = require('react');
 var PropTypes = require('prop-types');
-var actionTypes = require('./actionTypes-1569cf4f.js');
-var index = require('./index-6ae34f4a.js');
-var index$3 = require('./index-83891612.js');
-var LeaveChannel = require('./LeaveChannel-27f1717b.js');
-var index$2 = require('./index-55e4848c.js');
-var index$1 = require('./index-3bd0e789.js');
-var index$4 = require('./index-015b255c.js');
+var actionTypes = require('./actionTypes-b982fb24.js');
+var index = require('./index-b9297e41.js');
+var index$3 = require('./index-cd5bc665.js');
+var LeaveChannel = require('./LeaveChannel-6c530bb4.js');
+var index$2 = require('./index-74786eb0.js');
+var index$1 = require('./index-0bd55ee3.js');
+var index$4 = require('./index-cda29404.js');
 require('react-dom');
-require('./utils-d9261c38.js');
-require('./index-795806c4.js');
+require('./utils-5cc86980.js');
+require('./index-e1691af4.js');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -1461,7 +1461,7 @@ function ChannelList(props) {
       }
     }
   }, sdkError && /*#__PURE__*/React__default["default"].createElement(ChannelsPlaceholder, {
-    type: index$2.PlaceHolderTypes.WRONG
+    type: index$2.PlaceHolderTypes$1.WRONG
   }), /*#__PURE__*/React__default["default"].createElement("div", null, sortedChannels && sortedChannels.map(function (channel, idx) {
     var _onLeaveChannel = function onLeaveChannel(c, cb) {
       logger.info('ChannelList: Leaving channel', c);
@@ -1523,10 +1523,10 @@ function ChannelList(props) {
       })
     });
   })), (!sdkIntialized || loading) && /*#__PURE__*/React__default["default"].createElement(ChannelsPlaceholder, {
-    type: index$2.PlaceHolderTypes.LOADING
+    type: index$2.PlaceHolderTypes$1.LOADING
   }), //  placeholder
   (!allChannels || allChannels.length === 0) && /*#__PURE__*/React__default["default"].createElement(ChannelsPlaceholder, {
-    type: index$2.PlaceHolderTypes.NO_CHANNELS
+    type: index$2.PlaceHolderTypes$1.NO_CHANNELS
   })));
 }
 

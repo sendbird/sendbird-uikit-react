@@ -1,12 +1,12 @@
 'use strict';
 
 var React = require('react');
-var index$1 = require('./index-6ae34f4a.js');
-var LocalizationContext = require('./LocalizationContext-2e2551bf.js');
-var index = require('./index-55e4848c.js');
-var utils = require('./utils-d9261c38.js');
-var index$2 = require('./index-015b255c.js');
-var index$3 = require('./index-5f34b141.js');
+var index$1 = require('./index-b9297e41.js');
+var LocalizationContext = require('./LocalizationContext-268fddf9.js');
+var index = require('./index-74786eb0.js');
+var utils = require('./utils-5cc86980.js');
+var index$2 = require('./index-cda29404.js');
+var index$3 = require('./index-874dbbfe.js');
 require('prop-types');
 require('react-dom');
 
@@ -511,7 +511,7 @@ function InvalidChannel(_a) {
   })), /*#__PURE__*/React__default["default"].createElement("div", {
     className: "sendbird-openchannel-settings__placeholder"
   }, /*#__PURE__*/React__default["default"].createElement(index.PlaceHolder, {
-    type: index.PlaceHolderTypes.WRONG
+    type: index.PlaceHolderTypes$1.WRONG
   })));
 }
 

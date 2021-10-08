@@ -1,27 +1,27 @@
 'use strict';
 
-var LocalizationContext = require('./LocalizationContext-2e2551bf.js');
+var LocalizationContext = require('./LocalizationContext-268fddf9.js');
 var React = require('react');
 var PropTypes = require('prop-types');
 var SendbirdProvider = require('./SendbirdProvider.js');
 var ChannelList = require('./ChannelList.js');
-var Channel = require('./Channel.js');
+var Channel = require('./index-d5a1faa9.js');
 var ChannelSettings = require('./ChannelSettings.js');
 var MessageSearch = require('./MessageSearch.js');
-var index = require('./index-55e4848c.js');
-var index$1 = require('./index-6ae34f4a.js');
+var index = require('./index-74786eb0.js');
+var index$1 = require('./index-b9297e41.js');
 require('sendbird');
-require('./actionTypes-1569cf4f.js');
+require('./actionTypes-b982fb24.js');
 require('css-vars-ponyfill');
-require('./index-83891612.js');
-require('./utils-d9261c38.js');
-require('./LeaveChannel-27f1717b.js');
-require('./index-015b255c.js');
-require('./index-3bd0e789.js');
-require('./index-795806c4.js');
-require('./index-66bf7f3a.js');
+require('./index-cd5bc665.js');
+require('./utils-5cc86980.js');
+require('./LeaveChannel-6c530bb4.js');
+require('./index-cda29404.js');
+require('./index-0bd55ee3.js');
+require('./index-e1691af4.js');
+require('./index-bc5b754c.js');
 require('react-dom');
-require('./index-5f34b141.js');
+require('./index-874dbbfe.js');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -214,7 +214,7 @@ function App(props) {
     }
   })), /*#__PURE__*/React__default["default"].createElement("div", {
     className: "\n            ".concat(showSettings ? 'sendbird-app__conversation--settings-open' : '', "\n            ").concat(showSearch ? 'sendbird-app__conversation--search-open' : '', "\n            sendbird-app__conversation-wrap\n          ")
-  }, /*#__PURE__*/React__default["default"].createElement(Channel["default"], {
+  }, /*#__PURE__*/React__default["default"].createElement(Channel.Conversation, {
     channelUrl: currentChannelUrl,
     onChatHeaderActionClick: function onChatHeaderActionClick() {
       setShowSearch(false);
