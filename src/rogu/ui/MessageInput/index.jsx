@@ -1,8 +1,5 @@
 import React, {
-  useState,
-  useRef,
-  useEffect,
-  useContext,
+  useState, useRef, useEffect, useContext,
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -18,7 +15,7 @@ import { LocalizationContext } from '../../../lib/LocalizationContext';
 // import IconAttach from '../../svgs/icon-attach.svg';
 
 const LINE_HEIGHT = 36;
-const noop = () => { };
+const noop = () => {};
 const KeyCode = {
   SHIFT: 16,
   ENTER: 13,
@@ -149,99 +146,94 @@ const MessageInput = React.forwardRef((props, ref) => {
               width="32px"
               onClick={sendMessage}
             >
-              <Icon type={IconTypes.SEND} fillColor={IconColors.PRIMARY} width="20px" height="20px" />
+              <Icon
+                type={IconTypes.SEND}
+                fillColor={IconColors.PRIMARY}
+                width="20px"
+                height="20px"
+              />
             </IconButton>
           )
         } */}
         {/* upload icon */}
-        {
-          !isEdit && (
-            <IconButton
-              className="sendbird-message-input--attach"
-              height="32px"
-              width="32px"
-              onClick={() => {
-                // todo: clear previous input
-                fileInputRef.current.click();
-              }}
-            >
-              <Icon
-                type={IconTypes.ATTACH}
-                fillColor={IconColors.CONTENT_INVERSE}
-                width="20px"
-                height="20px"
-              />
-              <input
-                className="sendbird-message-input--attach-input"
-                type="file"
-                ref={fileInputRef}
-                onChange={handleUploadFile(onFileUpload)}
-              />
-            </IconButton>
-          )
-        }
-
-{
-        !isEdit && (
+        {!isEdit && (
           <IconButton
-          className="sendbird-message-input--send"
-          height="36px"
-          width="36px"
-          onClick={sendMessage}
+            className="sendbird-message-input--attach"
+            height="32px"
+            width="32px"
+            onClick={() => {
+              // todo: clear previous input
+              fileInputRef.current.click();
+            }}
           >
-            <Icon type={IconTypes.SEND} fillColor={IconColors.WHITE} width="20px" height="20px" />
+            <Icon
+              type={IconTypes.ATTACH}
+              fillColor={IconColors.CONTENT_INVERSE}
+              width="20px"
+              height="20px"
+            />
+            <input
+              className="sendbird-message-input--attach-input"
+              type="file"
+              ref={fileInputRef}
+              onChange={handleUploadFile(onFileUpload)}
+            />
           </IconButton>
-        )
-        }
+        )}
 
+        {!isEdit && (
+          <IconButton
+            className="sendbird-message-input--send"
+            height="36px"
+            width="36px"
+            onClick={sendMessage}
+          >
+            <Icon
+              type={IconTypes.SEND}
+              fillColor={IconColors.WHITE}
+              width="20px"
+              height="20px"
+            />
+          </IconButton>
+        )}
       </div>
       {/* Edit */}
-      
 
-      
-        {
-        isEdit && (
-          <div className="sendbird-message-input--edit-action">
-            <Button
-              className="sendbird-message-input--edit-action__cancel"
-              type={ButtonTypes.SECONDARY}
-              size={ButtonSizes.SMALL}
-              onClick={onCancelEdit}
-            >
-              {stringSet.BUTTON__CANCEL}
-            </Button>
-            <Button
-              className="sendbird-message-input--edit-action__save"
-              type={ButtonTypes.PRIMARY}
-              size={ButtonSizes.SMALL}
-              onClick={() => {
-                if (inputValue) {
-                  const trimmedInputValue = inputValue.trim();
-                  onSendMessage(name, trimmedInputValue, () => {
-                    onCancelEdit();
-                  });
-                }
-              }}
-            >
-              {stringSet.BUTTON__SAVE}
-            </Button>
-          </div>
-        )
-      }
+      {isEdit && (
+        <div className="sendbird-message-input--edit-action">
+          <Button
+            className="sendbird-message-input--edit-action__cancel"
+            type={ButtonTypes.SECONDARY}
+            size={ButtonSizes.SMALL}
+            onClick={onCancelEdit}
+          >
+            {stringSet.BUTTON__CANCEL}
+          </Button>
+          <Button
+            className="sendbird-message-input--edit-action__save"
+            type={ButtonTypes.PRIMARY}
+            size={ButtonSizes.SMALL}
+            onClick={() => {
+              if (inputValue) {
+                const trimmedInputValue = inputValue.trim();
+                onSendMessage(name, trimmedInputValue, () => {
+                  onCancelEdit();
+                });
+              }
+            }}
+          >
+            {stringSet.BUTTON__SAVE}
+          </Button>
+        </div>
+      )}
     </form>
   );
 });
 
 MessageInput.propTypes = {
-  placeholder: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
+  placeholder: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   isEdit: PropTypes.bool,
-  name: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]),
+  name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   value: PropTypes.string,
   disabled: PropTypes.bool,
   maxLength: PropTypes.number,
