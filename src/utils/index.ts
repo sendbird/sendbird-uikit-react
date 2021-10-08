@@ -300,7 +300,7 @@ export const getEmojiMapAll = (emojiContainer: EmojiContainer): Map<string, Emoj
 
 export const getUserName = (user: User): string => (user?.friendName || user?.nickname || user?.userId);
 export const getSenderName = (message: UserMessage | FileMessage): string => (message.sender && getUserName(message.sender));
-export const getMessageCreatedAt = (message: UserMessage | FileMessage): string => format(message.createdAt || 0, 'p');
+export const getMessageCreatedAt = (message: UserMessage | FileMessage): string => format(message.createdAt || 0, 'HH:mm');
 
 export const hasSameMembers = <T>(a: T[], b: T[]): boolean => {
   if (a === b) {

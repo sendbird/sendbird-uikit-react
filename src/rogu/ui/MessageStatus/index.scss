@@ -1,0 +1,37 @@
+@import '../../../styles/variables';
+
+.rogu-message-status {
+  display: flex;
+  align-items: center;
+
+  .rogu-message-status__icon {
+    width: fit-content;
+    height: fit-content;
+  }
+
+  .rogu-message-status__text {
+    position: relative;
+    margin-right: 4px;
+
+    .rogu-message-status__text__try-again {
+      text-decoration: underline;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    .rogu-message-status__text__delete {
+      text-decoration: underline;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.rogu-flex {
+  display: flex;
+  align-items: center;
+}

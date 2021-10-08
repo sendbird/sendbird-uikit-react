@@ -1,0 +1,100 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MessageStatus should do a snapshot test of the MessageStatus DOM 1`] = `
+<div
+  className="example-text rogu-message-status"
+>
+  <span
+    className="rogu-message-status__text sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
+  >
+    mock-date
+  </span>
+  <div
+    className="rogu-flex"
+  >
+    <div
+      className="rogu-message-status__icon sendbird-icon "
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+      style={
+        Object {
+          "height": "18px",
+          "minHeight": "18px",
+          "minWidth": "18px",
+          "width": "18px",
+        }
+      }
+      tabIndex="0"
+    >
+      <test-file-stub />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`MessageStatus should do a snapshot test of the failed MessageStatus DOM when isResendable: false 1`] = `
+<div
+  className="example-text rogu-message-status"
+>
+  <div
+    className="rogu-flex"
+  >
+    <span
+      className="rogu-message-status__text sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
+    >
+      Gagal terkirim
+    </span>
+    <div
+      className="rogu-message-status__icon sendbird-icon "
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+      style={
+        Object {
+          "height": "18px",
+          "minHeight": "18px",
+          "minWidth": "18px",
+          "width": "18px",
+        }
+      }
+      tabIndex="0"
+    >
+      <test-file-stub />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`MessageStatus should do a snapshot test of the failed MessageStatus DOM when isResendable: true 1`] = `
+<div
+  className="example-text rogu-message-status"
+>
+  <div
+    className="rogu-flex"
+  >
+    <span
+      className="rogu-message-status__text sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
+    >
+      Gagal terkirim
+    </span>
+    <div
+      className="rogu-message-status__icon sendbird-icon "
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+      style={
+        Object {
+          "height": "18px",
+          "minHeight": "18px",
+          "minWidth": "18px",
+          "width": "18px",
+        }
+      }
+      tabIndex="0"
+    >
+      <test-file-stub />
+    </div>
+  </div>
+</div>
+`;

@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Icon should do a snapshot test of the defualt Icon DOM 1`] = `
+<div
+  className=" sendbird-icon "
+  onClick={[Function]}
+  onKeyDown={[Function]}
+  role="button"
+  style={
+    Object {
+      "height": "26px",
+      "minHeight": "26px",
+      "minWidth": "26px",
+      "width": "26px",
+    }
+  }
+  tabIndex="0"
+>
+  <test-file-stub />
+</div>
+`;

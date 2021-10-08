@@ -1,0 +1,157 @@
+@import '../../../styles/variables';
+
+[class*=sendbird-label] {
+  font-family: var(--sendbird-font-family-default);
+}
+
+.sendbird-label--h-1 {
+  font-size: 20px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.4;
+  letter-spacing: -0.2px;
+}
+
+.sendbird-label--h-2 {
+  font-size: 18px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: -0.2px;
+}
+
+.sendbird-label--subtitle-1 {
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.38;
+  letter-spacing: -0.2px;
+}
+
+.sendbird-label--subtitle-2 {
+  font-size: 14px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.14;
+  letter-spacing: -0.2px;
+}
+
+.sendbird-label--body-1 {
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+}
+
+.sendbird-label--body-2 {
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: normal;
+}
+
+.sendbird-label--button-1 {
+  font-size: 14px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+}
+
+.sendbird-label--button-2 {
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+}
+
+.sendbird-label--caption-1 {
+  font-size: 14px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+}
+
+.sendbird-label--caption-2 {
+  font-size: 12px;
+  font-weight: bold;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+}
+
+.sendbird-label--caption-3 {
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+}
+
+.sendbird-label--color-onbackground-1 {
+  @include themed() {
+    color: t(on-bg-1);
+  }
+}
+
+.sendbird-label--color-onbackground-2 {
+  @include themed() {
+    color: t(on-bg-2);
+  }
+}
+
+.sendbird-label--color-onbackground-3 {
+  @include themed() {
+    color: t(on-bg-3);
+  }
+}
+
+.sendbird-label--color-onbackground-4 {
+  @include themed() {
+    color: t(on-bg-4);
+  }
+}
+
+.sendbird-label--color-oncontent-1 {
+  @include themed() {
+    color: t(on-content-1);
+  }
+}
+
+.sendbird-label--color-oncontent-2 {
+  @include themed() {
+    color: t(on-content-2);
+  }
+}
+
+.sendbird-label--color-primary {
+  @include themed() {
+    color: t(primary-3);
+  }
+}
+
+.sendbird-label--color-error {
+  @include themed() {
+    color: t(error--3-2);
+  }
+}
+
+.sendbird-label--color-secondary-3 {
+  @include themed() {
+    color: t(secondary-3);
+  }
+}

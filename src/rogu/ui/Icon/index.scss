@@ -1,0 +1,87 @@
+@import '../../../styles/variables';
+
+.sendbird-icon {
+  display: inline-block;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.sendbird-icon-color--primary [class*='fill'] {
+  @include themed() {
+    fill: t(primary-3);
+  }
+}
+
+.sendbird-icon-color--primary [class*='stroke'] {
+  @include themed() {
+    stroke: t(primary-3);
+    stroke-width: 2px;
+    stroke-linejoin: round;
+  }
+}
+
+.sendbird-icon-color--secondary [class*='fill'] {
+  @include themed() {
+    fill: t(secondary-3);
+  }
+}
+
+.sendbird-icon-color--content [class*='fill'] {
+  @include themed() {
+    fill: t(on-content-1);
+  }
+}
+
+.sendbird-icon-color--content-inverse [class*='fill'] {
+  @include themed() {
+    fill: t(inverse-on-content-1);
+  }
+}
+
+.sendbird-icon-color--white [class*='fill'] {
+  fill: #ffffff;
+}
+
+.sendbird-icon-color--sent [class*='fill'] {
+  @include themed() {
+    fill: t(inverse-on-content-3);
+  }
+}
+
+.sendbird-icon-color--read [class*='fill'] {
+  @include themed() {
+    fill: t(secondary--3-2);
+  }
+}
+
+.sendbird-icon-color--on-background-1 [class*='fill'] {
+  @include themed() {
+    fill: t(on-bg-1);
+  }
+}
+
+.sendbird-icon-color--on-background-2 [class*='fill'] {
+  @include themed() {
+    fill: t(on-bg-2);
+  }
+}
+
+.sendbird-icon-color--on-background-3 [class*='fill'] {
+  @include themed() {
+    fill: t(on-bg-3)
+  }
+}
+
+.sendbird-icon-color--background-3 [class*='fill'] {
+  @include themed() {
+    fill: t(bg-3);
+  }
+}
+
+.sendbird-icon-color--error [class*='fill'] {
+  @include themed() {
+    fill: t(error--3-2);
+  }
+}
