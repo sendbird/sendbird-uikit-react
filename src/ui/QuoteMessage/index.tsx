@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext } from 'react';
+import React, { ReactElement, useContext, useState } from 'react';
 // import { FileMessage, User, UserMessage } from 'sendbird';
 import { FileMessage, UserMessage } from '../../sendbird.min.js';
 import './index.scss';
@@ -7,7 +7,18 @@ import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import ImageRenderer from '../ImageRenderer';
 import { LocalizationContext } from '../../lib/LocalizationContext';
-import { getClassName, getUIKitFileType, getUIKitFileTypes, isFileMessage, isSupportedFileView, isThumbnailMessage, isUserMessage, isVideo, truncateString } from '../../utils';
+import {
+  getClassName,
+  getUIKitFileType,
+  getUIKitFileTypes,
+  isFileMessage,
+  isGif,
+  isSupportedFileView,
+  isThumbnailMessage,
+  isUserMessage,
+  isVideo,
+  truncateString,
+} from '../../utils';
 interface Props {
   message?: UserMessage | FileMessage;
   isByMe?: boolean;
@@ -23,9 +34,10 @@ export default function QuoteMessage({
   const parentMessageSender = parentMessage?.sender;
   const parentMessageSenderNickname = parentMessageSender?.nickname;
   const parentMessageUrl = parentMessage?.url || '';
-  const parentMessageType = parentMessage?.messageType;
+  const parentMessageType = parentMessage?.type;
   const currentMessageSenderNickname = message?.sender?.nickname;
 
+  const [isThumbnailLoaded, setThumbnailLoaded] = useState(false);
   const { stringSet } = useContext(LocalizationContext);
   const uikitFileTypes = getUIKitFileTypes();
   const splitUrl = parentMessageUrl.split('/');
@@ -55,7 +67,7 @@ export default function QuoteMessage({
             <Label
               className="sendbird-quote-message__replied-message__text-message__word"
               type={LabelTypography.BODY_2}
-              color={LabelColors.ONBACKGROUND_3}
+              color={LabelColors.ONBACKGROUND_1}
             >
               {parentMessage?.message}
             </Label>
@@ -70,29 +82,49 @@ export default function QuoteMessage({
               alt={parentMessageType}
               width="144px"
               height="108px"
-              placeHolder={(style) => {
-                <div className="sendbird-quote-message__replied-message__thumbnail-message__placeholder" style={style}>
+              onLoad={() => setThumbnailLoaded(true)}
+              defaultComponent={(
+                <div className="sendbird-quote-message__replied-message__thumbnail-message__placeholder">
                   <div className="sendbird-quote-message__replied-message__thumbnail-message__placeholder__icon">
                     <Icon
                       type={isVideo(parentMessageType) ? IconTypes.PLAY : IconTypes.PHOTO}
+                      fillColor={IconColors.ON_BACKGROUND_2}
+                      width="22px"
+                      height="22px"
+                    />
+                  </div>
+                </div>
+              )}
+            />
+            {(isVideo(parentMessageType) && !(parentMessage?.thumbnails?.length > 0)) && (
+              <>
+                <video className="sendbird-quote-message__replied-message__thumbnail-message__video">
+                  <source src={parentMessageUrl} type={parentMessageType} />
+                </video>
+                <div className="sendbird-quote-message__replied-message__thumbnail-message__cover">
+                  <div className="sendbird-quote-message__replied-message__thumbnail-message__cover__icon">
+                    <Icon
+                      type={IconTypes.PLAY}
                       fillColor={IconColors.ON_BACKGROUND_2}
                       width="14px"
                       height="14px"
                     />
                   </div>
                 </div>
-              }}
-            />
-            <div className="sendbird-quote-message__replied-message__thumbnail-message__cover">
-              <div className="sendbird-quote-message__replied-message__thumbnail-message__cover__icon">
-                <Icon
-                  type={isVideo(parentMessageType) ? IconTypes.PLAY : IconTypes.PHOTO}
-                  fillColor={IconColors.ON_BACKGROUND_2}
-                  width="14px"
-                  height="14px"
-                />
+              </>
+            )}
+            {(isThumbnailLoaded && isGif(parentMessageType)) && (
+              <div className="sendbird-quote-message__replied-message__thumbnail-message__cover">
+                <div className="sendbird-quote-message__replied-message__thumbnail-message__cover__icon">
+                  <Icon
+                    type={IconTypes.GIF}
+                    fillColor={IconColors.ON_BACKGROUND_2}
+                    width="14px"
+                    height="14px"
+                  />
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
         {/* file message */}
