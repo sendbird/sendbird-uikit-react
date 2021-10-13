@@ -6,6 +6,7 @@ function useScrollCallback({
   currentGroupChannel,
   lastMessageTimeStamp,
   userFilledMessageListQuery,
+  replyType,
 }, {
   hasMore,
   logger,
@@ -14,11 +15,18 @@ function useScrollCallback({
 }) {
   return useCallback((cb) => {
     if (!hasMore) { return; }
+    const {appInfo = {}} = sdk;
+    const useReaction = appInfo.isUsingReaction || false;
+
     const messageListParams = new sdk.MessageListParams();
     messageListParams.prevResultSize = 30;
+    messageListParams.isInclusive = true;
     messageListParams.includeReplies = false;
-    messageListParams.includeReaction = true;
-
+    messageListParams.includeReaction = useReaction;
+    if (replyType && replyType === 'QUOTE_REPLY') {
+      messageListParams.includeParentMessageInfo = true;
+      messageListParams.replyType = 'all';
+    }
     if (userFilledMessageListQuery) {
       Object.keys(userFilledMessageListQuery).forEach((key) => {
         messageListParams[key] = userFilledMessageListQuery[key];
@@ -63,7 +71,7 @@ function useScrollCallback({
       .finally(() => {
         currentGroupChannel.markAsRead();
       });
-  }, [currentGroupChannel, lastMessageTimeStamp]);
+  }, [currentGroupChannel, lastMessageTimeStamp, replyType]);
 }
 
 export default useScrollCallback;
