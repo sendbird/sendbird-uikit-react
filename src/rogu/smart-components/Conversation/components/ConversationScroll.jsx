@@ -22,16 +22,14 @@ export default class ConversationScroll extends Component {
     } = this.props;
 
     const element = e.target;
-    const {
-      scrollTop,
-      clientHeight,
-      scrollHeight,
-    } = element;
+    const { scrollTop, clientHeight, scrollHeight } = element;
     if (scrollTop === 0) {
       if (!hasMore) {
         return;
       }
-      const nodes = scrollRef.current.querySelectorAll('.sendbird-msg--scroll-ref');
+      const nodes = scrollRef.current.querySelectorAll(
+        '.sendbird-msg--scroll-ref',
+      );
       const first = nodes && nodes[0];
       onScroll(([messages]) => {
         if (messages) {
@@ -46,7 +44,9 @@ export default class ConversationScroll extends Component {
     }
 
     if (clientHeight + scrollTop === scrollHeight) {
-      const nodes = scrollRef.current.querySelectorAll('.sendbird-msg--scroll-ref');
+      const nodes = scrollRef.current.querySelectorAll(
+        '.sendbird-msg--scroll-ref',
+      );
       const last = nodes && nodes[nodes.length - 1];
       onScrollDown(([messages]) => {
         if (messages) {
@@ -70,7 +70,7 @@ export default class ConversationScroll extends Component {
         currentGroupChannel.markAsRead();
       }
     }, 500);
-  }
+  };
 
   render() {
     const {
@@ -123,95 +123,88 @@ export default class ConversationScroll extends Component {
             we are planning to implement it inside the library
           */}
           <div className="sendbird-conversation__messages-padding">
-            {
-              allMessages.map(
-                (m, idx) => {
-                  const previousMessage = allMessages[idx - 1];
-                  const nextMessage = allMessages[idx + 1];
-                  const [chainTop, chainBottom] = useMessageGrouping
-                    ? compareMessagesForGrouping(previousMessage, m, nextMessage)
-                    : [false, false];
-                  const previousMessageCreatedAt = previousMessage && previousMessage.createdAt;
-                  const currentCreatedAt = m.createdAt;
-                  // https://stackoverflow.com/a/41855608
-                  const hasSeparator = !(previousMessageCreatedAt && (
-                    isSameDay(currentCreatedAt, previousMessageCreatedAt)
-                  ));
-                  if (renderChatItem) {
-                    return (
-                      <div
-                        key={m.messageId || m.reqId}
-                        className="sendbird-msg--scroll-ref"
-                      >
-                        {
-                          renderChatItem({
-                            message: m,
-                            highLightedMessageId,
-                            channel: currentGroupChannel,
-                            onDeleteMessage: deleteMessage,
-                            onUpdateMessage: updateMessage,
-                            onResendMessage: resendMessage,
-                            onScrollToMessage: scrollToMessage,
-                            emojiContainer,
-                            chainTop,
-                            chainBottom,
-                            hasSeparator,
-                            menuDisabled: disabled,
-                          })
-                        }
-                      </div>
-                    );
-                  }
+            {allMessages.map((m, idx) => {
+              const previousMessage = allMessages[idx - 1];
+              const nextMessage = allMessages[idx + 1];
+              const [chainTop, chainBottom] = useMessageGrouping
+                ? compareMessagesForGrouping(previousMessage, m, nextMessage)
+                : [false, false];
+              const previousMessageCreatedAt = previousMessage && previousMessage.createdAt;
+              const currentCreatedAt = m.createdAt;
+              // https://stackoverflow.com/a/41855608
+              const hasSeparator = !(
+                previousMessageCreatedAt
+                && isSameDay(currentCreatedAt, previousMessageCreatedAt)
+              );
+              if (renderChatItem) {
+                return (
+                  <div
+                    key={m.messageId || m.reqId}
+                    className="sendbird-msg--scroll-ref"
+                  >
+                    {renderChatItem({
+                      message: m,
+                      highLightedMessageId,
+                      channel: currentGroupChannel,
+                      onDeleteMessage: deleteMessage,
+                      onUpdateMessage: updateMessage,
+                      onResendMessage: resendMessage,
+                      onScrollToMessage: scrollToMessage,
+                      emojiContainer,
+                      chainTop,
+                      chainBottom,
+                      hasSeparator,
+                      menuDisabled: disabled,
+                    })}
+                  </div>
+                );
+              }
 
-                  return (
-                    <MessageHOC
-                      highLightedMessageId={highLightedMessageId}
-                      renderCustomMessage={renderCustomMessage}
-                      key={m.messageId || m.reqId}
-                      userId={userId}
-                      // show status for pending/failed messages
-                      message={m}
-                      scrollToMessage={scrollToMessage}
-                      currentGroupChannel={currentGroupChannel}
-                      disabled={disabled}
-                      membersMap={membersMap}
-                      chainTop={chainTop}
-                      useReaction={useReaction}
-                      emojiAllMap={emojiAllMap}
-                      emojiContainer={emojiContainer}
-                      editDisabled={editDisabled}
-                      hasSeparator={hasSeparator}
-                      chainBottom={chainBottom}
-                      updateMessage={updateMessage}
-                      deleteMessage={deleteMessage}
-                      resendMessage={resendMessage}
-                      toggleReaction={toggleReaction}
-                      memoizedEmojiListItems={memoizedEmojiListItems}
-                    />
-                  );
-                },
-              )
-            }
+              return (
+                <MessageHOC
+                  highLightedMessageId={highLightedMessageId}
+                  renderCustomMessage={renderCustomMessage}
+                  key={m.messageId || m.reqId}
+                  userId={userId}
+                  // show status for pending/failed messages
+                  message={m}
+                  scrollToMessage={scrollToMessage}
+                  currentGroupChannel={currentGroupChannel}
+                  disabled={disabled}
+                  membersMap={membersMap}
+                  chainTop={chainTop}
+                  useReaction={useReaction}
+                  emojiAllMap={emojiAllMap}
+                  emojiContainer={emojiContainer}
+                  editDisabled={editDisabled}
+                  hasSeparator={hasSeparator}
+                  chainBottom={chainBottom}
+                  updateMessage={updateMessage}
+                  deleteMessage={deleteMessage}
+                  resendMessage={resendMessage}
+                  toggleReaction={toggleReaction}
+                  memoizedEmojiListItems={memoizedEmojiListItems}
+                />
+              );
+            })}
           </div>
         </div>
-        {
-          showScrollBot && (
-            <div
-              className="sendbird-conversation__scroll-bottom-button"
-              onClick={onClickScrollBot}
-              onKeyDown={onClickScrollBot}
-              tabIndex={0}
-              role="button"
-            >
-              <Icon
-                width="24px"
-                height="24px"
-                type={IconTypes.CHEVRON_DOWN}
-                fillColor={IconColors.PRIMARY}
-              />
-            </div>
-          )
-        }
+        {showScrollBot && (
+          <div
+            className="sendbird-conversation__scroll-bottom-button"
+            onClick={onClickScrollBot}
+            onKeyDown={onClickScrollBot}
+            tabIndex={0}
+            role="button"
+          >
+            <Icon
+              width="24px"
+              height="24px"
+              type={IconTypes.CHEVRON_DOWN}
+              fillColor={IconColors.PRIMARY}
+            />
+          </div>
+        )}
       </div>
     );
   }
@@ -220,10 +213,7 @@ export default class ConversationScroll extends Component {
 ConversationScroll.propTypes = {
   // https://stackoverflow.com/a/52646941
   scrollRef: PropTypes.shape({
-    current: PropTypes.oneOfType([
-      PropTypes.element,
-      PropTypes.shape({}),
-    ]),
+    current: PropTypes.oneOfType([PropTypes.element, PropTypes.shape({})]),
   }).isRequired,
   hasMore: PropTypes.bool,
   messagesDispatcher: PropTypes.func.isRequired,
@@ -232,9 +222,11 @@ ConversationScroll.propTypes = {
   editDisabled: PropTypes.bool,
   disabled: PropTypes.bool,
   userId: PropTypes.string,
-  allMessages: PropTypes.arrayOf(PropTypes.shape({
-    createdAt: PropTypes.number,
-  })).isRequired,
+  allMessages: PropTypes.arrayOf(
+    PropTypes.shape({
+      createdAt: PropTypes.number,
+    }),
+  ).isRequired,
   deleteMessage: PropTypes.func.isRequired,
   resendMessage: PropTypes.func.isRequired,
   updateMessage: PropTypes.func.isRequired,
@@ -279,6 +271,6 @@ ConversationScroll.defaultProps = {
   emojiAllMap: new Map(),
   membersMap: new Map(),
   useMessageGrouping: true,
-  toggleReaction: () => { },
+  toggleReaction: () => {},
   memoizedEmojiListItems: () => '',
 };
