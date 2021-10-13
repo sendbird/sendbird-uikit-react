@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextMessageItemBody should do a snapshot test of the TextMessageItemBody DOM 1`] = `
+<div
+  className=" rogu-text-message-item-body"
+/>
+`;

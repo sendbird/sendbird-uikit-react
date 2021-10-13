@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MessageContent should do a snapshot test of the MessageContent DOM 1`] = `
+<div
+  className=" rogu-message-content rogu-message-content--incoming  "
+>
+  <div
+    className="rogu-message-content__avatar sendbird-avatar"
+    role="button"
+    style={
+      Object {
+        "height": "2rem",
+        "width": "2rem",
+      }
+    }
+    tabIndex={0}
+  >
+    <div
+      className="sendbird-avatar-img sendbird-image-renderer"
+      style={
+        Object {
+          "height": "2rem",
+          "maxWidth": "400px",
+          "minWidth": "2rem",
+          "width": "100%",
+        }
+      }
+    >
+      <div
+        className="sendbird-image-renderer__image"
+        style={
+          Object {
+            "backgroundImage": "url(https://avatars3.githubusercontent.com/u/46333979?s=460&v=4)",
+            "backgroundPosition": "center",
+            "backgroundRepeat": "no-repeat",
+            "backgroundSize": "cover",
+            "borderRadius": null,
+            "height": "2rem",
+            "maxWidth": "400px",
+            "minWidth": "2rem",
+            "position": "absolute",
+            "width": "100%",
+          }
+        }
+      />
+      <img
+        alt=""
+        className="sendbird-image-renderer__hidden-image-loader"
+        onError={[Function]}
+        onLoad={[Function]}
+        src="https://avatars3.githubusercontent.com/u/46333979?s=460&v=4"
+      />
+    </div>
+  </div>
+  <div
+    className="rogu-message-content__content"
+  >
+    <div
+      className="rogu-message-content__bubble"
+    >
+      <div
+        className="rogu-message-content__bubble__header"
+      >
+        <span
+          className="rogu-message-content__sender-name sendbird-label sendbird-label--caption-1 sendbird-label--color-onbackground-2"
+        >
+          Kukuh Aji Sulistyo Bangun Jaya Abadi Mangkubumi
+        </span>
+      </div>
+      <div
+        className=" rogu-text-message-item-body"
+      >
+        <span
+          className="rogu-text-message-item-body__message sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
+        >
+          Welcome to the classroom!
+        </span>
+      </div>
+    </div>
+    <div
+      className="rogu-message-content__misc"
+    >
+      <span
+        className="rogu-message-content__created-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
+      >
+        14:45
+      </span>
+    </div>
+  </div>
+</div>
+`;
