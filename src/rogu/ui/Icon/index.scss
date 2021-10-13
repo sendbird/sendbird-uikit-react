@@ -41,7 +41,7 @@
 }
 
 .sendbird-icon-color--white [class*='fill'] {
-  fill: #ffffff;
+  fill: #fff;
 }
 
 .sendbird-icon-color--sent [class*='fill'] {
@@ -70,7 +70,7 @@
 
 .sendbird-icon-color--on-background-3 [class*='fill'] {
   @include themed() {
-    fill: t(on-bg-3)
+    fill: t(on-bg-3);
   }
 }
 
