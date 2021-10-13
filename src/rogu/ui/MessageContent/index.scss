@@ -1,0 +1,305 @@
+@import "../../../styles/variables";
+
+$borderRadius: 0.5rem;
+$bubbleCaretSize: 0.5rem;
+$avatarSpacing: 0.5rem;
+$avatarSize: 2rem;
+
+.rogu-message-content {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  margin-bottom: 1rem;
+
+  @include themed() {
+    color: t(on-bg-1);
+  }
+
+  .rogu-message-content__avatar {
+    margin-right: $avatarSpacing;
+    width: $avatarSize;
+    height: $avatarSize;
+    flex-shrink: 0;
+  }
+
+  .rogu-message-content__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    position: relative;
+    max-width: 35rem;
+
+    .rogu-message-content__bubble {
+      display: flex;
+      flex-direction: column;
+      padding: 0.75rem;
+      border-top-left-radius: $borderRadius;
+      border-top-right-radius: $borderRadius;
+      border-bottom-left-radius: $borderRadius;
+      border-bottom-right-radius: $borderRadius;
+
+      .rogu-message-content__bubble__header {
+        line-height: 0;
+        display: flex;
+        flex-wrap: nowrap;
+
+        .rogu-message-content__sender-name {
+          margin-bottom: 4px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+        }
+
+        .rogu-message-content__menu {
+          flex-shrink: 0;
+        }
+      }
+
+      &::before {
+        content: "";
+        width: 0;
+        height: 0;
+        border-style: solid;
+        position: absolute;
+        top: 0;
+      }
+    }
+
+    .rogu-message-content__misc {
+      margin-top: 0.25rem;
+    }
+  }
+
+  &.rogu-message-content--incoming {
+    justify-content: flex-start;
+
+    .rogu-message-content__content {
+      padding-left: $bubbleCaretSize;
+
+      .rogu-message-content__bubble {
+        border-top-left-radius: 0;
+
+        @include themed() {
+          background-color: t(bg-0);
+        }
+
+        &::before {
+          border-width: 0 $bubbleCaretSize $bubbleCaretSize 0;
+          left: 0;
+
+          @include themed() {
+            border-color: transparent t(bg-0) transparent transparent;
+          }
+        }
+      }
+    }
+  }
+
+  &.rogu-message-content--outgoing {
+    justify-content: flex-end;
+
+    .rogu-message-content__content {
+      padding-right: $bubbleCaretSize;
+      padding-left: $avatarSize + $avatarSpacing;
+
+      .rogu-message-content__bubble {
+        border-top-right-radius: 0;
+
+        @include themed() {
+          background-color: t(primary-1);
+        }
+
+        &::before {
+          border-width: $bubbleCaretSize $bubbleCaretSize 0 0;
+          right: 0;
+
+          @include themed() {
+            border-color: t(primary-1) transparent transparent transparent;
+          }
+        }
+      }
+    }
+  }
+
+  &.rogu-message-content--chain-bottom {
+    margin-bottom: 0.5rem;
+  }
+
+  &.rogu-message-content--chain-top {
+    .rogu-message-content__content {
+      .rogu-message-content__bubble {
+        &::before {
+          display: none;
+        }
+      }
+    }
+
+    &.rogu-message-content--incoming {
+      .rogu-message-content__content {
+        padding-left: $avatarSize + $avatarSpacing + $bubbleCaretSize;
+
+        .rogu-message-content__bubble {
+          border-top-left-radius: 0;
+        }
+      }
+    }
+
+    &.rogu-message-content--outgoing {
+      .rogu-message-content__content {
+        padding-right: $bubbleCaretSize;
+
+        .rogu-message-content__bubble {
+          border-top-right-radius: 0;
+        }
+      }
+    }
+  }
+}
+
+// // incoming
+// .rogu-message-content.incoming {
+//   .rogu-message-content__left {
+//     position: relative;
+//     display: inline-flex;
+//     min-width: 40px;
+
+//     .rogu-message-content__left__avatar {
+//       position: absolute;
+//       left: 0px;
+//       bottom: 2px;
+//     }
+//   }
+
+//   .rogu-message-content__middle {
+//     position: relative;
+//     display: inline-flex;
+//     flex-direction: column;
+//     max-width: 400px;
+
+//     .rogu-message-content__middle__sender-name {
+//       position: relative;
+//       margin-left: 12px;
+//       margin-bottom: 4px;
+//     }
+//   }
+
+//   .rogu-message-content__right {
+//     position: relative;
+//     display: inline-flex;
+//     width: 50px;
+//     &.use-reactions { width: 70px; }
+//     margin-left: 4px;
+//     padding-top: 18px;
+//     &.chain-top { padding-top: 2px; }
+
+//     .rogu-message-content__right__created-at {
+//       position: absolute;
+//       bottom: 2px;
+//       white-space: nowrap;
+//       display: inline-flex;
+//       &.supposed-hover {
+//         display: none;
+//       }
+//     }
+
+//     .rogu-message-content-menu {
+//       position: relative;
+//       flex-direction: row;
+//       height: 32px;
+//       display: none;
+//       &.supposed-hover {
+//         display: inline-flex;
+//       }
+//     }
+//   }
+
+//   &:hover {
+//     .rogu-message-content__right {
+//       .rogu-message-content__right__created-at {
+//         display: none;
+//       }
+//       .rogu-message-content-menu {
+//         display: inline-flex;
+//       }
+//     }
+//   }
+// }
+
+// // outgoing
+// .rogu-message-content.outgoing {
+//   .rogu-message-content__left {
+//     position: relative;
+//     box-sizing: border-box;
+//     display: inline-flex;
+//     justify-content: end;
+//     width: 50px;
+//     &.use-reactions { width: 70px }
+
+//     .rogu-message-content__left__created-at {
+//       position: absolute;
+//       bottom: 2px;
+//       right: 4px;
+//       white-space: nowrap;
+//       display: flex;
+//       box-sizing: content-box;
+//       min-width: 16px;
+//       min-height: 16px;
+//       &.supposed-hover {
+//         display: none;
+//       }
+//     }
+
+//     .rogu-message-content-menu {
+//       position: absolute;
+//       top: 2px;
+//       right: 4px;
+//       flex-direction: row;
+//       display: none;
+//       &.supposed-hover {
+//         display: inline-flex;
+//       }
+//     }
+//   }
+
+//   .rogu-message-content__middle {
+//     position: relative;
+//     display: inline-flex;
+//     flex-direction: column;
+//     max-width: 400px;
+//   }
+
+//   .rogu-message-content__right {
+//     display: none;
+//   }
+
+//   &:hover {
+//     .rogu-message-content__left {
+//       .rogu-message-content__left__created-at {
+//         display: none;
+//       }
+//       .rogu-message-content-menu {
+//         display: inline-flex;
+//       }
+//     }
+//   }
+// }
+
+// .rogu-message-content-reactions {
+//   position: relative;
+//   width: 100%;
+//   border-radius: 0px 0px 16px 16px;
+//   @include themed() { background-color: t(bg-1) }
+//   &.primary {
+//     @include themed() { background-color: t(primary-3) }
+//   }
+//   &.mouse-hover, &:hover {
+//     @include themed() { background-color: t(bg-2) }
+//     &.primary {
+//       @include themed() { background-color: t(primary-4) }
+//     }
+//   }
+// }
