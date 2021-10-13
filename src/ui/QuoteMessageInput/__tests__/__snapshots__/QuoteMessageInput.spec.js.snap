@@ -40,7 +40,7 @@ exports[`QuoteMessageInput should do a snapshot test of the QuoteMessageInput DO
     </span>
   </div>
   <div
-    className="sendbird-replying_message_attachment__close-button sendbird-icon sendbird-icon-close sendbird-icon-color--on-background-2"
+    className="sendbird-quote_message_input__close-button sendbird-icon sendbird-icon-close sendbird-icon-color--on-background-2"
     onClick={[Function]}
     onKeyDown={[Function]}
     role="button"
