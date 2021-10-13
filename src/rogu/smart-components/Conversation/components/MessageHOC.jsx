@@ -4,12 +4,15 @@ import React, {
 import PropTypes from 'prop-types';
 import format from 'date-fns/format';
 
-import MessageContent from '../../../../ui/MessageContent';
-import DateSeparator from '../../../../ui/DateSeparator';
-import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
+// Rogu components
+import MessageContent from '../../../ui/MessageContent';
+import Label, { LabelTypography, LabelColors } from '../../../ui/Label';
 import MessageInput from '../../../ui/MessageInput';
-import FileViewer from '../../../../ui/FileViewer';
 import RemoveMessageModal from './RemoveMessage';
+
+// Sendbird original components
+import DateSeparator from '../../../../ui/DateSeparator';
+import FileViewer from '../../../../ui/FileViewer';
 
 export default function MessageHoc({
   message,
