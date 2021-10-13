@@ -8,6 +8,12 @@
   height: 100%;
   &.incoming { justify-content: flex-start; }
   &.outgoing { justify-content: flex-end; }
+  .sendbird-message-content__middle {
+    .sendbird-message-content__middle__message-item-body.use-quote {
+      top: -8px;
+      width: fit-content;
+    }
+  }
 }
 
 // incoming
@@ -29,11 +35,17 @@
     display: inline-flex;
     flex-direction: column;
     max-width: 400px;
-
+    align-items: flex-start;
     .sendbird-message-content__middle__sender-name {
       position: relative;
       margin-left: 12px;
       margin-bottom: 4px;
+    }
+    .sendbird-message-content__middle__quote-message {
+      width: 100%;
+      display: inline-flex;
+      &.outgoing { justify-content: flex-end }
+      &.incoming { justify-content: flex-start }
     }
   }
 
@@ -44,7 +56,12 @@
     &.use-reactions { width: 70px; }
     margin-left: 4px;
     padding-top: 18px;
-    &.chain-top { padding-top: 2px; }
+    &.chain-top {
+      padding-top: 2px;
+      &.use-quote {
+        padding-top: 18px;
+      }
+    }
 
     .sendbird-message-content__right__created-at {
       position: absolute;
@@ -88,6 +105,11 @@
     justify-content: flex-end;
     width: 50px;
     &.use-reactions { width: 70px }
+    &.use-quote {
+      .sendbird-message-content-menu {
+        top: 18px;
+      }
+    }
 
     .sendbird-message-content__left__created-at {
       position: absolute;
@@ -120,6 +142,13 @@
     display: inline-flex;
     flex-direction: column;
     max-width: 400px;
+    align-items: flex-end;
+    .sendbird-message-content__middle__quote-message {
+      width: 100%;
+      display: inline-flex;
+      &.outgoing { justify-content: flex-end }
+      &.incoming { justify-content: flex-start }
+    }
   }
 
   .sendbird-message-content__right {

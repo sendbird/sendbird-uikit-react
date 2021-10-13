@@ -6,7 +6,6 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import format from 'date-fns/format';
-import './message-hoc.scss';
 
 import MessageContent from '../../../ui/MessageContent';
 import DateSeparator from '../../../ui/DateSeparator';
@@ -14,8 +13,6 @@ import Label, { LabelTypography, LabelColors } from '../../../ui/Label';
 import MessageInput from '../../../ui/MessageInput';
 import FileViewer from '../../../ui/FileViewer';
 import RemoveMessageModal from './RemoveMessage';
-import QuoteMessage from '../../../ui/QuoteMessage';
-import { getClassName } from '../../../utils';
 
 export default function MessageHoc({
   message,
@@ -132,18 +129,9 @@ export default function MessageHoc({
           </DateSeparator>
         )
       }
-      {/* Quote Message */}
-      {(replyType === 'QUOTE_REPLY' && message?.parentMessageId) ? (
-        <div className={getClassName(['sendbird-message-hoc__quote-message', isByMe ? 'outgoing' : 'incoming'])}>
-          <QuoteMessage message={message} isByMe={isByMe} />
-        </div>
-      ) : null}
       {/* Message */}
       <MessageContent
-        className={[
-          'sendbird-message-hoc__message-content',
-          replyType === 'QUOTE_REPLY' ? 'use-quote' : '',
-        ]}
+        className="sendbird-message-hoc__message-content"
         userId={userId}
         scrollToMessage={scrollToMessage}
         channel={currentGroupChannel}
