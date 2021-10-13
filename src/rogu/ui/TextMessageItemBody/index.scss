@@ -1,0 +1,12 @@
+@import "../../../styles/variables";
+
+.rogu-text-message-item-body {
+  position: relative;
+  display: inline-block;
+  box-sizing: content-box;
+
+  .rogu-text-message-item-body__message {
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+}
