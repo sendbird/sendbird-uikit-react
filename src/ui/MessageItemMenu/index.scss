@@ -8,10 +8,10 @@
 
 .sendbird-message-item-menu__list {
   .sendbird-message-item-menu__list__menu-item {
-    &.copy {}
-    &.reply {}
-    &.edit {}
-    &.resend {}
-    &.delete {}
+    &.menu-item-copy {}
+    &.menu-item-reply {}
+    &.menu-item-edit {}
+    &.menu-item-resend {}
+    &.menu-item-delete {}
   }
 }
