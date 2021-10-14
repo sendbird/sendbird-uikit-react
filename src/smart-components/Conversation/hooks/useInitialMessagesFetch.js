@@ -37,7 +37,7 @@ function useInitialMessagesFetch({
       messageListParams.includeReaction = true;
       if (replyType && replyType === 'QUOTE_REPLY') {
         messageListParams.includeParentMessageInfo = true;
-        messageListParams.replyTypeFilter = 'all';
+        messageListParams.replyType = 'all';
       }
       if (userFilledMessageListQuery) {
         Object.keys(userFilledMessageListQuery).forEach((key) => {

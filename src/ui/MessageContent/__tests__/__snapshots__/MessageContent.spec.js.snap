@@ -7,7 +7,7 @@ exports[`MessageContent should do a snapshot test of the MessageContent DOM 1`] 
   onMouseOver={[Function]}
 >
   <div
-    className="sendbird-message-content__left  incoming"
+    className="sendbird-message-content__left  incoming "
   >
     <div
       className="sendbird-context-menu"
@@ -78,7 +78,7 @@ exports[`MessageContent should do a snapshot test of the MessageContent DOM 1`] 
       Mathew
     </span>
     <div
-      className=" sendbird-text-message-item-body incoming  "
+      className="sendbird-message-content__middle__message-item-body  sendbird-text-message-item-body incoming  "
     >
       <span
         className="sendbird-text-message-item-body__message sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
@@ -88,7 +88,7 @@ exports[`MessageContent should do a snapshot test of the MessageContent DOM 1`] 
     </div>
   </div>
   <div
-    className="sendbird-message-content__right  "
+    className="sendbird-message-content__right   "
   >
     <span
       className="sendbird-message-content__right__created-at  sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
