@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import * as utils from '../utils';
 import * as messageActionTypes from '../dux/actionTypes';
 
-function useHandleReconnect({ isOnline }, {
+function useHandleReconnect({ isOnline, replyType }, {
   logger,
   sdk,
   currentGroupChannel,
@@ -21,9 +21,13 @@ function useHandleReconnect({ isOnline }, {
 
         const messageListParams = new sdk.MessageListParams();
         messageListParams.prevResultSize = 30;
+        messageListParams.isInclusive = true;
         messageListParams.includeReplies = false;
         messageListParams.includeReaction = useReaction;
-
+        if (replyType && replyType === 'QUOTE_REPLY') {
+          messageListParams.includeParentMessageInfo = true;
+          messageListParams.replyType = 'all';
+        }
         if (userFilledMessageListQuery) {
           Object.keys(userFilledMessageListQuery).forEach((key) => {
             messageListParams[key] = userFilledMessageListQuery[key];
@@ -71,7 +75,7 @@ function useHandleReconnect({ isOnline }, {
           });
       }
     };
-  }, [isOnline]);
+  }, [isOnline, replyType]);
 }
 
 export default useHandleReconnect;

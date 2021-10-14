@@ -146,7 +146,7 @@ export const ConversationPanel = (props) => {
 
   // Scrollup is default scroll for channel
   const onScrollCallback = useScrollCallback({
-    currentGroupChannel, lastMessageTimeStamp, userFilledMessageListQuery,
+    currentGroupChannel, lastMessageTimeStamp, userFilledMessageListQuery, replyType,
   }, {
     hasMore,
     logger,
@@ -168,6 +168,7 @@ export const ConversationPanel = (props) => {
     latestFetchedMessageTimeStamp,
     userFilledMessageListQuery,
     hasMoreToBottom,
+    replyType,
   }, {
     logger,
     messagesDispatcher,
@@ -227,7 +228,7 @@ export const ConversationPanel = (props) => {
   }, [channelUrl, sdkInit]);
 
   // handling connection breaks
-  useHandleReconnect({ isOnline }, {
+  useHandleReconnect({ isOnline, replyType }, {
     logger,
     sdk,
     currentGroupChannel,
