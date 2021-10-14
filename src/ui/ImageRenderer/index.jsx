@@ -22,6 +22,8 @@ export default function ImageRenderer({
   defaultComponent,
   circle,
   placeHolder, // a function returing JSX / (style) => Element
+  onLoad,
+  onError,
 }) {
   const [showDefaultComponent, setShowDefaultComponent] = useState(false);
   const [showPlaceHolder, setShowPlaceHolder] = useState(true);
@@ -59,8 +61,14 @@ export default function ImageRenderer({
         className="sendbird-image-renderer__hidden-image-loader"
         src={url}
         alt={alt}
-        onLoad={() => setShowPlaceHolder(false)}
-        onError={() => setShowDefaultComponent(true)}
+        onLoad={() => {
+          setShowPlaceHolder(false);
+          onLoad();
+        }}
+        onError={() => {
+          setShowDefaultComponent(true);
+          onError();
+        }}
       />
     );
   }, [url]);
@@ -127,6 +135,8 @@ ImageRenderer.propTypes = {
   ]),
   placeHolder: PropTypes.func,
   circle: PropTypes.bool,
+  onLoad: PropTypes.func,
+  onError: PropTypes.func,
 };
 ImageRenderer.defaultProps = {
   className: '',
@@ -137,4 +147,6 @@ ImageRenderer.defaultProps = {
   height: null,
   fixedSize: false,
   circle: false,
+  onLoad: () => { },
+  onError: () => { },
 };

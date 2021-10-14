@@ -26,7 +26,7 @@ export default function App(props) {
     profileUrl,
     config = {},
     useReaction,
-    replyType,
+    // replyType,
     useMessageGrouping,
     colorSet,
     stringSet,

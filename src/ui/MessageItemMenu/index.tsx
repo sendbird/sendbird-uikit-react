@@ -100,7 +100,7 @@ export default function MessageItemMenu({
             >
               {showMenuItemCopy && (
                 <MenuItem
-                  className="sendbird-message-item-menu__list__menu-item"
+                  className="sendbird-message-item-menu__list__menu-item menu-item-copy"
                   onClick={() => {
                     copyToClipboard((message as UserMessage)?.message);
                     closeDropdown();
@@ -111,7 +111,7 @@ export default function MessageItemMenu({
               )}
               {showMenuItemReply && (
                 <MenuItem
-                  className="sendbird-message-item-menu__list__menu-item"
+                  className="sendbird-message-item-menu__list__menu-item menu-item-reply"
                   onClick={() => {
                     setQuoteMessage(message);
                     closeDropdown();
@@ -123,7 +123,7 @@ export default function MessageItemMenu({
               )}
               {showMenuItemEdit && (
                 <MenuItem
-                  className="sendbird-message-item-menu__list__menu-item"
+                  className="sendbird-message-item-menu__list__menu-item menu-item-edit"
                   onClick={() => {
                     if (!disabled) {
                       showEdit(true);
@@ -136,7 +136,7 @@ export default function MessageItemMenu({
               )}
               {showMenuItemResend && (
                 <MenuItem
-                  className="sendbird-message-item-menu__list__menu-item"
+                  className="sendbird-message-item-menu__list__menu-item menu-item-resend"
                   onClick={() => {
                     if (!disabled) {
                       resendMessage(message);
@@ -149,7 +149,7 @@ export default function MessageItemMenu({
               )}
               {showMenuItemDelete && (
                 <MenuItem
-                  className="sendbird-message-item-menu__list__menu-item"
+                  className="sendbird-message-item-menu__list__menu-item menu-item-delete"
                   onClick={() => {
                     if (!disabled) {
                       showRemove(true);

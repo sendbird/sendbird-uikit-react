@@ -18,6 +18,7 @@ import FileMessageItemBody from '../FileMessageItemBody';
 import ThumbnailMessageItemBody from '../ThumbnailMessageItemBody';
 import OGMessageItemBody from '../OGMessageItemBody';
 import UnknownMessageItemBody from '../UnknownMessageItemBody';
+import QuoteMessage from '../QuoteMessage';
 
 import {
   getClassName,
@@ -86,6 +87,8 @@ export default function MessageContent({
   const chainTopClassName = chainTop ? 'chain-top' : '';
   const useReactionClassName = useReaction ? 'use-reactions' : '';
   const supposedHoverClassName = supposedHover ? 'supposed-hover' : '';
+  const useReplying: boolean = replyType === 'QUOTE_REPLY' && message?.parentMessageId;
+  const useReplyingClassName = useReplying ? 'use-quote' : '';
 
   if (message?.isAdminMessage?.() || message?.messageType === 'admin') {
     return (<ClientAdminMessage message={message} />);
@@ -97,7 +100,7 @@ export default function MessageContent({
       onMouseLeave={() => setMouseHover(false)}
     >
       {/* left */}
-      <div className={getClassName(['sendbird-message-content__left', useReactionClassName, isByMeClassName])}>
+      <div className={getClassName(['sendbird-message-content__left', useReactionClassName, isByMeClassName, useReplyingClassName])}>
         {(!isByMe && !chainBottom) && (
           /** user profile */
           <ContextMenu
@@ -170,7 +173,7 @@ export default function MessageContent({
       </div>
       {/* middle */}
       <div className="sendbird-message-content__middle">
-        {(!isByMe && !chainTop) && (
+        {(!isByMe && !chainTop && !useReplying) && (
           <Label
             className="sendbird-message-content__middle__sender-name"
             type={LabelTypography.CAPTION_2}
@@ -179,21 +182,53 @@ export default function MessageContent({
             {getSenderName(message)}
           </Label>
         )}
+        {/* quote message */}
+        {(useReplying) ? (
+          <div className={getClassName(['sendbird-message-content__middle__quote-message', isByMe ? 'outgoing' : 'incoming'])}>
+          <QuoteMessage message={message} isByMe={isByMe} />
+          </div>
+        ): null}
         {/* message item body components */}
         {isTextMessage(message as UserMessage) && (
-          <TextMessageItemBody message={message as UserMessage} isByMe={isByMe} mouseHover={mouseHover} />
+          <TextMessageItemBody
+            className={['sendbird-message-content__middle__message-item-body', useReplyingClassName]}
+            message={message as UserMessage}
+            isByMe={isByMe}
+            mouseHover={mouseHover}
+          />
         )}
         {(isOGMessage(message as UserMessage)) && (
-          <OGMessageItemBody message={message as UserMessage} isByMe={isByMe} mouseHover={mouseHover} />
+          <OGMessageItemBody
+            className={['sendbird-message-content__middle__message-item-body', useReplyingClassName]}
+            message={message as UserMessage}
+            isByMe={isByMe}
+            mouseHover={mouseHover}
+          />
         )}
         {(getUIKitMessageType((message as FileMessage)) === messageTypes.FILE) && (
-          <FileMessageItemBody message={message as FileMessage} isByMe={isByMe} mouseHover={mouseHover} />
+          <FileMessageItemBody
+            className={['sendbird-message-content__middle__message-item-body', useReplyingClassName]}
+            message={message as FileMessage}
+            isByMe={isByMe}
+            mouseHover={mouseHover}
+          />
         )}
         {(isThumbnailMessage(message as FileMessage)) && (
-          <ThumbnailMessageItemBody message={message as FileMessage} isByMe={isByMe} mouseHover={mouseHover} showFileViewer={showFileViewer} />
+          <ThumbnailMessageItemBody
+            className={['sendbird-message-content__middle__message-item-body', useReplyingClassName]}
+            message={message as FileMessage}
+            isByMe={isByMe}
+            mouseHover={mouseHover}
+            showFileViewer={showFileViewer}
+          />
         )}
         {(getUIKitMessageType((message as FileMessage)) === messageTypes.UNKNOWN) && (
-          <UnknownMessageItemBody message={message} isByMe={isByMe} mouseHover={mouseHover} />
+          <UnknownMessageItemBody
+            className={['sendbird-message-content__middle__message-item-body', useReplyingClassName]}
+            message={message}
+            isByMe={isByMe}
+            mouseHover={mouseHover}
+          />
         )}
         {/* reactions */}
         {(useReaction && message?.reactions?.length > 0) && (
@@ -214,7 +249,7 @@ export default function MessageContent({
         )}
       </div>
       {/* right */}
-      <div className={getClassName(['sendbird-message-content__right', chainTopClassName, useReactionClassName])}>
+      <div className={getClassName(['sendbird-message-content__right', chainTopClassName, useReactionClassName, useReplyingClassName])}>
         {(!isByMe && !chainBottom) && (
           <Label
             className={getClassName(['sendbird-message-content__right__created-at', supposedHoverClassName])}

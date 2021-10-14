@@ -36,6 +36,7 @@
   .sendbird-quote-message__replied-message {
     position: relative;
     display: inline-flex;
+    opacity: 0.5;
 
     // text message
     .sendbird-quote-message__replied-message__text-message {
@@ -61,6 +62,16 @@
       height: 108px;
       border-radius: 6.4px;
       overflow: hidden;
+      @include themed() {
+        background-color: t(bg-1);
+      }
+      .sendbird-quote-message__replied-message__thumbnail-message__video {
+        position: absolute;
+        top: 0px;
+        display: inline-flex;
+        width: 100%;
+        height: 100%;
+      }
       .sendbird-quote-message__replied-message__thumbnail-message__placeholder {
         position: absolute;
         display: inline-flex;
@@ -75,7 +86,6 @@
           width: 22px;
           height: 22px;
           border-radius: 50%;
-          background-color: var(--sendbird-light-background-50);
         }
       }
       .sendbird-quote-message__replied-message__thumbnail-message__cover {
