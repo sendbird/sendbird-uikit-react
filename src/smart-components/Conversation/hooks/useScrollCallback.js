@@ -15,7 +15,7 @@ function useScrollCallback({
 }) {
   return useCallback((cb) => {
     if (!hasMore) { return; }
-    const {appInfo = {}} = sdk;
+    const { appInfo = {} } = sdk;
     const useReaction = appInfo.isUsingReaction || false;
 
     const messageListParams = new sdk.MessageListParams();
