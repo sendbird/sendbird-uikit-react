@@ -1,5 +1,5 @@
 import React, { ReactElement, useRef } from "react";
-import { GroupChannel, AdminMessage, UserMessage, FileMessage } from "sendbird";
+import { GroupChannel, AdminMessage, UserMessage, FileMessage, User } from "sendbird";
 
 import Label, { LabelTypography, LabelColors } from "../Label";
 import MessageStatus from "../MessageStatus";
@@ -27,6 +27,9 @@ import {
   isSentMessage,
   isPendingMessage,
 } from "../../../utils";
+
+import {isAssignmentMessage, isMaterialMessage} from '../../utils';
+import AssignmentMessageItemBody from "../AssignmentMessageItemBody";
 
 interface Props {
   chainBottom?: boolean;
@@ -132,6 +135,11 @@ Props): ReactElement {
               isByMe={isByMe}
             />
           )}
+          {
+           isAssignmentMessage(message.customType) && (
+             <AssignmentMessageItemBody message={message as UserMessage} />
+           )
+          }
           {getUIKitMessageType(message as FileMessage) ===
             messageTypes.FILE && (
             <FileMessageItemBody

@@ -63,6 +63,8 @@ import RoguIconMsgFailed from '../../../svgs/rogu-icon-msg-failed.svg';
 import RoguIconMsgPending from '../../../svgs/rogu-icon-msg-pending.svg';
 import RoguIconMsgSent from '../../../svgs/rogu-icon-msg-sent.svg';
 import RoguIconMsgReadAll from '../../../svgs/rogu-icon-msg-read-all.svg';
+import RoguIconAssignment from '../../../svgs/rogu-icon-assignment.svg';
+import RoguIconMaterial from '../../../svgs/rogu-icon-material.svg';
 
 const Colors = {
   DEFAULT: 'DEFAULT',
@@ -159,6 +161,8 @@ function changeTypeToIconComponent(type) {
     case Type.ROGU_SENT: return <RoguIconMsgSent />;
     case Type.ROGU_READ_ALL: return <RoguIconMsgReadAll />;
     case Type.ROGU_ERROR: return <RoguIconMsgFailed />;
+    case Type.ROGU_ASSIGNMENT: return <RoguIconAssignment />;
+    case Type.ROGU_MATERIAL: return <RoguIconMaterial />;
     default: return 'icon'; // If you see this text 'icon' replace icon for it
   }
 }

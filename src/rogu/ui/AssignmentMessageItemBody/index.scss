@@ -1,0 +1,65 @@
+@import "../../../styles/variables";
+
+.rogu-assignment-message-item-body {
+  position: relative;
+  display: inline-block;
+  // TODO: Change fixing width and height lengths
+  width: 100%;
+  min-width: 200px;
+  max-width: 400px;
+
+  .rogu-assignment-message-item-body__text-bubble {
+    position: relative;
+    padding: 8px 12px;
+    box-sizing: border-box;
+    border-radius: 16px 16px 0px 0px;
+    word-break: break-all;
+  }
+
+  .rogu-assignment-message-item-body__container {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 10;
+
+    .rogu-assignment-message-item-body__icon {
+    }
+
+    .rogu-assignment-message-item-body__text-container {
+      margin-left: 6px;
+    }
+
+    .rogu-assignment-message-item-body__text-title {
+      margin: 0;
+    }
+    .rogu-assignment-message-item-body__text-deadline {
+      margin: 0 0 0 3px;
+      &:before {
+        content: ".";
+        margin-right: 3px;
+      }
+    }
+    .rogu-assignment-message-item-body__og-thumbnail__image {
+      width: 100%;
+    }
+  }
+
+  &.outgoing {
+    .rogu-assignment-message-item-body__container {
+      @include themed() {
+        background-color: t(primary-2);
+      }
+    }
+  }
+  &.incoming {
+    .rogu-assignment-message-item-body__container {
+      @include themed() {
+        background-color: t(bg-1);
+      }
+    }
+  }
+}

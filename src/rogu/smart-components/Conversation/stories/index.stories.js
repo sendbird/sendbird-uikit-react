@@ -8,9 +8,13 @@ import withSendBird from "../../../../lib/SendbirdSdkContext";
 
 export default { title: "ruangkelas/Smart Components/Channel" };
 
-const appId = process.env.STORYBOOK_APP_ID;
-const userId = process.env.STORYBOOK_USER_ID;
-const channelUrl = process.env.STORYBOOK_GROUP_ID;
+// const appId = process.env.STORYBOOK_APP_ID;
+// const userId = process.env.STORYBOOK_USER_ID;
+// const channelUrl = process.env.STORYBOOK_GROUP_ID;
+
+const appId = "4DE1DD00-7D88-4F55-9C38-F368054928B3";
+const userId = "HENDRI2552"; //"JILLYU9G79PUXOHK";
+const channelUrl = "LMS-CR-ARHSS4XK3RP1R0HQ";
 
 const frozenAppId = process.env.STORYBOOK_FROZEN_APP_ID;
 const frozenUserId = process.env.STORYBOOK_FROZEN_USER_ID;
