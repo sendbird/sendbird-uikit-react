@@ -1,6 +1,6 @@
 import format from 'date-fns/format';
 import { AdminMessage, Emoji, EmojiCategory, EmojiContainer, FileMessage, GroupChannel, GroupChannelListQuery, Member, MessageListParams, OpenChannel, Reaction, SendBirdInstance, User, UserMessage } from "sendbird";
-import { isAssignmentMessage } from '../rogu/utils';
+import { isAssignmentMessage, isMaterialMessage } from '../rogu/utils';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 const SUPPORTED_MIMES = {
@@ -163,7 +163,7 @@ export const isFileMessage = (message: FileMessage): boolean => (
 export const isOGMessage = (message: UserMessage): boolean => !!(
   message && isUserMessage(message) && message?.ogMetaData && message?.ogMetaData?.url
 );
-export const isTextMessage = (message: UserMessage): boolean => isUserMessage(message) && !isOGMessage(message) && !isAssignmentMessage(message.customType);
+export const isTextMessage = (message: UserMessage): boolean => isUserMessage(message) && !isOGMessage(message) && !isAssignmentMessage(message.customType) && !isMaterialMessage(message.customType);
 export const isThumbnailMessage = (message: FileMessage): boolean => message && isFileMessage(message) && isSupportedFileView(message.type);
 export const isImageMessage = (message: FileMessage): boolean => message && isThumbnailMessage(message) && isImage(message.type);
 export const isVideoMessage = (message: FileMessage): boolean => message && isThumbnailMessage(message) && isVideo(message.type);

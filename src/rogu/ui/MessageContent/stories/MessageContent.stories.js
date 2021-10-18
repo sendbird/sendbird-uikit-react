@@ -7,6 +7,8 @@ import { MenuRoot } from "../../../../ui/ContextMenu";
 
 import COLOR_SET from "../../../../../__mocks__/themeMock";
 import {
+  ASSIGNMENT_MESSAGE_A_1,
+  ASSIGNMENT_MESSAGE_A_2,
   BASIC_MESSAGE_A_1,
   BASIC_MESSAGE_A_2,
   BASIC_MESSAGE_A_3,
@@ -113,6 +115,33 @@ export const Chaining = () => (
         }}
       />
       <MenuRoot />
+    </div>
+  </SendbirdProvider>
+);
+
+
+export const Assignment = () => (
+  <SendbirdProvider colorSet={COLOR_SET}>
+    <div style={{ backgroundColor: "#F1F7FF", padding: "1rem" }}>
+    <MessageContent
+        userId={"random-user-id"}
+        channel={{
+          isGroupChannel: () => true,
+          getUnreadMemberCount: (_) => 10,
+          getUndeliveredMemberCount: (_) => 0,
+        }}
+        message={ASSIGNMENT_MESSAGE_A_1}
+      />
+      <MessageContent
+        userId={USER_ID_A}
+        channel={{
+          isGroupChannel: () => true,
+          getUnreadMemberCount: (_) => 10,
+          getUndeliveredMemberCount: (_) => 0,
+        }}
+        message={ASSIGNMENT_MESSAGE_A_2}
+      />
+
     </div>
   </SendbirdProvider>
 );

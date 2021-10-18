@@ -69,3 +69,15 @@ export const BASIC_MESSAGE_A_3 = {
   message: 'Of course, outside reading log',
   sender: { ...BASIC_MESSAGE.sender, userId: USER_ID_A },
 };
+
+export const ASSIGNMENT_MESSAGE_A_1 = {
+  ...BASIC_MESSAGE,
+  customType: 'assignment',
+  data: "{\"serial\":\"ASN-F8ES2S32KFTAR5S6\",\"title\":\"Pilihan Ganda Template with deadline\",\"description\":\"Pilihan Ganda Template\",\"dueAt\":\"2022-01-01T13:20:00Z\",\"creatorSerial\":\"JILLYU9G79PUXOHK\",\"cta\":\"ruangguru://ruangkelas?page=assignment_detail\\u0026workspace_serial=LMS-WS-YPJJS4QTPQU89LR1\\u0026classroom_serial=LMS-CR-ARHSS4XK3RP1R0HQ\\u0026assignment_serial=ASN-F8ES2S32KFTAR5S6\",\"ctaWeb\":\"https://kelas.sirogu.com/workspace/LMS-WS-YPJJS4QTPQU89LR1/classroom/LMS-CR-ARHSS4XK3RP1R0HQ/assignment/detail/ASN-F8ES2S32KFTAR5S6\"}",
+};
+
+export const ASSIGNMENT_MESSAGE_A_2 = {
+  ...ASSIGNMENT_MESSAGE_A_1,
+  data: "{\"serial\":\"ASN-IHB4XI1KY1HWRWPO\",\"title\":\"Pilihan Ganda Template\",\"description\":\"Pilihan Ganda Template\",\"dueAt\":\"\",\"creatorSerial\":\"JILLYU9G79PUXOHK\",\"cta\":\"ruangguru://ruangkelas?page=assignment_detail\\u0026workspace_serial=LMS-WS-YPJJS4QTPQU89LR1\\u0026classroom_serial=LMS-CR-ARHSS4XK3RP1R0HQ\\u0026assignment_serial=ASN-IHB4XI1KY1HWRWPO\",\"ctaWeb\":\"https://kelas.sirogu.com/workspace/LMS-WS-YPJJS4QTPQU89LR1/classroom/LMS-CR-ARHSS4XK3RP1R0HQ/assignment/detail/ASN-IHB4XI1KY1HWRWPO\"}",
+  sender: { ...BASIC_MESSAGE.sender, userId: USER_ID_A },
+};

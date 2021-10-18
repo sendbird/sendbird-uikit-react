@@ -137,7 +137,7 @@ Props): ReactElement {
           )}
           {
            isAssignmentMessage(message.customType) && (
-             <AssignmentMessageItemBody message={message as UserMessage} />
+             <AssignmentMessageItemBody message={message as UserMessage} isByMe={isByMe} />
            )
           }
           {getUIKitMessageType(message as FileMessage) ===

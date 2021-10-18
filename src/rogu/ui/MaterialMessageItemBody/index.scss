@@ -1,14 +1,19 @@
 @import "../../../styles/variables";
 
-.rogu-assignment-message-item-body {
+.rogu-material-message-item-body {
   position: relative;
   display: inline-block;
-  // TODO: Change fixing width and height lengths
+  box-sizing: content-box;
   width: 100%;
   min-width: 200px;
   max-width: 400px;
 
-  .rogu-assignment-message-item-body__text-bubble {
+  .rogu-material-message-text {
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  .rogu-material-message-item-body__text-bubble {
     position: relative;
     padding: 8px 12px;
     box-sizing: border-box;
@@ -16,7 +21,7 @@
     word-break: break-all;
   }
 
-  .rogu-assignment-message-item-body__container {
+  .rogu-material-message-item-body__container {
     position: relative;
     overflow: hidden;
     display: flex;
@@ -26,37 +31,30 @@
     cursor: pointer;
     z-index: 10;
 
-    .rogu-assignment-message-item-body__icon {
+    .rogu-material-message-item-body__icon {
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .rogu-assignment-message-item-body__text-container {
+    .rogu-material-message-item-body__text-container {
       margin-left: 6px;
     }
 
-    .rogu-assignment-message-item-body__text-title {
+    .rogu-material-message-item-body__text-title {
       margin: 0;
-    }
-    .rogu-assignment-message-item-body__text-deadline {
-      margin: 0 0 0 3px;
-      &:before {
-        content: ".";
-        margin-right: 3px;
-      }
     }
   }
 
   &.outgoing {
-    .rogu-assignment-message-item-body__container {
+    .rogu-material-message-item-body__container {
       @include themed() {
         background-color: t(primary-2);
       }
     }
   }
   &.incoming {
-    .rogu-assignment-message-item-body__container {
+    .rogu-material-message-item-body__container {
       @include themed() {
         background-color: t(bg-1);
       }

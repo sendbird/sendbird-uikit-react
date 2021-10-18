@@ -20,7 +20,7 @@ import pubSubFactory from './pubSub/index';
 import useAppendDomNode from '../hooks/useAppendDomNode';
 
 import { LocalizationProvider } from './LocalizationContext';
-import getStringSet from '../ui/Label/stringSet';
+import getStringSet from '../rogu/ui/Label/stringSet';
 
 export default function Sendbird(props) {
   const {

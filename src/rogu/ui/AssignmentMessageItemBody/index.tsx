@@ -51,17 +51,15 @@ export default function AssignmentMessageItemBody({
       mouseHover ? 'mouse-hover' : '',
       message?.reactions?.length > 0 ? 'reactions' : '',
     ])}>
-      
       <div
         className="rogu-assignment-message-item-body__container"
-        onClick={openAssignment}
-      >
+        onClick={openAssignment}>
         <Icon
-                className="rogu-assignment-message-item-body__icon"
-                type={IconTypes.ROGU_ASSIGNMENT}
-                width="30"
-                height="30"
-              />
+            className="rogu-assignment-message-item-body__icon"
+            type={IconTypes.ROGU_ASSIGNMENT}
+            width="30"
+            height="30"
+          />
         <div className="rogu-assignment-message-item-body__text-container">
           <Label className="rogu-assignment-message-item-body__text-title" color={LabelColors.ONBACKGROUND_1} type={LabelTypography.SUBTITLE_2}>
             {assignmentData?.title}
@@ -79,12 +77,9 @@ export default function AssignmentMessageItemBody({
             </Label>
             }
           </div>
-
         </div>
-        
       </div>
      
-      <div className="rogu-assignment-message-item-body__cover" />
     </div>
   );
 }

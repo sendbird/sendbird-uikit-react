@@ -1,7 +1,7 @@
 import React from 'react';
 import TextMessageItemBody from '../index.tsx';
 
-export default { title: 'UI Components/TextMessageItemBody' };
+export default { title: 'ruangkelas / UI Components/TextMessageItemBody' };
 export const withText = () => (
   <div>
     <TextMessageItemBody
