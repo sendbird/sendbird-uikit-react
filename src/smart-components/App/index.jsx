@@ -26,7 +26,7 @@ export default function App(props) {
     profileUrl,
     config = {},
     useReaction,
-    // replyType,
+    replyType,
     useMessageGrouping,
     colorSet,
     stringSet,
@@ -97,9 +97,7 @@ export default function App(props) {
             startingPoint={startingPoint}
             highlightedMessage={highlightedMessage}
             useReaction={useReaction}
-            // replyType={replyType}
-            // HOON
-            replyType="QUOTE_REPLY"
+            replyType={replyType}
             useMessageGrouping={useMessageGrouping}
           />
         </div>
