@@ -196,6 +196,7 @@ export const user1 = () => fitPageSize(
     profileUrl={addProfile}
     config={{ logLevel: 'all' }}
     queries={{}}
+    replyType="QUOTE_REPLY"
   />
 );
 export const user2 = () => fitPageSize(
@@ -223,6 +224,7 @@ export const user3 = () => fitPageSize(
       resizingWidth: 100,
       resizingHeight: '100px',
     }}
+    replyType="QUOTE_REPLY"
   />
 );
 
