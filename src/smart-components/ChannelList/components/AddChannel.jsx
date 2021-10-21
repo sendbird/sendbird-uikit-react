@@ -59,10 +59,10 @@ export default function AddChannel({
       {
         showModal && step === 0 && (
           <Modal
-            titleText="New channel"
+            titleText={stringSet.MODAL__CHOOSE_CHANNEL_TYPE__TITLE}
             hideFooter
             onCancel={() => { setShowModal(false); }}
-            onSubmit={() => {}}
+            onSubmit={() => { }}
           >
             <div className="sendbird-add-channel__rectangle-wrap">
               <div
@@ -86,7 +86,7 @@ export default function AddChannel({
                   height="28px"
                 />
                 <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
-                  Group
+                  {stringSet.MODAL__CHOOSE_CHANNEL_TYPE__GROUP}
                 </Label>
               </div>
               {
@@ -112,7 +112,7 @@ export default function AddChannel({
                       height="28px"
                     />
                     <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
-                      Super group
+                      {stringSet.MODAL__CHOOSE_CHANNEL_TYPE__SUPER_GROUP}
                     </Label>
                   </div>
                 )
@@ -140,7 +140,7 @@ export default function AddChannel({
                       height="28px"
                     />
                     <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
-                      Broadcast
+                      {stringSet.MODAL__CHOOSE_CHANNEL_TYPE__BROADCAST}
                     </Label>
                   </div>
                 )
