@@ -33,7 +33,7 @@ const getStringSet = (lang = 'en') => {
       CHANNEL_SETTING__MEMBERS__TITLE: 'Members',
       CHANNEL_SETTING__MEMBERS__SEE_ALL_MEMBERS: 'All members',
       CHANNEL_SETTING__MEMBERS__INVITE_MEMBER: 'Invite users',
-      CHANNEL_SETTING__MEMBERS__YOU:' (You)',
+      CHANNEL_SETTING__MEMBERS__YOU: ' (You)',
       CHANNEL_SETTING__LEAVE_CHANNEL__TITLE: 'Leave channel',
       CHANNEL_SETTING__OPERATORS__TITLE: 'Operators',
       CHANNEL_SETTING__OPERATORS__TITLE_ALL: 'All operators',
