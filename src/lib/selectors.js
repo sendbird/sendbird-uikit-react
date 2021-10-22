@@ -593,7 +593,7 @@ export const getOpenChannelDeleteMessage = (store) => (channelUrl, message) => {
     if (!sdk) {
       reject(new Error('Sdk not found'));
     }
-    sdk.GroupChannel.getChannel(channelUrl)
+    sdk.OpenChannel.getChannel(channelUrl)
       .then((channel) => {
         const { messageId } = message;
         channel.deleteMessage(message, (res, err) => {
