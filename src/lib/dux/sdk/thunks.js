@@ -66,12 +66,12 @@ export const handleConnection = ({
           userDispatcher({ type: INIT_USER, payload: user });
           // use nickname/profileUrl if provided
           // or set userID as nickname
-          const newNickName = nickname || user.nickname;
-          const newProfileUrl = profileUrl || user.profileUrl;
-          newSdk.updateCurrentUserInfo(newNickName, newProfileUrl)
-            .then((namedUser) => {
-              userDispatcher({ type: UPDATE_USER_INFO, payload: namedUser });
-            });
+          if (nickname !== user.nickname || profileUrl !== user.profileUrl) {
+            newSdk.updateCurrentUserInfo(nickname || user.nickname, profileUrl || user.profileUrl)
+              .then((namedUser) => {
+                userDispatcher({ type: UPDATE_USER_INFO, payload: namedUser });
+              });
+          }
         };
 
         const connectCbError = (e) => {
