@@ -2,13 +2,13 @@ import { useCallback } from 'react';
 import { SendbirdTypes } from '../../../types';
 import { Logger } from '../../../index';
 
-interface useScrollToMessageDynamicParams {
+interface DynamicParams {
   setIntialTimeStamp(ts: number): null;
   setHighLightedMessageId(id: number): null;
   allMessages: SendbirdTypes['BaseMessageInstance'][];
 }
 
-interface useScrollToMessageStaticParams {
+interface StaticParams {
   logger: Logger;
 }
 
@@ -16,9 +16,9 @@ function useScrollToMessage({
   setIntialTimeStamp,
   setHighLightedMessageId,
   allMessages,
-}: useScrollToMessageDynamicParams, {
-  logger,
-}: useScrollToMessageStaticParams): (createdAt: number, messageId: number) => void {
+}: DynamicParams,
+  { logger }: StaticParams,
+): (createdAt: number, messageId: number) => void {
   return useCallback(
     (createdAt: number, messageId: number) => {
       const isPresent = allMessages.find((m) => (
@@ -37,10 +37,10 @@ function useScrollToMessage({
         }
       });
     }, [
-      setIntialTimeStamp,
-      setHighLightedMessageId,
-      allMessages,
-    ],
+    setIntialTimeStamp,
+    setHighLightedMessageId,
+    allMessages,
+  ],
   );
 }
 

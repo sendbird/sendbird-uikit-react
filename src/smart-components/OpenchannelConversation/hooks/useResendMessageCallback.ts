@@ -1,18 +1,18 @@
 import { useCallback } from 'react';
 import * as messageActionTypes from '../dux/actionTypes';
 
-interface MainProps {
+interface StaticParams {
   currentOpenChannel: SendbirdUIKit.OpenChannelType;
 }
-interface ToolProps {
+interface StaticParams {
   logger: SendbirdUIKit.Logger;
   messagesDispatcher: ({ type: string, payload: any }) => void;
 }
 type CallbackReturn = (failedMessage: SendbirdUIKit.ClientUserMessage | SendbirdUIKit.ClientFileMessage) => void;
 
 function useResendMessageCallback(
-  { currentOpenChannel }: MainProps,
-  { logger, messagesDispatcher }: ToolProps,
+  { currentOpenChannel }: StaticParams,
+  { logger, messagesDispatcher }: StaticParams,
 ): CallbackReturn {
   return useCallback((failedMessage) => {
     logger.info('OpenChannel | useResendMessageCallback: Resending message has started', failedMessage);

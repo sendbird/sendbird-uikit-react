@@ -2,11 +2,11 @@ import Sendbird from 'sendbird';
 import { useCallback } from 'react';
 import * as messageActionTypes from '../dux/actionTypes';
 
-interface MainProps {
+interface DynamicParams {
   currentOpenChannel: SendbirdUIKit.OpenChannelType;
   onBeforeSendUserMessage?: (text) => Sendbird.UserMessageParams;
 }
-interface ToolProps {
+interface StaticParams {
   sdk: SendbirdUIKit.Sdk;
   logger: SendbirdUIKit.Logger;
   messagesDispatcher: ({ type: string, payload :any }) => void;
@@ -14,8 +14,8 @@ interface ToolProps {
 type CallbackReturn = (messageId, text, callback) => void;
 
 function useUpdateMessageCallback(
-  { currentOpenChannel, onBeforeSendUserMessage }: MainProps,
-  { sdk, logger, messagesDispatcher }: ToolProps,
+  { currentOpenChannel, onBeforeSendUserMessage }: DynamicParams,
+  { sdk, logger, messagesDispatcher }: StaticParams,
 ): CallbackReturn {
   return useCallback((messageId, text, callback) => {
     const createParamsDefault = (txt) => {

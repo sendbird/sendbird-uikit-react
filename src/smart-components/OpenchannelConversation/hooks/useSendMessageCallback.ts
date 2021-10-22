@@ -3,21 +3,21 @@ import { useCallback } from 'react';
 import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';
 
-interface MainProps {
+interface DynamicParams {
   currentOpenChannel: SendbirdUIKit.OpenChannelType;
   onBeforeSendUserMessage: (text: string) => Sendbird.UserMessageParams;
   checkScrollBottom: () => boolean;
   messageInputRef: React.RefObject<HTMLInputElement>;
 }
-interface ToolProps {
+interface StaticParams {
   sdk: SendbirdUIKit.Sdk;
   logger: SendbirdUIKit.Logger;
   messagesDispatcher: ({ type: string, payload: any }) => void;
 }
 
 function useSendMessageCallback(
-  { currentOpenChannel, onBeforeSendUserMessage, checkScrollBottom, messageInputRef }: MainProps,
-  { sdk, logger, messagesDispatcher }: ToolProps,
+  { currentOpenChannel, onBeforeSendUserMessage, checkScrollBottom, messageInputRef }: DynamicParams,
+  { sdk, logger, messagesDispatcher }: StaticParams,
 ): () => void {
   return useCallback(() => {
     if (sdk && sdk.UserMessageParams) {

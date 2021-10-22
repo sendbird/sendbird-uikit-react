@@ -3,19 +3,19 @@ import * as messageActionTypes from '../dux/actionTypes';
 import uuidv4 from '../../../utils/uuid';
 import { scrollIntoLast } from '../utils';
 
-interface MainProps {
+interface DynamicParams {
   currentOpenChannel: SendbirdUIKit.OpenChannelType;
   checkScrollBottom: () => boolean;
 }
-interface ToolProps {
+interface StaticParams {
   sdk: SendbirdUIKit.Sdk;
   logger: SendbirdUIKit.Logger;
   messagesDispatcher: ({ type: string, payload: any }) => void;
 }
 
 function useHandleChannelEvents(
-  { currentOpenChannel, checkScrollBottom }: MainProps,
-  { sdk, logger, messagesDispatcher }: ToolProps,
+  { currentOpenChannel, checkScrollBottom }: DynamicParams,
+  { sdk, logger, messagesDispatcher }: StaticParams,
 ): void {
   useEffect(() => {
     const messageReceiverId = uuidv4();

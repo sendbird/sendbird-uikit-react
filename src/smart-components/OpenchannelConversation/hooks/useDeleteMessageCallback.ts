@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
 import * as messageActionTypes from '../dux/actionTypes';
 
-interface MainProps {
+interface DynamicParams {
   currentOpenChannel: SendbirdUIKit.OpenChannelType;
 }
-interface ToolProps {
+interface StaticParams {
   logger: SendbirdUIKit.Logger;
   messagesDispatcher: ({ type: string, payload: any }) => void;
 }
@@ -15,8 +15,8 @@ type CallbackReturn = (
 ) => void;
 
 function useDeleteMessageCallback(
-  { currentOpenChannel }: MainProps,
-  { logger, messagesDispatcher }: ToolProps,
+  { currentOpenChannel }: DynamicParams,
+  { logger, messagesDispatcher }: StaticParams,
 ): CallbackReturn {
   return useCallback((message, callback) => {
     logger.info('OpenChannel | useDeleteMessageCallback: Deleting message', message);

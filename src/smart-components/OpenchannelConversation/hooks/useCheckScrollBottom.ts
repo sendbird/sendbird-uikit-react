@@ -1,15 +1,15 @@
 import { useCallback } from 'react';
 
-interface MainProps {
+interface DynamicParams {
   conversationScrollRef: React.RefObject<HTMLDivElement>;
 }
-interface ToolProps {
+interface StaticParams {
   logger: SendbirdUIKit.Logger;
 }
 
 function useCheckScrollBottom(
-  { conversationScrollRef }: MainProps,
-  { logger }: ToolProps,
+  { conversationScrollRef }: DynamicParams,
+  { logger }: StaticParams,
 ): () => boolean {
   return useCallback(() => {
     let isBottom = true;
