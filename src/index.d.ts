@@ -166,6 +166,7 @@ export interface RenderGroupChannelMessageInputProps {
   channel: Sendbird.GroupChannel;
   user: Sendbird.User;
   disabled: boolean;
+  quoteMessage?: UserMessage | FileMessage;
 }
 
 export interface ClientMessageSearchQuery extends SendBird.MessageSearchQuery {
