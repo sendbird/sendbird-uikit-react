@@ -72,7 +72,7 @@ export default function useSendFileMessageCallback({
                 logger.info('Channel: Creating params using onBeforeSendFileMessage', onBeforeSendFileMessage);
               }
               const params = createCustomParams
-                ? onBeforeSendFileMessage(compressedFile)
+                ? onBeforeSendFileMessage(compressedFile, quoteMessage)
                 : createParamsDefault(compressedFile);
               logger.info('Channel: Uploading file message start!', params);
               const pendingMessage = currentGroupChannel.sendFileMessage(
