@@ -72,7 +72,7 @@ const UserListItem = ({ member = {}, currentUser = '' }) => {
         {member.nickname || stringSet.NO_NAME}
         {
           (currentUser === member.userId) && (
-            stringSet.YOU
+            stringSet.CHANNEL_SETTING__MEMBERS__YOU
           )
         }
       </Label>
