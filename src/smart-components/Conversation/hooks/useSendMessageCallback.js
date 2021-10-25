@@ -34,7 +34,7 @@ export default function useSendMessageCallback({ currentGroupChannel, onBeforeSe
       }
 
       const params = onBeforeSendUserMessage
-        ? onBeforeSendUserMessage(text)
+        ? onBeforeSendUserMessage(text, quoteMessage)
         : createParamsDefault(text);
 
       logger.info('Channel: Sending message has started', params);
