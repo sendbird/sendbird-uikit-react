@@ -2,20 +2,20 @@ import { useEffect } from 'react';
 import * as messageActionTypes from '../dux/actionTypes';
 import { scrollIntoLast } from '../utils';
 
-interface MainProps {
+interface DynamicParams {
   currentOpenChannel: SendbirdUIKit.OpenChannelType;
   /* eslint-disable @typescript-eslint/no-explicit-any*/
   userFilledMessageListParams?: Record<string, any>;
 }
-interface ToolProps {
+interface StaticParams {
   sdk: SendbirdUIKit.Sdk;
   logger: SendbirdUIKit.Logger;
   messagesDispatcher: ({ type: string, payload: any }) => void;
 }
 
 function useInitialMessagesFetch(
-  { currentOpenChannel, userFilledMessageListParams }: MainProps,
-  { sdk, logger, messagesDispatcher }: ToolProps,
+  { currentOpenChannel, userFilledMessageListParams }: DynamicParams,
+  { sdk, logger, messagesDispatcher }: StaticParams,
 ): void {
   useEffect(() => {
     logger.info('OpenChannel | useInitialMessagesFetch: Setup started', currentOpenChannel);

@@ -2,20 +2,20 @@ import { useEffect } from 'react';
 import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';
 
-interface MainProps {
+interface DynamicParams {
   channelUrl: string;
   sdkInit: boolean;
   fetchingParticipants: boolean;
 }
-interface ToolProps {
+interface StaticParams {
   sdk: SendbirdUIKit.Sdk;
   logger: SendbirdUIKit.Logger;
   messagesDispatcher: ({ type: string, payload: any }) => void;
 }
 
 function useSetChannel(
-  { channelUrl, sdkInit, fetchingParticipants }: MainProps,
-  { sdk, logger, messagesDispatcher }: ToolProps,
+  { channelUrl, sdkInit, fetchingParticipants }: DynamicParams,
+  { sdk, logger, messagesDispatcher }: StaticParams,
 ): void {
   useEffect(() => {
     if (channelUrl && sdkInit && sdk && sdk.OpenChannel) {

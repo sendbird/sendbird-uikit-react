@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';
 
-interface MainProps {
+interface DynamicParams {
   currentOpenChannel: SendbirdUIKit.OpenChannelType;
   onBeforeSendFileMessage: (file: File) => Sendbird.FileMessageParams;
   checkScrollBottom: () => boolean;
@@ -13,7 +13,7 @@ interface MainProps {
     resizingHeight?: number | string,
   };
 }
-interface ToolProps {
+interface StaticParams {
   sdk: SendbirdUIKit.Sdk;
   logger: SendbirdUIKit.Logger;
   messagesDispatcher: ({ type: string, payload: any }) => void;
@@ -27,8 +27,8 @@ function useFileUploadCallback(
     checkScrollBottom,
     imageCompression = {},
     onBeforeSendFileMessage,
-  }: MainProps,
-  { sdk, logger, messagesDispatcher }: ToolProps,
+  }: DynamicParams,
+  { sdk, logger, messagesDispatcher }: StaticParams,
 ): CallbackReturn {
   return useCallback((file) => {
     if (sdk && sdk.FileMessageParams) {

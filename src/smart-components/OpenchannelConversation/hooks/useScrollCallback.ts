@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
 import * as messageActionTypes from '../dux/actionTypes';
 
-interface MainProps {
+interface DynamicParams {
   currentOpenChannel: SendbirdUIKit.OpenChannelType;
   lastMessageTimestamp: number;
 }
-interface ToolProps {
+interface StaticParams {
   sdk: SendbirdUIKit.Sdk;
   logger: SendbirdUIKit.Logger;
   messagesDispatcher: ({ type: string, payload: any }) => void;
@@ -16,8 +16,8 @@ interface ToolProps {
 type CallbackReturn = (callback: () => void) => void;
 
 function useScrollCallback(
-  { currentOpenChannel, lastMessageTimestamp }: MainProps,
-  { sdk, logger, messagesDispatcher, hasMore, userFilledMessageListParams }: ToolProps,
+  { currentOpenChannel, lastMessageTimestamp }: DynamicParams,
+  { sdk, logger, messagesDispatcher, hasMore, userFilledMessageListParams }: StaticParams,
 ): CallbackReturn {
   return useCallback((callback) => {
     if (hasMore && sdk && sdk.MessageListParams) {

@@ -2,7 +2,7 @@ import React from 'react';
 import { OutgoingFileMessage, IncomingFileMessage } from '../index.jsx';
 import { dummyFileMessageImage, dummyFileMessageAudio } from '../dummyFileMessage.mock';
 
-import { MessageStatusTypes } from '../../../../utils';
+import { MessageStatusTypes } from '../../../../ui/MessageStatus';
 
 export default { title: 'Legacy/FileMessage' };
 
