@@ -9,9 +9,8 @@
   &.incoming { justify-content: flex-start; }
   &.outgoing { justify-content: flex-end; }
   .sendbird-message-content__middle {
-    .sendbird-message-content__middle__message-item-body.use-quote {
+    .sendbird-message-content__middle__body-container.use-quote {
       top: -8px;
-      width: fit-content;
     }
   }
 }
@@ -149,6 +148,10 @@
       &.outgoing { justify-content: flex-end }
       &.incoming { justify-content: flex-start }
     }
+
+    .sendbird-message-content__middle__body-container {
+      width: fit-content;
+    }
   }
 
   .sendbird-message-content__right {
@@ -164,6 +167,18 @@
         display: inline-flex;
       }
     }
+  }
+}
+
+.sendbird-message-content__middle__body-container {
+  position: relative;
+  width: fit-content;
+  .sendbird-message-content__middle__message-item-body {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .sendbird-message-content-reactions {
+    width: 100%;
   }
 }
 
