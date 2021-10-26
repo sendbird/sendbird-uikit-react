@@ -34,7 +34,7 @@ export default function useSendFileMessageCallback({
       const params = new sdk.FileMessageParams();
       params.file = file_;
       if (quoteMessage) {
-        params.isReplyTochannel = true;
+        params.isReplyToChannel = true;
         params.parentMessageId = quoteMessage.messageId;
       }
       return params;
