@@ -20,7 +20,7 @@ export default function useSendMessageCallback({ currentGroupChannel, onBeforeSe
         const params = new sdk.UserMessageParams();
         params.message = message;
         if (quoteMessage) {
-          params.isReplyTochannel = true;
+          params.isReplyToChannel = true;
           params.parentMessageId = quoteMessage.messageId;
         }
         return params;
