@@ -42,6 +42,7 @@ function useHandleReconnect(
         messageListParams.includeReplies = false;
         messageListParams.includeReaction = useReaction;
         if (replyType && replyType === 'QUOTE_REPLY') {
+          messageListParams.includeThreadInfo = true;
           messageListParams.includeParentMessageInfo = true;
           messageListParams.replyType = 'all';
         }

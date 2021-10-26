@@ -36,6 +36,7 @@ function useInitialMessagesFetch({
       messageListParams.includeReplies = false;
       messageListParams.includeReaction = true;
       if (replyType && replyType === 'QUOTE_REPLY') {
+        messageListParams.includeThreadInfo = true;
         messageListParams.includeParentMessageInfo = true;
         messageListParams.replyType = 'all';
       }
@@ -72,6 +73,19 @@ function useInitialMessagesFetch({
             // to make sure there are no more messages below
             const nextMessageListParams = new sdk.MessageListParams();
             nextMessageListParams.nextResultSize = NEXT_RESULT_SIZE;
+            nextMessageListParams.isInclusive = true;
+            nextMessageListParams.includeReplies = false;
+            nextMessageListParams.includeReaction = true;
+            if (replyType && replyType === 'QUOTE_REPLY') {
+              nextMessageListParams.includeThreadInfo = true;
+              nextMessageListParams.includeParentMessageInfo = true;
+              nextMessageListParams.replyType = 'all';
+            }
+            if (userFilledMessageListQuery) {
+              Object.keys(userFilledMessageListQuery).forEach((key) => {
+                nextMessageListParams[key] = userFilledMessageListQuery[key];
+              });
+            }
             currentGroupChannel.getMessagesByTimestamp(
               latestFetchedMessageTimeStamp || new Date().getTime(),
               nextMessageListParams,
