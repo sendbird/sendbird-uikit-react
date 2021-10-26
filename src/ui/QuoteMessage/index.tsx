@@ -23,12 +23,14 @@ interface Props {
   message?: UserMessage | FileMessage;
   isByMe?: boolean;
   className?: string | Array<string>;
+  onClick?: () => void;
 }
 
 export default function QuoteMessage({
   message,
   isByMe = false,
   className,
+  onClick = () => {},
 }: Props): ReactElement {
   const { parentMessage } = message;
   const parentMessageSender = parentMessage?.sender;
@@ -43,7 +45,11 @@ export default function QuoteMessage({
   const splitUrl = parentMessageUrl.split('/');
 
   return (
-    <div className={getClassName([className, 'sendbird-quote-message', isByMe ? 'outgoing' : 'incoming'])}>
+    <div
+      className={getClassName([className, 'sendbird-quote-message', isByMe ? 'outgoing' : 'incoming'])}
+      key={parentMessage?.messageId}
+      onClick={onClick}
+    >
       <div className="sendbird-quote-message__replied-to">
         <Icon
           className="sendbird-quote-message__replied-to__icon"

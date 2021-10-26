@@ -64,7 +64,7 @@ export default function MessageContent({
   chainBottom = false,
   useReaction = false,
   replyType,
-  // scrollToMessage,
+  scrollToMessage,
   nicknamesMap,
   emojiContainer,
   showEdit,
@@ -185,7 +185,15 @@ export default function MessageContent({
         {/* quote message */}
         {(useReplying) ? (
           <div className={getClassName(['sendbird-message-content__middle__quote-message', isByMe ? 'outgoing' : 'incoming'])}>
-          <QuoteMessage message={message} isByMe={isByMe} />
+          <QuoteMessage
+            message={message}
+            isByMe={isByMe}
+            onClick={() => {
+              if (message?.parentMessage?.createdAt && message?.parentMessageId) {
+                scrollToMessage(message.parentMessage.createdAt, message.parentMessageId);
+              }
+            }}
+          />
           </div>
         ): null}
         {/* message item body components */}
