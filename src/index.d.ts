@@ -4,7 +4,7 @@
  * git: https://github.com/sendbird/SendBird-UIKIT-JavaScript
  */
 import React from 'react';
-import Sendbird from 'sendbird';
+import Sendbird, { FileMessage, UserMessage } from 'sendbird';
 
 export type OpenChannelType = Sendbird.OpenChannel;
 export type GroupChannelType = Sendbird.GroupChannel;
@@ -166,6 +166,7 @@ export interface RenderGroupChannelMessageInputProps {
   channel: Sendbird.GroupChannel;
   user: Sendbird.User;
   disabled: boolean;
+  quoteMessage?: UserMessage | FileMessage;
 }
 
 export interface ClientMessageSearchQuery extends SendBird.MessageSearchQuery {
@@ -376,8 +377,8 @@ interface ChannelProps {
   onSearchClick?(): void;
   highlightedMessage?: string | number;
   startingPoint?: number;
-  onBeforeSendUserMessage?(text: string): Sendbird.UserMessageParams;
-  onBeforeSendFileMessage?(file: File): Sendbird.FileMessageParams;
+  onBeforeSendUserMessage?(text: string, quoteMessage?: UserMessage | FileMessage): Sendbird.UserMessageParams;
+  onBeforeSendFileMessage?(file: File, quoteMessage?: UserMessage | FileMessage): Sendbird.FileMessageParams;
   onBeforeUpdateUserMessage?(text: string): Sendbird.UserMessageParams;
   onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
   renderCustomMessage?: RenderCustomMessage;

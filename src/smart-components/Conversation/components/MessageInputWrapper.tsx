@@ -46,7 +46,7 @@ const MessageInputWrapper = ({
 
   // custom message
   if (renderMessageInput) {
-    return renderMessageInput({ channel, user, disabled });
+    return renderMessageInput({ channel, user, disabled, quoteMessage });
   }
 
   // broadcast channel + not operator
