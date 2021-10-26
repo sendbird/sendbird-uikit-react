@@ -294,7 +294,11 @@ export const getEmojiListAll = (emojiContainer: EmojiContainer): Array<Emoji> =>
 );
 export const getEmojiMapAll = (emojiContainer: EmojiContainer): Map<string, Emoji> => {
   const emojiMap = new Map();
-  emojiContainer?.emojiCategories?.forEach((category: EmojiCategory) => category.emojis.forEach((emoji: Emoji): void => { emojiMap.set(emoji.key, emoji) }));
+  emojiContainer?.emojiCategories?.forEach((category: EmojiCategory) => {
+    category.emojis.forEach((emoji: Emoji): void => {
+      emojiMap.set(emoji.key, emoji);
+    });
+  });
   return emojiMap;
 };
 
