@@ -248,7 +248,9 @@ export const pubSubHandler = (pubSub, channelListDispatcher) => {
   subScriber.set(topics.UPDATE_USER_MESSAGE, pubSub.subscribe(topics.UPDATE_USER_MESSAGE, (msg) => {
     const { channel, message } = msg;
     const updatedChannel = channel;
-    updatedChannel.lastMessage = message;
+    if (updatedChannel.lastMessage && updatedChannel.lastMessage.messageId === message.messageId) {
+      updatedChannel.lastMessage = message;
+    }
     if (channel) {
       channelListDispatcher({
         type: channelActions.ON_LAST_MESSAGE_UPDATED,
