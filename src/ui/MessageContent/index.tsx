@@ -185,76 +185,79 @@ export default function MessageContent({
         {/* quote message */}
         {(useReplying) ? (
           <div className={getClassName(['sendbird-message-content__middle__quote-message', isByMe ? 'outgoing' : 'incoming'])}>
-          <QuoteMessage
-            message={message}
-            isByMe={isByMe}
-            onClick={() => {
-              if (message?.parentMessage?.createdAt && message?.parentMessageId) {
-                scrollToMessage(message.parentMessage.createdAt, message.parentMessageId);
-              }
-            }}
-          />
-          </div>
-        ): null}
-        {/* message item body components */}
-        {isTextMessage(message as UserMessage) && (
-          <TextMessageItemBody
-            className={['sendbird-message-content__middle__message-item-body', useReplyingClassName]}
-            message={message as UserMessage}
-            isByMe={isByMe}
-            mouseHover={mouseHover}
-          />
-        )}
-        {(isOGMessage(message as UserMessage)) && (
-          <OGMessageItemBody
-            className={['sendbird-message-content__middle__message-item-body', useReplyingClassName]}
-            message={message as UserMessage}
-            isByMe={isByMe}
-            mouseHover={mouseHover}
-          />
-        )}
-        {(getUIKitMessageType((message as FileMessage)) === messageTypes.FILE) && (
-          <FileMessageItemBody
-            className={['sendbird-message-content__middle__message-item-body', useReplyingClassName]}
-            message={message as FileMessage}
-            isByMe={isByMe}
-            mouseHover={mouseHover}
-          />
-        )}
-        {(isThumbnailMessage(message as FileMessage)) && (
-          <ThumbnailMessageItemBody
-            className={['sendbird-message-content__middle__message-item-body', useReplyingClassName]}
-            message={message as FileMessage}
-            isByMe={isByMe}
-            mouseHover={mouseHover}
-            showFileViewer={showFileViewer}
-          />
-        )}
-        {(getUIKitMessageType((message as FileMessage)) === messageTypes.UNKNOWN) && (
-          <UnknownMessageItemBody
-            className={['sendbird-message-content__middle__message-item-body', useReplyingClassName]}
-            message={message}
-            isByMe={isByMe}
-            mouseHover={mouseHover}
-          />
-        )}
-        {/* reactions */}
-        {(useReaction && message?.reactions?.length > 0) && (
-          <div className={getClassName([
-            'sendbird-message-content-reactions',
-            (!isByMe || isThumbnailMessage(message as FileMessage) || isOGMessage(message as UserMessage)) ? '' : 'primary',
-            mouseHover ? 'mouse-hover' : '',
-          ])}>
-            <EmojiReactions
-              userId={userId}
+            <QuoteMessage
               message={message}
               isByMe={isByMe}
-              emojiContainer={emojiContainer}
-              memberNicknamesMap={nicknamesMap}
-              toggleReaction={toggleReaction}
+              onClick={() => {
+                if (message?.parentMessage?.createdAt && message?.parentMessageId) {
+                  scrollToMessage(message.parentMessage.createdAt, message.parentMessageId);
+                }
+              }}
             />
           </div>
-        )}
+        ) : null}
+        {/* container: message item body + emoji reactions */}
+        <div className={getClassName(['sendbird-message-content__middle__body-container', useReplyingClassName])} >
+          {/* message item body components */}
+          {isTextMessage(message as UserMessage) && (
+            <TextMessageItemBody
+              className="sendbird-message-content__middle__message-item-body"
+              message={message as UserMessage}
+              isByMe={isByMe}
+              mouseHover={mouseHover}
+            />
+          )}
+          {(isOGMessage(message as UserMessage)) && (
+            <OGMessageItemBody
+              className="sendbird-message-content__middle__message-item-body"
+              message={message as UserMessage}
+              isByMe={isByMe}
+              mouseHover={mouseHover}
+            />
+          )}
+          {(getUIKitMessageType((message as FileMessage)) === messageTypes.FILE) && (
+            <FileMessageItemBody
+              className="sendbird-message-content__middle__message-item-body"
+              message={message as FileMessage}
+              isByMe={isByMe}
+              mouseHover={mouseHover}
+            />
+          )}
+          {(isThumbnailMessage(message as FileMessage)) && (
+            <ThumbnailMessageItemBody
+              className="sendbird-message-content__middle__message-item-body"
+              message={message as FileMessage}
+              isByMe={isByMe}
+              mouseHover={mouseHover}
+              showFileViewer={showFileViewer}
+            />
+          )}
+          {(getUIKitMessageType((message as FileMessage)) === messageTypes.UNKNOWN) && (
+            <UnknownMessageItemBody
+              className="sendbird-message-content__middle__message-item-body"
+              message={message}
+              isByMe={isByMe}
+              mouseHover={mouseHover}
+            />
+          )}
+          {/* reactions */}
+          {(useReaction && message?.reactions?.length > 0) && (
+            <div className={getClassName([
+              'sendbird-message-content-reactions',
+              (!isByMe || isThumbnailMessage(message as FileMessage) || isOGMessage(message as UserMessage)) ? '' : 'primary',
+              mouseHover ? 'mouse-hover' : '',
+            ])}>
+              <EmojiReactions
+                userId={userId}
+                message={message}
+                isByMe={isByMe}
+                emojiContainer={emojiContainer}
+                memberNicknamesMap={nicknamesMap}
+                toggleReaction={toggleReaction}
+              />
+            </div>
+          )}
+        </div>
       </div>
       {/* right */}
       <div className={getClassName(['sendbird-message-content__right', chainTopClassName, useReactionClassName, useReplyingClassName])}>
