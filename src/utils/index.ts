@@ -344,8 +344,12 @@ export const filterMessageListParams = (params: SubsitutionMessageListParams, me
   if (params?.messageType && params.messageType !== message.messageType) {
     return false;
   }
-  if (params?.customTypes?.length > 0 && !params.customTypes.includes(message.customType)) {
-    return false;
+  if (params?.customTypes?.length > 0) {
+    const customTypes = params.customTypes.filter((item) => item !== '*');
+    // Because Chat SDK inserts '*' when customTypes is empty
+    if (customTypes.includes(message.customType)) {
+      return false;
+    }
   }
   if (params?.senderUserIds && params?.senderUserIds?.length > 0) {
     if (message?.isUserMessage() || message.isFileMessage()) {
