@@ -7,7 +7,9 @@
   max-width: 200px;
   border-radius: 8px;
   padding: 8px 16px;
-  background-color: var(--sendbird-tooltip-background);
+  @include themed() {
+    background-color: t(bg--7-3);
+  }
 
   &::after {
     content: '';
@@ -16,7 +18,9 @@
     width: 8px;
     height: 8px;
     transform: rotate(45deg);
-    background-color: var(--sendbird-tooltip-background);
+    @include themed() {
+      background-color: t(bg--7-3);
+    }
   }
 
   &__text {
@@ -27,6 +31,5 @@
     font-style: normal;
     line-height: 1.33;
     letter-spacing: normal;
-    color: var(--sendbird-tooltip-text-color);
   }
 }
