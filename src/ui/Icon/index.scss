@@ -43,6 +43,10 @@
   fill: #ffffff;
 }
 
+.sendbird-icon-color--gray [class*='fill'] {
+  fill: rgba(0, 0, 0, 0.5);
+}
+
 .sendbird-icon-color--sent [class*='fill'] {
   @include themed() {
     fill: t(inverse-on-content-3);

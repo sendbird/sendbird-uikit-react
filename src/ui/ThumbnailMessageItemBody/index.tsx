@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 // import { FileMessage } from 'sendbird';
 import { FileMessage } from '../../sendbird.min.js';
 import './index.scss';
@@ -24,6 +24,7 @@ export default function ThumbnailMessageItemBody({
 }: Props): ReactElement {
   const { thumbnails = [] } = message;
   const thumbnailUrl: string = thumbnails.length > 0 ? thumbnails[0]?.url : '';
+  const [imageRendered, setImageRendered] = useState(false);
 
   return (
     <div
@@ -42,6 +43,7 @@ export default function ThumbnailMessageItemBody({
         alt={message?.type}
         width="360px"
         height="270px"
+        onLoad={() => { setImageRendered(true) }}
         placeHolder={(style) => (
           <div
             className="sendbird-thumbnail-message-item-body__placeholder"
@@ -59,7 +61,7 @@ export default function ThumbnailMessageItemBody({
         )}
       />
       {
-        (isVideoMessage(message) && !thumbnailUrl) && (
+        (isVideoMessage(message) && !thumbnailUrl) && !imageRendered && (
           <video className="sendbird-thumbnail-message-item-body__video">
             <source src={message?.url} type={message?.type} />
           </video>
@@ -72,7 +74,7 @@ export default function ThumbnailMessageItemBody({
             <div className="sendbird-thumbnail-message-item-body__icon-wrapper__icon">
               <Icon
                 type={isVideoMessage(message) ? IconTypes.PLAY : IconTypes.GIF}
-                fillColor={IconColors.ON_BACKGROUND_2}
+                fillColor={IconColors.GRAY}
                 width="34px"
                 height="34px"
               />
