@@ -26,6 +26,7 @@ const getStringSet = (lang = 'en') => {
       CHANNEL__MESSAGE_INPUT__PLACE_HOLDER: 'Enter message',
       CHANNEL__MESSAGE_INPUT__PLACE_HOLDER__DISABLED: 'Chat is unavailable in this channel',
       CHANNEL__MESSAGE_INPUT__PLACE_HOLDER__MUTED: 'Chat is unavailable because you are being muted',
+      CHANNEL__MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER: 'Reply to message',
       CHANNEL__MESSAGE_LIST__NOTIFICATION__NEW_MESSAGE: 'new message(s) since',
       CHANNEL__MESSAGE_LIST__NOTIFICATION__ON: 'on',
       CHANNEL_SETTING__HEADER__TITLE: 'Channel information',
