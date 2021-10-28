@@ -26,13 +26,15 @@
   }
 
   .sendbird-quote_message_input__body {
-    width: 100%;
+    position: absolute;
+    width: calc(100% - 120px);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     overflow: hidden;
 
     .sendbird-quote_message_input__body__sender-name {
+      position: relative;
       width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -41,6 +43,7 @@
       margin-bottom: 8px;
     }
     .sendbird-quote_message_input__body__message-content {
+      position: relative;
       width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
