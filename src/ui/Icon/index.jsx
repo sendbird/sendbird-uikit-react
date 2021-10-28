@@ -67,6 +67,7 @@ const Colors = {
   CONTENT: 'CONTENT',
   CONTENT_INVERSE: 'CONTENT_INVERSE',
   WHITE: 'WHITE',
+  GRAY: 'GRAY',
   SENT: 'SENT',
   READ: 'READ',
   ON_BACKGROUND_1: 'ON_BACKGROUND_1',
@@ -83,6 +84,7 @@ function changeColorToClassName(color) {
     case Colors.CONTENT: return 'sendbird-icon-color--content';
     case Colors.CONTENT_INVERSE: return 'sendbird-icon-color--content-inverse';
     case Colors.WHITE: return 'sendbird-icon-color--white';
+    case Colors.GRAY: return 'sendbird-icon-color--gray';
     case Colors.SENT: return 'sendbird-icon-color--sent';
     case Colors.READ: return 'sendbird-icon-color--read';
     case Colors.ON_BACKGROUND_1: return 'sendbird-icon-color--on-background-1';
