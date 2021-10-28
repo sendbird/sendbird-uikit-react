@@ -50,7 +50,9 @@
         background-color: t(bg-1);
       }
       .sendbird-quote-message__replied-message__text-message__word {
-        max-height: 32px;
+        position: relative;
+        display: inline-flex;
+        max-height: 30px;
         overflow: hidden;
         text-overflow: ellipsis;
       }
