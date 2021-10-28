@@ -42,7 +42,7 @@ export default function QuoteMessage({
   const [isThumbnailLoaded, setThumbnailLoaded] = useState(false);
   const { stringSet } = useContext(LocalizationContext);
   const uikitFileTypes = getUIKitFileTypes();
-  const splitUrl = parentMessageUrl.split('/');
+  const splitFileName = parentMessage?.name ? parentMessage.name.split('/') : parentMessageUrl.split('/');
 
   return (
     <div
@@ -154,7 +154,7 @@ export default function QuoteMessage({
               type={LabelTypography.BODY_2}
               color={LabelColors.ONBACKGROUND_3}
             >
-              {truncateString(splitUrl[splitUrl.length - 1])}
+              {truncateString(splitFileName[splitFileName.length - 1])}
             </Label>
           </div>
         )}
