@@ -146,14 +146,11 @@ export const OpenchannelConversation = (props: Props): JSX.Element => {
   );
 
   useEffect(() => {
-    // FIXME: Remove me after change the parameter type
-    return () => {
-      if (renderCustomMessage) {
-        // eslint-disable-next-line no-console
-        console.info('The parameter type of renderCustomMessage will be changed to the object in the next minor update.');
-      }
+    if (renderCustomMessage) {
+      // eslint-disable-next-line no-console
+      console.info('The parameter type of renderCustomMessage will be changed to the object in the next minor update.');
     }
-  }, [renderCustomMessage]);
+  }, []);
 
   const checkScrollBottom = useCheckScrollBottom(
     { conversationScrollRef },
