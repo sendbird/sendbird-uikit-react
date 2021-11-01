@@ -28,7 +28,7 @@
 .sendbird-conversation__footer {
   width: 100%;
   order: 3;
-  padding: 0px 24px 24px 24px;
+  padding: 0px 0px 24px 0px;
 }
 
 @keyframes sbHighlight {
@@ -107,8 +107,13 @@
 .sendbird-conversation__footer {
   position: relative;
   box-sizing: border-box;
-  .sendbird-conversation__typing-indicator {
+  .sendbird-conversation__footer__typing-indicator {
     position: absolute;
+    display: inline-flex;
     bottom: 8px;
+    .sendbird-conversation__footer__typing-indicator__text {
+      margin-left: 24px;
+      margin-right: 10px;
+    }
   }
 }

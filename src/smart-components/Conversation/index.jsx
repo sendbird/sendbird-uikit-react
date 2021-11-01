@@ -394,14 +394,14 @@ export const ConversationPanel = (props) => {
           setQuoteMessage={setQuoteMessage}
           renderMessageInput={renderMessageInput}
         />
-        <div className="sendbird-conversation__typing-indicator">
-          <TypingIndicator channelUrl={channelUrl} sb={sdk} logger={logger} />
+        <div className="sendbird-conversation__footer__typing-indicator">
+          <TypingIndicator className="sendbird-conversation__footer__typing-indicator__text" channelUrl={channelUrl} sb={sdk} logger={logger} />
+          {
+            !isOnline && (
+              <ConnectionStatus sdkInit={sdkInit} sb={sdk} logger={logger} />
+            )
+          }
         </div>
-        {
-          !isOnline && (
-            <ConnectionStatus sdkInit={sdkInit} sb={sdk} logger={logger} />
-          )
-        }
       </div>
     </UserProfileProvider>
   );
