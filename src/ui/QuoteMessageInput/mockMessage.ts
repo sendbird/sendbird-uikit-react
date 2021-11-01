@@ -118,7 +118,8 @@ export const dummyFileMessageAudio = {
   requireAuth: false,
   requestState: 'succeeded',
   requestedMentionUserIds: [],
-  errorCode: 0
+  errorCode: 0,
+  isFileMessage: () => true,
 };
 
 export const dummyFileMessageGif = {

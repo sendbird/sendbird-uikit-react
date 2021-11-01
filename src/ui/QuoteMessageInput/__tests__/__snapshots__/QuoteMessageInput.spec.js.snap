@@ -27,6 +27,12 @@ exports[`QuoteMessageInput should do a snapshot test of the QuoteMessageInput DO
   </div>
   <div
     className="sendbird-quote_message_input__body"
+    style={
+      Object {
+        "left": "92px",
+        "width": "calc(100% - 164px)",
+      }
+    }
   >
     <span
       className="sendbird-quote_message_input__body__sender-name sendbird-label sendbird-label--caption-1 sendbird-label--color-onbackground-1"
