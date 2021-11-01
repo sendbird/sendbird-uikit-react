@@ -276,6 +276,9 @@ const CustomApp = () => {
                   setChannelSettings(false);
                   setChannelSearch(true);
                 }}
+                renderCustomMessage={() => {
+                  return null;
+                }}
               />
             </div>
             {channelSearch && (
