@@ -9,8 +9,9 @@
   &.incoming { justify-content: flex-start; }
   &.outgoing { justify-content: flex-end; }
   .sendbird-message-content__middle {
-    .sendbird-message-content__middle__body-container.use-quote {
-      top: -8px;
+    .sendbird-message-content__middle__quote-message.use-quote {
+      margin-top: -8px;
+      bottom: -8px;
     }
   }
 }
@@ -41,6 +42,7 @@
       margin-bottom: 4px;
     }
     .sendbird-message-content__middle__quote-message {
+      position: relative;
       width: 100%;
       display: inline-flex;
       &.outgoing { justify-content: flex-end }
@@ -143,6 +145,7 @@
     max-width: 400px;
     align-items: flex-end;
     .sendbird-message-content__middle__quote-message {
+      position: relative;
       width: 100%;
       display: inline-flex;
       &.outgoing { justify-content: flex-end }

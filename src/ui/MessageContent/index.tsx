@@ -183,7 +183,7 @@ export default function MessageContent({
         )}
         {/* quote message */}
         {(useReplying) ? (
-          <div className={getClassName(['sendbird-message-content__middle__quote-message', isByMe ? 'outgoing' : 'incoming'])}>
+          <div className={getClassName(['sendbird-message-content__middle__quote-message', isByMe ? 'outgoing' : 'incoming', useReplyingClassName])}>
             <QuoteMessage
               message={message}
               isByMe={isByMe}
@@ -196,7 +196,7 @@ export default function MessageContent({
           </div>
         ) : null}
         {/* container: message item body + emoji reactions */}
-        <div className={getClassName(['sendbird-message-content__middle__body-container', useReplyingClassName])} >
+        <div className={getClassName(['sendbird-message-content__middle__body-container'])} >
           {/* message item body components */}
           {isTextMessage(message as UserMessage) && (
             <TextMessageItemBody
