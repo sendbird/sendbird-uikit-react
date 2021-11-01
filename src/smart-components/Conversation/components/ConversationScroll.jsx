@@ -238,7 +238,6 @@ ConversationScroll.propTypes = {
   deleteMessage: PropTypes.func.isRequired,
   resendMessage: PropTypes.func.isRequired,
   updateMessage: PropTypes.func.isRequired,
-  readStatus: PropTypes.shape({}).isRequired,
   currentGroupChannel: PropTypes.shape({
     markAsRead: PropTypes.func,
     members: PropTypes.arrayOf(PropTypes.shape({})),

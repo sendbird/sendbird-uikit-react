@@ -50,7 +50,7 @@ MenuItem.propTypes = {
     PropTypes.element,
   ]).isRequired,
   onClick: PropTypes.func.isRequired,
-  disable: PropTypes.func,
+  disable: PropTypes.bool,
 };
 
 MenuItem.defaultProps = {

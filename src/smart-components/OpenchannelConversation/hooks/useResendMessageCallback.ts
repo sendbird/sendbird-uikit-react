@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import * as messageActionTypes from '../dux/actionTypes';
 
-interface StaticParams {
+interface DynamicParams {
   currentOpenChannel: SendbirdUIKit.OpenChannelType;
 }
 interface StaticParams {
@@ -11,7 +11,7 @@ interface StaticParams {
 type CallbackReturn = (failedMessage: SendbirdUIKit.ClientUserMessage | SendbirdUIKit.ClientFileMessage) => void;
 
 function useResendMessageCallback(
-  { currentOpenChannel }: StaticParams,
+  { currentOpenChannel }: DynamicParams,
   { logger, messagesDispatcher }: StaticParams,
 ): CallbackReturn {
   return useCallback((failedMessage) => {
