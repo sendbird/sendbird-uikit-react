@@ -1,6 +1,5 @@
 import React, { ReactElement, useContext } from 'react';
-// import { FileMessage, UserMessage } from 'sendbird';
-import { FileMessage, UserMessage } from '../../sendbird.min.js';
+import { FileMessage, UserMessage } from 'sendbird';
 import {
   CoreMessageType,
   getClassName,

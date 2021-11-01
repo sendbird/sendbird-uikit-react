@@ -26,8 +26,7 @@ import {
   SendingMessageStatus,
   getMessageType,
 } from './types';
-// import { OpenChannel } from 'sendbird';
-import { OpenChannel } from '../../../sendbird.min.js';
+import { OpenChannel } from 'sendbird';
 
 interface Props {
   message: types.EveryMessage;

@@ -1,6 +1,5 @@
 import React, { ReactElement, useContext, useRef, useState } from 'react';
-// import { GroupChannel, AdminMessage, UserMessage, FileMessage, EmojiContainer } from 'sendbird';
-import { GroupChannel, AdminMessage, UserMessage, FileMessage, EmojiContainer } from '../../sendbird.min.js';
+import { GroupChannel, AdminMessage, UserMessage, FileMessage, EmojiContainer } from 'sendbird';
 import './index.scss';
 
 import Avatar from '../Avatar';
@@ -87,7 +86,7 @@ export default function MessageContent({
   const chainTopClassName = chainTop ? 'chain-top' : '';
   const useReactionClassName = useReaction ? 'use-reactions' : '';
   const supposedHoverClassName = supposedHover ? 'supposed-hover' : '';
-  const useReplying: boolean = replyType === 'QUOTE_REPLY' && message?.parentMessageId;
+  const useReplying = (replyType === 'QUOTE_REPLY') && message?.parentMessageId;
   const useReplyingClassName = useReplying ? 'use-quote' : '';
 
   if (message?.isAdminMessage?.() || message?.messageType === 'admin') {

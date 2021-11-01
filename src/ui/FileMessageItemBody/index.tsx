@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react';
-// import { FileMessage } from 'sendbird';
-import { FileMessage } from '../../sendbird.min.js';
+import { FileMessage } from 'sendbird';
 import './index.scss';
 
 import Label, { LabelTypography, LabelColors } from '../Label';

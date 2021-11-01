@@ -1,6 +1,5 @@
 import React, { ReactElement, useContext, useRef } from 'react';
-// import { Emoji, EmojiContainer, FileMessage, Reaction, UserMessage } from 'sendbird';
-import { Emoji, EmojiContainer, FileMessage, Reaction, UserMessage } from '../../sendbird.min.js';
+import { Emoji, EmojiContainer, FileMessage, Reaction, UserMessage } from 'sendbird';
 import './index.scss';
 
 import Tooltip from '../Tooltip';

@@ -1,8 +1,7 @@
 // Logic required to handle message input rendering
 
 import React, { useContext } from 'react';
-// import Sendbird, { FileMessage, UserMessage } from 'sendbird';
-import Sendbird, { FileMessage, UserMessage } from '../../../sendbird.min.js';
+import Sendbird, { FileMessage, UserMessage } from 'sendbird';
 
 import './message-input-wrapper.scss';
 import { RenderGroupChannelMessageInputProps } from '../../../index';

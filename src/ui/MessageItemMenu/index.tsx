@@ -1,6 +1,5 @@
 import React, { ReactElement, useContext, useRef } from 'react';
-// import { FileMessage, GroupChannel, OpenChannel, UserMessage } from 'sendbird';
-import { FileMessage, GroupChannel, OpenChannel, UserMessage } from '../../sendbird.min.js';
+import { FileMessage, GroupChannel, OpenChannel, UserMessage } from 'sendbird';
 
 import ContextMenu, { MenuItems, MenuItem } from '../ContextMenu';
 import Icon, { IconTypes, IconColors } from '../Icon';
