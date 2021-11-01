@@ -214,7 +214,11 @@ export default function reducer(state, action) {
       };
     }
     case actionTypes.ON_MESSAGE_UPDATED: {
-      const { message } = action.payload;
+      const { channel, message } = action.payload;
+      const currentGroupChannelUrl = (state.currentGroupChannel && state.currentGroupChannel.url) || '';
+      if (!compareIds(channel.url, currentGroupChannelUrl)) {
+        return state; // Ignore event when it is not for the current channel
+      }
       if (state.messageListParams && !filterMessageListParams(state.messageListParams, message)) {
         // Delete the message if it doesn't match to the params anymore
         return {
@@ -231,6 +235,27 @@ export default function reducer(state, action) {
             ? action.payload.message
             : m
         )),
+      };
+    }
+    case actionTypes.ON_MESSAGE_THREAD_INFO_UPDATED: {
+      const { channel, event } = action.payload;
+      const { channelUrl, threadInfo, targetMessageId } = event;
+      const currentGroupChannelUrl = (state.currentGroupChannel && state.currentGroupChannel.url) || '';
+      if (
+        !compareIds(channel.url, currentGroupChannelUrl)
+        && !compareIds(channel.url, channelUrl)
+      ) {
+        return state; // Ignore event when it is not for the current channel
+      }
+      return {
+        ...state,
+        allMessages: state.allMessages.map((m) => {
+          if (compareIds(m.messageId, targetMessageId)) {
+            // eslint-disable-next-line no-param-reassign
+            m.threadInfo = threadInfo; // Upsert threadInfo to the target message
+          }
+          return m;
+        }),
       };
     }
     case actionTypes.RESEND_MESSAGEGE_START:

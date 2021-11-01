@@ -25,6 +25,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
     if (channelUrl && sdk && sdk.ChannelHandler) {
       const ChannelHandler = new sdk.ChannelHandler();
       logger.info('Channel | useHandleChannelEvents: Setup event handler', messageReceiverId);
+
       ChannelHandler.onMessageReceived = (channel, message) => {
         // donot update if hasMoreToBottom
         if (compareIds(channel.url, currentGroupChannel.url) && !hasMoreToBottom) {
@@ -66,6 +67,14 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
         messagesDispatcher({
           type: messageActions.ON_MESSAGE_UPDATED,
           payload: { channel, message },
+        });
+      };
+
+      ChannelHandler.onThreadInfoUpdated = (channel, event) => {
+        logger.info('Channel | useHandleChannelEvents: onThreadInfoUpdated', event);
+        messagesDispatcher({
+          type: messageActions.ON_MESSAGE_THREAD_INFO_UPDATED,
+          payload: { channel, event },
         });
       };
 
