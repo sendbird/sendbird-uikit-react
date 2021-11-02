@@ -351,7 +351,7 @@ export const filterMessageListParams = (params: SubsitutionMessageListParams, me
   if (params?.customTypes?.length > 0) {
     const customTypes = params.customTypes.filter((item) => item !== '*');
     // Because Chat SDK inserts '*' when customTypes is empty
-    if (!customTypes.includes(message.customType)) {
+    if (customTypes.length > 0 && !customTypes.includes(message.customType)) {
       return false;
     }
   }
