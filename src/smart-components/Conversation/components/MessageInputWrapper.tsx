@@ -1,8 +1,7 @@
 // Logic required to handle message input rendering
 
 import React, { useContext } from 'react';
-// import Sendbird, { FileMessage, UserMessage } from 'sendbird';
-import Sendbird, { FileMessage, UserMessage } from '../../../sendbird.min.js';
+import Sendbird, { FileMessage, UserMessage } from 'sendbird';
 
 import './message-input-wrapper.scss';
 import { RenderGroupChannelMessageInputProps } from '../../../index';
@@ -66,6 +65,7 @@ const MessageInputWrapper = ({
         </div>
       )}
       <MessageInput
+        className="sendbird-message-input-wrapper__message-input"
         placeholder={
           (quoteMessage && stringSet.CHANNEL__MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER)
           || (utils.isDisabledBecauseFrozen(channel) && stringSet.CHANNEL__MESSAGE_INPUT__PLACE_HOLDER__DISABLED)

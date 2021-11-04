@@ -1,6 +1,5 @@
 import React, { ReactElement, useContext, useState } from 'react';
-// import { FileMessage, User, UserMessage } from 'sendbird';
-import { FileMessage, UserMessage } from '../../sendbird.min.js';
+import { FileMessage, UserMessage } from 'sendbird';
 import './index.scss';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
@@ -30,25 +29,25 @@ export default function QuoteMessage({
   message,
   isByMe = false,
   className,
-  onClick = () => {},
+  onClick,
 }: Props): ReactElement {
   const { parentMessage } = message;
-  const parentMessageSender = parentMessage?.sender;
+  const parentMessageSender = (parentMessage as UserMessage | FileMessage)?.sender;
   const parentMessageSenderNickname = parentMessageSender?.nickname;
-  const parentMessageUrl = parentMessage?.url || '';
-  const parentMessageType = parentMessage?.type;
+  const parentMessageUrl = (parentMessage as FileMessage)?.url || '';
+  const parentMessageType = (parentMessage as FileMessage)?.type;
   const currentMessageSenderNickname = message?.sender?.nickname;
 
   const [isThumbnailLoaded, setThumbnailLoaded] = useState(false);
   const { stringSet } = useContext(LocalizationContext);
   const uikitFileTypes = getUIKitFileTypes();
-  const splitFileName = parentMessage?.name ? parentMessage.name.split('/') : parentMessageUrl.split('/');
+  const splitFileName = (parentMessage as FileMessage)?.name ? (parentMessage as FileMessage).name.split('/') : parentMessageUrl.split('/');
 
   return (
     <div
       className={getClassName([className, 'sendbird-quote-message', isByMe ? 'outgoing' : 'incoming'])}
       key={parentMessage?.messageId}
-      onClick={onClick}
+      onClick={() => { if (onClick) onClick() }}
     >
       <div className="sendbird-quote-message__replied-to">
         <Icon
@@ -68,19 +67,19 @@ export default function QuoteMessage({
       </div>
       <div className="sendbird-quote-message__replied-message">
         {/* text message */}
-        {(isUserMessage(parentMessage) && parentMessage?.message?.length > 0) && (
+        {(isUserMessage(parentMessage as UserMessage) && (parentMessage as UserMessage)?.message?.length > 0) && (
           <div className="sendbird-quote-message__replied-message__text-message">
             <Label
               className="sendbird-quote-message__replied-message__text-message__word"
               type={LabelTypography.BODY_2}
               color={LabelColors.ONBACKGROUND_1}
             >
-              {parentMessage?.message}
+              {(parentMessage as UserMessage)?.message}
             </Label>
           </div>
         )}
         {/* thumbnail message */}
-        {(isThumbnailMessage(parentMessage) && parentMessageUrl) && (
+        {(isThumbnailMessage(parentMessage as FileMessage) && parentMessageUrl) && (
           <div className="sendbird-quote-message__replied-message__thumbnail-message">
             <ImageRenderer
               className="sendbird-quote-message__replied-message__thumbnail-message__image"
@@ -102,7 +101,7 @@ export default function QuoteMessage({
                 </div>
               )}
             />
-            {(isVideo(parentMessageType) && !(parentMessage?.thumbnails?.length > 0)) && (
+            {(isVideo(parentMessageType) && !((parentMessage as FileMessage)?.thumbnails?.length > 0)) && (
               <>
                 <video className="sendbird-quote-message__replied-message__thumbnail-message__video">
                   <source src={parentMessageUrl} type={parentMessageType} />
@@ -134,7 +133,7 @@ export default function QuoteMessage({
           </div>
         )}
         {/* file message */}
-        {(isFileMessage(parentMessage) && !isSupportedFileView(parentMessage.type) && parentMessageUrl) && (
+        {(isFileMessage(parentMessage as FileMessage) && !isSupportedFileView((parentMessage as FileMessage).type) && parentMessageUrl) && (
           <div className="sendbird-quote-message__replied-message__file-message">
             <Icon
               className="sendbird-quote-message__replied-message__file-message__type-icon"

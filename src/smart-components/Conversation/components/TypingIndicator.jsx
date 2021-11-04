@@ -22,7 +22,13 @@ const TypingIndicatorText = ({ members }) => {
   return stringSet.TYPING_INDICATOR__MULTIPLE_TYPING;
 };
 
-function TypingIndicator({ channelUrl, sb, logger }) {
+function TypingIndicator(props) {
+  const {
+    className,
+    channelUrl,
+    sb,
+    logger,
+  } = props;
   const [handlerId, setHandlerId] = useState(uuidv4());
   const [typingMembers, setTypingMembers] = useState([]);
 
@@ -52,13 +58,21 @@ function TypingIndicator({ channelUrl, sb, logger }) {
   }, [channelUrl]);
 
   return (
-    <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
+    <Label
+      className={className}
+      type={LabelTypography.CAPTION_2}
+      color={LabelColors.ONBACKGROUND_2}
+    >
       <TypingIndicatorText members={typingMembers} />
     </Label>
   );
 }
 
 TypingIndicator.propTypes = {
+  className: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ]),
   channelUrl: PropTypes.string.isRequired,
   sb: PropTypes.shape({
     ChannelHandler: PropTypes.func,
@@ -68,6 +82,9 @@ TypingIndicator.propTypes = {
   logger: PropTypes.shape({
     info: PropTypes.func,
   }).isRequired,
+};
+TypingIndicator.defaultProps = {
+  className: '',
 };
 
 export default TypingIndicator;

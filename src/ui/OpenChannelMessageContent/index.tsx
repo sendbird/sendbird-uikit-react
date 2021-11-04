@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react';
-// import { OpenChannel } from 'sendbird';
-import { OpenChannel } from '../../sendbird.min.js';
+import { OpenChannel } from 'sendbird';
 import './index.scss';
 
 interface Props {

@@ -1,5 +1,4 @@
-// import Sb from 'sendbird';
-import Sb from '../../../sendbird.min.js';
+import Sb from 'sendbird';
 
 import {
   INIT_SDK,

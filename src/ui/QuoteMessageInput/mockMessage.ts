@@ -118,7 +118,9 @@ export const dummyFileMessageAudio = {
   requireAuth: false,
   requestState: 'succeeded',
   requestedMentionUserIds: [],
-  errorCode: 0
+  errorCode: 0,
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  isFileMessage: () => true,
 };
 
 export const dummyFileMessageGif = {

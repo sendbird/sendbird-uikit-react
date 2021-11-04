@@ -15,7 +15,6 @@
     height: 44px;
     min-height: 44px;
     position: relative;
-    margin-right: 8px;
     border-radius: 8px;
     display: flex;
     justify-content: center;
@@ -27,7 +26,6 @@
 
   .sendbird-quote_message_input__body {
     position: absolute;
-    width: calc(100% - 120px);
     display: flex;
     flex-direction: column;
     align-items: flex-start;

@@ -3,6 +3,7 @@
 exports[`ReplyingMessageItemBody should do a snapshot test of the ReplyingMessageItemBody DOM 1`] = `
 <div
   className=" sendbird-quote-message outgoing"
+  onClick={[Function]}
 >
   <div
     className="sendbird-quote-message__replied-to"

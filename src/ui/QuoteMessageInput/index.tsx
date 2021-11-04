@@ -1,6 +1,5 @@
 import React, { ReactElement, useContext } from 'react';
-// import { FileMessage, UserMessage } from 'sendbird';
-import { FileMessage, UserMessage } from '../../sendbird.min.js';
+import { FileMessage, UserMessage } from 'sendbird';
 import {
   CoreMessageType,
   getClassName,
@@ -37,7 +36,13 @@ export default function QuoteMessageInput({
   return (
     <div className={getClassName(['sendbird-quote_message_input', className])}>
       <QuoteMessageThumbnail message={fileMessage} />
-      <div className="sendbird-quote_message_input__body">
+      <div
+        className="sendbird-quote_message_input__body"
+        style={{
+          width: `calc(100% - ${fileMessage.isFileMessage() ? '164px' : '120px'})`,
+          left: fileMessage.isFileMessage() ? '92px' : '40px',
+        }}
+      >
         <Label
           className="sendbird-quote_message_input__body__sender-name"
           type={LabelTypography.CAPTION_1}
