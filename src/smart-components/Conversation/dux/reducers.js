@@ -243,7 +243,7 @@ export default function reducer(state, action) {
       const currentGroupChannelUrl = (state.currentGroupChannel && state.currentGroupChannel.url) || '';
       if (
         !compareIds(channel.url, currentGroupChannelUrl)
-        && !compareIds(channel.url, channelUrl)
+        || !compareIds(channel.url, channelUrl)
       ) {
         return state; // Ignore event when it is not for the current channel
       }
