@@ -1,11 +1,20 @@
 # Changelog
 
+## [2.4.3] (Nov 1 2021)
+- Bugfix
+  * Use OpenChannel in the getOpenChannelDeleteMessage
+  * Do not try to reconnect when current channel is not selected
+  * Do not update user info when nickname or profil url are empty string
+  * Update latest message value on channelListItem only if the latest message is edited
+  * Add string set for hardcorded strings that are used in the selecting channel type modal
+  * String set update
+
 ## [2.4.2](Sep 30 2021)
 - Bugfix
-  *Use simple logic to calculate isByMe
-  *Use flex-end instead of end
-  *Add null check for sdk and sdk.ChannelHandler before createEventHandler
-  *Fix SENDING_MESSAGE_START payload mismatch
+  * Use simple logic to calculate isByMe
+  * Use flex-end instead of end
+  * Add null check for sdk and sdk.ChannelHandler before createEventHandler
+  * Fix SENDING_MESSAGE_START payload mismatch
 
 ## [2.4.1](Sep 9 2021)
 

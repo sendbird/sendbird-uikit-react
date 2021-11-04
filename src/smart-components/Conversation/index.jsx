@@ -87,6 +87,13 @@ export const ConversationPanel = (props) => {
     console.warn('messageListQuery has been deprecated, please use messageListParams instead');
   }
 
+  useEffect(() => {
+    if (renderCustomMessage) {
+      // eslint-disable-next-line no-console
+      console.info('The parameter type of renderCustomMessage will be changed to the object in the next minor update.');
+    }
+  }, []);
+
   const [intialTimeStamp, setIntialTimeStamp] = useState(startingPoint);
   useEffect(() => {
     setIntialTimeStamp(startingPoint);

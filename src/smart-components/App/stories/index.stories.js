@@ -284,8 +284,18 @@ const CustomApp = () => {
             <div style={{ width: '100%' }}>
               <MessageSearch
                 channelUrl={channelUrl}
-                searchString="hello"
-                onResultClick={() => { }}
+                onChatHeaderActionClick={() => {
+                  setChannelSearch(false);
+                  setChannelSettings(true);
+                }}
+                showSearchIcon
+                onSearchClick={() => {
+                  setChannelSettings(false);
+                  setChannelSearch(true);
+                }}
+                renderCustomMessage={() => {
+                  return null;
+                }}
               />
             </div>
           )}
