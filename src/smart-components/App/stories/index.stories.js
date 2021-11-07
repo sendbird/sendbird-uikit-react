@@ -68,6 +68,7 @@ export const login = () => {
   const [theme, setTheme] = useState('light');
   const [messageSearch, setMessageSearch] = useState(true);
   const [profileEdit, setProfileEdit] = useState(true);
+  const [useReply, setUseReply] = useState(true);
   return isLoginPage
     ? fitPageSize(
       <div
@@ -127,6 +128,16 @@ export const login = () => {
           onClick={() => setProfileEdit(!profileEdit)}
         />
         <input
+          className="input__toggle-use-reply"
+          type="button"
+          value={
+            useReply
+              ? 'Use Reply'
+              : 'Not use Reply'
+          }
+          onClick={() => setUseReply(!useReply)}
+        />
+        <input
           className="login-submit"
           type="submit"
           value="Submit"
@@ -142,6 +153,7 @@ export const login = () => {
         theme={theme}
         showSearchIcon={messageSearch}
         allowProfileEdit={profileEdit}
+        replyType={useReply ? 'QUOTE_REPLY' : 'NONE'}
       />
     )
 };
