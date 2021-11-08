@@ -20,6 +20,7 @@ import {
 } from '../../utils';
 interface Props {
   message?: UserMessage | FileMessage;
+  userId?: string;
   isByMe?: boolean;
   className?: string | Array<string>;
   onClick?: () => void;
@@ -27,19 +28,21 @@ interface Props {
 
 export default function QuoteMessage({
   message,
+  userId = '',
   isByMe = false,
   className,
   onClick,
 }: Props): ReactElement {
+  const { stringSet } = useContext(LocalizationContext);
+
   const { parentMessage } = message;
   const parentMessageSender = (parentMessage as UserMessage | FileMessage)?.sender;
-  const parentMessageSenderNickname = parentMessageSender?.nickname;
+  const parentMessageSenderNickname = (userId === parentMessageSender?.userId) ? stringSet.QUOTED_MESSAGE__CURRENT_USER : parentMessageSender?.nickname;
   const parentMessageUrl = (parentMessage as FileMessage)?.url || '';
   const parentMessageType = (parentMessage as FileMessage)?.type;
-  const currentMessageSenderNickname = message?.sender?.nickname;
+  const currentMessageSenderNickname = (userId === message?.sender?.userId) ? stringSet.QUOTED_MESSAGE__CURRENT_USER : message?.sender?.nickname;
 
   const [isThumbnailLoaded, setThumbnailLoaded] = useState(false);
-  const { stringSet } = useContext(LocalizationContext);
   const uikitFileTypes = getUIKitFileTypes();
   const splitFileName = (parentMessage as FileMessage)?.name ? (parentMessage as FileMessage).name.split('/') : parentMessageUrl.split('/');
 
@@ -62,7 +65,7 @@ export default function QuoteMessage({
           type={LabelTypography.CAPTION_2}
           color={LabelColors.ONBACKGROUND_3}
         >
-          {`${currentMessageSenderNickname} ${stringSet.REPLIED_TO} ${parentMessageSenderNickname}`}
+          {`${currentMessageSenderNickname} ${stringSet.QUOTED_MESSAGE__REPLIED_TO} ${parentMessageSenderNickname}`}
         </Label>
       </div>
       <div className="sendbird-quote-message__replied-message">

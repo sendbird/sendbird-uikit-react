@@ -140,7 +140,7 @@ const MessageInput = React.forwardRef((props, ref) => {
             type={LabelTypography.BODY_1}
             color={LabelColors.ONBACKGROUND_3}
           >
-            {placeholder || stringSet.CHANNEL__MESSAGE_INPUT__PLACE_HOLDER}
+            {placeholder || stringSet.MESSAGE_INPUT__PLACE_HOLDER}
           </Label>
         )}
         {/* send icon */}

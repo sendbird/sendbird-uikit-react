@@ -48,16 +48,16 @@ export default function QuoteMessageInput({
           type={LabelTypography.CAPTION_1}
           color={LabelColors.ONBACKGROUND_1}
         >
-          {`${stringSet.REPLYING_ATTACHMENT__REPLY_TO} ${(sender && sender.nickname) ? sender.nickname : stringSet.NO_NAME}`}
+          {`${stringSet.QUOTE_MESSAGE_INPUT__REPLY_TO} ${(sender && sender.nickname) ? sender.nickname : stringSet.NO_NAME}`}
         </Label>
         <Label
           className="sendbird-quote_message_input__body__message-content"
           type={LabelTypography.BODY_2}
           color={LabelColors.ONBACKGROUND_3}
         >
-          {isImageMessage(fileMessage) && !isGifMessage(fileMessage) && stringSet.REPLYING_ATTACHMENT__FILE_TYPE__IMAGE}
-          {isVideoMessage(fileMessage) && stringSet.REPLYING_ATTACHMENT__FILE_TYPE__VIDEO}
-          {isGifMessage(fileMessage) && stringSet.REPLYING_ATTACHMENT__FILE_TYPE__GIF}
+          {isImageMessage(fileMessage) && !isGifMessage(fileMessage) && stringSet.QUOTE_MESSAGE_INPUT__FILE_TYPE_IMAGE}
+          {isVideoMessage(fileMessage) && stringSet.QUOTE_MESSAGE_INPUT__FILE_TYPE__VIDEO}
+          {isGifMessage(fileMessage) && stringSet.QUOTE_MESSAGE_INPUT__FILE_TYPE_GIF}
           {isUserMessage(replyingMessage as UserMessage) && (replyingMessage as UserMessage).message}
           {(isFileMessage(fileMessage) && !isThumbnailMessage(fileMessage)) && fileMessage.name}
         </Label>

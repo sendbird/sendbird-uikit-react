@@ -40,7 +40,7 @@ const MessageInputWrapper = ({
         onFileUpload={onFileUpload}
         placeholder={(
           disabled
-          && stringSet.CHANNEL__MESSAGE_INPUT__PLACE_HOLDER__DISABLED
+          && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED
           // add disabled because of muted state
         )}
       />

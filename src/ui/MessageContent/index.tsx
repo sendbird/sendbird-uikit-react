@@ -186,6 +186,7 @@ export default function MessageContent({
           <div className={getClassName(['sendbird-message-content__middle__quote-message', isByMe ? 'outgoing' : 'incoming', useReplyingClassName])}>
             <QuoteMessage
               message={message}
+              userId={userId}
               isByMe={isByMe}
               onClick={() => {
                 if (message?.parentMessage?.createdAt && message?.parentMessageId) {
