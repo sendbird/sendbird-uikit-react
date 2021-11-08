@@ -38,7 +38,7 @@ function useInitialMessagesFetch({
       if (replyType && replyType === 'QUOTE_REPLY') {
         messageListParams.includeThreadInfo = true;
         messageListParams.includeParentMessageInfo = true;
-        messageListParams.replyType = 'all';
+        messageListParams.replyType = 'only_reply_to_channel';
       }
       if (userFilledMessageListQuery) {
         Object.keys(userFilledMessageListQuery).forEach((key) => {
@@ -79,7 +79,7 @@ function useInitialMessagesFetch({
             if (replyType && replyType === 'QUOTE_REPLY') {
               nextMessageListParams.includeThreadInfo = true;
               nextMessageListParams.includeParentMessageInfo = true;
-              nextMessageListParams.replyType = 'all';
+              nextMessageListParams.replyType = 'only_reply_to_channel';
             }
             if (userFilledMessageListQuery) {
               Object.keys(userFilledMessageListQuery).forEach((key) => {

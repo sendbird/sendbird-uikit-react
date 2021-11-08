@@ -26,7 +26,7 @@ function useScrollCallback({
     if (replyType && replyType === 'QUOTE_REPLY') {
       messageListParams.includeThreadInfo = true;
       messageListParams.includeParentMessageInfo = true;
-      messageListParams.replyType = 'all';
+      messageListParams.replyType = 'only_reply_to_channel';
     }
     if (userFilledMessageListQuery) {
       Object.keys(userFilledMessageListQuery).forEach((key) => {
