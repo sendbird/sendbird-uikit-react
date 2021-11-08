@@ -1,0 +1,6 @@
+@import '../../styles/variables';
+
+.sendbird-message-item-menu__list__menu-item:focus-visible {
+  // We will display outline when we support keyboard UX officially
+  outline: none;
+}
