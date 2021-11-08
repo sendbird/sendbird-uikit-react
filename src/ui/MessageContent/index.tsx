@@ -86,7 +86,7 @@ export default function MessageContent({
   const chainTopClassName = chainTop ? 'chain-top' : '';
   const useReactionClassName = useReaction ? 'use-reactions' : '';
   const supposedHoverClassName = supposedHover ? 'supposed-hover' : '';
-  const useReplying = (replyType === 'QUOTE_REPLY') && message?.parentMessageId;
+  const useReplying: boolean = !!((replyType === 'QUOTE_REPLY') && message?.parentMessageId && message?.parentMessage);
   const useReplyingClassName = useReplying ? 'use-quote' : '';
 
   if (message?.isAdminMessage?.() || message?.messageType === 'admin') {
