@@ -132,7 +132,7 @@ export default function MessageContent({
             )}
           />
         )}
-        {(isByMe && !chainBottom && channel?.isGroupChannel() && channel?.isSuper === false && channel?.isPublic === false) && (
+        {(isByMe && !chainBottom && channel?.isGroupChannel() && !channel?.isSuper && !channel?.isPublic && !channel?.isBroadcast) && (
           <div className={getClassName(['sendbird-message-content__left__created-at', supposedHoverClassName])}>
             <MessageStatus
               message={message}
