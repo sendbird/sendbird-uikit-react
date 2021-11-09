@@ -86,7 +86,7 @@ export default function MessageContent({
   const chainTopClassName = chainTop ? 'chain-top' : '';
   const useReactionClassName = useReaction ? 'use-reactions' : '';
   const supposedHoverClassName = supposedHover ? 'supposed-hover' : '';
-  const useReplying: boolean = !!((replyType === 'QUOTE_REPLY') && message?.parentMessageId && message?.parentMessage);
+  const useReplying = !!((replyType === 'QUOTE_REPLY') && message?.parentMessageId && message?.parentMessage);
   const useReplyingClassName = useReplying ? 'use-quote' : '';
 
   if (message?.isAdminMessage?.() || message?.messageType === 'admin') {
@@ -132,10 +132,11 @@ export default function MessageContent({
             )}
           />
         )}
-        {(isByMe && !chainBottom && channel?.isGroupChannel() && !channel?.isSuper && !channel?.isPublic && !channel?.isBroadcast) && (
+        {(isByMe && !chainBottom) && (
           <div className={getClassName(['sendbird-message-content__left__created-at', supposedHoverClassName])}>
             <MessageStatus
               message={message}
+              channel={channel}
               status={getOutgoingMessageState(channel, message)}
             />
           </div>

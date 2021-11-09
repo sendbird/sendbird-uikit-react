@@ -16,6 +16,7 @@ export const MessageStatusTypes = getOutgoingMessageStates();
 export default function MessageStatus({
   className,
   message,
+  channel,
   status,
 }) {
   const iconType = {
@@ -38,29 +39,36 @@ export default function MessageStatus({
         'sendbird-message-status',
       ].join(' ')}
     >
-      {(status === MessageStatusTypes.PENDING)
-        ? (
-          <Loader
-            className="sendbird-message-status__icon"
-            width="16px"
-            height="16px"
-          >
-            <Icon
-              type={IconTypes.SPINNER}
-              fillColor={IconColors.PRIMARY}
-              width="16px"
-              height="16px"
-            />
-          </Loader>
-        )
-        : (
-          <Icon
-            className="sendbird-message-status__icon"
-            type={iconType[status] || IconTypes.ERROR}
-            fillColor={iconColor[status]}
-            width="16px"
-            height="16px"
-          />
+      {(channel?.isGroupChannel()
+        && !channel?.isSuper
+        && !channel?.isPublic
+        && !channel?.isBroadcast) && (
+          <div>
+            {(status === MessageStatusTypes.PENDING)
+              ? (
+                <Loader
+                  className="sendbird-message-status__icon"
+                  width="16px"
+                  height="16px"
+                >
+                  <Icon
+                    type={IconTypes.SPINNER}
+                    fillColor={IconColors.PRIMARY}
+                    width="16px"
+                    height="16px"
+                  />
+                </Loader>
+              )
+              : (
+                <Icon
+                  className="sendbird-message-status__icon"
+                  type={iconType[status] || IconTypes.ERROR}
+                  fillColor={iconColor[status]}
+                  width="16px"
+                  height="16px"
+                />
+              )}
+          </div>
         )}
       {isSentStatus(status) && (
         <Label
@@ -90,11 +98,18 @@ MessageStatus.propTypes = {
     }),
     sendingStatus: PropTypes.string,
   }),
+  channel: PropTypes.shape({
+    isGroupChannel: PropTypes.func,
+    isSuper: PropTypes.bool,
+    isBroadcast: PropTypes.bool,
+    isPublic: PropTypes.bool,
+  }),
   status: PropTypes.string,
 };
 
 MessageStatus.defaultProps = {
   className: '',
   message: null,
+  channel: null,
   status: '',
 };
