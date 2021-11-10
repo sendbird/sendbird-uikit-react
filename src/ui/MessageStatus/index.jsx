@@ -19,6 +19,10 @@ export default function MessageStatus({
   channel,
   status,
 }) {
+  const showMessageStatusIcon = channel?.isGroupChannel()
+    && !channel?.isSuper
+    && !channel?.isPublic
+    && !channel?.isBroadcast;
   const iconType = {
     [MessageStatusTypes.SENT]: IconTypes.DONE,
     [MessageStatusTypes.DELIVERED]: IconTypes.DONE_ALL,
@@ -39,37 +43,32 @@ export default function MessageStatus({
         'sendbird-message-status',
       ].join(' ')}
     >
-      {(channel?.isGroupChannel()
-        && !channel?.isSuper
-        && !channel?.isPublic
-        && !channel?.isBroadcast) && (
-          <div>
-            {(status === MessageStatusTypes.PENDING)
-              ? (
-                <Loader
-                  className="sendbird-message-status__icon"
-                  width="16px"
-                  height="16px"
-                >
-                  <Icon
-                    type={IconTypes.SPINNER}
-                    fillColor={IconColors.PRIMARY}
-                    width="16px"
-                    height="16px"
-                  />
-                </Loader>
-              )
-              : (
-                <Icon
-                  className="sendbird-message-status__icon"
-                  type={iconType[status] || IconTypes.ERROR}
-                  fillColor={iconColor[status]}
-                  width="16px"
-                  height="16px"
-                />
-              )}
-          </div>
-        )}
+      {(showMessageStatusIcon) && (
+        <div>
+          {(status === MessageStatusTypes.PENDING) ? (
+            <Loader
+              className="sendbird-message-status__icon"
+              width="16px"
+              height="16px"
+            >
+              <Icon
+                type={IconTypes.SPINNER}
+                fillColor={IconColors.PRIMARY}
+                width="16px"
+                height="16px"
+              />
+            </Loader>
+          ) : (
+            <Icon
+              className="sendbird-message-status__icon"
+              type={iconType[status] || IconTypes.ERROR}
+              fillColor={iconColor[status]}
+              width="16px"
+              height="16px"
+            />
+          )}
+        </div>
+      )}
       {isSentStatus(status) && (
         <Label
           className="sendbird-message-status__text"

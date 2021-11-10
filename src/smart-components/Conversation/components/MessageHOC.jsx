@@ -99,7 +99,7 @@ export default function MessageHoc({
         className={getClassName([
           'sendbird-msg-hoc sendbird-msg--scroll-ref',
           isAnimated ? 'sendbird-msg-hoc__animated' : '',
-          isHighlighted ? 'sendbird-msg-hoc__highlighted' : ''
+          isHighlighted ? 'sendbird-msg-hoc__highlighted' : '',
         ])}
       >
         {/* date-separator */}

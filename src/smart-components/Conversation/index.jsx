@@ -61,7 +61,7 @@ export const ConversationPanel = (props) => {
     startingPoint,
     highlightedMessage,
     useReaction,
-    replyType,
+    // replyType,
     showSearchIcon,
     onSearchClick,
     renderChatItem,
@@ -76,7 +76,7 @@ export const ConversationPanel = (props) => {
     onBeforeSendFileMessage,
     onBeforeUpdateUserMessage,
   } = props;
-
+  const replyType = 'NONE'; // TODO: Get back replyType for message threading
   const { sdk } = sdkStore;
   const { config } = props;
   const sdkError = sdkStore.error;
@@ -505,7 +505,7 @@ ConversationPanel.propTypes = {
   onSearchClick: PropTypes.func,
   onChatHeaderActionClick: PropTypes.func,
   useReaction: PropTypes.bool,
-  replyType: PropTypes.oneOf(['NONE', 'QUOTE_REPLY', 'THREAD']),
+  // replyType: PropTypes.oneOf(['NONE', 'QUOTE_REPLY', 'THREAD']),
   disableUserProfile: PropTypes.bool,
   renderUserProfile: PropTypes.func,
   useMessageGrouping: PropTypes.bool,
@@ -524,7 +524,7 @@ ConversationPanel.defaultProps = {
   renderMessageInput: null,
   renderChatHeader: null,
   useReaction: true,
-  replyType: 'NONE',
+  // replyType: 'NONE',
   showSearchIcon: false,
   onSearchClick: noop,
   disableUserProfile: false,
