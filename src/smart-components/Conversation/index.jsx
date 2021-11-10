@@ -98,6 +98,7 @@ export const ConversationPanel = (props) => {
   useEffect(() => {
     setIntialTimeStamp(startingPoint);
   }, [startingPoint, channelUrl]);
+  const [animatedMessageId, setAnimatedMessageId] = useState('');
   const [highLightedMessageId, setHighLightedMessageId] = useState(highlightedMessage);
   useEffect(() => {
     setHighLightedMessageId(highlightedMessage);
@@ -163,7 +164,7 @@ export const ConversationPanel = (props) => {
 
   const scrollToMessage = useScrollToMessage({
     setIntialTimeStamp,
-    setHighLightedMessageId,
+    setAnimatedMessageId,
     allMessages,
   }, { logger });
 
@@ -353,6 +354,7 @@ export const ConversationPanel = (props) => {
               swapParams={
                 sdk && sdk.getErrorFirstCallback && sdk.getErrorFirstCallback()
               }
+              animatedMessageId={animatedMessageId}
               highLightedMessageId={highLightedMessageId}
               userId={userId}
               hasMore={hasMore}

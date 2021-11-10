@@ -89,6 +89,7 @@ export default class ConversationScroll extends Component {
       resendMessage,
       renderCustomMessage,
       renderChatItem,
+      animatedMessageId,
       highLightedMessageId,
       emojiContainer,
       toggleReaction,
@@ -148,6 +149,7 @@ export default class ConversationScroll extends Component {
                         {
                           renderChatItem({
                             message: m,
+                            animatedMessageId,
                             highLightedMessageId,
                             channel: currentGroupChannel,
                             onDeleteMessage: deleteMessage,
@@ -168,6 +170,7 @@ export default class ConversationScroll extends Component {
 
                   return (
                     <MessageHOC
+                      animatedMessageId={animatedMessageId}
                       highLightedMessageId={highLightedMessageId}
                       renderCustomMessage={renderCustomMessage}
                       key={m.messageId || m.reqId}
@@ -247,6 +250,10 @@ ConversationScroll.propTypes = {
     markAsRead: PropTypes.func,
     members: PropTypes.arrayOf(PropTypes.shape({})),
   }).isRequired,
+  animatedMessageId: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
   highLightedMessageId: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,
@@ -274,6 +281,7 @@ ConversationScroll.defaultProps = {
   userId: '',
   renderCustomMessage: null,
   renderChatItem: null,
+  animatedMessageId: null,
   highLightedMessageId: null,
   onScroll: null,
   onScrollDown: null,

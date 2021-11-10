@@ -4,7 +4,7 @@ import { Logger } from '../../../index';
 
 interface DynamicParams {
   setIntialTimeStamp(ts: number): null;
-  setHighLightedMessageId(id: number): null;
+  setAnimatedMessageId(id: number): null;
   allMessages: SendbirdTypes['BaseMessageInstance'][];
 }
 
@@ -14,7 +14,7 @@ interface StaticParams {
 
 function useScrollToMessage({
   setIntialTimeStamp,
-  setHighLightedMessageId,
+  setAnimatedMessageId,
   allMessages,
 }: DynamicParams,
   { logger }: StaticParams,
@@ -24,21 +24,21 @@ function useScrollToMessage({
       const isPresent = allMessages.find((m) => (
         m.messageId === messageId
       ));
-      setHighLightedMessageId(null);
+      setAnimatedMessageId(null);
       setTimeout(() => {
         if (isPresent) {
           logger.info('Channel: scroll to message - message is present');
-          setHighLightedMessageId(messageId);
+          setAnimatedMessageId(messageId);
         } else {
           logger.info('Channel: scroll to message - fetching older messages');
           setIntialTimeStamp(null);
           setIntialTimeStamp(createdAt);
-          setHighLightedMessageId(messageId);
+          setAnimatedMessageId(messageId);
         }
       });
     }, [
     setIntialTimeStamp,
-    setHighLightedMessageId,
+    setAnimatedMessageId,
     allMessages,
   ],
   );

@@ -13,6 +13,7 @@ import Label, { LabelTypography, LabelColors } from '../../../ui/Label';
 import MessageInput from '../../../ui/MessageInput';
 import FileViewer from '../../../ui/FileViewer';
 import RemoveMessageModal from './RemoveMessage';
+import { getClassName } from '../../../utils';
 
 export default function MessageHoc({
   message,
@@ -30,6 +31,7 @@ export default function MessageHoc({
   chainBottom,
   membersMap,
   emojiContainer,
+  animatedMessageId,
   highLightedMessageId,
   toggleReaction,
   setQuoteMessage,
@@ -41,6 +43,7 @@ export default function MessageHoc({
   const [showRemove, setShowRemove] = useState(false);
   const [showFileViewer, setShowFileViewer] = useState(false);
   const [isAnimated, setIsAnimated] = useState(false);
+  const [isHighlighted, setIsHighlighted] = useState(false);
   const editMessageInputRef = useRef(null);
   const useMessageScrollRef = useRef(null);
 
@@ -51,6 +54,23 @@ export default function MessageHoc({
           block: 'center',
           inline: 'center',
         });
+        setIsAnimated(false);
+        setTimeout(() => {
+          setIsHighlighted(true);
+        }, 500);
+      }
+    } else {
+      setIsHighlighted(false);
+    }
+  }, [highLightedMessageId, useMessageScrollRef.current, message.messageId]);
+  useLayoutEffect(() => {
+    if (animatedMessageId === message.messageId) {
+      if (useMessageScrollRef && useMessageScrollRef.current) {
+        useMessageScrollRef.current.scrollIntoView({
+          block: 'center',
+          inline: 'center',
+        });
+        setIsHighlighted(false);
         setTimeout(() => {
           setIsAnimated(true);
         }, 500);
@@ -58,7 +78,7 @@ export default function MessageHoc({
     } else {
       setIsAnimated(false);
     }
-  }, [highLightedMessageId, useMessageScrollRef.current, message.messageId]);
+  }, [animatedMessageId, useMessageScrollRef.current, message.messageId]);
   const RenderedMessage = useMemo(() => {
     if (renderCustomMessage) {
       return renderCustomMessage(message, currentGroupChannel, chainTop, chainBottom);
@@ -76,10 +96,11 @@ export default function MessageHoc({
     return (
       <div
         ref={useMessageScrollRef}
-        className={`
-          sendbird-msg-hoc sendbird-msg--scroll-ref
-          ${isAnimated ? 'sendbird-msg-hoc__animated' : ''}
-        `}
+        className={getClassName([
+          'sendbird-msg-hoc sendbird-msg--scroll-ref',
+          isAnimated ? 'sendbird-msg-hoc__animated' : '',
+          isHighlighted ? 'sendbird-msg-hoc__highlighted' : ''
+        ])}
       >
         {/* date-separator */}
         {
@@ -113,10 +134,11 @@ export default function MessageHoc({
   return (
     <div
       ref={useMessageScrollRef}
-      className={`
-        sendbird-msg-hoc sendbird-msg--scroll-ref
-        ${isAnimated ? 'sendbird-msg-hoc__animated' : ''}
-      `}
+      className={getClassName([
+        'sendbird-msg-hoc sendbird-msg--scroll-ref',
+        isAnimated ? 'sendbird-msg-hoc__animated' : '',
+        isHighlighted ? 'sendbird-msg-hoc__highlighted' : '',
+      ])}
       style={{ marginBottom: '2px' }}
     >
       {/* date-separator */}
@@ -197,6 +219,10 @@ MessageHoc.propTypes = {
     ogMetaData: PropTypes.shape({}),
     parentMessageId: PropTypes.number,
   }),
+  animatedMessageId: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
   highLightedMessageId: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,
@@ -235,6 +261,7 @@ MessageHoc.defaultProps = {
   message: {},
   hasSeparator: false,
   disabled: false,
+  animatedMessageId: null,
   highLightedMessageId: null,
   toggleReaction: () => { },
   scrollToMessage: () => { },

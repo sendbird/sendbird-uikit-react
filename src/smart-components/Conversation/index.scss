@@ -61,6 +61,18 @@
 }
 
 .sendbird-msg-hoc__animated {
+  .sendbird-message-content {
+    animation: bounce 1s ease;
+    @keyframes bounce {
+        50% { transform:translateY(-10px); }
+        60% { transform:translateY(0); }
+        90% { transform:translateY(-10px); }
+        100% { transform:translateY(0); }
+    }
+  }
+}
+
+.sendbird-msg-hoc__highlighted {
   .sendbird-text-message-item-body,
   .sendbird-file-message-item-body {
     animation-name: sbHighlight;
@@ -107,6 +119,7 @@
 .sendbird-conversation__footer {
   position: relative;
   box-sizing: border-box;
+  margin-top: 6px;
   .sendbird-conversation__footer__typing-indicator {
     position: absolute;
     display: inline-flex;
