@@ -3,10 +3,7 @@ import React, {
   useEffect,
   useState,
   useContext,
-} from 'react'
-
-
-import { SendbirdTypes } from '../../../../types';
+} from 'react';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Modal from '../../../../ui/Modal';
@@ -16,22 +13,23 @@ import Label, {
 } from '../../../../ui/Label';
 import { Type as ButtonType } from '../../../../ui/Button/type';
 import UserListItem from '../../../../ui/UserListItem';
+import { useChannelSettings } from '../../context/ChannelSettingsProvider';
 
 interface Props {
-  hideModal(): void;
+  onCancel(): void;
   onSubmit(members: Array<string>): void;
-  channel: SendbirdTypes["GroupChannel"];
 }
 
 export default function AddOperatorsModal({
-  hideModal,
-  channel,
+  onCancel,
   onSubmit,
 }: Props): ReactElement {
   const [members, setMembers] = useState([]);
   const [selectedMembers, setSelectedMembers] = useState({});
   const [memberQuery, setMemberQuery] = useState(null);
   const { stringSet } = useContext(LocalizationContext);
+
+  const { channel } = useChannelSettings();
 
   useEffect(() => {
     const memberListQuery = channel.createMemberListQuery();
@@ -51,10 +49,12 @@ export default function AddOperatorsModal({
       <Modal
         type={ButtonType.PRIMARY}
         submitText="Add"
-        onCancel={() => hideModal()}
+        onCancel={onCancel}
         onSubmit={() => {
           const members = Object.keys(selectedMembers).filter((m) => selectedMembers[m]);
-          onSubmit(members);
+          channel?.addOperators(members).then(() => {
+            onSubmit(members);
+          })
         }}
         titleText="Select members"
       >

@@ -13,28 +13,33 @@ import { Type as ButtonType } from '../../../ui/Button/type';
 import Label, { LabelColors, LabelTypography } from '../../../ui/Label';
 import TextButton from '../../../ui/TextButton';
 import OpenChannelAvatar from '../../../ui/ChannelAvatar/OpenChannelAvatar';
+import { useOpenChannelSettings } from '../context/OpenChannelSettingsProvider';
+import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 
 interface Props {
-  onSubmit(newFile: File, newTitle: string): void;
   onCancel(): void;
-  channel: SendBird.OpenChannel;
-  theme: string;
 }
 
 const EditDetails = (props: Props): ReactElement => {
   const {
-    onSubmit,
     onCancel,
-    channel,
-    theme,
   } = props;
+  const globalState = useSendbirdStateContext();
+  const logger = globalState?.config?.logger;
+  const {
+    channel,
+    onBeforeUpdateChannel,
+    onChannelModified,
+    setChannel,
+  } = useOpenChannelSettings();
+
   const inputRef = useRef(null);
   const formRef = useRef(null);
   const hiddenInputRef = useRef(null);
   const [currentImg, setCurrentImg] = useState(null);
   const [newFile, setNewFile] = useState(null);
   const { stringSet } = useContext(LocalizationContext);
-  const title = channel.name;
+  const title = channel?.name;
   return (
     <Modal
       titleText={stringSet.MODAL__CHANNEL_INFORMATION__TITLE}
@@ -47,7 +52,32 @@ const EditDetails = (props: Props): ReactElement => {
           }
           return;
         }
-        onSubmit(newFile, inputRef.current.value);
+        const currentTitle = inputRef.current.value;
+        const currentImg = newFile;
+        logger.info('ChannelSettings: Channel information being updated');
+        if (onBeforeUpdateChannel) {
+          const params = onBeforeUpdateChannel(currentTitle, currentImg, channel?.data);
+          logger.info('ChannelSettings: onBeforeUpdateChannel', params);
+          channel?.updateChannel(params, (openChannel) => {
+            onChannelModified(openChannel);
+            // setChannel(openChannel) => alone not working
+            setChannel(null);
+            setChannel(openChannel);
+          });
+        } else {
+          channel?.updateChannel(
+            currentTitle,
+            currentImg,
+            channel?.data,
+            (openChannel) => {
+              logger.info('ChannelSettings: Channel information updated', openChannel);
+              onChannelModified(openChannel);
+              // setChannel(openChannel) => alone not working
+              setChannel(null);
+              setChannel(openChannel);
+            },
+          );
+        }
         onCancel();
       }}
       type={ButtonType.PRIMARY}

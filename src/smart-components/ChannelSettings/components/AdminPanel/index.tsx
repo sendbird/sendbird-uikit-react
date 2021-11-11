@@ -1,14 +1,13 @@
-import './index.scss';
+import './admin-panel.scss';
 import React, {
   ReactElement,
   useEffect,
   useState,
   useContext,
 } from 'react';
-import { SendbirdTypes } from '../../../../types';
 
-import Accordion, { AccordionGroup } from '../../../../ui/Accordion';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
+import Accordion, { AccordionGroup } from '../../../../ui/Accordion';
 import
   Label, {
   LabelTypography,
@@ -22,24 +21,20 @@ import MemberList from './MemberList';
 import BannedMemberList from './BannedMemberList';
 import MutedMemberList from './MutedMemberList';
 
+import { useChannelSettings } from '../../context/ChannelSettingsProvider';
+
 const kFormatter = (num: number): string|number => {
   return Math.abs(num) > 999
     ? `${(Math.abs(num)/1000).toFixed(1)}K`
     : num;
 }
 
-interface Props {
-  channel: SendbirdTypes['GroupChannel'];
-  userQueryCreator(): SendbirdTypes['UserListQuery'];
-  userId: string;
-}
-
-export default function AdminPannel({
-  userQueryCreator,
-  channel,
-  userId,
-}: Props): ReactElement {
+export default function AdminPannel(): ReactElement {
   const [frozen, setFrozen] = useState(false);
+
+  const { stringSet } = useContext(LocalizationContext);
+  const { channel } = useChannelSettings();
+
 
   // work around for
   // https://sendbird.slack.com/archives/G01290GCDCN/p1595922832000900
@@ -47,7 +42,7 @@ export default function AdminPannel({
   useEffect(() => {
     setFrozen(channel.isFrozen);
   }, [channel]);
-  const { stringSet } = useContext(LocalizationContext);
+
   return (
     <AccordionGroup className="sendbird-channel-settings__operator">
       <Accordion
@@ -72,7 +67,7 @@ export default function AdminPannel({
         )}
         renderContent={() => (
           <>
-            <OperatorList channel={channel} />
+            <OperatorList />
           </>
         )}
       />
@@ -99,11 +94,7 @@ export default function AdminPannel({
         )}
         renderContent={() => (
           <>
-            <MemberList
-              userQueryCreator={userQueryCreator}
-              channel={channel}
-              userId={userId}
-            />
+            <MemberList />
           </>
         )}
       />
@@ -132,7 +123,7 @@ export default function AdminPannel({
             )}
             renderContent={() => (
               <>
-                <MutedMemberList channel={channel} />
+                <MutedMemberList />
               </>
             )}
           />
@@ -160,12 +151,12 @@ export default function AdminPannel({
         )}
         renderContent={() => (
           <>
-            <BannedMemberList channel={channel} />
+            <BannedMemberList />
           </>
         )}
       />
       {
-        // cannot frozen broadcast channel
+        // cannot freeze broadcast channel
         !channel.isBroadcast && (
           <div className="sendbird-channel-settings__freeze">
             <Icon

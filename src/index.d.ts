@@ -6,6 +6,14 @@
 import React from 'react';
 import Sendbird from 'sendbird';
 
+import AppProps from './smart-components/App/types';
+
+import {
+  UserListQuery,
+  RenderUserProfileProps,
+  SendBirdProviderConfig,
+} from './types';
+
 export type OpenChannelType = Sendbird.OpenChannel;
 export type GroupChannelType = Sendbird.GroupChannel;
 
@@ -28,7 +36,18 @@ export function useSendbirdStateContext(): SendBirdState;
 export type SendBirdState = {
   config: SendBirdStateConfig;
   stores: SendBirdStateStore;
+  dispatchers: {
+    userDispatcher: UserDispatcher,
+  },
 }
+
+type UserDispatcherParams = {
+  type: string,
+  payload: Sendbird.User
+};
+
+type UserDispatcher = (params: UserDispatcherParams) => void;
+
 export namespace SendBirdSelectors {
   type GetSdk = Sendbird.SendBirdInstance | undefined;
   type GetConnect = (
@@ -158,7 +177,7 @@ interface OpenChannelSettingsProps {
   onChannelModified?(channel: Sendbird.OpenChannel): void;
   onDeleteChannel?(channel: Sendbird.OpenChannel): void;
   renderChannelProfile?: (props: SendbirdUIKit.RenderOpenChannelProfileProps) => React.ReactNode;
-  renderUserProfile?: (props: SendbirdUIKit.RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   disableUserProfile?: boolean;
 }
 
@@ -190,6 +209,8 @@ interface SendBirdStateConfig {
   appId: string;
   accessToken: string;
   theme: string;
+  pubSub: any;
+  logger: Logger;
   setCurrenttheme: (theme: string) => void;
   userListQuery?(): UserListQuery;
   imageCompression?: {
@@ -218,18 +239,6 @@ export type MessageSearchQueryType = Sendbird.MessageSearchQueryOptions;
 
 export type Sdk = Sendbird.SendBirdInstance;
 
-interface RenderUserProfileProps {
-  user: Sendbird.Member | Sendbird.User;
-  currentUserId: string;
-  close(): void;
-}
-interface UserListQuery {
-  hasNext?: boolean;
-  next(callback: unknown): void;
-}
-interface SendBirdProviderConfig {
-  logLevel?: 'debug' | 'warning' | 'error' | 'info' | 'all' | Array<string>;
-}
 interface RenderChannelProfileProps {
   channel: Sendbird.GroupChannel;
 }
@@ -238,11 +247,7 @@ interface RenderOpenChannelProfileProps {
   channel: Sendbird.OpenChannel;
   user: Sendbird.User;
 }
-interface RenderUserProfileProps {
-  user: Sendbird.User | Sendbird.Member;
-  currentUserId: string;
-  close(): void;
-}
+
 interface ApplicationUserListQuery {
   limit?: number;
   userIdsFilter?: Array<string>;
@@ -364,6 +369,7 @@ interface ChannelListProps {
   onThemeChange?(theme: string): void;
   onProfileEditSuccess?(user: Sendbird.User): void;
   onChannelSelect?(channel: Sendbird.GroupChannel): void;
+  sortChannelList?: (channels: Sendbird.GroupChannel[]) => Sendbird.GroupChannel[];
   renderChannelPreview?: (props: RenderChannelPreviewProps) => React.ReactNode;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   renderHeader?: (props: void) => React.ReactNode;
@@ -426,31 +432,6 @@ interface ChannelSettingsProps {
   renderChannelProfile?: (props: RenderChannelProfileProps) => React.ReactNode;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   queries?: ChannelSettingsQueries;
-}
-interface AppProps {
-  appId: string;
-  userId: string;
-  accessToken?: string;
-  theme?: 'light' | 'dark';
-  userListQuery?(): UserListQuery;
-  nickname?: string;
-  profileUrl?: string;
-  allowProfileEdit?: boolean;
-  disableUserProfile?: boolean;
-  showSearchIcon?: boolean;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
-  onProfileEditSuccess?(user: Sendbird.User): void;
-  config?: SendBirdProviderConfig;
-  useReaction?: boolean;
-  useMessageGrouping?: boolean;
-  stringSet?: Record<string, string>;
-  colorSet?: Record<string, string>;
-  imageCompression?: {
-    compressionRate?: number,
-    resizingWidth?: number | string,
-    resizingHeight?: number | string,
-  };
-  replyType?: ReplyType;
 }
 
 interface ClientMessage {

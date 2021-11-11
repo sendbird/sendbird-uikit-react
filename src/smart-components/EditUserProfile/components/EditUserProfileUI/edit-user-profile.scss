@@ -1,0 +1,33 @@
+@import '../../../../styles/variables';
+
+.sendbird-edit-user-profile {
+  section {
+    margin-top: 16px;
+    .sendbird-input-label {
+      display: block;
+      margin-bottom: 12px;
+    }
+  }
+
+  .sendbird-edit-user-profile__img {
+    .sendbird-input-label {
+      margin-bottom: 12px;
+    }
+  }
+}
+
+.sendbird-edit-user-profile__img {
+  position: relative;
+}
+
+.sendbird-edit-user-profile__img__avatar-button {
+  position: absolute;
+  top: 50px;
+  left: 96px;
+}
+
+.sendbird-edit-user-profile__theme__theme-icon {
+  .sendbird-icon {
+    cursor: pointer;
+  }
+}

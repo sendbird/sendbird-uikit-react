@@ -2,9 +2,7 @@ import React, {
   ReactElement,
   useEffect,
   useState,
-} from 'react'
-
-import { SendbirdTypes } from '../../../../types';
+} from 'react';
 
 import Modal from '../../../../ui/Modal';
 import UserListItem from '../../../../ui/UserListItem';
@@ -13,18 +11,18 @@ import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 
 import { noop } from '../../../../utils/utils';
+import { useChannelSettings } from '../../context/ChannelSettingsProvider';
 
 interface Props {
-  hideModal(): void;
-  channel: SendbirdTypes["GroupChannel"];
+  onCancel(): void;
 }
 
 export default function BannedMembersModal({
-  hideModal,
-  channel,
+  onCancel,
 }: Props): ReactElement {
   const [members, setMembers] = useState([]);
   const [memberQuery, setMemberQuery] = useState(null);
+  const { channel } = useChannelSettings();
 
   useEffect(() => {
     const bannedUserListQuery = channel.createBannedUserListQuery();
@@ -40,7 +38,7 @@ export default function BannedMembersModal({
     <div>
       <Modal
         hideFooter
-        onCancel={() => hideModal()}
+        onCancel={() => onCancel()}
         onSubmit={noop}
         titleText="Muted members"
       >

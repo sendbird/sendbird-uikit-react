@@ -4,29 +4,24 @@ import React, {
   useState,
 } from 'react'
 
-
-import { SendbirdTypes } from '../../../../types';
-
 import Modal from '../../../../ui/Modal';
 import UserListItem from '../../../../ui/UserListItem';
 import IconButton from '../../../../ui/IconButton';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
-import { noop } from '../../../../utils/utils';
 
-interface Props {
-  hideModal(): void;
-  channel: SendbirdTypes["GroupChannel"];
-  currentUser?: string;
-}
+import { useChannelSettings } from '../../context/ChannelSettingsProvider';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
-export default function OperatorsModal({
-  hideModal,
-  channel,
-  currentUser,
-}: Props): ReactElement {
+interface Props { onCancel?(): void }
+
+export default function OperatorsModal({ onCancel }: Props): ReactElement {
   const [operators, setOperators] = useState([]);
   const [operatorQuery, setOperatorQuery] = useState(null);
+
+  const { channel } = useChannelSettings();
+  const state = useSendbirdStateContext();
+  const currentUser = state?.config?.userId;
 
   useEffect(() => {
     const operatorListQuery = channel.createOperatorListQuery();
@@ -43,9 +38,8 @@ export default function OperatorsModal({
     <div>
       <Modal
         hideFooter
-        onCancel={() => hideModal()}
-        onSubmit={noop}
         titleText="All operators"
+        onCancel={onCancel}
       >
         <div
           className="sendbird-more-members__popup-scroll"

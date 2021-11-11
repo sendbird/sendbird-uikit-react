@@ -1,0 +1,34 @@
+@import '../../../../styles/variables';
+
+.sendbird-openchannel-profile {
+  position: relative;
+  text-align: center;
+  padding: 32px 40px 27px 40px;
+  @include themed() {
+    border-bottom: 1px solid t(on-bg-4);
+    background-color: t(bg-0);
+  }
+
+  .sendbird-openchannel-profile--inner {
+    height: 116px;
+  }
+
+  .sendbird-openchannel-profile__avatar {
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .sendbird-openchannel-profile__title {
+    max-width: 240px;
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    height: 18px;
+  }
+
+  .sendbird-openchannel-profile__edit {
+    position: absolute;
+    top: 10px;
+    right: 16px;
+  }
+}

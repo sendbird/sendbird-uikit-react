@@ -1,31 +1,32 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 
-
-import { SendbirdTypes } from '../../../../types';
-
 import Modal from '../../../../ui/Modal';
 import { Type as ButtonType } from '../../../../ui/Button/type';
 import UserListItem from '../../../../ui/UserListItem';
+import { useChannelSettings } from '../../context/ChannelSettingsProvider';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
 interface Props {
-  hideModal(): void;
+  onCancel(): void;
   onSubmit(members: Array<string>): void;
-  channel: SendbirdTypes['GroupChannel'];
-  userQueryCreator(): SendbirdTypes['UserListQuery'];
 }
 
 export default function InviteMembers({
-  hideModal,
-  userQueryCreator,
+  onCancel,
   onSubmit,
 }: Props): ReactElement {
   const [members, setMembers] = useState([]);
   const [selectedMembers, setSelectedMembers] = useState({});
   const [userQuery, setUserQuery] = useState(null);
 
+  const state = useSendbirdStateContext();
+  const sdk = state?.stores?.sdkStore?.sdk;
+
+  const { channel } = useChannelSettings();
+
   useEffect(() => {
-    const userListQuery = userQueryCreator();
-    userListQuery.limit = 20;
+    const userListQuery = sdk?.createApplicationUserListQuery();
+    
     userListQuery.next((members, error) => {
       if (error) {
         return;
@@ -33,17 +34,19 @@ export default function InviteMembers({
       setMembers(members);
     });
     setUserQuery(userListQuery);
-  }, [])
+  }, [sdk])
   return (
     <div>
       <Modal
         disabled={Object.keys(selectedMembers).length === 0}
         submitText="Invite"
         type={ButtonType.PRIMARY}
-        onCancel={() => hideModal()}
+        onCancel={() => onCancel()}
         onSubmit={() => {
           const members = Object.keys(selectedMembers).filter((m) => selectedMembers[m]);
-          onSubmit(members);
+          channel.inviteWithUserIds(members).then(() => {
+            onSubmit(members);
+          });
         }}
         titleText="Select members"
       >

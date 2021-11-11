@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import './index.scss';
 
 import Sendbird from '../../lib/Sendbird';
-import OpenChannel from '../OpenchannelConversation';
+import OpenChannel from '../OpenChannel';
 import OpenChannelSettings from '../OpenChannelSettings';
 
 interface Props {

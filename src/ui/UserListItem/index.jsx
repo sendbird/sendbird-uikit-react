@@ -165,7 +165,10 @@ UserListItem.propTypes = {
   }).isRequired,
   disableMessaging: PropTypes.bool,
   currentUser: PropTypes.string,
-  action: PropTypes.element,
+  action: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.func,
+  ]),
   checkBox: PropTypes.bool,
   checked: PropTypes.bool,
   onChange: PropTypes.func,

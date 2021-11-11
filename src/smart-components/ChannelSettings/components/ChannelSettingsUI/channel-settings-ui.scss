@@ -1,0 +1,90 @@
+@import '../../../../styles/variables';
+
+.sendbird-channel-settings {
+  height: 100%;
+  width: 320px;
+  display: inline-block;
+  box-sizing: border-box;
+  @include themed() {
+    background-color: t(bg-0);
+    border-left: 1px solid t(on-bg-4--bg-6);
+  }
+
+  .sendbird-channel-settings__header-icon {
+    cursor: pointer;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    .sendbird-channel-settings__close-icon {
+      path {
+        @include themed() {
+          fill: t(on-bg-1);
+        }
+      }
+    }
+  }
+
+  .sendbird-channel-settings__members {
+    .sendbird-badge__text {
+      margin-top: -2px;
+    }
+  }
+
+  .sendbird-channel-settings__header {
+    height: 64px;
+    min-height: 64px;
+    position: relative;
+    padding: 20px 24px;
+    box-sizing: border-box;
+    @include themed() {
+      border-bottom: solid 1px t(on-bg-4);
+    }
+  }
+
+  .sendbird-channel-settings__scroll-area {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    height: calc(100% - 64px);
+    overflow-y: auto;
+  }
+
+  .sendbird-channel-settings__panel-item {
+    cursor: pointer;
+    position: relative;
+    padding: 12px 22px 10px 56px;
+    @include themed() {
+      background-color: t(bg-0);
+      border-bottom: 1px solid t(on-bg-4);
+    }
+    &:focus {
+      outline: none;
+    }
+    &.sendbird-channel-settings__panel-item__disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  .sendbird-channel-settings__panel-icon-left,
+  .sendbird-channel-settings__panel-icon-right {
+    position: absolute;
+    top: 10px;
+  }
+
+  .sendbird-channel-settings__panel-icon-left {
+    left: 16px;
+  }
+  .sendbird-channel-settings__panel-icon-right {
+    right: 16px;
+  }
+  .sendbird-channel-settings__panel-icon--open {
+    transform: rotate(90deg);
+  }
+  .sendbird-channel-settings__panel-icon--chevron {
+    path {
+      @include themed() {
+        fill: t(on-bg-1);
+      }
+    }
+  }
+}

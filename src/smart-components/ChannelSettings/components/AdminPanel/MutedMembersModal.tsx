@@ -2,10 +2,7 @@ import React, {
   ReactElement,
   useEffect,
   useState,
-} from 'react'
-
-
-import { SendbirdTypes } from '../../../../types';
+} from 'react';
 
 import Modal from '../../../../ui/Modal';
 import UserListItem from '../../../../ui/UserListItem';
@@ -13,20 +10,22 @@ import IconButton from '../../../../ui/IconButton';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 import { noop } from '../../../../utils/utils';
+import { useChannelSettings } from '../../context/ChannelSettingsProvider';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
 interface Props {
-  hideModal(): void;
-  channel: SendbirdTypes["GroupChannel"];
-  currentUser?: string;
+  onCancel(): void;
 }
 
 export default function MutedMembersModal({
-  hideModal,
-  channel,
-  currentUser,
+  onCancel,
 }: Props): ReactElement {
   const [members, setMembers] = useState([]);
   const [memberQuery, setMemberQuery] = useState(null);
+
+  const { channel } = useChannelSettings();
+  const state = useSendbirdStateContext();
+  const currentUser = state?.config?.userId;
 
   useEffect(() => {
     const memberUserListQuery = channel.createMemberListQuery();
@@ -44,7 +43,7 @@ export default function MutedMembersModal({
     <div>
       <Modal
         hideFooter
-        onCancel={() => hideModal()}
+        onCancel={() => onCancel()}
         onSubmit={noop}
         titleText="Muted members"
       >

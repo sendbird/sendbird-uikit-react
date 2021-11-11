@@ -7,13 +7,9 @@ export App from './smart-components/App/index';
 // Individual smart components
 export ChannelSettings from './smart-components/ChannelSettings';
 export ChannelList from './smart-components/ChannelList';
-export Channel, {
-  getEmojiCategoriesFromEmojiContainer,
-  getAllEmojisFromEmojiContainer,
-  getEmojisFromEmojiContainer,
-} from './smart-components/Conversation';
+export Channel from './smart-components/Channel';
 export getStringSet from './ui/Label/stringSet';
-export OpenChannel from './smart-components/OpenchannelConversation';
+export OpenChannel from './smart-components/OpenChannel';
 export OpenChannelSettings from './smart-components/OpenChannelSettings';
 export MessageSearch from './smart-components/MessageSearch';
 

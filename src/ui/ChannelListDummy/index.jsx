@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import DefaultChannelPreview from '../ChannelPreview';
 import ChannelPreviewAction from '../../smart-components/ChannelList/components/ChannelPreviewAction';
 
+// Legacy
 export default function ChannelList({ channels, ChannelPreview }) {
   return (
     <div
