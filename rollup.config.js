@@ -24,14 +24,14 @@ module.exports = ({
   // To bundle split
   input: {
     index: 'src/index.js',
-    App: 'src/smart-components/App/index.jsx',
-    ChannelList: 'src/smart-components/ChannelList/index.jsx',
-    ChannelSettings: 'src/smart-components/ChannelSettings/index.jsx',
-    Channel: 'src/smart-components/Conversation/index.jsx',
-    OpenChannel: 'src/smart-components/OpenchannelConversation/index.tsx',
-    MessageSearch: 'src/smart-components/MessageSearch/index.tsx',
-    OpenChannelSettings: 'src/smart-components/OpenChannelSettings/index.tsx',
-    SendbirdProvider: 'src/lib/Sendbird.jsx',
+    // App: 'src/smart-components/App/index.jsx',
+    // ChannelList: 'src/smart-components/ChannelList/index.jsx',
+    // ChannelSettings: 'src/smart-components/ChannelSettings/index.jsx',
+    // Channel: 'src/smart-components/Conversation/index.jsx',
+    // OpenChannel: 'src/smart-components/OpenchannelConversation/index.tsx',
+    // MessageSearch: 'src/smart-components/MessageSearch/index.tsx',
+    // OpenChannelSettings: 'src/smart-components/OpenChannelSettings/index.tsx',
+    // SendbirdProvider: 'src/lib/Sendbird.jsx',
   },
   output: [
     {

@@ -5,10 +5,6 @@ import React, {
   useCallback,
 } from 'react';
 
-import { SendbirdTypes } from '../../../../types';
-
-import withSendbirdContext from '../../../../lib/SendbirdSdkContext';
-import { getSdk } from '../../../../lib/selectors';
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import IconButton from '../../../../ui/IconButton';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
@@ -20,16 +16,18 @@ import
 } from '../../../../ui/Label';
 import UserListItem from '../UserListItem';
 import MutedMembersModal from './MutedMembersModal';
+import { useChannelSettings } from '../../context/ChannelSettingsProvider';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
-interface Props {
-  sdk: SendbirdTypes["SendBirdInstance"];
-  channel: SendbirdTypes["GroupChannel"];
-}
 
-export const MutedMemberList = ({ sdk, channel }: Props): ReactElement => {
+export const MutedMemberList = (): ReactElement => {
   const [members, setMembers] = useState([]);
   const [hasNext, setHasNext] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
+  const { channel } = useChannelSettings();
+  const state = useSendbirdStateContext();
+  const currentUser = state?.config?.userId;
 
   useEffect(() => {
     if (!channel) {
@@ -73,7 +71,7 @@ export const MutedMemberList = ({ sdk, channel }: Props): ReactElement => {
           <UserListItem
             key={member.userId}
             user={member}
-            currentUser={sdk.currentUser.userId}
+            currentUser={currentUser}
             action={({ actionRef, parentRef }) => {
               return (
                 <ContextMenu
@@ -149,9 +147,7 @@ export const MutedMemberList = ({ sdk, channel }: Props): ReactElement => {
       {
         showModal && (
           <MutedMembersModal
-            currentUser={sdk.currentUser.userId}
-            channel={channel}
-            hideModal={() => {
+            onCancel={() => {
               setShowModal(false);
               refreshList();
             }}
@@ -162,8 +158,4 @@ export const MutedMemberList = ({ sdk, channel }: Props): ReactElement => {
   );
 }
 
-const mapStoreToProps = (store) => ({
-  sdk: getSdk(store),
-});
-
-export default withSendbirdContext(MutedMemberList, mapStoreToProps);
+export default MutedMemberList;

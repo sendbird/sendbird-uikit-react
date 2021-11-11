@@ -10,6 +10,7 @@ import IconButton from '../IconButton';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Button, { ButtonTypes } from '../Button';
 import Label, { LabelTypography, LabelColors } from '../Label';
+import { noop } from '../../utils/utils';
 
 export const ModalHeader = ({ titleText }) => (
   <div className="sendbird-modal__header">
@@ -73,7 +74,7 @@ export default function Modal(props) {
   const {
     children,
     onCancel,
-    onSubmit,
+    onSubmit = noop,
     disabled,
     submitText,
     titleText,
@@ -122,7 +123,7 @@ Modal.propTypes = {
     PropTypes.arrayOf(PropTypes.element),
   ]),
   onCancel: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func,
   hideFooter: PropTypes.bool,
   disabled: PropTypes.bool,
   type: PropTypes.string,

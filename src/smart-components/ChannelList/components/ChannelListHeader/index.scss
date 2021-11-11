@@ -1,0 +1,71 @@
+@import '../../../../styles/variables';
+
+.sendbird-channel-header {
+  position: relative;
+  height: 64px;
+  min-height: 64px;
+  width: 320px;
+  padding: 8px 64px 8px 8px;
+  box-sizing: border-box;
+  @include themed() {
+    border-bottom: 1px solid t(on-bg-4);
+    background-color: t(bg-0);
+  }
+
+  &.sendbird-channel-header--allow-edit {
+    .sendbird-channel-header__title {
+      cursor: pointer;
+    }
+  }
+
+  .sendbird-channel-header__title {
+    display: flex;
+    flex-direction: row;
+    width: 260px;
+    height: 48px;
+    border-radius: 4px;
+
+    &:hover {
+      @include themed() {
+        background: t(bg-1);
+      }
+    }
+    &:focus {
+      outline: none;
+      @include themed() {
+        background: t(bg-2);
+      }
+    }
+    &:active {
+      @include themed() {
+        border: solid 2px t(primary-3);
+      }
+    }
+
+    .sendbird-channel-header__title__left {
+      width: 48px;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+
+    .sendbird-channel-header__title__right {
+      margin-left: 4px;
+      padding-top: 8px;
+    }
+
+    .sendbird-channel-header__title__right__name,
+    .sendbird-channel-header__title__right__user-id {
+      display: block;
+      max-width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .sendbird-channel-header__right-icon {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+  }
+}

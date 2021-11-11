@@ -6,11 +6,7 @@ import React, {
   useContext,
 } from 'react';
 
-import { SendbirdTypes } from '../../../../types';
-
-import withSendbirdContext from '../../../../lib/SendbirdSdkContext';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { getSdk } from '../../../../lib/selectors';
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import IconButton from '../../../../ui/IconButton';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
@@ -19,18 +15,20 @@ import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 import UserListItem from '../UserListItem';
 import OperatorsModal from './OperatorsModal';
 import AddOperatorsModal from './AddOperatorsModal';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { useChannelSettings } from '../../context/ChannelSettingsProvider';
 
-interface Props {
-  sdk: SendbirdTypes["SendBirdInstance"];
-  channel: SendbirdTypes["GroupChannel"];
-}
-
-export const OperatorList = ({ sdk, channel }: Props): ReactElement => {
+export const OperatorList = (): ReactElement => {
   const [operators, setOperators] = useState([]);
   const [showMore, setShowMore] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [hasNext, setHasNext] = useState(false);
   const { stringSet } = useContext(LocalizationContext);
+
+  const state = useSendbirdStateContext();
+  const { channel } = useChannelSettings();
+
+  const userId = state?.config?.userId;
 
   useEffect(() => {
     if (!channel) {
@@ -75,7 +73,7 @@ export const OperatorList = ({ sdk, channel }: Props): ReactElement => {
           <UserListItem
             key={operator.userId}
             user={operator}
-            currentUser={sdk.currentUser.userId}
+            currentUser={userId}
             action={({ actionRef, parentRef }) => {
               return (
                 <ContextMenu
@@ -124,11 +122,20 @@ export const OperatorList = ({ sdk, channel }: Props): ReactElement => {
           />
         ))
       }
-      {
-        hasNext && (
-          <div
-            className="sendbird-channel-settings-accordion__footer"
-          >
+      <div
+        className="sendbird-channel-settings-accordion__footer"
+      >
+        <Button
+          type={ButtonTypes.SECONDARY}
+          size={ButtonSizes.SMALL}
+          onClick={() => {
+            setShowAdd(true);
+          }}
+        >
+          {stringSet.CHANNEL_SETTING__OPERATORS__TITLE_ADD}
+        </Button>
+        {
+          hasNext && (
             <Button
               type={ButtonTypes.SECONDARY}
               size={ButtonSizes.SMALL}
@@ -138,40 +145,24 @@ export const OperatorList = ({ sdk, channel }: Props): ReactElement => {
             >
               {stringSet.CHANNEL_SETTING__OPERATORS__TITLE_ALL}
             </Button>
-            <Button
-              type={ButtonTypes.SECONDARY}
-              size={ButtonSizes.SMALL}
-              onClick={() => {
-                setShowAdd(true);
-              }}
-            >
-              {stringSet.CHANNEL_SETTING__OPERATORS__TITLE_ADD}
-            </Button>
-          </div>
-        )
-      }
+          )
+        }
+      </div>
       {
         showMore && (
-          <OperatorsModal
-            currentUser={sdk.currentUser.userId}
-            hideModal={() => {
-              setShowMore(false);
-              refershList();
-            }}
-            channel={channel}
-          />
+          <OperatorsModal onCancel={() => {
+            setShowMore(false);
+            refershList();
+          }} />
         )
       }
       {
         showAdd && (
           <AddOperatorsModal
-            hideModal={() => setShowAdd(false)}
-            channel={channel}
-            onSubmit={(members) => {
+            onCancel={() => setShowAdd(false)}
+            onSubmit={() => {
+              refershList();
               setShowAdd(false);
-              channel.addOperators(members, () => {
-                refershList();
-              });
             }}
           />
         )
@@ -180,8 +171,4 @@ export const OperatorList = ({ sdk, channel }: Props): ReactElement => {
   );
 }
 
-const mapStoreToProps = (store) => ({
-  sdk: getSdk(store),
-});
-
-export default withSendbirdContext(OperatorList, mapStoreToProps);
+export default OperatorList;

@@ -1,0 +1,138 @@
+@import '../../../../styles/variables';
+
+.sendbird-conversation {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  @include themed() {
+    background-color: t(bg-0);
+    border: 1px solid t(on-bg-4);
+  }
+}
+
+.sendbird-conversation__messages {
+  overflow-y: auto;
+  flex: 1 1 0;
+  order: 2;
+}
+
+.sendbird-conversation__messages-list {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.sendbird-conversation__footer {
+  width: 100%;
+  order: 3;
+  padding: 0px 0px 24px 0px;
+}
+
+@keyframes sbHighlight {
+  0% {
+    background-color: #FFF2B6;
+  }
+  99% {
+    background-color: #FFF2B6;
+  }
+}
+
+@keyframes sbTextHighlight {
+  0% {
+    color: var(--sendbird-dark-onlight-01);
+  }
+  99% {
+    color: var(--sendbird-dark-onlight-01);
+  }
+}
+
+@keyframes sbHighlightBlock {
+  0% {
+    opacity: 0.5;
+    background-color: #FFF2B6;
+  }
+  99% {
+    opacity: 0.5;
+    background-color: #FFF2B6;
+  }
+}
+
+.sendbird-msg-hoc__animated {
+  .sendbird-message-content {
+    animation: bounce 1s ease;
+    @keyframes bounce {
+        50% { transform:translateY(-10px); }
+        60% { transform:translateY(0); }
+        90% { transform:translateY(-10px); }
+        100% { transform:translateY(0); }
+    }
+  }
+}
+
+.sendbird-msg-hoc__highlighted {
+  .sendbird-text-message-item-body,
+  .sendbird-file-message-item-body {
+    animation-name: sbHighlight;
+    animation-duration: 1.6s;
+    animation-fill-mode: forwards;
+  }
+
+  .sendbird-text-message-item-body__message,
+  .sendbird-file-message-item-body__file-name__text {
+    animation-name: sbTextHighlight;
+    animation-duration: 1.6s;
+    animation-fill-mode: forwards;
+  }
+
+
+  .sendbird-thumbnail-message-item-body
+  .sendbird-thumbnail-message-item-body__image-cover {
+    display: block;
+    animation-name: sbHighlightBlock;
+    animation-duration: 1.6s;
+    animation-fill-mode: forwards;
+  }
+
+  .sendbird-og-message-item-body
+  .sendbird-og-message-item-body__cover {
+    display: block;
+    animation-name: sbHighlightBlock;
+    animation-duration: 1.6s;
+    animation-fill-mode: forwards;
+  }
+
+  .sendbird-message-content-reactions {
+    animation-name: sbHighlight;
+    animation-duration: 1.6s;
+    animation-fill-mode: forwards;
+  }
+}
+
+.sendbird-conversation__scroll-container {
+  display: flex;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex-direction: column;
+  .sendbird-conversation__padding {
+    flex: 1 1 0;
+  }
+}
+
+.sendbird-conversation__footer {
+  position: relative;
+  box-sizing: border-box;
+  margin-top: 6px;
+  .sendbird-conversation__footer__typing-indicator {
+    position: absolute;
+    display: inline-flex;
+    bottom: 8px;
+    .sendbird-conversation__footer__typing-indicator__text {
+      margin-left: 24px;
+      margin-right: 10px;
+    }
+  }
+}

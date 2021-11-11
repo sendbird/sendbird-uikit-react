@@ -11,6 +11,7 @@ import { LocalizationContext } from '../../lib/LocalizationContext';
 
 import * as utils from './utils';
 
+// Legacy
 export default function ChannelPreview({
   channel,
   currentUser,

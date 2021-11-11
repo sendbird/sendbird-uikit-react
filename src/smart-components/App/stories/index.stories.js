@@ -5,7 +5,7 @@ import pkg from '../../../../package-lock.json'
 import App from '../index';
 import Sendbird from '../../../lib/Sendbird';
 import ChannelList from '../../ChannelList';
-import Conversation from '../../Conversation';
+import Channel from '../../Channel';
 import ChannelSettings from '../../ChannelSettings';
 import MessageSearch from '../../MessageSearch';
 import { withSendBird } from '../../..';
@@ -287,7 +287,7 @@ const SBChannel = withSendBird((props) => {
   } = props;
 
   return (
-    <Conversation
+    <Channel
       channelUrl={channelUrl}
       showSearchIcon={showSearchIcon}
       onSearchClick={onSearchClick}

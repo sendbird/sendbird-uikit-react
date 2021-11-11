@@ -1,207 +1,154 @@
-import React, { useReducer, useRef, useContext, useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import './index.scss';
 
-import widthSendbirdContext from '../../lib/SendbirdSdkContext';
-import messageSearchReducer from './dux/reducers';
-import messageSearchInitialState from './dux/initialState';
-
-import useSetChannel from './hooks/useSetChannel';
-import useGetSearchMessages from './hooks/useGetSearchedMessages';
-import useScrollCallback from './hooks/useScrollCallback';
-
-import MessageSearchItem from '../../ui/MessageSearchItem';
-import PlaceHolder, { PlaceHolderTypes } from '../../ui/PlaceHolder';
+import MessageSearch, { MessageSearchUIProps } from './components/MessageSearchUI';
 import { LocalizationContext } from '../../lib/LocalizationContext';
-import MessageSearchFileItem from '../../ui/MessageSearchFileItem';
+import Icon, { IconTypes, IconColors } from '../../ui/Icon';
+import IconButton from '../../ui/IconButton';
+import Label, { LabelTypography, LabelColors } from '../../ui/Label';
+import Loader from '../../ui/Loader';
+import { MessageSearchProvider, MessageSearchProviderProps } from './context/MessageSearchProvider';
 
-import SendbirdUIKit from '../../index';
-import useSearchStringEffect from './hooks/useSearchStringEffect';
-
-const COMPONENT_CLASS_NAME = 'sendbird-message-search';
-
-interface Props extends SendbirdUIKit.MessageSearchProps {
-  // sendbird internal props
-  stores: {
-    sdkStore?: SendbirdUIKit.SdkStore,
-    userStore?: SendbirdUIKit.UserStore,
-  };
-  config: {
-    userId: string,
-    isOnline: boolean,
-    logger?: SendbirdUIKit.Logger,
-    theme?: string,
-    /* eslint-disable @typescript-eslint/no-explicit-any*/
-    pubSub: any,
-    disableUserProfile?: boolean,
-    renderUserProfile?(): JSX.Element,
-    imageCompression?: {
-      compressionRate?: number,
-      resizingWidth?: number | string,
-      resizingHeight?: number | string,
-    },
-  };
+export interface MessageSearchPannelProps extends
+  MessageSearchUIProps, MessageSearchProviderProps {
+  onResultClick?: (message) => void;
+  onCloseClick?: () => void;
 }
 
-function MessageSearch(props: Props): JSX.Element {
+const COMPONENT_CLASS_NAME = 'sendbird-message-search-pannel';
+
+function MessageSearchPannel(props: MessageSearchPannelProps): JSX.Element {
   const {
-    // sendbird internal props
-    stores,
-    config,
-    // message search props
     channelUrl,
-    searchString,
-    messageSearchQuery,
-    renderSearchItem,
-    onResultLoaded,
     onResultClick,
+    onCloseClick,
+    messageSearchQuery,
+    renderPlaceHolderError,
+    renderPlaceHolderLoading,
+    renderPlaceHolderNoString,
+    renderPlaceHolderEmptyList,
+    renderSearchItem,
   } = props;
 
-  // hook variables
+  const [searchString, setSearchString] = useState('');
+  const [inputString, setInputString] = useState('');
+  const [loading, setLoading] = useState(false);
   const { stringSet } = useContext(LocalizationContext);
-  const [retryCount, setRetryCount] = useState(0); // this is a trigger flag for activating useGetSearchMessages
-  const [selectedMessageId, setSelectedMessageId] = useState(0);
-  const [messageSearchStore, messageSearchDispathcer] = useReducer(messageSearchReducer, messageSearchInitialState);
-  const {
-    allMessages,
-    loading,
-    isInvalid,
-    currentChannel,
-    currentMessageSearchQuery,
-    hasMoreResult,
-  } = messageSearchStore;
 
-  const getChannelName = () => {
-    if (currentChannel && currentChannel.name && currentChannel.name !== 'Group Channel') {
-      return currentChannel.name;
+  let timeout = null;
+  useEffect(() => {
+    if (timeout) {
+      clearTimeout(timeout);
     }
-    if (currentChannel && (currentChannel.name === 'Group Channel' || !currentChannel.name)) {
-      return currentChannel.members.map((member) => member.nickname || stringSet.NO_NAME).join(', ');
-    }
-    return stringSet.NO_TITLE;
+    timeout = setTimeout(() => {
+      setSearchString(inputString);
+      setLoading(true);
+      timeout = null;
+    }, 500);
+  }, [inputString]);
+
+  const handleOnChangeInputString = (e) => {
+    setInputString(e.target.value);
   };
 
-  // const
-  const { sdkStore } = stores;
-  const { logger } = config;
-  const { sdk } = sdkStore;
-  const sdkInit = sdkStore.initialized;
-  const scrollRef = useRef(null);
-  const handleOnScroll = (e) => {
-    const scrollElement = e.target;
-    const {
-      scrollTop,
-      scrollHeight,
-      clientHeight,
-    } = scrollElement;
-
-    if (!hasMoreResult) {
-      return;
-    }
-    if (scrollTop + clientHeight >= scrollHeight) {
-      onScroll(() => {
-        // after load more searched messages
-      });
-    }
+  const handleOnResultLoaded = () => {
+    setLoading(false);
   };
 
-  useSetChannel(
-    { channelUrl, sdkInit },
-    { sdk, logger, messageSearchDispathcer },
-  );
-
-  const requestString = useSearchStringEffect({ searchString }, { messageSearchDispathcer });
-
-  useGetSearchMessages(
-    { currentChannel, channelUrl, requestString, messageSearchQuery, onResultLoaded, retryCount },
-    { sdk, logger, messageSearchDispathcer },
-  );
-
-  const onScroll = useScrollCallback(
-    { currentMessageSearchQuery, hasMoreResult, onResultLoaded },
-    { logger, messageSearchDispathcer },
-  );
-
-  const handleRetryToConnect = () => {
-    setRetryCount(retryCount + 1);
+  const handleOnClickResetStringButton = (e) => {
+    e.stopPropagation();
+    setInputString('');
+    setSearchString('');
   };
-
-  if (isInvalid && searchString && requestString) {
-    return (
-      <div className={COMPONENT_CLASS_NAME}>
-        <PlaceHolder
-          type={PlaceHolderTypes.WRONG}
-          retryToConnect={handleRetryToConnect}
-        />
-      </div>
-    );
-  }
-
-  if (loading && searchString && requestString) {
-    return (
-      <div className={COMPONENT_CLASS_NAME}>
-        <PlaceHolder type={PlaceHolderTypes.SEARCHING} />
-      </div>
-    );
-  }
-
-  if (!searchString) {
-    return (
-      <div className={COMPONENT_CLASS_NAME}>
-        <PlaceHolder
-          type={PlaceHolderTypes.SEARCH_IN}
-          searchInString={getChannelName()}
-        />
-      </div>
-    );
-  }
 
   return (
-    <div
-      className={COMPONENT_CLASS_NAME}
-      onScroll={handleOnScroll}
-      ref={scrollRef}
-    >
-      {
-        (allMessages.length > 0)
-          ? (
-            allMessages.map((message) => {
-              if (renderSearchItem) {
-                return renderSearchItem({ message, onResultClick });
-              }
-              if (message.messageType === 'file') {
-                return (
-                  <MessageSearchFileItem
-                    className={`${COMPONENT_CLASS_NAME}__message-search-item`}
-                    message={message}
-                    key={message.messageId}
-                    selected={(selectedMessageId === message.messageId)}
-                    onClick={() => {
-                      onResultClick(message);
-                      setSelectedMessageId(message.messageId);
-                    }}
+    <div className={COMPONENT_CLASS_NAME}>
+      <div className={`${COMPONENT_CLASS_NAME}__header`}>
+        <Label
+          className={`${COMPONENT_CLASS_NAME}__header__title`}
+          type={LabelTypography.H_2}
+          color={LabelColors.ONBACKGROUND_1}
+        >
+          {stringSet.SEARCH_IN_CHANNEL}
+        </Label>
+        <IconButton
+          className={`${COMPONENT_CLASS_NAME}__header__close-button`}
+          width="32px"
+          height="32px"
+          onClick={onCloseClick}
+        >
+          <Icon
+            type={IconTypes.CLOSE}
+            fillColor={IconColors.ON_BACKGROUND_1}
+            width="22px"
+            height="22px"
+          />
+        </IconButton>
+      </div>
+      <div className={`${COMPONENT_CLASS_NAME}__input`}>
+        <div className={`${COMPONENT_CLASS_NAME}__input__container`}>
+            <Icon
+              className={`${COMPONENT_CLASS_NAME}__input__container__search-icon`}
+              type={IconTypes.SEARCH}
+              fillColor={IconColors.ON_BACKGROUND_3}
+              width="24px"
+              height="24px"
+            />
+            <input
+              className={`${COMPONENT_CLASS_NAME}__input__container__input-area`}
+              placeholder={stringSet.SEARCH}
+              value={inputString}
+              onChange={handleOnChangeInputString}
+            />
+            {
+              inputString && loading && (
+                <Loader
+                  className={`${COMPONENT_CLASS_NAME}__input__container__spinner`}
+                  width="20px"
+                  height="20px"
+                >
+                  <Icon
+                    type={IconTypes.SPINNER}
+                    fillColor={IconColors.PRIMARY}
+                    width="20px"
+                    height="20px"
                   />
-                );
-              }
-              return (
-                <MessageSearchItem
-                  className={`${COMPONENT_CLASS_NAME}__message-search-item`}
-                  message={message}
-                  key={message.messageId}
-                  selected={(selectedMessageId === message.messageId)}
-                  onClick={() => {
-                    onResultClick(message);
-                    setSelectedMessageId(message.messageId);
-                  }}
+                </Loader>
+              )
+            }
+            {
+              !loading && inputString && (
+                <Icon
+                  className={`${COMPONENT_CLASS_NAME}__input__container__reset-input-button`}
+                  type={IconTypes.REMOVE}
+                  fillColor={IconColors.ON_BACKGROUND_3}
+                  width="20px"
+                  height="20px"
+                  onClick={handleOnClickResetStringButton}
                 />
-              );
-            })
-          )
-          : (
-            <PlaceHolder type={PlaceHolderTypes.NO_RESULTS} />
-          )
-      }
+              )
+            }
+        </div>
+      </div>
+      <div className={`${COMPONENT_CLASS_NAME}__message-search`}>
+        <MessageSearchProvider
+          channelUrl={channelUrl}
+          searchString={searchString}
+          onResultClick={onResultClick}
+          onResultLoaded={handleOnResultLoaded}
+          messageSearchQuery={messageSearchQuery}
+        >
+          <MessageSearch
+            renderPlaceHolderError={renderPlaceHolderError}
+            renderPlaceHolderLoading={renderPlaceHolderLoading}
+            renderPlaceHolderNoString={renderPlaceHolderNoString}
+            renderPlaceHolderEmptyList={renderPlaceHolderEmptyList}
+            renderSearchItem={renderSearchItem}
+          />
+        </MessageSearchProvider>
+      </div>
     </div>
   );
 }
 
-export default widthSendbirdContext(MessageSearch);
+export default MessageSearchPannel;

@@ -1,5 +1,6 @@
 import format from 'date-fns/format';
 import { AdminMessage, Emoji, EmojiCategory, EmojiContainer, FileMessage, GroupChannel, GroupChannelListQuery, Member, MessageListParams, OpenChannel, Reaction, SendBirdInstance, User, UserMessage } from "sendbird";
+import { EveryMessage } from '../types';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 const SUPPORTED_MIMES = {
@@ -94,7 +95,7 @@ const OutgoingMessageStates: OutgoingMessageStates = {
   READ: 'READ',
 };
 
-export type CoreMessageType = AdminMessage | UserMessage | FileMessage;
+export type CoreMessageType = EveryMessage;
 
 export const isTextuallyNull = (text: string): boolean => {
   if (text === '' || text === null) {

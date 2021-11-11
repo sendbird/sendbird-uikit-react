@@ -5,10 +5,6 @@ import React, {
   useCallback,
 } from 'react';
 
-import { SendbirdTypes } from '../../../../types';
-
-import withSendbirdContext from '../../../../lib/SendbirdSdkContext';
-import { getSdk } from '../../../../lib/selectors';
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import
   Label, {
@@ -21,16 +17,14 @@ import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 
 import UserListItem from '../UserListItem';
 import BannedMembersModal from './BannedMembersModal';
+import { useChannelSettings } from '../../context/ChannelSettingsProvider';
 
-interface Props {
-  sdk: SendbirdTypes["SendBirdInstance"];
-  channel: SendbirdTypes["GroupChannel"];
-}
-
-export const BannedMemberList = ({ channel }: Props): ReactElement => {
+export const BannedMemberList = (): ReactElement => {
   const [members, setMembers] = useState([]);
   const [hasNext, setHasNext] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
+  const { channel } = useChannelSettings();
 
   useEffect(() => {
     if (!channel) {
@@ -144,8 +138,7 @@ export const BannedMemberList = ({ channel }: Props): ReactElement => {
       {
         showModal && (
           <BannedMembersModal
-            channel={channel}
-            hideModal={() => {
+            onCancel={() => {
               setShowModal(false);
               refreshList();
             }}
@@ -156,8 +149,5 @@ export const BannedMemberList = ({ channel }: Props): ReactElement => {
   );
 }
 
-const mapStoreToProps = (store) => ({
-  sdk: getSdk(store),
-});
 
-export default withSendbirdContext(BannedMemberList, mapStoreToProps);
+export default BannedMemberList;

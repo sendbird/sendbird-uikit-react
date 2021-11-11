@@ -5,10 +5,6 @@ import React, {
   useCallback,
 } from 'react';
 
-import { SendbirdTypes } from '../../../../types';
-
-import withSendbirdContext from '../../../../lib/SendbirdSdkContext';
-import { getSdk } from '../../../../lib/selectors';
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import IconButton from '../../../../ui/IconButton';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
@@ -17,24 +13,24 @@ import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 import UserListItem from '../UserListItem';
 import MembersModal from './MembersModal';
 import InviteMembers from './InviteMembersModal';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { useChannelSettings } from '../../context/ChannelSettingsProvider';
+import uuidv4 from '../../../../utils/uuid';
 
-interface Props {
-  sdk: SendbirdTypes['SendBirdInstance'];
-  channel: SendbirdTypes['GroupChannel'];
-  userQueryCreator(): SendbirdTypes['UserListQuery'];
-  userId: string;
-}
-
-export const MemberList = ({
-  sdk,
-  channel,
-  userQueryCreator,
-  userId,
-}: Props): ReactElement => {
+export const MemberList = (): ReactElement => {
   const [members, setMembers] = useState([]);
   const [hasNext, setHasNext] = useState(false);
   const [showAllMembers, setShowAllMembers] = useState(false);
   const [showInviteMembers, setShowInviteMembers] = useState(false);
+
+  const state = useSendbirdStateContext();
+  const {
+    channel,
+    setChannelUpdateId,
+  } = useChannelSettings();
+
+  const sdk = state?.stores?.sdkStore?.sdk;
+  const userId = state?.config?.userId;
 
   useEffect(() => {
     if (!channel) {
@@ -67,6 +63,7 @@ export const MemberList = ({
         }
         setMembers(members);
         setHasNext(memberUserListQuery.hasNext);
+        setChannelUpdateId(uuidv4());
       });
     },
     [channel],
@@ -189,9 +186,7 @@ export const MemberList = ({
       {
         showAllMembers && (
           <MembersModal
-            currentUser={sdk.currentUser.userId}
-            channel={channel}
-            hideModal={() => {
+            onCancel={() => {
               setShowAllMembers(false);
               refershList();
             }}
@@ -201,15 +196,11 @@ export const MemberList = ({
       {
         showInviteMembers && (
           <InviteMembers
-            userQueryCreator={userQueryCreator}
-            onSubmit={(selectedMembers: Array<string>) => {
-              channel.inviteWithUserIds(selectedMembers, () => {
-                setShowInviteMembers(false);
-                refershList();
-              });
+            onSubmit={() => {
+              setShowInviteMembers(false);
+              refershList();
             }}
-            channel={channel}
-            hideModal={() => setShowInviteMembers(false)}
+            onCancel={() => setShowInviteMembers(false)}
           />
         )
       }
@@ -217,8 +208,4 @@ export const MemberList = ({
   );
 }
 
-const mapStoreToProps = (store) => ({
-  sdk: getSdk(store),
-});
-
-export default withSendbirdContext(MemberList, mapStoreToProps);
+export default MemberList;

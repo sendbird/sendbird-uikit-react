@@ -1,0 +1,83 @@
+@import '../../../../styles/variables';
+
+.sendbird-user-list-item--small {
+  display: block;
+  position: relative;
+  box-sizing: border-box;
+  height: 40px;
+
+  &__avatar {
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    left: 12px;
+  }
+
+  .sendbird-muted-avatar {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  &__title {
+    position: absolute;
+    top: 10px;
+    left: 54px;
+    width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__subtitle {
+    position: absolute;
+    top: 23px;
+    left: 140px;
+    max-width: 237px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__checkbox {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+  }
+
+  &__action {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 4px;
+  }
+
+  &__operator {
+    position: absolute;
+    right: 24px;
+    top: 10px;
+  }
+
+  &:hover,
+  &.sendbird-icon--pressed {
+    @include themed() {
+      background-color: t(bg-1);
+    }
+    .sendbird-user-list-item--small__action {
+      display: block;
+    }
+
+    .sendbird-user-list-item--small__operator {
+      display: none;
+    }
+  }
+  &.sendbird-icon--pressed {
+    .sendbird-iconbutton {
+      @include themed() {
+        background-color: t(primary--1-bg--7);
+      }
+    }
+  }
+}

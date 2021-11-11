@@ -1,0 +1,46 @@
+@import '../../../../styles/variables';
+
+.sendbird-conversation__messages {
+  .sendbird-conversation__messages-padding {
+    padding-left: 24px;
+    padding-right: 24px;
+    height: 100%;
+    overflow: scroll;
+  }
+  .sendbird-separator,
+  .sendbird-admin-message {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+}
+
+.sendbird-conversation__scroll-bottom-button {
+  position: sticky;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  bottom: 30px;
+  left: calc(100% - 65px);
+  width: 40px;
+  height: 40px;
+  border-radius: 24px;
+  z-index: 1;
+  @include themed() {
+    background-color: t(bg--0-4);
+    box-shadow: t(shadow-gradient-5);
+  }
+  &:hover {
+    cursor: pointer;
+    @include themed() {
+      background-color: t(bg--1-5);
+    }
+  }
+  &:active {
+    @include themed() {
+      background-color: t(bg--2-7);
+    }
+  }
+  &:focus {
+    outline: none;
+  }
+}

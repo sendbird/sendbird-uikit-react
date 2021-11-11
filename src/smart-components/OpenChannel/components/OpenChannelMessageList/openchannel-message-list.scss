@@ -1,0 +1,54 @@
+@import '../../../../styles/variables';
+
+.sendbird-openchannel-conversation-scroll {
+  position: relative;
+  width: 100%;
+
+  .sendbird-openchannel-conversation-scroll__container {
+    position: sticky;
+    width: 100%;
+    bottom: 0px;
+    height: 100%;
+
+    .sendbird-openchannel-conversation-scroll__container__padding {
+      height: 8px;
+    }
+
+    .sendbird-openchannel-conversation-scroll__container__scroll-bottom-button {
+      position: sticky;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      bottom: 8px;
+      left: calc(50% - 20px);
+      width: 40px;
+      height: 40px;
+      border-radius: 24px;
+      z-index: 1;
+      @include themed() {
+        background-color: t(primary-3);
+        box-shadow: t(shadow-gradient-5);
+      }
+      &:hover {
+        cursor: pointer;
+        @include themed() {
+          background-color: t(primary-4);
+        }
+      }
+      &:active {
+        @include themed() {
+          background-color: t(primary-5);
+        }
+      }
+    }
+
+    .sendbird-openchannel-conversation-scroll__container__item-container--no-messages {
+      width: 100%;
+      height: calc(100% - 8px);
+      .sendbird-openchannel-conversation-scroll__container__place-holder {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+}

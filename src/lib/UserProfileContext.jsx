@@ -12,12 +12,10 @@ const UserProfileContext = React.createContext({
 });
 
 const UserProfileProvider = (props) => {
-  const { children, className } = props;
+  const { children } = props;
   return (
     <UserProfileContext.Provider value={props}>
-      <div className={className}>
-        {children}
-      </div>
+      {children}
     </UserProfileContext.Provider>
   );
 };
@@ -34,11 +32,9 @@ UserProfileProvider.propTypes = {
   disableUserProfile: PropTypes.bool,
   // eslint-disable-next-line react/no-unused-prop-types
   renderUserProfile: PropTypes.func,
-  className: PropTypes.string,
 };
 
 UserProfileProvider.defaultProps = {
-  className: null,
   isOpenChannel: false,
   disableUserProfile: false,
   renderUserProfile: null,

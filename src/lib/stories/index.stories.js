@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import SendBirdProvider from '../Sendbird';
 import withSendBird from '../SendbirdSdkContext';
 import sendBirdSelectors from '../selectors';
-import Conversation from '../../smart-components/Conversation';
 import ChannelList from '../../smart-components/ChannelList';
 
 const appId = process.env.STORYBOOK_APP_ID;

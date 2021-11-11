@@ -8,7 +8,7 @@ import './theme.scss';
 
 import Sendbird from '../../lib/Sendbird';
 
-import OpenChannel from '../OpenchannelConversation';
+import OpenChannel from '../OpenChannel';
 import OpenChannelSettings from '../OpenChannelSettings';
 
 import ChannelList from './components/StreamingChannelList';
@@ -94,7 +94,7 @@ export default function Streaming({
                 : (
                   <OpenChannel
                     channelUrl={currentChannelUrl}
-                    renderChannelTitle={() => {
+                    renderHeader={() => {
                       return (
                         <ChannelTitle
                           onCloseClick={() => { setShowSettings(true); }}

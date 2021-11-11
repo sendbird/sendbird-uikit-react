@@ -1,0 +1,22 @@
+@import '../../../../styles/variables';
+
+.sendbird-message-input-wrapper {
+  position: relative;
+  width: 100%;
+
+  .sendbird-message-input-wrapper__quote-message-input {
+    position: relative;
+    width: 100%;
+    @include themed() {
+      border-top: solid 1px t(on-bg-4);
+    }
+  }
+
+  .sendbird-message-input-wrapper__message-input {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
