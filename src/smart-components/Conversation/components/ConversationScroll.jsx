@@ -98,6 +98,7 @@ export default class ConversationScroll extends Component {
       memoizedEmojiListItems,
       showScrollBot,
       onClickScrollBot,
+      quoteMessage,
       setQuoteMessage,
     } = this.props;
 
@@ -177,6 +178,7 @@ export default class ConversationScroll extends Component {
                       userId={userId}
                       // show status for pending/failed messages
                       message={m}
+                      quoteMessage={quoteMessage}
                       scrollToMessage={scrollToMessage}
                       currentGroupChannel={currentGroupChannel}
                       disabled={disabled}
@@ -271,6 +273,7 @@ ConversationScroll.propTypes = {
   useMessageGrouping: PropTypes.bool,
   toggleReaction: PropTypes.func,
   memoizedEmojiListItems: PropTypes.func,
+  quoteMessage: PropTypes.shape({}),
   setQuoteMessage: PropTypes.func.isRequired,
 };
 
@@ -296,4 +299,5 @@ ConversationScroll.defaultProps = {
   useMessageGrouping: true,
   toggleReaction: () => { },
   memoizedEmojiListItems: () => '',
+  quoteMessage: null,
 };

@@ -18,6 +18,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
   sdk,
   logger,
   scrollRef,
+  setQuoteMessage,
 }) {
   const channelUrl = currentGroupChannel && currentGroupChannel.url;
   useEffect(() => {
@@ -80,6 +81,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
 
       ChannelHandler.onMessageDeleted = (_, messageId) => {
         logger.info('Channel | useHandleChannelEvents: onMessageDeleted', messageId);
+        setQuoteMessage(null);
         messagesDispatcher({
           type: messageActions.ON_MESSAGE_DELETED,
           payload: messageId,

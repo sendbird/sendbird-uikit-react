@@ -34,6 +34,7 @@ export default function MessageHoc({
   animatedMessageId,
   highLightedMessageId,
   toggleReaction,
+  quoteMessage,
   setQuoteMessage,
   renderCustomMessage,
   currentGroupChannel,
@@ -170,6 +171,7 @@ export default function MessageHoc({
         showFileViewer={setShowFileViewer}
         resendMessage={resendMessage}
         toggleReaction={toggleReaction}
+        quoteMessage={quoteMessage}
         setQuoteMessage={setQuoteMessage}
       />
       {/* Modal */}
@@ -179,6 +181,9 @@ export default function MessageHoc({
             onCloseModal={() => setShowRemove(false)}
             onDeleteMessage={() => {
               deleteMessage(message);
+              if (message?.messageId === quoteMessage?.messageId) {
+                setQuoteMessage(null);
+              }
             }}
           />
         )
@@ -250,6 +255,9 @@ MessageHoc.propTypes = {
     })),
   }),
   toggleReaction: PropTypes.func,
+  quoteMessage: PropTypes.shape({
+    messageId: PropTypes.string,
+  }),
   setQuoteMessage: PropTypes.func.isRequired,
 };
 
@@ -266,4 +274,5 @@ MessageHoc.defaultProps = {
   toggleReaction: () => { },
   scrollToMessage: () => { },
   emojiContainer: {},
+  quoteMessage: null,
 };

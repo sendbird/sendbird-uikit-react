@@ -209,6 +209,7 @@ export const ConversationPanel = (props) => {
       sdk,
       logger,
       scrollRef,
+      setQuoteMessage,
     },
   );
 
@@ -377,6 +378,7 @@ export const ConversationPanel = (props) => {
               toggleReaction={toggleReaction}
               emojiContainer={emojiContainer}
               renderChatItem={renderChatItem}
+              quoteMessage={quoteMessage}
               setQuoteMessage={setQuoteMessage}
               showScrollBot={showScrollBot}
               onClickScrollBot={() => {
@@ -399,9 +401,9 @@ export const ConversationPanel = (props) => {
           ref={messageInputRef}
           isOnline={isOnline}
           initialized={initialized}
-          quoteMessage={quoteMessage}
           onSendMessage={onSendMessage}
           onFileUpload={onSendFileMessage}
+          quoteMessage={quoteMessage}
           setQuoteMessage={setQuoteMessage}
           renderMessageInput={renderMessageInput}
         />
