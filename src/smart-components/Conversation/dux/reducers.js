@@ -53,13 +53,14 @@ export default function reducer(state, action) {
       // remove duplicate messages
       const duplicatedMessageIds = [];
       const updatedAllMessages = state.allMessages.map((msg) => {
-        const duplicatedMessage = receivedMessages.find(({ messageId }) => compareIds(messageId, msg.messageId));
+        const duplicatedMessage = receivedMessages.find(({ messageId }) => (
+          compareIds(messageId, msg.messageId)
+        ));
         if (!duplicatedMessage) {
           return msg;
-        } else {
-          duplicatedMessageIds.push(duplicatedMessage.messageId);
-          return (duplicatedMessage.updatedAt > msg.updatedAt) ? duplicatedMessage : msg;
         }
+        duplicatedMessageIds.push(duplicatedMessage.messageId);
+        return (duplicatedMessage.updatedAt > msg.updatedAt) ? duplicatedMessage : msg;
       });
       const filteredNewMessages = (duplicatedMessageIds.length > 0)
         ? receivedMessages.filter((msg) => (
@@ -102,13 +103,14 @@ export default function reducer(state, action) {
       // remove duplicate messages
       const duplicatedMessageIds = [];
       const updatedAllMessages = state.allMessages.map((msg) => {
-        const duplicatedMessage = receivedMessages.find(({ messageId }) => compareIds(messageId, msg.messageId));
+        const duplicatedMessage = receivedMessages.find(({ messageId }) => (
+          compareIds(messageId, msg.messageId)
+        ));
         if (!duplicatedMessage) {
           return msg;
-        } else {
-          duplicatedMessageIds.push(duplicatedMessage.messageId);
-          return (duplicatedMessage.updatedAt > msg.updatedAt) ? duplicatedMessage : msg;
         }
+        duplicatedMessageIds.push(duplicatedMessage.messageId);
+        return (duplicatedMessage.updatedAt > msg.updatedAt) ? duplicatedMessage : msg;
       });
       const filteredNewMessages = (duplicatedMessageIds.length > 0)
         ? receivedMessages.filter((msg) => (
