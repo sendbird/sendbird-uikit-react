@@ -327,6 +327,7 @@ export const ConversationPanel = (props) => {
             onClick={() => {
               if (intialTimeStamp) {
                 setIntialTimeStamp(null);
+                setAnimatedMessageId(null);
                 setHighLightedMessageId(null);
               } else {
                 utils.scrollIntoLast();
@@ -380,6 +381,7 @@ export const ConversationPanel = (props) => {
               showScrollBot={showScrollBot}
               onClickScrollBot={() => {
                 setIntialTimeStamp(null);
+                setAnimatedMessageId(null);
                 setHighLightedMessageId(null);
               }}
               renderCustomMessage={renderCustomMessage}
