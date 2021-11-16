@@ -114,7 +114,7 @@ export const getOutgoingMessageStates = (): OutgoingMessageStates => ({ ...Outgo
 export const getOutgoingMessageState = (channel: GroupChannel | OpenChannel, message: UserMessage | FileMessage): string => {
   if (message.sendingStatus === 'pending') return OutgoingMessageStates.PENDING;
   if (message.sendingStatus === 'failed') return OutgoingMessageStates.FAILED;
-  if (channel.isGroupChannel()) {
+  if (channel?.isGroupChannel?.()) {
     /* GroupChannel only */
     if ((channel as GroupChannel).getUnreadMemberCount(message) === 0) {
       return OutgoingMessageStates.READ;
@@ -137,6 +137,7 @@ export const isDeliveredMessage = (channel: GroupChannel, message: UserMessage |
 export const isReadMessage = (channel: GroupChannel, message: UserMessage | FileMessage): boolean => (
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
 );
+// TODO: Remove channel from the params, it seems unnecessary
 export const isFailedMessage = (channel: GroupChannel | OpenChannel, message: UserMessage | FileMessage): boolean => (
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.FAILED
 );

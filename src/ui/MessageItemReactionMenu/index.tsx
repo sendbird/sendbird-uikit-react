@@ -1,5 +1,5 @@
 import React, { ReactElement, useRef } from 'react';
-import { FileMessage, UserMessage, Emoji, Reaction, EmojiContainer } from 'sendbird';
+import { FileMessage, UserMessage, Emoji, Reaction, EmojiContainer, GroupChannel, OpenChannel } from 'sendbird';
 import './index.scss';
 
 import ContextMenu, { EmojiListItems } from '../ContextMenu';
@@ -7,11 +7,12 @@ import Icon, { IconTypes, IconColors } from '../Icon';
 import IconButton from '../IconButton';
 import ImageRenderer from '../ImageRenderer';
 import ReactionButton from '../ReactionButton';
-import { getClassName, getEmojiListAll } from '../../utils';
+import { getClassName, getEmojiListAll, isPendingMessage, isFailedMessage } from '../../utils';
 
 interface Props {
   className?: string | Array<string>;
   message: UserMessage | FileMessage;
+  channel: GroupChannel | OpenChannel;
   userId: string;
   spaceFromTrigger?: Record<string, unknown>;
   emojiContainer?: EmojiContainer;
@@ -22,6 +23,7 @@ interface Props {
 export default function MessageItemReactionMenu({
   className,
   message,
+  channel,
   userId,
   spaceFromTrigger = {},
   emojiContainer,
@@ -30,6 +32,10 @@ export default function MessageItemReactionMenu({
 }: Props): ReactElement {
   const triggerRef = useRef(null);
   const containerRef = useRef(null);
+
+  if(isPendingMessage(channel, message) || isFailedMessage(channel, message)) {
+    return null;
+  }
 
   return (
     <div
