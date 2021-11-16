@@ -15,6 +15,7 @@ import { LocalizationContext } from '../../lib/LocalizationContext';
 import MessageSearchFileItem from '../../ui/MessageSearchFileItem';
 
 import SendbirdUIKit from '../../index';
+import useSearchStringEffect from './hooks/useSearchStringEffect';
 
 const COMPONENT_CLASS_NAME = 'sendbird-message-search';
 
@@ -59,6 +60,7 @@ function MessageSearch(props: Props): JSX.Element {
   const { stringSet } = useContext(LocalizationContext);
   const [retryCount, setRetryCount] = useState(0); // this is a trigger flag for activating useGetSearchMessages
   const [selectedMessageId, setSelectedMessageId] = useState(0);
+  const [requestString, setRequestString] = useState('');
   const [messageSearchStore, messageSearchDispathcer] = useReducer(messageSearchReducer, messageSearchInitialState);
   const {
     allMessages,
@@ -80,12 +82,8 @@ function MessageSearch(props: Props): JSX.Element {
   };
 
   // const
-  const {
-    sdkStore,
-  } = stores;
-  const {
-    logger,
-  } = config;
+  const { sdkStore } = stores;
+  const { logger } = config;
   const { sdk } = sdkStore;
   const sdkInit = sdkStore.initialized;
   const scrollRef = useRef(null);
@@ -112,8 +110,10 @@ function MessageSearch(props: Props): JSX.Element {
     { sdk, logger, messageSearchDispathcer },
   );
 
+  useSearchStringEffect({ searchString }, { setRequestString });
+
   useGetSearchMessages(
-    { currentChannel, channelUrl, searchString, messageSearchQuery, onResultLoaded, retryCount },
+    { currentChannel, channelUrl, requestString, messageSearchQuery, onResultLoaded, retryCount },
     { sdk, logger, messageSearchDispathcer },
   );
 
@@ -126,7 +126,7 @@ function MessageSearch(props: Props): JSX.Element {
     setRetryCount(retryCount + 1);
   };
 
-  if (isInvalid && searchString) {
+  if (isInvalid && searchString && requestString) {
     return (
       <div className={COMPONENT_CLASS_NAME}>
         <PlaceHolder
@@ -137,7 +137,7 @@ function MessageSearch(props: Props): JSX.Element {
     );
   }
 
-  if (loading && searchString) {
+  if (loading && searchString && requestString) {
     return (
       <div className={COMPONENT_CLASS_NAME}>
         <PlaceHolder type={PlaceHolderTypes.SEARCHING} />

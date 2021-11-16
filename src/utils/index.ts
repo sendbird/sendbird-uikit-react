@@ -289,13 +289,18 @@ export const copyToClipboard = (text: string): boolean => {
 };
 
 export const getEmojiListAll = (emojiContainer: EmojiContainer): Array<Emoji> => (
-  emojiContainer.emojiCategories
-    .map((emojiCategory: EmojiCategory) => emojiCategory.emojis)
+  emojiContainer?.emojiCategories?.map((emojiCategory: EmojiCategory) => emojiCategory.emojis)
     .reduce((prevArr: Array<Emoji>, currArr: Array<Emoji>) => prevArr.concat(currArr), [])
 );
 export const getEmojiMapAll = (emojiContainer: EmojiContainer): Map<string, Emoji> => {
   const emojiMap = new Map();
-  emojiContainer.emojiCategories.forEach((category: EmojiCategory) => category.emojis.forEach((emoji: Emoji): void => { emojiMap.set(emoji.key, emoji) }));
+  emojiContainer?.emojiCategories?.forEach((category: EmojiCategory) => {
+    category?.emojis?.forEach((emoji: Emoji): void => {
+      if (emoji && emoji.key) {
+        emojiMap.set(emoji.key, emoji);
+      }
+    });
+  });
   return emojiMap;
 };
 
