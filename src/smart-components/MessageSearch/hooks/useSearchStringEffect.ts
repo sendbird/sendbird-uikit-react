@@ -1,28 +1,39 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import * as messageActionTypes from '../dux/actionTypes';
 
 interface DynamicParams {
   searchString: string;
 }
+
 interface StaticParams {
-  setRequestString(string: string): void;
+  messageSearchDispathcer: ({ type: string, payload: any }) => void;
 }
 
 const DEBOUNCING_TIME = 500;
 
 function useSearchStringEffect(
   { searchString }: DynamicParams,
-  { setRequestString }: StaticParams,
-): void {
-  let debouncingTimer = null;
+  { messageSearchDispathcer }: StaticParams,
+): string {
+  const [requestString, setRequestString] = useState('');
+  const [debouncingTimer, setDebouncingTimer] = useState(null);
   useEffect(() => {
-    if (debouncingTimer) {
-      clearTimeout(debouncingTimer);
-      debouncingTimer = null;
+    clearTimeout(debouncingTimer);
+    if (searchString) {
+      setDebouncingTimer(
+        setTimeout(() => {
+          setRequestString(searchString);
+        }, DEBOUNCING_TIME)
+      );
+    } else {
+      setRequestString('');
+      messageSearchDispathcer({
+        type: messageActionTypes.RESET_SEARCH_STRING,
+        payload: '',
+      });
     }
-    setTimeout(() => {
-      setRequestString(searchString);
-    }, DEBOUNCING_TIME);
   }, [searchString]);
+  return requestString;
 }
 
 export default useSearchStringEffect;

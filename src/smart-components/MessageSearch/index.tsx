@@ -60,7 +60,6 @@ function MessageSearch(props: Props): JSX.Element {
   const { stringSet } = useContext(LocalizationContext);
   const [retryCount, setRetryCount] = useState(0); // this is a trigger flag for activating useGetSearchMessages
   const [selectedMessageId, setSelectedMessageId] = useState(0);
-  const [requestString, setRequestString] = useState('');
   const [messageSearchStore, messageSearchDispathcer] = useReducer(messageSearchReducer, messageSearchInitialState);
   const {
     allMessages,
@@ -110,7 +109,7 @@ function MessageSearch(props: Props): JSX.Element {
     { sdk, logger, messageSearchDispathcer },
   );
 
-  useSearchStringEffect({ searchString }, { setRequestString });
+  const requestString = useSearchStringEffect({ searchString }, { messageSearchDispathcer });
 
   useGetSearchMessages(
     { currentChannel, channelUrl, requestString, messageSearchQuery, onResultLoaded, retryCount },
