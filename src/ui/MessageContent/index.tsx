@@ -153,6 +153,7 @@ export default function MessageContent({
               <MessageItemReactionMenu
                 className="sendbird-message-content-menu__reaction-menu"
                 message={message as UserMessage | FileMessage}
+                channel={channel}
                 userId={userId}
                 spaceFromTrigger={{}}
                 emojiContainer={emojiContainer}
@@ -233,6 +234,7 @@ export default function MessageContent({
               <MessageItemReactionMenu
                 className="sendbird-message-content-menu__reaction-menu"
                 message={message as UserMessage | FileMessage}
+                channel={channel}
                 userId={userId}
                 spaceFromTrigger={{}}
                 emojiContainer={emojiContainer}

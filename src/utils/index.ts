@@ -114,7 +114,7 @@ export const getOutgoingMessageStates = (): OutgoingMessageStates => ({ ...Outgo
 export const getOutgoingMessageState = (channel: GroupChannel | OpenChannel, message: UserMessage | FileMessage): string => {
   if (message.sendingStatus === 'pending') return OutgoingMessageStates.PENDING;
   if (message.sendingStatus === 'failed') return OutgoingMessageStates.FAILED;
-  if (channel.isGroupChannel()) {
+  if (channel?.isGroupChannel?.()) {
     /* GroupChannel only */
     if ((channel as GroupChannel).getUnreadMemberCount(message) === 0) {
       return OutgoingMessageStates.READ;
@@ -137,6 +137,7 @@ export const isDeliveredMessage = (channel: GroupChannel, message: UserMessage |
 export const isReadMessage = (channel: GroupChannel, message: UserMessage | FileMessage): boolean => (
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
 );
+// TODO: Remove channel from the params, it seems unnecessary
 export const isFailedMessage = (channel: GroupChannel | OpenChannel, message: UserMessage | FileMessage): boolean => (
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.FAILED
 );
@@ -288,13 +289,18 @@ export const copyToClipboard = (text: string): boolean => {
 };
 
 export const getEmojiListAll = (emojiContainer: EmojiContainer): Array<Emoji> => (
-  emojiContainer.emojiCategories
-    .map((emojiCategory: EmojiCategory) => emojiCategory.emojis)
+  emojiContainer?.emojiCategories?.map((emojiCategory: EmojiCategory) => emojiCategory.emojis)
     .reduce((prevArr: Array<Emoji>, currArr: Array<Emoji>) => prevArr.concat(currArr), [])
 );
 export const getEmojiMapAll = (emojiContainer: EmojiContainer): Map<string, Emoji> => {
   const emojiMap = new Map();
-  emojiContainer.emojiCategories.forEach((category: EmojiCategory) => category.emojis.forEach((emoji: Emoji): void => { emojiMap.set(emoji.key, emoji) }));
+  emojiContainer?.emojiCategories?.forEach((category: EmojiCategory) => {
+    category?.emojis?.forEach((emoji: Emoji): void => {
+      if (emoji && emoji.key) {
+        emojiMap.set(emoji.key, emoji);
+      }
+    });
+  });
   return emojiMap;
 };
 
