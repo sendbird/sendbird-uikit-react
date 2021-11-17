@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.4] (Nov 17 2021)
+- Feature
+  * Add a debouncing logic to the message search component
+- Bugfix
+  * Add an order to the message search as 'ts'
+  * Add an optional chaining for some properties of Message
+
 ## [2.4.3] (Nov 1 2021)
 - Bugfix
   * Use OpenChannel in the getOpenChannelDeleteMessage
