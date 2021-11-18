@@ -73,6 +73,12 @@ export default function reducer(
         hasMoreResult: state.currentMessageSearchQuery.hasNext,
       };
     }
+    case actionTypes.RESET_SEARCH_STRING: {
+      return {
+        ...state,
+        allMessages: [],
+      };
+    }
     default: {
       return state;
     }
