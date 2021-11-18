@@ -69,7 +69,7 @@ ModalFooter.defaultProps = {
   type: ButtonTypes.DANGER,
 };
 
-function Modal(props) {
+export default function Modal(props) {
   const {
     children,
     onCancel,
@@ -133,5 +133,3 @@ Modal.defaultProps = {
   disabled: false,
   type: ButtonTypes.DANGER,
 };
-
-export default Modal;

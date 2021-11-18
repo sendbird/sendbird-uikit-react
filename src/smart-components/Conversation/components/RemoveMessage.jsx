@@ -8,10 +8,12 @@ const RemoveMessage = (props) => {
   const {
     onCloseModal,
     onDeleteMessage,
+    message,
   } = props;
   const { stringSet } = useContext(LocalizationContext);
   return (
     <Modal
+      disabled={message?.threadInfo?.replyCount > 0}
       onCancel={onCloseModal}
       onSubmit={onDeleteMessage}
       submitText="Delete"
@@ -23,6 +25,11 @@ const RemoveMessage = (props) => {
 RemoveMessage.propTypes = {
   onCloseModal: PropTypes.func.isRequired,
   onDeleteMessage: PropTypes.func.isRequired,
+  message: PropTypes.shape({
+    threadInfo: PropTypes.shape({
+      replyCount: PropTypes.number,
+    }),
+  }).isRequired,
 };
 
 export default RemoveMessage;

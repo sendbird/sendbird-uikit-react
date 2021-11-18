@@ -178,6 +178,7 @@ export default function MessageHoc({
       {
         showRemove && (
           <RemoveMessageModal
+            message={message}
             onCloseModal={() => setShowRemove(false)}
             onDeleteMessage={() => {
               deleteMessage(message);

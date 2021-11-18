@@ -8,7 +8,7 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import Icon, { IconColors, IconTypes } from '../Icon';
 import { MODAL_ROOT } from '../../hooks/useModal/ModalRoot';
 
-import { isImage, isVideo, isSupportedFileView, getClassName } from '../../utils';
+import { isImage, isVideo, isSupportedFileView } from '../../utils';
 
 export const FileViewerComponent = ({
   // sender
@@ -71,7 +71,7 @@ export const FileViewerComponent = ({
                       fillColor={disableDelete ? IconColors.GRAY : IconColors.ON_BACKGROUND_1}
                       height="24px"
                       width="24px"
-                      onClick={() => { if (!disableDelete) { onDelete() } }}
+                      onClick={() => { if (!disableDelete) { onDelete(); } }}
                     />
                   </div>
                 )
@@ -128,10 +128,12 @@ FileViewerComponent.propTypes = {
   onClose: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   isByMe: PropTypes.bool,
+  disableDelete: PropTypes.bool,
 };
 
 FileViewerComponent.defaultProps = {
   isByMe: true,
+  disableDelete: false,
 };
 
 export default function FileViewer(props) {
