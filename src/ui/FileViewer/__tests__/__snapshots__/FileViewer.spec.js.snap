@@ -86,7 +86,7 @@ exports[`FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
           target="_blank"
         >
           <div
-            className=" sendbird-icon sendbird-icon-down-load "
+            className=" sendbird-icon sendbird-icon-down-load sendbird-icon-color--on-background-1"
             onClick={[Function]}
             onKeyDown={[Function]}
             role="button"
@@ -107,7 +107,7 @@ exports[`FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
           className="sendbird-fileviewer__header__right__actions__delete"
         >
           <div
-            className=" sendbird-icon sendbird-icon-delete "
+            className=" sendbird-icon sendbird-icon-delete sendbird-icon-color--on-background-1"
             onClick={[Function]}
             onKeyDown={[Function]}
             role="button"
@@ -129,7 +129,7 @@ exports[`FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
         className="sendbird-fileviewer__header__right__actions__close"
       >
         <div
-          className=" sendbird-icon sendbird-icon-close "
+          className=" sendbird-icon sendbird-icon-close sendbird-icon-color--on-background-1"
           onClick={[Function]}
           onKeyDown={[Function]}
           role="button"

@@ -5,10 +5,10 @@ import { createPortal } from 'react-dom';
 import './index.scss';
 import Avatar from '../Avatar/index';
 import Label, { LabelTypography, LabelColors } from '../Label';
-import Icon, { IconTypes } from '../Icon';
+import Icon, { IconColors, IconTypes } from '../Icon';
 import { MODAL_ROOT } from '../../hooks/useModal/ModalRoot';
 
-import { isImage, isVideo, isSupportedFileView } from '../../utils';
+import { isImage, isVideo, isSupportedFileView, getClassName } from '../../utils';
 
 export const FileViewerComponent = ({
   // sender
@@ -22,6 +22,7 @@ export const FileViewerComponent = ({
   isByMe,
   onClose,
   onDelete,
+  disableDelete,
 }) => (
   <div className="sendbird-fileviewer">
     <div className="sendbird-fileviewer__header">
@@ -56,6 +57,7 @@ export const FileViewerComponent = ({
               >
                 <Icon
                   type={IconTypes.DOWNLOAD}
+                  fillColor={IconColors.ON_BACKGROUND_1}
                   height="24px"
                   width="24px"
                 />
@@ -64,10 +66,12 @@ export const FileViewerComponent = ({
                 onDelete && isByMe && (
                   <div className="sendbird-fileviewer__header__right__actions__delete">
                     <Icon
+                      className={disableDelete ? 'disabled' : ''}
                       type={IconTypes.DELETE}
+                      fillColor={disableDelete ? IconColors.GRAY : IconColors.ON_BACKGROUND_1}
                       height="24px"
                       width="24px"
-                      onClick={onDelete}
+                      onClick={() => { if (!disableDelete) { onDelete() } }}
                     />
                   </div>
                 )
@@ -78,6 +82,7 @@ export const FileViewerComponent = ({
         <div className="sendbird-fileviewer__header__right__actions__close">
           <Icon
             type={IconTypes.CLOSE}
+            fillColor={IconColors.ON_BACKGROUND_1}
             height="24px"
             width="24px"
             onClick={onClose}
@@ -141,7 +146,9 @@ export default function FileViewer(props) {
     type,
     url,
     name = '',
+    threadInfo = {},
   } = message;
+  const disableDelete = threadInfo?.replyCount > 0;
   const { profileUrl, nickname = '' } = sender;
   return createPortal(
     (
@@ -154,6 +161,7 @@ export default function FileViewer(props) {
         onClose={onClose}
         onDelete={onDelete}
         isByMe={isByMe}
+        disableDelete={disableDelete}
       />
     ),
     document.getElementById(MODAL_ROOT),
