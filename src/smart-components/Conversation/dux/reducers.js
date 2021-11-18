@@ -51,9 +51,22 @@ export default function reducer(state, action) {
       }
 
       // remove duplicate messages
-      const filteredAllMessages = state.allMessages.filter((msg) => (
-        !(receivedMessages.find(({ messageId }) => compareIds(messageId, msg.messageId)))
-      ));
+      const duplicatedMessageIds = [];
+      const updatedAllMessages = state.allMessages.map((msg) => {
+        const duplicatedMessage = receivedMessages.find(({ messageId }) => (
+          compareIds(messageId, msg.messageId)
+        ));
+        if (!duplicatedMessage) {
+          return msg;
+        }
+        duplicatedMessageIds.push(duplicatedMessage.messageId);
+        return (duplicatedMessage.updatedAt > msg.updatedAt) ? duplicatedMessage : msg;
+      });
+      const filteredNewMessages = (duplicatedMessageIds.length > 0)
+        ? receivedMessages.filter((msg) => (
+          !duplicatedMessageIds.find((messageId) => compareIds(messageId, msg.messageId))
+        ))
+        : receivedMessages;
 
       const hasHasMoreToBottom = hasOwnProperty('hasMoreToBottom')(action.payload);
       const hasLatestFetchedMessageTimeStamp = hasOwnProperty('latestFetchedMessageTimeStamp')(action.payload);
@@ -71,8 +84,8 @@ export default function reducer(state, action) {
           latestFetchedMessageTimeStamp: action.payload.latestFetchedMessageTimeStamp,
         }),
         allMessages: [
-          ...receivedMessages,
-          ...filteredAllMessages,
+          ...filteredNewMessages,
+          ...updatedAllMessages,
         ],
       };
     }
@@ -88,9 +101,22 @@ export default function reducer(state, action) {
       }
 
       // remove duplicate messages
-      const filteredAllMessages = state.allMessages.filter((msg) => (
-        !(receivedMessages.find(({ messageId }) => compareIds(messageId, msg.messageId)))
-      ));
+      const duplicatedMessageIds = [];
+      const updatedAllMessages = state.allMessages.map((msg) => {
+        const duplicatedMessage = receivedMessages.find(({ messageId }) => (
+          compareIds(messageId, msg.messageId)
+        ));
+        if (!duplicatedMessage) {
+          return msg;
+        }
+        duplicatedMessageIds.push(duplicatedMessage.messageId);
+        return (duplicatedMessage.updatedAt > msg.updatedAt) ? duplicatedMessage : msg;
+      });
+      const filteredNewMessages = (duplicatedMessageIds.length > 0)
+        ? receivedMessages.filter((msg) => (
+          !duplicatedMessageIds.find((messageId) => compareIds(messageId, msg.messageId))
+        ))
+        : receivedMessages;
 
       return {
         ...state,
@@ -101,8 +127,8 @@ export default function reducer(state, action) {
         hasMoreToBottom: action.payload.hasMoreToBottom,
         latestFetchedMessageTimeStamp: action.payload.latestFetchedMessageTimeStamp,
         allMessages: [
-          ...filteredAllMessages,
-          ...receivedMessages,
+          ...updatedAllMessages,
+          ...filteredNewMessages,
         ],
       };
     }
@@ -214,7 +240,11 @@ export default function reducer(state, action) {
       };
     }
     case actionTypes.ON_MESSAGE_UPDATED: {
-      const { message } = action.payload;
+      const { channel, message } = action.payload;
+      const currentGroupChannelUrl = (state.currentGroupChannel && state.currentGroupChannel.url) || '';
+      if (!compareIds(channel.url, currentGroupChannelUrl)) {
+        return state; // Ignore event when it is not for the current channel
+      }
       if (state.messageListParams && !filterMessageListParams(state.messageListParams, message)) {
         // Delete the message if it doesn't match to the params anymore
         return {
@@ -231,6 +261,27 @@ export default function reducer(state, action) {
             ? action.payload.message
             : m
         )),
+      };
+    }
+    case actionTypes.ON_MESSAGE_THREAD_INFO_UPDATED: {
+      const { channel, event } = action.payload;
+      const { channelUrl, threadInfo, targetMessageId } = event;
+      const currentGroupChannelUrl = (state.currentGroupChannel && state.currentGroupChannel.url) || '';
+      if (
+        !compareIds(channel.url, currentGroupChannelUrl)
+        || !compareIds(channel.url, channelUrl)
+      ) {
+        return state; // Ignore event when it is not for the current channel
+      }
+      return {
+        ...state,
+        allMessages: state.allMessages.map((m) => {
+          if (compareIds(m.messageId, targetMessageId)) {
+            // eslint-disable-next-line no-param-reassign
+            m.threadInfo = threadInfo; // Upsert threadInfo to the target message
+          }
+          return m;
+        }),
       };
     }
     case actionTypes.RESEND_MESSAGEGE_START:

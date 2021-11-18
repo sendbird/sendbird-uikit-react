@@ -14,8 +14,7 @@ import Button, { ButtonTypes, ButtonSizes } from '../Button';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { LocalizationContext } from '../../lib/LocalizationContext';
-// import IconSend from '../../svgs/icon-send.svg';
-// import IconAttach from '../../svgs/icon-attach.svg';
+import { getClassName } from '../../utils';
 
 const LINE_HEIGHT = 76;
 const noop = () => { };
@@ -34,6 +33,7 @@ const handleUploadFile = (callback) => (event) => {
 
 const MessageInput = React.forwardRef((props, ref) => {
   const {
+    className,
     isEdit,
     disabled,
     value,
@@ -81,11 +81,13 @@ const MessageInput = React.forwardRef((props, ref) => {
     if (inputValue && inputValue.trim().length > 0) {
       const trimmedInputValue = inputValue.trim();
       if (isEdit) {
+        // useUpdateMessageCallback
         onSendMessage(name, trimmedInputValue, () => {
           onCancelEdit();
         });
       } else {
-        onSendMessage(trimmedInputValue);
+        // useSendMessageCallback
+        onSendMessage();
         setInputValue('');
       }
     }
@@ -93,16 +95,17 @@ const MessageInput = React.forwardRef((props, ref) => {
 
   return (
     <form
-      className={[
+      className={getClassName([
+        className,
         isEdit ? 'sendbird-message-input__edit' : '',
         disabled ? 'sendbird-message-input-form__disabled' : '',
-      ].join(' ')}
+      ])}
     >
       <div
-        className={[
+        className={getClassName([
           'sendbird-message-input',
           disabled ? 'sendbird-message-input__disabled' : '',
-        ].join(' ')}
+        ])}
       >
         <textarea
           className="sendbird-message-input--textarea"
@@ -137,7 +140,7 @@ const MessageInput = React.forwardRef((props, ref) => {
             type={LabelTypography.BODY_1}
             color={LabelColors.ONBACKGROUND_3}
           >
-            {placeholder || stringSet.CHANNEL__MESSAGE_INPUT__PLACE_HOLDER}
+            {placeholder || stringSet.MESSAGE_INPUT__PLACE_HOLDER}
           </Label>
         )}
         {/* send icon */}
@@ -216,6 +219,10 @@ const MessageInput = React.forwardRef((props, ref) => {
 });
 
 MessageInput.propTypes = {
+  className: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ]),
   placeholder: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.bool,
@@ -235,6 +242,7 @@ MessageInput.propTypes = {
 };
 
 MessageInput.defaultProps = {
+  className: '',
   value: '',
   onSendMessage: noop,
   name: 'sendbird-message-input',

@@ -24,17 +24,17 @@ export const versionInfo = () => {
     <>
       <div>UIKit: {pkg.version}</div>
       <div>Sendbird SDK: {pkg.dependencies.sendbird.version}</div>
-      <button onClick={() => { setshowAll(!showAll)}}>Show all</button>
+      <button onClick={() => { setshowAll(!showAll) }}>Show all</button>
       {
         showAll && (
-        <div>
-          {
-            Object.keys(pkg.dependencies)
-              .map((p) => (
-                <div key={p}>{p}: {pkg.dependencies[p].version}</div>
-              ))
-          }
-        </div>
+          <div>
+            {
+              Object.keys(pkg.dependencies)
+                .map((p) => (
+                  <div key={p}>{p}: {pkg.dependencies[p].version}</div>
+                ))
+            }
+          </div>
         )
       }
     </>
@@ -47,7 +47,7 @@ export const basicSDK = () => fitPageSize(
     userId={userId}
     nickname={userId}
     showSearchIcon
-    /*config={{ logLevel: 'all' }}*/
+  /*config={{ logLevel: 'all' }}*/
   />
 );
 
@@ -68,6 +68,7 @@ export const login = () => {
   const [theme, setTheme] = useState('light');
   const [messageSearch, setMessageSearch] = useState(true);
   const [profileEdit, setProfileEdit] = useState(true);
+  const [useReply, setUseReply] = useState(true);
   return isLoginPage
     ? fitPageSize(
       <div
@@ -111,8 +112,8 @@ export const login = () => {
           type="button"
           value={
             messageSearch
-            ? 'Use MessageSearch'
-            : 'Not use MessageSearch'
+              ? 'Use MessageSearch'
+              : 'Not use MessageSearch'
           }
           onClick={() => setMessageSearch(!messageSearch)}
         />
@@ -121,10 +122,20 @@ export const login = () => {
           type="button"
           value={
             profileEdit
-            ? 'Use ProfileEdit'
-            : 'Not use ProfileEdit'
+              ? 'Use ProfileEdit'
+              : 'Not use ProfileEdit'
           }
           onClick={() => setProfileEdit(!profileEdit)}
+        />
+        <input
+          className="input__toggle-use-reply"
+          type="button"
+          value={
+            useReply
+              ? 'Use Reply'
+              : 'Not use Reply'
+          }
+          onClick={() => setUseReply(!useReply)}
         />
         <input
           className="login-submit"
@@ -142,6 +153,7 @@ export const login = () => {
         theme={theme}
         showSearchIcon={messageSearch}
         allowProfileEdit={profileEdit}
+        replyType={useReply ? 'QUOTE_REPLY' : 'NONE'}
       />
     )
 };
@@ -162,7 +174,7 @@ export const updateProfile = () => {
   );
 };
 
-const age = 60;
+const age = 70;
 const array = [
   `hoon${age}1`,
   `hoon${age}2`,
@@ -196,6 +208,7 @@ export const user1 = () => fitPageSize(
     profileUrl={addProfile}
     config={{ logLevel: 'all' }}
     queries={{}}
+    replyType="QUOTE_REPLY"
   />
 );
 export const user2 = () => fitPageSize(
@@ -206,7 +219,12 @@ export const user2 = () => fitPageSize(
     showSearchIcon
     allowProfileEdit
     profileUrl={addProfile}
-  // config={{ logLevel: 'all' }}
+    replyType="QUOTE_REPLY"
+    imageCompression={{
+      compressionRate: 0.5,
+      resizingWidth: 100,
+      resizingHeight: '100px',
+    }}
   />
 );
 export const user3 = () => fitPageSize(
@@ -218,11 +236,7 @@ export const user3 = () => fitPageSize(
     showSearchIcon
     allowProfileEdit
     profileUrl={addProfile}
-    imageCompression={{
-      compressionRate: 0.5,
-      resizingWidth: 100,
-      resizingHeight: '100px',
-    }}
+    replyType="QUOTE_REPLY"
   />
 );
 
@@ -262,10 +276,25 @@ const CustomApp = () => {
       imageCompression={{ compressionRate: 0.5, resizingWidth: 100, resizingHeight: '100px' }}
     >
       <div style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'row' }}>
-          <SBChannelList setChannelUrl={setChannelUrl} />
-          <div style={{ height: '100%', width: '100%', display: 'inline-flex', flexDirection: 'row' }}>
+        <SBChannelList setChannelUrl={setChannelUrl} />
+        <div style={{ height: '100%', width: '100%', display: 'inline-flex', flexDirection: 'row' }}>
+          <div style={{ width: '100%' }}>
+            <Conversation
+              channelUrl={channelUrl}
+              onChatHeaderActionClick={() => {
+                setChannelSearch(false);
+                setChannelSettings(true);
+              }}
+              showSearchIcon
+              onSearchClick={() => {
+                setChannelSettings(false);
+                setChannelSearch(true);
+              }}
+            />
+          </div>
+          {channelSearch && (
             <div style={{ width: '100%' }}>
-              <Conversation
+              <MessageSearch
                 channelUrl={channelUrl}
                 onChatHeaderActionClick={() => {
                   setChannelSearch(false);
@@ -281,25 +310,17 @@ const CustomApp = () => {
                 }}
               />
             </div>
-            {channelSearch && (
-              <div style={{ width: '100%' }}>
-                <MessageSearch
-                  channelUrl={channelUrl}
-                  searchString="hello"
-                  onResultClick={() => {}}
-                />
-              </div>
-            )}
-            {channelSettings && (
-              <div style={{ display: 'inline-flex'}}>
-                <ChannelSettings
-                  channelUrl={channelUrl}
-                  onCloseClick={() => setChannelSettings(false)}
-                />
-              </div>
-            )}
-          </div>
+          )}
+          {channelSettings && (
+            <div style={{ display: 'inline-flex' }}>
+              <ChannelSettings
+                channelUrl={channelUrl}
+                onCloseClick={() => setChannelSettings(false)}
+              />
+            </div>
+          )}
         </div>
+      </div>
     </Sendbird>
   );
 };

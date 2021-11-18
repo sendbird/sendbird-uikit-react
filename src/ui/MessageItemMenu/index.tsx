@@ -1,5 +1,6 @@
 import React, { ReactElement, useContext, useRef } from 'react';
 import { FileMessage, GroupChannel, OpenChannel, UserMessage } from 'sendbird';
+import './index.scss';
 
 import ContextMenu, { MenuItems, MenuItem } from '../ContextMenu';
 import Icon, { IconTypes, IconColors } from '../Icon';
@@ -13,6 +14,7 @@ import {
   isPendingMessage,
 } from '../../utils/index';
 import { LocalizationContext } from '../../lib/LocalizationContext';
+import { ReplyType } from '../../index';
 
 interface Props {
   className?: string | Array<string>;
@@ -20,9 +22,11 @@ interface Props {
   channel: GroupChannel | OpenChannel;
   isByMe?: boolean;
   disabled?: boolean;
+  replyType?: ReplyType;
   showEdit?: (bool: boolean) => void;
   showRemove?: (bool: boolean) => void;
   resendMessage?: (message: UserMessage | FileMessage) => void;
+  setQuoteMessage?: (message: UserMessage | FileMessage) => void;
   setSupposedHover?: (bool: boolean) => void;
 }
 
@@ -32,9 +36,11 @@ export default function MessageItemMenu({
   channel,
   isByMe = false,
   disabled = false,
+  replyType,
   showEdit,
   showRemove,
   resendMessage,
+  setQuoteMessage,
   setSupposedHover,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
@@ -42,12 +48,12 @@ export default function MessageItemMenu({
   const containerRef = useRef(null);
 
   const showMenuItemCopy: boolean = isUserMessage(message as UserMessage);
-  const showMenuItemReply: boolean = false && !isFailedMessage(channel, message) && !isPendingMessage(channel, message);
+  const showMenuItemReply: boolean = replyType === 'QUOTE_REPLY' && !isFailedMessage(channel, message) && !isPendingMessage(channel, message);
   const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(channel, message) && isByMe);
   const showMenuItemResend: boolean = (isFailedMessage(channel, message) && message?.isResendable?.() && isByMe);
   const showMenuItemDelete: boolean = !isPendingMessage(channel, message) && isByMe;
 
-  if (!(showMenuItemCopy || showMenuItemEdit || showMenuItemResend || showMenuItemDelete)) {
+  if (!(showMenuItemCopy || showMenuItemReply || showMenuItemEdit || showMenuItemResend || showMenuItemDelete)) {
     return null;
   }
   return (
@@ -94,7 +100,7 @@ export default function MessageItemMenu({
             >
               {showMenuItemCopy && (
                 <MenuItem
-                  className="sendbird-message-item-menu__list__menu-item"
+                  className="sendbird-message-item-menu__list__menu-item menu-item-copy"
                   onClick={() => {
                     copyToClipboard((message as UserMessage)?.message);
                     closeDropdown();
@@ -105,9 +111,9 @@ export default function MessageItemMenu({
               )}
               {showMenuItemReply && (
                 <MenuItem
-                  className="sendbird-message-item-menu__list__menu-item"
+                  className="sendbird-message-item-menu__list__menu-item menu-item-reply"
                   onClick={() => {
-                    // TODO: Add replying message logic
+                    setQuoteMessage(message);
                     closeDropdown();
                   }}
                   disable={message?.parentMessageId > 0}
@@ -117,7 +123,7 @@ export default function MessageItemMenu({
               )}
               {showMenuItemEdit && (
                 <MenuItem
-                  className="sendbird-message-item-menu__list__menu-item"
+                  className="sendbird-message-item-menu__list__menu-item menu-item-edit"
                   onClick={() => {
                     if (!disabled) {
                       showEdit(true);
@@ -130,7 +136,7 @@ export default function MessageItemMenu({
               )}
               {showMenuItemResend && (
                 <MenuItem
-                  className="sendbird-message-item-menu__list__menu-item"
+                  className="sendbird-message-item-menu__list__menu-item menu-item-resend"
                   onClick={() => {
                     if (!disabled) {
                       resendMessage(message);
@@ -143,7 +149,7 @@ export default function MessageItemMenu({
               )}
               {showMenuItemDelete && (
                 <MenuItem
-                  className="sendbird-message-item-menu__list__menu-item"
+                  className="sendbird-message-item-menu__list__menu-item menu-item-delete"
                   onClick={() => {
                     if (!disabled) {
                       showRemove(true);

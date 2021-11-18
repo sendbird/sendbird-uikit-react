@@ -81,6 +81,7 @@ export default class ConversationScroll extends Component {
       allMessages,
       scrollToMessage,
       useReaction,
+      replyType,
       emojiAllMap,
       editDisabled,
       deleteMessage,
@@ -88,6 +89,7 @@ export default class ConversationScroll extends Component {
       resendMessage,
       renderCustomMessage,
       renderChatItem,
+      animatedMessageId,
       highLightedMessageId,
       emojiContainer,
       toggleReaction,
@@ -96,6 +98,8 @@ export default class ConversationScroll extends Component {
       memoizedEmojiListItems,
       showScrollBot,
       onClickScrollBot,
+      quoteMessage,
+      setQuoteMessage,
     } = this.props;
 
     if (allMessages.length < 1) {
@@ -146,12 +150,14 @@ export default class ConversationScroll extends Component {
                         {
                           renderChatItem({
                             message: m,
+                            animatedMessageId,
                             highLightedMessageId,
                             channel: currentGroupChannel,
                             onDeleteMessage: deleteMessage,
                             onUpdateMessage: updateMessage,
                             onResendMessage: resendMessage,
                             onScrollToMessage: scrollToMessage,
+                            onReplyMessage: setQuoteMessage,
                             emojiContainer,
                             chainTop,
                             chainBottom,
@@ -165,18 +171,21 @@ export default class ConversationScroll extends Component {
 
                   return (
                     <MessageHOC
+                      animatedMessageId={animatedMessageId}
                       highLightedMessageId={highLightedMessageId}
                       renderCustomMessage={renderCustomMessage}
                       key={m.messageId || m.reqId}
                       userId={userId}
                       // show status for pending/failed messages
                       message={m}
+                      quoteMessage={quoteMessage}
                       scrollToMessage={scrollToMessage}
                       currentGroupChannel={currentGroupChannel}
                       disabled={disabled}
                       membersMap={membersMap}
                       chainTop={chainTop}
                       useReaction={useReaction}
+                      replyType={replyType}
                       emojiAllMap={emojiAllMap}
                       emojiContainer={emojiContainer}
                       editDisabled={editDisabled}
@@ -186,6 +195,7 @@ export default class ConversationScroll extends Component {
                       deleteMessage={deleteMessage}
                       resendMessage={resendMessage}
                       toggleReaction={toggleReaction}
+                      setQuoteMessage={setQuoteMessage}
                       memoizedEmojiListItems={memoizedEmojiListItems}
                     />
                   );
@@ -242,6 +252,10 @@ ConversationScroll.propTypes = {
     markAsRead: PropTypes.func,
     members: PropTypes.arrayOf(PropTypes.shape({})),
   }).isRequired,
+  animatedMessageId: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
   highLightedMessageId: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,
@@ -250,6 +264,7 @@ ConversationScroll.propTypes = {
   renderCustomMessage: PropTypes.func,
   scrollToMessage: PropTypes.func,
   useReaction: PropTypes.bool,
+  replyType: PropTypes.oneOf(['NONE', 'QUOTE_REPLY', 'THREAD']),
   showScrollBot: PropTypes.bool,
   onClickScrollBot: PropTypes.func,
   emojiContainer: PropTypes.shape({}),
@@ -258,6 +273,8 @@ ConversationScroll.propTypes = {
   useMessageGrouping: PropTypes.bool,
   toggleReaction: PropTypes.func,
   memoizedEmojiListItems: PropTypes.func,
+  quoteMessage: PropTypes.shape({}),
+  setQuoteMessage: PropTypes.func.isRequired,
 };
 
 ConversationScroll.defaultProps = {
@@ -267,10 +284,12 @@ ConversationScroll.defaultProps = {
   userId: '',
   renderCustomMessage: null,
   renderChatItem: null,
+  animatedMessageId: null,
   highLightedMessageId: null,
   onScroll: null,
   onScrollDown: null,
   useReaction: true,
+  replyType: 'NONE',
   emojiContainer: {},
   showScrollBot: false,
   onClickScrollBot: () => {},
@@ -280,4 +299,5 @@ ConversationScroll.defaultProps = {
   useMessageGrouping: true,
   toggleReaction: () => { },
   memoizedEmojiListItems: () => '',
+  quoteMessage: null,
 };

@@ -108,6 +108,7 @@ export type Logger = {
 };
 
 export type SendbirdError = Sendbird.SendBirdError;
+export type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
 
 export interface RenderOpenChannelTitleProps {
   channel: Sendbird.OpenChannel;
@@ -165,6 +166,7 @@ export interface RenderGroupChannelMessageInputProps {
   channel: Sendbird.GroupChannel;
   user: Sendbird.User;
   disabled: boolean;
+  quoteMessage?: Sendbird.UserMessage | Sendbird.FileMessage;
 }
 
 export interface ClientMessageSearchQuery extends SendBird.MessageSearchQuery {
@@ -375,8 +377,8 @@ interface ChannelProps {
   onSearchClick?(): void;
   highlightedMessage?: string | number;
   startingPoint?: number;
-  onBeforeSendUserMessage?(text: string): Sendbird.UserMessageParams;
-  onBeforeSendFileMessage?(file: File): Sendbird.FileMessageParams;
+  onBeforeSendUserMessage?(text: string, quoteMessage?: Sendbird.UserMessage | Sendbird.FileMessage): Sendbird.UserMessageParams;
+  onBeforeSendFileMessage?(file: File, quoteMessage?: Sendbird.UserMessage | Sendbird.FileMessage): Sendbird.FileMessageParams;
   onBeforeUpdateUserMessage?(text: string): Sendbird.UserMessageParams;
   onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
   renderCustomMessage?: RenderCustomMessage;

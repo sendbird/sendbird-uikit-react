@@ -7,6 +7,7 @@ import { GroupChannel } from 'sendbird';
 
 interface DynamicParams {
   isOnline: boolean;
+  replyType?: string;
 }
 
 interface StaticParams {
@@ -18,7 +19,7 @@ interface StaticParams {
 }
 
 function useHandleReconnect(
-  { isOnline }: DynamicParams,
+  { isOnline, replyType }: DynamicParams,
   {
     logger,
     sdk,
@@ -37,9 +38,14 @@ function useHandleReconnect(
 
         const messageListParams = new sdk.MessageListParams();
         messageListParams.prevResultSize = 30;
+        messageListParams.isInclusive = true;
         messageListParams.includeReplies = false;
         messageListParams.includeReaction = useReaction;
-
+        if (replyType && replyType === 'QUOTE_REPLY') {
+          messageListParams.includeThreadInfo = true;
+          messageListParams.includeParentMessageInfo = true;
+          messageListParams.replyType = 'only_reply_to_channel';
+        }
         if (userFilledMessageListQuery) {
           Object.keys(userFilledMessageListQuery).forEach((key) => {
             messageListParams[key] = userFilledMessageListQuery[key];
@@ -89,7 +95,7 @@ function useHandleReconnect(
           });
       }
     };
-  }, [isOnline]);
+  }, [isOnline, replyType]);
 }
 
 export default useHandleReconnect;

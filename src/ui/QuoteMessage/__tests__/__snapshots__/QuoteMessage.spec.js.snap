@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReplyingMessageItemBody should do a snapshot test of the ReplyingMessageItemBody DOM 1`] = `
+<div
+  className=" sendbird-quote-message outgoing"
+  onClick={[Function]}
+>
+  <div
+    className="sendbird-quote-message__replied-to"
+  >
+    <div
+      className="sendbird-quote-message__replied-to__icon sendbird-icon sendbird-icon-reply sendbird-icon-color--on-background-3"
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+      style={
+        Object {
+          "height": "12px",
+          "minHeight": "12px",
+          "minWidth": "12px",
+          "width": "12px",
+        }
+      }
+      tabIndex="0"
+    >
+      <test-file-stub />
+    </div>
+    <span
+      className="sendbird-quote-message__replied-to__text sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-3"
+    >
+      Simon replied to undefined
+    </span>
+  </div>
+  <div
+    className="sendbird-quote-message__replied-message"
+  />
+</div>
+`;

@@ -1,12 +1,14 @@
 // Logic required to handle message input rendering
 
 import React, { useContext } from 'react';
-import Sendbird from 'sendbird';
+import Sendbird, { FileMessage, UserMessage } from 'sendbird';
 
+import './message-input-wrapper.scss';
 import { RenderGroupChannelMessageInputProps } from '../../../index';
 import * as utils from '../utils.js';
 
 import MessageInput from '../../../ui/MessageInput';
+import QuoteMessageInput from '../../../ui/QuoteMessageInput';
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 
 interface Props {
@@ -14,19 +16,23 @@ interface Props {
   user: Sendbird.User;
   isOnline: boolean;
   initialized: boolean;
-  onSendMessage(): void;
-  onFileUpload(): void;
-  renderMessageInput(renderProps: RenderGroupChannelMessageInputProps): JSX.Element;
+  quoteMessage?: UserMessage | FileMessage;
+  onSendMessage: (quoteMessage?: UserMessage | FileMessage) => void;
+  onFileUpload: (file: File, quoteMessage?: UserMessage | FileMessage) => void;
+  setQuoteMessage: (message: UserMessage | FileMessage) => void;
+  renderMessageInput: (renderProps: RenderGroupChannelMessageInputProps) => JSX.Element;
 }
 
 const MessageInputWrapper = ({
   channel,
   user,
-  onSendMessage,
-  onFileUpload,
-  renderMessageInput,
   isOnline,
   initialized,
+  quoteMessage,
+  onSendMessage,
+  onFileUpload,
+  setQuoteMessage,
+  renderMessageInput,
 }: Props, ref: React.RefObject<HTMLInputElement>): JSX.Element => {
   const { stringSet } = useContext(LocalizationContext);
   const disabled = !initialized
@@ -39,7 +45,7 @@ const MessageInputWrapper = ({
 
   // custom message
   if (renderMessageInput) {
-    return renderMessageInput({ channel, user, disabled });
+    return renderMessageInput({ channel, user, disabled, quoteMessage });
   }
 
   // broadcast channel + not operator
@@ -49,21 +55,37 @@ const MessageInputWrapper = ({
 
   // other conditions
   return (
-    <MessageInput
-      placeholder={(utils.isDisabledBecauseFrozen(channel)
-        && stringSet.CHANNEL__MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
-        || (utils.isDisabledBecauseMuted(channel)
-          && stringSet.CHANNEL__MESSAGE_INPUT__PLACE_HOLDER__MUTED
-        )
-      }
-      ref={ref}
-      disabled={disabled}
-      onStartTyping={() => {
-        channel.startTyping();
-      }}
-      onSendMessage={onSendMessage}
-      onFileUpload={onFileUpload}
-    />
+    <div className="sendbird-message-input-wrapper">
+      {quoteMessage && (
+        <div className="sendbird-message-input-wrapper__quote-message-input">
+          <QuoteMessageInput
+            replyingMessage={quoteMessage}
+            onClose={() => setQuoteMessage(null)}
+          />
+        </div>
+      )}
+      <MessageInput
+        className="sendbird-message-input-wrapper__message-input"
+        placeholder={
+          (quoteMessage && stringSet.MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER)
+          || (utils.isDisabledBecauseFrozen(channel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
+          || (utils.isDisabledBecauseMuted(channel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED)
+        }
+        ref={ref}
+        disabled={disabled}
+        onStartTyping={() => {
+          channel.startTyping();
+        }}
+        onSendMessage={() => {
+          onSendMessage(quoteMessage);
+          setQuoteMessage(null);
+        }}
+        onFileUpload={(file) => {
+          onFileUpload(file, quoteMessage);
+          setQuoteMessage(null);
+        }}
+      />
+    </div>
   );
 }
 

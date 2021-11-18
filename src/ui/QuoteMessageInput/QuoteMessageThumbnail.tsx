@@ -3,20 +3,21 @@ import { FileMessage } from 'sendbird';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
 import ImageRenderer from '../ImageRenderer';
-import { isAudioMessage, isFileMessage, isThumbnailMessage } from '../../utils';
+import { isAudioMessage, isFileMessage, isImageMessage, isThumbnailMessage } from '../../utils';
 
 interface Props {
   message: FileMessage;
 }
 
-const componentClassname = 'sendbird-replying_message_attachment__avatar';
+const componentClassname = 'sendbird-quote_message_input__avatar';
 
-export default function ReplyingMessageThumbnail({ message }: Props): ReactElement {
+export default function QuoteMessageThumbnail({ message }: Props): ReactElement {
   if (!isFileMessage(message)) {
     return null;
   }
 
-  const thumbnailUrl: string = message.thumbnails && message.thumbnails.length > 0 && message.thumbnails[0].url;
+  const thumbnailUrl: string = (message.thumbnails && message.thumbnails.length > 0 && message.thumbnails[0].url)
+    || (isImageMessage(message) && message.url);
   if (isThumbnailMessage(message) && thumbnailUrl) {
     return (
       <ImageRenderer
@@ -25,6 +26,7 @@ export default function ReplyingMessageThumbnail({ message }: Props): ReactEleme
         alt={message.type}
         width="44px"
         height="44px"
+        fixedSize
       />
     );
   } else if (isAudioMessage(message)) {

@@ -137,6 +137,7 @@ export const generateMockMessage = (id) => {
       mockMessage.reactions = reactionEvent.reactions;
     },
     isUserMessage: () => true,
+    threadInfo: null,
   };
   return mockMessage;
 }
@@ -171,7 +172,8 @@ export const mockMessage1 = {
   "translations": {},
   "requestState": "succeeded",
   "requestedMentionUserIds": [],
-  "errorCode": 0
+  "errorCode": 0,
+  threadInfo: null,
 };
 
 export const frozenChannel = {

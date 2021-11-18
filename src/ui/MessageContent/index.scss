@@ -8,6 +8,12 @@
   height: 100%;
   &.incoming { justify-content: flex-start; }
   &.outgoing { justify-content: flex-end; }
+  .sendbird-message-content__middle {
+    .sendbird-message-content__middle__quote-message.use-quote {
+      margin-top: -8px;
+      bottom: -8px;
+    }
+  }
 }
 
 // incoming
@@ -29,11 +35,18 @@
     display: inline-flex;
     flex-direction: column;
     max-width: 400px;
-
+    align-items: flex-start;
     .sendbird-message-content__middle__sender-name {
       position: relative;
       margin-left: 12px;
       margin-bottom: 4px;
+    }
+    .sendbird-message-content__middle__quote-message {
+      position: relative;
+      width: 100%;
+      display: inline-flex;
+      &.outgoing { justify-content: flex-end }
+      &.incoming { justify-content: flex-start }
     }
   }
 
@@ -44,7 +57,12 @@
     &.use-reactions { width: 70px; }
     margin-left: 4px;
     padding-top: 18px;
-    &.chain-top { padding-top: 2px; }
+    &.chain-top {
+      padding-top: 2px;
+      &.use-quote {
+        padding-top: 18px;
+      }
+    }
 
     .sendbird-message-content__right__created-at {
       position: absolute;
@@ -88,6 +106,11 @@
     justify-content: flex-end;
     width: 50px;
     &.use-reactions { width: 70px }
+    &.use-quote {
+      .sendbird-message-content-menu {
+        top: 18px;
+      }
+    }
 
     .sendbird-message-content__left__created-at {
       position: absolute;
@@ -120,6 +143,18 @@
     display: inline-flex;
     flex-direction: column;
     max-width: 400px;
+    align-items: flex-end;
+    .sendbird-message-content__middle__quote-message {
+      position: relative;
+      width: 100%;
+      display: inline-flex;
+      &.outgoing { justify-content: flex-end }
+      &.incoming { justify-content: flex-start }
+    }
+
+    .sendbird-message-content__middle__body-container {
+      width: fit-content;
+    }
   }
 
   .sendbird-message-content__right {
@@ -135,6 +170,18 @@
         display: inline-flex;
       }
     }
+  }
+}
+
+.sendbird-message-content__middle__body-container {
+  position: relative;
+  width: fit-content;
+  .sendbird-message-content__middle__message-item-body {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .sendbird-message-content-reactions {
+    width: 100%;
   }
 }
 

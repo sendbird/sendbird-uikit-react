@@ -18,9 +18,12 @@ export default function ImageRenderer({
   alt,
   width,
   height,
+  fixedSize,
   defaultComponent,
   circle,
   placeHolder, // a function returing JSX / (style) => Element
+  onLoad,
+  onError,
 }) {
   const [showDefaultComponent, setShowDefaultComponent] = useState(false);
   const [showPlaceHolder, setShowPlaceHolder] = useState(true);
@@ -38,7 +41,7 @@ export default function ImageRenderer({
         style: {
           width: '100%',
           minWidth: width,
-          maxWidth: '400px',
+          maxWidth: fixedSize ? width : '400px',
           height,
           position: 'absolute',
           display: 'flex',
@@ -58,8 +61,14 @@ export default function ImageRenderer({
         className="sendbird-image-renderer__hidden-image-loader"
         src={url}
         alt={alt}
-        onLoad={() => setShowPlaceHolder(false)}
-        onError={() => setShowDefaultComponent(true)}
+        onLoad={() => {
+          setShowPlaceHolder(false);
+          onLoad();
+        }}
+        onError={() => {
+          setShowDefaultComponent(true);
+          onError();
+        }}
       />
     );
   }, [url]);
@@ -73,7 +82,7 @@ export default function ImageRenderer({
       style={{
         width: '100%',
         minWidth: width,
-        maxWidth: '400px',
+        maxWidth: fixedSize ? width : '400px',
         height,
       }}
     >
@@ -87,7 +96,7 @@ export default function ImageRenderer({
               style={{
                 width: '100%',
                 minWidth: width,
-                maxWidth: '400px',
+                maxWidth: fixedSize ? width : '400px',
                 height,
                 position: 'absolute',
                 backgroundRepeat: 'no-repeat',
@@ -119,12 +128,15 @@ ImageRenderer.propTypes = {
     PropTypes.string,
     PropTypes.number,
   ]),
+  fixedSize: PropTypes.bool,
   defaultComponent: PropTypes.oneOfType([
     PropTypes.element,
     PropTypes.func,
   ]),
   placeHolder: PropTypes.func,
   circle: PropTypes.bool,
+  onLoad: PropTypes.func,
+  onError: PropTypes.func,
 };
 ImageRenderer.defaultProps = {
   className: '',
@@ -133,5 +145,8 @@ ImageRenderer.defaultProps = {
   alt: '',
   width: null,
   height: null,
+  fixedSize: false,
   circle: false,
+  onLoad: () => { },
+  onError: () => { },
 };

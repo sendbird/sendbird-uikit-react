@@ -26,6 +26,10 @@
     overflow: hidden;
     .sendbird-og-message-item-body__og-thumbnail__image {
       width: 100%;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 

@@ -166,6 +166,92 @@ describe('Messages-Reducers', () => {
     expect(nextState.allMessages.find(m => m.messageId === updatedMessage.messageId)).toBeUndefined();
   });
 
+  it('should update threadInfo of message on ON_MESSAGE_THREAD_INFO_UPDATED', () => {
+    const mockData = generateMockChannel();
+    const currentState = { ...mockData };
+    const updateEvent = {
+      channelUrl: currentState.currentGroupChannel.url,
+      targetMessageId: currentState.allMessages[0].messageId,
+      threadInfo: { replyCount: 1, updatedAt: 1, mostRepliedUsers: [{ userId: 111 }], lastRepliedAt: 1 },
+    };
+    expect(currentState.allMessages.find(m => m.messageId === updateEvent.targetMessageId).threadInfo).toBeUndefined();
+
+    const nextState = reducers(mockData, {
+      type: actionTypes.ON_MESSAGE_THREAD_INFO_UPDATED,
+      payload: {
+        channel: currentState.currentGroupChannel,
+        event: updateEvent,
+      },
+    });
+    expect(nextState.allMessages.length).toEqual(mockData.allMessages.length);
+    expect(nextState.allMessages.find(m => m.messageId === updateEvent.targetMessageId)).toBeDefined();
+    expect(nextState.allMessages.find(m => m.messageId === updateEvent.targetMessageId).threadInfo).toBeDefined();
+    expect(
+      nextState.allMessages.find(m => m.messageId === updateEvent.targetMessageId).threadInfo.replyCount
+    ).toEqual(updateEvent.threadInfo.replyCount);
+
+    const updateEvent2 = {
+      channelUrl: currentState.currentGroupChannel.url,
+      targetMessageId: currentState.allMessages[0].messageId,
+      threadInfo: { replyCount: 2, updatedAt: 2, mostRepliedUsers: [{ userId: 111 }, { userId: 222 }], lastRepliedAt: 2 },
+    };
+    const nextState2 = reducers(nextState, {
+      type: actionTypes.ON_MESSAGE_THREAD_INFO_UPDATED,
+      payload: {
+        channel: currentState.currentGroupChannel,
+        event: updateEvent2,
+      },
+    });
+    expect(nextState2.allMessages.length).toEqual(nextState.allMessages.length);
+    expect(
+      nextState2.allMessages.find(m => m.messageId === updateEvent2.targetMessageId).threadInfo.replyCount
+    ).toEqual(updateEvent2.threadInfo.replyCount);
+    expect(updateEvent.threadInfo.replyCount).not.toEqual(updateEvent2.threadInfo.replyCount);
+  });
+
+  it('should not update threadInfo of message if channel does not match on ON_MESSAGE_THREAD_INFO_UPDATED', () => {
+    const mockData = generateMockChannel();
+    const currentState = { ...mockData };
+    const updateEvent = {
+      channelUrl: 'channel-url-001',
+      targetMessageId: currentState.allMessages[0].messageId,
+      threadInfo: { replyCount: 1, updatedAt: 1, mostRepliedUsers: [{ userId: 111 }], lastRepliedAt: 1 },
+    };
+    expect(currentState.allMessages.find(m => m.messageId === updateEvent.targetMessageId).threadInfo).toBeUndefined();
+
+    const nextState = reducers(currentState, {
+      type: actionTypes.ON_MESSAGE_THREAD_INFO_UPDATED,
+      payload: {
+        channel: { url: updateEvent.channelUrl },
+        event: updateEvent,
+      },
+    });
+    expect(nextState.allMessages.length).toEqual(currentState.allMessages.length);
+    expect(nextState.allMessages.find(m => m.messageId === updateEvent.targetMessageId)).toBeDefined();
+    expect(nextState.allMessages.find(m => m.messageId === updateEvent.targetMessageId).threadInfo).toBeUndefined();
+  });
+
+  it('should not update threadInfo of message if there is no matching message on ON_MESSAGE_THREAD_INFO_UPDATED', () => {
+    const mockData = generateMockChannel();
+    const currentState = { ...mockData };
+    const updateEvent = {
+      channelUrl: currentState.currentGroupChannel.url,
+      targetMessageId: 'target-message-id-001',
+      threadInfo: { replyCount: 1, updatedAt: 1, mostRepliedUsers: [{ userId: 111 }], lastRepliedAt: 1 },
+    };
+    expect(currentState.allMessages.find(m => m.messageId === updateEvent.targetMessageId)).toBeUndefined();
+
+    const nextState = reducers(currentState, {
+      type: actionTypes.ON_MESSAGE_THREAD_INFO_UPDATED,
+      payload: {
+        channel: currentState.currentGroupChannel,
+        event: updateEvent,
+      },
+    });
+    expect(nextState.allMessages.length).toEqual(currentState.allMessages.length);
+    expect(nextState.allMessages.find(m => m.messageId === updateEvent.targetMessageId)).toBeUndefined();
+  });
+
   it('should delete message on ON_MESSAGE_DELETED', () => {
     const mockData = generateMockChannel();
     const deletedMessage = mockData.allMessages[1].messageId;

@@ -18,6 +18,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
   sdk,
   logger,
   scrollRef,
+  setQuoteMessage,
 }) {
   const channelUrl = currentGroupChannel && currentGroupChannel.url;
   useEffect(() => {
@@ -25,6 +26,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
     if (channelUrl && sdk && sdk.ChannelHandler) {
       const ChannelHandler = new sdk.ChannelHandler();
       logger.info('Channel | useHandleChannelEvents: Setup event handler', messageReceiverId);
+
       ChannelHandler.onMessageReceived = (channel, message) => {
         // donot update if hasMoreToBottom
         if (compareIds(channel.url, currentGroupChannel.url) && !hasMoreToBottom) {
@@ -69,8 +71,17 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
         });
       };
 
+      ChannelHandler.onThreadInfoUpdated = (channel, event) => {
+        logger.info('Channel | useHandleChannelEvents: onThreadInfoUpdated', event);
+        messagesDispatcher({
+          type: messageActions.ON_MESSAGE_THREAD_INFO_UPDATED,
+          payload: { channel, event },
+        });
+      };
+
       ChannelHandler.onMessageDeleted = (_, messageId) => {
         logger.info('Channel | useHandleChannelEvents: onMessageDeleted', messageId);
+        setQuoteMessage(null);
         messagesDispatcher({
           type: messageActions.ON_MESSAGE_DELETED,
           payload: messageId,

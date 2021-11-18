@@ -13,12 +13,16 @@ export default function useSendMessageCallback({ currentGroupChannel, onBeforeSe
   const messageInputRef = useRef(null);
 
   const sendMessage = useCallback(
-    () => {
+    (quoteMessage = null) => {
       const text = messageInputRef.current.value;
       const createParamsDefault = (txt) => {
         const message = (typeof txt === 'string') ? txt.trim() : txt;
         const params = new sdk.UserMessageParams();
         params.message = message;
+        if (quoteMessage) {
+          params.isReplyToChannel = true;
+          params.parentMessageId = quoteMessage.messageId;
+        }
         return params;
       };
 
@@ -30,7 +34,7 @@ export default function useSendMessageCallback({ currentGroupChannel, onBeforeSe
       }
 
       const params = onBeforeSendUserMessage
-        ? onBeforeSendUserMessage(text)
+        ? onBeforeSendUserMessage(text, quoteMessage)
         : createParamsDefault(text);
 
       logger.info('Channel: Sending message has started', params);
