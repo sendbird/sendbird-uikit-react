@@ -44,6 +44,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     onSendMessage,
     onCancelEdit,
     onStartTyping,
+    channelUrl,
   } = props;
 
   const { stringSet } = useContext(LocalizationContext);
@@ -76,6 +77,10 @@ const MessageInput = React.forwardRef((props, ref) => {
     setHeight();
     return setHeight;
   }, [inputValue]);
+  // clear input value when channel changes
+  useEffect(() => {
+    setInputValue('');
+  }, [channelUrl]);
 
   const sendMessage = () => {
     if (inputValue && inputValue.trim().length > 0) {
@@ -239,11 +244,13 @@ MessageInput.propTypes = {
   onSendMessage: PropTypes.func,
   onStartTyping: PropTypes.func,
   onCancelEdit: PropTypes.func,
+  channelUrl: PropTypes.string,
 };
 
 MessageInput.defaultProps = {
   className: '',
   value: '',
+  channelUrl: '',
   onSendMessage: noop,
   name: 'sendbird-message-input',
   isEdit: false,
