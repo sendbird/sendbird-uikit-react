@@ -2,7 +2,10 @@ import format from 'date-fns/format';
 import * as channelActions from './dux/actionTypes';
 import * as topics from '../../lib/pubSub/topics';
 
-import { getSendingMessageStatus, getOutgoingMessageStates } from '../../utils';
+import {
+  getSendingMessageStatus,
+  getOutgoingMessageStates,
+} from '../../utils';
 
 const MessageStatusType = getOutgoingMessageStates();
 const UNDEFINED = 'undefined';
@@ -207,12 +210,14 @@ export const compareMessagesForGrouping = (
   prevMessage,
   currMessage,
   nextMessage,
-) => (
-  [
-    isSameGroup(prevMessage, currMessage),
-    isSameGroup(currMessage, nextMessage),
-  ]
-);
+) => {
+  const sendingStatus = currMessage?.sendingStatus || '';
+  const isAcceptable = sendingStatus !== 'pending' && sendingStatus !== 'failed';
+  return [
+    isSameGroup(prevMessage, currMessage) && isAcceptable,
+    isSameGroup(currMessage, nextMessage) && isAcceptable,
+  ];
+};
 
 export const hasOwnProperty = (property) => (payload) => {
   // eslint-disable-next-line no-prototype-builtins
