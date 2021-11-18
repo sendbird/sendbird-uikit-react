@@ -76,7 +76,7 @@ export const ConversationPanel = (props) => {
     onBeforeSendFileMessage,
     onBeforeUpdateUserMessage,
   } = props;
-  const replyType = 'NONE'; // TODO: Get back replyType for message threading
+  const replyType = 'QUOTE_REPLY'; // TODO: Get back replyType for message threading
   const { sdk } = sdkStore;
   const { config } = props;
   const sdkError = sdkStore.error;
@@ -200,6 +200,10 @@ export const ConversationPanel = (props) => {
     { channelUrl, sdkInit },
     { messagesDispatcher, sdk, logger },
   );
+
+  useEffect(() => {
+    setQuoteMessage(null);
+  }, [channelUrl]);
 
   // Hook to handle ChannelEvents and send values to useReducer using messagesDispatcher
   useHandleChannelEvents(
