@@ -20,6 +20,7 @@
   &.sendbird-button__disabled {
     cursor: not-allowed;
     @include themed() {
+      border: none;
       background-color: t(bg-2);
     }
     &:hover {
