@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.5.0-alpha] (Nov 22 2021)
+
+This is an alpha version release for message threading
+
 ## [2.4.4] (Nov 17 2021)
 - Feature
   * Add a debouncing logic to the message search component
