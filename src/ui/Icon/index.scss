@@ -44,7 +44,7 @@
 }
 
 .sendbird-icon-color--gray [class*='fill'] {
-  fill: rgba(0, 0, 0, 0.5);
+  fill: var(--sendbird-light-onlight-04);
 }
 
 .sendbird-icon-color--sent [class*='fill'] {

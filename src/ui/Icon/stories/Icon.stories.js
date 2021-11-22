@@ -99,3 +99,15 @@ export const iconError = () => [
     )
   )
 ];
+export const iconGray = () => [
+  ...Object.keys(IconTypes).map(
+    type => (
+      <div style={{ margin: '20px', marginBottom: '30px' }}>
+        <h3>
+          {type}
+        </h3>
+        <Icon type={type} width={36} height={36} fillColor={IconColors.GRAY} />
+      </div>
+    )
+  )
+];

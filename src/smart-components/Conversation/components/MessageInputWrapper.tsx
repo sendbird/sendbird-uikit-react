@@ -66,6 +66,7 @@ const MessageInputWrapper = ({
       )}
       <MessageInput
         className="sendbird-message-input-wrapper__message-input"
+        channelUrl={channel?.url}
         placeholder={
           (quoteMessage && stringSet.MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER)
           || (utils.isDisabledBecauseFrozen(channel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)

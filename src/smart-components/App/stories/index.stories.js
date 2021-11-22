@@ -179,6 +179,7 @@ const array = [
   `hoon${age}1`,
   `hoon${age}2`,
   `hoon${age}3`,
+  `hoon${age}4`,
   `eunseo${age}1`,
 ];
 const addProfile = null; // 'https://static.sendbird.com/sample/profiles/profile_12_512px.png';
@@ -220,6 +221,7 @@ export const user2 = () => fitPageSize(
     allowProfileEdit
     profileUrl={addProfile}
     replyType="QUOTE_REPLY"
+    useMessageGrouping={false}
     imageCompression={{
       compressionRate: 0.5,
       resizingWidth: 100,
@@ -235,6 +237,19 @@ export const user3 = () => fitPageSize(
     theme="dark"
     showSearchIcon
     allowProfileEdit
+    profileUrl={addProfile}
+    replyType="QUOTE_REPLY"
+  />
+);
+export const user4 = () => fitPageSize(
+  <App
+    appId={appId}
+    userId={array[3]}
+    nickname={array[3]}
+    theme="dark"
+    showSearchIcon
+    allowProfileEdit
+    useMessageGrouping={false}
     profileUrl={addProfile}
     replyType="QUOTE_REPLY"
   />
@@ -267,8 +282,8 @@ const CustomApp = () => {
   return (
     <Sendbird
       appId={appId}
-      userId={array[3]}
-      nickname={array[3]}
+      userId={array[4]}
+      nickname={array[4]}
       theme="dark"
       showSearchIcon
       allowProfileEdit

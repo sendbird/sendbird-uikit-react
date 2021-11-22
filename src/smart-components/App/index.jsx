@@ -26,7 +26,7 @@ export default function App(props) {
     profileUrl,
     config = {},
     useReaction,
-    // replyType,
+    replyType,
     useMessageGrouping,
     colorSet,
     stringSet,
@@ -97,7 +97,7 @@ export default function App(props) {
             startingPoint={startingPoint}
             highlightedMessage={highlightedMessage}
             useReaction={useReaction}
-            // replyType={replyType}
+            replyType={replyType}
             useMessageGrouping={useMessageGrouping}
           />
         </div>
@@ -158,7 +158,7 @@ App.propTypes = {
     ]),
   }),
   useReaction: PropTypes.bool,
-  // replyType: PropTypes.oneOf(['NONE', 'QUOTE_REPLY', 'THREAD']),
+  replyType: PropTypes.oneOf(['NONE', 'QUOTE_REPLY', 'THREAD']),
   showSearchIcon: PropTypes.bool,
   useMessageGrouping: PropTypes.bool,
   stringSet: PropTypes.objectOf(PropTypes.string),
@@ -189,7 +189,7 @@ App.defaultProps = {
   renderUserProfile: null,
   config: {},
   useReaction: true,
-  // replyType: 'NONE',
+  replyType: 'NONE',
   useMessageGrouping: true,
   stringSet: null,
   colorSet: null,
