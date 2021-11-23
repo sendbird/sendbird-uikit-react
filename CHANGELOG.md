@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.5.0] (Nov 23 2021)
+
+- Features
+  * Support MessageThreading
+  * <App /> and <Channel /> can enable or disable message threading feature using prop: `replyType`
+  * `replyType="QUOTE_REPLY"` enable message threading
+  * `replyType="NONE"` disable message threading, and this is a default option
+- Bugfix
+  * Change the message status component location from the bottom of the message to the side of the message content
+
 ## [2.5.0-alpha] (Nov 22 2021)
 
 This is an alpha version release for message threading
