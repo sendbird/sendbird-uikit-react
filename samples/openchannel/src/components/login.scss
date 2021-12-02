@@ -1,0 +1,15 @@
+.login-form {
+  height: 99vh;
+  width: 99vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 500px;
+    width: 500px;
+    border: 1px solid gray;
+  }
+}
