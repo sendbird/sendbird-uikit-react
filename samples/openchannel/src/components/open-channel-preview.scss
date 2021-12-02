@@ -1,0 +1,126 @@
+.channel-preview {
+  position: relative;
+  cursor: pointer;
+  width: 264px;
+  height: 48px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid var(--gray-1);
+  color: var(--gray-0);
+
+  &:hover {
+    background-color: var(--preview-hover);
+  }
+
+  &.channel-preview--streaming {
+    .channel-preview__inner-right {
+      padding-top: 0px;
+      padding-left: 0px;
+    }
+    .channel-preview__name,
+    .channel-preview__creator-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 140px;
+      left: 4px;
+    }
+    .channel-preview__name {
+      position: absolute;
+      top: 8px;
+    }
+    .channel-preview__creator-name {
+      position: absolute;
+      top: 22px;
+      font-size: 14px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.43;
+      letter-spacing: normal;
+      color: var(--selected-sub-text);
+    }
+    .channel-preview__count {
+      position: absolute;
+      right: 22px;
+      top: 12px;
+      display: flex;
+      flex-direction: row;
+    }
+    .channel-preview__count-icon {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: red;
+    }
+
+    .channel-preview__count-text {
+      font-size: 12px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1;
+      letter-spacing: normal;
+      margin-left: 4px;
+      color: var(--gray-0);
+    }
+  }
+
+  &.channel-preview--selected {
+    background-color: var(--selected-bg-0);
+    color: var(--selected-text-0);
+    .channel-preview__selection {
+      display: inline-block;
+    }
+  }
+
+  .channel-preview__selection {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 4px;
+    background-color: #9e8cf5;
+  }
+
+  .channel-preview__avatar {
+    height: 32px;
+    width: 32px;
+
+    img {
+      height: 100%;
+      width: 100%;
+      border-radius: 50%;
+    }
+  }
+
+  .channel-preview__name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 210px;
+    font-size: 14px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.14;
+    letter-spacing: -0.2px;
+  }
+
+  .channel-preview__inner-left {
+    padding-top: 8px;
+    padding-left: 12px;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  .channel-preview__inner-right {
+    position: relative;
+    width: 230px;
+    padding-top: 16px;
+    padding-left: 12px;
+    box-sizing: border-box;
+  }
+}

@@ -1,0 +1,67 @@
+.streaming-app {
+  display: flex;
+  flex-direction: row;
+  height: 99vh;
+  position: relative;
+  * {
+    font-family: var(--sendbird-font-family-default);
+  }
+
+  .expand-icon {
+    position: absolute;
+    cursor: pointer;
+    top: 15px;
+    right: 15px;
+    path {
+      fill: var(--icon-fill-solid);
+    }
+  }
+
+  .channel-title {
+    position: relative;
+    font-size: 18px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: -0.2px;
+    color: var(--gray-0);
+    border-bottom: 1px solid var(--gray-1);
+    .close {
+      cursor: pointer;
+      position: absolute;
+      right: 15px;
+      top: 15px;
+      path {
+        fill: var(--icon-fill-solid);
+      }
+    }
+    .collapse {
+      cursor: pointer;
+      position: absolute;
+      left: 15px;
+      top: 15px;
+      path {
+        fill: var(--icon-fill-solid);
+      }
+    }
+    .channel-title-text {
+      margin: 15px auto;
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  .stream {
+    flex: 1;
+  }
+
+  .channel-list {
+    background-color: var(--bg-0);
+  }
+
+  .chat-panel {
+    background-color: var(--bg-0);
+    width: 320px;
+  }
+}

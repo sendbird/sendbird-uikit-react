@@ -1,0 +1,112 @@
+.dummy-stream-empty,
+.dummy-stream {
+  background-color: var(--stream-bg);
+  height: 100%;
+  width: 100%;
+
+  .dummy-stream-banner {
+    width: 100%;
+    text-align: center;
+    img {
+      width: 100%;
+      max-height: 700px;
+    }
+  }
+
+  .dummy-stream-panel {
+    padding: 16px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    margin: 16px;
+    height: 128px;
+    background-color: var(--stream-panel-bg);
+    display: flex;
+    flex-direction: row;
+    .dummy-stream-panel__right {
+      margin-left: 16px;
+    }
+    .stream-name {
+      display: flex;
+      align-items: center;
+    }
+    .live-badge {
+      border-radius: 4px;
+      background-color: red;
+      color: white;
+      width: 40px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: bold;
+      display: inline-block;
+    }
+    .channel-name {
+      display: inline-block;
+      margin-left: 16px;
+      font-size: 20px;
+      font-weight: 600;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.4;
+      letter-spacing: -0.2px;
+      color: var(--gray-0);
+    }
+
+    .stream-meta {
+      margin: 2px 0 19px 0px;
+      font-size: 14px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.43;
+      letter-spacing: normal;
+      text-align: center;
+      color: var(--gray-2);
+    }
+
+    .stream-creator {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: row;
+    }
+
+    .stream-creator-tags {
+      margin-left: 8px;
+      display: flex;
+      flex-direction: row;
+    }
+
+    .tag {
+      padding: 2px 8px;
+      margin-right: 4px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.43;
+      letter-spacing: normal;
+      color: var(--gray-2);
+      background-color: var(--stream-tag-bg);
+    }
+
+    .stream-creator-name {
+      display: inline-block;
+      font-weight: 600;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.43;
+      letter-spacing: normal;
+      color: var(--gray-0);
+    }
+  }
+
+  .channel-avatar-large {
+    height: 56px;
+    width: 56px;
+    img {
+      height: 100%;
+      width: 100%;
+      border-radius: 50%;
+    }
+  }
+}
