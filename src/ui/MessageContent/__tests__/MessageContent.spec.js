@@ -72,7 +72,7 @@ describe('MessageContent', () => {
       component.find('.sendbird-message-content__left__avatar').hostNodes().exists()
     ).toBe(true);
     expect(
-      component.find('.sendbird-message-content__left__created-at').hostNodes().exists()
+      component.find('.sendbird-message-content__middle__body-container__created-at.left').hostNodes().exists()
     ).toBe(false);
     expect(
       component.find('.sendbird-message-content-menu.outgoing').hostNodes().exists()
@@ -87,7 +87,7 @@ describe('MessageContent', () => {
       component.find('.sendbird-message-content__right.chain-top').hostNodes().exists()
     ).toBe(false);
     expect(
-      component.find('.sendbird-message-content__right__created-at').hostNodes().exists()
+      component.find('.sendbird-message-content__middle__body-container__created-at.right').hostNodes().exists()
     ).toBe(true);
     expect(
       component.find('.sendbird-message-content-menu.incoming').hostNodes().exists()
@@ -198,10 +198,7 @@ describe('MessageContent', () => {
       outgoingMessage.find('.sendbird-message-content__left__avatar').hostNodes().exists()
     ).toBe(false);
     expect(
-      outgoingMessage.find('.sendbird-message-content__left__created-at').hostNodes().exists()
-    ).toBe(false);
-    expect(
-      outgoingMessage.find('.sendbird-message-content__right__created-at').hostNodes().exists()
+      outgoingMessage.find('.sendbird-message-content__middle__body-container__created-at').hostNodes().exists()
     ).toBe(false);
     const incomingMessage = mount(
       <MessageContent
@@ -216,10 +213,7 @@ describe('MessageContent', () => {
       incomingMessage.find('.sendbird-message-content__left__avatar').hostNodes().exists()
     ).toBe(false);
     expect(
-      incomingMessage.find('.sendbird-message-content__left__created-at').hostNodes().exists()
-    ).toBe(false);
-    expect(
-      incomingMessage.find('.sendbird-message-content__right__created-at').hostNodes().exists()
+      incomingMessage.find('.sendbird-message-content__middle__body-container__created-at').hostNodes().exists()
     ).toBe(false);
   });
 

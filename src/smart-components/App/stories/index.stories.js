@@ -220,6 +220,7 @@ export const user2 = () => fitPageSize(
     showSearchIcon
     allowProfileEdit
     profileUrl={addProfile}
+    config={{ logLevel: 'all' }}
     replyType="QUOTE_REPLY"
     useMessageGrouping={false}
     imageCompression={{
@@ -238,6 +239,7 @@ export const user3 = () => fitPageSize(
     showSearchIcon
     allowProfileEdit
     profileUrl={addProfile}
+    config={{ logLevel: 'all' }}
     replyType="QUOTE_REPLY"
   />
 );
@@ -251,6 +253,7 @@ export const user4 = () => fitPageSize(
     allowProfileEdit
     useMessageGrouping={false}
     profileUrl={addProfile}
+    config={{ logLevel: 'all' }}
     replyType="QUOTE_REPLY"
   />
 );

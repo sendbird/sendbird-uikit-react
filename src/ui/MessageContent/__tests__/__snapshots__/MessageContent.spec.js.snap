@@ -89,16 +89,16 @@ exports[`MessageContent should do a snapshot test of the MessageContent DOM 1`] 
           First second third
         </span>
       </div>
+      <span
+        className="sendbird-message-content__middle__body-container__created-at right  sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
+      >
+        mock-date
+      </span>
     </div>
   </div>
   <div
     className="sendbird-message-content__right   "
   >
-    <span
-      className="sendbird-message-content__right__created-at  sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
-    >
-      mock-date
-    </span>
     <div
       className="sendbird-message-content-menu   incoming"
     >
