@@ -79,7 +79,9 @@ const MessageInput = React.forwardRef((props, ref) => {
   }, [inputValue]);
   // clear input value when channel changes
   useEffect(() => {
-    setInputValue('');
+    if (!isEdit) {
+      setInputValue('');
+    }
   }, [channelUrl]);
 
   const sendMessage = () => {
@@ -137,7 +139,8 @@ const MessageInput = React.forwardRef((props, ref) => {
               setIsShiftPressed(false);
             }
           }}
-        />
+        >
+        </textarea>
         {/* placeholder */}
         {!inputValue && (
           <Label

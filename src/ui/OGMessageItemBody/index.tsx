@@ -40,45 +40,42 @@ export default function OGMessageItemBody({
       mouseHover ? 'mouse-hover' : '',
       message?.reactions?.length > 0 ? 'reactions' : '',
     ])}>
-      <div className="sendbird-og-message-item-body__text-bubble">
-        {
-          message?.message.split(' ').map((word: string) => (
-            isUrl(word)
-              ? (
-                <LinkLabel
-                  className="sendbird-og-message-item-body__text-bubble__message"
-                  key={uuidv4()}
-                  src={word}
-                  type={LabelTypography.BODY_1}
-                  color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
-                >
-                  {word}
-                </LinkLabel>
-              )
-              : (
-                <Label
-                  className="sendbird-og-message-item-body__text-bubble__message"
-                  key={uuidv4()}
-                  type={LabelTypography.BODY_1}
-                  color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
-                >
-                  {word}
-                </Label>
-              )
-          ))
-        }
-        {
-          isEditedMessage(message) && (
-            <Label
-              className="sendbird-og-message-item-body__text-bubble__message"
-              type={LabelTypography.BODY_1}
-              color={isByMe ? LabelColors.ONCONTENT_2 : LabelColors.ONBACKGROUND_2}
-            >
-              {` ${stringSet.MESSAGE_EDITED} `}
-            </Label>
-          )
-        }
-      </div>
+      <Label
+        key={uuidv4()}
+        type={LabelTypography.BODY_1}
+        color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
+      >
+        <p className="sendbird-og-message-item-body__text-bubble">
+          {
+            message?.message.split(' ').map((word: string) => (
+              isUrl(word)
+                ? (
+                  <LinkLabel
+                    className="sendbird-og-message-item-body__text-bubble__message"
+                    key={uuidv4()}
+                    src={word}
+                    type={LabelTypography.BODY_1}
+                    color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
+                  >
+                    {word}
+                  </LinkLabel>
+                )
+                : (`${word} `)
+            ))
+          }
+          {
+            isEditedMessage(message) && (
+              <Label
+                className="sendbird-og-message-item-body__text-bubble__message"
+                type={LabelTypography.BODY_1}
+                color={isByMe ? LabelColors.ONCONTENT_2 : LabelColors.ONBACKGROUND_2}
+              >
+                {` ${stringSet.MESSAGE_EDITED} `}
+              </Label>
+            )
+          }
+        </p>
+      </Label>
       <div
         className="sendbird-og-message-item-body__og-thumbnail"
         onClick={openOGUrl}

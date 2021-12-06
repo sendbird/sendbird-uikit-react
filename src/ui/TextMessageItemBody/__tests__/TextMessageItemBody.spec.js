@@ -117,9 +117,6 @@ describe('TextMessageItemBody', () => {
       />
     );
     expect(
-      component.find('.sendbird-text-message-item-body__message').hostNodes().length
-    ).toBe(messageText.split(/\r/).length);
-    expect(
       component.find('.sendbird-text-message-item-body__message.edited').hostNodes().exists()
     ).toBe(false);
     const editedMessage = mount(
@@ -131,9 +128,6 @@ describe('TextMessageItemBody', () => {
         }))}
       />
     );
-    expect(
-      editedMessage.find('.sendbird-text-message-item-body__message').hostNodes().length
-    ).toBe(messageText.split(/\r/).length + 1);
     expect(
       editedMessage.find('.sendbird-text-message-item-body__message.edited').hostNodes().exists()
     ).toBe(true);

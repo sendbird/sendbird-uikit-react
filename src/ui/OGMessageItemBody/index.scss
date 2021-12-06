@@ -13,7 +13,7 @@
     padding: 8px 12px;
     box-sizing: border-box;
     border-radius: 16px 16px 0px 0px;
-    word-break: break-all;
+    word-break: break-word;
 
     .sendbird-og-message-item-body__text-bubble__message {
       display: inline;
@@ -106,4 +106,8 @@
     height: 100%;
     border-radius: 16px 16px 0px 0px;
   }
+}
+
+p.sendbird-og-message-item-body__text-bubble {
+  margin: 0px;
 }
