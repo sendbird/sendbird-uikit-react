@@ -79,7 +79,9 @@ const MessageInput = React.forwardRef((props, ref) => {
   }, [inputValue]);
   // clear input value when channel changes
   useEffect(() => {
-    setInputValue('');
+    if (!isEdit) {
+      setInputValue('');
+    }
   }, [channelUrl]);
 
   const sendMessage = () => {

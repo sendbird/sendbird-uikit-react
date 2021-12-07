@@ -6,6 +6,10 @@
   box-sizing: content-box;
   padding: 8px 12px;
   border-radius: 16px;
+
+  white-space: pre-line;
+  word-break: break-word;
+
   &.reactions {
     border-radius: 16px 16px 0px 0px;
   }
@@ -24,9 +28,8 @@
       @include themed() { background-color: t(primary-4) }
     }
   }
+}
 
-  .sendbird-text-message-item-body__message {
-    white-space: pre-wrap;
-    word-break: break-all;
-  }
+p.sendbird-text-message-item-body {
+  margin: 0px;
 }

@@ -24,40 +24,30 @@ export default function TextMessageItemBody({
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   return (
-    <div className={getClassName([
-      className,
-      'sendbird-text-message-item-body',
-      isByMe ? 'outgoing' : 'incoming',
-      mouseHover ? 'mouse-hover' : '',
-      message?.reactions?.length > 0 ? 'reactions' : '',
-    ])}>
-      {
-        message?.message.split(/\r/).map((word) => (
-          (word === '')
-            ? <br key={word} />
-            : (
-              <Label
-                key={word}
-                className="sendbird-text-message-item-body__message"
-                type={LabelTypography.BODY_1}
-                color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
-              >
-                {word}
-              </Label>
-            )
-        ))
-      }
-      {
-        isEditedMessage(message) && (
-          <Label
-            className="sendbird-text-message-item-body__message edited"
-            type={LabelTypography.BODY_1}
-            color={isByMe ? LabelColors.ONCONTENT_2 : LabelColors.ONBACKGROUND_2}
-          >
-            {` ${stringSet.MESSAGE_EDITED} `}
-          </Label>
-        )
-      }
-    </div>
+    <Label
+      type={LabelTypography.BODY_1}
+      color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
+    >
+      <p className={getClassName([
+        className,
+        'sendbird-text-message-item-body',
+        isByMe ? 'outgoing' : 'incoming',
+        mouseHover ? 'mouse-hover' : '',
+        message?.reactions?.length > 0 ? 'reactions' : '',
+      ])}>
+        {message?.message}
+        {
+          isEditedMessage(message) && (
+            <Label
+              className="sendbird-text-message-item-body__message edited"
+              type={LabelTypography.BODY_1}
+              color={isByMe ? LabelColors.ONCONTENT_2 : LabelColors.ONBACKGROUND_2}
+            >
+              {` ${stringSet.MESSAGE_EDITED} `}
+            </Label>
+          )
+        }
+      </p>
+    </Label>
   );
 }

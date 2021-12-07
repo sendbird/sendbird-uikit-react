@@ -387,6 +387,7 @@ interface ChannelProps {
   renderChatHeader?: (props: RenderChatHeaderProps) => React.ReactNode;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   queries?: ChannelQueries;
+  replyType?: ReplyType;
 }
 interface sendBirdSelectorsInterface {
   getSdk: (store: SendBirdState) => SendBirdSelectors.GetSdk;
@@ -448,6 +449,7 @@ interface AppProps {
     resizingWidth?: number | string,
     resizingHeight?: number | string,
   };
+  replyType?: ReplyType;
 }
 
 interface ClientMessage {

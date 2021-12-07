@@ -132,15 +132,6 @@ export default function MessageContent({
             )}
           />
         )}
-        {(isByMe && !chainBottom) && (
-          <div className={getClassName(['sendbird-message-content__left__created-at', supposedHoverClassName])}>
-            <MessageStatus
-              message={message}
-              channel={channel}
-              status={getOutgoingMessageState(channel, message)}
-            />
-          </div>
-        )}
         {/* outgoing menu */}
         {isByMe && (
           <div className={getClassName(['sendbird-message-content-menu', useReactionClassName, supposedHoverClassName, isByMeClassName])}>
@@ -200,6 +191,18 @@ export default function MessageContent({
         ) : null}
         {/* container: message item body + emoji reactions */}
         <div className={getClassName(['sendbird-message-content__middle__body-container'])} >
+          {/* message status component */}
+          {(isByMe && !chainBottom) && (
+            <div className={getClassName(['sendbird-message-content__middle__body-container__created-at', 'left', supposedHoverClassName])}>
+              <div className="sendbird-message-content__middle__body-container__created-at__component-container">
+                <MessageStatus
+                  message={message}
+                  channel={channel}
+                  status={getOutgoingMessageState(channel, message)}
+                />
+              </div>
+            </div>
+          )}
           {/* message item body components */}
           {isTextMessage(message as UserMessage) && (
             <TextMessageItemBody
@@ -259,19 +262,19 @@ export default function MessageContent({
               />
             </div>
           )}
+          {(!isByMe && !chainBottom) && (
+            <Label
+              className={getClassName(['sendbird-message-content__middle__body-container__created-at', 'right', supposedHoverClassName])}
+              type={LabelTypography.CAPTION_3}
+              color={LabelColors.ONBACKGROUND_2}
+            >
+              {getMessageCreatedAt(message)}
+            </Label>
+          )}
         </div>
       </div>
       {/* right */}
       <div className={getClassName(['sendbird-message-content__right', chainTopClassName, useReactionClassName, useReplyingClassName])}>
-        {(!isByMe && !chainBottom) && (
-          <Label
-            className={getClassName(['sendbird-message-content__right__created-at', supposedHoverClassName])}
-            type={LabelTypography.CAPTION_3}
-            color={LabelColors.ONBACKGROUND_2}
-          >
-            {getMessageCreatedAt(message)}
-          </Label>
-        )}
         {/* incoming menu */}
         {!isByMe && (
           <div className={getClassName(['sendbird-message-content-menu', chainTopClassName, supposedHoverClassName, isByMeClassName])}>

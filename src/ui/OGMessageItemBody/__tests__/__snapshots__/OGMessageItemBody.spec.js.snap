@@ -4,9 +4,13 @@ exports[`OGMessageItemBody should do a snapshot test of the OGMessageItemBody DO
 <div
   className=" sendbird-og-message-item-body incoming  "
 >
-  <div
-    className="sendbird-og-message-item-body__text-bubble"
-  />
+  <span
+    className="sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
+  >
+    <p
+      className="sendbird-og-message-item-body__text-bubble"
+    />
+  </span>
   <div
     className="sendbird-og-message-item-body__og-thumbnail"
     onClick={[Function]}

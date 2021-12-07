@@ -36,11 +36,28 @@
     flex-direction: column;
     max-width: 400px;
     align-items: flex-start;
+
+    .sendbird-message-content__middle__body-container {
+      .sendbird-message-content__middle__body-container__created-at {
+        position: absolute;
+        bottom: 6px;
+        right: -84px;
+        white-space: nowrap;
+        display: flex;
+        flex-direction: row;
+        min-width: 80px;
+        &.supposed-hover {
+          display: none;
+        }
+      }
+    }
+
     .sendbird-message-content__middle__sender-name {
       position: relative;
       margin-left: 12px;
       margin-bottom: 4px;
     }
+
     .sendbird-message-content__middle__quote-message {
       position: relative;
       width: 100%;
@@ -64,16 +81,6 @@
       }
     }
 
-    .sendbird-message-content__right__created-at {
-      position: absolute;
-      bottom: 2px;
-      white-space: nowrap;
-      display: inline-flex;
-      &.supposed-hover {
-        display: none;
-      }
-    }
-
     .sendbird-message-content-menu {
       position: relative;
       flex-direction: row;
@@ -87,11 +94,15 @@
 
   &:hover {
     .sendbird-message-content__right {
-      .sendbird-message-content__right__created-at {
-        display: none;
-      }
       .sendbird-message-content-menu {
         display: inline-flex;
+      }
+    }
+    .sendbird-message-content__middle {
+      .sendbird-message-content__middle__body-container {
+        .sendbird-message-content__middle__body-container__created-at {
+          display: none;
+        }
       }
     }
   }
@@ -109,20 +120,6 @@
     &.use-quote {
       .sendbird-message-content-menu {
         top: 18px;
-      }
-    }
-
-    .sendbird-message-content__left__created-at {
-      position: absolute;
-      bottom: 2px;
-      right: 4px;
-      white-space: nowrap;
-      display: flex;
-      box-sizing: content-box;
-      min-width: 16px;
-      min-height: 16px;
-      &.supposed-hover {
-        display: none;
       }
     }
 
@@ -144,6 +141,7 @@
     flex-direction: column;
     max-width: 400px;
     align-items: flex-end;
+
     .sendbird-message-content__middle__quote-message {
       position: relative;
       width: 100%;
@@ -153,7 +151,27 @@
     }
 
     .sendbird-message-content__middle__body-container {
+      position: relative;
       width: fit-content;
+
+      .sendbird-message-content__middle__body-container__created-at {
+        position: absolute;
+        bottom: 2px;
+        left: -84px;
+        white-space: nowrap;
+        display: flex;
+        justify-content: flex-end;
+        box-sizing: content-box;
+        min-width: 80px;
+        min-height: 16px;
+        &.supposed-hover {
+          display: none;
+        }
+        .sendbird-message-content__middle__body-container__created-at__component-container {
+          position: relative;
+          display: inline-flex;
+        }
+      }
     }
   }
 
@@ -163,11 +181,15 @@
 
   &:hover {
     .sendbird-message-content__left {
-      .sendbird-message-content__left__created-at {
-        display: none;
-      }
       .sendbird-message-content-menu {
         display: inline-flex;
+      }
+    }
+    .sendbird-message-content__middle {
+      .sendbird-message-content__middle__body-container {
+        .sendbird-message-content__middle__body-container__created-at {
+          display: none;
+        }
       }
     }
   }
@@ -176,6 +198,9 @@
 .sendbird-message-content__middle__body-container {
   position: relative;
   width: fit-content;
+  display: flex;
+  flex-direction: column;
+
   .sendbird-message-content__middle__message-item-body {
     width: 100%;
     box-sizing: border-box;
