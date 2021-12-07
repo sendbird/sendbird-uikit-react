@@ -98,6 +98,13 @@
         display: inline-flex;
       }
     }
+    .sendbird-message-content__middle {
+      .sendbird-message-content__middle__body-container {
+        .sendbird-message-content__middle__body-container__created-at {
+          display: none;
+        }
+      }
+    }
   }
 }
 
@@ -180,8 +187,7 @@
     }
     .sendbird-message-content__middle {
       .sendbird-message-content__middle__body-container {
-        .sendbird-message-content__middle__body-container__created-at,
-        .sendbird-message-content__middle__body-container__right-created-at {
+        .sendbird-message-content__middle__body-container__created-at {
           display: none;
         }
       }

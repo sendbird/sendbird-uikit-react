@@ -139,8 +139,7 @@ const MessageInput = React.forwardRef((props, ref) => {
               setIsShiftPressed(false);
             }
           }}
-        >
-        </textarea>
+        />
         {/* placeholder */}
         {!inputValue && (
           <Label
