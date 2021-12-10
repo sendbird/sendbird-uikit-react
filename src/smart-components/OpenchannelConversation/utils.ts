@@ -21,29 +21,28 @@ export const scrollIntoLast = (intialTry = 0): void => {
   }
 };
 
-
 export const isSameGroup = (
   message: SendbirdUIKit.EveryMessage,
   comparingMessage: SendbirdUIKit.EveryMessage,
 ): boolean => {
-  if (
-    !message
-    || !comparingMessage
-    || message.messageType === 'admin'
-    || comparingMessage.messageType === 'admin'
-    || !message.sender
-    || !comparingMessage.sender
-    || !message.createdAt
-    || !comparingMessage.createdAt
-    || !message.sender.userId
-    || !comparingMessage.sender.userId
-  ) {
+  if (!(
+    message
+    && comparingMessage
+    && message?.messageType !== 'admin'
+    && comparingMessage?.messageType !== 'admin'
+    && message?.sender
+    && comparingMessage?.sender
+    && message?.createdAt
+    && comparingMessage?.createdAt
+    && message?.sender?.userId
+    && comparingMessage?.sender?.userId
+  )) {
     return false
   }
 
   return (
-    message.sendingStatus === comparingMessage.sendingStatus
-    && message.sender.userId === comparingMessage.sender.userId
+    message?.sendingStatus === comparingMessage?.sendingStatus
+    && message?.sender?.userId === comparingMessage?.sender?.userId
     && getMessageCreatedAt(message) === getMessageCreatedAt(comparingMessage)
   );
 };
@@ -53,11 +52,11 @@ export const compareMessagesForGrouping = (
   currMessage: SendbirdUIKit.EveryMessage,
   nextMessage: SendbirdUIKit.EveryMessage,
 ): [boolean, boolean] => (
-    [
-      isSameGroup(prevMessage, currMessage),
-      isSameGroup(currMessage, nextMessage),
-    ]
-  );
+  [
+    isSameGroup(prevMessage, currMessage),
+    isSameGroup(currMessage, nextMessage),
+  ]
+);
 
 export const kFormatter = (num: number): string => {
   if (Math.abs(num) > 999999) {
