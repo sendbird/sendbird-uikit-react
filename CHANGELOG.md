@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.1] (Dec 14 2021)
+- Bugfix
+  * Add type definition for `replyType` into the props of <App /> and <Channel />
+  * Replace the position of message status and timestamp
+  * Change word-break property for text message in group channel
+  * Fix admin message break in group channel
+
 ## [2.5.1-alpha.2] (Dec 10 2021)
 This is an alpha version release for bugfix
 ## [2.5.1-alpha.1] (Dec 10 2021)

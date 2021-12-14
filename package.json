@@ -47,8 +47,7 @@
     "date-fns": "^2.16.1",
     "prop-types": "^15.7.2",
     "react": "^16.8.6 || ^17.0.0",
-    "react-dom": "^16.8.6 || ^17.0.0",
-    "sendbird": "^3.1.2"
+    "react-dom": "^16.8.6 || ^17.0.0"
   },
   "dependencies": {
     "css-vars-ponyfill": "^2.3.2",
@@ -56,7 +55,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.8.6 || ^17.0.0",
     "react-dom": "^16.8.6 || ^17.0.0",
-    "sendbird": "^3.1.2"
+    "sendbird": "^3.1.4"
   },
   "bugs": {
     "url": "https://community.sendbird.com"
