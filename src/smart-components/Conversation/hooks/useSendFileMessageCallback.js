@@ -124,7 +124,7 @@ export default function useSendFileMessageCallback({
         logger.info('Channel: creating params using onBeforeSendFileMessage', onBeforeSendFileMessage);
       }
       const params = onBeforeSendFileMessage
-        ? onBeforeSendFileMessage(file)
+        ? onBeforeSendFileMessage(file, quoteMessage)
         : createParamsDefault(file);
       logger.info('Channel: Uploading file message start!', params);
 
