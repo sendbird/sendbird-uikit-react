@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.5.1-alpha] (Dec 24 2021)
+
+Features:
+* Implement experimentalMessageLimit for openChannel
+This feature limits the no.of messages that are stored in
+OpenChannel. This is intended for live streaming, where multiple
+thousands of messages are expected to flow
+Recommend a limit higher than 150 and less than 500
+Usage:
+```
+<OpenChannel experimentalMessageLimit={number} />
+```
+
+Fixes:
+
+* Fix time stamp position on message threading
+* Add quote message to onBeforeSendFileMessage params
+
 ## [2.5.1] (Dec 14 2021)
 - Bugfix
   * Add type definition for `replyType` into the props of <App /> and <Channel />
