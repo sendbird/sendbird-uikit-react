@@ -89,7 +89,7 @@ export default function MessageHoc({
     return null;
   }, [message, message.message, renderCustomMessage]);
 
-  const isByMe = (userId === sender.userId)
+  const isByMe = (userId === sender?.userId)
     || (message.requestState === 'pending')
     || (message.requestState === 'failed');
 
