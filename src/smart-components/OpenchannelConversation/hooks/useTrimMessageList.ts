@@ -14,14 +14,14 @@ interface StaticParams {
   logger: SendbirdUIKit.Logger;
 }
 
-const THROTTLE_TIMER = 3000;
+const THROTTLE_TIMER = 5000;
 
 // to trim message list so that we wont keep thousands of messages in memory
 // We are throttling here; not debouncing
 // it will be called once very 5 sec if messagesLength, experimentalMessageLimit changes
 // we check if messagesLength > experimentalMessageLimit before dispatching action
 function useTrimMessageList(
-  { messagesLength, experimentalMessageLimit, channelUrl }: DynamicParams,
+  { messagesLength, experimentalMessageLimit }: DynamicParams,
   { messagesDispatcher, logger }: StaticParams,
 ): void {
   const [inProgress, setInProgress] = useState(false);
@@ -29,18 +29,15 @@ function useTrimMessageList(
     if (inProgress) {
       return;
     }
+    if (typeof messagesLength === 'number' && messagesLength > experimentalMessageLimit) {
+      logger.info('Trimming MessageList');
+      messagesDispatcher({
+        type: messageActionTypes.TRIM_MESSAGE_LIST,
+        payload: { experimentalMessageLimit },
+      });
+    }
     setInProgress(true);
-    setTimeout(() => {
-      if (typeof messagesLength === 'number'
-        && messagesLength > experimentalMessageLimit) {
-          logger.info('Trimming MessageList');
-          messagesDispatcher({
-            type: messageActionTypes.TRIM_MESSAGE_LIST,
-            payload: { experimentalMessageLimit },
-          });
-        }
-      setInProgress(false);
-    }, THROTTLE_TIMER);
+    setTimeout(() => { setInProgress(false); }, THROTTLE_TIMER);
   }, [messagesLength, experimentalMessageLimit]);
 }
 

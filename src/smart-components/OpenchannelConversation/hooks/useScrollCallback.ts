@@ -4,6 +4,7 @@ import * as messageActionTypes from '../dux/actionTypes';
 interface DynamicParams {
   currentOpenChannel: SendbirdUIKit.OpenChannelType;
   lastMessageTimestamp: number;
+  fetchMore?: boolean;
 }
 interface StaticParams {
   sdk: SendbirdUIKit.Sdk;
@@ -16,11 +17,11 @@ interface StaticParams {
 type CallbackReturn = (callback: () => void) => void;
 
 function useScrollCallback(
-  { currentOpenChannel, lastMessageTimestamp }: DynamicParams,
+  { currentOpenChannel, lastMessageTimestamp, fetchMore }: DynamicParams,
   { sdk, logger, messagesDispatcher, hasMore, userFilledMessageListParams }: StaticParams,
 ): CallbackReturn {
   return useCallback((callback) => {
-    if (hasMore && sdk && sdk.MessageListParams) {
+    if (fetchMore && hasMore && sdk && sdk.MessageListParams) {
       logger.info('OpenChannel | useScrollCallback: start');
       const messageListParams = new sdk.MessageListParams();
       messageListParams.prevResultSize = 30;
@@ -67,7 +68,7 @@ function useScrollCallback(
         }
       });
     }
-  }, [currentOpenChannel, lastMessageTimestamp]);
+  }, [currentOpenChannel, lastMessageTimestamp, fetchMore]);
 }
 
 export default useScrollCallback;

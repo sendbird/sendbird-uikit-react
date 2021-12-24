@@ -4,6 +4,19 @@ import SendbirdUIKit from '../../index';
 
 export const getMessageCreatedAt = (message: SendbirdUIKit.EveryMessage): string => format(message.createdAt, 'p');
 
+export const shouldFetchMore = (messageLength: number, maxMessages: number): boolean => {
+  if (typeof maxMessages !== 'number') {
+    return true;
+  }
+
+  if (typeof maxMessages === 'number'
+    && maxMessages > messageLength
+  ) {
+    return true;
+  }
+  return false;
+}
+
 export const scrollIntoLast = (intialTry = 0): void => {
   const MAX_TRIES = 10;
   const currentTry = intialTry;

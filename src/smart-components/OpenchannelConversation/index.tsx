@@ -166,8 +166,11 @@ export const OpenchannelConversation = (props: Props): JSX.Element => {
     { currentOpenChannel, userFilledMessageListParams },
     { sdk, logger, messagesDispatcher },
   );
+
+  // donot fetch more for streaming
+  const fetchMore = utils.shouldFetchMore(allMessages?.length, experimentalMessageLimit);
   const onScroll = useScrollCallback(
-    { currentOpenChannel, lastMessageTimestamp },
+    { currentOpenChannel, lastMessageTimestamp, fetchMore },
     { sdk, logger, messagesDispatcher, hasMore, userFilledMessageListParams },
   );
   const handleSendMessage = useSendMessageCallback(
