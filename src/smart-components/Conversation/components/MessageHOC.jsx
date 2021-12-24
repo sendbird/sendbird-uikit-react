@@ -38,6 +38,8 @@ export default function MessageHoc({
   setQuoteMessage,
   renderCustomMessage,
   currentGroupChannel,
+  setShowState,
+  setShowEditHandler,
 }) {
   const { sender = {} } = message;
   const [showEdit, setShowEdit] = useState(false);
@@ -166,7 +168,12 @@ export default function MessageHoc({
         replyType={replyType}
         nicknamesMap={membersMap}
         emojiContainer={emojiContainer}
-        showEdit={setShowEdit}
+        showEdit={() => {
+          setShowEditHandler({
+            ...setShowState,
+          });
+          setShowEdit(true);
+        }}
         showRemove={setShowRemove}
         showFileViewer={setShowFileViewer}
         resendMessage={resendMessage}

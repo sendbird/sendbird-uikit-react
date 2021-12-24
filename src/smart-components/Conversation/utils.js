@@ -18,7 +18,7 @@ export const scrollIntoLast = (intialTry = 0) => {
     return;
   }
   try {
-    const scrollDOM = document.querySelector('.sendbird-conversation__scroll-container');
+    const scrollDOM = document.querySelector('.sendbird-conversation__messages-padding');
     // eslint-disable-next-line no-multi-assign
     scrollDOM.scrollTop = scrollDOM.scrollHeight;
   } catch (error) {

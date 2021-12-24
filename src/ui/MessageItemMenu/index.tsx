@@ -23,7 +23,7 @@ interface Props {
   isByMe?: boolean;
   disabled?: boolean;
   replyType?: ReplyType;
-  showEdit?: (bool: boolean) => void;
+  showEdit?: () => void;
   showRemove?: (bool: boolean) => void;
   resendMessage?: (message: UserMessage | FileMessage) => void;
   setQuoteMessage?: (message: UserMessage | FileMessage) => void;
@@ -126,7 +126,8 @@ export default function MessageItemMenu({
                   className="sendbird-message-item-menu__list__menu-item menu-item-edit"
                   onClick={() => {
                     if (!disabled) {
-                      showEdit(true);
+                      // showEdit(true);
+                      showEdit();
                       closeDropdown();
                     }
                   }}
