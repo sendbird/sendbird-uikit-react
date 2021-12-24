@@ -35,6 +35,7 @@ import useFileUploadCallback from './hooks/useFileUploadCallback';
 import useUpdateMessageCallback from './hooks/useUpdateMessageCallback';
 import useDeleteMessageCallback from './hooks/useDeleteMessageCallback';
 import useResendMessageCallback from './hooks/useResendMessageCallback';
+import useTrimMessageList from './hooks/useTrimMessageList';
 
 const COMPONENT_CLASS_NAME = 'sendbird-openchannel-conversation';
 
@@ -76,6 +77,7 @@ export const OpenchannelConversation = (props: Props): JSX.Element => {
     renderChannelTitle,
     renderMessageInput,
     onBeforeSendUserMessage,
+    experimentalMessageLimit,
     onBeforeSendFileMessage,
     onChatHeaderActionClick
   } = props;
@@ -164,8 +166,11 @@ export const OpenchannelConversation = (props: Props): JSX.Element => {
     { currentOpenChannel, userFilledMessageListParams },
     { sdk, logger, messagesDispatcher },
   );
+
+  // donot fetch more for streaming
+  const fetchMore = utils.shouldFetchMore(allMessages?.length, experimentalMessageLimit);
   const onScroll = useScrollCallback(
-    { currentOpenChannel, lastMessageTimestamp },
+    { currentOpenChannel, lastMessageTimestamp, fetchMore },
     { sdk, logger, messagesDispatcher, hasMore, userFilledMessageListParams },
   );
   const handleSendMessage = useSendMessageCallback(
@@ -187,6 +192,11 @@ export const OpenchannelConversation = (props: Props): JSX.Element => {
   const resendMessage = useResendMessageCallback(
     { currentOpenChannel },
     { logger, messagesDispatcher },
+  );
+
+  useTrimMessageList(
+    { messagesLength: allMessages?.length, experimentalMessageLimit },
+    { messagesDispatcher, logger }
   );
 
   // handle API calls from withSendbird

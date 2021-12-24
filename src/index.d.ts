@@ -142,6 +142,7 @@ export interface OpenChannelProps {
   disableUserProfile?: boolean;
   fetchingParticipants: boolean;
   renderCustomMessage?: RenderCustomMessage;
+  experimentalMessageLimit?: number;
   renderUserProfile?(): JSX.Element;
   renderChannelTitle?(renderProps: RenderOpenChannelTitleProps): JSX.Element;
   renderMessageInput?(renderProps: RenderOpenChannelMessageInputProps): JSX.Element;

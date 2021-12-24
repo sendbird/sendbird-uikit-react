@@ -126,6 +126,21 @@ export default function reducer(
         )),
       };
     }
+    case actionTypes.TRIM_MESSAGE_LIST: {
+      const { allMessages } = state;
+      const experimentalMessageLimit = action.payload?.experimentalMessageLimit;
+      if (experimentalMessageLimit
+        && experimentalMessageLimit > 0
+        && allMessages?.length > experimentalMessageLimit
+      ) {
+        const sliceAt = allMessages.length - experimentalMessageLimit;
+        return {
+          ...state,
+          allMessages: allMessages.slice(sliceAt),
+        }
+      }
+      return state;
+    }
     case actionTypes.RESENDING_MESSAGE_START: {
       const eventedChannel = action.payload.channel;
       const resentMessage = action.payload.message;
