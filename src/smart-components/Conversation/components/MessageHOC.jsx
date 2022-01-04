@@ -267,6 +267,8 @@ MessageHoc.propTypes = {
     messageId: PropTypes.string,
   }),
   setQuoteMessage: PropTypes.func.isRequired,
+  setShowState: PropTypes.func.isRequired,
+  setShowEditHandler: PropTypes.func.isRequired,
 };
 
 MessageHoc.defaultProps = {

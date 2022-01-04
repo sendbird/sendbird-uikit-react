@@ -14,13 +14,20 @@ const SCROLL_REF_CLASS_NAME = '.sendbird-msg--scroll-ref';
 
 export default class ConversationScroll extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {};
   }
 
-  setShowEditHandler = () => {
-    this.setState({ ...this.state });
-    // trigger for rendering when showEdit state is changed
+  componentDidUpdate() {
+    const { scrollRef } = this.props;
+    const current = scrollRef?.current;
+    if (current) {
+      const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
+      const { scrollBottom = 0 } = this.state;
+      if (scrollBottom < bottom) {
+        current.scrollTop += bottom - scrollBottom;
+      }
+    }
   }
 
   onScroll = (e) => {
@@ -85,23 +92,17 @@ export default class ConversationScroll extends Component {
       // save the lastest scroll bottom value
       if (scrollRef?.current) {
         const current = scrollRef?.current;
-        this.setState({
-          ...this.state,
+        this.setState((state) => ({
+          ...state,
           scrollBottom: current.scrollHeight - current.scrollTop - current.offsetHeight,
-        });
+        }), () => { });
       }
     }, 500);
   }
 
-  componentDidUpdate() {
-    const { scrollRef } = this.props;
-    const current = scrollRef?.current;
-    if (current) {
-      const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
-      if (this.state.scrollBottom < bottom) {
-        current.scrollTop += bottom - this.state.scrollBottom;
-      }
-    }
+  setShowEditHandler = () => {
+    this.setState((state) => ({ ...state }));
+    // trigger for rendering when showEdit state is changed
   }
 
   render() {
