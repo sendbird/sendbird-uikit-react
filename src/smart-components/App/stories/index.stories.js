@@ -278,6 +278,32 @@ const UseSendbirdChannelList = (props) => {
   );
 };
 const SBChannelList = withSendBird(UseSendbirdChannelList);
+const SBChannel = withSendBird((props) => {
+  const {
+    channelUrl,
+    onSearchClick,
+    onChatHeaderActionClick,
+    showSearchIcon,
+  } = props;
+
+  return (
+    <Conversation
+      channelUrl={channelUrl}
+      showSearchIcon={showSearchIcon}
+      onSearchClick={onSearchClick}
+      onChatHeaderActionClick={onChatHeaderActionClick}
+      // renderCustomMessage={(message) => {
+      //   if (message.messageType === 'user') {
+      //     return () => (
+      //       <CustomMessageItem
+      //         message={message}
+      //       />
+      //     )
+      //   }
+      // }}
+    />
+  );
+});
 const CustomApp = () => {
   const [channelUrl, setChannelUrl] = useState('');
   const [channelSettings, setChannelSettings] = useState(false);
@@ -297,7 +323,7 @@ const CustomApp = () => {
         <SBChannelList setChannelUrl={setChannelUrl} />
         <div style={{ height: '100%', width: '100%', display: 'inline-flex', flexDirection: 'row' }}>
           <div style={{ width: '100%' }}>
-            <Conversation
+            <SBChannel
               channelUrl={channelUrl}
               onChatHeaderActionClick={() => {
                 setChannelSearch(false);

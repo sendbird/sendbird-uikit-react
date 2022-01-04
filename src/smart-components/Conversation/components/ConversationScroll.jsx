@@ -19,10 +19,8 @@ export default class ConversationScroll extends Component {
   }
 
   setShowEditHandler = () => {
-    this.setState({
-      ...this.state,
-      // ...
-    });
+    this.setState({ ...this.state });
+    // trigger for rendering when showEdit state is changed
   }
 
   onScroll = (e) => {
@@ -96,7 +94,6 @@ export default class ConversationScroll extends Component {
   }
 
   componentDidUpdate() {
-    console.log('스라반')
     const { scrollRef } = this.props;
     const current = scrollRef?.current;
     if (current) {
@@ -212,8 +209,7 @@ export default class ConversationScroll extends Component {
                       key={m.messageId || m.reqId}
                       userId={userId}
                       setShowState={this.state}
-                      setShowEditHandler={setShowEditHandler}
-                      // show status for pending/failed messages
+                      setShowEditHandler={this.setShowEditHandler}
                       message={m}
                       quoteMessage={quoteMessage}
                       scrollToMessage={scrollToMessage}
