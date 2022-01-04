@@ -209,7 +209,6 @@ export default class ConversationScroll extends Component {
                       renderCustomMessage={renderCustomMessage}
                       key={m.messageId || m.reqId}
                       userId={userId}
-                      setShowState={this.state}
                       setShowEditHandler={this.setShowEditHandler}
                       message={m}
                       quoteMessage={quoteMessage}
