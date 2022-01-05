@@ -103,6 +103,12 @@
     animation-duration: 1.6s;
     animation-fill-mode: forwards;
   }
+
+  .sendbird-message-content-reactions {
+    animation-name: sbHighlight;
+    animation-duration: 1.6s;
+    animation-fill-mode: forwards;
+  }
 }
 
 .sendbird-conversation__scroll-container {
