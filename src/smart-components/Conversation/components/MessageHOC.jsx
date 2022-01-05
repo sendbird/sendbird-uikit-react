@@ -171,9 +171,7 @@ export default function MessageHoc({
         replyType={replyType}
         nicknamesMap={membersMap}
         emojiContainer={emojiContainer}
-        showEdit={() => {
-          setShowEdit(true);
-        }}
+        showEdit={setShowEdit}
         showRemove={setShowRemove}
         showFileViewer={setShowFileViewer}
         resendMessage={resendMessage}
