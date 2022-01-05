@@ -1,22 +1,25 @@
 # Changelog
 
-## [2.5.1-alpha] (Dec 24 2021)
+## [2.5.2] (Jan 5 2022)
+- Bugfix
+  * Move scroll when the height of message item changes
+  * Fix emoji reaction background color when the message is highlighted
 
-Features:
-* Implement experimentalMessageLimit for openChannel
+## [2.5.2-alpha] (Dec 24 2021)
+- Features
+Implement experimentalMessageLimit for openChannel
 This feature limits the no.of messages that are stored in
 OpenChannel. This is intended for live streaming, where multiple
 thousands of messages are expected to flow
 Recommend a limit higher than 150 and less than 500
-Usage:
+Usage
 ```
 <OpenChannel experimentalMessageLimit={number} />
 ```
 
-Fixes:
-
-* Fix time stamp position on message threading
-* Add quote message to onBeforeSendFileMessage params
+- Bugix
+  * Fix time stamp position on message threading
+  * Add quote message to onBeforeSendFileMessage params
 
 ## [2.5.1] (Dec 14 2021)
 - Bugfix
