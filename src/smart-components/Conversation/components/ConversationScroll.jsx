@@ -18,9 +18,8 @@ export default class ConversationScroll extends Component {
     this.state = {};
   }
 
-  componentDidUpdate() {
-    const { scrollRef } = this.props;
-    const current = scrollRef?.current;
+  handleScroll() {
+    const current = this?.props?.scrollRef?.current;
     if (current) {
       const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
       const { scrollBottom = 0 } = this.state;
@@ -98,11 +97,6 @@ export default class ConversationScroll extends Component {
         }), () => { });
       }
     }, 500);
-  }
-
-  setShowEditHandler = () => {
-    this.setState((state) => ({ ...state }));
-    // trigger for rendering when showEdit state is changed
   }
 
   render() {
@@ -209,7 +203,7 @@ export default class ConversationScroll extends Component {
                       renderCustomMessage={renderCustomMessage}
                       key={m.messageId || m.reqId}
                       userId={userId}
-                      setShowEditHandler={this.setShowEditHandler}
+                      handleScroll={() => this.handleScroll()}
                       message={m}
                       quoteMessage={quoteMessage}
                       scrollToMessage={scrollToMessage}
