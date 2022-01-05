@@ -10,7 +10,26 @@ import { compareMessagesForGrouping } from '../utils';
 import PlaceHolder, { PlaceHolderTypes } from '../../../ui/PlaceHolder';
 import Icon, { IconTypes, IconColors } from '../../../ui/Icon';
 
+const SCROLL_REF_CLASS_NAME = '.sendbird-msg--scroll-ref';
+
 export default class ConversationScroll extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  handleScroll = () => {
+    const { scrollRef } = this?.props;
+    const current = scrollRef?.current;
+    if (current) {
+      const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
+      const { scrollBottom = 0 } = this.state;
+      if (scrollBottom < bottom) {
+        current.scrollTop += bottom - scrollBottom;
+      }
+    }
+  }
+
   onScroll = (e) => {
     const {
       scrollRef,
@@ -31,7 +50,7 @@ export default class ConversationScroll extends Component {
       if (!hasMore) {
         return;
       }
-      const nodes = scrollRef.current.querySelectorAll('.sendbird-msg--scroll-ref');
+      const nodes = scrollRef.current.querySelectorAll(SCROLL_REF_CLASS_NAME);
       const first = nodes && nodes[0];
       onScroll(([messages]) => {
         if (messages) {
@@ -46,7 +65,7 @@ export default class ConversationScroll extends Component {
     }
 
     if (clientHeight + scrollTop === scrollHeight) {
-      const nodes = scrollRef.current.querySelectorAll('.sendbird-msg--scroll-ref');
+      const nodes = scrollRef.current.querySelectorAll(SCROLL_REF_CLASS_NAME);
       const last = nodes && nodes[nodes.length - 1];
       onScrollDown(([messages]) => {
         if (messages) {
@@ -68,6 +87,15 @@ export default class ConversationScroll extends Component {
           type: messageActionTypes.MARK_AS_READ,
         });
         currentGroupChannel.markAsRead();
+      }
+
+      // save the lastest scroll bottom value
+      if (scrollRef?.current) {
+        const current = scrollRef?.current;
+        this.setState((state) => ({
+          ...state,
+          scrollBottom: current.scrollHeight - current.scrollTop - current.offsetHeight,
+        }), () => { });
       }
     }, 500);
   }
@@ -113,11 +141,7 @@ export default class ConversationScroll extends Component {
 
     return (
       <div className="sendbird-conversation__messages">
-        <div
-          ref={scrollRef}
-          className="sendbird-conversation__scroll-container"
-          onScroll={this.onScroll}
-        >
+        <div className="sendbird-conversation__scroll-container">
           <div className="sendbird-conversation__padding" />
           {/*
             To do: Implement windowing
@@ -126,7 +150,11 @@ export default class ConversationScroll extends Component {
             We hesitate to bring one more dependency to our library,
             we are planning to implement it inside the library
           */}
-          <div className="sendbird-conversation__messages-padding">
+          <div
+            className="sendbird-conversation__messages-padding"
+            ref={scrollRef}
+            onScroll={this.onScroll}
+          >
             {
               allMessages.map(
                 (m, idx) => {
@@ -176,7 +204,7 @@ export default class ConversationScroll extends Component {
                       renderCustomMessage={renderCustomMessage}
                       key={m.messageId || m.reqId}
                       userId={userId}
-                      // show status for pending/failed messages
+                      handleScroll={this.handleScroll}
                       message={m}
                       quoteMessage={quoteMessage}
                       scrollToMessage={scrollToMessage}
@@ -292,8 +320,8 @@ ConversationScroll.defaultProps = {
   replyType: 'NONE',
   emojiContainer: {},
   showScrollBot: false,
-  onClickScrollBot: () => {},
-  scrollToMessage: () => {},
+  onClickScrollBot: () => { },
+  scrollToMessage: () => { },
   emojiAllMap: new Map(),
   membersMap: new Map(),
   useMessageGrouping: true,

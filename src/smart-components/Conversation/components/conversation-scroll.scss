@@ -4,6 +4,8 @@
   .sendbird-conversation__messages-padding {
     padding-left: 24px;
     padding-right: 24px;
+    height: 100%;
+    overflow: scroll;
   }
   .sendbird-separator,
   .sendbird-admin-message {

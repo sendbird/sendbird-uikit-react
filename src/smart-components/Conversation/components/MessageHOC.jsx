@@ -38,6 +38,7 @@ export default function MessageHoc({
   setQuoteMessage,
   renderCustomMessage,
   currentGroupChannel,
+  handleScroll,
 }) {
   const { sender = {} } = message;
   const [showEdit, setShowEdit] = useState(false);
@@ -47,6 +48,10 @@ export default function MessageHoc({
   const [isHighlighted, setIsHighlighted] = useState(false);
   const editMessageInputRef = useRef(null);
   const useMessageScrollRef = useRef(null);
+
+  useLayoutEffect(() => {
+    handleScroll();
+  }, [showEdit, message?.reactions?.length]);
 
   useLayoutEffect(() => {
     if (highLightedMessageId === message.messageId) {
@@ -166,7 +171,9 @@ export default function MessageHoc({
         replyType={replyType}
         nicknamesMap={membersMap}
         emojiContainer={emojiContainer}
-        showEdit={setShowEdit}
+        showEdit={() => {
+          setShowEdit(true);
+        }}
         showRemove={setShowRemove}
         showFileViewer={setShowFileViewer}
         resendMessage={resendMessage}
@@ -224,6 +231,7 @@ MessageHoc.propTypes = {
     sender: PropTypes.shape({ userId: PropTypes.string }),
     ogMetaData: PropTypes.shape({}),
     parentMessageId: PropTypes.number,
+    reactions: PropTypes.arrayOf(PropTypes.number),
   }),
   animatedMessageId: PropTypes.oneOfType([
     PropTypes.string,
@@ -260,6 +268,7 @@ MessageHoc.propTypes = {
     messageId: PropTypes.string,
   }),
   setQuoteMessage: PropTypes.func.isRequired,
+  handleScroll: PropTypes.func.isRequired,
 };
 
 MessageHoc.defaultProps = {

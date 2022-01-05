@@ -378,8 +378,8 @@ interface ChannelProps {
   onSearchClick?(): void;
   highlightedMessage?: string | number;
   startingPoint?: number;
-  onBeforeSendUserMessage?(text: string, quoteMessage?: Sendbird.UserMessage | Sendbird.FileMessage): Sendbird.UserMessageParams;
-  onBeforeSendFileMessage?(file: File, quoteMessage?: Sendbird.UserMessage | Sendbird.FileMessage): Sendbird.FileMessageParams;
+  onBeforeSendUserMessage?(text: string, quotedMessage?: Sendbird.UserMessage | Sendbird.FileMessage): Sendbird.UserMessageParams;
+  onBeforeSendFileMessage?(file: File, quotedMessage?: Sendbird.UserMessage | Sendbird.FileMessage): Sendbird.FileMessageParams;
   onBeforeUpdateUserMessage?(text: string): Sendbird.UserMessageParams;
   onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
   renderCustomMessage?: RenderCustomMessage;
