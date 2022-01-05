@@ -231,6 +231,7 @@ MessageHoc.propTypes = {
     sender: PropTypes.shape({ userId: PropTypes.string }),
     ogMetaData: PropTypes.shape({}),
     parentMessageId: PropTypes.number,
+    reactions: PropTypes.arrayOf(PropTypes.number),
   }),
   animatedMessageId: PropTypes.oneOfType([
     PropTypes.string,
@@ -267,6 +268,7 @@ MessageHoc.propTypes = {
     messageId: PropTypes.string,
   }),
   setQuoteMessage: PropTypes.func.isRequired,
+  handleScroll: PropTypes.func.isRequired,
 };
 
 MessageHoc.defaultProps = {

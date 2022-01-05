@@ -18,8 +18,9 @@ export default class ConversationScroll extends Component {
     this.state = {};
   }
 
-  handleScroll() {
-    const current = this?.props?.scrollRef?.current;
+  handleScroll = () => {
+    const { scrollRef } = this?.props;
+    const current = scrollRef?.current;
     if (current) {
       const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
       const { scrollBottom = 0 } = this.state;
@@ -203,7 +204,7 @@ export default class ConversationScroll extends Component {
                       renderCustomMessage={renderCustomMessage}
                       key={m.messageId || m.reqId}
                       userId={userId}
-                      handleScroll={() => this.handleScroll()}
+                      handleScroll={this.handleScroll}
                       message={m}
                       quoteMessage={quoteMessage}
                       scrollToMessage={scrollToMessage}
