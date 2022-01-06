@@ -7,6 +7,7 @@ import {
   SDK_ERROR,
 } from './actionTypes';
 import { INIT_USER, UPDATE_USER_INFO, RESET_USER } from '../user/actionTypes';
+import { isTextuallyNull } from '../../../utils';
 
 const APP_VERSION_STRING = '__uikit_app_version__';
 const IS_ROLLUP = '__is_rollup__';
@@ -66,7 +67,9 @@ export const handleConnection = ({
           userDispatcher({ type: INIT_USER, payload: user });
           // use nickname/profileUrl if provided
           // or set userID as nickname
-          if ((nickname !== user.nickname || profileUrl !== user.profileUrl) && (nickname !== '' || profileUrl !== '')) {
+          if ((nickname !== user.nickname || profileUrl !== user.profileUrl)
+            && !(isTextuallyNull(nickname) && isTextuallyNull(profileUrl))
+          ) {
             newSdk.updateCurrentUserInfo(nickname || user.nickname, profileUrl || user.profileUrl)
               .then((namedUser) => {
                 userDispatcher({ type: UPDATE_USER_INFO, payload: namedUser });
