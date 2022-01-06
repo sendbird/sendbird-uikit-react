@@ -66,7 +66,7 @@ export const handleConnection = ({
           userDispatcher({ type: INIT_USER, payload: user });
           // use nickname/profileUrl if provided
           // or set userID as nickname
-          if (nickname !== user.nickname || profileUrl !== user.profileUrl) {
+          if ((nickname !== user.nickname || profileUrl !== user.profileUrl) && (nickname !== '' || profileUrl !== '')) {
             newSdk.updateCurrentUserInfo(nickname || user.nickname, profileUrl || user.profileUrl)
               .then((namedUser) => {
                 userDispatcher({ type: UPDATE_USER_INFO, payload: namedUser });
