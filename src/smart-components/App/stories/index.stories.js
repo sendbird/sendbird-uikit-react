@@ -204,9 +204,9 @@ export const user1 = () => fitPageSize(
     appId={appId}
     userId={array[0]}
     nickname={array[0]}
+    profileUrl={addProfile}
     showSearchIcon
     allowProfileEdit
-    profileUrl={addProfile}
     config={{ logLevel: 'all' }}
     queries={{}}
     replyType="QUOTE_REPLY"
