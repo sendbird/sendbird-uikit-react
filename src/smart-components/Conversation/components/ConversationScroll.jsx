@@ -288,7 +288,7 @@ ConversationScroll.propTypes = {
     PropTypes.string,
     PropTypes.number,
   ]),
-  renderChatItem: PropTypes.element,
+  renderChatItem: PropTypes.func,
   renderCustomMessage: PropTypes.func,
   scrollToMessage: PropTypes.func,
   useReaction: PropTypes.bool,
