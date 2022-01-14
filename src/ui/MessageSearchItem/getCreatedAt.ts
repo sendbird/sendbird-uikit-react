@@ -1,17 +1,18 @@
 import format from 'date-fns/format';
+import formatRelative from 'date-fns/formatRelative';
 import isToday from 'date-fns/isToday';
 import isYesterday from 'date-fns/isYesterday';
 
 // getCreatedAt
-export default (createdAt: number): string => {
+export default (createdAt: number, locale: Locale): string => {
   if (!createdAt) {
     return '';
   }
   if (isToday(createdAt)) {
-    return format(createdAt, 'p');
+    return format(createdAt, 'p',  { locale });
   }
   if (isYesterday(createdAt)) {
-    return 'Yesterday';
+    return formatRelative(createdAt, new Date(), { locale });
   }
-  return format(createdAt, 'MMM dd');
+  return format(createdAt, 'MMM dd',  { locale });
 };

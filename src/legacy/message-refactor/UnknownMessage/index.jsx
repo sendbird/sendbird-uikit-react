@@ -1,8 +1,8 @@
 import React, { useState, useRef, useContext } from 'react';
 import PropTypes from 'prop-types';
+import format from 'date-fns/format';
 
 import './index.scss';
-import * as utils from './utils';
 
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 import Avatar from '../../../ui/Avatar/index';
@@ -93,7 +93,7 @@ function OutgoingUnknownMessage({
   const [mousehover, setMousehover] = useState(false);
   const [moreActive, setMoreActive] = useState(false);
   const [menuDisplaying, setMenuDisplaying] = useState(false);
-  const { stringSet } = useContext(LocalizationContext);
+  const { stringSet, dateLocale } = useContext(LocalizationContext);
   const handleMoreIconClick = () => {
     setMoreActive(true);
   };
@@ -312,7 +312,7 @@ function IncomingUnknownMessage({
                 type={LabelTypography.CAPTION_3}
                 color={LabelColors.ONBACKGROUND_2}
               >
-                {utils.getMessageCreatedAt(message)}
+                { format(message?.createdAt || 0, 'p', { locale: dateLocale}) }
               </Label>
             )
           }

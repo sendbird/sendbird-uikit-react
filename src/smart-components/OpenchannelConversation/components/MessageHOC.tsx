@@ -3,10 +3,13 @@ import React, {
   useRef,
   ReactElement,
   useMemo,
+  useContext,
 } from 'react';
 
 import format from 'date-fns/format';
 import * as types from '../../../index';
+
+import { LocalizationContext } from '../../../lib/LocalizationContext';
 
 import OpenChannelUserMessage from '../../../ui/OpenchannelUserMessage';
 import OpenChannelAdminMessage from '../../../ui/OpenChannelAdminMessage';
@@ -64,6 +67,8 @@ export default function MessageHoc({
     sender = message.sender;
   }
 
+  const { dateLocale } = useContext(LocalizationContext);
+
   const RenderedMessage = useMemo(() => {
     if (renderCustomMessage) {
       return renderCustomMessage(message, channel, chainTop, chainBottom);
@@ -114,7 +119,7 @@ export default function MessageHoc({
         hasSeparator && (
           <DateSeparator>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
-              {format(message.createdAt, 'MMMM dd, yyyy')}
+              {format(message.createdAt, 'MMMM dd, yyyy', { locale: dateLocale })}
             </Label>
           </DateSeparator>
         )

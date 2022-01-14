@@ -4,10 +4,12 @@ import getStringSet from '../ui/Label/stringSet';
 
 const LocalizationContext = React.createContext({
   stringSet: getStringSet('en'),
+  dateLocale: null,
 });
 
 interface LocalizationProviderProps {
   stringSet: Record<string, string>;
+  dateLocale: any;
   children: React.Component;
 }
 

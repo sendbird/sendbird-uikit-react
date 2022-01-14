@@ -62,7 +62,7 @@ export default function OpenchannelThumbnailMessage({
     thumbnails,
   } = message;
   const thumbnailUrl = (thumbnails && thumbnails.length > 0 && thumbnails[0].url) || null;
-  const { stringSet } = useContext(LocalizationContext);
+  const { stringSet, dateLocale } = useContext(LocalizationContext);
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const [messageWidth, setMessageWidth] = useState(360);
   const messageRef = useRef(null);
@@ -168,11 +168,7 @@ export default function OpenchannelThumbnailMessage({
                 type={LabelTypography.CAPTION_3}
                 color={LabelColors.ONBACKGROUND_3}
               >
-                {
-                  message.createdAt && (
-                    format(message.createdAt, 'p')
-                  )
-                }
+                {format(message.createdAt, 'p', { locale: dateLocale })}
               </Label>
             </div>
           )

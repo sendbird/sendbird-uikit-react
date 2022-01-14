@@ -61,7 +61,7 @@ export default function OpenchannelOGMessage({
   const { ogMetaData } = message;
   const { defaultImage } = ogMetaData;
 
-  const { stringSet } = useContext(LocalizationContext);
+  const { stringSet, dateLocale } = useContext(LocalizationContext);
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const [contextStyle, setContextStyle] = useState({});
   const messageComponentRef = useRef(null);
@@ -218,11 +218,7 @@ export default function OpenchannelOGMessage({
                   type={LabelTypography.CAPTION_3}
                   color={LabelColors.ONBACKGROUND_3}
                 >
-                  {
-                    message.createdAt && (
-                      format(message.createdAt, 'p')
-                    )
-                  }
+                  {format(message.createdAt, 'p', { locale: dateLocale })}
                 </Label>
               </div>
             )

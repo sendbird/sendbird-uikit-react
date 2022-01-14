@@ -1,4 +1,3 @@
-import format from 'date-fns/format';
 import { AdminMessage, Emoji, EmojiCategory, EmojiContainer, FileMessage, GroupChannel, GroupChannelListQuery, Member, MessageListParams, OpenChannel, Reaction, SendBirdInstance, User, UserMessage } from "sendbird";
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
@@ -313,7 +312,6 @@ export const getEmojiMapAll = (emojiContainer: EmojiContainer): Map<string, Emoj
 
 export const getUserName = (user: User): string => (user?.friendName || user?.nickname || user?.userId);
 export const getSenderName = (message: UserMessage | FileMessage): string => (message.sender && getUserName(message.sender));
-export const getMessageCreatedAt = (message: UserMessage | FileMessage): string => format(message.createdAt || 0, 'p');
 
 export const hasSameMembers = <T>(a: T[], b: T[]): boolean => {
   if (a === b) {

@@ -33,6 +33,7 @@ export default function Sendbird(props) {
     allowProfileEdit,
     theme,
     nickname,
+    dateLocale,
     profileUrl,
     userListQuery,
     config = {},
@@ -169,7 +170,7 @@ export default function Sendbird(props) {
         },
       }}
     >
-      <LocalizationProvider stringSet={localeStringSet}>
+      <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
         {children}
       </LocalizationProvider>
     </SendbirdSdkContext.Provider>
@@ -188,6 +189,7 @@ Sendbird.propTypes = {
   theme: PropTypes.string,
   nickname: PropTypes.string,
   profileUrl: PropTypes.string,
+  dateLocale: PropTypes.shape({}),
   disableUserProfile: PropTypes.bool,
   renderUserProfile: PropTypes.func,
   allowProfileEdit: PropTypes.bool,
@@ -224,6 +226,7 @@ Sendbird.defaultProps = {
   theme: 'light',
   nickname: '',
   profileUrl: '',
+  dateLocale: null,
   disableUserProfile: false,
   renderUserProfile: null,
   allowProfileEdit: false,

@@ -1,11 +1,11 @@
 import React, { useState, useRef, useContext } from 'react';
 import PropTypes from 'prop-types';
+import format from 'date-fns/format';
 
 import {
   getSenderName,
   copyToClipboard,
   checkOGIsEnalbed,
-  getMessageCreatedAt,
   getIsSentFromStatus,
   getSenderProfileUrl,
   getIsSentFromSendingStatus,
@@ -438,7 +438,7 @@ function IncomingOGMessage(props) {
   const {
     defaultImage,
   } = ogMetaData;
-  const { stringSet } = useContext(LocalizationContext);
+  const { stringSet, dateLocale } = useContext(LocalizationContext);
   const MemoizedMessageText = memoizedMessageText;
   const MemoizedEmojiListItems = memoizedEmojiListItems;
   const showEmojiReactions = (useReaction && message.reactions && message.reactions.length > 0);
@@ -649,7 +649,7 @@ function IncomingOGMessage(props) {
                 type={LabelTypography.CAPTION_3}
                 color={LabelColors.ONBACKGROUND_2}
               >
-                {getMessageCreatedAt(message)}
+                { format(message?.createdAt || 0, 'p', { locale: dateLocale}) }
               </Label>
             )
           }

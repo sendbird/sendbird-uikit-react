@@ -1,4 +1,3 @@
-import format from 'date-fns/format';
 import { getOutgoingMessageStates } from '../../../utils';
 
 const MessageStatusType = getOutgoingMessageStates();
@@ -24,8 +23,6 @@ export const copyToClipboard = (text) => {
   }
   return false;
 };
-
-export const getMessageCreatedAt = (message) => format(message.createdAt || 0, 'p');
 
 export const getSenderName = (message) => (
   message.sender && (
@@ -54,7 +51,6 @@ export const createUrlTester = (regexp) => (text) => regexp.test(text);
 
 export default {
   copyToClipboard,
-  getMessageCreatedAt,
   getSenderName,
   getSenderProfileUrl,
   getIsSentFromStatus,

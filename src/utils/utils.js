@@ -1,8 +1,4 @@
-import format from 'date-fns/format';
-
 export const noop = () => {};
-
-export const getMessageCreatedAt = (message) => format(message.createdAt, 'p');
 
 export const getSenderName = (message) => (
   message.sender && (
@@ -15,7 +11,6 @@ export const getSenderName = (message) => (
 export const getSenderProfileUrl = (message) => message.sender && message.sender.profileUrl;
 
 export default {
-  getMessageCreatedAt,
   getSenderName,
   getSenderProfileUrl,
 };
