@@ -96,6 +96,13 @@ const OutgoingMessageStates: OutgoingMessageStates = {
 
 export type CoreMessageType = AdminMessage | UserMessage | FileMessage;
 
+export const isTextuallyNull = (text: string): boolean => {
+  if (text === '' || text === null) {
+    return true;
+  }
+  return false;
+};
+
 export const isImage = (type: string): boolean => SUPPORTED_MIMES.IMAGE.indexOf(type) >= 0;
 export const isVideo = (type: string): boolean => SUPPORTED_MIMES.VIDEO.indexOf(type) >= 0;
 export const isGif = (type: string): boolean => type === 'image/gif';
