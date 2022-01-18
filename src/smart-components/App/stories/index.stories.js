@@ -292,6 +292,11 @@ const SBChannel = withSendBird((props) => {
       showSearchIcon={showSearchIcon}
       onSearchClick={onSearchClick}
       onChatHeaderActionClick={onChatHeaderActionClick}
+      // renderChatItem={({ message }) => {
+      //   return (
+      //     <div>{message.message || '하잉'}</div>
+      //   )
+      // }}
       // renderCustomMessage={(message) => {
       //   if (message.messageType === 'user') {
       //     return () => (
