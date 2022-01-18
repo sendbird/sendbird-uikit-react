@@ -344,7 +344,7 @@ interface SendBirdProviderProps {
   theme?: 'light' | 'dark';
   nickname?: string;
   profileUrl?: string;
-  dateLocale?: any;
+  dateLocale?: Locale;
   disableUserProfile?: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   allowProfileEdit?: boolean;
@@ -436,7 +436,7 @@ interface AppProps {
   theme?: 'light' | 'dark';
   userListQuery?(): UserListQuery;
   nickname?: string;
-  dateLocale?: any;
+  dateLocale?: Locale;
   profileUrl?: string;
   allowProfileEdit?: boolean;
   disableUserProfile?: boolean;

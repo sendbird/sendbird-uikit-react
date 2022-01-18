@@ -9,7 +9,7 @@ const LocalizationContext = React.createContext({
 
 interface LocalizationProviderProps {
   stringSet: Record<string, string>;
-  dateLocale: any;
+  dateLocale: Locale;
   children: React.Component;
 }
 
