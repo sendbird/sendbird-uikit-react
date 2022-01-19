@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.5.3-alpha] (Jan 19 2022)
+- Bugfix
+  * Modify type of `renderChatItem` to function
+  * Modify dependencies of react and react-dom libraries
+  * Do not update current user info when `nickname` and `userProfileUrl` props are empty
+
 ## [2.5.2] (Jan 5 2022)
 - Bugfix
   * Move scroll when the height of message item changes
