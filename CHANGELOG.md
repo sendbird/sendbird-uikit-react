@@ -1,5 +1,6 @@
 # Changelog
 
+## [2.5.3] (Jan 19 2022)
 ## [2.5.3-alpha] (Jan 19 2022)
 - Bugfix
   * Modify type of `renderChatItem` to function
