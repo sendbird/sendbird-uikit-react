@@ -376,6 +376,24 @@ const CustomApp = () => {
 
 export const customer1 = () => fitPageSize(<CustomApp />);
 
+export const customer2 = () => (
+  <div style={{ height: '2000px', width: '100vw', backgroundColor: 'gray', position: 'relative', display: 'flex', justifyContent: 'center'}}>
+    <div style={{ height: '100vh', width: '90vw', position: 'relative', top: '200px' }}>
+      <App
+        appId={appId}
+        userId={array[0]}
+        nickname={array[0]}
+        profileUrl={addProfile}
+        showSearchIcon
+        allowProfileEdit
+        config={{ logLevel: 'all' }}
+        queries={{}}
+        replyType="QUOTE_REPLY"
+      />
+    </div>
+  </div>
+);
+
 export const disableUserProfile = () => fitPageSize(
   <App
     showSearchIcon
