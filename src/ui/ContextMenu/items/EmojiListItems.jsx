@@ -18,11 +18,13 @@ export default class EmojiListItems extends Component {
     this.setupEvents();
     this.getBarPosition();
     this.showParent();
+    document.body.style.overflow = 'hidden';
   }
 
   componentWillUnmount() {
     this.cleanUpEvents();
     this.hideParent();
+    document.body.style.overflow = 'unset';
   }
 
   showParent = () => {

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
 
@@ -80,6 +80,13 @@ export default function Modal(props) {
     hideFooter,
     type,
   } = props;
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
   return createPortal((
     <div className="sendbird-modal">
       <div className="sendbird-modal__content">

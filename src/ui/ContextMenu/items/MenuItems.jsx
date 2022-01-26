@@ -16,11 +16,13 @@ export default class MenuItems extends Component {
     this.setupEvents();
     this.getMenuPosition();
     this.showParent();
+    document.body.style.overflow = 'hidden';
   }
 
   componentWillUnmount() {
     this.cleanUpEvents();
     this.hideParent();
+    document.body.style.overflow = 'unset';
   }
 
   showParent = () => {
