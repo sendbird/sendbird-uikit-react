@@ -147,11 +147,11 @@ EmojiListItems.propTypes = {
   ]).isRequired,
   parentRef: PropTypes.oneOfType([
     PropTypes.func,
-    PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+    PropTypes.shape({ current: PropTypes.instanceOf(PropTypes.element) }),
   ]).isRequired,
   parentContainRef: PropTypes.oneOfType([
     PropTypes.func,
-    PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+    PropTypes.shape({ current: PropTypes.instanceOf(PropTypes.element) }),
   ]).isRequired,
   spaceFromTrigger: PropTypes.shape({
     x: PropTypes.number,
