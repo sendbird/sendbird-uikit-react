@@ -360,6 +360,7 @@ interface SendBirdProviderProps {
 interface ChannelListProps {
   disableUserProfile?: boolean;
   allowProfileEdit?: boolean;
+  sortChannelList?(channelList: Array<Sendbird.GroupChannel>): Array<Sendbird.GroupChannel>;
   onBeforeCreateChannel?(users: Array<string>): Sendbird.GroupChannelParams;
   onThemeChange?(theme: string): void;
   onProfileEditSuccess?(user: Sendbird.User): void;
