@@ -44,30 +44,28 @@ export default function MessageStatus({
       ].join(' ')}
     >
       {(showMessageStatusIcon) && (
-        <div>
-          {(status === MessageStatusTypes.PENDING) ? (
-            <Loader
-              className="sendbird-message-status__icon"
-              width="16px"
-              height="16px"
-            >
-              <Icon
-                type={IconTypes.SPINNER}
-                fillColor={IconColors.PRIMARY}
-                width="16px"
-                height="16px"
-              />
-            </Loader>
-          ) : (
+        (status === MessageStatusTypes.PENDING) ? (
+          <Loader
+            className="sendbird-message-status__icon"
+            width="16px"
+            height="16px"
+          >
             <Icon
-              className="sendbird-message-status__icon"
-              type={iconType[status] || IconTypes.ERROR}
-              fillColor={iconColor[status]}
+              type={IconTypes.SPINNER}
+              fillColor={IconColors.PRIMARY}
               width="16px"
               height="16px"
             />
-          )}
-        </div>
+          </Loader>
+        ) : (
+          <Icon
+            className="sendbird-message-status__icon"
+            type={iconType[status] || IconTypes.ERROR}
+            fillColor={iconColor[status]}
+            width="16px"
+            height="16px"
+          />
+        )
       )}
       {isSentStatus(status) && (
         <Label
