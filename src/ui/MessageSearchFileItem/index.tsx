@@ -25,7 +25,7 @@ export default function MessageSearchFileItem(props: Props): ReactElement {
   const fileMessageUrl = url;
   const sender = message.sender || message._sender;
   const { profileUrl, nickname } = sender;
-  const { stringSet } = useContext(LocalizationContext);
+  const { stringSet, dateLocale } = useContext(LocalizationContext);
 
   return (
     <div
@@ -79,7 +79,7 @@ export default function MessageSearchFileItem(props: Props): ReactElement {
         type={LabelTypography.CAPTION_3}
         color={LabelColors.ONBACKGROUND_2}
       >
-        {getCreatedAt(createdAt)}
+        {getCreatedAt(createdAt, dateLocale)}
       </Label>
       <div className="sendbird-message-search-file-item__right-footer" />
     </div>

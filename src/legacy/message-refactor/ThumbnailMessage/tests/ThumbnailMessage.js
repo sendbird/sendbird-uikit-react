@@ -3,7 +3,6 @@ import { mount } from 'enzyme';
 import ThumbnailMessage from '../index.jsx';
 
 import message from '../dummyData.mock';
-import { getMessageCreatedAt } from '../util';
 
 const noop = () => { };
 
@@ -36,7 +35,6 @@ const legacy = () => {
     );
     expect(component.find('.sendbird-incoming-thumbnail-message__avatar').hostNodes().text()).toEqual('');
     expect(component.find('.sendbird-incoming-thumbnail-message__sender-name').hostNodes().text()).toEqual(message.sender.nickname);
-    expect(component.find('.sendbird-incoming-thumbnail-message__sent-at').hostNodes().text()).toEqual(getMessageCreatedAt(message));
   });
 
   it('should handle outgoing message', () => {

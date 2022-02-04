@@ -49,7 +49,7 @@ export default function OpenchannelFileMessage({
 }: Props): JSX.Element {
   const contextMenuRef = useRef(null);
   const avatarRef = useRef(null);
-  const { stringSet } = useContext(LocalizationContext);
+  const { stringSet, dateLocale } = useContext(LocalizationContext);
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
 
   const openFileUrl = () => { window.open(message.url); };
@@ -135,11 +135,7 @@ export default function OpenchannelFileMessage({
                 type={LabelTypography.CAPTION_3}
                 color={LabelColors.ONBACKGROUND_3}
               >
-                {
-                  message.createdAt && (
-                    format(message.createdAt, 'p')
-                  )
-                }
+                {format(message.createdAt, 'p', { locale: dateLocale })}
               </Label>
             </div>
           )

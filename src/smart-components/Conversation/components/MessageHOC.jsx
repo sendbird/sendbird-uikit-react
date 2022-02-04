@@ -3,10 +3,12 @@ import React, {
   useRef,
   useMemo,
   useLayoutEffect,
+  useContext,
 } from 'react';
 import PropTypes from 'prop-types';
 import format from 'date-fns/format';
 
+import { LocalizationContext } from '../../../lib/LocalizationContext';
 import MessageContent from '../../../ui/MessageContent';
 import DateSeparator from '../../../ui/DateSeparator';
 import Label, { LabelTypography, LabelColors } from '../../../ui/Label';
@@ -49,6 +51,7 @@ export default function MessageHoc({
   const editMessageInputRef = useRef(null);
   const useMessageScrollRef = useRef(null);
 
+  const { dateLocale } = useContext(LocalizationContext);
   useLayoutEffect(() => {
     handleScroll();
   }, [showEdit, message?.reactions?.length]);
@@ -113,7 +116,7 @@ export default function MessageHoc({
           hasSeparator && (
             <DateSeparator>
               <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
-                {format(message.createdAt, 'MMMM dd, yyyy')}
+                {format(message?.createdAt, 'MMMM dd, yyyy', { locale: dateLocale })}
               </Label>
             </DateSeparator>
           )
@@ -152,7 +155,7 @@ export default function MessageHoc({
         hasSeparator && (
           <DateSeparator>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
-              {format(message.createdAt, 'MMMM dd, yyyy')}
+              {format(message?.createdAt, 'MMMM dd, yyyy', { locale: dateLocale })}
             </Label>
           </DateSeparator>
         )

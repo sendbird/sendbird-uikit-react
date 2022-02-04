@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import './index.scss';
 
 import { UserProfileContext } from '../../../lib/UserProfileContext';
+import { LocalizationContext } from '../../../lib/LocalizationContext';
 import UserProfile from '../../../ui/UserProfile';
 import Avatar from '../../../ui/Avatar/index';
 import Icon, { IconTypes, IconColors } from '../../../ui/Icon';
@@ -13,7 +14,6 @@ import ContextMenu, { MenuItem, MenuItems } from '../../../ui/ContextMenu';
 import EmojiReactions from '../EmojiReactions';
 import {
   copyToClipboard,
-  getMessageCreatedAt,
   getSenderName,
   getSenderProfileUrl,
   getIsSentFromStatus,
@@ -21,6 +21,7 @@ import {
 } from './utils';
 import useMemoizedMessageText from './memoizedMessageText';
 import useMouseHover from '../../../hooks/onMouseHover';
+import format from 'date-fns/format';
 
 const noop = () => { };
 const GROUPING_PADDING = '1px';
@@ -48,6 +49,7 @@ export default function Message(props) {
 
   if (!message) return null;
 
+  const { dateLocale } = useContext(LocalizationContext);
   const outgoingMemoizedMessageText = useMemoizedMessageText({
     className: 'sendbird-user-message-word',
     message: message.message,
@@ -624,7 +626,7 @@ function IncomingUserMessage({
                 type={LabelTypography.CAPTION_3}
                 color={LabelColors.ONBACKGROUND_2}
               >
-                {getMessageCreatedAt(message)}
+                { format(message?.createdAt || 0, 'p', { locale: dateLocale}) }
               </Label>
             )
           }

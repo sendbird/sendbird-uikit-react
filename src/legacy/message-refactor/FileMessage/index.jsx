@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import PropTypes from 'prop-types';
 import './index.scss';
 
@@ -20,6 +20,7 @@ import {
   getIsSentFromSendingStatus,
 } from './utils';
 import useMouseHover from '../../../hooks/onMouseHover';
+import { LocalizationContext } from '../../../lib/LocalizationContext';
 
 const MAX_TRUNCATE_LENGTH = 40;
 const GROUPAING_PADDING = '1px';
@@ -376,6 +377,7 @@ export function IncomingFileMessage({
   const [mousehover, setMousehover] = useState(false);
   const [moreActive, setMoreActive] = useState(false);
   const [menuDisplaying, setMenuDisplaying] = useState(false);
+  const { dateLocale } = useContext(LocalizationContext);
   const showReactionAddButton = useReaction && emojiAllMap && (emojiAllMap.size > 0);
   const MemoizedEmojiListItems = memoizedEmojiListItems;
 
@@ -560,7 +562,7 @@ export function IncomingFileMessage({
                 type={LabelTypography.CAPTION_3}
                 color={LabelColors.ONBACKGROUND_2}
               >
-                {getMessageCreatedAt(message)}
+                {format(message?.createdAt, 'p', dateLocale)}
               </Label>
             )
           }

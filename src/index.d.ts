@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import Sendbird from 'sendbird';
+import type { Locale } from 'date-fns';
 
 export type OpenChannelType = Sendbird.OpenChannel;
 export type GroupChannelType = Sendbird.GroupChannel;
@@ -344,6 +345,7 @@ interface SendBirdProviderProps {
   theme?: 'light' | 'dark';
   nickname?: string;
   profileUrl?: string;
+  dateLocale?: Locale;
   disableUserProfile?: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   allowProfileEdit?: boolean;
@@ -435,6 +437,7 @@ interface AppProps {
   theme?: 'light' | 'dark';
   userListQuery?(): UserListQuery;
   nickname?: string;
+  dateLocale?: Locale;
   profileUrl?: string;
   allowProfileEdit?: boolean;
   disableUserProfile?: boolean;

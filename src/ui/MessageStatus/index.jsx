@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+
+import format from 'date-fns/format';
 
 import './index.scss';
 import Icon, { IconTypes, IconColors } from '../Icon';
@@ -7,10 +9,10 @@ import Label, { LabelColors, LabelTypography } from '../Label';
 import Loader from '../Loader';
 
 import {
-  getMessageCreatedAt,
   getOutgoingMessageStates,
   isSentStatus,
 } from '../../utils';
+import { LocalizationContext } from '../../lib/LocalizationContext';
 
 export const MessageStatusTypes = getOutgoingMessageStates();
 export default function MessageStatus({
@@ -19,6 +21,7 @@ export default function MessageStatus({
   channel,
   status,
 }) {
+  const { dateLocale } = useContext(LocalizationContext);
   const showMessageStatusIcon = channel?.isGroupChannel()
     && !channel?.isSuper
     && !channel?.isPublic
@@ -73,7 +76,7 @@ export default function MessageStatus({
           type={LabelTypography.CAPTION_3}
           color={LabelColors.ONBACKGROUND_2}
         >
-          {getMessageCreatedAt(message)}
+          {format(message?.createdAt, 'p', dateLocale)}
         </Label>
       )}
     </div>

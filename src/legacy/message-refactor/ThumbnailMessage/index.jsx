@@ -5,10 +5,10 @@ import React, {
   useMemo,
 } from 'react';
 import PropTypes from 'prop-types';
+import format from 'date-fns/format';
 
 import './index.scss';
 import {
-  getMessageCreatedAt,
   getIsSentFromStatus,
   getIsSentFromSendingStatus,
 } from './util';
@@ -439,7 +439,7 @@ export function IncomingThumbnailMessage({
     disableUserProfile,
     renderUserProfile,
   } = React.useContext(UserProfileContext);
-  const { stringSet } = useContext(LocalizationContext);
+  const { stringSet, dateLocale } = useContext(LocalizationContext);
   const messageRef = useRef(null);
   const parentContainRef = useRef(null);
   const reactionAddRef = useRef(null);
@@ -665,7 +665,7 @@ export function IncomingThumbnailMessage({
                 type={LabelTypography.CAPTION_3}
                 color={LabelColors.ONBACKGROUND_2}
               >
-                {getMessageCreatedAt(message)}
+                { format(message?.createdAt || 0, 'p', { locale: dateLocale}) }
               </Label>
             )
           }

@@ -30,6 +30,7 @@ export default function App(props) {
     useMessageGrouping,
     colorSet,
     stringSet,
+    dateLocale,
     allowProfileEdit,
     disableUserProfile,
     renderUserProfile,
@@ -46,6 +47,7 @@ export default function App(props) {
   return (
     <Sendbird
       stringSet={stringSet}
+      dateLocale={dateLocale}
       appId={appId}
       userId={userId}
       accessToken={accessToken}
@@ -157,6 +159,7 @@ App.propTypes = {
       PropTypes.arrayOf(PropTypes.string),
     ]),
   }),
+  dateLocale: PropTypes.shape({}),
   useReaction: PropTypes.bool,
   replyType: PropTypes.oneOf(['NONE', 'QUOTE_REPLY', 'THREAD']),
   showSearchIcon: PropTypes.bool,
@@ -188,6 +191,7 @@ App.defaultProps = {
   showSearchIcon: false,
   renderUserProfile: null,
   config: {},
+  dateLocale: null,
   useReaction: true,
   replyType: 'NONE',
   useMessageGrouping: true,

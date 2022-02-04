@@ -63,7 +63,7 @@ export default function OpenchannelUserMessage({
   }
 
   // hooks
-  const { stringSet } = useContext(LocalizationContext);
+  const { stringSet, dateLocale } = useContext(LocalizationContext);
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const messageRef = useRef(null);
   const avatarRef = useRef(null);
@@ -180,11 +180,7 @@ export default function OpenchannelUserMessage({
                 type={LabelTypography.CAPTION_3}
                 color={LabelColors.ONBACKGROUND_3}
               >
-                {
-                  message.createdAt && (
-                    format(message.createdAt, 'p')
-                  )
-                }
+                {format(message.createdAt, 'p', { locale: dateLocale })}
               </Label>
             </div>
           )

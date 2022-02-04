@@ -1,4 +1,3 @@
-import format from 'date-fns/format';
 import { getOutgoingMessageStates } from '../../../utils';
 
 const MessageStatusType = getOutgoingMessageStates();
@@ -48,8 +47,6 @@ export const getSenderName = (message) => (
   )
 );
 
-export const getMessageCreatedAt = (message) => format(message.createdAt, 'p');
-
 export const checkOGIsEnalbed = (message) => {
   const { ogMetaData } = message;
   if (!ogMetaData) {
@@ -74,7 +71,6 @@ export default {
   createUrlTester,
   copyToClipboard,
   checkOGIsEnalbed,
-  getMessageCreatedAt,
   getIsSentFromStatus,
   getSenderProfileUrl,
   getIsSentFromSendingStatus,
