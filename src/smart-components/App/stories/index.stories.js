@@ -397,7 +397,6 @@ export const renderUserProfile = () => fitPageSize(
     renderUserProfile={({ user }) => {
       return user.userId;
     }}
-    dateLocale
   />
 );
 

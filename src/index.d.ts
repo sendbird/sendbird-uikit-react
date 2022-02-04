@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import Sendbird from 'sendbird';
+import type { Locale } from 'date-fns';
 
 export type OpenChannelType = Sendbird.OpenChannel;
 export type GroupChannelType = Sendbird.GroupChannel;

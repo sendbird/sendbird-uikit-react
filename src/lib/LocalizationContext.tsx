@@ -1,6 +1,7 @@
 import React from 'react';
 
 import getStringSet from '../ui/Label/stringSet';
+import type { Locale } from 'date-fns';
 
 const LocalizationContext = React.createContext({
   stringSet: getStringSet('en'),
