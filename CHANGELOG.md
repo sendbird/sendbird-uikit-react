@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.6.0] (Feb 8 2022)
+- Features
+  * Setup date localization
+- Bugfix
+  * Add sortChannelList props to the ChannelListProps
+  * Appear message status icon in Safari
+  * Fix compliation issue: Element not defined
+  * Fix event leakage issues (scroll and pop-up)
+
 ## [2.5.3] (Jan 19 2022)
 ## [2.5.3-alpha] (Jan 19 2022)
 - Bugfix
