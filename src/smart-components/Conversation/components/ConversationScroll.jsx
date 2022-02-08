@@ -55,8 +55,9 @@ export default class ConversationScroll extends Component {
       onScroll(([messages]) => {
         if (messages) {
           // https://github.com/scabbiaza/react-scroll-position-on-updating-dom
+          // Set block to nearest to prevent unexpected scrolling from outer components
           try {
-            first.scrollIntoView();
+            first.scrollIntoView({ block: 'nearest' });
           } catch (error) {
             //
           }
@@ -71,7 +72,7 @@ export default class ConversationScroll extends Component {
         if (messages) {
           // https://github.com/scabbiaza/react-scroll-position-on-updating-dom
           try {
-            last.scrollIntoView();
+            last.scrollIntoView({ block: 'nearest' });
           } catch (error) {
             //
           }

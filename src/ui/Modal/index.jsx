@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
 
@@ -80,6 +80,14 @@ export default function Modal(props) {
     hideFooter,
     type,
   } = props;
+  const { body } = document;
+  useEffect(() => {
+    body.className = `sendbird-modal-pop-up ${body.className}`;
+    return () => {
+      body.className = body.className.split(' ').filter((className) => className !== 'sendbird-modal-pop-up').join(' ');
+    };
+  }, []);
+
   return createPortal((
     <div className="sendbird-modal">
       <div className="sendbird-modal__content">

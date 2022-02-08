@@ -1,5 +1,10 @@
 @import '../../styles/variables';
 
+body.sendbird-emoji-list-pop-up,
+body.sendbird-menu-items-pop-up {
+  overflow: hidden !important;
+}
+
 .sendbird__offline {
   .sendbird-dropdown__menu .sendbird-dropdown__menu-item {
     cursor: not-allowed;

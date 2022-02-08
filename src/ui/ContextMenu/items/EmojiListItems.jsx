@@ -4,10 +4,13 @@ import PropTypes from 'prop-types';
 
 import SortByRow from '../../SortByRow';
 
+const EMOJI_LIST_POP_UP = 'sendbird-emoji-list-pop-up';
+
 export default class EmojiListItems extends Component {
   constructor(props) {
     super(props);
     this.reactionRef = React.createRef();
+    this.rootForPopup = document.body;
     this.state = {
       reactionStyle: {},
       handleClickOutside: () => { },
@@ -18,11 +21,15 @@ export default class EmojiListItems extends Component {
     this.setupEvents();
     this.getBarPosition();
     this.showParent();
+    // add className to body
+    this.rootForPopup.className = `${EMOJI_LIST_POP_UP} ${this.rootForPopup.className}`;
   }
 
   componentWillUnmount() {
     this.cleanUpEvents();
     this.hideParent();
+    // remove className from body
+    this.rootForPopup.className = this.rootForPopup.className.split(' ').filter((className) => className !== EMOJI_LIST_POP_UP).join(' ');
   }
 
   showParent = () => {
