@@ -80,10 +80,11 @@ export default function Modal(props) {
     hideFooter,
     type,
   } = props;
+  const { body } = document;
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    body.className = `sendbird-modal-pop-up ${body.className}`;
     return () => {
-      document.body.style.overflow = 'unset';
+      body.className = body.className.split(' ').filter((className) => className !== 'sendbird-modal-pop-up').join(' ');
     };
   }, []);
 

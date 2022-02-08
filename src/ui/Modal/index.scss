@@ -61,3 +61,7 @@
     background-color: t(overlay-2);
   }
 }
+
+body.sendbird-modal-pop-up {
+  overflow: hidden !important;
+}
