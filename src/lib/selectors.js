@@ -104,7 +104,7 @@ export const getSendUserMessage = (store) => (channelUrl, userMessageParams) => 
       .catch(reject);
   });
 };
-export const getSendFileMessage = (store) => (channelUrl, fileMessageParams) => {
+export const getSendFileMessage = (store) => (channelUrl, fileMessageParams, prgHandler = null) => {
   const sdk = getSdk(store);
   const pubsub = getPubSub(store);
   return new Promise((resolve, reject) => {
@@ -115,29 +115,59 @@ export const getSendFileMessage = (store) => (channelUrl, fileMessageParams) => 
       .then((channel) => {
         const promisify = () => {
           let pendingMsg = null;
+          let progressEvent = null;
           const pendingPromise = new Promise((resolve_, reject_) => {
-            pendingMsg = channel.sendFileMessage(fileMessageParams, (res, err) => {
-              const swapParams = sdk.getErrorFirstCallback();
-              let message = res;
-              let error = err;
-              if (swapParams) {
-                message = err;
-                error = res;
-              }
+            pendingMsg = channel.sendFileMessage(
+              fileMessageParams,
+              (event) => {
+                // Useless progressHandler callback functions could be called everytime
+                // Performance vs Readability
+                if (prgHandler && event) {
+                  progressEvent = event;
+                }
+              },
+              (res, err) => {
+                const swapParams = sdk.getErrorFirstCallback();
+                let message = res;
+                let error = err;
+                if (swapParams) {
+                  message = err;
+                  error = res;
+                }
 
-              if (error) {
-                reject_(error);
-                return;
-              }
-              resolve_(message);
-              pubsub.publish(
-                topics.SEND_FILE_MESSAGE,
-                {
-                  message,
-                  channel,
-                },
-              );
-            });
+                if (!progressEvent) {
+                  if (error) {
+                    reject_(error);
+                  } else {
+                    resolve_(message);
+                    pubsub.publish(
+                      topics.SEND_FILE_MESSAGE,
+                      {
+                        message,
+                        channel,
+                      },
+                    );
+                  }
+                  return;
+                }
+                // If prgHandler and progressEvent exists call prgHandler with progressEvent first
+                resolve_(new Promise((resolve2, reject2) => {
+                  prgHandler(progressEvent);
+                  if (error) {
+                    reject2(error);
+                    return;
+                  }
+                  resolve2(message);
+                  pubsub.publish(
+                    topics.SEND_FILE_MESSAGE,
+                    {
+                      message,
+                      channel,
+                    },
+                  );
+                }));
+              },
+            );
           });
           if (fileMessageParams.file) {
             // keep the file's local version in pendingMsg.localUrl

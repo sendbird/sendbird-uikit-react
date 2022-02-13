@@ -47,7 +47,8 @@ export namespace SendBirdSelectors {
   ) => Promise<Sendbird.UserMessage>;
   type GetSendFileMessage = (
     channelUrl: string,
-    fileMessageParams: Sendbird.FileMessageParams
+    fileMessageParams: Sendbird.FileMessageParams,
+    progressHandler: (event: ProgressEvent) => void
   ) => Promise<Sendbird.FileMessage>;
   type GetUpdateUserMessage = (
     channelUrl: string,
