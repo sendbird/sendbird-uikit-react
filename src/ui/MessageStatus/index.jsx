@@ -76,7 +76,7 @@ export default function MessageStatus({
           type={LabelTypography.CAPTION_3}
           color={LabelColors.ONBACKGROUND_2}
         >
-          {format(message?.createdAt, 'p', dateLocale)}
+          {format(message?.createdAt, 'p', { locale: dateLocale })}
         </Label>
       )}
     </div>
