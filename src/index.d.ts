@@ -145,7 +145,7 @@ export interface OpenChannelProps {
   fetchingParticipants: boolean;
   renderCustomMessage?: RenderCustomMessage;
   experimentalMessageLimit?: number;
-  renderUserProfile?(): JSX.Element;
+  renderUserProfile?(props: SendbirdUIKit.RenderUserProfileProps): JSX.Element;
   renderChannelTitle?(renderProps: RenderOpenChannelTitleProps): JSX.Element;
   renderMessageInput?(renderProps: RenderOpenChannelMessageInputProps): JSX.Element;
   onBeforeSendUserMessage?(text: string): Sendbird.UserMessageParams;
