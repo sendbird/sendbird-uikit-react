@@ -109,8 +109,11 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   deleteMessage(message: CoreMessageType): Promise<CoreMessageType>,
   updateMessage(messageId: number, text: string): Promise<CoreMessageType>,
   resendMessage(failedMessage: CoreMessageType): Promise<CoreMessageType>,
-  sendMessage(messageParams: SendBird.UserMessageParams): Promise<SendBird.UserMessage>,
-  sendFileMessage(messageParams: SendBird.FileMessageParams): Promise<SendBird.FileMessage>,
+  // TODO: Good to change interface to using params / This part need refactoring
+  sendMessage(quoteMessage: CoreMessageType): Promise<SendBird.UserMessage>,
+  sendFileMessage(file: File, quoteMessage: CoreMessageType): Promise<SendBird.FileMessage>,
+  // sendMessage(messageParams: SendBird.UserMessageParams): Promise<SendBird.UserMessage>,
+  // sendFileMessage(messageParams: SendBird.FileMessageParams): Promise<SendBird.FileMessage>,
 }
 
 const ChannelContext = React.createContext<ChannelProviderInterface|null>(undefined);
