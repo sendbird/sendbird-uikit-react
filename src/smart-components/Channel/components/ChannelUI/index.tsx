@@ -50,7 +50,6 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
     intialTimeStamp,
     scrollRef,
     messagesDispatcher,
-    messageInputRef,
   } = useChannel();
 
   const globalStore = useSendbirdStateContext();
@@ -153,9 +152,7 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
       <div className="sendbird-conversation__footer">
         {
           renderMessageInput?.() || (
-            <MessageInput
-              ref={messageInputRef}
-            />
+            <MessageInput />
           )
         }
         <div className="sendbird-conversation__footer__typing-indicator">
