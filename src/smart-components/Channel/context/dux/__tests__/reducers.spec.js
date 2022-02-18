@@ -2,7 +2,7 @@ import { mockMessage1, generateMockMessage, generateMockChannel } from '../data.
 import * as actionTypes from '../actionTypes';
 import reducers from '../reducers';
 import initialState from '../initialState';
-import uuid from '../../../../utils/uuid';
+import uuid from '../../../../../utils/uuid';
 
 const randomBoolean = () => Math.random() >= 0.5;
 describe('Messages-Reducers', () => {

@@ -9,7 +9,7 @@ import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useChannel } from '../../context/ChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
-const MessageInputWrapper = (_, ref: React.RefObject<HTMLInputElement>): JSX.Element => {
+const MessageInputWrapper = (): JSX.Element => {
   const {
     currentGroupChannel,
     initialized,
@@ -17,6 +17,7 @@ const MessageInputWrapper = (_, ref: React.RefObject<HTMLInputElement>): JSX.Ele
     sendMessage,
     sendFileMessage,
     setQuoteMessage,
+    messageInputRef,
   } = useChannel();
   const globalStore = useSendbirdStateContext();
   const channel = currentGroupChannel;
@@ -56,7 +57,7 @@ const MessageInputWrapper = (_, ref: React.RefObject<HTMLInputElement>): JSX.Ele
           || (utils.isDisabledBecauseFrozen(channel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
           || (utils.isDisabledBecauseMuted(channel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED)
         }
-        ref={ref}
+        ref={messageInputRef}
         disabled={disabled}
         onStartTyping={() => {
           channel.startTyping();
