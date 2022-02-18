@@ -9,7 +9,7 @@ import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useChannel } from '../../context/ChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
-const MessageInputWrapper = (_, ref: React.RefObject<HTMLInputElement>): JSX.Element => {
+const MessageInputWrapper = (): JSX.Element => {
   const {
     currentGroupChannel,
     initialized,
