@@ -11,7 +11,7 @@ import MessageList from '../MessageList';
 import TypingIndicator from '../TypingIndicator';
 import FrozenNotification from '../FrozenNotification';
 import UnreadCount from '../UnreadCount';
-import MessageInput from '../MessageInput';
+import MessageInputWrapper from '../MessageInput';
 import { RenderMessageProps } from '../../../../types';
 import { scrollIntoLast } from '../../context/utils';
 import * as messageActionTypes from '../../context/dux/actionTypes';
@@ -152,7 +152,7 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
       <div className="sendbird-conversation__footer">
         {
           renderMessageInput?.() || (
-            <MessageInput />
+            <MessageInputWrapper />
           )
         }
         <div className="sendbird-conversation__footer__typing-indicator">
