@@ -38,11 +38,13 @@ module.exports = ({
       dir: 'dist/cjs',
       format: 'cjs',
       sourcemap: true,
+      exports: 'named'
     },
     {
       dir: 'dist',
       format: 'esm',
       sourcemap: true,
+      exports: 'named'
     },
   ],
   external: [
@@ -97,6 +99,7 @@ module.exports = ({
           },
         ],
       ],
+      babelHelpers: 'bundled',
       extensions: ['.tsx', '.ts', '.jsx', '.js'],
       exclude: 'node_modules/**',
       plugins: [
