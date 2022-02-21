@@ -139,6 +139,13 @@ function ChannelList(props) {
   }
 
   useEffect(() => {
+    channelListDispatcher({
+      type: channelListActions.SET_AUTO_SELECT_CHANNEL_ITEM,
+      payload: ableAutoSelectChannelItem,
+    });
+  }, [ableAutoSelectChannelItem]);
+
+  useEffect(() => {
     if (!sdk || !sdk.GroupChannel || !currentChannel) { return; }
     sdk.GroupChannel.getChannel(currentChannel, (groupChannel) => {
       if (groupChannel) {
