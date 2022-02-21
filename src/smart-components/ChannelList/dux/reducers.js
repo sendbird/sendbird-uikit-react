@@ -20,7 +20,7 @@ export default function reducer(state, action) {
         initialized: true,
         loading: false,
         allChannels: action.payload,
-        currentChannel: state.ableAutoSelectChannelItem ? nextChannel : null,
+        currentChannel: state.disableAutoSelect ? null : nextChannel,
       };
     }
     case actions.FETCH_CHANNELS_SUCCESS: {
@@ -71,7 +71,7 @@ export default function reducer(state, action) {
         : state.currentChannel;
       return {
         ...state,
-        currentChannel: state.ableAutoSelectChannelItem ? nextChannel : null,
+        currentChannel: state.disableAutoSelect ? null : nextChannel,
         allChannels: state.allChannels.filter(({ url }) => url !== channel.url),
       };
     }
@@ -83,7 +83,7 @@ export default function reducer(state, action) {
         : state.currentChannel;
       return {
         ...state,
-        currentChannel: state.ableAutoSelectChannelItem ? nextChannel : null,
+        currentChannel: state.disableAutoSelect ? null : nextChannel,
         allChannels: state.allChannels.filter(({ url }) => url !== channelUrl),
       };
     }
@@ -97,7 +97,7 @@ export default function reducer(state, action) {
             : state.currentChannel;
           return {
             ...state,
-            currentChannel: state.ableAutoSelectChannelItem ? nextChannel : null,
+            currentChannel: state.disableAutoSelect ? null : nextChannel,
             allChannels: filteredChannels,
           };
         }
@@ -106,7 +106,7 @@ export default function reducer(state, action) {
           : state.currentChannel;
         return {
           ...state,
-          currentChannel: state.ableAutoSelectChannelItem ? nextChannel : null,
+          currentChannel: state.disableAutoSelect ? null : nextChannel,
           allChannels: state.allChannels.filter(({ url }) => url !== channel.url),
         };
       }
@@ -116,7 +116,7 @@ export default function reducer(state, action) {
         : state.currentChannel;
       return {
         ...state,
-        currentChannel: state.ableAutoSelectChannelItem ? nextChannel : null,
+        currentChannel: state.disableAutoSelect ? null : nextChannel,
         allChannels: filteredChannels,
       };
     }
@@ -141,7 +141,7 @@ export default function reducer(state, action) {
           : state.currentChannel;
         return {
           ...state,
-          currentChannel: state.ableAutoSelectChannelItem ? nextChannel : null,
+          currentChannel: state.disableAutoSelect ? null : nextChannel,
           allChannels: state.allChannels.filter(({ url }) => url !== channel.url),
         };
       }
@@ -200,7 +200,7 @@ export default function reducer(state, action) {
           : state.currentChannel;
         return {
           ...state,
-          currentChannel: state.ableAutoSelectChannelItem ? nextChannel : null,
+          currentChannel: state.disableAutoSelect ? null : nextChannel,
           allChannels: state.allChannels.filter(({ url }) => url !== channel.url),
         };
       }
@@ -231,7 +231,7 @@ export default function reducer(state, action) {
           : state.currentChannel;
         return {
           ...state,
-          currentChannel: state.ableAutoSelectChannelItem ? nextChannel : null,
+          currentChannel: state.disableAutoSelect ? null : nextChannel,
           allChannels: state.allChannels.filter(({ url }) => url !== channel.url),
         };
       }
@@ -265,7 +265,7 @@ export default function reducer(state, action) {
     case actions.SET_AUTO_SELECT_CHANNEL_ITEM:
       return {
         ...state,
-        ableAutoSelectChannelItem: action.payload,
+        disableAutoSelect: action.payload,
       };
     default:
       return state;
