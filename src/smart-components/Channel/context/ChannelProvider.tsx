@@ -114,6 +114,7 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   sendFileMessage(file: File, quoteMessage: CoreMessageType): Promise<SendBird.FileMessage>,
   // sendMessage(messageParams: SendBird.UserMessageParams): Promise<SendBird.UserMessage>,
   // sendFileMessage(messageParams: SendBird.FileMessageParams): Promise<SendBird.FileMessage>,
+  toggleReaction(message: SendBird.UserMessage | SendBird.FileMessage, emojiKey: string, isReacted: boolean): void,
 }
 
 const ChannelContext = React.createContext<ChannelProviderInterface|null>(undefined);
@@ -382,6 +383,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       onScrollDownCallback,
       memoizedEmojiListItems,
       scrollRef,
+      toggleReaction,
     }}>
       <UserProfileProvider
         disableUserProfile={props?.disableUserProfile}
