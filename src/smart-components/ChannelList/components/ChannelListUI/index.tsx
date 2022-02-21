@@ -194,7 +194,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
                       tabIndex={idx}
                       onClick={onClick}
                       channel={channel}
-                      isActive={channel.url === currentChannel.url}
+                      isActive={channel.url === currentChannel?.url}
                       renderChannelAction={(() => (
                         <ChannelPreviewAction
                           disabled={!isOnline}
