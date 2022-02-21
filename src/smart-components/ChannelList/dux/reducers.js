@@ -17,8 +17,13 @@ export default function reducer(state, action) {
         initialized: true,
         loading: false,
         allChannels: action.payload,
-        currentChannel: (action.payload && action.payload.length && action.payload.length > 0)
-          ? action.payload[0].url
+        currentChannel: (
+          state.ableAutoSelectChannelItem
+          && action.payload
+          && action.payload.length
+          && action.payload.length > 0
+        )
+          ? action.payload[0]
           : null,
       };
     case actions.FETCH_CHANNELS_SUCCESS: {
@@ -45,13 +50,13 @@ export default function reducer(state, action) {
         }
         return {
           ...state,
-          currentChannel: channel.url,
+          currentChannel: channel,
         };
       }
       return {
         ...state,
-        currentChannel: channel.url,
         allChannels: [channel, ...state.allChannels.filter((ch) => ch.url !== channel.url)],
+        currentChannel: channel,
       };
     }
     case actions.ON_CHANNEL_ARCHIVED: {
@@ -62,14 +67,16 @@ export default function reducer(state, action) {
             ...state,
             allChannels: getChannelsWithUpsertedChannel(state.allChannels, channel),
           };
+          // TODO: Check if we have to set current channel
         }
       }
+      const nextChannel = (channel.url === state.currentChannel?.url)
+        ? state.allChannels[state.allChannels[0].url === channel.url ? 1 : 0]
+        : state.currentChannel;
       return {
         ...state,
-        currentChannel: (channel.url === state.currentChannel)
-          ? state.allChannels[state.allChannels[0].url === channel.url ? 1 : 0].url
-          : state.currentChannel,
         allChannels: state.allChannels.filter(({ url }) => url !== channel.url),
+        currentChannel: state.ableAutoSelectChannelItem ? nextChannel : null,
       };
     }
     case actions.LEAVE_CHANNEL_SUCCESS:
@@ -77,8 +84,8 @@ export default function reducer(state, action) {
       const channelUrl = action.payload;
       return {
         ...state,
-        currentChannel: (channelUrl === state.currentChannel)
-          ? state.allChannels[0].url
+        currentChannel: (channelUrl === state.currentChannel?.url)
+          ? state.allChannels[0]
           : state.currentChannel,
         allChannels: state.allChannels.filter(({ url }) => url !== channelUrl),
       };
@@ -88,28 +95,31 @@ export default function reducer(state, action) {
       if (state.channelListQuery) {
         if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
           const filteredChannels = getChannelsWithUpsertedChannel(state.allChannels, channel);
+          const nextChannel = (isMe && (channel.url === state.currentChannel?.url))
+            ? filteredChannels[0]
+            : state.currentChannel;
           return {
             ...state,
-            currentChannel: (isMe && (channel.url === state.currentChannel))
-              ? filteredChannels[0].url
-              : state.currentChannel,
+            currentChannel: state.ableAutoSelectChannelItem ? nextChannel : null,
             allChannels: filteredChannels,
           };
         }
+        const nextChannel = (channel.url === state.currentChannel?.url)
+          ? state.allChannels[0]
+          : state.currentChannel;
         return {
           ...state,
-          currentChannel: (channel.url === state.currentChannel)
-            ? state.allChannels[0].url
-            : state.currentChannel,
+          currentChannel: state.ableAutoSelectChannelItem ? nextChannel : null,
           allChannels: state.allChannels.filter(({ url }) => url !== channel.url),
         };
       }
       const filteredChannels = state.allChannels.filter((c) => !(c.url === channel.url && isMe));
+      const nextChannel = (isMe && (channel.url === state.currentChannel?.url))
+        ? filteredChannels[0]
+        : state.currentChannel;
       return {
         ...state,
-        currentChannel: (isMe && (channel.url === state.currentChannel))
-          ? filteredChannels[0].url
-          : state.currentChannel,
+        currentChannel: state.ableAutoSelectChannelItem ? nextChannel : null,
         allChannels: filteredChannels,
       };
     }
@@ -128,12 +138,13 @@ export default function reducer(state, action) {
             allChannels: getChannelsWithUpsertedChannel(allChannels, channel),
           };
         }
+        const nextChannel = (channel.url === state.currentChannel?.url)
+          ? state.allChannels[state.allChannels[0].url === channel.url ? 1 : 0]
+          // if coming channel is first of channel list, current channel will be the next one
+          : state.currentChannel;
         return {
           ...state,
-          currentChannel: (channel.url === state.currentChannel)
-            ? state.allChannels[state.allChannels[0].url === channel.url ? 1 : 0].url
-            // if coming channel is first of channel list, current channel will be the next one
-            : state.currentChannel,
+          currentChannel: state.ableAutoSelectChannelItem ? nextChannel : null,
           allChannels: state.allChannels.filter(({ url }) => url !== channel.url),
         };
       }
@@ -186,13 +197,14 @@ export default function reducer(state, action) {
             allChannels: getChannelsWithUpsertedChannel(state.allChannels, channel),
           };
         }
+        const nextChannel = (channel.url === state.currentChannel?.url)
+          ? state.allChannels[state.allChannels[0].url === channel.url ? 1 : 0]
+          // if coming channel is first of channel list, current channel will be the next one
+          : state.currentChannel;
         return {
           ...state,
-          currentChannel: (channel.url === state.currentChannel)
-            ? state.allChannels[state.allChannels[0].url === channel.url ? 1 : 0].url
-            // if coming channel is first of channel list, current channel will be the next one
-            : state.currentChannel,
           allChannels: state.allChannels.filter(({ url }) => url !== channel.url),
+          currentChannel: state.ableAutoSelectChannelItem ? nextChannel : null,
         };
       }
       return {
@@ -216,13 +228,14 @@ export default function reducer(state, action) {
             allChannels: getChannelsWithUpsertedChannel(state.allChannels, channel),
           };
         }
+        const nextChannel = (channel.url === state.currentChannel?.url)
+          ? state.allChannels[state.allChannels[0].url === channel.url ? 1 : 0]
+          // if coming channel is first of channel list, current channel will be the next one
+          : state.currentChannel;
         return {
           ...state,
-          currentChannel: (channel.url === state.currentChannel)
-            ? state.allChannels[state.allChannels[0].url === channel.url ? 1 : 0].url
-            // if coming channel is first of channel list, current channel will be the next one
-            : state.currentChannel,
           allChannels: state.allChannels.filter(({ url }) => url !== channel.url),
+          currentChannel: state.ableAutoSelectChannelItem ? nextChannel : null,
         };
       }
       return {
@@ -252,6 +265,12 @@ export default function reducer(state, action) {
         currentUserId: action.payload.currentUserId,
         channelListQuery: action.payload.channelListQuery,
       };
+    case actions.SET_AUTO_SELECT_CHANNEL_ITEM: {
+      return {
+        ...state,
+        ableAutoSelect: action.payload,
+      };
+    }
     default:
       return state;
   }

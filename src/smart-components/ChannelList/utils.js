@@ -151,6 +151,7 @@ function setupChannelList({
   userFilledChannelListQuery,
   logger,
   sortChannelList,
+  ableAutoSelectChannelItem,
 }) {
   if (sdk && sdk.ChannelHandler) {
     createEventHandler({
@@ -204,15 +205,17 @@ function setupChannelList({
       }
       // select first channel
       logger.info('ChannelList - highlight channel', channelList[0]);
-      let sorted = channelList;
+      let sortedChannelList = channelList;
       if (sortChannelList && typeof sortChannelList === 'function') {
-        sorted = sortChannelList(channelList);
-        logger.info('ChannelList - channel list sorted', sorted);
+        sortedChannelList = sortChannelList(channelList);
+        logger.info('ChannelList - channel list sorted', sortedChannelList);
       }
-      onChannelSelect(sorted[0]);
+      if (ableAutoSelectChannelItem) {
+        onChannelSelect(sortedChannelList[0]);
+      }
       channelListDispatcher({
         type: channelActions.INIT_CHANNELS_SUCCESS,
-        payload: sorted,
+        payload: sortedChannelList,
       });
       if (channelList && typeof channelList.forEach === 'function') {
         logger.info('ChannelList - mark all channels as delivered');

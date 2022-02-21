@@ -13,7 +13,7 @@ describe('Channels-Reducers', () => {
 
     expect(nextState.initialized).toEqual(true);
     expect(nextState.allChannels).toEqual(mockData.allChannels);
-    expect(nextState.currentChannel).toEqual(mockData.allChannels[0].url);
+    expect(nextState.currentChannel.url).toEqual(mockData.allChannels[0].url);
   });
 
   it('should handle create new channel using CREATE_CHANNEL', () => {
@@ -23,7 +23,7 @@ describe('Channels-Reducers', () => {
     });
 
     expect(nextState.allChannels[0].url).toEqual(mockData.allChannels[1].url);
-    expect(nextState.currentChannel).toEqual(mockData.allChannels[1].url);
+    expect(nextState.currentChannel.url).toEqual(mockData.allChannels[1].url);
   });
 
   it('should handle leave channel action LEAVE_CHANNEL_SUCCESS', () => {

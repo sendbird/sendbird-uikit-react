@@ -271,7 +271,9 @@ export default {
       "invitedAt": 1580278143504
     }
   ],
-  "currentChannel": "sendbird_group_channel_13883929_89ea0faddf24ba6328e95ff56b0b37960f400c83"
+  "currentChannel": {
+    "url": "sendbird_group_channel_13883929_89ea0faddf24ba6328e95ff56b0b37960f400c83",
+  }
 }
 
 export const channel0 = {
