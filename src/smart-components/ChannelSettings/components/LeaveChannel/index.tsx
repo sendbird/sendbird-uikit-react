@@ -2,8 +2,6 @@ import React from 'react';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelSettings } from '../../context/ChannelSettingsProvider';
-import { useChannelListContext } from '../../../ChannelList/context/ChannelListProvider';
-import { noop } from '../../../../utils/utils';
 
 import Modal from '../../../../ui/Modal';
 
@@ -14,31 +12,29 @@ export type LeaveChannelProps = {
 
 const LeaveChannel: React.FC<LeaveChannelProps> = (props: LeaveChannelProps) => {
   const {
-    onSubmit = noop,
-    onCancel = noop,
+    onSubmit,
+    onCancel,
   } = props;
-  const channel = useChannelSettings()?.channel || useChannelListContext()?.currentChannel;
+  const { channel } = useChannelSettings();
   const state = useSendbirdStateContext();
   const logger = state?.config?.logger;
   const isOnline = state?.config?.isOnline;
-  if (channel) {
-    return (
-      <Modal
-        disabled={!isOnline}
-        onCancel={onCancel}
-        onSubmit={() => {
-          logger.info('ChannelSettings: Leaving channel', channel);
-          channel.leave()
-            .then(() => {
-              logger.info('ChannelSettings: Leaving channel successful!', channel);
-              onSubmit();
-            });
-        }}
-        submitText="Leave"
-        titleText="Leave this channel?"
-      />
-    );
-  }
+  return (
+    <Modal
+      disabled={!isOnline}
+      onCancel={onCancel}
+      onSubmit={() => {
+        logger.info('ChannelSettings: Leaving channel', channel);
+        channel.leave()
+          .then(() => {
+            logger.info('ChannelSettings: Leaving channel successful!', channel);
+            onSubmit();
+          });
+      }}
+      submitText="Leave"
+      titleText="Leave this channel?"
+    />
+  );
 };
 
 export default LeaveChannel;

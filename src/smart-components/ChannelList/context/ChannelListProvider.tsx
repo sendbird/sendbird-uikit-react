@@ -241,7 +241,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
         onChannelSelect(null);
       }
     });
-  }, [currentChannel?.url]);
+  }, [currentChannel.url]);
 
   return (
     <ChannelListContext.Provider value={{
