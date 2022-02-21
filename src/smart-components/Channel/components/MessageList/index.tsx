@@ -5,7 +5,7 @@ import isSameDay from 'date-fns/isSameDay';
 
 import { useChannel } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
-import Icon, { IconTypes } from '../../../../ui/Icon';
+import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import { compareMessagesForGrouping } from '../../context/utils';
 import Message from '../Message';
 import { RenderMessageProps } from '../../../../types';
