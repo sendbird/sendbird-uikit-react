@@ -22,6 +22,7 @@
     "cp-css": "./scripts/copy-css.sh",
     "clean-release": "rm -rf ./release; rm -rf ./dist",
     "build": "npm run clean-release; rollup -c; npm run cp-css",
+    "checkout": "rm -fr ./node_modules; npm install;",
     "start": "rollup -c -w",
     "prepublishOnly": "npm run build",
     "predeploy": "cd example && npm install && npm run build",
