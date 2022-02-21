@@ -374,6 +374,7 @@ interface ChannelListProps {
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   renderHeader?: (props: void) => React.ReactNode;
   queries?: ChannelListQueries;
+  autoSelectChannelItem?: boolean;
 }
 interface ChannelProps {
   channelUrl: string;

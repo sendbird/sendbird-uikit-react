@@ -18,6 +18,7 @@ const ChannelList: React.FC<ChannelListProps> = (props: ChannelListProps) => {
       onThemeChange={props?.onThemeChange}
       onProfileEditSuccess={props?.onProfileEditSuccess}
       onChannelSelect={props?.onChannelSelect}
+      autoSelectChannelItem={props?.autoSelectChannelItem}
       sortChannelList={props?.sortChannelList}
       queries={props?.queries}
     >
