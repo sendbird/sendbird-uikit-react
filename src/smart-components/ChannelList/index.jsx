@@ -53,7 +53,7 @@ function ChannelList(props) {
     onThemeChange,
     onBeforeCreateChannel,
     onChannelSelect,
-    autoSelectChannelItem,
+    ableAutoSelectChannelItem,
   } = props;
   const { config = {} } = props;
   // enable if it is true atleast once(both are flase by default)
@@ -102,7 +102,7 @@ function ChannelList(props) {
         userFilledChannelListQuery,
         logger,
         sortChannelList,
-        autoSelectChannelItem,
+        ableAutoSelectChannelItem,
       });
     } else {
       logger.info('ChannelList: Removing channelHandlers');
@@ -394,7 +394,7 @@ ChannelList.propTypes = {
     PropTypes.func,
   ]),
   onChannelSelect: PropTypes.func,
-  autoSelectChannelItem: PropTypes.bool,
+  ableAutoSelectChannelItem: PropTypes.bool,
 };
 
 ChannelList.defaultProps = {
@@ -409,7 +409,7 @@ ChannelList.defaultProps = {
   onProfileEditSuccess: null,
   queries: {},
   onChannelSelect: noop,
-  autoSelectChannelItem: true,
+  ableAutoSelectChannelItem: true,
 };
 
 export default withSendbirdContext(ChannelList);

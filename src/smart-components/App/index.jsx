@@ -37,7 +37,7 @@ export default function App(props) {
     showSearchIcon,
     onProfileEditSuccess,
     imageCompression,
-    autoSelectChannelItem,
+    ableAutoSelectChannelItem,
   } = props;
   const [currentChannelUrl, setCurrentChannelUrl] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
@@ -77,7 +77,7 @@ export default function App(props) {
                 setCurrentChannelUrl('');
               }
             }}
-            autoSelectChannelItem={autoSelectChannelItem}
+            ableAutoSelectChannelItem={ableAutoSelectChannelItem}
           />
         </div>
         <div
@@ -179,7 +179,7 @@ App.propTypes = {
       PropTypes.string,
     ]),
   }),
-  autoSelectChannelItem: PropTypes.bool,
+  ableAutoSelectChannelItem: PropTypes.bool,
 };
 
 App.defaultProps = {
@@ -201,5 +201,5 @@ App.defaultProps = {
   stringSet: null,
   colorSet: null,
   imageCompression: {},
-  autoSelectChannelItem: true,
+  ableAutoSelectChannelItem: true,
 };
