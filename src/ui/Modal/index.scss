@@ -13,6 +13,8 @@
 
 .sendbird-modal__content {
   width: 480px;
+  height: calc(100% - 440px);
+  min-height: 548px;
   border-radius: 4px;
   z-index: 10001;
   padding: 18px 24px 24px 24px;
@@ -38,7 +40,10 @@
   .sendbird-modal__header {
     margin-bottom: 16px;
   }
-  // .sendbird-modal__body {}
+  .sendbird-modal__body {
+    height: calc(100% - 116px);
+    overflow: scroll;
+  }
   .sendbird-modal__footer {
     margin-top: 32px;
     text-align: right;

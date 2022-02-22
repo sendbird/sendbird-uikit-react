@@ -1,5 +1,5 @@
 import React, { ReactElement, useContext, useRef, useState } from 'react';
-import { GroupChannel, AdminMessage, UserMessage, FileMessage, EmojiContainer } from 'sendbird';
+import { GroupChannel, UserMessage, FileMessage, EmojiContainer } from 'sendbird';
 import './index.scss';
 
 import Avatar from '../Avatar';
@@ -29,6 +29,7 @@ import {
   getOutgoingMessageState,
   getSenderName,
   getMessageCreatedAt,
+  CoreMessageType,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 import { ReplyType } from '../../index.js';
@@ -37,7 +38,7 @@ interface Props {
   className?: string | Array<string>;
   userId: string;
   channel: GroupChannel;
-  message: AdminMessage | UserMessage | FileMessage;
+  message: CoreMessageType;
   disabled?: boolean;
   chainTop?: boolean;
   chainBottom?: boolean;

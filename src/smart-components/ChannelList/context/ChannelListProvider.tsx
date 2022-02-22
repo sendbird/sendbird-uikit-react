@@ -69,13 +69,14 @@ export interface ChannelListProviderProps {
   className?: string | string[];
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   disableUserProfile?: boolean;
+  disableAutoSelect?: boolean;
 }
 
 export interface ChannelListProviderInterface extends ChannelListProviderProps {
   initialized: boolean;
   loading: boolean;
   allChannels: Sendbird.GroupChannel[];
-  currentChannel: string;
+  currentChannel: Sendbird.GroupChannel;
   showSettings: boolean;
   channelListQuery: GroupChannelListQuery;
   currentUserId: string;
@@ -87,7 +88,7 @@ interface ChannelListStoreInterface {
   initialized: boolean;
   loading: boolean;
   allChannels: Sendbird.GroupChannel[];
-  currentChannel: string;
+  currentChannel: Sendbird.GroupChannel;
   showSettings: boolean;
   channelListQuery: GroupChannelListQuery;
   currentUserId: string;
@@ -125,6 +126,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     onThemeChange,
     onBeforeCreateChannel,
     sortChannelList,
+    disableAutoSelect,
   } = props;
   const onChannelSelect = props?.onChannelSelect || noop;
 
@@ -164,6 +166,13 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   }, [sdkIntialized]);
 
   useEffect(() => {
+    channelListDispatcher({
+      type: channelListActions.SET_AUTO_SELECT_CHANNEL_ITEM,
+      payload: disableAutoSelect,
+    });
+  }, [disableAutoSelect]);
+
+  useEffect(() => {
     setSdkChannelHandlerId(uuidv4);
     if (sdkIntialized) {
       logger.info('ChannelList: Setup channelHandlers');
@@ -176,6 +185,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
         userFilledChannelListQuery,
         logger,
         sortChannelList,
+        disableAutoSelect,
       });
     } else {
       logger.info('ChannelList: Removing channelHandlers');
@@ -223,15 +233,15 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   }
 
   useEffect(() => {
-    if (!sdk || !sdk.GroupChannel || !currentChannel) { return; }
-    sdk.GroupChannel.getChannel(currentChannel, (groupChannel) => {
+    if (!sdk || !sdk.GroupChannel || !currentChannel || !currentChannel?.url) { return; }
+    sdk.GroupChannel.getChannel(currentChannel.url, (groupChannel) => {
       if (groupChannel) {
         onChannelSelect(groupChannel);
       } else {
         onChannelSelect(null);
       }
     });
-  }, [currentChannel]);
+  }, [currentChannel?.url]);
 
   return (
     <ChannelListContext.Provider value={{

@@ -36,6 +36,7 @@ export default function App(props) {
     showSearchIcon,
     onProfileEditSuccess,
     imageCompression,
+    disableAutoSelect,
   } = props;
   const [currentChannelUrl, setCurrentChannelUrl] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
@@ -65,6 +66,7 @@ export default function App(props) {
           <ChannelList
             allowProfileEdit={allowProfileEdit}
             onProfileEditSuccess={onProfileEditSuccess}
+            disableAutoSelect={disableAutoSelect}
             onChannelSelect={(channel) => {
               setStartingPoint(null);
               setHighlightedMessage(null);
@@ -174,6 +176,7 @@ App.propTypes = {
       PropTypes.string,
     ]),
   }),
+  disableAutoSelect: PropTypes.bool,
 };
 
 App.defaultProps = {
@@ -194,4 +197,5 @@ App.defaultProps = {
   stringSet: null,
   colorSet: null,
   imageCompression: {},
+  disableAutoSelect: false,
 };

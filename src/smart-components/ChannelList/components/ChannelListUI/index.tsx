@@ -176,7 +176,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
                 logger.info('ChannelList: Clicked on channel:', channel);
                 channelListDispatcher({
                   type: channelListActions.SET_CURRENT_CHANNEL,
-                  payload: channel.url,
+                  payload: channel,
                 });
               };
 
@@ -194,7 +194,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
                       tabIndex={idx}
                       onClick={onClick}
                       channel={channel}
-                      isActive={channel.url === currentChannel}
+                      isActive={channel.url === currentChannel?.url}
                       renderChannelAction={(() => (
                         <ChannelPreviewAction
                           disabled={!isOnline}

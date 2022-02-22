@@ -30,4 +30,5 @@ export default interface AppProps {
     resizingHeight?: number | string,
   };
   replyType?: ReplyType;
+  disableAutoSelect?: boolean;
 }
