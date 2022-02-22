@@ -7,5 +7,5 @@ export default {
   showSettings: false,
   channelListQuery: null,
   currentUserId: '',
-  ableAutoSelectChannelItem: true,
+  disableAutoSelect: false,
 };

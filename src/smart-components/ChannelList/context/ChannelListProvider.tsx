@@ -69,7 +69,7 @@ export interface ChannelListProviderProps {
   className?: string | string[];
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   disableUserProfile?: boolean;
-  ableAutoSelectChannelItem?: boolean;
+  disableAutoSelect?: boolean;
 }
 
 export interface ChannelListProviderInterface extends ChannelListProviderProps {
@@ -126,7 +126,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     onThemeChange,
     onBeforeCreateChannel,
     sortChannelList,
-    ableAutoSelectChannelItem,
+    disableAutoSelect,
   } = props;
   const onChannelSelect = props?.onChannelSelect || noop;
 
@@ -168,9 +168,9 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   useEffect(() => {
     channelListDispatcher({
       type: channelListActions.SET_AUTO_SELECT_CHANNEL_ITEM,
-      payload: ableAutoSelectChannelItem,
+      payload: disableAutoSelect,
     });
-  }, [ableAutoSelectChannelItem]);
+  }, [disableAutoSelect]);
 
   useEffect(() => {
     setSdkChannelHandlerId(uuidv4);
@@ -185,7 +185,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
         userFilledChannelListQuery,
         logger,
         sortChannelList,
-        ableAutoSelectChannelItem,
+        disableAutoSelect,
       });
     } else {
       logger.info('ChannelList: Removing channelHandlers');

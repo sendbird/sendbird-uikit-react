@@ -151,7 +151,7 @@ function setupChannelList({
   userFilledChannelListQuery,
   logger,
   sortChannelList,
-  ableAutoSelectChannelItem,
+  disableAutoSelect,
 }) {
   if (sdk && sdk.ChannelHandler) {
     createEventHandler({
@@ -210,7 +210,7 @@ function setupChannelList({
         sortedChannelList = sortChannelList(channelList);
         logger.info('ChannelList - channel list sorted', sortedChannelList);
       }
-      if (ableAutoSelectChannelItem) {
+      if (!disableAutoSelect) {
         onChannelSelect(sortedChannelList[0]);
       }
       channelListDispatcher({

@@ -30,5 +30,5 @@ export default interface AppProps {
     resizingHeight?: number | string,
   };
   replyType?: ReplyType;
-  ableAutoSelectChannelItem?: boolean;
+  disableAutoSelect?: boolean;
 }
