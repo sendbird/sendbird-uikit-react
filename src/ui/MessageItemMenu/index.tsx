@@ -54,7 +54,7 @@ export default function MessageItemMenu({
   const showMenuItemReply: boolean = (replyType === 'QUOTE_REPLY')
     && !isFailedMessage(channel, message)
     && !isPendingMessage(channel, message)
-    && (channel.isGroupChannel() && !(channel as GroupChannel).isBroadcast);
+    && (channel?.isGroupChannel() && !(channel as GroupChannel)?.isBroadcast);
 
   if (!(showMenuItemCopy || showMenuItemReply || showMenuItemEdit || showMenuItemResend || showMenuItemDelete)) {
     return null;
