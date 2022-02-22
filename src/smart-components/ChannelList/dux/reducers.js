@@ -76,7 +76,7 @@ export default function reducer(state, action) {
       return {
         ...state,
         allChannels: state.allChannels.filter(({ url }) => url !== channel.url),
-        currentChannel: state.disableAutoSelect ?  null : nextChannel,
+        currentChannel: state.disableAutoSelect ? null : nextChannel,
       };
     }
     case actions.LEAVE_CHANNEL_SUCCESS:
