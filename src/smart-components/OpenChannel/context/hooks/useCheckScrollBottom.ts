@@ -13,7 +13,7 @@ function useCheckScrollBottom(
 ): () => boolean {
   return useCallback(() => {
     let isBottom = true;
-    if (conversationScrollRef) {
+    if (conversationScrollRef && conversationScrollRef?.current) {
       try {
         const conversationScroll = conversationScrollRef.current;
         isBottom = conversationScroll.scrollHeight <= conversationScroll.scrollTop + conversationScroll.clientHeight;

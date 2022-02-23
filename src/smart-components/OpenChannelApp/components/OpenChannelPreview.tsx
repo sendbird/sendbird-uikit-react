@@ -52,8 +52,8 @@ export default function OpenChannelPreview({
       <div className="channel-preview__inner-left">
           <Avatar
             className="channel-preview__avatar"
-            src={channel.coverUrl}
-            alt={channel.name}
+            src={channel?.coverUrl}
+            alt={channel?.name}
             width="32px"
             height="32px"
             customDefaultComponent={(style) => (
@@ -70,9 +70,9 @@ export default function OpenChannelPreview({
       </div>
       <div className="channel-preview__inner-right">
         <div className="channel-preview__name">
-          {channel.name}
+          {channel?.name}
           {
-            channel.isFrozen && (
+            channel?.isFrozen && (
               <Freeze />
             )
           }
@@ -80,7 +80,7 @@ export default function OpenChannelPreview({
         {
           isStreaming && (
             <div className="channel-preview__creator-name">
-              {streamInfo.creator_info.name}
+              {streamInfo?.creator_info.name}
             </div>
           )
         }
@@ -89,7 +89,7 @@ export default function OpenChannelPreview({
             <div className="channel-preview__count">
               <div className="channel-preview__count-icon" />
               <div className="channel-preview__count-text">
-                { kFormat(channel.participantCount) }
+                { kFormat(channel?.participantCount) }
               </div>
             </div>
           )

@@ -32,8 +32,26 @@ import useTrimMessageList from './hooks/useTrimMessageList';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 
 type OpenChannelQueries = {
-
-}
+  // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
+  messageListParams?: {
+    replyType?: string,
+    messageType?: string,
+    prevResultSize?: number,
+    nextResultSize?: number,
+    reverse?: boolean,
+    isInclusive?: boolean,
+    includeMetaArray?: boolean,
+    // UIKit doesn't support emoji reaction in OpenChannel
+    // includeReactions?: boolean,
+    // UIKit doesn't support message threading in OpenChannel
+    // includeThreadInfo?: boolean,
+    includePollDetails?: boolean,
+    includeParentMessageInfo?: boolean,
+    showSubchannelMessagesOnly?: boolean,
+    customTypes?: Array<string>,
+    senderUserIds?: Array<string>,
+  },
+};
 
 export interface OpenChannelProviderProps {
   channelUrl: string;
@@ -59,7 +77,7 @@ interface OpenChannelInterface extends OpenChannelProviderProps, MessageStoreSta
   amIOperator: boolean;
   fetchMore: boolean;
   checkScrollBottom: () => boolean;
-  onScroll:(callback: () => void) => void;
+  onScroll: (callback: () => void) => void;
   handleSendMessage: any;
   handleFileUpload: any;
   updateMessage: any;
@@ -67,7 +85,7 @@ interface OpenChannelInterface extends OpenChannelProviderProps, MessageStoreSta
   resendMessage: any;
 }
 
-const MessageContext = React.createContext<OpenChannelInterface|null>(undefined);
+const OpenChannelContext = React.createContext<OpenChannelInterface | null>(undefined);
 
 const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChannelProviderProps) => {
   const {
@@ -119,8 +137,8 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
   const userFilledMessageListParams = queries?.messageListParams;
   const disabled = !initialized
     || !isOnline
-    || utils.isDisabledBecauseFrozen(currentOpenChannel, userId);
-  // || utils.isDisabledBecauseMuted(mutedParticipantIds, userId)
+    || utils.isDisabledBecauseFrozen(currentOpenChannel, userId)
+    || utils.isDisabledBecauseMuted(mutedParticipantIds, userId);
 
   // useMemo
   const amIBanned = useMemo(() => {
@@ -135,7 +153,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
 
   // use hooks
   useSetChannel(
-    { channelUrl, sdkInit, fetchingParticipants },
+    { channelUrl, sdkInit, fetchingParticipants, userId },
     { sdk, logger, messagesDispatcher },
   );
 
@@ -251,7 +269,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
     };
   }, [channelUrl, sdkInit]);
   return (
-    <MessageContext.Provider value={{
+    <OpenChannelContext.Provider value={{
       // props
       channelUrl,
       children,
@@ -295,11 +313,11 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
       >
         {children}
       </UserProfileProvider>
-    </MessageContext.Provider>
+    </OpenChannelContext.Provider>
   );
 }
 
 export type UseOpenChannelType = () => OpenChannelInterface;
-const useOpenChannel: UseOpenChannelType = () => React.useContext(MessageContext);
+const useOpenChannel: UseOpenChannelType = () => React.useContext(OpenChannelContext);
 
 export { OpenChannelProvider, useOpenChannel };

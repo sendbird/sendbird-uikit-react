@@ -12,8 +12,8 @@ export interface State {
   frozen: boolean;
   operators: Array<Sendbird.User>;
   participants: Array<Sendbird.User>;
-  bannedParticipantIds: Array<string | number>;
-  mutedParticipantIds: Array<string | number>;
+  bannedParticipantIds: Array<string>;
+  mutedParticipantIds: Array<string>;
 }
 
 const initialState: State = {
