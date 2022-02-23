@@ -97,7 +97,7 @@ export const isDisabledBecauseFrozen = (openChannel: Sendbird.OpenChannel, userI
 };
 
 export const isDisabledBecauseMuted = (mutedParticipantIds: Array<string>, userId: string): boolean => {
-  return mutedParticipantIds.indexOf(userId) < 0;
+  return mutedParticipantIds.indexOf(userId) > -1;
 };
 
 export const fetchWithListQuery = (

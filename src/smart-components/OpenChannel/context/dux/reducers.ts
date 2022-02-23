@@ -196,7 +196,7 @@ export default function reducer(
       return {
         ...state,
         mutedParticipantIds: [
-          ... state.bannedParticipantIds,
+          ... state.mutedParticipantIds,
           ...fetchedMutedUserList.map(user => user.userId),
         ],
         // Should check duplication
