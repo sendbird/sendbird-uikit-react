@@ -61,8 +61,11 @@ export default function ChannelPreviewAction({ disabled, onLeaveChannel }) {
       {
         showModal && (
           <LeaveChannelModal
-            onCloseModal={() => setShowModal(false)}
-            onLeaveChannel={onLeaveChannel}
+            onSubmit={() => {
+              setShowModal(false);
+              onLeaveChannel();
+            }}
+            onCancel={() => setShowModal(false)}
           />
         )
       }

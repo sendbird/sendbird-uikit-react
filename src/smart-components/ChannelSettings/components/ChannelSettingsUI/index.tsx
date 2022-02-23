@@ -155,7 +155,9 @@ const ChannelSettingsUI: React.FC<ChannelSettingsUIProps> = (props: ChannelSetti
         {
           showLeaveChannelModal && (
             <LeaveChannelModal
-              onCancel={() => setShowLeaveChannelModal(false)}
+              onCancel={() => {
+                setShowLeaveChannelModal(false);
+              }}
               onSubmit={() => {
                 setShowLeaveChannelModal(false);
                 onCloseClick?.();
