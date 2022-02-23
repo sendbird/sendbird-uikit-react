@@ -86,8 +86,8 @@ export const StreamingAppLogin = () => {
 }
 
 export const CommunityAppLogin = () => {
-  const [userId, setUserId] = useState('hoon1');
-  const [nickname, setNickname] = useState('hoon1');
+  const [userId, setUserId] = useState('');
+  const [nickname, setNickname] = useState('');
   const [darkTheme, setDarkTheme] = useState(false);
   if (!appId || !userId || !nickname) {
     return (
