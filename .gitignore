@@ -9,6 +9,7 @@ build
 dist
 .rpt2_cache
 release
+.size-snapshot.json
 
 # misc
 .DS_Store

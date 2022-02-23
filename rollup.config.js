@@ -15,6 +15,7 @@ import { sizeSnapshot } from 'rollup-plugin-size-snapshot';
 
 // config from package.json
 import pkg from './package.json';
+import inputs from './exports';
 
 const APP_VERSION_STRING = '__uikit_app_version__';
 const IS_ROLLUP = '__is_rollup__';
@@ -22,17 +23,7 @@ const IS_ROLLUP_REPLACE = '__is_rollup_replace__';
 
 module.exports = ({
   // To bundle split
-  input: {
-    index: 'src/index.js',
-    // App: 'src/smart-components/App/index.jsx',
-    // ChannelList: 'src/smart-components/ChannelList/index.jsx',
-    // ChannelSettings: 'src/smart-components/ChannelSettings/index.jsx',
-    // Channel: 'src/smart-components/Conversation/index.jsx',
-    // OpenChannel: 'src/smart-components/OpenchannelConversation/index.tsx',
-    // MessageSearch: 'src/smart-components/MessageSearch/index.tsx',
-    // OpenChannelSettings: 'src/smart-components/OpenChannelSettings/index.tsx',
-    // SendbirdProvider: 'src/lib/Sendbird.jsx',
-  },
+  input: inputs,
   output: [
     {
       dir: 'release/dist/cjs',
