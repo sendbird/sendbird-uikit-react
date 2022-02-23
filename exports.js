@@ -71,6 +71,18 @@ export default {
   'MessageSearch/context': 'src/smart-components/MessageSearch/context/MessageSearchProvider.tsx',
   'MessageSearch/components/MessageSearchUI': 'src/smart-components/MessageSearch/components/MessageSearchUI/index.tsx',
 
+  // CreateChannel
+  CreateChannel: 'src/smart-components/CreateChannel/index.tsx',
+  'CreateChannel/context': 'src/smart-components/CreateChannel/context/CreateChannelProvider.tsx',
+  'CreateChannel/components/CreateChannelUI': 'src/smart-components/CreateChannel/components/CreateChannelUI/index.tsx',
+  'CreateChannel/components/InviteMembers': 'src/smart-components/CreateChannel/components/InviteMembers/index.tsx',
+  'CreateChannel/components/SelectChannelType': 'src/smart-components/CreateChannel/components/SelectChannelType.tsx',
+
+  // EditUserProfile
+  EditUserProfile: 'src/smart-components/EditUserProfile/index.tsx',
+  'EditUserProfile/context': 'src/smart-components/EditUserProfile/context/EditUserProfileProvider.tsx',
+  'EditUserProfile/components/EditUserProfileUI': 'src/smart-components/EditUserProfile/components/EditUserProfileUI/index.tsx',
+
   // UI Components
   'ui/Accordion': 'src/ui/Accordion/index.tsx',
   'ui/AccordionGroup': 'src/ui/Accordion/AccordionGroup.tsx',
