@@ -30,10 +30,10 @@ export const getLastMessageCreatedAt = (channel, locale) => {
     return '';
   }
   if (isToday(createdAt)) {
-    return format(createdAt, 'p', locale ? { locale } : null);
+    return format(createdAt, 'p', { locale });
   }
   if (isYesterday(createdAt)) {
-    return formatRelative(createdAt, new Date(), locale ? { locale } : null);
+    return formatRelative(createdAt, new Date(), { locale });
   }
   return format(createdAt, 'MMM dd', { locale });
 };
