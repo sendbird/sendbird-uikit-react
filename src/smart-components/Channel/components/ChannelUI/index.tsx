@@ -121,11 +121,11 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
                 // there is no scroll
                 if (scrollRef?.current?.scrollTop === 0) {
                   currentGroupChannel.markAsRead();
-                  messagesDispatcher({
-                    type: messageActionTypes.MARK_AS_READ,
-                    payload: null,
-                  });
                 }
+                messagesDispatcher({
+                  type: messageActionTypes.MARK_AS_READ,
+                  payload: null,
+                });
               }
             }}
           />

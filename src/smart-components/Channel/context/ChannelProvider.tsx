@@ -35,23 +35,26 @@ import useScrollToMessage from './hooks/useScrollToMessage';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 
 export type MessageListParams = {
-  prevResultSize?: number;
-  nextResultSize?: number;
-  isInclusive?: boolean;
-  shouldReverse?: boolean;
-  messageType?: string;
-  customType?: string;
-  senderUserIds?: Array<string>;
-  includeMetaArray?: boolean;
-  includeReactions?: boolean;
-  includeReplies?: boolean;
-  includeParentMessageText?: boolean;
-  includeThreadInfo?: boolean;
-}
+  // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
+  replyType?: string,
+  messageType?: string,
+  prevResultSize?: number,
+  nextResultSize?: number,
+  reverse?: boolean,
+  isInclusive?: boolean,
+  includeMetaArray?: boolean,
+  includeReactions?: boolean,
+  includeThreadInfo?: boolean,
+  includePollDetails?: boolean,
+  includeParentMessageInfo?: boolean,
+  showSubchannelMessagesOnly?: boolean,
+  customTypes?: Array<string>,
+  senderUserIds?: Array<string>,
+};
 
 export type ChannelQueries = {
   messageListParams?: MessageListParams;
-}
+};
 
 export type ChannelContextProps = {
   children?: React.ReactNode;
@@ -117,7 +120,7 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   toggleReaction(message: SendBird.UserMessage | SendBird.FileMessage, emojiKey: string, isReacted: boolean): void,
 }
 
-const ChannelContext = React.createContext<ChannelProviderInterface|null>(undefined);
+const ChannelContext = React.createContext<ChannelProviderInterface | null>(undefined);
 
 const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextProps) => {
   const {

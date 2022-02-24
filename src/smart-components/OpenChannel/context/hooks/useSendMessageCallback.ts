@@ -52,8 +52,19 @@ function useSendMessageCallback(
           logger.warning('OpenChannel | useSendMessageCallback: Sending message failed', error);
           messagesDispatcher({
             type: messageActionTypes.SENDING_MESSAGE_FAILED,
-            payload: messageActionTypes,
+            payload: message,
           });
+          // https://sendbird.com/docs/chat/v3/javascript/guides/error-codes#2-server-error-codes
+          // TODO: Do we need to handle the error cases?
+          if (error?.code === 900041) {
+            messagesDispatcher({
+              type: messageActionTypes.ON_USER_MUTED,
+              payload: {
+                channel: currentOpenChannel,
+                user: sdk.currentUser,
+              },
+            });
+          }
         }
       });
       messagesDispatcher({

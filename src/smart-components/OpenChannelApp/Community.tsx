@@ -31,6 +31,7 @@ export default function Community({
       userId={userId}
       theme={theme}
       nickname={nickname}
+      config={{ logLevel: 'all' }}
     >
       <div className="community-app">
         <div className="channel-list">

@@ -6,6 +6,7 @@ interface DynamicParams {
   channelUrl: string;
   sdkInit: boolean;
   fetchingParticipants: boolean;
+  userId: string;
 }
 interface StaticParams {
   sdk: SendbirdUIKit.Sdk;
@@ -14,7 +15,7 @@ interface StaticParams {
 }
 
 function useSetChannel(
-  { channelUrl, sdkInit, fetchingParticipants }: DynamicParams,
+  { channelUrl, sdkInit, fetchingParticipants, userId }: DynamicParams,
   { sdk, logger, messagesDispatcher }: StaticParams,
 ): void {
   useEffect(() => {
@@ -35,24 +36,9 @@ function useSetChannel(
                 payload: null,
               });
             }
-            if (fetchingParticipants) {
-              // fetch participants, banned participantIds, muted participantIds
-              const participantListQuery = openChannel.createParticipantListQuery();
+            if (openChannel.isOperatorWithUserId(userId)) { // only operator has a permission to fetch these list
               const bannedParticipantListQuery = openChannel.createBannedUserListQuery();
               const mutedParticipantListQuery = openChannel.createMutedUserListQuery();
-              utils.fetchWithListQuery(
-                participantListQuery,
-                logger,
-                (users) => {
-                  messagesDispatcher({
-                    type: messageActionTypes.FETCH_PARTICIPANT_LIST,
-                    payload: {
-                      channel: openChannel,
-                      users,
-                    },
-                  });
-                },
-              );
               utils.fetchWithListQuery(
                 bannedParticipantListQuery,
                 logger,
@@ -72,6 +58,23 @@ function useSetChannel(
                 (users) => {
                   messagesDispatcher({
                     type: messageActionTypes.FETCH_MUTED_USER_LIST,
+                    payload: {
+                      channel: openChannel,
+                      users,
+                    },
+                  });
+                },
+              );
+            }
+            if (fetchingParticipants) {
+              // fetch participants list
+              const participantListQuery = openChannel.createParticipantListQuery();
+              utils.fetchWithListQuery(
+                participantListQuery,
+                logger,
+                (users) => {
+                  messagesDispatcher({
+                    type: messageActionTypes.FETCH_PARTICIPANT_LIST,
                     payload: {
                       channel: openChannel,
                       users,

@@ -66,7 +66,7 @@ function CommunityChannelList({
           type={LabelTypography.H_2}
           color={LabelColors.ONBACKGROUND_1}
         >
-          Live streaming
+          Community
         </Label>
         <IconButton
           className="community-channel-list__header__create-channel"
