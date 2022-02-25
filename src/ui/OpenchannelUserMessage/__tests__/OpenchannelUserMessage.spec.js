@@ -107,9 +107,9 @@ describe('OpenchannelUserMessage', () => {
       <OpenchannelUserMessage
         message={getMockMessage((message) => {
           message.isResendable = () => true;
+          message.sendingStatus = 'pending';
         })}
         userId={userId}
-        status="pending"
       />
     );
     expect(
@@ -125,9 +125,9 @@ describe('OpenchannelUserMessage', () => {
       <OpenchannelUserMessage
         message={getMockMessage((message) => {
           message.isResendable = () => true;
+          message.sendingStatus = 'failed';
         })}
         userId={userId}
-        status="failed"
       />
     );
     expect(

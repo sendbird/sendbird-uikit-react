@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import renderer from 'react-test-renderer';
-import { dummyFileMessageImage } from '../mockMessages';
+import { dummyFileMessageImage, getFileMessage } from '../mockMessages';
 
 import OpenchannelFileMessage from "../index";
 
@@ -87,8 +87,7 @@ describe('OpenchannelFileMessage', () => {
   it('should render pending icon if status is pending', function() {
     const component = mount(
       <OpenchannelFileMessage
-        message={dummyFileMessageImage}
-        status="pending"
+        message={getFileMessage((m) => ({ ...m, sendingStatus: 'pending' }))}
       />
     );
 
@@ -124,7 +123,7 @@ describe('OpenchannelFileMessage', () => {
   it('should render pending icon if status is failed', function() {
     const component = mount(
       <OpenchannelFileMessage
-        message={dummyFileMessageImage}
+        message={getFileMessage((m) => ({ ...m, sendingStatus: 'failed' }))}
         status="failed"
       />
     );

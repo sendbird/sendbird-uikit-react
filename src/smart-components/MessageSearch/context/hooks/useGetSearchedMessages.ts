@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import * as messageActionTypes from '../dux/actionTypes';
-import SendbirdUIKit from '../../../index';
+import SendbirdUIKit from '../../../../index';
 import SendBird from 'sendbird';
 
 interface MainProps {
