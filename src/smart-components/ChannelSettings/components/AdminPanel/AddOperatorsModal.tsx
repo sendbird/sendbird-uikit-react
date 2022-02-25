@@ -72,7 +72,6 @@ export default function AddOperatorsModal({
             const fetchMore = (
               target.clientHeight + target.scrollTop === target.scrollHeight
             );
-
             if (hasNext && fetchMore) {
               memberQuery.next((o, error) => {
                 if (error) {
