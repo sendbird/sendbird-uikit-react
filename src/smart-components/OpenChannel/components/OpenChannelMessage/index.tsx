@@ -36,7 +36,6 @@ export type OpenChannelMessageProps = {
   chainBottom?: boolean;
   hasSeparator?: boolean;
   editDisabled?: boolean;
-  status?: string;
 };
 
 export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessageProps): ReactElement {
@@ -46,7 +45,6 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
     chainBottom,
     hasSeparator,
     renderMessage,
-    status,
   } = props;
 
   const {
@@ -143,7 +141,6 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
                   userId={userId}
                   showRemove={setShowRemove}
                   resendMessage={resendMessage}
-                  status={status}
                   chainTop={chainTop}
                   chainBottom={chainBottom}
                 />
@@ -156,7 +153,6 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
               return (
                 <OpenChannelOGMessage
                   message={message}
-                  status={status}
                   userId={userId}
                   showEdit={setShowEdit}
                   disabled={editDisabled}
@@ -179,7 +175,6 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
                   showRemove={setShowRemove}
                   resendMessage={resendMessage}
                   onClick={setShowFileViewer}
-                  status={status}
                   chainTop={chainTop}
                   chainBottom={chainBottom}
                 />
@@ -197,7 +192,6 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
                   showEdit={setShowEdit}
                   showRemove={setShowRemove}
                   resendMessage={resendMessage}
-                  status={status}
                   chainTop={chainTop}
                   chainBottom={chainBottom}
                 />
@@ -244,7 +238,6 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
         && (
           <UnknownMessage
             message={message}
-            status={status}
             isByMe={isByMe}
             showRemove={setShowRemove}
             chainTop={chainTop}

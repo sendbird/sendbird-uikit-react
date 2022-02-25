@@ -84,12 +84,6 @@ function OpenchannelMessageList(
             hasMessage
               ? (
                 allMessages.map((message, index) => {
-                  let status: string;
-
-                  if (message.messageType !== 'admin') {
-                    status = message.sendingStatus;
-                  }
-
                   const previousMessage = allMessages[index - 1];
                   const nextMessage = allMessages[index - 1];
 
@@ -111,7 +105,6 @@ function OpenchannelMessageList(
                       chainBottom={chainBottom}
                       hasSeparator={hasSeparator}
                       renderMessage={props?.renderMessage}
-                      status={status}
                     />
                   )
                 })
