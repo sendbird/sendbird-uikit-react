@@ -221,6 +221,7 @@ export default function OpenchannelUserMessage({
                   <Icon
                     className="sendbird-openchannel-user-message__right__tail__failed"
                     type={IconTypes.ERROR}
+                    fillColor={IconColors.ERROR}
                     width="16px"
                     height="16px"
                   />
