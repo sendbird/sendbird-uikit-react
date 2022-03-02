@@ -32,7 +32,6 @@ interface Props {
   disabled?: boolean;
   chainTop?: boolean;
   chainBottom?: boolean;
-  status: string;
   showRemove(bool: boolean): void;
   resendMessage(message: ClientFileMessage): void;
 }
@@ -43,10 +42,10 @@ export default function OpenchannelFileMessage({
   userId,
   disabled,
   chainTop,
-  status,
   showRemove,
   resendMessage,
 }: Props): JSX.Element {
+  const status = message?.sendingStatus;
   const contextMenuRef = useRef(null);
   const avatarRef = useRef(null);
   const { stringSet } = useContext(LocalizationContext);

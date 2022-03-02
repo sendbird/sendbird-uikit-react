@@ -39,7 +39,6 @@ interface Props {
   resendMessage(message: ClientUserMessage): void;
   chainTop?: boolean;
   chainBottom?: boolean;
-  status: string;
   userId: string;
 }
 
@@ -51,13 +50,13 @@ export default function OpenchannelOGMessage({
   showRemove,
   resendMessage,
   chainTop,
-  status,
   userId,
 }: Props): JSX.Element {
   if (!message || message.messageType !== 'user') {
     return null;
   }
 
+  const status = message?.sendingStatus;
   const { ogMetaData } = message;
   const { defaultImage } = ogMetaData;
 

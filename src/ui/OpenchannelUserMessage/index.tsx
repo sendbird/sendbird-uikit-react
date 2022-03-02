@@ -44,7 +44,6 @@ interface Props {
   resendMessage(message: ClientUserMessage): void;
   chainTop?: boolean;
   chainBottom?: boolean;
-  status: string;
 }
 
 export default function OpenchannelUserMessage({
@@ -56,7 +55,6 @@ export default function OpenchannelUserMessage({
   showEdit,
   showRemove,
   chainTop,
-  status,
 }: Props): ReactElement {
   if (!message || message.messageType !== 'user') {
     return null;
@@ -71,6 +69,7 @@ export default function OpenchannelUserMessage({
   const [contextStyle, setContextStyle] = useState({});
 
   // consts
+  const status = message?.sendingStatus;
   const isByMe = checkIsByMe(message, userId);
   const isPending = checkIsPending(status);
   const isFailed = checkIsFailed(status);
@@ -222,6 +221,7 @@ export default function OpenchannelUserMessage({
                   <Icon
                     className="sendbird-openchannel-user-message__right__tail__failed"
                     type={IconTypes.ERROR}
+                    fillColor={IconColors.ERROR}
                     width="16px"
                     height="16px"
                   />

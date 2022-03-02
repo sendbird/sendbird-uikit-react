@@ -36,7 +36,6 @@ interface Props {
   message: ClientFileMessage;
   disabled: boolean;
   userId: string;
-  status: string;
   chainTop: boolean;
   chainBottom: boolean;
   onClick(bool: boolean): void,
@@ -49,7 +48,6 @@ export default function OpenchannelThumbnailMessage({
   message,
   disabled,
   userId,
-  status,
   chainTop,
   onClick,
   showRemove,
@@ -61,6 +59,7 @@ export default function OpenchannelThumbnailMessage({
     localUrl,
     thumbnails,
   } = message;
+  const status = message?.sendingStatus;
   const thumbnailUrl = (thumbnails && thumbnails.length > 0 && thumbnails[0].url) || null;
   const { stringSet } = useContext(LocalizationContext);
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);

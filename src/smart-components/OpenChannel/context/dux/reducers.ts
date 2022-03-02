@@ -96,14 +96,17 @@ export default function reducer(
         message,
         channel,
       } = action.payload;
-      if (channel.url !== state.currentOpenChannel.url) {
+      if (channel.url !== state.currentOpenChannel.url
+        || state.allMessages.some((m) => m.reqId === message.reqId)
+        // Handing failed first than sending start issue
+      ) {
         return state;
       }
       return {
         ...state,
         allMessages: [
           ...state.allMessages,
-          { ...message },
+          message,
         ],
       };
     }
@@ -119,12 +122,21 @@ export default function reducer(
     }
     case actionTypes.SENDING_MESSAGE_FAILED: {
       const sentMessage = action.payload;
-      return {
-        ...state,
-        allMessages: state.allMessages.map((m) => (
-          compareIds(m.reqId, sentMessage.reqId) ? sentMessage : m
-        )),
-      };
+      if (!state.allMessages.some((m) => m.reqId === sentMessage.reqId)) {
+        // Handling failed first than sending start issue
+        return {
+          ...state,
+          allMessages: [
+            ...state.allMessages.filter((m) => !compareIds(m.reqId, sentMessage)),
+            sentMessage,
+          ],
+        };
+      } else {
+        return {
+          ...state,
+          allMessages: state.allMessages.map((m) => compareIds(m.reqId, sentMessage.reqId) ? sentMessage : m),
+        };
+      }
     }
     case actionTypes.TRIM_MESSAGE_LIST: {
       const { allMessages } = state;
@@ -162,7 +174,7 @@ export default function reducer(
       }
       return {
         ...state,
-        participants: [... state.participants, ...fetchedParticipantList],
+        participants: [...state.participants, ...fetchedParticipantList],
         // Should check duplication
       };
     }
@@ -178,7 +190,7 @@ export default function reducer(
       return {
         ...state,
         bannedParticipantIds: [
-          ... state.bannedParticipantIds,
+          ...state.bannedParticipantIds,
           ...fetchedBannedUserList.map(user => user.userId),
         ],
         // Should check duplication
@@ -196,7 +208,7 @@ export default function reducer(
       return {
         ...state,
         mutedParticipantIds: [
-          ... state.mutedParticipantIds,
+          ...state.mutedParticipantIds,
           ...fetchedMutedUserList.map(user => user.userId),
         ],
         // Should check duplication
@@ -216,7 +228,7 @@ export default function reducer(
         || (
           !(state.allMessages.map(
             (message) => message.messageId).indexOf(receivedMessage.messageId) < 0
-        ))
+          ))
       ) {
         return state;
       }

@@ -26,7 +26,6 @@ export default function InviteMembers({
 
   useEffect(() => {
     const userListQuery = sdk?.createApplicationUserListQuery();
-    
     userListQuery.next((members, error) => {
       if (error) {
         return;
@@ -58,40 +57,41 @@ export default function InviteMembers({
             const fetchMore = (
               target.clientHeight + target.scrollTop === target.scrollHeight
             );
-
             if (hasNext && fetchMore) {
-              userQuery.next((o, error) => {
+              userQuery.next((users, error) => {
                 if (error) {
                   return;
                 }
                 setMembers([
                   ...members,
-                  ...o,
+                  ...users,
                 ])
               });
             }
           }}
         >
-          { members.map((member) => (
-            <UserListItem
-              checkBox
-              checked={selectedMembers[member.userId]}
-              onChange={
-                (event) => {
-                  const modifiedSelectedMembers = {
-                    ...selectedMembers,
-                    [event.target.id]: event.target.checked,
-                  };
-                  if (!event.target.checked) {
-                    delete modifiedSelectedMembers[event.target.id];
+          <div className="sendbird-more-members__popup-scroll__inner">
+            { members.map((member) => (
+              <UserListItem
+                checkBox
+                checked={selectedMembers[member.userId]}
+                onChange={
+                  (event) => {
+                    const modifiedSelectedMembers = {
+                      ...selectedMembers,
+                      [event.target.id]: event.target.checked,
+                    };
+                    if (!event.target.checked) {
+                      delete modifiedSelectedMembers[event.target.id];
+                    }
+                    setSelectedMembers(modifiedSelectedMembers);
                   }
-                  setSelectedMembers(modifiedSelectedMembers);
                 }
-              }
-              user={member}
-              key={member.userId}
-            />
-          ))}
+                user={member}
+                key={member.userId}
+              />
+            ))}
+          </div>
         </div>
       </Modal>
     </div>

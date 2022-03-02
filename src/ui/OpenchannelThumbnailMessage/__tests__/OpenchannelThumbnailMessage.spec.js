@@ -230,12 +230,12 @@ describe('OpenchannelThumbnailMessage', () => {
   it('should render pending icon if status is pending', function() {
     const message = getMockMessageWithVideo((message) => {
       message.isResendable = () => true;
+      message.sendingStatus = 'pending';
     });
     const component = mount(
       <OpenchannelThumbnailMessage
         message={message}
         userId={message.sender.userId}
-        status="pending"
       />
     );
     expect(
@@ -249,12 +249,12 @@ describe('OpenchannelThumbnailMessage', () => {
   it('should render failed icon if status is failed', function() {
     const message = getMockMessageWithVideo((message) => {
       message.isResendable = () => true;
+      message.sendingStatus = 'failed';
     });
     const component = mount(
       <OpenchannelThumbnailMessage
         message={message}
         userId={message.sender.userId}
-        status="failed"
       />
     );
     expect(

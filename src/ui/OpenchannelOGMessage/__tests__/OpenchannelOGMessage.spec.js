@@ -34,7 +34,7 @@ const getMockMessage = (callback) => {
     isResendable: () => false,
   };
   if (callback) {
-    callback(message);
+    return callback(message);
   }
   return message;
 };
@@ -150,9 +150,7 @@ describe('OpenchannelOGMessage', () => {
   it('should not have og elements when ogMetaData does not exist', function() {
     const component = mount(
       <OpenchannelOGMessage
-        message={getMockMessage((message) => {
-          message.ogMetaData = {};
-        })}
+        message={getMockMessage((message) => ({ ...message, ogMetaData: {} }))}
         status="succeeded"
         userId="hh-1234"
       />
@@ -205,8 +203,7 @@ describe('OpenchannelOGMessage', () => {
   it('should render pending icon if status is pending', function() {
     const component = mount(
       <OpenchannelOGMessage
-        message={getMockMessage()}
-        status="pending"
+        message={getMockMessage((message) => ({ ...message, sendingStatus: 'pending' }))}
       />
     );
     expect(
@@ -220,7 +217,7 @@ describe('OpenchannelOGMessage', () => {
   it('should render failed icon if status is failed', function() {
     const component = mount(
       <OpenchannelOGMessage
-        message={getMockMessage()}
+        message={getMockMessage((message) => ({ ...message, sendingStatus: 'failed' }))}
         status="failed"
       />
     );

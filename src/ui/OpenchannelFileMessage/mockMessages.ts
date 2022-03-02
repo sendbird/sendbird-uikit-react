@@ -71,3 +71,13 @@ export const dummyFileMessageAudio = {
   requestedMentionUserIds: [],
   errorCode: 0
 };
+
+type generatorType = (callback?: (message: Record<string, any>) => Record<string, any>) => Record<string, any>;
+
+export const getFileMessage: generatorType = (callback) => {
+  const message = { ...dummyFileMessageImage };
+  if (callback) {
+    return callback(message);
+  }
+  return message;
+};
