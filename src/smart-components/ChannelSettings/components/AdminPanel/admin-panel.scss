@@ -12,6 +12,7 @@
 
 .sendbird-more-members__popup-scroll {
   max-height: 420px;
+  overflow: scroll;
   .sendbird-user-list-item__operator {
     right: 72px;
   }
