@@ -4,6 +4,23 @@ exports[`MessageStatus should do a snapshot test of the MessageStatus DOM 1`] = 
 <div
   className="example-text sendbird-message-status"
 >
+  <div
+    className="sendbird-message-status__icon hide-icon sendbird-icon sendbird-icon-done sendbird-icon-color--sent"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    role="button"
+    style={
+      Object {
+        "height": "16px",
+        "minHeight": "16px",
+        "minWidth": "16px",
+        "width": "16px",
+      }
+    }
+    tabIndex="0"
+  >
+    <test-file-stub />
+  </div>
   <span
     className="sendbird-message-status__text sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
   >
@@ -15,11 +32,47 @@ exports[`MessageStatus should do a snapshot test of the MessageStatus DOM 1`] = 
 exports[`MessageStatus should do a snapshot test of the failed MessageStatus DOM when isResendable: false 1`] = `
 <div
   className="example-text sendbird-message-status"
-/>
+>
+  <div
+    className="sendbird-message-status__icon hide-icon sendbird-icon sendbird-icon-error sendbird-icon-color--error"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    role="button"
+    style={
+      Object {
+        "height": "16px",
+        "minHeight": "16px",
+        "minWidth": "16px",
+        "width": "16px",
+      }
+    }
+    tabIndex="0"
+  >
+    <test-file-stub />
+  </div>
+</div>
 `;
 
 exports[`MessageStatus should do a snapshot test of the failed MessageStatus DOM when isResendable: true 1`] = `
 <div
   className="example-text sendbird-message-status"
-/>
+>
+  <div
+    className="sendbird-message-status__icon hide-icon sendbird-icon sendbird-icon-error sendbird-icon-color--error"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    role="button"
+    style={
+      Object {
+        "height": "16px",
+        "minHeight": "16px",
+        "minWidth": "16px",
+        "width": "16px",
+      }
+    }
+    tabIndex="0"
+  >
+    <test-file-stub />
+  </div>
+</div>
 `;
