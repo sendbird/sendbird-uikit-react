@@ -1,0 +1,120 @@
+# Introduction
+
+### Overview
+
+Sendbird UIKit for React is a set of prebuilt UI components that allows you to easily craft an in-app chat with all
+the essential messaging features. Our development kit includes light and dark themes, text fonts, colors and more.
+You can customize these components to create an interactive messaging interface unique to your brand identity.
+
+Sendbird UIKit supports both open channels and group channels.
+Follow the guide below to start sending a message from scratch with React.
+> Note: This library isn't designed to work with other frameworks such as Vue or Angular.
+
+### Requirements
+
+The dependencies for UIKit for React are:
+
+* React 16.8.0 or higher
+* React DOM 16.8.0 or higher
+* Sendbird Chat SDK for JavaScript 3.1 or higher
+* css-vars-ponyfill 2.3.2
+* date-fns 2.16.1
+
+System Requirements:
+* nodejs 14 or higher
+* npm or yarn latest versions
+
+### Supported browsers
+
+| Browser | Supported versions |
+|---------|--------------------|
+| Chrome  | Modern Versions    |
+| Firefox | Modern Versions    |
+| Safari  | 11 or higher       |
+| Edge    | 13 or higher       |
+
+### Send first message
+
+##### Before you start
+Before installing Sendbird Chat SDK, you need to create a Sendbird application on the Sendbird Dashboard, which comprises everything required in a chat service including users, messages, and channels. You will need the App ID of your Sendbird application when initializing the Chat SDK.
+> Note: Each Sendbird application can be integrated with a single client app. Within the same application, users can communicate with each other across all platforms, whether they are on mobile devices or on the web.
+
+You can start building a modern messaging experience in your app by first installing Sendbird UIKit. This developer kit is an add-on feature to Sendbird Chat SDK so installing it will also install the core Chat SDK.
+
+##### Step 1
+
+Install UIKit
+You can install UIKit for React through
+npm: `npm install sendbird-uikit --save`
+
+Enter the following code on the command line with npm.
+The minimum requirements listed above must be installed on your system to use npm.
+
+When using yarn, enter the following command: `yarn add sendbird-uikit`
+
+Next, import UIKit components to your app.
+
+```
+import SendBirdProvider from "sendbird-uikit/SendbirdProvider";
+
+import "sendbird-uikit/dist/index.css";
+```
+
+##### Step 2
+
+Implement UIKit to your web app
+Once you're done installing Sendbird UIKit, you can now implement it to your web app by using the
+App component. The App component is a group of essential UI components needed to build a functioning chat interface.
+You can also use our common components to your web app if you wish to make the interface more tailored to your needs.
+
+Add the following pattern to use the App component:
+
+```
+import SendBirdApp from "sendbird-uikit/App";
+import "sendbird-uikit/dist/index.css";
+
+const App = () => {
+  return (
+    <div className="App">
+      <SendBirdApp
+        // Add the two lines below.
+        appId={YOUR_APP_ID};    // Specify your Sendbird application ID.
+        userId={USER_ID};    // Specify your user ID.
+      />
+    </div>
+  );
+};
+
+Specify the dimensions of your chat interface.
+
+.App {
+  Font-family: sans-serif;
+  Text-align: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+```
+
+##### Step 3
+
+Send your first message
+You can now run the app to send a message. First, create a group channel by clicking on the icon in the top-left corner. Then, you can select users you wish to invite as members to your channel.
+Once the channel has been created, enter your first message and send.
+
+You've successfully sent your first message with Sendbird.
+
+### Use UIKit with SSR frameworks
+
+You can use UIKit with SSR frameworks such as Gatsby or NextJS by importing it dynamically on the client side. These frameworks support the following plug-in and workflow:
+
+* [Loadable components](https://www.gatsbyjs.org/docs/using-client-side-only-packages/#workaround-3-load-client-side-dependent-components-with-loadable-components) of Gatsby
+* [Dynamic imports](https://nextjs.org/docs/advanced-features/dynamic-import#with-no-ssr) of NextJS
+You may refer to NextJS [sample](https://codesandbox.io/s/cocky-hawking-h3zbs?file=/components/Chat.jsx:97-157) for better understanding. You will need your own Sendbird application ID and user ID to use the sample.
+
+
+### Migration guide
+Todo
+
+### Change log (tentative location)
+Todo
