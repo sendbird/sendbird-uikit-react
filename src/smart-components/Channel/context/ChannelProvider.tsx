@@ -336,7 +336,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       // props
       channelUrl,
       useMessageGrouping,
-      useReaction,
+      useReaction: usingReaction,
       showSearchIcon,
       highlightedMessage,
       startingPoint,
