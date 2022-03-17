@@ -48,12 +48,16 @@ export default function MessageItemMenu({
   const containerRef = useRef(null);
 
   const showMenuItemCopy: boolean = isUserMessage(message as UserMessage);
-  const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(channel, message) && isByMe);
-  const showMenuItemResend: boolean = (isFailedMessage(channel, message) && message?.isResendable?.() && isByMe);
-  const showMenuItemDelete: boolean = !isPendingMessage(channel, message) && isByMe;
+  const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe);
+  const showMenuItemResend: boolean = (isFailedMessage(message) && message?.isResendable?.() && isByMe);
+  const showMenuItemDelete: boolean = !isPendingMessage(message) && isByMe;
+  /**
+   * TODO: Manage timing issue
+   * User delete pending message -> Sending message success
+   */
   const showMenuItemReply: boolean = (replyType === 'QUOTE_REPLY')
-    && !isFailedMessage(channel, message)
-    && !isPendingMessage(channel, message)
+    && !isFailedMessage(message)
+    && !isPendingMessage(message)
     && (channel?.isGroupChannel() && !(channel as GroupChannel)?.isBroadcast);
 
   if (!(showMenuItemCopy || showMenuItemReply || showMenuItemEdit || showMenuItemResend || showMenuItemDelete)) {
