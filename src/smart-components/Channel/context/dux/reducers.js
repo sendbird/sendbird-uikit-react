@@ -180,6 +180,7 @@ export default function reducer(state, action) {
         ...state,
         currentGroupChannel: action.payload,
         isInvalid: false,
+        unreadCount: 0,
       };
     }
     case actionTypes.SET_CHANNEL_INVALID: {
