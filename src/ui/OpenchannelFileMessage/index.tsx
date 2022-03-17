@@ -191,6 +191,7 @@ export default function OpenchannelFileMessage({
                   <Icon
                     className="sendbird-openchannel-file-message__right__tail__failed"
                     type={IconTypes.ERROR}
+                    fillColor={IconColors.ERROR}
                     width="16px"
                     height="16px"
                   />

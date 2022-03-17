@@ -427,6 +427,7 @@ export default function OpenchannelOGMessage({
                   <Icon
                     className="sendbird-openchannel-og-message__top__right__tail__failed"
                     type={IconTypes.ERROR}
+                    fillColor={IconColors.ERROR}
                     width="16px"
                     height="16px"
                   />
