@@ -17,6 +17,7 @@ function useResendMessageCallback({
       // Move the logic setting sendingStatus to pending into the reducer
       // eslint-disable-next-line no-param-reassign
       failedMessage.requestState = 'pending';
+      // eslint-disable-next-line no-param-reassign
       failedMessage.sendingStatus = 'pending';
       messagesDispatcher({
         type: messageActionTypes.RESEND_MESSAGEGE_START,
@@ -26,8 +27,8 @@ function useResendMessageCallback({
       // userMessage
       if (messageType === 'user') {
         currentGroupChannel
-        .resendUserMessage(failedMessage)
-        .then((message) => {
+          .resendUserMessage(failedMessage)
+          .then((message) => {
             logger.info('Channel: Resending message success!', message);
             messagesDispatcher({
               type: messageActionTypes.SEND_MESSAGEGE_SUCESS,
@@ -38,6 +39,7 @@ function useResendMessageCallback({
             logger.warning('Channel: Resending message failed!', e);
             // eslint-disable-next-line no-param-reassign
             failedMessage.requestState = 'failed';
+            // eslint-disable-next-line no-param-reassign
             failedMessage.sendingStatus = 'failed';
             messagesDispatcher({
               type: messageActionTypes.SEND_MESSAGEGE_FAILURE,
@@ -47,6 +49,7 @@ function useResendMessageCallback({
 
         // eslint-disable-next-line no-param-reassign
         failedMessage.requestState = 'pending';
+        // eslint-disable-next-line no-param-reassign
         failedMessage.sendingStatus = 'pending';
         messagesDispatcher({
           type: messageActionTypes.RESEND_MESSAGEGE_START,
@@ -69,6 +72,7 @@ function useResendMessageCallback({
             logger.warning('Channel: Resending file message failed!', e);
             // eslint-disable-next-line no-param-reassign
             failedMessage.requestState = 'failed';
+            // eslint-disable-next-line no-param-reassign
             failedMessage.sendingStatus = 'failed';
             messagesDispatcher({
               type: messageActionTypes.SEND_MESSAGEGE_FAILURE,
@@ -78,6 +82,7 @@ function useResendMessageCallback({
 
         // eslint-disable-next-line no-param-reassign
         failedMessage.requestState = 'pending';
+        // eslint-disable-next-line no-param-reassign
         failedMessage.sendingStatus = 'pending';
         messagesDispatcher({
           type: messageActionTypes.RESEND_MESSAGEGE_START,

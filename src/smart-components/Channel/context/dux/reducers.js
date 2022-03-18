@@ -203,6 +203,8 @@ export default function reducer(state, action) {
     }
     case actionTypes.ON_MESSAGE_RECEIVED: {
       const { channel, message, scrollToEnd } = action.payload;
+      const { members } = channel;
+      const { sender } = message;
       let unreadCount = 0;
       const { currentGroupChannel = {}, unreadSince } = state;
       const currentGroupChannelUrl = currentGroupChannel.url;
@@ -231,9 +233,24 @@ export default function reducer(state, action) {
           allMessages: passUnsuccessfullMessages(state.allMessages, message),
         };
       }
+
+      // Update members when sender profileUrl, nickname, friendName has been changed
+      const senderMember = members?.find((m) => (m?.userId === sender?.userId));
+      if ((senderMember?.profileUrl !== sender?.profileUrl)
+      || (senderMember?.friendName !== sender?.friendName)
+      || (senderMember?.nickname !== sender?.nickname)) {
+        channel.members = members.map((member) => {
+          if (member.userId === sender.userId) {
+            return sender;
+          }
+          return member;
+        });
+      }
+
       return {
         ...state,
         unreadCount,
+        currentGroupChannel: channel,
         unreadSince: (unreadCount === 1)
           ? format(new Date(), 'p MMM dd')
           : unreadSince,

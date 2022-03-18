@@ -49,7 +49,6 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
       clientHeight,
       scrollHeight,
     } = element;
-    console.log(`scrollTop: ${scrollTop} | clientHeight: ${clientHeight} | scrollHeight: ${scrollHeight}`)
 
     if (scrollTop === 0) {
       if (!hasMore) {
@@ -73,10 +72,8 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
     if (isAboutSame(clientHeight + scrollTop, scrollHeight, 1)) {
       // if (clientHeight + scrollTop === scrollHeight) {
         const nodes = scrollRef.current.querySelectorAll(SCROLL_REF_CLASS_NAME);
-        console.log('훈하', nodes)
         const last = nodes && nodes[nodes.length - 1];
       onScrollDownCallback(([messages]) => {
-        console.log('메하')
         if (messages) {
           // https://github.com/scabbiaza/react-scroll-position-on-updating-dom
           try {
