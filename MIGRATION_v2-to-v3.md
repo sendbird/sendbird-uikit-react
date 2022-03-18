@@ -25,14 +25,45 @@ or `import Channel from "@sendbird/uikit-react/Channel"`
 
 ### Changes
   * Removed renderCustomMessage, renderChatItem. Use renderMessage instead
-  ```example
+  Current channel can be obtained from `useChannel()`
+  Message related actions should be implemented using sendbirdSelectors
+  ```jsx
+    <Channel renderMessage={MyAdminMessageComponent} />
+    const MyAdminMessageComponent = ({message, chainTop, chainBottom }) => {
+      const {
+        currentGroupChannel,
+        scrollToMessage,
+      } = useChannel();
+      const globalStore = useSendbirdStateContext();
+      // use sendbirdSelectors and globalStore to implement onDeleteMessage, onUpdateMessage, onResendMessage
+      const updateMessage = sendBirdSelectors.getDeleteMessage(globalStore);
+      if (message.messageType === 'admin') {
+        return (
+          ... implement your component
+        );
+      }
+      return null;
+    }
   ```
   * Changed signature of renderMessageInput to `() => React.ReactNode`
-  ```example
+    Current channel can be obtained from `useChannel()`
+    Message related actions should be implemented using sendbirdSelectors
+  ```jsx
+    <Channel renderMessageInput={MyMessageInput} />
+    const MyMessageInput = ({message, chainTop, chainBottom }) => {
+      const {
+        currentGroupChannel,
+      } = useChannel();
+      const globalStore = useSendbirdStateContext();
+      // use sendbirdSelectors and globalStore to implement onDeleteMessage, onUpdateMessage, onResendMessage
+      const sendMessage = sendBirdSelectors.getSendUserMessage(globalStore);
+      return (
+        ...
+      );
+    }
   ```
   * Changed signature of renderChatHeader to `?: () => React.ReactNode`
-  ```example
-  ```
+    Similar to before, use `useChannel` to access current channel
 ### Added props
   * renderPlaceholderLoader?: () => React.ReactNode;
   * renderPlaceholderInvalid?: () => React.ReactNode;
@@ -50,7 +81,16 @@ or `import ChannelSettings from "@sendbird/uikit-react/ChannelSettings"`
 
 ### Changes
   * renderChannelProfile new signature `() => React.ReactNode`
-  ```example
+  Use `useChannelSettings` to access current channel
+
+  ```jsx
+  <ChannelSettings
+    renderChannelProfile={MyChannelProfile}
+  />
+  const MyChannelProfile = () => {
+    const { channel } = useChannelSettings();
+    return (...);
+  }
   ```
 ### Added props
   * renderPlaceholderError?: () => React.ReactNode;
@@ -65,15 +105,19 @@ or `import OpenChannel from "@sendbird/uikit-react/OpenChannel"`
 ### Changes
   * fetchingParticipants false by default
   * renderCustomMessage is now renderMessage
-  ```example
+  renderMessage is similar to renderMessage in <Channel />
+  ```jsx
+    // use useOpenChannel to access current channel
+    // use sendbirdSelectors for message-actions
+    const {
+      currentOpenChannel,
+    } = useOpenChannel();
+
   ```
   * experimentalMessageLimit renamed to messageLimit
-  * renderChannelTitle signature changed ->
-  ```example
-  ```
-  * renderMessageInput signature changed ->
-  ```example
-  ```
+  * renderChannelTitle signature changed so that you will not recive channel from props, use `useOpenChannel` to access it
+  * renderMessageInput signature changed same as in <Channel /> component,
+  use `useOpenChannel` to access current channel and use `sendbirdSelectors` for message actions
 ### Added props
   * renderMessage?: (props: RenderMessageProps) => React.ReactNode;
   * renderHeader?: () => React.ReactNode;
