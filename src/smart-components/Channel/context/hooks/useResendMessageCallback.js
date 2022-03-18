@@ -14,8 +14,11 @@ function useResendMessageCallback({
     if (failedMessage && typeof failedMessage.isResendable === 'function'
       && failedMessage.isResendable()
     ) {
+      // Move the logic setting sendingStatus to pending into the reducer
       // eslint-disable-next-line no-param-reassign
       failedMessage.requestState = 'pending';
+      // eslint-disable-next-line no-param-reassign
+      failedMessage.sendingStatus = 'pending';
       messagesDispatcher({
         type: messageActionTypes.RESEND_MESSAGEGE_START,
         payload: failedMessage,
@@ -26,16 +29,18 @@ function useResendMessageCallback({
         currentGroupChannel
           .resendUserMessage(failedMessage)
           .then((message) => {
-            logger.info('Channel: Resending message success!', { message });
+            logger.info('Channel: Resending message success!', message);
             messagesDispatcher({
               type: messageActionTypes.SEND_MESSAGEGE_SUCESS,
               payload: message,
             });
           })
           .catch((e) => {
-            logger.warning('Channel: Resending message failed!', { e });
+            logger.warning('Channel: Resending message failed!', e);
             // eslint-disable-next-line no-param-reassign
             failedMessage.requestState = 'failed';
+            // eslint-disable-next-line no-param-reassign
+            failedMessage.sendingStatus = 'failed';
             messagesDispatcher({
               type: messageActionTypes.SEND_MESSAGEGE_FAILURE,
               payload: failedMessage,
@@ -44,6 +49,8 @@ function useResendMessageCallback({
 
         // eslint-disable-next-line no-param-reassign
         failedMessage.requestState = 'pending';
+        // eslint-disable-next-line no-param-reassign
+        failedMessage.sendingStatus = 'pending';
         messagesDispatcher({
           type: messageActionTypes.RESEND_MESSAGEGE_START,
           payload: failedMessage,
@@ -55,16 +62,18 @@ function useResendMessageCallback({
         currentGroupChannel
           .resendFileMessage(failedMessage, file)
           .then((message) => {
-            logger.info('Channel: Resending file message success!', { message });
+            logger.info('Channel: Resending file message success!', message);
             messagesDispatcher({
               type: messageActionTypes.SEND_MESSAGEGE_SUCESS,
               payload: message,
             });
           })
           .catch((e) => {
-            logger.warning('Channel: Resending file message failed!', { e });
+            logger.warning('Channel: Resending file message failed!', e);
             // eslint-disable-next-line no-param-reassign
             failedMessage.requestState = 'failed';
+            // eslint-disable-next-line no-param-reassign
+            failedMessage.sendingStatus = 'failed';
             messagesDispatcher({
               type: messageActionTypes.SEND_MESSAGEGE_FAILURE,
               payload: failedMessage,
@@ -73,6 +82,8 @@ function useResendMessageCallback({
 
         // eslint-disable-next-line no-param-reassign
         failedMessage.requestState = 'pending';
+        // eslint-disable-next-line no-param-reassign
+        failedMessage.sendingStatus = 'pending';
         messagesDispatcher({
           type: messageActionTypes.RESEND_MESSAGEGE_START,
           payload: failedMessage,

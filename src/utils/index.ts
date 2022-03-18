@@ -1,5 +1,5 @@
 import format from 'date-fns/format';
-import { AdminMessage, Emoji, EmojiCategory, EmojiContainer, FileMessage, GroupChannel, GroupChannelListQuery, Member, MessageListParams, OpenChannel, Reaction, SendBirdInstance, User, UserMessage } from "sendbird";
+import SendBird, { AdminMessage, Emoji, EmojiCategory, EmojiContainer, FileMessage, GroupChannel, GroupChannelListQuery, Member, MessageListParams, OpenChannel, Reaction, SendBirdInstance, User, UserMessage } from "sendbird";
 import { EveryMessage } from '../types';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
@@ -133,11 +133,7 @@ export const getOutgoingMessageState = (channel: GroupChannel | OpenChannel, mes
   if (message.sendingStatus === 'succeeded') return OutgoingMessageStates.SENT;
   return OutgoingMessageStates.NONE;
 };
-export const isSentMessage = (channel: GroupChannel | OpenChannel, message: UserMessage | FileMessage): boolean => (
-  getOutgoingMessageState(channel, message) === OutgoingMessageStates.SENT
-  || getOutgoingMessageState(channel, message) === OutgoingMessageStates.DELIVERED
-  || getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
-);
+export const isSentMessage = (message: UserMessage | FileMessage): boolean => (message.sendingStatus === 'succeeded');
 export const isDeliveredMessage = (channel: GroupChannel, message: UserMessage | FileMessage): boolean => (
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.DELIVERED
   || getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
@@ -146,12 +142,8 @@ export const isReadMessage = (channel: GroupChannel, message: UserMessage | File
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
 );
 // TODO: Remove channel from the params, it seems unnecessary
-export const isFailedMessage = (channel: GroupChannel | OpenChannel, message: UserMessage | FileMessage): boolean => (
-  getOutgoingMessageState(channel, message) === OutgoingMessageStates.FAILED
-);
-export const isPendingMessage = (channel: GroupChannel | OpenChannel, message: UserMessage | FileMessage): boolean => (
-  getOutgoingMessageState(channel, message) === OutgoingMessageStates.PENDING
-);
+export const isFailedMessage = (message: UserMessage | FileMessage): boolean => (message.sendingStatus === 'failed');
+export const isPendingMessage = (message: UserMessage | FileMessage): boolean => (message.sendingStatus === 'pending');
 export const isSentStatus = (state: string): boolean => (
   state === OutgoingMessageStates.SENT
   || state === OutgoingMessageStates.DELIVERED
@@ -184,8 +176,8 @@ export const isEnabledOGMessage = (message: UserMessage): boolean => (
 );
 
 export const getUIKitMessageTypes = (): UIKitMessageTypes => ({ ...UIKitMessageTypes });
-export const getUIKitMessageType = (message: CoreMessageType): string => {
-  if (isAdminMessage(message as AdminMessage)) return UIKitMessageTypes.ADMIN;
+export const getUIKitMessageType = (message: SendBird.UserMessage | SendBird.FileMessage | SendBird.AdminMessage): string => {
+  if (isAdminMessage(message as SendBird.AdminMessage)) return UIKitMessageTypes.ADMIN;
   if (isUserMessage(message as UserMessage)) {
     return isOGMessage(message as UserMessage) ? UIKitMessageTypes.OG : UIKitMessageTypes.TEXT;
   }

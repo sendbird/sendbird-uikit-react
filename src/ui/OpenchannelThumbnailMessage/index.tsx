@@ -295,6 +295,7 @@ export default function OpenchannelThumbnailMessage({
                   <Icon
                     className="sendbird-openchannel-thumbnail-message__right__tail__failed"
                     type={IconTypes.ERROR}
+                    fillColor={IconColors.ERROR}
                     width="16px"
                     height="16px"
                   />

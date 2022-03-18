@@ -18,13 +18,13 @@ import MessageContent from '../../../../ui/MessageContent';
 import FileViewer from '../FileViewer';
 import RemoveMessageModal from '../RemoveMessageModal';
 import { EveryMessage, RenderMessageProps } from '../../../../types';
-import SendBird from 'sendbird';
 
 type MessageUIProps = {
   message: EveryMessage;
   hasSeparator?: boolean;
   chainTop?: boolean;
   chainBottom?: boolean;
+  handleScroll: () => void;
   // for extending
   renderMessage?: (props: RenderMessageProps) => React.ReactNode;
   renderCustomSeperator?: () => React.ReactNode;
@@ -38,6 +38,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
     hasSeparator,
     chainTop,
     chainBottom,
+    handleScroll,
     renderCustomSeperator,
     renderEditInput,
     renderMessage,
@@ -61,7 +62,6 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
     nicknamesMap,
     quoteMessage,
     setQuoteMessage,
-    handleScroll,
     resendMessage,
   } = useChannel();
 
@@ -110,15 +110,15 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
       setIsAnimated(false);
     }
   }, [animatedMessageId, useMessageScrollRef.current, message.messageId]);
-  const RenderedMessage = useMemo(() => {
+  const renderedMessage = useMemo(() => {
     return renderMessage?.({
       message,
       chainTop,
       chainBottom,
     });
-  }, [message, message?.message, renderMessage]);
+  }, [message, renderMessage]);
 
-  if (RenderedMessage) {
+  if (renderedMessage) {
     return (
       <div
         ref={useMessageScrollRef}
@@ -138,12 +138,12 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
             </DateSeparator>
           )
         }
-        <RenderedMessage />
+        {renderedMessage}
       </div>
     );
   }
 
-  if (showEdit) {
+  if (showEdit && message.isUserMessage()) {
     return renderEditInput?.() || (
       <MessageInput
         isEdit
@@ -152,7 +152,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
         name={message.messageId}
         onSendMessage={updateMessage}
         onCancelEdit={() => { setShowEdit(false); }}
-        value={message?.message}
+        value={(message as SendbirdUIKit.ClientUserMessage)?.message}
       />
     );
   }
@@ -215,7 +215,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
       {
         showFileViewer && (
           <FileViewer
-            message={message as SendBird.FileMessage}
+            message={message as SendbirdUIKit.ClientFileMessage}
             onCancel={() => setShowFileViewer(false)}
           />
         )

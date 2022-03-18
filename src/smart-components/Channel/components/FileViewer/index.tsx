@@ -10,7 +10,6 @@ import { MODAL_ROOT } from '../../../../hooks/useModal/ModalRoot';
 import { isImage, isVideo, isSupportedFileView } from '../../../../utils';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannel } from '../../context/ChannelProvider';
-import { ClientFileMessage } from '../../../../types';
 
 type FileViewerUIProps = {
   profileUrl: string;
@@ -136,7 +135,7 @@ export const FileViewerComponent: React.FC<FileViewerUIProps> = ({
 
 type FileViewerProps = {
   onCancel:() => void;
-  message: ClientFileMessage;
+  message: SendbirdUIKit.ClientFileMessage;
 };
 
 const FileViewer: React.FC<FileViewerProps> = ({ onCancel, message }: FileViewerProps) => {

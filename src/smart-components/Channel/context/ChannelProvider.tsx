@@ -17,6 +17,7 @@ import * as utils from './utils';
 
 import messagesInitialState from './dux/initialState';
 import messagesReducer from './dux/reducers';
+import * as messageActionTypes from './dux/actionTypes';
 
 import useHandleChannelEvents from './hooks/useHandleChannelEvents';
 import useGetChannel from './hooks/useGetChannel';
@@ -93,6 +94,7 @@ interface MessageStoreInterface {
 
 interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInterface {
   scrollToMessage?(createdAt: number, messageId: number): void;
+  messageActionTypes: Record<string ,string>;
   messagesDispatcher: CustomUseReducerDispatcher;
   quoteMessage: CoreMessageType;
   setQuoteMessage: React.Dispatch<React.SetStateAction<CoreMessageType>>;
@@ -336,7 +338,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       // props
       channelUrl,
       useMessageGrouping,
-      useReaction,
+      useReaction: usingReaction,
       showSearchIcon,
       highlightedMessage,
       startingPoint,
@@ -357,8 +359,8 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       isInvalid,
       currentGroupChannel,
       hasMore,
-      lastMessageTimeStamp,
       hasMoreToBottom,
+      lastMessageTimeStamp,
       latestFetchedMessageTimeStamp,
       emojiContainer,
       readStatus,
@@ -374,6 +376,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       sendMessage,
       sendFileMessage,
       intialTimeStamp,
+      messageActionTypes,
       messagesDispatcher,
       setIntialTimeStamp,
       setAnimatedMessageId,

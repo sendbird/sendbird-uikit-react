@@ -1,5 +1,5 @@
 import React, { ReactElement, useRef } from 'react';
-import { FileMessage, UserMessage, Emoji, Reaction, EmojiContainer, GroupChannel, OpenChannel } from 'sendbird';
+import { FileMessage, UserMessage, Emoji, Reaction, EmojiContainer } from 'sendbird';
 import './index.scss';
 
 import ContextMenu, { EmojiListItems } from '../ContextMenu';
@@ -12,7 +12,6 @@ import { getClassName, getEmojiListAll, isPendingMessage, isFailedMessage } from
 interface Props {
   className?: string | Array<string>;
   message: UserMessage | FileMessage;
-  channel: GroupChannel | OpenChannel;
   userId: string;
   spaceFromTrigger?: Record<string, unknown>;
   emojiContainer?: EmojiContainer;
@@ -23,7 +22,6 @@ interface Props {
 export default function MessageItemReactionMenu({
   className,
   message,
-  channel,
   userId,
   spaceFromTrigger = {},
   emojiContainer,
@@ -33,7 +31,7 @@ export default function MessageItemReactionMenu({
   const triggerRef = useRef(null);
   const containerRef = useRef(null);
 
-  if(isPendingMessage(channel, message) || isFailedMessage(channel, message)) {
+  if(isPendingMessage(message) || isFailedMessage(message)) {
     return null;
   }
 

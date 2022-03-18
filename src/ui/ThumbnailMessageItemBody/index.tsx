@@ -4,7 +4,7 @@ import './index.scss';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
 import ImageRenderer from '../ImageRenderer';
-import { getClassName, isGifMessage, isVideoMessage } from '../../utils';
+import { getClassName, isGifMessage, isSentMessage, isVideoMessage } from '../../utils';
 
 interface Props {
   className?: string | Array<string>;
@@ -34,7 +34,11 @@ export default function ThumbnailMessageItemBody({
         mouseHover ? 'mouse-hover' : '',
         message?.reactions?.length > 0 ? 'reactions' : '',
       ])}
-      onClick={() => showFileViewer(true)}
+      onClick={() => {
+        if (isSentMessage(message)) {
+          showFileViewer(true);
+        }
+      }}
     >
       <ImageRenderer
         className="sendbird-thumbnail-message-item-body__thumbnail"

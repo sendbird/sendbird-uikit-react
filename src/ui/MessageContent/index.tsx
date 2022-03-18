@@ -107,7 +107,8 @@ export default function MessageContent({
             menuTrigger={(toggleDropdown: () => void): ReactElement => (
               <Avatar
                 className="sendbird-message-content__left__avatar"
-                src={message?.sender?.profileUrl || ''}
+                src={channel?.members?.find((member) => member?.userId === message?.sender?.userId)?.profileUrl || message?.sender?.profileUrl || ''}
+                // TODO: Divide getting profileUrl logic to utils
                 ref={avatarRef}
                 width="28px"
                 height="28px"
@@ -153,7 +154,6 @@ export default function MessageContent({
               <MessageItemReactionMenu
                 className="sendbird-message-content-menu__reaction-menu"
                 message={message as UserMessage | FileMessage}
-                channel={channel}
                 userId={userId}
                 spaceFromTrigger={{}}
                 emojiContainer={emojiContainer}
@@ -172,7 +172,11 @@ export default function MessageContent({
             type={LabelTypography.CAPTION_2}
             color={LabelColors.ONBACKGROUND_2}
           >
-            {getSenderName(message)}
+            {
+              channel?.members?.find((member) => member?.userId === message?.sender?.userId)?.nickname
+              || getSenderName(message)
+              // TODO: Divide getting profileUrl logic to utils
+            }
           </Label>
         )}
         {/* quote message */}
@@ -283,7 +287,6 @@ export default function MessageContent({
               <MessageItemReactionMenu
                 className="sendbird-message-content-menu__reaction-menu"
                 message={message as UserMessage | FileMessage}
-                channel={channel}
                 userId={userId}
                 spaceFromTrigger={{}}
                 emojiContainer={emojiContainer}
