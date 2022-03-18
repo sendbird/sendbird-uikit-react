@@ -1,6 +1,6 @@
 import './message-list.scss';
 
-import React from 'react';
+import React, { useState } from 'react';
 import isSameDay from 'date-fns/isSameDay';
 
 import { useChannel } from '../../context/ChannelProvider';
@@ -9,12 +9,15 @@ import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import { compareMessagesForGrouping } from '../../context/utils';
 import Message from '../Message';
 import { RenderMessageProps } from '../../../../types';
+import { isAboutSame } from '../../context/utils';
 
 export type MessageListProps = {
   renderMessage?: (props: RenderMessageProps) => React.ReactNode;
   renderPlaceholderEmpty?: () => React.ReactNode;
   renderCustomSeperator?: () => React.ReactNode;
 };
+
+const SCROLL_REF_CLASS_NAME = 'sendbird-msg--scroll-ref';
 
 const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
   const {
@@ -24,13 +27,85 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
   } = props;
   const {
     allMessages,
+    hasMore,
     hasMoreToBottom,
     setIntialTimeStamp,
     setAnimatedMessageId,
     setHighLightedMessageId,
     useMessageGrouping,
     scrollRef,
+    onScrollCallback,
+    onScrollDownCallback,
+    messagesDispatcher,
+    messageActionTypes,
+    currentGroupChannel,
   } = useChannel();
+  const [scrollBottom, setScrollBottom] = useState(0);
+
+  const onScroll = (e) => {
+    const element = e.target;
+    const {
+      scrollTop,
+      clientHeight,
+      scrollHeight,
+    } = element;
+    console.log(`scrollTop: ${scrollTop} | clientHeight: ${clientHeight} | scrollHeight: ${scrollHeight}`)
+
+    if (scrollTop === 0) {
+      if (!hasMore) {
+        return;
+      }
+      const nodes = scrollRef.current.querySelectorAll(SCROLL_REF_CLASS_NAME);
+      const first = nodes && nodes[0];
+      onScrollCallback(([messages]) => {
+        if (messages) {
+          // https://github.com/scabbiaza/react-scroll-position-on-updating-dom
+          // Set block to nearest to prevent unexpected scrolling from outer components
+          try {
+            first.scrollIntoView({ block: 'nearest' });
+          } catch (error) {
+            //
+          }
+        }
+      });
+    }
+
+    if (isAboutSame(clientHeight + scrollTop, scrollHeight, 1)) {
+      // if (clientHeight + scrollTop === scrollHeight) {
+        const nodes = scrollRef.current.querySelectorAll(SCROLL_REF_CLASS_NAME);
+        console.log('훈하', nodes)
+        const last = nodes && nodes[nodes.length - 1];
+      onScrollDownCallback(([messages]) => {
+        console.log('메하')
+        if (messages) {
+          // https://github.com/scabbiaza/react-scroll-position-on-updating-dom
+          try {
+            last.scrollIntoView({ block: 'nearest' });
+          } catch (error) {
+            //
+          }
+        }
+      });
+    }
+
+    // do this later
+    setTimeout(() => {
+      // mark as read if scroll is at end
+      if (clientHeight + scrollTop === scrollHeight) {
+        messagesDispatcher({
+          type: messageActionTypes.MARK_AS_READ,
+          payload: null,
+        });
+        currentGroupChannel.markAsRead();
+      }
+
+      // save the lastest scroll bottom value
+      if (scrollRef?.current) {
+        const current = scrollRef?.current;
+        setScrollBottom(current.scrollHeight - current.scrollTop - current.offsetHeight)
+      }
+    }, 500);
+  };
 
   const onClickScrollBot = () => {
     setIntialTimeStamp?.(null);
@@ -58,7 +133,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
           <div
             className="sendbird-conversation__messages-padding"
             ref={scrollRef}
-            // onScroll={onScroll}
+            onScroll={onScroll}
           >
             {
               allMessages.map(
@@ -76,14 +151,13 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
                   ));
 
                   const handleScroll = () => {
-                    // const current = scrollRef?.current;
-                    // if (current) {
-                    //   const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
-                    //   // const { scrollBottom = 0 } = this.state;
-                    //   if (scrollBottom < bottom) {
-                    //     current.scrollTop += bottom - scrollBottom;
-                    //   }
-                    // }
+                    const current = scrollRef?.current;
+                    if (current) {
+                      const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
+                      if (scrollBottom < bottom) {
+                        current.scrollTop += bottom - scrollBottom;
+                      }
+                    }
                   }
 
                   return (

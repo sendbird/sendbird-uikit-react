@@ -263,4 +263,6 @@ export const pxToNumber = (px) => {
   return null;
 };
 
+export const isAboutSame = (a, b, px) => (Math.abs(a - b) <= px);
+
 export default getParsedStatus;
