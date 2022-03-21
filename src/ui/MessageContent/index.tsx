@@ -32,7 +32,6 @@ import {
   isTextMessage,
   isOGMessage,
   isThumbnailMessage,
-  getOutgoingMessageState,
   getSenderName,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';

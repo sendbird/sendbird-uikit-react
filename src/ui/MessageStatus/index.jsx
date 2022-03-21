@@ -39,9 +39,9 @@ export default function MessageStatus({
     [MessageStatusTypes.FAILED]: IconColors.ERROR,
   };
 
-  const messageStatus = useMemo(() => {
-    return getOutgoingMessageState(channel, message);
-  }, [channel.getUnreadMemberCount(message), channel.getUndeliveredMemberCount(message)]);
+  const messageStatus = useMemo(() => (
+    getOutgoingMessageState(channel, message)
+  ), [channel?.getUnreadMemberCount?.(message), channel?.getUndeliveredMemberCount?.(message)]);
 
   return (
     <div
@@ -107,13 +107,13 @@ MessageStatus.propTypes = {
     isSuper: PropTypes.bool,
     isBroadcast: PropTypes.bool,
     isPublic: PropTypes.bool,
+    getUnreadMemberCount: PropTypes.func,
+    getUndeliveredMemberCount: PropTypes.func,
   }),
-  status: PropTypes.string,
 };
 
 MessageStatus.defaultProps = {
   className: '',
   message: null,
   channel: null,
-  status: '',
 };
