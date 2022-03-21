@@ -26,7 +26,6 @@ import {
   isTextMessage,
   isOGMessage,
   isThumbnailMessage,
-  getOutgoingMessageState,
   getSenderName,
   getMessageCreatedAt,
   CoreMessageType,
@@ -203,7 +202,6 @@ export default function MessageContent({
                 <MessageStatus
                   message={message}
                   channel={channel}
-                  status={getOutgoingMessageState(channel, message)}
                 />
               </div>
             </div>

@@ -13,7 +13,7 @@ jest.mock('date-fns/format', () => () => ('mock-date'));
 describe('MessageStatus', () => {
   it('should contain className', function () {
     const text = "example-text";
-    const component = shallow(<MessageStatus className={text} />);
+    const component = shallow(<MessageStatus className={text} message={dummyMessage} />);
 
     expect(
       component.find(".sendbird-message-status").hasClass(text)
@@ -33,10 +33,11 @@ describe('MessageStatus', () => {
     const text = "example-text";
     const failedMsg = {
       ...dummyMessage,
+      sendingStatus: 'failed',
       isResendable: () => { return true; },
     };
     const component = renderer.create(
-      <MessageStatus className={text} status={MessageStatusTypes.FAILED} message={failedMsg} />,
+      <MessageStatus className={text} message={failedMsg} />,
     );
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
@@ -46,9 +47,10 @@ describe('MessageStatus', () => {
     const text = "example-text";
     const failedMsg = {
       ...dummyMessage,
+      sendingStatus: 'failed',
     };
     const component = renderer.create(
-      <MessageStatus className={text} status={MessageStatusTypes.FAILED} message={failedMsg} />,
+      <MessageStatus className={text} message={failedMsg} />,
     );
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
