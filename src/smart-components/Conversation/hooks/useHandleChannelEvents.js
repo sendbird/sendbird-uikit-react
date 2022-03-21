@@ -63,6 +63,26 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
         }
       };
 
+      ChannelHandler.onReadReceiptUpdated = (channel) => {
+        if (compareIds(currentGroupChannel.url, channel.url)) {
+          logger.info('Channel | useHandleChannelEvents: onReadReceiptUpdated', channel);
+          messagesDispatcher({
+            type: messageActions.SET_CURRENT_CHANNEL,
+            payload: channel,
+          });
+        }
+      };
+
+      ChannelHandler.onDeliveryReceiptUpdated = (channel) => {
+        if (compareIds(currentGroupChannel.url, channel.url)) {
+          logger.info('Channel | useHandleChannelEvents: onDeliveryReceiptUpdated', channel);
+          messagesDispatcher({
+            type: messageActions.SET_CURRENT_CHANNEL,
+            payload: channel,
+          });
+        }
+      };
+
       ChannelHandler.onMessageUpdated = (channel, message) => {
         logger.info('Channel | useHandleChannelEvents: onMessageUpdated', message);
         messagesDispatcher({
