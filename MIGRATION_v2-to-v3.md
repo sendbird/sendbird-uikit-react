@@ -28,19 +28,25 @@ or `import Channel from "@sendbird/uikit-react/Channel"`
   Current channel can be obtained from `useChannel()`
   Message related actions should be implemented using sendbirdSelectors
   ```jsx
-    <Channel renderMessage={MyAdminMessageComponent} />
-    const MyAdminMessageComponent = ({message, chainTop, chainBottom }) => {
+    <Channel renderMessage={MyFileMessageComponent} />
+    const MyFileMessageComponent = ({ message, chainTop, chainBottom }) => {
       const {
         currentGroupChannel,
         scrollToMessage,
       } = useChannel();
       const globalStore = useSendbirdStateContext();
       // use sendbirdSelectors and globalStore to implement onDeleteMessage, onUpdateMessage, onResendMessage
-      const updateMessage = sendBirdSelectors.getDeleteMessage(globalStore);
-      if (message.messageType === 'admin') {
+      const deleteFileMessage = sendBirdSelectors.getDeleteMessage(globalStore);
+      if (message.messageType === 'file') {
         return (
-          ... implement your component
-        );
+          <div className="custom-file-message">
+            <button
+              className="cusotmo-file-message__delete-button"
+              onClick={deleteFileMessage(currentGroupChannel, message)}
+            />
+            ... implement your component
+          </div>
+        )
       }
       return null;
     }
@@ -55,7 +61,7 @@ or `import Channel from "@sendbird/uikit-react/Channel"`
         currentGroupChannel,
       } = useChannel();
       const globalStore = useSendbirdStateContext();
-      // use sendbirdSelectors and globalStore to implement onDeleteMessage, onUpdateMessage, onResendMessage
+      // use sendbirdSelectors and globalStore to implement getSendUserMessage, getSendFileMessage
       const sendMessage = sendBirdSelectors.getSendUserMessage(globalStore);
       return (
         ...
@@ -132,7 +138,7 @@ Can be imported as `import { OpenChannelSettings } from "@sendbird/uikit-react"`
 or `import OpenChannelSettings from "@sendbird/uikit-react/OpenChannelSettings"`
 
 ### Changes
-  * Removed renderChannelProfile use renderOperatorUI or renderParticipantList instead
+  * Removed renderChannelProfile, use renderOperatorUI or renderParticipantList instead
 ### Added props
   * renderOperatorUI?: () => React.ReactNode;
   * renderParticipantList?: () => React.ReactNode;
