@@ -1,5 +1,5 @@
 import React from 'react';
-import MessageStatus, { MessageStatusTypes } from '../index.jsx';
+import MessageStatus, { MessageStatusTypes } from '../index';
 import { generateNormalMessage } from '../messageDummyData.mock';
 
 export default { title: 'UI Components/MessageStatus' };

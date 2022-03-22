@@ -1,24 +1,34 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
+import React, { useMemo } from 'react';
 import './index.scss';
+
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import Loader from '../Loader';
 
 import {
   getMessageCreatedAt,
+  getOutgoingMessageState,
   getOutgoingMessageStates,
   isSentStatus,
 } from '../../utils';
+import { FileMessage, GroupChannel, UserMessage } from 'sendbird';
 
 export const MessageStatusTypes = getOutgoingMessageStates();
+
+interface MessageStatusProps {
+  className?: string;
+  message: UserMessage | FileMessage;
+  channel: GroupChannel;
+}
+
 export default function MessageStatus({
   className,
   message,
   channel,
-  status,
-}) {
+}: MessageStatusProps): React.ReactElement {
+  const status = useMemo(() => (
+    getOutgoingMessageState(channel, message)
+  ), [channel?.getUnreadMemberCount?.(message), channel?.getUndeliveredMemberCount?.(message)]);
   const showMessageStatusIcon = channel?.isGroupChannel()
     && !channel?.isSuper
     && !channel?.isPublic
@@ -77,34 +87,3 @@ export default function MessageStatus({
     </div>
   );
 }
-
-MessageStatus.propTypes = {
-  className: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string),
-  ]),
-  message: PropTypes.shape({
-    createdAt: PropTypes.number,
-    sender: PropTypes.shape({
-      friendName: PropTypes.string,
-      nickname: PropTypes.string,
-      userId: PropTypes.string,
-      profileUrl: PropTypes.string,
-    }),
-    sendingStatus: PropTypes.string,
-  }),
-  channel: PropTypes.shape({
-    isGroupChannel: PropTypes.func,
-    isSuper: PropTypes.bool,
-    isBroadcast: PropTypes.bool,
-    isPublic: PropTypes.bool,
-  }),
-  status: PropTypes.string,
-};
-
-MessageStatus.defaultProps = {
-  className: '',
-  message: null,
-  channel: null,
-  status: '',
-};
