@@ -70,7 +70,11 @@ function useScrollCallback({
         cb([null, error]);
       })
       .finally(() => {
-        currentGroupChannel.markAsRead();
+        try {
+          currentGroupChannel.markAsRead();
+        } catch {
+          //
+        }
       });
   }, [currentGroupChannel, lastMessageTimeStamp, replyType]);
 }

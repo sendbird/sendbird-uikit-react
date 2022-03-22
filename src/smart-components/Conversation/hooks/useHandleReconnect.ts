@@ -90,7 +90,11 @@ function useHandleReconnect(
                 logger.error('Channel: Fetching messages failed', error);
               })
               .finally(() => {
-                currentGroupChannel.markAsRead?.();
+                try {
+                  currentGroupChannel.markAsRead?.();
+                } catch {
+                  //
+                }
               });
           });
       }

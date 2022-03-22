@@ -119,7 +119,11 @@ function useInitialMessagesFetch({
             if (!intialTimeStamp) {
               setTimeout(() => utils.scrollIntoLast());
             }
-            currentGroupChannel.markAsRead();
+            try {
+              currentGroupChannel.markAsRead();
+            } catch {
+              //
+            }
           });
       } else {
         currentGroupChannel.getMessagesByTimestamp(
@@ -160,7 +164,11 @@ function useInitialMessagesFetch({
             if (!intialTimeStamp) {
               setTimeout(() => utils.scrollIntoLast());
             }
-            currentGroupChannel.markAsRead();
+            try {
+              currentGroupChannel.markAsRead();
+            } catch {
+              //
+            }
           });
       }
     }

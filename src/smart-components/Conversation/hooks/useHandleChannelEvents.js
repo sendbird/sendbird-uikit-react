@@ -47,7 +47,11 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
           if (scrollToEnd) {
             try {
               setTimeout(() => {
-                currentGroupChannel.markAsRead();
+                try {
+                  currentGroupChannel.markAsRead();
+                } catch {
+                  //
+                }
                 scrollIntoLast();
               });
             } catch (error) {
