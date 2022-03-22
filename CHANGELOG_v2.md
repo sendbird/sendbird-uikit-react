@@ -1,5 +1,37 @@
 # Changelog - legacy(upto v2)
 
+## [2.7.0] (Mar 22 2022)
+- Features
+  * Add props disableAutoSelect into the <ChannelList />
+    * A flag to allow or disallow the channel auto select feature
+  * Add progressHandler into the getSendFileMessage hook
+    * getSendFileMessage = (store) => (channelUrl, fileMessageParams, progressHandler)
+- Bugfix
+  * Modify difinition type of renderUserProfile props in the <OpenChannel />
+  * Update message receipts on real time basis
+  * Suppress an intermittent NO_ACK Error
+
+## [2.7.0-alpha] (Mar 11 2022)
+- Minor Update
+  * Use commonjs module as default - jest expects commonjs module
+    * Builds are now saved to \dist instead of \release
+- Features
+  * Add progressHandler into the GetSendFileMessage hook
+  * Provide an auto select flag in the channel list
+- Bugfix
+  * Localization parameter for some format calls
+  * Exclude the optional param when locale is undefined in the dateFns utils
+  * Appear MessageStatus component in Safari
+
+## [2.6.0] (Feb 8 2022)
+- Features
+  * Setup date localization
+- Bugfix
+  * Add sortChannelList props to the ChannelListProps
+  * Appear message status icon in Safari
+  * Fix compliation issue: Element not defined
+  * Fix event leakage issues (scroll and pop-up)
+
 ## [2.5.3] (Jan 19 2022)
 ## [2.5.3-alpha] (Jan 19 2022)
 - Bugfix
