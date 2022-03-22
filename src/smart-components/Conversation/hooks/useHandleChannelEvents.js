@@ -20,7 +20,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
   scrollRef,
   setQuoteMessage,
 }) {
-  const channelUrl = currentGroupChannel && currentGroupChannel.url;
+  const channelUrl = currentGroupChannel && currentGroupChannel?.url;
   useEffect(() => {
     const messageReceiverId = uuidv4();
     if (channelUrl && sdk && sdk.ChannelHandler) {
@@ -29,7 +29,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
 
       ChannelHandler.onMessageReceived = (channel, message) => {
         // donot update if hasMoreToBottom
-        if (compareIds(channel.url, currentGroupChannel.url) && !hasMoreToBottom) {
+        if (compareIds(channel.url, channelUrl) && !hasMoreToBottom) {
           let scrollToEnd = false;
           try {
             const { current } = scrollRef;
@@ -55,7 +55,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
             }
           }
         }
-        if (compareIds(channel.url, currentGroupChannel.url) && hasMoreToBottom) {
+        if (compareIds(channel.url, channelUrl) && hasMoreToBottom) {
           messagesDispatcher({
             type: messageActions.UPDATE_UNREAD_COUNT,
             payload: { channel },
@@ -63,8 +63,13 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
         }
       };
 
+      /**
+       * We need to update current channel with the channel,
+       * when onReadReceiptUpdated or onDeliveryReceiptUpdated are called,
+       * because cachedReadReceiptStatus and cachedDeliveryReceiptStatus properties were changed
+       */
       ChannelHandler.onReadReceiptUpdated = (channel) => {
-        if (compareIds(currentGroupChannel.url, channel.url)) {
+        if (compareIds(channel.url, channelUrl)) {
           logger.info('Channel | useHandleChannelEvents: onReadReceiptUpdated', channel);
           messagesDispatcher({
             type: messageActions.SET_CURRENT_CHANNEL,
@@ -72,9 +77,8 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
           });
         }
       };
-
       ChannelHandler.onDeliveryReceiptUpdated = (channel) => {
-        if (compareIds(currentGroupChannel.url, channel.url)) {
+        if (compareIds(channel.url, channelUrl)) {
           logger.info('Channel | useHandleChannelEvents: onDeliveryReceiptUpdated', channel);
           messagesDispatcher({
             type: messageActions.SET_CURRENT_CHANNEL,
@@ -117,7 +121,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
       };
 
       ChannelHandler.onChannelChanged = (groupChannel) => {
-        if (compareIds(groupChannel.url, currentGroupChannel.url)) {
+        if (compareIds(groupChannel.url, channelUrl)) {
           logger.info('Channel | useHandleChannelEvents: onChannelChanged', groupChannel);
           messagesDispatcher({
             type: messageActions.SET_CURRENT_CHANNEL,
@@ -127,7 +131,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
       };
 
       ChannelHandler.onChannelFrozen = (groupChannel) => {
-        if (compareIds(groupChannel.url, currentGroupChannel.url)) {
+        if (compareIds(groupChannel.url, channelUrl)) {
           logger.info('Channel | useHandleChannelEvents: onChannelFrozen', groupChannel);
           messagesDispatcher({
             type: messageActions.SET_CURRENT_CHANNEL,
@@ -137,7 +141,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
       };
 
       ChannelHandler.onChannelUnfrozen = (groupChannel) => {
-        if (compareIds(groupChannel.url, currentGroupChannel.url)) {
+        if (compareIds(groupChannel.url, channelUrl)) {
           logger.info('Channel | useHandleChannelEvents: onChannelUnFrozen', groupChannel);
           messagesDispatcher({
             type: messageActions.SET_CURRENT_CHANNEL,
@@ -147,7 +151,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
       };
 
       ChannelHandler.onUserMuted = (groupChannel) => {
-        if (compareIds(groupChannel.url, currentGroupChannel.url)) {
+        if (compareIds(groupChannel.url, channelUrl)) {
           logger.info('Channel | useHandleChannelEvents: onUserMuted', groupChannel);
           messagesDispatcher({
             type: messageActions.SET_CURRENT_CHANNEL,
@@ -157,7 +161,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
       };
 
       ChannelHandler.onUserUnmuted = (groupChannel) => {
-        if (compareIds(groupChannel.url, currentGroupChannel.url)) {
+        if (compareIds(groupChannel.url, channelUrl)) {
           logger.info('Channel | useHandleChannelEvents: onUserUnmuted', groupChannel);
           messagesDispatcher({
             type: messageActions.SET_CURRENT_CHANNEL,
@@ -167,7 +171,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
       };
 
       ChannelHandler.onUserBanned = (groupChannel) => {
-        if (compareIds(groupChannel.url, currentGroupChannel.url)) {
+        if (compareIds(groupChannel.url, channelUrl)) {
           logger.info('Channel | useHandleChannelEvents: onUserBanned', groupChannel);
           messagesDispatcher({
             type: messageActions.SET_CURRENT_CHANNEL,
@@ -177,7 +181,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
       };
 
       ChannelHandler.onOperatorUpdated = (groupChannel) => {
-        if (compareIds(groupChannel.url, currentGroupChannel.url)) {
+        if (compareIds(groupChannel.url, channelUrl)) {
           logger.info('Channel | useHandleChannelEvents: onOperatorUpdated', groupChannel);
           messagesDispatcher({
             type: messageActions.SET_CURRENT_CHANNEL,
