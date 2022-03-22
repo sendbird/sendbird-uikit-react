@@ -32,7 +32,6 @@ import {
   isTextMessage,
   isOGMessage,
   isThumbnailMessage,
-  getOutgoingMessageState,
   getSenderName,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
@@ -95,7 +94,6 @@ export default function MessageContent({
   const supposedHoverClassName = supposedHover ? 'supposed-hover' : '';
   const useReplying = !!((replyType === 'QUOTE_REPLY') && message?.parentMessageId && message?.parentMessage);
   const useReplyingClassName = useReplying ? 'use-quote' : '';
-
   if (message?.isAdminMessage?.() || message?.messageType === 'admin') {
     return (<ClientAdminMessage message={message} />);
   }
@@ -205,7 +203,6 @@ export default function MessageContent({
                 <MessageStatus
                   message={message}
                   channel={channel}
-                  status={getOutgoingMessageState(channel, message)}
                 />
               </div>
             </div>

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import format from 'date-fns/format';
@@ -9,6 +9,7 @@ import Label, { LabelColors, LabelTypography } from '../Label';
 import Loader from '../Loader';
 
 import {
+  getOutgoingMessageState,
   getOutgoingMessageStates,
   isSentStatus,
 } from '../../utils';
@@ -19,7 +20,6 @@ export default function MessageStatus({
   className,
   message,
   channel,
-  status,
 }) {
   const { dateLocale } = useContext(LocalizationContext);
   const showMessageStatusIcon = channel?.isGroupChannel()
@@ -39,6 +39,10 @@ export default function MessageStatus({
     [MessageStatusTypes.FAILED]: IconColors.ERROR,
   };
 
+  const messageStatus = useMemo(() => (
+    getOutgoingMessageState(channel, message)
+  ), [channel?.getUnreadMemberCount?.(message), channel?.getUndeliveredMemberCount?.(message)]);
+
   return (
     <div
       className={[
@@ -47,7 +51,7 @@ export default function MessageStatus({
       ].join(' ')}
     >
       {(showMessageStatusIcon) && (
-        (status === MessageStatusTypes.PENDING) ? (
+        (messageStatus === MessageStatusTypes.PENDING) ? (
           <Loader
             className="sendbird-message-status__icon"
             width="16px"
@@ -63,14 +67,14 @@ export default function MessageStatus({
         ) : (
           <Icon
             className="sendbird-message-status__icon"
-            type={iconType[status] || IconTypes.ERROR}
-            fillColor={iconColor[status]}
+            type={iconType[messageStatus] || IconTypes.ERROR}
+            fillColor={iconColor[messageStatus]}
             width="16px"
             height="16px"
           />
         )
       )}
-      {isSentStatus(status) && (
+      {isSentStatus(messageStatus) && (
         <Label
           className="sendbird-message-status__text"
           type={LabelTypography.CAPTION_3}
@@ -103,13 +107,13 @@ MessageStatus.propTypes = {
     isSuper: PropTypes.bool,
     isBroadcast: PropTypes.bool,
     isPublic: PropTypes.bool,
+    getUnreadMemberCount: PropTypes.func,
+    getUndeliveredMemberCount: PropTypes.func,
   }),
-  status: PropTypes.string,
 };
 
 MessageStatus.defaultProps = {
   className: '',
   message: null,
   channel: null,
-  status: '',
 };
