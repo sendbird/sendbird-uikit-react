@@ -1,5 +1,6 @@
 import React, { ReactElement, useContext, useRef, useState } from 'react';
 import { GroupChannel, UserMessage, FileMessage, EmojiContainer } from 'sendbird';
+import format from 'date-fns/format';
 import './index.scss';
 
 import Avatar from '../Avatar';
@@ -27,11 +28,11 @@ import {
   isOGMessage,
   isThumbnailMessage,
   getSenderName,
-  getMessageCreatedAt,
   CoreMessageType,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 import { ReplyType } from '../../index.js';
+import { useLocalization } from '../../lib/LocalizationContext';
 
 interface Props {
   className?: string | Array<string>;
@@ -74,6 +75,7 @@ export default function MessageContent({
   setQuoteMessage,
 }: Props): ReactElement {
   const messageTypes = getUIKitMessageTypes();
+  const { dateLocale } = useLocalization();
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const avatarRef = useRef(null);
   const [mouseHover, setMouseHover] = useState(false);
@@ -271,7 +273,9 @@ export default function MessageContent({
               type={LabelTypography.CAPTION_3}
               color={LabelColors.ONBACKGROUND_2}
             >
-              {getMessageCreatedAt(message)}
+              {format(message?.createdAt || 0, 'p', {
+                locale: dateLocale,
+              })}
             </Label>
           )}
         </div>

@@ -18,6 +18,7 @@ import MessageContent from '../../../../ui/MessageContent';
 import FileViewer from '../FileViewer';
 import RemoveMessageModal from '../RemoveMessageModal';
 import { EveryMessage, RenderMessageProps } from '../../../../types';
+import { useLocalization } from '../../../../lib/LocalizationContext';
 
 type MessageUIProps = {
   message: EveryMessage;
@@ -45,6 +46,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
     renderMessageContent,
   } = props;
 
+  const { dateLocale } = useLocalization();
   const globalStore = useSendbirdStateContext();
   const userId = globalStore?.config?.userId;
   const isOnline = globalStore?.config?.isOnline;
@@ -133,7 +135,9 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
           hasSeparator && renderCustomSeperator?.() || (
             <DateSeparator>
               <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
-                {format(message.createdAt, 'MMMM dd, yyyy')}
+                {format(message.createdAt, 'MMMM dd, yyyy', {
+                  locale: dateLocale,
+                })}
               </Label>
             </DateSeparator>
           )
@@ -172,7 +176,9 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
         hasSeparator && (renderCustomSeperator?.() || (
           <DateSeparator>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
-              {format(message.createdAt, 'MMMM dd, yyyy')}
+              {format(message.createdAt, 'MMMM dd, yyyy', {
+                locale: dateLocale,
+              })}
             </Label>
           </DateSeparator>
         ))

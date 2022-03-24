@@ -28,6 +28,7 @@ import {
 import { useOpenChannel } from '../../context/OpenChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import type { EveryMessage, RenderMessageProps } from '../../../../types';
+import { useLocalization } from '../../../../lib/LocalizationContext';
 
 export type OpenChannelMessageProps = {
   renderMessage?: (props: RenderMessageProps) => React.ReactNode;
@@ -53,6 +54,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
     updateMessage,
     resendMessage,
   } = useOpenChannel();
+  const { dateLocale } = useLocalization();
   const editDisabled = currentOpenChannel?.isFrozen;
 
   const globalState = useSendbirdStateContext();
@@ -117,7 +119,9 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
         hasSeparator && (
           <DateSeparator>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
-              {format(message?.createdAt, 'MMMM dd, yyyy')}
+              {format(message?.createdAt, 'MMMM dd, yyyy', {
+                locale: dateLocale,
+              })}
             </Label>
           </DateSeparator>
         )

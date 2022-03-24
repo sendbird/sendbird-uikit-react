@@ -15,7 +15,7 @@ import { UserProfileContext } from '../../lib/UserProfileContext';
 
 import uuidv4 from '../../utils/uuid';
 import { copyToClipboard } from '../OpenchannelUserMessage/utils';
-import { LocalizationContext } from '../../lib/LocalizationContext';
+import { useLocalization } from '../../lib/LocalizationContext';
 import { checkOGIsEnalbed, createUrlTester, URL_REG } from './utils';
 import { ClientUserMessage } from '../../index';
 import {
@@ -60,7 +60,7 @@ export default function OpenchannelOGMessage({
   const { ogMetaData } = message;
   const { defaultImage } = ogMetaData;
 
-  const { stringSet } = useContext(LocalizationContext);
+  const { stringSet, dateLocale } = useLocalization();
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const [contextStyle, setContextStyle] = useState({});
   const messageComponentRef = useRef(null);
@@ -218,8 +218,10 @@ export default function OpenchannelOGMessage({
                   color={LabelColors.ONBACKGROUND_3}
                 >
                   {
-                    message.createdAt && (
-                      format(message.createdAt, 'p')
+                    message?.createdAt && (
+                      format(message?.createdAt, 'p', {
+                        locale: dateLocale,
+                      })
                     )
                   }
                 </Label>

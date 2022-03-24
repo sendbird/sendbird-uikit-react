@@ -1,10 +1,10 @@
-import React, { ReactElement, useContext } from 'react';
+import React, { ReactElement } from 'react';
 import './index.scss';
 
 import Avatar from '../Avatar';
 import Icon, { IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
-import { LocalizationContext } from '../../lib/LocalizationContext';
+import { useLocalization } from '../../lib/LocalizationContext';
 import { getCreatedAt, getIconOfFileType, truncate } from './utils';
 
 interface Props {
@@ -25,7 +25,7 @@ export default function MessageSearchFileItem(props: Props): ReactElement {
   const fileMessageUrl = url;
   const sender = message.sender || message._sender;
   const { profileUrl, nickname } = sender;
-  const { stringSet } = useContext(LocalizationContext);
+  const { stringSet, dateLocale } = useLocalization();
 
   return (
     <div
@@ -79,7 +79,7 @@ export default function MessageSearchFileItem(props: Props): ReactElement {
         type={LabelTypography.CAPTION_3}
         color={LabelColors.ONBACKGROUND_2}
       >
-        {getCreatedAt(createdAt)}
+        {getCreatedAt(createdAt, dateLocale)}
       </Label>
       <div className="sendbird-message-search-file-item__right-footer" />
     </div>

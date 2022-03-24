@@ -1,4 +1,6 @@
 import SendBird from "sendbird";
+import type { Locale } from "date-fns";
+
 import {
   ReplyType,
   UserListQuery,
@@ -14,6 +16,7 @@ export default interface AppProps {
   userListQuery?(): UserListQuery;
   nickname?: string;
   profileUrl?: string;
+  dateLocale?: Locale;
   allowProfileEdit?: boolean;
   disableUserProfile?: boolean;
   showSearchIcon?: boolean;

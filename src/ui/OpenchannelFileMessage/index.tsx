@@ -12,7 +12,7 @@ import TextButton from '../TextButton';
 import UserProfile from '../UserProfile';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 
-import { LocalizationContext } from '../../lib/LocalizationContext';
+import { LocalizationContext, useLocalization } from '../../lib/LocalizationContext';
 import { checkFileType, truncate } from './utils';
 import { ClientFileMessage } from '../../index';
 import {
@@ -46,9 +46,9 @@ export default function OpenchannelFileMessage({
   resendMessage,
 }: Props): JSX.Element {
   const status = message?.sendingStatus;
+  const { dateLocale, stringSet } = useLocalization();
   const contextMenuRef = useRef(null);
   const avatarRef = useRef(null);
-  const { stringSet } = useContext(LocalizationContext);
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
 
   const openFileUrl = () => { window.open(message.url); };
@@ -135,8 +135,10 @@ export default function OpenchannelFileMessage({
                 color={LabelColors.ONBACKGROUND_3}
               >
                 {
-                  message.createdAt && (
-                    format(message.createdAt, 'p')
+                  message?.createdAt && (
+                    format(message.createdAt, 'p', {
+                      locale: dateLocale,
+                    })
                   )
                 }
               </Label>

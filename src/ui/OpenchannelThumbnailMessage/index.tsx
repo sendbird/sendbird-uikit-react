@@ -9,7 +9,7 @@ import format from 'date-fns/format';
 import './index.scss';
 import { SUPPORTING_TYPES, getSupportingFileType } from './utils';
 import { ClientFileMessage } from '../../index';
-import { LocalizationContext } from '../../lib/LocalizationContext';
+import { useLocalization } from '../../lib/LocalizationContext';
 
 import Avatar from '../Avatar';
 import ContextMenu, { MenuItems, MenuItem } from '../ContextMenu';
@@ -61,7 +61,7 @@ export default function OpenchannelThumbnailMessage({
   } = message;
   const status = message?.sendingStatus;
   const thumbnailUrl = (thumbnails && thumbnails.length > 0 && thumbnails[0].url) || null;
-  const { stringSet } = useContext(LocalizationContext);
+  const { stringSet, dateLocale } = useLocalization();
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const [messageWidth, setMessageWidth] = useState(360);
   const messageRef = useRef(null);
@@ -168,8 +168,10 @@ export default function OpenchannelThumbnailMessage({
                 color={LabelColors.ONBACKGROUND_3}
               >
                 {
-                  message.createdAt && (
-                    format(message.createdAt, 'p')
+                  message?.createdAt && (
+                    format(message.createdAt, 'p', {
+                      locale: dateLocale,
+                    })
                   )
                 }
               </Label>

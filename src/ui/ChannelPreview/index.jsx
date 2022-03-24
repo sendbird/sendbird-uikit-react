@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import './index.scss';
@@ -7,7 +7,7 @@ import ChannelAvatar from '../ChannelAvatar/index';
 import Badge from '../Badge';
 import Icon, { IconColors, IconTypes } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
-import { LocalizationContext } from '../../lib/LocalizationContext';
+import { useLocalization } from '../../lib/LocalizationContext';
 
 import * as utils from './utils';
 
@@ -25,7 +25,7 @@ export default function ChannelPreview({
     userId,
   } = currentUser;
   const { isBroadcast, isFrozen } = channel;
-  const { stringSet } = useContext(LocalizationContext);
+  const { stringSet, locale } = useLocalization();
   return (
     <div
       className={[
@@ -95,7 +95,7 @@ export default function ChannelPreview({
             type={LabelTypography.CAPTION_3}
             color={LabelColors.ONBACKGROUND_2}
           >
-            {utils.getLastMessageCreatedAt(channel)}
+            {utils.getLastMessageCreatedAt(channel, locale)}
           </Label>
         </div>
         <div className="sendbird-channel-preview__content__lower">

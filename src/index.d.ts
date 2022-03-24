@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import Sendbird from 'sendbird';
+import type { Locale } from 'date-fns';
 
 import AppProps from './smart-components/App/types';
 import * as SendbirdTypes from './types';
@@ -348,6 +349,7 @@ interface SendBirdProviderProps {
   theme?: 'light' | 'dark';
   nickname?: string;
   profileUrl?: string;
+  dateLocale?: Locale;
   disableUserProfile?: boolean;
   renderUserProfile?: (props: SendbirdTypes.RenderUserProfileProps) => React.ReactNode;
   allowProfileEdit?: boolean;
