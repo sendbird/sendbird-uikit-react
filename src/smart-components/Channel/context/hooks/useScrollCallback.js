@@ -59,13 +59,8 @@ function useScrollCallback({
       .catch((error) => {
         logger.error('Channel: Fetching messages failed', error);
         messagesDispatcher({
-          type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
-          payload: {
-            messages: [],
-            hasMorePrev: false,
-            oldestMessageTimeStamp: 0,
-            currentGroupChannel,
-          },
+          type: messageActionTypes.GET_PREV_MESSAGES_FAILURE,
+          payload: { currentGroupChannel },
         });
         cb([null, error]);
       })

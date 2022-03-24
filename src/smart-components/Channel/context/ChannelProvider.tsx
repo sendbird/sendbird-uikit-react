@@ -98,7 +98,7 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   messagesDispatcher: CustomUseReducerDispatcher;
   quoteMessage: CoreMessageType;
   setQuoteMessage: React.Dispatch<React.SetStateAction<CoreMessageType>>;
-  intialTimeStamp: number;
+  initialTimeStamp: number;
   setIntialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
   animatedMessageId: number;
   highLightedMessageId: number;
@@ -148,7 +148,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   const sdk = globalStore?.stores?.sdkStore?.sdk;
   const sdkInit = globalStore?.stores?.sdkStore?.initialized;
 
-  const [intialTimeStamp, setIntialTimeStamp] = useState(startingPoint);
+  const [initialTimeStamp, setIntialTimeStamp] = useState(startingPoint);
   useEffect(() => {
     setIntialTimeStamp(startingPoint);
   }, [startingPoint, channelUrl]);
@@ -274,11 +274,11 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   // hook that fetches messages when channel changes
   // to be clear here useGetChannel sets currentGroupChannel
   // and useInitialMessagesFetch executes when currentGroupChannel changes
-  // p.s This one executes on intialTimeStamp change too
+  // p.s This one executes on initialTimeStamp change too
   useInitialMessagesFetch({
     currentGroupChannel,
     userFilledMessageListQuery,
-    intialTimeStamp,
+    initialTimeStamp,
     replyType,
   }, {
     sdk,
@@ -375,7 +375,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       messageInputRef,
       sendMessage,
       sendFileMessage,
-      intialTimeStamp,
+      initialTimeStamp,
       messageActionTypes,
       messagesDispatcher,
       setIntialTimeStamp,

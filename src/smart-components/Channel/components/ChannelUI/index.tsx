@@ -47,7 +47,7 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
     setIntialTimeStamp,
     setAnimatedMessageId,
     setHighLightedMessageId,
-    intialTimeStamp,
+    initialTimeStamp,
     scrollRef,
     messagesDispatcher,
   } = useChannel();
@@ -112,7 +112,7 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
             count={unreadCount}
             time={unreadSince}
             onClick={() => {
-              if (intialTimeStamp) {
+              if (initialTimeStamp) {
                 setIntialTimeStamp(null);
                 setAnimatedMessageId(null);
                 setHighLightedMessageId(null);

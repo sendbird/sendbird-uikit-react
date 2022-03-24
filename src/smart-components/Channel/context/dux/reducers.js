@@ -93,6 +93,18 @@ export default function reducer(state, action) {
         ],
       };
     }
+    case actionTypes.GET_PREV_MESSAGES_FAILURE: {
+      const { currentGroupChannel } = action.payload;
+      if (state.currentGroupChannel?.url !== currentGroupChannel?.url) {
+        return state;
+      }
+      return {
+        ...state,
+        messages: [],
+        hasMorePrev: false,
+        oldestMessageTimeStamp: 0,
+      };
+    }
     case actionTypes.GET_NEXT_MESSAGES_SUCESS: {
       const receivedMessages = action.payload.messages || [];
       const { currentGroupChannel = {} } = action.payload;

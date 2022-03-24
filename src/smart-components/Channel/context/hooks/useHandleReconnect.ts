@@ -78,10 +78,10 @@ function useHandleReconnect(
                 messagesDispatcher({
                   type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
                   payload: {
+                    currentGroupChannel,
                     messages,
                     hasMorePrev,
                     oldestMessageTimeStamp,
-                    currentGroupChannel,
                   },
                 });
                 setTimeout(() => utils.scrollIntoLast());

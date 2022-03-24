@@ -14,7 +14,8 @@ const getLatestMessageTimeStamp = (messages = []) => {
 function useInitialMessagesFetch({
   currentGroupChannel,
   userFilledMessageListQuery,
-  intialTimeStamp,
+  initialTimeStamp,
+  // initialTimeStamp
   replyType,
 }, {
   sdk,
@@ -58,7 +59,7 @@ function useInitialMessagesFetch({
         type: messageActionTypes.GET_PREV_MESSAGES_START,
       });
 
-      if (!intialTimeStamp) {
+      if (!initialTimeStamp) {
         // Fetching messages first
         currentGroupChannel.getMessagesByTimestamp(
           new Date().getTime(),
@@ -73,10 +74,10 @@ function useInitialMessagesFetch({
             messagesDispatcher({
               type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
               payload: {
+                currentGroupChannel,
                 messages,
                 hasMorePrev,
                 oldestMessageTimeStamp,
-                currentGroupChannel,
                 latestMessageTimeStamp,
               },
             });
@@ -84,17 +85,12 @@ function useInitialMessagesFetch({
           .catch((error) => {
             logger.error('Channel: Fetching messages failed', error);
             messagesDispatcher({
-              type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
-              payload: {
-                messages: [],
-                hasMorePrev: false,
-                oldestMessageTimeStamp: 0,
-                currentGroupChannel,
-              },
+              type: messageActionTypes.GET_PREV_MESSAGES_FAILURE,
+              payload: { currentGroupChannel },
             });
           })
           .finally(() => {
-            if (!intialTimeStamp) {
+            if (!initialTimeStamp) {
               setTimeout(() => utils.scrollIntoLast());
             }
             currentGroupChannel.markAsRead();
@@ -103,7 +99,7 @@ function useInitialMessagesFetch({
         // Fetching messages again
         messageListParams.nextResultSize = NEXT_RESULT_SIZE;
         currentGroupChannel.getMessagesByTimestamp(
-          intialTimeStamp,
+          initialTimeStamp,
           messageListParams,
         )
           .then((messages) => {
@@ -135,12 +131,12 @@ function useInitialMessagesFetch({
               messagesDispatcher({
                 type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
                 payload: {
+                  currentGroupChannel,
                   messages,
                   hasMorePrev,
                   oldestMessageTimeStamp,
-                  currentGroupChannel,
-                  latestMessageTimeStamp,
                   hasMoreNext: nextMessages && nextMessages.length > 0,
+                  latestMessageTimeStamp,
                 },
               });
             });
@@ -148,24 +144,19 @@ function useInitialMessagesFetch({
           .catch((error) => {
             logger.error('Channel: Fetching messages failed', error);
             messagesDispatcher({
-              type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
-              payload: {
-                messages: [],
-                hasMorePrev: false,
-                oldestMessageTimeStamp: 0,
-                currentGroupChannel,
-              },
+              type: messageActionTypes.GET_PREV_MESSAGES_FAILURE,
+              payload: { currentGroupChannel },
             });
           })
           .finally(() => {
-            if (!intialTimeStamp) {
+            if (!initialTimeStamp) {
               setTimeout(() => utils.scrollIntoLast());
             }
             currentGroupChannel.markAsRead();
           });
       }
     }
-  }, [channelUrl, userFilledMessageListQuery, intialTimeStamp]);
+  }, [channelUrl, userFilledMessageListQuery, initialTimeStamp]);
   /**
    * Note - useEffect(() => {}, [currentGroupChannel])
    * was buggy, that is why we did
