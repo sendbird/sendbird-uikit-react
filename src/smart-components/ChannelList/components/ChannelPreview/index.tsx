@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import SendBird from 'sendbird';
 
 import './channel-preview.scss';
@@ -11,7 +11,7 @@ import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import * as utils from './utils';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { LocalizationContext } from '../../../../lib/LocalizationContext';
+import { useLocalization } from '../../../../lib/LocalizationContext';
 
 interface ChannelPreviewInterface {
   channel: SendBird.GroupChannel;
@@ -29,10 +29,10 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
   tabIndex,
 }: ChannelPreviewInterface) => {
   const sbState = useSendbirdStateContext();
+  const { dateLocale, stringSet } = useLocalization();
   const userId = sbState?.stores?.userStore?.user?.userId;
   const theme = sbState?.config?.theme;
   const { isBroadcast, isFrozen } = channel;
-  const { stringSet } = useContext(LocalizationContext);
   return (
     <div
       className={[
@@ -102,7 +102,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
             type={LabelTypography.CAPTION_3}
             color={LabelColors.ONBACKGROUND_2}
           >
-            {utils.getLastMessageCreatedAt(channel)}
+            {utils.getLastMessageCreatedAt(channel, dateLocale)}
           </Label>
         </div>
         <div className="sendbird-channel-preview__content__lower">

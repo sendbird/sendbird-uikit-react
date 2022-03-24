@@ -1,5 +1,6 @@
 import isToday from 'date-fns/isToday';
 import format from 'date-fns/format';
+import formatRelative from 'date-fns/formatRelative';
 import isYesterday from 'date-fns/isYesterday';
 
 import { truncateString } from '../../../../utils';
@@ -22,20 +23,18 @@ export const getChannelTitle = (channel = {}, currentUserId, stringSet = LabelSt
     .join(', ');
 };
 
-export const getLastMessageCreatedAt = (channel) => {
-  if (!channel || !channel.lastMessage) {
+export const getLastMessageCreatedAt = (channel, locale) => {
+  const createdAt = channel?.lastMessage?.createdAt;
+  if (!createdAt) {
     return '';
   }
-  const date = channel.lastMessage.createdAt;
-  if (isToday(date)) {
-    return format(date, 'p');
+  if (isToday(createdAt)) {
+    return format(createdAt, 'p', { locale });
   }
-
-  if (isYesterday(date)) {
-    return 'Yesterday';
+  if (isYesterday(createdAt)) {
+    return formatRelative(createdAt, new Date(), { locale });
   }
-
-  return format(date, 'MMM dd');
+  return format(createdAt, 'MMM dd', { locale });
 };
 
 export const getTotalMembers = (channel) => (

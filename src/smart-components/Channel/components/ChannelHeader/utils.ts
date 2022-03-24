@@ -1,8 +1,5 @@
-import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict';
 import SendBird from 'sendbird';
 import { LabelStringSet } from '../../../../ui/Label';
-
-export const prettyDate = (date: Date): string => formatDistanceToNowStrict(date, { addSuffix: true });
 
 export const getChannelTitle = (
   channel: SendBird.GroupChannel,

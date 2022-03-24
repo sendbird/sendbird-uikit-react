@@ -24,6 +24,7 @@ export default function App(props) {
     userListQuery,
     nickname,
     profileUrl,
+    dateLocale,
     config = {},
     useReaction,
     replyType,
@@ -53,6 +54,7 @@ export default function App(props) {
       theme={theme}
       nickname={nickname}
       profileUrl={profileUrl}
+      dateLocale={dateLocale}
       userListQuery={userListQuery}
       config={config}
       colorSet={colorSet}
@@ -152,6 +154,7 @@ App.propTypes = {
   disableUserProfile: PropTypes.bool,
   renderUserProfile: PropTypes.func,
   onProfileEditSuccess: PropTypes.func,
+  dateLocale: PropTypes.shape({}),
   config: PropTypes.shape({
     // None Error Warning Info 'All/Debug'
     logLevel: PropTypes.oneOfType([
@@ -185,6 +188,7 @@ App.defaultProps = {
   nickname: '',
   profileUrl: '',
   userListQuery: null,
+  dateLocale: null,
   allowProfileEdit: false,
   onProfileEditSuccess: null,
   disableUserProfile: false,

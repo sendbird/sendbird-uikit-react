@@ -18,7 +18,7 @@ import Loader from '../Loader';
 import UserProfile from '../UserProfile';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 
-import { LocalizationContext } from '../../lib/LocalizationContext';
+import { useLocalization } from '../../lib/LocalizationContext';
 import { copyToClipboard } from './utils';
 import uuidv4 from '../../utils/uuid';
 import { ClientUserMessage } from '../../index';
@@ -61,7 +61,7 @@ export default function OpenchannelUserMessage({
   }
 
   // hooks
-  const { stringSet } = useContext(LocalizationContext);
+  const { stringSet, dateLocale } = useLocalization();
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const messageRef = useRef(null);
   const avatarRef = useRef(null);
@@ -180,8 +180,10 @@ export default function OpenchannelUserMessage({
                 color={LabelColors.ONBACKGROUND_3}
               >
                 {
-                  message.createdAt && (
-                    format(message.createdAt, 'p')
+                  message?.createdAt && (
+                    format(message?.createdAt, 'p', {
+                      locale: dateLocale,
+                    })
                   )
                 }
               </Label>

@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import './index.scss';
 import getCreatedAt from './getCreatedAt';
 
 import Avatar from '../Avatar';
 import Label, { LabelTypography, LabelColors } from '../Label';
-import { LocalizationContext } from '../../lib/LocalizationContext';
+import { useLocalization } from '../../lib/LocalizationContext';
 
 interface Props {
   className?: string | Array<string>;
@@ -23,7 +23,7 @@ export default function MessageSearchItem({
   const messageText = message.message;
   const sender = message.sender || message._sender;
   const { profileUrl, nickname } = sender;
-  const { stringSet } = useContext(LocalizationContext);
+  const { stringSet, dateLocale } = useLocalization();
 
   return (
     <div
@@ -66,7 +66,7 @@ export default function MessageSearchItem({
           type={LabelTypography.CAPTION_3}
           color={LabelColors.ONBACKGROUND_2}
         >
-          {getCreatedAt(createdAt)}
+          {getCreatedAt(createdAt, dateLocale)}
         </Label>
       </div>
       <div className="sendbird-message-search-item__right-footer" />

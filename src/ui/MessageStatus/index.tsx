@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import format from 'date-fns/format';
 import './index.scss';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
@@ -6,12 +7,12 @@ import Label, { LabelColors, LabelTypography } from '../Label';
 import Loader from '../Loader';
 
 import {
-  getMessageCreatedAt,
   getOutgoingMessageState,
   getOutgoingMessageStates,
   isSentStatus,
 } from '../../utils';
 import { FileMessage, GroupChannel, UserMessage } from 'sendbird';
+import { useLocalization } from '../../lib/LocalizationContext';
 
 export const MessageStatusTypes = getOutgoingMessageStates();
 
@@ -26,6 +27,7 @@ export default function MessageStatus({
   message,
   channel,
 }: MessageStatusProps): React.ReactElement {
+  const { dateLocale } = useLocalization();
   const status = useMemo(() => (
     getOutgoingMessageState(channel, message)
   ), [channel?.getUnreadMemberCount?.(message), channel?.getUndeliveredMemberCount?.(message)]);
@@ -81,7 +83,9 @@ export default function MessageStatus({
           type={LabelTypography.CAPTION_3}
           color={LabelColors.ONBACKGROUND_2}
         >
-          {getMessageCreatedAt(message)}
+          {format(message?.createdAt || 0, 'p', {
+            locale: dateLocale,
+          })}
         </Label>
       )}
     </div>
