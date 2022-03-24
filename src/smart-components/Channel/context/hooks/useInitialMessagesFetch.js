@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 
+import * as utils from '../utils';
 import * as messageActionTypes from '../dux/actionTypes';
 import { PREV_RESULT_SIZE, NEXT_RESULT_SIZE } from '../const';
 
@@ -74,6 +75,11 @@ function useInitialMessagesFetch({
             type: messageActionTypes.FETCH_INITIAL_MESSAGES_FAILURE,
             payload: { currentGroupChannel },
           });
+        })
+        .finally(() => {
+          if (!initialTimeStamp) {
+            setTimeout(() => utils.scrollIntoLast());
+          }
         });
     }
   }, [channelUrl, userFilledMessageListQuery, initialTimeStamp]);
