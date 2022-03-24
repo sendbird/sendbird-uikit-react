@@ -84,9 +84,9 @@ interface MessageStoreInterface {
   unreadSince: number;
   isInvalid: boolean;
   currentGroupChannel: GroupChannel;
-  hasMore: boolean;
+  hasMorePrev: boolean;
   lastMessageTimeStamp: number;
-  hasMoreToBottom: boolean;
+  hasMoreNext: boolean;
   latestFetchedMessageTimeStamp: number;
   emojiContainer: any;
   readStatus: any;
@@ -174,9 +174,9 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     unreadSince,
     isInvalid,
     currentGroupChannel,
-    hasMore,
+    hasMorePrev,
     lastMessageTimeStamp,
-    hasMoreToBottom,
+    hasMoreNext,
     latestFetchedMessageTimeStamp,
     emojiContainer,
     readStatus,
@@ -209,7 +209,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   const onScrollCallback = useScrollCallback({
     currentGroupChannel, lastMessageTimeStamp, userFilledMessageListQuery, replyType,
   }, {
-    hasMore,
+    hasMorePrev,
     logger,
     messagesDispatcher,
     sdk,
@@ -222,13 +222,13 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   }, { logger });
 
   // onScrollDownCallback is added for navigation to different timestamps on messageSearch
-  // hasMoreToBottom, onScrollDownCallback -> scroll down
-  // hasMore, onScrollCallback -> scroll up(default behavior)
+  // hasMorePrev, onScrollCallback -> scroll up(default behavior)
+  // hasMoreNext, onScrollDownCallback -> scroll down
   const onScrollDownCallback = useScrollDownCallback({
     currentGroupChannel,
     latestFetchedMessageTimeStamp,
     userFilledMessageListQuery,
-    hasMoreToBottom,
+    hasMoreNext,
     replyType,
   }, {
     logger,
@@ -261,7 +261,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
 
   // Hook to handle ChannelEvents and send values to useReducer using messagesDispatcher
   useHandleChannelEvents(
-    { currentGroupChannel, sdkInit, hasMoreToBottom },
+    { currentGroupChannel, sdkInit, hasMoreNext },
     {
       messagesDispatcher,
       sdk,
@@ -358,8 +358,8 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       unreadSince,
       isInvalid,
       currentGroupChannel,
-      hasMore,
-      hasMoreToBottom,
+      hasMorePrev,
+      hasMoreNext,
       lastMessageTimeStamp,
       latestFetchedMessageTimeStamp,
       emojiContainer,

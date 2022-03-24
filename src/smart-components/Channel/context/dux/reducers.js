@@ -20,9 +20,9 @@ export default function reducer(state, action) {
     case actionTypes.RESET_MESSAGES:
       return {
         ...state,
-        // when user switches channel, if the previous channel `hasMore`
-        // the onScroll gets called twice, setting hasMore false prevents this
-        hasMore: false,
+        // when user switches channel, if the previous channel `hasMorePrev`
+        // the onScroll gets called twice, setting hasMorePrev false prevents this
+        hasMorePrev: false,
         allMessages: [],
       };
     case actionTypes.GET_PREV_MESSAGES_START:
@@ -41,8 +41,15 @@ export default function reducer(state, action) {
       };
     case actionTypes.GET_PREV_MESSAGES_SUCESS: {
       const receivedMessages = action.payload.messages || [];
-      const { currentGroupChannel = {} } = action.payload;
-
+      const {
+        hasMorePrev,
+        hasMoreNext,
+        currentGroupChannel = {},
+        lastMessageTimeStamp,
+        latestFetchedMessageTimeStamp,
+    } = action.payload;
+      const hasHasMoreNext = hasOwnProperty('hasMoreNext')(action.payload);
+      const hasLatestFetchedMessageTimeStamp = hasOwnProperty('latestFetchedMessageTimeStamp')(action.payload);
       const stateChannel = state.currentGroupChannel || {};
       const stateChannelUrl = stateChannel.url;
       const actionChannelUrl = currentGroupChannel.url;
@@ -67,18 +74,15 @@ export default function reducer(state, action) {
           !duplicatedMessageIds.find((messageId) => compareIds(messageId, msg.messageId))
         ))
         : receivedMessages;
-
-      const hasHasMoreToBottom = hasOwnProperty('hasMoreToBottom')(action.payload);
-      const hasLatestFetchedMessageTimeStamp = hasOwnProperty('latestFetchedMessageTimeStamp')(action.payload);
       return {
         ...state,
         loading: false,
         initialized: true,
-        hasMore: action.payload.hasMore,
-        lastMessageTimeStamp: action.payload.lastMessageTimeStamp,
+        hasMorePrev: hasMorePrev,
+        lastMessageTimeStamp: lastMessageTimeStamp,
         // if present change else, keep
-        ...(hasHasMoreToBottom && {
-          hasMoreToBottom: action.payload.hasMoreToBottom,
+        ...(hasHasMoreNext && {
+          hasMoreNext: hasMoreNext,
         }),
         ...(hasLatestFetchedMessageTimeStamp && {
           latestFetchedMessageTimeStamp: action.payload.latestFetchedMessageTimeStamp,
@@ -117,14 +121,13 @@ export default function reducer(state, action) {
           !duplicatedMessageIds.find((messageId) => compareIds(messageId, msg.messageId))
         ))
         : receivedMessages;
-
       return {
         ...state,
         loading: false,
         initialized: true,
-        hasMore: action.payload.hasMore,
+        hasMorePrev: action.payload.hasMorePrev,
         lastMessageTimeStamp: action.payload.lastMessageTimeStamp,
-        hasMoreToBottom: action.payload.hasMoreToBottom,
+        hasMoreNext: action.payload.hasMoreNext,
         latestFetchedMessageTimeStamp: action.payload.latestFetchedMessageTimeStamp,
         allMessages: [
           ...updatedAllMessages,
@@ -190,6 +193,7 @@ export default function reducer(state, action) {
       };
     }
     case actionTypes.UPDATE_UNREAD_COUNT: {
+      console.log('업언카')
       const { channel } = action.payload;
       const { currentGroupChannel = {}, unreadCount } = state;
       const currentGroupChannelUrl = currentGroupChannel.url;
@@ -198,6 +202,7 @@ export default function reducer(state, action) {
       }
       return {
         ...state,
+        unreadCount: unreadCount + 1,
         unreadSince: unreadCount + 1,
       };
     }
@@ -312,6 +317,10 @@ export default function reducer(state, action) {
         )),
       };
     case actionTypes.MARK_AS_READ:
+      const { channel } = action.payload;
+      if (state.currentGroupChannel?.url !== channel?.url) {
+        return state;
+      }
       return {
         ...state,
         unreadCount: 0,

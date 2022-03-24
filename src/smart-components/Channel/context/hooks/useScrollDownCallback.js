@@ -8,7 +8,7 @@ function useScrollDownCallback({
   currentGroupChannel,
   latestFetchedMessageTimeStamp,
   userFilledMessageListQuery,
-  hasMoreToBottom,
+  hasMoreNext,
   replyType,
 }, {
   logger,
@@ -16,7 +16,7 @@ function useScrollDownCallback({
   sdk,
 }) {
   return useCallback((cb) => {
-    if (!hasMoreToBottom) { return; }
+    if (!hasMoreNext) { return; }
     const { appInfo = {} } = sdk;
     const useReaction = appInfo.isUsingReaction || false;
 
@@ -52,7 +52,7 @@ function useScrollDownCallback({
           type: messageActionTypes.GET_NEXT_MESSAGES_SUCESS,
           payload: {
             messages,
-            hasMoreToBottom: hasMoreMessages,
+            hasMoreNext: hasMoreMessages,
             latestFetchedMessageTimeStamp: lastMessageTs,
             currentGroupChannel,
           },
@@ -65,7 +65,7 @@ function useScrollDownCallback({
           type: messageActionTypes.GET_NEXT_MESSAGES_FAILURE,
           payload: {
             messages: [],
-            hasMoreToBottom: false,
+            hasMoreNext: false,
             latestFetchedMessageTimeStamp: 0,
             currentGroupChannel,
           },
@@ -75,7 +75,7 @@ function useScrollDownCallback({
       .finally(() => {
         currentGroupChannel.markAsRead();
       });
-  }, [currentGroupChannel, latestFetchedMessageTimeStamp, hasMoreToBottom, replyType]);
+  }, [currentGroupChannel, latestFetchedMessageTimeStamp, hasMoreNext, replyType]);
 }
 
 export default useScrollDownCallback;

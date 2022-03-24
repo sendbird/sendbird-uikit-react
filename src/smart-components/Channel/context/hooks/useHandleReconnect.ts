@@ -71,15 +71,15 @@ function useHandleReconnect(
                   payload: null,
                 });
 
-                const hasMore = messages?.length > 0;
-                const lastMessageTimeStamp = hasMore
+                const hasMorePrev = messages?.length > 0;
+                const lastMessageTimeStamp = hasMorePrev
                   ? messages[0].createdAt
                   : null;
                 messagesDispatcher({
                   type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
                   payload: {
                     messages,
-                    hasMore,
+                    hasMorePrev,
                     lastMessageTimeStamp,
                     currentGroupChannel,
                   },

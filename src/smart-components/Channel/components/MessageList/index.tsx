@@ -27,8 +27,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
   } = props;
   const {
     allMessages,
-    hasMore,
-    hasMoreToBottom,
+    hasMorePrev,
     setIntialTimeStamp,
     setAnimatedMessageId,
     setHighLightedMessageId,
@@ -51,7 +50,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
     } = element;
 
     if (scrollTop === 0) {
-      if (!hasMore) {
+      if (!hasMorePrev) {
         return;
       }
       const nodes = scrollRef.current.querySelectorAll(SCROLL_REF_CLASS_NAME);
@@ -91,7 +90,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
       if (clientHeight + scrollTop === scrollHeight) {
         messagesDispatcher({
           type: messageActionTypes.MARK_AS_READ,
-          payload: null,
+          payload: { channel: currentGroupChannel },
         });
         currentGroupChannel.markAsRead();
       }
@@ -175,7 +174,8 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
           </div>
         </div>
         {
-          hasMoreToBottom && (
+          // This flag is an unmatched variable
+          false && (
             <div
               className="sendbird-conversation__scroll-bottom-button"
               onClick={onClickScrollBot}
@@ -195,6 +195,5 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
       </div>
   );
 };
-
 
 export default MessageList;

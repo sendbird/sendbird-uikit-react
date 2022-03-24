@@ -8,13 +8,13 @@ function useScrollCallback({
   userFilledMessageListQuery,
   replyType,
 }, {
-  hasMore,
+  hasMorePrev,
   logger,
   messagesDispatcher,
   sdk,
 }) {
   return useCallback((cb) => {
-    if (!hasMore) { return; }
+    if (!hasMorePrev) { return; }
     const { appInfo = {} } = sdk;
     const useReaction = appInfo.isUsingReaction || false;
 
@@ -40,8 +40,8 @@ function useScrollCallback({
       messageListParams,
     )
       .then((messages) => {
-        const hasMoreMessages = (messages && messages.length > 0);
-        const lastMessageTs = hasMoreMessages
+        const hasMorePrev = (messages && messages.length > 0);
+        const lastMessageTs = hasMorePrev
           ? messages[0].createdAt
           : null;
 
@@ -49,7 +49,7 @@ function useScrollCallback({
           type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
           payload: {
             messages,
-            hasMore: hasMoreMessages,
+            hasMorePrev: hasMorePrev,
             lastMessageTimeStamp: lastMessageTs,
             currentGroupChannel,
           },
@@ -62,7 +62,7 @@ function useScrollCallback({
           type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
           payload: {
             messages: [],
-            hasMore: false,
+            hasMorePrev: false,
             lastMessageTimeStamp: 0,
             currentGroupChannel,
           },

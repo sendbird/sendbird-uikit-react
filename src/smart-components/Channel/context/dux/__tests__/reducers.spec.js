@@ -15,68 +15,68 @@ describe('Messages-Reducers', () => {
 
   it('should set messages GET_PREV_MESSAGES_SUCESS', () => {
     const mockData = generateMockChannel();
-    const hasMore = randomBoolean();
+    const hasMorePrev = randomBoolean();
     const lastMessageTimeStamp = 123;
     const nextState = reducers(initialState, {
       type: actionTypes.GET_PREV_MESSAGES_SUCESS,
       payload: {
-        hasMore,
+        hasMorePrev,
         messages: mockData.allMessages,
         lastMessageTimeStamp,
       }
     });
     expect(nextState.loading).toEqual(false);
-    expect(nextState.hasMore).toEqual(hasMore);
+    expect(nextState.hasMorePrev).toEqual(hasMorePrev);
     expect(nextState.allMessages).toEqual(mockData.allMessages);
     expect(nextState.lastMessageTimeStamp).toEqual(lastMessageTimeStamp);
   });
 
   it('should append to head of all messages on GET_PREV_MESSAGES_SUCESS', () => {
     const mockData = generateMockChannel();
-    const hasMore = randomBoolean();
+    const hasMorePrev = randomBoolean();
     const nextState = reducers(mockData, {
       type: actionTypes.GET_PREV_MESSAGES_SUCESS,
       payload: {
-        hasMore,
+        hasMorePrev,
         messages: [mockMessage1],
         currentGroupChannel: mockData.currentGroupChannel,
       }
     });
     expect(nextState.loading).toEqual(false);
-    expect(nextState.hasMore).toEqual(hasMore);
+    expect(nextState.hasMorePrev).toEqual(hasMorePrev);
     expect(nextState.allMessages.length).toEqual(mockData.allMessages.length + 1);
     expect(nextState.allMessages[0]).toEqual(mockMessage1);
   });
 
   it('should not append duplicate messages on GET_PREV_MESSAGES_SUCESS', () => {
     const mockData = generateMockChannel();
-    const hasMore = randomBoolean();
+    const hasMorePrev = randomBoolean();
     const nextState = reducers(mockData, {
       type: actionTypes.GET_PREV_MESSAGES_SUCESS,
       payload: {
-        hasMore,
+        hasMorePrev,
         messages: [mockData.allMessages[0]],
         currentGroupChannel: mockData.currentGroupChannel,
       }
     });
     expect(nextState.loading).toEqual(false);
-    expect(nextState.hasMore).toEqual(hasMore);
+    expect(nextState.hasMorePrev).toEqual(hasMorePrev);
     expect(nextState.allMessages.length).toEqual(mockData.allMessages.length);
   });
 
   it('should not handle append messages on GET_PREV_MESSAGES_SUCESS when payload.messages is []', () => {
     const mockData = generateMockChannel();
-    const hasMore = randomBoolean();
+    const hasMorePrev = randomBoolean();
     const nextState = reducers(mockData, {
       type: actionTypes.GET_PREV_MESSAGES_SUCESS,
       payload: {
-        hasMore,
+        hasMorePrev,
         messages: [],
         currentGroupChannel: mockData.currentGroupChannel,
       }
     });
     expect(nextState.loading).toEqual(false);
-    expect(nextState.hasMore).toEqual(hasMore);
+    expect(nextState.hasMorePrev).toEqual(hasMorePrev);
     expect(nextState.allMessages).toEqual(mockData.allMessages);
   });
 
@@ -279,7 +279,7 @@ describe('Messages-Reducers', () => {
     });
     expect(nextState).toEqual({
       ...mockData,
-      hasMore: false,
+      hasMorePrev: false,
       allMessages: [],
     });
   });

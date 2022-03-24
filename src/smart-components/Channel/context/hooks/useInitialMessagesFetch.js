@@ -58,15 +58,57 @@ function useInitialMessagesFetch({
         type: messageActionTypes.GET_PREV_MESSAGES_START,
       });
 
-      if (intialTimeStamp) {
+      if (!intialTimeStamp) {
+        // Fetching messages first
+        currentGroupChannel.getMessagesByTimestamp(
+          new Date().getTime(),
+          messageListParams,
+        )
+          .then((messages) => {
+            const hasMorePrev = (messages && messages.length > 0);
+            const lastMessageTimeStamp = hasMorePrev
+              ? messages[0].createdAt
+              : null;
+            const latestFetchedMessageTimeStamp = getLatestMessageTimeStamp(messages);
+            messagesDispatcher({
+              type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
+              payload: {
+                messages,
+                hasMorePrev,
+                lastMessageTimeStamp,
+                currentGroupChannel,
+                latestFetchedMessageTimeStamp,
+              },
+            });
+          })
+          .catch((error) => {
+            logger.error('Channel: Fetching messages failed', error);
+            messagesDispatcher({
+              type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
+              payload: {
+                messages: [],
+                hasMorePrev: false,
+                lastMessageTimeStamp: 0,
+                currentGroupChannel,
+              },
+            });
+          })
+          .finally(() => {
+            if (!intialTimeStamp) {
+              setTimeout(() => utils.scrollIntoLast());
+            }
+            currentGroupChannel.markAsRead();
+          });
+      } else {
+        // Fetching messages again
         messageListParams.nextResultSize = NEXT_RESULT_SIZE;
         currentGroupChannel.getMessagesByTimestamp(
           intialTimeStamp,
           messageListParams,
         )
           .then((messages) => {
-            const hasMore = (messages && messages.length > 0);
-            const lastMessageTimeStamp = hasMore
+            const hasMorePrev = (messages && messages.length > 0);
+            const lastMessageTimeStamp = hasMorePrev
               ? messages[0].createdAt
               : null;
             const latestFetchedMessageTimeStamp = getLatestMessageTimeStamp(messages);
@@ -94,11 +136,11 @@ function useInitialMessagesFetch({
                 type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
                 payload: {
                   messages,
-                  hasMore,
+                  hasMorePrev,
                   lastMessageTimeStamp,
                   currentGroupChannel,
                   latestFetchedMessageTimeStamp,
-                  hasMoreToBottom: nextMessages && nextMessages.length > 0,
+                  hasMoreNext: nextMessages && nextMessages.length > 0,
                 },
               });
             });
@@ -109,48 +151,7 @@ function useInitialMessagesFetch({
               type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
               payload: {
                 messages: [],
-                hasMore: false,
-                lastMessageTimeStamp: 0,
-                currentGroupChannel,
-              },
-            });
-          })
-          .finally(() => {
-            if (!intialTimeStamp) {
-              setTimeout(() => utils.scrollIntoLast());
-            }
-            currentGroupChannel.markAsRead();
-          });
-      } else {
-        currentGroupChannel.getMessagesByTimestamp(
-          new Date().getTime(),
-          messageListParams,
-        )
-          .then((messages) => {
-            const hasMore = (messages && messages.length > 0);
-            const lastMessageTimeStamp = hasMore
-              ? messages[0].createdAt
-              : null;
-            const latestFetchedMessageTimeStamp = getLatestMessageTimeStamp(messages);
-            messagesDispatcher({
-              type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
-              payload: {
-                messages,
-                hasMore,
-                lastMessageTimeStamp,
-                currentGroupChannel,
-                latestFetchedMessageTimeStamp,
-                hasMoreToBottom: false,
-              },
-            });
-          })
-          .catch((error) => {
-            logger.error('Channel: Fetching messages failed', error);
-            messagesDispatcher({
-              type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
-              payload: {
-                messages: [],
-                hasMore: false,
+                hasMorePrev: false,
                 lastMessageTimeStamp: 0,
                 currentGroupChannel,
               },
