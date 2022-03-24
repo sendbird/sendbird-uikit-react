@@ -99,7 +99,7 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   quoteMessage: CoreMessageType;
   setQuoteMessage: React.Dispatch<React.SetStateAction<CoreMessageType>>;
   initialTimeStamp: number;
-  setIntialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
+  setInitialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
   animatedMessageId: number;
   highLightedMessageId: number;
   nicknamesMap: Map<string, string>;
@@ -148,9 +148,9 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   const sdk = globalStore?.stores?.sdkStore?.sdk;
   const sdkInit = globalStore?.stores?.sdkStore?.initialized;
 
-  const [initialTimeStamp, setIntialTimeStamp] = useState(startingPoint);
+  const [initialTimeStamp, setInitialTimeStamp] = useState(startingPoint);
   useEffect(() => {
-    setIntialTimeStamp(startingPoint);
+    setInitialTimeStamp(startingPoint);
   }, [startingPoint, channelUrl]);
   const [animatedMessageId, setAnimatedMessageId] = useState(null);
   const [highLightedMessageId, setHighLightedMessageId] = useState(highlightedMessage);
@@ -216,7 +216,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   });
 
   const scrollToMessage = useScrollToMessage({
-    setIntialTimeStamp,
+    setInitialTimeStamp,
     setAnimatedMessageId,
     allMessages,
   }, { logger });
@@ -378,7 +378,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       initialTimeStamp,
       messageActionTypes,
       messagesDispatcher,
-      setIntialTimeStamp,
+      setInitialTimeStamp,
       setAnimatedMessageId,
       setHighLightedMessageId,
       animatedMessageId,

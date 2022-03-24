@@ -28,7 +28,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
   const {
     allMessages,
     hasMorePrev,
-    setIntialTimeStamp,
+    setInitialTimeStamp,
     setAnimatedMessageId,
     setHighLightedMessageId,
     useMessageGrouping,
@@ -104,7 +104,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
   };
 
   const onClickScrollBot = () => {
-    setIntialTimeStamp?.(null);
+    setInitialTimeStamp?.(null);
     setAnimatedMessageId?.(null);
     setHighLightedMessageId?.(null);
   };
