@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 
 import * as messageActionTypes from '../dux/actionTypes';
-import * as utils from '../utils';
 import { PREV_RESULT_SIZE, NEXT_RESULT_SIZE } from '../const';
 
 function useInitialMessagesFetch({
