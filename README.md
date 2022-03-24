@@ -1,5 +1,7 @@
 # sendbird-uikit
 
+<img alt="Version 3 beta" src="https://img.shields.io/badge/beta-v3-orange" />
+
 > React based UI kit based on sendbird javascript SDK
 
 ## Getting Started
@@ -8,9 +10,8 @@ With Sendbird UI Kit React, we export these components:
 (See `src/index.jsx`)
 
 * SendBirdProvider - The context provider for SDK component
-* withSendBird - HOC to access SendBirdProvider context
 * useSendbirdStateContext - Hook to access SendBirdProvider context
-* sendBirdSelectors - A bunch of useful selectors that can be used along with *withSendbird* or *useSendbirdStateContext*
+* sendBirdSelectors - A bunch of useful selectors that can be used along with *useSendbirdStateContext*
 
 * Channel - A UI Component where conversations happen
 * ChannelList - A ChannelList UI component
@@ -18,6 +19,7 @@ With Sendbird UI Kit React, we export these components:
 * MessageSearch - To search for a message from a Channel
 * OpenChannel - A UI Component where open channel conversations happen
 * OpenChannelSettings - A component to handle the settings of a given channel
+And many more...
 
 * App - is a full fledged app(group channel) component made by combining the above components so that you dont have to combine all the above components by hand. Also it can be used as an example for composing components to build a chat UI
 
@@ -95,5 +97,5 @@ npm run lint
 1. Define your component inside './src'
 2. Add the following line to './src/index.js'
   `export NewComponent from './src/location/of/NewComponent';`
-3. Add the following line to './rollup.config.js' `input`
+3. Add the following line to './exports.js'
   `NewComponent: 'src/location/of/NewComponent',`
