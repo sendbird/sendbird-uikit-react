@@ -1,8 +1,6 @@
 import format from 'date-fns/format';
 
 import * as actionTypes from './actionTypes';
-import initialState from './initialState';
-
 import compareIds from '../../../../utils/compareIds';
 import { PREV_RESULT_SIZE, NEXT_RESULT_SIZE } from '../const';
 import { passUnsuccessfullMessages } from '../utils';
@@ -86,11 +84,11 @@ export default function reducer(state, action) {
           return msg;
         }
         duplicatedMessageIds.push(duplicatedMessage.messageId);
-        return (duplicatedMessage.updatedAt < msg.updatedAt) ? msg : duplicatedMessage;
+        return (duplicatedMessage.updatedAt > msg.updatedAt) ? duplicatedMessage : msg;
       });
-      const filteredNewMessages = (duplicatedMessageIds.length === 0)
+      const filteredNewMessages = (duplicatedMessageIds.length > 0)
         ? messages.filter((msg) => (
-          duplicatedMessageIds.findIndex((messageId) => compareIds(messageId, msg.messageId)) > -1
+          !duplicatedMessageIds.find((messageId) => compareIds(messageId, msg.messageId))
         ))
         : messages;
 
@@ -125,11 +123,11 @@ export default function reducer(state, action) {
           return msg;
         }
         duplicatedMessageIds.push(duplicatedMessage.messageId);
-        return (duplicatedMessage.updatedAt < msg.updatedAt) ? msg : duplicatedMessage;
+        return (duplicatedMessage.updatedAt > msg.updatedAt) ? duplicatedMessage : msg;
       });
-      const filteredNewMessages = (duplicatedMessageIds.length === 0)
+      const filteredNewMessages = (duplicatedMessageIds.length > 0)
         ? messages.filter((msg) => (
-          duplicatedMessageIds.findIndex((messageId) => compareIds(messageId, msg.messageId)) > -1
+          !duplicatedMessageIds.find((messageId) => compareIds(messageId, msg.messageId))
         ))
         : messages;
 
