@@ -1,8 +1,7 @@
 import { useCallback } from 'react';
 
 import * as messageActionTypes from '../dux/actionTypes';
-
-const RESULT_SIZE = 30;
+import { NEXT_RESULT_SIZE } from '../const';
 
 function useScrollDownCallback({
   currentGroupChannel,
@@ -21,7 +20,7 @@ function useScrollDownCallback({
     const useReaction = appInfo.isUsingReaction || false;
 
     const messageListParams = new sdk.MessageListParams();
-    messageListParams.nextResultSize = RESULT_SIZE;
+    messageListParams.nextResultSize = NEXT_RESULT_SIZE;
     messageListParams.isInclusive = true;
     messageListParams.includeReplies = false;
     messageListParams.includeReaction = useReaction;
@@ -42,33 +41,17 @@ function useScrollDownCallback({
       messageListParams,
     )
       .then((messages) => {
-        const messagesLength = (messages && messages.length) || 0;
-        const hasMoreMessages = (messagesLength > 0)
-          && (messageListParams.nextResultSize === messagesLength);
-        const lastMessageTs = hasMoreMessages
-          ? messages[messages.length - 1].createdAt
-          : null;
         messagesDispatcher({
-          type: messageActionTypes.GET_NEXT_MESSAGES_SUCESS,
-          payload: {
-            messages,
-            hasMoreNext: hasMoreMessages,
-            latestMessageTimeStamp: lastMessageTs,
-            currentGroupChannel,
-          },
+          type: messageActionTypes.FETCH_NEXT_MESSAGES_SUCCESS,
+          payload: { currentGroupChannel, messages },
         });
         cb([messages, null]);
       })
       .catch((error) => {
         logger.error('Channel: Fetching later messages failed', error);
         messagesDispatcher({
-          type: messageActionTypes.GET_NEXT_MESSAGES_FAILURE,
-          payload: {
-            messages: [],
-            hasMoreNext: false,
-            latestMessageTimeStamp: 0,
-            currentGroupChannel,
-          },
+          type: messageActionTypes.FETCH_NEXT_MESSAGES_FAILURE,
+          payload: { currentGroupChannel },
         });
         cb([null, error]);
       })

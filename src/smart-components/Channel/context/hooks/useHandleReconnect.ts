@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 
 import * as utils from '../utils';
+import { PREV_RESULT_SIZE } from '../const';
 import * as messageActionTypes from '../dux/actionTypes';
 import SendBird, { GroupChannel } from 'sendbird';
 import { Logger } from '../../../../lib/SendbirdState';
@@ -37,7 +38,7 @@ function useHandleReconnect(
         const useReaction = sdk?.appInfo?.isUsingReaction || false;
 
         const messageListParams = new sdk.MessageListParams();
-        messageListParams.prevResultSize = 30;
+        messageListParams.prevResultSize = PREV_RESULT_SIZE;
         messageListParams.isInclusive = true;
         messageListParams.includeReplies = false;
         messageListParams.includeReaction = useReaction;
@@ -53,7 +54,7 @@ function useHandleReconnect(
         }
         logger.info('Channel: Fetching messages', { currentGroupChannel, userFilledMessageListQuery });
         messagesDispatcher({
-          type: messageActionTypes.GET_PREV_MESSAGES_START,
+          type: messageActionTypes.FETCH_INITIAL_MESSAGES_START,
           payload: null,
         });
 
@@ -67,27 +68,20 @@ function useHandleReconnect(
             )
               .then((messages) => {
                 messagesDispatcher({
-                  type: messageActionTypes.CLEAR_SENT_MESSAGES,
-                  payload: null,
-                });
-
-                const hasMorePrev = messages?.length > 0;
-                const oldestMessageTimeStamp = hasMorePrev
-                  ? messages[0].createdAt
-                  : null;
-                messagesDispatcher({
-                  type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
+                  type: messageActionTypes.FETCH_INITIAL_MESSAGES_SUCCESS,
                   payload: {
                     currentGroupChannel,
                     messages,
-                    hasMorePrev,
-                    oldestMessageTimeStamp,
                   },
                 });
                 setTimeout(() => utils.scrollIntoLast());
               })
               .catch((error) => {
                 logger.error('Channel: Fetching messages failed', error);
+                messagesDispatcher({
+                  type: messageActionTypes.FETCH_INITIAL_MESSAGES_FAILURE,
+                  payload: { currentGroupChannel },
+                });
               })
               .finally(() => {
                 currentGroupChannel.markAsRead?.();

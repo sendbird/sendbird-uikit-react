@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 
 import * as messageActionTypes from '../dux/actionTypes';
+import { PREV_RESULT_SIZE } from '../const';
 
 function useScrollCallback({
   currentGroupChannel,
@@ -19,7 +20,7 @@ function useScrollCallback({
     const useReaction = appInfo.isUsingReaction || false;
 
     const messageListParams = new sdk.MessageListParams();
-    messageListParams.prevResultSize = 30;
+    messageListParams.prevResultSize = PREV_RESULT_SIZE;
     messageListParams.isInclusive = true;
     messageListParams.includeReplies = false;
     messageListParams.includeReaction = useReaction;
@@ -40,26 +41,16 @@ function useScrollCallback({
       messageListParams,
     )
       .then((messages) => {
-        const hasMorePrev = (messages && messages.length > 0);
-        const lastMessageTs = hasMorePrev
-          ? messages[0].createdAt
-          : null;
-
         messagesDispatcher({
-          type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
-          payload: {
-            messages,
-            hasMorePrev: hasMorePrev,
-            oldestMessageTimeStamp: lastMessageTs,
-            currentGroupChannel,
-          },
+          type: messageActionTypes.FETCH_PREV_MESSAGES_SUCCESS,
+          payload: { currentGroupChannel, messages },
         });
         cb([messages, null]);
       })
       .catch((error) => {
         logger.error('Channel: Fetching messages failed', error);
         messagesDispatcher({
-          type: messageActionTypes.GET_PREV_MESSAGES_FAILURE,
+          type: messageActionTypes.FETCH_PREV_MESSAGES_FAILURE,
           payload: { currentGroupChannel },
         });
         cb([null, error]);

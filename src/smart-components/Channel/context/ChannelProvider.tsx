@@ -279,6 +279,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     currentGroupChannel,
     userFilledMessageListQuery,
     initialTimeStamp,
+    latestMessageTimeStamp,
     replyType,
   }, {
     sdk,
