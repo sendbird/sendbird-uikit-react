@@ -75,12 +75,6 @@ function useInitialMessagesFetch({
             type: messageActionTypes.FETCH_INITIAL_MESSAGES_FAILURE,
             payload: { currentGroupChannel },
           });
-        })
-        .finally(() => {
-          if (!initialTimeStamp) {
-            setTimeout(() => utils.scrollIntoLast());
-          }
-          currentGroupChannel.markAsRead();
         });
     }
   }, [channelUrl, userFilledMessageListQuery, initialTimeStamp]);

@@ -54,9 +54,6 @@ function useScrollDownCallback({
           payload: { currentGroupChannel },
         });
         cb([null, error]);
-      })
-      .finally(() => {
-        currentGroupChannel.markAsRead();
       });
   }, [currentGroupChannel, latestMessageTimeStamp, hasMoreNext, replyType]);
 }
