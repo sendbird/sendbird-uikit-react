@@ -28,7 +28,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
       logger.info('Channel | useHandleChannelEvents: Setup event handler', messageReceiverId);
 
       ChannelHandler.onMessageReceived = (channel, message) => {
-        // donot update if hasMoreNext
+        // Do not update when hasMoreNext
         if (compareIds(channel.url, channelUrl) && !hasMoreNext) {
           let scrollToEnd = false;
           try {
@@ -41,7 +41,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
           logger.info('Channel | useHandleChannelEvents: onMessageReceived', message);
           messagesDispatcher({
             type: messageActions.ON_MESSAGE_RECEIVED,
-            payload: { channel, message, scrollToEnd },
+            payload: { channel, message },
           });
 
           if (scrollToEnd) {
@@ -54,12 +54,6 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
               logger.warning('Channel | onMessageReceived | scroll to end failed');
             }
           }
-        }
-        if (compareIds(channel.url, channelUrl) && hasMoreNext) {
-          messagesDispatcher({
-            type: messageActions.UPDATE_UNREAD_COUNT,
-            payload: { channel },
-          });
         }
       };
 

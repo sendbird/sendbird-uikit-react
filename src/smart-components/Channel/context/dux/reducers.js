@@ -204,7 +204,6 @@ export default function reducer(state, action) {
         ...state,
         currentGroupChannel: action.payload,
         isInvalid: false,
-        unreadCount: 0,
       };
     }
     case actionTypes.SET_CHANNEL_INVALID: {
@@ -213,24 +212,10 @@ export default function reducer(state, action) {
         isInvalid: true,
       };
     }
-    case actionTypes.UPDATE_UNREAD_COUNT: {
-      const { channel } = action.payload;
-      const { currentGroupChannel = {}, unreadCount } = state;
-      const currentGroupChannelUrl = currentGroupChannel.url;
-      if (!compareIds(channel.url, currentGroupChannelUrl)) {
-        return state;
-      }
-      return {
-        ...state,
-        unreadCount: unreadCount + 1,
-        unreadSince: unreadCount + 1,
-      };
-    }
     case actionTypes.ON_MESSAGE_RECEIVED: {
-      const { channel, message, scrollToEnd } = action.payload;
+      const { channel, message } = action.payload;
       const { members } = channel;
       const { sender } = message;
-      let unreadCount = 0;
       const { currentGroupChannel = {}, unreadSince } = state;
       const currentGroupChannelUrl = currentGroupChannel.url;
 
@@ -244,12 +229,6 @@ export default function reducer(state, action) {
       // Filter by userFilledQuery
       if (state.messageListParams && !filterMessageListParams(state.messageListParams, message)) {
         return state;
-      }
-
-      unreadCount = state.unreadCount + 1;
-      // reset unreadCount if have to scrollToEnd
-      if (scrollToEnd) {
-        unreadCount = 0;
       }
 
       if (message.isAdminMessage && message.isAdminMessage()) {
@@ -274,11 +253,8 @@ export default function reducer(state, action) {
 
       return {
         ...state,
-        unreadCount,
         currentGroupChannel: channel,
-        unreadSince: (unreadCount === 1)
-          ? format(new Date(), 'p MMM dd')
-          : unreadSince,
+        unreadSince: state?.unreadSince ? unreadSince : format(new Date(), 'p MMM dd'),
         allMessages: passUnsuccessfullMessages(state.allMessages, message),
       };
     }
@@ -342,7 +318,6 @@ export default function reducer(state, action) {
       }
       return {
         ...state,
-        unreadCount: 0,
         unreadSince: null,
       };
     case actionTypes.ON_MESSAGE_DELETED:

@@ -80,8 +80,7 @@ interface MessageStoreInterface {
   allMessages: CoreMessageType[];
   loading: boolean;
   initialized: boolean;
-  unreadCount: number;
-  unreadSince: number;
+  unreadSince: string;
   isInvalid: boolean;
   currentGroupChannel: GroupChannel;
   hasMorePrev: boolean;
@@ -170,7 +169,6 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     allMessages,
     loading,
     initialized,
-    unreadCount,
     unreadSince,
     isInvalid,
     currentGroupChannel,
@@ -355,7 +353,6 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       allMessages,
       loading,
       initialized,
-      unreadCount,
       unreadSince,
       isInvalid,
       currentGroupChannel,

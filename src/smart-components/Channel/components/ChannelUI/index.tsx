@@ -1,6 +1,6 @@
 import './channel-ui.scss';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
 import { useChannel } from '../../context/ChannelProvider';
@@ -13,7 +13,6 @@ import FrozenNotification from '../FrozenNotification';
 import UnreadCount from '../UnreadCount';
 import MessageInputWrapper from '../MessageInput';
 import { RenderMessageProps } from '../../../../types';
-import { scrollIntoLast } from '../../context/utils';
 import * as messageActionTypes from '../../context/dux/actionTypes';
 
 export interface ChannelUIProps {
@@ -41,16 +40,18 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
     currentGroupChannel,
     channelUrl,
     isInvalid,
-    unreadCount,
     unreadSince,
     loading,
     setInitialTimeStamp,
     setAnimatedMessageId,
     setHighLightedMessageId,
-    initialTimeStamp,
     scrollRef,
     messagesDispatcher,
   } = useChannel();
+  const [unreadCount, setUnreadCount] = useState(0);
+  useEffect(() => {
+    setUnreadCount(currentGroupChannel.unreadMessageCount);
+  }, [currentGroupChannel?.unreadMessageCount]);
 
   const globalStore = useSendbirdStateContext();
   const sdkError = globalStore?.stores?.sdkStore?.error;
@@ -112,21 +113,18 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
             count={unreadCount}
             time={unreadSince}
             onClick={() => {
-              if (initialTimeStamp) {
-                setInitialTimeStamp(null);
-                setAnimatedMessageId(null);
-                setHighLightedMessageId(null);
-              } else {
-                scrollIntoLast();
-                // there is no scroll
-                if (scrollRef?.current?.scrollTop === 0) {
-                  currentGroupChannel.markAsRead();
-                }
-                messagesDispatcher({
-                  type: messageActionTypes.MARK_AS_READ,
-                  payload: { channel: currentGroupChannel },
-                });
+              setUnreadCount(0);
+              if (scrollRef?.current?.scrollTop) {
+                scrollRef.current.scrollTop = scrollRef?.current?.scrollHeight - scrollRef?.current?.offsetHeight;
               }
+              currentGroupChannel?.markAsRead();
+              messagesDispatcher({
+                type: messageActionTypes.MARK_AS_READ,
+                payload: { channel: currentGroupChannel },
+              });
+              setInitialTimeStamp(null);
+              setAnimatedMessageId(null);
+              setHighLightedMessageId(null);
             }}
           />
         )
