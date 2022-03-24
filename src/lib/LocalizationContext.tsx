@@ -24,6 +24,11 @@ const LocalizationProvider = (props: LocalizationProviderProps): React.ReactNode
   );
 };
 
-const useLocalization = () => React.useContext(LocalizationContext);
+export type UseLocalizationType = () => {
+  stringSet: Record<string, string>;
+  dateLocale: globalThis.Locale;
+};
+
+const useLocalization: UseLocalizationType = () => React.useContext(LocalizationContext);
 
 export { LocalizationContext, LocalizationProvider, useLocalization };

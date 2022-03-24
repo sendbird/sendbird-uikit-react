@@ -25,6 +25,7 @@ import getStringSet from '../ui/Label/stringSet';
 export default function Sendbird(props) {
   const {
     userId,
+    dateLocale,
     appId,
     accessToken,
     children,
@@ -169,7 +170,7 @@ export default function Sendbird(props) {
         },
       }}
     >
-      <LocalizationProvider stringSet={localeStringSet}>
+      <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
         {children}
       </LocalizationProvider>
     </SendbirdSdkContext.Provider>
@@ -187,6 +188,7 @@ Sendbird.propTypes = {
   ]).isRequired,
   theme: PropTypes.string,
   nickname: PropTypes.string,
+  dateLocale: PropTypes.shape({}),
   profileUrl: PropTypes.string,
   disableUserProfile: PropTypes.bool,
   renderUserProfile: PropTypes.func,
@@ -223,6 +225,7 @@ Sendbird.defaultProps = {
   accessToken: '',
   theme: 'light',
   nickname: '',
+  dateLocale: null,
   profileUrl: '',
   disableUserProfile: false,
   renderUserProfile: null,

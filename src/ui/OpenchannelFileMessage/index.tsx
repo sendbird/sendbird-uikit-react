@@ -12,7 +12,7 @@ import TextButton from '../TextButton';
 import UserProfile from '../UserProfile';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 
-import { LocalizationContext, useLocalization } from '../../lib/LocalizationContext';
+import { useLocalization } from '../../lib/LocalizationContext';
 import { checkFileType, truncate } from './utils';
 import { ClientFileMessage } from '../../index';
 import {

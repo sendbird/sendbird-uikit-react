@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import kr from 'date-fns/locale/ko';
 
 import pkg from '../../../../package-lock.json'
 
@@ -190,6 +191,7 @@ export const Korean = () => fitPageSize(
     userId={array[0]}
     nickname={array[0]}
     showSearchIcon
+    dateLocale={kr}
     stringSet={{
       CHANNEL_LIST__TITLE: '채널 목록',
       CHANNEL__MESSAGE_INPUT__PLACE_HOLDER: '메시지 보내기',
