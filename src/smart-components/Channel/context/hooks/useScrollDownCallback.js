@@ -6,7 +6,7 @@ const RESULT_SIZE = 30;
 
 function useScrollDownCallback({
   currentGroupChannel,
-  latestFetchedMessageTimeStamp,
+  latestMessageTimeStamp,
   userFilledMessageListQuery,
   hasMoreNext,
   replyType,
@@ -38,7 +38,7 @@ function useScrollDownCallback({
     logger.info('Channel: Fetching later messages', { currentGroupChannel, userFilledMessageListQuery });
 
     currentGroupChannel.getMessagesByTimestamp(
-      latestFetchedMessageTimeStamp || new Date().getTime(),
+      latestMessageTimeStamp || new Date().getTime(),
       messageListParams,
     )
       .then((messages) => {
@@ -53,7 +53,7 @@ function useScrollDownCallback({
           payload: {
             messages,
             hasMoreNext: hasMoreMessages,
-            latestFetchedMessageTimeStamp: lastMessageTs,
+            latestMessageTimeStamp: lastMessageTs,
             currentGroupChannel,
           },
         });
@@ -66,7 +66,7 @@ function useScrollDownCallback({
           payload: {
             messages: [],
             hasMoreNext: false,
-            latestFetchedMessageTimeStamp: 0,
+            latestMessageTimeStamp: 0,
             currentGroupChannel,
           },
         });
@@ -75,7 +75,7 @@ function useScrollDownCallback({
       .finally(() => {
         currentGroupChannel.markAsRead();
       });
-  }, [currentGroupChannel, latestFetchedMessageTimeStamp, hasMoreNext, replyType]);
+  }, [currentGroupChannel, latestMessageTimeStamp, hasMoreNext, replyType]);
 }
 
 export default useScrollDownCallback;

@@ -45,11 +45,11 @@ export default function reducer(state, action) {
         hasMorePrev,
         hasMoreNext,
         currentGroupChannel = {},
-        lastMessageTimeStamp,
-        latestFetchedMessageTimeStamp,
+        oldestMessageTimeStamp,
+        latestMessageTimeStamp,
     } = action.payload;
       const hasHasMoreNext = hasOwnProperty('hasMoreNext')(action.payload);
-      const hasLatestFetchedMessageTimeStamp = hasOwnProperty('latestFetchedMessageTimeStamp')(action.payload);
+      const hasLatestFetchedMessageTimeStamp = hasOwnProperty('latestMessageTimeStamp')(action.payload);
       const stateChannel = state.currentGroupChannel || {};
       const stateChannelUrl = stateChannel.url;
       const actionChannelUrl = currentGroupChannel.url;
@@ -79,13 +79,13 @@ export default function reducer(state, action) {
         loading: false,
         initialized: true,
         hasMorePrev: hasMorePrev,
-        lastMessageTimeStamp: lastMessageTimeStamp,
+        oldestMessageTimeStamp: oldestMessageTimeStamp,
         // if present change else, keep
         ...(hasHasMoreNext && {
           hasMoreNext: hasMoreNext,
         }),
         ...(hasLatestFetchedMessageTimeStamp && {
-          latestFetchedMessageTimeStamp: action.payload.latestFetchedMessageTimeStamp,
+          latestMessageTimeStamp: action.payload.latestMessageTimeStamp,
         }),
         allMessages: [
           ...filteredNewMessages,
@@ -126,9 +126,9 @@ export default function reducer(state, action) {
         loading: false,
         initialized: true,
         hasMorePrev: action.payload.hasMorePrev,
-        lastMessageTimeStamp: action.payload.lastMessageTimeStamp,
+        oldestMessageTimeStamp: action.payload.oldestMessageTimeStamp,
         hasMoreNext: action.payload.hasMoreNext,
-        latestFetchedMessageTimeStamp: action.payload.latestFetchedMessageTimeStamp,
+        latestMessageTimeStamp: action.payload.latestMessageTimeStamp,
         allMessages: [
           ...updatedAllMessages,
           ...filteredNewMessages,

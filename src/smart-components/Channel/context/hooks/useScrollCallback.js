@@ -4,7 +4,7 @@ import * as messageActionTypes from '../dux/actionTypes';
 
 function useScrollCallback({
   currentGroupChannel,
-  lastMessageTimeStamp,
+  oldestMessageTimeStamp,
   userFilledMessageListQuery,
   replyType,
 }, {
@@ -36,7 +36,7 @@ function useScrollCallback({
     logger.info('Channel: Fetching messages', { currentGroupChannel, userFilledMessageListQuery });
 
     currentGroupChannel.getMessagesByTimestamp(
-      lastMessageTimeStamp || new Date().getTime(),
+      oldestMessageTimeStamp || new Date().getTime(),
       messageListParams,
     )
       .then((messages) => {
@@ -50,7 +50,7 @@ function useScrollCallback({
           payload: {
             messages,
             hasMorePrev: hasMorePrev,
-            lastMessageTimeStamp: lastMessageTs,
+            oldestMessageTimeStamp: lastMessageTs,
             currentGroupChannel,
           },
         });
@@ -63,7 +63,7 @@ function useScrollCallback({
           payload: {
             messages: [],
             hasMorePrev: false,
-            lastMessageTimeStamp: 0,
+            oldestMessageTimeStamp: 0,
             currentGroupChannel,
           },
         });
@@ -72,7 +72,7 @@ function useScrollCallback({
       .finally(() => {
         currentGroupChannel.markAsRead();
       });
-  }, [currentGroupChannel, lastMessageTimeStamp, replyType]);
+  }, [currentGroupChannel, oldestMessageTimeStamp, replyType]);
 }
 
 export default useScrollCallback;

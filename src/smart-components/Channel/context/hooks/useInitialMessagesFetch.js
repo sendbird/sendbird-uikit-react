@@ -66,18 +66,18 @@ function useInitialMessagesFetch({
         )
           .then((messages) => {
             const hasMorePrev = (messages && messages.length > 0);
-            const lastMessageTimeStamp = hasMorePrev
+            const oldestMessageTimeStamp = hasMorePrev
               ? messages[0].createdAt
               : null;
-            const latestFetchedMessageTimeStamp = getLatestMessageTimeStamp(messages);
+            const latestMessageTimeStamp = getLatestMessageTimeStamp(messages);
             messagesDispatcher({
               type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
               payload: {
                 messages,
                 hasMorePrev,
-                lastMessageTimeStamp,
+                oldestMessageTimeStamp,
                 currentGroupChannel,
-                latestFetchedMessageTimeStamp,
+                latestMessageTimeStamp,
               },
             });
           })
@@ -88,7 +88,7 @@ function useInitialMessagesFetch({
               payload: {
                 messages: [],
                 hasMorePrev: false,
-                lastMessageTimeStamp: 0,
+                oldestMessageTimeStamp: 0,
                 currentGroupChannel,
               },
             });
@@ -108,10 +108,10 @@ function useInitialMessagesFetch({
         )
           .then((messages) => {
             const hasMorePrev = (messages && messages.length > 0);
-            const lastMessageTimeStamp = hasMorePrev
+            const oldestMessageTimeStamp = hasMorePrev
               ? messages[0].createdAt
               : null;
-            const latestFetchedMessageTimeStamp = getLatestMessageTimeStamp(messages);
+            const latestMessageTimeStamp = getLatestMessageTimeStamp(messages);
             // to make sure there are no more messages below
             const nextMessageListParams = new sdk.MessageListParams();
             nextMessageListParams.nextResultSize = NEXT_RESULT_SIZE;
@@ -129,7 +129,7 @@ function useInitialMessagesFetch({
               });
             }
             currentGroupChannel.getMessagesByTimestamp(
-              latestFetchedMessageTimeStamp || new Date().getTime(),
+              latestMessageTimeStamp || new Date().getTime(),
               nextMessageListParams,
             ).then((nextMessages) => {
               messagesDispatcher({
@@ -137,9 +137,9 @@ function useInitialMessagesFetch({
                 payload: {
                   messages,
                   hasMorePrev,
-                  lastMessageTimeStamp,
+                  oldestMessageTimeStamp,
                   currentGroupChannel,
-                  latestFetchedMessageTimeStamp,
+                  latestMessageTimeStamp,
                   hasMoreNext: nextMessages && nextMessages.length > 0,
                 },
               });
@@ -152,7 +152,7 @@ function useInitialMessagesFetch({
               payload: {
                 messages: [],
                 hasMorePrev: false,
-                lastMessageTimeStamp: 0,
+                oldestMessageTimeStamp: 0,
                 currentGroupChannel,
               },
             });

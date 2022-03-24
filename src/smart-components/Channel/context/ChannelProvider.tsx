@@ -85,9 +85,9 @@ interface MessageStoreInterface {
   isInvalid: boolean;
   currentGroupChannel: GroupChannel;
   hasMorePrev: boolean;
-  lastMessageTimeStamp: number;
+  oldestMessageTimeStamp: number;
   hasMoreNext: boolean;
-  latestFetchedMessageTimeStamp: number;
+  latestMessageTimeStamp: number;
   emojiContainer: any;
   readStatus: any;
 }
@@ -175,9 +175,9 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     isInvalid,
     currentGroupChannel,
     hasMorePrev,
-    lastMessageTimeStamp,
+    oldestMessageTimeStamp,
     hasMoreNext,
-    latestFetchedMessageTimeStamp,
+    latestMessageTimeStamp,
     emojiContainer,
     readStatus,
   } = messagesStore;
@@ -207,7 +207,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
 
   // Scrollup is default scroll for channel
   const onScrollCallback = useScrollCallback({
-    currentGroupChannel, lastMessageTimeStamp, userFilledMessageListQuery, replyType,
+    currentGroupChannel, oldestMessageTimeStamp, userFilledMessageListQuery, replyType,
   }, {
     hasMorePrev,
     logger,
@@ -226,7 +226,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   // hasMoreNext, onScrollDownCallback -> scroll down
   const onScrollDownCallback = useScrollDownCallback({
     currentGroupChannel,
-    latestFetchedMessageTimeStamp,
+    latestMessageTimeStamp,
     userFilledMessageListQuery,
     hasMoreNext,
     replyType,
@@ -360,8 +360,8 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       currentGroupChannel,
       hasMorePrev,
       hasMoreNext,
-      lastMessageTimeStamp,
-      latestFetchedMessageTimeStamp,
+      oldestMessageTimeStamp,
+      latestMessageTimeStamp,
       emojiContainer,
       readStatus,
 

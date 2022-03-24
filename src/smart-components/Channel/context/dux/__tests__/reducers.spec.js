@@ -16,19 +16,19 @@ describe('Messages-Reducers', () => {
   it('should set messages GET_PREV_MESSAGES_SUCESS', () => {
     const mockData = generateMockChannel();
     const hasMorePrev = randomBoolean();
-    const lastMessageTimeStamp = 123;
+    const oldestMessageTimeStamp = 123;
     const nextState = reducers(initialState, {
       type: actionTypes.GET_PREV_MESSAGES_SUCESS,
       payload: {
         hasMorePrev,
         messages: mockData.allMessages,
-        lastMessageTimeStamp,
+        oldestMessageTimeStamp,
       }
     });
     expect(nextState.loading).toEqual(false);
     expect(nextState.hasMorePrev).toEqual(hasMorePrev);
     expect(nextState.allMessages).toEqual(mockData.allMessages);
-    expect(nextState.lastMessageTimeStamp).toEqual(lastMessageTimeStamp);
+    expect(nextState.oldestMessageTimeStamp).toEqual(oldestMessageTimeStamp);
   });
 
   it('should append to head of all messages on GET_PREV_MESSAGES_SUCESS', () => {
