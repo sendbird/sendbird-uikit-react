@@ -130,6 +130,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
       >
         {/* date-separator */}
         {
+          // TODO: Add message instance as a function parameter
           hasSeparator && renderCustomSeperator?.() || (
             <DateSeparator>
               <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>

@@ -124,7 +124,7 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
                 }
                 messagesDispatcher({
                   type: messageActionTypes.MARK_AS_READ,
-                  payload: null,
+                  payload: { channel: currentGroupChannel },
                 });
               }
             }}
