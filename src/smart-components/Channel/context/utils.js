@@ -106,8 +106,8 @@ export const getParsedStatus = (message, currentGroupChannel) => {
       return MessageStatusType.SENT;
     }
 
-    const unreadCount = currentGroupChannel.getReadReceipt(message);
-    if (unreadCount === 0) {
+    const unreadMemberCount = currentGroupChannel.getUnreadMemberCount(message);
+    if (unreadMemberCount === 0) {
       return MessageStatusType.READ;
     }
 

@@ -5,8 +5,8 @@ export const generateMockChannel = () => ({
     url: 'sendbird_group_channel_13883929_3dc3bb3af92eded8ff8e5f71de775fe149a32dd6',
   },
   messageListParams: null,
-  lastMessageTimeStamp: 0,
-  latestFetchedMessageTimeStamp: 1582004042250,
+  oldestMessageTimeStamp: 1582004042250,
+  latestMessageTimeStamp: 1582004214188,
   allMessages: [{
     "messageId": 390280166,
     "messageType": "user",

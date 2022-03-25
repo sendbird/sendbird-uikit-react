@@ -10,6 +10,7 @@ import { compareMessagesForGrouping } from '../../context/utils';
 import Message from '../Message';
 import { RenderMessageProps } from '../../../../types';
 import { isAboutSame } from '../../context/utils';
+import uuidv4 from '../../../../utils/uuid';
 
 export type MessageListProps = {
   renderMessage?: (props: RenderMessageProps) => React.ReactNode;
@@ -17,7 +18,7 @@ export type MessageListProps = {
   renderCustomSeperator?: () => React.ReactNode;
 };
 
-const SCROLL_REF_CLASS_NAME = 'sendbird-msg--scroll-ref';
+const SCROLL_REF_CLASS_NAME = '.sendbird-msg--scroll-ref';
 
 const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
   const {
@@ -27,9 +28,8 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
   } = props;
   const {
     allMessages,
-    hasMore,
-    hasMoreToBottom,
-    setIntialTimeStamp,
+    hasMorePrev,
+    setInitialTimeStamp,
     setAnimatedMessageId,
     setHighLightedMessageId,
     useMessageGrouping,
@@ -51,7 +51,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
     } = element;
 
     if (scrollTop === 0) {
-      if (!hasMore) {
+      if (!hasMorePrev) {
         return;
       }
       const nodes = scrollRef.current.querySelectorAll(SCROLL_REF_CLASS_NAME);
@@ -61,7 +61,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
           // https://github.com/scabbiaza/react-scroll-position-on-updating-dom
           // Set block to nearest to prevent unexpected scrolling from outer components
           try {
-            first.scrollIntoView({ block: 'nearest' });
+            first.scrollIntoView({ block: "start", inline: "nearest" });
           } catch (error) {
             //
           }
@@ -69,20 +69,22 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
       });
     }
 
-    if (isAboutSame(clientHeight + scrollTop, scrollHeight, 1)) {
-      // if (clientHeight + scrollTop === scrollHeight) {
-        const nodes = scrollRef.current.querySelectorAll(SCROLL_REF_CLASS_NAME);
-        const last = nodes && nodes[nodes.length - 1];
+    if (isAboutSame(clientHeight + scrollTop, scrollHeight, 10)) {
       onScrollDownCallback(([messages]) => {
         if (messages) {
-          // https://github.com/scabbiaza/react-scroll-position-on-updating-dom
           try {
-            last.scrollIntoView({ block: 'nearest' });
+            element.scrollTop = scrollHeight - clientHeight;
           } catch (error) {
             //
           }
         }
       });
+    }
+
+    // save the lastest scroll bottom value
+    if (scrollRef?.current) {
+      const current = scrollRef?.current;
+      setScrollBottom(current.scrollHeight - current.scrollTop - current.offsetHeight)
     }
 
     // do this later
@@ -91,23 +93,20 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
       if (clientHeight + scrollTop === scrollHeight) {
         messagesDispatcher({
           type: messageActionTypes.MARK_AS_READ,
-          payload: null,
+          payload: { channel: currentGroupChannel },
         });
         currentGroupChannel.markAsRead();
-      }
-
-      // save the lastest scroll bottom value
-      if (scrollRef?.current) {
-        const current = scrollRef?.current;
-        setScrollBottom(current.scrollHeight - current.scrollTop - current.offsetHeight)
       }
     }, 500);
   };
 
   const onClickScrollBot = () => {
-    setIntialTimeStamp?.(null);
+    setInitialTimeStamp?.(null);
     setAnimatedMessageId?.(null);
     setHighLightedMessageId?.(null);
+    if (scrollRef?.current?.scrollTop) {
+      scrollRef.current.scrollTop = scrollRef?.current?.scrollHeight - scrollRef?.current?.offsetHeight;
+    }
   };
 
   if (allMessages.length < 1) {
@@ -125,76 +124,76 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
   }
   return (
     <div className="sendbird-conversation__messages">
-        <div className="sendbird-conversation__scroll-container">
-          <div className="sendbird-conversation__padding" />
-          <div
-            className="sendbird-conversation__messages-padding"
-            ref={scrollRef}
-            onScroll={onScroll}
-          >
-            {
-              allMessages.map(
-                (m, idx) => {
-                  const previousMessage = allMessages[idx - 1];
-                  const nextMessage = allMessages[idx + 1];
-                  const [chainTop, chainBottom] = useMessageGrouping
-                    ? compareMessagesForGrouping(previousMessage, m, nextMessage)
-                    : [false, false];
-                  const previousMessageCreatedAt = previousMessage?.createdAt;
-                  const currentCreatedAt = m.createdAt;
-                  // https://stackoverflow.com/a/41855608
-                  const hasSeparator = !(previousMessageCreatedAt && (
-                    isSameDay(currentCreatedAt, previousMessageCreatedAt)
-                  ));
+      <div className="sendbird-conversation__scroll-container">
+        <div className="sendbird-conversation__padding" />
+        <div
+          className="sendbird-conversation__messages-padding"
+          ref={scrollRef}
+          onScroll={onScroll}
+        >
+          {
+            allMessages.map(
+              (m, idx) => {
+                const previousMessage = allMessages[idx - 1];
+                const nextMessage = allMessages[idx + 1];
+                const [chainTop, chainBottom] = useMessageGrouping
+                  ? compareMessagesForGrouping(previousMessage, m, nextMessage)
+                  : [false, false];
+                const previousMessageCreatedAt = previousMessage?.createdAt;
+                const currentCreatedAt = m.createdAt;
+                // https://stackoverflow.com/a/41855608
+                const hasSeparator = !(previousMessageCreatedAt && (
+                  isSameDay(currentCreatedAt, previousMessageCreatedAt)
+                ));
 
-                  const handleScroll = () => {
-                    const current = scrollRef?.current;
-                    if (current) {
-                      const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
-                      if (scrollBottom < bottom) {
-                        current.scrollTop += bottom - scrollBottom;
-                      }
+                const handleScroll = () => {
+                  const current = scrollRef?.current;
+                  if (current) {
+                    const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
+                    if (scrollBottom < bottom) {
+                      current.scrollTop += bottom - scrollBottom;
                     }
                   }
+                }
 
-                  return (
-                    <Message
-                      handleScroll={handleScroll}
-                      renderMessage={renderMessage}
-                      message={m}
-                      hasSeparator={hasSeparator}
-                      chainTop={chainTop}
-                      chainBottom={chainBottom}
-                      renderCustomSeperator={renderCustomSeperator}
-                      key={m.messageId || m.reqId}
-                    />
-                  )
-                },
-              )
-            }
-          </div>
+                return (
+                  <Message
+                    handleScroll={handleScroll}
+                    renderMessage={renderMessage}
+                    message={m}
+                    hasSeparator={hasSeparator}
+                    chainTop={chainTop}
+                    chainBottom={chainBottom}
+                    renderCustomSeperator={renderCustomSeperator}
+                    key={m?.messageId + uuidv4()}
+                  />
+                )
+              },
+            )
+          }
         </div>
-        {
-          hasMoreToBottom && (
-            <div
-              className="sendbird-conversation__scroll-bottom-button"
-              onClick={onClickScrollBot}
-              onKeyDown={onClickScrollBot}
-              tabIndex={0}
-              role="button"
-            >
-              <Icon
-                width="24px"
-                height="24px"
-                type={IconTypes.CHEVRON_DOWN}
-                fillColor={IconColors.PRIMARY}
-              />
-            </div>
-          )
-        }
       </div>
+      {
+        // This flag is an unmatched variable
+        (scrollBottom > 1) && (
+          <div
+            className="sendbird-conversation__scroll-bottom-button"
+            onClick={onClickScrollBot}
+            onKeyDown={onClickScrollBot}
+            tabIndex={0}
+            role="button"
+          >
+            <Icon
+              width="24px"
+              height="24px"
+              type={IconTypes.CHEVRON_DOWN}
+              fillColor={IconColors.PRIMARY}
+            />
+          </div>
+        )
+      }
+    </div>
   );
 };
-
 
 export default MessageList;

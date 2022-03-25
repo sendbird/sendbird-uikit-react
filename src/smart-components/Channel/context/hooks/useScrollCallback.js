@@ -1,25 +1,26 @@
 import { useCallback } from 'react';
 
 import * as messageActionTypes from '../dux/actionTypes';
+import { PREV_RESULT_SIZE } from '../const';
 
 function useScrollCallback({
   currentGroupChannel,
-  lastMessageTimeStamp,
+  oldestMessageTimeStamp,
   userFilledMessageListQuery,
   replyType,
 }, {
-  hasMore,
+  hasMorePrev,
   logger,
   messagesDispatcher,
   sdk,
 }) {
   return useCallback((cb) => {
-    if (!hasMore) { return; }
+    if (!hasMorePrev) { return; }
     const { appInfo = {} } = sdk;
     const useReaction = appInfo.isUsingReaction || false;
 
     const messageListParams = new sdk.MessageListParams();
-    messageListParams.prevResultSize = 30;
+    messageListParams.prevResultSize = PREV_RESULT_SIZE;
     messageListParams.isInclusive = true;
     messageListParams.includeReplies = false;
     messageListParams.includeReaction = useReaction;
@@ -36,43 +37,25 @@ function useScrollCallback({
     logger.info('Channel: Fetching messages', { currentGroupChannel, userFilledMessageListQuery });
 
     currentGroupChannel.getMessagesByTimestamp(
-      lastMessageTimeStamp || new Date().getTime(),
+      oldestMessageTimeStamp || new Date().getTime(),
       messageListParams,
     )
       .then((messages) => {
-        const hasMoreMessages = (messages && messages.length > 0);
-        const lastMessageTs = hasMoreMessages
-          ? messages[0].createdAt
-          : null;
-
         messagesDispatcher({
-          type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
-          payload: {
-            messages,
-            hasMore: hasMoreMessages,
-            lastMessageTimeStamp: lastMessageTs,
-            currentGroupChannel,
-          },
+          type: messageActionTypes.FETCH_PREV_MESSAGES_SUCCESS,
+          payload: { currentGroupChannel, messages },
         });
         cb([messages, null]);
       })
       .catch((error) => {
         logger.error('Channel: Fetching messages failed', error);
         messagesDispatcher({
-          type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
-          payload: {
-            messages: [],
-            hasMore: false,
-            lastMessageTimeStamp: 0,
-            currentGroupChannel,
-          },
+          type: messageActionTypes.FETCH_PREV_MESSAGES_FAILURE,
+          payload: { currentGroupChannel },
         });
         cb([null, error]);
-      })
-      .finally(() => {
-        currentGroupChannel.markAsRead();
       });
-  }, [currentGroupChannel, lastMessageTimeStamp, replyType]);
+  }, [currentGroupChannel, oldestMessageTimeStamp, replyType]);
 }
 
 export default useScrollCallback;

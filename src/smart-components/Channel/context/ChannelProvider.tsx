@@ -80,14 +80,13 @@ interface MessageStoreInterface {
   allMessages: CoreMessageType[];
   loading: boolean;
   initialized: boolean;
-  unreadCount: number;
-  unreadSince: number;
+  unreadSince: string;
   isInvalid: boolean;
   currentGroupChannel: GroupChannel;
-  hasMore: boolean;
-  lastMessageTimeStamp: number;
-  hasMoreToBottom: boolean;
-  latestFetchedMessageTimeStamp: number;
+  hasMorePrev: boolean;
+  oldestMessageTimeStamp: number;
+  hasMoreNext: boolean;
+  latestMessageTimeStamp: number;
   emojiContainer: any;
   readStatus: any;
 }
@@ -98,8 +97,8 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   messagesDispatcher: CustomUseReducerDispatcher;
   quoteMessage: CoreMessageType;
   setQuoteMessage: React.Dispatch<React.SetStateAction<CoreMessageType>>;
-  intialTimeStamp: number;
-  setIntialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
+  initialTimeStamp: number;
+  setInitialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
   animatedMessageId: number;
   highLightedMessageId: number;
   nicknamesMap: Map<string, string>;
@@ -148,9 +147,9 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   const sdk = globalStore?.stores?.sdkStore?.sdk;
   const sdkInit = globalStore?.stores?.sdkStore?.initialized;
 
-  const [intialTimeStamp, setIntialTimeStamp] = useState(startingPoint);
+  const [initialTimeStamp, setInitialTimeStamp] = useState(startingPoint);
   useEffect(() => {
-    setIntialTimeStamp(startingPoint);
+    setInitialTimeStamp(startingPoint);
   }, [startingPoint, channelUrl]);
   const [animatedMessageId, setAnimatedMessageId] = useState(null);
   const [highLightedMessageId, setHighLightedMessageId] = useState(highlightedMessage);
@@ -170,14 +169,13 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     allMessages,
     loading,
     initialized,
-    unreadCount,
     unreadSince,
     isInvalid,
     currentGroupChannel,
-    hasMore,
-    lastMessageTimeStamp,
-    hasMoreToBottom,
-    latestFetchedMessageTimeStamp,
+    hasMorePrev,
+    oldestMessageTimeStamp,
+    hasMoreNext,
+    latestMessageTimeStamp,
     emojiContainer,
     readStatus,
   } = messagesStore;
@@ -207,28 +205,28 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
 
   // Scrollup is default scroll for channel
   const onScrollCallback = useScrollCallback({
-    currentGroupChannel, lastMessageTimeStamp, userFilledMessageListQuery, replyType,
+    currentGroupChannel, oldestMessageTimeStamp, userFilledMessageListQuery, replyType,
   }, {
-    hasMore,
+    hasMorePrev,
     logger,
     messagesDispatcher,
     sdk,
   });
 
   const scrollToMessage = useScrollToMessage({
-    setIntialTimeStamp,
+    setInitialTimeStamp,
     setAnimatedMessageId,
     allMessages,
   }, { logger });
 
   // onScrollDownCallback is added for navigation to different timestamps on messageSearch
-  // hasMoreToBottom, onScrollDownCallback -> scroll down
-  // hasMore, onScrollCallback -> scroll up(default behavior)
+  // hasMorePrev, onScrollCallback -> scroll up(default behavior)
+  // hasMoreNext, onScrollDownCallback -> scroll down
   const onScrollDownCallback = useScrollDownCallback({
     currentGroupChannel,
-    latestFetchedMessageTimeStamp,
+    latestMessageTimeStamp,
     userFilledMessageListQuery,
-    hasMoreToBottom,
+    hasMoreNext,
     replyType,
   }, {
     logger,
@@ -261,7 +259,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
 
   // Hook to handle ChannelEvents and send values to useReducer using messagesDispatcher
   useHandleChannelEvents(
-    { currentGroupChannel, sdkInit, hasMoreToBottom },
+    { currentGroupChannel, sdkInit, hasMoreNext },
     {
       messagesDispatcher,
       sdk,
@@ -274,11 +272,12 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   // hook that fetches messages when channel changes
   // to be clear here useGetChannel sets currentGroupChannel
   // and useInitialMessagesFetch executes when currentGroupChannel changes
-  // p.s This one executes on intialTimeStamp change too
+  // p.s This one executes on initialTimeStamp change too
   useInitialMessagesFetch({
     currentGroupChannel,
     userFilledMessageListQuery,
-    intialTimeStamp,
+    initialTimeStamp,
+    latestMessageTimeStamp,
     replyType,
   }, {
     sdk,
@@ -354,14 +353,13 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       allMessages,
       loading,
       initialized,
-      unreadCount,
       unreadSince,
       isInvalid,
       currentGroupChannel,
-      hasMore,
-      hasMoreToBottom,
-      lastMessageTimeStamp,
-      latestFetchedMessageTimeStamp,
+      hasMorePrev,
+      hasMoreNext,
+      oldestMessageTimeStamp,
+      latestMessageTimeStamp,
       emojiContainer,
       readStatus,
 
@@ -375,10 +373,10 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       messageInputRef,
       sendMessage,
       sendFileMessage,
-      intialTimeStamp,
+      initialTimeStamp,
       messageActionTypes,
       messagesDispatcher,
-      setIntialTimeStamp,
+      setInitialTimeStamp,
       setAnimatedMessageId,
       setHighLightedMessageId,
       animatedMessageId,

@@ -1,10 +1,9 @@
 import format from 'date-fns/format';
 
 import * as actionTypes from './actionTypes';
-import initialState from './initialState';
-
 import compareIds from '../../../../utils/compareIds';
-import { passUnsuccessfullMessages, hasOwnProperty } from '../utils';
+import { PREV_RESULT_SIZE, NEXT_RESULT_SIZE } from '../const';
+import { passUnsuccessfullMessages } from '../utils';
 import { filterMessageListParams, getSendingMessageStatus } from '../../../../utils';
 
 const {
@@ -12,48 +11,73 @@ const {
   FAILED,
   PENDING,
 } = getSendingMessageStatus();
+const getOldestMessageTimeStamp = (messages = []) => {
+  const oldestMessage = messages[0];
+  return (oldestMessage && oldestMessage.createdAt) || null;
+};
+const getLatestMessageTimeStamp = (messages = []) => {
+  const latestMessage = messages[messages.length - 1];
+  return (latestMessage && latestMessage.createdAt) || null;
+};
 
 export default function reducer(state, action) {
   switch (action.type) {
-    case actionTypes.RESET_STATE:
-      return initialState;
     case actionTypes.RESET_MESSAGES:
       return {
         ...state,
-        // when user switches channel, if the previous channel `hasMore`
-        // the onScroll gets called twice, setting hasMore false prevents this
-        hasMore: false,
+        // when user switches channel, if the previous channel `hasMorePrev`
+        // the onScroll gets called twice, setting hasMorePrev false prevents this
+        hasMorePrev: false,
+        hasMoreNext: false,
         allMessages: [],
       };
-    case actionTypes.GET_PREV_MESSAGES_START:
+    case actionTypes.FETCH_INITIAL_MESSAGES_START: {
       return {
         ...state,
         loading: true,
-      };
-    case actionTypes.CLEAR_SENT_MESSAGES:
-      return {
-        ...state,
         allMessages: [
           ...state.allMessages.filter((m) => (
             m.sendingStatus !== SUCCEEDED
           )),
         ],
       };
-    case actionTypes.GET_PREV_MESSAGES_SUCESS: {
-      const receivedMessages = action.payload.messages || [];
-      const { currentGroupChannel = {} } = action.payload;
-
-      const stateChannel = state.currentGroupChannel || {};
-      const stateChannelUrl = stateChannel.url;
-      const actionChannelUrl = currentGroupChannel.url;
-      if (actionChannelUrl !== stateChannelUrl) {
+    }
+    case actionTypes.FETCH_INITIAL_MESSAGES_SUCCESS: {
+      const {
+        currentGroupChannel,
+        messages,
+      } = action.payload;
+      if (!(currentGroupChannel?.url === state.currentGroupChannel?.url)) {
         return state;
       }
+      const oldestMessageTimeStamp = getOldestMessageTimeStamp(messages);
+      const latestMessageTimeStamp = getLatestMessageTimeStamp(messages);
+      return {
+        ...state,
+        loading: false,
+        initialized: true,
+        hasMorePrev: true,
+        hasMoreNext: true,
+        oldestMessageTimeStamp,
+        latestMessageTimeStamp,
+        allMessages: [...messages],
+      };
+    }
+    case actionTypes.FETCH_PREV_MESSAGES_SUCCESS: {
+      const {
+        currentGroupChannel,
+        messages,
+      } = action.payload;
+      if (!(currentGroupChannel?.url === state.currentGroupChannel?.url)) {
+        return state;
+      }
+      const hasMorePrev = messages && messages.length === PREV_RESULT_SIZE + 1;
+      const oldestMessageTimeStamp = getOldestMessageTimeStamp(messages);
 
-      // remove duplicate messages
+      // Remove duplicated messages
       const duplicatedMessageIds = [];
-      const updatedAllMessages = state.allMessages.map((msg) => {
-        const duplicatedMessage = receivedMessages.find(({ messageId }) => (
+      const updatedOldMessages = state.allMessages.map((msg) => {
+        const duplicatedMessage = messages.find(({ messageId }) => (
           compareIds(messageId, msg.messageId)
         ));
         if (!duplicatedMessage) {
@@ -63,47 +87,36 @@ export default function reducer(state, action) {
         return (duplicatedMessage.updatedAt > msg.updatedAt) ? duplicatedMessage : msg;
       });
       const filteredNewMessages = (duplicatedMessageIds.length > 0)
-        ? receivedMessages.filter((msg) => (
+        ? messages.filter((msg) => (
           !duplicatedMessageIds.find((messageId) => compareIds(messageId, msg.messageId))
         ))
-        : receivedMessages;
+        : messages;
 
-      const hasHasMoreToBottom = hasOwnProperty('hasMoreToBottom')(action.payload);
-      const hasLatestFetchedMessageTimeStamp = hasOwnProperty('latestFetchedMessageTimeStamp')(action.payload);
       return {
         ...state,
-        loading: false,
-        initialized: true,
-        hasMore: action.payload.hasMore,
-        lastMessageTimeStamp: action.payload.lastMessageTimeStamp,
-        // if present change else, keep
-        ...(hasHasMoreToBottom && {
-          hasMoreToBottom: action.payload.hasMoreToBottom,
-        }),
-        ...(hasLatestFetchedMessageTimeStamp && {
-          latestFetchedMessageTimeStamp: action.payload.latestFetchedMessageTimeStamp,
-        }),
+        hasMorePrev,
+        oldestMessageTimeStamp,
         allMessages: [
           ...filteredNewMessages,
-          ...updatedAllMessages,
+          ...updatedOldMessages,
         ],
       };
     }
-    case actionTypes.GET_NEXT_MESSAGES_SUCESS: {
-      const receivedMessages = action.payload.messages || [];
-      const { currentGroupChannel = {} } = action.payload;
-
-      const stateChannel = state.currentGroupChannel || {};
-      const stateChannelUrl = stateChannel.url;
-      const actionChannelUrl = currentGroupChannel.url;
-      if (actionChannelUrl !== stateChannelUrl) {
+    case actionTypes.FETCH_NEXT_MESSAGES_SUCCESS: {
+      const {
+        currentGroupChannel,
+        messages,
+      } = action.payload;
+      if (!(currentGroupChannel?.url === state.currentGroupChannel?.url)) {
         return state;
       }
+      const hasMoreNext = messages && messages.length === NEXT_RESULT_SIZE + 1;
+      const latestMessageTimeStamp = getLatestMessageTimeStamp(messages);
 
-      // remove duplicate messages
+      // Remove duplicated messages
       const duplicatedMessageIds = [];
-      const updatedAllMessages = state.allMessages.map((msg) => {
-        const duplicatedMessage = receivedMessages.find(({ messageId }) => (
+      const updatedOldMessages = state.allMessages.map((msg) => {
+        const duplicatedMessage = messages.find(({ messageId }) => (
           compareIds(messageId, msg.messageId)
         ));
         if (!duplicatedMessage) {
@@ -113,27 +126,38 @@ export default function reducer(state, action) {
         return (duplicatedMessage.updatedAt > msg.updatedAt) ? duplicatedMessage : msg;
       });
       const filteredNewMessages = (duplicatedMessageIds.length > 0)
-        ? receivedMessages.filter((msg) => (
+        ? messages.filter((msg) => (
           !duplicatedMessageIds.find((messageId) => compareIds(messageId, msg.messageId))
         ))
-        : receivedMessages;
+        : messages;
 
       return {
         ...state,
-        loading: false,
-        initialized: true,
-        hasMore: action.payload.hasMore,
-        lastMessageTimeStamp: action.payload.lastMessageTimeStamp,
-        hasMoreToBottom: action.payload.hasMoreToBottom,
-        latestFetchedMessageTimeStamp: action.payload.latestFetchedMessageTimeStamp,
+        hasMoreNext,
+        latestMessageTimeStamp,
         allMessages: [
-          ...updatedAllMessages,
+          ...updatedOldMessages,
           ...filteredNewMessages,
         ],
       };
     }
-    case actionTypes.GET_NEXT_MESSAGES_FAILURE: {
-      return { ...state };
+    case actionTypes.FETCH_INITIAL_MESSAGES_FAILURE:
+    case actionTypes.FETCH_PREV_MESSAGES_FAILURE:
+    case actionTypes.FETCH_NEXT_MESSAGES_FAILURE: {
+      const { currentGroupChannel } = action.payload;
+      if (currentGroupChannel?.url !== state?.currentGroupChannel?.url) {
+        return state;
+      }
+      return {
+        ...state,
+        loading: false,
+        initialized: false,
+        allMessages: [],
+        hasMorePrev: false,
+        hasMoreNext: false,
+        oldestMessageTimeStamp: null,
+        latestMessageTimeStamp: null,
+      };
     }
     case actionTypes.SEND_MESSAGEGE_START:
       return {
@@ -180,7 +204,6 @@ export default function reducer(state, action) {
         ...state,
         currentGroupChannel: action.payload,
         isInvalid: false,
-        unreadCount: 0,
       };
     }
     case actionTypes.SET_CHANNEL_INVALID: {
@@ -189,23 +212,10 @@ export default function reducer(state, action) {
         isInvalid: true,
       };
     }
-    case actionTypes.UPDATE_UNREAD_COUNT: {
-      const { channel } = action.payload;
-      const { currentGroupChannel = {}, unreadCount } = state;
-      const currentGroupChannelUrl = currentGroupChannel.url;
-      if (!compareIds(channel.url, currentGroupChannelUrl)) {
-        return state;
-      }
-      return {
-        ...state,
-        unreadSince: unreadCount + 1,
-      };
-    }
     case actionTypes.ON_MESSAGE_RECEIVED: {
-      const { channel, message, scrollToEnd } = action.payload;
+      const { channel, message } = action.payload;
       const { members } = channel;
       const { sender } = message;
-      let unreadCount = 0;
       const { currentGroupChannel = {}, unreadSince } = state;
       const currentGroupChannelUrl = currentGroupChannel.url;
 
@@ -221,12 +231,6 @@ export default function reducer(state, action) {
         return state;
       }
 
-      unreadCount = state.unreadCount + 1;
-      // reset unreadCount if have to scrollToEnd
-      if (scrollToEnd) {
-        unreadCount = 0;
-      }
-
       if (message.isAdminMessage && message.isAdminMessage()) {
         return {
           ...state,
@@ -237,8 +241,8 @@ export default function reducer(state, action) {
       // Update members when sender profileUrl, nickname, friendName has been changed
       const senderMember = members?.find((m) => (m?.userId === sender?.userId));
       if ((senderMember?.profileUrl !== sender?.profileUrl)
-      || (senderMember?.friendName !== sender?.friendName)
-      || (senderMember?.nickname !== sender?.nickname)) {
+        || (senderMember?.friendName !== sender?.friendName)
+        || (senderMember?.nickname !== sender?.nickname)) {
         channel.members = members.map((member) => {
           if (member.userId === sender.userId) {
             return sender;
@@ -249,11 +253,8 @@ export default function reducer(state, action) {
 
       return {
         ...state,
-        unreadCount,
         currentGroupChannel: channel,
-        unreadSince: (unreadCount === 1)
-          ? format(new Date(), 'p MMM dd')
-          : unreadSince,
+        unreadSince: state?.unreadSince ? unreadSince : format(new Date(), 'p MMM dd'),
         allMessages: passUnsuccessfullMessages(state.allMessages, message),
       };
     }
@@ -312,9 +313,11 @@ export default function reducer(state, action) {
         )),
       };
     case actionTypes.MARK_AS_READ:
+      if (state.currentGroupChannel?.url !== action.payload?.channel?.url) {
+        return state;
+      }
       return {
         ...state,
-        unreadCount: 0,
         unreadSince: null,
       };
     case actionTypes.ON_MESSAGE_DELETED:

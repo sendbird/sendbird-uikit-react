@@ -6,78 +6,69 @@ import uuid from '../../../../../utils/uuid';
 
 const randomBoolean = () => Math.random() >= 0.5;
 describe('Messages-Reducers', () => {
-  it('should setloading true GET_PREV_MESSAGES_START', () => {
+  const stateWithCurrentChannel = {
+    ...initialState,
+    currentGroupChannel: { url: generateMockChannel().currentGroupChannel.url },
+  };
+  it('should setloading true FETCH_INITIAL_MESSAGES_START', () => {
     const nextState = reducers(initialState, {
-      type: actionTypes.GET_PREV_MESSAGES_START,
+      type: actionTypes.FETCH_INITIAL_MESSAGES_START,
     });
     expect(nextState.loading).toEqual(true);
   });
 
-  it('should set messages GET_PREV_MESSAGES_SUCESS', () => {
+  it('should initialize messages FETCH_INITIAL_MESSAGES_SUCCESS', () => {
     const mockData = generateMockChannel();
-    const hasMore = randomBoolean();
-    const lastMessageTimeStamp = 123;
-    const nextState = reducers(initialState, {
-      type: actionTypes.GET_PREV_MESSAGES_SUCESS,
+    const nextState = reducers(stateWithCurrentChannel, {
+      type: actionTypes.FETCH_INITIAL_MESSAGES_SUCCESS,
       payload: {
-        hasMore,
+        currentGroupChannel: mockData.currentGroupChannel,
         messages: mockData.allMessages,
-        lastMessageTimeStamp,
-      }
+      },
     });
     expect(nextState.loading).toEqual(false);
-    expect(nextState.hasMore).toEqual(hasMore);
+    expect(nextState.initialized).toEqual(true);
+    expect(nextState.hasMorePrev).toEqual(true);
+    expect(nextState.hasMoreNext).toEqual(true);
+    expect(nextState.oldestMessageTimeStamp).toEqual(mockData.allMessages[0].createdAt);
+    expect(nextState.latestMessageTimeStamp).toEqual(mockData.allMessages[mockData.allMessages.length - 1].createdAt);
     expect(nextState.allMessages).toEqual(mockData.allMessages);
-    expect(nextState.lastMessageTimeStamp).toEqual(lastMessageTimeStamp);
   });
 
-  it('should append to head of all messages on GET_PREV_MESSAGES_SUCESS', () => {
+  it('should append previous messages FETCH_PREV_MESSAGES_SUCCESS', () => {
     const mockData = generateMockChannel();
-    const hasMore = randomBoolean();
     const nextState = reducers(mockData, {
-      type: actionTypes.GET_PREV_MESSAGES_SUCESS,
+      type: actionTypes.FETCH_PREV_MESSAGES_SUCCESS,
       payload: {
-        hasMore,
+        currentGroupChannel: mockData.currentGroupChannel,
         messages: [mockMessage1],
-        currentGroupChannel: mockData.currentGroupChannel,
       }
     });
     expect(nextState.loading).toEqual(false);
-    expect(nextState.hasMore).toEqual(hasMore);
-    expect(nextState.allMessages.length).toEqual(mockData.allMessages.length + 1);
-    expect(nextState.allMessages[0]).toEqual(mockMessage1);
+    expect(nextState.initialized).toEqual(true);
+    expect(nextState.hasMorePrev).toEqual(false); // Because messages.length doesn't match to the query size
+    expect(nextState.hasMoreNext).toEqual(mockData.hasMoreNext);
+    expect(nextState.oldestMessageTimeStamp).toEqual(mockMessage1.createdAt);
+    expect(nextState.oldestMessageTimeStamp).not.toEqual(mockData.allMessages[0].createdAt);
+    expect(nextState.latestMessageTimeStamp).toEqual(mockData.allMessages[mockData.allMessages.length - 1].createdAt);
   });
 
-  it('should not append duplicate messages on GET_PREV_MESSAGES_SUCESS', () => {
+  it('should append next messages FETCH_NEXT_MESSAGES_SUCCESS', () => {
     const mockData = generateMockChannel();
-    const hasMore = randomBoolean();
     const nextState = reducers(mockData, {
-      type: actionTypes.GET_PREV_MESSAGES_SUCESS,
+      type: actionTypes.FETCH_NEXT_MESSAGES_SUCCESS,
       payload: {
-        hasMore,
-        messages: [mockData.allMessages[0]],
         currentGroupChannel: mockData.currentGroupChannel,
+        messages: [mockMessage1],
       }
     });
     expect(nextState.loading).toEqual(false);
-    expect(nextState.hasMore).toEqual(hasMore);
-    expect(nextState.allMessages.length).toEqual(mockData.allMessages.length);
-  });
-
-  it('should not handle append messages on GET_PREV_MESSAGES_SUCESS when payload.messages is []', () => {
-    const mockData = generateMockChannel();
-    const hasMore = randomBoolean();
-    const nextState = reducers(mockData, {
-      type: actionTypes.GET_PREV_MESSAGES_SUCESS,
-      payload: {
-        hasMore,
-        messages: [],
-        currentGroupChannel: mockData.currentGroupChannel,
-      }
-    });
-    expect(nextState.loading).toEqual(false);
-    expect(nextState.hasMore).toEqual(hasMore);
-    expect(nextState.allMessages).toEqual(mockData.allMessages);
+    expect(nextState.initialized).toEqual(true);
+    expect(nextState.hasMorePrev).toEqual(mockData.hasMorePrev);
+    expect(nextState.hasMoreNext).toEqual(false);
+    expect(nextState.oldestMessageTimeStamp).toEqual(mockData.allMessages[0].createdAt);
+    expect(nextState.latestMessageTimeStamp).toEqual(mockMessage1.createdAt);
+    expect(nextState.latestMessageTimeStamp).not.toEqual(mockData.allMessages[mockData.allMessages.length - 1].createdAt);
   });
 
   it('should set pending message on SEND_MESSAGEGE_START', () => {
@@ -264,14 +255,6 @@ describe('Messages-Reducers', () => {
     expect(nextState.allMessages.find(m => m.messageId === deletedMessage)).toBeUndefined();
   });
 
-  it('should reset state on RESET_STATE', () => {
-    const mockData = generateMockChannel();
-    const nextState = reducers(mockData, {
-      type: actionTypes.RESET_STATE,
-    });
-    expect(nextState).toEqual(initialState);
-  });
-
   it('should reset all messages on RESET_MESSAGES', () => {
     const mockData = generateMockChannel();
     const nextState = reducers(mockData, {
@@ -279,7 +262,8 @@ describe('Messages-Reducers', () => {
     });
     expect(nextState).toEqual({
       ...mockData,
-      hasMore: false,
+      hasMorePrev: false,
+      hasMoreNext: false,
       allMessages: [],
     });
   });
@@ -299,24 +283,6 @@ describe('Messages-Reducers', () => {
       },
     });
     expect(nextState.allMessages[0].reactions).toEqual(reactions);
-  });
-
-  it('should remove all successful messages on CLEAR_SENT_MESSAGES', () => {
-    const mockData = generateMockChannel();
-    const id1 = "12345678";
-    const id2 = "1234567890";
-    const m1 = generateMockMessage(id1);
-    const m2 = generateMockMessage(id2);
-    m1.sendingStatus = 'succeeded';
-    const nextState = reducers({
-      ...mockData,
-      allMessages: [m1, m2],
-    }, {
-      type: actionTypes.CLEAR_SENT_MESSAGES,
-    });
-
-    expect(nextState.allMessages.length).toEqual(1);
-    expect(nextState.allMessages[0].messageId).toEqual(id2);
   });
 
   it('should handle SET_CURRENT_CHANNEL', () => {

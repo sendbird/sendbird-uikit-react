@@ -698,3 +698,4 @@ export default {
   getOpenChannelResendUserMessage,
   getOpenChannelResendFileMessage,
 };
+// TODO: Check naming

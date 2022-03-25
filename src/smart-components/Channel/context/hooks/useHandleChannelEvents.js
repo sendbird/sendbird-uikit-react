@@ -13,23 +13,23 @@ import { scrollIntoLast } from '../utils';
  * channelUrl: string
  * sdkInit: bool
  */
-function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom }, {
+function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
   messagesDispatcher,
   sdk,
   logger,
   scrollRef,
   setQuoteMessage,
 }) {
-  const channelUrl = currentGroupChannel && currentGroupChannel?.url;
   useEffect(() => {
+    const channelUrl = currentGroupChannel && currentGroupChannel?.url;
     const messageReceiverId = uuidv4();
     if (channelUrl && sdk && sdk.ChannelHandler) {
       const ChannelHandler = new sdk.ChannelHandler();
       logger.info('Channel | useHandleChannelEvents: Setup event handler', messageReceiverId);
 
       ChannelHandler.onMessageReceived = (channel, message) => {
-        // donot update if hasMoreToBottom
-        if (compareIds(channel.url, channelUrl) && !hasMoreToBottom) {
+        // Do not update when hasMoreNext
+        if (compareIds(channel.url, channelUrl) && !hasMoreNext) {
           let scrollToEnd = false;
           try {
             const { current } = scrollRef;
@@ -41,7 +41,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
           logger.info('Channel | useHandleChannelEvents: onMessageReceived', message);
           messagesDispatcher({
             type: messageActions.ON_MESSAGE_RECEIVED,
-            payload: { channel, message, scrollToEnd },
+            payload: { channel, message },
           });
 
           if (scrollToEnd) {
@@ -54,12 +54,6 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
               logger.warning('Channel | onMessageReceived | scroll to end failed');
             }
           }
-        }
-        if (compareIds(channel.url, channelUrl) && hasMoreToBottom) {
-          messagesDispatcher({
-            type: messageActions.UPDATE_UNREAD_COUNT,
-            payload: { channel },
-          });
         }
       };
 
@@ -199,7 +193,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreToBottom 
         sdk.removeChannelHandler(messageReceiverId);
       }
     };
-  }, [channelUrl, sdkInit]);
+  }, [currentGroupChannel?.url, sdkInit]);
 }
 
 export default useHandleChannelEvents;

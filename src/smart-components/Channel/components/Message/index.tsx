@@ -54,7 +54,9 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
   const {
     currentGroupChannel,
     highLightedMessageId,
+    setHighLightedMessageId,
     animatedMessageId,
+    setAnimatedMessageId,
     updateMessage,
     scrollToMessage,
     replyType,
@@ -90,6 +92,9 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
         setTimeout(() => {
           setIsHighlighted(true);
         }, 500);
+        setTimeout(() => {
+          setHighLightedMessageId(0);
+        }, 1600);
       }
     } else {
       setIsHighlighted(false);
@@ -107,6 +112,9 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
         setTimeout(() => {
           setIsAnimated(true);
         }, 500);
+        setTimeout(() => {
+          setAnimatedMessageId(0);
+        }, 1600);
       }
     } else {
       setIsAnimated(false);
@@ -132,6 +140,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
       >
         {/* date-separator */}
         {
+          // TODO: Add message instance as a function parameter
           hasSeparator && renderCustomSeperator?.() || (
             <DateSeparator>
               <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
@@ -163,13 +172,13 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
 
   return (
     <div
-      ref={useMessageScrollRef}
       className={getClassName([
         'sendbird-msg-hoc sendbird-msg--scroll-ref',
         isAnimated ? 'sendbird-msg-hoc__animated' : '',
         isHighlighted ? 'sendbird-msg-hoc__highlighted' : '',
       ])}
       style={{ marginBottom: '2px' }}
+      ref={useMessageScrollRef}
     >
       {/* date-separator */}
       {

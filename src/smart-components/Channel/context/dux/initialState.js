@@ -4,16 +4,15 @@ export default {
   allMessages: [],
   currentGroupChannel: { members: [] },
   // for scrollup
-  hasMore: false,
-  lastMessageTimeStamp: 0,
+  hasMorePrev: false,
+  oldestMessageTimeStamp: 0,
   // for scroll down
   // onScrollDownCallback is added for navigation to different timestamps on messageSearch
-  // hasMoreToBottom, onScrollDownCallback -> scroll down
-  // hasMore, onScrollCallback -> scroll up(default behavior)
-  hasMoreToBottom: false,
-  latestFetchedMessageTimeStamp: 0,
+  // hasMorePrev, onScrollCallback -> scroll up(default behavior)
+  // hasMoreNext, onScrollDownCallback -> scroll down
+  hasMoreNext: false,
+  latestMessageTimeStamp: 0,
   emojiContainer: {},
-  unreadCount: 0,
   unreadSince: null,
   isInvalid: false,
   messageListParams: null,

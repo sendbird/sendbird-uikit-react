@@ -4,7 +4,7 @@ import { BaseMessageInstance } from 'sendbird';
 import { Logger } from '../../../../index';
 
 interface DynamicParams {
-  setIntialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
+  setInitialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
   setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
   allMessages: BaseMessageInstance[];
 }
@@ -14,7 +14,7 @@ interface StaticParams {
 }
 
 function useScrollToMessage({
-  setIntialTimeStamp,
+  setInitialTimeStamp,
   setAnimatedMessageId,
   allMessages,
 }: DynamicParams,
@@ -32,13 +32,13 @@ function useScrollToMessage({
           setAnimatedMessageId(messageId);
         } else {
           logger.info('Channel: scroll to message - fetching older messages');
-          setIntialTimeStamp(null);
-          setIntialTimeStamp(createdAt);
+          setInitialTimeStamp(null);
+          setInitialTimeStamp(createdAt);
           setAnimatedMessageId(messageId);
         }
       });
     }, [
-    setIntialTimeStamp,
+    setInitialTimeStamp,
     setAnimatedMessageId,
     allMessages,
   ],
