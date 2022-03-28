@@ -6,15 +6,15 @@ import isYesterday from 'date-fns/isYesterday';
 
 // getCreatedAt
 export default function (createdAt: number, locale: Locale): string {
-  const thirdParam = locale ? { locale } : null;
+  const optionalParam = locale ? { locale } : null;
   if (!createdAt) {
     return '';
   }
   if (isToday(createdAt)) {
-    return format(createdAt, 'p', thirdParam);
+    return format(createdAt, 'p', optionalParam);
   }
   if (isYesterday(createdAt)) {
-    return formatRelative(createdAt, new Date(), thirdParam);
+    return formatRelative(createdAt, new Date(), optionalParam);
   }
-  return format(createdAt, 'MMM dd', thirdParam);
+  return format(createdAt, 'MMM dd', optionalParam);
 }

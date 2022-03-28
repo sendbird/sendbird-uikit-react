@@ -25,17 +25,17 @@ export const getChannelTitle = (channel = {}, currentUserId, stringSet = LabelSt
 
 export const getLastMessageCreatedAt = (channel, locale) => {
   const createdAt = channel?.lastMessage?.createdAt;
-  const thirdParam = locale ? { locale } : null;
+  const optionalParam = locale ? { locale } : null;
   if (!createdAt) {
     return '';
   }
   if (isToday(createdAt)) {
-    return format(createdAt, 'p', thirdParam);
+    return format(createdAt, 'p', optionalParam);
   }
   if (isYesterday(createdAt)) {
-    return formatRelative(createdAt, new Date(), thirdParam);
+    return formatRelative(createdAt, new Date(), optionalParam);
   }
-  return format(createdAt, 'MMM dd', thirdParam);
+  return format(createdAt, 'MMM dd', optionalParam);
 };
 
 export const getTotalMembers = (channel) => (
