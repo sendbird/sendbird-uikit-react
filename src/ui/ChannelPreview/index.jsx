@@ -25,7 +25,7 @@ export default function ChannelPreview({
     userId,
   } = currentUser;
   const { isBroadcast, isFrozen } = channel;
-  const { stringSet, locale } = useLocalization();
+  const { dateLocale, stringSet } = useLocalization();
   return (
     <div
       className={[
@@ -95,7 +95,7 @@ export default function ChannelPreview({
             type={LabelTypography.CAPTION_3}
             color={LabelColors.ONBACKGROUND_2}
           >
-            {utils.getLastMessageCreatedAt(channel, locale)}
+            {utils.getLastMessageCreatedAt(channel, dateLocale)}
           </Label>
         </div>
         <div className="sendbird-channel-preview__content__lower">
