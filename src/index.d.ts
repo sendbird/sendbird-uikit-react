@@ -235,7 +235,10 @@ interface SendBirdStateStore {
   userStore: UserStore;
 }
 
-export type MessageSearchQueryType = Sendbird.MessageSearchQueryOptions;
+export interface MessageSearchQueryType extends Sendbird.MessageSearchQueryOptions {
+  key: string;
+  hasNext?: boolean;
+}
 
 export type Sdk = Sendbird.SendBirdInstance;
 
