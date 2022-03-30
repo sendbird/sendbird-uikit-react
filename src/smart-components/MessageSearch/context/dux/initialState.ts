@@ -10,7 +10,7 @@ export interface State {
   isInvalid: boolean;
   initialized: boolean;
   currentChannel: SendBird.GroupChannel;
-  currentMessageSearchQuery: SendBird.MessageSearchQuery;
+  currentMessageSearchQuery: SendBird.MessageSearchQuery | SendBird.MessageSearchQueryOptions;
   hasMoreResult: boolean;
 }
 

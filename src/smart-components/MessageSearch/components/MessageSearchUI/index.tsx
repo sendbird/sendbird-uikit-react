@@ -1,4 +1,6 @@
 import React, { useContext } from 'react';
+import './index.scss';
+
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useMessageSearch } from '../../context/MessageSearchProvider';
 
@@ -67,7 +69,7 @@ export const MessageSearchUI: React.FC<MessageSearchUIProps> = ({
     if (!hasMoreResult) {
       return;
     }
-    if (scrollTop + clientHeight >= scrollHeight) {
+    if (scrollTop + clientHeight >= scrollHeight - 1) {
       onScroll(() => {
         // after load more searched messages
       });

@@ -31,15 +31,15 @@ export default function reducer(
       const { messages, createdQuery } = action.payload;
       if (
         createdQuery
-        && createdQuery.channelUrl === state.currentMessageSearchQuery.channelUrl
-        && createdQuery.key === state.currentMessageSearchQuery.key
+        && createdQuery.channelUrl === (state?.currentMessageSearchQuery as SendbirdUIKit.MessageSearchQueryType).channelUrl
+        && createdQuery.key === (state?.currentMessageSearchQuery as SendbirdUIKit.MessageSearchQueryType).key
       ) {
         return {
           ...state,
           loading: false,
           isInvalid: false,
           allMessages: [...messages],
-          hasMoreResult: state.currentMessageSearchQuery.hasNext,
+          hasMoreResult: (state?.currentMessageSearchQuery as SendbirdUIKit.MessageSearchQueryType).hasNext,
         };
       }
       return { ...state };
@@ -70,7 +70,7 @@ export default function reducer(
       return {
         ...state,
         allMessages: [...state.allMessages, ...messages],
-        hasMoreResult: state.currentMessageSearchQuery.hasNext,
+        hasMoreResult: (state?.currentMessageSearchQuery as SendbirdUIKit.MessageSearchQueryType).hasNext,
       };
     }
     case actionTypes.RESET_SEARCH_STRING: {

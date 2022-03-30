@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import * as messageActionTypes from '../dux/actionTypes';
-import SendbirdUIKit from '../../../index';
 
 interface MainProps {
   currentMessageSearchQuery: SendBird.MessageSearchQuery;
