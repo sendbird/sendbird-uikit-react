@@ -1,5 +1,5 @@
 {
-  "name": "sendbird-uikit",
+  "name": "@globacap/sendbird-uikit",
   "version": "2.7.0",
   "description": "React based UI kit for sendbird",
   "main": "dist/cjs/index.js",
@@ -38,7 +38,7 @@
     "type": "git",
     "url": "git+git@github.com:sendbird/sendbird-uikit-react-sources.git"
   },
-  "author": "SendBird <support@sendbird.com>",
+  "author": "Robert Jezyk <robert.jezyk@globacap.com>",
   "license": "SEE LICENSE IN LICENSE.md",
   "peerDependencies": {
     "css-vars-ponyfill": "^2.3.2",
