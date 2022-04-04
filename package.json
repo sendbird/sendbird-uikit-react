@@ -1,5 +1,5 @@
 {
-  "name": "@globacap/sendbird-uikit",
+  "name": "globacap-sendbird-uikit",
   "version": "2.7.0",
   "description": "React based UI kit for sendbird",
   "main": "dist/cjs/index.js",
