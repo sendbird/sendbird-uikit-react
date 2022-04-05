@@ -1,0 +1,1 @@
+Globacap fork of [sendbird-uikit](https://www.npmjs.com/package/globacap-sendbird-uikit) includes change to `<ChannelList />` component now, in the form of extra `oneToOneChannel` boolean prop, which can be passed to limit the choice of people participating in conversation to only 1.
