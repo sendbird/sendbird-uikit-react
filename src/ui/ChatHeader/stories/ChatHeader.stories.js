@@ -22,6 +22,7 @@ export const chatHeader = () => [
     isActive="true"
   />,
 ];
+export const chatHeaderWithHiddenInfoIcon = () => <ChatHeader showInfoIcon={false} />;
 export const overFlowChatHaeder = () => [
   <ChatHeader
     title="AaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAa"

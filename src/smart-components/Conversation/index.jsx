@@ -63,6 +63,7 @@ export const ConversationPanel = (props) => {
     useReaction,
     replyType,
     showSearchIcon,
+    showInfoIcon,
     onSearchClick,
     renderChatItem,
     renderChatHeader,
@@ -312,6 +313,7 @@ export const ConversationPanel = (props) => {
               currentGroupChannel={currentGroupChannel}
               currentUser={user}
               showSearchIcon={showSearchIcon}
+              showInfoIcon={showInfoIcon}
               onSearchClick={onSearchClick}
               onActionClick={onChatHeaderActionClick}
               subTitle={currentGroupChannel.members && currentGroupChannel.members.length !== 2}
@@ -513,6 +515,7 @@ ConversationPanel.propTypes = {
     PropTypes.func,
   ]),
   showSearchIcon: PropTypes.bool,
+  showInfoIcon: PropTypes.bool,
   onSearchClick: PropTypes.func,
   onChatHeaderActionClick: PropTypes.func,
   useReaction: PropTypes.bool,
@@ -537,6 +540,7 @@ ConversationPanel.defaultProps = {
   useReaction: true,
   replyType: 'NONE',
   showSearchIcon: false,
+  showInfoIcon: true,
   onSearchClick: noop,
   disableUserProfile: false,
   renderUserProfile: null,

@@ -1,1 +1,3 @@
-Globacap fork of [sendbird-uikit](https://www.npmjs.com/package/globacap-sendbird-uikit) includes change to `<ChannelList />` component now, in the form of extra `oneToOneChannel` boolean prop, which can be passed to limit the choice of people participating in conversation to only 1.
+Globacap fork of [sendbird-uikit](https://www.npmjs.com/package/globacap-sendbird-uikit) includes changes:
+- to `<ChannelList />` component, in the form of extra `oneToOneChannel` boolean prop (default value `false`), which can be passed to limit the choice of people participating in conversation to only 1.
+- to `<ChatHeader />` component, by adding `showInfoIcon` prop to hide/remove Info Icon (default value `true`). This prop is passed from `<Channel />`, which is also exposed with same name.
