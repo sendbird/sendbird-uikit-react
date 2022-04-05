@@ -9,9 +9,9 @@ import withSendBird from '../../../lib/SendbirdSdkContext';
 export default { title: 'Channel' };
 
 const appId = process.env.STORYBOOK_APP_ID;;
-const userId = 'sendbird';
+const userId = process.env.STORYBOOK_USER_ID || 'sendbird';
 // use your own channelURL
-const channelUrl = "sendbird_group_channel_199083408_359dd2e2afe107fa7d083bcd993a727f5e0bef9b";
+const channelUrl = "sendbird-group-channel_2893930545";
 const frozenChannel = 'sendbird_group_channel_15698963_f98cd352627e2c97f3ed796e7f8a28a3c7984ce1';
 
 export const IndependantChannel = () => (
@@ -21,6 +21,17 @@ export const IndependantChannel = () => (
   >
     <div style={{ height: '100vh' }}>
       <Channel channelUrl={channelUrl} />
+    </div>
+  </Sendbird>
+);
+
+export const ChannelWithHiddenInfoIcon = () => (
+  <Sendbird
+    appId={appId}
+    userId={userId}
+  >
+    <div style={{ height: '100vh' }}>
+      <Channel channelUrl={channelUrl} showInfoIcon={false} />
     </div>
   </Sendbird>
 );

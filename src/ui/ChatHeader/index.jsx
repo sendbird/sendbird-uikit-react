@@ -20,6 +20,7 @@ export default function ChatHeader(props) {
     isMuted,
     theme,
     showSearchIcon,
+    showInfoIcon,
     onSearchClick,
     onActionClick,
   } = props;
@@ -79,19 +80,23 @@ export default function ChatHeader(props) {
             </IconButton>
           )
         }
-        <IconButton
-          className="sendbird-chat-header__right__info"
-          width="32px"
-          height="32px"
-          onClick={onActionClick}
-        >
-          <Icon
-            type={IconTypes.INFO}
-            fillColor={IconColors.PRIMARY}
-            width="24px"
-            height="24px"
-          />
-        </IconButton>
+        {
+          showInfoIcon && (
+            <IconButton
+              className="sendbird-chat-header__right__info"
+              width="32px"
+              height="32px"
+              onClick={onActionClick}
+            >
+              <Icon
+                type={IconTypes.INFO}
+                fillColor={IconColors.PRIMARY}
+                width="24px"
+                height="24px"
+              />
+            </IconButton>
+          )
+        }
       </div>
     </div>
   );
@@ -116,6 +121,7 @@ ChatHeader.propTypes = {
   ]),
   theme: PropTypes.string,
   showSearchIcon: PropTypes.bool,
+  showInfoIcon: PropTypes.bool,
   onSearchClick: PropTypes.func,
   onActionClick: PropTypes.func,
 };
@@ -128,6 +134,7 @@ ChatHeader.defaultProps = {
   isMuted: false,
   theme: 'light',
   showSearchIcon: false,
+  showInfoIcon: true,
   onSearchClick: noop,
   onActionClick: noop,
 };
