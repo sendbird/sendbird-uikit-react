@@ -19,6 +19,7 @@ const InviteMembers = (props) => {
     titleText,
     idsToFilter,
     swapParams,
+    singleUserChoice,
   } = props;
 
   const [users, setUsers] = useState([]);
@@ -97,7 +98,7 @@ const InviteMembers = (props) => {
                 onChange={
                   (event) => {
                     const modifiedSelectedUsers = {
-                      ...selectedUsers,
+                      ...(!singleUserChoice && { ...selectedUsers }),
                       [event.target.id]: event.target.checked,
                     };
                     if (!event.target.checked) {
@@ -123,12 +124,14 @@ InviteMembers.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   submitText: PropTypes.string,
   titleText: PropTypes.string,
+  singleUserChoice: PropTypes.bool,
 };
 InviteMembers.defaultProps = {
   swapParams: false,
   submitText: 'create',
   titleText: 'Create new channel',
   idsToFilter: [],
+  singleUserChoice: false,
 };
 
 export default InviteMembers;

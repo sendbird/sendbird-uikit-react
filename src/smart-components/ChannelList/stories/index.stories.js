@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
 
 import Sendbird from '../../../lib/Sendbird';
-const appId = process.env.STORYBOOK_APP_ID;;
-const userId = 'sendbird';
+const appId = process.env.STORYBOOK_APP_ID;
+const userId = process.env.STORYBOOK_USER_ID || 'sendbird';
 
 import ChannelList from '../../ChannelList';
 import { getSdk } from '../../../lib/selectors';
@@ -10,13 +10,24 @@ import withSendBird from '../../../lib/SendbirdSdkContext';
 
 export default { title: 'ChannelList' };
 
-export const IndependantChannelList = () => (
+export const IndependentChannelList = () => (
   <Sendbird
     appId={appId}
     userId={userId}
   >
     <div style={{ height: '100vh' }}>
       <ChannelList />
+    </div>
+  </Sendbird>
+);
+
+export const OneToOneChannelList = () => (
+  <Sendbird
+    appId={appId}
+    userId={userId}
+  >
+    <div style={{ height: '100vh' }}>
+      <ChannelList oneToOneChannel />
     </div>
   </Sendbird>
 );

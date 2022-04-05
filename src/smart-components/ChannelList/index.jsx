@@ -54,6 +54,7 @@ function ChannelList(props) {
     onBeforeCreateChannel,
     onChannelSelect,
     disableAutoSelect,
+    oneToOneChannel,
   } = props;
   const { config = {} } = props;
   // enable if it is true atleast once(both are flase by default)
@@ -181,6 +182,7 @@ function ChannelList(props) {
               userId={userId}
               userFilledApplicationUserListQuery={userFilledApplicationUserListQuery}
               onBeforeCreateChannel={onBeforeCreateChannel}
+              oneToOneChannel={oneToOneChannel}
             />
           )}
         />
@@ -402,6 +404,7 @@ ChannelList.propTypes = {
   ]),
   onChannelSelect: PropTypes.func,
   disableAutoSelect: PropTypes.bool,
+  oneToOneChannel: PropTypes.bool,
 };
 
 ChannelList.defaultProps = {
@@ -417,6 +420,7 @@ ChannelList.defaultProps = {
   queries: {},
   onChannelSelect: noop,
   disableAutoSelect: false,
+  oneToOneChannel: false,
 };
 
 export default withSendbirdContext(ChannelList);

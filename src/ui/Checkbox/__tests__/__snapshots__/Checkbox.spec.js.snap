@@ -9,7 +9,6 @@ exports[`Checkbox should do a snapshot test of the checked Checkbox DOM 1`] = `
     checked={true}
     id="sendbird-checkbox-input"
     onChange={[Function]}
-    onClick={[Function]}
     type="checkbox"
   />
   <span
@@ -27,7 +26,6 @@ exports[`Checkbox should do a snapshot test of the default Checkbox DOM 1`] = `
     checked={false}
     id="sendbird-checkbox-input"
     onChange={[Function]}
-    onClick={[Function]}
     type="checkbox"
   />
   <span

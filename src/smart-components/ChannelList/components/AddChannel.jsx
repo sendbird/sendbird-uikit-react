@@ -26,6 +26,7 @@ export default function AddChannel({
   userId,
   userFilledApplicationUserListQuery,
   userListQuery,
+  oneToOneChannel,
 }) {
   const [showModal, setShowModal] = useState(false);
   const [step, setStep] = useState(0);
@@ -179,6 +180,7 @@ export default function AddChannel({
                 payload: channel,
               });
             })}
+            singleUserChoice={oneToOneChannel}
           />
         )
       }
@@ -197,6 +199,7 @@ AddChannel.propTypes = {
   onBeforeCreateChannel: PropTypes.func,
   userId: PropTypes.string.isRequired,
   userListQuery: PropTypes.func,
+  oneToOneChannel: PropTypes.bool,
 };
 
 AddChannel.defaultProps = {
@@ -204,4 +207,5 @@ AddChannel.defaultProps = {
   userFilledApplicationUserListQuery: {},
   onBeforeCreateChannel: null,
   userListQuery: null,
+  oneToOneChannel: false,
 };

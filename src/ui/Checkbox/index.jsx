@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import './index.scss';
@@ -8,14 +8,12 @@ export default function Checkbox({
   checked,
   onChange,
 }) {
-  const [isChecked, setCheck] = useState(checked);
   return (
     <label className="sendbird-checkbox" htmlFor={id}>
       <input
         id={id}
         type="checkbox"
-        checked={isChecked}
-        onClick={() => setCheck(!isChecked)}
+        checked={checked}
         onChange={onChange}
       />
       <span className="sendbird-checkbox--checkmark" />
