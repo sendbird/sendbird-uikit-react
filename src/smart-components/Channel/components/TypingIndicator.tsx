@@ -44,8 +44,8 @@ const TypingIndicator: React.FC = () => {
       // there is a possible warning in here - setState called after unmount
       handler.onTypingStatusUpdated = (groupChannel) => {
         logger.info('Channel > Typing Indicator: onTypingStatusUpdated', groupChannel);
-        const members = groupChannel.getTypingMembers();
         if (groupChannel.url === channelUrl) {
+          const members = groupChannel.getTypingMembers();
           setTypingMembers(members);
         }
       };

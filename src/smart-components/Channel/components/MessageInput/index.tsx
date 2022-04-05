@@ -60,11 +60,12 @@ const MessageInputWrapper = (): JSX.Element => {
         ref={messageInputRef}
         disabled={disabled}
         onStartTyping={() => {
-          channel.startTyping();
+          channel?.startTyping();
         }}
         onSendMessage={() => {
           sendMessage(quoteMessage);
           setQuoteMessage(null);
+          channel?.endTyping();
         }}
         onFileUpload={(file) => {
           sendFileMessage(file, quoteMessage);
