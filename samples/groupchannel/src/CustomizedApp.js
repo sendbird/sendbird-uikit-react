@@ -1,43 +1,29 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback } from 'react';
 
 import {
   Channel as SBConversation,
   ChannelList as SBChannelList,
   ChannelSettings as SBChannelSettings,
-  withSendBird
-} from "sendbird-uikit";
+  withSendBird,
+} from 'sendbird-uikit';
 
 function CustomizedApp(props) {
   // default props
   const {
     stores: { sdkStore, userStore },
-    config: {
-      isOnline,
-      userId,
-      appId,
-      accessToken,
-      theme,
-      userListQuery,
-      logger,
-      pubSub
-    }
+    config: { isOnline, userId, appId, accessToken, theme, userListQuery, logger, pubSub },
   } = props;
   const logDefaultProps = useCallback(() => {
     console.log(
-      "SDK store list log",
+      'SDK store list log',
       sdkStore.initialized,
       sdkStore.sdk,
       sdkStore.loading,
       sdkStore.error
     );
+    console.log('User store list log', userStore.initialized, userStore.user, userStore.loading);
     console.log(
-      "User store list log",
-      userStore.initialized,
-      userStore.user,
-      userStore.loading
-    );
-    console.log(
-      "Config list log",
+      'Config list log',
       isOnline,
       userId,
       appId,
@@ -62,13 +48,13 @@ function CustomizedApp(props) {
     theme,
     userListQuery,
     logger,
-    pubSub
+    pubSub,
   ]);
   logDefaultProps();
 
   // useState
   const [showSettings, setShowSettings] = useState(false);
-  const [currentChannelUrl, setCurrentChannelUrl] = useState("");
+  const [currentChannelUrl, setCurrentChannelUrl] = useState('');
 
   return (
     <div className="customized-app">
@@ -90,17 +76,17 @@ function CustomizedApp(props) {
             }}
           />
         </div>
+        {showSettings && (
+          <div className="sendbird-app__settingspanel-wrap">
+            <SBChannelSettings
+              channelUrl={currentChannelUrl}
+              onCloseClick={() => {
+                setShowSettings(false);
+              }}
+            />
+          </div>
+        )}
       </div>
-      {showSettings && (
-        <div className="sendbird-app__settingspanel-wrap">
-          <SBChannelSettings
-            channelUrl={currentChannelUrl}
-            onCloseClick={() => {
-              setShowSettings(false);
-            }}
-          />
-        </div>
-      )}
     </div>
   );
 }
