@@ -1,5 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import debounce from 'lodash.debounce';
 
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 import Icon, { IconTypes, IconColors } from '../../../ui/Icon';
@@ -9,7 +10,7 @@ import './search-box.scss';
 const EMPTY_STRING = '';
 const COMPONENT_CLASS_NAME = 'sendbird-channel-search-box';
 
-const SearchBox = ({ onChannelSearch, ...domAttributes }) => {
+const SearchBox = ({ onChannelSearch, debounceInMilliseconds = 300, ...domAttributes }) => {
   const [channelSearchString, setChannelSearchString] = useState(EMPTY_STRING);
   const { stringSet } = useContext(LocalizationContext);
 
@@ -19,7 +20,12 @@ const SearchBox = ({ onChannelSearch, ...domAttributes }) => {
   };
 
   const handleOnChange = e => changeInputValue(e.target.value);
-  const resetSearchString = () => changeInputValue(EMPTY_STRING);;
+  const resetSearchString = () => changeInputValue(EMPTY_STRING);
+
+  // TODO: implement debounce
+  const debouncedHandleOnChange = useMemo(() => debounce(handleOnChange, debounceInMilliseconds), [onChannelSearch]);
+
+  useEffect(() => () => debouncedHandleOnChange.cancel(), []);
 
   return (
     <div className={`${COMPONENT_CLASS_NAME}__input`}>
@@ -55,12 +61,10 @@ const SearchBox = ({ onChannelSearch, ...domAttributes }) => {
 };
 
 SearchBox.propTypes = {
-  channelSearchString: PropTypes.string,
   onChannelSearch: PropTypes.func,
 };
 
 SearchBox.defaultProps = {
-  channelSearchString: '',
   onChannelSearch: () => {},
 };
 
