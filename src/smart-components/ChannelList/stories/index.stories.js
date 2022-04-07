@@ -21,6 +21,40 @@ export const IndependentChannelList = () => (
   </Sendbird>
 );
 
+export const ChannelListWithSearchBox = () => {
+  const [queries, setQueries] = useState({
+    channelListQuery: {
+      includeEmpty: true,
+      nicknameContainsFilter: '',
+    }
+  });
+
+  const onChannelSearch = searchString => {
+    setQueries({
+      ...queries,
+      channelListQuery: {
+        ...queries.channelListQuery,
+        nicknameContainsFilter: searchString,
+      },
+    });
+  };
+
+  return (
+    <Sendbird
+      appId={appId}
+      userId={userId}
+    >
+      <div style={{ height: '100vh' }}>
+        <ChannelList
+          onChannelSearch={onChannelSearch}
+          showChannelSearchBox
+          queries={queries}
+        />
+      </div>
+    </Sendbird>
+  );
+};
+
 export const OneToOneChannelList = () => (
   <Sendbird
     appId={appId}

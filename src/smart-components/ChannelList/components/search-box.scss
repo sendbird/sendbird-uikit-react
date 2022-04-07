@@ -1,0 +1,52 @@
+@import '../../../styles/variables';
+
+.sendbird-channel-search-box__input {
+  display: flex;
+  position: relative;
+  padding: 16px;
+  box-sizing: border-box;
+
+  .sendbird-channel-search-box__input__container {
+    position: relative;
+    border-radius: 4px;
+    width: 100%;
+    height: 44px;
+    @include themed() {
+      border: 1px solid t(on-bg-3);
+    }
+
+    .sendbird-channel-search-box__input__container__search-icon {
+      position: absolute;
+      top: 10px;
+      left: 16px;
+    }
+    .sendbird-channel-search-box__input__container__input-area {
+      position: absolute;
+      top: 14px;
+      left: 48px;
+      margin: 0px;
+      padding: 0px;
+      border: 0px;
+      outline: none;
+      font-size: 14px;
+      width: calc(100% - 90px);
+      @include themed() {
+        color: t(on-bg-1);
+        background-color: t(bg-0);
+      }
+    }
+    .sendbird-channel-search-box__input__container__spinner {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+    }
+    .sendbird-channel-search-box__input__container__reset-input-button {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}

@@ -7,8 +7,9 @@ import Conversation from '../../Conversation';
 export default { title: 'MessageSearch' };
 
 const appId = process.env.STORYBOOK_APP_ID;
-const userId = 'hoon601';
-const channelUrl = "sendbird_group_channel_224133251_33dfa347e2bf6c42420a8faee9bab7728f263a88";
+const userId = process.env.STORYBOOK_USER_ID || 'sendbird';
+// const channelUrl = "sendbird_group_channel_224133251_33dfa347e2bf6c42420a8faee9bab7728f263a88";
+const channelUrl = "sendbird-group-channel_2893930545";
 
 export const normal = () => {
   const [inputText, setInputText] = useState('');

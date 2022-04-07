@@ -17,6 +17,7 @@ import PlaceholderTypes from '../../ui/PlaceHolder/type';
 import AddChannel from './components/AddChannel';
 import ChannelPreviewAction from './components/ChannelPreviewAction';
 import PlaceHolder from './components/Placeholder';
+import SearchBox from './components/SearchBox';
 
 import setupChannelList, {
   pubSubHandler,
@@ -55,6 +56,8 @@ function ChannelList(props) {
     onChannelSelect,
     disableAutoSelect,
     oneToOneChannel,
+    showChannelSearchBox,
+    onChannelSearch,
   } = props;
   const { config = {} } = props;
   // enable if it is true atleast once(both are flase by default)
@@ -204,6 +207,9 @@ function ChannelList(props) {
           />
         )
       }
+
+      {showChannelSearchBox && <SearchBox onChannelSearch={onChannelSearch} />}
+
       <div
         className="sendbird-channel-list__body"
         onScroll={(e) => {
@@ -405,6 +411,8 @@ ChannelList.propTypes = {
   onChannelSelect: PropTypes.func,
   disableAutoSelect: PropTypes.bool,
   oneToOneChannel: PropTypes.bool,
+  showChannelSearchBox: PropTypes.bool,
+  onChannelSearch: PropTypes.func,
 };
 
 ChannelList.defaultProps = {
@@ -421,6 +429,8 @@ ChannelList.defaultProps = {
   onChannelSelect: noop,
   disableAutoSelect: false,
   oneToOneChannel: false,
+  showChannelSearchBox: false,
+  onChannelSearch: noop,
 };
 
 export default withSendbirdContext(ChannelList);
