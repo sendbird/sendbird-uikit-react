@@ -90,17 +90,17 @@ function CustomizedApp(props) {
             }}
           />
         </div>
+          {showSettings && (
+            <div className="sendbird-app__settingspanel-wrap">
+              <SBChannelSettings
+                channelUrl={currentChannelUrl}
+                onCloseClick={() => {
+                  setShowSettings(false);
+                }}
+              />
+          </div>
+        )}
       </div>
-      {showSettings && (
-        <div className="sendbird-app__settingspanel-wrap">
-          <SBChannelSettings
-            channelUrl={currentChannelUrl}
-            onCloseClick={() => {
-              setShowSettings(false);
-            }}
-          />
-        </div>
-      )}
     </div>
   );
 }
