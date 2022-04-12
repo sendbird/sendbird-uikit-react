@@ -1,11 +1,9 @@
 import React, { useState, useCallback } from "react";
 
-import {
-  Channel as SBConversation,
-  ChannelList as SBChannelList,
-  ChannelSettings as SBChannelSettings,
-  withSendBird
-} from "sendbird-uikit";
+import  SBConversation from '@sendbird/uikit-react/Channel';
+import SBChannelList from '@sendbird/uikit-react/ChannelList';
+import SBChannelSettings from '@sendbird/uikit-react/ChannelSettings'
+import withSendBird from '@sendbird/uikit-react/withSendBird';
 
 function CustomizedApp(props) {
   // default props

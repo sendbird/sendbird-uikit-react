@@ -1,6 +1,6 @@
 import React from "react";
-import { SendBirdProvider as SBProvider } from "sendbird-uikit";
-import "sendbird-uikit/dist/index.css";
+import SBProvider from "@sendbird/uikit-react/SendbirdProvider";
+import "@sendbird/uikit-react/dist/index.css";
 
 import CustomizedApp from "./CustomizedApp";
 import "./styles.css";
