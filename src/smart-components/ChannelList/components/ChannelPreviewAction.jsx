@@ -9,7 +9,7 @@ import { LocalizationContext } from '../../../lib/LocalizationContext';
 import ContextMenu, { MenuItem, MenuItems } from '../../../ui/ContextMenu';
 import IconButton from '../../../ui/IconButton';
 import Icon, { IconTypes, IconColors } from '../../../ui/Icon';
-import LeaveChannelModal from '../../ChannelSettings/components/LeaveChannel';
+import LeaveChannelModal from './LeaveChannel';
 
 export default function ChannelPreviewAction({ disabled, onLeaveChannel }) {
   const parentRef = useRef(null);

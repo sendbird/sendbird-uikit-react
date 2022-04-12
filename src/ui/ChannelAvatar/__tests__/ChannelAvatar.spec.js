@@ -42,14 +42,14 @@ describe('ChannelAvatar-Utils-getChannelAvatarSource', () => {
   });
 });
 
-describe('ChannelAvatar-Utils-useDefaultAvatar', () => {
+describe('ChannelAvatar-Utils-generateDefaultAvatar', () => {
   it('should return true if coverUrl is empty', () => {
-    expect(utils.useDefaultAvatar({})).toEqual(true)
+    expect(utils.generateDefaultAvatar({})).toEqual(true)
   });
   it('should return true if coverUrl is default one', () => {
-    expect(utils.useDefaultAvatar({ coverUrl: `${utils.DEFAULT_URL_PREFIX}/123.jpg` })).toEqual(true)
+    expect(utils.generateDefaultAvatar({ coverUrl: `${utils.DEFAULT_URL_PREFIX}/123.jpg` })).toEqual(true)
   });
   it('should return false if coverUrl is there', () => {
-    expect(utils.useDefaultAvatar({ coverUrl: 'randomurl' })).toEqual(false)
+    expect(utils.generateDefaultAvatar({ coverUrl: 'randomurl' })).toEqual(false)
   });
 });

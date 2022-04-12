@@ -1,10 +1,10 @@
 import React from 'react';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useChannelSettings } from '../../context/ChannelSettingsProvider';
 import { noop } from '../../../../utils/utils';
 
 import Modal from '../../../../ui/Modal';
+import { useChannelListContext } from '../../context/ChannelListProvider';
 
 export type LeaveChannelProps = {
   onSubmit: () => void;
@@ -17,7 +17,7 @@ const LeaveChannel: React.FC<LeaveChannelProps> = (props: LeaveChannelProps) => 
     onCancel = noop,
   } = props;
 
-  const channel = useChannelSettings()?.channel;
+  const channel = useChannelListContext()?.currentChannel;
   const state = useSendbirdStateContext();
   const logger = state?.config?.logger;
   const isOnline = state?.config?.isOnline;

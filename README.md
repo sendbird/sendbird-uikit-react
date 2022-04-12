@@ -6,6 +6,8 @@
 
 > React based UI kit based on sendbird javascript SDK
 
+We are introducing a new version of the Sendbird Chat UIKit. Version 3 features a new modular architecture with more granular components that give you enhanced flexibility to customize your web and mobile apps. Check out our [migration guides](MIGRATION_v2-to-v3.md).
+
 ## Getting Started
 
 With Sendbird UI Kit React, we export these components:

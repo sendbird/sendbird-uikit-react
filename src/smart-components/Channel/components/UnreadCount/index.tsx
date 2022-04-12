@@ -17,12 +17,15 @@ const UnreadCount: React.FC<UnreadCountProps> = (props: UnreadCountProps) => {
     time = '',
     onClick,
   } = props;
-  if (count < 1) {
-    return;
-  }
+
   const { stringSet } = useContext(LocalizationContext);
   const timeArray = time?.toString?.()?.split(' ') || [];
   timeArray?.splice(-2, 0, stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__ON);
+
+  if (count < 1) {
+    return;
+  }
+
   return (
     <div className="sendbird-notification" onClick={onClick}>
       <Label className="sendbird-notification__text" color={LabelColors.ONCONTENT_1} type={LabelTypography.CAPTION_2}>

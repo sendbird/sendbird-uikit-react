@@ -1,5 +1,5 @@
 import React, { ReactElement, useContext } from 'react';
-import { SendbirdTypes } from '../../types';
+import type SendBird from 'sendbird';
 import './index.scss';
 
 import { LocalizationContext } from '../../lib/LocalizationContext';
@@ -10,16 +10,16 @@ import Label, { LabelColors, LabelTypography } from '../Label';
 import Button, { ButtonTypes } from '../Button';
 
 interface Logger {
-  info?(message: string, channel: SendbirdTypes['GroupChannel']): void;
+  info?(message: string, channel: SendBird.GroupChannel): void;
 }
 
 interface Props {
-  user: SendbirdTypes['User'];
+  user: SendBird.User;
   currentUserId?: string;
-  sdk?: SendbirdTypes['SendBirdInstance'];
+  sdk?: SendBird.SendBirdInstance;
   logger?: Logger;
   disableMessaging?: boolean;
-  createChannel?(params: SendbirdTypes['GroupChannelParams']): Promise<SendbirdTypes['GroupChannel']>;
+  createChannel?(params: SendBird.GroupChannelParams): Promise<SendBird.GroupChannel>;
   onSuccess?(): void;
 }
 

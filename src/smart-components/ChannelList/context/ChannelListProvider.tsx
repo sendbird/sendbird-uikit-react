@@ -279,6 +279,6 @@ function useChannelListContext (): ChannelListProviderInterface {
 
 export {
   ChannelListProvider,
-  ChannelListContext,
+  // ChannelListContext,
   useChannelListContext,
 };

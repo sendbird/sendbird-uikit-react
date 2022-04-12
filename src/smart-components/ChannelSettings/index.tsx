@@ -15,10 +15,6 @@ interface ApplicationUserListQuery {
   metaDataValuesFilter?: Array<string>;
 }
 
-interface ChannelSettingsQueries {
-  applicationUserListQuery?: ApplicationUserListQuery;
-}
-
 interface ChannelSettingsProps extends ChannelSettingsUIProps, ChannelSettingsContextProps {
 }
 

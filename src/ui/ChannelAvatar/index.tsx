@@ -25,7 +25,7 @@ function ChannelAvatar({
   const memoizedAvatar = useMemo(() => (
     isBroadcast
       ? (
-        utils.useDefaultAvatar(channel)
+        utils.generateDefaultAvatar(channel)
           ? (
             <div
               className="sendbird-chat-header--default-avatar"

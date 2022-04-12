@@ -58,9 +58,7 @@ export default {
   // OpenChannelSettings
   OpenChannelSettings: 'src/smart-components/OpenChannelSettings/index.tsx',
   'OpenChannelSettings/context': 'src/smart-components/OpenChannelSettings/context/OpenChannelSettingsProvider.tsx',
-  'OpenChannelSettings/components/DeleteOpenChannel': 'src/smart-components/OpenChannelSettings/components/DeleteOpenChannel.tsx',
   'OpenChannelSettings/components/EditDetailsModal': 'src/smart-components/OpenChannelSettings/components/EditDetailsModal.tsx',
-  'OpenChannelSettings/components/InvalidChannel': 'src/smart-components/OpenChannelSettings/components/InvalidChannel.tsx',
   'OpenChannelSettings/components/OpenChannelProfile': 'src/smart-components/OpenChannelSettings/components/OpenChannelProfile/index.tsx',
   'OpenChannelSettings/components/OpenChannelSettingsUI': 'src/smart-components/OpenChannelSettings/components/OpenChannelSettingsUI/index.tsx',
   'OpenChannelSettings/components/OperatorUI': 'src/smart-components/OpenChannelSettings/components/OperatorUI/index.tsx',
