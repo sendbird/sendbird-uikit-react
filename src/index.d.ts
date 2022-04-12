@@ -479,7 +479,7 @@ declare module '@sendbird/uikit-react/ChannelList/context' {
 }
 
 declare module '@sendbird/uikit-react/ChannelList/components/AddChannel' {
-  type AddChannel = React.FunctionComponent<{}>;
+  type AddChannel = React.VoidFunctionComponent;
   export default AddChannel;
 }
 
@@ -514,12 +514,12 @@ declare module '@sendbird/uikit-react/ChannelSettings/context' {
 }
 
 declare module '@sendbird/uikit-react/ChannelSettings/components/AdminPanel' {
-  type AdminPanel = React.FunctionComponent<{}>;
+  type AdminPanel = React.VoidFunctionComponent;
   export default AdminPanel;
 }
 
 declare module '@sendbird/uikit-react/ChannelSettings/components/ChannelProfile' {
-  type ChannelProfile = React.FunctionComponent<{}>;
+  type ChannelProfile = React.VoidFunctionComponent;
   export default ChannelProfile;
 }
 
@@ -674,7 +674,7 @@ declare module '@sendbird/uikit-react/Channel/context' {
 }
 
 declare module '@sendbird/uikit-react/Channel/components/ChannelHeader' {
-  type ChannelHeader = React.FunctionComponent<{}>;
+  type ChannelHeader = React.VoidFunctionComponent;
   export default ChannelHeader;
 }
 
@@ -689,7 +689,7 @@ declare module '@sendbird/uikit-react/Channel/components/FileViewer' {
 }
 
 declare module '@sendbird/uikit-react/Channel/components/FrozenNotification' {
-  type FrozenNotification = React.FunctionComponent<{}>;
+  type FrozenNotification = React.VoidFunctionComponent;
   export default FrozenNotification;
 }
 
@@ -699,7 +699,7 @@ declare module '@sendbird/uikit-react/Channel/components/Message' {
 }
 
 declare module '@sendbird/uikit-react/Channel/components/MessageInput' {
-  type MessageInput = React.FunctionComponent<{}>;
+  type MessageInput = React.VoidFunctionComponent;
   export default MessageInput;
 }
 
@@ -714,7 +714,7 @@ declare module '@sendbird/uikit-react/Channel/components/RemoveMessageModal' {
 }
 
 declare module '@sendbird/uikit-react/Channel/components/TypingIndicator' {
-  type TypingIndicator = React.FunctionComponent<{}>;
+  type TypingIndicator = React.VoidFunctionComponent;
   export default TypingIndicator;
 }
 
@@ -1215,9 +1215,7 @@ declare module '@sendbird/uikit-react/ui/Checkbox' {
 }
 
 declare module '@sendbird/uikit-react/ui/ConnectionStatus' {
-  interface ConnectionStatusProps {
-  }
-  type ConnectionStatus = React.FC<ConnectionStatusProps>;
+  type ConnectionStatus = React.VoidFunctionComponent;
   export default ConnectionStatus;
 }
 
