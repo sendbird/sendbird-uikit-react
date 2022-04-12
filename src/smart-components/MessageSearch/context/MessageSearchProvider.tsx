@@ -23,7 +23,7 @@ export interface MessageSearchProviderProps {
   channelUrl: string;
   children?: React.ReactNode;
   searchString?: string;
-  // requestString?: string;
+  requestString?: string;
   messageSearchQuery?: SendBird.MessageSearchQueryOptions;
   onResultLoaded?(messages?: Array<ClientSentMessages>, error?: SendBird.SendBirdError): void;
   onResultClick?(message: ClientSentMessages): void;
@@ -31,7 +31,6 @@ export interface MessageSearchProviderProps {
 
 interface MessageSearchProviderInterface extends MessageSearchProviderProps {
   retryCount: number;
-  requestString?: string;
   setRetryCount: React.Dispatch<React.SetStateAction<number>>;
   selectedMessageId: number;
   setSelectedMessageId: React.Dispatch<React.SetStateAction<number>>;
@@ -102,10 +101,10 @@ const MessageSearchProvider: React.FC<MessageSearchProviderProps> = (props: Mess
     { sdk, logger, messageSearchDispatcher },
   );
 
-  // const requestString = useSearchStringEffect({ searchString }, { messageSearchDispatcher });
+  const requestString = useSearchStringEffect({ searchString }, { messageSearchDispatcher });
 
   useGetSearchMessages(
-    // { currentChannel, channelUrl, requestString, messageSearchQuery, onResultLoaded, retryCount },
+    { currentChannel, channelUrl, requestString, messageSearchQuery, onResultLoaded, retryCount },
     { sdk, logger, messageSearchDispatcher },
   );
 
@@ -121,7 +120,7 @@ const MessageSearchProvider: React.FC<MessageSearchProviderProps> = (props: Mess
     <MessageSearchContext.Provider value={{
       channelUrl,
       searchString,
-      // requestString,
+      requestString,
       messageSearchQuery,
       onResultLoaded,
       onResultClick,

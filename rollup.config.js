@@ -10,7 +10,7 @@ import postcss from 'rollup-plugin-postcss';
 import replace from '@rollup/plugin-replace';
 import typescript from '@rollup/plugin-typescript';
 import autoprefixer from 'autoprefixer';
-// import copy from 'rollup-plugin-copy';
+import copy from 'rollup-plugin-copy';
 import { sizeSnapshot } from 'rollup-plugin-size-snapshot';
 
 // config from package.json
@@ -26,12 +26,12 @@ module.exports = ({
   input: inputs,
   output: [
     {
-      dir: 'release/dist/cjs',
+      dir: 'dist/cjs',
       format: 'cjs',
       sourcemap: true,
     },
     {
-      dir: 'release',
+      dir: 'dist',
       format: 'esm',
       sourcemap: true,
     },
@@ -54,7 +54,7 @@ module.exports = ({
         autoprefixer,
       ],
       sourceMap: true,
-      extract: 'dist/index.css',
+      extract: 'index.css',
       extensions: ['.sass', '.scss', '.css'],
     }),
     replace({
@@ -64,6 +64,15 @@ module.exports = ({
       [IS_ROLLUP]: IS_ROLLUP_REPLACE,
     }),
     typescript({ jsx: 'preserve' }),
+    // external(),
+    // extensions({
+    //   // Supporting Typescript files
+    //   // Uses ".mjs, .js" by default
+    //   extensions: ['.tsx', '.ts', '.jsx', '.js'],
+    //   // Resolves index dir files based on supplied extensions
+    //   // This is enable by default
+    //   resolveIndex: true,
+    // }),
     svgr(),
     babel({
       presets: [
@@ -79,6 +88,7 @@ module.exports = ({
           },
         ],
       ],
+      babelHelpers: 'bundled',
       extensions: ['.tsx', '.ts', '.jsx', '.js'],
       exclude: 'node_modules/**',
       plugins: [
@@ -91,5 +101,14 @@ module.exports = ({
     }),
     commonjs(),
     sizeSnapshot(),
+    copy({
+      verbose: true,
+      targets: [
+        {
+          src: './src/index.d.ts',
+          dest: 'dist',
+        },
+      ],
+    }),
   ],
 });
