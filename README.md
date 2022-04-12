@@ -1,8 +1,7 @@
 # sendbird-uikit
 
-<img alt="Platform React" src="https://img.shields.io/badge/Platform-React-orange" />
-<img alt="Language TypeScript/JavaScript" src="https://img.shields.io/badge/Language-JavaScript | TypeScript-orange" />
-<img alt="Version 3 beta" src="https://img.shields.io/badge/version-3.0.0--beta-blue" />
+<img alt="Version 3 beta" src="https://img.shields.io/badge/Sendbird-BETA-blue" />
+<img alt="Platform React" src="https://img.shields.io/badge/Platform-React-orange" /> <img alt="Language TypeScript/JavaScript" src="https://img.shields.io/badge/Language-JavaScript | TypeScript-orange" />
 
 > React based UI kit based on sendbird javascript SDK
 
