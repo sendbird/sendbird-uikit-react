@@ -9,7 +9,7 @@
     "react": "17.0.0",
     "react-dom": "17.0.0",
     "react-scripts": "3.0.1",
-    "sendbird-uikit": "2.5.0"
+    "@sendbird/uikit-react": "3.0.0-beta"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
