@@ -942,7 +942,7 @@ interface MessageSearchProviderInterface extends MessageSearchProviderProps {
   setSelectedMessageId: React.Dispatch<React.SetStateAction<number>>;
   messageSearchDispatcher: ({ type: string, payload: any }) => void;
   scrollRef: React.MutableRefObject<HTMLDivElement>;
-  allMessages: Array<ClientFileMessage | ClientUserMessage>;;
+  allMessages: Array<ClientFileMessage | ClientUserMessage>;
   loading: boolean;
   isInvalid: boolean;
   currentChannel: SendBird.GroupChannel;
@@ -993,11 +993,6 @@ interface CreateChannelProviderProps {
   userListQuery?(): UserListQuery;
 }
 
-enum CHANNEL_TYPE {
-  GROUP = 'group',
-  SUPERGROUP = 'supergroup',
-  BROADCAST = 'broadcast',
-}
 
 interface CreateChannelContextInterface {
   onBeforeCreateChannel?(users: Array<string>): Sendbird.GroupChannelParams;
@@ -1007,8 +1002,8 @@ interface CreateChannelContextInterface {
   onCreateChannel?(channel: Sendbird.GroupChannel): void;
   step: number,
   setStep: React.Dispatch<React.SetStateAction<number>>,
-  type: CHANNEL_TYPE,
-  setType: React.Dispatch<React.SetStateAction<CHANNEL_TYPE>>,
+  type: 'group' | 'supergroup' | 'broadcast',
+  setType: React.Dispatch<React.SetStateAction<'group' | 'supergroup' | 'broadcast'>>,
 }
 
 interface CreateChannelUIProps {
@@ -1138,7 +1133,7 @@ declare module '@sendbird/uikit-react/ui/Badge' {
     count: number,
     maxLevel?: number,
     className?: string | string [],
-  };
+  }
   type Badge = React.FC<BadgeProps>;
   export default Badge;
 }
@@ -1151,7 +1146,7 @@ declare module '@sendbird/uikit-react/ui/Button' {
     children?: string | React.ReactElement;
     disabled?: boolean;
     onClick?: () => void;
-  };
+  }
   type Button = React.FC<ButtonProps>;
   export default Button;
 }
@@ -1246,7 +1241,7 @@ declare module '@sendbird/uikit-react/ui/DateSeparator' {
     PRIMARY ='PRIMARY',
     ERROR ='ERROR',
     SECONDARY_3 ='SECONDARY_3',
-  };
+  }
   interface DateSeparatorProps {
     className?: string | string[];
     children?: string | React.ReactElement,
