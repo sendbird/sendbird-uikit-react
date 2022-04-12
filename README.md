@@ -1,5 +1,10 @@
 # sendbird-uikit
 
+<img alt="Platform React" src="https://img.shields.io/badge/Platform-React-orange" />
+<img alt="Language TypeScript/JavaScript" src="https://img.shields.io/badge/Language-JavaScript | TypeScript-orange" />
+
+[Beta version of Sendbird UIKit 3.0](https://github.com/sendbird/sendbird-uikit-react/tree/develop-v3) has been released. Try to make your own application with this amazing version which contains new modular components and UI components of elementary level.
+
 > React based UI kit based on sendbird javascript SDK
 
 ## Getting Started
