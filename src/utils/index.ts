@@ -85,7 +85,7 @@ export interface OutgoingMessageStates {
   READ: 'READ',
   // delivered and read are only in group channel
 }
-const OutgoingMessageStates: OutgoingMessageStates = {
+export const OutgoingMessageStates: OutgoingMessageStates = {
   NONE: 'NONE',
   PENDING: 'PENDING',
   SENT: 'SENT',

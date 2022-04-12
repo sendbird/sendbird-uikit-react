@@ -40,6 +40,7 @@ interface ChannelSettingsProviderInterface {
   onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): Sendbird.GroupChannelParams;
   queries?: ChannelSettingsQueries;
   setChannelUpdateId(uniqId: string): void;
+  forceUpdateUI(): void;
   channel: Sendbird.GroupChannel;
   invalidChannel: boolean;
 }
@@ -69,6 +70,10 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
   const [channelUpdateId, setChannelUpdateId] = useState(uuidv4());
   const [channel, setChannel] = useState(null);
   const [invalidChannel, setInvalidChannel] = useState(false);
+
+  const forceUpdateUI = () => {
+    setChannelUpdateId(uuidv4());
+  }
 
   useEffect(() => {
     logger.info('ChannelSettings: Setting up');
@@ -101,6 +106,7 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
       onBeforeUpdateChannel,
       queries,
       setChannelUpdateId,
+      forceUpdateUI,
       channel,
       invalidChannel,
     }}>
@@ -116,7 +122,7 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
   );
 }
 
-export type UseChannelSettingsType = () => ChannelSettingsProviderInterface
+export type UseChannelSettingsType = () => ChannelSettingsProviderInterface;
 const useChannelSettings: UseChannelSettingsType = () => React.useContext(ChannelSettingsContext);
 
 export { ChannelSettingsProvider, useChannelSettings };

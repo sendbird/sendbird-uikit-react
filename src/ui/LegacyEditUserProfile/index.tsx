@@ -4,6 +4,7 @@ import React, {
   useState,
   useContext,
 } from 'react';
+import type SendBird from 'sendbird';
 import './index.scss';
 
 import Modal from '../Modal';
@@ -16,11 +17,10 @@ import Icon, { IconTypes } from '../Icon';
 import { Type as ButtonType } from '../Button/type';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import TextButton from '../TextButton';
-import { SendbirdTypes } from '../../types';
 import { noop } from '../../utils/utils';
 
 interface Props {
-  user: SendbirdTypes['User'];
+  user: SendBird.User;
   theme?: string;
   onCancel(): void;
   onSubmit(newFile: File, newNickname: string): void;
@@ -169,7 +169,7 @@ const mapStoreToProps = (store) => {
 };
 
 interface ConnectedEditUserProfileProps {
-  user: SendbirdTypes['User'];
+  user: SendBird.User;
   onCancel(): void;
   onSubmit(newFile: File, newNickname: string): void;
   onThemeChange?(theme: string): void;

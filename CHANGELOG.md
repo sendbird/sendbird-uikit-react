@@ -1,6 +1,6 @@
 # Changelog - v3
 
-## [3.0.0-beta] (March 2022)
+## [3.0.0-beta] (March/April 2022)
 
 This is the official beta for Sendbird UIKit for React version 3!
 

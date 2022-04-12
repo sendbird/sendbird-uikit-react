@@ -3,14 +3,14 @@ import Sendbird from 'sendbird';
 
 const EditUserProfileProviderContext = React.createContext(undefined);
 
-interface EditUserProfileProps {
+export interface EditUserProfileProps {
   children?: React.ReactNode;
   onCancel?(): void;
   onThemeChange?(theme: string): void;
   onEditProfile?(updatedUser: Sendbird.User): void;
 }
 
-interface EditUserProfileProviderInterface {
+export interface EditUserProfileProviderInterface {
   onCancel?(): void;
   onThemeChange?(theme: string): void;
   onEditProfile?(updatedUser: Sendbird.User): void;
@@ -46,6 +46,4 @@ const useEditUserProfileProvider = (): EditUserProfileProviderInterface => (
 export {
   EditUserProfileProvider,
   useEditUserProfileProvider,
-  EditUserProfileProps,
-  EditUserProfileProviderInterface,
 };

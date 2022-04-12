@@ -21,7 +21,7 @@ export const getChannelAvatarSource = (channel: SendBird.GroupChannel, currentUs
 };
 
 
-export const useDefaultAvatar = (channel: SendBird.GroupChannel): boolean => {
+export const generateDefaultAvatar = (channel: SendBird.GroupChannel): boolean => {
   if (channel && channel.coverUrl) {
     if (new RegExp(`^${DEFAULT_URL_PREFIX}`).test(channel.coverUrl)) {
       return true;

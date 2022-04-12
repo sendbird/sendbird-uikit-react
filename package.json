@@ -1,6 +1,6 @@
 {
-  "name": "sendbird-uikit",
-  "version": "2.5.3",
+  "name": "@sendbird/uikit-react",
+  "version": "3.0.0-beta",
   "description": "React based UI kit for sendbird",
   "main": "release/index.js",
   "style": "release/dist/index.css",
@@ -34,7 +34,8 @@
     "generate-component": "plop",
     "rollup": "npm run clean-release; rollup -c",
     "deploy-storybook": "storybook-to-ghpages",
-    "inspect": "npm run test; npm run lint;"
+    "inspect": "npm run test; npm run lint;",
+    "bundle": "dts-bundle-generator -o ./dist/my.d.ts ./src/index.d.ts"
   },
   "repository": {
     "type": "git",
@@ -91,6 +92,7 @@
     "browserslist": "^4.14.5",
     "caniuse-lite": "^1.0.30001148",
     "css-loader": "^3.4.2",
+    "dts-bundle-generator": "^6.5.0",
     "enzyme": "^3.11.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.0.1",
