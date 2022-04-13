@@ -23,6 +23,7 @@
     "clean-release": "rm -rf ./release; rm -rf ./dist",
     "build": "npm run clean-release; rollup -c; npm run cp-css",
     "start": "rollup -c -w",
+    "reset": "rm -rf ./node_modules; npm install;",
     "prepublishOnly": "npm run build",
     "predeploy": "cd example && npm install && npm run build",
     "storybook": "start-storybook -p 6006",
