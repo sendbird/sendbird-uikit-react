@@ -44,6 +44,7 @@ export default {
   'Channel/components/RemoveMessageModal': 'src/smart-components/Channel/components/RemoveMessageModal.tsx',
   'Channel/components/TypingIndicator': 'src/smart-components/Channel/components/TypingIndicator.tsx',
   'Channel/components/UnreadCount': 'src/smart-components/Channel/components/UnreadCount/index.tsx',
+  'Channel/components/SuggestedMentionList': 'src/smart-components/Channel/components/SuggestedMentionList/index.tsx',
 
   // OpenChannel
   OpenChannel: 'src/smart-components/OpenChannel/index.tsx',
