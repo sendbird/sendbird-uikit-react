@@ -1,19 +1,19 @@
 import React, { ReactElement, useContext } from 'react';
-import { UserMessage } from 'sendbird';
+import SendBird from 'sendbird';
 import './index.scss';
 
 import Label, { LabelTypography, LabelColors } from '../Label';
-import {
-  getClassName,
-  isEditedMessage,
-} from '../../utils';
+import { getClassName, isEditedMessage } from '../../utils';
 import { LocalizationContext } from '../../lib/LocalizationContext';
+import uuidv4 from '../../utils/uuid';
+import Word from '../Word';
 
 interface Props {
   className?: string | Array<string>;
-  message: UserMessage;
+  message: SendBird.UserMessage;
   isByMe?: boolean;
   mouseHover?: boolean;
+  isMentionEnabled?: boolean;
 }
 
 export default function TextMessageItemBody({
@@ -21,8 +21,11 @@ export default function TextMessageItemBody({
   message,
   isByMe = false,
   mouseHover = false,
+  isMentionEnabled = false,
 }: Props): ReactElement {
+  console.log('text message', message);
   const { stringSet } = useContext(LocalizationContext);
+  const isMessageMentioned = isMentionEnabled && message?.mentionedMessageTemplate?.length > 0 && message?.mentionedUsers?.length > 0;
   return (
     <Label
       type={LabelTypography.BODY_1}
@@ -35,7 +38,23 @@ export default function TextMessageItemBody({
         mouseHover ? 'mouse-hover' : '',
         message?.reactions?.length > 0 ? 'reactions' : '',
       ])}>
-        {message?.message}
+        {
+          isMessageMentioned
+           ? (
+              message.mentionedMessageTemplate.split(' ').map((word) => {
+                console.log('word', word);
+                return (
+                  <Word
+                    key={uuidv4()}
+                    word={word}
+                    message={message}
+                    isByMe={isByMe}
+                  />
+                );
+              })
+           )
+           : message?.message
+        }
         {
           isEditedMessage(message) && (
             <Label

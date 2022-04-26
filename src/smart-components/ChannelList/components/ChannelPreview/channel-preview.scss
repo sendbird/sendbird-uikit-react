@@ -83,6 +83,8 @@
       }
 
       .sendbird-channel-preview__content__lower__unread-message-count {
+        display: flex;
+        align-items: center;
         margin-left: 8px;
         margin-bottom: 12px;
       }

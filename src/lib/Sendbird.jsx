@@ -41,6 +41,7 @@ export default function Sendbird(props) {
     stringSet,
     imageCompression,
     useReaction,
+    isMentionEnabled,
   } = props;
 
   const {
@@ -167,6 +168,7 @@ export default function Sendbird(props) {
           pubSub,
           imageCompression,
           useReaction,
+          isMentionEnabled,
         },
       }}
     >
@@ -208,6 +210,7 @@ Sendbird.propTypes = {
   stringSet: PropTypes.objectOf(PropTypes.string),
   colorSet: PropTypes.objectOf(PropTypes.string),
   useReaction: PropTypes.bool,
+  isMentionEnabled: PropTypes.bool,
   imageCompression: PropTypes.shape({
     compressionRate: PropTypes.number,
     resizingWidth: PropTypes.oneOfType([
@@ -236,4 +239,5 @@ Sendbird.defaultProps = {
   colorSet: null,
   imageCompression: {},
   useReaction: true,
+  isMentionEnabled: false,
 };

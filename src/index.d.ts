@@ -79,6 +79,7 @@ interface SendBirdStateConfig {
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   allowProfileEdit: boolean;
   isOnline: boolean;
+  isMentionEnabled: boolean;
   userId: string;
   appId: string;
   accessToken: string;

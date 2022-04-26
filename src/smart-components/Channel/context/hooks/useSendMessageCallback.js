@@ -4,7 +4,7 @@ import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';
 import * as topics from '../../../../lib/pubSub/topics';
 
-export default function useSendMessageCallback({ currentGroupChannel, onBeforeSendUserMessage }, {
+export default function useSendMessageCallback({ currentGroupChannel, onBeforeSendUserMessage, isMentionEnabled }, {
   sdk,
   logger,
   pubSub,
@@ -13,12 +13,26 @@ export default function useSendMessageCallback({ currentGroupChannel, onBeforeSe
   const messageInputRef = useRef(null);
 
   const sendMessage = useCallback(
-    (quoteMessage = null) => {
-      const text = messageInputRef.current.value;
-      const createParamsDefault = (txt) => {
-        const message = (typeof txt === 'string') ? txt.trim() : txt;
+    (props) => {
+      const {
+        quoteMessage = null,
+        message,
+        mentionTemplate,
+        // mentionedUserIds,
+        mentionedUsers,
+      } = props;
+      const createParamsDefault = () => {
         const params = new sdk.UserMessageParams();
-        params.message = message;
+        params.message = message?.trim() || message;
+        // if (isMentionEnabled && mentionedUserIds?.length > 0) {
+        if (isMentionEnabled && mentionedUsers?.length > 0) {
+          // params.mentionedUserIds = mentionedUserIds;
+          params.mentionedUsers = mentionedUsers;
+        }
+        // if (isMentionEnabled && mentionTemplate && mentionedUserIds?.length > 0) {
+        if (isMentionEnabled && mentionTemplate && mentionedUsers?.length > 0) {
+          params.mentionedMessageTemplate = mentionTemplate?.trim() || mentionTemplate;
+        }
         if (quoteMessage) {
           params.isReplyToChannel = true;
           params.parentMessageId = quoteMessage.messageId;
@@ -34,8 +48,9 @@ export default function useSendMessageCallback({ currentGroupChannel, onBeforeSe
       }
 
       const params = onBeforeSendUserMessage
-        ? onBeforeSendUserMessage(text, quoteMessage)
-        : createParamsDefault(text);
+        ? onBeforeSendUserMessage(message, quoteMessage)
+        : createParamsDefault();
+      console.log('보내기 전 ', params)
 
       logger.info('Channel: Sending message has started', params);
       const pendingMsg = currentGroupChannel.sendUserMessage(params, (res, err) => {

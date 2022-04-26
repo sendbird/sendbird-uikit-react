@@ -1,11 +1,13 @@
 import React, {
   useState,
+  useEffect,
   useRef,
   useLayoutEffect,
   useMemo,
 } from 'react';
 import format from 'date-fns/format';
 
+import SuggestedMentionList from '../SuggestedMentionList';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannel } from '../../context/ChannelProvider';
 import { getClassName } from '../../../../utils';
@@ -50,6 +52,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
   const globalStore = useSendbirdStateContext();
   const userId = globalStore?.config?.userId;
   const isOnline = globalStore?.config?.isOnline;
+  const isMentionEnabled = globalStore?.config?.isMentionEnabled || false;
 
   const {
     currentGroupChannel,
@@ -67,6 +70,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
     quoteMessage,
     setQuoteMessage,
     resendMessage,
+    renderUserMentionItem,
   } = useChannel();
 
   const [showEdit, setShowEdit] = useState(false);
@@ -74,8 +78,33 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
   const [showFileViewer, setShowFileViewer] = useState(false);
   const [isAnimated, setIsAnimated] = useState(false);
   const [isHighlighted, setIsHighlighted] = useState(false);
+  const [mentionNickname, setMentionNickname] = useState('');
+  const [mentionedUsers, setMentionedUsers] = useState([]);
+  const [mentionedUserIds, setMentionedUserIds] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [disableMention, setDisableMention] = useState(false);
   const editMessageInputRef = useRef(null);
   const useMessageScrollRef = useRef(null);
+
+  useEffect(() => {
+    if (mentionedUsers?.length >= 10) {
+      setDisableMention(true);
+    } else {
+      setDisableMention(false);
+    }
+  }, [mentionedUsers]);
+
+  useEffect(() => {
+    setMentionedUsers(mentionedUsers.filter(({ userId }) => {
+      const i = mentionedUserIds.indexOf(userId);
+      if (i < 0) {
+        return false;
+      } else {
+        mentionedUserIds.splice(i, 1);
+        return true;
+      }
+    }));
+  }, [mentionedUserIds]);
 
   useLayoutEffect(() => {
     handleScroll?.();
@@ -158,15 +187,53 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
 
   if (showEdit && message.isUserMessage()) {
     return renderEditInput?.() || (
-      <MessageInput
-        isEdit
-        disabled={isDisabledBecauseFrozen(currentGroupChannel)}
-        ref={editMessageInputRef}
-        name={message.messageId}
-        onSendMessage={updateMessage}
-        onCancelEdit={() => { setShowEdit(false); }}
-        value={(message as SendbirdUIKit.ClientUserMessage)?.message}
-      />
+      <>
+        {
+          (mentionNickname.length > 0) && (
+            <SuggestedMentionList
+              targetNickname={mentionNickname}
+              renderUserMentionItem={renderUserMentionItem}
+              onUserItemClick={(user) => {
+                if (user) {
+                  setMentionedUsers([...mentionedUsers, user]);
+                }
+                setMentionNickname('');
+                setSelectedUser(user);
+              }}
+              disableAddMention={disableMention}
+            />
+          )
+        }
+        <MessageInput
+          isEdit
+          disabled={isDisabledBecauseFrozen(currentGroupChannel)}
+          ref={editMessageInputRef}
+          mentionSelectedUser={selectedUser}
+          isMentionEnabled={isMentionEnabled}
+          message={message}
+          onUpdateMessage={({ messageId, message, mentionTemplate }) => {
+            updateMessage({
+              messageId,
+              message,
+              mentionedUsers,
+              mentionTemplate,
+            });
+          }}
+          onCancelEdit={() => { setShowEdit(false); }}
+          onUserMentioned={(user) => {
+            if (selectedUser?.userId === user?.userId) {
+              setSelectedUser(null);
+              setMentionNickname('');
+            }
+          }}
+          onMentionStringChange={(mentionText) => {
+            setMentionNickname(mentionText);
+          }}
+          onMentionedUserIdsUpdated={(userIds) => {
+            setMentionedUserIds(userIds);
+          }}
+        />
+      </>
     );
   }
 

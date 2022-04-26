@@ -7,15 +7,28 @@ function useUpdateMessageCallback({
   currentGroupChannel,
   messagesDispatcher,
   onBeforeUpdateUserMessage,
+  isMentionEnabled,
 }, {
   logger,
   pubSub,
   sdk,
 }) {
-  return useCallback((messageId, text, cb) => {
-    const createParamsDefault = (txt) => {
+  return useCallback((props, callback) => {
+    const {
+      messageId,
+      message,
+      mentionedUsers,
+      mentionTemplate,
+    } = props;
+    const createParamsDefault = () => {
       const params = new sdk.UserMessageParams();
-      params.message = txt;
+      params.message = message;
+      if (isMentionEnabled && mentionedUsers?.length > 0) {
+        params.mentionedUsers = mentionedUsers;
+      }
+      if (isMentionEnabled && mentionTemplate) {
+        params.mentionedMessageTemplate = mentionTemplate;
+      }
       return params;
     };
 
@@ -27,8 +40,8 @@ function useUpdateMessageCallback({
     }
 
     const params = onBeforeUpdateUserMessage
-      ? onBeforeUpdateUserMessage(text)
-      : createParamsDefault(text);
+      ? onBeforeUpdateUserMessage(message)
+      : createParamsDefault(message);
 
     currentGroupChannel.updateUserMessage(messageId, params, (r, e) => {
       logger.info('Channel: Updating message!', params);
@@ -39,8 +52,8 @@ function useUpdateMessageCallback({
         message = e;
         err = r;
       }
-      if (cb) {
-        cb(err, message);
+      if (callback) {
+        callback(err, message);
       }
       if (!err) {
         logger.info('Channel: Updating message success!', message);

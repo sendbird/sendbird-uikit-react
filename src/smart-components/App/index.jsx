@@ -27,6 +27,7 @@ export default function App(props) {
     dateLocale,
     config = {},
     useReaction,
+    isMentionEnabled,
     replyType,
     useMessageGrouping,
     colorSet,
@@ -62,6 +63,7 @@ export default function App(props) {
       renderUserProfile={renderUserProfile}
       imageCompression={imageCompression}
       useReaction={useReaction}
+      isMentionEnabled={isMentionEnabled}
     >
       <div className="sendbird-app__wrap">
         <div className="sendbird-app__channellist-wrap">
@@ -196,6 +198,7 @@ App.defaultProps = {
   renderUserProfile: null,
   config: {},
   useReaction: true,
+  isMentionEnabled: false,
   replyType: 'NONE',
   useMessageGrouping: true,
   stringSet: null,

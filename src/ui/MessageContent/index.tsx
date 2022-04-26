@@ -33,6 +33,7 @@ import {
 import { UserProfileContext } from '../../lib/UserProfileContext';
 import { ReplyType } from '../../index.js';
 import { useLocalization } from '../../lib/LocalizationContext';
+import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 interface Props {
   className?: string | Array<string>;
@@ -76,6 +77,8 @@ export default function MessageContent({
 }: Props): ReactElement {
   const messageTypes = getUIKitMessageTypes();
   const { dateLocale } = useLocalization();
+  const { config } = useSendbirdStateContext();
+  const { isMentionEnabled } = config;
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const avatarRef = useRef(null);
   const [mouseHover, setMouseHover] = useState(false);
@@ -215,6 +218,7 @@ export default function MessageContent({
               message={message as UserMessage}
               isByMe={isByMe}
               mouseHover={mouseHover}
+              isMentionEnabled={isMentionEnabled}
             />
           )}
           {(isOGMessage(message as UserMessage)) && (
@@ -223,6 +227,7 @@ export default function MessageContent({
               message={message as UserMessage}
               isByMe={isByMe}
               mouseHover={mouseHover}
+              isMentionEnabled={isMentionEnabled}
             />
           )}
           {(getUIKitMessageType((message as FileMessage)) === messageTypes.FILE) && (

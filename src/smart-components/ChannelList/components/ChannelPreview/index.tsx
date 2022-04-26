@@ -12,6 +12,7 @@ import * as utils from './utils';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
+import MentionUserLabel from '../../../../ui/MentionUserLabel';
 
 interface ChannelPreviewInterface {
   channel: SendBird.GroupChannel;
@@ -32,6 +33,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
   const { dateLocale, stringSet } = useLocalization();
   const userId = sbState?.stores?.userStore?.user?.userId;
   const theme = sbState?.config?.theme;
+  const isMentionEnabled = sbState?.config?.isMentionEnabled;
   const { isBroadcast, isFrozen } = channel;
   return (
     <div
@@ -114,6 +116,11 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
             {utils.getLastMessage(channel)}
           </Label>
           <div className="sendbird-channel-preview__content__lower__unread-message-count">
+            {
+              (isMentionEnabled && channel?.unreadMentionCount > 0)
+                ? <MentionUserLabel color="purple">@</MentionUserLabel>
+                : null
+            }
             {
               utils.getChannelUnreadMessageCount(channel) // return number
                 ? <Badge count={utils.getChannelUnreadMessageCount(channel)} />

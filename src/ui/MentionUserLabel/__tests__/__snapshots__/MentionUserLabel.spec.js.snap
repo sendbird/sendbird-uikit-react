@@ -1,3 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`MentionUserLabel should do a snapshot test of the MentionUserLabel DOM 1`] = `<div />`;
+exports[`MentionUserLabel should do a snapshot test of the MentionUserLabel DOM 1`] = `
+<span
+  className="sendbird-mention-user-label   undefined"
+  contentEditable={false}
+/>
+`;

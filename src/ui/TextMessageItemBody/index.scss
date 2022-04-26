@@ -28,6 +28,11 @@
       @include themed() { background-color: t(primary-4) }
     }
   }
+
+  .sendbird-text-message-item-body__text-bubble__message {
+    display: inline;
+    margin: 0px 2px;
+  }
 }
 
 p.sendbird-text-message-item-body {

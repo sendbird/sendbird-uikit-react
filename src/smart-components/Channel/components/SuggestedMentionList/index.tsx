@@ -13,16 +13,16 @@ export interface SuggestedMentionListProps {
   targetNickname: string;
   memberListQuery?: Record<string, string>;
   onUserItemClick?: (member: SendBird.User) => void;
-  renderUserItem?: (member: SendBird.Member) => JSX.Element;
+  renderUserMentionItem?: (member: SendBird.Member) => JSX.Element;
   disableAddMention: boolean;
 }
 
 function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   const {
-    targetNickname,
+    targetNickname = '',
     // memberListQuery,
     onUserItemClick,
-    renderUserItem,
+    renderUserMentionItem,
     disableAddMention = false,
   } = props;
   const { config } = useSendbirdStateContext();
@@ -41,7 +41,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
 
     const query = currentGroupChannel.createMemberListQuery();
     query.limit = 15;
-    query.nicknameStartsWithFilter = targetNickname;
+    query.nicknameStartsWithFilter = targetNickname.slice('@'.length);
     // Add member list query for customization
     query.next((memberList, error) => {
       if (error) {
@@ -78,13 +78,13 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
         )
       }
       {!disableAddMention && currentMemberList.map((member) => {
-        if (renderUserItem) {
+        if (renderUserMentionItem) {
           return (
             <div
               className="sendbird-mention-suggest-list__user-item"
               onClick={() => onUserItemClick(member)}
             >
-              {renderUserItem(member)}
+              {renderUserMentionItem(member)}
             </div>
           )
         }
@@ -92,6 +92,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
           <div
             className="sendbird-mention-suggest-list__user-item"
             onClick={() => onUserItemClick(member)}
+            key={member.nickname}
           >
             <Avatar
               className="sendbird-mention-suggest-list__user-item__avatar"
