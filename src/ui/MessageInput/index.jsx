@@ -23,9 +23,8 @@ import {
 const TEXT_FIELD_ID = 'sendbird-message-input-text-field';
 const LINE_HEIGHT = 76;
 const noop = () => { };
-const KeyCode = {
-  SHIFT: 16,
-  ENTER: 13,
+export const MessageInputKeys = {
+  Enter: 'Enter',
 };
 
 const handleUploadFile = (callback) => (event) => {
@@ -70,7 +69,6 @@ const MessageInput = React.forwardRef((props, ref) => {
   const fileInputRef = useRef(null);
   const [isInput, setIsInput] = useState(false);
   const [mentionedUserIds, setMentionedUserIds] = useState([]);
-  const [isShiftPressed, setIsShiftPressed] = useState(false);
   const [targetStringInfo, setTargetStringInfo] = useState({ ...initialTargetStringInfo });
 
   const setHeight = useMemo(() => (
@@ -345,19 +343,13 @@ const MessageInput = React.forwardRef((props, ref) => {
           maxLength={maxLength}
           onKeyDown={(e) => {
             onKeyDown(e);
-            if (e.keyCode === KeyCode.SHIFT) {
-              setIsShiftPressed(true);
-            }
-            if (!isShiftPressed && e.keyCode === KeyCode.ENTER) {
+            if (!e.shiftKey && e.key === MessageInputKeys.Enter) {
               e.preventDefault();
               sendMessage();
             }
           }}
           onKeyUp={(e) => {
             onKeyUp(e);
-            if (e.keyCode === KeyCode.SHIFT) {
-              setIsShiftPressed(false);
-            }
             useMentionInputDetection();
           }}
           onClick={() => {
