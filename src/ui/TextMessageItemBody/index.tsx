@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext } from 'react';
+import React, { ReactElement, useContext, useMemo } from 'react';
 import SendBird from 'sendbird';
 import './index.scss';
 
@@ -23,9 +23,11 @@ export default function TextMessageItemBody({
   mouseHover = false,
   isMentionEnabled = false,
 }: Props): ReactElement {
-  console.log('text message', message);
   const { stringSet } = useContext(LocalizationContext);
   const isMessageMentioned = isMentionEnabled && message?.mentionedMessageTemplate?.length > 0 && message?.mentionedUsers?.length > 0;
+  const sentences: Array<Array<string>> = useMemo(() => {
+    return message?.mentionedMessageTemplate?.split(/\n/).map((sentence) => sentence.split(/\s/));
+  }, [message?.mentionedMessageTemplate]);
   return (
     <Label
       type={LabelTypography.BODY_1}
@@ -41,16 +43,20 @@ export default function TextMessageItemBody({
         {
           isMessageMentioned
            ? (
-              message.mentionedMessageTemplate.split(' ').map((word) => {
-                console.log('word', word);
-                return (
-                  <Word
-                    key={uuidv4()}
-                    word={word}
-                    message={message}
-                    isByMe={isByMe}
-                  />
-                );
+              sentences.map((sentence, index) => {
+                return [
+                  sentence.map((word) => {
+                    return (
+                      <Word
+                        key={uuidv4()}
+                        word={word}
+                        message={message}
+                        isByMe={isByMe}
+                      />
+                    );
+                  }),
+                  sentences?.[index + 1] ? <br /> : null,
+                ]
               })
            )
            : message?.message

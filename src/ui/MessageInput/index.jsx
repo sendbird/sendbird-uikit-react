@@ -1,99 +1,31 @@
-import React, { useState, useRef, useEffect, useCallback, useContext } from 'react';
+import React, {
+  useState, useRef, useEffect, useCallback, useContext, useMemo,
+} from 'react';
 import { renderToString } from 'react-dom/server';
 import PropTypes from 'prop-types';
 
 import './index.scss';
+import { USER_MENTION_TEMP_CHAR } from '../../smart-components/Channel/context/const';
 
 import IconButton from '../IconButton';
 import Button, { ButtonTypes, ButtonSizes } from '../Button';
-
 import MentionUserLabel from '../MentionUserLabel';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { LocalizationContext } from '../../lib/LocalizationContext';
-import { getClassName, arrayEqual, convertWordToStringObj, StringObjType } from '../../utils';
+import {
+  arrayEqual,
+  getClassName,
+  StringObjType,
+  convertWordToStringObj,
+} from '../../utils';
 
 const TEXT_FIELD_ID = 'sendbird-message-input-text-field';
-const SPAN_TAG_REGEX = /<span.*?>.*?<\/span>/g;
 const LINE_HEIGHT = 76;
 const noop = () => { };
 const KeyCode = {
   SHIFT: 16,
   ENTER: 13,
-};
-
-function decodeEntity(inputStr) {
-  var textarea = document.createElement("textarea");
-  textarea.innerHTML = inputStr;
-  return textarea.value;
-}
-
-/* Thanks to https://stackoverflow.com/a/4812022/96100 */
-function getSelectionCharacterOffsetWithin(element) {
-  let start = null;
-  let end = null;
-  let doc = element.ownerDocument || element.document;
-  let win = doc.defaultView || doc.parentWindow;
-  let sel;
-  if (typeof win.getSelection != "undefined") {
-    sel = win.getSelection();
-    if (sel.rangeCount > 0) {
-      let range = win.getSelection().getRangeAt(0);
-      let preCaretRange = range.cloneRange();
-      preCaretRange.selectNodeContents(element);
-      preCaretRange.setEnd(range.startContainer, range.startOffset);
-      start = preCaretRange.toString().length;
-      preCaretRange.setEnd(range.endContainer, range.endOffset);
-      end = preCaretRange.toString().length;
-    }
-  } else if ((sel = doc.selection) && sel.type != "Control") {
-    let textRange = sel.createRange();
-    let preCaretTextRange = doc.body.createTextRange();
-    preCaretTextRange.moveToElementText(element);
-    preCaretTextRange.setEndPoint("EndToStart", textRange);
-    start = preCaretTextRange.text.length;
-    preCaretTextRange.setEndPoint("EndToEnd", textRange);
-    end = preCaretTextRange.text.length;
-  }
-  return { start: start, end: end };
-}
-
-function getMentionStringInfo(currentText, position) {
-  const frontString = currentText?.slice(0, position);
-  let isMentionActivated = false;
-  let targetString = '';
-  let start = null;
-  let end = position;
-  if (frontString?.length > 0 && frontString?.includes('@')) {
-    isMentionActivated = true;
-    const splitedTextArray = frontString?.split(' @');
-    const charIndex = splitedTextArray[splitedTextArray.length - 1].lastIndexOf('@');
-    if (splitedTextArray.length === 1 && charIndex >= 0) {
-      // Edge case: When the trigger charater is at the front end of the sentence
-      targetString = splitedTextArray[0].slice(charIndex + 1);
-      start = charIndex;
-    } else {
-      targetString = splitedTextArray[splitedTextArray.length - 1];
-      start = splitedTextArray.slice(0, -1).join(' @').length;
-    }
-  }
-  return { targetString, isMentionActivated, start, end };
-}
-
-const getHtmlStringFromNodes = (startNode, start, endNode, end) => {
-  const range = new Range();
-  range.setStart(startNode, start);
-  range.setEnd(endNode, end);
-  const tempDom = document.createElement('div');
-  tempDom.appendChild(range.cloneContents());
-  return tempDom.innerHTML;
-};
-
-const getStringFromNode = (element, start, end) => {
-  const range = new Range();
-  range.setStart(element, start);
-  range.setEnd(element, end);
-  return range.toString();
 };
 
 const handleUploadFile = (callback) => (event) => {
@@ -138,31 +70,32 @@ const MessageInput = React.forwardRef((props, ref) => {
   const fileInputRef = useRef(null);
   const [isInput, setIsInput] = useState(false);
   const [mentionedUserIds, setMentionedUserIds] = useState([]);
-  const [caretPosition, setCaretPosition] = useState(0);
   const [isShiftPressed, setIsShiftPressed] = useState(false);
   const [targetStringInfo, setTargetStringInfo] = useState({ ...initialTargetStringInfo });
 
-  const setHeight = () => {
-    try {
-      const elem = ref.current;
-      const MAX_HEIGHT = window.document.body.offsetHeight * 0.6;
-      if (elem && elem.scrollHeight >= LINE_HEIGHT) {
-        if (MAX_HEIGHT < elem.scrollHeight) {
-          elem.style.height = 'auto';
-          elem.style.height = `${MAX_HEIGHT}px`;
+  const setHeight = useMemo(() => (
+    () => {
+      try {
+        const elem = ref.current;
+        const MAX_HEIGHT = window.document.body.offsetHeight * 0.6;
+        if (elem && elem.scrollHeight >= LINE_HEIGHT) {
+          if (MAX_HEIGHT < elem.scrollHeight) {
+            elem.style.height = 'auto';
+            elem.style.height = `${MAX_HEIGHT}px`;
+          } else {
+            elem.style.height = 'auto';
+            elem.style.height = `${elem.scrollHeight}px`;
+          }
         } else {
-          elem.style.height = 'auto';
-          elem.style.height = `${elem.scrollHeight}px`;
+          elem.style.height = '';
         }
-      } else {
-        elem.style.height = '';
+      } catch (error) {
+        // error
       }
-    } catch (error) {
-      // error
     }
-  };
+  ), []);
 
-  // clear input value when channel changes
+  // #Mention | Clear input value when channel changes
   useEffect(() => {
     if (!isEdit) {
       setIsInput(false);
@@ -170,33 +103,37 @@ const MessageInput = React.forwardRef((props, ref) => {
     }
   }, [channelUrl]);
 
+  // #Mention | Fill message input values
   useEffect(() => {
     if (isEdit && message?.messageId) {
-      const textField = document.getElementById(TEXT_FIELD_ID);
+      // const textField = document.getElementById(TEXT_FIELD_ID);
+      const textField = ref.current;
       if (isMentionEnabled
         && message?.mentionedUsers?.length > 0
         && message?.mentionedMessageTemplate?.length > 0
       ) {
         /* mention enabled */
         const { mentionedUsers = [] } = message;
-        textField.innerHTML = message?.mentionedMessageTemplate?.split(' ').map((word) => {
-          console.log('splited word', word);
-          return convertWordToStringObj(word, mentionedUsers).map((stringObj) => {
+        textField.innerHTML = message?.mentionedMessageTemplate?.split(' ').map((word) => (
+          convertWordToStringObj(word, mentionedUsers).map((stringObj) => {
             const { type, value, userId } = stringObj;
-            console.log('converted string obj', stringObj)
             if (type === StringObjType.mention
               && mentionedUsers.some((user) => user?.userId === userId)
             ) {
               return renderToString(
                 <MentionUserLabel userId={userId}>
-                  {`@${mentionedUsers.find((user) => user?.userId === userId)?.nickname || value || '(No name)'}`}
-                </MentionUserLabel>
+                  {
+                    `${USER_MENTION_TEMP_CHAR}${mentionedUsers.find((user) => user?.userId === userId)?.nickname
+                    || value
+                    || stringSet.MENTION_SUGGESTION_LIST__NO_NAME
+                    }`
+                  }
+                </MentionUserLabel>,
               );
-            } else {
-              return value;
             }
-          }).join('');
-        }).join(' ');
+            return value;
+          }).join('')
+        )).join(' ');
       } else {
         /* mention disabled */
         textField.innerHTML = message?.message;
@@ -207,89 +144,9 @@ const MessageInput = React.forwardRef((props, ref) => {
     }
   }, [isEdit, message]);
 
-  // #Mention | Replace selected user nickname to the MentionedUserLabel
-  useEffect(() => {
-    // if (isMentionEnabled && mentionSelectedUser) {
-    //   const {
-    //     targetString,
-    //     startNodeIndex,
-    //     startOffsetIndex,
-    //     endNodeIndex,
-    //     endOffsetIndex,
-    //   } = targetStringInfo;
-    //   if (targetString && startNodeIndex !== null && startOffsetIndex !== null) {
-    //     const textField = document.getElementById(TEXT_FIELD_ID);
-    //     const childNodes = [...textField?.childNodes]?.map?.((node) => node.cloneNode());
-    //     const frontTextNode = document?.createTextNode(childNodes[startNodeIndex]?.textContent.slice(0, startOffsetIndex));
-    //     const backTextNode = document?.createTextNode(childNodes[endNodeIndex]?.textContent.slice(endOffsetIndex));
-    //     const mentionLabel = renderToString(
-    //       <MentionUserLabel>
-    //         {mentionSelectedUser?.nickname}
-    //       </MentionUserLabel>
-    //     );
-    //     const div = document.createElement('div');
-    //     div.innerHTML = mentionLabel;
-    //     const newNodes = [
-    //       ...childNodes.slice(0, startNodeIndex),
-    //       frontTextNode,
-    //       div.childNodes[0],
-    //       backTextNode,
-    //       ...childNodes.slice(endNodeIndex + 1),
-    //     ];
-    //     textField.innerHTML = '';
-    //     newNodes.forEach((newNode) => {
-    //       textField.appendChild(newNode);
-    //     });
-    //     setTargetStringInfo({ ...initialTargetStringInfo });
-    //     setHeight();
-    //   }
-    // }
-    if (isMentionEnabled && mentionSelectedUser) {
-      const textField = document.getElementById(TEXT_FIELD_ID);
-      for (let index = 0; index < textField.childNodes.length; index++) {
-        const previousTextContents = getStringFromNode(textField, 0, index);
-        const currentTextContents = getStringFromNode(textField, index, index + 1);
-        // search which child node includes the caret
-        if (previousTextContents.length + currentTextContents.length >= caretPosition
-          && !SPAN_TAG_REGEX.test(currentTextContents)
-        ) {
-          const { start, end } = getMentionStringInfo(currentTextContents, caretPosition - previousTextContents.length);
-          const frontHtmlString = getHtmlStringFromNodes(textField, 0, textField.childNodes[index], start);
-          const backHtmlString = getHtmlStringFromNodes(textField.childNodes[index], end, textField, textField.childNodes.length) || '&nbsp;';
-          const targetHtmlString = renderToString(
-            <MentionUserLabel userId={mentionSelectedUser?.userId}>
-              {`@${mentionSelectedUser?.nickname || '(No name)'}`}
-            </MentionUserLabel>
-          );
-          textField.innerHTML = `${frontHtmlString} ${targetHtmlString}${backHtmlString}`;
-          onUserMentioned(mentionSelectedUser);
-          if (window.getSelection || document.getSelection) {
-            // set caret postion
-            const selection = window.getSelection() || document.getSelection();
-            selection.removeAllRanges();
-            const range = new Range();
-            range.selectNodeContents(textField);
-            range.setStart(textField.childNodes[index + 2], 1);
-            range.setEnd(textField.childNodes[index + 2], 1);
-            range.collapse(false);
-            selection.addRange(range);
-            textField.focus();
-            const { start, end } = getSelectionCharacterOffsetWithin(document.getElementById(TEXT_FIELD_ID));
-            if (start === end) {
-              setCaretPosition(start);
-            }
-          }
-          setHeight();
-          useMentionedLabelDetection();
-          break;
-        }
-      }
-    }
-  }, [mentionSelectedUser, isMentionEnabled]);
-
   // #Mention | Detect MentionedLabel modified
   const useMentionedLabelDetection = useCallback(() => {
-    const textField = document.getElementById(TEXT_FIELD_ID);
+    const textField = ref.current;
     if (isMentionEnabled) {
       const newMentionedUserIds = [...textField.getElementsByClassName('sendbird-mention-user-label')].map((node) => node?.dataset?.userid);
       if (!arrayEqual(mentionedUserIds, newMentionedUserIds)) {
@@ -298,7 +155,65 @@ const MessageInput = React.forwardRef((props, ref) => {
       }
     }
     setIsInput(textField.innerText.length > 0);
-  }, [caretPosition, isMentionEnabled]);
+  }, [targetStringInfo, isMentionEnabled]);
+
+  // #Mention | Replace selected user nickname to the MentionedUserLabel
+  useEffect(() => {
+    if (isMentionEnabled && mentionSelectedUser) {
+      const {
+        targetString,
+        startNodeIndex,
+        startOffsetIndex,
+        endNodeIndex,
+        endOffsetIndex,
+      } = targetStringInfo;
+      if (targetString && startNodeIndex !== null && startOffsetIndex !== null) {
+        // const textField = document.getElementById(TEXT_FIELD_ID);
+        const textField = ref.current;
+        const childNodes = [...textField?.childNodes];
+        const frontTextNode = document?.createTextNode(
+          childNodes[startNodeIndex]?.textContent.slice(0, startOffsetIndex),
+        );
+        const backTextNode = document?.createTextNode(
+          `\u00A0${childNodes[endNodeIndex]?.textContent.slice(endOffsetIndex)}`,
+        );
+        const mentionLabel = renderToString(
+          <MentionUserLabel userId={mentionSelectedUser?.userId}>
+            {`${USER_MENTION_TEMP_CHAR}${mentionSelectedUser?.nickname || stringSet.MENTION_SUGGESTION_LIST__NO_NAME}`}
+          </MentionUserLabel>,
+        );
+        const div = document.createElement('div');
+        div.innerHTML = mentionLabel;
+        const newNodes = [
+          ...childNodes.slice(0, startNodeIndex),
+          frontTextNode,
+          div.childNodes[0],
+          backTextNode,
+          ...childNodes.slice(endNodeIndex + 1),
+        ];
+        textField.innerHTML = '';
+        newNodes.forEach((newNode) => {
+          textField.appendChild(newNode);
+        });
+        onUserMentioned(mentionSelectedUser);
+        if (window.getSelection || document.getSelection) {
+          // set caret postion
+          const selection = window.getSelection() || document.getSelection();
+          selection.removeAllRanges();
+          const range = new Range();
+          range.selectNodeContents(textField);
+          range.setStart(textField.childNodes[startNodeIndex + 2], 1);
+          range.setEnd(textField.childNodes[startNodeIndex + 2], 1);
+          range.collapse(false);
+          selection.addRange(range);
+          textField.focus();
+        }
+        setTargetStringInfo({ ...initialTargetStringInfo });
+        setHeight();
+        useMentionedLabelDetection();
+      }
+    }
+  }, [mentionSelectedUser, isMentionEnabled]);
 
   // #Mention | Detect mentioning user nickname
   const useMentionInputDetection = useCallback(() => {
@@ -307,10 +222,11 @@ const MessageInput = React.forwardRef((props, ref) => {
       && selection.anchorNode === selection.focusNode
       && selection.anchorOffset === selection.focusOffset
     ) {
-      const textField = document.getElementById(TEXT_FIELD_ID);
+      const textField = ref.current;
       let textStack = '';
-      let startNodeIndex = null, startOffsetIndex = null;
-      for (let index = 0; index < textField.childNodes.length; index++) {
+      let startNodeIndex = null;
+      let startOffsetIndex = null;
+      for (let index = 0; index < textField.childNodes.length; index += 1) {
         const currentNode = textField.childNodes[index];
         if (currentNode.nodeType === 3) {
           /* text node */
@@ -320,10 +236,10 @@ const MessageInput = React.forwardRef((props, ref) => {
           }
           if (textStack.length > 0) {
             textStack += textContent;
-          } else if (textContent.indexOf('@') > -1) {
+          } else if (textContent.lastIndexOf(USER_MENTION_TEMP_CHAR) > -1) {
             textStack = textContent;
             startNodeIndex = index;
-            startOffsetIndex = textContent.indexOf('@');
+            startOffsetIndex = textContent.lastIndexOf(USER_MENTION_TEMP_CHAR);
           }
         } else {
           /* other nodes */
@@ -336,7 +252,7 @@ const MessageInput = React.forwardRef((props, ref) => {
            * targetString could be ''
            * startNodeIndex and startOffsetIndex could be null
            */
-          const targetString = textStack ? textStack.slice(startOffsetIndex) : '';  // include template character
+          const targetString = textStack ? textStack.slice(startOffsetIndex) : '';// include template character
           setTargetStringInfo({
             targetString,
             startNodeIndex,
@@ -352,82 +268,55 @@ const MessageInput = React.forwardRef((props, ref) => {
   }, [isMentionEnabled]);
 
   const sendMessage = () => {
-    const textField = document.getElementById(TEXT_FIELD_ID);
+    const textField = ref.current;
     if (!isEdit && textField?.innerText) {
-      let message = '';
+      let messageText = '';
       let mentionTemplate = '';
       textField.childNodes.forEach((node) => {
         if (node.nodeType === 1 && node.nodeName === 'SPAN') { // element node (mention)
           const { innerText, dataset = {} } = node;
           const { userid = '' } = dataset;
-          message += innerText;
-          mentionTemplate += `${'@'}{${userid}}`;
+          messageText += innerText;
+          mentionTemplate += `${USER_MENTION_TEMP_CHAR}{${userid}}`;
         } else if (node.nodeType === 1 && node.nodeName === 'BR') {
-          message += '\n';
+          messageText += '\n';
           mentionTemplate += '\n';
-          // FIXME: Display new line
         } else { // other nodes including text node
           const { textContent = '' } = node;
-          message += textContent;
+          messageText += textContent;
           mentionTemplate += textContent;
         }
       });
-      const params = { message, mentionTemplate };
+      const params = { message: messageText, mentionTemplate };
       onSendMessage(params);
       document.getElementById(TEXT_FIELD_ID).innerHTML = '';
+      setHeight();
     }
   };
   const editMessage = () => {
-    const textField = document.getElementById(TEXT_FIELD_ID);
+    const textField = ref.current;
     const messageId = message?.messageId;
     if (isEdit && messageId) {
-      let message = '';
+      let messageText = '';
       let mentionTemplate = '';
       textField.childNodes.forEach((node) => {
-        if (node.nodeType === 1) { // element node (mention)
+        if (node.nodeType === 1 && node.nodeName === 'SPAN') { // element node (mention)
           const { innerText, dataset = {} } = node;
           const { userid = '' } = dataset;
-          message += innerText;
-          mentionTemplate += `${'@'}{${userid}}`;
+          messageText += innerText;
+          mentionTemplate += `${USER_MENTION_TEMP_CHAR}{${userid}}`;
+        } else if (node.nodeType === 1 && node.nodeName === 'BR') {
+          messageText += '\n';
+          mentionTemplate += '\n';
         } else { // other nodes including text node
           const { textContent = '' } = node;
-          message += textContent;
+          messageText += textContent;
           mentionTemplate += textContent;
         }
       });
-      const params = { messageId, message, mentionTemplate };
+      const params = { messageId, message: messageText, mentionTemplate };
       onUpdateMessage(params);
       document.getElementById(TEXT_FIELD_ID).innerHTML = '';
-
-      // const textField = document.getElementById(TEXT_FIELD_ID);
-      // let message = '';
-      // let mentionTemplate = '';
-      // if (isMentionEnabled) {
-      //   const htmlString = getHtmlStringFromNodes(textField, 0, textField, textField.childNodes.length);
-      //   const templateList = htmlString.match(SPAN_TAG_REGEX).map((elementString) => {
-      //     const frontTagLength = elementString.match(/<span.*?>/i)[0].length;
-      //     const backTagLength = elementString.match(/<\/span>/i)[0].length;
-      //     const innerText = elementString.slice(frontTagLength, elementString.length - backTagLength);
-      //     return { text: `@${innerText}`, template: `@{${innerText}}` };
-      //   });
-      //   const stringList = htmlString.split(SPAN_TAG_REGEX);
-      //   for (let i = 0; i < stringList.length; i++) {
-      //     message += stringList[i];
-      //     if (templateList[i]) {
-      //       message += templateList[i].text;
-      //     }
-      //     mentionTemplate += stringList[i];
-      //     if (templateList[i]) {
-      //       mentionTemplate += templateList[i].template;
-      //     }
-      //   }
-      // } else {
-      //   const string = getStringFromNode(textField, 0, textField.childNodes.length);
-      //   message = string;
-      // }
-      // onSendMessage(name, message, () => {
-      //   onCancelEdit();
-      // });
     }
   };
 
@@ -450,6 +339,7 @@ const MessageInput = React.forwardRef((props, ref) => {
           className="sendbird-message-input--textarea"
           contentEditable
           role="textbox"
+          aria-label="Text Input"
           disabled={disabled}
           ref={ref}
           maxLength={maxLength}
@@ -468,17 +358,9 @@ const MessageInput = React.forwardRef((props, ref) => {
             if (e.keyCode === KeyCode.SHIFT) {
               setIsShiftPressed(false);
             }
-            const { start, end } = getSelectionCharacterOffsetWithin(document.getElementById(TEXT_FIELD_ID));
-            if (start === end) {
-              setCaretPosition(start);
-            }
             useMentionInputDetection();
           }}
           onClick={() => {
-            const { start, end } = getSelectionCharacterOffsetWithin(document.getElementById(TEXT_FIELD_ID));
-            if (start === end) {
-              setCaretPosition(start);
-            }
             useMentionInputDetection();
           }}
           onInput={() => {
@@ -579,8 +461,10 @@ MessageInput.propTypes = {
   isMentionEnabled: PropTypes.bool,
   message: PropTypes.shape({
     messageId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    message: PropTypes.string,
+    mentionedMessageTemplate: PropTypes.string,
+    mentionedUsers: PropTypes.arrayOf(PropTypes.shape({})),
   }),
-  value: PropTypes.string,
   disabled: PropTypes.bool,
   maxLength: PropTypes.number,
   onFileUpload: PropTypes.func,
@@ -602,7 +486,6 @@ MessageInput.propTypes = {
 
 MessageInput.defaultProps = {
   className: '',
-  value: '',
   channelUrl: '',
   onSendMessage: noop,
   onUpdateMessage: noop,

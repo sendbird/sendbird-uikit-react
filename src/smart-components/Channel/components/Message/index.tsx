@@ -12,6 +12,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannel } from '../../context/ChannelProvider';
 import { getClassName } from '../../../../utils';
 import { isDisabledBecauseFrozen } from '../../context/utils';
+import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT } from '../../context/const';
 
 import DateSeparator from '../../../../ui/DateSeparator';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
@@ -50,9 +51,14 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
 
   const { dateLocale } = useLocalization();
   const globalStore = useSendbirdStateContext();
-  const userId = globalStore?.config?.userId;
-  const isOnline = globalStore?.config?.isOnline;
-  const isMentionEnabled = globalStore?.config?.isMentionEnabled || false;
+  const {
+    userId,
+    isOnline,
+    isMentionEnabled,
+    userMention,
+  } = globalStore?.config;
+  const maxUserMentionCount = userMention?.maxMentionCount || MAX_USER_MENTION_COUNT;
+  const maxUserSuggestionCount = userMention?.maxSuggestionCount || MAX_USER_SUGGESTION_COUNT;
 
   const {
     currentGroupChannel,
@@ -67,7 +73,6 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
     toggleReaction,
     emojiContainer,
     nicknamesMap,
-    quoteMessage,
     setQuoteMessage,
     resendMessage,
     renderUserMentionItem,
@@ -87,7 +92,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
   const useMessageScrollRef = useRef(null);
 
   useEffect(() => {
-    if (mentionedUsers?.length >= 10) {
+    if (mentionedUsers?.length >= maxUserMentionCount) {
       setDisableMention(true);
     } else {
       setDisableMention(false);
@@ -189,7 +194,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
     return renderEditInput?.() || (
       <>
         {
-          (mentionNickname.length > 0) && (
+          (isMentionEnabled && mentionNickname.length > 0) && (
             <SuggestedMentionList
               targetNickname={mentionNickname}
               renderUserMentionItem={renderUserMentionItem}
@@ -201,6 +206,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
                 setSelectedUser(user);
               }}
               disableAddMention={disableMention}
+              maxSuggestionCount={maxUserSuggestionCount}
             />
           )
         }
@@ -218,6 +224,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
               mentionedUsers,
               mentionTemplate,
             });
+            setShowEdit(false);
           }}
           onCancelEdit={() => { setShowEdit(false); }}
           onUserMentioned={(user) => {
@@ -280,7 +287,6 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
             showFileViewer={setShowFileViewer}
             resendMessage={resendMessage}
             toggleReaction={toggleReaction}
-            quoteMessage={quoteMessage}
             setQuoteMessage={setQuoteMessage}
           />
         )

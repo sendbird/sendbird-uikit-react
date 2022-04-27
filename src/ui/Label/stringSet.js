@@ -104,8 +104,8 @@ const getStringSet = (lang = 'en') => {
       CONTEXT_MENU_DROPDOWN__EDIT: 'Edit',
       CONTEXT_MENU_DROPDOWN__RESEND: 'Resend',
       CONTEXT_MENU_DROPDOWN__DELETE: 'Delete',
-      SUGGESTION_LIST__NO_NAME: '(No name)',
-      SUGGESTION_LIST__OVER_LIMIT: 'You can mention up to 10 times at a time.',
+      MENTION_SUGGESTION_LIST__NO_NAME: '(No name)',
+      MENTION_SUGGESTION_LIST__OVER_LIMIT: 'You can mention up to %d times at a time.',
     },
   };
   return stringSet[lang];

@@ -8,6 +8,7 @@ import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import { useChannel } from '../../context/ChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
+import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT, USER_MENTION_TEMP_CHAR } from '../../context/const';
 
 export interface SuggestedMentionListProps {
   targetNickname: string;
@@ -15,6 +16,8 @@ export interface SuggestedMentionListProps {
   onUserItemClick?: (member: SendBird.User) => void;
   renderUserMentionItem?: (member: SendBird.Member) => JSX.Element;
   disableAddMention: boolean;
+  maxMentionCount?: number;
+  maxSuggestionCount?: number;
 }
 
 function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
@@ -24,6 +27,8 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
     onUserItemClick,
     renderUserMentionItem,
     disableAddMention = false,
+    maxMentionCount = MAX_USER_MENTION_COUNT,
+    maxSuggestionCount = MAX_USER_SUGGESTION_COUNT,
   } = props;
   const { config } = useSendbirdStateContext();
   const { logger } = config;
@@ -40,8 +45,8 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
     }
 
     const query = currentGroupChannel.createMemberListQuery();
-    query.limit = 15;
-    query.nicknameStartsWithFilter = targetNickname.slice('@'.length);
+    query.limit = maxSuggestionCount;
+    query.nicknameStartsWithFilter = targetNickname.slice(USER_MENTION_TEMP_CHAR.length);
     // Add member list query for customization
     query.next((memberList, error) => {
       if (error) {
@@ -72,7 +77,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
               type={LabelTypography.SUBTITLE_2}
               color={LabelColors.ONBACKGROUND_2}
             >
-              {stringSet.SUGGESTION_LIST__OVER_LIMIT}
+              {stringSet.MENTION_SUGGESTION_LIST__OVER_LIMIT.replace('%d', maxMentionCount)}
             </Label>
           </div>
         )
@@ -106,7 +111,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
               type={LabelTypography.SUBTITLE_2}
               color={LabelColors.ONBACKGROUND_1}
             >
-              {member?.nickname || stringSet.SUGGESTION_LIST__NO_NAME}
+              {member?.nickname || stringSet.MENTION_SUGGESTION_LIST__NO_NAME}
             </Label>
             <Label
               className="sendbird-mention-suggest-list__user-item__user-id"

@@ -182,6 +182,7 @@ App.propTypes = {
     ]),
   }),
   disableAutoSelect: PropTypes.bool,
+  isMentionEnabled: PropTypes.bool,
 };
 
 App.defaultProps = {

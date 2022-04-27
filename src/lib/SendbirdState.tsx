@@ -39,6 +39,11 @@ interface SendBirdStateConfig {
   theme: SendbirdUIKitThemes;
   setCurrenttheme: (theme: SendbirdUIKitThemes) => void;
   userListQuery?(): UserListQuery;
+  isMentionEnabled?: boolean;
+  userMention: {
+    maxMentionCount: number,
+    maxSuggestionCount: number,
+  };
   /* eslint-disable @typescript-eslint/no-explicit-any*/
   pubSub: any,
   logger: Logger;

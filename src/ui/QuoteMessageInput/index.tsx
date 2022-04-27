@@ -1,7 +1,6 @@
 import React, { ReactElement, useContext } from 'react';
 import { FileMessage, UserMessage } from 'sendbird';
 import {
-  CoreMessageType,
   getClassName,
   isFileMessage,
   isGifMessage,
@@ -20,8 +19,8 @@ import './index.scss';
 
 interface Props {
   className?: string | Array<string>;
-  replyingMessage: CoreMessageType;
-  onClose?: (message: CoreMessageType) => void;
+  replyingMessage: UserMessage | FileMessage;
+  onClose?: (message: UserMessage | FileMessage) => void;
 }
 
 export default function QuoteMessageInput({

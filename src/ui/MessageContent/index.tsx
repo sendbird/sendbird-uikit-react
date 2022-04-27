@@ -51,7 +51,7 @@ interface Props {
   showEdit?: (bool: boolean) => void;
   showRemove?: (bool: boolean) => void;
   showFileViewer?: (bool: boolean) => void;
-  resendMessage?: (message: UserMessage | FileMessage) => void;
+  resendMessage?: (message: UserMessage | FileMessage) => Promise<UserMessage | FileMessage>;
   toggleReaction?: (message: UserMessage | FileMessage, reactionKey: string, isReacted: boolean) => void;
   setQuoteMessage?: (message: UserMessage | FileMessage) => void;
 }
@@ -77,8 +77,7 @@ export default function MessageContent({
 }: Props): ReactElement {
   const messageTypes = getUIKitMessageTypes();
   const { dateLocale } = useLocalization();
-  const { config } = useSendbirdStateContext();
-  const { isMentionEnabled } = config;
+  const { config } = useSendbirdStateContext?.() || {};
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const avatarRef = useRef(null);
   const [mouseHover, setMouseHover] = useState(false);
@@ -218,7 +217,7 @@ export default function MessageContent({
               message={message as UserMessage}
               isByMe={isByMe}
               mouseHover={mouseHover}
-              isMentionEnabled={isMentionEnabled}
+              isMentionEnabled={config?.isMentionEnabled || false}
             />
           )}
           {(isOGMessage(message as UserMessage)) && (
@@ -227,7 +226,7 @@ export default function MessageContent({
               message={message as UserMessage}
               isByMe={isByMe}
               mouseHover={mouseHover}
-              isMentionEnabled={isMentionEnabled}
+              isMentionEnabled={config?.isMentionEnabled || false}
             />
           )}
           {(getUIKitMessageType((message as FileMessage)) === messageTypes.FILE) && (
@@ -308,7 +307,6 @@ export default function MessageContent({
               isByMe={isByMe}
               replyType={replyType}
               disabled={disabled}
-              showEdit={showEdit}
               showRemove={showRemove}
               resendMessage={resendMessage}
               setQuoteMessage={setQuoteMessage}

@@ -4,7 +4,7 @@
  * git: https://github.com/sendbird/sendbird-uikit-react
  */
 import type React from 'react';
-import Sendbird from 'sendbird';
+import Sendbird, { FileMessage, UserMessage } from 'sendbird';
 import type { Locale } from 'date-fns';
 import SendBird from 'sendbird';
 
@@ -29,6 +29,10 @@ interface RenderUserProfileProps {
 
 interface SendBirdProviderConfig {
   logLevel?: 'debug' | 'warning' | 'error' | 'info' | 'all' | Array<string>;
+  userMention?: {
+    maxMentionCount?: number,
+    maxSuggestionCount?: number,
+  };
 }
 
 interface ClientMessage {
@@ -67,6 +71,7 @@ interface SendBirdProviderProps {
   config?: SendBirdProviderConfig;
   stringSet?: Record<string, string>;
   colorSet?: Record<string, string>;
+  isMentionEnabled?: boolean;
   imageCompression?: {
     compressionRate?: number,
     resizingWidth?: number | string,
@@ -80,6 +85,10 @@ interface SendBirdStateConfig {
   allowProfileEdit: boolean;
   isOnline: boolean;
   isMentionEnabled: boolean;
+  userMention: {
+    maxMentionCount: number;
+    maxSuggestionCount: number;
+  };
   userId: string;
   appId: string;
   accessToken: string;
@@ -545,7 +554,7 @@ declare module '@sendbird/uikit-react/ChannelSettings/components/UserListItem' {
 }
 
 declare module '@sendbird/uikit-react/ChannelSettings/components/UserPanel' {
-  type UserPanel = React.FC<{}>;
+  type UserPanel = React.FC<Record<string, unknown>>;
   export default UserPanel;
 }
 
@@ -612,8 +621,8 @@ interface MessageStoreInterface {
 interface ChannelProviderInterface extends ChannelContextProps, ChannelContextProps {
   scrollToMessage?(createdAt: number, messageId: number): void;
   messageActionTypes: Record<string ,string>;
-  quoteMessage: CoreMessageType;
-  setQuoteMessage: React.Dispatch<React.SetStateAction<CoreMessageType>>;
+  quoteMessage: UserMessage | FileMessage;
+  setQuoteMessage: React.Dispatch<React.SetStateAction<UserMessage | FileMessage>>;
   initialTimeStamp: number;
   setInitialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
   animatedMessageId: number;
@@ -824,17 +833,17 @@ declare module '@sendbird/uikit-react/OpenChannel/context' {
 }
 
 declare module '@sendbird/uikit-react/OpenChannel/components/FrozenChannelNotification' {
-  type FrozenChannelNotification = React.FC<{}>;
+  type FrozenChannelNotification = React.FC<Record<string, unknown>>;
   export default FrozenChannelNotification;
 }
 
 declare module '@sendbird/uikit-react/OpenChannel/components/OpenChannelHeader' {
-  type OpenChannelHeader = React.FC<{}>;
+  type OpenChannelHeader = React.FC<Record<string, unknown>>;
   export default OpenChannelHeader;
 }
 
 declare module '@sendbird/uikit-react/OpenChannel/components/OpenChannelInput' {
-  type OpenChannelInput = React.FC<{}>;
+  type OpenChannelInput = React.FC<Record<string, unknown>>;
   export default OpenChannelInput;
 
 }
@@ -914,7 +923,7 @@ declare module '@sendbird/uikit-react/OpenChannelSettings/components/OperatorUI'
 }
 
 declare module '@sendbird/uikit-react/OpenChannelSettings/components/ParticipantUI' {
-  type ParticipantUI = React.FC<{}>;
+  type ParticipantUI = React.FC<Record<string, unknown>>;
   export default ParticipantUI;
 }
 
@@ -1071,7 +1080,7 @@ declare module '@sendbird/uikit-react/EditUserProfile/context' {
 }
 
 declare module '@sendbird/uikit-react/EditUserProfile/components/EditUserProfileUI' {
-  type EditUserProfileUI = React.FC<{}>;
+  type EditUserProfileUI = React.FC<Record<string, unknown>>;
   export default EditUserProfileUI;
 }
 

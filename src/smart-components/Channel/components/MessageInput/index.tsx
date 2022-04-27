@@ -24,7 +24,9 @@ const MessageInputWrapper = (): JSX.Element => {
   const globalStore = useSendbirdStateContext();
   const channel = currentGroupChannel;
 
-  const { isOnline, isMentionEnabled } = globalStore?.config;
+  const { isOnline, isMentionEnabled, userMention } = globalStore?.config;
+  const maxUserMentionCount = userMention?.maxMentionCount || 10;
+  const maxUserSuggestionCount = userMention?.maxSuggestionCount || 15;
 
   const { stringSet } = useContext(LocalizationContext);
   const [mentionNickname, setMentionNickname] = useState('');
@@ -41,7 +43,7 @@ const MessageInputWrapper = (): JSX.Element => {
   const { isBroadcast } = channel;
 
   useEffect(() => {
-    if (mentionedUsers?.length >= 10) {
+    if (mentionedUsers?.length >= maxUserMentionCount) {
       setDisableMention(true);
     } else {
       setDisableMention(false);
@@ -68,7 +70,7 @@ const MessageInputWrapper = (): JSX.Element => {
   return (
     <div className="sendbird-message-input-wrapper">
       {
-        (mentionNickname.length > 0) && (
+        (isMentionEnabled && mentionNickname.length > 0) && (
           <SuggestedMentionList
             targetNickname={mentionNickname}
             renderUserMentionItem={renderUserMentionItem}
@@ -80,6 +82,7 @@ const MessageInputWrapper = (): JSX.Element => {
               setSelectedUser(user);
             }}
             disableAddMention={disableMention}
+            maxSuggestionCount={maxUserSuggestionCount}
           />
         )
       }
@@ -113,6 +116,7 @@ const MessageInputWrapper = (): JSX.Element => {
             mentionedUsers,
             mentionTemplate,
           });
+          setMentionNickname('');
           setMentionedUsers([]);
           setQuoteMessage(null);
           channel?.endTyping();

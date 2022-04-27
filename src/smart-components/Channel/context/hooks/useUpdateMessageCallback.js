@@ -46,28 +46,28 @@ function useUpdateMessageCallback({
     currentGroupChannel.updateUserMessage(messageId, params, (r, e) => {
       logger.info('Channel: Updating message!', params);
       const swapParams = sdk.getErrorFirstCallback();
-      let message = r;
+      let msg = r;
       let err = e;
       if (swapParams) {
-        message = e;
+        msg = e;
         err = r;
       }
       if (callback) {
-        callback(err, message);
+        callback(err, msg);
       }
       if (!err) {
-        logger.info('Channel: Updating message success!', message);
+        logger.info('Channel: Updating message success!', msg);
         messagesDispatcher({
           type: messageActionTypes.ON_MESSAGE_UPDATED,
           payload: {
             channel: currentGroupChannel,
-            message,
+            message: msg,
           },
         });
         pubSub.publish(
           topics.UPDATE_USER_MESSAGE,
           {
-            message,
+            message: msg,
             channel: currentGroupChannel,
           },
         );

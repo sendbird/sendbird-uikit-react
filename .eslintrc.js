@@ -38,6 +38,9 @@ module.exports = {
       },
     ],
     "react/forbid-prop-types": 0,
+    // read more - https://github.com/babel/babel-eslint/issues/681#issuecomment-420663038
+    "template-curly-spacing" : "off",
+    indent : "off"
   },
   settings: {
     "import/resolver": {

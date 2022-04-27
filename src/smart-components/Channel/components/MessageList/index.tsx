@@ -1,6 +1,6 @@
 import './message-list.scss';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import isSameDay from 'date-fns/isSameDay';
 
 import { useChannel } from '../../context/ChannelProvider';
@@ -109,6 +109,48 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
     }
   };
 
+  // Because every message components are re-rendered everytime by every scroll events
+  const memoizedAllMessages = useMemo(() => {
+    return (
+      allMessages.map((m, idx) => {
+        const previousMessage = allMessages[idx - 1];
+        const nextMessage = allMessages[idx + 1];
+        const [chainTop, chainBottom] = useMessageGrouping
+          ? compareMessagesForGrouping(previousMessage, m, nextMessage)
+          : [false, false];
+        const previousMessageCreatedAt = previousMessage?.createdAt;
+        const currentCreatedAt = m.createdAt;
+        // https://stackoverflow.com/a/41855608
+        const hasSeparator = !(previousMessageCreatedAt && (
+          isSameDay(currentCreatedAt, previousMessageCreatedAt)
+        ));
+
+        const handleScroll = () => {
+          const current = scrollRef?.current;
+          if (current) {
+            const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
+            if (scrollBottom < bottom) {
+              current.scrollTop += bottom - scrollBottom;
+            }
+          }
+        }
+
+        return (
+          <Message
+            handleScroll={handleScroll}
+            renderMessage={renderMessage}
+            message={m}
+            hasSeparator={hasSeparator}
+            chainTop={chainTop}
+            chainBottom={chainBottom}
+            renderCustomSeperator={renderCustomSeperator}
+            key={m.messageId + uuidv4()}
+          />
+        );
+      })
+    );
+  }, [allMessages]);
+
   if (allMessages.length < 1) {
     return (
       <>
@@ -131,46 +173,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
           ref={scrollRef}
           onScroll={onScroll}
         >
-          {
-            allMessages.map(
-              (m, idx) => {
-                const previousMessage = allMessages[idx - 1];
-                const nextMessage = allMessages[idx + 1];
-                const [chainTop, chainBottom] = useMessageGrouping
-                  ? compareMessagesForGrouping(previousMessage, m, nextMessage)
-                  : [false, false];
-                const previousMessageCreatedAt = previousMessage?.createdAt;
-                const currentCreatedAt = m.createdAt;
-                // https://stackoverflow.com/a/41855608
-                const hasSeparator = !(previousMessageCreatedAt && (
-                  isSameDay(currentCreatedAt, previousMessageCreatedAt)
-                ));
-
-                const handleScroll = () => {
-                  const current = scrollRef?.current;
-                  if (current) {
-                    const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
-                    if (scrollBottom < bottom) {
-                      current.scrollTop += bottom - scrollBottom;
-                    }
-                  }
-                }
-
-                return (
-                  <Message
-                    handleScroll={handleScroll}
-                    renderMessage={renderMessage}
-                    message={m}
-                    hasSeparator={hasSeparator}
-                    chainTop={chainTop}
-                    chainBottom={chainBottom}
-                    renderCustomSeperator={renderCustomSeperator}
-                    key={m?.messageId + uuidv4()}
-                  />
-                )
-              },
-            )
-          }
+          {memoizedAllMessages}
         </div>
       </div>
       {
