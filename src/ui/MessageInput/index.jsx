@@ -212,11 +212,14 @@ const MessageInput = React.forwardRef((props, ref) => {
   // #Mention | Detect mentioning user nickname
   const useMentionInputDetection = useCallback(() => {
     const selection = window?.getSelection?.() || document?.getSelection?.();
+    const textField = ref.current;
+    if (selection.anchorNode === textField) {
+      onMentionStringChange('');
+    }
     if (isMentionEnabled && selection
       && selection.anchorNode === selection.focusNode
       && selection.anchorOffset === selection.focusOffset
     ) {
-      const textField = ref.current;
       let textStack = '';
       let startNodeIndex = null;
       let startOffsetIndex = null;

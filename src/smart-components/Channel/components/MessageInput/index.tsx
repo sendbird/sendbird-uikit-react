@@ -149,7 +149,6 @@ const MessageInputWrapper = (): JSX.Element => {
           if (displaySuggestedMentionList
             && (e.key === MessageInputKeys.Enter || e.key === MessageInputKeys.ArrowUp || e.key === MessageInputKeys.ArrowDown)
           ) {
-            console.log('end', e.key)
             setMessageInputEvent(e);
             return true;
           }

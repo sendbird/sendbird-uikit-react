@@ -20,6 +20,7 @@ import MessageInput from '../../../../ui/MessageInput';
 import MessageContent from '../../../../ui/MessageContent';
 import FileViewer from '../FileViewer';
 import RemoveMessageModal from '../RemoveMessageModal';
+import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import { EveryMessage, RenderMessageProps } from '../../../../types';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 
@@ -86,10 +87,13 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
   const [mentionNickname, setMentionNickname] = useState('');
   const [mentionedUsers, setMentionedUsers] = useState([]);
   const [mentionedUserIds, setMentionedUserIds] = useState([]);
+  const [messageInputEvent, setMessageInputEvent] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [ableMention, setAbleMention] = useState(true);
   const editMessageInputRef = useRef(null);
   const useMessageScrollRef = useRef(null);
+
+  const displaySuggestedMentionList = (isMentionEnabled && mentionNickname.length > 0);
 
   useEffect(() => {
     if (mentionedUsers?.length >= maxUserMentionCount) {
@@ -188,9 +192,10 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
     return renderEditInput?.() || (
       <>
         {
-          (isMentionEnabled && mentionNickname.length > 0) && (
+          displaySuggestedMentionList && (
             <SuggestedMentionList
               targetNickname={mentionNickname}
+              inputEvent={messageInputEvent}
               renderUserMentionItem={renderUserMentionItem}
               onUserItemClick={(user) => {
                 if (user) {
@@ -198,6 +203,10 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
                 }
                 setMentionNickname('');
                 setSelectedUser(user);
+                setMessageInputEvent(null);
+              }}
+              onFocusItemChange={() => {
+                setMessageInputEvent(null);
               }}
               ableAddMention={ableMention}
               maxSuggestionCount={maxUserSuggestionCount}
@@ -232,6 +241,15 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
           }}
           onMentionedUserIdsUpdated={(userIds) => {
             setMentionedUserIds(userIds);
+          }}
+          onKeyDown={(e) => {
+            if (displaySuggestedMentionList
+              && (e.key === MessageInputKeys.Enter || e.key === MessageInputKeys.ArrowUp || e.key === MessageInputKeys.ArrowDown)
+            ) {
+              setMessageInputEvent(e);
+              return true;
+            }
+            return false;
           }}
         />
       </>
