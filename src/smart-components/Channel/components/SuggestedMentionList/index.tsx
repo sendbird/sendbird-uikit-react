@@ -44,6 +44,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   const [timer, setTimer] = useState(null);
   const [searchString, setSearchString] = useState('');
   const [currentUser, setCurrentUser] = useState<SendBird.User>(null);
+  const [mouseOverUser, setMouseOverUser] = useState<SendBird.User>(null);
   const [currentMemberList, setCurrentMemberList] = useState<Array<SendBird.Member>>([]);
 
   useEffect(() => {
@@ -109,6 +110,11 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   return (
     <div
       className="sendbird-mention-suggest-list"
+      onMouseLeave={() => {
+        if (mouseOverUser) {
+          setCurrentUser(mouseOverUser);
+        }
+      }}
     >
       {
         ableAddMention && currentMemberList.map((member) => (
@@ -120,7 +126,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
               onUserItemClick(member);
             }}
             onMouseOver={() => {
-              setCurrentUser(member);
+              setMouseOverUser(member);
             }}
             renderUserMentionItem={renderUserMentionItem}
           />

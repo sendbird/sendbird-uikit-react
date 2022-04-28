@@ -23,6 +23,9 @@
     }
     &:hover {
       cursor: pointer;
+      @include themed() {
+        background-color: t(bg-1);
+      }
     }
     &.focused {
       @include themed() {
