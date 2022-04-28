@@ -5,8 +5,9 @@ import { renderToString } from 'react-dom/server';
 import PropTypes from 'prop-types';
 
 import './index.scss';
-import { USER_MENTION_TEMP_CHAR } from '../../smart-components/Channel/context/const';
+import { MessageInputKeys } from './const';
 
+import { USER_MENTION_TEMP_CHAR } from '../../smart-components/Channel/context/const';
 import IconButton from '../IconButton';
 import Button, { ButtonTypes, ButtonSizes } from '../Button';
 import MentionUserLabel from '../MentionUserLabel';
@@ -23,10 +24,6 @@ import {
 const TEXT_FIELD_ID = 'sendbird-message-input-text-field';
 const LINE_HEIGHT = 76;
 const noop = () => { };
-export const MessageInputKeys = {
-  Enter: 'Enter',
-};
-
 const handleUploadFile = (callback) => (event) => {
   if (event.target.files && event.target.files[0]) {
     callback(event.target.files[0]);
@@ -34,7 +31,6 @@ const handleUploadFile = (callback) => (event) => {
   // eslint-disable-next-line no-param-reassign
   event.target.value = '';
 };
-
 const initialTargetStringInfo = {
   targetString: '',
   startNodeIndex: null,
@@ -342,15 +338,21 @@ const MessageInput = React.forwardRef((props, ref) => {
           ref={ref}
           maxLength={maxLength}
           onKeyDown={(e) => {
-            onKeyDown(e);
-            if (!e.shiftKey && e.key === MessageInputKeys.Enter) {
+            const preventEvent = onKeyDown(e);
+            if (preventEvent) {
+              e.preventDefault();
+            } else if (!e.shiftKey && e.key === MessageInputKeys.Enter) {
               e.preventDefault();
               sendMessage();
             }
           }}
           onKeyUp={(e) => {
-            onKeyUp(e);
-            useMentionInputDetection();
+            const preventEvent = onKeyUp(e);
+            if (preventEvent) {
+              e.preventDefault();
+            } else {
+              useMentionInputDetection();
+            }
           }}
           onClick={() => {
             useMentionInputDetection();

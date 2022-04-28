@@ -87,15 +87,15 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
   const [mentionedUsers, setMentionedUsers] = useState([]);
   const [mentionedUserIds, setMentionedUserIds] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [disableMention, setDisableMention] = useState(false);
+  const [ableMention, setAbleMention] = useState(true);
   const editMessageInputRef = useRef(null);
   const useMessageScrollRef = useRef(null);
 
   useEffect(() => {
     if (mentionedUsers?.length >= maxUserMentionCount) {
-      setDisableMention(true);
+      setAbleMention(false);
     } else {
-      setDisableMention(false);
+      setAbleMention(true);
     }
   }, [mentionedUsers]);
 
@@ -118,10 +118,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
   useLayoutEffect(() => {
     if (highLightedMessageId === message.messageId) {
       if (useMessageScrollRef && useMessageScrollRef.current) {
-        useMessageScrollRef.current.scrollIntoView({
-          block: 'center',
-          inline: 'center',
-        });
+        useMessageScrollRef.current.scrollIntoView({ block: 'center', inline: 'center' });
         setIsAnimated(false);
         setTimeout(() => {
           setIsHighlighted(true);
@@ -138,10 +135,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
   useLayoutEffect(() => {
     if (animatedMessageId === message.messageId) {
       if (useMessageScrollRef && useMessageScrollRef.current) {
-        useMessageScrollRef.current.scrollIntoView({
-          block: 'center',
-          inline: 'center',
-        });
+        useMessageScrollRef.current.scrollIntoView({ block: 'center', inline: 'center' });
         setIsHighlighted(false);
         setTimeout(() => {
           setIsAnimated(true);
@@ -205,7 +199,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
                 setMentionNickname('');
                 setSelectedUser(user);
               }}
-              disableAddMention={disableMention}
+              ableAddMention={ableMention}
               maxSuggestionCount={maxUserSuggestionCount}
             />
           )

@@ -2,22 +2,25 @@ import React, { useState, useEffect, useContext } from 'react';
 import SendBird from 'sendbird';
 import './index.scss';
 
-import Avatar from '../../../../ui/Avatar';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
+import SuggestedUserMentionItem from './SuggestedUserMentionItem';
 import { useChannel } from '../../context/ChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT, USER_MENTION_TEMP_CHAR } from '../../context/const';
+import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 
 export interface SuggestedMentionListProps {
   targetNickname: string;
   memberListQuery?: Record<string, string>;
   onUserItemClick?: (member: SendBird.User) => void;
-  renderUserMentionItem?: (member: SendBird.Member) => JSX.Element;
-  disableAddMention: boolean;
+  onFocusItemChange?: (member: SendBird.User) => void;
+  renderUserMentionItem?: (props: { user: SendBird.User }) => JSX.Element;
+  ableAddMention: boolean;
   maxMentionCount?: number;
   maxSuggestionCount?: number;
+  inputEvent?: React.KeyboardEvent<HTMLDivElement>;
 }
 
 function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
@@ -25,8 +28,10 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
     targetNickname = '',
     // memberListQuery,
     onUserItemClick,
+    onFocusItemChange,
     renderUserMentionItem,
-    disableAddMention = false,
+    inputEvent,
+    ableAddMention = true,
     maxMentionCount = MAX_USER_MENTION_COUNT,
     maxSuggestionCount = MAX_USER_SUGGESTION_COUNT,
   } = props;
@@ -34,8 +39,34 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   const { logger } = config;
   const { currentGroupChannel } = useChannel();
   const { stringSet } = useContext(LocalizationContext);
-
+  const [currentUser, setCurrentUser] = useState<SendBird.User>(null);
   const [currentMemberList, setCurrentMemberList] = useState<Array<SendBird.Member>>([]);
+
+  useEffect(() => {
+    if (inputEvent?.key === MessageInputKeys.Enter) {
+      if (currentMemberList.length > 0) {
+        onUserItemClick(currentUser);
+      }
+    }
+    if (inputEvent?.key === MessageInputKeys.ArrowUp) {
+      const currentUserIndex = currentMemberList.findIndex((member) => (
+        member?.userId === currentUser?.userId
+      ));
+      if (0 < currentUserIndex) {
+        setCurrentUser(currentMemberList[currentUserIndex - 1]);
+        onFocusItemChange(currentMemberList[currentUserIndex - 1]);
+      }
+    }
+    if (inputEvent?.key === MessageInputKeys.ArrowDown) {
+      const currentUserIndex = currentMemberList.findIndex((member) => (
+        member?.userId === currentUser?.userId
+      ));
+      if (currentUserIndex < currentMemberList.length - 1) {
+        setCurrentUser(currentMemberList[currentUserIndex + 1]);
+        onFocusItemChange(currentMemberList[currentUserIndex + 1]);
+      }
+    }
+  }, [inputEvent]);
 
   /* Fetch member list */
   useEffect(() => {
@@ -54,8 +85,10 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
       }
       if (memberList.length < 1) {
         logger.info('SuggestedMentionList: Fetched member list is empty');
+      } else {
+        logger.info('SuggestedMentionList: Fetching member list succeeded', { memberListQuery: query, memberList });
+        setCurrentUser(memberList[0]);
       }
-      logger.info('SuggestedMentionList: Fetching member list succeeded', { memberListQuery: query, memberList });
       setCurrentMemberList(memberList);
     });
   }, [currentGroupChannel?.url, targetNickname]);
@@ -65,7 +98,23 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
       className="sendbird-mention-suggest-list"
     >
       {
-        disableAddMention && (
+        ableAddMention && currentMemberList.map((member) => (
+          <SuggestedUserMentionItem
+            key={member?.nickname}
+            member={member}
+            isFocused={member?.userId === currentUser?.userId}
+            onClick={() => {
+              onUserItemClick(member);
+            }}
+            onMouseOver={() => {
+              setCurrentUser(member);
+            }}
+            renderUserMentionItem={renderUserMentionItem}
+          />
+        ))
+      }
+      {
+        !ableAddMention && (
           <div className="sendbird-mention-suggest-list__notice-item">
             <Icon
               className="sendbird-mention-suggest-list__notice-item__icon"
@@ -82,47 +131,6 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
           </div>
         )
       }
-      {!disableAddMention && currentMemberList.map((member) => {
-        if (renderUserMentionItem) {
-          return (
-            <div
-              className="sendbird-mention-suggest-list__user-item"
-              onClick={() => onUserItemClick(member)}
-            >
-              {renderUserMentionItem(member)}
-            </div>
-          )
-        }
-        return (
-          <div
-            className="sendbird-mention-suggest-list__user-item"
-            onClick={() => onUserItemClick(member)}
-            key={member.nickname}
-          >
-            <Avatar
-              className="sendbird-mention-suggest-list__user-item__avatar"
-              src={member?.profileUrl}
-              alt="user-profile"
-              width="24px"
-              height="24px"
-            />
-            <Label
-              className="sendbird-mention-suggest-list__user-item__nickname"
-              type={LabelTypography.SUBTITLE_2}
-              color={LabelColors.ONBACKGROUND_1}
-            >
-              {member?.nickname || stringSet.MENTION_SUGGESTION_LIST__NO_NAME}
-            </Label>
-            <Label
-              className="sendbird-mention-suggest-list__user-item__user-id"
-              type={LabelTypography.SUBTITLE_2}
-              color={LabelColors.ONBACKGROUND_2}
-            >
-              {member?.userId}
-            </Label>
-          </div>
-        )
-      })}
     </div>
   );
 }

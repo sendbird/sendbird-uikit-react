@@ -134,7 +134,7 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   // sendMessage(messageParams: SendBird.UserMessageParams): Promise<SendBird.UserMessage>,
   // sendFileMessage(messageParams: SendBird.FileMessageParams): Promise<SendBird.FileMessage>,
   toggleReaction(message: SendBird.UserMessage | SendBird.FileMessage, emojiKey: string, isReacted: boolean): void,
-  renderUserMentionItem?: (user: SendBird.User) => JSX.Element;
+  renderUserMentionItem?: (props: { user: SendBird.User }) => JSX.Element;
 }
 
 const ChannelContext = React.createContext<ChannelProviderInterface | null>(undefined);

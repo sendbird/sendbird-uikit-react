@@ -9,6 +9,7 @@ import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useChannel } from '../../context/ChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import SuggestedMentionList from '../SuggestedMentionList';
+import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 
 const MessageInputWrapper = (): JSX.Element => {
   const {
@@ -33,20 +34,22 @@ const MessageInputWrapper = (): JSX.Element => {
   const [mentionedUsers, setMentionedUsers] = useState([]);
   const [mentionedUserIds, setMentionedUserIds] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [disableMention, setDisableMention] = useState(false);
+  const [ableMention, setAbleMention] = useState(true);
+  const [messageInputEvent, setMessageInputEvent] = useState(null);
   const disabled = !initialized
     || utils.isDisabledBecauseFrozen(channel)
     || utils.isDisabledBecauseMuted(channel)
     || !isOnline;
-
   const isOperator = utils.isOperator(channel);
   const { isBroadcast } = channel;
 
+  const displaySuggestedMentionList = (isMentionEnabled && mentionNickname.length > 0);
+
   useEffect(() => {
     if (mentionedUsers?.length >= maxUserMentionCount) {
-      setDisableMention(true);
+      setAbleMention(false);
     } else {
-      setDisableMention(false);
+      setAbleMention(true);
     }
   }, [mentionedUsers]);
 
@@ -70,9 +73,10 @@ const MessageInputWrapper = (): JSX.Element => {
   return (
     <div className="sendbird-message-input-wrapper">
       {
-        (isMentionEnabled && mentionNickname.length > 0) && (
+        displaySuggestedMentionList && (
           <SuggestedMentionList
             targetNickname={mentionNickname}
+            inputEvent={messageInputEvent}
             renderUserMentionItem={renderUserMentionItem}
             onUserItemClick={(user) => {
               if (user) {
@@ -80,8 +84,12 @@ const MessageInputWrapper = (): JSX.Element => {
               }
               setMentionNickname('');
               setSelectedUser(user);
+              setMessageInputEvent(null);
             }}
-            disableAddMention={disableMention}
+            onFocusItemChange={() => {
+              setMessageInputEvent(null);
+            }}
+            ableAddMention={ableMention}
             maxSuggestionCount={maxUserSuggestionCount}
           />
         )
@@ -136,6 +144,16 @@ const MessageInputWrapper = (): JSX.Element => {
         }}
         onMentionedUserIdsUpdated={(userIds) => {
           setMentionedUserIds(userIds);
+        }}
+        onKeyDown={(e) => {
+          if (displaySuggestedMentionList
+            && (e.key === MessageInputKeys.Enter || e.key === MessageInputKeys.ArrowUp || e.key === MessageInputKeys.ArrowDown)
+          ) {
+            console.log('end', e.key)
+            setMessageInputEvent(e);
+            return true;
+          }
+          return false;
         }}
       />
     </div>
