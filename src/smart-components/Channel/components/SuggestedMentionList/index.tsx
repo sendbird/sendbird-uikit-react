@@ -23,6 +23,8 @@ export interface SuggestedMentionListProps {
   inputEvent?: React.KeyboardEvent<HTMLDivElement>;
 }
 
+const DEBOUNCING_TIME = 300;
+
 function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   const {
     targetNickname = '',
@@ -39,8 +41,19 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   const { logger } = config;
   const { currentGroupChannel } = useChannel();
   const { stringSet } = useContext(LocalizationContext);
+  const [timer, setTimer] = useState(null);
+  const [searchString, setSearchString] = useState('');
   const [currentUser, setCurrentUser] = useState<SendBird.User>(null);
   const [currentMemberList, setCurrentMemberList] = useState<Array<SendBird.Member>>([]);
+
+  useEffect(() => {
+    clearTimeout(timer);
+    setTimer(
+      setTimeout(() => {
+        setSearchString(targetNickname);
+      }, DEBOUNCING_TIME)
+    );
+  }, [targetNickname]);
 
   useEffect(() => {
     if (inputEvent?.key === MessageInputKeys.Enter) {
@@ -77,7 +90,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
 
     const query = currentGroupChannel.createMemberListQuery();
     query.limit = maxSuggestionCount;
-    query.nicknameStartsWithFilter = targetNickname.slice(USER_MENTION_TEMP_CHAR.length);
+    query.nicknameStartsWithFilter = searchString.slice(USER_MENTION_TEMP_CHAR.length);
     // Add member list query for customization
     query.next((memberList, error) => {
       if (error) {
@@ -91,7 +104,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
       }
       setCurrentMemberList(memberList);
     });
-  }, [currentGroupChannel?.url, targetNickname]);
+  }, [currentGroupChannel?.url, searchString]);
 
   return (
     <div
