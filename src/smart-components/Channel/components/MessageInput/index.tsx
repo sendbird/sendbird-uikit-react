@@ -34,6 +34,7 @@ const MessageInputWrapper = (): JSX.Element => {
   const [mentionedUsers, setMentionedUsers] = useState([]);
   const [mentionedUserIds, setMentionedUserIds] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState([]);
   const [ableMention, setAbleMention] = useState(true);
   const [messageInputEvent, setMessageInputEvent] = useState(null);
   const disabled = !initialized
@@ -46,7 +47,8 @@ const MessageInputWrapper = (): JSX.Element => {
   const displaySuggestedMentionList = (isMentionEnabled && mentionNickname.length > 0);
 
   useEffect(() => {
-    if (mentionedUsers?.length >= maxUserMentionCount) {
+    const mentionedUserSet = new Set(mentionedUsers.map((user) => user.userId));
+    if (mentionedUserSet?.size >= maxUserMentionCount) {
       setAbleMention(false);
     } else {
       setAbleMention(true);
@@ -89,7 +91,11 @@ const MessageInputWrapper = (): JSX.Element => {
             onFocusItemChange={() => {
               setMessageInputEvent(null);
             }}
+            onFetchUsers={(users) => {
+              setMentionSuggestedUsers(users);
+            }}
             ableAddMention={ableMention}
+            maxMentionCount={maxUserMentionCount}
             maxSuggestionCount={maxUserSuggestionCount}
           />
         )
@@ -146,8 +152,8 @@ const MessageInputWrapper = (): JSX.Element => {
           setMentionedUserIds(userIds);
         }}
         onKeyDown={(e) => {
-          if (displaySuggestedMentionList
-            && (e.key === MessageInputKeys.Enter || e.key === MessageInputKeys.ArrowUp || e.key === MessageInputKeys.ArrowDown)
+          if (displaySuggestedMentionList && mentionSuggestedUsers?.length > 0
+            && ((e.key === MessageInputKeys.Enter && ableMention) || e.key === MessageInputKeys.ArrowUp || e.key === MessageInputKeys.ArrowDown)
           ) {
             setMessageInputEvent(e);
             return true;

@@ -143,7 +143,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     const textField = ref.current;
     if (isMentionEnabled) {
       const newMentionedUserIds = [...textField.getElementsByClassName('sendbird-mention-user-label')].map((node) => node?.dataset?.userid);
-      if (!arrayEqual(mentionedUserIds, newMentionedUserIds)) {
+      if (!arrayEqual(mentionedUserIds, newMentionedUserIds) || newMentionedUserIds.length === 0) {
         onMentionedUserIdsUpdated(newMentionedUserIds);
         setMentionedUserIds(newMentionedUserIds);
       }
@@ -227,16 +227,25 @@ const MessageInput = React.forwardRef((props, ref) => {
         const currentNode = textField.childNodes[index];
         if (currentNode.nodeType === 3) {
           /* text node */
-          let { textContent = '' } = currentNode;
-          if (currentNode === selection.anchorNode) {
-            textContent = textContent.slice(0, selection.anchorOffset);
-          }
+          const textContent = (currentNode === selection.anchorNode)
+            ? currentNode?.textContent.slice(0, selection.anchorOffset) || ''
+            : currentNode?.textContent || '';
           if (textStack.length > 0) {
             textStack += textContent;
-          } else if (textContent.lastIndexOf(USER_MENTION_TEMP_CHAR) > -1) {
-            textStack = textContent;
-            startNodeIndex = index;
-            startOffsetIndex = textContent.lastIndexOf(USER_MENTION_TEMP_CHAR);
+          } else {
+            let charLastIndex = textContent.lastIndexOf(USER_MENTION_TEMP_CHAR);
+            for(let i = charLastIndex - 1; i > -1; i -= 1) {
+              if (textContent[i] === USER_MENTION_TEMP_CHAR) {
+                charLastIndex = i;
+              } else {
+                break;
+              }
+            }
+            if (charLastIndex > -1) {
+              textStack = textContent;
+              startNodeIndex = index;
+              startOffsetIndex = charLastIndex;
+            }
           }
         } else {
           /* other nodes */
@@ -287,6 +296,7 @@ const MessageInput = React.forwardRef((props, ref) => {
       const params = { message: messageText, mentionTemplate };
       onSendMessage(params);
       document.getElementById(TEXT_FIELD_ID).innerHTML = '';
+      setIsInput(false);
       setHeight();
     }
   };

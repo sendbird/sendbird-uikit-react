@@ -16,6 +16,7 @@ export interface SuggestedMentionListProps {
   memberListQuery?: Record<string, string>;
   onUserItemClick?: (member: SendBird.User) => void;
   onFocusItemChange?: (member: SendBird.User) => void;
+  onFetchUsers?: (users: Array<SendBird.User>) => void;
   renderUserMentionItem?: (props: { user: SendBird.User }) => JSX.Element;
   ableAddMention: boolean;
   maxMentionCount?: number;
@@ -31,18 +32,21 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
     // memberListQuery,
     onUserItemClick,
     onFocusItemChange,
+    onFetchUsers,
     renderUserMentionItem,
     inputEvent,
     ableAddMention = true,
     maxMentionCount = MAX_USER_MENTION_COUNT,
     maxSuggestionCount = MAX_USER_SUGGESTION_COUNT,
   } = props;
-  const { config } = useSendbirdStateContext();
+  const { config, stores } = useSendbirdStateContext();
   const { logger } = config;
+  const currentUserId = stores?.sdkStore?.sdk?.currentUser?.userId || '';
   const { currentGroupChannel } = useChannel();
   const { stringSet } = useContext(LocalizationContext);
   const [timer, setTimer] = useState(null);
   const [searchString, setSearchString] = useState('');
+  const [lastSearchString, setLastSearchString] = useState('');
   const [currentUser, setCurrentUser] = useState<SendBird.User>(null);
   const [mouseOverUser, setMouseOverUser] = useState<SendBird.User>(null);
   const [currentMemberList, setCurrentMemberList] = useState<Array<SendBird.Member>>([]);
@@ -84,8 +88,12 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
 
   /* Fetch member list */
   useEffect(() => {
-    if (!currentGroupChannel || !currentGroupChannel.createMemberListQuery) {
+    if (!currentGroupChannel || !currentGroupChannel.createMemberListQuery || !ableAddMention) {
       logger.warning('SuggestedMentionList: Creating member list query failed');
+      return;
+    }
+    if (lastSearchString && searchString.indexOf(lastSearchString) === 0 && currentMemberList.length === 0) {
+      // Don't need to request query again
       return;
     }
 
@@ -103,7 +111,9 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
         logger.info('SuggestedMentionList: Fetching member list succeeded', { memberListQuery: query, memberList });
         setCurrentUser(memberList[0]);
       }
-      setCurrentMemberList(memberList);
+      setLastSearchString(searchString);
+      onFetchUsers(memberList);
+      setCurrentMemberList(memberList.filter((member) => currentUserId !== member?.userId));
     });
   }, [currentGroupChannel?.url, searchString]);
 

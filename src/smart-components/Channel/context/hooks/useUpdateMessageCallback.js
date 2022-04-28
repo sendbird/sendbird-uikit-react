@@ -28,6 +28,8 @@ function useUpdateMessageCallback({
       }
       if (isMentionEnabled && mentionTemplate) {
         params.mentionedMessageTemplate = mentionTemplate;
+      } else {
+        params.mentionedMessageTemplate = message;
       }
       return params;
     };
