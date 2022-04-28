@@ -5,7 +5,7 @@ import { renderToString } from 'react-dom/server';
 import PropTypes from 'prop-types';
 
 import './index.scss';
-import { MessageInputKeys } from './const';
+import { MessageInputKeys, NodeNames, NodeTypes } from './const';
 
 import { USER_MENTION_TEMP_CHAR } from '../../smart-components/Channel/context/const';
 import IconButton from '../IconButton';
@@ -225,7 +225,7 @@ const MessageInput = React.forwardRef((props, ref) => {
       let startOffsetIndex = null;
       for (let index = 0; index < textField.childNodes.length; index += 1) {
         const currentNode = textField.childNodes[index];
-        if (currentNode.nodeType === 3) {
+        if (currentNode.nodeType === NodeTypes.TextNode) {
           /* text node */
           const textContent = (currentNode === selection.anchorNode)
             ? currentNode?.textContent.slice(0, selection.anchorOffset) || ''
@@ -234,7 +234,7 @@ const MessageInput = React.forwardRef((props, ref) => {
             textStack += textContent;
           } else {
             let charLastIndex = textContent.lastIndexOf(USER_MENTION_TEMP_CHAR);
-            for(let i = charLastIndex - 1; i > -1; i -= 1) {
+            for (let i = charLastIndex - 1; i > -1; i -= 1) {
               if (textContent[i] === USER_MENTION_TEMP_CHAR) {
                 charLastIndex = i;
               } else {
@@ -279,12 +279,12 @@ const MessageInput = React.forwardRef((props, ref) => {
       let messageText = '';
       let mentionTemplate = '';
       textField.childNodes.forEach((node) => {
-        if (node.nodeType === 1 && node.nodeName === 'SPAN') { // element node (mention)
+        if (node.nodeType === NodeTypes.ElementNode && node.nodeName === NodeNames.Span) {
           const { innerText, dataset = {} } = node;
           const { userid = '' } = dataset;
           messageText += innerText;
           mentionTemplate += `${USER_MENTION_TEMP_CHAR}{${userid}}`;
-        } else if (node.nodeType === 1 && node.nodeName === 'BR') {
+        } else if (node.nodeType === NodeTypes.ElementNode && node.nodeName === NodeNames.Br) {
           messageText += '\n';
           mentionTemplate += '\n';
         } else { // other nodes including text node
@@ -307,12 +307,12 @@ const MessageInput = React.forwardRef((props, ref) => {
       let messageText = '';
       let mentionTemplate = '';
       textField.childNodes.forEach((node) => {
-        if (node.nodeType === 1 && node.nodeName === 'SPAN') { // element node (mention)
+        if (node.nodeType === NodeTypes.ElementNode && node.nodeName === NodeNames.Span) {
           const { innerText, dataset = {} } = node;
           const { userid = '' } = dataset;
           messageText += innerText;
           mentionTemplate += `${USER_MENTION_TEMP_CHAR}{${userid}}`;
-        } else if (node.nodeType === 1 && node.nodeName === 'BR') {
+        } else if (node.nodeType === NodeTypes.ElementNode && node.nodeName === NodeNames.Span) {
           messageText += '\n';
           mentionTemplate += '\n';
         } else { // other nodes including text node
@@ -354,9 +354,18 @@ const MessageInput = React.forwardRef((props, ref) => {
             const preventEvent = onKeyDown(e);
             if (preventEvent) {
               e.preventDefault();
-            } else if (!e.shiftKey && e.key === MessageInputKeys.Enter) {
-              e.preventDefault();
-              sendMessage();
+            } else {
+              if (!e.shiftKey && e.key === MessageInputKeys.Enter) {
+                e.preventDefault();
+                sendMessage();
+              }
+              if (e.key === MessageInputKeys.Backspace
+                && ref?.current?.childNodes?.length === 2
+                && !ref?.current?.childNodes?.[0]?.textContent
+                && ref.current.childNodes?.[1]?.nodeType === NodeTypes.ElementNode
+              ) {
+                ref.current.removeChild(ref.current.childNodes[1]);
+              }
             }
           }}
           onKeyUp={(e) => {

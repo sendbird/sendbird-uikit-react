@@ -235,7 +235,7 @@ export const user2 = () => fitPageSize(
     showSearchIcon
     allowProfileEdit
     profileUrl={addProfile}
-    config={{ logLevel: 'all' }}
+    config={{ logLevel: 'all', userMention: { maxMentionCount: 2, maxSuggestionCount: 5 } }}
     replyType="QUOTE_REPLY"
     useMessageGrouping={false}
     imageCompression={{
@@ -308,20 +308,20 @@ const SBChannel = withSendBird((props) => {
       showSearchIcon={showSearchIcon}
       onSearchClick={onSearchClick}
       onChatHeaderActionClick={onChatHeaderActionClick}
-      // renderChatItem={({ message }) => {
-      //   return (
-      //     <div>{message.message || '하잉'}</div>
-      //   )
-      // }}
-      // renderCustomMessage={(message) => {
-      //   if (message.messageType === 'user') {
-      //     return () => (
-      //       <CustomMessageItem
-      //         message={message}
-      //       />
-      //     )
-      //   }
-      // }}
+    // renderChatItem={({ message }) => {
+    //   return (
+    //     <div>{message.message || '하잉'}</div>
+    //   )
+    // }}
+    // renderCustomMessage={(message) => {
+    //   if (message.messageType === 'user') {
+    //     return () => (
+    //       <CustomMessageItem
+    //         message={message}
+    //       />
+    //     )
+    //   }
+    // }}
     />
   );
 });
