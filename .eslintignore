@@ -3,6 +3,7 @@ __test__/*/**.js
 __test__/*/**.jsx
 *.spec.js
 *.mock.js
+src/ui/MessageInput/index.jsx
 
 __snapshots__/**/*
 *.spec.js.snap
