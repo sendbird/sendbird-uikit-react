@@ -124,7 +124,7 @@ const MessageInput = React.forwardRef((props, ref) => {
                   {
                     `${USER_MENTION_TEMP_CHAR}${mentionedUsers.find((user) => user?.userId === userId)?.nickname
                     || value
-                    || stringSet.MENTION_SUGGESTION_LIST__NO_NAME
+                    || stringSet.MENTION_NAME__NO_NAME
                     }`
                   }
                 </MentionUserLabel>,
@@ -178,7 +178,7 @@ const MessageInput = React.forwardRef((props, ref) => {
         );
         const mentionLabel = renderToString(
           <MentionUserLabel userId={mentionSelectedUser?.userId}>
-            {`${USER_MENTION_TEMP_CHAR}${mentionSelectedUser?.nickname || stringSet.MENTION_SUGGESTION_LIST__NO_NAME}`}
+            {`${USER_MENTION_TEMP_CHAR}${mentionSelectedUser?.nickname || stringSet.MENTION_NAME__NO_NAME}`}
           </MentionUserLabel>,
         );
         const div = document.createElement('div');

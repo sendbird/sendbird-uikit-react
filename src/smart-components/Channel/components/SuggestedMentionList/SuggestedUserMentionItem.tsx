@@ -66,7 +66,7 @@ function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Ele
         type={LabelTypography.SUBTITLE_2}
         color={member?.nickname ? LabelColors.ONBACKGROUND_1 : LabelColors.ONBACKGROUND_3}
       >
-        {member?.nickname || stringSet?.MENTION_SUGGESTION_LIST__NO_NAME}
+        {member?.nickname || stringSet?.MENTION_NAME__NO_NAME}
       </Label>
       <Label
         className="sendbird-mention-suggest-list__user-item__user-id"
