@@ -26,6 +26,7 @@ const EditDetails = (props: Props): ReactElement => {
   } = props;
   const globalState = useSendbirdStateContext();
   const logger = globalState?.config?.logger;
+  const theme = globalState?.config?.theme;
   const {
     channel,
     onBeforeUpdateChannel,
