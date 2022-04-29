@@ -44,6 +44,7 @@ export default {
   'Channel/components/RemoveMessageModal': 'src/smart-components/Channel/components/RemoveMessageModal.tsx',
   'Channel/components/TypingIndicator': 'src/smart-components/Channel/components/TypingIndicator.tsx',
   'Channel/components/UnreadCount': 'src/smart-components/Channel/components/UnreadCount/index.tsx',
+  'Channel/components/SuggestedMentionList': 'src/smart-components/Channel/components/SuggestedMentionList/index.tsx',
 
   // OpenChannel
   OpenChannel: 'src/smart-components/OpenChannel/index.tsx',
@@ -108,6 +109,7 @@ export default {
   'ui/Label': 'src/ui/Label/index.jsx',
   'ui/LinkLabel': 'src/ui/LinkLabel/index.jsx',
   'ui/Loader': 'src/ui/Loader/index.jsx',
+  'ui/MentionUserLabel': 'src/ui/MentionUserLabel/index.tsx',
   'ui/MessageContent': 'src/ui/MessageContent/index.tsx',
   'ui/MessageInput': 'src/ui/MessageInput/index.jsx',
   'ui/MessageItemMenu': 'src/ui/MessageItemMenu/index.tsx',

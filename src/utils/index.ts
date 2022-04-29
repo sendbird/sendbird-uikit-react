@@ -250,6 +250,8 @@ export const isMessageSentByMe = (userId: string, message: UserMessage | FileMes
 
 const URL_REG = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
 export const isUrl = (text: string): boolean => URL_REG.test(text);
+const MENTION_TAG_REG = /\@\{.*?\}/i;
+export const isMentionedText = (text: string): boolean => MENTION_TAG_REG.test(text);
 
 export const truncateString = (fullStr: string, strLen?: number): string => {
   if (!strLen) strLen = 40;
@@ -563,4 +565,79 @@ export const getChannelsWithUpsertedChannel = (channels: Array<GroupChannel>, ch
     channel?.lastMessage?.createdAt || channel?.createdAt
   );
   return [...channels.slice(0, targetIndex), channel, ...channels.slice(targetIndex, channels.length)];
+};
+
+export const getMatchedUserIds = (word: string, users: Array<SendBird.User>, _template?: string): boolean => {
+  const template = _template || '@'; // Use global variable
+  // const matchedUserIds = [];
+  // users.map((user) => user?.userId).forEach((userId) => {
+  //   if (word.indexOf(`${template}{${userId}}`) > -1) {
+  //     matchedUserIds.push(userId);
+  //   }
+  // });
+  // return matchedUserIds;
+  return users.map((user) => user?.userId).some((userId) => word.indexOf(`${template}{${userId}}`) > -1);
+};
+
+export enum StringObjType { normal, mention, url }
+export interface StringObj {
+  type: StringObjType;
+  value: string;
+  userId?: string;
+}
+
+export const convertWordToStringObj = (word: string, _users : Array<SendBird.User>, _template?: string): Array<StringObj> => {
+  const users = _users || [];
+  const template = _template || '@'; // Use global variable
+  const resultArray = [];
+  const regex = RegExp(`${template}{(${users.map((user) => user?.userId).join('|')})}`, 'g');
+  let excutionResult;
+  let lastIndex = 0;
+  while ((excutionResult = regex.exec(word)) !== null) {
+    const [template, userId] = excutionResult;
+    const endIndex = regex.lastIndex;
+    const startIndex = endIndex - template.length;
+    // Normal text
+    const normalText = word.slice(lastIndex, startIndex);
+    resultArray.push({
+      type: isUrl(normalText) ? StringObjType.url : StringObjType.normal,
+      value: normalText,
+    });
+    // Mention template
+    const mentionedUser = users.find((user) => user?.userId === userId);
+    if (!mentionedUser) {
+      resultArray.push({
+        type: StringObjType.normal,
+        value: template,  // because template is the origin text
+      });
+    } else {
+      resultArray.push({
+        type: StringObjType.mention,
+        value: mentionedUser?.nickname || '(No name)',
+        userId: userId,
+      });
+    }
+    lastIndex = endIndex;
+  }
+  if (lastIndex < word.length) {
+    // Normal text
+    const normalText = word.slice(lastIndex);
+    resultArray.push({
+      type: isUrl(normalText) ? StringObjType.url : StringObjType.normal,
+      value: normalText,
+    });
+  }
+  return resultArray;
+};
+
+export const arrayEqual = (array1: Array<unknown>, array2: Array<unknown>): boolean => {
+  if (Array.isArray(array1) && Array.isArray(array2) && array1.length === array2.length) {
+    for (let i = 0; i < array1.length; i++) {
+      if (array1[i] !== array2[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+  return false;
 };

@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Word should do a snapshot test of the Word DOM 1`] = `
+<span
+  className="sendbird-word"
+>
+  hello
+  <span
+    className="sendbird-word__mention sendbird-label sendbird-label--caption-1 sendbird-label--color-onbackground-1"
+  >
+    @Hoon Baek
+  </span>
+</span>
+`;

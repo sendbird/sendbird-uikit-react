@@ -1,0 +1,64 @@
+@import '../../../../styles/variables';
+
+.sendbird-mention-suggest-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 56px);
+  max-height: 260px;
+  overflow: scroll;
+  margin-left: 28px;
+  margin-right: 28px;
+  @include themed() {
+    border: 1px solid t(bg-1);
+  }
+
+  .sendbird-mention-suggest-list__user-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 16px 8px;
+    @include themed() {
+      background-color: t(bg-0);
+    }
+    &:hover {
+      cursor: pointer;
+      @include themed() {
+        background-color: t(bg-1);
+      }
+    }
+    &.focused {
+      @include themed() {
+        background-color: t(bg-1);
+      }
+    }
+
+    .sendbird-mention-suggest-list__user-item__avatar {
+      position: relative;
+      display: inline-block;
+    }
+    .sendbird-mention-suggest-list__user-item__nickname {
+      position: relative;
+      display: inline-block;
+      margin-left: 16px;
+    }
+    .sendbird-mention-suggest-list__user-item__user-id {
+      position: absolute;
+      display: inline-block;
+      right: 16px;
+    }
+  }
+
+  .sendbird-mention-suggest-list__notice-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 16px 8px;
+    @include themed() {
+      background-color: t(bg-0);
+    }
+    .sendbird-mention-suggest-list__notice-item__icon {
+      margin-right: 4px;
+    }
+  }
+}

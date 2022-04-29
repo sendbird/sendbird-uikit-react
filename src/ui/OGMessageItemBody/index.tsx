@@ -2,16 +2,12 @@ import React, { ReactElement, useContext } from 'react';
 import { UserMessage } from 'sendbird';
 import './index.scss';
 
-import Label, { LabelTypography, LabelColors } from '../Label';
-import LinkLabel from '../LinkLabel';
-import Icon, { IconTypes } from '../Icon';
+import Word from '../Word';
 import ImageRenderer from '../ImageRenderer';
-import {
-  getClassName,
-  isEditedMessage,
-  isUrl,
-} from '../../utils';
+import Icon, { IconTypes } from '../Icon';
+import Label, { LabelTypography, LabelColors } from '../Label';
 import uuidv4 from '../../utils/uuid';
+import { getClassName, isEditedMessage } from '../../utils';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 
 interface Props {
@@ -19,6 +15,7 @@ interface Props {
   message: UserMessage;
   isByMe?: boolean;
   mouseHover?: boolean;
+  isMentionEnabled?: boolean;
 }
 
 export default function OGMessageItemBody({
@@ -26,12 +23,13 @@ export default function OGMessageItemBody({
   message,
   isByMe = false,
   mouseHover = false,
+  isMentionEnabled = false,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   const openOGUrl = (): void => {
     if (message?.ogMetaData?.url) window.open(message?.ogMetaData?.url);
   };
-
+  const isMessageMentioned = isMentionEnabled && message?.mentionedMessageTemplate?.length > 0 && message?.mentionedUsers?.length > 0;
   return (
     <div className={getClassName([
       className,
@@ -47,21 +45,27 @@ export default function OGMessageItemBody({
       >
         <p className="sendbird-og-message-item-body__text-bubble">
           {
-            message?.message.split(' ').map((word: string) => (
-              isUrl(word)
-                ? (
-                  <LinkLabel
-                    className="sendbird-og-message-item-body__text-bubble__message"
+            isMessageMentioned
+              ? (
+                message?.mentionedMessageTemplate.split(' ').map((word: string) => (
+                  <Word
                     key={uuidv4()}
-                    src={word}
-                    type={LabelTypography.BODY_1}
-                    color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
-                  >
-                    {word}
-                  </LinkLabel>
-                )
-                : (`${word} `)
-            ))
+                    word={word}
+                    message={message}
+                    isByMe={isByMe}
+                  />
+                ))
+              )
+              : (
+                message?.message.split(' ').map((word: string) => (
+                  <Word
+                    key={uuidv4()}
+                    word={word}
+                    message={message}
+                    isByMe={isByMe}
+                  />
+                ))
+              )
           }
           {
             isEditedMessage(message) && (

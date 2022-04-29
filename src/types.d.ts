@@ -15,6 +15,10 @@ export interface RenderUserProfileProps {
 
 export interface SendBirdProviderConfig {
   logLevel?: 'debug' | 'warning' | 'error' | 'info' | 'all' | Array<string>;
+  userMention?: {
+    maxMentionCount?: number,
+    maxSuggestionCount?: number,
+  };
 }
 
 export interface ClientMessage {

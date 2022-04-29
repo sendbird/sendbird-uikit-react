@@ -41,10 +41,12 @@ export default function Sendbird(props) {
     stringSet,
     imageCompression,
     useReaction,
+    isMentionEnabled,
   } = props;
 
   const {
     logLevel = '',
+    userMention = {},
   } = config;
   const [logger, setLogger] = useState(LoggerFactory(logLevel));
   const [pubSub, setPubSub] = useState();
@@ -167,6 +169,11 @@ export default function Sendbird(props) {
           pubSub,
           imageCompression,
           useReaction,
+          isMentionEnabled: isMentionEnabled || false,
+          userMention: {
+            maxMentionCount: userMention?.maxMentionCount || 10,
+            maxSuggestionCount: userMention?.maxSuggestionCount || 15,
+          },
         },
       }}
     >
@@ -204,10 +211,15 @@ Sendbird.propTypes = {
       subscribe: PropTypes.func,
       publish: PropTypes.func,
     }),
+    userMention: PropTypes.shape({
+      maxMentionCount: PropTypes.number,
+      maxSuggestionCount: PropTypes.number,
+    }),
   }),
   stringSet: PropTypes.objectOf(PropTypes.string),
   colorSet: PropTypes.objectOf(PropTypes.string),
   useReaction: PropTypes.bool,
+  isMentionEnabled: PropTypes.bool,
   imageCompression: PropTypes.shape({
     compressionRate: PropTypes.number,
     resizingWidth: PropTypes.oneOfType([
@@ -236,4 +248,5 @@ Sendbird.defaultProps = {
   colorSet: null,
   imageCompression: {},
   useReaction: true,
+  isMentionEnabled: false,
 };

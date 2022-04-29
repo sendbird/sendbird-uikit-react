@@ -7,15 +7,30 @@ function useUpdateMessageCallback({
   currentGroupChannel,
   messagesDispatcher,
   onBeforeUpdateUserMessage,
+  isMentionEnabled,
 }, {
   logger,
   pubSub,
   sdk,
 }) {
-  return useCallback((messageId, text, cb) => {
-    const createParamsDefault = (txt) => {
+  return useCallback((props, callback) => {
+    const {
+      messageId,
+      message,
+      mentionedUsers,
+      mentionTemplate,
+    } = props;
+    const createParamsDefault = () => {
       const params = new sdk.UserMessageParams();
-      params.message = txt;
+      params.message = message;
+      if (isMentionEnabled && mentionedUsers?.length > 0) {
+        params.mentionedUsers = mentionedUsers;
+      }
+      if (isMentionEnabled && mentionTemplate) {
+        params.mentionedMessageTemplate = mentionTemplate;
+      } else {
+        params.mentionedMessageTemplate = message;
+      }
       return params;
     };
 
@@ -27,34 +42,34 @@ function useUpdateMessageCallback({
     }
 
     const params = onBeforeUpdateUserMessage
-      ? onBeforeUpdateUserMessage(text)
-      : createParamsDefault(text);
+      ? onBeforeUpdateUserMessage(message)
+      : createParamsDefault(message);
 
     currentGroupChannel.updateUserMessage(messageId, params, (r, e) => {
       logger.info('Channel: Updating message!', params);
       const swapParams = sdk.getErrorFirstCallback();
-      let message = r;
+      let msg = r;
       let err = e;
       if (swapParams) {
-        message = e;
+        msg = e;
         err = r;
       }
-      if (cb) {
-        cb(err, message);
+      if (callback) {
+        callback(err, msg);
       }
       if (!err) {
-        logger.info('Channel: Updating message success!', message);
+        logger.info('Channel: Updating message success!', msg);
         messagesDispatcher({
           type: messageActionTypes.ON_MESSAGE_UPDATED,
           payload: {
             channel: currentGroupChannel,
-            message,
+            message: msg,
           },
         });
         pubSub.publish(
           topics.UPDATE_USER_MESSAGE,
           {
-            message,
+            message: msg,
             channel: currentGroupChannel,
           },
         );

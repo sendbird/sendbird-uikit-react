@@ -1,0 +1,35 @@
+@import '../../styles/variables';
+
+.sendbird-mention-user-label {
+  &:hover {
+    cursor: pointer;
+  }
+  display: inline-block;
+  font-family: var(--sendbird-font-family-default);
+  font-size: 14px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+  @include themed() {
+    color: t(on-bg-1);
+  }
+  &.reverse {
+    @include themed() {
+      color: t(on-content-1);
+    }
+  }
+  &.purple {
+    font-family: Roboto;
+    font-size: 18px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    @include themed() {
+      color: t(primary-3);
+    }
+  }
+}

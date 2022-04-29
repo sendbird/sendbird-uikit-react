@@ -70,6 +70,7 @@ export const login = () => {
   const [messageSearch, setMessageSearch] = useState(true);
   const [profileEdit, setProfileEdit] = useState(true);
   const [useReply, setUseReply] = useState(true);
+  const [useMention, setUseMention] = useState(true);
   return isLoginPage
     ? fitPageSize(
       <div
@@ -139,6 +140,16 @@ export const login = () => {
           onClick={() => setUseReply(!useReply)}
         />
         <input
+          className="input__toggle-user-mention"
+          type="button"
+          value={
+            useMention
+              ? 'Use Mention'
+              : 'Not use Mention'
+          }
+          onClick={() => setUseMention(!useMention)}
+        />
+        <input
           className="login-submit"
           type="submit"
           value="Submit"
@@ -152,6 +163,7 @@ export const login = () => {
         userId={userId}
         nickname={nickname}
         theme={theme}
+        isMentionEnabled={useMention}
         showSearchIcon={messageSearch}
         allowProfileEdit={profileEdit}
         replyType={useReply ? 'QUOTE_REPLY' : 'NONE'}
@@ -175,7 +187,7 @@ export const updateProfile = () => {
   );
 };
 
-const age = 70;
+const age = 73;
 const array = [
   `hoon${age}1`,
   `hoon${age}2`,
@@ -212,6 +224,7 @@ export const user1 = () => fitPageSize(
     config={{ logLevel: 'all' }}
     queries={{}}
     replyType="QUOTE_REPLY"
+    isMentionEnabled
   />
 );
 export const user2 = () => fitPageSize(
@@ -222,7 +235,7 @@ export const user2 = () => fitPageSize(
     showSearchIcon
     allowProfileEdit
     profileUrl={addProfile}
-    config={{ logLevel: 'all' }}
+    config={{ logLevel: 'all', userMention: { maxMentionCount: 2, maxSuggestionCount: 5 } }}
     replyType="QUOTE_REPLY"
     useMessageGrouping={false}
     imageCompression={{
@@ -230,6 +243,7 @@ export const user2 = () => fitPageSize(
       resizingWidth: 100,
       resizingHeight: '100px',
     }}
+    isMentionEnabled
   />
 );
 export const user3 = () => fitPageSize(
@@ -294,20 +308,20 @@ const SBChannel = withSendBird((props) => {
       showSearchIcon={showSearchIcon}
       onSearchClick={onSearchClick}
       onChatHeaderActionClick={onChatHeaderActionClick}
-      // renderChatItem={({ message }) => {
-      //   return (
-      //     <div>{message.message || '하잉'}</div>
-      //   )
-      // }}
-      // renderCustomMessage={(message) => {
-      //   if (message.messageType === 'user') {
-      //     return () => (
-      //       <CustomMessageItem
-      //         message={message}
-      //       />
-      //     )
-      //   }
-      // }}
+    // renderChatItem={({ message }) => {
+    //   return (
+    //     <div>{message.message || '하잉'}</div>
+    //   )
+    // }}
+    // renderCustomMessage={(message) => {
+    //   if (message.messageType === 'user') {
+    //     return () => (
+    //       <CustomMessageItem
+    //         message={message}
+    //       />
+    //     )
+    //   }
+    // }}
     />
   );
 });

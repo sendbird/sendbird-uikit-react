@@ -4,7 +4,7 @@
  * git: https://github.com/sendbird/sendbird-uikit-react
  */
 import type React from 'react';
-import Sendbird from 'sendbird';
+import Sendbird, { FileMessage, UserMessage } from 'sendbird';
 import type { Locale } from 'date-fns';
 import SendBird from 'sendbird';
 
@@ -29,6 +29,10 @@ interface RenderUserProfileProps {
 
 interface SendBirdProviderConfig {
   logLevel?: 'debug' | 'warning' | 'error' | 'info' | 'all' | Array<string>;
+  userMention?: {
+    maxMentionCount?: number,
+    maxSuggestionCount?: number,
+  };
 }
 
 interface ClientMessage {
@@ -67,6 +71,7 @@ interface SendBirdProviderProps {
   config?: SendBirdProviderConfig;
   stringSet?: Record<string, string>;
   colorSet?: Record<string, string>;
+  isMentionEnabled?: boolean;
   imageCompression?: {
     compressionRate?: number,
     resizingWidth?: number | string,
@@ -79,6 +84,11 @@ interface SendBirdStateConfig {
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   allowProfileEdit: boolean;
   isOnline: boolean;
+  isMentionEnabled: boolean;
+  userMention: {
+    maxMentionCount: number;
+    maxSuggestionCount: number;
+  };
   userId: string;
   appId: string;
   accessToken: string;
@@ -544,7 +554,7 @@ declare module '@sendbird/uikit-react/ChannelSettings/components/UserListItem' {
 }
 
 declare module '@sendbird/uikit-react/ChannelSettings/components/UserPanel' {
-  type UserPanel = React.FC<{}>;
+  type UserPanel = React.FC<Record<string, unknown>>;
   export default UserPanel;
 }
 
@@ -611,8 +621,8 @@ interface MessageStoreInterface {
 interface ChannelProviderInterface extends ChannelContextProps, ChannelContextProps {
   scrollToMessage?(createdAt: number, messageId: number): void;
   messageActionTypes: Record<string ,string>;
-  quoteMessage: CoreMessageType;
-  setQuoteMessage: React.Dispatch<React.SetStateAction<CoreMessageType>>;
+  quoteMessage: UserMessage | FileMessage;
+  setQuoteMessage: React.Dispatch<React.SetStateAction<UserMessage | FileMessage>>;
   initialTimeStamp: number;
   setInitialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
   animatedMessageId: number;
@@ -647,6 +657,27 @@ type MessageListProps = {
   renderMessage?: (props: RenderMessageProps) => React.ReactNode;
   renderPlaceholderEmpty?: () => React.ReactNode;
   renderCustomSeperator?: () => React.ReactNode;
+};
+
+type SuggestedMentionListProps = {
+  targetNickname: string;
+  memberListQuery?: Record<string, string>;
+  onUserItemClick?: (member: SendBird.User) => void;
+  onFocusItemChange?: (member: SendBird.User) => void;
+  onFetchUsers?: (users: Array<SendBird.User>) => void;
+  renderUserMentionItem?: (props: { user: SendBird.User }) => JSX.Element;
+  ableAddMention: boolean;
+  maxMentionCount?: number;
+  maxSuggestionCount?: number;
+  inputEvent?: React.KeyboardEvent<HTMLDivElement>;
+};
+
+type SuggestedUserMentionItemProps = {
+  member: SendBird.User;
+  isFocused?: boolean;
+  onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  onMouseOver?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  renderUserMentionItem?: (props: { user: SendBird.User }) => JSX.Element;
 };
 
 interface UnreadCountProps {
@@ -706,6 +737,11 @@ declare module '@sendbird/uikit-react/Channel/components/MessageInput' {
 declare module '@sendbird/uikit-react/Channel/components/MessageList' {
   type MessageList = React.FunctionComponent<MessageListProps>;
   export default MessageList;
+}
+
+declare module '@sendbird/uikit-react/Channel/components/SuggestedMentionList' {
+  type SuggestedMentionList = React.FunctionComponent<SuggestedMentionListProps>;
+  export default SuggestedMentionList;
 }
 
 declare module '@sendbird/uikit-react/Channel/components/RemoveMessageModal' {
@@ -823,17 +859,17 @@ declare module '@sendbird/uikit-react/OpenChannel/context' {
 }
 
 declare module '@sendbird/uikit-react/OpenChannel/components/FrozenChannelNotification' {
-  type FrozenChannelNotification = React.FC<{}>;
+  type FrozenChannelNotification = React.FC<Record<string, unknown>>;
   export default FrozenChannelNotification;
 }
 
 declare module '@sendbird/uikit-react/OpenChannel/components/OpenChannelHeader' {
-  type OpenChannelHeader = React.FC<{}>;
+  type OpenChannelHeader = React.FC<Record<string, unknown>>;
   export default OpenChannelHeader;
 }
 
 declare module '@sendbird/uikit-react/OpenChannel/components/OpenChannelInput' {
-  type OpenChannelInput = React.FC<{}>;
+  type OpenChannelInput = React.FC<Record<string, unknown>>;
   export default OpenChannelInput;
 
 }
@@ -913,7 +949,7 @@ declare module '@sendbird/uikit-react/OpenChannelSettings/components/OperatorUI'
 }
 
 declare module '@sendbird/uikit-react/OpenChannelSettings/components/ParticipantUI' {
-  type ParticipantUI = React.FC<{}>;
+  type ParticipantUI = React.FC<Record<string, unknown>>;
   export default ParticipantUI;
 }
 
@@ -1070,7 +1106,7 @@ declare module '@sendbird/uikit-react/EditUserProfile/context' {
 }
 
 declare module '@sendbird/uikit-react/EditUserProfile/components/EditUserProfileUI' {
-  type EditUserProfileUI = React.FC<{}>;
+  type EditUserProfileUI = React.FC<Record<string, unknown>>;
   export default EditUserProfileUI;
 }
 
@@ -1392,6 +1428,18 @@ declare module '@sendbird/uikit-react/ui/Loader' {
   export default Loader;
 }
 
+declare module '@sendbird/uikit-react/ui/MentionUserLabel' {
+  interface MentionUserLabelProps {
+    className?: string
+    children?: string;
+    isReverse?: boolean;
+    color?: string;
+    userId?: string;
+  }
+  type MentionUserLabel = React.FC<MentionUserLabelProps>;
+  export default MentionUserLabel;
+}
+
 declare module '@sendbird/uikit-react/ui/MessageContent' {
   interface MessageContentProps {
     className?: string | Array<string>;
@@ -1421,16 +1469,23 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
   interface MessageInputProps {
     className?: string[],
     isEdit?: boolean,
+    isMentionEnabled?: boolean;
     disabled?: boolean,
-    value?: string,
-    name: string,
+    message?: SendBird.UserMessage;
     placeholder?: string,
     maxLength?: number,
-    onFileUpload?: () => void,
-    onSendMessage?: () => void,
-    onCancelEdit?: () => void,
+    onFileUpload?: (file: File) => void,
+    onSendMessage?: (props: { message: string, mentionTemplate?: string }) => void,
+    onUpdateMessage?: (props: { messageId: number, message: string, mentionTemplate?: string }) => void,
+    onCancelEdit?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
     onStartTyping?: () => void,
     channelUrl: string,
+    mentionSelectedUser?: Array<SendBird.User>,
+    onUserMentioned?: (user: SendBird.User) => void,
+    onMentionStringChange?: (str: string) => void,
+    onMentionedUserIdsUpdated?: (userIds: Array<string>) => void,
+    onKeyUp?: (e: React.KeyboardEvent<HTMLDivElement>) => void,
+    onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void,
   }
   type MessageInput = React.FC<MessageInputProps>;
   export default MessageInput;

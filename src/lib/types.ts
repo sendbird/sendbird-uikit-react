@@ -1,5 +1,6 @@
 import SendBird from 'sendbird';
 import type SendBirdTypes from '../types';
+import { Logger } from './SendbirdState';
 
 export interface SendBirdProviderProps {
   userId: string;
@@ -17,6 +18,7 @@ export interface SendBirdProviderProps {
   config?: SendBirdTypes.SendBirdProviderConfig;
   stringSet?: Record<string, string>;
   colorSet?: Record<string, string>;
+  isMentionEnabled?: boolean;
   imageCompression?: {
     compressionRate?: number,
     resizingWidth?: number | string,
@@ -34,9 +36,14 @@ interface SendBirdStateConfig {
   accessToken: string;
   theme: string;
   pubSub: any;
-  logger: SendBirdTypes.Logger;
+  logger: Logger;
   setCurrenttheme: (theme: string) => void;
   userListQuery?(): SendBirdTypes.UserListQuery;
+  isMentionEnabled: boolean;
+  userMention: {
+    maxMentionCount: number,
+    maxSuggestionCount: number,
+  };
   imageCompression?: {
     compressionRate?: number,
     resizingWidth?: number | string,

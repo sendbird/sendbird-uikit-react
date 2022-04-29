@@ -21,6 +21,7 @@
     resize: none;
     font-family: var(--sendbird-font-family-default);
     background-color: inherit;
+    white-space: pre-wrap;
     @include themed() {
       color: t(on-bg-1);
       caret-color: t(primary-3);

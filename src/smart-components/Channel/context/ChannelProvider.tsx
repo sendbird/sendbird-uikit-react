@@ -6,7 +6,7 @@ import React, {
   useRef,
   useMemo,
 } from 'react';
-import SendBird, { GroupChannel } from 'sendbird';
+import SendBird, { FileMessage, GroupChannel, UserMessage, UserMessageParams } from 'sendbird';
 
 import { ReplyType, RenderUserProfileProps } from '../../../types';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
@@ -91,12 +91,27 @@ interface MessageStoreInterface {
   readStatus: any;
 }
 
+interface SendMessageParams {
+  message: string;
+  quoteMessage?: UserMessage | FileMessage;
+  // mentionedUserIds?: Array<string>;
+  mentionedUsers?: Array<SendBird.User>;
+  mentionTemplate?: string;
+}
+
+interface UpdateMessageProps {
+  messageId: string | number;
+  message: string;
+  mentionedUsers?: Array<SendBird.User>;
+  mentionTemplate?: string;
+}
+
 interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInterface {
   scrollToMessage?(createdAt: number, messageId: number): void;
   messageActionTypes: Record<string ,string>;
   messagesDispatcher: CustomUseReducerDispatcher;
-  quoteMessage: CoreMessageType;
-  setQuoteMessage: React.Dispatch<React.SetStateAction<CoreMessageType>>;
+  quoteMessage: UserMessage | FileMessage;
+  setQuoteMessage: React.Dispatch<React.SetStateAction<UserMessage | FileMessage>>;
   initialTimeStamp: number;
   setInitialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
   animatedMessageId: number;
@@ -111,14 +126,15 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   setHighLightedMessageId: React.Dispatch<React.SetStateAction<number>>;
   messageInputRef: React.MutableRefObject<HTMLInputElement>,
   deleteMessage(message: CoreMessageType): Promise<CoreMessageType>,
-  updateMessage(messageId: number, text: string): Promise<CoreMessageType>,
-  resendMessage(failedMessage: CoreMessageType): Promise<CoreMessageType>,
+  updateMessage(props: UpdateMessageProps, callback?: (err: SendBird.SendBirdError, message: SendBird.UserMessage) => void): Promise<CoreMessageType>,
+  resendMessage(failedMessage: UserMessage | FileMessage): Promise<UserMessage | FileMessage>,
   // TODO: Good to change interface to using params / This part need refactoring
-  sendMessage(quoteMessage: CoreMessageType): Promise<SendBird.UserMessage>,
-  sendFileMessage(file: File, quoteMessage: CoreMessageType): Promise<SendBird.FileMessage>,
+  sendMessage(props: SendMessageParams): Promise<SendBird.UserMessage>,
+  sendFileMessage(file: File, quoteMessage: UserMessage | FileMessage): Promise<SendBird.FileMessage>,
   // sendMessage(messageParams: SendBird.UserMessageParams): Promise<SendBird.UserMessage>,
   // sendFileMessage(messageParams: SendBird.FileMessageParams): Promise<SendBird.FileMessage>,
   toggleReaction(message: SendBird.UserMessage | SendBird.FileMessage, emojiKey: string, isReacted: boolean): void,
+  renderUserMentionItem?: (props: { user: SendBird.User }) => JSX.Element;
 }
 
 const ChannelContext = React.createContext<ChannelProviderInterface | null>(undefined);
@@ -143,7 +159,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
 
   const globalStore = useSendbirdStateContext();
   const { config } = globalStore;
-  const { pubSub, logger, userId, isOnline, imageCompression } = config;
+  const { pubSub, logger, userId, isOnline, imageCompression, isMentionEnabled } = config;
   const sdk = globalStore?.stores?.sdkStore?.sdk;
   const sdkInit = globalStore?.stores?.sdkStore?.initialized;
 
@@ -157,7 +173,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     setHighLightedMessageId(highlightedMessage);
   }, [highlightedMessage]);
   const userFilledMessageListQuery = queries?.messageListParams;
-  const [quoteMessage, setQuoteMessage] = useState<CoreMessageType>(null);
+  const [quoteMessage, setQuoteMessage] = useState<UserMessage | FileMessage>(null);
 
   const [messagesStore, messagesDispatcher] = useReducer(
     messagesReducer,
@@ -306,7 +322,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   const deleteMessage = useDeleteMessageCallback({ currentGroupChannel, messagesDispatcher },
     { logger });
   const updateMessage = useUpdateMessageCallback(
-    { currentGroupChannel, messagesDispatcher, onBeforeUpdateUserMessage },
+    { currentGroupChannel, messagesDispatcher, onBeforeUpdateUserMessage, isMentionEnabled },
     { logger, sdk, pubSub },
   );
   const resendMessage = useResendMessageCallback(
@@ -314,7 +330,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     { logger },
   );
   const [messageInputRef, sendMessage] = useSendMessageCallback(
-    { currentGroupChannel, onBeforeSendUserMessage },
+    { currentGroupChannel, onBeforeSendUserMessage, isMentionEnabled },
     {
       sdk,
       logger,
