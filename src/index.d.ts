@@ -1469,16 +1469,23 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
   interface MessageInputProps {
     className?: string[],
     isEdit?: boolean,
+    isMentionEnabled?: boolean;
     disabled?: boolean,
-    value?: string,
-    name: string,
+    message?: SendBird.UserMessage;
     placeholder?: string,
     maxLength?: number,
-    onFileUpload?: () => void,
-    onSendMessage?: () => void,
-    onCancelEdit?: () => void,
+    onFileUpload?: (file: File) => void,
+    onSendMessage?: (props: { message: string, mentionTemplate?: string }) => void,
+    onUpdateMessage?: (props: { messageId: number, message: string, mentionTemplate?: string }) => void,
+    onCancelEdit?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
     onStartTyping?: () => void,
     channelUrl: string,
+    mentionSelectedUser?: Array<SendBird.User>,
+    onUserMentioned?: (user: SendBird.User) => void,
+    onMentionStringChange?: (str: string) => void,
+    onMentionedUserIdsUpdated?: (userIds: Array<string>) => void,
+    onKeyUp?: (e: React.KeyboardEvent<HTMLDivElement>) => void,
+    onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void,
   }
   type MessageInput = React.FC<MessageInputProps>;
   export default MessageInput;
