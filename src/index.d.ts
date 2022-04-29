@@ -659,6 +659,27 @@ type MessageListProps = {
   renderCustomSeperator?: () => React.ReactNode;
 };
 
+type SuggestedMentionListProps = {
+  targetNickname: string;
+  memberListQuery?: Record<string, string>;
+  onUserItemClick?: (member: SendBird.User) => void;
+  onFocusItemChange?: (member: SendBird.User) => void;
+  onFetchUsers?: (users: Array<SendBird.User>) => void;
+  renderUserMentionItem?: (props: { user: SendBird.User }) => JSX.Element;
+  ableAddMention: boolean;
+  maxMentionCount?: number;
+  maxSuggestionCount?: number;
+  inputEvent?: React.KeyboardEvent<HTMLDivElement>;
+};
+
+type SuggestedUserMentionItemProps = {
+  member: SendBird.User;
+  isFocused?: boolean;
+  onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  onMouseOver?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  renderUserMentionItem?: (props: { user: SendBird.User }) => JSX.Element;
+};
+
 interface UnreadCountProps {
   count: number;
   time: string;
@@ -716,6 +737,11 @@ declare module '@sendbird/uikit-react/Channel/components/MessageInput' {
 declare module '@sendbird/uikit-react/Channel/components/MessageList' {
   type MessageList = React.FunctionComponent<MessageListProps>;
   export default MessageList;
+}
+
+declare module '@sendbird/uikit-react/Channel/components/SuggestedMentionList' {
+  type SuggestedMentionList = React.FunctionComponent<SuggestedMentionListProps>;
+  export default SuggestedMentionList;
 }
 
 declare module '@sendbird/uikit-react/Channel/components/RemoveMessageModal' {
@@ -1400,6 +1426,18 @@ declare module '@sendbird/uikit-react/ui/Loader' {
   }
   type Loader = React.FC<LoaderProps>;
   export default Loader;
+}
+
+declare module '@sendbird/uikit-react/ui/MentionUserLabel' {
+  interface MentionUserLabelProps {
+    className?: string
+    children?: string;
+    isReverse?: boolean;
+    color?: string;
+    userId?: string;
+  }
+  type MentionUserLabel = React.FC<MentionUserLabelProps>;
+  export default MentionUserLabel;
 }
 
 declare module '@sendbird/uikit-react/ui/MessageContent' {

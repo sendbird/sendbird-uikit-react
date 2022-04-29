@@ -127,7 +127,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
       }}
     >
       {
-        ableAddMention && currentMemberList.map((member) => (
+        ableAddMention && currentMemberList?.map((member) => (
           <SuggestedUserMentionItem
             key={member?.nickname}
             member={member}
