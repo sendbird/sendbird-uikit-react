@@ -105,7 +105,7 @@ const getStringSet = (lang = 'en') => {
       CONTEXT_MENU_DROPDOWN__RESEND: 'Resend',
       CONTEXT_MENU_DROPDOWN__DELETE: 'Delete',
       MENTION_NAME__NO_NAME: '(No name)',
-      MENTION_COUNT__OVER_LIMIT: 'You can mention up to %d users per message.',
+      MENTION_COUNT__OVER_LIMIT: 'You can mention up to %d times per message.',
     },
   };
   return stringSet[lang];

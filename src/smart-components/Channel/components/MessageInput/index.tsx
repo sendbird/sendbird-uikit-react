@@ -47,8 +47,7 @@ const MessageInputWrapper = (): JSX.Element => {
   const displaySuggestedMentionList = (isMentionEnabled && mentionNickname.length > 0);
 
   useEffect(() => {
-    const mentionedUserSet = new Set(mentionedUsers.map((user) => user.userId));
-    if (mentionedUserSet?.size >= maxUserMentionCount) {
+    if (mentionedUsers?.length >= maxUserMentionCount) {
       setAbleMention(false);
     } else {
       setAbleMention(true);
