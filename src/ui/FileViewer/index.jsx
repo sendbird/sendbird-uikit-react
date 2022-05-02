@@ -144,7 +144,7 @@ export default function FileViewer(props) {
     onDelete,
   } = props;
   const {
-    sender,
+    sender = {},
     type,
     url,
     name = '',
