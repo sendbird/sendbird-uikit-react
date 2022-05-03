@@ -27,6 +27,7 @@ import { uuidv4 } from '../../utils/uuid';
 import './index.scss';
 
 const noop = () => { };
+const DELIVERY_RECIPT = 'delivery_receipt';
 
 function ChannelList(props) {
   const {
@@ -232,9 +233,20 @@ function ChannelList(props) {
                 type: channelListActions.FETCH_CHANNELS_SUCCESS,
                 payload: channelList,
               });
-              if (channelList && typeof channelList.forEach === 'function') {
+
+              const canSetMarkAsDelivered = sdk?.appInfo?.premiumFeatureList
+                ?.find((feature) => (feature === DELIVERY_RECIPT));
+
+              if (canSetMarkAsDelivered) {
                 logger.info('ChannelList: Marking all channels as read');
-                channelList.forEach((c) => c.markAsDelivered());
+                // eslint-disable-next-line no-unused-expressions
+                channelList?.forEach((c, idx) => {
+                  // Plan-based rate limits - minimum limit is 5 requests per second
+                  setTimeout(() => {
+                    // eslint-disable-next-line no-unused-expressions
+                    sdk?.markAsDelivered(c?.url);
+                  }, 300 * idx);
+                });
               }
             });
           }
