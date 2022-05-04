@@ -1,6 +1,8 @@
 import * as channelActions from './dux/actionTypes';
 import * as topics from '../../lib/pubSub/topics';
 
+const DELIVERY_RECIPT = 'delivery_receipt';
+
 const createEventHandler = ({
   sdk,
   sdkChannelHandlerId,
@@ -217,9 +219,19 @@ function setupChannelList({
         type: channelActions.INIT_CHANNELS_SUCCESS,
         payload: sortedChannelList,
       });
-      if (channelList && typeof channelList.forEach === 'function') {
-        logger.info('ChannelList - mark all channels as delivered');
-        channelList.forEach((c) => c.markAsDelivered());
+      const canSetMarkAsDelivered = sdk?.appInfo?.premiumFeatureList
+        ?.find((feature) => (feature === DELIVERY_RECIPT));
+
+      if (canSetMarkAsDelivered) {
+        logger.info('ChannelList: Marking all channels as read');
+        // eslint-disable-next-line no-unused-expressions
+        channelList?.forEach((c, idx) => {
+          // Plan-based rate limits - minimum limit is 5 requests per second
+          setTimeout(() => {
+            // eslint-disable-next-line no-unused-expressions
+            sdk?.markAsDelivered(c?.url);
+          }, 300 * idx);
+        });
       }
     });
   } else {
