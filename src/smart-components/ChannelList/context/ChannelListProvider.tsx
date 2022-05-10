@@ -221,7 +221,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   }, [sdkIntialized, userFilledChannelListQuery, sortChannelList]);
 
   useEffect(() => {
-    if (sdk && sdk.ChannelHandler) {
+    if (sdk && sdk?.ChannelHandler) {
       const handlerId = uuidv4()
       const handler = new sdk.ChannelHandler()
       handler.onTypingStatusUpdated = (channel) => {

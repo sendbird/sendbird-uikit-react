@@ -71,12 +71,14 @@ interface SendBirdProviderProps {
   config?: SendBirdProviderConfig;
   stringSet?: Record<string, string>;
   colorSet?: Record<string, string>;
-  isMentionEnabled?: boolean;
   imageCompression?: {
     compressionRate?: number,
     resizingWidth?: number | string,
     resizingHeight?: number | string,
   };
+  isMentionEnabled?: boolean;
+  isTypingIndicatorEnabledOnChannelList?: boolean;
+  isMessageReceiptStatusEnabledOnChannelList?: boolean;
 }
 
 interface SendBirdStateConfig {
@@ -264,6 +266,9 @@ interface AppProps {
   };
   replyType?: ReplyType;
   disableAutoSelect?: boolean;
+  isMentionEnabled?: boolean;
+  isTypingIndicatorEnabledOnChannelList?: boolean;
+  isMessageReceiptStatusEnabledOnChannelList?: boolean;
 }
 
 interface ApplicationUserListQuery {
@@ -311,6 +316,9 @@ export interface ChannelListProviderProps {
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   disableUserProfile?: boolean;
   disableAutoSelect?: boolean;
+  typingChannels?: Array<Sendbird.GroupChannel>;
+  isTypingIndicatorEnabled?: boolean;
+  isMessageReceiptStatusEnabled?: boolean;
 }
 
 export interface ChannelListProviderInterface extends ChannelListProviderProps {
