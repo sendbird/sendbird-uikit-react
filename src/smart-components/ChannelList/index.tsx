@@ -21,6 +21,8 @@ const ChannelList: React.FC<ChannelListProps> = (props: ChannelListProps) => {
       sortChannelList={props?.sortChannelList}
       queries={props?.queries}
       disableAutoSelect={props?.disableAutoSelect}
+      isTypingIndicatorEnabled={props?.isTypingIndicatorEnabled}
+      isMessageReceiptStatusEnabled={props?.isMessageReceiptStatusEnabled}
     >
       <ChannelListUI
         renderChannelPreview={props?.renderChannelPreview}

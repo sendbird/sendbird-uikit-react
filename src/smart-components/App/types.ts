@@ -34,4 +34,6 @@ export default interface AppProps {
   };
   replyType?: ReplyType;
   disableAutoSelect?: boolean;
+  isTypingIndicatorEnabledOnChannelList?: boolean;
+  isMessageReceiptStatusEnabledOnChannelList?: boolean;
 }

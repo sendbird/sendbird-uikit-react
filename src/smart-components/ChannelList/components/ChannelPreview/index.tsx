@@ -13,10 +13,14 @@ import * as utils from './utils';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import MentionUserLabel from '../../../../ui/MentionUserLabel';
+import { useChannelListContext } from '../../context/ChannelListProvider';
+import { TypingIndicatorText } from '../../../Channel/components/TypingIndicator';
+import MessageStatus from '../../../../ui/MessageStatus';
 
 interface ChannelPreviewInterface {
   channel: SendBird.GroupChannel;
   isActive?: boolean;
+  isTyping?: boolean;
   onClick: () => void;
   renderChannelAction: (props: { channel: SendBird.GroupChannel }) => React.ReactNode;
   tabIndex: number;
@@ -25,16 +29,25 @@ interface ChannelPreviewInterface {
 const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
   channel,
   isActive = false,
+  isTyping = false,
   renderChannelAction,
   onClick,
   tabIndex,
 }: ChannelPreviewInterface) => {
   const sbState = useSendbirdStateContext();
+  const {
+    isTypingIndicatorEnabled = false,
+    isMessageReceiptStatusEnabled = false,
+  } = useChannelListContext();
   const { dateLocale, stringSet } = useLocalization();
   const userId = sbState?.stores?.userStore?.user?.userId;
   const theme = sbState?.config?.theme;
   const isMentionEnabled = sbState?.config?.isMentionEnabled;
   const { isBroadcast, isFrozen } = channel;
+  const isChannelTyping = isTypingIndicatorEnabled && isTyping;
+  const isMessageStatusEnabled = isMessageReceiptStatusEnabled
+    && (channel?.lastMessage?.messageType === 'user' || channel?.lastMessage?.messageType === 'file')
+    && channel?.lastMessage?.sender?.userId === userId;
   return (
     <div
       className={[
@@ -99,13 +112,25 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
               )
             }
           </div>
-          <Label
-            className="sendbird-channel-preview__content__upper__last-message-at"
-            type={LabelTypography.CAPTION_3}
-            color={LabelColors.ONBACKGROUND_2}
-          >
-            {utils.getLastMessageCreatedAt(channel, dateLocale)}
-          </Label>
+          {
+            isMessageStatusEnabled
+              ? (
+                <MessageStatus
+                  className="sendbird-channel-preview__content__upper__last-message-at"
+                  channel={channel}
+                  message={channel?.lastMessage as SendBird.UserMessage | SendBird.FileMessage}
+                />
+              )
+              : (
+                <Label
+                  className="sendbird-channel-preview__content__upper__last-message-at"
+                  type={LabelTypography.CAPTION_3}
+                  color={LabelColors.ONBACKGROUND_2}
+                >
+                  {utils.getLastMessageCreatedAt(channel, dateLocale)}
+                </Label>
+              )
+          }
         </div>
         <div className="sendbird-channel-preview__content__lower">
           <Label
@@ -113,7 +138,11 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
             type={LabelTypography.BODY_2}
             color={LabelColors.ONBACKGROUND_3}
           >
-            {utils.getLastMessage(channel)}
+            {
+              isChannelTyping
+                ? <TypingIndicatorText members={channel?.getTypingMembers()} />
+                : utils.getLastMessage(channel)
+            }
           </Label>
           <div className="sendbird-channel-preview__content__lower__unread-message-count">
             {

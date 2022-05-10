@@ -210,6 +210,9 @@ export const Korean = () => fitPageSize(
       CHANNEL__MESSAGE_INPUT__PLACE_HOLDER__DISABLED: '입력이 불가능 합니다',
       CHANNEL__MESSAGE_INPUT__PLACE_HOLDER__MUTED: '음소거 되었습니다',
     }}
+    isMentionEnabled
+    isTypingIndicatorEnabledOnChannelList
+    isMessageReceiptStatusEnabledOnChannelList
   />
 );
 
@@ -225,6 +228,8 @@ export const user1 = () => fitPageSize(
     queries={{}}
     replyType="QUOTE_REPLY"
     isMentionEnabled
+    isTypingIndicatorEnabledOnChannelList
+    isMessageReceiptStatusEnabledOnChannelList
   />
 );
 export const user2 = () => fitPageSize(
@@ -244,6 +249,8 @@ export const user2 = () => fitPageSize(
       resizingHeight: '100px',
     }}
     isMentionEnabled
+    isTypingIndicatorEnabledOnChannelList
+    isMessageReceiptStatusEnabledOnChannelList
   />
 );
 export const user3 = () => fitPageSize(
@@ -257,6 +264,8 @@ export const user3 = () => fitPageSize(
     profileUrl={addProfile}
     config={{ logLevel: 'all' }}
     replyType="QUOTE_REPLY"
+    isTypingIndicatorEnabledOnChannelList
+    isMessageReceiptStatusEnabledOnChannelList
   />
 );
 export const user4 = () => fitPageSize(

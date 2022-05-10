@@ -71,12 +71,14 @@ interface SendBirdProviderProps {
   config?: SendBirdProviderConfig;
   stringSet?: Record<string, string>;
   colorSet?: Record<string, string>;
-  isMentionEnabled?: boolean;
   imageCompression?: {
     compressionRate?: number,
     resizingWidth?: number | string,
     resizingHeight?: number | string,
   };
+  isMentionEnabled?: boolean;
+  isTypingIndicatorEnabledOnChannelList?: boolean;
+  isMessageReceiptStatusEnabledOnChannelList?: boolean;
 }
 
 interface SendBirdStateConfig {
@@ -102,6 +104,8 @@ interface SendBirdStateConfig {
     resizingWidth?: number | string,
     resizingHeight?: number | string,
   };
+  isTypingIndicatorEnabledOnChannelList?: boolean;
+  isMessageReceiptStatusEnabledOnChannelList?: boolean;
 }
 export interface SdkStore {
   error: boolean;
@@ -262,6 +266,9 @@ interface AppProps {
   };
   replyType?: ReplyType;
   disableAutoSelect?: boolean;
+  isMentionEnabled?: boolean;
+  isTypingIndicatorEnabledOnChannelList?: boolean;
+  isMessageReceiptStatusEnabledOnChannelList?: boolean;
 }
 
 interface ApplicationUserListQuery {
@@ -309,6 +316,9 @@ export interface ChannelListProviderProps {
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   disableUserProfile?: boolean;
   disableAutoSelect?: boolean;
+  typingChannels?: Array<Sendbird.GroupChannel>;
+  isTypingIndicatorEnabled?: boolean;
+  isMessageReceiptStatusEnabled?: boolean;
 }
 
 export interface ChannelListProviderInterface extends ChannelListProviderProps {
@@ -352,6 +362,7 @@ interface ChannelListHeaderInterface {
 interface ChannelPreviewInterface {
   channel: SendBird.GroupChannel;
   isActive?: boolean;
+  isTyping?: boolean;
   onClick: () => void;
   renderChannelAction: (props: { channel: SendBird.GroupChannel }) => React.ReactNode;
   tabIndex: number;

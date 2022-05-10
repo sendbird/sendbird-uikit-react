@@ -2,15 +2,15 @@
 
 .sendbird-message-status {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: flex-start;
   width: 100%;
   height: 100%;
 
   .sendbird-message-status__icon {
     position: relative;
     display: inline-block;
-    top: 4px;
-
+    top: -2px;
     &.hide-icon {
       display: none;
     }

@@ -11,7 +11,7 @@ export interface TypingIndicatorTextProps {
   members: SendBird.Member[];
 }
 
-const TypingIndicatorText: React.FC<TypingIndicatorTextProps> = ({ members }: TypingIndicatorTextProps) => {
+export const TypingIndicatorText: React.FC<TypingIndicatorTextProps> = ({ members }: TypingIndicatorTextProps) => {
   const { stringSet } = useContext(LocalizationContext);
   if (!members || members.length === 0) {
     return '';
