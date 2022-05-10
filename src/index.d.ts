@@ -362,6 +362,7 @@ interface ChannelListHeaderInterface {
 interface ChannelPreviewInterface {
   channel: SendBird.GroupChannel;
   isActive?: boolean;
+  isTyping?: boolean;
   onClick: () => void;
   renderChannelAction: (props: { channel: SendBird.GroupChannel }) => React.ReactNode;
   tabIndex: number;
