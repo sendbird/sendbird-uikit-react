@@ -225,6 +225,8 @@ export const user1 = () => fitPageSize(
     queries={{}}
     replyType="QUOTE_REPLY"
     isMentionEnabled
+    isTypingIndicatorEnabledOnChannelList
+    isMessageReceiptStatusEnabledOnChannelList
   />
 );
 export const user2 = () => fitPageSize(

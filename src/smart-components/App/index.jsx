@@ -39,6 +39,8 @@ export default function App(props) {
     onProfileEditSuccess,
     imageCompression,
     disableAutoSelect,
+    isTypingIndicatorEnabledOnChannelList,
+    isMessageReceiptStatusEnabledOnChannelList,
   } = props;
   const [currentChannelUrl, setCurrentChannelUrl] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
@@ -64,6 +66,8 @@ export default function App(props) {
       imageCompression={imageCompression}
       useReaction={useReaction}
       isMentionEnabled={isMentionEnabled}
+      isTypingIndicatorEnabledOnChannelList={isTypingIndicatorEnabledOnChannelList}
+      isMessageReceiptStatusEnabledOnChannelList={isMessageReceiptStatusEnabledOnChannelList}
     >
       <div className="sendbird-app__wrap">
         <div className="sendbird-app__channellist-wrap">
@@ -183,6 +187,8 @@ App.propTypes = {
   }),
   disableAutoSelect: PropTypes.bool,
   isMentionEnabled: PropTypes.bool,
+  isTypingIndicatorEnabledOnChannelList: PropTypes.bool,
+  isMessageReceiptStatusEnabledOnChannelList: PropTypes.bool,
 };
 
 App.defaultProps = {
@@ -206,4 +212,6 @@ App.defaultProps = {
   colorSet: null,
   imageCompression: {},
   disableAutoSelect: false,
+  isTypingIndicatorEnabledOnChannelList: false,
+  isMessageReceiptStatusEnabledOnChannelList: false,
 };

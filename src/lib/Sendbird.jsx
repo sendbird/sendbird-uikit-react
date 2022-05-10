@@ -42,6 +42,8 @@ export default function Sendbird(props) {
     imageCompression,
     useReaction,
     isMentionEnabled,
+    isTypingIndicatorEnabledOnChannelList,
+    isMessageReceiptStatusEnabledOnChannelList,
   } = props;
 
   const {
@@ -174,6 +176,8 @@ export default function Sendbird(props) {
             maxMentionCount: userMention?.maxMentionCount || 10,
             maxSuggestionCount: userMention?.maxSuggestionCount || 15,
           },
+          isTypingIndicatorEnabledOnChannelList,
+          isMessageReceiptStatusEnabledOnChannelList,
         },
       }}
     >
@@ -231,6 +235,8 @@ Sendbird.propTypes = {
       PropTypes.string,
     ]),
   }),
+  isTypingIndicatorEnabledOnChannelList: PropTypes.bool,
+  isMessageReceiptStatusEnabledOnChannelList: PropTypes.bool,
 };
 
 Sendbird.defaultProps = {
@@ -249,4 +255,6 @@ Sendbird.defaultProps = {
   imageCompression: {},
   useReaction: true,
   isMentionEnabled: false,
+  isTypingIndicatorEnabledOnChannelList: false,
+  isMessageReceiptStatusEnabledOnChannelList: false,
 };

@@ -24,6 +24,8 @@ export interface SendBirdProviderProps {
     resizingWidth?: number | string,
     resizingHeight?: number | string,
   };
+  isTypingIndicatorEnabledOnChannelList?: boolean;
+  isMessageReceiptStatusEnabledOnChannelList?: boolean;
 }
 
 interface SendBirdStateConfig {
@@ -49,6 +51,8 @@ interface SendBirdStateConfig {
     resizingWidth?: number | string,
     resizingHeight?: number | string,
   };
+  isTypingIndicatorEnabledOnChannelList?: boolean;
+  isMessageReceiptStatusEnabledOnChannelList?: boolean;
 }
 export interface SdkStore {
   error: boolean;

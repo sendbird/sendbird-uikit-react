@@ -67,6 +67,10 @@
         margin-left: 4px;
         margin-bottom: 4px;
         white-space: nowrap;
+        &.sendbird-message-status {
+          max-width: 74px;
+          justify-content: flex-end;
+        }
       }
     }
 

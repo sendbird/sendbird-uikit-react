@@ -57,6 +57,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
     currentChannel,
     channelListDispatcher,
     channelSource,
+    typingChannels,
   } = useChannelListContext();
 
   const state = useSendbirdStateContext();
@@ -195,6 +196,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
                       onClick={onClick}
                       channel={channel}
                       isActive={channel.url === currentChannel?.url}
+                      isTyping={typingChannels.some(({ url }) => url === channel.url)}
                       renderChannelAction={(() => (
                         <ChannelPreviewAction
                           disabled={!isOnline}

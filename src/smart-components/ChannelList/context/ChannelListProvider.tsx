@@ -70,6 +70,9 @@ export interface ChannelListProviderProps {
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   disableUserProfile?: boolean;
   disableAutoSelect?: boolean;
+  typingChannels?: Array<Sendbird.GroupChannel>;
+  isTypingIndicatorEnabled?: boolean;
+  isMessageReceiptStatusEnabled?: boolean;
 }
 
 export interface ChannelListProviderInterface extends ChannelListProviderProps {
@@ -112,6 +115,7 @@ const ChannelListContext = React.createContext<ChannelListProviderInterface | nu
   currentUserId: null,
   channelListDispatcher: null,
   channelSource: null,
+  typingChannels: [],
 });
 
 const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelListProviderProps) => {
@@ -127,6 +131,8 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     onBeforeCreateChannel,
     sortChannelList,
     disableAutoSelect,
+    isTypingIndicatorEnabled = null,
+    isMessageReceiptStatusEnabled = null,
   } = props;
   const onChannelSelect = props?.onChannelSelect || noop;
 
@@ -135,6 +141,10 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   const { config, stores } = globalStore;
   const { sdkStore } = stores;
   const { pubSub, logger } = config;
+  const {
+    isTypingIndicatorEnabledOnChannelList,
+    isMessageReceiptStatusEnabledOnChannelList,
+  } = config;
   const { sdk } = sdkStore;
 
   // derive some variables
@@ -148,15 +158,16 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
 
   const sdkIntialized = sdkStore?.initialized;
 
-  const [ channelListStore, channelListDispatcher ] = useReducer(
+  const [channelListStore, channelListDispatcher] = useReducer(
     channelListReducers,
     channelListInitialState,
   ) as [ChannelListStoreInterface, CustomUseReducerDispatcher];
+  const { loading, currentChannel } = channelListStore;
 
   const [channelSource, setChannelSource] = useState<Sendbird.GroupChannelListQuery | null>();
   const [sdkChannelHandlerId, setSdkChannelHandlerId] = useState<string | null>(null);
-
-  const { loading, currentChannel } = channelListStore;
+  const [typingHandlerId, setTypingHandlerId] = useState<string | null>(null);
+  const [typingChannels, setTypingChannels] = useState<Array<Sendbird.GroupChannel>>([]);
 
   useEffect(() => {
     const subscriber = pubSubHandler(pubSub, channelListDispatcher);
@@ -209,6 +220,29 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     };
   }, [sdkIntialized, userFilledChannelListQuery, sortChannelList]);
 
+  useEffect(() => {
+    if (sdk && sdk.ChannelHandler) {
+      const handlerId = uuidv4()
+      const handler = new sdk.ChannelHandler()
+      handler.onTypingStatusUpdated = (channel) => {
+        const typingMemberCount = channel?.getTypingMembers()?.length
+        const channelList = typingChannels.filter(ch => ch.url !== channel.url)
+        if (typingMemberCount > 0) {
+          setTypingChannels([...channelList, channel])
+        } else {
+          setTypingChannels(channelList)
+        }
+      }
+      sdk.addChannelHandler(handlerId, handler)
+      setTypingHandlerId(handlerId)
+    }
+    return () => {
+      if (sdk && sdk.removeChannelHandler) {
+        sdk.removeChannelHandler(typingHandlerId)
+      }
+    }
+  }, [sdk?.currentUser?.userId]);
+
   const queries_ = useMemo(() => {
     return {
       applicationUserListQuery: userFilledApplicationUserListQuery,
@@ -259,6 +293,9 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
       channelSource,
       ...channelListStore,
       allChannels: sortedChannels,
+      typingChannels,
+      isTypingIndicatorEnabled: (isTypingIndicatorEnabled !== null) ? isTypingIndicatorEnabled : isTypingIndicatorEnabledOnChannelList,
+      isMessageReceiptStatusEnabled: (isMessageReceiptStatusEnabled !== null) ? isMessageReceiptStatusEnabled : isMessageReceiptStatusEnabledOnChannelList,
     }}>
       <UserProfileProvider
         disableUserProfile={userDefinedDisableUserProfile}
@@ -272,7 +309,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   );
 };
 
-function useChannelListContext (): ChannelListProviderInterface {
+function useChannelListContext(): ChannelListProviderInterface {
   const context: ChannelListProviderInterface = useContext(ChannelListContext);
   return context;
 }
