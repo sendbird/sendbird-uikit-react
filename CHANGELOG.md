@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.7.1] (May 11 2022)
+- Bugfix
+  * Add rate limit to markAsDelivered call
+  * Thumbnail message shouldnt be clikced while loading
+  * Fix sample: corrected groupChannel sample setting placement
+
 ## [2.7.0] (Mar 22 2022)
 - Features
   * Add props disableAutoSelect into the <ChannelList />
