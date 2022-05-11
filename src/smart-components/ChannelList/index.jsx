@@ -240,12 +240,12 @@ function ChannelList(props) {
               if (canSetMarkAsDelivered) {
                 logger.info('ChannelList: Marking all channels as read');
                 // eslint-disable-next-line no-unused-expressions
-                channelList?.forEach((c, idx) => {
+                channelList?.forEach((channel, idx) => {
                   // Plan-based rate limits - minimum limit is 5 requests per second
                   setTimeout(() => {
                     // eslint-disable-next-line no-unused-expressions
-                    sdk?.markAsDelivered(c?.url);
-                  }, 300 * idx);
+                    channel?.markAsDelivered();
+                  }, 500 * idx);
                 });
               }
             });
