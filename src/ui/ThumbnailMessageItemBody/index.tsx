@@ -34,7 +34,11 @@ export default function ThumbnailMessageItemBody({
         mouseHover ? 'mouse-hover' : '',
         message?.reactions?.length > 0 ? 'reactions' : '',
       ])}
-      onClick={() => showFileViewer(true)}
+      onClick={() => {
+        if(message?.sendingStatus === 'succeeded'){
+          showFileViewer(true);
+        }
+      }}
     >
       <ImageRenderer
         className="sendbird-thumbnail-message-item-body__thumbnail"
