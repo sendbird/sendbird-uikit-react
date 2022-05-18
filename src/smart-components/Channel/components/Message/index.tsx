@@ -180,7 +180,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
         {/* date-separator */}
         {
           // TODO: Add message instance as a function parameter
-          hasSeparator && renderedCustomSeparator || (
+          hasSeparator && (renderedCustomSeparator || (
             <DateSeparator>
               <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
                 {format(message.createdAt, 'MMMM dd, yyyy', {
@@ -188,7 +188,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
                 })}
               </Label>
             </DateSeparator>
-          )
+          ))
         }
         {renderedMessage}
       </div>
@@ -279,7 +279,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
     >
       {/* date-separator */}
       {
-        hasSeparator && (renderCustomSeparator?.() || (
+        hasSeparator && (renderedCustomSeparator || (
           <DateSeparator>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
               {format(message.createdAt, 'MMMM dd, yyyy', {
