@@ -160,7 +160,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
 
   const [channelListStore, channelListDispatcher] = useReducer(
     channelListReducers,
-    channelListInitialState,
+    {...channelListInitialState, disableAutoSelect: disableAutoSelect !== undefined ? disableAutoSelect : channelListInitialState.disableAutoSelect}
   ) as [ChannelListStoreInterface, CustomUseReducerDispatcher];
   const { loading, currentChannel } = channelListStore;
 
