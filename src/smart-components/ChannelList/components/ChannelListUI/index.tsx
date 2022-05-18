@@ -15,6 +15,8 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import EditUserProfile from '../../../EditUserProfile';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 
+const DELIVERY_RECIPT = 'delivery_receipt';
+
 interface RenderChannelPreviewProps {
   channel: SendBird.GroupChannel;
   onLeaveChannel(
@@ -124,9 +126,18 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
                 type: channelListActions.FETCH_CHANNELS_SUCCESS,
                 payload: channelList,
               });
-              if (channelList && typeof channelList.forEach === 'function') {
+              const canSetMarkAsDelivered = sdk?.appInfo?.premiumFeatureList
+                ?.find((feature) => (feature === DELIVERY_RECIPT));
+
+              if (canSetMarkAsDelivered) {
                 logger.info('ChannelList: Marking all channels as read');
-                channelList.forEach((c) => { sdk.markAsDelivered(c.url) });
+                // eslint-disable-next-line no-unused-expressions
+                channelList?.forEach((c, idx) => {
+                  // Plan-based rate limits - minimum limit is 5 requests per second
+                  setTimeout(() => {
+                    sdk?.markAsDelivered(c?.url);
+                  }, 300 * idx);
+                });
               }
             });
           }
