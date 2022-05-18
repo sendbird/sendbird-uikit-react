@@ -32,7 +32,7 @@ type MessageUIProps = {
   handleScroll: () => void;
   // for extending
   renderMessage?: (props: RenderMessageProps) => React.ReactNode;
-  renderCustomSeperator?: () => React.ReactNode;
+  renderCustomSeparator?: () => React.ReactNode;
   renderEditInput?: () => React.ReactNode;
   renderMessageContent?: () => React.ReactNode;
 };
@@ -44,7 +44,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
     chainTop,
     chainBottom,
     handleScroll,
-    renderCustomSeperator,
+    renderCustomSeparator,
     renderEditInput,
     renderMessage,
     renderMessageContent,
@@ -160,6 +160,12 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
       chainBottom,
     });
   }, [message, renderMessage]);
+  const renderedCustomSeparator = useMemo(() => {
+    if (renderCustomSeparator) {
+      return renderCustomSeparator?.();
+    }
+    return null;
+  }, [message, renderCustomSeparator]);
 
   if (renderedMessage) {
     return (
@@ -174,7 +180,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
         {/* date-separator */}
         {
           // TODO: Add message instance as a function parameter
-          hasSeparator && renderCustomSeperator?.() || (
+          hasSeparator && renderedCustomSeparator || (
             <DateSeparator>
               <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
                 {format(message.createdAt, 'MMMM dd, yyyy', {
@@ -273,7 +279,7 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
     >
       {/* date-separator */}
       {
-        hasSeparator && (renderCustomSeperator?.() || (
+        hasSeparator && (renderCustomSeparator?.() || (
           <DateSeparator>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
               {format(message.createdAt, 'MMMM dd, yyyy', {

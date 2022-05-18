@@ -609,7 +609,7 @@ interface ChannelUIProps {
   renderMessage?: (props: RenderMessageProps) => React.ComponentType;
   renderMessageInput?: () => React.ReactNode;
   renderTypingIndicator?: () => React.ReactNode;
-  renderCustomSeperator?: () => React.ReactNode;
+  renderCustomSeparator?: () => React.ReactNode;
 }
 
 type CoreMessageType = Sendbird.AdminMessage | Sendbird.UserMessage | Sendbird.FileMessage;
@@ -659,7 +659,7 @@ type MessageUIProps = {
   handleScroll: () => void;
   // for extending
   renderMessage?: (props: RenderMessageProps) => React.ReactNode;
-  renderCustomSeperator?: () => React.ReactNode;
+  renderCustomSeparator?: () => React.ReactNode;
   renderEditInput?: () => React.ReactNode;
   renderMessageContent?: () => React.ReactNode;
 };
@@ -667,7 +667,7 @@ type MessageUIProps = {
 type MessageListProps = {
   renderMessage?: (props: RenderMessageProps) => React.ReactNode;
   renderPlaceholderEmpty?: () => React.ReactNode;
-  renderCustomSeperator?: () => React.ReactNode;
+  renderCustomSeparator?: () => React.ReactNode;
 };
 
 type SuggestedMentionListProps = {

@@ -15,7 +15,7 @@ import uuidv4 from '../../../../utils/uuid';
 export type MessageListProps = {
   renderMessage?: (props: RenderMessageProps) => React.ReactNode;
   renderPlaceholderEmpty?: () => React.ReactNode;
-  renderCustomSeperator?: () => React.ReactNode;
+  renderCustomSeparator?: () => React.ReactNode;
 };
 
 const SCROLL_REF_CLASS_NAME = '.sendbird-msg--scroll-ref';
@@ -24,7 +24,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
   const {
     renderMessage,
     renderPlaceholderEmpty,
-    renderCustomSeperator,
+    renderCustomSeparator,
   } = props;
   const {
     allMessages,
@@ -143,7 +143,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
             hasSeparator={hasSeparator}
             chainTop={chainTop}
             chainBottom={chainBottom}
-            renderCustomSeperator={renderCustomSeperator}
+            renderCustomSeparator={renderCustomSeparator}
             key={m.messageId + uuidv4()}
           />
         );
