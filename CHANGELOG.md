@@ -1,5 +1,12 @@
 # Changelog - v3
 
+## [3.0.0-beta.3] (May 19 2022)
+Fixes:
+* Rate limit markAsDelivered call
+* Do not render date separator when renderCustomSeparator is null
+Misc:
+* Update Chat SDK minimum version to `3.1.13`
+
 ## [3.0.0-beta.2] (April 29 2022)
 
 Feature:

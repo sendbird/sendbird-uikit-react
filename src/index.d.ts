@@ -77,8 +77,8 @@ interface SendBirdProviderProps {
     resizingHeight?: number | string,
   };
   isMentionEnabled?: boolean;
-  isTypingIndicatorEnabledOnChannelList?: boolean;
-  isMessageReceiptStatusEnabledOnChannelList?: boolean;
+  // isTypingIndicatorEnabledOnChannelList?: boolean;
+  // isMessageReceiptStatusEnabledOnChannelList?: boolean;
 }
 
 interface SendBirdStateConfig {
@@ -104,8 +104,8 @@ interface SendBirdStateConfig {
     resizingWidth?: number | string,
     resizingHeight?: number | string,
   };
-  isTypingIndicatorEnabledOnChannelList?: boolean;
-  isMessageReceiptStatusEnabledOnChannelList?: boolean;
+  // isTypingIndicatorEnabledOnChannelList?: boolean;
+  // isMessageReceiptStatusEnabledOnChannelList?: boolean;
 }
 export interface SdkStore {
   error: boolean;
@@ -267,8 +267,8 @@ interface AppProps {
   replyType?: ReplyType;
   disableAutoSelect?: boolean;
   isMentionEnabled?: boolean;
-  isTypingIndicatorEnabledOnChannelList?: boolean;
-  isMessageReceiptStatusEnabledOnChannelList?: boolean;
+  // isTypingIndicatorEnabledOnChannelList?: boolean;
+  // isMessageReceiptStatusEnabledOnChannelList?: boolean;
 }
 
 interface ApplicationUserListQuery {
