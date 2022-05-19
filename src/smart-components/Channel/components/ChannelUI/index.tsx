@@ -23,7 +23,7 @@ export interface ChannelUIProps {
   renderMessage?: (props: RenderMessageProps) => React.ReactNode;
   renderMessageInput?: () => React.ReactNode;
   renderTypingIndicator?: () => React.ReactNode;
-  renderCustomSeperator?: () => React.ReactNode;
+  renderCustomSeparator?: () => React.ReactNode;
 }
 
 const ChannelUI: React.FC<ChannelUIProps> = ({
@@ -34,7 +34,7 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
   renderMessage,
   renderMessageInput,
   renderTypingIndicator,
-  renderCustomSeperator,
+  renderCustomSeparator,
 }: ChannelUIProps) => {
   const {
     currentGroupChannel,
@@ -143,7 +143,7 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
             <MessageList
               renderMessage={renderMessage}
               renderPlaceholderEmpty={renderPlaceholderEmpty}
-              renderCustomSeperator={renderCustomSeperator}
+              renderCustomSeparator={renderCustomSeparator}
             />
           )
       }
