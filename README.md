@@ -102,6 +102,24 @@ npm run lint
 * .eslintrc.json lints ts files and .eslintrc.js lints js files
 * Type definition file can be `src/index.d.ts` which will be copied to `/release` directory
 
+### Webpack 5
+
+Webpack 5 removes stream and buffer componets from default polyfill
+To enable these, install buffer and stream and then add the following to webpack.cofig.js
+```javascript
+module.exports = {
+  //...
+  resolve: {
+    fallback: {
+      buffer: require.resolve('buffer'),
+      stream: require.resolve('stream-browserify'),
+    },
+  },
+};
+
+```
+To read more: https://webpack.js.org/configuration/resolve/#resolvefallback
+
 ### Creating/exporting new components
 
 1. Define your component inside './src'
