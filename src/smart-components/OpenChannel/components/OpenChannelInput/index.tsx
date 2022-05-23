@@ -1,5 +1,3 @@
-import './open-channel-input.scss';
-
 import React, { useContext } from 'react';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import MessageInput from '../../../../ui/MessageInput';
