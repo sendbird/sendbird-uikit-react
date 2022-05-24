@@ -217,7 +217,7 @@ function setupChannelList({
       }
       channelListDispatcher({
         type: channelActions.INIT_CHANNELS_SUCCESS,
-        payload: sortedChannelList,
+        payload: { channelList: sortedChannelList, disableAutoSelect },
       });
       const canSetMarkAsDelivered = sdk?.appInfo?.premiumFeatureList
         ?.find((feature) => (feature === DELIVERY_RECIPT));

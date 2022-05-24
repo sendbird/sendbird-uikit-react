@@ -8,7 +8,7 @@ describe('Channels-Reducers', () => {
   it('should set channels on INIT_CHANNELS_SUCCESS', () => {
     const nextState = reducers(initialState, {
       type: actionTypes.INIT_CHANNELS_SUCCESS,
-      payload: mockData.allChannels,
+      payload: { channelList: mockData.allChannels },
     });
 
     expect(nextState.initialized).toEqual(true);
