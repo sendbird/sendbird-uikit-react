@@ -11,21 +11,24 @@ export default function reducer(state, action) {
       };
     case actions.RESET_CHANNEL_LIST:
       return initialState;
-    case actions.INIT_CHANNELS_SUCCESS:
+    case actions.INIT_CHANNELS_SUCCESS: {
+      const { channelList, disableAutoSelect } = action.payload;
       return {
         ...state,
         initialized: true,
         loading: false,
-        allChannels: action.payload,
+        allChannels: channelList,
+        disableAutoSelect,
         currentChannel: (
-          !state.disableAutoSelect
-          && action.payload
-          && action.payload.length
-          && action.payload.length > 0
+          !disableAutoSelect
+          && channelList
+          && channelList.length
+          && channelList.length > 0
         )
-          ? action.payload[0]
+          ? channelList[0]
           : null,
       };
+    }
     case actions.FETCH_CHANNELS_SUCCESS: {
       const currentChannels = state.allChannels.map((c) => c.url);
       const filteredChannels = action.payload.filter(
@@ -265,12 +268,6 @@ export default function reducer(state, action) {
         currentUserId: action.payload.currentUserId,
         channelListQuery: action.payload.channelListQuery,
       };
-    case actions.SET_AUTO_SELECT_CHANNEL_ITEM: {
-      return {
-        ...state,
-        ableAutoSelect: action.payload,
-      };
-    }
     default:
       return state;
   }

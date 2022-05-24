@@ -243,6 +243,7 @@ export const user2 = () => fitPageSize(
     config={{ logLevel: 'all', userMention: { maxMentionCount: 2, maxSuggestionCount: 5 } }}
     replyType="QUOTE_REPLY"
     useMessageGrouping={false}
+    disableAutoSelect
     imageCompression={{
       compressionRate: 0.5,
       resizingWidth: 100,

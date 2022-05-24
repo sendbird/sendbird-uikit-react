@@ -95,6 +95,7 @@ interface ChannelListStoreInterface {
   showSettings: boolean;
   channelListQuery: GroupChannelListQuery;
   currentUserId: string;
+  disableAutoSelect: boolean;
 }
 
 const ChannelListContext = React.createContext<ChannelListProviderInterface | null>({
@@ -175,13 +176,6 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
       pubSubHandleRemover(subscriber);
     };
   }, [sdkIntialized]);
-
-  useEffect(() => {
-    channelListDispatcher({
-      type: channelListActions.SET_AUTO_SELECT_CHANNEL_ITEM,
-      payload: disableAutoSelect,
-    });
-  }, [disableAutoSelect]);
 
   useEffect(() => {
     setSdkChannelHandlerId(uuidv4);
