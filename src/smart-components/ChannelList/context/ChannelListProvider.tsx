@@ -314,8 +314,12 @@ function useChannelListContext(): ChannelListProviderInterface {
   return context;
 }
 
+const useChannelList = useChannelListContext;
+
 export {
   ChannelListProvider,
   // ChannelListContext,
+  // todo: rename all use{component}Context to use{component}
   useChannelListContext,
+  useChannelList,
 };
