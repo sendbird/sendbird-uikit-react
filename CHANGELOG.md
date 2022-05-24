@@ -1,5 +1,13 @@
 # Changelog - v3
 
+## [3.0.0-beta.4] (May 24 2022)
+Fixes:
+* Export useChannelList
+* Active disableAutoSelect props
+* Remove empty CSS file to fix source map warning
+
+DOC:
+* Add info about webpack 5 breaking changes
 ## [3.0.0-beta.3] (May 19 2022)
 Fixes:
 * Rate limit markAsDelivered call
