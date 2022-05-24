@@ -1,5 +1,3 @@
-import './create-channel-ui.scss';
-
 import React from 'react';
 
 import { useCreateChannelContext } from '../../context/CreateChannelProvider';
