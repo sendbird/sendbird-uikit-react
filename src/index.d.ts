@@ -497,6 +497,7 @@ declare module '@sendbird/uikit-react/ChannelList' {
 declare module '@sendbird/uikit-react/ChannelList/context' {
   export type ChannelListProvider = React.FunctionComponent<ChannelListProviderProps>;
   export function useChannelListContext (): ChannelListProviderInterface;
+  export function useChannelList (): ChannelListProviderInterface;
 }
 
 declare module '@sendbird/uikit-react/ChannelList/components/AddChannel' {
