@@ -360,7 +360,7 @@ const MessageInput = React.forwardRef((props, ref) => {
             if (preventEvent) {
               e.preventDefault();
             } else {
-              if (!e.shiftKey && e.key === MessageInputKeys.Enter) {
+              if (!e.shiftKey && e.key === MessageInputKeys.Enter && e?.nativeEvent?.isComposing !== true) {
                 e.preventDefault();
                 sendMessage();
               }
