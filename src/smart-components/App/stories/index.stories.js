@@ -224,7 +224,12 @@ export const user1 = () => fitPageSize(
     profileUrl={addProfile}
     showSearchIcon
     allowProfileEdit
-    config={{ logLevel: 'all' }}
+    config={{
+      logLevel: 'all',
+      userMention: {
+        maxMentionCount: 2,
+      }
+    }}
     queries={{}}
     replyType="QUOTE_REPLY"
     isMentionEnabled

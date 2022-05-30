@@ -49,7 +49,6 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   const [searchString, setSearchString] = useState('');
   const [lastSearchString, setLastSearchString] = useState('');
   const [currentUser, setCurrentUser] = useState<SendBird.User>(null);
-  const [mouseOverUser, setMouseOverUser] = useState<SendBird.User>(null);
   const [currentMemberList, setCurrentMemberList] = useState<Array<SendBird.Member>>([]);
 
   useEffect(() => {
@@ -89,7 +88,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
 
   /* Fetch member list */
   useEffect(() => {
-    if (!currentGroupChannel || !currentGroupChannel.createMemberListQuery || !ableAddMention) {
+    if (!currentGroupChannel || !currentGroupChannel.createMemberListQuery) {
       logger.warning('SuggestedMentionList: Creating member list query failed');
       return;
     }
@@ -118,6 +117,10 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
     });
   }, [currentGroupChannel?.url, searchString]);
 
+  if (!ableAddMention && currentMemberList.length === 0) {
+    return null;
+  }
+
   return (
     <div
       className="sendbird-mention-suggest-list"
@@ -135,7 +138,6 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
               onUserItemClick(member);
             }}
             onMouseOver={({ member }) => {
-              setMouseOverUser(member);
               setCurrentUser(member);
             }}
             renderUserMentionItem={renderUserMentionItem}
