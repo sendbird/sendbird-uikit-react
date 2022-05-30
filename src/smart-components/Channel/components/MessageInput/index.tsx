@@ -44,7 +44,11 @@ const MessageInputWrapper = (): JSX.Element => {
   const isOperator = utils.isOperator(channel);
   const { isBroadcast } = channel;
 
-  const displaySuggestedMentionList = (isMentionEnabled && mentionNickname.length > 0);
+  const displaySuggestedMentionList = isOnline
+    && isMentionEnabled
+    && mentionNickname.length > 0
+    && !utils.isDisabledBecauseFrozen(channel)
+    && !utils.isDisabledBecauseMuted(channel);
 
   // Reset when channel changes
   useEffect(() => {
