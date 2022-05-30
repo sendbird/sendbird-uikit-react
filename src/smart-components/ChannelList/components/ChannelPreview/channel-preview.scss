@@ -91,6 +91,11 @@
         align-items: center;
         margin-left: 8px;
         margin-bottom: 12px;
+        .sendbird-channel-preview__content__lower__unread-message-count__mention {
+          display: inline-flex;
+          align-items: center;
+          margin-right: 4px;
+        }
       }
     }
   }

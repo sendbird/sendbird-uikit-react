@@ -147,7 +147,14 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
           <div className="sendbird-channel-preview__content__lower__unread-message-count">
             {
               (isMentionEnabled && channel?.unreadMentionCount > 0)
-                ? <MentionUserLabel color="purple">@</MentionUserLabel>
+                ? (
+                  <MentionUserLabel
+                    className="sendbird-channel-preview__content__lower__unread-message-count__mention"
+                    color="purple"
+                  >
+                    {'@'}
+                  </MentionUserLabel>
+                )
                 : null
             }
             {
