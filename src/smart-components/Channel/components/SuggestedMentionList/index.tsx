@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import SendBird from 'sendbird';
 import './index.scss';
 
@@ -43,6 +43,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   const { logger } = config;
   const currentUserId = stores?.sdkStore?.sdk?.currentUser?.userId || '';
   const { currentGroupChannel } = useChannel();
+  const scrollRef = useRef(null);
   const { stringSet } = useContext(LocalizationContext);
   const [timer, setTimer] = useState(null);
   const [searchString, setSearchString] = useState('');
@@ -120,11 +121,8 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   return (
     <div
       className="sendbird-mention-suggest-list"
-      onMouseLeave={() => {
-        if (mouseOverUser) {
-          setCurrentUser(mouseOverUser);
-        }
-      }}
+      key="sendbird-mention-suggest-list"
+      ref={scrollRef}
     >
       {
         ableAddMention && currentMemberList?.map((member) => (
@@ -132,11 +130,13 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
             key={member?.nickname}
             member={member}
             isFocused={member?.userId === currentUser?.userId}
-            onClick={() => {
+            parentScrollRef={scrollRef}
+            onClick={({ member }) => {
               onUserItemClick(member);
             }}
-            onMouseOver={() => {
+            onMouseOver={({ member }) => {
               setMouseOverUser(member);
+              setCurrentUser(member);
             }}
             renderUserMentionItem={renderUserMentionItem}
           />

@@ -21,12 +21,6 @@
     @include themed() {
       background-color: t(bg-0);
     }
-    &:hover {
-      cursor: pointer;
-      @include themed() {
-        background-color: t(bg-1);
-      }
-    }
     &.focused {
       @include themed() {
         background-color: t(bg-1);
