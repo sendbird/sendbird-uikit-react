@@ -240,7 +240,13 @@ const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
             });
             setShowEdit(false);
           }}
-          onCancelEdit={() => { setShowEdit(false); }}
+          onCancelEdit={() => {
+            setMentionNickname('');
+            setMentionedUsers([]);
+            setMentionedUserIds([]);
+            setMentionSuggestedUsers([])
+            setShowEdit(false);
+          }}
           onUserMentioned={(user) => {
             if (selectedUser?.userId === user?.userId) {
               setSelectedUser(null);
