@@ -347,7 +347,7 @@ const MessageInput = React.forwardRef((props, ref) => {
         ])}
       >
         <div
-          id={TEXT_FIELD_ID}
+          id={`${TEXT_FIELD_ID}${isEdit ? message?.messageId : ''}`}
           className="sendbird-message-input--textarea"
           contentEditable={!disabled}
           role="textbox"
