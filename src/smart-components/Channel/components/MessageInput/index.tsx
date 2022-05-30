@@ -46,6 +46,17 @@ const MessageInputWrapper = (): JSX.Element => {
 
   const displaySuggestedMentionList = (isMentionEnabled && mentionNickname.length > 0);
 
+  // Reset when channel changes
+  useEffect(() => {
+    setMentionNickname('');
+    setMentionedUsers([]);
+    setMentionedUserIds([]);
+    setSelectedUser(null);
+    setMentionSuggestedUsers([]);
+    setAbleMention(true);
+    setMessageInputEvent(null);
+  }, [channel?.url]);
+
   useEffect(() => {
     if (mentionedUsers?.length >= maxUserMentionCount) {
       setAbleMention(false);
