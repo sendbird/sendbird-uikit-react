@@ -149,6 +149,8 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
               className="sendbird-mention-suggest-list__notice-item__icon"
               type={IconTypes.INFO}
               fillColor={IconColors.ON_BACKGROUND_2}
+              width="20px"
+              height="20px"
             />
             <Label
               className="sendbird-mention-suggest-list__notice-item__text"
