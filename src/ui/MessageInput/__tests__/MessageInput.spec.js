@@ -46,11 +46,12 @@ describe('MessageInput', () => {
   });
 
   it('should display save/cancel button on edit mode', () => {
+    const messageId = 'aaa';
     const component = shallow(
-      <MessageInput onSendMessage={noop} isEdit />
+      <MessageInput onSendMessage={noop} isEdit message={{ messageId }} />
     );
     expect(
-      component.find('#sendbird-message-input-text-field').exists()
+      component.find('#sendbird-message-input-text-field' + messageId).exists()
     ).toBe(true);
     expect(
       component.find('.sendbird-message-input--send').exists()
