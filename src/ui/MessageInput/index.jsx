@@ -390,6 +390,10 @@ const MessageInput = React.forwardRef((props, ref) => {
             setIsInput(document?.getElementById?.(TEXT_FIELD_ID)?.innerText?.length > 0);
             useMentionedLabelDetection();
           }}
+          onPaste={(e) => {
+            e.preventDefault();
+            document.execCommand("insertHTML", false, e?.clipboardData.getData('text'));
+          }}
         />
         {/* placeholder */}
         {!isInput && (
