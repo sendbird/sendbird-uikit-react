@@ -13,7 +13,7 @@ interface SuggestedUserMentionItemProps {
   onClick?: (props: MentionItemUIEvent) => void;
   onMouseOver?: (props: MentionItemUIEvent) => void;
   onMouseMove?: (props: MentionItemUIEvent) => void;
-  renderUserMentionItem?: (props: { user: SendBird.User }) => JSX.Element;
+  renderUserMentionItem?: (props: { user: SendBird.User | SendBird.Member }) => JSX.Element;
 }
 
 function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Element {

@@ -668,11 +668,11 @@ type SuggestedMentionListProps = {
 };
 
 type SuggestedUserMentionItemProps = {
-  member: SendBird.User;
+  member: SendBird.User | SendBird.Member;
   isFocused?: boolean;
   onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   onMouseOver?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
-  renderUserMentionItem?: (props: { user: SendBird.User }) => JSX.Element;
+  renderUserMentionItem?: (props: { user: SendBird.User | SendBird.Member }) => JSX.Element;
 };
 
 interface UnreadCountProps {
