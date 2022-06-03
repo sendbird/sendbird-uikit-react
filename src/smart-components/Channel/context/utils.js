@@ -5,6 +5,7 @@ import * as topics from '../../../lib/pubSub/topics';
 import {
   getSendingMessageStatus,
   getOutgoingMessageStates,
+  isReadMessage,
 } from '../../../utils';
 
 const MessageStatusType = getOutgoingMessageStates();
@@ -186,7 +187,7 @@ export const getNicknamesMapFromMembers = (members = []) => {
 
 export const getMessageCreatedAt = (message) => format(message.createdAt, 'p');
 
-export const isSameGroup = (message, comparingMessage) => {
+export const isSameGroup = (message, comparingMessage, currentChannel) => {
   if (!(message
     && comparingMessage
     && message?.messageType !== 'admin'
@@ -200,11 +201,11 @@ export const isSameGroup = (message, comparingMessage) => {
   )) {
     return false;
   }
-
   return (
     message?.sendingStatus === comparingMessage?.sendingStatus
     && message?.sender?.userId === comparingMessage?.sender?.userId
     && getMessageCreatedAt(message) === getMessageCreatedAt(comparingMessage)
+    && isReadMessage(currentChannel, message) === isReadMessage(currentChannel, comparingMessage)
   );
 };
 
@@ -212,12 +213,13 @@ export const compareMessagesForGrouping = (
   prevMessage,
   currMessage,
   nextMessage,
+  currentChannel,
 ) => {
   const sendingStatus = currMessage?.sendingStatus || '';
   const isAcceptable = sendingStatus !== 'pending' && sendingStatus !== 'failed';
   return [
-    isSameGroup(prevMessage, currMessage) && isAcceptable,
-    isSameGroup(currMessage, nextMessage) && isAcceptable,
+    isSameGroup(prevMessage, currMessage, currentChannel) && isAcceptable,
+    isSameGroup(currMessage, nextMessage, currentChannel) && isAcceptable,
   ];
 };
 

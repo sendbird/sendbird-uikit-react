@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import SendBird from 'sendbird';
 import './index.scss';
 
@@ -43,12 +43,12 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   const { logger } = config;
   const currentUserId = stores?.sdkStore?.sdk?.currentUser?.userId || '';
   const { currentGroupChannel } = useChannel();
+  const scrollRef = useRef(null);
   const { stringSet } = useContext(LocalizationContext);
   const [timer, setTimer] = useState(null);
   const [searchString, setSearchString] = useState('');
   const [lastSearchString, setLastSearchString] = useState('');
   const [currentUser, setCurrentUser] = useState<SendBird.User>(null);
-  const [mouseOverUser, setMouseOverUser] = useState<SendBird.User>(null);
   const [currentMemberList, setCurrentMemberList] = useState<Array<SendBird.Member>>([]);
 
   useEffect(() => {
@@ -88,7 +88,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
 
   /* Fetch member list */
   useEffect(() => {
-    if (!currentGroupChannel || !currentGroupChannel.createMemberListQuery || !ableAddMention) {
+    if (!currentGroupChannel || !currentGroupChannel.createMemberListQuery) {
       logger.warning('SuggestedMentionList: Creating member list query failed');
       return;
     }
@@ -117,14 +117,15 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
     });
   }, [currentGroupChannel?.url, searchString]);
 
+  if (!ableAddMention && currentMemberList.length === 0) {
+    return null;
+  }
+
   return (
     <div
       className="sendbird-mention-suggest-list"
-      onMouseLeave={() => {
-        if (mouseOverUser) {
-          setCurrentUser(mouseOverUser);
-        }
-      }}
+      key="sendbird-mention-suggest-list"
+      ref={scrollRef}
     >
       {
         ableAddMention && currentMemberList?.map((member) => (
@@ -132,11 +133,12 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
             key={member?.nickname}
             member={member}
             isFocused={member?.userId === currentUser?.userId}
-            onClick={() => {
+            parentScrollRef={scrollRef}
+            onClick={({ member }) => {
               onUserItemClick(member);
             }}
-            onMouseOver={() => {
-              setMouseOverUser(member);
+            onMouseOver={({ member }) => {
+              setCurrentUser(member);
             }}
             renderUserMentionItem={renderUserMentionItem}
           />
@@ -149,6 +151,8 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
               className="sendbird-mention-suggest-list__notice-item__icon"
               type={IconTypes.INFO}
               fillColor={IconColors.ON_BACKGROUND_2}
+              width="20px"
+              height="20px"
             />
             <Label
               className="sendbird-mention-suggest-list__notice-item__text"

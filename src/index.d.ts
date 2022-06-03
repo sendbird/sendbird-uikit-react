@@ -706,6 +706,14 @@ interface RemoveMessageProps {
   message: EveryMessage;
 }
 
+interface SendbirdUIKitUIEvent<> {
+  event: React.MouseEvent<HTMLDivElement, MouseEvent> | React.KeyboardEvent<HTMLDivElement>;
+}
+export interface MentionItemUIEvent extends SendbirdUIKitUIEvent {
+  member: SendBird.Member;
+  itemRef: React.RefObject<HTMLDivElement>;
+}
+
 declare module '@sendbird/uikit-react/Channel' {
   type Channel = React.FC<ChannelProps>;
   export default Channel;

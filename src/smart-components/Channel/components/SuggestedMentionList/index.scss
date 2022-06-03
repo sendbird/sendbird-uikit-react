@@ -21,12 +21,6 @@
     @include themed() {
       background-color: t(bg-0);
     }
-    &:hover {
-      cursor: pointer;
-      @include themed() {
-        background-color: t(bg-1);
-      }
-    }
     &.focused {
       @include themed() {
         background-color: t(bg-1);
@@ -41,11 +35,19 @@
       position: relative;
       display: inline-block;
       margin-left: 16px;
+      max-width: calc(100% - 250px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .sendbird-mention-suggest-list__user-item__user-id {
       position: absolute;
       display: inline-block;
       right: 16px;
+      max-width: 180px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 

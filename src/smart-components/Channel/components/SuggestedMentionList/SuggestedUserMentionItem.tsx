@@ -4,28 +4,37 @@ import Avatar from '../../../../ui/Avatar';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import SendBird from 'sendbird';
+import { MentionItemUIEvent } from '../../../..';
 
 interface SuggestedUserMentionItemProps {
-  member: SendBird.User;
+  member: SendBird.User | SendBird.Member;
   isFocused?: boolean;
-  onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
-  onMouseOver?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
-  renderUserMentionItem?: (props: { user: SendBird.User }) => JSX.Element;
+  parentScrollRef?: React.RefObject<HTMLDivElement>;
+  onClick?: (props: MentionItemUIEvent) => void;
+  onMouseOver?: (props: MentionItemUIEvent) => void;
+  onMouseMove?: (props: MentionItemUIEvent) => void;
+  renderUserMentionItem?: (props: { user: SendBird.User | SendBird.Member }) => JSX.Element;
 }
 
 function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Element {
   const {
     member,
     isFocused = false,
+    parentScrollRef,
     onClick,
     onMouseOver,
+    onMouseMove,
     renderUserMentionItem,
   } = props;
   const scrollRef = useRef(null);
   const { stringSet = {} } = useContext(LocalizationContext);
   useEffect(() => {
     if (isFocused) {
-      scrollRef?.current?.scrollIntoView({ block: 'center', inline: 'center' });
+      if (parentScrollRef?.current?.scrollTop >= scrollRef?.current?.offsetTop) {
+        scrollRef?.current?.scrollIntoView({ block: "start", inline: "nearest" });
+      } else if (parentScrollRef?.current?.scrollTop + parentScrollRef?.current?.clientHeight <= scrollRef?.current?.offsetTop) {
+        scrollRef?.current?.scrollIntoView({ block: "end", inline: "nearest" });
+      }
     }
   }, [isFocused]);
   const customMentionItem = useMemo(() => {
@@ -33,8 +42,9 @@ function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Ele
       return (
         <div
           className="sendbird-mention-suggest-list__user-item"
-          onClick={onClick}
-          onMouseOver={onMouseOver}
+          onClick={(event) => onClick?.({ event, member: (member as SendBird.Member), itemRef: scrollRef })}
+          onMouseOver={(event) => onMouseOver?.({ event, member: (member as SendBird.Member), itemRef: scrollRef })}
+          onMouseMove={(event) => onMouseMove?.({ event, member: (member as SendBird.Member), itemRef: scrollRef })}
           key={member.nickname}
           ref={scrollRef}
         >
@@ -49,8 +59,9 @@ function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Ele
   return (
     <div
       className={`sendbird-mention-suggest-list__user-item ${isFocused ? 'focused' : ''}`}
-      onClick={onClick}
-      onMouseOver={onMouseOver}
+      onClick={(event) => onClick?.({ event, member: (member as SendBird.Member), itemRef: scrollRef })}
+      onMouseOver={(event) => onMouseOver?.({ event, member: (member as SendBird.Member), itemRef: scrollRef })}
+      onMouseMove={(event) => onMouseMove?.({ event, member: (member as SendBird.Member), itemRef: scrollRef })}
       key={member.nickname}
       ref={scrollRef}
     >

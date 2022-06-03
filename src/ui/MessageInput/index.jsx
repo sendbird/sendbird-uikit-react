@@ -347,9 +347,9 @@ const MessageInput = React.forwardRef((props, ref) => {
         ])}
       >
         <div
-          id={TEXT_FIELD_ID}
+          id={`${TEXT_FIELD_ID}${isEdit ? message?.messageId : ''}`}
           className="sendbird-message-input--textarea"
-          contentEditable
+          contentEditable={!disabled}
           role="textbox"
           aria-label="Text Input"
           disabled={disabled}
@@ -360,7 +360,7 @@ const MessageInput = React.forwardRef((props, ref) => {
             if (preventEvent) {
               e.preventDefault();
             } else {
-              if (!e.shiftKey && e.key === MessageInputKeys.Enter) {
+              if (!e.shiftKey && e.key === MessageInputKeys.Enter && e?.nativeEvent?.isComposing !== true) {
                 e.preventDefault();
                 sendMessage();
               }
@@ -389,6 +389,10 @@ const MessageInput = React.forwardRef((props, ref) => {
             onStartTyping();
             setIsInput(document?.getElementById?.(TEXT_FIELD_ID)?.innerText?.length > 0);
             useMentionedLabelDetection();
+          }}
+          onPaste={(e) => {
+            e.preventDefault();
+            document.execCommand("insertHTML", false, e?.clipboardData.getData('text'));
           }}
         />
         {/* placeholder */}
