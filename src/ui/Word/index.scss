@@ -4,12 +4,6 @@
   display: inline-block;
   margin-right: 4px;
   height: fit-content;
-  .sendbird-word__mention {
-    &:hover {
-      cursor: pointer;
-    }
-  }
-  .sendbird-word__mention,
   .sendbird-word__url,
   .sendbird-word__normal {
     display: inline-block;

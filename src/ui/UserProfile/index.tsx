@@ -39,7 +39,7 @@ function UserProfile({
         <Avatar
           height="80px"
           width="80px"
-          src={user.profileUrl}
+          src={user?.profileUrl}
         />
       </section>
       <section className="sendbird__user-profile-name">
@@ -47,18 +47,18 @@ function UserProfile({
           type={LabelTypography.H_2}
           color={LabelColors.ONBACKGROUND_1}
         >
-          {user.nickname || stringSet.NO_NAME}
+          {user?.nickname || stringSet.NO_NAME}
         </Label>
       </section>
       {
-        (user.userId !== currentUserId) && !disableMessaging && (
+        (user?.userId !== currentUserId) && !disableMessaging && (
           <section className="sendbird__user-profile-message">
             <Button
               type={ButtonTypes.SECONDARY}
               onClick={() => {
                 const params = new sdk.GroupChannelParams();
                 params.isDistinct = true;
-                params.addUserIds([user.userId]);
+                params.addUserIds([user?.userId]);
                 onSuccess();
                 createChannel(params)
                   .then((groupChannel) => {
@@ -85,7 +85,7 @@ function UserProfile({
           type={LabelTypography.BODY_1}
           color={LabelColors.ONBACKGROUND_1}
         >
-          {user.userId}
+          {user?.userId}
         </Label>
       </section>
     </div>

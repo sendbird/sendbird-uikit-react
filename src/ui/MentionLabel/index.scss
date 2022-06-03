@@ -1,0 +1,20 @@
+@import '../../styles/variables';
+
+.sendbird-word {
+  .sendbird-word__mention {
+    &:hover {
+      cursor: pointer;
+    }
+    display: inline-block;
+    &.sendbird-word__mention--me {
+      @include themed() {
+        background-color: t(highlight--1);
+      }
+      .sendbird-label {
+        @include themed() {
+          color: t(on-information-1);
+        }
+      }
+    }
+  }
+}
