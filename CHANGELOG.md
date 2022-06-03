@@ -1,5 +1,37 @@
 # Changelog - v3
 
+## [3.0.0-beta.6] (June 03 2022)
+
+Feature:
+* Show profile on clicking a mention
+* Visual highlight when user is mention
+* Add session handler interface
+```
+  // its recommended to memoize configureSession function
+  const memoizedConfigureSession = (sb) => {
+    const sessionHandler = new sb.SessionHandler();
+    sessionHandler.onSessionTokenRequired = (onSuccess, onError) => {
+    };
+    return sessionHandler;
+  };
+
+  // see: https://sendbird.com/docs/chat/v3/javascript/guides/authentication
+  <SendbirdProvider
+    configureSession={memoizedConfigureSession}
+  />
+```
+
+Fix:
+* Change the front-weight of Subtitle2 from 600 to 500
+* Modify mention badge position on the ChannelListItem component
+* Change Info Icon size to 20px on the SuggestedMentionListItem component
+Fix: Mention related stuff
+* Modify the onMouseOver event on the SuggestedMentionList component
+* Filter 'html' text when pasting text to the MessageInput component
+* Hide and apply ellipsis for overflowing text on the SuggestedMentionListItem component
+* Deactivate the MessageInput component when the current user is muted or the current channel is frozen
+* Reset the mention states of the current channel when changing channel and closing the edit MessageInput component
+
 ## [3.0.0-beta.5] (May 24 2022)
 Fixes:
 * Export useChannelList
