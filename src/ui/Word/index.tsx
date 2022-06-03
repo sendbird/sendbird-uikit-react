@@ -2,9 +2,8 @@ import React from 'react';
 import SendBird from 'sendbird';
 import './index.scss';
 
-import Label, { LabelTypography, LabelColors } from '../Label';
+import { LabelTypography, LabelColors } from '../Label';
 import LinkLabel from '../LinkLabel';
-import ContextMenu, { MenuItems } from '../ContextMenu';
 import uuidv4 from '../../utils/uuid';
 import { convertWordToStringObj, StringObjType, StringObj } from '../../utils';
 import MentionLabel from '../MentionLabel';

@@ -10,7 +10,6 @@ import type SendBird from 'sendbird';
 
 import ContextMenu, { MenuItems } from '../ContextMenu';
 import Label, { LabelTypography, LabelColors } from '../Label';
-import { UserProfileContext } from '../../lib/UserProfileContext';
 import UserProfile from '../UserProfile';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
@@ -32,7 +31,7 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
   const sendbirdState = useSendbirdStateContext();
   const userId = sendbirdState?.config?.userId;
   const sdk = sendbirdState?.stores?.sdkStore?.sdk;
-  const iAmBeingMentioned = userId === mentionedUserId;
+  const amIBeingMentioned = userId === mentionedUserId;
   const [user, setUser] = useState<SendBird.User| null>();
   const fetchUser = useCallback(
     (toggleDropdown) => {
@@ -56,7 +55,7 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
         <a
           className={`
             sendbird-word__mention
-            ${iAmBeingMentioned && 'sendbird-word__mention--me'}
+            ${amIBeingMentioned ? 'sendbird-word__mention--me' : ''}
           `}
           onClick={() => fetchUser(toggleDropdown)}
           ref={mentionRef}
