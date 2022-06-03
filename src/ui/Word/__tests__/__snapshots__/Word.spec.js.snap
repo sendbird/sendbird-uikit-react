@@ -5,10 +5,27 @@ exports[`Word should do a snapshot test of the Word DOM 1`] = `
   className="sendbird-word"
 >
   hello
-  <span
-    className="sendbird-word__mention sendbird-label sendbird-label--caption-1 sendbird-label--color-onbackground-1"
+  <div
+    className="sendbird-context-menu"
+    style={
+      Object {
+        "display": "inline",
+      }
+    }
   >
-    @Hoon Baek
-  </span>
+    <a
+      className="
+            sendbird-word__mention
+            
+          "
+      onClick={[Function]}
+    >
+      <span
+        className="sendbird-label sendbird-label--caption-1 sendbird-label--color-onbackground-1"
+      >
+        @Hoon Baek
+      </span>
+    </a>
+  </div>
 </span>
 `;

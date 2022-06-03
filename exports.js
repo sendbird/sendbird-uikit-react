@@ -110,6 +110,7 @@ export default {
   'ui/LinkLabel': 'src/ui/LinkLabel/index.jsx',
   'ui/Loader': 'src/ui/Loader/index.jsx',
   'ui/MentionUserLabel': 'src/ui/MentionUserLabel/index.tsx',
+  'ui/MentionLabel': 'src/ui/MentionLabel/index.tsx',
   'ui/MessageContent': 'src/ui/MessageContent/index.tsx',
   'ui/MessageInput': 'src/ui/MessageInput/index.jsx',
   'ui/MessageItemMenu': 'src/ui/MessageItemMenu/index.tsx',

@@ -1435,6 +1435,16 @@ declare module '@sendbird/uikit-react/ui/MentionUserLabel' {
   export default MentionUserLabel;
 }
 
+declare module '@sendbird/uikit-react/ui/MentionLabel' {
+  interface MentionLabelProps {
+    mentionTemplate: string;
+    mentionedUserId: string;
+    isByMe: boolean;
+  }
+  const MentionUserLabel: React.FC<MentionLabelProps>;
+  export default MentionUserLabel;
+}
+
 declare module '@sendbird/uikit-react/ui/MessageContent' {
   interface MessageContentProps {
     className?: string | Array<string>;

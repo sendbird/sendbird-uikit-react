@@ -2,10 +2,11 @@ import React from 'react';
 import SendBird from 'sendbird';
 import './index.scss';
 
-import Label, { LabelTypography, LabelColors } from '../Label';
+import { LabelTypography, LabelColors } from '../Label';
 import LinkLabel from '../LinkLabel';
 import uuidv4 from '../../utils/uuid';
 import { convertWordToStringObj, StringObjType, StringObj } from '../../utils';
+import MentionLabel from '../MentionLabel';
 
 interface WordProps {
   word: string;
@@ -34,14 +35,12 @@ export default function Word(props: WordProps): JSX.Element {
           }
           if (type === StringObjType.mention) {
             return (
-              <Label
+              <MentionLabel
+                mentionTemplate={mentionTemplate}
+                mentionedUserId={value}
                 key={uuidv4()}
-                className="sendbird-word__mention"
-                type={LabelTypography.CAPTION_1}
-                color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
-              >
-                {`${mentionTemplate}${value}`}
-              </Label>
+                isByMe={isByMe}
+              />
             );
           } else if (type === StringObjType.url) {
             return (
