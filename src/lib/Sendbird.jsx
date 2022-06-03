@@ -28,6 +28,7 @@ export default function Sendbird(props) {
     dateLocale,
     appId,
     accessToken,
+    configureSession,
     children,
     disableUserProfile,
     renderUserProfile,
@@ -71,6 +72,7 @@ export default function Sendbird(props) {
       sdkStore,
       nickname,
       profileUrl,
+      configureSession,
       sdk: sdkStore.sdk,
       logger,
     }, {
@@ -192,6 +194,7 @@ Sendbird.propTypes = {
   userId: PropTypes.string.isRequired,
   appId: PropTypes.string.isRequired,
   accessToken: PropTypes.string,
+  configureSession: PropTypes.func,
   children: PropTypes.oneOfType([
     PropTypes.element,
     PropTypes.arrayOf(PropTypes.element),
@@ -241,6 +244,7 @@ Sendbird.propTypes = {
 
 Sendbird.defaultProps = {
   accessToken: '',
+  configureSession: null,
   theme: 'light',
   nickname: '',
   dateLocale: null,

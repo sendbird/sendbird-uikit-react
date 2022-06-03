@@ -59,6 +59,7 @@ interface SendBirdProviderProps {
   userId: string;
   appId: string;
   accessToken?: string;
+  configureSession?: (sdk: SendBird.SendBirdInstance) => SendBird.SessionHandler;
   children?: React.ReactNode;
   theme?: 'light' | 'dark';
   nickname?: string;
