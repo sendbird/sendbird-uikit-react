@@ -40,6 +40,7 @@ export const handleConnection = ({
   nickname,
   profileUrl,
   accessToken,
+  configureSession,
   sdk,
   logger,
 }, dispatchers) => {
@@ -54,9 +55,13 @@ export const handleConnection = ({
     logger,
     onDisconnect: () => {
       logger.info('Setup connection');
+      let sessionHandler = null;
       sdkDispatcher({ type: SET_SDK_LOADING, payload: true });
       if (userId && appId) {
         const newSdk = new Sb({ appId });
+        if (configureSession && typeof configureSession === 'function') {
+          sessionHandler = configureSession(newSdk);
+        }
         // to check if code is released version from rollup and *not from storybook*
         // see rollup config file
         if (IS_ROLLUP === IS_ROLLUP_REPLACE) {
@@ -89,6 +94,9 @@ export const handleConnection = ({
             .then((res) => connectCbSucess(res))
             .catch((err) => connectCbError(err));
         } else {
+          if (sessionHandler) {
+            newSdk.setSessionHandler(sessionHandler);
+          }
           newSdk.connect(userId)
             .then((res) => connectCbSucess(res))
             .catch((err) => connectCbError(err));
