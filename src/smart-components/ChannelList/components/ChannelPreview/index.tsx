@@ -16,6 +16,7 @@ import MentionUserLabel from '../../../../ui/MentionUserLabel';
 import { useChannelListContext } from '../../context/ChannelListProvider';
 import { TypingIndicatorText } from '../../../Channel/components/TypingIndicator';
 import MessageStatus from '../../../../ui/MessageStatus';
+import { isEditedMessage } from '../../../../utils';
 
 interface ChannelPreviewInterface {
   channel: SendBird.GroupChannel;
@@ -139,9 +140,14 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
             color={LabelColors.ONBACKGROUND_3}
           >
             {
-              isChannelTyping
-                ? <TypingIndicatorText members={channel?.getTypingMembers()} />
-                : utils.getLastMessage(channel)
+              isChannelTyping && (
+                <TypingIndicatorText members={channel?.getTypingMembers()} />
+              )
+            }
+            {
+              !isChannelTyping && (
+                utils.getLastMessage(channel) + (isEditedMessage(channel?.lastMessage as SendBird.UserMessage) && ` ${stringSet.MESSAGE_EDITED}`)
+              )
             }
           </Label>
           <div className="sendbird-channel-preview__content__lower__unread-message-count">
@@ -168,7 +174,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
       <div
         className="sendbird-channel-preview__action"
       >
-        { renderChannelAction({ channel }) }
+        {renderChannelAction({ channel })}
       </div>
     </div>
   );
