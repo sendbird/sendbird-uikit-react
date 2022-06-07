@@ -58,6 +58,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     onUpdateMessage,
     onCancelEdit,
     onStartTyping,
+    onInputEmpty,
     channelUrl,
     mentionSelectedUser,
     onUserMentioned,
@@ -102,7 +103,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     }
   }, [channelUrl]);
 
-  // #Mention | Fill message input values
+  // #Mention | Fill message input values for edit message input
   useEffect(() => {
     if (isEdit && message?.messageId) {
       // const textField = document.getElementById(TEXT_FIELD_ID);
@@ -386,7 +387,11 @@ const MessageInput = React.forwardRef((props, ref) => {
           }}
           onInput={() => {
             setHeight();
-            onStartTyping();
+            if (ref?.current?.innerText?.trim?.() === '') {
+              onInputEmpty();
+            } else {
+              onStartTyping();
+            }
             setIsInput(document?.getElementById?.(TEXT_FIELD_ID)?.innerText?.length > 0);
             useMentionedLabelDetection();
           }}
@@ -496,6 +501,7 @@ MessageInput.propTypes = {
   onSendMessage: PropTypes.func,
   onUpdateMessage: PropTypes.func,
   onStartTyping: PropTypes.func,
+  onInputEmpty: PropTypes.func,
   onCancelEdit: PropTypes.func,
   channelUrl: PropTypes.string,
   mentionSelectedUser: PropTypes.shape({
@@ -523,6 +529,7 @@ MessageInput.defaultProps = {
   onFileUpload: noop,
   onCancelEdit: noop,
   onStartTyping: noop,
+  onInputEmpty: noop,
   mentionSelectedUser: null,
   onUserMentioned: noop,
   onMentionStringChange: noop,
