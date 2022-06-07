@@ -146,7 +146,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
             }
             {
               !isChannelTyping && (
-                utils.getLastMessage(channel) + (isEditedMessage(channel?.lastMessage as SendBird.UserMessage) && ` ${stringSet.MESSAGE_EDITED}`)
+                utils.getLastMessage(channel) + (isEditedMessage(channel?.lastMessage as SendBird.UserMessage) ? ` ${stringSet.MESSAGE_EDITED}` : '')
               )
             }
           </Label>

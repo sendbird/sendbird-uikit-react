@@ -25,6 +25,8 @@ Fix:
 * Change the front-weight of Subtitle2 from 600 to 500
 * Modify mention badge position on the ChannelListItem component
 * Change Info Icon size to 20px on the SuggestedMentionListItem component
+* Differentiate the message status 'read' and 'delivered' with message grouping
+* Modify KeyDown event handler on the message input for sending Korean text edge case
 Fix: Mention related stuff
 * Modify the onMouseOver event on the SuggestedMentionList component
 * Filter 'html' text when pasting text to the MessageInput component
