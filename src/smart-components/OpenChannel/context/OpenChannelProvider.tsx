@@ -177,7 +177,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
     { sdk, logger, messagesDispatcher, hasMore, userFilledMessageListParams },
   );
   const handleSendMessage = useSendMessageCallback(
-    { currentOpenChannel, onBeforeSendUserMessage, checkScrollBottom, messageInputRef },
+    { currentOpenChannel, onBeforeSendUserMessage, checkScrollBottom },
     { sdk, logger, messagesDispatcher },
   );
   const handleFileUpload = useFileUploadCallback(
