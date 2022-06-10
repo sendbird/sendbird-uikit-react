@@ -7,7 +7,6 @@ interface DynamicParams {
   currentOpenChannel: SendbirdUIKit.OpenChannelType;
   onBeforeSendUserMessage: (text: string) => Sendbird.UserMessageParams;
   checkScrollBottom: () => boolean;
-  messageInputRef: React.RefObject<HTMLInputElement>;
 }
 interface StaticParams {
   sdk: SendbirdUIKit.Sdk;
@@ -16,12 +15,12 @@ interface StaticParams {
 }
 
 function useSendMessageCallback(
-  { currentOpenChannel, onBeforeSendUserMessage, checkScrollBottom, messageInputRef }: DynamicParams,
+  { currentOpenChannel, onBeforeSendUserMessage, checkScrollBottom }: DynamicParams,
   { sdk, logger, messagesDispatcher }: StaticParams,
-): () => void {
-  return useCallback(() => {
+): (props: { message: string }) => void {
+  return useCallback((props) => {
+    const text = props?.message || '';
     if (sdk && sdk.UserMessageParams) {
-      const text = messageInputRef.current.value;
       const createParamsDefault = (txt: string | number): Sendbird.UserMessageParams => {
         const message = typeof txt === 'string' ? txt.trim() : txt.toString(10).trim();
         const params = new sdk.UserMessageParams();
@@ -75,7 +74,7 @@ function useSendMessageCallback(
         }
       });
     }
-  }, [currentOpenChannel, onBeforeSendUserMessage, checkScrollBottom, messageInputRef]);
+  }, [currentOpenChannel, onBeforeSendUserMessage, checkScrollBottom]);
 }
 
 export default useSendMessageCallback;

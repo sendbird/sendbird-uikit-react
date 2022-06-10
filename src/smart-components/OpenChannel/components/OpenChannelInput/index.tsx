@@ -23,7 +23,9 @@ const MessageInputWrapper = (props, ref: React.RefObject<HTMLInputElement>): JSX
       <MessageInput
         ref={ref}
         disabled={disabled}
-        onSendMessage={handleSendMessage}
+        onSendMessage={({ message }) => {
+          handleSendMessage({ message });
+        }}
         onFileUpload={handleFileUpload}
         placeholder={(
           disabled

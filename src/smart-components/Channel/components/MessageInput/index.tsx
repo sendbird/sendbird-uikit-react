@@ -137,6 +137,9 @@ const MessageInputWrapper = (): JSX.Element => {
         onStartTyping={() => {
           channel?.startTyping();
         }}
+        onInputEmpty={() => {
+          channel?.endTyping();
+        }}
         onSendMessage={({ message, mentionTemplate }) => {
           sendMessage({
             message,
