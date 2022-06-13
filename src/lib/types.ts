@@ -1,4 +1,9 @@
-import SendBird from 'sendbird';
+import type SendbirdChat from '@sendbird/chat';
+import type { User } from '@sendbird/chat';
+import type { GroupChannel, GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
+import type { AdminMessage, FileMessage, FileMessageCreateParams, UserMessage, UserMessageCreateParams, UserMessageUpdateParams } from '@sendbird/chat/message';
+import type { OpenChannel, OpenChannelCreateParams } from '@sendbird/chat/openChannel';
+
 import type SendBirdTypes from '../types';
 import { Logger } from './SendbirdState';
 
@@ -58,12 +63,12 @@ export interface SdkStore {
   error: boolean;
   initialized: boolean;
   loading: boolean;
-  sdk: SendBird.SendBirdInstance;
+  sdk: SendbirdChat;
 }
 interface UserStore {
   initialized: boolean;
   loading: boolean;
-  user: SendBird.User;
+  user: User;
 }
 interface SendBirdStateStore {
   sdkStore: SdkStore;
@@ -81,78 +86,78 @@ export type SendBirdState = {
 
 type UserDispatcherParams = {
   type: string,
-  payload: SendBird.User
+  payload: User,
 };
 
 type UserDispatcher = (params: UserDispatcherParams) => void;
 
-type GetSdk = SendBird.SendBirdInstance | undefined;
+type GetSdk = SendbirdChat | undefined;
 type GetConnect = (
   userId: string,
   accessToken?: string
-) => Promise<SendBird.User>;
+) => Promise<User>;
 type GetDisconnect = () => Promise<void>;
 type GetUpdateUserInfo = (
   nickName: string,
   profileUrl?: string
-) => Promise<SendBird.User>;
+) => Promise<User>;
 type GetSendUserMessage = (
   channelUrl: string,
-  userMessageParams: SendBird.UserMessageParams
-) => Promise<SendBird.UserMessage>;
+  userMessageParams: UserMessageCreateParams
+) => Promise<UserMessage>;
 type GetSendFileMessage = (
   channelUrl: string,
-  fileMessageParams: SendBird.FileMessageParams
-) => Promise<SendBird.FileMessage>;
+  fileMessageParams: FileMessageCreateParams
+) => Promise<FileMessage>;
 type GetUpdateUserMessage = (
   channelUrl: string,
   messageId: string | number,
-  params: SendBird.UserMessageParams
-) => Promise<SendBird.UserMessage>;
+  params: UserMessageUpdateParams
+) => Promise<UserMessage>;
 type GetDeleteMessage = (
   channelUrl: string,
-  message: SendBird.AdminMessage | SendBird.UserMessage | SendBird.FileMessage
+  message: AdminMessage | UserMessage | FileMessage
 ) => Promise<void>;
 type GetResendUserMessage = (
   channelUrl: string,
-  failedMessage: SendBird.UserMessage
-) => Promise<SendBird.UserMessage>;
+  failedMessage: UserMessage
+) => Promise<UserMessage>;
 type GetResendFileMessage = (
   channelUrl: string,
-  failedMessage: SendBird.FileMessage
-) => Promise<SendBird.FileMessage>;
-type GetFreezeChannel = (channelUrl: string) => Promise<SendBird.GroupChannel>;
-type GetUnFreezeChannel = (channelUrl: string) => Promise<SendBird.GroupChannel>;
-type GetCreateChannel = (channelParams: SendBird.GroupChannelParams) => Promise<SendBird.GroupChannel>;
-type GetLeaveChannel = (channelUrl: string) => Promise<SendBird.GroupChannel>;
-type GetCreateOpenChannel = (channelParams: SendBird.OpenChannelParams) => Promise<SendBird.OpenChannel>;
+  failedMessage: FileMessage
+) => Promise<FileMessage>;
+type GetFreezeChannel = (channelUrl: string) => Promise<GroupChannel>;
+type GetUnFreezeChannel = (channelUrl: string) => Promise<GroupChannel>;
+type GetCreateChannel = (channelParams: GroupChannelCreateParams) => Promise<GroupChannel>;
+type GetLeaveChannel = (channelUrl: string) => Promise<GroupChannel>;
+type GetCreateOpenChannel = (channelParams: OpenChannelCreateParams) => Promise<OpenChannel>;
 type GetEnterOpenChannel = (channelUrl: string) => Promise<null>;
 type GetExitOpenChannel = (channelUrl: string) => Promise<null>;
 type GetOpenChannelSendUserMessage = (
   channelUrl: string,
-  params: SendBird.UserMessageParams,
-) => Promise<SendBird.UserMessage>;
+  params: UserMessageCreateParams,
+) => Promise<UserMessage>;
 type GetOpenChannelSendFileMessage = (
   channelUrl: string,
-  params: SendBird.FileMessageParams,
-) => Promise<SendBird.FileMessage>;
+  params: FileMessageCreateParams,
+) => Promise<FileMessage>;
 type GetOpenChannelUpdateUserMessage = (
   channelUrl: string,
   messageId: string,
-  params: SendBird.UserMessageParams,
-) => Promise<SendBird.UserMessage>;
+  params: UserMessageUpdateParams,
+) => Promise<UserMessage>;
 type GetOpenChannelDeleteMessage = (
   channelUrl: string,
-  message: SendBird.UserMessage | SendBird.FileMessage,
-) => Promise<SendBird.UserMessage | SendBird.FileMessage>;
+  message: UserMessage | FileMessage,
+) => Promise<UserMessage | FileMessage>;
 type GetOpenChannelResendUserMessage = (
   channelUrl: string,
-  failedMessage: SendBird.UserMessage,
-) => Promise<SendBird.UserMessage>;
+  failedMessage: UserMessage,
+) => Promise<UserMessage>;
 type GetOpenChannelResendFileMessage = (
   channelUrl: string,
-  failedMessage: SendBird.FileMessage,
-) => Promise<SendBird.FileMessage>;
+  failedMessage: FileMessage,
+) => Promise<FileMessage>;
 
 
 export interface sendBirdSelectorsInterface {

@@ -1,4 +1,6 @@
-import Sb from 'sendbird';
+import SendbirdChat from '@sendbird/chat';
+import { OpenChannelModule } from '@sendbird/chat/openChannel';
+import { GroupChannelModule } from '@sendbird/chat/groupChannel';
 
 import {
   INIT_SDK,
@@ -58,7 +60,13 @@ export const handleConnection = ({
       let sessionHandler = null;
       sdkDispatcher({ type: SET_SDK_LOADING, payload: true });
       if (userId && appId) {
-        const newSdk = new Sb({ appId });
+        const newSdk = SendbirdChat.init({
+          appId,
+          modules: [
+            new GroupChannelModule(),
+            new OpenChannelModule(),
+          ],
+        });
         if (configureSession && typeof configureSession === 'function') {
           sessionHandler = configureSession(newSdk);
         }
@@ -75,10 +83,12 @@ export const handleConnection = ({
           if ((nickname !== user.nickname || profileUrl !== user.profileUrl)
             && !(isTextuallyNull(nickname) && isTextuallyNull(profileUrl))
           ) {
-            newSdk.updateCurrentUserInfo(nickname || user.nickname, profileUrl || user.profileUrl)
-              .then((namedUser) => {
-                userDispatcher({ type: UPDATE_USER_INFO, payload: namedUser });
-              });
+            newSdk.updateCurrentUserInfo({
+              nickname: nickname || user.nickname,
+              profileUrl: profileUrl || user.profileUrl,
+            }).then((namedUser) => {
+              userDispatcher({ type: UPDATE_USER_INFO, payload: namedUser });
+            });
           }
         };
 

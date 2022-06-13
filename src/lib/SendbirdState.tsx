@@ -1,3 +1,4 @@
+import type { Member } from '@sendbird/chat/groupChannel';
 import Sendbird from 'sendbird';
 
 export type CustomUseReducerDispatcher = ({
@@ -12,7 +13,7 @@ interface UserListQuery {
 }
 
 interface RenderUserProfileProps {
-  user: Sendbird.Member | Sendbird.User;
+  user: Member;
   currentUserId: string;
   close(): void;
 }

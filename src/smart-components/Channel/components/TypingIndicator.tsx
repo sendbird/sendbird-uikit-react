@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import SendBird from 'sendbird';
+import type { Member } from '@sendbird/chat/groupChannel';
 
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 import { uuidv4 } from '../../../utils/uuid';
@@ -8,7 +9,7 @@ import { useChannel } from '../context/ChannelProvider';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 
 export interface TypingIndicatorTextProps {
-  members: SendBird.Member[];
+  members: Member[];
 }
 
 export const TypingIndicatorText: React.FC<TypingIndicatorTextProps> = ({ members }: TypingIndicatorTextProps) => {
@@ -34,7 +35,7 @@ const TypingIndicator: React.FC = () => {
   const sb = globalStore?.stores?.sdkStore?.sdk;
   const logger = globalStore?.config?.logger;
   const [handlerId, setHandlerId] = useState(uuidv4());
-  const [typingMembers, setTypingMembers] = useState<SendBird.Member[]>([]);
+  const [typingMembers, setTypingMembers] = useState<Member[]>([]);
 
   useEffect(() => {
     if (sb && sb.ChannelHandler) {
