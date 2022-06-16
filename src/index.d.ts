@@ -7,6 +7,7 @@ import type React from 'react';
 import Sendbird, { FileMessage, UserMessage } from 'sendbird';
 import type { Locale } from 'date-fns';
 import type SendbirdChat from '@sendbird/chat';
+import type { Member } from '@sendbird/chat/groupChannel';
 
 type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
 
@@ -711,7 +712,7 @@ interface SendbirdUIKitUIEvent<> {
   event: React.MouseEvent<HTMLDivElement, MouseEvent> | React.KeyboardEvent<HTMLDivElement>;
 }
 export interface MentionItemUIEvent extends SendbirdUIKitUIEvent {
-  member: SendBird.Member;
+  member: Member;
   itemRef: React.RefObject<HTMLDivElement>;
 }
 
