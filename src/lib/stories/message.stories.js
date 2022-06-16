@@ -26,8 +26,9 @@ const CustomComponent = (props) => {
       {`Last MessageId: ${lastMessageId}`}
       <button onClick={
         () => {
-          const params = new sdk.UserMessageParams();
-          params.message = "storybook message";
+          const params = {
+            message: "storybook message",
+          };
           sendMessage(channelUrl, params)
             .then((pendingMessage) => {
               setLastMessage(pendingMessage);
@@ -47,8 +48,9 @@ const CustomComponent = (props) => {
       }>Send a Message</button>
       <button disable={!lastMessageId} onClick={
         () => {
-          const params = new sdk.UserMessageParams();
-          params.message = "updated storybook message";
+          const params = {
+            message: "updated storybook message",
+          };
           updateLastMessage(channelUrl, lastMessageId, params)
             .then((message) => {
               setLastMessage(message);
@@ -73,7 +75,7 @@ const CustomComponent = (props) => {
       <input type="file" id="file-upload" />
       <button onClick={
         () => {
-          const params = new sdk.FileMessageParams();
+          const params = {};
           params.file = document.getElementById('file-upload').files[0];
           sendFileMessage(channelUrl, params)
             .then((pendingMessage) => {
@@ -94,7 +96,7 @@ const CustomComponent = (props) => {
       }>Send file Message</button>
       <button onClick={
         () => {
-          const params = new sdk.FileMessageParams();
+          const params = {};
           params.name = "my file";
           params.fileUrl = "https://6cro14eml0v2yuvyx3v5j11j-wpengine.netdna-ssl.com/wp-content/uploads/img-home-hero@2x.png";
           params.mimeType = "image/png";
