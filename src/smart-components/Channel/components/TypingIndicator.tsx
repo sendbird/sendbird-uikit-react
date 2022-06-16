@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
-import SendBird from 'sendbird';
-import type { Member } from '@sendbird/chat/groupChannel';
+import {
+  GroupChannelHandler,
+  Member,
+  SendbirdGroupChat,
+} from '@sendbird/chat/groupChannel';
 
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 import { uuidv4 } from '../../../utils/uuid';
@@ -32,32 +35,32 @@ export const TypingIndicatorText: React.FC<TypingIndicatorTextProps> = ({ member
 const TypingIndicator: React.FC = () => {
   const { channelUrl } = useChannel();
   const globalStore = useSendbirdStateContext();
-  const sb = globalStore?.stores?.sdkStore?.sdk;
+  const sb = globalStore?.stores?.sdkStore?.sdk as SendbirdGroupChat;
   const logger = globalStore?.config?.logger;
   const [handlerId, setHandlerId] = useState(uuidv4());
   const [typingMembers, setTypingMembers] = useState<Member[]>([]);
 
   useEffect(() => {
-    if (sb && sb.ChannelHandler) {
-      sb.removeChannelHandler(handlerId);
+    if (sb?.groupChannel?.addGroupChannelHandler) {
+      sb.groupChannel.removeGroupChannelHandler(handlerId);
       const newHandlerId = uuidv4();
-      const handler = new sb.ChannelHandler();
+      const handler = new GroupChannelHandler();
       // there is a possible warning in here - setState called after unmount
       handler.onTypingStatusUpdated = (groupChannel) => {
         logger.info('Channel > Typing Indicator: onTypingStatusUpdated', groupChannel);
         if (groupChannel.url === channelUrl) {
-          const members = groupChannel.getTypingMembers();
+          const members = groupChannel.getTypingUsers();
           setTypingMembers(members);
         }
       };
-      sb.addChannelHandler(newHandlerId, handler);
+      sb.groupChannel.addGroupChannelHandler(newHandlerId, handler);
       setHandlerId(newHandlerId);
     }
 
     return () => {
       setTypingMembers([]);
-      if (sb && sb.removeChannelHandler) {
-        sb.removeChannelHandler(handlerId);
+      if (sb) {
+        sb.groupChannel.removeGroupChannelHandler(handlerId);
       }
     };
   }, [channelUrl]);

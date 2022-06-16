@@ -6,7 +6,7 @@ import React, {
   useRef,
   useMemo,
 } from 'react';
-import SendBird, { FileMessage, GroupChannel, UserMessage, UserMessageParams } from 'sendbird';
+import SendBird, { FileMessage, UserMessage } from 'sendbird';
 
 import { ReplyType, RenderUserProfileProps } from '../../../types';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
@@ -34,6 +34,7 @@ import useMemoizedEmojiListItems from './hooks/useMemoizedEmojiListItems';
 import useToggleReactionCallback from './hooks/useToggleReactionCallback';
 import useScrollToMessage from './hooks/useScrollToMessage';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 export type MessageListParams = {
   // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html

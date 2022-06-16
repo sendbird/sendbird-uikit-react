@@ -6,7 +6,7 @@
 import type React from 'react';
 import Sendbird, { FileMessage, UserMessage } from 'sendbird';
 import type { Locale } from 'date-fns';
-import SendBird from 'sendbird';
+import type SendbirdChat from '@sendbird/chat';
 
 type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
 
@@ -112,7 +112,7 @@ export interface SdkStore {
   error: boolean;
   initialized: boolean;
   loading: boolean;
-  sdk: SendBird.SendBirdInstance;
+  sdk: SendbirdChat;
 }
 interface UserStore {
   initialized: boolean;

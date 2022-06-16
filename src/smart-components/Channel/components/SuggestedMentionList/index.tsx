@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import SendBird from 'sendbird';
 import './index.scss';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import type { User } from '@sendbird/chat';
+import type { Member } from '@sendbird/chat/groupChannel';
 
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
@@ -14,10 +15,10 @@ import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 export interface SuggestedMentionListProps {
   targetNickname: string;
   memberListQuery?: Record<string, string>;
-  onUserItemClick?: (member: SendBird.User) => void;
-  onFocusItemChange?: (member: SendBird.User) => void;
-  onFetchUsers?: (users: Array<SendBird.User>) => void;
-  renderUserMentionItem?: (props: { user: SendBird.User }) => JSX.Element;
+  onUserItemClick?: (member: User) => void;
+  onFocusItemChange?: (member: User) => void;
+  onFetchUsers?: (users: Array<User>) => void;
+  renderUserMentionItem?: (props: { user: User }) => JSX.Element;
   ableAddMention: boolean;
   maxMentionCount?: number;
   maxSuggestionCount?: number;
@@ -48,8 +49,8 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   const [timer, setTimer] = useState(null);
   const [searchString, setSearchString] = useState('');
   const [lastSearchString, setLastSearchString] = useState('');
-  const [currentUser, setCurrentUser] = useState<SendBird.User>(null);
-  const [currentMemberList, setCurrentMemberList] = useState<Array<SendBird.Member>>([]);
+  const [currentUser, setCurrentUser] = useState<User>(null);
+  const [currentMemberList, setCurrentMemberList] = useState<Array<Member>>([]);
 
   useEffect(() => {
     clearTimeout(timer);

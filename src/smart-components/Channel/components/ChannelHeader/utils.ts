@@ -1,8 +1,8 @@
-import SendBird from 'sendbird';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import { LabelStringSet } from '../../../../ui/Label';
 
 export const getChannelTitle = (
-  channel: SendBird.GroupChannel,
+  channel: GroupChannel,
   currentUserId: string,
   stringSet: { [label: string]: string }
   ): string => {

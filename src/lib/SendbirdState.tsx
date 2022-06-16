@@ -1,5 +1,6 @@
+import type SendbirdChat from '@sendbird/chat';
+import type { User } from '@sendbird/chat';
 import type { Member } from '@sendbird/chat/groupChannel';
-import Sendbird from 'sendbird';
 
 export type CustomUseReducerDispatcher = ({
   type: string,
@@ -61,13 +62,13 @@ export interface SdkStore {
   error: boolean;
   initialized: boolean;
   loading: boolean;
-  sdk: Sendbird.SendBirdInstance;
+  sdk: SendbirdChat;
 }
 
 interface UserStore {
   initialized: boolean;
   loading: boolean;
-  user: Sendbird.User;
+  user: User;
 }
 
 interface SendBirdStateStore {
