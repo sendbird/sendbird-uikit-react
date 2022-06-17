@@ -44,15 +44,16 @@ const TypingIndicator: React.FC = () => {
     if (sb?.groupChannel?.addGroupChannelHandler) {
       sb.groupChannel.removeGroupChannelHandler(handlerId);
       const newHandlerId = uuidv4();
-      const handler = new GroupChannelHandler();
-      // there is a possible warning in here - setState called after unmount
-      handler.onTypingStatusUpdated = (groupChannel) => {
-        logger.info('Channel > Typing Indicator: onTypingStatusUpdated', groupChannel);
-        if (groupChannel.url === channelUrl) {
-          const members = groupChannel.getTypingUsers();
-          setTypingMembers(members);
+      const handler = new GroupChannelHandler({
+        onTypingStatusUpdated: (groupChannel) => {
+          // there is a possible warning in here - setState called after unmount
+          logger.info('Channel > Typing Indicator: onTypingStatusUpdated', groupChannel);
+          if (groupChannel.url === channelUrl) {
+            const members = groupChannel.getTypingUsers();
+            setTypingMembers(members);
+          }
         }
-      };
+      });
       sb.groupChannel.addGroupChannelHandler(newHandlerId, handler);
       setHandlerId(newHandlerId);
     }

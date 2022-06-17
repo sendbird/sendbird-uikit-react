@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
+import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
 
 import * as messageActions from '../dux/actionTypes';
 import { uuidv4 } from '../../../../utils/uuid';
 import compareIds from '../../../../utils/compareIds';
 import { scrollIntoLast } from '../utils';
-import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
 
 /**
  * Handles ChannelEvents and send values to dispatcher using messagesDispatcher
@@ -25,10 +25,8 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
     const channelUrl = currentGroupChannel && currentGroupChannel?.url;
     const messageReceiverId = uuidv4();
     if (channelUrl && sdk) {
-      const channelHandler = new GroupChannelHandler();
-      logger.info('Channel | useHandleChannelEvents: Setup event handler', messageReceiverId);
-
-      channelHandler.onMessageReceived = (channel, message) => {
+      const channelHandlerConstructor = {};
+      channelHandlerConstructor.onMessageReceived = (channel, message) => {
         // Do not update when hasMoreNext
         if (compareIds(channel.url, channelUrl) && !hasMoreNext) {
           let scrollToEnd = false;
@@ -63,7 +61,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
        * (before) onReadReceiptUpdated or onUnreadMemberStatusUpdated are called,
        * because cachedReadReceiptStatus and cachedDeliveryReceiptStatus properties were changed
        */
-      channelHandler.onUnreadMemberStatusUpdated = (channel) => {
+      channelHandlerConstructor.onUnreadMemberStatusUpdated = (channel) => {
         if (compareIds(channel.url, channelUrl)) {
           logger.info('Channel | useHandleChannelEvents: onReadReceiptUpdated', channel);
           messagesDispatcher({
@@ -73,7 +71,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
         }
       };
       // before(onDeliveryReceiptUpdated)
-      channelHandler.onUndeliveredMemberStatusUpdated = (channel) => {
+      channelHandlerConstructor.onUndeliveredMemberStatusUpdated = (channel) => {
         if (compareIds(channel.url, channelUrl)) {
           logger.info('Channel | useHandleChannelEvents: onDeliveryReceiptUpdated', channel);
           messagesDispatcher({
@@ -83,7 +81,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
         }
       };
 
-      channelHandler.onMessageUpdated = (channel, message) => {
+      channelHandlerConstructor.onMessageUpdated = (channel, message) => {
         logger.info('Channel | useHandleChannelEvents: onMessageUpdated', message);
         messagesDispatcher({
           type: messageActions.ON_MESSAGE_UPDATED,
@@ -91,7 +89,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
         });
       };
 
-      channelHandler.onThreadInfoUpdated = (channel, event) => {
+      channelHandlerConstructor.onThreadInfoUpdated = (channel, event) => {
         logger.info('Channel | useHandleChannelEvents: onThreadInfoUpdated', event);
         messagesDispatcher({
           type: messageActions.ON_MESSAGE_THREAD_INFO_UPDATED,
@@ -99,7 +97,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
         });
       };
 
-      channelHandler.onMessageDeleted = (_, messageId) => {
+      channelHandlerConstructor.onMessageDeleted = (_, messageId) => {
         logger.info('Channel | useHandleChannelEvents: onMessageDeleted', messageId);
         setQuoteMessage(null);
         messagesDispatcher({
@@ -108,7 +106,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
         });
       };
 
-      channelHandler.onReactionUpdated = (_, reactionEvent) => {
+      channelHandlerConstructor.onReactionUpdated = (_, reactionEvent) => {
         logger.info('Channel | useHandleChannelEvents: onReactionUpdated', reactionEvent);
         messagesDispatcher({
           type: messageActions.ON_REACTION_UPDATED,
@@ -116,7 +114,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
         });
       };
 
-      channelHandler.onChannelChanged = (groupChannel) => {
+      channelHandlerConstructor.onChannelChanged = (groupChannel) => {
         if (compareIds(groupChannel.url, channelUrl)) {
           logger.info('Channel | useHandleChannelEvents: onChannelChanged', groupChannel);
           messagesDispatcher({
@@ -126,7 +124,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
         }
       };
 
-      channelHandler.onChannelFrozen = (groupChannel) => {
+      channelHandlerConstructor.onChannelFrozen = (groupChannel) => {
         if (compareIds(groupChannel.url, channelUrl)) {
           logger.info('Channel | useHandleChannelEvents: onChannelFrozen', groupChannel);
           messagesDispatcher({
@@ -136,7 +134,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
         }
       };
 
-      channelHandler.onChannelUnfrozen = (groupChannel) => {
+      channelHandlerConstructor.onChannelUnfrozen = (groupChannel) => {
         if (compareIds(groupChannel.url, channelUrl)) {
           logger.info('Channel | useHandleChannelEvents: onChannelUnFrozen', groupChannel);
           messagesDispatcher({
@@ -146,7 +144,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
         }
       };
 
-      channelHandler.onUserMuted = (groupChannel) => {
+      channelHandlerConstructor.onUserMuted = (groupChannel) => {
         if (compareIds(groupChannel.url, channelUrl)) {
           logger.info('Channel | useHandleChannelEvents: onUserMuted', groupChannel);
           messagesDispatcher({
@@ -156,7 +154,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
         }
       };
 
-      channelHandler.onUserUnmuted = (groupChannel) => {
+      channelHandlerConstructor.onUserUnmuted = (groupChannel) => {
         if (compareIds(groupChannel.url, channelUrl)) {
           logger.info('Channel | useHandleChannelEvents: onUserUnmuted', groupChannel);
           messagesDispatcher({
@@ -166,7 +164,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
         }
       };
 
-      channelHandler.onUserBanned = (groupChannel) => {
+      channelHandlerConstructor.onUserBanned = (groupChannel) => {
         if (compareIds(groupChannel.url, channelUrl)) {
           logger.info('Channel | useHandleChannelEvents: onUserBanned', groupChannel);
           messagesDispatcher({
@@ -176,7 +174,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
         }
       };
 
-      channelHandler.onOperatorUpdated = (groupChannel) => {
+      channelHandlerConstructor.onOperatorUpdated = (groupChannel) => {
         if (compareIds(groupChannel.url, channelUrl)) {
           logger.info('Channel | useHandleChannelEvents: onOperatorUpdated', groupChannel);
           messagesDispatcher({
@@ -185,6 +183,9 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
           });
         }
       };
+
+      const channelHandler = new GroupChannelHandler(channelHandlerConstructor);
+      logger.info('Channel | useHandleChannelEvents: Setup event handler', messageReceiverId);
 
       // Add this channel event handler to the SendBird object.
       sdk.groupChannel.addChannelHandler(messageReceiverId, channelHandler);
