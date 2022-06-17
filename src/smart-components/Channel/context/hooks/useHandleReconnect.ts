@@ -1,11 +1,15 @@
 import { useEffect } from 'react';
 
+import type { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import {
+  MessageListParams,
+  ReplyType,
+} from '@sendbird/chat/message';
 import * as utils from '../utils';
 import { PREV_RESULT_SIZE } from '../const';
 import * as messageActionTypes from '../dux/actionTypes';
-import SendBird, { GroupChannel } from 'sendbird';
 import { Logger } from '../../../../lib/SendbirdState';
-
+import { NEXT_RESULT_SIZE } from '../const';
 interface DynamicParams {
   isOnline: boolean;
   replyType?: string;
@@ -13,7 +17,7 @@ interface DynamicParams {
 
 interface StaticParams {
   logger: Logger;
-  sdk: SendBird.SendBirdInstance;
+  sdk: SendbirdGroupChat;
   currentGroupChannel: GroupChannel;
   messagesDispatcher: ({ type: string, payload: any }) => void;
   userFilledMessageListQuery?: Record<string, any>;
@@ -37,15 +41,16 @@ function useHandleReconnect(
         logger.info('Refreshing conversation state');
         const useReaction = sdk?.appInfo?.isUsingReaction || false;
 
-        const messageListParams = new sdk.MessageListParams();
-        messageListParams.prevResultSize = PREV_RESULT_SIZE;
-        messageListParams.isInclusive = true;
-        messageListParams.includeReplies = false;
-        messageListParams.includeReaction = useReaction;
+        const messageListParams: MessageListParams = {
+          prevResultSize: PREV_RESULT_SIZE,
+          isInclusive: true,
+          includeReactions: useReaction,
+          nextResultSize: NEXT_RESULT_SIZE,
+        };
         if (replyType && replyType === 'QUOTE_REPLY') {
           messageListParams.includeThreadInfo = true;
           messageListParams.includeParentMessageInfo = true;
-          messageListParams.replyType = 'only_reply_to_channel';
+          messageListParams.replyType = ReplyType.ONLY_REPLY_TO_CHANNEL;
         }
         if (userFilledMessageListQuery) {
           Object.keys(userFilledMessageListQuery).forEach((key) => {
@@ -58,7 +63,7 @@ function useHandleReconnect(
           payload: null,
         });
 
-        sdk.GroupChannel.getChannel(currentGroupChannel.url)
+        sdk.groupChannel.getChannel(currentGroupChannel.url)
           .then((groupChannel) => {
             const lastMessageTime = new Date().getTime();
 

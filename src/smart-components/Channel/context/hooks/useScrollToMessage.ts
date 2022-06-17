@@ -1,12 +1,12 @@
+import type { BaseMessage } from '@sendbird/chat/message';
 import { useCallback } from 'react';
-import { BaseMessageInstance } from 'sendbird';
 
 import { Logger } from '../../../../index';
 
 interface DynamicParams {
   setInitialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
   setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
-  allMessages: BaseMessageInstance[];
+  allMessages: BaseMessage[];
 }
 
 interface StaticParams {

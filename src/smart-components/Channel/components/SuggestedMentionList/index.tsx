@@ -98,24 +98,28 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
       return;
     }
 
-    const query = currentGroupChannel.createMemberListQuery();
-    query.limit = maxSuggestionCount;
-    query.nicknameStartsWithFilter = searchString.slice(USER_MENTION_TEMP_CHAR.length);
-    // Add member list query for customization
-    query.next((memberList, error) => {
-      if (error) {
-        logger.error('SuggestedMentionList: Fetching member list failed', error);
-      }
-      if (memberList.length < 1) {
-        logger.info('SuggestedMentionList: Fetched member list is empty');
-      } else {
-        logger.info('SuggestedMentionList: Fetching member list succeeded', { memberListQuery: query, memberList });
-        setCurrentUser(memberList[0]);
-      }
-      setLastSearchString(searchString);
-      onFetchUsers(memberList);
-      setCurrentMemberList(memberList.filter((member) => currentUserId !== member?.userId));
+    const query = currentGroupChannel.createMemberListQuery({
+      limit: maxSuggestionCount,
+      nicknameStartsWithFilter: searchString.slice(USER_MENTION_TEMP_CHAR.length),
     });
+    // Add member list query for customization
+    query.next()
+      .then((memberList) => {
+        if (memberList.length < 1) {
+          logger.info('SuggestedMentionList: Fetched member list is empty');
+        } else {
+          logger.info('SuggestedMentionList: Fetching member list succeeded', { memberListQuery: query, memberList });
+          setCurrentUser(memberList[0]);
+        }
+        setLastSearchString(searchString);
+        onFetchUsers(memberList);
+        setCurrentMemberList(memberList.filter((member) => currentUserId !== member?.userId));
+      })
+      .catch((error) => {
+        if (error) {
+          logger.error('SuggestedMentionList: Fetching member list failed', error);
+        }
+      });
   }, [currentGroupChannel?.url, searchString]);
 
   if (!ableAddMention && currentMemberList.length === 0) {

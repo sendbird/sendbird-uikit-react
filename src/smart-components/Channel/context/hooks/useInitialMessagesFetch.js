@@ -22,15 +22,13 @@ function useInitialMessagesFetch({
       payload: null,
     });
 
-    if (sdk && sdk.MessageListParams
-      && currentGroupChannel && currentGroupChannel.getMessagesByTimestamp) {
-      const messageListParams = new sdk.MessageListParams();
+    if (currentGroupChannel && currentGroupChannel.getMessagesByTimestamp) {
+      const messageListParams = {};
       messageListParams.prevResultSize = PREV_RESULT_SIZE;
       if (initialTimeStamp) {
         messageListParams.nextResultSize = NEXT_RESULT_SIZE;
       }
       messageListParams.isInclusive = true;
-      messageListParams.includeReplies = false;
       messageListParams.includeReaction = true;
       if (replyType && replyType === 'QUOTE_REPLY') {
         messageListParams.includeThreadInfo = true;

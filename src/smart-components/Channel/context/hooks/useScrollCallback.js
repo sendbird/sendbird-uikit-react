@@ -19,11 +19,11 @@ function useScrollCallback({
     const { appInfo = {} } = sdk;
     const useReaction = appInfo.isUsingReaction || false;
 
-    const messageListParams = new sdk.MessageListParams();
-    messageListParams.prevResultSize = PREV_RESULT_SIZE;
-    messageListParams.isInclusive = true;
-    messageListParams.includeReplies = false;
-    messageListParams.includeReaction = useReaction;
+    const messageListParams = {
+      prevResultSize: PREV_RESULT_SIZE,
+      isInclusive: true,
+      includeReaction: useReaction,
+    };
     if (replyType && replyType === 'QUOTE_REPLY') {
       messageListParams.includeThreadInfo = true;
       messageListParams.includeParentMessageInfo = true;

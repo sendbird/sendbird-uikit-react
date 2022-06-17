@@ -93,7 +93,7 @@ export const pubSubHandler = (channelUrl, pubSub, dispatcher) => {
   return subscriber;
 };
 
-export const getParsedStatus = (message, currentGroupChannel) => {
+export const getParsedStatus = (message, currentGroupChannel: GroupChannel) => {
   if (message.requestState === FAILED) {
     return MessageStatusType.FAILED;
   }
@@ -112,7 +112,7 @@ export const getParsedStatus = (message, currentGroupChannel) => {
       return MessageStatusType.READ;
     }
 
-    const isDelivered = currentGroupChannel.getDeliveryReceipt(message) === 0;
+    const isDelivered = currentGroupChannel.getUndeliveredMemberCount(message) === 0;
     if (isDelivered) {
       return MessageStatusType.DELIVERED;
     }

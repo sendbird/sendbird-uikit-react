@@ -75,42 +75,39 @@ export default function useSendFileMessageCallback({
                 ? onBeforeSendFileMessage(compressedFile, quoteMessage)
                 : createParamsDefault(compressedFile);
               logger.info('Channel: Uploading file message start!', params);
-              const pendingMessage = currentGroupChannel.sendFileMessage(
-                params,
-                (response, err) => {
-                  const swapParams = sdk.getErrorFirstCallback();
-                  const [message, error] = swapParams ? [err, response] : [response, err];
-                  if (error) {
-                    // sending params instead of pending message
-                    // to make sure that we can resend the message once it fails
-                    logger.error('Channel: Sending file message failed!', { message, error });
-                    message.localUrl = URL.createObjectURL(compressedFile);
-                    message.file = compressedFile;
-                    messagesDispatcher({
-                      type: messageActionTypes.SEND_MESSAGEGE_FAILURE,
-                      payload: message,
-                    });
-                    return;
-                  }
+              currentGroupChannel.sendFileMessage(params)
+                .onPending((pendingMessage) => {
+                  pubSub.publish(topics.SEND_MESSAGE_START, {
+                    /* pubSub is used instead of messagesDispatcher
+                      to avoid redundantly calling `messageActionTypes.SEND_MESSAGEGE_START` */
+                    message: {
+                      ...pendingMessage,
+                      url: URL.createObjectURL(compressedFile),
+                      // pending thumbnail message seems to be failed
+                      requestState: 'pending',
+                    },
+                    channel: currentGroupChannel,
+                  });
+                  setTimeout(() => utils.scrollIntoLast(), 1000);
+                })
+                .onFailed((err, failedMessage) => {
+                  logger.error('Channel: Sending file message failed!', { message, err });
+                  // eslint-disable-next-line no-param-reassign
+                  failedMessage.localUrl = URL.createObjectURL(compressedFile);
+                  // eslint-disable-next-line no-param-reassign
+                  failedMessage.file = compressedFile;
+                  messagesDispatcher({
+                    type: messageActionTypes.SEND_MESSAGEGE_FAILURE,
+                    payload: failedMessage,
+                  });
+                })
+                .onSucceeded((succeededMessage) => {
                   logger.info('Channel: Sending file message success!', message);
                   messagesDispatcher({
                     type: messageActionTypes.SEND_MESSAGEGE_SUCESS,
-                    payload: message,
+                    payload: succeededMessage,
                   });
-                },
-              );
-              pubSub.publish(topics.SEND_MESSAGE_START, {
-                /* pubSub is used instead of messagesDispatcher
-                  to avoid redundantly calling `messageActionTypes.SEND_MESSAGEGE_START` */
-                message: {
-                  ...pendingMessage,
-                  url: URL.createObjectURL(compressedFile),
-                  // pending thumbnail message seems to be failed
-                  requestState: 'pending',
-                },
-                channel: currentGroupChannel,
-              });
-              setTimeout(() => utils.scrollIntoLast(), 1000);
+                });
             },
             file.type,
             compressionRate,
@@ -128,39 +125,39 @@ export default function useSendFileMessageCallback({
         : createParamsDefault(file);
       logger.info('Channel: Uploading file message start!', params);
 
-      const pendingMsg = currentGroupChannel.sendFileMessage(params, (response, err) => {
-        const swapParams = sdk.getErrorFirstCallback();
-        const [message, error] = swapParams ? [err, response] : [response, err];
-        if (error) {
-          // sending params instead of pending message
-          // to make sure that we can resend the message once it fails
+      currentGroupChannel.sendFileMessage(params)
+        .onPending((pendingMsg) => {
+          pubSub.publish(topics.SEND_MESSAGE_START, {
+            /* pubSub is used instead of messagesDispatcher
+              to avoid redundantly calling `messageActionTypes.SEND_MESSAGEGE_START` */
+            message: {
+              ...pendingMsg,
+              url: URL.createObjectURL(file),
+              // pending thumbnail message seems to be failed
+              requestState: 'pending',
+            },
+            channel: currentGroupChannel,
+          });
+          setTimeout(() => utils.scrollIntoLast(), 1000);
+        })
+        .onFailed((error, message) => {
           logger.error('Channel: Sending file message failed!', { message, error });
+          // eslint-disable-next-line no-param-reassign
           message.localUrl = URL.createObjectURL(file);
+          // eslint-disable-next-line no-param-reassign
           message.file = file;
           messagesDispatcher({
             type: messageActionTypes.SEND_MESSAGEGE_FAILURE,
             payload: message,
           });
-          return;
-        }
-        logger.info('Channel: Sending message success!', message);
-        messagesDispatcher({
-          type: messageActionTypes.SEND_MESSAGEGE_SUCESS,
-          payload: message,
+        })
+        .onSucceeded((message) => {
+          logger.info('Channel: Sending message success!', message);
+          messagesDispatcher({
+            type: messageActionTypes.SEND_MESSAGEGE_SUCESS,
+            payload: message,
+          });
         });
-      });
-      pubSub.publish(topics.SEND_MESSAGE_START, {
-        /* pubSub is used instead of messagesDispatcher
-          to avoid redundantly calling `messageActionTypes.SEND_MESSAGEGE_START` */
-        message: {
-          ...pendingMsg,
-          url: URL.createObjectURL(file),
-          // pending thumbnail message seems to be failed
-          requestState: 'pending',
-        },
-        channel: currentGroupChannel,
-      });
-      setTimeout(() => utils.scrollIntoLast(), 1000);
     }
   }, [currentGroupChannel, onBeforeSendFileMessage, imageCompression]);
   return [sendMessage];
