@@ -66,24 +66,23 @@ const EditDetails: React.FC<EditDetailsProps> = (props: EditDetailsProps) => {
         if (onBeforeUpdateChannel) {
           logger.info('ChannelSettings: onBeforeUpdateChannel');
           const params = onBeforeUpdateChannel(currentTitle, currentImg, channel.data);
-          channel.updateChannel(params, (groupChannel) => {
+          channel.updateChannel(params).then((groupChannel) => {
             onChannelModified?.(groupChannel);
             setChannelUpdateId(uuidv4());
             onSubmit();
           });
         } else {
           logger.info('ChannelSettings: normal');
-          channel.updateChannel(
-            currentTitle,
-            currentImg,
-            channel.data,
-            (groupChannel) => {
-              logger.info('ChannelSettings: Channel information updated', groupChannel);
-              onChannelModified?.(groupChannel);
-              setChannelUpdateId(uuidv4());
-              onSubmit();
-            },
-          );
+          channel.updateChannel({
+            coverUrl: currentImg,
+            name: currentTitle,
+            data: channel?.data,
+          }).then((groupChannel) => {
+            logger.info('ChannelSettings: Channel information updated', groupChannel);
+            onChannelModified?.(groupChannel);
+            setChannelUpdateId(uuidv4());
+            onSubmit();
+          });
         }
       }}
       type={ButtonType.PRIMARY}

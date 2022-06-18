@@ -3,7 +3,11 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import Sendbird from 'sendbird';
+import type {
+  GroupChannel,
+  GroupChannelUpdateParams,
+  SendbirdGroupChat,
+} from '@sendbird/chat/groupChannel';
 
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { RenderUserProfileProps } from '../../../types';
@@ -26,8 +30,8 @@ export type ChannelSettingsContextProps = {
   channelUrl: string;
   className?: string;
   onCloseClick?(): void;
-  onChannelModified?(channel: Sendbird.GroupChannel): void;
-  onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): Sendbird.GroupChannelParams;
+  onChannelModified?(channel: GroupChannel): void;
+  onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): GroupChannelUpdateParams;
   queries?: ChannelSettingsQueries;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   disableUserProfile?: boolean;
@@ -36,12 +40,12 @@ export type ChannelSettingsContextProps = {
 interface ChannelSettingsProviderInterface {
   channelUrl: string;
   onCloseClick?(): void;
-  onChannelModified?(channel: Sendbird.GroupChannel): void;
-  onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): Sendbird.GroupChannelParams;
+  onChannelModified?(channel: GroupChannel): void;
+  onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): GroupChannelUpdateParams;
   queries?: ChannelSettingsQueries;
   setChannelUpdateId(uniqId: string): void;
   forceUpdateUI(): void;
-  channel: Sendbird.GroupChannel;
+  channel: GroupChannel;
   invalidChannel: boolean;
 }
 
@@ -64,7 +68,8 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
   const { sdkStore } = stores;
   const { logger } = config;
 
-  const { sdk, initialized } = sdkStore;
+  const { initialized } = sdkStore;
+  const sdk = sdkStore?.sdk as SendbirdGroupChat;
 
   // hack to keep track of channel updates by triggering useEffect
   const [channelUpdateId, setChannelUpdateId] = useState(uuidv4());
@@ -81,11 +86,11 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
       logger.warning('ChannelSettings: Setting up failed', 'No channelUrl or sdk uninitialized');
       setInvalidChannel(false);
     } else {
-      if (!sdk || !sdk.GroupChannel) {
+      if (!sdk || !sdk.groupChannel) {
         logger.warning('ChannelSettings: No GroupChannel');
         return;
       }
-      sdk.GroupChannel.getChannel(channelUrl, (groupChannel) => {
+      sdk.groupChannel.getChannel(channelUrl).then((groupChannel) => {
         if (!groupChannel) {
           logger.warning('ChannelSettings: Channel not found');
           setInvalidChannel(true);

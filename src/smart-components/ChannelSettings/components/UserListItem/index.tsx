@@ -1,7 +1,5 @@
 import React, { ReactElement, useRef, useContext } from 'react';
 
-import SendBird from 'sendbird';
-
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { UserProfileContext } from '../../../../lib/UserProfileContext';
 import Avatar from '../../../../ui/Avatar/index';
