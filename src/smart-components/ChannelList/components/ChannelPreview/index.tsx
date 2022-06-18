@@ -1,7 +1,7 @@
-import React from 'react';
-import SendBird from 'sendbird';
-
 import './channel-preview.scss';
+
+import React from 'react';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import ChannelAvatar from '../../../../ui/ChannelAvatar';
 import Badge from '../../../../ui/Badge';
@@ -19,11 +19,11 @@ import MessageStatus from '../../../../ui/MessageStatus';
 import { isEditedMessage } from '../../../../utils';
 
 interface ChannelPreviewInterface {
-  channel: SendBird.GroupChannel;
+  channel: GroupChannel;
   isActive?: boolean;
   isTyping?: boolean;
   onClick: () => void;
-  renderChannelAction: (props: { channel: SendBird.GroupChannel }) => React.ReactNode;
+  renderChannelAction: (props: { channel: GroupChannel }) => React.ReactNode;
   tabIndex: number;
 }
 

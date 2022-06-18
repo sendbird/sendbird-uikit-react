@@ -1,3 +1,4 @@
+import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
 import * as channelActions from './dux/actionTypes';
 import * as topics from '../../lib/pubSub/topics';
 
@@ -9,132 +10,134 @@ const createEventHandler = ({
   channelListDispatcher,
   logger,
 }) => {
-  const ChannelHandler = new sdk.ChannelHandler();
-
-  ChannelHandler.onChannelChanged = (channel) => {
-    logger.info('ChannelList: onChannelChanged', channel);
-    channelListDispatcher({
-      type: channelActions.ON_CHANNEL_CHANGED,
-      payload: channel,
-    });
-  };
-  ChannelHandler.onChannelDeleted = (channelUrl) => {
-    logger.info('ChannelList: onChannelDeleted', channelUrl);
-    channelListDispatcher({
-      type: channelActions.ON_CHANNEL_DELETED,
-      payload: channelUrl,
-    });
-  };
-  ChannelHandler.onUserJoined = (channel) => {
-    logger.info('ChannelList: onUserJoined', channel);
-    if (channel.lastMessage) {
+  const ChannelHandler = new GroupChannelHandler({
+    onChannelChanged: (channel) => {
+      logger.info('ChannelList: onChannelChanged', channel);
       channelListDispatcher({
-        type: channelActions.ON_USER_JOINED,
+        type: channelActions.ON_CHANNEL_CHANGED,
         payload: channel,
       });
-    }
-  };
-  ChannelHandler.onUserBanned = (channel, user) => {
-    const { currentUser } = sdk;
-    logger.info('Channel | useHandleChannelEvents: onUserBanned', channel);
-    if (user.userId === currentUser.userId) {
+    },
+    onChannelDeleted: (channelUrl) => {
+      logger.info('ChannelList: onChannelDeleted', channelUrl);
+      channelListDispatcher({
+        type: channelActions.ON_CHANNEL_DELETED,
+        payload: channelUrl,
+      });
+    },
+    onUserJoined: (channel) => {
+      logger.info('ChannelList: onUserJoined', channel);
+      if (channel.lastMessage) {
+        channelListDispatcher({
+          type: channelActions.ON_USER_JOINED,
+          payload: channel,
+        });
+      }
+    },
+    onUserBanned: (channel, user) => {
+      const { currentUser } = sdk;
+      logger.info('Channel | useHandleChannelEvents: onUserBanned', channel);
+      if (user.userId === currentUser.userId) {
+        channelListDispatcher({
+          type: channelActions.ON_USER_LEFT,
+          payload: {
+            channel,
+            isMe: true,
+          },
+        });
+      } else {
+        channelListDispatcher({
+          type: channelActions.ON_USER_LEFT,
+          payload: {
+            channel,
+            isMe: false,
+          },
+        });
+      }
+    },
+    onUserLeft: (channel, leftUser) => {
+      const { currentUser } = sdk;
+      const isMe = (currentUser.userId === leftUser.userId);
+      logger.info('ChannelList: onUserLeft', channel);
       channelListDispatcher({
         type: channelActions.ON_USER_LEFT,
         payload: {
           channel,
-          isMe: true,
+          isMe,
         },
       });
-    } else {
-      channelListDispatcher({
-        type: channelActions.ON_USER_LEFT,
-        payload: {
-          channel,
-          isMe: false,
-        },
-      });
-    }
-  };
-  ChannelHandler.onUserLeft = (channel, leftUser) => {
-    const { currentUser } = sdk;
-    const isMe = (currentUser.userId === leftUser.userId);
-    logger.info('ChannelList: onUserLeft', channel);
-    channelListDispatcher({
-      type: channelActions.ON_USER_LEFT,
-      payload: {
-        channel,
-        isMe,
-      },
-    });
-  };
+    },
 
-  ChannelHandler.onReadStatus = (channel) => {
-    logger.info('ChannelList: onReadStatus', channel);
-    channelListDispatcher({
-      type: channelActions.ON_READ_RECEIPT_UPDATED,
-      payload: channel,
-    });
-  };
-
-  ChannelHandler.onDeliveryReceiptUpdated = (channel) => {
-    logger.info('ChannelList: onDeliveryReceiptUpdated', channel);
-    if (channel.lastMessage) {
+    onReadStatus: (channel) => {
+      logger.info('ChannelList: onReadStatus', channel);
       channelListDispatcher({
-        type: channelActions.ON_DELIVERY_RECEIPT_UPDATED,
+        type: channelActions.ON_READ_RECEIPT_UPDATED,
         payload: channel,
       });
-    }
-  };
+    },
 
-  ChannelHandler.onMessageUpdated = (channel, message) => {
-    if (channel.lastMessage.isEqual(message)) {
-      logger.info('ChannelList: onMessageUpdated', channel);
+    onDeliveryReceiptUpdated: (channel) => {
+      logger.info('ChannelList: onDeliveryReceiptUpdated', channel);
+      if (channel.lastMessage) {
+        channelListDispatcher({
+          type: channelActions.ON_DELIVERY_RECEIPT_UPDATED,
+          payload: channel,
+        });
+      }
+    },
+
+    onMessageUpdated: (channel, message) => {
+      if (channel.lastMessage.isEqual(message)) {
+        logger.info('ChannelList: onMessageUpdated', channel);
+        channelListDispatcher({
+          type: channelActions.ON_LAST_MESSAGE_UPDATED,
+          payload: channel,
+        });
+      }
+    },
+
+    onChannelHidden: (channel) => {
+      logger.info('ChannelList: onChannelHidden', channel);
       channelListDispatcher({
-        type: channelActions.ON_LAST_MESSAGE_UPDATED,
+        type: channelActions.ON_CHANNEL_ARCHIVED,
         payload: channel,
       });
-    }
-  };
+    },
 
-  ChannelHandler.onChannelHidden = (channel) => {
-    logger.info('ChannelList: onChannelHidden', channel);
-    channelListDispatcher({
-      type: channelActions.ON_CHANNEL_ARCHIVED,
-      payload: channel,
-    });
-  };
+    onChannelFrozen: (channel) => {
+      logger.info('ChannelList: onChannelFrozen', channel);
+      channelListDispatcher({
+        type: channelActions.ON_CHANNEL_FROZEN,
+        payload: channel,
+      });
+    },
 
-  ChannelHandler.onChannelFrozen = (channel) => {
-    logger.info('ChannelList: onChannelFrozen', channel);
-    channelListDispatcher({
-      type: channelActions.ON_CHANNEL_FROZEN,
-      payload: channel,
-    });
-  };
-
-  ChannelHandler.onChannelUnfrozen = (channel) => {
-    logger.info('ChannelList: onChannelUnfrozen', channel);
-    channelListDispatcher({
-      type: channelActions.ON_CHANNEL_UNFROZEN,
-      payload: channel,
-    });
-  };
+    onChannelUnfrozen: (channel) => {
+      logger.info('ChannelList: onChannelUnfrozen', channel);
+      channelListDispatcher({
+        type: channelActions.ON_CHANNEL_UNFROZEN,
+        payload: channel,
+      });
+    },
+  });
 
   logger.info('ChannelList: Added channelHandler');
-  sdk.addChannelHandler(sdkChannelHandlerId, ChannelHandler);
+  sdk.groupChannel.addChannelHandler(sdkChannelHandlerId, ChannelHandler);
 };
 
 const createChannelListQuery = ({ sdk, userFilledChannelListQuery = {} }) => {
-  const channelListQuery = sdk.GroupChannel.createMyGroupChannelListQuery();
-  channelListQuery.includeEmpty = false;
-  channelListQuery.order = 'latest_last_message'; // 'chronological', 'latest_last_message', 'channel_name_alphabetical', and 'metadata_value_alphabetical'
-  channelListQuery.limit = 20; // The value of pagination limit could be set up to 100.
+  const param = {};
+  param.includeEmpty = false;
+  param.limit = 20; // The value of pagination limit could be set up to 100.
+  param.order = 'latest_last_message'; // 'chronological', 'latest_last_message', 'channel_name_alphabetical', and 'metadata_value_alphabetical'
 
   if (userFilledChannelListQuery) {
     Object.keys(userFilledChannelListQuery).forEach((key) => {
-      channelListQuery[key] = userFilledChannelListQuery[key];
+      param[key] = userFilledChannelListQuery[key];
     });
   }
+
+  const channelListQuery = sdk.groupChannel.createMyGroupChannelListQuery(param);
 
   return channelListQuery;
 };

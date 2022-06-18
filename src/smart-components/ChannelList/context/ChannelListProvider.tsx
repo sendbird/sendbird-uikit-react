@@ -5,7 +5,15 @@ import React, {
   useReducer,
   useMemo,
 } from 'react';
-import Sendbird from 'sendbird';
+
+import type { User } from '@sendbird/chat';
+import {
+  GroupChannel,
+  GroupChannelCreateParams,
+  GroupChannelHandler,
+  SendbirdGroupChat,
+  GroupChannelListQuery as GroupChannelListQuerySb
+} from '@sendbird/chat/groupChannel';
 
 import { RenderUserProfileProps } from '../../../types';
 
@@ -23,6 +31,7 @@ import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 import channelListReducers from '../dux/reducers';
 import channelListInitialState from '../dux/initialState';
+import { GroupChannelListQueryStatic } from 'sendbird';
 
 interface ApplicationUserListQuery {
   limit?: number;
@@ -59,18 +68,18 @@ interface ChannelListQueries {
 
 export interface ChannelListProviderProps {
   allowProfileEdit?: boolean;
-  onBeforeCreateChannel?(users: Array<string>): Sendbird.GroupChannelParams;
+  onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
   onThemeChange?(theme: string): void;
-  onProfileEditSuccess?(user: Sendbird.User): void;
-  onChannelSelect?(channel: Sendbird.GroupChannel): void;
-  sortChannelList?: (channels: Sendbird.GroupChannel[]) => Sendbird.GroupChannel[];
+  onProfileEditSuccess?(user: User): void;
+  onChannelSelect?(channel: GroupChannel): void;
+  sortChannelList?: (channels: GroupChannel[]) => GroupChannel[];
   queries?: ChannelListQueries;
   children?: React.ReactNode;
   className?: string | string[];
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   disableUserProfile?: boolean;
   disableAutoSelect?: boolean;
-  typingChannels?: Array<Sendbird.GroupChannel>;
+  typingChannels?: Array<GroupChannel>;
   isTypingIndicatorEnabled?: boolean;
   isMessageReceiptStatusEnabled?: boolean;
 }
@@ -78,20 +87,20 @@ export interface ChannelListProviderProps {
 export interface ChannelListProviderInterface extends ChannelListProviderProps {
   initialized: boolean;
   loading: boolean;
-  allChannels: Sendbird.GroupChannel[];
-  currentChannel: Sendbird.GroupChannel;
+  allChannels: GroupChannel[];
+  currentChannel: GroupChannel;
   showSettings: boolean;
   channelListQuery: GroupChannelListQuery;
   currentUserId: string;
   channelListDispatcher: CustomUseReducerDispatcher;
-  channelSource: Sendbird.GroupChannelListQuery;
+  channelSource: GroupChannelListQuerySb;
 }
 
 interface ChannelListStoreInterface {
   initialized: boolean;
   loading: boolean;
-  allChannels: Sendbird.GroupChannel[];
-  currentChannel: Sendbird.GroupChannel;
+  allChannels: GroupChannel[];
+  currentChannel: GroupChannel;
   showSettings: boolean;
   channelListQuery: GroupChannelListQuery;
   currentUserId: string;
@@ -146,7 +155,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     isTypingIndicatorEnabledOnChannelList,
     isMessageReceiptStatusEnabledOnChannelList,
   } = config;
-  const { sdk } = sdkStore;
+  const sdk = sdkStore?.sdk as SendbirdGroupChat;
 
   // derive some variables
   // enable if it is true atleast once(both are flase by default)
@@ -165,10 +174,10 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   ) as [ChannelListStoreInterface, CustomUseReducerDispatcher];
   const { loading, currentChannel } = channelListStore;
 
-  const [channelSource, setChannelSource] = useState<Sendbird.GroupChannelListQuery | null>();
+  const [channelSource, setChannelSource] = useState<GroupChannelListQuerySb>();
   const [sdkChannelHandlerId, setSdkChannelHandlerId] = useState<string | null>(null);
   const [typingHandlerId, setTypingHandlerId] = useState<string | null>(null);
-  const [typingChannels, setTypingChannels] = useState<Array<Sendbird.GroupChannel>>([]);
+  const [typingChannels, setTypingChannels] = useState<Array<GroupChannel>>([]);
 
   useEffect(() => {
     const subscriber = pubSubHandler(pubSub, channelListDispatcher);
@@ -195,8 +204,8 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     } else {
       logger.info('ChannelList: Removing channelHandlers');
       // remove previous channelHandlers
-      if (sdk && sdk?.removeChannelHandler) {
-        sdk.removeChannelHandler(sdkChannelHandlerId);
+      if (sdk?.groupChannel?.removeGroupChannelHandler) {
+        sdk.groupChannel.removeGroupChannelHandler(sdkChannelHandlerId);
       }
       // remove channelSource
       setChannelSource(null);
@@ -208,31 +217,32 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     }
     return () => {
       logger.info('ChannelList: Removing channelHandlers');
-      if (sdk && sdk.removeChannelHandler) {
-        sdk.removeChannelHandler(sdkChannelHandlerId);
+      if (sdk?.groupChannel?.removeGroupChannelHandler) {
+        sdk?.groupChannel?.removeGroupChannelHandler(sdkChannelHandlerId);
       }
     };
   }, [sdkIntialized, userFilledChannelListQuery, sortChannelList]);
 
   useEffect(() => {
-    if (sdk && sdk?.ChannelHandler) {
+    if (sdk?.groupChannel?.addGroupChannelHandler) {
       const handlerId = uuidv4()
-      const handler = new sdk.ChannelHandler()
-      handler.onTypingStatusUpdated = (channel) => {
-        const typingMemberCount = channel?.getTypingMembers()?.length
-        const channelList = typingChannels.filter(ch => ch.url !== channel.url)
-        if (typingMemberCount > 0) {
-          setTypingChannels([...channelList, channel])
-        } else {
-          setTypingChannels(channelList)
-        }
-      }
-      sdk.addChannelHandler(handlerId, handler)
+      const handler = new GroupChannelHandler({
+        onTypingStatusUpdated: (channel) => {
+          const typingMemberCount = channel?.getTypingUsers()?.length
+          const channelList = typingChannels.filter(ch => ch.url !== channel.url)
+          if (typingMemberCount > 0) {
+            setTypingChannels([...channelList, channel])
+          } else {
+            setTypingChannels(channelList)
+          }
+        },
+      });
+      sdk?.groupChannel?.addGroupChannelHandler(handlerId, handler)
       setTypingHandlerId(handlerId)
     }
     return () => {
-      if (sdk && sdk.removeChannelHandler) {
-        sdk.removeChannelHandler(typingHandlerId)
+      if (sdk?.groupChannel?.removeGroupChannelHandler) {
+        sdk.groupChannel.removeGroupChannelHandler(typingHandlerId)
       }
     }
   }, [sdk?.currentUser?.userId]);
@@ -261,8 +271,10 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   }
 
   useEffect(() => {
-    if (!sdk || !sdk.GroupChannel || !currentChannel || !currentChannel?.url) { return; }
-    sdk.GroupChannel.getChannel(currentChannel.url, (groupChannel) => {
+    if (!sdk || !sdk.groupChannel || !currentChannel || !currentChannel?.url) {
+      return;
+    }
+    sdk.groupChannel.getChannel(currentChannel.url).then((groupChannel) => {
       if (groupChannel) {
         onChannelSelect(groupChannel);
       } else {

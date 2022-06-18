@@ -1,8 +1,8 @@
 import './channel-list-ui.scss';
 
 import React, { useState } from 'react';
-
-import SendBird from 'sendbird';
+import type { GroupChannel, Member, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import type { User } from '@sendbird/chat';
 
 import ChannelListHeader from '../ChannelListHeader';
 import AddChannel from '../AddChannel';
@@ -18,15 +18,15 @@ import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 const DELIVERY_RECIPT = 'delivery_receipt';
 
 interface RenderChannelPreviewProps {
-  channel: SendBird.GroupChannel;
+  channel: GroupChannel;
   onLeaveChannel(
-    channel: SendBird.GroupChannel,
-    onLeaveChannelCb?: (c: SendBird.GroupChannel) => void,
+    channel: GroupChannel,
+    onLeaveChannelCb?: (c: GroupChannel) => void,
   );
 }
 
 interface RenderUserProfileProps {
-  user: SendBird.Member | SendBird.User;
+  user: Member | User;
   currentUserId: string;
   close(): void;
 }
@@ -70,7 +70,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
   const isOnline = state?.config?.isOnline;
   const logger = config?.logger;
 
-  const sdk = sdkStore?.sdk;
+  const sdk = sdkStore?.sdk as SendbirdGroupChat;
   const sdkError = sdkStore?.error;
   const sdkIntialized = sdkStore?.initialized || false;
 
@@ -112,15 +112,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
               type: channelListActions.FETCH_CHANNELS_START,
               payload: null,
             });
-            channelSource?.next((channelList, err) => {
-              if (err) {
-                logger.info('ChannelList: Fetching channels failed', err);
-                channelListDispatcher({
-                  type: channelListActions.FETCH_CHANNELS_FAILURE,
-                  payload: channelList,
-                });
-                return;
-              }
+            channelSource.next().then((channelList) => {
               logger.info('ChannelList: Fetching channels successful', channelList);
               channelListDispatcher({
                 type: channelListActions.FETCH_CHANNELS_SUCCESS,
@@ -135,10 +127,16 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
                 channelList?.forEach((c, idx) => {
                   // Plan-based rate limits - minimum limit is 5 requests per second
                   setTimeout(() => {
-                    sdk?.markAsDelivered(c?.url);
+                    // sdk?.markAsDelivered(c?.url);
                   }, 300 * idx);
                 });
               }
+            }).catch((err) => {
+              logger.info('ChannelList: Fetching channels failed', err);
+              channelListDispatcher({
+                type: channelListActions.FETCH_CHANNELS_FAILURE,
+                payload: err,
+              });
             });
           }
         }}
