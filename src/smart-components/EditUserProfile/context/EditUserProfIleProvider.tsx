@@ -1,5 +1,5 @@
+import type { User } from '@sendbird/chat';
 import React, { useMemo } from 'react';
-import Sendbird from 'sendbird';
 
 const EditUserProfileProviderContext = React.createContext(undefined);
 
@@ -7,13 +7,13 @@ export interface EditUserProfileProps {
   children?: React.ReactNode;
   onCancel?(): void;
   onThemeChange?(theme: string): void;
-  onEditProfile?(updatedUser: Sendbird.User): void;
+  onEditProfile?(updatedUser: User): void;
 }
 
 export interface EditUserProfileProviderInterface {
   onCancel?(): void;
   onThemeChange?(theme: string): void;
-  onEditProfile?(updatedUser: Sendbird.User): void;
+  onEditProfile?(updatedUser: User): void;
 }
 
 const EditUserProfileProvider: React.FC<EditUserProfileProps> = (props: EditUserProfileProps) => {

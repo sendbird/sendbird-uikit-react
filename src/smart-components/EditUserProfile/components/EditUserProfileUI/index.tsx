@@ -56,7 +56,10 @@ export default function EditUserProfile(): ReactElement {
           }
           return;
         }
-        sdk?.updateCurrentUserInfoWithProfileImage(inputRef?.current?.value, newFile, (updatedUser) => {
+        sdk?.updateCurrentUserInfo({
+          nickname: inputRef?.current?.value,
+          profileImage: newFile,
+        }).then((updatedUser) => {
           userDispatcher({ type: userActions.UPDATE_USER_INFO, payload: updatedUser });
           if (onEditProfile && typeof onEditProfile === 'function') {
             onEditProfile(updatedUser);
