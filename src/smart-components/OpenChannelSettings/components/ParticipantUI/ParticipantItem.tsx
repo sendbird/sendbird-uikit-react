@@ -5,6 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
+import type { User } from '@sendbird/chat';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 
 import { UserProfileContext } from '../../../../lib/UserProfileContext';
@@ -22,7 +23,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 const SHOWN_MEMBER_MAX = 10;
 
 interface UserListItemProps {
-  member: SendBird.User;
+  member: User;
   currentUser?: string;
 }
 
@@ -112,11 +113,8 @@ export default function ParticipantsAccordion(props: ParticipantsAccordionProps)
     if (!channel || !channel.createParticipantListQuery) {
       return;
     }
-    const participantListQuery = channel.createParticipantListQuery();
-    participantListQuery.next((participantList, error) => {
-      if (error) {
-        return;
-      }
+    const participantListQuery = channel.createParticipantListQuery({});
+    participantListQuery.next().then((participantList) => {
       setParticipants(participantList);
     });
   }, [channel]);

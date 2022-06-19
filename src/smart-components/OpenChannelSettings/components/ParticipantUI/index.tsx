@@ -4,6 +4,8 @@ import React, {
   useState,
   useEffect,
 } from 'react';
+import type { User } from '@sendbird/chat';
+import type { ParticipantListQuery } from '@sendbird/chat/openChannel';
 
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import Icon, { IconTypes } from '../../../../ui/Icon';
@@ -18,18 +20,15 @@ export default function ParticipantsList(): ReactElement {
   const currentUser = globalState?.config?.userId;
   const { channel, onCloseClick } = useOpenChannelSettings();
   const { stringSet } = useContext(LocalizationContext);
-  const [participants, setParticipants] = useState<Array<SendBird.User>|null>([]);
-  const [participantListQuery, setParticipantListQuery] = useState<SendBird.ParticipantListQuery | null>(null);
+  const [participants, setParticipants] = useState<Array<User>|null>([]);
+  const [participantListQuery, setParticipantListQuery] = useState<ParticipantListQuery | null>(null);
   useEffect(() => {
     if (!channel || !channel.createParticipantListQuery) {
       return;
     }
-    const participantListQuery = channel.createParticipantListQuery();
+    const participantListQuery = channel.createParticipantListQuery({});
     setParticipantListQuery(participantListQuery);
-    participantListQuery.next((participantList, error) => {
-      if (error) {
-        return;
-      }
+    participantListQuery.next().then((participantList) => {
       setParticipants(participantList);
     });
   }, [channel]);
@@ -59,10 +58,7 @@ export default function ParticipantsList(): ReactElement {
           );
 
           if (hasNext && fetchMore) {
-            participantListQuery.next((fetchedParticipants, error) => {
-              if (error) {
-                return;
-              }
+            participantListQuery.next().then((fetchedParticipants) => {
               setParticipants([
                 ...participants,
                 ...fetchedParticipants,
@@ -73,7 +69,7 @@ export default function ParticipantsList(): ReactElement {
       >
         <div>
           {
-            participants.map((p: SendBird.User) => (
+            participants.map((p: User) => (
               <UserListItem
                 member={p}
                 currentUser={currentUser}

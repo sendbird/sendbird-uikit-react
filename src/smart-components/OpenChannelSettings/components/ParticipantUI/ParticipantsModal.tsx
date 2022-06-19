@@ -4,6 +4,8 @@ import React, {
   useState,
   useContext,
 } from 'react';
+import type { User } from '@sendbird/chat';
+import type { ParticipantListQuery } from '@sendbird/chat/openChannel';
 
 import Modal from '../../../../ui/Modal';
 import UserListItem from '../../../../ui/UserListItem';
@@ -20,18 +22,15 @@ export default function ParticipantsModal({
 }: Props): ReactElement {
   const { channel } = useOpenChannelSettings();
   const { stringSet } = useContext(LocalizationContext);
-  const [participants, setParticipants] = useState<Array<SendBird.User>|null>([]);
-  const [participantListQuery, setParticipantListQuery] = useState<SendBird.ParticipantListQuery | null>(null);
+  const [participants, setParticipants] = useState<Array<User>|null>([]);
+  const [participantListQuery, setParticipantListQuery] = useState<ParticipantListQuery | null>(null);
   useEffect(() => {
     if (!channel || !channel.createParticipantListQuery) {
       return;
     }
-    const participantListQuery = channel.createParticipantListQuery();
+    const participantListQuery = channel.createParticipantListQuery({});
     setParticipantListQuery(participantListQuery);
-    participantListQuery.next((participantList, error) => {
-      if (error) {
-        return;
-      }
+    participantListQuery.next().then((participantList) => {
       setParticipants(participantList);
     });
   }, []);
@@ -53,10 +52,7 @@ export default function ParticipantsModal({
             );
 
             if (hasNext && fetchMore) {
-              participantListQuery.next((fetchedParticipants, error) => {
-                if (error) {
-                  return;
-                }
+              participantListQuery.next().then((fetchedParticipants) => {
                 setParticipants([
                   ...participants,
                   ...fetchedParticipants,
