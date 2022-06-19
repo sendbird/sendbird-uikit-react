@@ -3,7 +3,9 @@ import React, {
   useState,
   useReducer,
 } from 'react';
-import SendBird from 'sendbird';
+import type { MessageSearchQuery } from '@sendbird/chat/message';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import type { MessageSearchQueryParams } from '@sendbird/chat/lib/__definition';
 
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { ClientSentMessages } from '../../../types';
@@ -24,7 +26,7 @@ export interface MessageSearchProviderProps {
   children?: React.ReactNode;
   searchString?: string;
   requestString?: string;
-  messageSearchQuery?: SendBird.MessageSearchQueryOptions;
+  messageSearchQuery?: MessageSearchQueryParams;
   onResultLoaded?(messages?: Array<ClientSentMessages>, error?: SendBird.SendBirdError): void;
   onResultClick?(message: ClientSentMessages): void;
 }
@@ -39,8 +41,8 @@ interface MessageSearchProviderInterface extends MessageSearchProviderProps {
   allMessages: MessageSearchReducerState['allMessages'];
   loading: boolean;
   isInvalid: boolean;
-  currentChannel: SendBird.GroupChannel;
-  currentMessageSearchQuery: SendBird.MessageSearchQuery;
+  currentChannel: GroupChannel;
+  currentMessageSearchQuery: MessageSearchQuery;
   hasMoreResult: boolean;
   onScroll: UseScrollCallbackType;
   handleRetryToConnect: () => void;

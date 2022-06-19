@@ -1,4 +1,5 @@
-import SendBird from 'sendbird';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import { MessageSearchQuery } from '@sendbird/chat/message';
 import {
   ClientFileMessage,
   ClientUserMessage,
@@ -9,8 +10,8 @@ export interface State {
   loading: boolean;
   isInvalid: boolean;
   initialized: boolean;
-  currentChannel: SendBird.GroupChannel;
-  currentMessageSearchQuery: SendBird.MessageSearchQuery | SendBird.MessageSearchQueryOptions;
+  currentChannel: GroupChannel;
+  currentMessageSearchQuery: MessageSearchQuery;
   hasMoreResult: boolean;
 }
 
