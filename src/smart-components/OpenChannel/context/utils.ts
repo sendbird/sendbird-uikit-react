@@ -1,8 +1,12 @@
+import type { User } from '@sendbird/chat';
+import type { UserMessage } from '@sendbird/chat/message';
+import type { OpenChannel, ParticipantListQuery } from '@sendbird/chat/openChannel';
 import format from 'date-fns/format';
-import Sendbird from 'sendbird';
-import SendbirdUIKit from '../../../index';
 
-export const getMessageCreatedAt = (message: SendbirdUIKit.EveryMessage): string => format(message.createdAt, 'p');
+import { Logger } from '../../../lib/SendbirdState';
+import { EveryMessage } from '../../../types';
+
+export const getMessageCreatedAt = (message: EveryMessage): string => format(message.createdAt, 'p');
 
 export const shouldFetchMore = (messageLength: number, maxMessages: number): boolean => {
   if (typeof maxMessages !== 'number') {
@@ -35,35 +39,43 @@ export const scrollIntoLast = (intialTry = 0): void => {
 };
 
 export const isSameGroup = (
-  message: SendbirdUIKit.EveryMessage,
-  comparingMessage: SendbirdUIKit.EveryMessage,
+  message: EveryMessage,
+  comparingMessage: EveryMessage,
 ): boolean => {
   if (!(
     message
     && comparingMessage
     && message?.messageType !== 'admin'
     && comparingMessage?.messageType !== 'admin'
+    // @ts-ignore
     && message?.sender
+    // @ts-ignore
     && comparingMessage?.sender
     && message?.createdAt
     && comparingMessage?.createdAt
+    // @ts-ignore
     && message?.sender?.userId
+    // @ts-ignore
     && comparingMessage?.sender?.userId
+    // @ts-ignore
   )) {
     return false
   }
 
+  // to fix typecasting
+  const message_ = message as UserMessage;
+  const comparingMessage_ = message as UserMessage;
   return (
-    message?.sendingStatus === comparingMessage?.sendingStatus
-    && message?.sender?.userId === comparingMessage?.sender?.userId
+    message_?.sendingStatus === comparingMessage_?.sendingStatus
+    && message_?.sender?.userId === comparingMessage_?.sender?.userId
     && getMessageCreatedAt(message) === getMessageCreatedAt(comparingMessage)
   );
 };
 
 export const compareMessagesForGrouping = (
-  prevMessage: SendbirdUIKit.EveryMessage,
-  currMessage: SendbirdUIKit.EveryMessage,
-  nextMessage: SendbirdUIKit.EveryMessage,
+  prevMessage: EveryMessage,
+  currMessage: EveryMessage,
+  nextMessage: EveryMessage,
 ): [boolean, boolean] => (
   [
     isSameGroup(prevMessage, currMessage),
@@ -83,7 +95,7 @@ export const kFormatter = (num: number): string => {
   return `${num}`;
 };
 
-export const isOperator = (openChannel: Sendbird.OpenChannel, userId: string): boolean => {
+export const isOperator = (openChannel: OpenChannel, userId: string): boolean => {
   const { operators } = openChannel;
   if (operators.map(operator => operator.userId).indexOf(userId) < 0) {
     return false;
@@ -91,7 +103,7 @@ export const isOperator = (openChannel: Sendbird.OpenChannel, userId: string): b
   return true;
 };
 
-export const isDisabledBecauseFrozen = (openChannel: Sendbird.OpenChannel, userId: string): boolean => {
+export const isDisabledBecauseFrozen = (openChannel: OpenChannel, userId: string): boolean => {
   const { isFrozen } = openChannel;
   return isFrozen && !isOperator(openChannel, userId);
 };
@@ -101,20 +113,18 @@ export const isDisabledBecauseMuted = (mutedParticipantIds: Array<string>, userI
 };
 
 export const fetchWithListQuery = (
-  listQuery: SendbirdUIKit.UserListQuery,
-  logger: SendbirdUIKit.Logger,
-  eachQueryNextCallback: (users: Array<Sendbird.User>) => void,
+  listQuery: ParticipantListQuery,
+  logger: Logger,
+  eachQueryNextCallback: (users: Array<User>) => void,
 ): void => {
-  const fetchList = (query) => {
+  const fetchList = (query: ParticipantListQuery) => {
     const { hasNext } = query;
     if (hasNext) {
-      query.next((error, users) => {
-        if (!error) {
-          eachQueryNextCallback(users);
-          fetchList(query);
-        } else {
-          logger.warning('OpenChannel | FetchUserList failed', error);
-        }
+      query.next().then((users) => {
+        eachQueryNextCallback(users);
+        fetchList(query);
+      }).catch((error) => {
+        logger.warning('OpenChannel | FetchUserList failed', error);
       });
     } else {
       logger.info('OpenChannel | FetchUserList finished');

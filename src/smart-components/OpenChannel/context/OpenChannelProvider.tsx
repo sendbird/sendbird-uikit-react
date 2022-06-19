@@ -4,7 +4,6 @@ import React, {
   useReducer,
   useMemo,
 } from 'react';
-import SendBird from 'sendbird';
 
 import * as utils from './utils';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
@@ -30,6 +29,7 @@ import useDeleteMessageCallback from './hooks/useDeleteMessageCallback';
 import useResendMessageCallback from './hooks/useResendMessageCallback';
 import useTrimMessageList from './hooks/useTrimMessageList';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
+import { FileMessageCreateParams, UserMessageCreateParams } from '@sendbird/chat/message';
 
 type OpenChannelQueries = {
   // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
@@ -59,8 +59,8 @@ export interface OpenChannelProviderProps {
   useMessageGrouping?: boolean;
   queries?: OpenChannelQueries;
   messageLimit?: number;
-  onBeforeSendUserMessage?(text: string): SendBird.UserMessageParams;
-  onBeforeSendFileMessage?(file_: File): SendBird.FileMessageParams;
+  onBeforeSendUserMessage?(text: string): UserMessageCreateParams;
+  onBeforeSendFileMessage?(file_: File): FileMessageCreateParams;
   onChatHeaderActionClick?(): void;
   disableUserProfile?: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;

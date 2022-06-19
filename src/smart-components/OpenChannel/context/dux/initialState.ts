@@ -1,17 +1,18 @@
-import Sendbird from 'sendbird';
+import type { User } from '@sendbird/chat';
+import type { OpenChannel } from '@sendbird/chat/openChannel';
 import { EveryMessage } from '../../../../index';
 
 export interface State {
   allMessages: Array<EveryMessage>;
   loading: boolean;
   initialized: boolean;
-  currentOpenChannel: Sendbird.OpenChannel;
+  currentOpenChannel: OpenChannel;
   isInvalid: boolean;
   hasMore: boolean;
   lastMessageTimestamp: number;
   frozen: boolean;
-  operators: Array<Sendbird.User>;
-  participants: Array<Sendbird.User>;
+  operators: Array<User>;
+  participants: Array<User>;
   bannedParticipantIds: Array<string>;
   mutedParticipantIds: Array<string>;
 }

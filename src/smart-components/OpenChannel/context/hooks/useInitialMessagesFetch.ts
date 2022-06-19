@@ -1,15 +1,20 @@
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import { MessageListParams } from '@sendbird/chat/message';
+import type { SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import { useEffect } from 'react';
+
+import type { Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
 import { scrollIntoLast } from '../utils';
 
 interface DynamicParams {
-  currentOpenChannel: SendbirdUIKit.OpenChannelType;
+  currentOpenChannel: GroupChannel;
   /* eslint-disable @typescript-eslint/no-explicit-any*/
   userFilledMessageListParams?: Record<string, any>;
 }
 interface StaticParams {
-  sdk: SendbirdUIKit.Sdk;
-  logger: SendbirdUIKit.Logger;
+  sdk: SendbirdOpenChat;
+  logger: Logger;
   messagesDispatcher: ({ type: string, payload: any }) => void;
 }
 
@@ -24,12 +29,13 @@ function useInitialMessagesFetch(
       payload: null,
     });
 
-    if (sdk && sdk.MessageListParams && currentOpenChannel && currentOpenChannel.getMessagesByTimestamp) {
-      const messageListParams = new sdk.MessageListParams();
-      messageListParams.prevResultSize = 30;
-      messageListParams.isInclusive = true;
-      messageListParams.includeReplies = false;
-      messageListParams.includeReactions = false;
+    if (currentOpenChannel && currentOpenChannel.getMessagesByTimestamp) {
+      const messageListParams: MessageListParams = {
+        nextResultSize: 0,
+        prevResultSize: 30,
+        isInclusive: true,
+        includeReactions: false,
+      };
       if (userFilledMessageListParams) {
         Object.keys(userFilledMessageListParams).forEach((key) => {
           messageListParams[key] = userFilledMessageListParams[key];
@@ -42,33 +48,31 @@ function useInitialMessagesFetch(
         type: messageActionTypes.GET_PREV_MESSAGES_START,
         payload: null,
       });
-      currentOpenChannel.getMessagesByTimestamp(new Date().getTime(), messageListParams, (messages, error) => {
-        if (!error) {
-          logger.info('OpenChannel | useInitialMessagesFetch: Fetching messages succeeded', messages);
-          const hasMore = (messages && messages.length > 0);
-          const lastMessageTimestamp = hasMore ? messages[0].createdAt : null;
-          messagesDispatcher({
-            type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
-            payload: {
-              currentOpenChannel,
-              messages,
-              hasMore,
-              lastMessageTimestamp,
-            },
-          });
-          setTimeout(() => { scrollIntoLast(); });
-        } else {
-          logger.error('OpenChannel | useInitialMessagesFetch: Fetching messages failed', error);
-          messagesDispatcher({
-            type: messageActionTypes.GET_PREV_MESSAGES_FAIL,
-            payload: {
-              currentOpenChannel,
-              messages: [],
-              hasMore: false,
-              lastMessageTimestamp: 0,
-            },
-          });
-        }
+      currentOpenChannel.getMessagesByTimestamp(new Date().getTime(), messageListParams).then((messages) => {
+        logger.info('OpenChannel | useInitialMessagesFetch: Fetching messages succeeded', messages);
+        const hasMore = (messages && messages.length > 0);
+        const lastMessageTimestamp = hasMore ? messages[0].createdAt : null;
+        messagesDispatcher({
+          type: messageActionTypes.GET_PREV_MESSAGES_SUCESS,
+          payload: {
+            currentOpenChannel,
+            messages,
+            hasMore,
+            lastMessageTimestamp,
+          },
+        });
+        setTimeout(() => { scrollIntoLast(); });
+      }).catch((error) => {
+        logger.error('OpenChannel | useInitialMessagesFetch: Fetching messages failed', error);
+        messagesDispatcher({
+          type: messageActionTypes.GET_PREV_MESSAGES_FAIL,
+          payload: {
+            currentOpenChannel,
+            messages: [],
+            hasMore: false,
+            lastMessageTimestamp: 0,
+          },
+        });
       });
     }
   }, [currentOpenChannel, userFilledMessageListParams]);

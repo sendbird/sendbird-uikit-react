@@ -1,11 +1,14 @@
-import Sendbird from 'sendbird';
 import { useCallback } from 'react';
+import type { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
+import type { FileMessageCreateParams } from '@sendbird/chat/message';
+
+import type { Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';
 
 interface DynamicParams {
-  currentOpenChannel: SendbirdUIKit.OpenChannelType;
-  onBeforeSendFileMessage: (file: File) => Sendbird.FileMessageParams;
+  currentOpenChannel: OpenChannel;
+  onBeforeSendFileMessage: (file: File) => FileMessageCreateParams;
   checkScrollBottom: () => boolean;
   imageCompression?: {
     compressionRate?: number,
@@ -14,8 +17,8 @@ interface DynamicParams {
   };
 }
 interface StaticParams {
-  sdk: SendbirdUIKit.Sdk;
-  logger: SendbirdUIKit.Logger;
+  sdk: SendbirdOpenChat;
+  logger: Logger;
   messagesDispatcher: ({ type: string, payload: any }) => void;
 }
 
@@ -31,7 +34,7 @@ function useFileUploadCallback(
   { sdk, logger, messagesDispatcher }: StaticParams,
 ): CallbackReturn {
   return useCallback((file) => {
-    if (sdk && sdk.FileMessageParams) {
+    if (sdk) {
       const {
         compressionRate,
         resizingWidth,
@@ -47,8 +50,8 @@ function useFileUploadCallback(
 
       const canCompressImage = compressibleFileType && (compressibleRatio || compressibleDiamensions);
 
-      const createParamsDefault = (file_): Sendbird.FileMessageParams => {
-        const params = new sdk.FileMessageParams();
+      const createParamsDefault = (file_): FileMessageCreateParams => {
+        const params: FileMessageCreateParams = {};
         params.file = file_;
         return params;
       };
@@ -87,44 +90,44 @@ function useFileUploadCallback(
                 logger.info('OpenChannel | useFileUploadCallback: Uploading file message start', params);
 
                 const isBottom = checkScrollBottom();
-                const pendingMessage = currentOpenChannel.sendFileMessage(
-                  params,
-                  (message: SendbirdUIKit.ClientFileMessage, error) => {
-                    if (!error) {
-                      logger.info('OpenChannel | useFileUploadCallback: Sending message succeeded', message);
-                      messagesDispatcher({
-                        type: messageActionTypes.SENDING_MESSAGE_SUCCEEDED,
-                        payload: message,
-                      });
-                      if (isBottom) {
-                        setTimeout(() => {
-                          utils.scrollIntoLast();
-                        });
+                currentOpenChannel.sendFileMessage(params)
+                  .onPending((pendingMessage) => {
+                    messagesDispatcher({
+                      type: messageActionTypes.SENDING_MESSAGE_START,
+                      payload: {
+                        message: {
+                          ...pendingMessage,
+                          url: URL.createObjectURL(file),
+                          // pending thumbnail message seems to be failed
+                          requestState: 'pending',
+                        },
+                        channel: currentOpenChannel,
                       }
-                    } else {
-                      logger.error('OpenChannel | useFileUploadCallback: Sending file message failed', { message, error });
-                      message.localUrl = URL.createObjectURL(file);
-                      message.file = file;
-                      messagesDispatcher({
-                        type: messageActionTypes.SENDING_MESSAGE_FAILED,
-                        payload: message,
+                    });
+                  })
+                  .onSucceeded((message) => {
+                    logger.info('OpenChannel | useFileUploadCallback: Sending message succeeded', message);
+                    messagesDispatcher({
+                      type: messageActionTypes.SENDING_MESSAGE_SUCCEEDED,
+                      payload: message,
+                    });
+                    if (isBottom) {
+                      setTimeout(() => {
+                        utils.scrollIntoLast();
                       });
                     }
-                  },
-                );
-
-                messagesDispatcher({
-                  type: messageActionTypes.SENDING_MESSAGE_START,
-                  payload: {
-                    message: {
-                      ...pendingMessage,
-                      url: URL.createObjectURL(file),
-                      // pending thumbnail message seems to be failed
-                      requestState: 'pending',
-                    },
-                    channel: currentOpenChannel,
-                  }
-                });
+                  })
+                  .onFailed((error, message) => {
+                    logger.error('OpenChannel | useFileUploadCallback: Sending file message failed', { message, error });
+                    // @ts-ignore
+                    message.localUrl = URL.createObjectURL(file);
+                    // @ts-ignore
+                    message.file = file;
+                    messagesDispatcher({
+                      type: messageActionTypes.SENDING_MESSAGE_FAILED,
+                      payload: message,
+                    });
+                  });
               },
               file.type,
               compressionRate,
@@ -141,44 +144,44 @@ function useFileUploadCallback(
         logger.info('OpenChannel | useFileUploadCallback: Uploading file message start', params);
 
         const isBottom = checkScrollBottom();
-        const pendingMessage = currentOpenChannel.sendFileMessage(
-          params,
-          (message: SendbirdUIKit.ClientFileMessage, error) => {
-            if (!error) {
-              logger.info('OpenChannel | useFileUploadCallback: Sending message succeeded', message);
-              messagesDispatcher({
-                type: messageActionTypes.SENDING_MESSAGE_SUCCEEDED,
-                payload: message,
-              });
-              if (isBottom) {
-                setTimeout(() => {
-                  utils.scrollIntoLast();
-                });
+        currentOpenChannel.sendFileMessage(params)
+          .onPending((pendingMessage) => {
+            messagesDispatcher({
+              type: messageActionTypes.SENDING_MESSAGE_START,
+              payload: {
+                message: {
+                  ...pendingMessage,
+                  url: URL.createObjectURL(file),
+                  // pending thumbnail message seems to be failed
+                  requestState: 'pending',
+                },
+                channel: currentOpenChannel,
               }
-            } else {
-              logger.error('OpenChannel | useFileUploadCallback: Sending file message failed', { message, error });
-              message.localUrl = URL.createObjectURL(file);
-              message.file = file;
-              messagesDispatcher({
-                type: messageActionTypes.SENDING_MESSAGE_FAILED,
-                payload: message,
+            });
+          })
+          .onSucceeded((message) => {
+            logger.info('OpenChannel | useFileUploadCallback: Sending message succeeded', message);
+            messagesDispatcher({
+              type: messageActionTypes.SENDING_MESSAGE_SUCCEEDED,
+              payload: message,
+            });
+            if (isBottom) {
+              setTimeout(() => {
+                utils.scrollIntoLast();
               });
             }
-          }
-        );
-
-        messagesDispatcher({
-          type: messageActionTypes.SENDING_MESSAGE_START,
-          payload: {
-            message: {
-              ...pendingMessage,
-              url: URL.createObjectURL(file),
-              // pending thumbnail message seems to be failed
-              requestState: 'pending',
-            },
-            channel: currentOpenChannel,
-          }
-        });
+          })
+          .onFailed((error, message) => {
+            logger.error('OpenChannel | useFileUploadCallback: Sending file message failed', { message, error });
+            // @ts-ignore
+            message.localUrl = URL.createObjectURL(file);
+            // @ts-ignore
+            message.file = file;
+            messagesDispatcher({
+              type: messageActionTypes.SENDING_MESSAGE_FAILED,
+              payload: message,
+            });
+          });
       }
     }
   }, [currentOpenChannel, onBeforeSendFileMessage, checkScrollBottom, imageCompression]);
