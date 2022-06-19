@@ -1,4 +1,5 @@
-import Sendbird from 'sendbird';
+import type { User } from '@sendbird/chat';
+import type { UserMessage } from '@sendbird/chat/message';
 import { ClientUserMessage, ClientFileMessage } from '../index';
 
 const OpenChannelMessageStatusTypes = {
@@ -9,7 +10,8 @@ const OpenChannelMessageStatusTypes = {
   SUCCEEDED: 'succeeded'
 };
 
-export const getSenderFromMessage = (message: ClientUserMessage | ClientFileMessage): Sendbird.User => {
+export const getSenderFromMessage = (message: ClientUserMessage | ClientFileMessage): User => {
+  // @ts-ignore
   return message.sender || message._sender;
 };
 
@@ -20,12 +22,12 @@ export const checkIsFailed = (status: string): boolean => (status === OpenChanne
 export const checkIsByMe = (message: ClientFileMessage | ClientUserMessage, userId: string): boolean => (getSenderFromMessage(message).userId === userId);
 
 interface isFineCopyParams {
-  message: ClientUserMessage;
+  message: UserMessage;
   status: string;
   userId: string;
 }
 export const isFineCopy = ({ message }: isFineCopyParams): boolean => {
-  return (message.messageType === 'user' && message.message.length > 0);
+  return (message?.messageType === 'user' && message?.message?.length > 0);
 };
 
 interface isFineResendParams {
@@ -36,8 +38,8 @@ interface isFineResendParams {
 export const isFineResend = ({ message, status, userId }: isFineResendParams): boolean => {
   return checkIsByMe(message, userId)
     && checkIsFailed(status)
-    && message.isResendable
-    && message.isResendable();
+    // @ts-ignore
+    && message?.isResendable();
 };
 
 interface isFineEditParams {
@@ -65,10 +67,12 @@ interface showMenuTriggerParams {
 }
 export const showMenuTrigger = (props: showMenuTriggerParams): boolean => {
   const { message, status, userId } = props;
+  // @ts-ignore
   if (message.messageType === 'user') {
     return (
       isFineDelete({ message, status, userId })
       || isFineEdit({ message, status, userId })
+      // @ts-ignore
       || isFineCopy({ message, status, userId })
       || isFineResend({ message, status, userId })
     );

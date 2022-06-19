@@ -1,4 +1,7 @@
-import SendBird, { AdminMessage, Emoji, EmojiCategory, EmojiContainer, FileMessage, GroupChannel, GroupChannelListQuery, Member, MessageListParams, OpenChannel, Reaction, SendBirdInstance, User, UserMessage } from "sendbird";
+import SendbirdChat, { Emoji, EmojiCategory, EmojiContainer, User } from '@sendbird/chat';
+import type { GroupChannel, Member, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import type { AdminMessage, FileMessage, MessageListParams, Reaction, UserMessage } from '@sendbird/chat/message';
+import type { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import { EveryMessage } from '../types';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
@@ -175,8 +178,8 @@ export const isEnabledOGMessage = (message: UserMessage): boolean => (
 );
 
 export const getUIKitMessageTypes = (): UIKitMessageTypes => ({ ...UIKitMessageTypes });
-export const getUIKitMessageType = (message: SendBird.UserMessage | SendBird.FileMessage | SendBird.AdminMessage): string => {
-  if (isAdminMessage(message as SendBird.AdminMessage)) return UIKitMessageTypes.ADMIN;
+export const getUIKitMessageType = (message: UserMessage | FileMessage | AdminMessage): string => {
+  if (isAdminMessage(message as AdminMessage)) return UIKitMessageTypes.ADMIN;
   if (isUserMessage(message as UserMessage)) {
     return isOGMessage(message as UserMessage) ? UIKitMessageTypes.OG : UIKitMessageTypes.TEXT;
   }
@@ -223,7 +226,7 @@ export const getEmojiTooltipString = (reaction: Reaction, userId: string, member
 interface UIKitStore {
   stores: {
     sdkStore: {
-      sdk: SendBirdInstance,
+      sdk: SendbirdChat | SendbirdOpenChat | SendbirdGroupChat,
     },
     userStore: {
       user: User,
@@ -237,7 +240,7 @@ export const getCurrentUserId = (store: UIKitStore): string => (store?.stores?.u
 export const getUseReaction = (store: UIKitStore, channel: GroupChannel | OpenChannel): boolean => {
   if (!store?.config?.useReaction)
     return false;
-  if (!store?.stores?.sdkStore?.sdk?.appInfo?.isUsingReaction)
+  if (!store?.stores?.sdkStore?.sdk?.appInfo?.useReaction)
     return false;
   if (channel?.isGroupChannel())
     return !((channel as GroupChannel).isBroadcast || (channel as GroupChannel).isSuper);
@@ -332,20 +335,21 @@ export const hasSameMembers = <T>(a: T[], b: T[]): boolean => {
 export const isFriend = (user: User): boolean => !!(user.friendDiscoveryKey || user.friendName);
 
 export const filterMessageListParams = (params: MessageListParams, message: UserMessage | FileMessage): boolean => {
-  if (params?.messageType && params.messageType !== message.messageType) {
+  // @ts-ignore
+  if (params?.messageTypeFilter && params.messageTypeFilter !== message.messageType) {
     return false;
   }
-  if (params?.customTypes?.length > 0) {
-    const customTypes = params.customTypes.filter((item) => item !== '*');
+  if (params?.customTypesFilter?.length > 0) {
+    const customTypes = params.customTypesFilter.filter((item) => item !== '*');
     // Because Chat SDK inserts '*' when customTypes is empty
     if (customTypes.length > 0 && !customTypes.includes(message.customType)) {
       return false;
     }
   }
-  if (params?.senderUserIds && params?.senderUserIds?.length > 0) {
+  if (params?.senderUserIdsFilter && params?.senderUserIdsFilter?.length > 0) {
     if (message?.isUserMessage() || message.isFileMessage()) {
       const messageSender = (message as UserMessage | FileMessage).sender || message['_sender'];
-      if (!params?.senderUserIds?.includes(messageSender?.userId)) {
+      if (!params?.senderUserIdsFilter?.includes(messageSender?.userId)) {
         return false;
       }
     } else {
@@ -567,7 +571,7 @@ export const getChannelsWithUpsertedChannel = (channels: Array<GroupChannel>, ch
   return [...channels.slice(0, targetIndex), channel, ...channels.slice(targetIndex, channels.length)];
 };
 
-export const getMatchedUserIds = (word: string, users: Array<SendBird.User>, _template?: string): boolean => {
+export const getMatchedUserIds = (word: string, users: Array<User>, _template?: string): boolean => {
   const template = _template || '@'; // Use global variable
   // const matchedUserIds = [];
   // users.map((user) => user?.userId).forEach((userId) => {
@@ -586,7 +590,7 @@ export interface StringObj {
   userId?: string;
 }
 
-export const convertWordToStringObj = (word: string, _users : Array<SendBird.User>, _template?: string): Array<StringObj> => {
+export const convertWordToStringObj = (word: string, _users : Array<User>, _template?: string): Array<StringObj> => {
   const users = _users || [];
   const template = _template || '@'; // Use global variable
   const resultArray = [];

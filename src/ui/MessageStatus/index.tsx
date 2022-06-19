@@ -1,6 +1,8 @@
+import './index.scss';
 import React, { useMemo } from 'react';
 import format from 'date-fns/format';
-import './index.scss';
+import type { FileMessage, UserMessage } from '@sendbird/chat/message';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelColors, LabelTypography } from '../Label';
@@ -12,8 +14,6 @@ import {
   isSentStatus,
 } from '../../utils';
 import { useLocalization } from '../../lib/LocalizationContext';
-import type { FileMessage, UserMessage } from '@sendbird/chat/message';
-import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 export const MessageStatusTypes = getOutgoingMessageStates();
 
