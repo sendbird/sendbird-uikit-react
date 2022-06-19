@@ -1,12 +1,13 @@
-import SendBird from "sendbird";
+import type { ApplicationUserListQuery } from "@sendbird/chat";
+import type { GroupChannelCreateParams, SendbirdGroupChat } from "@sendbird/chat/groupChannel";
 import { CHANNEL_TYPE } from "../../types";
 
 export const filterUser = (idsToFilter: string[]) => (currentId: string): boolean => idsToFilter?.includes(currentId);
 
 export const setChannelType = (
-  params: SendBird.GroupChannelParams,
+  params: GroupChannelCreateParams,
   type: CHANNEL_TYPE,
-): SendBird.GroupChannelParams => {
+): GroupChannelCreateParams => {
   if (type === 'broadcast') {
     // eslint-disable-next-line no-param-reassign
     params.isBroadcast = true;
@@ -19,13 +20,13 @@ export const setChannelType = (
 };
 
 type CreateDefaultUserListQueryType = {
-  sdk: SendBird.SendBirdInstance;
-  userFilledApplicationUserListQuery?: SendBird.ApplicationUserListQuery;
+  sdk: SendbirdGroupChat;
+  userFilledApplicationUserListQuery?: ApplicationUserListQuery;
 }
 
 export const createDefaultUserListQuery = (
   { sdk, userFilledApplicationUserListQuery }: CreateDefaultUserListQueryType
-): SendBird.ApplicationUserListQuery => {
+): ApplicationUserListQuery => {
   const params = sdk.createApplicationUserListQuery();
   if (userFilledApplicationUserListQuery) {
     Object.keys(userFilledApplicationUserListQuery).forEach((key) => {

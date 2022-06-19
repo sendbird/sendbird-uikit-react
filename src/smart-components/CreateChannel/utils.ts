@@ -1,6 +1,6 @@
-import SendBird from 'sendbird';
+import type { SendbirdGroupChat } from "@sendbird/chat/groupChannel";
 
-export const isBroadcastChannelEnabled = (sdk: SendBird.SendBirdInstance): boolean => {
+export const isBroadcastChannelEnabled = (sdk: SendbirdGroupChat): boolean => {
   const ALLOW_BROADCAST_CHANNEL = 'allow_broadcast_channel';
   const applicationAttributes = sdk?.appInfo?.applicationAttributes;
 
@@ -11,7 +11,7 @@ export const isBroadcastChannelEnabled = (sdk: SendBird.SendBirdInstance): boole
   return false;
 };
 
-export const isSuperGroupChannelEnabled = (sdk: SendBird.SendBirdInstance): boolean => {
+export const isSuperGroupChannelEnabled = (sdk: SendbirdGroupChat): boolean => {
   const ALLOW_SUPER_GROUP_CHANNEL = 'allow_super_group_channel';
   const applicationAttributes = sdk?.appInfo?.applicationAttributes;
 

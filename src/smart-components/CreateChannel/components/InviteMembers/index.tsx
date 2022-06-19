@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import type { ApplicationUserListQuery } from '@sendbird/chat';
 
 import './invite-members.scss';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
@@ -18,7 +19,7 @@ import {
   setChannelType,
   createDefaultUserListQuery,
 } from './utils';
-import SendBird from 'sendbird';
+import { GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
 
 export interface InviteMembersProps {
   onCancel?: () => void;
@@ -39,7 +40,7 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ onCancel }: InviteMembers
   const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState({});
   const { stringSet } = useContext(LocalizationContext);
-  const [usersDataSource, setUsersDataSource] = useState<SendBird.ApplicationUserListQuery>(null);
+  const [usersDataSource, setUsersDataSource] = useState<ApplicationUserListQuery>(null);
   const selectedCount = Object.keys(selectedUsers).length;
   const titleText = stringSet.MODAL__CREATE_CHANNEL__TITLE;
   const submitText = stringSet.BUTTON__CREATE;
@@ -70,8 +71,8 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ onCancel }: InviteMembers
               onCreateChannel(channel);
             });
           } else {
-            const params = new sdk.GroupChannelParams();
-            params.addUserIds(selectedUserList);
+            const params: GroupChannelCreateParams = {};
+            params.invitedUserIds = selectedUserList;
             params.isDistinct = false;
             if (userId) {
               params.operatorUserIds = [userId];
@@ -103,10 +104,7 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ onCancel }: InviteMembers
             );
 
             if (hasNext && fetchMore) {
-              usersDataSource.next((usersBatch, error) => {
-                if (error) {
-                  return;
-                }
+              usersDataSource.next().then((usersBatch) => {
                 setUsers([
                   ...users,
                   ...usersBatch,
