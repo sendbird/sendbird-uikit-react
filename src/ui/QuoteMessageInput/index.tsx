@@ -1,5 +1,7 @@
+import './index.scss';
+
 import React, { ReactElement, useContext } from 'react';
-import { FileMessage, UserMessage } from 'sendbird';
+import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 import {
   getClassName,
   isFileMessage,
@@ -15,7 +17,6 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 
 import QuoteMessageThumbnail from './QuoteMessageThumbnail';
-import './index.scss';
 
 interface Props {
   className?: string | Array<string>;

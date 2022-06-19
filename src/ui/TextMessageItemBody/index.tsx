@@ -1,6 +1,6 @@
-import React, { ReactElement, useContext, useMemo } from 'react';
-import SendBird from 'sendbird';
 import './index.scss';
+import React, { ReactElement, useContext, useMemo } from 'react';
+import type { UserMessage } from '@sendbird/chat/message';
 
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { getClassName, isEditedMessage } from '../../utils';
@@ -10,7 +10,7 @@ import Word from '../Word';
 
 interface Props {
   className?: string | Array<string>;
-  message: SendBird.UserMessage;
+  message: UserMessage;
   isByMe?: boolean;
   mouseHover?: boolean;
   isMentionEnabled?: boolean;

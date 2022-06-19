@@ -1,6 +1,7 @@
-import React, { ReactElement, useContext, useRef } from 'react';
-import { Emoji, EmojiContainer, FileMessage, Reaction, UserMessage } from 'sendbird';
 import './index.scss';
+import React, { ReactElement, useContext, useRef } from 'react';
+import type { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
+import type { Emoji, EmojiContainer } from '@sendbird/chat';
 
 import Tooltip from '../Tooltip';
 import TooltipWrapper from '../TooltipWrapper';

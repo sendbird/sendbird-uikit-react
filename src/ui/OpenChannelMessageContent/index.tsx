@@ -1,6 +1,6 @@
-import React, { ReactElement } from 'react';
-import { OpenChannel } from 'sendbird';
 import './index.scss';
+import type { OpenChannel } from '@sendbird/chat/openChannel';
+import React, { ReactElement } from 'react';
 
 interface Props {
   channel: OpenChannel;

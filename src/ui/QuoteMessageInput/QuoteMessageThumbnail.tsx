@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { FileMessage } from 'sendbird';
+import type { FileMessage } from '@sendbird/chat/message';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
 import ImageRenderer from '../ImageRenderer';

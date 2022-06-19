@@ -1,6 +1,6 @@
-import React, { ReactElement, useContext, useState } from 'react';
-import { FileMessage, UserMessage } from 'sendbird';
 import './index.scss';
+import React, { ReactElement, useContext, useState } from 'react';
+import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';

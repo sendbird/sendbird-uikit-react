@@ -1,6 +1,6 @@
-import React, { ReactElement, useContext } from 'react';
-import { UserMessage } from 'sendbird';
 import './index.scss';
+import React, { ReactElement, useContext } from 'react';
+import type { UserMessage } from '@sendbird/chat/message';
 
 import Word from '../Word';
 import ImageRenderer from '../ImageRenderer';

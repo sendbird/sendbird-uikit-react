@@ -1,6 +1,8 @@
-import React, { ReactElement, useContext, useRef } from 'react';
-import { FileMessage, GroupChannel, OpenChannel, UserMessage } from 'sendbird';
 import './index.scss';
+import React, { ReactElement, useContext, useRef } from 'react';
+import type { FileMessage, UserMessage } from '@sendbird/chat/message';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import type { OpenChannel } from '@sendbird/chat/openChannel';
 
 import ContextMenu, { MenuItems, MenuItem } from '../ContextMenu';
 import Icon, { IconTypes, IconColors } from '../Icon';
@@ -49,7 +51,7 @@ export default function MessageItemMenu({
 
   const showMenuItemCopy: boolean = isUserMessage(message as UserMessage);
   const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe);
-  const showMenuItemResend: boolean = (isFailedMessage(message) && message?.isResendable?.() && isByMe);
+  const showMenuItemResend: boolean = (isFailedMessage(message) && message?.isResendable && isByMe);
   const showMenuItemDelete: boolean = !isPendingMessage(message) && isByMe;
   /**
    * TODO: Manage timing issue

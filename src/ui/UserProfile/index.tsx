@@ -1,6 +1,7 @@
-import React, { ReactElement, useContext } from 'react';
-import type SendBird from 'sendbird';
 import './index.scss';
+import React, { ReactElement, useContext } from 'react';
+import type { GroupChannel, GroupChannelCreateParams, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import type { User } from '@sendbird/chat';
 
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import withSendbirdContext from '../../lib/SendbirdSdkContext';
@@ -10,16 +11,16 @@ import Label, { LabelColors, LabelTypography } from '../Label';
 import Button, { ButtonTypes } from '../Button';
 
 interface Logger {
-  info?(message: string, channel: SendBird.GroupChannel): void;
+  info?(message: string, channel: GroupChannel): void;
 }
 
 interface Props {
-  user: SendBird.User;
+  user: User;
   currentUserId?: string;
-  sdk?: SendBird.SendBirdInstance;
+  sdk?: SendbirdGroupChat;
   logger?: Logger;
   disableMessaging?: boolean;
-  createChannel?(params: SendBird.GroupChannelParams): Promise<SendBird.GroupChannel>;
+  createChannel?(params: GroupChannelCreateParams): Promise<GroupChannel>;
   onSuccess?(): void;
 }
 
@@ -56,9 +57,10 @@ function UserProfile({
             <Button
               type={ButtonTypes.SECONDARY}
               onClick={() => {
-                const params = new sdk.GroupChannelParams();
-                params.isDistinct = true;
-                params.addUserIds([user?.userId]);
+                const params: GroupChannelCreateParams = {
+                  isDistinct: true,
+                  invitedUserIds: [user?.userId],
+                };
                 onSuccess();
                 createChannel(params)
                   .then((groupChannel) => {

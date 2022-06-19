@@ -6,7 +6,7 @@ import React, {
   useState,
   useCallback,
 } from 'react';
-import type SendBird from 'sendbird';
+import type { User } from '@sendbird/chat';
 
 import ContextMenu, { MenuItems } from '../ContextMenu';
 import Label, { LabelTypography, LabelColors } from '../Label';
@@ -32,15 +32,16 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
   const userId = sendbirdState?.config?.userId;
   const sdk = sendbirdState?.stores?.sdkStore?.sdk;
   const amIBeingMentioned = userId === mentionedUserId;
-  const [user, setUser] = useState<SendBird.User| null>();
+  const [user, setUser] = useState<User| null>();
   const fetchUser = useCallback(
     (toggleDropdown) => {
       if (user) {
         toggleDropdown();
       }
-      const query = sdk.createApplicationUserListQuery();
-      query.userIdsFilter = [mentionedUserId];
-      query.next((members) => {
+      const query = sdk.createApplicationUserListQuery({
+        userIdsFilter: [mentionedUserId],
+      });
+      query.next().then((members) => {
         if (members?.length > 0) {
           setUser(members[0]);
         }

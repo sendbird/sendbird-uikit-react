@@ -11,8 +11,9 @@ import {
   getOutgoingMessageStates,
   isSentStatus,
 } from '../../utils';
-import { FileMessage, GroupChannel, UserMessage } from 'sendbird';
 import { useLocalization } from '../../lib/LocalizationContext';
+import type { FileMessage, UserMessage } from '@sendbird/chat/message';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 export const MessageStatusTypes = getOutgoingMessageStates();
 

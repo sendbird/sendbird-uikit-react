@@ -1,6 +1,6 @@
-import React from 'react';
-import SendBird from 'sendbird';
 import './index.scss';
+import React from 'react';
+import type { UserMessage } from '@sendbird/chat/message';
 
 import { LabelTypography, LabelColors } from '../Label';
 import LinkLabel from '../LinkLabel';
@@ -10,7 +10,7 @@ import MentionLabel from '../MentionLabel';
 
 interface WordProps {
   word: string;
-  message: SendBird.UserMessage;
+  message: UserMessage;
   isByMe?: boolean;
   mentionTemplate?: string;
   renderString?: (stringObj: StringObj) => JSX.Element;

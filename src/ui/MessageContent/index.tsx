@@ -1,5 +1,9 @@
-import React, { ReactElement, useContext, useRef, useState } from 'react';
-import { GroupChannel, UserMessage, FileMessage, EmojiContainer } from 'sendbird';
+import React, {
+  ReactElement,
+  useContext,
+  useRef,
+  useState,
+} from 'react';
 import format from 'date-fns/format';
 import './index.scss';
 
@@ -34,6 +38,9 @@ import { UserProfileContext } from '../../lib/UserProfileContext';
 import { ReplyType } from '../../index.js';
 import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { EmojiContainer } from '@sendbird/chat';
+import { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 interface Props {
   className?: string | Array<string>;
@@ -110,6 +117,7 @@ export default function MessageContent({
             menuTrigger={(toggleDropdown: () => void): ReactElement => (
               <Avatar
                 className="sendbird-message-content__left__avatar"
+                // @ts-ignore
                 src={channel?.members?.find((member) => member?.userId === message?.sender?.userId)?.profileUrl || message?.sender?.profileUrl || ''}
                 // TODO: Divide getting profileUrl logic to utils
                 ref={avatarRef}
@@ -130,7 +138,9 @@ export default function MessageContent({
                 style={{ paddingTop: 0, paddingBottom: 0 }}
               >
                 {renderUserProfile
+                  // @ts-ignore
                   ? renderUserProfile({ user: message?.sender, close: closeDropdown })
+                  // @ts-ignore
                   : (<UserProfile user={message.sender} onSuccess={closeDropdown} />)
                 }
               </MenuItems>
@@ -176,6 +186,7 @@ export default function MessageContent({
             color={LabelColors.ONBACKGROUND_2}
           >
             {
+              // @ts-ignore
               channel?.members?.find((member) => member?.userId === message?.sender?.userId)?.nickname
               || getSenderName(message)
               // TODO: Divide getting profileUrl logic to utils
@@ -263,7 +274,7 @@ export default function MessageContent({
             ])}>
               <EmojiReactions
                 userId={userId}
-                message={message}
+                message={message as UserMessage | FileMessage}
                 isByMe={isByMe}
                 emojiContainer={emojiContainer}
                 memberNicknamesMap={nicknamesMap}
