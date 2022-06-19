@@ -1,4 +1,6 @@
 import React, { ReactElement, useEffect, useState, useRef } from 'react';
+import type { User } from '@sendbird/chat';
+import type { OpenChannel, OpenChannelCreateParams, OpenChannelListQuery, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import withSendBird from '../../../lib/SendbirdSdkContext';
 import sendBirdSelectors from '../../../lib/selectors';
 
@@ -15,12 +17,12 @@ import TextButton from '../../../ui/TextButton';
 const SB_COMMUNITY_TYPE = 'SB_COMMUNITY_TYPE';
 
 interface Props {
-  sdk: SendBird.SendBirdInstance;
-  user: SendBird.User;
+  sdk: SendbirdOpenChat;
+  user: User;
   currentChannelUrl: string;
-  setCurrentChannel(channel: SendBird.OpenChannel): void;
-  channels: Array<SendBird.OpenChannel>;
-  setChannels(channels: Array<SendBird.OpenChannel>): void;
+  setCurrentChannel(channel: OpenChannel): void;
+  channels: Array<OpenChannel>;
+  setChannels(channels: Array<OpenChannel>): void;
 }
 
 function CommunityChannelList({
@@ -31,7 +33,7 @@ function CommunityChannelList({
   channels,
   setChannels,
 }: Props): ReactElement {
-  const [channelSource, setChannelSource] = useState<SendBird.OpenChannelListQuery>(null);
+  const [channelSource, setChannelSource] = useState<OpenChannelListQuery>(null);
   const [showModal, setShowModal] = useState(false);
   const [currentImage, setCurrentImage] = useState(null);
   const [currentFile, setCurrentFile] = useState(null);
@@ -39,17 +41,14 @@ function CommunityChannelList({
   const hiddenInputRef = useRef(null);
 
   useEffect(() => {
-    if (!sdk || !sdk.OpenChannel) {
+    if (!sdk || !sdk.openChannel) {
       return;
     }
-    const openChannelListQuery = sdk.OpenChannel.createOpenChannelListQuery();
+    const openChannelListQuery = sdk.openChannel.createOpenChannelListQuery();
     // @ts-ignore: Unreachable code error
     openChannelListQuery.customTypes = [SB_COMMUNITY_TYPE];
     setChannelSource(openChannelListQuery);
-    openChannelListQuery.next((openChannels, error) => {
-      if (error) {
-        return;
-      }
+    openChannelListQuery.next().then((openChannels) => {
       setChannels(openChannels);
       if (openChannels.length > 0) {
         setCurrentChannel(openChannels[0]);
@@ -87,15 +86,14 @@ function CommunityChannelList({
               titleText="New channel profile"
               onCancel={() => setShowModal(false)}
               onSubmit={() => {
-                const params = new sdk.OpenChannelParams();
-                params.name = currentChannelName;
-                params.coverUrlOrImage = currentFile;
-                params.customType = SB_COMMUNITY_TYPE;
-                sdk.OpenChannel.createChannel(params, (openChannel, error) => {
-                  if (!error) {
-                    setChannels([openChannel, ...channels]);
-                    setCurrentChannel(openChannel);
-                  }
+                const params: OpenChannelCreateParams = {
+                  name: currentChannelName,
+                  coverUrlOrImage: currentFile,
+                  customType: SB_COMMUNITY_TYPE,
+                };
+                sdk.openChannel.createChannel(params).then((openChannel) => {
+                  setChannels([openChannel, ...channels]);
+                  setCurrentChannel(openChannel);
                   setShowModal(false);
                 });
               }}
@@ -169,10 +167,7 @@ function CommunityChannelList({
           const target = e.target as HTMLDivElement;
           const fetchMore = target.clientHeight + target.scrollTop === target.scrollHeight;
           if (fetchMore && channelSource.hasNext) {
-            channelSource.next((openChannels, error) => {
-              if (error) {
-                return;
-              }
+            channelSource.next().then((openChannels) => {
               setChannels([...channels, ...openChannels]);
             });
           }
