@@ -26,7 +26,7 @@ export default function useSendMessageCallback({
         mentionedUsers,
       } = props;
       const createParamsDefault = () => {
-        const params = new sdk.UserMessageParams();
+        const params = {};
         params.message = message?.trim() || message;
         // if (isMentionEnabled && mentionedUserIds?.length > 0) {
         if (isMentionEnabled && mentionedUsers?.length > 0) {

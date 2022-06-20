@@ -127,7 +127,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
                 channelList?.forEach((c, idx) => {
                   // Plan-based rate limits - minimum limit is 5 requests per second
                   setTimeout(() => {
-                    // sdk?.markAsDelivered(c?.url);
+                    c?.markAsDelivered();
                   }, 300 * idx);
                 });
               }

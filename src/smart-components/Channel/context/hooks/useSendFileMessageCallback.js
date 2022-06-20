@@ -31,7 +31,7 @@ export default function useSendFileMessageCallback({
     const canCompressImage = compressibleFileType && (compressibleRatio || compressibleDiamensions);
 
     const createParamsDefault = (file_) => {
-      const params = new sdk.FileMessageParams();
+      const params = {};
       params.file = file_;
       if (quoteMessage) {
         params.isReplyToChannel = true;

@@ -21,7 +21,7 @@ function useUpdateMessageCallback({
       mentionTemplate,
     } = props;
     const createParamsDefault = () => {
-      const params = new sdk.UserMessageParams();
+      const params = {};
       params.message = message;
       if (isMentionEnabled && mentionedUsers?.length > 0) {
         params.mentionedUsers = mentionedUsers;
@@ -46,7 +46,7 @@ function useUpdateMessageCallback({
       : createParamsDefault(message);
 
     logger.info('Channel: Updating message!', params);
-    currentGroupChannel.updateUserMessage().then((msg, err) => {
+    currentGroupChannel.updateUserMessage(messageId, params).then((msg, err) => {
       if (callback) {
         callback(err, msg);
       }

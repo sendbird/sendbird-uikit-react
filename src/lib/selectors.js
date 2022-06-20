@@ -298,7 +298,7 @@ export const getCreateChannel = (store) => (params) => {
     if (!sdk) {
       reject(new Error('Sdk not found'));
     }
-    sdk.GroupChannel.createChannel(params)
+    sdk.groupChannel.createChannel(params)
       .then((channel) => {
         resolve(channel);
         pubsub.publish(

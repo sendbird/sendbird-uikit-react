@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 
 import type { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import type { MessageSearchQueryParams } from '@sendbird/chat/lib/__definition';
 import type {
   AdminMessage,
   BaseMessage,
@@ -41,13 +42,14 @@ function useGetSearchedMessages(
     });
     if (sdk && channelUrl && sdk.createMessageSearchQuery && currentChannel) {
       if (requestString) {
-        const inputSearchMessageQueryObject = {
+        const inputSearchMessageQueryObject: MessageSearchQueryParams = {
           ...messageSearchQuery,
           order: 'ts' as const,
           channelUrl,
           messageTimestampFrom: currentChannel.invitedAt,
+          keyword: requestString,
         };
-        const createdQuery = sdk.createMessageSearchQuery(requestString, inputSearchMessageQueryObject);
+        const createdQuery = sdk.createMessageSearchQuery(inputSearchMessageQueryObject);
         createdQuery.next().then((messages) => {
           logger.info('MessageSearch | useGetSearchedMessages: succeeded getting messages', messages);
           messageSearchDispatcher({
@@ -62,13 +64,13 @@ function useGetSearchedMessages(
           }
         }).catch((error) => {
           logger.warning('MessageSearch | useGetSearchedMessages: getting failed', error);
-            messageSearchDispatcher({
-              type: messageActionTypes.SET_QUERY_INVALID,
-              payload: null,
-            });
-            if (onResultLoaded && typeof onResultLoaded === 'function') {
-              onResultLoaded(null, error);
-            }
+          messageSearchDispatcher({
+            type: messageActionTypes.SET_QUERY_INVALID,
+            payload: null,
+          });
+          if (onResultLoaded && typeof onResultLoaded === 'function') {
+            onResultLoaded(null, error);
+          }
         });
         messageSearchDispatcher({
           type: messageActionTypes.START_GETTING_SEARCHED_MESSAGES,

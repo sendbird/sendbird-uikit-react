@@ -24,7 +24,7 @@ export const versionInfo = () => {
   return (
     <>
       <div>UIKit: {pkg.version}</div>
-      <div>Sendbird SDK: {pkg.dependencies.sendbird.version}</div>
+      <div>Sendbird SDK: {pkg.dependencies['@sendbird/chat'].version}</div>
       <button onClick={() => { setshowAll(!showAll) }}>Show all</button>
       {
         showAll && (
@@ -48,7 +48,7 @@ export const basicSDK = () => fitPageSize(
     userId={userId}
     nickname={userId}
     showSearchIcon
-  /*config={{ logLevel: 'all' }}*/
+    config={{ logLevel: 'all' }}
   />
 );
 

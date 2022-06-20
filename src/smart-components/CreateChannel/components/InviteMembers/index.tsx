@@ -5,6 +5,7 @@ import './invite-members.scss';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useCreateChannelContext } from '../../context/CreateChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import type { GroupChannelCreateParams, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 
 import Modal from '../../../../ui/Modal';
 import Label, {
@@ -19,7 +20,6 @@ import {
   setChannelType,
   createDefaultUserListQuery,
 } from './utils';
-import { GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
 
 export interface InviteMembersProps {
   onCancel?: () => void;
@@ -35,7 +35,7 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ onCancel }: InviteMembers
 
   const globalStore = useSendbirdStateContext();
   const userId = globalStore?.config?.userId;
-  const sdk = globalStore?.stores?.sdkStore?.sdk;
+  const sdk = globalStore?.stores?.sdkStore?.sdk as SendbirdGroupChat;
   const idsToFilter = [userId];
   const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState({});
@@ -50,7 +50,7 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ onCancel }: InviteMembers
   useEffect(() => {
     const applicationUserListQuery = userQueryCreator;
     setUsersDataSource(applicationUserListQuery);
-    applicationUserListQuery.next((users_) => {
+    applicationUserListQuery.next().then((users_) => {
       setUsers(users_);
     });
   }, []);

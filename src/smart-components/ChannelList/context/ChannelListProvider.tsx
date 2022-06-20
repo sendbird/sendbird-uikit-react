@@ -145,7 +145,6 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     isMessageReceiptStatusEnabled = null,
   } = props;
   const onChannelSelect = props?.onChannelSelect || noop;
-
   // fetch store from <SendbirdProvider />
   const globalStore = useSendbirdStateContext();
   const { config, stores } = globalStore;

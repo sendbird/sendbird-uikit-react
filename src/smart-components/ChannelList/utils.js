@@ -122,7 +122,7 @@ const createEventHandler = ({
   });
 
   logger.info('ChannelList: Added channelHandler');
-  sdk.groupChannel.addChannelHandler(sdkChannelHandlerId, ChannelHandler);
+  sdk.groupChannel.addGroupChannelHandler(sdkChannelHandlerId, ChannelHandler);
 };
 
 const createChannelListQuery = ({ sdk, userFilledChannelListQuery = {} }) => {
@@ -158,7 +158,7 @@ function setupChannelList({
   sortChannelList,
   disableAutoSelect,
 }) {
-  if (sdk && sdk.ChannelHandler) {
+  if (sdk?.groupChannel) {
     createEventHandler({
       sdk,
       channelListDispatcher,
@@ -166,13 +166,12 @@ function setupChannelList({
       logger,
     });
   } else {
-    logger.console.warning('ChannelList - createEventHandler: sdk or sdk.ChannelHandler does not exist', sdk);
+    logger.warning('ChannelList - createEventHandler: sdk or sdk.ChannelHandler does not exist', sdk);
   }
 
   logger.info('ChannelList - creating query', { userFilledChannelListQuery });
   const channelListQuery = createChannelListQuery({ sdk, userFilledChannelListQuery });
   logger.info('ChannelList - created query', channelListQuery);
-
   setChannelSource(channelListQuery);
 
   channelListDispatcher({
@@ -192,22 +191,8 @@ function setupChannelList({
 
   logger.info('ChannelList - fetching channels');
   if (channelListQuery.hasNext) {
-    channelListQuery.next((response, error) => {
-      const swapParams = sdk.getErrorFirstCallback();
-      let channelList = response;
-      let err = error;
-      if (swapParams) {
-        channelList = error;
-        err = response;
-      }
+    channelListQuery.next().then((channelList) => {
       logger.info('ChannelList - fetched channels', channelList);
-      if (err) {
-        logger.error('ChannelList - couldnt fetch channels', err);
-        channelListDispatcher({
-          type: channelActions.INIT_CHANNELS_FAILURE,
-        });
-        return;
-      }
       // select first channel
       logger.info('ChannelList - highlight channel', channelList[0]);
       let sortedChannelList = channelList;
@@ -232,8 +217,15 @@ function setupChannelList({
           // Plan-based rate limits - minimum limit is 5 requests per second
           setTimeout(() => {
             // eslint-disable-next-line no-unused-expressions
-            sdk?.markAsDelivered(c?.url);
+            c?.markAsDelivered();
           }, 300 * idx);
+        });
+      }
+    }).catch((err) => {
+      if (err) {
+        logger.error('ChannelList - couldnt fetch channels', err);
+        channelListDispatcher({
+          type: channelActions.INIT_CHANNELS_FAILURE,
         });
       }
     });

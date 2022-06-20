@@ -24,7 +24,7 @@ function useHandleChannelEvents(
     if (currentOpenChannel && currentOpenChannel.url && sdk?.openChannel?.addOpenChannelHandler) {
       logger.info('OpenChannel | useHandleChannelEvents: Setup evnet handler', messageReceiverId);
       const channelHandlerParams = {
-        onMessageReceived = (channel, message) => {
+        onMessageReceived: (channel, message) => {
           const scrollToEnd = checkScrollBottom();
           const channelUrl = channel.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMessageReceived', { channelUrl, message });
@@ -42,7 +42,7 @@ function useHandleChannelEvents(
             }
           }
         },
-        onMessageUpdated = (channel, message) => {
+        onMessageUpdated: (channel, message) => {
           const channelUrl = channel.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMessageUpdated', { channelUrl, message });
           messagesDispatcher({

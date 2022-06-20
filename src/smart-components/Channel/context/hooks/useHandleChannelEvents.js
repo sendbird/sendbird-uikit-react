@@ -188,7 +188,7 @@ function useHandleChannelEvents({ currentGroupChannel, sdkInit, hasMoreNext }, {
       logger.info('Channel | useHandleChannelEvents: Setup event handler', messageReceiverId);
 
       // Add this channel event handler to the SendBird object.
-      sdk.groupChannel.addChannelHandler(messageReceiverId, channelHandler);
+      sdk.groupChannel.addGroupChannelHandler(messageReceiverId, channelHandler);
     }
     return () => {
       if (sdk && sdk?.groupChannel?.removeChannelHandler) {

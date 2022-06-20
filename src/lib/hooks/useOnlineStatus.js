@@ -24,7 +24,8 @@ function useConnectionStatus(sdk, logger) {
       logger.warning('onReconnectFailed');
     };
     logger.info('Added ConnectionHandler', uniqueHandlerId);
-    sdk.addConnectionHandler(uniqueHandlerId, handler);
+
+    sdk?.addConnectionHandler?.(uniqueHandlerId, handler);
     return () => {
       try {
         sdk.removeConnectionHandler(uniqueHandlerId);
