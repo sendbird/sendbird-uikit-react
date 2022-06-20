@@ -60,7 +60,7 @@ export const createChannel = (
     setChannelType(params, type);
     sdk.groupChannel.createChannel(params).then((groupChannel) => {
       resolve(groupChannel);
-    }).catch((err) => { resolve(err); });
+    }).catch((err) => { reject(err); });
     return;
   }
 

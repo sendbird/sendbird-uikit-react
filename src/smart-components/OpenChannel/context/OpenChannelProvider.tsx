@@ -4,6 +4,8 @@ import React, {
   useReducer,
   useMemo,
 } from 'react';
+import type { FileMessageCreateParams, UserMessageCreateParams } from '@sendbird/chat/message';
+import type { SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
 import * as utils from './utils';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
@@ -29,7 +31,6 @@ import useDeleteMessageCallback from './hooks/useDeleteMessageCallback';
 import useResendMessageCallback from './hooks/useResendMessageCallback';
 import useTrimMessageList from './hooks/useTrimMessageList';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
-import { FileMessageCreateParams, UserMessageCreateParams } from '@sendbird/chat/message';
 
 type OpenChannelQueries = {
   // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
@@ -103,7 +104,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
   const fetchingParticipants = false;
   const globalStore = useSendbirdStateContext();
 
-  const sdk = globalStore?.stores?.sdkStore?.sdk;
+  const sdk = globalStore?.stores?.sdkStore?.sdk as SendbirdOpenChat;
   const sdkInit = globalStore?.stores?.sdkStore?.initialized;
   const user = globalStore?.stores?.userStore?.user;
   const config = globalStore?.config;
@@ -167,7 +168,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
   );
   useInitialMessagesFetch(
     { currentOpenChannel, userFilledMessageListParams },
-    { sdk, logger, messagesDispatcher },
+    { logger, messagesDispatcher },
   );
 
   const fetchMore: boolean = utils.shouldFetchMore(allMessages?.length, messageLimit);
@@ -186,7 +187,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
   );
   const updateMessage = useUpdateMessageCallback(
     { currentOpenChannel, onBeforeSendUserMessage },
-    { sdk, logger, messagesDispatcher },
+    { logger, messagesDispatcher },
   );
   const deleteMessage = useDeleteMessageCallback(
     { currentOpenChannel },

@@ -11,7 +11,6 @@ function useUpdateMessageCallback({
 }, {
   logger,
   pubSub,
-  sdk,
 }) {
   return useCallback((props, callback) => {
     const {

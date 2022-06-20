@@ -10,7 +10,6 @@ function useInitialMessagesFetch({
   initialTimeStamp,
   replyType,
 }, {
-  sdk,
   logger,
   messagesDispatcher,
 }) {

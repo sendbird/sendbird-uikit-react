@@ -1,6 +1,5 @@
-import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import { MessageListParams } from '@sendbird/chat/message';
-import type { SendbirdOpenChat } from '@sendbird/chat/openChannel';
+import type { OpenChannel } from '@sendbird/chat/openChannel';
 import { useEffect } from 'react';
 
 import type { Logger } from '../../../../lib/SendbirdState';
@@ -8,19 +7,18 @@ import * as messageActionTypes from '../dux/actionTypes';
 import { scrollIntoLast } from '../utils';
 
 interface DynamicParams {
-  currentOpenChannel: GroupChannel;
+  currentOpenChannel: OpenChannel;
   /* eslint-disable @typescript-eslint/no-explicit-any*/
   userFilledMessageListParams?: Record<string, any>;
 }
 interface StaticParams {
-  sdk: SendbirdOpenChat;
   logger: Logger;
   messagesDispatcher: ({ type: string, payload: any }) => void;
 }
 
 function useInitialMessagesFetch(
   { currentOpenChannel, userFilledMessageListParams }: DynamicParams,
-  { sdk, logger, messagesDispatcher }: StaticParams,
+  { logger, messagesDispatcher }: StaticParams,
 ): void {
   useEffect(() => {
     logger.info('OpenChannel | useInitialMessagesFetch: Setup started', currentOpenChannel);

@@ -9,7 +9,6 @@ export default function useSendMessageCallback({
   currentGroupChannel,
   onBeforeSendUserMessage,
 }, {
-  sdk,
   logger,
   pubSub,
   messagesDispatcher,

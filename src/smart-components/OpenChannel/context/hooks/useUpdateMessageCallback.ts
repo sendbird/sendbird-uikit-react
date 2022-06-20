@@ -10,7 +10,6 @@ interface DynamicParams {
   onBeforeSendUserMessage?: (text) => UserMessageUpdateParams;
 }
 interface StaticParams {
-  sdk: SendbirdOpenChat;
   logger: Logger;
   messagesDispatcher: ({ type: string, payload :any }) => void;
 }
@@ -18,7 +17,7 @@ type CallbackReturn = (messageId, text, callback) => void;
 
 function useUpdateMessageCallback(
   { currentOpenChannel, onBeforeSendUserMessage }: DynamicParams,
-  { sdk, logger, messagesDispatcher }: StaticParams,
+  { logger, messagesDispatcher }: StaticParams,
 ): CallbackReturn {
   return useCallback((messageId, text, callback) => {
     const createParamsDefault = (txt) => {

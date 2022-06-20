@@ -9,7 +9,6 @@ export default function useSendFileMessageCallback({
   onBeforeSendFileMessage,
   imageCompression = {},
 }, {
-  sdk,
   logger,
   pubSub,
   messagesDispatcher,
@@ -91,7 +90,7 @@ export default function useSendFileMessageCallback({
                   setTimeout(() => utils.scrollIntoLast(), 1000);
                 })
                 .onFailed((err, failedMessage) => {
-                  logger.error('Channel: Sending file message failed!', { message, err });
+                  logger.error('Channel: Sending file message failed!', { failedMessage, err });
                   // eslint-disable-next-line no-param-reassign
                   failedMessage.localUrl = URL.createObjectURL(compressedFile);
                   // eslint-disable-next-line no-param-reassign
@@ -102,7 +101,7 @@ export default function useSendFileMessageCallback({
                   });
                 })
                 .onSucceeded((succeededMessage) => {
-                  logger.info('Channel: Sending file message success!', message);
+                  logger.info('Channel: Sending file message success!', succeededMessage);
                   messagesDispatcher({
                     type: messageActionTypes.SEND_MESSAGEGE_SUCESS,
                     payload: succeededMessage,

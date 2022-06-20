@@ -25,7 +25,9 @@ function useConnectionStatus(sdk, logger) {
     };
     logger.info('Added ConnectionHandler', uniqueHandlerId);
 
-    sdk?.addConnectionHandler?.(uniqueHandlerId, handler);
+    if (sdk?.addConnectionHandler) {
+      sdk.addConnectionHandler(uniqueHandlerId, handler);
+    }
     return () => {
       try {
         sdk.removeConnectionHandler(uniqueHandlerId);

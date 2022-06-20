@@ -305,7 +305,6 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     latestMessageTimeStamp,
     replyType,
   }, {
-    sdk,
     logger,
     messagesDispatcher,
   });
@@ -332,7 +331,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     { logger });
   const updateMessage = useUpdateMessageCallback(
     { currentGroupChannel, messagesDispatcher, onBeforeUpdateUserMessage, isMentionEnabled },
-    { logger, sdk, pubSub },
+    { logger, pubSub },
   );
   const resendMessage = useResendMessageCallback(
     { currentGroupChannel, messagesDispatcher },
@@ -341,7 +340,6 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   const [messageInputRef, sendMessage] = useSendMessageCallback(
     { currentGroupChannel, onBeforeSendUserMessage, isMentionEnabled },
     {
-      sdk,
       logger,
       pubSub,
       messagesDispatcher,
@@ -350,7 +348,6 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   const [sendFileMessage] = useSendFileMessageCallback(
     { currentGroupChannel, onBeforeSendFileMessage, imageCompression },
     {
-      sdk,
       logger,
       pubSub,
       messagesDispatcher,

@@ -93,7 +93,7 @@ export const pubSubHandler = (channelUrl, pubSub, dispatcher) => {
   return subscriber;
 };
 
-export const getParsedStatus = (message, currentGroupChannel: GroupChannel) => {
+export const getParsedStatus = (message, currentGroupChannel) => {
   if (message.requestState === FAILED) {
     return MessageStatusType.FAILED;
   }
