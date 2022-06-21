@@ -142,7 +142,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
           >
             {
               isChannelTyping && (
-                <TypingIndicatorText members={channel?.getTypingMembers()} />
+                <TypingIndicatorText members={channel?.getTypingUsers()} />
               )
             }
             {
