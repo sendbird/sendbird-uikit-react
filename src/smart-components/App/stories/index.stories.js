@@ -48,17 +48,26 @@ export const basicSDK = () => fitPageSize(
     userId={userId}
     nickname={userId}
     showSearchIcon
-    config={{ logLevel: 'all' }}
+    replyType="QUOTE_REPLY"
+    isMentionEnabled
+    isTypingIndicatorEnabledOnChannelList
+    isMessageReceiptStatusEnabledOnChannelList
+    /*config={{ logLevel: 'all' }}*/
   />
 );
 
 export const darkTheme = () => fitPageSize(
   <App
     appId={appId}
-    userId={'leo.sub'}
-    theme={'dark'}
+    userId={userId}
+    nickname={userId}
+    theme="dark"
     showSearchIcon
+    replyType="QUOTE_REPLY"
     config={{ logLevel: 'all' }}
+    isMentionEnabled
+    isTypingIndicatorEnabledOnChannelList
+    isMessageReceiptStatusEnabledOnChannelList
   />
 );
 
