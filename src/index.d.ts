@@ -255,7 +255,7 @@ interface AppProps {
   disableUserProfile?: boolean;
   showSearchIcon?: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
-  onProfileEditSuccess?(user: SendBird.User): void;
+  onProfileEditSuccess?(user: User): void;
   config?: SendBirdProviderConfig;
   useReaction?: boolean;
   useMessageGrouping?: boolean;

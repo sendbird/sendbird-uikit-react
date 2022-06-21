@@ -17,7 +17,7 @@ function useScrollCallback({
   return useCallback((cb) => {
     if (!hasMorePrev) { return; }
     const { appInfo = {} } = sdk;
-    const useReaction = appInfo.isUsingReaction || false;
+    const useReaction = appInfo.useReaction || false;
 
     const messageListParams = {
       prevResultSize: PREV_RESULT_SIZE,

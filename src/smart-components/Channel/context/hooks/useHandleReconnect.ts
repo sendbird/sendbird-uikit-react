@@ -39,7 +39,7 @@ function useHandleReconnect(
       // state changed from offline to online
       if (wasOffline && currentGroupChannel?.url) {
         logger.info('Refreshing conversation state');
-        const useReaction = sdk?.appInfo?.isUsingReaction || false;
+        const useReaction = sdk?.appInfo?.useReaction || false;
 
         const messageListParams: MessageListParams = {
           prevResultSize: PREV_RESULT_SIZE,

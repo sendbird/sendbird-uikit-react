@@ -2,6 +2,7 @@ import './channel-preview.scss';
 
 import React from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 import ChannelAvatar from '../../../../ui/ChannelAvatar';
 import Badge from '../../../../ui/Badge';
@@ -119,7 +120,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
                 <MessageStatus
                   className="sendbird-channel-preview__content__upper__last-message-at"
                   channel={channel}
-                  message={channel?.lastMessage as SendBird.UserMessage | SendBird.FileMessage}
+                  message={channel?.lastMessage as UserMessage | FileMessage}
                 />
               )
               : (

@@ -17,8 +17,7 @@ function useScrollDownCallback({
   return useCallback((cb) => {
     if (!hasMoreNext) { return; }
     const { appInfo = {} } = sdk;
-    const useReaction = appInfo.isUsingReaction || false;
-
+    const useReaction = appInfo.useReaction || false;
     const messageListParams = {
       nextResultSize: NEXT_RESULT_SIZE,
       isInclusive: true,
