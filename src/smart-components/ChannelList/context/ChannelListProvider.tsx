@@ -241,7 +241,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     }
     return () => {
       if (sdk?.groupChannel?.removeGroupChannelHandler) {
-        sdk.groupChannel.removeGroupChannelHandler(typingHandlerId)
+        sdk.groupChannel.removeGroupChannelHandler(typingHandlerId);
       }
     }
   }, [sdk?.currentUser?.userId]);

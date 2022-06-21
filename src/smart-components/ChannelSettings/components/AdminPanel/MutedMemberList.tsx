@@ -35,13 +35,12 @@ export const MutedMemberList = (): ReactElement => {
       return;
     }
 
-    const memberUserListQuery = channel.createMemberListQuery();
-    memberUserListQuery.limit = 10;
-    memberUserListQuery.mutedMemberFilter = 'muted';
-    memberUserListQuery.next((members, error) => {
-      if (error) {
-        return;
-      }
+    const memberUserListQuery = channel.createMemberListQuery({
+      limit: 10,
+      // @ts-ignore
+      mutedMemberFilter: 'muted',
+    });
+    memberUserListQuery.next().then((members) => {
       setMembers(members);
       setHasNext(memberUserListQuery.hasNext);
     });
@@ -53,13 +52,12 @@ export const MutedMemberList = (): ReactElement => {
       return;
     }
 
-    const memberUserListQuery = channel.createMemberListQuery();
-    memberUserListQuery.limit = 10;
-    memberUserListQuery.mutedMemberFilter = 'muted';
-    memberUserListQuery.next((members, error) => {
-      if (error) {
-        return;
-      }
+    const memberUserListQuery = channel.createMemberListQuery({
+      limit: 10,
+      // @ts-ignore
+      mutedMemberFilter: 'muted',
+    });
+    memberUserListQuery.next().then((members) => {
       setMembers(members);
       setHasNext(memberUserListQuery.hasNext);
     });
@@ -99,7 +97,7 @@ export const MutedMemberList = (): ReactElement => {
                     >
                       <MenuItem
                         onClick={() => {
-                          channel.unmuteUser(member, () => {
+                          channel.unmuteUser(member).then(() => {
                             refreshList();
                             closeDropdown();
                           })

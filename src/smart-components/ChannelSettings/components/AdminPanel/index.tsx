@@ -178,7 +178,7 @@ export default function AdminPannel(): ReactElement {
                   ? (
                     <Icon
                       onClick={() => {
-                        channel.unfreeze(() => {
+                        channel.unfreeze().then(() => {
                           setFrozen(false);
                         });
                       }}
@@ -191,7 +191,7 @@ export default function AdminPannel(): ReactElement {
                   : (
                     <Icon
                       onClick={() => {
-                        channel.freeze(() => {
+                        channel.freeze().then(() => {
                           setFrozen(true);
                         });
                       }}

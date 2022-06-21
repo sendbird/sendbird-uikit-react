@@ -33,10 +33,7 @@ export const BannedMemberList = (): ReactElement => {
     }
 
     const bannedUserListQuery = channel.createBannedUserListQuery();
-    bannedUserListQuery.next((users, error) => {
-      if (error) {
-        return;
-      }
+    bannedUserListQuery.next().then((users) => {
       setMembers(users);
       setHasNext(bannedUserListQuery.hasNext);
     });
@@ -49,10 +46,7 @@ export const BannedMemberList = (): ReactElement => {
     }
 
     const bannedUserListQuery = channel.createBannedUserListQuery();
-    bannedUserListQuery.next(function(users, error) {
-      if (error) {
-        return;
-      }
+    bannedUserListQuery.next().then((users) => {
       setMembers(users);
       setHasNext(bannedUserListQuery.hasNext);
     });
@@ -91,7 +85,7 @@ export const BannedMemberList = (): ReactElement => {
                     >
                       <MenuItem
                         onClick={() => {
-                          channel.unbanUser(member, () => {
+                          channel.unbanUser(member).then(() => {
                             closeDropdown();
                             refreshList();
                           })

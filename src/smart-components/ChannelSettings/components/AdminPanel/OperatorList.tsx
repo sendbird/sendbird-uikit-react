@@ -36,12 +36,10 @@ export const OperatorList = (): ReactElement => {
       return;
     }
 
-    const operatorListQuery = channel.createOperatorListQuery();
-    operatorListQuery.limit = 10;
-    operatorListQuery.next((operators, error) => {
-      if (error) {
-        return;
-      }
+    const operatorListQuery = channel.createOperatorListQuery({
+      limit: 10,
+    });
+    operatorListQuery.next().then((operators) => {
       setOperators(operators);
       setHasNext(operatorListQuery.hasNext);
     });
@@ -53,12 +51,10 @@ export const OperatorList = (): ReactElement => {
         setOperators([]);
         return;
       }
-      const operatorListQuery = channel.createOperatorListQuery();
-      operatorListQuery.limit = 10;
-      operatorListQuery.next((operators, error) => {
-        if (error) {
-          return;
-        }
+      const operatorListQuery = channel.createOperatorListQuery({
+        limit: 10,
+      });
+      operatorListQuery.next().then((operators) => {
         setOperators(operators);
         setHasNext(operatorListQuery.hasNext);
       });
@@ -101,10 +97,7 @@ export const OperatorList = (): ReactElement => {
                     >
                       <MenuItem
                         onClick={() => {
-                          channel.removeOperators([operator.userId], (response, error) => {
-                            if (error) {
-                              return;
-                            }
+                          channel.removeOperators([operator.userId]).then(() => {
                             setOperators(operators.filter(({ userId }) => {
                               return userId !== operator.userId;
                             }))

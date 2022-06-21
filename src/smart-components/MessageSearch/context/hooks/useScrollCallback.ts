@@ -30,23 +30,21 @@ function useScrollCallback(
       logger.warning('MessageSearch | useScrollCallback: no more searched results', hasMoreResult);
     }
     if (currentMessageSearchQuery && currentMessageSearchQuery.hasNext) {
-      currentMessageSearchQuery.next((messages, error) => {
-        if (!error) {
-          logger.info('MessageSearch | useScrollCallback: succeeded getting searched messages', messages);
-          messageSearchDispatcher({
-            type: messageActionTypes.GET_NEXT_SEARCHED_MESSAGES,
-            payload: messages,
-          });
-          cb(messages, null);
-          if (onResultLoaded && typeof onResultLoaded === 'function') {
-            onResultLoaded(messages, null);
-          }
-        } else {
-          logger.warning('MessageSearch | useScrollCallback: failed getting searched messages', error);
-          cb(null, error);
-          if (onResultLoaded && typeof onResultLoaded === 'function') {
-            onResultLoaded(null, error);
-          }
+      currentMessageSearchQuery.next().then((messages) => {
+        logger.info('MessageSearch | useScrollCallback: succeeded getting searched messages', messages);
+        messageSearchDispatcher({
+          type: messageActionTypes.GET_NEXT_SEARCHED_MESSAGES,
+          payload: messages,
+        });
+        cb(messages, null);
+        if (onResultLoaded && typeof onResultLoaded === 'function') {
+          onResultLoaded(messages, null);
+        }
+      }).catch((error) => {
+        logger.warning('MessageSearch | useScrollCallback: failed getting searched messages', error);
+        cb(null, error);
+        if (onResultLoaded && typeof onResultLoaded === 'function') {
+          onResultLoaded(null, error);
         }
       });
     } else {

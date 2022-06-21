@@ -27,12 +27,10 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
   const currentUser = state?.config?.userId;
 
   useEffect(() => {
-    const memberListQuery = channel.createMemberListQuery();
-    memberListQuery.limit = 20;
-    memberListQuery.next((members, error) => {
-      if (error) {
-        return;
-      }
+    const memberListQuery = channel.createMemberListQuery({
+      limit: 20,
+    });
+    memberListQuery.next().then((members) => {
       setMembers(members);
     });
     setMemberQuery(memberListQuery);
@@ -55,10 +53,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
             );
 
             if (hasNext && fetchMore) {
-              memberQuery.next((o, error) => {
-                if (error) {
-                  return;
-                }
+              memberQuery.next().then((o) => {
                 setMembers([
                   ...members,
                   ...o,
@@ -101,7 +96,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                           <MenuItem
                             onClick={() => {
                               if ((member.role !== 'operator')) {
-                                channel.addOperators([member.userId], () => {
+                                channel.addOperators([member.userId]).then(() => {
                                   setMembers(members.map(m => {
                                     if(m.userId === member.userId) {
                                       return {
@@ -114,7 +109,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                   closeDropdown();
                                 });
                               } else {
-                                channel.removeOperators([member.userId], () => {
+                                channel.removeOperators([member.userId]).then(() => {
                                   setMembers(members.map(m => {
                                     if(m.userId === member.userId) {
                                       return {
@@ -137,7 +132,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                               <MenuItem
                                 onClick={() => {
                                   if (member.isMuted) {
-                                    channel.unmuteUser(member, () => {
+                                    channel.unmuteUser(member).then(() => {
                                       setMembers(members.map(m => {
                                         if(m.userId === member.userId) {
                                           return {
@@ -150,7 +145,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                       closeDropdown();
                                     })
                                   } else {
-                                    channel.muteUser(member, () => {
+                                    channel.muteUser(member).then(() => {
                                       setMembers(members.map(m => {
                                         if(m.userId === member.userId) {
                                           return {
@@ -171,7 +166,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                           }
                           <MenuItem
                             onClick={() => {
-                              channel.banUser(member, -1, '', () => {
+                              channel.banUser(member, -1, '').then(() => {
                                 setMembers(members.filter(({ userId }) => {
                                   return userId !== member.userId;
                                 }));

@@ -28,13 +28,12 @@ export default function MutedMembersModal({
   const currentUser = state?.config?.userId;
 
   useEffect(() => {
-    const memberUserListQuery = channel.createMemberListQuery();
-    memberUserListQuery.limit = 10;
-    memberUserListQuery.mutedMemberFilter = 'muted';
-    memberUserListQuery.next((members, error) => {
-      if (error) {
-        return;
-      }
+    const memberUserListQuery = channel.createMemberListQuery({
+      limit: 10,
+      // @ts-ignore
+      mutedMemberFilter: 'muted',
+    });
+    memberUserListQuery.next().then((members) => {
       setMembers(members);
     });
     setMemberQuery(memberUserListQuery);
@@ -57,10 +56,7 @@ export default function MutedMembersModal({
             );
 
             if (hasNext && fetchMore) {
-              memberQuery.next((o, error) => {
-                if (error) {
-                  return;
-                }
+              memberQuery.next().then((o) => {
                 setMembers([
                   ...members,
                   ...o,
@@ -100,7 +96,7 @@ export default function MutedMembersModal({
                     >
                       <MenuItem
                         onClick={() => {
-                          channel.unmuteUser(member, () => {
+                          channel.unmuteUser(member).then(() => {
                             closeDropdown();
                             setMembers(members.filter(m => {
                               return (m.userId !== member.userId);

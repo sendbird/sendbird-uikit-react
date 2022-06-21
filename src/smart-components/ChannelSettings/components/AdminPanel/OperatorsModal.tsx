@@ -24,12 +24,10 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
   const currentUser = state?.config?.userId;
 
   useEffect(() => {
-    const operatorListQuery = channel.createOperatorListQuery();
-    operatorListQuery.limit = 20;
-    operatorListQuery.next((operators, error) => {
-      if (error) {
-        return;
-      }
+    const operatorListQuery = channel.createOperatorListQuery({
+      limit: 20,
+    });
+    operatorListQuery.next().then((operators) => {
       setOperators(operators);
     });
     setOperatorQuery(operatorListQuery);
@@ -51,10 +49,7 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
             );
 
             if (hasNext && fetchMore) {
-              operatorQuery.next((o, error) => {
-                if (error) {
-                  return;
-                }
+              operatorQuery.next().then((o) => {
                 setOperators([
                   ...operators,
                   ...o,
@@ -94,10 +89,7 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
                     >
                       <MenuItem
                         onClick={() => {
-                          channel.removeOperators([member.userId], (response, error) => {
-                            if (error) {
-                              return;
-                            }
+                          channel.removeOperators([member.userId]).then(() => {
                             setOperators(operators.filter(({ userId }) => {
                               return userId !== member.userId;
                             }));

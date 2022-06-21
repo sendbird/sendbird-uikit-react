@@ -32,12 +32,10 @@ export default function AddOperatorsModal({
   const { channel } = useChannelSettings();
 
   useEffect(() => {
-    const memberListQuery = channel.createMemberListQuery();
-    memberListQuery.limit = 20;
-    memberListQuery.next((members, error) => {
-      if (error) {
-        return;
-      }
+    const memberListQuery = channel.createMemberListQuery({
+      limit: 20,
+    });
+    memberListQuery.next().then((members) => {
       setMembers(members);
     });
     setMemberQuery(memberListQuery);
@@ -73,10 +71,7 @@ export default function AddOperatorsModal({
               target.clientHeight + target.scrollTop === target.scrollHeight
             );
             if (hasNext && fetchMore) {
-              memberQuery.next((o, error) => {
-                if (error) {
-                  return;
-                }
+              memberQuery.next().then((o) => {
                 setMembers([
                   ...members,
                   ...o,

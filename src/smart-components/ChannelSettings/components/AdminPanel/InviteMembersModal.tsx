@@ -26,10 +26,7 @@ export default function InviteMembers({
 
   useEffect(() => {
     const userListQuery = sdk?.createApplicationUserListQuery();
-    userListQuery.next((members, error) => {
-      if (error) {
-        return;
-      }
+    userListQuery.next().then((members) => {
       setMembers(members);
     });
     setUserQuery(userListQuery);
@@ -58,10 +55,7 @@ export default function InviteMembers({
               target.clientHeight + target.scrollTop === target.scrollHeight
             );
             if (hasNext && fetchMore) {
-              userQuery.next((users, error) => {
-                if (error) {
-                  return;
-                }
+              userQuery.next().then((users) => {
                 setMembers([
                   ...members,
                   ...users,
