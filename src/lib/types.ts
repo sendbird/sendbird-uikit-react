@@ -70,7 +70,7 @@ interface UserStore {
   loading: boolean;
   user: User;
 }
-interface SendBirdStateStore {
+export interface SendBirdStateStore {
   sdkStore: SdkStore;
   userStore: UserStore;
 }
