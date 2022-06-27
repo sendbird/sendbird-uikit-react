@@ -7,7 +7,7 @@ export default {
 
   // SendbirdProvider
   SendbirdProvider: 'src/lib/Sendbird.jsx',
-  sendBirdSelectors: 'src/lib/selectors.js',
+  sendBirdSelectors: 'src/lib/selectors.js',// We must to change this to sendbirdSelectors
   useSendbirdStateContext: 'src/hooks/useSendbirdStateContext.tsx',
   withSendBird: 'src/lib/SendbirdSdkContext.jsx',
 
