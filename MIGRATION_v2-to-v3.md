@@ -7,6 +7,58 @@ If you are using v2 and want to upgrade to v3, we have tried to keep the changes
 * There are no changes to SendbirdProvider, App, withSendbird, useSendbirdStateContext etc,
 * import path should start from `"@sendbird/uikit-react`!
 
+## Sendbird Selectors
+We renamed `sendBirdSelectors` to `sendbirdSelectors`. And importing path has been changed.
+```jsx
+// from
+import { sendBirdSelectors } from 'sendbird-uikit';
+// to
+import sendbirdSelectors from '@sendbird/uikit-react/sendbirdSelectors';
+```
+
+### Changes
+And here is a table shows what has been changed in sendbirdSelectors in v3.
+
+| in v2 | in v3 | Description |
+| -------------- | -------------- | ------------------------------------- |
+| getSdk | **getSdk** | Getting sendbird chat sdk instance form `SendbirdState` |
+| getPubSub | **getPubSub** | Getting `pubSub` which is a common dispatcher of sendbird UIKit |
+| getConnect | **connect** | Generating a function that returns `Promise` to connect |
+| getDisconnect | **disconnect** | Generating a function returns `Promise` to disconnect |
+| getUpdateUserInfo | **updateUserInfo** | Generating a function returns `Promise` to udpate **currenetUserInfo** what means nickname and profile url |
+| getCreateChannel | **createGroupChannel** | Generating a function returns `Promise` to create GroupChannel |
+| getCreateOpenChannelChannel | **createOpenChannel** | Generating a function returns `Promise` to create OpenChannel |
+| getFreezeChannel | **freezeChannel** | Generating a function returns `Promise` to freeze GroupChannel and OpenChannel |
+| getUnfreezeChannel | **unfreezeChannel** | Generating a function returns `Promise` to unfreeze GroupChannel and OpenChannel |
+| getLeaveChannel | **leaveGroupChannel** | Generating a function returns `Promise` to leave GroupChannel |
+| getEnterOpenChannel | **enterOpenChannel** | Generating a function returns `Promise` to enter to OpenChannel |
+| getExitOpenChannel | **exitOpenChannel** | Generating a function returns `Promise` to exit from OpenChannel |
+| getSendUserMessage & getOpenChannelSendUserMessage | **sendUserMessage** | Generating a function returns `UIKitMessageHandler` to send user messages in GroupChannel and OpenChannel |
+| getSendFileMessage & getOpenChannelSendFileMessage | **sendFileMessage** | Generating a function returns `UIKitMessageHandler` to send file messages in GroupChannel and OpenChannel |
+| getUpdateUserMessage & getOpenChannelUpdateUserMessage | **updateUserMessage** | Generating a function returns `Promise` to update user messages in GroupChannel and OpenChannel |
+| getDeleteMessage & getOpenChannelDeleteMessage | **deleteMessage** | Generating a function returns `Promise` to delete messages in GroupChannel and OpenChannel |
+| getResendUserMessage & getOpenChannelResendUserMessage | **resendUserMessage** | Generating a function returns `Promise` to resend user messages in GroupChannel and OpenChannel |
+| getResendFileMessage & getOpenChannelResendFileMessage | **resendFileMessage** | Generating a function returns `Promise` to resend file messages in GroupChannel and OpenChannel |
+
+### New functions
+* A new interface `UIKitMessageHandler` has been added for handling message event when sending messages. There are three options in the handler.
+```jsx
+const state = useSendbirdStateContext();
+const sendUserMessage = sendbirdSelectors.sendUserMessage(state);
+
+sendUserMessage(channel, { message: 'Hello world' })
+  .onPending((message) => { })
+  .onFailed((error, message) => { })
+  .onSucceeded((message) => { })
+```
+
+* Also we're providing new functions. Here is a table shows what has been added in sendbirdSelectors in v3.
+
+| New in v3 | Description |
+| --------- | ---------------------- |
+| **getGroupChannel** | Generating a function returns `Promise` to get a GroupChannel instance |
+| **getOpenChannel** | Generating a function returns `Promise` to get a OpenChannel instance |
+
 ## ChannelList
 
 Can be imported as `import { ChannelList } from "@sendbird/uikit-react"`

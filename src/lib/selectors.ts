@@ -261,12 +261,12 @@ export const getOpenChannel = (state: SendBirdState) => (
 );
 
 /**
- * const leaveChannel = selectors.leaveChannel(state);
+ * const leaveChannel = selectors.leaveGroupChannel(state);
  * leaveChannel('group-channel-url')
  *  .then((channel) => {})
  *  .catch((error) => {})
  */
-export const leaveChannel = (state: SendBirdState) => (
+export const leaveGroupChannel = (state: SendBirdState) => (
   (channelUrl: string): Promise<void> => (
     new Promise((resolve, reject) => {
       getGroupChannel(state)?.(channelUrl)
@@ -312,7 +312,7 @@ export const enterOpenChannel = (state: SendBirdState) => (
  *  .then((channel) => {})
  *  .catch((error) => {})
  */
-export const exitChannel = (state: SendBirdState) => (
+export const exitOpenChannel = (state: SendBirdState) => (
   (channelUrl: string): Promise<void> => (
     new Promise((resolve, reject) => {
       getOpenChannel(state)?.(channelUrl)
@@ -513,8 +513,7 @@ export const updateUserMessage = (state: SendBirdState) => (
   )
 );
 
-// TODO: We haven't provided this feature
-// So we need to decide if we are going to provide or not
+// TODO: We will provie this function in the future
 /**
  * const updateFileMessage = selectors.updateFileMessage(state);
  * updateFileMessage(
@@ -525,22 +524,22 @@ export const updateUserMessage = (state: SendBirdState) => (
  *  .then((message) => {})
  *  .catch((error) => {})
  */
-const updateFileMessage = (state: SendBirdState) => (
-  (channel: GroupChannel | OpenChannel, messageId: number, params: FileMessageUpdateParams) => (
-    new Promise((resolve, reject) => {
-      const pubSub = getPubSub(state);
-      channel.updateFileMessage(messageId, params)
-        .then((message) => {
-          pubSub.publish(
-            topics.UPDATE_USER_MESSAGE,
-            { message, channel, fromSelector: true },
-          );
-          resolve(message);
-        })
-        .catch(reject);
-    })
-  )
-);
+// const updateFileMessage = (state: SendBirdState) => (
+//   (channel: GroupChannel | OpenChannel, messageId: number, params: FileMessageUpdateParams) => (
+//     new Promise((resolve, reject) => {
+//       const pubSub = getPubSub(state);
+//       channel.updateFileMessage(messageId, params)
+//         .then((message) => {
+//           pubSub.publish(
+//             topics.UPDATE_USER_MESSAGE,
+//             { message, channel, fromSelector: true },
+//           );
+//           resolve(message);
+//         })
+//         .catch(reject);
+//     })
+//   )
+// );
 
 /**
  * const deleteMessage = selectors.deleteMessage(state);
