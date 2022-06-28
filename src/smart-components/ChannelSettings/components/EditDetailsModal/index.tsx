@@ -74,9 +74,9 @@ const EditDetails: React.FC<EditDetailsProps> = (props: EditDetailsProps) => {
         } else {
           logger.info('ChannelSettings: normal');
           channel.updateChannel({
-            coverUrl: currentImg,
+            coverImage: currentImg,
             name: currentTitle,
-            data: channel?.data,
+            data: channel?.data || '',
           }).then((groupChannel) => {
             logger.info('ChannelSettings: Channel information updated', groupChannel);
             onChannelModified?.(groupChannel);
