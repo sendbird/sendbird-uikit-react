@@ -245,9 +245,9 @@ export const pubSubHandleRemover = (subscriber) => {
 };
 
 export const pubSubHandler = (pubSub, channelListDispatcher) => {
-  const subScriber = new Map();
-  if (!pubSub) return subScriber;
-  subScriber.set(topics.CREATE_CHANNEL, pubSub.subscribe(topics.CREATE_CHANNEL, (msg) => {
+  const subscriber = new Map();
+  if (!pubSub) return subscriber;
+  subscriber.set(topics.CREATE_CHANNEL, pubSub.subscribe(topics.CREATE_CHANNEL, (msg) => {
     const { channel } = msg;
     channelListDispatcher({
       type: 'CREATE_CHANNEL',
@@ -255,7 +255,7 @@ export const pubSubHandler = (pubSub, channelListDispatcher) => {
     });
   }));
 
-  subScriber.set(topics.UPDATE_USER_MESSAGE, pubSub.subscribe(topics.UPDATE_USER_MESSAGE, (msg) => {
+  subscriber.set(topics.UPDATE_USER_MESSAGE, pubSub.subscribe(topics.UPDATE_USER_MESSAGE, (msg) => {
     const { channel, message } = msg;
     const updatedChannel = channel;
     if (updatedChannel?.lastMessage?.messageId === message.messageId) {
@@ -269,7 +269,7 @@ export const pubSubHandler = (pubSub, channelListDispatcher) => {
     }
   }));
 
-  subScriber.set(topics.LEAVE_CHANNEL, pubSub.subscribe(topics.LEAVE_CHANNEL, (msg) => {
+  subscriber.set(topics.LEAVE_CHANNEL, pubSub.subscribe(topics.LEAVE_CHANNEL, (msg) => {
     const { channel } = msg;
     channelListDispatcher({
       type: channelActions.LEAVE_CHANNEL_SUCCESS,
@@ -277,7 +277,7 @@ export const pubSubHandler = (pubSub, channelListDispatcher) => {
     });
   }));
 
-  subScriber.set(topics.SEND_MESSAGE_START, pubSub.subscribe(topics.SEND_MESSAGE_START, (msg) => {
+  subscriber.set(topics.SEND_MESSAGE_START, pubSub.subscribe(topics.SEND_MESSAGE_START, (msg) => {
     const { channel } = msg;
     channelListDispatcher({
       type: channelActions.CHANNEL_REPLACED_TO_TOP,
@@ -285,7 +285,7 @@ export const pubSubHandler = (pubSub, channelListDispatcher) => {
     });
   }));
 
-  return subScriber;
+  return subscriber;
 };
 
 export default setupChannelList;

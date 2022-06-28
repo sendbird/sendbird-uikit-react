@@ -139,7 +139,7 @@ export const createGroupChannel = (state: SendBirdState) => (
   (params: GroupChannelCreateParams): Promise<GroupChannel> => (
     new Promise((resolve, reject) => {
       const sdk = getSdk(state);
-      // const pubSub = getPubSub(state);
+      const pubSub = getPubSub(state);
       if (!sdk) {
         reject(new Error('Sdk not found'));
       }
@@ -152,10 +152,10 @@ export const createGroupChannel = (state: SendBirdState) => (
       sdk.groupChannel.createChannel(params)
         .then((channel) => {
           resolve(channel);
-          // pubSub.publish(
-          //   topics.CREATE_CHANNEL,
-          //   { channel },
-          // );
+          pubSub.publish(
+            topics.CREATE_CHANNEL,
+            { channel },
+          );
         })
         .catch(reject)
     })
