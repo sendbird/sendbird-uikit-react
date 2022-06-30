@@ -28,7 +28,7 @@ export default function MutedMembersModal({
   const currentUser = state?.config?.userId;
 
   useEffect(() => {
-    const memberUserListQuery = channel.createMemberListQuery({
+    const memberUserListQuery = channel?.createMemberListQuery({
       limit: 10,
       // @ts-ignore
       mutedMemberFilter: 'muted',
@@ -96,7 +96,7 @@ export default function MutedMembersModal({
                     >
                       <MenuItem
                         onClick={() => {
-                          channel.unmuteUser(member).then(() => {
+                          channel?.unmuteUser(member).then(() => {
                             closeDropdown();
                             setMembers(members.filter(m => {
                               return (m.userId !== member.userId);

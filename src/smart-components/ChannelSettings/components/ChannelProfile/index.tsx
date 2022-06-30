@@ -32,7 +32,7 @@ const ChannelProfile: React.FC = () => {
       return channel.name;
     }
     if (channel?.name === 'Group Channel' || !channel?.name) {
-      return channel.members.map((member) => member.nickname || stringSet.NO_NAME).join(', ');
+      return (channel?.members || []).map((member) => member.nickname || stringSet.NO_NAME).join(', ');
     }
 
     return stringSet.NO_TITLE;

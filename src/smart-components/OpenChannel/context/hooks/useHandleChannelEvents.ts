@@ -26,7 +26,7 @@ function useHandleChannelEvents(
       const channelHandlerParams = {
         onMessageReceived: (channel, message) => {
           const scrollToEnd = checkScrollBottom();
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMessageReceived', { channelUrl, message });
           messagesDispatcher({
             type: messageActionTypes.ON_MESSAGE_RECEIVED,
@@ -43,7 +43,7 @@ function useHandleChannelEvents(
           }
         },
         onMessageUpdated: (channel, message) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMessageUpdated', { channelUrl, message });
           messagesDispatcher({
             type: messageActionTypes.ON_MESSAGE_UPDATED,
@@ -51,7 +51,7 @@ function useHandleChannelEvents(
           });
         },
         onMessageDeleted: (channel, messageId) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMessageDeleted', { channelUrl, messageId });
           messagesDispatcher({
             type: messageActionTypes.ON_MESSAGE_DELETED,
@@ -59,7 +59,7 @@ function useHandleChannelEvents(
           });
         },
         onOperatorUpdated: (channel, operators) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onOperatorUpdated', { channelUrl, operators });
           messagesDispatcher({
             type: messageActionTypes.ON_OPERATOR_UPDATED,
@@ -67,7 +67,7 @@ function useHandleChannelEvents(
           });
         },
         onUserEntered: (channel, user) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onUserEntered', { channelUrl, user });
           messagesDispatcher({
             type: messageActionTypes.ON_USER_ENTERED,
@@ -75,7 +75,7 @@ function useHandleChannelEvents(
           });
         },
         onUserExited: (channel, user) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onUserExited', { channelUrl, user });
           messagesDispatcher({
             type: messageActionTypes.ON_USER_EXITED,
@@ -83,7 +83,7 @@ function useHandleChannelEvents(
           });
         },
         onUserMuted: (channel, user) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onUserMuted', { channelUrl, user });
           messagesDispatcher({
             type: messageActionTypes.ON_USER_MUTED,
@@ -91,7 +91,7 @@ function useHandleChannelEvents(
           });
         },
         onUserUnmuted: (channel, user) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onUserUnmuted', { channelUrl, user });
           messagesDispatcher({
             type: messageActionTypes.ON_USER_UNMUTED,
@@ -99,7 +99,7 @@ function useHandleChannelEvents(
           });
         },
         onUserBanned: (channel, user) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onUserBanned', { channelUrl, user });
           messagesDispatcher({
             type: messageActionTypes.ON_USER_BANNED,
@@ -107,7 +107,7 @@ function useHandleChannelEvents(
           });
         },
         onUserUnbanned: (channel, user) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onUserUnbanned', { channelUrl, user });
           messagesDispatcher({
             type: messageActionTypes.ON_USER_UNBANNED,
@@ -136,7 +136,7 @@ function useHandleChannelEvents(
           });
         },
         onMetaDataCreated: (channel, metaData) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMetaDataCreated', { channelUrl, metaData });
           messagesDispatcher({
             type: messageActionTypes.ON_META_DATA_CREATED,
@@ -144,7 +144,7 @@ function useHandleChannelEvents(
           });
         },
         onMetaDataUpdated: (channel, metaData) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMetaDataUpdated', { channelUrl, metaData });
           messagesDispatcher({
             type: messageActionTypes.ON_META_DATA_UPDATED,
@@ -152,7 +152,7 @@ function useHandleChannelEvents(
           });
         },
         onMetaDataDeleted: (channel, metaDataKeys) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMetaDataDeleted', { channelUrl, metaDataKeys });
           messagesDispatcher({
             type: messageActionTypes.ON_META_DATA_DELETED,
@@ -160,7 +160,7 @@ function useHandleChannelEvents(
           });
         },
         onMetaCounterCreated: (channel, metaCounter) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMetaCountersCreated', { channelUrl, metaCounter });
           messagesDispatcher({
             type: messageActionTypes.ON_META_COUNTERS_CREATED,
@@ -168,7 +168,7 @@ function useHandleChannelEvents(
           });
         },
         onMetaCounterUpdated: (channel, metaCounter) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMetaCountersUpdated', { channelUrl, metaCounter });
           messagesDispatcher({
             type: messageActionTypes.ON_META_COUNTERS_UPDATED,
@@ -176,7 +176,7 @@ function useHandleChannelEvents(
           });
         },
         onMetaCounterDeleted: (channel, metaCounterKeys) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMetaCountersDeleted', { channelUrl, metaCounterKeys });
           messagesDispatcher({
             type: messageActionTypes.ON_META_COUNTERS_DELETED,
@@ -184,7 +184,7 @@ function useHandleChannelEvents(
           });
         },
         onMentionReceived: (channel, message) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMentionReceived', { channelUrl, message });
           messagesDispatcher({
             type: messageActionTypes.ON_MENTION_RECEIVED,

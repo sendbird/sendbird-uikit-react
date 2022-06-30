@@ -53,7 +53,7 @@ function ChannelAvatar({
               src={utils.getChannelAvatarSource(channel, userId)}
               width={width}
               height={height}
-              alt={channel.name}
+              alt={channel?.name}
             />
           )
       )
@@ -63,7 +63,7 @@ function ChannelAvatar({
           src={utils.getChannelAvatarSource(channel, userId)}
           width={`${width}px`}
           height={`${height}px`}
-          alt={channel.name}
+          alt={channel?.name}
         />
       )
   ),[channel?.members, channel?.coverUrl, theme]);

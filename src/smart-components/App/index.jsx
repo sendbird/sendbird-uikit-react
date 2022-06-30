@@ -78,7 +78,7 @@ export default function App(props) {
             onChannelSelect={(channel) => {
               setStartingPoint(null);
               setHighlightedMessage(null);
-              if (channel && channel.url) {
+              if (channel?.url) {
                 setCurrentChannelUrl(channel.url);
               } else {
                 setCurrentChannelUrl('');

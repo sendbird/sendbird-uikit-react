@@ -23,7 +23,7 @@ export const IndependantChannelList = () => (
 
 const MyCustomPreview = ({ channel, onLeaveChannel }) => (
   <div style={{ border: '1px solid gray' }}>
-    <img height="20px" width="20px" src={channel.coverUrl} />
+    <img height="20px" width="20px" src={channel?.coverUrl} />
     <button
       onClick={() => {
         const leaveChannelCb = () => { console.warn('Leave channel success') }

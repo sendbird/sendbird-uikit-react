@@ -4,7 +4,8 @@ import React, {
   ReactElement,
   useMemo,
 } from 'react';
-
+import { AdminMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
+import { User } from '@sendbird/chat';
 import format from 'date-fns/format';
 
 import OpenChannelUserMessage from '../../../../ui/OpenchannelUserMessage';
@@ -27,12 +28,13 @@ import {
 } from './utils';
 import { useOpenChannel } from '../../context/OpenChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import type { EveryMessage, RenderMessageProps } from '../../../../types';
+import type { RenderMessageProps } from '../../../../types';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 
+type RenderedMessageType = React.ElementType<RenderMessageProps>;
 export type OpenChannelMessageProps = {
-  renderMessage?: (props: RenderMessageProps) => React.ReactNode;
-  message: EveryMessage;
+  renderMessage?: (props: RenderMessageProps) => RenderedMessageType;
+  message: UserMessage | FileMessage | AdminMessage;
   chainTop?: boolean;
   chainBottom?: boolean;
   hasSeparator?: boolean;
@@ -60,20 +62,21 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
   const globalState = useSendbirdStateContext();
   const userId = globalState?.config?.userId;
 
-  let sender: SendBird.User = null;
+  let sender: User = null;
   if (message?.messageType !== 'admin') {
-    sender = message?.sender;
+    sender = (message as UserMessage | FileMessage)?.sender;
   }
 
-  const RenderedMessage = useMemo(() => {
-    if (renderMessage) {
-      return renderMessage({
-        message,
-        chainBottom,
-        chainTop,
-      });
-    }
-    return null;
+  const RenderedMessage = useMemo(() => (props: RenderMessageProps) => {
+    return (
+      <>
+        {
+          renderMessage
+            ? (renderMessage(props))
+            : null
+        }
+      </>
+    );
   }, [message, renderMessage]);
 
   const [showEdit, setShowEdit] = useState(false);
@@ -86,14 +89,14 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
   if (sender && message?.messageType !== 'admin') {
     // pending and failed messages are by me
     isByMe = (userId === sender.userId)
-      || (message?.requestState === SendingMessageStatus.PENDING)
-      || (message?.requestState === SendingMessageStatus.FAILED);
+      || ((message as UserMessage | FileMessage)?.sendingStatus === SendingMessageStatus.PENDING)
+      || ((message as UserMessage | FileMessage)?.sendingStatus === SendingMessageStatus.FAILED);
   }
 
-  if(RenderedMessage) {
+  if (RenderedMessage) {
     return (
       <div className="sendbird-msg-hoc sendbird-msg--scroll-ref">
-        <RenderedMessage />
+        <RenderedMessage message={message} chainTop={chainTop} chainBottom={chainBottom} />
       </div>
     );
   }
@@ -107,7 +110,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
         name={message?.messageId}
         onSendMessage={updateMessage}
         onCancelEdit={() => { setShowEdit(false); }}
-        value={message?.message}
+        value={(message as UserMessage)?.message}
       />
     );
   }
@@ -132,7 +135,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
           [MessageTypes.ADMIN]: (() => {
             if (message?.messageType === 'admin') {
               return (
-                <OpenChannelAdminMessage message={message} />
+                <OpenChannelAdminMessage message={message as AdminMessage} />
               )
             }
           })(),
@@ -140,7 +143,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
             if (message?.messageType === 'file') {
               return (
                 <OpenChannelFileMessage
-                  message={message}
+                  message={message as FileMessage}
                   disabled={editDisabled}
                   userId={userId}
                   showRemove={setShowRemove}
@@ -156,7 +159,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
             if (message?.messageType === 'user') {
               return (
                 <OpenChannelOGMessage
-                  message={message}
+                  message={message as UserMessage}
                   userId={userId}
                   showEdit={setShowEdit}
                   disabled={editDisabled}
@@ -173,7 +176,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
             if (message?.messageType === 'file') {
               return (
                 <OpenChannelThumbnailMessage
-                  message={message}
+                  message={message as FileMessage}
                   disabled={editDisabled}
                   userId={userId}
                   showRemove={setShowRemove}
@@ -190,7 +193,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
             if (message?.messageType === 'user') {
               return (
                 <OpenChannelUserMessage
-                  message={message}
+                  message={message as UserMessage}
                   userId={userId}
                   disabled={editDisabled}
                   showEdit={setShowEdit}

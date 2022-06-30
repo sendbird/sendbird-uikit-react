@@ -219,7 +219,7 @@ export default function reducer(state, action) {
       const { currentGroupChannel = {}, unreadSince } = state;
       const currentGroupChannelUrl = currentGroupChannel?.url;
 
-      if (!compareIds(channel.url, currentGroupChannelUrl)) {
+      if (!compareIds(channel?.url, currentGroupChannelUrl)) {
         return state;
       }
       // Excluded overlapping messages
@@ -260,7 +260,7 @@ export default function reducer(state, action) {
     case actionTypes.ON_MESSAGE_UPDATED: {
       const { channel, message } = action.payload;
       const currentGroupChannelUrl = state?.currentGroupChannel?.url || '';
-      if (!compareIds(channel.url, currentGroupChannelUrl)) {
+      if (!compareIds(channel?.url, currentGroupChannelUrl)) {
         return state; // Ignore event when it is not for the current channel
       }
       if (state.messageListParams && !filterMessageListParams(state.messageListParams, message)) {
@@ -286,8 +286,8 @@ export default function reducer(state, action) {
       const { channelUrl, threadInfo, targetMessageId } = event;
       const currentGroupChannelUrl = state?.currentGroupChannel?.url || '';
       if (
-        !compareIds(channel.url, currentGroupChannelUrl)
-        || !compareIds(channel.url, channelUrl)
+        !compareIds(channel?.url, currentGroupChannelUrl)
+        || !compareIds(channel?.url, channelUrl)
       ) {
         return state; // Ignore event when it is not for the current channel
       }

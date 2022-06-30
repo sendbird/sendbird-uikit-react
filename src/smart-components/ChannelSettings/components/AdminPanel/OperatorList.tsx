@@ -36,7 +36,7 @@ export const OperatorList = (): ReactElement => {
       return;
     }
 
-    const operatorListQuery = channel.createOperatorListQuery({
+    const operatorListQuery = channel?.createOperatorListQuery({
       limit: 10,
     });
     operatorListQuery.next().then((operators) => {
@@ -51,7 +51,7 @@ export const OperatorList = (): ReactElement => {
         setOperators([]);
         return;
       }
-      const operatorListQuery = channel.createOperatorListQuery({
+      const operatorListQuery = channel?.createOperatorListQuery({
         limit: 10,
       });
       operatorListQuery.next().then((operators) => {
@@ -97,7 +97,7 @@ export const OperatorList = (): ReactElement => {
                     >
                       <MenuItem
                         onClick={() => {
-                          channel.removeOperators([operator.userId]).then(() => {
+                          channel?.removeOperators([operator.userId]).then(() => {
                             setOperators(operators.filter(({ userId }) => {
                               return userId !== operator.userId;
                             }))

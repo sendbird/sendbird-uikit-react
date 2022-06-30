@@ -13,7 +13,7 @@ export default function ChannelList({ channels, ChannelPreview }) {
     >
       {
         channels.map((channel, idx) => (
-          <div key={channel.url}>
+          <div key={channel?.url}>
             <ChannelPreview
               channel={channel}
               isActive={idx === 0}

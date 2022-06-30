@@ -6,6 +6,7 @@ import React, {
   ReactElement,
   useEffect,
 } from 'react';
+import { UserMessage } from '@sendbird/chat/message';
 import format from 'date-fns/format';
 import './index.scss';
 
@@ -21,7 +22,6 @@ import { UserProfileContext } from '../../lib/UserProfileContext';
 import { useLocalization } from '../../lib/LocalizationContext';
 import { copyToClipboard } from './utils';
 import uuidv4 from '../../utils/uuid';
-import { ClientUserMessage } from '../../index';
 import {
   checkIsByMe,
   checkIsPending,
@@ -36,12 +36,12 @@ import { getSenderFromMessage } from '../../utils/openChannelUtils';
 
 interface Props {
   className?: string | Array<string>;
-  message: ClientUserMessage;
+  message: UserMessage;
   userId: string;
   disabled?: boolean;
   showEdit(bool: boolean): void;
   showRemove(bool: boolean): void;
-  resendMessage(message: ClientUserMessage): void;
+  resendMessage(message: UserMessage): void;
   chainTop?: boolean;
   chainBottom?: boolean;
 }

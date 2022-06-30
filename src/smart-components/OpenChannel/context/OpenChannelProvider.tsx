@@ -212,7 +212,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
     subscriber.set(topics.SEND_USER_MESSAGE, pubSub.subscribe(topics.SEND_USER_MESSAGE, (msg) => {
       const { channel, message } = msg;
       scrollIntoLast();
-      if (channel && (channelUrl === channel.url)) {
+      if (channel && (channelUrl === channel?.url)) {
         messagesDispatcher({
           type: messageActionTypes.SENDING_MESSAGE_SUCCEEDED,
           payload: message,
@@ -221,7 +221,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
     }));
     subscriber.set(topics.SEND_MESSAGE_START, pubSub.subscribe(topics.SEND_MESSAGE_START, (msg) => {
       const { channel, message } = msg;
-      if (channel && (channelUrl === channel.url)) {
+      if (channel && (channelUrl === channel?.url)) {
         messagesDispatcher({
           type: messageActionTypes.SENDING_MESSAGE_START,
           payload: { message, channel },
@@ -231,7 +231,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
     subscriber.set(topics.SEND_FILE_MESSAGE, pubSub.subscribe(topics.SEND_FILE_MESSAGE, (msg) => {
       const { channel, message } = msg;
       scrollIntoLast();
-      if (channel && (channelUrl === channel.url)) {
+      if (channel && (channelUrl === channel?.url)) {
         messagesDispatcher({
           type: messageActionTypes.SENDING_MESSAGE_SUCCEEDED,
           payload: { message, channel },
@@ -240,7 +240,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
     }));
     subscriber.set(topics.UPDATE_USER_MESSAGE, pubSub.subscribe(topics.UPDATE_USER_MESSAGE, (msg) => {
       const { channel, message, fromSelector } = msg;
-      if (fromSelector && channel && (channelUrl === channel.url)) {
+      if (fromSelector && channel && (channelUrl === channel?.url)) {
         messagesDispatcher({
           type: messageActionTypes.ON_MESSAGE_UPDATED,
           payload: { channel, message },
@@ -249,7 +249,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
     }));
     subscriber.set(topics.DELETE_MESSAGE, pubSub.subscribe(topics.DELETE_MESSAGE, (msg) => {
       const { channel, messageId } = msg;
-      if (channel && (channelUrl === channel.url)) {
+      if (channel && (channelUrl === channel?.url)) {
         messagesDispatcher({
           type: messageActionTypes.ON_MESSAGE_DELETED,
           payload: messageId,

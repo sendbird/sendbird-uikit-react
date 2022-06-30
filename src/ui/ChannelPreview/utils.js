@@ -7,17 +7,17 @@ import { truncateString } from '../../utils';
 import { LabelStringSet } from '../Label';
 
 export const getChannelTitle = (channel = {}, currentUserId, stringSet = LabelStringSet) => {
-  if (!channel || (!channel.name && !channel.members)) {
+  if (!channel?.name && !channel?.members) {
     return stringSet.NO_TITLE;
   }
-  if (channel.name && channel.name !== 'Group Channel') {
+  if (channel?.name !== 'Group Channel') {
     return channel.name;
   }
-  if (channel.members.length === 1) {
+  if (channel?.members?.length === 1) {
     return stringSet.NO_MEMBERS;
   }
 
-  return channel.members
+  return (channel?.members || [])
     .filter(({ userId }) => userId !== currentUserId)
     .map(({ nickname }) => (nickname || stringSet.NO_NAME))
     .join(', ');
@@ -39,7 +39,7 @@ export const getLastMessageCreatedAt = (channel, locale) => {
 };
 
 export const getTotalMembers = (channel) => (
-  channel && channel.memberCount
+  channel?.memberCount
     ? channel.memberCount
     : 0
 );
@@ -54,13 +54,13 @@ const getPrettyLastMessage = (message = {}) => {
 };
 
 export const getLastMessage = (channel) => (
-  channel && channel.lastMessage
+  channel?.lastMessage
     ? getPrettyLastMessage(channel.lastMessage)
     : ''
 );
 
 export const getChannelUnreadMessageCount = (channel) => (
-  (channel && channel.unreadMessageCount)
+  channel?.unreadMessageCount
     ? channel.unreadMessageCount
     : 0
 );

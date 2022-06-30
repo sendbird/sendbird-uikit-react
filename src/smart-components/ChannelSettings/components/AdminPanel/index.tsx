@@ -40,7 +40,7 @@ export default function AdminPannel(): ReactElement {
   // https://sendbird.slack.com/archives/G01290GCDCN/p1595922832000900
   // SDK bug - after frozen/unfrozen myRole becomes "none"
   useEffect(() => {
-    setFrozen(channel.isFrozen);
+    setFrozen(channel?.isFrozen);
   }, [channel]);
 
   return (
@@ -89,7 +89,7 @@ export default function AdminPannel(): ReactElement {
             >
               {stringSet.CHANNEL_SETTING__MEMBERS__TITLE}
             </Label>
-            <Badge count={kFormatter(channel.memberCount)} />
+            <Badge count={kFormatter(channel?.memberCount)} />
           </>
         )}
         renderContent={() => (
@@ -100,7 +100,7 @@ export default function AdminPannel(): ReactElement {
       />
       {
         // No muted members in broadcast channel
-        !channel.isBroadcast && (
+        !channel?.isBroadcast && (
           <Accordion
             id="mutedMembers"
             className="sendbird-channel-settings__muted-members-list"
@@ -157,7 +157,7 @@ export default function AdminPannel(): ReactElement {
       />
       {
         // cannot freeze broadcast channel
-        !channel.isBroadcast && (
+        !channel?.isBroadcast && (
           <div className="sendbird-channel-settings__freeze">
             <Icon
               type={IconTypes.FREEZE}
@@ -178,7 +178,7 @@ export default function AdminPannel(): ReactElement {
                   ? (
                     <Icon
                       onClick={() => {
-                        channel.unfreeze().then(() => {
+                        channel?.unfreeze().then(() => {
                           setFrozen(false);
                         });
                       }}
@@ -191,7 +191,7 @@ export default function AdminPannel(): ReactElement {
                   : (
                     <Icon
                       onClick={() => {
-                        channel.freeze().then(() => {
+                        channel?.freeze().then(() => {
                           setFrozen(true);
                         });
                       }}

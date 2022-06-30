@@ -25,10 +25,10 @@ export default function ParticipantsModal({
   const [participants, setParticipants] = useState<Array<User>|null>([]);
   const [participantListQuery, setParticipantListQuery] = useState<ParticipantListQuery | null>(null);
   useEffect(() => {
-    if (!channel || !channel.createParticipantListQuery) {
+    if (!channel || !channel?.createParticipantListQuery) {
       return;
     }
-    const participantListQuery = channel.createParticipantListQuery({});
+    const participantListQuery = channel?.createParticipantListQuery({});
     setParticipantListQuery(participantListQuery);
     participantListQuery.next().then((participantList) => {
       setParticipants(participantList);
