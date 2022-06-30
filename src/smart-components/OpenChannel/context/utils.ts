@@ -64,7 +64,7 @@ export const isSameGroup = (
 
   // to fix typecasting
   const message_ = message as UserMessage;
-  const comparingMessage_ = message as UserMessage;
+  const comparingMessage_ = comparingMessage as UserMessage;
   return (
     message_?.sendingStatus === comparingMessage_?.sendingStatus
     && message_?.sender?.userId === comparingMessage_?.sender?.userId
