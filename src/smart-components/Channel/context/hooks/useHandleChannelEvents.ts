@@ -48,7 +48,7 @@ function useHandleChannelEvents(
     const channelUrl = currentGroupChannel?.url;
     const channelHandlerId = uuidv4();
     if (channelUrl && sdkInit) {
-      const channelHandler = {
+      const channelHandler: GroupChannelHandler = {
         onMessageReceived: (channel, message) => {
           // Do not update when hasMoreNext
           if (compareIds(channel?.url, channelUrl) && !hasMoreNext) {
@@ -172,7 +172,7 @@ function useHandleChannelEvents(
           }
         },
         onUserBanned: (channel, user) => {
-          if (compareIds(channel?.url, channelUrl)) {
+          if (compareIds(channel?.url, channelUrl) && user?.userId === sdk?.currentUser?.userId) {
             logger.info('Channel | useHandleChannelEvents: onUserBanned', { channel, user });
             messagesDispatcher({
               type: messageActions.SET_CURRENT_CHANNEL,

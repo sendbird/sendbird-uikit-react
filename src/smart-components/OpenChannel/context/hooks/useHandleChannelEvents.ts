@@ -1,5 +1,6 @@
-import { OpenChannel, OpenChannelHandler, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import { useEffect } from 'react';
+import { ChannelType } from '@sendbird/chat';
+import { OpenChannel, OpenChannelHandler, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import * as messageActionTypes from '../dux/actionTypes';
 import uuidv4 from '../../../../utils/uuid';
 import { scrollIntoLast } from '../utils';
@@ -23,7 +24,7 @@ function useHandleChannelEvents(
     const messageReceiverId = uuidv4();
     if (currentOpenChannel && currentOpenChannel.url && sdk?.openChannel?.addOpenChannelHandler) {
       logger.info('OpenChannel | useHandleChannelEvents: Setup evnet handler', messageReceiverId);
-      const channelHandlerParams = {
+      const channelHandlerParams: OpenChannelHandler = {
         onMessageReceived: (channel, message) => {
           const scrollToEnd = checkScrollBottom();
           const channelUrl = channel?.url;
@@ -103,7 +104,7 @@ function useHandleChannelEvents(
           logger.info('OpenChannel | useHandleChannelEvents: onUserBanned', { channelUrl, user });
           messagesDispatcher({
             type: messageActionTypes.ON_USER_BANNED,
-            payload: { channel, user },
+            payload: { channel, user, currentUser: sdk?.currentUser },
           });
         },
         onUserUnbanned: (channel, user) => {
@@ -191,11 +192,19 @@ function useHandleChannelEvents(
             payload: { channel, message },
           });
         },
+        onChannelDeleted: (channelUrl, channelType) => {
+          if (channelType === ChannelType.OPEN && currentOpenChannel?.url === channelUrl) {
+            messagesDispatcher({
+              type: messageActionTypes.ON_CHANNEL_DELETED,
+              payload: channelUrl,
+            });
+          }
+        },
       };
 
       const ChannelHandler = new OpenChannelHandler(channelHandlerParams);
 
-      sdk.openChannel.addOpenChannelHandler(messageReceiverId, ChannelHandler);
+      sdk?.openChannel?.addOpenChannelHandler(messageReceiverId, ChannelHandler);
     }
 
     return () => {

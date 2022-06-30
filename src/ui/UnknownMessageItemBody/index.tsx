@@ -4,12 +4,12 @@ import './index.scss';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { getClassName } from '../../utils';
 import { LocalizationContext } from '../../lib/LocalizationContext';
-import { FileMessage, UserMessage } from '@sendbird/chat/message';
+import { BaseMessage } from '@sendbird/chat/message';
 
 interface Props {
   className?: string | Array<string>;
   isByMe?: boolean;
-  message: UserMessage | FileMessage | any;
+  message: BaseMessage;
   mouseHover?: boolean;
 }
 
