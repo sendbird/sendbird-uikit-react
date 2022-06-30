@@ -1,4 +1,9 @@
-import React, { useContext, useEffect, useMemo, useRef } from 'react';
+import React, {
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import type { Member } from '@sendbird/chat/groupChannel';
 import type { User } from '@sendbird/chat';
 
