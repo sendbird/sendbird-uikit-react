@@ -12,8 +12,9 @@ import { useOpenChannel } from '../../context/OpenChannelProvider';
 import OpenChannelMessage from '../OpenChannelMessage';
 import { RenderMessageProps } from '../../../../types';
 
+type RenderedMessageType = React.ElementType<RenderMessageProps>;
 export type OpenchannelMessageListProps = {
-  renderMessage?: (props: RenderMessageProps) => React.ReactNode;
+  renderMessage?: (props: RenderMessageProps) => RenderedMessageType;
   renderPlaceHolderEmptyList?: () => React.ReactNode;
 }
 
