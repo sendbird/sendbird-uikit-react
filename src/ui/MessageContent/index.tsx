@@ -32,7 +32,6 @@ import {
   isOGMessage,
   isThumbnailMessage,
   getSenderName,
-  CoreMessageType,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 import { ReplyType } from '../../index.js';
@@ -46,7 +45,7 @@ interface Props {
   className?: string | Array<string>;
   userId: string;
   channel: GroupChannel;
-  message: CoreMessageType;
+  message: UserMessage | FileMessage;
   disabled?: boolean;
   chainTop?: boolean;
   chainBottom?: boolean;
