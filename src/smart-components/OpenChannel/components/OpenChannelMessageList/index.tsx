@@ -11,9 +11,11 @@ import { compareMessagesForGrouping } from '../../context/utils';
 import { useOpenChannel } from '../../context/OpenChannelProvider';
 import OpenChannelMessage from '../OpenChannelMessage';
 import { RenderMessageProps } from '../../../../types';
+import { FileMessage, UserMessage } from '@sendbird/chat/message';
 
+type RenderedMessageType = React.ElementType<RenderMessageProps>;
 export type OpenchannelMessageListProps = {
-  renderMessage?: (props: RenderMessageProps) => React.ReactNode;
+  renderMessage?: (props: RenderMessageProps) => RenderedMessageType;
   renderPlaceHolderEmptyList?: () => React.ReactNode;
 }
 
@@ -99,7 +101,7 @@ function OpenchannelMessageList(
                     : [false, false];
                   return (
                     <OpenChannelMessage
-                      key={message?.messageId || message?.reqId}
+                      key={message?.messageId || (message as UserMessage | FileMessage)?.reqId}
                       message={message}
                       chainTop={chainTop}
                       chainBottom={chainBottom}

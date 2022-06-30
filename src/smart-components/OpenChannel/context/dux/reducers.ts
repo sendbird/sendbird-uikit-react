@@ -285,10 +285,7 @@ export default function reducer(
       }
       return {
         ...state,
-        currentOpenChannel: {
-          ...state.currentOpenChannel,
-          operators: updatedOperators,
-        },
+        currentOpenChannel: eventedChannel,
         operators: updatedOperators,
       };
     }

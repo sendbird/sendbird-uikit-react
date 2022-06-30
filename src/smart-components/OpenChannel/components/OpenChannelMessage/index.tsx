@@ -93,7 +93,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
       || ((message as UserMessage | FileMessage)?.sendingStatus === SendingMessageStatus.FAILED);
   }
 
-  if (RenderedMessage) {
+  if (renderMessage && RenderedMessage) {
     return (
       <div className="sendbird-msg-hoc sendbird-msg--scroll-ref">
         <RenderedMessage message={message} chainTop={chainTop} chainBottom={chainBottom} />
@@ -107,10 +107,13 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
         isEdit
         disabled={editDisabled}
         ref={editMessageInputRef}
+        message={message as UserMessage}
         name={message?.messageId}
-        onSendMessage={updateMessage}
+        onUpdateMessage={({ messageId, message }) => {
+          updateMessage(messageId, message);
+          setShowEdit(false);
+        }}
         onCancelEdit={() => { setShowEdit(false); }}
-        value={(message as UserMessage)?.message}
       />
     );
   }
