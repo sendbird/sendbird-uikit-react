@@ -152,13 +152,13 @@ export const isSentStatus = (state: string): boolean => (
   || state === OutgoingMessageStates.READ
 );
 
-export const isAdminMessage = (message: AdminMessage): boolean => (
+export const isAdminMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => (
   message && (message.isAdminMessage?.() || (message['messageType'] && message.messageType === 'admin'))
 );
-export const isUserMessage = (message: UserMessage): boolean => (
+export const isUserMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => (
   message && (message.isUserMessage?.() || (message['messageType'] && message.messageType === 'user'))
 );
-export const isFileMessage = (message: FileMessage): boolean => (
+export const isFileMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => (
   message && (message.isFileMessage?.() || (message['messageType'] && message.messageType === 'file'))
 );
 
@@ -172,7 +172,7 @@ export const isVideoMessage = (message: FileMessage): boolean => message && isTh
 export const isGifMessage = (message: FileMessage): boolean => message && isThumbnailMessage(message) && isGif(message.type);
 export const isAudioMessage = (message: FileMessage): boolean => message && isFileMessage(message) && isAudio(message.type);
 
-export const isEditedMessage = (message: UserMessage): boolean => isUserMessage(message) && (message?.updatedAt > 0);
+export const isEditedMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => isUserMessage(message) && (message?.updatedAt > 0);
 export const isEnabledOGMessage = (message: UserMessage): boolean => (
   (!message || !message.ogMetaData || !message.ogMetaData.url) ? false : true
 );

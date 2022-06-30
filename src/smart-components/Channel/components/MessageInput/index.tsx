@@ -42,7 +42,7 @@ const MessageInputWrapper = (): JSX.Element => {
     || utils.isDisabledBecauseMuted(channel)
     || !isOnline;
   const isOperator = utils.isOperator(channel);
-  const { isBroadcast } = channel;
+  const isBroadcast = channel?.isBroadcast;
 
   const displaySuggestedMentionList = isOnline
     && isMentionEnabled

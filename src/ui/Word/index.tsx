@@ -29,7 +29,9 @@ export default function Word(props: WordProps): JSX.Element {
     <span className="sendbird-word">
       {
         convertWordToStringObj(word, message?.mentionedUsers).map((stringObj) => {
-          const { type, value } = stringObj;
+          const type = stringObj?.type || '';
+          const value = stringObj?.value || '';
+          const userId = stringObj?.userId || '';
           if (renderString && typeof renderString === 'function') {
             return renderString(stringObj);
           }
@@ -37,7 +39,8 @@ export default function Word(props: WordProps): JSX.Element {
             return (
               <MentionLabel
                 mentionTemplate={mentionTemplate}
-                mentionedUserId={value}
+                mentionedUserId={userId}
+                mentionedUserNickname={value}
                 key={uuidv4()}
                 isByMe={isByMe}
               />
