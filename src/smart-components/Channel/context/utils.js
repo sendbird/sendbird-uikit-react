@@ -107,12 +107,12 @@ export const getParsedStatus = (message, currentGroupChannel) => {
       return MessageStatusType.SENT;
     }
 
-    const unreadMemberCount = currentGroupChannel.getUnreadMemberCount(message);
+    const unreadMemberCount = currentGroupChannel?.getUnreadMemberCount(message);
     if (unreadMemberCount === 0) {
       return MessageStatusType.READ;
     }
 
-    const isDelivered = currentGroupChannel.getUndeliveredMemberCount(message) === 0;
+    const isDelivered = currentGroupChannel?.getUndeliveredMemberCount(message) === 0;
     if (isDelivered) {
       return MessageStatusType.DELIVERED;
     }

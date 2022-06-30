@@ -13,7 +13,7 @@ function useInitialMessagesFetch({
   logger,
   messagesDispatcher,
 }) {
-  const channelUrl = currentGroupChannel && currentGroupChannel.url;
+  const channelUrl = currentGroupChannel?.url;
   useEffect(() => {
     logger.info('Channel useInitialMessagesFetch: Setup started', currentGroupChannel);
     messagesDispatcher({
@@ -21,7 +21,7 @@ function useInitialMessagesFetch({
       payload: null,
     });
 
-    if (currentGroupChannel && currentGroupChannel.getMessagesByTimestamp) {
+    if (currentGroupChannel && currentGroupChannel?.getMessagesByTimestamp) {
       const messageListParams = {};
       messageListParams.prevResultSize = PREV_RESULT_SIZE;
       if (initialTimeStamp) {
@@ -53,7 +53,7 @@ function useInitialMessagesFetch({
         payload: null,
       });
 
-      currentGroupChannel.getMessagesByTimestamp(
+      currentGroupChannel?.getMessagesByTimestamp(
         initialTimeStamp || new Date().getTime(),
         messageListParams,
       )

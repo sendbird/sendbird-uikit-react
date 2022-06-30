@@ -50,7 +50,7 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
   } = useChannel();
   const [unreadCount, setUnreadCount] = useState(0);
   useEffect(() => {
-    setUnreadCount(currentGroupChannel.unreadMessageCount);
+    setUnreadCount(currentGroupChannel?.unreadMessageCount);
   }, [currentGroupChannel?.unreadMessageCount]);
 
   const globalStore = useSendbirdStateContext();

@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 export default function useToggleReactionCallback({ currentGroupChannel }, { logger }) {
   return useCallback((message, key, isReacted) => {
     if (isReacted) {
-      currentGroupChannel.deleteReaction(message, key)
+      currentGroupChannel?.deleteReaction(message, key)
         .then((res) => {
           logger.info('Delete reaction success', res);
         })
@@ -12,7 +12,7 @@ export default function useToggleReactionCallback({ currentGroupChannel }, { log
         });
       return;
     }
-    currentGroupChannel.addReaction(message, key)
+    currentGroupChannel?.addReaction(message, key)
       .then((res) => {
         logger.info('Add reaction success', res);
       })

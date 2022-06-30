@@ -55,7 +55,7 @@ export default function useSendMessageCallback({
         : createParamsDefault();
 
       logger.info('Channel: Sending message has started', params);
-      currentGroupChannel.sendUserMessage(params)
+      currentGroupChannel?.sendUserMessage(params)
         .onPending((pendingMsg) => {
           pubSub.publish(topics.SEND_MESSAGE_START, {
             /* pubSub is used instead of messagesDispatcher
@@ -66,9 +66,7 @@ export default function useSendMessageCallback({
           setTimeout(() => utils.scrollIntoLast());
         })
         .onFailed((err, msg) => {
-          logger.warning('Channel: Sending message failed!', {
-            msg,
-          });
+          logger.warning('Channel: Sending message failed!', { message: msg, error: err });
           messagesDispatcher({
             type: messageActionTypes.SEND_MESSAGEGE_FAILURE,
             payload: msg,

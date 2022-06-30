@@ -205,7 +205,8 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     readStatus,
   } = messagesStore;
 
-  const { isBroadcast, isSuper } = currentGroupChannel;
+  const isSuper = currentGroupChannel?.isSuper || false;
+  const isBroadcast = currentGroupChannel?.isBroadcast || false;
   const { appInfo } = sdk;
   const usingReaction = (
     appInfo?.useReaction && !isBroadcast && !isSuper && useReaction
@@ -223,10 +224,10 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       : []
   ), [emojiContainer]);
   const nicknamesMap: Map<string, string> = useMemo(() => (
-    usingReaction
-      ? utils.getNicknamesMapFromMembers(currentGroupChannel.members)
+    (usingReaction && currentGroupChannel)
+      ? utils.getNicknamesMapFromMembers(currentGroupChannel?.members)
       : new Map()
-  ), [currentGroupChannel.members]);
+  ), [currentGroupChannel?.members]);
 
   // Scrollup is default scroll for channel
   const onScrollCallback = useScrollCallback({
