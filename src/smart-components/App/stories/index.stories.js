@@ -197,7 +197,7 @@ export const updateProfile = () => {
   );
 };
 
-const age = 73;
+const age = 75;
 const array = [
   `hoon${age}1`,
   `hoon${age}2`,
@@ -234,12 +234,7 @@ export const user1 = () => fitPageSize(
     profileUrl={addProfile}
     showSearchIcon
     allowProfileEdit
-    config={{
-      logLevel: 'all',
-      userMention: {
-        maxMentionCount: 2,
-      }
-    }}
+    config={{ logLevel: 'all' }}
     queries={{}}
     replyType="QUOTE_REPLY"
     isMentionEnabled
@@ -255,7 +250,7 @@ export const user2 = () => fitPageSize(
     showSearchIcon
     allowProfileEdit
     profileUrl={addProfile}
-    config={{ logLevel: 'all', userMention: { maxMentionCount: 2, maxSuggestionCount: 5 } }}
+    config={{ logLevel: 'all' }}
     replyType="QUOTE_REPLY"
     useMessageGrouping={false}
     disableAutoSelect
@@ -307,7 +302,7 @@ const UseSendbirdChannelList = (props) => {
 
   return (
     <ChannelList
-      onChannelSelect={(channel) => channel && setChannelUrl(channel.url)}
+      onChannelSelect={(channel) => channel && setChannelUrl(channel?.url)}
       queries={queries}
       onBeforeCreateChannel={(selectedUserIds) => {
         const params = new sdk.GroupChannelParams();
