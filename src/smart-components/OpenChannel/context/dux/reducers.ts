@@ -2,6 +2,7 @@ import { State as initialStateInterface } from './initialState';
 import * as actionTypes from './actionTypes';
 
 import compareIds from '../../../../utils/compareIds.js';
+import { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 // @ts-ignore: Unreachable code error
@@ -97,7 +98,7 @@ export default function reducer(
         channel,
       } = action.payload;
       if (channel?.url !== state.currentOpenChannel.url
-        || state.allMessages.some((m) => m.reqId === message.reqId)
+        || state.allMessages.some((m) => (m as UserMessage | FileMessage).reqId === message.reqId)
         // Handing failed first than sending start issue
       ) {
         return state;
@@ -113,7 +114,7 @@ export default function reducer(
     case actionTypes.SENDING_MESSAGE_SUCCEEDED: {
       const sentMessage = action.payload;
       const newMessages = state.allMessages.map((m) => (
-        compareIds(m.reqId, sentMessage.reqId) ? sentMessage : m
+        compareIds((m as UserMessage | FileMessage).reqId, sentMessage.reqId) ? sentMessage : m
       ));
       return {
         ...state,
@@ -122,19 +123,21 @@ export default function reducer(
     }
     case actionTypes.SENDING_MESSAGE_FAILED: {
       const sentMessage = action.payload;
-      if (!state.allMessages.some((m) => m.reqId === sentMessage.reqId)) {
+      if (!state.allMessages.some((m) => (m as UserMessage | FileMessage).reqId === sentMessage.reqId)) {
         // Handling failed first than sending start issue
         return {
           ...state,
           allMessages: [
-            ...state.allMessages.filter((m) => !compareIds(m.reqId, sentMessage)),
+            ...state.allMessages.filter((m) => !compareIds((m as UserMessage | FileMessage).reqId, sentMessage)),
             sentMessage,
           ],
         };
       } else {
         return {
           ...state,
-          allMessages: state.allMessages.map((m) => compareIds(m.reqId, sentMessage.reqId) ? sentMessage : m),
+          allMessages: state.allMessages.map((m) => (
+            compareIds((m as UserMessage | FileMessage).reqId, sentMessage.reqId) ? sentMessage : m
+          )),
         };
       }
     }
@@ -162,7 +165,7 @@ export default function reducer(
       return {
         ...state,
         allMessages: state.allMessages.map((m) => (
-          compareIds(m.reqId, resentMessage.reqId) ? resentMessage : m
+          compareIds((m as UserMessage | FileMessage).reqId, resentMessage.reqId) ? resentMessage : m
         )),
       };
     }
@@ -272,7 +275,7 @@ export default function reducer(
       return {
         ...state,
         allMessages: state.allMessages.filter((m) => (
-          !compareIds(m.reqId, action.payload)
+          !compareIds((m as UserMessage | FileMessage).reqId, action.payload)
         )),
       };
     }
@@ -411,6 +414,17 @@ export default function reducer(
         ...state,
         currentOpenChannel: changedChannel,
       };
+    }
+    case actionTypes.ON_CHANNEL_DELETED: {
+      const deletedChannelUrl = action.payload;
+      const currentChannel = state?.currentOpenChannel;
+      if (currentChannel?.url === deletedChannelUrl) {
+        return {
+          ...state,
+          currentOpenChannel: null,
+        }
+      }
+      return state;
     }
     case actionTypes.ON_META_DATA_CREATED: {
       // const eventedChannel = action.payload.channel;

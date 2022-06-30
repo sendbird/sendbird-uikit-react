@@ -1,10 +1,11 @@
 import React, { ReactElement, useState } from 'react';
+import { OpenChannel } from '@sendbird/chat/openChannel';
 
 import './community.scss';
 import './theme.scss';
 
 import Sendbird from '../../lib/Sendbird';
-import OpenChannel from '../OpenChannel';
+import OpenChannelComponent from '../OpenChannel';
 import OpenChannelSettings from '../OpenChannelSettings';
 import CommunityChannelList from './components/CommunityChannelList';
 
@@ -22,8 +23,8 @@ export default function Community({
   nickname,
 }: Props): ReactElement {
   const [showSettings, setShowSettings] = useState(false);
-  const [currentChannel, setCurrentChannel] = useState<SendBird.OpenChannel>(null);
-  const [channels, setChannels] = useState<Array<SendBird.OpenChannel>>([]);
+  const [currentChannel, setCurrentChannel] = useState<OpenChannel>(null);
+  const [channels, setChannels] = useState<Array<OpenChannel>>([]);
   const currentChannelUrl = currentChannel ? currentChannel.url : '';
   return (
     <Sendbird
@@ -43,7 +44,7 @@ export default function Community({
           />
         </div>
         <div className="community-open-channel">
-          <OpenChannel
+          <OpenChannelComponent
             channelUrl={currentChannelUrl}
             onChatHeaderActionClick={() => {
               setShowSettings(true);
@@ -57,7 +58,7 @@ export default function Community({
               onCloseClick={() => {
                 setShowSettings(false);
               }}
-              onDeleteChannel={(openChannel: SendBird.OpenChannel) => {
+              onDeleteChannel={(openChannel: OpenChannel) => {
                 setShowSettings(false);
                 const isCurrent = currentChannelUrl === openChannel.url;
                 const updatedChannels = channels.filter(c => c.url !== openChannel.url);

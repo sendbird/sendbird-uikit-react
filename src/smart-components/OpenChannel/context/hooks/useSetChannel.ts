@@ -21,7 +21,7 @@ function useSetChannel(
   { sdk, logger, messagesDispatcher }: StaticParams,
 ): void {
   useEffect(() => {
-    if (channelUrl && sdkInit && sdk && sdk.openChannel) {
+    if (channelUrl && sdkInit && sdk?.openChannel) {
       logger.info('OpenChannel | useSetChannel fetching channel', channelUrl);
       sdk.openChannel.getChannel(channelUrl).then((openChannel) => {
         logger.info('OpenChannel | useSetChannel fetched channel', openChannel);

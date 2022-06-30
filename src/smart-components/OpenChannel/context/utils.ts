@@ -91,7 +91,7 @@ export const kFormatter = (num: number): string => {
 };
 
 export const isOperator = (openChannel: OpenChannel, userId: string): boolean => {
-  const { operators } = openChannel;
+  const operators = openChannel?.operators;
   if (operators.map(operator => operator.userId).indexOf(userId) < 0) {
     return false;
   }
@@ -99,7 +99,7 @@ export const isOperator = (openChannel: OpenChannel, userId: string): boolean =>
 };
 
 export const isDisabledBecauseFrozen = (openChannel: OpenChannel, userId: string): boolean => {
-  const { isFrozen } = openChannel;
+  const isFrozen = openChannel?.isFrozen;
   return isFrozen && !isOperator(openChannel, userId);
 };
 
