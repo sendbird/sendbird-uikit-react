@@ -16,6 +16,7 @@ import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 interface MentionLabelProps {
   mentionTemplate: string;
   mentionedUserId: string;
+  mentionedUserNickname: string;
   isByMe: boolean;
 }
 
@@ -23,6 +24,7 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
   const {
     mentionTemplate,
     mentionedUserId,
+    mentionedUserNickname,
     isByMe,
   } = props;
 
@@ -65,7 +67,7 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
             type={LabelTypography.CAPTION_1}
             color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
           >
-            {`${mentionTemplate}${mentionedUserId}`}
+            {`${mentionTemplate}${mentionedUserNickname}`}
           </Label>
         </a>
       )}
