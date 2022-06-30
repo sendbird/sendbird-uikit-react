@@ -104,7 +104,7 @@ function useHandleChannelEvents(
           logger.info('OpenChannel | useHandleChannelEvents: onUserBanned', { channelUrl, user });
           messagesDispatcher({
             type: messageActionTypes.ON_USER_BANNED,
-            payload: { channel, user },
+            payload: { channel, user, currentUser: sdk?.currentUser },
           });
         },
         onUserUnbanned: (channel, user) => {

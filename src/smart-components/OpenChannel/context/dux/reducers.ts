@@ -353,34 +353,32 @@ export default function reducer(
     case actionTypes.ON_USER_BANNED: {
       const eventedChannel = action.payload.channel;
       const bannedUser = action.payload.user;
+      const currentUser = action.payload.currentUser;
       const currentChannel = state.currentOpenChannel;
-      if (
-        !currentChannel
-        || (currentChannel.url && (currentChannel.url !== eventedChannel.url))
-        || state.bannedParticipantIds.indexOf(bannedUser.userId) >= 0
-      ) {
-        return state;
+      if (currentChannel?.url === eventedChannel?.url && bannedUser?.userId === currentUser?.userId) {
+        return {
+          ...state,
+          currentOpenChannel: null,
+        }
+      } else if (currentChannel?.url === eventedChannel?.url) {
+        return {
+          ...state,
+          bannedParticipantIds: [...state.bannedParticipantIds, bannedUser.userId],
+        }
       }
-      return {
-        ...state,
-        bannedParticipantIds: [...state.bannedParticipantIds, bannedUser.userId],
-      };
+      return state;
     }
     case actionTypes.ON_USER_UNBANNED: {
       const eventedChannel = action.payload.channel;
       const unbannedUser = action.payload.user;
       const currentChannel = state.currentOpenChannel;
-      if (
-        !currentChannel
-        || (currentChannel.url && (currentChannel.url !== eventedChannel.url))
-        || state.bannedParticipantIds.indexOf(unbannedUser.userId) < 0
-      ) {
-        return state;
+      if (currentChannel?.url === eventedChannel?.url) {
+        return {
+          ...state,
+          bannedParticipantIds: state.bannedParticipantIds.filter((userId) => userId !== unbannedUser.userId),
+        }
       }
-      return {
-        ...state,
-        bannedParticipantIds: state.bannedParticipantIds.filter(userId => userId !== unbannedUser.userId),
-      };
+      return state;
     }
     case actionTypes.ON_CHANNEL_FROZEN: {
       const frozenChannel = action.payload;
