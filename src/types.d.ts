@@ -31,11 +31,11 @@ export interface ClientMessage {
   reqId: string;
   file?: File;
   localUrl?: string;
-  _sender: SendBird.User;
+  _sender: User;
 }
 
 export interface RenderMessageProps {
-  message: EveryMessage;
+  message: UserMessage | FileMessage | AdminMessage;
   chainTop: boolean;
   chainBottom: boolean;
 }

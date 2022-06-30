@@ -58,7 +58,7 @@ function useScrollCallback(
         setTimeout(() => {
           callback();
         });
-      }).catch(() => {
+      }).catch((error) => {
         logger.error('OpenChannel | useScrollCallback: Fetching messages failed', error);
         messagesDispatcher({
           type: messageActionTypes.GET_PREV_MESSAGES_FAIL,
@@ -71,7 +71,7 @@ function useScrollCallback(
         });
       });
     }
-  }, [currentOpenChannel, lastMessageTimestamp, fetchMore]);
+  }, [currentOpenChannel, lastMessageTimestamp, fetchMore, sdk]);
 }
 
 export default useScrollCallback;

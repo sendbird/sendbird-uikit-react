@@ -27,7 +27,7 @@ const createEventHandler = ({
     },
     onUserJoined: (channel) => {
       logger.info('ChannelList: onUserJoined', channel);
-      if (channel.lastMessage) {
+      if (channel?.lastMessage) {
         channelListDispatcher({
           type: channelActions.ON_USER_JOINED,
           payload: channel,
@@ -78,7 +78,7 @@ const createEventHandler = ({
 
     onDeliveryReceiptUpdated: (channel) => {
       logger.info('ChannelList: onDeliveryReceiptUpdated', channel);
-      if (channel.lastMessage) {
+      if (channel?.lastMessage) {
         channelListDispatcher({
           type: channelActions.ON_DELIVERY_RECEIPT_UPDATED,
           payload: channel,
@@ -87,7 +87,7 @@ const createEventHandler = ({
     },
 
     onMessageUpdated: (channel, message) => {
-      if (channel.lastMessage.isEqual(message)) {
+      if (channel?.lastMessage.isEqual(message)) {
         logger.info('ChannelList: onMessageUpdated', channel);
         channelListDispatcher({
           type: channelActions.ON_LAST_MESSAGE_UPDATED,
@@ -273,7 +273,7 @@ export const pubSubHandler = (pubSub, channelListDispatcher) => {
     const { channel } = msg;
     channelListDispatcher({
       type: channelActions.LEAVE_CHANNEL_SUCCESS,
-      payload: channel.url,
+      payload: channel?.url,
     });
   }));
 

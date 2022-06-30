@@ -40,7 +40,7 @@ export default function InviteMembers({
         onCancel={() => onCancel()}
         onSubmit={() => {
           const members = Object.keys(selectedMembers).filter((m) => selectedMembers[m]);
-          channel.inviteWithUserIds(members).then(() => {
+          channel?.inviteWithUserIds(members).then(() => {
             onSubmit(members);
           });
         }}

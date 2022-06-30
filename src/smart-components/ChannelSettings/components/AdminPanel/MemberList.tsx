@@ -38,7 +38,7 @@ export const MemberList = (): ReactElement => {
       return;
     }
 
-    const memberUserListQuery = channel.createMemberListQuery({
+    const memberUserListQuery = channel?.createMemberListQuery({
       limit: 10,
     });
     memberUserListQuery.next().then((members) => {
@@ -53,7 +53,7 @@ export const MemberList = (): ReactElement => {
         setMembers([]);
         return;
       }
-      const memberUserListQuery = channel.createMemberListQuery({
+      const memberUserListQuery = channel?.createMemberListQuery({
         limit: 10,
       });
       memberUserListQuery.next().then((members) => {
@@ -102,12 +102,12 @@ export const MemberList = (): ReactElement => {
                         <MenuItem
                           onClick={() => {
                             if ((member.role !== 'operator')) {
-                              channel.addOperators([member.userId]).then(() => {
+                              channel?.addOperators([member.userId]).then(() => {
                                 refershList();
                                 closeDropdown();
                               });
                             } else {
-                              channel.removeOperators([member.userId]).then(() => {
+                              channel?.removeOperators([member.userId]).then(() => {
                                 refershList();
                                 closeDropdown();
                               });
@@ -118,16 +118,16 @@ export const MemberList = (): ReactElement => {
                         </MenuItem>
                         {
                           // No muted members in broadcast channel
-                          !channel.isBroadcast && (
+                          !channel?.isBroadcast && (
                             <MenuItem
                               onClick={() => {
                                 if (member.isMuted) {
-                                  channel.unmuteUser(member).then(() => {
+                                  channel?.unmuteUser(member).then(() => {
                                     refershList();
                                     closeDropdown();
                                   })
                                 } else {
-                                  channel.muteUser(member).then(() => {
+                                  channel?.muteUser(member).then(() => {
                                     refershList();
                                     closeDropdown();
                                   });
@@ -140,7 +140,7 @@ export const MemberList = (): ReactElement => {
                         }
                         <MenuItem
                           onClick={() => {
-                            channel.banUser(member, -1, '').then(() => {
+                            channel?.banUser(member, -1, '').then(() => {
                               refershList();
                               closeDropdown();
                             });

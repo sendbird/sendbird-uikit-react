@@ -32,7 +32,7 @@ export default function OpenChannelPreview({
     let channelMeta: ChannelMeta;
     if (isStreaming) {
       try {
-        channelMeta = JSON.parse(channel.data);
+        channelMeta = JSON.parse(channel?.data);
       } catch (error) {
         channelMeta = null;
       }

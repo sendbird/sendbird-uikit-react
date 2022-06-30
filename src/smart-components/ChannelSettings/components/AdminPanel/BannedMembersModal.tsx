@@ -25,7 +25,7 @@ export default function BannedMembersModal({
   const { channel } = useChannelSettings();
 
   useEffect(() => {
-    const bannedUserListQuery = channel.createBannedUserListQuery();
+    const bannedUserListQuery = channel?.createBannedUserListQuery();
     bannedUserListQuery.next().then((users) => {
       setMembers(users);
     });
@@ -88,7 +88,7 @@ export default function BannedMembersModal({
                     >
                       <MenuItem
                         onClick={() => {
-                          channel.unbanUser(member).then(() => {
+                          channel?.unbanUser(member).then(() => {
                             closeDropdown();
                             setMembers(members.filter(m => {
                               return (m.userId !== member.userId);

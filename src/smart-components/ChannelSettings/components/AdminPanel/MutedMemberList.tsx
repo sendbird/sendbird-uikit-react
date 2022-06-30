@@ -35,7 +35,7 @@ export const MutedMemberList = (): ReactElement => {
       return;
     }
 
-    const memberUserListQuery = channel.createMemberListQuery({
+    const memberUserListQuery = channel?.createMemberListQuery({
       limit: 10,
       // @ts-ignore
       mutedMemberFilter: 'muted',
@@ -52,7 +52,7 @@ export const MutedMemberList = (): ReactElement => {
       return;
     }
 
-    const memberUserListQuery = channel.createMemberListQuery({
+    const memberUserListQuery = channel?.createMemberListQuery({
       limit: 10,
       // @ts-ignore
       mutedMemberFilter: 'muted',
@@ -97,7 +97,7 @@ export const MutedMemberList = (): ReactElement => {
                     >
                       <MenuItem
                         onClick={() => {
-                          channel.unmuteUser(member).then(() => {
+                          channel?.unmuteUser(member).then(() => {
                             refreshList();
                             closeDropdown();
                           })

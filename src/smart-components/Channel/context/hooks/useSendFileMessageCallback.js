@@ -74,7 +74,7 @@ export default function useSendFileMessageCallback({
                 ? onBeforeSendFileMessage(compressedFile, quoteMessage)
                 : createParamsDefault(compressedFile);
               logger.info('Channel: Uploading file message start!', params);
-              currentGroupChannel.sendFileMessage(params)
+              currentGroupChannel?.sendFileMessage(params)
                 .onPending((pendingMessage) => {
                   pubSub.publish(topics.SEND_MESSAGE_START, {
                     /* pubSub is used instead of messagesDispatcher
@@ -124,7 +124,7 @@ export default function useSendFileMessageCallback({
         : createParamsDefault(file);
       logger.info('Channel: Uploading file message start!', params);
 
-      currentGroupChannel.sendFileMessage(params)
+      currentGroupChannel?.sendFileMessage(params)
         .onPending((pendingMsg) => {
           pubSub.publish(topics.SEND_MESSAGE_START, {
             /* pubSub is used instead of messagesDispatcher

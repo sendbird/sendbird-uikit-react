@@ -110,10 +110,10 @@ export default function ParticipantsAccordion(props: ParticipantsAccordionProps)
   const { stringSet } = useContext(LocalizationContext);
 
   useEffect(() => {
-    if (!channel || !channel.createParticipantListQuery) {
+    if (!channel || !channel?.createParticipantListQuery) {
       return;
     }
-    const participantListQuery = channel.createParticipantListQuery({});
+    const participantListQuery = channel?.createParticipantListQuery({});
     participantListQuery.next().then((participantList) => {
       setParticipants(participantList);
     });

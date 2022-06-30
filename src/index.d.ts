@@ -4,10 +4,13 @@
  * git: https://github.com/sendbird/sendbird-uikit-react
  */
 import type React from 'react';
-import Sendbird, { FileMessage, UserMessage } from 'sendbird';
 import type { Locale } from 'date-fns';
 import type SendbirdChat from '@sendbird/chat';
-import type { Member } from '@sendbird/chat/groupChannel';
+import { EmojiCategory, EmojiContainer, SendbirdError, SessionHandler, User } from '@sendbird/chat';
+import type { GroupChannel, GroupChannelCreateParams, GroupChannelUpdateParams, Member } from '@sendbird/chat/groupChannel';
+import { AdminMessage, FileMessage, FileMessageCreateParams, MessageListParams, MessageSearchQuery, UserMessage, UserMessageCreateParams, UserMessageUpdateParams } from '@sendbird/chat/message';
+import { OpenChannel, OpenChannelCreateParams, OpenChannelUpdateParams } from '@sendbird/chat/openChannel';
+import { ReactElement } from 'react';
 
 type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
 
@@ -23,7 +26,7 @@ interface UserListQuery {
 }
 
 interface RenderUserProfileProps {
-  user: SendBird.User | SendBird.Member;
+  user: User | Member;
   currentUserId: string;
   close(): void;
 }
@@ -40,7 +43,7 @@ interface ClientMessage {
   reqId: string;
   file?: File;
   localUrl?: string;
-  _sender: SendBird.User;
+  _sender: User;
 }
 
 interface RenderMessageProps {
@@ -49,9 +52,9 @@ interface RenderMessageProps {
   chainBottom: boolean;
 }
 
-interface ClientUserMessage extends SendBird.UserMessage, ClientMessage { }
-interface ClientFileMessage extends SendBird.FileMessage, ClientMessage { }
-interface ClientAdminMessage extends SendBird.AdminMessage, ClientMessage { }
+interface ClientUserMessage extends UserMessage, ClientMessage { }
+interface ClientFileMessage extends FileMessage, ClientMessage { }
+interface ClientAdminMessage extends AdminMessage, ClientMessage { }
 type EveryMessage = ClientUserMessage | ClientFileMessage | ClientAdminMessage;
 type ClientSentMessages = ClientUserMessage | ClientFileMessage;
 
@@ -60,7 +63,7 @@ interface SendBirdProviderProps {
   userId: string;
   appId: string;
   accessToken?: string;
-  configureSession?: (sdk: SendBird.SendBirdInstance) => SendBird.SessionHandler;
+  configureSession?: (sdk: SendbirdChat) => SessionHandler;
   children?: React.ReactNode;
   theme?: 'light' | 'dark';
   nickname?: string;
@@ -118,16 +121,15 @@ export interface SdkStore {
 interface UserStore {
   initialized: boolean;
   loading: boolean;
-  user: SendBird.User;
+  user: User;
 }
 interface SendBirdStateStore {
   sdkStore: SdkStore;
   userStore: UserStore;
 }
 
-export interface MessageSearchQueryType extends Sendbird.MessageSearchQueryOptions {
-  key: string;
-  hasNext?: boolean;
+export interface MessageSearchQueryType extends MessageSearchQuery {
+  key?: string;
 }
 
 export type SendBirdState = {
@@ -140,78 +142,78 @@ export type SendBirdState = {
 
 type UserDispatcherParams = {
   type: string,
-  payload: SendBird.User
+  payload: User
 };
 
 type UserDispatcher = (params: UserDispatcherParams) => void;
 
-type GetSdk = SendBird.SendBirdInstance | undefined;
+type GetSdk = SendbirdChat | undefined;
 type GetConnect = (
   userId: string,
   accessToken?: string
-) => Promise<SendBird.User>;
+) => Promise<User>;
 type GetDisconnect = () => Promise<void>;
 type GetUpdateUserInfo = (
   nickName: string,
   profileUrl?: string
-) => Promise<SendBird.User>;
+) => Promise<User>;
 type GetSendUserMessage = (
   channelUrl: string,
-  userMessageParams: SendBird.UserMessageParams
-) => Promise<SendBird.UserMessage>;
+  userMessageParams: UserMessageCreateParams,
+) => Promise<UserMessage>;
 type GetSendFileMessage = (
   channelUrl: string,
-  fileMessageParams: SendBird.FileMessageParams
-) => Promise<SendBird.FileMessage>;
+  fileMessageParams: FileMessageCreateParams
+) => Promise<FileMessage>;
 type GetUpdateUserMessage = (
   channelUrl: string,
   messageId: string | number,
-  params: SendBird.UserMessageParams
-) => Promise<SendBird.UserMessage>;
+  params: UserMessageUpdateParams
+) => Promise<UserMessage>;
 type GetDeleteMessage = (
   channelUrl: string,
-  message: SendBird.AdminMessage | SendBird.UserMessage | SendBird.FileMessage
+  message: AdminMessage | UserMessage | FileMessage
 ) => Promise<void>;
 type GetResendUserMessage = (
   channelUrl: string,
-  failedMessage: SendBird.UserMessage
-) => Promise<SendBird.UserMessage>;
+  failedMessage: UserMessage
+) => Promise<UserMessage>;
 type GetResendFileMessage = (
   channelUrl: string,
-  failedMessage: SendBird.FileMessage
-) => Promise<SendBird.FileMessage>;
-type GetFreezeChannel = (channelUrl: string) => Promise<SendBird.GroupChannel>;
-type GetUnFreezeChannel = (channelUrl: string) => Promise<SendBird.GroupChannel>;
-type GetCreateChannel = (channelParams: SendBird.GroupChannelParams) => Promise<SendBird.GroupChannel>;
-type GetLeaveChannel = (channelUrl: string) => Promise<SendBird.GroupChannel>;
-type GetCreateOpenChannel = (channelParams: SendBird.OpenChannelParams) => Promise<SendBird.OpenChannel>;
+  failedMessage: FileMessage
+) => Promise<FileMessage>;
+type GetFreezeChannel = (channelUrl: string) => Promise<GroupChannel>;
+type GetUnFreezeChannel = (channelUrl: string) => Promise<GroupChannel>;
+type GetCreateChannel = (channelParams: GroupChannelCreateParams) => Promise<GroupChannel>;
+type GetLeaveChannel = (channelUrl: string) => Promise<GroupChannel>;
+type GetCreateOpenChannel = (channelParams: OpenChannelCreateParams) => Promise<OpenChannel>;
 type GetEnterOpenChannel = (channelUrl: string) => Promise<null>;
 type GetExitOpenChannel = (channelUrl: string) => Promise<null>;
 type GetOpenChannelSendUserMessage = (
   channelUrl: string,
-  params: SendBird.UserMessageParams,
-) => Promise<SendBird.UserMessage>;
+  params: UserMessageCreateParams,
+) => Promise<UserMessage>;
 type GetOpenChannelSendFileMessage = (
   channelUrl: string,
-  params: SendBird.FileMessageParams,
-) => Promise<SendBird.FileMessage>;
+  params: FileMessageCreateParams,
+) => Promise<FileMessage>;
 type GetOpenChannelUpdateUserMessage = (
   channelUrl: string,
   messageId: string,
-  params: SendBird.UserMessageParams,
-) => Promise<SendBird.UserMessage>;
+  params: UserMessageUpdateParams,
+) => Promise<UserMessage>;
 type GetOpenChannelDeleteMessage = (
   channelUrl: string,
-  message: SendBird.UserMessage | SendBird.FileMessage,
-) => Promise<SendBird.UserMessage | SendBird.FileMessage>;
+  message: UserMessage | FileMessage,
+) => Promise<UserMessage | FileMessage>;
 type GetOpenChannelResendUserMessage = (
   channelUrl: string,
-  failedMessage: SendBird.UserMessage,
-) => Promise<SendBird.UserMessage>;
+  failedMessage: UserMessage,
+) => Promise<UserMessage>;
 type GetOpenChannelResendFileMessage = (
   channelUrl: string,
-  failedMessage: SendBird.FileMessage,
-) => Promise<SendBird.FileMessage>;
+  failedMessage: FileMessage,
+) => Promise<FileMessage>;
 
 
 interface sendBirdSelectorsInterface {
@@ -307,18 +309,18 @@ interface ChannelListQueries {
 
 export interface ChannelListProviderProps {
   allowProfileEdit?: boolean;
-  onBeforeCreateChannel?(users: Array<string>): Sendbird.GroupChannelParams;
+  onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
   onThemeChange?(theme: string): void;
-  onProfileEditSuccess?(user: Sendbird.User): void;
-  onChannelSelect?(channel: Sendbird.GroupChannel): void;
-  sortChannelList?: (channels: Sendbird.GroupChannel[]) => Sendbird.GroupChannel[];
+  onProfileEditSuccess?(user: User): void;
+  onChannelSelect?(channel: GroupChannel): void;
+  sortChannelList?: (channels: GroupChannel[]) => GroupChannel[];
   queries?: ChannelListQueries;
   children?: React.ReactNode;
   className?: string | string[];
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   disableUserProfile?: boolean;
   disableAutoSelect?: boolean;
-  typingChannels?: Array<Sendbird.GroupChannel>;
+  typingChannels?: Array<GroupChannel>;
   isTypingIndicatorEnabled?: boolean;
   isMessageReceiptStatusEnabled?: boolean;
 }
@@ -326,20 +328,20 @@ export interface ChannelListProviderProps {
 export interface ChannelListProviderInterface extends ChannelListProviderProps {
   initialized: boolean;
   loading: boolean;
-  allChannels: Sendbird.GroupChannel[];
-  currentChannel: Sendbird.GroupChannel;
+  allChannels: GroupChannel[];
+  currentChannel: GroupChannel;
   showSettings: boolean;
   channelListQuery: GroupChannelListQuery;
   currentUserId: string;
   // channelListDispatcher: CustomUseReducerDispatcher;
-  channelSource: Sendbird.GroupChannelListQuery;
+  channelSource: GroupChannelListQuery;
 }
 
 interface RenderChannelPreviewProps {
-  channel: SendBird.GroupChannel;
+  channel: GroupChannel;
   onLeaveChannel(
-    channel: SendBird.GroupChannel,
-    onLeaveChannelCb?: (c: SendBird.GroupChannel) => void,
+    channel: GroupChannel,
+    onLeaveChannelCb?: (c: GroupChannel) => void,
   );
 }
 
@@ -362,11 +364,11 @@ interface ChannelListHeaderInterface {
 }
 
 interface ChannelPreviewInterface {
-  channel: SendBird.GroupChannel;
+  channel: GroupChannel;
   isActive?: boolean;
   isTyping?: boolean;
   onClick: () => void;
-  renderChannelAction: (props: { channel: SendBird.GroupChannel }) => React.ReactNode;
+  renderChannelAction: (props: { channel: GroupChannel }) => React.ReactNode;
   tabIndex: number;
 }
 
@@ -378,11 +380,11 @@ interface ChannelPreviewActionInterface {
 interface ChannelSettingsProviderInterface {
   channelUrl: string;
   onCloseClick?(): void;
-  onChannelModified?(channel: Sendbird.GroupChannel): void;
-  onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): Sendbird.GroupChannelParams;
+  onChannelModified?(channel: GroupChannel): void;
+  onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): GroupChannelUpdateParams;
   queries?: ChannelSettingsQueries;
   forceUpdateUI(): void;
-  channel: Sendbird.GroupChannel;
+  channel: GroupChannel;
   invalidChannel: boolean;
 }
 
@@ -409,8 +411,8 @@ type ChannelSettingsContextProps = {
   channelUrl: string;
   className?: string;
   onCloseClick?(): void;
-  onChannelModified?(channel: Sendbird.GroupChannel): void;
-  onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): Sendbird.GroupChannelParams;
+  onChannelModified?(channel: GroupChannel): void;
+  onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): GroupChannelUpdateParams;
   queries?: ChannelSettingsQueries;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   disableUserProfile?: boolean;
@@ -424,7 +426,7 @@ type ChannelSettingsEditDetailsProps = {
   onCancel: () => void;
 }
 
-type CustomUser = SendBird.User & {
+type CustomUser = User & {
   isMuted: boolean;
   role: string;
 }
@@ -582,7 +584,7 @@ interface RenderMessageProps {
 }
 
 type ChannelQueries = {
-  messageListParams?: SendBird.MessageListParams;
+  messageListParams?: MessageListParams;
 };
 
 type ChannelContextProps = {
@@ -593,9 +595,9 @@ type ChannelContextProps = {
   showSearchIcon?: boolean;
   highlightedMessage?: number;
   startingPoint?: number;
-  onBeforeSendUserMessage?(text: string, quotedMessage?: SendBird.UserMessage | SendBird.FileMessage): SendBird.UserMessageParams;
-  onBeforeSendFileMessage?(file: File, quotedMessage?: SendBird.UserMessage | SendBird.FileMessage): SendBird.FileMessageParams;
-  onBeforeUpdateUserMessage?(text: string): SendBird.UserMessageParams;
+  onBeforeSendUserMessage?(text: string, quotedMessage?: UserMessage | FileMessage): UserMessageCreateParams;
+  onBeforeSendFileMessage?(file: File, quotedMessage?: UserMessage | FileMessage): FileMessageCreateParams;
+  onBeforeUpdateUserMessage?(text: string): UserMessageUpdateParams;
   onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
   onSearchClick?(): void;
   replyType?: ReplyType;
@@ -615,7 +617,7 @@ interface ChannelUIProps {
   renderCustomSeparator?: () => React.ReactNode;
 }
 
-type CoreMessageType = Sendbird.AdminMessage | Sendbird.UserMessage | Sendbird.FileMessage;
+type CoreMessageType = AdminMessage | UserMessage | FileMessage;
 
 interface MessageStoreInterface {
   allMessages: CoreMessageType[];
@@ -623,7 +625,7 @@ interface MessageStoreInterface {
   initialized: boolean;
   unreadSince: string;
   isInvalid: boolean;
-  currentGroupChannel: SendBird.GroupChannel;
+  currentGroupChannel: GroupChannel;
   hasMorePrev: boolean;
   oldestMessageTimeStamp: number;
   hasMoreNext: boolean;
@@ -646,7 +648,7 @@ interface ChannelProviderInterface extends ChannelContextProps, ChannelContextPr
   setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
   setHighLightedMessageId: React.Dispatch<React.SetStateAction<number>>;
   messageInputRef: React.MutableRefObject<HTMLInputElement>,
-  toggleReaction(message: SendBird.UserMessage | SendBird.FileMessage, emojiKey: string, isReacted: boolean): void,
+  toggleReaction(message: UserMessage | FileMessage, emojiKey: string, isReacted: boolean): void,
 }
 
 type FileViewerProps = {
@@ -676,10 +678,10 @@ type MessageListProps = {
 type SuggestedMentionListProps = {
   targetNickname: string;
   memberListQuery?: Record<string, string>;
-  onUserItemClick?: (member: SendBird.User) => void;
-  onFocusItemChange?: (member: SendBird.User) => void;
-  onFetchUsers?: (users: Array<SendBird.User>) => void;
-  renderUserMentionItem?: (props: { user: SendBird.User }) => JSX.Element;
+  onUserItemClick?: (member: User) => void;
+  onFocusItemChange?: (member: User) => void;
+  onFetchUsers?: (users: Array<User>) => void;
+  renderUserMentionItem?: (props: { user: User }) => JSX.Element;
   ableAddMention: boolean;
   maxMentionCount?: number;
   maxSuggestionCount?: number;
@@ -687,11 +689,11 @@ type SuggestedMentionListProps = {
 };
 
 type SuggestedUserMentionItemProps = {
-  member: SendBird.User;
+  member: User;
   isFocused?: boolean;
   onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   onMouseOver?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
-  renderUserMentionItem?: (props: { user: SendBird.User }) => JSX.Element;
+  renderUserMentionItem?: (props: { user: User }) => JSX.Element;
 };
 
 interface UnreadCountProps {
@@ -809,8 +811,8 @@ interface OpenChannelProviderProps {
   useMessageGrouping?: boolean;
   queries?: OpenChannelQueries;
   messageLimit?: number;
-  onBeforeSendUserMessage?(text: string): SendBird.UserMessageParams;
-  onBeforeSendFileMessage?(file_: File): SendBird.FileMessageParams;
+  onBeforeSendUserMessage?(text: string): UserMessageCreateParams;
+  onBeforeSendFileMessage?(file_: File): FileMessageCreateParams;
   onChatHeaderActionClick?(): void;
   disableUserProfile?: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
@@ -820,13 +822,13 @@ interface OpenChannelMessagesState {
   allMessages: Array<EveryMessage>;
   loading: boolean;
   initialized: boolean;
-  currentOpenChannel: Sendbird.OpenChannel;
+  currentOpenChannel: OpenChannel;
   isInvalid: boolean;
   hasMore: boolean;
   lastMessageTimestamp: number;
   frozen: boolean;
-  operators: Array<Sendbird.User>;
-  participants: Array<Sendbird.User>;
+  operators: Array<User>;
+  participants: Array<User>;
   bannedParticipantIds: Array<string>;
   mutedParticipantIds: Array<string>;
 }
@@ -916,9 +918,9 @@ interface OpenChannelSettingsContextProps {
   channelUrl: string;
   children?: React.ReactNode;
   onCloseClick?(): void;
-  onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): Sendbird.OpenChannelParams;
-  onChannelModified?(channel: Sendbird.OpenChannel): void;
-  onDeleteChannel?(channel: Sendbird.OpenChannel): void;
+  onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): OpenChannelUpdateParams;
+  onChannelModified?(channel: OpenChannel): void;
+  onDeleteChannel?(channel: OpenChannel): void;
   disableUserProfile?: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
 }
@@ -933,8 +935,8 @@ interface OpenChannelSettingsProps extends OpenChannelSettingsContextProps, Open
 
 interface OpenChannelSettingsContextType extends OpenChannelSettingsContextProps {
   channelUrl: string;
-  channel?: Sendbird.OpenChannel;
-  setChannel?: React.Dispatch<React.SetStateAction<Sendbird.OpenChannel>>;
+  channel?: OpenChannel;
+  setChannel?: React.Dispatch<React.SetStateAction<OpenChannel>>;
 }
 
 interface OperatorUIProps {
@@ -980,14 +982,14 @@ export interface MessageSearchProviderProps {
   children?: React.ReactNode;
   searchString?: string;
   requestString?: string;
-  messageSearchQuery?: SendBird.MessageSearchQueryOptions;
-  onResultLoaded?(messages?: Array<ClientSentMessages>, error?: SendBird.SendBirdError): void;
+  messageSearchQuery?: MessageSearchQuery;
+  onResultLoaded?(messages?: Array<ClientSentMessages>, error?: SendbirdError): void;
   onResultClick?(message: ClientSentMessages): void;
 }
 
 type MessageSearchScrollCallbackReturn = (
   callback: (
-    messages: Array<SendBird.UserMessage | SendBird.FileMessage | SendBird.AdminMessage>,
+    messages: Array<UserMessage | FileMessage | AdminMessage>,
     /* eslint-disable @typescript-eslint/no-explicit-any*/
     error: any,
   ) => void
@@ -1003,8 +1005,8 @@ interface MessageSearchProviderInterface extends MessageSearchProviderProps {
   allMessages: Array<ClientFileMessage | ClientUserMessage>;
   loading: boolean;
   isInvalid: boolean;
-  currentChannel: SendBird.GroupChannel;
-  currentMessageSearchQuery: SendBird.MessageSearchQuery;
+  currentChannel: GroupChannel;
+  currentMessageSearchQuery: MessageSearchQuery;
   hasMoreResult: boolean;
   onScroll: MessageSearchScrollCallbackReturn;
   handleRetryToConnect: () => void;
@@ -1046,18 +1048,18 @@ declare module '@sendbird/uikit-react/MessageSearch/components/MessageSearchUI' 
 
 interface CreateChannelProviderProps {
   children?: React.ReactNode;
-  onCreateChannel(channel: Sendbird.GroupChannel): void;
-  onBeforeCreateChannel?(users: Array<string>): Sendbird.GroupChannelParams;
+  onCreateChannel(channel: GroupChannel): void;
+  onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
   userListQuery?(): UserListQuery;
 }
 
 
 interface CreateChannelContextInterface {
-  onBeforeCreateChannel?(users: Array<string>): Sendbird.GroupChannelParams;
-  createChannel: (channelParams: Sendbird.GroupChannelParams) => Promise<Sendbird.GroupChannel>;
-  sdk: Sendbird.SendBirdInstance;
+  onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
+  createChannel: (channelParams: GroupChannelCreateParams) => Promise<GroupChannel>;
+  sdk: SendbirdChat;
   userListQuery?(): UserListQuery;
-  onCreateChannel?(channel: Sendbird.GroupChannel): void;
+  onCreateChannel?(channel: GroupChannel): void;
   step: number,
   setStep: React.Dispatch<React.SetStateAction<number>>,
   type: 'group' | 'supergroup' | 'broadcast',
@@ -1108,13 +1110,13 @@ interface EditUserProfileProps {
   children?: React.ReactNode;
   onCancel?(): void;
   onThemeChange?(theme: string): void;
-  onEditProfile?(updatedUser: Sendbird.User): void;
+  onEditProfile?(updatedUser: User): void;
 }
 
 interface EditUserProfileProviderInterface {
   onCancel?(): void;
   onThemeChange?(theme: string): void;
-  onEditProfile?(updatedUser: Sendbird.User): void;
+  onEditProfile?(updatedUser: User): void;
 }
 
 declare module '@sendbird/uikit-react/EditUserProfile' {
@@ -1157,7 +1159,7 @@ declare module '@sendbird/uikit-react/ui/AccordionGroup' {
 declare module '@sendbird/uikit-react/ui/AdminMessage' {
   interface AdminMessageProps {
     className?: string,
-    message: SendBird.AdminMessage,
+    message: AdminMessage,
   }
   type AdminMessage = React.FC<AdminMessageProps>;
   export default AdminMessage;
@@ -1211,7 +1213,7 @@ declare module '@sendbird/uikit-react/ui/Button' {
 
 declare module '@sendbird/uikit-react/ui/ChannelAvatar' {
   interface ChannelAvatarProps {
-    channel: SendBird.GroupChannel;
+    channel: GroupChannel;
     userId: string;
     theme: string;
     width?: number,
@@ -1223,7 +1225,7 @@ declare module '@sendbird/uikit-react/ui/ChannelAvatar' {
 
 declare module '@sendbird/uikit-react/ui/OpenChannelAvatar' {
   interface OpenChannelAvatarProps {
-    channel: SendBird.OpenChannel;
+    channel: OpenChannel;
     theme: string;
     height?: number;
     width?: number;
@@ -1234,8 +1236,8 @@ declare module '@sendbird/uikit-react/ui/OpenChannelAvatar' {
 
 declare module '@sendbird/uikit-react/ui/ChannelPreview' {
   interface ChannelPreviewProps {
-    channel?: SendBird.GroupChannel,
-    currentUser?: SendBird.User,
+    channel?: GroupChannel,
+    currentUser?: User,
     isActive?: boolean,
     ChannelAction: React.ReactElement,
     theme?: 'light' | 'dark',
@@ -1248,8 +1250,8 @@ declare module '@sendbird/uikit-react/ui/ChannelPreview' {
 
 declare module '@sendbird/uikit-react/ui/ChatHeader' {
   interface ChatHeaderProps {
-    currentGroupChannel?: SendBird.GroupChannel;
-    currentUser?: SendBird.User;
+    currentGroupChannel?: GroupChannel;
+    currentUser?: User;
     title?: string;
     subTitle?: string;
     isMuted?: boolean;
@@ -1318,18 +1320,18 @@ declare module '@sendbird/uikit-react/ui/Dropdown' {
 
 declare module '@sendbird/uikit-react/ui/EmojiReactions' {
   interface EmojiContainer {
-    emojiCategories: Array<Sendbird.EmojiCategory>;
+    emojiCategories: Array<EmojiCategory>;
     emojiHash: string;
   }
   interface EmojiReactionsProps {
     className?: string | Array<string>;
     userId: string;
-    message: SendBird.UserMessage | SendBird.FileMessage;
+    message: UserMessage | FileMessage;
     emojiContainer: EmojiContainer;
     memberNicknamesMap: Map<string, string>;
     spaceFromTrigger?: Record<string, unknown>;
     isByMe?: boolean;
-    toggleReaction?: (message: SendBird.UserMessage | SendBird.FileMessage, key: string, byMe: boolean) => void;
+    toggleReaction?: (message: UserMessage | FileMessage, key: string, byMe: boolean) => void;
   }
   type EmojiReactions = React.FC<EmojiReactionsProps>;
   export default EmojiReactions;
@@ -1339,7 +1341,7 @@ declare module '@sendbird/uikit-react/ui/EmojiReactions' {
 declare module '@sendbird/uikit-react/ui/FileMessageItemBody' {
   interface FileMessageItemBodyProps {
     className?: string | Array<string>;
-    message: SendBird.FileMessage;
+    message: FileMessage;
     isByMe?: boolean;
     mouseHover?: boolean;
   }
@@ -1350,7 +1352,7 @@ declare module '@sendbird/uikit-react/ui/FileMessageItemBody' {
 
 declare module '@sendbird/uikit-react/ui/FileViewer' {
   interface FileViewerBodyProps {
-    message: SendBird.FileMessage;
+    message: FileMessage;
     isByMe?: boolean;
     onClose?: () => void,
     onDelete?: () => void,
@@ -1466,7 +1468,7 @@ declare module '@sendbird/uikit-react/ui/MessageContent' {
   interface MessageContentProps {
     className?: string | Array<string>;
     userId: string;
-    channel: Sendbird.GroupChannel;
+    channel: GroupChannel;
     message: CoreMessageType;
     disabled?: boolean;
     chainTop?: boolean;
@@ -1474,14 +1476,14 @@ declare module '@sendbird/uikit-react/ui/MessageContent' {
     useReaction?: boolean;
     replyType?: ReplyType;
     nicknamesMap?: Map<string, string>;
-    emojiContainer?: Sendbird.EmojiContainer;
+    emojiContainer?: EmojiContainer;
     scrollToMessage?: (createdAt: number, messageId: number) => void;
     showEdit?: (bool: boolean) => void;
     showRemove?: (bool: boolean) => void;
     showFileViewer?: (bool: boolean) => void;
-    resendMessage?: (message: Sendbird.UserMessage | Sendbird.FileMessage) => void;
-    toggleReaction?: (message: Sendbird.UserMessage | Sendbird.FileMessage, reactionKey: string, isReacted: boolean) => void;
-    setQuoteMessage?: (message: Sendbird.UserMessage | Sendbird.FileMessage) => void;
+    resendMessage?: (message: UserMessage | FileMessage) => void;
+    toggleReaction?: (message: UserMessage | FileMessage, reactionKey: string, isReacted: boolean) => void;
+    setQuoteMessage?: (message: UserMessage | FileMessage) => void;
   }
   type MessageContent = React.FC<MessageContentProps>;
   export default MessageContent;
@@ -1493,7 +1495,7 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
     isEdit?: boolean,
     isMentionEnabled?: boolean;
     disabled?: boolean,
-    message?: SendBird.UserMessage;
+    message?: UserMessage;
     placeholder?: string,
     maxLength?: number,
     onFileUpload?: (file: File) => void,
@@ -1502,8 +1504,8 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
     onCancelEdit?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
     onStartTyping?: () => void,
     channelUrl: string,
-    mentionSelectedUser?: Array<SendBird.User>,
-    onUserMentioned?: (user: SendBird.User) => void,
+    mentionSelectedUser?: Array<User>,
+    onUserMentioned?: (user: User) => void,
     onMentionStringChange?: (str: string) => void,
     onMentionedUserIdsUpdated?: (userIds: Array<string>) => void,
     onKeyUp?: (e: React.KeyboardEvent<HTMLDivElement>) => void,
@@ -1517,15 +1519,15 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
 declare module '@sendbird/uikit-react/ui/MessageItemMenu' {
   interface MessageItemMenuProps {
     className?: string | Array<string>;
-    message: Sendbird.UserMessage | Sendbird.FileMessage;
-    channel: Sendbird.GroupChannel | Sendbird.OpenChannel;
+    message: UserMessage | FileMessage;
+    channel: GroupChannel | OpenChannel;
     isByMe?: boolean;
     disabled?: boolean;
     replyType?: ReplyType;
     showEdit?: (bool: boolean) => void;
     showRemove?: (bool: boolean) => void;
-    resendMessage?: (message: Sendbird.UserMessage | Sendbird.FileMessage) => void;
-    setQuoteMessage?: (message: Sendbird.UserMessage | Sendbird.FileMessage) => void;
+    resendMessage?: (message: UserMessage | FileMessage) => void;
+    setQuoteMessage?: (message: UserMessage | FileMessage) => void;
     setSupposedHover?: (bool: boolean) => void;
   }
   type MessageItemMenu = React.FC<MessageItemMenuProps>;
@@ -1536,11 +1538,11 @@ declare module '@sendbird/uikit-react/ui/MessageItemMenu' {
 declare module '@sendbird/uikit-react/ui/MessageItemReactionMenu' {
   interface MessageItemReactionMenuProps {
     className?: string | Array<string>;
-    message: Sendbird.UserMessage | Sendbird.FileMessage;
+    message: UserMessage | FileMessage;
     userId: string;
     spaceFromTrigger?: Record<string, unknown>;
-    emojiContainer?: Sendbird.EmojiContainer;
-    toggleReaction?: (message: Sendbird.UserMessage | Sendbird.FileMessage, reactionKey: string, isReacted: boolean) => void;
+    emojiContainer?: EmojiContainer;
+    toggleReaction?: (message: UserMessage | FileMessage, reactionKey: string, isReacted: boolean) => void;
     setSupposedHover?: (bool: boolean) => void;
   }
   type MessageItemReactionMenu = React.FC<MessageItemReactionMenuProps>;
@@ -1574,8 +1576,8 @@ declare module '@sendbird/uikit-react/ui/MessageSearchItem' {
 declare module '@sendbird/uikit-react/ui/MessageStatus' {
   interface MessageStatusProps {
     className?: string;
-    message: Sendbird.UserMessage | Sendbird.FileMessage;
-    channel: Sendbird.GroupChannel;
+    message: UserMessage | FileMessage;
+    channel: GroupChannel;
   }
   type MessageStatus = React.FC<MessageStatusProps>;
   export default MessageStatus;
@@ -1600,7 +1602,7 @@ declare module '@sendbird/uikit-react/ui/Modal' {
 declare module '@sendbird/uikit-react/ui/OGMessageItemBody' {
   interface OGMessageItemBodyProps {
     className?: string | Array<string>;
-    message: Sendbird.UserMessage;
+    message: UserMessage;
     isByMe?: boolean;
     mouseHover?: boolean;
   }
@@ -1712,7 +1714,7 @@ declare module '@sendbird/uikit-react/ui/PlaceHolder' {
 
 declare module '@sendbird/uikit-react/ui/QuoteMessage' {
   interface QuoteMessageProps {
-    message?: Sendbird.UserMessage | Sendbird.FileMessage;
+    message?: UserMessage | FileMessage;
     userId?: string;
     isByMe?: boolean;
     className?: string | Array<string>;
@@ -1792,7 +1794,7 @@ declare module '@sendbird/uikit-react/ui/TextButton' {
 declare module '@sendbird/uikit-react/ui/TextMessageItemBody' {
   interface TextMessageItemBodyProps {
     className?: string | Array<string>;
-    message: Sendbird.UserMessage;
+    message: UserMessage;
     isByMe?: boolean;
     mouseHover?: boolean;
   }
@@ -1804,7 +1806,7 @@ declare module '@sendbird/uikit-react/ui/TextMessageItemBody' {
 declare module '@sendbird/uikit-react/ui/ThumbnailMessageItemBody' {
   interface ThumbnailMessageItemBodyProps {
     className?: string | Array<string>;
-    message: Sendbird.FileMessage;
+    message: FileMessage;
     isByMe?: boolean;
     mouseHover?: boolean;
     showFileViewer?: (bool: boolean) => void;
@@ -1850,7 +1852,7 @@ declare module '@sendbird/uikit-react/ui/UnknownMessageItemBody' {
 declare module '@sendbird/uikit-react/ui/UserListItem' {
   interface UserListItemProps {
     className?: string | Array<string>;
-    user?: Sendbird.User,
+    user?: User,
     checkBox?: boolean,
     disableMessaging?: boolean,
     currentUser?: string,
@@ -1865,12 +1867,12 @@ declare module '@sendbird/uikit-react/ui/UserListItem' {
 
 declare module '@sendbird/uikit-react/ui/UserProfile' {
   interface UserProfileProps {
-    user: Sendbird.User;
+    user: User;
     currentUserId?: string;
-    sdk?: Sendbird.SendBirdInstance;
+    sdk?: SendbirdChat;
     logger?: Logger;
     disableMessaging?: boolean;
-    createChannel?(params: Sendbird.GroupChannelParams): Promise<Sendbird.GroupChannel>;
+    createChannel?(params: GroupChannelCreateParams): Promise<GroupChannel>;
     onSuccess?(): void;
   }
   type UserProfile = React.FC<UserProfileProps>;

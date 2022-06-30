@@ -21,12 +21,12 @@ function useScrollDownCallback({
     const messageListParams = {
       nextResultSize: NEXT_RESULT_SIZE,
       isInclusive: true,
-      includeReaction: useReaction,
+      includeReactions: useReaction,
     };
     if (replyType && replyType === 'QUOTE_REPLY') {
       messageListParams.includeThreadInfo = true;
       messageListParams.includeParentMessageInfo = true;
-      messageListParams.replyType = 'only_reply_to_channel';
+      messageListParams.replyType = 'all';
     }
     if (userFilledMessageListQuery) {
       Object.keys(userFilledMessageListQuery).forEach((key) => {
@@ -35,7 +35,7 @@ function useScrollDownCallback({
     }
     logger.info('Channel: Fetching later messages', { currentGroupChannel, userFilledMessageListQuery });
 
-    currentGroupChannel.getMessagesByTimestamp(
+    currentGroupChannel?.getMessagesByTimestamp(
       latestMessageTimeStamp || new Date().getTime(),
       messageListParams,
     )

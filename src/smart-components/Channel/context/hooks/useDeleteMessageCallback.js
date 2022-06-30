@@ -19,7 +19,7 @@ function useDeleteMessageCallback({ currentGroupChannel, messagesDispatcher }, {
       }
 
       logger.info('Channel | useDeleteMessageCallback: Deleting message from remote:', requestState);
-      currentGroupChannel.deleteMessage(message).then(() => {
+      currentGroupChannel?.deleteMessage(message).then(() => {
         logger.info('Channel | useDeleteMessageCallback: Deleting message success!', message);
         messagesDispatcher({
           type: messageActionTypes.ON_MESSAGE_DELETED,

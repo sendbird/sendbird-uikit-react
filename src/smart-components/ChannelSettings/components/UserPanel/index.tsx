@@ -47,7 +47,7 @@ const UserPanel: React.FC = () => {
           color={LabelColors.ONBACKGROUND_1}
         >
           {stringSet.CHANNEL_SETTING__MEMBERS__TITLE}
-          <Badge count={kFormatter(channel.memberCount)} />
+          <Badge count={kFormatter(channel?.memberCount)} />
         </Label>
         <Icon
           className={[

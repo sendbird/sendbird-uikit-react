@@ -96,7 +96,7 @@ export default function reducer(
         message,
         channel,
       } = action.payload;
-      if (channel.url !== state.currentOpenChannel.url
+      if (channel?.url !== state.currentOpenChannel.url
         || state.allMessages.some((m) => m.reqId === message.reqId)
         // Handing failed first than sending start issue
       ) {

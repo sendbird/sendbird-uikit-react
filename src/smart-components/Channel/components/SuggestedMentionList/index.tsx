@@ -89,7 +89,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
 
   /* Fetch member list */
   useEffect(() => {
-    if (!currentGroupChannel || !currentGroupChannel.createMemberListQuery) {
+    if (!currentGroupChannel?.createMemberListQuery) {
       logger.warning('SuggestedMentionList: Creating member list query failed');
       return;
     }
@@ -98,7 +98,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
       return;
     }
 
-    const query = currentGroupChannel.createMemberListQuery({
+    const query = currentGroupChannel?.createMemberListQuery({
       limit: maxSuggestionCount,
       nicknameStartsWithFilter: searchString.slice(USER_MENTION_TEMP_CHAR.length),
     });

@@ -32,7 +32,7 @@ export default function AddOperatorsModal({
   const { channel } = useChannelSettings();
 
   useEffect(() => {
-    const memberListQuery = channel.createMemberListQuery({
+    const memberListQuery = channel?.createMemberListQuery({
       limit: 20,
     });
     memberListQuery.next().then((members) => {

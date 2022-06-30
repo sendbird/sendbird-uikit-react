@@ -31,7 +31,6 @@ import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 import channelListReducers from '../dux/reducers';
 import channelListInitialState from '../dux/initialState';
-import { GroupChannelListQueryStatic } from 'sendbird';
 
 interface ApplicationUserListQuery {
   limit?: number;
