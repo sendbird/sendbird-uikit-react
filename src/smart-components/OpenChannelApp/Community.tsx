@@ -5,7 +5,7 @@ import './community.scss';
 import './theme.scss';
 
 import Sendbird from '../../lib/Sendbird';
-import OpenChannelComponent from '../OpenChannel';
+import OpenChannelConversation from '../OpenChannel';
 import OpenChannelSettings from '../OpenChannelSettings';
 import CommunityChannelList from './components/CommunityChannelList';
 
@@ -44,7 +44,7 @@ export default function Community({
           />
         </div>
         <div className="community-open-channel">
-          <OpenChannelComponent
+          <OpenChannelConversation
             channelUrl={currentChannelUrl}
             onChatHeaderActionClick={() => {
               setShowSettings(true);
