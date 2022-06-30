@@ -1,9 +1,10 @@
 import React, {
+  useRef,
+  useMemo,
   useState,
   useEffect,
-  useRef,
   useLayoutEffect,
-  useMemo,
+  ReactElement,
 } from 'react';
 import format from 'date-fns/format';
 
@@ -37,7 +38,7 @@ type MessageUIProps = {
   renderMessageContent?: () => React.ReactNode;
 };
 
-const Message: React.FC<MessageUIProps> = (props: MessageUIProps) => {
+const Message = (props: MessageUIProps): ReactElement | React.ReactNode | React.ElementType<MessageUIProps> => {
   const {
     message,
     hasSeparator,

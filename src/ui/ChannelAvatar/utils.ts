@@ -15,14 +15,10 @@ export const getChannelAvatarSource = (channel: GroupChannel, currentUserId: str
       return channel.coverUrl;
     }
   }
-
   return (channel?.members || [])
-    ? channel.members
-      .filter((member) => member.userId !== currentUserId)
-      .map(({ profileUrl }) => profileUrl)
-    : [];
+    .filter((member) => member.userId !== currentUserId)
+    .map(({ profileUrl }) => profileUrl);
 };
-
 
 export const generateDefaultAvatar = (channel: GroupChannel): boolean => {
   if (channel?.coverUrl) {
