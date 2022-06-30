@@ -30,17 +30,20 @@ interface StaticParams {
   messagesDispatcher: CustomUseReducerDispatcher;
 }
 
-function useHandleChannelEvents({
-  sdkInit,
-  hasMoreNext,
-  currentGroupChannel,
-}: DynamicParams, {
-  sdk,
-  logger,
-  scrollRef,
-  setQuoteMessage,
-  messagesDispatcher,
-}: StaticParams) {
+function useHandleChannelEvents(
+  {
+    sdkInit,
+    hasMoreNext,
+    currentGroupChannel,
+  }: DynamicParams,
+  {
+    sdk,
+    logger,
+    scrollRef,
+    setQuoteMessage,
+    messagesDispatcher,
+  }: StaticParams,
+): void {
   useEffect(() => {
     const channelUrl = currentGroupChannel?.url;
     const channelHandlerId = uuidv4();

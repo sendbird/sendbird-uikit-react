@@ -10,7 +10,7 @@ import { EmojiCategory, EmojiContainer, SendbirdError, SessionHandler, User } fr
 import type { GroupChannel, GroupChannelCreateParams, GroupChannelUpdateParams, Member } from '@sendbird/chat/groupChannel';
 import { AdminMessage, FileMessage, FileMessageCreateParams, MessageListParams, MessageSearchQuery, UserMessage, UserMessageCreateParams, UserMessageUpdateParams } from '@sendbird/chat/message';
 import { OpenChannel, OpenChannelCreateParams, OpenChannelUpdateParams } from '@sendbird/chat/openChannel';
-import { JSXElementConstructor, ReactElement } from 'react';
+import { ReactElement } from 'react';
 
 type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
 
