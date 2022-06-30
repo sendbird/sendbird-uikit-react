@@ -1,5 +1,5 @@
 import SendbirdChat, { Emoji, EmojiCategory, EmojiContainer, User } from '@sendbird/chat';
-import type { GroupChannel, Member, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import type { GroupChannel, Member, SendbirdGroupChat, GroupChannelListQuery } from '@sendbird/chat/groupChannel';
 import type { AdminMessage, FileMessage, MessageListParams, Reaction, UserMessage } from '@sendbird/chat/message';
 import type { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import { EveryMessage } from '../types';
@@ -458,8 +458,8 @@ export const filterChannelListParams = (params: SDKChannelListParamsPrivateProps
   if (params?.channelUrlsFilter?.length > 0 && !params.channelUrlsFilter.includes(channel?.url)) {
     return false;
   }
-  if (params?.memberStateFilter) {
-    switch (params.memberStateFilter) {
+  if (params?.myMemberStateFilter) {
+    switch (params.myMemberStateFilter) {
       case 'joined_only':
         if (channel?.myMemberState !== 'joined') {
           return false;

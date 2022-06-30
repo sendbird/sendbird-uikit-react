@@ -159,7 +159,7 @@ function useHandleChannelEvents(
             payload: { channel, metaDataKeys },
           });
         },
-        onMetaCountersCreated: (channel, metaCounter) => {
+        onMetaCounterCreated: (channel, metaCounter) => {
           const channelUrl = channel.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMetaCountersCreated', { channelUrl, metaCounter });
           messagesDispatcher({
@@ -167,7 +167,7 @@ function useHandleChannelEvents(
             payload: { channel, metaCounter },
           });
         },
-        onMetaCountersUpdated: (channel, metaCounter) => {
+        onMetaCounterUpdated: (channel, metaCounter) => {
           const channelUrl = channel.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMetaCountersUpdated', { channelUrl, metaCounter });
           messagesDispatcher({
@@ -175,7 +175,7 @@ function useHandleChannelEvents(
             payload: { channel, metaCounter },
           });
         },
-        onMetaCountersDeleted: (channel, metaCounterKeys) => {
+        onMetaCounterDeleted: (channel, metaCounterKeys) => {
           const channelUrl = channel.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMetaCountersDeleted', { channelUrl, metaCounterKeys });
           messagesDispatcher({
