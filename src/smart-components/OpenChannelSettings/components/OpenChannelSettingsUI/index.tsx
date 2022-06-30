@@ -1,3 +1,5 @@
+import './open-channel-ui.scss';
+
 import React from 'react';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useOpenChannelSettings } from '../../context/OpenChannelSettingsProvider';
@@ -37,23 +39,23 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
     );
   }
   return (
-    <UserProfileProvider
-      className="sendbird-openchannel-settings"
-    >
-      {
-        channel?.isOperator(user) && (
-          renderOperatorUI?.() || (
-            <OperatorUI />
+    <UserProfileProvider>
+      <div className='sendbird-openchannel-settings'>
+        {
+          channel?.isOperator(user) && (
+            renderOperatorUI?.() || (
+              <OperatorUI />
+            )
           )
-        )
-      }
-      {
-        !(channel?.isOperator(user)) && (
-          renderParticipantList?.() || (
-            <ParticipantUI />
+        }
+        {
+          !(channel?.isOperator(user)) && (
+            renderParticipantList?.() || (
+              <ParticipantUI />
+            )
           )
-        )
-      }
+        }
+      </div>
     </UserProfileProvider>
   )
 };
