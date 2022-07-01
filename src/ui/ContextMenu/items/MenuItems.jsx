@@ -15,12 +15,10 @@ export default class MenuItems extends Component {
   componentDidMount() {
     this.setupEvents();
     this.getMenuPosition();
-    this.showParent();
   }
 
   componentWillUnmount() {
     this.cleanUpEvents();
-    this.hideParent();
   }
 
   setupEvents = () => {
