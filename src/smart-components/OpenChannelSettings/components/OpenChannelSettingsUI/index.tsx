@@ -1,13 +1,17 @@
 import './open-channel-ui.scss';
 
-import React from 'react';
+import React, { useContext } from 'react';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useOpenChannelSettings } from '../../context/OpenChannelSettingsProvider';
 import { UserProfileProvider } from '../../../../lib/UserProfileContext';
+import { LocalizationContext } from '../../../../lib/LocalizationContext';
 
 import InvalidChannel from '../InvalidChannel';
 import OperatorUI from '../OperatorUI';
 import ParticipantUI from '../ParticipantUI';
+
+import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
+import Icon, { IconTypes } from '../../../../ui/Icon';
 
 export interface OpenChannelUIProps {
   renderOperatorUI?: () => React.ReactNode;
@@ -26,6 +30,7 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
   const logger = globalStore?.config?.logger;
   const user = globalStore?.stores?.userStore?.user;
 
+  const { stringSet } = useContext(LocalizationContext);
   if (!channel) {
     return (
       <InvalidChannel
@@ -50,9 +55,27 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
         }
         {
           !(channel?.isOperator(user)) && (
-            renderParticipantList?.() || (
-              <ParticipantUI />
-            )
+            <div className="sendbird-openchannel-settings__participant">
+              <div className="sendbird-openchannel-settings__header">
+                <Label type={LabelTypography.H_2} color={LabelColors.ONBACKGROUND_1}>
+                  {stringSet.OPEN_CHANNEL_SETTINGS__PARTICIPANTS_TITLE}
+                </Label>
+                <Icon
+                  type={IconTypes.CLOSE}
+                  className="sendbird-openchannel-settings__close-icon"
+                  height="24px"
+                  width="24px"
+                  onClick={() => {
+                    onCloseClick();
+                  }}
+                />
+              </div>
+              {
+                renderParticipantList?.() || (
+                  <ParticipantUI />
+                )
+              }
+            </div>
           )
         }
       </div>
