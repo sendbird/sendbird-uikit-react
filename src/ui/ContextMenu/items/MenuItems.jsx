@@ -15,28 +15,10 @@ export default class MenuItems extends Component {
   componentDidMount() {
     this.setupEvents();
     this.getMenuPosition();
-    this.showParent();
   }
 
   componentWillUnmount() {
     this.cleanUpEvents();
-    this.hideParent();
-  }
-
-  showParent = () => {
-    const { parentContainRef = {} } = this.props;
-    const { current } = parentContainRef;
-    if (parentContainRef && current) {
-      current.classList.add('sendbird-icon--pressed');
-    }
-  }
-
-  hideParent = () => {
-    const { parentContainRef = {} } = this.props;
-    const { current } = parentContainRef;
-    if (parentContainRef && current) {
-      current.classList.remove('sendbird-icon--pressed');
-    }
   }
 
   setupEvents = () => {
