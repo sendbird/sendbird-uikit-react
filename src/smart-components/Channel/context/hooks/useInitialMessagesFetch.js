@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
+import { ReplyType } from '@sendbird/chat/message';
 
 import * as utils from '../utils';
 import * as messageActionTypes from '../dux/actionTypes';
 import { PREV_RESULT_SIZE, NEXT_RESULT_SIZE } from '../const';
-import { ReplyType } from '@sendbird/chat/message';
 
 function useInitialMessagesFetch({
   currentGroupChannel,

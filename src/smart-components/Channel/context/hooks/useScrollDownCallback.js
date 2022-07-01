@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
+import { ReplyType } from '@sendbird/chat/message';
 
 import * as messageActionTypes from '../dux/actionTypes';
 import { NEXT_RESULT_SIZE } from '../const';
-import { ReplyType } from '@sendbird/chat/message';
 
 function useScrollDownCallback({
   currentGroupChannel,
