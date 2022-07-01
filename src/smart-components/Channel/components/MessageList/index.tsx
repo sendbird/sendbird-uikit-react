@@ -104,7 +104,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
     setInitialTimeStamp?.(null);
     setAnimatedMessageId?.(null);
     setHighLightedMessageId?.(null);
-    if (scrollRef?.current?.scrollTop) {
+    if (scrollRef?.current?.scrollTop > -1) {
       scrollRef.current.scrollTop = scrollRef?.current?.scrollHeight - scrollRef?.current?.offsetHeight;
     }
   };
