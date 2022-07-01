@@ -90,6 +90,7 @@ function CommunityChannelList({
                   name: currentChannelName,
                   coverUrlOrImage: currentFile,
                   customType: SB_COMMUNITY_TYPE,
+                  operatorUserIds: [user.userId],
                 };
                 sdk.openChannel.createChannel(params).then((openChannel) => {
                   setChannels([openChannel, ...channels]);
