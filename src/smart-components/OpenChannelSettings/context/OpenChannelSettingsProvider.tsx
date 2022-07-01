@@ -38,6 +38,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
     onCloseClick,
     onChannelModified,
     onBeforeUpdateChannel,
+    onDeleteChannel,
   } = props;
 
   // fetch store from <SendbirdProvider />
@@ -70,6 +71,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
       onCloseClick,
       onChannelModified,
       onBeforeUpdateChannel,
+      onDeleteChannel,
     }}>
       <UserProfileProvider
         isOpenChannel

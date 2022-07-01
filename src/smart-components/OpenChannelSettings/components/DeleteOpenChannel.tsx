@@ -21,15 +21,13 @@ export default function DeleteChannel(): ReactElement {
   const { channel, onDeleteChannel } = useOpenChannelSettings();
 
   const deleteChannel = () => {
-    channel?.delete((response, error) => {
-      if (error) {
-        logger.warning('OpenChannelSettings: Delete channel failed', error);
-        return;
-      }
+    channel?.delete().then((response) => {
       logger.info('OpenChannelSettings: Delete channel success', response);
       if (onDeleteChannel) {
         onDeleteChannel(channel);
       }
+    }).catch((error) => {
+      logger.warning('OpenChannelSettings: Delete channel failed', error);
     });
   }
   return (
