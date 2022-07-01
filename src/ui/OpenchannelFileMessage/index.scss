@@ -33,6 +33,7 @@
     flex-direction: column;
     margin-left: 12px;
     margin-bottom: 4px;
+    width: calc(100% - 64px);
 
     .sendbird-openchannel-file-message__right__title {
       position: relative;
@@ -79,6 +80,7 @@
         height: 20px;
         max-height: 20px;
         text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
   }
