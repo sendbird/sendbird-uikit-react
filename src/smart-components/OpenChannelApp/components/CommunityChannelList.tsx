@@ -92,11 +92,17 @@ function CommunityChannelList({
                   customType: SB_COMMUNITY_TYPE,
                   operatorUserIds: [user.userId],
                 };
-                sdk.openChannel.createChannel(params).then((openChannel) => {
-                  setChannels([openChannel, ...channels]);
-                  setCurrentChannel(openChannel);
-                  setShowModal(false);
-                });
+                console.log('CommunityChannelList: Creating channel with OpenChannelCreateParams', params);
+                sdk.openChannel.createChannel(params)
+                  .then((openChannel) => {
+                    console.log('CommunityChannelList: OpenChannel has been created', openChannel);
+                    setChannels([openChannel, ...channels]);
+                    setCurrentChannel(openChannel);
+                    setShowModal(false);
+                  })
+                  .catch((error) => {
+                    console.log('CommunityChannelList: Failed to create OpenChannel', error);
+                  });
               }}
               type="PRIMARY"
               submitText="Create"
