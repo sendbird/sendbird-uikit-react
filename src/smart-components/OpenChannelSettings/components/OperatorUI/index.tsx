@@ -7,12 +7,13 @@ import Label, {
 } from '../../../../ui/Label';
 import Icon, {
   IconTypes,
+  IconColors,
 } from '../../../../ui/Icon';
 import { useOpenChannelSettings } from '../../context/OpenChannelSettingsProvider';
 import OpenChannelProfile from '../OpenChannelProfile';
 import DeleteChannel from '../DeleteOpenChannel';
 import ParticipantsAccordion from '../ParticipantUI';
-import { AccordionGroup } from '../../../../ui/Accordion';
+import Accordion, { AccordionGroup } from '../../../../ui/Accordion';
 
 export const copyToClipboard = (text: string): boolean => {
   // @ts-ignore: Unreachable code error
@@ -98,7 +99,32 @@ export const OperatorUI: React.FC<OperatorUIProps> = ({
         </Label>
       </div>
       <AccordionGroup>
-        <ParticipantsAccordion />
+        <Accordion
+          className="sendbird-channel-settings__operators-list"
+          id="participants"
+          renderTitle={() => (
+            <>
+              <Icon
+                type={IconTypes.MEMBERS}
+                fillColor={IconColors.PRIMARY}
+                width={24}
+                height={24}
+                className="sendbird-openchannel-settings__operator-accordion-icon"
+              />
+              <Label
+                type={LabelTypography.SUBTITLE_1}
+                color={LabelColors.ONBACKGROUND_1}
+              >
+                {stringSet.OPEN_CHANNEL_SETTINGS__PARTICIPANTS_ACCORDION_TITLE}
+              </Label>
+            </>
+          )}
+          renderContent={() => (
+            <>
+              <ParticipantsAccordion />
+            </>
+          )}
+        />
       </AccordionGroup>
       <DeleteChannel />
     </>
