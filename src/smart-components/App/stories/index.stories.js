@@ -252,7 +252,7 @@ export const user2 = () => fitPageSize(
     profileUrl={addProfile}
     config={{ logLevel: 'all' }}
     replyType="QUOTE_REPLY"
-    useMessageGrouping={false}
+    useMessageGrouping={true}
     disableAutoSelect
     imageCompression={{
       compressionRate: 0.5,

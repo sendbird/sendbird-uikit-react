@@ -234,6 +234,18 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
             setTypingChannels(channelList)
           }
         },
+        onUnreadMemberStatusUpdated(channel) {
+          channelListDispatcher({
+            type: channelListActions.ON_LAST_MESSAGE_UPDATED,
+            payload: channel,
+          });
+        },
+        onUndeliveredMemberStatusUpdated(channel) {
+          channelListDispatcher({
+            type: channelListActions.ON_LAST_MESSAGE_UPDATED,
+            payload: channel,
+          });
+        },
       });
       sdk?.groupChannel?.addGroupChannelHandler(handlerId, handler)
       setTypingHandlerId(handlerId)
