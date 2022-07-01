@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import * as utils from '../utils';
 import * as messageActionTypes from '../dux/actionTypes';
 import { PREV_RESULT_SIZE, NEXT_RESULT_SIZE } from '../const';
+import { ReplyType } from '@sendbird/chat/message';
 
 function useInitialMessagesFetch({
   currentGroupChannel,
@@ -32,7 +33,7 @@ function useInitialMessagesFetch({
       if (replyType && replyType === 'QUOTE_REPLY') {
         messageListParams.includeThreadInfo = true;
         messageListParams.includeParentMessageInfo = true;
-        messageListParams.replyType = 'all';
+        messageListParams.replyType = ReplyType.ONLY_REPLY_TO_CHANNEL;
       }
       if (userFilledMessageListQuery) {
         Object.keys(userFilledMessageListQuery).forEach((key) => {

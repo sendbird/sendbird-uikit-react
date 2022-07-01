@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 
 import * as messageActionTypes from '../dux/actionTypes';
 import { PREV_RESULT_SIZE } from '../const';
+import { ReplyType } from '@sendbird/chat/message';
 
 function useScrollCallback({
   currentGroupChannel,
@@ -27,7 +28,7 @@ function useScrollCallback({
     if (replyType && replyType === 'QUOTE_REPLY') {
       messageListParams.includeThreadInfo = true;
       messageListParams.includeParentMessageInfo = true;
-      messageListParams.replyType = 'all';
+      messageListParams.replyType = ReplyType.ONLY_REPLY_TO_CHANNEL;
     }
     if (userFilledMessageListQuery) {
       Object.keys(userFilledMessageListQuery).forEach((key) => {
