@@ -44,8 +44,10 @@ export const isSameGroup = (
   if (!(
     message
     && comparingMessage
-    && message?.messageType !== 'admin'
-    && comparingMessage?.messageType !== 'admin'
+    && message?.messageType
+    && message.messageType !== 'admin'
+    && comparingMessage?.messageType
+    && comparingMessage.messageType !== 'admin'
     && (message as UserMessage | FileMessage)?.sender
     && (comparingMessage as UserMessage | FileMessage)?.sender
     && message?.createdAt

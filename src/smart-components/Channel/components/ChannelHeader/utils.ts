@@ -10,7 +10,7 @@ export const getChannelTitle = (
   if (!channel?.name && !channel?.members) {
     return LABEL_STRING_SET.NO_TITLE;
   }
-  if (channel?.name !== 'Group Channel') {
+  if (channel.name && channel.name !== 'Group Channel') {
     return channel.name;
   }
 

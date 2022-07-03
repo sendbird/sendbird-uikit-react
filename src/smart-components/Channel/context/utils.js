@@ -190,7 +190,9 @@ export const getMessageCreatedAt = (message) => format(message.createdAt, 'p');
 export const isSameGroup = (message, comparingMessage, currentChannel) => {
   if (!(message
     && comparingMessage
-    && message?.messageType !== 'admin'
+    && message.messageType
+    && message.messageType !== 'admin'
+    && comparingMessage.messageType
     && comparingMessage?.messageType !== 'admin'
     && message?.sender
     && comparingMessage?.sender

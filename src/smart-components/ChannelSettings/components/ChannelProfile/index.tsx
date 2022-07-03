@@ -28,7 +28,7 @@ const ChannelProfile: React.FC = () => {
   const { channel } = channelSettingStore;
 
   const getChannelName = () => {
-    if (channel?.name && channel?.name !== 'Group Channel') {
+    if (channel.name && channel?.name !== 'Group Channel') {
       return channel.name;
     }
     if (channel?.name === 'Group Channel' || !channel?.name) {
