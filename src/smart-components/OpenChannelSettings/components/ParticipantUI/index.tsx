@@ -8,7 +8,6 @@ import type { User } from '@sendbird/chat';
 import type { ParticipantListQuery } from '@sendbird/chat/openChannel';
 
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
-import Icon, { IconTypes } from '../../../../ui/Icon';
 
 import { UserListItem } from './ParticipantItem';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
@@ -18,7 +17,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 export default function ParticipantsList(): ReactElement {
   const globalState = useSendbirdStateContext();
   const currentUser = globalState?.config?.userId;
-  const { channel, onCloseClick } = useOpenChannelSettings();
+  const { channel } = useOpenChannelSettings();
   const { stringSet } = useContext(LocalizationContext);
   const [participants, setParticipants] = useState<Array<User>|null>([]);
   const [participantListQuery, setParticipantListQuery] = useState<ParticipantListQuery | null>(null);
