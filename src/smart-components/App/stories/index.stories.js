@@ -81,6 +81,8 @@ export const login = () => {
   const [profileEdit, setProfileEdit] = useState(true);
   const [useReply, setUseReply] = useState(true);
   const [useMention, setUseMention] = useState(true);
+  const [isTypingOnChannelListEnabled, setIsTypingOnChannelListEnabled] = useState(true);
+  const [isMessageStatusOnChannelListEnabled, setIsMessageStatusOnChannelListEnabled] = useState(true);
   return isLoginPage
     ? fitPageSize(
       <div
@@ -160,6 +162,26 @@ export const login = () => {
           onClick={() => setUseMention(!useMention)}
         />
         <input
+          className="input__toggle-typing-indicator-on-channel-list"
+          type="button"
+          value={
+            isTypingOnChannelListEnabled
+              ? 'Use typing indicator on ChannelList'
+              : 'Not use typing indicator on ChannelList'
+          }
+          onClick={() => setIsTypingOnChannelListEnabled(!isTypingOnChannelListEnabled)}
+        />
+        <input
+          className="input__toggle-message-status-on-channel-list"
+          type="button"
+          value={
+            isMessageStatusOnChannelListEnabled
+              ? 'Use message status on ChannelList'
+              : 'Not use message status on ChannelList'
+          }
+          onClick={() => setIsMessageStatusOnChannelListEnabled(!isMessageStatusOnChannelListEnabled)}
+        />
+        <input
           className="login-submit"
           type="submit"
           value="Submit"
@@ -176,7 +198,10 @@ export const login = () => {
         isMentionEnabled={useMention}
         showSearchIcon={messageSearch}
         allowProfileEdit={profileEdit}
+        config={{ logLevel: 'all' }}
         replyType={useReply ? 'QUOTE_REPLY' : 'NONE'}
+        isTypingIndicatorEnabledOnChannelList
+        isMessageReceiptStatusEnabledOnChannelList
       />
     )
 };
@@ -252,7 +277,6 @@ export const user2 = () => fitPageSize(
     profileUrl={addProfile}
     config={{ logLevel: 'all' }}
     replyType="QUOTE_REPLY"
-    useMessageGrouping={true}
     disableAutoSelect
     imageCompression={{
       compressionRate: 0.5,
@@ -292,6 +316,9 @@ export const user4 = () => fitPageSize(
     profileUrl={addProfile}
     config={{ logLevel: 'all' }}
     replyType="QUOTE_REPLY"
+    isMentionEnabled
+    isTypingIndicatorEnabledOnChannelList
+    isMessageReceiptStatusEnabledOnChannelList
   />
 );
 
