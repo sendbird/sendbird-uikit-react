@@ -89,7 +89,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
 
   /* Fetch member list */
   useEffect(() => {
-    if (!currentGroupChannel || !currentGroupChannel.createMemberListQuery) {
+    if (!currentGroupChannel?.createMemberListQuery) {
       logger.warning('SuggestedMentionList: Creating member list query failed');
       return;
     }
@@ -98,8 +98,8 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
       return;
     }
 
-    const query = currentGroupChannel.createMemberListQuery({
-      limit: maxSuggestionCount,
+    const query = currentGroupChannel?.createMemberListQuery({
+      limit: maxSuggestionCount + 1,  // because current user could be included
       nicknameStartsWithFilter: searchString.slice(USER_MENTION_TEMP_CHAR.length),
     });
     // Add member list query for customization
@@ -112,8 +112,11 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
           setCurrentUser(memberList[0]);
         }
         setLastSearchString(searchString);
-        onFetchUsers(memberList);
-        setCurrentMemberList(memberList.filter((member) => currentUserId !== member?.userId));
+        const suggestingMembers = memberList
+          .filter((member) => currentUserId !== member?.userId)
+          .slice(0, maxSuggestionCount);
+        onFetchUsers(suggestingMembers);
+        setCurrentMemberList(suggestingMembers);
       })
       .catch((error) => {
         if (error) {

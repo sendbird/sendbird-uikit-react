@@ -1,0 +1,165 @@
+@import '../../../../styles/variables';
+
+.sendbird-openchannel-settings {
+  height: 100%;
+  width: 320px;
+  display: inline-block;
+  overflow-y: scroll;
+  position: relative;
+  @include themed() {
+    background-color: t(bg-0);
+    border-left: 1px solid t(on-bg-4);
+  }
+
+  .sendbird-participants-accordion__footer {
+    text-align: left;
+    padding-top: 16px;
+    padding-left: 16px;
+  }
+
+  .sendbird-openchannel-settings__operator-accordion-icon {
+    position: absolute;
+    left: 14px;
+  }
+
+  .sendbird-openchannel-settings__accordion-icon,
+  .sendbird-openchannel-settings__panel-icon__delete {
+    position: absolute;
+    left: 16px;
+  }
+
+  .sendbird-openchannel-settings__participant {
+    height: 100%;
+    .sendbird-openchannel-settings__participants-list {
+      padding-top: 64px;
+      height: calc(100% - 64px);
+      overflow-y: scroll;
+    }
+    .sendbird-openchannel-settings__header {
+      display: block;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      @include themed() {
+        background-color: t(bg-0);
+      }
+    }
+  }
+
+  .sendbird-participants-accordion,
+  .sendbird-openchannel-settings__delete-channel {
+    text-align: left;
+  }
+
+  .sendbird-openchannel-settings__members {
+    .sendbird-badge__text {
+      margin-top: -2px;
+    }
+  }
+
+  .sendbird-openchannel-settings__header {
+    height: 64px;
+    min-height: 64px;
+    position: relative;
+    padding: 20px 24px;
+    box-sizing: border-box;
+    text-align: left;
+    @include themed() {
+      border-bottom: solid 1px t(on-bg-4);
+    }
+  }
+
+  .sendbird-openchannel-settings__close-icon {
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    right: 16px;
+    path {
+      @include themed() {
+        fill: t(on-bg-1);
+      }
+    }
+  }
+
+  .sendbird-openchannel-settings__placeholder {
+    margin-top: 40%;
+  }
+
+  .sendbird-openchannel-settings__url {
+    padding: 16px;
+    box-sizing: border-box;
+    position: relative;
+
+    &:hover {
+      .sendbird-openchannel-settings__copy-icon {
+        display: inline-block;
+      }
+    }
+
+    .sendbird-openchannel-settings__copy-icon {
+      cursor: pointer;
+      position: absolute;
+      display: none;
+      top: 10px;
+      right: 18px;
+    }
+
+    .sendbird-openchannel-settings__url-value {
+      margin-top: 8px;
+    }
+    .sendbird-openchannel-settings__url-value,
+    .sendbird-openchannel-settings__url-label {
+      text-align: left;
+      display: block;
+      word-wrap: break-word;
+    }
+  }
+
+  .sendbird-openchannel-settings__url {
+    @include themed() {
+      background-color: t(bg-0);
+      border-bottom: 1px solid t(on-bg-4);
+    }
+  }
+
+  .sendbird-openchannel-settings__panel-item {
+    display: block;
+    cursor: pointer;
+    box-sizing: border-box;
+    position: relative;
+    padding: 12px 22px 10px 56px;
+    @include themed() {
+      background-color: t(bg-0);
+      border-bottom: 1px solid t(on-bg-4);
+    }
+    &:focus {
+      outline: none;
+    }
+    &.sendbird-channel-settings__panel-item__disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  .sendbird-participants-accordion__member {
+    position: relative;
+    padding: 12px 0px 12px 56px;
+    height: 40px;
+    box-sizing: border-box;
+    text-align: left;
+
+    .sendbird-label {
+      max-width: 240px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .sendbird-participants-accordion__member-avatar {
+    position: absolute;
+    left: 16px;
+    top: 10px;
+    cursor: pointer;
+  }
+}

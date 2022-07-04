@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { ReplyType } from '@sendbird/chat/message';
 
 import * as messageActionTypes from '../dux/actionTypes';
 import { NEXT_RESULT_SIZE } from '../const';
@@ -21,12 +22,12 @@ function useScrollDownCallback({
     const messageListParams = {
       nextResultSize: NEXT_RESULT_SIZE,
       isInclusive: true,
-      includeReaction: useReaction,
+      includeReactions: useReaction,
     };
     if (replyType && replyType === 'QUOTE_REPLY') {
       messageListParams.includeThreadInfo = true;
       messageListParams.includeParentMessageInfo = true;
-      messageListParams.replyType = 'only_reply_to_channel';
+      messageListParams.replyType = ReplyType.ONLY_REPLY_TO_CHANNEL;
     }
     if (userFilledMessageListQuery) {
       Object.keys(userFilledMessageListQuery).forEach((key) => {

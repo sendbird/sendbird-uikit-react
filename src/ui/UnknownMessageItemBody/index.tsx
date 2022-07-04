@@ -2,13 +2,14 @@ import React, { ReactElement, useContext } from 'react';
 import './index.scss';
 
 import Label, { LabelTypography, LabelColors } from '../Label';
-import { CoreMessageType, getClassName } from '../../utils';
+import { getClassName } from '../../utils';
 import { LocalizationContext } from '../../lib/LocalizationContext';
+import { BaseMessage } from '@sendbird/chat/message';
 
 interface Props {
   className?: string | Array<string>;
   isByMe?: boolean;
-  message: CoreMessageType;
+  message: BaseMessage;
   mouseHover?: boolean;
 }
 

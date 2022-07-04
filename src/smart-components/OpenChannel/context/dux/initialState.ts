@@ -1,9 +1,9 @@
 import type { User } from '@sendbird/chat';
+import { AdminMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
-import { EveryMessage } from '../../../../index';
 
 export interface State {
-  allMessages: Array<EveryMessage>;
+  allMessages: Array<AdminMessage | UserMessage | FileMessage>;
   loading: boolean;
   initialized: boolean;
   currentOpenChannel: OpenChannel;

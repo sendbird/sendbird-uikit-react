@@ -1,12 +1,11 @@
 import type { User } from '@sendbird/chat';
-import type { UserMessage } from '@sendbird/chat/message';
+import type { AdminMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
 import type { OpenChannel, ParticipantListQuery } from '@sendbird/chat/openChannel';
 import format from 'date-fns/format';
 
 import { Logger } from '../../../lib/SendbirdState';
-import { EveryMessage } from '../../../types';
 
-export const getMessageCreatedAt = (message: EveryMessage): string => format(message.createdAt, 'p');
+export const getMessageCreatedAt = (message: UserMessage | FileMessage): string => format(message.createdAt, 'p');
 
 export const shouldFetchMore = (messageLength: number, maxMessages: number): boolean => {
   if (typeof maxMessages !== 'number') {
@@ -39,43 +38,41 @@ export const scrollIntoLast = (intialTry = 0): void => {
 };
 
 export const isSameGroup = (
-  message: EveryMessage,
-  comparingMessage: EveryMessage,
+  message: AdminMessage | UserMessage | FileMessage,
+  comparingMessage: AdminMessage | UserMessage | FileMessage,
 ): boolean => {
   if (!(
     message
     && comparingMessage
-    && message?.messageType !== 'admin'
-    && comparingMessage?.messageType !== 'admin'
-    // @ts-ignore
-    && message?.sender
-    // @ts-ignore
-    && comparingMessage?.sender
+    && message?.messageType
+    && message.messageType !== 'admin'
+    && comparingMessage?.messageType
+    && comparingMessage.messageType !== 'admin'
+    && (message as UserMessage | FileMessage)?.sender
+    && (comparingMessage as UserMessage | FileMessage)?.sender
     && message?.createdAt
     && comparingMessage?.createdAt
-    // @ts-ignore
-    && message?.sender?.userId
-    // @ts-ignore
-    && comparingMessage?.sender?.userId
-    // @ts-ignore
+    && (message as UserMessage | FileMessage)?.sender?.userId
+    && (comparingMessage as UserMessage | FileMessage)?.sender?.userId
   )) {
     return false
   }
-
   // to fix typecasting
   const message_ = message as UserMessage;
-  const comparingMessage_ = message as UserMessage;
+  const comparingMessage_ = comparingMessage as UserMessage;
   return (
     message_?.sendingStatus === comparingMessage_?.sendingStatus
     && message_?.sender?.userId === comparingMessage_?.sender?.userId
-    && getMessageCreatedAt(message) === getMessageCreatedAt(comparingMessage)
+    && (
+      getMessageCreatedAt(message as UserMessage | FileMessage) === getMessageCreatedAt(comparingMessage as UserMessage | FileMessage)
+    )
   );
 };
 
 export const compareMessagesForGrouping = (
-  prevMessage: EveryMessage,
-  currMessage: EveryMessage,
-  nextMessage: EveryMessage,
+  prevMessage: AdminMessage | UserMessage | FileMessage,
+  currMessage: AdminMessage | UserMessage | FileMessage,
+  nextMessage: AdminMessage | UserMessage | FileMessage,
 ): [boolean, boolean] => (
   [
     isSameGroup(prevMessage, currMessage),
@@ -96,7 +93,7 @@ export const kFormatter = (num: number): string => {
 };
 
 export const isOperator = (openChannel: OpenChannel, userId: string): boolean => {
-  const { operators } = openChannel;
+  const operators = openChannel?.operators;
   if (operators.map(operator => operator.userId).indexOf(userId) < 0) {
     return false;
   }
@@ -104,7 +101,7 @@ export const isOperator = (openChannel: OpenChannel, userId: string): boolean =>
 };
 
 export const isDisabledBecauseFrozen = (openChannel: OpenChannel, userId: string): boolean => {
-  const { isFrozen } = openChannel;
+  const isFrozen = openChannel?.isFrozen;
   return isFrozen && !isOperator(openChannel, userId);
 };
 

@@ -109,7 +109,7 @@ const ChannelSettingsUI: React.FC<ChannelSettingsUIProps> = (props: ChannelSetti
         }
         {
           renderModerationPanel?.() || (
-            channel.myRole === 'operator'
+            channel?.myRole === 'operator'
               ? (<AdminPanel />)
               : (<UserPanel />)
           )

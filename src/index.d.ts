@@ -33,7 +33,7 @@ import type {
 } from '@sendbird/chat/groupChannel';
 
 import type { Locale } from 'date-fns';
-import { OpenChannel, OpenChannelCreateParams } from '@sendbird/chat/openChannel';
+import { OpenChannel, OpenChannelCreateParams, OpenChannelUpdateParams } from '@sendbird/chat/openChannel';
 
 type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
 
@@ -151,7 +151,7 @@ interface SendBirdStateStore {
 }
 
 export interface MessageSearchQueryType extends MessageSearchQuery {
-  key: string;
+  key?: string;
 }
 
 export type SendBirdState = {
@@ -181,7 +181,7 @@ type GetUpdateUserInfo = (
 ) => Promise<User>;
 type GetSendUserMessage = (
   channelUrl: string,
-  userMessageParams: UserMessageCreateParams
+  userMessageParams: UserMessageCreateParams,
 ) => Promise<UserMessage>;
 type GetSendFileMessage = (
   channelUrl: string,
@@ -939,7 +939,7 @@ interface OpenChannelSettingsContextProps {
   channelUrl: string;
   children?: React.ReactNode;
   onCloseClick?(): void;
-  onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): OpenChannelCreateParams;
+  onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): OpenChannelUpdateParams;
   onChannelModified?(channel: OpenChannel): void;
   onDeleteChannel?(channel: OpenChannel): void;
   disableUserProfile?: boolean;

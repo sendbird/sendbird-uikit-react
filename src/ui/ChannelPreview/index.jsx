@@ -24,7 +24,8 @@ export default function ChannelPreview({
   const {
     userId,
   } = currentUser;
-  const { isBroadcast, isFrozen } = channel;
+  const isFrozen = channel?.isFrozen;
+  const isBroadcast = channel?.isBroadcast;
   const { dateLocale, stringSet } = useLocalization();
   return (
     <div

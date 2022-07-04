@@ -28,7 +28,7 @@ const LeaveChannel: React.FC<LeaveChannelProps> = (props: LeaveChannelProps) => 
         onCancel={onCancel}
         onSubmit={() => {
           logger.info('ChannelSettings: Leaving channel', channel);
-          channel.leave()
+          channel?.leave()
             .then(() => {
               logger.info('ChannelSettings: Leaving channel successful!', channel);
               onSubmit();

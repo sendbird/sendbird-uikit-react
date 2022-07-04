@@ -170,7 +170,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
                     }
                     channelListDispatcher({
                       type: channelListActions.LEAVE_CHANNEL_SUCCESS,
-                      payload: channel.url,
+                      payload: channel?.url,
                     });
                   })
                   .catch((err) => {
@@ -194,18 +194,18 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
                 (renderChannelPreview)
                   ? (
                     // eslint-disable-next-line
-                    <div key={channel.url} onClick={onClick}>
+                    <div key={channel?.url} onClick={onClick}>
                       {renderChannelPreview({ channel, onLeaveChannel })}
                     </div>
                   )
                   : (
                     <ChannelPreview
-                      key={channel.url}
+                      key={channel?.url}
                       tabIndex={idx}
                       onClick={onClick}
                       channel={channel}
-                      isActive={channel.url === currentChannel?.url}
-                      isTyping={typingChannels?.some(({ url }) => url === channel.url)}
+                      isActive={channel?.url === currentChannel?.url}
+                      isTyping={typingChannels?.some(({ url }) => url === channel?.url)}
                       renderChannelAction={(() => (
                         <ChannelPreviewAction
                           disabled={!isOnline}

@@ -66,7 +66,7 @@ function useUpdateMessageCallback({
         },
       );
     });
-  }, [currentGroupChannel.url, messagesDispatcher, onBeforeUpdateUserMessage]);
+  }, [currentGroupChannel?.url, messagesDispatcher, onBeforeUpdateUserMessage]);
 }
 
 export default useUpdateMessageCallback;

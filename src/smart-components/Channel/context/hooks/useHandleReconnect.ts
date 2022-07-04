@@ -63,7 +63,7 @@ function useHandleReconnect(
           payload: null,
         });
 
-        sdk.groupChannel.getChannel(currentGroupChannel.url)
+        sdk?.groupChannel?.getChannel(currentGroupChannel?.url)
           .then((groupChannel) => {
             const lastMessageTime = new Date().getTime();
 
@@ -89,7 +89,7 @@ function useHandleReconnect(
                 });
               })
               .finally(() => {
-                currentGroupChannel.markAsRead?.();
+                currentGroupChannel?.markAsRead?.();
               });
           });
       }

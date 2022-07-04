@@ -45,11 +45,12 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
   const userId = sbState?.stores?.userStore?.user?.userId;
   const theme = sbState?.config?.theme;
   const isMentionEnabled = sbState?.config?.isMentionEnabled;
-  const { isBroadcast, isFrozen } = channel;
+  const isFrozen = channel?.isFrozen || false;
+  const isBroadcast = channel?.isBroadcast || false;
   const isChannelTyping = isTypingIndicatorEnabled && isTyping;
   const isMessageStatusEnabled = isMessageReceiptStatusEnabled
     && (channel?.lastMessage?.messageType === 'user' || channel?.lastMessage?.messageType === 'file')
-    && channel?.lastMessage?.sender?.userId === userId;
+    && (channel?.lastMessage as UserMessage | FileMessage)?.sender?.userId === userId;
   return (
     <div
       className={[
@@ -147,7 +148,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
             }
             {
               !isChannelTyping && (
-                utils.getLastMessage(channel) + (isEditedMessage(channel?.lastMessage as SendBird.UserMessage) ? ` ${stringSet.MESSAGE_EDITED}` : '')
+                utils.getLastMessage(channel) + (isEditedMessage(channel?.lastMessage as UserMessage | FileMessage) ? ` ${stringSet.MESSAGE_EDITED}` : '')
               )
             }
           </Label>

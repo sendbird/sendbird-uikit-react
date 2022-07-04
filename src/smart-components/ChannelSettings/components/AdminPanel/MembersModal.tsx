@@ -27,7 +27,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
   const currentUser = state?.config?.userId;
 
   useEffect(() => {
-    const memberListQuery = channel.createMemberListQuery({
+    const memberListQuery = channel?.createMemberListQuery({
       limit: 20,
     });
     memberListQuery.next().then((members) => {
@@ -69,7 +69,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
               currentUser={currentUser}
               action={({ parentRef, actionRef }) => (
                 <>
-                  {channel.myRole === 'operator' && (
+                  {channel?.myRole === 'operator' && (
                     <ContextMenu
                       menuTrigger={(toggleDropdown) => (
                         <IconButton
@@ -96,7 +96,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                           <MenuItem
                             onClick={() => {
                               if ((member.role !== 'operator')) {
-                                channel.addOperators([member.userId]).then(() => {
+                                channel?.addOperators([member.userId]).then(() => {
                                   setMembers(members.map(m => {
                                     if(m.userId === member.userId) {
                                       return {
@@ -109,7 +109,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                   closeDropdown();
                                 });
                               } else {
-                                channel.removeOperators([member.userId]).then(() => {
+                                channel?.removeOperators([member.userId]).then(() => {
                                   setMembers(members.map(m => {
                                     if(m.userId === member.userId) {
                                       return {
@@ -128,11 +128,11 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                           </MenuItem>
                           {
                             // No muted members in broadcast channel
-                            !channel.isBroadcast && (
+                            !channel?.isBroadcast && (
                               <MenuItem
                                 onClick={() => {
                                   if (member.isMuted) {
-                                    channel.unmuteUser(member).then(() => {
+                                    channel?.unmuteUser(member).then(() => {
                                       setMembers(members.map(m => {
                                         if(m.userId === member.userId) {
                                           return {
@@ -145,7 +145,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                       closeDropdown();
                                     })
                                   } else {
-                                    channel.muteUser(member).then(() => {
+                                    channel?.muteUser(member).then(() => {
                                       setMembers(members.map(m => {
                                         if(m.userId === member.userId) {
                                           return {
@@ -166,7 +166,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                           }
                           <MenuItem
                             onClick={() => {
-                              channel.banUser(member, -1, '').then(() => {
+                              channel?.banUser(member, -1, '').then(() => {
                                 setMembers(members.filter(({ userId }) => {
                                   return userId !== member.userId;
                                 }));

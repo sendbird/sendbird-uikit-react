@@ -205,14 +205,12 @@
     width: 100%;
     box-sizing: border-box;
   }
-  .sendbird-message-content-reactions {
-    width: 100%;
-  }
 }
 
 .sendbird-message-content-reactions {
   position: relative;
   width: 100%;
+  max-width: 400px;
   border-radius: 0px 0px 16px 16px;
   @include themed() { background-color: t(bg-1) }
   &.primary {

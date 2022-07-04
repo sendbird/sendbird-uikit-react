@@ -1,12 +1,12 @@
 import React, { ReactElement } from 'react';
-import { ClientAdminMessage } from '../../index';
+import { AdminMessage } from '@sendbird/chat/message';
 import './index.scss';
 
 import Label, { LabelColors, LabelTypography } from '../Label';
 
 interface Props {
   className?: string | Array<string>;
-  message: ClientAdminMessage;
+  message: AdminMessage;
 }
 
 export default function OpenChannelAdminMessage({

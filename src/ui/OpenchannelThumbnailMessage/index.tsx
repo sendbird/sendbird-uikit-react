@@ -5,10 +5,10 @@ import React, {
   useEffect,
   useContext,
 } from 'react';
+import { FileMessage } from '@sendbird/chat/message';
 import format from 'date-fns/format';
 import './index.scss';
 import { SUPPORTING_TYPES, getSupportingFileType } from './utils';
-import { ClientFileMessage } from '../../index';
 import { useLocalization } from '../../lib/LocalizationContext';
 
 import Avatar from '../Avatar';
@@ -31,16 +31,19 @@ import {
 } from '../../utils/openChannelUtils';
 import { getSenderFromMessage } from '../../utils/openChannelUtils';
 
+interface LocalUrl {
+  localUrl?: string;
+}
 interface Props {
   className?: string | Array<string>;
-  message: ClientFileMessage;
+  message: FileMessage;
   disabled: boolean;
   userId: string;
   chainTop: boolean;
   chainBottom: boolean;
   onClick(bool: boolean): void,
   showRemove(bool: boolean): void,
-  resendMessage(message: ClientFileMessage): void;
+  resendMessage(message: FileMessage): void;
 }
 
 export default function OpenchannelThumbnailMessage({
@@ -56,9 +59,9 @@ export default function OpenchannelThumbnailMessage({
   const {
     type,
     url,
-    localUrl,
     thumbnails,
-  } = message;
+    localUrl,
+  }: FileMessage & LocalUrl = message;
   const status = message?.sendingStatus;
   const thumbnailUrl = (thumbnails && thumbnails.length > 0 && thumbnails[0].url) || null;
   const { stringSet, dateLocale } = useLocalization();

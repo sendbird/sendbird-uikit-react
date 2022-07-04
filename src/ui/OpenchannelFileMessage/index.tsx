@@ -1,4 +1,5 @@
 import React, { useContext, useRef } from 'react';
+import { FileMessage } from '@sendbird/chat/message';
 import format from 'date-fns/format';
 import './index.scss';
 
@@ -14,7 +15,6 @@ import { UserProfileContext } from '../../lib/UserProfileContext';
 
 import { useLocalization } from '../../lib/LocalizationContext';
 import { checkFileType, truncate } from './utils';
-import { ClientFileMessage } from '../../index';
 import {
   checkIsByMe,
   checkIsPending,
@@ -27,13 +27,13 @@ import { getSenderFromMessage } from '../../utils/openChannelUtils';
 
 interface Props {
   className?: string | Array<string>;
-  message: ClientFileMessage;
+  message: FileMessage;
   userId: string;
   disabled?: boolean;
   chainTop?: boolean;
   chainBottom?: boolean;
   showRemove(bool: boolean): void;
-  resendMessage(message: ClientFileMessage): void;
+  resendMessage(message: FileMessage): void;
 }
 
 export default function OpenchannelFileMessage({

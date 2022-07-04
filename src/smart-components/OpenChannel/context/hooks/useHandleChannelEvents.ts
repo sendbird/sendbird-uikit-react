@@ -1,5 +1,6 @@
-import { OpenChannel, OpenChannelHandler, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import { useEffect } from 'react';
+import { ChannelType } from '@sendbird/chat';
+import { OpenChannel, OpenChannelHandler, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import * as messageActionTypes from '../dux/actionTypes';
 import uuidv4 from '../../../../utils/uuid';
 import { scrollIntoLast } from '../utils';
@@ -23,10 +24,10 @@ function useHandleChannelEvents(
     const messageReceiverId = uuidv4();
     if (currentOpenChannel && currentOpenChannel.url && sdk?.openChannel?.addOpenChannelHandler) {
       logger.info('OpenChannel | useHandleChannelEvents: Setup evnet handler', messageReceiverId);
-      const channelHandlerParams = {
+      const channelHandlerParams: OpenChannelHandler = {
         onMessageReceived: (channel, message) => {
           const scrollToEnd = checkScrollBottom();
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMessageReceived', { channelUrl, message });
           messagesDispatcher({
             type: messageActionTypes.ON_MESSAGE_RECEIVED,
@@ -43,7 +44,7 @@ function useHandleChannelEvents(
           }
         },
         onMessageUpdated: (channel, message) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMessageUpdated', { channelUrl, message });
           messagesDispatcher({
             type: messageActionTypes.ON_MESSAGE_UPDATED,
@@ -51,7 +52,7 @@ function useHandleChannelEvents(
           });
         },
         onMessageDeleted: (channel, messageId) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMessageDeleted', { channelUrl, messageId });
           messagesDispatcher({
             type: messageActionTypes.ON_MESSAGE_DELETED,
@@ -59,7 +60,7 @@ function useHandleChannelEvents(
           });
         },
         onOperatorUpdated: (channel, operators) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onOperatorUpdated', { channelUrl, operators });
           messagesDispatcher({
             type: messageActionTypes.ON_OPERATOR_UPDATED,
@@ -67,7 +68,7 @@ function useHandleChannelEvents(
           });
         },
         onUserEntered: (channel, user) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onUserEntered', { channelUrl, user });
           messagesDispatcher({
             type: messageActionTypes.ON_USER_ENTERED,
@@ -75,7 +76,7 @@ function useHandleChannelEvents(
           });
         },
         onUserExited: (channel, user) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onUserExited', { channelUrl, user });
           messagesDispatcher({
             type: messageActionTypes.ON_USER_EXITED,
@@ -83,7 +84,7 @@ function useHandleChannelEvents(
           });
         },
         onUserMuted: (channel, user) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onUserMuted', { channelUrl, user });
           messagesDispatcher({
             type: messageActionTypes.ON_USER_MUTED,
@@ -91,7 +92,7 @@ function useHandleChannelEvents(
           });
         },
         onUserUnmuted: (channel, user) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onUserUnmuted', { channelUrl, user });
           messagesDispatcher({
             type: messageActionTypes.ON_USER_UNMUTED,
@@ -99,15 +100,15 @@ function useHandleChannelEvents(
           });
         },
         onUserBanned: (channel, user) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onUserBanned', { channelUrl, user });
           messagesDispatcher({
             type: messageActionTypes.ON_USER_BANNED,
-            payload: { channel, user },
+            payload: { channel, user, currentUser: sdk?.currentUser },
           });
         },
         onUserUnbanned: (channel, user) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onUserUnbanned', { channelUrl, user });
           messagesDispatcher({
             type: messageActionTypes.ON_USER_UNBANNED,
@@ -136,7 +137,7 @@ function useHandleChannelEvents(
           });
         },
         onMetaDataCreated: (channel, metaData) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMetaDataCreated', { channelUrl, metaData });
           messagesDispatcher({
             type: messageActionTypes.ON_META_DATA_CREATED,
@@ -144,7 +145,7 @@ function useHandleChannelEvents(
           });
         },
         onMetaDataUpdated: (channel, metaData) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMetaDataUpdated', { channelUrl, metaData });
           messagesDispatcher({
             type: messageActionTypes.ON_META_DATA_UPDATED,
@@ -152,31 +153,31 @@ function useHandleChannelEvents(
           });
         },
         onMetaDataDeleted: (channel, metaDataKeys) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMetaDataDeleted', { channelUrl, metaDataKeys });
           messagesDispatcher({
             type: messageActionTypes.ON_META_DATA_DELETED,
             payload: { channel, metaDataKeys },
           });
         },
-        onMetaCountersCreated: (channel, metaCounter) => {
-          const channelUrl = channel.url;
+        onMetaCounterCreated: (channel, metaCounter) => {
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMetaCountersCreated', { channelUrl, metaCounter });
           messagesDispatcher({
             type: messageActionTypes.ON_META_COUNTERS_CREATED,
             payload: { channel, metaCounter },
           });
         },
-        onMetaCountersUpdated: (channel, metaCounter) => {
-          const channelUrl = channel.url;
+        onMetaCounterUpdated: (channel, metaCounter) => {
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMetaCountersUpdated', { channelUrl, metaCounter });
           messagesDispatcher({
             type: messageActionTypes.ON_META_COUNTERS_UPDATED,
             payload: { channel, metaCounter },
           });
         },
-        onMetaCountersDeleted: (channel, metaCounterKeys) => {
-          const channelUrl = channel.url;
+        onMetaCounterDeleted: (channel, metaCounterKeys) => {
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMetaCountersDeleted', { channelUrl, metaCounterKeys });
           messagesDispatcher({
             type: messageActionTypes.ON_META_COUNTERS_DELETED,
@@ -184,18 +185,26 @@ function useHandleChannelEvents(
           });
         },
         onMentionReceived: (channel, message) => {
-          const channelUrl = channel.url;
+          const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMentionReceived', { channelUrl, message });
           messagesDispatcher({
             type: messageActionTypes.ON_MENTION_RECEIVED,
             payload: { channel, message },
           });
         },
+        onChannelDeleted: (channelUrl, channelType) => {
+          if (channelType === ChannelType.OPEN && currentOpenChannel?.url === channelUrl) {
+            messagesDispatcher({
+              type: messageActionTypes.ON_CHANNEL_DELETED,
+              payload: channelUrl,
+            });
+          }
+        },
       };
 
       const ChannelHandler = new OpenChannelHandler(channelHandlerParams);
 
-      sdk.openChannel.addOpenChannelHandler(messageReceiverId, ChannelHandler);
+      sdk?.openChannel?.addOpenChannelHandler(messageReceiverId, ChannelHandler);
     }
 
     return () => {

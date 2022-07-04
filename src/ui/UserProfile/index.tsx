@@ -1,6 +1,6 @@
 import './index.scss';
 import React, { ReactElement, useContext } from 'react';
-import type { GroupChannel, GroupChannelCreateParams, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import type { GroupChannel, GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
 import type { User } from '@sendbird/chat';
 
 import { LocalizationContext } from '../../lib/LocalizationContext';
@@ -17,7 +17,6 @@ interface Logger {
 interface Props {
   user: User;
   currentUserId?: string;
-  sdk?: SendbirdGroupChat;
   logger?: Logger;
   disableMessaging?: boolean;
   createChannel?(params: GroupChannelCreateParams): Promise<GroupChannel>;
@@ -27,7 +26,6 @@ interface Props {
 function UserProfile({
   user,
   currentUserId,
-  sdk,
   logger,
   disableMessaging = false,
   createChannel,

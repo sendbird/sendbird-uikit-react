@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { ReplyType } from '@sendbird/chat/message';
 
 import * as utils from '../utils';
 import * as messageActionTypes from '../dux/actionTypes';
@@ -13,7 +14,7 @@ function useInitialMessagesFetch({
   logger,
   messagesDispatcher,
 }) {
-  const channelUrl = currentGroupChannel && currentGroupChannel.url;
+  const channelUrl = currentGroupChannel?.url;
   useEffect(() => {
     logger.info('Channel useInitialMessagesFetch: Setup started', currentGroupChannel);
     messagesDispatcher({
@@ -21,18 +22,18 @@ function useInitialMessagesFetch({
       payload: null,
     });
 
-    if (currentGroupChannel && currentGroupChannel.getMessagesByTimestamp) {
+    if (currentGroupChannel && currentGroupChannel?.getMessagesByTimestamp) {
       const messageListParams = {};
       messageListParams.prevResultSize = PREV_RESULT_SIZE;
       if (initialTimeStamp) {
         messageListParams.nextResultSize = NEXT_RESULT_SIZE;
       }
       messageListParams.isInclusive = true;
-      messageListParams.includeReaction = true;
+      messageListParams.includeReactions = true;
       if (replyType && replyType === 'QUOTE_REPLY') {
         messageListParams.includeThreadInfo = true;
         messageListParams.includeParentMessageInfo = true;
-        messageListParams.replyType = 'only_reply_to_channel';
+        messageListParams.replyType = ReplyType.ONLY_REPLY_TO_CHANNEL;
       }
       if (userFilledMessageListQuery) {
         Object.keys(userFilledMessageListQuery).forEach((key) => {

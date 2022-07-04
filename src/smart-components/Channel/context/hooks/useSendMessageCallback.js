@@ -66,9 +66,7 @@ export default function useSendMessageCallback({
           setTimeout(() => utils.scrollIntoLast());
         })
         .onFailed((err, msg) => {
-          logger.warning('Channel: Sending message failed!', {
-            msg,
-          });
+          logger.warning('Channel: Sending message failed!', { message: msg, error: err });
           messagesDispatcher({
             type: messageActionTypes.SEND_MESSAGEGE_FAILURE,
             payload: msg,

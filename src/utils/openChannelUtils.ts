@@ -1,6 +1,5 @@
 import type { User } from '@sendbird/chat';
-import type { UserMessage } from '@sendbird/chat/message';
-import { ClientUserMessage, ClientFileMessage } from '../index';
+import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 const OpenChannelMessageStatusTypes = {
   NONE: 'none',
@@ -10,7 +9,7 @@ const OpenChannelMessageStatusTypes = {
   SUCCEEDED: 'succeeded'
 };
 
-export const getSenderFromMessage = (message: ClientUserMessage | ClientFileMessage): User => {
+export const getSenderFromMessage = (message: UserMessage | FileMessage): User => {
   // @ts-ignore
   return message.sender || message._sender;
 };
@@ -19,7 +18,7 @@ export const checkIsSent = (status: string): boolean => (status === OpenChannelM
 export const checkIsPending = (status: string): boolean => (status === OpenChannelMessageStatusTypes.PENDING);
 export const checkIsFailed = (status: string): boolean => (status === OpenChannelMessageStatusTypes.FAILED);
 
-export const checkIsByMe = (message: ClientFileMessage | ClientUserMessage, userId: string): boolean => (getSenderFromMessage(message).userId === userId);
+export const checkIsByMe = (message: UserMessage | FileMessage, userId: string): boolean => (getSenderFromMessage(message).userId === userId);
 
 interface isFineCopyParams {
   message: UserMessage;
@@ -31,7 +30,7 @@ export const isFineCopy = ({ message }: isFineCopyParams): boolean => {
 };
 
 interface isFineResendParams {
-  message: ClientFileMessage | ClientUserMessage;
+  message: UserMessage | FileMessage;
   status: string;
   userId: string;
 }
@@ -43,7 +42,7 @@ export const isFineResend = ({ message, status, userId }: isFineResendParams): b
 };
 
 interface isFineEditParams {
-  message: ClientUserMessage;
+  message: UserMessage | FileMessage;
   status: string;
   userId: string;
 }
@@ -52,7 +51,7 @@ export const isFineEdit = ({ message, status, userId }: isFineEditParams): boole
 };
 
 interface isFineDeleteParams {
-  message: ClientFileMessage | ClientUserMessage;
+  message: UserMessage | FileMessage;
   status: string;
   userId: string;
 }
@@ -61,7 +60,7 @@ export const isFineDelete = ({ message, userId }: isFineDeleteParams): boolean =
 };
 
 interface showMenuTriggerParams {
-  message: ClientUserMessage | ClientFileMessage;
+  message: UserMessage | FileMessage;
   status: string;
   userId: string;
 }
