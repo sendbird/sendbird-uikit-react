@@ -4,8 +4,12 @@ If you are using v2 and want to upgrade to v3, we have tried to keep the changes
 
 ## Common changes
 * Installation `npm i @sendbird/uikit-react`
-* There are no changes to SendbirdProvider, App, withSendbird, useSendbirdStateContext etc,
+* There are no changes to App, withSendbird, useSendbirdStateContext etc,
 * import path should start from `"@sendbird/uikit-react`!
+
+## SendbirdProvider
+### Changes
+  * `UserListQuery.next(callback: unknown): void;` changed to `next(): Promise<User[]>;`(chat v4 change)
 
 ## Sendbird Selectors
 We renamed `sendBirdSelectors` to `sendbirdSelectors`. And importing path has been changed.
@@ -258,7 +262,8 @@ getOpenChannel('channel-url')
 Can be imported as `import { ChannelList } from "@sendbird/uikit-react"`
 or `import ChannelList from "@sendbird/uikit-react/ChannelList"`
 
-### Changes - none
+### Changes
+  * queries.channelListQuery.MemberStateFilter -> queries.channelListQuery.MyMemberStateFilter
 ### Added props
   * renderPlaceHolderError?: (props: void) => React.ReactNode;
   * renderPlaceHolderLoading?: (props: void) => React.ReactNode;
@@ -316,6 +321,10 @@ or `import Channel from "@sendbird/uikit-react/Channel"`
   ```
   * Changed signature of renderChatHeader to `?: () => React.ReactNode`
     Similar to before, use `useChannel` to access current channel
+  * `queries.MessageListParams.messageType?: string;` -> queries.MessageListParams.messageTypeFilter?: [MessageTypeFilter](https://sendbird.com/docs/chat/v4/javascript/ref/enums/_sendbird_chat_message.MessageTypeFilter.html);
+  * `queries.MessageListParams.customType`| `queries.MessageListParams.customTypes` -> queries.MessageListParams.customTypesFilter?: string[];
+  * `queries.MessageListParams.senderUserIds` -> queries.MessageListParams.senderUserIdsFilter?: string[];
+
 ### Added props
   * renderPlaceholderLoader?: () => React.ReactNode;
   * renderPlaceholderInvalid?: () => React.ReactNode;
@@ -370,6 +379,10 @@ or `import OpenChannel from "@sendbird/uikit-react/OpenChannel"`
   * renderChannelTitle signature changed so that you will not recive channel from props, use `useOpenChannel` to access it
   * renderMessageInput signature changed same as in <Channel /> component,
   use `useOpenChannel` to access current channel and use `sendbirdSelectors` for message actions
+  * `queries.MessageListParams.messageType?: string;` -> queries.MessageListParams.messageTypeFilter?: [MessageTypeFilter](https://sendbird.com/docs/chat/v4/javascript/ref/enums/_sendbird_chat_message.MessageTypeFilter.html);
+  * `queries.MessageListParams.customType`| `queries.MessageListParams.customTypes` -> queries.MessageListParams.customTypesFilter?: string[];
+  * `queries.MessageListParams.senderUserIds` -> queries.MessageListParams.senderUserIdsFilter?: string[];
+
 ### Added props
   * renderMessage?: (props: RenderMessageProps) => React.ReactNode;
   * renderHeader?: () => React.ReactNode;
