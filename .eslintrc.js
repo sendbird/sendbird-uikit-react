@@ -20,7 +20,7 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  plugins: [ 'react', 'babel' ],
+  plugins: [ 'react', 'babel', 'eslint-plugin-babel' ],
   rules: {
     // uncomment 'linebreak-style' to build in windows - its not adviced to commit from windows
     // read more - https://community.perforce.com/s/article/3096
