@@ -92,7 +92,6 @@ module.exports = ({
       extensions: ['.tsx', '.ts', '.jsx', '.js'],
       exclude: 'node_modules/**',
       plugins: [
-        'eslint-plugin-babel',
         '@babel/plugin-proposal-export-default-from',
         '@babel/plugin-proposal-class-properties',
       ],

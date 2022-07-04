@@ -24,8 +24,7 @@
   ],
   "plugins": [
     "react",
-    "@typescript-eslint",
-    "eslint-plugin-babel"
+    "@typescript-eslint"
   ],
   "ignorePatterns": "['**/*.js', '**/*.jsx', 'node_modules']"
 }
