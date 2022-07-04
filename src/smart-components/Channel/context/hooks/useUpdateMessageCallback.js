@@ -45,7 +45,7 @@ function useUpdateMessageCallback({
       : createParamsDefault(message);
 
     logger.info('Channel: Updating message!', params);
-    currentGroupChannel?.updateUserMessage(messageId, params).then((msg, err) => {
+    currentGroupChannel.updateUserMessage(messageId, params).then((msg, err) => {
       if (callback) {
         callback(err, msg);
       }

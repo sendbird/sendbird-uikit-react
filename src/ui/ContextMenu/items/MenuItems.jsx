@@ -124,10 +124,10 @@ MenuItems.propTypes = {
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
   ]).isRequired,
-  parentContainRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
-  ]).isRequired,
+  // parentContainRef: PropTypes.oneOfType([
+  //   PropTypes.func,
+  //   PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+  // ]).isRequired,
   openLeft: PropTypes.bool,
 };
 MenuItems.defaultProps = {

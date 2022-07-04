@@ -36,7 +36,7 @@ function useScrollDownCallback({
     }
     logger.info('Channel: Fetching later messages', { currentGroupChannel, userFilledMessageListQuery });
 
-    currentGroupChannel?.getMessagesByTimestamp(
+    currentGroupChannel.getMessagesByTimestamp(
       latestMessageTimeStamp || new Date().getTime(),
       messageListParams,
     )

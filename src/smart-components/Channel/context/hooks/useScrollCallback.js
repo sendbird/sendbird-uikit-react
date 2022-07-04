@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
+import { ReplyType } from '@sendbird/chat/message';
 
 import * as messageActionTypes from '../dux/actionTypes';
 import { PREV_RESULT_SIZE } from '../const';
-import { ReplyType } from '@sendbird/chat/message';
 
 function useScrollCallback({
   currentGroupChannel,
@@ -37,7 +37,7 @@ function useScrollCallback({
     }
     logger.info('Channel: Fetching messages', { currentGroupChannel, userFilledMessageListQuery });
 
-    currentGroupChannel?.getMessagesByTimestamp(
+    currentGroupChannel.getMessagesByTimestamp(
       oldestMessageTimeStamp || new Date().getTime(),
       messageListParams,
     )

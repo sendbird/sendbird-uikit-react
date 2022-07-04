@@ -320,9 +320,9 @@ describe('Messages-Reducers', () => {
     test('messageType filter is ADMIN', () => {
       const appliedParamsState = reducers(mockData, {
         type: actionTypes.MESSAGE_LIST_PARAMS_CHANGED,
-        payload: { messageType: messageTypes.ADMIN },
+        payload: { messageTypeFilter: messageTypes.ADMIN },
       });
-      expect(appliedParamsState.messageListParams.messageType).toEqual(messageTypes.ADMIN);
+      expect(appliedParamsState.messageListParams.messageTypeFilter).toEqual(messageTypes.ADMIN);
       ['admin', 'user', 'file'].forEach((messageType) => {
         const receivedMessage = generateMockMessage(1010);
         receivedMessage.messageType = messageType;
@@ -344,9 +344,9 @@ describe('Messages-Reducers', () => {
     test('messageType filter is USER', () => {
       const appliedParamsState = reducers(mockData, {
         type: actionTypes.MESSAGE_LIST_PARAMS_CHANGED,
-        payload: { messageType: messageTypes.USER },
+        payload: { messageTypeFilter: messageTypes.USER },
       });
-      expect(appliedParamsState.messageListParams.messageType).toEqual(messageTypes.USER);
+      expect(appliedParamsState.messageListParams.messageTypeFilter).toEqual(messageTypes.USER);
       ['admin', 'user', 'file'].forEach((messageType) => {
         const receivedMessage = generateMockMessage(1010);
         receivedMessage.messageType = messageType;
@@ -368,9 +368,9 @@ describe('Messages-Reducers', () => {
     test('messageType filter is FILE', () => {
       const appliedParamsState = reducers(mockData, {
         type: actionTypes.MESSAGE_LIST_PARAMS_CHANGED,
-        payload: { messageType: messageTypes.FILE },
+        payload: { messageTypeFilter: messageTypes.FILE },
       });
-      expect(appliedParamsState.messageListParams.messageType).toEqual(messageTypes.FILE);
+      expect(appliedParamsState.messageListParams.messageTypeFilter).toEqual(messageTypes.FILE);
       ['admin', 'user', 'file'].forEach((messageType) => {
         const receivedMessage = generateMockMessage(1010);
         receivedMessage.messageType = messageType;
@@ -396,9 +396,9 @@ describe('Messages-Reducers', () => {
     const paramsCustomTypes = ['a', 'b', 'c'];
     const appliedParamsState = reducers(mockData, {
       type: actionTypes.MESSAGE_LIST_PARAMS_CHANGED,
-      payload: { customTypes: paramsCustomTypes },
+      payload: { customTypesFilter: paramsCustomTypes },
     });
-    expect(appliedParamsState.messageListParams.customTypes).toEqual(paramsCustomTypes);
+    expect(appliedParamsState.messageListParams.customTypesFilter).toEqual(paramsCustomTypes);
     ['a', 'd'].forEach((customType) => {
       const receivedMessage = generateMockMessage(1010);
       receivedMessage.customType = customType;
@@ -423,9 +423,9 @@ describe('Messages-Reducers', () => {
     const paramsSenderUserIds = ['mark-1', 'mark-2', 'mark-3'];
     const appliedParamsState = reducers(mockData, {
       type: actionTypes.MESSAGE_LIST_PARAMS_CHANGED,
-      payload: { senderUserIds: paramsSenderUserIds },
+      payload: { senderUserIdsFilter: paramsSenderUserIds },
     });
-    expect(appliedParamsState.messageListParams.senderUserIds).toEqual(paramsSenderUserIds);
+    expect(appliedParamsState.messageListParams.senderUserIdsFilter).toEqual(paramsSenderUserIds);
     ['mark-1', 'mark-4'].forEach((messageSenderId) => {
       const receivedMessage = generateMockMessage(1010);
       receivedMessage.sender = { userId: messageSenderId };
@@ -461,14 +461,14 @@ describe('Messages-Reducers', () => {
     const appliedParamsState = reducers(mockData, {
       type: actionTypes.MESSAGE_LIST_PARAMS_CHANGED,
       payload: {
-        messageType: 'user',
-        customTypes: ['apple', 'banana'],
-        senderUserIds: ['John', 'Mark'],
+        messageTypeFilter: 'user',
+        customTypesFilter: ['apple', 'banana'],
+        senderUserIdsFilter: ['John', 'Mark'],
       },
     });
-    expect(appliedParamsState.messageListParams.messageType).toEqual('user');
-    expect(appliedParamsState.messageListParams.customTypes).toEqual(['apple', 'banana']);
-    expect(appliedParamsState.messageListParams.senderUserIds).toEqual(['John', 'Mark']);
+    expect(appliedParamsState.messageListParams.messageTypeFilter).toEqual('user');
+    expect(appliedParamsState.messageListParams.customTypesFilter).toEqual(['apple', 'banana']);
+    expect(appliedParamsState.messageListParams.senderUserIdsFilter).toEqual(['John', 'Mark']);
 
     const updatedMessageState = reducers(appliedParamsState, {
       type: actionTypes.ON_MESSAGE_UPDATED,
