@@ -213,11 +213,11 @@ function setupChannelList({
       if (canSetMarkAsDelivered) {
         logger.info('ChannelList: Marking all channels as read');
         // eslint-disable-next-line no-unused-expressions
-        channelList?.forEach((c, idx) => {
+        channelList.forEach((c, idx) => {
           // Plan-based rate limits - minimum limit is 5 requests per second
           setTimeout(() => {
             // eslint-disable-next-line no-unused-expressions
-            c?.markAsDelivered();
+            c.markAsDelivered();
           }, 300 * idx);
         });
       }

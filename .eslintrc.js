@@ -20,7 +20,7 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  plugins: [ 'react', 'babel' ],
+  plugins: [ 'react', 'babel', '@typescript-eslint' ],
   rules: {
     // uncomment 'linebreak-style' to build in windows - its not adviced to commit from windows
     // read more - https://community.perforce.com/s/article/3096
@@ -35,7 +35,9 @@ module.exports = {
         "tsx": "never",
       },
     ],
-    "react/forbid-prop-types": 0
+    "react/forbid-prop-types": 0,
+    "no-unused-expressions": "off",
+    "@typescript-eslint/no-unused-expressions": ["error"],
   },
   settings: {
     "import/resolver": {

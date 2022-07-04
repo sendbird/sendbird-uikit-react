@@ -54,7 +54,7 @@ function useInitialMessagesFetch({
         payload: null,
       });
 
-      currentGroupChannel?.getMessagesByTimestamp(
+      currentGroupChannel.getMessagesByTimestamp(
         initialTimeStamp || new Date().getTime(),
         messageListParams,
       )

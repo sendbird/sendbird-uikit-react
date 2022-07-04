@@ -26,8 +26,7 @@ function useResendMessageCallback({
 
       // userMessage
       if (messageType === 'user') {
-        currentGroupChannel
-          .resendUserMessage(failedMessage)
+        currentGroupChannel.resendUserMessage(failedMessage)
           .then((message) => {
             logger.info('Channel: Resending message success!', message);
             messagesDispatcher({
