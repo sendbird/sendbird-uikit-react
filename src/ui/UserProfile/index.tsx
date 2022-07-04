@@ -5,7 +5,7 @@ import type { User } from '@sendbird/chat';
 
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import withSendbirdContext from '../../lib/SendbirdSdkContext';
-import { getSdk, getCreateChannel } from '../../lib/selectors';
+import { getSdk, createGroupChannel } from '../../lib/selectors';
 import Avatar from '../Avatar/index';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import Button, { ButtonTypes } from '../Button';
@@ -94,7 +94,7 @@ function UserProfile({
 
 const mapStoreToProps = (store) => ({
   sdk: getSdk(store),
-  createChannel: getCreateChannel(store),
+  createChannel: createGroupChannel(store),
   logger: store.config.logger,
   pubsub: store.config.pubSub,
 });

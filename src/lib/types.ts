@@ -1,8 +1,8 @@
 import type SendbirdChat from '@sendbird/chat';
 import type { User } from '@sendbird/chat';
-import type { GroupChannel, GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
+import type { GroupChannel, GroupChannelCreateParams, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 import type { AdminMessage, FileMessage, FileMessageCreateParams, UserMessage, UserMessageCreateParams, UserMessageUpdateParams } from '@sendbird/chat/message';
-import type { OpenChannel, OpenChannelCreateParams } from '@sendbird/chat/openChannel';
+import type { OpenChannel, OpenChannelCreateParams, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
 import type SendBirdTypes from '../types';
 import { Logger } from './SendbirdState';
@@ -33,7 +33,7 @@ export interface SendBirdProviderProps {
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
 }
 
-interface SendBirdStateConfig {
+export interface SendBirdStateConfig {
   disableUserProfile: boolean;
   renderUserProfile?: (props: SendBirdTypes.RenderUserProfileProps) => React.ReactNode;
   allowProfileEdit: boolean;
@@ -63,14 +63,14 @@ export interface SdkStore {
   error: boolean;
   initialized: boolean;
   loading: boolean;
-  sdk: SendbirdChat;
+  sdk: SendbirdChat & SendbirdGroupChat & SendbirdOpenChat;
 }
-interface UserStore {
+export interface UserStore {
   initialized: boolean;
   loading: boolean;
   user: User;
 }
-interface SendBirdStateStore {
+export interface SendBirdStateStore {
   sdkStore: SdkStore;
   userStore: UserStore;
 }

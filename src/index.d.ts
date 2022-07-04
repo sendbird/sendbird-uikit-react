@@ -4,13 +4,36 @@
  * git: https://github.com/sendbird/sendbird-uikit-react
  */
 import type React from 'react';
-import type { Locale } from 'date-fns';
+import type { ReactElement } from 'react';
+
 import type SendbirdChat from '@sendbird/chat';
-import { EmojiCategory, EmojiContainer, SendbirdError, SessionHandler, User } from '@sendbird/chat';
-import type { GroupChannel, GroupChannelCreateParams, GroupChannelUpdateParams, Member } from '@sendbird/chat/groupChannel';
-import { AdminMessage, FileMessage, FileMessageCreateParams, MessageListParams, MessageSearchQuery, UserMessage, UserMessageCreateParams, UserMessageUpdateParams } from '@sendbird/chat/message';
+import type {
+  User,
+  SessionHandler,
+  SendbirdError,
+  EmojiCategory,
+  EmojiContainer,
+} from '@sendbird/chat';
+import type {
+  AdminMessage,
+  UserMessage,
+  FileMessage,
+  MessageSearchQuery,
+  UserMessageCreateParams,
+  FileMessageCreateParams,
+  UserMessageUpdateParams,
+  MessageListParams,
+} from '@sendbird/chat/message';
+import type {
+  Member,
+  GroupChannel,
+  GroupChannelCreateParams,
+  GroupChannelUpdateParams,
+  GroupChannelListQuery,
+} from '@sendbird/chat/groupChannel';
+
+import type { Locale } from 'date-fns';
 import { OpenChannel, OpenChannelCreateParams, OpenChannelUpdateParams } from '@sendbird/chat/openChannel';
-import { ReactElement } from 'react';
 
 type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
 
@@ -57,7 +80,6 @@ interface ClientFileMessage extends FileMessage, ClientMessage { }
 interface ClientAdminMessage extends AdminMessage, ClientMessage { }
 type EveryMessage = ClientUserMessage | ClientFileMessage | ClientAdminMessage;
 type ClientSentMessages = ClientUserMessage | ClientFileMessage;
-
 
 interface SendBirdProviderProps {
   userId: string;
@@ -215,7 +237,6 @@ type GetOpenChannelResendFileMessage = (
   failedMessage: FileMessage,
 ) => Promise<FileMessage>;
 
-
 interface sendBirdSelectorsInterface {
   getSdk: (store: SendBirdState) => GetSdk;
   getConnect: (store: SendBirdState) => GetConnect
@@ -282,26 +303,26 @@ interface ApplicationUserListQuery {
   metaDataValuesFilter?: Array<string>;
 }
 
-interface GroupChannelListQuery {
-  limit?: number;
-  includeEmpty?: boolean;
-  order?: 'latest_last_message' | 'chronological' | 'channel_name_alphabetical' | 'metadata_value_alphabetical';
-  userIdsExactFilter?: Array<string>;
-  userIdsIncludeFilter?: Array<string>;
-  userIdsIncludeFilterQueryType?: 'AND' | 'OR';
-  nicknameContainsFilter?: string;
-  channelNameContainsFilter?: string;
-  customTypesFilter?: Array<string>;
-  customTypeStartsWithFilter?: string;
-  channelUrlsFilter?: Array<string>;
-  superChannelFilter?: 'all' | 'super' | 'nonsuper';
-  publicChannelFilter?: 'all' | 'public' | 'private';
-  metadataOrderKeyFilter?: string;
-  memberStateFilter?: 'all' | 'joined_only' | 'invited_only' | 'invited_by_friend' | 'invited_by_non_friend';
-  hiddenChannelFilter?: 'unhidden_only' | 'hidden_only' | 'hidden_allow_auto_unhide' | 'hidden_prevent_auto_unhide';
-  unreadChannelFilter?: 'all' | 'unread_message';
-  includeFrozen?: boolean;
-}
+// interface GroupChannelListQuery {
+//   limit?: number;
+//   includeEmpty?: boolean;
+//   order?: 'latest_last_message' | 'chronological' | 'channel_name_alphabetical' | 'metadata_value_alphabetical';
+//   userIdsExactFilter?: Array<string>;
+//   userIdsIncludeFilter?: Array<string>;
+//   userIdsIncludeFilterQueryType?: 'AND' | 'OR';
+//   nicknameContainsFilter?: string;
+//   channelNameContainsFilter?: string;
+//   customTypesFilter?: Array<string>;
+//   customTypeStartsWithFilter?: string;
+//   channelUrlsFilter?: Array<string>;
+//   superChannelFilter?: 'all' | 'super' | 'nonsuper';
+//   publicChannelFilter?: 'all' | 'public' | 'private';
+//   metadataOrderKeyFilter?: string;
+//   memberStateFilter?: 'all' | 'joined_only' | 'invited_only' | 'invited_by_friend' | 'invited_by_non_friend';
+//   hiddenChannelFilter?: 'unhidden_only' | 'hidden_only' | 'hidden_allow_auto_unhide' | 'hidden_prevent_auto_unhide';
+//   unreadChannelFilter?: 'all' | 'unread_message';
+//   includeFrozen?: boolean;
+// }
 interface ChannelListQueries {
   applicationUserListQuery?: ApplicationUserListQuery;
   channelListQuery?: GroupChannelListQuery;
