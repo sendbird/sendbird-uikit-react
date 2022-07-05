@@ -105,16 +105,16 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
     // Add member list query for customization
     query.next()
       .then((memberList) => {
-        if (memberList.length < 1) {
-          logger.info('SuggestedMentionList: Fetched member list is empty');
-        } else {
-          logger.info('SuggestedMentionList: Fetching member list succeeded', { memberListQuery: query, memberList });
-          setCurrentUser(memberList[0]);
-        }
-        setLastSearchString(searchString);
         const suggestingMembers = memberList
           .filter((member) => currentUserId !== member?.userId)
           .slice(0, maxSuggestionCount);
+        if (suggestingMembers.length < 1) {
+          logger.info('SuggestedMentionList: Fetched member list is empty');
+        } else {
+          logger.info('SuggestedMentionList: Fetching member list succeeded', { memberListQuery: query, memberList: suggestingMembers });
+          setCurrentUser(suggestingMembers[0]);
+        }
+        setLastSearchString(searchString);
         onFetchUsers(suggestingMembers);
         setCurrentMemberList(suggestingMembers);
       })
