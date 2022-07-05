@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState, useRef } from 'react';
 import type { User } from '@sendbird/chat';
 import type { OpenChannel, OpenChannelCreateParams, OpenChannelListQuery, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import withSendBird from '../../../lib/SendbirdSdkContext';
-import sendBirdSelectors from '../../../lib/selectors';
+import * as sendbirdSelectors from '../../../lib/selectors';
 
 import './community-channel-list.scss';
 import OpenChannelPreview from './OpenChannelPreview';
@@ -217,7 +217,7 @@ function CommunityChannelList({
 
 export default withSendBird(CommunityChannelList, (store) => {
   return {
-    sdk: sendBirdSelectors.getSdk(store),
+    sdk: sendbirdSelectors.getSdk(store),
     user: store.stores.userStore.user,
   };
 });
