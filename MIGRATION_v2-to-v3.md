@@ -263,7 +263,7 @@ Can be imported as `import { ChannelList } from "@sendbird/uikit-react"`
 or `import ChannelList from "@sendbird/uikit-react/ChannelList"`
 
 ### Changes
-  * queries.channelListQuery.MemberStateFilter -> queries.channelListQuery.MyMemberStateFilter
+  * queries.channelListQuery.memberStateFilter -> queries.channelListQuery.myMemberStateFilter
 ### Added props
   * renderPlaceHolderError?: (props: void) => React.ReactNode;
   * renderPlaceHolderLoading?: (props: void) => React.ReactNode;
