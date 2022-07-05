@@ -5,7 +5,7 @@ import type {
   SendbirdGroupChat,
 } from '@sendbird/chat/groupChannel';
 
-import { getCreateChannel } from '../../../lib/selectors';
+import { getCreateGroupChannel } from '../../../lib/selectors';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { CHANNEL_TYPE } from '../types';
 
@@ -48,7 +48,7 @@ const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: Crea
   const store = useSendbirdStateContext();
   const userListQuery_ = store?.config?.userListQuery;
   const createChannel: (channelParams: GroupChannelCreateParams)
-    => Promise<GroupChannel> = getCreateChannel(store);
+    => Promise<GroupChannel> = getCreateGroupChannel(store);
 
   const [step, setStep] = useState(0);
   const [type, setType] = useState(CHANNEL_TYPE.GROUP);

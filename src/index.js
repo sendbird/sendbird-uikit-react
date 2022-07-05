@@ -16,5 +16,5 @@ export MessageSearch from './smart-components/MessageSearch';
 // HOC for using ui-kit state
 // withBird(MyCustomComponent) will give the sendbird state as props to MyCustomComponent
 export withSendBird from './lib/SendbirdSdkContext';
-export sendBirdSelectors from './lib/selectors';
+export sendbirdSelectors from './lib/selectors';
 export useSendbirdStateContext from './hooks/useSendbirdStateContext';

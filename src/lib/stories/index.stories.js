@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import SendBirdProvider from '../Sendbird';
 import withSendBird from '../SendbirdSdkContext';
-import sendBirdSelectors from '../selectors';
+import * as sendbirdSelectors from '../selectors';
 import ChannelList from '../../smart-components/ChannelList';
 
 const appId = process.env.STORYBOOK_APP_ID;
@@ -18,7 +18,7 @@ const Welcome = ({ currentUser }) => (
 );
 
 const WelcomeWithSendBird = withSendBird(Welcome, (state) => {
-  const sdk =  sendBirdSelectors.getSdk(state);
+  const sdk =  sendbirdSelectors.getSdk(state);
   const currentUser = sdk && sdk.getCurrentUserId && sdk.getCurrentUserId();
   return ({ currentUser });
 });
@@ -60,9 +60,9 @@ const CustomComponent = ({ createChannel, sdk, leaveChannel }) => {
 };
 
 const CustomComponentWithSendBird = withSendBird(CustomComponent, (state) => {
-  const createChannel =  sendBirdSelectors.getCreateChannel(state);
-  const leaveChannel =  sendBirdSelectors.getLeaveChannel(state);
-  const sdk = sendBirdSelectors.getSdk(state);
+  const createChannel =  sendbirdSelectors.getCreateChannel(state);
+  const leaveChannel =  sendbirdSelectors.getLeaveChannel(state);
+  const sdk = sendbirdSelectors.getSdk(state);
   return ({ createChannel, sdk, leaveChannel });
 });
 

@@ -1,6 +1,7 @@
-import React, { ReactElement, useEffect, useState } from "react";
-import { withSendBird, sendBirdSelectors } from "sendbird-uikit";
+import React, { useEffect, useState } from "react";
 
+import withSendbird from '../../../../src/lib/SendbirdSdkContext';
+import * as sendbirdSelectors from '../../../../src/lib/selectors';
 import "./streaming-channel-list.scss";
 import OpenChannelPreview from "./OpenChannelPreview";
 import Profile from "./Profile";
@@ -64,10 +65,10 @@ function StreamingChannelList({
   );
 }
 
-export default withSendBird(StreamingChannelList, (store) => {
+export default withSendbird(StreamingChannelList, (store) => {
   console.warn(store);
   return {
-    sdk: sendBirdSelectors.getSdk(store),
+    sdk: sendbirdSelectors.getSdk(store),
     user: store.stores.userStore.user
   };
 });
