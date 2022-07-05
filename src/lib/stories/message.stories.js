@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import SendBirdProvider from '../Sendbird';
 import withSendBird from '../SendbirdSdkContext';
-import sendBirdSelectors from '../selectors';
+import * as sendbirdSelectors from '../selectors';
 import Channel from '../../smart-components/Channel';
 
 const appId = process.env.STORYBOOK_APP_ID;
@@ -17,7 +17,6 @@ const CustomComponent = (props) => {
     sendFileMessage,
     deleteMessage,
     updateLastMessage,
-    sdk,
   } = props;
   const [lastMessage, setLastMessage] = useState({});
   const lastMessageId = lastMessage.messageId;
@@ -126,11 +125,11 @@ const CustomComponent = (props) => {
 };
 
 const CustomComponentWithSendBird = withSendBird(CustomComponent, (state) => {
-  const sendMessage = sendBirdSelectors.getSendUserMessage(state);
-  const sendFileMessage = sendBirdSelectors.getSendFileMessage(state);
-  const deleteMessage = sendBirdSelectors.getDeleteMessage(state);
-  const updateLastMessage = sendBirdSelectors.getUpdateUserMessage(state);
-  const sdk = sendBirdSelectors.getSdk(state);
+  const sendMessage = sendbirdSelectors.getSendUserMessage(state);
+  const sendFileMessage = sendbirdSelectors.getSendFileMessage(state);
+  const deleteMessage = sendbirdSelectors.getDeleteMessage(state);
+  const updateLastMessage = sendbirdSelectors.getUpdateUserMessage(state);
+  const sdk = sendbirdSelectors.getSdk(state);
   return ({
     sendMessage,
     sendFileMessage,

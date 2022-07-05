@@ -10,7 +10,7 @@ import Channel from '../../Channel';
 import ChannelSettings from '../../ChannelSettings';
 import MessageSearch from '../../MessageSearch';
 import { withSendBird } from '../../..';
-import { sendBirdSelectors } from '../../..';
+import { sendbirdSelectors } from '../../..';
 import { fitPageSize } from './utils';
 
 const appId = process.env.STORYBOOK_APP_ID;
@@ -324,7 +324,7 @@ export const user4 = () => fitPageSize(
 
 const UseSendbirdChannelList = (props) => {
   const [queries] = useState({ channelListQuery: { customTypesFilter: ['apple'] } });
-  const sdk = sendBirdSelectors.getSdk(props);
+  const sdk = sendbirdSelectors.getSdk(props);
   const { setChannelUrl } = props;
 
   return (

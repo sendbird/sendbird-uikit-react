@@ -34,6 +34,7 @@ import type {
 
 import type { Locale } from 'date-fns';
 import { OpenChannel, OpenChannelCreateParams, OpenChannelUpdateParams } from '@sendbird/chat/openChannel';
+import { UikitMessageHandler } from './lib/selectors';
 
 type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
 
@@ -179,90 +180,72 @@ type GetUpdateUserInfo = (
   nickName: string,
   profileUrl?: string
 ) => Promise<User>;
+type GetCreateGroupChannel = (channelParams: GroupChannelCreateParams) => Promise<GroupChannel>;
+type GetCreateOpenChannel = (channelParams: OpenChannelCreateParams) => Promise<OpenChannel>;
+type GetGetGroupChannel = (
+  channelUrl: string,
+  isSelected?: boolean,
+) => Promise<GroupChannel>;
+type GetGetOpenChannel = (
+  channelUrl: string,
+) => Promise<OpenChannel>;
+type GetLeaveGroupChannel = (channel: GroupChannel) => Promise<void>;
+type GetEnterOpenChannel = (channel: OpenChannel) => Promise<OpenChannel>;
+type GetExitOpenChannel = (channel: OpenChannel) => Promise<void>;
+type GetFreezeChannel = (channel: GroupChannel | OpenChannel) => Promise<void>;
+type GetUnFreezeChannel = (channel: GroupChannel | OpenChannel) => Promise<void>;
 type GetSendUserMessage = (
-  channelUrl: string,
+  channel: GroupChannel | OpenChannel,
   userMessageParams: UserMessageCreateParams,
-) => Promise<UserMessage>;
+) => UikitMessageHandler;
 type GetSendFileMessage = (
-  channelUrl: string,
+  channel: GroupChannel | OpenChannel,
   fileMessageParams: FileMessageCreateParams
-) => Promise<FileMessage>;
+) => UikitMessageHandler;
 type GetUpdateUserMessage = (
-  channelUrl: string,
+  channel: GroupChannel | OpenChannel,
   messageId: string | number,
   params: UserMessageUpdateParams
 ) => Promise<UserMessage>;
+// type getUpdateFileMessage = (
+//   channel: GroupChannel | OpenChannel,
+//   messageId: string | number,
+//   params: FileMessageUpdateParams,
+// ) => Promise<FileMessage>;
 type GetDeleteMessage = (
-  channelUrl: string,
+  channel: GroupChannel | OpenChannel,
   message: AdminMessage | UserMessage | FileMessage
 ) => Promise<void>;
 type GetResendUserMessage = (
-  channelUrl: string,
+  channel: GroupChannel | OpenChannel,
   failedMessage: UserMessage
 ) => Promise<UserMessage>;
 type GetResendFileMessage = (
-  channelUrl: string,
+  channel: GroupChannel | OpenChannel,
   failedMessage: FileMessage
 ) => Promise<FileMessage>;
-type GetFreezeChannel = (channelUrl: string) => Promise<GroupChannel>;
-type GetUnFreezeChannel = (channelUrl: string) => Promise<GroupChannel>;
-type GetCreateChannel = (channelParams: GroupChannelCreateParams) => Promise<GroupChannel>;
-type GetLeaveChannel = (channelUrl: string) => Promise<GroupChannel>;
-type GetCreateOpenChannel = (channelParams: OpenChannelCreateParams) => Promise<OpenChannel>;
-type GetEnterOpenChannel = (channelUrl: string) => Promise<null>;
-type GetExitOpenChannel = (channelUrl: string) => Promise<null>;
-type GetOpenChannelSendUserMessage = (
-  channelUrl: string,
-  params: UserMessageCreateParams,
-) => Promise<UserMessage>;
-type GetOpenChannelSendFileMessage = (
-  channelUrl: string,
-  params: FileMessageCreateParams,
-) => Promise<FileMessage>;
-type GetOpenChannelUpdateUserMessage = (
-  channelUrl: string,
-  messageId: string,
-  params: UserMessageUpdateParams,
-) => Promise<UserMessage>;
-type GetOpenChannelDeleteMessage = (
-  channelUrl: string,
-  message: UserMessage | FileMessage,
-) => Promise<UserMessage | FileMessage>;
-type GetOpenChannelResendUserMessage = (
-  channelUrl: string,
-  failedMessage: UserMessage,
-) => Promise<UserMessage>;
-type GetOpenChannelResendFileMessage = (
-  channelUrl: string,
-  failedMessage: FileMessage,
-) => Promise<FileMessage>;
 
-interface sendBirdSelectorsInterface {
+interface sendbirdSelectorsInterface {
   getSdk: (store: SendBirdState) => GetSdk;
   getConnect: (store: SendBirdState) => GetConnect
   getDisconnect: (store: SendBirdState) => GetDisconnect;
   getUpdateUserInfo: (store: SendBirdState) => GetUpdateUserInfo;
+  getCreateGroupChannel: (store: SendBirdState) => GetCreateGroupChannel;
+  getCreateOpenChannel: (store: SendBirdState) => GetCreateOpenChannel;
+  getGetGroupChannel: (store: SendBirdState) => GetGetGroupChannel;
+  getGetOpenChannel: (store: SendBirdState) => GetGetOpenChannel;
+  getLeaveChannel: (store: SendBirdState) => GetLeaveGroupChannel;
+  getEnterOpenChannel: (store: SendBirdState) => GetEnterOpenChannel;
+  getExitOpenChannel: (store: SendBirdState) => GetExitOpenChannel;
+  getFreezeChannel: (store: SendBirdState) => GetFreezeChannel;
+  getUnFreezeChannel: (store: SendBirdState) => GetUnFreezeChannel;
   getSendUserMessage: (store: SendBirdState) => GetSendUserMessage;
   getSendFileMessage: (store: SendBirdState) => GetSendFileMessage;
   getUpdateUserMessage: (store: SendBirdState) => GetUpdateUserMessage;
+  // getUpdateFileMessage: (store: SendBirdState) => GetUpdateFileMessage;
   getDeleteMessage: (store: SendBirdState) => GetDeleteMessage;
   getResendUserMessage: (store: SendBirdState) => GetResendUserMessage;
   getResendFileMessage: (store: SendBirdState) => GetResendFileMessage;
-  getFreezeChannel: (store: SendBirdState) => GetFreezeChannel;
-  getUnFreezeChannel: (store: SendBirdState) => GetUnFreezeChannel;
-  getCreateChannel: (store: SendBirdState) => GetCreateChannel;
-  getLeaveChannel: (store: SendBirdState) => GetLeaveChannel;
-  getCreateOpenChannel: (store: SendBirdState) => GetCreateOpenChannel;
-  getEnterOpenChannel: (store: SendBirdState) => GetEnterOpenChannel;
-  getExitOpenChannel: (store: SendBirdState) => GetExitOpenChannel;
-  enterOpenChannel: (store: SendBirdState) => GetEnterOpenChannel;
-  exitOpenChannel: (store: SendBirdState) => GetExitOpenChannel;
-  getOpenChannelSendUserMessage: (store: SendBirdState) => GetOpenChannelSendUserMessage;
-  getOpenChannelSendFileMessage: (store: SendBirdState) => GetOpenChannelSendFileMessage;
-  getOpenChannelUpdateUserMessage: (store: SendBirdState) => GetOpenChannelUpdateUserMessage;
-  getOpenChannelDeleteMessage: (store: SendBirdState) => GetOpenChannelDeleteMessage;
-  getOpenChannelResendUserMessage: (store: SendBirdState) => GetOpenChannelResendUserMessage;
-  getOpenChannelResendFileMessage: (store: SendBirdState) => GetOpenChannelResendFileMessage;
 }
 
 interface AppProps {
@@ -472,7 +455,7 @@ type LeaveChannelProps = {
 declare module '@sendbird/uikit-react'  {
   export type App = React.FunctionComponent<AppProps>;
   export type SendBirdProvider = React.FunctionComponent<SendBirdProviderProps>;
-  export type sendBirdSelectors = sendBirdSelectorsInterface;
+  export type sendbirdSelectors = sendbirdSelectorsInterface;
   export type ChannelList = React.FunctionComponent<ChannelListProps>;
   export type ChannelSettings = React.FunctionComponent<ChannelSettingsProps>;
   export type Channel = React.FunctionComponent<ChannelProps>
@@ -496,9 +479,9 @@ declare module '@sendbird/uikit-react/SendbirdProvider' {
   export default SendbirdProvider;
 }
 
-declare module '@sendbird/uikit-react/sendBirdSelectors' {
-  type sendBirdSelectors = sendBirdSelectorsInterface;
-  export default sendBirdSelectors;
+declare module '@sendbird/uikit-react/sendbirdSelectors' {
+  type sendbirdSelectors = sendbirdSelectorsInterface;
+  export default sendbirdSelectors;
 }
 
 declare module '@sendbird/uikit-react/useSendbirdStateContext' {

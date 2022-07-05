@@ -18,9 +18,30 @@ import { noop } from '../utils/utils';
 
 /**
  * 1. UIKit Instances
+ *    a. getSdk
+ *    b. getPubSub
  * 2. Chat & Connection
+ *    a. getConnect
+ *    b. getDisconnect
+ *    c. getUpdateUserInfo
  * 3. Channel
+ *    a. getCreateGroupChannel
+ *    b. getCreateOpenChannel
+ *    c. getGetGroupChannel
+ *    d. getGetOpenChannel
+ *    e. getLeaveGroupChannel
+ *    f. getEnterOpenChannel
+ *    g. getExitOpenChannel
+ *    h. getFreezeChannel
+ *    i. getUnfreezeChannel
  * 4. Message
+ *    a. getSendUserMessage
+ *    b. getSendFileMessage
+ *    c. getUpdateUserMessage
+ *    d. x - getUpdateFileMessage
+ *    e. getDeleteMessage
+ *    f. getResendUserMessage
+ *    g. getResendFileMessage
  */
 
 /**
@@ -267,13 +288,13 @@ export const getGetOpenChannel = (state: SendBirdState) => (
  *  .catch((error) => {})
  */
 export const getLeaveGroupChannel = (state: SendBirdState) => (
-  (channelUrl: string): Promise<GroupChannel> => (
+  (channelUrl: string): Promise<void> => (
     new Promise((resolve, reject) => {
       getGetGroupChannel(state)?.(channelUrl)
         .then((channel) => {
           channel.leave()
             .then(() => {
-              resolve(channel);
+              resolve();
               // Add pubSub process
             })
             .catch(reject)
@@ -335,8 +356,8 @@ export const getExitOpenChannel = (state: SendBirdState) => (
  *  .then((channel) => {})
  *  .catch((error) => {})
  */
-export const getFreezeChannel = (channel: GroupChannel | OpenChannel) => (
-  (): Promise<void> => (
+export const getFreezeChannel = () => (
+  (channel: GroupChannel | OpenChannel): Promise<void> => (
     new Promise((resolve, reject) => {
       if (!(channel.freeze && typeof channel?.freeze === 'function')) {
         reject(new Error('Not found the function "freeze"'));
@@ -361,8 +382,8 @@ export const getFreezeChannel = (channel: GroupChannel | OpenChannel) => (
  *  .then((channel) => {})
  *  .catch((error) => {})
  */
-export const getUnfreezeChannel = (channel: GroupChannel | OpenChannel) => (
-  (): Promise<void> => (
+export const getUnfreezeChannel = () => (
+  (channel: GroupChannel | OpenChannel): Promise<void> => (
     new Promise((resolve, reject) => {
       if (!(channel.unfreeze && typeof channel?.unfreeze === 'function')) {
         reject(new Error('Not found the function "unfreeze"'));
@@ -515,7 +536,7 @@ export const getUpdateUserMessage = (state: SendBirdState) => (
 
 // TODO: We will provie this function in the future
 /**
- * const updateFileMessage = selectors.updateFileMessage(state);
+ * const updateFileMessage = selectors.getUpdateFileMessage(state);
  * updateFileMessage(
  *  channel: GroupChannel | OpenChannel,
  *  messageId: number,
@@ -524,7 +545,7 @@ export const getUpdateUserMessage = (state: SendBirdState) => (
  *  .then((message) => {})
  *  .catch((error) => {})
  */
-// const updateFileMessage = (state: SendBirdState) => (
+// const getUpdateFileMessage = (state: SendBirdState) => (
 //   (channel: GroupChannel | OpenChannel, messageId: number, params: FileMessageUpdateParams) => (
 //     new Promise((resolve, reject) => {
 //       const pubSub = getPubSub(state);
