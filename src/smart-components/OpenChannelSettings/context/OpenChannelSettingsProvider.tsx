@@ -29,7 +29,7 @@ interface OpenChannelSettingsContextType {
   onDeleteChannel?(channel: OpenChannel): void;
 }
 
-const OpenChannelSettingsContext = React.createContext<OpenChannelSettingsContextType|null>(undefined);
+const OpenChannelSettingsContext = React.createContext<OpenChannelSettingsContextType | null>(undefined);
 
 const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (props: OpenChannelSettingsContextProps) => {
   const {
@@ -54,13 +54,15 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
       return;
     }
 
-    sdk.openChannel.getChannel(channelUrl).then((openChannel) => {
-      logger.error('open channel setting: fetched', openChannel);
-      setChannel(openChannel);
-    }).catch((error) => {
-      logger.error('open channel setting: error fetching', error);
-      setChannel(null);
-    });
+    sdk.openChannel.getChannel(channelUrl)
+      .then((channel) => {
+        logger.info('open channel setting: fetched', channel);
+        setChannel(channel);
+      })
+      .catch((error) => {
+        logger.error('open channel setting: error fetching', error);
+        setChannel(null);
+      });
   }, [channelUrl, sdk]);
 
   return (
