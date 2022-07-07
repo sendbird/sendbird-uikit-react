@@ -46,7 +46,7 @@ type Logger = {
 
 interface UserListQuery {
   hasNext?: boolean;
-  next(callback: unknown): void;
+  next(): Promise<User[]>;
 }
 
 interface RenderUserProfileProps {
