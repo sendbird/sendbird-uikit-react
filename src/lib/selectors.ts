@@ -641,3 +641,28 @@ export const getResendFileMessage = (state: SendBirdState) => (
     })
   )
 );
+
+const sendbirdSelectors = {
+  getSdk,
+  getPubSub,
+  getConnect,
+  getDisconnect,
+  getUpdateUserInfo,
+  getCreateGroupChannel,
+  getCreateOpenChannel,
+  getGetGroupChannel,
+  getGetOpenChannel,
+  getLeaveGroupChannel,
+  getEnterOpenChannel,
+  getExitOpenChannel,
+  getFreezeChannel,
+  getUnfreezeChannel,
+  getSendUserMessage,
+  getSendFileMessage,
+  getUpdateUserMessage,
+  getDeleteMessage,
+  getResendUserMessage,
+  getResendFileMessage,
+};
+
+export default sendbirdSelectors;
