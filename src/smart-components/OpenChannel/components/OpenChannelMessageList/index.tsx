@@ -39,10 +39,7 @@ function OpenchannelMessageList(
       scrollHeight,
       clientHeight,
     } = element;
-    if (
-      (scrollHeight > scrollTop + clientHeight)
-      && (window.navigator.userAgent.indexOf('MSIE ') < 0) // don't show button in IE
-    ) {
+    if (scrollHeight > scrollTop + clientHeight + 1) {
       setShowScrollDownButton(true);
     } else {
       setShowScrollDownButton(false);
@@ -74,14 +71,14 @@ function OpenchannelMessageList(
   }, [allMessages.length]);
 
   return (
-    <div
-      className="sendbird-openchannel-conversation-scroll"
-      onScroll={handleOnScroll}
-      ref={scrollRef}
-    >
+    <div className="sendbird-openchannel-conversation-scroll">
       <div className="sendbird-openchannel-conversation-scroll__container">
         <div className="sendbird-openchannel-conversation-scroll__container__padding" />
-        <div className={`sendbird-openchannel-conversation-scroll__container__item-container${hasMessage ? '' : '--no-messages'}`}>
+        <div
+          className={`sendbird-openchannel-conversation-scroll__container__item-container${hasMessage ? '' : '--no-messages'}`}
+          onScroll={handleOnScroll}
+          ref={scrollRef}
+        >
           {
             hasMessage
               ? (
@@ -119,25 +116,25 @@ function OpenchannelMessageList(
               )
           }
         </div>
-        {
-          showScrollDownButton && (
-            <div
-              className="sendbird-openchannel-conversation-scroll__container__scroll-bottom-button"
-              onClick={scrollToBottom}
-              onKeyDown={scrollToBottom}
-              tabIndex={0}
-              role="button"
-            >
-              <Icon
-                width="24px"
-                height="24px"
-                type={IconTypes.CHEVRON_DOWN}
-                fillColor={IconColors.CONTENT}
-              />
-            </div>
-          )
-        }
       </div>
+      {
+        showScrollDownButton && (
+          <div
+            className="sendbird-openchannel-conversation-scroll__container__scroll-bottom-button"
+            onClick={scrollToBottom}
+            onKeyDown={scrollToBottom}
+            tabIndex={0}
+            role="button"
+          >
+            <Icon
+              width="24px"
+              height="24px"
+              type={IconTypes.CHEVRON_DOWN}
+              fillColor={IconColors.CONTENT}
+            />
+          </div>
+        )
+      }
     </div>
   );
 }
