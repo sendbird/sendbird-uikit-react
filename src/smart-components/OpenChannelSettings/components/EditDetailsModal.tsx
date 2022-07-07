@@ -4,6 +4,7 @@ import React, {
   useContext,
   ReactElement,
 } from 'react';
+import { OpenChannelUpdateParams } from '@sendbird/chat/openChannel';
 
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 import Modal from '../../../ui/Modal';
@@ -56,29 +57,24 @@ const EditDetails = (props: Props): ReactElement => {
         const currentTitle = inputRef.current.value;
         const currentImg = newFile;
         logger.info('ChannelSettings: Channel information being updated');
-        if (onBeforeUpdateChannel) {
-          const params = onBeforeUpdateChannel(currentTitle, currentImg, channel?.data);
-          logger.info('ChannelSettings: onBeforeUpdateChannel', params);
-          channel?.updateChannel(params, (openChannel) => {
-            onChannelModified(openChannel);
-            // setChannel(openChannel) => alone not working
+        const params: OpenChannelUpdateParams = onBeforeUpdateChannel
+          ? onBeforeUpdateChannel(currentTitle, currentImg, channel?.data)
+          : {
+            name: currentTitle,
+            coverUrlOrImage: currentImg,
+            data: channel?.data,
+          };
+        logger.info('ChannelSettings: Updating channel information', params);
+        channel?.updateChannel(params)
+          .then((updateChannel) => {
+            logger.info('ChannelSettings: Channel information update succeeded', updateChannel);
+            onChannelModified?.(updateChannel);
+            setChannel(updateChannel);
+          })
+          .catch((error) => {
+            logger.error('ChannelSettings: Channel infomation update failed', error);
             setChannel(null);
-            setChannel(openChannel);
           });
-        } else {
-          channel?.updateChannel(
-            currentTitle,
-            currentImg,
-            channel?.data,
-            (openChannel) => {
-              logger.info('ChannelSettings: Channel information updated', openChannel);
-              onChannelModified(openChannel);
-              // setChannel(openChannel) => alone not working
-              setChannel(null);
-              setChannel(openChannel);
-            },
-          );
-        }
         onCancel();
       }}
       type={ButtonType.PRIMARY}
@@ -109,7 +105,7 @@ const EditDetails = (props: Props): ReactElement => {
                     theme={theme}
                   />
                 )
-              }
+            }
           </div>
           <input
             ref={hiddenInputRef}
