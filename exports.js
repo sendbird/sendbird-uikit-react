@@ -23,7 +23,7 @@ export default {
   // ChannelSettings
   ChannelSettings: 'src/smart-components/ChannelSettings/index.tsx',
   'ChannelSettings/context': 'src/smart-components/ChannelSettings/context/ChannelSettingsProvider.tsx',
-  'ChannelSettings/components/AdminPanel': 'src/smart-components/ChannelSettings/components/AdminPanel/index.tsx',
+  'ChannelSettings/components/ModerationPanel': 'src/smart-components/ChannelSettings/components/ModerationPanel/index.tsx',
   'ChannelSettings/components/ChannelProfile': 'src/smart-components/ChannelSettings/components/ChannelProfile/index.tsx',
   'ChannelSettings/components/ChannelSettingsUI': 'src/smart-components/ChannelSettings/components/ChannelSettingsUI/index.tsx',
   'ChannelSettings/components/EditDetailsModal': 'src/smart-components/ChannelSettings/components/EditDetailsModal/index.tsx',
