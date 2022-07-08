@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import Modal from '../../../ui/Modal';
 import { ButtonTypes } from '../../../ui/Button';
 import { LocalizationContext } from '../../../lib/LocalizationContext';
-import { useChannel } from '../context/ChannelProvider';
+import { useChannelContext } from '../context/ChannelProvider';
 import { EveryMessage } from '../../../types';
 
 export interface RemoveMessageProps {
@@ -19,7 +19,7 @@ const RemoveMessage: React.FC<RemoveMessageProps> = (props: RemoveMessageProps) 
   const { stringSet } = useContext(LocalizationContext);
   const {
     deleteMessage,
-  } = useChannel();
+  } = useChannelContext();
   return (
     <Modal
       type={ButtonTypes.DANGER}

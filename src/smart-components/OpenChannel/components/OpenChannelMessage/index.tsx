@@ -26,7 +26,7 @@ import {
   SendingMessageStatus,
   getMessageType,
 } from './utils';
-import { useOpenChannel } from '../../context/OpenChannelProvider';
+import { useOpenChannelContext } from '../../context/OpenChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import type { RenderMessageProps } from '../../../../types';
 import { useLocalization } from '../../../../lib/LocalizationContext';
@@ -55,7 +55,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
     deleteMessage,
     updateMessage,
     resendMessage,
-  } = useOpenChannel();
+  } = useOpenChannelContext();
   const { dateLocale } = useLocalization();
   const editDisabled = currentOpenChannel?.isFrozen;
 

@@ -6,7 +6,7 @@ import type { Member } from '@sendbird/chat/groupChannel';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import SuggestedUserMentionItem from './SuggestedUserMentionItem';
-import { useChannel } from '../../context/ChannelProvider';
+import { useChannelContext } from '../../context/ChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT, USER_MENTION_TEMP_CHAR } from '../../context/const';
@@ -43,7 +43,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   const { config, stores } = useSendbirdStateContext();
   const { logger } = config;
   const currentUserId = stores?.sdkStore?.sdk?.currentUser?.userId || '';
-  const { currentGroupChannel } = useChannel();
+  const { currentGroupChannel } = useChannelContext();
   const scrollRef = useRef(null);
   const { stringSet } = useContext(LocalizationContext);
   const [timer, setTimer] = useState(null);

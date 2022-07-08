@@ -9,7 +9,7 @@ import { MODAL_ROOT } from '../../../../hooks/useModal/ModalRoot';
 
 import { isImage, isVideo, isSupportedFileView } from '../../../../utils';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useChannel } from '../../context/ChannelProvider';
+import { useChannelContext } from '../../context/ChannelProvider';
 
 type FileViewerUIProps = {
   profileUrl: string;
@@ -139,7 +139,7 @@ type FileViewerProps = {
 };
 
 const FileViewer: React.FC<FileViewerProps> = ({ onCancel, message }: FileViewerProps) => {
-  const { deleteMessage } = useChannel();
+  const { deleteMessage } = useChannelContext();
   const {
     sender,
     type,

@@ -14,7 +14,7 @@ import UserListItem from '../UserListItem';
 import MembersModal from './MembersModal';
 import InviteUsers from './InviteUsersModal';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useChannelSettings } from '../../context/ChannelSettingsProvider';
+import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import uuidv4 from '../../../../utils/uuid';
 
 export const MemberList = (): ReactElement => {
@@ -27,7 +27,7 @@ export const MemberList = (): ReactElement => {
   const {
     channel,
     setChannelUpdateId,
-  } = useChannelSettings();
+  } = useChannelSettingsContext();
 
   const sdk = state?.stores?.sdkStore?.sdk;
   const userId = state?.config?.userId;

@@ -9,7 +9,7 @@ import Label, { LabelTypography, LabelColors } from '../../../ui/Label';
 import Icon, { IconTypes } from '../../../ui/Icon';
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
-import { useOpenChannelSettings } from '../context/OpenChannelSettingsProvider';
+import { useOpenChannelSettingsContext } from '../context/OpenChannelSettingsProvider';
 
 export default function DeleteChannel(): ReactElement {
   const [showDeleteChannelModal, setShowDeleteChannelModal] = useState(false);
@@ -18,7 +18,7 @@ export default function DeleteChannel(): ReactElement {
   const isOnline = globalState?.config?.isOnline;
   const logger = globalState?.config?.logger;
 
-  const { channel, onDeleteChannel } = useOpenChannelSettings();
+  const { channel, onDeleteChannel } = useOpenChannelSettingsContext();
 
   const deleteChannel = () => {
     channel?.delete().then((response) => {

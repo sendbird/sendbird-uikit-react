@@ -505,7 +505,6 @@ declare module '@sendbird/uikit-react/ChannelList' {
 declare module '@sendbird/uikit-react/ChannelList/context' {
   export type ChannelListProvider = React.FunctionComponent<ChannelListProviderProps>;
   export function useChannelListContext (): ChannelListProviderInterface;
-  export function useChannelList (): ChannelListProviderInterface;
 }
 
 declare module '@sendbird/uikit-react/ChannelList/components/AddChannel' {
@@ -729,7 +728,7 @@ declare module '@sendbird/uikit-react/Channel' {
 
 declare module '@sendbird/uikit-react/Channel/context' {
   export type ChannelProvider = React.FunctionComponent<ChannelContextProps>;
-  export function useChannel(): ChannelProviderInterface;
+  export function useChannelContext(): ChannelProviderInterface;
 }
 
 declare module '@sendbird/uikit-react/Channel/components/ChannelHeader' {
@@ -883,7 +882,7 @@ declare module '@sendbird/uikit-react/OpenChannel' {
 
 declare module '@sendbird/uikit-react/OpenChannel/context' {
   export type OpenChannelProvider = React.FunctionComponent<OpenChannelProviderProps>;
-  export function useOpenChannel(): OpenChannelInterface;
+  export function useOpenChannelContext(): OpenChannelInterface;
 }
 
 declare module '@sendbird/uikit-react/OpenChannel/components/FrozenChannelNotification' {
@@ -1041,8 +1040,8 @@ declare module '@sendbird/uikit-react/MessageSearch' {
 }
 
 declare module '@sendbird/uikit-react/MessageSearch/context' {
-  export type useMessageSearch = () => MessageSearchProviderInterface;
   export type MessageSearchProvider = React.FC<MessageSearchProviderProps>;
+  export type useMessageSearchContext = () => MessageSearchProviderInterface;
 }
 
 declare module '@sendbird/uikit-react/MessageSearch/components/MessageSearchUI' {
@@ -1130,7 +1129,7 @@ declare module '@sendbird/uikit-react/EditUserProfile' {
 
 declare module '@sendbird/uikit-react/EditUserProfile/context' {
   export type EditUserProfileProvider = React.FC<EditUserProfileProps>;
-  export function useEditUserProfileProvider (): EditUserProfileProviderInterface;
+  export function useEditUserProfileContext (): EditUserProfileProviderInterface;
 }
 
 declare module '@sendbird/uikit-react/EditUserProfile/components/EditUserProfileUI' {

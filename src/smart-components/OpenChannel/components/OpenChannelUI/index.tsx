@@ -1,7 +1,7 @@
 import './open-channel-ui.scss';
 
 import React from 'react';
-import { useOpenChannel } from '../../context/OpenChannelProvider';
+import { useOpenChannelContext } from '../../context/OpenChannelProvider';
 
 import OpenChannelInput from '../OpenChannelInput';
 import FrozenChannelNotification from '../FrozenChannelNotification';
@@ -36,7 +36,7 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
     loading,
     isInvalid,
     messageInputRef,
-  } = useOpenChannel();
+  } = useOpenChannelContext();
 
   if (
     !currentOpenChannel

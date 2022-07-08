@@ -3,7 +3,7 @@ import './channel-settings-ui.scss';
 import React, { useContext, useState } from 'react';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useChannelSettings } from '../../context/ChannelSettingsProvider';
+import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
@@ -26,7 +26,7 @@ const ChannelSettingsUI: React.FC<ChannelSettingsUIProps> = (props: ChannelSetti
   const { stringSet } = useContext(LocalizationContext);
 
   const state = useSendbirdStateContext();
-  const channelSettingStore = useChannelSettings();
+  const channelSettingStore = useChannelSettingsContext();
 
   const [showLeaveChannelModal, setShowLeaveChannelModal] = useState(false);
 

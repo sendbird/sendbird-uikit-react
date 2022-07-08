@@ -3,7 +3,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import Modal from '../../../../ui/Modal';
 import { Type as ButtonType } from '../../../../ui/Button/type';
 import UserListItem from '../../../../ui/UserListItem';
-import { useChannelSettings } from '../../context/ChannelSettingsProvider';
+import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
 interface Props {
@@ -22,7 +22,7 @@ export default function InviteUsers({
   const state = useSendbirdStateContext();
   const sdk = state?.stores?.sdkStore?.sdk;
 
-  const { channel } = useChannelSettings();
+  const { channel } = useChannelSettingsContext();
 
   useEffect(() => {
     const userListQuery = sdk?.createApplicationUserListQuery();

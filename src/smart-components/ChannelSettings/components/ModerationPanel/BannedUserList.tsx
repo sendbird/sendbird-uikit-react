@@ -17,14 +17,14 @@ import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 
 import UserListItem from '../UserListItem';
 import BannedUsersModal from './BannedUsersModal';
-import { useChannelSettings } from '../../context/ChannelSettingsProvider';
+import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 
 export const BannedMemberList = (): ReactElement => {
   const [members, setMembers] = useState([]);
   const [hasNext, setHasNext] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-  const { channel } = useChannelSettings();
+  const { channel } = useChannelSettingsContext();
 
   useEffect(() => {
     if (!channel) {

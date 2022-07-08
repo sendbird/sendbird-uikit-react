@@ -9,7 +9,7 @@ import Icon, {
   IconTypes,
   IconColors,
 } from '../../../../ui/Icon';
-import { useOpenChannelSettings } from '../../context/OpenChannelSettingsProvider';
+import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import OpenChannelProfile from '../OpenChannelProfile';
 import DeleteChannel from '../DeleteOpenChannel';
 import ParticipantsAccordion from '../ParticipantUI';
@@ -50,7 +50,7 @@ export const OperatorUI: React.FC<OperatorUIProps> = ({
   const {
     onCloseClick,
     channel,
-  } = useOpenChannelSettings();
+  } = useOpenChannelSettingsContext();
   return (
     <>
       <div className="sendbird-openchannel-settings__header">

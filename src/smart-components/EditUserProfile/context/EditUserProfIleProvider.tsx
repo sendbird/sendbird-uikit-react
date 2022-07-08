@@ -39,11 +39,11 @@ const EditUserProfileProvider: React.FC<EditUserProfileProps> = (props: EditUser
   );
 }
 
-const useEditUserProfileProvider = (): EditUserProfileProviderInterface => (
+const useEditUserProfileContext = (): EditUserProfileProviderInterface => (
   React.useContext(EditUserProfileProviderContext)
 );
 
 export {
   EditUserProfileProvider,
-  useEditUserProfileProvider,
+  useEditUserProfileContext,
 };

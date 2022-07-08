@@ -16,7 +16,7 @@ import UserListItem from '../UserListItem';
 import OperatorsModal from './OperatorsModal';
 import AddOperatorsModal from './AddOperatorsModal';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useChannelSettings } from '../../context/ChannelSettingsProvider';
+import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 
 export const OperatorList = (): ReactElement => {
   const [operators, setOperators] = useState([]);
@@ -26,7 +26,7 @@ export const OperatorList = (): ReactElement => {
   const { stringSet } = useContext(LocalizationContext);
 
   const state = useSendbirdStateContext();
-  const { channel } = useChannelSettings();
+  const { channel } = useChannelSettingsContext();
 
   const userId = state?.config?.userId;
 

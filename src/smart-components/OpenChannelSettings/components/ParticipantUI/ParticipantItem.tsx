@@ -17,7 +17,7 @@ import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import ParticipantsModal from './ParticipantsModal';
 import UserProfile from '../../../../ui/UserProfile';
 import ContextMenu, { MenuItems } from '../../../../ui/ContextMenu';
-import { useOpenChannelSettings } from '../../context/OpenChannelSettingsProvider';
+import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
 const SHOWN_MEMBER_MAX = 10;
@@ -102,7 +102,7 @@ export interface ParticipantsAccordionProps {
 
 export default function ParticipantsAccordion(props: ParticipantsAccordionProps): ReactElement {
   const maxMembers = props?.maxMembers || SHOWN_MEMBER_MAX;
-  const { channel } = useOpenChannelSettings();
+  const { channel } = useOpenChannelSettingsContext();
   const globalState = useSendbirdStateContext();
   const currentUser = globalState?.config?.userId;
   const [participants, setParticipants] = useState([]);

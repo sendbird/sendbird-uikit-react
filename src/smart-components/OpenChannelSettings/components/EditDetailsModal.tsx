@@ -14,7 +14,7 @@ import { Type as ButtonType } from '../../../ui/Button/type';
 import Label, { LabelColors, LabelTypography } from '../../../ui/Label';
 import TextButton from '../../../ui/TextButton';
 import OpenChannelAvatar from '../../../ui/ChannelAvatar/OpenChannelAvatar';
-import { useOpenChannelSettings } from '../context/OpenChannelSettingsProvider';
+import { useOpenChannelSettingsContext } from '../context/OpenChannelSettingsProvider';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 
 interface Props {
@@ -33,7 +33,7 @@ const EditDetails = (props: Props): ReactElement => {
     onBeforeUpdateChannel,
     onChannelModified,
     setChannel,
-  } = useOpenChannelSettings();
+  } = useOpenChannelSettingsContext();
 
   const inputRef = useRef(null);
   const formRef = useRef(null);

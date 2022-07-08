@@ -3,7 +3,7 @@ import './channel-ui.scss';
 import React, { useEffect, useState } from 'react';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
-import { useChannel } from '../../context/ChannelProvider';
+import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import ConnectionStatus from '../../../../ui/ConnectionStatus';
 import ChannelHeader from '../ChannelHeader';
@@ -47,7 +47,7 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
     setHighLightedMessageId,
     scrollRef,
     messagesDispatcher,
-  } = useChannel();
+  } = useChannelContext();
   const [unreadCount, setUnreadCount] = useState(0);
   useEffect(() => {
     setUnreadCount(currentGroupChannel?.unreadMessageCount);

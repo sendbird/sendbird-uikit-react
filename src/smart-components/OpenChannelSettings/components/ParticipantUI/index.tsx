@@ -11,13 +11,13 @@ import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 
 import { UserListItem } from './ParticipantItem';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { useOpenChannelSettings } from '../../context/OpenChannelSettingsProvider';
+import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
 export default function ParticipantsList(): ReactElement {
   const globalState = useSendbirdStateContext();
   const currentUser = globalState?.config?.userId;
-  const { channel } = useOpenChannelSettings();
+  const { channel } = useOpenChannelSettingsContext();
   const { stringSet } = useContext(LocalizationContext);
   const [participants, setParticipants] = useState<Array<User>|null>([]);
   const [participantListQuery, setParticipantListQuery] = useState<ParticipantListQuery | null>(null);

@@ -8,7 +8,7 @@ import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import { compareMessagesForGrouping } from '../../context/utils';
-import { useOpenChannel } from '../../context/OpenChannelProvider';
+import { useOpenChannelContext } from '../../context/OpenChannelProvider';
 import OpenChannelMessage from '../OpenChannelMessage';
 import { RenderMessageProps } from '../../../../types';
 import { FileMessage, UserMessage } from '@sendbird/chat/message';
@@ -28,7 +28,7 @@ function OpenchannelMessageList(
     allMessages,
     hasMore,
     onScroll,
-  } = useOpenChannel();
+  } = useOpenChannelContext();
   const scrollRef = ref || useRef(null);
   const [showScrollDownButton, setShowScrollDownButton] = useState(false);
 

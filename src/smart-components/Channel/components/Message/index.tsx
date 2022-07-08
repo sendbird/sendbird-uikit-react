@@ -10,7 +10,7 @@ import format from 'date-fns/format';
 
 import SuggestedMentionList from '../SuggestedMentionList';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useChannel } from '../../context/ChannelProvider';
+import { useChannelContext } from '../../context/ChannelProvider';
 import { getClassName } from '../../../../utils';
 import { isDisabledBecauseFrozen } from '../../context/utils';
 import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT } from '../../context/const';
@@ -78,7 +78,7 @@ const Message = (props: MessageUIProps): ReactElement | React.ReactNode | React.
     setQuoteMessage,
     resendMessage,
     renderUserMentionItem,
-  } = useChannel();
+  } = useChannelContext();
 
   const [showEdit, setShowEdit] = useState(false);
   const [showRemove, setShowRemove] = useState(false);

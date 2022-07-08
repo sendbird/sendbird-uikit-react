@@ -13,7 +13,7 @@ import Label, {
 } from '../../../../ui/Label';
 import { Type as ButtonType } from '../../../../ui/Button/type';
 import UserListItem from '../../../../ui/UserListItem';
-import { useChannelSettings } from '../../context/ChannelSettingsProvider';
+import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 
 interface Props {
   onCancel(): void;
@@ -29,7 +29,7 @@ export default function AddOperatorsModal({
   const [memberQuery, setMemberQuery] = useState(null);
   const { stringSet } = useContext(LocalizationContext);
 
-  const { channel } = useChannelSettings();
+  const { channel } = useChannelSettingsContext();
 
   useEffect(() => {
     const memberListQuery = channel?.createMemberListQuery({

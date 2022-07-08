@@ -10,7 +10,7 @@ import IconButton from '../../../../ui/IconButton';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 
-import { useChannelSettings } from '../../context/ChannelSettingsProvider';
+import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
 interface Props { onCancel?(): void }
@@ -19,7 +19,7 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
   const [operators, setOperators] = useState([]);
   const [operatorQuery, setOperatorQuery] = useState(null);
 
-  const { channel } = useChannelSettings();
+  const { channel } = useChannelSettingsContext();
   const state = useSendbirdStateContext();
   const currentUser = state?.config?.userId;
 

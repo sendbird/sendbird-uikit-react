@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import './index.scss';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { useMessageSearch } from '../../context/MessageSearchProvider';
+import { useMessageSearchContext } from '../../context/MessageSearchProvider';
 
 import MessageSearchItem from '../../../../ui/MessageSearchItem';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
@@ -50,7 +50,7 @@ export const MessageSearchUI: React.FC<MessageSearchUIProps> = ({
     onResultClick,
     selectedMessageId,
     setSelectedMessageId,
-  } = useMessageSearch();
+  } = useMessageSearchContext();
 
   const { stringSet } = useContext(LocalizationContext);
 

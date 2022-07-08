@@ -87,6 +87,9 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
 }
 
 type useOpenChannelSettingsType = () => OpenChannelSettingsContextType;
-const useOpenChannelSettings: useOpenChannelSettingsType = () => React.useContext(OpenChannelSettingsContext);
+const useOpenChannelSettingsContext: useOpenChannelSettingsType = () => React.useContext(OpenChannelSettingsContext);
 
-export { OpenChannelSettingsProvider, useOpenChannelSettings };
+export {
+  OpenChannelSettingsProvider,
+  useOpenChannelSettingsContext,
+};

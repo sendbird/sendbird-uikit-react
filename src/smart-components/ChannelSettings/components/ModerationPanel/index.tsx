@@ -21,7 +21,7 @@ import MemberList from './MemberList';
 import BannedMemberList from './BannedUserList';
 import MutedMemberList from './MutedMemberList';
 
-import { useChannelSettings } from '../../context/ChannelSettingsProvider';
+import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 
 const kFormatter = (num: number): string|number => {
   return Math.abs(num) > 999
@@ -33,7 +33,7 @@ export default function AdminPannel(): ReactElement {
   const [frozen, setFrozen] = useState(false);
 
   const { stringSet } = useContext(LocalizationContext);
-  const { channel } = useChannelSettings();
+  const { channel } = useChannelSettingsContext();
 
 
   // work around for

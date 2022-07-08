@@ -12,7 +12,7 @@ import TextButton from '../../../../ui/TextButton';
 import OpenChannelAvatar from '../../../../ui/ChannelAvatar/OpenChannelAvatar';
 import EditDetailsModal from '../EditDetailsModal';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useOpenChannelSettings } from '../../context/OpenChannelSettingsProvider';
+import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 
 export default function ChannelProfile(): ReactElement {
   const globalState = useSendbirdStateContext();
@@ -20,7 +20,7 @@ export default function ChannelProfile(): ReactElement {
   const theme = globalState?.config?.theme;
   const {
     channel,
-  } = useOpenChannelSettings();
+  } = useOpenChannelSettingsContext();
 
   const title = channel?.name;
   const [showModal, setShowModal] = useState(false);
