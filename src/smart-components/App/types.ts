@@ -23,7 +23,7 @@ export default interface AppProps {
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   onProfileEditSuccess?(user: SendBird.User): void;
   config?: SendBirdProviderConfig;
-  useReaction?: boolean;
+  isReactionEnabled?: boolean;
   isMessageGroupingEnabled?: boolean;
   stringSet?: Record<string, string>;
   colorSet?: Record<string, string>;

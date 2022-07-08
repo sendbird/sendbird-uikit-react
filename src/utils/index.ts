@@ -233,18 +233,18 @@ interface UIKitStore {
     },
   },
   config: {
-    useReaction: boolean,
+    isReactionEnabled: boolean,
   }
 }
 export const getCurrentUserId = (store: UIKitStore): string => (store?.stores?.userStore?.user?.userId);
 export const getUseReaction = (store: UIKitStore, channel: GroupChannel | OpenChannel): boolean => {
-  if (!store?.config?.useReaction)
+  if (!store?.config?.isReactionEnabled)
     return false;
   if (!store?.stores?.sdkStore?.sdk?.appInfo?.useReaction)
     return false;
   if (channel?.isGroupChannel())
     return !((channel as GroupChannel).isBroadcast || (channel as GroupChannel).isSuper);
-  return store?.config?.useReaction;
+  return store?.config?.isReactionEnabled;
 };
 
 export const isMessageSentByMe = (userId: string, message: UserMessage | FileMessage): boolean => (

@@ -50,7 +50,7 @@ export const basicSDK = () => fitPageSize(
     showSearchIcon
     replyType="QUOTE_REPLY"
     isMentionEnabled
-    useReaction
+    isReactionEnabled
     isTypingIndicatorEnabledOnChannelList
     isMessageReceiptStatusEnabledOnChannelList
     /*config={{ logLevel: 'all' }}*/

@@ -217,7 +217,7 @@ describe('MessageContent', () => {
     ).toBe(false);
   });
 
-  // it('should render components by useReaction and reactions', () => {});
+  // it('should render components by isReactionEnabled and reactions', () => {});
 
   it('should do a snapshot test of the MessageContent DOM', function () {
     const component = renderer.create(

@@ -18,11 +18,11 @@ function useScrollDownCallback({
   return useCallback((cb) => {
     if (!hasMoreNext) { return; }
     const { appInfo = {} } = sdk;
-    const useReaction = appInfo.useReaction || false;
+    const isReactionEnabled = appInfo.useReaction || false;
     const messageListParams = {
       nextResultSize: NEXT_RESULT_SIZE,
       isInclusive: true,
-      includeReactions: useReaction,
+      includeReactions: isReactionEnabled,
     };
     if (replyType && replyType === 'QUOTE_REPLY') {
       messageListParams.includeThreadInfo = true;

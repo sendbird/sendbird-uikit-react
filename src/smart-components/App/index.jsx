@@ -26,7 +26,7 @@ export default function App(props) {
     profileUrl,
     dateLocale,
     config = {},
-    useReaction,
+    isReactionEnabled,
     isMentionEnabled,
     replyType,
     isMessageGroupingEnabled,
@@ -64,7 +64,7 @@ export default function App(props) {
       disableUserProfile={disableUserProfile}
       renderUserProfile={renderUserProfile}
       imageCompression={imageCompression}
-      useReaction={useReaction}
+      isReactionEnabled={isReactionEnabled}
       isMentionEnabled={isMentionEnabled}
       isTypingIndicatorEnabledOnChannelList={isTypingIndicatorEnabledOnChannelList}
       isMessageReceiptStatusEnabledOnChannelList={isMessageReceiptStatusEnabledOnChannelList}
@@ -106,7 +106,7 @@ export default function App(props) {
             showSearchIcon={showSearchIcon}
             startingPoint={startingPoint}
             highlightedMessage={highlightedMessage}
-            useReaction={useReaction}
+            isReactionEnabled={isReactionEnabled}
             replyType={replyType}
             isMessageGroupingEnabled={isMessageGroupingEnabled}
           />
@@ -168,7 +168,7 @@ App.propTypes = {
       PropTypes.arrayOf(PropTypes.string),
     ]),
   }),
-  useReaction: PropTypes.bool,
+  isReactionEnabled: PropTypes.bool,
   replyType: PropTypes.oneOf(['NONE', 'QUOTE_REPLY', 'THREAD']),
   showSearchIcon: PropTypes.bool,
   isMessageGroupingEnabled: PropTypes.bool,
@@ -204,7 +204,7 @@ App.defaultProps = {
   showSearchIcon: false,
   renderUserProfile: null,
   config: {},
-  useReaction: true,
+  isReactionEnabled: true,
   isMentionEnabled: false,
   replyType: 'NONE',
   isMessageGroupingEnabled: true,

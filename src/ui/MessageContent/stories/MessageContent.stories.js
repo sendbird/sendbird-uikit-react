@@ -44,7 +44,7 @@ export const withText = () => (
       optionalProps={{
         // chainTop: true,
         // chainBottom: true,
-        useReaction: true,
+        isReactionEnabled: true,
         emojiContainer: {
           emojiCategories: [
             { emojis: [ { key: 'emoji1', url: '' } ] },
@@ -88,7 +88,7 @@ export const withText = () => (
         optionalProps={{
           // chainTop: true,
           // chainBottom: true,
-          useReaction: true,
+          isReactionEnabled: true,
           emojiContainer: {
             emojiCategories: [
               { emojis: [ { key: 'emoji1', url: '' } ] },

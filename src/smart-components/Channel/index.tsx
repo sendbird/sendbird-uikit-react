@@ -13,8 +13,8 @@ const Channel: React.FC<ChannelProps> = (props: ChannelProps) => {
   return (
     <ChannelProvider
       channelUrl={props?.channelUrl}
+      isReactionEnabled={props?.isReactionEnabled}
       isMessageGroupingEnabled={props?.isMessageGroupingEnabled}
-      useReaction={props?.useReaction}
       showSearchIcon={props?.showSearchIcon}
       highlightedMessage={props?.highlightedMessage}
       startingPoint={props?.startingPoint}
