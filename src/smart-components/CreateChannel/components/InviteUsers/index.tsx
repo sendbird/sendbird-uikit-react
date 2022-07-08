@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import type { ApplicationUserListQuery } from '@sendbird/chat';
 
-import './invite-members.scss';
+import './invite-users.scss';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useCreateChannelContext } from '../../context/CreateChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
