@@ -73,4 +73,7 @@ const useCreateChannelContext = (): CreateChannelContextInterface => (
   React.useContext(CreateChannelContext)
 );
 
-export { CreateChannelProvider, useCreateChannelContext };
+export {
+  CreateChannelProvider,
+  useCreateChannelContext,
+};

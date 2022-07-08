@@ -16,7 +16,7 @@ import
 } from '../../../../ui/Label';
 import UserListItem from '../UserListItem';
 import MutedMembersModal from './MutedMembersModal';
-import { useChannelSettings } from '../../context/ChannelSettingsProvider';
+import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
 
@@ -25,7 +25,7 @@ export const MutedMemberList = (): ReactElement => {
   const [hasNext, setHasNext] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-  const { channel } = useChannelSettings();
+  const { channel } = useChannelSettingsContext();
   const state = useSendbirdStateContext();
   const currentUser = state?.config?.userId;
 

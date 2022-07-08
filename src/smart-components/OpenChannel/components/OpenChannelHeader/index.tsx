@@ -6,7 +6,7 @@ import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
 import IconButton from '../../../../ui/IconButton';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { useOpenChannel } from '../../context/OpenChannelProvider';
+import { useOpenChannelContext } from '../../context/OpenChannelProvider';
 
 import { kFormatter } from '../../context/utils';
 
@@ -16,7 +16,7 @@ export default function OpenchannelConversationHeader(): JSX.Element {
     currentOpenChannel,
     onChatHeaderActionClick,
     amIOperator,
-  } = useOpenChannel();
+  } = useOpenChannelContext();
   const title = currentOpenChannel?.name;
   const subTitle = `${kFormatter(currentOpenChannel?.participantCount)} ${stringSet.OPEN_CHANNEL_CONVERSATION__TITLE_PARTICIPANTS}`;
   const coverImage = currentOpenChannel?.coverUrl;

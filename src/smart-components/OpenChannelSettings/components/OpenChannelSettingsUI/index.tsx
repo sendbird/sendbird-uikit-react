@@ -2,7 +2,7 @@ import './open-channel-ui.scss';
 
 import React, { useContext } from 'react';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useOpenChannelSettings } from '../../context/OpenChannelSettingsProvider';
+import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import { UserProfileProvider } from '../../../../lib/UserProfileContext';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 
@@ -25,7 +25,7 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
   const {
     channel,
     onCloseClick,
-  } = useOpenChannelSettings();
+  } = useOpenChannelSettingsContext();
   const globalStore = useSendbirdStateContext();
   const logger = globalStore?.config?.logger;
   const user = globalStore?.stores?.userStore?.user;

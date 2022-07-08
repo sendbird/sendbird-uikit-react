@@ -11,7 +11,7 @@ import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 
 import { noop } from '../../../../utils/utils';
-import { useChannelSettings } from '../../context/ChannelSettingsProvider';
+import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 
 interface Props {
   onCancel(): void;
@@ -22,7 +22,7 @@ export default function BannedUsersModal({
 }: Props): ReactElement {
   const [members, setMembers] = useState([]);
   const [memberQuery, setMemberQuery] = useState(null);
-  const { channel } = useChannelSettings();
+  const { channel } = useChannelSettingsContext();
 
   useEffect(() => {
     const bannedUserListQuery = channel?.createBannedUserListQuery();

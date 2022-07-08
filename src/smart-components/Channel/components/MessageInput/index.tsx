@@ -6,7 +6,7 @@ import * as utils from '../../context/utils';
 import MessageInput from '../../../../ui/MessageInput';
 import QuoteMessageInput from '../../../../ui/QuoteMessageInput';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { useChannel } from '../../context/ChannelProvider';
+import { useChannelContext } from '../../context/ChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import SuggestedMentionList from '../SuggestedMentionList';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
@@ -21,7 +21,7 @@ const MessageInputWrapper = (): JSX.Element => {
     setQuoteMessage,
     messageInputRef,
     renderUserMentionItem,
-  } = useChannel();
+  } = useChannelContext();
   const globalStore = useSendbirdStateContext();
   const channel = currentGroupChannel;
 

@@ -6,7 +6,7 @@ import React, {
   useState,
   useContext,
 } from 'react';
-import { useEditUserProfileProvider } from '../../context/EditUserProfIleProvider';
+import { useEditUserProfileContext } from '../../context/EditUserProfIleProvider';
 
 import Modal from '../../../../ui/Modal';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
@@ -22,7 +22,7 @@ import { noop } from '../../../../utils/utils';
 import * as userActions from '../../../../lib/dux/user/actionTypes';
 
 export default function EditUserProfile(): ReactElement {
-  const editProfileProps = useEditUserProfileProvider();
+  const editProfileProps = useEditUserProfileContext();
   const store = useSendbirdStateContext();
   const hiddenInputRef = useRef(null);
   const inputRef = useRef(null);

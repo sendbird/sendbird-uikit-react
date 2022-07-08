@@ -11,7 +11,7 @@ import Modal from '../../../../ui/Modal';
 import UserListItem from '../../../../ui/UserListItem';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { noop } from '../../../../utils/utils';
-import { useOpenChannelSettings } from '../../context/OpenChannelSettingsProvider';
+import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 
 interface Props {
   onCancel(): void;
@@ -20,7 +20,7 @@ interface Props {
 export default function ParticipantsModal({
   onCancel,
 }: Props): ReactElement {
-  const { channel } = useOpenChannelSettings();
+  const { channel } = useOpenChannelSettingsContext();
   const { stringSet } = useContext(LocalizationContext);
   const [participants, setParticipants] = useState<Array<User>|null>([]);
   const [participantListQuery, setParticipantListQuery] = useState<ParticipantListQuery | null>(null);

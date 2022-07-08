@@ -319,6 +319,9 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
 }
 
 export type UseOpenChannelType = () => OpenChannelInterface;
-const useOpenChannel: UseOpenChannelType = () => React.useContext(OpenChannelContext);
+const useOpenChannelContext: UseOpenChannelType = () => React.useContext(OpenChannelContext);
 
-export { OpenChannelProvider, useOpenChannel };
+export {
+  OpenChannelProvider,
+  useOpenChannelContext,
+};

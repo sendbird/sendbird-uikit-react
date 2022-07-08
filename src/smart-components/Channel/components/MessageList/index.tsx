@@ -3,7 +3,7 @@ import './message-list.scss';
 import React, { useState, useMemo } from 'react';
 import isSameDay from 'date-fns/isSameDay';
 
-import { useChannel } from '../../context/ChannelProvider';
+import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import { compareMessagesForGrouping } from '../../context/utils';
@@ -39,7 +39,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
     messagesDispatcher,
     messageActionTypes,
     currentGroupChannel,
-  } = useChannel();
+  } = useChannelContext();
   const [scrollBottom, setScrollBottom] = useState(0);
 
   const onScroll = (e) => {

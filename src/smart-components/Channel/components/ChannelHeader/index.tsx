@@ -9,14 +9,14 @@ import IconButton from '../../../../ui/IconButton';
 import ChannelAvatar from '../../../../ui/ChannelAvatar/index';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useChannel } from '../../context/ChannelProvider';
+import { useChannelContext } from '../../context/ChannelProvider';
 
 const ChatHeader: React.FC = () => {
   const globalStore = useSendbirdStateContext();
   const userId = globalStore?.config?.userId;
   const theme = globalStore?.config?.theme;
 
-  const channelStore = useChannel();
+  const channelStore = useChannelContext();
   const {
     currentGroupChannel,
     showSearchIcon,

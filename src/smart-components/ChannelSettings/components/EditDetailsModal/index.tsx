@@ -1,6 +1,6 @@
 import React, { useState, useRef, useContext } from 'react';
 
-import { useChannelSettings } from '../../context/ChannelSettingsProvider';
+import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
@@ -29,7 +29,7 @@ const EditDetails: React.FC<EditDetailsProps> = (props: EditDetailsProps) => {
     onChannelModified,
     onBeforeUpdateChannel,
     setChannelUpdateId,
-  } = useChannelSettings();
+  } = useChannelSettingsContext();
   const title = channel?.name;
 
   const state = useSendbirdStateContext();

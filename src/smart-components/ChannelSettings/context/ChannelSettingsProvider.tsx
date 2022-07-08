@@ -128,6 +128,9 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
 }
 
 export type UseChannelSettingsType = () => ChannelSettingsProviderInterface;
-const useChannelSettings: UseChannelSettingsType = () => React.useContext(ChannelSettingsContext);
+const useChannelSettingsContext: UseChannelSettingsType = () => React.useContext(ChannelSettingsContext);
 
-export { ChannelSettingsProvider, useChannelSettings };
+export {
+  ChannelSettingsProvider,
+  useChannelSettingsContext,
+};

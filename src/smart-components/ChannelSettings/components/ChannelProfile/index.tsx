@@ -3,7 +3,7 @@ import React, { useState, useContext } from 'react';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useChannelSettings } from '../../context/ChannelSettingsProvider';
+import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 
 import ChannelAvatar from '../../../../ui/ChannelAvatar';
 import TextButton from '../../../../ui/TextButton';
@@ -16,7 +16,7 @@ import EditDetailsModal from '../EditDetailsModal';
 
 const ChannelProfile: React.FC = () => {
   const state = useSendbirdStateContext();
-  const channelSettingStore = useChannelSettings();
+  const channelSettingStore = useChannelSettingsContext();
   const { stringSet } = useContext(LocalizationContext);
   const [showModal, setShowModal] = useState(false);
 

@@ -423,6 +423,9 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
 }
 
 export type UseChannelType = () => ChannelProviderInterface;
-const useChannel: UseChannelType = () => React.useContext(ChannelContext);
+const useChannelContext: UseChannelType = () => React.useContext(ChannelContext);
 
-export { ChannelProvider, useChannel };
+export {
+  ChannelProvider,
+  useChannelContext,
+};
