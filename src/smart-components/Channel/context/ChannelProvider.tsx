@@ -69,8 +69,8 @@ export type ChannelQueries = {
 export type ChannelContextProps = {
   children?: React.ReactNode;
   channelUrl: string;
-  useMessageGrouping?: boolean;
   isReactionEnabled?: boolean;
+  isMessageGroupingEnabled?: boolean;
   showSearchIcon?: boolean;
   highlightedMessage?: number;
   startingPoint?: number;
@@ -152,8 +152,8 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   const {
     channelUrl,
     children,
-    useMessageGrouping,
     isReactionEnabled,
+    isMessageGroupingEnabled,
     showSearchIcon,
     highlightedMessage,
     startingPoint,
@@ -359,8 +359,8 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     <ChannelContext.Provider value={{
       // props
       channelUrl,
-      useMessageGrouping,
       isReactionEnabled: usingReaction,
+      isMessageGroupingEnabled,
       showSearchIcon,
       highlightedMessage,
       startingPoint,

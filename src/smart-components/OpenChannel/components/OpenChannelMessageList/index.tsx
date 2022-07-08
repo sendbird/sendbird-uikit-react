@@ -24,7 +24,7 @@ function OpenchannelMessageList(
   ref: React.RefObject<HTMLDivElement>,
 ): ReactElement {
   const {
-    useMessageGrouping = true,
+    isMessageGroupingEnabled = true,
     allMessages,
     hasMore,
     onScroll,
@@ -93,7 +93,7 @@ function OpenchannelMessageList(
                     isSameDay(currentCreatedAt, previousMessageCreatedAt)
                   ));
 
-                  const [chainTop, chainBottom] = useMessageGrouping
+                  const [chainTop, chainBottom] = isMessageGroupingEnabled
                     ? compareMessagesForGrouping(previousMessage, message, nextMessage)
                     : [false, false];
                   return (

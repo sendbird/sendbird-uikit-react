@@ -24,7 +24,7 @@ export default interface AppProps {
   onProfileEditSuccess?(user: SendBird.User): void;
   config?: SendBirdProviderConfig;
   isReactionEnabled?: boolean;
-  useMessageGrouping?: boolean;
+  isMessageGroupingEnabled?: boolean;
   stringSet?: Record<string, string>;
   colorSet?: Record<string, string>;
   imageCompression?: {
