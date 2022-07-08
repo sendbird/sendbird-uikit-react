@@ -18,7 +18,7 @@ import Badge from '../../../../ui/Badge';
 
 import OperatorList from './OperatorList';
 import MemberList from './MemberList';
-import BannedMemberList from './BannedMemberList';
+import BannedMemberList from './BannedUserList';
 import MutedMemberList from './MutedMemberList';
 
 import { useChannelSettings } from '../../context/ChannelSettingsProvider';
@@ -131,7 +131,7 @@ export default function AdminPannel(): ReactElement {
       }
       <Accordion
         className="sendbird-channel-settings__banned-members-list"
-        id="bannedMembers"
+        id="bannedUsers"
         renderTitle={() => (
           <>
             <Icon

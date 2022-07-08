@@ -11,7 +11,7 @@ import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import IconButton from '../../../../ui/IconButton';
 import ChannelProfile from '../ChannelProfile';
-import AdminPanel from '../AdminPanel';
+import ModerationPanel from '../ModerationPanel';
 import LeaveChannelModal from '../LeaveChannel';
 import UserPanel from '../UserPanel';
 
@@ -110,7 +110,7 @@ const ChannelSettingsUI: React.FC<ChannelSettingsUIProps> = (props: ChannelSetti
         {
           renderModerationPanel?.() || (
             channel?.myRole === 'operator'
-              ? (<AdminPanel />)
+              ? (<ModerationPanel />)
               : (<UserPanel />)
           )
         }

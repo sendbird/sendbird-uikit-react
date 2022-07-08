@@ -16,7 +16,7 @@ import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 
 import UserListItem from '../UserListItem';
-import BannedMembersModal from './BannedMembersModal';
+import BannedUsersModal from './BannedUsersModal';
 import { useChannelSettings } from '../../context/ChannelSettingsProvider';
 
 export const BannedMemberList = (): ReactElement => {
@@ -131,7 +131,7 @@ export const BannedMemberList = (): ReactElement => {
       }
       {
         showModal && (
-          <BannedMembersModal
+          <BannedUsersModal
             onCancel={() => {
               setShowModal(false);
               refreshList();
