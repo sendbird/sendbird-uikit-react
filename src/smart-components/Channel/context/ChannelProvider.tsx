@@ -70,7 +70,7 @@ export type ChannelContextProps = {
   children?: React.ReactNode;
   channelUrl: string;
   useMessageGrouping?: boolean;
-  useReaction?: boolean;
+  isReactionEnabled?: boolean;
   showSearchIcon?: boolean;
   highlightedMessage?: number;
   startingPoint?: number;
@@ -153,7 +153,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     channelUrl,
     children,
     useMessageGrouping,
-    useReaction,
+    isReactionEnabled,
     showSearchIcon,
     highlightedMessage,
     startingPoint,
@@ -209,8 +209,8 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   const isBroadcast = currentGroupChannel?.isBroadcast || false;
   const { appInfo } = sdk;
   const usingReaction = (
-    appInfo?.useReaction && !isBroadcast && !isSuper && useReaction
-    // TODO: Make useReaction independent from appInfo.useReaction
+    appInfo?.useReaction && !isBroadcast && !isSuper && isReactionEnabled
+    // TODO: Make isReactionEnabled independent from appInfo.useReaction
   );
 
   const emojiAllMap = useMemo(() => (
@@ -265,7 +265,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   const memoizedEmojiListItems = useMemoizedEmojiListItems({
     emojiContainer, toggleReaction,
   }, {
-    useReaction: usingReaction,
+    isReactionEnabled: usingReaction,
     logger,
     userId,
     emojiAllList,
@@ -360,7 +360,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       // props
       channelUrl,
       useMessageGrouping,
-      useReaction: usingReaction,
+      isReactionEnabled: usingReaction,
       showSearchIcon,
       highlightedMessage,
       startingPoint,

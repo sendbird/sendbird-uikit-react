@@ -49,7 +49,7 @@ interface Props {
   disabled?: boolean;
   chainTop?: boolean;
   chainBottom?: boolean;
-  useReaction?: boolean;
+  isReactionEnabled?: boolean;
   replyType?: ReplyType;
   nicknamesMap?: Map<string, string>;
   emojiContainer?: EmojiContainer;
@@ -69,7 +69,7 @@ export default function MessageContent({
   disabled = false,
   chainTop = false,
   chainBottom = false,
-  useReaction = false,
+  isReactionEnabled = false,
   replyType,
   nicknamesMap,
   emojiContainer,
@@ -94,7 +94,7 @@ export default function MessageContent({
     || ((message as UserMessage | FileMessage).sendingStatus === 'failed');
   const isByMeClassName = isByMe ? 'outgoing' : 'incoming';
   const chainTopClassName = chainTop ? 'chain-top' : '';
-  const useReactionClassName = useReaction ? 'use-reactions' : '';
+  const isReactionEnabledClassName = isReactionEnabled ? 'use-reactions' : '';
   const supposedHoverClassName = supposedHover ? 'supposed-hover' : '';
   const useReplying = !!((replyType === 'QUOTE_REPLY') && message?.parentMessageId && message?.parentMessage);
   const useReplyingClassName = useReplying ? 'use-quote' : '';
@@ -109,7 +109,7 @@ export default function MessageContent({
       onMouseLeave={() => setMouseHover(false)}
     >
       {/* left */}
-      <div className={getClassName(['sendbird-message-content__left', useReactionClassName, isByMeClassName, useReplyingClassName])}>
+      <div className={getClassName(['sendbird-message-content__left', isReactionEnabledClassName, isByMeClassName, useReplyingClassName])}>
         {(!isByMe && !chainBottom) && (
           /** user profile */
           <ContextMenu
@@ -148,7 +148,7 @@ export default function MessageContent({
         )}
         {/* outgoing menu */}
         {isByMe && (
-          <div className={getClassName(['sendbird-message-content-menu', useReactionClassName, supposedHoverClassName, isByMeClassName])}>
+          <div className={getClassName(['sendbird-message-content-menu', isReactionEnabledClassName, supposedHoverClassName, isByMeClassName])}>
             <MessageItemMenu
               className="sendbird-message-content-menu__normal-menu"
               channel={channel}
@@ -162,7 +162,7 @@ export default function MessageContent({
               setQuoteMessage={setQuoteMessage}
               setSupposedHover={setSupposedHover}
             />
-            {useReaction && (
+            {isReactionEnabled && (
               <MessageItemReactionMenu
                 className="sendbird-message-content-menu__reaction-menu"
                 message={message as UserMessage | FileMessage}
@@ -265,7 +265,7 @@ export default function MessageContent({
             />
           )}
           {/* reactions */}
-          {(useReaction && message?.reactions?.length > 0) && (
+          {(isReactionEnabled && message?.reactions?.length > 0) && (
             <div className={getClassName([
               'sendbird-message-content-reactions',
               (!isByMe || isThumbnailMessage(message as FileMessage) || isOGMessage(message as UserMessage)) ? '' : 'primary',
@@ -295,11 +295,11 @@ export default function MessageContent({
         </div>
       </div>
       {/* right */}
-      <div className={getClassName(['sendbird-message-content__right', chainTopClassName, useReactionClassName, useReplyingClassName])}>
+      <div className={getClassName(['sendbird-message-content__right', chainTopClassName, isReactionEnabledClassName, useReplyingClassName])}>
         {/* incoming menu */}
         {!isByMe && (
           <div className={getClassName(['sendbird-message-content-menu', chainTopClassName, supposedHoverClassName, isByMeClassName])}>
-            {useReaction && (
+            {isReactionEnabled && (
               <MessageItemReactionMenu
                 className="sendbird-message-content-menu__reaction-menu"
                 message={message as UserMessage | FileMessage}

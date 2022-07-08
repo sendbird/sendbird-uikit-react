@@ -8,7 +8,7 @@ import Icon, { IconTypes } from '../../../../ui/Icon';
 export default function useMemoizedEmojiListItems({
   emojiContainer, toggleReaction,
 }, {
-  useReaction,
+  isReactionEnabled,
   logger,
   userId,
   emojiAllList,
@@ -21,7 +21,7 @@ export default function useMemoizedEmojiListItems({
     closeDropdown,
     spaceFromTrigger = {},
   }) => {
-    if (!useReaction || !(parentRef || parentContainRef || message || closeDropdown)) {
+    if (!isReactionEnabled || !(parentRef || parentContainRef || message || closeDropdown)) {
       logger.warning('Channel: Invalid Params in memoizedEmojiListItems');
       return null;
     }

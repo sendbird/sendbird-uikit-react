@@ -263,7 +263,7 @@ interface AppProps {
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   onProfileEditSuccess?(user: User): void;
   config?: SendBirdProviderConfig;
-  useReaction?: boolean;
+  isReactionEnabled?: boolean;
   useMessageGrouping?: boolean;
   stringSet?: Record<string, string>;
   colorSet?: Record<string, string>;
@@ -595,7 +595,7 @@ type ChannelContextProps = {
   channelUrl: string;
   children?: React.ReactNode;
   useMessageGrouping?: boolean;
-  useReaction?: boolean;
+  isReactionEnabled?: boolean;
   showSearchIcon?: boolean;
   highlightedMessage?: number;
   startingPoint?: number;
@@ -1477,7 +1477,7 @@ declare module '@sendbird/uikit-react/ui/MessageContent' {
     disabled?: boolean;
     chainTop?: boolean;
     chainBottom?: boolean;
-    useReaction?: boolean;
+    isReactionEnabled?: boolean;
     replyType?: ReplyType;
     nicknamesMap?: Map<string, string>;
     emojiContainer?: EmojiContainer;

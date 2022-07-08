@@ -39,12 +39,12 @@ function useHandleReconnect(
       // state changed from offline to online
       if (wasOffline && currentGroupChannel?.url) {
         logger.info('Refreshing conversation state');
-        const useReaction = sdk?.appInfo?.useReaction || false;
+        const isReactionEnabled = sdk?.appInfo?.useReaction || false;
 
         const messageListParams: MessageListParams = {
           prevResultSize: PREV_RESULT_SIZE,
           isInclusive: true,
-          includeReactions: useReaction,
+          includeReactions: isReactionEnabled,
           nextResultSize: NEXT_RESULT_SIZE,
         };
         if (replyType && replyType === 'QUOTE_REPLY') {

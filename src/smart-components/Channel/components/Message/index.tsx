@@ -71,7 +71,7 @@ const Message = (props: MessageUIProps): ReactElement | React.ReactNode | React.
     updateMessage,
     scrollToMessage,
     replyType,
-    useReaction,
+    isReactionEnabled,
     toggleReaction,
     emojiContainer,
     nicknamesMap,
@@ -308,7 +308,7 @@ const Message = (props: MessageUIProps): ReactElement | React.ReactNode | React.
             disabled={!isOnline}
             chainTop={chainTop}
             chainBottom={chainBottom}
-            useReaction={useReaction}
+            isReactionEnabled={isReactionEnabled}
             replyType={replyType}
             nicknamesMap={nicknamesMap}
             emojiContainer={emojiContainer}
