@@ -114,7 +114,7 @@ export const MemberList = (): ReactElement => {
                             }
                           }}
                         >
-                          {member.role !== 'operator' ? 'Promote to operator' : 'Demote operator'}
+                          {member.role !== 'operator' ? 'Register as operator' : 'Unregister operator'}
                         </MenuItem>
                         {
                           // No muted members in broadcast channel
