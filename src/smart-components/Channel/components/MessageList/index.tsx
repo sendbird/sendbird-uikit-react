@@ -32,7 +32,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
     setInitialTimeStamp,
     setAnimatedMessageId,
     setHighLightedMessageId,
-    useMessageGrouping,
+    isMessageGroupingEnabled,
     scrollRef,
     onScrollCallback,
     onScrollDownCallback,
@@ -115,7 +115,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
       allMessages.map((m, idx) => {
         const previousMessage = allMessages[idx - 1];
         const nextMessage = allMessages[idx + 1];
-        const [chainTop, chainBottom] = useMessageGrouping
+        const [chainTop, chainBottom] = isMessageGroupingEnabled
           ? compareMessagesForGrouping(previousMessage, m, nextMessage)
           : [false, false];
         const previousMessageCreatedAt = previousMessage?.createdAt;

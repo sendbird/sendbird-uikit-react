@@ -312,7 +312,7 @@ export const user4 = () => fitPageSize(
     theme="dark"
     showSearchIcon
     allowProfileEdit
-    useMessageGrouping={false}
+    isMessageGroupingEnabled={false}
     profileUrl={addProfile}
     config={{ logLevel: 'all' }}
     replyType="QUOTE_REPLY"

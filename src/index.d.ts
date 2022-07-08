@@ -264,7 +264,7 @@ interface AppProps {
   onProfileEditSuccess?(user: User): void;
   config?: SendBirdProviderConfig;
   useReaction?: boolean;
-  useMessageGrouping?: boolean;
+  isMessageGroupingEnabled?: boolean;
   stringSet?: Record<string, string>;
   colorSet?: Record<string, string>;
   imageCompression?: {
@@ -594,7 +594,7 @@ type ChannelQueries = {
 type ChannelContextProps = {
   channelUrl: string;
   children?: React.ReactNode;
-  useMessageGrouping?: boolean;
+  isMessageGroupingEnabled?: boolean;
   useReaction?: boolean;
   showSearchIcon?: boolean;
   highlightedMessage?: number;
@@ -812,7 +812,7 @@ type OpenChannelQueries = {
 interface OpenChannelProviderProps {
   channelUrl: string;
   children?: React.ReactNode;
-  useMessageGrouping?: boolean;
+  isMessageGroupingEnabled?: boolean;
   queries?: OpenChannelQueries;
   messageLimit?: number;
   onBeforeSendUserMessage?(text: string): UserMessageCreateParams;
