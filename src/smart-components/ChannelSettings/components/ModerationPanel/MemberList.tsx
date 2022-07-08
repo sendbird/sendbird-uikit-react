@@ -12,7 +12,7 @@ import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 
 import UserListItem from '../UserListItem';
 import MembersModal from './MembersModal';
-import InviteMembers from './InviteMembersModal';
+import InviteUsers from './InviteUsersModal';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelSettings } from '../../context/ChannelSettingsProvider';
 import uuidv4 from '../../../../utils/uuid';
@@ -21,7 +21,7 @@ export const MemberList = (): ReactElement => {
   const [members, setMembers] = useState([]);
   const [hasNext, setHasNext] = useState(false);
   const [showAllMembers, setShowAllMembers] = useState(false);
-  const [showInviteMembers, setShowInviteMembers] = useState(false);
+  const [showInviteUsers, setShowInviteUsers] = useState(false);
 
   const state = useSendbirdStateContext();
   const {
@@ -174,7 +174,7 @@ export const MemberList = (): ReactElement => {
         <Button
           type={ButtonTypes.SECONDARY}
           size={ButtonSizes.SMALL}
-          onClick={() => setShowInviteMembers(true)}
+          onClick={() => setShowInviteUsers(true)}
         >
           Invite members
         </Button>
@@ -190,13 +190,13 @@ export const MemberList = (): ReactElement => {
         )
       }
       {
-        showInviteMembers && (
-          <InviteMembers
+        showInviteUsers && (
+          <InviteUsers
             onSubmit={() => {
-              setShowInviteMembers(false);
+              setShowInviteUsers(false);
               refershList();
             }}
-            onCancel={() => setShowInviteMembers(false)}
+            onCancel={() => setShowInviteUsers(false)}
           />
         )
       }

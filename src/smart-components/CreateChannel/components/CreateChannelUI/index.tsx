@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useCreateChannelContext } from '../../context/CreateChannelProvider';
-import InviteMembers from '../InviteMembers';
+import InviteUsers from '../InviteUsers';
 
 import SelectChannelType from '../SelectChannelType';
 
@@ -32,7 +32,7 @@ const CreateChannel: React.FC<CreateChannelUIProps> = (props: CreateChannelUIPro
       }
       {
         step === 1 && (
-          <InviteMembers
+          <InviteUsers
             onCancel={() => {
               setStep(0);
               onCancel();

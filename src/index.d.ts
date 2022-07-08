@@ -1077,7 +1077,7 @@ interface CreateChannelUIProps {
 
 interface CreateChannelProps extends CreateChannelProviderProps, CreateChannelUIProps {}
 
-interface InviteMembersProps {
+interface InviteUsersProps {
   onCancel?: () => void;
 }
 
@@ -1100,9 +1100,9 @@ declare module '@sendbird/uikit-react/CreateChannel/components/CreateChannelUI' 
   export default CreateChannelUI;
 }
 
-declare module '@sendbird/uikit-react/CreateChannel/components/InviteMembers' {
-  type InviteMembers = React.FC<InviteMembersProps>;
-  export default InviteMembers;
+declare module '@sendbird/uikit-react/CreateChannel/components/InviteUsers' {
+  type InviteUsers = React.FC<InviteUsersProps>;
+  export default InviteUsers;
 }
 
 declare module '@sendbird/uikit-react/CreateChannel/components/SelectChannelType' {

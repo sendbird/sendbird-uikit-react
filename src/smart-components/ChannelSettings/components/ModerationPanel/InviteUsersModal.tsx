@@ -11,7 +11,7 @@ interface Props {
   onSubmit(members: Array<string>): void;
 }
 
-export default function InviteMembers({
+export default function InviteUsers({
   onCancel,
   onSubmit,
 }: Props): ReactElement {
