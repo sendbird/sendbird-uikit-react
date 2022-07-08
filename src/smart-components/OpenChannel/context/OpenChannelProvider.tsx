@@ -57,7 +57,7 @@ type OpenChannelQueries = {
 export interface OpenChannelProviderProps {
   channelUrl: string;
   children?: React.ReactNode;
-  useMessageGrouping?: boolean;
+  isMessageGroupingEnabled?: boolean;
   queries?: OpenChannelQueries;
   messageLimit?: number;
   onBeforeSendUserMessage?(text: string): UserMessageCreateParams;
@@ -92,7 +92,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
   const {
     channelUrl,
     children,
-    useMessageGrouping,
+    isMessageGroupingEnabled,
     queries,
     onBeforeSendUserMessage,
     messageLimit,
@@ -274,7 +274,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
       // props
       channelUrl,
       children,
-      useMessageGrouping,
+      isMessageGroupingEnabled,
       queries,
       onBeforeSendUserMessage,
       messageLimit,

@@ -29,7 +29,7 @@ export default function App(props) {
     useReaction,
     isMentionEnabled,
     replyType,
-    useMessageGrouping,
+    isMessageGroupingEnabled,
     colorSet,
     stringSet,
     allowProfileEdit,
@@ -108,7 +108,7 @@ export default function App(props) {
             highlightedMessage={highlightedMessage}
             useReaction={useReaction}
             replyType={replyType}
-            useMessageGrouping={useMessageGrouping}
+            isMessageGroupingEnabled={isMessageGroupingEnabled}
           />
         </div>
         {showSettings && (
@@ -171,7 +171,7 @@ App.propTypes = {
   useReaction: PropTypes.bool,
   replyType: PropTypes.oneOf(['NONE', 'QUOTE_REPLY', 'THREAD']),
   showSearchIcon: PropTypes.bool,
-  useMessageGrouping: PropTypes.bool,
+  isMessageGroupingEnabled: PropTypes.bool,
   stringSet: PropTypes.objectOf(PropTypes.string),
   colorSet: PropTypes.objectOf(PropTypes.string),
   imageCompression: PropTypes.shape({
@@ -207,7 +207,7 @@ App.defaultProps = {
   useReaction: true,
   isMentionEnabled: false,
   replyType: 'NONE',
-  useMessageGrouping: true,
+  isMessageGroupingEnabled: true,
   stringSet: null,
   colorSet: null,
   imageCompression: {},
