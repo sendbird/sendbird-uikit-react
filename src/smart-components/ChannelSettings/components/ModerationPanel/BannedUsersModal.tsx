@@ -17,7 +17,7 @@ interface Props {
   onCancel(): void;
 }
 
-export default function BannedMembersModal({
+export default function BannedUsersModal({
   onCancel,
 }: Props): ReactElement {
   const [members, setMembers] = useState([]);

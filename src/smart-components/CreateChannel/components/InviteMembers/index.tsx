@@ -21,11 +21,11 @@ import {
   createDefaultUserListQuery,
 } from './utils';
 
-export interface InviteMembersProps {
+export interface InviteUsersProps {
   onCancel?: () => void;
 }
 
-const InviteMembers: React.FC<InviteMembersProps> = ({ onCancel }: InviteMembersProps) => {
+const InviteUsers: React.FC<InviteUsersProps> = ({ onCancel }: InviteUsersProps) => {
   const {
     onBeforeCreateChannel,
     onCreateChannel,
@@ -141,4 +141,4 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ onCancel }: InviteMembers
   );
 };
 
-export default InviteMembers;
+export default InviteUsers;

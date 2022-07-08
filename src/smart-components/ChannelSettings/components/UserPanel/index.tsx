@@ -9,7 +9,7 @@ import
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import Badge from '../../../../ui/Badge';
 
-import MemberList from '../AdminPanel/MemberList';
+import MemberList from '../ModerationPanel/MemberList';
 import { useChannelSettings } from '../../context/ChannelSettingsProvider';
 
 const kFormatter = (num: number): string|number => {
