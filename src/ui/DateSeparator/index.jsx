@@ -34,7 +34,15 @@ DateSeparator.propTypes = {
     PropTypes.arrayOf(PropTypes.string),
     PropTypes.element,
   ]),
-  separatorColor: PropTypes.string,
+  separatorColor: PropTypes.oneOf([
+    'ONBACKGROUND_1',
+    'ONBACKGROUND_2',
+    'ONBACKGROUND_3',
+    'ONBACKGROUND_4',
+    'ONCONTENT_1',
+    'PRIMARY',
+    'ERROR',
+  ]),
 };
 
 DateSeparator.defaultProps = {

@@ -1,6 +1,20 @@
 import React from 'react';
 import DateSeparator from '../index.jsx';
 
-export default { title: 'UI Components/DateSeparator' };
+const description = `
+  \`import DateSeparator from "@sendbird/uikit-react/ui/DateSeparator";\`
+`;
 
-export const defaultDateSeparator = () => <DateSeparator />;
+export default {
+  title: '@sendbird/uikit-react/ui/DateSeparator',
+  component: DateSeparator,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (args) => <DateSeparator {...args} />;

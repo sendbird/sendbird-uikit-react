@@ -1,28 +1,29 @@
 import React from 'react';
 import FileViewer from '../index.jsx';
 
-export default { title: 'UI Components/FileViewer' };
+import { msg0 } from '../data.mock';
 
-import { msg1, msg0 } from '../data.mock';
+const description = `
+  \`import FileViewer from "@sendbird/uikit-react/ui/FileViewer";\`
+`;
 
-export const imageViewer = () => (
+export default {
+  title: '@sendbird/uikit-react/ui/FileViewer',
+  component: FileViewer,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (arg) => (
   <FileViewer
-    onClose={() => {}}
-    onDelete={() => {}}
+    {...arg}
+    onClose={() => { setShow(false); }}
+    onDelete={() => { setShow(false); }}
     message={msg0}
-  />
-);
-export const movieViewer = () => (
-  <FileViewer
-    onClose={() => {}}
-    onDelete={() => {}}
-    message={msg1}
-  />
-);
-export const unSupportedViewer = () => (
-  <FileViewer
-    onClose={() => {}}
-    onDelete={() => {}}
-    message={{ sender: {} }}
   />
 );
