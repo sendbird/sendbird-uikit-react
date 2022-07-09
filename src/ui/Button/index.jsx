@@ -48,8 +48,13 @@ Button.propTypes = {
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string),
   ]),
-  type: PropTypes.oneOf(Object.keys(Type)),
-  size: PropTypes.oneOf(Object.keys(Size)),
+  type: PropTypes.oneOf([
+    'PRIMARY',
+    'SECONDARY',
+    'DANGER',
+    'DISABLED',
+  ]),
+  size: PropTypes.oneOf(['BIG', 'SMALL']),
   children: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.element,

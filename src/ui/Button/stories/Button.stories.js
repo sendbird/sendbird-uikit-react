@@ -3,7 +3,23 @@ import Button from '../index.jsx';
 
 import { Type, Size } from '../type';
 
-export default { title: 'UI Components/Button' };
+const description = `
+  \`import Button from "@sendbird/uikit-react/ui/Button";\`
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/Button',
+  component: Button,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControls = (args) => <Button {...args}>TEXT</Button>;
 
 export const defaultButton = () => [
   <Button>DEFAULT</Button>,

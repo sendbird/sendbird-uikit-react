@@ -1,7 +1,21 @@
 import React from 'react';
 import Avatar from '../index';
 
-export default { title: 'UI Components/Avatar' };
+const description = `
+  \`import Avatar from "@sendbird/uikit-react/ui/Avatar";\`
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/Avatar',
+  component: Avatar,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
 
 const src = 'https://avatars3.githubusercontent.com/u/46333979?s=460&v=4';
 const src1 = 'https://avatars1.githubusercontent.com/u/1384313?s=460&v=4';

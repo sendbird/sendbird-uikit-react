@@ -6,7 +6,6 @@ import { Provider } from './context';
 
 interface Props {
   children: Array<ReactElement> | ReactElement;
-  defaultOpened?: string;
   className?: string;
 }
 
