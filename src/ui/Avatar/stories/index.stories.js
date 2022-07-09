@@ -22,7 +22,7 @@ const src1 = 'https://avatars1.githubusercontent.com/u/1384313?s=460&v=4';
 const src2 = 'https://avatars2.githubusercontent.com/u/11382805?s=460&v=4';
 const src3 = '';
 
-export const defaultAvatar = () => <Avatar />;
+export const WithControl = (arg) => <Avatar {...arg} />;
 
 export const basicAvatar = () => <Avatar src={src} />;
 export const basicAvatarWithDiamensions = () => <Avatar src={src} height="100px" width="100px" />;

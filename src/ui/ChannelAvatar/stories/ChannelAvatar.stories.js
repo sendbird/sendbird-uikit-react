@@ -1,7 +1,23 @@
 import React from 'react';
 import ChannelAvatar from '../index';
 
-export default { title: 'UI Components/ChannelAvatar' };
+const description = `
+  \`import ChannelAvatar from "@sendbird/uikit-react/ui/ChannelAvatar";\`
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/ChannelAvatar',
+  component: ChannelAvatar,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (args) => <ChannelAvatar {...args} />;
 
 export const simpleDefault = () => <ChannelAvatar channel={{ name: "12e" }} />;
 

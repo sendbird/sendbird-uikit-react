@@ -99,10 +99,12 @@ export default function ChatHeader(props) {
 }
 
 ChatHeader.propTypes = {
+  /**Type: GroupChannel */
   currentGroupChannel: PropTypes.shape({
     members: PropTypes.arrayOf(PropTypes.shape({})),
     coverUrl: PropTypes.string,
   }),
+  /** Type: User */
   currentUser: PropTypes.shape({
     userId: PropTypes.string,
   }),
@@ -118,6 +120,7 @@ ChatHeader.propTypes = {
   theme: PropTypes.string,
   showSearchIcon: PropTypes.bool,
   onSearchClick: PropTypes.func,
+  /** For clicking the info button */
   onActionClick: PropTypes.func,
 };
 

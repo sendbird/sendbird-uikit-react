@@ -19,6 +19,17 @@ export default {
   },
 };
 
+export const WithControl = (args) => (
+  <AccordionGroup>
+    <Accordion
+      {...args}
+      renderTitle={() => (<div>Simple Accordion</div>)}
+      renderContent={() => (<div>Content</div>)}
+      renderFooter={() => (<div>Footer</div>)}
+    />
+  </AccordionGroup>
+);
+
 export const multipleAccordions = () => (
   <AccordionGroup>
     <Accordion
