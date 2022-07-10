@@ -32,10 +32,6 @@ export default function MessageStatus({
   const status = useMemo(() => (
     getOutgoingMessageState(channel, message)
   ), [channel?.getUnreadMemberCount?.(message), channel?.getUndeliveredMemberCount?.(message)]);
-  const showMessageStatusIcon = channel?.isGroupChannel()
-    && !channel?.isSuper
-    && !channel?.isPublic
-    && !channel?.isBroadcast;
   const hideMessageStatusIcon = channel?.isGroupChannel() && (
     (channel.isSuper || channel.isPublic || channel.isBroadcast)
     && !(status === MessageStatusTypes.PENDING || status === MessageStatusTypes.FAILED)
