@@ -3,9 +3,31 @@ import OpenchannelThumbnailMessage from '../index.tsx';
 import { mockMessage, getMockMessage, getMockMessageWithVideo } from '../dummyData.mock';
 import { MenuRoot } from '../../ContextMenu';
 
-export default { title: 'UI Components/OpenchannelThumbnailMessage' };
+const description = `
+  \`import OpenchannelThumbnailMessage from "@sendbird/uikit-react/ui/OpenchannelThumbnailMessage";\`
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/OpenchannelThumbnailMessage',
+  component: OpenchannelThumbnailMessage,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
 
 const userId = mockMessage.sender.userId;
+
+export const WithControl = (arg) => (
+  <OpenchannelThumbnailMessage
+    message={mockMessage}
+    userId={userId}
+    {...arg}
+  />
+);
 
 export const defaultThumbnailMessage = () => (
   <div>

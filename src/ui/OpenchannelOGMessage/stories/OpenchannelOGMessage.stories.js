@@ -2,7 +2,21 @@ import React from 'react';
 import OpenchannelOGMessage from '../index.tsx';
 import { MenuRoot } from '../../ContextMenu';
 
-export default { title: 'UI Components/OpenchannelOGMessage' };
+const description = `
+  \`import OpenchannelOGMessage from "@sendbird/uikit-react/ui/OpenchannelOGMessage";\`
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/OpenchannelOGMessage',
+  component: OpenchannelOGMessage,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
 
 const userId = 'hh-1234';
 const defaultMessage = {
@@ -27,6 +41,14 @@ const defaultMessage = {
   },
   isResendable: () => true,
 };
+
+export const WithControl = (arg) => (
+  <OpenchannelOGMessage
+    message={defaultMessage}
+    userId={userId}
+    {...arg}
+  />
+);
 
 export const defaultOpenchannelOGMessage = () => ([
   <OpenchannelOGMessage

@@ -25,7 +25,26 @@ const mockMessage = (process) => {
   return obj;
 };
 
-export default { title: 'UI Components/OGMessageItemBody' };
+const description = `
+  \`import OGMessageItemBody from "@sendbird/uikit-react/ui/OGMessageItemBody";\`
+  \n OGMessage is the message that captures summary of a hyperlink/webpage
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/OGMessageItemBody',
+  component: OGMessageItemBody,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (arg) => (
+  <OGMessageItemBody message={mockMessage()} {...arg} />
+);
 
 export const withText = () => (
   <>

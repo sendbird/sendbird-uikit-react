@@ -6,9 +6,32 @@ import {
 } from '../mockMessages';
 import { MenuRoot } from '../../ContextMenu';
 
-export default { title: 'UI Components/OpenchannelFileMessage' };
+const description = `
+  \`import OpenchannelFileMessage from "@sendbird/uikit-react/ui/OpenchannelFileMessage";\`
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/OpenchannelFileMessage',
+  component: OpenchannelFileMessage,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
 const currentUserId = dummyFileMessageImage.sender.userId;
 dummyFileMessageImage.isResendable = () => true;
+
+export const WithControl = (arg) => (
+  <OpenchannelFileMessage
+    message={dummyFileMessageImage}
+    userId={currentUserId}
+    {...arg}
+  />
+);
 
 export const fileMessageImage = () => ([
   <OpenchannelFileMessage
