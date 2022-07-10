@@ -3,7 +3,6 @@ import './openchannel-message-list.scss';
 import React, { ReactElement, useRef, useState, useMemo } from 'react';
 import isSameDay from 'date-fns/isSameDay';
 
-// import MessageHoc from './MessageHOC';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
@@ -13,10 +12,9 @@ import OpenChannelMessage from '../OpenChannelMessage';
 import { RenderMessageProps } from '../../../../types';
 import { FileMessage, UserMessage } from '@sendbird/chat/message';
 
-type RenderedMessageType = React.ElementType<RenderMessageProps>;
 export type OpenchannelMessageListProps = {
-  renderMessage?: (props: RenderMessageProps) => RenderedMessageType;
-  renderPlaceHolderEmptyList?: () => React.ReactNode;
+  renderMessage?: (props: RenderMessageProps) => React.ElementType<RenderMessageProps>;
+  renderPlaceHolderEmptyList?: () => React.ReactElement;
 }
 
 function OpenchannelMessageList(
@@ -75,7 +73,10 @@ function OpenchannelMessageList(
       <div className="sendbird-openchannel-conversation-scroll__container">
         <div className="sendbird-openchannel-conversation-scroll__container__padding" />
         <div
-          className={`sendbird-openchannel-conversation-scroll__container__item-container${hasMessage ? '' : '--no-messages'}`}
+          className={[
+            'sendbird-openchannel-conversation-scroll__container__item-container',
+            hasMessage ? '' : 'no-messages',
+          ].join(' ')}
           onScroll={handleOnScroll}
           ref={scrollRef}
         >
