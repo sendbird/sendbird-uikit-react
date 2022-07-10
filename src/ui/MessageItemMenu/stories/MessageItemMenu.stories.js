@@ -3,7 +3,56 @@ import MessageItemMenu from '../index.tsx';
 
 import { MenuRoot } from '../../ContextMenu';
 
-export default { title: 'UI Components/MessageItemMenu' };
+const description = `
+  \`import MessageItemMenu from "@sendbird/uikit-react/ui/MessageItemMenu";\`
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/MessageItemMenu',
+  component: MessageItemMenu,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (arg) => (
+  <div
+    style={{
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'column',
+    }}
+  >
+    <MessageItemMenu
+      message={{
+        sendingStatus: 'succeeded',
+        message: 'Im copied message',
+        messageType: 'user',
+        isResendable: () => false,
+      }}
+      channel={{
+        isGroupChannel: () => true,
+        getUnreadMemberCount: (message) => 10,
+        getUndeliveredMemberCount: (message) => 0,
+      }}
+      isByMe
+      contextMenuProps={{
+        disabled: false,
+        resendMessage: () => { alert('resend message')},
+        showEdit: () => { alert('show edit')},
+        showRemove: () => {alert('who remove')},
+      }}
+      {...arg}
+    />
+  </div>
+);
 
 export const messageItemMenu = () => (
   <div

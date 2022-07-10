@@ -2,12 +2,26 @@ import React from 'react';
 
 import MessageInput from '../index';
 
-export default { title: 'UI Components/MessageInput' };
+const description = `
+  \`import MessageInput from "@sendbird/uikit-react/ui/MessageInput";\`
+`;
 
-export const basicMessageInput = () => {
+export default {
+  title: '@sendbird/uikit-react/ui/MessageInput',
+  component: MessageInput,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (arg) => {
   const ref = React.useRef();
   return (
-    <MessageInput name="example" ref={ref} />
+    <MessageInput {...arg} ref={ref} />
   )
 };
 
