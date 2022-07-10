@@ -1,6 +1,20 @@
 import React from 'react';
 import Loader from '../index.jsx';
 
-export default { title: 'UI Components/Loader' };
+const description = `
+  \`import Loader from "@sendbird/uikit-react/ui/Loader";\`
+`;
 
-export const defaultLoader = () => <Loader />;
+export default {
+  title: '@sendbird/uikit-react/ui/Loader',
+  component: Loader,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (arg) => <Loader {...arg} />;

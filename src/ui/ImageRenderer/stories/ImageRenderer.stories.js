@@ -3,7 +3,30 @@ import ImageRenderer from '../index.jsx';
 
 import Icon, { IconTypes, IconColors } from '../../Icon';
 
-export default { title: 'UI Components/ImageRenderer' };
+const description = `
+  \`import ImageRenderer from "@sendbird/uikit-react/ui/ImageRenderer";\`
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/ImageRenderer',
+  component: ImageRenderer,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (arg) => (
+  <ImageRenderer
+    {...arg}
+    defaultComponent={
+      <Icon type={IconTypes.ADD} fillColor={IconColors.PRIMARY} />
+    }
+  />
+);
 
 export const setDefaultComponent = () => (
   <ImageRenderer
