@@ -11,6 +11,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT, USER_MENTION_TEMP_CHAR } from '../../context/const';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
+import uuidv4 from '../../../../utils/uuid';
 
 export interface SuggestedMentionListProps {
   targetNickname: string;
@@ -138,7 +139,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
       {
         ableAddMention && currentMemberList?.map((member) => (
           <SuggestedUserMentionItem
-            key={member?.nickname}
+            key={uuidv4()}
             member={member}
             isFocused={member?.userId === currentUser?.userId}
             parentScrollRef={scrollRef}
