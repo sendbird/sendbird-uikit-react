@@ -274,11 +274,15 @@ export default function reducer(state, action) {
       }
       return {
         ...state,
-        allMessages: state.allMessages.map((m) => (
-          compareIds(m.messageId, action.payload.message.messageId)
-            ? action.payload.message
-            : m
-        )),
+        allMessages: state.allMessages.map((m) => {
+          if (compareIds(m.messageId, message.messageId)) {
+            return message;
+          }
+          if (compareIds(m.parentMessageId, message.messageId)) {
+            m.parentMessage = message;// eslint-disable-line no-param-reassign
+          }
+          return m;
+        }),
       };
     }
     case actionTypes.ON_MESSAGE_THREAD_INFO_UPDATED: {
