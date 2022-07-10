@@ -39,8 +39,8 @@ export default function QuoteMessageInput({
       <div
         className="sendbird-quote_message_input__body"
         style={{
-          width: `calc(100% - ${fileMessage.isFileMessage() ? '164px' : '120px'})`,
-          left: fileMessage.isFileMessage() ? '92px' : '40px',
+          width: `calc(100% - ${fileMessage?.isFileMessage() ? '164px' : '120px'})`,
+          left: fileMessage?.isFileMessage() ? '92px' : '40px',
         }}
       >
         <Label

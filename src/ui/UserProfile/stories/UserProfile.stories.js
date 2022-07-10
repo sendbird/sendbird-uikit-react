@@ -1,9 +1,22 @@
 import React from 'react';
 import UserProfile from '../index.tsx';
-
 import SendbirdProvider from '../../../lib/Sendbird'
 
-export default { title: 'UI Components/UserProfile' };
+const description = `
+  \`import UserProfile from "@sendbird/uikit-react/ui/UserProfile";\`
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/UserProfile',
+  component: UserProfile,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
 
 const getUser = () => (
   {
@@ -13,9 +26,9 @@ const getUser = () => (
   }
 );
 
-export const otherUserProfile = () => (
+export const WithControl = (arg) => (
   <SendbirdProvider>
-    <UserProfile user={getUser()} />
+    <UserProfile user={getUser()} {...arg} />
   </SendbirdProvider>
 );
 

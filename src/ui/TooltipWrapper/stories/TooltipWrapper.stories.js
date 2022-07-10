@@ -4,14 +4,29 @@ import TooltipWrapper from '../index.jsx';
 import Tooltip from '../../Tooltip';
 import Icon, { IconTypes, IconColors } from '../../Icon';
 
-export default { title: 'UI Components/TooltipWrapper' };
+const description = `
+  \`import TooltipWrapper from "@sendbird/uikit-react/ui/TooltipWrapper";\`
+`;
 
-export const withTooltip = () => (
+export default {
+  title: '@sendbird/uikit-react/ui/TooltipWrapper',
+  component: TooltipWrapper,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (arg) => (
   <div style={{ marginTop: 100, marginLeft: 100 }}>
     <TooltipWrapper
       hoverTooltip={
         <Tooltip>Test Text</Tooltip>
       }
+      {...arg}
     >
       <Icon type={IconTypes.ADD} fillColor={IconColors.PRIMARY} />
     </TooltipWrapper>

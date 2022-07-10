@@ -121,7 +121,6 @@ export default {
   'ui/Modal': 'src/ui/Modal/index.jsx',
   'ui/OGMessageItemBody': 'src/ui/OGMessageItemBody/index.tsx',
   'ui/OpenChannelAdminMessage': 'src/ui/OpenChannelAdminMessage/index.tsx',
-  'ui/OpenChannelMessageContent': 'src/ui/OpenChannelMessageContent/index.tsx',
   // should we rename it to OpenChannel?
   'ui/OpenchannelConversationHeader': 'src/ui/OpenchannelConversationHeader/index.tsx',
   'ui/OpenchannelFileMessage': 'src/ui/OpenchannelFileMessage/index.tsx',
@@ -142,4 +141,5 @@ export default {
   'ui/UnknownMessageItemBody': 'src/ui/UnknownMessageItemBody/index.tsx',
   'ui/UserListItem': 'src/ui/UserListItem/index.jsx',
   'ui/UserProfile': 'src/ui/UserProfile/index.tsx',
+  'ui/Word': 'src/ui/Word/index.tsx',
 };

@@ -1,7 +1,38 @@
 import React from 'react';
 import QuoteMessage from '../index.tsx';
 
-export default { title: 'UI Components/QuoteMessage' };
+const description = `
+  \`import QuoteMessage from "@sendbird/uikit-react/ui/QuoteMessage";\`
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/QuoteMessage',
+  component: QuoteMessage,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (arg) => (
+  <QuoteMessage
+    message={{
+      sender: { nickname: 'Simon' },
+      parentMessage: {
+        messageType: 'user',
+        message: 'Hello nice to meet you. Katherine and I are baking cupcakes this Sunday if anyone else wants to join?atherine and I are baking cupcakes this Sunday if anyone else can join. Welcome.',
+        url: '',
+        sender: {
+          nickname: 'Gabie',
+        }
+      }
+    }}
+    {...arg}
+  />
+);
 
 export const withText = () => (
   <div style={{ display: 'flex', flexDirection: 'column' }}>
