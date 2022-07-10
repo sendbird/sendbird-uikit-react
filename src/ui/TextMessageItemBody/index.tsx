@@ -33,7 +33,7 @@ export default function TextMessageItemBody({
       type={LabelTypography.BODY_1}
       color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
     >
-      <p className={getClassName([
+      <div className={getClassName([
         className,
         'sendbird-text-message-item-body',
         isByMe ? 'outgoing' : 'incoming',
@@ -72,7 +72,7 @@ export default function TextMessageItemBody({
             </Label>
           )
         }
-      </p>
+      </div>
     </Label>
   );
 }
