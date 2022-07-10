@@ -36,6 +36,10 @@ export default function MessageStatus({
     && !channel?.isSuper
     && !channel?.isPublic
     && !channel?.isBroadcast;
+  const hideMessageStatusIcon = channel?.isGroupChannel() && (
+    (channel.isSuper || channel.isPublic || channel.isBroadcast)
+    && !(status === MessageStatusTypes.PENDING || status === MessageStatusTypes.FAILED)
+  );
   const iconType = {
     [MessageStatusTypes.SENT]: IconTypes.DONE,
     [MessageStatusTypes.DELIVERED]: IconTypes.DONE_ALL,
@@ -58,7 +62,7 @@ export default function MessageStatus({
     >
       {(status === MessageStatusTypes.PENDING) ? (
         <Loader
-          className={`sendbird-message-status__icon ${showMessageStatusIcon ? '' : 'hide-icon'}`}
+          className="sendbird-message-status__icon"
           width="16px"
           height="16px"
         >
@@ -71,7 +75,7 @@ export default function MessageStatus({
         </Loader>
       ) : (
         <Icon
-          className={`sendbird-message-status__icon ${showMessageStatusIcon ? '' : 'hide-icon'}`}
+          className={`sendbird-message-status__icon ${hideMessageStatusIcon ? 'hide-icon' : ''}`}
           type={iconType[status] || IconTypes.ERROR}
           fillColor={iconColor[status]}
           width="16px"
