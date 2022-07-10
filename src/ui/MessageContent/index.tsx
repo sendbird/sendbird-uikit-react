@@ -39,13 +39,13 @@ import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { EmojiContainer } from '@sendbird/chat';
-import { FileMessage, UserMessage } from '@sendbird/chat/message';
+import { AdminMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
 
 interface Props {
   className?: string | Array<string>;
   userId: string;
   channel: GroupChannel;
-  message: UserMessage | FileMessage;
+  message: AdminMessage | UserMessage | FileMessage;
   disabled?: boolean;
   chainTop?: boolean;
   chainBottom?: boolean;
@@ -187,7 +187,7 @@ export default function MessageContent({
             {
               // @ts-ignore
               channel?.members?.find((member) => member?.userId === message?.sender?.userId)?.nickname
-              || getSenderName(message)
+              || getSenderName(message as UserMessage | FileMessage)
               // TODO: Divide getting profileUrl logic to utils
             }
           </Label>
@@ -196,7 +196,7 @@ export default function MessageContent({
         {(useReplying) ? (
           <div className={getClassName(['sendbird-message-content__middle__quote-message', isByMe ? 'outgoing' : 'incoming', useReplyingClassName])}>
             <QuoteMessage
-              message={message}
+              message={message as UserMessage | FileMessage}
               userId={userId}
               isByMe={isByMe}
               onClick={() => {
@@ -214,7 +214,7 @@ export default function MessageContent({
             <div className={getClassName(['sendbird-message-content__middle__body-container__created-at', 'left', supposedHoverClassName])}>
               <div className="sendbird-message-content__middle__body-container__created-at__component-container">
                 <MessageStatus
-                  message={message}
+                  message={message as UserMessage | FileMessage}
                   channel={channel}
                 />
               </div>

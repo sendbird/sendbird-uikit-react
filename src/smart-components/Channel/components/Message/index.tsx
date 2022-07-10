@@ -4,7 +4,6 @@ import React, {
   useState,
   useEffect,
   useLayoutEffect,
-  ReactElement,
 } from 'react';
 import format from 'date-fns/format';
 
@@ -32,13 +31,13 @@ type MessageUIProps = {
   chainBottom?: boolean;
   handleScroll: () => void;
   // for extending
-  renderMessage?: (props: RenderMessageProps) => React.ReactNode;
-  renderCustomSeparator?: () => React.ReactNode;
-  renderEditInput?: () => React.ReactNode;
-  renderMessageContent?: () => React.ReactNode;
+  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+  renderCustomSeparator?: () => React.ReactElement;
+  renderEditInput?: () => React.ReactElement;
+  renderMessageContent?: () => React.ReactElement;
 };
 
-const Message = (props: MessageUIProps): ReactElement | React.ReactNode | React.ElementType<MessageUIProps> => {
+const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactElement => {
   const {
     message,
     hasSeparator,
