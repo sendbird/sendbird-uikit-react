@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Logger } from '../../../..';
 import * as messageActionTypes from '../dux/actionTypes';
 
 interface DynamicParams {
@@ -6,12 +7,15 @@ interface DynamicParams {
   messageLimit: number;
 }
 
+
+type MessagesDispatcherType = {
+  type: string,
+  payload: { messageLimit: number }
+};
+
 interface StaticParams {
-  messagesDispatcher: ({
-    type: string,
-    payload: { messageLimit: number }
-  }) => void;
-  logger: SendbirdUIKit.Logger;
+  messagesDispatcher: (dispatcher: MessagesDispatcherType) => void;
+  logger: Logger;
 }
 
 const THROTTLE_TIMER = 5000;

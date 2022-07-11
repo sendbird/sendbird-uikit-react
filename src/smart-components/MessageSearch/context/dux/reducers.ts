@@ -1,6 +1,10 @@
 import { State as initialStateInterface } from './initialState';
+import type { MessageSearchQuery } from '@sendbird/chat/message';
 import * as actionTypes from './actionTypes';
 
+interface MessageSearchQueryType extends MessageSearchQuery {
+  key?: string;
+}
 interface ActionInterface {
   type: string;
   /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -31,15 +35,15 @@ export default function reducer(
       const { messages, createdQuery } = action.payload;
       if (
         createdQuery
-        && createdQuery.channelUrl === (state?.currentMessageSearchQuery as SendbirdUIKit.MessageSearchQueryType).channelUrl
-        && createdQuery.key === (state?.currentMessageSearchQuery as SendbirdUIKit.MessageSearchQueryType).key
+        && createdQuery.channelUrl === (state?.currentMessageSearchQuery as MessageSearchQueryType).channelUrl
+        && createdQuery.key === (state?.currentMessageSearchQuery as MessageSearchQueryType).key
       ) {
         return {
           ...state,
           loading: false,
           isInvalid: false,
           allMessages: [...messages],
-          hasMoreResult: (state?.currentMessageSearchQuery as SendbirdUIKit.MessageSearchQueryType).hasNext,
+          hasMoreResult: (state?.currentMessageSearchQuery as MessageSearchQueryType).hasNext,
         };
       }
       return { ...state };
@@ -70,7 +74,7 @@ export default function reducer(
       return {
         ...state,
         allMessages: [...state.allMessages, ...messages],
-        hasMoreResult: (state?.currentMessageSearchQuery as SendbirdUIKit.MessageSearchQueryType).hasNext,
+        hasMoreResult: (state?.currentMessageSearchQuery as MessageSearchQuery).hasNext,
       };
     }
     case actionTypes.RESET_SEARCH_STRING: {

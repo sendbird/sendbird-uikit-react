@@ -1,10 +1,11 @@
 import { useCallback } from 'react';
+import { Logger } from '../../../..';
 
 interface DynamicParams {
   conversationScrollRef: React.RefObject<HTMLDivElement>;
 }
 interface StaticParams {
-  logger: SendbirdUIKit.Logger;
+  logger: Logger;
 }
 
 function useCheckScrollBottom(

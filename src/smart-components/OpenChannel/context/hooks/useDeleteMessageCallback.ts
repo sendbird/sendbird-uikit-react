@@ -1,16 +1,24 @@
+import type { FileMessage, UserMessage } from '@sendbird/chat/message';
+import type { OpenChannel } from '@sendbird/chat/openChannel';
 import { useCallback } from 'react';
+import { Logger } from '../../../..';
 import * as messageActionTypes from '../dux/actionTypes';
 
 interface DynamicParams {
-  currentOpenChannel: SendbirdUIKit.OpenChannelType;
+  currentOpenChannel: OpenChannel;
 }
+
+type MessagesDispatcherType = {
+  type: string, payload: any,
+};
+
 interface StaticParams {
-  logger: SendbirdUIKit.Logger;
-  messagesDispatcher: ({ type: string, payload: any }) => void;
+  logger: Logger;
+  messagesDispatcher: (dispatcher: MessagesDispatcherType) => void;
 }
 
 type CallbackReturn = (
-  message: SendbirdUIKit.ClientUserMessage | SendbirdUIKit.ClientFileMessage,
+  message: UserMessage | FileMessage,
   callback?: () => void,
 ) => void;
 
@@ -36,24 +44,22 @@ function useDeleteMessageCallback(
       if (!(message.messageType ==='file' || message.messageType === 'user')) {
         return;
       }
-      const messageToDelete = message as SendBird.UserMessage;
-      currentOpenChannel.deleteMessage(messageToDelete, (error) => {
+      const messageToDelete = message as UserMessage;
+      currentOpenChannel.deleteMessage(messageToDelete).then(() => {
         logger.info('OpenChannel | useDeleteMessageCallback: Deleting message on server', sendingStatus);
         if (callback) {
           callback();
         }
-        if (!error) {
-          logger.info('OpenChannel | useDeleteMessageCallback: Deleting message succeeded', message);
-          messagesDispatcher({
-            type: messageActionTypes.ON_MESSAGE_DELETED,
-            payload: {
-              channel: currentOpenChannel,
-              messageId: message.messageId,
-            },
-          });
-        } else {
-          logger.warning('OpenChannel | useDeleteMessageCallback: Deleting message failed', error);
-        }
+        logger.info('OpenChannel | useDeleteMessageCallback: Deleting message succeeded', message);
+        messagesDispatcher({
+          type: messageActionTypes.ON_MESSAGE_DELETED,
+          payload: {
+            channel: currentOpenChannel,
+            messageId: message.messageId,
+          },
+        });
+      }).catch((error) => {
+        logger.warning('OpenChannel | useDeleteMessageCallback: Deleting message failed', error);
       });
     }
   }, [currentOpenChannel]);

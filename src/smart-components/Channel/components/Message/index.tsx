@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useLayoutEffect,
 } from 'react';
+import type { FileMessage } from '@sendbird/chat/message';
 import format from 'date-fns/format';
 
 import SuggestedMentionList from '../SuggestedMentionList';
@@ -340,7 +341,7 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
       {
         showFileViewer && (
           <FileViewer
-            message={message as SendbirdUIKit.ClientFileMessage}
+            message={message as FileMessage}
             onCancel={() => setShowFileViewer(false)}
           />
         )

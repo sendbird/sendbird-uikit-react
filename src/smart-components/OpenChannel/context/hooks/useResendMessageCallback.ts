@@ -1,14 +1,20 @@
+import type { FileMessage, UserMessage } from '@sendbird/chat/message';
+import type { OpenChannel } from '@sendbird/chat/openChannel';
 import { useCallback } from 'react';
+import { Logger } from '../../../..';
 import * as messageActionTypes from '../dux/actionTypes';
 
 interface DynamicParams {
-  currentOpenChannel: SendbirdUIKit.OpenChannelType;
+  currentOpenChannel: OpenChannel;
 }
+
+type MessagesDispatcherType = { type: string, payload: any };
+
 interface StaticParams {
-  logger: SendbirdUIKit.Logger;
-  messagesDispatcher: ({ type: string, payload: any }) => void;
+  logger: Logger;
+  messagesDispatcher: (dispatcher: MessagesDispatcherType) => void;
 }
-type CallbackReturn = (failedMessage: SendbirdUIKit.ClientUserMessage | SendbirdUIKit.ClientFileMessage) => void;
+type CallbackReturn = (failedMessage: UserMessage | FileMessage) => void;
 
 function useResendMessageCallback(
   { currentOpenChannel }: DynamicParams,
@@ -16,8 +22,9 @@ function useResendMessageCallback(
 ): CallbackReturn {
   return useCallback((failedMessage) => {
     logger.info('OpenChannel | useResendMessageCallback: Resending message has started', failedMessage);
-    const { messageType, file } = failedMessage;
-    if (failedMessage && typeof failedMessage.isResendable === 'function' && failedMessage.isResendable()) {
+    // eslint-disable-next-line no-param-reassign
+    const { messageType, file } = failedMessage as FileMessage;
+    if (failedMessage && typeof failedMessage.isResendable === 'function' && failedMessage.isResendable) {
       // eslint-disable-next-line no-param-reassign
       failedMessage.requestState = 'pending';
       messagesDispatcher({
@@ -30,44 +37,39 @@ function useResendMessageCallback(
 
       // userMessage
       if (messageType === 'user' && failedMessage.messageType === 'user') {
-        currentOpenChannel.resendUserMessage(failedMessage, (message, error) => {
-          if (!error) {
-            logger.info('OpenChannel | useResendMessageCallback: Reseding message succeeded', message);
-            messagesDispatcher({
-              type: messageActionTypes.SENDING_MESSAGE_SUCCEEDED,
-              payload: message,
-            });
-          } else {
-            logger.warning('OpenChannel | useResendMessageCallback: Resending message failed', error);
-            // eslint-disable-next-line no-param-reassign
-            failedMessage.requestState = 'failed';
-            messagesDispatcher({
-              type: messageActionTypes.SENDING_MESSAGE_FAILED,
-              payload: failedMessage,
-            });
-          }
+        currentOpenChannel.resendUserMessage(failedMessage).then((message) => {
+          logger.info('OpenChannel | useResendMessageCallback: Reseding message succeeded', message);
+          messagesDispatcher({
+            type: messageActionTypes.SENDING_MESSAGE_SUCCEEDED,
+            payload: message,
+          });
+        }).catch((error) => {
+          logger.warning('OpenChannel | useResendMessageCallback: Resending message failed', error);
+          // eslint-disable-next-line no-param-reassign
+          failedMessage.requestState = 'failed';
+          messagesDispatcher({
+            type: messageActionTypes.SENDING_MESSAGE_FAILED,
+            payload: failedMessage,
+          });
         });
-        return;
       }
 
       // fileMessage
       if (messageType === 'file' && failedMessage.messageType === 'file') {
-        currentOpenChannel.resendFileMessage(failedMessage, file, (message, error) => {
-          if (!error) {
-            logger.info('OpenChannel | useResendMessageCallback: Resending file message succeeded', message);
-            messagesDispatcher({
-              type: messageActionTypes.SENDING_MESSAGE_SUCCEEDED,
-              payload: message,
-            });
-          } else {
-            logger.warning('OpenChannel | useResendMessageCallback: Resending file message failed', error);
-            // eslint-disable-next-line no-param-reassign
-            failedMessage.requestState = 'failed';
-            messagesDispatcher({
-              type: messageActionTypes.SENDING_MESSAGE_FAILED,
-              payload: failedMessage,
-            });
-          }
+        currentOpenChannel.resendFileMessage(failedMessage, file).then((message) => {
+          logger.info('OpenChannel | useResendMessageCallback: Resending file message succeeded', message);
+          messagesDispatcher({
+            type: messageActionTypes.SENDING_MESSAGE_SUCCEEDED,
+            payload: message,
+          });
+        }).catch((error) => {
+          logger.warning('OpenChannel | useResendMessageCallback: Resending file message failed', error);
+          // eslint-disable-next-line no-param-reassign
+          failedMessage.requestState = 'failed';
+          messagesDispatcher({
+            type: messageActionTypes.SENDING_MESSAGE_FAILED,
+            payload: failedMessage,
+          });
         });
       }
     } else {
