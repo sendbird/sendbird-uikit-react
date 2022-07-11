@@ -70,5 +70,26 @@
   .chat-panel {
     background-color: var(--bg-0);
     width: 320px;
+    .sendbird-openchannel-thumbnail-message
+    .sendbird-openchannel-thumbnail-message__right
+    .sendbird-openchannel-thumbnail-message__right__body
+    .sendbird-openchannel-thumbnail-message__right__body__wrap {
+      .sendbird-openchannel-thumbnail-message__right__body__wrap__overlay,
+      .sendbird-openchannel-thumbnail-message__right__body__wrap__video,
+      .sendbird-openchannel-thumbnail-message__right__body__wrap__video__video {
+        max-width: 95%;
+      }
+    }
+    .sendbird-openchannel-user-message
+    .sendbird-openchannel-user-message__right
+    .sendbird-openchannel-user-message__right__top {
+      width: 230px;
+      .sendbird-openchannel-user-message__right__top__sender-name {
+        width: 180px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
   }
 }
