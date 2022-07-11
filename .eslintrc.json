@@ -28,5 +28,5 @@
     "react",
     "@typescript-eslint"
   ],
-  "ignorePatterns": "['**/*.js', '**/*.jsx', 'node_modules']"
+  "ignorePatterns": "['**/*.js', '**/*.jsx', 'node_modules', 'ui/QuoteMessageInput/mockMessage.ts']"
 }

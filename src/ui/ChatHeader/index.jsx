@@ -99,7 +99,7 @@ export default function ChatHeader(props) {
 }
 
 ChatHeader.propTypes = {
-  /**Type: GroupChannel */
+  /** Type: GroupChannel */
   currentGroupChannel: PropTypes.shape({
     members: PropTypes.arrayOf(PropTypes.shape({})),
     coverUrl: PropTypes.string,
