@@ -1,5 +1,11 @@
 # Changelog - v3
 
+## [v3.0.0-rc.0] (July 11 2022)
+
+Features:
+* Use `@sendbird/chat@4`, see [MIGRATION_v2-to-v3.md](./MIGRATION_v2-to-v3.md) for details
+* Support react 18
+
 ## [3.0.0-beta.6] (June 03 2022)
 
 Feature:
