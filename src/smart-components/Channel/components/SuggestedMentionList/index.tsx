@@ -139,7 +139,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
       {
         ableAddMention && currentMemberList?.map((member) => (
           <SuggestedUserMentionItem
-            key={uuidv4()}
+            key={member?.userId || uuidv4()}
             member={member}
             isFocused={member?.userId === currentUser?.userId}
             parentScrollRef={scrollRef}

@@ -47,7 +47,7 @@ function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Ele
           onClick={(event) => onClick?.({ event, member: (member as Member), itemRef: scrollRef })}
           onMouseOver={(event) => onMouseOver?.({ event, member: (member as Member), itemRef: scrollRef })}
           onMouseMove={(event) => onMouseMove?.({ event, member: (member as Member), itemRef: scrollRef })}
-          key={uuidv4()}
+          key={member?.userId || uuidv4()}
           ref={scrollRef}
         >
           {renderUserMentionItem({ user: member })}
@@ -64,7 +64,7 @@ function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Ele
       onClick={(event) => onClick?.({ event, member: (member as Member), itemRef: scrollRef })}
       onMouseOver={(event) => onMouseOver?.({ event, member: (member as Member), itemRef: scrollRef })}
       onMouseMove={(event) => onMouseMove?.({ event, member: (member as Member), itemRef: scrollRef })}
-      key={uuidv4()}
+      key={member?.userId || uuidv4()}
       ref={scrollRef}
     >
       <Avatar
