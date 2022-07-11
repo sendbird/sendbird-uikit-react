@@ -11,7 +11,7 @@ import SuggestedMentionList from '../SuggestedMentionList';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelContext } from '../../context/ChannelProvider';
 import { getClassName } from '../../../../utils';
-import { isDisabledBecauseFrozen } from '../../context/utils';
+import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../context/utils';
 import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT } from '../../context/const';
 
 import DateSeparator from '../../../../ui/DateSeparator';
@@ -62,6 +62,7 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
   const maxUserSuggestionCount = userMention?.maxSuggestionCount || MAX_USER_SUGGESTION_COUNT;
 
   const {
+    initialized,
     currentGroupChannel,
     highLightedMessageId,
     setHighLightedMessageId,
@@ -93,8 +94,15 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
   const [ableMention, setAbleMention] = useState(true);
   const editMessageInputRef = useRef(null);
   const useMessageScrollRef = useRef(null);
-
-  const displaySuggestedMentionList = (isMentionEnabled && mentionNickname.length > 0);
+  const displaySuggestedMentionList = isOnline
+    && isMentionEnabled
+    && mentionNickname.length > 0
+    && !isDisabledBecauseFrozen(currentGroupChannel)
+    && !isDisabledBecauseMuted(currentGroupChannel);
+  const disabled = !initialized
+    || isDisabledBecauseFrozen(currentGroupChannel)
+    || isDisabledBecauseMuted(currentGroupChannel)
+    || !isOnline;
 
   useEffect(() => {
     if (mentionedUsers?.length >= maxUserMentionCount) {
@@ -226,7 +234,7 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
         }
         <MessageInput
           isEdit
-          disabled={isDisabledBecauseFrozen(currentGroupChannel)}
+          disabled={disabled}
           ref={editMessageInputRef}
           mentionSelectedUser={selectedUser}
           isMentionEnabled={isMentionEnabled}
