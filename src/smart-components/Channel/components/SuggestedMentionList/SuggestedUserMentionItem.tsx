@@ -6,6 +6,7 @@ import Avatar from '../../../../ui/Avatar';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { MentionItemUIEvent } from '../../../..';
+import uuidv4 from '../../../../utils/uuid';
 
 interface SuggestedUserMentionItemProps {
   member: User | Member;
@@ -46,7 +47,7 @@ function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Ele
           onClick={(event) => onClick?.({ event, member: (member as Member), itemRef: scrollRef })}
           onMouseOver={(event) => onMouseOver?.({ event, member: (member as Member), itemRef: scrollRef })}
           onMouseMove={(event) => onMouseMove?.({ event, member: (member as Member), itemRef: scrollRef })}
-          key={member.nickname}
+          key={member?.userId || uuidv4()}
           ref={scrollRef}
         >
           {renderUserMentionItem({ user: member })}
@@ -63,7 +64,7 @@ function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Ele
       onClick={(event) => onClick?.({ event, member: (member as Member), itemRef: scrollRef })}
       onMouseOver={(event) => onMouseOver?.({ event, member: (member as Member), itemRef: scrollRef })}
       onMouseMove={(event) => onMouseMove?.({ event, member: (member as Member), itemRef: scrollRef })}
-      key={member.nickname}
+      key={member?.userId || uuidv4()}
       ref={scrollRef}
     >
       <Avatar
