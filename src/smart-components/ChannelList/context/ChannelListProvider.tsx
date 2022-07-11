@@ -251,12 +251,26 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
             type: channelListActions.ON_LAST_MESSAGE_UPDATED,
             payload: channel,
           });
+          sdk.groupChannel.getChannelWithoutCache(channel.url)
+            .then((ch) => {
+              channelListDispatcher({
+                type: channelListActions.ON_LAST_MESSAGE_UPDATED,
+                payload: ch,
+              });
+            });
         },
         onMentionReceived(channel) {
           channelListDispatcher({
             type: channelListActions.ON_LAST_MESSAGE_UPDATED,
             payload: channel,
           });
+          sdk.groupChannel.getChannelWithoutCache(channel.url)
+            .then((ch) => {
+              channelListDispatcher({
+                type: channelListActions.ON_LAST_MESSAGE_UPDATED,
+                payload: ch,
+              });
+            });
         },
       });
       sdk?.groupChannel?.addGroupChannelHandler(handlerId, handler)
