@@ -899,7 +899,7 @@ declare module '@sendbird/uikit-react/ChannelSettings' {
 declare module '@sendbird/uikit-react/ChannelSettings/context' {
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
   export const ChannelSettingsProvider: React.FC<SendbirdUIKitGlobal.ChannelSettingsContextProps>;
-  export const UseChannelSettingsType: () => SendbirdUIKitGlobal.ChannelSettingsProviderInterface;
+  export const useChannelSettingsContext: () => SendbirdUIKitGlobal.ChannelSettingsProviderInterface;
 }
 
 declare module '@sendbird/uikit-react/ChannelSettings/components/AdminPanel' {
