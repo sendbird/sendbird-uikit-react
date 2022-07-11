@@ -258,7 +258,7 @@ Icon.propTypes = {
     PropTypes.arrayOf(PropTypes.string),
   ]),
   /** Type: Use strings from below list */
-  type: PropTypes.oneOf([
+  type: PropTypes.oneOfType([
     PropTypes.oneOf(Object.keys(Type)),
     PropTypes.string,
   ]).isRequired,
