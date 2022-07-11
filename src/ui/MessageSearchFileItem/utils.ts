@@ -1,3 +1,4 @@
+import type { FileMessage } from '@sendbird/chat/message';
 import type { Locale } from 'date-fns';
 import format from 'date-fns/format';
 import formatRelative from 'date-fns/formatRelative';
@@ -19,7 +20,7 @@ export function getCreatedAt(createdAt: number, locale: Locale): string {
   return format(createdAt, 'MMM dd', optionalParam);
 }
 
-export function getIconOfFileType(message: SendbirdUIKit.ClientFileMessage): string {
+export function getIconOfFileType(message: FileMessage): string {
   const { url } = message;
   const fileMessageUrl = url;
   const fileExtension = (fileMessageUrl.match(/\.([^.]*?)(?=\?|#|$)/))[1];

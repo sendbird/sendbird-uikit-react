@@ -5,12 +5,13 @@ import getCreatedAt from './getCreatedAt';
 import Avatar from '../Avatar';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
+import { UserMessage } from '@sendbird/chat/message';
 
 interface Props {
   className?: string | Array<string>;
-  message: SendbirdUIKit.ClientUserMessage;
+  message: UserMessage;
   selected?: boolean;
-  onClick?: (message: SendbirdUIKit.ClientMessage) => void;
+  onClick?: (message: UserMessage) => void;
 }
 
 export default function MessageSearchItem({

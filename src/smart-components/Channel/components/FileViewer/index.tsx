@@ -1,5 +1,6 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
+import type { FileMessage } from '@sendbird/chat/message';
 
 import './file-viewer.scss';
 import Avatar from '../../../../ui/Avatar';
@@ -10,6 +11,7 @@ import { MODAL_ROOT } from '../../../../hooks/useModal/ModalRoot';
 import { isImage, isVideo, isSupportedFileView } from '../../../../utils';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelContext } from '../../context/ChannelProvider';
+import { EveryMessage } from '../../../../types';
 
 type FileViewerUIProps = {
   profileUrl: string;
@@ -135,7 +137,7 @@ export const FileViewerComponent: React.FC<FileViewerUIProps> = ({
 
 type FileViewerProps = {
   onCancel:() => void;
-  message: SendbirdUIKit.ClientFileMessage;
+  message: FileMessage;
 };
 
 const FileViewer: React.FC<FileViewerProps> = ({ onCancel, message }: FileViewerProps) => {
@@ -161,7 +163,7 @@ const FileViewer: React.FC<FileViewerProps> = ({ onCancel, message }: FileViewer
         name={name}
         onCancel={onCancel}
         onDelete={() => {
-          deleteMessage(message).then(() => {
+          deleteMessage(message as EveryMessage).then(() => {
             onCancel();
           });
         }}

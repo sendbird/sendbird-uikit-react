@@ -7,7 +7,7 @@ export default {
 
   // SendbirdProvider
   SendbirdProvider: 'src/lib/Sendbird.jsx',
-  sendbirdSelectors: 'src/lib/selectors.js',
+  sendbirdSelectors: 'src/lib/selectors.ts',
   useSendbirdStateContext: 'src/hooks/useSendbirdStateContext.tsx',
   withSendBird: 'src/lib/SendbirdSdkContext.jsx',
 
@@ -74,7 +74,7 @@ export default {
   CreateChannel: 'src/smart-components/CreateChannel/index.tsx',
   'CreateChannel/context': 'src/smart-components/CreateChannel/context/CreateChannelProvider.tsx',
   'CreateChannel/components/CreateChannelUI': 'src/smart-components/CreateChannel/components/CreateChannelUI/index.tsx',
-  'CreateChannel/components/InviteMembers': 'src/smart-components/CreateChannel/components/InviteMembers/index.tsx',
+  'CreateChannel/components/InviteUsers': 'src/smart-components/CreateChannel/components/InviteUsers/index.tsx',
   'CreateChannel/components/SelectChannelType': 'src/smart-components/CreateChannel/components/SelectChannelType.tsx',
 
   // EditUserProfile

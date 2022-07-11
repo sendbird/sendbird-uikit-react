@@ -1,21 +1,28 @@
+import type { SendbirdError } from '@sendbird/chat';
+import type { AdminMessage, FileMessage, MessageSearchQuery, UserMessage } from '@sendbird/chat/message';
 import { useCallback } from 'react';
+import { Logger } from '../../../..';
 import * as messageActionTypes from '../dux/actionTypes';
 
 interface MainProps {
-  currentMessageSearchQuery: SendBird.MessageSearchQuery;
+  currentMessageSearchQuery: MessageSearchQuery;
   hasMoreResult: boolean;
   onResultLoaded?: (
-    messages?: Array<SendBird.UserMessage | SendBird.FileMessage | SendBird.AdminMessage>,
-    error?: SendbirdUIKit.SendbirdError,
+    messages?: Array<UserMessage | FileMessage | AdminMessage>,
+    error?: SendbirdError,
   ) => void;
 }
+
+type MessageSearchDispatcherType = { type: string, payload: any };
+
 interface ToolProps {
-  logger: SendbirdUIKit.Logger;
-  messageSearchDispatcher: ({ type: string, payload: any }) => void;
+  logger: Logger;
+  messageSearchDispatcher: (payload: MessageSearchDispatcherType) => void;
 }
+
 export type CallbackReturn = (
   callback: (
-    messages: Array<SendBird.UserMessage | SendBird.FileMessage | SendBird.AdminMessage>,
+    messages: Array<UserMessage | FileMessage | AdminMessage>,
     /* eslint-disable @typescript-eslint/no-explicit-any*/
     error: any,
   ) => void

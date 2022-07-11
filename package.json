@@ -21,7 +21,7 @@
     "test-update-snapshot": "jest -u",
     "cp-css": "./scripts/copy-css.sh",
     "clean-release": "rm -rf ./release; rm -rf ./dist",
-    "build": "npm run clean-release; rollup -c; npm run cp-css",
+    "build": "npm run clean-release; rollup -c",
     "start": "rollup -c -w",
     "reset": "rm -rf ./node_modules; npm install;",
     "prepublishOnly": "npm run build",
