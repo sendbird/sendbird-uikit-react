@@ -12,12 +12,12 @@ import OpenChannelMessageList from '../OpenChannelMessageList';
 import { RenderMessageProps } from '../../../../types';
 
 export interface OpenChannelUIProps {
-  renderMessage?: (props: RenderMessageProps) => React.ReactNode;
-  renderHeader?: () => React.ReactNode;
-  renderInput?: () => React.ReactNode;
-  renderPlaceHolderEmptyList?: () => React.ReactNode;
-  renderPlaceHolderError?: () => React.ReactNode;
-  renderPlaceHolderLoading?: () => React.ReactNode;
+  renderMessage?: (props: RenderMessageProps) => React.ElementType<RenderMessageProps>;
+  renderHeader?: () => React.ReactElement;
+  renderInput?: () => React.ReactElement;
+  renderPlaceHolderEmptyList?: () => React.ReactElement;
+  renderPlaceHolderError?: () => React.ReactElement;
+  renderPlaceHolderLoading?: () => React.ReactElement;
 }
 
 const COMPONENT_CLASS_NAME = 'sendbird-openchannel-conversation';

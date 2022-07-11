@@ -2,13 +2,14 @@ import React, {
   ReactElement,
   useState,
 } from 'react';
+import { OpenChannel } from '@sendbird/chat/openChannel';
 
 import './streaming.scss';
 import './theme.scss';
 
 import Sendbird from '../../lib/Sendbird';
 
-import OpenChannel from '../OpenChannel';
+import OpenChannelConversation from '../OpenChannel';
 import OpenChannelSettings from '../OpenChannelSettings';
 
 import ChannelList from './components/StreamingChannelList';
@@ -58,7 +59,7 @@ export default function Streaming({
 }: Props): ReactElement {
   const [showSettings, setShowSettings] = useState(false);
   const [showPanel, setShowPanel] = useState(true);
-  const [currentChannel, setCurrentChannel] = useState<SendBird.OpenChannel>(null);
+  const [currentChannel, setCurrentChannel] = useState<OpenChannel>(null);
   const currentChannelUrl = currentChannel ? currentChannel.url : '';
   return (
     <Sendbird
@@ -92,7 +93,7 @@ export default function Streaming({
                   />
                 )
                 : (
-                  <OpenChannel
+                  <OpenChannelConversation
                     channelUrl={currentChannelUrl}
                     renderHeader={() => {
                       return (

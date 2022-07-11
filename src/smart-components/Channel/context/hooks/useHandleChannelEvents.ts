@@ -198,7 +198,7 @@ function useHandleChannelEvents(
       if (sdk?.groupChannel?.removeGroupChannelHandler) {
         logger.info('Channel | useHandleChannelEvents: Removing message reciver handler', channelHandlerId);
         sdk.groupChannel.removeGroupChannelHandler(channelHandlerId);
-      } else {
+      } else if (sdk?.groupChannel) {
         logger.error('Channel | useHandleChannelEvents: Not found the removeGroupChannelHandler');
       }
     }

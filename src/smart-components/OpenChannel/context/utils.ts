@@ -27,7 +27,7 @@ export const scrollIntoLast = (intialTry = 0): void => {
     return;
   }
   try {
-    const scrollDOM = document.querySelector('.sendbird-openchannel-conversation-scroll');
+    const scrollDOM = document.querySelector('.sendbird-openchannel-conversation-scroll__container__item-container');
     // eslint-disable-next-line no-multi-assign
     scrollDOM.scrollTop = scrollDOM.scrollHeight;
   } catch (error) {

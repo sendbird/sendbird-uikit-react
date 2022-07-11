@@ -31,9 +31,8 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import type { RenderMessageProps } from '../../../../types';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 
-type RenderedMessageType = React.ElementType<RenderMessageProps>;
 export type OpenChannelMessageProps = {
-  renderMessage?: (props: RenderMessageProps) => RenderedMessageType;
+  renderMessage?: (props: RenderMessageProps) => React.ElementType<RenderMessageProps>;
   message: UserMessage | FileMessage | AdminMessage;
   chainTop?: boolean;
   chainBottom?: boolean;

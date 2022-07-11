@@ -1,8 +1,8 @@
-import React, { ReactElement, useMemo } from "react";
+import React, { useMemo } from "react";
 
 import "./open-channel-preview.scss";
 
-import { ChannelMeta } from "./DummyStream";
+// import { ChannelMeta } from "./DummyStream";
 
 const kFormat = (num) => {
   if (num < 1000) {
@@ -19,7 +19,7 @@ export default function OpenChannelPreview({
   isStreaming = false
 }) {
   const streamInfo = useMemo(() => {
-    let channelMeta: ChannelMeta;
+    let channelMeta;// ChannelMeta;
     if (isStreaming) {
       try {
         channelMeta = JSON.parse(channel.data);

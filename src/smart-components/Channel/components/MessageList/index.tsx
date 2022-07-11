@@ -13,9 +13,9 @@ import { isAboutSame } from '../../context/utils';
 import uuidv4 from '../../../../utils/uuid';
 
 export type MessageListProps = {
-  renderMessage?: (props: RenderMessageProps) => React.ReactNode;
-  renderPlaceholderEmpty?: () => React.ReactNode;
-  renderCustomSeparator?: () => React.ReactNode;
+  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+  renderPlaceholderEmpty?: () => React.ReactElement;
+  renderCustomSeparator?: () => React.ReactElement;
 };
 
 const SCROLL_REF_CLASS_NAME = '.sendbird-msg--scroll-ref';
