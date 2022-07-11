@@ -185,12 +185,13 @@ export default function reducer(state, action) {
         ...state,
         showSettings: false,
       };
-    case actions.ON_LAST_MESSAGE_UPDATED:
+    case actions.ON_LAST_MESSAGE_UPDATED: {
       return {
         ...state,
         allChannels: state.allChannels.map((channel) => (
           channel?.url === action.payload.url ? action.payload : channel)),
       };
+    }
     case actions.ON_CHANNEL_FROZEN: {
       const channel = action.payload;
       if (state.channelListQuery) {
