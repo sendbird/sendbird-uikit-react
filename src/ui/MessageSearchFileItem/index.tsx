@@ -1,5 +1,6 @@
-import React, { ReactElement } from 'react';
 import './index.scss';
+import React, { ReactElement } from 'react';
+import type { FileMessage } from '@sendbird/chat/message';
 
 import Avatar from '../Avatar';
 import Icon, { IconColors } from '../Icon';
@@ -9,9 +10,9 @@ import { getCreatedAt, getIconOfFileType, truncate } from './utils';
 
 interface Props {
   className?: string | Array<string>;
-  message: SendbirdUIKit.ClientFileMessage;
+  message: FileMessage;
   selected?: boolean;
-  onClick?: (message: SendbirdUIKit.ClientFileMessage) => void;
+  onClick?: (message: FileMessage) => void;
 }
 
 export default function MessageSearchFileItem(props: Props): ReactElement {
@@ -23,6 +24,7 @@ export default function MessageSearchFileItem(props: Props): ReactElement {
   } = props;
   const { createdAt, url, name } = message;
   const fileMessageUrl = url;
+  // @ts-ignore
   const sender = message.sender || message._sender;
   const { profileUrl, nickname } = sender;
   const { stringSet, dateLocale } = useLocalization();

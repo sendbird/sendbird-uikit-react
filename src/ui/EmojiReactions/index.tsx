@@ -25,7 +25,7 @@ interface Props {
   toggleReaction?: (message: UserMessage | FileMessage, key: string, byMe: boolean) => void;
 }
 
-export default function EmojiReactions2({
+const EmojiReactions = ({
   className,
   userId,
   message,
@@ -34,7 +34,7 @@ export default function EmojiReactions2({
   spaceFromTrigger = {},
   isByMe = false,
   toggleReaction,
-}: Props): ReactElement {
+}: Props): ReactElement => {
   const { stringSet } = useContext(LocalizationContext);
   const emojisMap = getEmojiMapAll(emojiContainer);
   const addReactionRef = useRef(null);
@@ -140,3 +140,5 @@ export default function EmojiReactions2({
     </div>
   );
 }
+
+export default EmojiReactions;

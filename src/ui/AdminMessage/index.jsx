@@ -30,6 +30,7 @@ export default function AdminMessage({
 }
 
 AdminMessage.propTypes = {
+  /** type: AdminMessage */
   message: PropTypes.shape({
     message: PropTypes.string,
     messageType: PropTypes.string,

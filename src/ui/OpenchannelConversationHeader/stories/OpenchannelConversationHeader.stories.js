@@ -1,10 +1,24 @@
 import React from 'react';
 import OpenchannelConversationHeader from '../index.tsx';
 
-export default { title: 'UI Components/OpenchannelConversationHeader' };
+const description = `
+  \`import OpenchannelConversationHeader from "@sendbird/uikit-react/ui/OpenchannelConversationHeader";\`
+`;
 
-export const defaultHeader = () => (
-  <OpenchannelConversationHeader />
+export default {
+  title: '@sendbird/uikit-react/ui/OpenchannelConversationHeader',
+  component: OpenchannelConversationHeader,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (arg) => (
+  <OpenchannelConversationHeader {...arg} />
 );
 
 export const filledProps = () => (

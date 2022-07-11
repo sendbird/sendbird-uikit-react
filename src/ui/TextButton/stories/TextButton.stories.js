@@ -2,9 +2,23 @@ import React from 'react';
 import TextButton from '../index.jsx';
 import Label, { LabelTypography, LabelColors } from '../../Label';
 
-export default { title: 'UI Components/TextButton' };
+const description = `
+  \`import TextButton from "@sendbird/uikit-react/ui/TextButton";\`
+`;
 
-export const defaultTextButton = () => <TextButton>Textbutton</TextButton>;
+export default {
+  title: '@sendbird/uikit-react/ui/TextButton',
+  component: TextButton,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (arg) => <TextButton {...arg}>Textbutton</TextButton>;
 
 export const labelTextButton = () => (
   <TextButton>

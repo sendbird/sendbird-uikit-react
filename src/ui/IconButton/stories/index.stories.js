@@ -3,7 +3,27 @@ import IconButton from '../index.jsx';
 
 import DefaultIcon from '../../../svgs/icon-create.svg';
 
-export default { title: 'UI Components/IconButton' };
+const description = `
+  \`import IconButton from "@sendbird/uikit-react/ui/IconButton";\`
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/IconButton',
+  component: IconButton,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (arg) => (
+  <IconButton onClick={() => alert("clicked the button")} {...arg}>
+    <DefaultIcon />
+  </IconButton>
+);
 
 export const simpleIconButton = () => (
   <IconButton onClick={() => alert("clicked the button")}>

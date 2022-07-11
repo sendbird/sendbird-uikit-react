@@ -1,7 +1,26 @@
 import React from 'react';
 import Label, { LabelTypography, LabelColors } from '../index.jsx';
 
-export default { title: 'UI Components/Label' };
+const description = `
+  \`import Label, { LabelTypography, LabelColors }  from "@sendbird/uikit-react/ui/Accordion";\`
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/Label',
+  component: Label,
+  subcomponents: { LabelTypography, LabelColors },
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (arg) => (
+  <Label {...arg}>Sample String</Label>
+);
 
 export const OnBackground_1 = () => [
   ...Object.keys(LabelTypography)

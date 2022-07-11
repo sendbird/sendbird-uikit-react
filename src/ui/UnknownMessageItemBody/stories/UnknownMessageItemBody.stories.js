@@ -1,13 +1,23 @@
 import React from 'react';
 import UnknownMessageItemBody from '../index.tsx';
 
-export default { title: 'UI Components/UnknownMessageItemBody' };
+const description = `
+  \`import UnknownMessageItemBody from "@sendbird/uikit-react/ui/UnknownMessageItemBody";\`
+`;
 
-export const withText = () => (
-  <div>
-    <UnknownMessageItemBody />
-    <br />
-    <br />
-    <UnknownMessageItemBody isByMe />
-  </div>
+export default {
+  title: '@sendbird/uikit-react/ui/UnknownMessageItemBody',
+  component: UnknownMessageItemBody,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+
+export const WithControl = (arg) => (
+  <UnknownMessageItemBody {...arg} />
 );

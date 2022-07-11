@@ -1,8 +1,6 @@
 import React from 'react';
 import QuoteMessageInput from '../index.tsx';
 
-export default { title: 'UI Components/QuoteMessageInput' };
-
 import {
   dummyFileMessageAudio,
   dummyFileMessageVideo,
@@ -10,6 +8,26 @@ import {
   dummyFileMessageGif,
   dummyFileMessageWithThumbnail,
 } from '../mockMessage.ts';
+
+const description = `
+  \`import QuoteMessageInput from "@sendbird/uikit-react/ui/QuoteMessageInput";\`
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/QuoteMessageInput',
+  component: QuoteMessageInput,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (arg) => (
+  <QuoteMessageInput replyingMessage={dummyFileMessageAudio} {...arg} />
+);
 
 export const withText = () => [
   <QuoteMessageInput replyingMessage={dummyFileMessageAudio} />,

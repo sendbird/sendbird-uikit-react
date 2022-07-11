@@ -1,9 +1,25 @@
 import React from 'react';
 import ChatHeader from '../index.jsx';
 
-export default { title: 'UI Components/ChatHeader' };
+const description = `
+  \`import ChatHeader from "@sendbird/uikit-react/ui/ChatHeader";\`
+  \n The title of Channel
+`;
 
-export const defaultChatHeader = () => <ChatHeader />;
+export default {
+  title: '@sendbird/uikit-react/ui/ChatHeader',
+  component: ChatHeader,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+
+export const WithControl = (arg) => <ChatHeader {...arg} />;
 export const chatHeader = () => [
   <ChatHeader
     title="Headline 2"

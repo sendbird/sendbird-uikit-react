@@ -126,16 +126,19 @@ export default function ChannelPreview({
 }
 
 ChannelPreview.propTypes = {
+  /** Type: GroupChannel / OpenChannel(Not tested) */
   channel: PropTypes.shape({
     members: PropTypes.arrayOf(PropTypes.shape({})),
     coverUrl: PropTypes.string,
     isBroadcast: PropTypes.bool,
     isFrozen: PropTypes.bool,
   }),
+  /** Type: User */
   currentUser: PropTypes.shape({
     userId: PropTypes.string,
   }),
   isActive: PropTypes.bool,
+  /** To render dropdown menu */
   ChannelAction: PropTypes.element.isRequired,
   theme: PropTypes.string,
   onClick: PropTypes.func,

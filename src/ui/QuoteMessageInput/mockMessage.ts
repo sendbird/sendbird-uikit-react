@@ -1,4 +1,6 @@
 export const dummyFileMessageImage = {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  isFileMessage: () => true,
   messageId: 15814617,
   messageType: 'file',
   channelUrl: 'sendbird_group_channel_11985956_fa67b79d39e6aa5abbeda4413cde24ce1685eedb',
@@ -36,6 +38,8 @@ export const dummyFileMessageImage = {
 };
 
 export const dummyFileMessageVideo = {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  isFileMessage: () => true,
   messageId: 15814617,
   messageType: 'file',
   channelUrl: 'sendbird_group_channel_11985956_fa67b79d39e6aa5abbeda4413cde24ce1685eedb',
@@ -85,6 +89,8 @@ export const dummyFileMessageVideo = {
 };
 
 export const dummyFileMessageAudio = {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  isFileMessage: () => true,
   messageId: 15814617,
   messageType: 'file',
   channelUrl: 'sendbird_group_channel_11985956_fa67b79d39e6aa5abbeda4413cde24ce1685eedb',
@@ -119,11 +125,11 @@ export const dummyFileMessageAudio = {
   requestState: 'succeeded',
   requestedMentionUserIds: [],
   errorCode: 0,
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  isFileMessage: () => true,
 };
 
 export const dummyFileMessageGif = {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  isFileMessage: () => true,
   messageId: 15814617,
   messageType: 'file',
   channelUrl: 'sendbird_group_channel_11985956_fa67b79d39e6aa5abbeda4413cde24ce1685eedb',
@@ -161,6 +167,8 @@ export const dummyFileMessageGif = {
 };
 
 export const dummyFileMessageWithThumbnail = {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  isFileMessage: () => true,
   messageId: 751865890,
   messageType: "file",
   channelUrl: "sendbird_group_channel_19238732_8e44958ac5c2fb88203146f42a18a9a4f4472dde",

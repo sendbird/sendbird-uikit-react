@@ -1,6 +1,20 @@
 import React from 'react';
 import Word from '../index.tsx';
 
-export default { title: 'UI Components/Word' };
+const description = `
+  \`import Word from "@sendbird/uikit-react/ui/Word";\`
+`;
 
-export const withText = () => <Word text="example" />;
+export default {
+  title: '@sendbird/uikit-react/ui/Word',
+  component: Word,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (arg) => <Word word="example" {...arg} />;

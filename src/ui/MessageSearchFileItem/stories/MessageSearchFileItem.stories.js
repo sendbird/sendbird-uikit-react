@@ -8,7 +8,31 @@ import {
   gifMock,
 } from '../mockFileMessage';
 
-export default { title: 'UI Components/MessageSearchFileItem' };
+const description = `
+  \`import MessageSearchFileItem from "@sendbird/uikit-react/ui/MessageSearchFileItem";\`
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/MessageSearchFileItem',
+  component: MessageSearchFileItem,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (arg) => (
+  <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <MessageSearchFileItem
+      message={docMock}
+      onClick={() => console.log('doc click')}
+      {...arg}
+    />
+  </div>
+);
 
 export const normal = () => {
   return (

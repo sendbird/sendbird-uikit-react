@@ -4,9 +4,24 @@ import DropdownMenu, { MenuItem } from '../index.jsx';
 import IconButton from "../../IconButton";
 import DefaultIcon from '../../../svgs/icon-create.svg';
 
-export default { title: 'UI Components/DropdownMenu' };
+const description = `
+  \`import DropdownMenu, { MenuItem } from "@sendbird/uikit-react/ui/DropdownMenu";\`
+`;
 
-export const simpleDropdownMenu = () => (
+export default {
+  title: '@sendbird/uikit-react/ui/DropdownMenu',
+  component: DropdownMenu,
+  subcomponents: { MenuItem },
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (arg) => (
   <DropdownMenu
     renderButton={(toggleDropdown) => (
       <IconButton
@@ -27,5 +42,6 @@ export const simpleDropdownMenu = () => (
         </MenuItem>
       </>
     )}
+    {...arg}
   />
 );

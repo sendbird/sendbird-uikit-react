@@ -1,7 +1,26 @@
 import React from 'react';
 import Icon, { IconTypes, IconColors } from '../index.jsx';
 
-export default { title: 'UI Components/Icon' };
+const description = `
+  \`import Icon, { IconTypes, IconColors } from "@sendbird/uikit-react/ui/Icon";\`
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/Icon',
+  component: Icon,
+  subcomponents: { IconTypes, IconColors },
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (arg) => (
+  <Icon {...arg} />
+);
 
 export const iconListDefault = () => [
   ...Object.keys(IconTypes).map(

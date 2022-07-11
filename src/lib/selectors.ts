@@ -224,7 +224,7 @@ export const getCreateOpenChannel = (state: SendBirdState) => (
  *  .catch((error) => {})
  */
 export const getGetGroupChannel = (state: SendBirdState) => (
-  (channelUrl: string, isSelected?: boolean): Promise<GroupChannel> => (
+  (channelUrl: string): Promise<GroupChannel> => (
     new Promise((resolve, reject) => {
       const sdk = getSdk(state);
       // const pubSub = getPubSub(state);

@@ -257,10 +257,12 @@ Icon.propTypes = {
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string),
   ]),
-  type: PropTypes.oneOfType([
+  /** Type: Use strings from below list */
+  type: PropTypes.oneOf([
     PropTypes.oneOf(Object.keys(Type)),
     PropTypes.string,
   ]).isRequired,
+  /** Type: Use Colors from below list */
   fillColor: PropTypes.oneOf(Object.keys(Colors)),
   width: PropTypes.oneOfType([
     PropTypes.string,

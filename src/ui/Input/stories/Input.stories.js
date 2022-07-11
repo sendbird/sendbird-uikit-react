@@ -1,13 +1,26 @@
 import React, { useRef, useState } from 'react';
 import Input, { InputLabel } from '../index.jsx';
 
-export default { title: 'UI Components/Input' };
+const description = `
+  \`import Input, { InputLabel } from "@sendbird/uikit-react/ui/Input";\`
+`;
 
-export const simpleInput = () => (
+export default {
+  title: '@sendbird/uikit-react/ui/Input',
+  component: Input,
+  subcomponents: { InputLabel },
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (arg) => (
   <Input
-    value=""
-    placeHolder="placeholder"
-    name="input"
+    {...arg}
   />
 );
 

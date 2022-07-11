@@ -2,7 +2,22 @@ import React from 'react';
 import MessageStatus, { MessageStatusTypes } from '../index';
 import { generateNormalMessage } from '../messageDummyData.mock';
 
-export default { title: 'UI Components/MessageStatus' };
+const description = `
+  \`import MessageStatus, { MessageStatusTypes } from "@sendbird/uikit-react/ui/MessageStatus, { MessageStatusTypes }";\`
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/MessageStatus',
+  component: MessageStatus,
+  subcomponents: { MessageStatusTypes },
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
 
 const pendingMessage = generateNormalMessage((message) => {
   message.sendingStatus = 'pending';
@@ -27,6 +42,11 @@ const failedMessage = generateNormalMessage((message) => {
   message.sendingStatus = 'failed';
   return message;
 });
+
+export const WithControl = (arg) => (
+  <MessageStatus message={pendingMessage} {...arg} />
+);
+
 export const messageStatus = () => [
   <p>
     PENDING

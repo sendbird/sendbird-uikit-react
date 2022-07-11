@@ -2,7 +2,22 @@ import React from 'react';
 import OpenchannelUserMessage from '../index.tsx';
 import { MenuRoot } from '../../ContextMenu';
 
-export default { title: 'UI Components/OpenchannelUserMessage' };
+const description = `
+  \`import OpenchannelUserMessage from "@sendbird/uikit-react/ui/OpenchannelUserMessage";\`
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/OpenchannelUserMessage',
+  component: OpenchannelUserMessage,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
 
 const getMockMessage = (callback) => {
   const message = {
@@ -24,6 +39,13 @@ const getMockMessage = (callback) => {
   return message;
 }
 const userId = getMockMessage().sender.userId;
+
+export const WithControl = (arg) => (
+  <OpenchannelUserMessage
+    message={getMockMessage()}
+    {...arg}
+  />
+);
 
 export const defaultUserMessage = () => (
   <div>

@@ -1,7 +1,21 @@
 import React from 'react';
 import UserListItem from '../index.jsx';
 
-export default { title: 'UI Components/UserListItem' };
+const description = `
+  \`import UserListItem from "@sendbird/uikit-react/ui/UserListItem";\`
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/UserListItem',
+  component: UserListItem,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
 
 const getUserList = () => [
   {
@@ -20,10 +34,15 @@ const getUserList = () => [
     profileUrl: 'https://static.sendbird.com/sample/user_sdk/user_sdk_14.png',
   },
 ];
+
 const useColumn = (fn) => (
   <div style={{display: 'flex', flexDirection: 'column'}}>
     {fn()}
   </div>
+);
+
+export const WithControl = (arg) => useColumn(
+  () => getUserList().map((user) => <UserListItem user={user} {...arg} />)
 );
 
 export const BasicUserList = () => useColumn(

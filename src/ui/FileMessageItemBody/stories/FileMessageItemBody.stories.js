@@ -8,7 +8,25 @@ import {
   dummyFileMessageDocument,
 } from './dummyFileMessage.mock';
 
-export default { title: 'UI Components/FileMessageItemBody' };
+const description = `
+  \`import FileMessageItemBody from "@sendbird/uikit-react/ui/FileMessageItemBody";\`
+`;
+
+export default {
+  title: '@sendbird/uikit-react/ui/FileMessageItemBody',
+  component: FileMessageItemBody,
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
+
+export const WithControl = (arg) => (
+  <FileMessageItemBody message={dummyFileMessageImage} {...arg} />
+);
 
 export const withText = () => (
   <div style={{ display: 'flex', flexDirection: 'column' }}>

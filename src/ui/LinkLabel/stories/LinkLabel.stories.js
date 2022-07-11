@@ -1,9 +1,22 @@
 import React from 'react';
-import LinkLabel from '../index.jsx';
+import LinkLabel, { LinkLabelTypography, LinkLabelColors } from '../index.jsx';
 
-export default { title: 'UI Components/LinkLabel' };
+const description = `
+  \`import LinkLabel from "@sendbird/uikit-react/ui/LinkLabel";\`
+`;
 
-import { LinkLabelTypography, LinkLabelColors } from '../index';
+export default {
+  title: '@sendbird/uikit-react/ui/LinkLabel',
+  component: LinkLabel,
+  subcomponents: { LinkLabelTypography, LinkLabelColors },
+  parameters: {
+    docs: {
+      description: {
+        component: description,
+      },
+    },
+  },
+};
 
 const rightLinks = [
   'https://sendbird.com',
@@ -19,6 +32,10 @@ const wrongLinks = [
   'htp://sendbird.com',
   'https:/sendbird.com',
 ];
+
+export const WithControl = (arg) => (
+  <LinkLabel {...arg}>Sample Text</LinkLabel>
+);
 
 export const RightLinks = () => (
   rightLinks.map(link => (
