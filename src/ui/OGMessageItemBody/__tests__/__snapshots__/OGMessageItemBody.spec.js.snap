@@ -7,7 +7,7 @@ exports[`OGMessageItemBody should do a snapshot test of the OGMessageItemBody DO
   <span
     className="sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
   >
-    <p
+    <div
       className="sendbird-og-message-item-body__text-bubble"
     />
   </span>

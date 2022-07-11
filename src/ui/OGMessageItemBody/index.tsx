@@ -43,7 +43,7 @@ export default function OGMessageItemBody({
         type={LabelTypography.BODY_1}
         color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
       >
-        <p className="sendbird-og-message-item-body__text-bubble">
+        <div className="sendbird-og-message-item-body__text-bubble">
           {
             isMessageMentioned
               ? (
@@ -78,7 +78,7 @@ export default function OGMessageItemBody({
               </Label>
             )
           }
-        </p>
+        </div>
       </Label>
       <div
         className="sendbird-og-message-item-body__og-thumbnail"
