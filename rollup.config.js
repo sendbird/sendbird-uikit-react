@@ -11,7 +11,8 @@ import replace from '@rollup/plugin-replace';
 import typescript from '@rollup/plugin-typescript';
 import autoprefixer from 'autoprefixer';
 import copy from 'rollup-plugin-copy';
-import { sizeSnapshot } from 'rollup-plugin-size-snapshot';
+import nodePolyfills from 'rollup-plugin-polyfill-node';
+// import { sizeSnapshot } from 'rollup-plugin-size-snapshot';
 
 // config from package.json
 import pkg from './package.json';
@@ -100,7 +101,9 @@ module.exports = ({
       preferBuiltins: true,
     }),
     commonjs(),
-    sizeSnapshot(),
+    nodePolyfills({
+      include: ['buffer', 'stream']
+    }),
     copy({
       verbose: true,
       targets: [
