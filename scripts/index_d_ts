@@ -27,7 +27,7 @@
     showSearchIcon?: boolean;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
     onProfileEditSuccess?(user: User): void;
-    config?: SendBirdProviderConfig;
+    config?: SendbirdProviderConfig;
     useReaction?: boolean;
     useMessageGrouping?: boolean;
     stringSet?: Record<string, string>;
@@ -66,7 +66,7 @@
     close(): void;
   }
 
-  export interface SendBirdProviderConfig {
+  export interface SendbirdProviderConfig {
     logLevel?: 'debug' | 'warning' | 'error' | 'info' | 'all' | Array<string>;
     userMention?: {
       maxMentionCount?: number,
@@ -137,7 +137,7 @@
   // ) => Promise<FileMessage>;
   export type GetDeleteMessage = (
     channel: GroupChannel | OpenChannel,
-    message: AdminMessage | UserMessage | FileMessage
+    message: UserMessage | FileMessage
   ) => Promise<void>;
   export type GetResendUserMessage = (
     channel: GroupChannel | OpenChannel,
@@ -170,7 +170,7 @@
     getResendUserMessage: (store: SendBirdState) => GetResendUserMessage;
     getResendFileMessage: (store: SendBirdState) => GetResendFileMessage;
   }
-  export interface SendBirdProviderProps {
+  export interface SendbirdProviderProps {
     userId: string;
     appId: string;
     accessToken?: string;
@@ -184,7 +184,7 @@
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
     allowProfileEdit?: boolean;
     userListQuery?(): UserListQuery;
-    config?: SendBirdProviderConfig;
+    config?: SendbirdProviderConfig;
     stringSet?: Record<string, string>;
     colorSet?: Record<string, string>;
     isMentionEnabled?: boolean;
@@ -799,7 +799,7 @@
 declare module '@sendbird/uikit-react'  {
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
   export const App: React.FunctionComponent<SendbirdUIKitGlobal.AppProps>;
-  export const SendBirdProvider: React.FunctionComponent<SendbirdUIKitGlobal.SendBirdProviderProps>;
+  export const SendBirdProvider: React.FunctionComponent<SendbirdUIKitGlobal.SendbirdProviderProps>;
   export const sendBirdSelectors: SendbirdUIKitGlobal.sendbirdSelectorsInterface;
   export const ChannelList: React.FunctionComponent<SendbirdUIKitGlobal.ChannelListProps>;
   export const ChannelSettings: React.FunctionComponent<SendbirdUIKitGlobal.ChannelSettingsProps>;
@@ -822,7 +822,7 @@ declare module '@sendbird/uikit-react/App' {
 
 declare module '@sendbird/uikit-react/SendbirdProvider' {
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  const SendbirdProvider: React.FunctionComponent<SendbirdUIKitGlobal.SendBirdProviderProps>;
+  const SendbirdProvider: React.FunctionComponent<SendbirdUIKitGlobal.SendbirdProviderProps>;
   export default SendbirdProvider;
 }
 
