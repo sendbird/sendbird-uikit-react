@@ -9,7 +9,7 @@ export default {
   SendbirdProvider: 'src/lib/Sendbird.jsx',
   sendbirdSelectors: 'src/lib/selectors.ts',
   useSendbirdStateContext: 'src/hooks/useSendbirdStateContext.tsx',
-  withSendbird: 'src/lib/SendbirdSdkContext.jsx',
+  withSendBird: 'src/lib/SendbirdSdkContext.jsx',
 
   // ChannelList
   ChannelList: 'src/smart-components/ChannelList/index.tsx',
