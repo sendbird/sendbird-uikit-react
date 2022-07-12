@@ -80,7 +80,7 @@ export const getPubSub = (state: SendBirdState): any => {
  *  .catch((error) => {})
  */
 export const getConnect = (state: SendBirdState) => (
-  (userId: string, accessToken: string): Promise<User> => (
+  (userId: string, accessToken?: string): Promise<User> => (
     new Promise((resolve, reject) => {
       const sdk = getSdk(state);
       if (!sdk) {
@@ -132,7 +132,7 @@ export const getDisconnect = (state: SendBirdState) => (
  *  .catch((error) => {})
  */
 export const getUpdateUserInfo = (state: SendBirdState) => (
-  (nickname: string, profileUrl: string): Promise<User> => (
+  (nickname: string, profileUrl?: string): Promise<User> => (
     new Promise((resolve, reject) => {
       const sdk = getSdk(state);
       if (!sdk) {
@@ -141,7 +141,11 @@ export const getUpdateUserInfo = (state: SendBirdState) => (
       if (!(sdk.updateCurrentUserInfo && typeof sdk.updateCurrentUserInfo === 'function')) {
         reject(new Error('Not found the function "updateCurrentUserInfo"'))
       }
-      sdk.updateCurrentUserInfo({ nickname, profileUrl } as UserUpdateParams)
+      const userParams: UserUpdateParams = { nickname };
+      if (profileUrl) {
+        userParams.profileUrl = profileUrl;
+      }
+      sdk.updateCurrentUserInfo(userParams)
         .then((res) => resolve(res))
         .catch((err) => reject(err));
     })
@@ -593,7 +597,7 @@ export const getDeleteMessage = (state: SendBirdState) => (
  * const resendUserMessage = selectors.getResendUserMessage(state);
  * resendUserMessage(
  *  channel: GroupChannel | OpenChannel,
- *  failedMessage: SendableMessage,
+ *  failedMessage: UserMessage,
  * )
  *  .then(() => {})
  *  .catch((error) => {})
