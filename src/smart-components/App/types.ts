@@ -5,7 +5,7 @@ import {
   ReplyType,
   UserListQuery,
   RenderUserProfileProps,
-  SendBirdProviderConfig,
+  SendbirdProviderConfig,
 } from "../../types";
 
 export default interface AppProps {
@@ -22,7 +22,7 @@ export default interface AppProps {
   showSearchIcon?: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   onProfileEditSuccess?(user: User): void;
-  config?: SendBirdProviderConfig;
+  config?: SendbirdProviderConfig;
   isReactionEnabled?: boolean;
   isMessageGroupingEnabled?: boolean;
   stringSet?: Record<string, string>;

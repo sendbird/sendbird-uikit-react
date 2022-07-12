@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import SendBirdProvider from '../Sendbird';
-import withSendBird from '../SendbirdSdkContext';
+import SendbirdProvider from '../Sendbird';
+import withSendbird from '../SendbirdSdkContext';
 import sendbirdSelectors from '../selectors';
 import ChannelList from '../../smart-components/ChannelList';
 
@@ -17,16 +17,16 @@ const Welcome = ({ currentUser }) => (
   </div>
 );
 
-const WelcomeWithSendBird = withSendBird(Welcome, (state) => {
+const WelcomeWithSendbird = withSendbird(Welcome, (state) => {
   const sdk =  sendbirdSelectors.getSdk(state);
   const currentUser = sdk && sdk.getCurrentUserId && sdk.getCurrentUserId();
   return ({ currentUser });
 });
 
 export const getSdkStory = () => (
-  <SendBirdProvider appId={appId} userId={userId} nickname={userId}>
-    <WelcomeWithSendBird />
-  </SendBirdProvider>
+  <SendbirdProvider appId={appId} userId={userId} nickname={userId}>
+    <WelcomeWithSendbird />
+  </SendbirdProvider>
 )
 
 const CustomComponent = ({ createChannel, sdk, leaveChannel }) => {
@@ -59,7 +59,7 @@ const CustomComponent = ({ createChannel, sdk, leaveChannel }) => {
   );
 };
 
-const CustomComponentWithSendBird = withSendBird(CustomComponent, (state) => {
+const CustomComponentWithSendbird = withSendbird(CustomComponent, (state) => {
   const createChannel =  sendbirdSelectors.getCreateChannel(state);
   const leaveChannel =  sendbirdSelectors.getLeaveChannel(state);
   const sdk = sendbirdSelectors.getSdk(state);
@@ -67,10 +67,10 @@ const CustomComponentWithSendBird = withSendBird(CustomComponent, (state) => {
 });
 
 export const createAndLeaveChannel = () => (
-  <SendBirdProvider appId={appId} userId={userId} nickname={userId}>
-    <CustomComponentWithSendBird />
+  <SendbirdProvider appId={appId} userId={userId} nickname={userId}>
+    <CustomComponentWithSendbird />
     <div style={{ width: '320px', height: '500px' }}>
       <ChannelList />
     </div>
-  </SendBirdProvider>
+  </SendbirdProvider>
 );

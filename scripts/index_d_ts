@@ -3,7 +3,7 @@
  * homepage: https://sendbird.com/
  * git: https://github.com/sendbird/sendbird-uikit-react
  */
- declare module "SendbirdUIKitGlobal" {
+declare module "SendbirdUIKitGlobal" {
   import type React from 'react';
   import type Locale from 'date-fns';
   import type SendbirdChat from '@sendbird/chat';
@@ -149,26 +149,26 @@
   ) => Promise<FileMessage>;
 
   export interface sendbirdSelectorsInterface {
-    getSdk: (store: SendBirdState) => GetSdk;
-    getConnect: (store: SendBirdState) => GetConnect
-    getDisconnect: (store: SendBirdState) => GetDisconnect;
-    getUpdateUserInfo: (store: SendBirdState) => GetUpdateUserInfo;
-    getCreateGroupChannel: (store: SendBirdState) => GetCreateGroupChannel;
-    getCreateOpenChannel: (store: SendBirdState) => GetCreateOpenChannel;
-    getGetGroupChannel: (store: SendBirdState) => GetGetGroupChannel;
-    getGetOpenChannel: (store: SendBirdState) => GetGetOpenChannel;
-    getLeaveChannel: (store: SendBirdState) => GetLeaveGroupChannel;
-    getEnterOpenChannel: (store: SendBirdState) => GetEnterOpenChannel;
-    getExitOpenChannel: (store: SendBirdState) => GetExitOpenChannel;
-    getFreezeChannel: (store: SendBirdState) => GetFreezeChannel;
-    getUnFreezeChannel: (store: SendBirdState) => GetUnFreezeChannel;
-    getSendUserMessage: (store: SendBirdState) => GetSendUserMessage;
-    getSendFileMessage: (store: SendBirdState) => GetSendFileMessage;
-    getUpdateUserMessage: (store: SendBirdState) => GetUpdateUserMessage;
-    // getUpdateFileMessage: (store: SendBirdState) => GetUpdateFileMessage;
-    getDeleteMessage: (store: SendBirdState) => GetDeleteMessage;
-    getResendUserMessage: (store: SendBirdState) => GetResendUserMessage;
-    getResendFileMessage: (store: SendBirdState) => GetResendFileMessage;
+    getSdk: (store: SendbirdState) => GetSdk;
+    getConnect: (store: SendbirdState) => GetConnect
+    getDisconnect: (store: SendbirdState) => GetDisconnect;
+    getUpdateUserInfo: (store: SendbirdState) => GetUpdateUserInfo;
+    getCreateGroupChannel: (store: SendbirdState) => GetCreateGroupChannel;
+    getCreateOpenChannel: (store: SendbirdState) => GetCreateOpenChannel;
+    getGetGroupChannel: (store: SendbirdState) => GetGetGroupChannel;
+    getGetOpenChannel: (store: SendbirdState) => GetGetOpenChannel;
+    getLeaveChannel: (store: SendbirdState) => GetLeaveGroupChannel;
+    getEnterOpenChannel: (store: SendbirdState) => GetEnterOpenChannel;
+    getExitOpenChannel: (store: SendbirdState) => GetExitOpenChannel;
+    getFreezeChannel: (store: SendbirdState) => GetFreezeChannel;
+    getUnFreezeChannel: (store: SendbirdState) => GetUnFreezeChannel;
+    getSendUserMessage: (store: SendbirdState) => GetSendUserMessage;
+    getSendFileMessage: (store: SendbirdState) => GetSendFileMessage;
+    getUpdateUserMessage: (store: SendbirdState) => GetUpdateUserMessage;
+    // getUpdateFileMessage: (store: SendbirdState) => GetUpdateFileMessage;
+    getDeleteMessage: (store: SendbirdState) => GetDeleteMessage;
+    getResendUserMessage: (store: SendbirdState) => GetResendUserMessage;
+    getResendFileMessage: (store: SendbirdState) => GetResendFileMessage;
   }
   export interface SendbirdProviderProps {
     userId: string;
@@ -195,7 +195,7 @@
     };
   }
 
-  export interface SendBirdStateConfig {
+  export interface SendbirdStateConfig {
     disableUserProfile: boolean;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
     allowProfileEdit: boolean;
@@ -230,14 +230,14 @@
     loading: boolean;
     user: User;
   }
-  export interface SendBirdStateStore {
+  export interface SendbirdStateStore {
     sdkStore: SdkStore;
     userStore: UserStore;
   }
 
-  export type SendBirdState = {
-    config: SendBirdStateConfig;
-    stores: SendBirdStateStore;
+  export type SendbirdState = {
+    config: SendbirdStateConfig;
+    stores: SendbirdStateStore;
     dispatchers: {
       userDispatcher: UserDispatcher,
     },
@@ -327,7 +327,7 @@
     renderPlaceHolderEmptyList?: (props: void) => React.ReactNode;
   }
 
-  export interface ChannelListProps extends ChannelListProviderInterface, ChannelListUIProps {}
+  export interface ChannelListProps extends ChannelListProviderInterface, ChannelListUIProps { }
 
   export interface ChannelListHeaderInterface {
     renderHeader?: (props: void) => React.ReactNode;
@@ -482,7 +482,7 @@
 
   export interface ChannelProviderInterface extends ChannelContextProps, ChannelContextProps {
     scrollToMessage?(createdAt: number, messageId: number): void;
-    messageActionTypes: Record<string ,string>;
+    messageActionTypes: Record<string, string>;
     quoteMessage: CoreMessageType;
     setQuoteMessage: React.Dispatch<React.SetStateAction<CoreMessageType>>;
     initialTimeStamp: number;
@@ -498,7 +498,7 @@
   }
 
   export type FileViewerProps = {
-    onCancel:() => void;
+    onCancel: () => void;
     message: ClientFileMessage;
   }
 
@@ -740,7 +740,7 @@
     ): JSX.Element;
   }
 
-  export interface MessageSearchProps extends MessageSearchUIProps, MessageSearchProviderProps {}
+  export interface MessageSearchProps extends MessageSearchUIProps, MessageSearchProviderProps { }
 
   /**
    * CreateChannel
@@ -766,10 +766,10 @@
 
   export interface CreateChannelUIProps {
     onCancel?(): void;
-    renderStepOne?:(props: void) => React.ReactNode;
+    renderStepOne?: (props: void) => React.ReactNode;
   }
 
-  export interface CreateChannelProps extends CreateChannelProviderProps, CreateChannelUIProps {}
+  export interface CreateChannelProps extends CreateChannelProviderProps, CreateChannelUIProps { }
 
   export interface InviteUsersProps {
     onCancel?: () => void;
@@ -796,10 +796,10 @@
   }
 }
 
-declare module '@sendbird/uikit-react'  {
+declare module '@sendbird/uikit-react' {
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
   export const App: React.FunctionComponent<SendbirdUIKitGlobal.AppProps>;
-  export const SendBirdProvider: React.FunctionComponent<SendbirdUIKitGlobal.SendbirdProviderProps>;
+  export const SendbirdProvider: React.FunctionComponent<SendbirdUIKitGlobal.SendbirdProviderProps>;
   export const sendBirdSelectors: SendbirdUIKitGlobal.sendbirdSelectorsInterface;
   export const ChannelList: React.FunctionComponent<SendbirdUIKitGlobal.ChannelListProps>;
   export const ChannelSettings: React.FunctionComponent<SendbirdUIKitGlobal.ChannelSettingsProps>;
@@ -807,11 +807,11 @@ declare module '@sendbird/uikit-react'  {
   export const OpenChannel: React.FunctionComponent<SendbirdUIKitGlobal.OpenChannelProps>
   export const OpenChannelSettings: React.FunctionComponent<SendbirdUIKitGlobal.OpenChannelSettingsProps>
   export const MessageSearch: React.FunctionComponent<SendbirdUIKitGlobal.MessageSearchProps>
-  export function withSendBird(
+  export function withSendbird(
     ChildComp: React.Component | React.ElementType,
-    mapStoreToProps?: (store: SendbirdUIKitGlobal.SendBirdState) => unknown
+    mapStoreToProps?: (store: SendbirdUIKitGlobal.SendbirdState) => unknown
   ): (props: unknown) => React.ReactNode;
-  export function useSendbirdStateContext(): SendbirdUIKitGlobal.SendBirdState;
+  export function useSendbirdStateContext(): SendbirdUIKitGlobal.SendbirdState;
 }
 
 declare module '@sendbird/uikit-react/App' {
@@ -834,17 +834,17 @@ declare module '@sendbird/uikit-react/sendbirdSelectors' {
 
 declare module '@sendbird/uikit-react/useSendbirdStateContext' {
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  function useSendbirdStateContext(): SendbirdUIKitGlobal.SendBirdState;
+  function useSendbirdStateContext(): SendbirdUIKitGlobal.SendbirdState;
   export default useSendbirdStateContext;
 }
 
-declare module '@sendbird/uikit-react/withSendBird' {
+declare module '@sendbird/uikit-react/withSendbird' {
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  function withSendBird(
+  function withSendbird(
     ChildComp: React.Component | React.ElementType,
-    mapStoreToProps?: (store: SendbirdUIKitGlobal.SendBirdState) => unknown
+    mapStoreToProps?: (store: SendbirdUIKitGlobal.SendbirdState) => unknown
   ): (props: unknown) => React.ReactNode;
-  export default withSendBird;
+  export default withSendbird;
 }
 
 /** ChannelList */
@@ -857,8 +857,8 @@ declare module '@sendbird/uikit-react/ChannelList' {
 declare module '@sendbird/uikit-react/ChannelList/context' {
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
   export const ChannelListProvider: React.FunctionComponent<SendbirdUIKitGlobal.ChannelListProviderProps>;
-  export function useChannelListContext (): SendbirdUIKitGlobal.ChannelListProviderInterface;
-  export function useChannelList (): SendbirdUIKitGlobal.ChannelListProviderInterface;
+  export function useChannelListContext(): SendbirdUIKitGlobal.ChannelListProviderInterface;
+  export function useChannelList(): SendbirdUIKitGlobal.ChannelListProviderInterface;
 }
 
 declare module '@sendbird/uikit-react/ChannelList/components/AddChannel' {
@@ -1138,7 +1138,7 @@ declare module '@sendbird/uikit-react/CreateChannel' {
 declare module '@sendbird/uikit-react/CreateChannel/context' {
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
   export const CreateChannelProvider: React.FC<SendbirdUIKitGlobal.CreateChannelProviderProps>;
-  export function useCreateChannelContext (): SendbirdUIKitGlobal.CreateChannelContextInterface;
+  export function useCreateChannelContext(): SendbirdUIKitGlobal.CreateChannelContextInterface;
 }
 
 declare module '@sendbird/uikit-react/CreateChannel/components/CreateChannelUI' {
@@ -1171,7 +1171,7 @@ declare module '@sendbird/uikit-react/EditUserProfile' {
 declare module '@sendbird/uikit-react/EditUserProfile/context' {
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
   export const EditUserProfileProvider: React.FC<SendbirdUIKitGlobal.EditUserProfileProps>;
-  export function useEditUserProfileProviderContext (): SendbirdUIKitGlobal.EditUserProfileProviderInterface;
+  export function useEditUserProfileProviderContext(): SendbirdUIKitGlobal.EditUserProfileProviderInterface;
 }
 
 declare module '@sendbird/uikit-react/EditUserProfile/components/EditUserProfileUI' {
@@ -1238,7 +1238,7 @@ declare module '@sendbird/uikit-react/ui/Badge' {
   interface BadgeProps {
     count: number,
     maxLevel?: number,
-    className?: string | string [],
+    className?: string | string[],
   }
   const Badge: React.FC<BadgeProps>;
   export default Badge;
@@ -1342,15 +1342,15 @@ declare module '@sendbird/uikit-react/ui/ContextMenu' {
 
 declare module '@sendbird/uikit-react/ui/DateSeparator' {
   enum COLORS {
-    ONBACKGROUND_1 ='ONBACKGROUND_1',
-    ONBACKGROUND_2 ='ONBACKGROUND_2',
-    ONBACKGROUND_3 ='ONBACKGROUND_3',
-    ONBACKGROUND_4 ='ONBACKGROUND_4',
-    ONCONTENT_1 ='ONCONTENT_1',
-    ONCONTENT_2 ='ONCONTENT_2',
-    PRIMARY ='PRIMARY',
-    ERROR ='ERROR',
-    SECONDARY_3 ='SECONDARY_3',
+    ONBACKGROUND_1 = 'ONBACKGROUND_1',
+    ONBACKGROUND_2 = 'ONBACKGROUND_2',
+    ONBACKGROUND_3 = 'ONBACKGROUND_3',
+    ONBACKGROUND_4 = 'ONBACKGROUND_4',
+    ONCONTENT_1 = 'ONCONTENT_1',
+    ONCONTENT_2 = 'ONCONTENT_2',
+    PRIMARY = 'PRIMARY',
+    ERROR = 'ERROR',
+    SECONDARY_3 = 'SECONDARY_3',
   }
   interface DateSeparatorProps {
     className?: string | string[];
@@ -1452,7 +1452,7 @@ declare module '@sendbird/uikit-react/ui/ImageRenderer' {
   interface ImageRendererProps {
     className?: string | string[],
     defaultComponent?: () => React.ReactElement,
-    placeHolder?:  () => React.ReactElement,
+    placeHolder?: () => React.ReactElement,
     alt?: string,
     width?: number,
     height?: number,
@@ -1653,7 +1653,7 @@ declare module '@sendbird/uikit-react/ui/MessageSearchItem' {
     message: SendbirdUIKitGlobal.ClientUserMessage;
     selected?: boolean;
     onClick?: (message: SendbirdUIKitGlobal.ClientMessage) => void;
-    }
+  }
   const MessageSearchItem: React.FC<MessageSearchItemProps>;
   export default MessageSearchItem;
 
@@ -1931,7 +1931,7 @@ declare module '@sendbird/uikit-react/ui/UnknownMessageItemBody' {
 }
 
 declare module '@sendbird/uikit-react/ui/UserListItem' {
-  import type  { User } from '@sendbird/chat';
+  import type { User } from '@sendbird/chat';
   interface UserListItemProps {
     className?: string | Array<string>;
     user?: User,
@@ -1947,9 +1947,9 @@ declare module '@sendbird/uikit-react/ui/UserListItem' {
 }
 
 declare module '@sendbird/uikit-react/ui/UserProfile' {
-  import type  { User } from '@sendbird/chat';
-  import type  { SendbirdGroupChat, GroupChannelCreateParams, GroupChannel } from '@sendbird/chat/groupChannel';
-  import type  { SendbirdOpenChat } from '@sendbird/chat/openChannel';
+  import type { User } from '@sendbird/chat';
+  import type { SendbirdGroupChat, GroupChannelCreateParams, GroupChannel } from '@sendbird/chat/groupChannel';
+  import type { SendbirdOpenChat } from '@sendbird/chat/openChannel';
   import type SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
   interface UserProfileProps {
     user: User;

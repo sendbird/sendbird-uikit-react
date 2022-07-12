@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 
-import withSendBird from '../../../lib/SendbirdSdkContext';
+import withSendbird from '../../../lib/SendbirdSdkContext';
 import * as sendbirdSelectors from '../../../lib/selectors';
 
 import './streaming-channel-list.scss';
@@ -80,7 +80,7 @@ function StreamingChannelList({
   )
 }
 
-export default withSendBird(StreamingChannelList, (store) => {
+export default withSendbird(StreamingChannelList, (store) => {
   return {
     sdk: sendbirdSelectors.getSdk(store),
     user: store.stores.userStore.user,

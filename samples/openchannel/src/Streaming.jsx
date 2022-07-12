@@ -4,7 +4,7 @@ import "./streaming.scss";
 import "./theme.scss";
 
 import {
-  SendBirdProvider as Sendbird,
+  SendbirdProvider as Sendbird,
   OpenChannel,
   OpenChannelSettings
 } from "sendbird-uikit";

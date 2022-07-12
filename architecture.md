@@ -16,7 +16,7 @@
 In root of your App, or highest level at which you want sendbird context to live -
 declare a
 ```
-<SendBird userId={} appId={} accessToken={}>
+<Sendbird userId={} appId={} accessToken={}>
   <ChannelList />
 </Sendbird>
 ```

@@ -19,8 +19,8 @@ For typescript projects, add `node_modules/@sendbird/uikit-react/index.d.ts` to 
 With Sendbird UI Kit React, we export these components:
 (See `src/index.jsx`)
 
-* SendBirdProvider - The context provider for SDK component
-* useSendbirdStateContext - Hook to access SendBirdProvider context
+* SendbirdProvider - The context provider for SDK component
+* useSendbirdStateContext - Hook to access SendbirdProvider context
 * sendBirdSelectors - A bunch of useful selectors that can be used along with *useSendbirdStateContext*
 
 * Channel - A UI Component where conversations happen
