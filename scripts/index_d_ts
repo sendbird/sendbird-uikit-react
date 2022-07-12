@@ -838,13 +838,13 @@ declare module '@sendbird/uikit-react/useSendbirdStateContext' {
   export default useSendbirdStateContext;
 }
 
-declare module '@sendbird/uikit-react/withSendBird' {
+declare module '@sendbird/uikit-react/withSendbird' {
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  function withSendBird(
+  function withSendbird(
     ChildComp: React.Component | React.ElementType,
     mapStoreToProps?: (store: SendbirdUIKitGlobal.SendBirdState) => unknown
   ): (props: unknown) => React.ReactNode;
-  export default withSendBird;
+  export default withSendbird;
 }
 
 /** ChannelList */
@@ -902,9 +902,9 @@ declare module '@sendbird/uikit-react/ChannelSettings/context' {
   export const useChannelSettingsContext: () => SendbirdUIKitGlobal.ChannelSettingsProviderInterface;
 }
 
-declare module '@sendbird/uikit-react/ChannelSettings/components/AdminPanel' {
-  const AdminPanel: React.FunctionComponent;
-  export default AdminPanel;
+declare module '@sendbird/uikit-react/ChannelSettings/components/ModerationPanel' {
+  const ModerationPanel: React.FunctionComponent;
+  export default ModerationPanel;
 }
 
 declare module '@sendbird/uikit-react/ChannelSettings/components/ChannelProfile' {
