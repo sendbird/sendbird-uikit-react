@@ -807,7 +807,7 @@ declare module '@sendbird/uikit-react'  {
   export const OpenChannel: React.FunctionComponent<SendbirdUIKitGlobal.OpenChannelProps>
   export const OpenChannelSettings: React.FunctionComponent<SendbirdUIKitGlobal.OpenChannelSettingsProps>
   export const MessageSearch: React.FunctionComponent<SendbirdUIKitGlobal.MessageSearchProps>
-  export function withSendBird(
+  export function withSendbird(
     ChildComp: React.Component | React.ElementType,
     mapStoreToProps?: (store: SendbirdUIKitGlobal.SendBirdState) => unknown
   ): (props: unknown) => React.ReactNode;
@@ -838,13 +838,13 @@ declare module '@sendbird/uikit-react/useSendbirdStateContext' {
   export default useSendbirdStateContext;
 }
 
-declare module '@sendbird/uikit-react/withSendBird' {
+declare module '@sendbird/uikit-react/withSendbird' {
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  function withSendBird(
+  function withSendbird(
     ChildComp: React.Component | React.ElementType,
     mapStoreToProps?: (store: SendbirdUIKitGlobal.SendBirdState) => unknown
   ): (props: unknown) => React.ReactNode;
-  export default withSendBird;
+  export default withSendbird;
 }
 
 /** ChannelList */
