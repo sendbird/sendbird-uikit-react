@@ -1,4 +1,5 @@
 import React, { ReactElement, useMemo } from 'react'
+import { OpenChannel } from '@sendbird/chat/openChannel';
 
 import './open-channel-preview.scss';
 
@@ -8,7 +9,7 @@ import Avatar from '../../../ui/Avatar';
 import Icon, { IconTypes, IconColors } from '../../../ui/Icon';
 
 interface Props {
-  channel: SendBird.OpenChannel;
+  channel: OpenChannel;
   selected: boolean;
   onClick(event): void;
   isStreaming?: boolean;

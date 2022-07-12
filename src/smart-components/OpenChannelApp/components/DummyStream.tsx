@@ -2,6 +2,7 @@ import React, {
   ReactElement,
   useMemo,
 } from 'react';
+import { OpenChannel } from '@sendbird/chat/openChannel';
 
 import './dummy-stream.scss';
 import { LiveBadge } from '../assets/Icons.jsx';
@@ -20,7 +21,7 @@ export interface CreatorInfo {
 }
 
 interface Props {
-  currentChannel: SendBird.OpenChannel;
+  currentChannel: OpenChannel;
 }
 
 export default function DummyStream({
