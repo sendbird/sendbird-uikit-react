@@ -1,10 +1,13 @@
 # Changelog - v3
 
-## [v3.0.0-rc.0] (July 11 2022)
+## [v3.0.0] (July 12 2022)
 
 Features:
-* Use `@sendbird/chat@4`, see [MIGRATION_v2-to-v3.md](./MIGRATION_v2-to-v3.md) for details
+* Support `modules` and `components` in the UIKit
+* Upgraded to `@sendbird/chat@4`
 * Support react 18
+* See the Migration Guide for Converting V2 to V3. [[details](./MIGRATION_v2-to-v3.md)]
+* See more details and breaking changes. [[details](./CHANGELOG.md)]
 
 ## [3.0.0-beta.6] (June 03 2022)
 
