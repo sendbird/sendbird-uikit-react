@@ -4,12 +4,12 @@ import React, {
   useContext,
 } from 'react';
 
-import Modal from '../../../ui/Modal';
-import Label, { LabelTypography, LabelColors } from '../../../ui/Label';
-import Icon, { IconTypes } from '../../../ui/Icon';
-import { LocalizationContext } from '../../../lib/LocalizationContext';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
-import { useOpenChannelSettingsContext } from '../context/OpenChannelSettingsProvider';
+import Modal from '../../../../ui/Modal';
+import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
+import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
+import { LocalizationContext } from '../../../../lib/LocalizationContext';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 
 export default function DeleteChannel(): ReactElement {
   const [showDeleteChannelModal, setShowDeleteChannelModal] = useState(false);
@@ -51,6 +51,7 @@ export default function DeleteChannel(): ReactElement {
       >
         <Icon
           type={IconTypes.DELETE}
+          fillColor={IconColors.ERROR}
           className={[
             'sendbird-openchannel-settings__panel-icon-left',
             'sendbird-openchannel-settings__panel-icon__delete',

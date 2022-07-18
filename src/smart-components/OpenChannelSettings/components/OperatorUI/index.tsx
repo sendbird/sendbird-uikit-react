@@ -11,7 +11,7 @@ import Icon, {
 } from '../../../../ui/Icon';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import OpenChannelProfile from '../OpenChannelProfile';
-import DeleteChannel from '../DeleteOpenChannel';
+import DeleteChannel from './DeleteOpenChannel';
 import ParticipantsAccordion from '../ParticipantUI';
 import Accordion, { AccordionGroup } from '../../../../ui/Accordion';
 
