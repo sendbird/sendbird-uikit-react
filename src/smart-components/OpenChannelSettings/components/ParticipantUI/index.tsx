@@ -14,7 +14,7 @@ import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
-export default function ParticipantsList(): ReactElement {
+export default function ParticipantList(): ReactElement {
   const globalState = useSendbirdStateContext();
   const currentUser = globalState?.config?.userId;
   const { channel } = useOpenChannelSettingsContext();
@@ -33,7 +33,7 @@ export default function ParticipantsList(): ReactElement {
   }, [channel]);
   return (
     <div
-      className="sendbird-openchannel-settings__participants-list"
+      className="sendbird-openchannel-settings__participant-list"
       onScroll={(e) => {
         const { hasNext } = participantListQuery;
         const target = e.target as HTMLTextAreaElement;
