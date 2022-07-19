@@ -43,6 +43,8 @@ export const handleConnection = ({
   profileUrl,
   accessToken,
   configureSession,
+  customApiHost,
+  customWebSocketHost,
   sdk,
   logger,
 }, dispatchers) => {
@@ -66,6 +68,8 @@ export const handleConnection = ({
             new GroupChannelModule(),
             new OpenChannelModule(),
           ],
+          customApiHost,
+          customWebSocketHost,
         });
         if (configureSession && typeof configureSession === 'function') {
           sessionHandler = configureSession(newSdk);

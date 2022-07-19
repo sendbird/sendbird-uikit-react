@@ -20,6 +20,8 @@ export default function App(props) {
     appId,
     userId,
     accessToken,
+    customApiHost,
+    customWebSocketHost,
     theme,
     userListQuery,
     nickname,
@@ -54,6 +56,8 @@ export default function App(props) {
       appId={appId}
       userId={userId}
       accessToken={accessToken}
+      customApiHost={customApiHost}
+      customWebSocketHost={customWebSocketHost}
       theme={theme}
       nickname={nickname}
       profileUrl={profileUrl}
@@ -152,6 +156,8 @@ App.propTypes = {
   appId: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
   accessToken: PropTypes.string,
+  customApiHost: PropTypes.string,
+  customWebSocketHost: PropTypes.string,
   theme: PropTypes.string,
   userListQuery: PropTypes.func,
   nickname: PropTypes.string,
@@ -193,6 +199,8 @@ App.propTypes = {
 
 App.defaultProps = {
   accessToken: '',
+  customApiHost: '',
+  customWebSocketHost: '',
   theme: 'light',
   nickname: '',
   profileUrl: '',
