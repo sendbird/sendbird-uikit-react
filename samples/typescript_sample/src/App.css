@@ -1,0 +1,13 @@
+.App {
+  height: 100vh;
+  display: flex;
+}
+
+.sendbird-app__conversation-wrap {
+  flex: 1;
+}
+
+/* Cheap trick to hide info button */
+.sendbird-chat-header__right__info {
+  display: none;
+}
