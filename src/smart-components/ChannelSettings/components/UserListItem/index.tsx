@@ -1,4 +1,5 @@
 import React, { ReactElement, useRef, useContext } from 'react';
+import { User } from '@sendbird/chat';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { UserProfileContext } from '../../../../lib/UserProfileContext';
@@ -17,7 +18,7 @@ interface ActionProps {
   parentRef: React.RefObject<HTMLInputElement>;
 }
 
-type CustomUser = SendBird.User & {
+type CustomUser = User & {
   isMuted: boolean;
   role: string;
 };

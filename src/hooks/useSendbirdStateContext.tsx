@@ -9,10 +9,10 @@
 import { useContext } from 'react';
 
 import { SendbirdSdkContext } from '../lib/SendbirdSdkContext';
-import { SendBirdState } from '../lib/types';
+import { SendbirdState } from '../lib/types';
 
-function useSendbirdStateContext (): SendBirdState {
-  const context: SendBirdState = useContext(SendbirdSdkContext);
+function useSendbirdStateContext (): SendbirdState {
+  const context: SendbirdState = useContext(SendbirdSdkContext);
   return context;
 }
 

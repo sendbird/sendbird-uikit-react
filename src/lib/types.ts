@@ -19,11 +19,11 @@ import type {
   UserMessageUpdateParams,
 } from '@sendbird/chat/message';
 
-import type SendBirdTypes from '../types';
+import type SendbirdTypes from '../types';
 import { UikitMessageHandler } from './selectors';
 import { Logger } from './SendbirdState';
 
-export interface SendBirdProviderProps {
+export interface SendbirdProviderProps {
   userId: string;
   appId: string;
   accessToken?: string;
@@ -33,10 +33,10 @@ export interface SendBirdProviderProps {
   profileUrl?: string;
   dateLocale?: Locale;
   disableUserProfile?: boolean;
-  renderUserProfile?: (props: SendBirdTypes.RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: SendbirdTypes.RenderUserProfileProps) => React.ReactNode;
   allowProfileEdit?: boolean;
-  userListQuery?(): SendBirdTypes.UserListQuery;
-  config?: SendBirdTypes.SendBirdProviderConfig;
+  userListQuery?(): SendbirdTypes.UserListQuery;
+  config?: SendbirdTypes.SendbirdProviderConfig;
   stringSet?: Record<string, string>;
   colorSet?: Record<string, string>;
   isMentionEnabled?: boolean;
@@ -49,9 +49,9 @@ export interface SendBirdProviderProps {
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
 }
 
-export interface SendBirdStateConfig {
+export interface SendbirdStateConfig {
   disableUserProfile: boolean;
-  renderUserProfile?: (props: SendBirdTypes.RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: SendbirdTypes.RenderUserProfileProps) => React.ReactNode;
   allowProfileEdit: boolean;
   isOnline: boolean;
   userId: string;
@@ -61,7 +61,7 @@ export interface SendBirdStateConfig {
   pubSub: any;
   logger: Logger;
   setCurrenttheme: (theme: string) => void;
-  userListQuery?(): SendBirdTypes.UserListQuery;
+  userListQuery?(): SendbirdTypes.UserListQuery;
   isMentionEnabled: boolean;
   userMention: {
     maxMentionCount: number,
@@ -86,15 +86,15 @@ export interface UserStore {
   loading: boolean;
   user: User;
 }
-export interface SendBirdStateStore {
+export interface SendbirdStateStore {
   sdkStore: SdkStore;
   userStore: UserStore;
 }
 
 
-export type SendBirdState = {
-  config: SendBirdStateConfig;
-  stores: SendBirdStateStore;
+export type SendbirdState = {
+  config: SendbirdStateConfig;
+  stores: SendbirdStateStore;
   dispatchers: {
     userDispatcher: UserDispatcher,
   },
@@ -163,24 +163,24 @@ type GetResendFileMessage = (
 ) => Promise<FileMessage>;
 
 export interface sendbirdSelectorsInterface {
-  getSdk: (store: SendBirdState) => GetSdk;
-  getConnect: (store: SendBirdState) => GetConnect
-  getDisconnect: (store: SendBirdState) => GetDisconnect;
-  getUpdateUserInfo: (store: SendBirdState) => GetUpdateUserInfo;
-  getCreateGroupChannel: (store: SendBirdState) => GetCreateGroupChannel;
-  getCreateOpenChannel: (store: SendBirdState) => GetCreateOpenChannel;
-  getGetGroupChannel: (store: SendBirdState) => GetGetGroupChannel;
-  getGetOpenChannel: (store: SendBirdState) => GetGetOpenChannel;
-  getLeaveChannel: (store: SendBirdState) => GetLeaveGroupChannel;
-  getEnterOpenChannel: (store: SendBirdState) => GetEnterOpenChannel;
-  getExitOpenChannel: (store: SendBirdState) => GetExitOpenChannel;
-  getFreezeChannel: (store: SendBirdState) => GetFreezeChannel;
-  getUnFreezeChannel: (store: SendBirdState) => GetUnFreezeChannel;
-  getSendUserMessage: (store: SendBirdState) => GetSendUserMessage;
-  getSendFileMessage: (store: SendBirdState) => GetSendFileMessage;
-  getUpdateUserMessage: (store: SendBirdState) => GetUpdateUserMessage;
-  // getUpdateFileMessage: (store: SendBirdState) => GetUpdateFileMessage;
-  getDeleteMessage: (store: SendBirdState) => GetDeleteMessage;
-  getResendUserMessage: (store: SendBirdState) => GetResendUserMessage;
-  getResendFileMessage: (store: SendBirdState) => GetResendFileMessage;
+  getSdk: (store: SendbirdState) => GetSdk;
+  getConnect: (store: SendbirdState) => GetConnect
+  getDisconnect: (store: SendbirdState) => GetDisconnect;
+  getUpdateUserInfo: (store: SendbirdState) => GetUpdateUserInfo;
+  getCreateGroupChannel: (store: SendbirdState) => GetCreateGroupChannel;
+  getCreateOpenChannel: (store: SendbirdState) => GetCreateOpenChannel;
+  getGetGroupChannel: (store: SendbirdState) => GetGetGroupChannel;
+  getGetOpenChannel: (store: SendbirdState) => GetGetOpenChannel;
+  getLeaveChannel: (store: SendbirdState) => GetLeaveGroupChannel;
+  getEnterOpenChannel: (store: SendbirdState) => GetEnterOpenChannel;
+  getExitOpenChannel: (store: SendbirdState) => GetExitOpenChannel;
+  getFreezeChannel: (store: SendbirdState) => GetFreezeChannel;
+  getUnFreezeChannel: (store: SendbirdState) => GetUnFreezeChannel;
+  getSendUserMessage: (store: SendbirdState) => GetSendUserMessage;
+  getSendFileMessage: (store: SendbirdState) => GetSendFileMessage;
+  getUpdateUserMessage: (store: SendbirdState) => GetUpdateUserMessage;
+  // getUpdateFileMessage: (store: SendbirdState) => GetUpdateFileMessage;
+  getDeleteMessage: (store: SendbirdState) => GetDeleteMessage;
+  getResendUserMessage: (store: SendbirdState) => GetResendUserMessage;
+  getResendFileMessage: (store: SendbirdState) => GetResendFileMessage;
 }

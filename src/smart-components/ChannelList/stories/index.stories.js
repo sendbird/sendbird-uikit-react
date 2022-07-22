@@ -6,7 +6,7 @@ const userId = 'sendbird';
 
 import ChannelList from '../../ChannelList';
 import { getSdk } from '../../../lib/selectors';
-import withSendBird from '../../../lib/SendbirdSdkContext';
+import withSendbird from '../../../lib/SendbirdSdkContext';
 
 export default { title: 'ChannelList' };
 
@@ -164,7 +164,7 @@ const ChannelWithOnBeforeCreateChannel = ({ sdk }) => (
   </div>
 )
 
-const ConnectedChannelList = withSendBird(ChannelWithOnBeforeCreateChannel, (store) => ({
+const ConnectedChannelList = withSendbird(ChannelWithOnBeforeCreateChannel, (store) => ({
   sdk: getSdk(store),
 }))
 

@@ -19,7 +19,7 @@ export interface RenderUserProfileProps {
   close(): void;
 }
 
-export interface SendBirdProviderConfig {
+export interface SendbirdProviderConfig {
   logLevel?: 'debug' | 'warning' | 'error' | 'info' | 'all' | Array<string>;
   userMention?: {
     maxMentionCount?: number,

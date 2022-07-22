@@ -30,7 +30,7 @@ export enum SendbirdUIKitThemes {
   dark = 'dark',
 }
 
-interface SendBirdStateConfig {
+interface SendbirdStateConfig {
   disableUserProfile: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   allowProfileEdit: boolean;
@@ -71,12 +71,12 @@ interface UserStore {
   user: User;
 }
 
-interface SendBirdStateStore {
+interface SendbirdStateStore {
   sdkStore: SdkStore;
   userStore: UserStore;
 }
 
-export type SendBirdState = {
-  config: SendBirdStateConfig;
-  stores: SendBirdStateStore;
+export type SendbirdState = {
+  config: SendbirdStateConfig;
+  stores: SendbirdStateStore;
 }

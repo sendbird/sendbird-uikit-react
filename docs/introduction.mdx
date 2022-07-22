@@ -55,7 +55,7 @@ When using yarn, enter the following command: `yarn add sendbird-uikit`
 Next, import UIKit components to your app.
 
 ```
-import SendBirdProvider from "sendbird-uikit/SendbirdProvider";
+import SendbirdProvider from "sendbird-uikit/SendbirdProvider";
 
 import "sendbird-uikit/dist/index.css";
 ```
@@ -70,13 +70,13 @@ You can also use our common components to your web app if you wish to make the i
 Add the following pattern to use the App component:
 
 ```
-import SendBirdApp from "sendbird-uikit/App";
+import SendbirdApp from "sendbird-uikit/App";
 import "sendbird-uikit/dist/index.css";
 
 const App = () => {
   return (
     <div className="App">
-      <SendBirdApp
+      <SendbirdApp
         // Add the two lines below.
         appId={YOUR_APP_ID};    // Specify your Sendbird application ID.
         userId={USER_ID};    // Specify your user ID.

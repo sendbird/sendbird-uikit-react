@@ -1,10 +1,11 @@
 import React, { ReactElement } from 'react';
+import { User } from '@sendbird/chat';
 
 import './profile.scss';
 import { ProfileAvatar } from '../assets/Icons';
 
 interface Props {
-  user: SendBird.User;
+  user: User;
 }
 
 export default function Profile({

@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
-
+import type { SendbirdError } from '@sendbird/chat';
 import type { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
-import type { MessageSearchQueryParams } from '@sendbird/chat/lib/__definition';
-import type {
+import {
   AdminMessage,
   BaseMessage,
   FileMessage,
+  MessageSearchOrder,
   MessageSearchQuery,
   UserMessage,
 } from '@sendbird/chat/message';
-import type { SendbirdError } from '@sendbird/chat';
+import { MessageSearchQueryParams } from '@sendbird/chat/lib/__definition';
 
 import type { Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
@@ -44,7 +44,7 @@ function useGetSearchedMessages(
       if (requestString) {
         const inputSearchMessageQueryObject: MessageSearchQueryParams = {
           ...messageSearchQuery,
-          order: 'ts' as const,
+          order: MessageSearchOrder.TIMESTAMP,
           channelUrl,
           messageTimestampFrom: currentChannel.invitedAt,
           keyword: requestString,

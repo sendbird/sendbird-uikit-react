@@ -140,8 +140,8 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   // TODO: Good to change interface to using params / This part need refactoring
   sendMessage(props: SendMessageParams): Promise<UserMessage>,
   sendFileMessage(file: File, quoteMessage: UserMessage | FileMessage): Promise<FileMessage>,
-  // sendMessage(messageParams: SendBird.UserMessageParams): Promise<SendBird.UserMessage>,
-  // sendFileMessage(messageParams: SendBird.FileMessageParams): Promise<SendBird.FileMessage>,
+  // sendMessage(messageParams: Sendbird.UserMessageParams): Promise<Sendbird.UserMessage>,
+  // sendFileMessage(messageParams: Sendbird.FileMessageParams): Promise<Sendbird.FileMessage>,
   toggleReaction(message: UserMessage | FileMessage, emojiKey: string, isReacted: boolean): void,
   renderUserMentionItem?: (props: { user: User }) => JSX.Element;
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import SendBirdProvider from '../Sendbird';
-import withSendBird from '../SendbirdSdkContext';
+import SendbirdProvider from '../Sendbird';
+import withSendbird from '../SendbirdSdkContext';
 import sendbirdSelectors from '../selectors';
 import Channel from '../../smart-components/Channel';
 
@@ -124,7 +124,7 @@ const CustomComponent = (props) => {
   );
 };
 
-const CustomComponentWithSendBird = withSendBird(CustomComponent, (state) => {
+const CustomComponentWithSendbird = withSendbird(CustomComponent, (state) => {
   const sendMessage = sendbirdSelectors.getSendUserMessage(state);
   const sendFileMessage = sendbirdSelectors.getSendFileMessage(state);
   const deleteMessage = sendbirdSelectors.getDeleteMessage(state);
@@ -140,10 +140,10 @@ const CustomComponentWithSendBird = withSendBird(CustomComponent, (state) => {
 });
 
 export const createAndLeaveChannel = () => (
-  <SendBirdProvider appId={appId} userId={userId} nickname={userId}>
-    <CustomComponentWithSendBird />
+  <SendbirdProvider appId={appId} userId={userId} nickname={userId}>
+    <CustomComponentWithSendbird />
     <div style={{ width: '720px', height: '500px' }}>
       <Channel channelUrl={channelUrl} />
     </div>
-  </SendBirdProvider>
+  </SendbirdProvider>
 );

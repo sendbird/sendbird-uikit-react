@@ -9,7 +9,7 @@ import ChannelList from '../../ChannelList';
 import Channel from '../../Channel';
 import ChannelSettings from '../../ChannelSettings';
 import MessageSearch from '../../MessageSearch';
-import { withSendBird } from '../../..';
+import { withSendbird } from '../../..';
 import { sendbirdSelectors } from '../../..';
 import { fitPageSize } from './utils';
 
@@ -341,8 +341,8 @@ const UseSendbirdChannelList = (props) => {
     />
   );
 };
-const SBChannelList = withSendBird(UseSendbirdChannelList);
-const SBChannel = withSendBird((props) => {
+const SBChannelList = withSendbird(UseSendbirdChannelList);
+const SBChannel = withSendbird((props) => {
   const {
     channelUrl,
     onSearchClick,

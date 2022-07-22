@@ -55,7 +55,7 @@ interface RenderUserProfileProps {
   close(): void;
 }
 
-interface SendBirdProviderConfig {
+interface SendbirdProviderConfig {
   logLevel?: 'debug' | 'warning' | 'error' | 'info' | 'all' | Array<string>;
   userMention?: {
     maxMentionCount?: number,
@@ -82,7 +82,7 @@ interface ClientAdminMessage extends AdminMessage, ClientMessage { }
 type EveryMessage = ClientUserMessage | ClientFileMessage | ClientAdminMessage;
 type ClientSentMessages = ClientUserMessage | ClientFileMessage;
 
-interface SendBirdProviderProps {
+interface SendbirdProviderProps {
   userId: string;
   appId: string;
   accessToken?: string;
@@ -98,7 +98,7 @@ interface SendBirdProviderProps {
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   allowProfileEdit?: boolean;
   userListQuery?(): UserListQuery;
-  config?: SendBirdProviderConfig;
+  config?: SendbirdProviderConfig;
   stringSet?: Record<string, string>;
   colorSet?: Record<string, string>;
   imageCompression?: {
@@ -111,7 +111,7 @@ interface SendBirdProviderProps {
   // isMessageReceiptStatusEnabledOnChannelList?: boolean;
 }
 
-interface SendBirdStateConfig {
+interface SendbirdStateConfig {
   disableUserProfile: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   allowProfileEdit: boolean;
@@ -148,7 +148,7 @@ interface UserStore {
   loading: boolean;
   user: User;
 }
-interface SendBirdStateStore {
+interface SendbirdStateStore {
   sdkStore: SdkStore;
   userStore: UserStore;
 }
@@ -157,9 +157,9 @@ export interface MessageSearchQueryType extends MessageSearchQuery {
   key?: string;
 }
 
-export type SendBirdState = {
-  config: SendBirdStateConfig;
-  stores: SendBirdStateStore;
+export type SendbirdState = {
+  config: SendbirdStateConfig;
+  stores: SendbirdStateStore;
   dispatchers: {
     userDispatcher: UserDispatcher,
   },
@@ -228,26 +228,26 @@ type GetResendFileMessage = (
 ) => Promise<FileMessage>;
 
 interface sendbirdSelectorsInterface {
-  getSdk: (store: SendBirdState) => GetSdk;
-  getConnect: (store: SendBirdState) => GetConnect
-  getDisconnect: (store: SendBirdState) => GetDisconnect;
-  getUpdateUserInfo: (store: SendBirdState) => GetUpdateUserInfo;
-  getCreateGroupChannel: (store: SendBirdState) => GetCreateGroupChannel;
-  getCreateOpenChannel: (store: SendBirdState) => GetCreateOpenChannel;
-  getGetGroupChannel: (store: SendBirdState) => GetGetGroupChannel;
-  getGetOpenChannel: (store: SendBirdState) => GetGetOpenChannel;
-  getLeaveChannel: (store: SendBirdState) => GetLeaveGroupChannel;
-  getEnterOpenChannel: (store: SendBirdState) => GetEnterOpenChannel;
-  getExitOpenChannel: (store: SendBirdState) => GetExitOpenChannel;
-  getFreezeChannel: (store: SendBirdState) => GetFreezeChannel;
-  getUnFreezeChannel: (store: SendBirdState) => GetUnFreezeChannel;
-  getSendUserMessage: (store: SendBirdState) => GetSendUserMessage;
-  getSendFileMessage: (store: SendBirdState) => GetSendFileMessage;
-  getUpdateUserMessage: (store: SendBirdState) => GetUpdateUserMessage;
-  // getUpdateFileMessage: (store: SendBirdState) => GetUpdateFileMessage;
-  getDeleteMessage: (store: SendBirdState) => GetDeleteMessage;
-  getResendUserMessage: (store: SendBirdState) => GetResendUserMessage;
-  getResendFileMessage: (store: SendBirdState) => GetResendFileMessage;
+  getSdk: (store: SendbirdState) => GetSdk;
+  getConnect: (store: SendbirdState) => GetConnect
+  getDisconnect: (store: SendbirdState) => GetDisconnect;
+  getUpdateUserInfo: (store: SendbirdState) => GetUpdateUserInfo;
+  getCreateGroupChannel: (store: SendbirdState) => GetCreateGroupChannel;
+  getCreateOpenChannel: (store: SendbirdState) => GetCreateOpenChannel;
+  getGetGroupChannel: (store: SendbirdState) => GetGetGroupChannel;
+  getGetOpenChannel: (store: SendbirdState) => GetGetOpenChannel;
+  getLeaveChannel: (store: SendbirdState) => GetLeaveGroupChannel;
+  getEnterOpenChannel: (store: SendbirdState) => GetEnterOpenChannel;
+  getExitOpenChannel: (store: SendbirdState) => GetExitOpenChannel;
+  getFreezeChannel: (store: SendbirdState) => GetFreezeChannel;
+  getUnFreezeChannel: (store: SendbirdState) => GetUnFreezeChannel;
+  getSendUserMessage: (store: SendbirdState) => GetSendUserMessage;
+  getSendFileMessage: (store: SendbirdState) => GetSendFileMessage;
+  getUpdateUserMessage: (store: SendbirdState) => GetUpdateUserMessage;
+  // getUpdateFileMessage: (store: SendbirdState) => GetUpdateFileMessage;
+  getDeleteMessage: (store: SendbirdState) => GetDeleteMessage;
+  getResendUserMessage: (store: SendbirdState) => GetResendUserMessage;
+  getResendFileMessage: (store: SendbirdState) => GetResendFileMessage;
 }
 
 interface AppProps {
@@ -266,7 +266,7 @@ interface AppProps {
   showSearchIcon?: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
   onProfileEditSuccess?(user: User): void;
-  config?: SendBirdProviderConfig;
+  config?: SendbirdProviderConfig;
   isReactionEnabled?: boolean;
   isMessageGroupingEnabled?: boolean;
   stringSet?: Record<string, string>;
@@ -458,7 +458,7 @@ type LeaveChannelProps = {
 
 declare module '@sendbird/uikit-react'  {
   export type App = React.FunctionComponent<AppProps>;
-  export type SendBirdProvider = React.FunctionComponent<SendBirdProviderProps>;
+  export type SendbirdProvider = React.FunctionComponent<SendbirdProviderProps>;
   export type sendbirdSelectors = sendbirdSelectorsInterface;
   export type ChannelList = React.FunctionComponent<ChannelListProps>;
   export type ChannelSettings = React.FunctionComponent<ChannelSettingsProps>;
@@ -466,11 +466,11 @@ declare module '@sendbird/uikit-react'  {
   export type OpenChannel = React.FunctionComponent<OpenChannelProps>
   export type OpenChannelSettings = React.FunctionComponent<OpenChannelSettingsProps>
   export type MessageSearch = React.FunctionComponent<MessageSearchProps>
-  export function withSendBird(
+  export function withSendbird(
     ChildComp: React.Component | React.ElementType,
-    mapStoreToProps?: (store: SendBirdState) => unknown
+    mapStoreToProps?: (store: SendbirdState) => unknown
   ): (props: unknown) => React.ReactNode;
-  export function useSendbirdStateContext(): SendBirdState;
+  export function useSendbirdStateContext(): SendbirdState;
 }
 
 declare module '@sendbird/uikit-react/App' {
@@ -479,7 +479,7 @@ declare module '@sendbird/uikit-react/App' {
 }
 
 declare module '@sendbird/uikit-react/SendbirdProvider' {
-  type SendbirdProvider = React.FunctionComponent<SendBirdProviderProps>;
+  type SendbirdProvider = React.FunctionComponent<SendbirdProviderProps>;
   export default SendbirdProvider;
 }
 
@@ -489,16 +489,16 @@ declare module '@sendbird/uikit-react/sendbirdSelectors' {
 }
 
 declare module '@sendbird/uikit-react/useSendbirdStateContext' {
-  function useSendbirdStateContext(): SendBirdState;
+  function useSendbirdStateContext(): SendbirdState;
   export default useSendbirdStateContext;
 }
 
-declare module '@sendbird/uikit-react/withSendBird' {
-  function withSendBird(
+declare module '@sendbird/uikit-react/withSendbird' {
+  function withSendbird(
     ChildComp: React.Component | React.ElementType,
-    mapStoreToProps?: (store: SendBirdState) => unknown
+    mapStoreToProps?: (store: SendbirdState) => unknown
   ): (props: unknown) => React.ReactNode;
-  export default withSendBird;
+  export default withSendbird;
 }
 
 declare module '@sendbird/uikit-react/ChannelList' {
