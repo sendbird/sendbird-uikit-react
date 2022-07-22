@@ -10,7 +10,7 @@ import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import IconButton from '../../../../ui/IconButton';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
-import OperatorListModal from './OperatorListModal';
+import OperatorListModal from './OperatorsModal';
 import AddOperatorsModal from './AddOperatorsModal';
 
 const OperatorList = (): ReactElement => {
