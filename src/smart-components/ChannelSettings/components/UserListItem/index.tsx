@@ -1,4 +1,5 @@
 import React, { ReactElement, useRef, useContext } from 'react';
+import { User } from '@sendbird/chat';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { UserProfileContext } from '../../../../lib/UserProfileContext';
@@ -17,7 +18,7 @@ interface ActionProps {
   parentRef: React.RefObject<HTMLInputElement>;
 }
 
-type CustomUser = SendBird.User & {
+type CustomUser = User & {
   isMuted: boolean;
   role: string;
 };
@@ -107,7 +108,7 @@ const UserListItem = ({
         {user.nickname || stringSet.NO_NAME}
         {
           (currentUser === user.userId) && (
-            " (You)"
+            stringSet.CHANNEL_SETTING__MEMBERS__YOU
           )
         }
       </Label>
@@ -129,7 +130,7 @@ const UserListItem = ({
             type={LabelTypography.SUBTITLE_2}
             color={LabelColors.ONBACKGROUND_2}
           >
-            Operator
+            {stringSet.CHANNEL_SETTING__MEMBERS__OPERATOR}
           </Label>
         )
       }

@@ -1,5 +1,6 @@
 import React, {
   ReactElement,
+  useContext,
   useEffect,
   useState,
 } from 'react'
@@ -13,6 +14,7 @@ import { noop } from '../../../../utils/utils';
 
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { LocalizationContext } from '../../../../lib/LocalizationContext';
 
 interface Props {
   onCancel(): void;
@@ -25,6 +27,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
   const { channel } = useChannelSettingsContext();
   const state = useSendbirdStateContext();
   const currentUser = state?.config?.userId;
+  const { stringSet } = useContext(LocalizationContext);
 
   useEffect(() => {
     const memberListQuery = channel?.createMemberListQuery({
@@ -124,7 +127,11 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                               }
                             }}
                           >
-                            { member.role !== 'operator' ? 'Register as operator' : 'Unregister operator'}
+                            {
+                              member.role !== 'operator'
+                                ? stringSet.CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR
+                                : stringSet.CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR
+                            }
                           </MenuItem>
                           {
                             // No muted members in broadcast channel
@@ -160,7 +167,11 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                   }
                                 }}
                               >
-                                { member.isMuted ? 'Unmute' : 'Mute' }
+                                {
+                                  member.isMuted
+                                    ? stringSet.CHANNEL_SETTING__MODERATION__UNMUTE
+                                    : stringSet.CHANNEL_SETTING__MODERATION__MUTE
+                                }
                               </MenuItem>
                             )
                           }
@@ -173,7 +184,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                               });
                             }}
                           >
-                            Ban
+                            {stringSet.CHANNEL_SETTING__MODERATION__BAN}
                           </MenuItem>
                         </MenuItems>
                       )}
