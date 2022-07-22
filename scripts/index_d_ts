@@ -17,6 +17,8 @@
     appId: string;
     userId: string;
     accessToken?: string;
+    customApiHost?: string,
+    customWebSocketHost?: string,
     theme?: 'light' | 'dark';
     userListQuery?(): UserListQuery;
     nickname?: string;
@@ -175,6 +177,8 @@
     appId: string;
     accessToken?: string;
     configureSession?: (sdk: SendbirdGroupChat | SendbirdOpenChat) => SessionHandler;
+    customApiHost?: string,
+    customWebSocketHost?: string,
     children?: React.ReactNode;
     theme?: 'light' | 'dark';
     nickname?: string;

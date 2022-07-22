@@ -87,6 +87,8 @@ interface SendBirdProviderProps {
   appId: string;
   accessToken?: string;
   configureSession?: (sdk: SendbirdChat) => SessionHandler;
+  customApiHost?: string,
+  customWebSocketHost?: string,
   children?: React.ReactNode;
   theme?: 'light' | 'dark';
   nickname?: string;
@@ -252,6 +254,8 @@ interface AppProps {
   appId: string;
   userId: string;
   accessToken?: string;
+  customApiHost?: string,
+  customWebSocketHost?: string,
   theme?: 'light' | 'dark';
   userListQuery?(): UserListQuery;
   nickname?: string;

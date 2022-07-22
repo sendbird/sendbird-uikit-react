@@ -29,6 +29,8 @@ export default function Sendbird(props) {
     appId,
     accessToken,
     configureSession,
+    customApiHost,
+    customWebSocketHost,
     children,
     disableUserProfile,
     renderUserProfile,
@@ -73,6 +75,8 @@ export default function Sendbird(props) {
       nickname,
       profileUrl,
       configureSession,
+      customApiHost,
+      customWebSocketHost,
       sdk: sdkStore.sdk,
       logger,
     }, {
@@ -194,6 +198,8 @@ Sendbird.propTypes = {
   userId: PropTypes.string.isRequired,
   appId: PropTypes.string.isRequired,
   accessToken: PropTypes.string,
+  customApiHost: PropTypes.string,
+  customWebSocketHost: PropTypes.string,
   configureSession: PropTypes.func,
   children: PropTypes.oneOfType([
     PropTypes.element,
@@ -244,6 +250,8 @@ Sendbird.propTypes = {
 
 Sendbird.defaultProps = {
   accessToken: '',
+  customApiHost: null,
+  customWebSocketHost: null,
   configureSession: null,
   theme: 'light',
   nickname: '',

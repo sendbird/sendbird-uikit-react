@@ -12,6 +12,8 @@ export default interface AppProps {
   appId: string;
   userId: string;
   accessToken?: string;
+  customApiHost?: string,
+  customWebSocketHost?: string,
   theme?: 'light' | 'dark';
   userListQuery?(): UserListQuery;
   nickname?: string;
