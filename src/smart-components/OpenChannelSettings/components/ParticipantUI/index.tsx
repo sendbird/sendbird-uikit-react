@@ -3,11 +3,15 @@ import React, {
   useContext,
   useState,
   useEffect,
+  useCallback,
 } from 'react';
 import type { User } from '@sendbird/chat';
 import type { ParticipantListQuery } from '@sendbird/chat/openChannel';
 
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
+import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
+import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
+import IconButton from '../../../../ui/IconButton';
 
 import { UserListItem } from './ParticipantItem';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
@@ -19,17 +23,27 @@ export default function ParticipantList(): ReactElement {
   const currentUser = globalState?.config?.userId;
   const { channel } = useOpenChannelSettingsContext();
   const { stringSet } = useContext(LocalizationContext);
-  const [participants, setParticipants] = useState<Array<User>|null>([]);
+  const [participants, setParticipants] = useState<Array<User> | null>([]);
   const [participantListQuery, setParticipantListQuery] = useState<ParticipantListQuery | null>(null);
   useEffect(() => {
     if (!channel || !channel?.createParticipantListQuery) {
       return;
     }
-    const participantListQuery = channel?.createParticipantListQuery({});
+    const participantListQuery = channel?.createParticipantListQuery({ limit: 10 });
     setParticipantListQuery(participantListQuery);
     participantListQuery.next().then((participantList) => {
       setParticipants(participantList);
     });
+  }, [channel]);
+  const refreshList = useCallback(() => {
+    if (!channel) {
+      setParticipants([]);
+      return;
+    }
+    const participantListQuery = channel?.createParticipantListQuery({ limit: 10 });
+    participantListQuery.next().then((participants) => {
+      setParticipants(participants);
+    })
   }, [channel]);
   return (
     <div
@@ -53,25 +67,97 @@ export default function ParticipantList(): ReactElement {
     >
       <div>
         {
-          participants.map((p: User) => (
-            <UserListItem
-              member={p}
-              currentUser={currentUser}
-              key={p.userId}
-            />
-          ))
+          participants.map((p: User) => {
+            const isOperator = channel?.isOperator(p.userId);
+            return (
+              <UserListItem
+                user={p}
+                currentUser={currentUser}
+                key={p.userId}
+                isOperator={isOperator}
+                action={({ actionRef }) => (
+                  <ContextMenu
+                    menuTrigger={(toggleDropdown) => (
+                      <IconButton
+                        className="sendbird-openchannel-participant-list__menu"
+                        width="32px"
+                        height="32px"
+                        onClick={toggleDropdown}
+                      >
+                        <Icon
+                          width="24px"
+                          height="24px"
+                          type={IconTypes.MORE}
+                          fillColor={IconColors.CONTENT_INVERSE}
+                        />
+                      </IconButton>
+                    )}
+                    menuItems={(closeDropdown) => (
+                      <MenuItems
+                        parentRef={actionRef}
+                        closeDropdown={closeDropdown}
+                        openLeft
+                      >
+                        <MenuItem
+                          onClick={() => {
+                            if (isOperator) {
+                              channel?.removeOperators([p.userId]).then(() => {
+                                refreshList();
+                                closeDropdown();
+                              });
+                            } else {
+                              channel?.addOperators([p.userId]).then(() => {
+                                refreshList();
+                                closeDropdown();
+                              })
+                            }
+                          }}
+                        >
+                          {
+                            isOperator
+                              ? stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR
+                              : stringSet.OPEN_CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR
+                          }
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            channel?.muteUser(p).then(() => {
+                              refreshList();
+                              closeDropdown();
+                            });
+                          }}
+                        >
+                          {stringSet.OPEN_CHANNEL_SETTING__MODERATION__MUTE}
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            channel?.banUser(p).then(() => {
+                              refreshList();
+                              closeDropdown();
+                            });
+                          }}
+                        >
+                          {stringSet.OPEN_CHANNEL_SETTING__MODERATION__BAN}
+                        </MenuItem>
+                      </MenuItems>
+                    )}
+                  />
+                )}
+              />
+            );
+          })
         }
         {
           (participants && participants.length === 0)
             ? (
-                <Label
-                  className="sendbird-channel-settings__empty-list"
-                  type={LabelTypography.SUBTITLE_2}
-                  color={LabelColors.ONBACKGROUND_3}
-                >
-                  {stringSet.OPEN_CHANNEL_SETTINGS__EMPTY_LIST}
-                </Label>
-            ): null
+              <Label
+                className="sendbird-channel-settings__empty-list"
+                type={LabelTypography.SUBTITLE_2}
+                color={LabelColors.ONBACKGROUND_3}
+              >
+                {stringSet.OPEN_CHANNEL_SETTINGS__EMPTY_LIST}
+              </Label>
+            ) : null
         }
       </div>
     </div>

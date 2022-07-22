@@ -144,6 +144,7 @@
   .sendbird-participants-accordion__member {
     position: relative;
     padding: 12px 0px 12px 56px;
+    width: 100%;
     height: 40px;
     box-sizing: border-box;
     text-align: left;
@@ -155,6 +156,12 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
+    .sendbird-participants-accordion__member__title.operator,
+    .sendbird-participants-accordion__member__title.user-id {
+      position: absolute;
+      right: 16px;
+    }
   }
 
   .sendbird-participants-accordion__member-avatar {
@@ -162,5 +169,21 @@
     left: 16px;
     top: 10px;
     cursor: pointer;
+  }
+
+  .sendbird-participants-accordion__member__action {
+    position: absolute;
+    top: 4px;
+    right: 8px;
+    cursor: pointer;
+  }
+
+  .sendbird-openchannel-operator-list__footer {
+    position: relative;
+    display: inline-flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 16px 16px 0px 16px;
   }
 }
