@@ -26,7 +26,7 @@ interface ChannelSettingsQueries {
 }
 
 export type ChannelSettingsContextProps = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   channelUrl: string;
   className?: string;
   onCloseClick?(): void;
