@@ -45,7 +45,7 @@ export const OperatorList = (): ReactElement => {
     });
   }, [channel]);
 
-  const refershList = useCallback(
+  const refreshList = useCallback(
     () => {
       if (!channel) {
         setOperators([]);
@@ -70,7 +70,7 @@ export const OperatorList = (): ReactElement => {
             key={operator.userId}
             user={operator}
             currentUser={userId}
-            action={({ actionRef, parentRef }) => {
+            action={({ actionRef }) => {
               return (
                 <ContextMenu
                   menuTrigger={(toggleDropdown) => (
@@ -90,22 +90,21 @@ export const OperatorList = (): ReactElement => {
                   )}
                   menuItems={(closeDropdown) => (
                     <MenuItems
-                      parentContainRef={parentRef}
-                      parentRef={actionRef} // for catching location(x, y) of MenuItems
+                      parentRef={actionRef}
                       closeDropdown={closeDropdown}
                       openLeft
                     >
                       <MenuItem
                         onClick={() => {
                           channel?.removeOperators([operator.userId]).then(() => {
-                            setOperators(operators.filter(({ userId }) => {
-                              return userId !== operator.userId;
-                            }))
+                            setOperators(operators.filter(({ userId }) => (
+                              userId !== operator.userId
+                            )));
                           });
                           closeDropdown();
                         }}
                       >
-                        Dismiss operator
+                        {stringSet.CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
                       </MenuItem>
                     </MenuItems>
                   )}
@@ -145,7 +144,7 @@ export const OperatorList = (): ReactElement => {
         showMore && (
           <OperatorsModal onCancel={() => {
             setShowMore(false);
-            refershList();
+            refreshList();
           }} />
         )
       }
@@ -154,7 +153,7 @@ export const OperatorList = (): ReactElement => {
           <AddOperatorsModal
             onCancel={() => setShowAdd(false)}
             onSubmit={() => {
-              refershList();
+              refreshList();
               setShowAdd(false);
             }}
           />

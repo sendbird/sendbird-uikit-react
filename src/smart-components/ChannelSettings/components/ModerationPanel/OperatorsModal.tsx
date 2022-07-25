@@ -1,5 +1,6 @@
 import React, {
   ReactElement,
+  useContext,
   useEffect,
   useState,
 } from 'react'
@@ -12,6 +13,7 @@ import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { LocalizationContext } from '../../../../lib/LocalizationContext';
 
 interface Props { onCancel?(): void }
 
@@ -22,6 +24,7 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
   const { channel } = useChannelSettingsContext();
   const state = useSendbirdStateContext();
   const currentUser = state?.config?.userId;
+  const { stringSet } = useContext(LocalizationContext);
 
   useEffect(() => {
     const operatorListQuery = channel?.createOperatorListQuery({
@@ -97,7 +100,7 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
                           closeDropdown();
                         }}
                       >
-                        Dismiss operator
+                        {stringSet.CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
                       </MenuItem>
                     </MenuItems>
                   )}

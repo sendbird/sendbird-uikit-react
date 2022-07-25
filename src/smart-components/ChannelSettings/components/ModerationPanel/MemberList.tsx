@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useState,
   useCallback,
+  useContext,
 } from 'react';
 
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
@@ -15,6 +16,7 @@ import MembersModal from './MembersModal';
 import InviteUsers from './InviteUsersModal';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
+import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import uuidv4 from '../../../../utils/uuid';
 
 export const MemberList = (): ReactElement => {
@@ -28,6 +30,7 @@ export const MemberList = (): ReactElement => {
     channel,
     setChannelUpdateId,
   } = useChannelSettingsContext();
+  const { stringSet } = useContext(LocalizationContext);
 
   const sdk = state?.stores?.sdkStore?.sdk;
   const userId = state?.config?.userId;
@@ -38,32 +41,25 @@ export const MemberList = (): ReactElement => {
       return;
     }
 
-    const memberUserListQuery = channel?.createMemberListQuery({
-      limit: 10,
-    });
+    const memberUserListQuery = channel?.createMemberListQuery({ limit: 10 });
     memberUserListQuery.next().then((members) => {
       setMembers(members);
       setHasNext(memberUserListQuery.hasNext);
     });
   }, [channel]);
 
-  const refershList = useCallback(
-    () => {
-      if (!channel) {
-        setMembers([]);
-        return;
-      }
-      const memberUserListQuery = channel?.createMemberListQuery({
-        limit: 10,
-      });
-      memberUserListQuery.next().then((members) => {
-        setMembers(members);
-        setHasNext(memberUserListQuery.hasNext);
-        setChannelUpdateId(uuidv4());
-      });
-    },
-    [channel],
-  );
+  const refreshList = useCallback(() => {
+    if (!channel) {
+      setMembers([]);
+      return;
+    }
+    const memberUserListQuery = channel?.createMemberListQuery({ limit: 10 });
+    memberUserListQuery.next().then((members) => {
+      setMembers(members);
+      setHasNext(memberUserListQuery.hasNext);
+      setChannelUpdateId(uuidv4());
+    });
+  }, [channel]);
 
   return (
     <>
@@ -103,18 +99,22 @@ export const MemberList = (): ReactElement => {
                           onClick={() => {
                             if ((member.role !== 'operator')) {
                               channel?.addOperators([member.userId]).then(() => {
-                                refershList();
+                                refreshList();
                                 closeDropdown();
                               });
                             } else {
                               channel?.removeOperators([member.userId]).then(() => {
-                                refershList();
+                                refreshList();
                                 closeDropdown();
                               });
                             }
                           }}
                         >
-                          {member.role !== 'operator' ? 'Register as operator' : 'Unregister operator'}
+                          {
+                            member.role !== 'operator'
+                              ? stringSet.CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR
+                              : stringSet.CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR
+                          }
                         </MenuItem>
                         {
                           // No muted members in broadcast channel
@@ -123,31 +123,35 @@ export const MemberList = (): ReactElement => {
                               onClick={() => {
                                 if (member.isMuted) {
                                   channel?.unmuteUser(member).then(() => {
-                                    refershList();
+                                    refreshList();
                                     closeDropdown();
                                   })
                                 } else {
                                   channel?.muteUser(member).then(() => {
-                                    refershList();
+                                    refreshList();
                                     closeDropdown();
                                   });
                                 }
                               }}
                             >
-                              { member.isMuted ? 'Unmute' : 'Mute'}
+                              {
+                                member.isMuted
+                                  ? stringSet.CHANNEL_SETTING__MODERATION__UNMUTE
+                                  : stringSet.CHANNEL_SETTING__MODERATION__MUTE
+                              }
                             </MenuItem>
                           )
                         }
                         <MenuItem
                           onClick={() => {
                             channel?.banUser(member, -1, '').then(() => {
-                              refershList();
+                              refreshList();
                               closeDropdown();
                             });
                           }}
                         >
-                          Ban
-                    </MenuItem>
+                          {stringSet.CHANNEL_SETTING__MODERATION__BAN}
+                        </MenuItem>
                       </MenuItems>
                     )}
                   />
@@ -167,7 +171,7 @@ export const MemberList = (): ReactElement => {
               size={ButtonSizes.SMALL}
               onClick={() => setShowAllMembers(true)}
             >
-              All members
+              {stringSet.CHANNEL_SETTING__MEMBERS__SEE_ALL_MEMBERS}
             </Button>
           )
         }
@@ -176,7 +180,7 @@ export const MemberList = (): ReactElement => {
           size={ButtonSizes.SMALL}
           onClick={() => setShowInviteUsers(true)}
         >
-          Invite members
+          {stringSet.CHANNEL_SETTING__MEMBERS__INVITE_MEMBER}
         </Button>
       </div>
       {
@@ -184,7 +188,7 @@ export const MemberList = (): ReactElement => {
           <MembersModal
             onCancel={() => {
               setShowAllMembers(false);
-              refershList();
+              refreshList();
             }}
           />
         )
@@ -194,7 +198,7 @@ export const MemberList = (): ReactElement => {
           <InviteUsers
             onSubmit={() => {
               setShowInviteUsers(false);
-              refershList();
+              refreshList();
             }}
             onCancel={() => setShowInviteUsers(false)}
           />
