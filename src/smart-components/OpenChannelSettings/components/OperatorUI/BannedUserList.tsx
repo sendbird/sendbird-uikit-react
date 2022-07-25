@@ -114,9 +114,7 @@ export const BannedUserList = (): ReactElement => {
       }
       {
         hasNext && (
-          <div
-            className="sendbird-channel-settings-accordion__footer"
-          >
+          <div className="sendbird-channel-settings-banned-user-list__footer" >
             <Button
               type={ButtonTypes.SECONDARY}
               size={ButtonSizes.SMALL}

@@ -96,6 +96,26 @@ const OperatorList = (): ReactElement => {
                     >
                       {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
                     </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        channel?.muteUser(operator).then(() => {
+                          refreshList();
+                          closeDropdown();
+                        });
+                      }}
+                    >
+                      {stringSet.OPEN_CHANNEL_SETTING__MODERATION__MUTE}
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        channel?.banUser(operator).then(() => {
+                          refreshList();
+                          closeDropdown();
+                        });
+                      }}
+                    >
+                      {stringSet.OPEN_CHANNEL_SETTING__MODERATION__BAN}
+                    </MenuItem>
                   </MenuItems>
                 )}
               />

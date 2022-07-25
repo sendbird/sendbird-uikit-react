@@ -27,19 +27,19 @@ export default function OperatorListModal({ onCancel }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
 
   useEffect(() => {
-    const participantListQuery = channel?.createParticipantListQuery({
+    const operatorListQuery = channel?.createOperatorListQuery({
       limit: 20,
     });
-    participantListQuery.next().then((participants) => {
+    operatorListQuery.next().then((participants) => {
       setUsers(participants);
     });
-    setOperatorQuery(participantListQuery);
+    setOperatorQuery(operatorListQuery);
   }, [])
   return (
     <div>
       <Modal
         hideFooter
-        titleText="All users"
+        titleText="All operators"
         onCancel={onCancel}
       >
         <div

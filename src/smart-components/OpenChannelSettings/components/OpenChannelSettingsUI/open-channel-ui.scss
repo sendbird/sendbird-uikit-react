@@ -162,6 +162,19 @@
       position: absolute;
       right: 16px;
     }
+
+    .sendbird-participants-accordion__member__action {
+      display: none;
+    }
+
+    &:hover {
+      .sendbird-participants-accordion__member__title.operator {
+        display: none;
+      }
+      .sendbird-participants-accordion__member__action {
+        display: inline-block;
+      }
+    }
   }
 
   .sendbird-participants-accordion__member-avatar {
@@ -173,17 +186,27 @@
 
   .sendbird-participants-accordion__member__action {
     position: absolute;
+    display: none;
     top: 4px;
     right: 8px;
     cursor: pointer;
   }
 
-  .sendbird-openchannel-operator-list__footer {
-    position: relative;
-    display: inline-flex;
-    justify-content: space-between;
-    box-sizing: border-box;
-    width: 100%;
-    padding: 16px 16px 0px 16px;
+  .sendbird-openchannel-operator-list__footer,
+  .sendbird-openchannel-participant-list__footer,
+  .sendbird-channel-settings-muted-participant-list__footer,
+  .sendbird-channel-settings-banned-user-list__footer {
+    padding-top: 16px;
+    display: flex;
+    justify-content: left;
+    padding-left: 12px;
+    .sendbird-button:nth-child(2) {
+      margin-left: 8px;
+    }
   }
+}
+
+.sendbird-more-users__popup-scroll {
+  max-height: 420px;
+  overflow: scroll;
 }

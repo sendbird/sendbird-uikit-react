@@ -7,11 +7,15 @@ import React, {
 import type { User } from '@sendbird/chat';
 import type { ParticipantListQuery } from '@sendbird/chat/openChannel';
 
+import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 import Modal from '../../../../ui/Modal';
 import UserListItem from '../../../../ui/UserListItem';
+import IconButton from '../../../../ui/IconButton';
+import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { noop } from '../../../../utils/utils';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
 interface Props {
   onCancel(): void;
@@ -20,10 +24,13 @@ interface Props {
 export default function ParticipantsModal({
   onCancel,
 }: Props): ReactElement {
+  const state = useSendbirdStateContext();
   const { channel } = useOpenChannelSettingsContext();
   const { stringSet } = useContext(LocalizationContext);
-  const [participants, setParticipants] = useState<Array<User>|null>([]);
+  const [participants, setParticipants] = useState<Array<User> | null>([]);
   const [participantListQuery, setParticipantListQuery] = useState<ParticipantListQuery | null>(null);
+  const userId = state?.config?.userId;
+  const sdk = state?.stores?.sdkStore?.sdk;
   useEffect(() => {
     if (!channel || !channel?.createParticipantListQuery) {
       return;
@@ -61,12 +68,87 @@ export default function ParticipantsModal({
             }
           }}
         >
-          { participants.map((p) => (
-            <UserListItem
-              user={p}
-              key={p.userId}
-            />
-          ))}
+          {
+            participants.map((p) => {
+              const isOperator = channel?.isOperator(p.userId);
+              return (
+                <UserListItem
+                  user={p}
+                  key={p.userId}
+                  currentUser={sdk?.currentUser?.userId}
+                  action={
+                    (userId !== p.userId)
+                      ? ({ actionRef, parentRef }) => (
+                        <ContextMenu
+                          menuTrigger={(toggleDropdown) => (
+                            <IconButton
+                              className="sendbird-user-message__more__menu"
+                              width="32px"
+                              height="32px"
+                              onClick={toggleDropdown}
+                            >
+                              <Icon
+                                width="24px"
+                                height="24px"
+                                type={IconTypes.MORE}
+                                fillColor={IconColors.CONTENT_INVERSE}
+                              />
+                            </IconButton>
+                          )}
+                          menuItems={(closeDropdown) => (
+                            <MenuItems
+                              parentContainRef={parentRef}
+                              parentRef={actionRef}
+                              closeDropdown={closeDropdown}
+                              openLeft
+                            >
+                              <MenuItem
+                                onClick={() => {
+                                  if (isOperator) {
+                                    channel?.removeOperators([p.userId]).then(() => {
+                                      closeDropdown();
+                                    });
+                                  } else {
+                                    channel?.addOperators([p.userId]).then(() => {
+                                      closeDropdown();
+                                    });
+                                  }
+                                }}
+                              >
+                                {
+                                  isOperator
+                                    ? stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR
+                                    : stringSet.OPEN_CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR
+                                }
+                              </MenuItem>
+                              <MenuItem
+                                onClick={() => {
+                                  channel?.muteUser(p).then(() => {
+                                    closeDropdown();
+                                  });
+                                }}
+                              >
+                                {stringSet.OPEN_CHANNEL_SETTING__MODERATION__MUTE}
+                              </MenuItem>
+                              <MenuItem
+                                onClick={() => {
+                                  channel?.banUser(p).then(() => {
+                                    closeDropdown();
+                                  });
+                                }}
+                              >
+                                {stringSet.OPEN_CHANNEL_SETTING__MODERATION__BAN}
+                              </MenuItem>
+                            </MenuItems>
+                          )}
+                        />
+                      )
+                      : null
+                  }
+                />
+              )
+            })
+          }
         </div>
       </Modal>
     </div>

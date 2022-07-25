@@ -8,12 +8,14 @@ import React, {
 import type { User } from '@sendbird/chat';
 import type { ParticipantListQuery } from '@sendbird/chat/openChannel';
 
-import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
+import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import IconButton from '../../../../ui/IconButton';
+import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 
 import { UserListItem } from './ParticipantItem';
+import ParticipantsModal from './ParticipantsModal';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
@@ -25,6 +27,7 @@ export default function ParticipantList(): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   const [participants, setParticipants] = useState<Array<User> | null>([]);
   const [participantListQuery, setParticipantListQuery] = useState<ParticipantListQuery | null>(null);
+  const [showParticipantsModal, setShowParticipantsModal] = useState<boolean>(false);
   useEffect(() => {
     if (!channel || !channel?.createParticipantListQuery) {
       return;
@@ -158,6 +161,29 @@ export default function ParticipantList(): ReactElement {
                 {stringSet.OPEN_CHANNEL_SETTINGS__EMPTY_LIST}
               </Label>
             ) : null
+        }
+        <div className="sendbird-openchannel-participant-list__footer">
+          {
+            participantListQuery?.hasNext && (
+              <Button
+                type={ButtonTypes.SECONDARY}
+                size={ButtonSizes.SMALL}
+                onClick={() => setShowParticipantsModal(true)}
+              >
+                {stringSet.OPEN_CHANNEL_SETTINGS__ALL_PARTICIPANTS_TITLE}
+              </Button>
+            )
+          }
+        </div>
+        {
+          showParticipantsModal && (
+            <ParticipantsModal
+              onCancel={() => {
+                setShowParticipantsModal(false);
+                refreshList();
+              }}
+            />
+          )
         }
       </div>
     </div>

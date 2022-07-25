@@ -36,7 +36,7 @@ export default function AddOperatorsModal({
       limit: 20,
     });
     participantListQuery.next().then((users) => {
-      setParticipants(users);
+      setParticipants(users.filter(({userId}) => !channel?.operators?.find((operator) => operator.userId === userId)));
     });
     setParticipantQuery(participantListQuery);
   }, [])

@@ -124,7 +124,7 @@ export const MutedParticipantList = (): ReactElement => {
       {
         hasNext && (
           <div
-            className="sendbird-channel-settings-accordion__footer"
+            className="sendbird-channel-settings-muted-participant-list__footer"
           >
             <Button
               type={ButtonTypes.SECONDARY}
