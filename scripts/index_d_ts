@@ -331,7 +331,7 @@
     renderPlaceHolderEmptyList?: (props: void) => React.ReactNode;
   }
 
-  export interface ChannelListProps extends ChannelListProviderInterface, ChannelListUIProps {}
+  export interface ChannelListProps extends ChannelListProviderProps, ChannelListUIProps {}
 
   export interface ChannelListHeaderInterface {
     renderHeader?: (props: void) => React.ReactNode;
@@ -383,7 +383,7 @@
   }
 
   export type ChannelSettingsContextProps = {
-    children: React.ReactNode;
+    children?: React.ReactNode;
     channelUrl: string;
     className?: string;
     onCloseClick?(): void;

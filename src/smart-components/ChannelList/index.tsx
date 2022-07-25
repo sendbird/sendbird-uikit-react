@@ -1,12 +1,12 @@
 import React from 'react';
 import {
   ChannelListProvider,
-  ChannelListProviderInterface,
+  ChannelListProviderProps,
 } from './context/ChannelListProvider';
 
 import ChannelListUI, { ChannelListUIProps } from './components/ChannelListUI';
 
-interface ChannelListProps extends ChannelListProviderInterface, ChannelListUIProps {}
+interface ChannelListProps extends ChannelListProviderProps, ChannelListUIProps {}
 
 const ChannelList: React.FC<ChannelListProps> = (props: ChannelListProps) => {
   return (
