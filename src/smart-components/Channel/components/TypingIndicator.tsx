@@ -60,7 +60,7 @@ const TypingIndicator: React.FC = () => {
 
     return () => {
       setTypingMembers([]);
-      if (sb) {
+      if (sb?.groupChannel?.removeGroupChannelHandler) {
         sb.groupChannel.removeGroupChannelHandler(handlerId);
       }
     };
