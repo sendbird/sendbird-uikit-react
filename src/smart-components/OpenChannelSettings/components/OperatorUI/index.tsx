@@ -150,7 +150,7 @@ export const OperatorUI: React.FC<OperatorUIProps> = ({
           )}
           renderContent={() => (
             <>
-              <ParticipantsAccordion />
+              <ParticipantsAccordion isOperatorView />
             </>
           )}
         />

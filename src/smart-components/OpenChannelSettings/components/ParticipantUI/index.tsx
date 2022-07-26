@@ -20,7 +20,13 @@ import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
-export default function ParticipantList(): ReactElement {
+interface ParticipantListProps {
+  isOperatorView?: boolean;
+}
+
+export default function ParticipantList({
+  isOperatorView = false,
+}: ParticipantListProps): ReactElement {
   const globalState = useSendbirdStateContext();
   const currentUser = globalState?.config?.userId;
   const { channel } = useOpenChannelSettingsContext();
@@ -79,7 +85,9 @@ export default function ParticipantList(): ReactElement {
                 key={p.userId}
                 isOperator={isOperator}
                 action={({ actionRef }) => (
-                  <ContextMenu
+                  isOperatorView
+                  ? (
+                    <ContextMenu
                     menuTrigger={(toggleDropdown) => (
                       <IconButton
                         className="sendbird-openchannel-participant-list__menu"
@@ -145,6 +153,8 @@ export default function ParticipantList(): ReactElement {
                       </MenuItems>
                     )}
                   />
+                  )
+                  : null
                 )}
               />
             );
