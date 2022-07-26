@@ -744,7 +744,9 @@
     ): JSX.Element;
   }
 
-  export interface MessageSearchProps extends MessageSearchUIProps, MessageSearchProviderProps {}
+  export interface MessageSearchProps extends MessageSearchUIProps, MessageSearchProviderProps {
+    onCloseClick?: () => void;
+  }
 
   /**
    * CreateChannel

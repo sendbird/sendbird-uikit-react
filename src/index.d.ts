@@ -1036,7 +1036,9 @@ interface MessageSearchUIProps {
   ): JSX.Element;
 }
 
-interface MessageSearchProps extends MessageSearchUIProps, MessageSearchProviderProps {}
+interface MessageSearchProps extends MessageSearchUIProps, MessageSearchProviderProps {
+  onCloseClick?: () => void;
+}
 
 declare module '@sendbird/uikit-react/MessageSearch' {
   type MessageSearch = React.FC<MessageSearchProps>;
