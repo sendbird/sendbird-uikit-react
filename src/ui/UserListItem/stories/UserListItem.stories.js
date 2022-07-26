@@ -1,5 +1,5 @@
 import React from 'react';
-import UserListItem from '../index.jsx';
+import UserListItem from '../index';
 
 const description = `
   \`import UserListItem from "@sendbird/uikit-react/ui/UserListItem";\`

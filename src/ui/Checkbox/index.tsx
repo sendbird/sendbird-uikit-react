@@ -1,11 +1,11 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ChangeEvent, ReactElement, useState } from 'react';
 import './index.scss';
 
 export interface CheckboxProps {
   id?: string;
   checked?: boolean;
   disabled?: boolean;
-  onChange?(): void;
+  onChange?(e: ChangeEvent<HTMLInputElement>): void;
 }
 
 export default function Checkbox({
@@ -17,7 +17,10 @@ export default function Checkbox({
   const [isChecked, setIsCheck] = useState(checked);
   return (
     <label
-      className="sendbird-checkbox"
+      className={[
+        "sendbird-checkbox",
+        disabled ? 'disabled' : '',
+      ].join(' ')}
       htmlFor={id}
     >
       <input

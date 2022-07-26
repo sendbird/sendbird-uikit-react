@@ -2,7 +2,7 @@
 
 exports[`Checkbox should do a snapshot test of the checked Checkbox DOM 1`] = `
 <label
-  className="sendbird-checkbox"
+  className="sendbird-checkbox "
 >
   <input
     checked={true}
@@ -17,7 +17,7 @@ exports[`Checkbox should do a snapshot test of the checked Checkbox DOM 1`] = `
 
 exports[`Checkbox should do a snapshot test of the default Checkbox DOM 1`] = `
 <label
-  className="sendbird-checkbox"
+  className="sendbird-checkbox "
 >
   <input
     onClick={[Function]}
