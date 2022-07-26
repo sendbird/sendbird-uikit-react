@@ -13,11 +13,11 @@ export interface CreateChannelUIProps {
 const CreateChannel: React.FC<CreateChannelUIProps> = (props: CreateChannelUIProps) => {
   const { onCancel, renderStepOne } = props;
 
-  const createChannelProps = useCreateChannelContext();
   const {
     step,
     setStep,
-  } = createChannelProps;
+    userListQuery,
+  } = useCreateChannelContext();
 
   return (
     <>
@@ -33,6 +33,7 @@ const CreateChannel: React.FC<CreateChannelUIProps> = (props: CreateChannelUIPro
       {
         step === 1 && (
           <InviteUsers
+            userListQuery={userListQuery}
             onCancel={() => {
               setStep(0);
               onCancel();

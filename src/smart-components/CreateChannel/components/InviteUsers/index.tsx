@@ -14,6 +14,7 @@ import Label, {
 } from '../../../../ui/Label';
 import { ButtonTypes } from '../../../../ui/Button';
 import UserListItem from '../../../../ui/UserListItem';
+import { UserListQuery } from '../../context/CreateChannelProvider';
 
 import {
   filterUser,
@@ -23,9 +24,13 @@ import {
 
 export interface InviteUsersProps {
   onCancel?: () => void;
+  userListQuery?(): UserListQuery;
 }
 
-const InviteUsers: React.FC<InviteUsersProps> = ({ onCancel }: InviteUsersProps) => {
+const InviteUsers: React.FC<InviteUsersProps> = ({
+  onCancel,
+  userListQuery,
+}: InviteUsersProps) => {
   const {
     onBeforeCreateChannel,
     onCreateChannel,
@@ -40,12 +45,12 @@ const InviteUsers: React.FC<InviteUsersProps> = ({ onCancel }: InviteUsersProps)
   const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState({});
   const { stringSet } = useContext(LocalizationContext);
-  const [usersDataSource, setUsersDataSource] = useState<ApplicationUserListQuery>(null);
+  const [usersDataSource, setUsersDataSource] = useState<ApplicationUserListQuery | UserListQuery>(null);
   const selectedCount = Object.keys(selectedUsers).length;
   const titleText = stringSet.MODAL__CREATE_CHANNEL__TITLE;
   const submitText = stringSet.BUTTON__CREATE;
 
-  const userQueryCreator = createDefaultUserListQuery({ sdk });
+  const userQueryCreator = userListQuery ? userListQuery() : createDefaultUserListQuery({ sdk });
 
   useEffect(() => {
     const applicationUserListQuery = userQueryCreator;
