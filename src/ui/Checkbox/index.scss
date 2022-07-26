@@ -31,7 +31,7 @@
   }
   &.disabled {
     @include themed() {
-      border: solid 2px t(bg-2);
+      border: solid 2px t(on-bg-4);
     }
   }
 }
@@ -49,8 +49,8 @@
   }
   &.disabled {
     @include themed() {
-      background-color: t(bg-2);
-      border: solid 2px t(bg-2);
+      background-color: t(on-bg-4);
+      border: solid 2px t(on-bg-4);
     }
   }
 }
