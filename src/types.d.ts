@@ -10,7 +10,7 @@ export type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
 
 export interface UserListQuery {
   hasNext?: boolean;
-  next(callback: unknown): void;
+  next(): Promise<Array<User>>;
 }
 
 export interface RenderUserProfileProps {

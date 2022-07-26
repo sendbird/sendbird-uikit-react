@@ -21,11 +21,12 @@ export default function InviteUsers({
 
   const state = useSendbirdStateContext();
   const sdk = state?.stores?.sdkStore?.sdk;
+  const globalUserListQuery = state?.config?.userListQuery;
 
   const { channel } = useChannelSettingsContext();
 
   useEffect(() => {
-    const userListQuery = sdk?.createApplicationUserListQuery();
+    const userListQuery = globalUserListQuery ? globalUserListQuery() : sdk?.createApplicationUserListQuery();
     userListQuery.next().then((members) => {
       setMembers(members);
     });

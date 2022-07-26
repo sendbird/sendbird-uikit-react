@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { User } from '@sendbird/chat';
 import type {
   GroupChannel,
   GroupChannelCreateParams,
@@ -11,9 +12,9 @@ import { CHANNEL_TYPE } from '../types';
 
 const CreateChannelContext = React.createContext(undefined);
 
-interface UserListQuery {
+export interface UserListQuery {
   hasNext?: boolean;
-  next(callback: unknown): void;
+  next(): Promise<Array<User>>;
 }
 
 export interface CreateChannelProviderProps {
