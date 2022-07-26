@@ -36,7 +36,7 @@ export default function AddOperatorsModal({
       limit: 20,
     });
     participantListQuery.next().then((users) => {
-      setParticipants(users.filter(({userId}) => !channel?.operators?.find((operator) => operator.userId === userId)));
+      setParticipants(users);
     });
     setParticipantQuery(participantListQuery);
   }, [])
@@ -80,26 +80,33 @@ export default function AddOperatorsModal({
             }
           }}
         >
-          { participants.map((participant) => (
-            <UserListItem
-              checkBox
-              checked={selectedUsers[participant.userId]}
-              onChange={
-                (event) => {
-                  const modifiedSelectedUsers = {
-                    ...selectedUsers,
-                    [event.target.id]: event.target.checked,
-                  };
-                  if (!event.target.checked) {
-                    delete modifiedSelectedUsers[event.target.id];
+          {
+            participants.map((participant) => {
+              const isOperator = channel?.operators.find((operator) => operator?.userId === participant?.userId) ? true : false;
+              return (
+                <UserListItem
+                  checkBox
+                  checked={selectedUsers[participant.userId] || isOperator}
+                  disabled={isOperator}
+                  isOperator={isOperator}
+                  onChange={
+                    (event) => {
+                      const modifiedSelectedUsers = {
+                        ...selectedUsers,
+                        [event.target.id]: event.target.checked,
+                      };
+                      if (!event.target.checked) {
+                        delete modifiedSelectedUsers[event.target.id];
+                      }
+                      setSelectedUsers(modifiedSelectedUsers);
+                    }
                   }
-                  setSelectedUsers(modifiedSelectedUsers);
-                }
-              }
-              user={participant}
-              key={participant.userId}
-            />
-          ))}
+                  user={participant}
+                  key={participant.userId}
+                />
+              );
+            })
+          }
         </div>
       </Modal>
     </div>
