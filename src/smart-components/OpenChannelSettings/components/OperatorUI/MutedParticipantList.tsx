@@ -67,6 +67,7 @@ export const MutedParticipantList = (): ReactElement => {
             key={mutedUser.userId}
             user={mutedUser}
             currentUser={currentUser}
+            isOperator={channel?.isOperator(mutedUser.userId)}
             action={({ actionRef }) => {
               return (
                 <ContextMenu

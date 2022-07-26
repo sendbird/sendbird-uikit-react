@@ -59,6 +59,7 @@ export const BannedUserList = (): ReactElement => {
           <UserListItem
             key={bannedUser.userId}
             user={bannedUser}
+            isOperator={channel?.isOperator(bannedUser.userId)}
             action={({ actionRef }) => {
               return (
                 <ContextMenu
