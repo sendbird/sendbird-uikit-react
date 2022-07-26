@@ -10,7 +10,7 @@ export type CustomUseReducerDispatcher = ({
 
 interface UserListQuery {
   hasNext?: boolean;
-  next(callback: unknown): void;
+  next(): Promise<Array<User>>;
 }
 
 interface RenderUserProfileProps {
