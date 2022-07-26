@@ -43,7 +43,7 @@ export default function AddOperatorsModal({
 
   const selectedCount = Object.keys(selectedUsers).filter((m) => selectedUsers[m]).length;
   return (
-    <div>
+    <>
       <Modal
         type={ButtonType.PRIMARY}
         submitText="Add"
@@ -109,6 +109,6 @@ export default function AddOperatorsModal({
           }
         </div>
       </Modal>
-    </div>
+    </>
   );
 }
