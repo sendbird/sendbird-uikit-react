@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.7.2] (July 27 2022)
+- Bugfix
+  * Fix: Improve URL detection in messages
+
 ## [2.7.1] (May 11 2022)
 - Bugfix
   * Add rate limit to markAsDelivered call
