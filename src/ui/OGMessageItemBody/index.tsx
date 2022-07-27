@@ -47,21 +47,53 @@ export default function OGMessageItemBody({
       >
         <p className="sendbird-og-message-item-body__text-bubble">
           {
-            message?.message.split(' ').map((word: string) => (
-              isUrl(word)
-                ? (
-                  <LinkLabel
-                    className="sendbird-og-message-item-body__text-bubble__message"
-                    key={uuidv4()}
-                    src={word}
-                    type={LabelTypography.BODY_1}
-                    color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
-                  >
-                    {word}
-                  </LinkLabel>
-                )
-                : (`${word} `)
-            ))
+            message?.message.split(' ').map((word: string) => {
+              const urlRegex = new RegExp("([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?");
+              const targetUrl = urlRegex.exec(word)?.[0];
+              const stringUrl = { front: '', url: '', back: '' };
+              if (targetUrl) {
+                const targetUrlIndex = word.indexOf(targetUrl);
+                if (targetUrlIndex > 0) {
+                  stringUrl.front = word.slice(0, targetUrlIndex);
+                }
+                stringUrl.url = word.slice(targetUrlIndex, targetUrlIndex + targetUrl.length);
+                if (targetUrlIndex + targetUrl.length < word.length) {
+                  stringUrl.back = word.slice(targetUrlIndex + targetUrl.length);
+                }
+              }
+              if (targetUrl) {
+                return [
+                  stringUrl.front ? stringUrl.front : '',
+                  stringUrl.url ? (
+                    <LinkLabel
+                      className="sendbird-word__url"
+                      key={uuidv4()}
+                      src={stringUrl.url}
+                      type={LabelTypography.BODY_1}
+                      color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
+                    >
+                      {stringUrl.url}
+                    </LinkLabel>
+                  ) : null,
+                  stringUrl.back ? stringUrl.back : '',
+                ];
+              }
+              return (
+                isUrl(word)
+                  ? (
+                    <LinkLabel
+                      className="sendbird-og-message-item-body__text-bubble__message"
+                      key={uuidv4()}
+                      src={word}
+                      type={LabelTypography.BODY_1}
+                      color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
+                    >
+                      {word}
+                    </LinkLabel>
+                  )
+                  : (`${word} `)
+              );
+            })
           }
           {
             isEditedMessage(message) && (
