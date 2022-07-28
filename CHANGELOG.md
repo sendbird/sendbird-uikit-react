@@ -1,4 +1,16 @@
 # Changelog - v3
+## [v3.0.1] (July 28 2022)
+
+Features:
+* Accept customApiHost & customWebSocketHost as props to SendbirdProvider
+* Add basic TS project sample
+
+Fixes:
+* Improve URL detection in OG message
+* add onCloseClick to MessageSearchProps
+* safe call removeGroupChannelHandler in TypingIndicator
+* Apply userListQuery
+* Type definition for channellist and setting
 
 ## [v3.0.0] (July 12 2022)
 
