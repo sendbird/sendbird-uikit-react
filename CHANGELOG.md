@@ -7,8 +7,8 @@ Features:
 
 Fixes:
 * Improve URL detection in OG message
-* add onCloseClick to MessageSearchProps
-* safe call removeGroupChannelHandler in TypingIndicator
+* Add onCloseClick to MessageSearchProps
+* Safe call removeGroupChannelHandler in TypingIndicator
 * Apply userListQuery
 * Type definition for channellist and setting
 
