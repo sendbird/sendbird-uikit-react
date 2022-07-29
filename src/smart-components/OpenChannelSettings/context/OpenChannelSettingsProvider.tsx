@@ -57,12 +57,32 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
     sdk.openChannel.getChannel(channelUrl)
       .then((channel) => {
         logger.info('open channel setting: fetched', channel);
-        setChannel(channel);
+        // TODO: Add pending status
+        channel.enter()
+        .then(() => {
+            setChannel(channel);
+            logger.info('OpenChannelSettings | Succeeded to enter channel');
+          })
+          .catch((error) => {
+            setChannel(null);
+            logger.warning('OpenChannelSettings | Failed to enter channel', error);
+          });
       })
       .catch((error) => {
         logger.error('open channel setting: error fetching', error);
         setChannel(null);
       });
+    return () => {
+      if (channel && channel.exit) {
+        channel.exit()
+          .then(() => {
+            logger.info('OpenChannelSettings | Succeeded to exit channel');
+          })
+          .catch((error) => {
+            logger.warning('OpenChannelSettings | Failed to exit channel', error);
+          });
+      }
+    }
   }, [channelUrl, sdk]);
 
   return (

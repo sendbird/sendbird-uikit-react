@@ -75,7 +75,9 @@ function useSetChannel(
           }
           if (fetchingParticipants) {
             // fetch participants list
-            const participantListQuery = openChannel.createParticipantListQuery({});
+            const participantListQuery = openChannel.createParticipantListQuery({
+              limit: openChannel.participantCount,
+            });
             utils.fetchWithListQuery(
               participantListQuery,
               logger,
