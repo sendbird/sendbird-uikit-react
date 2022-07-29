@@ -19,7 +19,7 @@ const OperatorList = (): ReactElement => {
   const [showAdd, setShowAdd] = useState<boolean>(false);
   const [showMore, setShowMore] = useState<boolean>(false);
   const state = useSendbirdStateContext();
-  const userId = state?.config?.userId;
+  const currentUserId = state?.config?.userId;
   const { stringSet } = useContext(LocalizationContext);
   const { channel } = useOpenChannelSettingsContext();
 
@@ -60,7 +60,7 @@ const OperatorList = (): ReactElement => {
           <UserListItem
             key={operator.userId}
             user={operator}
-            currentUser={userId}
+            currentUser={currentUserId}
             action={({ actionRef }) => (
               <ContextMenu
                 menuTrigger={(toggleDropdown) => (
@@ -96,26 +96,34 @@ const OperatorList = (): ReactElement => {
                     >
                       {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
                     </MenuItem>
-                    <MenuItem
-                      onClick={() => {
-                        channel?.muteUser(operator).then(() => {
-                          refreshList();
-                          closeDropdown();
-                        });
-                      }}
-                    >
-                      {stringSet.OPEN_CHANNEL_SETTING__MODERATION__MUTE}
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => {
-                        channel?.banUser(operator).then(() => {
-                          refreshList();
-                          closeDropdown();
-                        });
-                      }}
-                    >
-                      {stringSet.OPEN_CHANNEL_SETTING__MODERATION__BAN}
-                    </MenuItem>
+                    {
+                      currentUserId !== operator?.userId && (
+                        <MenuItem
+                          onClick={() => {
+                            channel?.muteUser(operator).then(() => {
+                              refreshList();
+                              closeDropdown();
+                            });
+                          }}
+                        >
+                          {stringSet.OPEN_CHANNEL_SETTING__MODERATION__MUTE}
+                        </MenuItem>
+                      )
+                    }
+                    {
+                      currentUserId !== operator?.userId && (
+                        <MenuItem
+                          onClick={() => {
+                            channel?.banUser(operator).then(() => {
+                              refreshList();
+                              closeDropdown();
+                            });
+                          }}
+                        >
+                          {stringSet.OPEN_CHANNEL_SETTING__MODERATION__BAN}
+                        </MenuItem>
+                      )
+                    }
                   </MenuItems>
                 )}
               />

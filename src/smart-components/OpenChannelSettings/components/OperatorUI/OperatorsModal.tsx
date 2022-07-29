@@ -23,7 +23,7 @@ export default function OperatorListModal({ onCancel }: Props): ReactElement {
 
   const { channel } = useOpenChannelSettingsContext();
   const state = useSendbirdStateContext();
-  const currentUser = state?.config?.userId;
+  const currentUserId = state?.config?.userId;
   const { stringSet } = useContext(LocalizationContext);
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function OperatorListModal({ onCancel }: Props): ReactElement {
           {
             users.map((operator) => (
               <UserListItem
-                currentUser={currentUser}
+                currentUser={currentUserId}
                 user={operator}
                 key={operator.userId}
                 action={({ parentRef, actionRef }) => (

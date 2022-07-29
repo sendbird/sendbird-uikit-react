@@ -28,7 +28,7 @@ export default function ParticipantList({
   isOperatorView = false,
 }: ParticipantListProps): ReactElement {
   const globalState = useSendbirdStateContext();
-  const currentUser = globalState?.config?.userId;
+  const currentUserId = globalState?.config?.userId;
   const { channel } = useOpenChannelSettingsContext();
   const { stringSet } = useContext(LocalizationContext);
   const [participants, setParticipants] = useState<Array<User> | null>([]);
@@ -81,7 +81,7 @@ export default function ParticipantList({
             return (
               <UserListItem
                 user={p}
-                currentUser={currentUser}
+                currentUser={currentUserId}
                 key={p.userId}
                 isOperator={isOperator}
                 action={({ actionRef }) => (
@@ -130,26 +130,34 @@ export default function ParticipantList({
                               : stringSet.OPEN_CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR
                           }
                         </MenuItem>
-                        <MenuItem
-                          onClick={() => {
-                            channel?.muteUser(p).then(() => {
-                              refreshList();
-                              closeDropdown();
-                            });
-                          }}
-                        >
-                          {stringSet.OPEN_CHANNEL_SETTING__MODERATION__MUTE}
-                        </MenuItem>
-                        <MenuItem
-                          onClick={() => {
-                            channel?.banUser(p).then(() => {
-                              refreshList();
-                              closeDropdown();
-                            });
-                          }}
-                        >
-                          {stringSet.OPEN_CHANNEL_SETTING__MODERATION__BAN}
-                        </MenuItem>
+                        {
+                          currentUserId !== p?.userId && (
+                            <MenuItem
+                              onClick={() => {
+                                channel?.muteUser(p).then(() => {
+                                  refreshList();
+                                  closeDropdown();
+                                });
+                              }}
+                            >
+                              {stringSet.OPEN_CHANNEL_SETTING__MODERATION__MUTE}
+                            </MenuItem>
+                          )
+                        }
+                        {
+                          currentUserId !== p?.userId && (
+                            <MenuItem
+                              onClick={() => {
+                                channel?.banUser(p).then(() => {
+                                  refreshList();
+                                  closeDropdown();
+                                });
+                              }}
+                            >
+                              {stringSet.OPEN_CHANNEL_SETTING__MODERATION__BAN}
+                            </MenuItem>
+                          )
+                        }
                       </MenuItems>
                     )}
                   />
