@@ -131,7 +131,7 @@ export default function ParticipantList({
                           }
                         </MenuItem>
                         {
-                          currentUserId !== p.userId && (
+                          currentUserId !== p?.userId && (
                             <MenuItem
                               onClick={() => {
                                 channel?.muteUser(p).then(() => {
@@ -145,7 +145,7 @@ export default function ParticipantList({
                           )
                         }
                         {
-                          currentUserId !== p.userId && (
+                          currentUserId !== p?.userId && (
                             <MenuItem
                               onClick={() => {
                                 channel?.banUser(p).then(() => {

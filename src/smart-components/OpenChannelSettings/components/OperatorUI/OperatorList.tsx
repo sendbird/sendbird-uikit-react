@@ -97,7 +97,7 @@ const OperatorList = (): ReactElement => {
                       {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
                     </MenuItem>
                     {
-                      currentUserId !== operator.userId && (
+                      currentUserId !== operator?.userId && (
                         <MenuItem
                           onClick={() => {
                             channel?.muteUser(operator).then(() => {
@@ -111,7 +111,7 @@ const OperatorList = (): ReactElement => {
                       )
                     }
                     {
-                      currentUserId !== operator.userId && (
+                      currentUserId !== operator?.userId && (
                         <MenuItem
                           onClick={() => {
                             channel?.banUser(operator).then(() => {
