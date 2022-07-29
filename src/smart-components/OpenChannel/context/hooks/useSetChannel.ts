@@ -59,6 +59,19 @@ function useSetChannel(
                 });
               },
             );
+          } else {
+            openChannel.getMyMutedInfo()
+              .then((mutedInfo) => {
+                if (mutedInfo?.isMuted) {
+                  messagesDispatcher({
+                    type: messageActionTypes.FETCH_MUTED_USER_LIST,
+                    payload: {
+                      channel: openChannel,
+                      users: [sdk?.currentUser],
+                    },
+                  });
+                }
+              });
           }
           if (fetchingParticipants) {
             // fetch participants list
@@ -84,12 +97,12 @@ function useSetChannel(
             payload: null,
           });
         });
-      }).catch(() => {
+      }).catch((error) => {
         logger.warning('OpenChannel | useSetChannel fetching channel failed', { channelUrl, error });
-          messagesDispatcher({
-            type: messageActionTypes.SET_CHANNEL_INVALID,
-            payload: null,
-          });
+        messagesDispatcher({
+          type: messageActionTypes.SET_CHANNEL_INVALID,
+          payload: null,
+        });
       });
     }
   }, [channelUrl, sdkInit, fetchingParticipants]);
