@@ -20,7 +20,11 @@ function useSetChannel({ channelUrl, sdkInit }, {
 
           logger.info('Channel: Mark as read', groupChannel);
           // this order is important - this mark as read should update the event handler up above
-          groupChannel.markAsRead();
+          try {
+            groupChannel.markAsRead();
+          } catch {
+            //
+          }
         })
         .catch((e) => {
           logger.warning('Channel | useSetChannel fetch channel failed', { channelUrl, e });

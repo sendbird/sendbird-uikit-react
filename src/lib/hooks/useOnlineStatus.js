@@ -7,26 +7,31 @@ function useConnectionStatus(sdk, logger) {
   const [isOnline, setIsOnline] = useState(true);
 
   useEffect(() => {
-    const uniqueHandlerId = uuidv4();
-    logger.warning('sdk changed', uniqueHandlerId);
-    const handler = new ConnectionHandler();
-
-    handler.onReconnectStarted = () => {
-      setIsOnline(false);
-      logger.warning('onReconnectStarted', { isOnline });
-    };
-    handler.onReconnectSucceeded = () => {
-      setIsOnline(true);
-      logger.warning('onReconnectSucceeded', { isOnline });
-    };
-    handler.onReconnectFailed = () => {
-      sdk.reconnect();
-      logger.warning('onReconnectFailed');
-    };
-    logger.info('Added ConnectionHandler', uniqueHandlerId);
-
-    if (sdk?.addConnectionHandler) {
-      sdk.addConnectionHandler(uniqueHandlerId, handler);
+    try {
+      const uniqueHandlerId = uuidv4();
+      logger.warning('sdk changed', uniqueHandlerId);
+      const handler = new ConnectionHandler();
+      handler.onDisconnected = () => {
+        logger.warning('onDisconnected', { isOnline });
+      };
+      handler.onReconnectStarted = () => {
+        setIsOnline(false);
+        logger.warning('onReconnectStarted', { isOnline });
+      };
+      handler.onReconnectSucceeded = () => {
+        setIsOnline(true);
+        logger.warning('onReconnectSucceeded', { isOnline });
+      };
+      handler.onReconnectFailed = () => {
+        sdk.reconnect();
+        logger.warning('onReconnectFailed');
+      };
+      logger.info('Added ConnectionHandler', uniqueHandlerId);
+      if (sdk?.addConnectionHandler) {
+        sdk.addConnectionHandler(uniqueHandlerId, handler);
+      }
+    } catch {
+      //
     }
     return () => {
       try {
