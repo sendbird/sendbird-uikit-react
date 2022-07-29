@@ -1,6 +1,9 @@
 1. Run npm build
 2. Update and replace dist/index.d.ts with scripts/index_d_ts
 3. Update and replace dist/package.json with scripts/package.template.json
+   * "type": "module"(only in package.template.json) need migration work in package.json
+   * Updated import paths
+   * Remove unnecessary scripts(build etc etc)
 4. Update and replace dist/README.md with main README.md
 4. Update and replace dist/CHANGELOG.md with main CHANGELOG.md
 4. Update and replace dist/LICENSE with main LICENSE

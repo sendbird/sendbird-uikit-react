@@ -2,6 +2,7 @@
   "name": "@sendbird/uikit-react",
   "version": "{{ version }}",
   "description": "React based UI kit for sendbird",
+  "type": "module",
   "main": "index.js",
   "style": "dist/index.css",
   "typings": "index.d.ts",
