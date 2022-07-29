@@ -111,6 +111,10 @@ module.exports = ({
           src: './src/index.d.ts',
           dest: 'dist',
         },
+        {
+          src: './package.lock.json',
+          dest: 'dist',
+        },
       ],
     }),
   ],
