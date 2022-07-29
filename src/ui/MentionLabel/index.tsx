@@ -37,10 +37,11 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
   const [user, setUser] = useState<User| null>();
   const fetchUser = useCallback(
     (toggleDropdown) => {
-      if (user) {
+      if (user || !sdk?.createApplicationUserListQuery) {
         toggleDropdown();
+        return;
       }
-      const query = sdk.createApplicationUserListQuery({
+      const query = sdk?.createApplicationUserListQuery({
         userIdsFilter: [mentionedUserId],
       });
       query.next().then((members) => {
@@ -48,7 +49,7 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
           setUser(members[0]);
         }
         toggleDropdown();
-      })
+      });
     },
     [sdk, mentionedUserId],
   );
