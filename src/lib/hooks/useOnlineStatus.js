@@ -7,8 +7,8 @@ function useConnectionStatus(sdk, logger) {
   const [isOnline, setIsOnline] = useState(true);
 
   useEffect(() => {
+    const uniqueHandlerId = uuidv4();
     try {
-      const uniqueHandlerId = uuidv4();
       logger.warning('sdk changed', uniqueHandlerId);
       const handler = new ConnectionHandler();
       handler.onDisconnected = () => {
