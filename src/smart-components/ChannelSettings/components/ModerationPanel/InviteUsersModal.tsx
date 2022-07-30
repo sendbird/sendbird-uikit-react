@@ -27,10 +27,12 @@ export default function InviteUsers({
 
   useEffect(() => {
     const userListQuery = globalUserListQuery ? globalUserListQuery() : sdk?.createApplicationUserListQuery();
-    userListQuery.next().then((members) => {
-      setMembers(members);
-    });
-    setUserQuery(userListQuery);
+    if (userListQuery?.next) {
+      userListQuery.next().then((members) => {
+        setMembers(members);
+      });
+      setUserQuery(userListQuery);
+    }
   }, [sdk])
   return (
     <div>
