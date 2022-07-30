@@ -174,7 +174,6 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
 
   const [channelSource, setChannelSource] = useState<GroupChannelListQuerySb>();
   const [sdkChannelHandlerId, setSdkChannelHandlerId] = useState<string | null>(null);
-  const [typingHandlerId, setTypingHandlerId] = useState<string | null>(null);
   const [typingChannels, setTypingChannels] = useState<Array<GroupChannel>>([]);
 
   useEffect(() => {
@@ -222,8 +221,9 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   }, [sdkIntialized, userFilledChannelListQuery, sortChannelList]);
 
   useEffect(() => {
+    let typingHandlerId = null;
     if (sdk?.groupChannel?.addGroupChannelHandler) {
-      const handlerId = uuidv4()
+      typingHandlerId = uuidv4();
       const handler = new GroupChannelHandler({
         onTypingStatusUpdated: (channel) => {
           const typingMemberCount = channel?.getTypingUsers()?.length
@@ -273,11 +273,10 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
             });
         },
       });
-      sdk?.groupChannel?.addGroupChannelHandler(handlerId, handler)
-      setTypingHandlerId(handlerId)
+      sdk?.groupChannel?.addGroupChannelHandler(typingHandlerId, handler);
     }
     return () => {
-      if (sdk?.groupChannel?.removeGroupChannelHandler) {
+      if (sdk?.groupChannel?.removeGroupChannelHandler && typingHandlerId) {
         sdk.groupChannel.removeGroupChannelHandler(typingHandlerId);
       }
     }
