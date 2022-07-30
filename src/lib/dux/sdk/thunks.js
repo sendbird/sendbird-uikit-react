@@ -62,15 +62,20 @@ export const handleConnection = ({
       let sessionHandler = null;
       sdkDispatcher({ type: SET_SDK_LOADING, payload: true });
       if (userId && appId) {
-        const newSdk = SendbirdChat.init({
+        const params = {
           appId,
           modules: [
             new GroupChannelModule(),
             new OpenChannelModule(),
           ],
-          customApiHost,
-          customWebSocketHost,
-        });
+        };
+        if (customApiHost) {
+          params.customApiHost = customApiHost;
+        }
+        if (customWebSocketHost) {
+          params.customWebSocketHost = customWebSocketHost;
+        }
+        const newSdk = SendbirdChat.init(params);
         if (configureSession && typeof configureSession === 'function') {
           sessionHandler = configureSession(newSdk);
         }
