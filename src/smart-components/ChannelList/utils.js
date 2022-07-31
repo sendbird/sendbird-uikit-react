@@ -157,6 +157,7 @@ function setupChannelList({
   logger,
   sortChannelList,
   disableAutoSelect,
+  setChannelsToMarkAsRead,
 }) {
   if (sdk?.groupChannel) {
     createEventHandler({
@@ -211,15 +212,7 @@ function setupChannelList({
         ?.find((feature) => (feature === DELIVERY_RECIPT));
 
       if (canSetMarkAsDelivered) {
-        logger.info('ChannelList: Marking all channels as read');
-        // eslint-disable-next-line no-unused-expressions
-        channelList.forEach((c, idx) => {
-          // Plan-based rate limits - minimum limit is 5 requests per second
-          setTimeout(() => {
-            // eslint-disable-next-line no-unused-expressions
-            c.markAsDelivered();
-          }, 300 * idx);
-        });
+        setChannelsToMarkAsRead(sortedChannelList);
       }
     }).catch((err) => {
       if (err) {

@@ -1,6 +1,6 @@
 import './channel-list-ui.scss';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { GroupChannel, Member, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 import type { User } from '@sendbird/chat';
 
@@ -74,6 +74,25 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
   const sdkError = sdkStore?.error;
   const sdkIntialized = sdkStore?.initialized || false;
 
+  const [channelsTomarkAsRead, setChannelsToMarkAsRead] = useState([]);
+  useEffect(() => {
+    // https://stackoverflow.com/a/60907638
+    let isMounted = true;
+    if (channelsTomarkAsRead?.length > 0) {
+      channelsTomarkAsRead?.forEach((c, idx) => {
+        // Plan-based rate limits - minimum limit is 5 requests per second
+        setTimeout(() => {
+          if (isMounted) {
+            c?.markAsDelivered();
+          }
+        }, 2000 * idx);
+      });
+    }
+    return () => {
+      isMounted = false;
+    }
+  }, [channelsTomarkAsRead]);
+
   return (
     <>
       <div className="sendbird-channel-list__header">
@@ -124,12 +143,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
               if (canSetMarkAsDelivered) {
                 logger.info('ChannelList: Marking all channels as read');
                 // eslint-disable-next-line no-unused-expressions
-                channelList?.forEach((c, idx) => {
-                  // Plan-based rate limits - minimum limit is 5 requests per second
-                  setTimeout(() => {
-                    c?.markAsDelivered();
-                  }, 300 * idx);
-                });
+                setChannelsToMarkAsRead(channelList);
               }
             }).catch((err) => {
               logger.info('ChannelList: Fetching channels failed', err);

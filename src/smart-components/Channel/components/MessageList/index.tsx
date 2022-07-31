@@ -95,7 +95,11 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
           type: messageActionTypes.MARK_AS_READ,
           payload: { channel: currentGroupChannel },
         });
-        currentGroupChannel?.markAsRead();
+        try {
+          currentGroupChannel?.markAsRead();
+        } catch {
+          //
+        }
       }
     }, 500);
   };
