@@ -85,7 +85,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
           if (isMounted) {
             c?.markAsDelivered();
           }
-        }, 700 * idx);
+        }, 2000 * idx);
       });
     }
     return () => {

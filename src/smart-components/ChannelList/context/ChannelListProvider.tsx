@@ -176,6 +176,25 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   const [sdkChannelHandlerId, setSdkChannelHandlerId] = useState<string | null>(null);
   const [typingChannels, setTypingChannels] = useState<Array<GroupChannel>>([]);
 
+  const [channelsTomarkAsRead, setChannelsToMarkAsRead] = useState([]);
+  useEffect(() => {
+    // https://stackoverflow.com/a/60907638
+    let isMounted = true;
+    if (channelsTomarkAsRead?.length > 0) {
+      channelsTomarkAsRead?.forEach((c, idx) => {
+        // Plan-based rate limits - minimum limit is 5 requests per second
+        setTimeout(() => {
+          if (isMounted) {
+            c?.markAsDelivered();
+          }
+        }, 2000 * idx);
+      });
+    }
+    return () => {
+      isMounted = false;
+    }
+  }, [channelsTomarkAsRead]);
+
   useEffect(() => {
     const subscriber = pubSubHandler(pubSub, channelListDispatcher);
     return () => {
@@ -197,6 +216,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
         logger,
         sortChannelList,
         disableAutoSelect,
+        setChannelsToMarkAsRead,
       });
     } else {
       logger.info('ChannelList: Removing channelHandlers');
