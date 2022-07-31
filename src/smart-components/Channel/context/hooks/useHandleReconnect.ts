@@ -88,9 +88,11 @@ function useHandleReconnect(
                   payload: { currentGroupChannel },
                 });
               })
-              .finally(() => {
+              try {
                 currentGroupChannel?.markAsRead?.();
-              });
+              } catch {
+                //
+              }
           });
       }
     };
