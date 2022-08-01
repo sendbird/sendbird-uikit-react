@@ -91,29 +91,32 @@ Try your [message item on CodeSandbox](https://codesandbox.io/s/2-1-customizing-
 
 The **queries.messageListParams** is an `instance` prop in the **channel** component which you can use to retrieve a list of messages by specifying the properties of `MessageListParams`.
 
-Try your [message list params on CodeSandbox](https://codesandbox.io/s/2-2-customizing-messagelistparams-45573).
+Try your [message list params on CodeSandbox](https://codesandbox.io/s/2-2-customizing-messagelistparams-3ipi0g).
 
 > Note: On CodeSandbox’s preview, only the messages you sent will be displayed.
 
 ```javascript
 // Pass arguments in JSON data input format to the query instance.
-<Channel
-    queries={{
-        messageListParams: {
-            senderUserIds: [USER_ID],
-            prevResultSize: 30,
-            includeReplies: false,
-            includeReactions: false
-        }
-   }}
->
+const [queries] = useState({
+// use object json type input, don't create sendbird query instance
+// https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
+// https://github.com/sendbird/SendBird-SDK-JavaScript/blob/master/SendBird.d.ts#L488
+messageListParams: {
+  senderUserIds: [USER_ID],
+  prevResultSize: 30,
+  includeReplies: false,
+  includeReactions: false
+}
+});
+
+<Channel queries={queries} />
 ```
 
 ### Message params
 
 The **onBeforeSendUserMessage**, **onBeforeSendFileMessage**, and **onBeforeUpdateUserMessage** are `callback function` props in the **channel** component. The first two execute additional operations for a user message and a file message respectively; the corresponding modified messages are returned through the **text** and the **file** arguments respectively. The **onBeforeUpdateUserMessage** executes additional operations for a user message before updating it.
 
-Try your [message params on CodeSandbox](https://codesandbox.io/s/2-3-customizing-messageparams-phqii)
+Try your [message params on CodeSandbox](https://codesandbox.io/s/2-3-customizing-messageparams-606156)
 
 > Note: On the CodeSandbox’s preview, you can send or update a message in highlight.
 
@@ -129,23 +132,23 @@ In order to complete an operation you intend to carry out with each function, yo
 
 ```javascript
 const handleUpdateUserMessage = (text) => {
-    const userMessageParams = new sdk.UserMessageParams();
+    const userMessageParams = {};
     userMessageParams.message = text;
     return userMessageParams;
 }
 ```
 
-Find out more about `UserMessageParams` and `FileMessageParams` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.github.io/core-sdk-javascript/module-model_params_userMessageParams-UserMessageParams.html).
+Find out more about `UserMessageParams` and `FileMessageParams` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.com/docs/chat/v4/javascript/ref/interfaces/_sendbird_chat_message.UserMessageCreateParams.html).
 
 ### Chat header
 
 The **renderChatHeader** is a `ReactElement` prop in the **channel** component which you can use to customize the header of `channel` by setting a function. This prop provides two arguments: **channel** and **user**. The channel refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **user** refers to a `User` object which represents the current user.
 
-Try your [chat header on CodeSandbox](https://codesandbox.io/s/2-4-customizing-chatheader-voi0z)
+Try your [chat header on CodeSandbox](https://codesandbox.io/s/2-4-customizing-chatheader-mi5ijz)
 
 ```javascript
 <Channel
-    renderChatHeader={({ channel, user }) => (
+    renderChannelHeader={() => (
         <CustomizedHeader />
     )}
 >
