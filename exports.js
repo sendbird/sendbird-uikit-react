@@ -94,7 +94,7 @@ export default {
   'ui/OpenChannelAvatar': 'src/ui/ChannelAvatar/OpenChannelAvatar.tsx',
   'ui/ChannelPreview': 'src/ui/ChannelPreview/index.jsx',
   'ui/ChatHeader': 'src/ui/ChatHeader/index.jsx',
-  'ui/Checkbox': 'src/ui/Checkbox/index.jsx',
+  'ui/Checkbox': 'src/ui/Checkbox/index.tsx',
   'ui/ConnectionStatus': 'src/ui/ConnectionStatus/index.jsx',
   'ui/ContextMenu': 'src/ui/ContextMenu/index.jsx',
   'ui/DateSeparator': 'src/ui/DateSeparator/index.jsx',
@@ -139,7 +139,7 @@ export default {
   'ui/Tooltip': 'src/ui/Tooltip/index.jsx',
   'ui/TooltipWrapper': 'src/ui/TooltipWrapper/index.jsx',
   'ui/UnknownMessageItemBody': 'src/ui/UnknownMessageItemBody/index.tsx',
-  'ui/UserListItem': 'src/ui/UserListItem/index.jsx',
+  'ui/UserListItem': 'src/ui/UserListItem/index.tsx',
   'ui/UserProfile': 'src/ui/UserProfile/index.tsx',
   'ui/Word': 'src/ui/Word/index.tsx',
 };

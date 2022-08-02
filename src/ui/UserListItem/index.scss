@@ -63,5 +63,8 @@
     position: absolute;
     right: 40px;
     top: 22px;
+    &.checkbox {
+      right: 66px;
+    }
   }
 }

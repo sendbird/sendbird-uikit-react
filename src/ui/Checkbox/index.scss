@@ -1,7 +1,7 @@
 @import '../../styles/variables';
 
 .sendbird-checkbox {
-  display: block;
+  display: inline-block;
   position: relative;
   padding-left: 35px;
   margin-bottom: 12px;
@@ -27,7 +27,12 @@
   border-radius: 2px;
   background-color: inherit;
   @include themed() {
-    border: 2px solid t(bg-4);
+    border: solid 2px t(bg-4);
+  }
+  &.disabled {
+    @include themed() {
+      border: solid 2px t(on-bg-4);
+    }
   }
 }
 
@@ -40,7 +45,13 @@
 .sendbird-checkbox input:checked ~ .sendbird-checkbox--checkmark {
   @include themed() {
     background-color: t(primary-3);
-    border: 2px solid t(primary-3);
+    border: solid 2px t(primary-3);
+  }
+  &.disabled {
+    @include themed() {
+      background-color: t(on-bg-4);
+      border: solid 2px t(on-bg-4);
+    }
   }
 }
 

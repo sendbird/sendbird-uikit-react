@@ -14,6 +14,7 @@ import Label, {
 import { Type as ButtonType } from '../../../../ui/Button/type';
 import UserListItem from '../../../../ui/UserListItem';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
+import { OperatorFilter } from '@sendbird/chat/groupChannel';
 
 interface Props {
   onCancel(): void;
@@ -33,6 +34,7 @@ export default function AddOperatorsModal({
 
   useEffect(() => {
     const memberListQuery = channel?.createMemberListQuery({
+      operatorFilter: OperatorFilter.NONOPERATOR,
       limit: 20,
     });
     memberListQuery.next().then((members) => {
@@ -80,26 +82,30 @@ export default function AddOperatorsModal({
             }
           }}
         >
-          { members.map((member) => (
-            <UserListItem
-              checkBox
-              checked={selectedMembers[member.userId]}
-              onChange={
-                (event) => {
-                  const modifiedSelectedMembers = {
-                    ...selectedMembers,
-                    [event.target.id]: event.target.checked,
-                  };
-                  if (!event.target.checked) {
-                    delete modifiedSelectedMembers[event.target.id];
+          {
+            members.map((member) => (
+              <UserListItem
+                checkBox
+                checked={selectedMembers[member.userId]}
+                isOperator={member?.role === 'operator'}
+                disabled={member?.role === 'operator'}
+                onChange={
+                  (event) => {
+                    const modifiedSelectedMembers = {
+                      ...selectedMembers,
+                      [event.target.id]: event.target.checked,
+                    };
+                    if (!event.target.checked) {
+                      delete modifiedSelectedMembers[event.target.id];
+                    }
+                    setSelectedMembers(modifiedSelectedMembers);
                   }
-                  setSelectedMembers(modifiedSelectedMembers);
                 }
-              }
-              user={member}
-              key={member.userId}
-            />
-          ))}
+                user={member}
+                key={member.userId}
+              />
+            ))
+          }
         </div>
       </Modal>
     </div>

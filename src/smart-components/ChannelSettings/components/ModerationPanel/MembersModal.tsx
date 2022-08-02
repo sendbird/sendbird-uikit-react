@@ -1,5 +1,6 @@
 import React, {
   ReactElement,
+  useContext,
   useEffect,
   useState,
 } from 'react'
@@ -13,6 +14,7 @@ import { noop } from '../../../../utils/utils';
 
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { LocalizationContext } from '../../../../lib/LocalizationContext';
 
 interface Props {
   onCancel(): void;
@@ -25,6 +27,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
   const { channel } = useChannelSettingsContext();
   const state = useSendbirdStateContext();
   const currentUser = state?.config?.userId;
+  const { stringSet } = useContext(LocalizationContext);
 
   useEffect(() => {
     const memberListQuery = channel?.createMemberListQuery({
@@ -62,127 +65,137 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
             }
           }}
         >
-          { members.map((member) => (
-            <UserListItem
-              user={member}
-              key={member.userId}
-              currentUser={currentUser}
-              action={({ parentRef, actionRef }) => (
-                <>
-                  {channel?.myRole === 'operator' && (
-                    <ContextMenu
-                      menuTrigger={(toggleDropdown) => (
-                        <IconButton
-                          className="sendbird-user-message__more__menu"
-                          width="32px"
-                          height="32px"
-                          onClick={toggleDropdown}
-                        >
-                          <Icon
-                            width="24px"
-                            height="24px"
-                            type={IconTypes.MORE}
-                            fillColor={IconColors.CONTENT_INVERSE}
-                          />
-                        </IconButton>
-                      )}
-                      menuItems={(closeDropdown) => (
-                        <MenuItems
-                          parentContainRef={parentRef}
-                          parentRef={actionRef} // for catching location(x, y) of MenuItems
-                          closeDropdown={closeDropdown}
-                          openLeft
-                        >
-                          <MenuItem
-                            onClick={() => {
-                              if ((member.role !== 'operator')) {
-                                channel?.addOperators([member.userId]).then(() => {
-                                  setMembers(members.map(m => {
-                                    if(m.userId === member.userId) {
-                                      return {
-                                        ...member,
-                                        role: 'operator',
-                                      };
-                                    }
-                                    return m;
-                                  }));
-                                  closeDropdown();
-                                });
-                              } else {
-                                channel?.removeOperators([member.userId]).then(() => {
-                                  setMembers(members.map(m => {
-                                    if(m.userId === member.userId) {
-                                      return {
-                                        ...member,
-                                        role: '',
-                                      };
-                                    }
-                                    return m;
-                                  }));
-                                  closeDropdown();
-                                });
+          {
+            members.map((member) => (
+              <UserListItem
+                user={member}
+                key={member.userId}
+                currentUser={currentUser}
+                action={({ parentRef, actionRef }) => (
+                  <>
+                    {channel?.myRole === 'operator' && (
+                      <ContextMenu
+                        menuTrigger={(toggleDropdown) => (
+                          <IconButton
+                            className="sendbird-user-message__more__menu"
+                            width="32px"
+                            height="32px"
+                            onClick={toggleDropdown}
+                          >
+                            <Icon
+                              width="24px"
+                              height="24px"
+                              type={IconTypes.MORE}
+                              fillColor={IconColors.CONTENT_INVERSE}
+                            />
+                          </IconButton>
+                        )}
+                        menuItems={(closeDropdown) => (
+                          <MenuItems
+                            parentContainRef={parentRef}
+                            parentRef={actionRef} // for catching location(x, y) of MenuItems
+                            closeDropdown={closeDropdown}
+                            openLeft
+                          >
+                            <MenuItem
+                              onClick={() => {
+                                if ((member.role !== 'operator')) {
+                                  channel?.addOperators([member.userId]).then(() => {
+                                    setMembers(members.map(m => {
+                                      if (m.userId === member.userId) {
+                                        return {
+                                          ...member,
+                                          role: 'operator',
+                                        };
+                                      }
+                                      return m;
+                                    }));
+                                    closeDropdown();
+                                  });
+                                } else {
+                                  channel?.removeOperators([member.userId]).then(() => {
+                                    setMembers(members.map(m => {
+                                      if (m.userId === member.userId) {
+                                        return {
+                                          ...member,
+                                          role: '',
+                                        };
+                                      }
+                                      return m;
+                                    }));
+                                    closeDropdown();
+                                  });
+                                }
+                              }}
+                            >
+                              {
+                                member.role !== 'operator'
+                                  ? stringSet.CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR
+                                  : stringSet.CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR
                               }
-                            }}
-                          >
-                            { member.role !== 'operator' ? 'Register as operator' : 'Unregister operator'}
-                          </MenuItem>
-                          {
-                            // No muted members in broadcast channel
-                            !channel?.isBroadcast && (
-                              <MenuItem
-                                onClick={() => {
-                                  if (member.isMuted) {
-                                    channel?.unmuteUser(member).then(() => {
-                                      setMembers(members.map(m => {
-                                        if(m.userId === member.userId) {
-                                          return {
-                                            ...member,
-                                            isMuted: false,
-                                          };
-                                        }
-                                        return m;
-                                      }));
-                                      closeDropdown();
-                                    })
-                                  } else {
-                                    channel?.muteUser(member).then(() => {
-                                      setMembers(members.map(m => {
-                                        if(m.userId === member.userId) {
-                                          return {
-                                            ...member,
-                                            isMuted: true,
-                                          };
-                                        }
-                                        return m;
-                                      }));
-                                      closeDropdown();
-                                    });
+                            </MenuItem>
+                            {
+                              // No muted members in broadcast channel
+                              !channel?.isBroadcast && (
+                                <MenuItem
+                                  onClick={() => {
+                                    if (member.isMuted) {
+                                      channel?.unmuteUser(member).then(() => {
+                                        setMembers(members.map(m => {
+                                          if (m.userId === member.userId) {
+                                            return {
+                                              ...member,
+                                              isMuted: false,
+                                            };
+                                          }
+                                          return m;
+                                        }));
+                                        closeDropdown();
+                                      })
+                                    } else {
+                                      channel?.muteUser(member).then(() => {
+                                        setMembers(members.map(m => {
+                                          if (m.userId === member.userId) {
+                                            return {
+                                              ...member,
+                                              isMuted: true,
+                                            };
+                                          }
+                                          return m;
+                                        }));
+                                        closeDropdown();
+                                      });
+                                    }
+                                  }}
+                                >
+                                  {
+                                    member.isMuted
+                                      ? stringSet.CHANNEL_SETTING__MODERATION__UNMUTE
+                                      : stringSet.CHANNEL_SETTING__MODERATION__MUTE
                                   }
-                                }}
-                              >
-                                { member.isMuted ? 'Unmute' : 'Mute' }
-                              </MenuItem>
-                            )
-                          }
-                          <MenuItem
-                            onClick={() => {
-                              channel?.banUser(member, -1, '').then(() => {
-                                setMembers(members.filter(({ userId }) => {
-                                  return userId !== member.userId;
-                                }));
-                              });
-                            }}
-                          >
-                            Ban
-                          </MenuItem>
-                        </MenuItems>
-                      )}
-                    />
-                  )}
-                </>
-              )}
-            />
-          ))}
+                                </MenuItem>
+                              )
+                            }
+                            <MenuItem
+                              onClick={() => {
+                                channel?.banUser(member, -1, '').then(() => {
+                                  setMembers(members.filter(({ userId }) => {
+                                    return userId !== member.userId;
+                                  }));
+                                });
+                              }}
+                            >
+                              {stringSet.CHANNEL_SETTING__MODERATION__BAN}
+                            </MenuItem>
+                          </MenuItems>
+                        )}
+                      />
+                    )}
+                  </>
+                )}
+              />
+            ))
+          }
         </div>
       </Modal>
     </div>

@@ -18,7 +18,7 @@ import Badge from '../../../../ui/Badge';
 
 import OperatorList from './OperatorList';
 import MemberList from './MemberList';
-import BannedMemberList from './BannedUserList';
+import BannedUserList from './BannedUserList';
 import MutedMemberList from './MutedMemberList';
 
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
@@ -151,7 +151,7 @@ export default function AdminPannel(): ReactElement {
         )}
         renderContent={() => (
           <>
-            <BannedMemberList />
+            <BannedUserList />
           </>
         )}
       />

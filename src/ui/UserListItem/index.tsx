@@ -1,5 +1,7 @@
-import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEvent, MutableRefObject, ReactElement, useContext } from 'react';
+import { User } from '@sendbird/chat';
+import { Member } from '@sendbird/chat/groupChannel';
+import './index.scss';
 
 import { UserProfileContext } from '../../lib/UserProfileContext';
 import { LocalizationContext } from '../../lib/LocalizationContext';
@@ -10,18 +12,34 @@ import UserProfile from '../UserProfile';
 import ContextMenu, { MenuItems } from '../ContextMenu';
 import Label, { LabelTypography, LabelColors } from '../Label';
 
-import './index.scss';
+export interface UserListItemProps {
+  user: User;
+  className?: string;
+  checked?: boolean;
+  checkBox?: boolean;
+  isOperator?: boolean;
+  disabled?: boolean;
+  disableMessaging?: boolean;
+  currentUser?: string;
+  action?({ actionRef, parentRef }: {
+    actionRef: MutableRefObject<any>,
+    parentRef?: MutableRefObject<any>,
+  }): ReactElement;
+  onChange?(e: ChangeEvent<HTMLInputElement>): void;
+}
 
 export default function UserListItem({
-  className,
   user,
+  className,
+  checked,
   checkBox,
+  isOperator,
+  disabled,
   disableMessaging,
   currentUser,
-  checked,
-  onChange,
   action,
-}) {
+  onChange,
+}: UserListItemProps): ReactElement {
   const uniqueKey = user.userId;
   const actionRef = React.useRef(null);
   const parentRef = React.useRef(null);
@@ -40,7 +58,7 @@ export default function UserListItem({
       ref={parentRef}
     >
       {
-        user.isMuted && (
+        (user as Member)?.isMuted && (
           <MutedAvatarOverlay height={40} width={40} />
         )
       }
@@ -113,7 +131,6 @@ export default function UserListItem({
       }
       {
         checkBox && (
-          // eslint-disable-next-line jsx-a11y/label-has-associated-control
           <label
             className="sendbird-user-list-item__checkbox"
             htmlFor={uniqueKey}
@@ -121,15 +138,19 @@ export default function UserListItem({
             <Checkbox
               id={uniqueKey}
               checked={checked}
+              disabled={disabled}
               onChange={(event) => onChange(event)}
             />
           </label>
         )
       }
       {
-        user.role === 'operator' && (
+        isOperator && (
           <Label
-            className="sendbird-user-list-item__operator"
+            className={[
+              "sendbird-user-list-item__operator",
+              checkBox ? "checkbox" : "",
+            ].join(' ')}
             type={LabelTypography.SUBTITLE_2}
             color={LabelColors.ONBACKGROUND_2}
           >
@@ -150,36 +171,3 @@ export default function UserListItem({
     </div>
   );
 }
-
-UserListItem.propTypes = {
-  className: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string),
-  ]),
-  user: PropTypes.shape({
-    userId: PropTypes.string,
-    role: PropTypes.string,
-    isMuted: PropTypes.bool,
-    nickname: PropTypes.string,
-    profileUrl: PropTypes.string,
-  }).isRequired,
-  disableMessaging: PropTypes.bool,
-  currentUser: PropTypes.string,
-  action: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.func,
-  ]),
-  checkBox: PropTypes.bool,
-  checked: PropTypes.bool,
-  onChange: PropTypes.func,
-};
-
-UserListItem.defaultProps = {
-  className: '',
-  currentUser: '',
-  checkBox: false,
-  disableMessaging: false,
-  checked: false,
-  action: null,
-  onChange: () => { },
-};

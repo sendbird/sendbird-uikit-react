@@ -2,36 +2,29 @@
 
 exports[`Checkbox should do a snapshot test of the checked Checkbox DOM 1`] = `
 <label
-  className="sendbird-checkbox"
-  htmlFor="sendbird-checkbox-input"
+  className="sendbird-checkbox "
 >
   <input
     checked={true}
-    id="sendbird-checkbox-input"
-    onChange={[Function]}
     onClick={[Function]}
     type="checkbox"
   />
   <span
-    className="sendbird-checkbox--checkmark"
+    className="sendbird-checkbox--checkmark "
   />
 </label>
 `;
 
 exports[`Checkbox should do a snapshot test of the default Checkbox DOM 1`] = `
 <label
-  className="sendbird-checkbox"
-  htmlFor="sendbird-checkbox-input"
+  className="sendbird-checkbox "
 >
   <input
-    checked={false}
-    id="sendbird-checkbox-input"
-    onChange={[Function]}
     onClick={[Function]}
     type="checkbox"
   />
   <span
-    className="sendbird-checkbox--checkmark"
+    className="sendbird-checkbox--checkmark "
   />
 </label>
 `;
