@@ -41,6 +41,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
   const globalStore = useSendbirdStateContext();
   const userId = globalStore?.config?.userId;
   const sdk = globalStore?.stores?.sdkStore?.sdk as SendbirdGroupChat;
+  const logger = globalStore?.config?.logger;
   const idsToFilter = [userId];
   const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState({});
@@ -55,9 +56,12 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
   useEffect(() => {
     const applicationUserListQuery = userQueryCreator;
     setUsersDataSource(applicationUserListQuery);
-    applicationUserListQuery.next().then((users_) => {
-      setUsers(users_);
-    });
+    // @ts-ignore
+    if (!applicationUserListQuery?.isLoading) {
+      applicationUserListQuery.next().then((users_) => {
+        setUsers(users_);
+      });
+    }
   }, []);
 
   return (
