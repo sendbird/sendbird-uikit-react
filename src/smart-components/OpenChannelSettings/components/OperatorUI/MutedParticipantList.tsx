@@ -10,11 +10,7 @@ import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import IconButton from '../../../../ui/IconButton';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
-import
-  Label, {
-  LabelTypography,
-  LabelColors,
-} from '../../../../ui/Label';
+import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { UserListItem } from '../ParticipantUI/ParticipantItem';
 import MutedParticipantsModal from './MutedParticipantsModal';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
@@ -68,47 +64,46 @@ export const MutedParticipantList = (): ReactElement => {
             user={mutedUser}
             currentUser={currentUserId}
             isOperator={channel?.isOperator(mutedUser.userId)}
-            action={({ actionRef }) => {
-              return (
-                <ContextMenu
-                  menuTrigger={(toggleDropdown) => (
-                    <IconButton
-                      className="sendbird-user-message__more__menu"
-                      width="32px"
-                      height="32px"
-                      onClick={toggleDropdown}
-                    >
-                      <Icon
-                        width="24px"
-                        height="24px"
-                        type={IconTypes.MORE}
-                        fillColor={IconColors.CONTENT_INVERSE}
-                      />
-                    </IconButton>
-                  )}
-                  menuItems={(closeDropdown) => (
-                    <MenuItems
-                      closeDropdown={closeDropdown}
-                      openLeft
-                      parentRef={actionRef}
-                    >
-                      <MenuItem
-                        disable={mutedUser?.userId === currentUserId}
-                        onClick={() => {
-                          channel?.unmuteUser(mutedUser).then(() => {
-                            refreshList();
-                            closeDropdown();
-                          })
-                        }}
+            action={({ actionRef }) => (
+              mutedUser?.userId !== currentUserId
+                ? (
+                  <ContextMenu
+                    menuTrigger={(toggleDropdown) => (
+                      <IconButton
+                        className="sendbird-user-message__more__menu"
+                        width="32px"
+                        height="32px"
+                        onClick={toggleDropdown}
                       >
-                        {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNMUTE}
-                      </MenuItem>
-                    </MenuItems>
-                  )}
-                />
-              );
-            }
-            }
+                        <Icon
+                          width="24px"
+                          height="24px"
+                          type={IconTypes.MORE}
+                          fillColor={IconColors.CONTENT_INVERSE}
+                        />
+                      </IconButton>
+                    )}
+                    menuItems={(closeDropdown) => (
+                      <MenuItems
+                        closeDropdown={closeDropdown}
+                        openLeft
+                        parentRef={actionRef}
+                      >
+                        <MenuItem
+                          onClick={() => {
+                            channel?.unmuteUser(mutedUser).then(() => {
+                              refreshList();
+                              closeDropdown();
+                            })
+                          }}
+                        >
+                          {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNMUTE}
+                        </MenuItem>
+                      </MenuItems>
+                    )}
+                  />
+                ) : null
+            )}
           />
         ))
       }

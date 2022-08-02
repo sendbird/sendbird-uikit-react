@@ -73,44 +73,46 @@ export default function MutedParticipantsModal({
                 user={mutedUser}
                 key={mutedUser.userId}
                 action={({ actionRef }) => (
-                  <ContextMenu
-                    menuTrigger={(toggleDropdown) => (
-                      <IconButton
-                        className="sendbird-user-message__more__menu"
-                        width="32px"
-                        height="32px"
-                        onClick={toggleDropdown}
-                      >
-                        <Icon
-                          width="24px"
-                          height="24px"
-                          type={IconTypes.MORE}
-                          fillColor={IconColors.CONTENT_INVERSE}
-                        />
-                      </IconButton>
-                    )}
-                    menuItems={(closeDropdown) => (
-                      <MenuItems
-                        parentRef={actionRef}
-                        closeDropdown={closeDropdown}
-                        openLeft
-                      >
-                        <MenuItem
-                          disable={mutedUser?.userId === currentUserId}
-                          onClick={() => {
-                            channel?.unmuteUser(mutedUser).then(() => {
-                              closeDropdown();
-                              setMutedUsers(mutedUsers.filter((u) => {
-                                return (u.userId !== mutedUser.userId);
-                              }));
-                            });
-                          }}
-                        >
-                          {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNMUTE}
-                        </MenuItem>
-                      </MenuItems>
-                    )}
-                  />
+                  mutedUser?.userId !== currentUserId
+                    ? (
+                      <ContextMenu
+                        menuTrigger={(toggleDropdown) => (
+                          <IconButton
+                            className="sendbird-user-message__more__menu"
+                            width="32px"
+                            height="32px"
+                            onClick={toggleDropdown}
+                          >
+                            <Icon
+                              width="24px"
+                              height="24px"
+                              type={IconTypes.MORE}
+                              fillColor={IconColors.CONTENT_INVERSE}
+                            />
+                          </IconButton>
+                        )}
+                        menuItems={(closeDropdown) => (
+                          <MenuItems
+                            parentRef={actionRef}
+                            closeDropdown={closeDropdown}
+                            openLeft
+                          >
+                            <MenuItem
+                              onClick={() => {
+                                channel?.unmuteUser(mutedUser).then(() => {
+                                  closeDropdown();
+                                  setMutedUsers(mutedUsers.filter((u) => {
+                                    return (u.userId !== mutedUser.userId);
+                                  }));
+                                });
+                              }}
+                            >
+                              {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNMUTE}
+                            </MenuItem>
+                          </MenuItems>
+                        )}
+                      />
+                    ) : null
                 )}
               />
             ))}
