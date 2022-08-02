@@ -11,7 +11,7 @@
     background-color: t(bg--0-5);
   }
 
-  &__avatar {
+  .sendbird-user-list-item__avatar {
     position: absolute;
     top: 8px;
     left: 0px;
@@ -27,17 +27,17 @@
     pointer-events: none;
   }
 
-  &__title {
+  .sendbird-user-list-item__title {
     position: absolute;
     top: 17px;
     left: 56px;
-    max-width: 280px;
+    max-width: 250px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  &__subtitle {
+  .sendbird-user-list-item__subtitle {
     position: absolute;
     top: 23px;
     left: 140px;
@@ -47,19 +47,19 @@
     text-overflow: ellipsis;
   }
 
-  &__checkbox {
+  .sendbird-user-list-item__checkbox {
     position: absolute;
     top: 16px;
     right: 16px;
   }
 
-  &__action {
+  .sendbird-user-list-item__action {
     position: absolute;
     right: 0;
     top: 10px;
   }
 
-  &__operator {
+  .sendbird-user-list-item__operator {
     position: absolute;
     right: 40px;
     top: 22px;
