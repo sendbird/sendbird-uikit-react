@@ -121,7 +121,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
     <div className="sendbird-msg-hoc sendbird-msg--scroll-ref">
       {/* date-separator */}
       {
-        hasSeparator && (
+        (hasSeparator && message?.createdAt) && (
           <DateSeparator>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
               {format(message?.createdAt, 'MMMM dd, yyyy', {
