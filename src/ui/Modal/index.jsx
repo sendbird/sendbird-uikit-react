@@ -24,7 +24,14 @@ ModalHeader.propTypes = {
 };
 
 export const ModalBody = ({ children }) => (
-  <div className="sendbird-modal__body">{children}</div>
+  <div className="sendbird-modal__body">
+    <Label
+      type={LabelTypography.SUBTITLE_1}
+      color={LabelColors.ONBACKGROUND_2}
+    >
+      {children}
+    </Label>
+  </div>
 );
 ModalBody.propTypes = {
   children: PropTypes.oneOfType([
