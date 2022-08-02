@@ -146,6 +146,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
               return (
                 <OpenChannelFileMessage
                   message={message as FileMessage}
+                  isOperator={currentOpenChannel?.isOperator((message as FileMessage)?.sender?.userId)}
                   disabled={editDisabled}
                   userId={userId}
                   showRemove={setShowRemove}
@@ -162,6 +163,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
               return (
                 <OpenChannelOGMessage
                   message={message as UserMessage}
+                  isOperator={currentOpenChannel?.isOperator((message as UserMessage)?.sender?.userId)}
                   userId={userId}
                   showEdit={setShowEdit}
                   disabled={editDisabled}
@@ -179,6 +181,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
               return (
                 <OpenChannelThumbnailMessage
                   message={message as FileMessage}
+                  isOperator={currentOpenChannel?.isOperator((message as FileMessage)?.sender?.userId)}
                   disabled={editDisabled}
                   userId={userId}
                   showRemove={setShowRemove}
@@ -196,6 +199,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
               return (
                 <OpenChannelUserMessage
                   message={message as UserMessage}
+                  isOperator={currentOpenChannel?.isOperator((message as UserMessage)?.sender?.userId)}
                   userId={userId}
                   disabled={editDisabled}
                   showEdit={setShowEdit}

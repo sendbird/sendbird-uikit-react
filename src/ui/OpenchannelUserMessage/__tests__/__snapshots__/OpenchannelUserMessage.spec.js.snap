@@ -74,7 +74,7 @@ exports[`OpenchannelUserMessage should do a snapshot test of the OpenchannelUser
       className="sendbird-openchannel-user-message__right__top"
     >
       <span
-        className="sendbird-openchannel-user-message__right__top__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-secondary-3"
+        className="sendbird-openchannel-user-message__right__top__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
       >
         Hoon Baek
       </span>

@@ -74,7 +74,7 @@ exports[`OpenchannelThumbnailMessage should do a snapshot test of the Openchanne
       className="sendbird-openchannel-thumbnail-message__right__title"
     >
       <span
-        className="sendbird-openchannel-thumbnail-message__right__title__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-secondary-3"
+        className="sendbird-openchannel-thumbnail-message__right__title__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
       >
         hoon102
       </span>

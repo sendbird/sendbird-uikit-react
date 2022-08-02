@@ -23,7 +23,6 @@ import { useLocalization } from '../../lib/LocalizationContext';
 import { copyToClipboard } from './utils';
 import uuidv4 from '../../utils/uuid';
 import {
-  checkIsByMe,
   checkIsPending,
   checkIsFailed,
   isFineCopy,
@@ -37,6 +36,7 @@ import { getSenderFromMessage } from '../../utils/openChannelUtils';
 interface Props {
   className?: string | Array<string>;
   message: UserMessage;
+  isOperator?: boolean;
   userId: string;
   disabled?: boolean;
   showEdit(bool: boolean): void;
@@ -49,6 +49,7 @@ interface Props {
 export default function OpenchannelUserMessage({
   className,
   message,
+  isOperator,
   userId,
   resendMessage,
   disabled,
@@ -70,7 +71,6 @@ export default function OpenchannelUserMessage({
 
   // consts
   const status = message?.sendingStatus;
-  const isByMe = checkIsByMe(message, userId);
   const isPending = checkIsPending(status);
   const isFailed = checkIsFailed(status);
   const sender = getSenderFromMessage(message);
@@ -164,7 +164,7 @@ export default function OpenchannelUserMessage({
               <Label
                 className="sendbird-openchannel-user-message__right__top__sender-name"
                 type={LabelTypography.CAPTION_2}
-                color={isByMe ? LabelColors.SECONDARY_3 : LabelColors.ONBACKGROUND_2}
+                color={isOperator ? LabelColors.SECONDARY_3 : LabelColors.ONBACKGROUND_2}
               >
                 {
                   sender && (

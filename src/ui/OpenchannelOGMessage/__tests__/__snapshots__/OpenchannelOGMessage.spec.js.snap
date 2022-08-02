@@ -77,7 +77,7 @@ exports[`OpenchannelOGMessage should do a snapshot test of the OpenchannelOGMess
         className="sendbird-openchannel-og-message__top__right__title"
       >
         <span
-          className="sendbird-openchannel-og-message__top__right__title__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-secondary-3"
+          className="sendbird-openchannel-og-message__top__right__title__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
         >
           Hoon Baek
         </span>

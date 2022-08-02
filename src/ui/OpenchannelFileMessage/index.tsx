@@ -16,7 +16,6 @@ import { UserProfileContext } from '../../lib/UserProfileContext';
 import { useLocalization } from '../../lib/LocalizationContext';
 import { checkFileType, truncate } from './utils';
 import {
-  checkIsByMe,
   checkIsPending,
   checkIsFailed,
   isFineDelete,
@@ -28,6 +27,7 @@ import { getSenderFromMessage } from '../../utils/openChannelUtils';
 interface Props {
   className?: string | Array<string>;
   message: FileMessage;
+  isOperator?: boolean;
   userId: string;
   disabled?: boolean;
   chainTop?: boolean;
@@ -39,6 +39,7 @@ interface Props {
 export default function OpenchannelFileMessage({
   className,
   message,
+  isOperator,
   userId,
   disabled,
   chainTop,
@@ -53,7 +54,6 @@ export default function OpenchannelFileMessage({
 
   const openFileUrl = () => { window.open(message.url); };
 
-  const isByMe = checkIsByMe(message, userId);
   const isPending = checkIsPending(status);
   const isFailed = checkIsFailed(status);
   const sender = getSenderFromMessage(message);
@@ -119,7 +119,7 @@ export default function OpenchannelFileMessage({
               <Label
                 className="sendbird-openchannel-file-message__right__title__sender-name"
                 type={LabelTypography.CAPTION_2}
-                color={isByMe ? LabelColors.SECONDARY_3 : LabelColors.ONBACKGROUND_2}
+                color={isOperator ? LabelColors.SECONDARY_3 : LabelColors.ONBACKGROUND_2}
               >
                 {
                   sender && (
