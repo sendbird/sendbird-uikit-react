@@ -87,7 +87,6 @@ const OperatorList = (): ReactElement => {
                         openLeft
                       >
                         <MenuItem
-                          disable={operator?.userId === currentUserId}
                           onClick={() => {
                             channel?.removeOperators([operator.userId]).then(() => {
                               setOperators(operators.filter(({ userId }) => (
