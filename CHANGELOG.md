@@ -1,4 +1,19 @@
 # Changelog - v3
+
+## [v3.0.2] (Aug 02 2022)
+Fixes:
+* Explicitly export library as esm-module
+  ESM library should have "type": "module" (package.json file that is going to /dist)
+  This fixes Cannot use import outside module issue in next.js
+* Add optional chaining for createApplicationUserList
+* Cannot connect sometimes when customApiHost is empty
+  Connection couldnt be established with no error message when customApiHost and customWebSocketHost
+  were passed as empty string
+* Handle all chances of command not received error
+  Handle chances of command not recieved error in markAsRead
+  Experimental markasread handling -> longer times, no more call after unmount
+* Move typing handler in channellist into local variable
+
 ## [v3.0.1] (July 28 2022)
 
 Features:
