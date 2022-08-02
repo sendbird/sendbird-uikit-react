@@ -31,6 +31,7 @@ export default function ParticipantsModal({
   const [participantListQuery, setParticipantListQuery] = useState<ParticipantListQuery | null>(null);
   const userId = state?.config?.userId;
   const sdk = state?.stores?.sdkStore?.sdk;
+  const isOperatorView = channel?.isOperator(userId);
   useEffect(() => {
     if (!channel || !channel?.createParticipantListQuery) {
       return;
@@ -77,7 +78,7 @@ export default function ParticipantsModal({
                   key={p.userId}
                   currentUser={sdk?.currentUser?.userId}
                   action={
-                    (userId !== p.userId)
+                    (userId !== p.userId && isOperatorView)
                       ? ({ actionRef, parentRef }) => (
                         <ContextMenu
                           menuTrigger={(toggleDropdown) => (
