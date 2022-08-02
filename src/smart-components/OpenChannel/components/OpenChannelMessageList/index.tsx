@@ -88,7 +88,7 @@ function OpenchannelMessageList(
                   const nextMessage = allMessages[index - 1];
 
                   const previousMessageCreatedAt = previousMessage && previousMessage.createdAt;
-                  const currentCreatedAt = message.createdAt;
+                  const currentCreatedAt = message?.createdAt;
                   // https://stackoverflow.com/a/41855608
                   const hasSeparator = !(previousMessageCreatedAt && (
                     isSameDay(currentCreatedAt, previousMessageCreatedAt)

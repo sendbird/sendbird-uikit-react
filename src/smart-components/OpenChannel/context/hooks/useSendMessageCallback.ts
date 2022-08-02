@@ -40,6 +40,7 @@ function useSendMessageCallback(
       logger.info('OpenChannel | useSendMessageCallback: Sending message has started', params);
 
       const isBottom = checkScrollBottom();
+      let pendingMsg = null;
       currentOpenChannel.sendUserMessage(params)
         .onPending((pendingMessage) => {
           messagesDispatcher({
@@ -49,6 +50,7 @@ function useSendMessageCallback(
               channel: currentOpenChannel,
             }
           });
+          pendingMsg = pendingMessage;
         })
         .onSucceeded((message) => {
           logger.info('OpenChannel | useSendMessageCallback: Sending message succeeded', message);
@@ -62,11 +64,11 @@ function useSendMessageCallback(
             });
           }
         })
-        .onFailed((error, message) => {
+        .onFailed((error) => {
           logger.warning('OpenChannel | useSendMessageCallback: Sending message failed', error);
           messagesDispatcher({
             type: messageActionTypes.SENDING_MESSAGE_FAILED,
-            payload: message,
+            payload: pendingMsg,
           });
           // https://sendbird.com/docs/chat/v3/javascript/guides/error-codes#2-server-error-codes
           // TODO: Do we need to handle the error cases?

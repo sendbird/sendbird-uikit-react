@@ -21,7 +21,6 @@ import Loader from '../Loader';
 import UserProfile from '../UserProfile';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 import {
-  checkIsByMe,
   checkIsSent,
   checkIsPending,
   checkIsFailed,
@@ -37,6 +36,7 @@ interface LocalUrl {
 interface Props {
   className?: string | Array<string>;
   message: FileMessage;
+  isOperator?: boolean;
   disabled: boolean;
   userId: string;
   chainTop: boolean;
@@ -49,6 +49,7 @@ interface Props {
 export default function OpenchannelThumbnailMessage({
   className,
   message,
+  isOperator,
   disabled,
   userId,
   chainTop,
@@ -82,7 +83,6 @@ export default function OpenchannelThumbnailMessage({
     </div>
   ), []);
 
-  const isByMe = checkIsByMe(message, userId);
   const isMessageSent = checkIsSent(status);
   const isPending = checkIsPending(status);
   const isFailed = checkIsFailed(status);
@@ -155,7 +155,7 @@ export default function OpenchannelThumbnailMessage({
               <Label
                 className="sendbird-openchannel-thumbnail-message__right__title__sender-name"
                 type={LabelTypography.CAPTION_2}
-                color={isByMe ? LabelColors.SECONDARY_3 : LabelColors.ONBACKGROUND_2}
+                color={isOperator ? LabelColors.SECONDARY_3 : LabelColors.ONBACKGROUND_2}
               >
                 {
                   sender && (

@@ -18,15 +18,15 @@ export const SendingMessageStatus = {
 };
 
 export const getMessageType = (message: UserMessage | FileMessage | AdminMessage): string => {
-  if ((message.isUserMessage && message.isUserMessage()) || message.messageType === 'user') {
-    return (message.ogMetaData)
+  if ((message?.isUserMessage()) || message?.messageType === 'user') {
+    return (message?.ogMetaData)
       ? MessageTypes.OG
       : MessageTypes.USER;
   }
-  if (message.isAdminMessage && message.isAdminMessage()) {
+  if (message?.isAdminMessage()) {
     return MessageTypes.ADMIN;
   }
-  if (message.messageType === 'file') {
+  if (message?.messageType === 'file') {
     return (isImage((message as FileMessage).type) || isVideo((message as FileMessage).type))
       ? MessageTypes.THUMBNAIL
       : MessageTypes.FILE;

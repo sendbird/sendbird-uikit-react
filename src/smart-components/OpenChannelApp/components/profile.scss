@@ -11,7 +11,12 @@
   }
   .profile-text {
     margin-left: 12px;
+    max-width: 180px;
+    overflow: hidden;
     .profile-name {
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
       color: var(--gray-0);
       font-size: 14px;
       font-weight: 600;
@@ -21,6 +26,9 @@
       letter-spacing: -0.2px;
     }
     .profile-nickname {
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
       color: var(--gray-2);
       font-size: 12px;
       font-weight: normal;

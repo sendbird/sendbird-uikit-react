@@ -123,7 +123,8 @@ export default function reducer(
     }
     case actionTypes.SENDING_MESSAGE_FAILED: {
       const sentMessage = action.payload;
-      if (!state.allMessages.some((m) => (m as UserMessage | FileMessage).reqId === sentMessage.reqId)) {
+      sentMessage.sendingStatus = 'failed';
+      if (!(state.allMessages.some((m) => (m as UserMessage | FileMessage)?.reqId === sentMessage?.reqId))) {
         // Handling failed first than sending start issue
         return {
           ...state,

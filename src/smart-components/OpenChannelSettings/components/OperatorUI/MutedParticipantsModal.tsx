@@ -27,7 +27,7 @@ export default function MutedParticipantsModal({
 
   const { channel } = useOpenChannelSettingsContext();
   const state = useSendbirdStateContext();
-  const currentUser = state?.config?.userId;
+  const currentUserId = state?.config?.userId;
   const { stringSet } = useContext(LocalizationContext);
 
   useEffect(() => {
@@ -69,7 +69,7 @@ export default function MutedParticipantsModal({
           {
             mutedUsers.map((mutedUser) => (
               <UserListItem
-                currentUser={currentUser}
+                currentUser={currentUserId}
                 user={mutedUser}
                 key={mutedUser.userId}
                 action={({ actionRef }) => (
@@ -96,6 +96,7 @@ export default function MutedParticipantsModal({
                         openLeft
                       >
                         <MenuItem
+                          disable={mutedUser?.userId === currentUserId}
                           onClick={() => {
                             channel?.unmuteUser(mutedUser).then(() => {
                               closeDropdown();

@@ -92,6 +92,7 @@ export default function OperatorListModal({ onCancel }: Props): ReactElement {
                         openLeft
                       >
                         <MenuItem
+                          disable={operator?.userId === currentUserId}
                           onClick={() => {
                             channel?.removeOperators([operator.userId]).then(() => {
                               setUsers(users.filter(({ userId }) => {

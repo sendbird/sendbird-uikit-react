@@ -75,9 +75,11 @@ export default function DeleteChannel(): ReactElement {
             onSubmit={() => {
               deleteChannel();
             }}
-            submitText={stringSet.OPEN_CHANNEL_SETTINGS__DELETE_CHANNEL_SUBMIT}
             titleText={stringSet.OPEN_CHANNEL_SETTINGS__DELETE_CHANNEL_TITLE}
-          />
+            submitText={stringSet.OPEN_CHANNEL_SETTINGS__DELETE_CHANNEL_SUBMIT}
+          >
+            {stringSet.OPEN_CHANNEL_SETTINGS__DELETE_CHANNEL_CONTEXT}
+          </Modal>
         )
       }
     </>

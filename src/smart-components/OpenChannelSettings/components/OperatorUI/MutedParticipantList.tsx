@@ -28,7 +28,7 @@ export const MutedParticipantList = (): ReactElement => {
 
   const { channel } = useOpenChannelSettingsContext();
   const state = useSendbirdStateContext();
-  const currentUser = state?.config?.userId;
+  const currentUserId = state?.config?.userId;
   const { stringSet } = useContext(LocalizationContext);
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export const MutedParticipantList = (): ReactElement => {
           <UserListItem
             key={mutedUser.userId}
             user={mutedUser}
-            currentUser={currentUser}
+            currentUser={currentUserId}
             isOperator={channel?.isOperator(mutedUser.userId)}
             action={({ actionRef }) => {
               return (
@@ -93,6 +93,7 @@ export const MutedParticipantList = (): ReactElement => {
                       parentRef={actionRef}
                     >
                       <MenuItem
+                        disable={mutedUser?.userId === currentUserId}
                         onClick={() => {
                           channel?.unmuteUser(mutedUser).then(() => {
                             refreshList();
