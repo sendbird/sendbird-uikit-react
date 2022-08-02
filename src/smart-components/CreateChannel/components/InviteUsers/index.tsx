@@ -41,6 +41,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
   const globalStore = useSendbirdStateContext();
   const userId = globalStore?.config?.userId;
   const sdk = globalStore?.stores?.sdkStore?.sdk as SendbirdGroupChat;
+  const logger = globalStore?.config?.logger;
   const idsToFilter = [userId];
   const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState({});
@@ -57,6 +58,8 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
     setUsersDataSource(applicationUserListQuery);
     applicationUserListQuery.next().then((users_) => {
       setUsers(users_);
+    }).catch((error) => {
+      logger.warning('CreateChannel: applicationUserListQuery error', error);
     });
   }, []);
 
