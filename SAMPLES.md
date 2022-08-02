@@ -269,8 +269,8 @@ We also provide samples for open channels. Check below to see how you can implem
 
 ### Live Streaming Sample
 
-See how open channel on live stream works on [CodeSandBox](https://codesandbox.io/s/openchannel-1-bvxl9?file=/src/App.js).
+See how open channel on live stream works on [CodeSandBox](https://codesandbox.io/s/openchannel-1-ykexd3).
 
 ### Community Sample
 
-See how you can create community channels on [CodeSandBox](https://codesandbox.io/s/openchannel-2-h7x3b?file=/src/App.js).
+See how you can create community channels on [CodeSandBox](https://codesandbox.io/s/openchannel-2-forked-5kpnqj?file=/src/App.js).
