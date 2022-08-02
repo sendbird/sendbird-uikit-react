@@ -168,7 +168,8 @@
     }
 
     &:hover {
-      .sendbird-participants-accordion__member__title.operator {
+      .sendbird-participants-accordion__member__title.operator,
+      .sendbird-participants-accordion__member__title.user-id {
         display: none;
       }
       .sendbird-participants-accordion__member__action {
