@@ -26,7 +26,7 @@ The minimum requirements for UIKit for React are:
 
 - React 16.8.0+
 - React DOM 16.8.0+
-- Sendbird Chat SDK for JavaScript 3.0.115+
+- @sendbird/chat v4
 - css-vars-ponyfill 2.3.2
 - date-fns 2.16.1
 
@@ -160,7 +160,7 @@ Try your [chat header on CodeSandbox](https://codesandbox.io/s/2-4-customizing-c
 
 The **renderMessageInput** is a `ReactElement` prop in the **Channel** component which allows you to customize the message input by setting a function. This prop provides three arguments: **channel**, **user**, and **disabled**. The **channel** refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **user** refers to a `User` object which represents the current user. The **disabled** refers to whether to enable the message input box or not.
 
-Try your [message input on CodeSandbox](https://codesandbox.io/s/2-5-customizing-chatinput-wgi9d)
+Try your [message input on CodeSandbox](https://codesandbox.io/s/2-5-customizing-messageinput-forked-or4lm8)
 
 
 ```javascript
