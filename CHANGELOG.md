@@ -6,6 +6,8 @@ Fixes:
   ESM library should have "type": "module" (package.json file that is going to /dist)
   This fixes Cannot use import outside module issue in next.js
 * Add optional chaining for createApplicationUserList
+* Fix QueryInProgress warning:
+  React 18 strict mode glitch that causes useEffect to run twice
 * Cannot connect sometimes when customApiHost is empty
   Connection couldnt be established with no error message when customApiHost and customWebSocketHost
   were passed as empty string
