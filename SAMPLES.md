@@ -204,33 +204,40 @@ const CustomizedChannelPreviewItem = (props) => {
 
 The **queries.channelListQuery** is an `instance` prop in the **ChannelList** component which filters channels by using its options.
 
-Try your [channel list query item on CodeSandbox](https://codesandbox.io/s/3-2-customizing-channellistquery-z2y89?file=)
+Try your [channel list query item on CodeSandbox](https://codesandbox.io/s/3-2-customizing-channellistquery-d0t2l8)
 
 > Note: On the CodeSandbox’s preview, the empty channels that you see means that the channels are successfully created and there are no messages sent by users.
 
 ```javascript
 // Pass arguments in JSON data input format to the query instance.
+  const [queries] = useState({
+    channelListQuery: {
+      includeEmpty: true,
+      limit: 50,
+      order: "chronological"
+      // channelListQuery
+      // https://sendbird.github.io/core-sdk-javascript/module-model_query_groupChannelListQuery-GroupChannelListQuery.html
+    },
+    applicationUserListQuery: {
+      limit: 50
+      // ex) userIdsFilter: ["sendbirdian", ...]
+      // applicationUserListQuery
+      // https://sendbird.github.io/core-sdk-javascript/module-model_query_applicationUserListQuery-ApplicationUserListQuery.html
+    }
+  });
+  
 <ChannelList
-    queries={{
-        channelListQuery: {
-            includeEmpty: true,
-            limit: 50,
-            order: "chronological"
-        },
-        applicationUserListQuery: {
-            limit: 50,
-        }
-    }}
+    queries={queries}
 >
 ```
 
-Find out more about `ChannelListQuery` and `ApplicationUserListQuery` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.github.io/core-sdk-javascript/module-model_query_groupChannelListQuery-GroupChannelListQuery.html).
+Find out more about `ChannelListQuery` and `ApplicationUserListQuery` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.com/docs/chat/v4/javascript/ref/classes/_sendbird_chat_groupChannel.GroupChannelListQuery.html).
 
 ### Channel params
 
 The **onBeforeCreateChannel** is a prop of the **ChannelList** component which can be implemented with custom code for events related to the corresponding user actions.
 
-Try your [channel param on CodeSandbox](https://codesandbox.io/s/3-3-customizing-channellist-sg9kx)
+Try your [channel param on CodeSandbox](https://codesandbox.io/s/3-3-customizing-channelparams-vgcgtj)
 
 > Note: you can create a channel using `GroupChannelParams`.
 
@@ -243,7 +250,7 @@ You can get an array of **selectedUsers** in a function argument. In order to co
 
 ```javascript
 const handleOnBeforeCreateChannel = (selectedUsers) => {
-    const channelParams = new sdk.GroupChannelParams();
+    const channelParams = new sdk.GroupChannelCreateParams();
     channelParams.addUserIds(selectedUsers);
     channelParams.name = "Hello Sendbird!!";
     channelParams.overUrl = null;
@@ -254,7 +261,7 @@ const handleOnBeforeCreateChannel = (selectedUsers) => {
 }
 ```
 
-Find out more about `GroupChannelParams` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.github.io/core-sdk-javascript/module-model_params_groupChannelParams-GroupChannelParams.html).
+Find out more about `GroupChannelParams` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.com/docs/chat/v4/javascript/ref/interfaces/_sendbird_chat_groupChannel.GroupChannelCreateParams.html).
 
 ## Open Channel Samples
 
