@@ -62,43 +62,43 @@ const OperatorList = (): ReactElement => {
             user={operator}
             currentUser={currentUserId}
             action={({ actionRef }) => (
-              <ContextMenu
-                menuTrigger={(toggleDropdown) => (
-                  <IconButton
-                    className="sendbird-openchannel-operator-list__menu"
-                    width="32px"
-                    height="32px"
-                    onClick={toggleDropdown}
-                  >
-                    <Icon
-                      width="24px"
-                      height="24px"
-                      type={IconTypes.MORE}
-                      fillColor={IconColors.CONTENT_INVERSE}
-                    />
-                  </IconButton>
-                )}
-                menuItems={(closeDropdown) => (
-                  <MenuItems
-                    parentRef={actionRef}
-                    closeDropdown={closeDropdown}
-                    openLeft
-                  >
-                    <MenuItem
-                      disable={operator?.userId === currentUserId}
-                      onClick={() => {
-                        channel?.removeOperators([operator.userId]).then(() => {
-                          setOperators(operators.filter(({ userId }) => (
-                            userId !== operator.userId
-                          )));
-                        });
-                        closeDropdown();
-                      }}
-                    >
-                      {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
-                    </MenuItem>
-                    {
-                      currentUserId !== operator?.userId && (
+              currentUserId !== operator?.userId
+                ? (
+                  <ContextMenu
+                    menuTrigger={(toggleDropdown) => (
+                      <IconButton
+                        className="sendbird-openchannel-operator-list__menu"
+                        width="32px"
+                        height="32px"
+                        onClick={toggleDropdown}
+                      >
+                        <Icon
+                          width="24px"
+                          height="24px"
+                          type={IconTypes.MORE}
+                          fillColor={IconColors.CONTENT_INVERSE}
+                        />
+                      </IconButton>
+                    )}
+                    menuItems={(closeDropdown) => (
+                      <MenuItems
+                        parentRef={actionRef}
+                        closeDropdown={closeDropdown}
+                        openLeft
+                      >
+                        <MenuItem
+                          disable={operator?.userId === currentUserId}
+                          onClick={() => {
+                            channel?.removeOperators([operator.userId]).then(() => {
+                              setOperators(operators.filter(({ userId }) => (
+                                userId !== operator.userId
+                              )));
+                            });
+                            closeDropdown();
+                          }}
+                        >
+                          {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
+                        </MenuItem>
                         <MenuItem
                           onClick={() => {
                             channel?.muteUser(operator).then(() => {
@@ -109,10 +109,6 @@ const OperatorList = (): ReactElement => {
                         >
                           {stringSet.OPEN_CHANNEL_SETTING__MODERATION__MUTE}
                         </MenuItem>
-                      )
-                    }
-                    {
-                      currentUserId !== operator?.userId && (
                         <MenuItem
                           onClick={() => {
                             channel?.banUser(operator).then(() => {
@@ -123,11 +119,10 @@ const OperatorList = (): ReactElement => {
                         >
                           {stringSet.OPEN_CHANNEL_SETTING__MODERATION__BAN}
                         </MenuItem>
-                      )
-                    }
-                  </MenuItems>
-                )}
-              />
+                      </MenuItems>
+                    )}
+                  />
+                ) : null
             )}
           />
         ))

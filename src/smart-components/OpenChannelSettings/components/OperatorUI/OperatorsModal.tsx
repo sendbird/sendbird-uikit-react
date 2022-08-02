@@ -68,45 +68,47 @@ export default function OperatorListModal({ onCancel }: Props): ReactElement {
                 user={operator}
                 key={operator.userId}
                 action={({ parentRef, actionRef }) => (
-                  <ContextMenu
-                    menuTrigger={(toggleDropdown) => (
-                      <IconButton
-                        className="sendbird-user-message__more__menu"
-                        width="32px"
-                        height="32px"
-                        onClick={toggleDropdown}
-                      >
-                        <Icon
-                          width="24px"
-                          height="24px"
-                          type={IconTypes.MORE}
-                          fillColor={IconColors.CONTENT_INVERSE}
-                        />
-                      </IconButton>
-                    )}
-                    menuItems={(closeDropdown) => (
-                      <MenuItems
-                        parentContainRef={parentRef}
-                        parentRef={actionRef}
-                        closeDropdown={closeDropdown}
-                        openLeft
-                      >
-                        <MenuItem
-                          disable={operator?.userId === currentUserId}
-                          onClick={() => {
-                            channel?.removeOperators([operator.userId]).then(() => {
-                              setUsers(users.filter(({ userId }) => {
-                                return userId !== operator.userId;
-                              }));
-                            });
-                            closeDropdown();
-                          }}
-                        >
-                          {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
-                        </MenuItem>
-                      </MenuItems>
-                    )}
-                  />
+                  currentUserId !== operator?.userId
+                    ? (
+                      <ContextMenu
+                        menuTrigger={(toggleDropdown) => (
+                          <IconButton
+                            className="sendbird-user-message__more__menu"
+                            width="32px"
+                            height="32px"
+                            onClick={toggleDropdown}
+                          >
+                            <Icon
+                              width="24px"
+                              height="24px"
+                              type={IconTypes.MORE}
+                              fillColor={IconColors.CONTENT_INVERSE}
+                            />
+                          </IconButton>
+                        )}
+                        menuItems={(closeDropdown) => (
+                          <MenuItems
+                            parentContainRef={parentRef}
+                            parentRef={actionRef}
+                            closeDropdown={closeDropdown}
+                            openLeft
+                          >
+                            <MenuItem
+                              onClick={() => {
+                                channel?.removeOperators([operator.userId]).then(() => {
+                                  setUsers(users.filter(({ userId }) => {
+                                    return userId !== operator.userId;
+                                  }));
+                                });
+                                closeDropdown();
+                              }}
+                            >
+                              {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
+                            </MenuItem>
+                          </MenuItems>
+                        )}
+                      />
+                    ) : null
                 )}
               />
             ))
