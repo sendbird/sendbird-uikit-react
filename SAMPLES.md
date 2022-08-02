@@ -165,7 +165,7 @@ Try your [message input on CodeSandbox](https://codesandbox.io/s/2-5-customizing
 
 ```javascript
 <Channel
-    renderMessageInput={({ channel, user, disabled }) => (
+    renderMessageInput={() => (
         <CustomizedMessageInput />
     )}
 >
@@ -177,7 +177,7 @@ Try your [message input on CodeSandbox](https://codesandbox.io/s/2-5-customizing
 
 The **renderChannelPreview** is a `ReactElement` prop in the **ChannelList** component which allows you to customize channel preview by setting a function. This prop provides two arguments: **channel** and **onLeaveChannel**. The **channel** refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **onLeaveChannel** has a callback function as an argument which can be implemented with custom code for events related to the corresponding user action.
 
-Try your [channel preview item on CodeSandbox](https://codesandbox.io/s/3-1-customizing-channelpreviewitem-ycsvs)
+Try your [channel preview item on CodeSandbox](https://codesandbox.io/s/3-1-customizing-channelpreviewitem-7c9xz6)
 
 ```javascript
 <ChannelList
@@ -192,14 +192,13 @@ Try your [channel preview item on CodeSandbox](https://codesandbox.io/s/3-1-cust
 You can make your own customized channel preview item component in this file. You can use the **onLeaveChannel** function in the component.
 
 ```javascript
-function CustomizedChannelPreviewItem(props) {
-    const { channel, onLeaveChannel } = props;
+const CustomizedChannelPreviewItem = (props) => {
+    const { channel } = props;
+    const onLeaveChannel = sendbirdSelectors.getLeaveChannel(store);
     ...
     onLeaveChannel(channel);
 }
 ```
-
-> Note: You can try making your own customized channel preview item by using `<CustomizedMessageItem />` and using the **onLeaveChannel** function in the component on the CodeSandbox sample.
 
 ### Channel list query
 
