@@ -14,6 +14,7 @@ import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 import { noop } from '../../../../utils/utils';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
 interface Props {
   onCancel(): void;
@@ -25,7 +26,9 @@ export default function BannedUsersModal({
   const [bannedUsers, setBannedUsers] = useState([]);
   const [userListQuery, setUserListQuery] = useState(null);
   const { channel } = useOpenChannelSettingsContext();
+  const state = useSendbirdStateContext();
   const { stringSet } = useContext(LocalizationContext);
+  const currentUserId = state?.config?.userId;
 
   useEffect(() => {
     const bannedUserListQuery = channel?.createBannedUserListQuery();
@@ -67,43 +70,46 @@ export default function BannedUsersModal({
                 user={bannedUser}
                 key={bannedUser.userId}
                 action={({ actionRef }) => (
-                  <ContextMenu
-                    menuTrigger={(toggleDropdown) => (
-                      <IconButton
-                        className="sendbird-user-message__more__menu"
-                        width="32px"
-                        height="32px"
-                        onClick={toggleDropdown}
-                      >
-                        <Icon
-                          width="24px"
-                          height="24px"
-                          type={IconTypes.MORE}
-                          fillColor={IconColors.CONTENT_INVERSE}
-                        />
-                      </IconButton>
-                    )}
-                    menuItems={(closeDropdown) => (
-                      <MenuItems
-                        parentRef={actionRef}
-                        closeDropdown={closeDropdown}
-                        openLeft
-                      >
-                        <MenuItem
-                          onClick={() => {
-                            channel?.unbanUser(bannedUser).then(() => {
-                              closeDropdown();
-                              setBannedUsers(bannedUsers.filter((u) => {
-                                return (u.userId !== bannedUser.userId);
-                              }));
-                            })
-                          }}
-                        >
-                          {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNBAN}
-                        </MenuItem>
-                      </MenuItems>
-                    )}
-                  />
+                  bannedUser?.userId !== currentUserId
+                    ? (
+                      <ContextMenu
+                        menuTrigger={(toggleDropdown) => (
+                          <IconButton
+                            className="sendbird-user-message__more__menu"
+                            width="32px"
+                            height="32px"
+                            onClick={toggleDropdown}
+                          >
+                            <Icon
+                              width="24px"
+                              height="24px"
+                              type={IconTypes.MORE}
+                              fillColor={IconColors.CONTENT_INVERSE}
+                            />
+                          </IconButton>
+                        )}
+                        menuItems={(closeDropdown) => (
+                          <MenuItems
+                            parentRef={actionRef}
+                            closeDropdown={closeDropdown}
+                            openLeft
+                          >
+                            <MenuItem
+                              onClick={() => {
+                                channel?.unbanUser(bannedUser).then(() => {
+                                  closeDropdown();
+                                  setBannedUsers(bannedUsers.filter((u) => {
+                                    return (u.userId !== bannedUser.userId);
+                                  }));
+                                })
+                              }}
+                            >
+                              {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNBAN}
+                            </MenuItem>
+                          </MenuItems>
+                        )}
+                      />
+                    ) : null
                 )
                 }
               />

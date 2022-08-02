@@ -85,53 +85,51 @@ export default function ParticipantList({
                 key={p.userId}
                 isOperator={isOperator}
                 action={({ actionRef }) => (
-                  isOperatorView
-                  ? (
-                    <ContextMenu
-                    menuTrigger={(toggleDropdown) => (
-                      <IconButton
-                        className="sendbird-openchannel-participant-list__menu"
-                        width="32px"
-                        height="32px"
-                        onClick={toggleDropdown}
-                      >
-                        <Icon
-                          width="24px"
-                          height="24px"
-                          type={IconTypes.MORE}
-                          fillColor={IconColors.CONTENT_INVERSE}
-                        />
-                      </IconButton>
-                    )}
-                    menuItems={(closeDropdown) => (
-                      <MenuItems
-                        parentRef={actionRef}
-                        closeDropdown={closeDropdown}
-                        openLeft
-                      >
-                        <MenuItem
-                          onClick={() => {
-                            if (isOperator) {
-                              channel?.removeOperators([p.userId]).then(() => {
-                                refreshList();
-                                closeDropdown();
-                              });
-                            } else {
-                              channel?.addOperators([p.userId]).then(() => {
-                                refreshList();
-                                closeDropdown();
-                              })
-                            }
-                          }}
-                        >
-                          {
-                            isOperator
-                              ? stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR
-                              : stringSet.OPEN_CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR
-                          }
-                        </MenuItem>
-                        {
-                          currentUserId !== p?.userId && (
+                  (isOperatorView && currentUserId !== p?.userId)
+                    ? (
+                      <ContextMenu
+                        menuTrigger={(toggleDropdown) => (
+                          <IconButton
+                            className="sendbird-openchannel-participant-list__menu"
+                            width="32px"
+                            height="32px"
+                            onClick={toggleDropdown}
+                          >
+                            <Icon
+                              width="24px"
+                              height="24px"
+                              type={IconTypes.MORE}
+                              fillColor={IconColors.CONTENT_INVERSE}
+                            />
+                          </IconButton>
+                        )}
+                        menuItems={(closeDropdown) => (
+                          <MenuItems
+                            parentRef={actionRef}
+                            closeDropdown={closeDropdown}
+                            openLeft
+                          >
+                            <MenuItem
+                              onClick={() => {
+                                if (isOperator) {
+                                  channel?.removeOperators([p.userId]).then(() => {
+                                    refreshList();
+                                    closeDropdown();
+                                  });
+                                } else {
+                                  channel?.addOperators([p.userId]).then(() => {
+                                    refreshList();
+                                    closeDropdown();
+                                  })
+                                }
+                              }}
+                            >
+                              {
+                                isOperator
+                                  ? stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR
+                                  : stringSet.OPEN_CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR
+                              }
+                            </MenuItem>
                             <MenuItem
                               onClick={() => {
                                 channel?.muteUser(p).then(() => {
@@ -142,10 +140,6 @@ export default function ParticipantList({
                             >
                               {stringSet.OPEN_CHANNEL_SETTING__MODERATION__MUTE}
                             </MenuItem>
-                          )
-                        }
-                        {
-                          currentUserId !== p?.userId && (
                             <MenuItem
                               onClick={() => {
                                 channel?.banUser(p).then(() => {
@@ -156,13 +150,11 @@ export default function ParticipantList({
                             >
                               {stringSet.OPEN_CHANNEL_SETTING__MODERATION__BAN}
                             </MenuItem>
-                          )
-                        }
-                      </MenuItems>
-                    )}
-                  />
-                  )
-                  : null
+                          </MenuItems>
+                        )}
+                      />
+                    )
+                    : null
                 )}
               />
             );
