@@ -2,11 +2,12 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import type { OpenChannel, OpenChannelUpdateParams, SendbirdOpenChat } from '@sendbird/chat/openChannel';
+import type { OpenChannel, OpenChannelHandler, OpenChannelUpdateParams, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import { RenderUserProfileProps } from '../../../types';
+import uuidv4 from '../../../utils/uuid';
 
 export interface OpenChannelSettingsContextProps {
   channelUrl: string;
@@ -84,6 +85,26 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
       }
     }
   }, [channelUrl, sdk]);
+
+  useEffect(() => {
+    const channelHandlerId = uuidv4();
+    if (channel !== null && sdk?.openChannel?.addOpenChannelHandler) {
+      const channelHandlerParams: OpenChannelHandler = {
+        onUserBanned(ch, user) {
+          if (ch?.url === channel?.url && user?.userId === sdk?.currentUser?.userId) {
+            setChannel(null);
+          }
+        },
+      };
+      sdk.openChannel.addOpenChannelHandler(channelHandlerId, channelHandlerParams);
+    }
+    return () => {
+      if (sdk?.openChannel?.removeOpenChannelHandler) {
+        logger.info('OpenChannelSettings | Removing channel handlers', channelHandlerId);
+        sdk.openChannel.removeOpenChannelHandler?.(channelHandlerId);
+      }
+    }
+  }, [channel]);
 
   return (
     <OpenChannelSettingsContext.Provider value={{
