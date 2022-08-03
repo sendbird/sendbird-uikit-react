@@ -3,7 +3,7 @@
  * homepage: https://sendbird.com/
  * git: https://github.com/sendbird/sendbird-uikit-react
  */
- declare module "SendbirdUIKitGlobal" {
+declare module "SendbirdUIKitGlobal" {
   import type React from 'react';
   import type Locale from 'date-fns';
   import type SendbirdChat from '@sendbird/chat';
