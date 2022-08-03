@@ -1,6 +1,6 @@
 # Changelog - v3
 
-## [v3.0.2] (Aug 02 2022)
+## [v3.0.2] (Aug 03 2022)
 Fixes:
 * Explicitly export library as esm-module
   ESM library should have "type": "module" (package.json file that is going to /dist)
