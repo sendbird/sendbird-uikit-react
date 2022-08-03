@@ -18,12 +18,12 @@ export const SendingMessageStatus = {
 };
 
 export const getMessageType = (message: UserMessage | FileMessage | AdminMessage): string => {
-  if ((message?.isUserMessage()) || message?.messageType === 'user') {
+  if ((message?.isUserMessage?.()) || message?.messageType === 'user') {
     return (message?.ogMetaData)
       ? MessageTypes.OG
       : MessageTypes.USER;
   }
-  if (message?.isAdminMessage()) {
+  if (message?.isAdminMessage?.()) {
     return MessageTypes.ADMIN;
   }
   if (message?.messageType === 'file') {

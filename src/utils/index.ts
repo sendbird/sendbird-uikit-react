@@ -347,7 +347,7 @@ export const filterMessageListParams = (params: MessageListParams, message: User
     }
   }
   if (params?.senderUserIdsFilter && params?.senderUserIdsFilter?.length > 0) {
-    if (message?.isUserMessage() || message.isFileMessage()) {
+    if (message?.isUserMessage?.() || message?.isFileMessage?.()) {
       const messageSender = (message as UserMessage | FileMessage).sender || message['_sender'];
       if (!params?.senderUserIdsFilter?.includes(messageSender?.userId)) {
         return false;

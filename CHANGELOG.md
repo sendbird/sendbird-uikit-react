@@ -1,5 +1,15 @@
 # Changelog - v3
 
+## [v3.1.0] (Aug 03 2022)
+Features:
+* Support moderation in OpenChannel
+  * Provide moderations: mute, unmute, ban, and unban on the <OpenChannelSettings />
+  * Provide moderations: register and unregister operator on the <OpenChannelSettings />
+  * Add MutedParticipantList and MutedParticipantsModal into the <OpenChannelSettings />
+  * Add BannedUserList and BannedUsersModal into the <OpenChannelSettings />
+  * Add OperatorList and OperatorsModal into the <OpenChannelSettings />
+  * Add AddOperatorsModal into the <OpenChannelSettings />
+
 ## [v3.0.2] (Aug 03 2022)
 Fixes:
 * Explicitly export library as esm-module
