@@ -90,10 +90,34 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
     const channelHandlerId = uuidv4();
     if (channel !== null && sdk?.openChannel?.addOpenChannelHandler) {
       const channelHandlerParams: OpenChannelHandler = {
+        onOperatorUpdated(channel, users) {
+          
+        },
+        onUserEntered(channel, user) {
+          
+        },
+        onUserExited(channel, user) {
+          
+        },
+        onUserMuted(channel, user) {
+          
+        },
+        onUserUnmuted(channel, user) {
+          
+        },
         onUserBanned(ch, user) {
           if (ch?.url === channel?.url && user?.userId === sdk?.currentUser?.userId) {
             setChannel(null);
           }
+        },
+        onUserUnbanned(channel, user) {
+          
+        },
+        onChannelChanged(channel) {
+          
+        },
+        onChannelDeleted(channelUrl, channelType) {
+          
         },
       };
       sdk.openChannel.addOpenChannelHandler(channelHandlerId, channelHandlerParams);
