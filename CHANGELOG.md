@@ -3,8 +3,8 @@
 ## [v3.1.0] (Aug 03 2022)
 Features:
 * Support moderation in OpenChannel
-  * Provide moderations: mute, unmute, ban, and unban for operator on the <OpenChannelSettings />
-  * Provide moderations: register and unregister operator in the <OpenChannelSettings />
+  * Provide moderations: mute, unmute, ban, and unban on the <OpenChannelSettings />
+  * Provide moderations: register and unregister operator on the <OpenChannelSettings />
   * Add MutedParticipantList and MutedParticipantsModal into the <OpenChannelSettings />
   * Add BannedUserList and BannedUsersModal into the <OpenChannelSettings />
   * Add OperatorList and OperatorsModal into the <OpenChannelSettings />
