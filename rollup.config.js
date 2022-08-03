@@ -108,12 +108,34 @@ module.exports = ({
       verbose: true,
       targets: [
         {
-          src: './src/index.d.ts',
+          src: './scripts/index_d_ts',
+          dest: 'dist',
+          rename: 'index.d.ts',
+        },
+        {
+          src: './package-lock.json',
+          dest: 'dist',
+        },
+        {
+          src: './README.md',
+          dest: 'dist',
+        },
+        {
+          src: './LICENSE',
+          dest: 'dist',
+        },
+        {
+          src: './CHANGELOG.md',
           dest: 'dist',
         },
         {
           src: './package.lock.json',
           dest: 'dist',
+        },
+        {
+          src: './scripts/package.template.json',
+          dest: 'dist',
+          rename: 'package.json'
         },
       ],
     }),
