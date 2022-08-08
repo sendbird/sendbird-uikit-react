@@ -1,5 +1,5 @@
 import React from 'react';
-import ConnectionStatus from '../index.jsx';
+import ConnectionStatus from '../index';
 
 const description = `
   \`import ConnectionStatus from "@sendbird/uikit-react/ui/ConnectionStatus";\`

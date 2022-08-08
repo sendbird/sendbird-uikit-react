@@ -95,7 +95,7 @@ export default {
   'ui/ChannelPreview': 'src/ui/ChannelPreview/index.jsx',
   'ui/ChatHeader': 'src/ui/ChatHeader/index.jsx',
   'ui/Checkbox': 'src/ui/Checkbox/index.tsx',
-  'ui/ConnectionStatus': 'src/ui/ConnectionStatus/index.jsx',
+  'ui/ConnectionStatus': 'src/ui/ConnectionStatus/index.tsx',
   'ui/ContextMenu': 'src/ui/ContextMenu/index.jsx',
   'ui/DateSeparator': 'src/ui/DateSeparator/index.jsx',
   'ui/Dropdown': 'src/ui/Dropdown/index.jsx',
