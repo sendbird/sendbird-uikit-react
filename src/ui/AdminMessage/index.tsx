@@ -1,13 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement } from 'react';
+import { AdminMessage as AdminMessageType } from '@sendbird/chat/message';
 
 import './index.scss';
 import Label, { LabelColors, LabelTypography } from '../Label';
 
+interface AdminMessageProps {
+  className: string | Array<string>;
+  message: AdminMessageType;
+}
+
 export default function AdminMessage({
   className,
   message,
-}) {
+}: AdminMessageProps): ReactElement {
   if (!(message.isAdminMessage || message.messageType) || !message.isAdminMessage() || message.messageType !== 'admin') {
     return null;
   }
@@ -28,21 +33,3 @@ export default function AdminMessage({
     </div>
   );
 }
-
-AdminMessage.propTypes = {
-  /** type: AdminMessage */
-  message: PropTypes.shape({
-    message: PropTypes.string,
-    messageType: PropTypes.string,
-    isAdminMessage: PropTypes.func,
-  }),
-  className: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string),
-  ]),
-};
-
-AdminMessage.defaultProps = {
-  message: {},
-  className: '',
-};
