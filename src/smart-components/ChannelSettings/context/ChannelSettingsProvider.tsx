@@ -3,7 +3,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import type {
+import {
   GroupChannel,
   GroupChannelUpdateParams,
   SendbirdGroupChat,
