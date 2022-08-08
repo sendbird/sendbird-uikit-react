@@ -130,7 +130,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
       sdk.openChannel.addOpenChannelHandler(channelHandlerId, channelHandlerParams);
     }
     return () => {
-      if (sdk?.openChannel?.removeOpenChannelHandler) {
+      if (sdk?.openChannel?.removeOpenChannelHandler && channelHandlerId) {
         logger.info('OpenChannelSettings | Removing channel handlers', channelHandlerId);
         sdk.openChannel.removeOpenChannelHandler?.(channelHandlerId);
       }
