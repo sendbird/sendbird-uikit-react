@@ -1,19 +1,27 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement } from 'react';
 
 import './index.scss';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { Type, Size } from './type';
 import { changeTypeToClassName, changeSizeToClassName } from './utils';
 
+export interface ButtonProps {
+  className?: string | Array<string>;
+  type: Type;
+  size: Size;
+  children: string | ReactElement;
+  disabled?: boolean;
+  onClick?: () => void;
+}
+
 export default function Button({
   className,
-  type,
-  size,
-  children,
-  disabled,
+  type = Type.PRIMARY,
+  size = Size.BIG,
+  children = 'Button',
+  disabled = false,
   onClick,
-}) {
+}: ButtonProps): ReactElement {
   const injectingClassNames = [
     ...((Array.isArray(className)) ? className : [className]),
     'sendbird-button',
@@ -42,33 +50,3 @@ export default function Button({
 
 export const ButtonTypes = Type;
 export const ButtonSizes = Size;
-
-Button.propTypes = {
-  className: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string),
-  ]),
-  type: PropTypes.oneOf([
-    'PRIMARY',
-    'SECONDARY',
-    'DANGER',
-    'DISABLED',
-  ]),
-  size: PropTypes.oneOf(['BIG', 'SMALL']),
-  children: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element),
-  ]),
-  disabled: PropTypes.bool,
-  onClick: PropTypes.func,
-};
-
-Button.defaultProps = {
-  className: '',
-  type: Type.PRIMARY,
-  size: Size.BIG,
-  children: 'Button',
-  disabled: false,
-  onClick: () => { },
-};

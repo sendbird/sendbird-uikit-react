@@ -4,7 +4,6 @@ exports[`Button should do a snapshot test of the default Button DOM 1`] = `
 <button
   className=" sendbird-button  sendbird-button--primary sendbird-button--big"
   disabled={false}
-  onClick={[Function]}
   type="button"
 >
   <span
@@ -19,7 +18,6 @@ exports[`Button should do a snapshot test of the small Button DOM 1`] = `
 <button
   className=" sendbird-button  sendbird-button--primary sendbird-button--small"
   disabled={false}
-  onClick={[Function]}
   type="button"
 >
   <span

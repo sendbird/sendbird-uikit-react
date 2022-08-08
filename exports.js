@@ -89,7 +89,7 @@ export default {
   'ui/Avatar': 'src/ui/Avatar/index.tsx',
   'ui/MutedAvatarOverlay': 'src/ui/Avatar/MutedAvatarOverlay.tsx',
   'ui/Badge': 'src/ui/Badge/index.jsx',
-  'ui/Button': 'src/ui/Button/index.jsx',
+  'ui/Button': 'src/ui/Button/index.tsx',
   'ui/ChannelAvatar': 'src/ui/ChannelAvatar/index.tsx',
   'ui/OpenChannelAvatar': 'src/ui/ChannelAvatar/OpenChannelAvatar.tsx',
   'ui/ChannelPreview': 'src/ui/ChannelPreview/index.jsx',
