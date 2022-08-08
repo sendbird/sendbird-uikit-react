@@ -1,6 +1,6 @@
 import React from 'react';
 import ChannelPreview from '../index.jsx';
-import channels from '../../ChannelListDummy/dummyData.mock';
+import channels from './dummyData.mock';
 
 import IconButton from '../../IconButton';
 import IconMore from '../../../svgs/icon-more.svg';
