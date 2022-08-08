@@ -93,7 +93,7 @@ export default {
   'ui/ChannelAvatar': 'src/ui/ChannelAvatar/index.tsx',
   'ui/OpenChannelAvatar': 'src/ui/ChannelAvatar/OpenChannelAvatar.tsx',
   'ui/ChannelPreview': 'src/ui/ChannelPreview/index.jsx',
-  'ui/ChatHeader': 'src/ui/ChatHeader/index.jsx',
+  'ui/ChatHeader': 'src/ui/ChatHeader/index.tsx',
   'ui/Checkbox': 'src/ui/Checkbox/index.tsx',
   'ui/ConnectionStatus': 'src/ui/ConnectionStatus/index.jsx',
   'ui/ContextMenu': 'src/ui/ContextMenu/index.jsx',

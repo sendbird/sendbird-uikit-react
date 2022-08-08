@@ -1,5 +1,5 @@
 import React from 'react';
-import ChatHeader from '../index.jsx';
+import ChatHeader from '../index';
 
 const description = `
   \`import ChatHeader from "@sendbird/uikit-react/ui/ChatHeader";\`
