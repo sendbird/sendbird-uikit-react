@@ -1,5 +1,4 @@
-import React, { ReactElement, useContext, useEffect, useState, useCallback } from 'react';
-import { User } from "@sendbird/chat";
+import React, { ReactElement, useContext, useState } from 'react';
 
 import { UserListItem } from '../ParticipantUI/ParticipantItem';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
@@ -14,8 +13,6 @@ import OperatorListModal from './OperatorsModal';
 import AddOperatorsModal from './AddOperatorsModal';
 
 const OperatorList = (): ReactElement => {
-  const [operators, setOperators] = useState<Array<User>>([]);
-  const [hasNext, setHasNext] = useState<boolean>(false);
   const [showAdd, setShowAdd] = useState<boolean>(false);
   const [showMore, setShowMore] = useState<boolean>(false);
   const state = useSendbirdStateContext();
@@ -23,40 +20,10 @@ const OperatorList = (): ReactElement => {
   const { stringSet } = useContext(LocalizationContext);
   const { channel } = useOpenChannelSettingsContext();
 
-  useEffect(() => {
-    if (!channel) {
-      setOperators([]);
-      return;
-    }
-
-    const operatorListQuery = channel?.createOperatorListQuery({
-      limit: 10,
-    });
-    operatorListQuery.next()
-      .then((operators) => {
-        setOperators(operators);
-        setHasNext(operatorListQuery.hasNext);
-      });
-  }, [channel]);
-
-  const refreshList = useCallback(() => {
-    if (!channel) {
-      setOperators([]);
-      return;
-    }
-    const operatorListQuery = channel?.createOperatorListQuery({
-      limit: 10,
-    });
-    operatorListQuery.next().then((operators) => {
-      setOperators(operators);
-      setHasNext(operatorListQuery.hasNext);
-    });
-  }, [channel]);
-
   return (
     <div>
       {
-        operators.map((operator) => (
+        channel?.operators?.slice(0, 10).map((operator) => (
           <UserListItem
             key={operator.userId}
             user={operator}
@@ -89,11 +56,8 @@ const OperatorList = (): ReactElement => {
                         <MenuItem
                           onClick={() => {
                             channel?.removeOperators([operator.userId]).then(() => {
-                              setOperators(operators.filter(({ userId }) => (
-                                userId !== operator.userId
-                              )));
+                              closeDropdown();
                             });
-                            closeDropdown();
                           }}
                         >
                           {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
@@ -101,7 +65,6 @@ const OperatorList = (): ReactElement => {
                         <MenuItem
                           onClick={() => {
                             channel?.muteUser(operator).then(() => {
-                              refreshList();
                               closeDropdown();
                             });
                           }}
@@ -111,7 +74,6 @@ const OperatorList = (): ReactElement => {
                         <MenuItem
                           onClick={() => {
                             channel?.banUser(operator).then(() => {
-                              refreshList();
                               closeDropdown();
                             });
                           }}
@@ -137,7 +99,7 @@ const OperatorList = (): ReactElement => {
           {stringSet.OPEN_CHANNEL_SETTINGS__OPERATORS__TITLE_ADD}
         </Button>
         {
-          hasNext && (
+          channel?.operators?.length > 10 && (
             <Button
               type={ButtonTypes.SECONDARY}
               size={ButtonSizes.SMALL}
@@ -156,7 +118,6 @@ const OperatorList = (): ReactElement => {
             <OperatorListModal
               onCancel={() => {
                 setShowMore(false);
-                refreshList();
               }}
             />
           </>
@@ -169,7 +130,6 @@ const OperatorList = (): ReactElement => {
               onCancel={() => setShowAdd(false)}
               onSubmit={() => {
                 setShowAdd(false);
-                refreshList();
               }}
             />
           </>
