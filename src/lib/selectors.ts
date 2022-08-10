@@ -357,7 +357,7 @@ export const getExitOpenChannel = (state: SendBirdState) => (
 /**
  * const freezeChannel = selectors.getFreezeChannel(currentChannel);
  * freezeChannel()
- *  .then((channel) => {})
+ *  .then(() => {})
  *  .catch((error) => {})
  */
 export const getFreezeChannel = () => (
@@ -576,7 +576,7 @@ export const getUpdateUserMessage = (state: SendBirdState) => (
  *  .catch((error) => {})
  */
 export const getDeleteMessage = (state: SendBirdState) => (
-  (channel: GroupChannel | OpenChannel, message: SendableMessage): Promise<SendableMessage> => (
+  (channel: GroupChannel | OpenChannel, message: UserMessage | FileMessage): Promise<void> => (
     new Promise((resolve, reject) => {
       const pubSub = getPubSub(state);
       const { messageId } = message;
@@ -586,7 +586,7 @@ export const getDeleteMessage = (state: SendBirdState) => (
             topics.DELETE_MESSAGE,
             { messageId, channel },
           );
-          resolve(message);
+          resolve();
         })
         .catch(reject);
     })
