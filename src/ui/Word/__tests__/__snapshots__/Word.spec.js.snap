@@ -7,11 +7,6 @@ exports[`Word should do a snapshot test of the Word DOM 1`] = `
   hello
   <div
     className="sendbird-context-menu"
-    style={
-      Object {
-        "display": "inline",
-      }
-    }
   >
     <a
       className="

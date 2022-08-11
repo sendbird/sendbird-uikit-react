@@ -9,11 +9,6 @@ exports[`OpenchannelUserMessage should do a snapshot test of the OpenchannelUser
   >
     <div
       className="sendbird-context-menu"
-      style={
-        Object {
-          "display": "inline",
-        }
-      }
     >
       <div
         className="sendbird-openchannel-user-message__left__avatar sendbird-avatar"
@@ -100,11 +95,6 @@ exports[`OpenchannelUserMessage should do a snapshot test of the OpenchannelUser
   >
     <div
       className="sendbird-context-menu"
-      style={
-        Object {
-          "display": "inline",
-        }
-      }
     >
       <button
         className="sendbird-openchannel-user-message__context-menu--icon sendbird-iconbutton "
