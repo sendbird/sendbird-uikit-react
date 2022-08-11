@@ -98,7 +98,6 @@ export default {
   'ui/ConnectionStatus': 'src/ui/ConnectionStatus/index.jsx',
   'ui/ContextMenu': 'src/ui/ContextMenu/index.jsx',
   'ui/DateSeparator': 'src/ui/DateSeparator/index.jsx',
-  'ui/Dropdown': 'src/ui/Dropdown/index.jsx',
   'ui/EmojiReactions': 'src/ui/EmojiReactions/index.tsx',
   'ui/FileMessageItemBody': 'src/ui/FileMessageItemBody/index.tsx',
   'ui/FileViewer': 'src/ui/FileViewer/index.jsx',
