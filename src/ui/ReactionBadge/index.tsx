@@ -1,20 +1,28 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Label, { LabelTypography, LabelColors } from '../Label';
+import React, { KeyboardEvent, MouseEvent, ReactElement, RefObject } from 'react';
 
 import './index.scss';
 
-const ReactionBadge = React.forwardRef((props, ref) => {
+import Label, { LabelTypography, LabelColors } from '../Label';
+
+export interface ReactionBadgeProps {
+  className?: string | Array<string>;
+  children: ReactElement;
+  count?: number | string;
+  isAdd?: boolean;
+  selected?: boolean;
+  onClick?: (e: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => void;
+}
+const ReactionBadge = React.forwardRef((props: ReactionBadgeProps, ref: RefObject<HTMLDivElement>): ReactElement => {
   const {
     className,
     children,
-    count,
-    selected,
-    isAdd,
+    count = '',
+    isAdd = false,
+    selected = false,
     onClick,
   } = props;
 
-  const getClassNameTail = () => {
+  const getClassNameTail = (): string => {
     if (selected && !isAdd) {
       return '--selected';
     }
@@ -32,8 +40,8 @@ const ReactionBadge = React.forwardRef((props, ref) => {
       ].join(' ')}
       role="button"
       ref={ref}
-      onClick={onClick}
-      onKeyDown={onClick}
+      onClick={(e) => onClick?.(e)}
+      onKeyDown={(e) => onClick?.(e)}
       tabIndex={0}
     >
       <div className="sendbird-reaction-badge__inner">
@@ -51,28 +59,5 @@ const ReactionBadge = React.forwardRef((props, ref) => {
     </div>
   );
 });
-
-ReactionBadge.propTypes = {
-  className: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string),
-  ]),
-  children: PropTypes.element.isRequired,
-  count: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string,
-  ]),
-  selected: PropTypes.bool,
-  isAdd: PropTypes.bool,
-  onClick: PropTypes.func,
-};
-
-ReactionBadge.defaultProps = {
-  className: '',
-  count: '',
-  selected: false,
-  isAdd: false,
-  onClick: () => { },
-};
 
 export default ReactionBadge;
