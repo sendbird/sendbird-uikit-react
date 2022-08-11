@@ -1,5 +1,5 @@
 import React from 'react';
-import FileViewer from '../index.jsx';
+import FileViewer from '../index';
 
 import { msg0 } from '../data.mock';
 
