@@ -1,5 +1,5 @@
 import React from 'react';
-import PlaceHolder from '../index.jsx';
+import PlaceHolder from '../index';
 
 import PlaceHolderTypes from '../type';
 
