@@ -1,4 +1,5 @@
-export function generateNormalMessage(pretreatment) {
+type MockMessage = { [key: string]: any };
+export function generateNormalMessage(pretreatment?: (msg: MockMessage) => MockMessage): MockMessage {
   const message = {
     messageId: 358312775,
     messageType: "user",
@@ -39,9 +40,9 @@ export function generateNormalMessage(pretreatment) {
   } else {
     return message;
   }
-};
+}
 
-export function generateLongMessage(pretreatment) {
+export function generateLongMessage(pretreatment?: (msg: MockMessage) => MockMessage): MockMessage {
   const message = {
     messageId: 358312775,
     messageType: "user",
@@ -74,13 +75,12 @@ export function generateLongMessage(pretreatment) {
     sendingStatus: "succeeded",
     requestedMentionUserIds: [],
     errorCode: 0,
-    requestState: 'DELIVERED',
   }
   if (pretreatment) {
     return pretreatment(message);
   } else {
     return message;
   }
-};
+}
 
 export default generateNormalMessage();
