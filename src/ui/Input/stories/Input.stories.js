@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import Input, { InputLabel } from '../index.jsx';
+import Input, { InputLabel } from '../index';
 
 const description = `
   \`import Input, { InputLabel } from "@sendbird/uikit-react/ui/Input";\`

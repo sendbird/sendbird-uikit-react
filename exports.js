@@ -105,7 +105,7 @@ export default {
   'ui/Icon': 'src/ui/Icon/index.jsx',
   'ui/IconButton': 'src/ui/IconButton/index.jsx',
   'ui/ImageRenderer': 'src/ui/ImageRenderer/index.jsx',
-  'ui/Input': 'src/ui/Input/index.jsx',
+  'ui/Input': 'src/ui/Input/index.tsx',
   'ui/Label': 'src/ui/Label/index.jsx',
   'ui/LinkLabel': 'src/ui/LinkLabel/index.jsx',
   'ui/Loader': 'src/ui/Loader/index.jsx',
