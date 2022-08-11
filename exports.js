@@ -96,7 +96,7 @@ export default {
   'ui/ChatHeader': 'src/ui/ChatHeader/index.jsx',
   'ui/Checkbox': 'src/ui/Checkbox/index.tsx',
   'ui/ConnectionStatus': 'src/ui/ConnectionStatus/index.jsx',
-  'ui/ContextMenu': 'src/ui/ContextMenu/index.jsx',
+  'ui/ContextMenu': 'src/ui/ContextMenu/index.tsx',
   'ui/DateSeparator': 'src/ui/DateSeparator/index.jsx',
   'ui/Dropdown': 'src/ui/Dropdown/index.jsx',
   'ui/EmojiReactions': 'src/ui/EmojiReactions/index.tsx',
