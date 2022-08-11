@@ -173,7 +173,6 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   const { loading, currentChannel } = channelListStore;
 
   const [channelSource, setChannelSource] = useState<GroupChannelListQuerySb>();
-  const [sdkChannelHandlerId, setSdkChannelHandlerId] = useState<string | null>(null);
   const [typingChannels, setTypingChannels] = useState<Array<GroupChannel>>([]);
 
   const [channelsTomarkAsRead, setChannelsToMarkAsRead] = useState([]);
@@ -203,7 +202,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   }, [sdkIntialized]);
 
   useEffect(() => {
-    setSdkChannelHandlerId(uuidv4);
+    const sdkChannelHandlerId = uuidv4();
     if (sdkIntialized) {
       logger.info('ChannelList: Setup channelHandlers');
       setupChannelList({
