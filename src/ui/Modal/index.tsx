@@ -1,29 +1,31 @@
-import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement, useContext } from 'react';
 import { createPortal } from 'react-dom';
 
 import './index.scss';
 
-import { LocalizationContext } from '../../lib/LocalizationContext';
 import { MODAL_ROOT } from '../../hooks/useModal/ModalRoot';
-import IconButton from '../IconButton';
-import Icon, { IconTypes, IconColors } from '../Icon';
-import Button, { ButtonTypes } from '../Button';
-import Label, { LabelTypography, LabelColors } from '../Label';
-import { noop } from '../../utils/utils';
+import { LocalizationContext } from '../../lib/LocalizationContext';
 
-export const ModalHeader = ({ titleText }) => (
+import Button, { ButtonTypes } from '../Button';
+import Icon, { IconTypes, IconColors } from '../Icon';
+import IconButton from '../IconButton';
+import Label, { LabelTypography, LabelColors } from '../Label';
+
+export interface ModalHeaderProps {
+  titleText: string;
+}
+export const ModalHeader = ({ titleText }: ModalHeaderProps): ReactElement => (
   <div className="sendbird-modal__header">
     <Label type={LabelTypography.H_1} color={LabelColors.ONBACKGROUND_1}>
       {titleText}
     </Label>
   </div>
 );
-ModalHeader.propTypes = {
-  titleText: PropTypes.string.isRequired,
-};
 
-export const ModalBody = ({ children }) => (
+export interface ModalBodyProps {
+  children?: ReactElement;
+}
+export const ModalBody = ({ children }: ModalBodyProps): ReactElement => (
   <div className="sendbird-modal__body">
     <Label
       type={LabelTypography.SUBTITLE_1}
@@ -33,23 +35,21 @@ export const ModalBody = ({ children }) => (
     </Label>
   </div>
 );
-ModalBody.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.element.isRequired,
-    PropTypes.arrayOf(PropTypes.element.isRequired),
-  ]),
-};
-ModalBody.defaultProps = {
-  children: null,
-};
 
+export interface ModalFooterProps {
+  submitText: string;
+  disabled?: boolean;
+  type?: string;
+  onCancel: () => void;
+  onSubmit: () => void;
+}
 export const ModalFooter = ({
+  submitText,
+  disabled = false,
+  type = ButtonTypes.DANGER,
   onSubmit,
   onCancel,
-  disabled = false,
-  submitText,
-  type,
-}) => {
+}: ModalFooterProps): ReactElement => {
   const { stringSet } = useContext(LocalizationContext);
   return (
     <div className="sendbird-modal__footer">
@@ -65,28 +65,26 @@ export const ModalFooter = ({
   );
 };
 
-ModalFooter.propTypes = {
-  onCancel: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  submitText: PropTypes.string.isRequired,
-  disabled: PropTypes.bool,
-  type: PropTypes.string,
-};
-ModalFooter.defaultProps = {
-  disabled: false,
-  type: ButtonTypes.DANGER,
-};
-
-export default function Modal(props) {
+export interface ModalProps {
+  children: ReactElement;
+  titleText?: string;
+  submitText?: string;
+  disabled?: boolean;
+  hideFooter?: boolean;
+  type?: string;
+  onCancel?: () => void;
+  onSubmit?: () => void;
+}
+export default function Modal(props: ModalProps): ReactElement {
   const {
     children,
-    onCancel,
-    onSubmit = noop,
-    disabled,
-    submitText,
     titleText,
-    hideFooter,
-    type,
+    submitText,
+    disabled = false,
+    hideFooter = false,
+    type = ButtonTypes.DANGER,
+    onCancel,
+    onSubmit,
   } = props;
   return createPortal((
     <div className="sendbird-modal">
@@ -123,21 +121,3 @@ export default function Modal(props) {
     </div>
   ), document.getElementById(MODAL_ROOT));
 }
-
-Modal.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element),
-  ]),
-  onCancel: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func,
-  hideFooter: PropTypes.bool,
-  disabled: PropTypes.bool,
-  type: PropTypes.string,
-};
-Modal.defaultProps = {
-  children: null,
-  hideFooter: false,
-  disabled: false,
-  type: ButtonTypes.DANGER,
-};

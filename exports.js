@@ -118,7 +118,7 @@ export default {
   'ui/MessageSearchFileItem': 'src/ui/MessageSearchFileItem/index.tsx',
   'ui/MessageSearchItem': 'src/ui/MessageSearchItem/index.tsx',
   'ui/MessageStatus': 'src/ui/MessageStatus/index.tsx',
-  'ui/Modal': 'src/ui/Modal/index.jsx',
+  'ui/Modal': 'src/ui/Modal/index.tsx',
   'ui/OGMessageItemBody': 'src/ui/OGMessageItemBody/index.tsx',
   'ui/OpenChannelAdminMessage': 'src/ui/OpenChannelAdminMessage/index.tsx',
   // should we rename it to OpenChannel?
