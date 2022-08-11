@@ -6,6 +6,7 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import TextButton from '../TextButton';
 import { getClassName, getUIKitFileType, truncateString } from '../../utils';
+import { Colors } from '../../utils/color';
 
 interface Props {
   className?: string | Array<string>;
@@ -47,7 +48,7 @@ export default function FileMessageItemBody({
       <TextButton
         className="sendbird-file-message-item-body__file-name"
         onClick={() => { window.open(message?.url) }}
-        color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
+        color={isByMe ? Colors.ONCONTENT_1 : Colors.ONBACKGROUND_1}
       >
         <Label
           className="sendbird-file-message-item-body__file-name__text"
