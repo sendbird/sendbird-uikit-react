@@ -131,7 +131,7 @@ export default {
   'ui/QuoteMessage': 'src/ui/QuoteMessage/index.tsx',
   'ui/QuoteMessageInput': 'src/ui/QuoteMessageInput/index.tsx',
   'ui/ReactionBadge': 'src/ui/ReactionBadge/index.jsx',
-  'ui/ReactionButton': 'src/ui/ReactionButton/index.jsx',
+  'ui/ReactionButton': 'src/ui/ReactionButton/index.tsx',
   'ui/SortByRow': 'src/ui/SortByRow/index.jsx',
   'ui/TextButton': 'src/ui/TextButton/index.jsx',
   'ui/TextMessageItemBody': 'src/ui/TextMessageItemBody/index.tsx',

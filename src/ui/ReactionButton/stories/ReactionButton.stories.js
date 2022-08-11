@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactionButton from '../index.jsx';
+import ReactionButton from '../index';
 import Icon, { IconTypes } from '../../Icon';
 
 const description = `

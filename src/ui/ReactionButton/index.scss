@@ -4,6 +4,7 @@
   border-radius: 8px;
   display: inline-block;
   border: solid 1px transparent;
+  box-sizing: border-box;
   cursor: pointer;
 
   &:hover {
