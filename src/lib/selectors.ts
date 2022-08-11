@@ -9,6 +9,11 @@ import { OpenChannel, OpenChannelCreateParams, SendbirdOpenChat } from '@sendbir
 import { FileMessage, FileMessageCreateParams, SendableMessage, UserMessageUpdateParams } from '@sendbird/chat/lib/__definition';
 
 import {
+  ConnectionHandler,
+  UserEventHandler,
+} from '@sendbird/chat';
+
+import {
   SdkStore,
   SendBirdState,
   SendBirdStateConfig,
@@ -646,6 +651,36 @@ export const getResendFileMessage = (state: SendBirdState) => (
   )
 );
 
+/**
+ * Returns the class of GroupChannelHandler
+ * workaround for: https://sendbird.atlassian.net/browse/UIKIT-1993
+ * Recommended fix: remove instanceOf validation check from SDK
+ */
+export const getGroupChannelHandler = () => {
+  return GroupChannelHandler;
+}
+
+/**
+ * Returns the class of OpenChannelHandler
+ */
+export const getOpenChannelHandler = () => {
+  return OpenChannelHandler;
+}
+
+/**
+ * Returns the class of ConnectionHandler
+ */
+export const getConnectionHandler = () => {
+  return ConnectionHandler;
+}
+
+/**
+ * Returns the class of UserEventHandler
+ */
+export const getUserEventHandler = () => {
+  return UserEventHandler;
+}
+
 const sendbirdSelectors = {
   getSdk,
   getPubSub,
@@ -667,6 +702,10 @@ const sendbirdSelectors = {
   getDeleteMessage,
   getResendUserMessage,
   getResendFileMessage,
+  getGroupChannelHandler,
+  getOpenChannelHandler,
+  getConnectionHandler,
+  getUserEventHandler,
 };
 
 export default sendbirdSelectors;

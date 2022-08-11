@@ -1,13 +1,15 @@
 import type SendbirdChat from '@sendbird/chat';
-import type { User } from '@sendbird/chat';
+import type { ConnectionHandler, User, UserEventHandler } from '@sendbird/chat';
 import type {
   GroupChannel,
   GroupChannelCreateParams,
+  GroupChannelHandler,
   SendbirdGroupChat,
 } from '@sendbird/chat/groupChannel';
 import type {
   OpenChannel,
   OpenChannelCreateParams,
+  OpenChannelHandler,
   SendbirdOpenChat,
 } from '@sendbird/chat/openChannel';
 import type {
@@ -183,4 +185,8 @@ export interface sendbirdSelectorsInterface {
   getDeleteMessage: (store: SendBirdState) => GetDeleteMessage;
   getResendUserMessage: (store: SendBirdState) => GetResendUserMessage;
   getResendFileMessage: (store: SendBirdState) => GetResendFileMessage;
+  getGroupChannelHandler: () => GroupChannelHandler;
+  getOpenChannelHandler: () => OpenChannelHandler;
+  getConnectionHandler: () => ConnectionHandler;
+  getUserEventHandler: () => UserEventHandler;
 }
