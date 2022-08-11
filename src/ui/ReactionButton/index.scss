@@ -23,6 +23,7 @@
   cursor: pointer;
   border-radius: 8px;
   display: inline-block;
+  box-sizing: border-box;
   @include themed() {
     border: solid 1px t(primary--1-4);
     background-color: t(primary--1-4);
