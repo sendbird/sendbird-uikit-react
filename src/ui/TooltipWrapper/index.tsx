@@ -1,16 +1,20 @@
-import React, { useState, useRef } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useRef, ReactElement } from 'react';
 
 import './index.scss';
 
 const SPACE_FROM_TRIGGER = 8;
 
+export interface TooltipWrapperProps {
+  className?: string | Array<string>;
+  children: ReactElement;
+  hoverTooltip: ReactElement;
+}
 export default function TooltipWrapper({
   className,
   children,
   hoverTooltip,
   // clickTooltip can be added later
-}) {
+}: TooltipWrapperProps): ReactElement {
   const [showHoverTooltip, setShowHoverTooltip] = useState(false);
   const childrenRef = useRef(null);
 
@@ -51,18 +55,3 @@ export default function TooltipWrapper({
     </div>
   );
 }
-
-TooltipWrapper.propTypes = {
-  className: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string),
-  ]),
-  children: PropTypes.element.isRequired,
-  hoverTooltip: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.func,
-  ]).isRequired,
-};
-TooltipWrapper.defaultProps = {
-  className: '',
-};
