@@ -572,11 +572,11 @@ export const getUpdateUserMessage = (state: SendBirdState) => (
  *  channel: GroupChannel | OpenChannel,
  *  message: SendableMessage,
  * )
- *  .then(() => {})
+ *  .then((deletedMessage) => {})
  *  .catch((error) => {})
  */
 export const getDeleteMessage = (state: SendBirdState) => (
-  (channel: GroupChannel | OpenChannel, message: UserMessage | FileMessage): Promise<void> => (
+  (channel: GroupChannel | OpenChannel, message: UserMessage | FileMessage): Promise<UserMessage | FileMessage> => (
     new Promise((resolve, reject) => {
       const pubSub = getPubSub(state);
       const { messageId } = message;
@@ -586,7 +586,7 @@ export const getDeleteMessage = (state: SendBirdState) => (
             topics.DELETE_MESSAGE,
             { messageId, channel },
           );
-          resolve();
+          resolve(message);
         })
         .catch(reject);
     })
