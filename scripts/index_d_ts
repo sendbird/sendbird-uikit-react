@@ -9,7 +9,7 @@ declare module "SendbirdUIKitGlobal" {
   import type SendbirdChat from '@sendbird/chat';
   import type { SendbirdError, SessionHandler, User } from '@sendbird/chat';
   import type { GroupChannel, GroupChannelCreateParams, GroupChannelUpdateParams, Member, SendbirdGroupChat, GroupChannelListQuery } from '@sendbird/chat/groupChannel';
-  import type { AdminMessage, FileMessage, FileMessageCreateParams, MessageListParams, MessageSearchQuery, UserMessage, UserMessageCreateParams, UserMessageUpdateParams } from '@sendbird/chat/message';
+  import type { AdminMessage, FailedMessageHandler, FileMessage, FileMessageCreateParams, MessageListParams, MessageSearchQuery, UserMessage, UserMessageCreateParams, UserMessageUpdateParams } from '@sendbird/chat/message';
   import type { OpenChannel, OpenChannelCreateParams, OpenChannelUpdateParams, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
   export type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
@@ -56,7 +56,7 @@ declare module "SendbirdUIKitGlobal" {
 
   export interface UikitMessageHandler {
     onPending: (handler: MessageHandler) => UikitMessageHandler;
-    onFailed: (handler: MessageHandler) => UikitMessageHandler;
+    onFailed: (handler: FailedMessageHandler) => UikitMessageHandler;
     onSucceeded: (handler: MessageHandler) => UikitMessageHandler;
   }
 
