@@ -32,7 +32,7 @@ The minimum requirements for UIKit for React are:
 
 ### Implement Chat with App component
 
-The `App` component is a collection of all UIKit components you need to implement chat. This is included in all core component samples, so be sure to set your own APP_ID, USER_ID, and NICKNAME in  `const.js` in each to customize your sample. On the [CodeSandbox](https://codesandbox.io/s/1-1-using-sendbird-app-9l4d4b?file=/src/App.js) link, you will see that the props of the `App` component refer to use the values of the correspondings of `const.js` for initialization.
+The `App` component is a collection of all UIKit components you need to implement chat. This is included in all core component samples, so be sure to set your own APP_ID, USER_ID, and NICKNAME in  `const.js` in each to customize your sample. On the [CodeSandbox](https://codesandbox.io/s/1-1-using-sendbird-app-9l4d4b) link, you will see that the props of the `App` component refer to use the values of the correspondings of `const.js` for initialization.
 
 Try setting your own by downloading the Sendbird sample.
 
@@ -273,4 +273,4 @@ See how open channel on live stream works on [CodeSandBox](https://codesandbox.i
 
 ### Community Sample
 
-See how you can create community channels on [CodeSandBox](https://codesandbox.io/s/openchannel-2-forked-5kpnqj?file=/src/App.js).
+See how you can create community channels on [CodeSandBox](https://codesandbox.io/s/openchannel-2-forked-5kpnqj).
