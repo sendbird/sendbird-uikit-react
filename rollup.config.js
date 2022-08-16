@@ -38,7 +38,7 @@ module.exports = ({
     },
   ],
   external: [
-    'sendbird',
+    '@sendbird/chat',
     'prop-types',
     'react',
     'react-dom',
