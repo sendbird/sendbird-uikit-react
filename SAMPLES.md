@@ -7,7 +7,7 @@ Sendbird UIKit for React is a development kit with an user interface that enable
 
 ### More about Sendbird UIKit for React
 
-Find out more about Sendbird UIKit for React at [UIKit for React doc](https://sendbird.com/docs/uikit/v1/javascript/getting-started/about-uikit). If you need any help in resolving any issues or have questions, visit [our community](https://community.sendbird.com).
+Find out more about Sendbird UIKit for React at [UIKit for React doc](https://sendbird.com/docs/uikit/v3/react/overview). If you need any help in resolving any issues or have questions, visit [our community](https://community.sendbird.com).
 
 <br />
 
@@ -26,32 +26,31 @@ The minimum requirements for UIKit for React are:
 
 - React 16.8.0+
 - React DOM 16.8.0+
-- Sendbird Chat SDK for JavaScript 3.0.115+
+- @sendbird/chat v4
 - css-vars-ponyfill 2.3.2
 - date-fns 2.16.1
 
 ### Implement Chat with App component
 
-The `App` component is a collection of all UIKit components you need to implement chat. This is included in all core component samples, so be sure to set your own APP_ID, USER_ID, and NICKNAME in  `const.js` in each to customize your sample. On the [CodeSandbox](https://codesandbox.io/s/1-1-using-sendbird-app-9xum5) link, you will see that the props of the `App` component refer to use the values of the correspondings of `const.js` for initialization.
+The `App` component is a collection of all UIKit components you need to implement chat. This is included in all core component samples, so be sure to set your own APP_ID, USER_ID, and NICKNAME in  `const.js` in each to customize your sample. On the [CodeSandbox](https://codesandbox.io/s/1-1-using-sendbird-app-9l4d4b) link, you will see that the props of the `App` component refer to use the values of the correspondings of `const.js` for initialization.
 
 Try setting your own by downloading the Sendbird sample.
 
 ```javascript
-import { App as SendbirdApp } from 'sendbird-uikit'
+import  SendbirdApp from '@sendbird/uikit-react/App'
 ```
 
 ### Import components to customize UIKit
 
 Here is a list of the essential components that you need to import before you start customizing chat. Note that the names of the components are changed as shown in the code below.
 
-Try [importing components on CodeSandbox](https://codesandbox.io/s/1-2-customization-basic-format-q4e6c).
+Try [importing components on CodeSandbox](https://codesandbox.io/s/1-2-customization-basic-format-9skqq3).
 
 ```javascript
-import {
-  Channel as SBConversation,
-  ChannelList as SBChannelList,
-  ChannelSettings as SBChannelSettings,
-} from 'sendbird-uikit'
+import SBConversation from '@sendbird/uikit-react/Channel';
+import SBChannelList from '@sendbird/uikit-react/ChannelList';
+import SBChannelSettings from '@sendbird/uikit-react/ChannelSettings';
+import withSendBird from '@sendbird/uikit-react/withSendbird';
 ```
 
 ### Referring to CodeSandbox
@@ -70,7 +69,7 @@ This section explains what you need to know before testing the sample app.
 
 The **renderChatItem** is a `ReactElement` prop in the Channel component which you can use to customize `message` by setting a function. This prop provides three arguments: **message**, **onUpdateMessage**, and **onDeleteMessage**. The **message** represents an already sent or received message of an `BaseMessage` object; **onUpdateMessage** and **onDeleteMessage** are callback functions which you can implement with custom code for events related to the corresponding user actions.
 
-Try your [message item on CodeSandbox](https://codesandbox.io/s/2-1-customizing-messageitem-0nop5?file=).
+Try your [message item on CodeSandbox](https://codesandbox.io/s/2-1-customizing-messageitem-q38cg5).
 
 ```javascript
 <Channel
@@ -92,29 +91,32 @@ Try your [message item on CodeSandbox](https://codesandbox.io/s/2-1-customizing-
 
 The **queries.messageListParams** is an `instance` prop in the **channel** component which you can use to retrieve a list of messages by specifying the properties of `MessageListParams`.
 
-Try your [message list params on CodeSandbox](https://codesandbox.io/s/2-2-customizing-messagelistparams-45573).
+Try your [message list params on CodeSandbox](https://codesandbox.io/s/2-2-customizing-messagelistparams-3ipi0g).
 
 > Note: On CodeSandbox’s preview, only the messages you sent will be displayed.
 
 ```javascript
 // Pass arguments in JSON data input format to the query instance.
-<Channel
-    queries={{
-        messageListParams: {
-            senderUserIds: [USER_ID],
-            prevResultSize: 30,
-            includeReplies: false,
-            includeReactions: false
-        }
-   }}
->
+const [queries] = useState({
+// use object json type input, don't create sendbird query instance
+// https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
+// https://github.com/sendbird/SendBird-SDK-JavaScript/blob/master/SendBird.d.ts#L488
+messageListParams: {
+  senderUserIds: [USER_ID],
+  prevResultSize: 30,
+  includeReplies: false,
+  includeReactions: false
+}
+});
+
+<Channel queries={queries} />
 ```
 
 ### Message params
 
 The **onBeforeSendUserMessage**, **onBeforeSendFileMessage**, and **onBeforeUpdateUserMessage** are `callback function` props in the **channel** component. The first two execute additional operations for a user message and a file message respectively; the corresponding modified messages are returned through the **text** and the **file** arguments respectively. The **onBeforeUpdateUserMessage** executes additional operations for a user message before updating it.
 
-Try your [message params on CodeSandbox](https://codesandbox.io/s/2-3-customizing-messageparams-phqii)
+Try your [message params on CodeSandbox](https://codesandbox.io/s/2-3-customizing-messageparams-606156)
 
 > Note: On the CodeSandbox’s preview, you can send or update a message in highlight.
 
@@ -130,23 +132,23 @@ In order to complete an operation you intend to carry out with each function, yo
 
 ```javascript
 const handleUpdateUserMessage = (text) => {
-    const userMessageParams = new sdk.UserMessageParams();
+    const userMessageParams = {};
     userMessageParams.message = text;
     return userMessageParams;
 }
 ```
 
-Find out more about `UserMessageParams` and `FileMessageParams` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.github.io/core-sdk-javascript/module-model_params_userMessageParams-UserMessageParams.html).
+Find out more about `UserMessageParams` and `FileMessageParams` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.com/docs/chat/v4/javascript/ref/interfaces/_sendbird_chat_message.UserMessageCreateParams.html).
 
 ### Chat header
 
 The **renderChatHeader** is a `ReactElement` prop in the **channel** component which you can use to customize the header of `channel` by setting a function. This prop provides two arguments: **channel** and **user**. The channel refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **user** refers to a `User` object which represents the current user.
 
-Try your [chat header on CodeSandbox](https://codesandbox.io/s/2-4-customizing-chatheader-voi0z)
+Try your [chat header on CodeSandbox](https://codesandbox.io/s/2-4-customizing-chatheader-mi5ijz)
 
 ```javascript
 <Channel
-    renderChatHeader={({ channel, user }) => (
+    renderChannelHeader={() => (
         <CustomizedHeader />
     )}
 >
@@ -158,12 +160,12 @@ Try your [chat header on CodeSandbox](https://codesandbox.io/s/2-4-customizing-c
 
 The **renderMessageInput** is a `ReactElement` prop in the **Channel** component which allows you to customize the message input by setting a function. This prop provides three arguments: **channel**, **user**, and **disabled**. The **channel** refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **user** refers to a `User` object which represents the current user. The **disabled** refers to whether to enable the message input box or not.
 
-Try your [message input on CodeSandbox](https://codesandbox.io/s/2-5-customizing-chatinput-wgi9d)
+Try your [message input on CodeSandbox](https://codesandbox.io/s/2-5-customizing-messageinput-forked-or4lm8)
 
 
 ```javascript
 <Channel
-    renderMessageInput={({ channel, user, disabled }) => (
+    renderMessageInput={() => (
         <CustomizedMessageInput />
     )}
 >
@@ -175,7 +177,7 @@ Try your [message input on CodeSandbox](https://codesandbox.io/s/2-5-customizing
 
 The **renderChannelPreview** is a `ReactElement` prop in the **ChannelList** component which allows you to customize channel preview by setting a function. This prop provides two arguments: **channel** and **onLeaveChannel**. The **channel** refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **onLeaveChannel** has a callback function as an argument which can be implemented with custom code for events related to the corresponding user action.
 
-Try your [channel preview item on CodeSandbox](https://codesandbox.io/s/3-1-customizing-channelpreviewitem-ycsvs)
+Try your [channel preview item on CodeSandbox](https://codesandbox.io/s/3-1-customizing-channelpreviewitem-7c9xz6)
 
 ```javascript
 <ChannelList
@@ -190,46 +192,52 @@ Try your [channel preview item on CodeSandbox](https://codesandbox.io/s/3-1-cust
 You can make your own customized channel preview item component in this file. You can use the **onLeaveChannel** function in the component.
 
 ```javascript
-function CustomizedChannelPreviewItem(props) {
-    const { channel, onLeaveChannel } = props;
+const CustomizedChannelPreviewItem = (props) => {
+    const { channel } = props;
+    const onLeaveChannel = sendbirdSelectors.getLeaveChannel(store);
     ...
     onLeaveChannel(channel);
 }
 ```
 
-> Note: You can try making your own customized channel preview item by using `<CustomizedMessageItem />` and using the **onLeaveChannel** function in the component on the CodeSandbox sample.
-
 ### Channel list query
 
 The **queries.channelListQuery** is an `instance` prop in the **ChannelList** component which filters channels by using its options.
 
-Try your [channel list query item on CodeSandbox](https://codesandbox.io/s/3-2-customizing-channellistquery-z2y89?file=)
+Try your [channel list query item on CodeSandbox](https://codesandbox.io/s/3-2-customizing-channellistquery-d0t2l8)
 
 > Note: On the CodeSandbox’s preview, the empty channels that you see means that the channels are successfully created and there are no messages sent by users.
 
 ```javascript
 // Pass arguments in JSON data input format to the query instance.
+  const [queries] = useState({
+    channelListQuery: {
+      includeEmpty: true,
+      limit: 50,
+      order: "chronological"
+      // channelListQuery
+      // https://sendbird.github.io/core-sdk-javascript/module-model_query_groupChannelListQuery-GroupChannelListQuery.html
+    },
+    applicationUserListQuery: {
+      limit: 50
+      // ex) userIdsFilter: ["sendbirdian", ...]
+      // applicationUserListQuery
+      // https://sendbird.github.io/core-sdk-javascript/module-model_query_applicationUserListQuery-ApplicationUserListQuery.html
+    }
+  });
+  
 <ChannelList
-    queries={{
-        channelListQuery: {
-            includeEmpty: true,
-            limit: 50,
-            order: "chronological"
-        },
-        applicationUserListQuery: {
-            limit: 50,
-        }
-    }}
+    queries={queries}
 >
 ```
 
-Find out more about `ChannelListQuery` and `ApplicationUserListQuery` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.github.io/core-sdk-javascript/module-model_query_groupChannelListQuery-GroupChannelListQuery.html).
+Find out more about `ChannelListQuery` and `ApplicationUserListQuery` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.com/docs/chat/v4/javascript/ref/classes/_sendbird_chat_groupChannel.GroupChannelListQuery.html).
 
 ### Channel params
 
 The **onBeforeCreateChannel** is a prop of the **ChannelList** component which can be implemented with custom code for events related to the corresponding user actions.
 
-Try your [channel param on CodeSandbox](https://codesandbox.io/s/3-3-customizing-channellist-sg9kx)
+Try your [channel param on CodeSandbox](https://codesandbox.io/s/3-3-customizing-channelparams-vgcgtj)
 
 > Note: you can create a channel using `GroupChannelParams`.
 
@@ -242,7 +250,7 @@ You can get an array of **selectedUsers** in a function argument. In order to co
 
 ```javascript
 const handleOnBeforeCreateChannel = (selectedUsers) => {
-    const channelParams = new sdk.GroupChannelParams();
+    const channelParams = new sdk.GroupChannelCreateParams();
     channelParams.addUserIds(selectedUsers);
     channelParams.name = "Hello Sendbird!!";
     channelParams.overUrl = null;
@@ -253,7 +261,7 @@ const handleOnBeforeCreateChannel = (selectedUsers) => {
 }
 ```
 
-Find out more about `GroupChannelParams` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.github.io/core-sdk-javascript/module-model_params_groupChannelParams-GroupChannelParams.html).
+Find out more about `GroupChannelParams` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.com/docs/chat/v4/javascript/ref/interfaces/_sendbird_chat_groupChannel.GroupChannelCreateParams.html).
 
 ## Open Channel Samples
 
@@ -261,8 +269,8 @@ We also provide samples for open channels. Check below to see how you can implem
 
 ### Live Streaming Sample
 
-See how open channel on live stream works on [CodeSandBox](https://codesandbox.io/s/openchannel-1-bvxl9?file=/src/App.js).
+See how open channel on live stream works on [CodeSandBox](https://codesandbox.io/s/openchannel-1-ykexd3).
 
 ### Community Sample
 
-See how you can create community channels on [CodeSandBox](https://codesandbox.io/s/openchannel-2-h7x3b?file=/src/App.js).
+See how you can create community channels on [CodeSandBox](https://codesandbox.io/s/openchannel-2-forked-5kpnqj).
