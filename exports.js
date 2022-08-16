@@ -11,6 +11,12 @@ export default {
   useSendbirdStateContext: 'src/hooks/useSendbirdStateContext.tsx',
   withSendbird: 'src/lib/SendbirdSdkContext.jsx',
 
+  // handlers - experimental
+  'handlers/ConnectionHandler': 'src/lib/handlers/ConnectionHandler.ts',
+  'handlers/GroupChannelHandler': 'src/lib/handlers/GroupChannelHandler.ts',
+  'handlers/OpenChannelHandler': 'src/lib/handlers/OpenChannelHandler.ts',
+  'handlers/UserEventHandler': 'src/lib/handlers/UserEventHandler.ts',
+
   // ChannelList
   ChannelList: 'src/smart-components/ChannelList/index.tsx',
   'ChannelList/context': 'src/smart-components/ChannelList/context/ChannelListProvider.tsx',
