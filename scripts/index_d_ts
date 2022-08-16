@@ -865,6 +865,24 @@ declare module '@sendbird/uikit-react/withSendbird' {
   export default withSendbird;
 }
 
+// handlers
+declare module '@sendbird/uikit-react/handlers/ConnectionHandler' {
+  import type { ConnectionHandler } from '@sendbird/chat';
+  export default ConnectionHandler;
+}
+declare module '@sendbird/uikit-react/handlers/GroupChannelHandler' {
+  import type { GroupChannelHandler } from '@sendbird/chat/groupChannel';
+  export default GroupChannelHandler;
+}
+declare module '@sendbird/uikit-react/handlers/OpenChannelHandler' {
+  import type { OpenChannelHandler } from '@sendbird/chat/openChannel';
+  export default OpenChannelHandler;
+}
+declare module '@sendbird/uikit-react/handlers/UserEventHandler' {
+  import type { UserEventHandler } from "@sendbird/chat";
+  export default UserEventHandler;
+}
+
 /** ChannelList */
 declare module '@sendbird/uikit-react/ChannelList' {
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';

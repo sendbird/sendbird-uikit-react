@@ -3,6 +3,7 @@ import type {
   User,
   UserUpdateParams,
 } from '@sendbird/chat';
+
 import { FailedMessageHandler, MessageHandler, UserMessage, UserMessageCreateParams } from '@sendbird/chat/message';
 import { GroupChannel, GroupChannelCreateParams, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 import { OpenChannel, OpenChannelCreateParams, SendbirdOpenChat } from '@sendbird/chat/openChannel';
