@@ -22,7 +22,7 @@ export default function PlaceHolder({
   className = '',
   type,
   searchInString = '',
-  retryToConnect,
+  retryToConnect = null,
 }: PlaceHolderProps): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   return (
