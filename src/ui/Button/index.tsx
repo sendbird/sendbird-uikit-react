@@ -20,7 +20,7 @@ export default function Button({
   size = Size.BIG,
   children = 'Button',
   disabled = false,
-  onClick,
+  onClick = () => {/* noop */},
 }: ButtonProps): ReactElement {
   const injectingClassNames = [
     ...((Array.isArray(className)) ? className : [className]),
