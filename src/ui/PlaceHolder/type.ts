@@ -1,4 +1,4 @@
-export function Types() {
+function Types(): { [key: string]: string } {
   return {
     LOADING: 'LOADING',
     NO_CHANNELS: 'NO_CHANNELS',

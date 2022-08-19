@@ -132,7 +132,7 @@ export default {
   'ui/OpenchannelOGMessage': 'src/ui/OpenchannelOGMessage/index.tsx',
   'ui/OpenchannelThumbnailMessage': 'src/ui/OpenchannelThumbnailMessage/index.tsx',
   'ui/OpenchannelUserMessage': 'src/ui/OpenchannelUserMessage/index.tsx',
-  'ui/PlaceHolder': 'src/ui/PlaceHolder/index.jsx',
+  'ui/PlaceHolder': 'src/ui/PlaceHolder/index.tsx',
   'ui/QuoteMessage': 'src/ui/QuoteMessage/index.tsx',
   'ui/QuoteMessageInput': 'src/ui/QuoteMessageInput/index.tsx',
   'ui/ReactionBadge': 'src/ui/ReactionBadge/index.tsx',
