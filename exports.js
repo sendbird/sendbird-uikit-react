@@ -135,7 +135,7 @@ export default {
   'ui/PlaceHolder': 'src/ui/PlaceHolder/index.jsx',
   'ui/QuoteMessage': 'src/ui/QuoteMessage/index.tsx',
   'ui/QuoteMessageInput': 'src/ui/QuoteMessageInput/index.tsx',
-  'ui/ReactionBadge': 'src/ui/ReactionBadge/index.jsx',
+  'ui/ReactionBadge': 'src/ui/ReactionBadge/index.tsx',
   'ui/ReactionButton': 'src/ui/ReactionButton/index.jsx',
   'ui/SortByRow': 'src/ui/SortByRow/index.tsx',
   'ui/TextButton': 'src/ui/TextButton/index.jsx',
