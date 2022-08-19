@@ -296,7 +296,7 @@ declare module "SendbirdUIKitGlobal" {
     sortChannelList?: (channels: GroupChannel[]) => GroupChannel[];
     queries?: ChannelListQueries;
     children?: React.ReactNode;
-    className?: string | string[];
+    className?: string | Array<string>;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
     disableUserProfile?: boolean;
     disableAutoSelect?: boolean;
@@ -1252,7 +1252,7 @@ declare module '@sendbird/uikit-react/ui/Badge' {
 
 declare module '@sendbird/uikit-react/ui/Button' {
   interface ButtonProps {
-    className?: string | string[];
+    className?: string | Array<string>;
     type?: 'PRIMARY' | 'SECONDARY' | 'DANGER' | 'DISABLED';
     size?: 'BIG' | 'SMALL';
     children?: string | React.ReactElement;
@@ -1359,7 +1359,7 @@ declare module '@sendbird/uikit-react/ui/DateSeparator' {
     SECONDARY_3 ='SECONDARY_3',
   }
   interface DateSeparatorProps {
-    className?: string | string[];
+    className?: string | Array<string>;
     children?: string | React.ReactElement,
     separatorColor: COLORS,
   }
@@ -1441,7 +1441,7 @@ declare module '@sendbird/uikit-react/ui/Icon' {
 
 declare module '@sendbird/uikit-react/ui/IconButton' {
   interface IconButtonProps {
-    className?: string | string[],
+    className?: string | Array<string>,
     children?: string | React.ReactElement,
     disabled?: boolean,
     width?: number,
@@ -1456,7 +1456,7 @@ declare module '@sendbird/uikit-react/ui/IconButton' {
 
 declare module '@sendbird/uikit-react/ui/ImageRenderer' {
   interface ImageRendererProps {
-    className?: string | string[],
+    className?: string | Array<string>,
     defaultComponent?: () => React.ReactElement,
     placeHolder?:  () => React.ReactElement,
     alt?: string,
@@ -1485,7 +1485,7 @@ declare module '@sendbird/uikit-react/ui/Input' {
 
 declare module '@sendbird/uikit-react/ui/Label' {
   interface LabelProps {
-    className: string[],
+    className: Array<string>,
     type: string,
     color: string,
     children: React.ReactElement,
@@ -1496,7 +1496,7 @@ declare module '@sendbird/uikit-react/ui/Label' {
 
 declare module '@sendbird/uikit-react/ui/LinkLabel' {
   interface LinkLabelProps {
-    className?: string[],
+    className?: Array<string>,
     src: string,
     type?: string,
     color?: string,
@@ -1508,7 +1508,7 @@ declare module '@sendbird/uikit-react/ui/LinkLabel' {
 
 declare module '@sendbird/uikit-react/ui/Loader' {
   interface LoaderProps {
-    className?: string[],
+    className?: Array<string>,
     width?: number,
     height?: number,
     children: React.ReactElement | string,
@@ -1572,7 +1572,7 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
   import type { User } from '@sendbird/chat';
 
   interface MessageInputProps {
-    className?: string[],
+    className?: Array<string>,
     isEdit?: boolean,
     isMentionEnabled?: boolean;
     disabled?: boolean,
@@ -1681,7 +1681,7 @@ declare module '@sendbird/uikit-react/ui/MessageStatus' {
 
 declare module '@sendbird/uikit-react/ui/Modal' {
   interface ModalProps {
-    className?: string[],
+    className?: Array<string>,
     onCancel: () => void,
     onSubmit: () => void,
     hideFooter?: boolean,

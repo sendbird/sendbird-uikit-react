@@ -13,7 +13,7 @@ export interface BadgeProps {
 export default function Badge({
   count,
   maxLevel = 2,
-  className,
+  className = '',
 }: BadgeProps): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   const maximumNumber = parseInt('9'.repeat((maxLevel > 6) ? 6 : maxLevel), 10);
