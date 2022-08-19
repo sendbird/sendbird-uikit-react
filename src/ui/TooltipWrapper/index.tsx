@@ -10,7 +10,7 @@ export interface TooltipWrapperProps {
   hoverTooltip: ReactElement;
 }
 export default function TooltipWrapper({
-  className,
+  className = '',
   children,
   hoverTooltip,
   // clickTooltip can be added later
