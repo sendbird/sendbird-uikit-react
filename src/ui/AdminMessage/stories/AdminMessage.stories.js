@@ -1,5 +1,5 @@
 import React from 'react';
-import AdminMessage from '../index.jsx';
+import AdminMessage from '../index';
 import dummyAdminMessage from '../adminMessageDummyData.mock';
 
 const description = `

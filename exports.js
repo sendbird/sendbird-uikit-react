@@ -11,6 +11,12 @@ export default {
   useSendbirdStateContext: 'src/hooks/useSendbirdStateContext.tsx',
   withSendbird: 'src/lib/SendbirdSdkContext.jsx',
 
+  // handlers - experimental
+  'handlers/ConnectionHandler': 'src/lib/handlers/ConnectionHandler.ts',
+  'handlers/GroupChannelHandler': 'src/lib/handlers/GroupChannelHandler.ts',
+  'handlers/OpenChannelHandler': 'src/lib/handlers/OpenChannelHandler.ts',
+  'handlers/UserEventHandler': 'src/lib/handlers/UserEventHandler.ts',
+
   // ChannelList
   ChannelList: 'src/smart-components/ChannelList/index.tsx',
   'ChannelList/context': 'src/smart-components/ChannelList/context/ChannelListProvider.tsx',
@@ -85,11 +91,11 @@ export default {
   // UI Components
   'ui/Accordion': 'src/ui/Accordion/index.tsx',
   'ui/AccordionGroup': 'src/ui/Accordion/AccordionGroup.tsx',
-  'ui/AdminMessage': 'src/ui/AdminMessage/index.jsx',
+  'ui/AdminMessage': 'src/ui/AdminMessage/index.tsx',
   'ui/Avatar': 'src/ui/Avatar/index.tsx',
   'ui/MutedAvatarOverlay': 'src/ui/Avatar/MutedAvatarOverlay.tsx',
-  'ui/Badge': 'src/ui/Badge/index.jsx',
   'ui/Button': 'src/ui/Button/index.tsx',
+  'ui/Badge': 'src/ui/Badge/index.tsx',
   'ui/ChannelAvatar': 'src/ui/ChannelAvatar/index.tsx',
   'ui/OpenChannelAvatar': 'src/ui/ChannelAvatar/OpenChannelAvatar.tsx',
   'ui/ChannelPreview': 'src/ui/ChannelPreview/index.jsx',

@@ -2,7 +2,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import type { OpenChannel, OpenChannelHandler, OpenChannelUpdateParams, SendbirdOpenChat } from '@sendbird/chat/openChannel';
+import { OpenChannel, OpenChannelHandler, OpenChannelUpdateParams, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
@@ -47,8 +47,9 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
   const sdk = globalStore?.stores?.sdkStore?.sdk as SendbirdOpenChat;
 
   const logger = globalStore?.config?.logger;
+  const currentUserId = sdk?.currentUser?.userId;
 
-  const [channel, setChannel] = useState<OpenChannel | null>(null);
+  const [currentChannel, setChannel] = useState<OpenChannel | null>(null);
   useEffect(() => {
     if (!channelUrl || !sdk.openChannel) {
       setChannel(null);
@@ -60,7 +61,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
         logger.info('open channel setting: fetched', channel);
         // TODO: Add pending status
         channel.enter()
-        .then(() => {
+          .then(() => {
             setChannel(channel);
             logger.info('OpenChannelSettings | Succeeded to enter channel');
           })
@@ -74,8 +75,8 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
         setChannel(null);
       });
     return () => {
-      if (channel && channel.exit) {
-        channel.exit()
+      if (currentChannel && currentChannel.exit) {
+        currentChannel.exit()
           .then(() => {
             logger.info('OpenChannelSettings | Succeeded to exit channel');
           })
@@ -88,28 +89,58 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
 
   useEffect(() => {
     const channelHandlerId = uuidv4();
-    if (channel !== null && sdk?.openChannel?.addOpenChannelHandler) {
-      const channelHandlerParams: OpenChannelHandler = {
-        onUserBanned(ch, user) {
-          if (ch?.url === channel?.url && user?.userId === sdk?.currentUser?.userId) {
+    if (currentChannel !== null && sdk?.openChannel?.addOpenChannelHandler) {
+      const channelHandlerParams = new OpenChannelHandler({
+        onOperatorUpdated(channel) {
+          if (channel?.url === currentChannel?.url) {
+            setChannel(channel as OpenChannel);
+          }
+        },
+        onUserMuted(channel, user) {
+          if (channel?.url === currentChannel?.url && user?.userId === currentUserId) {
+            setChannel(channel as OpenChannel);
+          }
+        },
+        onUserUnmuted(channel, user) {
+          if (channel?.url === currentChannel?.url && user?.userId === currentUserId) {
+            setChannel(channel as OpenChannel);
+          }
+        },
+        onUserBanned(channel, user) {
+          if (channel?.url === currentChannel?.url && user?.userId === currentUserId) {
             setChannel(null);
           }
         },
-      };
+        onUserUnbanned(channel, user) {
+          if (user?.userId === currentUserId) {
+            setChannel(channel as OpenChannel);
+          }
+        },
+        onChannelChanged(channel) {
+          if (channel?.url === currentChannel?.url) {
+            setChannel(channel as OpenChannel);
+          }
+        },
+        onChannelDeleted(channelUrl) {
+          if (channelUrl === currentChannel?.url) {
+            setChannel(null);
+          }
+        },
+      });
       sdk.openChannel.addOpenChannelHandler(channelHandlerId, channelHandlerParams);
     }
     return () => {
-      if (sdk?.openChannel?.removeOpenChannelHandler) {
+      if (sdk?.openChannel?.removeOpenChannelHandler && channelHandlerId) {
         logger.info('OpenChannelSettings | Removing channel handlers', channelHandlerId);
         sdk.openChannel.removeOpenChannelHandler?.(channelHandlerId);
       }
     }
-  }, [channel]);
+  }, [currentChannel]);
 
   return (
     <OpenChannelSettingsContext.Provider value={{
       channelUrl,
-      channel,
+      channel: currentChannel,
       setChannel,
       onCloseClick,
       onChannelModified,

@@ -1,5 +1,26 @@
 # Changelog - v3
 
+## [v3.1.1] (Aug 17 2022)
+
+Features:
+* Add channel handlers to the open channel settings
+  * Add an open channel handler into the OpenChannelSettings component
+  * Use operators property to render operator list on the OpenChannelSetting
+  instead of fetching operators
+* Export handlers through `@sendbird/uikit-react/handlers`, this is a workaround
+  to fix an issue where inhertiance chains break custom handler implementation
+  * ConnectionHandler -> `@sendbird/uikit-react/handlers/ConnectionHandler`
+  * GroupChannelHandler -> `@sendbird/uikit-react/handlers/GroupChannelHandler`
+  * OpenChannelHandler -> `@sendbird/uikit-react/handlers/OpenChannelHandler`
+  * UserEventHandler -> `@sendbird/uikit-react/handlers/UserEventHandler`
+  * Example: https://codesandbox.io/s/test-3-1-1-rc-5-f94w7i
+
+Fixes:
+* Update SendableMessage to UserMessage and FileMessage
+* Change the type of MessageHandler.onFailed to FailedMessageHandler
+* Add missing type defns into scripts/index_d_ts
+* Typo in creating channelHandlerId on the ChannelList
+
 ## [v3.1.0] (Aug 03 2022)
 Features:
 * Support moderation in OpenChannel

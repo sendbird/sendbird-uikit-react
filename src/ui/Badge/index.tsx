@@ -1,15 +1,20 @@
-import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement, useContext } from 'react';
 
 import './index.scss';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 
+export interface BadgeProps {
+  count: number;
+  maxLevel?: number;
+  className?: string | Array<string>;
+}
+
 export default function Badge({
   count,
-  maxLevel,
-  className,
-}) {
+  maxLevel = 2,
+  className = '',
+}: BadgeProps): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   const maximumNumber = parseInt('9'.repeat((maxLevel > 6) ? 6 : maxLevel), 10);
   return (
@@ -34,17 +39,3 @@ export default function Badge({
     </div>
   );
 }
-
-Badge.propTypes = {
-  count: PropTypes.number.isRequired,
-  maxLevel: PropTypes.number,
-  className: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string),
-  ]),
-};
-
-Badge.defaultProps = {
-  maxLevel: 2,
-  className: [],
-};

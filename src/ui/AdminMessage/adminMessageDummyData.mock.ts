@@ -44,5 +44,5 @@ export default {
   channelType: "group",
   mentionType: "users",
   message: "hoon1000, pp, Nico, aloompatest, 598, Kyle, 33333333, bennettl and tyson joined.",
-  isAdminMessage: () => true,
+  isAdminMessage: (): boolean => true,
 }
