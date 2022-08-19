@@ -32,8 +32,8 @@ export default function ChatHeader({
   isMuted = false,
   theme = 'light',
   showSearchIcon = false,
-  onSearchClick,
-  onActionClick,
+  onSearchClick = () => {/* noop */},
+  onActionClick = () => {/* noop */},
 }: ChatHeaderProps): ReactElement {
   const userId = currentUser?.userId;
   const { stringSet } = useContext(LocalizationContext);
