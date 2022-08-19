@@ -94,7 +94,7 @@ export default {
   'ui/AdminMessage': 'src/ui/AdminMessage/index.tsx',
   'ui/Avatar': 'src/ui/Avatar/index.tsx',
   'ui/MutedAvatarOverlay': 'src/ui/Avatar/MutedAvatarOverlay.tsx',
-  'ui/Badge': 'src/ui/Badge/index.jsx',
+  'ui/Badge': 'src/ui/Badge/index.tsx',
   'ui/Button': 'src/ui/Button/index.jsx',
   'ui/ChannelAvatar': 'src/ui/ChannelAvatar/index.tsx',
   'ui/OpenChannelAvatar': 'src/ui/ChannelAvatar/OpenChannelAvatar.tsx',
