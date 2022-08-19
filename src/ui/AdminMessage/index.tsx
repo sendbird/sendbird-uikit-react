@@ -10,10 +10,10 @@ interface AdminMessageProps {
 }
 
 export default function AdminMessage({
-  className,
+  className = '',
   message,
 }: AdminMessageProps): ReactElement {
-  if (!(message.isAdminMessage || message.messageType) || !message.isAdminMessage() || message.messageType !== 'admin') {
+  if (!(message?.isAdminMessage || message?.messageType) || !message?.isAdminMessage?.() || message?.messageType !== 'admin') {
     return null;
   }
   return (
@@ -28,7 +28,7 @@ export default function AdminMessage({
         type={LabelTypography.CAPTION_2}
         color={LabelColors.ONBACKGROUND_2}
       >
-        {message.message}
+        {message?.message}
       </Label>
     </div>
   );
