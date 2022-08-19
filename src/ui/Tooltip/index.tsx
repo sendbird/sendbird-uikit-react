@@ -1,14 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement } from 'react';
 
 import './index.scss';
 
 import Label, { LabelColors, LabelTypography } from '../Label';
 
+export interface TooltipProps {
+  className?: string | Array<string>;
+  children?: string | ReactElement;
+}
 export default function Tooltip({
-  className,
-  children,
-}) {
+  className = '',
+  children= '',
+}: TooltipProps): ReactElement {
   return (
     <div
       className={[
@@ -26,17 +29,3 @@ export default function Tooltip({
     </div>
   );
 }
-
-Tooltip.propTypes = {
-  className: PropTypes.string,
-  children: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.arrayOf(PropTypes.string),
-    PropTypes.string,
-  ]),
-};
-
-Tooltip.defaultProps = {
-  className: '',
-  children: '',
-};
