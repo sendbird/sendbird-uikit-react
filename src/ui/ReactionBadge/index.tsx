@@ -14,12 +14,12 @@ export interface ReactionBadgeProps {
 }
 const ReactionBadge = React.forwardRef((props: ReactionBadgeProps, ref: RefObject<HTMLDivElement>): ReactElement => {
   const {
-    className,
+    className = '',
     children,
     count = '',
     isAdd = false,
     selected = false,
-    onClick,
+    onClick = () => {/* noop */},
   } = props;
 
   const getClassNameTail = (): string => {
@@ -40,8 +40,8 @@ const ReactionBadge = React.forwardRef((props: ReactionBadgeProps, ref: RefObjec
       ].join(' ')}
       role="button"
       ref={ref}
-      onClick={(e) => onClick?.(e)}
-      onKeyDown={(e) => onClick?.(e)}
+      onClick={onClick}
+      onKeyDown={onClick}
       tabIndex={0}
     >
       <div className="sendbird-reaction-badge__inner">
