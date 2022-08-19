@@ -91,7 +91,7 @@ export default {
   // UI Components
   'ui/Accordion': 'src/ui/Accordion/index.tsx',
   'ui/AccordionGroup': 'src/ui/Accordion/AccordionGroup.tsx',
-  'ui/AdminMessage': 'src/ui/AdminMessage/index.jsx',
+  'ui/AdminMessage': 'src/ui/AdminMessage/index.tsx',
   'ui/Avatar': 'src/ui/Avatar/index.tsx',
   'ui/MutedAvatarOverlay': 'src/ui/Avatar/MutedAvatarOverlay.tsx',
   'ui/Badge': 'src/ui/Badge/index.jsx',
