@@ -13,7 +13,7 @@ export interface SortByRowProps {
   children: ReactElement | Array<ReactElement>;
 }
 export default function SortByRow({
-  className,
+  className = '',
   maxItemCount,
   itemWidth,
   itemHeight,
