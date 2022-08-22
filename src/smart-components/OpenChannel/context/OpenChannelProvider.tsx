@@ -92,7 +92,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
   const {
     channelUrl,
     children,
-    isMessageGroupingEnabled,
+    isMessageGroupingEnabled = true,
     queries,
     onBeforeSendUserMessage,
     messageLimit,
