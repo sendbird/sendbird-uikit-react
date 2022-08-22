@@ -153,7 +153,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     channelUrl,
     children,
     isReactionEnabled,
-    isMessageGroupingEnabled,
+    isMessageGroupingEnabled = true,
     showSearchIcon,
     highlightedMessage,
     startingPoint,
