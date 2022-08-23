@@ -1,6 +1,7 @@
-// delete
-import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
+// will be deprecated
+import React, { ReactElement, useContext, useEffect } from 'react';
+import { User } from '@sendbird/chat';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import './index.scss';
 import * as utils from './utils';
@@ -11,21 +12,35 @@ import Icon, { IconTypes, IconColors } from '../Icon';
 import IconButton from '../IconButton';
 import ChannelAvatar from '../ChannelAvatar/index';
 
-const noop = () => { };
-export default function ChatHeader(props) {
-  const {
-    currentGroupChannel,
-    currentUser,
-    title,
-    subTitle,
-    isMuted,
-    theme,
-    showSearchIcon,
-    onSearchClick,
-    onActionClick,
-  } = props;
-  const { userId } = currentUser;
+export interface ChatHeaderProps {
+  currentGroupChannel?: GroupChannel;
+  currentUser?: User;
+  title?: string;
+  subTitle?: string;
+  isMuted?: boolean;
+  theme?: string;
+  showSearchIcon?: boolean;
+  onSearchClick?: () => void;
+  onActionClick?: () => void;
+}
+
+export default function ChatHeader({
+  currentGroupChannel,
+  currentUser,
+  title = '',
+  subTitle = '',
+  isMuted = false,
+  theme = 'light',
+  showSearchIcon = false,
+  onSearchClick = () => {/* noop */},
+  onActionClick = () => {/* noop */},
+}: ChatHeaderProps): ReactElement {
+  const userId = currentUser?.userId;
   const { stringSet } = useContext(LocalizationContext);
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.warn('SendbirdUIKit: ChatHeader will be deprecated in the next minor version. Recommend to use "@sendbird/uikit-react/Channtl/components/ChannelHeader" instead.');
+  }, []);
   return (
     <div className="sendbird-chat-header">
       <div className="sendbird-chat-header__left">
@@ -97,41 +112,3 @@ export default function ChatHeader(props) {
     </div>
   );
 }
-
-ChatHeader.propTypes = {
-  /** Type: GroupChannel */
-  currentGroupChannel: PropTypes.shape({
-    members: PropTypes.arrayOf(PropTypes.shape({})),
-    coverUrl: PropTypes.string,
-  }),
-  /** Type: User */
-  currentUser: PropTypes.shape({
-    userId: PropTypes.string,
-  }),
-  title: PropTypes.string,
-  subTitle: PropTypes.oneOfType([
-    PropTypes.bool,
-    PropTypes.string,
-  ]),
-  isMuted: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
-  theme: PropTypes.string,
-  showSearchIcon: PropTypes.bool,
-  onSearchClick: PropTypes.func,
-  /** For clicking the info button */
-  onActionClick: PropTypes.func,
-};
-
-ChatHeader.defaultProps = {
-  currentGroupChannel: {},
-  currentUser: {},
-  title: '',
-  subTitle: '',
-  isMuted: false,
-  theme: 'light',
-  showSearchIcon: false,
-  onSearchClick: noop,
-  onActionClick: noop,
-};

@@ -1,17 +1,25 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement } from 'react';
+import uuidv4 from '../../utils/uuid';
 
 import './index.scss';
 
 const componentClassName = 'sendbird-sort-by-row';
+
+export interface SortByRowProps {
+  className?: string | Array<string>;
+  maxItemCount: number;
+  itemWidth: number;
+  itemHeight: number;
+  children: ReactElement | Array<ReactElement>;
+}
 export default function SortByRow({
-  className,
+  className = '',
   maxItemCount,
   itemWidth,
   itemHeight,
   children,
-}) {
-  if (children.length > maxItemCount) {
+}: SortByRowProps): ReactElement | Array<ReactElement> {
+  if (Array.isArray(children) && children.length > maxItemCount) {
     const result = [];
 
     for (let i = 0; i < children.length; i += maxItemCount) {
@@ -21,7 +29,7 @@ export default function SortByRow({
             ...(Array.isArray(className) ? className : [className]),
             componentClassName,
           ].join(' ')}
-          key={className + i}
+          key={uuidv4()}
           style={{
             width: itemWidth * maxItemCount,
             height: itemHeight,
@@ -43,7 +51,7 @@ export default function SortByRow({
         componentClassName,
       ].join(' ')}
       style={{
-        width: itemWidth * children.length,
+        width: itemWidth * (Array.isArray(children) ? children.length : 1),
         height: itemHeight,
       }}
     >
@@ -51,23 +59,3 @@ export default function SortByRow({
     </div>
   );
 }
-
-SortByRow.propTypes = {
-  className: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string),
-  ]),
-  maxItemCount: PropTypes.number.isRequired,
-  itemWidth: PropTypes.number.isRequired,
-  itemHeight: PropTypes.number.isRequired,
-  children: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element),
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string),
-  ]).isRequired,
-};
-
-SortByRow.defaultProps = {
-  className: '',
-};

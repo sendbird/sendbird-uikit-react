@@ -1,6 +1,6 @@
 import { Type, Size } from './type';
 
-export function changeTypeToClassName(type) {
+export function changeTypeToClassName(type: Type): string {
   switch (type) {
     case Type.PRIMARY: return 'sendbird-button--primary';
     case Type.SECONDARY: return 'sendbird-button--secondary';
@@ -10,7 +10,7 @@ export function changeTypeToClassName(type) {
   }
 }
 
-export function changeSizeToClassName(size) {
+export function changeSizeToClassName(size: Size): string {
   switch (size) {
     case Size.BIG: return 'sendbird-button--big';
     case Size.SMALL: return 'sendbird-button--small';

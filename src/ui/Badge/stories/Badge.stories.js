@@ -1,5 +1,5 @@
 import React from 'react';
-import Badge from '../index.jsx';
+import Badge from '../index';
 
 const description = `
   \`import Badge from "@sendbird/uikit-react/ui/Badge";\`
