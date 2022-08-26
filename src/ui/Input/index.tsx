@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement, RefObject, useState } from 'react';
 
-import Label, { LabelTypography, LabelColors } from '../Label';
 import './index.scss';
 
-export const InputLabel = ({ children }) => (
+import Label, { LabelTypography, LabelColors } from '../Label';
+
+export interface InputLabelProps {
+  children: ReactElement;
+}
+export const InputLabel = ({ children }: InputLabelProps): ReactElement => (
   <Label
     className="sendbird-input-label"
     type={LabelTypography.CAPTION_3}
@@ -14,18 +17,20 @@ export const InputLabel = ({ children }) => (
   </Label>
 );
 
-InputLabel.propTypes = {
-  children: PropTypes.string.isRequired,
-};
-
-// future: add validations? onChange? more props etc etc
-const Input = React.forwardRef((props, ref) => {
+export interface InputProps {
+  name: string;
+  required?: boolean;
+  disabled?: boolean;
+  value?: string;
+  placeHolder?: string;
+}
+const Input = React.forwardRef((props: InputProps, ref: RefObject<HTMLInputElement>) => {
   const {
     name,
     required,
     disabled,
-    placeHolder,
     value,
+    placeHolder,
   } = props;
   const [inputValue, setInputValue] = useState(value);
   return (
@@ -53,20 +58,5 @@ const Input = React.forwardRef((props, ref) => {
     </div>
   );
 });
-
-Input.propTypes = {
-  name: PropTypes.string.isRequired,
-  required: PropTypes.bool,
-  disabled: PropTypes.bool,
-  placeHolder: PropTypes.string,
-  value: PropTypes.string,
-};
-
-Input.defaultProps = {
-  required: false,
-  disabled: false,
-  placeHolder: '',
-  value: '',
-};
 
 export default Input;
