@@ -1,14 +1,15 @@
-import React, { MouseEvent, ReactElement } from 'react';
+import React, { MouseEvent, ReactElement, useContext } from 'react';
+import { FileMessage } from '@sendbird/chat/message';
 import { createPortal } from 'react-dom';
 
 import './index.scss';
+import { LocalizationContext } from '../../lib/LocalizationContext';
 import { MODAL_ROOT } from '../../hooks/useModal/ModalRoot';
 import { isImage, isVideo, isSupportedFileView } from '../../utils';
 
 import Avatar from '../Avatar/index';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import Icon, { IconColors, IconTypes } from '../Icon';
-import { FileMessage } from '@sendbird/chat/message';
 
 interface SenderInfo {
   profileUrl: string;
@@ -37,6 +38,7 @@ export const FileViewerComponent = ({
   onClose,
   onDelete,
 }: FileViewerComponentProps): ReactElement => {
+  const { stringSet } = useContext(LocalizationContext);
   return (
     <div className="sendbird-fileviewer">
       <div className="sendbird-fileviewer__header">
@@ -123,8 +125,7 @@ export const FileViewerComponent = ({
           !isSupportedFileView(type) && (
             <div className="sendbird-fileviewer__content__unsupported">
               <Label type={LabelTypography.H_1} color={LabelColors.ONBACKGROUND_1}>
-                Unsupoprted message
-                {/* TODO: Exchange with StringSet */}
+                {stringSet?.UI__FILE_VIEWER__UNSUPPORT || 'Unsupported message'}
               </Label>
             </div>
           )
