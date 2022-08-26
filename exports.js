@@ -109,7 +109,7 @@ export default {
   'ui/FileViewer': 'src/ui/FileViewer/index.tsx',
   'ui/Icon': 'src/ui/Icon/index.jsx',
   'ui/IconButton': 'src/ui/IconButton/index.tsx',
-  'ui/ImageRenderer': 'src/ui/ImageRenderer/index.jsx',
+  'ui/ImageRenderer': 'src/ui/ImageRenderer/index.tsx',
   'ui/Input': 'src/ui/Input/index.tsx',
   'ui/Label': 'src/ui/Label/index.jsx',
   'ui/LinkLabel': 'src/ui/LinkLabel/index.jsx',

@@ -1,5 +1,4 @@
-import React, { useState, useMemo } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useMemo, ReactElement } from 'react';
 
 import './index.scss';
 
@@ -10,34 +9,45 @@ import './index.scss';
   and those properties switch img tag to real purposing element
 */
 
-// TODO: Set up the official constant of width and height with DesignTeam
+export interface ImageRendererProps {
+  className?: string | Array<string>;
+  url: string;
+  alt?: string;
+  width?: string | number;
+  height?: string | number;
+  circle?: boolean;
+  fixedSize?: boolean;
+  placeHolder?: ((props: { style: { [key: string]: string | number } }) => ReactElement) | ReactElement;
+  defaultComponent?: (() => ReactElement) | ReactElement;
+  onLoad?: () => void;
+  onError?: () => void;
+}
 
-export default function ImageRenderer({
-  className,
+const ImageRenderer = ({
+  className = '',
   url,
-  alt,
-  width,
-  height,
-  fixedSize,
-  defaultComponent,
-  circle,
-  placeHolder, // a function returing JSX / (style) => Element
-  onLoad,
-  onError,
-}) {
+  alt = '',
+  width = null,
+  height = null,
+  circle = false,
+  fixedSize = false,
+  placeHolder = null,
+  defaultComponent = null,
+  onLoad = () => {/* noop */},
+  onError = () => {/* noop */},
+}: ImageRendererProps): ReactElement => {
   const [showDefaultComponent, setShowDefaultComponent] = useState(false);
   const [showPlaceHolder, setShowPlaceHolder] = useState(true);
 
   const DefaultComponent = useMemo(() => {
-    if (typeof defaultComponent === 'function') {
-      return defaultComponent();
-    }
-    return defaultComponent;
+    return typeof defaultComponent === 'function'
+      ? defaultComponent()
+      : defaultComponent;
   }, [defaultComponent]);
 
   const PlaceHolder = useMemo(() => {
-    if (placeHolder && typeof placeHolder === 'function') {
-      return placeHolder({
+    return (placeHolder && typeof placeHolder === 'function')
+      ? placeHolder({
         style: {
           width: '100%',
           minWidth: width,
@@ -47,10 +57,9 @@ export default function ImageRenderer({
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-        },
-      });
-    }
-    return null;
+        }
+      })
+      : null;
   }, [placeHolder]);
 
   const HiddenImageLoader = useMemo(() => {
@@ -111,42 +120,6 @@ export default function ImageRenderer({
       {HiddenImageLoader}
     </div>
   );
-}
+};
 
-ImageRenderer.propTypes = {
-  className: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.string),
-    PropTypes.string,
-  ]),
-  url: PropTypes.string.isRequired,
-  alt: PropTypes.string,
-  width: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]),
-  height: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]),
-  fixedSize: PropTypes.bool,
-  defaultComponent: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.func,
-  ]),
-  placeHolder: PropTypes.func,
-  circle: PropTypes.bool,
-  onLoad: PropTypes.func,
-  onError: PropTypes.func,
-};
-ImageRenderer.defaultProps = {
-  className: '',
-  defaultComponent: null,
-  placeHolder: null,
-  alt: '',
-  width: null,
-  height: null,
-  fixedSize: false,
-  circle: false,
-  onLoad: () => { },
-  onError: () => { },
-};
+export default ImageRenderer;

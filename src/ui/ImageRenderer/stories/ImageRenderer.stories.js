@@ -1,5 +1,5 @@
 import React from 'react';
-import ImageRenderer from '../index.jsx';
+import ImageRenderer from '../index';
 
 import Icon, { IconTypes, IconColors } from '../../Icon';
 
