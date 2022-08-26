@@ -3,6 +3,7 @@ import React, {
   useState,
   useReducer,
 } from 'react';
+import { SendbirdError } from '@sendbird/chat';
 import type { MessageSearchQuery } from '@sendbird/chat/message';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { MessageSearchQueryParams } from '@sendbird/chat/lib/__definition';
@@ -23,11 +24,11 @@ import useSearchStringEffect from './hooks/useSearchStringEffect';
 
 export interface MessageSearchProviderProps {
   channelUrl: string;
-  children?: React.ReactNode;
+  children?: React.ReactElement;
   searchString?: string;
   requestString?: string;
   messageSearchQuery?: MessageSearchQueryParams;
-  onResultLoaded?(messages?: Array<ClientSentMessages>, error?: SendBird.SendBirdError): void;
+  onResultLoaded?(messages?: Array<ClientSentMessages>, error?: SendbirdError): void;
   onResultClick?(message: ClientSentMessages): void;
 }
 
