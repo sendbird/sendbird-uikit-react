@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
 
 import type { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
-import type { MessageSearchQueryParams } from '@sendbird/chat/lib/__definition';
+import { MessageSearchOrder, MessageSearchQueryParams } from '@sendbird/chat/lib/__definition';
 import type {
   AdminMessage,
   BaseMessage,
   FileMessage,
-  MessageSearchQuery,
   UserMessage,
 } from '@sendbird/chat/message';
 import type { SendbirdError } from '@sendbird/chat';
@@ -18,7 +17,7 @@ interface MainProps {
   currentChannel: GroupChannel;
   channelUrl: string;
   requestString?: string;
-  messageSearchQuery?: MessageSearchQuery;
+  messageSearchQuery?: MessageSearchQueryParams;
   onResultLoaded?: (
     messages?: Array<BaseMessage | UserMessage | FileMessage | AdminMessage>,
     error?: SendbirdError,
@@ -44,7 +43,7 @@ function useGetSearchedMessages(
       if (requestString) {
         const inputSearchMessageQueryObject: MessageSearchQueryParams = {
           ...messageSearchQuery,
-          order: 'ts' as const,
+          order: MessageSearchOrder.TIMESTAMP,
           channelUrl,
           messageTimestampFrom: currentChannel.invitedAt,
           keyword: requestString,
