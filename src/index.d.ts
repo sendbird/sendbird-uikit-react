@@ -618,7 +618,7 @@ interface ChannelUIProps {
   renderPlaceholderInvalid?: () => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
   renderChannelHeader?: () => React.ReactElement;
-  renderMessage?: (props: RenderMessageProps) => React.ComponentType;
+  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderMessageInput?: () => React.ReactElement;
   renderTypingIndicator?: () => React.ReactElement;
   renderCustomSeparator?: () => React.ReactElement;
