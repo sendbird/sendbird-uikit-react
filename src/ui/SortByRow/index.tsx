@@ -18,7 +18,7 @@ export default function SortByRow({
   itemWidth,
   itemHeight,
   children,
-}: SortByRowProps): ReactElement | Array<ReactElement> {
+}: SortByRowProps): ReactElement {
   if (Array.isArray(children) && children.length > maxItemCount) {
     const result = [];
 
@@ -41,7 +41,7 @@ export default function SortByRow({
         </div>,
       );
     }
-    return result;
+    return <>{result}</>;
   }
 
   return (
