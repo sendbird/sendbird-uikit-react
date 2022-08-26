@@ -77,14 +77,14 @@ export interface ModalProps {
 }
 export default function Modal(props: ModalProps): ReactElement {
   const {
-    children,
+    children = null,
     titleText,
     submitText,
     disabled = false,
     hideFooter = false,
     type = ButtonTypes.DANGER,
-    onCancel,
-    onSubmit,
+    onCancel = () => {/* noop */},
+    onSubmit = () => {/* noop */},
   } = props;
   return createPortal((
     <div className="sendbird-modal">
