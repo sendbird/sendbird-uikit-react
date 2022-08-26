@@ -113,7 +113,7 @@ export default {
   'ui/Input': 'src/ui/Input/index.jsx',
   'ui/Label': 'src/ui/Label/index.jsx',
   'ui/LinkLabel': 'src/ui/LinkLabel/index.jsx',
-  'ui/Loader': 'src/ui/Loader/index.jsx',
+  'ui/Loader': 'src/ui/Loader/index.tsx',
   'ui/MentionUserLabel': 'src/ui/MentionUserLabel/index.tsx',
   'ui/MentionLabel': 'src/ui/MentionLabel/index.tsx',
   'ui/MessageContent': 'src/ui/MessageContent/index.tsx',

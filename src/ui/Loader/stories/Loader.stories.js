@@ -1,5 +1,5 @@
 import React from 'react';
-import Loader from '../index.jsx';
+import Loader from '../index';
 
 const description = `
   \`import Loader from "@sendbird/uikit-react/ui/Loader";\`
