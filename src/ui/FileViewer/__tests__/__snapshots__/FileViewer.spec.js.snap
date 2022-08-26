@@ -81,7 +81,7 @@ exports[`FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
       >
         <a
           className="sendbird-fileviewer__header__right__actions__download"
-          href="https://sendbird-staging.s3.amazonaws.com/26FA710D-A7F6-4483-ABEA-1F07A07A112E/upload/n/e49e0a4111d4445a8840bd51f3c9d933.png"
+          href="https://static.sendbird.com/sample/profiles/profile_15_512px.png"
           rel="noopener noreferrer"
           target="_blank"
         >
@@ -154,7 +154,7 @@ exports[`FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
     <img
       alt="sent-mail (1).png"
       className="sendbird-fileviewer__content__img"
-      src="https://sendbird-staging.s3.amazonaws.com/26FA710D-A7F6-4483-ABEA-1F07A07A112E/upload/n/e49e0a4111d4445a8840bd51f3c9d933.png"
+      src="https://static.sendbird.com/sample/profiles/profile_15_512px.png"
     />
   </div>
 </div>

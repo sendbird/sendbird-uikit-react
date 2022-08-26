@@ -106,7 +106,7 @@ export default {
   'ui/DateSeparator': 'src/ui/DateSeparator/index.jsx',
   'ui/EmojiReactions': 'src/ui/EmojiReactions/index.tsx',
   'ui/FileMessageItemBody': 'src/ui/FileMessageItemBody/index.tsx',
-  'ui/FileViewer': 'src/ui/FileViewer/index.jsx',
+  'ui/FileViewer': 'src/ui/FileViewer/index.tsx',
   'ui/Icon': 'src/ui/Icon/index.jsx',
   'ui/IconButton': 'src/ui/IconButton/index.jsx',
   'ui/ImageRenderer': 'src/ui/ImageRenderer/index.jsx',
