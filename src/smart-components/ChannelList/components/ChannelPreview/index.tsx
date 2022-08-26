@@ -24,7 +24,7 @@ interface ChannelPreviewInterface {
   isActive?: boolean;
   isTyping?: boolean;
   onClick: () => void;
-  renderChannelAction: (props: { channel: GroupChannel }) => React.ReactNode;
+  renderChannelAction: (props: { channel: GroupChannel }) => React.ReactElement;
   tabIndex: number;
 }
 

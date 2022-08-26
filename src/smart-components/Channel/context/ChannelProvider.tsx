@@ -67,7 +67,7 @@ export type ChannelQueries = {
 };
 
 export type ChannelContextProps = {
-  children?: React.ReactNode;
+  children?: React.ReactElement;
   channelUrl: string;
   isReactionEnabled?: boolean;
   isMessageGroupingEnabled?: boolean;
@@ -81,7 +81,7 @@ export type ChannelContextProps = {
   onSearchClick?(): void;
   replyType?: ReplyType;
   queries?: ChannelQueries;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   disableUserProfile?: boolean;
 };
 

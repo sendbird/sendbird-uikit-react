@@ -16,14 +16,14 @@ import { RenderMessageProps } from '../../../../types';
 import * as messageActionTypes from '../../context/dux/actionTypes';
 
 export interface ChannelUIProps {
-  renderPlaceholderLoader?: () => React.ReactNode;
-  renderPlaceholderInvalid?: () => React.ReactNode;
-  renderPlaceholderEmpty?: () => React.ReactNode;
-  renderChannelHeader?: () => React.ReactNode;
-  renderMessage?: (props: RenderMessageProps) => React.ReactNode;
-  renderMessageInput?: () => React.ReactNode;
-  renderTypingIndicator?: () => React.ReactNode;
-  renderCustomSeparator?: () => React.ReactNode;
+  renderPlaceholderLoader?: () => React.ReactElement;
+  renderPlaceholderInvalid?: () => React.ReactElement;
+  renderPlaceholderEmpty?: () => React.ReactElement;
+  renderChannelHeader?: () => React.ReactElement;
+  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+  renderMessageInput?: () => React.ReactElement;
+  renderTypingIndicator?: () => React.ReactElement;
+  renderCustomSeparator?: () => React.ReactElement;
 }
 
 const ChannelUI: React.FC<ChannelUIProps> = ({

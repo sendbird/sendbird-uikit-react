@@ -7,7 +7,7 @@ import SelectChannelType from '../SelectChannelType';
 
 export interface CreateChannelUIProps {
   onCancel?(): void;
-  renderStepOne?:(props: void) => React.ReactNode;
+  renderStepOne?:(props: void) => React.ReactElement;
 }
 
 const CreateChannel: React.FC<CreateChannelUIProps> = (props: CreateChannelUIProps) => {

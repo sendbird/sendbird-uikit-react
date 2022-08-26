@@ -32,12 +32,12 @@ interface RenderUserProfileProps {
 }
 
 export interface ChannelListUIProps {
-  renderChannelPreview?: (props: RenderChannelPreviewProps) => React.ReactNode;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
-  renderHeader?: (props: void) => React.ReactNode;
-  renderPlaceHolderError?: (props: void) => React.ReactNode;
-  renderPlaceHolderLoading?: (props: void) => React.ReactNode;
-  renderPlaceHolderEmptyList?: (props: void) => React.ReactNode;
+  renderChannelPreview?: (props: RenderChannelPreviewProps) => React.ReactElement;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
+  renderHeader?: (props: void) => React.ReactElement;
+  renderPlaceHolderError?: (props: void) => React.ReactElement;
+  renderPlaceHolderLoading?: (props: void) => React.ReactElement;
+  renderPlaceHolderEmptyList?: (props: void) => React.ReactElement;
 }
 
 const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) => {

@@ -43,7 +43,7 @@ export const copyToClipboard = (text: string): boolean => {
 };
 
 export interface OperatorUIProps {
-  renderChannelProfile?: () => React.ReactNode;
+  renderChannelProfile?: () => React.ReactElement;
 }
 
 export const OperatorUI: React.FC<OperatorUIProps> = ({

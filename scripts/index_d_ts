@@ -27,7 +27,7 @@ declare module "SendbirdUIKitGlobal" {
     allowProfileEdit?: boolean;
     disableUserProfile?: boolean;
     showSearchIcon?: boolean;
-    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
     onProfileEditSuccess?(user: User): void;
     config?: SendbirdProviderConfig;
     useReaction?: boolean;
@@ -182,13 +182,13 @@ declare module "SendbirdUIKitGlobal" {
     configureSession?: (sdk: SendbirdGroupChat | SendbirdOpenChat) => SessionHandler;
     customApiHost?: string,
     customWebSocketHost?: string,
-    children?: React.ReactNode;
+    children?: React.ReactElement;
     theme?: 'light' | 'dark';
     nickname?: string;
     profileUrl?: string;
     dateLocale?: Locale;
     disableUserProfile?: boolean;
-    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
     allowProfileEdit?: boolean;
     userListQuery?(): UserListQuery;
     config?: SendbirdProviderConfig;
@@ -207,7 +207,7 @@ declare module "SendbirdUIKitGlobal" {
 
   export interface SendBirdStateConfig {
     disableUserProfile: boolean;
-    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
     allowProfileEdit: boolean;
     isOnline: boolean;
     isMentionEnabled: boolean;
@@ -301,9 +301,9 @@ declare module "SendbirdUIKitGlobal" {
     onChannelSelect?(channel: GroupChannel): void;
     sortChannelList?: (channels: GroupChannel[]) => GroupChannel[];
     queries?: ChannelListQueries;
-    children?: React.ReactNode;
+    children?: React.ReactElement;
     className?: string | Array<string>;
-    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
     disableUserProfile?: boolean;
     disableAutoSelect?: boolean;
     isTypingIndicatorEnabled?: boolean;
@@ -333,19 +333,19 @@ declare module "SendbirdUIKitGlobal" {
   }
 
   export interface ChannelListUIProps {
-    renderChannelPreview?: (props: RenderChannelPreviewProps) => React.ReactNode;
-    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
-    renderHeader?: (props: void) => React.ReactNode;
-    renderPlaceHolderError?: (props: void) => React.ReactNode;
-    renderPlaceHolderLoading?: (props: void) => React.ReactNode;
-    renderPlaceHolderEmptyList?: (props: void) => React.ReactNode;
+    renderChannelPreview?: (props: RenderChannelPreviewProps) => React.ReactElement;
+    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
+    renderHeader?: (props: void) => React.ReactElement;
+    renderPlaceHolderError?: (props: void) => React.ReactElement;
+    renderPlaceHolderLoading?: (props: void) => React.ReactElement;
+    renderPlaceHolderEmptyList?: (props: void) => React.ReactElement;
   }
 
   export interface ChannelListProps extends ChannelListProviderProps, ChannelListUIProps { }
 
   export interface ChannelListHeaderInterface {
-    renderHeader?: (props: void) => React.ReactNode;
-    renderIconButton?: (props: void) => React.ReactNode;
+    renderHeader?: (props: void) => React.ReactElement;
+    renderIconButton?: (props: void) => React.ReactElement;
     onEdit?: (props: void) => void;
     allowProfileEdit?: boolean;
   }
@@ -354,7 +354,7 @@ declare module "SendbirdUIKitGlobal" {
     channel: GroupChannel;
     isActive?: boolean;
     onClick: () => void;
-    renderChannelAction: (props: { channel: GroupChannel }) => React.ReactNode;
+    renderChannelAction: (props: { channel: GroupChannel }) => React.ReactElement;
     tabIndex: number;
   }
 
@@ -375,10 +375,10 @@ declare module "SendbirdUIKitGlobal" {
   }
 
   export interface ChannelSettingsUIProps {
-    renderPlaceholderError?: () => React.ReactNode;
-    renderChannelProfile?: () => React.ReactNode;
-    renderModerationPanel?: () => React.ReactNode;
-    renderLeaveChannel?: () => React.ReactNode;
+    renderPlaceholderError?: () => React.ReactElement;
+    renderChannelProfile?: () => React.ReactElement;
+    renderModerationPanel?: () => React.ReactElement;
+    renderLeaveChannel?: () => React.ReactElement;
   }
 
   export interface ApplicationUserListQuery {
@@ -393,14 +393,14 @@ declare module "SendbirdUIKitGlobal" {
   }
 
   export type ChannelSettingsContextProps = {
-    children?: React.ReactNode;
+    children?: React.ReactElement;
     channelUrl: string;
     className?: string;
     onCloseClick?(): void;
     onChannelModified?(channel: GroupChannel): void;
     onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): GroupChannelUpdateParams;
     queries?: ChannelSettingsQueries;
-    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
     disableUserProfile?: boolean;
   }
 
@@ -449,7 +449,7 @@ declare module "SendbirdUIKitGlobal" {
 
   export type ChannelContextProps = {
     channelUrl: string;
-    children?: React.ReactNode;
+    children?: React.ReactElement;
     useMessageGrouping?: boolean;
     useReaction?: boolean;
     showSearchIcon?: boolean;
@@ -462,20 +462,20 @@ declare module "SendbirdUIKitGlobal" {
     onSearchClick?(): void;
     replyType?: ReplyType;
     queries?: ChannelQueries;
-    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
     disableUserProfile?: boolean;
     renderUserMentionItem?: (props: { user: User }) => JSX.Element;
   };
 
   export interface ChannelUIProps {
-    renderPlaceholderLoader?: () => React.ReactNode;
-    renderPlaceholderInvalid?: () => React.ReactNode;
-    renderPlaceholderEmpty?: () => React.ReactNode;
-    renderChannelHeader?: () => React.ReactNode;
+    renderPlaceholderLoader?: () => React.ReactElement;
+    renderPlaceholderInvalid?: () => React.ReactElement;
+    renderPlaceholderEmpty?: () => React.ReactElement;
+    renderChannelHeader?: () => React.ReactElement;
     renderMessage?: (props: RenderMessageProps) => React.ComponentType;
-    renderMessageInput?: () => React.ReactNode;
-    renderTypingIndicator?: () => React.ReactNode;
-    renderCustomSeperator?: () => React.ReactNode;
+    renderMessageInput?: () => React.ReactElement;
+    renderTypingIndicator?: () => React.ReactElement;
+    renderCustomSeperator?: () => React.ReactElement;
   }
 
   export type CoreMessageType = AdminMessage | UserMessage | FileMessage;
@@ -524,16 +524,16 @@ declare module "SendbirdUIKitGlobal" {
     chainBottom?: boolean;
     handleScroll: () => void;
     // for extending
-    renderMessage?: (props: RenderMessageProps) => React.ReactNode;
-    renderCustomSeperator?: () => React.ReactNode;
-    renderEditInput?: () => React.ReactNode;
-    renderMessageContent?: () => React.ReactNode;
+    renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+    renderCustomSeperator?: () => React.ReactElement;
+    renderEditInput?: () => React.ReactElement;
+    renderMessageContent?: () => React.ReactElement;
   };
 
   export type MessageListProps = {
-    renderMessage?: (props: RenderMessageProps) => React.ReactNode;
-    renderPlaceholderEmpty?: () => React.ReactNode;
-    renderCustomSeperator?: () => React.ReactNode;
+    renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+    renderPlaceholderEmpty?: () => React.ReactElement;
+    renderCustomSeperator?: () => React.ReactElement;
   };
 
   export type SuggestedMentionListProps = {
@@ -598,7 +598,7 @@ declare module "SendbirdUIKitGlobal" {
 
   export interface OpenChannelProviderProps {
     channelUrl: string;
-    children?: React.ReactNode;
+    children?: React.ReactElement;
     useMessageGrouping?: boolean;
     queries?: OpenChannelQueries;
     messageLimit?: number;
@@ -606,7 +606,7 @@ declare module "SendbirdUIKitGlobal" {
     onBeforeSendFileMessage?(file_: File): FileMessageCreateParams;
     onChatHeaderActionClick?(): void;
     disableUserProfile?: boolean;
-    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   }
 
   export interface OpenChannelMessagesState {
@@ -638,24 +638,24 @@ declare module "SendbirdUIKitGlobal" {
   }
 
   export interface OpenChannelUIProps {
-    renderMessage?: (props: RenderMessageProps) => React.ReactNode;
-    renderHeader?: () => React.ReactNode;
-    renderInput?: () => React.ReactNode;
-    renderPlaceHolderEmptyList?: () => React.ReactNode;
-    renderPlaceHolderError?: () => React.ReactNode;
-    renderPlaceHolderLoading?: () => React.ReactNode;
+    renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+    renderHeader?: () => React.ReactElement;
+    renderInput?: () => React.ReactElement;
+    renderPlaceHolderEmptyList?: () => React.ReactElement;
+    renderPlaceHolderError?: () => React.ReactElement;
+    renderPlaceHolderLoading?: () => React.ReactElement;
   }
 
   export interface OpenChannelProps extends OpenChannelProviderProps, OpenChannelUIProps {
   }
 
   export type OpenchannelMessageListProps = {
-    renderMessage?: (props: RenderMessageProps) => React.ReactNode;
-    renderPlaceHolderEmptyList?: () => React.ReactNode;
+    renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+    renderPlaceHolderEmptyList?: () => React.ReactElement;
   }
 
   export type OpenChannelMessageProps = {
-    renderMessage?: (props: RenderMessageProps) => React.ReactNode;
+    renderMessage?: (props: RenderMessageProps) => React.ReactElement;
     message: EveryMessage;
     chainTop?: boolean;
     chainBottom?: boolean;
@@ -668,18 +668,18 @@ declare module "SendbirdUIKitGlobal" {
    */
   export interface OpenChannelSettingsContextProps {
     channelUrl: string;
-    children?: React.ReactNode;
+    children?: React.ReactElement;
     onCloseClick?(): void;
     onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): OpenChannelUpdateParams;
     onChannelModified?(channel: OpenChannel): void;
     onDeleteChannel?(channel: OpenChannel): void;
     disableUserProfile?: boolean;
-    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   }
 
   export interface OpenChannelSettingsUIProps {
-    renderOperatorUI?: () => React.ReactNode;
-    renderParticipantList?: () => React.ReactNode;
+    renderOperatorUI?: () => React.ReactElement;
+    renderParticipantList?: () => React.ReactElement;
   }
 
   export interface OpenChannelSettingsProps extends OpenChannelSettingsContextProps, OpenChannelSettingsUIProps {
@@ -692,7 +692,7 @@ declare module "SendbirdUIKitGlobal" {
   }
 
   export interface OperatorUIProps {
-    renderChannelProfile?: () => React.ReactNode;
+    renderChannelProfile?: () => React.ReactElement;
   }
 
   export interface OpenChannelEditDetailsProps {
@@ -704,7 +704,7 @@ declare module "SendbirdUIKitGlobal" {
    */
   export interface MessageSearchProviderProps {
     channelUrl: string;
-    children?: React.ReactNode;
+    children?: React.ReactElement;
     searchString?: string;
     requestString?: string;
     messageSearchQuery?: MessageSearchQuery;
@@ -740,10 +740,10 @@ declare module "SendbirdUIKitGlobal" {
   }
 
   export interface MessageSearchUIProps {
-    renderPlaceHolderError?: (props: void) => React.ReactNode;
-    renderPlaceHolderLoading?: (props: void) => React.ReactNode;
-    renderPlaceHolderNoString?: (props: void) => React.ReactNode;
-    renderPlaceHolderEmptyList?: (props: void) => React.ReactNode;
+    renderPlaceHolderError?: (props: void) => React.ReactElement;
+    renderPlaceHolderLoading?: (props: void) => React.ReactElement;
+    renderPlaceHolderNoString?: (props: void) => React.ReactElement;
+    renderPlaceHolderEmptyList?: (props: void) => React.ReactElement;
     renderSearchItem?(
       {
         message,
@@ -763,7 +763,7 @@ declare module "SendbirdUIKitGlobal" {
    * CreateChannel
    */
   export interface CreateChannelProviderProps {
-    children?: React.ReactNode;
+    children?: React.ReactElement;
     onCreateChannel(channel: GroupChannel): void;
     onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
     userListQuery?(): UserListQuery;
@@ -783,7 +783,7 @@ declare module "SendbirdUIKitGlobal" {
 
   export interface CreateChannelUIProps {
     onCancel?(): void;
-    renderStepOne?: (props: void) => React.ReactNode;
+    renderStepOne?: (props: void) => React.ReactElement;
   }
 
   export interface CreateChannelProps extends CreateChannelProviderProps, CreateChannelUIProps { }
@@ -800,7 +800,7 @@ declare module "SendbirdUIKitGlobal" {
    * EditUserProfile
    */
   export interface EditUserProfileProps {
-    children?: React.ReactNode;
+    children?: React.ReactElement;
     onCancel?(): void;
     onThemeChange?(theme: string): void;
     onEditProfile?(updatedUser: User): void;
@@ -826,9 +826,9 @@ declare module '@sendbird/uikit-react' {
   export const OpenChannelSettings: React.FunctionComponent<SendbirdUIKitGlobal.OpenChannelSettingsProps>
   export const MessageSearch: React.FunctionComponent<SendbirdUIKitGlobal.MessageSearchProps>
   export function withSendBird(
-    ChildComp: React.Component | React.ElementType,
+    ChildComp: React.Component | React.ElementType | React.ReactElement,
     mapStoreToProps?: (store: SendbirdUIKitGlobal.SendBirdState) => unknown
-  ): (props: unknown) => React.ReactNode;
+  ): (props: unknown) => React.ReactElement;
   export function useSendbirdStateContext(): SendbirdUIKitGlobal.SendBirdState;
 }
 
@@ -859,9 +859,9 @@ declare module '@sendbird/uikit-react/useSendbirdStateContext' {
 declare module '@sendbird/uikit-react/withSendbird' {
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
   function withSendbird(
-    ChildComp: React.Component | React.ElementType,
+    ChildComp: React.Component | React.ElementType | React.ReactElement,
     mapStoreToProps?: (store: SendbirdUIKitGlobal.SendBirdState) => unknown
-  ): (props: unknown) => React.ReactNode;
+  ): (props: unknown) => React.ReactElement;
   export default withSendbird;
 }
 
