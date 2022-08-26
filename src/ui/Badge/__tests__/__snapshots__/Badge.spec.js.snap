@@ -2,7 +2,7 @@
 
 exports[`Badge should do a snapshot test of the Badge DOM 1`] = `
 <div
-  className="sendbird-badge"
+  className=" sendbird-badge"
 >
   <div
     className="sendbird-badge__text"

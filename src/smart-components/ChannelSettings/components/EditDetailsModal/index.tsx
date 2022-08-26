@@ -130,7 +130,7 @@ const EditDetails: React.FC<EditDetailsProps> = (props: EditDetailsProps) => {
           <TextButton
             className="channel-profile-form__avatar-button"
             onClick={() => hiddenInputRef.current.click()}
-            notUnderline
+            disableUnderline
           >
             <Label type={LabelTypography.BUTTON_1} color={LabelColors.PRIMARY}>
               {stringSet.MODAL__CHANNEL_INFORMATION__UPLOAD}

@@ -135,7 +135,7 @@ function CommunityChannelList({
                     />
                     <TextButton
                       className="community-channel__add-channel__image-box__body__upload"
-                      notUnderline
+                      disableUnderline
                       onClick={() => hiddenInputRef.current.click()}
                     >
                       <Label

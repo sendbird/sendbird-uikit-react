@@ -1,5 +1,5 @@
 import React from 'react';
-import DateSeparator from '../index.jsx';
+import DateSeparator from '../index';
 
 const description = `
   \`import DateSeparator from "@sendbird/uikit-react/ui/DateSeparator";\`

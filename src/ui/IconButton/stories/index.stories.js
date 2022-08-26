@@ -1,5 +1,5 @@
 import React from 'react';
-import IconButton from '../index.jsx';
+import IconButton from '../index';
 
 import DefaultIcon from '../../../svgs/icon-create.svg';
 

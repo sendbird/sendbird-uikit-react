@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import './index.scss';
@@ -27,6 +27,10 @@ export default function ChannelPreview({
   const isFrozen = channel?.isFrozen;
   const isBroadcast = channel?.isBroadcast;
   const { dateLocale, stringSet } = useLocalization();
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.warn('SendbirdUIKit: This ChannelPreview component will be removed in the next minor version. Recommend to use "@sendbird/uikit-react/ChannelList/components/ChannelPreview" instead.');
+  }, []);
   return (
     <div
       className={[

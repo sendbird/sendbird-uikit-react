@@ -1,5 +1,5 @@
 import React from 'react';
-import TooltipWrapper from '../index.jsx';
+import TooltipWrapper from '../index';
 
 import Tooltip from '../../Tooltip';
 import Icon, { IconTypes, IconColors } from '../../Icon';

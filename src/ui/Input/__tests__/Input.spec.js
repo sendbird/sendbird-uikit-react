@@ -13,6 +13,7 @@ describe('Input', () => {
         placeHolder="placeholder"
         name="name"
         disabled={false}
+        required={false}
       />,
     );
     let tree = component.toJSON();
