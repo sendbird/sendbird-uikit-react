@@ -1,5 +1,9 @@
 @import '../../styles/variables';
 
+.sendbird-context-menu {
+  display: 'inline';
+}
+
 .sendbird__offline {
   .sendbird-dropdown__menu .sendbird-dropdown__menu-item {
     cursor: not-allowed;

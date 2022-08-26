@@ -1,12 +1,13 @@
 import React from 'react';
 import ChannelPreview from '../index.jsx';
-import channels from '../../ChannelListDummy/dummyData.mock';
+import channels from './dummyData.mock';
 
 import IconButton from '../../IconButton';
 import IconMore from '../../../svgs/icon-more.svg';
 
 const description = `
-  \`import ChannelPreview from "@sendbird/uikit-react/ui/ChannelPreview";\`
+  \`Recommend to use "@sendbird/uikit-react/ChannelList/components/ChannelPreview" instead of this.\`
+  \`We are removing this ui component in the next minor version.\`
 `;
 
 export default {

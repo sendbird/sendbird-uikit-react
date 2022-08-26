@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '../index.jsx';
+import Button from '../index';
 
 import { Type, Size } from '../type';
 

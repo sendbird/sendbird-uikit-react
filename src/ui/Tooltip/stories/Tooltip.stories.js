@@ -1,5 +1,5 @@
 import React from 'react';
-import Tooltip from '../index.jsx';
+import Tooltip from '../index';
 
 const description = `
   \`import Tooltip from "@sendbird/uikit-react/ui/Tooltip";\`

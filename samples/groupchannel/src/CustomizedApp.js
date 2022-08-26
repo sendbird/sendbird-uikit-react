@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import  SBConversation from '@sendbird/uikit-react/Channel';
 import SBChannelList from '@sendbird/uikit-react/ChannelList';
 import SBChannelSettings from '@sendbird/uikit-react/ChannelSettings'
-import withSendBird from '@sendbird/uikit-react/withSendBird';
+import withSendbird from '@sendbird/uikit-react/withSendbird';
 
 function CustomizedApp(props) {
   // default props
@@ -103,4 +103,4 @@ function CustomizedApp(props) {
   );
 }
 
-export default withSendBird(CustomizedApp);
+export default withSendbird(CustomizedApp);

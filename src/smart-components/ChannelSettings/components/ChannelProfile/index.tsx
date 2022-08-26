@@ -64,7 +64,7 @@ const ChannelProfile: React.FC = () => {
             if (disabled) { return; }
             setShowModal(true);
           }}
-          notUnderline
+          disableUnderline
         >
           <Label
             type={LabelTypography.BUTTON_1}

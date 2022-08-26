@@ -32,14 +32,13 @@ describe('SortByRow', () => {
         {MOCK_ARR}
       </SortByRow>
     );
-
     expect(
-      component
+      component.find(`.${className}`)
     ).toHaveLength(
       parseInt(MOCK_ARR.length / maxItemCount) + ((MOCK_ARR.length % maxItemCount > 0) ? 1 : 0)
     );
     expect(
-      component
+      component.find(`.${className}`)
     ).toHaveLength(3);
   });
 
@@ -58,12 +57,12 @@ describe('SortByRow', () => {
     );
 
     expect(
-      component
+      component.find(`.${className}`)
     ).toHaveLength(
       parseInt(MOCK_ARR.length / maxItemCount) + ((MOCK_ARR.length % maxItemCount > 0) ? 1 : 0)
     );
     expect(
-      component
+      component.find(`.${className}`)
     ).toHaveLength(2);
   });
 

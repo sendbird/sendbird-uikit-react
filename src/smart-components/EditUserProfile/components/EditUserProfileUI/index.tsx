@@ -96,7 +96,7 @@ export default function EditUserProfile(): ReactElement {
           />
           <TextButton
             className="sendbird-edit-user-profile__img__avatar-button"
-            notUnderline
+            disableUnderline
             onClick={() => hiddenInputRef.current.click()}
           >
             <Label type={LabelTypography.BUTTON_1} color={LabelColors.PRIMARY}>

@@ -3,6 +3,7 @@ import type {
   User,
   UserUpdateParams,
 } from '@sendbird/chat';
+
 import { FailedMessageHandler, MessageHandler, UserMessage, UserMessageCreateParams } from '@sendbird/chat/message';
 import { GroupChannel, GroupChannelCreateParams, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 import { OpenChannel, OpenChannelCreateParams, SendbirdOpenChat } from '@sendbird/chat/openChannel';
@@ -357,7 +358,7 @@ export const getExitOpenChannel = (state: SendBirdState) => (
 /**
  * const freezeChannel = selectors.getFreezeChannel(currentChannel);
  * freezeChannel()
- *  .then((channel) => {})
+ *  .then(() => {})
  *  .catch((error) => {})
  */
 export const getFreezeChannel = () => (
@@ -572,11 +573,11 @@ export const getUpdateUserMessage = (state: SendBirdState) => (
  *  channel: GroupChannel | OpenChannel,
  *  message: SendableMessage,
  * )
- *  .then(() => {})
+ *  .then((deletedMessage) => {})
  *  .catch((error) => {})
  */
 export const getDeleteMessage = (state: SendBirdState) => (
-  (channel: GroupChannel | OpenChannel, message: SendableMessage): Promise<SendableMessage> => (
+  (channel: GroupChannel | OpenChannel, message: UserMessage | FileMessage): Promise<UserMessage | FileMessage> => (
     new Promise((resolve, reject) => {
       const pubSub = getPubSub(state);
       const { messageId } = message;
