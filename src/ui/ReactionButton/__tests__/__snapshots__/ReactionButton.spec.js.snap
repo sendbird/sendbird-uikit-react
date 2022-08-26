@@ -8,8 +8,8 @@ exports[`ReactionButton should do a snapshot test of the ReactionButton DOM 1`] 
   role="button"
   style={
     Object {
-      "height": "34px",
-      "width": "34px",
+      "height": "36px",
+      "width": "36px",
     }
   }
   tabIndex={0}
