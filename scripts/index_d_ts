@@ -1388,7 +1388,7 @@ declare module '@sendbird/uikit-react/ui/DateSeparator' {
   }
   interface DateSeparatorProps {
     className?: string | Array<string>;
-    children: React.ReactElement,
+    children?: string | React.ReactElement,
     separatorColor?: Colors,
   }
   const DateSeparator: React.FC<DateSeparatorProps>;

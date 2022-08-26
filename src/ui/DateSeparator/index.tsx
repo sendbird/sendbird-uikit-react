@@ -10,12 +10,12 @@ import {
 import Label, { LabelTypography, LabelColors } from '../Label';
 
 export interface DateSeparatorProps {
-  children: ReactElement;
+  children?: string | ReactElement;
   className?: string | Array<string>;
   separatorColor?: Colors;
 }
 const DateSeparator = ({
-  children,
+  children = null,
   className = '',
   separatorColor = Colors.ONBACKGROUND_4,
 }: DateSeparatorProps): ReactElement => {

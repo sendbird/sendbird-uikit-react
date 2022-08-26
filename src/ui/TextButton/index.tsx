@@ -8,12 +8,12 @@ import {
 } from '../../utils/color';
 
 export interface TextButtonProps {
-  children: ReactElement;
   className?: string | Array<string>;
   color?: Colors;
   disabled?: boolean;
   disableUnderline?: boolean;
   onClick?: (e: (MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>)) => void;
+  children: ReactElement;
 }
 
 const TextButton = ({
@@ -21,7 +21,7 @@ const TextButton = ({
   color = Colors.ONBACKGROUND_1,
   disabled = false,
   disableUnderline = false,
-  onClick,
+  onClick = () => {/* noop */},
   children,
 }: TextButtonProps): ReactElement => {
   return (
