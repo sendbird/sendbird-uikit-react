@@ -33,8 +33,8 @@ const ImageRenderer = ({
   fixedSize = false,
   placeHolder = null,
   defaultComponent = null,
-  onLoad,
-  onError,
+  onLoad = () => {/* noop */},
+  onError = () => {/* noop */},
 }: ImageRendererProps): ReactElement => {
   const [showDefaultComponent, setShowDefaultComponent] = useState(false);
   const [showPlaceHolder, setShowPlaceHolder] = useState(true);
