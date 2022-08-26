@@ -1,5 +1,5 @@
 import React from 'react';
-import SortByRow from '../index.jsx';
+import SortByRow from '../index';
 import Icon, { IconTypes } from '../../Icon';
 
 const description = `

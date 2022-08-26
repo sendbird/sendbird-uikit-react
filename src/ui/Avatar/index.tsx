@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, RefObject } from 'react';
 
 import ImageRenderer from '../ImageRenderer';
 import Icon, { IconTypes, IconColors } from '../Icon';
@@ -197,7 +197,7 @@ function Avatar(
     onClick,
     customDefaultComponent,
   }: AvatarProps,
-  ref: React.Ref<HTMLDivElement>,
+  ref: RefObject<HTMLDivElement>,
 ): ReactElement {
   return (
     <div

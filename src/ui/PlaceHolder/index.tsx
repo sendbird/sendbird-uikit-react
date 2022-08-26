@@ -1,21 +1,29 @@
-import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement, useContext } from 'react';
 
 import './index.scss';
-import Icon, { IconTypes, IconColors } from '../Icon';
-import Loader from '../Loader';
-import { LocalizationContext } from '../../lib/LocalizationContext';
-import Label, { LabelColors, LabelTypography } from '../Label';
+
 import _PlaceHolderTypes from './type';
+import { LocalizationContext } from '../../lib/LocalizationContext';
+
+import Icon, { IconTypes, IconColors } from '../Icon';
+import Label, { LabelColors, LabelTypography } from '../Label';
+import Loader from '../Loader';
 
 export const PlaceHolderTypes = _PlaceHolderTypes;
 
+export interface PlaceHolderProps {
+  className?: string | Array<string>;
+  type: typeof PlaceHolderTypes[keyof typeof PlaceHolderTypes];
+  searchInString?: string;
+  retryToConnect?: () => void;
+}
+
 export default function PlaceHolder({
-  className,
+  className = '',
   type,
-  retryToConnect,
-  searchInString,
-}) {
+  searchInString = '',
+  retryToConnect = null,
+}: PlaceHolderProps): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   return (
     <div className={[
@@ -190,22 +198,3 @@ export default function PlaceHolder({
     </div>
   );
 }
-
-PlaceHolder.propTypes = {
-  className: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string),
-  ]),
-  type: PropTypes.oneOfType([
-    PropTypes.oneOf(Object.keys(PlaceHolderTypes)),
-    PropTypes.string,
-  ]).isRequired,
-  retryToConnect: PropTypes.func,
-  searchInString: PropTypes.string,
-};
-
-PlaceHolder.defaultProps = {
-  className: '',
-  retryToConnect: null,
-  searchInString: '',
-};

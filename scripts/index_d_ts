@@ -8,8 +8,8 @@ declare module "SendbirdUIKitGlobal" {
   import type Locale from 'date-fns';
   import type SendbirdChat from '@sendbird/chat';
   import type { SendbirdError, SessionHandler, User } from '@sendbird/chat';
-  import type { GroupChannel, GroupChannelCreateParams, GroupChannelUpdateParams, Member, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
-  import type { AdminMessage, FileMessage, FileMessageCreateParams, MessageListParams, MessageSearchQuery, UserMessage, UserMessageCreateParams, UserMessageUpdateParams } from '@sendbird/chat/message';
+  import type { GroupChannel, GroupChannelCreateParams, GroupChannelUpdateParams, Member, SendbirdGroupChat, GroupChannelListQuery } from '@sendbird/chat/groupChannel';
+  import type { AdminMessage, FailedMessageHandler, FileMessage, FileMessageCreateParams, MessageListParams, MessageSearchQuery, UserMessage, UserMessageCreateParams, UserMessageUpdateParams } from '@sendbird/chat/message';
   import type { OpenChannel, OpenChannelCreateParams, OpenChannelUpdateParams, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
   export type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
@@ -41,6 +41,9 @@ declare module "SendbirdUIKitGlobal" {
     };
     replyType?: ReplyType;
     disableAutoSelect?: boolean;
+    isReactionEnabled?: boolean,
+    isTypingIndicatorEnabledOnChannelList?: boolean,
+    isMessageReceiptStatusEnabledOnChannelList?: boolean,
   }
 
   export type Logger = {
@@ -53,7 +56,7 @@ declare module "SendbirdUIKitGlobal" {
 
   export interface UikitMessageHandler {
     onPending: (handler: MessageHandler) => UikitMessageHandler;
-    onFailed: (handler: MessageHandler) => UikitMessageHandler;
+    onFailed: (handler: FailedMessageHandler) => UikitMessageHandler;
     onSucceeded: (handler: MessageHandler) => UikitMessageHandler;
   }
 
@@ -197,6 +200,9 @@ declare module "SendbirdUIKitGlobal" {
       resizingWidth?: number | string,
       resizingHeight?: number | string,
     };
+    isReactionEnabled?: boolean,
+    isTypingIndicatorEnabledOnChannelList?: boolean,
+    isMessageReceiptStatusEnabledOnChannelList?: boolean,
   }
 
   export interface SendBirdStateConfig {
@@ -262,7 +268,7 @@ declare module "SendbirdUIKitGlobal" {
     metaDataValuesFilter?: Array<string>;
   }
 
-  export interface GroupChannelListQuery {
+  export interface GroupChannelListQueryParams {
     limit?: number;
     includeEmpty?: boolean;
     order?: 'latest_last_message' | 'chronological' | 'channel_name_alphabetical' | 'metadata_value_alphabetical';
@@ -284,7 +290,7 @@ declare module "SendbirdUIKitGlobal" {
   }
   export interface ChannelListQueries {
     applicationUserListQuery?: ApplicationUserListQuery;
-    channelListQuery?: GroupChannelListQuery;
+    channelListQuery?: GroupChannelListQueryParams;
   }
 
   export interface ChannelListProviderProps {
@@ -296,10 +302,12 @@ declare module "SendbirdUIKitGlobal" {
     sortChannelList?: (channels: GroupChannel[]) => GroupChannel[];
     queries?: ChannelListQueries;
     children?: React.ReactNode;
-    className?: string | string[];
+    className?: string | Array<string>;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
     disableUserProfile?: boolean;
     disableAutoSelect?: boolean;
+    isTypingIndicatorEnabled?: boolean;
+    isMessageReceiptStatusEnabled?: boolean;
   }
 
   export interface ChannelListProviderInterface extends ChannelListProviderProps {
@@ -308,11 +316,13 @@ declare module "SendbirdUIKitGlobal" {
     allChannels: GroupChannel[];
     currentChannel: GroupChannel;
     showSettings: boolean;
-    channelListQuery: GroupChannelListQuery;
+    channelListQuery: GroupChannelListQueryParams;
     currentUserId: string;
     // channelListDispatcher: CustomUseReducerDispatcher;
     channelSource: GroupChannelListQuery;
+    typingChannels: GroupChannel[];
   }
+
 
   export interface RenderChannelPreviewProps {
     channel: GroupChannel;
@@ -454,6 +464,7 @@ declare module "SendbirdUIKitGlobal" {
     queries?: ChannelQueries;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
     disableUserProfile?: boolean;
+    renderUserMentionItem?: (props: { user: User }) => JSX.Element;
   };
 
   export interface ChannelUIProps {
@@ -471,20 +482,20 @@ declare module "SendbirdUIKitGlobal" {
 
   export interface MessageStoreInterface {
     allMessages: CoreMessageType[];
-    loading: boolean;
-    initialized: boolean;
-    unreadSince: string;
-    isInvalid: boolean;
-    currentGroupChannel: GroupChannel;
-    hasMorePrev: boolean;
+    loading?: boolean;
+    initialized?: boolean;
+    unreadSince?: string;
+    isInvalid?: boolean;
+    currentGroupChannel?: GroupChannel;
+    hasMorePrev?: boolean;
     oldestMessageTimeStamp: number;
-    hasMoreNext: boolean;
+    hasMoreNext?: boolean;
     latestMessageTimeStamp: number;
     emojiContainer: any;
     readStatus: any;
   }
 
-  export interface ChannelProviderInterface extends ChannelContextProps, ChannelContextProps {
+  export interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInterface {
     scrollToMessage?(createdAt: number, messageId: number): void;
     messageActionTypes: Record<string, string>;
     quoteMessage: CoreMessageType;
@@ -807,6 +818,7 @@ declare module '@sendbird/uikit-react' {
   export const App: React.FunctionComponent<SendbirdUIKitGlobal.AppProps>;
   export const SendBirdProvider: React.FunctionComponent<SendbirdUIKitGlobal.SendbirdProviderProps>;
   export const sendBirdSelectors: SendbirdUIKitGlobal.sendbirdSelectorsInterface;
+  export const sendbirdSelectors: SendbirdUIKitGlobal.sendbirdSelectorsInterface;
   export const ChannelList: React.FunctionComponent<SendbirdUIKitGlobal.ChannelListProps>;
   export const ChannelSettings: React.FunctionComponent<SendbirdUIKitGlobal.ChannelSettingsProps>;
   export const Channel: React.FunctionComponent<SendbirdUIKitGlobal.ChannelProps>
@@ -851,6 +863,24 @@ declare module '@sendbird/uikit-react/withSendbird' {
     mapStoreToProps?: (store: SendbirdUIKitGlobal.SendBirdState) => unknown
   ): (props: unknown) => React.ReactNode;
   export default withSendbird;
+}
+
+// handlers
+declare module '@sendbird/uikit-react/handlers/ConnectionHandler' {
+  import { ConnectionHandler } from '@sendbird/chat';
+  export default ConnectionHandler;
+}
+declare module '@sendbird/uikit-react/handlers/GroupChannelHandler' {
+  import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
+  export default GroupChannelHandler;
+}
+declare module '@sendbird/uikit-react/handlers/OpenChannelHandler' {
+  import { OpenChannelHandler } from '@sendbird/chat/openChannel';
+  export default OpenChannelHandler;
+}
+declare module '@sendbird/uikit-react/handlers/UserEventHandler' {
+  import { UserEventHandler } from "@sendbird/chat";
+  export default UserEventHandler;
 }
 
 /** ChannelList */
@@ -1252,7 +1282,7 @@ declare module '@sendbird/uikit-react/ui/Badge' {
 
 declare module '@sendbird/uikit-react/ui/Button' {
   interface ButtonProps {
-    className?: string | string[];
+    className?: string | Array<string>;
     type?: 'PRIMARY' | 'SECONDARY' | 'DANGER' | 'DISABLED';
     size?: 'BIG' | 'SMALL';
     children?: string | React.ReactElement;
@@ -1357,8 +1387,8 @@ declare module '@sendbird/uikit-react/ui/DateSeparator' {
     ERROR,
   }
   interface DateSeparatorProps {
-    children: React.ReactElement,
     className?: string | Array<string>;
+    children: React.ReactElement,
     separatorColor?: Colors,
   }
   const DateSeparator: React.FC<DateSeparatorProps>;
@@ -1439,7 +1469,7 @@ declare module '@sendbird/uikit-react/ui/Icon' {
 
 declare module '@sendbird/uikit-react/ui/IconButton' {
   interface IconButtonProps {
-    className?: string | string[],
+    className?: string | Array<string>,
     children?: string | React.ReactElement,
     disabled?: boolean,
     width?: number,
@@ -1454,7 +1484,7 @@ declare module '@sendbird/uikit-react/ui/IconButton' {
 
 declare module '@sendbird/uikit-react/ui/ImageRenderer' {
   interface ImageRendererProps {
-    className?: string | string[],
+    className?: string | Array<string>,
     defaultComponent?: () => React.ReactElement,
     placeHolder?: () => React.ReactElement,
     alt?: string,
@@ -1483,7 +1513,7 @@ declare module '@sendbird/uikit-react/ui/Input' {
 
 declare module '@sendbird/uikit-react/ui/Label' {
   interface LabelProps {
-    className: string[],
+    className: Array<string>,
     type: string,
     color: string,
     children: React.ReactElement,
@@ -1494,7 +1524,7 @@ declare module '@sendbird/uikit-react/ui/Label' {
 
 declare module '@sendbird/uikit-react/ui/LinkLabel' {
   interface LinkLabelProps {
-    className?: string[],
+    className?: Array<string>,
     src: string,
     type?: string,
     color?: string,
@@ -1506,7 +1536,7 @@ declare module '@sendbird/uikit-react/ui/LinkLabel' {
 
 declare module '@sendbird/uikit-react/ui/Loader' {
   interface LoaderProps {
-    className?: string[],
+    className?: Array<string>,
     width?: number,
     height?: number,
     children: React.ReactElement | string,
@@ -1570,7 +1600,7 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
   import type { User } from '@sendbird/chat';
 
   interface MessageInputProps {
-    className?: string[],
+    className?: Array<string>,
     isEdit?: boolean,
     isMentionEnabled?: boolean;
     disabled?: boolean,
@@ -1679,7 +1709,7 @@ declare module '@sendbird/uikit-react/ui/MessageStatus' {
 
 declare module '@sendbird/uikit-react/ui/Modal' {
   interface ModalProps {
-    className?: string[],
+    className?: Array<string>,
     onCancel: () => void,
     onSubmit: () => void,
     hideFooter?: boolean,

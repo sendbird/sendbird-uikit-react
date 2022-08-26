@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { ReactElement, useContext } from 'react';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
@@ -6,7 +6,7 @@ import { LocalizationContext } from '../../lib/LocalizationContext';
 
 import './index.scss';
 
-function ConnectionStatus() {
+function ConnectionStatus(): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   return (
     <div className="sendbird-connection-status">

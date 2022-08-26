@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactionBadge from '../index.jsx';
+import ReactionBadge from '../index';
 import Icon, { IconTypes } from '../../Icon';
 
 const description = `

@@ -17,4 +17,6 @@ export MessageSearch from './smart-components/MessageSearch';
 // withBird(MyCustomComponent) will give the sendbird state as props to MyCustomComponent
 export withSendBird from './lib/SendbirdSdkContext';
 export sendbirdSelectors from './lib/selectors';
+// for legacy parity, slowly remove
+export sendBirdSelectors from './lib/selectors';
 export useSendbirdStateContext from './hooks/useSendbirdStateContext';
