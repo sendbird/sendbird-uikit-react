@@ -143,7 +143,7 @@ export interface FileViewerProps {
 
 export default function FileViewer({
   message,
-  isByMe,
+  isByMe = false,
   onClose,
   onDelete,
 }: FileViewerProps): ReactElement {
