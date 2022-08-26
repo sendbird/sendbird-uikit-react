@@ -108,7 +108,7 @@ export default {
   'ui/FileMessageItemBody': 'src/ui/FileMessageItemBody/index.tsx',
   'ui/FileViewer': 'src/ui/FileViewer/index.tsx',
   'ui/Icon': 'src/ui/Icon/index.jsx',
-  'ui/IconButton': 'src/ui/IconButton/index.jsx',
+  'ui/IconButton': 'src/ui/IconButton/index.tsx',
   'ui/ImageRenderer': 'src/ui/ImageRenderer/index.jsx',
   'ui/Input': 'src/ui/Input/index.jsx',
   'ui/Label': 'src/ui/Label/index.jsx',
