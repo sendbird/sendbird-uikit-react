@@ -16,10 +16,10 @@ import LeaveChannelModal from '../LeaveChannel';
 import UserPanel from '../UserPanel';
 
 export interface ChannelSettingsUIProps {
-  renderPlaceholderError?: () => React.ReactNode;
-  renderChannelProfile?: () => React.ReactNode;
-  renderModerationPanel?: () => React.ReactNode;
-  renderLeaveChannel?: () => React.ReactNode;
+  renderPlaceholderError?: () => React.ReactElement;
+  renderChannelProfile?: () => React.ReactElement;
+  renderModerationPanel?: () => React.ReactElement;
+  renderLeaveChannel?: () => React.ReactElement;
 }
 
 const ChannelSettingsUI: React.FC<ChannelSettingsUIProps> = (props: ChannelSettingsUIProps) => {

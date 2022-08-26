@@ -27,13 +27,13 @@ export interface SendBirdProviderProps {
   userId: string;
   appId: string;
   accessToken?: string;
-  children?: React.ReactNode;
+  children?: React.ReactElement;
   theme?: 'light' | 'dark';
   nickname?: string;
   profileUrl?: string;
   dateLocale?: Locale;
   disableUserProfile?: boolean;
-  renderUserProfile?: (props: SendBirdTypes.RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: SendBirdTypes.RenderUserProfileProps) => React.ReactElement;
   allowProfileEdit?: boolean;
   userListQuery?(): SendBirdTypes.UserListQuery;
   config?: SendBirdTypes.SendBirdProviderConfig;
@@ -51,7 +51,7 @@ export interface SendBirdProviderProps {
 
 export interface SendBirdStateConfig {
   disableUserProfile: boolean;
-  renderUserProfile?: (props: SendBirdTypes.RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: SendBirdTypes.RenderUserProfileProps) => React.ReactElement;
   allowProfileEdit: boolean;
   isOnline: boolean;
   userId: string;

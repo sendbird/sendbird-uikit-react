@@ -294,7 +294,7 @@ channel OpenChannelSettings
 - Features/Bugs:
   * ChannelList
     * disableUserProfile: boolean
-    * renderUserProfile: React.Component
+    * renderUserProfile: React.ReactElement
 
 ## 1.2.4(Sept 17, 2020) Deprecated
 
@@ -304,16 +304,16 @@ channel OpenChannelSettings
 
   * SendBirdProvider
     * disableUserProfile: boolean
-    * renderUserProfile: React.Component
+    * renderUserProfile: React.ReactElement
     * allowProfileEdit: boolean
   * Channel
     * disableUserProfile: boolean
-    * renderUserProfile: React.Component
+    * renderUserProfile: React.ReactElement
   * ChannelSettings
     * disableUserProfile: boolean
-    * renderUserProfile: React.Component
+    * renderUserProfile: React.ReactElement
   * ChannelList
-    * renderHeader(): React.Component
+    * renderHeader(): React.ReactElement
     * allowProfileEdit: boolean
     * onThemeChange(theme: string): void
     * onProfileEditSuccess(user: User): void

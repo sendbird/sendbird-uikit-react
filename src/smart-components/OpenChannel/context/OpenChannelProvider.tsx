@@ -56,7 +56,7 @@ type OpenChannelQueries = {
 
 export interface OpenChannelProviderProps {
   channelUrl: string;
-  children?: React.ReactNode;
+  children?: React.ReactElement;
   isMessageGroupingEnabled?: boolean;
   queries?: OpenChannelQueries;
   messageLimit?: number;
@@ -64,7 +64,7 @@ export interface OpenChannelProviderProps {
   onBeforeSendFileMessage?(file_: File): FileMessageCreateParams;
   onChatHeaderActionClick?(): void;
   disableUserProfile?: boolean;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
 }
 
 

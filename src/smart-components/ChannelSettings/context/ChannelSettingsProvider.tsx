@@ -26,14 +26,14 @@ interface ChannelSettingsQueries {
 }
 
 export type ChannelSettingsContextProps = {
-  children?: React.ReactNode;
+  children?: React.ReactElement;
   channelUrl: string;
   className?: string;
   onCloseClick?(): void;
   onChannelModified?(channel: GroupChannel): void;
   onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): GroupChannelUpdateParams;
   queries?: ChannelSettingsQueries;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   disableUserProfile?: boolean;
 }
 

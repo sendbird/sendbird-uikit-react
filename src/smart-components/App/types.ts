@@ -22,7 +22,7 @@ export default interface AppProps {
   allowProfileEdit?: boolean;
   disableUserProfile?: boolean;
   showSearchIcon?: boolean;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   onProfileEditSuccess?(user: User): void;
   config?: SendBirdProviderConfig;
   isReactionEnabled?: boolean;

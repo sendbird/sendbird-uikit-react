@@ -18,7 +18,7 @@ export interface UserListQuery {
 }
 
 export interface CreateChannelProviderProps {
-  children?: React.ReactNode;
+  children?: React.ReactElement;
   onCreateChannel(channel: GroupChannel): void;
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
   userListQuery?(): UserListQuery;

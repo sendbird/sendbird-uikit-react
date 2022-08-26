@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 const EditUserProfileProviderContext = React.createContext(undefined);
 
 export interface EditUserProfileProps {
-  children?: React.ReactNode;
+  children?: React.ReactElement;
   onCancel?(): void;
   onThemeChange?(theme: string): void;
   onEditProfile?(updatedUser: User): void;

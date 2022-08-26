@@ -481,9 +481,9 @@ The following table lists properties that were added to the `ChannelList` module
 
 |Property name|Type|Description|
 |---|---|---|
-|renderPlaceHolderError|ReactElement|Renders a customized placeholder for error messages in the channel list. (Default: `null`)|
-|renderPlaceHolderLoading|ReactElement|Renders a customized placeholder for loading messages in the channel list. (Default: `null`)|
-|renderPlaceHolderEmptyList|ReactElement|Renders a customized placeholder message for when the channel list is empty. (Default: `null`)|
+|renderPlaceHolderError|React.ReactElement|Renders a customized placeholder for error messages in the channel list. (Default: `null`)|
+|renderPlaceHolderLoading|React.ReactElement|Renders a customized placeholder for loading messages in the channel list. (Default: `null`)|
+|renderPlaceHolderEmptyList|React.ReactElement|Renders a customized placeholder message for when the channel list is empty. (Default: `null`)|
 
 </div>
 
@@ -605,8 +605,8 @@ const MyFileMessageComponent = ({ message, chainTop, chainBottom }) => {
 
 |Render prop|From v2|To v3|
 |---|---|---|
-|renderMessageInput|({ channel, user, disabled, quoteMessage }) => React.ReactNode|() => React.ReactNode|
-|renderChannelHeader|renderChatHeader?: ({ channel, user }) => React.ReactNode|renderChannelHeader?: () => React.ReactNode|
+|renderMessageInput|({ channel, user, disabled, quoteMessage }) => React.ReactElement|() => React.ReactElement|
+|renderChannelHeader|renderChatHeader?: ({ channel, user }) => React.ReactElement|renderChannelHeader?: () => React.ReactElement|
 
 </div>
 
@@ -659,14 +659,14 @@ The following table lists properties that were added to the `Channel` module.
 
 |Property name|Type|Description|
 |---|---|---|
-|renderPlaceholderLoader|ReactElement|Renders a customized placeholder for loading messages in the channel. (Default: `null`)|
-|renderPlaceholderInvalid|ReactElement|Renders a customized placeholder for invalid channel state. (Default: `null`)|
-|renderPlaceholderEmpty|ReactElement|Renders a customized placeholder for an empty channel. (Default: `null`)|
-|renderChannelHeader|ReactElement|Renders a customized channel header component. (Default: `null`)|
-|renderMessage|ReactElement|Renders a customized message view in the channel. (Default: `null`)|
-|renderMessageInput|ReactElement|Renders a customized message input component. (Default: `null`)|
-|renderTypingIndicator|ReactElement|Renders a customized typing indicator component. (Default: `null`)|
-|renderCustomSeperator|ReactElement|Renders a customized date separator view in the message list component. (Default: `null`)|
+|renderPlaceholderLoader|React.ReactElement|Renders a customized placeholder for loading messages in the channel. (Default: `null`)|
+|renderPlaceholderInvalid|React.ReactElement|Renders a customized placeholder for invalid channel state. (Default: `null`)|
+|renderPlaceholderEmpty|React.ReactElement|Renders a customized placeholder for an empty channel. (Default: `null`)|
+|renderChannelHeader|React.ReactElement|Renders a customized channel header component. (Default: `null`)|
+|renderMessage|React.ReactElement|Renders a customized message view in the channel. (Default: `null`)|
+|renderMessageInput|React.ReactElement|Renders a customized message input component. (Default: `null`)|
+|renderTypingIndicator|React.ReactElement|Renders a customized typing indicator component. (Default: `null`)|
+|renderCustomSeperator|React.ReactElement|Renders a customized date separator view in the message list component. (Default: `null`)|
 
 </div>
 
@@ -698,7 +698,7 @@ import { ChannelSettings } from "@sendbird/uikit-react"
 
 |Render prop|From v2|To v3|
 |---|---|---|
-|renderChannelProfile|({ channel }) => React.ReactNode|() => React.ReactNode|
+|renderChannelProfile|({ channel }) => React.ReactElement|() => React.ReactElement|
 
 </div>
 
@@ -724,9 +724,9 @@ The following table lists properties that were added to the `ChannelSettings` mo
 
 |Property name|Type|Description|
 |---|---|---|
-|renderPlaceHolderError|ReactElement|Renders a customized placeholder for error messages that occur in the channel settings menu. (Default: `null`)|
-|renderModerationPanel|ReactElement|Renders a customized view of the moderation panel that displays the moderation tools for channel operators. (Default: `null`)|
-|renderexitChannel|ReactElement|Renders a customized leave channel button in the settings module. (Default: `null`)|
+|renderPlaceHolderError|React.ReactElement|Renders a customized placeholder for error messages that occur in the channel settings menu. (Default: `null`)|
+|renderModerationPanel|React.ReactElement|Renders a customized view of the moderation panel that displays the moderation tools for channel operators. (Default: `null`)|
+|renderexitChannel|React.ReactElement|Renders a customized leave channel button in the settings module. (Default: `null`)|
 
 </div>
 
@@ -758,8 +758,8 @@ import { OpenChannel } from "@sendbird/uikit-react"
 
 |Render prop|From v2|To v3|
 |---|---|---|
-|renderChannelTitle|({channel, user}) => React.ReactNode|() => React.ReactNode|
-|renderMessageInput|({channel, user, disabled}) => React.ReactNode|() => React.ReactNode|
+|renderChannelTitle|({channel, user}) => React.ReactElement|() => React.ReactElement|
+|renderMessageInput|({channel, user, disabled}) => React.ReactElement|() => React.ReactElement|
 
 </div>
 
@@ -806,12 +806,12 @@ The following table lists properties that were added to the `OpenChannel` module
 
 |Property name|Type|Description|
 |---|---|---|
-|renderMessage|ReactElement|Renders a customized message view in the channel. (Default: `null`)|
-|renderHeader|ReactElement|Renders a customized channel header component. (Default: `null`)|
-|renderInput|ReactElement|Renders a customized message input component. (Default: `null`)|
-|renderPlaceholderEmptyList|ReactElement|Renders a customized placeholder for an empty channel. (Default: `null`)|
-|renderPlaceHolderError|ReactElement|Renders a customized placeholder for error messages that occur in the channel. (Default: `null`)|
-|renderPlaceholderLoading|ReactElement|Renders a customized placeholder for loading messages in the channel. (Default: `null`)|
+|renderMessage|React.ReactElement|Renders a customized message view in the channel. (Default: `null`)|
+|renderHeader|React.ReactElement|Renders a customized channel header component. (Default: `null`)|
+|renderInput|React.ReactElement|Renders a customized message input component. (Default: `null`)|
+|renderPlaceholderEmptyList|React.ReactElement|Renders a customized placeholder for an empty channel. (Default: `null`)|
+|renderPlaceHolderError|React.ReactElement|Renders a customized placeholder for error messages that occur in the channel. (Default: `null`)|
+|renderPlaceholderLoading|React.ReactElement|Renders a customized placeholder for loading messages in the channel. (Default: `null`)|
 
 </div>
 
@@ -855,8 +855,8 @@ The following table lists properties that were added to the `OpenChannelSettings
 
 |Property name|Type|Description|
 |---|---|---|
-|renderOperatorUI|ReactElement|Renders a customized view of the channel settings for operators. (Default: `null`)|
-|renderParticipantList|ReactElement|Renders a customized view of the channel settings for non-operator members. (Default: `null`)|
+|renderOperatorUI|React.ReactElement|Renders a customized view of the channel settings for operators. (Default: `null`)|
+|renderParticipantList|React.ReactElement|Renders a customized view of the channel settings for non-operator members. (Default: `null`)|
 
 </div>
 
@@ -890,10 +890,10 @@ The following table lists properties that were added to the `MessageSearch` modu
 
 |Property name|Type|Description|
 |---|---|---|
-|renderPlaceHolderError|ReactElement|Renders a customized placeholder for error messages that occur in the search result. (Default: `null`)|
-|renderPlaceholderLoading|ReactElement|Renders a customized placeholder for loading messages in the search result. (Default: `null`)|
-|renderPlaceHolderNoString|ReactElement|Renders a customized placeholder for when there are no messages that match the search query.|
-|renderPlaceholderEmptyList|ReactElement|Renders a customized placeholder for an empty list of search results. (Default: `null`)|
+|renderPlaceHolderError|React.ReactElement|Renders a customized placeholder for error messages that occur in the search result. (Default: `null`)|
+|renderPlaceholderLoading|React.ReactElement|Renders a customized placeholder for loading messages in the search result. (Default: `null`)|
+|renderPlaceHolderNoString|React.ReactElement|Renders a customized placeholder for when there are no messages that match the search query.|
+|renderPlaceholderEmptyList|React.ReactElement|Renders a customized placeholder for an empty list of search results. (Default: `null`)|
 
 </div>
 

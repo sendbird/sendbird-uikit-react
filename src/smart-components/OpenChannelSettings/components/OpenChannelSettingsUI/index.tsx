@@ -14,8 +14,8 @@ import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import Icon, { IconTypes } from '../../../../ui/Icon';
 
 export interface OpenChannelUIProps {
-  renderOperatorUI?: () => React.ReactNode;
-  renderParticipantList?: () => React.ReactNode;
+  renderOperatorUI?: () => React.ReactElement;
+  renderParticipantList?: () => React.ReactElement;
 }
 
 const OpenChannelUI: React.FC<OpenChannelUIProps> = ({

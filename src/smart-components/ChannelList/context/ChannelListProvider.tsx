@@ -73,9 +73,9 @@ export interface ChannelListProviderProps {
   onChannelSelect?(channel: GroupChannel): void;
   sortChannelList?: (channels: GroupChannel[]) => GroupChannel[];
   queries?: ChannelListQueries;
-  children?: React.ReactNode;
+  children?: React.ReactElement;
   className?: string | string[];
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   disableUserProfile?: boolean;
   disableAutoSelect?: boolean;
   typingChannels?: Array<GroupChannel>;

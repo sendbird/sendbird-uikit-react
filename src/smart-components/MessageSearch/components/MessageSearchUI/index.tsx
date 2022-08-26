@@ -14,10 +14,10 @@ import { ClientSentMessages } from '../../../../types';
 const COMPONENT_CLASS_NAME = 'sendbird-message-search';
 
 export interface MessageSearchUIProps {
-  renderPlaceHolderError?: (props: void) => React.ReactNode;
-  renderPlaceHolderLoading?: (props: void) => React.ReactNode;
-  renderPlaceHolderNoString?: (props: void) => React.ReactNode;
-  renderPlaceHolderEmptyList?: (props: void) => React.ReactNode;
+  renderPlaceHolderError?: (props: void) => React.ReactElement;
+  renderPlaceHolderLoading?: (props: void) => React.ReactElement;
+  renderPlaceHolderNoString?: (props: void) => React.ReactElement;
+  renderPlaceHolderEmptyList?: (props: void) => React.ReactElement;
   renderSearchItem?(
     {
       message,

@@ -32,7 +32,7 @@ export enum SendbirdUIKitThemes {
 
 interface SendBirdStateConfig {
   disableUserProfile: boolean;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   allowProfileEdit: boolean;
   isOnline: boolean;
   userId: string;

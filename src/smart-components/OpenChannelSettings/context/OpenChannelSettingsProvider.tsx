@@ -11,13 +11,13 @@ import uuidv4 from '../../../utils/uuid';
 
 export interface OpenChannelSettingsContextProps {
   channelUrl: string;
-  children?: React.ReactNode;
+  children?: React.ReactElement;
   onCloseClick?(): void;
   onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): OpenChannelUpdateParams;
   onChannelModified?(channel: OpenChannel): void;
   onDeleteChannel?(channel: OpenChannel): void;
   disableUserProfile?: boolean;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
 }
 
 interface OpenChannelSettingsContextType {

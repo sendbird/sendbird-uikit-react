@@ -177,6 +177,6 @@ interface ConnectedEditUserProfileProps {
 
 const ConnectedEditUserProfile: (
   props: ConnectedEditUserProfileProps
-) => React.Component = withSendbirdContext(EditUserProfile, mapStoreToProps);
+) => React.ReactElement = withSendbirdContext(EditUserProfile, mapStoreToProps);
 
 export default ConnectedEditUserProfile;

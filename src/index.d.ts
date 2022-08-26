@@ -89,13 +89,13 @@ interface SendBirdProviderProps {
   configureSession?: (sdk: SendbirdChat) => SessionHandler;
   customApiHost?: string,
   customWebSocketHost?: string,
-  children?: React.ReactNode;
+  children?: React.ReactElement;
   theme?: 'light' | 'dark';
   nickname?: string;
   profileUrl?: string;
   dateLocale?: Locale;
   disableUserProfile?: boolean;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   allowProfileEdit?: boolean;
   userListQuery?(): UserListQuery;
   config?: SendBirdProviderConfig;
@@ -113,7 +113,7 @@ interface SendBirdProviderProps {
 
 interface SendBirdStateConfig {
   disableUserProfile: boolean;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   allowProfileEdit: boolean;
   isOnline: boolean;
   isMentionEnabled: boolean;
@@ -264,7 +264,7 @@ interface AppProps {
   allowProfileEdit?: boolean;
   disableUserProfile?: boolean;
   showSearchIcon?: boolean;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   onProfileEditSuccess?(user: User): void;
   config?: SendBirdProviderConfig;
   isReactionEnabled?: boolean;
@@ -323,9 +323,9 @@ export interface ChannelListProviderProps {
   onChannelSelect?(channel: GroupChannel): void;
   sortChannelList?: (channels: GroupChannel[]) => GroupChannel[];
   queries?: ChannelListQueries;
-  children?: React.ReactNode;
+  children?: React.ReactElement;
   className?: string | string[];
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   disableUserProfile?: boolean;
   disableAutoSelect?: boolean;
   typingChannels?: Array<GroupChannel>;
@@ -354,19 +354,19 @@ interface RenderChannelPreviewProps {
 }
 
 interface ChannelListUIProps {
-  renderChannelPreview?: (props: RenderChannelPreviewProps) => React.ReactNode;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
-  renderHeader?: (props: void) => React.ReactNode;
-  renderPlaceHolderError?: (props: void) => React.ReactNode;
-  renderPlaceHolderLoading?: (props: void) => React.ReactNode;
-  renderPlaceHolderEmptyList?: (props: void) => React.ReactNode;
+  renderChannelPreview?: (props: RenderChannelPreviewProps) => React.ReactElement;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
+  renderHeader?: (props: void) => React.ReactElement;
+  renderPlaceHolderError?: (props: void) => React.ReactElement;
+  renderPlaceHolderLoading?: (props: void) => React.ReactElement;
+  renderPlaceHolderEmptyList?: (props: void) => React.ReactElement;
 }
 
 interface ChannelListProps extends ChannelListProviderInterface, ChannelListUIProps {}
 
 interface ChannelListHeaderInterface {
-  renderHeader?: (props: void) => React.ReactNode;
-  renderIconButton?: (props: void) => React.ReactNode;
+  renderHeader?: (props: void) => React.ReactElement;
+  renderIconButton?: (props: void) => React.ReactElement;
   onEdit?: (props: void) => void;
   allowProfileEdit?: boolean;
 }
@@ -376,7 +376,7 @@ interface ChannelPreviewInterface {
   isActive?: boolean;
   isTyping?: boolean;
   onClick: () => void;
-  renderChannelAction: (props: { channel: GroupChannel }) => React.ReactNode;
+  renderChannelAction: (props: { channel: GroupChannel }) => React.ReactElement;
   tabIndex: number;
 }
 
@@ -397,10 +397,10 @@ interface ChannelSettingsProviderInterface {
 }
 
 interface ChannelSettingsUIProps {
-  renderPlaceholderError?: () => React.ReactNode;
-  renderChannelProfile?: () => React.ReactNode;
-  renderModerationPanel?: () => React.ReactNode;
-  renderLeaveChannel?: () => React.ReactNode;
+  renderPlaceholderError?: () => React.ReactElement;
+  renderChannelProfile?: () => React.ReactElement;
+  renderModerationPanel?: () => React.ReactElement;
+  renderLeaveChannel?: () => React.ReactElement;
 }
 
 interface ApplicationUserListQuery {
@@ -415,14 +415,14 @@ interface ChannelSettingsQueries {
 }
 
 type ChannelSettingsContextProps = {
-  children: React.ReactNode;
+  children: React.ReactElement;
   channelUrl: string;
   className?: string;
   onCloseClick?(): void;
   onChannelModified?(channel: GroupChannel): void;
   onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): GroupChannelUpdateParams;
   queries?: ChannelSettingsQueries;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   disableUserProfile?: boolean;
 }
 
@@ -467,9 +467,9 @@ declare module '@sendbird/uikit-react'  {
   export type OpenChannelSettings = React.FunctionComponent<OpenChannelSettingsProps>
   export type MessageSearch = React.FunctionComponent<MessageSearchProps>
   export function withSendBird(
-    ChildComp: React.Component | React.ElementType,
+    ChildComp: React.Component | React.ElementType | React.ReactElement,
     mapStoreToProps?: (store: SendBirdState) => unknown
-  ): (props: unknown) => React.ReactNode;
+  ): (props: unknown) => React.ReactElement;
   export function useSendbirdStateContext(): SendBirdState;
 }
 
@@ -495,9 +495,9 @@ declare module '@sendbird/uikit-react/useSendbirdStateContext' {
 
 declare module '@sendbird/uikit-react/withSendBird' {
   function withSendBird(
-    ChildComp: React.Component | React.ElementType,
+    ChildComp: React.Component | React.ElementType | React.ReactElement,
     mapStoreToProps?: (store: SendBirdState) => unknown
-  ): (props: unknown) => React.ReactNode;
+  ): (props: unknown) => React.ReactElement;
   export default withSendBird;
 }
 
@@ -596,7 +596,7 @@ type ChannelQueries = {
 
 type ChannelContextProps = {
   channelUrl: string;
-  children?: React.ReactNode;
+  children?: React.ReactElement;
   isReactionEnabled?: boolean;
   isMessageGroupingEnabled?: boolean;
   showSearchIcon?: boolean;
@@ -609,19 +609,19 @@ type ChannelContextProps = {
   onSearchClick?(): void;
   replyType?: ReplyType;
   queries?: ChannelQueries;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   disableUserProfile?: boolean;
 };
 
 interface ChannelUIProps {
-  renderPlaceholderLoader?: () => React.ReactNode;
-  renderPlaceholderInvalid?: () => React.ReactNode;
-  renderPlaceholderEmpty?: () => React.ReactNode;
-  renderChannelHeader?: () => React.ReactNode;
-  renderMessage?: (props: RenderMessageProps) => React.ComponentType;
-  renderMessageInput?: () => React.ReactNode;
-  renderTypingIndicator?: () => React.ReactNode;
-  renderCustomSeparator?: () => React.ReactNode;
+  renderPlaceholderLoader?: () => React.ReactElement;
+  renderPlaceholderInvalid?: () => React.ReactElement;
+  renderPlaceholderEmpty?: () => React.ReactElement;
+  renderChannelHeader?: () => React.ReactElement;
+  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+  renderMessageInput?: () => React.ReactElement;
+  renderTypingIndicator?: () => React.ReactElement;
+  renderCustomSeparator?: () => React.ReactElement;
 }
 
 type CoreMessageType = AdminMessage | UserMessage | FileMessage;
@@ -670,16 +670,16 @@ type MessageUIProps = {
   chainBottom?: boolean;
   handleScroll: () => void;
   // for extending
-  renderMessage?: (props: RenderMessageProps) => React.ReactNode;
-  renderCustomSeparator?: () => React.ReactNode;
-  renderEditInput?: () => React.ReactNode;
-  renderMessageContent?: () => React.ReactNode;
+  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+  renderCustomSeparator?: () => React.ReactElement;
+  renderEditInput?: () => React.ReactElement;
+  renderMessageContent?: () => React.ReactElement;
 };
 
 type MessageListProps = {
-  renderMessage?: (props: RenderMessageProps) => React.ReactNode;
-  renderPlaceholderEmpty?: () => React.ReactNode;
-  renderCustomSeparator?: () => React.ReactNode;
+  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+  renderPlaceholderEmpty?: () => React.ReactElement;
+  renderCustomSeparator?: () => React.ReactElement;
 };
 
 type SuggestedMentionListProps = {
@@ -814,7 +814,7 @@ type OpenChannelQueries = {
 
 interface OpenChannelProviderProps {
   channelUrl: string;
-  children?: React.ReactNode;
+  children?: React.ReactElement;
   isMessageGroupingEnabled?: boolean;
   queries?: OpenChannelQueries;
   messageLimit?: number;
@@ -822,7 +822,7 @@ interface OpenChannelProviderProps {
   onBeforeSendFileMessage?(file_: File): FileMessageCreateParams;
   onChatHeaderActionClick?(): void;
   disableUserProfile?: boolean;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
 }
 
 interface OpenChannelMessagesState {
@@ -854,24 +854,24 @@ interface OpenChannelInterface extends OpenChannelProviderProps, OpenChannelMess
 }
 
 interface OpenChannelUIProps {
-  renderMessage?: (props: RenderMessageProps) => React.ReactNode;
-  renderHeader?: () => React.ReactNode;
-  renderInput?: () => React.ReactNode;
-  renderPlaceHolderEmptyList?: () => React.ReactNode;
-  renderPlaceHolderError?: () => React.ReactNode;
-  renderPlaceHolderLoading?: () => React.ReactNode;
+  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+  renderHeader?: () => React.ReactElement;
+  renderInput?: () => React.ReactElement;
+  renderPlaceHolderEmptyList?: () => React.ReactElement;
+  renderPlaceHolderError?: () => React.ReactElement;
+  renderPlaceHolderLoading?: () => React.ReactElement;
 }
 
 interface OpenChannelProps extends OpenChannelProviderProps, OpenChannelUIProps {
 }
 
 type OpenchannelMessageListProps = {
-  renderMessage?: (props: RenderMessageProps) => React.ReactNode;
-  renderPlaceHolderEmptyList?: () => React.ReactNode;
+  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+  renderPlaceHolderEmptyList?: () => React.ReactElement;
 }
 
 type OpenChannelMessageProps = {
-  renderMessage?: (props: RenderMessageProps) => React.ReactNode;
+  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   message: EveryMessage;
   chainTop?: boolean;
   chainBottom?: boolean;
@@ -923,18 +923,18 @@ declare module '@sendbird/uikit-react/OpenChannel/components/OpenChannelUI' {
 
 interface OpenChannelSettingsContextProps {
   channelUrl: string;
-  children?: React.ReactNode;
+  children?: React.ReactElement;
   onCloseClick?(): void;
   onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): OpenChannelUpdateParams;
   onChannelModified?(channel: OpenChannel): void;
   onDeleteChannel?(channel: OpenChannel): void;
   disableUserProfile?: boolean;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
 }
 
 interface OpenChannelSettingsUIProps {
-  renderOperatorUI?: () => React.ReactNode;
-  renderParticipantList?: () => React.ReactNode;
+  renderOperatorUI?: () => React.ReactElement;
+  renderParticipantList?: () => React.ReactElement;
 }
 
 interface OpenChannelSettingsProps extends OpenChannelSettingsContextProps, OpenChannelSettingsUIProps {
@@ -947,7 +947,7 @@ interface OpenChannelSettingsContextType extends OpenChannelSettingsContextProps
 }
 
 interface OperatorUIProps {
-  renderChannelProfile?: () => React.ReactNode;
+  renderChannelProfile?: () => React.ReactElement;
 }
 
 interface OpenChannelEditDetailsProps {
@@ -986,7 +986,7 @@ declare module '@sendbird/uikit-react/OpenChannelSettings/components/Participant
 
 export interface MessageSearchProviderProps {
   channelUrl: string;
-  children?: React.ReactNode;
+  children?: React.ReactElement;
   searchString?: string;
   requestString?: string;
   messageSearchQuery?: MessageSearchQuery;
@@ -1021,10 +1021,10 @@ interface MessageSearchProviderInterface extends MessageSearchProviderProps {
 }
 
 interface MessageSearchUIProps {
-  renderPlaceHolderError?: (props: void) => React.ReactNode;
-  renderPlaceHolderLoading?: (props: void) => React.ReactNode;
-  renderPlaceHolderNoString?: (props: void) => React.ReactNode;
-  renderPlaceHolderEmptyList?: (props: void) => React.ReactNode;
+  renderPlaceHolderError?: (props: void) => React.ReactElement;
+  renderPlaceHolderLoading?: (props: void) => React.ReactElement;
+  renderPlaceHolderNoString?: (props: void) => React.ReactElement;
+  renderPlaceHolderEmptyList?: (props: void) => React.ReactElement;
   renderSearchItem?(
     {
       message,
@@ -1056,7 +1056,7 @@ declare module '@sendbird/uikit-react/MessageSearch/components/MessageSearchUI' 
 }
 
 interface CreateChannelProviderProps {
-  children?: React.ReactNode;
+  children?: React.ReactElement;
   onCreateChannel(channel: GroupChannel): void;
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
   userListQuery?(): UserListQuery;
@@ -1077,7 +1077,7 @@ interface CreateChannelContextInterface {
 
 interface CreateChannelUIProps {
   onCancel?(): void;
-  renderStepOne?:(props: void) => React.ReactNode;
+  renderStepOne?:(props: void) => React.ReactElement;
 }
 
 interface CreateChannelProps extends CreateChannelProviderProps, CreateChannelUIProps {}
@@ -1116,7 +1116,7 @@ declare module '@sendbird/uikit-react/CreateChannel/components/SelectChannelType
 }
 
 interface EditUserProfileProps {
-  children?: React.ReactNode;
+  children?: React.ReactElement;
   onCancel?(): void;
   onThemeChange?(theme: string): void;
   onEditProfile?(updatedUser: User): void;

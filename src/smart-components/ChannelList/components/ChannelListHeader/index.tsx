@@ -9,8 +9,8 @@ import './index.scss';
 import Avatar from '../../../../ui/Avatar';
 
 interface ChannelListHeaderInterface {
-  renderHeader?: (props: void) => React.ReactNode;
-  renderIconButton?: (props: void) => React.ReactNode;
+  renderHeader?: (props: void) => React.ReactElement;
+  renderIconButton?: (props: void) => React.ReactElement;
   onEdit?: (props: void) => void;
   allowProfileEdit?: boolean;
 }
