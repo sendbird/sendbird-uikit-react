@@ -7,7 +7,7 @@ type SpaceFromTrigger = { x: number, y: number };
 type ReactionStyle = { left: number, top: number };
 export interface EmojiListItemsProps {
   closeDropdown: () => void;
-  children?: ReactElement;
+  children: ReactElement;
   parentRef: RefObject<HTMLDivElement>;
   parentContainRef: RefObject<HTMLDivElement>;
   spaceFromTrigger?: SpaceFromTrigger;
@@ -17,7 +17,7 @@ const EmojiListItems = ({
   children,
   parentRef,
   parentContainRef,
-  spaceFromTrigger,
+  spaceFromTrigger = { x: 0, y: 0 },
   closeDropdown,
 }: EmojiListItemsProps): ReactElement => {
   const [reactionStyle, setReactionStyle] = useState<ReactionStyle>({ left: 0, top: 0 });

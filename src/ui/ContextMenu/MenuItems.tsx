@@ -15,10 +15,10 @@ export interface MenuItemsProps {
 const MenuItems = ({
   className,
   children,
-  style,
+  style = {},
   parentRef,
   parentContainRef,
-  openLeft,
+  openLeft = false,
   closeDropdown,
 }: MenuItemsProps): ReactElement => {
   const menuRef = useRef(null);

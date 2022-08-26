@@ -25,7 +25,7 @@ export const MenuItem = ({
   disable = false,
 }: MenuItemProps): ReactElement => {
   const handleClickEvent = (e) => {
-    if (!disable) {
+    if (!disable && onClick) {
       onClick?.(e);
     }
   };
