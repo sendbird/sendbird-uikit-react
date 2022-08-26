@@ -1,16 +1,17 @@
 import './color.scss';
 
-export const Colors = {
-  ONBACKGROUND_1: 'ONBACKGROUND_1',
-  ONBACKGROUND_2: 'ONBACKGROUND_2',
-  ONBACKGROUND_3: 'ONBACKGROUND_3',
-  ONBACKGROUND_4: 'ONBACKGROUND_4',
-  ONCONTENT_1: 'ONCONTENT_1',
-  PRIMARY: 'PRIMARY',
-  ERROR: 'ERROR',
-};
+export enum Colors {
+  ONBACKGROUND_1,
+  ONBACKGROUND_2,
+  ONBACKGROUND_3,
+  ONBACKGROUND_4,
+  ONCONTENT_1,
+  ONCONTENT_2,
+  PRIMARY,
+  ERROR,
+}
 
-export function changeColorToClassName(color) {
+export const changeColorToClassName = (color: Colors): string => {
   switch (color) {
     case Colors.ONBACKGROUND_1: return 'sendbird-color--onbackground-1';
     case Colors.ONBACKGROUND_2: return 'sendbird-color--onbackground-2';
@@ -21,4 +22,4 @@ export function changeColorToClassName(color) {
     case Colors.ERROR: return 'sendbird-color--error';
     default: return null;
   }
-}
+};

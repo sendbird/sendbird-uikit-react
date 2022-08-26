@@ -1298,23 +1298,21 @@ declare module '@sendbird/uikit-react/ui/ContextMenu' {
 }
 
 declare module '@sendbird/uikit-react/ui/DateSeparator' {
-  enum COLORS {
-    ONBACKGROUND_1 ='ONBACKGROUND_1',
-    ONBACKGROUND_2 ='ONBACKGROUND_2',
-    ONBACKGROUND_3 ='ONBACKGROUND_3',
-    ONBACKGROUND_4 ='ONBACKGROUND_4',
-    ONCONTENT_1 ='ONCONTENT_1',
-    ONCONTENT_2 ='ONCONTENT_2',
-    PRIMARY ='PRIMARY',
-    ERROR ='ERROR',
-    SECONDARY_3 ='SECONDARY_3',
+  enum Colors {
+    ONBACKGROUND_1,
+    ONBACKGROUND_2,
+    ONBACKGROUND_3,
+    ONBACKGROUND_4,
+    ONCONTENT_1,
+    PRIMARY,
+    ERROR,
   }
   interface DateSeparatorProps {
-    className?: string | string[];
-    children?: string | React.ReactElement,
-    separatorColor: COLORS,
+    children: React.ReactElement,
+    className?: string | Array<string>;
+    separatorColor?: Colors,
   }
-  type DateSeparator = React.FC<DateSeparatorProps>;
+  const DateSeparator: React.FC<DateSeparatorProps>;
   export default DateSeparator;
 }
 
@@ -1787,17 +1785,25 @@ declare module '@sendbird/uikit-react/ui/SortByRow' {
 }
 
 declare module '@sendbird/uikit-react/ui/TextButton' {
-  interface TextButtonProps {
-    children?: React.ReactElement;
-    className?: string | Array<string>;
-    color?: 'ONBACKGROUND_1' | 'ONBACKGROUND_2' | 'ONBACKGROUND_3' | 'ONBACKGROUND_4' | 'ONCONTENT_1' | 'PRIMARY' | 'ERROR',
-    disabled?: boolean,
-    notUnderline?: boolean,
-    onClick?: () => void,
+  enum Colors {
+    ONBACKGROUND_1,
+    ONBACKGROUND_2,
+    ONBACKGROUND_3,
+    ONBACKGROUND_4,
+    ONCONTENT_1,
+    PRIMARY,
+    ERROR,
   }
-  type TextButton = React.FC<TextButtonProps>;
+  interface TextButtonProps {
+    children: React.ReactElement;
+    className?: string | Array<string>;
+    color?: Colors;
+    disabled?: boolean;
+    disableUnderline?: boolean;
+    onClick?: (e: (React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>)) => void;
+  }
+  const TextButton: React.FC<TextButtonProps>;
   export default TextButton;
-
 }
 
 declare module '@sendbird/uikit-react/ui/TextMessageItemBody' {
