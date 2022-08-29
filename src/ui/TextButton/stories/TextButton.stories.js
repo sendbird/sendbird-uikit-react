@@ -1,5 +1,5 @@
 import React from 'react';
-import TextButton from '../index.jsx';
+import TextButton from '../index';
 import Label, { LabelTypography, LabelColors } from '../../Label';
 
 const description = `
