@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import type { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
-import { MessageSearchOrder, MessageSearchQueryParams } from '@sendbird/chat/lib/__definition';
+import type { MessageSearchQueryParams } from '@sendbird/chat/lib/__definition';
 import type {
   AdminMessage,
   BaseMessage,
@@ -12,6 +12,11 @@ import type { SendbirdError } from '@sendbird/chat';
 
 import type { Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
+
+enum MessageSearchOrder {
+  SCORE = 'score',
+  TIMESTAMP = 'ts',
+}
 
 interface MainProps {
   currentChannel: GroupChannel;
