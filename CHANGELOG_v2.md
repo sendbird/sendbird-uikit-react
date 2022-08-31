@@ -294,7 +294,7 @@ channel OpenChannelSettings
 - Features/Bugs:
   * ChannelList
     * disableUserProfile: boolean
-    * renderUserProfile: React.ReactElement
+    * renderUserProfile: React.Copmonent
 
 ## 1.2.4(Sept 17, 2020) Deprecated
 
@@ -304,14 +304,14 @@ channel OpenChannelSettings
 
   * SendBirdProvider
     * disableUserProfile: boolean
-    * renderUserProfile: React.ReactElement
+    * renderUserProfile: React.Copmonent
     * allowProfileEdit: boolean
   * Channel
     * disableUserProfile: boolean
-    * renderUserProfile: React.ReactElement
+    * renderUserProfile: React.Copmonent
   * ChannelSettings
     * disableUserProfile: boolean
-    * renderUserProfile: React.ReactElement
+    * renderUserProfile: React.Copmonent
   * ChannelList
     * renderHeader(): React.ReactElement
     * allowProfileEdit: boolean
