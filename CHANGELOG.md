@@ -1,5 +1,34 @@
 # Changelog - v3
 
+## [v3.1.2] (Aug 31 2022)
+
+* Migrate UI components into TypeScript
+  This doesnt affect anyone, it a step in task to migrate the project source code into TS
+
+Fixes:
+* Type defn: Change type of react elements to `React.ReactElement`
+  * Change every `React.ReactNode` and `React.Component` to `React.ReactElement`
+  * Use the type of SendbirdError
+  * Use the type MessageSearchQueryParams
+  * Use enum MessageSearchOrder.TIMESTAMP in the message search query params instead of `'ts' as const`
+
+  **ReactNode** could be `string | number | null | undefined | ReactElement | portal` and this(expecting string or number) causes **warning** when we use it like `<CustomComp />`
+  ```typescript
+  // in the component
+  { renderMessage } = props
+  const CustomMessage = useMemo(() => {
+    return renderMessage({ ... });
+  }, []);
+  return (
+    <div>
+      <CustomMessage />
+    </div>
+  );
+  ```
+  so expecting **ReactElement** is better for our case
+* Fix message grouping:
+  Set isMessageGroupingEnabed to true(was set to false during v2 migration)
+
 ## [v3.1.1] (Aug 17 2022)
 
 Features:
