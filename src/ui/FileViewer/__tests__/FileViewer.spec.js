@@ -1,20 +1,19 @@
 import React from 'react';
-import {shallow} from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render, screen } from '@testing-library/react';
 
 import { FileViewerComponent as FileViewer } from "../index";
 import { msg0, msg1 } from '../data.mock';
 
-describe('FileViewer', () => {
+describe('ui/FileViewer', () => {
   it('should display image', function() {
     const {
       sender,
       type,
       url,
-      name = '',
+      name = 'example-text',
     } = msg0;
     const { profileUrl, nickname = '' } = sender;
-    const component = shallow(
+    render(
       <FileViewer
         profileUrl={profileUrl}
         nickname={nickname}
@@ -25,9 +24,15 @@ describe('FileViewer', () => {
         onDelete={() => {}}
         />
     );
-    const img = component.find('.sendbird-fileviewer__content__img');
-    expect(img.length).toEqual(1);
-    expect(img.prop('src')).toEqual(msg0.url);
+    expect(
+      screen.getByAltText(msg0.name).className
+    ).toBe('sendbird-fileviewer__content__img');
+    expect(
+      screen.getByAltText(msg0.name).className
+    ).not.toContain('sendbird-fileviewer__content__video');
+    expect(
+      screen.getByAltText(msg0.name).src
+    ).toEqual(msg0.url);
   });
 
   it('should display video', function() {
@@ -38,7 +43,7 @@ describe('FileViewer', () => {
       name = '',
     } = msg1;
     const { profileUrl, nickname = '' } = sender;
-    const component = shallow(
+    render(
       <FileViewer
         profileUrl={profileUrl}
         nickname={nickname}
@@ -49,9 +54,15 @@ describe('FileViewer', () => {
         onDelete={() => {}}
       />
     );
-    const video = component.find('.sendbird-fileviewer__content__video source');
-    expect(video.length).toEqual(1);
-    expect(video.prop('src')).toEqual(msg1.url);
+    expect(
+      screen.getByTestId('sendbird-fileviewer__content__video').className
+    ).not.toContain('sendbird-fileviewer__content__img');
+    expect(
+      screen.getByTestId('sendbird-fileviewer__content__video').className
+    ).toBe('sendbird-fileviewer__content__video');
+    expect(
+      screen.getByTestId('sendbird-fileviewer__content__video').children[0].src
+    ).toEqual(url);
   });
 
   it('should handle unsupported msg', function() {
@@ -59,12 +70,11 @@ describe('FileViewer', () => {
     const profileUrl = '';
     const nickname = '';
     const {
-      sender,
       type = '',
       url = '',
       name = '',
     } = unsupportedMsg;
-    const component = shallow(
+    render(
       <FileViewer
         profileUrl={profileUrl}
         nickname={nickname}
@@ -75,10 +85,12 @@ describe('FileViewer', () => {
         onDelete={() => {}}
       />
     );
-    const fallback = component.find('.sendbird-fileviewer__content__unsupported');
-    expect(fallback.length).toEqual(1);
-    const headerActions = component.find('.sendbird-fileviewer__header__right__actions');
-    expect(headerActions.length).toEqual(0);
+    expect(
+      screen.getByTestId('sendbird-fileviewer__content__unsupported').className
+    ).toBe('sendbird-fileviewer__content__unsupported');
+    expect(
+      screen.getByTestId('sendbird-fileviewer__header__right').children[0].className
+    ).not.toBe('sendbird-fileviewer__header__right__actions');
   });
 
   it('should do a snapshot test of the FileViewer DOM', function() {
@@ -89,7 +101,7 @@ describe('FileViewer', () => {
       name = '',
     } = msg0;
     const { profileUrl, nickname = '' } = sender;
-    const component = renderer.create(
+    const { asFragment } = render(
       <FileViewer
         profileUrl={profileUrl}
         nickname={nickname}
@@ -99,9 +111,8 @@ describe('FileViewer', () => {
         onClose={() => {}}
         onDelete={() => {}}
         message={msg0}
-      />,
+      />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });
