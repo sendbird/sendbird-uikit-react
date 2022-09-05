@@ -1,13 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`OpenChannelAdminMessage should do a snapshot test of the OpenChannelAdminMessage DOM 1`] = `
-<div
-  className=" sendbird-openchannel-admin-message"
->
-  <span
-    className="sendbird-openchannel-admin-message__text sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
+<DocumentFragment>
+  <div
+    class=" sendbird-openchannel-admin-message"
   >
-    Hello I am Admin
-  </span>
-</div>
+    <span
+      class="sendbird-openchannel-admin-message__text sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
+    >
+      Hello I am Admin
+    </span>
+  </div>
+</DocumentFragment>
 `;

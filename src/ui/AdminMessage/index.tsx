@@ -18,6 +18,7 @@ export default function AdminMessage({
   }
   return (
     <div
+      data-testid="sendbird-admin-message"
       className={[
         ...(Array.isArray(className) ? className : [className]),
         'sendbird-admin-message',
