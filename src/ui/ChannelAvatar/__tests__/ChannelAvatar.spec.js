@@ -1,29 +1,31 @@
 import React from 'react';
-import {shallow} from 'enzyme';
+import { render, screen } from '@testing-library/react';
 
 import ChannelAvatar from "../index";
 import * as utils from '../utils';
 
-describe('ChannelAvatar', () => {
+describe('ui/ChannelAvatar', () => {
   it('should render a normal default channel avatar', function() {
-    const avatar  = shallow(<ChannelAvatar channel={{}} />);
-    expect(avatar.find('.sendbird-chat-header--avatar--group-channel').length).toEqual(1);
+    const targetClassName = "sendbird-chat-header--avatar--group-channel";
+    render(<ChannelAvatar channel={{}} />);
+    expect(screen.getByRole('button').className).toContain(targetClassName);
   });
 
   it('should render a default avatar of broadcastChannel', function() {
-    const avatar  = shallow(<ChannelAvatar channel={{ isBroadcast: true }} />);
-    expect(avatar.find('.sendbird-chat-header--default-avatar').length).toEqual(1);
+    const targetClassName = "sendbird-chat-header--default-avatar";
+    render(<ChannelAvatar channel={{ isBroadcast: true }} />);
+    expect(screen.getByTestId(targetClassName).className).toContain(targetClassName);
   });
 
   it('should render an avatar broadcastChannel with url', function() {
+    const targetClassName = "sendbird-chat-header--avatar--broadcast-channel";
     const coverUrl = '123';
-    const avatar  = shallow(<ChannelAvatar channel={{ isBroadcast: true, coverUrl }} />);
-    expect(avatar.find('.sendbird-chat-header--avatar--broadcast-channel').length).toEqual(1);
+    render(<ChannelAvatar channel={{ isBroadcast: true, coverUrl }} />);
+    expect(screen.getByRole('button').className).toContain(targetClassName);
   });
 });
 
-
-describe('ChannelAvatar-Utils-getChannelAvatarSource', () => {
+describe('ui/ChannelAvatar/utils/getAvatarSource', () => {
   it('should return channel url if present', () => {
     const coverUrl = '123';
     expect(utils.getChannelAvatarSource({ coverUrl }, '123')).toEqual(coverUrl);
@@ -42,7 +44,7 @@ describe('ChannelAvatar-Utils-getChannelAvatarSource', () => {
   });
 });
 
-describe('ChannelAvatar-Utils-generateDefaultAvatar', () => {
+describe('ui/ChannelAvatar/utils/generateDefaultAvatar', () => {
   it('should return true if coverUrl is empty', () => {
     expect(utils.generateDefaultAvatar({})).toEqual(true)
   });
