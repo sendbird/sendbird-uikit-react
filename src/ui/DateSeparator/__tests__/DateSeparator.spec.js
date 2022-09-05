@@ -1,25 +1,20 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render, screen } from '@testing-library/react';
 
 import DateSeparator from "../index";
 
-describe('DateSeparator', () => {
+describe('ui/DateSeparator', () => {
   it('should contain className', function () {
     const className = "example-classname";
-    const component = shallow(<DateSeparator className={className} />);
+    render(<DateSeparator className={className} />);
 
-    expect(
-      component.find(".sendbird-separator").hasClass(className)
-    ).toBe(true);
+    expect(screen.getByTestId('sendbird-separator').className).toContain(className);
+    expect(screen.getByTestId('sendbird-separator').className).toContain('sendbird-separator');
   });
 
   it('should do a snapshot test of the DateSeparator DOM', function () {
     const className = "example-classname";
-    const component = renderer.create(
-      <DateSeparator className={className} />,
-    );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(<DateSeparator className={className} />);
+    expect(asFragment()).toMatchSnapshot();
   });
 });
