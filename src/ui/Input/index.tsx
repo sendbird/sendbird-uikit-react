@@ -36,6 +36,7 @@ const Input = React.forwardRef((props: InputProps, ref: RefObject<HTMLInputEleme
   return (
     <div className="sendbird-input">
       <input
+        data-testid="sendbird-input__input"
         className="sendbird-input__input"
         ref={ref}
         name={name}

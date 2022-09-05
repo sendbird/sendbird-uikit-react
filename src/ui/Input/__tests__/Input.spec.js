@@ -1,13 +1,11 @@
 import React, { useState, useRef } from 'react';
-import { mount } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render, screen, fireEvent } from '@testing-library/react';
 
 import Input from "../index";
 
-describe('Input', () => {
-  it('should do a snapshot test of the Input DOM', function() {
-    const text = "example-text";
-    const component = renderer.create(
+describe('ui/Input', () => {
+  it('should do a snapshot test of the Input DOM', function () {
+    const { asFragment } = render(
       <Input
         value="value"
         placeHolder="placeholder"
@@ -16,11 +14,10 @@ describe('Input', () => {
         required={false}
       />,
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 
-  it('should be able to access value using ref', function() {
+  it('should be able to access value using ref', function () {
     const initialValue = 'initialValue';
     const finalValue = 'finalValue';
 
@@ -34,18 +31,20 @@ describe('Input', () => {
       return (
         <>
           <Input ref={inputEl} name="input" value={initialValue} />
-          <button onClick={onButtonClick}>click to set value</button>
+          <button role="button" onClick={onButtonClick}>click to set value</button>
           <span id="result">{value}</span>
         </>
       );
     }
-    const component = mount(<App />);
-
-    component.find('input').simulate('change', { target: { value: finalValue } });
-    component.find('button').simulate('click');
-    component.update();
+    render(<App />);
     expect(
-      component.find('#result').text()
-  ).toEqual(finalValue);
+      screen.getByText("initialState").id
+    ).toBe('result');
+
+    fireEvent.change(screen.getByTestId('sendbird-input__input'), { target: { value: finalValue } });
+    fireEvent.click(screen.getByRole('button'));
+    expect(
+      screen.getByText(finalValue).id
+    ).toBe('result');
   });
 });
