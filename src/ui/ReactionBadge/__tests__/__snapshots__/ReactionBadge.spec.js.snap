@@ -1,42 +1,33 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ReactionBadge should do a snapshot test of the ReactionBadge DOM 1`] = `
-<div
-  className="example-text sendbird-reaction-badge"
-  onClick={[Function]}
-  onKeyDown={[Function]}
-  role="button"
-  tabIndex={0}
->
+<DocumentFragment>
   <div
-    className="sendbird-reaction-badge__inner"
+    class="example-text sendbird-reaction-badge"
+    role="button"
+    tabindex="0"
   >
     <div
-      className="sendbird-reaction-badge__inner__icon"
+      class="sendbird-reaction-badge__inner"
     >
       <div
-        className=" sendbird-icon sendbird-icon-create "
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="button"
-        style={
-          Object {
-            "height": "20px",
-            "minHeight": "20px",
-            "minWidth": "20px",
-            "width": "20px",
-          }
-        }
-        tabIndex="0"
+        class="sendbird-reaction-badge__inner__icon"
       >
-        <test-file-stub />
+        <div
+          class=" sendbird-icon sendbird-icon-create "
+          role="button"
+          style="width: 20px; min-width: 20px; height: 20px; min-height: 20px;"
+          tabindex="0"
+        >
+          <test-file-stub />
+        </div>
       </div>
+      <span
+        class="sendbird-reaction-badge__inner__count sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-1"
+      >
+        +99
+      </span>
     </div>
-    <span
-      className="sendbird-reaction-badge__inner__count sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-1"
-    >
-      +99
-    </span>
   </div>
-</div>
+</DocumentFragment>
 `;

@@ -1,17 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Badge should do a snapshot test of the Badge DOM 1`] = `
-<div
-  className=" sendbird-badge"
->
+<DocumentFragment>
   <div
-    className="sendbird-badge__text"
+    class=" sendbird-badge"
   >
-    <span
-      className="sendbird-label sendbird-label--caption-2 sendbird-label--color-oncontent-1"
+    <div
+      class="sendbird-badge__text"
     >
-      1
-    </span>
+      <span
+        class="sendbird-label sendbird-label--caption-2 sendbird-label--color-oncontent-1"
+      >
+        1
+      </span>
+    </div>
   </div>
-</div>
+</DocumentFragment>
 `;
