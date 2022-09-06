@@ -14,6 +14,7 @@ export default function Label({
 }) {
   return (
     <span
+      data-testid="sendbird-label"
       className={[
         ...(Array.isArray(className) ? className : [className]),
         'sendbird-label',

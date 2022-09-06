@@ -1,9 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Label should create a snapshot of a default label component 1`] = `
-<span
-  className="sendbird-label sendbird-label--h-1 sendbird-label--color-onbackground-1"
->
-  Example
-</span>
+exports[`ui/Label should create a snapshot of a default label component 1`] = `
+<DocumentFragment>
+  <span
+    class="sendbird-label sendbird-label--h-1 sendbird-label--color-onbackground-1"
+    data-testid="sendbird-label"
+  >
+    Example
+  </span>
+</DocumentFragment>
 `;

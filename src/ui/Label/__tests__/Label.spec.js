@@ -1,14 +1,13 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render, screen } from '@testing-library/react';
 
 import Label, { LabelTypography, LabelColors } from '../index.jsx';
 import { changeTypographyToClassName, changeColorToClassName } from '../utils.js';
 
-describe('Label', () => {
+describe('ui/Label', () => {
   it('should have default classname if props are not provided', function () {
     const text = 'Example';
-    const component = shallow(
+    render(
       <Label
         type={LabelTypography.H_1}
         color={LabelColors.ONBACKGROUND_1}
@@ -17,40 +16,41 @@ describe('Label', () => {
       </Label>
     );
     expect(
-      component.find(".sendbird-label").hasClass("sendbird-label--h-1")
-    ).toBeTruthy();
+      screen.getByTestId('sendbird-label').className
+    ).toContain('sendbird-label--h-1');
     expect(
-      component.find(".sendbird-label").hasClass("sendbird-label--color-onbackground-1")
-    ).toBe(true);
+      screen.getByTestId('sendbird-label').className
+    ).toContain('sendbird-label--color-onbackground-1');
     expect(
-      component.find(".sendbird-label").text()
-    ).toEqual(text)
+      screen.getByText(text).className
+    ).toContain('sendbird-label');
   });
 
   it('should have each typography', function () {
     for (let color in LabelColors) {
       for (let typography in LabelTypography) {
-        const component = shallow(<Label color={color} type={typography}>Component</Label>);
+        render(<Label color={color} type={typography}>Component</Label>);
+        const allScreens = screen.getAllByTestId('sendbird-label');
+        const currentScreen = allScreens[allScreens.length - 1];
         expect(
-          component.find('.sendbird-label').hasClass(changeColorToClassName(color))
-        ).toBeTruthy();
+          currentScreen.className
+        ).toContain(changeColorToClassName(color));
         expect(
-          component.find('.sendbird-label').hasClass(changeTypographyToClassName(typography))
-        ).toBe(true);
+          currentScreen.className
+        ).toContain(changeTypographyToClassName(typography));
       }
     }
   });
 
   it('should create a snapshot of a default label component', function () {
-    const component = renderer.create(
+    const { asFragment } = render(
       <Label
         type={LabelTypography.H_1}
         color={LabelColors.ONBACKGROUND_1}
       >
         Example
-      </Label>,
+      </Label>
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });
