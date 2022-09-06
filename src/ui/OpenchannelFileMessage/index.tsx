@@ -60,6 +60,7 @@ export default function OpenchannelFileMessage({
 
   return (
     <div
+      data-testid="sendbird-openchannel-file-message"
       className={[
         ...(Array.isArray(className) ? className : [className]),
         'sendbird-openchannel-file-message',
