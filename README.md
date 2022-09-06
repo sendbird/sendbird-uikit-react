@@ -81,7 +81,7 @@ The CSS is in `./release/dist/index.css`
 
 ## Running the tests
 
-We have implemented tests for dumb ui components only. Technologies used: Jest, Enzyme and react-dom/test-utils
+We have implemented tests for dumb ui components only. Technologies used: Jest and testing-library
 
 ```
 npm run test
