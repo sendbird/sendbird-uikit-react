@@ -1,30 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ConnectionStatus should render ConnectionStatus 1`] = `
-<div
-  className="sendbird-connection-status"
->
-  <span
-    className="sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-2"
-  >
-    Trying to connect…
-  </span>
+exports[`ui/ConnectionStatus should render ConnectionStatus 1`] = `
+<DocumentFragment>
   <div
-    className=" sendbird-icon sendbird-icon-disconnected sendbird-icon-color--sent"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    role="button"
-    style={
-      Object {
-        "height": "14px",
-        "minHeight": "14px",
-        "minWidth": "14px",
-        "width": "14px",
-      }
-    }
-    tabIndex="0"
+    class="sendbird-connection-status"
   >
-    <test-file-stub />
+    <span
+      class="sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-2"
+      data-testid="sendbird-label"
+    >
+      Trying to connect…
+    </span>
+    <div
+      class=" sendbird-icon sendbird-icon-disconnected sendbird-icon-color--sent"
+      data-testid="sendbird-icon"
+      role="button"
+      style="width: 14px; min-width: 14px; height: 14px; min-height: 14px;"
+      tabindex="0"
+    >
+      <test-file-stub />
+    </div>
   </div>
-</div>
+</DocumentFragment>
 `;
