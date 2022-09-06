@@ -1,6 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render, screen } from '@testing-library/react';
 
 import MessageItemMenu from "../index";
 import { MenuRoot } from '../../ContextMenu';
@@ -42,10 +41,10 @@ const createMockMessage = (process) => {
   return process ? process(mockMessage) : mockMessage;
 };
 
-describe('MessageItemMenu', () => {
+describe('ui/MessageItemMenu', () => {
   it('should have components by own basic status', () => {
     const className="class-name-for-test";
-    const component = mount(
+    const { container } = render(
       <div>
         <MenuRoot />
         <MessageItemMenu
@@ -59,30 +58,32 @@ describe('MessageItemMenu', () => {
       </div>
     );
     expect(
-      component.find('.sendbird-message-item-menu').hostNodes().exists()
-    ).toBe(true);
+      screen.getByTestId('sendbird-dropdown-portal').id
+    ).toBe('sendbird-dropdown-portal');
     expect(
-      component.find(`.${className}.sendbird-message-item-menu`).hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-message-item-menu').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-message-item-menu__trigger').hostNodes().exists()
-    ).toBe(true);
+      container.querySelector(`.${className}.sendbird-message-item-menu`)
+    ).toBeTruthy();
     expect(
-      component.find('.sendbird-message-item-menu__trigger__icon').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-message-item-menu__trigger').length
+    ).toBe(1);
+    expect(
+      container.getElementsByClassName('sendbird-message-item-menu__trigger__icon').length
+    ).toBe(1);
   });
 
   // TODO: Add tests with onClick events
 
   it('should do a snapshot test of the MessageItemMenu DOM', function() {
-    const component = renderer.create(
+    const { asFragment } = render(
       <MessageItemMenu
         className="classname-for-snapshot"
         message={createMockMessage()}
         channel={createMockChannel()}
       />,
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

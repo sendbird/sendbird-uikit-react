@@ -48,7 +48,7 @@ export const MenuItem = ({
   );
 };
 
-export const MenuRoot = (): ReactElement => <div id="sendbird-dropdown-portal" />;
+export const MenuRoot = (): ReactElement => <div id="sendbird-dropdown-portal" data-testid="sendbird-dropdown-portal" />;
 export const EmojiReactionListRoot = (): ReactElement => <div id="sendbird-emoji-list-portal" />;
 
 type MenuDisplayingFunc = () => void;
