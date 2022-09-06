@@ -1,24 +1,20 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import TextButton from "../index";
 
-describe('TextButton', () => {
+describe('ui/TextButton', () => {
   it('should contain the className', function () {
     const className = "example-classname";
-    const component = shallow(<TextButton className={className}>Textbutton</TextButton>);
+    const { container } = render(<TextButton className={className}>Textbutton</TextButton>);
 
     expect(
-      component.find('.sendbird-textbutton').hasClass(className)
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-textbutton')
+    ).toHaveLength(1);
   });
 
   it('should do a snapshot test of the TextButton DOM', function () {
-    const component = renderer.create(
-      <TextButton>Textbutton</TextButton>
-    );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(<TextButton>Textbutton</TextButton>);
+    expect(asFragment()).toMatchSnapshot();
   });
 });
