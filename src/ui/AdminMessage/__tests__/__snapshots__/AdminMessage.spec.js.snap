@@ -1,13 +1,33 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AdminMessage should do a snapshot test of the AdminMessage DOM 1`] = `
-<div
-  className="example-classname sendbird-admin-message"
->
-  <span
-    className="sendbird-admin-message__text sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
+<DocumentFragment>
+  <div
+    class="example-classname sendbird-admin-message"
+    data-testid="sendbird-admin-message"
   >
-    hoon1000, pp, Nico, aloompatest, 598, Kyle, 33333333, bennettl and tyson joined.
-  </span>
-</div>
+    <span
+      class="sendbird-admin-message__text sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
+      data-testid="sendbird-label"
+    >
+      hoon1000, pp, Nico, aloompatest, 598, Kyle, 33333333, bennettl and tyson joined.
+    </span>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`ui/AdminMessage should do a snapshot test of the AdminMessage DOM 1`] = `
+<DocumentFragment>
+  <div
+    class="example-classname sendbird-admin-message"
+    data-testid="sendbird-admin-message"
+  >
+    <span
+      class="sendbird-admin-message__text sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
+      data-testid="sendbird-label"
+    >
+      hoon1000, pp, Nico, aloompatest, 598, Kyle, 33333333, bennettl and tyson joined.
+    </span>
+  </div>
+</DocumentFragment>
 `;

@@ -4,8 +4,8 @@ import { render, screen } from '@testing-library/react';
 import AdminMessage from "../index";
 import dummyAdminMessage from '../adminMessageDummyData.mock';
 
-describe('AdminMessage', () => {
-  it.only('should contain className', function () {
+describe('ui/AdminMessage', () => {
+  it('should contain className', function () {
     const text = "example-classname";
     render(<AdminMessage className={text} message={dummyAdminMessage} />);
     expect(screen.getByTestId('sendbird-admin-message').className).toContain(text);
