@@ -1,6 +1,5 @@
 import React from 'react';
-// import { mount } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import MessageSearchFileItem from "../index";
 import {
@@ -14,20 +13,19 @@ import {
 jest.mock('date-fns/format', () => () => ('mock-date'));
 
 
-describe('MessageSearchFileItem', () => {
+describe('ui/MessageSearchFileItem', () => {
   // should add test cases for each file types
   // define id for each icon svg files first
   // https://sendbird.atlassian.net/browse/UK-634
 
   it('should do a snapshot test of the MessageSearchFileItem DOM', function() {
     const text = "example-text";
-    const component = renderer.create(
+    const { asFragment } = render(
       <MessageSearchFileItem
         className={text}
         message={docMock}
-      />,
+      />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });
