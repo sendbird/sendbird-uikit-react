@@ -1,22 +1,20 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import Checkbox from "../index";
 
-describe('Checkbox', () => {
+describe('ui/Checkbox', () => {
   it('should do a snapshot test of the default Checkbox DOM', function () {
-    const component = renderer.create(
-      <Checkbox />,
+    const { asFragment } = render(
+      <Checkbox />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('should do a snapshot test of the checked Checkbox DOM', function () {
-    const component = renderer.create(
-      <Checkbox checked={true} />,
+    const { asFragment } = render(
+      <Checkbox checked={true} />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });
