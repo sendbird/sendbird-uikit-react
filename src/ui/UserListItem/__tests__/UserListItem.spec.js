@@ -1,6 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import UserListItem from "../index";
 
@@ -22,27 +21,26 @@ const getUserList = () => [
   },
 ];
 
-describe.skip('UserListItem', () => {
-  it('should render text prop', function() {
-    const [ user1 ] = getUserList();
-    const component = mount(<UserListItem user={user1} />);
+describe('ui/UserListItem', () => {
+  it.skip('should render text prop', function () {
+    const [user1] = getUserList();
+    render(<UserListItem user={user1} />);
 
-    expect(
-      component.find(".sendbird-user-list-item__title").hostNodes().text()
-    ).toEqual(user1.nickname);
+    // expect(
+    //   component.find(".sendbird-user-list-item__title").hostNodes().text()
+    // ).toEqual(user1.nickname);
   });
 
-  it('should do a snapshot test of the UserListItem DOM', function() {
-    const [ user1 ] = getUserList();
-    const component = renderer.create(
+  it('should do a snapshot test of the UserListItem DOM', function () {
+    const [user1] = getUserList();
+    const { asFragment } = render(
       <UserListItem
         user={user1}
         checkBox
         checked={true}
         onChange={() => { }}
-      />,
+      />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

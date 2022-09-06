@@ -1,63 +1,59 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`UserListItem should do a snapshot test of the UserListItem DOM 1`] = `
-<div
-  className="sendbird-user-list-item "
->
+exports[`ui/UserListItem should do a snapshot test of the UserListItem DOM 1`] = `
+<DocumentFragment>
   <div
-    className="sendbird-context-menu"
-    style={
-      Object {
-        "display": "inline",
-      }
-    }
+    class=" sendbird-user-list-item"
   >
     <div
-      className="sendbird-user-list-item__avatar sendbird-avatar"
-      onClick={[Function]}
-      onKeyDown={[Function]}
-      role="button"
-      style={
-        Object {
-          "height": "40px",
-          "width": "40px",
-        }
-      }
-      tabIndex="0"
+      class="sendbird-context-menu"
     >
-      <img
-        alt=""
-        className="sendbird-image-renderer--hidden-placeholder"
-        onError={[Function]}
-        onLoad={[Function]}
-        src="https://static.sendbird.com/sample/profiles/profile_12_512px.png"
-      />
+      <div
+        class="sendbird-user-list-item__avatar sendbird-avatar"
+        role="button"
+        style="height: 40px; width: 40px;"
+        tabindex="0"
+      >
+        <div
+          class="sendbird-avatar-img sendbird-image-renderer"
+          style="width: 100%; min-width: 40px; max-width: 400px; height: 40px;"
+        >
+          <div
+            class="sendbird-image-renderer__image"
+            style="width: 100%; min-width: 40px; max-width: 400px; height: 40px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://static.sendbird.com/sample/profiles/profile_12_512px.png);"
+          />
+          <img
+            alt=""
+            class="sendbird-image-renderer__hidden-image-loader"
+            src="https://static.sendbird.com/sample/profiles/profile_12_512px.png"
+          />
+        </div>
+      </div>
     </div>
-  </div>
-  <span
-    className="sendbird-label sendbird-user-list-item__title sendbird-label--subtitle-1 sendbird-label--color-onbackground-1"
-  >
-    Topy
-  </span>
-  <label
-    className="sendbird-user-list-item__checkbox"
-    htmlFor="userid-1"
-  >
-    <label
-      className="sendbird-checkbox"
-      htmlFor="userid-1"
+    <span
+      class="sendbird-user-list-item__title sendbird-label sendbird-label--subtitle-1 sendbird-label--color-onbackground-1"
+      data-testid="sendbird-label"
     >
-      <input
-        checked={true}
-        id="userid-1"
-        onChange={[Function]}
-        onClick={[Function]}
-        type="checkbox"
-      />
-      <span
-        className="sendbird-checkbox--checkmark"
-      />
+      Topy
+    </span>
+    <label
+      class="sendbird-user-list-item__checkbox"
+      for="userid-1"
+    >
+      <label
+        class="sendbird-checkbox "
+        for="userid-1"
+      >
+        <input
+          checked=""
+          id="userid-1"
+          type="checkbox"
+        />
+        <span
+          class="sendbird-checkbox--checkmark "
+        />
+      </label>
     </label>
-  </label>
-</div>
+  </div>
+</DocumentFragment>
 `;
