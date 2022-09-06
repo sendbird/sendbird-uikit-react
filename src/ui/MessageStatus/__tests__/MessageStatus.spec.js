@@ -1,6 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render, screen } from '@testing-library/react';
 
 import MessageStatus, { MessageStatusTypes } from "../index";
 import dummyMessage from '../messageDummyData.mock';
@@ -10,23 +9,24 @@ import dummyMessage from '../messageDummyData.mock';
 // ideally we want to mock date-fns globally - needs more research
 jest.mock('date-fns/format', () => () => ('mock-date'));
 
-describe('MessageStatus', () => {
+describe('ui/MessageStatus', () => {
   it('should contain className', function () {
     const text = "example-text";
-    const component = shallow(<MessageStatus className={text} message={dummyMessage} />);
-
+    const { container } = render(<MessageStatus className={text} message={dummyMessage} />);
     expect(
-      component.find(".sendbird-message-status").hasClass(text)
-    ).toBe(true);
+      screen.getByTestId('sendbird-message-status').className
+    ).toContain('sendbird-message-status');
+    expect(
+      container.getElementsByClassName('sendbird-message-status').length
+    ).toBe(1);
   });
 
   it('should do a snapshot test of the MessageStatus DOM', function () {
     const text = "example-text";
-    const component = renderer.create(
+    const { asFragment } = render(
       <MessageStatus className={text} status={MessageStatusTypes.SENT} message={dummyMessage} />,
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('should do a snapshot test of the failed MessageStatus DOM when isResendable: true', function () {
@@ -36,11 +36,8 @@ describe('MessageStatus', () => {
       sendingStatus: 'failed',
       isResendable: () => { return true; },
     };
-    const component = renderer.create(
-      <MessageStatus className={text} message={failedMsg} />,
-    );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(<MessageStatus className={text} message={failedMsg} />);
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('should do a snapshot test of the failed MessageStatus DOM when isResendable: false', function () {
@@ -49,10 +46,7 @@ describe('MessageStatus', () => {
       ...dummyMessage,
       sendingStatus: 'failed',
     };
-    const component = renderer.create(
-      <MessageStatus className={text} message={failedMsg} />,
-    );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(<MessageStatus className={text} message={failedMsg} />);
+    expect(asFragment()).toMatchSnapshot();
   });
 });

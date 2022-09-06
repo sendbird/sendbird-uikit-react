@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import MessageSearchItem from "../index";
 import { generateNormalMessage } from '../messageDummyDate.mock';

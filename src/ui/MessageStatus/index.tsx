@@ -51,6 +51,7 @@ export default function MessageStatus({
 
   return (
     <div
+      data-testid="sendbird-message-status"
       className={[
         ...(Array.isArray(className) ? className : [className]),
         'sendbird-message-status',
