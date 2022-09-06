@@ -40,3 +40,44 @@ exports[`OGMessageItemBody should do a snapshot test of the OGMessageItemBody DO
   </div>
 </DocumentFragment>
 `;
+
+exports[`ui/OGMessageItemBody should do a snapshot test of the OGMessageItemBody DOM 1`] = `
+<DocumentFragment>
+  <div
+    class=" sendbird-og-message-item-body incoming  "
+  >
+    <span
+      class="sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
+      data-testid="sendbird-label"
+    >
+      <div
+        class="sendbird-og-message-item-body__text-bubble"
+      />
+    </span>
+    <div
+      class="sendbird-og-message-item-body__og-thumbnail"
+    >
+      <div
+        class="sendbird-og-message-item-body__og-thumbnail__image sendbird-image-renderer"
+        style="width: 100%; min-width: 320px; max-width: 400px; height: 180px;"
+      >
+        <div
+          class="sendbird-image-renderer__image"
+          style="width: 100%; min-width: 320px; max-width: 400px; height: 180px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url();"
+        />
+        <img
+          alt=""
+          class="sendbird-image-renderer__hidden-image-loader"
+          src=""
+        />
+      </div>
+    </div>
+    <div
+      class="sendbird-og-message-item-body__description"
+    />
+    <div
+      class="sendbird-og-message-item-body__cover"
+    />
+  </div>
+</DocumentFragment>
+`;

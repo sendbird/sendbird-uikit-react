@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 
 import OGMessageItemBody from "../index";
 
-describe('OGMessageItemBody', () => {
+describe('ui/OGMessageItemBody', () => {
   it('should do a snapshot test of the OGMessageItemBody DOM', function() {
     const text = "example-text";
     const { asFragment } = render(<OGMessageItemBody />);
