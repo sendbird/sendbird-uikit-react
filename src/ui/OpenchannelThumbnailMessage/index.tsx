@@ -95,6 +95,7 @@ export default function OpenchannelThumbnailMessage({
 
   return (
     <div
+      data-testid="sendbird-openchannel-thumbnail-message"
       className={[
         ...(Array.isArray(className) ? className : [className]),
         'sendbird-openchannel-thumbnail-message',

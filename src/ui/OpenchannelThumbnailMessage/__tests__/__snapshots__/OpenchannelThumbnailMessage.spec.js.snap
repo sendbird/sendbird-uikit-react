@@ -1,173 +1,136 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`OpenchannelThumbnailMessage should do a snapshot test of the OpenchannelThumbnailMessage DOM 1`] = `
-<div
-  className=" sendbird-openchannel-thumbnail-message"
->
+<DocumentFragment>
   <div
-    className="sendbird-openchannel-thumbnail-message__left"
+    class=" sendbird-openchannel-thumbnail-message"
+    data-testid="sendbird-openchannel-thumbnail-message"
   >
     <div
+<<<<<<< HEAD
       className="sendbird-context-menu"
       style={
         Object {
           "display": "inline",
         }
       }
+=======
+      class="sendbird-openchannel-thumbnail-message__left"
+>>>>>>> b926af1 (Migrate tests of ui/OpenchannelThumbnailMessage with testing-library)
     >
       <div
-        className="sendbird-openchannel-thumbnail-message__left__avatar sendbird-avatar"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="button"
-        style={
-          Object {
-            "height": "28px",
-            "width": "28px",
-          }
-        }
-        tabIndex={0}
+        class="sendbird-context-menu"
       >
         <div
-          className="sendbird-avatar-img sendbird-image-renderer"
-          style={
-            Object {
-              "height": "28px",
-              "maxWidth": "400px",
-              "minWidth": "28px",
-              "width": "100%",
-            }
-          }
+          class="sendbird-openchannel-thumbnail-message__left__avatar sendbird-avatar"
+          role="button"
+          style="height: 28px; width: 28px;"
+          tabindex="0"
         >
           <div
-            className="sendbird-image-renderer__image"
-            style={
-              Object {
-                "backgroundImage": "url(https://static.sendbird.com/sample/profiles/profile_15_512px.png)",
-                "backgroundPosition": "center",
-                "backgroundRepeat": "no-repeat",
-                "backgroundSize": "cover",
-                "borderRadius": null,
-                "height": "28px",
-                "maxWidth": "400px",
-                "minWidth": "28px",
-                "position": "absolute",
-                "width": "100%",
-              }
-            }
-          />
-          <img
-            alt=""
-            className="sendbird-image-renderer__hidden-image-loader"
-            onError={[Function]}
-            onLoad={[Function]}
-            src="https://static.sendbird.com/sample/profiles/profile_15_512px.png"
-          />
+            class="sendbird-avatar-img sendbird-image-renderer"
+            style="width: 100%; min-width: 28px; max-width: 400px; height: 28px;"
+          >
+            <div
+              class="sendbird-image-renderer__image"
+              style="width: 100%; min-width: 28px; max-width: 400px; height: 28px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://static.sendbird.com/sample/profiles/profile_15_512px.png);"
+            />
+            <img
+              alt=""
+              class="sendbird-image-renderer__hidden-image-loader"
+              src="https://static.sendbird.com/sample/profiles/profile_15_512px.png"
+            />
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div
-    className="sendbird-openchannel-thumbnail-message__right"
-  >
     <div
-      className="sendbird-openchannel-thumbnail-message__right__title"
-    >
-      <span
-        className="sendbird-openchannel-thumbnail-message__right__title__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
-      >
-        hoon102
-      </span>
-      <span
-        className="sendbird-openchannel-thumbnail-message__right__title__sent-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-3"
-      >
-        mock-date
-      </span>
-    </div>
-    <div
-      className="sendbird-openchannel-thumbnail-message__right__body"
+      class="sendbird-openchannel-thumbnail-message__right"
     >
       <div
-        className="sendbird-openchannel-thumbnail-message__right__body__wrap"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="button"
-        tabIndex={0}
+        class="sendbird-openchannel-thumbnail-message__right__title"
+      >
+        <span
+          class="sendbird-openchannel-thumbnail-message__right__title__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
+          data-testid="sendbird-label"
+        >
+          hoon102
+        </span>
+        <span
+          class="sendbird-openchannel-thumbnail-message__right__title__sent-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-3"
+          data-testid="sendbird-label"
+        >
+          mock-date
+        </span>
+      </div>
+      <div
+        class="sendbird-openchannel-thumbnail-message__right__body"
       >
         <div
-          className="sendbird-openchannel-thumbnail-message__right__body__wrap__overlay"
-        />
-        <div
-          className="sendbird-openchannel-thumbnail-message__right__body__wrap__image sendbird-image-renderer"
-          style={
-            Object {
-              "height": "270px",
-              "maxWidth": "400px",
-              "minWidth": 360,
-              "width": "100%",
-            }
-          }
+          class="sendbird-openchannel-thumbnail-message__right__body__wrap"
+          role="button"
+          tabindex="0"
         >
           <div
-            style={
-              Object {
-                "alignItems": "center",
-                "display": "flex",
-                "height": "270px",
-                "justifyContent": "center",
-                "maxWidth": "400px",
-                "minWidth": 360,
-                "position": "absolute",
-                "width": "100%",
-              }
-            }
+            class="sendbird-openchannel-thumbnail-message__right__body__wrap__overlay"
+          />
+          <div
+            class="sendbird-openchannel-thumbnail-message__right__body__wrap__image sendbird-image-renderer"
+            style="width: 100%; min-width: -80px; max-width: 400px; height: 270px;"
           >
             <div
-              className=" sendbird-icon sendbird-icon-photo sendbird-icon-color--on-background-2"
-              onClick={[Function]}
-              onKeyDown={[Function]}
+              style="width: 100%; min-width: -80px; max-width: 400px; height: 270px; position: absolute; display: flex; justify-content: center; align-items: center;"
+            >
+              <div
+                class=" sendbird-icon sendbird-icon-photo sendbird-icon-color--on-background-2"
+                role="button"
+                style="width: 56px; min-width: 56px; height: 56px; min-height: 56px;"
+                tabindex="0"
+              >
+                <test-file-stub />
+              </div>
+            </div>
+            <div
+              class="sendbird-image-renderer__image"
+              style="width: 100%; min-width: -80px; max-width: 400px; height: 270px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://sendbird-staging.s3.amazonaws.com/26FA710D-A7F6-4483-ABEA-1F07A07A112E/upload/n/e49e0a4111d4445a8840bd51f3c9d933.png);"
+            />
+            <img
+              alt="image"
+              class="sendbird-image-renderer__hidden-image-loader"
+              src="https://sendbird-staging.s3.amazonaws.com/26FA710D-A7F6-4483-ABEA-1F07A07A112E/upload/n/e49e0a4111d4445a8840bd51f3c9d933.png"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="sendbird-openchannel-thumbnail-message__context-menu"
+    >
+      <div
+        class="sendbird-context-menu"
+      >
+        <button
+          class="sendbird-openchannel-thumbnail-message__context-menu--icon sendbird-iconbutton "
+          style="height: 32px; width: 32px;"
+          type="button"
+        >
+          <span
+            class="sendbird-iconbutton__inner"
+          >
+            <div
+              class=" sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
               role="button"
-              style={
-                Object {
-                  "height": "56px",
-                  "minHeight": "56px",
-                  "minWidth": "56px",
-                  "width": "56px",
-                }
-              }
-              tabIndex="0"
+              style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
+              tabindex="0"
             >
               <test-file-stub />
             </div>
-          </div>
-          <div
-            className="sendbird-image-renderer__image"
-            style={
-              Object {
-                "backgroundImage": "url(https://sendbird-staging.s3.amazonaws.com/26FA710D-A7F6-4483-ABEA-1F07A07A112E/upload/n/e49e0a4111d4445a8840bd51f3c9d933.png)",
-                "backgroundPosition": "center",
-                "backgroundRepeat": "no-repeat",
-                "backgroundSize": "cover",
-                "borderRadius": null,
-                "height": "270px",
-                "maxWidth": "400px",
-                "minWidth": 360,
-                "position": "absolute",
-                "width": "100%",
-              }
-            }
-          />
-          <img
-            alt="image"
-            className="sendbird-image-renderer__hidden-image-loader"
-            onError={[Function]}
-            onLoad={[Function]}
-            src="https://sendbird-staging.s3.amazonaws.com/26FA710D-A7F6-4483-ABEA-1F07A07A112E/upload/n/e49e0a4111d4445a8840bd51f3c9d933.png"
-          />
-        </div>
+          </span>
+        </button>
       </div>
     </div>
   </div>
+<<<<<<< HEAD
   <div
     className="sendbird-openchannel-thumbnail-message__context-menu"
   >
@@ -217,4 +180,7 @@ exports[`OpenchannelThumbnailMessage should do a snapshot test of the Openchanne
     </div>
   </div>
 </div>
+=======
+</DocumentFragment>
+>>>>>>> b926af1 (Migrate tests of ui/OpenchannelThumbnailMessage with testing-library)
 `;
