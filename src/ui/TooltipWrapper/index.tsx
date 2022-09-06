@@ -20,6 +20,7 @@ export default function TooltipWrapper({
 
   return (
     <div
+      data-testid="sendbird-tooltip-wrapper"
       className={[
         ...(Array.isArray(className) ? className : [className]),
         'sendbird-tooltip-wrapper',
