@@ -1,5 +1,5 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import Avatar from '../index';
 
@@ -8,44 +8,39 @@ const src1 = 'https://avatars1.githubusercontent.com/u/1384313?s=460&v=4';
 const src2 = 'https://avatars2.githubusercontent.com/u/11382805?s=460&v=4';
 const src3 = '';
 
-describe('Avatar', () => {
+describe('ui/Avatar', () => {
   it('should render default image if src is empty', function() {
-    const component = renderer.create(
-      <Avatar />,
+    const { asFragment } = render(
+      <Avatar />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('should do a snapshot test of the Avatar DOM with single element', function() {
-    const component = renderer.create(
-      <Avatar src={src} />,
+    const { asFragment } = render(
+      <Avatar src={src} />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('should do a snapshot test of the Avatar DOM with two elements', function() {
-    const component = renderer.create(
-      <Avatar src={[src, src1]} />,
+    const { asFragment } = render(
+      <Avatar src={[src, src1]} />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('should do a snapshot test of the Avatar DOM with three elements', function() {
-    const component = renderer.create(
-      <Avatar src={[src, src1, src2]} />,
+    const { asFragment } = render(
+      <Avatar src={[src, src1, src2]} />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('should do a snapshot test of the Avatar DOM with four elements', function() {
-    const component = renderer.create(
-      <Avatar src={[src, src1, src2, src3]} />,
+    const { asFragment } = render(
+      <Avatar src={[src, src1, src2, src3]} />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });
