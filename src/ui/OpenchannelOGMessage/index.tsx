@@ -139,6 +139,7 @@ export default function OpenchannelOGMessage({
 
   return (
     <div
+      data-testid="sendbird-openchannel-og-message"
       className={[
         ...(Array.isArray(className) ? className : [className]),
         'sendbird-openchannel-og-message',

@@ -1,6 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render, screen } from '@testing-library/react';
 
 import OpenchannelOGMessage from "../index";
 
@@ -39,62 +38,64 @@ const getMockMessage = (callback) => {
   return message;
 };
 
-describe('OpenchannelOGMessage', () => {
+describe('ui/OpenchannelOGMessage', () => {
   it('should have default elements', function() {
-    const component = mount(
+    const { container } = render(
       <OpenchannelOGMessage
         message={getMockMessage()}
         userId={userId}
         status="succeeded"
       />
     );
-
     expect(
-      component.find('.sendbird-openchannel-og-message').exists()
-    ).toBe(true);
+      screen.getByTestId('sendbird-openchannel-og-message').className
+    ).toContain('sendbird-openchannel-og-message');
     expect(
-      component.find('.sendbird-openchannel-og-message__top__left').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__left__avatar').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__left').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__left__avatar').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right__title__sender-name').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right__title__sent-at').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right__title__sender-name').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right__description__message').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right__title__sent-at').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__bottom').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right__description__message').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__bottom__og-tag__url').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__bottom').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__bottom__og-tag__title').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__bottom__og-tag__url').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__bottom__og-tag__description').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__bottom__og-tag__title').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__bottom__og-tag__thumbnail').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__bottom__og-tag__description').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right__tail__pending').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-og-message__bottom__og-tag__thumbnail').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right__tail__failed').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right__tail__pending').length
+    ).toBe(0);
+    expect(
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right__tail__failed').length
+    ).toBe(0);
   });
 
   it('should not have elements by chainTop', function() {
-    const component = mount(
+    const { container } = render(
       <OpenchannelOGMessage
         message={getMockMessage()}
         userId={userId}
@@ -102,135 +103,139 @@ describe('OpenchannelOGMessage', () => {
         chainTop
       />
     );
-
     expect(
-      component.find('.sendbird-openchannel-og-message').exists()
-    ).toBe(true);
+      screen.getByTestId('sendbird-openchannel-og-message').className
+    ).toContain('sendbird-openchannel-og-message');
     expect(
-      component.find('.sendbird-openchannel-og-message__top__left').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__left__avatar').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__left').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__left__avatar').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right__title__sender-name').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right__title__sent-at').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right__title__sender-name').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right__description__message').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right__title__sent-at').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-openchannel-og-message__bottom').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right__description__message').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__bottom__og-tag__url').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__bottom').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__bottom__og-tag__title').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__bottom__og-tag__url').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__bottom__og-tag__description').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__bottom__og-tag__title').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__bottom__og-tag__thumbnail').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__bottom__og-tag__description').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right__tail__pending').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-og-message__bottom__og-tag__thumbnail').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right__tail__failed').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right__tail__pending').length
+    ).toBe(0);
+    expect(
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right__tail__pending').length
+    ).toBe(0);
   });
 
   it('should not have og elements when ogMetaData does not exist', function() {
-    const component = mount(
+    const { container } = render(
       <OpenchannelOGMessage
         message={getMockMessage((message) => ({ ...message, ogMetaData: {} }))}
         status="succeeded"
         userId="hh-1234"
       />
     );
-
     expect(
-      component.find('.sendbird-openchannel-og-message').exists()
-    ).toBe(true);
+      screen.getByTestId('sendbird-openchannel-og-message').className
+    ).toContain('sendbird-openchannel-og-message');
     expect(
-      component.find('.sendbird-openchannel-og-message__top__left').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__left__avatar').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__left').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__left__avatar').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right__title__sender-name').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right__title__sent-at').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right__title__sender-name').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right__description__message').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right__title__sent-at').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__bottom').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right__description__message').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__bottom__og-tag__url').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-og-message__bottom').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__bottom__og-tag__title').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-og-message__bottom__og-tag__url').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-openchannel-og-message__bottom__og-tag__description').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-og-message__bottom__og-tag__title').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-openchannel-og-message__bottom__og-tag__thumbnail').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-og-message__bottom__og-tag__description').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right__tail__pending').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-og-message__bottom__og-tag__thumbnail').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right__tail__failed').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right__tail__pending').length
+    ).toBe(0);
+    expect(
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right__tail__failed').length
+    ).toBe(0);
   });
 
   it('should render pending icon if status is pending', function() {
-    const component = mount(
+    const { container } = render(
       <OpenchannelOGMessage
         message={getMockMessage((message) => ({ ...message, sendingStatus: 'pending' }))}
       />
     );
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right__tail__pending').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right__tail__pending').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right__tail__failed').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right__tail__failed').length
+    ).toBe(0);
   });
 
   it('should render failed icon if status is failed', function() {
-    const component = mount(
+    const { container } = render(
       <OpenchannelOGMessage
         message={getMockMessage((message) => ({ ...message, sendingStatus: 'failed' }))}
         status="failed"
       />
     );
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right__tail__pending').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right__tail__pending').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-openchannel-og-message__top__right__tail__failed').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-og-message__top__right__tail__failed').length
+    ).toBe(1);
   });
 
   it('should do a snapshot test of the OpenchannelOGMessage DOM', function() {
-    const component = renderer.create(
+    const { asFragment } = render(
       <OpenchannelOGMessage
         message={{
           messageType: 'user',
@@ -258,7 +263,6 @@ describe('OpenchannelOGMessage', () => {
         userId="hh-1234"
       />,
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });
