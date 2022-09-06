@@ -1,5 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+<<<<<<< HEAD
 exports[`OpenchannelThumbnailMessage should do a snapshot test of the OpenchannelThumbnailMessage DOM 1`] = `
 <DocumentFragment>
   <div
@@ -185,6 +186,8 @@ exports[`OpenchannelThumbnailMessage should do a snapshot test of the Openchanne
 >>>>>>> b926af1 (Migrate tests of ui/OpenchannelThumbnailMessage with testing-library)
 `;
 
+=======
+>>>>>>> d0bd767 (Update snapshots)
 exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the OpenchannelThumbnailMessage DOM 1`] = `
 <DocumentFragment>
   <div
@@ -259,6 +262,7 @@ exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the Opencha
             >
               <div
                 class=" sendbird-icon sendbird-icon-photo sendbird-icon-color--on-background-2"
+                data-testid="sendbird-icon"
                 role="button"
                 style="width: 56px; min-width: 56px; height: 56px; min-height: 56px;"
                 tabindex="0"
@@ -295,6 +299,7 @@ exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the Opencha
           >
             <div
               class=" sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
+              data-testid="sendbird-icon"
               role="button"
               style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
               tabindex="0"

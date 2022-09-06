@@ -14,6 +14,7 @@ exports[`FileMessageItemBody should do a snapshot test of the FileMessageItemBod
     >
       <div
         class="sendbird-file-message-item-body__file-icon__icon sendbird-icon sendbird-icon-photo sendbird-icon-color--primary"
+        data-testid="sendbird-icon"
         role="button"
         style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
         tabindex="0"
@@ -28,6 +29,7 @@ exports[`FileMessageItemBody should do a snapshot test of the FileMessageItemBod
     >
       <span
         class="sendbird-file-message-item-body__file-name__text sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-1"
+        data-testid="sendbird-label"
       >
         My name is name
       </span>

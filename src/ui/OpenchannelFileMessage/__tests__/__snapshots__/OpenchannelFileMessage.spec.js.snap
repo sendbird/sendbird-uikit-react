@@ -1,5 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+<<<<<<< HEAD
 exports[`OpenchannelFileMessage should do a snapshot test of the OpenchannelFileMessage DOM 1`] = `
 <DocumentFragment>
   <div
@@ -118,6 +119,8 @@ exports[`OpenchannelFileMessage should do a snapshot test of the OpenchannelFile
 </DocumentFragment>
 `;
 
+=======
+>>>>>>> d0bd767 (Update snapshots)
 exports[`ui/OpenchannelFileMessage should do a snapshot test of the OpenchannelFileMessage DOM 1`] = `
 <DocumentFragment>
   <div
@@ -186,6 +189,7 @@ exports[`ui/OpenchannelFileMessage should do a snapshot test of the OpenchannelF
       >
         <div
           class="sendbird-openchannel-file-message__right__body__icon sendbird-icon sendbird-icon-file-document sendbird-icon-color--primary"
+          data-testid="sendbird-icon"
           role="button"
           style="width: 48px; min-width: 48px; height: 48px; min-height: 48px;"
           tabindex="0"
@@ -222,6 +226,7 @@ exports[`ui/OpenchannelFileMessage should do a snapshot test of the OpenchannelF
           >
             <div
               class=" sendbird-icon sendbird-icon-more "
+              data-testid="sendbird-icon"
               role="button"
               style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
               tabindex="0"

@@ -8,6 +8,7 @@ exports[`ui/MessageStatus should do a snapshot test of the MessageStatus DOM 1`]
   >
     <div
       class="sendbird-message-status__icon  sendbird-icon sendbird-icon-done sendbird-icon-color--sent"
+      data-testid="sendbird-icon"
       role="button"
       style="width: 16px; min-width: 16px; height: 16px; min-height: 16px;"
       tabindex="0"
@@ -32,6 +33,7 @@ exports[`ui/MessageStatus should do a snapshot test of the failed MessageStatus 
   >
     <div
       class="sendbird-message-status__icon  sendbird-icon sendbird-icon-error sendbird-icon-color--error"
+      data-testid="sendbird-icon"
       role="button"
       style="width: 16px; min-width: 16px; height: 16px; min-height: 16px;"
       tabindex="0"
@@ -50,6 +52,7 @@ exports[`ui/MessageStatus should do a snapshot test of the failed MessageStatus 
   >
     <div
       class="sendbird-message-status__icon  sendbird-icon sendbird-icon-error sendbird-icon-color--error"
+      data-testid="sendbird-icon"
       role="button"
       style="width: 16px; min-width: 16px; height: 16px; min-height: 16px;"
       tabindex="0"

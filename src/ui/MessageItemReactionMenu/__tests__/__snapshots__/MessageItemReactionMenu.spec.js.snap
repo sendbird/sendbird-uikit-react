@@ -1,5 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+<<<<<<< HEAD
 exports[`MessageItemReactionMenu should do a snapshot test of the MessageItemReactionMenu DOM 1`] = `
 <div
   className=" sendbird-message-item-reaction-menu"
@@ -51,6 +52,8 @@ exports[`MessageItemReactionMenu should do a snapshot test of the MessageItemRea
 </div>
 `;
 
+=======
+>>>>>>> d0bd767 (Update snapshots)
 exports[`ui/MessageItemReactionMenu should do a snapshot test of the MessageItemReactionMenu DOM 1`] = `
 <DocumentFragment>
   <div

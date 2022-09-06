@@ -31,11 +31,13 @@ exports[`ui/ChatHeader should do a snapshot test of the ChatHeader DOM 1`] = `
       </div>
       <span
         class="sendbird-chat-header__left__title sendbird-label sendbird-label--h-2 sendbird-label--color-onbackground-1"
+        data-testid="sendbird-label"
       >
         Headline 2
       </span>
       <span
         class="sendbird-chat-header__left__subtitle sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-2"
+        data-testid="sendbird-label"
       >
         Body text 2
       </span>
@@ -45,6 +47,7 @@ exports[`ui/ChatHeader should do a snapshot test of the ChatHeader DOM 1`] = `
     >
       <div
         class="sendbird-chat-header__right__mute sendbird-icon sendbird-icon-notifications-off-filled "
+        data-testid="sendbird-icon"
         role="button"
         style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
         tabindex="0"
@@ -61,6 +64,7 @@ exports[`ui/ChatHeader should do a snapshot test of the ChatHeader DOM 1`] = `
         >
           <div
             class=" sendbird-icon sendbird-icon-info sendbird-icon-color--primary"
+            data-testid="sendbird-icon"
             role="button"
             style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
             tabindex="0"

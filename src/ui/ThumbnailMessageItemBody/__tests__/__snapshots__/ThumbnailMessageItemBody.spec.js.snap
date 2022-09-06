@@ -26,6 +26,7 @@ exports[`ui/ThumbnailMessageItemBody should do a snapshot test of the ThumbnailM
         >
           <div
             class=" sendbird-icon sendbird-icon-photo sendbird-icon-color--on-background-2"
+            data-testid="sendbird-icon"
             role="button"
             style="width: 34px; min-width: 34px; height: 34px; min-height: 34px;"
             tabindex="0"

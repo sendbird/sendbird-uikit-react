@@ -55,6 +55,7 @@ exports[`ui/OpenchannelConversationHeader should do a snapshot test of the Openc
         >
           <div
             class=" sendbird-icon sendbird-icon-members sendbird-icon-color--primary"
+            data-testid="sendbird-icon"
             role="button"
             style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
             tabindex="0"
