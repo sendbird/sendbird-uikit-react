@@ -29,6 +29,7 @@ export default function ThumbnailMessageItemBody({
 
   return (
     <div
+      data-testid="sendbird-thumbnail-message-item-body"
       className={getClassName([
         className,
         'sendbird-thumbnail-message-item-body',
