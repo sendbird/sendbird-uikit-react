@@ -1,16 +1,12 @@
 import React from 'react';
-import {shallow} from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import MentionUserLabel from "../index";
 
-describe('MentionUserLabel', () => {
+describe('ui/MentionUserLabel', () => {
   it('should do a snapshot test of the MentionUserLabel DOM', function() {
     const text = "example-text";
-    const component = renderer.create(
-      <MentionUserLabel />,
-    );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(<MentionUserLabel />);
+    expect(asFragment()).toMatchSnapshot();
   });
 });
