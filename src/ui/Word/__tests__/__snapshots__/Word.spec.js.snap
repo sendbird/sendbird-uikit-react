@@ -1,5 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+<<<<<<< HEAD
 exports[`Word should do a snapshot test of the Word DOM 1`] = `
 <span
   className="sendbird-word"
@@ -12,20 +13,31 @@ exports[`Word should do a snapshot test of the Word DOM 1`] = `
         "display": "inline",
       }
     }
+=======
+exports[`ui/Word should do a snapshot test of the Word DOM 1`] = `
+<DocumentFragment>
+  <span
+    class="sendbird-word"
+>>>>>>> b42f348 (Migrate tests of ui/Word with testing-library)
   >
-    <a
-      className="
+    hello
+    <div
+      class="sendbird-context-menu"
+    >
+      <a
+        class="
             sendbird-word__mention
             
           "
-      onClick={[Function]}
-    >
-      <span
-        className="sendbird-label sendbird-label--caption-1 sendbird-label--color-onbackground-1"
       >
-        @Hoon Baek
-      </span>
-    </a>
-  </div>
-</span>
+        <span
+          class="sendbird-label sendbird-label--caption-1 sendbird-label--color-onbackground-1"
+          data-testid="sendbird-label"
+        >
+          @Hoon Baek
+        </span>
+      </a>
+    </div>
+  </span>
+</DocumentFragment>
 `;

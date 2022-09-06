@@ -1,21 +1,19 @@
 import React from 'react';
-import {shallow} from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import Word from "../index";
 
-describe('Word', () => {
+describe('ui/Word', () => {
   it('should do a snapshot test of the Word DOM', function() {
     const text = "example-text";
-    const component = renderer.create(
+    const { asFragment } = render(
       <Word
         word="hello@{hoon}"
         message={{
           mentionedUsers: [{ userId: 'hoon', nickname: 'Hoon Baek' }]
         }}
-      />,
+      />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });
