@@ -29,7 +29,7 @@ const getMockMessage = (callback) => {
   return mockMessage;
 };
 
-describe('OpenchannelUserMessage', () => {
+describe('ui/OpenchannelUserMessage', () => {
   it('should have default elements', function () {
     const { container } = render(
       <OpenchannelUserMessage

@@ -26,10 +26,12 @@ export default function PlaceHolder({
 }: PlaceHolderProps): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   return (
-    <div className={[
-      ...(Array.isArray(className) ? className : [className]),
-      'sendbird-place-holder',
-    ].join(' ')}
+    <div
+      data-testid="sendbird-place-holder"
+      className={[
+        ...(Array.isArray(className) ? className : [className]),
+        'sendbird-place-holder',
+      ].join(' ')}
     >
       {
         type === PlaceHolderTypes.LOADING && (
