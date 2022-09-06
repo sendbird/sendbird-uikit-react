@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import PlaceHolder from "../index";
 import PlaceHolderTypes from '../type';
 
-describe('PlaceHolder', () => {
+describe('ui/PlaceHolder', () => {
   it('should should contain className', function () {
     const text = "example-text";
     const { container } = render(<PlaceHolder className={text} type={PlaceHolderTypes.WRONG} />);
