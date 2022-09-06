@@ -6,7 +6,7 @@ import Icon, { IconTypes } from '../../Icon';
 
 const children = <Icon type={IconTypes.CREATE} width="28px" height="28px" />;
 
-describe('ReactionButton', () => {
+describe('ui/ReactionButton', () => {
   it('should render className prop', function () {
     const text = "example-text";
     const { container } = render(<ReactionButton className={text}>{children}</ReactionButton>);

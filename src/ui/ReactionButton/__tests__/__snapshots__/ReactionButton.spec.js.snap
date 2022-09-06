@@ -24,3 +24,28 @@ exports[`ReactionButton should do a snapshot test of the ReactionButton DOM 1`] 
   </div>
 </DocumentFragment>
 `;
+
+exports[`ui/ReactionButton should do a snapshot test of the ReactionButton DOM 1`] = `
+<DocumentFragment>
+  <div
+    class="example-text sendbird-reaction-button"
+    data-testid="sendbird-reaction-button"
+    role="button"
+    style="width: 36px; height: 36px;"
+    tabindex="0"
+  >
+    <div
+      class="sendbird-reaction-button__inner"
+    >
+      <div
+        class=" sendbird-icon sendbird-icon-create "
+        role="button"
+        style="width: 28px; min-width: 28px; height: 28px; min-height: 28px;"
+        tabindex="0"
+      >
+        <test-file-stub />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
