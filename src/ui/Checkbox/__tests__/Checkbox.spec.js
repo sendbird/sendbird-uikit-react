@@ -13,7 +13,12 @@ describe('ui/Checkbox', () => {
 
   it('should do a snapshot test of the checked Checkbox DOM', function () {
     const { asFragment } = render(
-      <Checkbox checked={true} />
+      <Checkbox
+        checked={true}
+        onChange={() => {
+          // noop
+        }}
+      />
     );
     expect(asFragment()).toMatchSnapshot();
   });
