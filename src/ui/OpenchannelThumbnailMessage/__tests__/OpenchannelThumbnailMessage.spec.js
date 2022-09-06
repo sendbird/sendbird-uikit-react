@@ -9,7 +9,7 @@ import OpenchannelThumbnailMessage from "../index";
 // ideally we want to mock date-fns globally - needs more research
 jest.mock('date-fns/format', () => () => ('mock-date'));
 
-describe('OpenchannelThumbnailMessage', () => {
+describe('ui/OpenchannelThumbnailMessage', () => {
   it('should render for image thumbnail message', function() {
     const { container } = render(
       <OpenchannelThumbnailMessage
