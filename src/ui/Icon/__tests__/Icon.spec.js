@@ -1,14 +1,13 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import Icon, { IconTypes } from "../index";
 
-describe('Icon', () => {
+describe('ui/Icon', () => {
   it('should do a snapshot test of the defualt Icon DOM', function () {
-    const component = renderer.create(
-      <Icon type={IconTypes.ADD} />,
+    const { asFragment } = render(
+      <Icon type={IconTypes.ADD} />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });
