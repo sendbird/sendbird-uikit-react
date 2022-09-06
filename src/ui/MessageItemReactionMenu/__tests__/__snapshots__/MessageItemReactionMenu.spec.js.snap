@@ -50,3 +50,35 @@ exports[`MessageItemReactionMenu should do a snapshot test of the MessageItemRea
   </div>
 </div>
 `;
+
+exports[`ui/MessageItemReactionMenu should do a snapshot test of the MessageItemReactionMenu DOM 1`] = `
+<DocumentFragment>
+  <div
+    class=" sendbird-message-item-reaction-menu"
+  >
+    <div
+      class="sendbird-context-menu"
+    >
+      <button
+        class="sendbird-message-item-reaction-menu__trigger sendbird-iconbutton "
+        style="height: 32px; width: 32px;"
+        type="button"
+      >
+        <span
+          class="sendbird-iconbutton__inner"
+        >
+          <div
+            class="sendbird-message-item-reaction-menu__trigger__icon sendbird-icon sendbird-icon-emoji-more sendbird-icon-color--content-inverse"
+            data-testid="sendbird-icon"
+            role="button"
+            style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
+            tabindex="0"
+          >
+            <test-file-stub />
+          </div>
+        </span>
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
