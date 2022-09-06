@@ -45,3 +45,49 @@ exports[`QuoteMessageInput should do a snapshot test of the QuoteMessageInput DO
   </div>
 </DocumentFragment>
 `;
+
+exports[`ui/QuoteMessageInput should do a snapshot test of the QuoteMessageInput DOM 1`] = `
+<DocumentFragment>
+  <div
+    class="sendbird-quote_message_input "
+  >
+    <div
+      class="sendbird-quote_message_input__avatar"
+    >
+      <div
+        class=" sendbird-icon sendbird-icon-file-audio sendbird-icon-color--on-background-2"
+        role="button"
+        style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
+        tabindex="0"
+      >
+        <test-file-stub />
+      </div>
+    </div>
+    <div
+      class="sendbird-quote_message_input__body"
+      style="width: calc(100% - 164px); left: 92px;"
+    >
+      <span
+        class="sendbird-quote_message_input__body__sender-name sendbird-label sendbird-label--caption-1 sendbird-label--color-onbackground-1"
+        data-testid="sendbird-label"
+      >
+        Reply to ME
+      </span>
+      <span
+        class="sendbird-quote_message_input__body__message-content sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-3"
+        data-testid="sendbird-label"
+      >
+        72b35fef-acda-4e32-123323456789973567890dfvgbhnjmkiytdxbna0e4-37e1226b0615.mp3
+      </span>
+    </div>
+    <div
+      class="sendbird-quote_message_input__close-button sendbird-icon sendbird-icon-close sendbird-icon-color--on-background-2"
+      role="button"
+      style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
+      tabindex="0"
+    >
+      <test-file-stub />
+    </div>
+  </div>
+</DocumentFragment>
+`;
