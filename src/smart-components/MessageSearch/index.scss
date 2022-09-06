@@ -11,6 +11,22 @@
     background-color: t(bg-0);
   }
 
+  .sendbird-message-search-pannel__input__container__input-area {
+    position: absolute;
+    top: 14px;
+    left: 48px;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    outline: none;
+    font-size: 14px;
+    width: calc(100% - 90px);
+    @include themed() {
+      color: t(on-bg-1);
+      background-color: t(bg-0);
+    }
+  }
+
   .sendbird-message-search-pannel__header {
     position: relative;
     display: flex;
@@ -58,21 +74,6 @@
         position: absolute;
         top: 10px;
         left: 16px;
-      }
-      .sendbird-message-search-pannel__input__container__input-area {
-        position: absolute;
-        top: 14px;
-        left: 48px;
-        margin: 0px;
-        padding: 0px;
-        border: 0px;
-        outline: none;
-        font-size: 14px;
-        width: calc(100% - 90px);
-        @include themed() {
-          color: t(on-bg-1);
-          background-color: t(bg-0);
-        }
       }
       .sendbird-message-search-pannel__input__container__spinner {
         position: absolute;

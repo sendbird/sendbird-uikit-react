@@ -1,4 +1,5 @@
 import './index.scss';
+import './__experimental__typography.scss';
 
 import React, { useEffect, useReducer, useState } from 'react';
 import PropTypes from 'prop-types';
@@ -52,6 +53,7 @@ export default function Sendbird(props) {
   const {
     logLevel = '',
     userMention = {},
+    useRemFontUnit = false,
   } = config;
   const [logger, setLogger] = useState(LoggerFactory(logLevel));
   const [pubSub, setPubSub] = useState();
@@ -94,6 +96,7 @@ export default function Sendbird(props) {
     'sendbird-modal-root',
     'sendbird-dropdown-portal',
     'sendbird-emoji-list-portal',
+    useRemFontUnit ? 'sendbird-experimental__rem__units' : '',
   ], 'body');
 
   // should move to reducer
@@ -228,6 +231,7 @@ Sendbird.propTypes = {
       maxMentionCount: PropTypes.number,
       maxSuggestionCount: PropTypes.number,
     }),
+    useRemFontUnit: PropTypes.bool,
   }),
   stringSet: PropTypes.objectOf(PropTypes.string),
   colorSet: PropTypes.objectOf(PropTypes.string),
