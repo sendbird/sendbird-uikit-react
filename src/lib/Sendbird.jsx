@@ -53,8 +53,9 @@ export default function Sendbird(props) {
   const {
     logLevel = '',
     userMention = {},
-    useRemFontUnit = false,
+    isREMUnitEnabled = false,
   } = config;
+  console.warn({ config, isREMUnitEnabled });
   const [logger, setLogger] = useState(LoggerFactory(logLevel));
   const [pubSub, setPubSub] = useState();
   const [sdkStore, sdkDispatcher] = useReducer(sdkReducers, sdkInitialState);
@@ -96,7 +97,6 @@ export default function Sendbird(props) {
     'sendbird-modal-root',
     'sendbird-dropdown-portal',
     'sendbird-emoji-list-portal',
-    useRemFontUnit ? 'sendbird-experimental__rem__units' : '',
   ], 'body');
 
   // should move to reducer
@@ -104,6 +104,14 @@ export default function Sendbird(props) {
   useEffect(() => {
     setCurrenttheme(theme);
   }, [theme]);
+
+  useEffect(() => {
+    const body = document.querySelector('body');
+    body.classList.remove('sendbird-experimental__rem__units');
+    if (isREMUnitEnabled) {
+      body.classList.add('sendbird-experimental__rem__units');
+    }
+  }, [isREMUnitEnabled]);
   // add-remove theme from body
   useEffect(() => {
     logger.info('Setup theme', `Theme: ${currenttheme}`);
@@ -231,7 +239,7 @@ Sendbird.propTypes = {
       maxMentionCount: PropTypes.number,
       maxSuggestionCount: PropTypes.number,
     }),
-    useRemFontUnit: PropTypes.bool,
+    isREMUnitEnabled: PropTypes.bool,
   }),
   stringSet: PropTypes.objectOf(PropTypes.string),
   colorSet: PropTypes.objectOf(PropTypes.string),

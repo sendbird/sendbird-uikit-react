@@ -173,7 +173,7 @@ App.propTypes = {
       PropTypes.string,
       PropTypes.arrayOf(PropTypes.string),
     ]),
-    useRemFontUnit: PropTypes.bool,
+    isREMUnitEnabled: PropTypes.bool,
   }),
   isReactionEnabled: PropTypes.bool,
   replyType: PropTypes.oneOf(['NONE', 'QUOTE_REPLY', 'THREAD']),
