@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 
 import Modal from '../../../../ui/Modal';
-import { Type as ButtonType } from '../../../../ui/Button/type';
+import { ButtonTypes } from '../../../../ui/Button';
 import UserListItem from '../../../../ui/UserListItem';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
@@ -39,7 +39,7 @@ export default function InviteUsers({
       <Modal
         disabled={Object.keys(selectedMembers).length === 0}
         submitText="Invite"
-        type={ButtonType.PRIMARY}
+        type={ButtonTypes.PRIMARY}
         onCancel={() => onCancel()}
         onSubmit={() => {
           const members = Object.keys(selectedMembers).filter((m) => selectedMembers[m]);

@@ -7,7 +7,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import Modal from '../../../../ui/Modal';
 import Input, { InputLabel } from '../../../../ui/Input';
 import Avatar from '../../../../ui/Avatar/index';
-import { Type as ButtonType } from '../../../../ui/Button/type';
+import { ButtonTypes } from '../../../../ui/Button';
 import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 import TextButton from '../../../../ui/TextButton';
 import ChannelAvatar from '../../../../ui/ChannelAvatar/index';
@@ -85,7 +85,7 @@ const EditDetails: React.FC<EditDetailsProps> = (props: EditDetailsProps) => {
           });
         }
       }}
-      type={ButtonType.PRIMARY}
+      type={ButtonTypes.PRIMARY}
     >
       <form
         className="channel-profile-form"

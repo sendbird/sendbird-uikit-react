@@ -1,7 +1,5 @@
 import React from 'react';
-import Button from '../index';
-
-import { Type, Size } from '../type';
+import Button, { ButtonTypes, ButtonSizes } from '../index';
 
 const description = `
   \`import Button from "@sendbird/uikit-react/ui/Button";\`
@@ -23,14 +21,14 @@ export const WithControls = (args) => <Button {...args}>TEXT</Button>;
 
 export const defaultButton = () => [
   <Button>DEFAULT</Button>,
-  <Button type={Type.PRIMARY}>PRIMARY</Button>,
-  <Button type={Type.SECONDARY}>SECONDARY</Button>,
-  <Button type={Type.DANGER}>DANGER</Button>,
-  <Button type={Type.DISABLED}>DISABLED</Button>,
+  <Button type={ButtonTypes.PRIMARY}>PRIMARY</Button>,
+  <Button type={ButtonTypes.SECONDARY}>SECONDARY</Button>,
+  <Button type={ButtonTypes.DANGER}>DANGER</Button>,
+  <Button type={ButtonTypes.DISABLED}>DISABLED</Button>,
 ];
 export const smallButton = () => [
-  <Button type={Type.PRIMARY} size={Size.SMALL}>PRIMARY</Button>,
-  <Button type={Type.SECONDARY} size={Size.SMALL}>SECONDARY</Button>,
-  <Button type={Type.DANGER} size={Size.SMALL}>DANGER</Button>,
-  <Button type={Type.DISABLED} size={Size.SMALL}>DISABLED</Button>,
+  <Button type={ButtonTypes.PRIMARY} size={ButtonSizes.SMALL}>PRIMARY</Button>,
+  <Button type={ButtonTypes.SECONDARY} size={ButtonSizes.SMALL}>SECONDARY</Button>,
+  <Button type={ButtonTypes.DANGER} size={ButtonSizes.SMALL}>DANGER</Button>,
+  <Button type={ButtonTypes.DISABLED} size={ButtonSizes.SMALL}>DISABLED</Button>,
 ];

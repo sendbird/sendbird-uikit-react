@@ -39,7 +39,7 @@ export const ModalBody = ({ children }: ModalBodyProps): ReactElement => (
 export interface ModalFooterProps {
   submitText: string;
   disabled?: boolean;
-  type?: string;
+  type?: ButtonTypes;
   onCancel: () => void;
   onSubmit: () => void;
 }
@@ -71,7 +71,7 @@ export interface ModalProps {
   submitText?: string;
   disabled?: boolean;
   hideFooter?: boolean;
-  type?: string;
+  type?: ButtonTypes;
   onCancel?: () => void;
   onSubmit?: () => void;
 }

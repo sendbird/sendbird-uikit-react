@@ -11,7 +11,7 @@ import Label, {
   LabelTypography,
   LabelColors,
 } from '../../../../ui/Label';
-import { Type as ButtonType } from '../../../../ui/Button/type';
+import { ButtonTypes } from '../../../../ui/Button';
 import UserListItem from '../../../../ui/UserListItem';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 
@@ -45,7 +45,7 @@ export default function AddOperatorsModal({
   return (
     <>
       <Modal
-        type={ButtonType.PRIMARY}
+        type={ButtonTypes.PRIMARY}
         submitText="Add"
         onCancel={onCancel}
         onSubmit={() => {

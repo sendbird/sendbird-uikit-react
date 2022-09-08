@@ -15,7 +15,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import Input, { InputLabel } from '../../../../ui/Input';
 import Avatar from '../../../../ui/Avatar';
 import Icon, { IconTypes } from '../../../../ui/Icon';
-import { Type as ButtonType } from '../../../../ui/Button/type';
+import { ButtonTypes } from '../../../../ui/Button';
 import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 import TextButton from '../../../../ui/TextButton';
 import { noop } from '../../../../utils/utils';
@@ -47,7 +47,7 @@ export default function EditUserProfile(): ReactElement {
     <Modal
       titleText={stringSet.EDIT_PROFILE__TITLE}
       submitText={stringSet.BUTTON__SAVE}
-      type={ButtonType.PRIMARY}
+      type={ButtonTypes.PRIMARY}
       onCancel={onCancel}
       onSubmit={() => {
         if (user?.nickname !== '' && !inputRef.current.value) {
