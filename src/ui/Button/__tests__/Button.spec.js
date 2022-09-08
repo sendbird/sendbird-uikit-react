@@ -2,8 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme'
 import renderer from 'react-test-renderer';
 
-import Button from "../index";
-import { Size } from '../type';
+import Button, { ButtonSizes } from "../index";
 
 describe('Button', () => {
   it('should do a snapshot test of the default Button DOM', function () {
@@ -16,7 +15,7 @@ describe('Button', () => {
 
   it('should do a snapshot test of the small Button DOM', function () {
     const component = renderer.create(
-      <Button size={Size.SMALL} />
+      <Button size={ButtonSizes.SMALL} />
     );
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
