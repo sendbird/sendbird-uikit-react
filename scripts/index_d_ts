@@ -870,6 +870,10 @@ declare module '@sendbird/uikit-react/handlers/ConnectionHandler' {
   import { ConnectionHandler } from '@sendbird/chat';
   export default ConnectionHandler;
 }
+declare module '@sendbird/uikit-react/handlers/SessionHandler' {
+  import { SessionHandler } from '@sendbird/chat';
+  export default SessionHandler;
+}
 declare module '@sendbird/uikit-react/handlers/GroupChannelHandler' {
   import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
   export default GroupChannelHandler;

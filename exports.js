@@ -16,6 +16,7 @@ export default {
   'handlers/GroupChannelHandler': 'src/lib/handlers/GroupChannelHandler.ts',
   'handlers/OpenChannelHandler': 'src/lib/handlers/OpenChannelHandler.ts',
   'handlers/UserEventHandler': 'src/lib/handlers/UserEventHandler.ts',
+  'handlers/SessionHandler': 'src/lib/handlers/SessionHandler.ts',
 
   // ChannelList
   ChannelList: 'src/smart-components/ChannelList/index.tsx',
