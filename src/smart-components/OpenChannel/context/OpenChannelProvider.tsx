@@ -278,7 +278,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
           logger.info('OpenChannel | useSetChannel: Succeeded to exit channel');
         });
     }
-  }, []);
+  }, [currentOpenChannel?.url]);
 
   return (
     <OpenChannelContext.Provider value={{
