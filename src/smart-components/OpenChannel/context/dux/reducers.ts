@@ -22,7 +22,15 @@ export default function reducer(
         allMessages: [],
       };
     }
-
+    case actionTypes.EXIT_CURRENT_CHANNEL: {
+      if (action.payload?.url === state.currentOpenChannel?.url) {
+        return {
+          ...state,
+          currentOpenChannel: null,
+        };
+      }
+      return state;
+    }
     case actionTypes.SET_CURRENT_CHANNEL: {
       const gottenChannel = action.payload;
       const operators = gottenChannel.operators;

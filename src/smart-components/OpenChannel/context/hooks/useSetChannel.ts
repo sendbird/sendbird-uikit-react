@@ -1,4 +1,4 @@
-import type { SendbirdOpenChat } from '@sendbird/chat/openChannel';
+import type { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import { useEffect } from 'react';
 import type { Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
@@ -9,22 +9,32 @@ interface DynamicParams {
   sdkInit: boolean;
   fetchingParticipants: boolean;
   userId: string;
+  currentOpenChannel: OpenChannel;
 }
 interface StaticParams {
   sdk: SendbirdOpenChat;
   logger: Logger;
-  messagesDispatcher: ({ type: string, payload: any }) => void;
+  messagesDispatcher: ({ type, payload }: { type: string, payload: any }) => void;
 }
 
 function useSetChannel(
-  { channelUrl, sdkInit, fetchingParticipants, userId }: DynamicParams,
+  { channelUrl, sdkInit, fetchingParticipants, userId, currentOpenChannel }: DynamicParams,
   { sdk, logger, messagesDispatcher }: StaticParams,
 ): void {
   useEffect(() => {
     if (channelUrl && sdkInit && sdk?.openChannel) {
-      logger.info('OpenChannel | useSetChannel fetching channel', channelUrl);
+      if (currentOpenChannel && currentOpenChannel?.exit) {
+        currentOpenChannel.exit?.().then(() => {
+          logger.info('OpenChannel | useSetChannel: Exit from the previous open channel', currentOpenChannel?.url);
+          messagesDispatcher({
+            type: messageActionTypes.EXIT_CURRENT_CHANNEL,
+            payload: currentOpenChannel,
+          });
+        });
+      }
+      logger.info('OpenChannel | useSetChannel: Fetching channel', channelUrl);
       sdk.openChannel.getChannel(channelUrl).then((openChannel) => {
-        logger.info('OpenChannel | useSetChannel fetched channel', openChannel);
+        logger.info('OpenChannel | useSetChannel: Succeeded to fetch channel', openChannel);
         messagesDispatcher({
           type: messageActionTypes.SET_CURRENT_CHANNEL,
           payload: openChannel,
@@ -93,14 +103,14 @@ function useSetChannel(
             );
           }
         }).catch((error) => {
-          logger.warning('OpenChannel | useSetChannel enter channel failed', { channelUrl, error });
+          logger.warning('OpenChannel | useSetChannel: Failed to enter channel', { channelUrl, error });
           messagesDispatcher({
             type: messageActionTypes.SET_CHANNEL_INVALID,
             payload: null,
           });
         });
       }).catch((error) => {
-        logger.warning('OpenChannel | useSetChannel fetching channel failed', { channelUrl, error });
+        logger.warning('OpenChannel | useSetChannel: Failed to fetch channel', { channelUrl, error });
         messagesDispatcher({
           type: messageActionTypes.SET_CHANNEL_INVALID,
           payload: null,

@@ -64,7 +64,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
         channel.enter()
           .then(() => {
             setChannel(channel);
-            logger.info('OpenChannelSettings | Succeeded to enter channel');
+            logger.info('OpenChannelSettings | Succeeded to enter channel', channel?.url);
           })
           .catch((error) => {
             setChannel(null);
@@ -79,7 +79,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
       if (currentChannel && currentChannel.exit) {
         currentChannel.exit()
           .then(() => {
-            logger.info('OpenChannelSettings | Succeeded to exit channel');
+            logger.info('OpenChannelSettings | Succeeded to exit channel', currentChannel?.url);
           })
           .catch((error) => {
             logger.warning('OpenChannelSettings | Failed to exit channel', error);
