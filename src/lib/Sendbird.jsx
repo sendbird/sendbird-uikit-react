@@ -55,7 +55,6 @@ export default function Sendbird(props) {
     userMention = {},
     isREMUnitEnabled = false,
   } = config;
-  console.warn({ config, isREMUnitEnabled });
   const [logger, setLogger] = useState(LoggerFactory(logLevel));
   const [pubSub, setPubSub] = useState();
   const [sdkStore, sdkDispatcher] = useReducer(sdkReducers, sdkInitialState);
