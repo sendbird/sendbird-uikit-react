@@ -154,7 +154,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
 
   // use hooks
   useSetChannel(
-    { channelUrl, sdkInit, fetchingParticipants, userId },
+    { channelUrl, sdkInit, fetchingParticipants, userId, currentOpenChannel },
     { sdk, logger, messagesDispatcher },
   );
 
@@ -269,16 +269,6 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
       }
     };
   }, [channelUrl, sdkInit]);
-
-  // Exit channel when unmount
-  useEffect(() => () => {
-    if (currentOpenChannel && currentOpenChannel.exit) {
-      currentOpenChannel.exit()
-        .then(() => {
-          logger.info('OpenChannel | useSetChannel: Succeeded to exit channel');
-        });
-    }
-  }, [currentOpenChannel]);
 
   return (
     <OpenChannelContext.Provider value={{
