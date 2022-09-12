@@ -324,6 +324,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     logger.warning(warning, { before: allChannels, after: sortedChannels });
   }
 
+  // Set current channel (by on_channel_selected event)
   useEffect(() => {
     if (!sdk || !sdk.groupChannel || !currentChannel || !currentChannel?.url) {
       return;
