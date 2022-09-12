@@ -1,0 +1,128 @@
+@import '../../../../styles/variables';
+
+.sendbird-open-channel-preview {
+  position: relative;
+  display: inline-flex;
+  flex-direction: row;
+
+  width: 264px;
+  height: 58px;
+  min-width: 264px;
+  min-height: 58px;
+  box-sizing: border-box;
+
+  @include themed() {
+    background-color: t(bg-0);
+    border-bottom: solid 1px t(on-bg-4);
+  }
+  &:hover {
+    @include themed() {
+      background-color: t(bg-1);
+    }
+  }
+  &.selected {
+    @include themed() {
+      background-color: t(primary-1);
+      border-left: solid 4px t(primary-3);
+    }
+  }
+
+  .sendbird-open-channel-preview__cover-image {
+    position: relative;
+    margin-top: 8px;
+    margin-left: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+    box-sizing: border-box;
+
+    .sendbird-open-channel-preview__cover-image__avatar,
+    .sendbird-open-channel-preview__cover-image__avatar--default {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+  }
+  .sendbird-open-channel-preview__context {
+    position: relative;
+    margin-top: 8px;
+    margin-left: 16px;
+    display: inline-flex;
+    flex-direction: column;
+
+    max-width: 178px;
+    box-sizing: border-box;
+
+    .sendbird-open-channel-preview__context__title {
+      position: relative;
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+
+      width: 100%;
+      height: 16px;
+      box-sizing: border-box;
+
+      .sendbird-open-channel-preview__context__title__channel-name {
+        position: relative;
+        display: inline-block;
+
+        max-width: 100%;
+        height: 100%;
+        &.frozen {
+          max-width: calc(100% - 20px);
+        }
+        box-sizing: border-box;
+
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        word-break: keep-all;
+      }
+
+      .sendbird-open-channel-preview__context__title__frozen {
+        position: relative;
+        margin-left: 4px;
+        display: inline-flex;
+      }
+    }
+    .sendbird-open-channel-preview__context__participants {
+      position: relative;
+      margin-top: 8px;
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+
+      width: 100%;
+      height: 14px;
+      box-sizing: border-box;
+
+      .sendbird-open-channel-preview__context__participants__icon {
+        position: relative;
+        display: inline-flex;
+
+        width: 14px;
+        height: 14px;
+        box-sizing: border-box;
+      }
+      .sendbird-open-channel-preview__context__participants__count {
+        position: relative;
+        margin-left: 4px;
+        display: inline-flex;
+
+        width: 160px;
+        max-width: 160px;
+        height: 12px;
+        box-sizing: border-box;
+
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        word-break: keep-all;
+      }
+    }
+  }
+}
