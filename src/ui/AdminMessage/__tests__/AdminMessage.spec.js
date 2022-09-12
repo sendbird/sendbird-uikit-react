@@ -7,8 +7,10 @@ import dummyAdminMessage from '../adminMessageDummyData.mock';
 describe('ui/AdminMessage', () => {
   it('should contain className', function () {
     const text = "example-classname";
-    render(<AdminMessage className={text} message={dummyAdminMessage} />);
-    expect(screen.getByTestId('sendbird-admin-message').className).toContain(text);
+    const { container } = render(<AdminMessage className={text} message={dummyAdminMessage} />);
+    expect(
+      container.querySelector('.sendbird-admin-message').className
+    ).toContain(text);
   });
 
   it('should do a snapshot test of the AdminMessage DOM', function () {
