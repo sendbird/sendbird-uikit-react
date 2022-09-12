@@ -74,6 +74,7 @@ export interface ModalProps {
   type?: ButtonTypes;
   onCancel?: () => void;
   onSubmit?: () => void;
+  renderHeader?: () => ReactElement;
 }
 export default function Modal(props: ModalProps): ReactElement {
   const {
@@ -83,13 +84,16 @@ export default function Modal(props: ModalProps): ReactElement {
     disabled = false,
     hideFooter = false,
     type = ButtonTypes.DANGER,
-    onCancel = () => {/* noop */},
-    onSubmit = () => {/* noop */},
+    onCancel = () => {/* noop */ },
+    onSubmit = () => {/* noop */ },
+    renderHeader,
   } = props;
   return createPortal((
     <div className="sendbird-modal">
       <div className="sendbird-modal__content">
-        <ModalHeader titleText={titleText} />
+        {renderHeader?.() || (
+          <ModalHeader titleText={titleText} />
+        )}
         <ModalBody>{children}</ModalBody>
         {
           !hideFooter && (
