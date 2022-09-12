@@ -7,7 +7,8 @@ import './theme.scss';
 import Sendbird from '../../lib/Sendbird';
 import OpenChannelConversation from '../OpenChannel';
 import OpenChannelSettings from '../OpenChannelSettings';
-import CommunityChannelList from './components/CommunityChannelList';
+// import CommunityChannelList from './components/CommunityChannelList';
+import OpenChannelList from '../OpenChannelList';
 
 interface Props {
   appId: string;
@@ -24,8 +25,7 @@ export default function Community({
 }: Props): ReactElement {
   const [showSettings, setShowSettings] = useState(false);
   const [currentChannel, setCurrentChannel] = useState<OpenChannel>(null);
-  const [channels, setChannels] = useState<Array<OpenChannel>>([]);
-  const currentChannelUrl = currentChannel ? currentChannel.url : '';
+  // const [channels, setChannels] = useState<Array<OpenChannel>>([]);
   return (
     <Sendbird
       appId={appId}
@@ -36,16 +36,15 @@ export default function Community({
     >
       <div className="community-app">
         <div className="channel-list">
-          <CommunityChannelList
-            currentChannelUrl={currentChannelUrl}
-            setCurrentChannel={setCurrentChannel}
-            channels={channels}
-            setChannels={setChannels}
+          <OpenChannelList
+            onChannelSelected={(channel) => {
+              setCurrentChannel(channel);
+            }}
           />
         </div>
         <div className="community-open-channel">
           <OpenChannelConversation
-            channelUrl={currentChannelUrl}
+            channelUrl={currentChannel?.url}
             onChatHeaderActionClick={() => {
               setShowSettings(true);
             }}
@@ -54,19 +53,19 @@ export default function Community({
         {
           showSettings && (
             <OpenChannelSettings
-              channelUrl={currentChannelUrl}
+              channelUrl={currentChannel?.url}
               onCloseClick={() => {
                 setShowSettings(false);
               }}
-              onDeleteChannel={(openChannel: OpenChannel) => {
-                setShowSettings(false);
-                const isCurrent = currentChannelUrl === openChannel.url;
-                const updatedChannels = channels.filter(c => c.url !== openChannel.url);
-                setChannels(updatedChannels);
-                if (isCurrent && updatedChannels.length > 0) {
-                  setCurrentChannel(updatedChannels[0]);
-                }
-              }}
+              // onDeleteChannel={(openChannel: OpenChannel) => {
+              //   setShowSettings(false);
+              //   const isCurrent = currentChannel?.url === openChannel.url;
+              //   const updatedChannels = channels.filter(c => c.url !== openChannel.url);
+              //   setChannels(updatedChannels);
+              //   if (isCurrent && updatedChannels.length > 0) {
+              //     setCurrentChannel(updatedChannels[0]);
+              //   }
+              // }}
             />
           )
         }
