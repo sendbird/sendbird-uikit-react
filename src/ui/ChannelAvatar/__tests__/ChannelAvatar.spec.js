@@ -13,8 +13,8 @@ describe('ui/ChannelAvatar', () => {
 
   it('should render a default avatar of broadcastChannel', function() {
     const targetClassName = "sendbird-chat-header--default-avatar";
-    render(<ChannelAvatar channel={{ isBroadcast: true }} />);
-    expect(screen.getByTestId(targetClassName).className).toContain(targetClassName);
+    const { container } = render(<ChannelAvatar channel={{ isBroadcast: true }} />);
+    expect(container.getElementsByClassName(targetClassName)[0].className).toContain(targetClassName);
   });
 
   it('should render an avatar broadcastChannel with url', function() {

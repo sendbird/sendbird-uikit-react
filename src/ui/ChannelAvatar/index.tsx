@@ -30,7 +30,6 @@ function ChannelAvatar({
         utils.generateDefaultAvatar(channel)
           ? (
             <div
-              data-testid="sendbird-chat-header--default-avatar"
               className="sendbird-chat-header--default-avatar"
               style={{
                 width,
