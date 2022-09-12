@@ -2,7 +2,7 @@ import { MessageListParams } from '@sendbird/chat/message';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
 import { useEffect } from 'react';
 
-import type { Logger } from '../../../../lib/SendbirdState';
+import type { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
 import { scrollIntoLast } from '../utils';
 
@@ -13,7 +13,7 @@ interface DynamicParams {
 }
 interface StaticParams {
   logger: Logger;
-  messagesDispatcher: ({ type: string, payload: any }) => void;
+  messagesDispatcher: CustomUseReducerDispatcher;
 }
 
 function useInitialMessagesFetch(
