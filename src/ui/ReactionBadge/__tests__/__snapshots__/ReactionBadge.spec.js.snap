@@ -25,7 +25,6 @@ exports[`ReactionBadge should do a snapshot test of the ReactionBadge DOM 1`] = 
       </div>
       <span
         class="sendbird-reaction-badge__inner__count sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-1"
-        data-testid="sendbird-label"
       >
         +99
       </span>

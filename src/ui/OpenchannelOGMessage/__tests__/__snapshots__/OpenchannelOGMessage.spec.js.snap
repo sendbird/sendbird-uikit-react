@@ -55,13 +55,11 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
         >
           <span
             class="sendbird-openchannel-og-message__top__right__title__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
-            data-testid="sendbird-label"
           >
             Hoon Baek
           </span>
           <span
             class="sendbird-openchannel-og-message__top__right__title__sent-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-3"
-            data-testid="sendbird-label"
           >
             mock-date
           </span>
@@ -71,29 +69,24 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
         >
           <span
             class="sendbird-openchannel-og-message__top__right__description__message sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
-            data-testid="sendbird-label"
           >
             <span
               class="sendbird-openchannel-og-message--word sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
-              data-testid="sendbird-label"
             >
               I
             </span>
             <span
               class="sendbird-openchannel-og-message--word sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
-              data-testid="sendbird-label"
             >
               am
             </span>
             <span
               class="sendbird-openchannel-og-message--word sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
-              data-testid="sendbird-label"
             >
               the
             </span>
             <span
               class="sendbird-openchannel-og-message--word sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
-              data-testid="sendbird-label"
             >
               Message
             </span>
@@ -137,7 +130,6 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
       >
         <span
           class="sendbird-openchannel-og-message__bottom__og-tag__url sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
-          data-testid="sendbird-label"
         >
           https://sendbird.com/
         </span>
@@ -150,14 +142,12 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
         >
           <span
             class="sendbird-link-label__label sendbird-label sendbird-label--subtitle-2 sendbird-label--color-primary"
-            data-testid="sendbird-label"
           >
             This is the TITLE
           </span>
         </a>
         <span
           class="sendbird-openchannel-og-message__bottom__og-tag__description sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-1"
-          data-testid="sendbird-label"
         >
           I am description I am who has much string in this og meta data
         </span>

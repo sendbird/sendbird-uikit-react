@@ -20,7 +20,6 @@ exports[`ui/PlaceHolder should do a snapshot test of the PlaceHolder DOM 1`] = `
       </div>
       <span
         class="sendbird-place-holder__body__text sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-2"
-        data-testid="sendbird-label"
       >
         Something went wrong
       </span>

@@ -17,13 +17,11 @@ exports[`ui/UnknownMessageItemBody should do a snapshot test of the UnknownMessa
   >
     <span
       class="sendbird-unknown-message-item-body__header sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-1"
-      data-testid="sendbird-label"
     >
       (Unknown message type)
     </span>
     <span
       class="sendbird-unknown-message-item-body__description sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-2"
-      data-testid="sendbird-label"
     >
       Cannot read this message.
     </span>

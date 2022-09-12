@@ -40,13 +40,11 @@ exports[`ui/LegacyChannelHeader should create a snapshot of a default ChannelHea
       >
         <span
           class="sendbird-channel-header__title__right__name sendbird-label sendbird-label--subtitle-2 sendbird-label--color-onbackground-1"
-          data-testid="sendbird-label"
         >
           (No name)
         </span>
         <span
           class="sendbird-channel-header__title__right__user-id sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-2"
-          data-testid="sendbird-label"
         />
       </div>
     </div>

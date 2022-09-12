@@ -38,13 +38,11 @@ exports[`ui/FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
         </div>
         <span
           class="sendbird-fileviewer__header__left__filename sendbird-label sendbird-label--h-2 sendbird-label--color-onbackground-1"
-          data-testid="sendbird-label"
         >
           sent-mail (1).png
         </span>
         <span
           class="sendbird-fileviewer__header__left__sender-name sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-2"
-          data-testid="sendbird-label"
         >
           hoon102
         </span>

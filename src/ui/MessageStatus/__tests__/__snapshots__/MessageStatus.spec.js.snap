@@ -17,7 +17,6 @@ exports[`ui/MessageStatus should do a snapshot test of the MessageStatus DOM 1`]
     </div>
     <span
       class="sendbird-message-status__text sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
-      data-testid="sendbird-label"
     >
       mock-date
     </span>

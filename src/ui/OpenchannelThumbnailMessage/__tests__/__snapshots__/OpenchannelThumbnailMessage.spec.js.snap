@@ -231,13 +231,11 @@ exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the Opencha
       >
         <span
           class="sendbird-openchannel-thumbnail-message__right__title__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
-          data-testid="sendbird-label"
         >
           hoon102
         </span>
         <span
           class="sendbird-openchannel-thumbnail-message__right__title__sent-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-3"
-          data-testid="sendbird-label"
         >
           mock-date
         </span>

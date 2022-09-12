@@ -7,7 +7,7 @@ import { changeTypographyToClassName, changeColorToClassName } from '../utils.js
 describe('ui/Label', () => {
   it('should have default classname if props are not provided', function () {
     const text = 'Example';
-    render(
+    const { container } = render(
       <Label
         type={LabelTypography.H_1}
         color={LabelColors.ONBACKGROUND_1}
@@ -16,10 +16,10 @@ describe('ui/Label', () => {
       </Label>
     );
     expect(
-      screen.getByTestId('sendbird-label').className
+      container.querySelector('.sendbird-label').className
     ).toContain('sendbird-label--h-1');
     expect(
-      screen.getByTestId('sendbird-label').className
+      container.querySelector('.sendbird-label').className
     ).toContain('sendbird-label--color-onbackground-1');
     expect(
       screen.getByText(text).className
@@ -29,14 +29,12 @@ describe('ui/Label', () => {
   it('should have each typography', function () {
     for (let color in LabelColors) {
       for (let typography in LabelTypography) {
-        render(<Label color={color} type={typography}>Component</Label>);
-        const allScreens = screen.getAllByTestId('sendbird-label');
-        const currentScreen = allScreens[allScreens.length - 1];
+        const { container } = render(<Label color={color} type={typography}>Component</Label>);
         expect(
-          currentScreen.className
+          container.querySelector('.sendbird-label').className
         ).toContain(changeColorToClassName(color));
         expect(
-          currentScreen.className
+          container.querySelector('.sendbird-label').className
         ).toContain(changeTypographyToClassName(typography));
       }
     }

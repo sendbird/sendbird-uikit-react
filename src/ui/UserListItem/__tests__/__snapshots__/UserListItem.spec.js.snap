@@ -32,7 +32,6 @@ exports[`ui/UserListItem should do a snapshot test of the UserListItem DOM 1`] =
     </div>
     <span
       class="sendbird-user-list-item__title sendbird-label sendbird-label--subtitle-1 sendbird-label--color-onbackground-1"
-      data-testid="sendbird-label"
     >
       Topy
     </span>

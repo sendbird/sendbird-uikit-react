@@ -12,8 +12,11 @@ exports[`ui/TextMessageItemBody should do a snapshot test of the TextMessageItem
 <DocumentFragment>
   <span
     class="sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-1"
+<<<<<<< HEAD
     data-testid="sendbird-label"
 >>>>>>> f29e0be (Migrate tests of ui/TextmessageItemBody with testing-library)
+=======
+>>>>>>> 6639fd1 (Remove data-testid from ui/Label component)
   >
     <div
       class="class-name-for-snapshot sendbird-text-message-item-body outgoing mouse-hover reactions"
@@ -21,7 +24,6 @@ exports[`ui/TextMessageItemBody should do a snapshot test of the TextMessageItem
       First second third fourth fifth
       <span
         class="sendbird-text-message-item-body__message edited sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-2"
-        data-testid="sendbird-label"
       >
          (edited) 
       </span>

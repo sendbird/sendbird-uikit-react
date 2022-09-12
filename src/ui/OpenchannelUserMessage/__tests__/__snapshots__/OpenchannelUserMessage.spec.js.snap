@@ -199,13 +199,11 @@ exports[`ui/OpenchannelUserMessage should do a snapshot test of the OpenchannelU
       >
         <span
           class="sendbird-openchannel-user-message__right__top__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
-          data-testid="sendbird-label"
         >
           Hoon Baek
         </span>
         <span
           class="sendbird-openchannel-user-message__right__top__sent-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-3"
-          data-testid="sendbird-label"
         >
           mock-date
         </span>
@@ -215,7 +213,6 @@ exports[`ui/OpenchannelUserMessage should do a snapshot test of the OpenchannelU
       >
         <span
           class="sendbird-openchannel-user-message__right__bottom__message sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
-          data-testid="sendbird-label"
         >
           I am message
         </span>

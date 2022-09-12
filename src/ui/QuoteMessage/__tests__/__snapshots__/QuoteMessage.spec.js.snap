@@ -19,7 +19,6 @@ exports[`ui/QuoteMessage should do a snapshot test of the ReplyingMessageItemBod
       </div>
       <span
         class="sendbird-quote-message__replied-to__text sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-3"
-        data-testid="sendbird-label"
       >
         Simon replied to undefined
       </span>

@@ -7,7 +7,6 @@ exports[`ui/Tooltip should do a snapshot test of the ReactedUsers DOM 1`] = `
   >
     <span
       class="sendbird-tooltip__text sendbird-label sendbird-label--caption-2 sendbird-label--color-oncontent-1"
-      data-testid="sendbird-label"
     >
       Sravan S, Hoon Baek, Chong Bu, Mickey, Leo Shin, Doo Rim, Tez Park, Harry Kim, and you
     </span>

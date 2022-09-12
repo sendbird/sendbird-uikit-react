@@ -173,13 +173,11 @@ exports[`ui/OpenchannelFileMessage should do a snapshot test of the OpenchannelF
       >
         <span
           class="sendbird-openchannel-file-message__right__title__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
-          data-testid="sendbird-label"
         >
           ME
         </span>
         <span
           class="sendbird-openchannel-file-message__right__title__sent-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-3"
-          data-testid="sendbird-label"
         >
           mock-date
         </span>
@@ -203,7 +201,6 @@ exports[`ui/OpenchannelFileMessage should do a snapshot test of the OpenchannelF
         >
           <span
             class="sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
-            data-testid="sendbird-label"
           >
             72b35fef-acda-4e32-...4-37e1226b0615.pdf
           </span>

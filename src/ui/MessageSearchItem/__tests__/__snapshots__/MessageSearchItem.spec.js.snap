@@ -35,19 +35,16 @@ exports[`ui/MessageSearchItem should do a snapshot test of the MessageSearchItem
     >
       <span
         class="sendbird-message-search-item__right__sender-name sendbird-label sendbird-label--subtitle-2 sendbird-label--color-onbackground-1"
-        data-testid="sendbird-label"
       >
         Sravan
       </span>
       <span
         class="sendbird-message-search-item__right__message-text sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-3"
-        data-testid="sendbird-label"
       >
         Hello My name is SendBird.
       </span>
       <span
         class="sendbird-message-search-item__right__message-created-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
-        data-testid="sendbird-label"
       >
         mock-date
       </span>

@@ -10,7 +10,6 @@ exports[`Badge should do a snapshot test of the Badge DOM 1`] = `
     >
       <span
         class="sendbird-label sendbird-label--caption-2 sendbird-label--color-oncontent-1"
-        data-testid="sendbird-label"
       >
         1
       </span>

@@ -8,7 +8,6 @@ exports[`ui/Button should do a snapshot test of the default Button DOM 1`] = `
   >
     <span
       class="sendbird-button__text sendbird-label sendbird-label--button-1 sendbird-label--color-oncontent-1"
-      data-testid="sendbird-label"
     >
       Button
     </span>
@@ -24,7 +23,6 @@ exports[`ui/Button should do a snapshot test of the small Button DOM 1`] = `
   >
     <span
       class="sendbird-button__text sendbird-label sendbird-label--button-1 sendbird-label--color-oncontent-1"
-      data-testid="sendbird-label"
     >
       Button
     </span>

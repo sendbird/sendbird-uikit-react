@@ -32,7 +32,6 @@ exports[`ui/Word should do a snapshot test of the Word DOM 1`] = `
       >
         <span
           class="sendbird-label sendbird-label--caption-1 sendbird-label--color-onbackground-1"
-          data-testid="sendbird-label"
         >
           @Hoon Baek
         </span>

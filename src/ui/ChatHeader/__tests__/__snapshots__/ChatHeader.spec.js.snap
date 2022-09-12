@@ -31,13 +31,11 @@ exports[`ui/ChatHeader should do a snapshot test of the ChatHeader DOM 1`] = `
       </div>
       <span
         class="sendbird-chat-header__left__title sendbird-label sendbird-label--h-2 sendbird-label--color-onbackground-1"
-        data-testid="sendbird-label"
       >
         Headline 2
       </span>
       <span
         class="sendbird-chat-header__left__subtitle sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-2"
-        data-testid="sendbird-label"
       >
         Body text 2
       </span>

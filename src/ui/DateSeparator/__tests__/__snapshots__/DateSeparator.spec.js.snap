@@ -14,7 +14,6 @@ exports[`ui/DateSeparator should do a snapshot test of the DateSeparator DOM 1`]
     >
       <span
         class="sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
-        data-testid="sendbird-label"
       >
         Date Separator
       </span>

@@ -35,7 +35,6 @@ exports[`ui/MessageSearchFileItem should do a snapshot test of the MessageSearch
     >
       <span
         class="sendbird-message-search-file-item__right__sender-name sendbird-label sendbird-label--subtitle-2 sendbird-label--color-onbackground-1"
-        data-testid="sendbird-label"
       >
         ME
       </span>
@@ -57,7 +56,6 @@ exports[`ui/MessageSearchFileItem should do a snapshot test of the MessageSearch
         </div>
         <span
           class="sendbird-message-search-file-item__right__content__url sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-1"
-          data-testid="sendbird-label"
         >
           72b35fef-acda...26b0615.test
         </span>
@@ -65,7 +63,6 @@ exports[`ui/MessageSearchFileItem should do a snapshot test of the MessageSearch
     </div>
     <span
       class="sendbird-message-search-file-item__message-created-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
-      data-testid="sendbird-label"
     >
       mock-date
     </span>
