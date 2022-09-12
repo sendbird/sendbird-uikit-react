@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import type { MessageListParams } from '@sendbird/chat/message';
 import type { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
-import type { Logger } from '../../../../lib/SendbirdState';
+import type { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
 
 interface DynamicParams {
@@ -13,7 +13,7 @@ interface DynamicParams {
 interface StaticParams {
   sdk: SendbirdOpenChat;
   logger: Logger;
-  messagesDispatcher: ({ type: string, payload: any }) => void;
+  messagesDispatcher: CustomUseReducerDispatcher;
   hasMore: boolean;
   /* eslint-disable @typescript-eslint/no-explicit-any*/
   userFilledMessageListParams?: Record<string, any>;
