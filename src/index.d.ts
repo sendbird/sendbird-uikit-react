@@ -1602,6 +1602,7 @@ declare module '@sendbird/uikit-react/ui/Modal' {
     disabled?: boolean,
     type?: string,
     children: React.ReactElement | string,
+    renderHeader?: () => React.ReactElement,
   }
   type Modal = React.FC<ModalProps>;
   export default Modal;
