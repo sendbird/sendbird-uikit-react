@@ -223,7 +223,7 @@ function setupChannelList({
       }
     });
   } else {
-    logger.warning('ChannelList - there are no more channels');
+    logger.info('ChannelList - there are no more channels');
   }
 }
 
