@@ -21,7 +21,6 @@ const DateSeparator = ({
 }: DateSeparatorProps): ReactElement => {
   return (
     <div
-      data-testid="sendbird-separator"
       className={[
         ...(Array.isArray(className) ? className : [className]),
         'sendbird-separator',
