@@ -1,4 +1,5 @@
 import './index.scss';
+import './__experimental__typography.scss';
 
 import React, { useEffect, useReducer, useState } from 'react';
 import PropTypes from 'prop-types';
@@ -52,6 +53,7 @@ export default function Sendbird(props) {
   const {
     logLevel = '',
     userMention = {},
+    isREMUnitEnabled = false,
   } = config;
   const [logger, setLogger] = useState(LoggerFactory(logLevel));
   const [pubSub, setPubSub] = useState();
@@ -101,6 +103,14 @@ export default function Sendbird(props) {
   useEffect(() => {
     setCurrenttheme(theme);
   }, [theme]);
+
+  useEffect(() => {
+    const body = document.querySelector('body');
+    body.classList.remove('sendbird-experimental__rem__units');
+    if (isREMUnitEnabled) {
+      body.classList.add('sendbird-experimental__rem__units');
+    }
+  }, [isREMUnitEnabled]);
   // add-remove theme from body
   useEffect(() => {
     logger.info('Setup theme', `Theme: ${currenttheme}`);
@@ -228,6 +238,7 @@ Sendbird.propTypes = {
       maxMentionCount: PropTypes.number,
       maxSuggestionCount: PropTypes.number,
     }),
+    isREMUnitEnabled: PropTypes.bool,
   }),
   stringSet: PropTypes.objectOf(PropTypes.string),
   colorSet: PropTypes.objectOf(PropTypes.string),

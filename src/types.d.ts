@@ -25,6 +25,7 @@ export interface SendBirdProviderConfig {
     maxMentionCount?: number,
     maxSuggestionCount?: number,
   };
+  isREMUnitEnabled?: boolean;
 }
 
 export interface ClientMessage {

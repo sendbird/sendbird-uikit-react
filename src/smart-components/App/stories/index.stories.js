@@ -53,7 +53,7 @@ export const basicSDK = () => fitPageSize(
     isReactionEnabled
     isTypingIndicatorEnabledOnChannelList
     isMessageReceiptStatusEnabledOnChannelList
-    /*config={{ logLevel: 'all' }}*/
+    config={{ logLevel: 'all', isREMUnitEnabled: true }}
   />
 );
 
@@ -65,7 +65,7 @@ export const darkTheme = () => fitPageSize(
     theme="dark"
     showSearchIcon
     replyType="QUOTE_REPLY"
-    config={{ logLevel: 'all' }}
+    config={{ logLevel: 'all', isREMUnitEnabled: true }}
     isMentionEnabled
     isTypingIndicatorEnabledOnChannelList
     isMessageReceiptStatusEnabledOnChannelList

@@ -71,7 +71,6 @@ const MessageInput = React.forwardRef((props, ref) => {
   const [isInput, setIsInput] = useState(false);
   const [mentionedUserIds, setMentionedUserIds] = useState([]);
   const [targetStringInfo, setTargetStringInfo] = useState({ ...initialTargetStringInfo });
-
   const setHeight = useMemo(() => (
     () => {
       try {
