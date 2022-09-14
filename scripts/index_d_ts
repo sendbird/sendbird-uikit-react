@@ -92,6 +92,9 @@ declare module "SendbirdUIKitGlobal" {
     chainTop: boolean;
     chainBottom: boolean;
   }
+  export interface RenderCustomSeparatorProps {
+    message: AdminMessage | UserMessage | FileMessage;
+  }
 
   export interface ClientUserMessage extends UserMessage, ClientMessage { }
   export interface ClientFileMessage extends FileMessage, ClientMessage { }
@@ -476,7 +479,7 @@ declare module "SendbirdUIKitGlobal" {
     renderMessage?: (props: RenderMessageProps) => React.ReactNode | React.ReactElement;
     renderMessageInput?: () => React.ReactNode | React.ReactElement;
     renderTypingIndicator?: () => React.ReactNode | React.ReactElement;
-    renderCustomSeperator?: () => React.ReactNode | React.ReactElement;
+    renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactNode | React.ReactElement;
   }
 
   export type CoreMessageType = AdminMessage | UserMessage | FileMessage;
@@ -526,7 +529,7 @@ declare module "SendbirdUIKitGlobal" {
     handleScroll: () => void;
     // for extending
     renderMessage?: (props: RenderMessageProps) => React.ReactNode | React.ReactElement;
-    renderCustomSeperator?: () => React.ReactNode | React.ReactElement;
+    renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactNode | React.ReactElement;
     renderEditInput?: () => React.ReactNode | React.ReactElement;
     renderMessageContent?: () => React.ReactNode | React.ReactElement;
   };
@@ -534,7 +537,7 @@ declare module "SendbirdUIKitGlobal" {
   export type MessageListProps = {
     renderMessage?: (props: RenderMessageProps) => React.ReactNode | React.ReactElement;
     renderPlaceholderEmpty?: () => React.ReactNode | React.ReactElement;
-    renderCustomSeperator?: () => React.ReactNode | React.ReactElement;
+    renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactNode | React.ReactElement;
   };
 
   export type SuggestedMentionListProps = {

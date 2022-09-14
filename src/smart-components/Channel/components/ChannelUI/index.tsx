@@ -12,7 +12,7 @@ import TypingIndicator from '../TypingIndicator';
 import FrozenNotification from '../FrozenNotification';
 import UnreadCount from '../UnreadCount';
 import MessageInputWrapper from '../MessageInput';
-import { RenderMessageProps } from '../../../../types';
+import { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import * as messageActionTypes from '../../context/dux/actionTypes';
 
 export interface ChannelUIProps {
@@ -23,7 +23,7 @@ export interface ChannelUIProps {
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderMessageInput?: () => React.ReactElement;
   renderTypingIndicator?: () => React.ReactElement;
-  renderCustomSeparator?: () => React.ReactElement;
+  renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
 }
 
 const ChannelUI: React.FC<ChannelUIProps> = ({

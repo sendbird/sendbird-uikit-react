@@ -41,6 +41,10 @@ export interface RenderMessageProps {
   chainBottom: boolean;
 }
 
+export interface RenderCustomSeparatorProps {
+  message: AdminMessage | UserMessage | FileMessage;
+}
+
 export interface ClientUserMessage extends UserMessage, ClientMessage { }
 export interface ClientFileMessage extends FileMessage, ClientMessage { }
 export interface ClientAdminMessage extends AdminMessage, ClientMessage { }

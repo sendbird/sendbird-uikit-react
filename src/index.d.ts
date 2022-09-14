@@ -35,6 +35,7 @@ import type {
 import type { Locale } from 'date-fns';
 import { OpenChannel, OpenChannelCreateParams, OpenChannelUpdateParams } from '@sendbird/chat/openChannel';
 import { UikitMessageHandler } from './lib/selectors';
+import { RenderCustomSeparatorProps } from './types';
 
 type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
 
@@ -621,7 +622,7 @@ interface ChannelUIProps {
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderMessageInput?: () => React.ReactElement;
   renderTypingIndicator?: () => React.ReactElement;
-  renderCustomSeparator?: () => React.ReactElement;
+  renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
 }
 
 type CoreMessageType = AdminMessage | UserMessage | FileMessage;
@@ -671,7 +672,7 @@ type MessageUIProps = {
   handleScroll: () => void;
   // for extending
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
-  renderCustomSeparator?: () => React.ReactElement;
+  renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
   renderEditInput?: () => React.ReactElement;
   renderMessageContent?: () => React.ReactElement;
 };
@@ -679,7 +680,7 @@ type MessageUIProps = {
 type MessageListProps = {
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
-  renderCustomSeparator?: () => React.ReactElement;
+  renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
 };
 
 type SuggestedMentionListProps = {
