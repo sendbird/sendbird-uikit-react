@@ -666,7 +666,7 @@ The following table lists properties that were added to the `Channel` module.
 |renderMessage|React.ReactElement|Renders a customized message view in the channel. (Default: `null`)|
 |renderMessageInput|React.ReactElement|Renders a customized message input component. (Default: `null`)|
 |renderTypingIndicator|React.ReactElement|Renders a customized typing indicator component. (Default: `null`)|
-|renderCustomSeperator|React.ReactElement|Renders a customized date separator view in the message list component. (Default: `null`)|
+|renderCustomSeparator|React.ReactElement|Renders a customized date separator view in the message list component. (Default: `null`)|
 
 </div>
 
