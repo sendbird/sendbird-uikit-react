@@ -105,8 +105,11 @@
     top: 12px;
     right: 12px;
     display: inline-block;
-    .sendbird-iconbutton {
+    & * {
       display: none;
+    }
+    &.supposed-hover * {
+      display: inline-block;
     }
   }
 
@@ -114,8 +117,8 @@
     @include themed() {
       background-color: t(bg-1);
     }
-
-    .sendbird-channel-preview__action .sendbird-iconbutton {
+    .sendbird-channel-preview__action *,
+    .sendbird-channel-preview__action.supposed-hover * {
       display: inline-block;
     }
 

@@ -1,8 +1,8 @@
 import './channel-list-ui.scss';
 
 import React, { useState, useEffect } from 'react';
-import type { GroupChannel, Member, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 import type { User } from '@sendbird/chat';
+import type { GroupChannel, Member, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 
 import ChannelListHeader from '../ChannelListHeader';
 import AddChannel from '../AddChannel';
@@ -220,12 +220,13 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
                       channel={channel}
                       isActive={channel?.url === currentChannel?.url}
                       isTyping={typingChannels?.some(({ url }) => url === channel?.url)}
-                      renderChannelAction={(() => (
+                      renderChannelAction={({ setSupposedHover }) => (
                         <ChannelPreviewAction
                           disabled={!isOnline}
                           onLeaveChannel={() => onLeaveChannel(channel, null)}
+                          setSupposedHover={setSupposedHover}
                         />
-                      ))}
+                      )}
                     />
                   )
               );

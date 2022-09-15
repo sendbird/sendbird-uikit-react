@@ -1,6 +1,6 @@
 import './channel-preview.scss';
 
-import React from 'react';
+import React, { useState } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 
@@ -24,7 +24,7 @@ interface ChannelPreviewInterface {
   isActive?: boolean;
   isTyping?: boolean;
   onClick: () => void;
-  renderChannelAction: (props: { channel: GroupChannel }) => React.ReactElement;
+  renderChannelAction: (props: { channel: GroupChannel, setSupposedHover?: () => void }) => React.ReactElement;
   tabIndex: number;
 }
 
@@ -51,6 +51,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
   const isMessageStatusEnabled = isMessageReceiptStatusEnabled
     && (channel?.lastMessage?.messageType === 'user' || channel?.lastMessage?.messageType === 'file')
     && (channel?.lastMessage as UserMessage | FileMessage)?.sender?.userId === userId;
+  const [supposedHover, setSupposedHover] = useState(false);
   return (
     <div
       className={[
@@ -174,9 +175,9 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
         </div>
       </div>
       <div
-        className="sendbird-channel-preview__action"
+        className={`sendbird-channel-preview__action ${supposedHover ? 'supposed-hover' : ''}`}
       >
-        {renderChannelAction({ channel })}
+        {renderChannelAction({ channel, setSupposedHover })}
       </div>
     </div>
   );
