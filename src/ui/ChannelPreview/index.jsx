@@ -34,8 +34,8 @@ export default function ChannelPreview({
   return (
     <div
       className={[
-        'sendbird-channel-preview',
-        isActive ? 'sendbird-channel-preview--active' : '',
+        'sendbird-ui-channel-preview',
+        isActive ? 'sendbird-ui-channel-preview--active' : '',
       ].join(' ')}
       role="link"
       onClick={onClick}
@@ -43,7 +43,7 @@ export default function ChannelPreview({
       tabIndex={tabIndex}
     >
       <div
-        className="sendbird-channel-preview__avatar"
+        className="sendbird-ui-channel-preview__avatar"
       >
         <ChannelAvatar
           channel={channel}
@@ -51,13 +51,13 @@ export default function ChannelPreview({
           theme={theme}
         />
       </div>
-      <div className="sendbird-channel-preview__content">
-        <div className="sendbird-channel-preview__content__upper">
-          <div className="sendbird-channel-preview__content__upper__header">
+      <div className="sendbird-ui-channel-preview__content">
+        <div className="sendbird-ui-channel-preview__content__upper">
+          <div className="sendbird-ui-channel-preview__content__upper__header">
             {
               isBroadcast
               && (
-                <div className="sendbird-channel-preview__content__upper__header__broadcast-icon">
+                <div className="sendbird-ui-channel-preview__content__upper__header__broadcast-icon">
                   <Icon
                     type={IconTypes.BROADCAST}
                     fillColor={IconColors.SECONDARY}
@@ -68,14 +68,14 @@ export default function ChannelPreview({
               )
             }
             <Label
-              className="sendbird-channel-preview__content__upper__header__channel-name"
+              className="sendbird-ui-channel-preview__content__upper__header__channel-name"
               type={LabelTypography.SUBTITLE_2}
               color={LabelColors.ONBACKGROUND_1}
             >
               {utils.getChannelTitle(channel, userId, stringSet)}
             </Label>
             <Label
-              className="sendbird-channel-preview__content__upper__header__total-members"
+              className="sendbird-ui-channel-preview__content__upper__header__total-members"
               type={LabelTypography.CAPTION_2}
               color={LabelColors.ONBACKGROUND_2}
             >
@@ -84,7 +84,7 @@ export default function ChannelPreview({
             {
               isFrozen
               && (
-                <div title="Frozen" className="sendbird-channel-preview__content__upper__header__frozen-icon">
+                <div title="Frozen" className="sendbird-ui-channel-preview__content__upper__header__frozen-icon">
                   <Icon
                     type={IconTypes.FREEZE}
                     fillColor={IconColors.PRIMARY}
@@ -96,22 +96,22 @@ export default function ChannelPreview({
             }
           </div>
           <Label
-            className="sendbird-channel-preview__content__upper__last-message-at"
+            className="sendbird-ui-channel-preview__content__upper__last-message-at"
             type={LabelTypography.CAPTION_3}
             color={LabelColors.ONBACKGROUND_2}
           >
             {utils.getLastMessageCreatedAt(channel, dateLocale)}
           </Label>
         </div>
-        <div className="sendbird-channel-preview__content__lower">
+        <div className="sendbird-ui-channel-preview__content__lower">
           <Label
-            className="sendbird-channel-preview__content__lower__last-message"
+            className="sendbird-ui-channel-preview__content__lower__last-message"
             type={LabelTypography.BODY_2}
             color={LabelColors.ONBACKGROUND_3}
           >
             {utils.getLastMessage(channel)}
           </Label>
-          <div className="sendbird-channel-preview__content__lower__unread-message-count">
+          <div className="sendbird-ui-channel-preview__content__lower__unread-message-count">
             {
               utils.getChannelUnreadMessageCount(channel) // return number
                 ? <Badge count={utils.getChannelUnreadMessageCount(channel)} />
@@ -121,7 +121,7 @@ export default function ChannelPreview({
         </div>
       </div>
       <div
-        className="sendbird-channel-preview__action"
+        className="sendbird-ui-channel-preview__action"
       >
         {ChannelAction}
       </div>

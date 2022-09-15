@@ -14,7 +14,7 @@ export const EmojiListItems = _EmojiListItems;
 
 export interface MenuItemProps {
   className?: string | Array<string>;
-  children: ReactElement;
+  children?: ReactElement;
   onClick?: (e: MouseEvent<HTMLLIElement>) => void;
   disable?: boolean;
 }
