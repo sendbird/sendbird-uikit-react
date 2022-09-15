@@ -104,11 +104,8 @@
     position: absolute;
     top: 12px;
     right: 12px;
-    display: inline-block;
-    & * {
-      display: none;
-    }
-    &.supposed-hover * {
+    display: none;
+    &.supposed-hover {
       display: inline-block;
     }
   }
@@ -117,8 +114,8 @@
     @include themed() {
       background-color: t(bg-1);
     }
-    .sendbird-channel-preview__action *,
-    .sendbird-channel-preview__action.supposed-hover * {
+    .sendbird-channel-preview__action,
+    .sendbird-channel-preview__action.supposed-hover {
       display: inline-block;
     }
 
