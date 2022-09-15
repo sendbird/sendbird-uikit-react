@@ -5,32 +5,40 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 
-import { LocalizationContext } from '../../../lib/LocalizationContext';
-import ContextMenu, { MenuItem, MenuItems } from '../../../ui/ContextMenu';
-import IconButton from '../../../ui/IconButton';
-import Icon, { IconTypes, IconColors } from '../../../ui/Icon';
-import LeaveChannelModal from './LeaveChannel';
+import { LocalizationContext } from '../../../../lib/LocalizationContext';
+import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
+import IconButton from '../../../../ui/IconButton';
+import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
+import LeaveChannelModal from '../LeaveChannel';
 
-export default function ChannelPreviewAction({ disabled, onLeaveChannel }) {
+export default function ChannelPreviewAction({ disabled, onLeaveChannel, setSupposedHover }) {
   const parentRef = useRef(null);
+  const parentContainRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
   const { stringSet } = useContext(LocalizationContext);
 
   return (
     <div
+      className="sendbird-channel-preview-action"
       role="button"
-      style={{ display: 'inline-block' }}
       onKeyDown={(e) => { e.stopPropagation(); }}
       tabIndex={0}
       onClick={(e) => { e.stopPropagation(); }}
+      ref={parentContainRef}
     >
       <ContextMenu
         menuTrigger={(toggleDropdown) => (
           <IconButton
             ref={parentRef}
-            onClick={toggleDropdown}
             height="32px"
             width="32px"
+            onClick={() => {
+              toggleDropdown();
+              setSupposedHover(true);
+            }}
+            onBlur={() => {
+              setSupposedHover(false);
+            }}
           >
             <Icon
               type={IconTypes.MORE}
@@ -43,8 +51,11 @@ export default function ChannelPreviewAction({ disabled, onLeaveChannel }) {
         menuItems={(closeDropdown) => (
           <MenuItems
             parentRef={parentRef}
-            parentContainRef={parentRef}
-            closeDropdown={closeDropdown}
+            parentContainRef={parentContainRef}
+            closeDropdown={() => {
+              closeDropdown();
+              setSupposedHover(false);
+            }}
           >
             <MenuItem
               onClick={() => {
@@ -76,8 +87,10 @@ export default function ChannelPreviewAction({ disabled, onLeaveChannel }) {
 ChannelPreviewAction.propTypes = {
   disabled: PropTypes.bool,
   onLeaveChannel: PropTypes.func.isRequired,
+  setSupposedHover: PropTypes.func,
 };
 
 ChannelPreviewAction.defaultProps = {
   disabled: false,
+  setSupposedHover: () => { },
 };
