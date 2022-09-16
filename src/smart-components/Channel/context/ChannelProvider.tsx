@@ -209,7 +209,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   const isBroadcast = currentGroupChannel?.isBroadcast || false;
   const { appInfo } = sdk;
   const usingReaction = (
-    appInfo?.useReaction && !isBroadcast && !isSuper && isReactionEnabled
+    appInfo?.useReaction && !isBroadcast && !isSuper && (config?.isReactionEnabled || isReactionEnabled)
     // TODO: Make isReactionEnabled independent from appInfo.useReaction
   );
 
