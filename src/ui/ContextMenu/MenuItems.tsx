@@ -29,29 +29,11 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
   componentDidMount(): void {
     this.setupEvents();
     this.getMenuPosition();
-    // this.showParent();
   }
 
   componentWillUnmount(): void {
     this.cleanUpEvents();
-    // this.hideParent();
   }
-
-  // showParent = (): void => {
-  //   const { parentContainRef } = this.props;
-  //   const { current } = parentContainRef;
-  //   if (parentContainRef && current) {
-  //     current.classList.add('sendbird-menu-item-trigger--pressed');
-  //   }
-  // }
-
-  // hideParent = (): void => {
-  //   const { parentContainRef } = this.props;
-  //   const { current } = parentContainRef;
-  //   if (parentContainRef && current) {
-  //     current.classList.remove('sendbird-menu-item-trigger--pressed');
-  //   }
-  // }
 
   setupEvents = (): void => {
     const { closeDropdown } = this.props;
