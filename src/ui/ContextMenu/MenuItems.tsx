@@ -21,7 +21,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
     super(props);
     this.state = {
       menuStyle: {},
-      handleClickOutside: () => {/* noop */},
+      handleClickOutside: () => {/* noop */ },
     };
   }
   menuRef: React.RefObject<HTMLUListElement> = React.createRef();
@@ -29,36 +29,36 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
   componentDidMount(): void {
     this.setupEvents();
     this.getMenuPosition();
-    this.showParent();
+    // this.showParent();
   }
 
   componentWillUnmount(): void {
     this.cleanUpEvents();
-    this.hideParent();
+    // this.hideParent();
   }
 
-    showParent = (): void => {
-    const { parentContainRef } = this.props;
-    const { current } = parentContainRef;
-    if (parentContainRef && current) {
-      current.classList.add('sendbird-menu-item-trigger--pressed');
-    }
-  }
+  // showParent = (): void => {
+  //   const { parentContainRef } = this.props;
+  //   const { current } = parentContainRef;
+  //   if (parentContainRef && current) {
+  //     current.classList.add('sendbird-menu-item-trigger--pressed');
+  //   }
+  // }
 
-  hideParent = (): void => {
-    const { parentContainRef } = this.props;
-    const { current } = parentContainRef;
-    if (parentContainRef && current) {
-      current.classList.remove('sendbird-menu-item-trigger--pressed');
-    }
-  }
+  // hideParent = (): void => {
+  //   const { parentContainRef } = this.props;
+  //   const { current } = parentContainRef;
+  //   if (parentContainRef && current) {
+  //     current.classList.remove('sendbird-menu-item-trigger--pressed');
+  //   }
+  // }
 
   setupEvents = (): void => {
     const { closeDropdown } = this.props;
     const { menuRef } = this;
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        closeDropdown();
+      if (menuRef?.current && !menuRef?.current?.contains?.(event.target)) {
+        closeDropdown?.();
       }
     };
     this.setState({
@@ -77,9 +77,9 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
 
   getMenuPosition = (): MenuStyleType => {
     const { parentRef, openLeft } = this.props;
-    const parentRect = parentRef.current.getBoundingClientRect();
-    const x = parentRect.x || parentRect.left;
-    const y = parentRect.y || parentRect.top;
+    const parentRect = parentRef?.current?.getBoundingClientRect?.();
+    const x = parentRect?.x || parentRect?.left || 0;
+    const y = parentRect?.y || parentRect?.top || 0;
     const menuStyle = {
       top: y,
       left: x,
