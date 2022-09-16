@@ -117,6 +117,7 @@ interface SendBirdStateConfig {
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   allowProfileEdit: boolean;
   isOnline: boolean;
+  isReactionEnabled: boolean;
   isMentionEnabled: boolean;
   userMention: {
     maxMentionCount: number;
@@ -596,8 +597,8 @@ type ChannelQueries = {
 };
 
 type ChannelContextProps = {
-  channelUrl: string;
   children?: React.ReactElement;
+  channelUrl: string;
   isReactionEnabled?: boolean;
   isMessageGroupingEnabled?: boolean;
   showSearchIcon?: boolean;
