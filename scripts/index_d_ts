@@ -467,7 +467,7 @@ declare module "SendbirdUIKitGlobal" {
     onSearchClick?(): void;
     replyType?: ReplyType;
     queries?: ChannelQueries;
-    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
+    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode | React.ReactElement;
     disableUserProfile?: boolean;
   };
 
