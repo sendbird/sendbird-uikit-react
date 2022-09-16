@@ -10,7 +10,7 @@ import './index.scss';
 
 export interface IconButtonProps {
   className?: string | Array<string>;
-  children: ReactElement;
+  children?: ReactElement;
   disabled?: boolean;
   width?: string;
   height?: string;

@@ -3,7 +3,6 @@ import React, { useContext } from 'react';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
-import IconButton from '../../../../ui/IconButton';
 
 import './index.scss';
 import Avatar from '../../../../ui/Avatar';
@@ -71,7 +70,7 @@ const ChannelListHeader : React.FC<ChannelListHeaderInterface> = ({
           )
       }
       <div className="sendbird-channel-header__right-icon">
-        {renderIconButton() || <IconButton />}
+        {renderIconButton?.()}
       </div>
     </div>
   );
