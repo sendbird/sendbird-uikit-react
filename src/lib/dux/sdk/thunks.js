@@ -78,6 +78,7 @@ export const handleConnection = ({
         const newSdk = SendbirdChat.init(params);
         if (configureSession && typeof configureSession === 'function') {
           sessionHandler = configureSession(newSdk);
+          newSdk.setSessionHandler(sessionHandler);
         }
         // to check if code is released version from rollup and *not from storybook*
         // see rollup config file
@@ -113,9 +114,6 @@ export const handleConnection = ({
             .then((res) => connectCbSucess(res))
             .catch((err) => connectCbError(err));
         } else {
-          if (sessionHandler) {
-            newSdk.setSessionHandler(sessionHandler);
-          }
           newSdk.connect(userId)
             .then((res) => connectCbSucess(res))
             .catch((err) => connectCbError(err));
