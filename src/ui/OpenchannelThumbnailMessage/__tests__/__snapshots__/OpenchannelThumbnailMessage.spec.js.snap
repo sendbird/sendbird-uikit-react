@@ -9,6 +9,11 @@ exports[`OpenchannelThumbnailMessage should do a snapshot test of the Openchanne
   >
     <div
       className="sendbird-context-menu"
+      style={
+        Object {
+          "display": "inline",
+        }
+      }
     >
       <div
         className="sendbird-openchannel-thumbnail-message__left__avatar sendbird-avatar"
@@ -168,6 +173,11 @@ exports[`OpenchannelThumbnailMessage should do a snapshot test of the Openchanne
   >
     <div
       className="sendbird-context-menu"
+      style={
+        Object {
+          "display": "inline",
+        }
+      }
     >
       <button
         className="sendbird-openchannel-thumbnail-message__context-menu--icon sendbird-iconbutton "

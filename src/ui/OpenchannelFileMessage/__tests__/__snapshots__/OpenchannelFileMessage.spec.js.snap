@@ -9,6 +9,11 @@ exports[`OpenchannelFileMessage should do a snapshot test of the OpenchannelFile
   >
     <div
       className="sendbird-context-menu"
+      style={
+        Object {
+          "display": "inline",
+        }
+      }
     >
       <div
         className="sendbird-openchannel-file-message__left__avatar sendbird-avatar"
@@ -119,6 +124,11 @@ exports[`OpenchannelFileMessage should do a snapshot test of the OpenchannelFile
   >
     <div
       className="sendbird-context-menu"
+      style={
+        Object {
+          "display": "inline",
+        }
+      }
     >
       <button
         className="sendbird-openchannel-file-message__context-menu__icon sendbird-iconbutton "
