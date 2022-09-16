@@ -13,6 +13,7 @@ import LeaveChannelModal from './LeaveChannel';
 
 export default function ChannelPreviewAction({ disabled, onLeaveChannel }) {
   const parentRef = useRef(null);
+  const parentContainerRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
   const { stringSet } = useContext(LocalizationContext);
 
@@ -23,6 +24,7 @@ export default function ChannelPreviewAction({ disabled, onLeaveChannel }) {
       onKeyDown={(e) => { e.stopPropagation(); }}
       tabIndex={0}
       onClick={(e) => { e.stopPropagation(); }}
+      ref={parentContainerRef}
     >
       <ContextMenu
         menuTrigger={(toggleDropdown) => (
@@ -43,7 +45,7 @@ export default function ChannelPreviewAction({ disabled, onLeaveChannel }) {
         menuItems={(closeDropdown) => (
           <MenuItems
             parentRef={parentRef}
-            parentContainRef={parentRef}
+            parentContainRef={parentContainerRef}
             closeDropdown={closeDropdown}
           >
             <MenuItem

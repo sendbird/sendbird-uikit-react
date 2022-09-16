@@ -11,6 +11,11 @@ exports[`MessageContent should do a snapshot test of the MessageContent DOM 1`] 
   >
     <div
       className="sendbird-context-menu"
+      style={
+        Object {
+          "display": "inline",
+        }
+      }
     >
       <div
         className="sendbird-message-content__left__avatar sendbird-avatar"
@@ -102,6 +107,11 @@ exports[`MessageContent should do a snapshot test of the MessageContent DOM 1`] 
       >
         <div
           className="sendbird-context-menu"
+          style={
+            Object {
+              "display": "inline",
+            }
+          }
         >
           <button
             className="sendbird-message-item-menu__trigger sendbird-iconbutton "

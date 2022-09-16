@@ -62,7 +62,10 @@ export default function ContextMenu({
 }: ContextMenuProps): ReactElement {
   const [showMenu, setShowMenu] = useState(false);
   return (
-    <div className="sendbird-context-menu">
+    <div
+      className="sendbird-context-menu"
+      style={{ display: 'inline' }}
+    >
       {menuTrigger(() => setShowMenu(!showMenu))}
       {showMenu && menuItems(() => setShowMenu(false))}
     </div>
