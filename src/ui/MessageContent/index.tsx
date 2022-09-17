@@ -228,6 +228,7 @@ export default function MessageContent({
               isByMe={isByMe}
               mouseHover={mouseHover}
               isMentionEnabled={config?.isMentionEnabled || false}
+              isReactionEnabled={isReactionEnabled}
             />
           )}
           {(isOGMessage(message as UserMessage)) && (
@@ -237,6 +238,7 @@ export default function MessageContent({
               isByMe={isByMe}
               mouseHover={mouseHover}
               isMentionEnabled={config?.isMentionEnabled || false}
+              isReactionEnabled={isReactionEnabled}
             />
           )}
           {(getUIKitMessageType((message as FileMessage)) === messageTypes.FILE) && (
@@ -245,6 +247,7 @@ export default function MessageContent({
               message={message as FileMessage}
               isByMe={isByMe}
               mouseHover={mouseHover}
+              isReactionEnabled={isReactionEnabled}
             />
           )}
           {(isThumbnailMessage(message as FileMessage)) && (
@@ -253,6 +256,7 @@ export default function MessageContent({
               message={message as FileMessage}
               isByMe={isByMe}
               mouseHover={mouseHover}
+              isReactionEnabled={isReactionEnabled}
               showFileViewer={showFileViewer}
             />
           )}
@@ -262,6 +266,7 @@ export default function MessageContent({
               message={message}
               isByMe={isByMe}
               mouseHover={mouseHover}
+              isReactionEnabled={isReactionEnabled}
             />
           )}
           {/* reactions */}
