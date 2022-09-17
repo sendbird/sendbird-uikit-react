@@ -13,6 +13,7 @@ interface Props {
   message: FileMessage;
   isByMe?: boolean;
   mouseHover?: boolean;
+  isReactionEnabled?: boolean;
 }
 
 export default function FileMessageItemBody({
@@ -20,6 +21,7 @@ export default function FileMessageItemBody({
   message,
   isByMe = false,
   mouseHover = false,
+  isReactionEnabled = false,
 }: Props): ReactElement {
 
   return (
@@ -28,7 +30,7 @@ export default function FileMessageItemBody({
       'sendbird-file-message-item-body',
       isByMe ? 'outgoing' : 'incoming',
       mouseHover ? 'mouse-hover' : '',
-      message?.reactions?.length > 0 ? 'reactions' : '',
+      (isReactionEnabled && message?.reactions?.length > 0) ? 'reactions' : '',
     ])}>
       <div className="sendbird-file-message-item-body__file-icon">
         <Icon

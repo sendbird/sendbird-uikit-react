@@ -2,7 +2,7 @@
 
 exports[`FileMessageItemBody should do a snapshot test of the FileMessageItemBody DOM 1`] = `
 <div
-  className="classname-for-snapshot sendbird-file-message-item-body outgoing mouse-hover reactions"
+  className="classname-for-snapshot sendbird-file-message-item-body outgoing mouse-hover "
 >
   <div
     className="sendbird-file-message-item-body__file-icon"
