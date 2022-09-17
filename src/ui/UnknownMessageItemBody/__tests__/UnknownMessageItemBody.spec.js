@@ -92,6 +92,7 @@ describe('UnknownMessageItemBody', () => {
   it('should have class name by reactions of message', () => {
     const component = mount(
       <UnknownMessageItemBody
+        isReactionEnabled
         message={createMockMessage((mockMessage) => ({
           ...mockMessage,
           reactions: [{}, {}, {}],
