@@ -11,7 +11,7 @@ import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelContext } from '../../context/ChannelProvider';
 
-const ChatHeader: React.FC = () => {
+const ChannelHeader: React.FC = () => {
   const globalStore = useSendbirdStateContext();
   const userId = globalStore?.config?.userId;
   const theme = globalStore?.config?.theme;
@@ -100,4 +100,4 @@ const ChatHeader: React.FC = () => {
   );
 }
 
-export default ChatHeader;
+export default ChannelHeader;
