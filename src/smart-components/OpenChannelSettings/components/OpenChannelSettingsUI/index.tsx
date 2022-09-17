@@ -25,13 +25,14 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
   const {
     channel,
     onCloseClick,
+    isChannelInitialized,
   } = useOpenChannelSettingsContext();
   const globalStore = useSendbirdStateContext();
   const logger = globalStore?.config?.logger;
   const user = globalStore?.stores?.userStore?.user;
 
   const { stringSet } = useContext(LocalizationContext);
-  if (!channel) {
+  if (isChannelInitialized && !channel) {
     return (
       <InvalidChannel
         onCloseClick={() => {
