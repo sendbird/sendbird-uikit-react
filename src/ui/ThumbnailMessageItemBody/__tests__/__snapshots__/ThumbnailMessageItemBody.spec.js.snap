@@ -2,7 +2,7 @@
 
 exports[`ThumbnailMessageItemBody should do a snapshot test of the ThumbnailMessageItemBody DOM 1`] = `
 <div
-  className="classname-for-snapshot sendbird-thumbnail-message-item-body outgoing mouse-hover reactions"
+  className="classname-for-snapshot sendbird-thumbnail-message-item-body outgoing mouse-hover "
   onClick={[Function]}
 >
   <div
