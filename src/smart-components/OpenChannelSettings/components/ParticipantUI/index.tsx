@@ -31,7 +31,7 @@ export default function ParticipantList({
   const currentUserId = globalState?.config?.userId;
   const { channel } = useOpenChannelSettingsContext();
   const { stringSet } = useContext(LocalizationContext);
-  const [participants, setParticipants] = useState<Array<User> | null>([]);
+  const [participants, setParticipants] = useState<Array<User> | null>(null);
   const [participantListQuery, setParticipantListQuery] = useState<ParticipantListQuery | null>(null);
   const [showParticipantsModal, setShowParticipantsModal] = useState<boolean>(false);
   useEffect(() => {
@@ -76,7 +76,7 @@ export default function ParticipantList({
     >
       <div>
         {
-          participants.map((p: User) => {
+          participants?.map((p: User) => {
             const isOperator = channel?.isOperator(p.userId);
             return (
               <UserListItem

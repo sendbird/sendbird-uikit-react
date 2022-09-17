@@ -23,6 +23,7 @@ export interface OpenChannelSettingsContextProps {
 interface OpenChannelSettingsContextType {
   channelUrl: string;
   channel?: OpenChannel;
+  isChannelInitialized: boolean;
   setChannel?: React.Dispatch<React.SetStateAction<OpenChannel>>;
   onCloseClick?(): void;
   onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): OpenChannelUpdateParams;
@@ -51,6 +52,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
   const currentUserId = sdk?.currentUser?.userId;
 
   const [currentChannel, setChannel] = useState<OpenChannel | null>(null);
+  const [isChannelInitialized, setChannelInitialized] = useState(false);
   useEffect(() => {
     if (!channelUrl || !sdk.openChannel) {
       setChannel(null);
@@ -65,6 +67,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
           .then(() => {
             setChannel(channel);
             logger.info('OpenChannelSettings | Succeeded to enter channel', channel?.url);
+            setChannelInitialized(true);
           })
           .catch((error) => {
             setChannel(null);
@@ -142,6 +145,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
     <OpenChannelSettingsContext.Provider value={{
       channelUrl,
       channel: currentChannel,
+      isChannelInitialized: isChannelInitialized,
       setChannel,
       onCloseClick,
       onChannelModified,
