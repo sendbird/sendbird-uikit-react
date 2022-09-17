@@ -1443,6 +1443,7 @@ declare module '@sendbird/uikit-react/ui/FileMessageItemBody' {
     message: FileMessage;
     isByMe?: boolean;
     mouseHover?: boolean;
+    isReactionEnabled?: boolean;
   }
   const FileMessageItemBody: React.FC<FileMessageItemBodyProps>;
   export default FileMessageItemBody;
@@ -1736,6 +1737,8 @@ declare module '@sendbird/uikit-react/ui/OGMessageItemBody' {
     message: UserMessage;
     isByMe?: boolean;
     mouseHover?: boolean;
+    isMentionEnabled?: boolean;
+    isReactionEnabled?: boolean;
   }
   const OGMessageItemBody: React.FC<OGMessageItemBodyProps>;
   export default OGMessageItemBody;
@@ -1932,6 +1935,8 @@ declare module '@sendbird/uikit-react/ui/TextMessageItemBody' {
     message: UserMessage;
     isByMe?: boolean;
     mouseHover?: boolean;
+    isMentionEnabled?: boolean;
+    isReactionEnabled?: boolean;
   }
   const TextMessageItemBody: React.FC<TextMessageItemBodyProps>;
   export default TextMessageItemBody;
@@ -1944,6 +1949,7 @@ declare module '@sendbird/uikit-react/ui/ThumbnailMessageItemBody' {
     message: FileMessage;
     isByMe?: boolean;
     mouseHover?: boolean;
+    isReactionEnabled?: boolean;
     showFileViewer?: (bool: boolean) => void;
   }
   const ThumbnailMessageItemBody: React.FC<ThumbnailMessageItemBodyProps>;
@@ -1976,6 +1982,7 @@ declare module '@sendbird/uikit-react/ui/UnknownMessageItemBody' {
     isByMe?: boolean;
     message: SendbirdUIKitGlobal.CoreMessageType;
     mouseHover?: boolean;
+    isReactionEnabled?: boolean;
   }
   const UnknownMessageItemBody: React.FC<UnknownMessageItemBodyProps>;
   export default UnknownMessageItemBody;
