@@ -1259,22 +1259,6 @@ declare module '@sendbird/uikit-react/ui/ChannelPreview' {
   export default ChannelPreview;
 }
 
-declare module '@sendbird/uikit-react/ui/ChatHeader' {
-  interface ChatHeaderProps {
-    currentGroupChannel?: GroupChannel;
-    currentUser?: User;
-    title?: string;
-    subTitle?: string;
-    isMuted?: boolean;
-    theme?: 'light' | 'dark';
-    showSearchIcon?: false;
-    onSearchClick?: () => void;
-    onActionClick?: () => void;
-  }
-  type ChatHeader = React.FC<ChatHeaderProps>;
-  export default ChatHeader;
-}
-
 declare module '@sendbird/uikit-react/ui/Checkbox' {
   interface CheckboxProps {
     id?: string,
