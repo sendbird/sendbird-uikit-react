@@ -5,7 +5,7 @@ exports[`TextMessageItemBody should do a snapshot test of the TextMessageItemBod
   className="sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-1"
 >
   <div
-    className="class-name-for-snapshot sendbird-text-message-item-body outgoing mouse-hover reactions"
+    className="class-name-for-snapshot sendbird-text-message-item-body outgoing mouse-hover "
   >
     First second third fourth fifth
     <span

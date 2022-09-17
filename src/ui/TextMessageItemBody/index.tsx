@@ -14,6 +14,7 @@ interface Props {
   isByMe?: boolean;
   mouseHover?: boolean;
   isMentionEnabled?: boolean;
+  isReactionEnabled?: boolean;
 }
 
 export default function TextMessageItemBody({
@@ -22,6 +23,7 @@ export default function TextMessageItemBody({
   isByMe = false,
   mouseHover = false,
   isMentionEnabled = false,
+  isReactionEnabled = false,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   const isMessageMentioned = isMentionEnabled && message?.mentionedMessageTemplate?.length > 0 && message?.mentionedUsers?.length > 0;
@@ -38,7 +40,7 @@ export default function TextMessageItemBody({
         'sendbird-text-message-item-body',
         isByMe ? 'outgoing' : 'incoming',
         mouseHover ? 'mouse-hover' : '',
-        message?.reactions?.length > 0 ? 'reactions' : '',
+        (isReactionEnabled && message?.reactions?.length > 0) ? 'reactions' : '',
       ])}>
         {
           isMessageMentioned
