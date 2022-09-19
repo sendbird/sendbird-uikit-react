@@ -1,5 +1,33 @@
 # Changelog - v3
 
+## [v3.1.3] (Sep 18 2022)
+
+Features:
+* Export SessionHandler through `@sendbird/uikit-react/handlers/SessionHandler`
+  * This is a workaround to fix an issue where inhertiance chains break custom handler implementation
+  * `import SessionHandler from '@sendbird/uikit-react/handlers/SessionHandler'`
+* Rem units can be used for typography
+  * Pass prop `config.isREMUnitEnabled` -> true on SendbirdProvider
+    to use "rem" units
+  * We are adding rem as unit for typography/font size
+
+Fixes:
+* Fix the position of ContextMenu
+* Do not exit the current open channel when the channel state is changed
+* Display menu only for operators on the member list
+* Hide muted icon when pop-up component is appeared
+* Set message context's border roundly by the state using the reaction feature
+  * Add props `isReactionEnabled` to the <TextMessageItemBody />
+  * Add props `isReactionEnabled` to the <OGMessageItemBody />
+  * Add props `isReactionEnabled` to the <FileMessageItemBody />
+  * Add props `isReactionEnabled` to the <ThumbnailMessageItemBody />
+  * Add props `isReactionEnabled` to the <UnknownMessageItemBody />
+* Add the message as a parameter of renderCustomSeparator
+  * before: renderCustomSeparator={() => ReactElement}
+  * after: renderCustomSeparator={(props: { message }) => ReactElement}
+* Fix typo on the type
+  * renderCustomSep'e'rator to renderCustomSep'a'rator
+
 ## [v3.1.2] (Aug 31 2022)
 
 * Migrate UI components into TypeScript
