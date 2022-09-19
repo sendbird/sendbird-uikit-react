@@ -2,7 +2,7 @@
 
 exports[`UnknownMessageItemBody should do a snapshot test of the UnknownMessageItemBody DOM 1`] = `
 <div
-  className="class-name-for-snapshot sendbird-unknown-message-item-body outgoing mouse-hover reactions"
+  className="class-name-for-snapshot sendbird-unknown-message-item-body outgoing mouse-hover "
 >
   <span
     className="sendbird-unknown-message-item-body__header sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-1"

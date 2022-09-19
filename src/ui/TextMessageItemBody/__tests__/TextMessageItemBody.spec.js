@@ -95,6 +95,7 @@ describe('TextMessageItemBody', () => {
   it('should have class name by reactions of message prop', () => {
     const component = mount(
       <TextMessageItemBody
+        isReactionEnabled
         message={createMockMessage((mockMessage) => ({
           ...mockMessage,
           reactions: [{}, {}, {}],

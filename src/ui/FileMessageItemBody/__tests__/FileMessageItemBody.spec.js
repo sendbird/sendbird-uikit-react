@@ -117,6 +117,7 @@ describe('FileMessageItemBody', () => {
   it('should have class name by reactions of message prop', () => {
     const component = mount(
       <FileMessageItemBody
+        isReactionEnabled
         message={createMockMessage((mock) => ({
           ...mock,
           reactions: [{}, {}],
