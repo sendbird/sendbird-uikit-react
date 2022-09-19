@@ -107,6 +107,9 @@
 
     .sendbird-openchannel-settings__url-value {
       margin-top: 8px;
+      @include themed() {
+        color: t(on-bg-1);
+      }
     }
     .sendbird-openchannel-settings__url-value,
     .sendbird-openchannel-settings__url-label {
