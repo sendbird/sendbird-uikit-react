@@ -13,6 +13,7 @@ Features:
 
 Fixes:
 * Fix the position of ContextMenu
+* Set message context's border roundly by the state using the reaction feature
 * Do not exit the current open channel when the channel state is changed
 * Add the message as a parameter of renderCustomSeparator
   * before: renderCustomSeparator={() => ReactElement}
