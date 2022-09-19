@@ -20,8 +20,8 @@ describe('ui/UnknownMessageItemBody', () => {
       />
     );
     expect(
-      screen.getByTestId('sendbird-unknown-message-item-body').className
-    ).toContain('sendbird-unknown-message-item-body');
+      container.getElementsByClassName('sendbird-unknown-message-item-body')[0].className
+    ).toContain(className);
     expect(
       container.querySelectorAll('.sendbird-unknown-message-item-body')
     ).toHaveLength(1)

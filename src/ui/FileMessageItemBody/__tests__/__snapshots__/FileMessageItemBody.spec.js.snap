@@ -1,16 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-<<<<<<< HEAD
-exports[`FileMessageItemBody should do a snapshot test of the FileMessageItemBody DOM 1`] = `
-<div
-  className="classname-for-snapshot sendbird-file-message-item-body outgoing mouse-hover "
->
-=======
 exports[`ui/FileMessageItemBody should do a snapshot test of the FileMessageItemBody DOM 1`] = `
 <DocumentFragment>
->>>>>>> 86b8219 (Remove data-testid from ui/FileMessageItemBody)
   <div
-    class="classname-for-snapshot sendbird-file-message-item-body outgoing mouse-hover reactions"
+    class="classname-for-snapshot sendbird-file-message-item-body outgoing mouse-hover "
   >
     <div
       class="sendbird-file-message-item-body__file-icon"

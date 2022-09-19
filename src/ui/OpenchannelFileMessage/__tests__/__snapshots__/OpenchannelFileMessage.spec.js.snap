@@ -1,126 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-<<<<<<< HEAD
-exports[`OpenchannelFileMessage should do a snapshot test of the OpenchannelFileMessage DOM 1`] = `
-<DocumentFragment>
-  <div
-    class=" sendbird-openchannel-file-message"
-    data-testid="sendbird-openchannel-file-message"
-  >
-    <div
-<<<<<<< HEAD
-      className="sendbird-context-menu"
-      style={
-        Object {
-          "display": "inline",
-        }
-      }
-=======
-      class="sendbird-openchannel-file-message__left"
->>>>>>> ce558cf (Migrate tests of ui/OpenchannelConversationHeader)
-    >
-      <div
-        class="sendbird-context-menu"
-      >
-        <div
-          class="sendbird-openchannel-file-message__left__avatar sendbird-avatar"
-          role="button"
-          style="height: 28px; width: 28px;"
-          tabindex="0"
-        >
-          <div
-            class="sendbird-avatar-img sendbird-image-renderer"
-            style="width: 100%; min-width: 28px; max-width: 400px; height: 28px;"
-          >
-            <div
-              class="sendbird-image-renderer__image"
-              style="width: 100%; min-width: 28px; max-width: 400px; height: 28px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://static.sendbird.com/sample/profiles/profile_19_512px.png);"
-            />
-            <img
-              alt=""
-              class="sendbird-image-renderer__hidden-image-loader"
-              src="https://static.sendbird.com/sample/profiles/profile_19_512px.png"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="sendbird-openchannel-file-message__right"
-    >
-      <div
-        class="sendbird-openchannel-file-message__right__title"
-      >
-        <span
-          class="sendbird-openchannel-file-message__right__title__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
-          data-testid="sendbird-label"
-        >
-          ME
-        </span>
-        <span
-          class="sendbird-openchannel-file-message__right__title__sent-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-3"
-          data-testid="sendbird-label"
-        >
-          mock-date
-        </span>
-      </div>
-      <div
-        class="sendbird-openchannel-file-message__right__body"
-      >
-        <div
-          class="sendbird-openchannel-file-message__right__body__icon sendbird-icon sendbird-icon-file-document sendbird-icon-color--primary"
-          role="button"
-          style="width: 48px; min-width: 48px; height: 48px; min-height: 48px;"
-          tabindex="0"
-        >
-          <test-file-stub />
-        </div>
-        <div
-          class="sendbird-openchannel-file-message__right__body__file-name sendbird-color--onbackground-1 sendbird-textbutton "
-          role="button"
-          tabindex="0"
-        >
-          <span
-            class="sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
-            data-testid="sendbird-label"
-          >
-            72b35fef-acda-4e32-...4-37e1226b0615.pdf
-          </span>
-        </div>
-      </div>
-    </div>
-    <div
-      class="sendbird-openchannel-file-message__context-menu"
-    >
-      <div
-        class="sendbird-context-menu"
-      >
-        <button
-          class="sendbird-openchannel-file-message__context-menu__icon sendbird-iconbutton "
-          style="height: 32px; width: 32px;"
-          type="button"
-        >
-          <span
-            class="sendbird-iconbutton__inner"
-          >
-            <div
-              class=" sendbird-icon sendbird-icon-more "
-              role="button"
-              style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
-              tabindex="0"
-            >
-              <test-file-stub />
-            </div>
-          </span>
-        </button>
-      </div>
-    </div>
-  </div>
-</DocumentFragment>
-`;
-
-=======
->>>>>>> d0bd767 (Update snapshots)
 exports[`ui/OpenchannelFileMessage should do a snapshot test of the OpenchannelFileMessage DOM 1`] = `
 <DocumentFragment>
   <div
@@ -128,19 +7,11 @@ exports[`ui/OpenchannelFileMessage should do a snapshot test of the OpenchannelF
     data-testid="sendbird-openchannel-file-message"
   >
     <div
-<<<<<<< HEAD
-      className="sendbird-context-menu"
-      style={
-        Object {
-          "display": "inline",
-        }
-      }
-=======
       class="sendbird-openchannel-file-message__left"
->>>>>>> ce558cf (Migrate tests of ui/OpenchannelConversationHeader)
     >
       <div
         class="sendbird-context-menu"
+        style="display: inline;"
       >
         <div
           class="sendbird-openchannel-file-message__left__avatar sendbird-avatar"
@@ -212,6 +83,7 @@ exports[`ui/OpenchannelFileMessage should do a snapshot test of the OpenchannelF
     >
       <div
         class="sendbird-context-menu"
+        style="display: inline;"
       >
         <button
           class="sendbird-openchannel-file-message__context-menu__icon sendbird-iconbutton "

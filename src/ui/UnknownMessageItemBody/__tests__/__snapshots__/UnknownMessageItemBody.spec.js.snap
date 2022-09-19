@@ -1,19 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-<<<<<<< HEAD
-exports[`UnknownMessageItemBody should do a snapshot test of the UnknownMessageItemBody DOM 1`] = `
-<div
-  className="class-name-for-snapshot sendbird-unknown-message-item-body outgoing mouse-hover "
->
-  <span
-    className="sendbird-unknown-message-item-body__header sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-1"
-=======
 exports[`ui/UnknownMessageItemBody should do a snapshot test of the UnknownMessageItemBody DOM 1`] = `
 <DocumentFragment>
   <div
-    class="class-name-for-snapshot sendbird-unknown-message-item-body outgoing mouse-hover reactions"
-    data-testid="sendbird-unknown-message-item-body"
->>>>>>> 58398ec (Migrate tests of ui/UnknownMessageItemBody with testing-library)
+    class="class-name-for-snapshot sendbird-unknown-message-item-body outgoing mouse-hover "
   >
     <span
       class="sendbird-unknown-message-item-body__header sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-1"

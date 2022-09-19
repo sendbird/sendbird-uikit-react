@@ -7,15 +7,11 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
     data-testid="sendbird-message-content"
   >
     <div
-      className="sendbird-context-menu"
-      style={
-        Object {
-          "display": "inline",
-        }
-      }
+      class="sendbird-message-content__left  incoming "
     >
       <div
         class="sendbird-context-menu"
+        style="display: inline;"
       >
         <div
           class="sendbird-message-content__left__avatar sendbird-avatar"
@@ -74,19 +70,11 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
         class="sendbird-message-content-menu   incoming"
       >
         <div
-<<<<<<< HEAD
-          className="sendbird-context-menu"
-          style={
-            Object {
-              "display": "inline",
-            }
-          }
-=======
           class="sendbird-message-content-menu__normal-menu sendbird-message-item-menu"
->>>>>>> 49ccc76 (Migrate tests of ui/MessageContent with testing-library)
         >
           <div
             class="sendbird-context-menu"
+            style="display: inline;"
           >
             <button
               class="sendbird-message-item-menu__trigger sendbird-iconbutton "

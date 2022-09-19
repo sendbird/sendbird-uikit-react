@@ -1,28 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-<<<<<<< HEAD
-exports[`Word should do a snapshot test of the Word DOM 1`] = `
-<span
-  className="sendbird-word"
->
-  hello
-  <div
-    className="sendbird-context-menu"
-    style={
-      Object {
-        "display": "inline",
-      }
-    }
-=======
 exports[`ui/Word should do a snapshot test of the Word DOM 1`] = `
 <DocumentFragment>
   <span
     class="sendbird-word"
->>>>>>> b42f348 (Migrate tests of ui/Word with testing-library)
   >
     hello
     <div
       class="sendbird-context-menu"
+      style="display: inline;"
     >
       <a
         class="

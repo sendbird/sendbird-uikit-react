@@ -3,19 +3,11 @@
 exports[`ui/MessageItemMenu should do a snapshot test of the MessageItemMenu DOM 1`] = `
 <DocumentFragment>
   <div
-<<<<<<< HEAD
-    className="sendbird-context-menu"
-    style={
-      Object {
-        "display": "inline",
-      }
-    }
-=======
     class="classname-for-snapshot sendbird-message-item-menu"
->>>>>>> e82ee03 (Migrate tests of ui/ContextMenu with testing-library)
   >
     <div
       class="sendbird-context-menu"
+      style="display: inline;"
     >
       <button
         class="sendbird-message-item-menu__trigger sendbird-iconbutton "

@@ -1,59 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-<<<<<<< HEAD
-exports[`MessageItemReactionMenu should do a snapshot test of the MessageItemReactionMenu DOM 1`] = `
-<div
-  className=" sendbird-message-item-reaction-menu"
->
-  <div
-    className="sendbird-context-menu"
-    style={
-      Object {
-        "display": "inline",
-      }
-    }
-  >
-    <button
-      className="sendbird-message-item-reaction-menu__trigger sendbird-iconbutton "
-      disabled={false}
-      onBlur={[Function]}
-      onClick={[Function]}
-      style={
-        Object {
-          "height": "32px",
-          "width": "32px",
-        }
-      }
-      type="button"
-    >
-      <span
-        className="sendbird-iconbutton__inner"
-      >
-        <div
-          className="sendbird-message-item-reaction-menu__trigger__icon sendbird-icon sendbird-icon-emoji-more sendbird-icon-color--content-inverse"
-          onClick={[Function]}
-          onKeyDown={[Function]}
-          role="button"
-          style={
-            Object {
-              "height": "24px",
-              "minHeight": "24px",
-              "minWidth": "24px",
-              "width": "24px",
-            }
-          }
-          tabIndex="0"
-        >
-          <test-file-stub />
-        </div>
-      </span>
-    </button>
-  </div>
-</div>
-`;
-
-=======
->>>>>>> d0bd767 (Update snapshots)
 exports[`ui/MessageItemReactionMenu should do a snapshot test of the MessageItemReactionMenu DOM 1`] = `
 <DocumentFragment>
   <div
@@ -61,6 +7,7 @@ exports[`ui/MessageItemReactionMenu should do a snapshot test of the MessageItem
   >
     <div
       class="sendbird-context-menu"
+      style="display: inline;"
     >
       <button
         class="sendbird-message-item-reaction-menu__trigger sendbird-iconbutton "

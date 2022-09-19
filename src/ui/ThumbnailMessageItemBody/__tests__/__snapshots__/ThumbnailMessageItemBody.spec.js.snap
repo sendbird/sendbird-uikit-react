@@ -1,17 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-<<<<<<< HEAD
-exports[`ThumbnailMessageItemBody should do a snapshot test of the ThumbnailMessageItemBody DOM 1`] = `
-<div
-  className="classname-for-snapshot sendbird-thumbnail-message-item-body outgoing mouse-hover "
-  onClick={[Function]}
->
-=======
 exports[`ui/ThumbnailMessageItemBody should do a snapshot test of the ThumbnailMessageItemBody DOM 1`] = `
 <DocumentFragment>
->>>>>>> c4f91e8 (Migrate tests of ui/ThumbnailMessageItemBody with testing-library)
   <div
-    class="classname-for-snapshot sendbird-thumbnail-message-item-body outgoing mouse-hover reactions"
+    class="classname-for-snapshot sendbird-thumbnail-message-item-body outgoing mouse-hover "
     data-testid="sendbird-thumbnail-message-item-body"
   >
     <div
