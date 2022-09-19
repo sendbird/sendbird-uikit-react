@@ -1838,8 +1838,9 @@ declare module '@sendbird/uikit-react/ui/PlaceHolder' {
   interface PlaceHolderProps {
     className?: string | Array<string>;
     type?: 'LOADING' | 'NO_CHANNELS' | 'NO_MESSAGES' | 'WRONG' | 'SEARCH_IN' | 'SEARCHING' | 'NO_RESULT',
-    retryToConnect?: () => void,
-    searchInString?: string,
+    iconSize?: string | number;
+    searchInString?: string;
+    retryToConnect?: () => void;
   }
   const PlaceHolder: React.FC<PlaceHolderProps>;
   export default PlaceHolder;
