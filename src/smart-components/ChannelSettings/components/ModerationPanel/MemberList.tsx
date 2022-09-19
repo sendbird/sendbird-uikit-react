@@ -70,7 +70,7 @@ export const MemberList = (): ReactElement => {
             user={member}
             currentUser={sdk.currentUser.userId}
             action={
-              (userId !== member.userId)
+              (channel?.myRole === 'operator' && userId !== member.userId)
                 ? ({ actionRef, parentRef }) => (
                   <ContextMenu
                     menuTrigger={(toggleDropdown) => (
