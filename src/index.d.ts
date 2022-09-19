@@ -1714,6 +1714,7 @@ declare module '@sendbird/uikit-react/ui/PlaceHolder' {
   interface PlaceHolderProps {
     className?: string | Array<string>;
     type?: 'LOADING' | 'NO_CHANNELS' | 'NO_MESSAGES' | 'WRONG' | 'SEARCH_IN' | 'SEARCHING' | 'NO_RESULT',
+    iconSize?: string | number;
     retryToConnect?: () => void,
     searchInString?: string,
   }
