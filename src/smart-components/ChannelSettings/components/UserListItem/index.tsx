@@ -52,11 +52,6 @@ const UserListItem = ({
         COMPONENT_NAME, ...injectingClassNames,
       ].join(' ')}
     >
-      {
-        user.isMuted && (
-          <MutedAvatarOverlay />
-        )
-      }
       <ContextMenu
         menuTrigger={(toggleDropdown) => (
           <Avatar
@@ -100,6 +95,11 @@ const UserListItem = ({
           </MenuItems>
         )}
       />
+      {
+        user.isMuted && (
+          <MutedAvatarOverlay />
+        )
+      }
       <Label
         className={`${COMPONENT_NAME}__title`}
         type={LabelTypography.SUBTITLE_1}
@@ -137,7 +137,7 @@ const UserListItem = ({
       {
         action && (
           <div ref={actionRef} className={`${COMPONENT_NAME}__action`}>
-            { action({ actionRef, parentRef }) }
+            {action({ actionRef, parentRef })}
           </div>
         )
       }
