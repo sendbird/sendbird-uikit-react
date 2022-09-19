@@ -87,10 +87,12 @@ function OpenChannelListUI({
     }
     if (fetchingStatus === OpenChannelListFetchingStatus.FETCHING) {
       return renderPlaceHolderLoading?.() || (
-        <PlaceHolder
-          className="sendbird-open-channel-list-ui__channel-list--place-holder--loading"
-          type={PlaceHolderTypes.LOADING}
-        />
+        <div className="sendbird-open-channel-list-ui__channel-list--place-holder--loading">
+          <PlaceHolder
+            iconSize="24px"
+            type={PlaceHolderTypes.LOADING}
+          />
+        </div>
       );
     }
     if (fetchingStatus === OpenChannelListFetchingStatus.ERROR) {
