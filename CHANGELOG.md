@@ -1,6 +1,6 @@
 # Changelog - v3
 
-## [v3.1.3] (Sep 18 2022)
+## [v3.1.3] (Sep 19 2022)
 
 Features:
 * Export SessionHandler through `@sendbird/uikit-react/handlers/SessionHandler`
