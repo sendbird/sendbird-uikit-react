@@ -13,8 +13,15 @@ Features:
 
 Fixes:
 * Fix the position of ContextMenu
-* Set message context's border roundly by the state using the reaction feature
 * Do not exit the current open channel when the channel state is changed
+* Display menu only for operators on the member list
+* Hide muted icon when pop-up component is appeared
+* Set message context's border roundly by the state using the reaction feature
+  * Add props `isReactionEnabled` to the <TextMessageItemBody />
+  * Add props `isReactionEnabled` to the <OGMessageItemBody />
+  * Add props `isReactionEnabled` to the <FileMessageItemBody />
+  * Add props `isReactionEnabled` to the <ThumbnailMessageItemBody />
+  * Add props `isReactionEnabled` to the <UnknownMessageItemBody />
 * Add the message as a parameter of renderCustomSeparator
   * before: renderCustomSeparator={() => ReactElement}
   * after: renderCustomSeparator={(props: { message }) => ReactElement}
