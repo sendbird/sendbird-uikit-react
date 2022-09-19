@@ -208,10 +208,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   const isSuper = currentGroupChannel?.isSuper || false;
   const isBroadcast = currentGroupChannel?.isBroadcast || false;
   const { appInfo } = sdk;
-  const usingReaction = (
-    appInfo?.useReaction && !isBroadcast && !isSuper && (config?.isReactionEnabled || isReactionEnabled)
-    // TODO: Make isReactionEnabled independent from appInfo.useReaction
-  );
+  const usingReaction = appInfo?.useReaction && !isBroadcast && !isSuper && (config?.isReactionEnabled || isReactionEnabled);
 
   const emojiAllMap = useMemo(() => (
     usingReaction

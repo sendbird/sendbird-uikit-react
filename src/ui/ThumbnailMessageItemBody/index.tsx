@@ -11,6 +11,7 @@ interface Props {
   message: FileMessage;
   isByMe?: boolean;
   mouseHover?: boolean;
+  isReactionEnabled?: boolean;
   showFileViewer?: (bool: boolean) => void;
 }
 
@@ -19,6 +20,7 @@ export default function ThumbnailMessageItemBody({
   message,
   isByMe = false,
   mouseHover = false,
+  isReactionEnabled = false,
   showFileViewer,
 }: Props): ReactElement {
   const { thumbnails = [] } = message;
@@ -32,7 +34,7 @@ export default function ThumbnailMessageItemBody({
         'sendbird-thumbnail-message-item-body',
         isByMe ? 'outgoing' : 'incoming',
         mouseHover ? 'mouse-hover' : '',
-        message?.reactions?.length > 0 ? 'reactions' : '',
+        (isReactionEnabled && message?.reactions?.length > 0) ? 'reactions' : '',
       ])}
       onClick={() => {
         if (isSentMessage(message)) {

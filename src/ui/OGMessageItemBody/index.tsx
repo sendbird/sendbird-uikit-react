@@ -16,6 +16,7 @@ interface Props {
   isByMe?: boolean;
   mouseHover?: boolean;
   isMentionEnabled?: boolean;
+  isReactionEnabled?: boolean;
 }
 
 export default function OGMessageItemBody({
@@ -24,6 +25,7 @@ export default function OGMessageItemBody({
   isByMe = false,
   mouseHover = false,
   isMentionEnabled = false,
+  isReactionEnabled = false,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   const openOGUrl = (): void => {
@@ -36,7 +38,7 @@ export default function OGMessageItemBody({
       'sendbird-og-message-item-body',
       isByMe ? 'outgoing' : 'incoming',
       mouseHover ? 'mouse-hover' : '',
-      message?.reactions?.length > 0 ? 'reactions' : '',
+      (isReactionEnabled && message?.reactions?.length > 0) ? 'reactions' : '',
     ])}>
       <Label
         key={uuidv4()}
