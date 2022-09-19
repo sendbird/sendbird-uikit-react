@@ -64,7 +64,16 @@
     box-sizing: border-box;
 
     overflow-y: scroll;
+  }
+}
 
-    .sendbird-open-channel-list-ui__channel-list__item {}
+.sendbird-open-channel-list-ui__channel-list--place-holder--loading {
+  position: relative;
+  min-height: 62px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  @include themed() {
+    background-color: t(bg-1);
   }
 }
