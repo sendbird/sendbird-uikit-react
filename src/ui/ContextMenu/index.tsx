@@ -48,7 +48,12 @@ export const MenuItem = ({
   );
 };
 
-export const MenuRoot = (): ReactElement => <div id="sendbird-dropdown-portal" />;
+export const MenuRoot = (): ReactElement => (
+  <div
+    id="sendbird-dropdown-portal"
+    className="sendbird-dropdown-portal"
+  />
+);
 export const EmojiReactionListRoot = (): ReactElement => <div id="sendbird-emoji-list-portal" />;
 
 type MenuDisplayingFunc = () => void;
@@ -62,7 +67,10 @@ export default function ContextMenu({
 }: ContextMenuProps): ReactElement {
   const [showMenu, setShowMenu] = useState(false);
   return (
-    <div className="sendbird-context-menu">
+    <div
+      className="sendbird-context-menu"
+      style={{ display: 'inline' }}
+    >
       {menuTrigger(() => setShowMenu(!showMenu))}
       {showMenu && menuItems(() => setShowMenu(false))}
     </div>

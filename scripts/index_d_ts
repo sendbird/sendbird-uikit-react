@@ -77,6 +77,7 @@ declare module "SendbirdUIKitGlobal" {
       maxMentionCount?: number,
       maxSuggestionCount?: number,
     };
+    isREMUnitEnabled?: boolean;
   }
 
   export interface ClientMessage {
@@ -90,6 +91,9 @@ declare module "SendbirdUIKitGlobal" {
     message: EveryMessage;
     chainTop: boolean;
     chainBottom: boolean;
+  }
+  export interface RenderCustomSeparatorProps {
+    message: AdminMessage | UserMessage | FileMessage;
   }
 
   export interface ClientUserMessage extends UserMessage, ClientMessage { }
@@ -210,6 +214,7 @@ declare module "SendbirdUIKitGlobal" {
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode | React.ReactElement;
     allowProfileEdit: boolean;
     isOnline: boolean;
+    isReactionEnabled: boolean;
     isMentionEnabled: boolean;
     userMention: {
       maxMentionCount: number;
@@ -448,10 +453,10 @@ declare module "SendbirdUIKitGlobal" {
   };
 
   export type ChannelContextProps = {
-    channelUrl: string;
     children?: React.ReactElement;
-    useMessageGrouping?: boolean;
-    useReaction?: boolean;
+    channelUrl: string;
+    isReactionEnabled?: boolean;
+    isMessageGroupingEnabled?: boolean;
     showSearchIcon?: boolean;
     highlightedMessage?: number;
     startingPoint?: number;
@@ -464,7 +469,6 @@ declare module "SendbirdUIKitGlobal" {
     queries?: ChannelQueries;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode | React.ReactElement;
     disableUserProfile?: boolean;
-    renderUserMentionItem?: (props: { user: User }) => JSX.Element;
   };
 
   export interface ChannelUIProps {
@@ -475,7 +479,7 @@ declare module "SendbirdUIKitGlobal" {
     renderMessage?: (props: RenderMessageProps) => React.ReactNode | React.ReactElement;
     renderMessageInput?: () => React.ReactNode | React.ReactElement;
     renderTypingIndicator?: () => React.ReactNode | React.ReactElement;
-    renderCustomSeperator?: () => React.ReactNode | React.ReactElement;
+    renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactNode | React.ReactElement;
   }
 
   export type CoreMessageType = AdminMessage | UserMessage | FileMessage;
@@ -525,7 +529,7 @@ declare module "SendbirdUIKitGlobal" {
     handleScroll: () => void;
     // for extending
     renderMessage?: (props: RenderMessageProps) => React.ReactNode | React.ReactElement;
-    renderCustomSeperator?: () => React.ReactNode | React.ReactElement;
+    renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactNode | React.ReactElement;
     renderEditInput?: () => React.ReactNode | React.ReactElement;
     renderMessageContent?: () => React.ReactNode | React.ReactElement;
   };
@@ -533,7 +537,7 @@ declare module "SendbirdUIKitGlobal" {
   export type MessageListProps = {
     renderMessage?: (props: RenderMessageProps) => React.ReactNode | React.ReactElement;
     renderPlaceholderEmpty?: () => React.ReactNode | React.ReactElement;
-    renderCustomSeperator?: () => React.ReactNode | React.ReactElement;
+    renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactNode | React.ReactElement;
   };
 
   export type SuggestedMentionListProps = {
@@ -869,6 +873,10 @@ declare module '@sendbird/uikit-react/withSendbird' {
 declare module '@sendbird/uikit-react/handlers/ConnectionHandler' {
   import { ConnectionHandler } from '@sendbird/chat';
   export default ConnectionHandler;
+}
+declare module '@sendbird/uikit-react/handlers/SessionHandler' {
+  import { SessionHandler } from '@sendbird/chat';
+  export default SessionHandler;
 }
 declare module '@sendbird/uikit-react/handlers/GroupChannelHandler' {
   import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
@@ -1435,6 +1443,7 @@ declare module '@sendbird/uikit-react/ui/FileMessageItemBody' {
     message: FileMessage;
     isByMe?: boolean;
     mouseHover?: boolean;
+    isReactionEnabled?: boolean;
   }
   const FileMessageItemBody: React.FC<FileMessageItemBodyProps>;
   export default FileMessageItemBody;
@@ -1728,6 +1737,8 @@ declare module '@sendbird/uikit-react/ui/OGMessageItemBody' {
     message: UserMessage;
     isByMe?: boolean;
     mouseHover?: boolean;
+    isMentionEnabled?: boolean;
+    isReactionEnabled?: boolean;
   }
   const OGMessageItemBody: React.FC<OGMessageItemBodyProps>;
   export default OGMessageItemBody;
@@ -1924,6 +1935,8 @@ declare module '@sendbird/uikit-react/ui/TextMessageItemBody' {
     message: UserMessage;
     isByMe?: boolean;
     mouseHover?: boolean;
+    isMentionEnabled?: boolean;
+    isReactionEnabled?: boolean;
   }
   const TextMessageItemBody: React.FC<TextMessageItemBodyProps>;
   export default TextMessageItemBody;
@@ -1936,6 +1949,7 @@ declare module '@sendbird/uikit-react/ui/ThumbnailMessageItemBody' {
     message: FileMessage;
     isByMe?: boolean;
     mouseHover?: boolean;
+    isReactionEnabled?: boolean;
     showFileViewer?: (bool: boolean) => void;
   }
   const ThumbnailMessageItemBody: React.FC<ThumbnailMessageItemBodyProps>;
@@ -1968,6 +1982,7 @@ declare module '@sendbird/uikit-react/ui/UnknownMessageItemBody' {
     isByMe?: boolean;
     message: SendbirdUIKitGlobal.CoreMessageType;
     mouseHover?: boolean;
+    isReactionEnabled?: boolean;
   }
   const UnknownMessageItemBody: React.FC<UnknownMessageItemBodyProps>;
   export default UnknownMessageItemBody;

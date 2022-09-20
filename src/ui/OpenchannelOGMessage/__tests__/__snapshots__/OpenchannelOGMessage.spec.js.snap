@@ -1,234 +1,168 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`OpenchannelOGMessage should do a snapshot test of the OpenchannelOGMessage DOM 1`] = `
-<div
-  className=" sendbird-openchannel-og-message"
->
+exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGMessage DOM 1`] = `
+<DocumentFragment>
   <div
-    className="sendbird-openchannel-og-message__top"
+    class=" sendbird-openchannel-og-message"
   >
     <div
-      className="sendbird-openchannel-og-message__top__left"
+      class="sendbird-openchannel-og-message__top"
     >
       <div
-        className="sendbird-context-menu"
+        class="sendbird-openchannel-og-message__top__left"
       >
         <div
-          className="sendbird-openchannel-og-message__top__left__avatar sendbird-avatar"
-          onClick={[Function]}
-          onKeyDown={[Function]}
-          role="button"
-          style={
-            Object {
-              "height": "28px",
-              "width": "28px",
-            }
-          }
-          tabIndex={0}
+          class="sendbird-context-menu"
+          style="display: inline;"
         >
           <div
-            className="sendbird-avatar-img sendbird-image-renderer"
-            style={
-              Object {
-                "height": "28px",
-                "maxWidth": "400px",
-                "minWidth": "28px",
-                "width": "100%",
-              }
-            }
+            class="sendbird-openchannel-og-message__top__left__avatar sendbird-avatar"
+            role="button"
+            style="height: 28px; width: 28px;"
+            tabindex="0"
           >
             <div
-              className="sendbird-image-renderer__image"
-              style={
-                Object {
-                  "backgroundImage": "url(https://static.sendbird.com/sample/profiles/profile_12_512px.png)",
-                  "backgroundPosition": "center",
-                  "backgroundRepeat": "no-repeat",
-                  "backgroundSize": "cover",
-                  "borderRadius": null,
-                  "height": "28px",
-                  "maxWidth": "400px",
-                  "minWidth": "28px",
-                  "position": "absolute",
-                  "width": "100%",
-                }
-              }
+              class="sendbird-avatar-img sendbird-image-renderer"
+              style="width: 100%; min-width: 28px; max-width: 400px; height: 28px;"
+            >
+              <div
+                class="sendbird-image-renderer__image"
+                style="width: 100%; min-width: 28px; max-width: 400px; height: 28px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://static.sendbird.com/sample/profiles/profile_12_512px.png);"
+              />
+              <img
+                alt=""
+                class="sendbird-image-renderer__hidden-image-loader"
+                src="https://static.sendbird.com/sample/profiles/profile_12_512px.png"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="sendbird-openchannel-og-message__top__right"
+      >
+        <div
+          class="sendbird-openchannel-og-message__top__right__title"
+        >
+          <span
+            class="sendbird-openchannel-og-message__top__right__title__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
+          >
+            Hoon Baek
+          </span>
+          <span
+            class="sendbird-openchannel-og-message__top__right__title__sent-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-3"
+          >
+            mock-date
+          </span>
+        </div>
+        <div
+          class="sendbird-openchannel-og-message__top__right__description"
+        >
+          <span
+            class="sendbird-openchannel-og-message__top__right__description__message sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
+          >
+            <span
+              class="sendbird-openchannel-og-message--word sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
+            >
+              I
+            </span>
+            <span
+              class="sendbird-openchannel-og-message--word sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
+            >
+              am
+            </span>
+            <span
+              class="sendbird-openchannel-og-message--word sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
+            >
+              the
+            </span>
+            <span
+              class="sendbird-openchannel-og-message--word sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
+            >
+              Message
+            </span>
+          </span>
+        </div>
+      </div>
+      <div
+        class="sendbird-openchannel-og-message__top__context-menu"
+        style="top: 2px;"
+      >
+        <div
+          class="sendbird-context-menu"
+          style="display: inline;"
+        >
+          <button
+            class="sendbird-openchannel-og-message__top__context-menu--icon sendbird-iconbutton "
+            style="height: 32px; width: 32px;"
+            type="button"
+          >
+            <span
+              class="sendbird-iconbutton__inner"
+            >
+              <div
+                class=" sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
+                role="button"
+                style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
+                tabindex="0"
+              >
+                <test-file-stub />
+              </div>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="sendbird-openchannel-og-message__bottom"
+    >
+      <div
+        class="sendbird-openchannel-og-message__bottom__og-tag"
+      >
+        <span
+          class="sendbird-openchannel-og-message__bottom__og-tag__url sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
+        >
+          https://sendbird.com/
+        </span>
+        <a
+          class="sendbird-openchannel-og-message__bottom__og-tag__title sendbird-link-label sendbird-label--color-primary"
+          href="https://sendbird.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <span
+            class="sendbird-link-label__label sendbird-label sendbird-label--subtitle-2 sendbird-label--color-primary"
+          >
+            This is the TITLE
+          </span>
+        </a>
+        <span
+          class="sendbird-openchannel-og-message__bottom__og-tag__description sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-1"
+        >
+          I am description I am who has much string in this og meta data
+        </span>
+        <div
+          class="sendbird-openchannel-og-message__bottom__og-tag__thumbnail"
+          role="button"
+          tabindex="0"
+        >
+          <div
+            class="sendbird-openchannel-og-message__bottom__og-tag__thumbnail__image sendbird-image-renderer"
+            style="width: 100%; max-width: 400px; height: 189px;"
+          >
+            <div
+              class="sendbird-image-renderer__image"
+              style="width: 100%; max-width: 400px; height: 189px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://static.sendbird.com/sample/profiles/profile_12_512px.png);"
             />
             <img
-              alt=""
-              className="sendbird-image-renderer__hidden-image-loader"
-              onError={[Function]}
-              onLoad={[Function]}
+              alt="test"
+              class="sendbird-image-renderer__hidden-image-loader"
               src="https://static.sendbird.com/sample/profiles/profile_12_512px.png"
             />
           </div>
         </div>
       </div>
     </div>
-    <div
-      className="sendbird-openchannel-og-message__top__right"
-    >
-      <div
-        className="sendbird-openchannel-og-message__top__right__title"
-      >
-        <span
-          className="sendbird-openchannel-og-message__top__right__title__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
-        >
-          Hoon Baek
-        </span>
-        <span
-          className="sendbird-openchannel-og-message__top__right__title__sent-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-3"
-        >
-          mock-date
-        </span>
-      </div>
-      <div
-        className="sendbird-openchannel-og-message__top__right__description"
-      >
-        <span
-          className="sendbird-openchannel-og-message__top__right__description__message sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
-        >
-          <span
-            className="sendbird-openchannel-og-message--word sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
-          >
-            I
-          </span>
-          <span
-            className="sendbird-openchannel-og-message--word sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
-          >
-            am
-          </span>
-          <span
-            className="sendbird-openchannel-og-message--word sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
-          >
-            the
-          </span>
-          <span
-            className="sendbird-openchannel-og-message--word sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
-          >
-            Message
-          </span>
-        </span>
-      </div>
-    </div>
-    <div
-      className="sendbird-openchannel-og-message__top__context-menu"
-      style={Object {}}
-    >
-      <div
-        className="sendbird-context-menu"
-      >
-        <button
-          className="sendbird-openchannel-og-message__top__context-menu--icon sendbird-iconbutton "
-          disabled={false}
-          onBlur={[Function]}
-          onClick={[Function]}
-          style={
-            Object {
-              "height": "32px",
-              "width": "32px",
-            }
-          }
-          type="button"
-        >
-          <span
-            className="sendbird-iconbutton__inner"
-          >
-            <div
-              className=" sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
-              onClick={[Function]}
-              onKeyDown={[Function]}
-              role="button"
-              style={
-                Object {
-                  "height": "24px",
-                  "minHeight": "24px",
-                  "minWidth": "24px",
-                  "width": "24px",
-                }
-              }
-              tabIndex="0"
-            >
-              <test-file-stub />
-            </div>
-          </span>
-        </button>
-      </div>
-    </div>
   </div>
-  <div
-    className="sendbird-openchannel-og-message__bottom"
-  >
-    <div
-      className="sendbird-openchannel-og-message__bottom__og-tag"
-    >
-      <span
-        className="sendbird-openchannel-og-message__bottom__og-tag__url sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
-      >
-        https://sendbird.com/
-      </span>
-      <a
-        className="sendbird-openchannel-og-message__bottom__og-tag__title sendbird-link-label sendbird-label--color-primary"
-        href="https://sendbird.com/"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        <span
-          className="sendbird-link-label__label sendbird-label sendbird-label--subtitle-2 sendbird-label--color-primary"
-        >
-          This is the TITLE
-        </span>
-      </a>
-      <span
-        className="sendbird-openchannel-og-message__bottom__og-tag__description sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-1"
-      >
-        I am description I am who has much string in this og meta data
-      </span>
-      <div
-        className="sendbird-openchannel-og-message__bottom__og-tag__thumbnail"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="button"
-        tabIndex={0}
-      >
-        <div
-          className="sendbird-openchannel-og-message__bottom__og-tag__thumbnail__image sendbird-image-renderer"
-          style={
-            Object {
-              "height": "189px",
-              "maxWidth": "400px",
-              "minWidth": null,
-              "width": "100%",
-            }
-          }
-        >
-          <div
-            className="sendbird-image-renderer__image"
-            style={
-              Object {
-                "backgroundImage": "url(https://static.sendbird.com/sample/profiles/profile_12_512px.png)",
-                "backgroundPosition": "center",
-                "backgroundRepeat": "no-repeat",
-                "backgroundSize": "cover",
-                "borderRadius": null,
-                "height": "189px",
-                "maxWidth": "400px",
-                "minWidth": null,
-                "position": "absolute",
-                "width": "100%",
-              }
-            }
-          />
-          <img
-            alt="test"
-            className="sendbird-image-renderer__hidden-image-loader"
-            onError={[Function]}
-            onLoad={[Function]}
-            src="https://static.sendbird.com/sample/profiles/profile_12_512px.png"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+</DocumentFragment>
 `;

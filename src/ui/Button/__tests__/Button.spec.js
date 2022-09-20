@@ -1,31 +1,22 @@
 import React from 'react';
-import { shallow } from 'enzyme'
-import renderer from 'react-test-renderer';
+import { render, screen } from '@testing-library/react';
 
 import Button, { ButtonSizes } from "../index";
 
-describe('Button', () => {
+describe('ui/Button', () => {
   it('should do a snapshot test of the default Button DOM', function () {
-    const component = renderer.create(
-      <Button />,
-    );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(<Button />);
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('should do a snapshot test of the small Button DOM', function () {
-    const component = renderer.create(
-      <Button size={ButtonSizes.SMALL} />
-    );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(<Button size={Size.SMALL} />);
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('should contain className', function () {
     const text = 'example-text';
-    const component = shallow(<Button className={text} />);
-    expect(
-      component.find(".sendbird-button").hasClass(text)
-    ).toBe(true);
+    render(<Button className={text} />);
+    expect(screen.getByRole('button').className).toContain(text);
   });
 });

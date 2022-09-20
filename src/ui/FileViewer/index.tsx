@@ -61,10 +61,12 @@ export const FileViewerComponent = ({
             {nickname}
           </Label>
         </div>
-        <div className="sendbird-fileviewer__header__right">
+        <div
+          className="sendbird-fileviewer__header__right"
+        >
           {
             isSupportedFileView(type) && (
-              <div className="sendbird-fileviewer__header__right__actions">
+              <div className="sendbird-fileviewer__header__right__actions" >
                 <a
                   className="sendbird-fileviewer__header__right__actions__download"
                   rel="noopener noreferrer"
@@ -108,7 +110,10 @@ export const FileViewerComponent = ({
       </div>
       <div className="sendbird-fileviewer__content">
         {isVideo(type) && (
-          <video controls className="sendbird-fileviewer__content__video">
+          <video
+            controls
+            className="sendbird-fileviewer__content__video"
+          >
             <source src={url} type={type} />
           </video>
         )}
@@ -123,7 +128,9 @@ export const FileViewerComponent = ({
         }
         {
           !isSupportedFileView(type) && (
-            <div className="sendbird-fileviewer__content__unsupported">
+            <div
+              className="sendbird-fileviewer__content__unsupported"
+            >
               <Label type={LabelTypography.H_1} color={LabelColors.ONBACKGROUND_1}>
                 {stringSet?.UI__FILE_VIEWER__UNSUPPORT || 'Unsupported message'}
               </Label>

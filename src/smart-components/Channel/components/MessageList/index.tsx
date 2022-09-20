@@ -8,14 +8,14 @@ import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import { compareMessagesForGrouping } from '../../context/utils';
 import Message from '../Message';
-import { RenderMessageProps } from '../../../../types';
+import { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { isAboutSame } from '../../context/utils';
 import uuidv4 from '../../../../utils/uuid';
 
 export type MessageListProps = {
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
-  renderCustomSeparator?: () => React.ReactElement;
+  renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
 };
 
 const SCROLL_REF_CLASS_NAME = '.sendbird-msg--scroll-ref';

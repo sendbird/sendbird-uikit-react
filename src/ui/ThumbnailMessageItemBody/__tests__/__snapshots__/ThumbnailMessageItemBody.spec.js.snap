@@ -1,87 +1,43 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ThumbnailMessageItemBody should do a snapshot test of the ThumbnailMessageItemBody DOM 1`] = `
-<div
-  className="classname-for-snapshot sendbird-thumbnail-message-item-body outgoing mouse-hover reactions"
-  onClick={[Function]}
->
+exports[`ui/ThumbnailMessageItemBody should do a snapshot test of the ThumbnailMessageItemBody DOM 1`] = `
+<DocumentFragment>
   <div
-    className="sendbird-thumbnail-message-item-body__thumbnail sendbird-image-renderer"
-    style={
-      Object {
-        "height": "270px",
-        "maxWidth": "400px",
-        "minWidth": "360px",
-        "width": "100%",
-      }
-    }
+    class="classname-for-snapshot sendbird-thumbnail-message-item-body outgoing mouse-hover "
   >
     <div
-      className="sendbird-thumbnail-message-item-body__placeholder"
-      style={
-        Object {
-          "style": Object {
-            "alignItems": "center",
-            "display": "flex",
-            "height": "270px",
-            "justifyContent": "center",
-            "maxWidth": "400px",
-            "minWidth": "360px",
-            "position": "absolute",
-            "width": "100%",
-          },
-        }
-      }
+      class="sendbird-thumbnail-message-item-body__thumbnail sendbird-image-renderer"
+      style="width: 100%; min-width: 360px; max-width: 400px; height: 270px;"
     >
       <div
-        className="sendbird-thumbnail-message-item-body__placeholder__icon"
+        class="sendbird-thumbnail-message-item-body__placeholder"
       >
         <div
-          className=" sendbird-icon sendbird-icon-photo sendbird-icon-color--on-background-2"
-          onClick={[Function]}
-          onKeyDown={[Function]}
-          role="button"
-          style={
-            Object {
-              "height": "34px",
-              "minHeight": "34px",
-              "minWidth": "34px",
-              "width": "34px",
-            }
-          }
-          tabIndex="0"
+          class="sendbird-thumbnail-message-item-body__placeholder__icon"
         >
-          <test-file-stub />
+          <div
+            class=" sendbird-icon sendbird-icon-photo sendbird-icon-color--on-background-2"
+            role="button"
+            style="width: 34px; min-width: 34px; height: 34px; min-height: 34px;"
+            tabindex="0"
+          >
+            <test-file-stub />
+          </div>
         </div>
       </div>
+      <div
+        class="sendbird-image-renderer__image"
+        style="width: 100%; min-width: 360px; max-width: 400px; height: 270px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://static.sendbird.com/sample/user_sdk/user_sdk_25.png);"
+      />
+      <img
+        alt="image/png"
+        class="sendbird-image-renderer__hidden-image-loader"
+        src="https://static.sendbird.com/sample/user_sdk/user_sdk_25.png"
+      />
     </div>
     <div
-      className="sendbird-image-renderer__image"
-      style={
-        Object {
-          "backgroundImage": "url(https://static.sendbird.com/sample/user_sdk/user_sdk_25.png)",
-          "backgroundPosition": "center",
-          "backgroundRepeat": "no-repeat",
-          "backgroundSize": "cover",
-          "borderRadius": null,
-          "height": "270px",
-          "maxWidth": "400px",
-          "minWidth": "360px",
-          "position": "absolute",
-          "width": "100%",
-        }
-      }
-    />
-    <img
-      alt="image/png"
-      className="sendbird-image-renderer__hidden-image-loader"
-      onError={[Function]}
-      onLoad={[Function]}
-      src="https://static.sendbird.com/sample/user_sdk/user_sdk_25.png"
+      class="sendbird-thumbnail-message-item-body__image-cover"
     />
   </div>
-  <div
-    className="sendbird-thumbnail-message-item-body__image-cover"
-  />
-</div>
+</DocumentFragment>
 `;

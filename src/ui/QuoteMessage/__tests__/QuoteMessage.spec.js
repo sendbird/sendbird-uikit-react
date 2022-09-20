@@ -1,11 +1,11 @@
 import React from 'react';
-// import {shallow} from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
+
 import QuoteMessageItemBody from '../index';
 
-describe('ReplyingMessageItemBody', () => {
+describe('ui/QuoteMessage', () => {
   it('should do a snapshot test of the ReplyingMessageItemBody DOM', function() {
-    const component = renderer.create(
+    const { asFragment } = render(
       <QuoteMessageItemBody
         message={{ sender: { nickname: 'Simon' } }}
         parentMessageType={null}
@@ -13,9 +13,8 @@ describe('ReplyingMessageItemBody', () => {
         parentMessageUrl={''}
         parentMessageSender={{ nickname: 'Gabie' }}
         isByMe
-      />,
+      />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

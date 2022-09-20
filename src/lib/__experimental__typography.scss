@@ -1,0 +1,110 @@
+// We are tyring to move font size into "rem" units for accesibility
+// todo: make this default in @sendbird/uikit@v4
+
+// assuming <html>@fontsize = 16px
+//  about rem https://www.joshwcomeau.com/css/surprising-truth-about-pixels-and-accessibility/#rems
+.sendbird-experimental__rem__units {
+  // typography
+  .sendbird-label--h-1 {
+    font-size: 1.25rem;
+  }
+
+  .sendbird-label--h-2 {
+    font-size: 1.125rem;
+  }
+
+  .sendbird-label--subtitle-1 {
+    font-size: 1rem;
+  }
+
+  .sendbird-label--subtitle-2 {
+    font-size: .875rem;
+  }
+
+  .sendbird-label--body-1 {
+   font-size: .875rem;
+  }
+
+  .sendbird-label--body-2 {
+    font-size: .75rem;
+  }
+
+  .sendbird-label--button-1 {
+    font-size: .875rem;
+  }
+
+  .sendbird-label--button-2 {
+    font-size: .875rem;
+  }
+
+  .sendbird-label--caption-1 {
+   font-size: .875rem;
+  }
+
+  .sendbird-label--caption-2 {
+   font-size: .75rem;
+  }
+
+  .sendbird-label--caption-3 {
+    font-size: .75rem;
+  }
+
+  // message search
+  .sendbird-message-search-pannel {
+    .sendbird-message-search-pannel__input__container__input-area {
+      font-size: .875rem;
+    }
+  }
+
+  // checkbox
+  .sendbird-checkbox {
+    font-size: 1.375rem;
+  }
+
+  .sendbird-mention-user-label {
+    font-size: .875rem;
+    &.purple {
+      font-size: 1.125rem;
+    }
+  }
+
+  // message input
+  .sendbird-message-input {
+    .sendbird-message-input--textarea,
+    .sendbird-message-input--placeholder {
+      font-size: .875rem;
+    }
+  }
+
+  // input
+  .sendbird-input {
+    .sendbird-input__input,
+    .sendbird-input__placeholder {
+      font-size: .875rem;
+    }
+  }
+
+  // tooltip
+  .sendbird-tooltip {
+    &__text {
+      font-size: .75rem;
+    }
+  }
+
+  // quote-message
+  .sendbird-quote-message {
+    .sendbird-quote-message__replied-to {
+      .sendbird-quote-message__replied-to__text {
+        font-size: .75rem;
+      }
+    }
+    .sendbird-quote-message__replied-message {
+      .sendbird-quote-message__replied-message__text-message {
+        font-size: .75rem;
+      }
+    }
+    .sendbird-quote-message__replied-message__file-message {
+      font-size: .75rem;
+    }
+  }
+}

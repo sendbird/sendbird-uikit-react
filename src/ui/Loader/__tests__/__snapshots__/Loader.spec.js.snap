@@ -1,31 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Loader should do a snapshot test of the default Loader DOM 1`] = `
-<div
-  className=" sendbird-loader"
-  style={
-    Object {
-      "height": "26px",
-      "width": "26px",
-    }
-  }
->
+exports[`ui/Loader should do a snapshot test of the default Loader DOM 1`] = `
+<DocumentFragment>
   <div
-    className=" sendbird-icon sendbird-icon-spinner "
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    role="button"
-    style={
-      Object {
-        "height": "26px",
-        "minHeight": "26px",
-        "minWidth": "26px",
-        "width": "26px",
-      }
-    }
-    tabIndex="0"
+    class=" sendbird-loader"
+    style="width: 26px; height: 26px;"
   >
-    <test-file-stub />
+    <div
+      class=" sendbird-icon sendbird-icon-spinner "
+      role="button"
+      style="width: 26px; min-width: 26px; height: 26px; min-height: 26px;"
+      tabindex="0"
+    >
+      <test-file-stub />
+    </div>
   </div>
-</div>
+</DocumentFragment>
 `;

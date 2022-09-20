@@ -62,6 +62,7 @@ export interface SendBirdStateConfig {
   logger: Logger;
   setCurrenttheme: (theme: string) => void;
   userListQuery?(): SendBirdTypes.UserListQuery;
+  isReactionEnabled: boolean;
   isMentionEnabled: boolean;
   userMention: {
     maxMentionCount: number,

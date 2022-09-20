@@ -1,39 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ReactionButton should do a snapshot test of the ReactionButton DOM 1`] = `
-<div
-  className="example-text sendbird-reaction-button"
-  onClick={[Function]}
-  onKeyDown={[Function]}
-  role="button"
-  style={
-    Object {
-      "height": "36px",
-      "width": "36px",
-    }
-  }
-  tabIndex={0}
->
+exports[`ui/ReactionButton should do a snapshot test of the ReactionButton DOM 1`] = `
+<DocumentFragment>
   <div
-    className="sendbird-reaction-button__inner"
+    class="example-text sendbird-reaction-button"
+    role="button"
+    style="width: 36px; height: 36px;"
+    tabindex="0"
   >
     <div
-      className=" sendbird-icon sendbird-icon-create "
-      onClick={[Function]}
-      onKeyDown={[Function]}
-      role="button"
-      style={
-        Object {
-          "height": "28px",
-          "minHeight": "28px",
-          "minWidth": "28px",
-          "width": "28px",
-        }
-      }
-      tabIndex="0"
+      class="sendbird-reaction-button__inner"
     >
-      <test-file-stub />
+      <div
+        class=" sendbird-icon sendbird-icon-create "
+        role="button"
+        style="width: 28px; min-width: 28px; height: 28px; min-height: 28px;"
+        tabindex="0"
+      >
+        <test-file-stub />
+      </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;

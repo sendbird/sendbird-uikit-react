@@ -1,6 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import SortByRow from "../index";
 
@@ -18,11 +17,11 @@ const MOCK_ARR = [
 const ITME_WIDTH = 44;
 const ITEM_HEIGHT = 40;
 
-describe('SortByRow', () => {
+describe('ui/SortByRow', () => {
   it('should be sorted by 3', function () {
     const className = "exam-classname";
     const maxItemCount = 3;
-    const component = shallow(
+    const { container } = render(
       <SortByRow
         className={className}
         maxItemCount={maxItemCount}
@@ -33,19 +32,17 @@ describe('SortByRow', () => {
       </SortByRow>
     );
     expect(
-      component.find(`.${className}`)
-    ).toHaveLength(
-      parseInt(MOCK_ARR.length / maxItemCount) + ((MOCK_ARR.length % maxItemCount > 0) ? 1 : 0)
-    );
+      container.getElementsByClassName(className)
+    ).toHaveLength(parseInt(MOCK_ARR.length / maxItemCount) + ((MOCK_ARR.length % maxItemCount > 0) ? 1 : 0));
     expect(
-      component.find(`.${className}`)
+      container.getElementsByClassName(className)
     ).toHaveLength(3);
   });
 
   it('should be sorted by 8', function () {
     const className = "exam-classname";
     const maxItemCount = 8;
-    const component = shallow(
+    const { container } = render(
       <SortByRow
         className={className}
         maxItemCount={maxItemCount}
@@ -57,19 +54,17 @@ describe('SortByRow', () => {
     );
 
     expect(
-      component.find(`.${className}`)
-    ).toHaveLength(
-      parseInt(MOCK_ARR.length / maxItemCount) + ((MOCK_ARR.length % maxItemCount > 0) ? 1 : 0)
-    );
+      container.getElementsByClassName(className)
+    ).toHaveLength(parseInt(MOCK_ARR.length / maxItemCount) + ((MOCK_ARR.length % maxItemCount > 0) ? 1 : 0));
     expect(
-      component.find(`.${className}`)
+      container.getElementsByClassName(className)
     ).toHaveLength(2);
   });
 
   it('should be sorted by 10', function () {
     const className = "exam-classname";
     const maxItemCount = 10;
-    const component = shallow(
+    const { container } = render(
       <SortByRow
         className={className}
         maxItemCount={maxItemCount}
@@ -81,19 +76,19 @@ describe('SortByRow', () => {
     );
 
     expect(
-      component
+      container.getElementsByClassName(className)
     ).toHaveLength(
       parseInt(MOCK_ARR.length / maxItemCount) + ((MOCK_ARR.length % maxItemCount > 0) ? 1 : 0)
     );
     expect(
-      component
+      container.getElementsByClassName(className)
     ).toHaveLength(1);
   });
 
   it('should do a snapshot test of the SortByRow DOM', function () {
     const className = 'exam-classname';
     const maxItemCount = 8;
-    const component = renderer.create(
+    const { asFragment } = render(
       <SortByRow
         className={className}
         maxItemCount={maxItemCount}
@@ -101,9 +96,8 @@ describe('SortByRow', () => {
         itemHeight={ITEM_HEIGHT}
       >
         {MOCK_ARR}
-      </SortByRow>,
+      </SortByRow>
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

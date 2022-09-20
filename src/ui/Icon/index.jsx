@@ -77,7 +77,7 @@ const Colors = {
   ERROR: 'ERROR',
 };
 
-function changeColorToClassName(color) {
+export function changeColorToClassName(color) {
   switch (color) {
     case Colors.PRIMARY: return 'sendbird-icon-color--primary';
     case Colors.SECONDARY: return 'sendbird-icon-color--secondary';

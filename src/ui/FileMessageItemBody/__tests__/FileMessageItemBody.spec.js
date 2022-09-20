@@ -1,6 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render, screen } from '@testing-library/react';
 
 import FileMessageItemBody from "../index";
 
@@ -14,109 +13,99 @@ const createMockMessage = (process) => {
   return process ? process(mockMessage) : mockMessage;
 };
 
-describe('FileMessageItemBody', () => {
+describe('ui/FileMessageItemBody', () => {
   it('should have class names of own basic status', () => {
     const className = 'classname-for-test';
-    const component = mount(
+    const createdMsg = createMockMessage();
+    const { container } = render(
       <FileMessageItemBody
         className={className}
-        message={createMockMessage()}
+        message={createdMsg}
       />
     );
     expect(
-      component.find('.sendbird-file-message-item-body').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body')[0].className
+    ).toContain('sendbird-file-message-item-body');
     expect(
-      component.find(`.${className}.sendbird-file-message-item-body`).hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body')[0].className
+    ).toContain(className);
     expect(
-      component.find('.sendbird-file-message-item-body.outgoing').hostNodes().exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-file-message-item-body')[0].className
+    ).not.toContain('outgoing');
     expect(
-      component.find('.sendbird-file-message-item-body.incoming').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body')[0].className
+    ).toContain('incoming');
     expect(
-      component.find('.sendbird-file-message-item-body.mouse-hover').hostNodes().exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-file-message-item-body')[0].className
+    ).not.toContain('mouse-hover');
     expect(
-      component.find('.sendbird-file-message-item-body.reactions').hostNodes().exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-file-message-item-body')[0].className
+    ).not.toContain('reactions');
     expect(
-      component.find('.sendbird-file-message-item-body__file-icon').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body__file-icon')[0].className
+    ).toBe('sendbird-file-message-item-body__file-icon');
     expect(
-      component.find('.sendbird-file-message-item-body__file-icon__icon').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body__file-icon')[0].children[0].className
+    ).toContain('sendbird-file-message-item-body__file-icon__icon');
     expect(
-      component.find('.sendbird-file-message-item-body__file-name').hostNodes().exists()
-    ).toBe(true);
-    expect(
-      component.find('.sendbird-file-message-item-body__file-name__text').hostNodes().exists()
-    ).toBe(true);
-    expect(
-      component.find('.sendbird-file-message-item-body__file-name__text').hostNodes().last().text()
-    ).toBe(createMockMessage().name);
+      screen.getByText(createdMsg.name).className
+    ).toContain('sendbird-file-message-item-body__file-name__text');
   });
 
   it('should render url when name does not exist', () => {
-    const component = mount(
-      <FileMessageItemBody
-        message={createMockMessage((mock) => ({
-          ...mock,
-          name: '',
-        }))}
-      />
-    );
+    const createdMsg = createMockMessage((mock) => ({ ...mock, name: '' }));
+    render(<FileMessageItemBody message={createdMsg} />);
     expect(
-      component.find('.sendbird-file-message-item-body__file-name').hostNodes().exists()
-    ).toBe(true);
-    expect(
-      component.find('.sendbird-file-message-item-body__file-name__text').hostNodes().last().text()
-    ).toBe(createMockMessage().url);
+      screen.getByText(createdMsg.url).className
+    ).toContain('sendbird-file-message-item-body__file-name__text');
   });
 
-  it('should have class name by isByMe prop', () => {
-    const outgoingMessage = mount(
+  it('should have class name by isByMe is true', () => {
+    const { container } = render(
       <FileMessageItemBody
         message={createMockMessage()}
         isByMe
       />
     );
     expect(
-      outgoingMessage.find('.sendbird-file-message-item-body.outgoing').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body')[0].className
+    ).toContain('outgoing');
     expect(
-      outgoingMessage.find('.sendbird-file-message-item-body.incoming').hostNodes().exists()
-    ).toBe(false);
-    const incomingMessage = mount(
+      container.getElementsByClassName('sendbird-file-message-item-body')[0].className
+    ).not.toContain('incoming');
+  });
+
+  it('should have class name when isByMe is false', () => {
+    const { container } = render(
       <FileMessageItemBody
         message={createMockMessage()}
         isByMe={false}
       />
     );
     expect(
-      incomingMessage.find('.sendbird-file-message-item-body.outgoing').hostNodes().exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-file-message-item-body')[0].className
+    ).not.toContain('outgoing');
     expect(
-      incomingMessage.find('.sendbird-file-message-item-body.incoming').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body')[0].className
+    ).toContain('incoming');
   });
 
   it('should have class name by mouseHover prop', () => {
-    const component = mount(
+    const { container } = render(
       <FileMessageItemBody
         message={createMockMessage()}
         mouseHover
       />
     );
     expect(
-      component.find('.sendbird-file-message-item-body.mouse-hover').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body')[0].className
+    ).toContain('mouse-hover');
   });
 
   it('should have class name by reactions of message prop', () => {
-    const component = mount(
+    const { container } = render(
       <FileMessageItemBody
+        isReactionEnabled
         message={createMockMessage((mock) => ({
           ...mock,
           reactions: [{}, {}],
@@ -124,12 +113,12 @@ describe('FileMessageItemBody', () => {
       />
     );
     expect(
-      component.find('.sendbird-file-message-item-body.reactions').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body')[0].className
+    ).toContain('reactions');
   });
 
-  it('should render icons by type of message prop', () => {
-    const imageMessage = mount(
+  it('should render icons of image type message', () => {
+    const { container } = render(
       <FileMessageItemBody
         message={createMockMessage((mock) => ({
           ...mock,
@@ -138,15 +127,21 @@ describe('FileMessageItemBody', () => {
       />
     );
     expect(
-      imageMessage.find('.sendbird-file-message-item-body').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body')[0].className
+    ).toContain('sendbird-file-message-item-body');
     expect(
-      imageMessage.find('.sendbird-icon').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body__file-icon')[0].children[0].className
+    ).toContain('sendbird-icon');
     expect(
-      imageMessage.find('.sendbird-icon-photo').hostNodes().exists()
-    ).toBe(true);
-    const videoMessage = mount(
+      container.getElementsByClassName('sendbird-file-message-item-body__file-icon')[0].children[0].className
+    ).toContain('sendbird-file-message-item-body__file-icon__icon');
+    expect(
+      container.getElementsByClassName('sendbird-file-message-item-body__file-icon')[0].children[0].className
+    ).toContain('sendbird-icon-photo');
+  });
+
+  it('should render icons of video type message', () => {
+    const { container } = render(
       <FileMessageItemBody
         message={createMockMessage((mock) => ({
           ...mock,
@@ -155,15 +150,18 @@ describe('FileMessageItemBody', () => {
       />
     );
     expect(
-      videoMessage.find('.sendbird-file-message-item-body').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body')[0].className
+    ).toContain('sendbird-file-message-item-body');
     expect(
-      videoMessage.find('.sendbird-icon').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body__file-icon')[0].children[0].className
+    ).toContain('sendbird-icon');
     expect(
-      videoMessage.find('.sendbird-icon-play').hostNodes().exists()
-    ).toBe(true);
-    const audioMessage = mount(
+      container.getElementsByClassName('sendbird-file-message-item-body__file-icon')[0].children[0].className
+    ).toContain('sendbird-icon-play');
+  });
+
+  it('should render icons of audio type message', () => {
+    const { container } = render(
       <FileMessageItemBody
         message={createMockMessage((mock) => ({
           ...mock,
@@ -172,15 +170,18 @@ describe('FileMessageItemBody', () => {
       />
     );
     expect(
-      audioMessage.find('.sendbird-file-message-item-body').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body')[0].className
+    ).toContain('sendbird-file-message-item-body');
     expect(
-      audioMessage.find('.sendbird-icon').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body__file-icon')[0].children[0].className
+    ).toContain('sendbird-icon');
     expect(
-      audioMessage.find('.sendbird-icon-file-audio').hostNodes().exists()
-    ).toBe(true);
-    const gifMessage = mount(
+      container.getElementsByClassName('sendbird-file-message-item-body__file-icon')[0].children[0].className
+    ).toContain('sendbird-icon-file-audio');
+  });
+
+  it('should render icons of gif type message', () => {
+    const { container } = render(
       <FileMessageItemBody
         message={createMockMessage((mock) => ({
           ...mock,
@@ -189,15 +190,18 @@ describe('FileMessageItemBody', () => {
       />
     );
     expect(
-      gifMessage.find('.sendbird-file-message-item-body').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body')[0].className
+    ).toContain('sendbird-file-message-item-body');
     expect(
-      gifMessage.find('.sendbird-icon').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body__file-icon')[0].children[0].className
+    ).toContain('sendbird-icon');
     expect(
-      gifMessage.find('.sendbird-icon-gif').hostNodes().exists()
-    ).toBe(true);
-    const documentMessage = mount(
+      container.getElementsByClassName('sendbird-file-message-item-body__file-icon')[0].children[0].className
+    ).toContain('sendbird-icon-gif');
+  });
+
+  it('should render icons of pdf type message', () => {
+    const { container } = render(
       <FileMessageItemBody
         message={createMockMessage((mock) => ({
           ...mock,
@@ -206,18 +210,18 @@ describe('FileMessageItemBody', () => {
       />
     );
     expect(
-      documentMessage.find('.sendbird-file-message-item-body').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body')[0].className
+    ).toContain('sendbird-file-message-item-body');
     expect(
-      documentMessage.find('.sendbird-icon').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body__file-icon')[0].children[0].className
+    ).toContain('sendbird-icon');
     expect(
-      documentMessage.find('.sendbird-icon-file-document').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-file-message-item-body__file-icon')[0].children[0].className
+    ).toContain('sendbird-icon-file-document');
   });
 
   it('should do a snapshot test of the FileMessageItemBody DOM', function () {
-    const component = renderer.create(
+    const { asFragment } = render(
       <FileMessageItemBody
         className="classname-for-snapshot"
         message={createMockMessage((mock) => ({
@@ -228,7 +232,6 @@ describe('FileMessageItemBody', () => {
         mouseHover
       />,
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

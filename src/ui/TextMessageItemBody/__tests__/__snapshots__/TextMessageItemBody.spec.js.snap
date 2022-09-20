@@ -1,18 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TextMessageItemBody should do a snapshot test of the TextMessageItemBody DOM 1`] = `
-<span
-  className="sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-1"
->
-  <div
-    className="class-name-for-snapshot sendbird-text-message-item-body outgoing mouse-hover reactions"
+exports[`ui/TextMessageItemBody should do a snapshot test of the TextMessageItemBody DOM 1`] = `
+<DocumentFragment>
+  <span
+    class="sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-1"
   >
-    First second third fourth fifth
-    <span
-      className="sendbird-text-message-item-body__message edited sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-2"
+    <div
+      class="class-name-for-snapshot sendbird-text-message-item-body outgoing mouse-hover "
     >
-       (edited) 
-    </span>
-  </div>
-</span>
+      First second third fourth fifth
+      <span
+        class="sendbird-text-message-item-body__message edited sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-2"
+      >
+         (edited) 
+      </span>
+    </div>
+  </span>
+</DocumentFragment>
 `;

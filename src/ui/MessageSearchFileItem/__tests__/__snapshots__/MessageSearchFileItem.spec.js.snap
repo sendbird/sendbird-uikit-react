@@ -1,108 +1,73 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`MessageSearchFileItem should do a snapshot test of the MessageSearchFileItem DOM 1`] = `
-<div
-  className="example-text sendbird-message-search-file-item "
-  onClick={[Function]}
->
+exports[`ui/MessageSearchFileItem should do a snapshot test of the MessageSearchFileItem DOM 1`] = `
+<DocumentFragment>
   <div
-    className="sendbird-message-search-file-item__left"
+    class="example-text sendbird-message-search-file-item "
   >
     <div
-      className="sendbird-message-search-file-item__left__sender-avatar sendbird-avatar"
-      role="button"
-      style={
-        Object {
-          "height": "56px",
-          "width": "56px",
-        }
-      }
-      tabIndex={0}
+      class="sendbird-message-search-file-item__left"
     >
       <div
-        className="sendbird-avatar-img sendbird-image-renderer"
-        style={
-          Object {
-            "height": "56px",
-            "maxWidth": "400px",
-            "minWidth": "56px",
-            "width": "100%",
-          }
-        }
+        class="sendbird-message-search-file-item__left__sender-avatar sendbird-avatar"
+        role="button"
+        style="height: 56px; width: 56px;"
+        tabindex="0"
       >
         <div
-          className="sendbird-image-renderer__image"
-          style={
-            Object {
-              "backgroundImage": "url(https://static.sendbird.com/sample/profiles/profile_19_512px.png)",
-              "backgroundPosition": "center",
-              "backgroundRepeat": "no-repeat",
-              "backgroundSize": "cover",
-              "borderRadius": null,
-              "height": "56px",
-              "maxWidth": "400px",
-              "minWidth": "56px",
-              "position": "absolute",
-              "width": "100%",
-            }
-          }
-        />
-        <img
-          alt="profile image"
-          className="sendbird-image-renderer__hidden-image-loader"
-          onError={[Function]}
-          onLoad={[Function]}
-          src="https://static.sendbird.com/sample/profiles/profile_19_512px.png"
-        />
-      </div>
-    </div>
-  </div>
-  <div
-    className="sendbird-message-search-file-item__right"
-  >
-    <span
-      className="sendbird-message-search-file-item__right__sender-name sendbird-label sendbird-label--subtitle-2 sendbird-label--color-onbackground-1"
-    >
-      ME
-    </span>
-    <div
-      className="sendbird-message-search-file-item__right__content"
-    >
-      <div
-        className="sendbird-message-search-file-item__right__content__type-icon"
-      >
-        <div
-          className=" sendbird-icon sendbird-icon-file-document sendbird-icon-color--primary"
-          onClick={[Function]}
-          onKeyDown={[Function]}
-          role="button"
-          style={
-            Object {
-              "height": "18px",
-              "minHeight": "18px",
-              "minWidth": "18px",
-              "width": "18px",
-            }
-          }
-          tabIndex="0"
+          class="sendbird-avatar-img sendbird-image-renderer"
+          style="width: 100%; min-width: 56px; max-width: 400px; height: 56px;"
         >
-          <test-file-stub />
+          <div
+            class="sendbird-image-renderer__image"
+            style="width: 100%; min-width: 56px; max-width: 400px; height: 56px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://static.sendbird.com/sample/profiles/profile_19_512px.png);"
+          />
+          <img
+            alt="profile image"
+            class="sendbird-image-renderer__hidden-image-loader"
+            src="https://static.sendbird.com/sample/profiles/profile_19_512px.png"
+          />
         </div>
       </div>
-      <span
-        className="sendbird-message-search-file-item__right__content__url sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-1"
-      >
-        72b35fef-acda...26b0615.test
-      </span>
     </div>
+    <div
+      class="sendbird-message-search-file-item__right"
+    >
+      <span
+        class="sendbird-message-search-file-item__right__sender-name sendbird-label sendbird-label--subtitle-2 sendbird-label--color-onbackground-1"
+      >
+        ME
+      </span>
+      <div
+        class="sendbird-message-search-file-item__right__content"
+      >
+        <div
+          class="sendbird-message-search-file-item__right__content__type-icon"
+        >
+          <div
+            class=" sendbird-icon sendbird-icon-file-document sendbird-icon-color--primary"
+            role="button"
+            style="width: 18px; min-width: 18px; height: 18px; min-height: 18px;"
+            tabindex="0"
+          >
+            <test-file-stub />
+          </div>
+        </div>
+        <span
+          class="sendbird-message-search-file-item__right__content__url sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-1"
+        >
+          72b35fef-acda...26b0615.test
+        </span>
+      </div>
+    </div>
+    <span
+      class="sendbird-message-search-file-item__message-created-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
+    >
+      mock-date
+    </span>
+    <div
+      class="sendbird-message-search-file-item__right-footer"
+    />
   </div>
-  <span
-    className="sendbird-message-search-file-item__message-created-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
-  >
-    mock-date
-  </span>
-  <div
-    className="sendbird-message-search-file-item__right-footer"
-  />
-</div>
+</DocumentFragment>
 `;

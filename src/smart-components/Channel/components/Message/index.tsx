@@ -22,7 +22,7 @@ import MessageContent from '../../../../ui/MessageContent';
 import FileViewer from '../FileViewer';
 import RemoveMessageModal from '../RemoveMessageModal';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
-import { EveryMessage, RenderMessageProps } from '../../../../types';
+import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 
 type MessageUIProps = {
@@ -33,7 +33,7 @@ type MessageUIProps = {
   handleScroll: () => void;
   // for extending
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
-  renderCustomSeparator?: () => React.ReactElement;
+  renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
   renderEditInput?: () => React.ReactElement;
   renderMessageContent?: () => React.ReactElement;
 };
@@ -171,7 +171,7 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
   }, [message, renderMessage]);
   const renderedCustomSeparator = useMemo(() => {
     if (renderCustomSeparator) {
-      return renderCustomSeparator?.();
+      return renderCustomSeparator?.({ message: message });
     }
     return null;
   }, [message, renderCustomSeparator]);

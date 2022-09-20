@@ -1,14 +1,13 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import Loader from "../index";
 
-describe('Loader', () => {
+describe('ui/Loader', () => {
   it('should do a snapshot test of the default Loader DOM', function () {
-    const component = renderer.create(
-      <Loader />,
+    const { asFragment } = render(
+      <Loader />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

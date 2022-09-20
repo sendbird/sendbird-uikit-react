@@ -71,11 +71,10 @@ const MessageInput = React.forwardRef((props, ref) => {
   const [isInput, setIsInput] = useState(false);
   const [mentionedUserIds, setMentionedUserIds] = useState([]);
   const [targetStringInfo, setTargetStringInfo] = useState({ ...initialTargetStringInfo });
-
   const setHeight = useMemo(() => (
     () => {
       try {
-        const elem = ref.current;
+        const elem = ref?.current;
         const MAX_HEIGHT = window.document.body.offsetHeight * 0.6;
         if (elem && elem.scrollHeight >= LINE_HEIGHT) {
           if (MAX_HEIGHT < elem.scrollHeight) {
@@ -106,7 +105,7 @@ const MessageInput = React.forwardRef((props, ref) => {
   useEffect(() => {
     if (isEdit && message?.messageId) {
       // const textField = document.getElementById(TEXT_FIELD_ID);
-      const textField = ref.current;
+      const textField = ref?.current;
       if (isMentionEnabled
         && message?.mentionedUsers?.length > 0
         && message?.mentionedMessageTemplate?.length > 0
@@ -134,8 +133,10 @@ const MessageInput = React.forwardRef((props, ref) => {
           }).join('')
         )).join(' ');
       } else {
-        /* mention disabled */
-        textField.innerHTML = message?.message;
+        if (textField?.innerHTML) {
+          /* mention disabled */
+          textField.innerHTML = message?.message;
+        }
         setMentionedUserIds([]);
       }
       setIsInput(textField?.innerText?.length > 0);
@@ -145,7 +146,7 @@ const MessageInput = React.forwardRef((props, ref) => {
 
   // #Mention | Detect MentionedLabel modified
   const useMentionedLabelDetection = useCallback(() => {
-    const textField = ref.current;
+    const textField = ref?.current;
     if (isMentionEnabled) {
       const newMentionedUserIds = [...textField.getElementsByClassName('sendbird-mention-user-label')].map((node) => node?.dataset?.userid);
       if (!arrayEqual(mentionedUserIds, newMentionedUserIds) || newMentionedUserIds.length === 0) {
@@ -168,7 +169,7 @@ const MessageInput = React.forwardRef((props, ref) => {
       } = targetStringInfo;
       if (targetString && startNodeIndex !== null && startOffsetIndex !== null) {
         // const textField = document.getElementById(TEXT_FIELD_ID);
-        const textField = ref.current;
+        const textField = ref?.current;
         const childNodes = [...textField?.childNodes];
         const frontTextNode = document?.createTextNode(
           childNodes[startNodeIndex]?.textContent.slice(0, startOffsetIndex),
@@ -217,7 +218,7 @@ const MessageInput = React.forwardRef((props, ref) => {
   // #Mention | Detect mentioning user nickname
   const useMentionInputDetection = useCallback(() => {
     const selection = window?.getSelection?.() || document?.getSelection?.();
-    const textField = ref.current;
+    const textField = ref?.current;
     if (selection.anchorNode === textField) {
       onMentionStringChange('');
     }
@@ -279,7 +280,7 @@ const MessageInput = React.forwardRef((props, ref) => {
   }, [isMentionEnabled]);
 
   const sendMessage = () => {
-    const textField = ref.current;
+    const textField = ref?.current;
     if (!isEdit && textField?.innerText) {
       let messageText = '';
       let mentionTemplate = '';
@@ -306,7 +307,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     }
   };
   const editMessage = () => {
-    const textField = ref.current;
+    const textField = ref?.current;
     const messageId = message?.messageId;
     if (isEdit && messageId) {
       let messageText = '';
@@ -348,7 +349,7 @@ const MessageInput = React.forwardRef((props, ref) => {
       >
         <div
           id={`${TEXT_FIELD_ID}${isEdit ? message?.messageId : ''}`}
-          className="sendbird-message-input--textarea"
+          className={`sendbird-message-input--textarea ${TEXT_FIELD_ID}`}
           contentEditable={!disabled}
           role="textbox"
           aria-label="Text Input"
@@ -367,9 +368,9 @@ const MessageInput = React.forwardRef((props, ref) => {
               if (e.key === MessageInputKeys.Backspace
                 && ref?.current?.childNodes?.length === 2
                 && !ref?.current?.childNodes?.[0]?.textContent
-                && ref.current.childNodes?.[1]?.nodeType === NodeTypes.ElementNode
+                && ref?.current.childNodes?.[1]?.nodeType === NodeTypes.ElementNode
               ) {
-                ref.current.removeChild(ref.current.childNodes[1]);
+                ref?.current.removeChild(ref?.current.childNodes[1]);
               }
             }
           }}
@@ -427,7 +428,7 @@ const MessageInput = React.forwardRef((props, ref) => {
               width="32px"
               onClick={() => {
                 // todo: clear previous input
-                fileInputRef.current.click();
+                fileInputRef?.current?.click?.();
               }}
             >
               <Icon

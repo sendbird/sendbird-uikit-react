@@ -1,161 +1,109 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
-<div
-  className="sendbird-fileviewer"
->
+exports[`ui/FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
+<DocumentFragment>
   <div
-    className="sendbird-fileviewer__header"
+    class="sendbird-fileviewer"
   >
     <div
-      className="sendbird-fileviewer__header__left"
+      class="sendbird-fileviewer__header"
     >
       <div
-        className="sendbird-fileviewer__header__left__avatar"
+        class="sendbird-fileviewer__header__left"
       >
         <div
-          className=" sendbird-avatar"
-          role="button"
-          style={
-            Object {
-              "height": "32px",
-              "width": "32px",
-            }
-          }
-          tabIndex={0}
+          class="sendbird-fileviewer__header__left__avatar"
         >
           <div
-            className="sendbird-avatar-img sendbird-image-renderer"
-            style={
-              Object {
-                "height": "32px",
-                "maxWidth": "400px",
-                "minWidth": "32px",
-                "width": "100%",
-              }
-            }
+            class=" sendbird-avatar"
+            role="button"
+            style="height: 32px; width: 32px;"
+            tabindex="0"
           >
             <div
-              className="sendbird-image-renderer__image"
-              style={
-                Object {
-                  "backgroundImage": "url(https://static.sendbird.com/sample/profiles/profile_15_512px.png)",
-                  "backgroundPosition": "center",
-                  "backgroundRepeat": "no-repeat",
-                  "backgroundSize": "cover",
-                  "borderRadius": null,
-                  "height": "32px",
-                  "maxWidth": "400px",
-                  "minWidth": "32px",
-                  "position": "absolute",
-                  "width": "100%",
-                }
-              }
-            />
-            <img
-              alt=""
-              className="sendbird-image-renderer__hidden-image-loader"
-              onError={[Function]}
-              onLoad={[Function]}
-              src="https://static.sendbird.com/sample/profiles/profile_15_512px.png"
-            />
+              class="sendbird-avatar-img sendbird-image-renderer"
+              style="width: 100%; min-width: 32px; max-width: 400px; height: 32px;"
+            >
+              <div
+                class="sendbird-image-renderer__image"
+                style="width: 100%; min-width: 32px; max-width: 400px; height: 32px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://static.sendbird.com/sample/profiles/profile_15_512px.png);"
+              />
+              <img
+                alt=""
+                class="sendbird-image-renderer__hidden-image-loader"
+                src="https://static.sendbird.com/sample/profiles/profile_15_512px.png"
+              />
+            </div>
+          </div>
+        </div>
+        <span
+          class="sendbird-fileviewer__header__left__filename sendbird-label sendbird-label--h-2 sendbird-label--color-onbackground-1"
+        >
+          sent-mail (1).png
+        </span>
+        <span
+          class="sendbird-fileviewer__header__left__sender-name sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-2"
+        >
+          hoon102
+        </span>
+      </div>
+      <div
+        class="sendbird-fileviewer__header__right"
+      >
+        <div
+          class="sendbird-fileviewer__header__right__actions"
+        >
+          <a
+            class="sendbird-fileviewer__header__right__actions__download"
+            href="https://static.sendbird.com/sample/profiles/profile_15_512px.png"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <div
+              class=" sendbird-icon sendbird-icon-down-load sendbird-icon-color--on-background-1"
+              role="button"
+              style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
+              tabindex="0"
+            >
+              <test-file-stub />
+            </div>
+          </a>
+          <div
+            class="sendbird-fileviewer__header__right__actions__delete"
+          >
+            <div
+              class=" sendbird-icon sendbird-icon-delete sendbird-icon-color--on-background-1"
+              role="button"
+              style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
+              tabindex="0"
+            >
+              <test-file-stub />
+            </div>
+          </div>
+        </div>
+        <div
+          class="sendbird-fileviewer__header__right__actions__close"
+        >
+          <div
+            class=" sendbird-icon sendbird-icon-close sendbird-icon-color--on-background-1"
+            role="button"
+            style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
+            tabindex="0"
+          >
+            <test-file-stub />
           </div>
         </div>
       </div>
-      <span
-        className="sendbird-fileviewer__header__left__filename sendbird-label sendbird-label--h-2 sendbird-label--color-onbackground-1"
-      >
-        sent-mail (1).png
-      </span>
-      <span
-        className="sendbird-fileviewer__header__left__sender-name sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-2"
-      >
-        hoon102
-      </span>
     </div>
     <div
-      className="sendbird-fileviewer__header__right"
+      class="sendbird-fileviewer__content"
     >
-      <div
-        className="sendbird-fileviewer__header__right__actions"
-      >
-        <a
-          className="sendbird-fileviewer__header__right__actions__download"
-          href="https://static.sendbird.com/sample/profiles/profile_15_512px.png"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <div
-            className=" sendbird-icon sendbird-icon-down-load sendbird-icon-color--on-background-1"
-            onClick={[Function]}
-            onKeyDown={[Function]}
-            role="button"
-            style={
-              Object {
-                "height": "24px",
-                "minHeight": "24px",
-                "minWidth": "24px",
-                "width": "24px",
-              }
-            }
-            tabIndex="0"
-          >
-            <test-file-stub />
-          </div>
-        </a>
-        <div
-          className="sendbird-fileviewer__header__right__actions__delete"
-        >
-          <div
-            className=" sendbird-icon sendbird-icon-delete sendbird-icon-color--on-background-1"
-            onClick={[Function]}
-            onKeyDown={[Function]}
-            role="button"
-            style={
-              Object {
-                "height": "24px",
-                "minHeight": "24px",
-                "minWidth": "24px",
-                "width": "24px",
-              }
-            }
-            tabIndex="0"
-          >
-            <test-file-stub />
-          </div>
-        </div>
-      </div>
-      <div
-        className="sendbird-fileviewer__header__right__actions__close"
-      >
-        <div
-          className=" sendbird-icon sendbird-icon-close sendbird-icon-color--on-background-1"
-          onClick={[Function]}
-          onKeyDown={[Function]}
-          role="button"
-          style={
-            Object {
-              "height": "24px",
-              "minHeight": "24px",
-              "minWidth": "24px",
-              "width": "24px",
-            }
-          }
-          tabIndex="0"
-        >
-          <test-file-stub />
-        </div>
-      </div>
+      <img
+        alt="sent-mail (1).png"
+        class="sendbird-fileviewer__content__img"
+        src="https://static.sendbird.com/sample/profiles/profile_15_512px.png"
+      />
     </div>
   </div>
-  <div
-    className="sendbird-fileviewer__content"
-  >
-    <img
-      alt="sent-mail (1).png"
-      className="sendbird-fileviewer__content__img"
-      src="https://static.sendbird.com/sample/profiles/profile_15_512px.png"
-    />
-  </div>
-</div>
+</DocumentFragment>
 `;

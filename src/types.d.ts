@@ -25,6 +25,7 @@ export interface SendBirdProviderConfig {
     maxMentionCount?: number,
     maxSuggestionCount?: number,
   };
+  isREMUnitEnabled?: boolean;
 }
 
 export interface ClientMessage {
@@ -38,6 +39,10 @@ export interface RenderMessageProps {
   message: UserMessage | FileMessage | AdminMessage;
   chainTop: boolean;
   chainBottom: boolean;
+}
+
+export interface RenderCustomSeparatorProps {
+  message: AdminMessage | UserMessage | FileMessage;
 }
 
 export interface ClientUserMessage extends UserMessage, ClientMessage { }

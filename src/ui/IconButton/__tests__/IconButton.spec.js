@@ -1,19 +1,17 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import IconButton from "../index";
 
 import DefaultIcon from '../../../svgs/icon-create.svg';
 
-describe('IconButton', () => {
+describe('ui/IconButton', () => {
   it('should do a snapshot test of the icon button DOM', function () {
-    const text = "example-text";
-    const component = renderer.create(
+    const { asFragment } = render(
       <IconButton>
         <DefaultIcon />
-      </IconButton>,
+      </IconButton>
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

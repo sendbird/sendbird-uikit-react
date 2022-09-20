@@ -45,6 +45,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
   // fetch store from <SendbirdProvider />
   const globalStore = useSendbirdStateContext();
   const sdk = globalStore?.stores?.sdkStore?.sdk as SendbirdOpenChat;
+  const isSDKInitialized = globalStore?.stores?.sdkStore?.initialized;
 
   const logger = globalStore?.config?.logger;
   const currentUserId = sdk?.currentUser?.userId;
@@ -63,7 +64,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
         channel.enter()
           .then(() => {
             setChannel(channel);
-            logger.info('OpenChannelSettings | Succeeded to enter channel');
+            logger.info('OpenChannelSettings | Succeeded to enter channel', channel?.url);
           })
           .catch((error) => {
             setChannel(null);
@@ -78,14 +79,14 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
       if (currentChannel && currentChannel.exit) {
         currentChannel.exit()
           .then(() => {
-            logger.info('OpenChannelSettings | Succeeded to exit channel');
+            logger.info('OpenChannelSettings | Succeeded to exit channel', currentChannel?.url);
           })
           .catch((error) => {
             logger.warning('OpenChannelSettings | Failed to exit channel', error);
           });
       }
     }
-  }, [channelUrl, sdk]);
+  }, [channelUrl, isSDKInitialized]);
 
   useEffect(() => {
     const channelHandlerId = uuidv4();
@@ -135,7 +136,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
         sdk.openChannel.removeOpenChannelHandler?.(channelHandlerId);
       }
     }
-  }, [currentChannel]);
+  }, [channelUrl]);
 
   return (
     <OpenChannelSettingsContext.Provider value={{

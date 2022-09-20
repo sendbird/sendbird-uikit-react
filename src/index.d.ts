@@ -35,6 +35,7 @@ import type {
 import type { Locale } from 'date-fns';
 import { OpenChannel, OpenChannelCreateParams, OpenChannelUpdateParams } from '@sendbird/chat/openChannel';
 import { UikitMessageHandler } from './lib/selectors';
+import { RenderCustomSeparatorProps } from './types';
 
 type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
 
@@ -116,6 +117,7 @@ interface SendBirdStateConfig {
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   allowProfileEdit: boolean;
   isOnline: boolean;
+  isReactionEnabled: boolean;
   isMentionEnabled: boolean;
   userMention: {
     maxMentionCount: number;
@@ -595,8 +597,8 @@ type ChannelQueries = {
 };
 
 type ChannelContextProps = {
-  channelUrl: string;
   children?: React.ReactElement;
+  channelUrl: string;
   isReactionEnabled?: boolean;
   isMessageGroupingEnabled?: boolean;
   showSearchIcon?: boolean;
@@ -621,7 +623,7 @@ interface ChannelUIProps {
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderMessageInput?: () => React.ReactElement;
   renderTypingIndicator?: () => React.ReactElement;
-  renderCustomSeparator?: () => React.ReactElement;
+  renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
 }
 
 type CoreMessageType = AdminMessage | UserMessage | FileMessage;
@@ -671,7 +673,7 @@ type MessageUIProps = {
   handleScroll: () => void;
   // for extending
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
-  renderCustomSeparator?: () => React.ReactElement;
+  renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
   renderEditInput?: () => React.ReactElement;
   renderMessageContent?: () => React.ReactElement;
 };
@@ -679,7 +681,7 @@ type MessageUIProps = {
 type MessageListProps = {
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
-  renderCustomSeparator?: () => React.ReactElement;
+  renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
 };
 
 type SuggestedMentionListProps = {
@@ -1351,6 +1353,7 @@ declare module '@sendbird/uikit-react/ui/FileMessageItemBody' {
     message: FileMessage;
     isByMe?: boolean;
     mouseHover?: boolean;
+    isReactionEnabled?: boolean;
   }
   type FileMessageItemBody = React.FC<FileMessageItemBodyProps>;
   export default FileMessageItemBody;
@@ -1612,6 +1615,8 @@ declare module '@sendbird/uikit-react/ui/OGMessageItemBody' {
     message: UserMessage;
     isByMe?: boolean;
     mouseHover?: boolean;
+    isMentionEnabled?: boolean;
+    isReactionEnabled?: boolean;
   }
   type OGMessageItemBody = React.FC<OGMessageItemBodyProps>;
   export default OGMessageItemBody;
@@ -1812,6 +1817,8 @@ declare module '@sendbird/uikit-react/ui/TextMessageItemBody' {
     message: UserMessage;
     isByMe?: boolean;
     mouseHover?: boolean;
+    isMentionEnabled?: boolean;
+    isReactionEnabled?: boolean;
   }
   type TextMessageItemBody = React.FC<TextMessageItemBodyProps>;
   export default TextMessageItemBody;
@@ -1824,6 +1831,7 @@ declare module '@sendbird/uikit-react/ui/ThumbnailMessageItemBody' {
     message: FileMessage;
     isByMe?: boolean;
     mouseHover?: boolean;
+    isReactionEnabled?: boolean;
     showFileViewer?: (bool: boolean) => void;
   }
   type ThumbnailMessageItemBody = React.FC<ThumbnailMessageItemBodyProps>;
@@ -1858,6 +1866,7 @@ declare module '@sendbird/uikit-react/ui/UnknownMessageItemBody' {
     isByMe?: boolean;
     message: CoreMessageType;
     mouseHover?: boolean;
+    isReactionEnabled?: boolean;
   }
   type UnknownMessageItemBody = React.FC<UnknownMessageItemBodyProps>;
   export default UnknownMessageItemBody;

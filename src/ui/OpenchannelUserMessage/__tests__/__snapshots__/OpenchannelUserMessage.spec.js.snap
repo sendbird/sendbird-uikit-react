@@ -1,137 +1,95 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`OpenchannelUserMessage should do a snapshot test of the OpenchannelUserMessage DOM 1`] = `
-<div
-  className=" sendbird-openchannel-user-message"
->
+exports[`ui/OpenchannelUserMessage should do a snapshot test of the OpenchannelUserMessage DOM 1`] = `
+<DocumentFragment>
   <div
-    className="sendbird-openchannel-user-message__left"
+    class=" sendbird-openchannel-user-message"
   >
     <div
-      className="sendbird-context-menu"
+      class="sendbird-openchannel-user-message__left"
     >
       <div
-        className="sendbird-openchannel-user-message__left__avatar sendbird-avatar"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="button"
-        style={
-          Object {
-            "height": "28px",
-            "width": "28px",
-          }
-        }
-        tabIndex={0}
+        class="sendbird-context-menu"
+        style="display: inline;"
       >
         <div
-          className="sendbird-avatar-img sendbird-image-renderer"
-          style={
-            Object {
-              "height": "28px",
-              "maxWidth": "400px",
-              "minWidth": "28px",
-              "width": "100%",
-            }
-          }
+          class="sendbird-openchannel-user-message__left__avatar sendbird-avatar"
+          role="button"
+          style="height: 28px; width: 28px;"
+          tabindex="0"
         >
           <div
-            className="sendbird-image-renderer__image"
-            style={
-              Object {
-                "backgroundImage": "url(https://static.sendbird.com/sample/profiles/profile_12_512px.png)",
-                "backgroundPosition": "center",
-                "backgroundRepeat": "no-repeat",
-                "backgroundSize": "cover",
-                "borderRadius": null,
-                "height": "28px",
-                "maxWidth": "400px",
-                "minWidth": "28px",
-                "position": "absolute",
-                "width": "100%",
-              }
-            }
-          />
-          <img
-            alt=""
-            className="sendbird-image-renderer__hidden-image-loader"
-            onError={[Function]}
-            onLoad={[Function]}
-            src="https://static.sendbird.com/sample/profiles/profile_12_512px.png"
-          />
+            class="sendbird-avatar-img sendbird-image-renderer"
+            style="width: 100%; min-width: 28px; max-width: 400px; height: 28px;"
+          >
+            <div
+              class="sendbird-image-renderer__image"
+              style="width: 100%; min-width: 28px; max-width: 400px; height: 28px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://static.sendbird.com/sample/profiles/profile_12_512px.png);"
+            />
+            <img
+              alt=""
+              class="sendbird-image-renderer__hidden-image-loader"
+              src="https://static.sendbird.com/sample/profiles/profile_12_512px.png"
+            />
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div
-    className="sendbird-openchannel-user-message__right"
-  >
     <div
-      className="sendbird-openchannel-user-message__right__top"
+      class="sendbird-openchannel-user-message__right"
     >
-      <span
-        className="sendbird-openchannel-user-message__right__top__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
-      >
-        Hoon Baek
-      </span>
-      <span
-        className="sendbird-openchannel-user-message__right__top__sent-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-3"
-      >
-        mock-date
-      </span>
-    </div>
-    <div
-      className="sendbird-openchannel-user-message__right__bottom"
-    >
-      <span
-        className="sendbird-openchannel-user-message__right__bottom__message sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
-      >
-        I am message
-      </span>
-    </div>
-  </div>
-  <div
-    className="sendbird-openchannel-user-message__context-menu"
-    style={Object {}}
-  >
-    <div
-      className="sendbird-context-menu"
-    >
-      <button
-        className="sendbird-openchannel-user-message__context-menu--icon sendbird-iconbutton "
-        disabled={false}
-        onBlur={[Function]}
-        onClick={[Function]}
-        style={
-          Object {
-            "height": "32px",
-            "width": "32px",
-          }
-        }
-        type="button"
+      <div
+        class="sendbird-openchannel-user-message__right__top"
       >
         <span
-          className="sendbird-iconbutton__inner"
+          class="sendbird-openchannel-user-message__right__top__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
         >
-          <div
-            className=" sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
-            onClick={[Function]}
-            onKeyDown={[Function]}
-            role="button"
-            style={
-              Object {
-                "height": "24px",
-                "minHeight": "24px",
-                "minWidth": "24px",
-                "width": "24px",
-              }
-            }
-            tabIndex="0"
-          >
-            <test-file-stub />
-          </div>
+          Hoon Baek
         </span>
-      </button>
+        <span
+          class="sendbird-openchannel-user-message__right__top__sent-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-3"
+        >
+          mock-date
+        </span>
+      </div>
+      <div
+        class="sendbird-openchannel-user-message__right__bottom"
+      >
+        <span
+          class="sendbird-openchannel-user-message__right__bottom__message sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
+        >
+          I am message
+        </span>
+      </div>
+    </div>
+    <div
+      class="sendbird-openchannel-user-message__context-menu"
+      style="top: 2px;"
+    >
+      <div
+        class="sendbird-context-menu"
+        style="display: inline;"
+      >
+        <button
+          class="sendbird-openchannel-user-message__context-menu--icon sendbird-iconbutton "
+          style="height: 32px; width: 32px;"
+          type="button"
+        >
+          <span
+            class="sendbird-iconbutton__inner"
+          >
+            <div
+              class=" sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
+              role="button"
+              style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
+              tabindex="0"
+            >
+              <test-file-stub />
+            </div>
+          </span>
+        </button>
+      </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;
