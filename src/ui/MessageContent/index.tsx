@@ -104,7 +104,6 @@ export default function MessageContent({
   }
   return (
     <div
-      data-testid="sendbird-message-content"
       className={getClassName([className, 'sendbird-message-content', isByMeClassName])}
       onMouseOver={() => setMouseHover(true)}
       onMouseLeave={() => setMouseHover(false)}

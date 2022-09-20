@@ -14,7 +14,7 @@ describe('ui/MessageStatus', () => {
     const text = "example-text";
     const { container } = render(<MessageStatus className={text} message={dummyMessage} />);
     expect(
-      screen.getByTestId('sendbird-message-status').className
+      container.getElementsByClassName('sendbird-message-status')[0].className
     ).toContain('sendbird-message-status');
     expect(
       container.getElementsByClassName('sendbird-message-status').length

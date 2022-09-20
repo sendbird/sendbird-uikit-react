@@ -48,7 +48,7 @@ describe('ui/OpenchannelOGMessage', () => {
       />
     );
     expect(
-      screen.getByTestId('sendbird-openchannel-og-message').className
+      container.getElementsByClassName('sendbird-openchannel-og-message')[0].className
     ).toContain('sendbird-openchannel-og-message');
     expect(
       container.getElementsByClassName('sendbird-openchannel-og-message').length
@@ -104,7 +104,7 @@ describe('ui/OpenchannelOGMessage', () => {
       />
     );
     expect(
-      screen.getByTestId('sendbird-openchannel-og-message').className
+      container.getElementsByClassName('sendbird-openchannel-og-message')[0].className
     ).toContain('sendbird-openchannel-og-message');
     expect(
       container.getElementsByClassName('sendbird-openchannel-og-message').length
@@ -159,7 +159,7 @@ describe('ui/OpenchannelOGMessage', () => {
       />
     );
     expect(
-      screen.getByTestId('sendbird-openchannel-og-message').className
+      container.getElementsByClassName('sendbird-openchannel-og-message')[0].className
     ).toContain('sendbird-openchannel-og-message');
     expect(
       container.getElementsByClassName('sendbird-openchannel-og-message').length

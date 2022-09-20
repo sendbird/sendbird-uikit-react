@@ -104,7 +104,6 @@ export default function OpenchannelUserMessage({
 
   return (
     <div
-      data-testid="sendbird-openchannel-user-message"
       className={[
         ...(Array.isArray(className) ? className : [className]),
         'sendbird-openchannel-user-message',

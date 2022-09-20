@@ -12,7 +12,6 @@ exports[`ui/ConnectionStatus should render ConnectionStatus 1`] = `
     </span>
     <div
       class=" sendbird-icon sendbird-icon-disconnected sendbird-icon-color--sent"
-      data-testid="sendbird-icon"
       role="button"
       style="width: 14px; min-width: 14px; height: 14px; min-height: 14px;"
       tabindex="0"

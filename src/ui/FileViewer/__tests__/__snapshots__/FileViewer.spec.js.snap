@@ -49,7 +49,6 @@ exports[`ui/FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
       </div>
       <div
         class="sendbird-fileviewer__header__right"
-        data-testid="sendbird-fileviewer__header__right"
       >
         <div
           class="sendbird-fileviewer__header__right__actions"
@@ -62,7 +61,6 @@ exports[`ui/FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
           >
             <div
               class=" sendbird-icon sendbird-icon-down-load sendbird-icon-color--on-background-1"
-              data-testid="sendbird-icon"
               role="button"
               style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
               tabindex="0"
@@ -75,7 +73,6 @@ exports[`ui/FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
           >
             <div
               class=" sendbird-icon sendbird-icon-delete sendbird-icon-color--on-background-1"
-              data-testid="sendbird-icon"
               role="button"
               style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
               tabindex="0"
@@ -89,7 +86,6 @@ exports[`ui/FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
         >
           <div
             class=" sendbird-icon sendbird-icon-close sendbird-icon-color--on-background-1"
-            data-testid="sendbird-icon"
             role="button"
             style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
             tabindex="0"

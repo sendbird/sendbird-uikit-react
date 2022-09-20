@@ -10,7 +10,6 @@ exports[`ui/QuoteMessageInput should do a snapshot test of the QuoteMessageInput
     >
       <div
         class=" sendbird-icon sendbird-icon-file-audio sendbird-icon-color--on-background-2"
-        data-testid="sendbird-icon"
         role="button"
         style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
         tabindex="0"
@@ -35,7 +34,6 @@ exports[`ui/QuoteMessageInput should do a snapshot test of the QuoteMessageInput
     </div>
     <div
       class="sendbird-quote_message_input__close-button sendbird-icon sendbird-icon-close sendbird-icon-color--on-background-2"
-      data-testid="sendbird-icon"
       role="button"
       style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
       tabindex="0"

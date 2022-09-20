@@ -27,7 +27,7 @@ describe('ui/ThumbnailMessageItemBody', () => {
       />
     );
     expect(
-      screen.getByTestId('sendbird-thumbnail-message-item-body').className
+      container.getElementsByClassName('sendbird-thumbnail-message-item-body')[0].className
     ).toContain('sendbird-thumbnail-message-item-body');
     expect(
       container.getElementsByClassName('sendbird-thumbnail-message-item-body')

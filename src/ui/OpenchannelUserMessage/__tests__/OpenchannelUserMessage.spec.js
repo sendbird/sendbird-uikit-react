@@ -39,7 +39,7 @@ describe('ui/OpenchannelUserMessage', () => {
       />
     );
     expect(
-      screen.getByTestId('sendbird-openchannel-user-message').className
+      container.getElementsByClassName('sendbird-openchannel-user-message')[0].className
     ).toContain('sendbird-openchannel-user-message');
     expect(
       container.getElementsByClassName('sendbird-openchannel-user-message').length
@@ -74,7 +74,7 @@ describe('ui/OpenchannelUserMessage', () => {
       />
     );
     expect(
-      screen.getByTestId('sendbird-openchannel-user-message').className
+      container.getElementsByClassName('sendbird-openchannel-user-message')[0].className
     ).toContain('sendbird-openchannel-user-message');
     expect(
       container.getElementsByClassName('sendbird-openchannel-user-message').length

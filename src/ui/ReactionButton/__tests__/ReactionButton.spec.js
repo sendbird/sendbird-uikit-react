@@ -11,7 +11,7 @@ describe('ui/ReactionButton', () => {
     const text = "example-text";
     const { container } = render(<ReactionButton className={text}>{children}</ReactionButton>);
     expect(
-      screen.getByTestId('sendbird-reaction-button').className
+      container.getElementsByClassName('sendbird-reaction-button')[0].className
     ).toContain('sendbird-reaction-button');
     expect(
       container.getElementsByClassName('sendbird-reaction-button').length

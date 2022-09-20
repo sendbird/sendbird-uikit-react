@@ -4,14 +4,12 @@ exports[`ui/TooltipWrapper should do a snapshot test of the TooltipWrapper DOM 1
 <DocumentFragment>
   <div
     class=" sendbird-tooltip-wrapper"
-    data-testid="sendbird-tooltip-wrapper"
   >
     <div
       class="sendbird-tooltip-wrapper__children"
     >
       <div
         class=" sendbird-icon sendbird-icon-add sendbird-icon-color--primary"
-        data-testid="sendbird-icon"
         role="button"
         style="width: 26px; min-width: 26px; height: 26px; min-height: 26px;"
         tabindex="0"

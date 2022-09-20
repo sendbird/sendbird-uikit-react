@@ -10,7 +10,6 @@ exports[`ui/FileMessageItemBody should do a snapshot test of the FileMessageItem
     >
       <div
         class="sendbird-file-message-item-body__file-icon__icon sendbird-icon sendbird-icon-photo sendbird-icon-color--primary"
-        data-testid="sendbird-icon"
         role="button"
         style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
         tabindex="0"

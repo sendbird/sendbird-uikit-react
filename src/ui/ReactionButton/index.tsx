@@ -22,7 +22,6 @@ const ReactionButton = React.forwardRef((props: ReactionButtonProps, ref: RefObj
 
   return (
     <div
-      data-testid="sendbird-reaction-button"
       className={[
         ...(Array.isArray(className) ? className : [className]),
         `sendbird-reaction-button${selected ? '--selected' : ''}`,

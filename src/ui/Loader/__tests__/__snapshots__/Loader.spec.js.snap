@@ -8,7 +8,6 @@ exports[`ui/Loader should do a snapshot test of the default Loader DOM 1`] = `
   >
     <div
       class=" sendbird-icon sendbird-icon-spinner "
-      data-testid="sendbird-icon"
       role="button"
       style="width: 26px; min-width: 26px; height: 26px; min-height: 26px;"
       tabindex="0"

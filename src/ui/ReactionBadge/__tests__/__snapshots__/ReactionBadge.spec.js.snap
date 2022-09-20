@@ -15,7 +15,6 @@ exports[`ReactionBadge should do a snapshot test of the ReactionBadge DOM 1`] = 
       >
         <div
           class=" sendbird-icon sendbird-icon-create "
-          data-testid="sendbird-icon"
           role="button"
           style="width: 20px; min-width: 20px; height: 20px; min-height: 20px;"
           tabindex="0"

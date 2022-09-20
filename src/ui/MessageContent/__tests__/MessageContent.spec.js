@@ -57,8 +57,8 @@ describe('ui/MessageContent', () => {
       />
     );
     expect(
-      queryByTestId('sendbird-message-content')
-    ).toBeTruthy();
+      container.getElementsByClassName('sendbird-message-content')[0].className
+    ).toContain(className);
     expect(
       container.getElementsByClassName('sendbird-message-content__left').length
     ).toBeGreaterThan(0);

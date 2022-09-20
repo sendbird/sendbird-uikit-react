@@ -58,7 +58,7 @@ describe('ui/MessageItemMenu', () => {
       </div>
     );
     expect(
-      screen.getByTestId('sendbird-dropdown-portal').id
+      container.getElementsByClassName('sendbird-dropdown-portal')[0].id
     ).toBe('sendbird-dropdown-portal');
     expect(
       container.getElementsByClassName('sendbird-message-item-menu').length

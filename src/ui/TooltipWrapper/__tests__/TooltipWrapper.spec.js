@@ -25,10 +25,10 @@ describe('ui/TooltipWrapper', () => {
     const { container } = render(tooltipWrapperComponent);
 
     expect(
-      screen.getByTestId('sendbird-tooltip-wrapper').children[0].className
+      container.getElementsByClassName('sendbird-tooltip-wrapper')[0].children[0].className
     ).toBe('sendbird-tooltip-wrapper__children');
     expect(
-      screen.getByTestId('sendbird-tooltip-wrapper').children[0].children[0].className
+      container.getElementsByClassName('sendbird-tooltip-wrapper')[0].children[0].children[0].className
     ).toContain(iconClassName);
     expect(
       container.querySelectorAll('.sendbird-tooltip-wrapper__hover-tooltip__inner__tooltip-container')
@@ -46,10 +46,10 @@ describe('ui/TooltipWrapper', () => {
       container.getElementsByClassName(iconClassName)
     ).toHaveLength(1);
     expect(
-      screen.getByTestId('sendbird-icon').className
+      container.getElementsByClassName('sendbird-icon')[0].className
     ).toContain(changeTypeToIconClassName(IconTypes.ADD));
     expect(
-      screen.getByTestId('sendbird-icon').className
+      container.getElementsByClassName('sendbird-icon')[0].className
     ).toContain(changeColorToClassName(IconColors.PRIMARY));
 
     expect(

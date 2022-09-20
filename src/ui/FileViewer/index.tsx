@@ -62,7 +62,6 @@ export const FileViewerComponent = ({
           </Label>
         </div>
         <div
-          data-testid="sendbird-fileviewer__header__right"
           className="sendbird-fileviewer__header__right"
         >
           {
@@ -113,7 +112,6 @@ export const FileViewerComponent = ({
         {isVideo(type) && (
           <video
             controls
-            data-testid="sendbird-fileviewer__content__video"
             className="sendbird-fileviewer__content__video"
           >
             <source src={url} type={type} />
@@ -131,7 +129,6 @@ export const FileViewerComponent = ({
         {
           !isSupportedFileView(type) && (
             <div
-              data-testid="sendbird-fileviewer__content__unsupported"
               className="sendbird-fileviewer__content__unsupported"
             >
               <Label type={LabelTypography.H_1} color={LabelColors.ONBACKGROUND_1}>

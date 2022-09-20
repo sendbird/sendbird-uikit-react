@@ -18,7 +18,6 @@ export default function LinkLabel({
 
   return (
     <a
-      data-testid="sendbird-link-label"
       className={[
         ...(Array.isArray(className) ? className : [className]),
         'sendbird-link-label',

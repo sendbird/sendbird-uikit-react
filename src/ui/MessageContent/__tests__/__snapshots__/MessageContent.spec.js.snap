@@ -4,7 +4,6 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
 <DocumentFragment>
   <div
     class="classname-for-snapshot sendbird-message-content incoming"
-    data-testid="sendbird-message-content"
   >
     <div
       class="sendbird-message-content__left  incoming "
@@ -86,7 +85,6 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
               >
                 <div
                   class="sendbird-message-item-menu__trigger__icon sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
-                  data-testid="sendbird-icon"
                   role="button"
                   style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
                   tabindex="0"

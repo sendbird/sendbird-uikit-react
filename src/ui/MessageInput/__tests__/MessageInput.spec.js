@@ -47,7 +47,7 @@ describe('ui/MessageInput', () => {
     const messageId = 'aaa';
     const { container } = render(<MessageInput onSendMessage={noop} isEdit message={{ messageId }} />);
     expect(
-      screen.getByTestId('sendbird-message-input-text-field' + messageId).id
+      container.getElementsByClassName('sendbird-message-input-text-field')[0].id
     ).toBe('sendbird-message-input-text-field' + messageId);
     expect(
       container.getElementsByClassName('sendbird-message-input--send').length

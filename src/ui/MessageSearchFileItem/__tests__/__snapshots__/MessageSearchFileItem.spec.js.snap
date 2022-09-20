@@ -46,7 +46,6 @@ exports[`ui/MessageSearchFileItem should do a snapshot test of the MessageSearch
         >
           <div
             class=" sendbird-icon sendbird-icon-file-document sendbird-icon-color--primary"
-            data-testid="sendbird-icon"
             role="button"
             style="width: 18px; min-width: 18px; height: 18px; min-height: 18px;"
             tabindex="0"

@@ -18,7 +18,7 @@ describe('ui/OpenchannelFileMessage', () => {
     );
 
     expect(
-      screen.getByTestId('sendbird-openchannel-file-message').className
+      container.getElementsByClassName('sendbird-openchannel-file-message')[0].className
     ).toContain('sendbird-openchannel-file-message');
     expect(
       container.getElementsByClassName('sendbird-openchannel-file-message').length
@@ -57,7 +57,7 @@ describe('ui/OpenchannelFileMessage', () => {
       />
     );
     expect(
-      screen.getByTestId('sendbird-openchannel-file-message').className
+      container.getElementsByClassName('sendbird-openchannel-file-message')[0].className
     ).toContain('sendbird-openchannel-file-message');
     expect(
       container.getElementsByClassName('sendbird-openchannel-file-message').length
@@ -95,7 +95,7 @@ describe('ui/OpenchannelFileMessage', () => {
       />
     );
     expect(
-      screen.getByTestId('sendbird-openchannel-file-message').className
+      container.getElementsByClassName('sendbird-openchannel-file-message')[0].className
     ).toContain('sendbird-openchannel-file-message');
     expect(
       container.getElementsByClassName('sendbird-openchannel-file-message__left__avatar').length
@@ -131,7 +131,7 @@ describe('ui/OpenchannelFileMessage', () => {
       />
     );
     expect(
-      screen.getByTestId('sendbird-openchannel-file-message').className
+      container.getElementsByClassName('sendbird-openchannel-file-message')[0].className
     ).toContain('sendbird-openchannel-file-message');
     expect(
       container.getElementsByClassName('sendbird-openchannel-file-message').length

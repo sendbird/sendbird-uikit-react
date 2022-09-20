@@ -19,7 +19,7 @@ describe('ui/OpenchannelThumbnailMessage', () => {
       />
     );
     expect(
-      screen.getByTestId('sendbird-openchannel-thumbnail-message').className
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message')[0].className
     ).toContain('sendbird-openchannel-thumbnail-message');
     expect(
       container.getElementsByClassName('sendbird-openchannel-thumbnail-message').length
@@ -61,7 +61,7 @@ describe('ui/OpenchannelThumbnailMessage', () => {
       />
     );
     expect(
-      screen.getByTestId('sendbird-openchannel-thumbnail-message').className
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message')[0].className
     ).toContain('sendbird-openchannel-thumbnail-message');
     expect(
       container.getElementsByClassName('sendbird-openchannel-thumbnail-message').length
@@ -105,7 +105,7 @@ describe('ui/OpenchannelThumbnailMessage', () => {
       />
     );
     expect(
-      screen.getByTestId('sendbird-openchannel-thumbnail-message').className
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message')[0].className
     ).toContain('sendbird-openchannel-thumbnail-message');
     expect(
       container.getElementsByClassName('sendbird-openchannel-thumbnail-message').length
@@ -153,7 +153,7 @@ describe('ui/OpenchannelThumbnailMessage', () => {
       />
     );
     expect(
-      screen.getByTestId('sendbird-openchannel-thumbnail-message').className
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message')[0].className
     ).toContain('sendbird-openchannel-thumbnail-message');
     expect(
       container.getElementsByClassName('sendbird-openchannel-thumbnail-message').length
@@ -203,7 +203,7 @@ describe('ui/OpenchannelThumbnailMessage', () => {
       />
     );
     expect(
-      screen.getByTestId('sendbird-openchannel-thumbnail-message').className
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message')[0].className
     ).toContain('sendbird-openchannel-thumbnail-message');
     expect(
       container.getElementsByClassName('sendbird-openchannel-thumbnail-message').length

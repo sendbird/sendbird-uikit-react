@@ -235,7 +235,6 @@ export default function Icon({
   };
   return (
     <div
-      data-testid="sendbird-icon"
       className={[
         ...Array.isArray(className) ? className : [className],
         'sendbird-icon',

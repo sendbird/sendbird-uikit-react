@@ -10,7 +10,6 @@ exports[`ui/QuoteMessage should do a snapshot test of the ReplyingMessageItemBod
     >
       <div
         class="sendbird-quote-message__replied-to__icon sendbird-icon sendbird-icon-reply sendbird-icon-color--on-background-3"
-        data-testid="sendbird-icon"
         role="button"
         style="width: 12px; min-width: 12px; height: 12px; min-height: 12px;"
         tabindex="0"

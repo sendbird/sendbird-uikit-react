@@ -4,7 +4,6 @@ exports[`ui/OpenchannelUserMessage should do a snapshot test of the OpenchannelU
 <DocumentFragment>
   <div
     class=" sendbird-openchannel-user-message"
-    data-testid="sendbird-openchannel-user-message"
   >
     <div
       class="sendbird-openchannel-user-message__left"
@@ -81,7 +80,6 @@ exports[`ui/OpenchannelUserMessage should do a snapshot test of the OpenchannelU
           >
             <div
               class=" sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
-              data-testid="sendbird-icon"
               role="button"
               style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
               tabindex="0"

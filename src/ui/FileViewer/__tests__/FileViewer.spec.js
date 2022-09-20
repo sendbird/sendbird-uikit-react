@@ -43,7 +43,7 @@ describe('ui/FileViewer', () => {
       name = '',
     } = msg1;
     const { profileUrl, nickname = '' } = sender;
-    render(
+    const { container } = render(
       <FileViewer
         profileUrl={profileUrl}
         nickname={nickname}
@@ -55,13 +55,13 @@ describe('ui/FileViewer', () => {
       />
     );
     expect(
-      screen.getByTestId('sendbird-fileviewer__content__video').className
+      container.getElementsByClassName('sendbird-fileviewer__content__video')[0].className
     ).not.toContain('sendbird-fileviewer__content__img');
     expect(
-      screen.getByTestId('sendbird-fileviewer__content__video').className
+      container.getElementsByClassName('sendbird-fileviewer__content__video')[0].className
     ).toBe('sendbird-fileviewer__content__video');
     expect(
-      screen.getByTestId('sendbird-fileviewer__content__video').children[0].src
+      container.getElementsByClassName('sendbird-fileviewer__content__video')[0].children[0].src
     ).toEqual(url);
   });
 
@@ -74,7 +74,7 @@ describe('ui/FileViewer', () => {
       url = '',
       name = '',
     } = unsupportedMsg;
-    render(
+    const { container } = render(
       <FileViewer
         profileUrl={profileUrl}
         nickname={nickname}
@@ -86,10 +86,10 @@ describe('ui/FileViewer', () => {
       />
     );
     expect(
-      screen.getByTestId('sendbird-fileviewer__content__unsupported').className
+      container.getElementsByClassName('sendbird-fileviewer__content__unsupported')[0].className
     ).toBe('sendbird-fileviewer__content__unsupported');
     expect(
-      screen.getByTestId('sendbird-fileviewer__header__right').children[0].className
+      container.getElementsByClassName('sendbird-fileviewer__header__right')[0].children[0].className
     ).not.toBe('sendbird-fileviewer__header__right__actions');
   });
 

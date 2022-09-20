@@ -4,7 +4,6 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
 <DocumentFragment>
   <div
     class=" sendbird-openchannel-og-message"
-    data-testid="sendbird-openchannel-og-message"
   >
     <div
       class="sendbird-openchannel-og-message__top"
@@ -103,7 +102,6 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
             >
               <div
                 class=" sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
-                data-testid="sendbird-icon"
                 role="button"
                 style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
                 tabindex="0"
@@ -128,7 +126,6 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
         </span>
         <a
           class="sendbird-openchannel-og-message__bottom__og-tag__title sendbird-link-label sendbird-label--color-primary"
-          data-testid="sendbird-link-label"
           href="https://sendbird.com/"
           rel="noopener noreferrer"
           target="_blank"

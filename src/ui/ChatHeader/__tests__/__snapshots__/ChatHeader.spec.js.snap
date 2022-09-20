@@ -45,7 +45,6 @@ exports[`ui/ChatHeader should do a snapshot test of the ChatHeader DOM 1`] = `
     >
       <div
         class="sendbird-chat-header__right__mute sendbird-icon sendbird-icon-notifications-off-filled "
-        data-testid="sendbird-icon"
         role="button"
         style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
         tabindex="0"
@@ -62,7 +61,6 @@ exports[`ui/ChatHeader should do a snapshot test of the ChatHeader DOM 1`] = `
         >
           <div
             class=" sendbird-icon sendbird-icon-info sendbird-icon-color--primary"
-            data-testid="sendbird-icon"
             role="button"
             style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
             tabindex="0"

@@ -4,7 +4,6 @@ exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the Opencha
 <DocumentFragment>
   <div
     class=" sendbird-openchannel-thumbnail-message"
-    data-testid="sendbird-openchannel-thumbnail-message"
   >
     <div
       class="sendbird-openchannel-thumbnail-message__left"
@@ -73,7 +72,6 @@ exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the Opencha
             >
               <div
                 class=" sendbird-icon sendbird-icon-photo sendbird-icon-color--on-background-2"
-                data-testid="sendbird-icon"
                 role="button"
                 style="width: 56px; min-width: 56px; height: 56px; min-height: 56px;"
                 tabindex="0"
@@ -111,7 +109,6 @@ exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the Opencha
           >
             <div
               class=" sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
-              data-testid="sendbird-icon"
               role="button"
               style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
               tabindex="0"

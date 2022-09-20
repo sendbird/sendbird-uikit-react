@@ -9,7 +9,7 @@ describe('ui/LinkLabel', () => {
   it('should render link label', function() {
     const CLASS_NAME = 'example-class-name';
     const text = 'example-text';
-    render(
+    const { container } = render(
       <LinkLabel
         className={CLASS_NAME}
         src="https://www.sendbird.com"
@@ -21,13 +21,13 @@ describe('ui/LinkLabel', () => {
     );
 
     expect(
-      screen.getByTestId('sendbird-link-label').className
+      container.getElementsByClassName('sendbird-link-label')[0].className
     ).toContain(CLASS_NAME);
     expect(
-      screen.getByTestId('sendbird-link-label').className
+      container.getElementsByClassName('sendbird-link-label')[0].className
     ).toContain(LINK_LABEL);
     expect(
-      screen.getByTestId('sendbird-link-label').children[0].className
+      container.getElementsByClassName('sendbird-link-label')[0].children[0].className
     ).toContain(`${LINK_LABEL}__label`);
     expect(
       screen.getByText(text).className

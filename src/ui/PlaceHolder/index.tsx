@@ -27,7 +27,6 @@ export default function PlaceHolder({
   const { stringSet } = useContext(LocalizationContext);
   return (
     <div
-      data-testid="sendbird-place-holder"
       className={[
         ...(Array.isArray(className) ? className : [className]),
         'sendbird-place-holder',

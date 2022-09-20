@@ -36,12 +36,12 @@ describe('ui/Input', () => {
         </>
       );
     }
-    render(<App />);
+    const { container } = render(<App />);
     expect(
       screen.getByText("initialState").id
     ).toBe('result');
 
-    fireEvent.change(screen.getByTestId('sendbird-input__input'), { target: { value: finalValue } });
+    fireEvent.change(container.getElementsByClassName('sendbird-input__input')[0], { target: { value: finalValue } });
     fireEvent.click(screen.getByRole('button'));
     expect(
       screen.getByText(finalValue).id
