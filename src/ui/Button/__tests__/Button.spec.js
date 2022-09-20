@@ -10,7 +10,7 @@ describe('ui/Button', () => {
   });
 
   it('should do a snapshot test of the small Button DOM', function () {
-    const { asFragment } = render(<Button size={Size.SMALL} />);
+    const { asFragment } = render(<Button size={ButtonSizes.SMALL} />);
     expect(asFragment()).toMatchSnapshot();
   });
 
