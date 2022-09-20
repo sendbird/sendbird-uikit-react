@@ -11,7 +11,7 @@ import Label, {
   LabelTypography,
   LabelColors,
 } from '../../../../ui/Label';
-import { Type as ButtonType } from '../../../../ui/Button/type';
+import { ButtonTypes } from '../../../../ui/Button';
 import UserListItem from '../../../../ui/UserListItem';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { OperatorFilter } from '@sendbird/chat/groupChannel';
@@ -47,7 +47,7 @@ export default function AddOperatorsModal({
   return (
     <div>
       <Modal
-        type={ButtonType.PRIMARY}
+        type={ButtonTypes.PRIMARY}
         submitText="Add"
         onCancel={onCancel}
         onSubmit={() => {

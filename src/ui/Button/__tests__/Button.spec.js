@@ -1,8 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 
-import Button from "../index";
-import { Size } from '../type';
+import Button, { ButtonSizes } from "../index";
 
 describe('ui/Button', () => {
   it('should do a snapshot test of the default Button DOM', function () {
@@ -11,7 +10,7 @@ describe('ui/Button', () => {
   });
 
   it('should do a snapshot test of the small Button DOM', function () {
-    const { asFragment } = render(<Button size={Size.SMALL} />);
+    const { asFragment } = render(<Button size={ButtonSizes.SMALL} />);
     expect(asFragment()).toMatchSnapshot();
   });
 

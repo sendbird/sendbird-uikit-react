@@ -14,7 +14,7 @@ import { LocalizationContext } from '../../lib/LocalizationContext';
 import Input, { InputLabel } from '../Input';
 import Avatar from '../Avatar';
 import Icon, { IconTypes } from '../Icon';
-import { Type as ButtonType } from '../Button/type';
+import { ButtonTypes } from '../Button';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import TextButton from '../TextButton';
 import { noop } from '../../utils/utils';
@@ -47,7 +47,7 @@ export function EditUserProfile({
     <Modal
       titleText={stringSet.EDIT_PROFILE__TITLE}
       submitText={stringSet.BUTTON__SAVE}
-      type={ButtonType.PRIMARY}
+      type={ButtonTypes.PRIMARY}
       onCancel={onCancel}
       onSubmit={() => {
         if (user.nickname !== '' && !inputRef.current.value) {

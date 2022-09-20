@@ -2,13 +2,23 @@ import React, { ReactElement } from 'react';
 
 import './index.scss';
 import Label, { LabelTypography, LabelColors } from '../Label';
-import { Type, Size } from './type';
 import { changeTypeToClassName, changeSizeToClassName } from './utils';
+
+export enum ButtonTypes {
+  PRIMARY,
+  SECONDARY,
+  DANGER,
+  DISABLED,
+}
+export enum ButtonSizes {
+  BIG,
+  SMALL,
+}
 
 export interface ButtonProps {
   className?: string | Array<string>;
-  type: Type;
-  size: Size;
+  type?: ButtonTypes;
+  size?: ButtonSizes;
   children: string | ReactElement;
   disabled?: boolean;
   onClick?: () => void;
@@ -16,8 +26,8 @@ export interface ButtonProps {
 
 export default function Button({
   className,
-  type = Type.PRIMARY,
-  size = Size.BIG,
+  type = ButtonTypes.PRIMARY,
+  size = ButtonSizes.BIG,
   children = 'Button',
   disabled = false,
   onClick = () => {/* noop */},
@@ -47,6 +57,3 @@ export default function Button({
     </button>
   );
 }
-
-export const ButtonTypes = Type;
-export const ButtonSizes = Size;

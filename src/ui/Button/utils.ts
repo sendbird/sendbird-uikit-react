@@ -1,19 +1,19 @@
-import { Type, Size } from './type';
+import { ButtonTypes, ButtonSizes } from './index';
 
-export function changeTypeToClassName(type: Type): string {
+export function changeTypeToClassName(type: ButtonTypes): string {
   switch (type) {
-    case Type.PRIMARY: return 'sendbird-button--primary';
-    case Type.SECONDARY: return 'sendbird-button--secondary';
-    case Type.DANGER: return 'sendbird-button--danger';
-    case Type.DISABLED: return 'sendbird-button--disabled';
+    case ButtonTypes.PRIMARY: return 'sendbird-button--primary';
+    case ButtonTypes.SECONDARY: return 'sendbird-button--secondary';
+    case ButtonTypes.DANGER: return 'sendbird-button--danger';
+    case ButtonTypes.DISABLED: return 'sendbird-button--disabled';
     default: return null;
   }
 }
 
-export function changeSizeToClassName(size: Size): string {
+export function changeSizeToClassName(size: ButtonSizes): string {
   switch (size) {
-    case Size.BIG: return 'sendbird-button--big';
-    case Size.SMALL: return 'sendbird-button--small';
+    case ButtonSizes.BIG: return 'sendbird-button--big';
+    case ButtonSizes.SMALL: return 'sendbird-button--small';
     default: return null;
   }
 }
