@@ -1,17 +1,15 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import MessageItemReactionMenu from "../index";
 
-describe('MessageItemReactionMenu', () => {
+describe('ui/MessageItemReactionMenu', () => {
   it('should do a snapshot test of the MessageItemReactionMenu DOM', function() {
-    const text = "example-text";
-    const component = renderer.create(
+    const { asFragment } = render(
       <MessageItemReactionMenu
         message={{ sendingStatus: 'succeeded' }}
-      />,
+      />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

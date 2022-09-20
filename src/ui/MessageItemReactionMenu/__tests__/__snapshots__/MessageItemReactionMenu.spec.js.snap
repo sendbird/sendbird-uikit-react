@@ -1,52 +1,33 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`MessageItemReactionMenu should do a snapshot test of the MessageItemReactionMenu DOM 1`] = `
-<div
-  className=" sendbird-message-item-reaction-menu"
->
+exports[`ui/MessageItemReactionMenu should do a snapshot test of the MessageItemReactionMenu DOM 1`] = `
+<DocumentFragment>
   <div
-    className="sendbird-context-menu"
-    style={
-      Object {
-        "display": "inline",
-      }
-    }
+    class=" sendbird-message-item-reaction-menu"
   >
-    <button
-      className="sendbird-message-item-reaction-menu__trigger sendbird-iconbutton "
-      disabled={false}
-      onBlur={[Function]}
-      onClick={[Function]}
-      style={
-        Object {
-          "height": "32px",
-          "width": "32px",
-        }
-      }
-      type="button"
+    <div
+      class="sendbird-context-menu"
+      style="display: inline;"
     >
-      <span
-        className="sendbird-iconbutton__inner"
+      <button
+        class="sendbird-message-item-reaction-menu__trigger sendbird-iconbutton "
+        style="height: 32px; width: 32px;"
+        type="button"
       >
-        <div
-          className="sendbird-message-item-reaction-menu__trigger__icon sendbird-icon sendbird-icon-emoji-more sendbird-icon-color--content-inverse"
-          onClick={[Function]}
-          onKeyDown={[Function]}
-          role="button"
-          style={
-            Object {
-              "height": "24px",
-              "minHeight": "24px",
-              "minWidth": "24px",
-              "width": "24px",
-            }
-          }
-          tabIndex="0"
+        <span
+          class="sendbird-iconbutton__inner"
         >
-          <test-file-stub />
-        </div>
-      </span>
-    </button>
+          <div
+            class="sendbird-message-item-reaction-menu__trigger__icon sendbird-icon sendbird-icon-emoji-more sendbird-icon-color--content-inverse"
+            role="button"
+            style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
+            tabindex="0"
+          >
+            <test-file-stub />
+          </div>
+        </span>
+      </button>
+    </div>
   </div>
-</div>
+</DocumentFragment>
 `;

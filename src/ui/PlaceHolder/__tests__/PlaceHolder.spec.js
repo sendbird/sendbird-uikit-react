@@ -1,26 +1,24 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import PlaceHolder from "../index";
 import PlaceHolderTypes from '../type';
 
-describe('PlaceHolder', () => {
+describe('ui/PlaceHolder', () => {
   it('should should contain className', function () {
     const text = "example-text";
-    const component = shallow(<PlaceHolder className={text} type={PlaceHolderTypes.WRONG} />);
-
+    const { container } = render(<PlaceHolder className={text} type={PlaceHolderTypes.WRONG} />);
     expect(
-      component.find(".sendbird-place-holder").hasClass(text)
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-place-holder')[0].className
+    ).toContain('sendbird-place-holder');
+    expect(
+      container.getElementsByClassName('sendbird-place-holder').length
+    ).toBe(1);
   });
 
   it('should do a snapshot test of the PlaceHolder DOM', function () {
     const text = "example-text";
-    const component = renderer.create(
-      <PlaceHolder className={text} type={PlaceHolderTypes.WRONG} />,
-    );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(<PlaceHolder className={text} type={PlaceHolderTypes.WRONG} />);
+    expect(asFragment()).toMatchSnapshot();
   });
 });

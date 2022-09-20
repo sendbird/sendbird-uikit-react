@@ -1,34 +1,32 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import OpenchannelConversationHeader from "../index";
 
-describe('OpenchannelConversationHeader', () => {
+describe('ui/OpenchannelConversationHeader', () => {
   it('should render default elements', function() {
-    const component = mount(<OpenchannelConversationHeader />);
+    const { container } = render(<OpenchannelConversationHeader />);
     expect(
-      component.find('.sendbird-openchannel-conversation-header__left__cover-image--icon').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-conversation-header__left__cover-image--icon').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-conversation-header__left__cover-image').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-conversation-header__left__cover-image').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-openchannel-conversation-header__left__title').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-conversation-header__left__title').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-conversation-header__left__sub-title').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-conversation-header__left__sub-title').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-conversation-header__right').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-conversation-header__right').length
+    ).toBe(1);
   });
 
   it('should render default elements', function() {
     const title = "Open Channel Title";
     const subTitle = "Open Channel Subtitle";
-    const triggerClassName = "information-trigger";
-    const component = mount(
+    const { container } = render(
       <OpenchannelConversationHeader
         title={title}
         subTitle={subTitle}
@@ -36,31 +34,30 @@ describe('OpenchannelConversationHeader', () => {
       />
     );
     expect(
-      component.find('.sendbird-openchannel-conversation-header__left__cover-image--icon').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-conversation-header__left__cover-image--icon').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-openchannel-conversation-header__left__cover-image').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-conversation-header__left__cover-image').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-conversation-header__left__title').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-conversation-header__left__title').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-conversation-header__left__sub-title').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-conversation-header__left__sub-title').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-conversation-header__right').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-conversation-header__right').length
+    ).toBe(1);
   });
 
   it('should do a snapshot test of the OpenchannelConversationHeader DOM', function() {
-    const component = renderer.create(
+    const { asFragment } = render(
       <OpenchannelConversationHeader
         title="Open Channel Title"
         subTitle="Open Channel Subtitle"
         coverImage="https://static.sendbird.com/sample/user_sdk/user_sdk_20.png"
       />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

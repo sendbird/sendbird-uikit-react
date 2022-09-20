@@ -1,14 +1,13 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import ConnectionStatus from "../index";
 
-describe('ConnectionStatus', () => {
+describe('ui/ConnectionStatus', () => {
   it('should render ConnectionStatus', function () {
-    const component = renderer.create(
-      <ConnectionStatus />,
+    const { asFragment } = render(
+      <ConnectionStatus />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

@@ -34,7 +34,7 @@ export default function FileMessageItemBody({
     ])}>
       <div className="sendbird-file-message-item-body__file-icon">
         <Icon
-          className={'sendbird-file-message-item-body__file-icon__icon'}
+          className="sendbird-file-message-item-body__file-icon__icon"
           type={{
             IMAGE: IconTypes.PHOTO,
             VIDEO: IconTypes.PLAY,

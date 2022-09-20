@@ -1,34 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PlaceHolder should do a snapshot test of the PlaceHolder DOM 1`] = `
-<div
-  className="example-text sendbird-place-holder"
->
+exports[`ui/PlaceHolder should do a snapshot test of the PlaceHolder DOM 1`] = `
+<DocumentFragment>
   <div
-    className="sendbird-place-holder__body"
+    class="example-text sendbird-place-holder"
   >
     <div
-      className="sendbird-place-holder__body__icon sendbird-icon sendbird-icon-error sendbird-icon-color--on-background-3"
-      onClick={[Function]}
-      onKeyDown={[Function]}
-      role="button"
-      style={
-        Object {
-          "height": "64px",
-          "minHeight": "64px",
-          "minWidth": "64px",
-          "width": "64px",
-        }
-      }
-      tabIndex="0"
+      class="sendbird-place-holder__body"
     >
-      <test-file-stub />
+      <div
+        class="sendbird-place-holder__body__icon sendbird-icon sendbird-icon-error sendbird-icon-color--on-background-3"
+        role="button"
+        style="width: 64px; min-width: 64px; height: 64px; min-height: 64px;"
+        tabindex="0"
+      >
+        <test-file-stub />
+      </div>
+      <span
+        class="sendbird-place-holder__body__text sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-2"
+      >
+        Something went wrong
+      </span>
     </div>
-    <span
-      className="sendbird-place-holder__body__text sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-2"
-    >
-      Something went wrong
-    </span>
   </div>
-</div>
+</DocumentFragment>
 `;

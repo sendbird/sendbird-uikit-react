@@ -1,33 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TooltipWrapper should do a snapshot test of the TooltipWrapper DOM 1`] = `
-<div
-  className=" sendbird-tooltip-wrapper"
-  onBlur={[Function]}
-  onFocus={[Function]}
-  onMouseOut={[Function]}
-  onMouseOver={[Function]}
->
+exports[`ui/TooltipWrapper should do a snapshot test of the TooltipWrapper DOM 1`] = `
+<DocumentFragment>
   <div
-    className="sendbird-tooltip-wrapper__children"
+    class=" sendbird-tooltip-wrapper"
   >
     <div
-      className=" sendbird-icon sendbird-icon-add sendbird-icon-color--primary"
-      onClick={[Function]}
-      onKeyDown={[Function]}
-      role="button"
-      style={
-        Object {
-          "height": "26px",
-          "minHeight": "26px",
-          "minWidth": "26px",
-          "width": "26px",
-        }
-      }
-      tabIndex="0"
+      class="sendbird-tooltip-wrapper__children"
     >
-      <test-file-stub />
+      <div
+        class=" sendbird-icon sendbird-icon-add sendbird-icon-color--primary"
+        role="button"
+        style="width: 26px; min-width: 26px; height: 26px; min-height: 26px;"
+        tabindex="0"
+      >
+        <test-file-stub />
+      </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;

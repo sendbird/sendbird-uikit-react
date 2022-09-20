@@ -1,126 +1,75 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ChatHeader should do a snapshot test of the ChatHeader DOM 1`] = `
-<div
-  className="sendbird-chat-header"
->
+exports[`ui/ChatHeader should do a snapshot test of the ChatHeader DOM 1`] = `
+<DocumentFragment>
   <div
-    className="sendbird-chat-header__left"
+    class="sendbird-chat-header"
   >
     <div
-      className="sendbird-chat-header--avatar--group-channel sendbird-avatar"
-      role="button"
-      style={
-        Object {
-          "height": "32px",
-          "width": "32px",
-        }
-      }
-      tabIndex={0}
+      class="sendbird-chat-header__left"
     >
       <div
-        className="sendbird-avatar-img sendbird-image-renderer"
-        style={
-          Object {
-            "height": "32px",
-            "maxWidth": "400px",
-            "minWidth": "32px",
-            "width": "100%",
-          }
-        }
+        class="sendbird-chat-header--avatar--group-channel sendbird-avatar"
+        role="button"
+        style="height: 32px; width: 32px;"
+        tabindex="0"
       >
         <div
-          className="sendbird-image-renderer__image"
-          style={
-            Object {
-              "backgroundImage": "url()",
-              "backgroundPosition": "center",
-              "backgroundRepeat": "no-repeat",
-              "backgroundSize": "cover",
-              "borderRadius": null,
-              "height": "32px",
-              "maxWidth": "400px",
-              "minWidth": "32px",
-              "position": "absolute",
-              "width": "100%",
-            }
-          }
-        />
-        <img
-          alt=""
-          className="sendbird-image-renderer__hidden-image-loader"
-          onError={[Function]}
-          onLoad={[Function]}
-          src=""
-        />
-      </div>
-    </div>
-    <span
-      className="sendbird-chat-header__left__title sendbird-label sendbird-label--h-2 sendbird-label--color-onbackground-1"
-    >
-      Headline 2
-    </span>
-    <span
-      className="sendbird-chat-header__left__subtitle sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-2"
-    >
-      Body text 2
-    </span>
-  </div>
-  <div
-    className="sendbird-chat-header__right"
-  >
-    <div
-      className="sendbird-chat-header__right__mute sendbird-icon sendbird-icon-notifications-off-filled "
-      onClick={[Function]}
-      onKeyDown={[Function]}
-      role="button"
-      style={
-        Object {
-          "height": "24px",
-          "minHeight": "24px",
-          "minWidth": "24px",
-          "width": "24px",
-        }
-      }
-      tabIndex="0"
-    >
-      <test-file-stub />
-    </div>
-    <button
-      className="sendbird-chat-header__right__info sendbird-iconbutton "
-      disabled={false}
-      onBlur={[Function]}
-      onClick={[Function]}
-      style={
-        Object {
-          "height": "32px",
-          "width": "32px",
-        }
-      }
-      type="button"
-    >
-      <span
-        className="sendbird-iconbutton__inner"
-      >
-        <div
-          className=" sendbird-icon sendbird-icon-info sendbird-icon-color--primary"
-          onClick={[Function]}
-          onKeyDown={[Function]}
-          role="button"
-          style={
-            Object {
-              "height": "24px",
-              "minHeight": "24px",
-              "minWidth": "24px",
-              "width": "24px",
-            }
-          }
-          tabIndex="0"
+          class="sendbird-avatar-img sendbird-image-renderer"
+          style="width: 100%; min-width: 32px; max-width: 400px; height: 32px;"
         >
-          <test-file-stub />
+          <div
+            class="sendbird-image-renderer__image"
+            style="width: 100%; min-width: 32px; max-width: 400px; height: 32px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url();"
+          />
+          <img
+            alt=""
+            class="sendbird-image-renderer__hidden-image-loader"
+            src=""
+          />
         </div>
+      </div>
+      <span
+        class="sendbird-chat-header__left__title sendbird-label sendbird-label--h-2 sendbird-label--color-onbackground-1"
+      >
+        Headline 2
       </span>
-    </button>
+      <span
+        class="sendbird-chat-header__left__subtitle sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-2"
+      >
+        Body text 2
+      </span>
+    </div>
+    <div
+      class="sendbird-chat-header__right"
+    >
+      <div
+        class="sendbird-chat-header__right__mute sendbird-icon sendbird-icon-notifications-off-filled "
+        role="button"
+        style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
+        tabindex="0"
+      >
+        <test-file-stub />
+      </div>
+      <button
+        class="sendbird-chat-header__right__info sendbird-iconbutton "
+        style="height: 32px; width: 32px;"
+        type="button"
+      >
+        <span
+          class="sendbird-iconbutton__inner"
+        >
+          <div
+            class=" sendbird-icon sendbird-icon-info sendbird-icon-color--primary"
+            role="button"
+            style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
+            tabindex="0"
+          >
+            <test-file-stub />
+          </div>
+        </span>
+      </button>
+    </div>
   </div>
-</div>
+</DocumentFragment>
 `;

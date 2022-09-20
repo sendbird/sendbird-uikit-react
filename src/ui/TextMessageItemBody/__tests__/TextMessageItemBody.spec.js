@@ -1,6 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import TextMessageItemBody from "../index";
 
@@ -15,85 +14,87 @@ const createMockMessage = (process) => {
   return process ? process(mockMessage) : mockMessage;
 };
 
-describe('TextMessageItemBody', () => {
+describe('ui/TextMessageItemBody', () => {
   it('should have class names of own basic status', () => {
     const insertingClassName = 'test-class-name';
-    const component = mount(
+    const { container } = render(
       <TextMessageItemBody
         className={insertingClassName}
         message={createMockMessage()}
       />
     );
     expect(
-      component.find(`.${insertingClassName}`).hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName(insertingClassName)
+    ).toHaveLength(1);
     expect(
-      component.find('.sendbird-text-message-item-body').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-text-message-item-body')
+    ).toHaveLength(1);
     expect(
-      component.find('.sendbird-text-message-item-body.outgoing').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll('.sendbird-text-message-item-body.outgoing')
+    ).toHaveLength(0);
     expect(
-      component.find('.sendbird-text-message-item-body.incoming').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-text-message-item-body.incoming')
+    ).toHaveLength(1);
     expect(
-      component.find('.sendbird-text-message-item-body.mouse-hover').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll('.sendbird-text-message-item-body.mouse-hover')
+    ).toHaveLength(0);
     expect(
-      component.find('.sendbird-text-message-item-body.reactions').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll('.sendbird-text-message-item-body.reactions')
+    ).toHaveLength(0);
     expect(
-      component.find('.sendbird-text-message-item-body__message').hostNodes().exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-text-message-item-body__message')
+    ).toHaveLength(0);
     expect(
-      component.find('.sendbird-text-message-item-body__message.edited').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll('.sendbird-text-message-item-body__message.edited')
+    ).toHaveLength(0);
   });
 
-  it('should have class name by isByMe prop', () => {
-    const outgoingMessage = mount(
+  it('should have class name by isByMe is true', () => {
+    const { container } = render(
       <TextMessageItemBody
         message={createMockMessage()}
         isByMe
       />
     );
     expect(
-      outgoingMessage.find('.sendbird-text-message-item-body.outgoing').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-text-message-item-body.outgoing')
+    ).toHaveLength(1);
     expect(
-      outgoingMessage.find('.sendbird-text-message-item-body.incoming').hostNodes().exists()
-    ).toBe(false);
-    const incomingMessage = mount(
+      container.querySelectorAll('.sendbird-text-message-item-body.incoming')
+    ).toHaveLength(0);
+  });
+  it('should have class name by isByMe is false', () => {
+    const { container } = render(
       <TextMessageItemBody
         message={createMockMessage()}
         isByMe={false}
       />
     );
     expect(
-      incomingMessage.find('.sendbird-text-message-item-body.outgoing').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll('.sendbird-text-message-item-body.outgoing')
+    ).toHaveLength(0);
     expect(
-      incomingMessage.find('.sendbird-text-message-item-body.incoming').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-text-message-item-body.incoming')
+    ).toHaveLength(1);
   });
 
   it('should have class name by mouse hover prop', () => {
-    const component = mount(
+    const { container } = render(
       <TextMessageItemBody
         message={createMockMessage()}
         mouseHover
       />
     );
     expect(
-      component.find('.sendbird-text-message-item-body.mouse-hover').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-text-message-item-body.mouse-hover')
+    ).toHaveLength(1);
     expect(
-      component.find('.sendbird-text-message-item-body.incoming.mouse-hover').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-text-message-item-body.incoming.mouse-hover')
+    ).toHaveLength(1);
   });
 
   it('should have class name by reactions of message prop', () => {
-    const component = mount(
+    const { container } = render(
       <TextMessageItemBody
         isReactionEnabled
         message={createMockMessage((mockMessage) => ({
@@ -103,13 +104,13 @@ describe('TextMessageItemBody', () => {
       />
     );
     expect(
-      component.find('.sendbird-text-message-item-body.reactions').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-text-message-item-body.reactions')
+    ).toHaveLength(1);
   });
 
   it('should have words component by split message', () => {
     const messageText = 'First second third fourth fifth';
-    const component = mount(
+    const { container } = render(
       <TextMessageItemBody
         message={createMockMessage((mockMessage) => ({
           ...mockMessage,
@@ -118,9 +119,12 @@ describe('TextMessageItemBody', () => {
       />
     );
     expect(
-      component.find('.sendbird-text-message-item-body__message.edited').hostNodes().exists()
-    ).toBe(false);
-    const editedMessage = mount(
+      container.querySelectorAll('.sendbird-text-message-item-body__message.edited')
+    ).toHaveLength(0);
+  });
+  it('should have words component by split message when message has updatedAt', () => {
+    const messageText = 'First second third fourth fifth';
+    const { container } = render(
       <TextMessageItemBody
         message={createMockMessage((mockMessage) => ({
           ...mockMessage,
@@ -130,12 +134,12 @@ describe('TextMessageItemBody', () => {
       />
     );
     expect(
-      editedMessage.find('.sendbird-text-message-item-body__message.edited').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-text-message-item-body__message.edited')
+    ).toHaveLength(1);
   });
 
   it('should do a snapshot test of the TextMessageItemBody DOM', function () {
-    const component = renderer.create(
+    const { asFragment } = render(
       <TextMessageItemBody
         className="class-name-for-snapshot"
         message={createMockMessage((mock) => ({
@@ -146,9 +150,8 @@ describe('TextMessageItemBody', () => {
         }))}
         isByMe
         mouseHover
-      />,
+      />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

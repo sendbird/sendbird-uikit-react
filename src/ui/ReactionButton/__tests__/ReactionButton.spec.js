@@ -1,30 +1,30 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render, screen } from '@testing-library/react';
 
 import ReactionButton from "../index";
 import Icon, { IconTypes } from '../../Icon';
 
 const children = <Icon type={IconTypes.CREATE} width="28px" height="28px" />;
 
-describe('ReactionButton', () => {
+describe('ui/ReactionButton', () => {
   it('should render className prop', function () {
     const text = "example-text";
-    const component = shallow(<ReactionButton className={text}>{children}</ReactionButton>);
-
+    const { container } = render(<ReactionButton className={text}>{children}</ReactionButton>);
     expect(
-      component.find(".sendbird-reaction-button").hasClass(text)
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-reaction-button')[0].className
+    ).toContain('sendbird-reaction-button');
+    expect(
+      container.getElementsByClassName('sendbird-reaction-button').length
+    ).toBe(1);
   });
 
   it('should do a snapshot test of the ReactionButton DOM', function () {
     const text = "example-text";
-    const component = renderer.create(
+    const { asFragment } = render(
       <ReactionButton className={text} width="36px" height="36px">
         {children}
-      </ReactionButton>,
+      </ReactionButton>
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

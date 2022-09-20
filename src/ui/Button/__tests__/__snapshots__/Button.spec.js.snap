@@ -1,31 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Button should do a snapshot test of the default Button DOM 1`] = `
-<button
-  className=" sendbird-button  sendbird-button--primary sendbird-button--big"
-  disabled={false}
-  onClick={[Function]}
-  type="button"
->
-  <span
-    className="sendbird-button__text sendbird-label sendbird-label--button-1 sendbird-label--color-oncontent-1"
+exports[`ui/Button should do a snapshot test of the default Button DOM 1`] = `
+<DocumentFragment>
+  <button
+    class=" sendbird-button  sendbird-button--primary sendbird-button--big"
+    type="button"
   >
-    Button
-  </span>
-</button>
+    <span
+      class="sendbird-button__text sendbird-label sendbird-label--button-1 sendbird-label--color-oncontent-1"
+    >
+      Button
+    </span>
+  </button>
+</DocumentFragment>
 `;
 
-exports[`Button should do a snapshot test of the small Button DOM 1`] = `
-<button
-  className=" sendbird-button  sendbird-button--primary sendbird-button--small"
-  disabled={false}
-  onClick={[Function]}
-  type="button"
->
-  <span
-    className="sendbird-button__text sendbird-label sendbird-label--button-1 sendbird-label--color-oncontent-1"
+exports[`ui/Button should do a snapshot test of the small Button DOM 1`] = `
+<DocumentFragment>
+  <button
+    class=" sendbird-button  sendbird-button--primary sendbird-button--small"
+    type="button"
   >
-    Button
-  </span>
-</button>
+    <span
+      class="sendbird-button__text sendbird-label sendbird-label--button-1 sendbird-label--color-oncontent-1"
+    >
+      Button
+    </span>
+  </button>
+</DocumentFragment>
 `;

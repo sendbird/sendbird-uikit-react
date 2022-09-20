@@ -1,6 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import MessageContent from "../index";
 jest.mock('date-fns/format', () => () => ('mock-date'));
@@ -42,75 +41,76 @@ const createMockMessage = (process) => {
   return process ? process(mockMessage) : mockMessage;
 };
 
-describe('MessageContent', () => {
+describe('ui/MessageContent', () => {
   // TODO: Add tests after message threading is applied
   // useReplying <-> replyType
   // it('should render components by replyType', () => {});
 
   it('should have class names by own user basic status', () => {
-    const component = mount(
+    const className = "test-classname";
+    const { container, queryByTestId } = render(
       <MessageContent
+        className={className}
         userId="sendbird-user-000"
         message={createMockMessage()}
         channel={createMockChannel()}
       />
     );
     expect(
-      component.find('.sendbird-message-content').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-message-content')[0].className
+    ).toContain(className);
     expect(
-      component.find('.sendbird-message-content__left').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-message-content__left').length
+    ).toBeGreaterThan(0);
     expect(
-      component.find('.sendbird-message-content__middle').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-message-content__middle').length
+    ).toBeGreaterThan(0);
     expect(
-      component.find('.sendbird-message-content__right').hostNodes().exists()
-    ).toBe(true);
-
+      container.getElementsByClassName('sendbird-message-content__right').length
+    ).toBeGreaterThan(0);
     expect(
-      component.find('.sendbird-message-content__left__avatar').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-message-content__left__avatar').length
+    ).toBeGreaterThan(0);
     expect(
-      component.find('.sendbird-message-content__middle__body-container__created-at.left').hostNodes().exists()
-    ).toBe(false);
+      container.querySelector('.sendbird-message-content__middle__body-container__created-at.left')
+    ).toBeNull();
     expect(
-      component.find('.sendbird-message-content-menu.outgoing').hostNodes().exists()
-    ).toBe(false);
+      container.querySelector('.sendbird-message-content-menu.outgoing')
+    ).toBeNull();
     expect(
-      component.find('.sendbird-message-content__middle__sender-name').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-message-content__middle__sender-name').length
+    ).toBeGreaterThan(0);
     expect(
-      component.find('.sendbird-message-content-reactions').hostNodes().exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-message-content-reactions').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-message-content__right.chain-top').hostNodes().exists()
-    ).toBe(false);
+      container.querySelector('.sendbird-message-content__right.chain-top')
+    ).toBeNull();
     expect(
-      component.find('.sendbird-message-content__middle__body-container__created-at.right').hostNodes().exists()
-    ).toBe(true);
+      container.querySelector('.sendbird-message-content__middle__body-container__created-at.right')
+    ).toBeTruthy();
     expect(
-      component.find('.sendbird-message-content-menu.incoming').hostNodes().exists()
-    ).toBe(true);
+      container.querySelector('.sendbird-message-content-menu.incoming')
+    ).toBeTruthy();
     expect(
-      component.find('.sendbird-message-content-menu.chain-top').hostNodes().exists()
-    ).toBe(false);
+      container.querySelector('.sendbird-message-content-menu.chain-top')
+    ).toBeNull();
     expect(
-      component.find('.sendbird-message-content-menu.outgoing .sendbird-message-content-menu__normal-menu').hostNodes().exists()
-    ).toBe(false);
+      container.querySelector('.sendbird-message-content-menu.outgoing .sendbird-message-content-menu__normal-menu')
+    ).toBeNull();
     expect(
-      component.find('.sendbird-message-content-menu.outgoing .sendbird-message-content-menu__reaction-menu').hostNodes().exists()
-    ).toBe(false);
+      container.querySelector('.sendbird-message-content-menu.outgoing .sendbird-message-content-menu__reaction-menu')
+    ).toBeNull();
     expect(
-      component.find('.sendbird-message-content-menu.incoming .sendbird-message-content-menu__normal-menu').hostNodes().exists()
-    ).toBe(true);
+      container.querySelector('.sendbird-message-content-menu.incoming .sendbird-message-content-menu__normal-menu')
+    ).toBeTruthy();
     expect(
-      component.find('.sendbird-message-content-menu.incoming .sendbird-message-content-menu__reaction-menu').hostNodes().exists()
-    ).toBe(false);
+      container.querySelector('.sendbird-message-content-menu.incoming .sendbird-message-content-menu__reaction-menu')
+    ).toBeNull();
   });
 
-  it('should render components by isByMe prop', () => {
-    const outgoingMessage = mount(
+  it('should render components when isByMe is true', () => {
+    const { container } = render(
       <MessageContent
         userId="user-id-001"
         message={createMockMessage()}
@@ -119,24 +119,26 @@ describe('MessageContent', () => {
       />
     );
     expect(
-      outgoingMessage.find('.sendbird-message-content.outgoing').hostNodes().exists()
-    ).toBe(true);
+      container.querySelector('.sendbird-message-content.outgoing')
+    ).toBeTruthy();
     expect(
-      outgoingMessage.find('.sendbird-message-content__left.outgoing').hostNodes().exists()
-    ).toBe(true);
+      container.querySelector('.sendbird-message-content__left.outgoing')
+    ).toBeTruthy();
     expect(
-      outgoingMessage.find('.sendbird-message-content-menu.outgoing').hostNodes().exists()
-    ).toBe(true);
+      container.querySelector('.sendbird-message-content-menu.outgoing')
+    ).toBeTruthy();
     expect(
-      outgoingMessage.find('.sendbird-message-content.incoming').hostNodes().exists()
-    ).toBe(false);
+      container.querySelector('.sendbird-message-content.incoming')
+    ).toBeNull();
     expect(
-      outgoingMessage.find('.sendbird-message-content__left.incoming').hostNodes().exists()
-    ).toBe(false);
+      container.querySelector('.sendbird-message-content__left.incoming')
+    ).toBeNull();
     expect(
-      outgoingMessage.find('.sendbird-message-content-menu.incoming').hostNodes().exists()
-    ).toBe(false);
-    const incomingMessage = mount(
+      container.querySelector('.sendbird-message-content-menu.incoming')
+    ).toBeNull();
+  });
+  it('should render components when isByMe is false', () => {
+    const { container } = render(
       <MessageContent
         userId="user-id-002"
         message={createMockMessage()}
@@ -145,27 +147,27 @@ describe('MessageContent', () => {
       />
     );
     expect(
-      incomingMessage.find('.sendbird-message-content.outgoing').hostNodes().exists()
-    ).toBe(false);
+      container.querySelector('.sendbird-message-content.outgoing')
+    ).toBeNull();
     expect(
-      incomingMessage.find('.sendbird-message-content__left.outgoing').hostNodes().exists()
-    ).toBe(false);
+      container.querySelector('.sendbird-message-content__left.outgoing')
+    ).toBeNull();
     expect(
-      incomingMessage.find('.sendbird-message-content-menu.outgoing').hostNodes().exists()
-    ).toBe(false);
+      container.querySelector('.sendbird-message-content-menu.outgoing')
+    ).toBeNull();
     expect(
-      incomingMessage.find('.sendbird-message-content.incoming').hostNodes().exists()
-    ).toBe(true);
+      container.querySelector('.sendbird-message-content.incoming')
+    ).toBeTruthy();
     expect(
-      incomingMessage.find('.sendbird-message-content__left.incoming').hostNodes().exists()
-    ).toBe(true);
+      container.querySelector('.sendbird-message-content__left.incoming')
+    ).toBeTruthy();
     expect(
-      incomingMessage.find('.sendbird-message-content-menu.incoming').hostNodes().exists()
-    ).toBe(true);
+      container.querySelector('.sendbird-message-content-menu.incoming')
+    ).toBeTruthy();
   });
 
   it('should not render components when chainTop is true', () => {
-    const component = mount(
+    const { container } = render(
       <MessageContent
         userId="sendbird-user-000"
         message={createMockMessage()}
@@ -174,18 +176,18 @@ describe('MessageContent', () => {
       />
     );
     expect(
-      component.find('.sendbird-message-content__middle__sender-name').hostNodes().exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-message-content__middle__sender-name').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-message-content__right.chain-top').hostNodes().exists()
-    ).toBe(true);
+      container.querySelector('.sendbird-message-content__right.chain-top')
+    ).toBeTruthy();
     expect(
-      component.find('.sendbird-message-content-menu.chain-top').hostNodes().exists()
-    ).toBe(true);
+      container.querySelector('.sendbird-message-content-menu.chain-top')
+    ).toBeTruthy();
   });
 
-  it('should not render components when chainBottom is true', () => {
-    const outgoingMessage = mount(
+  it('should not render components when chainBottom is true & isByMe is true', () => {
+    const { container } = render(
       <MessageContent
         userId="sendbird-user-001"
         message={createMockMessage()}
@@ -195,12 +197,14 @@ describe('MessageContent', () => {
       />
     );
     expect(
-      outgoingMessage.find('.sendbird-message-content__left__avatar').hostNodes().exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-message-content__left__avatar').length
+    ).toBe(0);
     expect(
-      outgoingMessage.find('.sendbird-message-content__middle__body-container__created-at').hostNodes().exists()
-    ).toBe(false);
-    const incomingMessage = mount(
+      container.getElementsByClassName('sendbird-message-content__middle__body-container__created-at').length
+    ).toBe(0);
+  });
+  it('should not render components when chainBottom is true & isByMe is false', () => {
+    const { container } = render(
       <MessageContent
         userId="sendbird-user-002"
         message={createMockMessage()}
@@ -210,25 +214,24 @@ describe('MessageContent', () => {
       />
     );
     expect(
-      incomingMessage.find('.sendbird-message-content__left__avatar').hostNodes().exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-message-content__left__avatar').length
+    ).toBe(0);
     expect(
-      incomingMessage.find('.sendbird-message-content__middle__body-container__created-at').hostNodes().exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-message-content__middle__body-container__created-at').length
+    ).toBe(0);
   });
 
   // it('should render components by isReactionEnabled and reactions', () => {});
 
   it('should do a snapshot test of the MessageContent DOM', function () {
-    const component = renderer.create(
+    const { asFragment }  = render(
       <MessageContent
         className="classname-for-snapshot"
         message={createMockMessage()}
         channel={createMockChannel()}
         userId="user-id-000"
-      />,
+      />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

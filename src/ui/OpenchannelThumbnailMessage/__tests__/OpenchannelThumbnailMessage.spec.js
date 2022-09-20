@@ -1,6 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render, screen } from '@testing-library/react';
 import mockMessage, { mockMessageVideo, getMockMessage, getMockMessageWithVideo } from '../dummyData.mock';
 
 import OpenchannelThumbnailMessage from "../index";
@@ -10,183 +9,192 @@ import OpenchannelThumbnailMessage from "../index";
 // ideally we want to mock date-fns globally - needs more research
 jest.mock('date-fns/format', () => () => ('mock-date'));
 
-describe('OpenchannelThumbnailMessage', () => {
+describe('ui/OpenchannelThumbnailMessage', () => {
   it('should render for image thumbnail message', function() {
-    const component = mount(
+    const { container } = render(
       <OpenchannelThumbnailMessage
         message={mockMessage}
         status="succeeded"
         userId="hoon102"
       />
     );
-
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message')[0].className
+    ).toContain('sendbird-openchannel-thumbnail-message');
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__left__avatar').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__title__sender-name').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__left__avatar').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__title__sent-at').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__title__sender-name').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__body__wrap__overlay').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__title__sent-at').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__body__wrap__image').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__overlay').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__context-menu--icon').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__image').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__tail__pending').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__context-menu--icon').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__tail__failed').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__tail__pending').length
+    ).toBe(0);
+    expect(
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__tail__failed').length
+    ).toBe(0);
   });
 
   it('should render for empty url image thumbnail message', function() {
     const mockMessage = getMockMessage();
     mockMessage.url = '';
-    const component = mount(
+    const { container } = render(
       <OpenchannelThumbnailMessage
         message={mockMessage}
         status="succeeded"
         userId="hoon102"
       />
     );
-
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message')[0].className
+    ).toContain('sendbird-openchannel-thumbnail-message');
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__left__avatar').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__title__sender-name').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__left__avatar').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__title__sent-at').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__title__sender-name').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__body__wrap__overlay').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__title__sent-at').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__body__wrap__image').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__overlay').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__body__wrap__image--icon').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__image').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__context-menu--icon').exists()
-    ).toBe(true);expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__tail__pending').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__image--icon').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__tail__failed').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__context-menu--icon').length
+    ).toBe(1);
+    expect(
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__tail__pending').length
+    ).toBe(0);
+    expect(
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__tail__failed').length
+    ).toBe(0);
   });
 
 
   it('should render for video thumbnail message', function() {
-    const component = mount(
+    const { container } = render(
       <OpenchannelThumbnailMessage
         message={mockMessageVideo}
         status="succeeded"
         userId="hoon102"
       />
     );
-
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message')[0].className
+    ).toContain('sendbird-openchannel-thumbnail-message');
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__left__avatar').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__title__sender-name').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__left__avatar').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__title__sent-at').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__title__sender-name').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__body__wrap__overlay').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__title__sent-at').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__body__wrap__video').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__overlay').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__body__wrap__video__video').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__video').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__body__wrap__video__icon').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__video__video').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__context-menu--icon').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__video__icon').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__tail__pending').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__context-menu--icon').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__tail__failed').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__tail__pending').length
+    ).toBe(0);
+    expect(
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__tail__failed').length
+    ).toBe(0);
   });
 
   it('should render for empty url video thumbnail message', function() {
     const mockMessage = getMockMessageWithVideo();
     mockMessage.url = '';
-    const component = mount(
+    const { container } = render(
       <OpenchannelThumbnailMessage
         message={mockMessage}
         status="succeeded"
         userId="hoon102"
       />
     );
-
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message')[0].className
+    ).toContain('sendbird-openchannel-thumbnail-message');
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__left__avatar').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__title__sender-name').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__left__avatar').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__title__sent-at').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__title__sender-name').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__body__wrap__overlay').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__title__sent-at').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__body__wrap__video').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__overlay').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__body__wrap__video__video').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__video').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__body__wrap__video__icon').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__video__video').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__body__wrap__video--icon').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__video__icon').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__context-menu--icon').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__video--icon').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__tail__pending').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__context-menu--icon').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__tail__failed').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__tail__pending').length
+    ).toBe(0);
+    expect(
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__tail__failed').length
+    ).toBe(0);
   });
 
   it('should not render avatar and title when chainTop is true', function() {
-    const component = mount(
+    const { container } = render(
       <OpenchannelThumbnailMessage
         message={mockMessage}
         status="succeeded"
@@ -194,37 +202,39 @@ describe('OpenchannelThumbnailMessage', () => {
         chainTop
       />
     );
-
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message')[0].className
+    ).toContain('sendbird-openchannel-thumbnail-message');
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__left__avatar').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__title__sender-name').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__left__avatar').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__title__sent-at').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__title__sender-name').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__body__wrap__overlay').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__title__sent-at').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__body__wrap__image').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__overlay').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__body__wrap__image--icon').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__image').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__context-menu--icon').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__image--icon').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__tail__pending').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__context-menu--icon').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__tail__failed').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__tail__pending').length
+    ).toBe(0);
+    expect(
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__tail__failed').length
+    ).toBe(0);
   });
 
   it('should render pending icon if status is pending', function() {
@@ -232,18 +242,18 @@ describe('OpenchannelThumbnailMessage', () => {
       message.isResendable = () => true;
       message.sendingStatus = 'pending';
     });
-    const component = mount(
+    const { container } = render(
       <OpenchannelThumbnailMessage
         message={message}
         userId={message.sender.userId}
       />
     );
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__tail__pending').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__tail__pending').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__tail__failed').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__tail__failed').length
+    ).toBe(0);
   });
 
   it('should render failed icon if status is failed', function() {
@@ -251,29 +261,28 @@ describe('OpenchannelThumbnailMessage', () => {
       message.isResendable = () => true;
       message.sendingStatus = 'failed';
     });
-    const component = mount(
+    const { container } = render(
       <OpenchannelThumbnailMessage
         message={message}
         userId={message.sender.userId}
       />
     );
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__tail__pending').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__tail__pending').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-openchannel-thumbnail-message__right__tail__failed').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__tail__failed').length
+    ).toBe(1);
   });
 
   it('should do a snapshot test of the OpenchannelThumbnailMessage DOM', function() {
-    const component = renderer.create(
+    const { asFragment } = render(
       <OpenchannelThumbnailMessage
         message={mockMessage}
         status="succeeded"
         userId="hoon102"
-      />,
+      />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

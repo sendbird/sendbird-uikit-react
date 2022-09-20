@@ -1,109 +1,67 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`OpenchannelConversationHeader should do a snapshot test of the OpenchannelConversationHeader DOM 1`] = `
-<div
-  className="sendbird-openchannel-conversation-header"
->
+exports[`ui/OpenchannelConversationHeader should do a snapshot test of the OpenchannelConversationHeader DOM 1`] = `
+<DocumentFragment>
   <div
-    className="sendbird-openchannel-conversation-header__left"
+    class="sendbird-openchannel-conversation-header"
   >
     <div
-      className="sendbird-openchannel-conversation-header__left__cover-image sendbird-avatar"
-      role="button"
-      style={
-        Object {
-          "height": "32px",
-          "width": "32px",
-        }
-      }
-      tabIndex={0}
+      class="sendbird-openchannel-conversation-header__left"
     >
       <div
-        className="sendbird-avatar-img sendbird-image-renderer"
-        style={
-          Object {
-            "height": "32px",
-            "maxWidth": "400px",
-            "minWidth": "32px",
-            "width": "100%",
-          }
-        }
+        class="sendbird-openchannel-conversation-header__left__cover-image sendbird-avatar"
+        role="button"
+        style="height: 32px; width: 32px;"
+        tabindex="0"
       >
         <div
-          className="sendbird-image-renderer__image"
-          style={
-            Object {
-              "backgroundImage": "url(https://static.sendbird.com/sample/user_sdk/user_sdk_20.png)",
-              "backgroundPosition": "center",
-              "backgroundRepeat": "no-repeat",
-              "backgroundSize": "cover",
-              "borderRadius": null,
-              "height": "32px",
-              "maxWidth": "400px",
-              "minWidth": "32px",
-              "position": "absolute",
-              "width": "100%",
-            }
-          }
-        />
-        <img
-          alt="channel cover image"
-          className="sendbird-image-renderer__hidden-image-loader"
-          onError={[Function]}
-          onLoad={[Function]}
-          src="https://static.sendbird.com/sample/user_sdk/user_sdk_20.png"
-        />
-      </div>
-    </div>
-    <span
-      className="sendbird-openchannel-conversation-header__left__title sendbird-label sendbird-label--h-2 sendbird-label--color-onbackground-1"
-    >
-      Open Channel Title
-    </span>
-    <span
-      className="sendbird-openchannel-conversation-header__left__sub-title sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-2"
-    >
-      Open Channel Subtitle
-    </span>
-  </div>
-  <div
-    className="sendbird-openchannel-conversation-header__right"
-  >
-    <button
-      className="sendbird-openchannel-conversation-header__right__trigger sendbird-iconbutton "
-      disabled={false}
-      onBlur={[Function]}
-      onClick={[Function]}
-      style={
-        Object {
-          "height": "32px",
-          "width": "32px",
-        }
-      }
-      type="button"
-    >
-      <span
-        className="sendbird-iconbutton__inner"
-      >
-        <div
-          className=" sendbird-icon sendbird-icon-members sendbird-icon-color--primary"
-          onClick={[Function]}
-          onKeyDown={[Function]}
-          role="button"
-          style={
-            Object {
-              "height": "24px",
-              "minHeight": "24px",
-              "minWidth": "24px",
-              "width": "24px",
-            }
-          }
-          tabIndex="0"
+          class="sendbird-avatar-img sendbird-image-renderer"
+          style="width: 100%; min-width: 32px; max-width: 400px; height: 32px;"
         >
-          <test-file-stub />
+          <div
+            class="sendbird-image-renderer__image"
+            style="width: 100%; min-width: 32px; max-width: 400px; height: 32px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://static.sendbird.com/sample/user_sdk/user_sdk_20.png);"
+          />
+          <img
+            alt="channel cover image"
+            class="sendbird-image-renderer__hidden-image-loader"
+            src="https://static.sendbird.com/sample/user_sdk/user_sdk_20.png"
+          />
         </div>
+      </div>
+      <span
+        class="sendbird-openchannel-conversation-header__left__title sendbird-label sendbird-label--h-2 sendbird-label--color-onbackground-1"
+      >
+        Open Channel Title
       </span>
-    </button>
+      <span
+        class="sendbird-openchannel-conversation-header__left__sub-title sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-2"
+      >
+        Open Channel Subtitle
+      </span>
+    </div>
+    <div
+      class="sendbird-openchannel-conversation-header__right"
+    >
+      <button
+        class="sendbird-openchannel-conversation-header__right__trigger sendbird-iconbutton "
+        style="height: 32px; width: 32px;"
+        type="button"
+      >
+        <span
+          class="sendbird-iconbutton__inner"
+        >
+          <div
+            class=" sendbird-icon sendbird-icon-members sendbird-icon-color--primary"
+            role="button"
+            style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
+            tabindex="0"
+          >
+            <test-file-stub />
+          </div>
+        </span>
+      </button>
+    </div>
   </div>
-</div>
+</DocumentFragment>
 `;

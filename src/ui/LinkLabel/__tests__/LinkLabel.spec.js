@@ -1,19 +1,15 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { act } from 'react-dom/test-utils';
-import { mount } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render, screen } from '@testing-library/react';
 
 import LinkLabel, { LinkLabelTypography, LinkLabelColors } from "../index";
 
-const container = document.createElement('div');
 const LINK_LABEL = 'sendbird-link-label';
 
-describe('LinkLabel', () => {
+describe('ui/LinkLabel', () => {
   it('should render link label', function() {
     const CLASS_NAME = 'example-class-name';
     const text = 'example-text';
-    const component = mount(
+    const { container } = render(
       <LinkLabel
         className={CLASS_NAME}
         src="https://www.sendbird.com"
@@ -25,31 +21,30 @@ describe('LinkLabel', () => {
     );
 
     expect(
-      component.find(`.${CLASS_NAME}`).exists()
-    ).toEqual(true);
+      container.getElementsByClassName('sendbird-link-label')[0].className
+    ).toContain(CLASS_NAME);
     expect(
-      component.find(`.${LINK_LABEL}`).exists()
-    ).toEqual(true);
+      container.getElementsByClassName('sendbird-link-label')[0].className
+    ).toContain(LINK_LABEL);
     expect(
-      component.find(`.${LINK_LABEL}__label`).exists()
-    ).toEqual(true);
+      container.getElementsByClassName('sendbird-link-label')[0].children[0].className
+    ).toContain(`${LINK_LABEL}__label`);
     expect(
-      component.find(`.${LINK_LABEL}__label`).hostNodes().text()
-    ).toEqual(text);
+      screen.getByText(text).className
+    ).toContain(`${LINK_LABEL}__label`);
   });
 
   it('should do a snapshot test of the LinkLabel DOM', function() {
     const text = 'example-text';
-    const component = renderer.create(
+    const { asFragment } = render(
       <LinkLabel
         src="https://www.sendbird.com"
         color={LinkLabelColors.PRIMARY}
         type={LinkLabelTypography.BODY_1}
       >
         {text}
-      </LinkLabel>,
+      </LinkLabel>
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

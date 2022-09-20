@@ -1,24 +1,22 @@
-import React from 'react';
-import { shallow } from 'enzyme';
+import React, { useRef } from 'react';
+import { render, screen } from '@testing-library/react';
 
 import MessageInput from "../index";
 
 const noop = () => {};
 
-describe('MessageInput', () => {
+describe('ui/MessageInput', () => {
   it('should render upload icon if no text is present', () => {
-    const component = shallow(
-      <MessageInput onSendMessage={noop} value="" />
-    );
+    const { container } = render(<MessageInput onSendMessage={noop} value="" />);
     expect(
-      component.find('.sendbird-message-input--send').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-message-input--send').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-message-input--attach').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-message-input--attach').length
+    ).toBe(1);
     expect(
-      component.find('.sendbird-message-input--edit-action').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-message-input--edit-action').length
+    ).toBe(0);
   });
 
   it.skip('should render send icon if text is present', () => {
@@ -47,20 +45,18 @@ describe('MessageInput', () => {
 
   it('should display save/cancel button on edit mode', () => {
     const messageId = 'aaa';
-    const component = shallow(
-      <MessageInput onSendMessage={noop} isEdit message={{ messageId }} />
-    );
+    const { container } = render(<MessageInput onSendMessage={noop} isEdit message={{ messageId }} />);
     expect(
-      component.find('#sendbird-message-input-text-field' + messageId).exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-message-input-text-field')[0].id
+    ).toBe('sendbird-message-input-text-field' + messageId);
     expect(
-      component.find('.sendbird-message-input--send').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-message-input--send').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-message-input--attach').exists()
-    ).toBe(false);
+      container.getElementsByClassName('sendbird-message-input--attach').length
+    ).toBe(0);
     expect(
-      component.find('.sendbird-message-input--edit-action').exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-message-input--edit-action').length
+    ).toBe(1);
   });
 });

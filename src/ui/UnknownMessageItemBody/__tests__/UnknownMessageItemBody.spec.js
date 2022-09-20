@@ -1,6 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render, screen } from '@testing-library/react';
 
 import UnknownMessageItemBody from "../index";
 
@@ -11,86 +10,93 @@ const createMockMessage = (process) => {
   return process ? process(mockMessage) : mockMessage;
 };
 
-describe('UnknownMessageItemBody', () => {
+describe('ui/UnknownMessageItemBody', () => {
   it('should have class names of own basic status', () => {
     const className = 'class-name-for-test';
-    const component = mount(
+    const { container } = render(
       <UnknownMessageItemBody
         className={className}
         message={createMockMessage()}
       />
     );
     expect(
-      component.find('.sendbird-unknown-message-item-body').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-unknown-message-item-body')[0].className
+    ).toContain(className);
     expect(
-      component.find('.sendbird-unknown-message-item-body__header').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-unknown-message-item-body')
+    ).toHaveLength(1)
     expect(
-      component.find('.sendbird-unknown-message-item-body__description').hostNodes().exists()
-    ).toBe(true);
-
+      container.querySelectorAll('.sendbird-unknown-message-item-body')
+    ).toHaveLength(1);
     expect(
-      component.find(`.${className}.sendbird-unknown-message-item-body`).hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-unknown-message-item-body__header')
+    ).toHaveLength(1);
     expect(
-      component.find('.sendbird-unknown-message-item-body.incoming').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-unknown-message-item-body__description')
+    ).toHaveLength(1);
     expect(
-      component.find('.sendbird-unknown-message-item-body.outgoing').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll(`.${className}.sendbird-unknown-message-item-body`)
+    ).toHaveLength(1);
     expect(
-      component.find('.sendbird-unknown-message-item-body.mouse-hover').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll('.sendbird-unknown-message-item-body.incoming')
+    ).toHaveLength(1);
     expect(
-      component.find('.sendbird-unknown-message-item-body.reactions').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll('.sendbird-unknown-message-item-body.outgoing')
+    ).toHaveLength(0);
+    expect(
+      container.querySelectorAll('.sendbird-unknown-message-item-body.mouse-hover')
+    ).toHaveLength(0);
+    expect(
+      container.querySelectorAll('.sendbird-unknown-message-item-body.reactions')
+    ).toHaveLength(0);
   });
 
-  it('should have class name by isByMe', () => {
-    const outgoingMessage = mount(
+  it('should have class name when isByMe is true', () => {
+    const { container } = render(
       <UnknownMessageItemBody
         message={createMockMessage()}
         isByMe
       />
     );
     expect(
-      outgoingMessage.find('.sendbird-unknown-message-item-body.outgoing').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-unknown-message-item-body.outgoing')
+    ).toHaveLength(1);
     expect(
-      outgoingMessage.find('.sendbird-unknown-message-item-body.incoming').hostNodes().exists()
-    ).toBe(false);
-    const incomingMessage = mount(
+      container.querySelectorAll('.sendbird-unknown-message-item-body.incoming')
+    ).toHaveLength(0);
+  });
+  it('should have class name when isByMe is false', () => {
+    const { container } = render(
       <UnknownMessageItemBody
         message={createMockMessage()}
         isByMe={false}
       />
     );
     expect(
-      incomingMessage.find('.sendbird-unknown-message-item-body.outgoing').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll('.sendbird-unknown-message-item-body.outgoing')
+    ).toHaveLength(0);
     expect(
-      incomingMessage.find('.sendbird-unknown-message-item-body.incoming').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-unknown-message-item-body.incoming')
+    ).toHaveLength(1);
   });
 
   it('should have class name by mouseHover prop', () => {
-    const component = mount(
+    const { container } = render(
       <UnknownMessageItemBody
         message={createMockMessage()}
         mouseHover
       />
     );
     expect(
-      component.find('.sendbird-unknown-message-item-body.mouse-hover').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-unknown-message-item-body.mouse-hover')
+    ).toHaveLength(1);
     expect(
-      component.find('.sendbird-unknown-message-item-body.incoming.mouse-hover').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-unknown-message-item-body.mouse-hover')
+    ).toHaveLength(1);
   });
 
   it('should have class name by reactions of message', () => {
-    const component = mount(
+    const { container } = render(
       <UnknownMessageItemBody
         isReactionEnabled
         message={createMockMessage((mockMessage) => ({
@@ -100,12 +106,12 @@ describe('UnknownMessageItemBody', () => {
       />
     );
     expect(
-      component.find('.sendbird-unknown-message-item-body.reactions').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-unknown-message-item-body.reactions')
+    ).toHaveLength(1);
   });
 
   it('should do a snapshot test of the UnknownMessageItemBody DOM', function () {
-    const component = renderer.create(
+    const { asFragment } = render(
       <UnknownMessageItemBody
         className="class-name-for-snapshot"
         message={createMockMessage((mock) => ({
@@ -114,9 +120,8 @@ describe('UnknownMessageItemBody', () => {
         }))}
         isByMe
         mouseHover
-      />,
+      />
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

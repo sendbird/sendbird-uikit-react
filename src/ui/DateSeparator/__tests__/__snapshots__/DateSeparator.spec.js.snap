@@ -1,23 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`DateSeparator should do a snapshot test of the DateSeparator DOM 1`] = `
-<div
-  className="example-classname sendbird-separator"
->
+exports[`ui/DateSeparator should do a snapshot test of the DateSeparator DOM 1`] = `
+<DocumentFragment>
   <div
-    className="sendbird-separator__left sendbird-color--onbackground-4--background-color"
-  />
-  <div
-    className="sendbird-separator__text"
+    class="example-classname sendbird-separator"
   >
-    <span
-      className="sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
+    <div
+      class="sendbird-separator__left sendbird-color--onbackground-4--background-color"
+    />
+    <div
+      class="sendbird-separator__text"
     >
-      Date Separator
-    </span>
+      <span
+        class="sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
+      >
+        Date Separator
+      </span>
+    </div>
+    <div
+      class="sendbird-separator__right sendbird-color--onbackground-4--background-color"
+    />
   </div>
-  <div
-    className="sendbird-separator__right sendbird-color--onbackground-4--background-color"
-  />
-</div>
+</DocumentFragment>
 `;

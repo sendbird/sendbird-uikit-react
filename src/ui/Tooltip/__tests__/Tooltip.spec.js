@@ -1,33 +1,30 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import Tooltip from "../index";
 
-describe('Tooltip', () => {
+describe('ui/Tooltip', () => {
   it('should have className', function () {
     const className = "example-text";
     const text = 'Sravan S, Hoon Baek, Chong Bu, Mickey, Leo Shin, Doo Rim, Tez Park, Harry Kim, and you';
-    const component = shallow(
+    const { container } = render(
       <Tooltip className={className}>
         {text}
       </Tooltip>
     );
-
     expect(
-      component.find(".sendbird-tooltip").hasClass(className)
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-tooltip')
+    ).toHaveLength(1);
   });
 
   it('should do a snapshot test of the ReactedUsers DOM', function () {
     const className = "example-text";
     const text = 'Sravan S, Hoon Baek, Chong Bu, Mickey, Leo Shin, Doo Rim, Tez Park, Harry Kim, and you';
-    const component = renderer.create(
+    const { asFragment } = render(
       <Tooltip className={className}>
         {text}
-      </Tooltip>,
+      </Tooltip>
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

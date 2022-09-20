@@ -1,6 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import renderer from 'react-test-renderer';
+import { render, screen } from '@testing-library/react';
 
 import ThumbnailMessageItemBody from "../index";
 
@@ -18,101 +17,105 @@ const createMockMessage = (process) => {
   return process ? process(mockMessage) : mockMessage;
 };
 
-describe('ThumbnailMessageItemBody', () => {
+describe('ui/ThumbnailMessageItemBody', () => {
   it('should have class names by own basic status', () => {
     const className = 'test-class-name';
-    const component = mount(
+    const { container } = render(
       <ThumbnailMessageItemBody
         className={className}
         message={createMockMessage()}
       />
     );
     expect(
-      component.find('.sendbird-thumbnail-message-item-body').hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-thumbnail-message-item-body')[0].className
+    ).toContain('sendbird-thumbnail-message-item-body');
     expect(
-      component.find(`.${className}.sendbird-thumbnail-message-item-body`).hostNodes().exists()
-    ).toBe(true);
+      container.getElementsByClassName('sendbird-thumbnail-message-item-body')
+    ).toHaveLength(1);
     expect(
-      component.find('.sendbird-thumbnail-message-item-body.outgoing').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll(`.${className}.sendbird-thumbnail-message-item-body`)
+    ).toHaveLength(1);
     expect(
-      component.find('.sendbird-thumbnail-message-item-body.incoming').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body.outgoing')
+    ).toHaveLength(0);
     expect(
-      component.find('.sendbird-thumbnail-message-item-body.mouse-hover').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body.incoming')
+    ).toHaveLength(1);
     expect(
-      component.find('.sendbird-thumbnail-message-item-body.reactions').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body.mouse-hover')
+    ).toHaveLength(0);
     expect(
-      component.find('.sendbird-thumbnail-message-item-body__thumbnail').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body.reactions')
+    ).toHaveLength(0);
     expect(
-      component.find('.sendbird-thumbnail-message-item-body__placeholder').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body__thumbnail')
+    ).toHaveLength(1);
     expect(
-      component.find('.sendbird-thumbnail-message-item-body__video').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body__placeholder')
+    ).toHaveLength(1);
     expect(
-      component.find('.sendbird-thumbnail-message-item-body__image-cover').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body__video')
+    ).toHaveLength(0);
     expect(
-      component.find('.sendbird-thumbnail-message-item-body__icon-wrapper').hostNodes().exists()
-    ).toBe(false);
-
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body__image-cover')
+    ).toHaveLength(1);
     expect(
-      component.find('.sendbird-icon-photo').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body__icon-wrapper')
+    ).toHaveLength(0);
     expect(
-      component.find('sendbird-icon-play').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll('.sendbird-icon-photo')
+    ).toHaveLength(1);
     expect(
-      component.find('sendbird-icon-gif').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll('sendbird-icon-play')
+    ).toHaveLength(0);
+    expect(
+      container.querySelectorAll('sendbird-icon-gif')
+    ).toHaveLength(0);
   });
 
-  it('should have class name by isByMe prop', () => {
-    const outgoingMessage = mount(
+  it('should have class name when isByMe is true', () => {
+    const { container } = render(
       <ThumbnailMessageItemBody
         message={createMockMessage()}
         isByMe
       />
     );
     expect(
-      outgoingMessage.find('.sendbird-thumbnail-message-item-body.outgoing').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body.outgoing')
+    ).toHaveLength(1);
     expect(
-      outgoingMessage.find('.sendbird-thumbnail-message-item-body.incoming').hostNodes().exists()
-    ).toBe(false);
-    const incomingMessage = mount(
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body.incoming')
+    ).toHaveLength(0);
+  });
+  it('should have class name when isByMe is false', () => {
+    const { container } = render(
       <ThumbnailMessageItemBody
         message={createMockMessage()}
         isByMe={false}
       />
     );
     expect(
-      incomingMessage.find('.sendbird-thumbnail-message-item-body.outgoing').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body.outgoing')
+    ).toHaveLength(0);
     expect(
-      incomingMessage.find('.sendbird-thumbnail-message-item-body.incoming').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body.incoming')
+    ).toHaveLength(1);
   });
 
   it('should have class name by mouseHover prop', () => {
-    const component = mount(
+    const { container } = render(
       <ThumbnailMessageItemBody
         message={createMockMessage()}
         mouseHover
       />
     );
     expect(
-      component.find('.sendbird-thumbnail-message-item-body.mouse-hover').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body.mouse-hover')
+    ).toHaveLength(1);
   });
 
   it('should render video components when file type is video', () => {
-    const component = mount(
+    const { container } = render(
       <ThumbnailMessageItemBody
         message={createMockMessage((mock) => ({
           ...mock,
@@ -121,28 +124,27 @@ describe('ThumbnailMessageItemBody', () => {
       />
     );
     expect(
-      component.find('.sendbird-thumbnail-message-item-body__thumbnail').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body__thumbnail')
+    ).toHaveLength(1);
     expect(
-      component.find('.sendbird-thumbnail-message-item-body__video').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body__video')
+    ).toHaveLength(1);
     expect(
-      component.find('.sendbird-thumbnail-message-item-body__icon-wrapper').hostNodes().exists()
-    ).toBe(true);
-
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body__icon-wrapper')
+    ).toHaveLength(1);
     expect(
-      component.find('.sendbird-icon-photo').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll('.sendbird-icon-photo')
+    ).toHaveLength(0);
     expect(
-      component.find('.sendbird-icon-play').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-icon-play')
+    ).toHaveLength(2);
     expect(
-      component.find('.sendbird-icon-gif').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll('.sendbird-icon-gif')
+    ).toHaveLength(0);
   });
 
   it('should render gif components when file type is image/gif', () => {
-    const component = mount(
+    const { container } = render(
       <ThumbnailMessageItemBody
         message={createMockMessage((mock) => ({
           ...mock,
@@ -151,28 +153,28 @@ describe('ThumbnailMessageItemBody', () => {
       />
     );
     expect(
-      component.find('.sendbird-thumbnail-message-item-body__thumbnail').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body__thumbnail')
+    ).toHaveLength(1);
     expect(
-      component.find('.sendbird-thumbnail-message-item-body__video').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body__video')
+    ).toHaveLength(0);
     expect(
-      component.find('.sendbird-thumbnail-message-item-body__icon-wrapper').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-thumbnail-message-item-body__icon-wrapper')
+    ).toHaveLength(1);
 
     expect(
-      component.find('.sendbird-icon-photo').hostNodes().exists()
-    ).toBe(true); // as a default component
+      container.querySelectorAll('.sendbird-icon-photo')
+    ).toHaveLength(1); // as a default component
     expect(
-      component.find('.sendbird-icon-play').hostNodes().exists()
-    ).toBe(false);
+      container.querySelectorAll('.sendbird-icon-play')
+    ).toHaveLength(0);
     expect(
-      component.find('.sendbird-icon-gif').hostNodes().exists()
-    ).toBe(true);
+      container.querySelectorAll('.sendbird-icon-gif')
+    ).toHaveLength(1);
   });
 
-  it('should do a snapshot test of the ThumbnailMessageItemBody DOM', function() {
-    const component = renderer.create(
+  it('should do a snapshot test of the ThumbnailMessageItemBody DOM', function () {
+    const { asFragment } = render(
       <ThumbnailMessageItemBody
         className="classname-for-snapshot"
         message={createMockMessage((mock) => ({
@@ -184,7 +186,6 @@ describe('ThumbnailMessageItemBody', () => {
         mouseHover
       />,
     );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });
