@@ -1,6 +1,7 @@
-import React, { useContext, useReducer, useMemo } from 'react';
+import React, { useContext, useReducer, useMemo, useEffect } from 'react';
 
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
+import * as pubSubTopics from '../../../lib/pubSub/topics';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 
 import openChannelListReducer from './dux/reducer';
@@ -13,6 +14,7 @@ import {
 import useFetchNextCallback from './hooks/useFetchNextCallback';
 import useSetupOpenChannelList from './hooks/useSetupOpenChannelList';
 import useRefreshOpenChannelList from './hooks/useRefreshOpenChannelList';
+import OpenChannelListActionTypes from './dux/actionTypes';
 
 const OpenChannelListContext = React.createContext<OpenChannelListProviderInterface | null>({
   onChannelSelected: null,
@@ -39,7 +41,7 @@ export const OpenChannelListProvider: React.FC<OpenChannelListProviderProps> = (
 }: OpenChannelListProviderProps): React.ReactElement => {
   // props
   const { stores, config } = useSendbirdStateContext();
-  const { logger } = config;
+  const { logger, pubSub } = config;
   const sdk = stores?.sdkStore?.sdk || null;
   const sdkInitialized = stores?.sdkStore?.initialized || false;
   const customOpenChannelListQuery = useMemo(() => {
@@ -58,7 +60,6 @@ export const OpenChannelListProvider: React.FC<OpenChannelListProviderProps> = (
     channelListQuery,
   } = openChannelListStore;
 
-  // add channel event: will do later
   // Initialize
   useSetupOpenChannelList({
     sdk,
@@ -68,6 +69,25 @@ export const OpenChannelListProvider: React.FC<OpenChannelListProviderProps> = (
     logger,
     openChannelListDispatcher,
   });
+
+  // Events & PubSub
+  useEffect(() => {
+    const subscriber = pubSub?.subscribe ? new Map() : null;
+    subscriber?.set(
+      pubSubTopics.UPDATE_OPEN_CHANNEL,
+      pubSub?.subscribe(pubSubTopics.UPDATE_OPEN_CHANNEL, (channel) => {
+        openChannelListDispatcher({
+          type: OpenChannelListActionTypes.UPDATE_OPEN_CHANNEL,
+          payload: channel,
+        });
+      }),
+    );
+    return () => {
+      subscriber?.forEach((s) => {
+        try { s.remove() } catch { }
+      });
+    };
+  }, [sdkInitialized, pubSub]);
 
   // Fetch next channels by scroll event
   const fetchNextChannels = useFetchNextCallback({

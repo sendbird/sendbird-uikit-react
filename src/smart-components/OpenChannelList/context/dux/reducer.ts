@@ -68,6 +68,17 @@ export default function reducer(
         channelListQuery: action?.payload,
       };
     }
+    case actionTypes.UPDATE_OPEN_CHANNEL: {
+      return {
+        ...state,
+        allChannels: state.allChannels.map((channel) => (
+          channel?.url === action.payload?.url ? action.payload : channel
+        )),
+        currentChannel: (state.currentChannel?.url === action?.payload?.url)
+          ? state.currentChannel
+          : action.payload,
+      };
+    }
     default: {
       return state;
     }

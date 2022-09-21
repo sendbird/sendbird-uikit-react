@@ -10,6 +10,7 @@ enum OpenChannelListActionTypes {
   CREATE_OPEN_CHANNEL,
   SET_CURRENT_OPEN_CHANNEL,
   UPDATE_OPEN_CHANNEL_LIST_QUERY,
+  UPDATE_OPEN_CHANNEL,
 }
 
 export default OpenChannelListActionTypes;
