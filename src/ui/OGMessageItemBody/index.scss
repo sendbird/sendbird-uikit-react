@@ -73,12 +73,18 @@
 
   &.outgoing {
     .sendbird-og-message-item-body__text-bubble {
-      @include themed() { background-color: t(primary-3) }
+      @include themed() {
+        background-color: t(primary-3);
+        color: t(on-content-1);
+      }
     }
   }
   &.incoming {
     .sendbird-og-message-item-body__text-bubble {
-      @include themed() { background-color: t(bg-1) }
+      @include themed() {
+        background-color: t(bg-1);
+        color: t(on-bg-1);
+      }
     }
   }
   &.mouse-hover, &:hover {
