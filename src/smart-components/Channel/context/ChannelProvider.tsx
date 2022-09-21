@@ -282,7 +282,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
 
   // Hook to handle ChannelEvents and send values to useReducer using messagesDispatcher
   useHandleChannelEvents(
-    { currentGroupChannel, sdkInit, hasMoreNext },
+    { currentGroupChannel, sdkInit },
     {
       messagesDispatcher,
       sdk,
