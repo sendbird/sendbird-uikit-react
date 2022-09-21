@@ -12,6 +12,7 @@ import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 import { noop } from '../../../../utils/utils';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { useLocalization } from '../../../../lib/LocalizationContext';
 
 interface Props {
   onCancel(): void;
@@ -26,6 +27,7 @@ export default function MutedMembersModal({
   const { channel } = useChannelSettingsContext();
   const state = useSendbirdStateContext();
   const currentUser = state?.config?.userId;
+  const { stringSet } = useLocalization();
 
   useEffect(() => {
     const memberUserListQuery = channel?.createMemberListQuery({
@@ -44,7 +46,7 @@ export default function MutedMembersModal({
         hideFooter
         onCancel={() => onCancel()}
         onSubmit={noop}
-        titleText="Muted members"
+        titleText={stringSet.CHANNEL_SETTING__MUTED_MEMBERS__TITLE}
       >
         <div
           className="sendbird-more-members__popup-scroll"

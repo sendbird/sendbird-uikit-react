@@ -5,6 +5,7 @@ import { noop } from '../../../../utils/utils';
 
 import Modal from '../../../../ui/Modal';
 import { useChannelListContext } from '../../context/ChannelListProvider';
+import { useLocalization } from '../../../../lib/LocalizationContext';
 
 export type LeaveChannelProps = {
   onSubmit: () => void;
@@ -19,6 +20,8 @@ const LeaveChannel: React.FC<LeaveChannelProps> = (props: LeaveChannelProps) => 
 
   const channel = useChannelListContext()?.currentChannel;
   const state = useSendbirdStateContext();
+  const { stringSet } = useLocalization();
+
   const logger = state?.config?.logger;
   const isOnline = state?.config?.isOnline;
   if (channel) {
@@ -34,8 +37,8 @@ const LeaveChannel: React.FC<LeaveChannelProps> = (props: LeaveChannelProps) => 
               onSubmit();
             });
         }}
-        submitText="Leave"
-        titleText="Leave this channel?"
+        submitText={stringSet.MODAL__LEAVE_CHANNEL__FOOTER}
+        titleText={stringSet.MODAL__LEAVE_CHANNEL__TITLE}
       />
     );
   }

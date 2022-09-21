@@ -100,7 +100,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
           color={(selectedCount > 0) ? LabelColors.PRIMARY : LabelColors.ONBACKGROUND_3}
           type={LabelTypography.CAPTION_1}
         >
-          {`${selectedCount} ${stringSet.MODAL__INVITE_MEMBER__SELECTEC}`}
+          {`${selectedCount} ${stringSet.MODAL__INVITE_MEMBER__SELECTED}`}
         </Label>
         <div
           className="sendbird-create-channel--scroll"

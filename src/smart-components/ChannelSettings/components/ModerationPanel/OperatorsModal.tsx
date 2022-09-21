@@ -39,7 +39,7 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
     <div>
       <Modal
         hideFooter
-        titleText="All operators"
+        titleText={stringSet.CHANNEL_SETTING__OPERATORS__TITLE_ALL}
         onCancel={onCancel}
       >
         <div
