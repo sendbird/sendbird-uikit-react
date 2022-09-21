@@ -41,7 +41,7 @@ export interface ModalFooterProps {
   disabled?: boolean;
   type?: ButtonTypes;
   onCancel: () => void;
-  onSubmit: () => void;
+  onSubmit: (e: SubmitEvent) => void;
 }
 export const ModalFooter = ({
   submitText,
@@ -73,7 +73,7 @@ export interface ModalProps {
   hideFooter?: boolean;
   type?: ButtonTypes;
   onCancel?: () => void;
-  onSubmit?: () => void;
+  onSubmit?: (e: SubmitEvent) => void;
   renderHeader?: () => ReactElement;
 }
 export default function Modal(props: ModalProps): ReactElement {
