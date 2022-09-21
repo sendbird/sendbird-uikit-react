@@ -3,8 +3,9 @@ import { useCallback } from "react";
 import { SendbirdError } from "@sendbird/chat";
 import { OpenChannel, OpenChannelListQuery } from "@sendbird/chat/openChannel";
 
-import { CustomUseReducerDispatcher, Logger } from "../../../../lib/SendbirdState";
+import { Logger } from "../../../../lib/SendbirdState";
 import OpenChannelListActionTypes from "../dux/actionTypes";
+import { OpenChannelListDispatcherType } from "../OpenChannelListInterfaces";
 
 interface DynamicParams {
   sdkInitialized: boolean;
@@ -12,7 +13,7 @@ interface DynamicParams {
 }
 interface StaticParams {
   logger: Logger;
-  openChannelListDispatcher: CustomUseReducerDispatcher;
+  openChannelListDispatcher: OpenChannelListDispatcherType;
 }
 
 export type FetchNextCallbackType = (callback: (channels?: Array<OpenChannel>, err?: SendbirdError) => void) => void;

@@ -1,6 +1,5 @@
 import React, { useContext, useReducer, useMemo, useEffect } from 'react';
 
-import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 import * as pubSubTopics from '../../../lib/pubSub/topics';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 
@@ -10,6 +9,7 @@ import {
   OpenChannelListFetchingStatus,
   OpenChannelListProviderProps,
   OpenChannelListProviderInterface,
+  OpenChannelListDispatcherType,
 } from './OpenChannelListInterfaces';
 import useFetchNextCallback from './hooks/useFetchNextCallback';
 import useSetupOpenChannelList from './hooks/useSetupOpenChannelList';
@@ -49,10 +49,10 @@ export const OpenChannelListProvider: React.FC<OpenChannelListProviderProps> = (
   }, [queries?.openChannelListQuery]);
 
   // dux
-  const [openChannelListStore, openChannelListDispatcher] = useReducer(
+  const [openChannelListStore, openChannelListDispatcher]: [OpenChannelListInitialInterface, OpenChannelListDispatcherType] = useReducer(
     openChannelListReducer,
     openChannelListInitialState,
-  ) as [OpenChannelListInitialInterface, CustomUseReducerDispatcher];
+  );
   const {
     allChannels,
     currentChannel,

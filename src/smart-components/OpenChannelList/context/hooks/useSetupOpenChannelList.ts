@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 import SendbirdChat from '@sendbird/chat';
 import { SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
-import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
+import { Logger } from '../../../../lib/SendbirdState';
 import OpenChannelListActionTypes from '../dux/actionTypes';
-import { UserFilledOpenChannelListQuery } from '../OpenChannelListInterfaces';
+import { OpenChannelListDispatcherType, UserFilledOpenChannelListQuery } from '../OpenChannelListInterfaces';
 import createChannelListQuery from './createChannelListQuery';
 
 interface DynamicParams {
@@ -14,7 +14,7 @@ interface DynamicParams {
 }
 interface StaticParams {
   logger: Logger;
-  openChannelListDispatcher: CustomUseReducerDispatcher;
+  openChannelListDispatcher: OpenChannelListDispatcherType;
 }
 
 function useSetupOpenChannelList(

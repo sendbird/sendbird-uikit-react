@@ -1,14 +1,14 @@
 import { OpenChannelListQuery, OpenChannelListQueryParams, SendbirdOpenChat } from "@sendbird/chat/openChannel";
-import { CustomUseReducerDispatcher, Logger } from "../../../../lib/SendbirdState";
+import { Logger } from "../../../../lib/SendbirdState";
 import OpenChannelListActionTypes from "../dux/actionTypes";
-import { UserFilledOpenChannelListQuery } from '../OpenChannelListInterfaces';
+import { OpenChannelListDispatcherType, UserFilledOpenChannelListQuery } from '../OpenChannelListInterfaces';
 
 interface createChannelListQueryProps {
   sdk: SendbirdOpenChat;
   logMessage: string;
   openChannelListQuery: UserFilledOpenChannelListQuery;
   logger: Logger;
-  openChannelListDispatcher: CustomUseReducerDispatcher;
+  openChannelListDispatcher: OpenChannelListDispatcherType;
 }
 
 function createChannelListQuery({

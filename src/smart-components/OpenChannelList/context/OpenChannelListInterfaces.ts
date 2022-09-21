@@ -1,5 +1,7 @@
 import { OpenChannel } from '@sendbird/chat/openChannel';
-import { CustomUseReducerDispatcher, Logger } from '../../../lib/SendbirdState';
+import { Dispatch } from 'react';
+import { Logger } from '../../../lib/SendbirdState';
+import OpenChannelListActionTypes from './dux/actionTypes';
 import { FetchNextCallbackType } from './hooks/useFetchNextCallback';
 
 export interface UserFilledOpenChannelListQuery {
@@ -20,6 +22,7 @@ export enum OpenChannelListFetchingStatus {
 }
 
 export type OnOpenChannelSelected = (channel: OpenChannel, e?: React.MouseEvent<HTMLDivElement | unknown>) => void;
+export type OpenChannelListDispatcherType = Dispatch<{ type: OpenChannelListActionTypes, payload: any }>;
 
 export interface OpenChannelListProviderProps {
   className?: string;
@@ -36,5 +39,5 @@ export interface OpenChannelListProviderInterface extends OpenChannelListProvide
   customOpenChannelListQuery?: UserFilledOpenChannelListQuery;
   fetchNextChannels: FetchNextCallbackType;
   refreshOpenChannelList: () => void;
-  openChannelListDispatcher: CustomUseReducerDispatcher;
+  openChannelListDispatcher: OpenChannelListDispatcherType;
 }

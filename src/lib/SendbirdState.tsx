@@ -1,12 +1,9 @@
 import type SendbirdChat from '@sendbird/chat';
 import type { User } from '@sendbird/chat';
 import type { Member } from '@sendbird/chat/groupChannel';
+import { Dispatch } from 'react';
 
-export type CustomUseReducerDispatcher = ({
-  type: string,
-  /* eslint-disable @typescript-eslint/no-explicit-any*/
-  payload: any,
-}) => void;
+export type CustomUseReducerDispatcher = Dispatch<{ type: string, payload: any }>;
 
 interface UserListQuery {
   hasNext?: boolean;
