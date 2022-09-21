@@ -33,7 +33,12 @@ import type {
 } from '@sendbird/chat/groupChannel';
 
 import type { Locale } from 'date-fns';
-import { OpenChannel, OpenChannelCreateParams, OpenChannelUpdateParams } from '@sendbird/chat/openChannel';
+import {
+  OpenChannel,
+  OpenChannelCreateParams,
+  OpenChannelUpdateParams,
+  SendbirdOpenChat,
+} from '@sendbird/chat/openChannel';
 import { UikitMessageHandler } from './lib/selectors';
 import { RenderCustomSeparatorProps } from './types';
 
@@ -923,6 +928,130 @@ declare module '@sendbird/uikit-react/OpenChannel/components/OpenChannelUI' {
   export default OpenChannelUI;
 }
 
+// OpenChannelList
+interface UserFilledOpenChannelListQuery {
+  customTypes?: Array<string>;
+  includeFrozen?: boolean;
+  includeMetaData?: boolean;
+  limit?: number;
+  nameKeyword?: string;
+  urlKeyword?: string;
+}
+
+type OpenChannelListFetchingStatus = 'EMPTY' | 'FETCHING' | 'DONE' | 'ERROR';
+type CustomUseReducerDispatcher = (props: { type: string, payload: any }) => void;
+type OnOpenChannelSelected = (channel: OpenChannel, e?: React.MouseEvent<HTMLDivElement | unknown>) => void;
+type FetchNextCallbackType = (callback: (channels?: Array<OpenChannel>, err?: SendbirdError) => void) => void
+
+interface OpenChannelListProviderProps {
+  className?: string;
+  children?: React.ReactElement;
+  queries?: { openChannelListQuery?: UserFilledOpenChannelListQuery };
+  onChannelSelected?: OnOpenChannelSelected;
+}
+
+interface OpenChannelListUIProps {
+  renderHeader?: () => React.ReactElement;
+  renderChannelPreview?: (props: RenderChannelPreviewProps) => React.ReactElement;
+  renderPlaceHolderEmpty?: () => React.ReactElement;
+  renderPlaceHolderError?: () => React.ReactElement;
+  renderPlaceHolderLoading?: () => React.ReactElement;
+}
+
+interface OpenChannelListProviderInterface extends OpenChannelListProviderProps {
+  logger: Logger;
+  currentChannel: OpenChannel;
+  allChannels: Array<OpenChannel>;
+  fetchingStatus: OpenChannelListFetchingStatus;
+  customOpenChannelListQuery?: UserFilledOpenChannelListQuery;
+  fetchNextChannels: FetchNextCallbackType;
+  refreshOpenChannelList: () => void;
+  openChannelListDispatcher: CustomUseReducerDispatcher;
+}
+
+interface OpenChannelListProps extends OpenChannelListProviderProps, OpenChannelListUIProps { }
+
+declare module '@sendbird/uikit-react/OpenChannelList' {
+  type OpenChannelList = React.FC<OpenChannelListProps>;
+  export default OpenChannelList;
+}
+
+declare module '@sendbird/uikit-react/OpenChannelList/context' {
+  export type OpenChannelListProvider = React.FunctionComponent<OpenChannelListProviderProps>;
+  export function useOpenChannelListContext(): OpenChannelListProviderInterface;
+}
+
+declare module '@sendbird/uikit-react/OpenChannel/components/OpenChannelListUI' {
+  interface OpenChannelListUIProps {
+    renderHeader?: () => React.ReactElement;
+    renderChannelPreview?: (props: RenderChannelPreviewProps) => React.ReactElement;
+    renderPlaceHolderEmpty?: () => React.ReactElement;
+    renderPlaceHolderError?: () => React.ReactElement;
+    renderPlaceHolderLoading?: () => React.ReactElement;
+  }
+  type OpenChannelListUI = React.FC<OpenChannelListUIProps>;
+  export default OpenChannelListUI;
+}
+
+declare module '@sendbird/uikit-react/OpenChannel/components/OpenChannelPreview' {
+  interface OpenChannelPreviewProps {
+    className?: string;
+    isSelected?: boolean;
+    channel: OpenChannel;
+    onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  }
+  type OpenChannelPreview = React.FC<OpenChannelPreviewProps>;
+  export default OpenChannelPreview;
+}
+
+// CreateOpenChannel
+interface CreateOpenChannelProviderProps {
+  className?: string;
+  children?: React.ReactElement;
+  onCreateChannel?: (channel: OpenChannel) => void;
+  onBeforeCreateChannel?: (params: OpenChannelCreateParams) => OpenChannelCreateParams;
+}
+interface CreateOpenChannelUIProps {
+  closeModal?: () => void;
+  renderHeader?: () => React.ReactElement;
+  renderProfileInput?: () => React.ReactElement;
+}
+
+interface CreateOpenChannelProps extends CreateOpenChannelProviderProps, CreateOpenChannelUIProps { }
+
+interface CreateNewOpenChannelCallbackProps {
+  name: string;
+  coverUrlOrImage?: string;
+}
+
+interface CreateOpenChannelContextInterface extends CreateOpenChannelProviderProps {
+  sdk: SendbirdOpenChat;
+  sdkInitialized: boolean;
+  logger: Logger;
+  createNewOpenChannel: (props: CreateNewOpenChannelCallbackProps) => void;
+}
+
+declare module '@sendbird/uikit-react/CreateOpenChannel' {
+  type CreateOpenChannel = React.FC<CreateOpenChannelProps>;
+  export default CreateOpenChannel;
+}
+
+declare module '@sendbird/uikit-react/CreateOpenChannel/context' {
+  export type CreateOpenChannelProvider = React.FunctionComponent<CreateOpenChannelProviderProps>;
+  export function useCreateOpenChannelContext(): CreateOpenChannelContextInterface;
+}
+
+declare module '@sendbird/uikit-react/CreateOpenChannel/components/CreateOpenChannelUI' {
+  interface CreateOpenChannelUIProps {
+    closeModal?: () => void;
+    renderHeader?: () => React.ReactElement;
+    renderProfileInput?: () => React.ReactElement;
+  }
+  type CreateOpenChannelUI = React.FC<CreateOpenChannelUIProps>;
+  export default CreateOpenChannelUI;
+}
+
+// OpenChannelSettings
 interface OpenChannelSettingsContextProps {
   channelUrl: string;
   children?: React.ReactElement;
