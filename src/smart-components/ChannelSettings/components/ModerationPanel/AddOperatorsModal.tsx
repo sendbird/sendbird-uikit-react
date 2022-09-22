@@ -56,13 +56,13 @@ export default function AddOperatorsModal({
             onSubmit(members);
           })
         }}
-        titleText="Select members"
+        titleText={stringSet.CHANNEL_SETTING__MEMBERS__SELECT_TITLE}
       >
         <Label
           color={(selectedCount > 0) ? LabelColors.PRIMARY : LabelColors.ONBACKGROUND_3}
           type={LabelTypography.CAPTION_1}
         >
-          {`${selectedCount} ${stringSet.MODAL__INVITE_MEMBER__SELECTEC}`}
+          {`${selectedCount} ${stringSet.MODAL__INVITE_MEMBER__SELECTED}`}
         </Label>
         <div
           className="sendbird-more-members__popup-scroll"

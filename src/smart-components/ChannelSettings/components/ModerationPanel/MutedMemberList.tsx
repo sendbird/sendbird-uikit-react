@@ -18,12 +18,14 @@ import UserListItem from '../UserListItem';
 import MutedMembersModal from './MutedMembersModal';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { useLocalization } from '../../../../lib/LocalizationContext';
 
 
 export const MutedMemberList = (): ReactElement => {
   const [members, setMembers] = useState([]);
   const [hasNext, setHasNext] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const { stringSet } = useLocalization();
 
   const { channel } = useChannelSettingsContext();
   const state = useSendbirdStateContext();
@@ -103,7 +105,9 @@ export const MutedMemberList = (): ReactElement => {
                           })
                         }}
                       >
-                        Unmute
+                        <>
+                          {stringSet.CHANNEL_SETTING__UNMUTE}
+                        </>
                       </MenuItem>
                     </MenuItems>
                   )}
@@ -121,7 +125,7 @@ export const MutedMemberList = (): ReactElement => {
             type={LabelTypography.SUBTITLE_2}
             color={LabelColors.ONBACKGROUND_3}
           >
-            No muted members yet
+            {stringSet.CHANNEL_SETTING__NO_UNMUTED}
           </Label>
         )
       }
@@ -137,7 +141,7 @@ export const MutedMemberList = (): ReactElement => {
                 setShowModal(true);
               }}
             >
-              All muted members
+              {stringSet.CHANNEL_SETTING__MUTED_MEMBERS__TITLE_ALL}
             </Button>
           </div>
         )

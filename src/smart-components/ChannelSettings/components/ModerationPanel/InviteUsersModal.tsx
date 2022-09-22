@@ -5,6 +5,7 @@ import { ButtonTypes } from '../../../../ui/Button';
 import UserListItem from '../../../../ui/UserListItem';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { useLocalization } from '../../../../lib/LocalizationContext';
 
 interface Props {
   onCancel(): void;
@@ -24,6 +25,7 @@ export default function InviteUsers({
   const globalUserListQuery = state?.config?.userListQuery;
 
   const { channel } = useChannelSettingsContext();
+  const { stringSet } = useLocalization();
 
   useEffect(() => {
     const userListQuery = globalUserListQuery ? globalUserListQuery() : sdk?.createApplicationUserListQuery();
@@ -33,7 +35,7 @@ export default function InviteUsers({
       });
       setUserQuery(userListQuery);
     }
-  }, [sdk])
+  }, [sdk]);
   return (
     <div>
       <Modal
@@ -47,7 +49,7 @@ export default function InviteUsers({
             onSubmit(members);
           });
         }}
-        titleText="Select members"
+        titleText={stringSet.CHANNEL_SETTING__MEMBERS__SELECT_TITLE}
       >
         <div
           className="sendbird-more-members__popup-scroll"

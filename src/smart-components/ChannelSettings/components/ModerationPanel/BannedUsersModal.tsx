@@ -12,6 +12,7 @@ import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 
 import { noop } from '../../../../utils/utils';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
+import { useLocalization } from '../../../../lib/LocalizationContext';
 
 interface Props {
   onCancel(): void;
@@ -23,6 +24,7 @@ export default function BannedUsersModal({
   const [members, setMembers] = useState([]);
   const [memberQuery, setMemberQuery] = useState(null);
   const { channel } = useChannelSettingsContext();
+  const { stringSet } = useLocalization();
 
   useEffect(() => {
     const bannedUserListQuery = channel?.createBannedUserListQuery();
@@ -37,7 +39,7 @@ export default function BannedUsersModal({
         hideFooter
         onCancel={() => onCancel()}
         onSubmit={noop}
-        titleText="Muted members"
+        titleText={stringSet.CHANNEL_SETTING__MUTED_MEMBERS__TITLE}
       >
         <div
           className="sendbird-more-members__popup-scroll"

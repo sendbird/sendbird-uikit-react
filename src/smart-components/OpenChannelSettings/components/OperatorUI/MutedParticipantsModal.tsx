@@ -45,7 +45,7 @@ export default function MutedParticipantsModal({
         hideFooter
         onCancel={() => onCancel()}
         onSubmit={noop}
-        titleText="Muted members"
+        titleText={stringSet.OPEN_CHANNEL_SETTINGS__MUTED_MEMBERS__TITLE}
       >
         <div
           className="sendbird-more-members__popup-scroll"

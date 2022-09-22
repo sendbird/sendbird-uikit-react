@@ -44,7 +44,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
         hideFooter
         onCancel={() => onCancel()}
         onSubmit={noop}
-        titleText="All Members"
+        titleText={stringSet.CHANNEL_SETTING__MEMBERS__SEE_ALL_MEMBERS}
       >
         <div
           className="sendbird-more-members__popup-scroll"

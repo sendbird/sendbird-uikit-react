@@ -241,9 +241,9 @@ export const Korean = () => fitPageSize(
     dateLocale={kr}
     stringSet={{
       CHANNEL_LIST__TITLE: '채널 목록',
-      CHANNEL__MESSAGE_INPUT__PLACE_HOLDER: '메시지 보내기',
-      CHANNEL__MESSAGE_INPUT__PLACE_HOLDER__DISABLED: '입력이 불가능 합니다',
-      CHANNEL__MESSAGE_INPUT__PLACE_HOLDER__MUTED: '음소거 되었습니다',
+      MESSAGE_INPUT__PLACE_HOLDER: '메시지 보내기',
+      MESSAGE_INPUT__PLACE_HOLDER__DISABLED: '입력이 불가능 합니다',
+      MESSAGE_INPUT__PLACE_HOLDER__MUTED: '음소거 되었습니다',
     }}
     isMentionEnabled
     isTypingIndicatorEnabledOnChannelList
