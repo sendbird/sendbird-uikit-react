@@ -133,10 +133,10 @@ const MessageInput = React.forwardRef((props, ref) => {
           }).join('')
         )).join(' ');
       } else {
-        if (textField?.innerHTML) {
-          /* mention disabled */
+        /* mention disabled */
+        try {
           textField.innerHTML = message?.message;
-        }
+        } catch { }
         setMentionedUserIds([]);
       }
       setIsInput(textField?.innerText?.length > 0);
