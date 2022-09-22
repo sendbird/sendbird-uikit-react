@@ -10,7 +10,7 @@ declare module "SendbirdUIKitGlobal" {
   import type { SendbirdError, SessionHandler, User } from '@sendbird/chat';
   import type { GroupChannel, GroupChannelCreateParams, GroupChannelUpdateParams, Member, SendbirdGroupChat, GroupChannelListQuery } from '@sendbird/chat/groupChannel';
   import type { AdminMessage, FailedMessageHandler, FileMessage, FileMessageCreateParams, MessageListParams, MessageSearchQuery, UserMessage, UserMessageCreateParams, UserMessageUpdateParams } from '@sendbird/chat/message';
-  import type { OpenChannel, OpenChannel, OpenChannelCreateParams, OpenChannelUpdateParams, SendbirdOpenChat } from '@sendbird/chat/openChannel';
+  import type { OpenChannel, OpenChannelCreateParams, OpenChannelUpdateParams, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
   export type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
   export interface AppProps {
