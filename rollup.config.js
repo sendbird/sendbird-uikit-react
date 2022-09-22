@@ -38,7 +38,7 @@ module.exports = ({
     },
   ],
   external: [
-    'sendbird',
+    '@sendbird/chat',
     'prop-types',
     'react',
     'react-dom',
@@ -102,7 +102,7 @@ module.exports = ({
     }),
     commonjs(),
     nodePolyfills({
-      include: ['buffer', 'stream']
+      include: ['buffer', 'stream'],
     }),
     copy({
       verbose: true,
@@ -135,7 +135,7 @@ module.exports = ({
         {
           src: './scripts/package.template.json',
           dest: 'dist',
-          rename: 'package.json'
+          rename: 'package.json',
         },
       ],
     }),
