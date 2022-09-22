@@ -62,7 +62,7 @@ export const MemberList = (): ReactElement => {
   }, [channel]);
 
   return (
-    <>
+    <div className="sendbird-channel-settings-member-list sendbird-accordion">
       {
         members.map((member) => (
           <UserListItem
@@ -204,7 +204,7 @@ export const MemberList = (): ReactElement => {
           />
         )
       }
-    </>
+    </div>
   );
 }
 
