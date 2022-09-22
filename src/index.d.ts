@@ -950,9 +950,15 @@ interface OpenChannelListProviderProps {
   onChannelSelected?: OnOpenChannelSelected;
 }
 
+interface RenderOpenChannelPreviewProps {
+  channel: OpenChannel;
+  isSelected: boolean;
+  onChannelSelected: OnOpenChannelSelected;
+}
+
 interface OpenChannelListUIProps {
   renderHeader?: () => React.ReactElement;
-  renderChannelPreview?: (props: RenderChannelPreviewProps) => React.ReactElement;
+  renderChannelPreview?: (props: RenderOpenChannelPreviewProps) => React.ReactElement;
   renderPlaceHolderEmpty?: () => React.ReactElement;
   renderPlaceHolderError?: () => React.ReactElement;
   renderPlaceHolderLoading?: () => React.ReactElement;
@@ -984,7 +990,7 @@ declare module '@sendbird/uikit-react/OpenChannelList/context' {
 declare module '@sendbird/uikit-react/OpenChannel/components/OpenChannelListUI' {
   interface OpenChannelListUIProps {
     renderHeader?: () => React.ReactElement;
-    renderChannelPreview?: (props: RenderChannelPreviewProps) => React.ReactElement;
+    renderChannelPreview?: (props: RenderOpenChannelPreviewProps) => React.ReactElement;
     renderPlaceHolderEmpty?: () => React.ReactElement;
     renderPlaceHolderError?: () => React.ReactElement;
     renderPlaceHolderLoading?: () => React.ReactElement;
@@ -1430,13 +1436,13 @@ declare module '@sendbird/uikit-react/ui/ContextMenu' {
 
 declare module '@sendbird/uikit-react/ui/DateSeparator' {
   enum Colors {
-    ONBACKGROUND_1,
-    ONBACKGROUND_2,
-    ONBACKGROUND_3,
-    ONBACKGROUND_4,
-    ONCONTENT_1,
-    PRIMARY,
-    ERROR,
+    ONBACKGROUND_1 = 'ONBACKGROUND_1',
+    ONBACKGROUND_2 = 'ONBACKGROUND_2',
+    ONBACKGROUND_3 = 'ONBACKGROUND_3',
+    ONBACKGROUND_4 = 'ONBACKGROUND_4',
+    ONCONTENT_1 = 'ONCONTENT_1',
+    PRIMARY = 'PRIMARY',
+    ERROR = 'ERROR',
   }
   interface DateSeparatorProps {
     children: React.ReactElement,
@@ -1922,13 +1928,13 @@ declare module '@sendbird/uikit-react/ui/SortByRow' {
 
 declare module '@sendbird/uikit-react/ui/TextButton' {
   enum Colors {
-    ONBACKGROUND_1,
-    ONBACKGROUND_2,
-    ONBACKGROUND_3,
-    ONBACKGROUND_4,
-    ONCONTENT_1,
-    PRIMARY,
-    ERROR,
+    ONBACKGROUND_1 = 'ONBACKGROUND_1',
+    ONBACKGROUND_2 = 'ONBACKGROUND_2',
+    ONBACKGROUND_3 = 'ONBACKGROUND_3',
+    ONBACKGROUND_4 = 'ONBACKGROUND_4',
+    ONCONTENT_1 = 'ONCONTENT_1',
+    PRIMARY = 'PRIMARY',
+    ERROR = 'ERROR',
   }
   interface TextButtonProps {
     children: React.ReactElement;

@@ -5,14 +5,14 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import { changeTypeToClassName, changeSizeToClassName } from './utils';
 
 export enum ButtonTypes {
-  PRIMARY,
-  SECONDARY,
-  DANGER,
-  DISABLED,
+  PRIMARY = 'PRIMARY',
+  SECONDARY = 'SECONDARY',
+  DANGER = 'DANGER',
+  DISABLED = 'DISABLED',
 }
 export enum ButtonSizes {
-  BIG,
-  SMALL,
+  BIG = 'BIG',
+  SMALL = 'SMALL',
 }
 
 export interface ButtonProps {
@@ -30,7 +30,7 @@ export default function Button({
   size = ButtonSizes.BIG,
   children = 'Button',
   disabled = false,
-  onClick = () => {/* noop */},
+  onClick = () => {/* noop */ },
 }: ButtonProps): ReactElement {
   const injectingClassNames = [
     ...((Array.isArray(className)) ? className : [className]),

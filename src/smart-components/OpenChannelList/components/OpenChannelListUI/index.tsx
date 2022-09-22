@@ -14,7 +14,7 @@ import OpenChannelListActionTypes from '../../context/dux/actionTypes';
 import CreateOpenChannel from '../../../CreateOpenChannel';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 
-interface RenderChannelPreviewProps {
+interface RenderOpenChannelPreviewProps {
   channel: OpenChannel;
   isSelected: boolean;
   onChannelSelected: OnOpenChannelSelected;
@@ -22,7 +22,7 @@ interface RenderChannelPreviewProps {
 
 export interface OpenChannelListUIProps {
   renderHeader?: () => React.ReactElement;
-  renderChannelPreview?: (props: RenderChannelPreviewProps) => React.ReactElement;
+  renderChannelPreview?: (props: RenderOpenChannelPreviewProps) => React.ReactElement;
   renderPlaceHolderEmpty?: () => React.ReactElement;
   renderPlaceHolderError?: () => React.ReactElement;
   renderPlaceHolderLoading?: () => React.ReactElement;
