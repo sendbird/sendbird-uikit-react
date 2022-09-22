@@ -15,10 +15,10 @@ export interface UserFilledOpenChannelListQuery {
 }
 
 export enum OpenChannelListFetchingStatus {
-  EMPTY,
-  FETCHING,
-  DONE,
-  ERROR,
+  EMPTY = 'EMPTY',
+  FETCHING = 'FETCHING',
+  DONE = 'DONE',
+  ERROR = 'ERROR',
 }
 
 export type OnOpenChannelSelected = (channel: OpenChannel, e?: React.MouseEvent<HTMLDivElement | unknown>) => void;
