@@ -7,10 +7,38 @@ declare module "SendbirdUIKitGlobal" {
   import type React from 'react';
   import type Locale from 'date-fns';
   import type SendbirdChat from '@sendbird/chat';
-  import type { SendbirdError, SessionHandler, User } from '@sendbird/chat';
-  import type { GroupChannel, GroupChannelCreateParams, GroupChannelUpdateParams, Member, SendbirdGroupChat, GroupChannelListQuery } from '@sendbird/chat/groupChannel';
-  import type { AdminMessage, FailedMessageHandler, FileMessage, FileMessageCreateParams, MessageListParams, MessageSearchQuery, UserMessage, UserMessageCreateParams, UserMessageUpdateParams } from '@sendbird/chat/message';
-  import type { OpenChannel, OpenChannelCreateParams, OpenChannelUpdateParams, SendbirdOpenChat } from '@sendbird/chat/openChannel';
+  import type {
+    SendbirdError,
+    SessionHandler,
+    User,
+    ApplicationUserListQueryParams,
+  } from '@sendbird/chat';
+  import type {
+    GroupChannel,
+    GroupChannelCreateParams,
+    GroupChannelUpdateParams,
+    Member,
+    SendbirdGroupChat,
+    GroupChannelListQuery,
+    GroupChannelListQueryParams,
+  } from '@sendbird/chat/groupChannel';
+  import type {
+    AdminMessage,
+    FailedMessageHandler,
+    FileMessage,
+    FileMessageCreateParams,
+    MessageListParams,
+    MessageSearchQuery,
+    UserMessage,
+    UserMessageCreateParams,
+    UserMessageUpdateParams,
+  } from '@sendbird/chat/message';
+  import type {
+    OpenChannel,
+    OpenChannelCreateParams,
+    OpenChannelUpdateParams,
+    SendbirdOpenChat,
+  } from '@sendbird/chat/openChannel';
 
   export type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
   export interface AppProps {
@@ -265,36 +293,8 @@ declare module "SendbirdUIKitGlobal" {
 
   export type UserDispatcher = (params: UserDispatcherParams) => void;
 
-
-  export interface ApplicationUserListQuery {
-    limit?: number;
-    userIdsFilter?: Array<string>;
-    metaDataKeyFilter?: string;
-    metaDataValuesFilter?: Array<string>;
-  }
-
-  export interface GroupChannelListQueryParams {
-    limit?: number;
-    includeEmpty?: boolean;
-    order?: 'latest_last_message' | 'chronological' | 'channel_name_alphabetical' | 'metadata_value_alphabetical';
-    userIdsExactFilter?: Array<string>;
-    userIdsIncludeFilter?: Array<string>;
-    userIdsIncludeFilterQueryType?: 'AND' | 'OR';
-    nicknameContainsFilter?: string;
-    channelNameContainsFilter?: string;
-    customTypesFilter?: Array<string>;
-    customTypeStartsWithFilter?: string;
-    channelUrlsFilter?: Array<string>;
-    superChannelFilter?: 'all' | 'super' | 'nonsuper';
-    publicChannelFilter?: 'all' | 'public' | 'private';
-    metadataOrderKeyFilter?: string;
-    memberStateFilter?: 'all' | 'joined_only' | 'invited_only' | 'invited_by_friend' | 'invited_by_non_friend';
-    hiddenChannelFilter?: 'unhidden_only' | 'hidden_only' | 'hidden_allow_auto_unhide' | 'hidden_prevent_auto_unhide';
-    unreadChannelFilter?: 'all' | 'unread_message';
-    includeFrozen?: boolean;
-  }
   export interface ChannelListQueries {
-    applicationUserListQuery?: ApplicationUserListQuery;
+    applicationUserListQuery?: ApplicationUserListQueryParams;
     channelListQuery?: GroupChannelListQueryParams;
   }
 
@@ -386,15 +386,8 @@ declare module "SendbirdUIKitGlobal" {
     renderLeaveChannel?: () => React.ReactNode | React.ReactElement;
   }
 
-  export interface ApplicationUserListQuery {
-    limit?: number;
-    userIdsFilter?: Array<string>;
-    metaDataKeyFilter?: string;
-    metaDataValuesFilter?: Array<string>;
-  }
-
   export interface ChannelSettingsQueries {
-    applicationUserListQuery?: ApplicationUserListQuery;
+    applicationUserListQuery?: ApplicationUserListQueryParams;
   }
 
   export type ChannelSettingsContextProps = {
