@@ -26,10 +26,11 @@
     "date-fns": "^2.16.1",
     "prop-types": "^15.7.2",
     "react": "^16.8.6 || ^17.0.0 || ^18.0.0",
-    "react-dom": "^16.8.6 || ^17.0.0 || ^18.0.0"
+    "react-dom": "^16.8.6 || ^17.0.0 || ^18.0.0",
+    "@sendbird/chat": "^4.0.11"
   },
   "dependencies": {
-    "@sendbird/chat": "^4.0.6",
+    "@sendbird/chat": "^4.0.11",
     "css-vars-ponyfill": "^2.3.2",
     "date-fns": "^2.16.1",
     "prop-types": "^15.7.2"
