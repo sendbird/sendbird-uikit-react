@@ -1245,36 +1245,6 @@ declare module '@sendbird/uikit-react/ui/OpenChannelAvatar' {
   export default OpenChannelAvatar;
 }
 
-declare module '@sendbird/uikit-react/ui/ChannelPreview' {
-  interface ChannelPreviewProps {
-    channel?: GroupChannel,
-    currentUser?: User,
-    isActive?: boolean,
-    ChannelAction: React.ReactElement,
-    theme?: 'light' | 'dark',
-    onClick?: () => void,
-    tabIndex?: number,
-  }
-  type ChannelPreview = React.FC<ChannelPreviewProps>;
-  export default ChannelPreview;
-}
-
-declare module '@sendbird/uikit-react/ui/ChatHeader' {
-  interface ChatHeaderProps {
-    currentGroupChannel?: GroupChannel;
-    currentUser?: User;
-    title?: string;
-    subTitle?: string;
-    isMuted?: boolean;
-    theme?: 'light' | 'dark';
-    showSearchIcon?: false;
-    onSearchClick?: () => void;
-    onActionClick?: () => void;
-  }
-  type ChatHeader = React.FC<ChatHeaderProps>;
-  export default ChatHeader;
-}
-
 declare module '@sendbird/uikit-react/ui/Checkbox' {
   interface CheckboxProps {
     id?: string,
