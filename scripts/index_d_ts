@@ -535,6 +535,7 @@ declare module "SendbirdUIKitGlobal" {
   };
 
   export type MessageInputProps = {
+    // value is removed when channelURL changes
     value?: string;
     ref?: React.MutableRefObject<any>;
   };
@@ -664,6 +665,7 @@ declare module "SendbirdUIKitGlobal" {
   }
 
   export type OpenChannelMessageInputWrapperProps = {
+    // value is removed when channelURL changes
     value?: string;
     ref?: React.MutableRefObject<any>;
   }
@@ -1725,6 +1727,7 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
     isEdit?: boolean,
     isMentionEnabled?: boolean;
     disabled?: boolean,
+    // value is removed when channelURL changes
     value?: string,
     name: string,
     placeholder?: string,
