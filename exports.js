@@ -72,7 +72,7 @@ export default {
   // CreateOpenChannel
   CreateOpenChannel: 'src/smart-components/CreateOpenChannel/index.tsx',
   'CreateOpenChannel/context': 'src/smart-components/CreateOpenChannel/context/CreateOpenChannelProvider.tsx',
-  'CreateOpenChannel/components/CreateOpenChannelUI': 'src/smart-components/CreateOpenChannelUI/index.tsx',
+  'CreateOpenChannel/components/CreateOpenChannelUI': 'src/smart-components/CreateOpenChannel/components/CreateOpenChannelUI/index.tsx',
 
   // OpenChannelSettings
   OpenChannelSettings: 'src/smart-components/OpenChannelSettings/index.tsx',
