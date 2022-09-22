@@ -534,6 +534,11 @@ declare module "SendbirdUIKitGlobal" {
     renderMessageContent?: () => React.ReactNode | React.ReactElement;
   };
 
+  export type MessageInputProps = {
+    value?: string;
+    ref?: React.MutableRefObject<any>;
+  };
+
   export type MessageListProps = {
     renderMessage?: (props: RenderMessageProps) => React.ReactNode | React.ReactElement;
     renderPlaceholderEmpty?: () => React.ReactNode | React.ReactElement;
@@ -656,6 +661,11 @@ declare module "SendbirdUIKitGlobal" {
   export type OpenchannelMessageListProps = {
     renderMessage?: (props: RenderMessageProps) => React.ReactNode | React.ReactElement;
     renderPlaceHolderEmptyList?: () => React.ReactNode | React.ReactElement;
+  }
+
+  export type OpenChannelMessageInputWrapperProps = {
+    value?: string;
+    ref?: React.MutableRefObject<any>;
   }
 
   export type OpenChannelMessageProps = {
@@ -1116,7 +1126,8 @@ declare module '@sendbird/uikit-react/Channel/components/Message' {
 }
 
 declare module '@sendbird/uikit-react/Channel/components/MessageInput' {
-  const MessageInput: React.FunctionComponent;
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  const MessageInput: React.FunctionComponent<SendbirdUIKitGlobal.MessageInputProps>;
   export default MessageInput;
 }
 
@@ -1175,9 +1186,9 @@ declare module '@sendbird/uikit-react/OpenChannel/components/OpenChannelHeader' 
 }
 
 declare module '@sendbird/uikit-react/OpenChannel/components/OpenChannelInput' {
-  const OpenChannelInput: React.FunctionComponent;
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  const OpenChannelInput: React.FC<SendbirdUIKitGlobal.OpenChannelMessageInputWrapperProps>;
   export default OpenChannelInput;
-
 }
 
 declare module '@sendbird/uikit-react/OpenChannel/components/OpenChannelMessage' {
