@@ -12,12 +12,13 @@ import LinkLabel from '../LinkLabel';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import Loader from '../Loader';
 import UserProfile from '../UserProfile';
+import Word from '../Word';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 
 import uuidv4 from '../../utils/uuid';
 import { copyToClipboard } from '../OpenchannelUserMessage/utils';
 import { useLocalization } from '../../lib/LocalizationContext';
-import { checkOGIsEnalbed, createUrlTester, URL_REG } from './utils';
+import { checkOGIsEnalbed } from './utils';
 import {
   checkIsPending,
   checkIsFailed,
@@ -28,6 +29,7 @@ import {
   showMenuTrigger,
 } from '../../utils/openChannelUtils';
 import { getSenderFromMessage } from '../../utils/openChannelUtils';
+import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 interface Props {
   message: UserMessage;
@@ -60,7 +62,7 @@ export default function OpenchannelOGMessage({
   const status = message?.sendingStatus;
   const { ogMetaData } = message;
   const { defaultImage } = ogMetaData;
-
+  const sdk = useSendbirdStateContext?.()?.stores?.sdkStore?.sdk;
   const { stringSet, dateLocale } = useLocalization();
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const [contextStyle, setContextStyle] = useState({});
@@ -68,7 +70,6 @@ export default function OpenchannelOGMessage({
   const contextMenuRef = useRef(null);
   const avatarRef = useRef(null);
 
-  const isUrl = createUrlTester(URL_REG);
   const isPending = checkIsPending(status);
   const isFailed = checkIsFailed(status);
   const sender = getSenderFromMessage(message);
@@ -78,31 +79,12 @@ export default function OpenchannelOGMessage({
     const splitMessage = message.message.split(' ');
     const matchedMessage = splitMessage
       .map((word) => (
-        isUrl(word)
-          ? (
-            <LinkLabel
-              key={uuidv4()}
-              className={[
-                wordClassName,
-                'sendbird-openchannel-og-message--word--link'
-              ]}
-              src={word}
-              type={LabelTypography.BODY_1}
-              color={LabelColors.PRIMARY}
-            >
-              {word}
-            </LinkLabel>
-          )
-          : (
-            <Label
-              key={uuidv4()}
-              className={wordClassName}
-              type={LabelTypography.BODY_1}
-              color={LabelColors.ONBACKGROUND_1}
-            >
-              {word}
-            </Label>
-          )
+        <Word
+          key={uuidv4()}
+          word={word}
+          message={message}
+          isByMe={message?.sender?.userId === sdk?.currentUser?.userId}
+        />
       ));
 
     if (message.updatedAt > 0) {

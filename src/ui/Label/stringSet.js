@@ -139,6 +139,14 @@ const getStringSet = (lang = 'en') => {
       MENTION_NAME__NO_NAME: '(No name)',
       MENTION_COUNT__OVER_LIMIT: 'You can mention up to %d times per message.',
       UI__FILE_VIEWER__UNSUPPORT: 'Unsupported message',
+      // OpenChannelList
+      OPEN_CHANNEL_LIST__TITLE: 'Channels',
+      CREATE_OPEN_CHANNEL_LIST__TITLE: 'New channel profile',
+      CREATE_OPEN_CHANNEL_LIST__SUBTITLE__IMG_SECTION: 'Channel image',
+      CREATE_OPEN_CHANNEL_LIST__SUBTITLE__IMG_UPLOAD: 'Upload',
+      CREATE_OPEN_CHANNEL_LIST__SUBTITLE__TEXT_SECTION: 'Channel name',
+      CREATE_OPEN_CHANNEL_LIST__SUBTITLE__TEXT_PLACE_HOLDER: 'Enter channel name',
+      CREATE_OPEN_CHANNEL_LIST__SUBMIT: 'Create',
     },
   };
   return stringSet[lang];

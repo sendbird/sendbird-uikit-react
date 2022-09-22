@@ -62,22 +62,22 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
             class="sendbird-openchannel-og-message__top__right__description__message sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
           >
             <span
-              class="sendbird-openchannel-og-message--word sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
+              class="sendbird-word"
             >
               I
             </span>
             <span
-              class="sendbird-openchannel-og-message--word sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
+              class="sendbird-word"
             >
               am
             </span>
             <span
-              class="sendbird-openchannel-og-message--word sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
+              class="sendbird-word"
             >
               the
             </span>
             <span
-              class="sendbird-openchannel-og-message--word sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
+              class="sendbird-word"
             >
               Message
             </span>

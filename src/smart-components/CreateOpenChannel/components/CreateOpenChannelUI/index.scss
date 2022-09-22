@@ -1,0 +1,58 @@
+@import '../../../../styles/variables';
+
+.sendbird-create-open-channel-ui {
+  position: relative;
+  display: inline-flex;
+}
+.sendbird-create-open-channel-ui__profile-input {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+
+  .sendbird-create-open-channel-ui__profile-input__img-section {
+    position: relative;
+    margin-top: 16px;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+
+    .sendbird-create-open-channel-ui__profile-input__img-section__avatar {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 80px;
+      height: 80px;
+
+      &--default {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+        height: 80px; 
+        border-radius: 50%;
+        @include themed() {
+          background-color: t(bg-2);
+        }
+      }
+    }
+    .sendbird-create-open-channel-ui__profile-input__img-section__button {
+      position: relative;
+      margin-left: 18px;
+      display: inline-flex;
+    }
+  }
+  .sendbird-create-open-channel-ui__profile-input__name-section {
+    position: relative;
+    margin-top: 8px;
+    display: inline-flex;
+    flex-direction: row;
+  }
+}

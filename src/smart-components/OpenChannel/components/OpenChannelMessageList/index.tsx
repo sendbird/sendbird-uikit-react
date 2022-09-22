@@ -64,9 +64,45 @@ function OpenchannelMessageList(
     }
   };
 
-  const hasMessage = useMemo(() => {
-    return allMessages.length > 0;
-  }, [allMessages.length]);
+  const memoizedMessageList = useMemo(() => {
+    if (allMessages.length > 0) {
+      return (
+        allMessages.map((message, index) => {
+          const previousMessage = allMessages[index - 1];
+          const nextMessage = allMessages[index - 1];
+
+          const previousMessageCreatedAt = previousMessage && previousMessage.createdAt;
+          const currentCreatedAt = message?.createdAt;
+          // https://stackoverflow.com/a/41855608
+          const hasSeparator = !(previousMessageCreatedAt && (
+            isSameDay(currentCreatedAt, previousMessageCreatedAt)
+          ));
+
+          const [chainTop, chainBottom] = isMessageGroupingEnabled
+            ? compareMessagesForGrouping(previousMessage, message, nextMessage)
+            : [false, false];
+          return (
+            <OpenChannelMessage
+              key={message?.messageId || (message as UserMessage | FileMessage)?.reqId}
+              message={message}
+              chainTop={chainTop}
+              chainBottom={chainBottom}
+              hasSeparator={hasSeparator}
+              renderMessage={props?.renderMessage}
+            />
+          )
+        })
+      );
+    }
+    return (
+      props?.renderPlaceHolderEmptyList?.() || (
+        <PlaceHolder
+          className="sendbird-openchannel-conversation-scroll__container__place-holder"
+          type={PlaceHolderTypes.NO_MESSAGES}
+        />
+      )
+    );
+  }, [allMessages]);
 
   return (
     <div className="sendbird-openchannel-conversation-scroll">
@@ -75,47 +111,12 @@ function OpenchannelMessageList(
         <div
           className={[
             'sendbird-openchannel-conversation-scroll__container__item-container',
-            hasMessage ? '' : 'no-messages',
+            (allMessages.length > 0) ? '' : 'no-messages',
           ].join(' ')}
           onScroll={handleOnScroll}
           ref={scrollRef}
         >
-          {
-            hasMessage
-              ? (
-                allMessages.map((message, index) => {
-                  const previousMessage = allMessages[index - 1];
-                  const nextMessage = allMessages[index - 1];
-
-                  const previousMessageCreatedAt = previousMessage && previousMessage.createdAt;
-                  const currentCreatedAt = message?.createdAt;
-                  // https://stackoverflow.com/a/41855608
-                  const hasSeparator = !(previousMessageCreatedAt && (
-                    isSameDay(currentCreatedAt, previousMessageCreatedAt)
-                  ));
-
-                  const [chainTop, chainBottom] = isMessageGroupingEnabled
-                    ? compareMessagesForGrouping(previousMessage, message, nextMessage)
-                    : [false, false];
-                  return (
-                    <OpenChannelMessage
-                      key={message?.messageId || (message as UserMessage | FileMessage)?.reqId}
-                      message={message}
-                      chainTop={chainTop}
-                      chainBottom={chainBottom}
-                      hasSeparator={hasSeparator}
-                      renderMessage={props?.renderMessage}
-                    />
-                  )
-                })
-              )
-              : props?.renderPlaceHolderEmptyList?.() || (
-                <PlaceHolder
-                  className="sendbird-openchannel-conversation-scroll__container__place-holder"
-                  type={PlaceHolderTypes.NO_MESSAGES}
-                />
-              )
-          }
+          {memoizedMessageList}
         </div>
       </div>
       {

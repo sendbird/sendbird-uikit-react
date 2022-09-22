@@ -63,6 +63,17 @@ export default {
   'OpenChannel/components/OpenChannelMessageList': 'src/smart-components/OpenChannel/components/OpenChannelMessageList/index.tsx',
   'OpenChannel/components/OpenChannelUI': 'src/smart-components/OpenChannel/components/OpenChannelUI/index.tsx',
 
+  // OpenChannelList
+  OpenChannelList: 'src/smart-components/OpenChannelList/index.tsx',
+  'OpenChannelList/context': 'src/smart-components/OpenChannelList/context/OpenChannelListProvider.tsx',
+  'OpenChannelList/components/OpenChannelListUI': 'src/smart-components/OpenChannelList/components/OpenChannelListUI/index.tsx',
+  'OpenChannelList/components/OpenChannelPreview': 'src/smart-components/OpenChannelList/components/OpenChannelPreview/index.tsx',
+
+  // CreateOpenChannel
+  CreateOpenChannel: 'src/smart-components/CreateOpenChannel/index.tsx',
+  'CreateOpenChannel/context': 'src/smart-components/CreateOpenChannel/context/CreateOpenChannelProvider.tsx',
+  'CreateOpenChannel/components/CreateOpenChannelUI': 'src/smart-components/CreateOpenChannel/components/CreateOpenChannelUI/index.tsx',
+
   // OpenChannelSettings
   OpenChannelSettings: 'src/smart-components/OpenChannelSettings/index.tsx',
   'OpenChannelSettings/context': 'src/smart-components/OpenChannelSettings/context/OpenChannelSettingsProvider.tsx',

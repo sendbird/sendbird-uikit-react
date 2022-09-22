@@ -309,9 +309,9 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
 
   // handles API calls from withSendbird
   useEffect(() => {
-    const subScriber = utils.pubSubHandler(channelUrl, pubSub, messagesDispatcher);
+    const subscriber = utils.pubSubHandler(channelUrl, pubSub, messagesDispatcher);
     return () => {
-      utils.pubSubHandleRemover(subScriber);
+      utils.pubSubHandleRemover(subscriber);
     };
   }, [channelUrl, sdkInit]);
 

@@ -2,7 +2,7 @@ import './index.scss';
 import React from 'react';
 import type { UserMessage } from '@sendbird/chat/message';
 
-import { LabelTypography, LabelColors } from '../Label';
+import { LabelTypography } from '../Label';
 import LinkLabel from '../LinkLabel';
 import uuidv4 from '../../utils/uuid';
 import { convertWordToStringObj, StringObjType, StringObj } from '../../utils';
@@ -68,7 +68,6 @@ export default function Word(props: WordProps): JSX.Element {
                     key={uuidv4()}
                     src={stringUrl.url}
                     type={LabelTypography.BODY_1}
-                    color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
                   >
                     {stringUrl.url}
                   </LinkLabel>
@@ -82,7 +81,6 @@ export default function Word(props: WordProps): JSX.Element {
                 key={uuidv4()}
                 src={word}
                 type={LabelTypography.BODY_1}
-                color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
               >
                 {value}
               </LinkLabel>

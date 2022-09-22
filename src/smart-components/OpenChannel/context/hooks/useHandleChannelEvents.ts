@@ -6,6 +6,9 @@ import uuidv4 from '../../../../utils/uuid';
 import { scrollIntoLast } from '../utils';
 import { Logger } from '../../../../lib/SendbirdState';
 
+type MessagesDispatcherType = {
+  type: string, payload: any,
+}
 interface DynamicParams {
   currentOpenChannel: OpenChannel;
   checkScrollBottom: () => boolean;
@@ -13,7 +16,7 @@ interface DynamicParams {
 interface StaticParams {
   sdk: SendbirdOpenChat;
   logger: Logger;
-  messagesDispatcher: ({ type: string, payload: any }) => void;
+  messagesDispatcher: (props: MessagesDispatcherType) => void;
 }
 
 function useHandleChannelEvents(

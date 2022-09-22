@@ -14,6 +14,7 @@ export const PlaceHolderTypes = _PlaceHolderTypes;
 export interface PlaceHolderProps {
   className?: string | Array<string>;
   type: typeof PlaceHolderTypes[keyof typeof PlaceHolderTypes];
+  iconSize?: string | number;
   searchInString?: string;
   retryToConnect?: () => void;
 }
@@ -21,6 +22,7 @@ export interface PlaceHolderProps {
 export default function PlaceHolder({
   className = '',
   type,
+  iconSize,
   searchInString = '',
   retryToConnect = null,
 }: PlaceHolderProps): ReactElement {
@@ -35,14 +37,14 @@ export default function PlaceHolder({
       {
         type === PlaceHolderTypes.LOADING && (
           <Loader
-            width="48px"
-            height="48px"
+            width={iconSize || "48px"}
+            height={iconSize || "48px"}
           >
             <Icon
               type={IconTypes.SPINNER}
               fillColor={IconColors.PRIMARY}
-              width="48px"
-              height="48px"
+              width={iconSize || "48px"}
+              height={iconSize || "48px"}
             />
           </Loader>
         )
@@ -60,8 +62,8 @@ export default function PlaceHolder({
                   className="sendbird-place-holder__body__icon"
                   type={IconTypes.CHAT}
                   fillColor={IconColors.ON_BACKGROUND_3}
-                  width="64px"
-                  height="64px"
+                  width={iconSize || "64px"}
+                  height={iconSize || "64px"}
                 />
               )
             }
@@ -71,8 +73,8 @@ export default function PlaceHolder({
                   className="sendbird-place-holder__body__icon"
                   type={IconTypes.ERROR}
                   fillColor={IconColors.ON_BACKGROUND_3}
-                  width="64px"
-                  height="64px"
+                  width={iconSize || "64px"}
+                  height={iconSize || "64px"}
                 />
               )
             }
@@ -82,8 +84,8 @@ export default function PlaceHolder({
                   className="sendbird-place-holder__body__icon"
                   type={IconTypes.MESSAGE}
                   fillColor={IconColors.ON_BACKGROUND_3}
-                  width="64px"
-                  height="64px"
+                  width={iconSize || "64px"}
+                  height={iconSize || "64px"}
                 />
               )
             }

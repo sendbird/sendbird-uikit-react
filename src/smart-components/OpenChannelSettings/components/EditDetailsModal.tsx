@@ -7,6 +7,7 @@ import React, {
 import { OpenChannelUpdateParams } from '@sendbird/chat/openChannel';
 
 import { LocalizationContext } from '../../../lib/LocalizationContext';
+import * as pubSubTopics from '../../../lib/pubSub/topics';
 import Modal from '../../../ui/Modal';
 import Input, { InputLabel } from '../../../ui/Input';
 import Avatar from '../../../ui/Avatar/index';
@@ -26,8 +27,7 @@ const EditDetails = (props: Props): ReactElement => {
     onCancel,
   } = props;
   const globalState = useSendbirdStateContext();
-  const logger = globalState?.config?.logger;
-  const theme = globalState?.config?.theme;
+  const { logger, theme, pubSub } = globalState?.config;
   const {
     channel,
     onBeforeUpdateChannel,
@@ -66,10 +66,11 @@ const EditDetails = (props: Props): ReactElement => {
           };
         logger.info('ChannelSettings: Updating channel information', params);
         channel?.updateChannel(params)
-          .then((updateChannel) => {
-            logger.info('ChannelSettings: Channel information update succeeded', updateChannel);
-            onChannelModified?.(updateChannel);
-            setChannel(updateChannel);
+          .then((updatedChannel) => {
+            logger.info('ChannelSettings: Channel information update succeeded', updatedChannel);
+            onChannelModified?.(updatedChannel);
+            setChannel(updatedChannel);
+            pubSub?.publish(pubSubTopics.UPDATE_OPEN_CHANNEL, updatedChannel);
           })
           .catch((error) => {
             logger.error('ChannelSettings: Channel infomation update failed', error);

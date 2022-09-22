@@ -10,7 +10,7 @@ declare module "SendbirdUIKitGlobal" {
   import type { SendbirdError, SessionHandler, User } from '@sendbird/chat';
   import type { GroupChannel, GroupChannelCreateParams, GroupChannelUpdateParams, Member, SendbirdGroupChat, GroupChannelListQuery } from '@sendbird/chat/groupChannel';
   import type { AdminMessage, FailedMessageHandler, FileMessage, FileMessageCreateParams, MessageListParams, MessageSearchQuery, UserMessage, UserMessageCreateParams, UserMessageUpdateParams } from '@sendbird/chat/message';
-  import type { OpenChannel, OpenChannelCreateParams, OpenChannelUpdateParams, SendbirdOpenChat } from '@sendbird/chat/openChannel';
+  import type { OpenChannel, OpenChannel, OpenChannelCreateParams, OpenChannelUpdateParams, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
   export type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
   export interface AppProps {
@@ -668,6 +668,93 @@ declare module "SendbirdUIKitGlobal" {
   };
 
   /**
+   * OpenChannelList
+   */
+  export interface UserFilledOpenChannelListQuery {
+    customTypes?: Array<string>;
+    includeFrozen?: boolean;
+    includeMetaData?: boolean;
+    limit?: number;
+    nameKeyword?: string;
+    urlKeyword?: string;
+  }
+
+  export type OpenChannelListFetchingStatus = 'EMPTY' | 'FETCHING' | 'DONE' | 'ERROR';
+  export type CustomUseReducerDispatcher = (props: { type: string, payload: any }) => void;
+  export type OnOpenChannelSelected = (channel: OpenChannel, e?: React.MouseEvent<HTMLDivElement | unknown>) => void;
+  export type FetchNextCallbackType = (callback: (channels?: Array<OpenChannel>, err?: SendbirdError) => void) => void
+
+  export interface OpenChannelListProviderProps {
+    className?: string;
+    children?: React.ReactElement;
+    queries?: { openChannelListQuery?: UserFilledOpenChannelListQuery };
+    onChannelSelected?: OnOpenChannelSelected;
+  }
+
+  export interface RenderOpenChannelPreviewProps {
+    channel: OpenChannel;
+    isSelected: boolean;
+    onChannelSelected: OnOpenChannelSelected;
+  }
+
+  export interface OpenChannelListUIProps {
+    renderHeader?: () => React.ReactElement;
+    renderChannelPreview?: (props: RenderOpenChannelPreviewProps) => React.ReactElement;
+    renderPlaceHolderEmpty?: () => React.ReactElement;
+    renderPlaceHolderError?: () => React.ReactElement;
+    renderPlaceHolderLoading?: () => React.ReactElement;
+  }
+
+  export interface OpenChannelPreviewProps {
+    className?: string;
+    isSelected?: boolean;
+    channel: OpenChannel;
+    onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  }
+
+  export interface OpenChannelListProviderInterface extends OpenChannelListProviderProps {
+    logger: Logger;
+    currentChannel: OpenChannel;
+    allChannels: Array<OpenChannel>;
+    fetchingStatus: OpenChannelListFetchingStatus;
+    customOpenChannelListQuery?: UserFilledOpenChannelListQuery;
+    fetchNextChannels: FetchNextCallbackType;
+    refreshOpenChannelList: () => void;
+    openChannelListDispatcher: CustomUseReducerDispatcher;
+  }
+
+  export interface OpenChannelListProps extends OpenChannelListProviderProps, OpenChannelListUIProps { }
+
+  /**
+   * CreateOpenChannel
+   */
+  export interface CreateOpenChannelProviderProps {
+    className?: string;
+    children?: React.ReactElement;
+    onCreateChannel?: (channel: OpenChannel) => void;
+    onBeforeCreateChannel?: (params: OpenChannelCreateParams) => OpenChannelCreateParams;
+  }
+  export interface CreateOpenChannelUIProps {
+    closeModal?: () => void;
+    renderHeader?: () => React.ReactElement;
+    renderProfileInput?: () => React.ReactElement;
+  }
+
+  export interface CreateOpenChannelProps extends CreateOpenChannelProviderProps, CreateOpenChannelUIProps { }
+
+  export interface CreateNewOpenChannelCallbackProps {
+    name: string;
+    coverUrlOrImage?: string;
+  }
+
+  export interface CreateOpenChannelContextInterface extends CreateOpenChannelProviderProps {
+    sdk: SendbirdOpenChat;
+    sdkInitialized: boolean;
+    logger: Logger;
+    createNewOpenChannel: (props: CreateNewOpenChannelCallbackProps) => void;
+  }
+
+  /**
    * OpenChannelSettings
    */
   export interface OpenChannelSettingsContextProps {
@@ -1112,6 +1199,54 @@ declare module '@sendbird/uikit-react/OpenChannel/components/OpenChannelUI' {
 }
 
 /**
+ * OpenChannelList
+ */
+declare module '@sendbird/uikit-react/OpenChannelList' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  const OpenChannelList: React.FC<SendbirdUIKitGlobal.OpenChannelListProps>;
+  export default OpenChannelList;
+}
+
+declare module '@sendbird/uikit-react/OpenChannelList/context' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  export const OpenChannelListProvider: React.FC<SendbirdUIKitGlobal.OpenChannelListProviderProps>;
+  export const useChannelListContext: () => SendbirdUIKitGlobal.OpenChannelListProviderInterface;
+}
+
+declare module '@sendbird/uikit-react/OpenChannelList/components/OpenChannelListUI' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  const OpenChannelListUI: React.FC<SendbirdUIKitGlobal.OpenChannelListUIProps>;
+  export default OpenChannelListUI;
+}
+
+declare module '@sendbird/uikit-react/OpenChannelList/components/OpenChannelPreview' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  const OpenChannelPreview: React.FC<SendbirdUIKitGlobal.OpenChannelPreviewProps>;
+  export default OpenChannelPreview;
+}
+
+/**
+ * CreateOpenChannel
+ */
+declare module '@sendbird/uikit-react/CreateOpenChannel' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  const CreateOpenChannel: React.FC<SendbirdUIKitGlobal.CreateOpenChannelProps>;
+  export default CreateOpenChannel;
+}
+
+declare module '@sendbird/uikit-react/CreateOpenChannel/context' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  export const CreateOpenChannelProvider: React.FC<SendbirdUIKitGlobal.CreateOpenChannelProviderProps>;
+  export const useCreateOpenChannelContext: () => SendbirdUIKitGlobal.CreateOpenChannelContextInterface;
+}
+
+declare module '@sendbird/uikit-react/CreateOpenChannel/components/CreateOpenChannelUI' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  const CreateOpenChannelUI: React.FC<SendbirdUIKitGlobal.CreateOpenChannelUIProps>;
+  export default CreateOpenChannelUI;
+}
+
+/**
  * OpenChannelSettings
  */
 declare module '@sendbird/uikit-react/OpenChannelSettings' {
@@ -1352,13 +1487,13 @@ declare module '@sendbird/uikit-react/ui/ContextMenu' {
 
 declare module '@sendbird/uikit-react/ui/DateSeparator' {
   enum Colors {
-    ONBACKGROUND_1,
-    ONBACKGROUND_2,
-    ONBACKGROUND_3,
-    ONBACKGROUND_4,
-    ONCONTENT_1,
-    PRIMARY,
-    ERROR,
+    ONBACKGROUND_1 = 'ONBACKGROUND_1',
+    ONBACKGROUND_2 = 'ONBACKGROUND_2',
+    ONBACKGROUND_3 = 'ONBACKGROUND_3',
+    ONBACKGROUND_4 = 'ONBACKGROUND_4',
+    ONCONTENT_1 = 'ONCONTENT_1',
+    PRIMARY = 'PRIMARY',
+    ERROR = 'ERROR',
   }
   interface DateSeparatorProps {
     className?: string | Array<string>;
@@ -1691,6 +1826,7 @@ declare module '@sendbird/uikit-react/ui/Modal' {
     disabled?: boolean,
     type?: string,
     children: React.ReactElement | string,
+    renderHeader?: () => React.ReactElement,
   }
   const Modal: React.FC<ModalProps>;
   export default Modal;
@@ -1803,8 +1939,9 @@ declare module '@sendbird/uikit-react/ui/PlaceHolder' {
   interface PlaceHolderProps {
     className?: string | Array<string>;
     type?: 'LOADING' | 'NO_CHANNELS' | 'NO_MESSAGES' | 'WRONG' | 'SEARCH_IN' | 'SEARCHING' | 'NO_RESULT',
-    retryToConnect?: () => void,
-    searchInString?: string,
+    iconSize?: string | number;
+    searchInString?: string;
+    retryToConnect?: () => void;
   }
   const PlaceHolder: React.FC<PlaceHolderProps>;
   export default PlaceHolder;
@@ -1874,13 +2011,13 @@ declare module '@sendbird/uikit-react/ui/SortByRow' {
 
 declare module '@sendbird/uikit-react/ui/TextButton' {
   enum Colors {
-    ONBACKGROUND_1,
-    ONBACKGROUND_2,
-    ONBACKGROUND_3,
-    ONBACKGROUND_4,
-    ONCONTENT_1,
-    PRIMARY,
-    ERROR,
+    ONBACKGROUND_1 = 'ONBACKGROUND_1',
+    ONBACKGROUND_2 = 'ONBACKGROUND_2',
+    ONBACKGROUND_3 = 'ONBACKGROUND_3',
+    ONBACKGROUND_4 = 'ONBACKGROUND_4',
+    ONCONTENT_1 = 'ONCONTENT_1',
+    PRIMARY = 'PRIMARY',
+    ERROR = 'ERROR',
   }
   interface TextButtonProps {
     children: React.ReactElement;

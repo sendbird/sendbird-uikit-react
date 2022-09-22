@@ -583,14 +583,18 @@ export const getMatchedUserIds = (word: string, users: Array<User>, _template?: 
   return users.map((user) => user?.userId).some((userId) => word.indexOf(`${template}{${userId}}`) > -1);
 };
 
-export enum StringObjType { normal, mention, url }
+export enum StringObjType {
+  normal = 'normal',
+  mention = 'mention',
+  url = 'url',
+}
 export interface StringObj {
   type: StringObjType;
   value: string;
   userId?: string;
 }
 
-export const convertWordToStringObj = (word: string, _users : Array<User>, _template?: string): Array<StringObj> => {
+export const convertWordToStringObj = (word: string, _users: Array<User>, _template?: string): Array<StringObj> => {
   const users = _users || [];
   const template = _template || '@'; // Use global variable
   const resultArray = [];
