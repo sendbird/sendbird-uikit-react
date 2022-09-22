@@ -1315,7 +1315,7 @@ declare module '@sendbird/uikit-react/ui/ChannelAvatar' {
 }
 
 declare module '@sendbird/uikit-react/ui/OpenChannelAvatar' {
-  import type { OpenChannel } from '@sendbird/chat/OpenChannel'
+  import type { OpenChannel } from '@sendbird/chat/openChannel'
   interface OpenChannelAvatarProps {
     channel: OpenChannel;
     theme: string;
