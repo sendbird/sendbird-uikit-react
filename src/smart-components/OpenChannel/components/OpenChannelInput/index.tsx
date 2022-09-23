@@ -7,7 +7,7 @@ export type MessageInputWrapperProps = {
   value?: string;
 };
 
-const MessageInputWrapper = (props, ref: React.RefObject<HTMLInputElement>): JSX.Element => {
+const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.RefObject<HTMLInputElement>): JSX.Element => {
   const {
     currentOpenChannel,
     disabled,
@@ -21,7 +21,7 @@ const MessageInputWrapper = (props, ref: React.RefObject<HTMLInputElement>): JSX
   }
 
   const { stringSet } = useContext(LocalizationContext);
-  const { value } = props?.value;
+  const { value } = props;
 
   return (
     <div className="sendbird-openchannel-footer">
