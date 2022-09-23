@@ -3,22 +3,18 @@ import React, { ReactElement } from 'react';
 import './index.scss';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { changeTypeToClassName, changeSizeToClassName } from './utils';
+import {
+  ButtonTypes as ButtonTypes_,
+  ButtonSizes as ButtonSizes_,
+} from './types';
 
-export enum ButtonTypes {
-  PRIMARY = 'PRIMARY',
-  SECONDARY = 'SECONDARY',
-  DANGER = 'DANGER',
-  DISABLED = 'DISABLED',
-}
-export enum ButtonSizes {
-  BIG = 'BIG',
-  SMALL = 'SMALL',
-}
+export const ButtonTypes = ButtonTypes_;
+export const ButtonSizes = ButtonSizes_;
 
 export interface ButtonProps {
   className?: string | Array<string>;
-  type?: ButtonTypes;
-  size?: ButtonSizes;
+  type?: ButtonTypes_;
+  size?: ButtonSizes_;
   children: string | ReactElement;
   disabled?: boolean;
   onClick?: () => void;

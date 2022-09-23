@@ -1,4 +1,4 @@
-import { ButtonTypes, ButtonSizes } from './index';
+import { ButtonTypes, ButtonSizes } from './types';
 
 export function changeTypeToClassName(type: ButtonTypes): string {
   switch (type) {
