@@ -11,7 +11,13 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import SuggestedMentionList from '../SuggestedMentionList';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 
-const MessageInputWrapper = (): JSX.Element => {
+export type MessageInputWrapperProps = {
+  value?: string;
+};
+
+
+const MessageInputWrapper = (props: MessageInputWrapperProps): JSX.Element => {
+  const { value } = props;
   const {
     currentGroupChannel,
     initialized,
@@ -124,6 +130,7 @@ const MessageInputWrapper = (): JSX.Element => {
       )}
       <MessageInput
         className="sendbird-message-input-wrapper__message-input"
+        value={value}
         channelUrl={channel?.url}
         mentionSelectedUser={selectedUser}
         isMentionEnabled={isMentionEnabled}

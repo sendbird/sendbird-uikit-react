@@ -3,7 +3,11 @@ import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import MessageInput from '../../../../ui/MessageInput';
 import { useOpenChannelContext } from '../../context/OpenChannelProvider';
 
-const MessageInputWrapper = (props, ref: React.RefObject<HTMLInputElement>): JSX.Element => {
+export type MessageInputWrapperProps = {
+  value?: string;
+};
+
+const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.RefObject<HTMLInputElement>): JSX.Element => {
   const {
     currentOpenChannel,
     disabled,
@@ -17,11 +21,13 @@ const MessageInputWrapper = (props, ref: React.RefObject<HTMLInputElement>): JSX
   }
 
   const { stringSet } = useContext(LocalizationContext);
+  const { value } = props;
 
   return (
     <div className="sendbird-openchannel-footer">
       <MessageInput
         ref={ref}
+        value={value}
         disabled={disabled}
         onSendMessage={handleSendMessage}
         onFileUpload={handleFileUpload}

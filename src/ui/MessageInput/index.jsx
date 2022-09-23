@@ -36,6 +36,17 @@ const handleUploadFile = (callback) => (event) => {
   // eslint-disable-next-line no-param-reassign
   event.target.value = '';
 };
+
+const displayCaret = (element, position) => {
+  const range = document.createRange();
+  const sel = window.getSelection();
+  range.setStart(element.childNodes[0], position);
+  range.collapse(true);
+  sel.removeAllRanges();
+  sel.addRange(range);
+  element.focus();
+}
+
 const initialTargetStringInfo = {
   targetString: '',
   startNodeIndex: null,
@@ -92,6 +103,20 @@ const MessageInput = React.forwardRef((props, ref) => {
       }
     }
   ), []);
+
+  // for easilly initialize input value from outside, but
+  // useEffect(_, [channelUrl]) erase it
+  const initialValue = props?.value;
+  useEffect(() => {
+    const textField = ref?.current;
+    try {
+      textField.innerHTML = initialValue;
+      displayCaret(textField, initialValue?.length);
+    } catch { }
+    setMentionedUserIds([]);
+    setIsInput(textField?.innerText?.length > 0);
+    setHeight();
+  }, [initialValue]);
 
   // #Mention | Clear input value when channel changes
   useEffect(() => {
@@ -483,6 +508,7 @@ MessageInput.propTypes = {
     PropTypes.string,
     PropTypes.bool,
   ]),
+  value: PropTypes.string,
   isEdit: PropTypes.bool,
   isMentionEnabled: PropTypes.bool,
   message: PropTypes.shape({
@@ -515,6 +541,7 @@ MessageInput.defaultProps = {
   channelUrl: '',
   onSendMessage: noop,
   onUpdateMessage: noop,
+  value: null,
   message: null,
   isEdit: false,
   isMentionEnabled: false,
