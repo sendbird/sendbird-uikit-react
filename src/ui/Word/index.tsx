@@ -25,6 +25,9 @@ export default function Word(props: WordProps): JSX.Element {
     mentionTemplate = '@',
     renderString = null,
   } = props;
+  if (word === '') {
+    return null;
+  }
   return (
     <span className="sendbird-word">
       {
