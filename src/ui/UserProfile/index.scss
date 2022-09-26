@@ -21,8 +21,10 @@
     white-space: nowrap;
     overflow-x: hidden;
     text-overflow: ellipsis;
+    @include themed() {
+      color: t(on-bg-1);
+    }
   }
-
 
   .sendbird__user-profile-message {
     margin-top: 20px;
