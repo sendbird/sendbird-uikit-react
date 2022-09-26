@@ -31,13 +31,16 @@
     width: calc(100% - 106px);
 
     .sendbird-message-search-item__right__sender-name {
-      display: flex;
-      max-width: 280px;
-      height: 16px;
-      overflow: hidden;
-      text-overflow: ellipsis;
       position: absolute;
       top: 12px;
+
+      display: inline;
+      max-width: 150px;
+      height: 16px;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-break: keep-all;
     }
     .sendbird-message-search-item__right__message-text {
       box-sizing: border-box;

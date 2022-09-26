@@ -8,6 +8,7 @@
 
   .sendbird-app__searchpanel-wrap {
     width: 320px;
+    min-width: 320px;
     overflow-y: scroll;
     box-sizing: border-box;
     @include themed() {

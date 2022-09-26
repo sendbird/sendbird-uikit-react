@@ -6,7 +6,7 @@ import Avatar from '../Avatar';
 import Icon, { IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
-import { getCreatedAt, getIconOfFileType, truncate } from './utils';
+import { getCreatedAt, getIconOfFileType } from './utils';
 
 interface Props {
   className?: string | Array<string>;
@@ -72,7 +72,7 @@ export default function MessageSearchFileItem(props: Props): ReactElement {
             type={LabelTypography.BODY_2}
             color={LabelColors.ONBACKGROUND_1}
           >
-            {truncate(name || fileMessageUrl, 28)}
+            {name || fileMessageUrl}
           </Label>
         </div>
       </div>
