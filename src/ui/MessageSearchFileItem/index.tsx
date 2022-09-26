@@ -6,7 +6,7 @@ import Avatar from '../Avatar';
 import Icon, { IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
-import { getCreatedAt, getIconOfFileType, truncate } from './utils';
+import { getCreatedAt, getIconOfFileType } from './utils';
 
 interface Props {
   className?: string | Array<string>;
