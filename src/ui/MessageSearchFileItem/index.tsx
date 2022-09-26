@@ -72,7 +72,7 @@ export default function MessageSearchFileItem(props: Props): ReactElement {
             type={LabelTypography.BODY_2}
             color={LabelColors.ONBACKGROUND_1}
           >
-            {truncate(name || fileMessageUrl, 28)}
+            {name || fileMessageUrl}
           </Label>
         </div>
       </div>
