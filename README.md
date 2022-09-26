@@ -38,13 +38,8 @@ And many more...
 ### Prerequisites
 
 You need to install:
-* nodejs 14 LTS https://nodejs.org/en/download/
-* npm 7 or above
-
-```
-npm 14 deprecated warnings for fsevents& chokidar@2.1.8 will be fixed when storybook is updated to webpack 5
-https://github.com/storybookjs/storybook/issues/12425#issuecomment-723043137
-```
+* nodejs 16 LTS https://nodejs.org/en/download/
+* npm 8 or above
 
 We tried development on Mac OS / Linux systems. You might encounter problems in running `npm run build` in Windows machines
 

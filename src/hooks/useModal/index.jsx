@@ -30,6 +30,23 @@ const Modal = ({
   );
 };
 
+Modal.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.arrayOf(PropTypes.element),
+    PropTypes.any,
+  ]).isRequired,
+  isOpen: PropTypes.bool,
+  modalRoot: PropTypes.string,
+  className: PropTypes.string,
+};
+
+Modal.defaultProps = {
+  isOpen: false,
+  modalRoot: MODAL_ROOT,
+  className: '',
+};
+
 const useModal = (className) => {
   const [isOpen, setOpen] = useState(false);
   const open = useCallback(() => setOpen(true), [setOpen]);
