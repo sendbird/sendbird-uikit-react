@@ -16,7 +16,10 @@ export type MessageInputWrapperProps = {
 };
 
 
-const MessageInputWrapper = (props: MessageInputWrapperProps): JSX.Element => {
+const MessageInputWrapper = (
+  props: MessageInputWrapperProps,
+  ref: React.MutableRefObject<any>,
+): JSX.Element => {
   const { value } = props;
   const {
     currentGroupChannel,
@@ -139,7 +142,7 @@ const MessageInputWrapper = (props: MessageInputWrapperProps): JSX.Element => {
           || (utils.isDisabledBecauseFrozen(channel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
           || (utils.isDisabledBecauseMuted(channel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED)
         }
-        ref={messageInputRef}
+        ref={ref || messageInputRef}
         disabled={disabled}
         onStartTyping={() => {
           channel?.startTyping();
