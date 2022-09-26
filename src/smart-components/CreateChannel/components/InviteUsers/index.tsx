@@ -68,6 +68,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
       titleText={titleText}
       submitText={submitText}
       type={ButtonTypes.PRIMARY}
+      disabled={Object.keys(selectedUsers).length === 0}
       onCancel={onCancel}
       onSubmit={() => {
         const selectedUserList = Object.keys(selectedUsers);
