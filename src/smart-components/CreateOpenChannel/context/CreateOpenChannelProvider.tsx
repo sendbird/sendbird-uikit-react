@@ -39,8 +39,8 @@ export const CreateOpenChannelProvider: React.FC<CreateOpenChannelProviderProps>
   const sdk = stores?.sdkStore?.sdk || null;
   const sdkInitialized = stores?.sdkStore?.initialized || false;
 
-  const createNewOpenChannel = useCallback((props: CreateNewOpenChannelCallbackProps): void => {
-    const { name, coverUrlOrImage } = props;
+  const createNewOpenChannel = useCallback((params: CreateNewOpenChannelCallbackProps): void => {
+    const { name, coverUrlOrImage } = params;
     if (sdkInitialized) {
       const params = {} as OpenChannelCreateParams;
       params.operatorUserIds = [sdk?.currentUser?.userId];
