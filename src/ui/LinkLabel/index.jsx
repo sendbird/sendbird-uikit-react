@@ -44,8 +44,8 @@ LinkLabel.propTypes = {
     PropTypes.arrayOf(PropTypes.string),
   ]),
   src: PropTypes.string.isRequired,
-  type: PropTypes.oneOf([...Object.keys(LabelTypography), '']),
-  color: PropTypes.oneOf([...Object.keys(LabelColors), '']),
+  type: PropTypes.string,
+  color: PropTypes.string,
   children: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.element,
