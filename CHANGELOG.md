@@ -1,5 +1,53 @@
 # Changelog - v3
 
+## [v3.2.0] (Sep 27 2022)
+
+Features:
+* OpenChannelList component
+  * Create new smart components (modules)
+    * CreateOpenChannel
+    * OpenChannelList
+  * Add a renderHeader props into the ui/Modal component
+  * Add stringSet for OpenChannelLisit and CreateOpenChannel components
+    * OPEN_CHANNEL_LIST__TITLE: 'Channels',
+    * CREATE_OPEN_CHANNEL_LIST__TITLE: 'New channel profile',
+    * CREATE_OPEN_CHANNEL_LIST__SUBTITLE__IMG_SECTION: 'Channel image',
+    * CREATE_OPEN_CHANNEL_LIST__SUBTITLE__IMG_UPLOAD: 'Upload',
+    * CREATE_OPEN_CHANNEL_LIST__SUBTITLE__TEXT_SECTION: 'Channel name',
+    * CREATE_OPEN_CHANNEL_LIST__SUBTITLE__TEXT_PLACE_HOLDER: 'Enter channel name',
+    * CREATE_OPEN_CHANNEL_LIST__SUBMIT: 'Create',
+* Add prop?.value to MessageWrappers
+  * @sendbird/uikit-react/Channel/components/MessageInput
+  * @sendbird/uikit-react/OpenChannel/components/OpenChannelInput
+  * @sendbird/uikit-react/ui/MessageInput
+  * Value is reset when channelURL changes
+
+Fixes:
+* Fix issue where ConnectionHandler overwrite SessionHandler
+* Use queries from @sendbird/chat
+  * Use imported versions of GroupChannelListQueryParams and ApplicationUserListQueryParams
+* Fix `o`penChannel casing in type defn
+* Add some missing localization variables
+* Deprecate ChatHeader and ChannelPreview in @sendbird/uikit-react/ui
+* Replace the ButtonTypes and ButtonSizes into the Button/index
+* Apply scroll to input and dark theme color to UserProfile
+* Disable the create channel button when no user invite
+* Use ref from MessageInputWrapper props if present
+* Some CSS level polishing fixes~
+
+Dev. Env:
+* Remove `enzyme` and `react-test-renderer`
+* Upgrade the `react` version to **v18**
+* Upgrade the `storybook` version to **v6.5.10**
+* Upgrade the `jest` and `babel-jest` to **v29**
+* Upgrade the `jsdom` to **v20**
+* Install `jest-environment-jsdom`
+* Install `global-jsdom`
+* Install `testing-library` (`@testing-library/react` and `@testing-library/jest-dom`)
+* Migrate every tests with `testing-library` instead of the `enzyme` and `react-test-renderer
+* Replace node-sass with sass(Dart Sass)
+* Reduce bundle size by treating react-dom/server as external
+
 ## [v3.1.3] (Sep 19 2022)
 
 Features:
