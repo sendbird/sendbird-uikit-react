@@ -23,13 +23,17 @@ Features:
   * Value is reset when channelURL changes
 
 Fixes:
-* Treat @sendbird/chat as external dependency
 * Fix issue where ConnectionHandler overwrite SessionHandler
 * Use queries from @sendbird/chat
   * Use imported versions of GroupChannelListQueryParams and ApplicationUserListQueryParams
 * Fix `o`penChannel casing in type defn
 * Add some missing localization variables
 * Deprecate ChatHeader and ChannelPreview in @sendbird/uikit-react/ui
+* Replace the ButtonTypes and ButtonSizes into the Button/index
+* Apply scroll to input and dark theme color to UserProfile
+* Disable the create channel button when no user invite
+* Use ref from MessageInputWrapper props if present
+* Some CSS level polishing fixes~
 
 Dev. Env:
 * Remove `enzyme` and `react-test-renderer`
@@ -41,6 +45,8 @@ Dev. Env:
 * Install `global-jsdom`
 * Install `testing-library` (`@testing-library/react` and `@testing-library/jest-dom`)
 * Migrate every tests with `testing-library` instead of the `enzyme` and `react-test-renderer
+* Replace node-sass with sass(Dart Sass)
+* Reduce bundle size by treating react-dom/server as external
 
 ## [v3.1.3] (Sep 19 2022)
 
