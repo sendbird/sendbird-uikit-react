@@ -13,7 +13,7 @@ export function changeTypographyToClassName(type) {
     case Typography.CAPTION_1: return 'sendbird-label--caption-1';
     case Typography.CAPTION_2: return 'sendbird-label--caption-2';
     case Typography.CAPTION_3: return 'sendbird-label--caption-3';
-    default: return null;
+    default: return '';
   }
 }
 
@@ -28,6 +28,6 @@ export function changeColorToClassName(color) {
     case Colors.PRIMARY: return 'sendbird-label--color-primary'; // should be Primary-3 fix me
     case Colors.ERROR: return 'sendbird-label--color-error';
     case Colors.SECONDARY_3: return 'sendbird-label--color-secondary-3';
-    default: return null;
+    default: return '';
   }
 }

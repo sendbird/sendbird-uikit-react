@@ -44,8 +44,8 @@ LinkLabel.propTypes = {
     PropTypes.arrayOf(PropTypes.string),
   ]),
   src: PropTypes.string.isRequired,
-  type: PropTypes.oneOf(Object.keys(LabelTypography)).isRequired,
-  color: PropTypes.oneOf(Object.keys(LabelColors)).isRequired,
+  type: PropTypes.string,
+  color: PropTypes.string,
   children: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.element,
@@ -56,6 +56,8 @@ LinkLabel.propTypes = {
 
 LinkLabel.defaultProps = {
   className: '',
+  type: '',
+  color: '',
 };
 
 export const LinkLabelTypography = LabelTypography;
