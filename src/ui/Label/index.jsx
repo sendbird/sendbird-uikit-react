@@ -43,6 +43,7 @@ Label.propTypes = {
     'CAPTION_1',
     'CAPTION_2',
     'CAPTION_3',
+    '',
   ]),
   color: PropTypes.oneOf([
     'ONBACKGROUND_1',
@@ -54,6 +55,7 @@ Label.propTypes = {
     'PRIMARY',
     'ERROR',
     'SECONDARY_3',
+    '',
   ]),
   children: PropTypes.oneOfType([
     PropTypes.string,
