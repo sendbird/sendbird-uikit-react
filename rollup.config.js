@@ -38,7 +38,8 @@ module.exports = ({
     },
   ],
   external: [
-    '@sendbird/chat',
+    // unbundled version of @sendbird/chat fails in production
+    // '@sendbird/chat',
     'react-dom/server',
     'prop-types',
     'react',

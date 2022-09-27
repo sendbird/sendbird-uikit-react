@@ -45,7 +45,6 @@
   "author": "SendBird <support@sendbird.com>",
   "license": "SEE LICENSE IN LICENSE.md",
   "peerDependencies": {
-    "@sendbird/chat": "^4.0.11",
     "css-vars-ponyfill": "^2.3.2",
     "date-fns": "^2.16.1",
     "prop-types": "^15.7.2",
