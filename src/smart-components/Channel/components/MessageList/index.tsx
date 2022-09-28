@@ -9,7 +9,7 @@ import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import { compareMessagesForGrouping } from '../../context/utils';
 import Message from '../Message';
 import { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
-import { isAboutSame } from '../../context/utils';
+import { isAboutSame } from '../../../../utils'
 import uuidv4 from '../../../../utils/uuid';
 
 export type MessageListProps = {

@@ -645,3 +645,5 @@ export const arrayEqual = (array1: Array<unknown>, array2: Array<unknown>): bool
   }
   return false;
 };
+
+export const isAboutSame = (a: number, b: number, px: number) => (Math.abs(a - b) <= px);
