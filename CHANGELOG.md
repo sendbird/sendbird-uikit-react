@@ -1,5 +1,43 @@
 # Changelog - v3
 
+## [v3.2.1] (Oct 02 2022)
+
+Fixes:
+
+* Do not bundle chat SDK with uikit compiled code
+
+Compiled UIKit code that is distributed through npm shouldn't
+have Chat SDK minified code included in it
+Chat SDK should be a dependency of UIKit
+Advantages:
+  * Chat SDK bug fixes will be added for free
+  * Eliminate the need for handlers
+What caused the issue:
+If you are using rollup for bundling
+in config.external you have to be specific
+ie>
+This works:
+```
+external: [
+  '@sendbird/chat',
+  '@sendbird/chat/groupChannel',
+  '@sendbird/chat/openChannel',
+  '@sendbird/chat/message',
+]
+```
+This doesn't:
+```
+external: [ '@sendbird/chat', ]
+```
+
+* Only react and react-dom should be peerDependencies
+
+For npm >= v7, npm autoinstall peerDependency packages
+According to `https://docs.npmjs.com/cli/v8/configuring-npm/package-json#peerdependencies`
+You want to express the compatibility of your package with a host tool
+or library while not necessarily doing a require of this host Even though react is required,
+its better to show that react is the host tool
+
 ## [v3.2.0] (Sep 27 2022)
 
 Features:
