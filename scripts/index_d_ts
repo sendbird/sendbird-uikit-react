@@ -54,6 +54,7 @@ declare module "SendbirdUIKitGlobal" {
     dateLocale?: Locale;
     allowProfileEdit?: boolean;
     disableUserProfile?: boolean;
+    disableMarkAsDelivered?: boolean;
     showSearchIcon?: boolean;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode | React.ReactElement;
     onProfileEditSuccess?(user: User): void;
@@ -220,6 +221,7 @@ declare module "SendbirdUIKitGlobal" {
     profileUrl?: string;
     dateLocale?: Locale;
     disableUserProfile?: boolean;
+    disableMarkAsDelivered?: boolean;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode | React.ReactElement;
     allowProfileEdit?: boolean;
     userListQuery?(): UserListQuery;
@@ -239,6 +241,7 @@ declare module "SendbirdUIKitGlobal" {
 
   export interface SendBirdStateConfig {
     disableUserProfile: boolean;
+    disableMarkAsDelivered: boolean;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode | React.ReactElement;
     allowProfileEdit: boolean;
     isOnline: boolean;

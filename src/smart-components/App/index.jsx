@@ -36,6 +36,7 @@ export default function App(props) {
     stringSet,
     allowProfileEdit,
     disableUserProfile,
+    disableMarkAsDelivered,
     renderUserProfile,
     showSearchIcon,
     onProfileEditSuccess,
@@ -66,6 +67,7 @@ export default function App(props) {
       config={config}
       colorSet={colorSet}
       disableUserProfile={disableUserProfile}
+      disableMarkAsDelivered={disableMarkAsDelivered}
       renderUserProfile={renderUserProfile}
       imageCompression={imageCompression}
       isReactionEnabled={isReactionEnabled}
@@ -164,6 +166,7 @@ App.propTypes = {
   profileUrl: PropTypes.string,
   allowProfileEdit: PropTypes.bool,
   disableUserProfile: PropTypes.bool,
+  disableMarkAsDelivered: PropTypes.bool,
   renderUserProfile: PropTypes.func,
   onProfileEditSuccess: PropTypes.func,
   dateLocale: PropTypes.shape({}),
@@ -210,6 +213,7 @@ App.defaultProps = {
   allowProfileEdit: false,
   onProfileEditSuccess: null,
   disableUserProfile: false,
+  disableMarkAsDelivered: false,
   showSearchIcon: false,
   renderUserProfile: null,
   config: {},
