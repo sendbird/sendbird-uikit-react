@@ -150,8 +150,9 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   const { sdkStore } = stores;
   const { pubSub, logger } = config;
   const {
-    isTypingIndicatorEnabledOnChannelList,
-    isMessageReceiptStatusEnabledOnChannelList,
+    disableMarkAsDelivered = false,
+    isTypingIndicatorEnabledOnChannelList = false,
+    isMessageReceiptStatusEnabledOnChannelList = false,
   } = config;
   const sdk = sdkStore?.sdk as SendbirdGroupChat;
 
@@ -179,7 +180,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   useEffect(() => {
     // https://stackoverflow.com/a/60907638
     let isMounted = true;
-    if (channelsTomarkAsRead?.length > 0) {
+    if (channelsTomarkAsRead?.length > 0 && !disableMarkAsDelivered) {
       channelsTomarkAsRead?.forEach((c, idx) => {
         // Plan-based rate limits - minimum limit is 5 requests per second
         setTimeout(() => {

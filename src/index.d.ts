@@ -101,6 +101,7 @@ interface SendBirdProviderProps {
   profileUrl?: string;
   dateLocale?: Locale;
   disableUserProfile?: boolean;
+  disableMarkAsDelivered?: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   allowProfileEdit?: boolean;
   userListQuery?(): UserListQuery;
@@ -119,6 +120,7 @@ interface SendBirdProviderProps {
 
 interface SendBirdStateConfig {
   disableUserProfile: boolean;
+  disableMarkAsDelivered: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   allowProfileEdit: boolean;
   isOnline: boolean;
@@ -270,6 +272,7 @@ interface AppProps {
   dateLocale?: Locale;
   allowProfileEdit?: boolean;
   disableUserProfile?: boolean;
+  disableMarkAsDelivered?: boolean;
   showSearchIcon?: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   onProfileEditSuccess?(user: User): void;

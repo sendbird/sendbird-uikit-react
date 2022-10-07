@@ -33,6 +33,7 @@ export interface SendBirdProviderProps {
   profileUrl?: string;
   dateLocale?: Locale;
   disableUserProfile?: boolean;
+  disableMarkAsDelivered?: boolean;
   renderUserProfile?: (props: SendBirdTypes.RenderUserProfileProps) => React.ReactElement;
   allowProfileEdit?: boolean;
   userListQuery?(): SendBirdTypes.UserListQuery;
@@ -51,6 +52,7 @@ export interface SendBirdProviderProps {
 
 export interface SendBirdStateConfig {
   disableUserProfile: boolean;
+  disableMarkAsDelivered: boolean;
   renderUserProfile?: (props: SendBirdTypes.RenderUserProfileProps) => React.ReactElement;
   allowProfileEdit: boolean;
   isOnline: boolean;

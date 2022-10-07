@@ -66,9 +66,11 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
 
   const sdkStore = state?.stores?.sdkStore;
   const config = state?.config;
-
-  const isOnline = state?.config?.isOnline;
-  const logger = config?.logger;
+  const {
+    logger = null,
+    isOnline = false,
+    disableMarkAsDelivered = false,
+  } = config;
 
   const sdk = sdkStore?.sdk as SendbirdGroupChat;
   const sdkError = sdkStore?.error;
@@ -78,7 +80,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
   useEffect(() => {
     // https://stackoverflow.com/a/60907638
     let isMounted = true;
-    if (channelsTomarkAsRead?.length > 0) {
+    if (channelsTomarkAsRead?.length > 0 && !disableMarkAsDelivered) {
       channelsTomarkAsRead?.forEach((c, idx) => {
         // Plan-based rate limits - minimum limit is 5 requests per second
         setTimeout(() => {
