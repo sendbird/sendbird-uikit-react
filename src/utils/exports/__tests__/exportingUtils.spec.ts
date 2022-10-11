@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { UserMessage } from '@sendbird/chat/message';
 import { getOutgoingMessageState, OutgoingMessageStates } from '../getOutgoingMessageState';
