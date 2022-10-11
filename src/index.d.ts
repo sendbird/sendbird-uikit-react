@@ -508,7 +508,7 @@ declare module '@sendbird/uikit-react/withSendBird' {
   export default withSendBird;
 }
 
-declare module '@sendbird/uikit-react/utils/getOutgoingMessageState' {
+declare module '@sendbird/uikit-react/utils/message/getOutgoingMessageState' {
   export enum OutgoingMessageStates {
     NONE = 'NONE',
     PENDING = 'PENDING',

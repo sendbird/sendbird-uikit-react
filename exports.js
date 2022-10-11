@@ -19,7 +19,7 @@ export default {
   'handlers/SessionHandler': 'src/lib/handlers/SessionHandler.ts',
 
   // utils
-  'utils/getOutgoingMessageState': 'src/utils/exports/getOutgoingMessageState.ts',
+  'utils/message/getOutgoingMessageState': 'src/utils/exports/getOutgoingMessageState.ts',
 
   // ChannelList
   ChannelList: 'src/smart-components/ChannelList/index.tsx',

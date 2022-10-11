@@ -984,7 +984,7 @@ declare module '@sendbird/uikit-react/handlers/UserEventHandler' {
 }
 
 /** utils */
-declare module '@sendbird-uikit-react/utils/getOutgoingMessageState' {
+declare module '@sendbird/uikit-react/utils/message/getOutgoingMessageState' {
   import { GroupChannel } from '@sendbird/chat/groupChannel';
   import { OpenChannel } from '@sendbird/chat/openChannel';
   import { UserMessage, FileMessage } from '@sendbird/chat/message';

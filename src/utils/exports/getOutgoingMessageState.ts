@@ -12,8 +12,12 @@ export enum OutgoingMessageStates {
 }
 
 export const getOutgoingMessageState = (channel: GroupChannel | OpenChannel, message: UserMessage | FileMessage): string => {
-  if (message.sendingStatus === 'pending') return OutgoingMessageStates.PENDING;
-  if (message.sendingStatus === 'failed') return OutgoingMessageStates.FAILED;
+  if (message.sendingStatus === 'pending') {
+    return OutgoingMessageStates.PENDING;
+  }
+  if (message.sendingStatus === 'failed') {
+    return OutgoingMessageStates.FAILED
+  }
   if (channel?.isGroupChannel?.()) {
     /* GroupChannel only */
     if ((channel as GroupChannel).getUnreadMemberCount?.(message) === 0) {
@@ -22,6 +26,8 @@ export const getOutgoingMessageState = (channel: GroupChannel | OpenChannel, mes
       return OutgoingMessageStates.DELIVERED;
     }
   }
-  if (message.sendingStatus === 'succeeded') return OutgoingMessageStates.SENT;
+  if (message.sendingStatus === 'succeeded') {
+    return OutgoingMessageStates.SENT
+  }
   return OutgoingMessageStates.NONE;
 };
