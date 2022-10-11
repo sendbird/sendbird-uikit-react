@@ -508,6 +508,21 @@ declare module '@sendbird/uikit-react/withSendBird' {
   export default withSendBird;
 }
 
+declare module '@sendbird/uikit-react/utils/getOutgoingMessageState' {
+  export enum OutgoingMessageStates {
+    NONE = 'NONE',
+    PENDING = 'PENDING',
+    SENT = 'SENT',
+    FAILED = 'FAILED',
+    DELIVERED = 'DELIVERED',
+    READ = 'READ',
+  }
+  export function getOutgoingMessageState(
+    channel: GroupChannel | OpenChannel,
+    message: UserMessage | FileMessage,
+  ): OutgoingMessageStates;
+}
+
 declare module '@sendbird/uikit-react/ChannelList' {
   type ChannelList = React.FunctionComponent<ChannelListProps>;
   export default ChannelList;

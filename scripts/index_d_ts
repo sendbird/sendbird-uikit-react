@@ -961,7 +961,7 @@ declare module '@sendbird/uikit-react/withSendbird' {
   export default withSendbird;
 }
 
-// handlers
+/** handlers */
 declare module '@sendbird/uikit-react/handlers/ConnectionHandler' {
   import { ConnectionHandler } from '@sendbird/chat';
   export default ConnectionHandler;
@@ -981,6 +981,25 @@ declare module '@sendbird/uikit-react/handlers/OpenChannelHandler' {
 declare module '@sendbird/uikit-react/handlers/UserEventHandler' {
   import { UserEventHandler } from "@sendbird/chat";
   export default UserEventHandler;
+}
+
+/** utils */
+declare module '@sendbird-uikit-react/utils/getOutgoingMessageState' {
+  import { GroupChannel } from '@sendbird/chat/groupChannel';
+  import { OpenChannel } from '@sendbird/chat/openChannel';
+  import { UserMessage, FileMessage } from '@sendbird/chat/message';
+  export enum OutgoingMessageStates {
+    NONE = 'NONE',
+    PENDING = 'PENDING',
+    SENT = 'SENT',
+    FAILED = 'FAILED',
+    DELIVERED = 'DELIVERED',
+    READ = 'READ',
+  }
+  export function getOutgoingMessageState(
+    channel: GroupChannel | OpenChannel,
+    message: UserMessage | FileMessage,
+  ): OutgoingMessageStates;
 }
 
 /** ChannelList */
