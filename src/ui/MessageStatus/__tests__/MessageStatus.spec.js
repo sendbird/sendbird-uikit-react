@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import MessageStatus, { MessageStatusTypes } from "../index";
 import dummyMessage from '../messageDummyData.mock';

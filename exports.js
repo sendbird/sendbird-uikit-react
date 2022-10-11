@@ -18,6 +18,9 @@ export default {
   'handlers/UserEventHandler': 'src/lib/handlers/UserEventHandler.ts',
   'handlers/SessionHandler': 'src/lib/handlers/SessionHandler.ts',
 
+  // utils
+  'utils/getOutgoingMessageState': 'src/utils/exports/getOutgoingMessageState.ts',
+
   // ChannelList
   ChannelList: 'src/smart-components/ChannelList/index.tsx',
   'ChannelList/context': 'src/smart-components/ChannelList/context/ChannelListProvider.tsx',

@@ -1,21 +1,21 @@
 import './index.scss';
 import React, { useMemo } from 'react';
 import format from 'date-fns/format';
-import type { FileMessage, UserMessage } from '@sendbird/chat/message';
-import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import Loader from '../Loader';
 
+import { isSentStatus } from '../../utils';
 import {
   getOutgoingMessageState,
-  getOutgoingMessageStates,
-  isSentStatus,
-} from '../../utils';
+  OutgoingMessageStates,
+} from '../../utils/exports/getOutgoingMessageState';
 import { useLocalization } from '../../lib/LocalizationContext';
 
-export const MessageStatusTypes = getOutgoingMessageStates();
+export const MessageStatusTypes = OutgoingMessageStates;
 
 interface MessageStatusProps {
   className?: string;
@@ -34,19 +34,19 @@ export default function MessageStatus({
   ), [channel?.getUnreadMemberCount?.(message), channel?.getUndeliveredMemberCount?.(message)]);
   const hideMessageStatusIcon = channel?.isGroupChannel() && (
     (channel.isSuper || channel.isPublic || channel.isBroadcast)
-    && !(status === MessageStatusTypes.PENDING || status === MessageStatusTypes.FAILED)
+    && !(status === OutgoingMessageStates.PENDING || status === OutgoingMessageStates.FAILED)
   );
   const iconType = {
-    [MessageStatusTypes.SENT]: IconTypes.DONE,
-    [MessageStatusTypes.DELIVERED]: IconTypes.DONE_ALL,
-    [MessageStatusTypes.READ]: IconTypes.DONE_ALL,
-    [MessageStatusTypes.FAILED]: IconTypes.ERROR,
+    [OutgoingMessageStates.SENT]: IconTypes.DONE,
+    [OutgoingMessageStates.DELIVERED]: IconTypes.DONE_ALL,
+    [OutgoingMessageStates.READ]: IconTypes.DONE_ALL,
+    [OutgoingMessageStates.FAILED]: IconTypes.ERROR,
   };
   const iconColor = {
-    [MessageStatusTypes.SENT]: IconColors.SENT,
-    [MessageStatusTypes.DELIVERED]: IconColors.SENT,
-    [MessageStatusTypes.READ]: IconColors.READ,
-    [MessageStatusTypes.FAILED]: IconColors.ERROR,
+    [OutgoingMessageStates.SENT]: IconColors.SENT,
+    [OutgoingMessageStates.DELIVERED]: IconColors.SENT,
+    [OutgoingMessageStates.READ]: IconColors.READ,
+    [OutgoingMessageStates.FAILED]: IconColors.ERROR,
   };
 
   return (
@@ -56,7 +56,7 @@ export default function MessageStatus({
         'sendbird-message-status',
       ].join(' ')}
     >
-      {(status === MessageStatusTypes.PENDING) ? (
+      {(status === OutgoingMessageStates.PENDING) ? (
         <Loader
           className="sendbird-message-status__icon"
           width="16px"
