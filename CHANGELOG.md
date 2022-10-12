@@ -1,9 +1,23 @@
 # Changelog - v3
 
+## [v3.2.2] (Oct 12 2022)
+
+Feature:
+* Export a type `OutgoingMessageStates`
+  * Type: `enum OutgoingMessageStates { NONE, PENDING, SENT, FAILED, DELIVERED, READ }`
+* Export a util function `getOutgoingMessageState`
+  * Importing path: "@sendbird/uikit-react/utils/message/getOutgoingMessageState"
+  * Interface: `function getOutgoingMessageState(channel, message): OutgoingMessageStates`
+
+Fixes:;
+* Add a `disableMarkAsDelivered` into the <App /> and <SendbirdProvider />
+  Some of our customers do not use the markAsDelivery feature,
+  but we always have called the markAsDelivered on the ChannelList with every channel
+  It caused a rate-limit issue, so we add a new prop to disable the markAdDelivered call for that case
+
 ## [v3.2.1] (Oct 02 2022)
 
 Fixes:
-
 * Do not bundle chat SDK with uikit compiled code
 
 Compiled UIKit code that is distributed through npm shouldn't
