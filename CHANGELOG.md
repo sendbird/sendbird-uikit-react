@@ -1,6 +1,6 @@
 # Changelog - v3
 
-## [v3.2.2] (Oct 12 2022)
+## [v3.2.2] (Oct 13 2022)
 
 Feature:
 * Export a type `OutgoingMessageStates`
@@ -8,9 +8,7 @@ Feature:
 * Export a util function `getOutgoingMessageState`
   * Importing path: "@sendbird/uikit-react/utils/message/getOutgoingMessageState"
   * Interface: `function getOutgoingMessageState(channel, message): OutgoingMessageStates`
-
-Fixes:;
-* Add a `disableMarkAsDelivered` into the <App /> and <SendbirdProvider />
+* Add a prop `disableMarkAsDelivered` into the <App /> and <SendbirdProvider />
   Some of our customers do not use the markAsDelivery feature,
   but we always have called the markAsDelivered on the ChannelList with every channel
   It caused a rate-limit issue, so we add a new prop to disable the markAdDelivered call for that case
