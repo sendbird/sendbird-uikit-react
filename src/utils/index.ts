@@ -1,7 +1,9 @@
 import SendbirdChat, { Emoji, EmojiCategory, EmojiContainer, User } from '@sendbird/chat';
-import type { GroupChannel, Member, SendbirdGroupChat, GroupChannelListQuery } from '@sendbird/chat/groupChannel';
-import type { AdminMessage, FileMessage, MessageListParams, Reaction, UserMessage } from '@sendbird/chat/message';
-import type { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
+import { GroupChannel, Member, SendbirdGroupChat, GroupChannelListQuery } from '@sendbird/chat/groupChannel';
+import { AdminMessage, FileMessage, MessageListParams, Reaction, UserMessage } from '@sendbird/chat/message';
+import { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
+
+import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOutgoingMessageState';
 import { EveryMessage } from '../types';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
@@ -79,23 +81,7 @@ const SendingMessageStatus: SendingMessageStatus = {
   PENDING: 'pending',
 };
 
-export interface OutgoingMessageStates {
-  NONE: 'NONE',
-  PENDING: 'PENDING',
-  SENT: 'SENT',
-  FAILED: 'FAILED',
-  DELIVERED: 'DELIVERED',
-  READ: 'READ',
-  // delivered and read are only in group channel
-}
-export const OutgoingMessageStates: OutgoingMessageStates = {
-  NONE: 'NONE',
-  PENDING: 'PENDING',
-  SENT: 'SENT',
-  FAILED: 'FAILED',
-  DELIVERED: 'DELIVERED',
-  READ: 'READ',
-};
+
 
 export type CoreMessageType = EveryMessage;
 
@@ -120,21 +106,7 @@ export const getUIKitFileType = (type: string): string => {
   if (isAudio(type)) return UIKitFileTypes.AUDIO;
   return UIKitFileTypes.OTHERS;
 };
-export const getOutgoingMessageStates = (): OutgoingMessageStates => ({ ...OutgoingMessageStates });
-export const getOutgoingMessageState = (channel: GroupChannel | OpenChannel, message: UserMessage | FileMessage): string => {
-  if (message.sendingStatus === 'pending') return OutgoingMessageStates.PENDING;
-  if (message.sendingStatus === 'failed') return OutgoingMessageStates.FAILED;
-  if (channel?.isGroupChannel?.()) {
-    /* GroupChannel only */
-    if ((channel as GroupChannel).getUnreadMemberCount(message) === 0) {
-      return OutgoingMessageStates.READ;
-    } else if ((channel as GroupChannel).getUndeliveredMemberCount(message) === 0) {
-      return OutgoingMessageStates.DELIVERED;
-    }
-  }
-  if (message.sendingStatus === 'succeeded') return OutgoingMessageStates.SENT;
-  return OutgoingMessageStates.NONE;
-};
+
 export const isSentMessage = (message: UserMessage | FileMessage): boolean => (message.sendingStatus === 'succeeded');
 export const isDeliveredMessage = (channel: GroupChannel, message: UserMessage | FileMessage): boolean => (
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.DELIVERED

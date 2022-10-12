@@ -2,13 +2,9 @@ import format from 'date-fns/format';
 import * as channelActions from './dux/actionTypes';
 import * as topics from '../../../lib/pubSub/topics';
 
-import {
-  getSendingMessageStatus,
-  getOutgoingMessageStates,
-  isReadMessage,
-} from '../../../utils';
+import { getSendingMessageStatus, isReadMessage } from '../../../utils';
+import { OutgoingMessageStates } from '../../../utils/exports/getOutgoingMessageState';
 
-const MessageStatusType = getOutgoingMessageStates();
 const UNDEFINED = 'undefined';
 const { SUCCEEDED, FAILED, PENDING } = getSendingMessageStatus();
 
@@ -95,29 +91,29 @@ export const pubSubHandler = (channelUrl, pubSub, dispatcher) => {
 
 export const getParsedStatus = (message, currentGroupChannel) => {
   if (message.requestState === FAILED) {
-    return MessageStatusType.FAILED;
+    return OutgoingMessageStates.FAILED;
   }
 
   if (message.requestState === PENDING) {
-    return MessageStatusType.PENDING;
+    return OutgoingMessageStates.PENDING;
   }
 
   if (message.requestState === SUCCEEDED) {
     if (!currentGroupChannel) {
-      return MessageStatusType.SENT;
+      return OutgoingMessageStates.SENT;
     }
 
     const unreadMemberCount = currentGroupChannel?.getUnreadMemberCount(message);
     if (unreadMemberCount === 0) {
-      return MessageStatusType.READ;
+      return OutgoingMessageStates.READ;
     }
 
     const isDelivered = currentGroupChannel?.getUndeliveredMemberCount(message) === 0;
     if (isDelivered) {
-      return MessageStatusType.DELIVERED;
+      return OutgoingMessageStates.DELIVERED;
     }
 
-    return MessageStatusType.SENT;
+    return OutgoingMessageStates.SENT;
   }
 
   return null;
