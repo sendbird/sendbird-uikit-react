@@ -636,6 +636,7 @@ type ChannelContextProps = {
   queries?: ChannelQueries;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   disableUserProfile?: boolean;
+  disableMarkAsRead?: boolean;
 };
 
 interface ChannelUIProps {

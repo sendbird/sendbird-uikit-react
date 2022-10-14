@@ -27,6 +27,7 @@ const Channel: React.FC<ChannelProps> = (props: ChannelProps) => {
       queries={props?.queries}
       renderUserProfile={props?.renderUserProfile}
       disableUserProfile={props?.disableUserProfile}
+      disableMarkAsRead={props?.disableMarkAsRead}
     >
       <ChannelUI
         renderPlaceholderLoader={props?.renderPlaceholderLoader}

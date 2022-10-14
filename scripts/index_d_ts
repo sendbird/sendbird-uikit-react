@@ -465,6 +465,7 @@ declare module "SendbirdUIKitGlobal" {
     queries?: ChannelQueries;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode | React.ReactElement;
     disableUserProfile?: boolean;
+    disableMarkAsRead?: boolean;
   };
 
   export interface ChannelUIProps {

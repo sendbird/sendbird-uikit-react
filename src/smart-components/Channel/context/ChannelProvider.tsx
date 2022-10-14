@@ -83,6 +83,7 @@ export type ChannelContextProps = {
   queries?: ChannelQueries;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   disableUserProfile?: boolean;
+  disableMarkAsRead?: boolean;
 };
 
 interface MessageStoreInterface {
@@ -117,7 +118,7 @@ interface UpdateMessageProps {
 
 interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInterface {
   scrollToMessage?(createdAt: number, messageId: number): void;
-  messageActionTypes: Record<string ,string>;
+  messageActionTypes: Record<string, string>;
   messagesDispatcher: CustomUseReducerDispatcher;
   quoteMessage: UserMessage | FileMessage;
   setQuoteMessage: React.Dispatch<React.SetStateAction<UserMessage | FileMessage>>;
@@ -164,6 +165,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     onSearchClick,
     replyType,
     queries,
+    disableMarkAsRead = false,
   } = props;
 
   const globalStore = useSendbirdStateContext();
@@ -271,7 +273,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   // to create message-datasource
   // this hook sets currentGroupChannel asynchronously
   useGetChannel(
-    { channelUrl, sdkInit },
+    { channelUrl, sdkInit, disableMarkAsRead },
     { messagesDispatcher, sdk, logger },
   );
 
@@ -282,7 +284,12 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
 
   // Hook to handle ChannelEvents and send values to useReducer using messagesDispatcher
   useHandleChannelEvents(
-    { currentGroupChannel, sdkInit, hasMoreNext },
+    {
+      currentGroupChannel,
+      sdkInit,
+      hasMoreNext,
+      disableMarkAsRead
+    },
     {
       messagesDispatcher,
       sdk,
@@ -316,7 +323,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   }, [channelUrl, sdkInit]);
 
   // handling connection breaks
-  useHandleReconnect({ isOnline, replyType }, {
+  useHandleReconnect({ isOnline, replyType, disableMarkAsRead }, {
     logger,
     sdk,
     currentGroupChannel,
@@ -368,6 +375,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       onSearchClick,
       replyType,
       queries,
+      disableMarkAsRead,
 
       // messagesStore
       allMessages,

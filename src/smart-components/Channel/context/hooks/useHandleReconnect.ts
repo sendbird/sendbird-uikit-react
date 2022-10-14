@@ -13,6 +13,7 @@ import { NEXT_RESULT_SIZE } from '../const';
 interface DynamicParams {
   isOnline: boolean;
   replyType?: string;
+  disableMarkAsRead: boolean;
 }
 
 interface StaticParams {
@@ -24,7 +25,7 @@ interface StaticParams {
 }
 
 function useHandleReconnect(
-  { isOnline, replyType }: DynamicParams,
+  { isOnline, replyType, disableMarkAsRead }: DynamicParams,
   {
     logger,
     sdk,
@@ -88,10 +89,12 @@ function useHandleReconnect(
                   payload: { currentGroupChannel },
                 });
               })
-              try {
-                currentGroupChannel?.markAsRead?.();
-              } catch {
-                //
+              if (!disableMarkAsRead) {
+                try {
+                  currentGroupChannel?.markAsRead?.();
+                } catch {
+                  //
+                }
               }
           });
       }
