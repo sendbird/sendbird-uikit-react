@@ -1,5 +1,10 @@
 # Changelog - v3
 
+## [v3.2.3] (Oct 14 2022)
+Feature:
+* Add a prop `disableMarkAsRead` into the <Channel />
+  This prop disables calling markAsRead in the Channel component
+
 ## [v3.2.2] (Oct 13 2022)
 
 Feature:
