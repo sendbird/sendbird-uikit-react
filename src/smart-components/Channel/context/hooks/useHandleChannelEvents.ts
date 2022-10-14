@@ -20,6 +20,7 @@ import * as messageActions from '../dux/actionTypes';
 interface DynamicParams {
   sdkInit: boolean;
   hasMoreNext: boolean;
+  disableMarkAsRead: boolean;
   currentGroupChannel: GroupChannel;
 }
 interface StaticParams {
@@ -34,6 +35,7 @@ function useHandleChannelEvents(
   {
     sdkInit,
     hasMoreNext,
+    disableMarkAsRead,
     currentGroupChannel,
   }: DynamicParams,
   {
@@ -69,7 +71,9 @@ function useHandleChannelEvents(
             if (scrollToEnd) {
               try {
                 setTimeout(() => {
-                  currentGroupChannel?.markAsRead?.();
+                  if (!disableMarkAsRead) {
+                    currentGroupChannel?.markAsRead?.();
+                  }
                   scrollIntoLast();
                 });
               } catch (error) {

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import * as messageActionTypes from '../dux/actionTypes';
 
-function useSetChannel({ channelUrl, sdkInit }, {
+function useSetChannel({ channelUrl, sdkInit, disableMarkAsRead }, {
   messagesDispatcher,
   sdk,
   logger,
@@ -19,11 +19,13 @@ function useSetChannel({ channelUrl, sdkInit }, {
           });
 
           logger.info('Channel: Mark as read', groupChannel);
-          // this order is important - this mark as read should update the event handler up above
-          try {
-            groupChannel.markAsRead();
-          } catch {
-            //
+          if (!disableMarkAsRead) {
+            // this order is important - this mark as read should update the event handler up above
+            try {
+              groupChannel.markAsRead();
+            } catch {
+              //
+            }
           }
         })
         .catch((e) => {

@@ -39,6 +39,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
     messagesDispatcher,
     messageActionTypes,
     currentGroupChannel,
+    disableMarkAsRead,
   } = useChannelContext();
   const [scrollBottom, setScrollBottom] = useState(0);
 
@@ -90,7 +91,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
     // do this later
     setTimeout(() => {
       // mark as read if scroll is at end
-      if (clientHeight + scrollTop === scrollHeight) {
+      if (!disableMarkAsRead && clientHeight + scrollTop === scrollHeight) {
         messagesDispatcher({
           type: messageActionTypes.MARK_AS_READ,
           payload: { channel: currentGroupChannel },

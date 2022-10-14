@@ -47,6 +47,7 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
     setHighLightedMessageId,
     scrollRef,
     messagesDispatcher,
+    disableMarkAsRead,
   } = useChannelContext();
   const [unreadCount, setUnreadCount] = useState(0);
   useEffect(() => {
@@ -117,15 +118,17 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
               if (scrollRef?.current?.scrollTop) {
                 scrollRef.current.scrollTop = scrollRef?.current?.scrollHeight - scrollRef?.current?.offsetHeight;
               }
-              try {
-                currentGroupChannel?.markAsRead();
-              } catch {
-                //
+              if (!disableMarkAsRead) {
+                try {
+                  currentGroupChannel?.markAsRead();
+                } catch {
+                  //
+                }
+                messagesDispatcher({
+                  type: messageActionTypes.MARK_AS_READ,
+                  payload: { channel: currentGroupChannel },
+                });
               }
-              messagesDispatcher({
-                type: messageActionTypes.MARK_AS_READ,
-                payload: { channel: currentGroupChannel },
-              });
               setInitialTimeStamp(null);
               setAnimatedMessageId(null);
               setHighLightedMessageId(null);
