@@ -69,9 +69,10 @@ const MediaQueryProvider = (props: MediaQueryProviderProps): React.ReactElement 
   );
 };
 
-export type useMediaQueryContextType = () => {
-  mediaQueryBreakPoint: string,
-};
+export type useMediaQueryContextType = () => ({
+  mediaQueryBreakPoint: string;
+  isMobile: boolean;
+});
 
 const useMediaQueryContext: useMediaQueryContextType = () => React.useContext(MediaQueryContext);
 
