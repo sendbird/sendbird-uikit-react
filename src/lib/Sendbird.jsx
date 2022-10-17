@@ -21,6 +21,7 @@ import pubSubFactory from './pubSub/index';
 import useAppendDomNode from '../hooks/useAppendDomNode';
 
 import { LocalizationProvider } from './LocalizationContext';
+import { MediaQueryProvider } from './MediaQueryContext';
 import getStringSet from '../ui/Label/stringSet';
 
 export default function Sendbird(props) {
@@ -30,6 +31,7 @@ export default function Sendbird(props) {
     appId,
     accessToken,
     configureSession,
+    mediaQueryBreakPoint,
     customApiHost,
     customWebSocketHost,
     children,
@@ -199,9 +201,11 @@ export default function Sendbird(props) {
         },
       }}
     >
-      <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
-        {children}
-      </LocalizationProvider>
+      <MediaQueryProvider logger={logger} mediaQueryBreakPoint={mediaQueryBreakPoint}>
+        <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
+          {children}
+        </LocalizationProvider>
+      </MediaQueryProvider>
     </SendbirdSdkContext.Provider>
   );
 }
@@ -212,6 +216,7 @@ Sendbird.propTypes = {
   accessToken: PropTypes.string,
   customApiHost: PropTypes.string,
   customWebSocketHost: PropTypes.string,
+  mediaQueryBreakPoint: PropTypes.string,
   configureSession: PropTypes.func,
   children: PropTypes.oneOfType([
     PropTypes.element,
@@ -268,6 +273,7 @@ Sendbird.defaultProps = {
   customWebSocketHost: null,
   configureSession: null,
   theme: 'light',
+  mediaQueryBreakPoint: null,
   nickname: '',
   dateLocale: null,
   profileUrl: '',
