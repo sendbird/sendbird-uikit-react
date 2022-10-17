@@ -1,4 +1,22 @@
 // thanks to: https://stackoverflow.com/questions/48048957/react-long-press-event
+/* example:
+  const Component = ({ onClick }) => {
+    const onLongPress = useLongPress({
+      onClick: onClick,
+      onLongPress: () => {
+        alert('longpress');
+      }
+    }, {
+      delay: 500,
+      shouldPreventDefault: true,
+    });
+    return (
+      <button {...onLongPress}>
+        hello
+      </button>
+    )
+  }
+*/
 import {
   useState,
   useRef,
@@ -11,7 +29,9 @@ import {
 const DEFAULT_DURATION = 300;
 
 function preventDefault(e: Event) {
-  if (!isTouchEvent(e)) return;
+  if (!isTouchEvent(e)) {
+    return
+  };
 
   if (e.touches.length < 2 && e.preventDefault) {
     e.preventDefault();
