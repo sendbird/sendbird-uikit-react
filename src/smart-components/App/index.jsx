@@ -80,7 +80,8 @@ export default function App(props) {
       <div className="sendbird-app__wrap">
         <div className="sendbird-app__channellist-wrap">
           <ChannelList
-            allowProfileEdit={allowProfileEdit}
+            // allowProfileEdit={allowProfileEdit}
+            allowProfileEdit
             onProfileEditSuccess={onProfileEditSuccess}
             disableAutoSelect={disableAutoSelect}
             onChannelSelect={(channel) => {

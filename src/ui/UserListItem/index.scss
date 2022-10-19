@@ -6,6 +6,9 @@
   box-sizing: border-box;
   width: 432px;
   height: 56px;
+  @include mobile() {
+    width: 100%;
+  }
   @include themed() {
     border-bottom: 1px solid t(on-bg-4);
     background-color: t(bg--0-5);
@@ -33,6 +36,9 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    @include mobile() {
+      max-width: 62%;
+    }
   }
 
   .sendbird-user-list-item__subtitle {
@@ -43,6 +49,9 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    @include mobile() {
+      max-width: 40%;
+    }
   }
 
   .sendbird-user-list-item__checkbox {

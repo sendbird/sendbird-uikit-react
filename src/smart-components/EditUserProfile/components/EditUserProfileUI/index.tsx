@@ -49,6 +49,7 @@ export default function EditUserProfile(): ReactElement {
       submitText={stringSet.BUTTON__SAVE}
       type={ButtonTypes.PRIMARY}
       onCancel={onCancel}
+      isFullScreenOnMobile
       onSubmit={() => {
         if (user?.nickname !== '' && !inputRef.current.value) {
           if (formRef.current.reportValidity) { // might not work in explorer

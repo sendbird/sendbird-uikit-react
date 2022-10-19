@@ -1,5 +1,3 @@
-import './add-channel.scss';
-
 import React, { useState } from 'react';
 
 import IconButton from '../../../../ui/IconButton';

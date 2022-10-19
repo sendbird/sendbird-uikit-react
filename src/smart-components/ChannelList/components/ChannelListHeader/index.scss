@@ -11,6 +11,9 @@
     border-bottom: 1px solid t(on-bg-4);
     background-color: t(bg-0);
   }
+  @include mobile() {
+    width: 100%;
+  }
 
   &.sendbird-channel-header--allow-edit {
     .sendbird-channel-header__title {

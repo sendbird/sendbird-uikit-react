@@ -65,6 +65,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
 
   return (
     <Modal
+      isFullScreenOnMobile
       titleText={titleText}
       submitText={submitText}
       type={ButtonTypes.PRIMARY}

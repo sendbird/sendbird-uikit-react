@@ -27,6 +27,9 @@
   @include themed() {
     border-bottom: solid 1px t(on-bg-4);
   }
+  @include mobile() {
+    width: 100%;
+  }
 
   &:focus {
     outline: none;
@@ -47,6 +50,9 @@
       width: 216px;
       height: 16px;
 
+      @include mobile() {
+        width: auto;
+      }
       .sendbird-channel-preview__content__upper__header {
         display: flex;
         justify-content: flex-start;

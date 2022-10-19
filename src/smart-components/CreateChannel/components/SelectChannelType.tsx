@@ -44,6 +44,7 @@ const SelectChannelType: React.FC<SelectChannelTypeProps> = (props: SelectChanne
       titleText={stringSet?.MODAL__CREATE_CHANNEL__TITLE}
       hideFooter
       onCancel={() => { onCancel(); }}
+      className="sendbird-add-channel__modal"
     >
       <div className="sendbird-add-channel__rectangle-wrap">
         <div

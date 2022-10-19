@@ -69,6 +69,7 @@ export interface ModalProps {
   children: ReactElement;
   className?: string;
   isCloseOnClickOutside?: boolean;
+  isFullScreenOnMobile?: boolean;
   titleText?: string;
   submitText?: string;
   disabled?: boolean;
@@ -81,8 +82,9 @@ export interface ModalProps {
 export default function Modal(props: ModalProps): ReactElement {
   const {
     children = null,
-    className,
+    className = '',
     isCloseOnClickOutside = false,
+    isFullScreenOnMobile = false,
     titleText,
     submitText,
     disabled = false,
@@ -94,7 +96,10 @@ export default function Modal(props: ModalProps): ReactElement {
   } = props;
 
   return createPortal((
-    <div className={`sendbird-modal ${className}`}>
+    <div className={`
+      sendbird-modal ${className}
+      ${isFullScreenOnMobile ? 'sendbird-modal--full-mobile' : ''}
+    `}>
       <div className="sendbird-modal__content">
         {renderHeader?.() || (
           <ModalHeader titleText={titleText} />
