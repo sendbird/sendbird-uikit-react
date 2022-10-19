@@ -1852,12 +1852,13 @@ declare module '@sendbird/uikit-react/ui/MessageStatus' {
 
 declare module '@sendbird/uikit-react/ui/Modal' {
   interface ModalProps {
-    className?: Array<string>,
+    className?: string,
     onCancel: () => void,
     onSubmit: () => void,
     hideFooter?: boolean,
     disabled?: boolean,
     type?: string,
+    isFullScreenOnMobile?: boolean;
     isCloseOnClickOutside?: boolean;
     children: React.ReactElement | string,
     renderHeader?: () => React.ReactElement,
