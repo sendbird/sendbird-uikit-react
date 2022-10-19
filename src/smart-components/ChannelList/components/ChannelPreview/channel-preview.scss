@@ -1,5 +1,14 @@
 @import '../../../../styles/variables';
 
+.sendbird-channel-preview__leave--mobile {
+  .sendbird-modal__content {
+    max-width: calc(100% - 80px);
+  }
+  .sendbird-modal__close {
+    display: none;
+  }
+}
+
 .sendbird__offline .sendbird-channel-preview {
   cursor: not-allowed;
 }

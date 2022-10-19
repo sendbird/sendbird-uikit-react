@@ -11,6 +11,10 @@
   justify-content: center;
 }
 
+.sendbird-modal__backdrop--clickoutside {
+  cursor: pointer;
+}
+
 .sendbird-modal__content {
   width: 480px;
   border-radius: 4px;

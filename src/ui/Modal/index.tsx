@@ -67,6 +67,8 @@ export const ModalFooter = ({
 
 export interface ModalProps {
   children: ReactElement;
+  className?: string;
+  isCloseOnClickOutside?: boolean;
   titleText?: string;
   submitText?: string;
   disabled?: boolean;
@@ -79,6 +81,8 @@ export interface ModalProps {
 export default function Modal(props: ModalProps): ReactElement {
   const {
     children = null,
+    className,
+    isCloseOnClickOutside = false,
     titleText,
     submitText,
     disabled = false,
@@ -88,8 +92,9 @@ export default function Modal(props: ModalProps): ReactElement {
     onSubmit = () => {/* noop */ },
     renderHeader,
   } = props;
+
   return createPortal((
-    <div className="sendbird-modal">
+    <div className={`sendbird-modal ${className}`}>
       <div className="sendbird-modal__content">
         {renderHeader?.() || (
           <ModalHeader titleText={titleText} />
@@ -121,7 +126,18 @@ export default function Modal(props: ModalProps): ReactElement {
           </IconButton>
         </div>
       </div>
-      <div className="sendbird-modal__backdrop" />
+      <div
+        className={`
+          sendbird-modal__backdrop
+          ${isCloseOnClickOutside && 'sendbird-modal__backdrop--clickoutside'}
+        `}
+        onClick={(e) =>{
+          e?.stopPropagation();
+          if (isCloseOnClickOutside) {
+            onCancel();
+          }
+        }}
+      />
     </div>
   ), document.getElementById(MODAL_ROOT));
 }
