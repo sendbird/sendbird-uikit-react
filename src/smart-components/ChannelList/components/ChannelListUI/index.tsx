@@ -176,6 +176,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
         <div>
           {
             allChannels && allChannels.map((channel, idx) => {
+              // todo: Refactor and move this inside channel - preview
               const onLeaveChannel = (c, cb) => {
                 logger.info('ChannelList: Leaving channel', c);
                 c.leave()
@@ -220,6 +221,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
                       tabIndex={idx}
                       onClick={onClick}
                       channel={channel}
+                      onLeaveChannel={() => onLeaveChannel(channel, null)}
                       isActive={channel?.url === currentChannel?.url}
                       isTyping={typingChannels?.some(({ url }) => url === channel?.url)}
                       renderChannelAction={(() => (

@@ -1,6 +1,7 @@
 const getStringSet = (lang = 'en') => {
   const stringSet = {
     en: {
+      CHANNEL_PREVIEW_MOBILE_LEAVE: 'Leave channel',
       OPEN_CHANNEL_SETTINGS__OPERATOR_TITLE: 'Channel Information',
       OPEN_CHANNEL_SETTINGS__OPERATOR_URL: 'URL',
       OPEN_CHANNEL_SETTINGS__PARTICIPANTS_ACCORDION_TITLE: 'Participants',
