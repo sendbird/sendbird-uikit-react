@@ -1,34 +1,45 @@
 import './mobile.scss';
 
+import type { User } from '@sendbird/chat';
+import type { BaseMessage } from '@sendbird/chat/message';
 import React, { useState, useEffect } from 'react';
 
-import SendbirdProvider from '../../../lib/Sendbird';
-import ChannelList from '../../ChannelList';
-import Channel from '../../Channel';
-import ChannelSettings from '../../ChannelSettings';
-import MessageSearch from '../../MessageSearch';
+import type { MobileLayoutProps } from './types';
 
-const appId = process.env.STORYBOOK_APP_ID;
-const userId = 'sendbird';
+import ChannelList from '../ChannelList';
+import Channel from '../Channel';
+import ChannelSettings from '../ChannelSettings';
+import MessageSearch from '../MessageSearch';
 
-export default { title: 'App-in-mobile' };
+enum PANELS {
+  CHANNEL_LIST = 'CHANNEL_LIST',
+  CHANNEL = 'CHANNEL',
+  CHANNEL_SETTINGS = 'CHANNEL_SETTINGS',
+  MESSAGE_SEARCH = 'MESSAGE_SEARCH',
+}
 
-const PANELS = {
-  CHANNEL_LIST: 'CHANNEL_LIST',
-  CHANNEL: 'CHANNEL',
-  CHANNEL_SETTINGS: 'CHANNEL_SETTINGS',
-  MESSAGE_SEARCH: 'MESSAGE_SEARCH',
-};
-
-const MobileApp = () => {
+export function MobileLayout(
+  props: MobileLayoutProps,
+): React.FC<MobileLayoutProps> {
+  const {
+    replyType,
+    isMessageGroupingEnabled,
+    allowProfileEdit,
+    isReactionEnabled,
+    showSearchIcon,
+    onProfileEditSuccess,
+    currentChannelUrl,
+    setCurrentChannelUrl,
+    highlightedMessage,
+    setHighlightedMessage,
+    startingPoint,
+    setStartingPoint,
+  } = props;
   const [panel, setPanel] = useState(PANELS?.CHANNEL_LIST);
-  const [channel, setChannel] = useState('');
-  const [highlitghtedMessage, setHighlitghtedMessage] = useState('');
-  const [startingPoint, setStartingPoint] = useState('');
-  const goToMessage = (message) => {
+  const goToMessage = (message?: BaseMessage | null) => {
     setStartingPoint(message?.createdAt);
     setTimeout(() => {
-      setHighlitghtedMessage(message?.messageId);
+      setHighlightedMessage(message?.messageId);
     });
   }
   useEffect(() => {
@@ -41,13 +52,15 @@ const MobileApp = () => {
     <div>
       {
         panel === PANELS?.CHANNEL_LIST && (
-          <div className='sb_mobile_channellist'>
+          <div className='sb_mobile__panelwrap'>
             <ChannelList
+              onProfileEditSuccess={onProfileEditSuccess}
               onChannelSelect={(channel) => {
-                setChannel(channel?.url);
+                setCurrentChannelUrl(channel?.url);
                 setPanel(PANELS.CHANNEL);
               }}
-              allowProfileEdit
+              allowProfileEdit={allowProfileEdit}
+              // this condition must be true for mobile
               disableAutoSelect
             />
           </div>
@@ -55,31 +68,33 @@ const MobileApp = () => {
       }
       {
         panel === PANELS?.CHANNEL && (
-          <div className='sb_mobile_channellist'>
+          <div className='sb_mobile__panelwrap'>
             <Channel
-              channelUrl={channel}
+              replyType={replyType}
+              channelUrl={currentChannelUrl}
               onSearchClick={() => {
                 setPanel(PANELS.MESSAGE_SEARCH);
               }}
               onBackClick={() => {
                 setPanel(PANELS.CHANNEL_LIST);
-                // setChannel('');
               }}
+              isReactionEnabled={isReactionEnabled}
+              showSearchIcon={showSearchIcon}
+              isMessageGroupingEnabled={isMessageGroupingEnabled}
               startingPoint={startingPoint}
-              highlightedMessage={highlitghtedMessage}
+              highlightedMessage={highlightedMessage}
               onChatHeaderActionClick={() => {
                 setPanel(PANELS.CHANNEL_SETTINGS);
               }}
-              showSearchIcon
             />
           </div>
         )
       }
       {
         panel === PANELS?.CHANNEL_SETTINGS && (
-          <div className='sb_mobile_channellist'>
+          <div className='sb_mobile__panelwrap'>
             <ChannelSettings
-              channelUrl={channel}
+              channelUrl={currentChannelUrl}
               onCloseClick={() => {
                 setPanel(PANELS.CHANNEL);
               }}
@@ -92,9 +107,9 @@ const MobileApp = () => {
       }
       {
         panel === PANELS?.MESSAGE_SEARCH && (
-          <div className='sb_mobile_channellist'>
+          <div className='sb_mobile__panelwrap'>
             <MessageSearch
-              channelUrl={channel}
+              channelUrl={currentChannelUrl}
               onCloseClick={() => {
                 setPanel(PANELS.CHANNEL);
               }}
@@ -109,19 +124,3 @@ const MobileApp = () => {
     </div>
   );
 }
-export const basicMobileApp = () => {
-  return (
-    <SendbirdProvider
-      appId={appId}
-      userId={userId}
-      nickname={userId}
-      // theme="dark"
-      showSearchIcon
-      replyType="QUOTE_REPLY"
-      config={{ logLevel: 'all', isREMUnitEnabled: true }}
-      isMentionEnabled
-    >
-      <MobileApp />
-    </SendbirdProvider>
-  )
-};

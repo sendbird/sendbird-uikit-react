@@ -11,7 +11,7 @@ const MediaQueryContext = React.createContext({
 
 export interface MediaQueryProviderProps {
   children: React.ReactElement;
-  mediaQueryBreakPoint?: string;
+  mediaQueryBreakPoint?: string | boolean;
   logger?: Logger;
 }
 
@@ -42,16 +42,27 @@ const MediaQueryProvider = (props: MediaQueryProviderProps): React.ReactElement 
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const updateSize = () => {
-      const mq = window.matchMedia(`(max-width: ${mediaQueryBreakPoint})`);
-      logger?.info?.(`MediaQueryProvider: Screensize updated to ${mediaQueryBreakPoint}`);
-      if (mq.matches) {
-        setIsMobile(true);
-        addClassNameToBody();
-        logger?.info?.(`MediaQueryProvider: isMobile: true`);
+      if (typeof mediaQueryBreakPoint === 'boolean') {
+        setIsMobile(mediaQueryBreakPoint);
+        if (mediaQueryBreakPoint) {
+          logger?.info?.(`MediaQueryProvider: isMobile: true`);
+          addClassNameToBody();
+        } else {
+          logger?.info?.(`MediaQueryProvider: isMobile: false`);
+          removeClassNameFromBody();
+        }
       } else {
-        setIsMobile(false);
-        removeClassNameFromBody();
-        logger?.info?.(`MediaQueryProvider: isMobile: false`);
+        const mq = window.matchMedia(`(max-width: ${mediaQueryBreakPoint})`);
+        logger?.info?.(`MediaQueryProvider: Screensize updated to ${mediaQueryBreakPoint}`);
+        if (mq.matches) {
+          setIsMobile(true);
+          addClassNameToBody();
+          logger?.info?.(`MediaQueryProvider: isMobile: true`);
+        } else {
+          setIsMobile(false);
+          removeClassNameFromBody();
+          logger?.info?.(`MediaQueryProvider: isMobile: false`);
+        }
       }
     }
     updateSize();
@@ -70,7 +81,7 @@ const MediaQueryProvider = (props: MediaQueryProviderProps): React.ReactElement 
 };
 
 export type useMediaQueryContextType = () => ({
-  mediaQueryBreakPoint: string;
+  mediaQueryBreakPoint: string | boolean;
   isMobile: boolean;
 });
 
