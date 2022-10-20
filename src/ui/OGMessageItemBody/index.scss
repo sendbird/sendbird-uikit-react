@@ -7,6 +7,10 @@
   width: 100%;
   min-width: 320px;
   max-width: 400px;
+  @include mobile() {
+    width: 66vw;
+    min-width: 160px;
+  }
 
   .sendbird-og-message-item-body__text-bubble {
     position: relative;

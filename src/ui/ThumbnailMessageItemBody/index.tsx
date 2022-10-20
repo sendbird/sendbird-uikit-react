@@ -26,7 +26,6 @@ export default function ThumbnailMessageItemBody({
   const { thumbnails = [] } = message;
   const thumbnailUrl: string = thumbnails.length > 0 ? thumbnails[0]?.url : '';
   const [imageRendered, setImageRendered] = useState(false);
-
   return (
     <div
       className={getClassName([
