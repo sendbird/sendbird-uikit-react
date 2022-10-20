@@ -39,6 +39,9 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    @include mobile () {
+      max-width: 40%;
+    }
   }
 
   &__checkbox {

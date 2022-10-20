@@ -41,6 +41,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
   return (
     <div>
       <Modal
+        isFullScreenOnMobile
         hideFooter
         onCancel={() => onCancel()}
         onSubmit={noop}

@@ -79,6 +79,7 @@ export type ChannelContextProps = {
   onBeforeUpdateUserMessage?(text: string): UserMessageUpdateParams;
   onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
   onSearchClick?(): void;
+  onBackClick?(): void;
   replyType?: ReplyType;
   queries?: ChannelQueries;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
@@ -163,6 +164,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     onBeforeUpdateUserMessage,
     onChatHeaderActionClick,
     onSearchClick,
+    onBackClick,
     replyType,
     queries,
     disableMarkAsRead = false,
@@ -373,6 +375,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       onBeforeUpdateUserMessage,
       onChatHeaderActionClick,
       onSearchClick,
+      onBackClick,
       replyType,
       queries,
       disableMarkAsRead,

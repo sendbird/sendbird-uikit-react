@@ -39,6 +39,7 @@ export default function InviteUsers({
   return (
     <div>
       <Modal
+        isFullScreenOnMobile
         disabled={Object.keys(selectedMembers).length === 0}
         submitText="Invite"
         type={ButtonTypes.PRIMARY}

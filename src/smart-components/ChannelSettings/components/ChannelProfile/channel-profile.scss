@@ -26,6 +26,9 @@
     overflow-x: hidden;
     text-overflow: ellipsis;
     height: 18px;
+    @include mobile() {
+      max-width: 100%;
+    }
   }
 
   .sendbird-channel-profile__edit {

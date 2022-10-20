@@ -35,6 +35,9 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 780px;
+    @include mobile() {
+      max-width: calc(100vw - 240px);;
+    }
   }
 
   .sendbird-chat-header__left__subtitle {
@@ -54,4 +57,8 @@
   .sendbird-chat-header__right__info {
     margin-left: 16px;
   }
+}
+
+.sendbird-chat-header__icon_back {
+  margin-right: 8px;
 }
