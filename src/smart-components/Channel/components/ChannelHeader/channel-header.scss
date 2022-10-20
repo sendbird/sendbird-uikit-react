@@ -36,7 +36,7 @@
     white-space: nowrap;
     max-width: 780px;
     @include mobile() {
-      max-width: calc(100vw - 240px);;
+      max-width: calc(100vw - 240px);
     }
   }
 
