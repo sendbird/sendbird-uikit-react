@@ -13,6 +13,9 @@
 .sendbird-more-members__popup-scroll {
   max-height: 420px;
   overflow: scroll;
+  @include mobile() {
+    max-height: 100%;
+  }
   .sendbird-user-list-item__operator {
     right: 72px;
   }
@@ -42,7 +45,9 @@
   max-width: 320px;
   position: relative;
   padding: 12px 22px 10px 56px;
-
+  @include mobile() {
+    max-width: 100%;
+  }
   @include themed() {
     background-color: t(bg-0);
     border-bottom: 1px solid t(on-bg-4);

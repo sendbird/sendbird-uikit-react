@@ -15,6 +15,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import MentionUserLabel from '../../../../ui/MentionUserLabel';
 import Modal from '../../../../ui/Modal';
+import TextButton from '../../../../ui/TextButton';
 import { useChannelListContext } from '../../context/ChannelListProvider';
 import { TypingIndicatorText } from '../../../Channel/components/TypingIndicator';
 import MessageStatus from '../../../../ui/MessageStatus';
@@ -217,11 +218,12 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
             isCloseOnClickOutside
             onCancel={() => setShowMobileLeave(false)}
           >
-            <button
+            <TextButton
               onClick={() => {
                 onLeaveChannel();
                 setShowMobileLeave(false);
               }}
+              className="sendbird-channel-preview__leave-label--mobile"
             >
               <Label
                 type={LabelTypography.SUBTITLE_1}
@@ -229,7 +231,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
               >
                 {stringSet.CHANNEL_PREVIEW_MOBILE_LEAVE}
               </Label>
-            </button>
+            </TextButton>
           </Modal>
         )
       }

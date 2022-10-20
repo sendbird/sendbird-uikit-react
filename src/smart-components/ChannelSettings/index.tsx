@@ -8,13 +8,6 @@ import {
   ChannelSettingsContextProps,
 } from './context/ChannelSettingsProvider';
 
-interface ApplicationUserListQuery {
-  limit?: number;
-  userIdsFilter?: Array<string>;
-  metaDataKeyFilter?: string;
-  metaDataValuesFilter?: Array<string>;
-}
-
 interface ChannelSettingsProps extends ChannelSettingsUIProps, ChannelSettingsContextProps {
 }
 
@@ -23,6 +16,7 @@ const ChannelSettings: React.FC<ChannelSettingsProps> = (props: ChannelSettingsP
     <ChannelSettingsProvider
       channelUrl={props.channelUrl}
       onCloseClick={props?.onCloseClick}
+      onLeaveChannel={props?.onLeaveChannel}
       onChannelModified={props?.onChannelModified}
       onBeforeUpdateChannel={props?.onBeforeUpdateChannel}
       queries={props?.queries}

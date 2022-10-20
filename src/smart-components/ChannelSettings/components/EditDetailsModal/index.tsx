@@ -46,6 +46,7 @@ const EditDetails: React.FC<EditDetailsProps> = (props: EditDetailsProps) => {
 
   return (
     <Modal
+      isFullScreenOnMobile
       titleText={stringSet.MODAL__CHANNEL_INFORMATION__TITLE}
       submitText={stringSet.BUTTON__SAVE}
       onCancel={onCancel}

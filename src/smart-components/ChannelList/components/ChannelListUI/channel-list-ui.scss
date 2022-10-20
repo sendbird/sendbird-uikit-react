@@ -9,6 +9,9 @@
   @include themed() {
     background-color: t(bg-0);
   }
+  @include mobile() {
+    width: 100%;
+  }
 }
 
 .sendbird-channel-list__header {

@@ -464,6 +464,7 @@ declare module "SendbirdUIKitGlobal" {
     onBeforeUpdateUserMessage?(text: string): UserMessageUpdateParams;
     onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
     onSearchClick?(): void;
+    onBackClick?(): void;
     replyType?: ReplyType;
     queries?: ChannelQueries;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode | React.ReactElement;
@@ -773,6 +774,7 @@ declare module "SendbirdUIKitGlobal" {
     channelUrl: string;
     children?: React.ReactElement;
     onCloseClick?(): void;
+    onLeaveChannel?(): void;
     onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): OpenChannelUpdateParams;
     onChannelModified?(channel: OpenChannel): void;
     onDeleteChannel?(channel: OpenChannel): void;
@@ -1852,12 +1854,13 @@ declare module '@sendbird/uikit-react/ui/MessageStatus' {
 
 declare module '@sendbird/uikit-react/ui/Modal' {
   interface ModalProps {
-    className?: Array<string>,
+    className?: string,
     onCancel: () => void,
     onSubmit: () => void,
     hideFooter?: boolean,
     disabled?: boolean,
     type?: string,
+    isFullScreenOnMobile?: boolean;
     isCloseOnClickOutside?: boolean;
     children: React.ReactElement | string,
     renderHeader?: () => React.ReactElement,

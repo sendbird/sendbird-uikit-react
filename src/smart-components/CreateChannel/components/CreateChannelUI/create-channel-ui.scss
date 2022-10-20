@@ -1,5 +1,13 @@
 @import '../../../../styles/variables';
 
+.sendbird-add-channel__modal {
+  .sendbird-modal__content {
+    @include mobile() {
+      margin: 0 40px;
+    }
+  }
+}
+
 .sendbird-add-channel__rectangle-wrap {
   margin-top: 26px;
 }
@@ -18,6 +26,11 @@
   position: relative;
   box-sizing: border-box;
   cursor: pointer;
+  @include mobile() {
+    min-width: 288px;
+    width: 100%;
+    padding-right: 0;
+  }
   @include themed() {
     border: 1px solid t(on-bg-4);
   }

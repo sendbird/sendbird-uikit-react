@@ -1,3 +1,5 @@
+@import '../../../../styles/variables';
+
 .sendbird-create-channel--content {
   width: 480px;
   max-height: 552px;
@@ -6,4 +8,7 @@
 .sendbird-create-channel--scroll {
   height: 360px;
   overflow-y: auto;
+  @include mobile() {
+    height: calc(100vh - 180px);
+  }
 }

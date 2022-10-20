@@ -43,6 +43,7 @@ export default function MutedMembersModal({
   return (
     <div>
       <Modal
+        isFullScreenOnMobile
         hideFooter
         onCancel={() => onCancel()}
         onSubmit={noop}

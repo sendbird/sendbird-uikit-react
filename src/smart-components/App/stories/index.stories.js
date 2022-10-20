@@ -515,4 +515,4 @@ export const userListQuery = () => fitPageSize(
     nickname={array[2]}
     userListQuery={getCustomPaginatedQuery}
   />
-);;
+);
