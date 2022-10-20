@@ -1,6 +1,6 @@
 import './mobile.scss';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import SendbirdProvider from '../../../lib/Sendbird';
 import ChannelList from '../../ChannelList';
@@ -21,12 +21,26 @@ const PANELS = {
 };
 
 const MobileApp = () => {
-  const [panel, setPanel] = useState('');
+  const [panel, setPanel] = useState(PANELS?.CHANNEL_LIST);
   const [channel, setChannel] = useState('');
+  const [highlitghtedMessage, setHighlitghtedMessage] = useState('');
+  const [startingPoint, setStartingPoint] = useState('');
+  const goToMessage = (message) => {
+    setStartingPoint(message?.createdAt);
+    setTimeout(() => {
+      setHighlitghtedMessage(message?.messageId);
+    });
+  }
+  useEffect(() => {
+    if (panel !== PANELS?.CHANNEL) {
+      goToMessage();
+    }
+  }, [panel])
+
   return (
     <div>
       {
-        panel === PANELS?.CHANNEL_LIST || panel === '' && (
+        panel === PANELS?.CHANNEL_LIST && (
           <div className='sb_mobile_channellist'>
             <ChannelList
               onChannelSelect={(channel) => {
@@ -51,6 +65,8 @@ const MobileApp = () => {
                 setPanel(PANELS.CHANNEL_LIST);
                 // setChannel('');
               }}
+              startingPoint={startingPoint}
+              highlightedMessage={highlitghtedMessage}
               onChatHeaderActionClick={() => {
                 setPanel(PANELS.CHANNEL_SETTINGS);
               }}
@@ -81,6 +97,10 @@ const MobileApp = () => {
               channelUrl={channel}
               onCloseClick={() => {
                 setPanel(PANELS.CHANNEL);
+              }}
+              onResultClick={(message) => {
+                setPanel(PANELS.CHANNEL);
+                goToMessage(message);
               }}
             />
           </div>
