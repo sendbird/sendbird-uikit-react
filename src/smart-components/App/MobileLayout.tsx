@@ -18,7 +18,9 @@ enum PANELS {
   MESSAGE_SEARCH = 'MESSAGE_SEARCH',
 }
 
-export function MobileLayout(props: MobileLayoutProps) {
+export function MobileLayout(
+  props: MobileLayoutProps,
+): React.FC<MobileLayoutProps> {
   const {
     replyType,
     isMessageGroupingEnabled,

@@ -8,7 +8,7 @@ import {
   SendBirdProviderConfig,
 } from "../../types";
 
-export interface LayoutProps {
+export interface AppLayoutProps {
   isReactionEnabled?: boolean;
   replyType?: "NONE" | "QUOTE_REPLY" | "THREAD";
   isMessageGroupingEnabled?: boolean;
@@ -16,9 +16,9 @@ export interface LayoutProps {
   showSearchIcon?: boolean;
   onProfileEditSuccess?(user: User): void;
   disableAutoSelect?: boolean;
-};
+}
 
-export interface MobileLayoutProps extends LayoutProps {
+export interface MobileLayoutProps extends AppLayoutProps {
   currentChannelUrl?: string;
   setCurrentChannelUrl?: React.Dispatch<string>;
   highlightedMessage?: number;
@@ -27,7 +27,7 @@ export interface MobileLayoutProps extends LayoutProps {
   setStartingPoint?: React.Dispatch<number>;
 }
 
-export interface DesktopLayoutProps extends LayoutProps {
+export interface DesktopLayoutProps extends AppLayoutProps {
   showSettings: boolean;
   setShowSettings: React.Dispatch<boolean>;
   showSearch: boolean;

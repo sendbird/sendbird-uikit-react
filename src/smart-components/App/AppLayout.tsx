@@ -1,14 +1,15 @@
-import type { User } from '@sendbird/chat';
 import React, { useState } from 'react';
 
-import type { LayoutProps } from './types';
+import type { AppLayoutProps } from './types';
 
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 
 import { DesktopLayout } from './DesktopLayout';
 import { MobileLayout } from './MobileLayout';
 
-export function AppLayout(props: LayoutProps) {
+export function AppLayout(
+  props: AppLayoutProps,
+): React.FC<AppLayoutProps> {
   const {
     isReactionEnabled,
     replyType,
