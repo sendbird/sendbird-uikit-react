@@ -30,6 +30,7 @@ export type ChannelSettingsContextProps = {
   channelUrl: string;
   className?: string;
   onCloseClick?(): void;
+  onLeaveChannel?(): void;
   onChannelModified?(channel: GroupChannel): void;
   onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): GroupChannelUpdateParams;
   queries?: ChannelSettingsQueries;
@@ -40,6 +41,7 @@ export type ChannelSettingsContextProps = {
 interface ChannelSettingsProviderInterface {
   channelUrl: string;
   onCloseClick?(): void;
+  onLeaveChannel?(): void;
   onChannelModified?(channel: GroupChannel): void;
   onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): GroupChannelUpdateParams;
   queries?: ChannelSettingsQueries;
@@ -57,6 +59,7 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
     className,
     channelUrl,
     onCloseClick,
+    onLeaveChannel,
     onChannelModified,
     onBeforeUpdateChannel,
     queries,
@@ -107,6 +110,7 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
     <ChannelSettingsContext.Provider value={{
       channelUrl,
       onCloseClick,
+      onLeaveChannel,
       onChannelModified,
       onBeforeUpdateChannel,
       queries,

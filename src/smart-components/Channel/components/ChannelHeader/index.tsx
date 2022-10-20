@@ -10,6 +10,8 @@ import ChannelAvatar from '../../../../ui/ChannelAvatar/index';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelContext } from '../../context/ChannelProvider';
+import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
+import { noop } from '../../../../utils/utils'
 
 const ChannelHeader: React.FC = () => {
   const globalStore = useSendbirdStateContext();
@@ -17,11 +19,13 @@ const ChannelHeader: React.FC = () => {
   const theme = globalStore?.config?.theme;
 
   const channelStore = useChannelContext();
+  const { isMobile } = useMediaQueryContext();
   const {
     currentGroupChannel,
     showSearchIcon,
     onSearchClick,
     onChatHeaderActionClick,
+    onBackClick = noop,
   } = channelStore;
   const subTitle = (currentGroupChannel?.members
     && currentGroupChannel?.members?.length !== 2);
@@ -31,6 +35,18 @@ const ChannelHeader: React.FC = () => {
   return (
     <div className="sendbird-chat-header">
       <div className="sendbird-chat-header__left">
+        {
+          isMobile && (
+            <Icon
+              className="sendbird-chat-header__icon_back"
+              onClick={onBackClick}
+              fillColor={IconColors.PRIMARY}
+              width="24px"
+              height="24px"
+              type={IconTypes.ARROW_LEFT}
+            />
+          )
+        }
         <ChannelAvatar
           theme={theme}
           channel={currentGroupChannel}

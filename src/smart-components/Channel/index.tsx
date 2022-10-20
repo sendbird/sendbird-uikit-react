@@ -23,6 +23,7 @@ const Channel: React.FC<ChannelProps> = (props: ChannelProps) => {
       onBeforeUpdateUserMessage={props?.onBeforeUpdateUserMessage}
       onChatHeaderActionClick={props?.onChatHeaderActionClick}
       onSearchClick={props?.onSearchClick}
+      onBackClick={props?.onBackClick}
       replyType={props?.replyType}
       queries={props?.queries}
       renderUserProfile={props?.renderUserProfile}

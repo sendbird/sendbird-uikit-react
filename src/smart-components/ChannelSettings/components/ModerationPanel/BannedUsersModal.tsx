@@ -36,6 +36,7 @@ export default function BannedUsersModal({
   return (
     <div>
       <Modal
+        isFullScreenOnMobile
         hideFooter
         onCancel={() => onCancel()}
         onSubmit={noop}

@@ -38,6 +38,7 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
   return (
     <div>
       <Modal
+        isFullScreenOnMobile
         hideFooter
         titleText={stringSet.CHANNEL_SETTING__OPERATORS__TITLE_ALL}
         onCancel={onCancel}

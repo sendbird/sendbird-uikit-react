@@ -24,9 +24,9 @@ const MobileApp = () => {
   const [panel, setPanel] = useState('');
   const [channel, setChannel] = useState('');
   return (
-    <>
+    <div>
       {
-        panel === PANELS?.CHANNEL_LIST || !panel && (
+        panel === PANELS?.CHANNEL_LIST || panel === '' && (
           <div className='sb_mobile_channellist'>
             <ChannelList
               onChannelSelect={(channel) => {
@@ -47,6 +47,10 @@ const MobileApp = () => {
               onSearchClick={() => {
                 setPanel(PANELS.MESSAGE_SEARCH);
               }}
+              onBackClick={() => {
+                setPanel(PANELS.CHANNEL_LIST);
+                // setChannel('');
+              }}
               onChatHeaderActionClick={() => {
                 setPanel(PANELS.CHANNEL_SETTINGS);
               }}
@@ -62,6 +66,9 @@ const MobileApp = () => {
               channelUrl={channel}
               onCloseClick={() => {
                 setPanel(PANELS.CHANNEL);
+              }}
+              onLeaveChannel={() => {
+                setPanel(PANELS.CHANNEL_LIST);
               }}
             />
           </div>
@@ -79,7 +86,7 @@ const MobileApp = () => {
           </div>
         )
       }
-    </>
+    </div>
   );
 }
 export const basicMobileApp = () => {
