@@ -7,6 +7,7 @@ import Icon, { IconTypes, IconColors } from '../Icon';
 import TextButton from '../TextButton';
 import { getClassName, getUIKitFileType, truncateString } from '../../utils';
 import { Colors } from '../../utils/color';
+import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 
 interface Props {
   className?: string | Array<string>;
@@ -23,7 +24,7 @@ export default function FileMessageItemBody({
   mouseHover = false,
   isReactionEnabled = false,
 }: Props): ReactElement {
-
+  const { isMobile } = useMediaQueryContext();
   return (
     <div className={getClassName([
       className,
@@ -57,7 +58,9 @@ export default function FileMessageItemBody({
           type={LabelTypography.BODY_1}
           color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
         >
-          {truncateString(message?.name || message?.url)}
+          {
+            truncateString(message?.name || message?.url, isMobile ? 20 : null)
+          }
         </Label>
       </TextButton>
     </div>

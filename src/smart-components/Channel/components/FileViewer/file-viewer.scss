@@ -29,6 +29,9 @@
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
+    @include mobile() {
+      position: relative;
+    }
     @include themed() {
       border-bottom: 1px solid t(on-bg-4);
     }
@@ -51,6 +54,13 @@
         overflow: hidden;
         text-overflow: ellipsis;
         display: inline-block;
+        @include mobile() {
+          position: absolute;
+          left: 64px;
+          top: 10px;
+          display: block;
+          max-width: calc(100vw - 240px);
+        }
       }
 
       .sendbird-fileviewer__header__left__sender-name {
@@ -61,6 +71,11 @@
         display: inline-flex;
         margin-left: 8px;
         padding-top: 5px;
+        @include mobile() {
+          position: absolute;
+          left: 56px;
+          top: 24px;
+        }
       }
     }
 

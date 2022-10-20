@@ -6,8 +6,19 @@
   flex-direction: row;
   width: 100%;
   height: 100%;
-  &.incoming { justify-content: flex-start; }
-  &.outgoing { justify-content: flex-end; }
+  &.incoming {
+    justify-content: flex-start;
+  }
+  &.outgoing {
+    justify-content: flex-end;
+  }
+  .sendbird-message-content__middle {
+    max-width: 400px;
+    @include mobile() {
+      max-width: calc(100vw - 100px);
+    }
+  }
+
   .sendbird-message-content__middle {
     .sendbird-message-content__middle__quote-message.use-quote {
       margin-top: -8px;
@@ -34,7 +45,6 @@
     position: relative;
     display: inline-flex;
     flex-direction: column;
-    max-width: 400px;
     align-items: flex-start;
 
     .sendbird-message-content__middle__body-container {
@@ -139,7 +149,6 @@
     position: relative;
     display: inline-flex;
     flex-direction: column;
-    max-width: 400px;
     align-items: flex-end;
 
     .sendbird-message-content__middle__quote-message {

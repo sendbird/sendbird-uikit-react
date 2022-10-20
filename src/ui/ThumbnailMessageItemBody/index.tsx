@@ -5,6 +5,7 @@ import type { FileMessage } from '@sendbird/chat/message';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import ImageRenderer from '../ImageRenderer';
 import { getClassName, isGifMessage, isSentMessage, isVideoMessage } from '../../utils';
+import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 
 interface Props {
   className?: string | Array<string>;
@@ -26,7 +27,7 @@ export default function ThumbnailMessageItemBody({
   const { thumbnails = [] } = message;
   const thumbnailUrl: string = thumbnails.length > 0 ? thumbnails[0]?.url : '';
   const [imageRendered, setImageRendered] = useState(false);
-
+  const { isMobile } = useMediaQueryContext();
   return (
     <div
       className={getClassName([
