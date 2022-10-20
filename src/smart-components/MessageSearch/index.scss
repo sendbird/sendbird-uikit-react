@@ -10,6 +10,9 @@
   @include themed() {
     background-color: t(bg-0);
   }
+  @include mobile() {
+    width: 100%;
+  }
 
   .sendbird-message-search-pannel__input__container__input-area {
     position: absolute;
