@@ -45,8 +45,8 @@ export const versionInfo = () => {
 export const basicSDK = () => fitPageSize(
   <App
     appId={appId}
-    userId={userId}
-    nickname={userId}
+    userId={"doo1018.4"}
+    nickname={"doo1018.4"}
     showSearchIcon
     replyType="QUOTE_REPLY"
     isMentionEnabled

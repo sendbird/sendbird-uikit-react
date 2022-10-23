@@ -46,6 +46,9 @@
     width: 100%;
     height: 100%;
     margin-left: 16px;
+    @include mobile() {
+      position: relative;
+    }
 
     .sendbird-channel-preview__content__upper {
       display: flex;
@@ -98,6 +101,9 @@
       height: 32px;
       display: flex;
       justify-content: space-between;
+      @include mobile() {
+        width: 100%;
+      }
 
       .sendbird-channel-preview__content__lower__last-message {
         overflow: hidden;
@@ -159,5 +165,12 @@
     @include themed() {
       color: t(primary-3);
     }
+  }
+}
+
+.sendbird-channel-preview__content__lower__unread-message-count {
+  @include mobile() {
+    position: absolute;
+    right: 0;
   }
 }
