@@ -10,6 +10,9 @@
   min-width: 256px;
   height: 100%;
   box-sizing: border-box;
+  @include mobile {
+    width: 100%;
+  }
   @include themed() {
     border-right: solid 1px t(on-bg-4);
   }

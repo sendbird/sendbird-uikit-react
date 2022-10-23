@@ -132,6 +132,7 @@ function OpenChannelListUI({
               channel={channel}
               isSelected={isSelected}
               onClick={handleClick}
+              key={channel?.url}
             />
           );
       })

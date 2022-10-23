@@ -46,6 +46,7 @@ export default function ParticipantsModal({
     <div>
       <Modal
         hideFooter
+        isFullScreenOnMobile
         onCancel={() => onCancel()}
         onSubmit={noop}
         titleText={stringSet.OPEN_CHANNEL_SETTINGS__ALL_PARTICIPANTS_TITLE}
