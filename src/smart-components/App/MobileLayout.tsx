@@ -1,6 +1,5 @@
 import './mobile.scss';
 
-import type { User } from '@sendbird/chat';
 import type { BaseMessage } from '@sendbird/chat/message';
 import React, { useState, useEffect } from 'react';
 

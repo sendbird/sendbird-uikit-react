@@ -22,4 +22,4 @@ export const WithControls = (args) => (
   <BottomSheet {...args}>
     <>Child component</>
   </BottomSheet>
-)
+);

@@ -1,5 +1,5 @@
 import './bottom-sheet.scss';
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 import { MODAL_ROOT } from '../../hooks/useModal/ModalRoot';
@@ -10,7 +10,7 @@ interface BottomSheetProps {
   onBackdropClick?: () => void;
 }
 
-export default function BottomSheet(props: BottomSheetProps) {
+const BottomSheet: React.FunctionComponent<BottomSheetProps> = (props: BottomSheetProps) => {
   const {
     className = '',
     children,
@@ -48,4 +48,6 @@ export default function BottomSheet(props: BottomSheetProps) {
       />
     </div>
   , portalRoot.current);
-}
+};
+
+export default BottomSheet;
