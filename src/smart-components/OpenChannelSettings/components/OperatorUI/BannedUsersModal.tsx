@@ -41,6 +41,7 @@ export default function BannedUsersModal({
     <div>
       <Modal
         hideFooter
+        isFullScreenOnMobile
         onCancel={() => onCancel()}
         onSubmit={noop}
         titleText={stringSet.OPEN_CHANNEL_SETTINGS__MUTED_MEMBERS__TITLE}

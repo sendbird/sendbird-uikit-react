@@ -1,5 +1,11 @@
 @import '../../../../styles/variables';
 
+.sendbird-oepnchannel-header__icon_back {
+  position: absolute;
+  left: 12px;
+  top: 18px;
+}
+
 .sendbird-openchannel-conversation-header {
   position: relative;
   min-height: 64px;
@@ -13,6 +19,9 @@
     overflow-x: hidden;
     text-overflow: ellipsis;
     max-width: calc(100% - 120px);
+    @include mobile() {
+      max-width: calc(100% - 160px);
+    }
   }
 
   &__left {
@@ -20,16 +29,25 @@
       position: absolute;
       left: 20px;
       top: 16px;
+      @include mobile() {
+        left: 50px;
+      }
     }
     &__title {
       position: absolute;
       left: 60px;
       top: 12px;
+      @include mobile() {
+        left: 90px;
+      }
     }
     &__sub-title {
       position: absolute;
       left: 60px;
       top: 36px;
+      @include mobile() {
+        left: 90px;
+      }
     }
   }
 

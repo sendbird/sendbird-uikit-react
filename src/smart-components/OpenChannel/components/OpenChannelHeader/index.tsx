@@ -30,7 +30,7 @@ export default function OpenchannelConversationHeader(): JSX.Element {
         {
           isMobile && (
             <Icon
-              className="sendbird-chat-header__icon_back"
+              className="sendbird-oepnchannel-header__icon_back"
               onClick={onBackClick}
               fillColor={IconColors.PRIMARY}
               width="24px"
