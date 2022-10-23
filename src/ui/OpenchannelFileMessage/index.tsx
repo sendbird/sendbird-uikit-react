@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { FileMessage } from '@sendbird/chat/message';
 import format from 'date-fns/format';
 import './index.scss';
@@ -24,6 +24,8 @@ import {
 } from '../../utils/openChannelUtils';
 import { getSenderFromMessage } from '../../utils/openChannelUtils';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
+import OpenChannelMobileMenu from '../OpenChannelMobileMenu';
+import useLongPress from '../../hooks/useLongPress';
 
 interface Props {
   className?: string | Array<string>;
@@ -50,6 +52,7 @@ export default function OpenchannelFileMessage({
   const status = message?.sendingStatus;
   const { dateLocale, stringSet } = useLocalization();
   const contextMenuRef = useRef(null);
+  const mobileMenuRef = useRef(null);
   const avatarRef = useRef(null);
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
 
@@ -59,13 +62,18 @@ export default function OpenchannelFileMessage({
   const isPending = checkIsPending(status);
   const isFailed = checkIsFailed(status);
   const sender = getSenderFromMessage(message);
-
+  const [contextMenu, setContextMenu] = useState(false);
+  const longPress = useLongPress({
+    onLongPress: () => { setContextMenu(true) },
+    onClick: openFileUrl,
+  }, {delay: 300});
   return (
     <div
       className={[
         ...(Array.isArray(className) ? className : [className]),
         'sendbird-openchannel-file-message',
       ].join(' ')}
+      ref={mobileMenuRef}
     >
       <div className="sendbird-openchannel-file-message__left">
         {
@@ -147,7 +155,7 @@ export default function OpenchannelFileMessage({
             </div>
           )
         }
-        <div className="sendbird-openchannel-file-message__right__body">
+        <div className="sendbird-openchannel-file-message__right__body" {...longPress}>
           {
             checkFileType(message.url) && (
               <Icon
@@ -267,6 +275,18 @@ export default function OpenchannelFileMessage({
                 />
             }
           </div>
+        )
+      }
+      {
+        contextMenu && (
+          <OpenChannelMobileMenu
+            message={message}
+            parentRef={mobileMenuRef}
+            showRemove={() => {
+              setContextMenu(false);
+              showRemove(true);
+            }}
+          />
         )
       }
     </div>

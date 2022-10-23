@@ -1513,8 +1513,9 @@ declare module '@sendbird/uikit-react/ui/ConnectionStatus' {
 
 declare module '@sendbird/uikit-react/ui/ContextMenu' {
   interface ContextMenuProps {
-    menuTrigger: () => void;
+    menuTrigger?: () => void;
     menuItems: () => void;
+    isOpen?: boolean;
   }
   const ContextMenu: React.FC<ContextMenuProps>;
   export default ContextMenu;

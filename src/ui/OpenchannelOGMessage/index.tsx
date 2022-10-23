@@ -31,6 +31,10 @@ import {
 import { getSenderFromMessage } from '../../utils/openChannelUtils';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
+import useLongPress from '../../hooks/useLongPress';
+import { OpenChannel } from '@sendbird/uikit-react';
+import OpenChannelMessageList from '../../smart-components/OpenChannel/components/OpenChannelMessageList';
+import OpenChannelMobileMenu from '../OpenChannelMobileMenu';
 
 interface Props {
   message: UserMessage;
@@ -60,6 +64,13 @@ export default function OpenchannelOGMessage({
     return null;
   }
 
+  const openLink = () => {
+    if (checkOGIsEnalbed(message)) {
+      const { url } = ogMetaData;
+      window.open(url);
+    }
+  };
+
   const status = message?.sendingStatus;
   const { ogMetaData } = message;
   const { defaultImage } = ogMetaData;
@@ -67,8 +78,14 @@ export default function OpenchannelOGMessage({
   const { stringSet, dateLocale } = useLocalization();
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const [contextStyle, setContextStyle] = useState({});
+  const [contextMenu, setContextMenu] = useState(false);
+  const onLongPress = useLongPress({
+    onLongPress: () => setContextMenu(true),
+    onClick: openLink,
+  }, { delay: 300 });
   const messageComponentRef = useRef(null);
   const contextMenuRef = useRef(null);
+  const mobileMenuRef = useRef(null);
   const avatarRef = useRef(null);
 
   const isPending = checkIsPending(status);
@@ -104,13 +121,6 @@ export default function OpenchannelOGMessage({
 
     return matchedMessage;
   }, [message, message.updatedAt]);
-
-  const openLink = () => {
-    if (checkOGIsEnalbed(message)) {
-      const { url } = ogMetaData;
-      window.open(url);
-    }
-  };
 
   // place conxt menu top depending clientHeight of message component
   useEffect(() => {
@@ -322,7 +332,7 @@ export default function OpenchannelOGMessage({
         }
       </div>
       <div className="sendbird-openchannel-og-message__bottom">
-        <div className="sendbird-openchannel-og-message__bottom__og-tag">
+        <div className="sendbird-openchannel-og-message__bottom__og-tag" ref={mobileMenuRef}>
           {
             ogMetaData.url && (
               <Label
@@ -367,6 +377,7 @@ export default function OpenchannelOGMessage({
                 onClick={openLink}
                 onKeyDown={openLink}
                 tabIndex={0}
+                { ...onLongPress }
               >
                 {
                   defaultImage && (
@@ -425,6 +436,30 @@ export default function OpenchannelOGMessage({
           )
         }
       </div>
+      {
+        contextMenu && (
+          <OpenChannelMobileMenu
+            message={message}
+            parentRef={mobileMenuRef}
+            showRemove={() => {
+              setContextMenu(false);
+              showRemove(true);
+            }}
+            showEdit={() => {
+              setContextMenu(false);
+              showEdit(true);
+            }}
+            copyToClipboard={() => {
+              setContextMenu(false);
+              copyToClipboard(message?.message);
+            }}
+            resendMessage={() => {
+              setContextMenu(false);
+              resendMessage(message);
+            }}
+          />
+        )
+      }
     </div>
   );
 }

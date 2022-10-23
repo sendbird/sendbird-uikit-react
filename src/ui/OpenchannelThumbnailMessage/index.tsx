@@ -30,6 +30,8 @@ import {
 } from '../../utils/openChannelUtils';
 import { getSenderFromMessage } from '../../utils/openChannelUtils';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
+import OpenChannelMobileMenu from '../OpenChannelMobileMenu';
+import useLongPress from '../../hooks/useLongPress';
 
 interface LocalUrl {
   localUrl?: string;
@@ -69,10 +71,15 @@ export default function OpenchannelThumbnailMessage({
   const { stringSet, dateLocale } = useLocalization();
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const [messageWidth, setMessageWidth] = useState(360);
+  const [contextMenu, setContextMenu] = useState(false);
   const messageRef = useRef(null);
+  const mobileMenuRef = useRef(null);
   const contextMenuRef = useRef(null);
   const avatarRef = useRef(null);
-
+  const onLongPress = useLongPress({
+    onLongPress: () => { setContextMenu(true); },
+    onClick: () => { onClick(true) },
+  })
   const { isMobile } = useMediaQueryContext();
 
   const memorizedThumbnailPlaceHolder = useMemo(() => (type) => ({ style }) => ( // eslint-disable-line
@@ -184,7 +191,7 @@ export default function OpenchannelThumbnailMessage({
             </div>
           )
         }
-        <div className="sendbird-openchannel-thumbnail-message__right__body">
+        <div className="sendbird-openchannel-thumbnail-message__right__body" ref={mobileMenuRef}>
           <div
             className="sendbird-openchannel-thumbnail-message__right__body__wrap"
             role="button"
@@ -200,7 +207,7 @@ export default function OpenchannelThumbnailMessage({
             }}
             tabIndex={0}
           >
-            <div className="sendbird-openchannel-thumbnail-message__right__body__wrap__overlay" />
+            <div {...onLongPress} className="sendbird-openchannel-thumbnail-message__right__body__wrap__overlay" />
             {
               {
                 [SUPPORTING_TYPES.VIDEO]: (
@@ -375,6 +382,22 @@ export default function OpenchannelThumbnailMessage({
               )}
             />
           </div>
+        )
+      }
+      {
+        contextMenu && (
+          <OpenChannelMobileMenu
+            message={message}
+            parentRef={mobileMenuRef}
+            showRemove={() => {
+              setContextMenu(false);
+              showRemove(true);
+            }}
+            resendMessage={() => {
+              setContextMenu(false);
+              resendMessage(message);
+            }}
+          />
         )
       }
     </div>

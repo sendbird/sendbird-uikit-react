@@ -47,7 +47,7 @@ interface isFineEditParams {
   userId: string;
 }
 export const isFineEdit = ({ message, status, userId }: isFineEditParams): boolean => {
-  return checkIsByMe(message, userId) && checkIsSent(status);
+  return checkIsByMe(message, userId) && checkIsSent(status) && message?.isUserMessage?.();
 };
 
 interface isFineDeleteParams {

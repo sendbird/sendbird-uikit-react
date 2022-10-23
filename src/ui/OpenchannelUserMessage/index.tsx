@@ -33,6 +33,8 @@ import {
 } from '../../utils/openChannelUtils';
 import { getSenderFromMessage } from '../../utils/openChannelUtils';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
+import OpenChannelMobileMenu from '../OpenChannelMobileMenu';
+import useLongPress from '../../hooks/useLongPress';
 
 interface Props {
   className?: string | Array<string>;
@@ -68,7 +70,9 @@ export default function OpenchannelUserMessage({
   const messageRef = useRef(null);
   const avatarRef = useRef(null);
   const contextMenuRef = useRef(null);
+  const mobileMenuRef = useRef(null);
   const [contextStyle, setContextStyle] = useState({});
+  const [contextMenu, setContextMenu] = useState(false);
 
   // consts
   const status = message?.sendingStatus;
@@ -102,6 +106,12 @@ export default function OpenchannelUserMessage({
       setContextStyle({ top: '2px' });
     }
   }, [window.innerWidth]);
+
+  const onLongPress = useLongPress({
+    onLongPress: () => {
+      setContextMenu(true);
+    }
+  });
 
   const { isMobile } = useMediaQueryContext();
   return (
@@ -192,7 +202,7 @@ export default function OpenchannelUserMessage({
             </div>
           )
         }
-        <div className="sendbird-openchannel-user-message__right__bottom">
+        <div {...onLongPress} className="sendbird-openchannel-user-message__right__bottom" ref={mobileMenuRef}>
           <Label
             className="sendbird-openchannel-user-message__right__bottom__message"
             type={LabelTypography.BODY_1}
@@ -332,6 +342,30 @@ export default function OpenchannelUserMessage({
             />
           </div>
 
+        )
+      }
+      {
+        contextMenu && (
+          <OpenChannelMobileMenu
+            message={message}
+            parentRef={mobileMenuRef}
+            showRemove={() => {
+              setContextMenu(false);
+              showRemove(true);
+            }}
+            showEdit={() => {
+              setContextMenu(false);
+              showEdit(true);
+            }}
+            copyToClipboard={() => {
+              setContextMenu(false);
+              copyToClipboard(message?.message);
+            }}
+            resendMessage={() => {
+              setContextMenu(false);
+              resendMessage(message);
+            }}
+          />
         )
       }
     </div>
