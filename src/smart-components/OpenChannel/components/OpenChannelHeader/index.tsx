@@ -9,6 +9,7 @@ import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useOpenChannelContext } from '../../context/OpenChannelProvider';
 
 import { kFormatter } from '../../context/utils';
+import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 
 export default function OpenchannelConversationHeader(): JSX.Element {
   const { stringSet } = useContext(LocalizationContext);
@@ -16,14 +17,28 @@ export default function OpenchannelConversationHeader(): JSX.Element {
     currentOpenChannel,
     onChatHeaderActionClick,
     amIOperator,
+    onBackClick,
   } = useOpenChannelContext();
   const title = currentOpenChannel?.name;
   const subTitle = `${kFormatter(currentOpenChannel?.participantCount)} ${stringSet.OPEN_CHANNEL_CONVERSATION__TITLE_PARTICIPANTS}`;
   const coverImage = currentOpenChannel?.coverUrl;
+  const { isMobile } = useMediaQueryContext();
 
   return (
     <div className="sendbird-openchannel-conversation-header">
       <div className="sendbird-openchannel-conversation-header__left">
+        {
+          isMobile && (
+            <Icon
+              className="sendbird-chat-header__icon_back"
+              onClick={onBackClick}
+              fillColor={IconColors.PRIMARY}
+              width="24px"
+              height="24px"
+              type={IconTypes.ARROW_LEFT}
+            />
+          )
+        }
         {
           coverImage ? (
             <Avatar

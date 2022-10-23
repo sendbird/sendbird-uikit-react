@@ -37,7 +37,6 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
     isInvalid,
     messageInputRef,
   } = useOpenChannelContext();
-
   if (
     !currentOpenChannel
     || !currentOpenChannel?.url

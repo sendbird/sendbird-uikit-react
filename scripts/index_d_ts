@@ -616,6 +616,7 @@ declare module "SendbirdUIKitGlobal" {
     onBeforeSendUserMessage?(text: string): UserMessageCreateParams;
     onBeforeSendFileMessage?(file_: File): FileMessageCreateParams;
     onChatHeaderActionClick?(): void;
+    onBackClick?(): void;
     disableUserProfile?: boolean;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode | React.ReactElement;
   }
