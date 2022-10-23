@@ -27,7 +27,3 @@ export interface MobileBottomSheetProps extends BaseMenuProps {
   toggleReaction?: (message: UserMessage | FileMessage, reactionKey: string, isReacted: boolean) => void;
 }
 
-export interface MobileContextMenuProps extends BaseMenuProps {}
-
-export interface MobileMenuProps extends MobileBottomSheetProps, MobileContextMenuProps {
-}

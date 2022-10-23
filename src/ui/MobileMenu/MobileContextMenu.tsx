@@ -1,12 +1,13 @@
 import React from 'react';
-import type { MobileContextMenuProps } from './types';
+import type { BaseMenuProps } from './types';
 
 // import {
 //   MenuItem,
 //   MenuItems
 // } from '../ContextMenu';
 
-const MobileContextMenu: React.FunctionComponent<MobileContextMenuProps> = (props: MobileContextMenuProps) => {
+// const MobileContextMenu: React.FunctionComponent<MobileContextMenuProps> = (props: MobileContextMenuProps) => {
+const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = () => {
   return (
     <>component</>
     // <MenuItems
