@@ -1,0 +1,39 @@
+@import '../../styles/variables';
+
+.sendbird-message__bottomsheet {
+  width: 100vw;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding-top: 16px;
+  @include themed() {
+    background-color: t(bg-0);
+  }
+}
+.sendbird-message__bottomsheet-reaction-bar {
+  padding-left: 0;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0px;
+  margin-top: 0;
+}
+
+
+.sendbird-message__bottomsheet-reaction-bar__row {
+  display: inline-block;
+  &.sendbird-message__bottomsheet-reaction-bar__all {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+.sendbird-message__bottomsheet--action {
+  cursor: pointer;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding-left: 16px;
+  .sendbird-icon {
+    margin-right: 24px;
+  }
+}
