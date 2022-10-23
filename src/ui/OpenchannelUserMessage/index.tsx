@@ -32,6 +32,7 @@ import {
   showMenuTrigger,
 } from '../../utils/openChannelUtils';
 import { getSenderFromMessage } from '../../utils/openChannelUtils';
+import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 
 interface Props {
   className?: string | Array<string>;
@@ -102,6 +103,7 @@ export default function OpenchannelUserMessage({
     }
   }, [window.innerWidth]);
 
+  const { isMobile } = useMediaQueryContext();
   return (
     <div
       className={[
@@ -234,100 +236,103 @@ export default function OpenchannelUserMessage({
         }
       </div>
       {
-        <div
-          className="sendbird-openchannel-user-message__context-menu"
-          ref={contextMenuRef}
-          style={contextStyle}
-        >
-          <ContextMenu
-            menuTrigger={(toggleDropdown) => (
-              showMenuTrigger({ message: message, userId: userId, status: status}) && (
-                <IconButton
-                  className="sendbird-openchannel-user-message__context-menu--icon"
-                  width="32px"
-                  height="32px"
-                  onClick={() => {
-                    toggleDropdown();
-                  }}
+        !isMobile && (
+          <div
+            className="sendbird-openchannel-user-message__context-menu"
+            ref={contextMenuRef}
+            style={contextStyle}
+          >
+            <ContextMenu
+              menuTrigger={(toggleDropdown) => (
+                showMenuTrigger({ message: message, userId: userId, status: status}) && (
+                  <IconButton
+                    className="sendbird-openchannel-user-message__context-menu--icon"
+                    width="32px"
+                    height="32px"
+                    onClick={() => {
+                      toggleDropdown();
+                    }}
+                  >
+                    <Icon
+                      type={IconTypes.MORE}
+                      fillColor={IconColors.CONTENT_INVERSE}
+                      width="24px"
+                      height="24px"
+                    />
+                  </IconButton>
+                )
+              )}
+              menuItems={(closeDropdown) => (
+                <MenuItems
+                  parentRef={contextMenuRef}
+                  parentContainRef={contextMenuRef}
+                  closeDropdown={closeDropdown}
+                  openLeft
                 >
-                  <Icon
-                    type={IconTypes.MORE}
-                    fillColor={IconColors.CONTENT_INVERSE}
-                    width="24px"
-                    height="24px"
-                  />
-                </IconButton>
-              )
-            )}
-            menuItems={(closeDropdown) => (
-              <MenuItems
-                parentRef={contextMenuRef}
-                parentContainRef={contextMenuRef}
-                closeDropdown={closeDropdown}
-                openLeft
-              >
-                {
-                  isFineCopy({ message: message, userId: userId, status: status }) && (
-                    <MenuItem
-                      className="sendbird-openchannel-user-message__context-menu__copy"
-                      onClick={() => {
-                        copyToClipboard(message.message);
-                        closeDropdown();
-                      }}
-                    >
-                      {stringSet.CONTEXT_MENU_DROPDOWN__COPY}
-                    </MenuItem>
-                  )
-                }
-                {
-                  isFineEdit({ message: message, userId: userId, status: status }) && (
-                    <MenuItem
-                      className="sendbird-openchannel-user-message__context-menu__edit"
-                      onClick={() => {
-                        if (disabled) {
-                          return;
-                        }
-                        showEdit(true);
-                        closeDropdown();
-                      }}
-                    >
-                      {stringSet.CONTEXT_MENU_DROPDOWN__EDIT}
-                    </MenuItem>
-                  )
-                }
-                {
-                  isFineResend({ message: message, userId: userId, status: status }) && (
-                    <MenuItem
-                      className="sendbird-openchannel-user-message__context-menu__resend"
-                      onClick={() => {
-                        resendMessage(message);
-                        closeDropdown();
-                      }}
-                    >
-                      {stringSet.CONTEXT_MENU_DROPDOWN__RESEND}
-                    </MenuItem>
-                  )
-                }
-                {
-                  isFineDelete({ message: message, userId: userId, status: status }) && (
-                    <MenuItem
-                      className="sendbird-openchannel-user-message__context-menu__delete"
-                      onClick={() => {
-                        if (disabled) {
-                          return;
-                        }
-                        showRemove(true);
-                        closeDropdown();
-                      }}
-                    >
-                      {stringSet.CONTEXT_MENU_DROPDOWN__DELETE}
-                    </MenuItem>
-                  )
-                }
-              </MenuItems>
-            )}
-          />
-        </div>
+                  {
+                    isFineCopy({ message: message, userId: userId, status: status }) && (
+                      <MenuItem
+                        className="sendbird-openchannel-user-message__context-menu__copy"
+                        onClick={() => {
+                          copyToClipboard(message.message);
+                          closeDropdown();
+                        }}
+                      >
+                        {stringSet.CONTEXT_MENU_DROPDOWN__COPY}
+                      </MenuItem>
+                    )
+                  }
+                  {
+                    isFineEdit({ message: message, userId: userId, status: status }) && (
+                      <MenuItem
+                        className="sendbird-openchannel-user-message__context-menu__edit"
+                        onClick={() => {
+                          if (disabled) {
+                            return;
+                          }
+                          showEdit(true);
+                          closeDropdown();
+                        }}
+                      >
+                        {stringSet.CONTEXT_MENU_DROPDOWN__EDIT}
+                      </MenuItem>
+                    )
+                  }
+                  {
+                    isFineResend({ message: message, userId: userId, status: status }) && (
+                      <MenuItem
+                        className="sendbird-openchannel-user-message__context-menu__resend"
+                        onClick={() => {
+                          resendMessage(message);
+                          closeDropdown();
+                        }}
+                      >
+                        {stringSet.CONTEXT_MENU_DROPDOWN__RESEND}
+                      </MenuItem>
+                    )
+                  }
+                  {
+                    isFineDelete({ message: message, userId: userId, status: status }) && (
+                      <MenuItem
+                        className="sendbird-openchannel-user-message__context-menu__delete"
+                        onClick={() => {
+                          if (disabled) {
+                            return;
+                          }
+                          showRemove(true);
+                          closeDropdown();
+                        }}
+                      >
+                        {stringSet.CONTEXT_MENU_DROPDOWN__DELETE}
+                      </MenuItem>
+                    )
+                  }
+                </MenuItems>
+              )}
+            />
+          </div>
+
+        )
       }
     </div>
   );

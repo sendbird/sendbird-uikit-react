@@ -30,6 +30,7 @@ import {
 } from '../../utils/openChannelUtils';
 import { getSenderFromMessage } from '../../utils/openChannelUtils';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
+import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 
 interface Props {
   message: UserMessage;
@@ -73,6 +74,7 @@ export default function OpenchannelOGMessage({
   const isPending = checkIsPending(status);
   const isFailed = checkIsFailed(status);
   const sender = getSenderFromMessage(message);
+  const { isMobile } = useMediaQueryContext();
 
   const MemoizedMessageText = useMemo(() => () => {
     const wordClassName = 'sendbird-openchannel-og-message--word';
@@ -221,100 +223,102 @@ export default function OpenchannelOGMessage({
           </div>
         </div>
         {
-          <div
-            className="sendbird-openchannel-og-message__top__context-menu"
-            ref={contextMenuRef}
-            style={contextStyle}
-          >
-            <ContextMenu
-              menuTrigger={(toggleDropdown) => (
-                showMenuTrigger({ message: message, userId: userId, status: status }) && (
-                  <IconButton
-                    className="sendbird-openchannel-og-message__top__context-menu--icon"
-                    width="32px"
-                    height="32px"
-                    onClick={() => {
-                      toggleDropdown();
-                    }}
+          !isMobile && (
+            <div
+              className="sendbird-openchannel-og-message__top__context-menu"
+              ref={contextMenuRef}
+              style={contextStyle}
+            >
+              <ContextMenu
+                menuTrigger={(toggleDropdown) => (
+                  showMenuTrigger({ message: message, userId: userId, status: status }) && (
+                    <IconButton
+                      className="sendbird-openchannel-og-message__top__context-menu--icon"
+                      width="32px"
+                      height="32px"
+                      onClick={() => {
+                        toggleDropdown();
+                      }}
+                    >
+                      <Icon
+                        type={IconTypes.MORE}
+                        fillColor={IconColors.CONTENT_INVERSE}
+                        width="24px"
+                        height="24px"
+                      />
+                    </IconButton>
+                  )
+                )}
+                menuItems={(closeDropdown) => (
+                  <MenuItems
+                    parentRef={contextMenuRef}
+                    parentContainRef={contextMenuRef}
+                    closeDropdown={closeDropdown}
+                    openLeft
                   >
-                    <Icon
-                      type={IconTypes.MORE}
-                      fillColor={IconColors.CONTENT_INVERSE}
-                      width="24px"
-                      height="24px"
-                    />
-                  </IconButton>
-                )
-              )}
-              menuItems={(closeDropdown) => (
-                <MenuItems
-                  parentRef={contextMenuRef}
-                  parentContainRef={contextMenuRef}
-                  closeDropdown={closeDropdown}
-                  openLeft
-                >
-                  {
-                    isFineCopy({ message, userId, status }) && (
-                      <MenuItem
-                        className="sendbird-openchannel-og-message__top__context-menu__copy"
-                        onClick={() => {
-                          copyToClipboard(message.message);
-                          closeDropdown();
-                        }}
-                      >
-                        {stringSet.CONTEXT_MENU_DROPDOWN__COPY}
-                      </MenuItem>
-                    )
-                  }
-                  {
-                    isFineEdit({ message, userId, status }) && (
-                      <MenuItem
-                        className="sendbird-openchannel-og-message__top__context-menu__edit"
-                        onClick={() => {
-                          if (disabled) {
-                            return;
-                          }
-                          showEdit(true);
-                          closeDropdown();
-                        }}
-                      >
-                        {stringSet.CONTEXT_MENU_DROPDOWN__EDIT}
-                      </MenuItem>
-                    )
-                  }
-                  {
-                    isFineResend({ message, userId, status }) && (
-                      <MenuItem
-                        className="sendbird-openchannel-og-message__top__context-menu__resend"
-                        onClick={() => {
-                          resendMessage(message);
-                          closeDropdown();
-                        }}
-                      >
-                        {stringSet.CONTEXT_MENU_DROPDOWN__RESEND}
-                      </MenuItem>
-                    )
-                  }
-                  {
-                    isFineDelete({ message, userId, status }) && (
-                      <MenuItem
-                        className="sendbird-openchannel-og-message__top__context-menu__delete"
-                        onClick={() => {
-                          if (disabled) {
-                            return;
-                          }
-                          showRemove(true);
-                          closeDropdown();
-                        }}
-                      >
-                        {stringSet.CONTEXT_MENU_DROPDOWN__DELETE}
-                      </MenuItem>
-                    )
-                  }
-                </MenuItems>
-              )}
-            />
-          </div>
+                    {
+                      isFineCopy({ message, userId, status }) && (
+                        <MenuItem
+                          className="sendbird-openchannel-og-message__top__context-menu__copy"
+                          onClick={() => {
+                            copyToClipboard(message.message);
+                            closeDropdown();
+                          }}
+                        >
+                          {stringSet.CONTEXT_MENU_DROPDOWN__COPY}
+                        </MenuItem>
+                      )
+                    }
+                    {
+                      isFineEdit({ message, userId, status }) && (
+                        <MenuItem
+                          className="sendbird-openchannel-og-message__top__context-menu__edit"
+                          onClick={() => {
+                            if (disabled) {
+                              return;
+                            }
+                            showEdit(true);
+                            closeDropdown();
+                          }}
+                        >
+                          {stringSet.CONTEXT_MENU_DROPDOWN__EDIT}
+                        </MenuItem>
+                      )
+                    }
+                    {
+                      isFineResend({ message, userId, status }) && (
+                        <MenuItem
+                          className="sendbird-openchannel-og-message__top__context-menu__resend"
+                          onClick={() => {
+                            resendMessage(message);
+                            closeDropdown();
+                          }}
+                        >
+                          {stringSet.CONTEXT_MENU_DROPDOWN__RESEND}
+                        </MenuItem>
+                      )
+                    }
+                    {
+                      isFineDelete({ message, userId, status }) && (
+                        <MenuItem
+                          className="sendbird-openchannel-og-message__top__context-menu__delete"
+                          onClick={() => {
+                            if (disabled) {
+                              return;
+                            }
+                            showRemove(true);
+                            closeDropdown();
+                          }}
+                        >
+                          {stringSet.CONTEXT_MENU_DROPDOWN__DELETE}
+                        </MenuItem>
+                      )
+                    }
+                  </MenuItems>
+                )}
+              />
+            </div>
+          )
         }
       </div>
       <div className="sendbird-openchannel-og-message__bottom">

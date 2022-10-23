@@ -59,24 +59,8 @@ export const OpenChannelApp = () => {
               onCloseClick={() => {
                 setPanel(PANELS.CHANNEL);
               }}
-              onLeaveChannel={() => {
+              onDeleteChannel={() => {
                 setPanel(PANELS.CHANNEL_LIST);
-              }}
-            />
-          </div>
-        )
-      }
-      {
-        panel === PANELS?.MESSAGE_SEARCH && (
-          <div className='sb_mobile__panelwrap'>
-            <MessageSearch
-              channelUrl={currentChannelUrl}
-              onCloseClick={() => {
-                setPanel(PANELS.CHANNEL);
-              }}
-              onResultClick={(message) => {
-                setPanel(PANELS.CHANNEL);
-                goToMessage(message);
               }}
             />
           </div>
