@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ui/BottomSheet should do a snapshot test of the default Button DOM 1`] = `
+<div
+  id="sendbird-modal-root"
+>
+  <div
+    class="test_classname sendbird-bottomsheet"
+  >
+    <div
+      aria-expanded="true"
+      aria-modal="true"
+      class="sendbird-bottomsheet__content"
+      role="dialog"
+    />
+    <div
+      class="
+          sendbird-bottomsheet__backdrop
+        "
+    />
+  </div>
+</div>
+`;

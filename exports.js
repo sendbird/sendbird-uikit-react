@@ -111,6 +111,7 @@ export default {
   'ui/MutedAvatarOverlay': 'src/ui/Avatar/MutedAvatarOverlay.tsx',
   'ui/Button': 'src/ui/Button/index.tsx',
   'ui/Badge': 'src/ui/Badge/index.tsx',
+  'ui/BottomSheet': 'src/ui/BottomSheet/index.tsx',
   'ui/ChannelAvatar': 'src/ui/ChannelAvatar/index.tsx',
   'ui/OpenChannelAvatar': 'src/ui/ChannelAvatar/OpenChannelAvatar.tsx',
   'ui/Checkbox': 'src/ui/Checkbox/index.tsx',
