@@ -63,6 +63,7 @@ export interface OpenChannelProviderProps {
   onBeforeSendUserMessage?(text: string): UserMessageCreateParams;
   onBeforeSendFileMessage?(file_: File): FileMessageCreateParams;
   onChatHeaderActionClick?(): void;
+  onBackClick?(): void;
   disableUserProfile?: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
 }
@@ -98,6 +99,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
     messageLimit,
     onBeforeSendFileMessage,
     onChatHeaderActionClick,
+    onBackClick,
   } = props;
 
   // We didn't decide to support fetching participant list
@@ -281,6 +283,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
       messageLimit,
       onBeforeSendFileMessage,
       onChatHeaderActionClick,
+      onBackClick,
       // store
       allMessages,
       loading,

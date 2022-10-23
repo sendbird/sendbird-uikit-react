@@ -35,6 +35,7 @@ function CreateOpenChannelUI({
   return (
     <div className="sendbird-create-open-channel-ui">
       <Modal
+        isFullScreenOnMobile
         titleText={stringSet.CREATE_OPEN_CHANNEL_LIST__TITLE}
         submitText={stringSet.CREATE_OPEN_CHANNEL_LIST__SUBMIT}
         type={ButtonTypes.PRIMARY}

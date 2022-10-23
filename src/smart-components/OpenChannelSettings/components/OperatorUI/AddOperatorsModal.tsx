@@ -45,6 +45,7 @@ export default function AddOperatorsModal({
   return (
     <>
       <Modal
+        isFullScreenOnMobile
         type={ButtonTypes.PRIMARY}
         submitText="Add"
         onCancel={onCancel}

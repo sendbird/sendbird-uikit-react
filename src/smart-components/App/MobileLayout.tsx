@@ -35,17 +35,19 @@ export function MobileLayout(
     setStartingPoint,
   } = props;
   const [panel, setPanel] = useState(PANELS?.CHANNEL_LIST);
+
   const goToMessage = (message?: BaseMessage | null) => {
     setStartingPoint(message?.createdAt);
     setTimeout(() => {
       setHighlightedMessage(message?.messageId);
     });
-  }
+  };
+
   useEffect(() => {
     if (panel !== PANELS?.CHANNEL) {
       goToMessage();
     }
-  }, [panel])
+  }, [panel]);
 
   return (
     <div>
