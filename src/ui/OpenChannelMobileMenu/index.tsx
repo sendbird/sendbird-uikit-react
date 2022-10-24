@@ -19,6 +19,7 @@ type Props = {
   showRemove?(): void;
   copyToClipboard?(): void;
   showEdit?(): void;
+  hideMenu(): void;
 };
 
 const OpenChannelMobileMenu = (props: Props) => {
@@ -29,6 +30,7 @@ const OpenChannelMobileMenu = (props: Props) => {
     showEdit,
     showRemove,
     copyToClipboard,
+    hideMenu,
   } = props;
   const userMessage = message as UserMessage;
   const status = message?.sendingStatus;
@@ -42,6 +44,7 @@ const OpenChannelMobileMenu = (props: Props) => {
           className="sendbird-openchannel__mobile-menu"
           parentRef={parentRef}
           parentContainRef={parentRef}
+          closeDropdown={hideMenu}
         >
           {
             isFineCopy({ message: userMessage, userId, status }) && (

@@ -1,5 +1,22 @@
 @import '../../styles/variables';
 
+.sendbird-message__mobile-context-menu {
+  border-radius: 8px;
+  width: 180px;
+}
+
+.sendbird-message__mobile-context-menu-item {
+  .sendbird-dropdown__menu-item__text {
+    display: flex;
+    justify-content: space-between;
+  }
+  &:not(:last-child) {
+    @include themed() {
+      border-bottom: 1px solid t(on-bg-4);
+    }
+  }
+}
+
 .sendbird-message__bottomsheet {
   width: 100vw;
   border-top-left-radius: 8px;
