@@ -69,4 +69,54 @@ export const OpenChannelApp = () => {
     </SendbirdProvider>
   );
 }
-
+export const OpenChannelAppDark = () => {
+  const [panel, setPanel] = useState(PANELS?.CHANNEL_LIST);
+  const [currentChannelUrl, setCurrentChannelUrl] = useState(null);
+  return (
+    <SendbirdProvider appId={appId} userId='sendbird' nickname="sendbird" theme="dark">
+      {
+        panel === PANELS?.CHANNEL_LIST && (
+          <div className='sb_mobile__panelwrap'>
+            <OpenChannelList
+              onChannelSelected={(channel) => {
+                setCurrentChannelUrl(channel?.url);
+                setPanel(PANELS.CHANNEL);
+              }}
+              disableAutoSelect
+            />
+          </div>
+        )
+      }
+      {
+        panel === PANELS?.CHANNEL && (
+          <div className='sb_mobile__panelwrap'>
+            <OpenChannel
+              channelUrl={currentChannelUrl}
+              onBackClick={() => {
+                setPanel(PANELS.CHANNEL_LIST);
+              }}
+              onChatHeaderActionClick={() => {
+                setPanel(PANELS.CHANNEL_SETTINGS);
+              }}
+            />
+          </div>
+        )
+      }
+      {
+        panel === PANELS?.CHANNEL_SETTINGS && (
+          <div className='sb_mobile__panelwrap'>
+            <OpenChannelSettings
+              channelUrl={currentChannelUrl}
+              onCloseClick={() => {
+                setPanel(PANELS.CHANNEL);
+              }}
+              onDeleteChannel={() => {
+                setPanel(PANELS.CHANNEL_LIST);
+              }}
+            />
+          </div>
+        )
+      }
+    </SendbirdProvider>
+  );
+}

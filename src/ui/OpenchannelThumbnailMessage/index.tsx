@@ -389,6 +389,9 @@ export default function OpenchannelThumbnailMessage({
           <OpenChannelMobileMenu
             message={message}
             parentRef={mobileMenuRef}
+            hideMenu={() => {
+              setContextMenu(false);
+            }}
             showRemove={() => {
               setContextMenu(false);
               showRemove(true);

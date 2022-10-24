@@ -89,6 +89,7 @@ export default function MessageContent({
   const { config } = useSendbirdStateContext?.() || {};
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const avatarRef = useRef(null);
+  const contentRef = useRef(null);
   const { isMobile } = useMediaQueryContext();
   const [showMenu, setShowMenu] = useState(false);
   const [mouseHover, setMouseHover] = useState(false);
@@ -195,7 +196,11 @@ export default function MessageContent({
         )}
       </div>
       {/* middle */}
-      <div className="sendbird-message-content__middle" {...longPress}>
+      <div
+        className="sendbird-message-content__middle"
+        {...longPress}
+        ref={contentRef}
+      >
         {(!isByMe && !chainTop && !useReplying) && (
           <Label
             className="sendbird-message-content__middle__sender-name"
@@ -353,6 +358,7 @@ export default function MessageContent({
           message?.isUserMessage() || message?.isFileMessage()
         ) && (
           <MobileMenu
+            parentRef={contentRef}
             channel={channel}
             hideMenu={() => { setShowMenu(false) }}
             message={message}

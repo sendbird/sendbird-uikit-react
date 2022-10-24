@@ -6,6 +6,7 @@ import type { ReplyType } from 'SendbirdUIKitGlobal';
 import type { EmojiContainer } from '@sendbird/chat';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
+import React from 'react';
 
 export interface BaseMenuProps {
   channel: GroupChannel | OpenChannel;
@@ -20,10 +21,10 @@ export interface BaseMenuProps {
   resendMessage?: (message: UserMessage | FileMessage) => Promise<UserMessage | FileMessage>;
   setQuoteMessage?: (message: UserMessage | FileMessage) => void;
   isReactionEnabled?: boolean;
+  parentRef?: React.RefObject<HTMLElement>;
 }
 
 export interface MobileBottomSheetProps extends BaseMenuProps {
   emojiContainer?: EmojiContainer;
   toggleReaction?: (message: UserMessage | FileMessage, reactionKey: string, isReacted: boolean) => void;
 }
-

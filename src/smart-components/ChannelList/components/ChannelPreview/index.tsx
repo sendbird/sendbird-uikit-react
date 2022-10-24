@@ -66,7 +66,11 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
     onLongPress: () => {
       setShowMobileLeave(true);
     },
-    onClick: onClick,
+    onClick: (e) => {
+      console.warn('a', e);
+    },
+  }, {
+    delay: 1000,
   });
   const channelName = utils.getChannelTitle(channel, userId, stringSet);
   return (
@@ -81,9 +85,21 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
         {
           ...onLongPress
         }
+        // onClick={
+        //   () => {
+        //     if (!isMobile) {
+        //       onClick();
+        //     }
+        //   }
+        // }
       >
         <div
           className="sendbird-channel-preview__avatar"
+          onTouchEnd={(e) => {
+            // to stop confusion between mobile UI drag and click
+            e.stopPropagation();
+            onClick();
+          }}
         >
           <ChannelAvatar
             channel={channel}
@@ -112,7 +128,13 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
                 type={LabelTypography.SUBTITLE_2}
                 color={LabelColors.ONBACKGROUND_1}
               >
-                { channelName }
+                <div onTouchEnd={(e) => {
+                  // to stop confusion between mobile UI drag and click
+                  e.stopPropagation();
+                  onClick();
+                }}>
+                  { channelName }
+                </div>
               </Label>
               <Label
                 className="sendbird-channel-preview__content__upper__header__total-members"

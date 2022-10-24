@@ -14,9 +14,9 @@ import {
   copyToClipboard,
 } from '../../utils';
 import BottomSheet from '../BottomSheet';
-import Icon, { IconTypes, IconColors } from '../Icon';
 import ImageRenderer from '../ImageRenderer';
 import ReactionButton from '../ReactionButton';
+import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 

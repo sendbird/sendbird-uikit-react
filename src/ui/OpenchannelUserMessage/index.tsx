@@ -349,6 +349,9 @@ export default function OpenchannelUserMessage({
           <OpenChannelMobileMenu
             message={message}
             parentRef={mobileMenuRef}
+            hideMenu={() => {
+              setContextMenu(false);
+            }}
             showRemove={() => {
               setContextMenu(false);
               showRemove(true);
