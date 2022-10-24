@@ -42,14 +42,6 @@ export function isTouchEvent(e: Event): e is TouchEvent {
   return e && 'touches' in e;
 }
 
-export function vibrate(): void {
-  try {
-    navigator.vibrate(100);
-  } catch {
-    //
-  }
-}
-
 interface PressHandlers<T> {
   onLongPress: (e: React.MouseEvent<T> | React.TouchEvent<T>) => void;
   onClick?: (e: React.MouseEvent<T> | React.TouchEvent<T>) => void;
@@ -103,7 +95,6 @@ export default function useLongPress<T> ({
     timeout.current = setTimeout(() => {
       onLongPress(clonedEvent);
       setLongPressTriggered(true);
-      vibrate();
     }, delay);
   }, [onLongPress, delay, shouldPreventDefault, isMobile]);
 
