@@ -194,7 +194,7 @@ You can make your own customized channel preview item component in this file. Yo
 ```javascript
 const CustomizedChannelPreviewItem = (props) => {
     const { channel } = props;
-    const onLeaveChannel = sendbirdSelectors.getLeaveChannel(store);
+    const onLeaveChannel = sendbirdSelectors.getLeaveGroupChannel(store);
     ...
     onLeaveChannel(channel);
 }
