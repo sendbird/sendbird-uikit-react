@@ -60,8 +60,8 @@ const CustomComponent = ({ createChannel, sdk, leaveChannel }) => {
 };
 
 const CustomComponentWithSendBird = withSendBird(CustomComponent, (state) => {
-  const createChannel =  sendbirdSelectors.getCreateChannel(state);
-  const leaveChannel =  sendbirdSelectors.getLeaveChannel(state);
+  const createChannel =  sendbirdSelectors.getCreateGroupChannel(state);
+  const leaveChannel =  sendbirdSelectors.getLeaveGroupChannel(state);
   const sdk = sendbirdSelectors.getSdk(state);
   return ({ createChannel, sdk, leaveChannel });
 });

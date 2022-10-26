@@ -245,7 +245,7 @@ interface sendbirdSelectorsInterface {
   getCreateOpenChannel: (store: SendBirdState) => GetCreateOpenChannel;
   getGetGroupChannel: (store: SendBirdState) => GetGetGroupChannel;
   getGetOpenChannel: (store: SendBirdState) => GetGetOpenChannel;
-  getLeaveChannel: (store: SendBirdState) => GetLeaveGroupChannel;
+  getLeaveGroupChannel: (store: SendBirdState) => GetLeaveGroupChannel;
   getEnterOpenChannel: (store: SendBirdState) => GetEnterOpenChannel;
   getExitOpenChannel: (store: SendBirdState) => GetExitOpenChannel;
   getFreezeChannel: (store: SendBirdState) => GetFreezeChannel;
