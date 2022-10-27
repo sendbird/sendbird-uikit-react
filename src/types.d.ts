@@ -1,5 +1,5 @@
 import type { User } from "@sendbird/chat";
-import type { Member } from "@sendbird/chat/groupChannel";
+import type { GroupChannel, Member } from "@sendbird/chat/groupChannel";
 import type {
   AdminMessage,
   FileMessage,
@@ -37,6 +37,7 @@ export interface ClientMessage {
 
 export interface RenderMessageProps {
   message: UserMessage | FileMessage | AdminMessage;
+  channel: GroupChannel;
   chainTop: boolean;
   chainBottom: boolean;
 }

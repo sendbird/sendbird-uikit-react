@@ -165,10 +165,11 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
   const renderedMessage = useMemo(() => {
     return renderMessage?.({
       message,
+      channel: currentGroupChannel,
       chainTop,
       chainBottom,
     });
-  }, [message, renderMessage]);
+  }, [message, currentGroupChannel, renderMessage]);
   const renderedCustomSeparator = useMemo(() => {
     if (renderCustomSeparator) {
       return renderCustomSeparator?.({ message: message });
