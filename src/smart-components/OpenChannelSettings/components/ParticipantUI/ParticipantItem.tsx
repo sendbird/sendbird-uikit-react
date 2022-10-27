@@ -118,7 +118,12 @@ export const UserListItem: React.FC<UserListItemProps> = ({
       {
         isOperator && (
           <Label
-            className="sendbird-participants-accordion__member__title operator"
+            className={
+              `sendbird-participants-accordion__member__title
+                ${user?.userId !== currentUser ? 'operator' : ''}
+                ${user?.userId === currentUser ? 'self-operator' : ''}
+              `
+            }
             type={LabelTypography.SUBTITLE_2}
             color={LabelColors.ONBACKGROUND_2}
           >
