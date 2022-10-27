@@ -11,6 +11,15 @@ Find out more about Sendbird UIKit for React at [UIKit for React doc](https://se
 
 <br />
 
+> Some default attributes of Sendbird's application have been changed, so you might have to check below.
+> <br /><br />allow_user_list_from_sdk: off
+> <br />allow_user_update_from_sdk: on
+> <br />allow_open_channel_create_from_sdk: on
+> <br />allow_group_channel_create_from_sdk: on
+> <br /><br />In order to use the API, the option must be turned on in the dashboard.
+
+<br />
+
 ## UIKit components and ways to customize
 These samples are here to help you better understand UIKit for React by going over the core components and ways to customize. On each core component sample, there is an attached CodeSandbox link in which you can see the sample codes and alter them to see how the changes are rendered.
 
