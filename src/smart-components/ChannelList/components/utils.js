@@ -38,6 +38,8 @@ export const isSuperGroupChannelEnabled = (sdk = {}) => {
   return false;
 };
 
+export const isAboutSame = (a, b, px) => (Math.abs(a - b) <= px);
+
 export const setChannelType = (params, type) => {
   if (type === 'broadcast') {
     // eslint-disable-next-line no-param-reassign
