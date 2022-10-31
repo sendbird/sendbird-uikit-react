@@ -7,9 +7,9 @@ import Channel from '../Channel';
 import ChannelSettings from '../ChannelSettings';
 import MessageSearchPannel from '../MessageSearch';
 
-export function DesktopLayout(
+export const DesktopLayout: React.FC<DesktopLayoutProps> = (
   props: DesktopLayoutProps,
-): React.FC<DesktopLayoutProps> {
+) => {
   const {
     isReactionEnabled,
     replyType,
@@ -106,4 +106,4 @@ export function DesktopLayout(
       )}
     </div>
   )
-}
+};

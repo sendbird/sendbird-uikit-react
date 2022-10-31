@@ -7,9 +7,9 @@ import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import { DesktopLayout } from './DesktopLayout';
 import { MobileLayout } from './MobileLayout';
 
-export function AppLayout(
+export const AppLayout: React.FC<AppLayoutProps> = (
   props: AppLayoutProps,
-): React.FC<AppLayoutProps> {
+) => {
   const {
     isReactionEnabled,
     replyType,
