@@ -10,6 +10,7 @@ import Button, { ButtonTypes } from '../Button';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import IconButton from '../IconButton';
 import Label, { LabelTypography, LabelColors } from '../Label';
+import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 
 export interface ModalHeaderProps {
   titleText: string;
@@ -95,10 +96,11 @@ export default function Modal(props: ModalProps): ReactElement {
     renderHeader,
   } = props;
 
+  const { isMobile } = useMediaQueryContext();
   return createPortal((
     <div className={`
       sendbird-modal ${className}
-      ${isFullScreenOnMobile ? 'sendbird-modal--full-mobile' : ''}
+      ${(isFullScreenOnMobile && isMobile) ? 'sendbird-modal--full-mobile' : ''}
     `}>
       <div className="sendbird-modal__content">
         {renderHeader?.() || (
