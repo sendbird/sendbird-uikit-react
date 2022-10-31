@@ -69,7 +69,7 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
   const globalStore = useSendbirdStateContext();
   const { config, stores } = globalStore;
   const { sdkStore } = stores;
-  const { logger } = config;
+  const { logger, onUserProfileMessage } = config;
 
   const { initialized } = sdkStore;
   const sdk = sdkStore?.sdk as SendbirdGroupChat;
@@ -122,6 +122,7 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
       <UserProfileProvider
         renderUserProfile={props?.renderUserProfile}
         disableUserProfile={props?.disableUserProfile}
+        onUserProfileMessage={onUserProfileMessage}
       >
         <div className={`sendbird-channel-settings ${className}`}>
           {children}

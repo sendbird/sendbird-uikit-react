@@ -148,7 +148,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   const globalStore = useSendbirdStateContext();
   const { config, stores } = globalStore;
   const { sdkStore } = stores;
-  const { pubSub, logger } = config;
+  const { pubSub, logger, onUserProfileMessage } = config;
   const {
     disableMarkAsDelivered = false,
     isTypingIndicatorEnabledOnChannelList = false,
@@ -362,6 +362,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
       <UserProfileProvider
         disableUserProfile={userDefinedDisableUserProfile}
         renderUserProfile={userDefinedRenderProfile}
+        onUserProfileMessage={onUserProfileMessage}
       >
         <div className={`sendbird-channel-list ${className}`}>
           {children}

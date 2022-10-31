@@ -16,6 +16,8 @@ export interface AppLayoutProps {
   showSearchIcon?: boolean;
   onProfileEditSuccess?(user: User): void;
   disableAutoSelect?: boolean;
+  currentChannelUrl?: string;
+  setCurrentChannelUrl?: React.Dispatch<string>;
 }
 
 export interface MobileLayoutProps extends AppLayoutProps {

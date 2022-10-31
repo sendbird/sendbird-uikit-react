@@ -224,6 +224,7 @@ declare module "SendbirdUIKitGlobal" {
     dateLocale?: Locale;
     disableUserProfile?: boolean;
     disableMarkAsDelivered?: boolean;
+    onUserProfileMessage?: (props: GroupChannel) => void;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode | React.ReactElement;
     allowProfileEdit?: boolean;
     userListQuery?(): UserListQuery;

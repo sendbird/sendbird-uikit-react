@@ -18,8 +18,9 @@ export const AppLayout: React.FC<AppLayoutProps> = (
     showSearchIcon,
     onProfileEditSuccess,
     disableAutoSelect,
+    currentChannelUrl,
+    setCurrentChannelUrl,
   } = props;
-  const [currentChannelUrl, setCurrentChannelUrl] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [highlightedMessage, setHighlightedMessage] = useState<number>(null);

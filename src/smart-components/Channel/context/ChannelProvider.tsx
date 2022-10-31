@@ -172,7 +172,15 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
 
   const globalStore = useSendbirdStateContext();
   const { config } = globalStore;
-  const { pubSub, logger, userId, isOnline, imageCompression, isMentionEnabled } = config;
+  const {
+    pubSub,
+    logger,
+    userId,
+    isOnline,
+    imageCompression,
+    isMentionEnabled,
+    onUserProfileMessage,
+  } = config;
   const sdk = globalStore?.stores?.sdkStore?.sdk as SendbirdGroupChat;
   const sdkInit = globalStore?.stores?.sdkStore?.initialized;
 
@@ -423,6 +431,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       <UserProfileProvider
         disableUserProfile={props?.disableUserProfile}
         renderUserProfile={props?.renderUserProfile}
+        onUserProfileMessage={onUserProfileMessage}
       >
         {children}
       </UserProfileProvider>

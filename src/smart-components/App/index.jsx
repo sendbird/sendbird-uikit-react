@@ -3,7 +3,7 @@
  * Can also be used as an example for creating
  * default chat apps
  */
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Sendbird from '../../lib/Sendbird';
@@ -43,6 +43,7 @@ export default function App(props) {
     isTypingIndicatorEnabledOnChannelList,
     isMessageReceiptStatusEnabledOnChannelList,
   } = props;
+  const [currentChannelUrl, setCurrentChannelUrl] = useState(null);
   return (
     <Sendbird
       stringSet={stringSet}
@@ -65,10 +66,15 @@ export default function App(props) {
       imageCompression={imageCompression}
       isReactionEnabled={isReactionEnabled}
       isMentionEnabled={isMentionEnabled}
+      onUserProfileMessage={(channel) => {
+        setCurrentChannelUrl(channel?.url);
+      }}
       isTypingIndicatorEnabledOnChannelList={isTypingIndicatorEnabledOnChannelList}
       isMessageReceiptStatusEnabledOnChannelList={isMessageReceiptStatusEnabledOnChannelList}
     >
       <AppLayout
+        currentChannelUrl={currentChannelUrl}
+        setCurrentChannelUrl={setCurrentChannelUrl}
         isReactionEnabled={isReactionEnabled}
         replyType={replyType}
         isMessageGroupingEnabled={isMessageGroupingEnabled}

@@ -29,6 +29,7 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
   } = useOpenChannelSettingsContext();
   const globalStore = useSendbirdStateContext();
   const logger = globalStore?.config?.logger;
+  const onUserProfileMessage = globalStore?.config?.onUserProfileMessage;
   const user = globalStore?.stores?.userStore?.user;
 
   const { stringSet } = useContext(LocalizationContext);
@@ -45,7 +46,7 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
     );
   }
   return (
-    <UserProfileProvider>
+    <UserProfileProvider isOpenChannel>
       <div className='sendbird-openchannel-settings'>
         {
           channel?.isOperator(user) && (

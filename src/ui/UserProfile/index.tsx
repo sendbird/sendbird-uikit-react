@@ -5,6 +5,7 @@ import type { User } from '@sendbird/chat';
 
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import withSendbirdContext from '../../lib/SendbirdSdkContext';
+import { UserProfileContext } from '../../lib/UserProfileContext';
 import { getSdk, getCreateGroupChannel } from '../../lib/selectors';
 import Avatar from '../Avatar/index';
 import Label, { LabelColors, LabelTypography } from '../Label';
@@ -32,6 +33,8 @@ function UserProfile({
   onSuccess,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
+  // @ts-ignore
+  const { onUserProfileMessage } = useContext(UserProfileContext);
   return (
     <div className="sendbird__user-profile">
       <section className="sendbird__user-profile-avatar">
@@ -63,6 +66,9 @@ function UserProfile({
                 createChannel(params)
                   .then((groupChannel) => {
                     logger.info('UserProfile, channel create', groupChannel);
+                    if (typeof onUserProfileMessage === 'function') {
+                      onUserProfileMessage?.(groupChannel);
+                    }
                   });
               }}
             >

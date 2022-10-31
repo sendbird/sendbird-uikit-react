@@ -54,6 +54,7 @@ export interface SendBirdStateConfig {
   disableUserProfile: boolean;
   disableMarkAsDelivered: boolean;
   renderUserProfile?: (props: SendBirdTypes.RenderUserProfileProps) => React.ReactElement;
+  onUserProfileMessage?: (props: GroupChannel) => void;
   allowProfileEdit: boolean;
   isOnline: boolean;
   userId: string;

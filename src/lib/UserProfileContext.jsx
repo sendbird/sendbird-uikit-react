@@ -9,6 +9,7 @@ const UserProfileContext = React.createContext({
   disableUserProfile: true,
   isOpenChannel: false,
   renderUserProfile: null,
+  onUserProfileMessage: null,
 });
 
 const UserProfileProvider = (props) => {
@@ -32,12 +33,15 @@ UserProfileProvider.propTypes = {
   disableUserProfile: PropTypes.bool,
   // eslint-disable-next-line react/no-unused-prop-types
   renderUserProfile: PropTypes.func,
+  // eslint-disable-next-line react/no-unused-prop-types
+  onUserProfileMessage: PropTypes.func,
 };
 
 UserProfileProvider.defaultProps = {
   isOpenChannel: false,
   disableUserProfile: false,
   renderUserProfile: null,
+  onUserProfileMessage: null,
 };
 
 export { UserProfileContext, UserProfileProvider };
