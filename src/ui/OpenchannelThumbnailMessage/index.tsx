@@ -206,8 +206,9 @@ export default function OpenchannelThumbnailMessage({
               }
             }}
             tabIndex={0}
+            {...onLongPress}
           >
-            <div {...onLongPress} className="sendbird-openchannel-thumbnail-message__right__body__wrap__overlay" />
+            <div className="sendbird-openchannel-thumbnail-message__right__body__wrap__overlay" />
             {
               {
                 [SUPPORTING_TYPES.VIDEO]: (
