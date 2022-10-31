@@ -14,6 +14,7 @@ import * as channelListActions from '../../dux/actionTypes';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import EditUserProfile from '../../../EditUserProfile';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
+import { isAboutSame } from '../utils';
 
 const DELIVERY_RECIPT = 'delivery_receipt';
 
@@ -126,7 +127,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
         className="sendbird-channel-list__body"
         onScroll={(e) => {
           const target = e?.target as HTMLDivElement;
-          const fetchMore = target.clientHeight + target.scrollTop === target.scrollHeight;
+          const fetchMore = isAboutSame(target.clientHeight + target.scrollTop, target.scrollHeight, 10);
           if (fetchMore && channelSource?.hasNext) {
             logger.info('ChannelList: Fetching more channels');
             channelListDispatcher({
