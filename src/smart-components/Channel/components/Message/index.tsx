@@ -204,7 +204,7 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
     );
   }
 
-  if (showEdit && message.isUserMessage()) {
+  if (showEdit && message?.isUserMessage?.()) {
     return renderEditInput?.() || (
       <>
         {
