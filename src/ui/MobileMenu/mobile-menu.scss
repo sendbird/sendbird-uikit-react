@@ -5,6 +5,29 @@
   width: 180px;
 }
 
+.sendbird-message__contextmenu--hyperlink {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sendbird-message__bottomsheet--hyperlink {
+  display: block;
+}
+
+.sendbird-message__bottomsheet--hyperlink,
+.sendbird-message__contextmenu--hyperlink {
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: inherit;
+  letter-spacing: inherit;
+  font-family: inherit;
+}
+
 .sendbird-message__mobile-context-menu-item {
   .sendbird-dropdown__menu-item__text {
     display: flex;

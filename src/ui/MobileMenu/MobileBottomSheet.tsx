@@ -1,5 +1,5 @@
 import type { Emoji } from '@sendbird/chat';
-import { Reaction, UserMessage } from '@sendbird/chat/message';
+import { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
 import React, { useState } from 'react';
 
 import type { MobileBottomSheetProps } from './types';
@@ -12,6 +12,7 @@ import {
   isSentMessage,
   isUserMessage,
   copyToClipboard,
+  isFileMessage,
 } from '../../utils';
 import BottomSheet from '../BottomSheet';
 import ImageRenderer from '../ImageRenderer';
@@ -43,20 +44,21 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
   const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe);
   const showMenuItemResend: boolean = (isFailedMessage(message) && message?.isResendable && isByMe);
   const showMenuItemDelete: boolean = !isPendingMessage(message) && isByMe;
+  const showMenuItemDownload: boolean = !isPendingMessage(message) && isFileMessage(message);
   const showReaction: boolean = !isFailedMessage(message) && !isPendingMessage(message) && isReactionEnabled;
   const showMenuItemReply: boolean = (replyType === 'QUOTE_REPLY')
     && !isFailedMessage(message)
     && !isPendingMessage(message)
     && (channel?.isGroupChannel() && !(channel as GroupChannel)?.isBroadcast);
 
-  //
+  const fileMessage = message as FileMessage;
   const maxEmojisPerRow = Math.floor(window?.innerWidth / EMOJI_SIZE) - 1;
   const [showEmojisOnly, setShowEmojisOnly] = useState<boolean>(false);
   const emojis = getEmojiListAll(emojiContainer);
   // calculate max emojis that can be shown in screen
   const visibleEmojis = showEmojisOnly
     ? emojis
-    : emojis.slice(0, maxEmojisPerRow);
+    : emojis?.slice(0, maxEmojisPerRow);
   const canShowMoreEmojis = emojis.length > maxEmojisPerRow;
   return (
     <BottomSheet onBackdropClick={hideMenu}>
@@ -244,6 +246,33 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                     <Label type={LabelTypography.SUBTITLE_1}>
                       {stringSet?.MESSAGE_MENU__DELETE}
                     </Label>
+                  </div>
+                )
+              }
+              {
+                showMenuItemDownload && (
+                  <div
+                    className='sendbird-message__bottomsheet--action'
+                    onClick={() => {
+                      hideMenu();
+                    }}
+                  >
+                    <a
+                      className="sendbird-message__bottomsheet--hyperlink"
+                      rel="noopener noreferrer"
+                      href={fileMessage?.url}
+                      target="_blank"
+                    >
+                      <Icon
+                        type={IconTypes.DOWNLOAD}
+                        fillColor={IconColors.PRIMARY}
+                        width="24px"
+                        height="24px"
+                      />
+                      <Label type={LabelTypography.SUBTITLE_1}>
+                        {stringSet?.MESSAGE_MENU__SAVE}
+                      </Label>
+                    </a>
                   </div>
                 )
               }

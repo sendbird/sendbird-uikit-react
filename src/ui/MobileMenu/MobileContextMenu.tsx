@@ -1,6 +1,6 @@
 import React from 'react';
 import type { BaseMenuProps } from './types';
-import type { UserMessage } from '@sendbird/chat/message';
+import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import ContextMenu, { MenuItems, MenuItem } from '../ContextMenu';
@@ -11,6 +11,7 @@ import {
   isSentMessage,
   isUserMessage,
   copyToClipboard,
+  isFileMessage,
 } from '../../utils';
 import { useLocalization } from '../../lib/LocalizationContext';
 import Icon, { IconTypes, IconColors } from '../Icon';
@@ -35,11 +36,13 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
   const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe);
   const showMenuItemResend: boolean = (isFailedMessage(message) && message?.isResendable && isByMe);
   const showMenuItemDelete: boolean = !isPendingMessage(message) && isByMe;
+  const showMenuItemDownload: boolean = !isPendingMessage(message) && isFileMessage(message);
   const showMenuItemReply: boolean = (replyType === 'QUOTE_REPLY')
     && !isFailedMessage(message)
     && !isPendingMessage(message)
     && (channel?.isGroupChannel() && !(channel as GroupChannel)?.isBroadcast);
 
+  const fileMessage = message as FileMessage;
   return (
     <ContextMenu
       isOpen
@@ -145,6 +148,31 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
                 width="24px"
                 height="24px"
               />
+            </MenuItem>
+          )}
+          {showMenuItemDownload && (
+            <MenuItem
+              className="sendbird-message__mobile-context-menu-item menu-item-save"
+              onClick={() => {
+                hideMenu();
+              }}
+            >
+              <a
+                className="sendbird-message__contextmenu--hyperlink"
+                rel="noopener noreferrer"
+                href={fileMessage?.url}
+                target="_blank"
+              >
+                <Label type={LabelTypography.SUBTITLE_1}>
+                  {stringSet.MESSAGE_MENU__SAVE}
+                </Label>
+                <Icon
+                  type={IconTypes.DOWNLOAD}
+                  fillColor={IconColors.PRIMARY}
+                  width="24px"
+                  height="24px"
+                />
+              </a>
             </MenuItem>
           )}
         </MenuItems>

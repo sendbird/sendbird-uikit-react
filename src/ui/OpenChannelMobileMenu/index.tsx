@@ -8,6 +8,7 @@ import {
   isFineResend,
   isFineCopy,
   isFineEdit,
+  isFineDownload,
 } from '../../utils/openChannelUtils';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../lib/LocalizationContext';
@@ -36,6 +37,7 @@ const OpenChannelMobileMenu = (props: Props) => {
   const status = message?.sendingStatus;
   const { stringSet } = useLocalization();
   const userId = useSendbirdStateContext()?.config?.userId;
+  const fileMessage = message as FileMessage;
   return (
     <ContextMenu
       isOpen
@@ -90,6 +92,24 @@ const OpenChannelMobileMenu = (props: Props) => {
               >
                 <>{stringSet.CONTEXT_MENU_DROPDOWN__DELETE}</>
               </MenuItem>
+            )
+          }
+          {
+            isFineDownload({ message, userId, status }) && (
+                <MenuItem
+                  onClick={() => {
+                    hideMenu();
+                  }}
+                >
+                  <a
+                    className="sendbird-openchannel__mobile-menu-hyperlink"
+                    rel="noopener noreferrer"
+                    href={fileMessage?.url}
+                    target="_blank"
+                  >
+                    {stringSet.CONTEXT_MENU_DROPDOWN__SAVE}
+                  </a>
+                </MenuItem>
             )
           }
         </MenuItems>

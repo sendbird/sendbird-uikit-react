@@ -59,6 +59,19 @@ export const isFineDelete = ({ message, userId }: isFineDeleteParams): boolean =
   return checkIsByMe(message, userId);
 };
 
+interface IsFineDownloadParams {
+  message: FileMessage | UserMessage;
+  status: string;
+  userId: string;
+}
+
+export const isFineDownload = ({ message, userId, status }: IsFineDownloadParams): boolean => {
+  if (message?.isFileMessage?.() && checkIsSent(status)) {
+    return true;
+  }
+  return false;
+};
+
 interface showMenuTriggerParams {
   message: UserMessage | FileMessage;
   status: string;

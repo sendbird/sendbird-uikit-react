@@ -32,6 +32,8 @@ import {
   isOGMessage,
   isThumbnailMessage,
   getSenderName,
+  isFileMessage,
+  isSentMessage,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 import { ReplyType } from '../../index.js';
@@ -113,6 +115,12 @@ export default function MessageContent({
   const longPress = useLongPress({
     onLongPress: () => {
       setShowMenu(true);
+    },
+    onClick: () => {
+      // @ts-ignore
+      if (isFileMessage(message) && isSentMessage(message)) {
+        showFileViewer(true);
+      }
     },
   }, {
     delay: 300,
