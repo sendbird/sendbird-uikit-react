@@ -16,6 +16,7 @@ import { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../type
 import * as messageActionTypes from '../../context/dux/actionTypes';
 
 export interface ChannelUIProps {
+  isLoading?: boolean;
   renderPlaceholderLoader?: () => React.ReactElement;
   renderPlaceholderInvalid?: () => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
@@ -27,6 +28,7 @@ export interface ChannelUIProps {
 }
 
 const ChannelUI: React.FC<ChannelUIProps> = ({
+  isLoading,
   renderPlaceholderLoader,
   renderPlaceholderInvalid,
   renderPlaceholderEmpty,
@@ -58,6 +60,16 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
   const sdkError = globalStore?.stores?.sdkStore?.error;
   const logger = globalStore?.config?.logger;
   const isOnline = globalStore?.config?.isOnline;
+
+  if (isLoading) {
+    return (<div className="sendbird-conversation">
+      {
+        renderPlaceholderInvalid?.() || (
+          <PlaceHolder type={PlaceHolderTypes.LOADING} />
+        )
+      }
+    </div>);
+  }
 
   if (!channelUrl) {
     return (<div className="sendbird-conversation">
