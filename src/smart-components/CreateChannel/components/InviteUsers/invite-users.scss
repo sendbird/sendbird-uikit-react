@@ -9,6 +9,7 @@
   height: 360px;
   overflow-y: auto;
   @include mobile() {
-    height: calc(100vh - 180px);
+    height: calc(100vh - 200px);
+    height: calc(calc(var(--sendbird-vh, 1vh) * 100) - 200px);
   }
 }
