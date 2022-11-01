@@ -57,7 +57,6 @@
   margin-top: 0;
 }
 
-
 .sendbird-message__bottomsheet-reaction-bar__row {
   display: inline-block;
   &.sendbird-message__bottomsheet-reaction-bar__all {
@@ -75,5 +74,12 @@
   padding-left: 16px;
   .sendbird-icon {
     margin-right: 24px;
+  }
+}
+
+.sendbird-message__bottomsheet--action-disabled {
+  cursor: not-allowed;
+  @include themed() {
+    background-color: t(bg--0-5);
   }
 }

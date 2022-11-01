@@ -18,7 +18,7 @@ import BottomSheet from '../BottomSheet';
 import ImageRenderer from '../ImageRenderer';
 import ReactionButton from '../ReactionButton';
 import Icon, { IconTypes, IconColors } from '../Icon';
-import Label, { LabelTypography } from '../Label';
+import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 
 const EMOJI_SIZE = 38;
@@ -50,6 +50,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     && !isFailedMessage(message)
     && !isPendingMessage(message)
     && (channel?.isGroupChannel() && !(channel as GroupChannel)?.isBroadcast);
+  const disableReaction = message?.parentMessageId > 0;
 
   const fileMessage = message as FileMessage;
   const maxEmojisPerRow = Math.floor(window?.innerWidth / EMOJI_SIZE) - 1;
@@ -210,19 +211,31 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                 showMenuItemReply && (
 
                   <div
-                    className='sendbird-message__bottomsheet--action'
+                    className={`sendbird-message__bottomsheet--action
+                      ${disableReaction ? 'sendbird-message__bottomsheet--action-disabled': ''}
+                    `}
+                    aria-role="menuitem"
+                    aria-disabled={disableReaction ? true : false}
                     onClick={() => {
-                      hideMenu();
-                      setQuoteMessage(message);
+                      if(!disableReaction) {
+                        hideMenu();
+                        setQuoteMessage(message);
+                      }
                     }}
                   >
                     <Icon
                       type={IconTypes.REPLY}
-                      fillColor={IconColors.PRIMARY}
+                      fillColor={disableReaction
+                        ? IconColors.ON_BACKGROUND_3
+                        : IconColors.PRIMARY
+                      }
                       width="24px"
                       height="24px"
                     />
-                    <Label type={LabelTypography.SUBTITLE_1}>
+                    <Label
+                      type={LabelTypography.SUBTITLE_1}
+                      color={disableReaction && LabelColors.ONBACKGROUND_4}
+                    >
                       {stringSet?.MESSAGE_MENU__REPLY}
                     </Label>
                   </div>

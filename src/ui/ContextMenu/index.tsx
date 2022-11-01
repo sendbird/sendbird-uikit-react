@@ -33,6 +33,7 @@ export const MenuItem = ({
     <li
       className={getClassName([className, 'sendbird-dropdown__menu-item', disable ? 'disable' : ''])}
       role="menuitem"
+      aria-disabled={disable ? true : false}
       onClick={handleClickEvent}
       onKeyPress={(e) => { if (e.keyCode === ENTER_KEY) handleClickEvent(e); }}
       tabIndex={0}
