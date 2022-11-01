@@ -17,6 +17,11 @@ describe('Messages-Reducers', () => {
     expect(nextState.loading).toEqual(true);
   });
 
+  // https://sendbird.atlassian.net/browse/UIKIT-2158
+  it('should check if ITNITAL_LOADING state is true', () => {
+    expect(initialState.loading).toEqual(true);
+  });
+
   it('should initialize messages FETCH_INITIAL_MESSAGES_SUCCESS', () => {
     const mockData = generateMockChannel();
     const nextState = reducers(stateWithCurrentChannel, {
