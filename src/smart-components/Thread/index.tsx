@@ -1,6 +1,7 @@
 import React from 'react';
 
 import ThreadProvider from './context/ThreadProvider';
+import ThreadUI from './components/ThreadUI';
 
 export interface ThreadProps { // extends ThreadContextProps, ThreadUIProps
 

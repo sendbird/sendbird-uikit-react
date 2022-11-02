@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useEffect, useReducer } from 'react';
+import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
+import { ThreadContextInitialState } from './dux/initialState';
+
+import threadReducer from './dux/reducer';
+import useGetChannel from './hooks/useGetChannel';
+import threadInitialState from './dux/initialState';
+import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
+import { FileMessage, MessageRetrievalParams, UserMessage } from '@sendbird/chat/message';
+import useGetParentMessage from './hooks/useGetParentMessage';
 
 export type ThreadContextProps = {
   children?: React.ReactElement;
   channelUrl?: string;
-  parentMessageId?: string | number;
+  message?: UserMessage | FileMessage;
 }
 
 export interface ThreadProviderInterface {// extends ThreadContextProps
@@ -15,8 +24,34 @@ const ThreadProvider: React.FC<ThreadContextProps> = (props: ThreadContextProps)
   const {
     children,
     channelUrl,
-    parentMessageId,
+    message,
   } = props;
+
+  // Context from SendbirdProvider
+  const globalStore = useSendbirdStateContext();
+  const { stores, config } = globalStore;
+  // // stores
+  const { sdkStore } = stores;
+  const { sdk } = sdkStore;
+  const sdkInit = sdkStore?.initialized;
+  // // config
+  const { logger } = config;
+
+  // dux of Thread
+  const [threadStore, threadDispatcher] = useReducer(
+    threadReducer,
+    threadInitialState,
+  ) as [ThreadContextInitialState, CustomUseReducerDispatcher];
+  const {
+    currentChannel,
+    parentMessage,
+    threadListState,
+    parentMessageInfoState,
+    hasMorePrev,
+    hasMoreNext,
+    emojiContainer,
+  }: ThreadContextInitialState = threadStore;
+
   /**
    * # Basic Business Logic
    * ### Functions
@@ -77,6 +112,26 @@ const ThreadProvider: React.FC<ThreadContextProps> = (props: ThreadContextProps)
    * 1. channel
    * 2. parent message
    */
+
+  // Initialization
+  useGetChannel({
+    channelUrl,
+    sdkInit,
+  }, {
+    sdk,
+    logger,
+    threadDispatcher,
+  });
+  useGetParentMessage({
+    channelUrl,
+    sdkInit,
+    parentMessageId: message?.parentMessageId,
+  }, {
+    sdk,
+    logger,
+    threadDispatcher,
+  });
+
   return (
     <ThreadContext.Provider
       value={{
