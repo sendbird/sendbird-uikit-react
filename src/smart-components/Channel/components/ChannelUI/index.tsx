@@ -64,7 +64,7 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
   if (isLoading) {
     return (<div className="sendbird-conversation">
       {
-        renderPlaceholderInvalid?.() || (
+        renderPlaceholderLoader?.() || (
           <PlaceHolder type={PlaceHolderTypes.LOADING} />
         )
       }
