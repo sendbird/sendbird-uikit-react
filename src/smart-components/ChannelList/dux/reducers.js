@@ -42,6 +42,7 @@ export default function reducer(state, action) {
         ],
       };
     }
+    case actions.USER_INVITED:
     case actions.CREATE_CHANNEL: {
       const channel = action.payload;
       if (state.channelListQuery) {
