@@ -473,6 +473,7 @@ declare module "SendbirdUIKitGlobal" {
   };
 
   export interface ChannelUIProps {
+    isLoading?: boolean;
     renderPlaceholderLoader?: () => React.ReactNode | React.ReactElement;
     renderPlaceholderInvalid?: () => React.ReactNode | React.ReactElement;
     renderPlaceholderEmpty?: () => React.ReactNode | React.ReactElement;

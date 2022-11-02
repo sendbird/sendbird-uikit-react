@@ -1,7 +1,7 @@
 export default {
   // we might not need this initialized state -> should remove
   initialized: false,
-  loading: false,
+  loading: true,
   allChannels: [],
   currentChannel: null,
   showSettings: false,

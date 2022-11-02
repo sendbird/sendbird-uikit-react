@@ -1,6 +1,6 @@
 export default {
   initialized: false,
-  loading: false,
+  loading: true,
   allMessages: [],
   currentGroupChannel: { members: [] },
   // for scrollup

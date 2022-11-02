@@ -159,7 +159,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
         }}
       >
         {
-          (sdkError) && (
+          (sdkError && !loading) && (
             (renderPlaceHolderError && typeof renderPlaceHolderError === 'function') ? (
               renderPlaceHolderError?.()
             ) : (
