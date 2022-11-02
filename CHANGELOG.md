@@ -1,5 +1,16 @@
 # Changelog - v3
 
+## [v3.2.4] (Nov 1 2022)
+Features:
+* For Channel component, added separate prop isLoading?.boolean
+  Usage: `<Channel channelUrl {currentChannelUrl} isLoading={!currentChannelUrl} />`
+* For flicker in ChannelList, no extra props
+
+Fixes:
+* React UIKit placeholder rendering issue
+* Fix scroll issue in ChannelList where user cannot load more channels
+* Modify TS interface getLeaveChannel to getLeaveGroupChannel in selectors
+
 ## [v3.2.3] (Oct 14 2022)
 Feature:
 * Add a prop `disableMarkAsRead` into the <Channel />
