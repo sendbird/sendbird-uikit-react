@@ -76,7 +76,6 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
 
   const sdk = sdkStore?.sdk as SendbirdGroupChat;
   const sdkError = sdkStore?.error;
-  const sdkIntialized = sdkStore?.initialized || false;
 
   const [channelsTomarkAsRead, setChannelsToMarkAsRead] = useState([]);
   useEffect(() => {
