@@ -30,6 +30,7 @@ const Channel: React.FC<ChannelProps> = (props: ChannelProps) => {
       disableMarkAsRead={props?.disableMarkAsRead}
     >
       <ChannelUI
+        isLoading={props?.isLoading}
         renderPlaceholderLoader={props?.renderPlaceholderLoader}
         renderPlaceholderInvalid={props?.renderPlaceholderInvalid}
         renderPlaceholderEmpty={props?.renderPlaceholderEmpty}

@@ -16,6 +16,11 @@ describe('Channels-Reducers', () => {
     expect(nextState.currentChannel.url).toEqual(mockData.allChannels[0].url);
   });
 
+    // https://sendbird.atlassian.net/browse/UIKIT-2158
+    it('should check if ITNITAL_LOADING state is true', () => {
+      expect(initialState.loading).toEqual(true);
+    });
+
   it('should handle create new channel using CREATE_CHANNEL', () => {
     const nextState = reducers(mockData, {
       type: actionTypes.CREATE_CHANNEL,
