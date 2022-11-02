@@ -61,6 +61,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
     channelListDispatcher,
     channelSource,
     typingChannels,
+    initialized,
   } = useChannelListContext();
 
   const state = useSendbirdStateContext();
@@ -162,7 +163,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
           (sdkError) && (
             (renderPlaceHolderError && typeof renderPlaceHolderError === 'function') ? (
               renderPlaceHolderError?.()
-            ): (
+            ) : (
               <PlaceHolder type={PlaceHolderTypes.WRONG} />
             )
           )
@@ -238,19 +239,19 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
           }
         </div>
         {
-          (!sdkIntialized || loading) && (
+          (!initialized && loading) && (
             (renderPlaceHolderLoading && typeof renderPlaceHolderLoading === 'function') ? (
               renderPlaceHolderLoading?.()
-            ): (
+            ) : (
               <PlaceHolder type={PlaceHolderTypes.LOADING} />
             )
           )
         }
         {
-          (!allChannels || allChannels.length === 0) && (
+          (initialized && allChannels?.length === 0) && (
             (renderPlaceHolderEmptyList && typeof renderPlaceHolderEmptyList === 'function') ? (
               renderPlaceHolderEmptyList?.()
-            ): (
+            ) : (
               <PlaceHolder type={PlaceHolderTypes.NO_CHANNELS} />
             )
           )
