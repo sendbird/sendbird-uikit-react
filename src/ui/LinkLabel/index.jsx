@@ -26,6 +26,12 @@ export default function LinkLabel({
       href={url}
       target="_blank"
       rel="noopener noreferrer"
+      // for mobile
+      onTouchEnd={(e) => {
+        e.preventDefault();
+        e.nativeEvent.stopImmediatePropagation();
+        window.open(url, '_blank', 'noopener,noreferrer');
+      }}
     >
       <Label
         className="sendbird-link-label__label"
