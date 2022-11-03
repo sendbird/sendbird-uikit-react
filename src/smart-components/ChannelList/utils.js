@@ -34,9 +34,20 @@ const createEventHandler = ({
         });
       }
     },
+    onUserReceivedInvitation: (channel, inviter, invitees) => {
+      logger.info('ChannelList: onUserReceivedInvitation', { channel, inviter, invitees });
+      const { currentUser } = sdk;
+      const isInvited = invitees.find((user) => user?.userId === currentUser?.userId);
+      if (isInvited) {
+        channelListDispatcher({
+          type: channelActions.USER_INVITED,
+          payload: channel,
+        });
+      }
+    },
     onUserBanned: (channel, user) => {
       const { currentUser } = sdk;
-      logger.info('Channel | useHandleChannelEvents: onUserBanned', channel);
+      logger.info('Channel: onUserBanned', channel);
       if (user.userId === currentUser.userId) {
         channelListDispatcher({
           type: channelActions.ON_USER_LEFT,
