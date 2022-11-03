@@ -47,7 +47,7 @@ const createEventHandler = ({
     },
     onUserBanned: (channel, user) => {
       const { currentUser } = sdk;
-      logger.info('Channel | useHandleChannelEvents: onUserBanned', channel);
+      logger.info('Channel: onUserBanned', channel);
       if (user.userId === currentUser.userId) {
         channelListDispatcher({
           type: channelActions.ON_USER_LEFT,
