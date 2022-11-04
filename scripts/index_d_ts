@@ -151,9 +151,9 @@ declare module "SendbirdUIKitGlobal" {
   export type GetGetOpenChannel = (
     channelUrl: string,
   ) => Promise<OpenChannel>;
-  export type GetLeaveGroupChannel = (channel: GroupChannel) => Promise<void>;
-  export type GetEnterOpenChannel = (channel: OpenChannel) => Promise<OpenChannel>;
-  export type GetExitOpenChannel = (channel: OpenChannel) => Promise<void>;
+  export type GetLeaveGroupChannel = (channelUrl: string) => Promise<void>;
+  export type GetEnterOpenChannel = (channelUrl: string) => Promise<OpenChannel>;
+  export type GetExitOpenChannel = (channelUrl: string) => Promise<void>;
   export type GetFreezeChannel = (channel: GroupChannel | OpenChannel) => Promise<void>;
   export type GetUnFreezeChannel = (channel: GroupChannel | OpenChannel) => Promise<void>;
   export type GetSendUserMessage = (
