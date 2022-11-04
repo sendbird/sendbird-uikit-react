@@ -1,7 +1,9 @@
 import './mobile.scss';
 
-import type { BaseMessage } from '@sendbird/chat/message';
 import React, { useState, useEffect } from 'react';
+import type { BaseMessage } from '@sendbird/chat/message';
+import type { SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
 
 import type { MobileLayoutProps } from './types';
 
@@ -9,6 +11,8 @@ import ChannelList from '../ChannelList';
 import Channel from '../Channel';
 import ChannelSettings from '../ChannelSettings';
 import MessageSearch from '../MessageSearch';
+import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
+import uuidv4 from '../../utils/uuid';
 
 enum PANELS {
   CHANNEL_LIST = 'CHANNEL_LIST',
@@ -36,6 +40,10 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
   } = props;
   const [panel, setPanel] = useState(PANELS?.CHANNEL_LIST);
 
+  const store = useSendbirdStateContext();
+  const sdk = store?.stores?.sdkStore?.sdk as SendbirdGroupChat;
+  const userId = store?.config?.userId;
+
   const goToMessage = (message?: BaseMessage | null) => {
     setStartingPoint(message?.createdAt);
     setTimeout(() => {
@@ -48,6 +56,23 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
       goToMessage();
     }
   }, [panel]);
+
+  useEffect(() => {
+    const handlerId = uuidv4();
+    if (sdk?.groupChannel?.addGroupChannelHandler) {
+      const handler = new GroupChannelHandler({
+        onUserBanned: (groupChannel, user) => {
+          if (groupChannel.url === currentChannelUrl && user?.userId === userId) {
+            setPanel(PANELS.CHANNEL_LIST);
+          }
+        }
+      });
+      sdk?.groupChannel?.addGroupChannelHandler(handlerId, handler)
+    }
+    return () => {
+      sdk?.groupChannel?.removeGroupChannelHandler?.(handlerId);
+    }
+  }, [sdk]);
 
   return (
     <div>
