@@ -200,9 +200,9 @@ type GetGetGroupChannel = (
 type GetGetOpenChannel = (
   channelUrl: string,
 ) => Promise<OpenChannel>;
-type GetLeaveGroupChannel = (channel: GroupChannel) => Promise<void>;
-type GetEnterOpenChannel = (channel: OpenChannel) => Promise<OpenChannel>;
-type GetExitOpenChannel = (channel: OpenChannel) => Promise<void>;
+type GetLeaveGroupChannel = (channelUrl: string) => Promise<void>;
+type GetEnterOpenChannel = (channelUrl: string) => Promise<OpenChannel>;
+type GetExitOpenChannel = (channelUrl: string) => Promise<void>;
 type GetFreezeChannel = (channel: GroupChannel | OpenChannel) => Promise<void>;
 type GetUnFreezeChannel = (channel: GroupChannel | OpenChannel) => Promise<void>;
 type GetSendUserMessage = (
