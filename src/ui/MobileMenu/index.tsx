@@ -51,6 +51,7 @@ const MobileMenu: React.FC<MobileBottomSheetProps> = (props: MobileBottomSheetPr
               message={message}
               hideMenu={hideMenu}
               isByMe={isByMe}
+              showEdit={showEdit}
               replyType={replyType}
               disabled={disabled}
               showRemove={showRemove}
