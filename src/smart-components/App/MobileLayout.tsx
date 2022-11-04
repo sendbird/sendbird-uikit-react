@@ -65,7 +65,17 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
           if (groupChannel.url === currentChannelUrl && user?.userId === userId) {
             setPanel(PANELS.CHANNEL_LIST);
           }
-        }
+        },
+        onChannelDeleted: (channelUrl) => {
+          if (channelUrl === currentChannelUrl) {
+            setPanel(PANELS.CHANNEL_LIST);
+          }
+        },
+        onUserLeft: (groupChannel, user) => {
+          if (groupChannel.url === currentChannelUrl && user?.userId === userId) {
+            setPanel(PANELS.CHANNEL_LIST);
+          }
+        },
       });
       sdk?.groupChannel?.addGroupChannelHandler(handlerId, handler)
     }
