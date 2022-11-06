@@ -1,6 +1,6 @@
 # Changelog - v3
 
-## [v3.2.5] (Nov 4 2022)
+## [v3.2.5] (Nov 7 2022)
 Fix:
 * Modify the type of parameters in the sendbirdSelectors
   There has been unsyncronous between reality and types
