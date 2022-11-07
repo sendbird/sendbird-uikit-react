@@ -1,5 +1,14 @@
 # Changelog - v3
 
+## [v3.2.5] (Nov 7 2022)
+Fix:
+* Modify the type of parameters in the sendbirdSelectors
+  There has been unsyncronous between reality and types
+  This fix only affects to TypeScript
+  * getLeaveGroupChannel: `channel` to `channelUrl`
+  * getEnterOpenChannel: `channel` to `channelUrl`
+  * getExitOpenChannel: `channel` to `channelUrl`
+
 ## [v3.2.4] (Nov 1 2022)
 Features:
 * For Channel component, added separate prop isLoading?.boolean
