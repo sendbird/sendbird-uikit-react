@@ -12,6 +12,8 @@ interface Props {
   onSubmit(members: Array<string>): void;
 }
 
+const isAboutSame = (a, b, px) => (Math.abs(a - b) <= px);
+
 export default function InviteUsers({
   onCancel,
   onSubmit,
@@ -57,9 +59,7 @@ export default function InviteUsers({
           onScroll={(e) => {
             const { hasNext } = userQuery;
             const target = e.target as HTMLTextAreaElement;
-            const fetchMore = (
-              target.clientHeight + target.scrollTop === target.scrollHeight
-            );
+            const fetchMore = isAboutSame(target.clientHeight + target.scrollTop, target.scrollHeight, 20);
             if (hasNext && fetchMore) {
               userQuery.next().then((users) => {
                 setMembers([
