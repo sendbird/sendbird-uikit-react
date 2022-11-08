@@ -53,9 +53,14 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
   } = useChannelContext();
   const [unreadCount, setUnreadCount] = useState(0);
   useEffect(() => {
-    setUnreadCount(currentGroupChannel?.unreadMessageCount);
+    // simple debounce to avoid flicker of UnreadCount badge
+    const handler = setTimeout(() => {
+      setUnreadCount(currentGroupChannel?.unreadMessageCount);
+    }, 1000);
+    return () => {
+      clearTimeout(handler);
+    }
   }, [currentGroupChannel?.unreadMessageCount]);
-
   const globalStore = useSendbirdStateContext();
   const sdkError = globalStore?.stores?.sdkStore?.error;
   const logger = globalStore?.config?.logger;
