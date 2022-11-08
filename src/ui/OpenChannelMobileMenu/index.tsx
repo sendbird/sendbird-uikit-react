@@ -23,7 +23,7 @@ type Props = {
   hideMenu(): void;
 };
 
-const OpenChannelMobileMenu = (props: Props) => {
+const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
   const {
     message,
     parentRef,
@@ -95,7 +95,7 @@ const OpenChannelMobileMenu = (props: Props) => {
             )
           }
           {
-            isFineDownload({ message, userId, status }) && (
+            isFineDownload({ message, status }) && (
                 <MenuItem
                   onClick={() => {
                     hideMenu();

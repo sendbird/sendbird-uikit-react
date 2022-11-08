@@ -62,10 +62,9 @@ export const isFineDelete = ({ message, userId }: isFineDeleteParams): boolean =
 interface IsFineDownloadParams {
   message: FileMessage | UserMessage;
   status: string;
-  userId: string;
 }
 
-export const isFineDownload = ({ message, userId, status }: IsFineDownloadParams): boolean => {
+export const isFineDownload = ({ message, status }: IsFineDownloadParams): boolean => {
   if (message?.isFileMessage?.() && checkIsSent(status)) {
     return true;
   }

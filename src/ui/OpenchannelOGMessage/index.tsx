@@ -32,8 +32,6 @@ import { getSenderFromMessage } from '../../utils/openChannelUtils';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import useLongPress from '../../hooks/useLongPress';
-import { OpenChannel } from '@sendbird/uikit-react';
-import OpenChannelMessageList from '../../smart-components/OpenChannel/components/OpenChannelMessageList';
 import OpenChannelMobileMenu from '../OpenChannelMobileMenu';
 
 interface Props {

@@ -29,7 +29,6 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
   } = useOpenChannelSettingsContext();
   const globalStore = useSendbirdStateContext();
   const logger = globalStore?.config?.logger;
-  const onUserProfileMessage = globalStore?.config?.onUserProfileMessage;
   const user = globalStore?.stores?.userStore?.user;
 
   const { stringSet } = useContext(LocalizationContext);

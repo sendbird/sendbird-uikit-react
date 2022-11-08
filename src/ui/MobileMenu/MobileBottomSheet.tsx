@@ -214,7 +214,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                     className={`sendbird-message__bottomsheet--action
                       ${disableReaction ? 'sendbird-message__bottomsheet--action-disabled': ''}
                     `}
-                    aria-role="menuitem"
+                    role="menuitem"
                     aria-disabled={disableReaction ? true : false}
                     onClick={() => {
                       if(!disableReaction) {
