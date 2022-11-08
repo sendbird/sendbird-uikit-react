@@ -1,0 +1,29 @@
+@import '../../styles/variables';
+
+.sendbird-bottomsheet {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sendbird-bottomsheet__content {
+  z-index: 10001;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+.sendbird-bottomsheet__backdrop {
+  position: fixed;
+  z-index: 10000;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  @include themed() {
+    background-color: t(overlay-2);
+  }
+}
+

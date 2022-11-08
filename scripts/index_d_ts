@@ -47,7 +47,7 @@ declare module "SendbirdUIKitGlobal" {
     accessToken?: string;
     customApiHost?: string,
     customWebSocketHost?: string,
-    mediaQueryBreakPoint?: string,
+    mediaQueryBreakPoint?: string | boolean,
     theme?: 'light' | 'dark';
     userListQuery?(): UserListQuery;
     nickname?: string;
@@ -216,7 +216,7 @@ declare module "SendbirdUIKitGlobal" {
     configureSession?: (sdk: SendbirdGroupChat | SendbirdOpenChat) => SessionHandler;
     customApiHost?: string,
     customWebSocketHost?: string,
-    mediaQueryBreakPoint?: string,
+    mediaQueryBreakPoint?: string | boolean,
     children?: React.ReactNode | React.ReactElement;
     theme?: 'light' | 'dark';
     nickname?: string;
@@ -224,6 +224,7 @@ declare module "SendbirdUIKitGlobal" {
     dateLocale?: Locale;
     disableUserProfile?: boolean;
     disableMarkAsDelivered?: boolean;
+    onUserProfileMessage?: (props: GroupChannel) => void;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode | React.ReactElement;
     allowProfileEdit?: boolean;
     userListQuery?(): UserListQuery;
@@ -617,6 +618,7 @@ declare module "SendbirdUIKitGlobal" {
     onBeforeSendUserMessage?(text: string): UserMessageCreateParams;
     onBeforeSendFileMessage?(file_: File): FileMessageCreateParams;
     onChatHeaderActionClick?(): void;
+    onBackClick?(): void;
     disableUserProfile?: boolean;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode | React.ReactElement;
   }
@@ -1513,8 +1515,9 @@ declare module '@sendbird/uikit-react/ui/ConnectionStatus' {
 
 declare module '@sendbird/uikit-react/ui/ContextMenu' {
   interface ContextMenuProps {
-    menuTrigger: () => void;
+    menuTrigger?: () => void;
     menuItems: () => void;
+    isOpen?: boolean;
   }
   const ContextMenu: React.FC<ContextMenuProps>;
   export default ContextMenu;

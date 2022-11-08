@@ -17,6 +17,7 @@ const OpenChannel: React.FC<OpenChannelProps> = (props: OpenChannelProps) => {
       onChatHeaderActionClick={props?.onChatHeaderActionClick}
       disableUserProfile={props?.disableUserProfile}
       renderUserProfile={props?.renderUserProfile}
+      onBackClick={props?.onBackClick}
     >
       <OpenChannelUI
         renderMessage={props?.renderMessage}

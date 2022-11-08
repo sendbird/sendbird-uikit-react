@@ -44,6 +44,7 @@ const EditDetails = (props: Props): ReactElement => {
   const title = channel?.name;
   return (
     <Modal
+      isFullScreenOnMobile
       titleText={stringSet.MODAL__CHANNEL_INFORMATION__TITLE}
       submitText={stringSet.BUTTON__SAVE}
       onCancel={onCancel}

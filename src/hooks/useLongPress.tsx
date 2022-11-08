@@ -42,14 +42,6 @@ export function isTouchEvent(e: Event): e is TouchEvent {
   return e && 'touches' in e;
 }
 
-export function vibrate(): void {
-  try {
-    navigator.vibrate(100);
-  } catch {
-    //
-  }
-}
-
 interface PressHandlers<T> {
   onLongPress: (e: React.MouseEvent<T> | React.TouchEvent<T>) => void;
   onClick?: (e: React.MouseEvent<T> | React.TouchEvent<T>) => void;
@@ -61,6 +53,7 @@ interface Options {
 }
 
 interface UseLongPressType<T> {
+  onTouchMove: (e: React.TouchEvent<T>) => void;
   onMouseDown: (e: React.MouseEvent<T>) => void;
   onTouchStart: (e: React.TouchEvent<T>) => void;
   onMouseUp: (e: React.MouseEvent<T>) => void;
@@ -77,25 +70,23 @@ export default function useLongPress<T> ({
 }: Options = {}): UseLongPressType<T> {
   const { isMobile } = useMediaQueryContext();
   const [longPressTriggered, setLongPressTriggered] = useState(false);
+  const [dragTriggered, setDragTriggered] = useState(false);
   // https://www.typescriptlang.org/docs/handbook/utility-types.html#returntypetype
   const timeout = useRef<ReturnType<typeof setTimeout>>();
   const target = useRef<EventTarget>();
 
   const start = useCallback((e: React.MouseEvent<T> | React.TouchEvent<T>) => {
-    if (!isMobile) {
-      return;
-    }
     e.persist();
     const clonedEvent = {
-      ...e
+      ...e,
     };
-
+    setDragTriggered(false);
     if (shouldPreventDefault && e.target) {
       e.target.addEventListener(
         'touchend',
         preventDefault, {
-          passive: false
-        }
+          passive: false,
+        },
       );
       target.current = e.target;
     }
@@ -103,32 +94,39 @@ export default function useLongPress<T> ({
     timeout.current = setTimeout(() => {
       onLongPress(clonedEvent);
       setLongPressTriggered(true);
-      vibrate();
     }, delay);
   }, [onLongPress, delay, shouldPreventDefault, isMobile]);
 
   const clear = useCallback((
     e: React.MouseEvent<T> | React.TouchEvent<T>,
     shouldTriggerClick = true,
+    onDrag = false,
   ) => {
+    if (onDrag) {
+      setDragTriggered(true);
+    } else {
+      setDragTriggered(false);
+    }
     if (timeout?.current) {
       clearTimeout(timeout.current);
     }
-    if (shouldTriggerClick && !longPressTriggered) {
+    if (shouldTriggerClick && !longPressTriggered && !dragTriggered) {
       onClick?.(e);
     }
     setLongPressTriggered(false);
-
     if (shouldPreventDefault && target.current) {
       target.current.removeEventListener('touchend', preventDefault);
     }
-  },[shouldPreventDefault, onClick, longPressTriggered]);
+  },[shouldPreventDefault, onClick, longPressTriggered, dragTriggered]);
 
   return {
     onMouseDown: (e: React.MouseEvent<T>) => start(e),
-    onTouchStart: (e: React.TouchEvent<T>) => start(e),
     onMouseUp: (e: React.MouseEvent<T>) => clear(e),
     onMouseLeave: (e: React.MouseEvent<T>) => clear(e, false),
+    onTouchStart: (e: React.TouchEvent<T>) => start(e),
+    // setDragTriggered as true on touchmove, so that next onTouchEnd is ignored
+    // if we dont do it, onClick?.(e) will be triggred, see inside clear()
+    onTouchMove: (e: React.TouchEvent<T>) => clear(e, false, true),
     onTouchEnd: (e: React.TouchEvent<T>) => clear(e),
   };
 }

@@ -66,7 +66,9 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
     onLongPress: () => {
       setShowMobileLeave(true);
     },
-    onClick: onClick,
+    onClick,
+  }, {
+    delay: 1000,
   });
   const channelName = utils.getChannelTitle(channel, userId, stringSet);
   return (
@@ -78,9 +80,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
         ].join(' ')}
         role="link"
         tabIndex={tabIndex}
-        {
-          ...onLongPress
-        }
+        {...(isMobile ? { ...onLongPress } : { onClick })}
       >
         <div
           className="sendbird-channel-preview__avatar"
@@ -112,7 +112,9 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
                 type={LabelTypography.SUBTITLE_2}
                 color={LabelColors.ONBACKGROUND_1}
               >
-                { channelName }
+                <div>
+                  { channelName }
+                </div>
               </Label>
               <Label
                 className="sendbird-channel-preview__content__upper__header__total-members"

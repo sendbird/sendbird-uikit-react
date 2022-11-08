@@ -1,3 +1,22 @@
 .sendbird-channel-settings__leave-label--mobile {
   text-decoration: none;
 }
+
+.sendbird-channel-settings__leave--mobile {
+  .sendbird-modal__content {
+    max-width: calc(100% - 80px);
+  }
+  .sendbird-modal__close {
+    display: none;
+  }
+  .sendbird-channel-preview__leave-label--mobile {
+    text-decoration: none;
+  }
+  .sendbird-modal__header span {
+    display: inline-block;
+    width: calc(100% - 120px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

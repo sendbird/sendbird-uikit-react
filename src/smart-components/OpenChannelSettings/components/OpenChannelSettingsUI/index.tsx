@@ -45,7 +45,7 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
     );
   }
   return (
-    <UserProfileProvider>
+    <UserProfileProvider isOpenChannel>
       <div className='sendbird-openchannel-settings'>
         {
           channel?.isOperator(user) && (

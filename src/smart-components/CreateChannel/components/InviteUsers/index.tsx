@@ -27,6 +27,13 @@ export interface InviteUsersProps {
   userListQuery?(): UserListQuery;
 }
 
+const appHeight = () => {
+  try {
+    const doc = document.documentElement;
+    doc.style.setProperty('--sendbird-vh', (window.innerHeight*.01) + 'px');
+  } catch {}
+}
+
 const InviteUsers: React.FC<InviteUsersProps> = ({
   onCancel,
   userListQuery,
@@ -60,6 +67,17 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
       applicationUserListQuery.next().then((users_) => {
         setUsers(users_);
       });
+    }
+  }, []);
+
+  // https://stackoverflow.com/a/70302463
+  // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/#css-custom-properties-the-trick-to-correct-sizing
+  // to fix navbar break in mobile
+  useEffect(() => {
+    appHeight();
+    window.addEventListener('resize', appHeight);
+    return () => {
+      window.removeEventListener('resize', appHeight);
     }
   }, []);
 

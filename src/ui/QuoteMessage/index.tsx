@@ -51,6 +51,7 @@ export default function QuoteMessage({
       className={getClassName([className, 'sendbird-quote-message', isByMe ? 'outgoing' : 'incoming'])}
       key={parentMessage?.messageId}
       onClick={() => { if (onClick) onClick() }}
+      onTouchEnd={() => { if (onClick) onClick() }}
     >
       <div className="sendbird-quote-message__replied-to">
         <Icon

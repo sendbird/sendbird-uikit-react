@@ -125,13 +125,13 @@ export const isSentStatus = (state: string): boolean => (
 );
 
 export const isAdminMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => (
-  message && (message.isAdminMessage?.() || (message['messageType'] && message.messageType === 'admin'))
+  message && (message?.isAdminMessage?.() || (message?.messageType === 'admin'))
 );
 export const isUserMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => (
-  message && (message.isUserMessage?.() || (message['messageType'] && message.messageType === 'user'))
+  message && (message?.isUserMessage?.() || (message?.messageType === 'user'))
 );
 export const isFileMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => (
-  message && (message.isFileMessage?.() || (message['messageType'] && message.messageType === 'file'))
+  message && (message?.isFileMessage?.() || (message?.messageType === 'file'))
 );
 
 export const isOGMessage = (message: UserMessage): boolean => !!(

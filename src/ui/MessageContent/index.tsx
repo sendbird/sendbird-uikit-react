@@ -32,6 +32,8 @@ import {
   isOGMessage,
   isThumbnailMessage,
   getSenderName,
+  isFileMessage,
+  isSentMessage,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 import { ReplyType } from '../../index.js';
@@ -40,6 +42,9 @@ import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { EmojiContainer } from '@sendbird/chat';
 import { AdminMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
+import useLongPress from '../../hooks/useLongPress';
+import MobileMenu from '../MobileMenu';
+import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 
 interface Props {
   className?: string | Array<string>;
@@ -86,6 +91,9 @@ export default function MessageContent({
   const { config } = useSendbirdStateContext?.() || {};
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const avatarRef = useRef(null);
+  const contentRef = useRef(null);
+  const { isMobile } = useMediaQueryContext();
+  const [showMenu, setShowMenu] = useState(false);
   const [mouseHover, setMouseHover] = useState(false);
   const [supposedHover, setSupposedHover] = useState(false);
 
@@ -98,6 +106,25 @@ export default function MessageContent({
   const supposedHoverClassName = supposedHover ? 'supposed-hover' : '';
   const useReplying = !!((replyType === 'QUOTE_REPLY') && message?.parentMessageId && message?.parentMessage);
   const useReplyingClassName = useReplying ? 'use-quote' : '';
+
+  // onMouseDown: (e: React.MouseEvent<T>) => void;
+  // onTouchStart: (e: React.TouchEvent<T>) => void;
+  // onMouseUp: (e: React.MouseEvent<T>) => void;
+  // onMouseLeave: (e: React.MouseEvent<T>) => void;
+  // onTouchEnd: (e: React.TouchEvent<T>) => void;
+  const longPress = useLongPress({
+    onLongPress: () => {
+      setShowMenu(true);
+    },
+    onClick: () => {
+      // @ts-ignore
+      if (isFileMessage(message) && isSentMessage(message)) {
+        showFileViewer(true);
+      }
+    },
+  }, {
+    delay: 300,
+  });
 
   if (message?.isAdminMessage?.() || message?.messageType === 'admin') {
     return (<ClientAdminMessage message={message} />);
@@ -147,7 +174,7 @@ export default function MessageContent({
           />
         )}
         {/* outgoing menu */}
-        {isByMe && (
+        {isByMe && !isMobile && (
           <div className={getClassName(['sendbird-message-content-menu', isReactionEnabledClassName, supposedHoverClassName, isByMeClassName])}>
             <MessageItemMenu
               className="sendbird-message-content-menu__normal-menu"
@@ -177,7 +204,11 @@ export default function MessageContent({
         )}
       </div>
       {/* middle */}
-      <div className="sendbird-message-content__middle">
+      <div
+        className="sendbird-message-content__middle"
+        {...longPress}
+        ref={contentRef}
+      >
         {(!isByMe && !chainTop && !useReplying) && (
           <Label
             className="sendbird-message-content__middle__sender-name"
@@ -302,7 +333,7 @@ export default function MessageContent({
       {/* right */}
       <div className={getClassName(['sendbird-message-content__right', chainTopClassName, isReactionEnabledClassName, useReplyingClassName])}>
         {/* incoming menu */}
-        {!isByMe && (
+        {!isByMe && !isMobile && (
           <div className={getClassName(['sendbird-message-content-menu', chainTopClassName, supposedHoverClassName, isByMeClassName])}>
             {isReactionEnabled && (
               <MessageItemReactionMenu
@@ -330,6 +361,29 @@ export default function MessageContent({
           </div>
         )}
       </div>
+      {
+        showMenu && (
+          message?.isUserMessage?.() || message?.isFileMessage?.()
+        ) && (
+          <MobileMenu
+            parentRef={contentRef}
+            channel={channel}
+            hideMenu={() => { setShowMenu(false) }}
+            message={message}
+            isReactionEnabled={isReactionEnabled}
+            isByMe={isByMe}
+            userId={userId}
+            replyType={replyType}
+            disabled={disabled}
+            showRemove={showRemove}
+            emojiContainer={emojiContainer}
+            resendMessage={resendMessage}
+            setQuoteMessage={setQuoteMessage}
+            toggleReaction={toggleReaction}
+            showEdit={showEdit}
+          />
+        )
+      }
     </div>
   );
 }

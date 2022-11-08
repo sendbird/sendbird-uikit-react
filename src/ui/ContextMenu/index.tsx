@@ -14,7 +14,7 @@ export const EmojiListItems = _EmojiListItems;
 
 export interface MenuItemProps {
   className?: string | Array<string>;
-  children: ReactElement;
+  children: ReactElement | ReactElement[];
   onClick?: (e: MouseEvent<HTMLLIElement>) => void;
   disable?: boolean;
 }
@@ -33,6 +33,7 @@ export const MenuItem = ({
     <li
       className={getClassName([className, 'sendbird-dropdown__menu-item', disable ? 'disable' : ''])}
       role="menuitem"
+      aria-disabled={disable ? true : false}
       onClick={handleClickEvent}
       onKeyPress={(e) => { if (e.keyCode === ENTER_KEY) handleClickEvent(e); }}
       tabIndex={0}
@@ -58,12 +59,14 @@ export const EmojiReactionListRoot = (): ReactElement => <div id="sendbird-emoji
 
 type MenuDisplayingFunc = () => void;
 export interface ContextMenuProps {
-  menuTrigger: (MenuDisplayingFunc) => ReactElement;
+  menuTrigger?: (MenuDisplayingFunc) => ReactElement;
   menuItems: (MenuDisplayingFunc) => ReactElement;
+  isOpen?: boolean;
 }
 export default function ContextMenu({
   menuTrigger,
   menuItems,
+  isOpen,
 }: ContextMenuProps): ReactElement {
   const [showMenu, setShowMenu] = useState(false);
   return (
@@ -71,8 +74,8 @@ export default function ContextMenu({
       className="sendbird-context-menu"
       style={{ display: 'inline' }}
     >
-      {menuTrigger(() => setShowMenu(!showMenu))}
-      {showMenu && menuItems(() => setShowMenu(false))}
+      {menuTrigger?.(() => setShowMenu(!showMenu))}
+      {(showMenu || isOpen) && menuItems(() => setShowMenu(false))}
     </div>
   );
 }

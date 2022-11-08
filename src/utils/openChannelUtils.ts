@@ -47,7 +47,7 @@ interface isFineEditParams {
   userId: string;
 }
 export const isFineEdit = ({ message, status, userId }: isFineEditParams): boolean => {
-  return checkIsByMe(message, userId) && checkIsSent(status);
+  return checkIsByMe(message, userId) && checkIsSent(status) && message?.isUserMessage?.();
 };
 
 interface isFineDeleteParams {
@@ -57,6 +57,18 @@ interface isFineDeleteParams {
 }
 export const isFineDelete = ({ message, userId }: isFineDeleteParams): boolean => {
   return checkIsByMe(message, userId);
+};
+
+interface IsFineDownloadParams {
+  message: FileMessage | UserMessage;
+  status: string;
+}
+
+export const isFineDownload = ({ message, status }: IsFineDownloadParams): boolean => {
+  if (message?.isFileMessage?.() && checkIsSent(status)) {
+    return true;
+  }
+  return false;
 };
 
 interface showMenuTriggerParams {

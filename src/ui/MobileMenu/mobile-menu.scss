@@ -1,0 +1,85 @@
+@import '../../styles/variables';
+
+.sendbird-message__mobile-context-menu {
+  border-radius: 8px;
+  width: 180px;
+}
+
+.sendbird-message__contextmenu--hyperlink {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sendbird-message__bottomsheet--hyperlink {
+  display: block;
+}
+
+.sendbird-message__bottomsheet--hyperlink,
+.sendbird-message__contextmenu--hyperlink {
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: inherit;
+  letter-spacing: inherit;
+  font-family: inherit;
+}
+
+.sendbird-message__mobile-context-menu-item {
+  .sendbird-dropdown__menu-item__text {
+    display: flex;
+    justify-content: space-between;
+  }
+  &:not(:last-child) {
+    @include themed() {
+      border-bottom: 1px solid t(on-bg-4);
+    }
+  }
+}
+
+.sendbird-message__bottomsheet {
+  width: 100vw;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding-top: 16px;
+  @include themed() {
+    background-color: t(bg-0);
+  }
+}
+.sendbird-message__bottomsheet-reaction-bar {
+  padding-left: 0;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0px;
+  margin-top: 0;
+}
+
+.sendbird-message__bottomsheet-reaction-bar__row {
+  display: inline-block;
+  &.sendbird-message__bottomsheet-reaction-bar__all {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+.sendbird-message__bottomsheet--action {
+  cursor: pointer;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding-left: 16px;
+  .sendbird-icon {
+    margin-right: 24px;
+  }
+}
+
+.sendbird-message__bottomsheet--action-disabled {
+  cursor: not-allowed;
+  @include themed() {
+    background-color: t(bg--0-5);
+  }
+}

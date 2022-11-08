@@ -1,4 +1,10 @@
-import React, { KeyboardEvent, MouseEvent, ReactElement, RefObject } from 'react';
+import React, {
+  KeyboardEvent,
+  MouseEvent,
+  ReactElement,
+  RefObject,
+  TouchEvent,
+} from 'react';
 
 import './index.scss';
 
@@ -10,7 +16,9 @@ export interface ReactionBadgeProps {
   count?: number | string;
   isAdd?: boolean;
   selected?: boolean;
-  onClick?: (e: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => void;
+  onClick?: (
+    e: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>
+  ) => void;
 }
 const ReactionBadge = React.forwardRef((props: ReactionBadgeProps, ref: RefObject<HTMLDivElement>): ReactElement => {
   const {
@@ -42,6 +50,7 @@ const ReactionBadge = React.forwardRef((props: ReactionBadgeProps, ref: RefObjec
       ref={ref}
       onClick={onClick}
       onKeyDown={onClick}
+      onTouchEnd={onClick}
       tabIndex={0}
     >
       <div className="sendbird-reaction-badge__inner">

@@ -39,6 +39,9 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      @include mobile() {
+        max-width: calc(100% - 150px);
+      }
     }
     .sendbird-mention-suggest-list__user-item__user-id {
       position: absolute;
@@ -48,6 +51,9 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      @include mobile() {
+        max-width: 100px;
+      }
     }
   }
 

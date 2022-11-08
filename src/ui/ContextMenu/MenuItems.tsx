@@ -2,11 +2,12 @@ import React, { ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 
 interface MenuItemsProps {
+  className?: string;
   style?: Record<string, string>;
   openLeft?: boolean;
-  children: React.ReactElement;
-  parentRef: React.RefObject<HTMLDivElement>;
-  parentContainRef: React.RefObject<HTMLDivElement>;
+  children: React.ReactElement | React.ReactElement[];
+  parentRef: React.RefObject<HTMLElement>;
+  parentContainRef: React.RefObject<HTMLElement>;
   closeDropdown: () => void;
 }
 
@@ -94,14 +95,14 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
 
   render(): ReactElement {
     const { menuStyle } = this.state;
-    const { children, style } = this.props;
+    const { children, style, className="" } = this.props;
     return (
       createPortal(
         (
           <>
             <div className="sendbird-dropdown__menu-backdrop" />
             <ul
-              className="sendbird-dropdown__menu"
+              className={`${className} sendbird-dropdown__menu`}
               ref={this.menuRef}
               style={{
                 display: 'inline-block',

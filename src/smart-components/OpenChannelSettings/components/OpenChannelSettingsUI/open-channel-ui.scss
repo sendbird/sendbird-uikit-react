@@ -6,6 +6,9 @@
   display: inline-block;
   overflow-y: scroll;
   position: relative;
+  @include mobile() {
+    width: 100%;
+  }
   @include themed() {
     background-color: t(bg-0);
     border-left: 1px solid t(on-bg-4);
@@ -160,6 +163,7 @@
       text-overflow: ellipsis;
     }
 
+    .sendbird-participants-accordion__member__title.self-operator,
     .sendbird-participants-accordion__member__title.operator,
     .sendbird-participants-accordion__member__title.user-id {
       position: absolute;
