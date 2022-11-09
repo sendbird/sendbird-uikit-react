@@ -85,6 +85,8 @@ export type ChannelContextProps = {
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   disableUserProfile?: boolean;
   disableMarkAsRead?: boolean;
+  onReplyInThread?: (props: { message: UserMessage | FileMessage }) => void;
+  onQuoteMessageClick?: (props: { message: UserMessage | FileMessage }) => void;
 };
 
 interface MessageStoreInterface {
@@ -168,6 +170,8 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     replyType,
     queries,
     disableMarkAsRead = false,
+    onReplyInThread,
+    onQuoteMessageClick,
   } = props;
 
   const globalStore = useSendbirdStateContext();
@@ -387,6 +391,8 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       replyType,
       queries,
       disableMarkAsRead,
+      onReplyInThread,
+      onQuoteMessageClick,
 
       // messagesStore
       allMessages,

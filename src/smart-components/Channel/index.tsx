@@ -6,8 +6,7 @@ import {
 } from './context/ChannelProvider';
 
 import ChannelUI, { ChannelUIProps } from './components/ChannelUI';
-export interface ChannelProps extends ChannelContextProps, ChannelUIProps {
-}
+export interface ChannelProps extends ChannelContextProps, ChannelUIProps { }
 
 const Channel: React.FC<ChannelProps> = (props: ChannelProps) => {
   return (
@@ -29,6 +28,8 @@ const Channel: React.FC<ChannelProps> = (props: ChannelProps) => {
       renderUserProfile={props?.renderUserProfile}
       disableUserProfile={props?.disableUserProfile}
       disableMarkAsRead={props?.disableMarkAsRead}
+      onReplyInThread={props?.onReplyInThread}
+      onQuoteMessageClick={props?.onQuoteMessageClick}
     >
       <ChannelUI
         isLoading={props?.isLoading}

@@ -79,6 +79,8 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
     setQuoteMessage,
     resendMessage,
     renderUserMentionItem,
+    onReplyInThread,
+    onQuoteMessageClick,
   } = useChannelContext();
 
   const [showEdit, setShowEdit] = useState(false);
@@ -326,6 +328,8 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
             resendMessage={resendMessage}
             toggleReaction={toggleReaction}
             setQuoteMessage={setQuoteMessage}
+            onReplyInThread={onReplyInThread}
+            onQuoteMessageClick={onQuoteMessageClick}
           />
         )
       }
