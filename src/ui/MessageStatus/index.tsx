@@ -31,8 +31,8 @@ export default function MessageStatus({
   const { dateLocale } = useLocalization();
   const status = useMemo(() => (
     getOutgoingMessageState(channel, message)
-  ), [channel?.getUnreadMemberCount?.(message), channel?.getUndeliveredMemberCount?.(message)]);
-  const hideMessageStatusIcon = channel?.isGroupChannel() && (
+  ), [channel, message]);
+  const hideMessageStatusIcon = channel?.isGroupChannel?.() && (
     (channel.isSuper || channel.isPublic || channel.isBroadcast)
     && !(status === OutgoingMessageStates.PENDING || status === OutgoingMessageStates.FAILED)
   );

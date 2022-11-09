@@ -58,6 +58,7 @@ const initialTargetStringInfo = {
 const MessageInput = React.forwardRef((props, ref) => {
   const {
     className,
+    messageFieldId,
     isEdit,
     isMentionEnabled,
     disabled,
@@ -77,6 +78,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     onKeyUp,
     onKeyDown,
   } = props;
+  const textFieldId = messageFieldId || TEXT_FIELD_ID;
   const { stringSet } = useContext(LocalizationContext);
   const fileInputRef = useRef(null);
   const [isInput, setIsInput] = useState(false);
@@ -122,14 +124,14 @@ const MessageInput = React.forwardRef((props, ref) => {
   useEffect(() => {
     if (!isEdit) {
       setIsInput(false);
-      document.getElementById(TEXT_FIELD_ID).innerHTML = '';
+      document.getElementById(textFieldId).innerHTML = '';
     }
   }, [channelUrl]);
 
   // #Mention | Fill message input values
   useEffect(() => {
     if (isEdit && message?.messageId) {
-      // const textField = document.getElementById(TEXT_FIELD_ID);
+      // const textField = document.getElementById(textFieldId);
       const textField = ref?.current;
       if (isMentionEnabled
         && message?.mentionedUsers?.length > 0
@@ -193,7 +195,7 @@ const MessageInput = React.forwardRef((props, ref) => {
         endOffsetIndex,
       } = targetStringInfo;
       if (targetString && startNodeIndex !== null && startOffsetIndex !== null) {
-        // const textField = document.getElementById(TEXT_FIELD_ID);
+        // const textField = document.getElementById(textFieldId);
         const textField = ref?.current;
         const childNodes = [...textField?.childNodes];
         const frontTextNode = document?.createTextNode(
@@ -326,7 +328,7 @@ const MessageInput = React.forwardRef((props, ref) => {
       });
       const params = { message: messageText, mentionTemplate };
       onSendMessage(params);
-      document.getElementById(TEXT_FIELD_ID).innerHTML = '';
+      document.getElementById(textFieldId).innerHTML = '';
       setIsInput(false);
       setHeight();
     }
@@ -354,7 +356,7 @@ const MessageInput = React.forwardRef((props, ref) => {
       });
       const params = { messageId, message: messageText, mentionTemplate };
       onUpdateMessage(params);
-      document.getElementById(TEXT_FIELD_ID).innerHTML = '';
+      document.getElementById(textFieldId).innerHTML = '';
     }
   };
 
@@ -373,8 +375,8 @@ const MessageInput = React.forwardRef((props, ref) => {
         ])}
       >
         <div
-          id={`${TEXT_FIELD_ID}${isEdit ? message?.messageId : ''}`}
-          className={`sendbird-message-input--textarea ${TEXT_FIELD_ID}`}
+          id={`${textFieldId}${isEdit ? message?.messageId : ''}`}
+          className={`sendbird-message-input--textarea ${textFieldId}`}
           contentEditable={!disabled}
           role="textbox"
           aria-label="Text Input"
@@ -413,7 +415,7 @@ const MessageInput = React.forwardRef((props, ref) => {
           onInput={() => {
             setHeight();
             onStartTyping();
-            setIsInput(document?.getElementById?.(TEXT_FIELD_ID)?.innerText?.length > 0);
+            setIsInput(document?.getElementById?.(textFieldId)?.innerText?.length > 0);
             useMentionedLabelDetection();
           }}
           onPaste={(e) => {
@@ -504,6 +506,7 @@ MessageInput.propTypes = {
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string),
   ]),
+  messageFieldId: PropTypes.string,
   placeholder: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.bool,
@@ -538,6 +541,7 @@ MessageInput.propTypes = {
 
 MessageInput.defaultProps = {
   className: '',
+  messageFieldId: '',
   channelUrl: '',
   onSendMessage: noop,
   onUpdateMessage: noop,

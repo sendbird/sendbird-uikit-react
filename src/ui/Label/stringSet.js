@@ -118,6 +118,7 @@ const getStringSet = (lang = 'en') => {
       MESSAGE_EDITED: '(edited)',
       MESSAGE_MENU__COPY: 'Copy',
       MESSAGE_MENU__REPLY: 'Reply',
+      MESSAGE_MENU__THREAD: 'Reply in thread',
       MESSAGE_MENU__EDIT: 'Edit',
       MESSAGE_MENU__RESEND: 'Resend',
       MESSAGE_MENU__DELETE: 'Delete',
@@ -150,6 +151,12 @@ const getStringSet = (lang = 'en') => {
       CREATE_OPEN_CHANNEL_LIST__SUBTITLE__TEXT_SECTION: 'Channel name',
       CREATE_OPEN_CHANNEL_LIST__SUBTITLE__TEXT_PLACE_HOLDER: 'Enter channel name',
       CREATE_OPEN_CHANNEL_LIST__SUBMIT: 'Create',
+      // Thread
+      THREAD_HEADER_TITLE: 'Thread',
+      CHANNEL_THREAD_REPLY: 'reply',
+      CHANNEL_THREAD_REPLIES: 'replies',
+      THREAD__THREAD_REPLY: 'reply',
+      THREAD__THREAD_REPLIES: 'replies',
     },
   };
   return stringSet[lang];

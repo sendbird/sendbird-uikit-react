@@ -5,7 +5,7 @@ import './index.scss';
 import Label, { LabelColors, LabelTypography } from '../Label';
 
 interface AdminMessageProps {
-  className: string | Array<string>;
+  className?: string | Array<string>;
   message: AdminMessageType;
 }
 

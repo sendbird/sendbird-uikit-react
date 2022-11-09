@@ -67,7 +67,7 @@ export const ModalFooter = ({
 };
 
 export interface ModalProps {
-  children: ReactElement;
+  children?: ReactElement;
   className?: string;
   isCloseOnClickOutside?: boolean;
   isFullScreenOnMobile?: boolean;

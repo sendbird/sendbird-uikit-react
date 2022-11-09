@@ -74,6 +74,9 @@
       display: inline-flex;
       &.outgoing { justify-content: flex-end }
       &.incoming { justify-content: flex-start }
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 
@@ -231,4 +234,9 @@
       @include themed() { background-color: t(primary-4) }
     }
   }
+}
+
+// threads
+.sendbird-message-content__middle__thread-replies {
+  margin-top: 4px;
 }

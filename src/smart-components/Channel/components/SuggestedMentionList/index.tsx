@@ -12,6 +12,7 @@ import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT, USER_MENTION_TEMP_CHAR } from '../../context/const';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import uuidv4 from '../../../../utils/uuid';
+import { useThreadContext } from '../../../Thread/context/ThreadProvider';
 
 export interface SuggestedMentionListProps {
   targetNickname: string;
@@ -44,7 +45,8 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   const { config, stores } = useSendbirdStateContext();
   const { logger } = config;
   const currentUserId = stores?.sdkStore?.sdk?.currentUser?.userId || '';
-  const { currentGroupChannel } = useChannelContext();
+  // const { currentGroupChannel } = useChannelContext();
+  const currentGroupChannel = useChannelContext?.()?.currentGroupChannel || useThreadContext?.()?.currentChannel;
   const scrollRef = useRef(null);
   const { stringSet } = useContext(LocalizationContext);
   const [timer, setTimer] = useState(null);

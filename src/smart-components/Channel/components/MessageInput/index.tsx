@@ -157,7 +157,7 @@ const MessageInputWrapper = (
           setMentionNickname('');
           setMentionedUsers([]);
           setQuoteMessage(null);
-          channel?.endTyping();
+          channel?.endTyping?.();
         }}
         onFileUpload={(file) => {
           sendFileMessage(file, quoteMessage);

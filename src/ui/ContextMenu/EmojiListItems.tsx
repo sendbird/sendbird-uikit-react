@@ -1,4 +1,4 @@
-import React, { ReactElement, RefObject, useEffect, useRef, useState } from 'react';
+import React, { JSXElementConstructor, ReactElement, RefObject, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import SortByRow from '../SortByRow';
@@ -7,7 +7,7 @@ type SpaceFromTrigger = { x: number, y: number };
 type ReactionStyle = { left: number, top: number };
 export interface EmojiListItemsProps {
   closeDropdown: () => void;
-  children: ReactElement;
+  children: ReactElement | Array<ReactElement> | JSXElementConstructor<any>;
   parentRef: RefObject<HTMLDivElement>;
   parentContainRef: RefObject<HTMLDivElement>;
   spaceFromTrigger?: SpaceFromTrigger;

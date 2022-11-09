@@ -45,6 +45,14 @@ import { AdminMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
 import useLongPress from '../../hooks/useLongPress';
 import MobileMenu from '../MobileMenu';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
+import ThreadReplies from '../ThreadReplies';
+
+// should initialize in UserProfileContext.jsx
+export interface UserProfileContextInterface {
+  disableUserProfile: boolean;
+  isOpenChannel: boolean;
+  renderUserProfile?: () => React.ReactElement,
+}
 
 interface Props {
   className?: string | Array<string>;
@@ -55,6 +63,7 @@ interface Props {
   chainTop?: boolean;
   chainBottom?: boolean;
   isReactionEnabled?: boolean;
+  disableQuoteMessage?: boolean;
   replyType?: ReplyType;
   nicknamesMap?: Map<string, string>;
   emojiContainer?: EmojiContainer;
@@ -65,6 +74,8 @@ interface Props {
   resendMessage?: (message: UserMessage | FileMessage) => Promise<UserMessage | FileMessage>;
   toggleReaction?: (message: UserMessage | FileMessage, reactionKey: string, isReacted: boolean) => void;
   setQuoteMessage?: (message: UserMessage | FileMessage) => void;
+  onReplyInThread?: (props: { message: UserMessage | FileMessage }) => void;
+  onQuoteMessageClick?: (props: { message: UserMessage | FileMessage }) => void;
 }
 export default function MessageContent({
   className,
@@ -75,6 +86,7 @@ export default function MessageContent({
   chainTop = false,
   chainBottom = false,
   isReactionEnabled = false,
+  disableQuoteMessage = false,
   replyType,
   nicknamesMap,
   emojiContainer,
@@ -85,11 +97,13 @@ export default function MessageContent({
   resendMessage,
   toggleReaction,
   setQuoteMessage,
+  onReplyInThread,
+  onQuoteMessageClick,
 }: Props): ReactElement {
   const messageTypes = getUIKitMessageTypes();
   const { dateLocale } = useLocalization();
   const { config } = useSendbirdStateContext?.() || {};
-  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
+  const { disableUserProfile, renderUserProfile }: UserProfileContextInterface = useContext(UserProfileContext);
   const avatarRef = useRef(null);
   const contentRef = useRef(null);
   const { isMobile } = useMediaQueryContext();
@@ -98,13 +112,16 @@ export default function MessageContent({
   const [supposedHover, setSupposedHover] = useState(false);
 
   const isByMe = (userId === (message as UserMessage | FileMessage)?.sender?.userId)
-    || ((message as UserMessage | FileMessage).sendingStatus === 'pending')
-    || ((message as UserMessage | FileMessage).sendingStatus === 'failed');
+    || ((message as UserMessage | FileMessage)?.sendingStatus === 'pending')
+    || ((message as UserMessage | FileMessage)?.sendingStatus === 'failed');
   const isByMeClassName = isByMe ? 'outgoing' : 'incoming';
   const chainTopClassName = chainTop ? 'chain-top' : '';
   const isReactionEnabledClassName = isReactionEnabled ? 'use-reactions' : '';
   const supposedHoverClassName = supposedHover ? 'supposed-hover' : '';
-  const useReplying = !!((replyType === 'QUOTE_REPLY') && message?.parentMessageId && message?.parentMessage);
+  const useReplying = !!((replyType === 'QUOTE_REPLY' || replyType === 'THREAD')
+    && message?.parentMessageId && message?.parentMessage
+    && !disableQuoteMessage
+  );
   const useReplyingClassName = useReplying ? 'use-quote' : '';
 
   // onMouseDown: (e: React.MouseEvent<T>) => void;
@@ -127,7 +144,7 @@ export default function MessageContent({
   });
 
   if (message?.isAdminMessage?.() || message?.messageType === 'admin') {
-    return (<ClientAdminMessage message={message} />);
+    return (<ClientAdminMessage message={message as AdminMessage} />);
   }
   return (
     <div
@@ -161,7 +178,7 @@ export default function MessageContent({
                 parentRef={avatarRef}
                 parentContainRef={avatarRef}
                 closeDropdown={closeDropdown}
-                style={{ paddingTop: 0, paddingBottom: 0 }}
+                style={{ paddingTop: '0px', paddingBottom: '0px' }}
               >
                 {renderUserProfile
                   // @ts-ignore
@@ -188,6 +205,7 @@ export default function MessageContent({
               resendMessage={resendMessage}
               setQuoteMessage={setQuoteMessage}
               setSupposedHover={setSupposedHover}
+              onReplyInThread={onReplyInThread}
             />
             {isReactionEnabled && (
               <MessageItemReactionMenu
@@ -231,7 +249,10 @@ export default function MessageContent({
               userId={userId}
               isByMe={isByMe}
               onClick={() => {
-                if (message?.parentMessage?.createdAt && message?.parentMessageId) {
+                if (typeof onQuoteMessageClick) {
+                  onQuoteMessageClick?.({ message: message as UserMessage | FileMessage });
+                }
+                if (replyType === 'QUOTE_REPLY' && message?.parentMessage?.createdAt && message?.parentMessageId) {
                   scrollToMessage(message.parentMessage.createdAt, message.parentMessageId);
                 }
               }}
@@ -329,6 +350,14 @@ export default function MessageContent({
             </Label>
           )}
         </div>
+        {/* thread replies */}
+        {(message?.threadInfo?.replyCount > 0 && replyType === 'THREAD') && (
+          <ThreadReplies
+            className="sendbird-message-content__middle__thread-replies"
+            threadInfo={message?.threadInfo}
+            onClick={() => onReplyInThread?.({ message: message as UserMessage | FileMessage })}
+          />
+        )}
       </div>
       {/* right */}
       <div className={getClassName(['sendbird-message-content__right', chainTopClassName, isReactionEnabledClassName, useReplyingClassName])}>
@@ -357,6 +386,7 @@ export default function MessageContent({
               resendMessage={resendMessage}
               setQuoteMessage={setQuoteMessage}
               setSupposedHover={setSupposedHover}
+              onReplyInThread={onReplyInThread}
             />
           </div>
         )}

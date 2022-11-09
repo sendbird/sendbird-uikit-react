@@ -30,6 +30,7 @@ interface Props {
   resendMessage?: (message: UserMessage | FileMessage) => void;
   setQuoteMessage?: (message: UserMessage | FileMessage) => void;
   setSupposedHover?: (bool: boolean) => void;
+  onReplyInThread?: (props: { message: UserMessage | FileMessage }) => void;
 }
 
 export default function MessageItemMenu({
@@ -44,6 +45,7 @@ export default function MessageItemMenu({
   resendMessage,
   setQuoteMessage,
   setSupposedHover,
+  onReplyInThread,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   const triggerRef = useRef(null);
@@ -57,12 +59,20 @@ export default function MessageItemMenu({
    * TODO: Manage timing issue
    * User delete pending message -> Sending message success
    */
-  const showMenuItemReply: boolean = (replyType === 'QUOTE_REPLY')
-    && !isFailedMessage(message)
+  const isReplyTypeEnabled = !isFailedMessage(message)
     && !isPendingMessage(message)
-    && (channel?.isGroupChannel() && !(channel as GroupChannel)?.isBroadcast);
+    && (channel?.isGroupChannel?.()
+    && !(channel as GroupChannel)?.isBroadcast);
+  const showMenuItemReply = isReplyTypeEnabled && replyType === 'QUOTE_REPLY';
+  const showMenuItemThread = isReplyTypeEnabled && replyType === 'THREAD' && !message?.parentMessageId && onReplyInThread;
 
-  if (!(showMenuItemCopy || showMenuItemReply || showMenuItemEdit || showMenuItemResend || showMenuItemDelete)) {
+  if (!(showMenuItemCopy
+    || showMenuItemReply
+    || showMenuItemThread
+    || showMenuItemEdit
+    || showMenuItemResend
+    || showMenuItemDelete)
+  ) {
     return null;
   }
   return (
@@ -128,6 +138,18 @@ export default function MessageItemMenu({
                   disable={message?.parentMessageId > 0}
                 >
                   {stringSet.MESSAGE_MENU__REPLY}
+                </MenuItem>
+              )}
+              {showMenuItemThread && (
+                <MenuItem
+                  className="sendbird-message-item-menu__list__menu-item menu-item-reply"
+                  onClick={() => {
+                    console.log('오픈 인 쓰레드', onReplyInThread)
+                    onReplyInThread?.({ message });
+                    closeDropdown();
+                  }}
+                >
+                  {stringSet.MESSAGE_MENU__THREAD}
                 </MenuItem>
               )}
               {showMenuItemEdit && (

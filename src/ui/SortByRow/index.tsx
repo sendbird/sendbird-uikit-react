@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { JSXElementConstructor, ReactElement } from 'react';
 import uuidv4 from '../../utils/uuid';
 
 import './index.scss';
@@ -10,7 +10,7 @@ export interface SortByRowProps {
   maxItemCount: number;
   itemWidth: number;
   itemHeight: number;
-  children: ReactElement | Array<ReactElement>;
+  children: ReactElement | Array<ReactElement> | JSXElementConstructor<any>;
 }
 export default function SortByRow({
   className = '',
@@ -55,7 +55,7 @@ export default function SortByRow({
         height: itemHeight,
       }}
     >
-      {children}
+      {children as ReactElement}
     </div>
   );
 }

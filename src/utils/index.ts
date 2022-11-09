@@ -116,8 +116,8 @@ export const isReadMessage = (channel: GroupChannel, message: UserMessage | File
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
 );
 // TODO: Remove channel from the params, it seems unnecessary
-export const isFailedMessage = (message: UserMessage | FileMessage): boolean => (message.sendingStatus === 'failed');
-export const isPendingMessage = (message: UserMessage | FileMessage): boolean => (message.sendingStatus === 'pending');
+export const isFailedMessage = (message: UserMessage | FileMessage): boolean => (message?.sendingStatus === 'failed');
+export const isPendingMessage = (message: UserMessage | FileMessage): boolean => (message?.sendingStatus === 'pending');
 export const isSentStatus = (state: string): boolean => (
   state === OutgoingMessageStates.SENT
   || state === OutgoingMessageStates.DELIVERED
@@ -281,7 +281,7 @@ export const getEmojiMapAll = (emojiContainer: EmojiContainer): Map<string, Emoj
 };
 
 export const getUserName = (user: User): string => (user?.friendName || user?.nickname || user?.userId);
-export const getSenderName = (message: UserMessage | FileMessage): string => (message.sender && getUserName(message.sender));
+export const getSenderName = (message: UserMessage | FileMessage): string => (message?.sender && getUserName(message?.sender));
 
 export const hasSameMembers = <T>(a: T[], b: T[]): boolean => {
   if (a === b) {
