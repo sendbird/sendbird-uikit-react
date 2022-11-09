@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 import type { AppLayoutProps } from './types';
 
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
-
 import { DesktopLayout } from './DesktopLayout';
 import { MobileLayout } from './MobileLayout';
 
@@ -22,7 +22,7 @@ export const AppLayout: React.FC<AppLayoutProps> = (
     setCurrentChannel,
   } = props;
   const [showThread, setShowThread] = useState(false);
-  const [threadTargetMessage, setThreadTargetMessage] = useState<>(null);
+  const [threadTargetMessage, setThreadTargetMessage] = useState<UserMessage | FileMessage>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [highlightedMessage, setHighlightedMessage] = useState<number>(null);
