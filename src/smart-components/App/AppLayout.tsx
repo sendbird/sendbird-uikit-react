@@ -18,9 +18,11 @@ export const AppLayout: React.FC<AppLayoutProps> = (
     showSearchIcon,
     onProfileEditSuccess,
     disableAutoSelect,
-    currentChannelUrl,
-    setCurrentChannelUrl,
+    currentChannel,
+    setCurrentChannel,
   } = props;
+  const [showThread, setShowThread] = useState(false);
+  const [threadTargetMessage, setThreadTargetMessage] = useState<>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [highlightedMessage, setHighlightedMessage] = useState<number>(null);
@@ -38,8 +40,8 @@ export const AppLayout: React.FC<AppLayoutProps> = (
               isReactionEnabled={isReactionEnabled}
               showSearchIcon={showSearchIcon}
               onProfileEditSuccess={onProfileEditSuccess}
-              currentChannelUrl={currentChannelUrl}
-              setCurrentChannelUrl={setCurrentChannelUrl}
+              currentChannel={currentChannel}
+              setCurrentChannel={setCurrentChannel}
               highlightedMessage={highlightedMessage}
               setHighlightedMessage={setHighlightedMessage}
               startingPoint={startingPoint}
@@ -55,8 +57,12 @@ export const AppLayout: React.FC<AppLayoutProps> = (
               showSearchIcon={showSearchIcon}
               onProfileEditSuccess={onProfileEditSuccess}
               disableAutoSelect={disableAutoSelect}
-              currentChannelUrl={currentChannelUrl}
-              setCurrentChannelUrl={setCurrentChannelUrl}
+              currentChannel={currentChannel}
+              setCurrentChannel={setCurrentChannel}
+              showThread={showThread}
+              setShowThread={setShowThread}
+              threadTargetMessage={threadTargetMessage}
+              setThreadTargetMessage={setThreadTargetMessage}
               showSettings={showSettings}
               setShowSettings={setShowSettings}
               showSearch={showSearch}

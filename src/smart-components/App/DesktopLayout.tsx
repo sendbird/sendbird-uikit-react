@@ -6,6 +6,7 @@ import ChannelList from '../ChannelList';
 import Channel from '../Channel';
 import ChannelSettings from '../ChannelSettings';
 import MessageSearchPannel from '../MessageSearch';
+import Thread from '../Thread';
 
 export const DesktopLayout: React.FC<DesktopLayoutProps> = (
   props: DesktopLayoutProps,
@@ -18,8 +19,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
     showSearchIcon,
     onProfileEditSuccess,
     disableAutoSelect,
-    currentChannelUrl,
-    setCurrentChannelUrl,
+    currentChannel,
+    setCurrentChannel,
     showSettings,
     setShowSettings,
     showSearch,
@@ -28,6 +29,10 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
     setHighlightedMessage,
     startingPoint,
     setStartingPoint,
+    showThread,
+    setShowThread,
+    threadTargetMessage,
+    setThreadTargetMessage,
   } = props;
   return (
     <div className="sendbird-app__wrap">
@@ -39,10 +44,10 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
           onChannelSelect={(channel) => {
             setStartingPoint(null);
             setHighlightedMessage(null);
-            if (channel?.url) {
-              setCurrentChannelUrl(channel.url);
+            if (channel) {
+              setCurrentChannel(channel);
             } else {
-              setCurrentChannelUrl('');
+              setCurrentChannel(null);
             }
           }}
         />
@@ -55,14 +60,28 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
         `}
       >
         <Channel
-          channelUrl={currentChannelUrl}
+          channelUrl={currentChannel?.url || ''}
           onChatHeaderActionClick={() => {
             setShowSearch(false);
+            setShowThread(false);
             setShowSettings(!showSettings);
           }}
           onSearchClick={() => {
             setShowSettings(false);
+            setShowThread(false);
             setShowSearch(!showSearch);
+          }}
+          onReplyInThread={({ message }) => { // parent message
+            setShowSettings(false);
+            setShowSearch(false);
+            setThreadTargetMessage(message); // as UserMessage
+            setShowThread(true);
+          }}
+          onQuoteMessageClick={({ message }) => { // thread message
+            setShowSettings(false);
+            setShowSearch(false);
+            setThreadTargetMessage(message);
+            setShowThread(true);
           }}
           showSearchIcon={showSearchIcon}
           startingPoint={startingPoint}
@@ -76,7 +95,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
         <div className="sendbird-app__settingspanel-wrap">
           <ChannelSettings
             className="sendbird-channel-settings"
-            channelUrl={currentChannelUrl}
+            channelUrl={currentChannel?.url || ''}
             onCloseClick={() => {
               setShowSettings(false);
             }}
@@ -86,7 +105,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
       {showSearch && (
         <div className="sendbird-app__searchpanel-wrap">
           <MessageSearchPannel
-            channelUrl={currentChannelUrl}
+            channelUrl={currentChannel?.url || ''}
             onResultClick={(message) => {
               if (message.messageId === highlightedMessage) {
                 setHighlightedMessage(null);
@@ -103,6 +122,20 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
             }}
           />
         </div>
+      )}
+      {showThread && (
+        <Thread
+          className="sendbird-app__thread"
+          channelUrl={currentChannel?.url || ''}
+          message={threadTargetMessage}
+          onHeaderActionClick={() => {
+            setShowThread(false);
+          }}
+          onMoveToParentMessage={({ message }) => {
+            setHighlightedMessage(message?.messageId);
+          }}
+          isMessageGroupingEnabled={isMessageGroupingEnabled}
+        />
       )}
     </div>
   )
