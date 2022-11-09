@@ -202,7 +202,9 @@ export default function OpenchannelUserMessage({
             </div>
           )
         }
-        <div {...onLongPress} className="sendbird-openchannel-user-message__right__bottom" ref={mobileMenuRef}>
+        <div
+          {...(isMobile ? { ...onLongPress } : {})}
+          className="sendbird-openchannel-user-message__right__bottom" ref={mobileMenuRef}>
           <Label
             className="sendbird-openchannel-user-message__right__bottom__message"
             type={LabelTypography.BODY_1}

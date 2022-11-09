@@ -155,7 +155,10 @@ export default function OpenchannelFileMessage({
             </div>
           )
         }
-        <div className="sendbird-openchannel-file-message__right__body" {...longPress}>
+        <div
+          className="sendbird-openchannel-file-message__right__body"
+          {...(isMobile ? { ...longPress } : {})}
+        >
           {
             checkFileType(message.url) && (
               <Icon
