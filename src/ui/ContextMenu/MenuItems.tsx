@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 interface MenuItemsProps {
   style?: Record<string, string>;
   openLeft?: boolean;
-  children: React.ReactElement;
+  children: React.ReactElement | Array<React.ReactElement>;
   parentRef: React.RefObject<HTMLDivElement>;
   parentContainRef: React.RefObject<HTMLDivElement>;
   closeDropdown: () => void;

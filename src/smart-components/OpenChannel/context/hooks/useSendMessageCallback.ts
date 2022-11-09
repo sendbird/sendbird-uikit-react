@@ -15,7 +15,7 @@ interface DynamicParams {
 interface StaticParams {
   sdk: SendbirdOpenChat;
   logger: Logger;
-  messagesDispatcher: ({ type: string, payload: any }) => void;
+  messagesDispatcher: (props: { type: string, payload: any }) => void;
 }
 
 function useSendMessageCallback(
@@ -26,7 +26,7 @@ function useSendMessageCallback(
     if (sdk) {
       const text = messageInputRef.current.innerText;
       const createParamsDefault = (txt: string | number): UserMessageCreateParams => {
-        const message = typeof txt === 'string' ? txt.trim() : txt.toString(10).trim();
+        const message = (txt as string)?.trim() || txt as string;
         const params: UserMessageCreateParams = {
           message: message,
         };
