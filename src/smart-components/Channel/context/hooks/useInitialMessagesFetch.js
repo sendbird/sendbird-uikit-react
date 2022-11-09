@@ -30,7 +30,7 @@ function useInitialMessagesFetch({
       }
       messageListParams.isInclusive = true;
       messageListParams.includeReactions = true;
-      if (replyType && replyType === 'QUOTE_REPLY') {
+      if (replyType && (replyType === 'QUOTE_REPLY' || replyType === 'THREAD')) {
         messageListParams.includeThreadInfo = true;
         messageListParams.includeParentMessageInfo = true;
         messageListParams.replyType = ReplyType.ONLY_REPLY_TO_CHANNEL;
@@ -40,7 +40,7 @@ function useInitialMessagesFetch({
           messageListParams[key] = userFilledMessageListQuery[key];
         });
       }
-      if ((replyType && replyType === 'QUOTE_REPLY') || userFilledMessageListQuery) {
+      if ((replyType && (replyType === 'QUOTE_REPLY' || replyType === 'THREAD')) || userFilledMessageListQuery) {
         logger.info('Channel useInitialMessagesFetch: Setup messageListParams', messageListParams);
         messagesDispatcher({
           type: messageActionTypes.MESSAGE_LIST_PARAMS_CHANGED,

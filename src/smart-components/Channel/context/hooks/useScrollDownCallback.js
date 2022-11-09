@@ -24,7 +24,7 @@ function useScrollDownCallback({
       isInclusive: true,
       includeReactions: isReactionEnabled,
     };
-    if (replyType && replyType === 'QUOTE_REPLY') {
+    if (replyType && (replyType === 'QUOTE_REPLY' || replyType === 'THREAD')) {
       messageListParams.includeThreadInfo = true;
       messageListParams.includeParentMessageInfo = true;
       messageListParams.replyType = ReplyType.ONLY_REPLY_TO_CHANNEL;

@@ -40,6 +40,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
     messageActionTypes,
     currentGroupChannel,
     disableMarkAsRead,
+    replyType,
   } = useChannelContext();
   const [scrollBottom, setScrollBottom] = useState(0);
 
@@ -75,7 +76,9 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
         if (messages) {
           try {
             element.scrollTop = scrollHeight - clientHeight;
+            scrollRef.current.scrollTop = scrollHeight - clientHeight;
           } catch (error) {
+            console.log('에러인가?', error);
             //
           }
         }
@@ -121,7 +124,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
         const previousMessage = allMessages[idx - 1];
         const nextMessage = allMessages[idx + 1];
         const [chainTop, chainBottom] = isMessageGroupingEnabled
-          ? compareMessagesForGrouping(previousMessage, m, nextMessage)
+          ? compareMessagesForGrouping(previousMessage, m, nextMessage, currentGroupChannel, replyType)
           : [false, false];
         const previousMessageCreatedAt = previousMessage?.createdAt;
         const currentCreatedAt = m.createdAt;
