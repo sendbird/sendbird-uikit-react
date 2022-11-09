@@ -1,0 +1,20 @@
+.sendbird-thread-list-item .sendbird-separator {
+  margin: 4px 0px;
+}
+
+.sendbird-thread-list .sendbird-message-content__middle__sender-name {
+  white-space: nowrap;
+  max-width: 210px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sendbird-thread-list .sendbird-message-content.incoming .sendbird-message-content__middle {
+  max-width: 200px;
+}
+
+.sendbird-thread-list .sendbird-message-content__middle__message-item-body.sendbird-thumbnail-message-item-body.outgoing {
+  min-width: 200px;
+  min-height: 148px;
+  height: 148px;
+}

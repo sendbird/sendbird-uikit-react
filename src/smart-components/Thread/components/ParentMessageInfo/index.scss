@@ -1,0 +1,123 @@
+@import '../../../../styles/variables';
+
+.sendbird-parent-message-info {
+  position: relative;
+  width: 100%;
+  height: fit-content;
+
+  padding: 12px 12px 12px 16px;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: flex-start;
+  box-sizing: border-box;
+}
+
+// left
+.sendbird-parent-message-info__sender {
+  position: relative;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+// right
+.sendbird-parent-message-info__content {
+  position: relative;
+  margin-left: 12px;
+
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.sendbird-parent-message-info__content__info {
+  position: relative;
+  max-width: 188px;
+  height: 16px;
+
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+.sendbird-parent-message-info__content__info__sender-name {
+  position: relative;
+  max-width: 142px;
+
+  word-break: keep-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sendbird-parent-message-info__content__info__sent-at {
+  position: relative;
+  max-width: 52px;
+  height: 12px;
+
+  display: inline-flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// message content body
+.sendbird-parent-message-info__content__body {
+  position: relative;
+  max-width: 210px;
+
+  overflow: hidden;
+}
+
+.sendbird-parent-message-info__content__body.sendbird-thumbnail-message-item-body.incoming {
+  min-width: 200px;
+  height: 148px;
+}
+
+.sendbird-parent-message-info__content__reactions {
+  position: relative;
+  max-width: 240px;
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+}
+
+.sendbird-parent-message-info__context-menu {
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  display: none;
+}
+.sendbird-parent-message-info__context-menu.use-reaction {
+  right: 44px;
+}
+.sendbird-parent-message-info__reaction-menu {
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  display: none;
+}
+
+.sendbird-parent-message-info .sendbird-text-message-item-body.reactions {
+  border-radius: 16px;
+}
+.sendbird-parent-message-info .sendbird-emoji-reactions {
+  @include themed() {
+    border: 1px solid t(bg-0);
+  }
+}
+
+// display menus
+.sendbird-parent-message-info:hover .sendbird-parent-message-info__context-menu {
+  display: inline-flex;
+}
+.sendbird-parent-message-info:hover .sendbird-parent-message-info__reaction-menu {
+  display: inline-flex;
+}
+.sendbird-parent-message-info__context-menu.supposed-hover {
+  display: inline-flex;
+}
+.sendbird-parent-message-info__reaction-menu.supposed-hover {
+  display: inline-flex;
+}
