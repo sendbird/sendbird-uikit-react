@@ -13,6 +13,7 @@ interface Props {
   mouseHover?: boolean;
   isReactionEnabled?: boolean;
   showFileViewer?: (bool: boolean) => void;
+  style?: Record<string, any>;
 }
 
 export default function ThumbnailMessageItemBody({
@@ -22,6 +23,7 @@ export default function ThumbnailMessageItemBody({
   mouseHover = false,
   isReactionEnabled = false,
   showFileViewer,
+  style = {},
 }: Props): ReactElement {
   const { thumbnails = [] } = message;
   const thumbnailUrl: string = thumbnails.length > 0 ? thumbnails[0]?.url : '';
@@ -45,13 +47,13 @@ export default function ThumbnailMessageItemBody({
         className="sendbird-thumbnail-message-item-body__thumbnail"
         url={thumbnailUrl || message?.url}
         alt={message?.type}
-        width="360px"
-        height="270px"
+        width={style?.width || "360px"}
+        height={style?.height || "270px"}
         onLoad={() => { setImageRendered(true) }}
-        placeHolder={(style) => (
+        placeHolder={(style_: Record<string, any>) => (
           <div
             className="sendbird-thumbnail-message-item-body__placeholder"
-            style={style}
+            style={style_}
           >
             <div className="sendbird-thumbnail-message-item-body__placeholder__icon">
               <Icon
