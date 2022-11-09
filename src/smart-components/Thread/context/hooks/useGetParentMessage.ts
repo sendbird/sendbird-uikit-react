@@ -4,6 +4,7 @@ import { SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { MessageRetrievalParams } from '@sendbird/chat/message';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
+import { ChannelType } from '@sendbird/chat';
 
 interface DynamicProps {
   channelUrl: string;
@@ -25,7 +26,7 @@ export default function useGetParentMessage({
   sdk,
   logger,
   threadDispatcher,
-}: StaticProps): void {
+}: StaticProps) {
   useEffect(() => {
     // validation check
     if (sdkInit && sdk?.message?.getMessage) {
@@ -33,17 +34,23 @@ export default function useGetParentMessage({
         type: ThreadContextActionTypes.GET_PARENT_MESSAGE_START,
         payload: null,
       });
-      sdk.message.getMessage?.({
-        channelUrl,
-        messageId: parentMessageId,
-        includeReactions: true,
-      includeThreadInfo: true,
-      } as MessageRetrievalParams)
+      const fetchParentMessage = async () => {
+        const params: MessageRetrievalParams = {
+          channelUrl,
+          messageId: parentMessageId,
+          includeReactions: true,
+          includeThreadInfo: true,
+          channelType: ChannelType.GROUP,
+        };
+        const data = await sdk.message.getMessage?.(params);
+        return data;
+      }
+      fetchParentMessage()
         .then((parentMessage) => {
           logger.info('Thread | useGetParentMessage: Get parent message succeeded.', parentMessage);
           threadDispatcher({
             type: ThreadContextActionTypes.GET_PARENT_MESSAGE_SUCCESS,
-            payload: parentMessage,
+            payload: { parentMessage },
           });
         })
         .catch((error) => {
@@ -54,5 +61,9 @@ export default function useGetParentMessage({
           });
         });
     }
-  }, [sdkInit, channelUrl, parentMessageId]);
+  }, [sdkInit, parentMessageId]);
+  /**
+   * We don't use channelUrl here,
+   * because Thread must operate independently of the channel.
+   */
 }

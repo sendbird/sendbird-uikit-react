@@ -3,10 +3,12 @@ import { SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 
 import { Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
+import { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 interface DynamicProps {
   channelUrl: string;
   sdkInit: boolean;
+  message: UserMessage | FileMessage;
 }
 
 interface StaticProps {
@@ -18,6 +20,7 @@ interface StaticProps {
 export default function useGetChannel({
   channelUrl,
   sdkInit,
+  message,
 }: DynamicProps, {
   sdk,
   logger,
@@ -35,7 +38,7 @@ export default function useGetChannel({
           logger.info('Thread | useInitialize: Get channel succeeded', groupChannel);
           threadDispatcher({
             type: ThreadContextActionTypes.GET_CHANNEL_SUCCESS,
-            payload: groupChannel,
+            payload: { groupChannel },
           });
         })
         .catch((error) => {
@@ -46,5 +49,9 @@ export default function useGetChannel({
           });
         });
     }
-  }, [channelUrl, sdkInit]);
+  }, [message, sdkInit]);
+  /**
+   * We don't use channelUrl here,
+   * because Thread must operate independently of the channel.
+   */
 }

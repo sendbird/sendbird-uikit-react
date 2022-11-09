@@ -1,65 +1,64 @@
 import { useEffect } from 'react';
-import { SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { FileMessage, ThreadedMessageListParams, UserMessage } from '@sendbird/chat/message';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
-
-// Divide this to useGetPrevThreadedMessages and useGetNextThreadedMessages
+import { NEXT_THREADS_FETCH_SIZE, PREV_THREADS_FETCH_SIZE } from '../../consts';
 
 interface DynamicProps {
+  sdkInit: boolean;
   parentMessage: UserMessage | FileMessage;
-  anchorMessage: UserMessage | FileMessage;
+  anchorMessage?: UserMessage | FileMessage;
+  isReactionEnabled?: boolean;
 }
 
 interface StaticProps {
-  sdk: SendbirdGroupChat;
   logger: Logger;
   threadDispatcher: CustomUseReducerDispatcher;
 }
 
 export default function useGetThreadList({
+  sdkInit,
   parentMessage,
   anchorMessage,
+  isReactionEnabled,
 }: DynamicProps, {
-  sdk,
   logger,
   threadDispatcher,
 }: StaticProps): void {
   useEffect(() => {
     // validation check
-    if (parentMessage?.getThreadedMessagesByTimestamp) {
+    if (sdkInit && parentMessage?.getThreadedMessagesByTimestamp) {
       threadDispatcher({
-        type: ThreadContextActionTypes.GET_NEXT_MESSAGES_START,
+        type: ThreadContextActionTypes.INITIALIZE_THREAD_LIST_START,
         payload: null,
       });
-      threadDispatcher({
-        type: ThreadContextActionTypes.GET_PREV_MESSAGES_START,
-        payload: null,
-      });
-      parentMessage.getThreadedMessagesByTimestamp(
-        anchorMessage.createdAt,
-        {} as ThreadedMessageListParams,
+      parentMessage.getThreadedMessagesByTimestamp?.(
+        anchorMessage?.createdAt || 0,
+        {
+          // check if
+          prevResultSize: PREV_THREADS_FETCH_SIZE,
+          nextResultSize: NEXT_THREADS_FETCH_SIZE,
+          includeReactions: isReactionEnabled,
+        } as ThreadedMessageListParams,
       )
         .then(({ parentMessage, threadedMessages }) => {
+          logger.info('Thread | useGetThreadList: Initialize thread list succeeded.', { parentMessage, threadedMessages });
           threadDispatcher({
-            type: ThreadContextActionTypes.GET_NEXT_MESSAGES_SUCESS,
-            payload: threadedMessages,
-          });
-          threadDispatcher({
-            type: ThreadContextActionTypes.GET_PREV_MESSAGES_SUCESS,
-            payload: threadedMessages,
+            type: ThreadContextActionTypes.INITIALIZE_THREAD_LIST_SUCCESS,
+            payload: {
+              parentMessage,
+              anchorMessage,
+              threadedMessages,
+            },
           });
         })
         .catch((error) => {
+          logger.info('Therad | useGetThreadList: Initialize thread list failed.', error);
           threadDispatcher({
-            type: ThreadContextActionTypes.GET_NEXT_MESSAGES_FAILURE,
-            payload: error,
-          });
-          threadDispatcher({
-            type: ThreadContextActionTypes.GET_PREV_MESSAGES_FAILURE,
+            type: ThreadContextActionTypes.INITIALIZE_THREAD_LIST_FAILURE,
             payload: error,
           });
         });
     }
-  }, [parentMessage]);
+  }, [sdkInit, parentMessage, anchorMessage]);
 }
