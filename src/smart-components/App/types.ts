@@ -1,6 +1,6 @@
 import type { User } from "@sendbird/chat";
 import type { GroupChannel } from "@sendbird/chat/groupChannel";
-import type { UserMessage } from "@sendbird/chat/message";
+import type { FileMessage, UserMessage } from "@sendbird/chat/message";
 
 import type { Locale } from "date-fns";
 
@@ -41,8 +41,8 @@ export interface DesktopLayoutProps extends AppLayoutProps {
   setStartingPoint?: React.Dispatch<number>;
   showThread: boolean;
   setShowThread: React.Dispatch<boolean>;
-  threadTargetMessage: UserMessage;
-  setThreadTargetMessage: React.Dispatch<UserMessage>;
+  threadTargetMessage: UserMessage | FileMessage;
+  setThreadTargetMessage: React.Dispatch<UserMessage | FileMessage>;
 }
 
 export default interface AppProps {
