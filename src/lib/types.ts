@@ -22,6 +22,7 @@ import type {
 import type SendBirdTypes from '../types';
 import { UikitMessageHandler } from './selectors';
 import { Logger } from './SendbirdState';
+import { ReplyType } from 'SendbirdUIKitGlobal';
 
 export interface SendBirdProviderProps {
   userId: string;
@@ -78,6 +79,7 @@ export interface SendBirdStateConfig {
   };
   isTypingIndicatorEnabledOnChannelList?: boolean;
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
+  replyType: ReplyType;
 }
 export interface SdkStore {
   error: boolean;

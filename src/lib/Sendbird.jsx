@@ -52,6 +52,7 @@ export default function Sendbird(props) {
     isMentionEnabled,
     isTypingIndicatorEnabledOnChannelList,
     isMessageReceiptStatusEnabledOnChannelList,
+    replyType,
   } = props;
 
   const mediaQueryBreakPoint = false;
@@ -202,6 +203,7 @@ export default function Sendbird(props) {
           },
           isTypingIndicatorEnabledOnChannelList,
           isMessageReceiptStatusEnabledOnChannelList,
+          replyType,
         },
       }}
     >
@@ -270,6 +272,7 @@ Sendbird.propTypes = {
   }),
   isTypingIndicatorEnabledOnChannelList: PropTypes.bool,
   isMessageReceiptStatusEnabledOnChannelList: PropTypes.bool,
+  replyType: PropTypes.oneOf(['NONE', 'QUOTE_REPLY', 'THREAD']),
 };
 
 Sendbird.defaultProps = {
@@ -296,4 +299,5 @@ Sendbird.defaultProps = {
   isMentionEnabled: false,
   isTypingIndicatorEnabledOnChannelList: false,
   isMessageReceiptStatusEnabledOnChannelList: false,
+  replyType: 'NONE',
 };
