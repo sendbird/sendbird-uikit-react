@@ -375,7 +375,7 @@ export default function OpenchannelOGMessage({
                 onClick={openLink}
                 onKeyDown={openLink}
                 tabIndex={0}
-                { ...onLongPress }
+                {...(isMobile ? { ...onLongPress } : {})}
               >
                 {
                   defaultImage && (
