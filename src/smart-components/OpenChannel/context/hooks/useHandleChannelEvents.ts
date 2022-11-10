@@ -16,12 +16,13 @@ interface DynamicParams {
 interface StaticParams {
   sdk: SendbirdOpenChat;
   logger: Logger;
+  scrollRef: React.RefObject<HTMLElement>;
   messagesDispatcher: (props: MessagesDispatcherType) => void;
 }
 
 function useHandleChannelEvents(
   { currentOpenChannel, checkScrollBottom }: DynamicParams,
-  { sdk, logger, messagesDispatcher }: StaticParams,
+  { sdk, logger, messagesDispatcher, scrollRef }: StaticParams,
 ): void {
   useEffect(() => {
     const messageReceiverId = uuidv4();
@@ -39,7 +40,7 @@ function useHandleChannelEvents(
           if (scrollToEnd) {
             try {
               setTimeout(() => {
-                scrollIntoLast();
+                scrollIntoLast(0, scrollRef);
               });
             } catch (error) {
               logger.warning('OpenChannel | onMessageReceived | scroll to end failed');
