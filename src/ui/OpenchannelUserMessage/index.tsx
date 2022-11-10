@@ -1,5 +1,4 @@
 import React, {
-  useMemo,
   useContext,
   useRef,
   useState,
@@ -32,6 +31,7 @@ import {
   showMenuTrigger,
 } from '../../utils/openChannelUtils';
 import { getSenderFromMessage } from '../../utils/openChannelUtils';
+import { isEditedMessage } from '../../utils';
 
 interface Props {
   className?: string | Array<string>;
@@ -63,7 +63,7 @@ export default function OpenchannelUserMessage({
 
   // hooks
   const { stringSet, dateLocale } = useLocalization();
-  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useContext<UserProfileContext>(UserProfileContext);
   const messageRef = useRef(null);
   const avatarRef = useRef(null);
   const contextMenuRef = useRef(null);
@@ -74,24 +74,6 @@ export default function OpenchannelUserMessage({
   const isPending = checkIsPending(status);
   const isFailed = checkIsFailed(status);
   const sender = getSenderFromMessage(message);
-
-  const MemoizedMessageText = useMemo(() => () => {
-    const splitMessage = message.message.split(/\r/);
-    const matchedMessage = splitMessage.map((word) => (word !== '' ? word : <br />));
-    if (message.updatedAt > 0) {
-      matchedMessage.push(
-        <Label
-          key={uuidv4()}
-          type={LabelTypography.BODY_1}
-          color={LabelColors.ONBACKGROUND_2}
-          calssName="sendbird-openchannel-user-message-word"
-        >
-          {` ${stringSet.MESSAGE_EDITED} `}
-        </Label>,
-      );
-    }
-    return matchedMessage;
-  }, [message, message.updatedAt]);
 
   // place context menu top depending clientHeight of message component
   useEffect(() => {
@@ -133,23 +115,23 @@ export default function OpenchannelUserMessage({
                   parentRef={avatarRef}
                   parentContainRef={avatarRef}
                   closeDropdown={closeDropdown}
-                  style={{ paddingTop: 0, paddingBottom: 0 }}
+                  style={{ paddingTop: '0px', paddingBottom: '0px' }}
                 >
                   {
                     renderUserProfile
-                    ? (
-                      renderUserProfile({
-                        user: sender,
-                        close: closeDropdown,
-                      })
-                    )
-                    : (
-                      <UserProfile
-                        user={sender}
-                        onSuccess={closeDropdown}
-                        disableMessaging
-                      />
-                    )
+                      ? (
+                        renderUserProfile({
+                          user: sender,
+                          close: closeDropdown,
+                        })
+                      )
+                      : (
+                        <UserProfile
+                          user={sender}
+                          onSuccess={closeDropdown}
+                          disableMessaging
+                        />
+                      )
                   }
                 </MenuItems>
               )}
@@ -196,7 +178,17 @@ export default function OpenchannelUserMessage({
             type={LabelTypography.BODY_1}
             color={LabelColors.ONBACKGROUND_1}
           >
-            {MemoizedMessageText()}
+            {message?.message}
+            {isEditedMessage(message) && (
+              <Label
+                key={uuidv4()}
+                type={LabelTypography.BODY_1}
+                color={LabelColors.ONBACKGROUND_2}
+                calssName="sendbird-openchannel-user-message-word"
+              >
+                {` ${stringSet.MESSAGE_EDITED} `}
+              </Label>
+            )}
           </Label>
         </div>
         {
@@ -241,7 +233,7 @@ export default function OpenchannelUserMessage({
         >
           <ContextMenu
             menuTrigger={(toggleDropdown) => (
-              showMenuTrigger({ message: message, userId: userId, status: status}) && (
+              showMenuTrigger({ message: message, userId: userId, status: status }) && (
                 <IconButton
                   className="sendbird-openchannel-user-message__context-menu--icon"
                   width="32px"
