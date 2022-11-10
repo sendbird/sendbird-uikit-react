@@ -321,12 +321,18 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     replyType,
   }, {
     logger,
+    scrollRef,
     messagesDispatcher,
   });
 
   // handles API calls from withSendbird
   useEffect(() => {
-    const subscriber = utils.pubSubHandler(channelUrl, pubSub, messagesDispatcher);
+    const subscriber = utils.pubSubHandler({
+      channelUrl,
+      pubSub,
+      messagesDispatcher,
+      scrollRef,
+    });
     return () => {
       utils.pubSubHandleRemover(subscriber);
     };
@@ -336,6 +342,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   useHandleReconnect({ isOnline, replyType, disableMarkAsRead }, {
     logger,
     sdk,
+    scrollRef,
     currentGroupChannel,
     messagesDispatcher,
     userFilledMessageListQuery,
@@ -357,6 +364,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     {
       logger,
       pubSub,
+      scrollRef,
       messagesDispatcher,
     },
   );
@@ -365,6 +373,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     {
       logger,
       pubSub,
+      scrollRef,
       messagesDispatcher,
     },
   );

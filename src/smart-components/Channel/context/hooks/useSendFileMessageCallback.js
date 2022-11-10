@@ -11,6 +11,7 @@ export default function useSendFileMessageCallback({
 }, {
   logger,
   pubSub,
+  scrollRef,
   messagesDispatcher,
 }) {
   const sendMessage = useCallback((file, quoteMessage = null) => {
@@ -87,7 +88,7 @@ export default function useSendFileMessageCallback({
                     },
                     channel: currentGroupChannel,
                   });
-                  setTimeout(() => utils.scrollIntoLast(), 1000);
+                  setTimeout(() => utils.scrollIntoLast(0, scrollRef), 1000);
                 })
                 .onFailed((err, failedMessage) => {
                   logger.error('Channel: Sending file message failed!', { failedMessage, err });
@@ -137,7 +138,7 @@ export default function useSendFileMessageCallback({
             },
             channel: currentGroupChannel,
           });
-          setTimeout(() => utils.scrollIntoLast(), 1000);
+          setTimeout(() => utils.scrollIntoLast(0, scrollRef), 1000);
         })
         .onFailed((error, message) => {
           logger.error('Channel: Sending file message failed!', { message, error });

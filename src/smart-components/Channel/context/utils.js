@@ -8,19 +8,19 @@ import { OutgoingMessageStates } from '../../../utils/exports/getOutgoingMessage
 const UNDEFINED = 'undefined';
 const { SUCCEEDED, FAILED, PENDING } = getSendingMessageStatus();
 
-export const scrollIntoLast = (intialTry = 0) => {
+export const scrollIntoLast = (intialTry = 0, scrollRef) => {
   const MAX_TRIES = 10;
   const currentTry = intialTry;
   if (currentTry > MAX_TRIES) {
     return;
   }
   try {
-    const scrollDOM = document.querySelector('.sendbird-conversation__messages-padding');
+    const scrollDOM = scrollRef?.current || document.querySelector('.sendbird-conversation__messages-padding');
     // eslint-disable-next-line no-multi-assign
     scrollDOM.scrollTop = scrollDOM.scrollHeight;
   } catch (error) {
     setTimeout(() => {
-      scrollIntoLast(currentTry + 1);
+      scrollIntoLast(currentTry + 1, scrollRef);
     }, 500 * currentTry);
   }
 };
@@ -35,12 +35,17 @@ export const pubSubHandleRemover = (subscriber) => {
   });
 };
 
-export const pubSubHandler = (channelUrl, pubSub, dispatcher) => {
+export const pubSubHandler = ({
+  channelUrl,
+  pubSub,
+  dispatcher,
+  scrollRef,
+}) => {
   const subscriber = new Map();
   if (!pubSub || !pubSub.subscribe) return subscriber;
   subscriber.set(topics.SEND_USER_MESSAGE, pubSub.subscribe(topics.SEND_USER_MESSAGE, (msg) => {
     const { channel, message } = msg;
-    scrollIntoLast();
+    scrollIntoLast(0, scrollRef);
     if (channelUrl === channel?.url) {
       dispatcher({
         type: channelActions.SEND_MESSAGEGE_SUCESS,
@@ -59,7 +64,7 @@ export const pubSubHandler = (channelUrl, pubSub, dispatcher) => {
   }));
   subscriber.set(topics.SEND_FILE_MESSAGE, pubSub.subscribe(topics.SEND_FILE_MESSAGE, (msg) => {
     const { channel, message } = msg;
-    scrollIntoLast();
+    scrollIntoLast(0, scrollRef);
     if (channelUrl === channel?.url) {
       dispatcher({
         type: channelActions.SEND_MESSAGEGE_SUCESS,

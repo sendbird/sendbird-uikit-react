@@ -74,7 +74,7 @@ function useHandleChannelEvents(
                   if (!disableMarkAsRead) {
                     currentGroupChannel?.markAsRead?.();
                   }
-                  scrollIntoLast();
+                  scrollIntoLast(0, scrollRef);
                 });
               } catch (error) {
                 logger.warning('Channel | onMessageReceived | scroll to end failed');
