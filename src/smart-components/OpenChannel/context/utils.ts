@@ -21,9 +21,9 @@ export const shouldFetchMore = (messageLength: number, maxMessages: number): boo
   return false;
 }
 
-export const scrollIntoLast = (intialTry = 0, scrollRef: React.RefObject<HTMLElement>): void => {
+export const scrollIntoLast = (initialTry = 0, scrollRef: React.RefObject<HTMLElement>): void => {
   const MAX_TRIES = 10;
-  const currentTry = intialTry;
+  const currentTry = initialTry;
   if (currentTry > MAX_TRIES) {
     return;
   }

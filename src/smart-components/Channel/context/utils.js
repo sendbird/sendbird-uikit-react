@@ -8,9 +8,9 @@ import { OutgoingMessageStates } from '../../../utils/exports/getOutgoingMessage
 const UNDEFINED = 'undefined';
 const { SUCCEEDED, FAILED, PENDING } = getSendingMessageStatus();
 
-export const scrollIntoLast = (intialTry = 0, scrollRef) => {
+export const scrollIntoLast = (initialTry = 0, scrollRef) => {
   const MAX_TRIES = 10;
-  const currentTry = intialTry;
+  const currentTry = initialTry;
   if (currentTry > MAX_TRIES) {
     return;
   }
