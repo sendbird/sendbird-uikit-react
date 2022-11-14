@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import type { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import type { FileMessageCreateParams } from '@sendbird/chat/message';
 
@@ -19,19 +19,19 @@ interface DynamicParams {
 interface StaticParams {
   sdk: SendbirdOpenChat;
   logger: Logger;
+  scrollRef: React.RefObject<HTMLElement>;
   messagesDispatcher: ({ type: string, payload: any }) => void;
 }
 
 type CallbackReturn = (file: File) => void;
 
-function useFileUploadCallback(
-  {
-    currentOpenChannel,
-    checkScrollBottom,
-    imageCompression = {},
-    onBeforeSendFileMessage,
+function useFileUploadCallback({
+  currentOpenChannel,
+  checkScrollBottom,
+  imageCompression = {},
+  onBeforeSendFileMessage,
   }: DynamicParams,
-  { sdk, logger, messagesDispatcher }: StaticParams,
+  { sdk, logger, messagesDispatcher, scrollRef }: StaticParams,
 ): CallbackReturn {
   return useCallback((file) => {
     if (sdk) {
@@ -113,7 +113,7 @@ function useFileUploadCallback(
                     });
                     if (isBottom) {
                       setTimeout(() => {
-                        utils.scrollIntoLast();
+                        utils.scrollIntoLast(0, scrollRef);
                       });
                     }
                   })
@@ -167,7 +167,7 @@ function useFileUploadCallback(
             });
             if (isBottom) {
               setTimeout(() => {
-                utils.scrollIntoLast();
+                utils.scrollIntoLast(0, scrollRef);
               });
             }
           })

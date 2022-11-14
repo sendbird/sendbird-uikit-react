@@ -11,6 +11,7 @@ export default function useSendMessageCallback({
 }, {
   logger,
   pubSub,
+  scrollRef,
   messagesDispatcher,
 }) {
   const messageInputRef = useRef(null);
@@ -63,7 +64,7 @@ export default function useSendMessageCallback({
             message: pendingMsg,
             channel: currentGroupChannel,
           });
-          setTimeout(() => utils.scrollIntoLast());
+          setTimeout(() => utils.scrollIntoLast(0, scrollRef));
         })
         .onFailed((err, msg) => {
           logger.warning('Channel: Sending message failed!', { message: msg, error: err });

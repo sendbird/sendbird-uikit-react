@@ -1,6 +1,6 @@
 import { MessageListParams } from '@sendbird/chat/message';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 import type { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
@@ -14,11 +14,12 @@ interface DynamicParams {
 interface StaticParams {
   logger: Logger;
   messagesDispatcher: CustomUseReducerDispatcher;
+  scrollRef: React.RefObject<HTMLElement>;
 }
 
 function useInitialMessagesFetch(
   { currentOpenChannel, userFilledMessageListParams }: DynamicParams,
-  { logger, messagesDispatcher }: StaticParams,
+  { logger, messagesDispatcher, scrollRef }: StaticParams,
 ): void {
   useEffect(() => {
     logger.info('OpenChannel | useInitialMessagesFetch: Setup started', currentOpenChannel);
@@ -59,7 +60,7 @@ function useInitialMessagesFetch(
             lastMessageTimestamp,
           },
         });
-        setTimeout(() => { scrollIntoLast(); });
+        setTimeout(() => { scrollIntoLast(0, scrollRef); });
       }).catch((error) => {
         logger.error('OpenChannel | useInitialMessagesFetch: Fetching messages failed', error);
         messagesDispatcher({
