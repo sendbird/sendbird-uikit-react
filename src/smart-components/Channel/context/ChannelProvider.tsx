@@ -330,7 +330,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     const subscriber = utils.pubSubHandler({
       channelUrl,
       pubSub,
-      messagesDispatcher,
+      dispatcher: messagesDispatcher,
       scrollRef,
     });
     return () => {
