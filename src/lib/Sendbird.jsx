@@ -31,7 +31,7 @@ export default function Sendbird(props) {
     appId,
     accessToken,
     configureSession,
-    // mediaQueryBreakPoint,
+    mediaQueryBreakPoint,
     customApiHost,
     customWebSocketHost,
     children,
@@ -53,8 +53,6 @@ export default function Sendbird(props) {
     isTypingIndicatorEnabledOnChannelList,
     isMessageReceiptStatusEnabledOnChannelList,
   } = props;
-
-  const mediaQueryBreakPoint = false;
 
   const {
     logLevel = '',
@@ -220,7 +218,7 @@ Sendbird.propTypes = {
   accessToken: PropTypes.string,
   customApiHost: PropTypes.string,
   customWebSocketHost: PropTypes.string,
-  // mediaQueryBreakPoint: PropTypes.string,
+  mediaQueryBreakPoint: PropTypes.string,
   configureSession: PropTypes.func,
   children: PropTypes.oneOfType([
     PropTypes.element,
@@ -278,7 +276,7 @@ Sendbird.defaultProps = {
   customWebSocketHost: null,
   configureSession: null,
   theme: 'light',
-  // mediaQueryBreakPoint: null,
+  mediaQueryBreakPoint: null,
   nickname: '',
   dateLocale: null,
   profileUrl: '',
