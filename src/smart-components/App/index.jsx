@@ -28,7 +28,7 @@ export default function App(props) {
     config = {},
     isReactionEnabled,
     isMentionEnabled,
-    // replyType,
+    replyType,
     isMessageGroupingEnabled,
     colorSet,
     stringSet,
@@ -44,7 +44,6 @@ export default function App(props) {
     isMessageReceiptStatusEnabledOnChannelList,
   } = props;
   const [currentChannel, setCurrentChannel] = useState(null);
-  const replyType = 'THREAD';
   return (
     <Sendbird
       stringSet={stringSet}
