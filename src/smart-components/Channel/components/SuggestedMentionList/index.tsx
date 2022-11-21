@@ -42,11 +42,12 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
     maxMentionCount = MAX_USER_MENTION_COUNT,
     maxSuggestionCount = MAX_USER_SUGGESTION_COUNT,
   } = props;
+  const { currentGroupChannel = null } = useChannelContext?.();
+  const { currentChannel = null } = useThreadContext?.();
+  const channelInstance = currentGroupChannel || currentChannel;
   const { config, stores } = useSendbirdStateContext();
   const { logger } = config;
   const currentUserId = stores?.sdkStore?.sdk?.currentUser?.userId || '';
-  // const { currentGroupChannel } = useChannelContext();
-  const currentGroupChannel = useChannelContext?.()?.currentGroupChannel || useThreadContext?.()?.currentChannel;
   const scrollRef = useRef(null);
   const { stringSet } = useContext(LocalizationContext);
   const [timer, setTimer] = useState(null);
@@ -92,7 +93,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
 
   /* Fetch member list */
   useEffect(() => {
-    if (!currentGroupChannel?.createMemberListQuery) {
+    if (!channelInstance?.createMemberListQuery) {
       logger.warning('SuggestedMentionList: Creating member list query failed');
       return;
     }
@@ -101,7 +102,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
       return;
     }
 
-    const query = currentGroupChannel?.createMemberListQuery({
+    const query = channelInstance?.createMemberListQuery({
       limit: maxSuggestionCount + 1,  // because current user could be included
       nicknameStartsWithFilter: searchString.slice(USER_MENTION_TEMP_CHAR.length),
     });
@@ -126,7 +127,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
           logger.error('SuggestedMentionList: Fetching member list failed', error);
         }
       });
-  }, [currentGroupChannel?.url, searchString]);
+  }, [channelInstance?.url, searchString]);
 
   if (!ableAddMention && currentMemberList.length === 0) {
     return null;
