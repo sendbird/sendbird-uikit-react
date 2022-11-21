@@ -48,6 +48,8 @@ export default function useSendUserMessageCallback({
     }
 
     const params = createDefaultParams();
+    logger.info('Thread | useSendUserMessageCallback: Sending user message start.', params);
+
     if (currentChannel?.sendUserMessage) {
       currentChannel?.sendUserMessage(params)
         .onPending((pendingMessage) => {
@@ -57,12 +59,14 @@ export default function useSendUserMessageCallback({
           });
         })
         .onFailed((error, message) => {
+          logger.info('Thread | useSendUserMessageCallback: Sending user message failed.', { message, error });
           threadDispatcher({
             type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
             payload: { error, message },
           });
         })
         .onSucceeded((message) => {
+          logger.info('Thread | useSendUserMessageCallback: Sending user message succeeded.', message);
           threadDispatcher({
             type: ThreadContextActionTypes.SEND_MESSAGE_SUCESS,
             payload: { message },

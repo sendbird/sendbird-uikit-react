@@ -39,6 +39,7 @@ export default function useSendFileMessageCallback({
       return params;
     };
     const params = createParamsDefault();
+    logger.info('Thread | useSendFileMessageCallback: Sending file message start.', params);
 
     currentChannel?.sendFileMessage(params)
       .onPending((pendingMessage) => {
@@ -60,12 +61,14 @@ export default function useSendFileMessageCallback({
       .onFailed((error, message) => {
         (message as LocalFileMessage).localUrl = URL.createObjectURL(file);
         (message as LocalFileMessage).file = file;
+        logger.info('Thread | useSendFileMessageCallback: Sending file message failed.', { message, error });
         threadDispatcher({
           type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
           payload: { message, error },
         });
       })
       .onSucceeded((message) => {
+        logger.info('Thread | useSendFileMessageCallback: Sending file message succeeded.', message);
         pubSub.publish(topics.SEND_FILE_MESSAGE, {
           channel: currentChannel,
           message: message,
