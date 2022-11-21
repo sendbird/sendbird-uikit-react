@@ -1,4 +1,4 @@
-import React, { ReactElement, MouseEvent, useState } from 'react';
+import React, { ReactElement, MouseEvent, useState, ReactNode } from 'react';
 import './index.scss';
 
 import _MenuItems from './MenuItems';
@@ -14,7 +14,7 @@ export const EmojiListItems = _EmojiListItems;
 
 export interface MenuItemProps {
   className?: string | Array<string>;
-  children: ReactElement | ReactElement[];
+  children: ReactElement | ReactElement[] | ReactNode;
   onClick?: (e: MouseEvent<HTMLLIElement>) => void;
   disable?: boolean;
 }

@@ -43,7 +43,7 @@ const UserListItem = ({
   const {
     disableUserProfile,
     renderUserProfile,
-  } = useContext(UserProfileContext);
+  } = useContext<UserProfileContext>(UserProfileContext);
   const injectingClassNames = Array.isArray(className) ? className : [className];
   return (
     <div
@@ -75,7 +75,7 @@ const UserListItem = ({
             parentContainRef={avatarRef}
             // for toggling more options(menus & reactions)
             closeDropdown={closeDropdown}
-            style={{ paddingTop: 0, paddingBottom: 0 }}
+            style={{ paddingTop: '0px', paddingBottom: '0px' }}
           >
             {
               renderUserProfile

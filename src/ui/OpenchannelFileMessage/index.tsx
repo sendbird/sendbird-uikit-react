@@ -54,7 +54,7 @@ export default function OpenchannelFileMessage({
   const contextMenuRef = useRef(null);
   const mobileMenuRef = useRef(null);
   const avatarRef = useRef(null);
-  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useContext<UserProfileContext>(UserProfileContext);
 
   const { isMobile } = useMediaQueryContext();
   const openFileUrl = () => { window.open(message.url); };
@@ -64,7 +64,11 @@ export default function OpenchannelFileMessage({
   const sender = getSenderFromMessage(message);
   const [contextMenu, setContextMenu] = useState(false);
   const longPress = useLongPress({
-    onLongPress: () => { setContextMenu(true) },
+    onLongPress: () => {
+      if (isMobile) {
+        setContextMenu(true);
+      }
+    },
     onClick: openFileUrl,
   }, {delay: 300});
   return (
@@ -98,7 +102,7 @@ export default function OpenchannelFileMessage({
                     parentRef={avatarRef}
                     parentContainRef={avatarRef}
                     closeDropdown={closeDropdown}
-                    style={{ paddingTop: 0, paddingBottom: 0 }}
+                    style={{ paddingTop: '0px', paddingBottom: '0px' }}
                   >
                     {
                       renderUserProfile

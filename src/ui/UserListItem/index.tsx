@@ -20,7 +20,7 @@ export interface UserListItemProps {
   isOperator?: boolean;
   disabled?: boolean;
   disableMessaging?: boolean;
-  currentUser?: string;
+  currentUserId?: string;
   action?({ actionRef, parentRef }: {
     actionRef: MutableRefObject<any>,
     parentRef?: MutableRefObject<any>,
@@ -36,7 +36,7 @@ export default function UserListItem({
   isOperator,
   disabled,
   disableMessaging,
-  currentUser,
+  currentUserId,
   action,
   onChange,
 }: UserListItemProps): ReactElement {
@@ -47,7 +47,7 @@ export default function UserListItem({
   const {
     disableUserProfile,
     renderUserProfile,
-  } = useContext(UserProfileContext);
+  } = useContext<UserProfileContext>(UserProfileContext);
   const { stringSet } = useContext(LocalizationContext);
   return (
     <div
@@ -85,20 +85,20 @@ export default function UserListItem({
             parentContainRef={avatarRef}
             // for toggling more options(menus & reactions)
             closeDropdown={closeDropdown}
-            style={{ paddingTop: 0, paddingBottom: 0 }}
+            style={{ paddingTop: '0px', paddingBottom: '0px' }}
           >
             {
               renderUserProfile
                 ? renderUserProfile({
                   user,
-                  currentUserId: currentUser,
+                  currentUserId,
                   close: closeDropdown,
                 })
                 : (
                   <UserProfile
                     disableMessaging={disableMessaging}
                     user={user}
-                    currentUserId={currentUser}
+                    currentUserId={currentUserId}
                     onSuccess={closeDropdown}
                   />
                 )
@@ -113,7 +113,7 @@ export default function UserListItem({
       >
         {user.nickname || stringSet.NO_NAME}
         {
-          (currentUser === user.userId) && (
+          (currentUserId === user.userId) && (
             ' (You)'
           )
         }

@@ -70,7 +70,7 @@ export const UserListItem: React.FC<UserListItemProps> = ({
               parentContainRef={avatarRef}
               // for toggling more options(menus & reactions)
               closeDropdown={closeDropdown}
-              style={{ paddingTop: 0, paddingBottom: 0 }}
+              style={{ paddingTop: '0px', paddingBottom: '0px' }}
             >
               {
                 renderUserProfile

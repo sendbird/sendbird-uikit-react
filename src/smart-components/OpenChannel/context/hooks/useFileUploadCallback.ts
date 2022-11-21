@@ -19,7 +19,7 @@ interface DynamicParams {
 interface StaticParams {
   sdk: SendbirdOpenChat;
   logger: Logger;
-  messagesDispatcher: ({ type: string, payload: any }) => void;
+  messagesDispatcher: (props: { type: string, payload: any }) => void;
 }
 
 type CallbackReturn = (file: File) => void;

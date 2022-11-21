@@ -66,7 +66,7 @@ export default function OpenchannelUserMessage({
 
   // hooks
   const { stringSet, dateLocale } = useLocalization();
-  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useContext<UserProfileContext>(UserProfileContext);
   const messageRef = useRef(null);
   const avatarRef = useRef(null);
   const contextMenuRef = useRef(null);
@@ -145,7 +145,7 @@ export default function OpenchannelUserMessage({
                   parentRef={avatarRef}
                   parentContainRef={avatarRef}
                   closeDropdown={closeDropdown}
-                  style={{ paddingTop: 0, paddingBottom: 0 }}
+                  style={{ paddingTop: '0px', paddingBottom: '0px' }}
                 >
                   {
                     renderUserProfile
