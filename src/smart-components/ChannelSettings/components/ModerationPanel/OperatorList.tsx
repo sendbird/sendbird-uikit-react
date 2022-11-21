@@ -71,6 +71,9 @@ export const OperatorList = (): ReactElement => {
             user={operator}
             currentUser={userId}
             action={({ actionRef }) => {
+              if (operator?.userId === userId) {
+                return null;
+              }
               return (
                 <ContextMenu
                   menuTrigger={(toggleDropdown) => (
