@@ -6,3 +6,9 @@
 .sendbird-image-renderer__hidden-image-loader {
   display: none;
 }
+
+.sendbird-image-renderer,
+.sendbird-image-renderer__image {
+  width: 320px;
+  height: 180px;
+}

@@ -35,8 +35,8 @@
     .sendbird-message-search-file-item__right__sender-name {
       position: absolute;
       top: 12px;
-      display: flex;
-      max-width: 280px;
+      display: inline-block;
+      max-width: 146px;
       height: 16px;
       overflow: hidden;
       text-overflow: ellipsis;

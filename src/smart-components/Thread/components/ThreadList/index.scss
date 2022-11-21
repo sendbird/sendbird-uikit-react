@@ -13,8 +13,16 @@
   max-width: 200px;
 }
 
-.sendbird-thread-list .sendbird-message-content__middle__message-item-body.sendbird-thumbnail-message-item-body.outgoing {
+.sendbird-thread-list .sendbird-thumbnail-message-item-body.outgoing {
   min-width: 200px;
   min-height: 148px;
   height: 148px;
+}
+
+.sendbird-thread-list .sendbird-message-content .sendbird-message-content__middle {
+  max-width: 230px;
+}
+
+.sendbird-thread-list .sendbird-message-status__icon.sendbird-message-status--sent {
+  display: none;
 }

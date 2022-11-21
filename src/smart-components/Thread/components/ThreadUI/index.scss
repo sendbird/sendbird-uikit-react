@@ -12,6 +12,7 @@
   @include themed() {
     border-right: 1px solid t(on-bg-4);
     border-bottom: 1px solid t(on-bg-4);
+    background-color: t(bg-0);
   }
 }
 
@@ -41,6 +42,7 @@
   position: relative;
   box-sizing: border-box;
   width: 100%;
+  height: 42px;
 
   display: inline-flex;
   justify-content: start;
