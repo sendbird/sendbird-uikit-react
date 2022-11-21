@@ -75,10 +75,9 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
       onScrollDownCallback(([messages]) => {
         if (messages) {
           try {
-            element.scrollTop = scrollHeight - clientHeight;
-            scrollRef.current.scrollTop = scrollHeight - clientHeight;
+            // element.scrollTop = scrollHeight - clientHeight;
+            // scrollRef.current.scrollTop = scrollHeight - clientHeight;
           } catch (error) {
-            console.log('에러인가?', error);
             //
           }
         }
@@ -141,7 +140,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
               current.scrollTop += bottom - scrollBottom;
             }
           }
-        }
+        };
 
         return (
           <Message
