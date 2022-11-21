@@ -8,8 +8,6 @@ import { filterMessageListParams, getSendingMessageStatus } from '../../../../ut
 
 const {
   SUCCEEDED,
-  FAILED,
-  PENDING,
 } = getSendingMessageStatus();
 const getOldestMessageTimeStamp = (messages = []) => {
   const oldestMessage = messages[0];
@@ -211,6 +209,7 @@ export default function reducer(state, action) {
     case actionTypes.SET_CHANNEL_INVALID: {
       return {
         ...state,
+        currentGroupChannel: null,
         isInvalid: true,
       };
     }
