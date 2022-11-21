@@ -1,4 +1,3 @@
-
 import React, {
   useEffect,
   useState,
@@ -72,6 +71,7 @@ export type ChannelContextProps = {
   isReactionEnabled?: boolean;
   isMessageGroupingEnabled?: boolean;
   showSearchIcon?: boolean;
+  animatedMessage?: number;
   highlightedMessage?: number;
   startingPoint?: number;
   onBeforeSendUserMessage?(text: string, quotedMessage?: UserMessage | FileMessage): UserMessageCreateParams;
@@ -87,6 +87,8 @@ export type ChannelContextProps = {
   disableMarkAsRead?: boolean;
   onReplyInThread?: (props: { message: UserMessage | FileMessage }) => void;
   onQuoteMessageClick?: (props: { message: UserMessage | FileMessage }) => void;
+  onMessageAnimated?: () => void;
+  onMessageHighlighted?: () => void;
 };
 
 interface MessageStoreInterface {
@@ -159,6 +161,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     isReactionEnabled,
     isMessageGroupingEnabled = true,
     showSearchIcon,
+    animatedMessage,
     highlightedMessage,
     startingPoint,
     onBeforeSendUserMessage,
@@ -172,6 +175,8 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     disableMarkAsRead = false,
     onReplyInThread,
     onQuoteMessageClick,
+    onMessageAnimated,
+    onMessageHighlighted,
   } = props;
 
   const globalStore = useSendbirdStateContext();
@@ -192,7 +197,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   useEffect(() => {
     setInitialTimeStamp(startingPoint);
   }, [startingPoint, channelUrl]);
-  const [animatedMessageId, setAnimatedMessageId] = useState(null);
+  const [animatedMessageId, setAnimatedMessageId] = useState(0);
   const [highLightedMessageId, setHighLightedMessageId] = useState(highlightedMessage);
   useEffect(() => {
     setHighLightedMessageId(highlightedMessage);
@@ -241,6 +246,13 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       ? utils.getNicknamesMapFromMembers(currentGroupChannel?.members)
       : new Map()
   ), [currentGroupChannel?.members]);
+
+  // Animate message
+  useEffect(() => {
+    if (animatedMessage) {
+      setAnimatedMessageId(animatedMessage);
+    }
+  }, [animatedMessage]);
 
   // Scrollup is default scroll for channel
   const onScrollCallback = useScrollCallback({
@@ -301,6 +313,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     {
       currentGroupChannel,
       sdkInit,
+      currentUserId: userId,
       hasMoreNext,
       disableMarkAsRead
     },
@@ -393,6 +406,8 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       disableMarkAsRead,
       onReplyInThread,
       onQuoteMessageClick,
+      onMessageAnimated,
+      onMessageHighlighted,
 
       // messagesStore
       allMessages,

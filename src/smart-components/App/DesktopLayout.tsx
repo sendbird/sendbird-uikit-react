@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import type { DesktopLayoutProps } from './types';
 
@@ -7,6 +7,7 @@ import Channel from '../Channel';
 import ChannelSettings from '../ChannelSettings';
 import MessageSearchPannel from '../MessageSearch';
 import Thread from '../Thread';
+import { BaseMessage, UserMessage } from '@sendbird/chat/message';
 
 export const DesktopLayout: React.FC<DesktopLayoutProps> = (
   props: DesktopLayoutProps,
@@ -34,6 +35,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
     threadTargetMessage,
     setThreadTargetMessage,
   } = props;
+  const [animatedMessageId, setAnimatedMessageId] = useState(null);
   return (
     <div className="sendbird-app__wrap">
       <div className="sendbird-app__channellist-wrap">
@@ -74,17 +76,32 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
           onReplyInThread={({ message }) => { // parent message
             setShowSettings(false);
             setShowSearch(false);
-            setThreadTargetMessage(message); // as UserMessage
-            setShowThread(true);
+            if (replyType === 'THREAD') {
+              setThreadTargetMessage({
+                parentMessage: message as BaseMessage,
+                parentMessageId: message?.messageId,
+              } as UserMessage);
+              setShowThread(true);
+            }
+            replyType
           }}
           onQuoteMessageClick={({ message }) => { // thread message
             setShowSettings(false);
             setShowSearch(false);
-            setThreadTargetMessage(message);
-            setShowThread(true);
+            if (replyType === 'THREAD') {
+              setThreadTargetMessage(message);
+              setShowThread(true);
+            }
+          }}
+          onMessageAnimated={() => {
+            setAnimatedMessageId(null);
+          }}
+          onMessageHighlighted={() => {
+            setHighlightedMessage(null);
           }}
           showSearchIcon={showSearchIcon}
           startingPoint={startingPoint}
+          animatedMessage={animatedMessageId}
           highlightedMessage={highlightedMessage}
           isReactionEnabled={isReactionEnabled}
           replyType={replyType}
@@ -131,8 +148,11 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
           onHeaderActionClick={() => {
             setShowThread(false);
           }}
-          onMoveToParentMessage={({ message }) => {
-            setHighlightedMessage(message?.messageId);
+          onMoveToParentMessage={({ message, channel }) => {
+            setCurrentChannel(channel);
+            setTimeout(() => {
+              setAnimatedMessageId(message?.messageId);
+            }, 500);
           }}
           isMessageGroupingEnabled={isMessageGroupingEnabled}
         />

@@ -15,6 +15,7 @@ const Channel: React.FC<ChannelProps> = (props: ChannelProps) => {
       isReactionEnabled={props?.isReactionEnabled}
       isMessageGroupingEnabled={props?.isMessageGroupingEnabled}
       showSearchIcon={props?.showSearchIcon}
+      animatedMessage={props?.animatedMessage}
       highlightedMessage={props?.highlightedMessage}
       startingPoint={props?.startingPoint}
       onBeforeSendUserMessage={props?.onBeforeSendUserMessage}
@@ -30,6 +31,8 @@ const Channel: React.FC<ChannelProps> = (props: ChannelProps) => {
       disableMarkAsRead={props?.disableMarkAsRead}
       onReplyInThread={props?.onReplyInThread}
       onQuoteMessageClick={props?.onQuoteMessageClick}
+      onMessageAnimated={props?.onMessageAnimated}
+      onMessageHighlighted={props?.onMessageHighlighted}
     >
       <ChannelUI
         isLoading={props?.isLoading}

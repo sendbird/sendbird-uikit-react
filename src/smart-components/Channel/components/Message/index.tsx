@@ -81,6 +81,8 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
     renderUserMentionItem,
     onReplyInThread,
     onQuoteMessageClick,
+    onMessageAnimated,
+    onMessageHighlighted,
   } = useChannelContext();
 
   const [showEdit, setShowEdit] = useState(false);
@@ -141,6 +143,7 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
         }, 500);
         setTimeout(() => {
           setHighLightedMessageId(0);
+          onMessageHighlighted?.();
         }, 1600);
       }
     } else {
@@ -158,12 +161,13 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
         }, 500);
         setTimeout(() => {
           setAnimatedMessageId(0);
+          onMessageAnimated?.();
         }, 1600);
       }
     } else {
       setIsAnimated(false);
     }
-  }, [animatedMessageId, useMessageScrollRef.current, message.messageId]);
+  }, [animatedMessageId, useMessageScrollRef.current, message.messageId, onMessageAnimated]);
   const renderedMessage = useMemo(() => {
     return renderMessage?.({
       message,
