@@ -1,10 +1,16 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { Role } from '@sendbird/chat';
 import { UserMessage } from '@sendbird/chat/message';
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+
+import './index.scss';
+
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import MessageInput from '../../../../ui/MessageInput';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import SuggestedMentionList from '../../../Channel/components/SuggestedMentionList';
 import { useThreadContext } from '../../context/ThreadProvider';
+import { useLocalization } from '../../../../lib/LocalizationContext';
+import { MutedState } from '@sendbird/chat/groupChannel';
 
 export interface ThreadMessageInputProps {
   className?: string;
@@ -16,6 +22,7 @@ const ThreadMessageInput = (
 ): React.ReactElement => {
   const { className } = props;
   const { config } = useSendbirdStateContext();
+  const { stringSet } = useLocalization();
   const {
     isMentionEnabled,
     isOnline,
@@ -27,15 +34,12 @@ const ThreadMessageInput = (
     sendMessage,
     sendFileMessage,
     isMuted,
-    isOperator,
     isChannelFrozen,
+    allThreadMessages,
   } = useThreadContext();
   const messageInputRef = useRef();
 
-  // memo
-  const disabled = useMemo(() => (
-    isMuted || (!isOperator && isChannelFrozen) 
-  ), [isMuted, isOperator, isChannelFrozen]);
+  const disabled = isMuted || (!(currentChannel?.myRole === Role.OPERATOR) && isChannelFrozen) || parentMessage === null;
 
   // mention
   const [mentionNickname, setMentionNickname] = useState('');
@@ -105,6 +109,17 @@ const ThreadMessageInput = (
         mentionSelectedUser={selectedUser}
         isMentionEnabled={isMentionEnabled}
         ref={ref || messageInputRef}
+        placeholder={
+          (currentChannel?.isFrozen && !(currentChannel?.myRole === Role.OPERATOR) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
+          || (currentChannel?.myMutedState === MutedState.MUTED && stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED)
+          || (allThreadMessages.length > 0
+            ? stringSet.THREAD__INPUT__REPLY_TO_THREAD
+            : stringSet.THREAD__INPUT__REPLY_IN_THREAD
+          )
+        }
+        onStartTyping={() => {
+          currentChannel?.startTyping?.();
+        }}
         onSendMessage={(props: { message: UserMessage, mentionTemplate: string }) => {
           sendMessage({
             message: props?.message,

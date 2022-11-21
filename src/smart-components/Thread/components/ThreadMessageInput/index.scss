@@ -1,0 +1,17 @@
+@import '../../../../styles/variables';
+
+.sendbird-thread-message-input .sendbird-mention-suggest-list {
+  width: 100%;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+.sendbird-thread-message-input .sendbird-mention-suggest-list .sendbird-mention-suggest-list__user-item {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+.sendbird-thread-message-input .sendbird-mention-suggest-list .sendbird-mention-suggest-list__user-item .sendbird-mention-suggest-list__user-item__nickname {
+  max-width: 134px;
+}
+.sendbird-thread-message-input .sendbird-mention-suggest-list .sendbird-mention-suggest-list__user-item .sendbird-mention-suggest-list__user-item__user-id {
+  max-width: 46px;
+}
