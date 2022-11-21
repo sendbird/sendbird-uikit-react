@@ -7,7 +7,8 @@
 
 .sendbird-create-channel--scroll {
   height: 360px;
-  overflow-y: auto;
+  overflow-x: hidden;
+  overflow-y: scroll;
   @include mobile() {
     height: calc(100vh - 200px);
     height: calc(calc(var(--sendbird-vh, 1vh) * 100) - 200px);

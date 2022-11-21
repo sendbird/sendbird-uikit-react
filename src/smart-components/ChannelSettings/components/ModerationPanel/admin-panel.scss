@@ -12,7 +12,8 @@
 
 .sendbird-more-members__popup-scroll {
   max-height: 420px;
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
   @include mobile() {
     max-height: 100%;
   }

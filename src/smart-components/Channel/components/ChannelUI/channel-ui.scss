@@ -13,7 +13,7 @@
 }
 
 .sendbird-conversation__messages {
-  overflow-y: auto;
+  overflow: hidden;
   flex: 1 1 0;
   order: 2;
 }
