@@ -134,14 +134,19 @@ export const isFileMessage = (message: AdminMessage | UserMessage | FileMessage)
   message && (message?.isFileMessage?.() || (message?.messageType === 'file'))
 );
 
-export const isOGMessage = (message: UserMessage): boolean => !!(
-  message && isUserMessage(message) && message?.ogMetaData && message?.ogMetaData?.url
+export const isOGMessage = (message: UserMessage | FileMessage): boolean => !!(
+  message && isUserMessage(message) && message?.ogMetaData && (
+    message.ogMetaData?.url
+    || message.ogMetaData?.title
+    || message.ogMetaData?.description
+    || message.ogMetaData?.defaultImage
+  )
 );
-export const isTextMessage = (message: UserMessage): boolean => isUserMessage(message) && !isOGMessage(message);
-export const isThumbnailMessage = (message: FileMessage): boolean => message && isFileMessage(message) && isSupportedFileView(message.type);
+export const isTextMessage = (message: UserMessage | FileMessage): boolean => isUserMessage(message) && !isOGMessage(message);
+export const isThumbnailMessage = (message: UserMessage | FileMessage): boolean => message && isFileMessage(message) && isSupportedFileView(message.type);
 export const isImageMessage = (message: FileMessage): boolean => message && isThumbnailMessage(message) && isImage(message.type);
-export const isVideoMessage = (message: FileMessage): boolean => message && isThumbnailMessage(message) && isVideo(message.type);
-export const isGifMessage = (message: FileMessage): boolean => message && isThumbnailMessage(message) && isGif(message.type);
+export const isVideoMessage = (message: UserMessage | FileMessage): boolean => message && isThumbnailMessage(message) && isVideo(message.type);
+export const isGifMessage = (message: UserMessage | FileMessage): boolean => message && isThumbnailMessage(message) && isGif(message.type);
 export const isAudioMessage = (message: FileMessage): boolean => message && isFileMessage(message) && isAudio(message.type);
 
 export const isEditedMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => isUserMessage(message) && (message?.updatedAt > 0);
