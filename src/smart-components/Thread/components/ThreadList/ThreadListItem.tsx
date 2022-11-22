@@ -256,7 +256,10 @@ export default function ThreadListItem({
           message={message as FileMessage}
           isByMe={message?.sender?.userId === userId}
           onClose={() => setShowFileViewer(false)}
-          onDelete={() => deleteMessage(message)}
+          onDelete={() => {
+            deleteMessage(message);
+            setShowFileViewer(false);
+          }}
         />
       )}
     </div>
