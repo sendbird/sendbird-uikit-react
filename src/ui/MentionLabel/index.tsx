@@ -81,9 +81,13 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
           parentRef={mentionRef}
           parentContainRef={mentionRef}
           closeDropdown={closeDropdown}
-          style={{ paddingTop: 0, paddingBottom: 0 }}
+          style={{ paddingTop: '0px', paddingBottom: '0px' }}
         >
-          <UserProfile user={user} onSuccess={closeDropdown} />
+          <UserProfile
+            user={user}
+            onSuccess={closeDropdown}
+            currentUserId={userId}
+          />
         </MenuItems>
       )}
     />
