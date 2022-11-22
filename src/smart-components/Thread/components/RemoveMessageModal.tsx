@@ -7,13 +7,15 @@ import { useThreadContext } from '../context/ThreadProvider';
 import { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 export interface RemoveMessageProps {
-  onCancel: () => void;
+  onCancel: () => void; // rename to onClose
+  onSubmit?: () => void;
   message: UserMessage | FileMessage;
 }
 
 const RemoveMessage: React.FC<RemoveMessageProps> = (props: RemoveMessageProps) => {
   const {
     onCancel,
+    onSubmit,
     message,
   } = props;
   const { stringSet } = useContext(LocalizationContext);
@@ -25,9 +27,12 @@ const RemoveMessage: React.FC<RemoveMessageProps> = (props: RemoveMessageProps) 
       type={ButtonTypes.DANGER}
       disabled={message?.threadInfo?.replyCount > 0}
       onCancel={onCancel}
-      onSubmit={() => { deleteMessage(message).then(() => {
-        onCancel();
-      }) }}
+      onSubmit={() => {
+        deleteMessage(message).then(() => {
+          onCancel?.();
+          onSubmit?.();
+        });
+      }}
       submitText={stringSet.MESSAGE_MENU__DELETE}
       titleText={stringSet.MODAL__DELETE_MESSAGE__TITLE}
     />
