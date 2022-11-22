@@ -32,7 +32,6 @@ import {
   isOGMessage,
   isThumbnailMessage,
   getSenderName,
-  isFileMessage,
   isSentMessage,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
@@ -41,7 +40,7 @@ import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { EmojiContainer } from '@sendbird/chat';
-import { AdminMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
+import { AdminMessage, FileMessage, Sender, UserMessage } from '@sendbird/chat/message';
 import useLongPress from '../../hooks/useLongPress';
 import MobileMenu from '../MobileMenu';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
@@ -51,7 +50,7 @@ import ThreadReplies from '../ThreadReplies';
 export interface UserProfileContextInterface {
   disableUserProfile: boolean;
   isOpenChannel: boolean;
-  renderUserProfile?: () => React.ReactElement,
+  renderUserProfile?: (props: { user: Sender, close: () => void }) => React.ReactElement,
 }
 
 interface Props {
@@ -117,12 +116,15 @@ export default function MessageContent({
   const isByMeClassName = isByMe ? 'outgoing' : 'incoming';
   const chainTopClassName = chainTop ? 'chain-top' : '';
   const isReactionEnabledClassName = isReactionEnabled ? 'use-reactions' : '';
-  const supposedHoverClassName = supposedHover ? 'supposed-hover' : '';
+  const supposedHoverClassName = supposedHover ? 'sendbird-mouse-hover' : '';
   const useReplying = !!((replyType === 'QUOTE_REPLY' || replyType === 'THREAD')
     && message?.parentMessageId && message?.parentMessage
     && !disableQuoteMessage
   );
   const useReplyingClassName = useReplying ? 'use-quote' : '';
+
+  // Thread replies
+  const displayThreadReplies = message?.threadInfo?.replyCount > 0 && replyType === 'THREAD';
 
   // onMouseDown: (e: React.MouseEvent<T>) => void;
   // onTouchStart: (e: React.TouchEvent<T>) => void;
@@ -131,11 +133,13 @@ export default function MessageContent({
   // onTouchEnd: (e: React.TouchEvent<T>) => void;
   const longPress = useLongPress({
     onLongPress: () => {
-      setShowMenu(true);
+      if (isMobile) {
+        setShowMenu(true);
+      }
     },
     onClick: () => {
       // @ts-ignore
-      if (isFileMessage(message) && isSentMessage(message)) {
+      if (isMobile && isThumbnailMessage(message) && isSentMessage(message)) {
         showFileViewer(true);
       }
     },
@@ -159,7 +163,7 @@ export default function MessageContent({
           <ContextMenu
             menuTrigger={(toggleDropdown: () => void): ReactElement => (
               <Avatar
-                className="sendbird-message-content__left__avatar"
+                className={`sendbird-message-content__left__avatar ${displayThreadReplies ? 'use-thread-replies' : ''}`}
                 // @ts-ignore
                 src={channel?.members?.find((member) => member?.userId === message?.sender?.userId)?.profileUrl || message?.sender?.profileUrl || ''}
                 // TODO: Divide getting profileUrl logic to utils
@@ -248,6 +252,7 @@ export default function MessageContent({
               message={message as UserMessage | FileMessage}
               userId={userId}
               isByMe={isByMe}
+              isUnavailable={(replyType === 'THREAD' && (channel?.joinedAt * 1000) > message?.parentMessage?.createdAt)}
               onClick={() => {
                 if (typeof onQuoteMessageClick) {
                   onQuoteMessageClick?.({ message: message as UserMessage | FileMessage });
@@ -351,7 +356,7 @@ export default function MessageContent({
           )}
         </div>
         {/* thread replies */}
-        {(message?.threadInfo?.replyCount > 0 && replyType === 'THREAD') && (
+        {displayThreadReplies && (
           <ThreadReplies
             className="sendbird-message-content__middle__thread-replies"
             threadInfo={message?.threadInfo}

@@ -27,8 +27,14 @@ export default function ThreadReplies({
     <div
       className={`sendbird-ui-thread-replies ${className}`}
       role="button"
-      onClick={onClick}
-      onKeyDown={onClick}
+      onClick={(e) => {
+        onClick(e);
+        e?.stopPropagation();
+      }}
+      onKeyDown={(e) => {
+        onClick(e);
+        e?.stopPropagation();
+      }}
     >
       <div className="sendbird-ui-thread-replies__user-profiles">
         {mostRepliedUsers.slice(0, 4).map((user) => {
@@ -70,8 +76,8 @@ export default function ThreadReplies({
       >
         {
           replyCount === 1
-            ? `${replyCount} ${stringSet.CHANNEL_THREAD_REPLY}`
-            : `${replyCount > 99 ? '99+' : replyCount} ${stringSet.CHANNEL_THREAD_REPLIES}`
+            ? `${replyCount} ${stringSet.CHANNEL__THREAD_REPLY}`
+            : `${replyCount > 99 ? stringSet.CHANNEL__THREAD_OVER_MAX : replyCount} ${stringSet.CHANNEL__THREAD_REPLIES}`
         }
       </Label>
       <Icon
