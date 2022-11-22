@@ -15,6 +15,7 @@ interface Props {
   isByMe?: boolean;
   mouseHover?: boolean;
   isReactionEnabled?: boolean;
+  truncateLimit?: number;
 }
 
 export default function FileMessageItemBody({
@@ -23,8 +24,10 @@ export default function FileMessageItemBody({
   isByMe = false,
   mouseHover = false,
   isReactionEnabled = false,
+  truncateLimit = null,
 }: Props): ReactElement {
   const { isMobile } = useMediaQueryContext();
+  const truncateMaxNum = truncateLimit || (isMobile ? 20 : null);
   return (
     <div className={getClassName([
       className,
@@ -58,9 +61,7 @@ export default function FileMessageItemBody({
           type={LabelTypography.BODY_1}
           color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
         >
-          {
-            truncateString(message?.name || message?.url, isMobile ? 20 : null)
-          }
+          {truncateString(message?.name || message?.url, truncateMaxNum)}
         </Label>
       </TextButton>
     </div>
