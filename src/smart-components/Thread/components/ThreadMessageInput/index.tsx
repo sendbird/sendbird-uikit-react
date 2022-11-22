@@ -110,7 +110,7 @@ const ThreadMessageInput = (
         ref={ref || messageInputRef}
         placeholder={
           (currentChannel?.isFrozen && !(currentChannel?.myRole === Role.OPERATOR) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
-          || (currentChannel?.myMutedState === MutedState.MUTED && stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED)
+          || (currentChannel?.myMutedState === MutedState.MUTED && stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT)
           || (allThreadMessages.length > 0
             ? stringSet.THREAD__INPUT__REPLY_TO_THREAD
             : stringSet.THREAD__INPUT__REPLY_IN_THREAD
