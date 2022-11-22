@@ -18,7 +18,6 @@ export interface ThreadContextInitialState {
   hasMoreNext: boolean;
   emojiContainer: EmojiContainer;
   isMuted: boolean;
-  isOperator: boolean;
   isChannelFrozen: boolean;
   currentUserId: string;
 }
@@ -34,7 +33,6 @@ const initialState: ThreadContextInitialState = {
   hasMoreNext: false,
   emojiContainer: {} as EmojiContainer,
   isMuted: false,
-  isOperator: false,
   isChannelFrozen: false,
   currentUserId: '',
 }

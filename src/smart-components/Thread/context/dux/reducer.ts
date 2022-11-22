@@ -1,5 +1,5 @@
 import { GroupChannel } from "@sendbird/chat/groupChannel";
-import { FileMessage, UserMessage } from "@sendbird/chat/message";
+import { FileMessage, ReactionEvent, UserMessage } from "@sendbird/chat/message";
 import { NEXT_THREADS_FETCH_SIZE, PREV_THREADS_FETCH_SIZE } from "../../consts";
 import { ChannelStateTypes, ParentMessageInfoStateTypes, ThreadListStateTypes } from "../../types";
 import { compareIds } from "../utils";
@@ -146,14 +146,31 @@ export default function reducer(
     }
     // event handlers - message status change
     case actionTypes.ON_MESSAGE_RECEIVED: {
-      const { channel, message } = action.payload;
-      if (state.currentChannel?.url !== channel?.url || state.hasMoreNext) {
+      const { channel, message }: { channel: GroupChannel, message: UserMessage | FileMessage } = action.payload;
+
+      if (
+        state.currentChannel?.url !== channel?.url
+        || state.hasMoreNext
+        || message?.parentMessage?.messageId !== state?.parentMessage?.messageId
+      ) {
         return state;
       }
-      // Add message if thread list is fetched to the last (hasMoreNext == false)
+      const isAlreadyReceived = state.allThreadMessages.findIndex((m) => {
+        m.messageId === message.messageId
+      }) > -1;
       return {
         ...state,
-        allThreadMessages: [...state.allThreadMessages, message],
+        parentMessage: state.parentMessage?.messageId === message?.messageId
+          ? message
+          : state.parentMessage,
+        allThreadMessages: isAlreadyReceived
+          ? state.allThreadMessages.map((m) => (
+            m.messageId === message.messageId ? message : m
+          ))
+          : [
+            ...state.allThreadMessages.filter((m) => (m as UserMessage | FileMessage)?.reqId !== message?.reqId),
+            message,
+          ],
       };
     }
     case actionTypes.ON_MESSAGE_UPDATED: {
@@ -163,20 +180,31 @@ export default function reducer(
       }
       return {
         ...state,
+        parentMessage: state.parentMessage?.messageId === message?.messageId
+          ? message
+          : state.parentMessage,
         allThreadMessages: state.allThreadMessages?.map((msg) => (
           (msg?.messageId === message?.messageId) ? message : msg
-        ))
+        )),
       };
     }
     case actionTypes.ON_MESSAGE_DELETED: {
-      const { channel, message } = action.payload;
+      const { channel, messageId } = action.payload;
       if (state.currentChannel?.url !== channel?.url) {
         return state;
+      }
+      if (state?.parentMessage?.messageId === messageId) {
+        return {
+          ...state,
+          parentMessage: null,
+          parentMessageInfoStatus: ParentMessageInfoStateTypes.NIL,
+          allThreadMessages: [],
+        };
       }
       return {
         ...state,
         allThreadMessages: state.allThreadMessages?.filter((msg) => (
-          msg?.messageId !== message?.messageId
+          msg?.messageId !== messageId
         )),
       };
     }
@@ -189,14 +217,15 @@ export default function reducer(
       };
     }
     case actionTypes.ON_REACTION_UPDATED: {
-      const { reactionEvent } = action.payload;
+      const reactionEvent = action.payload?.reactionEvent as ReactionEvent;
+      if (state?.parentMessage?.messageId === reactionEvent?.messageId) {
+        state.parentMessage?.applyReactionEvent?.(reactionEvent);
+      }
       return {
         ...state,
         allThreadMessages: state.allThreadMessages.map((m) => {
-          if (compareIds(m?.messageId, reactionEvent.messageId)) {
-            if (m?.applyReactionEvent && typeof m.applyReactionEvent === 'function') {
-              m?.applyReactionEvent?.(reactionEvent);
-            }
+          if (reactionEvent?.messageId === m?.messageId) {
+            m?.applyReactionEvent?.(reactionEvent);
             return m;
           }
           return m;
@@ -209,7 +238,6 @@ export default function reducer(
       if (state.currentChannel?.url !== channel?.url || state.currentUserId !== user?.userId) {
         return state;
       }
-      console.log('이거 불렸나?')
       return {
         ...state,
         isMuted: true,
@@ -269,6 +297,16 @@ export default function reducer(
         isChannelFrozen: false,
       };
     }
+    case actionTypes.ON_OPERATOR_UPDATED: {
+      const { channel } = action.payload;
+      if (channel?.url === state.currentChannel?.url) {
+        return {
+          ...state,
+          currentChannel: channel,
+        }
+      }
+      return state;
+    }
     // message
     case actionTypes.SEND_MESSAGE_START: {
       const { message } = action.payload;
@@ -282,13 +320,13 @@ export default function reducer(
     }
     case actionTypes.SEND_MESSAGE_SUCESS: {
       const { message } = action.payload;
-      const newMessages = state.allThreadMessages.filter((m) => (
+      const filteredThreadMessages = state.allThreadMessages.filter((m) => (
         !compareIds((m as UserMessage)?.reqId, message?.reqId)
       ));
       return {
         ...state,
         allThreadMessages: [
-          ...newMessages,
+          ...filteredThreadMessages,
           message,
         ],
       };
@@ -305,16 +343,6 @@ export default function reducer(
       };
     }
     case actionTypes.RESEND_MESSAGE_START: {
-      return {
-        ...state,
-      };
-    }
-    case actionTypes.EDIT_MESSAGE: {
-      return {
-        ...state,
-      };
-    }
-    case actionTypes.DELETE_MESSAGE: {
       return {
         ...state,
       };

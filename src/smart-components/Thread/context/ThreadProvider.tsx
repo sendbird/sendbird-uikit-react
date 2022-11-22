@@ -1,33 +1,42 @@
-import React, { useReducer, useMemo, useEffect } from 'react';
+import React, { useReducer, useMemo, useEffect, ReactElement } from 'react';
+import { User } from '@sendbird/chat';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { BaseMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
 
+import { getNicknamesMapFromMembers } from './utils';
+import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
-import { ThreadContextInitialState } from './dux/initialState';
-import threadReducer from './dux/reducer';
-import useGetChannel from './hooks/useGetChannel';
-import threadInitialState from './dux/initialState';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
-import useGetParentMessage from './hooks/useGetParentMessage';
+
+import threadReducer from './dux/reducer';
+import { ThreadContextActionTypes } from './dux/actionTypes';
+import threadInitialState, { ThreadContextInitialState } from './dux/initialState';
+
+import useGetChannel from './hooks/useGetChannel';
+import useGetAllEmoji from './hooks/useGetAllEmoji';
 import useGetThreadList from './hooks/useGetThreadList';
+import useGetParentMessage from './hooks/useGetParentMessage';
+import useHandlePubsubEvents from './hooks/useHandlePubsubEvents';
+import useHandleChannelEvents from './hooks/useHandleChannelEvents';
+import useSendFileMessageCallback from './hooks/useSendFileMessage';
+import useUpdateMessageCallback from './hooks/useUpdateMessageCallback';
+import useDeleteMessageCallback from './hooks/useDeleteMessageCallback';
 import useGetPrevThreadsCallback from './hooks/useGetPrevThreadsCallback';
 import useGetNextThreadsCallback from './hooks/useGetNextThreadsCallback';
-import useHandleChannelEvents from './hooks/useHandleChannelEvents';
-import useGetAllEmoji from './hooks/useGetAllEmoji';
-import { getNicknamesMapFromMembers } from './utils';
 import useToggleReactionCallback from './hooks/useToggleReactionsCallback';
-import useDeleteMessageCallback from './hooks/useDeleteMessageCallback';
-import { User } from '@sendbird/chat';
 import useSendUserMessageCallback from './hooks/useSendUserMessageCallback';
-import useSendFileMessageCallback from './hooks/useSendFileMessage';
-import useHandlePubsubEvents from './hooks/useHandlePubsubEvents';
-import useUpdateMessageCallback from './hooks/useUpdateMessageCallback';
-import { ThreadContextActionTypes } from './dux/actionTypes';
+import useResendMessageCallback from './hooks/useResendMessageCallback';
 
 export type ThreadContextProps = {
   children?: React.ReactElement;
-  channelUrl?: string;
-  message?: UserMessage | FileMessage;
-  isMessageGroupingEnabled?: boolean;
+  channelUrl: string;
+  message: UserMessage | FileMessage;
+  onHeaderActionClick?: () => void;
+  onMoveToParentMessage?: (props: { message: UserMessage | FileMessage, channel: GroupChannel }) => void;
+  // User Profile
+  disableUserProfile?: boolean;
+  renderUserProfile?: (props: { user: User, close: () => void }) => ReactElement;
+  onUserProfileMessage?: (channel: GroupChannel) => void;
 }
 export interface ThreadProviderInterface extends ThreadContextProps, ThreadContextInitialState {
   // hooks for fetching threads
@@ -41,6 +50,7 @@ export interface ThreadProviderInterface extends ThreadContextProps, ThreadConte
     mentionedUsers?: Array<User>,
   }) => void;
   sendFileMessage: (file: File, quoteMessage: UserMessage | FileMessage) => void;
+  resendMessage: (failedMessage: UserMessage | FileMessage) => void;
   updateMessage: (props, callback?: () => void) => void;
   deleteMessage: (message: UserMessage | FileMessage) => Promise<UserMessage | FileMessage>;
   nicknamesMap: Map<string, string>;
@@ -52,7 +62,12 @@ export const ThreadProvider: React.FC<ThreadContextProps> = (props: ThreadContex
     children,
     channelUrl,
     message,
-    isMessageGroupingEnabled,
+    onHeaderActionClick,
+    onMoveToParentMessage,
+    // User Profile
+    disableUserProfile,
+    renderUserProfile,
+    onUserProfileMessage,
   } = props;
   // Context from SendbirdProvider
   const globalStore = useSendbirdStateContext();
@@ -87,7 +102,6 @@ export const ThreadProvider: React.FC<ThreadContextProps> = (props: ThreadContex
     hasMoreNext,
     emojiContainer,
     isMuted,
-    isOperator,
     isChannelFrozen,
     currentUserId,
   }: ThreadContextInitialState = threadStore;
@@ -108,6 +122,7 @@ export const ThreadProvider: React.FC<ThreadContextProps> = (props: ThreadContex
     channelUrl,
     sdkInit,
     parentMessageId: message?.parentMessageId,
+    parentMessage: message?.parentMessage,
   }, { sdk, logger, threadDispatcher });
   useGetThreadList({
     sdkInit,
@@ -150,6 +165,9 @@ export const ThreadProvider: React.FC<ThreadContextProps> = (props: ThreadContex
   const sendFileMessage = useSendFileMessageCallback({
     currentChannel,
   }, { logger, pubSub, threadDispatcher });
+  const resendMessage = useResendMessageCallback({
+    currentChannel,
+  }, { logger, pubSub, threadDispatcher });
   const updateMessage = useUpdateMessageCallback({
     currentChannel,
     isMentionEnabled,
@@ -167,8 +185,10 @@ export const ThreadProvider: React.FC<ThreadContextProps> = (props: ThreadContex
     <ThreadContext.Provider
       value={{
         // ThreadContextProps
+        channelUrl,
         message,
-        isMessageGroupingEnabled,
+        onHeaderActionClick,
+        onMoveToParentMessage,
         // ThreadContextInitialState
         currentChannel,
         allThreadMessages,
@@ -185,18 +205,24 @@ export const ThreadProvider: React.FC<ThreadContextProps> = (props: ThreadContex
         toggleReaction,
         sendMessage,
         sendFileMessage,
+        resendMessage,
         updateMessage,
         deleteMessage,
         // context
         nicknamesMap,
         isMuted,
-        isOperator,
         isChannelFrozen,
         currentUserId,
       }}
     >
       {/* UserProfileProvider */}
-      {children}
+      <UserProfileProvider
+        disableUserProfile={disableUserProfile}
+        renderUserProfile={renderUserProfile}
+        onUserProfileMessage={onUserProfileMessage}
+      >
+        {children}
+      </UserProfileProvider>
     </ThreadContext.Provider>
   );
 };
