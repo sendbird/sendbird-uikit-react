@@ -42,8 +42,8 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
     maxMentionCount = MAX_USER_MENTION_COUNT,
     maxSuggestionCount = MAX_USER_SUGGESTION_COUNT,
   } = props;
-  const { currentGroupChannel = null } = useChannelContext?.();
-  const { currentChannel = null } = useThreadContext?.();
+  const currentGroupChannel = useChannelContext?.()?.currentGroupChannel;
+  const currentChannel = useThreadContext?.()?.currentChannel;
   const channelInstance = currentGroupChannel || currentChannel;
   const { config, stores } = useSendbirdStateContext();
   const { logger } = config;
