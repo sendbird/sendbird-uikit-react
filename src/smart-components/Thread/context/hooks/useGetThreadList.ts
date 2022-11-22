@@ -32,15 +32,14 @@ export default function useGetThreadList({
         type: ThreadContextActionTypes.INITIALIZE_THREAD_LIST_START,
         payload: null,
       });
-      parentMessage.getThreadedMessagesByTimestamp?.(
-        anchorMessage?.createdAt || 0,
-        {
-          // check if
-          prevResultSize: PREV_THREADS_FETCH_SIZE,
-          nextResultSize: NEXT_THREADS_FETCH_SIZE,
-          includeReactions: isReactionEnabled,
-        } as ThreadedMessageListParams,
-      )
+      const timeStamp = anchorMessage?.createdAt || 0;
+      const params = {
+        prevResultSize: PREV_THREADS_FETCH_SIZE,
+        nextResultSize: NEXT_THREADS_FETCH_SIZE,
+        includeReactions: isReactionEnabled,
+      } as ThreadedMessageListParams;
+      logger.info('Thread | useGetThreadList: Initialize thread list start.', { timeStamp, params });
+      parentMessage.getThreadedMessagesByTimestamp?.(timeStamp, params)
         .then(({ parentMessage, threadedMessages }) => {
           logger.info('Thread | useGetThreadList: Initialize thread list succeeded.', { parentMessage, threadedMessages });
           threadDispatcher({
