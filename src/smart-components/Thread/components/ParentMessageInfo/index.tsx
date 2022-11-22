@@ -27,7 +27,7 @@ import { UserProfileContextInterface } from '../../../../ui/MessageContent';
 import MessageInput from '../../../../ui/MessageInput';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 
-interface ParentMessageInfoProps {
+export interface ParentMessageInfoProps {
   className?: string;
 }
 

@@ -27,7 +27,7 @@ import useToggleReactionCallback from './hooks/useToggleReactionsCallback';
 import useSendUserMessageCallback from './hooks/useSendUserMessageCallback';
 import useResendMessageCallback from './hooks/useResendMessageCallback';
 
-export type ThreadContextProps = {
+export type ThreadProviderProps = {
   children?: React.ReactElement;
   channelUrl: string;
   message: UserMessage | FileMessage;
@@ -38,7 +38,7 @@ export type ThreadContextProps = {
   renderUserProfile?: (props: { user: User, close: () => void }) => ReactElement;
   onUserProfileMessage?: (channel: GroupChannel) => void;
 }
-export interface ThreadProviderInterface extends ThreadContextProps, ThreadContextInitialState {
+export interface ThreadProviderInterface extends ThreadProviderProps, ThreadContextInitialState {
   // hooks for fetching threads
   fetchPrevThreads: (callback?: (messages?: Array<BaseMessage>) => void) => void;
   fetchNextThreads: (callback?: (messages?: Array<BaseMessage>) => void) => void;
@@ -57,7 +57,7 @@ export interface ThreadProviderInterface extends ThreadContextProps, ThreadConte
 }
 const ThreadContext = React.createContext<ThreadProviderInterface | null>(null);
 
-export const ThreadProvider: React.FC<ThreadContextProps> = (props: ThreadContextProps) => {
+export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProviderProps) => {
   const {
     children,
     channelUrl,
@@ -184,7 +184,7 @@ export const ThreadProvider: React.FC<ThreadContextProps> = (props: ThreadContex
   return (
     <ThreadContext.Provider
       value={{
-        // ThreadContextProps
+        // ThreadProviderProps
         channelUrl,
         message,
         onHeaderActionClick,

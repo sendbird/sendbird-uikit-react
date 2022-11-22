@@ -11,7 +11,7 @@ import {
   isEditedMessage,
   isFileMessage,
   isGifMessage,
-  isOGMessage,
+  // isOGMessage,
   isSentMessage,
   isThumbnailMessage,
   isUserMessage,
@@ -29,7 +29,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import EmojiReactions from '../../../../ui/EmojiReactions';
 import { useThreadContext } from '../../context/ThreadProvider';
 
-interface ParentMessageInfoItemProps {
+export interface ParentMessageInfoItemProps {
   className?: string;
   message: UserMessage | FileMessage;
   showFileViewer?: (bool: boolean) => void;
@@ -67,11 +67,11 @@ export default function ParentMessageInfoItem({
     && message?.reactions?.length > 0;
 
   // OG message
-  const openUrl = () => {
-    if (isOGMessage(message) && message?.ogMetaData?.url) {
-      window.open(message.ogMetaData.url);
-    }
-  };
+  // const openUrl = () => {
+  //   if (isOGMessage(message) && message?.ogMetaData?.url) {
+  //     window.open(message.ogMetaData.url);
+  //   }
+  // };
 
   // Thumbnail mesage
   const [isImageRendered, setImageRendered] = useState(false);

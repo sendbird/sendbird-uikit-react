@@ -12,6 +12,7 @@ declare module "SendbirdUIKitGlobal" {
     SessionHandler,
     User,
     ApplicationUserListQueryParams,
+    EmojiContainer,
   } from '@sendbird/chat';
   import type {
     GroupChannel,
@@ -24,6 +25,7 @@ declare module "SendbirdUIKitGlobal" {
   } from '@sendbird/chat/groupChannel';
   import type {
     AdminMessage,
+    BaseMessage,
     FailedMessageHandler,
     FileMessage,
     FileMessageCreateParams,
@@ -872,6 +874,131 @@ declare module "SendbirdUIKitGlobal" {
   }
 
   /**
+   * Thread
+   */
+  export enum ChannelStateTypes {
+    NIL = 'NIL',
+    LOADING = 'LOADING',
+    INVALID = 'INVALID',
+    INITIALIZED = 'INITIALIZED',
+  }
+  export enum ParentMessageInfoStateTypes {
+    NIL = 'NIL',
+    LOADING = 'LOADING',
+    INVALID = 'INVALID',
+    INITIALIZED = 'INITIALIZED',
+  }
+  export enum ThreadListStateTypes {
+    NIL = 'NIL',
+    LOADING = 'LOADING',
+    INVALID = 'INVALID',
+    INITIALIZED = 'INITIALIZED',
+  }
+
+  export interface ThreadProps extends ThreadProviderProps, ThreadContextInitialState {
+    className?: string;
+  }
+
+  export interface ThreadProviderInterface extends ThreadProviderProps, ThreadContextInitialState {
+    fetchPrevThreads: (callback?: (messages?: Array<BaseMessage>) => void) => void;
+    fetchNextThreads: (callback?: (messages?: Array<BaseMessage>) => void) => void;
+    toggleReaction: (message, key, isReacted) => void;
+    sendMessage: (props: {
+      message: UserMessage,
+      quoteMessage?: UserMessage | FileMessage,
+      mentionTemplate?: string,
+      mentionedUsers?: Array<User>,
+    }) => void;
+    sendFileMessage: (file: File, quoteMessage: UserMessage | FileMessage) => void;
+    resendMessage: (failedMessage: UserMessage | FileMessage) => void;
+    updateMessage: (props, callback?: () => void) => void;
+    deleteMessage: (message: UserMessage | FileMessage) => Promise<UserMessage | FileMessage>;
+    nicknamesMap: Map<string, string>;
+  }
+
+  export type ThreadProviderProps = {
+    children?: React.ReactElement;
+    channelUrl: string;
+    message: UserMessage | FileMessage;
+    onHeaderActionClick?: () => void;
+    onMoveToParentMessage?: (props: { message: UserMessage | FileMessage, channel: GroupChannel }) => void;
+    disableUserProfile?: boolean;
+    renderUserProfile?: (props: { user: User, close: () => void }) => React.ReactElement;
+    onUserProfileMessage?: (channel: GroupChannel) => void;
+  }
+
+  export interface ThreadContextInitialState {
+    currentChannel: GroupChannel;
+    allThreadMessages: Array<BaseMessage>;
+    parentMessage: UserMessage | FileMessage;
+    channelStatus: ChannelStateTypes;
+    parentMessageInfoStatus: ParentMessageInfoStateTypes;
+    threadListStatus: ThreadListStateTypes;
+    hasMorePrev: boolean;
+    hasMoreNext: boolean;
+    emojiContainer: EmojiContainer;
+    isMuted: boolean;
+    isChannelFrozen: boolean;
+    currentUserId: string;
+  }
+
+  export interface ThreadUIProps {
+    renderHeader?: () => React.ReactElement;
+    renderParentMessageInfo?: () => React.ReactElement;
+    renderMessage?: (props: { message: UserMessage | FileMessage }) => React.ReactElement;
+    renderMessageInput?: () => React.ReactElement;
+    renderCustomSeparator?: () => React.ReactElement;
+    renderParentMessageInfoPlaceholder?: (type: ParentMessageInfoStateTypes) => React.ReactElement;
+    renderThreadListPlaceHolder?: (type: ThreadListStateTypes) => React.ReactElement;
+  }
+
+  type EventType = React.MouseEvent<HTMLDivElement | HTMLButtonElement> | React.KeyboardEvent<HTMLDivElement>;
+  export interface ThreadHeaderProps {
+    className?: string;
+    channelName: string;
+    renderActionIcon?: (props: { onActionIconClick: (e: EventType) => void }) => React.ReactElement;
+    onActionIconClick?: (e: EventType) => void;
+    onChannelNameClick?: (e: EventType) => void;
+  }
+
+  export interface ParentMessageInfoProps {
+    className?: string;
+  }
+
+  export interface ParentMessageInfoItemProps {
+    className?: string;
+    message: UserMessage | FileMessage;
+    showFileViewer?: (bool: boolean) => void;
+  }
+
+  export interface ThreadListProps {
+    className?: string;
+    allThreadMessages: Array<UserMessage | FileMessage | BaseMessage>;
+    renderMessage?: (props: {
+      message: UserMessage | FileMessage,
+      chainTop: boolean,
+      chainBottom: boolean,
+      hasSeparator: boolean,
+    }) => React.ReactElement;
+    renderCustomSeparator?: (props: { message: UserMessage | FileMessage }) => React.ReactElement;
+    scrollRef?: React.RefObject<HTMLDivElement>;
+    scrollBottom?: number;
+  }
+  export interface ThreadListItemProps {
+    className?: string;
+    message: UserMessage | FileMessage;
+    chainTop?: boolean;
+    chainBottom?: boolean;
+    hasSeparator?: boolean;
+    renderCustomSeparator?: (props: { message: UserMessage | FileMessage }) => React.ReactElement;
+    handleScroll?: () => void;
+  }
+
+  export interface ThreadMessageInputProps {
+    className?: string;
+  }
+
+  /**
    * CreateChannel
    */
   export interface CreateChannelProviderProps {
@@ -1347,6 +1474,64 @@ declare module '@sendbird/uikit-react/MessageSearch/components/MessageSearchUI' 
 }
 
 /**
+ * Thread
+ */
+declare module '@sendbird/uikit-react/Thread' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  const Thread: React.FC<SendbirdUIKitGlobal.ThreadProviderProps>;
+  export default Thread;
+}
+
+declare module '@sendbird/uikit-react/Thread/context' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  export const useThreadContext: () => SendbirdUIKitGlobal.ThreadProviderInterface;
+  export const ThreadProvider: React.FC<SendbirdUIKitGlobal.ThreadProviderProps>;
+}
+
+declare module '@sendbird/uikit-react/Thread/context/types' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  export const ChannelStateTypes: SendbirdUIKitGlobal.ChannelStateTypes;
+  export const ParentMessageInfoStateTypes: SendbirdUIKitGlobal.ParentMessageInfoStateTypes;
+  export const ThreadListStateTypes: SendbirdUIKitGlobal.ThreadListStateTypes;
+}
+
+declare module '@sendbird/uikit-react/Thread/components/ThreadUI' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  const ThreadUI: React.FC<SendbirdUIKitGlobal.ThreadUIProps>;
+  export default ThreadUI;
+}
+declare module '@sendbird/uikit-react/Thread/components/ThreadHeader' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  const ThreadHeader: React.FC<SendbirdUIKitGlobal.ThreadHeaderProps>;
+  export default ThreadHeader;
+}
+declare module '@sendbird/uikit-react/Thread/components/ParentMessageInfo' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  const ParentMessageInfo: React.FC<SendbirdUIKitGlobal.ParentMessageInfoProps>;
+  export default ParentMessageInfo;
+}
+declare module '@sendbird/uikit-react/Thread/components/ParentMessageInfoItem' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  const ParentMessageInfoItem: React.FC<SendbirdUIKitGlobal.ParentMessageInfoItemProps>;
+  export default ParentMessageInfoItem;
+}
+declare module '@sendbird/uikit-react/Thread/components/ThreadList' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  const ThreadList: React.FC<SendbirdUIKitGlobal.ThreadListProps>;
+  export default ThreadList;
+}
+declare module '@sendbird/uikit-react/Thread/components/ThreadListItem' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  const ThreadListItem: React.FC<SendbirdUIKitGlobal.ThreadListItemProps>;
+  export default ThreadListItem;
+}
+declare module '@sendbird/uikit-react/Thread/components/ThreadMessageInput' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  const ThreadMessageInput: React.FC<SendbirdUIKitGlobal.ThreadMessageInputProps>;
+  export default ThreadMessageInput;
+}
+
+/**
  * CreateChannel
  */
 declare module '@sendbird/uikit-react/CreateChannel' {
@@ -1636,16 +1821,17 @@ declare module '@sendbird/uikit-react/ui/IconButton' {
 
 declare module '@sendbird/uikit-react/ui/ImageRenderer' {
   interface ImageRendererProps {
-    className?: string | Array<string>,
-    defaultComponent?: () => React.ReactElement,
-    placeHolder?: () => React.ReactElement,
-    alt?: string,
-    width?: number,
-    height?: number,
-    fixedSize?: boolean,
-    circle?: boolean,
-    onLoad?: () => void,
-    onError?: () => void,
+    className?: string | Array<string>;
+    url: string;
+    alt?: string;
+    width?: string | number;
+    height?: string | number;
+    circle?: boolean;
+    fixedSize?: boolean;
+    placeHolder?: ((props: { style: { [key: string]: string | number } }) => React.ReactElement) | React.ReactElement;
+    defaultComponent?: (() => React.ReactElement) | React.ReactElement;
+    onLoad?: () => void;
+    onError?: () => void;
   }
   const ImageRenderer: React.FC<ImageRendererProps>;
   export default ImageRenderer;
@@ -2090,6 +2276,17 @@ declare module '@sendbird/uikit-react/ui/TextMessageItemBody' {
   export default TextMessageItemBody;
 }
 
+declare module '@sendbird/uikit-react/ui/ThreadReplies' {
+  import type { ThreadInfo } from '@sendbird/chat/message';
+  interface ThreadRepliesProps {
+    className?: string;
+    threadInfo: ThreadInfo;
+    onClick?: (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => void;
+  }
+  const ThreadReplies: React.FC<ThreadRepliesProps>;
+  export default ThreadReplies;
+}
+
 declare module '@sendbird/uikit-react/ui/ThumbnailMessageItemBody' {
   import type { FileMessage } from '@sendbird/chat/message';
   interface ThumbnailMessageItemBodyProps {
@@ -2099,6 +2296,7 @@ declare module '@sendbird/uikit-react/ui/ThumbnailMessageItemBody' {
     mouseHover?: boolean;
     isReactionEnabled?: boolean;
     showFileViewer?: (bool: boolean) => void;
+    style?: Record<string, any>;
   }
   const ThumbnailMessageItemBody: React.FC<ThumbnailMessageItemBodyProps>;
   export default ThumbnailMessageItemBody;

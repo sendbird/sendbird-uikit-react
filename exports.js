@@ -91,6 +91,18 @@ export default {
   'MessageSearch/context': 'src/smart-components/MessageSearch/context/MessageSearchProvider.tsx',
   'MessageSearch/components/MessageSearchUI': 'src/smart-components/MessageSearch/components/MessageSearchUI/index.tsx',
 
+  // Thread
+  Thread: 'src/smart-components/Thread/index.tsx',
+  'Thread/context': 'src/smart-components/Thread/context/ThreadProvider.tsx',
+  'Thread/context/types': 'src/smart-components/Thread/types.tsx',
+  'Thread/components/ThreadUI': 'src/smart-components/Thread/components/ThreadUI/index.tsx',
+  'Thread/components/ThreadHeader': 'src/smart-components/Thread/components/ThreadHeader/index.tsx',
+  'Thread/components/ParentMessageInfo': 'src/smart-components/Thread/components/ParentMessageInfo/index.tsx',
+  'Thread/components/ParentMessageInfoItem': 'src/smart-components/Thread/components/ParentMessageInfo/ParentMessageInfoItem.tsx',
+  'Thread/components/ThreadList': 'src/smart-components/Thread/components/ThreadList/index.tsx',
+  'Thread/components/ThreadListItem': 'src/smart-components/Thread/components/ThreadList/ThreadListItem.tsx',
+  'Thread/components/ThreadMessageInput': 'src/smart-components/Thread/components/ThreadMessageInput/index.tsx',
+
   // CreateChannel
   CreateChannel: 'src/smart-components/CreateChannel/index.tsx',
   'CreateChannel/context': 'src/smart-components/CreateChannel/context/CreateChannelProvider.tsx',
@@ -154,6 +166,7 @@ export default {
   'ui/SortByRow': 'src/ui/SortByRow/index.tsx',
   'ui/TextButton': 'src/ui/TextButton/index.tsx',
   'ui/TextMessageItemBody': 'src/ui/TextMessageItemBody/index.tsx',
+  'ui/ThreadReplies': 'src/ui/ThreadReplies/index.tsx',
   'ui/ThumbnailMessageItemBody': 'src/ui/ThumbnailMessageItemBody/index.tsx',
   'ui/Tooltip': 'src/ui/Tooltip/index.tsx',
   'ui/TooltipWrapper': 'src/ui/TooltipWrapper/index.tsx',

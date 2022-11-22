@@ -2,11 +2,11 @@ import React from 'react';
 
 import {
   ThreadProvider,
-  ThreadContextProps,
+  ThreadProviderProps,
 } from './context/ThreadProvider';
 import ThreadUI, { ThreadUIProps } from './components/ThreadUI';
 
-export interface ThreadProps extends ThreadContextProps, ThreadUIProps {
+export interface ThreadProps extends ThreadProviderProps, ThreadUIProps {
   className?: string;
 }
 
@@ -14,7 +14,7 @@ const Thread: React.FC<ThreadProps> = (props: ThreadProps) => {
   const {
     // props
     className,
-    // ThreadContextProps
+    // ThreadProviderProps
     channelUrl,
     message,
     onHeaderActionClick,
