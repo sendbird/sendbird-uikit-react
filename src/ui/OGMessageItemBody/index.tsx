@@ -91,8 +91,6 @@ export default function OGMessageItemBody({
           url={message?.ogMetaData?.defaultImage?.url || ''}
           alt={message?.ogMetaData?.defaultImage?.alt}
           // TODO: Change fixing width and height lengths
-          width="320px"
-          height="180px"
           defaultComponent={(
             <div className="sendbird-og-message-item-body__og-thumbnail__place-holder">
               <Icon
