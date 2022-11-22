@@ -8,12 +8,13 @@ import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import RemoveMessage from '../RemoveMessageModal';
 import FileViewer from '../../../../ui/FileViewer';
 import { useThreadContext } from '../../context/ThreadProvider';
-import MessageContent from '../../../../ui/MessageContent';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import SuggestedMentionList from '../../../Channel/components/SuggestedMentionList';
 import MessageInput from '../../../../ui/MessageInput';
 import { ThreadListStateTypes } from '../../types';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
+import ThreadListItemContent from './ThreadListItemContent';
+import { Role } from '@sendbird/chat';
 
 export interface ThreadListItemProps {
   className?: string;
@@ -44,6 +45,7 @@ export default function ThreadListItem({
   } = config;
   const userId = stores?.userStore?.user?.userId;
   const { dateLocale } = useLocalization();
+  const threadContext = useThreadContext?.();
   const {
     currentChannel,
     nicknamesMap,
@@ -51,14 +53,24 @@ export default function ThreadListItem({
     toggleReaction,
     threadListStatus,
     updateMessage,
+    resendMessage,
     isMuted,
     isChannelFrozen,
-  } = useThreadContext();
+  } = threadContext;
+  const openingMessage = threadContext?.message;
 
   const [showEdit, setShowEdit] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
   const [showFileViewer, setShowFileViewer] = useState(false);
   const usingReaction = isReactionEnabled && !currentChannel?.isSuper && !currentChannel?.isBroadcast;
+
+  // Move to message
+  const messageScrollRef = useRef(null);
+  useLayoutEffect(() => {
+    if (openingMessage?.messageId === message?.messageId && messageScrollRef?.current) {
+      messageScrollRef.current?.scrollIntoView({ block: 'center', inline: 'center' });
+    }
+  }, [openingMessage, messageScrollRef?.current]);
 
   // reactions
   useLayoutEffect(() => {
@@ -77,8 +89,8 @@ export default function ThreadListItem({
   const displaySuggestedMentionList = isOnline
     && isMentionEnabled
     && mentionNickname.length > 0
-  // && !isDisabledBecauseFrozen(currentGroupChannel)
-  // && !isDisabledBecauseMuted(currentGroupChannel);
+    && !isMuted
+    && !(isChannelFrozen && !(currentChannel.myRole === Role.OPERATOR));
   useEffect(() => {
     if (mentionedUsers?.length >= userMention?.maxMentionCount) {
       setAbleMention(false);
@@ -112,17 +124,19 @@ export default function ThreadListItem({
   }, [message, renderCustomSeparator]);
   const MemorizedMessageContent = useMemo(() => {
     return (
-      <MessageContent
+      <ThreadListItemContent
         userId={userId}
         channel={currentChannel}
         message={message}
         chainTop={chainTop}
         chainBottom={chainBottom}
         isReactionEnabled={usingReaction}
+        isMentionEnabled={isMentionEnabled}
         disableQuoteMessage
         replyType={replyType}
         nicknamesMap={nicknamesMap}
         emojiContainer={emojiContainer}
+        resendMessage={resendMessage}
         showRemove={setShowRemove}
         showFileViewer={setShowFileViewer}
         toggleReaction={toggleReaction}
@@ -131,6 +145,7 @@ export default function ThreadListItem({
     );
   }, [message, currentChannel]);
 
+  // Edit message
   if (showEdit && message.isUserMessage()) {
     return (
       <>
@@ -167,6 +182,9 @@ export default function ThreadListItem({
           mentionSelectedUser={selectedUser}
           isMentionEnabled={isMentionEnabled}
           message={message}
+          onStartTyping={() => {
+            currentChannel?.startTyping?.();
+          }}
           onUpdateMessage={({ messageId, message, mentionTemplate }) => {
             updateMessage({
               messageId,
@@ -175,6 +193,7 @@ export default function ThreadListItem({
               mentionTemplate,
             });
             setShowEdit(false);
+            currentChannel?.endTyping?.();
           }}
           onCancelEdit={() => {
             setMentionNickname('');
@@ -182,6 +201,7 @@ export default function ThreadListItem({
             setMentionedUserIds([]);
             setMentionSuggestedUsers([])
             setShowEdit(false);
+            currentChannel?.endTyping?.();
           }}
           onUserMentioned={(user) => {
             if (selectedUser?.userId === user?.userId) {
@@ -210,7 +230,10 @@ export default function ThreadListItem({
   }
 
   return (
-    <div className={`sendbird-thread-list-item ${className}`}>
+    <div
+      ref={messageScrollRef}
+      className={`sendbird-thread-list-item ${className}`}
+    >
       {/* date separator */}
       {
         hasSeparator && message?.createdAt && (MemorizedSeparator || (

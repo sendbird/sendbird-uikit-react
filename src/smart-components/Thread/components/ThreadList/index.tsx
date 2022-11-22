@@ -1,10 +1,10 @@
-import React, { RefObject, useMemo, useState } from 'react';
+import React, { RefObject, useMemo } from 'react';
 import { BaseMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
 
 import './index.scss';
 import ThreadListItem from './ThreadListItem';
 import { useThreadContext } from '../../context/ThreadProvider';
-import { compareMessagesForGrouping, isAboutSame } from '../../context/utils';
+import { compareMessagesForGrouping } from '../../context/utils';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { isSameDay } from 'date-fns';
 
@@ -34,11 +34,6 @@ export default function ThreadList({
   const { replyType } = config;
   const {
     currentChannel,
-    isMessageGroupingEnabled,
-    hasMorePrev,
-    hasMoreNext,
-    fetchPrevThreads,
-    fetchNextThreads,
   } = useThreadContext();
 
   const MemorizedMessage = useMemo(() => ({
@@ -85,7 +80,7 @@ export default function ThreadList({
               current.scrollTop += bottom - scrollBottom;
             }
           }
-        }
+        };
 
         return MemorizedMessage({
           message,

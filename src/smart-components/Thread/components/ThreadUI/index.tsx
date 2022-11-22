@@ -19,8 +19,6 @@ import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { isAboutSame } from '../../context/utils';
 
 export interface ThreadUIProps {
-  onHeaderActionClick?: () => void;
-  onMoveToParentMessage?: (props: { message: UserMessage | FileMessage }) => void;
   renderHeader?: () => React.ReactElement;
   renderParentMessageInfo?: () => React.ReactElement;
   renderMessage?: (props: { message: UserMessage | FileMessage }) => React.ReactElement;
@@ -31,8 +29,6 @@ export interface ThreadUIProps {
 }
 
 const ThreadUI: React.FC<ThreadUIProps> = ({
-  onHeaderActionClick,
-  onMoveToParentMessage,
   renderHeader,
   renderParentMessageInfo,
   renderMessage,
@@ -52,20 +48,21 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
     currentChannel,
     allThreadMessages,
     parentMessage,
-    channelStatus,
     parentMessageInfoStatus,
     threadListStatus,
     hasMorePrev,
     hasMoreNext,
-    emojiContainer,
     fetchPrevThreads,
     fetchNextThreads,
+    onHeaderActionClick,
+    onMoveToParentMessage,
   } = useThreadContext();
-  const replyCount = parentMessage?.threadInfo?.replyCount;
+  const replyCount = allThreadMessages.length;
 
   // Memoized custom components
   const MemorizedHeader = useMemorizedHeader({ renderHeader });
   const MemorizedParentMessageInfo = useMemorizedParentMessageInfo({
+    parentMessage,
     parentMessageInfoStatus,
     renderParentMessageInfo,
     renderParentMessageInfoPlaceholder, // nil, loading, invalid
@@ -85,20 +82,28 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
       clientHeight,
       scrollHeight,
     } = element;
-    console.log('스크롤 발생중', scrollTop, clientHeight, scrollHeight);
+
+    const threadItemNodes = scrollRef.current.querySelectorAll('.sendbird-thread-list-item');
+    const firstNode = threadItemNodes?.[0];
     if (isAboutSame(scrollTop, 0, 10) && hasMorePrev) {
       fetchPrevThreads((messages) => {
-        console.log('fetchPrevThreads called', messages)
+        if (messages) {
+          try {
+            firstNode?.scrollIntoView?.({ block: 'start', inline: 'nearest' });
+          } catch (error) {
+            //
+          }
+        }
       });
     }
+
     if (isAboutSame(clientHeight + scrollTop, scrollHeight, 10) && hasMoreNext) {
-      console.log('스크롤 이전', scrollTop, clientHeight, scrollHeight);
-      const savedScrollTop = scrollTop;
+      const scrollTop_ = scrollTop;
       fetchNextThreads((messages) => {
         if (messages) {
           try {
-            console.log('스크롤 이후', scrollTop, clientHeight, scrollHeight);
-            element.scrollTop = savedScrollTop;
+            element.scrollTop = scrollTop_;
+            scrollRef.current.scrollTop = scrollTop_;
           } catch (error) {
             //
           }
@@ -121,7 +126,7 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
             className="sendbird-thread-ui__header"
             channelName={getChannelTitle(currentChannel, currentUserId, stringSet)}
             onActionIconClick={onHeaderActionClick}
-            onChannelNameClick={() => onMoveToParentMessage({ message: parentMessage })}
+            onChannelNameClick={() => onMoveToParentMessage({ message: parentMessage, channel: currentChannel })}
           />
         )
       }
@@ -134,8 +139,6 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
           MemorizedParentMessageInfo || (
             <ParentMessageInfo
               className="sendbird-thread-ui__parent-message-info"
-              channel={currentChannel}
-              message={parentMessage}
             />
           )
         }
@@ -146,7 +149,7 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
                 type={LabelTypography.BODY_1}
                 color={LabelColors.ONBACKGROUND_3}
               >
-                {`${replyCount > 99 ? '99+' : replyCount} ${replyCount > 1 ? stringSet.THREAD__THREAD_REPLIES : stringSet.THREAD__THREAD_REPLY}`}
+                {`${replyCount} ${replyCount > 1 ? stringSet.THREAD__THREAD_REPLIES : stringSet.THREAD__THREAD_REPLY}`}
               </Label>
             </div>
           )
