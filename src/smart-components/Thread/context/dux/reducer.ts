@@ -160,9 +160,7 @@ export default function reducer(
       )) > -1;
       return {
         ...state,
-        parentMessage: state.parentMessage?.messageId === message?.messageId
-          ? message
-          : state.parentMessage,
+        parentMessage: state.parentMessage?.messageId === message?.messageId ? message : state.parentMessage,
         allThreadMessages: isAlreadyReceived
           ? state.allThreadMessages.map((m) => (
             m.messageId === message.messageId ? message : m

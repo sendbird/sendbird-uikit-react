@@ -1967,7 +1967,7 @@ declare module '@sendbird/uikit-react/ui/MessageItemMenu' {
   import type { GroupChannel } from '@sendbird/chat/groupChannel';
   import type { FileMessage, UserMessage } from '@sendbird/chat/message';
   import type { OpenChannel } from '@sendbird/chat/openChannel';
-  import type SenbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
 
   interface MessageItemMenuProps {
     className?: string | Array<string>;
@@ -1975,12 +1975,15 @@ declare module '@sendbird/uikit-react/ui/MessageItemMenu' {
     channel: GroupChannel | OpenChannel;
     isByMe?: boolean;
     disabled?: boolean;
-    replyType?: SenbirdUIKitGlobal.ReplyType;
+    replyType?: ReplyType;
+    disableDeleteMessage?: boolean;
     showEdit?: (bool: boolean) => void;
     showRemove?: (bool: boolean) => void;
     resendMessage?: (message: UserMessage | FileMessage) => void;
     setQuoteMessage?: (message: UserMessage | FileMessage) => void;
     setSupposedHover?: (bool: boolean) => void;
+    onReplyInThread?: (props: { message: UserMessage | FileMessage }) => void;
+    onMoveToParentMessage?: () => void;
   }
   const MessageItemMenu: React.FC<MessageItemMenuProps>;
   export default MessageItemMenu;

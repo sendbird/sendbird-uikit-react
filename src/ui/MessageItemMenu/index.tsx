@@ -25,6 +25,7 @@ interface Props {
   isByMe?: boolean;
   disabled?: boolean;
   replyType?: ReplyType;
+  disableDeleteMessage?: boolean;
   showEdit?: (bool: boolean) => void;
   showRemove?: (bool: boolean) => void;
   resendMessage?: (message: UserMessage | FileMessage) => void;
@@ -41,6 +42,7 @@ export default function MessageItemMenu({
   isByMe = false,
   disabled = false,
   replyType,
+  disableDeleteMessage = null,
   showEdit,
   showRemove,
   resendMessage,
@@ -201,7 +203,11 @@ export default function MessageItemMenu({
                       closeDropdown();
                     }
                   }}
-                  disable={message?.threadInfo?.replyCount > 0}
+                  disable={
+                    typeof disableDeleteMessage === 'boolean'
+                    ? disableDeleteMessage
+                    : message?.threadInfo?.replyCount > 0
+                  }
                 >
                   {stringSet.MESSAGE_MENU__DELETE}
                 </MenuItem>

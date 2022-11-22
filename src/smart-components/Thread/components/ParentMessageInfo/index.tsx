@@ -45,10 +45,11 @@ export default function ParentMessageInfo({
   const userId = stores?.userStore?.user?.userId;
   const { dateLocale } = useLocalization?.();
   const {
+    currentChannel,
+    parentMessage,
+    allThreadMessages,
     emojiContainer,
     toggleReaction,
-    parentMessage,
-    currentChannel,
     updateMessage,
     deleteMessage,
     onMoveToParentMessage,
@@ -262,6 +263,7 @@ export default function ParentMessageInfo({
         channel={currentChannel}
         message={parentMessage}
         isByMe={userId === parentMessage?.sender?.userId}
+        disableDeleteMessage={allThreadMessages.length > 0}
         replyType={replyType}
         showEdit={setShowEditInput}
         showRemove={setShowRemove}
