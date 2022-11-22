@@ -54,6 +54,7 @@ export default function ThreadListItem({
     threadListStatus,
     updateMessage,
     resendMessage,
+    deleteMessage,
     isMuted,
     isChannelFrozen,
   } = threadContext;
@@ -122,28 +123,6 @@ export default function ThreadListItem({
       return renderCustomSeparator?.({ message });
     }
   }, [message, renderCustomSeparator]);
-  const MemorizedMessageContent = useMemo(() => {
-    return (
-      <ThreadListItemContent
-        userId={userId}
-        channel={currentChannel}
-        message={message}
-        chainTop={chainTop}
-        chainBottom={chainBottom}
-        isReactionEnabled={usingReaction}
-        isMentionEnabled={isMentionEnabled}
-        disableQuoteMessage
-        replyType={replyType}
-        nicknamesMap={nicknamesMap}
-        emojiContainer={emojiContainer}
-        resendMessage={resendMessage}
-        showRemove={setShowRemove}
-        showFileViewer={setShowFileViewer}
-        toggleReaction={toggleReaction}
-        showEdit={setShowEdit}
-      />
-    );
-  }, [message, currentChannel]);
 
   // Edit message
   if (showEdit && message.isUserMessage()) {
@@ -247,29 +226,24 @@ export default function ThreadListItem({
           </DateSeparator>
         ))
       }
-      {MemorizedMessageContent}
-      {/* <MessageContent
+      <ThreadListItemContent
         userId={userId}
         channel={currentChannel}
         message={message}
         chainTop={chainTop}
         chainBottom={chainBottom}
-        isReactionEnabled={isReactionEnabled}
+        isReactionEnabled={usingReaction}
+        isMentionEnabled={isMentionEnabled}
         disableQuoteMessage
         replyType={replyType}
         nicknamesMap={nicknamesMap}
         emojiContainer={emojiContainer}
+        resendMessage={resendMessage}
         showRemove={setShowRemove}
         showFileViewer={setShowFileViewer}
-      /> */}
-      {/* <ThreadListItemContent
-        message={message}
-        channel={currentChannel}
-        chainTop={chainTop}
-        chainBottom={chainBottom}
-        setShowRemove={setShowRemove}
-        setShowFileViewer={setShowFileViewer}
-      /> */}
+        toggleReaction={toggleReaction}
+        showEdit={setShowEdit}
+      />
       {/* modal */}
       {showRemove && (
         <RemoveMessage
@@ -280,8 +254,9 @@ export default function ThreadListItem({
       {showFileViewer && (
         <FileViewer
           message={message as FileMessage}
+          isByMe={message?.sender?.userId === userId}
           onClose={() => setShowFileViewer(false)}
-          onDelete={() => setShowRemove(true)}
+          onDelete={() => deleteMessage(message)}
         />
       )}
     </div>
