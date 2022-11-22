@@ -23,7 +23,6 @@ export default function useHandlePubsubEvents({
   currentChannel,
   parentMessage,
 }: DynamicProps, {
-  logger,
   pubSub,
   threadDispatcher,
 }: StaticProps): void {

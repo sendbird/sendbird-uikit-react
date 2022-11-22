@@ -13,7 +13,7 @@ export default function useToggleReactionCallback({
   currentChannel,
 }: DynamicProps, {
   logger
-}: StaticProps) {
+}: StaticProps): (message, key, isReacted) => void {
   return useCallback((message, key, isReacted) => {
     if (isReacted) {
       currentChannel?.deleteReaction?.(message, key)

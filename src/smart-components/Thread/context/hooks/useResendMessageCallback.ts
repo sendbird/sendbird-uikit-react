@@ -20,7 +20,7 @@ export default function useResendMessageCallback({
   logger,
   pubSub,
   threadDispatcher,
-}: StaticProps) {
+}: StaticProps): (failedMessage: UserMessage | FileMessage) => void {
   return useCallback((failedMessage: UserMessage | FileMessage) => {
     if ((failedMessage as UserMessage | FileMessage)?.isResendable) {
       failedMessage.sendingStatus = SendingStatus.PENDING;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Role } from '@sendbird/chat';
-import { UserMessage } from '@sendbird/chat/message';
+import { MutedState } from '@sendbird/chat/groupChannel';
 
 import './index.scss';
 
@@ -10,7 +10,6 @@ import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import SuggestedMentionList from '../../../Channel/components/SuggestedMentionList';
 import { useThreadContext } from '../../context/ThreadProvider';
 import { useLocalization } from '../../../../lib/LocalizationContext';
-import { MutedState } from '@sendbird/chat/groupChannel';
 
 export interface ThreadMessageInputProps {
   className?: string;
@@ -120,11 +119,11 @@ const ThreadMessageInput = (
         onStartTyping={() => {
           currentChannel?.startTyping?.();
         }}
-        onSendMessage={(props: { message: UserMessage, mentionTemplate: string }) => {
+        onSendMessage={({ message, mentionTemplate }) => {
           sendMessage({
-            message: props?.message,
+            message: message,
             mentionedUsers,
-            mentionTemplate: props?.mentionTemplate,
+            mentionTemplate: mentionTemplate,
             quoteMessage: parentMessage,
           });
           setMentionNickname('');

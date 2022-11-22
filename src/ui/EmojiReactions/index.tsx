@@ -20,7 +20,7 @@ interface Props {
   message: UserMessage | FileMessage;
   emojiContainer: EmojiContainer;
   memberNicknamesMap: Map<string, string>;
-  spaceFromTrigger?: Record<string, unknown>;
+  spaceFromTrigger?: { x: number, y: number };
   isByMe?: boolean;
   toggleReaction?: (message: UserMessage | FileMessage, key: string, byMe: boolean) => void;
 }
@@ -31,7 +31,7 @@ const EmojiReactions = ({
   message,
   emojiContainer,
   memberNicknamesMap,
-  spaceFromTrigger = {},
+  spaceFromTrigger = { x: 0, y: 0 },
   isByMe = false,
   toggleReaction,
 }: Props): ReactElement => {
@@ -60,7 +60,10 @@ const EmojiReactions = ({
               <ReactionBadge
                 count={reaction.userIds.length}
                 selected={reactedByMe}
-                onClick={() => toggleReaction(message, reaction.key, reactedByMe)}
+                onClick={(e) => {
+                  toggleReaction(message, reaction.key, reactedByMe);
+                  e?.stopPropagation?.();
+                }}
               >
                 <ImageRenderer
                   circle
@@ -83,7 +86,10 @@ const EmojiReactions = ({
               className="sendbird-emoji-reactions__add-reaction-badge"
               ref={addReactionRef}
               isAdd
-              onClick={toggleDropdown}
+              onClick={(e) => {
+                toggleDropdown();
+                e?.stopPropagation?.();
+              }}
             >
               <Icon
                 type={IconTypes.EMOJI_MORE}
@@ -101,18 +107,19 @@ const EmojiReactions = ({
               spacefromTrigger={spaceFromTrigger}
             >
               {getEmojiListAll(emojiContainer).map((emoji: Emoji): ReactElement => {
-                const isReacted: boolean = message?.reactions?.
-                  filter((reaction: Reaction): boolean => reaction.key === emoji.key)[0]?.userIds?.
-                  some((reactorId: string): boolean => reactorId === userId);
+                const isReacted: boolean = (message?.reactions?.
+                  find((reaction: Reaction): boolean => reaction.key === emoji.key)?.userIds?.
+                  some((reactorId: string): boolean => reactorId === userId));
                 return (
                   <ReactionButton
                     key={emoji.key}
                     width="36px"
                     height="36px"
                     selected={isReacted}
-                    onClick={(): void => {
+                    onClick={(e): void => {
                       closeDropdown();
                       toggleReaction(message, emoji.key, isReacted);
+                      e?.stopPropagation();
                     }}
                   >
                     <ImageRenderer

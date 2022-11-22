@@ -27,7 +27,7 @@ export default function useSendFileMessageCallback({
   logger,
   pubSub,
   threadDispatcher,
-}: StaticProps) {
+}: StaticProps): (file, quoteMessage) => void {
   const sendMessage = useCallback((file, quoteMessage) => {
     const createParamsDefault = () => {
       const params = {} as FileMessageCreateParams;

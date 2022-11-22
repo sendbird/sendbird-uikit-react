@@ -1,19 +1,22 @@
-import React, { useMemo } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 
 import { ParentMessageInfoStateTypes } from '../../types';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
+import { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 export interface UseMemorizedParentMessageInfoProps {
+  parentMessage: UserMessage | FileMessage;
   parentMessageInfoStatus: ParentMessageInfoStateTypes;
   renderParentMessageInfo?: () => React.ReactElement;
   renderParentMessageInfoPlaceholder?: (type: ParentMessageInfoStateTypes) => React.ReactElement;
 }
 
 const useMemorizedParentMessageInfo = ({
+  parentMessage,
   parentMessageInfoStatus,
   renderParentMessageInfo,
   renderParentMessageInfoPlaceholder,
-}: UseMemorizedParentMessageInfoProps) => useMemo(() => {
+}: UseMemorizedParentMessageInfoProps): ReactElement => useMemo(() => {
   if (parentMessageInfoStatus === ParentMessageInfoStateTypes.NIL
     || parentMessageInfoStatus === ParentMessageInfoStateTypes.LOADING
     || parentMessageInfoStatus === ParentMessageInfoStateTypes.INVALID
@@ -60,6 +63,7 @@ const useMemorizedParentMessageInfo = ({
   }
   return null;
 }, [
+  parentMessage,
   parentMessageInfoStatus,
   renderParentMessageInfo,
   renderParentMessageInfoPlaceholder,

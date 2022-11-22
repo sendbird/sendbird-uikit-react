@@ -83,7 +83,6 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
               } as UserMessage);
               setShowThread(true);
             }
-            replyType
           }}
           onQuoteMessageClick={({ message }) => { // thread message
             setShowSettings(false);

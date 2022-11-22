@@ -14,7 +14,7 @@ export const getNicknamesMapFromMembers = (members = []): Map<string, string> =>
 
 export const isAboutSame = (a: number, b: number, px: number): boolean => (Math.abs(a - b) <= px);
 
-export const isEmpty = (val: any): boolean => (val === null || val === undefined);
+export const isEmpty = (val: unknown): boolean => (val === null || val === undefined);
 
 // Some Ids return string and number inconsistently
 // only use to comapre IDs

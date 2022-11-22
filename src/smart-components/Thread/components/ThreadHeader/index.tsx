@@ -41,17 +41,18 @@ export default function ThreadHeader({
         type={LabelTypography.H_2}
         color={LabelColors.ONBACKGROUND_1}
       >
-        {stringSet.THREAD_HEADER_TITLE}
+        {stringSet.THREAD__HEADER_TITLE}
       </Label>
       <TextButton
-        className="sendbird-thread-header__channel-name"
         onClick={(e) => onChannelNameClick(e)}
+        disableUnderline
       >
         <Label
+          className="sendbird-thread-header__channel-name"
           type={LabelTypography.CAPTION_3}
           color={LabelColors.ONBACKGROUND_2}
         >
-          {`#${channelName}`}
+          {channelName}
         </Label>
       </TextButton>
       {
@@ -75,5 +76,3 @@ export default function ThreadHeader({
     </div>
   );
 }
-
-

@@ -23,7 +23,7 @@ export default function useSendUserMessageCallback({
   logger,
   pubSub,
   threadDispatcher,
-}: StaticProps) {
+}: StaticProps): (props) => void {
   const sendMessage = useCallback((props) => {
     const {
       message,

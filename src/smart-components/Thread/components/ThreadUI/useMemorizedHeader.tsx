@@ -1,12 +1,10 @@
-import React, { useMemo } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 
 export interface UseMemorizedHeaderProps {
   renderHeader?: () => React.ReactElement;
 }
 
-const useMemorizedHeader = ({
-  renderHeader
-}: UseMemorizedHeaderProps) => useMemo(() => {
+const useMemorizedHeader = ({ renderHeader }: UseMemorizedHeaderProps): ReactElement => useMemo(() => {
   if (typeof renderHeader === 'function') {
     return renderHeader();
   }

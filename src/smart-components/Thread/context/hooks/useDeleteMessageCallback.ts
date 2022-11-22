@@ -17,7 +17,7 @@ export default function useDeleteMessageCallback({
   threadDispatcher,
 }: DynamicProps, {
   logger,
-}: StaticProps) {
+}: StaticProps): (message: UserMessage | FileMessage) => Promise<UserMessage | FileMessage> {
   return useCallback((message: UserMessage | FileMessage): Promise<UserMessage | FileMessage> => {
     logger.info('Thread | useDeleteMessageCallback: Deleting message.', message);
     const { sendingStatus } = message;

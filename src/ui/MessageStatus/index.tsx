@@ -71,7 +71,9 @@ export default function MessageStatus({
         </Loader>
       ) : (
         <Icon
-          className={`sendbird-message-status__icon ${hideMessageStatusIcon ? 'hide-icon' : ''}`}
+          className={`sendbird-message-status__icon ${hideMessageStatusIcon ? 'hide-icon' : ''} ${
+            status === OutgoingMessageStates.FAILED ? '' : 'sendbird-message-status--sent'
+          }`}
           type={iconType[status] || IconTypes.ERROR}
           fillColor={iconColor[status]}
           width="16px"

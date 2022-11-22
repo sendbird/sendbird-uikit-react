@@ -24,7 +24,7 @@ export default function useUpdateMessageCallback({
   logger,
   pubSub,
   threadDispatcher,
-}: StaticProps) {
+}: StaticProps): (props) => void {
   return useCallback((props) => {
     const {
       messageId,
@@ -47,9 +47,11 @@ export default function useUpdateMessageCallback({
     };
 
     const params = createParamsDefault();
+    logger.info('Thread | useUpdateMessageCallback: Message update start.', params);
 
     currentChannel?.updateUserMessage?.(messageId, params)
       .then((message: UserMessage) => {
+        logger.info('Thread | useUpdateMessageCallback: Message update succeeded.', message);
         threadDispatcher({
           type: ThreadContextActionTypes.ON_MESSAGE_UPDATED,
           payload: {

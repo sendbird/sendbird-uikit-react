@@ -155,9 +155,9 @@ export default function reducer(
       ) {
         return state;
       }
-      const isAlreadyReceived = state.allThreadMessages.findIndex((m) => {
+      const isAlreadyReceived = state.allThreadMessages.findIndex((m) => (
         m.messageId === message.messageId
-      }) > -1;
+      )) > -1;
       return {
         ...state,
         parentMessage: state.parentMessage?.messageId === message?.messageId

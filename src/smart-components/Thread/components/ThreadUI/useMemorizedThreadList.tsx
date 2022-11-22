@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 
 import { ThreadListStateTypes } from '../../types';
@@ -11,7 +11,7 @@ export interface UseMemorizedThreadListProps {
 const useMemorizedThreadList = ({
   threadListStatus,
   renderThreadListPlaceHolder,
-}: UseMemorizedThreadListProps) => useMemo(() => {
+}: UseMemorizedThreadListProps): ReactElement => useMemo(() => {
   if (threadListStatus === ThreadListStateTypes.NIL
     || threadListStatus === ThreadListStateTypes.LOADING
     || threadListStatus === ThreadListStateTypes.INVALID

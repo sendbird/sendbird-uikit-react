@@ -28,7 +28,7 @@ export default function useGetParentMessage({
   sdk,
   logger,
   threadDispatcher,
-}: StaticProps) {
+}: StaticProps): void {
   useEffect(() => {
     // validation check
     if (sdkInit && sdk?.message?.getMessage) {
