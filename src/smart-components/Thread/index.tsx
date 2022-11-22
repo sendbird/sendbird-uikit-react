@@ -17,6 +17,8 @@ const Thread: React.FC<ThreadProps> = (props: ThreadProps) => {
     // ThreadContextProps
     channelUrl,
     message,
+    onHeaderActionClick,
+    onMoveToParentMessage,
     // ThreadUIProps
     renderHeader,
     renderParentMessageInfo,
@@ -25,18 +27,16 @@ const Thread: React.FC<ThreadProps> = (props: ThreadProps) => {
     renderCustomSeparator,
     renderParentMessageInfoPlaceholder,
     renderThreadListPlaceHolder,
-    onHeaderActionClick,
-    onMoveToParentMessage,
   } = props;
   return (
     <div className={`sendbird-thread ${className}`}>
       <ThreadProvider
         channelUrl={channelUrl}
         message={message}
+        onHeaderActionClick={onHeaderActionClick}
+        onMoveToParentMessage={onMoveToParentMessage}
       >
         <ThreadUI
-          onHeaderActionClick={onHeaderActionClick}
-          onMoveToParentMessage={onMoveToParentMessage}
           renderHeader={renderHeader}
           renderParentMessageInfo={renderParentMessageInfo}
           renderMessage={renderMessage}
