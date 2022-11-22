@@ -206,7 +206,7 @@ export default function OpenchannelThumbnailMessage({
               }
             }}
             tabIndex={0}
-            {...onLongPress}
+            {...(isMobile ? { ...onLongPress } : {})}
           >
             <div className="sendbird-openchannel-thumbnail-message__right__body__wrap__overlay" />
             {

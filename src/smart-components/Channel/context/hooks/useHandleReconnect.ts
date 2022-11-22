@@ -20,6 +20,7 @@ interface StaticParams {
   logger: Logger;
   sdk: SendbirdGroupChat;
   currentGroupChannel: GroupChannel;
+  scrollRef: React.RefObject<HTMLDivElement>;
   messagesDispatcher: ({ type: string, payload: any }) => void;
   userFilledMessageListQuery?: Record<string, any>;
 }
@@ -29,6 +30,7 @@ function useHandleReconnect(
   {
     logger,
     sdk,
+    scrollRef,
     currentGroupChannel,
     messagesDispatcher,
     userFilledMessageListQuery,
@@ -80,7 +82,7 @@ function useHandleReconnect(
                     messages,
                   },
                 });
-                setTimeout(() => utils.scrollIntoLast());
+                setTimeout(() => utils.scrollIntoLast(0, scrollRef));
               })
               .catch((error) => {
                 logger.error('Channel: Fetching messages failed', error);

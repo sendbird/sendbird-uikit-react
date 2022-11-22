@@ -1,7 +1,7 @@
 import type { UserMessageCreateParams } from '@sendbird/chat/message';
 import type { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import type { Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';
@@ -15,18 +15,19 @@ interface DynamicParams {
 interface StaticParams {
   sdk: SendbirdOpenChat;
   logger: Logger;
-  messagesDispatcher: ({ type: string, payload: any }) => void;
+  messagesDispatcher: (props: { type: string, payload: any }) => void;
+  scrollRef: React.RefObject<HTMLElement>;
 }
 
 function useSendMessageCallback(
   { currentOpenChannel, onBeforeSendUserMessage, checkScrollBottom, messageInputRef }: DynamicParams,
-  { sdk, logger, messagesDispatcher }: StaticParams,
+  { sdk, logger, messagesDispatcher, scrollRef }: StaticParams,
 ): () => void {
   return useCallback(() => {
     if (sdk) {
       const text = messageInputRef.current.innerText;
       const createParamsDefault = (txt: string | number): UserMessageCreateParams => {
-        const message = typeof txt === 'string' ? txt.trim() : txt.toString(10).trim();
+        const message = (txt as string)?.trim() || txt as string;
         const params: UserMessageCreateParams = {
           message: message,
         };
@@ -60,7 +61,7 @@ function useSendMessageCallback(
           });
           if (isBottom) {
             setTimeout(() => {
-              utils.scrollIntoLast();
+              utils.scrollIntoLast(0, scrollRef);
             });
           }
         })

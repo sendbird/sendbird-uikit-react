@@ -47,6 +47,14 @@ const displayCaret = (element, position) => {
   element.focus();
 }
 
+const resetInput = (ref) => {
+  try {
+    ref.current.innerHTML = '';
+  } catch {
+    //
+  }
+}
+
 const initialTargetStringInfo = {
   targetString: '',
   startNodeIndex: null,
@@ -124,7 +132,7 @@ const MessageInput = React.forwardRef((props, ref) => {
   useEffect(() => {
     if (!isEdit) {
       setIsInput(false);
-      document.getElementById(textFieldId).innerHTML = '';
+      resetInput(ref);
     }
   }, [channelUrl]);
 
@@ -328,7 +336,7 @@ const MessageInput = React.forwardRef((props, ref) => {
       });
       const params = { message: messageText, mentionTemplate };
       onSendMessage(params);
-      document.getElementById(textFieldId).innerHTML = '';
+      resetInput(ref);
       setIsInput(false);
       setHeight();
     }
@@ -356,7 +364,7 @@ const MessageInput = React.forwardRef((props, ref) => {
       });
       const params = { messageId, message: messageText, mentionTemplate };
       onUpdateMessage(params);
-      document.getElementById(textFieldId).innerHTML = '';
+      resetInput(ref);
     }
   };
 
@@ -415,7 +423,7 @@ const MessageInput = React.forwardRef((props, ref) => {
           onInput={() => {
             setHeight();
             onStartTyping();
-            setIsInput(document?.getElementById?.(textFieldId)?.innerText?.length > 0);
+            setIsInput(ref?.current?.innerText?.length > 0);
             useMentionedLabelDetection();
           }}
           onPaste={(e) => {

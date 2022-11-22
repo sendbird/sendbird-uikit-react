@@ -36,6 +36,7 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
     loading,
     isInvalid,
     messageInputRef,
+    conversationScrollRef,
   } = useOpenChannelContext();
   if (
     !currentOpenChannel
@@ -70,6 +71,7 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
         )
       }
       <OpenChannelMessageList
+        ref={conversationScrollRef}
         renderMessage={renderMessage}
         renderPlaceHolderEmptyList={renderPlaceHolderEmptyList}
       />

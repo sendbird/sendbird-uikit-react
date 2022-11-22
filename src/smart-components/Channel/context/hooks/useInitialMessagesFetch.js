@@ -12,6 +12,7 @@ function useInitialMessagesFetch({
   replyType,
 }, {
   logger,
+  scrollRef,
   messagesDispatcher,
 }) {
   const channelUrl = currentGroupChannel?.url;
@@ -76,7 +77,7 @@ function useInitialMessagesFetch({
         })
         .finally(() => {
           if (!initialTimeStamp) {
-            setTimeout(() => utils.scrollIntoLast());
+            setTimeout(() => utils.scrollIntoLast(0, scrollRef));
           }
         });
     }

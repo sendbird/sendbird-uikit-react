@@ -1,5 +1,4 @@
 import React, {
-  useMemo,
   useContext,
   useRef,
   useState,
@@ -35,6 +34,7 @@ import { getSenderFromMessage } from '../../utils/openChannelUtils';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import OpenChannelMobileMenu from '../OpenChannelMobileMenu';
 import useLongPress from '../../hooks/useLongPress';
+import { isEditedMessage } from '../../utils';
 
 interface Props {
   className?: string | Array<string>;
@@ -79,24 +79,6 @@ export default function OpenchannelUserMessage({
   const isPending = checkIsPending(status);
   const isFailed = checkIsFailed(status);
   const sender = getSenderFromMessage(message);
-
-  const MemoizedMessageText = useMemo(() => () => {
-    const splitMessage = message.message.split(/\r/);
-    const matchedMessage = splitMessage.map((word) => (word !== '' ? word : <br />));
-    if (message.updatedAt > 0) {
-      matchedMessage.push(
-        <Label
-          key={uuidv4()}
-          type={LabelTypography.BODY_1}
-          color={LabelColors.ONBACKGROUND_2}
-          calssName="sendbird-openchannel-user-message-word"
-        >
-          {` ${stringSet.MESSAGE_EDITED} `}
-        </Label>,
-      );
-    }
-    return matchedMessage;
-  }, [message, message.updatedAt]);
 
   // place context menu top depending clientHeight of message component
   useEffect(() => {
@@ -149,19 +131,19 @@ export default function OpenchannelUserMessage({
                 >
                   {
                     renderUserProfile
-                    ? (
-                      renderUserProfile({
-                        user: sender,
-                        close: closeDropdown,
-                      })
-                    )
-                    : (
-                      <UserProfile
-                        user={sender}
-                        onSuccess={closeDropdown}
-                        disableMessaging
-                      />
-                    )
+                      ? (
+                        renderUserProfile({
+                          user: sender,
+                          close: closeDropdown,
+                        })
+                      )
+                      : (
+                        <UserProfile
+                          user={sender}
+                          onSuccess={closeDropdown}
+                          disableMessaging
+                        />
+                      )
                   }
                 </MenuItems>
               )}
@@ -202,13 +184,25 @@ export default function OpenchannelUserMessage({
             </div>
           )
         }
-        <div {...onLongPress} className="sendbird-openchannel-user-message__right__bottom" ref={mobileMenuRef}>
+        <div
+          {...(isMobile ? { ...onLongPress } : {})}
+          className="sendbird-openchannel-user-message__right__bottom" ref={mobileMenuRef}>
           <Label
             className="sendbird-openchannel-user-message__right__bottom__message"
             type={LabelTypography.BODY_1}
             color={LabelColors.ONBACKGROUND_1}
           >
-            {MemoizedMessageText()}
+            {message?.message}
+            {isEditedMessage(message) && (
+              <Label
+                key={uuidv4()}
+                type={LabelTypography.BODY_1}
+                color={LabelColors.ONBACKGROUND_2}
+                calssName="sendbird-openchannel-user-message-word"
+              >
+                {` ${stringSet.MESSAGE_EDITED} `}
+              </Label>
+            )}
           </Label>
         </div>
         {
@@ -254,7 +248,7 @@ export default function OpenchannelUserMessage({
           >
             <ContextMenu
               menuTrigger={(toggleDropdown) => (
-                showMenuTrigger({ message: message, userId: userId, status: status}) && (
+                showMenuTrigger({ message: message, userId: userId, status: status }) && (
                   <IconButton
                     className="sendbird-openchannel-user-message__context-menu--icon"
                     width="32px"

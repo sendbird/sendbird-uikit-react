@@ -166,11 +166,11 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
   );
   useHandleChannelEvents(
     { currentOpenChannel, checkScrollBottom },
-    { sdk, logger, messagesDispatcher },
+    { sdk, logger, messagesDispatcher, scrollRef: conversationScrollRef },
   );
   useInitialMessagesFetch(
     { currentOpenChannel, userFilledMessageListParams },
-    { logger, messagesDispatcher },
+    { logger, messagesDispatcher, scrollRef: conversationScrollRef },
   );
 
   const fetchMore: boolean = utils.shouldFetchMore(allMessages?.length, messageLimit);
@@ -181,11 +181,11 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
   );
   const handleSendMessage = useSendMessageCallback(
     { currentOpenChannel, onBeforeSendUserMessage, checkScrollBottom, messageInputRef },
-    { sdk, logger, messagesDispatcher },
+    { sdk, logger, messagesDispatcher, scrollRef: conversationScrollRef },
   );
   const handleFileUpload = useFileUploadCallback(
     { currentOpenChannel, onBeforeSendFileMessage, checkScrollBottom, imageCompression },
-    { sdk, logger, messagesDispatcher },
+    { sdk, logger, messagesDispatcher, scrollRef: conversationScrollRef },
   );
   const updateMessage = useUpdateMessageCallback(
     { currentOpenChannel, onBeforeSendUserMessage },
@@ -213,7 +213,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
     }
     subscriber.set(topics.SEND_USER_MESSAGE, pubSub.subscribe(topics.SEND_USER_MESSAGE, (msg) => {
       const { channel, message } = msg;
-      scrollIntoLast();
+      scrollIntoLast(0, conversationScrollRef);
       if (channel && (channelUrl === channel?.url)) {
         messagesDispatcher({
           type: messageActionTypes.SENDING_MESSAGE_SUCCEEDED,
@@ -232,7 +232,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
     }));
     subscriber.set(topics.SEND_FILE_MESSAGE, pubSub.subscribe(topics.SEND_FILE_MESSAGE, (msg) => {
       const { channel, message } = msg;
-      scrollIntoLast();
+      scrollIntoLast(0, conversationScrollRef);
       if (channel && (channelUrl === channel?.url)) {
         messagesDispatcher({
           type: messageActionTypes.SENDING_MESSAGE_SUCCEEDED,
