@@ -39,6 +39,9 @@
       left: 0px;
       bottom: 2px;
     }
+    .sendbird-message-content__left__avatar.use-thread-replies {
+      bottom: 35px;
+    }
   }
 
   .sendbird-message-content__middle {
@@ -56,7 +59,7 @@
         display: flex;
         flex-direction: row;
         min-width: 80px;
-        &.supposed-hover {
+        &.sendbird-mouse-hover {
           display: none;
         }
       }
@@ -99,7 +102,7 @@
       flex-direction: row;
       height: 32px;
       display: none;
-      &.supposed-hover {
+      &.sendbird-mouse-hover {
         display: inline-flex;
       }
     }
@@ -142,7 +145,7 @@
       right: 4px;
       flex-direction: row;
       display: none;
-      &.supposed-hover {
+      &.sendbird-mouse-hover {
         display: inline-flex;
       }
     }
@@ -176,7 +179,7 @@
         box-sizing: content-box;
         min-width: 80px;
         min-height: 16px;
-        &.supposed-hover {
+        &.sendbird-mouse-hover {
           display: none;
         }
         .sendbird-message-content__middle__body-container__created-at__component-container {
