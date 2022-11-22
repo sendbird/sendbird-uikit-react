@@ -148,12 +148,16 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
             setShowThread(false);
           }}
           onMoveToParentMessage={({ message, channel }) => {
-            setCurrentChannel(channel);
+            if (channel?.url !== currentChannel?.url) {
+              setCurrentChannel(channel);
+            }
+            if (message?.messageId !== animatedMessageId) {
+              setStartingPoint(message?.createdAt);
+            }
             setTimeout(() => {
               setAnimatedMessageId(message?.messageId);
             }, 500);
           }}
-          isMessageGroupingEnabled={isMessageGroupingEnabled}
         />
       )}
     </div>
