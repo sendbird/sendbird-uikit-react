@@ -26,3 +26,20 @@
 .sendbird-thread-list .sendbird-message-status__icon.sendbird-message-status--sent {
   display: none;
 }
+
+// SuggestedMentionList
+.sendbird-thread-list .sendbird-mention-suggest-list {
+  width: 100%;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+.sendbird-thread-list .sendbird-mention-suggest-list__user-item {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+.sendbird-thread-list .sendbird-mention-suggest-list__user-item .sendbird-mention-suggest-list__user-item__nickname {
+  max-width: 134px;
+}
+.sendbird-thread-list .sendbird-mention-suggest-list__user-item .sendbird-mention-suggest-list__user-item__user-id {
+  max-width: 46px;
+}

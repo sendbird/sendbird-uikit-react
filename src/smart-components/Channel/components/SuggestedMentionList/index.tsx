@@ -15,6 +15,7 @@ import uuidv4 from '../../../../utils/uuid';
 import { useThreadContext } from '../../../Thread/context/ThreadProvider';
 
 export interface SuggestedMentionListProps {
+  className?: string;
   targetNickname: string;
   memberListQuery?: Record<string, string>;
   onUserItemClick?: (member: User) => void;
@@ -31,6 +32,7 @@ const DEBOUNCING_TIME = 300;
 
 function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   const {
+    className,
     targetNickname = '',
     // memberListQuery,
     onUserItemClick,
@@ -135,7 +137,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
 
   return (
     <div
-      className="sendbird-mention-suggest-list"
+      className={`sendbird-mention-suggest-list ${className}`}
       key="sendbird-mention-suggest-list"
       ref={scrollRef}
     >

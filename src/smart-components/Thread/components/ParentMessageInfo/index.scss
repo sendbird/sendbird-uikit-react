@@ -137,3 +137,20 @@
     background-color: t(bg-1);
   }
 }
+
+// SuggestedMentionList
+.parent-message-info--suggested-mention-list {
+  width: 100%;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+.parent-message-info--suggested-mention-list .sendbird-mention-suggest-list__user-item {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+.parent-message-info--suggested-mention-list .sendbird-mention-suggest-list__user-item .sendbird-mention-suggest-list__user-item__nickname {
+  max-width: 166px;
+}
+.parent-message-info--suggested-mention-list .sendbird-mention-suggest-list__user-item .sendbird-mention-suggest-list__user-item__user-id {
+  max-width: 68px;
+}

@@ -112,6 +112,7 @@ export default function ParentMessageInfo({
         {
           displaySuggestedMentionList && (
             <SuggestedMentionList
+              className="parent-message-info--suggested-mention-list"
               targetNickname={mentionNickname}
               inputEvent={messageInputEvent}
               // renderUserMentionItem={renderUserMentionItem}
