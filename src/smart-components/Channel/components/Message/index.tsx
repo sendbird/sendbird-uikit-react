@@ -246,6 +246,9 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
           mentionSelectedUser={selectedUser}
           isMentionEnabled={isMentionEnabled}
           message={message}
+          onStartTyping={() => {
+            currentGroupChannel?.startTyping?.();
+          }}
           onUpdateMessage={({ messageId, message, mentionTemplate }) => {
             updateMessage({
               messageId,
@@ -254,6 +257,7 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
               mentionTemplate,
             });
             setShowEdit(false);
+            currentGroupChannel?.endTyping?.();
           }}
           onCancelEdit={() => {
             setMentionNickname('');
@@ -261,6 +265,7 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
             setMentionedUserIds([]);
             setMentionSuggestedUsers([])
             setShowEdit(false);
+            currentGroupChannel?.endTyping?.();
           }}
           onUserMentioned={(user) => {
             if (selectedUser?.userId === user?.userId) {
