@@ -116,7 +116,8 @@ export default function ParentMessageInfoItem({
           )}
         </Label>
       )}
-      {isOGMessage(message) && (
+      {/* Will enable ogMessage after Server support - getMessage including og_tag */}
+      {/* {isOGMessage(message) && (
         <div
           className="sendbird-parent-message-info-item__og-field"
           onClick={openUrl}
@@ -169,7 +170,7 @@ export default function ParentMessageInfoItem({
             )}
           </div>
         </div>
-      )}
+      )} */}
       {isFileMessage(message) && !isThumbnailMessage(message) && (
         <div className="sendbird-parent-message-info-item__file-message">
           <div className="sendbird-parent-message-info-item__file-message__file-icon">
