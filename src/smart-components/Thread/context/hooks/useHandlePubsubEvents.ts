@@ -55,8 +55,8 @@ export default function useHandlePubsubEvents({
         scrollIntoLast?.();
       }));
       subscriber.set(topics.UPDATE_USER_MESSAGE, pubSub.subscribe(topics.UPDATE_USER_MESSAGE, (msg) => {
-        const { channel, message, fromSelector } = msg;
-        if (fromSelector && (currentChannel?.url === channel?.url)) {
+        const { channel, message } = msg;
+        if (currentChannel?.url === channel?.url) {
           threadDispatcher({
             type: ThreadContextActionTypes.ON_MESSAGE_UPDATED,
             payload: { channel, message },
