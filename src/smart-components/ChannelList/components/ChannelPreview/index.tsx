@@ -64,7 +64,9 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
 
   const onLongPress = useLongPress({
     onLongPress: () => {
-      setShowMobileLeave(true);
+      if (isMobile) {
+        setShowMobileLeave(true);
+      }
     },
     onClick,
   }, {
