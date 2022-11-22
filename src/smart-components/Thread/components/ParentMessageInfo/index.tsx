@@ -232,7 +232,7 @@ export default function ParentMessageInfo({
       <div className="sendbird-parent-message-info__content">
         <div className="sendbird-parent-message-info__content__info">
           <Label
-            className="sendbird-parent-message-info__content__info__sender-name"
+            className={`sendbird-parent-message-info__content__info__sender-name${usingReaction ? '--use-reaction' : ''}`}
             type={LabelTypography.CAPTION_2}
             color={LabelColors.ONBACKGROUND_2}
           >
