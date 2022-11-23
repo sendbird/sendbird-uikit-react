@@ -1,7 +1,7 @@
 import { GroupChannel } from "@sendbird/chat/groupChannel";
 import { FileMessage, ReactionEvent, UserMessage } from "@sendbird/chat/message";
 import { NEXT_THREADS_FETCH_SIZE, PREV_THREADS_FETCH_SIZE } from "../../consts";
-import { ChannelStateTypes, ParentMessageInfoStateTypes, ThreadListStateTypes } from "../../types";
+import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from "../../types";
 import { compareIds } from "../utils";
 import { ThreadContextActionTypes as actionTypes } from "./actionTypes";
 import { ThreadContextInitialState } from "./initialState";
@@ -26,7 +26,7 @@ export default function reducer(
     case actionTypes.GET_CHANNEL_START: {
       return {
         ...state,
-        channelStatus: ChannelStateTypes.LOADING,
+        channelState: ChannelStateTypes.LOADING,
         currentChannel: null,
       };
     }
@@ -34,7 +34,7 @@ export default function reducer(
       const groupChannel = action.payload.groupChannel as GroupChannel;
       return {
         ...state,
-        channelStatus: ChannelStateTypes.INITIALIZED,
+        channelState: ChannelStateTypes.INITIALIZED,
         currentChannel: groupChannel,
         // only support in normal group channel
         isMuted: groupChannel?.members?.find((member) => member?.userId === state.currentUserId)?.isMuted || false,
@@ -44,7 +44,7 @@ export default function reducer(
     case actionTypes.GET_CHANNEL_FAILURE: {
       return {
         ...state,
-        channelStatus: ChannelStateTypes.INVALID,
+        channelState: ChannelStateTypes.INVALID,
         currentChannel: null,
       };
     }
@@ -58,21 +58,21 @@ export default function reducer(
     case actionTypes.GET_PARENT_MESSAGE_START: {
       return {
         ...state,
-        parentMessageInfoStatus: ParentMessageInfoStateTypes.LOADING,
+        parentMessageState: ParentMessageStateTypes.LOADING,
         parentMessage: null,
       };
     }
     case actionTypes.GET_PARENT_MESSAGE_SUCCESS: {
       return {
         ...state,
-        parentMessageInfoStatus: ParentMessageInfoStateTypes.INITIALIZED,
+        parentMessageState: ParentMessageStateTypes.INITIALIZED,
         parentMessage: action.payload.parentMessage,
       };
     }
     case actionTypes.GET_PARENT_MESSAGE_FAILURE: {
       return {
         ...state,
-        parentMessageInfoStatus: ParentMessageInfoStateTypes.INVALID,
+        parentMessageState: ParentMessageStateTypes.INVALID,
         parentMessage: null,
       };
     }
@@ -80,7 +80,7 @@ export default function reducer(
     case actionTypes.INITIALIZE_THREAD_LIST_START: {
       return {
         ...state,
-        threadListStatus: ThreadListStateTypes.LOADING,
+        threadListState: ThreadListStateTypes.LOADING,
         allThreadMessages: [],
       };
     }
@@ -93,7 +93,7 @@ export default function reducer(
       const nextThreadMessages = anchorIndex > -1 ? threadedMessages.slice(anchorIndex) : [];
       return {
         ...state,
-        threadListStatus: ThreadListStateTypes.INITIALIZED,
+        threadListState: ThreadListStateTypes.INITIALIZED,
         hasMorePrev: anchorIndex === -1 || anchorIndex === PREV_THREADS_FETCH_SIZE,
         hasMoreNext: threadedMessages.length - anchorIndex === NEXT_THREADS_FETCH_SIZE,
         allThreadMessages: [prevThreadMessages, anchorThreadMessage, nextThreadMessages].flat(),
@@ -102,7 +102,7 @@ export default function reducer(
     case actionTypes.INITIALIZE_THREAD_LIST_FAILURE: {
       return {
         ...state,
-        threadListStatus: ThreadListStateTypes.INVALID,
+        threadListState: ThreadListStateTypes.INVALID,
         allThreadMessages: [],
       };
     }
@@ -195,7 +195,7 @@ export default function reducer(
         return {
           ...state,
           parentMessage: null,
-          parentMessageInfoStatus: ParentMessageInfoStateTypes.NIL,
+          parentMessageState: ParentMessageStateTypes.NIL,
           allThreadMessages: [],
         };
       }
@@ -254,9 +254,9 @@ export default function reducer(
     case actionTypes.ON_USER_BANNED: {
       return {
         ...state,
-        channelStatus: ChannelStateTypes.NIL,
-        threadListStatus: ThreadListStateTypes.NIL,
-        parentMessageInfoStatus: ParentMessageInfoStateTypes.NIL,
+        channelState: ChannelStateTypes.NIL,
+        threadListState: ThreadListStateTypes.NIL,
+        parentMessageState: ParentMessageStateTypes.NIL,
         currentChannel: null,
         parentMessage: null,
         allThreadMessages: [],
@@ -272,9 +272,9 @@ export default function reducer(
     case actionTypes.ON_USER_LEFT: {
       return {
         ...state,
-        channelStatus: ChannelStateTypes.NIL,
-        threadListStatus: ThreadListStateTypes.NIL,
-        parentMessageInfoStatus: ParentMessageInfoStateTypes.NIL,
+        channelState: ChannelStateTypes.NIL,
+        threadListState: ThreadListStateTypes.NIL,
+        parentMessageState: ParentMessageStateTypes.NIL,
         currentChannel: null,
         parentMessage: null,
         allThreadMessages: [],

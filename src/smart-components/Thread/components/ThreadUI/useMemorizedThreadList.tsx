@@ -4,22 +4,22 @@ import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import { ThreadListStateTypes } from '../../types';
 
 export interface UseMemorizedThreadListProps {
-  threadListStatus: ThreadListStateTypes;
+  threadListState: ThreadListStateTypes;
   renderThreadListPlaceHolder?: (tyep: ThreadListStateTypes) => React.ReactElement;
 }
 
 const useMemorizedThreadList = ({
-  threadListStatus,
+  threadListState,
   renderThreadListPlaceHolder,
 }: UseMemorizedThreadListProps): ReactElement => useMemo(() => {
-  if (threadListStatus === ThreadListStateTypes.NIL
-    || threadListStatus === ThreadListStateTypes.LOADING
-    || threadListStatus === ThreadListStateTypes.INVALID
+  if (threadListState === ThreadListStateTypes.NIL
+    || threadListState === ThreadListStateTypes.LOADING
+    || threadListState === ThreadListStateTypes.INVALID
   ) {
     if (typeof renderThreadListPlaceHolder === 'function') {
-      return renderThreadListPlaceHolder(threadListStatus);
+      return renderThreadListPlaceHolder(threadListState);
     }
-    switch (threadListStatus) {
+    switch (threadListState) {
       case ThreadListStateTypes.LOADING: {
         return (
           <PlaceHolder
@@ -48,7 +48,7 @@ const useMemorizedThreadList = ({
   }
   return null;
 }, [
-  threadListStatus,
+  threadListState,
   renderThreadListPlaceHolder,
 ]);
 

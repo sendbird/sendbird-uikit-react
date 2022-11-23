@@ -3,7 +3,7 @@ import { GroupChannel } from "@sendbird/chat/groupChannel";
 import { BaseMessage, FileMessage, UserMessage } from "@sendbird/chat/message";
 import {
   ChannelStateTypes,
-  ParentMessageInfoStateTypes,
+  ParentMessageStateTypes,
   ThreadListStateTypes,
 } from "../../types";
 
@@ -11,9 +11,9 @@ export interface ThreadContextInitialState {
   currentChannel: GroupChannel;
   allThreadMessages: Array<BaseMessage>;
   parentMessage: UserMessage | FileMessage;
-  channelStatus: ChannelStateTypes;
-  parentMessageInfoStatus: ParentMessageInfoStateTypes;
-  threadListStatus: ThreadListStateTypes;
+  channelState: ChannelStateTypes;
+  parentMessageState: ParentMessageStateTypes;
+  threadListState: ThreadListStateTypes;
   hasMorePrev: boolean;
   hasMoreNext: boolean;
   emojiContainer: EmojiContainer;
@@ -26,9 +26,9 @@ const initialState: ThreadContextInitialState = {
   currentChannel: null,
   allThreadMessages: [],
   parentMessage: null,
-  channelStatus: ChannelStateTypes.NIL,
-  parentMessageInfoStatus: ParentMessageInfoStateTypes.NIL,
-  threadListStatus: ThreadListStateTypes.NIL,
+  channelState: ChannelStateTypes.NIL,
+  parentMessageState: ParentMessageStateTypes.NIL,
+  threadListState: ThreadListStateTypes.NIL,
   hasMorePrev: false,
   hasMoreNext: false,
   emojiContainer: {} as EmojiContainer,

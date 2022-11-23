@@ -64,7 +64,7 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
         >
           {operators.map((member) => (
             <UserListItem
-              currentUserId={currentUserId}
+              currentUser={currentUserId}
               user={member}
               key={member.userId}
               action={({ parentRef, actionRef }) => (

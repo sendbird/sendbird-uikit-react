@@ -8,7 +8,7 @@ import { ThreadContextActionTypes } from "../dux/actionTypes";
 interface DynamicProps {
   hasMoreNext: boolean;
   parentMessage: UserMessage | FileMessage;
-  threadListStatus: ThreadListStateTypes;
+  threadListState: ThreadListStateTypes;
   latestMessageTimeStamp: number;
   isReactionEnabled?: boolean;
 }
@@ -20,7 +20,7 @@ interface StaticProps {
 export default function useGetNextThreadsCallback({
   hasMoreNext,
   parentMessage,
-  threadListStatus,
+  threadListState,
   latestMessageTimeStamp,
   isReactionEnabled,
 }: DynamicProps, {
@@ -29,7 +29,7 @@ export default function useGetNextThreadsCallback({
 }: StaticProps): (callback: (messages?: Array<BaseMessage>) => void) => void {
   return useCallback((callback) => {
     // validation check
-    if (threadListStatus === ThreadListStateTypes.INITIALIZED
+    if (threadListState === ThreadListStateTypes.INITIALIZED
       && parentMessage?.getThreadedMessagesByTimestamp
       && latestMessageTimeStamp !== 0
     ) {
@@ -64,7 +64,7 @@ export default function useGetNextThreadsCallback({
   }, [
     hasMoreNext,
     parentMessage,
-    threadListStatus,
+    threadListState,
     latestMessageTimeStamp,
   ]);
 }

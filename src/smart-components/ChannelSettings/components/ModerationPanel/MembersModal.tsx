@@ -72,7 +72,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
               <UserListItem
                 user={member}
                 key={member.userId}
-                currentUserId={currentUser}
+                currentUser={currentUser}
                 action={({ parentRef, actionRef }) => (
                   <>
                     {channel?.myRole === 'operator' && (

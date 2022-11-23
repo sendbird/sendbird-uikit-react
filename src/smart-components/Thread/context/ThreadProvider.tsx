@@ -95,9 +95,9 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
     currentChannel,
     allThreadMessages,
     parentMessage,
-    channelStatus,
-    threadListStatus,
-    parentMessageInfoStatus,
+    channelState,
+    threadListState,
+    parentMessageState,
     hasMorePrev,
     hasMoreNext,
     emojiContainer,
@@ -146,14 +146,14 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
   const fetchPrevThreads = useGetPrevThreadsCallback({
     hasMorePrev,
     parentMessage,
-    threadListStatus,
+    threadListState,
     isReactionEnabled,
     oldestMessageTimeStamp: allThreadMessages[0]?.createdAt || 0,
   }, { logger, threadDispatcher });
   const fetchNextThreads = useGetNextThreadsCallback({
     hasMoreNext,
     parentMessage,
-    threadListStatus,
+    threadListState,
     isReactionEnabled,
     latestMessageTimeStamp: allThreadMessages[allThreadMessages.length - 1]?.createdAt || 0
   }, { logger, threadDispatcher });
@@ -193,9 +193,9 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
         currentChannel,
         allThreadMessages,
         parentMessage,
-        channelStatus,
-        threadListStatus,
-        parentMessageInfoStatus,
+        channelState,
+        threadListState,
+        parentMessageState,
         hasMorePrev,
         hasMoreNext,
         emojiContainer,
