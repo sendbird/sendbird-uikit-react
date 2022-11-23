@@ -45,7 +45,8 @@ const getStringSet = (lang = 'en') => {
       EDIT_PROFILE__THEME_LABEL: 'Dark theme',
       MESSAGE_INPUT__PLACE_HOLDER: 'Enter message',
       MESSAGE_INPUT__PLACE_HOLDER__DISABLED: 'Chat is unavailable in this channel',
-      MESSAGE_INPUT__PLACE_HOLDER__MUTED: 'Chat is unavailable because you are being muted',
+      MESSAGE_INPUT__PLACE_HOLDER__MUTED: 'Chat is unavailable because you\'re muted',
+      MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT: 'You\'re muted',
       MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER: 'Reply to message',
       CHANNEL__MESSAGE_LIST__NOTIFICATION__NEW_MESSAGE: 'new message(s) since',
       CHANNEL__MESSAGE_LIST__NOTIFICATION__ON: 'on',
@@ -116,8 +117,11 @@ const getStringSet = (lang = 'en') => {
       UNKNOWN__UNKNOWN_MESSAGE_TYPE: '(Unknown message type)',
       UNKNOWN__CANNOT_READ_MESSAGE: 'Cannot read this message.',
       MESSAGE_EDITED: '(edited)',
+      // Menu items
       MESSAGE_MENU__COPY: 'Copy',
       MESSAGE_MENU__REPLY: 'Reply',
+      MESSAGE_MENU__THREAD: 'Reply in thread',
+      MESSAGE_MENU__OPEN_IN_CHANNEL: 'Open in channel',
       MESSAGE_MENU__EDIT: 'Edit',
       MESSAGE_MENU__RESEND: 'Resend',
       MESSAGE_MENU__DELETE: 'Delete',
@@ -133,6 +137,7 @@ const getStringSet = (lang = 'en') => {
       QUOTE_MESSAGE_INPUT__FILE_TYPE__VIDEO: 'Video',
       QUOTED_MESSAGE__REPLIED_TO: 'replied to',
       QUOTED_MESSAGE__CURRENT_USER: 'You',
+      QUOTED_MESSAGE__UNAVAILABLE: 'Message unavailable',
       // FIXME: get back legacy, remove after refactoring open channel messages
       CONTEXT_MENU_DROPDOWN__COPY: 'Copy',
       CONTEXT_MENU_DROPDOWN__EDIT: 'Edit',
@@ -150,6 +155,15 @@ const getStringSet = (lang = 'en') => {
       CREATE_OPEN_CHANNEL_LIST__SUBTITLE__TEXT_SECTION: 'Channel name',
       CREATE_OPEN_CHANNEL_LIST__SUBTITLE__TEXT_PLACE_HOLDER: 'Enter channel name',
       CREATE_OPEN_CHANNEL_LIST__SUBMIT: 'Create',
+      // Thread
+      THREAD__HEADER_TITLE: 'Thread',
+      CHANNEL__THREAD_REPLY: 'reply',
+      CHANNEL__THREAD_REPLIES: 'replies',
+      CHANNEL__THREAD_OVER_MAX: '99+',
+      THREAD__THREAD_REPLY: 'reply',
+      THREAD__THREAD_REPLIES: 'replies',
+      THREAD__INPUT__REPLY_TO_THREAD: 'Reply to thread',
+      THREAD__INPUT__REPLY_IN_THREAD: 'Reply in thread',
     },
   };
   return stringSet[lang];

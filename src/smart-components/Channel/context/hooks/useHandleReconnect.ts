@@ -1,10 +1,7 @@
 import { useEffect } from 'react';
 
 import type { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
-import {
-  MessageListParams,
-  ReplyType,
-} from '@sendbird/chat/message';
+import { MessageListParams, ReplyType } from '@sendbird/chat/message';
 import * as utils from '../utils';
 import { PREV_RESULT_SIZE } from '../const';
 import * as messageActionTypes from '../dux/actionTypes';
@@ -21,7 +18,7 @@ interface StaticParams {
   sdk: SendbirdGroupChat;
   currentGroupChannel: GroupChannel;
   scrollRef: React.RefObject<HTMLDivElement>;
-  messagesDispatcher: ({ type: string, payload: any }) => void;
+  messagesDispatcher: (props: { type: string, payload: any }) => void;
   userFilledMessageListQuery?: Record<string, any>;
 }
 

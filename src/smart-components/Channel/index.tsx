@@ -6,8 +6,7 @@ import {
 } from './context/ChannelProvider';
 
 import ChannelUI, { ChannelUIProps } from './components/ChannelUI';
-export interface ChannelProps extends ChannelContextProps, ChannelUIProps {
-}
+export interface ChannelProps extends ChannelContextProps, ChannelUIProps { }
 
 const Channel: React.FC<ChannelProps> = (props: ChannelProps) => {
   return (
@@ -16,6 +15,7 @@ const Channel: React.FC<ChannelProps> = (props: ChannelProps) => {
       isReactionEnabled={props?.isReactionEnabled}
       isMessageGroupingEnabled={props?.isMessageGroupingEnabled}
       showSearchIcon={props?.showSearchIcon}
+      animatedMessage={props?.animatedMessage}
       highlightedMessage={props?.highlightedMessage}
       startingPoint={props?.startingPoint}
       onBeforeSendUserMessage={props?.onBeforeSendUserMessage}
@@ -25,10 +25,15 @@ const Channel: React.FC<ChannelProps> = (props: ChannelProps) => {
       onSearchClick={props?.onSearchClick}
       onBackClick={props?.onBackClick}
       replyType={props?.replyType}
+      threadReplySelectType={props?.threadReplySelectType}
       queries={props?.queries}
       renderUserProfile={props?.renderUserProfile}
       disableUserProfile={props?.disableUserProfile}
       disableMarkAsRead={props?.disableMarkAsRead}
+      onReplyInThread={props?.onReplyInThread}
+      onQuoteMessageClick={props?.onQuoteMessageClick}
+      onMessageAnimated={props?.onMessageAnimated}
+      onMessageHighlighted={props?.onMessageHighlighted}
     >
       <ChannelUI
         isLoading={props?.isLoading}

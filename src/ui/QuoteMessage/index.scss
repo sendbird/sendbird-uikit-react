@@ -30,6 +30,19 @@
       word-break: keep-all;
       text-overflow: ellipsis;
       font-size: 12px;
+
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      .sendbird-quote-message__replied-to__text__nickname {
+        display: inline-block;
+        max-width: 148px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .sendbird-quote-message__replied-to__text__text {
+        margin: 0px 4px;
+      }
     }
   }
 
@@ -137,4 +150,11 @@
       }
     }
   }
+}
+
+.sendbird-quote-message:hover {
+  cursor: pointer;
+}
+.sendbird-quote-message.unavailable:hover {
+  cursor: default;
 }

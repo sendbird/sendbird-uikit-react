@@ -262,6 +262,7 @@ export const user1 = () => fitPageSize(
     config={{ logLevel: 'all' }}
     queries={{}}
     replyType="QUOTE_REPLY"
+    isReactionEnabled
     isMentionEnabled
     isTypingIndicatorEnabledOnChannelList
     isMessageReceiptStatusEnabledOnChannelList
@@ -299,6 +300,7 @@ export const user3 = () => fitPageSize(
     profileUrl={addProfile}
     config={{ logLevel: 'all' }}
     replyType="QUOTE_REPLY"
+    isReactionEnabled
     isMentionEnabled
     isTypingIndicatorEnabledOnChannelList
     isMessageReceiptStatusEnabledOnChannelList

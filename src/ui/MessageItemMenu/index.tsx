@@ -25,11 +25,14 @@ interface Props {
   isByMe?: boolean;
   disabled?: boolean;
   replyType?: ReplyType;
+  disableDeleteMessage?: boolean;
   showEdit?: (bool: boolean) => void;
   showRemove?: (bool: boolean) => void;
   resendMessage?: (message: UserMessage | FileMessage) => void;
   setQuoteMessage?: (message: UserMessage | FileMessage) => void;
   setSupposedHover?: (bool: boolean) => void;
+  onReplyInThread?: (props: { message: UserMessage | FileMessage }) => void;
+  onMoveToParentMessage?: () => void;
 }
 
 export default function MessageItemMenu({
@@ -39,11 +42,14 @@ export default function MessageItemMenu({
   isByMe = false,
   disabled = false,
   replyType,
+  disableDeleteMessage = null,
   showEdit,
   showRemove,
   resendMessage,
   setQuoteMessage,
   setSupposedHover,
+  onReplyInThread,
+  onMoveToParentMessage = null,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   const triggerRef = useRef(null);
@@ -53,16 +59,26 @@ export default function MessageItemMenu({
   const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe);
   const showMenuItemResend: boolean = (isFailedMessage(message) && message?.isResendable && isByMe);
   const showMenuItemDelete: boolean = !isPendingMessage(message) && isByMe;
+  const showMenuItemOpenInChannel: boolean = onMoveToParentMessage !== null;
   /**
    * TODO: Manage timing issue
    * User delete pending message -> Sending message success
    */
-  const showMenuItemReply: boolean = (replyType === 'QUOTE_REPLY')
-    && !isFailedMessage(message)
+  const isReplyTypeEnabled = !isFailedMessage(message)
     && !isPendingMessage(message)
-    && (channel?.isGroupChannel() && !(channel as GroupChannel)?.isBroadcast);
+    && (channel?.isGroupChannel?.()
+      && !(channel as GroupChannel)?.isBroadcast);
+  const showMenuItemReply = isReplyTypeEnabled && replyType === 'QUOTE_REPLY';
+  const showMenuItemThread = isReplyTypeEnabled && replyType === 'THREAD' && !message?.parentMessageId && onReplyInThread;
 
-  if (!(showMenuItemCopy || showMenuItemReply || showMenuItemEdit || showMenuItemResend || showMenuItemDelete)) {
+  if (!(showMenuItemCopy
+    || showMenuItemReply
+    || showMenuItemThread
+    || showMenuItemOpenInChannel
+    || showMenuItemEdit
+    || showMenuItemResend
+    || showMenuItemDelete
+  )) {
     return null;
   }
   return (
@@ -130,6 +146,28 @@ export default function MessageItemMenu({
                   {stringSet.MESSAGE_MENU__REPLY}
                 </MenuItem>
               )}
+              {showMenuItemThread && (
+                <MenuItem
+                  className="sendbird-message-item-menu__list__menu-item menu-item-thread"
+                  onClick={() => {
+                    onReplyInThread?.({ message });
+                    closeDropdown();
+                  }}
+                >
+                  {stringSet.MESSAGE_MENU__THREAD}
+                </MenuItem>
+              )}
+              {showMenuItemOpenInChannel && (
+                <MenuItem
+                  className="sendbird-message-item-menu__list__menu-item menu-item-open-channel"
+                  onClick={() => {
+                    onMoveToParentMessage?.();
+                    closeDropdown();
+                  }}
+                >
+                  {stringSet.MESSAGE_MENU__OPEN_IN_CHANNEL}
+                </MenuItem>
+              )}
               {showMenuItemEdit && (
                 <MenuItem
                   className="sendbird-message-item-menu__list__menu-item menu-item-edit"
@@ -165,7 +203,11 @@ export default function MessageItemMenu({
                       closeDropdown();
                     }
                   }}
-                  disable={message?.threadInfo?.replyCount > 0}
+                  disable={
+                    typeof disableDeleteMessage === 'boolean'
+                    ? disableDeleteMessage
+                    : message?.threadInfo?.replyCount > 0
+                  }
                 >
                   {stringSet.MESSAGE_MENU__DELETE}
                 </MenuItem>

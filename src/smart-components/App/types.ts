@@ -1,4 +1,7 @@
 import type { User } from "@sendbird/chat";
+import type { GroupChannel } from "@sendbird/chat/groupChannel";
+import type { FileMessage, UserMessage } from "@sendbird/chat/message";
+
 import type { Locale } from "date-fns";
 
 import {
@@ -16,13 +19,11 @@ export interface AppLayoutProps {
   showSearchIcon?: boolean;
   onProfileEditSuccess?(user: User): void;
   disableAutoSelect?: boolean;
-  currentChannelUrl?: string;
-  setCurrentChannelUrl?: React.Dispatch<string>;
+  currentChannel?: GroupChannel;
+  setCurrentChannel?: React.Dispatch<GroupChannel>;
 }
 
 export interface MobileLayoutProps extends AppLayoutProps {
-  currentChannelUrl?: string;
-  setCurrentChannelUrl?: React.Dispatch<string>;
   highlightedMessage?: number;
   setHighlightedMessage?: React.Dispatch<number>;
   startingPoint?: number;
@@ -34,12 +35,14 @@ export interface DesktopLayoutProps extends AppLayoutProps {
   setShowSettings: React.Dispatch<boolean>;
   showSearch: boolean;
   setShowSearch: React.Dispatch<boolean>;
-  currentChannelUrl?: string;
-  setCurrentChannelUrl?: React.Dispatch<string>;
   highlightedMessage?: number;
   setHighlightedMessage?: React.Dispatch<number>;
   startingPoint?: number;
   setStartingPoint?: React.Dispatch<number>;
+  showThread: boolean;
+  setShowThread: React.Dispatch<boolean>;
+  threadTargetMessage: UserMessage | FileMessage;
+  setThreadTargetMessage: React.Dispatch<UserMessage | FileMessage>;
 }
 
 export default interface AppProps {

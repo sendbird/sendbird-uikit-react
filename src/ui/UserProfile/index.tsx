@@ -21,7 +21,7 @@ interface Props {
   logger?: Logger;
   disableMessaging?: boolean;
   createChannel?(params: GroupChannelCreateParams): Promise<GroupChannel>;
-  onSuccess?(): void;
+  onSuccess?: () => void;
 }
 
 function UserProfile({
@@ -58,9 +58,11 @@ function UserProfile({
             <Button
               type={ButtonTypes.SECONDARY}
               onClick={() => {
+                // Create 1:1 channel
                 const params: GroupChannelCreateParams = {
-                  isDistinct: true,
+                  isDistinct: false,
                   invitedUserIds: [user?.userId],
+                  operatorUserIds: [currentUserId],
                 };
                 onSuccess();
                 createChannel(params)

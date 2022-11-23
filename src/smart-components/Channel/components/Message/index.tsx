@@ -72,6 +72,7 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
     updateMessage,
     scrollToMessage,
     replyType,
+    threadReplySelectType,
     isReactionEnabled,
     toggleReaction,
     emojiContainer,
@@ -79,6 +80,10 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
     setQuoteMessage,
     resendMessage,
     renderUserMentionItem,
+    onReplyInThread,
+    onQuoteMessageClick,
+    onMessageAnimated,
+    onMessageHighlighted,
   } = useChannelContext();
 
   const [showEdit, setShowEdit] = useState(false);
@@ -139,6 +144,7 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
         }, 500);
         setTimeout(() => {
           setHighLightedMessageId(0);
+          onMessageHighlighted?.();
         }, 1600);
       }
     } else {
@@ -156,12 +162,13 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
         }, 500);
         setTimeout(() => {
           setAnimatedMessageId(0);
+          onMessageAnimated?.();
         }, 1600);
       }
     } else {
       setIsAnimated(false);
     }
-  }, [animatedMessageId, useMessageScrollRef.current, message.messageId]);
+  }, [animatedMessageId, useMessageScrollRef.current, message.messageId, onMessageAnimated]);
   const renderedMessage = useMemo(() => {
     return renderMessage?.({
       message,
@@ -240,6 +247,9 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
           mentionSelectedUser={selectedUser}
           isMentionEnabled={isMentionEnabled}
           message={message}
+          onStartTyping={() => {
+            currentGroupChannel?.startTyping?.();
+          }}
           onUpdateMessage={({ messageId, message, mentionTemplate }) => {
             updateMessage({
               messageId,
@@ -248,6 +258,7 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
               mentionTemplate,
             });
             setShowEdit(false);
+            currentGroupChannel?.endTyping?.();
           }}
           onCancelEdit={() => {
             setMentionNickname('');
@@ -255,6 +266,7 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
             setMentionedUserIds([]);
             setMentionSuggestedUsers([])
             setShowEdit(false);
+            currentGroupChannel?.endTyping?.();
           }}
           onUserMentioned={(user) => {
             if (selectedUser?.userId === user?.userId) {
@@ -318,6 +330,7 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
             chainBottom={chainBottom}
             isReactionEnabled={isReactionEnabled}
             replyType={replyType}
+            threadReplySelectType={threadReplySelectType}
             nicknamesMap={nicknamesMap}
             emojiContainer={emojiContainer}
             showEdit={setShowEdit}
@@ -326,6 +339,8 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
             resendMessage={resendMessage}
             toggleReaction={toggleReaction}
             setQuoteMessage={setQuoteMessage}
+            onReplyInThread={onReplyInThread}
+            onQuoteMessageClick={onQuoteMessageClick}
           />
         )
       }

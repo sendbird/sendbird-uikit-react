@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import type { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import type { FileMessageCreateParams } from '@sendbird/chat/message';
 
@@ -19,8 +19,7 @@ interface DynamicParams {
 interface StaticParams {
   sdk: SendbirdOpenChat;
   logger: Logger;
-  scrollRef: React.RefObject<HTMLElement>;
-  messagesDispatcher: ({ type: string, payload: any }) => void;
+  messagesDispatcher: (props: { type: string, payload: any }) => void;
 }
 
 type CallbackReturn = (file: File) => void;

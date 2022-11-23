@@ -3,7 +3,7 @@
 exports[`ui/QuoteMessage should do a snapshot test of the ReplyingMessageItemBody DOM 1`] = `
 <DocumentFragment>
   <div
-    class=" sendbird-quote-message outgoing"
+    class=" sendbird-quote-message outgoing "
   >
     <div
       class="sendbird-quote-message__replied-to"
@@ -19,7 +19,19 @@ exports[`ui/QuoteMessage should do a snapshot test of the ReplyingMessageItemBod
       <span
         class="sendbird-quote-message__replied-to__text sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-3"
       >
-        Simon replied to undefined
+        <span
+          class="sendbird-quote-message__replied-to__text__nickname"
+        >
+          Simon
+        </span>
+        <span
+          class="sendbird-quote-message__replied-to__text__text"
+        >
+          replied to
+        </span>
+        <span
+          class="sendbird-quote-message__replied-to__text__nickname"
+        />
       </span>
     </div>
     <div

@@ -8,8 +8,6 @@ import { filterMessageListParams, getSendingMessageStatus } from '../../../../ut
 
 const {
   SUCCEEDED,
-  FAILED,
-  PENDING,
 } = getSendingMessageStatus();
 const getOldestMessageTimeStamp = (messages = []) => {
   const oldestMessage = messages[0];
@@ -168,23 +166,25 @@ export default function reducer(state, action) {
         ],
       };
     case actionTypes.SEND_MESSAGEGE_SUCESS: {
-      const newMessages = state.allMessages.map((m) => (
-        compareIds(m.reqId, action.payload.reqId) ? action.payload : m
+      const message = action.payload;
+      const filteredMessages = state.allMessages.filter((m) => (
+        m?.reqId !== message?.reqId
       ));
-      [...newMessages].sort((a, b) => (
-        (
-          a.sendingStatus
-          && b.sendingStatus
-          && a.sendingStatus === SUCCEEDED
-          && (
-            b.sendingStatus === PENDING
-            || b.sendingStatus === FAILED
-          )
-        ) ? -1 : 1
+      const pendingIndex = filteredMessages.findIndex((msg) => (
+        msg?.sendingStatus === 'pending' || msg?.sendingStatus === 'failed'
       ));
       return {
         ...state,
-        allMessages: newMessages,
+        allMessages: pendingIndex > -1
+          ? [
+            ...filteredMessages.slice(0, pendingIndex),
+            message,
+            ...filteredMessages.slice(pendingIndex),
+          ]
+          : [
+            ...filteredMessages,
+            message,
+          ],
       };
     }
     case actionTypes.SEND_MESSAGEGE_FAILURE: {
@@ -209,6 +209,7 @@ export default function reducer(state, action) {
     case actionTypes.SET_CHANNEL_INVALID: {
       return {
         ...state,
+        currentGroupChannel: null,
         isInvalid: true,
       };
     }

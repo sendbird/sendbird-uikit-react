@@ -66,6 +66,7 @@ const initialTargetStringInfo = {
 const MessageInput = React.forwardRef((props, ref) => {
   const {
     className,
+    messageFieldId,
     isEdit,
     isMentionEnabled,
     disabled,
@@ -85,6 +86,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     onKeyUp,
     onKeyDown,
   } = props;
+  const textFieldId = messageFieldId || TEXT_FIELD_ID;
   const { stringSet } = useContext(LocalizationContext);
   const fileInputRef = useRef(null);
   const [isInput, setIsInput] = useState(false);
@@ -137,7 +139,7 @@ const MessageInput = React.forwardRef((props, ref) => {
   // #Mention | Fill message input values
   useEffect(() => {
     if (isEdit && message?.messageId) {
-      // const textField = document.getElementById(TEXT_FIELD_ID);
+      // const textField = document.getElementById(textFieldId);
       const textField = ref?.current;
       if (isMentionEnabled
         && message?.mentionedUsers?.length > 0
@@ -201,7 +203,7 @@ const MessageInput = React.forwardRef((props, ref) => {
         endOffsetIndex,
       } = targetStringInfo;
       if (targetString && startNodeIndex !== null && startOffsetIndex !== null) {
-        // const textField = document.getElementById(TEXT_FIELD_ID);
+        // const textField = document.getElementById(textFieldId);
         const textField = ref?.current;
         const childNodes = [...textField?.childNodes];
         const frontTextNode = document?.createTextNode(
@@ -381,8 +383,8 @@ const MessageInput = React.forwardRef((props, ref) => {
         ])}
       >
         <div
-          id={`${TEXT_FIELD_ID}${isEdit ? message?.messageId : ''}`}
-          className={`sendbird-message-input--textarea ${TEXT_FIELD_ID}`}
+          id={`${textFieldId}${isEdit ? message?.messageId : ''}`}
+          className={`sendbird-message-input--textarea ${textFieldId}`}
           contentEditable={!disabled}
           role="textbox"
           aria-label="Text Input"
@@ -512,6 +514,7 @@ MessageInput.propTypes = {
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string),
   ]),
+  messageFieldId: PropTypes.string,
   placeholder: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.bool,
@@ -546,6 +549,7 @@ MessageInput.propTypes = {
 
 MessageInput.defaultProps = {
   className: '',
+  messageFieldId: '',
   channelUrl: '',
   onSendMessage: noop,
   onUpdateMessage: noop,

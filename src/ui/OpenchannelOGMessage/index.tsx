@@ -74,7 +74,7 @@ export default function OpenchannelOGMessage({
   const { defaultImage } = ogMetaData;
   const sdk = useSendbirdStateContext?.()?.stores?.sdkStore?.sdk;
   const { stringSet, dateLocale } = useLocalization();
-  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useContext<UserProfileContext>(UserProfileContext);
   const [contextStyle, setContextStyle] = useState({});
   const [contextMenu, setContextMenu] = useState(false);
   const onLongPress = useLongPress({
@@ -163,7 +163,7 @@ export default function OpenchannelOGMessage({
                     parentRef={avatarRef}
                     parentContainRef={avatarRef}
                     closeDropdown={closeDropdown}
-                    style={{ paddingTop: 0, paddingBottom: 0 }}
+                    style={{ paddingTop: '0px', paddingBottom: '0px' }}
                   >
                     {
                       renderUserProfile

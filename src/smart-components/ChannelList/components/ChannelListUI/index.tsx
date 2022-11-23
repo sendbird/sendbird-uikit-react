@@ -227,6 +227,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
                       isTyping={typingChannels?.some(({ url }) => url === channel?.url)}
                       renderChannelAction={(() => (
                         <ChannelPreviewAction
+                          channel={channel}
                           disabled={!isOnline}
                           onLeaveChannel={() => onLeaveChannel(channel, null)}
                         />

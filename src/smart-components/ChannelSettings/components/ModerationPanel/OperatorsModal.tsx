@@ -23,7 +23,7 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
 
   const { channel } = useChannelSettingsContext();
   const state = useSendbirdStateContext();
-  const currentUser = state?.config?.userId;
+  const currentUserId = state?.config?.userId;
   const { stringSet } = useContext(LocalizationContext);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
       setOperators(operators);
     });
     setOperatorQuery(operatorListQuery);
-  }, [])
+  }, []);
   return (
     <div>
       <Modal
@@ -62,50 +62,52 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
             }
           }}
         >
-          { operators.map((member) => (
+          {operators.map((member) => (
             <UserListItem
-              currentUser={currentUser}
+              currentUserId={currentUserId}
               user={member}
               key={member.userId}
               action={({ parentRef, actionRef }) => (
-                <ContextMenu
-                  menuTrigger={(toggleDropdown) => (
-                    <IconButton
-                      className="sendbird-user-message__more__menu"
-                      width="32px"
-                      height="32px"
-                      onClick={toggleDropdown}
-                    >
-                      <Icon
-                        width="24px"
-                        height="24px"
-                        type={IconTypes.MORE}
-                        fillColor={IconColors.CONTENT_INVERSE}
-                      />
-                    </IconButton>
-                  )}
-                  menuItems={(closeDropdown) => (
-                    <MenuItems
-                      parentContainRef={parentRef}
-                      parentRef={actionRef} // for catching location(x, y) of MenuItems
-                      closeDropdown={closeDropdown}
-                      openLeft
-                    >
-                      <MenuItem
-                        onClick={() => {
-                          channel?.removeOperators([member.userId]).then(() => {
-                            setOperators(operators.filter(({ userId }) => {
-                              return userId !== member.userId;
-                            }));
-                          });
-                          closeDropdown();
-                        }}
+                member?.userId !== currentUserId && (
+                  <ContextMenu
+                    menuTrigger={(toggleDropdown) => (
+                      <IconButton
+                        className="sendbird-user-message__more__menu"
+                        width="32px"
+                        height="32px"
+                        onClick={toggleDropdown}
                       >
-                        {stringSet.CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
-                      </MenuItem>
-                    </MenuItems>
-                  )}
-                />
+                        <Icon
+                          width="24px"
+                          height="24px"
+                          type={IconTypes.MORE}
+                          fillColor={IconColors.CONTENT_INVERSE}
+                        />
+                      </IconButton>
+                    )}
+                    menuItems={(closeDropdown) => (
+                      <MenuItems
+                        parentContainRef={parentRef}
+                        parentRef={actionRef} // for catching location(x, y) of MenuItems
+                        closeDropdown={closeDropdown}
+                        openLeft
+                      >
+                        <MenuItem
+                          onClick={() => {
+                            channel?.removeOperators([member.userId]).then(() => {
+                              setOperators(operators.filter(({ userId }) => {
+                                return userId !== member.userId;
+                              }));
+                            });
+                            closeDropdown();
+                          }}
+                        >
+                          {stringSet.CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
+                        </MenuItem>
+                      </MenuItems>
+                    )}
+                  />
+                )
               )}
             />
           ))}

@@ -1,4 +1,3 @@
-
 import React, {
   useEffect,
   useState,
@@ -43,6 +42,7 @@ import useMemoizedEmojiListItems from './hooks/useMemoizedEmojiListItems';
 import useToggleReactionCallback from './hooks/useToggleReactionCallback';
 import useScrollToMessage from './hooks/useScrollToMessage';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
+import { ThreadReplySelectType as _ThreadReplySelectType } from './const';
 
 export type MessageListParams = {
   // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
@@ -66,12 +66,15 @@ export type ChannelQueries = {
   messageListParams?: MessageListParams;
 };
 
+export const ThreadReplySelectType = _ThreadReplySelectType;
+
 export type ChannelContextProps = {
   children?: React.ReactElement;
   channelUrl: string;
   isReactionEnabled?: boolean;
   isMessageGroupingEnabled?: boolean;
   showSearchIcon?: boolean;
+  animatedMessage?: number;
   highlightedMessage?: number;
   startingPoint?: number;
   onBeforeSendUserMessage?(text: string, quotedMessage?: UserMessage | FileMessage): UserMessageCreateParams;
@@ -81,10 +84,15 @@ export type ChannelContextProps = {
   onSearchClick?(): void;
   onBackClick?(): void;
   replyType?: ReplyType;
+  threadReplySelectType?: ThreadReplySelectType;
   queries?: ChannelQueries;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   disableUserProfile?: boolean;
   disableMarkAsRead?: boolean;
+  onReplyInThread?: (props: { message: UserMessage | FileMessage }) => void;
+  onQuoteMessageClick?: (props: { message: UserMessage | FileMessage }) => void;
+  onMessageAnimated?: () => void;
+  onMessageHighlighted?: () => void;
 };
 
 interface MessageStoreInterface {
@@ -157,6 +165,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     isReactionEnabled,
     isMessageGroupingEnabled = true,
     showSearchIcon,
+    animatedMessage,
     highlightedMessage,
     startingPoint,
     onBeforeSendUserMessage,
@@ -166,8 +175,13 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     onSearchClick,
     onBackClick,
     replyType,
+    threadReplySelectType = ThreadReplySelectType.THREAD,
     queries,
     disableMarkAsRead = false,
+    onReplyInThread,
+    onQuoteMessageClick,
+    onMessageAnimated,
+    onMessageHighlighted,
   } = props;
 
   const globalStore = useSendbirdStateContext();
@@ -188,7 +202,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   useEffect(() => {
     setInitialTimeStamp(startingPoint);
   }, [startingPoint, channelUrl]);
-  const [animatedMessageId, setAnimatedMessageId] = useState(null);
+  const [animatedMessageId, setAnimatedMessageId] = useState(0);
   const [highLightedMessageId, setHighLightedMessageId] = useState(highlightedMessage);
   useEffect(() => {
     setHighLightedMessageId(highlightedMessage);
@@ -237,6 +251,13 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       ? utils.getNicknamesMapFromMembers(currentGroupChannel?.members)
       : new Map()
   ), [currentGroupChannel?.members]);
+
+  // Animate message
+  useEffect(() => {
+    if (animatedMessage) {
+      setAnimatedMessageId(animatedMessage);
+    }
+  }, [animatedMessage]);
 
   // Scrollup is default scroll for channel
   const onScrollCallback = useScrollCallback({
@@ -297,6 +318,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     {
       currentGroupChannel,
       sdkInit,
+      currentUserId: userId,
       hasMoreNext,
       disableMarkAsRead
     },
@@ -394,8 +416,13 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       onSearchClick,
       onBackClick,
       replyType,
+      threadReplySelectType,
       queries,
       disableMarkAsRead,
+      onReplyInThread,
+      onQuoteMessageClick,
+      onMessageAnimated,
+      onMessageHighlighted,
 
       // messagesStore
       allMessages,

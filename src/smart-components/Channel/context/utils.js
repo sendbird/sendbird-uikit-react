@@ -217,7 +217,11 @@ export const compareMessagesForGrouping = (
   currMessage,
   nextMessage,
   currentChannel,
+  replyType,
 ) => {
+  if (replyType === 'THREAD' && currMessage?.threadInfo) {
+    return [false, false];
+  }
   const sendingStatus = currMessage?.sendingStatus || '';
   const isAcceptable = sendingStatus !== 'pending' && sendingStatus !== 'failed';
   return [

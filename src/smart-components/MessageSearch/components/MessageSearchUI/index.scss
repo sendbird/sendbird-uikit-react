@@ -3,7 +3,8 @@
 .sendbird-message-search {
   position: relative;
   height: 100%;
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
   @include themed() {
     background-color: t(bg-0);
   }

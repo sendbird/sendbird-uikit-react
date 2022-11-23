@@ -43,7 +43,7 @@ export default function App(props) {
     isTypingIndicatorEnabledOnChannelList,
     isMessageReceiptStatusEnabledOnChannelList,
   } = props;
-  const [currentChannelUrl, setCurrentChannelUrl] = useState(null);
+  const [currentChannel, setCurrentChannel] = useState(null);
   return (
     <Sendbird
       stringSet={stringSet}
@@ -67,14 +67,15 @@ export default function App(props) {
       isReactionEnabled={isReactionEnabled}
       isMentionEnabled={isMentionEnabled}
       onUserProfileMessage={(channel) => {
-        setCurrentChannelUrl(channel?.url);
+        currentChannel(channel);
       }}
       isTypingIndicatorEnabledOnChannelList={isTypingIndicatorEnabledOnChannelList}
       isMessageReceiptStatusEnabledOnChannelList={isMessageReceiptStatusEnabledOnChannelList}
+      replyType={replyType}
     >
       <AppLayout
-        currentChannelUrl={currentChannelUrl}
-        setCurrentChannelUrl={setCurrentChannelUrl}
+        currentChannel={currentChannel}
+        setCurrentChannel={setCurrentChannel}
         isReactionEnabled={isReactionEnabled}
         replyType={replyType}
         isMessageGroupingEnabled={isMessageGroupingEnabled}

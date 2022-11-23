@@ -70,7 +70,7 @@ export default function MutedMembersModal({
         >
           { members.map((member) => (
             <UserListItem
-              currentUser={currentUser}
+              currentUserId={currentUser}
               user={member}
               key={member.userId}
               action={({ actionRef, parentRef }) => (

@@ -11,7 +11,7 @@ interface DynamicParams {
 }
 interface StaticParams {
   logger: Logger;
-  messagesDispatcher: ({ type: string, payload :any }) => void;
+  messagesDispatcher: (props: { type: string, payload :any }) => void;
 }
 type CallbackReturn = (messageId, text, callback) => void;
 

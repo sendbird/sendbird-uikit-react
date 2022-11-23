@@ -19,10 +19,11 @@ import {
   truncateString,
 } from '../../utils';
 interface Props {
+  className?: string | Array<string>;
   message?: UserMessage | FileMessage;
   userId?: string;
   isByMe?: boolean;
-  className?: string | Array<string>;
+  isUnavailable?: boolean;
   onClick?: () => void;
 }
 
@@ -31,6 +32,7 @@ export default function QuoteMessage({
   userId = '',
   isByMe = false,
   className,
+  isUnavailable = false,
   onClick,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
@@ -48,10 +50,18 @@ export default function QuoteMessage({
 
   return (
     <div
-      className={getClassName([className, 'sendbird-quote-message', isByMe ? 'outgoing' : 'incoming'])}
+      className={getClassName([className, 'sendbird-quote-message', isByMe ? 'outgoing' : 'incoming', isUnavailable ? 'unavailable' : ''])}
       key={parentMessage?.messageId}
-      onClick={() => { if (onClick) onClick() }}
-      onTouchEnd={() => { if (onClick) onClick() }}
+      onClick={() => {
+        if (!isUnavailable && onClick) {
+          onClick();
+        }
+      }}
+      onTouchEnd={() => {
+        if (!isUnavailable && onClick) {
+          onClick();
+        }
+      }}
     >
       <div className="sendbird-quote-message__replied-to">
         <Icon
@@ -66,12 +76,25 @@ export default function QuoteMessage({
           type={LabelTypography.CAPTION_2}
           color={LabelColors.ONBACKGROUND_3}
         >
-          {`${currentMessageSenderNickname} ${stringSet.QUOTED_MESSAGE__REPLIED_TO} ${parentMessageSenderNickname}`}
+          <span className="sendbird-quote-message__replied-to__text__nickname">{currentMessageSenderNickname}</span>
+          <span className="sendbird-quote-message__replied-to__text__text">{stringSet.QUOTED_MESSAGE__REPLIED_TO}</span>
+          <span className="sendbird-quote-message__replied-to__text__nickname">{parentMessageSenderNickname}</span>
         </Label>
       </div>
       <div className="sendbird-quote-message__replied-message">
+        {isUnavailable && (
+          <div className="sendbird-quote-message__replied-message__text-message">
+            <Label
+              className="sendbird-quote-message__replied-message__text-message__word"
+              type={LabelTypography.BODY_2}
+              color={LabelColors.ONBACKGROUND_1}
+            >
+              {stringSet.QUOTED_MESSAGE__UNAVAILABLE}
+            </Label>
+          </div>
+        )}
         {/* text message */}
-        {(isUserMessage(parentMessage as UserMessage) && (parentMessage as UserMessage)?.message?.length > 0) && (
+        {((isUserMessage(parentMessage as UserMessage) && (parentMessage as UserMessage)?.message?.length > 0) && !isUnavailable) && (
           <div className="sendbird-quote-message__replied-message__text-message">
             <Label
               className="sendbird-quote-message__replied-message__text-message__word"
@@ -83,7 +106,7 @@ export default function QuoteMessage({
           </div>
         )}
         {/* thumbnail message */}
-        {(isThumbnailMessage(parentMessage as FileMessage) && parentMessageUrl) && (
+        {(isThumbnailMessage(parentMessage as FileMessage) && parentMessageUrl && !isUnavailable) && (
           <div className="sendbird-quote-message__replied-message__thumbnail-message">
             <ImageRenderer
               className="sendbird-quote-message__replied-message__thumbnail-message__image"
@@ -137,7 +160,7 @@ export default function QuoteMessage({
           </div>
         )}
         {/* file message */}
-        {(isFileMessage(parentMessage as FileMessage) && !isSupportedFileView((parentMessage as FileMessage).type) && parentMessageUrl) && (
+        {(isFileMessage(parentMessage as FileMessage) && !isSupportedFileView((parentMessage as FileMessage).type) && parentMessageUrl && !isUnavailable) && (
           <div className="sendbird-quote-message__replied-message__file-message">
             <Icon
               className="sendbird-quote-message__replied-message__file-message__type-icon"

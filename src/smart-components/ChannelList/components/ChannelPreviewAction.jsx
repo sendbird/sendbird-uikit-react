@@ -11,7 +11,11 @@ import IconButton from '../../../ui/IconButton';
 import Icon, { IconTypes, IconColors } from '../../../ui/Icon';
 import LeaveChannelModal from './LeaveChannel';
 
-export default function ChannelPreviewAction({ disabled, onLeaveChannel }) {
+export default function ChannelPreviewAction({
+  channel,
+  disabled,
+  onLeaveChannel,
+}) {
   const parentRef = useRef(null);
   const parentContainerRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
@@ -63,6 +67,7 @@ export default function ChannelPreviewAction({ disabled, onLeaveChannel }) {
       {
         showModal && (
           <LeaveChannelModal
+            channel={channel}
             onSubmit={() => {
               setShowModal(false);
               onLeaveChannel();
@@ -78,8 +83,10 @@ export default function ChannelPreviewAction({ disabled, onLeaveChannel }) {
 ChannelPreviewAction.propTypes = {
   disabled: PropTypes.bool,
   onLeaveChannel: PropTypes.func.isRequired,
+  channel: PropTypes.shape({}),
 };
 
 ChannelPreviewAction.defaultProps = {
   disabled: false,
+  channel: null,
 };

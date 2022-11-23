@@ -1,0 +1,45 @@
+@import '../../../../styles/variables';
+
+.sendbird-thread-header {
+  position: relative;
+  min-width: 320px;
+  width: 320px;
+  min-height: 64px;
+  height: 64px;
+
+  display: inline;
+  padding: 13px 24px;
+  box-sizing: border-box;
+}
+
+.sendbird-thread-header__title {
+  position: relative;
+  max-width: 254px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sendbird-thread-header__channel-name {
+  position: relative;
+  max-width: 254px;
+  height: 12px;
+
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sendbird-thread-header__action {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 56px;
+  height: 100%;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

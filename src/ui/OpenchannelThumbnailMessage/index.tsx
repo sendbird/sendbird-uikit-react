@@ -69,7 +69,7 @@ export default function OpenchannelThumbnailMessage({
   const status = message?.sendingStatus;
   const thumbnailUrl = (thumbnails && thumbnails.length > 0 && thumbnails[0].url) || null;
   const { stringSet, dateLocale } = useLocalization();
-  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useContext<UserProfileContext>(UserProfileContext);
   const [messageWidth, setMessageWidth] = useState(360);
   const [contextMenu, setContextMenu] = useState(false);
   const messageRef = useRef(null);
@@ -134,7 +134,7 @@ export default function OpenchannelThumbnailMessage({
                   parentRef={avatarRef}
                   parentContainRef={avatarRef}
                   closeDropdown={closeDropdown}
-                  style={{ paddingTop: 0, paddingBottom: 0 }}
+                  style={{ paddingTop: '0px', paddingBottom: '0px' }}
                 >
                   {
                     renderUserProfile

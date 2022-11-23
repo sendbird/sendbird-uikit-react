@@ -15,6 +15,7 @@ import { noop } from '../../../../utils/utils';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
+import { Member } from '@sendbird/chat/groupChannel';
 
 interface Props {
   onCancel(): void;
@@ -67,11 +68,11 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
           }}
         >
           {
-            members.map((member) => (
+            members.map((member: Member) => (
               <UserListItem
                 user={member}
                 key={member.userId}
-                currentUser={currentUser}
+                currentUserId={currentUser}
                 action={({ parentRef, actionRef }) => (
                   <>
                     {channel?.myRole === 'operator' && (
@@ -99,6 +100,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                             openLeft
                           >
                             <MenuItem
+                              disable={currentUser === member.userId}
                               onClick={() => {
                                 if ((member.role !== 'operator')) {
                                   channel?.addOperators([member.userId]).then(() => {

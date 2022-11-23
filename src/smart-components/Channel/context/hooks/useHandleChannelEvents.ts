@@ -20,6 +20,7 @@ import * as messageActions from '../dux/actionTypes';
 interface DynamicParams {
   sdkInit: boolean;
   hasMoreNext: boolean;
+  currentUserId: string;
   disableMarkAsRead: boolean;
   currentGroupChannel: GroupChannel;
 }
@@ -31,21 +32,19 @@ interface StaticParams {
   messagesDispatcher: CustomUseReducerDispatcher;
 }
 
-function useHandleChannelEvents(
-  {
-    sdkInit,
-    hasMoreNext,
-    disableMarkAsRead,
-    currentGroupChannel,
-  }: DynamicParams,
-  {
-    sdk,
-    logger,
-    scrollRef,
-    setQuoteMessage,
-    messagesDispatcher,
-  }: StaticParams,
-): void {
+function useHandleChannelEvents({
+  sdkInit,
+  hasMoreNext,
+  currentUserId,
+  disableMarkAsRead,
+  currentGroupChannel,
+}: DynamicParams, {
+  sdk,
+  logger,
+  scrollRef,
+  setQuoteMessage,
+  messagesDispatcher,
+}: StaticParams): void {
   useEffect(() => {
     const channelUrl = currentGroupChannel?.url;
     const channelHandlerId = uuidv4();
@@ -193,8 +192,19 @@ function useHandleChannelEvents(
             });
           }
         },
+        onUserLeft: (channel, user) => {
+          if (compareIds(channel?.url, channelUrl)) {
+            logger.info('Channel | useHandleChannelEvents: onUserLeft', { channel, user });
+            if (user?.userId === currentUserId) {
+              messagesDispatcher({
+                type: messageActions.SET_CURRENT_CHANNEL,
+                payload: null,
+              });
+            }
+          }
+        },
       };
-      logger.info('Channel | useHandleChannelEvents: Setup event handler', channelHandlerId);
+      logger.info('Channel | useHandleChannelEvents: Setup event handler', { channelHandlerId, channelHandler });
       // Add this group channel handler to the Sendbird chat instance
       sdk.groupChannel?.addGroupChannelHandler(channelHandlerId, new GroupChannelHandler(channelHandler));
     }

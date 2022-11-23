@@ -1,0 +1,69 @@
+@import '../../../../styles/variables';
+
+.sendbird-thread-ui {
+  position: relative;
+  max-width: 320px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  @include themed() {
+    border-right: 1px solid t(on-bg-4);
+    border-bottom: 1px solid t(on-bg-4);
+    background-color: t(bg-0);
+  }
+}
+
+.sendbird-thread-ui__header {
+  width: 100%;
+  @include themed() {
+    border-top: 1px solid t(on-bg-4);
+  }
+}
+
+.sendbird-thread-ui--scroll {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100%;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.sendbird-thread-ui__parent-message-info {
+  @include themed() {
+    border-top: 1px solid t(on-bg-4);
+  }
+}
+
+.sendbird-thread-ui__reply-counts {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 42px;
+
+  display: inline-flex;
+  justify-content: start;
+  align-items: center;
+  padding: 16px 11px;
+
+  @include themed() {
+    border-top: 1px solid t(on-bg-4);
+    border-bottom: 1px solid t(on-bg-4);
+  }
+}
+
+.sendbird-thread-ui__thread-list {
+  padding: 16px;
+}
+
+.sendbird-thread-ui__message-input {
+  padding: 0px 16px;
+  margin-bottom: 24px;
+}
+
+.sendbird-thread-ui__thread-list.sendbird-place-holder {
+  box-sizing: border-box;
+}

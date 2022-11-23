@@ -31,8 +31,8 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
     isReactionEnabled,
     showSearchIcon,
     onProfileEditSuccess,
-    currentChannelUrl,
-    setCurrentChannelUrl,
+    currentChannel,
+    setCurrentChannel,
     highlightedMessage,
     setHighlightedMessage,
     startingPoint,
@@ -62,17 +62,17 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
     if (sdk?.groupChannel?.addGroupChannelHandler) {
       const handler = new GroupChannelHandler({
         onUserBanned: (groupChannel, user) => {
-          if (groupChannel.url === currentChannelUrl && user?.userId === userId) {
+          if (groupChannel.url === currentChannel?.url && user?.userId === userId) {
             setPanel(PANELS.CHANNEL_LIST);
           }
         },
         onChannelDeleted: (channelUrl) => {
-          if (channelUrl === currentChannelUrl) {
+          if (channelUrl === currentChannel?.url) {
             setPanel(PANELS.CHANNEL_LIST);
           }
         },
         onUserLeft: (groupChannel, user) => {
-          if (groupChannel.url === currentChannelUrl && user?.userId === userId) {
+          if (groupChannel.url === currentChannel?.url && user?.userId === userId) {
             setPanel(PANELS.CHANNEL_LIST);
           }
         },
@@ -92,7 +92,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
             <ChannelList
               onProfileEditSuccess={onProfileEditSuccess}
               onChannelSelect={(channel) => {
-                setCurrentChannelUrl(channel?.url);
+                setCurrentChannel(channel);
                 setPanel(PANELS.CHANNEL);
               }}
               allowProfileEdit={allowProfileEdit}
@@ -107,7 +107,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
           <div className='sb_mobile__panelwrap'>
             <Channel
               replyType={replyType}
-              channelUrl={currentChannelUrl}
+              channelUrl={currentChannel?.url}
               onSearchClick={() => {
                 setPanel(PANELS.MESSAGE_SEARCH);
               }}
@@ -130,7 +130,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
         panel === PANELS?.CHANNEL_SETTINGS && (
           <div className='sb_mobile__panelwrap'>
             <ChannelSettings
-              channelUrl={currentChannelUrl}
+              channelUrl={currentChannel?.url}
               onCloseClick={() => {
                 setPanel(PANELS.CHANNEL);
               }}
@@ -145,7 +145,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
         panel === PANELS?.MESSAGE_SEARCH && (
           <div className='sb_mobile__panelwrap'>
             <MessageSearch
-              channelUrl={currentChannelUrl}
+              channelUrl={currentChannel?.url}
               onCloseClick={() => {
                 setPanel(PANELS.CHANNEL);
               }}

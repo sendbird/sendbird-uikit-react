@@ -99,7 +99,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
     return (
       createPortal(
         (
-          <>
+          <div className={this.props?.className}>
             <div className="sendbird-dropdown__menu-backdrop" />
             <ul
               className={`${className} sendbird-dropdown__menu`}
@@ -114,7 +114,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
             >
               {children}
             </ul>
-          </>
+          </div>
         ),
         document.getElementById('sendbird-dropdown-portal'),
       )

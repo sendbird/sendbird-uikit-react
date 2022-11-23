@@ -1,0 +1,265 @@
+@import '../../../../styles/variables';
+
+.sendbird-thread-list-item-content {
+  position: relative;
+  display: inline-flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  &.incoming {
+    justify-content: flex-start;
+  }
+  &.outgoing {
+    justify-content: flex-end;
+  }
+  .sendbird-thread-list-item-content__middle {
+    max-width: 200px;
+    @include mobile() {
+      max-width: calc(100vw - 100px);
+    }
+  }
+
+  .sendbird-thread-list-item-content__middle {
+    .sendbird-thread-list-item-content__middle__quote-message.use-quote {
+      margin-top: -8px;
+      bottom: -8px;
+    }
+  }
+}
+
+// incoming
+.sendbird-thread-list-item-content.incoming {
+  .sendbird-thread-list-item-content__left {
+    position: relative;
+    display: inline-flex;
+    min-width: 40px;
+
+    .sendbird-thread-list-item-content__left__avatar {
+      position: absolute;
+      left: 0px;
+      bottom: 2px;
+    }
+  }
+
+  .sendbird-thread-list-item-content__middle {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .sendbird-thread-list-item-content__middle__body-container {
+      .sendbird-thread-list-item-content__middle__message-item-body {
+        max-width: 198px;
+      }
+      .sendbird-thread-list-item-content__middle__body-container__created-at {
+        position: absolute;
+        bottom: 6px;
+        right: -84px;
+        white-space: nowrap;
+        display: flex;
+        flex-direction: row;
+        min-width: 80px;
+        &.sendbird-mouse-hover {
+          display: none;
+        }
+      }
+    }
+
+    .sendbird-thread-list-item-content__middle__sender-name {
+      position: relative;
+      margin-left: 12px;
+      margin-bottom: 4px;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sendbird-thread-list-item-content__middle__quote-message {
+      position: relative;
+      width: 100%;
+      display: inline-flex;
+      &.outgoing { justify-content: flex-end }
+      &.incoming { justify-content: flex-start }
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .sendbird-thread-list-item-content__right {
+    position: relative;
+    display: inline-flex;
+    width: 50px;
+    &.use-reactions { width: 70px; }
+    margin-left: 4px;
+    padding-top: 18px;
+    &.chain-top {
+      padding-top: 2px;
+      &.use-quote {
+        padding-top: 18px;
+      }
+    }
+
+    .sendbird-thread-list-item-content-menu {
+      position: relative;
+      flex-direction: row;
+      height: 32px;
+      display: none;
+      &.sendbird-mouse-hover {
+        display: inline-flex;
+      }
+    }
+  }
+
+  &:hover {
+    .sendbird-thread-list-item-content__right {
+      .sendbird-thread-list-item-content-menu {
+        display: inline-flex;
+      }
+    }
+    .sendbird-thread-list-item-content__middle {
+      .sendbird-thread-list-item-content__middle__body-container {
+        .sendbird-thread-list-item-content__middle__body-container__created-at {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+// outgoing
+.sendbird-thread-list-item-content.outgoing {
+  .sendbird-thread-list-item-content__left {
+    position: relative;
+    box-sizing: border-box;
+    display: inline-flex;
+    justify-content: flex-end;
+    width: 50px;
+    &.use-reactions { width: 70px }
+    &.use-quote {
+      .sendbird-thread-list-item-content-menu {
+        top: 18px;
+      }
+    }
+
+    .sendbird-thread-list-item-content-menu {
+      position: absolute;
+      top: 2px;
+      right: 4px;
+      flex-direction: row;
+      display: none;
+      &.sendbird-mouse-hover {
+        display: inline-flex;
+      }
+    }
+  }
+
+  .sendbird-thread-list-item-content__middle {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    .sendbird-thread-list-item-content__middle__quote-message {
+      position: relative;
+      width: 100%;
+      display: inline-flex;
+      &.outgoing { justify-content: flex-end }
+      &.incoming { justify-content: flex-start }
+    }
+
+    .sendbird-thread-list-item-content__middle__body-container {
+      position: relative;
+      width: fit-content;
+
+      .sendbird-thread-list-item-content__middle__message-item-body {
+        max-width: 200px;
+      }
+
+      .sendbird-thread-list-item-content__middle__body-container__created-at {
+        position: absolute;
+        bottom: 2px;
+        left: -84px;
+        white-space: nowrap;
+        display: flex;
+        justify-content: flex-end;
+        box-sizing: content-box;
+        min-width: 80px;
+        min-height: 16px;
+        &.sendbird-mouse-hover {
+          display: none;
+        }
+        .sendbird-thread-list-item-content__middle__body-container__created-at__component-container {
+          position: relative;
+          display: inline-flex;
+        }
+      }
+    }
+  }
+
+  .sendbird-thread-list-item-content__right {
+    display: none;
+  }
+
+  &:hover {
+    .sendbird-thread-list-item-content__left {
+      .sendbird-thread-list-item-content-menu {
+        display: inline-flex;
+      }
+    }
+    .sendbird-thread-list-item-content__middle {
+      .sendbird-thread-list-item-content__middle__body-container {
+        .sendbird-thread-list-item-content__middle__body-container__created-at {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+.sendbird-thread-list-item-content__middle__body-container {
+  position: relative;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+
+  .sendbird-thread-list-item-content__middle__message-item-body {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+.sendbird-thread-list-item-content-reactions {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 0px 0px 16px 16px;
+  @include themed() { background-color: t(bg-1) }
+  &.primary {
+    @include themed() { background-color: t(primary-3) }
+  }
+  &.mouse-hover, &:hover {
+    @include themed() { background-color: t(bg-2) }
+    &.primary {
+      @include themed() { background-color: t(primary-4) }
+    }
+  }
+}
+
+// threads
+.sendbird-thread-list-item-content__middle__thread-replies {
+  margin-top: 4px;
+}
+.sendbird-thread-list-item-content__middle__message-item-body.sendbird-og-message-item-body,
+.sendbird-thread-list-item-content__middle__message-item-body.sendbird-thumbnail-message-item-body {
+  min-width: 200px;
+  max-width: 200px;
+}
+.sendbird-thread-list-item-content__middle__message-item-body.sendbird-thumbnail-message-item-body {
+  height: 148px;
+}
+.sendbird-thread-list-item-content__middle__message-item-body .sendbird-thumbnail-message-item-body__placeholder,
+.sendbird-thread-list-item-content__middle__message-item-body .sendbird-thumbnail-message-item-body__icon-wrapper,
+.sendbird-thread-list-item-content__middle__message-item-body .sendbird-thumbnail-message-item-body__video {
+  height: 148px;
+}

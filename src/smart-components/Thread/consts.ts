@@ -1,0 +1,2 @@
+export const PREV_THREADS_FETCH_SIZE = 30;
+export const NEXT_THREADS_FETCH_SIZE = 30;
