@@ -458,6 +458,11 @@ declare module "SendbirdUIKitGlobal" {
     messageListParams?: MessageListParams;
   };
 
+  export enum ThreadReplySelectType {
+    PARENT = 'PARENT',
+    THREAD = 'THREAD',
+  }
+
   export type ChannelContextProps = {
     children?: React.ReactElement;
     channelUrl: string;
@@ -473,6 +478,7 @@ declare module "SendbirdUIKitGlobal" {
     onSearchClick?(): void;
     onBackClick?(): void;
     replyType?: ReplyType;
+    threadReplySelectType?: ThreadReplySelectType;
     queries?: ChannelQueries;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode | React.ReactElement;
     disableUserProfile?: boolean;
@@ -1252,6 +1258,7 @@ declare module '@sendbird/uikit-react/Channel/context' {
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
   export const ChannelProvider: React.FunctionComponent<SendbirdUIKitGlobal.ChannelContextProps>;
   export function useChannelContext(): SendbirdUIKitGlobal.ChannelProviderInterface;
+  export const ThreadReplySelectType: SendbirdUIKitGlobal.ThreadReplySelectType;
 }
 
 declare module '@sendbird/uikit-react/Channel/components/ChannelHeader' {

@@ -72,6 +72,7 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
     updateMessage,
     scrollToMessage,
     replyType,
+    threadReplySelectType,
     isReactionEnabled,
     toggleReaction,
     emojiContainer,
@@ -329,6 +330,7 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
             chainBottom={chainBottom}
             isReactionEnabled={isReactionEnabled}
             replyType={replyType}
+            threadReplySelectType={threadReplySelectType}
             nicknamesMap={nicknamesMap}
             emojiContainer={emojiContainer}
             showEdit={setShowEdit}

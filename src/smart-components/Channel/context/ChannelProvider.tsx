@@ -65,6 +65,11 @@ export type ChannelQueries = {
   messageListParams?: MessageListParams;
 };
 
+export enum ThreadReplySelectType {
+  PARENT = 'PARENT',
+  THREAD = 'THREAD',
+}
+
 export type ChannelContextProps = {
   children?: React.ReactElement;
   channelUrl: string;
@@ -81,6 +86,7 @@ export type ChannelContextProps = {
   onSearchClick?(): void;
   onBackClick?(): void;
   replyType?: ReplyType;
+  threadReplySelectType?: ThreadReplySelectType;
   queries?: ChannelQueries;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   disableUserProfile?: boolean;
@@ -171,6 +177,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     onSearchClick,
     onBackClick,
     replyType,
+    threadReplySelectType = ThreadReplySelectType.THREAD,
     queries,
     disableMarkAsRead = false,
     onReplyInThread,
@@ -411,6 +418,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       onSearchClick,
       onBackClick,
       replyType,
+      threadReplySelectType,
       queries,
       disableMarkAsRead,
       onReplyInThread,

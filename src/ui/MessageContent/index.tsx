@@ -45,6 +45,7 @@ import useLongPress from '../../hooks/useLongPress';
 import MobileMenu from '../MobileMenu';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import ThreadReplies from '../ThreadReplies';
+import { ThreadReplySelectType } from '../../smart-components/Channel/context/ChannelProvider';
 
 // should initialize in UserProfileContext.jsx
 export interface UserProfileContextInterface {
@@ -64,6 +65,7 @@ interface Props {
   isReactionEnabled?: boolean;
   disableQuoteMessage?: boolean;
   replyType?: ReplyType;
+  threadReplySelectType?: ThreadReplySelectType;
   nicknamesMap?: Map<string, string>;
   emojiContainer?: EmojiContainer;
   scrollToMessage?: (createdAt: number, messageId: number) => void;
@@ -87,6 +89,7 @@ export default function MessageContent({
   isReactionEnabled = false,
   disableQuoteMessage = false,
   replyType,
+  threadReplySelectType,
   nicknamesMap,
   emojiContainer,
   scrollToMessage,
@@ -209,7 +212,13 @@ export default function MessageContent({
               resendMessage={resendMessage}
               setQuoteMessage={setQuoteMessage}
               setSupposedHover={setSupposedHover}
-              onReplyInThread={onReplyInThread}
+              onReplyInThread={({ message }) => {
+                if (threadReplySelectType === ThreadReplySelectType.THREAD) {
+                  onReplyInThread({ message });
+                } else if (threadReplySelectType === ThreadReplySelectType.PARENT) {
+                  scrollToMessage(message.parentMessage.createdAt, message.parentMessageId);
+                }
+              }}
             />
             {isReactionEnabled && (
               <MessageItemReactionMenu
@@ -254,10 +263,13 @@ export default function MessageContent({
               isByMe={isByMe}
               isUnavailable={(replyType === 'THREAD' && (channel?.joinedAt * 1000) > message?.parentMessage?.createdAt)}
               onClick={() => {
-                if (typeof onQuoteMessageClick) {
+                if (replyType === 'THREAD' && threadReplySelectType === ThreadReplySelectType.THREAD) {
                   onQuoteMessageClick?.({ message: message as UserMessage | FileMessage });
                 }
-                if (replyType === 'QUOTE_REPLY' && message?.parentMessage?.createdAt && message?.parentMessageId) {
+                if (
+                  (replyType === 'QUOTE_REPLY' || (replyType === 'THREAD' && threadReplySelectType === ThreadReplySelectType.PARENT))
+                  && message?.parentMessage?.createdAt && message?.parentMessageId
+                ) {
                   scrollToMessage(message.parentMessage.createdAt, message.parentMessageId);
                 }
               }}
@@ -391,7 +403,13 @@ export default function MessageContent({
               resendMessage={resendMessage}
               setQuoteMessage={setQuoteMessage}
               setSupposedHover={setSupposedHover}
-              onReplyInThread={onReplyInThread}
+              onReplyInThread={({ message }) => {
+                if (threadReplySelectType === ThreadReplySelectType.THREAD) {
+                  onReplyInThread({ message });
+                } else if (threadReplySelectType === ThreadReplySelectType.PARENT) {
+                  scrollToMessage(message.parentMessage.createdAt, message.parentMessageId);
+                }
+              }}
             />
           </div>
         )}

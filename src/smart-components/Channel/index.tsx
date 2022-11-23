@@ -25,6 +25,7 @@ const Channel: React.FC<ChannelProps> = (props: ChannelProps) => {
       onSearchClick={props?.onSearchClick}
       onBackClick={props?.onBackClick}
       replyType={props?.replyType}
+      threadReplySelectType={props?.threadReplySelectType}
       queries={props?.queries}
       renderUserProfile={props?.renderUserProfile}
       disableUserProfile={props?.disableUserProfile}
