@@ -1,5 +1,45 @@
 # Changelog - v3
 
+## [v3.3.0] (Nov 23 2022)
+Features:
+* Provide new module `Thread`. See the specific informations of this module on the [Docs page](https://sendbird.com/docs/uikit)
+  * You can use a combined component `Thread`. Import it with
+    ```typescript
+    import Thread from "@sendbird/uikit-react/Thread"
+    ```
+  * Also you can use `ThreadProvider` and `useThreadContext` for customization. Import it with
+    ```typescript
+    import { ThreadProvider, useThreadContext } from "@sendbird/uikit-react/Thread/context"
+    ```
+  * And the other UI components are provided under the Thread. `ThreadUI`, `ThreadHeader`, `ParentMessageInfo`, `ParentMessageInfoItem`, `ThreadList`, `ThreadListItem`, and `ThreadMessageInput` are it
+* Add `ui/ThreadReplies` component
+  ```typescript
+  interface ThreadRepliesProps {
+    className?: string;
+    threadInfo: ThreadInfo;
+    onClick?: (e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => void;
+  }
+  ```
+* Add channel props `threadReplySelectType`
+  * Type of the value should be
+  ```typescript
+  enum ThreadReplySelectType { PARENT, THREAD }
+  ```
+  You can see how to use it below
+  ```typescript
+  import { ThreadReplySelectType } from "@sendbird/uikit-react/Channel/context";
+
+  <Channel
+    ...
+    threadReplySelectType={ThreadReplySelectType.PARENT}
+  />
+  ```
+
+Fixes:
+* Do not allow operator to unregister itself on the OperatorList of GroupChannel
+* Create new group channel when user open 1:1 channel on the UserProfile
+* Register the channel creator as an operator in 1:1 channel
+
 ## [v3.2.6] (Nov 14 2022)
 Fix:
 * Use ref instead of querySelector for DOM manipulation
