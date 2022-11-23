@@ -42,6 +42,7 @@ import useMemoizedEmojiListItems from './hooks/useMemoizedEmojiListItems';
 import useToggleReactionCallback from './hooks/useToggleReactionCallback';
 import useScrollToMessage from './hooks/useScrollToMessage';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
+import { ThreadReplySelectType as _ThreadReplySelectType } from './const';
 
 export type MessageListParams = {
   // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
@@ -65,10 +66,7 @@ export type ChannelQueries = {
   messageListParams?: MessageListParams;
 };
 
-export enum ThreadReplySelectType {
-  PARENT = 'PARENT',
-  THREAD = 'THREAD',
-}
+export const ThreadReplySelectType = _ThreadReplySelectType;
 
 export type ChannelContextProps = {
   children?: React.ReactElement;

@@ -45,7 +45,7 @@ import useLongPress from '../../hooks/useLongPress';
 import MobileMenu from '../MobileMenu';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import ThreadReplies from '../ThreadReplies';
-import { ThreadReplySelectType } from '../../smart-components/Channel/context/ChannelProvider';
+import { ThreadReplySelectType } from '../../smart-components/Channel/context/const';
 
 // should initialize in UserProfileContext.jsx
 export interface UserProfileContextInterface {

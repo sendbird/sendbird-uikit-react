@@ -204,7 +204,7 @@ function useHandleChannelEvents({
           }
         },
       };
-      logger.info('Channel | useHandleChannelEvents: Setup event handler', channelHandlerId, channelHandler);
+      logger.info('Channel | useHandleChannelEvents: Setup event handler', { channelHandlerId, channelHandler });
       // Add this group channel handler to the Sendbird chat instance
       sdk.groupChannel?.addGroupChannelHandler(channelHandlerId, new GroupChannelHandler(channelHandler));
     }
