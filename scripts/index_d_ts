@@ -469,6 +469,7 @@ declare module "SendbirdUIKitGlobal" {
     isReactionEnabled?: boolean;
     isMessageGroupingEnabled?: boolean;
     showSearchIcon?: boolean;
+    animatedMessage?: number;
     highlightedMessage?: number;
     startingPoint?: number;
     onBeforeSendUserMessage?(text: string, quotedMessage?: UserMessage | FileMessage): UserMessageCreateParams;
@@ -480,9 +481,13 @@ declare module "SendbirdUIKitGlobal" {
     replyType?: ReplyType;
     threadReplySelectType?: ThreadReplySelectType;
     queries?: ChannelQueries;
-    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode | React.ReactElement;
+    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
     disableUserProfile?: boolean;
     disableMarkAsRead?: boolean;
+    onReplyInThread?: (props: { message: UserMessage | FileMessage }) => void;
+    onQuoteMessageClick?: (props: { message: UserMessage | FileMessage }) => void;
+    onMessageAnimated?: () => void;
+    onMessageHighlighted?: () => void;
   };
 
   export interface ChannelUIProps {
@@ -1258,7 +1263,7 @@ declare module '@sendbird/uikit-react/Channel/context' {
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
   export const ChannelProvider: React.FunctionComponent<SendbirdUIKitGlobal.ChannelContextProps>;
   export function useChannelContext(): SendbirdUIKitGlobal.ChannelProviderInterface;
-  export const ThreadReplySelectType: SendbirdUIKitGlobal.ThreadReplySelectType;
+  export enum ThreadReplySelectType { PARENT, THREAD }
 }
 
 declare module '@sendbird/uikit-react/Channel/components/ChannelHeader' {
