@@ -12,6 +12,37 @@ Features:
     import { ThreadProvider, useThreadContext } from "@sendbird/uikit-react/Thread/context"
     ```
   * And the other UI components are provided under the Thread. `ThreadUI`, `ThreadHeader`, `ParentMessageInfo`, `ParentMessageInfoItem`, `ThreadList`, `ThreadListItem`, and `ThreadMessageInput` are it
+* Add channel props
+  * `threadReplySelectType`: Type of the value should be
+    ```typescript
+    enum ThreadReplySelectType { PARENT, THREAD }
+    ```
+    You can see how to use it below
+    ```typescript
+    import { ThreadReplySelectType } from "@sendbird/uikit-react/Channel/context";
+
+    <Channel
+      ...
+      threadReplySelectType={ThreadReplySelectType.PARENT}
+    />
+    ```
+  * `animatedMessage`: Type of the value should be number(messageId)
+  * `onReplyInThread`: This function is called when user click the button "Reply in thread" on the message context menu
+    ```typescript
+    type onReplyInThread = ({ message: UserMessage | FileMessage }) => void
+    ```
+  * `onQuoteMessageClick`: This function is called when user click the quote message on the message of Channel
+    ```typescript
+    type onQuoteMessageClick = ({ message: UserMessage | FileMessage }) => {}
+    ```
+  * `onMessageAnimated`: This function is called after that message item is animated
+    ```typescript
+    type onMessageAnimated = () => void
+    ```
+  * `onMessageHighlighted`: This function is called after that message item is highlighted
+    ```typescript
+    type onMessageHighlighted = () => void
+    ```
 * Add `ui/ThreadReplies` component
   ```typescript
   interface ThreadRepliesProps {
@@ -19,20 +50,6 @@ Features:
     threadInfo: ThreadInfo;
     onClick?: (e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => void;
   }
-  ```
-* Add channel props `threadReplySelectType`
-  * Type of the value should be
-  ```typescript
-  enum ThreadReplySelectType { PARENT, THREAD }
-  ```
-  You can see how to use it below
-  ```typescript
-  import { ThreadReplySelectType } from "@sendbird/uikit-react/Channel/context";
-
-  <Channel
-    ...
-    threadReplySelectType={ThreadReplySelectType.PARENT}
-  />
   ```
 
 Fixes:
