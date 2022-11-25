@@ -1,5 +1,33 @@
 # Changelog - v3
 
+## [v3.3.1] (Nov 23 2022)
+Fixes:
+* Rename properties of `useThreadContext`
+  * `channelStatus` to `channelState`
+  * `parentMessageInfoStatus` to `parentMessageState`
+  * `threadListStatus` to `threadListState`
+* Change the state types to enum
+  ```typescript
+  enum ChannelStateTypes {
+    NIL = 'NIL',
+    LOADING = 'LOADING',
+    INVALID = 'INVALID',
+    INITIALIZED = 'INITIALIZED',
+  }
+  enum ParentMessageStateTypes {
+    NIL = 'NIL',
+    LOADING = 'LOADING',
+    INVALID = 'INVALID',
+    INITIALIZED = 'INITIALIZED',
+  }
+  enum ThreadListStateTypes {
+    NIL = 'NIL',
+    LOADING = 'LOADING',
+    INVALID = 'INVALID',
+    INITIALIZED = 'INITIALIZED',
+  }
+  ```
+
 ## [v3.3.0] (Nov 23 2022)
 Features:
 * Provide new module `Thread`. See the specific informations of this module on the [Docs page](https://sendbird.com/docs/uikit)

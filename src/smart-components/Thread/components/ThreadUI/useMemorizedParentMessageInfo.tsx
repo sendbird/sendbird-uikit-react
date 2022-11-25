@@ -1,31 +1,31 @@
 import React, { ReactElement, useMemo } from 'react';
 
-import { ParentMessageInfoStateTypes } from '../../types';
+import { ParentMessageStateTypes } from '../../types';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 export interface UseMemorizedParentMessageInfoProps {
   parentMessage: UserMessage | FileMessage;
-  parentMessageInfoStatus: ParentMessageInfoStateTypes;
+  parentMessageState: ParentMessageStateTypes;
   renderParentMessageInfo?: () => React.ReactElement;
-  renderParentMessageInfoPlaceholder?: (type: ParentMessageInfoStateTypes) => React.ReactElement;
+  renderParentMessageInfoPlaceholder?: (type: ParentMessageStateTypes) => React.ReactElement;
 }
 
 const useMemorizedParentMessageInfo = ({
   parentMessage,
-  parentMessageInfoStatus,
+  parentMessageState,
   renderParentMessageInfo,
   renderParentMessageInfoPlaceholder,
 }: UseMemorizedParentMessageInfoProps): ReactElement => useMemo(() => {
-  if (parentMessageInfoStatus === ParentMessageInfoStateTypes.NIL
-    || parentMessageInfoStatus === ParentMessageInfoStateTypes.LOADING
-    || parentMessageInfoStatus === ParentMessageInfoStateTypes.INVALID
+  if (parentMessageState === ParentMessageStateTypes.NIL
+    || parentMessageState === ParentMessageStateTypes.LOADING
+    || parentMessageState === ParentMessageStateTypes.INVALID
   ) {
     if (typeof renderParentMessageInfoPlaceholder === 'function') {
-      return renderParentMessageInfoPlaceholder(parentMessageInfoStatus);
+      return renderParentMessageInfoPlaceholder(parentMessageState);
     }
-    switch (parentMessageInfoStatus) {
-      case ParentMessageInfoStateTypes.NIL: {
+    switch (parentMessageState) {
+      case ParentMessageStateTypes.NIL: {
         return (
           <PlaceHolder
             className="sendbird-thread-ui__parent-message-info placeholder-nil"
@@ -34,7 +34,7 @@ const useMemorizedParentMessageInfo = ({
           />
         );
       }
-      case ParentMessageInfoStateTypes.LOADING: {
+      case ParentMessageStateTypes.LOADING: {
         return (
           <PlaceHolder
             className="sendbird-thread-ui__parent-message-info placeholder-loading"
@@ -43,7 +43,7 @@ const useMemorizedParentMessageInfo = ({
           />
         );
       }
-      case ParentMessageInfoStateTypes.INVALID: {
+      case ParentMessageStateTypes.INVALID: {
         return (
           <PlaceHolder
             className="sendbird-thread-ui__parent-message-info placeholder-invalid"
@@ -56,7 +56,7 @@ const useMemorizedParentMessageInfo = ({
         return null;
       }
     }
-  } else if (parentMessageInfoStatus === ParentMessageInfoStateTypes.INITIALIZED) {
+  } else if (parentMessageState === ParentMessageStateTypes.INITIALIZED) {
     if (typeof renderParentMessageInfo === 'function') {
       return renderParentMessageInfo();
     }
@@ -64,7 +64,7 @@ const useMemorizedParentMessageInfo = ({
   return null;
 }, [
   parentMessage,
-  parentMessageInfoStatus,
+  parentMessageState,
   renderParentMessageInfo,
   renderParentMessageInfoPlaceholder,
 ]);

@@ -893,7 +893,7 @@ declare module "SendbirdUIKitGlobal" {
     INVALID = 'INVALID',
     INITIALIZED = 'INITIALIZED',
   }
-  export enum ParentMessageInfoStateTypes {
+  export enum ParentMessageStateTypes {
     NIL = 'NIL',
     LOADING = 'LOADING',
     INVALID = 'INVALID',
@@ -942,9 +942,9 @@ declare module "SendbirdUIKitGlobal" {
     currentChannel: GroupChannel;
     allThreadMessages: Array<BaseMessage>;
     parentMessage: UserMessage | FileMessage;
-    channelStatus: ChannelStateTypes;
-    parentMessageInfoStatus: ParentMessageInfoStateTypes;
-    threadListStatus: ThreadListStateTypes;
+    channelState: ChannelStateTypes;
+    parentMessageState: ParentMessageStateTypes;
+    threadListState: ThreadListStateTypes;
     hasMorePrev: boolean;
     hasMoreNext: boolean;
     emojiContainer: EmojiContainer;
@@ -959,7 +959,7 @@ declare module "SendbirdUIKitGlobal" {
     renderMessage?: (props: { message: UserMessage | FileMessage }) => React.ReactElement;
     renderMessageInput?: () => React.ReactElement;
     renderCustomSeparator?: () => React.ReactElement;
-    renderParentMessageInfoPlaceholder?: (type: ParentMessageInfoStateTypes) => React.ReactElement;
+    renderParentMessageInfoPlaceholder?: (type: ParentMessageStateTypes) => React.ReactElement;
     renderThreadListPlaceHolder?: (type: ThreadListStateTypes) => React.ReactElement;
   }
 
@@ -1501,10 +1501,24 @@ declare module '@sendbird/uikit-react/Thread/context' {
 }
 
 declare module '@sendbird/uikit-react/Thread/context/types' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  export const ChannelStateTypes: SendbirdUIKitGlobal.ChannelStateTypes;
-  export const ParentMessageInfoStateTypes: SendbirdUIKitGlobal.ParentMessageInfoStateTypes;
-  export const ThreadListStateTypes: SendbirdUIKitGlobal.ThreadListStateTypes;
+  export enum ChannelStateTypes {
+    NIL = 'NIL',
+    LOADING = 'LOADING',
+    INVALID = 'INVALID',
+    INITIALIZED = 'INITIALIZED',
+  }
+  export enum ParentMessageStateTypes {
+    NIL = 'NIL',
+    LOADING = 'LOADING',
+    INVALID = 'INVALID',
+    INITIALIZED = 'INITIALIZED',
+  }
+  export enum ThreadListStateTypes {
+    NIL = 'NIL',
+    LOADING = 'LOADING',
+    INVALID = 'INVALID',
+    INITIALIZED = 'INITIALIZED',
+  }
 }
 
 declare module '@sendbird/uikit-react/Thread/components/ThreadUI' {

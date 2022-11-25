@@ -7,7 +7,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { getChannelTitle } from '../../../Channel/components/ChannelHeader/utils';
 import { useThreadContext } from '../../context/ThreadProvider';
-import { ParentMessageInfoStateTypes, ThreadListStateTypes } from '../../types';
+import { ParentMessageStateTypes, ThreadListStateTypes } from '../../types';
 import ParentMessageInfo from '../ParentMessageInfo';
 import ThreadHeader from '../ThreadHeader';
 import ThreadList from '../ThreadList';
@@ -24,7 +24,7 @@ export interface ThreadUIProps {
   renderMessage?: (props: { message: UserMessage | FileMessage }) => React.ReactElement;
   renderMessageInput?: () => React.ReactElement;
   renderCustomSeparator?: () => React.ReactElement;
-  renderParentMessageInfoPlaceholder?: (type: ParentMessageInfoStateTypes) => React.ReactElement;
+  renderParentMessageInfoPlaceholder?: (type: ParentMessageStateTypes) => React.ReactElement;
   renderThreadListPlaceHolder?: (type: ThreadListStateTypes) => React.ReactElement;
 }
 
@@ -48,8 +48,8 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
     currentChannel,
     allThreadMessages,
     parentMessage,
-    parentMessageInfoStatus,
-    threadListStatus,
+    parentMessageState,
+    threadListState,
     hasMorePrev,
     hasMoreNext,
     fetchPrevThreads,
@@ -63,12 +63,12 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
   const MemorizedHeader = useMemorizedHeader({ renderHeader });
   const MemorizedParentMessageInfo = useMemorizedParentMessageInfo({
     parentMessage,
-    parentMessageInfoStatus,
+    parentMessageState,
     renderParentMessageInfo,
     renderParentMessageInfoPlaceholder, // nil, loading, invalid
   });
   const MemorizedThreadList = useMemorizedThreadList({
-    threadListStatus,
+    threadListState,
     renderThreadListPlaceHolder,
   });
 

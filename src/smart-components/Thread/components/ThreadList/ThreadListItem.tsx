@@ -51,7 +51,7 @@ export default function ThreadListItem({
     nicknamesMap,
     emojiContainer,
     toggleReaction,
-    threadListStatus,
+    threadListState,
     updateMessage,
     resendMessage,
     deleteMessage,
@@ -112,7 +112,7 @@ export default function ThreadListItem({
   }, [mentionedUserIds]);
 
   // edit input
-  const disabled = !(threadListStatus === ThreadListStateTypes.INITIALIZED)
+  const disabled = !(threadListState === ThreadListStateTypes.INITIALIZED)
     || !isOnline
     || isMuted
     || isChannelFrozen;

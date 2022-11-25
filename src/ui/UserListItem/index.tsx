@@ -20,7 +20,7 @@ export interface UserListItemProps {
   isOperator?: boolean;
   disabled?: boolean;
   disableMessaging?: boolean;
-  currentUserId?: string;
+  currentUser?: string;
   action?({ actionRef, parentRef }: {
     actionRef: MutableRefObject<any>,
     parentRef?: MutableRefObject<any>,
@@ -36,7 +36,7 @@ export default function UserListItem({
   isOperator,
   disabled,
   disableMessaging,
-  currentUserId,
+  currentUser,
   action,
   onChange,
 }: UserListItemProps): ReactElement {
@@ -91,14 +91,14 @@ export default function UserListItem({
               renderUserProfile
                 ? renderUserProfile({
                   user,
-                  currentUserId,
+                  currentUserId: currentUser,
                   close: closeDropdown,
                 })
                 : (
                   <UserProfile
                     disableMessaging={disableMessaging}
                     user={user}
-                    currentUserId={currentUserId}
+                    currentUserId={currentUser}
                     onSuccess={closeDropdown}
                   />
                 )
@@ -113,7 +113,7 @@ export default function UserListItem({
       >
         {user.nickname || stringSet.NO_NAME}
         {
-          (currentUserId === user.userId) && (
+          (currentUser === user.userId) && (
             ' (You)'
           )
         }

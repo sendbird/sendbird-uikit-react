@@ -5,7 +5,7 @@ export enum ChannelStateTypes {
   INVALID = 'INVALID',
   INITIALIZED = 'INITIALIZED',
 }
-export enum ParentMessageInfoStateTypes {
+export enum ParentMessageStateTypes {
   NIL = 'NIL',
   LOADING = 'LOADING',
   INVALID = 'INVALID',
