@@ -13,6 +13,7 @@ import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { RenderUserProfileProps } from '../../../types';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import uuidv4 from '../../../utils/uuid';
+import { CHANNEL_TYPE } from '../../CreateChannel/types';
 
 interface ApplicationUserListQuery {
   limit?: number;
@@ -25,12 +26,19 @@ interface ChannelSettingsQueries {
   applicationUserListQuery?: ApplicationUserListQuery;
 }
 
+type OverrideInviteUserType = {
+  users: Array<string>;
+  onClose: () => void;
+  channel: GroupChannel;
+};
+
 export type ChannelSettingsContextProps = {
   children?: React.ReactElement;
   channelUrl: string;
   className?: string;
   onCloseClick?(): void;
   onLeaveChannel?(): void;
+  overrideInviteUser?(params: OverrideInviteUserType): void;
   onChannelModified?(channel: GroupChannel): void;
   onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): GroupChannelUpdateParams;
   queries?: ChannelSettingsQueries;
@@ -42,6 +50,7 @@ interface ChannelSettingsProviderInterface {
   channelUrl: string;
   onCloseClick?(): void;
   onLeaveChannel?(): void;
+  overrideInviteUser?(params: OverrideInviteUserType): void;
   onChannelModified?(channel: GroupChannel): void;
   onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): GroupChannelUpdateParams;
   queries?: ChannelSettingsQueries;
@@ -61,6 +70,7 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
     onCloseClick,
     onLeaveChannel,
     onChannelModified,
+    overrideInviteUser,
     onBeforeUpdateChannel,
     queries,
   } = props;
@@ -114,6 +124,7 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
       onChannelModified,
       onBeforeUpdateChannel,
       queries,
+      overrideInviteUser,
       setChannelUpdateId,
       forceUpdateUI,
       channel,

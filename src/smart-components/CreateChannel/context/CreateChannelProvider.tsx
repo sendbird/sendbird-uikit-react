@@ -17,9 +17,16 @@ export interface UserListQuery {
   next(): Promise<Array<User>>;
 }
 
+type OverrideInviteUserType = {
+  users: Array<string>;
+  onClose: () => void;
+  channelType: CHANNEL_TYPE;
+};
+
 export interface CreateChannelProviderProps {
   children?: React.ReactElement;
   onCreateChannel(channel: GroupChannel): void;
+  overrideInviteUser?(params: OverrideInviteUserType): void;
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
   userListQuery?(): UserListQuery;
 }
@@ -31,6 +38,7 @@ export interface CreateChannelContextInterface {
   createChannel: CreateChannel;
   sdk: SendbirdGroupChat;
   userListQuery?(): UserListQuery;
+  overrideInviteUser?(params: OverrideInviteUserType): void;
   onCreateChannel?(channel: GroupChannel): void;
   step: number,
   setStep: React.Dispatch<React.SetStateAction<number>>,
@@ -43,6 +51,7 @@ const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: Crea
     children,
     onCreateChannel,
     onBeforeCreateChannel,
+    overrideInviteUser,
     userListQuery,
   } = props;
 
@@ -59,6 +68,7 @@ const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: Crea
       onBeforeCreateChannel,
       createChannel,
       onCreateChannel,
+      overrideInviteUser,
       userListQuery: userListQuery || userListQuery_,
       step,
       setStep,

@@ -26,7 +26,7 @@ export default function InviteUsers({
   const sdk = state?.stores?.sdkStore?.sdk;
   const globalUserListQuery = state?.config?.userListQuery;
 
-  const { channel } = useChannelSettingsContext();
+  const { channel, overrideInviteUser } = useChannelSettingsContext();
   const { stringSet } = useLocalization();
 
   useEffect(() => {
@@ -48,6 +48,14 @@ export default function InviteUsers({
         onCancel={() => onCancel()}
         onSubmit={() => {
           const members = Object.keys(selectedMembers).filter((m) => selectedMembers[m]);
+          if(typeof overrideInviteUser === 'function') {
+            overrideInviteUser({
+              users: members,
+              onClose: onCancel,
+              channel,
+            });
+            return;
+          }
           channel?.inviteWithUserIds(members).then(() => {
             onSubmit(members);
           });

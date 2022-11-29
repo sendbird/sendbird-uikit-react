@@ -310,8 +310,15 @@ declare module "SendbirdUIKitGlobal" {
     channelListQuery?: GroupChannelListQueryParams;
   }
 
+  export type OverrideInviteUserType = {
+    users: Array<string>;
+    onClose: () => void;
+    channelType: 'group' | 'supergroup' | 'broadcast';
+  };
+
   export interface ChannelListProviderProps {
     allowProfileEdit?: boolean;
+    overrideInviteUser?(params: OverrideInviteUserType): void;
     onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
     onThemeChange?(theme: string): void;
     onProfileEditSuccess?(user: User): void;
@@ -381,9 +388,16 @@ declare module "SendbirdUIKitGlobal" {
     onLeaveChannel?: () => void;
   }
 
+  export type OverrideInviteMemberType = {
+    users: Array<string>;
+    onClose: () => void;
+    channel: GroupChannel;
+  };
+
   export interface ChannelSettingsProviderInterface {
     channelUrl: string;
     onCloseClick?(): void;
+    overrideInviteUser?(params: OverrideInviteMemberType): void;
     onChannelModified?(channel: GroupChannel): void;
     onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): GroupChannelUpdateParams;
     queries?: ChannelSettingsQueries;
@@ -409,6 +423,7 @@ declare module "SendbirdUIKitGlobal" {
     className?: string;
     onCloseClick?(): void;
     onChannelModified?(channel: GroupChannel): void;
+    overrideInviteUser?(params: OverrideInviteMemberType): void;
     onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): GroupChannelUpdateParams;
     queries?: ChannelSettingsQueries;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode | React.ReactElement;
@@ -1015,11 +1030,13 @@ declare module "SendbirdUIKitGlobal" {
   export interface CreateChannelProviderProps {
     children?: React.ReactNode | React.ReactElement;
     onCreateChannel(channel: GroupChannel): void;
+    overrideInviteUser?(params: OverrideInviteUserType): void;
     onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
     userListQuery?(): UserListQuery;
   }
 
   export interface CreateChannelContextInterface {
+    overrideInviteUser?(params: OverrideInviteUserType): void;
     onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
     createChannel: (channelParams: GroupChannelCreateParams) => Promise<GroupChannel>;
     sdk: SendbirdGroupChat | SendbirdOpenChat;
