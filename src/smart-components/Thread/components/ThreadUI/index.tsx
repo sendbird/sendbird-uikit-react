@@ -21,7 +21,12 @@ import { isAboutSame } from '../../context/utils';
 export interface ThreadUIProps {
   renderHeader?: () => React.ReactElement;
   renderParentMessageInfo?: () => React.ReactElement;
-  renderMessage?: (props: { message: UserMessage | FileMessage }) => React.ReactElement;
+  renderMessage?: (props: {
+    message: UserMessage | FileMessage,
+    chainTop: boolean,
+    chainBottom: boolean,
+    hasSeparator: boolean,
+  }) => React.ReactElement;
   renderMessageInput?: () => React.ReactElement;
   renderCustomSeparator?: () => React.ReactElement;
   renderParentMessageInfoPlaceholder?: (type: ParentMessageStateTypes) => React.ReactElement;
