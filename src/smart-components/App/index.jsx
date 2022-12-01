@@ -67,7 +67,7 @@ export default function App(props) {
       isReactionEnabled={isReactionEnabled}
       isMentionEnabled={isMentionEnabled}
       onUserProfileMessage={(channel) => {
-        currentChannel(channel);
+        setCurrentChannel(channel);
       }}
       isTypingIndicatorEnabledOnChannelList={isTypingIndicatorEnabledOnChannelList}
       isMessageReceiptStatusEnabledOnChannelList={isMessageReceiptStatusEnabledOnChannelList}

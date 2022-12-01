@@ -4,12 +4,12 @@ import type { GroupChannel, GroupChannelCreateParams } from '@sendbird/chat/grou
 import type { User } from '@sendbird/chat';
 
 import { LocalizationContext } from '../../lib/LocalizationContext';
-import withSendbirdContext from '../../lib/SendbirdSdkContext';
 import { UserProfileContext } from '../../lib/UserProfileContext';
-import { getSdk, getCreateGroupChannel } from '../../lib/selectors';
+import { getCreateGroupChannel } from '../../lib/selectors';
 import Avatar from '../Avatar/index';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import Button, { ButtonTypes } from '../Button';
+import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 interface Logger {
   info?(message: string, channel: GroupChannel): void;
@@ -27,12 +27,14 @@ interface Props {
 function UserProfile({
   user,
   currentUserId,
-  logger,
   disableMessaging = false,
-  createChannel,
   onSuccess,
 }: Props): ReactElement {
+  const store = useSendbirdStateContext();
+  const createChannel = getCreateGroupChannel(store);
+  const logger = store?.config?.logger;
   const { stringSet } = useContext(LocalizationContext);
+  const currentUserId_ = currentUserId || store?.config?.userId;
   // @ts-ignore
   const { onUserProfileMessage } = useContext(UserProfileContext);
   return (
@@ -53,7 +55,7 @@ function UserProfile({
         </Label>
       </section>
       {
-        (user?.userId !== currentUserId) && !disableMessaging && (
+        (user?.userId !== currentUserId_) && !disableMessaging && (
           <section className="sendbird__user-profile-message">
             <Button
               type={ButtonTypes.SECONDARY}
@@ -62,7 +64,7 @@ function UserProfile({
                 const params: GroupChannelCreateParams = {
                   isDistinct: false,
                   invitedUserIds: [user?.userId],
-                  operatorUserIds: [currentUserId],
+                  operatorUserIds: [currentUserId_],
                 };
                 onSuccess();
                 createChannel(params)
@@ -100,13 +102,4 @@ function UserProfile({
   );
 }
 
-const mapStoreToProps = (store) => ({
-  sdk: getSdk(store),
-  createChannel: getCreateGroupChannel(store),
-  logger: store.config.logger,
-  pubsub: store.config.pubSub,
-});
-
-const ConnectedUserProfile = withSendbirdContext(UserProfile, mapStoreToProps);
-
-export default ConnectedUserProfile;
+export default UserProfile;
