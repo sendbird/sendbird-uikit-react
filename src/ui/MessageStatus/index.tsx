@@ -1,5 +1,5 @@
 import './index.scss';
-import React, { useMemo } from 'react';
+import React from 'react';
 import format from 'date-fns/format';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { FileMessage, UserMessage } from '@sendbird/chat/message';

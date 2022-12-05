@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { GroupChannel, GroupChannelHandler, SendbirdGroupChat } from "@sendbird/chat/groupChannel";
 import { FileMessage, UserMessage } from "@sendbird/chat/message";
 
-import { scrollIntoLast, isAboutSame } from '../utils';
+import { scrollIntoLast } from '../utils';
 
 import { CustomUseReducerDispatcher, Logger } from "../../../../lib/SendbirdState";
 import uuidv4 from "../../../../utils/uuid";
