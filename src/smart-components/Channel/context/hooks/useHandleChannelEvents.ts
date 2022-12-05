@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { GroupChannel, GroupChannelHandler, SendbirdGroupChat } from "@sendbird/chat/groupChannel";
 import { FileMessage, UserMessage } from "@sendbird/chat/message";
 
-import { scrollIntoLast } from '../utils';
+import { scrollIntoLast, isAboutSame } from '../utils';
 
 import { CustomUseReducerDispatcher, Logger } from "../../../../lib/SendbirdState";
 import uuidv4 from "../../../../utils/uuid";
@@ -56,7 +56,8 @@ function useHandleChannelEvents({
             let scrollToEnd = false;
             try {
               const { current } = scrollRef;
-              scrollToEnd = current.offsetHeight + current.scrollTop >= current.scrollHeight;
+              scrollToEnd = current.offsetHeight + current.scrollTop >= current.scrollHeight - 10;
+              // 10 is a buffer
             } catch (error) {
               //
             }
