@@ -29,9 +29,7 @@ export default function MessageStatus({
   channel,
 }: MessageStatusProps): React.ReactElement {
   const { dateLocale } = useLocalization();
-  const status = useMemo(() => (
-    getOutgoingMessageState(channel, message)
-  ), [channel, message]);
+  const status = getOutgoingMessageState(channel, message);
   const hideMessageStatusIcon = channel?.isGroupChannel?.() && (
     (channel.isSuper || channel.isPublic || channel.isBroadcast)
     && !(status === OutgoingMessageStates.PENDING || status === OutgoingMessageStates.FAILED)
