@@ -84,27 +84,26 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
       });
     }
 
-    // save the lastest scroll bottom value
+    // Save the lastest scroll bottom value
     if (scrollRef?.current) {
       const current = scrollRef?.current;
       setScrollBottom(current.scrollHeight - current.scrollTop - current.offsetHeight)
     }
 
-    // do this later
-    setTimeout(() => {
-      // mark as read if scroll is at end
-      if (!disableMarkAsRead && clientHeight + scrollTop === scrollHeight) {
+    if (!disableMarkAsRead && isAboutSame(clientHeight + scrollTop, scrollHeight, 10)) {
+      // Mark as read if scroll is at end
+      setTimeout(() => {
         messagesDispatcher({
           type: messageActionTypes.MARK_AS_READ,
           payload: { channel: currentGroupChannel },
         });
         try {
-          currentGroupChannel?.markAsRead();
+          currentGroupChannel?.markAsRead?.();
         } catch {
           //
         }
-      }
-    }, 500);
+      }, 500);
+    }
   };
 
   const onClickScrollBot = () => {
