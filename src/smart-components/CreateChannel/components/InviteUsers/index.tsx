@@ -41,6 +41,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
   const {
     onBeforeCreateChannel,
     onCreateChannel,
+    overrideInviteUser,
     createChannel,
     type,
   } = useCreateChannelContext();
@@ -91,6 +92,14 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
       onCancel={onCancel}
       onSubmit={() => {
         const selectedUserList = Object.keys(selectedUsers);
+        if (typeof overrideInviteUser === 'function') {
+          overrideInviteUser({
+            users: selectedUserList,
+            onClose: onCancel,
+            channelType: type,
+          });
+          return;
+        }
         if (selectedUserList.length > 0) {
           if (onBeforeCreateChannel) {
             const params = onBeforeCreateChannel(selectedUserList);

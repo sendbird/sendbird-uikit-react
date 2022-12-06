@@ -16,6 +16,7 @@ const CreateChannel: React.FC<CreateChannelProps> = (props: CreateChannelProps) 
     onBeforeCreateChannel,
     userListQuery,
     onCreateChannel,
+    overrideInviteUser,
     onCancel,
     renderStepOne,
   } = props;
@@ -24,6 +25,7 @@ const CreateChannel: React.FC<CreateChannelProps> = (props: CreateChannelProps) 
       onBeforeCreateChannel={onBeforeCreateChannel}
       userListQuery={userListQuery}
       onCreateChannel={onCreateChannel}
+      overrideInviteUser={overrideInviteUser}
     >
       <CreateChannelUI
         renderStepOne={renderStepOne}

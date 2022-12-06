@@ -16,6 +16,7 @@ const ChannelList: React.FC<ChannelListProps> = (props: ChannelListProps) => {
       allowProfileEdit={props?.allowProfileEdit}
       onBeforeCreateChannel={props?.onBeforeCreateChannel}
       onThemeChange={props?.onThemeChange}
+      overrideInviteUser={props?.overrideInviteUser}
       onProfileEditSuccess={props?.onProfileEditSuccess}
       onChannelSelect={props?.onChannelSelect}
       sortChannelList={props?.sortChannelList}

@@ -31,6 +31,7 @@ import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 import channelListReducers from '../dux/reducers';
 import channelListInitialState from '../dux/initialState';
+import { CHANNEL_TYPE } from '../../CreateChannel/types';
 
 interface ApplicationUserListQuery {
   limit?: number;
@@ -65,9 +66,16 @@ interface ChannelListQueries {
   channelListQuery?: GroupChannelListQuery;
 }
 
+type OverrideInviteUserType = {
+  users: Array<string>;
+  onClose: () => void;
+  channelType: CHANNEL_TYPE;
+};
+
 export interface ChannelListProviderProps {
   allowProfileEdit?: boolean;
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
+  overrideInviteUser?(params: OverrideInviteUserType): void;
   onThemeChange?(theme: string): void;
   onProfileEditSuccess?(user: User): void;
   onChannelSelect?(channel: GroupChannel): void;
@@ -139,6 +147,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     onThemeChange,
     onBeforeCreateChannel,
     sortChannelList,
+    overrideInviteUser,
     disableAutoSelect,
     isTypingIndicatorEnabled = null,
     isMessageReceiptStatusEnabled = null,
@@ -347,6 +356,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
       onProfileEditSuccess,
       onThemeChange,
       onBeforeCreateChannel,
+      overrideInviteUser,
       onChannelSelect,
       sortChannelList,
       loading,

@@ -14,6 +14,7 @@ interface ChannelSettingsProps extends ChannelSettingsUIProps, ChannelSettingsCo
 const ChannelSettings: React.FC<ChannelSettingsProps> = (props: ChannelSettingsProps) => {
   return (
     <ChannelSettingsProvider
+      overrideInviteUser={props?.overrideInviteUser}
       channelUrl={props.channelUrl}
       onCloseClick={props?.onCloseClick}
       onLeaveChannel={props?.onLeaveChannel}
