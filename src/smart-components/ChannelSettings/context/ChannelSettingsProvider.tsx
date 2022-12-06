@@ -13,7 +13,6 @@ import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { RenderUserProfileProps } from '../../../types';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import uuidv4 from '../../../utils/uuid';
-import { CHANNEL_TYPE } from '../../CreateChannel/types';
 
 interface ApplicationUserListQuery {
   limit?: number;
