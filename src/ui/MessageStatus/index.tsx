@@ -1,5 +1,5 @@
 import './index.scss';
-import React, { useMemo } from 'react';
+import React from 'react';
 import format from 'date-fns/format';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { FileMessage, UserMessage } from '@sendbird/chat/message';
@@ -29,9 +29,7 @@ export default function MessageStatus({
   channel,
 }: MessageStatusProps): React.ReactElement {
   const { dateLocale } = useLocalization();
-  const status = useMemo(() => (
-    getOutgoingMessageState(channel, message)
-  ), [channel, message]);
+  const status = getOutgoingMessageState(channel, message);
   const hideMessageStatusIcon = channel?.isGroupChannel?.() && (
     (channel.isSuper || channel.isPublic || channel.isBroadcast)
     && !(status === OutgoingMessageStates.PENDING || status === OutgoingMessageStates.FAILED)
