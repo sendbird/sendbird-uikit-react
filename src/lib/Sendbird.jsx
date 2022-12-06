@@ -141,7 +141,7 @@ export default function Sendbird(props) {
     };
   }, [currenttheme]);
 
-  const isOnline = useOnlineStatus(sdkStore.sdk, logger, configureSession);
+  const isOnline = useOnlineStatus(sdkStore.sdk, logger);
 
   const localeStringSet = React.useMemo(() => {
     if (!stringSet) {

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 
 import { uuidv4 } from '../../utils/uuid';
 
-function useConnectionStatus(sdk, logger, configureSession) {
+function useConnectionStatus(sdk, logger) {
   const [isOnline, setIsOnline] = useState(true);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ function useConnectionStatus(sdk, logger, configureSession) {
       logger.info('Added ConnectionHandler', uniqueHandlerId);
       // workaround -> addConnectionHandler invalidates session handler
       // provided through configureSession
-      if (sdk?.addConnectionHandler && !configureSession) {
+      if (sdk?.addConnectionHandler) {
         sdk.addConnectionHandler(uniqueHandlerId, handler);
       }
     } catch {
@@ -43,7 +43,7 @@ function useConnectionStatus(sdk, logger, configureSession) {
         //
       }
     };
-  }, [sdk, configureSession]);
+  }, [sdk]);
 
   useEffect(() => {
     const tryReconnect = () => {
