@@ -47,11 +47,11 @@ function useGetSearchedMessages(
     if (sdk && channelUrl && sdk.createMessageSearchQuery && currentChannel) {
       if (requestString) {
         const inputSearchMessageQueryObject: MessageSearchQueryParams = {
-          ...messageSearchQuery,
           order: MessageSearchOrder.TIMESTAMP,
           channelUrl,
           messageTimestampFrom: currentChannel.invitedAt,
           keyword: requestString,
+          ...messageSearchQuery,
         };
         const createdQuery = sdk.createMessageSearchQuery(inputSearchMessageQueryObject);
         createdQuery.next().then((messages) => {
