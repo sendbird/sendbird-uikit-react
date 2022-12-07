@@ -3,28 +3,37 @@ import React, { useContext } from 'react';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
-import IconButton from '../../../../ui/IconButton';
 
 import './index.scss';
 import Avatar from '../../../../ui/Avatar';
 
 interface ChannelListHeaderInterface {
   renderHeader?: (props: void) => React.ReactElement;
+  renderTitle?: () => React.ReactElement;
   renderIconButton?: (props: void) => React.ReactElement;
   onEdit?: (props: void) => void;
   allowProfileEdit?: boolean;
 }
 
-const ChannelListHeader : React.FC<ChannelListHeaderInterface> = ({
+const ChannelListHeader: React.FC<ChannelListHeaderInterface> = ({
   renderHeader,
+  renderTitle,
   renderIconButton,
   onEdit,
   allowProfileEdit,
 }: ChannelListHeaderInterface) => {
-  const sbState = useSendbirdStateContext();
-  const { user } = sbState?.stores?.userStore;
+  const { stores, config } = useSendbirdStateContext?.();
+  const { user } = stores?.userStore;
+  const { logger } = config;
 
   const { stringSet } = useContext(LocalizationContext);
+
+  if (renderHeader) {
+    logger?.warning('Recomend to use "renderTitle" instead of "renderHeader". It will be deprecated.');
+  }
+  // renderTitle should have higher priority
+  const titleRenderer = renderHeader || renderTitle;
+
   return (
     <div
       className={[
@@ -33,45 +42,43 @@ const ChannelListHeader : React.FC<ChannelListHeaderInterface> = ({
       ].join(' ')}
     >
       {
-        renderHeader
-          ? renderHeader()
-          : (
-            <div
-              className="sendbird-channel-header__title"
-              role="button"
-              onClick={() => { onEdit() }}
-              onKeyDown={() => { onEdit() }}
-              tabIndex={0}
-            >
-              <div className="sendbird-channel-header__title__left">
-                <Avatar
-                  width="32px"
-                  height="32px"
-                  src={user.profileUrl}
-                  alt={user.nickname}
-                />
-              </div>
-              <div className="sendbird-channel-header__title__right">
-                <Label
-                  className="sendbird-channel-header__title__right__name"
-                  type={LabelTypography.SUBTITLE_2}
-                  color={LabelColors.ONBACKGROUND_1}
-                >
-                  {user.nickname || stringSet.NO_NAME}
-                </Label>
-                <Label
-                  className="sendbird-channel-header__title__right__user-id"
-                  type={LabelTypography.BODY_2}
-                  color={LabelColors.ONBACKGROUND_2}
-                >
-                  {user.userId}
-                </Label>
-              </div>
+        titleRenderer?.() || (
+          <div
+            className="sendbird-channel-header__title"
+            role="button"
+            onClick={() => { onEdit?.() }}
+            onKeyDown={() => { onEdit?.() }}
+            tabIndex={0}
+          >
+            <div className="sendbird-channel-header__title__left">
+              <Avatar
+                width="32px"
+                height="32px"
+                src={user.profileUrl}
+                alt={user.nickname}
+              />
             </div>
-          )
+            <div className="sendbird-channel-header__title__right">
+              <Label
+                className="sendbird-channel-header__title__right__name"
+                type={LabelTypography.SUBTITLE_2}
+                color={LabelColors.ONBACKGROUND_1}
+              >
+                {user.nickname || stringSet.NO_NAME}
+              </Label>
+              <Label
+                className="sendbird-channel-header__title__right__user-id"
+                type={LabelTypography.BODY_2}
+                color={LabelColors.ONBACKGROUND_2}
+              >
+                {user.userId}
+              </Label>
+            </div>
+          </div>
+        )
       }
       <div className="sendbird-channel-header__right-icon">
-        {renderIconButton() || <IconButton />}
+        {renderIconButton?.()}
       </div>
     </div>
   );

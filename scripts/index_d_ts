@@ -369,6 +369,7 @@ declare module "SendbirdUIKitGlobal" {
 
   export interface ChannelListHeaderInterface {
     renderHeader?: (props: void) => React.ReactNode | React.ReactElement;
+    renderTitle?: (props: void) => React.ReactNode | React.ReactElement;
     renderIconButton?: (props: void) => React.ReactNode | React.ReactElement;
     onEdit?: (props: void) => void;
     allowProfileEdit?: boolean;

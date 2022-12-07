@@ -99,18 +99,21 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
   return (
     <>
       <div className="sendbird-channel-list__header">
-        <ChannelListHeader
-          renderHeader={renderHeader}
-          onEdit={() => {
-            if (allowProfileEdit) {
-              setShowProfileEdit(true);
-            }
-          }}
-          allowProfileEdit={allowProfileEdit}
-          renderIconButton={() => (
-            <AddChannel />
-          )}
-        />
+        {
+          renderHeader?.() || (
+            <ChannelListHeader
+              onEdit={() => {
+                if (allowProfileEdit) {
+                  setShowProfileEdit(true);
+                }
+              }}
+              allowProfileEdit={allowProfileEdit}
+              renderIconButton={() => (
+                <AddChannel />
+              )}
+            />
+          )
+        }
       </div>
       {
         showProfileEdit && (
