@@ -29,7 +29,7 @@ const ChannelListHeader: React.FC<ChannelListHeaderInterface> = ({
   const { stringSet } = useContext(LocalizationContext);
 
   if (renderHeader) {
-    logger?.warning('Recomend to use "renderTitle" instead of "renderHeader".');
+    logger?.warning('Recomend to use "renderTitle" instead of "renderHeader". It will be deprecated.');
   }
   // renderTitle should have higher priority
   const titleRenderer = renderHeader || renderTitle;

@@ -377,6 +377,7 @@ interface ChannelListProps extends ChannelListProviderInterface, ChannelListUIPr
 
 interface ChannelListHeaderInterface {
   renderHeader?: (props: void) => React.ReactElement;
+  renderTitle?: (props: void) => React.ReactElement;
   renderIconButton?: (props: void) => React.ReactElement;
   onEdit?: (props: void) => void;
   allowProfileEdit?: boolean;
