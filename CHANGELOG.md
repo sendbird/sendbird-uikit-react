@@ -1,5 +1,60 @@
 # Changelog - v3
 
+## [v3.3.2] (Dec 8 2022)
+Features:
+* Add props `renderTitle` to the <ChannelListHeader /> component
+  * `renderHeader` of <ChannelListHeader /> will be deprecated
+* Add interface overrideInviteUser
+
+  Add overrideInviteUser to ChannelList, CreateChannel and ChannelSettings
+
+  This interface overrides InviteMember functionality. Customer has to create the channel
+  and close the popup manually
+
+  ```javascript
+  export type OverrideInviteUserType = {
+      users: Array<string>;
+      onClose: () => void;
+      channelType: 'group' | 'supergroup' | 'broadcast';
+  };
+  export interface ChannelListProps {
+    overrideInviteUser?(params: OverrideInviteUserType): void;
+  }
+  export interface CreateChannelProps {
+    overrideInviteUser?(params: OverrideInviteUserType): void;
+  }
+  export type OverrideInviteMemberType = {
+      users: Array<string>;
+      onClose: () => void;
+      channel: GroupChannel;
+  };
+  ChannelSettings.overrideInviteUser?(params: OverrideInviteMemberType): void;
+  ```
+
+  example:
+  ```javascript
+  <ChannelList
+    overrideInviteUser={({users, onClose, channelType}) => {
+      createMyChannel(users, channelType).then(() => {
+        onClose();
+      })
+    }}
+  />
+  ```
+
+Fixes:
+* Allow to override entire message search query.
+  Now message search query supports searching messages in multiple channels.
+* Modify type definitions for props `ThreadUIProps.renderMessage`.
+* Remove duplication of create channel button when using `renderHeader` of <ChannelList />.
+* The online status should work even configureSession is provided.
+  This was disabled because of a bug in sessionHandler in SDK now, we can re-enable this.
+* Create channel sometimes had empty operatorID.
+  Use sendbird state to access currentUserID and use it incase prop value is empty.
+  Also, remove legacy HOC pattern.
+* Add the props type `isMentionEnabled` of <App />.
+* Change the props type `messageSearchQuery` of <MessageSearch /> to **MessageSearchQueryParams**.
+
 ## [v3.3.1] (Nov 23 2022)
 Fixes:
 * Rename properties of `useThreadContext`
