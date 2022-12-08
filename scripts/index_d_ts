@@ -31,6 +31,7 @@ declare module "SendbirdUIKitGlobal" {
     FileMessageCreateParams,
     MessageListParams,
     MessageSearchQuery,
+    MessageSearchQueryParams,
     UserMessage,
     UserMessageCreateParams,
     UserMessageUpdateParams,
@@ -848,7 +849,7 @@ declare module "SendbirdUIKitGlobal" {
     children?: React.ReactNode | React.ReactElement;
     searchString?: string;
     requestString?: string;
-    messageSearchQuery?: MessageSearchQuery;
+    messageSearchQuery?: MessageSearchQueryParams;
     onResultLoaded?(messages?: Array<ClientSentMessages>, error?: SendbirdError): void;
     onResultClick?(message: ClientSentMessages): void;
   }

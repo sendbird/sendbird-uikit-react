@@ -32,7 +32,7 @@ interface MainProps {
 interface ToolProps {
   sdk: SendbirdGroupChat;
   logger: Logger;
-  messageSearchDispatcher: ({ type: string, payload: any }) => void;
+  messageSearchDispatcher: (props: { type: string, payload: any }) => void;
 }
 
 function useGetSearchedMessages(

@@ -37,7 +37,7 @@ interface MessageSearchProviderInterface extends MessageSearchProviderProps {
   setRetryCount: React.Dispatch<React.SetStateAction<number>>;
   selectedMessageId: number;
   setSelectedMessageId: React.Dispatch<React.SetStateAction<number>>;
-  messageSearchDispatcher: ({ type: string, payload: any }) => void;
+  messageSearchDispatcher: (props: { type: string, payload: any }) => void;
   scrollRef: React.MutableRefObject<HTMLDivElement>;
   allMessages: MessageSearchReducerState['allMessages'];
   loading: boolean;
