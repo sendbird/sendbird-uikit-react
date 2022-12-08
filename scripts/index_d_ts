@@ -75,9 +75,10 @@ declare module "SendbirdUIKitGlobal" {
     };
     replyType?: ReplyType;
     disableAutoSelect?: boolean;
-    isReactionEnabled?: boolean,
-    isTypingIndicatorEnabledOnChannelList?: boolean,
-    isMessageReceiptStatusEnabledOnChannelList?: boolean,
+    isMentionEnabled?: boolean;
+    isReactionEnabled?: boolean;
+    isTypingIndicatorEnabledOnChannelList?: boolean;
+    isMessageReceiptStatusEnabledOnChannelList?: boolean;
   }
 
   export type Logger = {
