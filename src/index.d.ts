@@ -23,6 +23,7 @@ import type {
   FileMessageCreateParams,
   UserMessageUpdateParams,
   MessageListParams,
+  MessageSearchQueryParams,
 } from '@sendbird/chat/message';
 import type {
   Member,
@@ -1147,7 +1148,7 @@ export interface MessageSearchProviderProps {
   children?: React.ReactElement;
   searchString?: string;
   requestString?: string;
-  messageSearchQuery?: MessageSearchQuery;
+  messageSearchQuery?: MessageSearchQueryParams;
   onResultLoaded?(messages?: Array<ClientSentMessages>, error?: SendbirdError): void;
   onResultClick?(message: ClientSentMessages): void;
 }
