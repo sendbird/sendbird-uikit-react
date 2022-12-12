@@ -194,7 +194,10 @@ export default function Sendbird(props) {
           userListQuery,
           logger,
           pubSub,
-          imageCompression,
+          imageCompression: {
+            compressionRate: 0.7,
+            ...imageCompression,
+          },
           isReactionEnabled,
           isMentionEnabled: isMentionEnabled || false,
           userMention: {
