@@ -3,6 +3,7 @@ import type { Locale } from 'date-fns';
 import format from 'date-fns/format';
 import formatRelative from 'date-fns/formatRelative';
 import isToday from 'date-fns/isToday';
+import isThisYear from 'date-fns/isThisYear';
 import isYesterday from 'date-fns/isYesterday';
 import { IconTypes } from '../Icon';
 
@@ -17,7 +18,10 @@ export function getCreatedAt(createdAt: number, locale: Locale): string {
   if (isYesterday(createdAt)) {
     return formatRelative(createdAt, new Date(), optionalParam);
   }
-  return format(createdAt, 'MMM dd', optionalParam);
+  if (isThisYear(createdAt)) {
+    return format(createdAt, 'MMM dd', optionalParam);
+  }
+  return format(createdAt, 'yyyy/MM/dd', optionalParam);
 }
 
 export function getIconOfFileType(message: FileMessage): string {

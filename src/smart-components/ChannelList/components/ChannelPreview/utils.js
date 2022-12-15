@@ -1,6 +1,7 @@
 import isToday from 'date-fns/isToday';
 import format from 'date-fns/format';
 import formatRelative from 'date-fns/formatRelative';
+import isThisYear from 'date-fns/isThisYear';
 import isYesterday from 'date-fns/isYesterday';
 
 import { truncateString } from '../../../../utils';
@@ -34,7 +35,10 @@ export const getLastMessageCreatedAt = (channel, locale) => {
   if (isYesterday(createdAt)) {
     return formatRelative(createdAt, new Date(), optionalParam);
   }
-  return format(createdAt, 'MMM dd', optionalParam);
+  if (isThisYear(createdAt)) {
+    return format(createdAt, 'MMM dd', optionalParam);
+  }
+  return format(createdAt, 'yyyy/MM/dd', optionalParam);
 };
 
 export const getTotalMembers = (channel) => (
