@@ -1,5 +1,9 @@
 # Changelog - v3
 
+## [v3.3.3] (Dec 22 2022)
+Fix:
+* Change default value of the image compression rate to 70%(0.7)
+
 ## [v3.3.2] (Dec 8 2022)
 Features:
 * Add props `renderTitle` to the <ChannelListHeader /> component
