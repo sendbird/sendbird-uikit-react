@@ -81,7 +81,7 @@ export default function MessageSearchFileItem(props: Props): ReactElement {
         type={LabelTypography.CAPTION_3}
         color={LabelColors.ONBACKGROUND_2}
       >
-        {getCreatedAt(createdAt, dateLocale)}
+        {getCreatedAt({ createdAt, locale: dateLocale, stringSet})}
       </Label>
       <div className="sendbird-message-search-file-item__right-footer" />
     </div>

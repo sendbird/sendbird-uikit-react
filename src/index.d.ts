@@ -1715,6 +1715,7 @@ declare module '@sendbird/uikit-react/ui/MessageStatus' {
     className?: string;
     message: UserMessage | FileMessage;
     channel: GroupChannel;
+    isDateSeparatorConsidered?: boolean;
   }
   type MessageStatus = React.FC<MessageStatusProps>;
   export default MessageStatus;

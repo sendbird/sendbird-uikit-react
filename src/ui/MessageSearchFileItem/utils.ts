@@ -1,12 +1,18 @@
 import type { FileMessage } from '@sendbird/chat/message';
 import type { Locale } from 'date-fns';
 import format from 'date-fns/format';
-import formatRelative from 'date-fns/formatRelative';
 import isToday from 'date-fns/isToday';
+import isThisYear from 'date-fns/isThisYear';
 import isYesterday from 'date-fns/isYesterday';
 import { IconTypes } from '../Icon';
 
-export function getCreatedAt(createdAt: number, locale: Locale): string {
+export interface GetCreatedAtProps {
+  createdAt: number;
+  locale?: Locale;
+  stringSet?: Record<string, string>;
+}
+
+export function getCreatedAt({ createdAt, locale, stringSet }: GetCreatedAtProps): string {
   const optionalParam = locale ? { locale } : null;
   if (!createdAt) {
     return '';
@@ -15,9 +21,12 @@ export function getCreatedAt(createdAt: number, locale: Locale): string {
     return format(createdAt, 'p', optionalParam);
   }
   if (isYesterday(createdAt)) {
-    return formatRelative(createdAt, new Date(), optionalParam);
+    return stringSet?.MESSAGE_STATUS__YESTERDAY || 'Yesterday';
   }
-  return format(createdAt, 'MMM dd', optionalParam);
+  if (isThisYear(createdAt)) {
+    return format(createdAt, 'MMM d', optionalParam);
+  }
+  return format(createdAt, 'yyyy/M/d', optionalParam);
 }
 
 export function getIconOfFileType(message: FileMessage): string {

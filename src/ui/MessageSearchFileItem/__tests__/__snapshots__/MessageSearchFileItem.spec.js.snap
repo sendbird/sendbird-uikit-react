@@ -63,7 +63,7 @@ exports[`ui/MessageSearchFileItem should do a snapshot test of the MessageSearch
     <span
       class="sendbird-message-search-file-item__message-created-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
     >
-      mock-date
+      2020/1/23
     </span>
     <div
       class="sendbird-message-search-file-item__right-footer"

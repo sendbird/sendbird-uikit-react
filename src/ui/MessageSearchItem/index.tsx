@@ -67,7 +67,7 @@ export default function MessageSearchItem({
           type={LabelTypography.CAPTION_3}
           color={LabelColors.ONBACKGROUND_2}
         >
-          {getCreatedAt(createdAt, dateLocale)}
+          {getCreatedAt({createdAt, locale: dateLocale, stringSet })}
         </Label>
       </div>
       <div className="sendbird-message-search-item__right-footer" />

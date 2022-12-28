@@ -3,11 +3,15 @@ import {
   getChannelTitle,
   getTotalMembers,
   getChannelUnreadMessageCount,
+  getLastMessageCreatedAt,
 } from '../utils';
 import { LabelStringSet } from '../../../../../ui/Label'
 
+jest.useFakeTimers();
+jest.setSystemTime(new Date('March 2, 2022 08:15:52'));
+
 describe('ChannelPreview', () => {
-  it('utils/getLastMessage: should return lastMessage', function () {
+  test('utils/getLastMessage returns lastMessage', function () {
     const text = 'example-text';
     const channel = {};
     const channel2 = { lastMessage: { message: '' } };
@@ -23,7 +27,7 @@ describe('ChannelPreview', () => {
     ).toBe(text);
   });
 
-  it('utils/getChannelTitle: should return channelTitle', function () {
+  test('utils/getChannelTitle returns channelTitle', function () {
     const text = 'example-text';
     const channel = {};
     const channel2 = { name: text };
@@ -61,7 +65,7 @@ describe('ChannelPreview', () => {
     ).toBe('Two');
   });
 
-  it('utils/getTotalMembers: should return totalMembers', function () {
+  test('utils/getTotalMembers returns totalMembers', function () {
     const channel = { memberCount: 1 };
     const channel2 = { memberCount: 100 };
     expect(
@@ -75,7 +79,7 @@ describe('ChannelPreview', () => {
     ).toBe(channel2.memberCount);
   });
 
-  it('utils/getChannelUnreadMessageCount: should return unreadMessageCount', function () {
+  test('utils/getChannelUnreadMessageCount returns unreadMessageCount', function () {
     const channel = {};
     const channel2 = { unreadMessageCount: 1 };
     const channel3 = { unreadMessageCount: 100 };
@@ -91,5 +95,49 @@ describe('ChannelPreview', () => {
     expect(
       getChannelUnreadMessageCount(channel3)
     ).toBe(channel3.unreadMessageCount);
+  });
+
+  test('utils/getLastMessageCreatedAt returns time if ts is created today', () => {
+    const nowTime = new Date(Date.now());
+    const isPM = nowTime?.getHours() > 12;
+    expect(
+      getLastMessageCreatedAt({
+        channel: { lastMessage: { createdAt: nowTime } },
+      })
+    ).toBe(`${nowTime?.getHours() - (isPM ? 12 : 0)}:${nowTime?.getMinutes()} ${isPM ? 'PM' : 'AM'}`);
+  });
+
+  test('utils/getLastMessageCreatedAt returns "Yesterday" if ts is created yesterday', () => {
+    const nowTime = new Date(Date.now());
+    nowTime.setDate(nowTime.getDate() - 1);
+    expect(
+      getLastMessageCreatedAt({
+        channel: { lastMessage: { createdAt: nowTime } },
+      })
+    ).toBe("Yesterday");
+  });
+
+  test('utils/getLastMessageCreatedAt returns month and date if ts is created in this year', () => {
+    const nowTime = new Date(Date.now());
+    nowTime.setDate(nowTime.getDate() - 2);
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    if (!(nowTime.getMonth() === 0 && (nowTime.getDate() === 0 || nowTime.getDate() === 1))) {
+      // This test will fail on Jan 1st and 2nd
+      expect(
+        getLastMessageCreatedAt({
+          channel: { lastMessage: { createdAt: nowTime } },
+        })
+      ).toBe(`${months[nowTime?.getMonth()]} ${nowTime?.getDate()}`)
+    }
+  });
+
+  test('utils/getLastMessageCreatedAt returns year, month, and date if ts is created last year', () => {
+    const nowTime = new Date(Date.now());
+    nowTime.setFullYear(nowTime.getFullYear() - 1);
+    expect(
+      getLastMessageCreatedAt({
+        channel: { lastMessage: { createdAt: nowTime } },
+      })
+    ).toBe(`${nowTime?.getFullYear()}/${nowTime?.getMonth() + 1}/${nowTime?.getDate()}`);
   });
 });

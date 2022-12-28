@@ -146,6 +146,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
                     className="sendbird-channel-preview__content__upper__last-message-at"
                     channel={channel}
                     message={channel?.lastMessage as UserMessage | FileMessage}
+                    isDateSeparatorConsidered={false}
                   />
                 )
                 : (
@@ -154,7 +155,11 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
                     type={LabelTypography.CAPTION_3}
                     color={LabelColors.ONBACKGROUND_2}
                   >
-                    {utils.getLastMessageCreatedAt(channel, dateLocale)}
+                    {utils.getLastMessageCreatedAt({
+                      channel,
+                      locale: dateLocale,
+                      stringSet,
+                    })}
                   </Label>
                 )
             }
