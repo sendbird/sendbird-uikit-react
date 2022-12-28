@@ -1,12 +1,21 @@
 import type { Locale } from 'date-fns';
 import format from 'date-fns/format';
-import formatRelative from 'date-fns/formatRelative';
 import isToday from 'date-fns/isToday';
 import isThisYear from 'date-fns/isThisYear';
 import isYesterday from 'date-fns/isYesterday';
 
+interface GetCreatedAtProps {
+  createdAt: number;
+  locale?: Locale;
+  stringSet?: Record<string, string>;
+}
+
 // getCreatedAt
-export default function (createdAt: number, locale: Locale): string {
+export default function ({
+  createdAt,
+  locale,
+  stringSet,
+}: GetCreatedAtProps): string {
   const optionalParam = locale ? { locale } : null;
   if (!createdAt) {
     return '';
@@ -15,10 +24,10 @@ export default function (createdAt: number, locale: Locale): string {
     return format(createdAt, 'p', optionalParam);
   }
   if (isYesterday(createdAt)) {
-    return formatRelative(createdAt, new Date(), optionalParam);
+    return stringSet?.MESSAGE_STATUS__YESTERDAY || 'Yesterday';
   }
   if (isThisYear(createdAt)) {
     return format(createdAt, 'MMM dd', optionalParam);
   }
-  return format(createdAt, 'yyyy/MM/dd', optionalParam);
+  return format(createdAt, 'yyyy/M/d', optionalParam);
 }
