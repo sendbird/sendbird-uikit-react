@@ -48,6 +48,7 @@ const getStringSet = (lang = 'en') => {
       MESSAGE_INPUT__PLACE_HOLDER__MUTED: 'Chat is unavailable because you\'re muted',
       MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT: 'You\'re muted',
       MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER: 'Reply to message',
+      MESSAGE_STATUS__YESTERDAY: 'Yesterday',
       CHANNEL__MESSAGE_LIST__NOTIFICATION__NEW_MESSAGE: 'new message(s) since',
       CHANNEL__MESSAGE_LIST__NOTIFICATION__ON: 'on',
       CHANNEL_SETTING__HEADER__TITLE: 'Channel information',
