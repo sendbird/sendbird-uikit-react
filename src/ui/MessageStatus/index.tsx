@@ -13,6 +13,7 @@ import {
   getOutgoingMessageState,
   OutgoingMessageStates,
 } from '../../utils/exports/getOutgoingMessageState';
+import { getLastMessageCreatedAt } from '../../smart-components/ChannelList/components/ChannelPreview/utils';
 import { useLocalization } from '../../lib/LocalizationContext';
 
 export const MessageStatusTypes = OutgoingMessageStates;
@@ -21,12 +22,14 @@ interface MessageStatusProps {
   className?: string;
   message: UserMessage | FileMessage;
   channel: GroupChannel;
+  isDateSeparatorConsidered?: boolean;
 }
 
 export default function MessageStatus({
   className,
   message,
   channel,
+  isDateSeparatorConsidered = true,
 }: MessageStatusProps): React.ReactElement {
   const { dateLocale } = useLocalization();
   const status = getOutgoingMessageState(channel, message);
@@ -69,9 +72,8 @@ export default function MessageStatus({
         </Loader>
       ) : (
         <Icon
-          className={`sendbird-message-status__icon ${hideMessageStatusIcon ? 'hide-icon' : ''} ${
-            status === OutgoingMessageStates.FAILED ? '' : 'sendbird-message-status--sent'
-          }`}
+          className={`sendbird-message-status__icon ${hideMessageStatusIcon ? 'hide-icon' : ''} ${status === OutgoingMessageStates.FAILED ? '' : 'sendbird-message-status--sent'
+            }`}
           type={iconType[status] || IconTypes.ERROR}
           fillColor={iconColor[status]}
           width="16px"
@@ -84,9 +86,11 @@ export default function MessageStatus({
           type={LabelTypography.CAPTION_3}
           color={LabelColors.ONBACKGROUND_2}
         >
-          {format(message?.createdAt || 0, 'p', {
-            locale: dateLocale,
-          })}
+          {
+            isDateSeparatorConsidered
+              ? format(message?.createdAt || 0, 'p', { locale: dateLocale })
+              : getLastMessageCreatedAt(channel, dateLocale)
+          }
         </Label>
       )}
     </div>

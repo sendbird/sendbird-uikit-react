@@ -146,6 +146,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
                     className="sendbird-channel-preview__content__upper__last-message-at"
                     channel={channel}
                     message={channel?.lastMessage as UserMessage | FileMessage}
+                    isDateSeparatorConsidered={false}
                   />
                 )
                 : (
