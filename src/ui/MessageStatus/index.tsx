@@ -31,7 +31,7 @@ export default function MessageStatus({
   channel,
   isDateSeparatorConsidered = true,
 }: MessageStatusProps): React.ReactElement {
-  const { dateLocale } = useLocalization();
+  const { stringSet, dateLocale } = useLocalization();
   const status = getOutgoingMessageState(channel, message);
   const hideMessageStatusIcon = channel?.isGroupChannel?.() && (
     (channel.isSuper || channel.isPublic || channel.isBroadcast)
@@ -89,7 +89,7 @@ export default function MessageStatus({
           {
             isDateSeparatorConsidered
               ? format(message?.createdAt || 0, 'p', { locale: dateLocale })
-              : getLastMessageCreatedAt(channel, dateLocale)
+              : getLastMessageCreatedAt({ channel, locale: dateLocale, stringSet })
           }
         </Label>
       )}

@@ -155,7 +155,11 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
                     type={LabelTypography.CAPTION_3}
                     color={LabelColors.ONBACKGROUND_2}
                   >
-                    {utils.getLastMessageCreatedAt(channel, dateLocale)}
+                    {utils.getLastMessageCreatedAt({
+                      channel,
+                      locale: dateLocale,
+                      stringSet,
+                    })}
                   </Label>
                 )
             }
