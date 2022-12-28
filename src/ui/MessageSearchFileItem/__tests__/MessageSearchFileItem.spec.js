@@ -12,7 +12,7 @@ import {
 import { getCreatedAt } from '../utils';
 
 jest.useFakeTimers();
-jest.setSystemTime(new Date('March 2, 2022 13:15:52'));
+jest.setSystemTime(new Date('2022-03-03T08:15:52'));
 
 describe('ui/MessageSearchFileItem', () => {
   // should add test cases for each file types
@@ -55,7 +55,7 @@ describe('ui/MessageSearchFileItem', () => {
     ).toBe(`${months[nowTime?.getMonth()]} ${nowTime?.getDate()}`);
     expect(
       getCreatedAt({ createdAt: nowTime })
-    ).toBe('Feb 28');
+    ).toBe('Mar 1');
   });
 
   test('utils/getCreatedAt returns year, month, and date if ts is created last year', () => {
@@ -66,6 +66,6 @@ describe('ui/MessageSearchFileItem', () => {
     ).toBe(`${nowTime?.getFullYear()}/${nowTime?.getMonth() + 1}/${nowTime?.getDate()}`);
     expect(
       getCreatedAt({ createdAt: nowTime })
-    ).toBe('2021/3/2');
+    ).toBe('2021/3/3');
   });
 });

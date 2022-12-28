@@ -24,7 +24,7 @@ export function getCreatedAt({ createdAt, locale, stringSet }: GetCreatedAtProps
     return stringSet?.MESSAGE_STATUS__YESTERDAY || 'Yesterday';
   }
   if (isThisYear(createdAt)) {
-    return format(createdAt, 'MMM dd', optionalParam);
+    return format(createdAt, 'MMM d', optionalParam);
   }
   return format(createdAt, 'yyyy/M/d', optionalParam);
 }
