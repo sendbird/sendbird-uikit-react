@@ -12,7 +12,7 @@ import {
 import { getCreatedAt } from '../utils';
 
 jest.useFakeTimers();
-jest.setSystemTime(new Date('March 2, 2022 08:15:52'));
+jest.setSystemTime(new Date('March 2, 2022 13:15:52'));
 
 describe('ui/MessageSearchFileItem', () => {
   // should add test cases for each file types
