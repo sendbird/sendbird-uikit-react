@@ -206,7 +206,7 @@ function ChannelList(props) {
       <div
         className="sendbird-channel-list__body"
         onScroll={(e) => {
-          const fetchMore = e.target.clientHeight + e.target.scrollTop === e.target.scrollHeight;
+          const fetchMore = Math.abs(e.target.clientHeight - e.target.clientHeight - e.target.scrollTop) < 1
           if (fetchMore && channelSource.hasNext) {
             logger.info('ChannelList: Fetching more channels');
             channelListDispatcher({
