@@ -20,4 +20,8 @@ export function debounce(func, wait, immediate) {
   };
 }
 
+export const encodeStrToHTML = (str) => (
+  str?.replace(/[\u00A0-\u9999<>]/gim, (i) => ''.concat('&#', i.charCodeAt(0), ';'))
+);
+
 export default debounce;
