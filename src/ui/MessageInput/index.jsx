@@ -19,7 +19,7 @@ import MentionUserLabel from '../MentionUserLabel';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { LocalizationContext } from '../../lib/LocalizationContext';
-import { encodeStrToHTML } from './utils';
+import { sanitizeString } from './utils';
 import {
   arrayEqual,
   getClassName,
@@ -164,13 +164,13 @@ const MessageInput = React.forwardRef((props, ref) => {
                 </MentionUserLabel>,
               );
             }
-            return encodeStrToHTML(value);
+            return sanitizeString(value);
           }).join('')
         )).join(' ');
       } else {
         /* mention disabled */
         try {
-          textField.innerHTML = encodeStrToHTML(message?.message);
+          textField.innerHTML = sanitizeString(message?.message);
         } catch { }
         setMentionedUserIds([]);
       }
@@ -428,7 +428,7 @@ const MessageInput = React.forwardRef((props, ref) => {
           }}
           onPaste={(e) => {
             e.preventDefault();
-            document.execCommand("insertHTML", false, encodeStrToHTML(e?.clipboardData.getData('text')));
+            document.execCommand("insertHTML", false, sanitizeString(e?.clipboardData.getData('text')));
           }}
         />
         {/* placeholder */}
