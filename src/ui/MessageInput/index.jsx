@@ -19,6 +19,7 @@ import MentionUserLabel from '../MentionUserLabel';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { LocalizationContext } from '../../lib/LocalizationContext';
+import { sanitizeString } from './utils';
 import {
   arrayEqual,
   getClassName,
@@ -114,6 +115,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     }
   ), []);
 
+  // #Edit mode
   // for easilly initialize input value from outside, but
   // useEffect(_, [channelUrl]) erase it
   const initialValue = props?.value;
@@ -136,7 +138,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     }
   }, [channelUrl]);
 
-  // #Mention | Fill message input values
+  // #Mention & #Edit | Fill message input values
   useEffect(() => {
     if (isEdit && message?.messageId) {
       // const textField = document.getElementById(textFieldId);
@@ -150,9 +152,7 @@ const MessageInput = React.forwardRef((props, ref) => {
         textField.innerHTML = message?.mentionedMessageTemplate?.split(' ').map((word) => (
           convertWordToStringObj(word, mentionedUsers).map((stringObj) => {
             const { type, value, userId } = stringObj;
-            if (type === StringObjType.mention
-              && mentionedUsers.some((user) => user?.userId === userId)
-            ) {
+            if (type === StringObjType.mention && mentionedUsers.some((user) => user?.userId === userId)) {
               return renderToString(
                 <MentionUserLabel userId={userId}>
                   {
@@ -164,13 +164,13 @@ const MessageInput = React.forwardRef((props, ref) => {
                 </MentionUserLabel>,
               );
             }
-            return value;
+            return sanitizeString(value);
           }).join('')
         )).join(' ');
       } else {
         /* mention disabled */
         try {
-          textField.innerHTML = message?.message;
+          textField.innerHTML = sanitizeString(message?.message);
         } catch { }
         setMentionedUserIds([]);
       }
@@ -428,7 +428,7 @@ const MessageInput = React.forwardRef((props, ref) => {
           }}
           onPaste={(e) => {
             e.preventDefault();
-            document.execCommand("insertHTML", false, e?.clipboardData.getData('text'));
+            document.execCommand("insertHTML", false, sanitizeString(e?.clipboardData.getData('text')));
           }}
         />
         {/* placeholder */}

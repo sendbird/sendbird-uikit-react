@@ -20,4 +20,9 @@ export function debounce(func, wait, immediate) {
   };
 }
 
+// Sanitize that special characters of HTML tags cause XSS issue
+export const sanitizeString = (str) => (
+  str?.replace(/[\u00A0-\u9999<>]/gim, (i) => ''.concat('&#', i.charCodeAt(0), ';'))
+);
+
 export default debounce;
