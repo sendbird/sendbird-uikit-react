@@ -1,6 +1,6 @@
 {
   "name": "@sendbird/uikit-react",
-  "version": "3.3.3",
+  "version": "3.3.4",
   "description": "React based UI kit for sendbird",
   "main": "dist/index.js",
   "style": "dist/index.css",
@@ -49,7 +49,7 @@
     "react-dom": "^16.8.6 || ^17.0.0 || ^18.0.0"
   },
   "dependencies": {
-    "@sendbird/chat": "^4.1.1",
+    "@sendbird/chat": "^4.2.3",
     "css-vars-ponyfill": "^2.3.2",
     "date-fns": "^2.16.1",
     "prop-types": "^15.7.2"

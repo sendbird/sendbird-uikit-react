@@ -1,5 +1,12 @@
 # Changelog - v3
 
+## [v3.3.4] (Jan 6 2023)
+Fix:
+* Add the time stamp rendering case for before this year on the ChannelList
+* Improve the message input security
+  * Possibility of XSS has been discovered
+  * Recommend to do a version up, if you are using UIKit version 3.0.0 or higher
+
 ## [v3.3.3] (Dec 22 2022)
 Fix:
 * Change default value of the image compression rate to 70%(0.7)
