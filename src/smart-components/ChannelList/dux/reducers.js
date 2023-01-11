@@ -42,7 +42,25 @@ export default function reducer(state, action) {
         ],
       };
     }
-    case actions.USER_INVITED:
+    case actions.USER_INVITED: {
+      const channel = action.payload;
+      if (state.channelListQuery) {
+        if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
+          return {
+            ...state,
+            allChannels: getChannelsWithUpsertedChannel(state.allChannels, channel),
+          };
+        }
+        return {
+          ...state,
+          currentChannel: channel,
+        };
+      }
+      return {
+        ...state,
+        allChannels: [channel, ...state.allChannels.filter((ch) => ch.url !== channel?.url)],
+      };
+    }
     case actions.CREATE_CHANNEL: {
       const channel = action.payload;
       if (state.channelListQuery) {
