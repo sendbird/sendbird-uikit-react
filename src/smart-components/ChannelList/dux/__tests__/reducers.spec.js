@@ -22,13 +22,25 @@ describe('Channels-Reducers', () => {
     });
 
   it('should handle create new channel using CREATE_CHANNEL', () => {
+    const newChannel = mockData.allChannels[1];
     const nextState = reducers(mockData, {
       type: actionTypes.CREATE_CHANNEL,
-      payload: mockData.allChannels[1],
+      payload: newChannel,
     });
 
-    expect(nextState.allChannels[0].url).toEqual(mockData.allChannels[1].url);
-    expect(nextState.currentChannel.url).toEqual(mockData.allChannels[1].url);
+    expect(nextState.allChannels[0].url).toEqual(newChannel.url);
+    expect(nextState.currentChannel.url).toEqual(newChannel.url);
+  });
+
+  it('should not set with new channel when calling USER_INVITED', () => {
+    const newChannel = mockData.allChannels[1];
+    const nextState = reducers(mockData, {
+      type: actionTypes.USER_INVITED,
+      payload: newChannel,
+    });
+
+    expect(nextState.allChannels[0].url).toEqual(newChannel.url);
+    expect(nextState.currentChannel.url).not.toEqual(newChannel.url);
   });
 
   it('should handle leave channel action LEAVE_CHANNEL_SUCCESS', () => {
