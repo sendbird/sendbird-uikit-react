@@ -18,7 +18,7 @@ type StaticParams = {
   logger: Logger;
 };
 
-function useInitialize({ currentChannel, sdkInit }: DynamicParams, {
+function useEventListener({ currentChannel, sdkInit }: DynamicParams, {
   notificationsDispatcher,
   sdk,
   logger,
@@ -72,4 +72,4 @@ function useInitialize({ currentChannel, sdkInit }: DynamicParams, {
   }, [currentChannel?.url, sdkInit]);
 }
 
-export default useInitialize;
+export default useEventListener;

@@ -5,3 +5,4 @@ export type RenderMessageProps = {
 }
 
 export type renderMessage = (props: RenderMessageProps) => React.ReactElement;
+export type renderMessageHeader = (props: RenderMessageProps) => React.ReactElement;

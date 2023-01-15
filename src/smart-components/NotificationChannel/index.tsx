@@ -4,12 +4,18 @@ import NotificationChannelUI, { NotificationChannelUIProps } from "./components/
 
 export interface NotificationChannelProps extends NotificationChannelUIProps, NotficationChannelContextProps {}
 export default function NotificationChannel(props: NotificationChannelProps) {
+  const {
+    channelUrl,
+    messageListParams,
+    ...uiProps
+  } = props;
   return (
     <NotficationChannelProvider
-      channelUrl={props?.channelUrl}
+      channelUrl={channelUrl}
+      messageListParams={messageListParams}
     >
       <NotificationChannelUI
-        {...props}
+        {...uiProps}
       />
     </NotficationChannelProvider>
   )

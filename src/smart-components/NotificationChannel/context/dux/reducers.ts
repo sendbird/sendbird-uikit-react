@@ -1,9 +1,11 @@
 import { GroupChannel } from "@sendbird/chat/groupChannel";
-import { BaseMessage } from "@sendbird/chat/message";
+import { AdminMessage, BaseMessage, MessageListParams } from "@sendbird/chat/message";
 
 import { NotficationChannelStateInterface, initialState } from "./initialState";
 import { actionTypes, ActionType } from "./actionTypes";
 import compareIds from '../../../../utils/compareIds';
+import { filterMessageListParams } from '../../../../utils';
+import { MAX_MESSAGE_COUNT } from "../consts";
 
 export declare type Action = {
   type: ActionType;
@@ -16,7 +18,10 @@ export function reducer(
 ): NotficationChannelStateInterface {
   switch (action?.type) {
     case actionTypes.FETCH_CHANNEL_START: {
-      return initialState;
+      return {
+        ...initialState,
+        messageListParams: action?.payload?.messageListParams as MessageListParams,
+      };
     }
     case actionTypes.FETCH_CHANNEL_SUCCESS: {
       return {
@@ -43,10 +48,12 @@ export function reducer(
       };
     }
     case actionTypes.FETCH_INITIAL_MESSAGES_SUCCESS: {
+      const messages = action.payload.messages as BaseMessage[] || [];
       return {
         ...state,
-        allMessages: action.payload.messages as BaseMessage[],
+        allMessages: messages,
         uiState: 'initialized',
+        hasMore: messages?.length === MAX_MESSAGE_COUNT,
       };
     }
     case actionTypes.FETCH_INITIAL_MESSAGES_FAILURE: {
@@ -57,17 +64,20 @@ export function reducer(
     }
     case actionTypes.FETCH_PREV_MESSAGES_SUCCESS: {
       const channel = action.payload.channel as GroupChannel;
-      const messages = action.payload.messages as BaseMessage[];
+      const messages = action.payload.messages as BaseMessage[] || [];
       if (channel?.url !== state?.currentNotificationChannel?.url) {
         return state;
       }
+
+      const deDuplucateAllMessages = state.allMessages.filter((m) => {
+        return !messages.find((m2) => compareIds(m.messageId, m2.messageId));
+      });
       return {
         ...state,
-        hasMore: messages?.length === 20,
-        // todo: de-duplicate
+        hasMore: messages?.length === MAX_MESSAGE_COUNT,
         allMessages: [
+          ...deDuplucateAllMessages,
           ...messages,
-          ...state?.allMessages,
         ],
       };
     }
@@ -76,15 +86,19 @@ export function reducer(
     }
     case actionTypes.ON_MESSAGE_RECEIVED: {
       const channel = action.payload.channel as GroupChannel;
-      const message = action.payload.message as BaseMessage;
+      const message = action.payload.message as AdminMessage;
       if (channel?.url !== state?.currentNotificationChannel?.url) {
+        return state;
+      }
+      // filter out messaegs using MessageListQuery
+      if (state?.messageListParams && !filterMessageListParams(state?.messageListParams, message)) {
         return state;
       }
       return {
         ...state,
         allMessages: [
-          ...state?.allMessages,
           message,
+          ...state?.allMessages,
         ]
       };
     }

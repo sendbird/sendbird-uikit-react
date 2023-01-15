@@ -5,10 +5,12 @@ import { actionTypes } from '../dux/actionTypes';
 import { Logger } from '../../../../lib/SendbirdState';
 import { Action } from '../dux/reducers';
 import { MessageListParams } from '@sendbird/chat/message';
+import { MAX_MESSAGE_COUNT } from '../consts';
 
 type DynamicParams = {
   channelUrl: string;
   sdkInit: boolean;
+  messageListParams?: MessageListParams;
 };
 
 type StaticParams = {
@@ -17,18 +19,32 @@ type StaticParams = {
   logger: Logger;
 };
 
-function useInitialize({ channelUrl, sdkInit }: DynamicParams, {
+function useInitialize({
+  channelUrl,
+  sdkInit,
+  messageListParams,
+}: DynamicParams, {
   notificationsDispatcher,
   sdk,
   logger,
 }: StaticParams) {
   useEffect(() => {
     if (sdkInit) {
-      logger.info('NotificationChannel: Fetching channel start', { channelUrl });
+      const messageListParams_: MessageListParams = {
+        nextResultSize: 0,
+        prevResultSize: MAX_MESSAGE_COUNT,
+        reverse: true,
+        isInclusive: false,
+        includeReactions: false,
+        ...messageListParams,
+      };
+
+      logger.info('NotificationChannel: Fetching channel start', { channelUrl, messageListParams_ });
       notificationsDispatcher({
         type: actionTypes.FETCH_CHANNEL_START,
         payload: {
           channelUrl,
+          messageListParams: messageListParams_,
         },
       });
       sdk?.groupChannel.getChannel(channelUrl).then((channel) => {
@@ -45,39 +61,32 @@ function useInitialize({ channelUrl, sdkInit }: DynamicParams, {
           type: actionTypes.FETCH_INITIAL_MESSAGES_START,
         });
 
-        const messageListParams: MessageListParams = {
-          prevResultSize: 20,
-          nextResultSize: 0,
-          isInclusive: false,
-          includeReactions: false,
-        };
-
         logger.info('NotificationChannel: Fetching messages', { channel });
 
         channel.getMessagesByTimestamp(
           new Date().getTime(),
-          messageListParams,
+          messageListParams_,
         ).then((messages) => {
           notificationsDispatcher({
-              type: actionTypes.FETCH_INITIAL_MESSAGES_SUCCESS,
-              payload: {
-                channel,
-                messages,
-              },
-            });
-          })
-          .catch((error) => {
-            logger.error('NotificationChannel: Fetching messages failed', error);
-            notificationsDispatcher({
-              type: actionTypes.FETCH_INITIAL_MESSAGES_FAILURE,
-              payload: { error, channel },
-            });
-          })
-          .finally(() => {
-            // if (!initialTimeStamp) {
-            //   setTimeout(() => utils.scrollIntoLast(0, scrollRef));
-            // }
+            type: actionTypes.FETCH_INITIAL_MESSAGES_SUCCESS,
+            payload: {
+              channel,
+              messages,
+            },
           });
+        })
+        .catch((error) => {
+          logger.error('NotificationChannel: Fetching messages failed', error);
+          notificationsDispatcher({
+            type: actionTypes.FETCH_INITIAL_MESSAGES_FAILURE,
+            payload: { error, channel },
+          });
+        })
+        .finally(() => {
+          // if (!initialTimeStamp) {
+          //   setTimeout(() => utils.scrollIntoLast(0, scrollRef));
+          // }
+        });
       }).catch((error) => {
         logger.error('NotificationChannel: Fetching channel fail', { error });
         notificationsDispatcher({
@@ -85,7 +94,7 @@ function useInitialize({ channelUrl, sdkInit }: DynamicParams, {
         });
       })
     }
-  }, [channelUrl, sdkInit]);
+  }, [channelUrl, sdkInit, messageListParams]);
 }
 
 export default useInitialize;

@@ -1,3 +1,5 @@
+import './notification-channel-ui.scss';
+
 import React from 'react';
 
 import NotificationList from '../NotificationList';

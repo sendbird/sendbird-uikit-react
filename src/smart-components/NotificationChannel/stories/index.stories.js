@@ -15,7 +15,7 @@ export const NotificationChannelComponenet = () => (
     userId={userId}
     accessToken={accessToken}
   >
-    <div style={{ height: '100vh' }}>
+    <div style={{ height: '500px', width: '360px' }}>
       <NotificationChannel
         channelUrl='SENDBIRD_NOTIFICATION_CHANNEL_NOTIFICATION_sravan'
       />
