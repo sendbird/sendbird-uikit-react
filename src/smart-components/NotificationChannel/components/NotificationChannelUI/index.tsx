@@ -4,7 +4,7 @@ import React from 'react';
 
 import NotificationList from '../NotificationList';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
-import { renderMessage } from '../../types';
+import { renderMessage, renderMessageHeader } from '../../types';
 import { useNotficationChannelContext } from '../../context/NotificationChannelProvider';
 
 export type NotificationChannelUIProps = {
@@ -13,6 +13,7 @@ export type NotificationChannelUIProps = {
   renderPlaceholderInvalid?: () => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
   renderHeader?: () => React.ReactElement;
+  renderMessageHeader?: renderMessageHeader;
   renderMessage?: renderMessage;
 }
 
@@ -21,6 +22,7 @@ export default function index({
   renderPlaceholderLoader,
   renderPlaceholderInvalid,
   renderPlaceholderEmpty,
+  renderMessageHeader,
   renderHeader,
   renderMessage,
 }: NotificationChannelUIProps) {
@@ -40,10 +42,28 @@ export default function index({
       </div>
     )
   }
+
+  if (uiState === 'invalid') {
+    return (
+      <div className="sendbird-notification-channel" data-notificationuistate="invalid">
+        { renderHeader?.() || null }
+        {
+          renderPlaceholderInvalid?.() || (
+            <PlaceHolder
+              type={PlaceHolderTypes.WRONG}
+              className="sendbird-notification-channel__placeholder"
+            />
+          )
+        }
+      </div>
+    )
+  }
   return (
     <div className="sendbird-notification-channel">
       { renderHeader?.() || null }
       <NotificationList
+        renderPlaceholderEmpty={renderPlaceholderEmpty}
+        renderMessageHeader={renderMessageHeader}
         renderMessage={renderMessage}
       />
     </div>

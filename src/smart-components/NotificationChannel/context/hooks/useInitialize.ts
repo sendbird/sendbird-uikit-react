@@ -55,6 +55,12 @@ function useInitialize({
             channel,
           },
         });
+        notificationsDispatcher({
+          type: actionTypes.SET_LAST_SEEN,
+          payload: {
+            lastSeen: channel?.myLastRead,
+          },
+        });
         // start fetching messages
         logger.info('NotificationChannel: Fetching messages start', { channel });
         notificationsDispatcher({
@@ -74,6 +80,7 @@ function useInitialize({
               messages,
             },
           });
+          channel?.markAsRead();
         })
         .catch((error) => {
           logger.error('NotificationChannel: Fetching messages failed', error);

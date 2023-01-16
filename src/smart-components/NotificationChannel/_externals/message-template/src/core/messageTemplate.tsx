@@ -25,7 +25,6 @@ export const createMessageTemplate = <T,>(opts: MessageTemplateOptions<T>) => {
 
   const MessageTemplateBase = (props: MessageTemplateProps) => {
     const renderItems = props.templateItems;
-
     return (
       <React.Fragment>
         {renderItems.map((item, index) => {

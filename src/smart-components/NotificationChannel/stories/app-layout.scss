@@ -33,6 +33,23 @@
 ul.sendbird-app__channellist-alarm-dropdown {
   width: 380px;
   max-height: 600px;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 12px;
+  // triangle
+  // &:before {
+  //   content:"\A";
+  //   position: absolute;
+  //   top: -8px;
+  //   left: 8px;
+  //   width: 0;
+  //   height: 0;
+  //   border-style: solid;
+  //   border-width: 0 8px 8px 8px;
+  //   @include themed() {
+  //     border-color: transparent transparent t(bg-0) transparent;
+  //   }
+  // }
   .sendbird-notification-channel__list {
     max-height: 600px;
     overflow-y: scroll;

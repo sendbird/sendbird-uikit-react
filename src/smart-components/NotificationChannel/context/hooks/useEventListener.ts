@@ -35,7 +35,8 @@ function useEventListener({ currentChannel, sdkInit }: DynamicParams, {
               type: actionTypes.ON_MESSAGE_RECEIVED,
               payload: { channel, message },
             });
-            // todo: scroll to end
+            const _channel = channel as GroupChannel;
+            _channel?.markAsRead();
           }
         },
         onMessageUpdated: (channel, message) => {

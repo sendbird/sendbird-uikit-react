@@ -1,6 +1,7 @@
 import React, {
   useReducer,
   useRef,
+  useEffect,
 } from 'react';
 import { SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 
@@ -11,15 +12,14 @@ import { reducer } from './dux/reducers';
 import { MessageListParams } from '@sendbird/chat/message';
 import useEventListener from './hooks/useEventListener';
 import useFetchMore from './hooks/useFetchMore';
-import { renderMessageHeader } from '../types';
+import { actionTypes } from './dux/actionTypes';
 
 export type NotficationChannelContextProps = {
   channelUrl: string,
   children?: React.ReactElement;
   messageListParams?: MessageListParams;
-  renderMessageHeader?: renderMessageHeader;
+  lastSeen?: number;
   // todo:
-  // lastSeenAt: number;
   // handleWebAction(view: EventTargentElement, action: Action, message: BaseMessage)
   // handleCustomAction(view: EventTargentElement, action: Action, message: BaseMessage)
   // hanlePredefinedAction(view: EventTargentElement, action: Action, message: BaseMessage)
@@ -41,6 +41,7 @@ const NotficationChannelProvider: React.FC<NotficationChannelContextProps> = (
     channelUrl,
     children,
     messageListParams,
+    lastSeen,
   } = props;
 
   const globalStore = useSendbirdStateContext();
@@ -80,6 +81,13 @@ const NotficationChannelProvider: React.FC<NotficationChannelContextProps> = (
     logger,
   });
 
+  useEffect(() => {
+    notificationsDispatcher({
+      type: actionTypes.SET_LAST_SEEN,
+      payload: { lastSeen },
+    })
+  }, [lastSeen]);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   return (
     <NotficationChannelContext.Provider value={{
@@ -88,6 +96,7 @@ const NotficationChannelProvider: React.FC<NotficationChannelContextProps> = (
       // store
       uiState,
       messageListParams: notificationsStore.messageListParams,
+      lastSeen: notificationsStore?.lastSeen,
       allMessages,
       currentNotificationChannel,
       hasMore,

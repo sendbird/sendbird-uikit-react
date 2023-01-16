@@ -1,3 +1,9 @@
+@import '../../../../styles/variables';
+
 .sendbird-notification-channel {
   height: 100%;
+  @include themed() {
+    background-color: t(bg-0);
+    border: 1px solid t(on-bg-4);
+  }
 }

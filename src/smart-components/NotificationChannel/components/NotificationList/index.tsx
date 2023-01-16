@@ -16,11 +16,13 @@ const SCROLL_DEBOUNCE = 400;
 type Props = {
   renderMessage?: renderMessage;
   renderMessageHeader?: renderMessageHeader;
+  renderPlaceholderEmpty?: () => React.ReactElement;
 }
 
 export default function NotificationList({
   renderMessage,
   renderMessageHeader,
+  renderPlaceholderEmpty,
 }: Props) {
   const {
     allMessages,
@@ -64,10 +66,14 @@ export default function NotificationList({
   if (allMessages.length === 0) {
     return (
       <div className="sendbird-notification-channel__list" data-notificationuistate="empty">
-        <PlaceHolder
-          type={PlaceHolderTypes.NO_NOTIFICATIONS}
-          className="sendbird-notification-channel__placeholder"
-        />
+        {
+          renderPlaceholderEmpty?.() || (
+            <PlaceHolder
+              type={PlaceHolderTypes.NO_NOTIFICATIONS}
+              className="sendbird-notification-channel__placeholder"
+            />
+          )
+        }
       </div>
     );
   }

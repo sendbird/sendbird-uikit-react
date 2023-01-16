@@ -17,6 +17,12 @@ export function reducer(
   action: Action,
 ): NotficationChannelStateInterface {
   switch (action?.type) {
+    case actionTypes.SET_LAST_SEEN: {
+      return {
+        ...state,
+        lastSeen: action?.payload?.lastSeen as number,
+      };
+    }
     case actionTypes.FETCH_CHANNEL_START: {
       return {
         ...initialState,

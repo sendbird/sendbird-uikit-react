@@ -10,6 +10,7 @@ import UnknownMessageItemBody from "../../../../ui/UnknownMessageItemBody";
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { useLocalization } from '../../../../lib/LocalizationContext';
+import { useNotficationChannelContext } from '../../context/NotificationChannelProvider';
 
 const NotificationIcon = () => (
   <div className="sendbird-notification-channel__channel-icon-wrap">
@@ -37,6 +38,7 @@ export default function NotificationMessageWrap({
   message,
 }: Props) {
   const { dateLocale } = useLocalization();
+  const { lastSeen } = useNotficationChannelContext();
   let messageTemplate;
   try {
     // @ts-ignore
@@ -73,8 +75,11 @@ export default function NotificationMessageWrap({
                   {message?.customType}
                 </Label>
                 <div className='sendbird-notification-channel__message-date-wrap'>
-                  {/* todo: implement greendot */}
-                  <span className="sendbird-notification-channel__unread" />
+                  {
+                    message?.createdAt > lastSeen && (
+                      <span className="sendbird-notification-channel__unread" />
+                    )
+                  }
                   <Label
                     className="sendbird-notification-channel__message-date"
                     type={LabelTypography.CAPTION_3}
@@ -106,8 +111,11 @@ export default function NotificationMessageWrap({
                 {message?.customType}
               </Label>
               <div className='sendbird-notification-channel__message-date-wrap'>
-                {/* todo: implement greendot */}
-                <span className="sendbird-notification-channel__unread" />
+                {
+                  message?.createdAt > lastSeen && (
+                    <span className="sendbird-notification-channel__unread" />
+                  )
+                }
                 <Label
                   className="sendbird-notification-channel__message-date"
                   type={LabelTypography.CAPTION_3}

@@ -29,6 +29,7 @@ export const renderer = createRenderer<ReactParsedProperties>({
       );
     },
     image(props) {
+      // todo: add image backup
       return (
         <div className="sb-message-template__image-container" style={props.parsedProperties}>
           <img className="sb-message-template__image" alt="image" src={props.imageUrl} style={props.parsedProperties} />
