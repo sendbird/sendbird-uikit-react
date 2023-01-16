@@ -11,6 +11,7 @@ import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useNotficationChannelContext } from '../../context/NotificationChannelProvider';
+import { MessageProvider } from '../../context/MessageContextProvider';
 
 const NotificationIcon = () => (
   <div className="sendbird-notification-channel__channel-icon-wrap">
@@ -60,8 +61,8 @@ export default function NotificationMessageWrap({
     return null;
   }, [message, renderMessageHeader]);
 
-  if (memoizedCustomMessage) {
-    return (
+  return (
+    <MessageProvider message={message}>
       <div className="sendbird-notification-channel__message-wrap" data-messageId={message?.messageId}>
         <div className="sendbird-notification-channel__message-wrap-header">
           {
@@ -92,49 +93,16 @@ export default function NotificationMessageWrap({
             )
           }
         </div>
-        { memoizedCustomMessage }
-      </div>
-    );
-  }
-  return (
-    <div className="sendbird-notification-channel__message-wrap" data-messageid={message?.messageId}>
-      <div className="sendbird-notification-channel__message-wrap-header">
-        {
-          memoizedCustomHeader || (
-            <>
-              <NotificationIcon />
-              <Label
-                className="sendbird-notification-channel__message-caption"
-                type={LabelTypography.CAPTION_2}
-                color={LabelColors.ONBACKGROUND_3}
-                >
-                {message?.customType}
-              </Label>
-              <div className='sendbird-notification-channel__message-date-wrap'>
-                {
-                  message?.createdAt > lastSeen && (
-                    <span className="sendbird-notification-channel__unread" />
-                  )
-                }
-                <Label
-                  className="sendbird-notification-channel__message-date"
-                  type={LabelTypography.CAPTION_3}
-                  color={LabelColors.ONBACKGROUND_3}
-                >
-                  {format(message?.createdAt || 0, 'p', { locale: dateLocale })}
-                </Label>
-              </div>
-            </>
+        {/* render custom message or unknown message or message template */}
+        { memoizedCustomMessage || (
+          messageTemplate?.body?.items === undefined ? (
+            <UnknownMessageItemBody message={message} />
+          ) : (
+            <MessageTemplate templateItems={messageTemplate?.body?.items} />
           )
-        }
+        )}
       </div>
-      {
-        messageTemplate?.body?.items === undefined ? (
-          <UnknownMessageItemBody message={message} />
-        ) : (
-          <MessageTemplate templateItems={messageTemplate?.body?.items} />
-        )
-      }
-    </div>
-  )
+
+    </MessageProvider>
+  );
 }

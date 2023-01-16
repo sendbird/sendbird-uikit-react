@@ -42,14 +42,6 @@ export const CustomTitle = () => {
       });
     }
   }, [userId, sdk]);
-  // add event listener for channel - to handle unread count
-  // useEffect(() => {
-  //   first
-  
-  //   return () => {
-  //     second
-  //   }
-  // }, [third]);
 
   const parentRef = React.useRef(null);
 

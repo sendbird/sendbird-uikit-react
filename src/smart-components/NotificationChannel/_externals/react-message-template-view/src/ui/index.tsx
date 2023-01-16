@@ -1,6 +1,8 @@
 import React from 'react';
 import '../index.css';
 
+import { useNotficationChannelContext } from '../../../../context/NotificationChannelProvider';
+
 import { createMessageTemplate, createParser, createRenderer } from '../../../message-template/src';
 
 import {
@@ -11,6 +13,7 @@ import {
   setTextStyle,
   setViewProps,
 } from '../styles';
+import { useMessageContext } from '../../../../context/MessageContextProvider';
 
 export const renderer = createRenderer<ReactParsedProperties>({
   views: {
@@ -37,15 +40,72 @@ export const renderer = createRenderer<ReactParsedProperties>({
       );
     },
     textButton(props) {
+      const {
+        handleWebAction,
+        handleCustomAction,
+        hanlePredefinedAction,
+      } = useNotficationChannelContext();
+      const { message } = useMessageContext();
       return (
-        <button className="sb-message-template__text-button" style={props.parsedProperties}>
+        <button
+          className="sb-message-template__text-button"
+          style={props.parsedProperties}
+          onClick={(e) => {
+            if (props?.action?.type === 'web') {
+              if (handleWebAction) {
+                handleWebAction?.(e, props.action, message);
+              } else {
+                window.open(props?.action?.data, '_blank').focus();
+              }
+            }
+            if (props?.action?.type === 'custom') {
+              if (handleCustomAction) {
+                handleCustomAction?.(e, props.action, message);
+              }
+            }
+            if (props?.action?.type === 'uikit') {
+              if (hanlePredefinedAction) {
+                hanlePredefinedAction?.(e, props.action, message);
+              }
+            }
+          }}
+        >
           {props.text}
         </button>
       );
     },
     imageButton(props) {
+      const {
+        handleWebAction,
+        handleCustomAction,
+        hanlePredefinedAction,
+      } = useNotficationChannelContext();
+      const { message } = useMessageContext();
+      // todo: implement default image
       return (
-        <div className="sb-message-template__image-container sb-message-template__image-button" style={props.parsedProperties}>
+        <div
+          className="sb-message-template__image-container sb-message-template__image-button"
+          style={props.parsedProperties}
+          onClick={(e) => {
+            if (props?.action?.type === 'web') {
+              if (handleWebAction) {
+                handleWebAction?.(e, props.action, message);
+              } else {
+                window.open(props?.action?.data, '_blank').focus();
+              }
+            }
+            if (props?.action?.type === 'custom') {
+              if (handleCustomAction) {
+                handleCustomAction?.(e, props.action, message);
+              }
+            }
+            if (props?.action?.type === 'uikit') {
+              if (hanlePredefinedAction) {
+                hanlePredefinedAction?.(e, props.action, message);
+              }
+            }
+          }}
+        >
           <img className="sb-message-template__image" alt="image-button" src={props.imageUrl} style={props.parsedProperties} />
         </div>
       );

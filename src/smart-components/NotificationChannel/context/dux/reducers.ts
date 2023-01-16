@@ -23,6 +23,13 @@ export function reducer(
         lastSeen: action?.payload?.lastSeen as number,
       };
     }
+    case actionTypes.SHOW_DELETE_MODAL: {
+      return {
+        ...state,
+        showDeleteModal: action?.payload?.showDeleteModal as boolean,
+        messageToDelete: action?.payload?.message as BaseMessage,
+      };
+    }
     case actionTypes.FETCH_CHANNEL_START: {
       return {
         ...initialState,

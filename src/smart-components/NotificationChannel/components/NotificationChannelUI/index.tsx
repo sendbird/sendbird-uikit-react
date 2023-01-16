@@ -6,6 +6,13 @@ import NotificationList from '../NotificationList';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import { renderMessage, renderMessageHeader } from '../../types';
 import { useNotficationChannelContext } from '../../context/NotificationChannelProvider';
+import Modal from '../../../../ui/Modal';
+import { ButtonTypes } from '../../../../ui/Button';
+import { actionTypes } from '../../context/dux/actionTypes';
+import { useLocalization } from '../../../../lib/LocalizationContext';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import sendbirdSelectors from '../../../../lib/selectors';
+
 
 export type NotificationChannelUIProps = {
   isLoading?: boolean;
@@ -26,7 +33,16 @@ export default function index({
   renderHeader,
   renderMessage,
 }: NotificationChannelUIProps) {
-  const { uiState } = useNotficationChannelContext();
+  const {
+    uiState,
+    showDeleteModal,
+    notificationsDispatcher,
+    currentNotificationChannel,
+    messageToDelete,
+  } = useNotficationChannelContext();
+  const { stringSet } = useLocalization();
+  const store = useSendbirdStateContext();
+  const deleteMessage = sendbirdSelectors.getDeleteMessage(store);
   if (isLoading || uiState === 'loading') {
     return (
       <div className="sendbird-notification-channel" data-notificationuistate="loading">
@@ -66,6 +82,36 @@ export default function index({
         renderMessageHeader={renderMessageHeader}
         renderMessage={renderMessage}
       />
+      {
+        showDeleteModal && (
+          <Modal
+            type={ButtonTypes.DANGER}
+            onCancel={() => {
+              notificationsDispatcher({
+                type: actionTypes.SHOW_DELETE_MODAL,
+                payload: {
+                  showDeleteModal: false,
+                  message: null,
+                },
+              })
+            }}
+            onSubmit={() => {
+              // @ts-ignore
+              deleteMessage(currentNotificationChannel, messageToDelete).then(() => {
+                notificationsDispatcher({
+                  type: actionTypes.SHOW_DELETE_MODAL,
+                  payload: {
+                    showDeleteModal: false,
+                    message: null,
+                  },
+                })
+              });
+            }}
+            submitText={stringSet.MESSAGE_MENU__DELETE}
+            titleText={stringSet.MODAL__DELETE_MESSAGE__TITLE}
+          />
+        )
+      }
     </div>
   );
 }

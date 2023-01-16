@@ -88,11 +88,6 @@ function useInitialize({
             type: actionTypes.FETCH_INITIAL_MESSAGES_FAILURE,
             payload: { error, channel },
           });
-        })
-        .finally(() => {
-          // if (!initialTimeStamp) {
-          //   setTimeout(() => utils.scrollIntoLast(0, scrollRef));
-          // }
         });
       }).catch((error) => {
         logger.error('NotificationChannel: Fetching channel fail', { error });

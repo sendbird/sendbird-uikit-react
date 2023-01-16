@@ -8,6 +8,9 @@ export default function NotificationChannel(props: NotificationChannelProps) {
     channelUrl,
     messageListParams,
     lastSeen,
+    handleWebAction,
+    handleCustomAction,
+    hanlePredefinedAction,
     ...uiProps
   } = props;
   return (
@@ -15,6 +18,9 @@ export default function NotificationChannel(props: NotificationChannelProps) {
       channelUrl={channelUrl}
       lastSeen={lastSeen}
       messageListParams={messageListParams}
+      handleWebAction={handleWebAction}
+      handleCustomAction={handleCustomAction}
+      hanlePredefinedAction={hanlePredefinedAction}
     >
       <NotificationChannelUI
         {...uiProps}

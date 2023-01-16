@@ -9,20 +9,20 @@ import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { NotficationChannelStateInterface, initialState } from './dux/initialState';
 import useInitialize from './hooks/useInitialize';
 import { reducer } from './dux/reducers';
-import { MessageListParams } from '@sendbird/chat/message';
+import { BaseMessage, MessageListParams } from '@sendbird/chat/message';
 import useEventListener from './hooks/useEventListener';
 import useFetchMore from './hooks/useFetchMore';
 import { actionTypes } from './dux/actionTypes';
+import { Action } from '../_externals/message-template/src';
 
 export type NotficationChannelContextProps = {
   channelUrl: string,
   children?: React.ReactElement;
   messageListParams?: MessageListParams;
   lastSeen?: number;
-  // todo:
-  // handleWebAction(view: EventTargentElement, action: Action, message: BaseMessage)
-  // handleCustomAction(view: EventTargentElement, action: Action, message: BaseMessage)
-  // hanlePredefinedAction(view: EventTargentElement, action: Action, message: BaseMessage)
+  handleWebAction?(event: React.SyntheticEvent, action: Action, message: BaseMessage);
+  handleCustomAction?(event: React.SyntheticEvent, action: Action, message: BaseMessage);
+  hanlePredefinedAction?(event: React.SyntheticEvent, action: Action, message: BaseMessage);
 };
 
 export interface NotficationChannelProviderInterface extends NotficationChannelStateInterface,
@@ -42,6 +42,9 @@ const NotficationChannelProvider: React.FC<NotficationChannelContextProps> = (
     children,
     messageListParams,
     lastSeen,
+    handleWebAction,
+    handleCustomAction,
+    hanlePredefinedAction,
   } = props;
 
   const globalStore = useSendbirdStateContext();
@@ -54,6 +57,8 @@ const NotficationChannelProvider: React.FC<NotficationChannelContextProps> = (
     allMessages,
     currentNotificationChannel,
     hasMore,
+    showDeleteModal,
+    messageToDelete,
   } = notificationsStore;
   const oldestMessageTimeStamp = allMessages?.[allMessages?.length - 1]?.createdAt || 0;
 
@@ -89,17 +94,32 @@ const NotficationChannelProvider: React.FC<NotficationChannelContextProps> = (
   }, [lastSeen]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const defaultHanlePredefinedAction = (event: React.SyntheticEvent, action: Action, message: BaseMessage) => {
+    logger.info('NotficationChannel: hanlePredefinedAction', { event, action, message });
+    if (action?.type === 'uikit' && action?.data === 'sendbirduikit://delete') {
+      notificationsDispatcher({
+        type: actionTypes.SHOW_DELETE_MODAL,
+        payload: { message, showDeleteModal: true },
+      });
+    }
+  }
   return (
     <NotficationChannelContext.Provider value={{
       // props
       channelUrl,
+      handleWebAction,
+      handleCustomAction,
+      hanlePredefinedAction: hanlePredefinedAction || defaultHanlePredefinedAction,
       // store
       uiState,
       messageListParams: notificationsStore.messageListParams,
       lastSeen: notificationsStore?.lastSeen,
       allMessages,
+      showDeleteModal,
       currentNotificationChannel,
       hasMore,
+      messageToDelete,
       // dispatcher
       notificationsDispatcher,
       // derived info

@@ -9,6 +9,8 @@ export declare type NotficationChannelStateInterface = {
   hasMore: boolean;
   messageListParams?: MessageListParams;
   lastSeen?: number;
+  showDeleteModal: boolean;
+  messageToDelete?: BaseMessage;
 }
 
 export const initialState: NotficationChannelStateInterface = {
@@ -18,4 +20,6 @@ export const initialState: NotficationChannelStateInterface = {
   hasMore: false,
   messageListParams: null,
   lastSeen: 0,
+  showDeleteModal: false,
+  messageToDelete: null,
 };
