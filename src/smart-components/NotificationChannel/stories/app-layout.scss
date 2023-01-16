@@ -1,0 +1,44 @@
+@import '../../../styles/variables';
+
+.sendbird-app__wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  box-sizing: border-box;
+}
+.sendbird-app__conversation-wrap {
+  flex: 1;
+  position: relative;
+  width: calc(100% - 320px);
+}
+.sendbird-app__channellist-wrap {
+  max-width: 320px;
+  @include themed() {
+    border-top: 1px solid t(on-bg-4--bg-6);
+    border-left: 1px solid t(on-bg-4--bg-6);
+    border-bottom: 1px solid t(on-bg-4--bg-6);
+  }
+}
+.sendbird-app__channellist-header-title {
+  margin-top: 13px;
+  margin-left: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+.sendbird-app__channellist-alarm {
+  cursor: pointer;
+  margin-top: -4px;
+}
+
+ul.sendbird-app__channellist-alarm-dropdown {
+  width: 380px;
+  max-height: 600px;
+  .sendbird-notification-channel__list {
+    max-height: 600px;
+    overflow-y: scroll;
+  }
+}
+
+.sendbird-notification-channel__placeholder {
+  height: 300px;
+}

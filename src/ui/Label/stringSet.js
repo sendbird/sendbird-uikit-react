@@ -111,6 +111,7 @@ const getStringSet = (lang = 'en') => {
       PLACE_HOLDER__WRONG: 'Something went wrong',
       PLACE_HOLDER__RETRY_TO_CONNECT: 'Retry',
       PLACE_HOLDER__NO_MESSAGES: 'No messages',
+      PLACE_HOLDER__NO_NOTIFICATIONS: 'No notifications',
       NO_TITLE: 'No title',
       NO_NAME: '(No name)',
       NO_MEMBERS: '(No members)',

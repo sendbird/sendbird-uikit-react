@@ -3,6 +3,7 @@ function Types(): { [key: string]: string } {
     LOADING: 'LOADING',
     NO_CHANNELS: 'NO_CHANNELS',
     NO_MESSAGES: 'NO_MESSAGES',
+    NO_NOTIFICATIONS: 'NO_NOTIFICATIONS',
     WRONG: 'WRONG',
     SEARCH_IN: 'SEARCH_IN',
     SEARCHING: 'SEARCHING',

@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 import { renderMessage, renderMessageHeader } from "../../types";
 import { useNotficationChannelContext } from "../../context/NotificationChannelProvider";
 import NotificationMessageWrap from "../NotificationMessageWrap";
+import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 
 const OFF_SET = 50;
 const shouldScroll = (clientHeight: number, scrollTop: number, scrollHeight: number) => {
@@ -30,8 +31,7 @@ export default function NotificationList({
 
   useEffect(() => {
     let timerId;
-    const scrollDiv = scrollRef.current;
-
+    const scrollDiv = scrollRef?.current;
     const handleScroll = () => {
       clearTimeout(timerId);
       timerId = setTimeout(() => {
@@ -53,17 +53,27 @@ export default function NotificationList({
         }
       }, SCROLL_DEBOUNCE);
     };
-
-    scrollDiv.addEventListener("scroll", handleScroll);
+    scrollDiv?.addEventListener("scroll", handleScroll);
 
     return () => {
       clearTimeout(timerId);
-      scrollDiv.removeEventListener("scroll", handleScroll);
+      scrollDiv?.removeEventListener("scroll", handleScroll);
     };
-  }, [onFetchMore, hasMore]);
+  }, [onFetchMore, hasMore, scrollRef?.current]);
+
+  if (allMessages.length === 0) {
+    return (
+      <div className="sendbird-notification-channel__list" data-notificationuistate="empty">
+        <PlaceHolder
+          type={PlaceHolderTypes.NO_NOTIFICATIONS}
+          className="sendbird-notification-channel__placeholder"
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className="sendbird-notification-channel__list" ref={scrollRef}>
+    <div className="sendbird-notification-channel__list" data-notificationuistate="loaded" ref={scrollRef}>
       <div>
         {
           allMessages.map((message) => {

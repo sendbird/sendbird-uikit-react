@@ -5,6 +5,7 @@ import React from 'react';
 import NotificationList from '../NotificationList';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import { renderMessage } from '../../types';
+import { useNotficationChannelContext } from '../../context/NotificationChannelProvider';
 
 export type NotificationChannelUIProps = {
   isLoading?: boolean;
@@ -23,13 +24,17 @@ export default function index({
   renderHeader,
   renderMessage,
 }: NotificationChannelUIProps) {
-  if (isLoading) {
+  const { uiState } = useNotficationChannelContext();
+  if (isLoading || uiState === 'loading') {
     return (
-      <div className="sendbird-notification-channel">
+      <div className="sendbird-notification-channel" data-notificationuistate="loading">
         { renderHeader?.() || null }
         {
           renderPlaceholderLoader?.() || (
-            <PlaceHolder type={PlaceHolderTypes.LOADING} />
+            <PlaceHolder
+              type={PlaceHolderTypes.LOADING}
+              className="sendbird-notification-channel__placeholder"
+            />
           )
         }
       </div>

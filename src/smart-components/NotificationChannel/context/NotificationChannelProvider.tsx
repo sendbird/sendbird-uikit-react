@@ -18,6 +18,11 @@ export type NotficationChannelContextProps = {
   children?: React.ReactElement;
   messageListParams?: MessageListParams;
   renderMessageHeader?: renderMessageHeader;
+  // todo:
+  // lastSeenAt: number;
+  // handleWebAction(view: EventTargentElement, action: Action, message: BaseMessage)
+  // handleCustomAction(view: EventTargentElement, action: Action, message: BaseMessage)
+  // hanlePredefinedAction(view: EventTargentElement, action: Action, message: BaseMessage)
 };
 
 export interface NotficationChannelProviderInterface extends NotficationChannelStateInterface,

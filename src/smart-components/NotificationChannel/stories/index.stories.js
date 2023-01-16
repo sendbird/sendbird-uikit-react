@@ -1,11 +1,12 @@
 import React, { useState, useCallback } from 'react';
 
 import Sendbird from '../../../lib/Sendbird';
+import NotificationChannel from '../index';
+import { AppLayout } from './AppLayout';
+
 const appId = '60E22A13-CC2E-4E83-98BE-578E72FC92F3';
 const accessToken = '28e0b19b0ddd8cff01faf50e2b08797e77ea26a6';
 const userId = 'sravan';
-
-import NotificationChannel from '../index';
 
 export default { title: 'NotficationChannel' };
 
@@ -22,3 +23,17 @@ export const NotificationChannelComponenet = () => (
     </div>
   </Sendbird>
 );
+
+export const NotificationApp = () => {
+  return (
+    <div style={{ height: '100vh' }}>
+      <Sendbird
+        appId={appId}
+        userId={userId}
+        accessToken={accessToken}
+      >
+        <AppLayout />
+      </Sendbird>
+    </div>
+  )
+}

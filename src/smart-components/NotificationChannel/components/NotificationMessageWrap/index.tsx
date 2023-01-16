@@ -70,7 +70,7 @@ export default function NotificationMessageWrap({
                   className="sendbird-notification-channel__message-caption"
                   type={LabelTypography.CAPTION_2}
                 >
-                  caption
+                  {message?.customType}
                 </Label>
                 <div className='sendbird-notification-channel__message-date-wrap'>
                   {/* todo: implement greendot */}
@@ -103,7 +103,7 @@ export default function NotificationMessageWrap({
                 type={LabelTypography.CAPTION_2}
                 color={LabelColors.ONBACKGROUND_3}
                 >
-                caption
+                {message?.customType}
               </Label>
               <div className='sendbird-notification-channel__message-date-wrap'>
                 {/* todo: implement greendot */}
