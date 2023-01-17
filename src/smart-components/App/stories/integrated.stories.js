@@ -123,7 +123,7 @@ export const GroupChannel = () => {
   const globalEnvironments = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { currentAppId: '', apps: {}, login: false };
   const appIdInputRef = useRef(null);
   const userIdInputRef = useRef(null);
-  const [isLogin, setIsLogin] = useState(globalEnvironments.login);
+  const [isLoggedin, setIsLoggedin] = useState(globalEnvironments.login);
   const [sampleOptions, setSampleOptions] = useState({
     appId: '',
     userId: '',
@@ -144,7 +144,7 @@ export const GroupChannel = () => {
   });
 
   useEffect(() => {
-    if (isLogin) {
+    if (isLoggedin) {
       const currentApp = globalEnvironments.apps?.[globalEnvironments.currentAppId];
       setSampleOptions(currentApp.users?.[currentApp?.currentUserId]);
     } else {
@@ -184,11 +184,11 @@ export const GroupChannel = () => {
   }, [appIdInputRef, userIdInputRef, sampleOptions.appId, sampleOptions.userId]);
 
   // Sendbird App
-  if (isLogin) {
+  if (isLoggedin) {
     return (
       <div className={`sendbird-integrated-sample-app sendbird-theme--${sampleOptions.theme}`}>
         <input value="Logout" type="button" onClick={() => {
-          setIsLogin(false);
+          setIsLoggedin(false);
           localStorage.setItem(STORAGE_KEY, JSON.stringify({
             login: false,
             currentAppId: sampleOptions.appId,
@@ -456,7 +456,7 @@ export const GroupChannel = () => {
             >Modify UserId</Button>
             <Button
               onClick={() => {
-                setIsLogin(true);
+                setIsLoggedin(true);
                 // save to Local Storage
                 localStorage.setItem(STORAGE_KEY, JSON.stringify({
                   login: true,
