@@ -49,7 +49,7 @@ We use storybook for development and rollup for building the npm distribution(bu
 Make sure you have nodejs and npm installed and run
 
 ```
-Make a copy of env.example and save it as .env
+Make a copy of .env.example and save it as .env
 Set your appId STORYBOOK_APP_ID
 npm install
 npm run storybook
