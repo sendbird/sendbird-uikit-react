@@ -1,18 +1,17 @@
 @import '../../../styles/variables';
 
 .sendbird-integrated-sample-app {
-  .integrated-app-theme--light {
-    background-color: var(--sendbird-light-background-50);
-  }
-  .integrated-app-theme--dark {
-    background-color: var(--sendbird-dark-background-600);
-  }
-
   position: relative;
   display: flex;
   flex-direction: column;
   width: 100vw;
   height: 100vh;
+}
+.sendbird-integrated-sample-app .integrated-app-theme--light {
+  background-color: var(--sendbird-light-background-50);
+}
+.sendbird-integrated-sample-app .integrated-app-theme--dark {
+  background-color: var(--sendbird-dark-background-600);
 }
 
 .sendbird-integrated-sample-app__title {
@@ -36,7 +35,6 @@
 }
 
 // .sendbird-integrated-sample-app__preview {}
-
 
 // components
 
@@ -85,6 +83,4 @@
 }
 
 // image compression
-.sendbird-image-compression-box {
-
-}
+// .sendbird-image-compression-box { }
