@@ -341,6 +341,7 @@ const MessageInput = React.forwardRef((props, ref) => {
       setHeight();
     }
   };
+  const isEditDisabled = !(ref?.current?.innerText?.trim());
   const editMessage = () => {
     const textField = ref?.current;
     const messageId = message?.messageId;
@@ -498,6 +499,7 @@ const MessageInput = React.forwardRef((props, ref) => {
               className="sendbird-message-input--edit-action__save"
               type={ButtonTypes.PRIMARY}
               size={ButtonSizes.SMALL}
+              disabled={isEditDisabled}
               onClick={() => editMessage()}
             >
               {stringSet.BUTTON__SAVE}
