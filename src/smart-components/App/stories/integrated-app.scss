@@ -34,8 +34,6 @@
   }
 }
 
-// .sendbird-integrated-sample-app__preview {}
-
 // components
 
 // option item
@@ -45,7 +43,6 @@
   flex-direction: row;
   align-items: flex-start;
   height: fit-content;
-  // margin-top: 10px;
   margin-bottom: 10px;
   padding-bottom: 12px;
   @include themed() {
@@ -81,6 +78,3 @@
   display: flex;
   gap: 6px;
 }
-
-// image compression
-// .sendbird-image-compression-box { }
