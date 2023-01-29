@@ -15,6 +15,25 @@ import {
 } from '../styles';
 import { useMessageContext } from '../../../../context/MessageContextProvider';
 
+const hasValidUrlProtocol = (url = '') => ['http://', 'https://', 'ftp://']
+  .some(protocol => url.startsWith(protocol));
+
+/**
+ * @param url - url to be checked
+ * @returns url with http:// protocol if it doesn't have any protocol
+ * @example
+ * returnUrl('www.sendbird.com') // returns 'http://www.sendbird.com'
+ * returnUrl('https://www.sendbird.com') // returns 'https://www.sendbird.com'
+ * returnUrl('ftp://www.sendbird.com') // returns 'ftp://www.sendbird.com'
+ * returnUrl('sendbird.com') // returns 'http://sendbird.com'
+ **/
+const returnUrl = (url = '') => {
+  if (hasValidUrlProtocol(url)) {
+    return url;
+  }
+  return `http://${url}`;
+}
+
 export const renderer = createRenderer<ReactParsedProperties>({
   views: {
     box(props) {
@@ -43,7 +62,7 @@ export const renderer = createRenderer<ReactParsedProperties>({
       const {
         handleWebAction,
         handleCustomAction,
-        hanlePredefinedAction,
+        handlePredefinedAction,
       } = useNotficationChannelContext();
       const { message } = useMessageContext();
       return (
@@ -55,7 +74,7 @@ export const renderer = createRenderer<ReactParsedProperties>({
               if (handleWebAction) {
                 handleWebAction?.(e, props.action, message);
               } else {
-                window.open(props?.action?.data, '_blank').focus();
+                window.open(returnUrl(props?.action?.data), '_blank', 'noopener noreferrer').focus();
               }
             }
             if (props?.action?.type === 'custom') {
@@ -64,8 +83,8 @@ export const renderer = createRenderer<ReactParsedProperties>({
               }
             }
             if (props?.action?.type === 'uikit') {
-              if (hanlePredefinedAction) {
-                hanlePredefinedAction?.(e, props.action, message);
+              if (handlePredefinedAction) {
+                handlePredefinedAction?.(e, props.action, message);
               }
             }
           }}
@@ -78,7 +97,7 @@ export const renderer = createRenderer<ReactParsedProperties>({
       const {
         handleWebAction,
         handleCustomAction,
-        hanlePredefinedAction,
+        handlePredefinedAction,
       } = useNotficationChannelContext();
       const { message } = useMessageContext();
       // todo: implement default image
@@ -91,7 +110,7 @@ export const renderer = createRenderer<ReactParsedProperties>({
               if (handleWebAction) {
                 handleWebAction?.(e, props.action, message);
               } else {
-                window.open(props?.action?.data, '_blank').focus();
+                window.open(returnUrl(props?.action?.data), '_blank', 'noopener noreferrer').focus();
               }
             }
             if (props?.action?.type === 'custom') {
@@ -100,8 +119,8 @@ export const renderer = createRenderer<ReactParsedProperties>({
               }
             }
             if (props?.action?.type === 'uikit') {
-              if (hanlePredefinedAction) {
-                hanlePredefinedAction?.(e, props.action, message);
+              if (handlePredefinedAction) {
+                handlePredefinedAction?.(e, props.action, message);
               }
             }
           }}

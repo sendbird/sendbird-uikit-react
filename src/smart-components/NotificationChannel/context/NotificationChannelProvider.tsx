@@ -22,7 +22,7 @@ export type NotficationChannelContextProps = {
   lastSeen?: number;
   handleWebAction?(event: React.SyntheticEvent, action: Action, message: BaseMessage);
   handleCustomAction?(event: React.SyntheticEvent, action: Action, message: BaseMessage);
-  hanlePredefinedAction?(event: React.SyntheticEvent, action: Action, message: BaseMessage);
+  handlePredefinedAction?(event: React.SyntheticEvent, action: Action, message: BaseMessage);
 };
 
 export interface NotficationChannelProviderInterface extends NotficationChannelStateInterface,
@@ -44,7 +44,7 @@ const NotficationChannelProvider: React.FC<NotficationChannelContextProps> = (
     lastSeen,
     handleWebAction,
     handleCustomAction,
-    hanlePredefinedAction,
+    handlePredefinedAction,
   } = props;
 
   const globalStore = useSendbirdStateContext();
@@ -95,8 +95,8 @@ const NotficationChannelProvider: React.FC<NotficationChannelContextProps> = (
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const defaultHanlePredefinedAction = (event: React.SyntheticEvent, action: Action, message: BaseMessage) => {
-    logger.info('NotficationChannel: hanlePredefinedAction', { event, action, message });
+  const defaulthandlePredefinedAction = (event: React.SyntheticEvent, action: Action, message: BaseMessage) => {
+    logger.info('NotficationChannel: handlePredefinedAction', { event, action, message });
     if (action?.type === 'uikit' && action?.data === 'sendbirduikit://delete') {
       notificationsDispatcher({
         type: actionTypes.SHOW_DELETE_MODAL,
@@ -110,7 +110,7 @@ const NotficationChannelProvider: React.FC<NotficationChannelContextProps> = (
       channelUrl,
       handleWebAction,
       handleCustomAction,
-      hanlePredefinedAction: hanlePredefinedAction || defaultHanlePredefinedAction,
+      handlePredefinedAction: handlePredefinedAction || defaulthandlePredefinedAction,
       // store
       uiState,
       messageListParams: notificationsStore.messageListParams,
