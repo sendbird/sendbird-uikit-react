@@ -72,7 +72,7 @@ export interface ViewStyle {
 export interface TextStyle {
   size?: number;
   color?: `#${string}`;
-  weight?: FontWeight;
+  weight?: FontWeight | number;
 }
 
 export interface ImageStyle {

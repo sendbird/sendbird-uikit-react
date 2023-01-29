@@ -140,9 +140,8 @@ export const parser = createParser<ReactParsedProperties>({
   },
   mapTextButtonProps(props) {
     const styles = getDefaultStyles({ alignItems: 'center', justifyContent: 'center' });
-
     setViewProps(styles, props);
-    setTextStyle(styles, props.textStyle);
+    setTextStyle(styles, { weight: 500, ...props.textStyle });
 
     return styles;
   },
