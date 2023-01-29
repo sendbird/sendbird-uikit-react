@@ -99,12 +99,19 @@ export default function index({
               // @ts-ignore
               deleteMessage(currentNotificationChannel, messageToDelete).then(() => {
                 notificationsDispatcher({
+                  type: actionTypes.ON_MESSAGE_DELETED,
+                  payload: {
+                    channel: currentNotificationChannel,
+                    message: messageToDelete,
+                  },
+                });
+                notificationsDispatcher({
                   type: actionTypes.SHOW_DELETE_MODAL,
                   payload: {
                     showDeleteModal: false,
                     message: null,
                   },
-                })
+                });
               });
             }}
             submitText={stringSet.MESSAGE_MENU__DELETE}

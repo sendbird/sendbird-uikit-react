@@ -34,6 +34,7 @@ export const CustomTitle = () => {
           channelUrl: notificaionChannelUrl,
           isDistinct: true,
           isStrict: true,
+          operatorUserIds: [userId],
           customType: 'SENDBIRD_NOTIFICATION_CHANNEL_NOTIFICATION',
         };
         sdk?.groupChannel?.createChannel(params).then((channel) => {
@@ -93,7 +94,7 @@ export const AppLayout: React.FC = () => {
     channelListQuery: {
       customTypesFilter: [''],
     },
-  })
+  });
   return (
     <div className="sendbird-app__wrap">
       <div className="sendbird-app__channellist-wrap">

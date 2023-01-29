@@ -10,6 +10,7 @@ interface Props {
   className?: string | Array<string>;
   isByMe?: boolean;
   message: BaseMessage;
+  customText?: string;
   mouseHover?: boolean;
   isReactionEnabled?: boolean;
 }
@@ -17,6 +18,7 @@ interface Props {
 export default function UnknownMessageItemBody({
   className,
   message,
+  customText,
   isByMe = false,
   mouseHover = false,
   isReactionEnabled = false,
@@ -42,7 +44,7 @@ export default function UnknownMessageItemBody({
         type={LabelTypography.BODY_1}
         color={isByMe ? LabelColors.ONCONTENT_2 : LabelColors.ONBACKGROUND_2}
       >
-        {stringSet.UNKNOWN__CANNOT_READ_MESSAGE}
+        {customText || stringSet.UNKNOWN__CANNOT_READ_MESSAGE}
       </Label>
     </div>
   );

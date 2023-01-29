@@ -16,7 +16,7 @@ import { actionTypes } from './dux/actionTypes';
 import { Action } from '../_externals/message-template/src';
 
 export type NotficationChannelContextProps = {
-  channelUrl: string,
+  channelUrl: string;
   children?: React.ReactElement;
   messageListParams?: MessageListParams;
   lastSeen?: number;

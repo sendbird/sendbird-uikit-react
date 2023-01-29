@@ -55,6 +55,7 @@ export const TestApp = () => {
       <Sendbird
         appId={appId}
         userId={userId}
+        nickname={userId}
         accessToken={accessToken}
       >
         <AppLayout />

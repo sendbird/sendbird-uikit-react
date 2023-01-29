@@ -1,7 +1,7 @@
 import './notification-message-wrap.scss';
 
 import React, { useMemo } from "react";
-import { BaseMessage } from "@sendbird/chat/message";
+import { BaseMessage, UserMessage } from "@sendbird/chat/message";
 import format from 'date-fns/format';
 
 import { renderMessage, renderMessageHeader } from "../../types";
@@ -40,6 +40,10 @@ export default function NotificationMessageWrap({
 }: Props) {
   const { dateLocale } = useLocalization();
   const { lastSeen } = useNotficationChannelContext();
+  // Typecasting to UserMessage to pass custom error message to UnknownMessage
+  const _message = message as UserMessage;
+  const customErrorLabel = _message?.message;
+
   let messageTemplate;
   try {
     // @ts-ignore
@@ -63,7 +67,7 @@ export default function NotificationMessageWrap({
 
   return (
     <MessageProvider message={message}>
-      <div className="sendbird-notification-channel__message-wrap" data-messageId={message?.messageId}>
+      <div className="sendbird-notification-channel__message-wrap" data-messageid={message?.messageId}>
         <div className="sendbird-notification-channel__message-wrap-header">
           {
             memoizedCustomHeader || (
@@ -96,7 +100,10 @@ export default function NotificationMessageWrap({
         {/* render custom message or unknown message or message template */}
         { memoizedCustomMessage || (
           messageTemplate?.body?.items === undefined ? (
-            <UnknownMessageItemBody message={message} />
+            <UnknownMessageItemBody
+              message={message}
+              customText={customErrorLabel}
+            />
           ) : (
             <MessageTemplate templateItems={messageTemplate?.body?.items} />
           )
