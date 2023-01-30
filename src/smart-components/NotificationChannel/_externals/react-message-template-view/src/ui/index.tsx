@@ -12,6 +12,7 @@ import {
   setImageStyle,
   setTextStyle,
   setViewProps,
+  setViewStyle,
 } from '../styles';
 import { useMessageContext } from '../../../../context/MessageContextProvider';
 
@@ -144,9 +145,9 @@ export const parser = createParser<ReactParsedProperties>({
   mapTextProps(props) {
     const styles = getDefaultStyles();
 
-    setViewProps(styles, props);
+    // Better not set flex 1 to text
+    setViewStyle(styles, props?.viewStyle);
     setTextStyle(styles, props.textStyle);
-
     return styles;
   },
   mapImageProps(props) {

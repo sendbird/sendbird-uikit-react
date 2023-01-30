@@ -46,6 +46,7 @@ export default function NotificationMessageWrap({
 
   let messageTemplate;
   try {
+    // todo: typecaste properly after moving to seperate package
     // @ts-ignore
     messageTemplate = JSON.parse(message?.extendedMessage?.sub_data);
   } catch (error) {
