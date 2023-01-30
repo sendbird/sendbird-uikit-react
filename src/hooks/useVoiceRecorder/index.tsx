@@ -15,9 +15,10 @@ export interface VoiceRecorderContext {
   start: (eventHandler?: VoiceRecorderEventHandler) => void,
   stop: () => void,
 }
+const noop = () => {/* noop */};
 const VoiceRecorderContext = createContext<VoiceRecorderContext>({
-  start: () => { },
-  stop: () => { },
+  start: noop,
+  stop: noop,
 });
 
 export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactElement => {
@@ -46,7 +47,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
         eventHandler?.onRecordingStarted();
         // logger
       })
-      .catch((error) => {
+      .catch(() => {
         // log error
         setMediaRecorder(null);
       });

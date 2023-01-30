@@ -1,13 +1,12 @@
 import { useCallback, useState } from 'react';
 import { VoiceRecorderEventHandler, useVoiceRecorderContext } from '.';
 
-export interface UseVoiceRecorderProps extends VoiceRecorderEventHandler {
-  // VoiceRecorderEventHandler
-  /**
-   * onRecordingStarted
-   * onRecordingEnded
-   */
-}
+// export interface UseVoiceRecorderProps extends VoiceRecorderEventHandler {
+//   /**
+//    * onRecordingStarted
+//    * onRecordingEnded
+//    */
+// }
 export interface UseVoiceRecorderContext {
   start: () => void;
   stop: () => void;
@@ -15,8 +14,8 @@ export interface UseVoiceRecorderContext {
   recordedFile: File;
 }
 
-const noop = () => { };
-export const useVoiceRecorder = (props: UseVoiceRecorderProps): UseVoiceRecorderContext => {
+const noop = () => {/* noop */};
+export const useVoiceRecorder = (props: VoiceRecorderEventHandler): UseVoiceRecorderContext => {
   const {
     onRecordingStarted = noop,
     onRecordingEnded = noop,
