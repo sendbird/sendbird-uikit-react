@@ -37,6 +37,15 @@
     border-bottom: 1px solid t(on-bg-4--bg-6);
   }
 }
+.sendbird-app__channellist-alarm-badge {
+  position: absolute;
+  top: 0px;
+  left: 14px;
+  height: 16px;
+  @include themed() {
+    background-color: t(error-3);
+  }
+}
 .sendbird-app__channellist-header-title {
   margin-top: 13px;
   margin-left: 20px;
@@ -44,6 +53,7 @@
   justify-content: space-between;
 }
 .sendbird-app__channellist-alarm {
+  position: relative;
   cursor: pointer;
   margin-top: -4px;
 }
