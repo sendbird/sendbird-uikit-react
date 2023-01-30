@@ -31,6 +31,10 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
   const { children } = props;
 
   function start(eventHandler: VoiceRecorderEventHandler): void {
+    if (currentStream && mediaRecorder) {
+      stop();
+    }
+
     // Getting the mic permission, stream
     navigator?.mediaDevices?.getUserMedia?.({ audio: true })
       .then((stream) => {
@@ -45,10 +49,11 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
         // Event handling
         setEventHandler(eventHandler);
         eventHandler?.onRecordingStarted();
-        // logger
+        // TODO: logger
       })
       .catch(() => {
-        // log error
+        // TODO: log error
+        // TODO: add eventHandler.onError
         setMediaRecorder(null);
       });
   }
@@ -65,7 +70,10 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
     // Event handling
     currentEventHandler?.onRecordingEnded(audioFile);
     setEventHandler(null);
-    // logger
+    // Clear stream and recorder
+    setCurrentStream(null);
+    setMediaRecorder(null);
+    // TODO: logger
   }
 
   return (
