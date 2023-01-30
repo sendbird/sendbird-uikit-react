@@ -34,7 +34,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 780px;
+    max-width: calc(100vw - 600px);
     @include mobile() {
       max-width: calc(100vw - 240px);
     }
