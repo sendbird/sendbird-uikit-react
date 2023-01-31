@@ -3,9 +3,15 @@ import React, { createContext, useContext, useState } from 'react';
 export interface VoicePlayerProps {
   children: React.ReactElement;
 }
+
+interface VoicePlayerOnPlayingStoppedProps {
+  playbackTime: number;
+  playSize: number;
+  audioFile: File;
+}
 export interface VoicePlayerEventHandler {
   onPlayingStarted?: () => void;
-  onPlayingStopped?: (props: { playbackTime: number, audioFile: File }) => void;
+  onPlayingStopped?: (props: VoicePlayerOnPlayingStoppedProps) => void;
   onPlaybackTimeUpdated?: (time: number) => void;
 }
 
@@ -13,7 +19,7 @@ export interface VoicePlayerContext {
   play: (props: VoicePlayerPlayProps) => void;
   stop: () => void;
 }
-const noop = () => {/* noop */};
+const noop = () => {/* noop */ };
 const VoicePlayerContext = createContext<VoicePlayerContext>({
   play: noop,
   stop: noop,
@@ -28,21 +34,16 @@ interface VoicePlayerPlayProps {
 export const VoicePlayerProvider = (props: VoicePlayerProps): React.ReactElement => {
   const [sourceFile, setSourceFile] = useState<File>(null);
   const [currentPlayer, setCurrentPlayer] = useState<HTMLAudioElement>(null);
-  const [currentEventHandler, setEventHandler] = useState<VoicePlayerEventHandler>(null);
-  
   const { children } = props;
 
-  function play({
+  const play = ({
     audioFile,
     playPoint,
     eventHandler,
-  }: VoicePlayerPlayProps): void {
+  }: VoicePlayerPlayProps): void => {
     if (sourceFile && currentPlayer) {
       stop();
     }
-
-    // Event handling
-    setEventHandler(eventHandler);
 
     // Start playing
     setSourceFile(audioFile);
@@ -56,29 +57,25 @@ export const VoicePlayerProvider = (props: VoicePlayerProps): React.ReactElement
     });
     audioPlayer?.addEventListener('pause', () => {
       eventHandler?.onPlayingStopped({
-        playbackTime: currentPlayer.currentTime,
-        audioFile: sourceFile,
+        playbackTime: audioPlayer.currentTime,
+        playSize: audioPlayer.duration,
+        audioFile: audioFile,
       });
     });
     audioPlayer?.addEventListener('timeupdate', () => {
-      eventHandler?.onPlaybackTimeUpdated(currentPlayer.currentTime);
+      eventHandler?.onPlaybackTimeUpdated(audioPlayer.currentTime);
     });
     setCurrentPlayer(audioPlayer);
     // TODO: log
-  }
-  function stop(): void {
+  };
+
+  const stop = (): void => {
     // Stop playing
-    currentPlayer?.pause();
-    // Event handling
-    currentEventHandler?.onPlayingStopped({
-      playbackTime: currentPlayer.currentTime,
-      audioFile: sourceFile,
-    });
-    // Clear source file and player
+    currentPlayer?.pause()
     setSourceFile(null);
     setCurrentPlayer(null);
     // TODO: log
-  }
+  };
 
   return (
     <VoicePlayerContext.Provider value={{

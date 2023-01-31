@@ -14,36 +14,43 @@ export interface UseVoiceRecorderContext {
   recordedFile: File;
 }
 
-const noop = () => {/* noop */};
+const noop = () => {/* noop */ };
 export const useVoiceRecorder = (props: VoiceRecorderEventHandler): UseVoiceRecorderContext => {
   const {
     onRecordingStarted = noop,
     onRecordingEnded = noop,
   } = props;
   const voiceRecorder = useVoiceRecorderContext();
-  const [recordingTime, setRecordingTime] = useState<number>(0);
   const [recordedFile, setRecordedFile] = useState<File>(null);
 
   // Timer
-  const [timeInterval, setTimeInterval] = useState<NodeJS.Timer>(null);
-  function startTimer(limit?: number) {
+  const [recordingTime, setRecordingTime] = useState<number>(0);
+  let timer: NodeJS.Timer = null;
+
+  const startTimer = (limit?: number) => {
+    stopTimer();
+    setRecordingTime(0);
     const timerLimit = limit || 60000;
     const interval = setInterval(() => {
-      const newTime = recordingTime + 100;
-      setRecordingTime(newTime);
-      if (newTime > timerLimit) {
-        stopTimer();
-      }
+      setRecordingTime(prevTime => {
+        const newTime = prevTime + 100;
+        if (newTime > timerLimit) {
+          stopTimer();
+        }
+        return newTime;
+      });
     }, 100);
-    setTimeInterval(interval);
-  }
-  function stopTimer() {
-    clearInterval(timeInterval);
-  }
+    timer = interval;
+  };
+  const stopTimer = () => {
+    clearInterval(timer);
+    timer = null;
+  };
 
   const start = useCallback(() => {
     voiceRecorder?.start({
       onRecordingStarted: () => {
+        onRecordingStarted();
         startTimer();
       },
       onRecordingEnded: (audioFile) => {
@@ -55,7 +62,7 @@ export const useVoiceRecorder = (props: VoiceRecorderEventHandler): UseVoiceReco
   }, [onRecordingStarted, onRecordingEnded]);
   const stop = useCallback(() => {
     voiceRecorder?.stop();
-  }, []);
+  }, [voiceRecorder]);
 
   return ({
     start,

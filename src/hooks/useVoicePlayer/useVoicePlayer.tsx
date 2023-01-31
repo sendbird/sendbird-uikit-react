@@ -8,35 +8,34 @@ export interface UseVoicePlayerProps extends VoicePlayerEventHandler {
    * onPlayingStopped
    * onPlaybackTimeUpdated
    */
-  audioFile: File;
+  audioFile: File
 }
 
 export interface UseVoicePlayerContext {
-  play: () => void;
+  play: (file: File) => void;
   pause: () => void;
   playbackTime: number;
 }
 
 const noop = () => {/* noop */ };
 export const useVoicePlayer = ({
-  audioFile,
   onPlayingStarted = noop,
   onPlayingStopped = noop,
   onPlaybackTimeUpdated = noop,
 }: UseVoicePlayerProps): UseVoicePlayerContext => {
   const voicePlayer = useVoicePlayerContext();
-  const [sourceFile] = useState<File>(audioFile);
   const [currentPlaybackTime, setPlaybackTime] = useState<number>(0);
 
-  const play = useCallback(() => {
+  const play = useCallback((file) => {
     voicePlayer?.play({
-      audioFile: sourceFile,
+      audioFile: file,
       playPoint: currentPlaybackTime,
       eventHandler: {
         onPlayingStarted: onPlayingStarted,
         onPlayingStopped: (props) => {
+          const { playbackTime, playSize } = props;
           onPlayingStopped(props);
-          setPlaybackTime(props?.playbackTime);
+          setPlaybackTime(playbackTime === playSize ? 0 : playbackTime);
         },
         onPlaybackTimeUpdated: (time) => {
           onPlaybackTimeUpdated(time);
@@ -44,10 +43,10 @@ export const useVoicePlayer = ({
         },
       },
     })
-  }, [audioFile, onPlayingStarted, onPlayingStopped, onPlaybackTimeUpdated]);
+  }, [onPlayingStarted, onPlayingStopped, onPlaybackTimeUpdated]);
   const pause = useCallback(() => {
     voicePlayer?.stop();
-  }, [audioFile, voicePlayer]);
+  }, [voicePlayer]);
 
   return ({
     play,
