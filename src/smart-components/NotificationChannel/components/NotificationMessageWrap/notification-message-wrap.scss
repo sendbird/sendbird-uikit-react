@@ -4,6 +4,18 @@
   padding-left: 48px;
   margin-right: 16px;
   box-sizing: border-box;
+  /**
+   * 1. Modify unknown message to be visually similar with other platforms
+   */
+  .sendbird-unknown-message-item-body {
+    width: 100%;
+  }
+  .sendbird-unknown-message-item-body__description {
+    white-space: pre-line; // splits the text into lines when there is a \n
+    @include themed() {
+      color: t(on-bg-1);
+    }
+  }
 }
 
 .sendbird-notification-channel__message-wrap-header {

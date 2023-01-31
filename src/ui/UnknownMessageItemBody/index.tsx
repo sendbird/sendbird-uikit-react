@@ -32,13 +32,17 @@ export default function UnknownMessageItemBody({
       mouseHover ? 'mouse-hover' : '',
       (isReactionEnabled && message?.reactions?.length > 0) ? 'reactions' : '',
     ])}>
-      <Label
-        className="sendbird-unknown-message-item-body__header"
-        type={LabelTypography.BODY_1}
-        color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
-      >
-        {stringSet.UNKNOWN__UNKNOWN_MESSAGE_TYPE}
-      </Label>
+      {
+        !customText && (
+          <Label
+            className="sendbird-unknown-message-item-body__header"
+            type={LabelTypography.BODY_1}
+            color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
+          >
+            {stringSet.UNKNOWN__UNKNOWN_MESSAGE_TYPE}
+          </Label>
+        )
+      }
       <Label
         className="sendbird-unknown-message-item-body__description"
         type={LabelTypography.BODY_1}

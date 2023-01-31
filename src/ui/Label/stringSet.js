@@ -123,6 +123,7 @@ const getStringSet = (lang = 'en') => {
       MESSAGE_EDITED: '(edited)',
       // Notification items
       NOTIFICATION_CHANNEL__YESTERDAY: 'Yesterday',
+      NOTIFICATION_CHANNEL__UNKNOWN_MESSAGE: '(Message template error) Can\'t read this message.',
       // Menu items
       MESSAGE_MENU__COPY: 'Copy',
       MESSAGE_MENU__REPLY: 'Reply',

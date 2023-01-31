@@ -45,7 +45,7 @@ export default function NotificationMessageWrap({
   const { lastSeen } = useNotficationChannelContext();
   // Typecasting to UserMessage to pass custom error message to UnknownMessage
   const _message = message as UserMessage;
-  const customErrorLabel = _message?.message;
+  const customErrorLabel = _message?.message ||  stringSet?.NOTIFICATION_CHANNEL__UNKNOWN_MESSAGE;
 
   let messageTemplate;
   try {
@@ -108,7 +108,7 @@ export default function NotificationMessageWrap({
                     type={LabelTypography.CAPTION_3}
                     color={LabelColors.ONBACKGROUND_3}
                   >
-                    {formatDate(message?.createdAt || 0, dateLocale)}
+                    {formatDate(message?.createdAt || 0)}
                   </Label>
                 </div>
               </>
