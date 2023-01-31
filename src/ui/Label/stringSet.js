@@ -121,6 +121,8 @@ const getStringSet = (lang = 'en') => {
       UNKNOWN__UNKNOWN_MESSAGE_TYPE: '(Unknown message type)',
       UNKNOWN__CANNOT_READ_MESSAGE: 'Cannot read this message.',
       MESSAGE_EDITED: '(edited)',
+      // Notification items
+      NOTIFICATION_CHANNEL__YESTERDAY: 'Yesterday',
       // Menu items
       MESSAGE_MENU__COPY: 'Copy',
       MESSAGE_MENU__REPLY: 'Reply',

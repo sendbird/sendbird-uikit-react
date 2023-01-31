@@ -2,7 +2,10 @@ import './notification-message-wrap.scss';
 
 import React, { useMemo } from "react";
 import { BaseMessage, UserMessage } from "@sendbird/chat/message";
-import format from 'date-fns/format';
+import isToday from "date-fns/isToday";
+import format from "date-fns/format";
+import isYesterday from "date-fns/isYesterday";
+import formatRelative from "date-fns/formatRelative";
 
 import { renderMessage, renderMessageHeader } from "../../types";
 import { MessageTemplate } from "../../_externals/react-message-template-view/src/ui";
@@ -38,7 +41,7 @@ export default function NotificationMessageWrap({
   renderMessageHeader,
   message,
 }: Props) {
-  const { dateLocale } = useLocalization();
+  const { dateLocale, stringSet } = useLocalization();
   const { lastSeen } = useNotficationChannelContext();
   // Typecasting to UserMessage to pass custom error message to UnknownMessage
   const _message = message as UserMessage;
@@ -66,6 +69,20 @@ export default function NotificationMessageWrap({
     return null;
   }, [message, renderMessageHeader]);
 
+  const formatDate = (createdAt: number) => {
+    const optionalParam = dateLocale ? { locale: dateLocale } : null;
+    if (!createdAt) {
+      return '';
+    }
+    if (isToday(createdAt)) {
+      return format(createdAt, 'p', optionalParam);
+    }
+    if (isYesterday(createdAt)) {
+      return stringSet.NOTIFICATION_CHANNEL__YESTERDAY;
+    }
+    return format(createdAt, 'MMM dd', optionalParam);
+  };
+
   return (
     <MessageProvider message={message}>
       <div className="sendbird-notification-channel__message-wrap" data-messageid={message?.messageId}>
@@ -91,7 +108,7 @@ export default function NotificationMessageWrap({
                     type={LabelTypography.CAPTION_3}
                     color={LabelColors.ONBACKGROUND_3}
                   >
-                    {format(message?.createdAt || 0, 'p', { locale: dateLocale })}
+                    {formatDate(message?.createdAt || 0, dateLocale)}
                   </Label>
                 </div>
               </>
