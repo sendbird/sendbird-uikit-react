@@ -8,7 +8,7 @@ export interface UseVoicePlayerProps extends VoicePlayerEventHandler {
    * onPlayingStopped
    * onPlaybackTimeUpdated
    */
-  audioFile: File
+  audioFile: File;
 }
 
 export interface UseVoicePlayerContext {

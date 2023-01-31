@@ -14,7 +14,7 @@ export interface UseVoiceRecorderContext {
   recordedFile: File;
 }
 
-const noop = () => {/* noop */ };
+const noop = () => {/* noop */};
 export const useVoiceRecorder = (props: VoiceRecorderEventHandler): UseVoiceRecorderContext => {
   const {
     onRecordingStarted = noop,
