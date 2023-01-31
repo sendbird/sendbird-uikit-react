@@ -13,6 +13,7 @@ import {
   setTextStyle,
   setViewProps,
   setViewStyle,
+  setImageAspectRatio,
 } from '../styles';
 import { useMessageContext } from '../../../../context/MessageContextProvider';
 
@@ -101,7 +102,6 @@ export const renderer = createRenderer<ReactParsedProperties>({
         handlePredefinedAction,
       } = useNotficationChannelContext();
       const { message } = useMessageContext();
-      // todo: implement default image
       return (
         <div
           className="sb-message-template__image-container sb-message-template__image-button"
@@ -155,6 +155,7 @@ export const parser = createParser<ReactParsedProperties>({
 
     setViewProps(styles, props);
     setImageStyle(styles, props.imageStyle);
+    setImageAspectRatio(styles, props);
 
     return styles;
   },
@@ -170,6 +171,7 @@ export const parser = createParser<ReactParsedProperties>({
 
     setViewProps(styles, props);
     setImageStyle(styles, props.imageStyle);
+    setImageAspectRatio(styles, props);
 
     return styles;
   },

@@ -1,7 +1,15 @@
 import type React from 'react';
 
 import type { Action } from './properties';
-import type { Align, ImageStyle, Layout, SizeSpec, TextStyle, ViewStyle } from './styles';
+import type {
+  Align,
+  ImageStyle,
+  Layout,
+  SizeSpec,
+  TextStyle,
+  ViewStyle,
+  ImageMetaData,
+} from './styles';
 
 export type BasicProps<T, ParsedProperties> = React.PropsWithChildren<{ parsedProperties?: ParsedProperties } & T>;
 
@@ -69,6 +77,7 @@ export interface Image extends View {
   type: ComponentType.Image;
   imageUrl: string;
   imageStyle?: ImageStyle;
+  metaData?: ImageMetaData;
 }
 
 export interface TextButton extends View {
@@ -82,4 +91,5 @@ export interface ImageButton extends View {
   type: ComponentType.ImageButton;
   imageUrl: string;
   imageStyle?: ImageStyle;
+  metaData?: ImageMetaData
 }

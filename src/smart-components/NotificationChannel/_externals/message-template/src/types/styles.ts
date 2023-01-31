@@ -78,3 +78,8 @@ export interface TextStyle {
 export interface ImageStyle {
   contentMode?: MediaContentMode;
 }
+
+export interface ImageMetaData {
+  pixelWidth: number;
+  pixelHeight: number;
+}

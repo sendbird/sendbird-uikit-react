@@ -2,13 +2,14 @@ import {
   Align,
   AlignValue,
   FlexSizeSpecValue,
+  ImageMetaData,
   ImageStyle,
   Layout,
   MediaContentMode,
   TextStyle,
   ViewStyle,
 } from '../../../message-template/src/types/styles';
-import { View } from '../../../message-template/src/types/components';
+import { Image, ImageButton, View } from '../../../message-template/src/types/components';
 
 export type ReactParsedProperties = Record<string, string | number>;
 
@@ -117,6 +118,19 @@ export function setImageStyle(styles: ReactParsedProperties, imageStyle?: ImageS
         break;
     }
   }
+}
+
+// uses image meta-date to render images that doesnt break the UI
+// https://sendbird.atlassian.net/wiki/spaces/UK/pages/2008220608/Message+template+-+Image+policy
+export function setImageAspectRatio(styles: ReactParsedProperties, props: Image | ImageButton) {
+  const imageMetaData = props?.metaData;
+  if (!imageMetaData?.pixelHeight || !imageMetaData?.pixelWidth) {
+    return;
+  }
+  if (props?.width?.type === 'fixed' || props?.height?.type === 'fixed') {
+    return;
+  }
+  styles['aspect-ratio'] = `${props?.metaData?.pixelWidth} / ${props?.metaData?.pixelHeight}`;
 }
 
 export function setTextStyle(styles: ReactParsedProperties, textStyle?: TextStyle) {
