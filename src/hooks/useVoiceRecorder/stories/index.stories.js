@@ -1,33 +1,34 @@
-import React, { useEffect } from 'react';
-import { useVoiceRecorderContext, VoiceRecorderProvider } from '../index';
+import React, { useState } from 'react';
+import { VoiceRecorderProvider } from '../index';
+import { useVoiceRecorder } from '../useVoiceRecorder';
+import { VoicePlayerProvider } from '../../useVoicePlayer/index';
+import { useVoicePlayer } from '../../useVoicePlayer/useVoicePlayer';
 
 export default { title: 'globalcontext/voice-recorder' };
 
 const Tester = () => {
-  const {
-    start,
-    stop,
-    recordingTime,
-  } = useVoiceRecorderContext();
+  const [currentAudio, setAudioFile] = useState(null);
 
-  // eventHandler
-  // useEffect(() => {
-  //   onRecordingStarted()
-  //     .then(() => {
-  //       console.log('on recording started')
-  //     })
-  //     .catch((error) => {
-  //       console.log('record starting failed')
-  //     });
-  //   onRecordingEnded()
-  //     .then((file) => {
-  //       console.log('on recording ended')
-  //       // manage file
-  //     })
-  //     .catch((error) => {
-  //       console.log('recording failed')
-  //     });
-  // }, []);
+  const { start, stop, recordingTime } = useVoiceRecorder({
+    onRecordingStarted: () => {
+      console.log('onRecordingStarted')
+    },
+    onRecordingEnded: (recordedFile) => {
+      console.log('onRecordingEnded', recordedFile)
+      setAudioFile(recordedFile);
+    },
+  });
+  const { play, pause, playbackTime } = useVoicePlayer({
+    onPlayingStarted: () =>  {
+      console.log('onPlayingStarted')
+    },
+    onPlayingStopped: ({playbackTime, audioFile}) => {
+      console.log('onPlayingStopped', playbackTime, audioFile)
+    },
+    onPlaybackTimeUpdated: (time) => {
+      console.log('onPlaybackTimeUpdated', time)
+    },
+  });
 
   return (
     <div style={{
@@ -56,6 +57,24 @@ const Tester = () => {
           stop();
         }}
       />
+      <div>{recordingTime}</div>
+      <input
+        value="play"
+        type="button"
+        onClick={() => {
+          console.log('on play clicked')
+          play(currentAudio);
+        }}
+      />
+      <input
+        value="pause"
+        type="button"
+        onClick={() => {
+          console.log('on pause clicked')
+          pause();
+        }}
+      />
+      <div>{playbackTime}</div>
     </div>
   );
 }
@@ -64,7 +83,9 @@ export const normal = () => {
   return (
     <div>
       <VoiceRecorderProvider>
-        <Tester />
+        <VoicePlayerProvider>
+          <Tester />
+        </VoicePlayerProvider>
       </VoiceRecorderProvider>
     </div>
   );
