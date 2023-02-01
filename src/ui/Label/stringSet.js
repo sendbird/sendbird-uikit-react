@@ -63,6 +63,7 @@ const getStringSet = (lang = 'en') => {
       CHANNEL_SETTING__OPERATORS__TITLE: 'Operators',
       CHANNEL_SETTING__OPERATORS__TITLE_ALL: 'All operators',
       CHANNEL_SETTING__OPERATORS__TITLE_ADD: 'Add operator',
+      CHANNEL_SETTING__OPERATORS__ADD_BUTTON: 'Add',
       CHANNEL_SETTING__MUTED_MEMBERS__TITLE: 'Muted members',
       CHANNEL_SETTING__MUTED_MEMBERS__TITLE_ALL: 'All muted members',
       CHANNEL_SETTING__UNMUTE: 'Unmute',
