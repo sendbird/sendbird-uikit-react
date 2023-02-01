@@ -1,5 +1,5 @@
 import './index.scss';
-import React, { ReactElement, useContext } from 'react';
+import React, { ReactElement, useContext, useMemo } from 'react';
 import type { UserMessage } from '@sendbird/chat/message';
 
 import Word from '../Word';
@@ -32,6 +32,12 @@ export default function OGMessageItemBody({
     if (message?.ogMetaData?.url) window.open(message?.ogMetaData?.url);
   };
   const isMessageMentioned = isMentionEnabled && message?.mentionedMessageTemplate?.length > 0 && message?.mentionedUsers?.length > 0;
+  const sentences: Array<Array<string>> = useMemo(() => {
+    if (isMessageMentioned) {
+      return message?.mentionedMessageTemplate?.split(/\n/).map((sentence) => sentence.split(/\s/));
+    }
+    return message?.message?.split(/\n/).map((sentence) => sentence.split(/\s/));
+  }, [message?.mentionedMessageTemplate]);
   return (
     <div className={getClassName([
       className,
@@ -47,27 +53,21 @@ export default function OGMessageItemBody({
       >
         <div className="sendbird-og-message-item-body__text-bubble">
           {
-            isMessageMentioned
-              ? (
-                message?.mentionedMessageTemplate.split(' ').map((word: string) => (
-                  <Word
-                    key={uuidv4()}
-                    word={word}
-                    message={message}
-                    isByMe={isByMe}
-                  />
-                ))
-              )
-              : (
-                message?.message.split(' ').map((word: string) => (
-                  <Word
-                    key={uuidv4()}
-                    word={word}
-                    message={message}
-                    isByMe={isByMe}
-                  />
-                ))
-              )
+            sentences?.map((sentence, index) => {
+              return [
+                sentence?.map((word) => {
+                  return (
+                    <Word
+                      key={uuidv4()}
+                      word={word}
+                      message={message}
+                      isByMe={isByMe}
+                    />
+                  );
+                }),
+                sentences?.[index + 1] ? <br /> : null,
+              ]
+            })
           }
           {
             isEditedMessage(message) && (
