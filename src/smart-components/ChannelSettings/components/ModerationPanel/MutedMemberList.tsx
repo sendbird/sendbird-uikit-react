@@ -106,7 +106,7 @@ export const MutedMemberList = (): ReactElement => {
                         }}
                       >
                         <>
-                          {stringSet.CHANNEL_SETTING__UNMUTE}
+                          {stringSet.CHANNEL_SETTING__MODERATION__UNMUTE}
                         </>
                       </MenuItem>
                     </MenuItems>

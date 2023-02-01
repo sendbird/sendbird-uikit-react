@@ -66,7 +66,6 @@ const getStringSet = (lang = 'en') => {
       CHANNEL_SETTING__OPERATORS__ADD_BUTTON: 'Add',
       CHANNEL_SETTING__MUTED_MEMBERS__TITLE: 'Muted members',
       CHANNEL_SETTING__MUTED_MEMBERS__TITLE_ALL: 'All muted members',
-      CHANNEL_SETTING__UNMUTE: 'Unmute',
       CHANNEL_SETTING__NO_UNMUTED: 'No muted members yet',
       CHANNEL_SETTING__BANNED_MEMBERS__TITLE: 'Banned users',
       CHANNEL_SETTING__FREEZE_CHANNEL: 'Freeze Channel',
