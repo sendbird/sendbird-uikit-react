@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState, useRef } from 'react';
+import React, { ReactElement, useEffect, useState, useRef, useContext } from 'react';
 import type { User } from '@sendbird/chat';
 import type { OpenChannel, OpenChannelCreateParams, OpenChannelListQuery, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import withSendBird from '../../../lib/SendbirdSdkContext';
@@ -13,6 +13,7 @@ import IconButton from '../../../ui/IconButton';
 import Icon, { IconColors, IconTypes } from '../../../ui/Icon';
 import Modal from '../../../ui/Modal';
 import TextButton from '../../../ui/TextButton';
+import { LocalizationContext } from '../../../lib/LocalizationContext';
 
 const SB_COMMUNITY_TYPE = 'SB_COMMUNITY_TYPE';
 
@@ -39,6 +40,7 @@ function CommunityChannelList({
   const [currentFile, setCurrentFile] = useState(null);
   const [currentChannelName, setCurrentChannelName] = useState('');
   const hiddenInputRef = useRef(null);
+  const { stringSet } = useContext(LocalizationContext);
 
   useEffect(() => {
     if (!sdk || !sdk.openChannel) {
@@ -105,7 +107,7 @@ function CommunityChannelList({
                   });
               }}
               type="PRIMARY"
-              submitText="Create"
+              submitText={stringSet.CREATE_OPEN_CHANNEL_LIST__SUBMIT}
             >
               <div className="community-channel__add-channel">
                 <div className="community-channel__add-channel__image-box">
