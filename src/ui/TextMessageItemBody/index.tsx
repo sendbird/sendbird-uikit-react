@@ -1,5 +1,5 @@
 import './index.scss';
-import React, { ReactElement, useContext, useMemo } from 'react';
+import React, { ReactElement, useContext } from 'react';
 import type { UserMessage } from '@sendbird/chat/message';
 
 import Label, { LabelTypography, LabelColors } from '../Label';
@@ -27,9 +27,6 @@ export default function TextMessageItemBody({
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   const isMessageMentioned = isMentionEnabled && message?.mentionedMessageTemplate?.length > 0 && message?.mentionedUsers?.length > 0;
-  const sentences: Array<Array<string>> = useMemo(() => {
-    return message?.mentionedMessageTemplate?.split(/\n/).map((sentence) => sentence.split(/\s/));
-  }, [message?.mentionedMessageTemplate]);
   return (
     <Label
       type={LabelTypography.BODY_1}
@@ -44,24 +41,26 @@ export default function TextMessageItemBody({
       ])}>
         {
           isMessageMentioned
-           ? (
-              sentences.map((sentence, index) => {
-                return [
-                  sentence.map((word) => {
-                    return (
-                      <Word
-                        key={uuidv4()}
-                        word={word}
-                        message={message}
-                        isByMe={isByMe}
-                      />
-                    );
-                  }),
-                  sentences?.[index + 1] ? <br /> : null,
-                ]
-              })
-           )
-           : message?.message
+            ? (
+              message?.mentionedMessageTemplate.split(' ').map((word: string) => (
+                <Word
+                  key={uuidv4()}
+                  word={word}
+                  message={message}
+                  isByMe={isByMe}
+                />
+              ))
+            )
+            : (
+              message?.message.split(' ').map((word: string) => (
+                <Word
+                  key={uuidv4()}
+                  word={word}
+                  message={message}
+                  isByMe={isByMe}
+                />
+              ))
+            )
         }
         {
           isEditedMessage(message) && (
