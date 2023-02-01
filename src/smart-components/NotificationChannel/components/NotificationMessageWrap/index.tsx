@@ -5,7 +5,6 @@ import { BaseMessage, UserMessage } from "@sendbird/chat/message";
 import isToday from "date-fns/isToday";
 import format from "date-fns/format";
 import isYesterday from "date-fns/isYesterday";
-import formatRelative from "date-fns/formatRelative";
 
 import { renderMessage, renderMessageHeader } from "../../types";
 import { MessageTemplate } from "../../_externals/react-message-template-view/src/ui";

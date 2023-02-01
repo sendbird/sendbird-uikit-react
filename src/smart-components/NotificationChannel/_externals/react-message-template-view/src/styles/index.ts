@@ -130,7 +130,7 @@ export function setImageAspectRatio(styles: ReactParsedProperties, props: Image 
   if (props?.width?.type === 'fixed' || props?.height?.type === 'fixed') {
     return;
   }
-  styles['aspect-ratio'] = `${props?.metaData?.pixelWidth} / ${props?.metaData?.pixelHeight}`;
+  styles['aspectRatio'] = `${props?.metaData?.pixelWidth} / ${props?.metaData?.pixelHeight}`;
 }
 
 export function setTextStyle(styles: ReactParsedProperties, textStyle?: TextStyle) {

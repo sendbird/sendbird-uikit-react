@@ -27,37 +27,87 @@ const hasValidUrlProtocol = (url = '') => ['http://', 'https://', 'ftp://']
  * returnUrl('www.sendbird.com') // returns 'http://www.sendbird.com'
  * returnUrl('https://www.sendbird.com') // returns 'https://www.sendbird.com'
  * returnUrl('ftp://www.sendbird.com') // returns 'ftp://www.sendbird.com'
- * returnUrl('sendbird.com') // returns 'http://sendbird.com'
+ * returnUrl('sendbird.com') // returns 'https://sendbird.com'
  **/
 const returnUrl = (url = '') => {
   if (hasValidUrlProtocol(url)) {
     return url;
   }
-  return `http://${url}`;
+  return `https://${url}`;
+}
+
+const ActionHandler = ({
+  className,
+  style,
+  children,
+  props,
+}) => {
+  const {
+    handleWebAction,
+    handleCustomAction,
+    handlePredefinedAction,
+  } = useNotficationChannelContext();
+  const { message } = useMessageContext();
+  return (
+    <div
+      role={ props?.action ? 'button' :'listitem' }
+      className={`${className} ${props?.action ? 'sb-message-template__action' : ''}`}
+      style={style}
+      onClick={(e) => {
+        if (props?.action?.type === 'web') {
+          if (handleWebAction) {
+            handleWebAction?.(e, props.action, message);
+          } else {
+            window.open(returnUrl(props?.action?.data), '_blank', 'noopener noreferrer').focus();
+          }
+        }
+        if (props?.action?.type === 'custom') {
+          handleCustomAction?.(e, props.action, message);
+        }
+        if (props?.action?.type === 'uikit') {
+          handlePredefinedAction?.(e, props.action, message);
+        }
+      }}
+    >
+      { children }
+    </div>
+  )
 }
 
 export const renderer = createRenderer<ReactParsedProperties>({
   views: {
     box(props) {
       return (
-        <div className="sb-message-template__box" style={props.parsedProperties}>
+        <ActionHandler
+          className="sb-message-template__box"
+          style={props.parsedProperties}
+          props={props}
+        >
           {props.children}
-        </div>
+        </ActionHandler>
       );
     },
     text(props) {
       return (
-        <div className="sb-message-template__text" style={props.parsedProperties}>
+        <ActionHandler
+          className="sb-message-template__text"
+          style={props.parsedProperties}
+          props={props}
+        >
           {props.text}
-        </div>
+        </ActionHandler>
       );
     },
     image(props) {
       // todo: add image backup
       return (
-        <div className="sb-message-template__image-container" style={props.parsedProperties}>
+        <ActionHandler
+          className="sb-message-template__image-container"
+          style={props.parsedProperties}
+          props={props}
+        >
           <img className="sb-message-template__image" alt="image" src={props.imageUrl} style={props.parsedProperties} />
-        </div>
+        </ActionHandler>
       );
     },
     textButton(props) {
@@ -80,14 +130,10 @@ export const renderer = createRenderer<ReactParsedProperties>({
               }
             }
             if (props?.action?.type === 'custom') {
-              if (handleCustomAction) {
-                handleCustomAction?.(e, props.action, message);
-              }
+              handleCustomAction?.(e, props.action, message);
             }
             if (props?.action?.type === 'uikit') {
-              if (handlePredefinedAction) {
-                handlePredefinedAction?.(e, props.action, message);
-              }
+              handlePredefinedAction?.(e, props.action, message);
             }
           }}
         >
@@ -96,38 +142,14 @@ export const renderer = createRenderer<ReactParsedProperties>({
       );
     },
     imageButton(props) {
-      const {
-        handleWebAction,
-        handleCustomAction,
-        handlePredefinedAction,
-      } = useNotficationChannelContext();
-      const { message } = useMessageContext();
       return (
-        <div
+        <ActionHandler
           className="sb-message-template__image-container sb-message-template__image-button"
           style={props.parsedProperties}
-          onClick={(e) => {
-            if (props?.action?.type === 'web') {
-              if (handleWebAction) {
-                handleWebAction?.(e, props.action, message);
-              } else {
-                window.open(returnUrl(props?.action?.data), '_blank', 'noopener noreferrer').focus();
-              }
-            }
-            if (props?.action?.type === 'custom') {
-              if (handleCustomAction) {
-                handleCustomAction?.(e, props.action, message);
-              }
-            }
-            if (props?.action?.type === 'uikit') {
-              if (handlePredefinedAction) {
-                handlePredefinedAction?.(e, props.action, message);
-              }
-            }
-          }}
+          props={props}
         >
           <img className="sb-message-template__image" alt="image-button" src={props.imageUrl} style={props.parsedProperties} />
-        </div>
+        </ActionHandler>
       );
     },
   },
