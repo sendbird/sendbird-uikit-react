@@ -107,7 +107,7 @@ export default function MutedMembersModal({
                           })
                         }}
                       >
-                        Unmute
+                        {stringSet.CHANNEL_SETTING__MODERATION__UNMUTE}
                       </MenuItem>
                     </MenuItems>
                   )}

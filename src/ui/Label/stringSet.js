@@ -75,6 +75,8 @@ const getStringSet = (lang = 'en') => {
       CHANNEL_SETTING__MODERATION__UNMUTE: 'Unmute',
       CHANNEL_SETTING__MODERATION__BAN: 'Ban',
       CHANNEL_SETTING__MODERATION__UNBAN: 'Unban',
+      CHANNEL_SETTING__MODERATION__EMPTY_BAN: 'No banned members yet',
+      CHANNEL_SETTING__MODERATION__ALL_BAN: 'All banned members',
       BUTTON__CANCEL: 'Cancel',
       BUTTON__DELETE: 'Delete',
       BUTTON__SAVE: 'Save',
