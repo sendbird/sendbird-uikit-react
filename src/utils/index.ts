@@ -339,25 +339,14 @@ export const filterMessageListParams = (params: MessageListParams, message: User
   return true;
 };
 
-interface SDKChannelListParamsPrivateProps extends GroupChannelListQuery {
-  _searchFilter: {
-    search_query: string,
-    search_fields: Array<'member_nickname' | 'channel_name'>,
-  };
-  _userIdsFilter: {
-    userIds: Array<string>,
-    includeMode: boolean,
-    queryType: 'AND' | 'OR',
-  };
-}
-export const filterChannelListParams = (params: SDKChannelListParamsPrivateProps, channel: GroupChannel, currentUserId: string): boolean => {
+export const filterChannelListParams = (params: GroupChannelListQuery, channel: GroupChannel, currentUserId: string): boolean => {
   if (!params?.includeEmpty && channel?.lastMessage === null) {
     return false;
   }
-  if (params?._searchFilter?.search_query && params._searchFilter.search_fields?.length > 0) {
-    const searchFilter = params._searchFilter;
-    const searchQuery = searchFilter.search_query;
-    const searchFields = searchFilter.search_fields;
+  const searchFilter = params?.searchFilter;
+  if (searchFilter?.query && searchFilter.fields?.length > 0) {
+    const searchQuery = searchFilter.query;
+    const searchFields = searchFilter.fields;
     if (searchQuery && searchFields && searchFields.length > 0) {
       if (!searchFields.some((searchField) => {
         switch (searchField) {
@@ -376,8 +365,8 @@ export const filterChannelListParams = (params: SDKChannelListParamsPrivateProps
       }
     }
   }
-  if (params?._userIdsFilter?.userIds?.length > 0) {
-    const userIdsFilter = params._userIdsFilter;
+  const userIdsFilter = params?.userIdsFilter;
+  if (userIdsFilter?.userIds?.length > 0) {
     const { includeMode, queryType } = userIdsFilter;
     const userIds: string[] = userIdsFilter.userIds;
     const memberIds = channel?.members?.map((member: Member) => member.userId);
