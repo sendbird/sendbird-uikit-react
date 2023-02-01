@@ -8,7 +8,31 @@ exports[`ui/TextMessageItemBody should do a snapshot test of the TextMessageItem
     <div
       class="class-name-for-snapshot sendbird-text-message-item-body outgoing mouse-hover "
     >
-      First second third fourth fifth
+      <span
+        class="sendbird-word"
+      >
+        First
+      </span>
+      <span
+        class="sendbird-word"
+      >
+        second
+      </span>
+      <span
+        class="sendbird-word"
+      >
+        third
+      </span>
+      <span
+        class="sendbird-word"
+      >
+        fourth
+      </span>
+      <span
+        class="sendbird-word"
+      >
+        fifth
+      </span>
       <span
         class="sendbird-text-message-item-body__message edited sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-2"
       >
