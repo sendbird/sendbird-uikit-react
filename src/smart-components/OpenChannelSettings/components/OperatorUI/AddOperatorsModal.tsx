@@ -47,7 +47,7 @@ export default function AddOperatorsModal({
       <Modal
         isFullScreenOnMobile
         type={ButtonTypes.PRIMARY}
-        submitText="Add"
+        submitText={stringSet.CHANNEL_SETTING__OPERATORS__ADD_BUTTON}
         onCancel={onCancel}
         onSubmit={() => {
           const users = Object.keys(selectedUsers).filter((m) => selectedUsers[m]);
