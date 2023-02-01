@@ -53,9 +53,9 @@ export default function OGMessageItemBody({
       >
         <div className="sendbird-og-message-item-body__text-bubble">
           {
-            sentences.map((sentence, index) => {
+            sentences?.map((sentence, index) => {
               return [
-                sentence.map((word) => {
+                sentence?.map((word) => {
                   return (
                     <Word
                       key={uuidv4()}
