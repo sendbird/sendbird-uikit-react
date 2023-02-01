@@ -1,0 +1,21 @@
+@import '../../styles/variables';
+
+.sendbird-progress-bar, .sendbird-progress-bar__fill {
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+  height: 40px;
+}
+
+.sendbird-progress-bar {
+  justify-content: flex-start;
+  @include themed() {
+    background-color: t(primary-3);
+  }
+}
+
+.sendbird-progress-bar__fill {
+  @include themed() {
+    background-color: t(on-bg-3);
+  }
+}
