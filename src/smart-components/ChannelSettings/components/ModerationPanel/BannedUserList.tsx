@@ -3,7 +3,9 @@ import React, {
   useEffect,
   useState,
   useCallback,
+  useContext,
 } from 'react';
+import { BannedUserListQueryParams } from '@sendbird/chat';
 
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import
@@ -18,21 +20,23 @@ import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 import UserListItem from '../UserListItem';
 import BannedUsersModal from './BannedUsersModal';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
+import { LocalizationContext } from '../../../../lib/LocalizationContext';
 
 export const BannedMemberList = (): ReactElement => {
   const [members, setMembers] = useState([]);
   const [hasNext, setHasNext] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
+  const { stringSet } = useContext(LocalizationContext);
   const { channel } = useChannelSettingsContext();
 
+  const bannedUserListQueryParams: BannedUserListQueryParams = { limit: 10 };
   useEffect(() => {
     if (!channel) {
       setMembers([]);
       return;
     }
-
-    const bannedUserListQuery = channel?.createBannedUserListQuery();
+    const bannedUserListQuery = channel?.createBannedUserListQuery(bannedUserListQueryParams);
     bannedUserListQuery.next().then((users) => {
       setMembers(users);
       setHasNext(bannedUserListQuery.hasNext);
@@ -44,8 +48,7 @@ export const BannedMemberList = (): ReactElement => {
       setMembers([]);
       return;
     }
-
-    const bannedUserListQuery = channel?.createBannedUserListQuery();
+    const bannedUserListQuery = channel?.createBannedUserListQuery(bannedUserListQueryParams);
     bannedUserListQuery.next().then((users) => {
       setMembers(users);
       setHasNext(bannedUserListQuery.hasNext);
@@ -91,7 +94,7 @@ export const BannedMemberList = (): ReactElement => {
                           })
                         }}
                       >
-                        Unban
+                        {stringSet.CHANNEL_SETTING__MODERATION__UNBAN}
                       </MenuItem>
                     </MenuItems>
                   )}
@@ -108,7 +111,7 @@ export const BannedMemberList = (): ReactElement => {
             type={LabelTypography.SUBTITLE_2}
             color={LabelColors.ONBACKGROUND_3}
           >
-            No banned members yet
+            {stringSet.CHANNEL_SETTING__MODERATION__EMPTY_BAN}
           </Label>
         )
       }
@@ -124,7 +127,7 @@ export const BannedMemberList = (): ReactElement => {
                 setShowModal(true);
               }}
             >
-              All banned members
+              {stringSet.CHANNEL_SETTING__MODERATION__ALL_BAN}
             </Button>
           </div>
         )
@@ -142,6 +145,5 @@ export const BannedMemberList = (): ReactElement => {
     </>
   );
 }
-
 
 export default BannedMemberList;

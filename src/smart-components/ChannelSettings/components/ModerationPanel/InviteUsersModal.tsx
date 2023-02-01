@@ -43,7 +43,7 @@ export default function InviteUsers({
       <Modal
         isFullScreenOnMobile
         disabled={Object.keys(selectedMembers).length === 0}
-        submitText="Invite"
+        submitText={stringSet.BUTTON__INVITE}
         type={ButtonTypes.PRIMARY}
         onCancel={() => onCancel()}
         onSubmit={() => {

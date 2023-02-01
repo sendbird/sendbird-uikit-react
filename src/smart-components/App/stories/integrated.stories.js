@@ -219,6 +219,18 @@ export const GroupChannel = () => {
             isMessageReceiptStatusEnabledOnChannelList={sampleOptions.messageStatus}
             imageCompression={{ compressionRate: sampleOptions.imageCompression ? 0.7 : 1 }}
             replyType={sampleOptions.replyType}
+            stringSet={{
+              CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR: '오퍼레이터 등록',
+              CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR: '오퍼레이터 해제',
+              CHANNEL_SETTING__MODERATION__MUTE: '유저 음소거',
+              CHANNEL_SETTING__MODERATION__UNMUTE: '유저 음소거 해제',
+              CHANNEL_SETTING__MODERATION__BAN: '유저 밴',
+              CHANNEL_SETTING__MODERATION__UNBAN: '유저 언밴',
+              BUTTON__CREATE: '만들다',
+              BUTTON__INVITE: '초대하다',
+              CHANNEL_SETTING__MODERATION__EMPTY_BAN: '차단된 된 유저가 아무도 없습니다',
+              CHANNEL_SETTING__MODERATION__ALL_BAN: '차단된 유저 모두보기'
+            }}
           />
         </div>
       </div>

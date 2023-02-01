@@ -59,6 +59,9 @@
     height: calc(100% - 116px);
   }
   .sendbird-modal__footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
     @include mobile() {
       position: sticky;
       bottom: 24px;
@@ -67,7 +70,7 @@
     text-align: right;
     .sendbird-button:last-child {
       margin-left: 8px;
-      width: 80px;
+      min-width: 80px;
       height: 40px;
     }
   }
