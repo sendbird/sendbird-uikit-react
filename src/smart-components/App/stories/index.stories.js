@@ -260,7 +260,6 @@ export const user1 = () => fitPageSize(
     showSearchIcon
     allowProfileEdit
     config={{ logLevel: 'all' }}
-    queries={{}}
     replyType="QUOTE_REPLY"
     isReactionEnabled
     isMentionEnabled
