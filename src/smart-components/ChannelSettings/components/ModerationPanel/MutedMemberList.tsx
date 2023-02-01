@@ -10,7 +10,7 @@ import IconButton from '../../../../ui/IconButton';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 import
-  Label, {
+Label, {
   LabelTypography,
   LabelColors,
 } from '../../../../ui/Label';
@@ -106,7 +106,7 @@ export const MutedMemberList = (): ReactElement => {
                         }}
                       >
                         <>
-                          {stringSet.CHANNEL_SETTING__MODERATION__UNMUTE}
+                          {stringSet?.CHANNEL_SETTING__UNMUTE || stringSet.CHANNEL_SETTING__MODERATION__UNMUTE}
                         </>
                       </MenuItem>
                     </MenuItems>
