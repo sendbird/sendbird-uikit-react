@@ -12,7 +12,8 @@ import {
   GroupChannelCreateParams,
   GroupChannelHandler,
   SendbirdGroupChat,
-  GroupChannelListQuery as GroupChannelListQuerySb
+  GroupChannelListQuery as GroupChannelListQuerySb,
+  GroupChannelUserIdsFilter
 } from '@sendbird/chat/groupChannel';
 
 import { RenderUserProfileProps } from '../../../types';
@@ -59,6 +60,7 @@ interface GroupChannelListQuery {
   hiddenChannelFilter?: 'unhidden_only' | 'hidden_only' | 'hidden_allow_auto_unhide' | 'hidden_prevent_auto_unhide';
   unreadChannelFilter?: 'all' | 'unread_message';
   includeFrozen?: boolean;
+  userIdsFilter?: GroupChannelUserIdsFilter;
 }
 
 interface ChannelListQueries {
