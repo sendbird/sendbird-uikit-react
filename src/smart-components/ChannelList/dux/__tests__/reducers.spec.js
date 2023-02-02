@@ -137,11 +137,11 @@ describe('Channels-Reducers', () => {
 
   it('should set channelListQuery for filter', () => {
     const channelListQuery = {
-      _searchFilter: {
+      searchFilter: {
         search_fields: ['channel_name', 'member_nicknames'],
         search_query: 'abcd',
       },
-      _userIdsFilter: {
+      userIdsFilter: {
         userIds: ['hoon001', 'hoon002'],
         includeMode: false,
         queryType: 'AND',
@@ -163,11 +163,11 @@ describe('Channels-Reducers', () => {
       payload: { currentUserId: user1.userId, channelListQuery: channelListQuery },
     });
     const appliedQuery = appliedParamsState.channelListQuery;
-    expect(appliedQuery._searchFilter.search_fields).toEqual(channelListQuery._searchFilter.search_fields);
-    expect(appliedQuery._searchFilter.search_query).toEqual(channelListQuery._searchFilter.search_query);
-    expect(appliedQuery._userIdsFilter.userIds).toEqual(channelListQuery._userIdsFilter.userIds);
-    expect(appliedQuery._userIdsFilter.includeMode).toEqual(channelListQuery._userIdsFilter.includeMode);
-    expect(appliedQuery._userIdsFilter.queryType).toEqual(channelListQuery._userIdsFilter.queryType);
+    expect(appliedQuery.searchFilter.search_fields).toEqual(channelListQuery.searchFilter.search_fields);
+    expect(appliedQuery.searchFilter.search_query).toEqual(channelListQuery.searchFilter.search_query);
+    expect(appliedQuery.userIdsFilter.userIds).toEqual(channelListQuery.userIdsFilter.userIds);
+    expect(appliedQuery.userIdsFilter.includeMode).toEqual(channelListQuery.userIdsFilter.includeMode);
+    expect(appliedQuery.userIdsFilter.queryType).toEqual(channelListQuery.userIdsFilter.queryType);
     expect(appliedQuery.nicknameContainsFilter).toEqual(channelListQuery.nicknameContainsFilter);
     expect(appliedQuery.channelNameContainsFilter).toEqual(channelListQuery.channelNameContainsFilter);
     expect(appliedQuery.memberStateFilter).toEqual(channelListQuery.memberStateFilter);
@@ -187,14 +187,14 @@ describe('Channels-Reducers', () => {
      * > target member join > change search_field to channel_name > another member join > change channel name
      */
     const channelListQuery = {
-      _searchFilter: { search_fields: ['member_nickname'], search_query: user1.nickname },
+      searchFilter: { fields: ['member_nickname'], query: user1.nickname },
     };
     const newChannel = { ...creatingChannel };
     const appliedParamsState = reducers(mockData, {
       type: actionTypes.CHANNEL_LIST_PARAMS_UPDATED,
       payload: { currentUserId: user1.userId, channelListQuery },
     });
-    expect(appliedParamsState.channelListQuery._searchFilter.search_query).toEqual(user1.nickname);
+    expect(appliedParamsState.channelListQuery.searchFilter.query).toEqual(user1.nickname);
     expect(appliedParamsState.allChannels[0].url).not.toEqual(newChannel.url);
     const createdChannelState = reducers(appliedParamsState, {
       type: actionTypes.CREATE_CHANNEL,
@@ -221,11 +221,11 @@ describe('Channels-Reducers', () => {
       type: actionTypes.CHANNEL_LIST_PARAMS_UPDATED,
       payload: {
         currentUserId: user1.userId,
-        channelListQuery: { _searchFilter: { ...channelListQuery._searchFilter, search_fields: ['channel_name'] } },
+        channelListQuery: { searchFilter: { ...channelListQuery.searchFilter, fields: ['channel_name'] } },
       },
     });
-    expect(paramsWithChannelNameState.channelListQuery._searchFilter.search_fields).toEqual(['channel_name']);
-    expect(paramsWithChannelNameState.channelListQuery._searchFilter.search_query).toEqual(user1.nickname);
+    expect(paramsWithChannelNameState.channelListQuery.searchFilter.fields).toEqual(['channel_name']);
+    expect(paramsWithChannelNameState.channelListQuery.searchFilter.query).toEqual(user1.nickname);
     const anotherUserJoinedState = reducers(paramsWithChannelNameState, {
       type: actionTypes.ON_USER_JOINED,
       payload: { ...newChannel, members: [user1, user2, user3] },
@@ -247,7 +247,7 @@ describe('Channels-Reducers', () => {
       payload: {
         currentUserId: user1.userId,
         channelListQuery: {
-          _userIdsFilter: { userIds: [user1.userId, user2.userId], includeMode: false },
+          userIdsFilter: { userIds: [user1.userId, user2.userId], includeMode: false },
         },
       }
     });
@@ -257,7 +257,7 @@ describe('Channels-Reducers', () => {
       payload: {
         currentUserId: user1.userId,
         channelListQuery: {
-          _userIdsFilter: {
+          userIdsFilter: {
             userIds: [user1.userId, user2.userId],
             includeMode: true,
             queryType: 'OR',
@@ -271,7 +271,7 @@ describe('Channels-Reducers', () => {
       payload: {
         currentUserId: user1.userId,
         channelListQuery: {
-          _userIdsFilter: {
+          userIdsFilter: {
             userIds: [user1.userId, user2.userId],
             includeMode: true,
             queryType: 'AND',
