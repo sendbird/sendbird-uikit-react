@@ -20,7 +20,6 @@ export const ProgressBar = ({
   colorType = ProgressBarColorTypes.PRIMARY,
 }: ProgressBarProps): React.ReactElement => {
   const width = useMemo(() => {
-    console.log('progress bar comp', currentSize, maxSize, `${currentSize / maxSize * 100}%`)
     return `${currentSize / maxSize * 100}%`;
   }, [currentSize, maxSize]);
   return (

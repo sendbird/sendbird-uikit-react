@@ -27,7 +27,7 @@ const VoicePlayerContext = createContext<VoicePlayerContext>({
 
 interface VoicePlayerPlayProps {
   audioFile: File;
-  playPoint?: number;
+  playPoint?: number;// seconds
   eventHandler?: VoicePlayerEventHandler;
 }
 
@@ -56,13 +56,13 @@ export const VoicePlayerProvider = (props: VoicePlayerProps): React.ReactElement
     };
     audioPlayer.onpause = () => {
       eventHandler?.onPlayingStopped({
-        playbackTime: audioPlayer.currentTime * 1000,
-        playSize: audioPlayer.duration * 1000,
+        playbackTime: audioPlayer.currentTime,
+        playSize: audioPlayer.duration,
         audioFile: audioFile,
       });
     };
     audioPlayer.ontimeupdate = () => {
-      eventHandler?.onPlaybackTimeUpdated(audioPlayer.currentTime * 1000);
+      eventHandler?.onPlaybackTimeUpdated(audioPlayer.currentTime);
     };
     audioPlayer?.play();
     setCurrentPlayer(audioPlayer);
