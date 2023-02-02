@@ -39,7 +39,7 @@ export const VoiceMessageItemBody = ({
       fetch(message?.url)
         .then((res) => res.blob())
         .then((blob) => {
-          const audioFile = new File([blob], 'I am file name', {
+          const audioFile = new File([blob], 'Voice message', {
             lastModified: new Date().getTime(),
             type: 'audio/mpeg',
           });
