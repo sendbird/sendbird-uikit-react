@@ -6,12 +6,14 @@ export interface PlaybackTimeProps {
   className?: string;
   time: number;// millisec
   labelType?: string;
+  labelColor?: string;
 }
 
 export const PlaybackTime = ({
   className,
   time = 0,
   labelType = LabelTypography.CAPTION_2,
+  labelColor = LabelColors.ONCONTENT_1,
 }: PlaybackTimeProps): React.ReactElement => {
   const hour = parseInt((time / 3600000).toFixed());
   const min = parseInt((time / 60000).toFixed());
@@ -20,7 +22,7 @@ export const PlaybackTime = ({
     <div className={`sendbird-ui-play-time ${className}`}>
       <Label
         type={labelType}
-        color={LabelColors.ONCONTENT_1}
+        color={labelColor}
       >
         {`${hour ? hour + ':' : ''}${min < 10 ? '0' : ''}${min ? min : '0'}:${sec < 10 ? '0' : ''}${sec}`}
       </Label>
