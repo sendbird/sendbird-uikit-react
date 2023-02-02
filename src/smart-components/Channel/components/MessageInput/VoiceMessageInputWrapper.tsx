@@ -33,7 +33,6 @@ export const VoiceMessageInputWrapper = ({
     },
     onRecordingEnded: (recordedFile) => {
       setAudioFile(recordedFile);
-      setDuration(new Audio(URL.createObjectURL(recordedFile)).duration);
       setVoiceInputState(VoiceMessageInputStatus.READY_TO_PLAY);
     },
   });
@@ -56,6 +55,10 @@ export const VoiceMessageInputWrapper = ({
       setIsRecording(true);
     } else {
       setIsRecording(false);
+    }
+
+    if (voiceInputState === VoiceMessageInputStatus.READY_TO_PLAY) {
+      setDuration(recordingTime);
     }
   }, [voiceInputState]);
   useEffect(() => {
