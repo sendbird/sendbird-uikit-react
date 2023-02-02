@@ -115,6 +115,11 @@ interface SendBirdProviderProps {
     resizingHeight?: number | string,
   };
   isMentionEnabled?: boolean;
+  isVoiceMessageEnabled?: boolean;
+  voiceRecord?: {
+    maxRecordingTime?: number,
+    minRecordingTime?: number,
+  };
   // isTypingIndicatorEnabledOnChannelList?: boolean;
   // isMessageReceiptStatusEnabledOnChannelList?: boolean;
 }
@@ -144,6 +149,11 @@ interface SendBirdStateConfig {
     compressionRate?: number,
     resizingWidth?: number | string,
     resizingHeight?: number | string,
+  };
+  isVoiceMessageEnabled?: boolean;
+  voiceRecord?: {
+    maxRecordingTime?: number,
+    minRecordingTime?: number,
   };
   isTypingIndicatorEnabledOnChannelList?: boolean;
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
@@ -281,6 +291,11 @@ interface AppProps {
   config?: SendBirdProviderConfig;
   isReactionEnabled?: boolean;
   isMessageGroupingEnabled?: boolean;
+  isVoiceMessageEnabled?: boolean;
+  voiceRecord?: {
+    maxRecordingTime?: number,
+    minRecordingTime?: number,
+  };
   stringSet?: Record<string, string>;
   colorSet?: Record<string, string>;
   imageCompression?: {

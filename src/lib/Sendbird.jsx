@@ -50,6 +50,8 @@ export default function Sendbird(props) {
     imageCompression,
     isReactionEnabled,
     isMentionEnabled,
+    isVoiceMessageEnabled,
+    voiceRecord,
     isTypingIndicatorEnabledOnChannelList,
     isMessageReceiptStatusEnabledOnChannelList,
     replyType,
@@ -200,6 +202,8 @@ export default function Sendbird(props) {
           },
           isReactionEnabled,
           isMentionEnabled: isMentionEnabled || false,
+          isVoiceMessageEnabled,
+          voiceRecord,
           userMention: {
             maxMentionCount: userMention?.maxMentionCount || 10,
             maxSuggestionCount: userMention?.maxSuggestionCount || 15,
@@ -262,6 +266,11 @@ Sendbird.propTypes = {
   colorSet: PropTypes.objectOf(PropTypes.string),
   isReactionEnabled: PropTypes.bool,
   isMentionEnabled: PropTypes.bool,
+  isVoiceMessageEnabled: PropTypes.bool,
+  voiceRecord: PropTypes.shape({
+    maxRecordingTime: PropTypes.number,
+    minRecordingTime: PropTypes.number,
+  }),
   imageCompression: PropTypes.shape({
     compressionRate: PropTypes.number,
     resizingWidth: PropTypes.oneOfType([
@@ -300,6 +309,11 @@ Sendbird.defaultProps = {
   imageCompression: {},
   isReactionEnabled: true,
   isMentionEnabled: false,
+  isVoiceMessageEnabled: true,
+  voiceRecord: {
+    maxRecordingTime: 60000,
+    minRecordingTime: 1000,
+  },
   isTypingIndicatorEnabledOnChannelList: false,
   isMessageReceiptStatusEnabledOnChannelList: false,
   replyType: 'NONE',

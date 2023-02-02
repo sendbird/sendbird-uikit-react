@@ -28,6 +28,8 @@ export default function App(props) {
     config = {},
     isReactionEnabled,
     isMentionEnabled,
+    isVoiceMessageEnabled,
+    voiceRecord,
     replyType,
     isMessageGroupingEnabled,
     colorSet,
@@ -66,6 +68,8 @@ export default function App(props) {
       imageCompression={imageCompression}
       isReactionEnabled={isReactionEnabled}
       isMentionEnabled={isMentionEnabled}
+      isVoiceMessageEnabled={isVoiceMessageEnabled}
+      voiceRecord={voiceRecord}
       onUserProfileMessage={(channel) => {
         setCurrentChannel(channel);
       }}
@@ -132,6 +136,11 @@ App.propTypes = {
   }),
   disableAutoSelect: PropTypes.bool,
   isMentionEnabled: PropTypes.bool,
+  isVoiceMessageEnabled: PropTypes.bool,
+  voiceRecord: PropTypes.shape({
+    maxRecordingTime: PropTypes.number,
+    minRecordingTime: PropTypes.number,
+  }),
   isTypingIndicatorEnabledOnChannelList: PropTypes.bool,
   isMessageReceiptStatusEnabledOnChannelList: PropTypes.bool,
 };
@@ -155,6 +164,11 @@ App.defaultProps = {
   config: {},
   isReactionEnabled: true,
   isMentionEnabled: false,
+  isVoiceMessageEnabled: true,
+  voiceRecord: {
+    maxRecordingTime: 60000,
+    minRecordingTime: 1000,
+  },
   replyType: 'NONE',
   isMessageGroupingEnabled: true,
   stringSet: null,
