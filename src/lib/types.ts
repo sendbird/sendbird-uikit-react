@@ -42,6 +42,11 @@ export interface SendBirdProviderProps {
   stringSet?: Record<string, string>;
   colorSet?: Record<string, string>;
   isMentionEnabled?: boolean;
+  isVoiceMessageEnabled?: boolean;
+  voiceRecord?: {
+    maxRecordingTime: number;
+    minRecordingTime: number;
+  };
   imageCompression?: {
     compressionRate?: number,
     resizingWidth?: number | string,
@@ -68,6 +73,11 @@ export interface SendBirdStateConfig {
   userListQuery?(): SendBirdTypes.UserListQuery;
   isReactionEnabled: boolean;
   isMentionEnabled: boolean;
+  isVoiceMessageEnabled?: boolean;
+  voiceRecord?: {
+    maxRecordingTime: number;
+    minRecordingTime: number;
+  };
   userMention: {
     maxMentionCount: number,
     maxSuggestionCount: number,

@@ -649,6 +649,7 @@ type ChannelContextProps = {
   onBeforeSendFileMessage?(file: File, quotedMessage?: UserMessage | FileMessage): FileMessageCreateParams;
   onBeforeUpdateUserMessage?(text: string): UserMessageUpdateParams;
   onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
+  onBeforeSendVoiceMessage?: (file: File, quotedMessage?: UserMessage | FileMessage) => FileMessageCreateParams;
   onSearchClick?(): void;
   replyType?: ReplyType;
   queries?: ChannelQueries;
