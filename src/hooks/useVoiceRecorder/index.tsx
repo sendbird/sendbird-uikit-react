@@ -40,7 +40,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
         const mediaRecorder = new MediaRecorder(stream);
         mediaRecorder.ondataavailable = (e) => {// when recording stops
           // Generate audio file
-          const audioFile = new File([e.data], 'I am file name', {
+          const audioFile = new File([e.data], 'Voice message', {
             lastModified: new Date().getTime(),
             type: 'audio/mpeg',
           });
