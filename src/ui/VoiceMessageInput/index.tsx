@@ -21,11 +21,11 @@ export interface VoiceMessageInputProps {
 }
 
 export enum VoiceMessageInputStatus {
-  PREPARING,
-  READY_TO_RECORD,
-  RECORDING,
-  READY_TO_PLAY,
-  PLAYING,
+  PREPARING = 'PREPARING',
+  READY_TO_RECORD = 'READY_TO_RECORD',
+  RECORDING = 'RECORDING',
+  READY_TO_PLAY = 'READY_TO_PLAY',
+  PLAYING = 'PLAYING',
 }
 
 let interval = null;

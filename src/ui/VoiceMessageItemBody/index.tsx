@@ -19,9 +19,9 @@ export interface VoiceMessageItemBodyProps {
 }
 
 export enum VoiceMessageItemStatus {
-  LOADING,
-  READY_TO_PLAY,
-  PLAYING,
+  LOADING = 'LOADING',
+  READY_TO_PLAY = 'READY_TO_PLAY',
+  PLAYING = 'PLAYING',
 }
 
 export const VoiceMessageItemBody = ({
