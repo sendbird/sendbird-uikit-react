@@ -20,6 +20,8 @@ import { LoggerFactory } from './Logger';
 import pubSubFactory from './pubSub/index';
 import useAppendDomNode from '../hooks/useAppendDomNode';
 
+import { VoiceRecorderProvider } from '../hooks/useVoiceRecorder';
+import { VoicePlayerProvider } from '../hooks/useVoicePlayer';
 import { LocalizationProvider } from './LocalizationContext';
 import { MediaQueryProvider } from './MediaQueryContext';
 import getStringSet from '../ui/Label/stringSet';
@@ -216,7 +218,11 @@ export default function Sendbird(props) {
     >
       <MediaQueryProvider logger={logger} mediaQueryBreakPoint={mediaQueryBreakPoint}>
         <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
-          {children}
+          <VoiceRecorderProvider>
+            <VoicePlayerProvider>
+              {children}
+            </VoicePlayerProvider>
+          </VoiceRecorderProvider>
         </LocalizationProvider>
       </MediaQueryProvider>
     </SendbirdSdkContext.Provider>
