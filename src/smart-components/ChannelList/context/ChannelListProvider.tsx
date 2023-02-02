@@ -13,7 +13,7 @@ import {
   GroupChannelHandler,
   SendbirdGroupChat,
   GroupChannelListQuery as GroupChannelListQuerySb,
-  GroupChannelUserIdsFilter
+  GroupChannelUserIdsFilter,
 } from '@sendbird/chat/groupChannel';
 
 import { RenderUserProfileProps } from '../../../types';
