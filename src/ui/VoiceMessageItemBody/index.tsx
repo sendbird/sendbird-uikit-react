@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FileMessage } from '@sendbird/chat/message';
 
 import './index.scss';
@@ -14,11 +14,11 @@ export interface VoiceMessageItemBodyProps {
   className?: string;
   message: FileMessage;
   isByMe?: boolean;
-  // mouseHover?: boolean;
   isReactionEnabled?: boolean;
 }
 
 export enum VoiceMessageItemStatus {
+  NONE = 'NONE',
   LOADING = 'LOADING',
   READY_TO_PLAY = 'READY_TO_PLAY',
   PLAYING = 'PLAYING',
@@ -28,14 +28,14 @@ export const VoiceMessageItemBody = ({
   className,
   message,
   isByMe = false,
-  // mouseHover = false,
   isReactionEnabled = false,
 }: VoiceMessageItemBodyProps): React.ReactElement => {
-  const [audio, setAudio] = useState(null);
-  const [audioState, setAudioState] = useState(VoiceMessageItemStatus.LOADING);
+  const [usingReaction, setUsingReaction] = useState(false);
+  const [audioState, setAudioState] = useState(VoiceMessageItemStatus.NONE);
   const [audioFile, setAudioFile] = useState(null);
-  useEffect(() => {
+  const downloadAudioFile = useCallback(() => {
     if (message?.url) {
+      setAudioState(VoiceMessageItemStatus.LOADING);
       fetch(message?.url)
         .then((res) => res.blob())
         .then((blob) => {
@@ -44,8 +44,6 @@ export const VoiceMessageItemBody = ({
             type: 'audio/mpeg',
           });
           setAudioFile(audioFile);
-          const url = URL.createObjectURL(audioFile);
-          setAudio(new Audio(url));
           setAudioState(VoiceMessageItemStatus.READY_TO_PLAY);
         });
     }
@@ -63,20 +61,50 @@ export const VoiceMessageItemBody = ({
     },
   });
 
+  useEffect(() => {
+    if (isReactionEnabled && message?.reactions?.length > 0) {
+      setUsingReaction(true);
+    } else {
+      setUsingReaction(false);
+    }
+  }, [isReactionEnabled, message?.reactions]);
+  const progresBarMaxSize = useMemo(() => {
+    if (message?.metaArrays) {
+      const duration = message?.metaArrays.find((metaArray) => metaArray.key === 'KEY_VOICE_MESSAGE_DURATION')?.value[0];
+      return duration && parseInt(duration);
+    }
+    return 1;
+  }, [message?.metaArrays]);
+
   const playAudio = () => {
     play(audioFile);
   };
   const pauseAudio = pause;
 
   return (
-    <div className={`sendbird-voice-message-item-body ${className} ${isReactionEnabled ? 'is-reactions-contained' : ''}`}>
+    <div className={`sendbird-voice-message-item-body ${className} ${usingReaction ? 'is-reactions-contained' : ''}`}>
       <ProgressBar
         className="sendbird-voice-message-item-body__progress-bar"
-        maxSize={(audio?.duration || 1) * 1000}
+        maxSize={progresBarMaxSize}
         currentSize={playbackTime}
         colorType={isByMe ? ProgressBarColorTypes.PRIMARY : ProgressBarColorTypes.GRAY}
       />
       <div className="sendbird-voice-message-item-body__status-button">
+        {
+          audioState === VoiceMessageItemStatus.NONE && (
+            <div
+              className="sendbird-voice-message-item-body__status-button__button"
+              onClick={downloadAudioFile}
+            >
+              <Icon
+                width="18px"
+                height="18px"
+                type={IconTypes.PLAY}
+                fillColor={IconColors.PRIMARY}
+              />
+            </div>
+          )
+        }
         {
           audioState === VoiceMessageItemStatus.LOADING && (
             <Loader width="22.2px" height="22.2px">
@@ -120,7 +148,10 @@ export const VoiceMessageItemBody = ({
       </div>
       <PlaybackTime
         className="sendbird-voice-message-item-body__playback-time"
-        time={playbackTime}
+        time={
+          (audioState === VoiceMessageItemStatus.PLAYING)
+          ? playbackTime : progresBarMaxSize
+        }
         labelType={LabelTypography.BODY_1}
         labelColor={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
       />

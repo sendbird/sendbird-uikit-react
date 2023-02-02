@@ -10,6 +10,7 @@ function useScrollDownCallback({
   userFilledMessageListQuery,
   hasMoreNext,
   replyType,
+  isVoiceMessageEnabled,
 }, {
   logger,
   messagesDispatcher,
@@ -24,6 +25,9 @@ function useScrollDownCallback({
       isInclusive: true,
       includeReactions: isReactionEnabled,
     };
+    if (isVoiceMessageEnabled) {
+      messageListParams.includeMetaArray = true;
+    }
     if (replyType && (replyType === 'QUOTE_REPLY' || replyType === 'THREAD')) {
       messageListParams.includeThreadInfo = true;
       messageListParams.includeParentMessageInfo = true;

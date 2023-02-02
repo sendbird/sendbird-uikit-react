@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { FileMessage, FileMessageCreateParams, UserMessage } from '@sendbird/chat/message';
+import { FileMessage, FileMessageCreateParams, MessageMetaArray, UserMessage } from '@sendbird/chat/message';
 import { Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';
@@ -16,7 +16,7 @@ interface StaticParams {
   scrollRef: React.RefObject<HTMLDivElement>;
   messagesDispatcher: (props: { type: string, payload: any }) => void;
 }
-type FuncType = (file: File, quoteMessage: UserMessage | FileMessage) => void;
+type FuncType = (file: File, duration: number, quoteMessage: UserMessage | FileMessage) => void;
 
 export const useSendVoiceMessageCallback = ({
   currentGroupChannel,
@@ -28,13 +28,24 @@ export const useSendVoiceMessageCallback = ({
     scrollRef,
     messagesDispatcher,
   }: StaticParams): Array<FuncType> => {
-  const sendMessage = useCallback((file: File, quoteMessage: UserMessage | FileMessage) => {
+  const sendMessage = useCallback((file: File, duration: number, quoteMessage: UserMessage | FileMessage) => {
+    debugger
     const messageParams: FileMessageCreateParams = (
       onBeforeSendVoiceMessage
       && typeof onBeforeSendVoiceMessage === 'function'
     )
       ? onBeforeSendVoiceMessage(file, quoteMessage)
-      : { file, mimeType: 'voice/mp3' };
+      : {
+        file,
+        fileName: 'Voice message',
+        mimeType: 'voice/mp3',
+        metaArrays: [
+          new MessageMetaArray({
+            key: 'KEY_VOICE_MESSAGE_DURATION',
+            value: [`${duration}`],
+          })
+        ],
+      };
     if (quoteMessage) {
       messageParams.isReplyToChannel = true;
       messageParams.parentMessageId = quoteMessage.messageId;

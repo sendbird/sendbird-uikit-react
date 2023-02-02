@@ -138,8 +138,8 @@ const MessageInputWrapper = (
         showVoiceMessageInput
           ? (
             <VoiceMessageInputWrapper
-              onSubmitClick={(recordedFile) => {
-                sendVoiceMessage(recordedFile, quoteMessage);
+              onSubmitClick={(recordedFile, duration) => {
+                sendVoiceMessage(recordedFile, duration, quoteMessage);
                 setQuoteMessage(null);
               }}
               onCancelClick={() => {

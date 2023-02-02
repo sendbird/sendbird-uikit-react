@@ -9,6 +9,7 @@ function useScrollCallback({
   oldestMessageTimeStamp,
   userFilledMessageListQuery,
   replyType,
+  isVoiceMessageEnabled,
 }, {
   hasMorePrev,
   logger,
@@ -25,6 +26,9 @@ function useScrollCallback({
       isInclusive: true,
       includeReactions: isReactionEnabled,
     };
+    if (isVoiceMessageEnabled) {
+      messageListParams.includeMetaArray = true;
+    }
     if (replyType === 'QUOTE_REPLY' || replyType === 'THREAD') {
       messageListParams.includeThreadInfo = true;
       messageListParams.includeParentMessageInfo = true;

@@ -8,7 +8,7 @@ import VoiceMessageInput, { VoiceMessageInputStatus } from '../../../../ui/Voice
 
 export interface VoiceMessageInputWrapperProps {
   onCancelClick?: () => void;
-  onSubmitClick?: (file: File) => void;
+  onSubmitClick?: (file: File, duration: number) => void;
 }
 
 export const VoiceMessageInputWrapper = ({
@@ -25,6 +25,7 @@ export const VoiceMessageInputWrapper = ({
   const {
     start,
     stop,
+    recordingTime,
   } = useVoiceRecorder({
     onRecordingStarted: () => {
       setVoiceInputState(VoiceMessageInputStatus.RECORDING);
@@ -65,7 +66,7 @@ export const VoiceMessageInputWrapper = ({
         inputState={voiceInputState}
         onCancelClick={onCancelClick}
         onSubmitClick={() => {
-          onSubmitClick(currentAudioFile);
+          onSubmitClick(currentAudioFile, recordingTime);
         }}
         onRecordClick={() => {
           start();
