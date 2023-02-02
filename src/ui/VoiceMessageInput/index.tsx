@@ -21,6 +21,7 @@ export interface VoiceMessageInputProps {
 }
 
 export enum VoiceMessageInputStatus {
+  PREPARING,
   READY_TO_RECORD,
   RECORDING,
   READY_TO_PLAY,
@@ -92,6 +93,7 @@ export const VoiceMessageInput = ({
       <div className="sendbird-voice-message-input__indicator">
         <div className="sendbird-voice-message-input__indicator__progress-bar">
           <ProgressBar
+            className="sendbird-voice-message-input__indicator__progress-bar__bar"
             maxSize={maxSize}
             currentSize={progress}
           />

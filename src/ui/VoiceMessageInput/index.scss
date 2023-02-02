@@ -119,6 +119,11 @@
     animation: flickerAnimation .5s infinite;
 }
 
+// Progress bar
+.sendbird-voice-message-input__indicator__progress-bar__bar {
+  height: 40px;
+}
+
 // Controler icons
 .sendbird-controler-icon {
   position: relative;
