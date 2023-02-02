@@ -47,8 +47,9 @@ export const VoiceMessageInput = ({
   const [progress, setProgress] = useState(0);
   const [frame, setFrame] = useState(0);
   useEffect(() => {
-    // device progress bar to 1000
-    setFrame(maxSize / 1000);
+    // device progress bar to progressFrame value
+    const progressFrame = maxSize / 8;
+    setFrame(maxSize / progressFrame);
   }, [maxSize]);
   useEffect(() => {
     if (inProgress) {
