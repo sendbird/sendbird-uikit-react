@@ -44,7 +44,7 @@ export const Basic = () => {
   return (
     <div style={{
       width: '100%',
-      height: '100%',
+      height: '100px',
       display: 'flex',
       flexDirection: 'column',
       gap: '10px',
