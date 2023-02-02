@@ -51,27 +51,27 @@ export const VoicePlayerProvider = (props: VoicePlayerProps): React.ReactElement
     audioPlayer.loop = false;// play repeat
     audioPlayer.volume = 1;
     audioPlayer.currentTime = playPoint;
-    audioPlayer?.play();
-    audioPlayer?.addEventListener('play', () => {
+    audioPlayer.onplay = () => {
       eventHandler?.onPlayingStarted();
-    });
-    audioPlayer?.addEventListener('pause', () => {
+    };
+    audioPlayer.onpause = () => {
       eventHandler?.onPlayingStopped({
-        playbackTime: audioPlayer.currentTime,
-        playSize: audioPlayer.duration,
+        playbackTime: audioPlayer.currentTime * 1000,
+        playSize: audioPlayer.duration * 1000,
         audioFile: audioFile,
       });
-    });
-    audioPlayer?.addEventListener('timeupdate', () => {
-      eventHandler?.onPlaybackTimeUpdated(audioPlayer.currentTime);
-    });
+    };
+    audioPlayer.ontimeupdate = () => {
+      eventHandler?.onPlaybackTimeUpdated(audioPlayer.currentTime * 1000);
+    };
+    audioPlayer?.play();
     setCurrentPlayer(audioPlayer);
     // TODO: log
   };
 
   const stop = (): void => {
     // Stop playing
-    currentPlayer?.pause()
+    currentPlayer?.pause();
     setSourceFile(null);
     setCurrentPlayer(null);
     // TODO: log

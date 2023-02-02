@@ -77,7 +77,7 @@ const Tester = () => {
       <div>{playbackTime}</div>
     </div>
   );
-}
+};
 
 export const normal = () => {
   return (
@@ -89,4 +89,4 @@ export const normal = () => {
       </VoiceRecorderProvider>
     </div>
   );
-}
+};
