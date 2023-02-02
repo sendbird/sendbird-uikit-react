@@ -12,6 +12,11 @@
     fill: t(primary-3);
   }
 }
+.sendbird-icon-color--primary-2 [class*='fill'] {
+  @include themed() {
+    fill: t(primary-2);
+  }
+}
 
 .sendbird-icon-color--primary [class*='stroke'] {
   @include themed() {

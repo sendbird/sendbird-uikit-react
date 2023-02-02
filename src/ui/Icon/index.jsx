@@ -63,6 +63,7 @@ import IconUser from '../../svgs/icon-user.svg';
 const Colors = {
   DEFAULT: 'DEFAULT',
   PRIMARY: 'PRIMARY',
+  PRIMARY_2: 'PRIMARY_2',
   SECONDARY: 'SECONDARY',
   CONTENT: 'CONTENT',
   CONTENT_INVERSE: 'CONTENT_INVERSE',
@@ -80,6 +81,7 @@ const Colors = {
 export function changeColorToClassName(color) {
   switch (color) {
     case Colors.PRIMARY: return 'sendbird-icon-color--primary';
+    case Colors.PRIMARY_2: return 'sendbird-icon-color--primary-2';
     case Colors.SECONDARY: return 'sendbird-icon-color--secondary';
     case Colors.CONTENT: return 'sendbird-icon-color--content';
     case Colors.CONTENT_INVERSE: return 'sendbird-icon-color--content-inverse';
