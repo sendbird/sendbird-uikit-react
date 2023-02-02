@@ -10,7 +10,7 @@ import { useChannelContext } from '../../context/ChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import SuggestedMentionList from '../SuggestedMentionList';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
-import VoiceMessageInputWrapper from './VoiceMessageWrapper';
+import VoiceMessageInputWrapper from './VoiceMessageInputWrapper';
 
 export type MessageInputWrapperProps = {
   value?: string;
@@ -141,6 +141,7 @@ const MessageInputWrapper = (
               onSubmitClick={(recordedFile, duration) => {
                 sendVoiceMessage(recordedFile, duration, quoteMessage);
                 setQuoteMessage(null);
+                setShowVoiceMessageInput(false);
               }}
               onCancelClick={() => {
                 setShowVoiceMessageInput(false);

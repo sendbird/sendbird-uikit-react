@@ -19,6 +19,7 @@ export const VoiceMessageInputWrapper = ({
   const [audioDuration, setDuration] = useState(0);
   const [voiceInputState, setVoiceInputState] = useState(VoiceMessageInputStatus.READY_TO_RECORD);
   const [isRecording, setIsRecording] = useState(true);
+  const [isSubmited, setSubmit] = useState(false);
   const { config } = useSendbirdStateContext();
   const { voiceRecord } = config;
   const { maxRecordingTime } = voiceRecord;
@@ -56,17 +57,22 @@ export const VoiceMessageInputWrapper = ({
     } else {
       setIsRecording(false);
     }
-  }, [voiceInputState])
+  }, [voiceInputState]);
+  useEffect(() => {
+    if (isSubmited && currentAudioFile) {
+      onSubmitClick(currentAudioFile, recordingTime);
+    }
+  }, [isSubmited, currentAudioFile, recordingTime]);
 
   return (
     <div className="sendbird-voice-message-input-wrapper">
       <VoiceMessageInput
         maxSize={isRecording ? maxRecordingTime : audioDuration}
-        // playTime={isRecording ? recordingTime : playbackTime}
         inputState={voiceInputState}
         onCancelClick={onCancelClick}
         onSubmitClick={() => {
-          onSubmitClick(currentAudioFile, recordingTime);
+          stop();
+          setSubmit(true);
         }}
         onRecordClick={() => {
           start();

@@ -29,7 +29,6 @@ export const useSendVoiceMessageCallback = ({
     messagesDispatcher,
   }: StaticParams): Array<FuncType> => {
   const sendMessage = useCallback((file: File, duration: number, quoteMessage: UserMessage | FileMessage) => {
-    debugger
     const messageParams: FileMessageCreateParams = (
       onBeforeSendVoiceMessage
       && typeof onBeforeSendVoiceMessage === 'function'
