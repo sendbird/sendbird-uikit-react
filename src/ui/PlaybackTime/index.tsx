@@ -16,8 +16,8 @@ export const PlaybackTime = ({
   labelColor = LabelColors.ONCONTENT_1,
 }: PlaybackTimeProps): React.ReactElement => {
   const hour = parseInt((time / 3600000).toFixed());
-  const min = parseInt((time / 60000).toFixed());
-  const sec = Math.floor((time % 60000) / 1000);
+  const min = parseInt((time % 3600000 / 60000).toFixed());
+  const sec = Math.floor((time % 3600000 % 60000) / 1000);
   return (
     <div className={`sendbird-ui-play-time ${className}`}>
       <Label
