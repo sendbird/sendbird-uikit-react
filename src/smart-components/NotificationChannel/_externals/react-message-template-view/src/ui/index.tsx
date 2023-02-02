@@ -1,8 +1,6 @@
 import React from 'react';
 import '../index.css';
 
-import { useNotficationChannelContext } from '../../../../context/NotificationChannelProvider';
-
 import { createMessageTemplate, createParser, createRenderer } from '../../../message-template/src';
 
 import {
@@ -15,7 +13,7 @@ import {
   setViewStyle,
   setImageAspectRatio,
 } from '../styles';
-import { useMessageContext } from '../../../../context/MessageContextProvider';
+import { useMessageContext } from '../context/MessageContextProvider';
 
 const hasValidUrlProtocol = (url = '') => ['http://', 'https://', 'ftp://']
   .some(protocol => url.startsWith(protocol));
@@ -43,12 +41,13 @@ const ActionHandler = ({
   props,
 }) => {
   const {
+    message,
     handleWebAction,
     handleCustomAction,
     handlePredefinedAction,
-  } = useNotficationChannelContext();
-  const { message } = useMessageContext();
+  } = useMessageContext();
   return (
+    // todo: semantic html here is not perfect, need to revisit. Same for Button
     <div
       role={ props?.action ? 'button' :'listitem' }
       className={`${className} ${props?.action ? 'sb-message-template__action' : ''}`}
@@ -112,11 +111,11 @@ export const renderer = createRenderer<ReactParsedProperties>({
     },
     textButton(props) {
       const {
+        message,
         handleWebAction,
         handleCustomAction,
         handlePredefinedAction,
-      } = useNotficationChannelContext();
-      const { message } = useMessageContext();
+      } = useMessageContext();
       return (
         <button
           className="sb-message-template__text-button"

@@ -13,7 +13,7 @@ import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useNotficationChannelContext } from '../../context/NotificationChannelProvider';
-import { MessageProvider } from '../../context/MessageContextProvider';
+import { MessageProvider } from '../../_externals/react-message-template-view/src/context/MessageContextProvider';
 
 const NotificationIcon = () => (
   <div className="sendbird-notification-channel__channel-icon-wrap">
@@ -41,7 +41,12 @@ export default function NotificationMessageWrap({
   message,
 }: Props) {
   const { dateLocale, stringSet } = useLocalization();
-  const { lastSeen } = useNotficationChannelContext();
+  const {
+    lastSeen,
+    handleWebAction,
+    handleCustomAction,
+    handlePredefinedAction,
+  } = useNotficationChannelContext();
   // Typecasting to UserMessage to pass custom error message to UnknownMessage
   const _message = message as UserMessage;
   const customErrorLabel = _message?.message ||  stringSet?.NOTIFICATION_CHANNEL__UNKNOWN_MESSAGE;
@@ -83,7 +88,12 @@ export default function NotificationMessageWrap({
   };
 
   return (
-    <MessageProvider message={message}>
+    <MessageProvider
+      message={message}
+      handleWebAction={handleWebAction}
+      handleCustomAction={handleCustomAction}
+      handlePredefinedAction={handlePredefinedAction}
+    >
       <div className="sendbird-notification-channel__message-wrap" data-messageid={message?.messageId}>
         <div className="sendbird-notification-channel__message-wrap-header">
           {
