@@ -66,6 +66,16 @@
     right: 16px;
     bottom: 14px;
   }
+  .sendbird-message-input--attach.is-voice-message-enabled {
+    right: 48px;
+  }
+
+  .sendbird-message-input--voice-message {
+    position: absolute;
+    padding: 6px;
+    right: 16px;
+    bottom: 14px;
+  }
 
   .sendbird-message-input--send {
     position: absolute;

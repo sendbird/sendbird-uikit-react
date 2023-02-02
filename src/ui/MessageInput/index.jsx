@@ -70,6 +70,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     messageFieldId,
     isEdit,
     isMentionEnabled,
+    isVoiceMessageEnabled,
     disabled,
     message,
     placeholder,
@@ -84,6 +85,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     onUserMentioned,
     onMentionStringChange,
     onMentionedUserIdsUpdated,
+    onVoiceMessageIconClick,
     onKeyUp,
     onKeyDown,
   } = props;
@@ -459,7 +461,7 @@ const MessageInput = React.forwardRef((props, ref) => {
         {
           (!isEdit && !isInput) && (
             <IconButton
-              className="sendbird-message-input--attach"
+              className={`sendbird-message-input--attach ${isVoiceMessageEnabled ? 'is-voice-message-enabled' : ''}`}
               height="32px"
               width="32px"
               onClick={() => {
@@ -482,6 +484,22 @@ const MessageInput = React.forwardRef((props, ref) => {
             </IconButton>
           )
         }
+        {/* voice message input trigger */}
+        {(isVoiceMessageEnabled && !isEdit && !isInput) && (
+          <IconButton
+            className="sendbird-message-input--voice-message"
+            width="32px"
+            height="32px"
+            onClick={onVoiceMessageIconClick}
+          >
+            <Icon
+              type={IconTypes.INFO}
+              fillColor={IconColors.CONTENT_INVERSE}
+              width="20px"
+              height="20px"
+            />
+          </IconButton>
+        )}
       </div>
       {/* Edit */}
       {
@@ -524,6 +542,8 @@ MessageInput.propTypes = {
   value: PropTypes.string,
   isEdit: PropTypes.bool,
   isMentionEnabled: PropTypes.bool,
+  isVoiceMessageEnabled: PropTypes.bool,
+  onVoiceMessageIconClick: PropTypes.func,
   message: PropTypes.shape({
     messageId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     message: PropTypes.string,
@@ -559,6 +579,8 @@ MessageInput.defaultProps = {
   message: null,
   isEdit: false,
   isMentionEnabled: false,
+  isVoiceMessageEnabled: true,
+  onVoiceMessageIconClick: noop,
   disabled: false,
   placeholder: '',
   maxLength: 5000,
