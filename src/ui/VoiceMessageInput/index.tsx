@@ -61,8 +61,11 @@ export const VoiceMessageInput = ({
   }, [inProgress, frame]);
   useEffect(() => {
     if (progress >= maxSize) {
+      setProgress(0);
+      setPlaybackTime(0);
       setInProgress(false);
       clearInterval(interval);
+      clearInterval(counter);
     }
   }, [progress]);
   const startProgressBar = () => {
@@ -73,6 +76,7 @@ export const VoiceMessageInput = ({
   };
   const clearProgressBar = () => {
     setProgress(0);
+    setPlaybackTime(0);
     setInProgress(false);
   };
 
