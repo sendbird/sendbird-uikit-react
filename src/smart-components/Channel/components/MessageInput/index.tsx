@@ -35,7 +35,12 @@ const MessageInputWrapper = (
   const globalStore = useSendbirdStateContext();
   const channel = currentGroupChannel;
 
-  const { isOnline, isMentionEnabled, userMention, isVoiceMessageEnabled } = globalStore?.config;
+  const {
+    isOnline,
+    isMentionEnabled,
+    userMention,
+    isVoiceMessageEnabled,
+  } = globalStore?.config;
   const maxUserMentionCount = userMention?.maxMentionCount || 10;
   const maxUserSuggestionCount = userMention?.maxSuggestionCount || 15;
 

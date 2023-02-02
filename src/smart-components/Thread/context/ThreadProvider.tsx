@@ -1,7 +1,7 @@
 import React, { useReducer, useMemo, useEffect, ReactElement } from 'react';
 import { User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { BaseMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
+import { BaseMessage, FileMessage, FileMessageCreateParams, UserMessage } from '@sendbird/chat/message';
 
 import { getNicknamesMapFromMembers } from './utils';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
@@ -26,6 +26,7 @@ import useGetNextThreadsCallback from './hooks/useGetNextThreadsCallback';
 import useToggleReactionCallback from './hooks/useToggleReactionsCallback';
 import useSendUserMessageCallback from './hooks/useSendUserMessageCallback';
 import useResendMessageCallback from './hooks/useResendMessageCallback';
+import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 
 export type ThreadProviderProps = {
   children?: React.ReactElement;
@@ -33,6 +34,7 @@ export type ThreadProviderProps = {
   message: UserMessage | FileMessage;
   onHeaderActionClick?: () => void;
   onMoveToParentMessage?: (props: { message: UserMessage | FileMessage, channel: GroupChannel }) => void;
+  onBeforeSendVoiceMessage?: (file: File, quotedMessage?: UserMessage | FileMessage) => FileMessageCreateParams;
   // User Profile
   disableUserProfile?: boolean;
   renderUserProfile?: (props: { user: User, close: () => void }) => ReactElement;
@@ -50,6 +52,7 @@ export interface ThreadProviderInterface extends ThreadProviderProps, ThreadCont
     mentionedUsers?: Array<User>,
   }) => void;
   sendFileMessage: (file: File, quoteMessage: UserMessage | FileMessage) => void;
+  sendVoiceMessage: (file: File, duration: number, quoteMessage?: UserMessage | FileMessage) => void;
   resendMessage: (failedMessage: UserMessage | FileMessage) => void;
   updateMessage: (props, callback?: () => void) => void;
   deleteMessage: (message: UserMessage | FileMessage) => Promise<UserMessage | FileMessage>;
@@ -64,6 +67,7 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
     message,
     onHeaderActionClick,
     onMoveToParentMessage,
+    onBeforeSendVoiceMessage,
     // User Profile
     disableUserProfile,
     renderUserProfile,
@@ -165,6 +169,9 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
   const sendFileMessage = useSendFileMessageCallback({
     currentChannel,
   }, { logger, pubSub, threadDispatcher });
+  const sendVoiceMessage = useSendVoiceMessageCallback({
+    currentChannel, onBeforeSendVoiceMessage,
+  }, { logger, pubSub, threadDispatcher });
   const resendMessage = useResendMessageCallback({
     currentChannel,
   }, { logger, pubSub, threadDispatcher });
@@ -205,6 +212,7 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
         toggleReaction,
         sendMessage,
         sendFileMessage,
+        sendVoiceMessage,
         resendMessage,
         updateMessage,
         deleteMessage,

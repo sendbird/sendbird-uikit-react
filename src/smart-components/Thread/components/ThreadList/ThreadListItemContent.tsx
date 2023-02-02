@@ -14,7 +14,7 @@ import UserProfile from '../../../../ui/UserProfile';
 import MessageItemMenu from '../../../../ui/MessageItemMenu';
 import MessageItemReactionMenu from '../../../../ui/MessageItemReactionMenu';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
-import { getClassName, getSenderName, getUIKitMessageType, getUIKitMessageTypes, isOGMessage, isTextMessage, isThumbnailMessage } from '../../../../utils';
+import { getClassName, getSenderName, getUIKitMessageType, getUIKitMessageTypes, isOGMessage, isTextMessage, isThumbnailMessage, isVoiceMessage } from '../../../../utils';
 import MessageStatus from '../../../../ui/MessageStatus';
 import EmojiReactions from '../../../../ui/EmojiReactions';
 import format from 'date-fns/format';
@@ -24,6 +24,7 @@ import OGMessageItemBody from '../../../../ui/OGMessageItemBody';
 import FileMessageItemBody from '../../../../ui/FileMessageItemBody';
 import ThumbnailMessageItemBody from '../../../../ui/ThumbnailMessageItemBody';
 import UnknownMessageItemBody from '../../../../ui/UnknownMessageItemBody';
+import VoiceMessageItemBody from '../../../../ui/VoiceMessageItemBody';
 
 export interface ThreadListItemContentProps {
   className?: string;
@@ -194,6 +195,14 @@ export default function ThreadListItemContent({
               message={message as UserMessage}
               isByMe={isByMe}
               isMentionEnabled={isMentionEnabled}
+              isReactionEnabled={isReactionEnabled}
+            />
+          )}
+          {isVoiceMessage(message as FileMessage) && (
+            <VoiceMessageItemBody
+              className="sendbird-thread-list-item-content__middle__message-item-body"
+              message={message as FileMessage}
+              isByMe={isByMe}
               isReactionEnabled={isReactionEnabled}
             />
           )}
