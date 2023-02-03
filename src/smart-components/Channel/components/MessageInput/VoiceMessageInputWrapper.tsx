@@ -66,6 +66,11 @@ export const VoiceMessageInputWrapper = ({
       onSubmitClick(currentAudioFile, recordingTime);
     }
   }, [isSubmited, currentAudioFile, recordingTime]);
+  useEffect(() => {
+    if (recordingTime >= maxRecordingTime) {
+      stop();
+    }
+  }, [recordingTime, maxRecordingTime]);
 
   return (
     <div className="sendbird-voice-message-input-wrapper">
