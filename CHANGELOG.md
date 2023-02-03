@@ -1,5 +1,30 @@
 # Changelog - v3
 
+## [v3.3.5] (Feb 3 2023)
+Features:
+* Voice Recorder&Player logic(not public yet)
+  * Add a voice record logic: VoiceRecorderProvider, useVoiceRecorderContext, useVoiceRecorder
+  * Add an audio play logic: VoicePlayerProvider, useVoicePlayerContext, useVoicePlayer
+* Create an integrated sample for the group channel
+
+Fix:
+* Migrate the outdated ChannelListQuery interface
+  * Issue: A customer said the `userIdsFilter` of ChannelListQuery doesn't work when receiving messages
+    There's been an internal channel filtering logic with custom channelListQuery, but it's broken because we've used the outdated interface of Chat SDK.
+  * Fix: We migrated the outdated interface `_searchFilter` and `_userIdsFilter` to new things `searchFilter` and `userIdsFilter
+* Use the same word-splitting logic on the TextMessage and OGMessage
+  * TextMessage will also allow opening the URL links
+  * Use the same word wrapping style on the TextMessage and OGMessage
+* Apply string set into the moderation section
+  * Add string set
+    * CHANNEL_SETTING__OPERATORS__ADD_BUTTON: 'Add'
+    * CHANNEL_SETTING__MODERATION__EMPTY_BAN: 'No banned members yet'
+    * CHANNEL_SETTING__MODERATION__ALL_BAN: 'All banned members'
+* Edit should not be allowed when input is empty
+* New channel interrupts the current conversation
+  * Do not set the current channel when getting an invitation
+  * Add test for USER_INVITED in the reducer of ChannelList
+
 ## [v3.3.4] (Jan 6 2023)
 Fix:
 * Add the time stamp rendering case for before this year on the ChannelList
