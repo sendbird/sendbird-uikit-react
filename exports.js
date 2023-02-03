@@ -103,6 +103,13 @@ export default {
   'Thread/components/ThreadListItem': 'src/smart-components/Thread/components/ThreadList/ThreadListItem.tsx',
   'Thread/components/ThreadMessageInput': 'src/smart-components/Thread/components/ThreadMessageInput/index.tsx',
 
+  // NotificationChannel
+  NotificationChannel: 'src/smart-components/NotificationChannel/index.tsx',
+  'NotificationChannel/context': 'src/smart-components/NotificationChannel/context/NotificationChannelProvider.tsx',
+  'NotificationChannel/components/NotificationChannelUI': 'src/smart-components/NotificationChannel/components/NotificationChannelUI/index.tsx',
+  'NotificationChannel/components/NotificationMessageWrap': 'src/smart-components/NotificationChannel/components/NotificationMessageWrap/index.tsx',
+  'NotificationChannel/components/NotificationList': 'src/smart-components/NotificationChannel/components/NotificationList/index.tsx',
+
   // CreateChannel
   CreateChannel: 'src/smart-components/CreateChannel/index.tsx',
   'CreateChannel/context': 'src/smart-components/CreateChannel/context/CreateChannelProvider.tsx',

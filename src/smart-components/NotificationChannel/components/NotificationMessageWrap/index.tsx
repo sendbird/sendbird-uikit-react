@@ -7,13 +7,15 @@ import format from "date-fns/format";
 import isYesterday from "date-fns/isYesterday";
 
 import { renderMessage, renderMessageHeader } from "../../types";
-import { MessageTemplate } from "../../_externals/react-message-template-view/src/ui";
 import UnknownMessageItemBody from "../../../../ui/UnknownMessageItemBody";
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useNotficationChannelContext } from '../../context/NotificationChannelProvider';
-import { MessageProvider } from '../../_externals/react-message-template-view/src/context/MessageContextProvider';
+
+import { MessageTemplate, MessageProvider } from '@sendbird/react-uikit-message-template-view';
+// import { MessageTemplate } from "../../_externals/react-message-template-view/src/ui";
+// import { MessageProvider } from '../../_externals/react-message-template-view/src/context/MessageContextProvider';
 
 const NotificationIcon = () => (
   <div className="sendbird-notification-channel__channel-icon-wrap">
