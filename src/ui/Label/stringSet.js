@@ -111,6 +111,7 @@ const getStringSet = (lang = 'en') => {
       PLACE_HOLDER__WRONG: 'Something went wrong',
       PLACE_HOLDER__RETRY_TO_CONNECT: 'Retry',
       PLACE_HOLDER__NO_MESSAGES: 'No messages',
+      PLACE_HOLDER__NO_NOTIFICATIONS: 'No notifications',
       NO_TITLE: 'No title',
       NO_NAME: '(No name)',
       NO_MEMBERS: '(No members)',
@@ -120,6 +121,9 @@ const getStringSet = (lang = 'en') => {
       UNKNOWN__UNKNOWN_MESSAGE_TYPE: '(Unknown message type)',
       UNKNOWN__CANNOT_READ_MESSAGE: 'Cannot read this message.',
       MESSAGE_EDITED: '(edited)',
+      // Notification items
+      NOTIFICATION_CHANNEL__YESTERDAY: 'Yesterday',
+      NOTIFICATION_CHANNEL__UNKNOWN_MESSAGE: '(Message template error) Can\'t read this message.',
       // Menu items
       MESSAGE_MENU__COPY: 'Copy',
       MESSAGE_MENU__REPLY: 'Reply',

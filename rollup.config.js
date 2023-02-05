@@ -42,6 +42,8 @@ module.exports = ({
     '@sendbird/chat/groupChannel',
     '@sendbird/chat/openChannel',
     '@sendbird/chat/message',
+    '@sendbird/react-uikit-message-template-view',
+    '@sendbird/uikit-message-template',
     'react-dom/server',
     'prop-types',
     'react',

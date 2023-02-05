@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import UnknownMessageItemBody from "../index";
 
@@ -123,5 +123,32 @@ describe('ui/UnknownMessageItemBody', () => {
       />
     );
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('should render default text if empty', () => {
+    const customText = '';
+    const DEAFULT_TEXT = 'Cannot read this message.';
+    const { container } = render(
+      <UnknownMessageItemBody
+        message={createMockMessage()}
+        customText={customText}
+      />
+    );
+    expect(
+      container.querySelector('.sendbird-unknown-message-item-body__description').textContent
+    ).toEqual(DEAFULT_TEXT);
+  });
+
+  it('should render the customText if provided', () => {
+    const customText = 'custom text';
+    const { container } = render(
+      <UnknownMessageItemBody
+        message={createMockMessage()}
+        customText={customText}
+      />
+    );
+    expect(
+      container.querySelector('.sendbird-unknown-message-item-body__description').textContent
+    ).toEqual(customText);
   });
 });

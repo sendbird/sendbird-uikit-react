@@ -49,7 +49,9 @@
     "react-dom": "^16.8.6 || ^17.0.0 || ^18.0.0"
   },
   "dependencies": {
-    "@sendbird/chat": "^4.2.3",
+    "@sendbird/chat": "^4.2.4",
+    "@sendbird/react-uikit-message-template-view": "^0.0.1-alpha.10",
+    "@sendbird/uikit-message-template": "^0.0.1-alpha.8",
     "css-vars-ponyfill": "^2.3.2",
     "date-fns": "^2.16.1",
     "prop-types": "^15.7.2"

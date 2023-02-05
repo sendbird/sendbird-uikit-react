@@ -1,0 +1,76 @@
+@import '../../../../styles/variables';
+
+.sendbird-notification-channel__message-wrap {
+  padding-left: 48px;
+  margin-right: 16px;
+  box-sizing: border-box;
+  /**
+   * 1. Modify unknown message to be visually similar with other platforms
+   */
+  .sendbird-unknown-message-item-body {
+    width: 100%;
+  }
+  .sendbird-unknown-message-item-body__description {
+    white-space: pre-line; // splits the text into lines when there is a \n
+    @include themed() {
+      color: t(on-bg-1);
+    }
+  }
+}
+
+.sendbird-notification-channel__message-wrap-header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 4px;
+  margin-top: 16px;
+}
+
+.sendbird-notification-channel__message-caption {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 120px;
+}
+
+.sendbird-notification-channel__message-date-wrap {
+  position: relative;
+}
+
+.sendbird-notification-channel__unread {
+  position: absolute;
+  left: -10px;
+  top: 8px;
+  height: 6px;
+  width: 6px;
+  border-radius: 50%;
+  background-color: #259C72;
+}
+
+.sendbird-notification-channel__channel-icon-wrap {
+  position: absolute;
+  left: -32px;
+  top: 12px;
+}
+
+.sendbird-notification-channel__channel-icon {
+  display: inline-block;
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  padding-top: 4px;
+  padding-left: 6px;
+  // not change based on theme
+  background-color: #bdbdbd;
+}
+
+.sendbird-theme--dark {
+  .sendbird-notification-channel__channel-icon-hash {
+    .icon-channels_svg__fill {
+      // not change based on theme
+      fill: rgba(0, 0, 0, 0.88);
+    }
+  }
+}

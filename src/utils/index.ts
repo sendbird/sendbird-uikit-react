@@ -311,7 +311,7 @@ export const hasSameMembers = <T>(a: T[], b: T[]): boolean => {
 }
 export const isFriend = (user: User): boolean => !!(user.friendDiscoveryKey || user.friendName);
 
-export const filterMessageListParams = (params: MessageListParams, message: UserMessage | FileMessage): boolean => {
+export const filterMessageListParams = (params: MessageListParams, message: UserMessage | FileMessage | AdminMessage): boolean => {
   // @ts-ignore
   if (params?.messageTypeFilter && params.messageTypeFilter !== message.messageType) {
     return false;

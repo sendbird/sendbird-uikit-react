@@ -54,6 +54,7 @@ export default function PlaceHolder({
           type === PlaceHolderTypes.NO_CHANNELS
           || type === PlaceHolderTypes.NO_MESSAGES
           || type === PlaceHolderTypes.WRONG
+          || type === PlaceHolderTypes.NO_NOTIFICATIONS
         ) && (
           <div className="sendbird-place-holder__body">
             {
@@ -61,6 +62,17 @@ export default function PlaceHolder({
                 <Icon
                   className="sendbird-place-holder__body__icon"
                   type={IconTypes.CHAT}
+                  fillColor={IconColors.ON_BACKGROUND_3}
+                  width={iconSize || "64px"}
+                  height={iconSize || "64px"}
+                />
+              )
+            }
+            {
+              type === PlaceHolderTypes.NO_NOTIFICATIONS && (
+                <Icon
+                  className="sendbird-place-holder__body__icon"
+                  type={IconTypes.MESSAGE}
                   fillColor={IconColors.ON_BACKGROUND_3}
                   width={iconSize || "64px"}
                   height={iconSize || "64px"}
@@ -107,6 +119,11 @@ export default function PlaceHolder({
               {
                 type === PlaceHolderTypes.NO_MESSAGES && (
                   stringSet.PLACE_HOLDER__NO_MESSAGES
+                )
+              }
+              {
+                type === PlaceHolderTypes.NO_NOTIFICATIONS && (
+                  stringSet.PLACE_HOLDER__NO_NOTIFICATIONS
                 )
               }
             </Label>
