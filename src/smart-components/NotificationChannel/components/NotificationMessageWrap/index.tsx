@@ -16,7 +16,7 @@ import { useNotficationChannelContext } from '../../context/NotificationChannelP
 
 import { MessageTemplate, MessageProvider } from '@sendbird/react-uikit-message-template-view';
 
-const NotificationIcon = () => (
+const NotificationIcon = (): React.ReactElement => (
   <div className="sendbird-notification-channel__channel-icon-wrap">
     <div className="sendbird-notification-channel__channel-icon">
       <Icon
@@ -40,7 +40,7 @@ export default function NotificationMessageWrap({
   renderMessage,
   renderMessageHeader,
   message,
-}: Props) {
+}: Props): JSX.Element {
   const { dateLocale, stringSet } = useLocalization();
   const {
     lastSeen,

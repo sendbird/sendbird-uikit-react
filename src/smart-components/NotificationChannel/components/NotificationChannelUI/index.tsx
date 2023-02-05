@@ -24,7 +24,7 @@ export type NotificationChannelUIProps = {
   renderMessage?: renderMessage;
 }
 
-export default function index({
+const NotificationChannelUI: React.FC<NotificationChannelUIProps> = ({
   isLoading,
   renderPlaceholderLoader,
   renderPlaceholderInvalid,
@@ -32,7 +32,7 @@ export default function index({
   renderMessageHeader,
   renderHeader,
   renderMessage,
-}: NotificationChannelUIProps) {
+}: NotificationChannelUIProps): React.ReactElement => {
   const {
     uiState,
     showDeleteModal,
@@ -122,3 +122,5 @@ export default function index({
     </div>
   );
 }
+
+export default NotificationChannelUI;

@@ -4,7 +4,7 @@ import { fitPageSize } from '../../App/stories/utils';
 import Sendbird from '../../../lib/Sendbird';
 import { AppLayout } from './AppLayout';
 
-export const TestApp = () => {
+export const TestApp = (): JSX.Element => {
   const [isLoginPage, setIsLoginPage] = useState(true);
   const [userId, setUserId] = useState('');
   const [appId, setAppId] = useState('');

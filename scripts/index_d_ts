@@ -917,6 +917,8 @@ declare module "SendbirdUIKitGlobal" {
     customData?: string;
   }
 
+  export type NotificationFetchMoreCb = (value: [BaseMessage[] | null, Error | null]) => void;
+
   export type NotficationChannelStateInterface = {
     uiState: 'loading' | 'initialized' | 'invalid';
     allMessages: BaseMessage[];
@@ -942,7 +944,7 @@ declare module "SendbirdUIKitGlobal" {
       notificationsDispatcher: React.Dispatch<any>;
       oldestMessageTimeStamp: number;
       scrollRef: React.RefObject<HTMLDivElement>;
-      onFetchMore: (cb: any) => void;
+      onFetchMore: (cb: NotificationFetchMoreCb) => void;
     }
   export type RenderNotificationMessageProps = {
     message: BaseMessage;

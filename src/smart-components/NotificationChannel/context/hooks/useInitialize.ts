@@ -27,7 +27,7 @@ function useInitialize({
   notificationsDispatcher,
   sdk,
   logger,
-}: StaticParams) {
+}: StaticParams): void {
   useEffect(() => {
     if (sdkInit) {
       const messageListParams_: MessageListParams = {

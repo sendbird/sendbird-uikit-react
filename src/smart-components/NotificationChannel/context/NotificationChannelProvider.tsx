@@ -11,7 +11,7 @@ import useInitialize from './hooks/useInitialize';
 import { reducer } from './dux/reducers';
 import { BaseMessage, MessageListParams } from '@sendbird/chat/message';
 import useEventListener from './hooks/useEventListener';
-import useFetchMore from './hooks/useFetchMore';
+import useFetchMore, { NotificationFetchMoreCb } from './hooks/useFetchMore';
 import { actionTypes } from './dux/actionTypes';
 import { Action } from '@sendbird/uikit-message-template';
 
@@ -30,8 +30,8 @@ export interface NotficationChannelProviderInterface extends NotficationChannelS
     notificationsDispatcher: React.Dispatch<any>;
     oldestMessageTimeStamp: number;
     scrollRef: React.RefObject<HTMLDivElement>;
-    onFetchMore: (cb: any) => void;
-  };
+    onFetchMore: (cb: NotificationFetchMoreCb) => void;
+  }
 
 const NotficationChannelContext = React.createContext<NotficationChannelProviderInterface | null>(undefined);
 const NotficationChannelProvider: React.FC<NotficationChannelContextProps> = (

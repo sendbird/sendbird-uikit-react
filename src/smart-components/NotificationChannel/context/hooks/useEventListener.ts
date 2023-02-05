@@ -22,7 +22,7 @@ function useEventListener({ currentChannel, sdkInit }: DynamicParams, {
   notificationsDispatcher,
   sdk,
   logger,
-}: StaticParams) {
+}: StaticParams): void {
   useEffect(() => {
     const channelUrl = currentChannel?.url;
     const channelHandlerId = uuidv4();

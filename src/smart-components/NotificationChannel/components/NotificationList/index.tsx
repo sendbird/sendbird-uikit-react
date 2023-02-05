@@ -19,11 +19,11 @@ type Props = {
   renderPlaceholderEmpty?: () => React.ReactElement;
 }
 
-export default function NotificationList({
+const NotificationList: React.FC<Props> = ({
   renderMessage,
   renderMessageHeader,
   renderPlaceholderEmpty,
-}: Props) {
+}: Props): React.ReactElement => {
   const {
     allMessages,
     scrollRef,
@@ -97,3 +97,5 @@ export default function NotificationList({
     </div>
   );
 }
+
+export default NotificationList;

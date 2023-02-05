@@ -6,7 +6,7 @@ import { TestApp } from './TestApp';
 
 export default { title: 'NotficationChannel' };
 
-export const NotificationChannelComponenet = () => (
+export const NotificationChannelComponent = () => (
   <Sendbird
     appId={appId}
     userId={userId}

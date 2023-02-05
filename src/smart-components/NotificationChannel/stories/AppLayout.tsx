@@ -20,7 +20,7 @@ const getNotificationChannelUrl = (userId: string) => {
   return `SENDBIRD_NOTIFICATION_CHANNEL_NOTIFICATION_${userId}`;
 };
 
-export const CustomTitle = () => {
+export const CustomTitle = (): JSX.Element => {
   const [ notificationChannel, setNotificationChannel ] = useState<GroupChannel>(null);
   const [ isNotficationsOpen, setIsNotficationsOpen ] = useState(false);
   const [ unreadCount, setUnreadCount] = useState(0);

@@ -10,6 +10,9 @@ describe('NotificationChannel reducers', () => {
   it('should handle FETCH_CHANNEL_START', () => {
     expect(reducer(initialState, {
       type: actionTypes.FETCH_CHANNEL_START,
+      payload: {
+        messageListParams: null,
+      },
     })).toEqual({
       ...initialState,
       uiState: 'loading',

@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
-import { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import { actionTypes } from '../dux/actionTypes';
 import { Logger } from '../../../../lib/SendbirdState';
 import { Action } from '../dux/reducers';
-import { MessageListParams } from '@sendbird/chat/message';
+import { BaseMessage, MessageListParams } from '@sendbird/chat/message';
 
 type DynamicParams = {
   channel: GroupChannel;
@@ -18,11 +18,13 @@ type StaticParams = {
   logger: Logger;
 };
 
+export type NotificationFetchMoreCb = (value: [BaseMessage[] | null, Error | null]) => void;
+
 function useFetchMore({ channel, sdkInit, oldestMessageTimeStamp }: DynamicParams, {
   logger,
   notificationsDispatcher,
   messageListParams,
-}: StaticParams) {
+}: StaticParams): (cb: NotificationFetchMoreCb) => void {
   return useCallback((cb) => {
     logger.info('NotificationChannel: Fetching messages', { channel, messageListParams });
 
