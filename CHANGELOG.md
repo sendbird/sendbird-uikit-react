@@ -1,5 +1,81 @@
 # Changelog - v3
 
+## [v3.5.0-beta.0] (Feb 6 2023)
+
+### Notification Channel
+
+A notification channel is a new group channel dedicated to receiving one way marketing and transactional messages. To allow users to view messages sent through Sendbird Message Builder with the correct rendering, you need to implement the notification channel view using <NotificationChannel>
+
+Overview:
+* Provide new module `NotificationChannel`
+  * NotificationChannel
+    `import NotificationChannel from '@sendbird/uikit-react/NotificationChannel'`
+  props:
+    * channelUrl: string;
+    * children?: React.ReactElement;
+    // To customize Query
+    * messageListParams?: MessageListParams;
+    // Sets last seen externally
+    * lastSeen?: number;
+    // handles Actions sepcified in Message Templates
+    * handleWebAction?(event: React.SyntheticEvent, action: Action, message: BaseMessage): null;
+    * handleCustomAction?(event: React.SyntheticEvent, action: Action, message: BaseMessage): null;
+    * handlePredefinedAction?(event: React.SyntheticEvent, action: Action, message: BaseMessage): null;
+    // UI overrides
+    * isLoading?: boolean;
+    * renderPlaceholderLoader?: () => React.ReactElement;
+    * renderPlaceholderInvalid?: () => React.ReactElement;
+    * renderPlaceholderEmpty?: () => React.ReactElement;
+    * renderHeader?: () => React.ReactElement;
+    * renderMessageHeader?: ({ message }) => React.ReactElement;
+    * renderMessage?: ({ message }) => React.ReactElement;
+
+```
+example:
+export const NotificationChannelComponenet = () => (
+  <Sendbird
+    appId={appId}
+    userId={userId}
+    accessToken={accessToken}
+  >
+    <div style={{ height: '960px', width: '360px' }}>
+      <NotificationChannel
+        channelUrl={`SENDBIRD_NOTIFICATION_CHANNEL_NOTIFICATION_${userId}`}
+        renderPlaceholderLoader={() => <MyBrandLogo />};
+        handleCustomAction={(event, action, message) => {
+          ... implement custom action
+        }}
+      />
+    </div>
+  </Sendbird>
+);
+```
+* Submodules:
+  * Context
+    `import { NotficationChannelProvider useNotficationChannelContext } from '@sendbird/uikit-react/NotificationChannel/context'`
+    Handles business logic of Notification Channel
+  * NotificationChannelUI
+    `import NotificationChannelUI from '@sendbird/uikit-react/NotificationChannel/components/NotificationChannelUI'`
+    UI wrapper of Notification Channel
+  * NotificationMessageWrap
+    `import NotificationMessageWrap from '@sendbird/uikit-react/NotificationChannel/components/NotificationMessageWrap'`
+  * NotificationList
+    `import NotificationList from '@sendbird/uikit-react/NotificationChannel/components/NotificationList'`
+* External modules:
+  Unlike some of our other releases we decide to release some components into seperate packages to enahnce reusability with other platforms/projects
+  * MessageTemplateParser('@sendbird/react-message-template')
+    * MessageTemplate
+      `import { createMessageTemplate } from '@sendbird/react-message-template'`
+    * Parser
+      `import { createParser } from '@sendbird/react-message-template'`
+    * Renderer
+      `import { createRenderer } from '@sendbird/react-message-template'`
+  * MessageTemplateParser('@sendbird/react-message-template')
+    * Context
+      `import { MessageProvider, useMessageContext } from '@sendbird/react-uikit-message-template-view';`
+    * MessageTemplateView
+      `import { MessageTemplateView } from '@sendbird/react-uikit-message-template-view';`
+
 ## [v3.3.5] (Feb 3 2023)
 Features:
 * Voice Recorder&Player logic(not public yet)
