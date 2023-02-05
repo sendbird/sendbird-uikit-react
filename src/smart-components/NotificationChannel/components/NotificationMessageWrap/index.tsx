@@ -15,8 +15,6 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useNotficationChannelContext } from '../../context/NotificationChannelProvider';
 
 import { MessageTemplate, MessageProvider } from '@sendbird/react-uikit-message-template-view';
-// import { MessageTemplate } from "../../_externals/react-message-template-view/src/ui";
-// import { MessageProvider } from '../../_externals/react-message-template-view/src/context/MessageContextProvider';
 
 const NotificationIcon = () => (
   <div className="sendbird-notification-channel__channel-icon-wrap">

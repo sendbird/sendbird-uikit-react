@@ -13,7 +13,7 @@ import { BaseMessage, MessageListParams } from '@sendbird/chat/message';
 import useEventListener from './hooks/useEventListener';
 import useFetchMore from './hooks/useFetchMore';
 import { actionTypes } from './dux/actionTypes';
-import { Action } from '../_externals/message-template/src';
+import { Action } from '@sendbird/uikit-message-template';
 
 export type NotficationChannelContextProps = {
   channelUrl: string;

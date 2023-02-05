@@ -903,6 +903,79 @@ declare module "SendbirdUIKitGlobal" {
   }
 
   /**
+   * NotificationChannel
+   */
+  export enum ActionType {
+    Web = "web",
+    Custom = "custom",
+    UIKit = "uikit"
+  }
+
+  export interface Action {
+    type: ActionType;
+    data: string;
+    customData?: string;
+  }
+
+  export type NotficationChannelStateInterface = {
+    uiState: 'loading' | 'initialized' | 'invalid';
+    allMessages: BaseMessage[];
+    currentNotificationChannel: GroupChannel;
+    hasMore: boolean;
+    messageListParams?: MessageListParams;
+    lastSeen?: number;
+    showDeleteModal: boolean;
+    messageToDelete?: BaseMessage;
+  }
+
+  export type NotficationChannelContextProps = {
+    channelUrl: string;
+    children?: React.ReactElement;
+    messageListParams?: MessageListParams;
+    lastSeen?: number;
+    handleWebAction?(event: React.SyntheticEvent, action: Action, message: BaseMessage);
+    handleCustomAction?(event: React.SyntheticEvent, action: Action, message: BaseMessage);
+    handlePredefinedAction?(event: React.SyntheticEvent, action: Action, message: BaseMessage);
+  };
+  export interface NotficationChannelProviderInterface extends NotficationChannelStateInterface,
+    NotficationChannelContextProps {
+      notificationsDispatcher: React.Dispatch<any>;
+      oldestMessageTimeStamp: number;
+      scrollRef: React.RefObject<HTMLDivElement>;
+      onFetchMore: (cb: any) => void;
+    }
+  export type RenderNotificationMessageProps = {
+    message: BaseMessage;
+  }
+
+  export type renderNotificationMessage = (props: RenderNotificationMessageProps) => React.ReactElement;
+  export type renderNotificationMessageHeader = (props: RenderNotificationMessageProps) => React.ReactElement;
+
+  export type NotificationChannelUIProps = {
+    isLoading?: boolean;
+    renderPlaceholderLoader?: () => React.ReactElement;
+    renderPlaceholderInvalid?: () => React.ReactElement;
+    renderPlaceholderEmpty?: () => React.ReactElement;
+    renderHeader?: () => React.ReactElement;
+    renderMessageHeader?: renderNotificationMessageHeader;
+    renderMessage?: renderNotificationMessage;
+  }
+
+  export type NotificationListProps = {
+    renderMessage?: renderNotificationMessage;
+    renderMessageHeader?: renderNotificationMessageHeader;
+    renderPlaceholderEmpty?: () => React.ReactElement;
+  }
+
+  export type NotificationMessageWrapProps = {
+    renderMessage?: renderNotificationMessage;
+    renderMessageHeader?: renderNotificationMessageHeader;
+    message: BaseMessage;
+  }
+
+  export interface NotificationChannelProps extends NotificationChannelUIProps, NotficationChannelContextProps {}
+
+  /**
    * Thread
    */
   export enum ChannelStateTypes {
@@ -1508,6 +1581,39 @@ declare module '@sendbird/uikit-react/MessageSearch/components/MessageSearchUI' 
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
   const MessageSearchUI: React.FC<SendbirdUIKitGlobal.MessageSearchUIProps>;
   export default MessageSearchUI;
+}
+
+/**
+ * NotificationChannel
+ */
+declare module '@sendbird/uikit-react/NotificationChannel' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  const NotificationChannel: React.FC<SendbirdUIKitGlobal.NotificationChannelProps>;
+  export default NotificationChannel;
+}
+
+declare module '@sendbird/uikit-react/NotificationChannel/context' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  export const useNotficationChannelContext: () => SendbirdUIKitGlobal.NotficationChannelProviderInterface;
+  export const NotficationChannelProvider: React.FC<SendbirdUIKitGlobal.NotficationChannelContextProps>;
+}
+
+declare module '@sendbird/uikit-react/NotificationChannel/components/NotificationChannelUI' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  const NotificationChannelUI: React.FC<SendbirdUIKitGlobal.NotificationChannelUIProps>;
+  export default NotificationChannelUI;
+}
+
+declare module '@sendbird/uikit-react/NotificationChannel/components/NotificationList' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  const NotificationList: React.FC<SendbirdUIKitGlobal.NotificationListProps>;
+  export default NotificationList;
+}
+
+declare module '@sendbird/uikit-react/NotificationChannel/components/NotificationMessageWrap' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  const NotificationMessageWrap: React.FC<SendbirdUIKitGlobal.NotificationMessageWrapProps>;
+  export default NotificationMessageWrap;
 }
 
 /**
