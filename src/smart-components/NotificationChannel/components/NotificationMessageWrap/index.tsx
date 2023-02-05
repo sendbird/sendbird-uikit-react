@@ -1,3 +1,4 @@
+import '@sendbird/react-uikit-message-template-view/dist/index.css';
 import './notification-message-wrap.scss';
 
 import React, { useMemo } from "react";
