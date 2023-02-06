@@ -37,11 +37,14 @@ export const useSendVoiceMessageCallback = ({
       : {
         file,
         fileName: 'Voice message',
-        mimeType: 'voice/mp3',
         metaArrays: [
           new MessageMetaArray({
             key: 'KEY_VOICE_MESSAGE_DURATION',
             value: [`${duration}`],
+          }),
+          new MessageMetaArray({
+            key: 'KEY_INTERNAL_MESSAGE_TYPE',
+            value: ['voice/mp3'],
           })
         ],
       };

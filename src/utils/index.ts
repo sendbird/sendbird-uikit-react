@@ -157,7 +157,7 @@ export const isGifMessage = (message: UserMessage | FileMessage): boolean => (
 );
 export const isAudioMessage = (message: FileMessage): boolean => message && isFileMessage(message) && isAudio(message.type);
 export const isVoiceMessage = (message: FileMessage): boolean => (
-  message && isFileMessage(message) && /^voice\//.test(message.type)
+  message && isFileMessage(message) && /^voice\//.test(message.metaArrays.find((metaArray) => metaArray.key === 'KEY_INTERNAL_MESSAGE_TYPE')?.value?.[0])
 );
 
 export const isEditedMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => isUserMessage(message) && (message?.updatedAt > 0);
