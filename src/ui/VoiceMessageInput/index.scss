@@ -78,9 +78,16 @@
   @include themed() {
     background-color: t(primary-3);
   }
-
   &:hover {
     cursor: pointer;
+  }
+}
+.sendbird-voice-message-input__controler__submit.voice-message--disabled {
+  @include themed() {
+    background-color: t(bg-1);
+  }
+  &:hover {
+    cursor: default;
   }
 }
 

@@ -15,6 +15,7 @@ export function changeColorToClassName(color: Colors): string {
     case Colors.ON_BACKGROUND_1: return 'sendbird-icon-color--on-background-1';
     case Colors.ON_BACKGROUND_2: return 'sendbird-icon-color--on-background-2';
     case Colors.ON_BACKGROUND_3: return 'sendbird-icon-color--on-background-3';
+    case Colors.ON_BACKGROUND_4: return 'sendbird-icon-color--on-background-4';
     case Colors.BACKGROUND_3: return 'sendbird-icon-color--background-3';
     case Colors.ERROR: return 'sendbird-icon-color--error';
     default: return '';

@@ -14,6 +14,7 @@ export interface VoiceMessageInputProps {
   onSubmitClick?: () => void;
   maxSize: number;
   inputState: VoiceMessageInputStatus;
+  minRecordingTime?: number;
   onRecordClick?: () => void;
   onRecordStopClick?: () => void;
   onPlayClick?: () => void;
@@ -35,6 +36,7 @@ export const VoiceMessageInput = ({
   onSubmitClick,
   maxSize = 60000,
   inputState = VoiceMessageInputStatus.READY_TO_RECORD,
+  minRecordingTime = 1000,
   onRecordClick,
   onRecordStopClick,
   onPlayClick,
@@ -42,10 +44,12 @@ export const VoiceMessageInput = ({
 }: VoiceMessageInputProps): React.ReactElement => {
   const { stringSet } = useContext(LocalizationContext);
 
-  // Progress bar
   const [inProgress, setInProgress] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [isSendable, setSendable] = useState(false);
   const [frame, setFrame] = useState(0);
+  
+  // Progress bar
+  const [progress, setProgress] = useState(0);
   useEffect(() => {
     // device progress bar to progressFrame value
     const progressFrame = maxSize / 8;
@@ -92,6 +96,15 @@ export const VoiceMessageInput = ({
       clearInterval(counter);
     }
   }, [inProgress]);
+
+  // minRecordingTime
+  useEffect(() => {
+    if (inputState === VoiceMessageInputStatus.RECORDING && playbackTime > minRecordingTime) {
+      setSendable(true);
+    } else {
+      setSendable(false);
+    }
+  }, [playbackTime]);
 
   return (
     <div className="sendbird-voice-message-input">
@@ -159,14 +172,18 @@ export const VoiceMessageInput = ({
           <ControlerIcon inputState={inputState} />
         </div>
         <div
-          className="sendbird-voice-message-input__controler__submit"
-          onClick={onSubmitClick}
+          className={`sendbird-voice-message-input__controler__submit ${isSendable ? '' : 'voice-message--disabled'}`}
+          onClick={() => {
+            if (isSendable) {
+              onSubmitClick()
+            }
+          }}
         >
           <Icon
             width="19px"
             height="19px"
             type={IconTypes.SEND}
-            fillColor={IconColors.CONTENT}
+            fillColor={isSendable ? IconColors.CONTENT : IconColors.ON_BACKGROUND_4}
           />
         </div>
       </div>
