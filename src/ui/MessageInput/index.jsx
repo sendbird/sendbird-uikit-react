@@ -493,7 +493,7 @@ const MessageInput = React.forwardRef((props, ref) => {
             onClick={onVoiceMessageIconClick}
           >
             <Icon
-              type={IconTypes.INFO}
+              type={IconTypes.AUDIO_ON_LINED}
               fillColor={IconColors.CONTENT_INVERSE}
               width="20px"
               height="20px"
