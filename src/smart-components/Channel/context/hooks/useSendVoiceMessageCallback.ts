@@ -36,7 +36,7 @@ export const useSendVoiceMessageCallback = ({
       ? onBeforeSendVoiceMessage(file, quoteMessage)
       : {
         file,
-        fileName: 'Voice message',
+        fileName: 'Voice message.mp3',
         metaArrays: [
           new MessageMetaArray({
             key: 'KEY_VOICE_MESSAGE_DURATION',
