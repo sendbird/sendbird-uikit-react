@@ -1,7 +1,8 @@
-export default {
+export const Types = {
   ADD: 'ADD',
   ARROW_LEFT: 'ARROW_LEFT',
   ATTACH: 'ATTACH',
+  AUDIO_ON_LINED: 'AUDIO_ON_LINED',
   BAN: 'BAN',
   BROADCAST: 'BROADCAST',
   CAMERA: 'CAMERA',
@@ -54,4 +55,5 @@ export default {
   TOGGLE_OFF: 'TOGGLE_OFF',
   TOGGLE_ON: 'TOGGLE_ON',
   USER: 'USER',
-};
+} as const;
+export type Types = typeof Types[keyof typeof Types];
