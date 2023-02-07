@@ -8,6 +8,7 @@ export enum ProgressBarColorTypes {
 
 export interface ProgressBarProps {
   className?: string;
+  disabled?: boolean;
   maxSize: number;
   currentSize: number;
   colorType?: ProgressBarColorTypes;
@@ -15,6 +16,7 @@ export interface ProgressBarProps {
 
 export const ProgressBar = ({
   className ='',
+  disabled = false,
   maxSize,
   currentSize,
   colorType = ProgressBarColorTypes.PRIMARY,
@@ -23,7 +25,7 @@ export const ProgressBar = ({
     return `${currentSize / maxSize * 100}%`;
   }, [currentSize, maxSize]);
   return (
-    <div className={`sendbird-progress-bar ${className} ${colorType}`}>
+    <div className={`sendbird-progress-bar ${className} ${colorType} ${disabled ? 'progress-bar--disabled' : ''}`}>
       <div className="sendbird-progress-bar__fill" style={{ width }} />
     </div>
   );

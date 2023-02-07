@@ -85,8 +85,12 @@ export const VoiceMessageInputWrapper = ({
         onRecordClick={() => {
           start();
         }}
-        onRecordStopClick={() => {
-          stop();
+        onRecordStopClick={(playbackTime) => {
+          if (playbackTime >= 1000) {
+            stop();
+          } else {
+            setVoiceInputState(VoiceMessageInputStatus.READY_TO_RECORD);
+          }
         }}
         onPlayClick={() => {
           play(currentAudioFile);

@@ -16,7 +16,7 @@ export interface VoiceMessageInputProps {
   inputState: VoiceMessageInputStatus;
   minRecordingTime?: number;
   onRecordClick?: () => void;
-  onRecordStopClick?: () => void;
+  onRecordStopClick?: (time: number) => void;
   onPlayClick?: () => void;
   onPauseClick?: () => void;
 }
@@ -47,7 +47,7 @@ export const VoiceMessageInput = ({
   const [inProgress, setInProgress] = useState(false);
   const [isSendable, setSendable] = useState(false);
   const [frame, setFrame] = useState(0);
-  
+
   // Progress bar
   const [progress, setProgress] = useState(0);
   useEffect(() => {
@@ -99,12 +99,20 @@ export const VoiceMessageInput = ({
 
   // minRecordingTime
   useEffect(() => {
-    if (inputState === VoiceMessageInputStatus.RECORDING && playbackTime > minRecordingTime) {
-      setSendable(true);
-    } else {
+    if (inputState === VoiceMessageInputStatus.PREPARING || inputState === VoiceMessageInputStatus.READY_TO_RECORD) {
       setSendable(false);
     }
-  }, [playbackTime]);
+    if (inputState === VoiceMessageInputStatus.RECORDING) {
+      if (playbackTime >= minRecordingTime) {
+        setSendable(true);
+      } else {
+        setSendable(false);
+      }
+    }
+    if (inputState === VoiceMessageInputStatus.READY_TO_PLAY || inputState === VoiceMessageInputStatus.PLAYING) {
+      setSendable(true);
+    }
+  }, [inputState, playbackTime]);
 
   return (
     <div className="sendbird-voice-message-input">
@@ -112,6 +120,7 @@ export const VoiceMessageInput = ({
         <div className="sendbird-voice-message-input__indicator__progress-bar">
           <ProgressBar
             className="sendbird-voice-message-input__indicator__progress-bar__bar"
+            disabled={inputState === VoiceMessageInputStatus.PREPARING || inputState === VoiceMessageInputStatus.READY_TO_RECORD}
             maxSize={maxSize}
             currentSize={progress}
           />
@@ -151,7 +160,7 @@ export const VoiceMessageInput = ({
                 break;
               }
               case VoiceMessageInputStatus.RECORDING: {
-                onRecordStopClick();
+                onRecordStopClick(playbackTime);
                 clearProgressBar();
                 break;
               }

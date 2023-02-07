@@ -21,8 +21,11 @@
     background-color: t(primary-3);
   }
 }
-.progress-bar-color--gray {
+.sendbird-progress-bar.progress-bar--disabled, .progress-bar-color--gray {
   @include themed() {
     background-color: t(bg-1);
   }
+}
+.sendbird-progress-bar.progress-bar--disabled .sendbird-progress-bar__fill {
+  background-color: transparent;
 }
