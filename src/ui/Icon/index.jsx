@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import './index.scss';
-import { Types } from './type.ts';
-import { Colors } from './colors.ts';
+import { Types } from './type';
+import { Colors } from './colors';
 import {
   changeColorToClassName,
   changeTypeToIconClassName,
-} from './utils.ts';
+} from './utils';
 
 import IconAdd from '../../svgs/icon-add.svg';
 import IconArrowLeft from '../../svgs/icon-arrow-left.svg';

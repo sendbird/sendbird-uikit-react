@@ -1,7 +1,7 @@
 import { Types } from './type';
 import { Colors } from './colors';
 
-export function changeColorToClassName(color: Colors) {
+export function changeColorToClassName(color: Colors): string {
   switch (color) {
     case Colors.PRIMARY: return 'sendbird-icon-color--primary';
     case Colors.PRIMARY_2: return 'sendbird-icon-color--primary-2';
@@ -21,7 +21,7 @@ export function changeColorToClassName(color: Colors) {
   }
 }
 
-export function changeTypeToIconClassName(type: Types) {
+export function changeTypeToIconClassName(type: Types): string {
   switch (type) {
     case Types.ADD: return 'sendbird-icon-add';
     case Types.ARROW_LEFT: return 'sendbird-icon-arrow-left';
