@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { LabelTypography } from '../../Label';
 import PlaybackTime from '../index';
 
 const description = `
@@ -20,18 +19,21 @@ export default {
 
 let counter = null;
 export const Basic = () => {
-    // PlaybackTime
-    const [isCounting, setIsCounting] = useState(false);
-    const [playbackTime, setPlaybackTime] = useState(60000);
-    useEffect(() => {
-      if (isCounting) {
-        counter = setInterval(() => {
-          setPlaybackTime((prev) => prev + 1000);
-        }, 1000);
-      } else {
-        clearInterval(counter);
-      }
-    }, [isCounting]);
+  const PERIOD = 10;
+  const INIT_VALUE = 60000;// start from 1 min
+
+  // PlaybackTime
+  const [isCounting, setIsCounting] = useState(false);
+  const [playbackTime, setPlaybackTime] = useState(INIT_VALUE);
+  useEffect(() => {
+    if (isCounting) {
+      counter = setInterval(() => {
+        setPlaybackTime((prev) => prev + 1000);// count up 1 sec
+      }, PERIOD);
+    } else {
+      clearInterval(counter);
+    }
+  }, [isCounting]);
 
   return (
     <div
