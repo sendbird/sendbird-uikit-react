@@ -110,7 +110,9 @@ export const VoiceMessageInput = ({
         }
         <PlaybackTime
           className="sendbird-voice-message-input__indicator__playback-time"
-          time={playbackTime}
+          time={((inputState === VoiceMessageInputStatus.READY_TO_PLAY || inputState === VoiceMessageInputStatus.PLAYING)
+            ? maxSize - playbackTime : playbackTime
+          )}
         />
       </div>
       <div className="sendbird-voice-message-input__controler">

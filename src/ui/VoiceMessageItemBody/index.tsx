@@ -150,7 +150,7 @@ export const VoiceMessageItemBody = ({
         className="sendbird-voice-message-item-body__playback-time"
         time={
           (audioState === VoiceMessageItemStatus.PLAYING)
-          ? playbackTime : progresBarMaxSize
+          ? progresBarMaxSize - playbackTime : progresBarMaxSize
         }
         labelType={LabelTypography.BODY_1}
         labelColor={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
