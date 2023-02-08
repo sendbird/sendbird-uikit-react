@@ -51,6 +51,6 @@ export const useVoicePlayer = ({
   return ({
     play,
     pause,
-    playbackTime: currentPlaybackTime * 1000,// convert to milliseconds
+    playbackTime: Math.floor(currentPlaybackTime * 1000),// convert to milliseconds
   });
 };

@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+
+import SendbirdProvider from '../../../lib/Sendbird';
+
 import { VoiceRecorderProvider } from '../index';
 import { useVoiceRecorder } from '../useVoiceRecorder';
 import { VoicePlayerProvider } from '../../useVoicePlayer/index';
@@ -82,11 +85,16 @@ const Tester = () => {
 export const normal = () => {
   return (
     <div>
-      <VoiceRecorderProvider>
-        <VoicePlayerProvider>
-          <Tester />
-        </VoicePlayerProvider>
-      </VoiceRecorderProvider>
+      <SendbirdProvider
+        appId={process.env.STORYBOOK_APP_ID}
+        userId="hoon"
+      >
+        <VoiceRecorderProvider>
+          <VoicePlayerProvider>
+            <Tester />
+          </VoicePlayerProvider>
+        </VoiceRecorderProvider>
+      </SendbirdProvider>
     </div>
   );
 };
