@@ -143,6 +143,7 @@ const MessageInputWrapper = (
         showVoiceMessageInput
           ? (
             <VoiceMessageInputWrapper
+              channel={channel}
               onSubmitClick={(recordedFile, duration) => {
                 sendVoiceMessage(recordedFile, duration, quoteMessage);
                 setQuoteMessage(null);

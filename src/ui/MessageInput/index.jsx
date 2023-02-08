@@ -439,7 +439,7 @@ const MessageInput = React.forwardRef((props, ref) => {
           <Label
             className="sendbird-message-input--placeholder"
             type={LabelTypography.BODY_1}
-            color={LabelColors.ONBACKGROUND_3}
+            color={disabled? LabelColors.ONBACKGROUND_4 : LabelColors.ONBACKGROUND_3}
           >
             {placeholder || stringSet.MESSAGE_INPUT__PLACE_HOLDER}
           </Label>
@@ -453,11 +453,16 @@ const MessageInput = React.forwardRef((props, ref) => {
               width="32px"
               onClick={() => sendMessage()}
             >
-              <Icon type={IconTypes.SEND} fillColor={IconColors.PRIMARY} width="20px" height="20px" />
+              <Icon
+                type={IconTypes.SEND}
+                fillColor={disabled ? IconColors.ON_BACKGROUND_4 : IconColors.PRIMARY}
+                width="20px"
+                height="20px"
+              />
             </IconButton>
           )
         }
-        {/* upload icon */}
+        {/* file upload icon */}
         {
           (!isEdit && !isInput) && (
             <IconButton
@@ -471,7 +476,7 @@ const MessageInput = React.forwardRef((props, ref) => {
             >
               <Icon
                 type={IconTypes.ATTACH}
-                fillColor={IconColors.CONTENT_INVERSE}
+                fillColor={disabled ? IconColors.ON_BACKGROUND_4 : IconColors.CONTENT_INVERSE}
                 width="20px"
                 height="20px"
               />
@@ -494,7 +499,7 @@ const MessageInput = React.forwardRef((props, ref) => {
           >
             <Icon
               type={IconTypes.AUDIO_ON_LINED}
-              fillColor={IconColors.CONTENT_INVERSE}
+              fillColor={disabled ? IconColors.ON_BACKGROUND_4 : IconColors.CONTENT_INVERSE}
               width="20px"
               height="20px"
             />

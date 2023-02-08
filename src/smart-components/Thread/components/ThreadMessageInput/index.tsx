@@ -114,6 +114,7 @@ const ThreadMessageInput = (
         showVoiceMessageInput
           ? (
             <VoiceMessageInputWrapper
+              channel={currentChannel}
               onSubmitClick={(recordedFile, duration) => {
                 sendVoiceMessage(recordedFile, duration, parentMessage);
                 setShowVoiceMessageInput(false);

@@ -55,9 +55,6 @@
     font-family: var(--sendbird-font-family-default);
     font-size: 14px;
     line-height: 1.43;
-    @include themed() {
-      color: t(on-bg-3);
-    }
   }
 
   .sendbird-message-input--attach {
@@ -125,12 +122,8 @@
   cursor: disabled;
   .sendbird-message-input--textarea {
     @include themed() {
-      background-color: t(bg-1);
-    }
-  }
-  svg {
-    @include themed() {
-      fill: t(on-bg-3);
+      color: t(on-bg-4);
+      border: 1px solid t(on-bg-4);
     }
   }
 }
