@@ -63,15 +63,11 @@ export default function Sendbird(props) {
     isREMUnitEnabled = false,
   } = config;
   const [logger, setLogger] = useState(LoggerFactory(logLevel));
-  const [pubSub, setPubSub] = useState();
+  const [pubSub] = useState(pubSubFactory());
   const [sdkStore, sdkDispatcher] = useReducer(sdkReducers, sdkInitialState);
   const [userStore, userDispatcher] = useReducer(userReducers, userInitialState);
 
   useTheme(colorSet);
-
-  useEffect(() => {
-    setPubSub(pubSubFactory());
-  }, []);
 
   useEffect(() => {
     logger.info('App Init');
