@@ -5,7 +5,7 @@ import './voice-message-wrapper.scss';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useVoicePlayer } from '../../../../hooks/useVoicePlayer/useVoicePlayer';
-import { useVoiceRecorder } from '../../../../hooks/useVoiceRecorder/useVoiceRecorder';
+import { useVoiceRecorder } from '../../../../hooks/VoiceRecorder/useVoiceRecorder';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../context/utils';
 
 import VoiceMessageInput, { VoiceMessageInputStatus } from '../../../../ui/VoiceMessageInput/index2';
