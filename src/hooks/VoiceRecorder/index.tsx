@@ -64,12 +64,12 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
     }
   }, [mediaRecorder, currentStream]);
 
-  const stop = (): void => {
+  const stop = useCallback((): void => {
     // Stop recording
     mediaRecorder?.stop();
     setMediaRecorder(null);
     // TODO: logger
-  };
+  }, [mediaRecorder]);
 
   return (
     <VoiceRecorderContext.Provider value={{

@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import './voice-message-wrapper.scss';
 
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
-import { useVoicePlayer } from '../../../../hooks/VoicePlayer/useVoicePlayer2';
-import { useVoiceRecorder } from '../../../../hooks/VoiceRecorder/useVoiceRecorder';
+import { useVoicePlayer } from '../../../../hooks/VoicePlayer/useVoicePlayer';
+import { useVoiceRecorder, VoiceRecorderStatus } from '../../../../hooks/VoiceRecorder/useVoiceRecorder';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../context/utils';
 
-import VoiceMessageInput, { VoiceMessageInputStatus } from '../../../../ui/VoiceMessageInput/index2';
+import { VoiceMessageInput, VoiceMessageInputStatus } from '../../../../ui/VoiceMessageInput';
 import Modal from '../../../../ui/Modal';
 import Button, { ButtonSizes, ButtonTypes } from '../../../../ui/Button';
 
@@ -18,39 +17,41 @@ export interface VoiceMessageInputWrapperProps {
   onSubmitClick?: (file: File, duration: number) => void;
 }
 
+const VOICE_MESSAGE_INPUT_KEY = 'voice-message-input';
 export const VoiceMessageInputWrapper = ({
   channel,
   onCancelClick,
   onSubmitClick,
 }: VoiceMessageInputWrapperProps): React.ReactElement => {
-  const [currentAudioFile, setAudioFile] = useState(null);
-  const [audioDuration, setDuration] = useState(0);
-  const [voiceInputState, setVoiceInputState] = useState(VoiceMessageInputStatus.READY_TO_RECORD);
-  const [isRecording, setIsRecording] = useState(true);
+  const [audioFile, setAudioFile] = useState<File>(null);
+  const [voiceInputState, setVoiceInputState] = useState<VoiceMessageInputStatus>(VoiceMessageInputStatus.READY_TO_RECORD);
   const [isSubmited, setSubmit] = useState(false);
   const [isDisabled, setDisabled] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { stringSet } = useLocalization();
-  const { config } = useSendbirdStateContext();
-  const { voiceRecord } = config;
-  const { maxRecordingTime } = voiceRecord;
   const {
     start,
     stop,
+    cancel,
     recordingTime,
+    recordingStatus,
+    recordingLimit,
   } = useVoiceRecorder({
     onRecordingStarted: () => {
       setVoiceInputState(VoiceMessageInputStatus.RECORDING);
     },
-    onRecordingEnded: (recordedFile) => {
-      setAudioFile(recordedFile);
-      setVoiceInputState(VoiceMessageInputStatus.READY_TO_PLAY);
+    onRecordingEnded: (audioFile) => {
+      setAudioFile(audioFile);
     },
   });
   const {
     play,
     pause,
+    playbackTime,
   } = useVoicePlayer({
+    channelUrl: channel?.url,
+    key: VOICE_MESSAGE_INPUT_KEY,
+    audioFile: audioFile,
     onPlayingStarted: () => {
       setVoiceInputState(VoiceMessageInputStatus.PLAYING);
     },
@@ -69,34 +70,25 @@ export const VoiceMessageInputWrapper = ({
   }, [channel?.myRole, channel?.isFrozen, channel?.myMutedState]);
 
   useEffect(() => {
-    if (voiceInputState === VoiceMessageInputStatus.READY_TO_RECORD
-      || voiceInputState === VoiceMessageInputStatus.RECORDING
-    ) {
-      setIsRecording(true);
-    } else {
-      setIsRecording(false);
+    if (isSubmited && audioFile) {
+      onSubmitClick(audioFile, recordingTime);
     }
-
-    if (voiceInputState === VoiceMessageInputStatus.READY_TO_PLAY) {
-      setDuration(recordingTime);
+    if (audioFile) {
+      if (recordingTime < 1000) {
+        setVoiceInputState(VoiceMessageInputStatus.READY_TO_RECORD);
+        setAudioFile(null);
+      } else {
+        setVoiceInputState(VoiceMessageInputStatus.READY_TO_PLAY);
+      }
     }
-  }, [voiceInputState]);
-  useEffect(() => {
-    if (isSubmited && currentAudioFile) {
-      onSubmitClick(currentAudioFile, recordingTime);
-    }
-  }, [isSubmited, currentAudioFile, recordingTime]);
-  useEffect(() => {
-    if (recordingTime >= maxRecordingTime) {
-      stop();
-    }
-  }, [recordingTime, maxRecordingTime]);
+  }, [isSubmited, audioFile, recordingTime]);
 
   return (
     <div className="sendbird-voice-message-input-wrapper">
       <VoiceMessageInput
-        maxSize={isRecording ? maxRecordingTime : audioDuration}
-        inputState={voiceInputState}
+        currentValue={recordingStatus === VoiceRecorderStatus.COMPLETED ? playbackTime : recordingTime}
+        maximumValue={recordingStatus === VoiceRecorderStatus.COMPLETED ? recordingTime : recordingLimit}
+        currentType={voiceInputState}
         onCancelClick={onCancelClick}
         onSubmitClick={() => {
           if (isDisabled) {
@@ -107,24 +99,34 @@ export const VoiceMessageInputWrapper = ({
             setSubmit(true);
           }
         }}
-        onRecordClick={() => {
-          start();
-        }}
-        onRecordStopClick={(playbackTime) => {
-          if (playbackTime >= 1000 && !isDisabled) {
-            stop();
-          } else if (isDisabled) {
-            setShowModal(true);
-            setVoiceInputState(VoiceMessageInputStatus.READY_TO_RECORD);
-          } else {
-            setVoiceInputState(VoiceMessageInputStatus.READY_TO_RECORD);
+        onControlClick={(type) => {
+          switch (type) {
+            case VoiceMessageInputStatus.READY_TO_RECORD: {
+              start();
+              break;
+            }
+            case VoiceMessageInputStatus.RECORDING: {
+              if (recordingTime >= 1000 && !isDisabled) {
+                stop();
+              } else if (isDisabled) {
+                cancel();
+                setShowModal(true);
+                setVoiceInputState(VoiceMessageInputStatus.READY_TO_RECORD);
+              } else {
+                cancel();
+                setVoiceInputState(VoiceMessageInputStatus.READY_TO_RECORD);
+              }
+              break;
+            }
+            case VoiceMessageInputStatus.READY_TO_PLAY: {
+              play();
+              break;
+            }
+            case VoiceMessageInputStatus.PLAYING: {
+              pause();
+              break;
+            }
           }
-        }}
-        onPlayClick={() => {
-          play(currentAudioFile);
-        }}
-        onPauseClick={() => {
-          pause();
         }}
       />
       {

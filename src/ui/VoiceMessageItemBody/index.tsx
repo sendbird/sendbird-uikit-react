@@ -4,7 +4,7 @@ import { FileMessage } from '@sendbird/chat/message';
 import './index.scss';
 
 import ProgressBar, { ProgressBarColorTypes } from '../ProgressBar';
-import { useVoicePlayer } from '../../hooks/VoicePlayer/useVoicePlayer2';
+import { useVoicePlayer } from '../../hooks/VoicePlayer/useVoicePlayer';
 import PlaybackTime from '../PlaybackTime';
 import Loader from '../Loader';
 import Icon, { IconTypes, IconColors } from '../Icon';

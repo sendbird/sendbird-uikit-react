@@ -18,6 +18,7 @@ export type VoiceRecorderStatus = typeof VoiceRecorderStatus[keyof typeof VoiceR
 export interface UseVoiceRecorderContext {
   start: () => void;
   stop: () => void;
+  cancel: () => void;
   recordingLimit: number;
   recordingTime: number;
   recordedFile: File;
@@ -44,28 +45,6 @@ export const useVoiceRecorder = ({
     }
   }, [isRecordable]);
 
-  // Timer
-  const [recordingTime, setRecordingTime] = useState<number>(0);
-  let timer: NodeJS.Timer = null;
-  const startTimer = () => {
-    stopTimer();
-    setRecordingTime(0);
-    const interval = setInterval(() => {
-      setRecordingTime(prevTime => {
-        const newTime = prevTime + 100;
-        if (newTime > maxRecordingTime) {
-          stopTimer();
-        }
-        return newTime;
-      });
-    }, 100);
-    timer = interval;
-  };
-  const stopTimer = () => {
-    clearInterval(timer);
-    timer = null;
-  };
-
   const start = useCallback(() => {
     voiceRecorder?.start({
       onRecordingStarted: () => {
@@ -83,11 +62,44 @@ export const useVoiceRecorder = ({
   }, [onRecordingStarted, onRecordingEnded]);
   const stop = useCallback(() => {
     voiceRecorder?.stop();
+    stopTimer();
   }, [voiceRecorder]);
+  const cancel = useCallback(() => {
+    stop();
+    setRecordedFile(null);
+  }, [voiceRecorder]);
+
+  // Timer
+  const [recordingTime, setRecordingTime] = useState<number>(0);
+  let timer: NodeJS.Timer = null;
+  function startTimer() {
+    stopTimer();
+    setRecordingTime(0);
+    const interval = setInterval(() => {
+      setRecordingTime(prevTime => {
+        const newTime = prevTime + 100;
+        if (newTime > maxRecordingTime) {
+          stopTimer();
+        }
+        return newTime;
+      });
+    }, 100);
+    timer = interval;
+  }
+  function stopTimer() {
+    clearInterval(timer);
+    timer = null;
+  }
+  useEffect(() => {
+    if (recordingTime > maxRecordingTime) {
+      stop();
+    }
+  }, [recordingTime, maxRecordingTime, stop]);
 
   return ({
     start,
     stop,
+    cancel,
     recordingStatus,
     recordingTime,
     recordedFile,

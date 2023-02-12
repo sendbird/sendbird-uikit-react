@@ -104,11 +104,7 @@ export const normal = () => {
         appId={process.env.STORYBOOK_APP_ID}
         userId="hoon"
       >
-        <VoiceRecorderProvider>
-          <VoicePlayerProvider>
-            <Tester />
-          </VoicePlayerProvider>
-        </VoiceRecorderProvider>
+        <Tester />
       </SendbirdProvider>
     </div>
   );
