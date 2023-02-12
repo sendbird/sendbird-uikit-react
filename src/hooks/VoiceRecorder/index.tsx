@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 // Input props of VoiceRecorder
 export interface VoiceRecorderProps {
@@ -14,11 +14,13 @@ export interface VoiceRecorderEventHandler {
 export interface VoiceRecorderContext {
   start: (eventHandler?: VoiceRecorderEventHandler) => void,
   stop: () => void,
+  isRecordable: boolean;
 }
 const noop = () => {/* noop */ };
 const VoiceRecorderContext = createContext<VoiceRecorderContext>({
   start: noop,
   stop: noop,
+  isRecordable: false,
 });
 
 export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactElement => {
@@ -27,42 +29,44 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
 
   const { children } = props;
 
-  const start = (eventHandler: VoiceRecorderEventHandler): void => {
-    if (currentStream && mediaRecorder) {
-      stop();
-    }
-
-    // Getting the mic permission, stream
+  useEffect(() => {
     navigator?.mediaDevices?.getUserMedia?.({ audio: true })
       .then((stream) => {
         setCurrentStream(stream);
-        // Start recording
-        const mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.ondataavailable = (e) => {// when recording stops
-          // Generate audio file
-          const audioFile = new File([e.data], 'Voice message', {
-            lastModified: new Date().getTime(),
-            type: 'audio/mpeg',
-          });
-          eventHandler?.onRecordingEnded(audioFile);
-        };
-        mediaRecorder?.start();
-        setMediaRecorder(mediaRecorder);
-        eventHandler?.onRecordingStarted();
-        // TODO: logger
       })
       .catch(() => {
-        // TODO: log error
-        // TODO: add eventHandler.onError
+        // error
         setMediaRecorder(null);
       });
-  };
+    return () => {
+      currentStream?.getAudioTracks?.().forEach?.(track => track?.stop());
+      setCurrentStream(null);
+    };
+  }, []);
+
+  const start = useCallback((eventHandler: VoiceRecorderEventHandler): void => {
+    if (mediaRecorder) {
+      stop();
+    }
+    if (currentStream) {
+      const mediaRecorder = new MediaRecorder(currentStream);
+      mediaRecorder.ondataavailable = (e) => {// when recording stops
+        // Generate audio file
+        const audioFile = new File([e.data], 'Voice message', {
+          lastModified: new Date().getTime(),
+          type: 'audio/mpeg',
+        });
+        eventHandler?.onRecordingEnded(audioFile);
+      };
+      mediaRecorder?.start();
+      setMediaRecorder(mediaRecorder);
+      eventHandler?.onRecordingStarted();
+    }
+  }, [mediaRecorder, currentStream]);
 
   const stop = (): void => {
     // Stop recording
-    currentStream?.getAudioTracks?.().forEach?.(track => track?.stop());
     mediaRecorder?.stop();
-    setCurrentStream(null);
     setMediaRecorder(null);
     // TODO: logger
   };
@@ -71,6 +75,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
     <VoiceRecorderContext.Provider value={{
       start,
       stop,
+      isRecordable: (null !== currentStream),
     }}>
       {children}
     </VoiceRecorderContext.Provider>

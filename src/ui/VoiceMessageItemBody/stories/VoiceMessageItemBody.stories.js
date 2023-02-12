@@ -1,5 +1,5 @@
 import React from 'react';
-import { VoicePlayerProvider } from '../../../hooks/useVoicePlayer';
+import { VoicePlayerProvider } from '../../../hooks/VoicePlayer';
 import VoiceMessageItemBody from '../index';
 
 const description = `

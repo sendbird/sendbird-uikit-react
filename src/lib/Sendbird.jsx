@@ -20,8 +20,8 @@ import { LoggerFactory } from './Logger';
 import pubSubFactory from './pubSub/index';
 import useAppendDomNode from '../hooks/useAppendDomNode';
 
-import { VoiceRecorderProvider } from '../hooks/useVoiceRecorder';
-import { VoicePlayerProvider } from '../hooks/useVoicePlayer';
+import { VoiceRecorderProvider } from '../hooks/VoiceRecorder';
+import { VoicePlayerProvider } from '../hooks/VoicePlayer';
 import { LocalizationProvider } from './LocalizationContext';
 import { MediaQueryProvider } from './MediaQueryContext';
 import getStringSet from '../ui/Label/stringSet';

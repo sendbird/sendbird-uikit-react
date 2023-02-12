@@ -1,18 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import SendbirdProvider from '../../../lib/Sendbird';
 
 import { VoiceRecorderProvider } from '../index';
 import { useVoiceRecorder } from '../useVoiceRecorder';
-import { VoicePlayerProvider } from '../../useVoicePlayer/index';
-import { useVoicePlayer } from '../../useVoicePlayer/useVoicePlayer';
+import { useVoicePlayerContext, VoicePlayerProvider } from '../../VoicePlayer/index';
+import { useVoicePlayer } from '../../VoicePlayer/useVoicePlayer';
 
 export default { title: 'globalcontext/voice-recorder' };
 
 const Tester = () => {
   const [currentAudio, setAudioFile] = useState(null);
 
-  const { start, stop, recordingTime } = useVoiceRecorder({
+  const {
+    checkInChannel,
+    checkOutChannel,
+  } = useVoicePlayerContext();
+
+  useEffect(() => {
+    const uuid = 'uuid';
+    checkInChannel('channel-url', uuid);
+    return () => {
+      checkOutChannel('channel-url', uuid);
+    }
+  }, []);
+
+  const { start, stop, recordingTime, recordingStatus } = useVoiceRecorder({
     onRecordingStarted: () => {
       console.log('onRecordingStarted')
     },
@@ -21,15 +34,15 @@ const Tester = () => {
       setAudioFile(recordedFile);
     },
   });
-  const { play, pause, playbackTime } = useVoicePlayer({
+  const { play, pause, playbackTime, playingStatus, duration } = useVoicePlayer({
+    channelUrl: 'channel-url',
+    key: 'unique-key',
+    audioFile: currentAudio,
     onPlayingStarted: () =>  {
       console.log('onPlayingStarted')
     },
-    onPlayingStopped: ({playbackTime, audioFile}) => {
-      console.log('onPlayingStopped', playbackTime, audioFile)
-    },
-    onPlaybackTimeUpdated: (time) => {
-      console.log('onPlaybackTimeUpdated', time)
+    onPlayingStopped: () => {
+      console.log('onPlayingStopped')
     },
   });
 
@@ -60,13 +73,14 @@ const Tester = () => {
           stop();
         }}
       />
-      <div>{recordingTime}</div>
+      {recordingTime}
+      {recordingStatus}
       <input
         value="play"
         type="button"
         onClick={() => {
           console.log('on play clicked')
-          play(currentAudio);
+          play();
         }}
       />
       <input
@@ -77,7 +91,8 @@ const Tester = () => {
           pause();
         }}
       />
-      <div>{playbackTime}</div>
+      {`${Math.floor(playbackTime)} / ${Math.floor(duration || recordingTime)}`}
+      {playingStatus}
     </div>
   );
 };

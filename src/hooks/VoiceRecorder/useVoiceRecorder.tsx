@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { VoiceRecorderEventHandler, useVoiceRecorderContext } from '.';
 import useSendbirdStateContext from '../useSendbirdStateContext';
 
@@ -8,39 +8,52 @@ import useSendbirdStateContext from '../useSendbirdStateContext';
 //    * onRecordingEnded
 //    */
 // }
+export const VoiceRecorderStatus = {
+  PREPARING: 'PREPARING',
+  READY_TO_RECORD: 'READY_TO_RECORD',
+  RECORDING: 'RECORDING',
+  COMPLETED: 'COMPLETED',
+} as const;
+export type VoiceRecorderStatus = typeof VoiceRecorderStatus[keyof typeof VoiceRecorderStatus];
 export interface UseVoiceRecorderContext {
   start: () => void;
   stop: () => void;
+  recordingLimit: number;
   recordingTime: number;
   recordedFile: File;
-  recordingLimit: number;
+  recordingStatus: VoiceRecorderStatus;
 }
 
 const noop = () => {/* noop */};
-export const useVoiceRecorder = (props: VoiceRecorderEventHandler): UseVoiceRecorderContext => {
-  const {
-    onRecordingStarted = noop,
-    onRecordingEnded = noop,
-  } = props;
+
+export const useVoiceRecorder = ({
+  onRecordingStarted = noop,
+  onRecordingEnded = noop,
+}: VoiceRecorderEventHandler): UseVoiceRecorderContext => {
   const { config } = useSendbirdStateContext();
   const { voiceRecord } = config;
   const { maxRecordingTime } = voiceRecord;
   const voiceRecorder = useVoiceRecorderContext();
+  const { isRecordable } = voiceRecorder;
 
   const [recordedFile, setRecordedFile] = useState<File>(null);
-  const [timerLimit] = useState<number>(maxRecordingTime);
+  const [recordingStatus, setRecordingStatus] = useState<VoiceRecorderStatus>(VoiceRecorderStatus.PREPARING);
+  useEffect(() => {
+    if (isRecordable && recordingStatus === VoiceRecorderStatus.PREPARING) {
+      setRecordingStatus(VoiceRecorderStatus.READY_TO_RECORD);
+    }
+  }, [isRecordable]);
 
   // Timer
   const [recordingTime, setRecordingTime] = useState<number>(0);
   let timer: NodeJS.Timer = null;
-
   const startTimer = () => {
     stopTimer();
     setRecordingTime(0);
     const interval = setInterval(() => {
       setRecordingTime(prevTime => {
         const newTime = prevTime + 100;
-        if (newTime > timerLimit) {
+        if (newTime > maxRecordingTime) {
           stopTimer();
         }
         return newTime;
@@ -56,10 +69,12 @@ export const useVoiceRecorder = (props: VoiceRecorderEventHandler): UseVoiceReco
   const start = useCallback(() => {
     voiceRecorder?.start({
       onRecordingStarted: () => {
+        setRecordingStatus(VoiceRecorderStatus.RECORDING);
         onRecordingStarted();
         startTimer();
       },
       onRecordingEnded: (audioFile) => {
+        setRecordingStatus(VoiceRecorderStatus.COMPLETED);
         onRecordingEnded(audioFile);
         setRecordedFile(audioFile);
         stopTimer();
@@ -73,8 +88,9 @@ export const useVoiceRecorder = (props: VoiceRecorderEventHandler): UseVoiceReco
   return ({
     start,
     stop,
+    recordingStatus,
     recordingTime,
     recordedFile,
-    recordingLimit: timerLimit,
+    recordingLimit: maxRecordingTime,
   });
 };
