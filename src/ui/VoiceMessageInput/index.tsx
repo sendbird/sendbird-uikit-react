@@ -9,22 +9,22 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 import ControlerIcon from './controlerIcons';
 
-export const VoiceMessageInputControlTypes = {
+export const VoiceMessageInputStatus = {
   READY_TO_RECORD: 'READY_TO_RECORD',
   RECORDING: 'RECORDING',
   READY_TO_PLAY: 'READY_TO_PLAY',
   PLAYING: 'PLAYING',
 } as const;
-export type VoiceMessageInputControlTypes = typeof VoiceMessageInputControlTypes[keyof typeof VoiceMessageInputControlTypes];
+export type VoiceMessageInputStatus = typeof VoiceMessageInputStatus[keyof typeof VoiceMessageInputStatus];
 export interface VoiceMessageInputProps {
   maximumValue: number;
   currentValue?: number;
-  currentType: VoiceMessageInputControlTypes;
+  currentType: VoiceMessageInputStatus;
   onCancelClick?: () => void;
-  onControlClick?: (type: VoiceMessageInputControlTypes) => void;
+  onControlClick?: (type: VoiceMessageInputStatus) => void;
   onSubmitClick?: () => void;
   renderCancelButton?: () => React.ReactElement;
-  renderControlButton?: (type: VoiceMessageInputControlTypes) => React.ReactElement;
+  renderControlButton?: (type: VoiceMessageInputStatus) => React.ReactElement;
   renderSubmitButton?: () => React.ReactElement;
 }
 
@@ -39,12 +39,12 @@ export const VoiceMessageInput = ({
   renderControlButton,
   renderSubmitButton,
 }: VoiceMessageInputProps): React.ReactElement => {
-  const isReadyToRecord = useMemo(() => currentType === VoiceMessageInputControlTypes.READY_TO_RECORD, [currentType]);
-  const isRecording = useMemo(() => currentType === VoiceMessageInputControlTypes.RECORDING, [currentType]);
+  const isReadyToRecord = useMemo(() => currentType === VoiceMessageInputStatus.READY_TO_RECORD, [currentType]);
+  const isRecording = useMemo(() => currentType === VoiceMessageInputStatus.RECORDING, [currentType]);
   const isPlayMode = useMemo(() => {
     return (
-      currentType === VoiceMessageInputControlTypes.READY_TO_PLAY
-      || currentType === VoiceMessageInputControlTypes.PLAYING
+      currentType === VoiceMessageInputStatus.READY_TO_PLAY
+      || currentType === VoiceMessageInputStatus.PLAYING
     );
   }, [currentType]);
   const { stringSet } = useLocalization();
