@@ -69,6 +69,8 @@ export const VoicePlayerProvider = ({
     }
     const audioPlayer = new Audio(URL?.createObjectURL?.(targetPlayerUnit?.audioFile));
     audioPlayer.currentTime = targetPlayerUnit.playbackTime;
+    audioPlayer.volume = 1;
+    audioPlayer.loop = false;
     audioPlayer.onplay = () => {
       setIsPlaying(true);
       eventHandler?.onPlayingStarted(channelUrl, fileKey);
@@ -79,6 +81,18 @@ export const VoicePlayerProvider = ({
       eventHandler?.onPlayingStopped(channelUrl, fileKey);
       if (targetPlayerUnit?.channelUrl === channelUrl && targetPlayerUnit?.id === fileKey) {
         setPlayerUnit(null);
+      }
+      if (audioPlayer.duration - audioPlayer.currentTime <= 0.01) {
+        targetPlayerUnit.playbackTime = 0;
+        setVoicePlayerMap((map) => {
+          return ({
+            ...map,
+            channelUrl: {
+              ...map.channelUrl,
+              fileKey: targetPlayerUnit,
+            },
+          });
+        });
       }
     };
     audioPlayer.ontimeupdate = () => {
