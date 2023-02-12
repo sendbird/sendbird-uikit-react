@@ -1,118 +1,53 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import './index.scss';
 
+import PlaybackTime from '../PlaybackTime';
 import ProgressBar from '../ProgressBar';
 import TextButton from '../TextButton';
-import { LocalizationContext } from '../../lib/LocalizationContext';
-import ControlerIcon from './controlerIcons';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
-import PlaybackTime from '../PlaybackTime';
+import { useLocalization } from '../../lib/LocalizationContext';
+import ControlerIcon from './controlerIcons';
 
+export const VoiceMessageInputControlTypes = {
+  READY_TO_RECORD: 'READY_TO_RECORD',
+  RECORDING: 'RECORDING',
+  READY_TO_PLAY: 'READY_TO_PLAY',
+  PLAYING: 'PLAYING',
+} as const;
+export type VoiceMessageInputControlTypes = typeof VoiceMessageInputControlTypes[keyof typeof VoiceMessageInputControlTypes];
 export interface VoiceMessageInputProps {
+  maximumValue: number;
+  currentValue?: number;
+  currentType: VoiceMessageInputControlTypes;
   onCancelClick?: () => void;
+  onControlClick?: (type: VoiceMessageInputControlTypes) => void;
   onSubmitClick?: () => void;
-  maxSize: number;
-  inputState: VoiceMessageInputStatus;
-  minRecordingTime?: number;
-  onRecordClick?: () => void;
-  onRecordStopClick?: (time: number) => void;
-  onPlayClick?: () => void;
-  onPauseClick?: () => void;
+  renderCancelButton?: () => React.ReactElement;
+  renderControlButton?: (type: VoiceMessageInputControlTypes) => React.ReactElement;
+  renderSubmitButton?: () => React.ReactElement;
 }
 
-export enum VoiceMessageInputStatus {
-  PREPARING = 'PREPARING',
-  READY_TO_RECORD = 'READY_TO_RECORD',
-  RECORDING = 'RECORDING',
-  READY_TO_PLAY = 'READY_TO_PLAY',
-  PLAYING = 'PLAYING',
-}
-
-let interval = null;
-let counter = null;
 export const VoiceMessageInput = ({
+  maximumValue,
+  currentValue = 0,
+  currentType,
   onCancelClick,
+  onControlClick,
   onSubmitClick,
-  maxSize = 60000,
-  inputState = VoiceMessageInputStatus.READY_TO_RECORD,
-  minRecordingTime = 1000,
-  onRecordClick,
-  onRecordStopClick,
-  onPlayClick,
-  onPauseClick,
+  renderCancelButton,
+  renderControlButton,
+  renderSubmitButton,
 }: VoiceMessageInputProps): React.ReactElement => {
-  const { stringSet } = useContext(LocalizationContext);
-
-  const [inProgress, setInProgress] = useState(false);
-  const [isSendable, setSendable] = useState(false);
-  const [frame, setFrame] = useState(0);
-
-  // Progress bar
-  const [progress, setProgress] = useState(0);
-  useEffect(() => {
-    // device progress bar to progressFrame value
-    const progressFrame = maxSize / 8;
-    setFrame(maxSize / progressFrame);
-  }, [maxSize]);
-  useEffect(() => {
-    if (inProgress) {
-      interval = setInterval(() => {
-        setProgress((prev) => prev + frame);
-      }, frame);
-    } else {
-      clearInterval(interval);
-    }
-  }, [inProgress, frame]);
-  useEffect(() => {
-    if (progress >= maxSize) {
-      setProgress(0);
-      setPlaybackTime(0);
-      setInProgress(false);
-      clearInterval(interval);
-      clearInterval(counter);
-    }
-  }, [progress]);
-  const startProgressBar = () => {
-    setInProgress(true);
-  };
-  const stopProgressBar = () => {
-    setInProgress(false);
-  };
-  const clearProgressBar = () => {
-    setProgress(0);
-    setPlaybackTime(0);
-    setInProgress(false);
-  };
-
-  // PlaybackTime
-  const [playbackTime, setPlaybackTime] = useState(0);
-  useEffect(() => {
-    if (inProgress) {
-      counter = setInterval(() => {
-        setPlaybackTime((prev) => prev + 1000);
-      }, 1000);
-    } else {
-      clearInterval(counter);
-    }
-  }, [inProgress]);
-
-  // minRecordingTime
-  useEffect(() => {
-    if (inputState === VoiceMessageInputStatus.PREPARING || inputState === VoiceMessageInputStatus.READY_TO_RECORD) {
-      setSendable(false);
-    }
-    if (inputState === VoiceMessageInputStatus.RECORDING) {
-      if (playbackTime >= minRecordingTime) {
-        setSendable(true);
-      } else {
-        setSendable(false);
-      }
-    }
-    if (inputState === VoiceMessageInputStatus.READY_TO_PLAY || inputState === VoiceMessageInputStatus.PLAYING) {
-      setSendable(true);
-    }
-  }, [inputState, playbackTime]);
+  const isReadyToRecord = useMemo(() => currentType === VoiceMessageInputControlTypes.READY_TO_RECORD, [currentType]);
+  const isRecording = useMemo(() => currentType === VoiceMessageInputControlTypes.RECORDING, [currentType]);
+  const isPlayMode = useMemo(() => {
+    return (
+      currentType === VoiceMessageInputControlTypes.READY_TO_PLAY
+      || currentType === VoiceMessageInputControlTypes.PLAYING
+    );
+  }, [currentType]);
+  const { stringSet } = useLocalization();
 
   return (
     <div className="sendbird-voice-message-input">
@@ -120,84 +55,64 @@ export const VoiceMessageInput = ({
         <div className="sendbird-voice-message-input__indicator__progress-bar">
           <ProgressBar
             className="sendbird-voice-message-input__indicator__progress-bar__bar"
-            disabled={inputState === VoiceMessageInputStatus.PREPARING || inputState === VoiceMessageInputStatus.READY_TO_RECORD}
-            maxSize={maxSize}
-            currentSize={progress}
+            disabled={isReadyToRecord}
+            maxSize={maximumValue}
+            currentSize={currentValue}
           />
         </div>
         {
-          (inputState === VoiceMessageInputStatus.RECORDING) && (
+          (isRecording) && (
             <div className="sendbird-voice-message-input__indicator__on-rec" />
           )
         }
         <PlaybackTime
           className="sendbird-voice-message-input__indicator__playback-time"
-          time={((inputState === VoiceMessageInputStatus.READY_TO_PLAY || inputState === VoiceMessageInputStatus.PLAYING)
-            ? maxSize - playbackTime : playbackTime
-          )}
+          time={isPlayMode ? maximumValue - currentValue : currentValue}
         />
       </div>
       <div className="sendbird-voice-message-input__controler">
-        <TextButton
-          className="sendbird-voice-message-input__controler__cancel"
-          onClick={onCancelClick}
-          disableUnderline
-        >
-          <Label
-            type={LabelTypography.BUTTON_1}
-            color={LabelColors.PRIMARY}
-          >
-            {stringSet.BUTTON__CANCEL}
-          </Label>
-        </TextButton>
-        <div
-          className="sendbird-voice-message-input__controler__main"
-          onClick={() => {
-            switch (inputState) {
-              case VoiceMessageInputStatus.READY_TO_RECORD: {
-                onRecordClick();
-                startProgressBar();
-                break;
-              }
-              case VoiceMessageInputStatus.RECORDING: {
-                onRecordStopClick(playbackTime);
-                clearProgressBar();
-                break;
-              }
-              case VoiceMessageInputStatus.READY_TO_PLAY: {
-                onPlayClick();
-                startProgressBar();
-                break;
-              }
-              case VoiceMessageInputStatus.PLAYING: {
-                onPauseClick();
-                stopProgressBar();
-                break;
-              }
-              default: break;
-            }
-          }}
-        >
-          <ControlerIcon inputState={inputState} />
-        </div>
-        <div
-          className={`sendbird-voice-message-input__controler__submit ${isSendable ? '' : 'voice-message--disabled'}`}
-          onClick={() => {
-            if (isSendable) {
-              onSubmitClick()
-            }
-          }}
-        >
-          <Icon
-            width="19px"
-            height="19px"
-            type={IconTypes.SEND}
-            fillColor={isSendable ? IconColors.CONTENT : IconColors.ON_BACKGROUND_4}
-          />
-        </div>
+        {
+          renderCancelButton?.() || (
+            <TextButton
+              className="sendbird-voice-message-input__controler__cancel"
+              onClick={onCancelClick}
+              disableUnderline
+            >
+              <Label
+                type={LabelTypography.BUTTON_1}
+                color={LabelColors.PRIMARY}
+              >
+                {stringSet.BUTTON__CANCEL}
+              </Label>
+            </TextButton>
+          )
+        }
+        {
+          renderControlButton?.(currentType) || (
+            <div
+              className="sendbird-voice-message-input__controler__main"
+              onClick={() => onControlClick(currentType)}
+            >
+              <ControlerIcon inputState={currentType} />
+            </div>
+          )
+        }
+        {
+          renderSubmitButton?.() || (
+            <div
+              className={`sendbird-voice-message-input__controler__submit`}
+              onClick={onSubmitClick}
+            >
+              <Icon
+                width="19px"
+                height="19px"
+                type={IconTypes.SEND}
+                fillColor={IconColors.CONTENT}
+              />
+            </div>
+          )
+        }
       </div>
     </div>
   );
 };
-
-export default VoiceMessageInput;

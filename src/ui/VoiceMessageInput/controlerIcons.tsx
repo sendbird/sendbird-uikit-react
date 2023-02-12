@@ -1,27 +1,27 @@
 import React from 'react';
 
-import { VoiceMessageInputStatus } from '.';
 import Icon, { IconTypes, IconColors } from '../Icon';
+import { VoiceMessageInputControlTypes } from '.';
 
 export interface ControlerIconProps {
-  inputState?: VoiceMessageInputStatus;
+  inputState?: VoiceMessageInputControlTypes;
 }
 
 export const ControlerIcon = ({
   inputState
 }: ControlerIconProps): React.ReactElement => {
   switch (inputState) {
-    case VoiceMessageInputStatus.READY_TO_RECORD: {
+    case VoiceMessageInputControlTypes.READY_TO_RECORD: {
       return (
         <div className="sendbird-controler-icon record-icon" />
       );
     }
-    case VoiceMessageInputStatus.RECORDING: {
+    case VoiceMessageInputControlTypes.RECORDING: {
       return (
         <div className="sendbird-controler-icon stop-icon" />
       );
     }
-    case VoiceMessageInputStatus.READY_TO_PLAY: {
+    case VoiceMessageInputControlTypes.READY_TO_PLAY: {
       return (
         <Icon
           className="sendbird-controler-icon play-icon"
@@ -32,7 +32,7 @@ export const ControlerIcon = ({
         />
       );
     }
-    case VoiceMessageInputStatus.PLAYING: {
+    case VoiceMessageInputControlTypes.PLAYING: {
       return (
         <div className="sendbird-controler-icon pause-icon">
           <div className="sendbird-controler-icon pause-icon-inner"/>

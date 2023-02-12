@@ -8,7 +8,7 @@ import { useVoicePlayer } from '../../../../hooks/useVoicePlayer/useVoicePlayer'
 import { useVoiceRecorder } from '../../../../hooks/useVoiceRecorder/useVoiceRecorder';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../context/utils';
 
-import VoiceMessageInput, { VoiceMessageInputStatus } from '../../../../ui/VoiceMessageInput';
+import VoiceMessageInput, { VoiceMessageInputStatus } from '../../../../ui/VoiceMessageInput/index2';
 import Modal from '../../../../ui/Modal';
 import Button, { ButtonSizes, ButtonTypes } from '../../../../ui/Button';
 
