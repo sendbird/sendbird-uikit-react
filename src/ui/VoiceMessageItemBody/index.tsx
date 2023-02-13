@@ -13,6 +13,7 @@ import { LabelTypography, LabelColors } from '../Label';
 export interface VoiceMessageItemBodyProps {
   className?: string;
   message: FileMessage;
+  channelUrl: string;
   isByMe?: boolean;
   isReactionEnabled?: boolean;
 }
@@ -27,6 +28,7 @@ export enum VoiceMessageItemStatus {
 export const VoiceMessageItemBody = ({
   className,
   message,
+  channelUrl,
   isByMe = false,
   isReactionEnabled = false,
 }: VoiceMessageItemBodyProps): React.ReactElement => {
@@ -53,6 +55,9 @@ export const VoiceMessageItemBody = ({
     pause,
     playbackTime,
   } = useVoicePlayer({
+    channelUrl,
+    key: `${message?.messageId}`,
+    audioFile: audioFile,
     onPlayingStarted: () => {
       setAudioState(VoiceMessageItemStatus.PLAYING);
     },
@@ -75,11 +80,6 @@ export const VoiceMessageItemBody = ({
     }
     return 1;
   }, [message?.metaArrays]);
-
-  const playAudio = () => {
-    play(audioFile);
-  };
-  const pauseAudio = pause;
 
   return (
     <div className={`sendbird-voice-message-item-body ${className} ${usingReaction ? 'is-reactions-contained' : ''}`}>
@@ -121,7 +121,7 @@ export const VoiceMessageItemBody = ({
           audioState === VoiceMessageItemStatus.READY_TO_PLAY && (
             <div
               className="sendbird-voice-message-item-body__status-button__button"
-              onClick={playAudio}
+              onClick={play}
             >
               <Icon
                 width="18px"
@@ -136,7 +136,7 @@ export const VoiceMessageItemBody = ({
           audioState === VoiceMessageItemStatus.PLAYING && (
             <div
               className="sendbird-voice-message-item-body__status-button__button"
-              onClick={pauseAudio}
+              onClick={pause}
             >
               <div className="sendbird-voice-message-item-body__status-button__button__pause">
                 <div className="sendbird-voice-message-item-body__status-button__button__pause__inner" />

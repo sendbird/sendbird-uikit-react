@@ -325,6 +325,7 @@ export default function MessageContent({
             <VoiceMessageItemBody
               className="sendbird-message-content__middle__message-item-body"
               message={message as FileMessage}
+              channelUrl={channel?.url}
               isByMe={isByMe}
               isReactionEnabled={isReactionEnabled}
             />
