@@ -1,5 +1,11 @@
 # Changelog - v3
 
+## [v3.3.6] (Feb 13 2023)
+
+Fixes:
+* pubsub should be initialized with useState
+* update onBeforeCreateChannel example to use chat V4
+
 ## [v3.5.0-beta.0] (Feb 6 2023)
 
 ### Notification Channel
