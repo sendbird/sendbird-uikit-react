@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sendbird-uikit-react__notification-center
+  description: The developemnt repo for react notification-center, also used to deploy test build
+  annotations:
+    github.com/project-slug: sendbird/sendbird-uikit-react__notification-center
+spec:
+  type: library
+  lifecycle: experimental
+  owner: dep-client-platform
+  system: sendbird-uikit
