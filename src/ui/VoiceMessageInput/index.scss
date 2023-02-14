@@ -121,10 +121,10 @@
   @include themed() {
     background-color: t(error-3);
   }
-   -webkit-animation: flickerAnimation .5s infinite;
-   -moz-animation: flickerAnimation .5s infinite;
-   -o-animation: flickerAnimation .5s infinite;
-    animation: flickerAnimation .5s infinite;
+   -webkit-animation: flickerAnimation 1s infinite;
+   -moz-animation: flickerAnimation 1s infinite;
+   -o-animation: flickerAnimation 1s infinite;
+    animation: flickerAnimation 1s infinite;
 }
 
 // Progress bar
