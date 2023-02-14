@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { downsampleToWav, encodeMp3 } from './WebAudioUtils';
 
 // Input props of VoiceRecorder
 export interface VoiceRecorderProps {
@@ -49,14 +50,24 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
       stop();
     }
     if (currentStream) {
-      const mediaRecorder = new MediaRecorder(currentStream);
+      const mediaRecorder = new MediaRecorder(currentStream, {
+        mimeType: 'audio/webm',
+        audioBitsPerSecond: 128000,
+      });
       mediaRecorder.ondataavailable = (e) => {// when recording stops
-        // Generate audio file
-        const audioFile = new File([e.data], 'Voice message', {
+        const audioFile = new File([e.data], `Voice message ${Date.now().toString()}.mp3`, {
           lastModified: new Date().getTime(),
-          type: 'audio/mpeg',
+          type: 'audio/mp3',
         });
-        eventHandler?.onRecordingEnded(audioFile);
+        downsampleToWav(audioFile, (buffer) => {
+          const mp3Buffer = encodeMp3(buffer);
+          const mp3blob = new Blob(mp3Buffer, { type: "audio/mp3" });
+          const convertedAudioFile = new File([mp3blob], `Voice_message_${Date.now().toString()}.mp3`, {
+            lastModified: new Date().getTime(),
+            type: 'audio/mp3',
+          });
+          eventHandler?.onRecordingEnded(convertedAudioFile);
+        })
       };
       mediaRecorder?.start();
       setMediaRecorder(mediaRecorder);
