@@ -10,7 +10,7 @@ export interface CheckboxProps {
 
 export default function Checkbox({
   id,
-  checked,
+  checked = false,
   disabled,
   onChange,
 }: CheckboxProps): ReactElement {
