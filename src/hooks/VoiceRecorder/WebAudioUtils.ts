@@ -1,6 +1,5 @@
-import { WavHeader, Mp3Encoder } from "lamejs";
-
 // Thanks to https://codesandbox.io/s/media-recorder-api-downsampling-16k-mp3-encode-using-lame-js-forked-n1pblw
+import { WavHeader, Mp3Encoder } from "lamejs";
 
 function encodeMp3(arrayBuffer: ArrayBuffer): WavHeader {
   const wav = WavHeader.readHeader(new DataView(arrayBuffer));
@@ -8,15 +7,8 @@ function encodeMp3(arrayBuffer: ArrayBuffer): WavHeader {
   const mp3Encoder = new Mp3Encoder(wav.channels, wav.sampleRate, 128);
   const maxSamples = 1152;
 
-  const samplesLeft =
-    wav.channels === 1
-      ? dataView
-      : new Int16Array(wav.dataLen / (2 * wav.channels));
-
-  const samplesRight =
-    wav.channels === 2
-      ? new Int16Array(wav.dataLen / (2 * wav.channels))
-      : undefined;
+  const samplesLeft = (wav.channels === 1) ? dataView : new Int16Array(wav.dataLen / (2 * wav.channels));
+  const samplesRight = (wav.channels === 2) ? new Int16Array(wav.dataLen / (2 * wav.channels)) : undefined;
 
   if (wav.channels > 1) {
     for (let j = 0; j < samplesLeft.length; j++) {
@@ -43,12 +35,13 @@ function encodeMp3(arrayBuffer: ArrayBuffer): WavHeader {
   return dataBuffer;
 }
 
+// Convert audioFile to arrayBuffer, because Mp3Encoder requires a parameter of ArrayBuffer type
 function downsampleToWav(file: File, callback: (buffer: ArrayBuffer) => void): void {
   //Browser compatibility
   // https://caniuse.com/?search=AudioContext
   const audioCtx = new AudioContext();
-  const fileReader1 = new FileReader();
-  fileReader1.onload = function (ev) {
+  const fileReader = new FileReader();
+  fileReader.onload = function (ev) {
     // Decode audio
     audioCtx.decodeAudioData(ev.target.result as ArrayBuffer, (buffer) => {
       // this is where you down sample the audio, usually is 44100 samples per second
@@ -59,9 +52,9 @@ function downsampleToWav(file: File, callback: (buffer: ArrayBuffer) => void): v
       soundSource.buffer = buffer;
       soundSource.connect(offlineAudioCtx.destination);
 
-      const reader2 = new FileReader();
-      reader2.onload = function () {
-        const renderCompleteHandler = function (evt) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        const renderCompleteHandler = (evt): void => {
           const renderedBuffer = usingWebkit ? evt.renderedBuffer : evt;
           const buffer = bufferToWav(renderedBuffer, renderedBuffer.length);
           if (callback) {
@@ -69,24 +62,20 @@ function downsampleToWav(file: File, callback: (buffer: ArrayBuffer) => void): v
           }
         };
         if (usingWebkit) {
-          offlineAudioCtx.addEventListener("complete", renderCompleteHandler);
+          offlineAudioCtx.oncomplete = renderCompleteHandler;
           offlineAudioCtx.startRendering();
         } else {
           offlineAudioCtx
             .startRendering()
             .then(renderCompleteHandler)
-            .catch(function (err) {
-              console.warn(err);
-            });
+            .catch((err) => console.warn(err));
         }
       };
-      reader2.readAsArrayBuffer(file);
-
+      reader.readAsArrayBuffer(file);
       soundSource.start(0);
     });
   };
-
-  fileReader1.readAsArrayBuffer(file);
+  fileReader.readAsArrayBuffer(file);
 }
 
 function bufferToWav(abuffer, len) {
