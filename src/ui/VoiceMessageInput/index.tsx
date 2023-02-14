@@ -17,6 +17,7 @@ export const VoiceMessageInputStatus = {
 } as const;
 export type VoiceMessageInputStatus = typeof VoiceMessageInputStatus[keyof typeof VoiceMessageInputStatus];
 export interface VoiceMessageInputProps {
+  minRecordTime?: number;
   maximumValue: number;
   currentValue?: number;
   currentType: VoiceMessageInputStatus;
@@ -29,6 +30,7 @@ export interface VoiceMessageInputProps {
 }
 
 export const VoiceMessageInput = ({
+  minRecordTime = 1000,
   maximumValue,
   currentValue = 0,
   currentType,
@@ -100,8 +102,12 @@ export const VoiceMessageInput = ({
         {
           renderSubmitButton?.() || (
             <div
-              className={`sendbird-voice-message-input__controler__submit`}
-              onClick={onSubmitClick}
+              className={`sendbird-voice-message-input__controler__submit ${minRecordTime <= currentValue ? '' : 'voice-message--disabled'}`}
+              onClick={() => {
+                if (minRecordTime <= currentValue) {
+                  onSubmitClick();
+                }
+              }}
             >
               <Icon
                 width="19px"
