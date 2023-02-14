@@ -9,14 +9,14 @@ import {
   getUIKitMessageType,
   getUIKitMessageTypes,
   isEditedMessage,
-  isFileMessage,
+  isVoiceMessage,
   isGifMessage,
   // isOGMessage,
   isSentMessage,
   isThumbnailMessage,
   isUserMessage,
   isVideoMessage,
-  truncateString
+  truncateString,
 } from '../../../../utils';
 import uuidv4 from '../../../../utils/uuid';
 
@@ -28,6 +28,7 @@ import TextButton from '../../../../ui/TextButton';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import EmojiReactions from '../../../../ui/EmojiReactions';
 import { useThreadContext } from '../../context/ThreadProvider';
+import VoiceMessageItemBody from '../../../../ui/VoiceMessageItemBody';
 
 export interface ParentMessageInfoItemProps {
   className?: string;
@@ -171,38 +172,62 @@ export default function ParentMessageInfoItem({
           </div>
         </div>
       )} */}
-      {isFileMessage(message) && !isThumbnailMessage(message) && (
-        <div className="sendbird-parent-message-info-item__file-message">
-          <div className="sendbird-parent-message-info-item__file-message__file-icon">
-            <Icon
-              className="sendbird-parent-message-info-item__file-message__file-icon__icon"
-              type={{
-                IMAGE: IconTypes.PHOTO,
-                VIDEO: IconTypes.PLAY,
-                AUDIO: IconTypes.FILE_AUDIO,
-                GIF: IconTypes.GIF,
-                OTHERS: IconTypes.FILE_DOCUMENT,
-              }[getUIKitFileType((message as FileMessage)?.type)]}
-              fillColor={IconColors.PRIMARY}
-              width="24px"
-              height="24px"
-            />
-          </div>
-          <TextButton
-            className="sendbird-parent-message-info-item__file-message__file-name"
-            onClick={() => { window.open((message as FileMessage)?.url) }}
-            color={LabelColors.ONBACKGROUND_1}
-          >
-            <Label
-              className="sendbird-parent-message-info-item__file-message__file-name__text"
-              type={LabelTypography.BODY_1}
+      {
+        (getUIKitMessageType((message as FileMessage)) === getUIKitMessageTypes().FILE) && (
+          <div className="sendbird-parent-message-info-item__file-message">
+            <div className="sendbird-parent-message-info-item__file-message__file-icon">
+              <Icon
+                className="sendbird-parent-message-info-item__file-message__file-icon__icon"
+                type={{
+                  IMAGE: IconTypes.PHOTO,
+                  VIDEO: IconTypes.PLAY,
+                  AUDIO: IconTypes.FILE_AUDIO,
+                  GIF: IconTypes.GIF,
+                  OTHERS: IconTypes.FILE_DOCUMENT,
+                }[getUIKitFileType((message as FileMessage)?.type)]}
+                fillColor={IconColors.PRIMARY}
+                width="24px"
+                height="24px"
+              />
+            </div>
+            <TextButton
+              className="sendbird-parent-message-info-item__file-message__file-name"
+              onClick={() => { window.open((message as FileMessage)?.url) }}
               color={LabelColors.ONBACKGROUND_1}
             >
-              {truncateString((message as FileMessage)?.name || (message as FileMessage)?.url, 30)}
-            </Label>
-          </TextButton>
-        </div>
-      )}
+              <Label
+                className="sendbird-parent-message-info-item__file-message__file-name__text"
+                type={LabelTypography.BODY_1}
+                color={LabelColors.ONBACKGROUND_1}
+              >
+                {truncateString((message as FileMessage)?.name || (message as FileMessage)?.url, 30)}
+              </Label>
+            </TextButton>
+          </div>
+        )
+      }
+      {
+        isVoiceMessage(message as FileMessage) && (
+          <div className="sendbird-parent-message-info-item__voice-message">
+            <VoiceMessageItemBody
+              className="sendbird-parent-message-info-item__voice-message__item"
+              message={message as FileMessage}
+              channelUrl={currentChannel?.url}
+              isByMe={false}
+              isReactionEnabled={isReactionEnabled}
+            />
+            {/* <ProgressBar
+              className="sendbird-parent-message-info-item__voice-message__progress-bar"
+              maxSize={progressBarMaxSize}
+              currentSize={playbackTime}
+              colorType={ProgressBarColorTypes.GRAY}
+            />
+            <div className="sendbird-parent-message-info-item__voice-message__status-button">
+
+            </div> */}
+          </div>
+        )
+      }
       {isThumbnailMessage(message) && (
         <div
           className="sendbird-parent-message-info-item__thumbnail-message"
