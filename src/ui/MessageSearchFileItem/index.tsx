@@ -7,6 +7,7 @@ import Icon, { IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 import { getCreatedAt, getIconOfFileType } from './utils';
+import { isVoiceMessage } from '../../utils';
 
 interface Props {
   className?: string | Array<string>;
@@ -23,11 +24,12 @@ export default function MessageSearchFileItem(props: Props): ReactElement {
     onClick,
   } = props;
   const { createdAt, url, name } = message;
-  const fileMessageUrl = url;
   // @ts-ignore
   const sender = message.sender || message._sender;
   const { profileUrl, nickname } = sender;
   const { stringSet, dateLocale } = useLocalization();
+  const isVoiceMsg = isVoiceMessage(message);
+  const displayingFileName = isVoiceMsg ? stringSet.VOICE_MESSAGE : (name || url);
 
   return (
     <div
@@ -59,7 +61,7 @@ export default function MessageSearchFileItem(props: Props): ReactElement {
           {nickname || stringSet.NO_NAME}
         </Label>
         <div className="sendbird-message-search-file-item__right__content">
-          <div className="sendbird-message-search-file-item__right__content__type-icon">
+          <div className={`sendbird-message-search-file-item__right__content__type-icon${isVoiceMsg ? ' --voice-message-border-radius' : ''}`}>
             <Icon
               type={getIconOfFileType(message)}
               fillColor={IconColors.PRIMARY}
@@ -72,7 +74,7 @@ export default function MessageSearchFileItem(props: Props): ReactElement {
             type={LabelTypography.BODY_2}
             color={LabelColors.ONBACKGROUND_1}
           >
-            {name || fileMessageUrl}
+            {displayingFileName}
           </Label>
         </div>
       </div>
@@ -81,7 +83,7 @@ export default function MessageSearchFileItem(props: Props): ReactElement {
         type={LabelTypography.CAPTION_3}
         color={LabelColors.ONBACKGROUND_2}
       >
-        {getCreatedAt({ createdAt, locale: dateLocale, stringSet})}
+        {getCreatedAt({ createdAt, locale: dateLocale, stringSet })}
       </Label>
       <div className="sendbird-message-search-file-item__right-footer" />
     </div>

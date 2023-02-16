@@ -45,7 +45,7 @@ export interface UIKitMessageTypes {
   OG: "OG",
   UNKNOWN: "UNKNOWN",
 }
-const UIKitMessageTypes: UIKitMessageTypes = {
+export const UIKitMessageTypes: UIKitMessageTypes = {
   ADMIN: "ADMIN",
   TEXT: "TEXT",
   FILE: "FILE",

@@ -4,12 +4,14 @@ import React, { ReactElement, useContext } from 'react';
 import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 import {
   getClassName,
+  getUIKitMessageType,
   isFileMessage,
   isGifMessage,
   isImageMessage,
-  isThumbnailMessage,
   isUserMessage,
   isVideoMessage,
+  isVoiceMessage,
+  UIKitMessageTypes,
 } from '../../utils';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
@@ -32,15 +34,20 @@ export default function QuoteMessageInput({
   const { stringSet } = useContext(LocalizationContext);
   const fileMessage = replyingMessage as FileMessage;
   const sender = (replyingMessage as UserMessage | FileMessage)?.sender;
+  const displayFileIcon = isFileMessage(replyingMessage) && !isVoiceMessage(replyingMessage as FileMessage);
 
   return (
     <div className={getClassName(['sendbird-quote_message_input', className])}>
-      <QuoteMessageThumbnail message={fileMessage} />
+      {
+        displayFileIcon && (
+          <QuoteMessageThumbnail message={fileMessage} />
+        )
+      }
       <div
         className="sendbird-quote_message_input__body"
         style={{
-          width: `calc(100% - ${fileMessage?.isFileMessage() ? '164px' : '120px'})`,
-          left: fileMessage?.isFileMessage() ? '92px' : '40px',
+          width: `calc(100% - ${displayFileIcon ? '164px' : '120px'})`,
+          left: displayFileIcon ? '92px' : '40px',
         }}
       >
         <Label
@@ -59,7 +66,8 @@ export default function QuoteMessageInput({
           {isVideoMessage(fileMessage) && stringSet.QUOTE_MESSAGE_INPUT__FILE_TYPE__VIDEO}
           {isGifMessage(fileMessage) && stringSet.QUOTE_MESSAGE_INPUT__FILE_TYPE_GIF}
           {isUserMessage(replyingMessage as UserMessage) && (replyingMessage as UserMessage).message}
-          {(isFileMessage(fileMessage) && !isThumbnailMessage(fileMessage)) && fileMessage.name}
+          {getUIKitMessageType(replyingMessage) === UIKitMessageTypes.FILE && fileMessage.name}
+          {isVoiceMessage(replyingMessage as FileMessage) && stringSet.VOICE_MESSAGE}
         </Label>
       </div>
       <Icon

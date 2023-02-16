@@ -124,6 +124,7 @@ const getStringSet = (lang = 'en') => {
       UNKNOWN__CANNOT_READ_MESSAGE: 'Cannot read this message.',
       MESSAGE_EDITED: '(edited)',
       // Menu items
+      VOICE_MESSAGE: 'Voice Message',
       MESSAGE_MENU__COPY: 'Copy',
       MESSAGE_MENU__REPLY: 'Reply',
       MESSAGE_MENU__THREAD: 'Reply in thread',
