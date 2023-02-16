@@ -18,7 +18,7 @@ export const ProgressBar = ({
   className ='',
   disabled = false,
   maxSize,
-  currentSize,
+  currentSize = 0,
   colorType = ProgressBarColorTypes.PRIMARY,
 }: ProgressBarProps): React.ReactElement => {
   const width = useMemo(() => {

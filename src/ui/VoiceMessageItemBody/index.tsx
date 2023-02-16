@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FileMessage } from '@sendbird/chat/message';
 
 import './index.scss';
@@ -35,13 +35,13 @@ export const VoiceMessageItemBody = ({
   const [usingReaction, setUsingReaction] = useState(false);
   const [audioState, setAudioState] = useState(VoiceMessageItemStatus.NONE);
   const [audioFile, setAudioFile] = useState(null);
-  const downloadAudioFile = useCallback(() => {
+  useEffect(() => {
     if (message?.url) {
       setAudioState(VoiceMessageItemStatus.LOADING);
       fetch(message?.url)
         .then((res) => res.blob())
         .then((blob) => {
-          const audioFile = new File([blob], 'Voice message', {
+          const audioFile = new File([blob], 'Voice_message.m4a', {
             lastModified: new Date().getTime(),
             type: 'audio/mpeg',
           });
@@ -53,7 +53,8 @@ export const VoiceMessageItemBody = ({
   const {
     play,
     pause,
-    playbackTime,
+    playbackTime = 0,
+    duration,
   } = useVoicePlayer({
     channelUrl,
     key: `${message?.messageId}`,
@@ -85,17 +86,14 @@ export const VoiceMessageItemBody = ({
     <div className={`sendbird-voice-message-item-body ${className} ${usingReaction ? 'is-reactions-contained' : ''}`}>
       <ProgressBar
         className="sendbird-voice-message-item-body__progress-bar"
-        maxSize={progresBarMaxSize}
+        maxSize={duration || progresBarMaxSize}
         currentSize={playbackTime}
         colorType={isByMe ? ProgressBarColorTypes.PRIMARY : ProgressBarColorTypes.GRAY}
       />
       <div className="sendbird-voice-message-item-body__status-button">
         {
           audioState === VoiceMessageItemStatus.NONE && (
-            <div
-              className="sendbird-voice-message-item-body__status-button__button"
-              onClick={downloadAudioFile}
-            >
+            <div className="sendbird-voice-message-item-body__status-button__button">
               <Icon
                 width="18px"
                 height="18px"
@@ -148,10 +146,7 @@ export const VoiceMessageItemBody = ({
       </div>
       <PlaybackTime
         className="sendbird-voice-message-item-body__playback-time"
-        time={
-          (audioState === VoiceMessageItemStatus.PLAYING)
-          ? progresBarMaxSize - playbackTime : progresBarMaxSize
-        }
+        time={progresBarMaxSize - playbackTime}
         labelType={LabelTypography.BODY_1}
         labelColor={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
       />

@@ -35,14 +35,17 @@ const Tester = () => {
     },
   });
   const { play, pause, playbackTime, playingStatus, duration } = useVoicePlayer({
-    channelUrl: 'channel-url',
     key: 'unique-key',
+    channelUrl: 'channel-url',
     audioFile: currentAudio,
     onPlayingStarted: () =>  {
       console.log('onPlayingStarted')
     },
     onPlayingStopped: () => {
       console.log('onPlayingStopped')
+    },
+    onPlaybackTimeUpdated: () => {
+      console.log('onPlaybackTimeUpdated')
     },
   });
 
