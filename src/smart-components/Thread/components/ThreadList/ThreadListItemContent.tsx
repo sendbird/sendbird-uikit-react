@@ -202,6 +202,7 @@ export default function ThreadListItemContent({
             <VoiceMessageItemBody
               className="sendbird-thread-list-item-content__middle__message-item-body"
               message={message as FileMessage}
+              channelUrl={channel?.url}
               isByMe={isByMe}
               isReactionEnabled={isReactionEnabled}
             />

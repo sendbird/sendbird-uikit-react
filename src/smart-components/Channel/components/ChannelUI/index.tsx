@@ -14,8 +14,6 @@ import UnreadCount from '../UnreadCount';
 import MessageInputWrapper from '../MessageInput';
 import { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import * as messageActionTypes from '../../context/dux/actionTypes';
-import { useVoicePlayerContext } from '../../../../hooks/VoicePlayer';
-import uuidv4 from '../../../../utils/uuid';
 
 export interface ChannelUIProps {
   isLoading?: boolean;
@@ -63,21 +61,6 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
       clearTimeout(handler);
     }
   }, [currentGroupChannel?.unreadMessageCount]);
-
-  // voice message
-  const {
-    checkInChannel,
-    checkOutChannel,
-  } = useVoicePlayerContext();
-  useEffect(() => {
-    if (currentGroupChannel?.url) {
-      const uuid = uuidv4();
-      checkInChannel(currentGroupChannel.url, uuid);
-      return () => {
-        checkOutChannel(currentGroupChannel.url, uuid);
-      }
-    }
-  }, [currentGroupChannel?.url]);
 
   const globalStore = useSendbirdStateContext();
   const sdkError = globalStore?.stores?.sdkStore?.error;

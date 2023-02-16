@@ -102,6 +102,7 @@ export const VoiceMessageInputWrapper = ({
         onControlClick={(type) => {
           switch (type) {
             case VoiceMessageInputStatus.READY_TO_RECORD: {
+              pause();
               start();
               break;
             }

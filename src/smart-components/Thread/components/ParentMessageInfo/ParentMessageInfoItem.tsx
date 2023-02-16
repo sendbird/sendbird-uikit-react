@@ -216,15 +216,6 @@ export default function ParentMessageInfoItem({
               isByMe={false}
               isReactionEnabled={isReactionEnabled}
             />
-            {/* <ProgressBar
-              className="sendbird-parent-message-info-item__voice-message__progress-bar"
-              maxSize={progressBarMaxSize}
-              currentSize={playbackTime}
-              colorType={ProgressBarColorTypes.GRAY}
-            />
-            <div className="sendbird-parent-message-info-item__voice-message__status-button">
-
-            </div> */}
           </div>
         )
       }

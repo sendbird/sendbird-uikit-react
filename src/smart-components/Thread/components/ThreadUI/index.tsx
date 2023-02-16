@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 import './index.scss';
@@ -17,8 +17,6 @@ import useMemorizedParentMessageInfo from './useMemorizedParentMessageInfo';
 import useMemorizedThreadList from './useMemorizedThreadList';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { isAboutSame } from '../../context/utils';
-import { useVoicePlayerContext } from '../../../../hooks/VoicePlayer';
-import uuidv4 from '../../../../utils/uuid';
 
 export interface ThreadUIProps {
   renderHeader?: () => React.ReactElement;
@@ -78,21 +76,6 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
     threadListState,
     renderThreadListPlaceHolder,
   });
-
-  // voice message
-  const {
-    checkInChannel,
-    checkOutChannel,
-  } = useVoicePlayerContext();
-  useEffect(() => {
-    if (currentChannel?.url) {
-      const uuid = uuidv4();
-      checkInChannel(currentChannel.url, uuid);
-      return () => {
-        checkOutChannel(currentChannel.url, uuid);
-      }
-    }
-  }, [currentChannel?.url]);
 
   // scroll
   const [scrollBottom, setScrollBottom] = useState(0);
