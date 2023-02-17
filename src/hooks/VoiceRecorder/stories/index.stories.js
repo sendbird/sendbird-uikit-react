@@ -1,29 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import SendbirdProvider from '../../../lib/Sendbird';
 
-import { VoiceRecorderProvider } from '../index';
 import { useVoiceRecorder } from '../useVoiceRecorder';
-import { useVoicePlayerContext, VoicePlayerProvider } from '../../VoicePlayer/index';
 import { useVoicePlayer } from '../../VoicePlayer/useVoicePlayer';
 
 export default { title: 'globalcontext/voice-recorder' };
 
 const Tester = () => {
   const [currentAudio, setAudioFile] = useState(null);
-
-  const {
-    checkInChannel,
-    checkOutChannel,
-  } = useVoicePlayerContext();
-
-  useEffect(() => {
-    const uuid = 'uuid';
-    checkInChannel('channel-url', uuid);
-    return () => {
-      checkOutChannel('channel-url', uuid);
-    }
-  }, []);
 
   const { start, stop, recordingTime, recordingStatus } = useVoiceRecorder({
     onRecordingStarted: () => {
