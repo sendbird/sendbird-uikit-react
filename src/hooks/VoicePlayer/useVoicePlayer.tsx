@@ -22,7 +22,7 @@ export interface UseVoicePlayerProps {
 
 export interface UseVoicePlayerContext {
   play: () => void;
-  pause: () => void;
+  pause: (groupKey?: string) => void;
   playbackTime: number;
   duration: number;
   playingStatus: VoicePlayerStatus;
@@ -92,8 +92,8 @@ export const useVoicePlayer = ({
       groupKey: groupKey,
     });
   };
-  const pauseVoicePlayer = () => {
-    stop?.();
+  const pauseVoicePlayer = (groupKey?: string) => {
+    stop?.(groupKey);
   };
 
   return ({

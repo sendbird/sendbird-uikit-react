@@ -134,7 +134,7 @@ export const VoiceMessageItemBody = ({
           audioState === VoiceMessageItemStatus.PLAYING && (
             <div
               className="sendbird-voice-message-item-body__status-button__button"
-              onClick={pause}
+              onClick={() => { pause() }}
             >
               <div className="sendbird-voice-message-item-body__status-button__button__pause">
                 <div className="sendbird-voice-message-item-body__status-button__button__pause__inner" />

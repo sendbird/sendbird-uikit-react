@@ -19,7 +19,7 @@ export interface VoicePlayerPlayProps {
 }
 export interface VoicePlayerContext {
   play: (props: VoicePlayerPlayProps) => void;
-  stop: () => void;
+  stop: (groupKey?: string) => void;
   addEventHandler: (props: VoicePlayerEvent) => void;
   removeEventHandler: (groupKey: string, handlerId: string) => void;
 }
@@ -72,9 +72,11 @@ export const VoicePlayerProvider = ({
     setCurrentGroupKey('');
   };
 
-  const stop = useCallback((): void => {
-    currentPlayer?.pause();
-    clearStates();
+  const stop = useCallback((groupKey?: string): void => {
+    if (groupKey === undefined || (groupKey?.length > 0 && groupKey === currentGroupKey)) {
+      currentPlayer?.pause();
+      clearStates();
+    }
   }, [currentPlayer, currentGroupKey]);
   const play = ({
     audioFile,

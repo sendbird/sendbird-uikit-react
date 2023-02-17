@@ -43,6 +43,9 @@ export const VoiceMessageInput = ({
 }: VoiceMessageInputProps): React.ReactElement => {
   const isReadyToRecord = useMemo(() => currentType === VoiceMessageInputStatus.READY_TO_RECORD, [currentType]);
   const isRecording = useMemo(() => currentType === VoiceMessageInputStatus.RECORDING, [currentType]);
+  const isSendButtonDisabled = useMemo(() => (
+    (isRecording || isReadyToRecord) && minRecordTime > currentValue
+  ), [isRecording, minRecordTime, currentValue]);
   const isPlayMode = useMemo(() => {
     return (
       currentType === VoiceMessageInputStatus.READY_TO_PLAY
@@ -102,9 +105,9 @@ export const VoiceMessageInput = ({
         {
           renderSubmitButton?.() || (
             <div
-              className={`sendbird-voice-message-input__controler__submit ${minRecordTime <= currentValue ? '' : 'voice-message--disabled'}`}
+              className={`sendbird-voice-message-input__controler__submit ${isSendButtonDisabled ? 'voice-message--disabled' : ''}`}
               onClick={() => {
-                if (minRecordTime <= currentValue) {
+                if (!isSendButtonDisabled) {
                   onSubmitClick();
                 }
               }}
