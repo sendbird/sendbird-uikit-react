@@ -17,6 +17,7 @@ import {
 } from '../../utils/index';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { ReplyType } from '../../index';
+import { Role } from '@sendbird/chat';
 
 interface Props {
   className?: string | Array<string>;
@@ -67,7 +68,10 @@ export default function MessageItemMenu({
   const isReplyTypeEnabled = !isFailedMessage(message)
     && !isPendingMessage(message)
     && (channel?.isGroupChannel?.()
-      && !(channel as GroupChannel)?.isBroadcast);
+    && (
+      ((channel as GroupChannel)?.isBroadcast && channel.myRole === Role.OPERATOR)
+      || !(channel as GroupChannel)?.isBroadcast
+    ));
   const showMenuItemReply = isReplyTypeEnabled && replyType === 'QUOTE_REPLY';
   const showMenuItemThread = isReplyTypeEnabled && replyType === 'THREAD' && !message?.parentMessageId && onReplyInThread;
 

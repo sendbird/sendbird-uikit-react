@@ -82,6 +82,10 @@ const ThreadMessageInput = (
     }));
   }, [mentionedUserIds]);
 
+  if (currentChannel?.isBroadcast && currentChannel?.myRole !== Role.OPERATOR) {
+    return null;
+  }
+
   return (
     <div className={`sendbird-thread-message-input ${className}`}>
       {
