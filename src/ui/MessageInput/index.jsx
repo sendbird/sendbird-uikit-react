@@ -88,6 +88,9 @@ const MessageInput = React.forwardRef((props, ref) => {
     onVoiceMessageIconClick,
     onKeyUp,
     onKeyDown,
+    renderFileUploadIcon,
+    renderVoiceMessageIcon,
+    renderSendMessageIcon,
   } = props;
   const textFieldId = messageFieldId || TEXT_FIELD_ID;
   const { stringSet } = useContext(LocalizationContext);
@@ -370,6 +373,18 @@ const MessageInput = React.forwardRef((props, ref) => {
       resetInput(ref);
     }
   };
+
+  const MemoizedSendIcon = useMemo(() => {
+    return renderSendMessageIcon?.();
+  }, [renderSendMessageIcon]);
+
+  const MemoizedUploadIcon = useMemo(() => {
+    return renderFileUploadIcon?.();
+  }, [renderSendMessageIcon]);
+
+  const MemoizedVoiceIcon = useMemo(() => {
+    return renderVoiceMessageIcon?.();
+  }, [renderVoiceMessageIcon]);
 
   return (
     <form
