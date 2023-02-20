@@ -1,5 +1,6 @@
 import './index.scss';
 import React, { ReactElement, useContext, useRef } from 'react';
+import type { Role } from '@sendbird/chat';
 import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
@@ -17,7 +18,6 @@ import {
 } from '../../utils/index';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { ReplyType } from '../../index';
-import { Role } from '@sendbird/chat';
 
 interface Props {
   className?: string | Array<string>;
@@ -69,7 +69,7 @@ export default function MessageItemMenu({
     && !isPendingMessage(message)
     && (channel?.isGroupChannel?.()
     && (
-      ((channel as GroupChannel)?.isBroadcast && channel.myRole === Role.OPERATOR)
+      ((channel as GroupChannel)?.isBroadcast && channel?.myRole === Role.OPERATOR)
       || !(channel as GroupChannel)?.isBroadcast
     ));
   const showMenuItemReply = isReplyTypeEnabled && replyType === 'QUOTE_REPLY';
