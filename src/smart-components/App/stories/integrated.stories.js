@@ -145,6 +145,7 @@ export const GroupChannel = () => {
     typingIndicator: true,
     messageStatus: true,
     imageCompression: true,
+    isVoiceMessageEnabled: true,
     compressionRate: 0.7,
     resizingHeight: '',
     resizingWidth: '',
@@ -228,6 +229,7 @@ export const GroupChannel = () => {
                 isMentionEnabled={sampleOptions.mention}
                 isTypingIndicatorEnabledOnChannelList={sampleOptions.typingIndicator}
                 isMessageReceiptStatusEnabledOnChannelList={sampleOptions.messageStatus}
+                isVoiceMessageEnabled={sampleOptions.isVoiceMessageEnabled}
                 imageCompression={{ compressionRate: sampleOptions.imageCompression ? 0.7 : 1 }}
                 replyType={sampleOptions.replyType}
                 stringSet={{
@@ -385,6 +387,17 @@ export const GroupChannel = () => {
                 setSampleOptions({
                   ...sampleOptions,
                   emojiReaction: !sampleOptions.emojiReaction,
+                });
+              }}
+            />
+          </ModerationOptionItem>
+          <ModerationOptionItem subTitle="Voice Message">
+            <ToggleButton
+              isEnabled={sampleOptions.isVoiceMessageEnabled}
+              onClick={() => {
+                setSampleOptions({
+                  ...sampleOptions,
+                  isVoiceMessageEnabled: !sampleOptions.isVoiceMessageEnabled,
                 });
               }}
             />
