@@ -1,6 +1,6 @@
 import './index.scss';
 import React, { ReactElement, useContext, useRef } from 'react';
-import type { Role } from '@sendbird/chat';
+import { Role } from '@sendbird/chat';
 import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
