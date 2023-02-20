@@ -181,8 +181,8 @@ const MessageInputWrapper = (
               ref={ref || messageInputRef}
               disabled={disabled}
               renderFileUploadIcon={renderFileUploadIcon}
-              renderVoiceMessageIcon={renderVoiceMessageIcon}
               renderSendMessageIcon={renderSendMessageIcon}
+              renderVoiceMessageIcon={renderVoiceMessageIcon}
               onStartTyping={() => {
                 channel?.startTyping();
               }}

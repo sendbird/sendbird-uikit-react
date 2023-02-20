@@ -14,13 +14,21 @@ import VoiceMessageInputWrapper from '../../../Channel/components/MessageInput/V
 
 export interface ThreadMessageInputProps {
   className?: string;
+  renderFileUploadIcon?: () =>  React.ReactElement;
+  renderVoiceMessageIcon?: () =>  React.ReactElement;
+  renderSendMessageIcon?: () =>  React.ReactElement;
 }
 
 const ThreadMessageInput = (
   props: ThreadMessageInputProps,
   ref: React.MutableRefObject<any>,
 ): React.ReactElement => {
-  const { className } = props;
+  const {
+    className,
+    renderFileUploadIcon,
+    renderVoiceMessageIcon,
+    renderSendMessageIcon,
+  } = props;
   const { config } = useSendbirdStateContext();
   const { stringSet } = useLocalization();
   const {
@@ -140,6 +148,9 @@ const ThreadMessageInput = (
               onVoiceMessageIconClick={() => {
                 setShowVoiceMessageInput(true);
               }}
+              renderFileUploadIcon={renderFileUploadIcon}
+              renderVoiceMessageIcon={renderVoiceMessageIcon}
+              renderSendMessageIcon={renderSendMessageIcon}
               ref={ref || messageInputRef}
               placeholder={
                 (currentChannel?.isFrozen && !(currentChannel?.myRole === Role.OPERATOR) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)

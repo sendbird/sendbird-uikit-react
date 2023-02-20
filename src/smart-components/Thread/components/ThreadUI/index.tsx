@@ -27,6 +27,9 @@ export interface ThreadUIProps {
     chainBottom: boolean,
     hasSeparator: boolean,
   }) => React.ReactElement;
+  renderFileUploadIcon?: () =>  React.ReactElement;
+  renderVoiceMessageIcon?: () =>  React.ReactElement;
+  renderSendMessageIcon?: () =>  React.ReactElement;
   renderMessageInput?: () => React.ReactElement;
   renderCustomSeparator?: () => React.ReactElement;
   renderParentMessageInfoPlaceholder?: (type: ParentMessageStateTypes) => React.ReactElement;
@@ -41,6 +44,9 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
   renderCustomSeparator,
   renderParentMessageInfoPlaceholder,
   renderThreadListPlaceHolder,
+  renderFileUploadIcon,
+  renderVoiceMessageIcon,
+  renderSendMessageIcon,
 }: ThreadUIProps): React.ReactElement => {
   const {
     stores,
@@ -176,6 +182,9 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
           renderMessageInput?.() || (
             <ThreadMessageInput
               className="sendbird-thread-ui__message-input"
+              renderFileUploadIcon={renderFileUploadIcon}
+              renderVoiceMessageIcon={renderVoiceMessageIcon}
+              renderSendMessageIcon={renderSendMessageIcon}
             />
           )
         }
