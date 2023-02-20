@@ -24,6 +24,13 @@ import { UikitMessageHandler } from './selectors';
 import { Logger } from './SendbirdState';
 import { ReplyType } from 'SendbirdUIKitGlobal';
 
+// note to SDK team:
+// using enum inside .d.ts won’t work for jest, but const enum will work.
+export const Role = {
+  OPERATOR: 'operator',
+  NONE: 'none',
+} as const;
+
 export interface SendBirdProviderProps {
   userId: string;
   appId: string;

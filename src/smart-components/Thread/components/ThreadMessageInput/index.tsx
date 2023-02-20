@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Role } from '@sendbird/chat';
 import { MutedState } from '@sendbird/chat/groupChannel';
 
 import './index.scss';
@@ -11,6 +10,7 @@ import SuggestedMentionList from '../../../Channel/components/SuggestedMentionLi
 import { useThreadContext } from '../../context/ThreadProvider';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import VoiceMessageInputWrapper from '../../../Channel/components/MessageInput/VoiceMessageInputWrapper';
+import { Role } from '../../../../lib/types';
 
 export interface ThreadMessageInputProps {
   className?: string;

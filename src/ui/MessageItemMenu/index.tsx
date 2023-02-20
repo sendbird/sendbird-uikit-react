@@ -1,6 +1,5 @@
 import './index.scss';
 import React, { ReactElement, useContext, useRef } from 'react';
-import { Role } from '@sendbird/chat';
 import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
@@ -18,6 +17,7 @@ import {
 } from '../../utils/index';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { ReplyType } from '../../index';
+import { Role } from '../../lib/types';
 
 interface Props {
   className?: string | Array<string>;
