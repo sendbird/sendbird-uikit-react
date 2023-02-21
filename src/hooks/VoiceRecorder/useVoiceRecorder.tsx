@@ -71,7 +71,7 @@ export const useVoiceRecorder = ({
 
   // Timer
   const [recordingTime, setRecordingTime] = useState<number>(0);
-  let timer: NodeJS.Timer = null;
+  let timer: ReturnType<typeof setInterval> = null;
   function startTimer() {
     stopTimer();
     setRecordingTime(0);
