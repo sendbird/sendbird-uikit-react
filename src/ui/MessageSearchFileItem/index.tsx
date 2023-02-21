@@ -29,7 +29,7 @@ export default function MessageSearchFileItem(props: Props): ReactElement {
   const { profileUrl, nickname } = sender;
   const { stringSet, dateLocale } = useLocalization();
   const isVoiceMsg = isVoiceMessage(message);
-  const displayingFileName = isVoiceMsg ? stringSet.VOICE_MESSAGE : (name || url);
+  const prettyFilename = isVoiceMsg ? stringSet.VOICE_MESSAGE : (name || url);
 
   return (
     <div
@@ -74,7 +74,7 @@ export default function MessageSearchFileItem(props: Props): ReactElement {
             type={LabelTypography.BODY_2}
             color={LabelColors.ONBACKGROUND_1}
           >
-            {displayingFileName}
+            {prettyFilename}
           </Label>
         </div>
       </div>

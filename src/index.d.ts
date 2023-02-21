@@ -993,7 +993,6 @@ interface OpenChannelProviderProps {
   messageLimit?: number;
   onBeforeSendUserMessage?(text: string): UserMessageCreateParams;
   onBeforeSendFileMessage?(file_: File): FileMessageCreateParams;
-  onBeforeSendVoiceMessage?: (file: File, quotedMessage?: UserMessage | FileMessage) => FileMessageCreateParams;
   onChatHeaderActionClick?(): void;
   disableUserProfile?: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;

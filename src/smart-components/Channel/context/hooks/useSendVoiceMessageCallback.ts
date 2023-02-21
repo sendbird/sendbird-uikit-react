@@ -65,10 +65,6 @@ export const useSendVoiceMessageCallback = ({
       })
       .onFailed((err, failedMessage) => {
         logger.error('Channel: Sending voice message failed!', { failedMessage, err });
-        // // eslint-disable-next-line no-param-reassign
-        // failedMessage.localUrl = URL.createObjectURL(file);
-        // // eslint-disable-next-line no-param-reassign
-        // failedMessage.file = file;
         messagesDispatcher({
           type: messageActionTypes.SEND_MESSAGEGE_FAILURE,
           payload: failedMessage,
