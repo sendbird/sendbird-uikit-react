@@ -14,13 +14,21 @@ import VoiceMessageInputWrapper from './VoiceMessageInputWrapper';
 
 export type MessageInputWrapperProps = {
   value?: string;
+  renderFileUploadIcon?: () =>  React.ReactElement;
+  renderVoiceMessageIcon?: () =>  React.ReactElement;
+  renderSendMessageIcon?: () =>  React.ReactElement;
 };
 
 const MessageInputWrapper = (
   props: MessageInputWrapperProps,
   ref: React.MutableRefObject<any>,
 ): JSX.Element => {
-  const { value } = props;
+  const {
+    value,
+    renderFileUploadIcon,
+    renderVoiceMessageIcon,
+    renderSendMessageIcon,
+  } = props;
   const {
     currentGroupChannel,
     initialized,
@@ -172,6 +180,9 @@ const MessageInputWrapper = (
               }
               ref={ref || messageInputRef}
               disabled={disabled}
+              renderFileUploadIcon={renderFileUploadIcon}
+              renderSendMessageIcon={renderSendMessageIcon}
+              renderVoiceMessageIcon={renderVoiceMessageIcon}
               onStartTyping={() => {
                 channel?.startTyping();
               }}

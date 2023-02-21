@@ -88,6 +88,9 @@ const MessageInput = React.forwardRef((props, ref) => {
     onVoiceMessageIconClick,
     onKeyUp,
     onKeyDown,
+    renderFileUploadIcon,
+    renderVoiceMessageIcon,
+    renderSendMessageIcon,
   } = props;
   const textFieldId = messageFieldId || TEXT_FIELD_ID;
   const { stringSet } = useContext(LocalizationContext);
@@ -453,40 +456,46 @@ const MessageInput = React.forwardRef((props, ref) => {
               width="32px"
               onClick={() => sendMessage()}
             >
-              <Icon
-                type={IconTypes.SEND}
-                fillColor={disabled ? IconColors.ON_BACKGROUND_4 : IconColors.PRIMARY}
-                width="20px"
-                height="20px"
-              />
+              {
+                renderSendMessageIcon?.() || (
+                  <Icon
+                    type={IconTypes.SEND}
+                    fillColor={disabled ? IconColors.ON_BACKGROUND_4 : IconColors.PRIMARY}
+                    width="20px"
+                    height="20px"
+                  />
+                )
+              }
             </IconButton>
           )
         }
         {/* file upload icon */}
         {
           (!isEdit && !isInput) && (
-            <IconButton
-              className={`sendbird-message-input--attach ${isVoiceMessageEnabled ? 'is-voice-message-enabled' : ''}`}
-              height="32px"
-              width="32px"
-              onClick={() => {
-                // todo: clear previous input
-                fileInputRef?.current?.click?.();
-              }}
-            >
-              <Icon
-                type={IconTypes.ATTACH}
-                fillColor={disabled ? IconColors.ON_BACKGROUND_4 : IconColors.CONTENT_INVERSE}
-                width="20px"
-                height="20px"
-              />
-              <input
-                className="sendbird-message-input--attach-input"
-                type="file"
-                ref={fileInputRef}
-                onChange={handleUploadFile(onFileUpload)}
-              />
-            </IconButton>
+            (renderFileUploadIcon?.() || (
+              <IconButton
+                className={`sendbird-message-input--attach ${isVoiceMessageEnabled ? 'is-voice-message-enabled' : ''}`}
+                height="32px"
+                width="32px"
+                onClick={() => {
+                  // todo: clear previous input
+                  fileInputRef?.current?.click?.();
+                }}
+              >
+                <Icon
+                  type={IconTypes.ATTACH}
+                  fillColor={disabled ? IconColors.ON_BACKGROUND_4 : IconColors.CONTENT_INVERSE}
+                  width="20px"
+                  height="20px"
+                />
+                <input
+                  className="sendbird-message-input--attach-input"
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleUploadFile(onFileUpload)}
+                />
+              </IconButton>
+            ))
           )
         }
         {/* voice message input trigger */}
@@ -497,12 +506,16 @@ const MessageInput = React.forwardRef((props, ref) => {
             height="32px"
             onClick={onVoiceMessageIconClick}
           >
-            <Icon
-              type={IconTypes.AUDIO_ON_LINED}
-              fillColor={disabled ? IconColors.ON_BACKGROUND_4 : IconColors.CONTENT_INVERSE}
-              width="20px"
-              height="20px"
-            />
+            {
+              renderVoiceMessageIcon?.() || (
+                <Icon
+                  type={IconTypes.AUDIO_ON_LINED}
+                  fillColor={disabled ? IconColors.ON_BACKGROUND_4 : IconColors.CONTENT_INVERSE}
+                  width="20px"
+                  height="20px"
+                />
+              )
+            }
           </IconButton>
         )}
       </div>

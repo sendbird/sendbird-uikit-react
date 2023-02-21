@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import format from 'date-fns/format';
 import { FileMessage, UserMessage } from '@sendbird/chat/message';
-import { Role } from '@sendbird/chat';
 
 import './index.scss';
 import RemoveMessage from '../RemoveMessageModal';
@@ -26,6 +25,7 @@ import ConnectedUserProfile from '../../../../ui/UserProfile';
 import { UserProfileContextInterface } from '../../../../ui/MessageContent';
 import MessageInput from '../../../../ui/MessageInput';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
+import { Role } from '../../../../lib/types';
 
 export interface ParentMessageInfoProps {
   className?: string;
