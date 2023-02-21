@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
 import './index.scss';
 
-export enum ProgressBarColorTypes {
-  PRIMARY = 'progress-bar-color--primary',
-  GRAY = 'progress-bar-color--gray',
-}
+export const ProgressBarColorTypes = {
+  PRIMARY: 'progress-bar-color--primary',
+  GRAY: 'progress-bar-color--gray',
+} as const;
+export type ProgressBarColorTypes = typeof ProgressBarColorTypes[keyof typeof ProgressBarColorTypes];
 
 export interface ProgressBarProps {
   className?: string;

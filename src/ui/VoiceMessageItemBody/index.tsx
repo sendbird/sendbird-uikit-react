@@ -18,12 +18,13 @@ export interface VoiceMessageItemBodyProps {
   isReactionEnabled?: boolean;
 }
 
-export enum VoiceMessageItemStatus {
-  NONE = 'NONE',
-  LOADING = 'LOADING',
-  READY_TO_PLAY = 'READY_TO_PLAY',
-  PLAYING = 'PLAYING',
-}
+export const VoiceMessageItemStatus = {
+  NONE: 'NONE',
+  LOADING: 'LOADING',
+  READY_TO_PLAY: 'READY_TO_PLAY',
+  PLAYING: 'PLAYING',
+} as const;
+export type VoiceMessageItemStatus = typeof VoiceMessageItemStatus[keyof typeof VoiceMessageItemStatus];
 
 export const VoiceMessageItemBody = ({
   className,
@@ -33,7 +34,7 @@ export const VoiceMessageItemBody = ({
   isReactionEnabled = false,
 }: VoiceMessageItemBodyProps): React.ReactElement => {
   const [usingReaction, setUsingReaction] = useState(false);
-  const [audioState, setAudioState] = useState(VoiceMessageItemStatus.NONE);
+  const [audioState, setAudioState] = useState<VoiceMessageItemStatus>(VoiceMessageItemStatus.NONE);
   const [audioFile, setAudioFile] = useState(null);
   useEffect(() => {
     if (message?.url) {

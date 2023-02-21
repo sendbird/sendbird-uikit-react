@@ -11,6 +11,12 @@ export default {
   useSendbirdStateContext: 'src/hooks/useSendbirdStateContext.tsx',
   withSendbird: 'src/lib/SendbirdSdkContext.jsx',
 
+  // Voice message
+  'VoiceRecorder/context': 'src/hooks/VoiceRecorder/index.tsx',
+  'VoiceRecorder/useVoiceRecorder': 'src/hooks/VoiceRecorder/useVoiceRecorder.tsx',
+  'VoicePlayer/context': 'src/hooks/VoicePlayer/index.tsx',
+  'VoicePlayer/useVoicePlayer': 'src/hooks/VoicePlayer/useVoicePlayer.tsx',
+
   // handlers - experimental
   'handlers/ConnectionHandler': 'src/lib/handlers/ConnectionHandler.ts',
   'handlers/GroupChannelHandler': 'src/lib/handlers/GroupChannelHandler.ts',
@@ -160,6 +166,8 @@ export default {
   'ui/OpenchannelThumbnailMessage': 'src/ui/OpenchannelThumbnailMessage/index.tsx',
   'ui/OpenchannelUserMessage': 'src/ui/OpenchannelUserMessage/index.tsx',
   'ui/PlaceHolder': 'src/ui/PlaceHolder/index.tsx',
+  'ui/PlaybackTime': 'src/ui/PlaybackTime/index.tsx',
+  'ui/ProgressBar': 'src/ui/ProgressBar/index.tsx',
   'ui/QuoteMessage': 'src/ui/QuoteMessage/index.tsx',
   'ui/QuoteMessageInput': 'src/ui/QuoteMessageInput/index.tsx',
   'ui/ReactionBadge': 'src/ui/ReactionBadge/index.tsx',
@@ -174,5 +182,7 @@ export default {
   'ui/UnknownMessageItemBody': 'src/ui/UnknownMessageItemBody/index.tsx',
   'ui/UserListItem': 'src/ui/UserListItem/index.tsx',
   'ui/UserProfile': 'src/ui/UserProfile/index.tsx',
+  'ui/VoiceMessgeInput': 'src/ui/VoiceMessageInput/index.tsx',
+  'ui/VoiceMessageItemBody': 'src/ui/VoiceMessageItemBody.tsx',
   'ui/Word': 'src/ui/Word/index.tsx',
 };
