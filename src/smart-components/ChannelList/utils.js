@@ -169,7 +169,6 @@ function setupChannelList({
   sortChannelList,
   disableAutoSelect,
   setChannelsToMarkAsRead,
-  activeChannelUrl,
 }) {
   if (sdk?.groupChannel) {
     createEventHandler({
