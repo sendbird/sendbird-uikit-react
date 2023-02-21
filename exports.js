@@ -20,6 +20,7 @@ export default {
 
   // utils
   'utils/message/getOutgoingMessageState': 'src/utils/exports/getOutgoingMessageState.ts',
+  'utils/message/isVoiceMessage': 'src/utils/isVoiceMessage.ts',
 
   // ChannelList
   ChannelList: 'src/smart-components/ChannelList/index.tsx',
