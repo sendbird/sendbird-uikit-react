@@ -332,6 +332,7 @@ declare module "SendbirdUIKitGlobal" {
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode | React.ReactElement;
     disableUserProfile?: boolean;
     disableAutoSelect?: boolean;
+    activeChannelUrl?: string;
     isTypingIndicatorEnabled?: boolean;
     isMessageReceiptStatusEnabled?: boolean;
   }

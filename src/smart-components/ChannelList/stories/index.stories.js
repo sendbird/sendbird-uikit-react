@@ -204,3 +204,47 @@ export const QueryParamsForChannelList = () => {
     </Sendbird>
   );
 };
+
+export const preSelectedChannel = () => {
+  const defaultChannel = 'sendbird_group_channel_199019523_b6febec0ad887b774dbe374e7a907841a9d2a61b';
+  const defaultQuery = {
+    channelListQuery: {
+      limit: 20,
+    },
+  };
+  const [activeChannelUrl, setActiveChannelUrl] = useState(defaultChannel);
+  const [queries, setQueries] = useState(defaultQuery);
+  return (
+    <Sendbird
+      appId={appId}
+      userId={userId}
+    >
+      <div>
+        <button
+          onClick={() => {
+            setQueries(defaultQuery)
+            setActiveChannelUrl('random_url');
+          }}
+        >Set invalid URL </button>
+        <button
+          onClick={() => {
+            setQueries({
+              channelListQuery: {
+                limit: 2,
+              }
+            });
+            setActiveChannelUrl(defaultChannel);
+          }}
+        >Set channel outside list </button>
+      </div>
+      <div style={{ height: '520px' }}>
+        <ChannelList
+          queries={queries}
+          onChannelSelect={(c) => { console.warn(c); }}
+          activeChannelUrl={activeChannelUrl}
+        />
+      </div>
+
+    </Sendbird>
+  );
+};
