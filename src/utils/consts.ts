@@ -1,0 +1,18 @@
+// voice message record
+export const VOICE_RECORDER_DEFAULT_MIN = 1000;
+export const VOICE_RECORDER_DEFAULT_MAX = 60000;
+export const VOICE_RECORDER_MIME_TYPE = 'audio/webm';
+export const VOICE_RECORDER_AUDIO_BITS = 128000;
+
+// voice message play
+export const VOICE_PLAYER_PLAYBACK_BUFFER = 0.01;
+export const VOICE_PLAYER_DURATION_MIN_SIZE = 1000;
+
+// voice message file
+export const VOICE_MESSAGE_FILE_NAME = 'Voice_message.mp3';
+export const VOICE_MESSAGE_MIME_TYPE = 'audio/mp3;sbu_type=voice';
+
+// meta array
+export const META_ARRAY_VOICE_DURATION_KEY = 'KEY_VOICE_MESSAGE_DURATION';
+export const META_ARRAY_MESSAGE_TYPE_KEY = 'KEY_INTERNAL_MESSAGE_TYPE';
+export const META_ARRAY_MESSAGE_TYPE_VALUE__VOICE = 'voice/mp3';

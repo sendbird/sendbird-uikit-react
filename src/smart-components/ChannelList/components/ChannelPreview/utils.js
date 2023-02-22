@@ -59,11 +59,7 @@ const getPrettyLastMessage = (message = {}) => {
   return message.message;
 };
 
-export const getLastMessage = (channel) => (
-  channel?.lastMessage
-    ? getPrettyLastMessage(channel.lastMessage)
-    : ''
-);
+export const getLastMessage = (channel) => (channel?.lastMessage ? getPrettyLastMessage(channel?.lastMessage) : '');
 
 export const getChannelUnreadMessageCount = (channel) => (
   channel?.unreadMessageCount

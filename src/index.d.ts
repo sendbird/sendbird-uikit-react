@@ -42,6 +42,7 @@ import {
 } from '@sendbird/chat/openChannel';
 import { UikitMessageHandler } from './lib/selectors';
 import { RenderCustomSeparatorProps } from './types';
+import { isVoiceMessage } from './utils';
 
 type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
 
@@ -115,8 +116,13 @@ interface SendBirdProviderProps {
     resizingHeight?: number | string,
   };
   isMentionEnabled?: boolean;
-  // isTypingIndicatorEnabledOnChannelList?: boolean;
-  // isMessageReceiptStatusEnabledOnChannelList?: boolean;
+  isVoiceMessageEnabled?: boolean;
+  voiceRecord?: {
+    maxRecordingTime?: number,
+    minRecordingTime?: number,
+  };
+  isTypingIndicatorEnabledOnChannelList?: boolean;
+  isMessageReceiptStatusEnabledOnChannelList?: boolean;
 }
 
 interface SendBirdStateConfig {
@@ -144,6 +150,11 @@ interface SendBirdStateConfig {
     compressionRate?: number,
     resizingWidth?: number | string,
     resizingHeight?: number | string,
+  };
+  isVoiceMessageEnabled?: boolean;
+  voiceRecord?: {
+    maxRecordingTime?: number,
+    minRecordingTime?: number,
   };
   isTypingIndicatorEnabledOnChannelList?: boolean;
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
@@ -281,6 +292,11 @@ interface AppProps {
   config?: SendBirdProviderConfig;
   isReactionEnabled?: boolean;
   isMessageGroupingEnabled?: boolean;
+  isVoiceMessageEnabled?: boolean;
+  voiceRecord?: {
+    maxRecordingTime?: number,
+    minRecordingTime?: number,
+  };
   stringSet?: Record<string, string>;
   colorSet?: Record<string, string>;
   imageCompression?: {
@@ -291,8 +307,8 @@ interface AppProps {
   replyType?: ReplyType;
   disableAutoSelect?: boolean;
   isMentionEnabled?: boolean;
-  // isTypingIndicatorEnabledOnChannelList?: boolean;
-  // isMessageReceiptStatusEnabledOnChannelList?: boolean;
+  isTypingIndicatorEnabledOnChannelList?: boolean;
+  isMessageReceiptStatusEnabledOnChannelList?: boolean;
 }
 
 interface ApplicationUserListQuery {
@@ -322,6 +338,88 @@ interface ApplicationUserListQuery {
 //   unreadChannelFilter?: 'all' | 'unread_message';
 //   includeFrozen?: boolean;
 // }
+
+export interface VoiceRecorderProps {
+  children: React.ReactElement;
+}
+export interface VoiceRecorderEventHandler {
+  onRecordingStarted?: () => void;
+  onRecordingEnded?: (props: null | File) => void;
+}
+export interface VoiceRecorderContext {
+  start: (eventHandler?: VoiceRecorderEventHandler) => void,
+  stop: () => void,
+  isRecordable: boolean;
+}
+export enum VoiceRecorderStatus {
+  PREPARING = 'PREPARING',
+  READY_TO_RECORD = 'READY_TO_RECORD',
+  RECORDING = 'RECORDING',
+  COMPLETED = 'COMPLETED',
+}
+export interface UseVoiceRecorderContext {
+  start: () => void;
+  stop: () => void;
+  cancel: () => void;
+  recordingLimit: number;
+  recordingTime: number;
+  recordedFile: File;
+  recordingStatus: VoiceRecorderStatus;
+}
+export interface VoicePlayerProps {
+  children: React.ReactElement;
+}
+export interface VoicePlayerPlayProps {
+  audioFile: File;
+  playbackTime: number;
+  groupKey: string;
+}
+export enum VoicePlayerEventTypes {
+  STARTED = 'onPlayingStarted',
+  STOPPED = 'onPlayingStopped',
+  TIME_UPDATED = 'onPlaybackTimeUpdated',
+}
+export interface VoicePlayerEventParams {
+  groupKey: string;
+  duration?: number;
+  playbackTime?: number;
+}
+export interface VoicePlayerEvent {
+  groupKey: string;
+  id: string;
+  onPlayingStarted?: (props: VoicePlayerEventParams) => void;
+  onPlayingStopped?: (props: VoicePlayerEventParams) => void;
+  onPlaybackTimeUpdated?: (props: VoicePlayerEventParams) => void;
+}
+export interface VoicePlayerContext {
+  play: (props: VoicePlayerPlayProps) => void;
+  stop: (groupKey?: string) => void;
+  addEventHandler: (props: VoicePlayerEvent) => void;
+  removeEventHandler: (groupKey: string, handlerId: string) => void;
+}
+export interface UseVoicePlayerProps {
+  key: string;
+  channelUrl: string;
+  audioFile?: File;
+  onPlayingStarted?: (props: VoicePlayerEventParams) => void;
+  onPlayingStopped?: (props: VoicePlayerEventParams) => void;
+  onPlaybackTimeUpdated?: (props: VoicePlayerEventParams) => void;
+}
+export enum VoicePlayerStatus {
+  PREPARING = 'PREPARING',
+  READY_TO_PLAY = 'READY_TO_PLAY',
+  PLAYING = 'PLAYING',
+  COMPLETED = 'COMPLETED',
+}
+
+export interface UseVoicePlayerContext {
+  play: () => void;
+  pause: (groupKey?: string) => void;
+  playbackTime: number;
+  duration: number;
+  playingStatus: VoicePlayerStatus;
+}
+
 interface ChannelListQueries {
   applicationUserListQuery?: ApplicationUserListQuery;
   channelListQuery?: GroupChannelListQuery;
@@ -374,7 +472,7 @@ interface ChannelListUIProps {
   renderPlaceHolderEmptyList?: (props: void) => React.ReactElement;
 }
 
-interface ChannelListProps extends ChannelListProviderInterface, ChannelListUIProps {}
+interface ChannelListProps extends ChannelListProviderInterface, ChannelListUIProps { }
 
 interface ChannelListHeaderInterface {
   renderHeader?: (props: void) => React.ReactElement;
@@ -469,7 +567,7 @@ type LeaveChannelProps = {
   onCancel: () => void;
 };
 
-declare module '@sendbird/uikit-react'  {
+declare module '@sendbird/uikit-react' {
   export type App = React.FunctionComponent<AppProps>;
   export type SendBirdProvider = React.FunctionComponent<SendBirdProviderProps>;
   export type sendbirdSelectors = sendbirdSelectorsInterface;
@@ -514,6 +612,21 @@ declare module '@sendbird/uikit-react/withSendBird' {
   export default withSendBird;
 }
 
+declare module '@sendbird/uikit-react/VoiceRecorder/context' {
+  export type VoiceRecorderProvider = React.FunctionComponent<VoiceRecorderProps>;
+  export function useVoiceRecorderContext(): VoiceRecorderContext;
+}
+declare module '@sendbird/uikit-react/VoiceRecorder/useVoiceRecorder' {
+  export function useVoiceRecorder(props: VoiceRecorderEventHandler): UseVoiceRecorderContext;
+}
+declare module '@sendbird/uikit-react/VoicePlayer/context' {
+  export type VoicePlayerProvider = React.FunctionComponent<VoicePlayerProps>;
+  export function useVoicePlayerContext(): VoicePlayerContext;
+}
+declare module '@sendbird/uikit-react/VoicePlayer/useVoicePlayer' {
+  export function useVoicePlayer(props: UseVoicePlayerProps): UseVoicePlayerContext;
+}
+
 declare module '@sendbird/uikit-react/utils/message/getOutgoingMessageState' {
   export enum OutgoingMessageStates {
     NONE = 'NONE',
@@ -529,6 +642,11 @@ declare module '@sendbird/uikit-react/utils/message/getOutgoingMessageState' {
   ): OutgoingMessageStates;
 }
 
+declare module '@sendbird/uikit-react/utils/message/isVoiceMessage' {
+  type isVoiceMessage = (message: FileMessage) => boolean;
+  export default isVoiceMessage;
+}
+
 declare module '@sendbird/uikit-react/ChannelList' {
   type ChannelList = React.FunctionComponent<ChannelListProps>;
   export default ChannelList;
@@ -536,7 +654,7 @@ declare module '@sendbird/uikit-react/ChannelList' {
 
 declare module '@sendbird/uikit-react/ChannelList/context' {
   export type ChannelListProvider = React.FunctionComponent<ChannelListProviderProps>;
-  export function useChannelListContext (): ChannelListProviderInterface;
+  export function useChannelListContext(): ChannelListProviderInterface;
 }
 
 declare module '@sendbird/uikit-react/ChannelList/components/AddChannel' {
@@ -634,6 +752,7 @@ type ChannelContextProps = {
   onBeforeSendFileMessage?(file: File, quotedMessage?: UserMessage | FileMessage): FileMessageCreateParams;
   onBeforeUpdateUserMessage?(text: string): UserMessageUpdateParams;
   onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
+  onBeforeSendVoiceMessage?: (file: File, quotedMessage?: UserMessage | FileMessage) => FileMessageCreateParams;
   onSearchClick?(): void;
   replyType?: ReplyType;
   queries?: ChannelQueries;
@@ -649,6 +768,9 @@ interface ChannelUIProps {
   renderChannelHeader?: () => React.ReactElement;
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderMessageInput?: () => React.ReactElement;
+  renderFileUploadIcon?: () =>  React.ReactElement;
+  renderVoiceMessageIcon?: () =>  React.ReactElement;
+  renderSendMessageIcon?: () =>  React.ReactElement;
   renderTypingIndicator?: () => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
 }
@@ -669,10 +791,22 @@ interface MessageStoreInterface {
   emojiContainer: any;
   readStatus: any;
 }
-
-interface ChannelProviderInterface extends ChannelContextProps, ChannelContextProps {
+interface UpdateMessageProps {
+  messageId: string | number;
+  message: string;
+  mentionedUsers?: Array<User>;
+  mentionTemplate?: string;
+}
+interface SendMessageParams {
+  message: string;
+  quoteMessage?: UserMessage | FileMessage;
+  // mentionedUserIds?: Array<string>;
+  mentionedUsers?: Array<User>;
+  mentionTemplate?: string;
+}
+interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInterface {
   scrollToMessage?(createdAt: number, messageId: number): void;
-  messageActionTypes: Record<string ,string>;
+  messageActionTypes: Record<string, string>;
   quoteMessage: UserMessage | FileMessage;
   setQuoteMessage: React.Dispatch<React.SetStateAction<UserMessage | FileMessage>>;
   initialTimeStamp: number;
@@ -684,11 +818,21 @@ interface ChannelProviderInterface extends ChannelContextProps, ChannelContextPr
   setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
   setHighLightedMessageId: React.Dispatch<React.SetStateAction<number>>;
   messageInputRef: React.MutableRefObject<HTMLInputElement>,
+  deleteMessage(message: CoreMessageType): Promise<CoreMessageType>,
+  updateMessage(props: UpdateMessageProps, callback?: (err: SendbirdError, message: UserMessage) => void): Promise<CoreMessageType>,
+  resendMessage(failedMessage: UserMessage | FileMessage): Promise<UserMessage | FileMessage>,
+  // TODO: Good to change interface to using params / This part need refactoring
+  sendMessage(props: SendMessageParams): Promise<UserMessage>,
+  sendFileMessage(file: File, quoteMessage: UserMessage | FileMessage): Promise<FileMessage>,
+  sendVoiceMessage: (file: File, duration: number, quoteMessage?: UserMessage | FileMessage) => void,
+  // sendMessage(messageParams: SendBird.UserMessageParams): Promise<SendBird.UserMessage>,
+  // sendFileMessage(messageParams: SendBird.FileMessageParams): Promise<SendBird.FileMessage>,
   toggleReaction(message: UserMessage | FileMessage, emojiKey: string, isReacted: boolean): void,
+  renderUserMentionItem?: (props: { user: User }) => JSX.Element;
 }
 
 type FileViewerProps = {
-  onCancel:() => void;
+  onCancel: () => void;
   message: ClientFileMessage;
 }
 
@@ -1221,7 +1365,6 @@ interface CreateChannelProviderProps {
   userListQuery?(): UserListQuery;
 }
 
-
 interface CreateChannelContextInterface {
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
   createChannel: (channelParams: GroupChannelCreateParams) => Promise<GroupChannel>;
@@ -1236,10 +1379,10 @@ interface CreateChannelContextInterface {
 
 interface CreateChannelUIProps {
   onCancel?(): void;
-  renderStepOne?:(props: void) => React.ReactElement;
+  renderStepOne?: (props: void) => React.ReactElement;
 }
 
-interface CreateChannelProps extends CreateChannelProviderProps, CreateChannelUIProps {}
+interface CreateChannelProps extends CreateChannelProviderProps, CreateChannelUIProps { }
 
 interface InviteUsersProps {
   onCancel?: () => void;
@@ -1256,7 +1399,7 @@ declare module '@sendbird/uikit-react/CreateChannel' {
 
 declare module '@sendbird/uikit-react/CreateChannel/context' {
   export type CreateChannelProvider = React.FC<CreateChannelProviderProps>;
-  export function useCreateChannelContext (): CreateChannelContextInterface;
+  export function useCreateChannelContext(): CreateChannelContextInterface;
 }
 
 declare module '@sendbird/uikit-react/CreateChannel/components/CreateChannelUI' {
@@ -1294,7 +1437,7 @@ declare module '@sendbird/uikit-react/EditUserProfile' {
 
 declare module '@sendbird/uikit-react/EditUserProfile/context' {
   export type EditUserProfileProvider = React.FC<EditUserProfileProps>;
-  export function useEditUserProfileContext (): EditUserProfileProviderInterface;
+  export function useEditUserProfileContext(): EditUserProfileProviderInterface;
 }
 
 declare module '@sendbird/uikit-react/EditUserProfile/components/EditUserProfileUI' {
@@ -1360,7 +1503,7 @@ declare module '@sendbird/uikit-react/ui/Badge' {
   interface BadgeProps {
     count: number,
     maxLevel?: number,
-    className?: string | string [],
+    className?: string | string[],
   }
   type Badge = React.FC<BadgeProps>;
   export default Badge;
@@ -1530,7 +1673,7 @@ declare module '@sendbird/uikit-react/ui/ImageRenderer' {
   interface ImageRendererProps {
     className?: string | string[],
     defaultComponent?: () => React.ReactElement,
-    placeHolder?:  () => React.ReactElement,
+    placeHolder?: () => React.ReactElement,
     alt?: string,
     width?: number,
     height?: number,
@@ -1631,6 +1774,7 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
     className?: string[],
     isEdit?: boolean,
     isMentionEnabled?: boolean;
+    isVoiceMessageEnabled?: boolean;
     disabled?: boolean,
     message?: UserMessage;
     placeholder?: string,
@@ -1645,6 +1789,7 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
     onUserMentioned?: (user: User) => void,
     onMentionStringChange?: (str: string) => void,
     onMentionedUserIdsUpdated?: (userIds: Array<string>) => void,
+    onVoiceMessageIconClick?: () => void;
     onKeyUp?: (e: React.KeyboardEvent<HTMLDivElement>) => void,
     onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void,
   }
@@ -1704,7 +1849,7 @@ declare module '@sendbird/uikit-react/ui/MessageSearchItem' {
     message: ClientUserMessage;
     selected?: boolean;
     onClick?: (message: ClientMessage) => void;
-    }
+  }
   type MessageSearchItem = React.FC<MessageSearchItemProps>;
   export default MessageSearchItem;
 
@@ -1851,7 +1996,33 @@ declare module '@sendbird/uikit-react/ui/PlaceHolder' {
   }
   type PlaceHolder = React.FC<PlaceHolderProps>;
   export default PlaceHolder;
+}
 
+declare module '@sendbird/uikit-react/ui/PlaybackTime' {
+  interface PlaybackTimeProps {
+    className?: string;
+    time: number;// millisec
+    labelType?: string;
+    labelColor?: string;
+  }
+  type PlaybackTime = React.FC<PlaybackTimeProps>;
+  export default PlaybackTime;
+}
+
+declare module '@sendbird/uikit-react/ui/ProgressBar' {
+  export enum ProgressBarColorTypes {
+    PRIMARY = 'progress-bar-color--primary',
+    GRAY = 'progress-bar-color--gray',
+  }
+  interface ProgressBarProps {
+    className?: string;
+    disabled?: boolean;
+    maxSize: number;
+    currentSize: number;
+    colorType?: ProgressBarColorTypes;
+  }
+  type ProgressBar = React.FC<ProgressBarProps>;
+  export default ProgressBar;
 }
 
 declare module '@sendbird/uikit-react/ui/QuoteMessage' {
@@ -2031,4 +2202,50 @@ declare module '@sendbird/uikit-react/ui/UserProfile' {
   }
   type UserProfile = React.FC<UserProfileProps>;
   export default UserProfile;
+}
+
+declare module '@sendbird/uikit-react/ui/VoiceMessageInput' {
+  export enum VoiceMessageInputStatus {
+    READY_TO_RECORD = 'READY_TO_RECORD',
+    RECORDING = 'RECORDING',
+    READY_TO_PLAY = 'READY_TO_PLAY',
+    PLAYING = 'PLAYING',
+  }
+  interface VoiceMessageInputProps {
+    minRecordTime?: number;
+    maximumValue: number;
+    currentValue?: number;
+    currentType: VoiceMessageInputStatus;
+    onCancelClick?: () => void;
+    onControlClick?: (type: VoiceMessageInputStatus) => void;
+    onSubmitClick?: () => void;
+    renderCancelButton?: () => React.ReactElement;
+    renderControlButton?: (type: VoiceMessageInputStatus) => React.ReactElement;
+    renderSubmitButton?: () => React.ReactElement;
+  }
+  type VoiceMessageInput = React.FC<VoiceMessageInputProps>;
+  export default VoiceMessageInput;
+}
+
+declare module '@sendbird/uikit-react/ui/VoiceMessageItemBody' {
+  export enum VoiceMessageItemStatus {
+    NONE = 'NONE',
+    LOADING = 'LOADING',
+    READY_TO_PLAY = 'READY_TO_PLAY',
+    PLAYING = 'PLAYING',
+  }
+  interface VoiceMessageItemBodyProps {
+    minRecordTime?: number;
+    maximumValue: number;
+    currentValue?: number;
+    currentType: VoiceMessageInputStatus;
+    onCancelClick?: () => void;
+    onControlClick?: (type: VoiceMessageInputStatus) => void;
+    onSubmitClick?: () => void;
+    renderCancelButton?: () => React.ReactElement;
+    renderControlButton?: (type: VoiceMessageInputStatus) => React.ReactElement;
+    renderSubmitButton?: () => React.ReactElement;
+  }
+  type VoiceMessageItemBody = React.FC<VoiceMessageItemBodyProps>;
+  export default VoiceMessageItemBody;
 }

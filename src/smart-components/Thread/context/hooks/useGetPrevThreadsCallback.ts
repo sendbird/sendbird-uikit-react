@@ -44,6 +44,7 @@ export default function useGetPrevThreadsCallback({
           prevResultSize: PREV_THREADS_FETCH_SIZE,
           nextResultSize: 0,
           includeReactions: isReactionEnabled,
+          includeMetaArray: true,
         } as ThreadedMessageListParams,
       )
         .then(({ parentMessage, threadedMessages }) => {

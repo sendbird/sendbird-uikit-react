@@ -1,9 +1,10 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 
 import TooltipWrapper from "../index";
 
-import Icon, { IconTypes, IconColors, changeTypeToIconClassName, changeColorToClassName } from '../../Icon';
+import Icon, { IconTypes, IconColors } from '../../Icon';
+import { changeTypeToIconClassName, changeColorToClassName } from '../../Icon/utils';
 import Tooltip from '../../Tooltip';
 
 const iconClassName = 'icon-class-name';

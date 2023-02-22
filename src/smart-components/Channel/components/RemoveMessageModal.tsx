@@ -7,12 +7,14 @@ import { useChannelContext } from '../context/ChannelProvider';
 import { EveryMessage } from '../../../types';
 
 export interface RemoveMessageProps {
+  onSubmit: () => void;
   onCancel: () => void;
   message: EveryMessage;
 }
 
 const RemoveMessage: React.FC<RemoveMessageProps> = (props: RemoveMessageProps) => {
   const {
+    onSubmit,
     onCancel,
     message,
   } = props;
@@ -26,6 +28,7 @@ const RemoveMessage: React.FC<RemoveMessageProps> = (props: RemoveMessageProps) 
       disabled={message?.threadInfo?.replyCount > 0}
       onCancel={onCancel}
       onSubmit={() => { deleteMessage(message).then(() => {
+        onSubmit();
         onCancel();
       }) }}
       submitText={stringSet.MESSAGE_MENU__DELETE}

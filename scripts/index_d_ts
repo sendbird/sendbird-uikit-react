@@ -518,6 +518,9 @@ declare module "SendbirdUIKitGlobal" {
     renderMessageInput?: () => React.ReactNode | React.ReactElement;
     renderTypingIndicator?: () => React.ReactNode | React.ReactElement;
     renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactNode | React.ReactElement;
+    renderFileUploadIcon?: () =>  React.ReactElement;
+    renderVoiceMessageIcon?: () =>  React.ReactElement;
+    renderSendMessageIcon?: () =>  React.ReactElement;
   }
 
   export type CoreMessageType = AdminMessage | UserMessage | FileMessage;
@@ -576,6 +579,9 @@ declare module "SendbirdUIKitGlobal" {
     // value is removed when channelURL changes
     value?: string;
     ref?: React.MutableRefObject<any>;
+    renderFileUploadIcon?: () =>  React.ReactElement;
+    renderVoiceMessageIcon?: () =>  React.ReactElement;
+    renderSendMessageIcon?: () =>  React.ReactElement;
   };
 
   export type MessageListProps = {
@@ -984,6 +990,9 @@ declare module "SendbirdUIKitGlobal" {
     renderCustomSeparator?: () => React.ReactElement;
     renderParentMessageInfoPlaceholder?: (type: ParentMessageStateTypes) => React.ReactElement;
     renderThreadListPlaceHolder?: (type: ThreadListStateTypes) => React.ReactElement;
+    renderFileUploadIcon?: () =>  React.ReactElement;
+    renderVoiceMessageIcon?: () =>  React.ReactElement;
+    renderSendMessageIcon?: () =>  React.ReactElement;
   }
 
   type EventType = React.MouseEvent<HTMLDivElement | HTMLButtonElement> | React.KeyboardEvent<HTMLDivElement>;
@@ -1030,6 +1039,9 @@ declare module "SendbirdUIKitGlobal" {
 
   export interface ThreadMessageInputProps {
     className?: string;
+    renderFileUploadIcon?: () =>  React.ReactElement;
+    renderVoiceMessageIcon?: () =>  React.ReactElement;
+    renderSendMessageIcon?: () =>  React.ReactElement;
   }
 
   /**
@@ -2009,6 +2021,9 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
     onMentionedUserIdsUpdated?: (userIds: Array<string>) => void,
     onKeyUp?: (e: React.KeyboardEvent<HTMLDivElement>) => void,
     onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void,
+    renderFileUploadIcon?: () =>  React.ReactElement;
+    renderVoiceMessageIcon?: () =>  React.ReactElement;
+    renderSendMessageIcon?: () =>  React.ReactElement;
   }
   const MessageInput: React.FC<MessageInputProps>;
   export default MessageInput;

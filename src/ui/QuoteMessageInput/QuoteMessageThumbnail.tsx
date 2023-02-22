@@ -3,7 +3,7 @@ import type { FileMessage } from '@sendbird/chat/message';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
 import ImageRenderer from '../ImageRenderer';
-import { isAudioMessage, isFileMessage, isImageMessage, isThumbnailMessage } from '../../utils';
+import { isAudioMessage, isFileMessage, isImageMessage, isThumbnailMessage, isVoiceMessage } from '../../utils';
 
 interface Props {
   message: FileMessage;
@@ -12,7 +12,7 @@ interface Props {
 const componentClassname = 'sendbird-quote_message_input__avatar';
 
 export default function QuoteMessageThumbnail({ message }: Props): ReactElement {
-  if (!isFileMessage(message)) {
+  if (!isFileMessage(message) || isVoiceMessage(message)) {
     return null;
   }
 

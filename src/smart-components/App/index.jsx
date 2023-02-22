@@ -11,6 +11,7 @@ import Sendbird from '../../lib/Sendbird';
 import { AppLayout } from './AppLayout';
 
 import './index.scss';
+import { VOICE_RECORDER_DEFAULT_MAX, VOICE_RECORDER_DEFAULT_MIN } from '../../utils/consts';
 
 export default function App(props) {
   const {
@@ -28,6 +29,8 @@ export default function App(props) {
     config = {},
     isReactionEnabled,
     isMentionEnabled,
+    isVoiceMessageEnabled,
+    voiceRecord,
     replyType,
     isMessageGroupingEnabled,
     colorSet,
@@ -66,6 +69,8 @@ export default function App(props) {
       imageCompression={imageCompression}
       isReactionEnabled={isReactionEnabled}
       isMentionEnabled={isMentionEnabled}
+      isVoiceMessageEnabled={isVoiceMessageEnabled}
+      voiceRecord={voiceRecord}
       onUserProfileMessage={(channel) => {
         setCurrentChannel(channel);
       }}
@@ -132,6 +137,11 @@ App.propTypes = {
   }),
   disableAutoSelect: PropTypes.bool,
   isMentionEnabled: PropTypes.bool,
+  isVoiceMessageEnabled: PropTypes.bool,
+  voiceRecord: PropTypes.shape({
+    maxRecordingTime: PropTypes.number,
+    minRecordingTime: PropTypes.number,
+  }),
   isTypingIndicatorEnabledOnChannelList: PropTypes.bool,
   isMessageReceiptStatusEnabledOnChannelList: PropTypes.bool,
 };
@@ -155,6 +165,11 @@ App.defaultProps = {
   config: {},
   isReactionEnabled: true,
   isMentionEnabled: false,
+  isVoiceMessageEnabled: true,
+  voiceRecord: {
+    maxRecordingTime: VOICE_RECORDER_DEFAULT_MAX,
+    minRecordingTime: VOICE_RECORDER_DEFAULT_MIN,
+  },
   replyType: 'NONE',
   isMessageGroupingEnabled: true,
   stringSet: null,

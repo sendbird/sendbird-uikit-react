@@ -5,6 +5,7 @@ import isToday from 'date-fns/isToday';
 import isThisYear from 'date-fns/isThisYear';
 import isYesterday from 'date-fns/isYesterday';
 import { IconTypes } from '../Icon';
+import { isVoiceMessage } from '../../utils';
 
 export interface GetCreatedAtProps {
   createdAt: number;
@@ -36,7 +37,7 @@ export function getIconOfFileType(message: FileMessage): string {
 
   if (/(jpg|jpeg|png)$/i.test(fileExtension)) {
     return IconTypes.PHOTO;
-  } else if (/mp4$/i.test(fileExtension)) {
+  } else if (/mp4$/i.test(fileExtension) || isVoiceMessage(message)) {
     return IconTypes.PLAY;
   } else if (/mp3/i.test(fileExtension)) {
     return IconTypes.FILE_AUDIO;

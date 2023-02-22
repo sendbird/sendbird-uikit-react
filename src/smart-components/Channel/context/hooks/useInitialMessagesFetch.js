@@ -31,6 +31,7 @@ function useInitialMessagesFetch({
       }
       messageListParams.isInclusive = true;
       messageListParams.includeReactions = true;
+      messageListParams.includeMetaArray = true;
       if (replyType && (replyType === 'QUOTE_REPLY' || replyType === 'THREAD')) {
         messageListParams.includeThreadInfo = true;
         messageListParams.includeParentMessageInfo = true;

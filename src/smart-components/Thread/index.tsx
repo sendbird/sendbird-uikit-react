@@ -27,6 +27,9 @@ const Thread: React.FC<ThreadProps> = (props: ThreadProps) => {
     renderCustomSeparator,
     renderParentMessageInfoPlaceholder,
     renderThreadListPlaceHolder,
+    renderFileUploadIcon,
+    renderVoiceMessageIcon,
+    renderSendMessageIcon,
   } = props;
   return (
     <div className={`sendbird-thread ${className}`}>
@@ -44,6 +47,9 @@ const Thread: React.FC<ThreadProps> = (props: ThreadProps) => {
           renderCustomSeparator={renderCustomSeparator}
           renderParentMessageInfoPlaceholder={renderParentMessageInfoPlaceholder}
           renderThreadListPlaceHolder={renderThreadListPlaceHolder}
+          renderFileUploadIcon={renderFileUploadIcon}
+          renderVoiceMessageIcon={renderVoiceMessageIcon}
+          renderSendMessageIcon={renderSendMessageIcon}
         />
       </ThreadProvider>
     </div>

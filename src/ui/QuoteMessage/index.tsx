@@ -10,13 +10,13 @@ import {
   getClassName,
   getUIKitFileType,
   getUIKitFileTypes,
-  isFileMessage,
   isGif,
-  isSupportedFileView,
   isThumbnailMessage,
   isUserMessage,
   isVideo,
+  isVoiceMessage,
   truncateString,
+  UIKitMessageTypes,
 } from '../../utils';
 interface Props {
   className?: string | Array<string>;
@@ -105,6 +105,18 @@ export default function QuoteMessage({
             </Label>
           </div>
         )}
+        {/* voice message */}
+        {(isVoiceMessage(parentMessage as FileMessage) && parentMessageUrl && !isUnavailable) && (
+          <div className="sendbird-quote-message__replied-message__text-message">
+            <Label
+              className="sendbird-quote-message__replied-message__text-message__word"
+              type={LabelTypography.BODY_2}
+              color={LabelColors.ONBACKGROUND_1}
+            >
+              {stringSet.VOICE_MESSAGE}
+            </Label>
+          </div>
+        )}
         {/* thumbnail message */}
         {(isThumbnailMessage(parentMessage as FileMessage) && parentMessageUrl && !isUnavailable) && (
           <div className="sendbird-quote-message__replied-message__thumbnail-message">
@@ -160,7 +172,7 @@ export default function QuoteMessage({
           </div>
         )}
         {/* file message */}
-        {(isFileMessage(parentMessage as FileMessage) && !isSupportedFileView((parentMessage as FileMessage).type) && parentMessageUrl && !isUnavailable) && (
+        {(getUIKitFileType(parentMessage?.messageType) === UIKitMessageTypes.FILE && parentMessageUrl && !isUnavailable) && (
           <div className="sendbird-quote-message__replied-message__file-message">
             <Icon
               className="sendbird-quote-message__replied-message__file-message__type-icon"

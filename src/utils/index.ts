@@ -45,7 +45,7 @@ export interface UIKitMessageTypes {
   OG: "OG",
   UNKNOWN: "UNKNOWN",
 }
-const UIKitMessageTypes: UIKitMessageTypes = {
+export const UIKitMessageTypes: UIKitMessageTypes = {
   ADMIN: "ADMIN",
   TEXT: "TEXT",
   FILE: "FILE",
@@ -58,6 +58,7 @@ export interface UIKitFileTypes {
   AUDIO: "AUDIO",
   VIDEO: "VIDEO",
   GIF: "GIF",
+  VOICE: "VOICE",
   OTHERS: "OTHERS",
 }
 export const UIKitFileTypes: UIKitFileTypes = {
@@ -65,6 +66,7 @@ export const UIKitFileTypes: UIKitFileTypes = {
   AUDIO: "AUDIO",
   VIDEO: "VIDEO",
   GIF: "GIF",
+  VOICE: "VOICE",
   OTHERS: "OTHERS",
 };
 
@@ -143,11 +145,35 @@ export const isOGMessage = (message: UserMessage | FileMessage): boolean => !!(
   )
 );
 export const isTextMessage = (message: UserMessage | FileMessage): boolean => isUserMessage(message) && !isOGMessage(message);
-export const isThumbnailMessage = (message: UserMessage | FileMessage): boolean => message && isFileMessage(message) && isSupportedFileView(message.type);
+export const isThumbnailMessage = (message: UserMessage | FileMessage): boolean => (
+  message && isFileMessage(message) && isSupportedFileView((message as FileMessage).type)
+);
 export const isImageMessage = (message: FileMessage): boolean => message && isThumbnailMessage(message) && isImage(message.type);
-export const isVideoMessage = (message: UserMessage | FileMessage): boolean => message && isThumbnailMessage(message) && isVideo(message.type);
-export const isGifMessage = (message: UserMessage | FileMessage): boolean => message && isThumbnailMessage(message) && isGif(message.type);
+export const isVideoMessage = (message: UserMessage | FileMessage): boolean => (
+  message && isThumbnailMessage(message) && isVideo((message as FileMessage).type)
+);
+export const isGifMessage = (message: UserMessage | FileMessage): boolean => (
+  message && isThumbnailMessage(message) && isGif((message as FileMessage).type)
+);
 export const isAudioMessage = (message: FileMessage): boolean => message && isFileMessage(message) && isAudio(message.type);
+export const isAudioMessageMimeType = (type: string): boolean => (/^audio\//.test(type));
+export const isVoiceMessage = (message: FileMessage): boolean => {
+  // ex) audio/m4a OR audio/m4a;sbu_type=voice
+  if (!(message && isFileMessage(message))) {
+    return false;
+  }
+  const [mimeType, typeParameter] = message.type?.split(';');
+  if (!isAudioMessageMimeType(mimeType) || !typeParameter) {
+    return false;
+  }
+  const [key, value] = typeParameter?.split('=');
+  if (key === 'sbu_type' && value === 'voice') {
+    return true;
+  }
+  // ex) message.metaArrays = [{ key: 'KEY_INTERNAL_MESSAGE_TYPE', value: ['voice/m4a'] }]
+  return isVOICE_MESSAGE_MIME_TYPE(message.metaArrays.find((metaArray) => metaArray.key === 'KEY_INTERNAL_MESSAGE_TYPE')?.value?.[0]);
+};
+export const isVOICE_MESSAGE_MIME_TYPE = (type: string): boolean => (/^voice\//.test(type));
 
 export const isEditedMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => isUserMessage(message) && (message?.updatedAt > 0);
 export const isEnabledOGMessage = (message: UserMessage): boolean => (
@@ -161,7 +187,13 @@ export const getUIKitMessageType = (message: UserMessage | FileMessage | AdminMe
     return isOGMessage(message as UserMessage) ? UIKitMessageTypes.OG : UIKitMessageTypes.TEXT;
   }
   if (isFileMessage(message as FileMessage)) {
-    return isThumbnailMessage(message as FileMessage) ? UIKitMessageTypes.THUMBNAIL : UIKitMessageTypes.FILE;
+    if (isThumbnailMessage(message as FileMessage)) {
+      return UIKitMessageTypes.THUMBNAIL;
+    }
+    if (isVoiceMessage(message as FileMessage)) {
+      return UIKitFileTypes.VOICE
+    }
+    return UIKitMessageTypes.FILE;
   }
   return UIKitMessageTypes.UNKNOWN;
 };

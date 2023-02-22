@@ -260,7 +260,7 @@ export const user1 = () => fitPageSize(
     showSearchIcon
     allowProfileEdit
     config={{ logLevel: 'all' }}
-    replyType="QUOTE_REPLY"
+    replyType="THREAD"
     isReactionEnabled
     isMentionEnabled
     isTypingIndicatorEnabledOnChannelList
@@ -276,7 +276,7 @@ export const user2 = () => fitPageSize(
     allowProfileEdit
     profileUrl={addProfile}
     config={{ logLevel: 'all' }}
-    replyType="QUOTE_REPLY"
+    replyType="THREAD"
     disableAutoSelect
     imageCompression={{
       compressionRate: 0.5,
