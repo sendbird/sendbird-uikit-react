@@ -11,7 +11,7 @@ import { VoiceMessageInput, VoiceMessageInputStatus } from '../../../../ui/Voice
 import Modal from '../../../../ui/Modal';
 import Button, { ButtonSizes, ButtonTypes } from '../../../../ui/Button';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { VoiceRecorderDefaultMin } from '../../../../utils/consts';
+import { VOICE_RECORDER_DEFAULT_MIN } from '../../../../utils/consts';
 
 export interface VoiceMessageInputWrapperProps {
   channel?: GroupChannel;
@@ -32,7 +32,7 @@ export const VoiceMessageInputWrapper = ({
   const [showModal, setShowModal] = useState(false);
   const { stringSet } = useLocalization();
   const { config } = useSendbirdStateContext();
-  const minRecordingTime = config?.voiceRecord?.minRecordingTime || VoiceRecorderDefaultMin;
+  const minRecordingTime = config?.voiceRecord?.minRecordingTime || VOICE_RECORDER_DEFAULT_MIN;
   const {
     start,
     stop,

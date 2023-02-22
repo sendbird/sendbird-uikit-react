@@ -1,18 +1,18 @@
 // voice message record
-export const VoiceRecorderDefaultMin = 1000;
-export const VoiceRecorderDefaultMax = 60000;
-export const VoiceRecorderMimeType = 'audio/webm';
-export const VoiceRecorderAudioBits = 128000;
+export const VOICE_RECORDER_DEFAULT_MIN = 1000;
+export const VOICE_RECORDER_DEFAULT_MAX = 60000;
+export const VOICE_RECORDER_MIME_TYPE = 'audio/webm';
+export const VOICE_RECORDER_AUDIO_BITS = 128000;
 
 // voice message play
-export const VoicePlayerPlaybackBuffer = 0.01;
-export const VoicePlayerDuraionMinSize = 1000;
+export const VOICE_PLAYER_PLAYBACK_BUFFER = 0.01;
+export const VOICE_PLAYER_DURATION_MIN_SIZE = 1000;
 
 // voice message file
-export const VoiceMessageFileName = 'Voice_message.mp3';
-export const VoiceMessageMimeType = 'audio/mp3;sbu_type=voice';
+export const VOICE_MESSAGE_FILE_NAME = 'Voice_message.mp3';
+export const VOICE_MESSAGE_MIME_TYPE = 'audio/mp3;sbu_type=voice';
 
 // meta array
-export const MetaArrayVoiceDurationKey = 'KEY_VOICE_MESSAGE_DURATION';
-export const MetaArrayMessageTypeKey = 'KEY_INTERNAL_MESSAGE_TYPE';
-export const MetaArrayMessageTypeValue_Voice = 'voice/mp3';
+export const META_ARRAY_VOICE_DURATION_KEY = 'KEY_VOICE_MESSAGE_DURATION';
+export const META_ARRAY_MESSAGE_TYPE_KEY = 'KEY_INTERNAL_MESSAGE_TYPE';
+export const META_ARRAY_MESSAGE_TYPE_VALUE__VOICE = 'voice/mp3';

@@ -3,7 +3,7 @@ import { useVoicePlayerContext } from ".";
 
 import uuidv4 from "../../utils/uuid";
 import { generateGroupKey, VoicePlayerEventParams } from "./voicePlayerEvent";
-import { VoicePlayerDuraionMinSize, VoicePlayerPlaybackBuffer } from "../../utils/consts";
+import { VOICE_PLAYER_DURATION_MIN_SIZE, VOICE_PLAYER_PLAYBACK_BUFFER } from "../../utils/consts";
 
 export const VoicePlayerStatus = {
   PREPARING: 'PREPARING',
@@ -44,7 +44,7 @@ export const useVoicePlayer = ({
   const eventId = uuidv4();
   const [playingStatus, setPlayingStatus] = useState<VoicePlayerStatus>(VoicePlayerStatus.PREPARING);
   const [currentPlaybackTime, setPlaybackTime] = useState<number>(0);
-  const [duration, setDuration] = useState<number>(VoicePlayerDuraionMinSize);
+  const [duration, setDuration] = useState<number>(VOICE_PLAYER_DURATION_MIN_SIZE);
   const {
     play,
     stop,
@@ -69,7 +69,7 @@ export const useVoicePlayer = ({
           setPlayingStatus(VoicePlayerStatus.READY_TO_PLAY);
           onPlayingStopped(props);
           setDuration(props?.duration);
-          if (duration - playbackTime <= VoicePlayerPlaybackBuffer) {
+          if (duration - playbackTime <= VOICE_PLAYER_PLAYBACK_BUFFER) {
             setPlaybackTime(0);
           } else {
             setPlaybackTime(props?.playbackTime);

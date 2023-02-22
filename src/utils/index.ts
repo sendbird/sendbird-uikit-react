@@ -171,9 +171,9 @@ export const isVoiceMessage = (message: FileMessage): boolean => {
     return true;
   }
   // ex) message.metaArrays = [{ key: 'KEY_INTERNAL_MESSAGE_TYPE', value: ['voice/m4a'] }]
-  return isVoiceMessageMimeType(message.metaArrays.find((metaArray) => metaArray.key === 'KEY_INTERNAL_MESSAGE_TYPE')?.value?.[0]);
+  return isVOICE_MESSAGE_MIME_TYPE(message.metaArrays.find((metaArray) => metaArray.key === 'KEY_INTERNAL_MESSAGE_TYPE')?.value?.[0]);
 };
-export const isVoiceMessageMimeType = (type: string): boolean => (/^voice\//.test(type));
+export const isVOICE_MESSAGE_MIME_TYPE = (type: string): boolean => (/^voice\//.test(type));
 
 export const isEditedMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => isUserMessage(message) && (message?.updatedAt > 0);
 export const isEnabledOGMessage = (message: UserMessage): boolean => (

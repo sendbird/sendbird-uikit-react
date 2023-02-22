@@ -6,11 +6,11 @@ import { ThreadContextActionTypes } from "../dux/actionTypes";
 import * as topics from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from "../utils";
 import {
-  MetaArrayMessageTypeKey,
-  MetaArrayMessageTypeValue_Voice,
-  MetaArrayVoiceDurationKey,
-  VoiceMessageFileName,
-  VoiceMessageMimeType
+  META_ARRAY_MESSAGE_TYPE_KEY,
+  META_ARRAY_MESSAGE_TYPE_VALUE__VOICE,
+  META_ARRAY_VOICE_DURATION_KEY,
+  VOICE_MESSAGE_FILE_NAME,
+  VOICE_MESSAGE_MIME_TYPE
 } from '../../../../utils/consts';
 
 interface DynamicParams {
@@ -45,16 +45,16 @@ export const useSendVoiceMessageCallback = ({
       ? onBeforeSendVoiceMessage(file, quoteMessage)
       : {
         file,
-        fileName: VoiceMessageFileName,
-        mimeType: VoiceMessageMimeType,
+        fileName: VOICE_MESSAGE_FILE_NAME,
+        mimeType: VOICE_MESSAGE_MIME_TYPE,
         metaArrays: [
           new MessageMetaArray({
-            key: MetaArrayVoiceDurationKey,
+            key: META_ARRAY_VOICE_DURATION_KEY,
             value: [`${duration}`],
           }),
           new MessageMetaArray({
-            key: MetaArrayMessageTypeKey,
-            value: [MetaArrayMessageTypeValue_Voice],
+            key: META_ARRAY_MESSAGE_TYPE_KEY,
+            value: [META_ARRAY_MESSAGE_TYPE_VALUE__VOICE],
           })
         ],
       };

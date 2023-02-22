@@ -11,7 +11,7 @@ import Sendbird from '../../lib/Sendbird';
 import { AppLayout } from './AppLayout';
 
 import './index.scss';
-import { VoiceRecorderDefaultMax, VoiceRecorderDefaultMin } from '../../utils/consts';
+import { VOICE_RECORDER_DEFAULT_MAX, VOICE_RECORDER_DEFAULT_MIN } from '../../utils/consts';
 
 export default function App(props) {
   const {
@@ -167,8 +167,8 @@ App.defaultProps = {
   isMentionEnabled: false,
   isVoiceMessageEnabled: true,
   voiceRecord: {
-    maxRecordingTime: VoiceRecorderDefaultMax,
-    minRecordingTime: VoiceRecorderDefaultMin,
+    maxRecordingTime: VOICE_RECORDER_DEFAULT_MAX,
+    minRecordingTime: VOICE_RECORDER_DEFAULT_MIN,
   },
   replyType: 'NONE',
   isMessageGroupingEnabled: true,
