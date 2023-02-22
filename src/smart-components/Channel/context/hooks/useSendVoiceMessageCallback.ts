@@ -5,6 +5,13 @@ import { Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';
 import * as topics from '../../../../lib/pubSub/topics';
+import {
+  MetaArrayMessageTypeKey,
+  MetaArrayMessageTypeValue_Voice,
+  MetaArrayVoiceDurationKey,
+  VoiceMessageFileName,
+  VoiceMessageMimeType,
+} from '../../../../utils/consts';
 
 interface DynamicParams {
   currentGroupChannel: GroupChannel;
@@ -36,16 +43,16 @@ export const useSendVoiceMessageCallback = ({
       ? onBeforeSendVoiceMessage(file, quoteMessage)
       : {
         file,
-        fileName: 'Voice message.mp3',
-        mimeType: 'audio/mp3;sbu_type=voice',
+        fileName: VoiceMessageFileName,
+        mimeType: VoiceMessageMimeType,
         metaArrays: [
           new MessageMetaArray({
-            key: 'KEY_VOICE_MESSAGE_DURATION',
+            key: MetaArrayVoiceDurationKey,
             value: [`${duration}`],
           }),
           new MessageMetaArray({
-            key: 'KEY_INTERNAL_MESSAGE_TYPE',
-            value: ['voice/mp3'],
+            key: MetaArrayMessageTypeKey,
+            value: [MetaArrayMessageTypeValue_Voice],
           })
         ],
       };

@@ -5,6 +5,13 @@ import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdStat
 import { ThreadContextActionTypes } from "../dux/actionTypes";
 import * as topics from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from "../utils";
+import {
+  MetaArrayMessageTypeKey,
+  MetaArrayMessageTypeValue_Voice,
+  MetaArrayVoiceDurationKey,
+  VoiceMessageFileName,
+  VoiceMessageMimeType
+} from '../../../../utils/consts';
 
 interface DynamicParams {
   currentChannel: GroupChannel;
@@ -38,16 +45,16 @@ export const useSendVoiceMessageCallback = ({
       ? onBeforeSendVoiceMessage(file, quoteMessage)
       : {
         file,
-        fileName: 'Voice message.mp3',
-        mimeType: 'audio/mp3;sbu_type=voice',
+        fileName: VoiceMessageFileName,
+        mimeType: VoiceMessageMimeType,
         metaArrays: [
           new MessageMetaArray({
-            key: 'KEY_VOICE_MESSAGE_DURATION',
+            key: MetaArrayVoiceDurationKey,
             value: [`${duration}`],
           }),
           new MessageMetaArray({
-            key: 'KEY_INTERNAL_MESSAGE_TYPE',
-            value: ['voice/mp3'],
+            key: MetaArrayMessageTypeKey,
+            value: [MetaArrayMessageTypeValue_Voice],
           })
         ],
       };

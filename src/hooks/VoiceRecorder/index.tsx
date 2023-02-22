@@ -1,5 +1,11 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { downsampleToWav, encodeMp3 } from './WebAudioUtils';
+import {
+  VoiceMessageFileName,
+  VoiceMessageMimeType,
+  VoiceRecorderAudioBits,
+  VoiceRecorderMimeType,
+} from '../../utils/consts';
 
 // Input props of VoiceRecorder
 export interface VoiceRecorderProps {
@@ -51,20 +57,20 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
     }
     if (currentStream) {
       const mediaRecorder = new MediaRecorder(currentStream, {
-        mimeType: 'audio/webm',
-        audioBitsPerSecond: 128000,
+        mimeType: VoiceRecorderMimeType,
+        audioBitsPerSecond: VoiceRecorderAudioBits,
       });
       mediaRecorder.ondataavailable = (e) => {// when recording stops
-        const audioFile = new File([e.data], `Voice message ${Date.now().toString()}.mp3`, {
+        const audioFile = new File([e.data], VoiceMessageFileName, {
           lastModified: new Date().getTime(),
-          type: 'audio/mp3',
+          type: VoiceMessageMimeType,
         });
         downsampleToWav(audioFile, (buffer) => {
           const mp3Buffer = encodeMp3(buffer);
-          const mp3blob = new Blob(mp3Buffer, { type: "audio/mp3" });
-          const convertedAudioFile = new File([mp3blob], `Voice_message_${Date.now().toString()}.mp3`, {
+          const mp3blob = new Blob(mp3Buffer, { type: VoiceMessageMimeType });
+          const convertedAudioFile = new File([mp3blob], VoiceMessageFileName, {
             lastModified: new Date().getTime(),
-            type: 'audio/mp3',
+            type: VoiceMessageMimeType,
           });
           eventHandler?.onRecordingEnded(convertedAudioFile);
         })

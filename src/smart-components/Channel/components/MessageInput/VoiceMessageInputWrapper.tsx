@@ -10,6 +10,8 @@ import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../context/u
 import { VoiceMessageInput, VoiceMessageInputStatus } from '../../../../ui/VoiceMessageInput';
 import Modal from '../../../../ui/Modal';
 import Button, { ButtonSizes, ButtonTypes } from '../../../../ui/Button';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { VoiceRecorderDefaultMin } from '../../../../utils/consts';
 
 export interface VoiceMessageInputWrapperProps {
   channel?: GroupChannel;
@@ -29,6 +31,8 @@ export const VoiceMessageInputWrapper = ({
   const [isDisabled, setDisabled] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { stringSet } = useLocalization();
+  const { config } = useSendbirdStateContext();
+  const minRecordingTime = config?.voiceRecord?.minRecordingTime || VoiceRecorderDefaultMin;
   const {
     start,
     stop,
@@ -74,7 +78,7 @@ export const VoiceMessageInputWrapper = ({
       onSubmitClick(audioFile, recordingTime);
     }
     if (audioFile) {
-      if (recordingTime < 1000) {
+      if (recordingTime < minRecordingTime) {
         setVoiceInputState(VoiceMessageInputStatus.READY_TO_RECORD);
         setAudioFile(null);
       } else {
@@ -107,7 +111,7 @@ export const VoiceMessageInputWrapper = ({
               break;
             }
             case VoiceMessageInputStatus.RECORDING: {
-              if (recordingTime >= 1000 && !isDisabled) {
+              if (recordingTime >= minRecordingTime && !isDisabled) {
                 stop();
               } else if (isDisabled) {
                 cancel();

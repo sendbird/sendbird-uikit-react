@@ -8,6 +8,7 @@ import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 import ControlerIcon from './controlerIcons';
+import { VoiceRecorderDefaultMin } from '../../utils/consts';
 
 export const VoiceMessageInputStatus = {
   READY_TO_RECORD: 'READY_TO_RECORD',
@@ -30,7 +31,7 @@ export interface VoiceMessageInputProps {
 }
 
 export const VoiceMessageInput = ({
-  minRecordTime = 1000,
+  minRecordTime = VoiceRecorderDefaultMin,
   maximumValue,
   currentValue = 0,
   currentType,

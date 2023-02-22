@@ -25,6 +25,7 @@ import { VoicePlayerProvider } from '../hooks/VoicePlayer';
 import { LocalizationProvider } from './LocalizationContext';
 import { MediaQueryProvider } from './MediaQueryContext';
 import getStringSet from '../ui/Label/stringSet';
+import { VoiceRecorderDefaultMax, VoiceRecorderDefaultMin } from '../utils/consts';
 
 export default function Sendbird(props) {
   const {
@@ -317,8 +318,8 @@ Sendbird.defaultProps = {
   isMentionEnabled: false,
   isVoiceMessageEnabled: true,
   voiceRecord: {
-    maxRecordingTime: 60000,
-    minRecordingTime: 1000,
+    maxRecordingTime: VoiceRecorderDefaultMax,
+    minRecordingTime: VoiceRecorderDefaultMin,
   },
   isTypingIndicatorEnabledOnChannelList: false,
   isMessageReceiptStatusEnabledOnChannelList: false,
