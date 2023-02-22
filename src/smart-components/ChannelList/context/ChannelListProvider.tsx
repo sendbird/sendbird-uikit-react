@@ -33,6 +33,7 @@ import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 import channelListReducers from '../dux/reducers';
 import channelListInitialState from '../dux/initialState';
 import { CHANNEL_TYPE } from '../../CreateChannel/types';
+import useActiveChannelUrl from './hooks/useActiveChannelUrl';
 
 interface ApplicationUserListQuery {
   limit?: number;
@@ -88,6 +89,7 @@ export interface ChannelListProviderProps {
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   disableUserProfile?: boolean;
   disableAutoSelect?: boolean;
+  activeChannelUrl?: string;
   typingChannels?: Array<GroupChannel>;
   isTypingIndicatorEnabled?: boolean;
   isMessageReceiptStatusEnabled?: boolean;
@@ -150,10 +152,13 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     onBeforeCreateChannel,
     sortChannelList,
     overrideInviteUser,
-    disableAutoSelect,
+    activeChannelUrl,
     isTypingIndicatorEnabled = null,
     isMessageReceiptStatusEnabled = null,
   } = props;
+  // disable autoselect, if activeChannelUrl is provided
+  // useActiveChannelUrl should be executed when activeChannelUrl is present
+  const disableAutoSelect = props?.disableAutoSelect || !!activeChannelUrl;
   const onChannelSelect = props?.onChannelSelect || noop;
   // fetch store from <SendbirdProvider />
   const globalStore = useSendbirdStateContext();
@@ -349,6 +354,16 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
       }
     });
   }, [currentChannel?.url]);
+
+  // Set active channel (by url)
+  useActiveChannelUrl({
+    activeChannelUrl,
+    channels: sortedChannels,
+    sdk,
+  } , {
+    logger,
+    channelListDispatcher,
+  });
 
   return (
     <ChannelListContext.Provider value={{
