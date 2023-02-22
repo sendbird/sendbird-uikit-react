@@ -48,7 +48,7 @@ export default function InviteUsers({
         onCancel={() => onCancel()}
         onSubmit={() => {
           const members = Object.keys(selectedMembers).filter((m) => selectedMembers[m]);
-          if(typeof overrideInviteUser === 'function') {
+          if (typeof overrideInviteUser === 'function') {
             overrideInviteUser({
               users: members,
               onClose: onCancel,
@@ -79,26 +79,30 @@ export default function InviteUsers({
           }}
         >
           <div className="sendbird-more-members__popup-scroll__inner">
-            { members.map((member) => (
-              <UserListItem
-                checkBox
-                checked={selectedMembers[member.userId]}
-                onChange={
-                  (event) => {
-                    const modifiedSelectedMembers = {
-                      ...selectedMembers,
-                      [event.target.id]: event.target.checked,
-                    };
-                    if (!event.target.checked) {
-                      delete modifiedSelectedMembers[event.target.id];
+            {members.map((member) => {
+              const isJoinedMember = channel?.members?.some(({ userId }) => userId === member?.userId);
+              return (
+                <UserListItem
+                  checkBox
+                  checked={isJoinedMember || selectedMembers[member.userId]}
+                  disabled={isJoinedMember}
+                  onChange={
+                    (event) => {
+                      const modifiedSelectedMembers = {
+                        ...selectedMembers,
+                        [event.target.id]: event.target.checked,
+                      };
+                      if (!event.target.checked) {
+                        delete modifiedSelectedMembers[event.target.id];
+                      }
+                      setSelectedMembers(modifiedSelectedMembers);
                     }
-                    setSelectedMembers(modifiedSelectedMembers);
                   }
-                }
-                user={member}
-                key={member.userId}
-              />
-            ))}
+                  user={member}
+                  key={member.userId}
+                />
+              );
+            })}
           </div>
         </div>
       </Modal>
