@@ -4,7 +4,6 @@ import * as topics from '../../../lib/pubSub/topics';
 
 import { getSendingMessageStatus, isReadMessage } from '../../../utils';
 import { OutgoingMessageStates } from '../../../utils/exports/getOutgoingMessageState';
-import compareIds from '../../../utils/compareIds';
 
 const UNDEFINED = 'undefined';
 const { SUCCEEDED, FAILED, PENDING } = getSendingMessageStatus();
