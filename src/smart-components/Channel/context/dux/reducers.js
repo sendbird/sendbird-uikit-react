@@ -3,7 +3,7 @@ import format from 'date-fns/format';
 import * as actionTypes from './actionTypes';
 import compareIds from '../../../../utils/compareIds';
 import { PREV_RESULT_SIZE, NEXT_RESULT_SIZE } from '../const';
-import { passUnsuccessfullMessages } from '../utils';
+import { passUnsuccessfullMessages, mergeAndSortMessages } from '../utils';
 import { filterMessageListParams, getSendingMessageStatus } from '../../../../utils';
 
 const {
@@ -111,32 +111,14 @@ export default function reducer(state, action) {
       const hasMoreNext = messages && messages.length === NEXT_RESULT_SIZE + 1;
       const latestMessageTimeStamp = getLatestMessageTimeStamp(messages);
 
-      // Remove duplicated messages
-      const duplicatedMessageIds = [];
-      const updatedOldMessages = state.allMessages.map((msg) => {
-        const duplicatedMessage = messages.find(({ messageId }) => (
-          compareIds(messageId, msg.messageId)
-        ));
-        if (!duplicatedMessage) {
-          return msg;
-        }
-        duplicatedMessageIds.push(duplicatedMessage.messageId);
-        return (duplicatedMessage.updatedAt > msg.updatedAt) ? duplicatedMessage : msg;
-      });
-      const filteredNewMessages = (duplicatedMessageIds.length > 0)
-        ? messages.filter((msg) => (
-          !duplicatedMessageIds.find((messageId) => compareIds(messageId, msg.messageId))
-        ))
-        : messages;
+      // sort ~
+      const sortedMessages = mergeAndSortMessages(state.allMessages, messages);
 
       return {
         ...state,
         hasMoreNext,
         latestMessageTimeStamp,
-        allMessages: [
-          ...updatedOldMessages,
-          ...filteredNewMessages,
-        ],
+        allMessages: sortedMessages,
       };
     }
     case actionTypes.FETCH_INITIAL_MESSAGES_FAILURE:

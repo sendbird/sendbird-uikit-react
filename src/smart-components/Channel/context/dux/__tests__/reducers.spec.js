@@ -1,4 +1,8 @@
-import { mockMessage1, generateMockMessage, generateMockChannel } from '../data.mock';
+import {
+  mockMessage1,
+  generateMockMessage,
+  generateMockChannel,
+} from '../data.mock';
 import * as actionTypes from '../actionTypes';
 import reducers from '../reducers';
 import initialState from '../initialState';
