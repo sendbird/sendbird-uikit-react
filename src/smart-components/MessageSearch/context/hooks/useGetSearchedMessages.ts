@@ -46,39 +46,41 @@ function useGetSearchedMessages(
     });
     if (sdk && channelUrl && sdk.createMessageSearchQuery && currentChannel) {
       if (requestString) {
-        const inputSearchMessageQueryObject: MessageSearchQueryParams = {
-          order: MessageSearchOrder.TIMESTAMP,
-          channelUrl,
-          messageTimestampFrom: currentChannel.invitedAt,
-          keyword: requestString,
-          ...messageSearchQuery,
-        };
-        const createdQuery = sdk.createMessageSearchQuery(inputSearchMessageQueryObject);
-        createdQuery.next().then((messages) => {
-          logger.info('MessageSearch | useGetSearchedMessages: succeeded getting messages', messages);
-          messageSearchDispatcher({
-            type: messageActionTypes.GET_SEARCHED_MESSAGES,
-            payload: {
-              messages,
-              createdQuery,
-            },
+        currentChannel.refresh().then((channel) => {
+          const inputSearchMessageQueryObject: MessageSearchQueryParams = {
+            order: MessageSearchOrder.TIMESTAMP,
+            channelUrl,
+            messageTimestampFrom: channel.invitedAt,
+            keyword: requestString,
+            ...messageSearchQuery,
+          };
+          const createdQuery = sdk.createMessageSearchQuery(inputSearchMessageQueryObject);
+          createdQuery.next().then((messages) => {
+            logger.info('MessageSearch | useGetSearchedMessages: succeeded getting messages', messages);
+            messageSearchDispatcher({
+              type: messageActionTypes.GET_SEARCHED_MESSAGES,
+              payload: {
+                messages,
+                createdQuery,
+              },
+            });
+            if (onResultLoaded && typeof onResultLoaded === 'function') {
+              onResultLoaded(messages, null);
+            }
+          }).catch((error) => {
+            logger.warning('MessageSearch | useGetSearchedMessages: getting failed', error);
+            messageSearchDispatcher({
+              type: messageActionTypes.SET_QUERY_INVALID,
+              payload: null,
+            });
+            if (onResultLoaded && typeof onResultLoaded === 'function') {
+              onResultLoaded(null, error);
+            }
           });
-          if (onResultLoaded && typeof onResultLoaded === 'function') {
-            onResultLoaded(messages, null);
-          }
-        }).catch((error) => {
-          logger.warning('MessageSearch | useGetSearchedMessages: getting failed', error);
           messageSearchDispatcher({
-            type: messageActionTypes.SET_QUERY_INVALID,
-            payload: null,
+            type: messageActionTypes.START_GETTING_SEARCHED_MESSAGES,
+            payload: createdQuery,
           });
-          if (onResultLoaded && typeof onResultLoaded === 'function') {
-            onResultLoaded(null, error);
-          }
-        });
-        messageSearchDispatcher({
-          type: messageActionTypes.START_GETTING_SEARCHED_MESSAGES,
-          payload: createdQuery,
         });
       } else {
         logger.info('MessageSearch | useGetSeasrchedMessages: search string is empty');
