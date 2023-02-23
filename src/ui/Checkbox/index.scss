@@ -48,6 +48,7 @@
     border: solid 2px t(primary-3);
   }
   &.disabled {
+    cursor: default;
     @include themed() {
       background-color: t(on-bg-4);
       border: solid 2px t(on-bg-4);
