@@ -15,7 +15,7 @@ Fixes:
 * Fix not showing newly recived messages in channel which has less messages
 * Use a real `channel.invitedAt` value when trying to fetch MessageSearchQuery
 * Disable the checkbox of the joined users on the InviteUsersModal
-* Set the default value of CheckBox component: `@sendbird/uikit-react/ui/CheckBox`
+* Set the default value of CheckBox component: `@sendbird/uikit-react/ui/CheckBox` as false
 
 ## [v3.3.6] (Feb 13 2023)
 
