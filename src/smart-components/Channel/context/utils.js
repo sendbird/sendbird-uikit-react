@@ -186,6 +186,27 @@ export const getNicknamesMapFromMembers = (members = []) => {
   return nicknamesMap;
 };
 
+const getUniqueListBy = (arr, key) => [...new Map(arr.map((item) => [item[key], item])).values()];
+const getUniqueListByMessageId = (arr) => getUniqueListBy(arr, 'messageId');
+const sortByCreatedAt = (messages) => messages.sort((a, b) => a.createdAt - b.createdAt);
+
+export const mergeAndSortMessages = (oldMessages, newMessages) => {
+  const lastOldMessage = oldMessages[oldMessages.length - 1];
+  const firstNewMessage = newMessages[0];
+  // If the last message of oldMessages is older than the first message of newMessages,
+  // then we can safely append newMessages to oldMessages.
+  if (lastOldMessage?.createdAt < firstNewMessage?.createdAt) {
+    return [...oldMessages, ...newMessages];
+  }
+
+  // todo: optimize this
+  // If the last message of oldMessages is newer than the first message of newMessages,
+  // then we need to merge the two arrays and sort them by createdAt.
+  const mergedMessages = [...oldMessages, ...newMessages];
+  const unique = getUniqueListByMessageId(mergedMessages);
+  return sortByCreatedAt(unique);
+};
+
 export const getMessageCreatedAt = (message) => format(message.createdAt, 'p');
 
 export const isSameGroup = (message, comparingMessage, currentChannel) => {

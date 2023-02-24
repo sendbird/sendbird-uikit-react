@@ -321,8 +321,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       currentGroupChannel,
       sdkInit,
       currentUserId: userId,
-      hasMoreNext,
-      disableMarkAsRead
+      disableMarkAsRead,
     },
     {
       messagesDispatcher,

@@ -19,7 +19,6 @@ import * as messageActions from '../dux/actionTypes';
  */
 interface DynamicParams {
   sdkInit: boolean;
-  hasMoreNext: boolean;
   currentUserId: string;
   disableMarkAsRead: boolean;
   currentGroupChannel: GroupChannel;
@@ -34,7 +33,6 @@ interface StaticParams {
 
 function useHandleChannelEvents({
   sdkInit,
-  hasMoreNext,
   currentUserId,
   disableMarkAsRead,
   currentGroupChannel,
@@ -51,8 +49,7 @@ function useHandleChannelEvents({
     if (channelUrl && sdkInit) {
       const channelHandler: GroupChannelHandler = {
         onMessageReceived: (channel, message) => {
-          // Do not update when hasMoreNext
-          if (compareIds(channel?.url, channelUrl) && !hasMoreNext) {
+          if (compareIds(channel?.url, channelUrl)) {
             let scrollToEnd = false;
             try {
               const { current } = scrollRef;

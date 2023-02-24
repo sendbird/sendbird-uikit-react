@@ -175,6 +175,14 @@ export const mockMessage1 = {
   "errorCode": 0,
   threadInfo: null,
 };
+export const mockMessage2 = {
+  "messageId": 390292882,
+  "channelUrl": "sendbird_group_channel_13883929_3dc3bb3af92eded8ff8e5f71de775fe149a32dd6",
+  "data": "",
+  "customType": "",
+  "createdAt": 1582004961440,
+  "updatedAt": 0,
+};
 
 export const frozenChannel = {
   "url": "sendbird_group_channel_204619489_3df4fd3d2feeef8bb0775e57950784a92fa3184c",
