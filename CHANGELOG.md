@@ -1,5 +1,22 @@
 # Changelog - v3
 
+## [v3.3.7] (Feb 24 2023)
+
+Features:
+* Add props `activeChannelUrl` to ChannelList to give an option to pragmatically set a channel from a parent component router
+  ```javascript
+  const MyChannelList = () => {
+    const [myActiveChannel] = useState()
+    return (<ChannelList activeChannelUrl={myActiveChannel.url} />)
+  }
+  ```
+
+Fixes:
+* Fix not showing newly recived messages in channel which has less messages
+* Use a real `channel.invitedAt` value when trying to fetch MessageSearchQuery
+* Disable the checkbox of the joined users on the InviteUsersModal
+* Set the default value of CheckBox component: `@sendbird/uikit-react/ui/CheckBox` as false
+
 ## [v3.3.6] (Feb 13 2023)
 
 Fixes:
