@@ -13,7 +13,9 @@ exports[`ui/OGMessageItemBody should do a snapshot test of the OGMessageItemBody
       />
     </span>
     <div
-      class="sendbird-og-message-item-body__og-thumbnail"
+      class="sendbird-og-message-item-body__og-thumbnail
+          sendbird-og-message-item-body__og-thumbnail__empty
+        "
     >
       <div
         class="sendbird-og-message-item-body__og-thumbnail__image sendbird-image-renderer"
@@ -32,7 +34,23 @@ exports[`ui/OGMessageItemBody should do a snapshot test of the OGMessageItemBody
     </div>
     <div
       class="sendbird-og-message-item-body__description"
-    />
+    >
+      <span
+        class="sendbird-og-message-item-body__description__title sendbird-label sendbird-label--subtitle-2 sendbird-label--color-onbackground-1"
+      >
+        example-text
+      </span>
+      <span
+        class="sendbird-og-message-item-body__description__description sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-1"
+      >
+        example-text
+      </span>
+      <span
+        class="sendbird-og-message-item-body__description__url sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
+      >
+        example-text
+      </span>
+    </div>
     <div
       class="sendbird-og-message-item-body__cover"
     />

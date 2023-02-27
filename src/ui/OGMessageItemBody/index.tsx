@@ -1,5 +1,10 @@
 import './index.scss';
-import React, { ReactElement, useContext, useMemo } from 'react';
+import React, {
+  ReactElement,
+  useContext,
+  useMemo,
+  useRef,
+} from 'react';
 import type { UserMessage } from '@sendbird/chat/message';
 
 import Word from '../Word';
@@ -27,6 +32,7 @@ export default function OGMessageItemBody({
   isMentionEnabled = false,
   isReactionEnabled = false,
 }: Props): ReactElement {
+  const imageRef = useRef<HTMLDivElement>(null);
   const { stringSet } = useContext(LocalizationContext);
   const openOGUrl = (): void => {
     if (message?.ogMetaData?.url) window.open(message?.ogMetaData?.url);
@@ -83,10 +89,20 @@ export default function OGMessageItemBody({
         </div>
       </Label>
       <div
-        className="sendbird-og-message-item-body__og-thumbnail"
+        ref={imageRef}
+        className={`sendbird-og-message-item-body__og-thumbnail
+          ${message?.ogMetaData?.defaultImage?.url ? '' : 'sendbird-og-message-item-body__og-thumbnail__empty'}
+        `}
         onClick={openOGUrl}
       >
         <ImageRenderer
+          onError={() => {
+            try {
+              imageRef?.current?.classList?.add('sendbird-og-message-item-body__og-thumbnail__empty');
+            } catch (error) {
+              // do nothing
+            }
+          }}
           className="sendbird-og-message-item-body__og-thumbnail__image"
           url={message?.ogMetaData?.defaultImage?.url || ''}
           alt={message?.ogMetaData?.defaultImage?.alt}
