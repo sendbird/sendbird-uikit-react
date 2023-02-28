@@ -54,38 +54,37 @@ export const useVoicePlayer = ({
 
   // event operation
   useEffect(() => {
-    if (audioFile) {
-      addEventHandler({
-        groupKey: groupKey,
-        id: eventId,
-        onPlayingStarted: (props) => {
-          setPlayingStatus(VoicePlayerStatus.PLAYING);
-          onPlayingStarted(props);
-          setDuration(props?.duration);
+    addEventHandler({
+      groupKey: groupKey,
+      id: eventId,
+      // get audioFile through events and put it to the state of this file
+      onPlayingStarted: (props) => {
+        setPlayingStatus(VoicePlayerStatus.PLAYING);
+        onPlayingStarted(props);
+        setDuration(props?.duration);
+        setPlaybackTime(props?.playbackTime);
+      },
+      onPlayingStopped: (props) => {
+        const { duration, playbackTime } = props;
+        setPlayingStatus(VoicePlayerStatus.READY_TO_PLAY);
+        onPlayingStopped(props);
+        setDuration(props?.duration);
+        if (duration - playbackTime <= VOICE_PLAYER_PLAYBACK_BUFFER) {
+          setPlaybackTime(0);
+        } else {
           setPlaybackTime(props?.playbackTime);
-        },
-        onPlayingStopped: (props) => {
-          const { duration, playbackTime } = props;
-          setPlayingStatus(VoicePlayerStatus.READY_TO_PLAY);
-          onPlayingStopped(props);
-          setDuration(props?.duration);
-          if (duration - playbackTime <= VOICE_PLAYER_PLAYBACK_BUFFER) {
-            setPlaybackTime(0);
-          } else {
-            setPlaybackTime(props?.playbackTime);
-          }
-        },
-        onPlaybackTimeUpdated: (props) => {
-          onPlaybackTimeUpdated(props);
-          setDuration(props?.duration);
-          setPlaybackTime(props?.playbackTime);
-        },
-      });
-    }
+        }
+      },
+      onPlaybackTimeUpdated: (props) => {
+        onPlaybackTimeUpdated(props);
+        setDuration(props?.duration);
+        setPlaybackTime(props?.playbackTime);
+      },
+    });
     return () => {
       removeEventHandler(groupKey, eventId);
     };
-  }, [audioFile]);
+  }, []);
 
   const playVoicePlayer = () => {
     play?.({

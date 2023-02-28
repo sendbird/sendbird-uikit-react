@@ -12,6 +12,7 @@ import Modal from '../../../../ui/Modal';
 import Button, { ButtonSizes, ButtonTypes } from '../../../../ui/Button';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { VOICE_RECORDER_DEFAULT_MIN } from '../../../../utils/consts';
+import { useVoicePlayerContext } from '../../../../hooks/VoicePlayer';
 
 export interface VoiceMessageInputWrapperProps {
   channel?: GroupChannel;
@@ -33,6 +34,7 @@ export const VoiceMessageInputWrapper = ({
   const { stringSet } = useLocalization();
   const { config } = useSendbirdStateContext();
   const minRecordingTime = config?.voiceRecord?.minRecordingTime || VOICE_RECORDER_DEFAULT_MIN;
+  const stopPlay = useVoicePlayerContext().stop;
   const {
     start,
     stop,
@@ -75,6 +77,7 @@ export const VoiceMessageInputWrapper = ({
 
   useEffect(() => {
     if (isSubmited && audioFile) {
+      stopPlay();
       onSubmitClick(audioFile, recordingTime);
     }
     if (audioFile) {
@@ -93,7 +96,10 @@ export const VoiceMessageInputWrapper = ({
         currentValue={recordingStatus === VoiceRecorderStatus.COMPLETED ? playbackTime : recordingTime}
         maximumValue={recordingStatus === VoiceRecorderStatus.COMPLETED ? recordingTime : recordingLimit}
         currentType={voiceInputState}
-        onCancelClick={onCancelClick}
+        onCancelClick={() => {
+          stopPlay();
+          onCancelClick();
+        }}
         onSubmitClick={() => {
           if (isDisabled) {
             setShowModal(true);
