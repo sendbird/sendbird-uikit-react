@@ -10,6 +10,7 @@ import {
   getClassName,
   getUIKitFileType,
   getUIKitFileTypes,
+  getUIKitMessageType,
   isGif,
   isThumbnailMessage,
   isUserMessage,
@@ -172,7 +173,7 @@ export default function QuoteMessage({
           </div>
         )}
         {/* file message */}
-        {(getUIKitFileType(parentMessage?.messageType) === UIKitMessageTypes.FILE && parentMessageUrl && !isUnavailable) && (
+        {(getUIKitMessageType(parentMessage as FileMessage) === UIKitMessageTypes.FILE && parentMessageUrl && !isUnavailable) && (
           <div className="sendbird-quote-message__replied-message__file-message">
             <Icon
               className="sendbird-quote-message__replied-message__file-message__type-icon"

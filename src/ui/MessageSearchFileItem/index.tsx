@@ -61,14 +61,16 @@ export default function MessageSearchFileItem(props: Props): ReactElement {
           {nickname || stringSet.NO_NAME}
         </Label>
         <div className="sendbird-message-search-file-item__right__content">
-          <div className={`sendbird-message-search-file-item__right__content__type-icon${isVoiceMsg ? ' --voice-message-border-radius' : ''}`}>
-            <Icon
-              type={getIconOfFileType(message)}
-              fillColor={IconColors.PRIMARY}
-              width="18px"
-              height="18px"
-            />
-          </div>
+          {!isVoiceMsg && (
+            <div className={`sendbird-message-search-file-item__right__content__type-icon`}>
+              <Icon
+                type={getIconOfFileType(message)}
+                fillColor={IconColors.PRIMARY}
+                width="18px"
+                height="18px"
+              />
+            </div>
+          )}
           <Label
             className="sendbird-message-search-file-item__right__content__url"
             type={LabelTypography.BODY_2}

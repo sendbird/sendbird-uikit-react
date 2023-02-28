@@ -74,6 +74,7 @@ export const VoiceMessageInput = ({
         <PlaybackTime
           className="sendbird-voice-message-input__indicator__playback-time"
           time={isPlayMode ? maximumValue - currentValue : currentValue}
+          labelColor={isReadyToRecord ? LabelColors.ONBACKGROUND_4 : LabelColors.ONCONTENT_1}
         />
       </div>
       <div className="sendbird-voice-message-input__controler">
@@ -117,7 +118,7 @@ export const VoiceMessageInput = ({
                 width="19px"
                 height="19px"
                 type={IconTypes.SEND}
-                fillColor={IconColors.CONTENT}
+                fillColor={isSendButtonDisabled ? IconColors.ON_BACKGROUND_4 : IconColors.CONTENT}
               />
             </div>
           )

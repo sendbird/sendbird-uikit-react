@@ -36,7 +36,8 @@ export const VoiceMessageItemBody = ({
   const [usingReaction, setUsingReaction] = useState(false);
   const [audioState, setAudioState] = useState<VoiceMessageItemStatus>(VoiceMessageItemStatus.NONE);
   const [audioFile, setAudioFile] = useState(null);
-  useEffect(() => {
+
+  const downloadAudio = () => {
     if (message?.url) {
       setAudioState(VoiceMessageItemStatus.LOADING);
       fetch(message?.url)
@@ -50,7 +51,7 @@ export const VoiceMessageItemBody = ({
           setAudioState(VoiceMessageItemStatus.READY_TO_PLAY);
         });
     }
-  }, [message?.url]);
+  };
   const {
     play,
     pause,
@@ -94,7 +95,9 @@ export const VoiceMessageItemBody = ({
       <div className="sendbird-voice-message-item-body__status-button">
         {
           audioState === VoiceMessageItemStatus.NONE && (
-            <div className="sendbird-voice-message-item-body__status-button__button">
+            <div className="sendbird-voice-message-item-body__status-button__button"
+              onClick={downloadAudio}
+            >
               <Icon
                 width="18px"
                 height="18px"

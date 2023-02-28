@@ -29,6 +29,7 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.RefObje
         ref={ref}
         value={value}
         disabled={disabled}
+        isVoiceMessageEnabled={false}
         onSendMessage={handleSendMessage}
         onFileUpload={handleFileUpload}
         placeholder={(
