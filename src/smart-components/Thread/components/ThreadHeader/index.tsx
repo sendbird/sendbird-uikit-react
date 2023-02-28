@@ -8,7 +8,6 @@ import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import TextButton from '../../../../ui/TextButton';
 
 import { useLocalization } from '../../../../lib/LocalizationContext';
-import { useVoicePlayerContext } from '../../../../hooks/VoicePlayer';
 
 type EventType = React.MouseEvent<HTMLDivElement | HTMLButtonElement> | React.KeyboardEvent<HTMLDivElement>;
 
@@ -28,7 +27,6 @@ export default function ThreadHeader({
   onChannelNameClick,
 }: ThreadHeaderProps): React.ReactElement {
   const { stringSet } = useLocalization();
-  const { stop } = useVoicePlayerContext();
 
   const MemoizedActionIcon = useMemo(() => {
     if (typeof renderActionIcon === 'function') {
@@ -36,7 +34,6 @@ export default function ThreadHeader({
     }
     return null;
   }, [renderActionIcon]);
-
   return (
     <div className={`sendbird-thread-header ${className}`}>
       <Label
@@ -64,10 +61,7 @@ export default function ThreadHeader({
             <IconButton
               width="32px"
               height="32px"
-              onClick={(e) => {
-                // stop();
-                onActionIconClick(e);
-              }}
+              onClick={(e) => onActionIconClick(e)}
             >
               <Icon
                 type={IconTypes.CLOSE}

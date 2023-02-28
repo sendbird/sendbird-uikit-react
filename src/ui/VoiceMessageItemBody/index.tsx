@@ -9,7 +9,6 @@ import PlaybackTime from '../PlaybackTime';
 import Loader from '../Loader';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import { LabelTypography, LabelColors } from '../Label';
-import { useVoicePlayerContext } from '../../hooks/VoicePlayer';
 
 export interface VoiceMessageItemBodyProps {
   className?: string;
@@ -37,9 +36,6 @@ export const VoiceMessageItemBody = ({
   const [usingReaction, setUsingReaction] = useState(false);
   const [audioState, setAudioState] = useState<VoiceMessageItemStatus>(VoiceMessageItemStatus.NONE);
   const [audioFile, setAudioFile] = useState(null);
-
-  const { stop } = useVoicePlayerContext();
-
   useEffect(() => {
     if (message?.url) {
       setAudioState(VoiceMessageItemStatus.LOADING);
@@ -71,13 +67,6 @@ export const VoiceMessageItemBody = ({
       setAudioState(VoiceMessageItemStatus.READY_TO_PLAY);
     },
   });
-
-  useEffect(() => {
-    return () => {
-      console.log('voiceMessageItemBody calls Stop to VoicePlayer')
-      stop();
-    }
-  }, []);
 
   useEffect(() => {
     if (isReactionEnabled && message?.reactions?.length > 0) {

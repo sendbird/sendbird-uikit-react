@@ -68,22 +68,17 @@ export const VoicePlayerProvider = ({
     }
   }, [eventStorage]);
   const clearStates = (): void => {
-    if (currentPlayer) {
-      currentPlayer.pause();
-    }
-    // setAudioPlayer(null);
+    setAudioPlayer(null);
     setCurrentGroupKey('');
   };
 
   const stop = useCallback((groupKey?: string): void => {
     if (groupKey === undefined || (groupKey?.length > 0 && groupKey === currentGroupKey)) {
-      console.log('stopp is called', currentPlayer)
       currentPlayer?.pause();
       clearStates();
     }
   }, [currentPlayer, currentGroupKey]);
-
-  const play = useCallback(({
+  const play = ({
     audioFile,
     playbackTime,
     groupKey,
@@ -91,6 +86,7 @@ export const VoicePlayerProvider = ({
     if (currentPlayer || currentGroupKey) {
       stop();
     }
+
     const audioPlayer = new Audio(URL?.createObjectURL?.(audioFile));
     audioPlayer.currentTime = playbackTime;
     audioPlayer.volume = 1;
@@ -119,7 +115,7 @@ export const VoicePlayerProvider = ({
     audioPlayer?.play();
     setAudioPlayer(audioPlayer);
     setCurrentGroupKey(groupKey);
-  }, [eventStorage]);
+  };
 
   return (
     <VoicePlayerContext.Provider value={{

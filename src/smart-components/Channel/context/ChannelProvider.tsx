@@ -43,7 +43,6 @@ import useToggleReactionCallback from './hooks/useToggleReactionCallback';
 import useScrollToMessage from './hooks/useScrollToMessage';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
-import { useVoicePlayerContext } from '../../../hooks/VoicePlayer';
 
 export type MessageListParams = {
   // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
@@ -217,7 +216,6 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   }, [highlightedMessage]);
   const userFilledMessageListQuery = queries?.messageListParams;
   const [quoteMessage, setQuoteMessage] = useState<UserMessage | FileMessage>(null);
-  const { stop } = useVoicePlayerContext();
 
   const [messagesStore, messagesDispatcher] = useReducer(
     messagesReducer,
@@ -325,7 +323,6 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   // to set quote message as null
   useEffect(() => {
     setQuoteMessage(null);
-    stop();
   }, [channelUrl]);
 
   // Hook to handle ChannelEvents and send values to useReducer using messagesDispatcher
