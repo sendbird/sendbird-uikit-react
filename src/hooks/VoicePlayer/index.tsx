@@ -8,6 +8,14 @@ import {
 
 const noop = () => {/* noop */ };
 
+export const VoicePlayerStatus = {
+  PREPARING: 'PREPARING',
+  PLAYING: 'PLAYING',
+  PAUSED: 'PAUSED',
+  COMPLETED: 'COMPLETED',
+} as const;
+export type VoicePlayerStatus = typeof VoicePlayerStatus[keyof typeof VoicePlayerStatus];
+
 // VoicePlayerProvider interface
 export interface VoicePlayerProps {
   children: React.ReactElement;
@@ -78,6 +86,7 @@ export const VoicePlayerProvider = ({
       clearStates();
     }
   }, [currentPlayer, currentGroupKey]);
+
   const play = ({
     audioFile,
     playbackTime,

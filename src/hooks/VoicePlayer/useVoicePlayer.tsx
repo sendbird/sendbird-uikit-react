@@ -1,17 +1,9 @@
 import { useEffect, useState } from "react";
-import { useVoicePlayerContext } from ".";
+import { useVoicePlayerContext, VoicePlayerStatus } from ".";
 
 import uuidv4 from "../../utils/uuid";
 import { generateGroupKey, VoicePlayerEventParams } from "./voicePlayerEvent";
 import { VOICE_PLAYER_DURATION_MIN_SIZE, VOICE_PLAYER_PLAYBACK_BUFFER } from "../../utils/consts";
-
-export const VoicePlayerStatus = {
-  PREPARING: 'PREPARING',
-  READY_TO_PLAY: 'READY_TO_PLAY',
-  PLAYING: 'PLAYING',
-  COMPLETED: 'COMPLETED',
-} as const;
-export type VoicePlayerStatus = typeof VoicePlayerStatus[keyof typeof VoicePlayerStatus];
 
 export interface UseVoicePlayerProps {
   key: string;
@@ -66,7 +58,7 @@ export const useVoicePlayer = ({
         },
         onPlayingStopped: (props) => {
           const { duration, playbackTime } = props;
-          setPlayingStatus(VoicePlayerStatus.READY_TO_PLAY);
+          setPlayingStatus(VoicePlayerStatus.PREPARING);
           onPlayingStopped(props);
           setDuration(props?.duration);
           if (duration - playbackTime <= VOICE_PLAYER_PLAYBACK_BUFFER) {

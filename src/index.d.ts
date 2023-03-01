@@ -406,6 +406,7 @@ export interface UseVoicePlayerProps {
   onPlaybackTimeUpdated?: (props: VoicePlayerEventParams) => void;
 }
 export enum VoicePlayerStatus {
+  IDLE = 'IDLE',
   PREPARING = 'PREPARING',
   READY_TO_PLAY = 'READY_TO_PLAY',
   PLAYING = 'PLAYING',
