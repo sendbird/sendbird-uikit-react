@@ -5,13 +5,18 @@ import {
   ON_VOICE_PLAYER_PLAY,
   SET_CURRENT_PLAYER,
 } from "./actionTypes";
-import { AudioStorageUnit, AudioUnitDefaultValue, VoicePlayerInitialState, VoicePlayerStatus } from "./initialState";
+import {
+  AudioStorageUnit,
+  AudioUnitDefaultValue,
+  VoicePlayerInitialState,
+  VoicePlayerStatus,
+} from "./initialState";
 
 type InitializeAudioUnitPayload = { groupKey: string };
 type SetCurrentPlayerPayload = { audioPlayer: HTMLAudioElement, groupKey: string };
 type OnVoicePlayerPlayPayload = { groupKey: string, audioFile: File };
 type OnVoicePlayerPausePayload = { groupKey: string };
-type OnCurrentTimeUpdatePayload = { groupKey: string, duration: number, playbackTime: number };
+type OnCurrentTimeUpdatePayload = { groupKey: string };
 type PayloadType = (
   InitializeAudioUnitPayload
   | SetCurrentPlayerPayload
@@ -31,7 +36,7 @@ export default function voicePlayerReducer(
   switch (action.type) {
     case INITIALIZE_AUDIO_UNIT: {
       const { groupKey } = action.payload as InitializeAudioUnitPayload;
-      const audioUnit = (state.audioStorage?.[groupKey] ? state.audioStorage[groupKey] : AudioUnitDefaultValue) as AudioStorageUnit;
+      const audioUnit = (state.audioStorage?.[groupKey] ? state.audioStorage[groupKey] : AudioUnitDefaultValue()) as AudioStorageUnit;
       audioUnit.playingStatus = VoicePlayerStatus.PREPARING;
       return {
         ...state,
@@ -52,7 +57,7 @@ export default function voicePlayerReducer(
     case ON_VOICE_PLAYER_PLAY: {
       const { groupKey, audioFile } = action.payload as OnVoicePlayerPlayPayload;
       console.log('ON_VOICE_PLAYER_PLAY', groupKey);
-      const audioUnit = (state.audioStorage?.[groupKey] ? state.audioStorage[groupKey] : AudioUnitDefaultValue) as AudioStorageUnit;
+      const audioUnit = (state.audioStorage?.[groupKey] ? state.audioStorage[groupKey] : AudioUnitDefaultValue()) as AudioStorageUnit;
       audioUnit.audioFile = audioFile;
       audioUnit.playingStatus = VoicePlayerStatus.PLAYING;
       return {
@@ -66,8 +71,11 @@ export default function voicePlayerReducer(
     case ON_VOICE_PLAYER_PAUSE: {
       const { groupKey } = action.payload as OnVoicePlayerPausePayload;
       console.log('ON_VOICE_PLAYER_PAUSE', groupKey)
-      const audioUnit = (state.audioStorage?.[groupKey] ? state.audioStorage[groupKey] : AudioUnitDefaultValue) as AudioStorageUnit;
+      const audioUnit = (state.audioStorage?.[groupKey] ? state.audioStorage[groupKey] : AudioUnitDefaultValue()) as AudioStorageUnit;
       audioUnit.playingStatus = VoicePlayerStatus.PAUSED;
+      if (audioUnit.playbackTime === audioUnit.duration) {
+        audioUnit.playbackTime = 0;
+      }
       return {
         ...state,
         audioStorage: {
@@ -77,12 +85,12 @@ export default function voicePlayerReducer(
       };
     }
     case ON_CURRENT_TIME_UPDATE: {
-      const { groupKey, playbackTime, duration } = action.payload as OnCurrentTimeUpdatePayload;
-      const audioUnit = (state.audioStorage?.[groupKey] ? state.audioStorage[groupKey] : AudioUnitDefaultValue) as AudioStorageUnit;
-      console.log('ON_CURRENT_TIME_UPDATE - playback time: ', playbackTime, state.currentPlayer.currentTime);
-      console.log('ON_CURRENT_TIME_UPDATE - duration: ', duration, state.currentPlayer.duration);
-      audioUnit.playbackTime = state.currentPlayer.currentTime;
-      audioUnit.duration = state.currentPlayer.duration;
+      const { groupKey } = action.payload as OnCurrentTimeUpdatePayload;
+      const { currentTime, duration } = state.currentPlayer as HTMLAudioElement;
+      console.log('ON_CURRENT_TIME_UPDATE', currentTime, duration);
+      const audioUnit = (state.audioStorage?.[groupKey] ? state.audioStorage[groupKey] : AudioUnitDefaultValue()) as AudioStorageUnit;
+      audioUnit.playbackTime = currentTime;
+      audioUnit.duration = duration;
       return {
         ...state,
         audioStorage: {
