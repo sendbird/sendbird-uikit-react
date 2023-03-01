@@ -12,6 +12,7 @@ import Modal from '../../../../ui/Modal';
 import Button, { ButtonSizes, ButtonTypes } from '../../../../ui/Button';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { VOICE_RECORDER_DEFAULT_MIN } from '../../../../utils/consts';
+import { VoicePlayerStatus } from '../../../../hooks/VoicePlayer/dux/initialState';
 
 export interface VoiceMessageInputWrapperProps {
   channel?: GroupChannel;
@@ -48,15 +49,18 @@ export const VoiceMessageInputWrapper = ({
       setAudioFile(audioFile);
     },
   });
-  const {
-    play,
-    pause,
-    playbackTime,
-  } = useVoicePlayer({
+  const voicePlayer = useVoicePlayer({
     channelUrl: channel?.url,
     key: VOICE_MESSAGE_INPUT_KEY,
     audioFile: audioFile,
   });
+  const {
+    play,
+    pause,
+    playbackTime,
+    playingStatus,
+  } = voicePlayer;
+  const stopVoicePlayer = voicePlayer.stop;
 
   // disabled state: muted & frozen
   useEffect(() => {
@@ -75,11 +79,13 @@ export const VoiceMessageInputWrapper = ({
       if (recordingTime < minRecordingTime) {
         setVoiceInputState(VoiceMessageInputStatus.READY_TO_RECORD);
         setAudioFile(null);
+      } else if (playingStatus === VoicePlayerStatus.PLAYING) {
+        setVoiceInputState(VoiceMessageInputStatus.PLAYING);
       } else {
         setVoiceInputState(VoiceMessageInputStatus.READY_TO_PLAY);
       }
     }
-  }, [isSubmited, audioFile, recordingTime]);
+  }, [isSubmited, audioFile, recordingTime, playingStatus]);
 
   return (
     <div className="sendbird-voice-message-input-wrapper">
@@ -100,7 +106,7 @@ export const VoiceMessageInputWrapper = ({
         onControlClick={(type) => {
           switch (type) {
             case VoiceMessageInputStatus.READY_TO_RECORD: {
-              pause();
+              stopVoicePlayer();
               start();
               break;
             }

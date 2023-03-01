@@ -42,9 +42,11 @@ export const useVoicePlayer = ({
       audioFileUrl,
     });
   };
+
   const pauseVoicePlayer = () => {
     pause?.(groupKey);
   };
+
   const stopVoicePlayer = () => {
     stop?.();
   };
