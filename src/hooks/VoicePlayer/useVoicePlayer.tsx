@@ -1,17 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useVoicePlayerContext, VoicePlayerStatus } from ".";
 
-import uuidv4 from "../../utils/uuid";
-import { generateGroupKey, VoicePlayerEventParams } from "./voicePlayerEvent";
 import { VOICE_PLAYER_DURATION_MIN_SIZE, VOICE_PLAYER_PLAYBACK_BUFFER } from "../../utils/consts";
+import { generateGroupKey } from "./utils";
 
 export interface UseVoicePlayerProps {
   key: string;
   channelUrl: string;
   audioFile?: File;
-  onPlayingStarted?: (props: VoicePlayerEventParams) => void;
-  onPlayingStopped?: (props: VoicePlayerEventParams) => void;
-  onPlaybackTimeUpdated?: (props: VoicePlayerEventParams) => void;
 }
 
 export interface UseVoicePlayerContext {
@@ -28,61 +24,16 @@ export const useVoicePlayer = ({
   key,
   channelUrl,
   audioFile,
-  onPlayingStarted = noop,
-  onPlayingStopped = noop,
-  onPlaybackTimeUpdated = noop,
 }: UseVoicePlayerProps): UseVoicePlayerContext => {
   const groupKey = generateGroupKey(channelUrl, key);
-  const eventId = uuidv4();
-  const [playingStatus, setPlayingStatus] = useState<VoicePlayerStatus>(VoicePlayerStatus.PREPARING);
-  const [currentPlaybackTime, setPlaybackTime] = useState<number>(0);
-  const [duration, setDuration] = useState<number>(VOICE_PLAYER_DURATION_MIN_SIZE);
   const {
     play,
     stop,
-    addEventHandler,
-    removeEventHandler,
   } = useVoicePlayerContext();
-
-  // event operation
-  useEffect(() => {
-    if (audioFile) {
-      addEventHandler({
-        groupKey: groupKey,
-        id: eventId,
-        onPlayingStarted: (props) => {
-          setPlayingStatus(VoicePlayerStatus.PLAYING);
-          onPlayingStarted(props);
-          setDuration(props?.duration);
-          setPlaybackTime(props?.playbackTime);
-        },
-        onPlayingStopped: (props) => {
-          const { duration, playbackTime } = props;
-          setPlayingStatus(VoicePlayerStatus.PREPARING);
-          onPlayingStopped(props);
-          setDuration(props?.duration);
-          if (duration - playbackTime <= VOICE_PLAYER_PLAYBACK_BUFFER) {
-            setPlaybackTime(0);
-          } else {
-            setPlaybackTime(props?.playbackTime);
-          }
-        },
-        onPlaybackTimeUpdated: (props) => {
-          onPlaybackTimeUpdated(props);
-          setDuration(props?.duration);
-          setPlaybackTime(props?.playbackTime);
-        },
-      });
-    }
-    return () => {
-      removeEventHandler(groupKey, eventId);
-    };
-  }, [audioFile]);
 
   const playVoicePlayer = () => {
     play?.({
       audioFile: audioFile,
-      playbackTime: currentPlaybackTime,
       groupKey: groupKey,
     });
   };
