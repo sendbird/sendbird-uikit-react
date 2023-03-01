@@ -1,4 +1,5 @@
 export const VoicePlayerStatus = {
+  IDLE: 'IDLE',
   PREPARING: 'PREPARING',
   PLAYING: 'PLAYING',
   PAUSED: 'PAUSED',
@@ -13,12 +14,12 @@ export type AudioStorageUnit = {
   playbackTime: number;
   duration: number;
 }
-export const AudioUnitDefaultValue: AudioStorageUnit = {
+export const AudioUnitDefaultValue = (): AudioStorageUnit => ({
   audioFile: null,
   playbackTime: 0,
   duration: 1000,
-  playingStatus: VoicePlayerStatus.PREPARING,
-};
+  playingStatus: VoicePlayerStatus.IDLE,
+});
 
 export interface VoicePlayerInitialState {
   currentPlayer: null | HTMLAudioElement;
