@@ -7,14 +7,14 @@ import { useChannelContext } from '../context/ChannelProvider';
 import { EveryMessage } from '../../../types';
 
 export interface RemoveMessageProps {
-  onSubmit: () => void;
+  onSubmit?: () => void;
   onCancel: () => void;
   message: EveryMessage;
 }
 
 const RemoveMessage: React.FC<RemoveMessageProps> = (props: RemoveMessageProps) => {
   const {
-    onSubmit,
+    onSubmit = () => {/* noop */},
     onCancel,
     message,
   } = props;
