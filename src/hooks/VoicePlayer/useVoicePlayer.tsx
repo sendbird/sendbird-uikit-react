@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useVoicePlayerContext } from ".";
+import { VOICE_PLAYER_AUDIO_ID } from "../../utils/consts";
 
 import { AudioUnitDefaultValue, VoicePlayerStatus } from "./dux/initialState";
 import { generateGroupKey } from "./utils";
@@ -14,7 +15,7 @@ export interface UseVoicePlayerProps {
 export interface UseVoicePlayerContext {
   play: () => void;
   pause: () => void;
-  stop: () => void;
+  stop: (text?: string) => void;
   playbackTime: number;
   duration: number;
   playingStatus: VoicePlayerStatus;
@@ -47,9 +48,17 @@ export const useVoicePlayer = ({
     pause?.(groupKey);
   };
 
-  const stopVoicePlayer = () => {
-    stop?.();
+  const stopVoicePlayer = (text = '') => {
+    stop?.(text);
   };
+
+  useEffect(() => {
+    return () => {
+      // Can't get the current AudioPlayer through the React hooks(useReducer or useState) in this scope
+      const voiceAudioPlayerElement = document.getElementById(VOICE_PLAYER_AUDIO_ID);
+      (voiceAudioPlayerElement as HTMLAudioElement)?.pause?.();
+    }
+  }, []);
 
   return ({
     play: playVoicePlayer,
