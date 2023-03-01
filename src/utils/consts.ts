@@ -12,7 +12,7 @@ export const VOICE_PLAYER_DURATION_MIN_SIZE = 1000;
  * Append Audio element to the root
  * because I can't get the Audio element in the useEffect unmount scope
  */
-export const VOICE_PLAYER_ROOT_ID = 'sendbirid-voice-player-provider-root';
+export const VOICE_PLAYER_ROOT_ID = 'sendbird-voice-player-provider-root';
 export const VOICE_PLAYER_AUDIO_ID = 'sendbird-global-audio-player-id';
 
 // voice message file
