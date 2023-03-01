@@ -56,12 +56,6 @@ export const VoiceMessageInputWrapper = ({
     channelUrl: channel?.url,
     key: VOICE_MESSAGE_INPUT_KEY,
     audioFile: audioFile,
-    onPlayingStarted: () => {
-      setVoiceInputState(VoiceMessageInputStatus.PLAYING);
-    },
-    onPlayingStopped: () => {
-      setVoiceInputState(VoiceMessageInputStatus.READY_TO_PLAY);
-    },
   });
 
   // disabled state: muted & frozen

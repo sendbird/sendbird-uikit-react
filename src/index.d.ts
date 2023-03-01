@@ -374,36 +374,15 @@ export interface VoicePlayerPlayProps {
   playbackTime: number;
   groupKey: string;
 }
-export enum VoicePlayerEventTypes {
-  STARTED = 'onPlayingStarted',
-  STOPPED = 'onPlayingStopped',
-  TIME_UPDATED = 'onPlaybackTimeUpdated',
-}
-export interface VoicePlayerEventParams {
-  groupKey: string;
-  duration?: number;
-  playbackTime?: number;
-}
-export interface VoicePlayerEvent {
-  groupKey: string;
-  id: string;
-  onPlayingStarted?: (props: VoicePlayerEventParams) => void;
-  onPlayingStopped?: (props: VoicePlayerEventParams) => void;
-  onPlaybackTimeUpdated?: (props: VoicePlayerEventParams) => void;
-}
 export interface VoicePlayerContext {
   play: (props: VoicePlayerPlayProps) => void;
-  stop: (groupKey?: string) => void;
-  addEventHandler: (props: VoicePlayerEvent) => void;
-  removeEventHandler: (groupKey: string, handlerId: string) => void;
+  pause: (groupKey?: string) => void;
+  stop: () => void;
 }
 export interface UseVoicePlayerProps {
   key: string;
   channelUrl: string;
   audioFile?: File;
-  onPlayingStarted?: (props: VoicePlayerEventParams) => void;
-  onPlayingStopped?: (props: VoicePlayerEventParams) => void;
-  onPlaybackTimeUpdated?: (props: VoicePlayerEventParams) => void;
 }
 export enum VoicePlayerStatus {
   IDLE = 'IDLE',

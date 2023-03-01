@@ -1,4 +1,10 @@
-import { VoicePlayerStatus } from "..";
+export const VoicePlayerStatus = {
+  PREPARING: 'PREPARING',
+  PLAYING: 'PLAYING',
+  PAUSED: 'PAUSED',
+  COMPLETED: 'COMPLETED',
+} as const;
+export type VoicePlayerStatus = typeof VoicePlayerStatus[keyof typeof VoicePlayerStatus];
 
 export type GroupKey = string;
 export type AudioStorageUnit = {
@@ -24,4 +30,4 @@ export const voicePlayerInitialState: VoicePlayerInitialState = {
   currentPlayer: null,
   currentGroupKey: '',
   audioStorage: {},
-}
+};

@@ -1,1 +1,1 @@
-export const generateGroupKey = (a: string = '', b: string = ''): string => (`${a}-${b}`);
+export const generateGroupKey = (channelUrl: string = '', key: string = ''): string => (`${channelUrl}-${key}`);

@@ -1,4 +1,3 @@
-import { VoicePlayerStatus } from "..";
 import {
   INITIALIZE_AUDIO_UNIT,
   ON_CURRENT_TIME_UPDATE,
@@ -6,7 +5,7 @@ import {
   ON_VOICE_PLAYER_PLAY,
   SET_CURRENT_PLAYER,
 } from "./actionTypes";
-import { AudioStorageUnit, AudioUnitDefaultValue, VoicePlayerInitialState } from "./initialState";
+import { AudioStorageUnit, AudioUnitDefaultValue, VoicePlayerInitialState, VoicePlayerStatus } from "./initialState";
 
 type InitializeAudioUnitPayload = { groupKey: string };
 type SetCurrentPlayerPayload = { audioPlayer: HTMLAudioElement, groupKey: string };
@@ -25,7 +24,7 @@ type ActionType = {
   payload: PayloadType;
 }
 
-export function voicePlayerReducer(
+export default function voicePlayerReducer(
   state: VoicePlayerInitialState,
   action: ActionType,
 ): VoicePlayerInitialState {

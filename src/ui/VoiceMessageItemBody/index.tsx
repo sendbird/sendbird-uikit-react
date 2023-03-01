@@ -60,12 +60,6 @@ export const VoiceMessageItemBody = ({
     channelUrl,
     key: `${message?.messageId}`,
     audioFile: audioFile,
-    onPlayingStarted: () => {
-      setAudioState(VoiceMessageItemStatus.PLAYING);
-    },
-    onPlayingStopped: () => {
-      setAudioState(VoiceMessageItemStatus.READY_TO_PLAY);
-    },
   });
 
   useEffect(() => {

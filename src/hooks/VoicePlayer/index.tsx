@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useReducer } from 'react';
-import { voicePlayerReducer } from './dux/reducer';
-import { CustomUseReducerDispatcher } from '../../lib/SendbirdState';
+import voicePlayerReducer from './dux/reducer';
 import {
   AudioStorageUnit,
   VoicePlayerInitialState,
@@ -12,14 +11,6 @@ import {
   ON_VOICE_PLAYER_PLAY,
   SET_CURRENT_PLAYER,
 } from './dux/actionTypes';
-
-export const VoicePlayerStatus = {
-  PREPARING: 'PREPARING',
-  PLAYING: 'PLAYING',
-  PAUSED: 'PAUSED',
-  COMPLETED: 'COMPLETED',
-} as const;
-export type VoicePlayerStatus = typeof VoicePlayerStatus[keyof typeof VoicePlayerStatus];
 
 // VoicePlayerProvider interface
 export interface VoicePlayerProps {
@@ -53,9 +44,7 @@ const VoicePlayerContext = createContext<VoicePlayerContext>({
 export const VoicePlayerProvider = ({
   children,
 }: VoicePlayerProps): React.ReactElement => {
-  const [voicePlayerStore, voicePlayerDispatcher] = (
-    useReducer(voicePlayerReducer, voicePlayerInitialState)
-  ) as [VoicePlayerInitialState, CustomUseReducerDispatcher];
+  const [voicePlayerStore, voicePlayerDispatcher] = useReducer(voicePlayerReducer, voicePlayerInitialState);
   const {
     currentGroupKey,
     currentPlayer,
