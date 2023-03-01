@@ -16,7 +16,7 @@ import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import ThreadListItemContent from './ThreadListItemContent';
 import { Role } from '../../../../lib/types';
 import { useVoicePlayerContext } from '../../../../hooks/VoicePlayer';
-import { generateGroupKey } from '../../../../hooks/VoicePlayer/voicePlayerEvent';
+import { generateGroupKey } from '../../../../hooks/VoicePlayer/utils';
 
 export interface ThreadListItemProps {
   className?: string;
@@ -38,7 +38,7 @@ export default function ThreadListItem({
   handleScroll,
 }: ThreadListItemProps): React.ReactElement {
   const { stores, config } = useSendbirdStateContext();
-  const { stop } = useVoicePlayerContext();
+  const { pause } = useVoicePlayerContext();
   const {
     isReactionEnabled,
     isMentionEnabled,
@@ -252,7 +252,7 @@ export default function ThreadListItem({
         <RemoveMessage
           message={message}
           onSubmit={() => {
-            stop?.(generateGroupKey(currentChannel?.url, `${message?.messageId}`));
+            pause?.(generateGroupKey(currentChannel?.url, `${message?.messageId}`));
           }}
           onCancel={() => setShowRemove(false)}
         />

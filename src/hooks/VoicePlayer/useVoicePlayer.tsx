@@ -1,52 +1,88 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useVoicePlayerContext, VoicePlayerStatus } from ".";
 
-import { VOICE_PLAYER_DURATION_MIN_SIZE, VOICE_PLAYER_PLAYBACK_BUFFER } from "../../utils/consts";
+import { VOICE_MESSAGE_FILE_NAME, VOICE_MESSAGE_MIME_TYPE } from "../../utils/consts";
+import { AudioStorageUnit, AudioUnitDefaultValue } from "./dux/initialState";
 import { generateGroupKey } from "./utils";
 
 export interface UseVoicePlayerProps {
   key: string;
   channelUrl: string;
   audioFile?: File;
+  audioFileUrl?: string;
 }
 
 export interface UseVoicePlayerContext {
   play: () => void;
-  pause: (groupKey?: string) => void;
+  pause: () => void;
+  stop: () => void;
   playbackTime: number;
   duration: number;
   playingStatus: VoicePlayerStatus;
 }
 
-const noop = () => {/* noop */}
-
 export const useVoicePlayer = ({
-  key,
-  channelUrl,
-  audioFile,
+  key = '',
+  channelUrl = '',
+  audioFile = null,
+  audioFileUrl = '',
 }: UseVoicePlayerProps): UseVoicePlayerContext => {
-  const groupKey = generateGroupKey(channelUrl, key);
+  const [groupKey] = useState<string>(generateGroupKey(channelUrl, key));
+  const [currentAudioUnit, setCurrentAudioUnit] = useState<AudioStorageUnit>(AudioUnitDefaultValue);
+
   const {
     play,
+    pause,
     stop,
+    voicePlayerStore,
   } = useVoicePlayerContext();
+
+  useEffect(() => {
+    // Set currentAudioUnit
+    //  a) get it from AudioStorage
+    //  b) set it with parameters, audioFile or audioFileUrl
+    if (voicePlayerStore.audioStorage?.[groupKey]) {
+      setCurrentAudioUnit(voicePlayerStore.audioStorage?.[groupKey]);
+    } else {
+      const newAudioUnit = AudioUnitDefaultValue;
+      if (audioFile) {
+        newAudioUnit.audioFile = audioFile;
+        setCurrentAudioUnit(newAudioUnit);
+      } else if (audioFileUrl) {
+        fetch(audioFileUrl)
+          .then((res) => res.blob())
+          .then((blob) => {
+            const audioFile = new File([blob], VOICE_MESSAGE_FILE_NAME, {
+              lastModified: new Date().getTime(),
+              type: VOICE_MESSAGE_MIME_TYPE,
+            });
+            newAudioUnit.audioFile = audioFile;
+            setCurrentAudioUnit(newAudioUnit);
+          });
+      }
+    }
+  }, [voicePlayerStore.audioStorage?.[groupKey]]);
 
   const playVoicePlayer = () => {
     play?.({
-      audioFile: audioFile,
-      groupKey: groupKey,
+      groupKey,
+      audioFile: currentAudioUnit?.audioFile,
     });
   };
-  const pauseVoicePlayer = (groupKey?: string) => {
-    stop?.(groupKey);
+  const pauseVoicePlayer = () => {
+    pause?.(groupKey);
+  };
+  const stopVoicePlayer = () => {
+    stop?.();
   };
 
   return ({
     play: playVoicePlayer,
     pause: pauseVoicePlayer,
-    playbackTime: currentPlaybackTime * 1000,
-    duration: duration * 1000,
+    stop: stopVoicePlayer,
+    playbackTime: currentAudioUnit?.playbackTime * 1000,
+    duration: currentAudioUnit?.duration * 1000,
     // the unit of playbackTime and duration should be millisecond
-    playingStatus,
+    playingStatus: currentAudioUnit?.playingStatus,
   });
 };

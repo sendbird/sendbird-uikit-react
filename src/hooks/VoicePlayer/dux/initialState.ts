@@ -7,6 +7,13 @@ export type AudioStorageUnit = {
   playbackTime: number;
   duration: number;
 }
+export const AudioUnitDefaultValue: AudioStorageUnit = {
+  audioFile: null,
+  playbackTime: 0,
+  duration: 1000,
+  playingStatus: VoicePlayerStatus.PREPARING,
+};
+
 export interface VoicePlayerInitialState {
   currentPlayer: null | HTMLAudioElement;
   currentGroupKey: string;
