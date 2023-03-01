@@ -74,7 +74,7 @@ export const VoiceMessageItemBody = ({
     } else {
       setUsingReaction(false);
     }
-  }, [isReactionEnabled, message?.reactions]);
+  }, [isReactionEnabled, message?.reactions?.length]);
   const progresBarMaxSize = useMemo(() => {
     if (message?.metaArrays) {
       const duration = message?.metaArrays.find((metaArray) => metaArray.key === 'KEY_VOICE_MESSAGE_DURATION')?.value[0];
