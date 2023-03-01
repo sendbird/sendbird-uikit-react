@@ -73,8 +73,12 @@ export default function voicePlayerReducer(
       console.log('ON_VOICE_PLAYER_PAUSE', groupKey)
       const audioUnit = (state.audioStorage?.[groupKey] ? state.audioStorage[groupKey] : AudioUnitDefaultValue()) as AudioStorageUnit;
       audioUnit.playingStatus = VoicePlayerStatus.PAUSED;
+      const { currentTime, duration } = state.currentPlayer as HTMLAudioElement;
       if (audioUnit.playbackTime === audioUnit.duration) {
         audioUnit.playbackTime = 0;
+      } else if (currentTime > 0 && duration > 0) {
+        audioUnit.playbackTime = currentTime;
+        audioUnit.duration = duration;
       }
       return {
         ...state,
@@ -89,8 +93,10 @@ export default function voicePlayerReducer(
       const { currentTime, duration } = state.currentPlayer as HTMLAudioElement;
       console.log('ON_CURRENT_TIME_UPDATE', currentTime, duration);
       const audioUnit = (state.audioStorage?.[groupKey] ? state.audioStorage[groupKey] : AudioUnitDefaultValue()) as AudioStorageUnit;
-      audioUnit.playbackTime = currentTime;
-      audioUnit.duration = duration;
+      if (currentTime > 0 && duration > 0) {
+        audioUnit.playbackTime = currentTime;
+        audioUnit.duration = duration;
+      }
       return {
         ...state,
         audioStorage: {
