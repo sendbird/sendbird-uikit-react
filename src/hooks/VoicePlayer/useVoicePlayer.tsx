@@ -1,109 +1,72 @@
 import { useEffect, useState } from "react";
 import { useVoicePlayerContext } from ".";
+import { VOICE_PLAYER_AUDIO_ID } from "../../utils/consts";
 
-import uuidv4 from "../../utils/uuid";
-import { generateGroupKey, VoicePlayerEventParams } from "./voicePlayerEvent";
-import { VOICE_PLAYER_DURATION_MIN_SIZE, VOICE_PLAYER_PLAYBACK_BUFFER } from "../../utils/consts";
-
-export const VoicePlayerStatus = {
-  PREPARING: 'PREPARING',
-  READY_TO_PLAY: 'READY_TO_PLAY',
-  PLAYING: 'PLAYING',
-  COMPLETED: 'COMPLETED',
-} as const;
-export type VoicePlayerStatus = typeof VoicePlayerStatus[keyof typeof VoicePlayerStatus];
+import { AudioUnitDefaultValue, VoicePlayerStatus } from "./dux/initialState";
+import { generateGroupKey } from "./utils";
 
 export interface UseVoicePlayerProps {
   key: string;
   channelUrl: string;
   audioFile?: File;
-  onPlayingStarted?: (props: VoicePlayerEventParams) => void;
-  onPlayingStopped?: (props: VoicePlayerEventParams) => void;
-  onPlaybackTimeUpdated?: (props: VoicePlayerEventParams) => void;
+  audioFileUrl?: string;
 }
 
 export interface UseVoicePlayerContext {
   play: () => void;
-  pause: (groupKey?: string) => void;
+  pause: () => void;
+  stop: (text?: string) => void;
   playbackTime: number;
   duration: number;
   playingStatus: VoicePlayerStatus;
 }
 
-const noop = () => {/* noop */}
-
 export const useVoicePlayer = ({
-  key,
-  channelUrl,
-  audioFile,
-  onPlayingStarted = noop,
-  onPlayingStopped = noop,
-  onPlaybackTimeUpdated = noop,
+  key = '',
+  channelUrl = '',
+  audioFile = null,
+  audioFileUrl = '',
 }: UseVoicePlayerProps): UseVoicePlayerContext => {
-  const groupKey = generateGroupKey(channelUrl, key);
-  const eventId = uuidv4();
-  const [playingStatus, setPlayingStatus] = useState<VoicePlayerStatus>(VoicePlayerStatus.PREPARING);
-  const [currentPlaybackTime, setPlaybackTime] = useState<number>(0);
-  const [duration, setDuration] = useState<number>(VOICE_PLAYER_DURATION_MIN_SIZE);
+  const [groupKey] = useState<string>(generateGroupKey(channelUrl, key));
   const {
     play,
+    pause,
     stop,
-    addEventHandler,
-    removeEventHandler,
+    voicePlayerStore,
   } = useVoicePlayerContext();
-
-  // event operation
-  useEffect(() => {
-    if (audioFile) {
-      addEventHandler({
-        groupKey: groupKey,
-        id: eventId,
-        onPlayingStarted: (props) => {
-          setPlayingStatus(VoicePlayerStatus.PLAYING);
-          onPlayingStarted(props);
-          setDuration(props?.duration);
-          setPlaybackTime(props?.playbackTime);
-        },
-        onPlayingStopped: (props) => {
-          const { duration, playbackTime } = props;
-          setPlayingStatus(VoicePlayerStatus.READY_TO_PLAY);
-          onPlayingStopped(props);
-          setDuration(props?.duration);
-          if (duration - playbackTime <= VOICE_PLAYER_PLAYBACK_BUFFER) {
-            setPlaybackTime(0);
-          } else {
-            setPlaybackTime(props?.playbackTime);
-          }
-        },
-        onPlaybackTimeUpdated: (props) => {
-          onPlaybackTimeUpdated(props);
-          setDuration(props?.duration);
-          setPlaybackTime(props?.playbackTime);
-        },
-      });
-    }
-    return () => {
-      removeEventHandler(groupKey, eventId);
-    };
-  }, [audioFile]);
+  const currentAudioUnit = voicePlayerStore?.audioStorage?.[groupKey] || AudioUnitDefaultValue();
 
   const playVoicePlayer = () => {
     play?.({
-      audioFile: audioFile,
-      playbackTime: currentPlaybackTime,
-      groupKey: groupKey,
+      groupKey,
+      audioFile,
+      audioFileUrl,
     });
   };
-  const pauseVoicePlayer = (groupKey?: string) => {
-    stop?.(groupKey);
+
+  const pauseVoicePlayer = () => {
+    pause?.(groupKey);
   };
+
+  const stopVoicePlayer = (text = '') => {
+    stop?.(text);
+  };
+
+  useEffect(() => {
+    return () => {
+      // Can't get the current AudioPlayer through the React hooks(useReducer or useState) in this scope
+      const voiceAudioPlayerElement = document.getElementById(VOICE_PLAYER_AUDIO_ID);
+      (voiceAudioPlayerElement as HTMLAudioElement)?.pause?.();
+    }
+  }, []);
 
   return ({
     play: playVoicePlayer,
     pause: pauseVoicePlayer,
-    playbackTime: currentPlaybackTime * 1000,
-    duration: duration * 1000,
+    stop: stopVoicePlayer,
+    playbackTime: currentAudioUnit?.playbackTime * 1000,
+    duration: currentAudioUnit?.duration * 1000,
     // the unit of playbackTime and duration should be millisecond
-    playingStatus,
+    playingStatus: currentAudioUnit?.playingStatus,
   });
 };

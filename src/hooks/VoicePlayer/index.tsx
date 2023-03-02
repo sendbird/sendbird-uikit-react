@@ -1,129 +1,168 @@
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import React, { createContext, useContext, useReducer } from 'react';
+import voicePlayerReducer from './dux/reducer';
 import {
-  VoicePlayerEvent,
-  VoicePlayerEventParams,
-  VoicePlayerEventStorage,
-  VoicePlayerEventTypes,
-} from './voicePlayerEvent';
-
-const noop = () => {/* noop */ };
+  AudioStorageUnit,
+  AudioUnitDefaultValue,
+  VoicePlayerInitialState,
+  voicePlayerInitialState,
+} from './dux/initialState';
+import {
+  INITIALIZE_AUDIO_UNIT,
+  ON_CURRENT_TIME_UPDATE,
+  ON_VOICE_PLAYER_PAUSE,
+  ON_VOICE_PLAYER_PLAY,
+  SET_CURRENT_PLAYER,
+} from './dux/actionTypes';
+import {
+  VOICE_MESSAGE_FILE_NAME,
+  VOICE_MESSAGE_MIME_TYPE,
+  VOICE_PLAYER_AUDIO_ID,
+  VOICE_PLAYER_ROOT_ID,
+} from '../../utils/consts';
 
 // VoicePlayerProvider interface
 export interface VoicePlayerProps {
   children: React.ReactElement;
 }
 export interface VoicePlayerPlayProps {
-  audioFile: File;
-  playbackTime: number;
   groupKey: string;
+  audioFile?: File;
+  audioFileUrl?: string;
 }
 export interface VoicePlayerContext {
   play: (props: VoicePlayerPlayProps) => void;
-  stop: (groupKey?: string) => void;
-  addEventHandler: (props: VoicePlayerEvent) => void;
-  removeEventHandler: (groupKey: string, handlerId: string) => void;
+  pause: (groupKey?: string) => void;
+  stop: (text?: string) => void;
+  voicePlayerStore: VoicePlayerInitialState;
 }
+
+const noop = () => {/* noop */ };
+const VoicePlayerStoreDefaultValue = {
+  currentGroupKey: '',
+  currentPlayer: null,
+  audioStorage: {},
+};
 
 const VoicePlayerContext = createContext<VoicePlayerContext>({
   play: noop,
+  pause: noop,
   stop: noop,
-  addEventHandler: noop,
-  removeEventHandler: noop,
+  voicePlayerStore: VoicePlayerStoreDefaultValue,
 });
 
 export const VoicePlayerProvider = ({
   children,
 }: VoicePlayerProps): React.ReactElement => {
-  const [eventStorage, setEventStorage] = useState<VoicePlayerEventStorage>({});
-  const [currentPlayer, setAudioPlayer] = useState<HTMLAudioElement>(null);
-  const [currentGroupKey, setCurrentGroupKey] = useState<string>('');
+  const [voicePlayerStore, voicePlayerDispatcher] = useReducer(voicePlayerReducer, voicePlayerInitialState);
+  const {
+    currentGroupKey,
+    currentPlayer,
+    audioStorage,
+  } = voicePlayerStore;
 
-  const addEventHandler = (event: VoicePlayerEvent): void => {
-    const { groupKey } = event;
-    setEventStorage((storage) => {
-      if (!storage?.[groupKey]) {
-        storage[groupKey] = [];
-      }
-      storage?.[groupKey].push(event);
-      return storage;
-    });
-  };
-  const removeEventHandler = (groupKey: string, handlerId: string): void => {
-    setEventStorage((storage) => {
-      if (!Array.isArray(storage?.[groupKey])) {
-        return storage;
-      }
-      return ({
-        ...storage,
-        [groupKey]: storage[groupKey].filter(({ id }) => id !== handlerId),
-      });
-    });
-  };
-  const triggerEvent = useCallback((eventType: VoicePlayerEventTypes, payload: VoicePlayerEventParams): void => {
-    const { groupKey } = payload;
-    if (Array.isArray(eventStorage?.[groupKey])) {
-      eventStorage[groupKey].map((playerEvent) => {
-        playerEvent?.[eventType]?.(payload);
-      });
+  const stop = (text = '') => {
+    if (currentGroupKey.includes(text)) {
+      pause(currentGroupKey);
     }
-  }, [eventStorage]);
-  const clearStates = (): void => {
-    setAudioPlayer(null);
-    setCurrentGroupKey('');
   };
 
-  const stop = useCallback((groupKey?: string): void => {
-    if (groupKey === undefined || (groupKey?.length > 0 && groupKey === currentGroupKey)) {
+  const pause = (groupKey: string) => {
+    if (currentGroupKey === groupKey && currentPlayer !== null) {
       currentPlayer?.pause();
-      clearStates();
     }
-  }, [currentPlayer, currentGroupKey]);
+  };
+
   const play = ({
-    audioFile,
-    playbackTime,
     groupKey,
+    audioFile = null,
+    audioFileUrl = '',
   }: VoicePlayerPlayProps): void => {
-    if (currentPlayer || currentGroupKey) {
-      stop();
+    if (groupKey !== currentGroupKey) {
+      pause(currentGroupKey);
     }
 
-    const audioPlayer = new Audio(URL?.createObjectURL?.(audioFile));
-    audioPlayer.currentTime = playbackTime;
-    audioPlayer.volume = 1;
-    audioPlayer.loop = false;
-    audioPlayer.onplaying = () => {
-      triggerEvent(VoicePlayerEventTypes.STARTED, {
-        groupKey,
-        playbackTime: audioPlayer?.currentTime,
-        duration: audioPlayer?.duration,
+    // Clear the previous AudioPlayer element
+    const voicePlayerRoot = document.getElementById(VOICE_PLAYER_ROOT_ID);
+    const voicePlayerAudioElement = document.getElementById(VOICE_PLAYER_AUDIO_ID);
+    if (voicePlayerAudioElement) {
+      voicePlayerRoot.removeChild(voicePlayerAudioElement);
+    }
+
+    new Promise((resolve) => {
+      if (audioFile) {
+        resolve(audioFile);
+      }
+      if (audioStorage?.[groupKey]?.audioFile) {
+        resolve(audioStorage[groupKey].audioFile)
+      }
+      voicePlayerDispatcher({
+        type: INITIALIZE_AUDIO_UNIT,
+        payload: {
+          groupKey,
+        },
       });
-    };
-    audioPlayer.onpause = () => {
-      triggerEvent(VoicePlayerEventTypes.STOPPED, {
-        groupKey,
-        playbackTime: audioPlayer?.currentTime,
-        duration: audioPlayer?.duration,
+      fetch(audioFileUrl)
+        .then((res) => res.blob())
+        .then((blob) => {
+          const audioFile = new File([blob], VOICE_MESSAGE_FILE_NAME, {
+            lastModified: new Date().getTime(),
+            type: VOICE_MESSAGE_MIME_TYPE,
+          });
+          resolve(audioFile);
+        });
+    }).then((audioFile: File) => {
+      const currentAudioUnit = audioStorage[groupKey] || AudioUnitDefaultValue() as AudioStorageUnit;
+      const audioPlayer = new Audio(URL?.createObjectURL?.(audioFile));
+      audioPlayer.id = VOICE_PLAYER_AUDIO_ID;
+      audioPlayer.currentTime = currentAudioUnit.playbackTime;
+      audioPlayer.volume = 1;
+      audioPlayer.loop = false;
+      audioPlayer.onplaying = () => {
+        voicePlayerDispatcher({
+          type: ON_VOICE_PLAYER_PLAY,
+          payload: {
+            groupKey,
+            audioFile,
+          },
+        });
+      };
+      audioPlayer.onpause = () => {
+        voicePlayerDispatcher({
+          type: ON_VOICE_PLAYER_PAUSE,
+          payload: {
+            groupKey,
+          },
+        });
+      };
+      audioPlayer.ontimeupdate = () => {
+        voicePlayerDispatcher({
+          type: ON_CURRENT_TIME_UPDATE,
+          payload: {
+            groupKey,
+          },
+        });
+      };
+      audioPlayer?.play();
+      const voicePlayerRoot = document.getElementById(VOICE_PLAYER_ROOT_ID);
+      voicePlayerRoot.appendChild(audioPlayer);
+      voicePlayerDispatcher({
+        type: SET_CURRENT_PLAYER,
+        payload: {
+          groupKey,
+          audioPlayer,
+        },
       });
-    };
-    audioPlayer.ontimeupdate = () => {
-      triggerEvent(VoicePlayerEventTypes.TIME_UPDATED, {
-        groupKey,
-        playbackTime: audioPlayer?.currentTime,
-        duration: audioPlayer?.duration,
-      });
-    };
-    audioPlayer?.play();
-    setAudioPlayer(audioPlayer);
-    setCurrentGroupKey(groupKey);
+    })
   };
 
   return (
     <VoicePlayerContext.Provider value={{
       play,
+      pause,
       stop,
-      addEventHandler,
-      removeEventHandler,
+      voicePlayerStore,
     }}>
+      <div id={VOICE_PLAYER_ROOT_ID} style={{ display: 'none' }} />
       {children}
     </VoicePlayerContext.Provider>
   );

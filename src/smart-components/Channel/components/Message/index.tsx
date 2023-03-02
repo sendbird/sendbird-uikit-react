@@ -24,8 +24,6 @@ import RemoveMessageModal from '../RemoveMessageModal';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { useLocalization } from '../../../../lib/LocalizationContext';
-import { useVoicePlayerContext } from '../../../../hooks/VoicePlayer';
-import { generateGroupKey } from '../../../../hooks/VoicePlayer/voicePlayerEvent';
 
 type MessageUIProps = {
   message: EveryMessage;
@@ -87,8 +85,6 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
     onMessageAnimated,
     onMessageHighlighted,
   } = useChannelContext();
-  const { stop } = useVoicePlayerContext()
-
   const [showEdit, setShowEdit] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
   const [showFileViewer, setShowFileViewer] = useState(false);
@@ -353,9 +349,6 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
           <RemoveMessageModal
             message={message}
             onCancel={() => setShowRemove(false)}
-            onSubmit={() => {
-              stop?.(generateGroupKey(currentGroupChannel?.url, `${message?.messageId}`));
-            }}
           />
         )
       }

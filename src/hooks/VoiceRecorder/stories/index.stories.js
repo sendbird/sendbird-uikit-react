@@ -23,15 +23,6 @@ const Tester = () => {
     key: 'unique-key',
     channelUrl: 'channel-url',
     audioFile: currentAudio,
-    onPlayingStarted: () =>  {
-      console.log('onPlayingStarted')
-    },
-    onPlayingStopped: () => {
-      console.log('onPlayingStopped')
-    },
-    onPlaybackTimeUpdated: () => {
-      console.log('onPlaybackTimeUpdated')
-    },
   });
 
   return (

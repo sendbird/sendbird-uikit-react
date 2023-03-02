@@ -9,6 +9,7 @@ import PlaybackTime from '../PlaybackTime';
 import Loader from '../Loader';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import { LabelTypography, LabelColors } from '../Label';
+import { VoicePlayerStatus } from '../../hooks/VoicePlayer/dux/initialState';
 
 export interface VoiceMessageItemBodyProps {
   className?: string;
@@ -18,14 +19,6 @@ export interface VoiceMessageItemBodyProps {
   isReactionEnabled?: boolean;
 }
 
-export const VoiceMessageItemStatus = {
-  NONE: 'NONE',
-  LOADING: 'LOADING',
-  READY_TO_PLAY: 'READY_TO_PLAY',
-  PLAYING: 'PLAYING',
-} as const;
-export type VoiceMessageItemStatus = typeof VoiceMessageItemStatus[keyof typeof VoiceMessageItemStatus];
-
 export const VoiceMessageItemBody = ({
   className,
   message,
@@ -34,38 +27,16 @@ export const VoiceMessageItemBody = ({
   isReactionEnabled = false,
 }: VoiceMessageItemBodyProps): React.ReactElement => {
   const [usingReaction, setUsingReaction] = useState(false);
-  const [audioState, setAudioState] = useState<VoiceMessageItemStatus>(VoiceMessageItemStatus.NONE);
-  const [audioFile, setAudioFile] = useState(null);
-  useEffect(() => {
-    if (message?.url) {
-      setAudioState(VoiceMessageItemStatus.LOADING);
-      fetch(message?.url)
-        .then((res) => res.blob())
-        .then((blob) => {
-          const audioFile = new File([blob], 'Voice_message.m4a', {
-            lastModified: new Date().getTime(),
-            type: 'audio/mpeg',
-          });
-          setAudioFile(audioFile);
-          setAudioState(VoiceMessageItemStatus.READY_TO_PLAY);
-        });
-    }
-  }, [message?.url]);
   const {
     play,
     pause,
     playbackTime = 0,
     duration,
+    playingStatus = VoicePlayerStatus.IDLE,
   } = useVoicePlayer({
     channelUrl,
     key: `${message?.messageId}`,
-    audioFile: audioFile,
-    onPlayingStarted: () => {
-      setAudioState(VoiceMessageItemStatus.PLAYING);
-    },
-    onPlayingStopped: () => {
-      setAudioState(VoiceMessageItemStatus.READY_TO_PLAY);
-    },
+    audioFileUrl: message?.url,
   });
 
   useEffect(() => {
@@ -92,58 +63,40 @@ export const VoiceMessageItemBody = ({
         colorType={isByMe ? ProgressBarColorTypes.PRIMARY : ProgressBarColorTypes.GRAY}
       />
       <div className="sendbird-voice-message-item-body__status-button">
-        {
-          audioState === VoiceMessageItemStatus.NONE && (
-            <div className="sendbird-voice-message-item-body__status-button__button">
-              <Icon
-                width="18px"
-                height="18px"
-                type={IconTypes.PLAY}
-                fillColor={IconColors.PRIMARY}
-              />
+        {(playingStatus === VoicePlayerStatus.IDLE || playingStatus === VoicePlayerStatus.PAUSED) && (
+          <div
+            className="sendbird-voice-message-item-body__status-button__button"
+            onClick={play}
+          >
+            <Icon
+              width="18px"
+              height="18px"
+              type={IconTypes.PLAY}
+              fillColor={IconColors.PRIMARY}
+            />
+          </div>
+        )}
+        {playingStatus === VoicePlayerStatus.PREPARING && (
+          <Loader width="22.2px" height="22.2px">
+            <Icon
+              width="22.2px"
+              height="22.2px"
+              type={IconTypes.SPINNER}
+              fillColor={IconColors.PRIMARY_2}
+            />
+          </Loader>
+        )}
+        {playingStatus === VoicePlayerStatus.PLAYING && (
+          <div
+            className="sendbird-voice-message-item-body__status-button__button"
+            onClick={() => { pause() }}
+          >
+            <div className="sendbird-voice-message-item-body__status-button__button__pause">
+              <div className="sendbird-voice-message-item-body__status-button__button__pause__inner" />
+              <div className="sendbird-voice-message-item-body__status-button__button__pause__inner" />
             </div>
-          )
-        }
-        {
-          audioState === VoiceMessageItemStatus.LOADING && (
-            <Loader width="22.2px" height="22.2px">
-              <Icon
-                width="22.2px"
-                height="22.2px"
-                type={IconTypes.SPINNER}
-                fillColor={IconColors.PRIMARY_2}
-              />
-            </Loader>
-          )
-        }
-        {
-          audioState === VoiceMessageItemStatus.READY_TO_PLAY && (
-            <div
-              className="sendbird-voice-message-item-body__status-button__button"
-              onClick={play}
-            >
-              <Icon
-                width="18px"
-                height="18px"
-                type={IconTypes.PLAY}
-                fillColor={IconColors.PRIMARY}
-              />
-            </div>
-          )
-        }
-        {
-          audioState === VoiceMessageItemStatus.PLAYING && (
-            <div
-              className="sendbird-voice-message-item-body__status-button__button"
-              onClick={() => { pause() }}
-            >
-              <div className="sendbird-voice-message-item-body__status-button__button__pause">
-                <div className="sendbird-voice-message-item-body__status-button__button__pause__inner" />
-                <div className="sendbird-voice-message-item-body__status-button__button__pause__inner" />
-              </div>
-            </div>
-          )
-        }
+          </div>
+        )}
       </div>
       <PlaybackTime
         className="sendbird-voice-message-item-body__playback-time"
