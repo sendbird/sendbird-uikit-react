@@ -60,5 +60,5 @@ export default function useGetThreadList({
           });
         });
     }
-  }, [sdkInit, parentMessage, anchorMessage]);
+  }, [sdkInit, parentMessage?.messageId, anchorMessage]);
 }

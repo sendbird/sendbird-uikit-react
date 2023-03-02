@@ -28,7 +28,7 @@ export const ControlerIcon = ({
           width="20px"
           height="20px"
           type={IconTypes.PLAY}
-          fillColor={IconColors.DEFAULT}
+          fillColor={IconColors.ON_BACKGROUND_1}
         />
       );
     }
