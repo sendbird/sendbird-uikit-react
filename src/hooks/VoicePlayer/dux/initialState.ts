@@ -1,3 +1,5 @@
+import { GroupKey } from '../utils';
+
 export const VoicePlayerStatus = {
   IDLE: 'IDLE',
   PREPARING: 'PREPARING',
@@ -7,7 +9,6 @@ export const VoicePlayerStatus = {
 } as const;
 export type VoicePlayerStatus = typeof VoicePlayerStatus[keyof typeof VoicePlayerStatus];
 
-export type GroupKey = string;
 export type AudioStorageUnit = {
   playingStatus: VoicePlayerStatus;
   audioFile: null | File;

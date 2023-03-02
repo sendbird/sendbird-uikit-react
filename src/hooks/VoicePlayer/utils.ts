@@ -1,1 +1,2 @@
-export const generateGroupKey = (channelUrl = '', key = ''): string => (`${channelUrl}-${key}`);
+export type GroupKey = string;
+export const generateGroupKey = (channelUrl = '', key = ''): GroupKey => (`${channelUrl}-${key}`);
