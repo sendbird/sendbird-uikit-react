@@ -2,6 +2,10 @@ export default {
   // legacy
   index: 'src/index.js',
 
+  // lame-js
+  // remove when they remove 1.2.2
+  'lame.all.js': 'src/_externals/lamejs/lame.all.js',
+
   // Easy to use app
   App: 'src/smart-components/App/index.jsx',
 
