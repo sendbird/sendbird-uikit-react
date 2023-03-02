@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 import { downsampleToWav, encodeMp3 } from './WebAudioUtils';
 import {
   VOICE_MESSAGE_FILE_NAME,
@@ -31,55 +31,47 @@ const VoiceRecorderContext = createContext<VoiceRecorderContext>({
 });
 
 export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactElement => {
-  const [currentStream, setCurrentStream] = useState<MediaStream>(null);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>(null);
+  const [isRecordable, setIsRecordable] = useState<boolean>(false);
 
   const { children } = props;
-
-  useEffect(() => {
-    navigator?.mediaDevices?.getUserMedia?.({ audio: true })
-      .then((stream) => {
-        setCurrentStream(stream);
-      })
-      .catch(() => {
-        // error
-        setMediaRecorder(null);
-      });
-    return () => {
-      currentStream?.getAudioTracks?.().forEach?.(track => track?.stop());
-      setCurrentStream(null);
-    };
-  }, []);
 
   const start = useCallback((eventHandler: VoiceRecorderEventHandler): void => {
     if (mediaRecorder) {
       stop();
     }
-    if (currentStream) {
-      const mediaRecorder = new MediaRecorder(currentStream, {
-        mimeType: VOICE_RECORDER_MIME_TYPE,
-        audioBitsPerSecond: VOICE_RECORDER_AUDIO_BITS,
-      });
-      mediaRecorder.ondataavailable = (e) => {// when recording stops
-        const audioFile = new File([e.data], VOICE_MESSAGE_FILE_NAME, {
-          lastModified: new Date().getTime(),
-          type: VOICE_MESSAGE_MIME_TYPE,
+    navigator?.mediaDevices?.getUserMedia?.({ audio: true })
+      .then((stream) => {
+        setIsRecordable(true);
+        const mediaRecorder = new MediaRecorder(stream, {
+          mimeType: VOICE_RECORDER_MIME_TYPE,
+          audioBitsPerSecond: VOICE_RECORDER_AUDIO_BITS,
         });
-        downsampleToWav(audioFile, (buffer) => {
-          const mp3Buffer = encodeMp3(buffer);
-          const mp3blob = new Blob(mp3Buffer, { type: VOICE_MESSAGE_MIME_TYPE });
-          const convertedAudioFile = new File([mp3blob], VOICE_MESSAGE_FILE_NAME, {
+        mediaRecorder.ondataavailable = (e) => {// when recording stops
+          const audioFile = new File([e.data], VOICE_MESSAGE_FILE_NAME, {
             lastModified: new Date().getTime(),
             type: VOICE_MESSAGE_MIME_TYPE,
           });
-          eventHandler?.onRecordingEnded(convertedAudioFile);
-        })
-      };
-      mediaRecorder?.start();
-      setMediaRecorder(mediaRecorder);
-      eventHandler?.onRecordingStarted();
-    }
-  }, [mediaRecorder, currentStream]);
+          downsampleToWav(audioFile, (buffer) => {
+            const mp3Buffer = encodeMp3(buffer);
+            const mp3blob = new Blob(mp3Buffer, { type: VOICE_MESSAGE_MIME_TYPE });
+            const convertedAudioFile = new File([mp3blob], VOICE_MESSAGE_FILE_NAME, {
+              lastModified: new Date().getTime(),
+              type: VOICE_MESSAGE_MIME_TYPE,
+            });
+            eventHandler?.onRecordingEnded(convertedAudioFile);
+          });
+          stream?.getAudioTracks?.().forEach?.(track => track?.stop());
+        };
+        mediaRecorder?.start();
+        setMediaRecorder(mediaRecorder);
+        eventHandler?.onRecordingStarted();
+      })
+      .catch(() => {
+        // error
+        setMediaRecorder(null);
+      });
+  }, [mediaRecorder]);
 
   const stop = useCallback((): void => {
     // Stop recording
@@ -92,7 +84,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
     <VoiceRecorderContext.Provider value={{
       start,
       stop,
-      isRecordable: (null !== currentStream),
+      isRecordable,
     }}>
       {children}
     </VoiceRecorderContext.Provider>
