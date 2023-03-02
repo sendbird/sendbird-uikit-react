@@ -1,0 +1,27 @@
+@import '../../../../styles/variables';
+
+.sendbird-more-members__popup-scroll {
+  max-height: 420px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  @include mobile() {
+    max-height: 100%;
+  }
+  .sendbird-user-list-item__operator {
+    right: 72px;
+  }
+  .sendbird-user-list-item__title {
+    max-width: 240px;
+  }
+}
+
+.sendbird-channel-settings__badge {
+  position: absolute;
+  right: 48px;
+}
+
+.sendbird-channel-settings__user-panel {
+  .sendbird-channel-settings-accordion__footer {
+    padding-left: 14px;
+  }
+}
