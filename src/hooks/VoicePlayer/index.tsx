@@ -89,11 +89,11 @@ export const VoicePlayerProvider = ({
     }
 
     new Promise((resolve) => {
-      if (audioStorage?.[groupKey]?.audioFile) {
-        resolve(audioStorage[groupKey].audioFile)
-      }
       if (audioFile) {
         resolve(audioFile);
+      }
+      if (audioStorage?.[groupKey]?.audioFile) {
+        resolve(audioStorage[groupKey].audioFile)
       }
       voicePlayerDispatcher({
         type: INITIALIZE_AUDIO_UNIT,
