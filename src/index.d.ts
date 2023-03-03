@@ -2208,23 +2208,11 @@ declare module '@sendbird/uikit-react/ui/VoiceMessageInput' {
 }
 
 declare module '@sendbird/uikit-react/ui/VoiceMessageItemBody' {
-  export enum VoiceMessageItemStatus {
-    NONE = 'NONE',
-    LOADING = 'LOADING',
-    READY_TO_PLAY = 'READY_TO_PLAY',
-    PLAYING = 'PLAYING',
-  }
   interface VoiceMessageItemBodyProps {
     minRecordTime?: number;
     maximumValue: number;
     currentValue?: number;
-    currentType: VoiceMessageInputStatus;
-    onCancelClick?: () => void;
-    onControlClick?: (type: VoiceMessageInputStatus) => void;
-    onSubmitClick?: () => void;
-    renderCancelButton?: () => React.ReactElement;
-    renderControlButton?: (type: VoiceMessageInputStatus) => React.ReactElement;
-    renderSubmitButton?: () => React.ReactElement;
+    currentType: VoicePlayerStatus;
   }
   type VoiceMessageItemBody = React.FC<VoiceMessageItemBodyProps>;
   export default VoiceMessageItemBody;
