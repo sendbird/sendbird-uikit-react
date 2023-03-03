@@ -25,9 +25,25 @@ const CustomApp = () => {
 }
 ```
 
-#### New components
-* VoiceMessageInput: An new input component for recording&playing your voice on the MessageInput.
-* VoiceMessageItemBody: A new message component that you can play the voice message. You can identify the voice message to check if `message.type` contains `sbu_type=voice`.
+#### How to customize the voice message in Channel and Thread?
+You can identify the voice message to check if `message.type` includes `sbu_type=voice`. But you can use `isVoiceMessage` util function to do that.
+```javascript
+import Channel from '@sendbird/uikit-react/Channel'
+import isVoiceMessage from '@sendbird/uikit-react/utils/message/isVoiceMessage'
+
+const CustomChannel = () => {
+  return (
+    <Channel
+      renderMessage={({ message }) => {
+        if (isVoiceMessage(message)) {
+          // Return your custom voice message item component
+        }
+        return null
+      }}
+    />
+  )
+}
+```
 
 #### Limitation & Next step
 * For now, it's not able to customize the inner components of VoiceMessageInput. We are going to provide an interface to customize it in the future. Until that time, you can replace the VoiceMessageInput component using the `renderVoiceMessageIcon` props of MessageInput component.
@@ -126,6 +142,13 @@ Fixes:
 * Use ApplicationUserListQuery on ChannelSettings component
 * Fix some visual issues on the normal User Panel of ChannelSettings
 * Indentify faulty images in OG message
+* Add classname: sendbird-og-message-item-body__og-thumbnail__empty to identify faulty images in OG message
+  Clients can use CSS to target this class~
+  ```css
+  .sendbird-og-message-item-body__og-thumbnail__empty {
+    display: none;
+  }
+  ```
 
 ## [v3.3.7] (Feb 24 2023)
 
