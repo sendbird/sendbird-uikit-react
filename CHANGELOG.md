@@ -1,5 +1,53 @@
 # Changelog - v3
 
+## [v3.4.0] (Mar 3 2023)
+
+### Voice Message
+
+Voice message is a new type of message and feature that you can use in group channel. You can record your voice on the message input and send it to the channel. Also the messages will be displayed as a new design of the voice message. You are able to use this feature from this version.
+
+#### How to turn this on/off
+You can turn this feature on/off using the props `isVoiceMessageEnabled` on the <App /> and <SendbirdProvider /> components. Here is an example.
+```javascript
+import App from '@sendbird/uikit-react/App'
+import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider'
+import { useEffect } from 'react'
+
+const QuickStart = () => (<App isVoiceMessageEnabled />)
+const CustomApp = () => {
+  const [useVoiceMessage, setUseVoiceMessage] = useEffect(true)
+  return (
+    <SendbirdProvider
+      isVoiceMessageEnabled={useVoiceMessage}
+    >
+      {/* Implement your custom app here */}
+    </SendbirdProvider>
+  )
+}
+```
+
+#### New components
+* VoiceMessageInput: An new input component for recording&playing your voice on the MessageInput.
+* VoiceMessageItemBody: A new message component that you can play the voice message. You can identify the voice message to check if `message.type` contains `sbu_type=voice`.
+
+#### Limitation & Next step
+For now, it's not able to customize the inner components of VoiceMessageInput. We are going to provide an interface to customize it in the future. Until that time, you can replace the VoiceMessageInput component using the `renderVoiceMessageIcon` props of MessageInput component.
+
+Features:
+* Add rendering props to the MessageInput component
+  ```javascript
+  interface MessageInputProps {
+    renderFileUploadIcon?: () =>  React.ReactElement;
+    renderVoiceMessageIcon?: () =>  React.ReactElement;
+    renderSendMessageIcon?: () =>  React.ReactElement;
+  }
+  ```
+
+Fixes:
+* Use ApplicationUserListQuery on ChannelSettings component
+* Fix some visual issues on the normal User Panel of ChannelSettings
+* Indentify faulty images in OG message
+
 ## [v3.3.7] (Feb 24 2023)
 
 Features:
