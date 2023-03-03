@@ -2,12 +2,26 @@
 
 ## [v3.4.0] (Mar 3 2023)
 
-### Voice Message
+Features:
+* Add props `renderFileUploadIcon`, `renderVoiceMessageIcon`, and `renderSendMessageIcon` into the `Channel`, `ChannelUI`, and `MessageInput` component
+  ```javascript
+  interface MessageInputProps {
+    renderFileUploadIcon?: () =>  React.ReactElement;
+    renderVoiceMessageIcon?: () =>  React.ReactElement;
+    renderSendMessageIcon?: () =>  React.ReactElement;
+  }
+  ```
 
+Fixes:
+* Use ApplicationUserListQuery on ChannelSettings component
+* Fix some visual issues on the normal User Panel of ChannelSettings
+* Indentify faulty images in OG message
+
+### Voice Message
 Voice message is a new type of message and feature that you can use in group channel. You can record your voice on the message input and send it to the channel. Also the messages will be displayed as a new design of the voice message. You are able to use this feature from this version.
 
-#### How to turn this on/off
-You can turn this feature on/off using the props `isVoiceMessageEnabled` on the <App /> and <SendbirdProvider /> components. Here is an example.
+#### How to turn on/off
+* You can turn this feature on/off using the props `isVoiceMessageEnabled` on the <App /> and <SendbirdProvider /> components. Here is an example.
 ```javascript
 import App from '@sendbird/uikit-react/App'
 import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider'
@@ -31,22 +45,87 @@ const CustomApp = () => {
 * VoiceMessageItemBody: A new message component that you can play the voice message. You can identify the voice message to check if `message.type` contains `sbu_type=voice`.
 
 #### Limitation & Next step
-For now, it's not able to customize the inner components of VoiceMessageInput. We are going to provide an interface to customize it in the future. Until that time, you can replace the VoiceMessageInput component using the `renderVoiceMessageIcon` props of MessageInput component.
+* For now, it's not able to customize the inner components of VoiceMessageInput. We are going to provide an interface to customize it in the future. Until that time, you can replace the VoiceMessageInput component using the `renderVoiceMessageIcon` props of MessageInput component.
 
-Features:
-* Add rendering props to the MessageInput component
+#### What has been changed?
+* Add props `isVoiceMessageEnabled` and `voiceRecord` props to the App, `SendbirdProvider`, and `MessageInput` components, to turn on/off the voice message recording feature
   ```javascript
-  interface MessageInputProps {
-    renderFileUploadIcon?: () =>  React.ReactElement;
-    renderVoiceMessageIcon?: () =>  React.ReactElement;
-    renderSendMessageIcon?: () =>  React.ReactElement;
+  import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider'
+  const CustomApp = () => {
+    return (
+      <SendbirdProvider
+        isVoiceMessageEnabled
+        voiceRecord={{
+          maxRecordingTime: 60000,
+          minRecordingTime: 1000,
+        }}
+      >
+        {/* implement custom application */}
+      </SendbirdProvider>
+    )
   }
   ```
+* Add props `onVoiceMessageIconClick` to the `MessageInput` component
+* Add props `onBeforeSendVoiceMessage` to the `Channel` component
+* Fetch message list including `MetaArray` in the `Channel` and `Thread` modules
+* Provide new IconType `AudioOnLined` & new IconColor `Primary2` and `OnBackground4`
+* Provide new string sets
+  ```javascript
+  import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider'
+  const CustomApp = () => {
+    return (
+      <SendbirdProvider
+        stringSet={{
+          BUTTON__OK: 'OK',
+          VOICE_MESSAGE: 'Voice Message',
+          MODAL__VOICE_MESSAGE_INPUT_DISABLED__TITLE_MUTED: 'You\'re muted by the operator.',
+          MODAL__VOICE_MESSAGE_INPUT_DISABLED__TITLE_FROZEN: 'Channel is frozen.',
+        }}
+      >
+        {/* implement custom application */}
+      </SendbirdProvider>
+    )
+  }
+  ```
+  * `BUTTON__OK`: 'OK' → Used on the submit button of pop up modal
+  * `MODAL__VOICE_MESSAGE_INPUT_DISABLED__TITLE_MUTED`: 'You\'re muted by the operator.' → Used in an alert pop-up modal
+  * `MODAL__VOICE_MESSAGE_INPUT_DISABLED__TITLE_FROZEN`: 'Channel is frozen.' → Used in an alert pop-up modal
+  * `VOICE_MESSAGE`: 'Voice Message' → Used in ChannelPreviewItem, QuoteMessage, and MessageSearch to appear that the message type is the voice## External Contributions
 
-Fixes:
-* Use ApplicationUserListQuery on ChannelSettings component
-* Fix some visual issues on the normal User Panel of ChannelSettings
-* Indentify faulty images in OG message
+#### What has been added?
+* Install `lamejs` to convert the audio file to mp3 (iOS support)
+* UI components
+  ```javascript
+  import PlaybackTime from "@sendbird/uikit-react/ui/PlaybackTime"
+  import ProgressBar from "@sendbird/uikit-react/ui/ProgressBar"
+  import VoiceMessageInput from "@sendbird/uikit-react/ui/VoiceMessageInput"
+  import VoiceMessageItemBody from "@sendbird/uikit-react/ui/VoiceMessageItemBody"
+  ```
+  * PlaybackTime: Display the current time in 00:00 format with the received millisecond value
+  * ProgressBar: Display the current progress status with the received maxSize and currentSize of millisecond unit value
+  * VoiceMessageInput: UI component for recording and playing a voice message
+  * VoiceMessageItemBody: UI component for rendering a voice message also able to play voice message
+* VoiceRecorder
+  ```javascript
+  import { VoiceRecorderProvider, useVoiceRecorderContext } from '@sendbird/uikit-react/VoiceRecorder/context'
+  import useVoiceRecorder from '@sendbird/uikit-react/VoiceRecorder/useVoiceRecorder'
+  ```
+  * VoiceRecorderProvider: A react context provider component providing `start`, and `stop` functions
+  * useVoiceRecorderContext: A react useContext hook of VoiceRecorderProvider
+  * useVoiceRecorder: A react hook that provides advanced context, `recordingLimit`, `recordingTime`, `recordingFile`, and `recordingStatus`. Recommend using this hook in the customized components.
+* VoicePlayer
+  ```javascript
+  import { VoicePlayerProvider, useVoicePlayerContext } from '@sendbird/uikit-react/VoicePlayer/context'
+  import useVoicePlayer from '@sendbird/uikit-react/VoicePlayer/useVoicePlayer'
+  ```
+  * VoicePlayerProvider: A react context provider component providing `play`, and `pause` functions
+  * useVoicePlayerContext: A react useContext hook of VoicePlayerProvider
+  * useVoicePlayer: A react hook that provides advanced context, `playbackTime`, `duration`, and `playingStatus`. Recommend using this hook in the customized components.
+* utils/isVoiceMessage: A function that you can check if the given message is a voice message
+  ```javascript
+  import isVoiceMessage from '@sendbird/uikit-react/utils/message/isVoiceMessage'
+  const isVoiceMsg: boolean = isVoiceMessage(message);
+  ```
 
 ## [v3.3.7] (Feb 24 2023)
 
