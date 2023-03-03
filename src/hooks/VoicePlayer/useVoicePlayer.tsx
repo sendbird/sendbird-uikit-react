@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useVoicePlayerContext } from ".";
 import { VOICE_PLAYER_AUDIO_ID } from "../../utils/consts";
+import { useVoiceRecorderContext } from "../VoiceRecorder";
 
 import { AudioUnitDefaultValue, VoicePlayerStatus } from "./dux/initialState";
 import { generateGroupKey } from "./utils";
@@ -34,14 +35,17 @@ export const useVoicePlayer = ({
     stop,
     voicePlayerStore,
   } = useVoicePlayerContext();
+  const { isRecordable } = useVoiceRecorderContext();
   const currentAudioUnit = voicePlayerStore?.audioStorage?.[groupKey] || AudioUnitDefaultValue();
 
   const playVoicePlayer = () => {
-    play?.({
-      groupKey,
-      audioFile,
-      audioFileUrl,
-    });
+    if (!isRecordable) {
+      play?.({
+        groupKey,
+        audioFile,
+        audioFileUrl,
+      });
+    }
   };
 
   const pauseVoicePlayer = () => {

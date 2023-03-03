@@ -62,6 +62,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
             eventHandler?.onRecordingEnded(convertedAudioFile);
           });
           stream?.getAudioTracks?.().forEach?.(track => track?.stop());
+          setIsRecordable(false);
         };
         mediaRecorder?.start();
         setMediaRecorder(mediaRecorder);
@@ -77,6 +78,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
     // Stop recording
     mediaRecorder?.stop();
     setMediaRecorder(null);
+    setIsRecordable(false);
     // TODO: logger
   }, [mediaRecorder]);
 
