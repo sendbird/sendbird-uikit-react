@@ -1,5 +1,6 @@
 @import '../../../../styles/variables';
 
+.sendbird-message-input-wrapper--voice-message,
 .sendbird-message-input-wrapper {
   position: relative;
   width: 100%;
@@ -18,5 +19,11 @@
     box-sizing: border-box;
     padding-left: 24px;
     padding-right: 24px;
+  }
+}
+
+.sendbird-message-input-wrapper--voice-message {
+  @include themed() {
+    border-top: 1px solid t(on-bg-4);
   }
 }
