@@ -58,9 +58,11 @@ export const useVoicePlayer = ({
 
   useEffect(() => {
     return () => {
-      // Can't get the current AudioPlayer through the React hooks(useReducer or useState) in this scope
-      const voiceAudioPlayerElement = document.getElementById(VOICE_PLAYER_AUDIO_ID);
-      (voiceAudioPlayerElement as HTMLAudioElement)?.pause?.();
+      if (audioFile || audioFileUrl) {
+        // Can't get the current AudioPlayer through the React hooks(useReducer or useState) in this scope
+        const voiceAudioPlayerElement = document.getElementById(VOICE_PLAYER_AUDIO_ID);
+        (voiceAudioPlayerElement as HTMLAudioElement)?.pause?.();
+      }
     }
   }, []);
 
