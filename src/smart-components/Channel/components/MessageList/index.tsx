@@ -10,7 +10,6 @@ import { compareMessagesForGrouping } from '../../context/utils';
 import Message from '../Message';
 import { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { isAboutSame } from '../../context/utils';
-import uuidv4 from '../../../../utils/uuid';
 
 export type MessageListProps = {
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
@@ -143,6 +142,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
 
         return (
           <Message
+            key={m?.messageId}
             handleScroll={handleScroll}
             renderMessage={renderMessage}
             message={m}
@@ -150,7 +150,6 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
             chainTop={chainTop}
             chainBottom={chainBottom}
             renderCustomSeparator={renderCustomSeparator}
-            key={m.messageId + uuidv4()}
           />
         );
       })

@@ -12,6 +12,11 @@
     fill: t(primary-3);
   }
 }
+.sendbird-icon-color--primary-2 [class*='fill'] {
+  @include themed() {
+    fill: t(primary-2);
+  }
+}
 
 .sendbird-icon-color--primary [class*='stroke'] {
   @include themed() {
@@ -64,16 +69,19 @@
     fill: t(on-bg-1);
   }
 }
-
 .sendbird-icon-color--on-background-2 [class*='fill'] {
   @include themed() {
     fill: t(on-bg-2);
   }
 }
-
 .sendbird-icon-color--on-background-3 [class*='fill'] {
   @include themed() {
-    fill: t(on-bg-3)
+    fill: t(on-bg-3);
+  }
+}
+.sendbird-icon-color--on-background-4 [class*='fill'] {
+  @include themed() {
+    fill: t(on-bg-4);
   }
 }
 

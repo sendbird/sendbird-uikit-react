@@ -9,7 +9,6 @@
   "files": [
     "release/**/*",
     "dist/**/*",
-    "package-lock.json",
     "LICENSE",
     "CHANGELOG.md"
   ],
@@ -52,6 +51,7 @@
     "@sendbird/chat": "^4.2.3",
     "css-vars-ponyfill": "^2.3.2",
     "date-fns": "^2.16.1",
+    "lamejs": "^1.2.1",
     "prop-types": "^15.7.2"
   },
   "bugs": {

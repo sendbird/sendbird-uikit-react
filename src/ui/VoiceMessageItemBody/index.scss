@@ -1,0 +1,70 @@
+@import '../../styles/variables';
+
+.sendbird-voice-message-item-body {
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.sendbird-voice-message-item-body.is-reactions-contained {
+  border-radius: 16px 16px 0px 0px;
+}
+
+.sendbird-voice-message-item-body__progress-bar {
+  position: absolute;
+  width: 100%;
+  height: 50px;
+}
+
+.sendbird-voice-message-item-body__status-button {
+  position: relative;
+  top: 8px;
+  left: 12px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  min-height: 34px;
+}
+
+.sendbird-voice-message-item-body__status-button__button {
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  @include themed() {
+    background-color: t(bg-0);
+  }
+}
+
+.sendbird-voice-message-item-body__playback-time {
+  position: absolute;
+  top: 15px;
+  right: 12px;
+}
+
+// pause icon
+.sendbird-voice-message-item-body__status-button__button__pause {
+  position: relative;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 13.75px;
+  height: 13.75px;
+}
+.sendbird-voice-message-item-body__status-button__button__pause__inner {
+  position: relative;
+  display: inline-flex;
+  width: 4.38px;
+  height: 13.75px;
+  border-radius: 2px;
+  @include themed() {
+    background-color: t(primary-3);
+  }
+}

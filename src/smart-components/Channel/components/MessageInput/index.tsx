@@ -10,23 +10,32 @@ import { useChannelContext } from '../../context/ChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import SuggestedMentionList from '../SuggestedMentionList';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
+import VoiceMessageInputWrapper from './VoiceMessageInputWrapper';
 
 export type MessageInputWrapperProps = {
   value?: string;
+  renderFileUploadIcon?: () =>  React.ReactElement;
+  renderVoiceMessageIcon?: () =>  React.ReactElement;
+  renderSendMessageIcon?: () =>  React.ReactElement;
 };
-
 
 const MessageInputWrapper = (
   props: MessageInputWrapperProps,
   ref: React.MutableRefObject<any>,
 ): JSX.Element => {
-  const { value } = props;
+  const {
+    value,
+    renderFileUploadIcon,
+    renderVoiceMessageIcon,
+    renderSendMessageIcon,
+  } = props;
   const {
     currentGroupChannel,
     initialized,
     quoteMessage,
     sendMessage,
     sendFileMessage,
+    sendVoiceMessage,
     setQuoteMessage,
     messageInputRef,
     renderUserMentionItem,
@@ -34,7 +43,12 @@ const MessageInputWrapper = (
   const globalStore = useSendbirdStateContext();
   const channel = currentGroupChannel;
 
-  const { isOnline, isMentionEnabled, userMention } = globalStore?.config;
+  const {
+    isOnline,
+    isMentionEnabled,
+    userMention,
+    isVoiceMessageEnabled,
+  } = globalStore?.config;
   const maxUserMentionCount = userMention?.maxMentionCount || 10;
   const maxUserSuggestionCount = userMention?.maxSuggestionCount || 15;
 
@@ -46,6 +60,7 @@ const MessageInputWrapper = (
   const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState([]);
   const [ableMention, setAbleMention] = useState(true);
   const [messageInputEvent, setMessageInputEvent] = useState(null);
+  const [showVoiceMessageInput, setShowVoiceMessageInput] = useState(false);
   const disabled = !initialized
     || utils.isDisabledBecauseFrozen(channel)
     || utils.isDisabledBecauseMuted(channel)
@@ -68,6 +83,7 @@ const MessageInputWrapper = (
     setMentionSuggestedUsers([]);
     setAbleMention(true);
     setMessageInputEvent(null);
+    setShowVoiceMessageInput(false);
   }, [channel?.url]);
 
   useEffect(() => {
@@ -96,7 +112,7 @@ const MessageInputWrapper = (
   }
   // other conditions
   return (
-    <div className="sendbird-message-input-wrapper">
+    <div className={`sendbird-message-input-wrapper${showVoiceMessageInput ? '--voice-message' : ''}`}>
       {
         displaySuggestedMentionList && (
           <SuggestedMentionList
@@ -131,62 +147,87 @@ const MessageInputWrapper = (
           />
         </div>
       )}
-      <MessageInput
-        className="sendbird-message-input-wrapper__message-input"
-        value={value}
-        channelUrl={channel?.url}
-        mentionSelectedUser={selectedUser}
-        isMentionEnabled={isMentionEnabled}
-        placeholder={
-          (quoteMessage && stringSet.MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER)
-          || (utils.isDisabledBecauseFrozen(channel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
-          || (utils.isDisabledBecauseMuted(channel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED)
-        }
-        ref={ref || messageInputRef}
-        disabled={disabled}
-        onStartTyping={() => {
-          channel?.startTyping();
-        }}
-        onSendMessage={({ message, mentionTemplate }) => {
-          sendMessage({
-            message,
-            quoteMessage,
-            mentionedUsers,
-            mentionTemplate,
-          });
-          setMentionNickname('');
-          setMentionedUsers([]);
-          setQuoteMessage(null);
-          channel?.endTyping?.();
-        }}
-        onFileUpload={(file) => {
-          sendFileMessage(file, quoteMessage);
-          setQuoteMessage(null);
-        }}
-        onUserMentioned={(user) => {
-          if (selectedUser?.userId === user?.userId) {
-            setSelectedUser(null);
-            setMentionNickname('');
-          }
-        }}
-        onMentionStringChange={(mentionText) => {
-          setMentionNickname(mentionText);
-        }}
-        onMentionedUserIdsUpdated={(userIds) => {
-          setMentionedUserIds(userIds);
-        }}
-        onKeyDown={(e) => {
-          if (displaySuggestedMentionList && mentionSuggestedUsers?.length > 0
-            && ((e.key === MessageInputKeys.Enter && ableMention) || e.key === MessageInputKeys.ArrowUp || e.key === MessageInputKeys.ArrowDown)
-          ) {
-            setMessageInputEvent(e);
-            return true;
-          }
-          return false;
-        }}
-      />
+      {
+        showVoiceMessageInput
+          ? (
+            <VoiceMessageInputWrapper
+              channel={channel}
+              onSubmitClick={(recordedFile, duration) => {
+                sendVoiceMessage(recordedFile, duration, quoteMessage);
+                setQuoteMessage(null);
+                setShowVoiceMessageInput(false);
+              }}
+              onCancelClick={() => {
+                setShowVoiceMessageInput(false);
+              }}
+            />
+          )
+          : (
+            <MessageInput
+              className="sendbird-message-input-wrapper__message-input"
+              value={value}
+              channelUrl={channel?.url}
+              mentionSelectedUser={selectedUser}
+              isMentionEnabled={isMentionEnabled}
+              isVoiceMessageEnabled={isVoiceMessageEnabled}
+              onVoiceMessageIconClick={() => {
+                setShowVoiceMessageInput(true);
+              }}
+              placeholder={
+                (quoteMessage && stringSet.MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER)
+                || (utils.isDisabledBecauseFrozen(channel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
+                || (utils.isDisabledBecauseMuted(channel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED)
+              }
+              ref={ref || messageInputRef}
+              disabled={disabled}
+              renderFileUploadIcon={renderFileUploadIcon}
+              renderSendMessageIcon={renderSendMessageIcon}
+              renderVoiceMessageIcon={renderVoiceMessageIcon}
+              onStartTyping={() => {
+                channel?.startTyping();
+              }}
+              onSendMessage={({ message, mentionTemplate }) => {
+                sendMessage({
+                  message,
+                  quoteMessage,
+                  mentionedUsers,
+                  mentionTemplate,
+                });
+                setMentionNickname('');
+                setMentionedUsers([]);
+                setQuoteMessage(null);
+                channel?.endTyping?.();
+              }}
+              onFileUpload={(file) => {
+                sendFileMessage(file, quoteMessage);
+                setQuoteMessage(null);
+              }}
+              onUserMentioned={(user) => {
+                if (selectedUser?.userId === user?.userId) {
+                  setSelectedUser(null);
+                  setMentionNickname('');
+                }
+              }}
+              onMentionStringChange={(mentionText) => {
+                setMentionNickname(mentionText);
+              }}
+              onMentionedUserIdsUpdated={(userIds) => {
+                setMentionedUserIds(userIds);
+              }}
+              onKeyDown={(e) => {
+                if (displaySuggestedMentionList && mentionSuggestedUsers?.length > 0
+                  && ((e.key === MessageInputKeys.Enter && ableMention) || e.key === MessageInputKeys.ArrowUp || e.key === MessageInputKeys.ArrowDown)
+                ) {
+                  setMessageInputEvent(e);
+                  return true;
+                }
+                return false;
+              }}
+            />
+          )
+      }
     </div>
   );
-}
+};
 
 export default React.forwardRef(MessageInputWrapper);

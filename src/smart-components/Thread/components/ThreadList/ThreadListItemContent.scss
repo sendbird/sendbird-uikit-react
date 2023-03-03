@@ -263,3 +263,9 @@
 .sendbird-thread-list-item-content__middle__message-item-body .sendbird-thumbnail-message-item-body__video {
   height: 148px;
 }
+
+// voice message
+.sendbird-voice-message-item-body.sendbird-thread-list-item-content__middle__message-item-body {
+  min-width: 136px;
+  height: 50px;
+}

@@ -70,6 +70,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     messageFieldId,
     isEdit,
     isMentionEnabled,
+    isVoiceMessageEnabled,
     disabled,
     message,
     placeholder,
@@ -84,8 +85,12 @@ const MessageInput = React.forwardRef((props, ref) => {
     onUserMentioned,
     onMentionStringChange,
     onMentionedUserIdsUpdated,
+    onVoiceMessageIconClick,
     onKeyUp,
     onKeyDown,
+    renderFileUploadIcon,
+    renderVoiceMessageIcon,
+    renderSendMessageIcon,
   } = props;
   const textFieldId = messageFieldId || TEXT_FIELD_ID;
   const { stringSet } = useContext(LocalizationContext);
@@ -437,7 +442,7 @@ const MessageInput = React.forwardRef((props, ref) => {
           <Label
             className="sendbird-message-input--placeholder"
             type={LabelTypography.BODY_1}
-            color={LabelColors.ONBACKGROUND_3}
+            color={disabled? LabelColors.ONBACKGROUND_4 : LabelColors.ONBACKGROUND_3}
           >
             {placeholder || stringSet.MESSAGE_INPUT__PLACE_HOLDER}
           </Label>
@@ -451,37 +456,68 @@ const MessageInput = React.forwardRef((props, ref) => {
               width="32px"
               onClick={() => sendMessage()}
             >
-              <Icon type={IconTypes.SEND} fillColor={IconColors.PRIMARY} width="20px" height="20px" />
+              {
+                renderSendMessageIcon?.() || (
+                  <Icon
+                    type={IconTypes.SEND}
+                    fillColor={disabled ? IconColors.ON_BACKGROUND_4 : IconColors.PRIMARY}
+                    width="20px"
+                    height="20px"
+                  />
+                )
+              }
             </IconButton>
           )
         }
-        {/* upload icon */}
+        {/* file upload icon */}
         {
           (!isEdit && !isInput) && (
-            <IconButton
-              className="sendbird-message-input--attach"
-              height="32px"
-              width="32px"
-              onClick={() => {
-                // todo: clear previous input
-                fileInputRef?.current?.click?.();
-              }}
-            >
-              <Icon
-                type={IconTypes.ATTACH}
-                fillColor={IconColors.CONTENT_INVERSE}
-                width="20px"
-                height="20px"
-              />
-              <input
-                className="sendbird-message-input--attach-input"
-                type="file"
-                ref={fileInputRef}
-                onChange={handleUploadFile(onFileUpload)}
-              />
-            </IconButton>
+            (renderFileUploadIcon?.() || (
+              <IconButton
+                className={`sendbird-message-input--attach ${isVoiceMessageEnabled ? 'is-voice-message-enabled' : ''}`}
+                height="32px"
+                width="32px"
+                onClick={() => {
+                  // todo: clear previous input
+                  fileInputRef?.current?.click?.();
+                }}
+              >
+                <Icon
+                  type={IconTypes.ATTACH}
+                  fillColor={disabled ? IconColors.ON_BACKGROUND_4 : IconColors.CONTENT_INVERSE}
+                  width="20px"
+                  height="20px"
+                />
+                <input
+                  className="sendbird-message-input--attach-input"
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleUploadFile(onFileUpload)}
+                />
+              </IconButton>
+            ))
           )
         }
+        {/* voice message input trigger */}
+        {(isVoiceMessageEnabled && !isEdit && !isInput) && (
+          <IconButton
+            className="sendbird-message-input--voice-message"
+            width="32px"
+            height="32px"
+            onClick={onVoiceMessageIconClick}
+          >
+            {
+              renderVoiceMessageIcon?.() || (
+                <Icon
+                  type={IconTypes.AUDIO_ON_LINED}
+                  fillColor={disabled ? IconColors.ON_BACKGROUND_4 : IconColors.CONTENT_INVERSE}
+                  width="20px"
+                  height="20px"
+                />
+              )
+            }
+          </IconButton>
+        )}
       </div>
       {/* Edit */}
       {
@@ -524,6 +560,8 @@ MessageInput.propTypes = {
   value: PropTypes.string,
   isEdit: PropTypes.bool,
   isMentionEnabled: PropTypes.bool,
+  isVoiceMessageEnabled: PropTypes.bool,
+  onVoiceMessageIconClick: PropTypes.func,
   message: PropTypes.shape({
     messageId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     message: PropTypes.string,
@@ -559,6 +597,8 @@ MessageInput.defaultProps = {
   message: null,
   isEdit: false,
   isMentionEnabled: false,
+  isVoiceMessageEnabled: true,
+  onVoiceMessageIconClick: noop,
   disabled: false,
   placeholder: '',
   maxLength: 5000,

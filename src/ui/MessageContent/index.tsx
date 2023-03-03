@@ -33,6 +33,7 @@ import {
   isThumbnailMessage,
   getSenderName,
   isSentMessage,
+  isVoiceMessage,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 import { ReplyType } from '../../index.js';
@@ -46,6 +47,7 @@ import MobileMenu from '../MobileMenu';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import ThreadReplies from '../ThreadReplies';
 import { ThreadReplySelectType } from '../../smart-components/Channel/context/const';
+import VoiceMessageItemBody from '../VoiceMessageItemBody';
 
 // should initialize in UserProfileContext.jsx
 export interface UserProfileContextInterface {
@@ -316,6 +318,15 @@ export default function MessageContent({
               message={message as FileMessage}
               isByMe={isByMe}
               mouseHover={mouseHover}
+              isReactionEnabled={isReactionEnabled}
+            />
+          )}
+          {isVoiceMessage(message as FileMessage) && (
+            <VoiceMessageItemBody
+              className="sendbird-message-content__middle__message-item-body"
+              message={message as FileMessage}
+              channelUrl={channel?.url}
+              isByMe={isByMe}
               isReactionEnabled={isReactionEnabled}
             />
           )}

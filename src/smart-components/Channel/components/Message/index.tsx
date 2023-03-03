@@ -85,7 +85,6 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
     onMessageAnimated,
     onMessageHighlighted,
   } = useChannelContext();
-
   const [showEdit, setShowEdit] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
   const [showFileViewer, setShowFileViewer] = useState(false);

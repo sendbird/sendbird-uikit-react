@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { VoiceRecorderProvider } from '../index';
+
+import SendbirdProvider from '../../../lib/Sendbird';
+
 import { useVoiceRecorder } from '../useVoiceRecorder';
-import { VoicePlayerProvider } from '../../useVoicePlayer/index';
-import { useVoicePlayer } from '../../useVoicePlayer/useVoicePlayer';
+import { useVoicePlayer } from '../../VoicePlayer/useVoicePlayer';
 
 export default { title: 'globalcontext/voice-recorder' };
 
 const Tester = () => {
   const [currentAudio, setAudioFile] = useState(null);
 
-  const { start, stop, recordingTime } = useVoiceRecorder({
+  const { start, stop, recordingTime, recordingStatus } = useVoiceRecorder({
     onRecordingStarted: () => {
       console.log('onRecordingStarted')
     },
@@ -18,16 +19,10 @@ const Tester = () => {
       setAudioFile(recordedFile);
     },
   });
-  const { play, pause, playbackTime } = useVoicePlayer({
-    onPlayingStarted: () =>  {
-      console.log('onPlayingStarted')
-    },
-    onPlayingStopped: ({playbackTime, audioFile}) => {
-      console.log('onPlayingStopped', playbackTime, audioFile)
-    },
-    onPlaybackTimeUpdated: (time) => {
-      console.log('onPlaybackTimeUpdated', time)
-    },
+  const { play, pause, playbackTime, playingStatus, duration } = useVoicePlayer({
+    key: 'unique-key',
+    channelUrl: 'channel-url',
+    audioFile: currentAudio,
   });
 
   return (
@@ -57,13 +52,14 @@ const Tester = () => {
           stop();
         }}
       />
-      <div>{recordingTime}</div>
+      {recordingTime}
+      {recordingStatus}
       <input
         value="play"
         type="button"
         onClick={() => {
           console.log('on play clicked')
-          play(currentAudio);
+          play();
         }}
       />
       <input
@@ -74,19 +70,21 @@ const Tester = () => {
           pause();
         }}
       />
-      <div>{playbackTime}</div>
+      {`${Math.floor(playbackTime)} / ${Math.floor(duration || recordingTime)}`}
+      {playingStatus}
     </div>
   );
-}
+};
 
 export const normal = () => {
   return (
     <div>
-      <VoiceRecorderProvider>
-        <VoicePlayerProvider>
-          <Tester />
-        </VoicePlayerProvider>
-      </VoiceRecorderProvider>
+      <SendbirdProvider
+        appId={process.env.STORYBOOK_APP_ID}
+        userId="hoon"
+      >
+        <Tester />
+      </SendbirdProvider>
     </div>
   );
-}
+};

@@ -2,11 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import './index.scss';
-import Type from './type';
+import { Types } from './type';
+import { Colors } from './colors';
+import {
+  changeColorToClassName,
+  changeTypeToIconClassName,
+} from './utils';
 
 import IconAdd from '../../svgs/icon-add.svg';
 import IconArrowLeft from '../../svgs/icon-arrow-left.svg';
 import IconAttach from '../../svgs/icon-attach.svg';
+import IconAudioOnLined from '../../svgs/icon-audio-on-lined.svg';
 import IconBan from '../../svgs/icon-ban.svg';
 import IconBroadcast from '../../svgs/icon-broadcast.svg';
 import IconCamera from '../../svgs/icon-camera.svg';
@@ -60,161 +66,65 @@ import IconToggleOff from '../../svgs/icon-toggleoff.svg';
 import IconToggleOn from '../../svgs/icon-toggleon.svg';
 import IconUser from '../../svgs/icon-user.svg';
 
-const Colors = {
-  DEFAULT: 'DEFAULT',
-  PRIMARY: 'PRIMARY',
-  SECONDARY: 'SECONDARY',
-  CONTENT: 'CONTENT',
-  CONTENT_INVERSE: 'CONTENT_INVERSE',
-  WHITE: 'WHITE',
-  GRAY: 'GRAY',
-  SENT: 'SENT',
-  READ: 'READ',
-  ON_BACKGROUND_1: 'ON_BACKGROUND_1',
-  ON_BACKGROUND_2: 'ON_BACKGROUND_2',
-  ON_BACKGROUND_3: 'ON_BACKGROUND_3',
-  BACKGROUND_3: 'BACKGROUND_3',
-  ERROR: 'ERROR',
-};
-
-export function changeColorToClassName(color) {
-  switch (color) {
-    case Colors.PRIMARY: return 'sendbird-icon-color--primary';
-    case Colors.SECONDARY: return 'sendbird-icon-color--secondary';
-    case Colors.CONTENT: return 'sendbird-icon-color--content';
-    case Colors.CONTENT_INVERSE: return 'sendbird-icon-color--content-inverse';
-    case Colors.WHITE: return 'sendbird-icon-color--white';
-    case Colors.GRAY: return 'sendbird-icon-color--gray';
-    case Colors.SENT: return 'sendbird-icon-color--sent';
-    case Colors.READ: return 'sendbird-icon-color--read';
-    case Colors.ON_BACKGROUND_1: return 'sendbird-icon-color--on-background-1';
-    case Colors.ON_BACKGROUND_2: return 'sendbird-icon-color--on-background-2';
-    case Colors.ON_BACKGROUND_3: return 'sendbird-icon-color--on-background-3';
-    case Colors.BACKGROUND_3: return 'sendbird-icon-color--background-3';
-    case Colors.ERROR: return 'sendbird-icon-color--error';
-    default: return '';
-  }
-}
-
 function changeTypeToIconComponent(type) {
   switch (type) {
-    case Type.ADD: return <IconAdd />;
-    case Type.ARROW_LEFT: return <IconArrowLeft />;
-    case Type.ATTACH: return <IconAttach />;
-    case Type.BAN: return <IconBan />;
-    case Type.BROADCAST: return <IconBroadcast />;
-    case Type.CAMERA: return <IconCamera />;
-    case Type.CHANNELS: return <IconChannels />;
-    case Type.CHAT: return <IconChat />;
-    case Type.CHAT_FILLED: return <IconChatFilled />;
-    case Type.CHEVRON_DOWN: return <IconChevronDown />;
-    case Type.CHEVRON_RIGHT: return <IconChevronRight />;
-    case Type.CLOSE: return <IconClose />;
-    case Type.COLLAPSE: return <IconCollapse />;
-    case Type.COPY: return <IconCopy />;
-    case Type.CREATE: return <IconCreate />;
-    case Type.DELETE: return <IconDelete />;
-    case Type.DISCONNECTED: return <IconDisconnected />;
-    case Type.DOCUMENT: return <IconDocument />;
-    case Type.DONE: return <IconDone />;
-    case Type.DONE_ALL: return <IconDoneAll />;
-    case Type.DOWNLOAD: return <IconDownload />;
-    case Type.EDIT: return <IconEdit />;
-    case Type.EMOJI_MORE: return <IconEmojiMore />;
-    case Type.ERROR: return <IconError />;
-    case Type.EXPAND: return <IconExpand />;
-    case Type.FILE_AUDIO: return <IconFileAudio />;
-    case Type.FILE_DOCUMENT: return <IconFileDocument />;
-    case Type.FREEZE: return <IconFreeze />;
-    case Type.GIF: return <IconGif />;
-    case Type.INFO: return <IconInfo />;
-    case Type.LEAVE: return <IconLeave />;
-    case Type.MEMBERS: return <IconMembers />;
-    case Type.MESSAGE: return <IconMessage />;
-    case Type.MODERATIONS: return <IconModerations />;
-    case Type.MORE: return <IconMore />;
-    case Type.MUTE: return <IconMute />;
-    case Type.NOTIFICATIONS: return <IconNotifications />;
-    case Type.NOTIFICATIONS_OFF_FILLED: return <IconNotificationsOffFilled />;
-    case Type.OPERATOR: return <IconOperator />;
-    case Type.PHOTO: return <IconPhoto />;
-    case Type.PLAY: return <IconPlay />;
-    case Type.PLUS: return <IconPlus />;
-    case Type.QUESTION: return <IconQuestion />;
-    case Type.REFRESH: return <IconRefresh />;
-    case Type.REMOVE: return <IconRemove />;
-    case Type.REPLY: return <IconReply />;
-    case Type.SEARCH: return <IconSearch />;
-    case Type.SEND: return <IconSend />;
-    case Type.SETTINGS_FILLED: return <IconSettingsFilled />;
-    case Type.SPINNER: return <IconSpinner />;
-    case Type.SUPERGROUP: return <IconSupergroup />;
-    case Type.THUMBNAIL_NONE: return <IconThumbnailNone />;
-    case Type.TOGGLE_OFF: return <IconToggleOff />;
-    case Type.TOGGLE_ON: return <IconToggleOn />;
-    case Type.USER: return <IconUser />;
+    case Types.ADD: return <IconAdd />;
+    case Types.ARROW_LEFT: return <IconArrowLeft />;
+    case Types.ATTACH: return <IconAttach />;
+    case Types.AUDIO_ON_LINED: return <IconAudioOnLined />;
+    case Types.BAN: return <IconBan />;
+    case Types.BROADCAST: return <IconBroadcast />;
+    case Types.CAMERA: return <IconCamera />;
+    case Types.CHANNELS: return <IconChannels />;
+    case Types.CHAT: return <IconChat />;
+    case Types.CHAT_FILLED: return <IconChatFilled />;
+    case Types.CHEVRON_DOWN: return <IconChevronDown />;
+    case Types.CHEVRON_RIGHT: return <IconChevronRight />;
+    case Types.CLOSE: return <IconClose />;
+    case Types.COLLAPSE: return <IconCollapse />;
+    case Types.COPY: return <IconCopy />;
+    case Types.CREATE: return <IconCreate />;
+    case Types.DELETE: return <IconDelete />;
+    case Types.DISCONNECTED: return <IconDisconnected />;
+    case Types.DOCUMENT: return <IconDocument />;
+    case Types.DONE: return <IconDone />;
+    case Types.DONE_ALL: return <IconDoneAll />;
+    case Types.DOWNLOAD: return <IconDownload />;
+    case Types.EDIT: return <IconEdit />;
+    case Types.EMOJI_MORE: return <IconEmojiMore />;
+    case Types.ERROR: return <IconError />;
+    case Types.EXPAND: return <IconExpand />;
+    case Types.FILE_AUDIO: return <IconFileAudio />;
+    case Types.FILE_DOCUMENT: return <IconFileDocument />;
+    case Types.FREEZE: return <IconFreeze />;
+    case Types.GIF: return <IconGif />;
+    case Types.INFO: return <IconInfo />;
+    case Types.LEAVE: return <IconLeave />;
+    case Types.MEMBERS: return <IconMembers />;
+    case Types.MESSAGE: return <IconMessage />;
+    case Types.MODERATIONS: return <IconModerations />;
+    case Types.MORE: return <IconMore />;
+    case Types.MUTE: return <IconMute />;
+    case Types.NOTIFICATIONS: return <IconNotifications />;
+    case Types.NOTIFICATIONS_OFF_FILLED: return <IconNotificationsOffFilled />;
+    case Types.OPERATOR: return <IconOperator />;
+    case Types.PHOTO: return <IconPhoto />;
+    case Types.PLAY: return <IconPlay />;
+    case Types.PLUS: return <IconPlus />;
+    case Types.QUESTION: return <IconQuestion />;
+    case Types.REFRESH: return <IconRefresh />;
+    case Types.REMOVE: return <IconRemove />;
+    case Types.REPLY: return <IconReply />;
+    case Types.SEARCH: return <IconSearch />;
+    case Types.SEND: return <IconSend />;
+    case Types.SETTINGS_FILLED: return <IconSettingsFilled />;
+    case Types.SPINNER: return <IconSpinner />;
+    case Types.SUPERGROUP: return <IconSupergroup />;
+    case Types.THUMBNAIL_NONE: return <IconThumbnailNone />;
+    case Types.TOGGLE_OFF: return <IconToggleOff />;
+    case Types.TOGGLE_ON: return <IconToggleOn />;
+    case Types.USER: return <IconUser />;
     default: return 'icon'; // If you see this text 'icon' replace icon for it
-  }
-}
-
-export function changeTypeToIconClassName(type) {
-  switch (type) {
-    case Type.ADD: return 'sendbird-icon-add';
-    case Type.ARROW_LEFT: return 'sendbird-icon-arrow-left';
-    case Type.ATTACH: return 'sendbird-icon-attach';
-    case Type.BAN: return 'sendbird-icon-ban';
-    case Type.BROADCAST: return 'sendbird-icon-broadcast';
-    case Type.CAMERA: return 'sendbird-icon-camera';
-    case Type.CHANNELS: return 'sendbird-icon-channels';
-    case Type.CHAT: return 'sendbird-icon-chat';
-    case Type.CHAT_FILLED: return 'sendbird-icon-chat-filled';
-    case Type.CHEVRON_DOWN: return 'sendbird-icon-chevron-down';
-    case Type.CHEVRON_RIGHT: return 'sendbird-icon-chevron-right';
-    case Type.CLOSE: return 'sendbird-icon-close';
-    case Type.COLLAPSE: return 'sendbird-icon-collapse';
-    case Type.COPY: return 'sendbird-icon-copy';
-    case Type.CREATE: return 'sendbird-icon-create';
-    case Type.DELETE: return 'sendbird-icon-delete';
-    case Type.DISCONNECTED: return 'sendbird-icon-disconnected';
-    case Type.DOCUMENT: return 'sendbird-icon-document';
-    case Type.DONE: return 'sendbird-icon-done';
-    case Type.DONE_ALL: return 'sendbird-icon-done-all';
-    case Type.DOWNLOAD: return 'sendbird-icon-down-load';
-    case Type.EDIT: return 'sendbird-icon-edit';
-    case Type.EMOJI_MORE: return 'sendbird-icon-emoji-more';
-    case Type.ERROR: return 'sendbird-icon-error';
-    case Type.EXPAND: return 'sendbird-icon-expand';
-    case Type.FILE_AUDIO: return 'sendbird-icon-file-audio';
-    case Type.FILE_DOCUMENT: return 'sendbird-icon-file-document';
-    case Type.FREEZE: return 'sendbird-icon-freeze';
-    case Type.GIF: return 'sendbird-icon-gif';
-    case Type.INFO: return 'sendbird-icon-info';
-    case Type.LEAVE: return 'sendbird-icon-leave';
-    case Type.MEMBERS: return 'sendbird-icon-members';
-    case Type.MESSAGE: return 'sendbird-icon-message';
-    case Type.MODERATIONS: return 'sendbird-icon-moderations';
-    case Type.MORE: return 'sendbird-icon-more';
-    case Type.MUTE: return 'sendbird-icon-mute';
-    case Type.NOTIFICATIONS: return 'sendbird-icon-notifications';
-    case Type.NOTIFICATIONS_OFF_FILLED: return 'sendbird-icon-notifications-off-filled';
-    case Type.OPERATOR: return 'sendbird-icon-operator';
-    case Type.PHOTO: return 'sendbird-icon-photo';
-    case Type.PLAY: return 'sendbird-icon-play';
-    case Type.PLUS: return 'sendbird-iconn-plus';
-    case Type.QUESTION: return 'sendbird-icon-question';
-    case Type.REFRESH: return 'sendbird-icon-refresh';
-    case Type.REMOVE: return 'sendbird-icon-remove';
-    case Type.REPLY: return 'sendbird-icon-reply';
-    case Type.SEARCH: return 'sendbird-icon-search';
-    case Type.SEND: return 'sendbird-icon-send';
-    case Type.SETTINGS_FILLED: return 'sendbird-icon-settings-filled';
-    case Type.SPINNER: return 'sendbird-icon-spinner';
-    case Type.SUPERGROUP: return 'sendbird-icon-supergroup';
-    case Type.THUMBNAIL_NONE: return 'sendbird-icon-thumbnail-none';
-    case Type.TOGGLE_OFF: return 'sendbird-icon-toggle-off';
-    case Type.TOGGLE_ON: return 'sendbird-icon-toggle-on';
-    case Type.USER: return 'sendbird-icon-user';
-    default: return 'sendbird-icon-unknown'; // If you see this text 'icon' replace icon for it
   }
 }
 
@@ -259,7 +169,7 @@ Icon.propTypes = {
   ]),
   /** Type: Use strings from below list */
   type: PropTypes.oneOfType([
-    PropTypes.oneOf(Object.keys(Type)),
+    PropTypes.oneOf(Object.keys(Types)),
     PropTypes.string,
   ]).isRequired,
   /** Type: Use Colors from below list */
@@ -285,5 +195,5 @@ Icon.defaultProps = {
   children: null,
 };
 
-export const IconTypes = Type;
+export const IconTypes = Types;
 export const IconColors = Colors;

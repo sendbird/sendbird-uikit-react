@@ -20,9 +20,12 @@ import { LoggerFactory } from './Logger';
 import pubSubFactory from './pubSub/index';
 import useAppendDomNode from '../hooks/useAppendDomNode';
 
+import { VoiceRecorderProvider } from '../hooks/VoiceRecorder';
+import { VoicePlayerProvider } from '../hooks/VoicePlayer';
 import { LocalizationProvider } from './LocalizationContext';
 import { MediaQueryProvider } from './MediaQueryContext';
 import getStringSet from '../ui/Label/stringSet';
+import { VOICE_RECORDER_DEFAULT_MAX, VOICE_RECORDER_DEFAULT_MIN } from '../utils/consts';
 
 export default function Sendbird(props) {
   const {
@@ -50,6 +53,8 @@ export default function Sendbird(props) {
     imageCompression,
     isReactionEnabled,
     isMentionEnabled,
+    isVoiceMessageEnabled,
+    voiceRecord,
     isTypingIndicatorEnabledOnChannelList,
     isMessageReceiptStatusEnabledOnChannelList,
     replyType,
@@ -196,6 +201,8 @@ export default function Sendbird(props) {
           },
           isReactionEnabled,
           isMentionEnabled: isMentionEnabled || false,
+          isVoiceMessageEnabled,
+          voiceRecord,
           userMention: {
             maxMentionCount: userMention?.maxMentionCount || 10,
             maxSuggestionCount: userMention?.maxSuggestionCount || 15,
@@ -208,7 +215,11 @@ export default function Sendbird(props) {
     >
       <MediaQueryProvider logger={logger} mediaQueryBreakPoint={mediaQueryBreakPoint}>
         <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
-          {children}
+          <VoiceRecorderProvider>
+            <VoicePlayerProvider>
+              {children}
+            </VoicePlayerProvider>
+          </VoiceRecorderProvider>
         </LocalizationProvider>
       </MediaQueryProvider>
     </SendbirdSdkContext.Provider>
@@ -258,6 +269,11 @@ Sendbird.propTypes = {
   colorSet: PropTypes.objectOf(PropTypes.string),
   isReactionEnabled: PropTypes.bool,
   isMentionEnabled: PropTypes.bool,
+  isVoiceMessageEnabled: PropTypes.bool,
+  voiceRecord: PropTypes.shape({
+    maxRecordingTime: PropTypes.number,
+    minRecordingTime: PropTypes.number,
+  }),
   imageCompression: PropTypes.shape({
     compressionRate: PropTypes.number,
     resizingWidth: PropTypes.oneOfType([
@@ -296,6 +312,11 @@ Sendbird.defaultProps = {
   imageCompression: {},
   isReactionEnabled: true,
   isMentionEnabled: false,
+  isVoiceMessageEnabled: true,
+  voiceRecord: {
+    maxRecordingTime: VOICE_RECORDER_DEFAULT_MAX,
+    minRecordingTime: VOICE_RECORDER_DEFAULT_MIN,
+  },
   isTypingIndicatorEnabledOnChannelList: false,
   isMessageReceiptStatusEnabledOnChannelList: false,
   replyType: 'NONE',

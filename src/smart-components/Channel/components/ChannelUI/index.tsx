@@ -23,6 +23,9 @@ export interface ChannelUIProps {
   renderChannelHeader?: () => React.ReactElement;
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderMessageInput?: () => React.ReactElement;
+  renderFileUploadIcon?: () =>  React.ReactElement;
+  renderVoiceMessageIcon?: () =>  React.ReactElement;
+  renderSendMessageIcon?: () =>  React.ReactElement;
   renderTypingIndicator?: () => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
 }
@@ -37,6 +40,9 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
   renderMessageInput,
   renderTypingIndicator,
   renderCustomSeparator,
+  renderFileUploadIcon,
+  renderVoiceMessageIcon,
+  renderSendMessageIcon,
 }: ChannelUIProps) => {
   const {
     currentGroupChannel,
@@ -61,6 +67,7 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
       clearTimeout(handler);
     }
   }, [currentGroupChannel?.unreadMessageCount]);
+
   const globalStore = useSendbirdStateContext();
   const sdkError = globalStore?.stores?.sdkStore?.error;
   const logger = globalStore?.config?.logger;
@@ -174,7 +181,11 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
       <div className="sendbird-conversation__footer">
         {
           renderMessageInput?.() || (
-            <MessageInputWrapper />
+            <MessageInputWrapper
+              renderFileUploadIcon={renderFileUploadIcon}
+              renderVoiceMessageIcon={renderVoiceMessageIcon}
+              renderSendMessageIcon={renderSendMessageIcon}
+            />
           )
         }
         <div className="sendbird-conversation__footer__typing-indicator">

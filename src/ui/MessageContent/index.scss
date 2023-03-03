@@ -167,7 +167,7 @@
 
     .sendbird-message-content__middle__body-container {
       position: relative;
-      width: fit-content;
+      width: 100%;
 
       .sendbird-message-content__middle__body-container__created-at {
         position: absolute;
@@ -242,4 +242,9 @@
 // threads
 .sendbird-message-content__middle__thread-replies {
   margin-top: 4px;
+}
+
+.sendbird-voice-message-item-body.sendbird-message-content__middle__message-item-body {
+  min-width: 136px;
+  height: 50px;
 }

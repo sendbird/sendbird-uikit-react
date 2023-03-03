@@ -76,6 +76,7 @@ const ChannelHeader: React.FC = () => {
               <Icon
                 className="sendbird-chat-header__right__mute"
                 type={IconTypes.NOTIFICATIONS_OFF_FILLED}
+                fillColor={IconColors.ON_BACKGROUND_2}
                 width="24px"
                 height="24px"
               />

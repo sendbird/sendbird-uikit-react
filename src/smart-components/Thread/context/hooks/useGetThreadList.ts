@@ -37,6 +37,7 @@ export default function useGetThreadList({
         prevResultSize: PREV_THREADS_FETCH_SIZE,
         nextResultSize: NEXT_THREADS_FETCH_SIZE,
         includeReactions: isReactionEnabled,
+        includeMetaArray: true,
       } as ThreadedMessageListParams;
       logger.info('Thread | useGetThreadList: Initialize thread list start.', { timeStamp, params });
       parentMessage.getThreadedMessagesByTimestamp?.(timeStamp, params)
@@ -59,5 +60,5 @@ export default function useGetThreadList({
           });
         });
     }
-  }, [sdkInit, parentMessage, anchorMessage]);
+  }, [sdkInit, parentMessage?.messageId, anchorMessage]);
 }

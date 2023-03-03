@@ -87,6 +87,12 @@
     animation-fill-mode: forwards;
   }
 
+  .sendbird-voice-message-item-body {
+    display: block;
+    animation-name: sbHighlightBlock;
+    animation-duration: 1.6s;
+    animation-fill-mode: forwards;
+  }
 
   .sendbird-thumbnail-message-item-body
   .sendbird-thumbnail-message-item-body__image-cover {

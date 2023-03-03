@@ -42,6 +42,7 @@ import useMemoizedEmojiListItems from './hooks/useMemoizedEmojiListItems';
 import useToggleReactionCallback from './hooks/useToggleReactionCallback';
 import useScrollToMessage from './hooks/useScrollToMessage';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
+import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 
 export type MessageListParams = {
   // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
@@ -83,6 +84,7 @@ export type ChannelContextProps = {
   onBeforeSendFileMessage?(file: File, quotedMessage?: UserMessage | FileMessage): FileMessageCreateParams;
   onBeforeUpdateUserMessage?(text: string): UserMessageUpdateParams;
   onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
+  onBeforeSendVoiceMessage?: (file: File, quotedMessage?: UserMessage | FileMessage) => FileMessageCreateParams;
   onSearchClick?(): void;
   onBackClick?(): void;
   replyType?: ReplyType;
@@ -152,6 +154,7 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   // TODO: Good to change interface to using params / This part need refactoring
   sendMessage(props: SendMessageParams): Promise<UserMessage>,
   sendFileMessage(file: File, quoteMessage: UserMessage | FileMessage): Promise<FileMessage>,
+  sendVoiceMessage: (file: File, duration: number, quoteMessage?: UserMessage | FileMessage) => void,
   // sendMessage(messageParams: SendBird.UserMessageParams): Promise<SendBird.UserMessage>,
   // sendFileMessage(messageParams: SendBird.FileMessageParams): Promise<SendBird.FileMessage>,
   toggleReaction(message: UserMessage | FileMessage, emojiKey: string, isReacted: boolean): void,
@@ -173,6 +176,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     onBeforeSendUserMessage,
     onBeforeSendFileMessage,
     onBeforeUpdateUserMessage,
+    onBeforeSendVoiceMessage,
     onChatHeaderActionClick,
     onSearchClick,
     onBackClick,
@@ -195,6 +199,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     isOnline,
     imageCompression,
     isMentionEnabled,
+    isVoiceMessageEnabled,
     onUserProfileMessage,
   } = config;
   const sdk = globalStore?.stores?.sdkStore?.sdk as SendbirdGroupChat;
@@ -263,7 +268,11 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
 
   // Scrollup is default scroll for channel
   const onScrollCallback = useScrollCallback({
-    currentGroupChannel, oldestMessageTimeStamp, userFilledMessageListQuery, replyType,
+    currentGroupChannel,
+    oldestMessageTimeStamp,
+    userFilledMessageListQuery,
+    replyType,
+    isVoiceMessageEnabled,
   }, {
     hasMorePrev,
     logger,
@@ -286,6 +295,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     userFilledMessageListQuery,
     hasMoreNext,
     replyType,
+    isVoiceMessageEnabled,
   }, {
     logger,
     messagesDispatcher,
@@ -342,6 +352,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     initialTimeStamp,
     latestMessageTimeStamp,
     replyType,
+    isVoiceMessageEnabled,
   }, {
     logger,
     scrollRef,
@@ -400,6 +411,18 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       messagesDispatcher,
     },
   );
+  const [sendVoiceMessage] = useSendVoiceMessageCallback(
+    {
+      currentGroupChannel,
+      onBeforeSendVoiceMessage,
+    },
+    {
+      logger,
+      pubSub,
+      scrollRef,
+      messagesDispatcher,
+    }
+  );
 
   return (
     <ChannelContext.Provider value={{
@@ -449,6 +472,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       messageInputRef,
       sendMessage,
       sendFileMessage,
+      sendVoiceMessage,
       initialTimeStamp,
       messageActionTypes,
       messagesDispatcher,

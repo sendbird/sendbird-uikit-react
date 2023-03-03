@@ -45,6 +45,9 @@ const Channel: React.FC<ChannelProps> = (props: ChannelProps) => {
         renderMessageInput={props?.renderMessageInput}
         renderTypingIndicator={props?.renderTypingIndicator}
         renderCustomSeparator={props?.renderCustomSeparator}
+        renderFileUploadIcon={props?.renderFileUploadIcon}
+        renderVoiceMessageIcon={props?.renderVoiceMessageIcon}
+        renderSendMessageIcon={props?.renderSendMessageIcon}
       />
     </ChannelProvider>
   );

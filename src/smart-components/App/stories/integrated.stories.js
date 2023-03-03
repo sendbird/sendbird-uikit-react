@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import './integrated-app.scss';
 
 import App from '../index';
+import Community from '../../OpenChannelApp/Community';
+import Streamnig from '../../OpenChannelApp/Streaming';
+
 import Label, { LabelTypography, LabelColors } from '../../../ui/Label';
 import Icon, { IconTypes, IconColors } from '../../../ui/Icon';
 import Button, { ButtonSizes, ButtonTypes } from '../../../ui/Button';
@@ -35,6 +38,11 @@ const ReplyType = {
   NONE: 'NONE',
   QUOTE_REPLY: 'QUOTE_REPLY',
   THREAD: 'THREAD',
+};
+const ChannelType = {
+  GROUP: 'GROUP',
+  COMMUNITY: 'COMMUNITY',
+  LIVE: 'LIVE',
 };
 
 const ModerationOptionItem = ({
@@ -137,10 +145,12 @@ export const GroupChannel = () => {
     typingIndicator: true,
     messageStatus: true,
     imageCompression: true,
+    isVoiceMessageEnabled: true,
     compressionRate: 0.7,
     resizingHeight: '',
     resizingWidth: '',
     replyType: ReplyType.THREAD,
+    channelType: ChannelType.GROUP,
   });
 
   useEffect(() => {
@@ -205,33 +215,59 @@ export const GroupChannel = () => {
           }));
         }} />
         <div style={{ height: 'calc(100% - 12px)' }}>
-          <App
-            appId={sampleOptions.appId}
-            userId={sampleOptions.userId}
-            nickname={sampleOptions.nickname}
-            theme={sampleOptions.theme}
-            showSearchIcon={sampleOptions.messageSearch}
-            disableUserProfile={!sampleOptions.editUserProfile}
-            isMessageGroupingEnabled={sampleOptions.messageGrouping}
-            isReactionEnabled={sampleOptions.emojiReaction}
-            isMentionEnabled={sampleOptions.mention}
-            isTypingIndicatorEnabledOnChannelList={sampleOptions.typingIndicator}
-            isMessageReceiptStatusEnabledOnChannelList={sampleOptions.messageStatus}
-            imageCompression={{ compressionRate: sampleOptions.imageCompression ? 0.7 : 1 }}
-            replyType={sampleOptions.replyType}
-            stringSet={{
-              CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR: '오퍼레이터 등록',
-              CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR: '오퍼레이터 해제',
-              CHANNEL_SETTING__MODERATION__MUTE: '유저 음소거',
-              CHANNEL_SETTING__MODERATION__UNMUTE: '유저 음소거 해제',
-              CHANNEL_SETTING__MODERATION__BAN: '유저 밴',
-              CHANNEL_SETTING__MODERATION__UNBAN: '유저 언밴',
-              BUTTON__CREATE: '만들다',
-              BUTTON__INVITE: '초대하다',
-              CHANNEL_SETTING__MODERATION__EMPTY_BAN: '차단된 된 유저가 아무도 없습니다',
-              CHANNEL_SETTING__MODERATION__ALL_BAN: '차단된 유저 모두보기'
-            }}
-          />
+          {
+            sampleOptions.channelType === ChannelType.GROUP && (
+              <App
+                appId={sampleOptions.appId}
+                userId={sampleOptions.userId}
+                nickname={sampleOptions.nickname}
+                theme={sampleOptions.theme}
+                allowProfileEdit
+                showSearchIcon={sampleOptions.messageSearch}
+                disableUserProfile={!sampleOptions.editUserProfile}
+                isMessageGroupingEnabled={sampleOptions.messageGrouping}
+                isReactionEnabled={sampleOptions.emojiReaction}
+                isMentionEnabled={sampleOptions.mention}
+                isTypingIndicatorEnabledOnChannelList={sampleOptions.typingIndicator}
+                isMessageReceiptStatusEnabledOnChannelList={sampleOptions.messageStatus}
+                isVoiceMessageEnabled={sampleOptions.isVoiceMessageEnabled}
+                imageCompression={{ compressionRate: sampleOptions.imageCompression ? 0.7 : 1 }}
+                replyType={sampleOptions.replyType}
+                stringSet={{
+                  // CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR: '오퍼레이터 등록',
+                  // CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR: '오퍼레이터 해제',
+                  // CHANNEL_SETTING__MODERATION__MUTE: '유저 음소거',
+                  // CHANNEL_SETTING__MODERATION__UNMUTE: '유저 음소거 해제',
+                  // CHANNEL_SETTING__MODERATION__BAN: '유저 밴',
+                  // CHANNEL_SETTING__MODERATION__UNBAN: '유저 언밴',
+                  // BUTTON__CREATE: '만들다',
+                  // BUTTON__INVITE: '초대하다',
+                  // CHANNEL_SETTING__MODERATION__EMPTY_BAN: '차단된 된 유저가 아무도 없습니다',
+                  // CHANNEL_SETTING__MODERATION__ALL_BAN: '차단된 유저 모두보기'
+                }}
+              />
+            )
+          }
+          {
+            sampleOptions.channelType === ChannelType.COMMUNITY && (
+              <Community
+                appId={sampleOptions.appId}
+                userId={sampleOptions.userId}
+                nickname={sampleOptions.nickname}
+                theme={sampleOptions.theme}
+              />
+            )
+          }
+          {
+            sampleOptions.channelType === ChannelType.LIVE && (
+              <Streamnig
+                appId={sampleOptions.appId}
+                userId={sampleOptions.userId}
+                nickname={sampleOptions.nickname}
+                theme={sampleOptions.theme}
+              />
+            )
+          }
         </div>
       </div>
     )
@@ -356,6 +392,17 @@ export const GroupChannel = () => {
               }}
             />
           </ModerationOptionItem>
+          <ModerationOptionItem subTitle="Voice Message">
+            <ToggleButton
+              isEnabled={sampleOptions.isVoiceMessageEnabled}
+              onClick={() => {
+                setSampleOptions({
+                  ...sampleOptions,
+                  isVoiceMessageEnabled: !sampleOptions.isVoiceMessageEnabled,
+                });
+              }}
+            />
+          </ModerationOptionItem>
           <ModerationOptionItem subTitle="Mention">
             <ToggleButton
               isEnabled={sampleOptions.mention}
@@ -455,6 +502,18 @@ export const GroupChannel = () => {
             >Next</Button>
           </div>
         )}
+        <ModerationOptionItem subTitle="Channel Type">
+            <MultipleButtons
+              options={ChannelType}
+              value={sampleOptions.channelType}
+              onClick={(selectedOption) => {
+                setSampleOptions({
+                  ...sampleOptions,
+                  channelType: selectedOption,
+                });
+              }}
+            />
+          </ModerationOptionItem>
         {(sampleOptions.appId && sampleOptions.userId) && (
           <div className='sendbird-integrated-app-submit-area'>
             <Button

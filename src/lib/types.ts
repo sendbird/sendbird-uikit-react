@@ -24,6 +24,13 @@ import { UikitMessageHandler } from './selectors';
 import { Logger } from './SendbirdState';
 import { ReplyType } from 'SendbirdUIKitGlobal';
 
+// note to SDK team:
+// using enum inside .d.ts won’t work for jest, but const enum will work.
+export const Role = {
+  OPERATOR: 'operator',
+  NONE: 'none',
+} as const;
+
 export interface SendBirdProviderProps {
   userId: string;
   appId: string;
@@ -42,6 +49,11 @@ export interface SendBirdProviderProps {
   stringSet?: Record<string, string>;
   colorSet?: Record<string, string>;
   isMentionEnabled?: boolean;
+  isVoiceMessageEnabled?: boolean;
+  voiceRecord?: {
+    maxRecordingTime: number;
+    minRecordingTime: number;
+  };
   imageCompression?: {
     compressionRate?: number,
     resizingWidth?: number | string,
@@ -68,6 +80,11 @@ export interface SendBirdStateConfig {
   userListQuery?(): SendBirdTypes.UserListQuery;
   isReactionEnabled: boolean;
   isMentionEnabled: boolean;
+  isVoiceMessageEnabled?: boolean;
+  voiceRecord?: {
+    maxRecordingTime: number;
+    minRecordingTime: number;
+  };
   userMention: {
     maxMentionCount: number,
     maxSuggestionCount: number,
