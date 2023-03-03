@@ -1,3 +1,5 @@
+import './user-panel.scss';
+
 import React, { useContext, useState } from 'react';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
@@ -23,7 +25,7 @@ const UserPanel: React.FC = () => {
   const [showAccordion, setShowAccordion] = useState(false);
   const { channel } = useChannelSettingsContext();
   return (
-    <>
+    <div className='sendbird-channel-settings__user-panel'>
       <div
         className={[
           'sendbird-channel-settings__panel-item',
@@ -47,7 +49,10 @@ const UserPanel: React.FC = () => {
           color={LabelColors.ONBACKGROUND_1}
         >
           {stringSet.CHANNEL_SETTING__MEMBERS__TITLE}
-          <Badge count={kFormatter(channel?.memberCount)} />
+          <Badge
+            className={"sendbird-channel-settings__badge"}
+            count={kFormatter(channel?.memberCount)}
+          />
         </Label>
         <Icon
           className={[
@@ -65,7 +70,7 @@ const UserPanel: React.FC = () => {
           <MemberList />
         )
       }
-    </>
+    </div>
   );
 }
 

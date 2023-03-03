@@ -26,11 +26,16 @@ export default function InviteUsers({
   const sdk = state?.stores?.sdkStore?.sdk;
   const globalUserListQuery = state?.config?.userListQuery;
 
-  const { channel, overrideInviteUser } = useChannelSettingsContext();
+  const { channel, overrideInviteUser, queries } = useChannelSettingsContext();
+  const userFilledQuery =  {
+    ...queries?.applicationUserListQuery,
+  };
   const { stringSet } = useLocalization();
 
   useEffect(() => {
-    const userListQuery = globalUserListQuery ? globalUserListQuery() : sdk?.createApplicationUserListQuery();
+    const userListQuery = globalUserListQuery
+      ? globalUserListQuery()
+      : sdk?.createApplicationUserListQuery(userFilledQuery);
     if (userListQuery?.next) {
       userListQuery.next().then((members) => {
         setMembers(members);
