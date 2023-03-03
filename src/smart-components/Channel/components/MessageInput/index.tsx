@@ -112,7 +112,7 @@ const MessageInputWrapper = (
   }
   // other conditions
   return (
-    <div className="sendbird-message-input-wrapper">
+    <div className={`sendbird-message-input-wrapper${showVoiceMessageInput ? '--voice-message' : ''}`}>
       {
         displaySuggestedMentionList && (
           <SuggestedMentionList

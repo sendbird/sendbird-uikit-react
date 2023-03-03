@@ -95,7 +95,7 @@ const ThreadMessageInput = (
   }
 
   return (
-    <div className={`sendbird-thread-message-input ${className}`}>
+    <div className={`sendbird-thread-message-input${showVoiceMessageInput ? '--voice-message' : ''} ${className}`}>
       {
         displaySuggestedMentionList && (
           <SuggestedMentionList

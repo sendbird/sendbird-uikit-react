@@ -16,3 +16,9 @@
 .sendbird-thread-message-input .sendbird-mention-suggest-list .sendbird-mention-suggest-list__user-item .sendbird-mention-suggest-list__user-item__user-id {
   max-width: 46px;
 }
+
+.sendbird-thread-message-input--voice-message {
+  @include themed() {
+    border-top: 1px solid t(on-bg-4);
+  }
+}
