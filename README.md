@@ -121,3 +121,11 @@ To read more: https://webpack.js.org/configuration/resolve/#resolvefallback
   `export NewComponent from './src/location/of/NewComponent';`
 3. Add the following line to './exports.js'
   `NewComponent: 'src/location/of/NewComponent',`
+
+## Acknowledgments
+### LameJS
+
+We use lamejs for converting audio formats
+It is a fast mp3 encoder written in JavaScript. The original repo is:
+* https://lame.sourceforge.net or
+* https://github.com/zhuker/lamejs

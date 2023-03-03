@@ -2,6 +2,10 @@ export default {
   // legacy
   index: 'src/index.js',
 
+  // lame-js
+  // remove when they remove 1.2.2
+  'lame.all': 'src/_externals/lamejs/js/index.js',
+
   // Easy to use app
   App: 'src/smart-components/App/index.jsx',
 
@@ -183,6 +187,6 @@ export default {
   'ui/UserListItem': 'src/ui/UserListItem/index.tsx',
   'ui/UserProfile': 'src/ui/UserProfile/index.tsx',
   'ui/VoiceMessgeInput': 'src/ui/VoiceMessageInput/index.tsx',
-  'ui/VoiceMessageItemBody': 'src/ui/VoiceMessageItemBody.tsx',
+  'ui/VoiceMessageItemBody': 'src/ui/VoiceMessageItemBody/index.tsx',
   'ui/Word': 'src/ui/Word/index.tsx',
 };
