@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
-import { VoiceMessageInputStatus } from '.';
+import { VoiceMessageInputStatus } from './types';
 
 export interface ControlerIconProps {
   inputState?: VoiceMessageInputStatus;
