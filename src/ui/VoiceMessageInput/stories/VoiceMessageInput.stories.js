@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import VoiceMessageInput, { VoiceMessageInputStatus } from '../index';
+import VoiceMessageInput from '../index';
+import { VoiceMessageInputStatus } from '../types';
 
 const description = `
   \`import VoiceMessageInput from "@sendbird/uikit-react/ui/VoiceMessageInput";\`

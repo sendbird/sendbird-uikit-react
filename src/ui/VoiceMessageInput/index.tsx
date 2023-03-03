@@ -9,14 +9,8 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 import ControlerIcon from './controlerIcons';
 import { VOICE_RECORDER_DEFAULT_MIN } from '../../utils/consts';
+import { VoiceMessageInputStatus } from './types';
 
-export const VoiceMessageInputStatus = {
-  READY_TO_RECORD: 'READY_TO_RECORD',
-  RECORDING: 'RECORDING',
-  READY_TO_PLAY: 'READY_TO_PLAY',
-  PLAYING: 'PLAYING',
-} as const;
-export type VoiceMessageInputStatus = typeof VoiceMessageInputStatus[keyof typeof VoiceMessageInputStatus];
 export interface VoiceMessageInputProps {
   minRecordTime?: number;
   maximumValue: number;
