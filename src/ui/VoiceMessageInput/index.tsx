@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import './index.scss';
 
 import PlaybackTime from '../PlaybackTime';
@@ -8,7 +8,7 @@ import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 import ControlerIcon from './controlerIcons';
-import { VOICE_RECORDER_DEFAULT_MIN } from '../../utils/consts';
+import { VOICE_RECORDER_CLICK_BUFFER_TIME, VOICE_RECORDER_DEFAULT_MIN } from '../../utils/consts';
 import { VoiceMessageInputStatus } from './types';
 
 export interface VoiceMessageInputProps {
@@ -36,6 +36,7 @@ export const VoiceMessageInput = ({
   renderControlButton,
   renderSubmitButton,
 }: VoiceMessageInputProps): React.ReactElement => {
+  const [lastClickTime, setLastClickTime] = useState<number>(0);
   const isReadyToRecord = useMemo(() => currentType === VoiceMessageInputStatus.READY_TO_RECORD, [currentType]);
   const isRecording = useMemo(() => currentType === VoiceMessageInputStatus.RECORDING, [currentType]);
   const isSendButtonDisabled = useMemo(() => (
@@ -49,6 +50,31 @@ export const VoiceMessageInput = ({
   }, [currentType]);
   const { stringSet } = useLocalization();
 
+  const handleOnCancelClick = () => {
+    const currentTime = Date.now();
+    if (currentTime - lastClickTime > VOICE_RECORDER_CLICK_BUFFER_TIME) {
+      onCancelClick();
+      setLastClickTime(currentTime);
+    }
+  };
+  const handleOnControlClick = useCallback(() => {
+    const currentTime = Date.now();
+    console.log(currentTime - lastClickTime, VOICE_RECORDER_CLICK_BUFFER_TIME)
+    if (currentTime - lastClickTime > VOICE_RECORDER_CLICK_BUFFER_TIME) {
+      onControlClick(currentType);
+      setLastClickTime(currentTime);
+    }
+  }, [currentType]);
+  const handleOnSubmitClick = () => {
+    const currentTime = Date.now();
+    if (currentTime - lastClickTime > VOICE_RECORDER_CLICK_BUFFER_TIME) {
+      if (!isSendButtonDisabled) {
+        onSubmitClick();
+      }
+      setLastClickTime(currentTime);
+    }
+  };
+
   return (
     <div className="sendbird-voice-message-input">
       <div className="sendbird-voice-message-input__indicator">
@@ -60,11 +86,7 @@ export const VoiceMessageInput = ({
             currentSize={currentValue}
           />
         </div>
-        {
-          (isRecording) && (
-            <div className="sendbird-voice-message-input__indicator__on-rec" />
-          )
-        }
+        {(isRecording) ? (<div className="sendbird-voice-message-input__indicator__on-rec" />) : null}
         <PlaybackTime
           className="sendbird-voice-message-input__indicator__playback-time"
           time={isPlayMode ? maximumValue - currentValue : currentValue}
@@ -76,7 +98,7 @@ export const VoiceMessageInput = ({
           renderCancelButton?.() || (
             <TextButton
               className="sendbird-voice-message-input__controler__cancel"
-              onClick={onCancelClick}
+              onClick={handleOnCancelClick}
               disableUnderline
             >
               <Label
@@ -92,7 +114,7 @@ export const VoiceMessageInput = ({
           renderControlButton?.(currentType) || (
             <div
               className="sendbird-voice-message-input__controler__main"
-              onClick={() => onControlClick(currentType)}
+              onClick={handleOnControlClick}
             >
               <ControlerIcon inputState={currentType} />
             </div>
@@ -102,11 +124,7 @@ export const VoiceMessageInput = ({
           renderSubmitButton?.() || (
             <div
               className={`sendbird-voice-message-input__controler__submit ${isSendButtonDisabled ? 'voice-message--disabled' : ''}`}
-              onClick={() => {
-                if (!isSendButtonDisabled) {
-                  onSubmitClick();
-                }
-              }}
+              onClick={handleOnSubmitClick}
             >
               <Icon
                 width="19px"
