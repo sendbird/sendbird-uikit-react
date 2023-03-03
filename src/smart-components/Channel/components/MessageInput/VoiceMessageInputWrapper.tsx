@@ -14,6 +14,7 @@ import Button, { ButtonSizes, ButtonTypes } from '../../../../ui/Button';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { VOICE_RECORDER_DEFAULT_MIN } from '../../../../utils/consts';
 import { VoicePlayerStatus } from '../../../../hooks/VoicePlayer/dux/initialState';
+import uuidv4 from '../../../../utils/uuid';
 
 export interface VoiceMessageInputWrapperProps {
   channel?: GroupChannel;
@@ -21,13 +22,13 @@ export interface VoiceMessageInputWrapperProps {
   onSubmitClick?: (file: File, duration: number) => void;
 }
 
-const VOICE_MESSAGE_INPUT_KEY = 'voice-message-input';
 export const VoiceMessageInputWrapper = ({
   channel,
   onCancelClick,
   onSubmitClick,
 }: VoiceMessageInputWrapperProps): React.ReactElement => {
   const [audioFile, setAudioFile] = useState<File>(null);
+  const [uuid] = useState<string>(uuidv4());
   const [voiceInputState, setVoiceInputState] = useState<VoiceMessageInputStatus>(VoiceMessageInputStatus.READY_TO_RECORD);
   const [isSubmited, setSubmit] = useState(false);
   const [isDisabled, setDisabled] = useState(false);
@@ -52,7 +53,7 @@ export const VoiceMessageInputWrapper = ({
   });
   const voicePlayer = useVoicePlayer({
     channelUrl: channel?.url,
-    key: VOICE_MESSAGE_INPUT_KEY,
+    key: uuid,
     audioFile: audioFile,
   });
   const {
