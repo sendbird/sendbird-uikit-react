@@ -2,21 +2,6 @@
 
 ## [v3.4.0] (Mar 3 2023)
 
-Features:
-* Add props `renderFileUploadIcon`, `renderVoiceMessageIcon`, and `renderSendMessageIcon` into the `Channel`, `ChannelUI`, and `MessageInput` component
-  ```javascript
-  interface MessageInputProps {
-    renderFileUploadIcon?: () =>  React.ReactElement;
-    renderVoiceMessageIcon?: () =>  React.ReactElement;
-    renderSendMessageIcon?: () =>  React.ReactElement;
-  }
-  ```
-
-Fixes:
-* Use ApplicationUserListQuery on ChannelSettings component
-* Fix some visual issues on the normal User Panel of ChannelSettings
-* Indentify faulty images in OG message
-
 ### Voice Message
 Voice message is a new type of message and feature that you can use in group channel. You can record your voice on the message input and send it to the channel. Also the messages will be displayed as a new design of the voice message. You are able to use this feature from this version.
 
@@ -126,6 +111,21 @@ const CustomApp = () => {
   import isVoiceMessage from '@sendbird/uikit-react/utils/message/isVoiceMessage'
   const isVoiceMsg: boolean = isVoiceMessage(message);
   ```
+
+Features:
+* Add props `renderFileUploadIcon`, `renderVoiceMessageIcon`, and `renderSendMessageIcon` into the `Channel`, `ChannelUI`, and `MessageInput` component
+  ```javascript
+  interface MessageInputProps {
+    renderFileUploadIcon?: () =>  React.ReactElement;
+    renderVoiceMessageIcon?: () =>  React.ReactElement;
+    renderSendMessageIcon?: () =>  React.ReactElement;
+  }
+  ```
+
+Fixes:
+* Use ApplicationUserListQuery on ChannelSettings component
+* Fix some visual issues on the normal User Panel of ChannelSettings
+* Indentify faulty images in OG message
 
 ## [v3.3.7] (Feb 24 2023)
 
