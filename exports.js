@@ -4,7 +4,7 @@ export default {
 
   // lame-js
   // remove when they remove 1.2.2
-  'lame.all': 'src/_externals/lamejs/js/index.js',
+  'lame.all': 'src/_externals/lamejs/lame.all.js',
 
   // Easy to use app
   App: 'src/smart-components/App/index.jsx',
