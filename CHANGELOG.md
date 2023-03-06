@@ -1,6 +1,6 @@
 # Changelog - v3
 
-## [v3.4.0] (Mar 3 2023)
+## [v3.4.0] (Mar 6 2023)
 
 ### Voice Message
 Voice message is a new type of message and feature that you can use in group channel. You can record your voice on the message input and send it to the channel. Also the messages will be displayed as a new design of the voice message. You are able to use this feature from this version.
