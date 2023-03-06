@@ -39,9 +39,14 @@ export const VoiceMessageInput = ({
   const [lastClickTime, setLastClickTime] = useState<number>(0);
   const isReadyToRecord = useMemo(() => currentType === VoiceMessageInputStatus.READY_TO_RECORD, [currentType]);
   const isRecording = useMemo(() => currentType === VoiceMessageInputStatus.RECORDING, [currentType]);
-  const isSendButtonDisabled = useMemo(() => (
-    (isRecording || isReadyToRecord) && minRecordTime > currentValue
-  ), [isRecording, minRecordTime, currentValue]);
+  const isSendButtonDisabled = useMemo(() => {
+    if (currentType === VoiceMessageInputStatus.READY_TO_RECORD
+      || currentType === VoiceMessageInputStatus.RECORDING
+    ) {
+      return minRecordTime > currentValue
+    }
+    return false;
+  }, [currentType, minRecordTime, currentValue]);
   const isPlayMode = useMemo(() => {
     return (
       currentType === VoiceMessageInputStatus.READY_TO_PLAY
@@ -59,7 +64,6 @@ export const VoiceMessageInput = ({
   };
   const handleOnControlClick = useCallback(() => {
     const currentTime = Date.now();
-    console.log(currentTime - lastClickTime, VOICE_RECORDER_CLICK_BUFFER_TIME)
     if (currentTime - lastClickTime > VOICE_RECORDER_CLICK_BUFFER_TIME) {
       onControlClick(currentType);
       setLastClickTime(currentTime);
