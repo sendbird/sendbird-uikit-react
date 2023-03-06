@@ -1216,8 +1216,7 @@ declare module '@sendbird/uikit-react/utils/message/getOutgoingMessageState' {
 
 declare module '@sendbird/uikit-react/utils/message/isVoiceMessage' {
   import type { FileMessage } from '@sendbird/chat/message';
-  type isVoiceMessage = (message: FileMessage) => boolean;
-  export default isVoiceMessage;
+  export function isVoiceMessage(message: FileMessage): boolean;
 }
 
 /** ChannelList */
