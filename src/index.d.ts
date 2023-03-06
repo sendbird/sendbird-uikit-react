@@ -42,7 +42,6 @@ import {
 } from '@sendbird/chat/openChannel';
 import { UikitMessageHandler } from './lib/selectors';
 import { RenderCustomSeparatorProps } from './types';
-import { isVoiceMessage } from './utils';
 
 type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
 

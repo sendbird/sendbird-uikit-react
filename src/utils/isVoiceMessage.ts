@@ -1,4 +1,3 @@
-import { isVoiceMessage } from ".";
+import { isVoiceMessage as _isVoiceMessage } from ".";
 
-export default isVoiceMessage;
-// mentioned on docs
+export const isVoiceMessage = _isVoiceMessage;
