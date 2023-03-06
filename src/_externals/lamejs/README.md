@@ -3,6 +3,8 @@
 lamejs added somefixes(https://github.com/zhuker/lamejs/pull/87) after release of 1.2.1. So, we need to use the master branch of lamejs.
 Todo: Remove this note when lamejs release a new version.
 
+Also, we use parcel to bundle `lame.all.js` file because, normal build of lamejs is not working well.
+
 # lamejs
 Fast mp3 encoder written in JavaScript.
 On my machine it works 20x faster than realtime (it will encode 132 second long sample in 6.5 seconds) both on node and chrome.
