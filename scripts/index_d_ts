@@ -66,6 +66,11 @@ declare module "SendbirdUIKitGlobal" {
     config?: SendbirdProviderConfig;
     useReaction?: boolean;
     useMessageGrouping?: boolean;
+    isVoiceMessageEnabled?: boolean;
+    voiceRecord?: {
+      maxRecordingTime?: number,
+      minRecordingTime?: number,
+    };
     stringSet?: Record<string, string>;
     colorSet?: Record<string, string>;
     imageCompression?: {
@@ -218,33 +223,35 @@ declare module "SendbirdUIKitGlobal" {
     userId: string;
     appId: string;
     accessToken?: string;
-    configureSession?: (sdk: SendbirdGroupChat | SendbirdOpenChat) => SessionHandler;
+    configureSession?: (sdk: SendbirdChat) => SessionHandler;
     customApiHost?: string,
     customWebSocketHost?: string,
-    // mediaQueryBreakPoint?: string | boolean,
-    children?: React.ReactNode | React.ReactElement;
+    children?: React.ReactElement;
     theme?: 'light' | 'dark';
     nickname?: string;
     profileUrl?: string;
     dateLocale?: Locale;
     disableUserProfile?: boolean;
     disableMarkAsDelivered?: boolean;
-    onUserProfileMessage?: (props: GroupChannel) => void;
-    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode | React.ReactElement;
+    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
     allowProfileEdit?: boolean;
     userListQuery?(): UserListQuery;
     config?: SendbirdProviderConfig;
     stringSet?: Record<string, string>;
     colorSet?: Record<string, string>;
-    isMentionEnabled?: boolean;
     imageCompression?: {
       compressionRate?: number,
       resizingWidth?: number | string,
       resizingHeight?: number | string,
     };
-    isReactionEnabled?: boolean,
-    isTypingIndicatorEnabledOnChannelList?: boolean,
-    isMessageReceiptStatusEnabledOnChannelList?: boolean,
+    isMentionEnabled?: boolean;
+    isVoiceMessageEnabled?: boolean;
+    voiceRecord?: {
+      maxRecordingTime?: number,
+      minRecordingTime?: number,
+    };
+    isTypingIndicatorEnabledOnChannelList?: boolean;
+    isMessageReceiptStatusEnabledOnChannelList?: boolean;
   }
 
   export interface SendBirdStateConfig {
@@ -271,6 +278,11 @@ declare module "SendbirdUIKitGlobal" {
       compressionRate?: number,
       resizingWidth?: number | string,
       resizingHeight?: number | string,
+    };
+    isVoiceMessageEnabled?: boolean;
+    voiceRecord?: {
+      maxRecordingTime?: number,
+      minRecordingTime?: number,
     };
     isTypingIndicatorEnabledOnChannelList?: boolean;
     isMessageReceiptStatusEnabledOnChannelList?: boolean;
@@ -463,6 +475,14 @@ declare module "SendbirdUIKitGlobal" {
     onSubmit: () => void;
     onCancel: () => void;
   };
+
+  export enum VoicePlayerStatus {
+    IDLE = 'IDLE',
+    PREPARING = 'PREPARING',
+    READY_TO_PLAY = 'READY_TO_PLAY',
+    PLAYING = 'PLAYING',
+    COMPLETED = 'COMPLETED',
+  }
 
   /**
    * Channel
@@ -1194,6 +1214,12 @@ declare module '@sendbird/uikit-react/utils/message/getOutgoingMessageState' {
   ): OutgoingMessageStates;
 }
 
+declare module '@sendbird/uikit-react/utils/message/isVoiceMessage' {
+  import type { FileMessage } from '@sendbird/chat/message';
+  type isVoiceMessage = (message: FileMessage) => boolean;
+  export default isVoiceMessage;
+}
+
 /** ChannelList */
 declare module '@sendbird/uikit-react/ChannelList' {
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
@@ -1839,7 +1865,17 @@ declare module '@sendbird/uikit-react/ui/FileMessageItemBody' {
   }
   const FileMessageItemBody: React.FC<FileMessageItemBodyProps>;
   export default FileMessageItemBody;
+}
 
+declare module '@sendbird/uikit-react/ui/VoiceMessageItemBody' {
+  interface VoiceMessageItemBodyProps {
+    minRecordTime?: number;
+    maximumValue: number;
+    currentValue?: number;
+    currentType: VoicePlayerStatus;
+  }
+  type VoiceMessageItemBody = React.FC<VoiceMessageItemBodyProps>;
+  export default VoiceMessageItemBody;
 }
 
 declare module '@sendbird/uikit-react/ui/FileViewer' {
@@ -2005,6 +2041,7 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
     className?: Array<string>,
     isEdit?: boolean,
     isMentionEnabled?: boolean;
+    isVoiceMessageEnabled?: boolean;
     disabled?: boolean,
     // value is removed when channelURL changes
     value?: string,
@@ -2022,12 +2059,36 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
     onMentionedUserIdsUpdated?: (userIds: Array<string>) => void,
     onKeyUp?: (e: React.KeyboardEvent<HTMLDivElement>) => void,
     onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void,
+    onVoiceMessageIconClick?: () => void;
     renderFileUploadIcon?: () =>  React.ReactElement;
     renderVoiceMessageIcon?: () =>  React.ReactElement;
     renderSendMessageIcon?: () =>  React.ReactElement;
   }
   const MessageInput: React.FC<MessageInputProps>;
   export default MessageInput;
+}
+
+declare module '@sendbird/uikit-react/ui/VoiceMessageInput' {
+  export enum VoiceMessageInputStatus {
+    READY_TO_RECORD = 'READY_TO_RECORD',
+    RECORDING = 'RECORDING',
+    READY_TO_PLAY = 'READY_TO_PLAY',
+    PLAYING = 'PLAYING',
+  }
+  interface VoiceMessageInputProps {
+    minRecordTime?: number;
+    maximumValue: number;
+    currentValue?: number;
+    currentType: VoiceMessageInputStatus;
+    onCancelClick?: () => void;
+    onControlClick?: (type: VoiceMessageInputStatus) => void;
+    onSubmitClick?: () => void;
+    renderCancelButton?: () => React.ReactElement;
+    renderControlButton?: (type: VoiceMessageInputStatus) => React.ReactElement;
+    renderSubmitButton?: () => React.ReactElement;
+  }
+  type VoiceMessageInput = React.FC<VoiceMessageInputProps>;
+  export default VoiceMessageInput;
 }
 
 declare module '@sendbird/uikit-react/ui/MessageItemMenu' {
