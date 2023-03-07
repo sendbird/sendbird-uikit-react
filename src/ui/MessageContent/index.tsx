@@ -120,7 +120,8 @@ export default function MessageContent({
     || ((message as UserMessage | FileMessage)?.sendingStatus === 'failed');
   const isByMeClassName = isByMe ? 'outgoing' : 'incoming';
   const chainTopClassName = chainTop ? 'chain-top' : '';
-  const isReactionEnabledClassName = isReactionEnabled ? 'use-reactions' : '';
+  const isReactionEnabledInChannel = isReactionEnabled && !channel?.isEphemeral;
+  const isReactionEnabledClassName = isReactionEnabledInChannel ? 'use-reactions' : '';
   const supposedHoverClassName = supposedHover ? 'sendbird-mouse-hover' : '';
   const useReplying = !!((replyType === 'QUOTE_REPLY' || replyType === 'THREAD')
     && message?.parentMessageId && message?.parentMessage
@@ -222,7 +223,7 @@ export default function MessageContent({
                 }
               }}
             />
-            {isReactionEnabled && (
+            {isReactionEnabledInChannel && (
               <MessageItemReactionMenu
                 className="sendbird-message-content-menu__reaction-menu"
                 message={message as UserMessage | FileMessage}
@@ -299,7 +300,7 @@ export default function MessageContent({
               isByMe={isByMe}
               mouseHover={mouseHover}
               isMentionEnabled={config?.isMentionEnabled || false}
-              isReactionEnabled={isReactionEnabled}
+              isReactionEnabled={isReactionEnabledInChannel}
             />
           )}
           {(isOGMessage(message as UserMessage)) && (
@@ -309,7 +310,7 @@ export default function MessageContent({
               isByMe={isByMe}
               mouseHover={mouseHover}
               isMentionEnabled={config?.isMentionEnabled || false}
-              isReactionEnabled={isReactionEnabled}
+              isReactionEnabled={isReactionEnabledInChannel}
             />
           )}
           {(getUIKitMessageType((message as FileMessage)) === messageTypes.FILE) && (
@@ -318,7 +319,7 @@ export default function MessageContent({
               message={message as FileMessage}
               isByMe={isByMe}
               mouseHover={mouseHover}
-              isReactionEnabled={isReactionEnabled}
+              isReactionEnabled={isReactionEnabledInChannel}
             />
           )}
           {isVoiceMessage(message as FileMessage) && (
@@ -327,7 +328,7 @@ export default function MessageContent({
               message={message as FileMessage}
               channelUrl={channel?.url}
               isByMe={isByMe}
-              isReactionEnabled={isReactionEnabled}
+              isReactionEnabled={isReactionEnabledInChannel}
             />
           )}
           {(isThumbnailMessage(message as FileMessage)) && (
@@ -336,7 +337,7 @@ export default function MessageContent({
               message={message as FileMessage}
               isByMe={isByMe}
               mouseHover={mouseHover}
-              isReactionEnabled={isReactionEnabled}
+              isReactionEnabled={isReactionEnabledInChannel}
               showFileViewer={showFileViewer}
             />
           )}
@@ -346,11 +347,11 @@ export default function MessageContent({
               message={message}
               isByMe={isByMe}
               mouseHover={mouseHover}
-              isReactionEnabled={isReactionEnabled}
+              isReactionEnabled={isReactionEnabledInChannel}
             />
           )}
           {/* reactions */}
-          {(isReactionEnabled && message?.reactions?.length > 0) && (
+          {(isReactionEnabledInChannel && message?.reactions?.length > 0) && (
             <div className={getClassName([
               'sendbird-message-content-reactions',
               (!isByMe || isThumbnailMessage(message as FileMessage) || isOGMessage(message as UserMessage)) ? '' : 'primary',
@@ -392,7 +393,7 @@ export default function MessageContent({
         {/* incoming menu */}
         {!isByMe && !isMobile && (
           <div className={getClassName(['sendbird-message-content-menu', chainTopClassName, supposedHoverClassName, isByMeClassName])}>
-            {isReactionEnabled && (
+            {isReactionEnabledInChannel && (
               <MessageItemReactionMenu
                 className="sendbird-message-content-menu__reaction-menu"
                 message={message as UserMessage | FileMessage}
@@ -434,7 +435,7 @@ export default function MessageContent({
             channel={channel}
             hideMenu={() => { setShowMenu(false) }}
             message={message}
-            isReactionEnabled={isReactionEnabled}
+            isReactionEnabled={isReactionEnabledInChannel}
             isByMe={isByMe}
             userId={userId}
             replyType={replyType}
