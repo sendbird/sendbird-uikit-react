@@ -38,6 +38,7 @@ type MessageUIProps = {
   renderMessageContent?: () => React.ReactElement;
 };
 
+// todo: Refactor this component, is too complex now
 const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactElement => {
   const {
     message,
@@ -134,38 +135,46 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
   }, [showEdit, message?.reactions?.length]);
 
   useLayoutEffect(() => {
-    if (highLightedMessageId === message.messageId) {
-      if (useMessageScrollRef && useMessageScrollRef.current) {
-        useMessageScrollRef.current.scrollIntoView({ block: 'center', inline: 'center' });
-        setIsAnimated(false);
-        setTimeout(() => {
-          setIsHighlighted(true);
-        }, 500);
-        setTimeout(() => {
-          setHighLightedMessageId(0);
-          onMessageHighlighted?.();
-        }, 1600);
-      }
+    let animationTimeout = null;
+    let messageHighlightedTimeout = null;
+    if (highLightedMessageId === message.messageId && useMessageScrollRef?.current) {
+      useMessageScrollRef.current.scrollIntoView({ block: 'center', inline: 'center' });
+      setIsAnimated(false);
+      animationTimeout = setTimeout(() => {
+        setIsHighlighted(true);
+      }, 500);
+      messageHighlightedTimeout = setTimeout(() => {
+        setHighLightedMessageId(0);
+        onMessageHighlighted?.();
+      }, 1600);
     } else {
       setIsHighlighted(false);
+    }
+    return () => {
+      clearTimeout(animationTimeout);
+      clearTimeout(messageHighlightedTimeout);
     }
   }, [highLightedMessageId, useMessageScrollRef.current, message.messageId]);
 
   useLayoutEffect(() => {
-    if (animatedMessageId === message.messageId) {
-      if (useMessageScrollRef && useMessageScrollRef.current) {
-        useMessageScrollRef.current.scrollIntoView({ block: 'center', inline: 'center' });
-        setIsHighlighted(false);
-        setTimeout(() => {
-          setIsAnimated(true);
-        }, 500);
-        setTimeout(() => {
-          setAnimatedMessageId(0);
-          onMessageAnimated?.();
-        }, 1600);
-      }
+    let animationTimeout = null;
+    let messageAnimatedTimeout = null;
+    if (animatedMessageId === message.messageId && useMessageScrollRef?.current) {
+      useMessageScrollRef.current.scrollIntoView({ block: 'center', inline: 'center' });
+      setIsHighlighted(false);
+      animationTimeout = setTimeout(() => {
+        setIsAnimated(true);
+      }, 500);
+      messageAnimatedTimeout = setTimeout(() => {
+        setAnimatedMessageId(0);
+        onMessageAnimated?.();
+      }, 1600);
     } else {
       setIsAnimated(false);
+    }
+    return () => {
+      clearTimeout(animationTimeout);
+      clearTimeout(messageAnimatedTimeout);
     }
   }, [animatedMessageId, useMessageScrollRef.current, message.messageId, onMessageAnimated]);
   const renderedMessage = useMemo(() => {
