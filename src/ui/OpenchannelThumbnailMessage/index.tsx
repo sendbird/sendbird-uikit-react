@@ -40,6 +40,7 @@ interface Props {
   className?: string | Array<string>;
   message: FileMessage;
   isOperator?: boolean;
+  isEphemeral?: boolean;
   disabled: boolean;
   userId: string;
   chainTop: boolean;
@@ -53,6 +54,7 @@ export default function OpenchannelThumbnailMessage({
   className,
   message,
   isOperator,
+  isEphemeral = false,
   disabled,
   userId,
   chainTop,
@@ -89,7 +91,7 @@ export default function OpenchannelThumbnailMessage({
         fillColor={IconColors.ON_BACKGROUND_2}
         width="56px"
         height="56px"
-        />
+      />
     </div>
   ), []);
 
@@ -327,61 +329,65 @@ export default function OpenchannelThumbnailMessage({
             className="sendbird-openchannel-thumbnail-message__context-menu"
             ref={contextMenuRef}
           >
-            <ContextMenu
-              menuTrigger={(toggleDropdown) => (
-                showMenuTrigger({ message, userId, status }) && (
-                  <IconButton
-                    className="sendbird-openchannel-thumbnail-message__context-menu--icon"
-                    width="32px"
-                    height="32px"
-                    onClick={toggleDropdown}
-                  >
-                    <Icon
-                      type={IconTypes.MORE}
-                      fillColor={IconColors.CONTENT_INVERSE}
-                      width="24px"
-                      height="24px"
-                    />
-                  </IconButton>
-                )
-              )}
-              menuItems={(closeDropdown) => (
-                <MenuItems
-                  parentRef={contextMenuRef}
-                  parentContainRef={contextMenuRef}
-                  closeDropdown={closeDropdown}
-                  openLeft
-                >
-                  {
-                    isFineResend({ message, userId, status }) && (
-                      <MenuItem
-                        onClick={() => {
-                          resendMessage(message);
-                          closeDropdown();
-                        }}
+            {
+              (isFineResend({ message, userId, status }) || !isEphemeral) && (
+                <ContextMenu
+                  menuTrigger={(toggleDropdown) => (
+                    showMenuTrigger({ message, userId, status }) && (
+                      <IconButton
+                        className="sendbird-openchannel-thumbnail-message__context-menu--icon"
+                        width="32px"
+                        height="32px"
+                        onClick={toggleDropdown}
                       >
-                        {stringSet.CONTEXT_MENU_DROPDOWN__RESEND}
-                      </MenuItem>
+                        <Icon
+                          type={IconTypes.MORE}
+                          fillColor={IconColors.CONTENT_INVERSE}
+                          width="24px"
+                          height="24px"
+                        />
+                      </IconButton>
                     )
-                  }
-                  {
-                    isFineDelete({ message, userId, status }) && (
-                      <MenuItem
-                        onClick={() => {
-                          if (disabled) {
-                            return;
-                          }
-                          showRemove(true);
-                          closeDropdown();
-                        }}
-                      >
-                        {stringSet.CONTEXT_MENU_DROPDOWN__DELETE}
-                      </MenuItem>
-                    )
-                  }
-                </MenuItems>
-              )}
-            />
+                  )}
+                  menuItems={(closeDropdown) => (
+                    <MenuItems
+                      parentRef={contextMenuRef}
+                      parentContainRef={contextMenuRef}
+                      closeDropdown={closeDropdown}
+                      openLeft
+                    >
+                      {
+                        isFineResend({ message, userId, status }) && (
+                          <MenuItem
+                            onClick={() => {
+                              resendMessage(message);
+                              closeDropdown();
+                            }}
+                          >
+                            {stringSet.CONTEXT_MENU_DROPDOWN__RESEND}
+                          </MenuItem>
+                        )
+                      }
+                      {
+                        (!isEphemeral && isFineDelete({ message, userId, status })) && (
+                          <MenuItem
+                            onClick={() => {
+                              if (disabled) {
+                                return;
+                              }
+                              showRemove(true);
+                              closeDropdown();
+                            }}
+                          >
+                            {stringSet.CONTEXT_MENU_DROPDOWN__DELETE}
+                          </MenuItem>
+                        )
+                      }
+                    </MenuItems>
+                  )}
+                />
+              )
+            }
           </div>
         )
       }

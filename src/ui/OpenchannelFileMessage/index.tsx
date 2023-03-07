@@ -31,6 +31,7 @@ interface Props {
   className?: string | Array<string>;
   message: FileMessage;
   isOperator?: boolean;
+  isEphemeral?: boolean;
   userId: string;
   disabled?: boolean;
   chainTop?: boolean;
@@ -43,6 +44,7 @@ export default function OpenchannelFileMessage({
   className,
   message,
   isOperator,
+  isEphemeral = false,
   userId,
   disabled,
   chainTop,
@@ -70,7 +72,7 @@ export default function OpenchannelFileMessage({
       }
     },
     onClick: openFileUrl,
-  }, {delay: 300});
+  }, { delay: 300 });
   return (
     <div
       className={[
@@ -81,31 +83,31 @@ export default function OpenchannelFileMessage({
     >
       <div className="sendbird-openchannel-file-message__left">
         {
-            !chainTop && (
-              <ContextMenu
-                menuTrigger={(toggleDropdown) => (
-                  <Avatar
-                    className="sendbird-openchannel-file-message__left__avatar"
-                    src={sender.profileUrl || ''}
-                    ref={avatarRef}
-                    width="28px"
-                    height="28px"
-                    onClick={() => {
-                      if (!disableUserProfile) {
-                        toggleDropdown();
-                      }
-                    }}
-                  />
-                )}
-                menuItems={(closeDropdown) => (
-                  <MenuItems
-                    parentRef={avatarRef}
-                    parentContainRef={avatarRef}
-                    closeDropdown={closeDropdown}
-                    style={{ paddingTop: '0px', paddingBottom: '0px' }}
-                  >
-                    {
-                      renderUserProfile
+          !chainTop && (
+            <ContextMenu
+              menuTrigger={(toggleDropdown) => (
+                <Avatar
+                  className="sendbird-openchannel-file-message__left__avatar"
+                  src={sender.profileUrl || ''}
+                  ref={avatarRef}
+                  width="28px"
+                  height="28px"
+                  onClick={() => {
+                    if (!disableUserProfile) {
+                      toggleDropdown();
+                    }
+                  }}
+                />
+              )}
+              menuItems={(closeDropdown) => (
+                <MenuItems
+                  parentRef={avatarRef}
+                  parentContainRef={avatarRef}
+                  closeDropdown={closeDropdown}
+                  style={{ paddingTop: '0px', paddingBottom: '0px' }}
+                >
+                  {
+                    renderUserProfile
                       ? (
                         renderUserProfile({
                           user: sender,
@@ -119,12 +121,12 @@ export default function OpenchannelFileMessage({
                           disableMessaging
                         />
                       )
-                    }
-                  </MenuItems>
-                )}
-              />
-            )
-          }
+                  }
+                </MenuItems>
+              )}
+            />
+          )
+        }
       </div>
       <div className="sendbird-openchannel-file-message__right">
         {
@@ -227,6 +229,7 @@ export default function OpenchannelFileMessage({
             ref={contextMenuRef}
           >
             {
+              (isFineResend({ message, userId, status }) || !isEphemeral) && (
                 <ContextMenu
                   menuTrigger={(toggleDropdown) => (
                     showMenuTrigger({ message, userId, status }) && (
@@ -265,7 +268,7 @@ export default function OpenchannelFileMessage({
                         )
                       }
                       {
-                        isFineDelete({ message, userId, status }) && (
+                        (!isEphemeral && isFineDelete({ message, userId, status })) && (
                           <MenuItem
                             onClick={() => {
                               if (disabled) { return; }
@@ -280,6 +283,7 @@ export default function OpenchannelFileMessage({
                     </MenuItems>
                   )}
                 />
+              )
             }
           </div>
         )

@@ -147,6 +147,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
                 <OpenChannelFileMessage
                   message={message as FileMessage}
                   isOperator={currentOpenChannel?.isOperator((message as FileMessage)?.sender?.userId)}
+                  isEphemeral={currentOpenChannel?.isEphemeral}
                   disabled={editDisabled}
                   userId={userId}
                   showRemove={setShowRemove}
@@ -164,6 +165,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
                 <OpenChannelOGMessage
                   message={message as UserMessage}
                   isOperator={currentOpenChannel?.isOperator((message as UserMessage)?.sender?.userId)}
+                  isEphemeral={currentOpenChannel?.isEphemeral}
                   userId={userId}
                   showEdit={setShowEdit}
                   disabled={editDisabled}
@@ -182,6 +184,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
                 <OpenChannelThumbnailMessage
                   message={message as FileMessage}
                   isOperator={currentOpenChannel?.isOperator((message as FileMessage)?.sender?.userId)}
+                  isEphemeral={currentOpenChannel?.isEphemeral}
                   disabled={editDisabled}
                   userId={userId}
                   showRemove={setShowRemove}
@@ -200,6 +203,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
                 <OpenChannelUserMessage
                   message={message as UserMessage}
                   isOperator={currentOpenChannel?.isOperator((message as UserMessage)?.sender?.userId)}
+                  isEphemeral={currentOpenChannel?.isEphemeral}
                   userId={userId}
                   disabled={editDisabled}
                   showEdit={setShowEdit}
@@ -237,7 +241,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
         (showFileViewer && message?.messageType === 'file') && (
           <FileViewer
             onClose={() => setShowFileViewer(false)}
-            message={message}
+            message={message as FileMessage}
             onDelete={() => deleteMessage(message)}
             isByMe={isByMe}
           />

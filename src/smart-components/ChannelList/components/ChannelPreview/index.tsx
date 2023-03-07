@@ -27,6 +27,7 @@ interface ChannelPreviewInterface {
   channel: GroupChannel;
   isActive?: boolean;
   isTyping?: boolean;
+  isEphmeral?: boolean;
   onClick: () => void;
   onLeaveChannel?: () => void;
   renderChannelAction: (props: { channel: GroupChannel }) => React.ReactElement;
@@ -37,6 +38,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
   channel,
   isActive = false,
   isTyping = false,
+  isEphmeral = false,
   renderChannelAction,
   onLeaveChannel,
   onClick,
@@ -115,7 +117,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
                 color={LabelColors.ONBACKGROUND_1}
               >
                 <div>
-                  { channelName }
+                  {channelName}
                 </div>
               </Label>
               <Label
@@ -140,28 +142,29 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
               }
             </div>
             {
-              isMessageStatusEnabled
-                ? (
-                  <MessageStatus
-                    className="sendbird-channel-preview__content__upper__last-message-at"
-                    channel={channel}
-                    message={channel?.lastMessage as UserMessage | FileMessage}
-                    isDateSeparatorConsidered={false}
-                  />
-                )
-                : (
-                  <Label
-                    className="sendbird-channel-preview__content__upper__last-message-at"
-                    type={LabelTypography.CAPTION_3}
-                    color={LabelColors.ONBACKGROUND_2}
-                  >
-                    {utils.getLastMessageCreatedAt({
-                      channel,
-                      locale: dateLocale,
-                      stringSet,
-                    })}
-                  </Label>
-                )
+              (!isEphmeral && isMessageStatusEnabled) && (
+                <MessageStatus
+                  className="sendbird-channel-preview__content__upper__last-message-at"
+                  channel={channel}
+                  message={channel?.lastMessage as UserMessage | FileMessage}
+                  isDateSeparatorConsidered={false}
+                />
+              )
+            }
+            {
+              (!isEphmeral && !isMessageStatusEnabled) && (
+                <Label
+                  className="sendbird-channel-preview__content__upper__last-message-at"
+                  type={LabelTypography.CAPTION_3}
+                  color={LabelColors.ONBACKGROUND_2}
+                >
+                  {utils.getLastMessageCreatedAt({
+                    channel,
+                    locale: dateLocale,
+                    stringSet,
+                  })}
+                </Label>
+              )
             }
           </div>
           <div className="sendbird-channel-preview__content__lower">
@@ -186,25 +189,29 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
                 )
               }
             </Label>
-            <div className="sendbird-channel-preview__content__lower__unread-message-count">
-              {
-                (isMentionEnabled && channel?.unreadMentionCount > 0)
-                  ? (
-                    <MentionUserLabel
-                      className="sendbird-channel-preview__content__lower__unread-message-count__mention"
-                      color="purple"
-                    >
-                      {'@'}
-                    </MentionUserLabel>
-                  )
-                  : null
-              }
-              {
-                utils.getChannelUnreadMessageCount(channel) // return number
-                  ? <Badge count={utils.getChannelUnreadMessageCount(channel)} />
-                  : null
-              }
-            </div>
+            {
+              !isEphmeral && (
+                <div className="sendbird-channel-preview__content__lower__unread-message-count">
+                  {
+                    (isMentionEnabled && channel?.unreadMentionCount > 0)
+                      ? (
+                        <MentionUserLabel
+                          className="sendbird-channel-preview__content__lower__unread-message-count__mention"
+                          color="purple"
+                        >
+                          {'@'}
+                        </MentionUserLabel>
+                      )
+                      : null
+                  }
+                  {
+                    utils.getChannelUnreadMessageCount(channel) // return number
+                      ? <Badge count={utils.getChannelUnreadMessageCount(channel)} />
+                      : null
+                  }
+                </div>
+              )
+            }
           </div>
         </div>
         {

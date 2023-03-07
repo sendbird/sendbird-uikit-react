@@ -40,6 +40,7 @@ interface Props {
   className?: string | Array<string>;
   message: UserMessage;
   isOperator?: boolean;
+  isEphemeral?: boolean;
   userId: string;
   disabled?: boolean;
   showEdit(bool: boolean): void;
@@ -53,6 +54,7 @@ export default function OpenchannelUserMessage({
   className,
   message,
   isOperator,
+  isEphemeral = false,
   userId,
   resendMessage,
   disabled,
@@ -287,7 +289,7 @@ export default function OpenchannelUserMessage({
                     )
                   }
                   {
-                    isFineEdit({ message: message, userId: userId, status: status }) && (
+                    (!isEphemeral && isFineEdit({ message: message, userId: userId, status: status })) && (
                       <MenuItem
                         className="sendbird-openchannel-user-message__context-menu__edit"
                         onClick={() => {
@@ -316,7 +318,7 @@ export default function OpenchannelUserMessage({
                     )
                   }
                   {
-                    isFineDelete({ message: message, userId: userId, status: status }) && (
+                    (!isEphemeral && isFineDelete({ message: message, userId: userId, status: status })) && (
                       <MenuItem
                         className="sendbird-openchannel-user-message__context-menu__delete"
                         onClick={() => {

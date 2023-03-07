@@ -37,6 +37,7 @@ import OpenChannelMobileMenu from '../OpenChannelMobileMenu';
 interface Props {
   message: UserMessage;
   isOperator?: boolean;
+  isEphemeral?: boolean;
   className?: string | Array<string>;
   disabled?: boolean;
   showEdit(bool: boolean): void;
@@ -50,6 +51,7 @@ interface Props {
 export default function OpenchannelOGMessage({
   message,
   isOperator,
+  isEphemeral = false,
   className,
   disabled,
   showEdit,
@@ -278,7 +280,7 @@ export default function OpenchannelOGMessage({
                       )
                     }
                     {
-                      isFineEdit({ message, userId, status }) && (
+                      (!isEphemeral && isFineEdit({ message, userId, status })) && (
                         <MenuItem
                           className="sendbird-openchannel-og-message__top__context-menu__edit"
                           onClick={() => {
@@ -307,7 +309,7 @@ export default function OpenchannelOGMessage({
                       )
                     }
                     {
-                      isFineDelete({ message, userId, status }) && (
+                      (!isEphemeral && isFineDelete({ message, userId, status })) && (
                         <MenuItem
                           className="sendbird-openchannel-og-message__top__context-menu__delete"
                           onClick={() => {
