@@ -12,7 +12,10 @@ export const AddChannel: React.VoidFunctionComponent = () => {
   const state = useSendbirdStateContext();
   const isOnline = state?.config?.isOnline;
   const disabled = !isOnline;
-  const { overrideInviteUser } = useChannelListContext();
+  const {
+    overrideInviteUser,
+    onBeforeCreateChannel,
+  } = useChannelListContext();
 
   return (
     <>
@@ -41,6 +44,7 @@ export const AddChannel: React.VoidFunctionComponent = () => {
             onCreateChannel={() => {
               setShowModal(false);
             }}
+            onBeforeCreateChannel={onBeforeCreateChannel}
           />
         )
       }
