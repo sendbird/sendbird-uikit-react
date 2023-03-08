@@ -22,12 +22,11 @@ const UnreadCount: React.FC<UnreadCountProps> = (props: UnreadCountProps) => {
   const timeArray = time?.toString?.()?.split(' ') || [];
   timeArray?.splice(-2, 0, stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__ON);
 
-  if (count < 1) {
-    return;
-  }
-
   return (
-    <div className="sendbird-notification" onClick={onClick}>
+    <div
+      className={`sendbird-notification${count < 1 ? '--undisplay' : ''}`}
+      onClick={onClick}
+    >
       <Label className="sendbird-notification__text" color={LabelColors.ONCONTENT_1} type={LabelTypography.CAPTION_2}>
         {`${count} `}
         {stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__NEW_MESSAGE}
