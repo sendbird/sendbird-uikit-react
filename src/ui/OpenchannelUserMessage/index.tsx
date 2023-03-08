@@ -36,7 +36,7 @@ import OpenChannelMobileMenu from '../OpenChannelMobileMenu';
 import useLongPress from '../../hooks/useLongPress';
 import { isEditedMessage } from '../../utils';
 
-interface Props {
+interface OpenChannelUserMessageProps {
   className?: string | Array<string>;
   message: UserMessage;
   isOperator?: boolean;
@@ -61,7 +61,7 @@ export default function OpenchannelUserMessage({
   showEdit,
   showRemove,
   chainTop,
-}: Props): ReactElement {
+}: OpenChannelUserMessageProps): ReactElement {
   if (!message || message.messageType !== 'user') {
     return null;
   }
