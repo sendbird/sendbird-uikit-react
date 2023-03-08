@@ -39,19 +39,17 @@ type MessageUIProps = {
 };
 
 // todo: Refactor this component, is too complex now
-const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactElement => {
-  const {
-    message,
-    hasSeparator,
-    chainTop,
-    chainBottom,
-    handleScroll,
-    renderCustomSeparator,
-    renderEditInput,
-    renderMessage,
-    renderMessageContent,
-  } = props;
-
+const Message = ({
+  message,
+  hasSeparator,
+  chainTop,
+  chainBottom,
+  handleScroll,
+  renderCustomSeparator,
+  renderEditInput,
+  renderMessage,
+  renderMessageContent,
+}: MessageUIProps): React.ReactElement => {
   const { dateLocale } = useLocalization();
   const globalStore = useSendbirdStateContext();
   const {
