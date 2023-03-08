@@ -27,7 +27,6 @@ interface ChannelPreviewInterface {
   channel: GroupChannel;
   isActive?: boolean;
   isTyping?: boolean;
-  isEphmeral?: boolean;
   onClick: () => void;
   onLeaveChannel?: () => void;
   renderChannelAction: (props: { channel: GroupChannel }) => React.ReactElement;
@@ -38,7 +37,6 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
   channel,
   isActive = false,
   isTyping = false,
-  isEphmeral = false,
   renderChannelAction,
   onLeaveChannel,
   onClick,
@@ -142,7 +140,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
               }
             </div>
             {
-              (!isEphmeral && isMessageStatusEnabled) && (
+              (!channel?.isEphemeral && isMessageStatusEnabled) && (
                 <MessageStatus
                   className="sendbird-channel-preview__content__upper__last-message-at"
                   channel={channel}
@@ -152,7 +150,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
               )
             }
             {
-              (!isEphmeral && !isMessageStatusEnabled) && (
+              (!channel?.isEphemeral && !isMessageStatusEnabled) && (
                 <Label
                   className="sendbird-channel-preview__content__upper__last-message-at"
                   type={LabelTypography.CAPTION_3}
@@ -190,7 +188,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
               }
             </Label>
             {
-              !isEphmeral && (
+              !channel?.isEphemeral && (
                 <div className="sendbird-channel-preview__content__lower__unread-message-count">
                   {
                     (isMentionEnabled && channel?.unreadMentionCount > 0)

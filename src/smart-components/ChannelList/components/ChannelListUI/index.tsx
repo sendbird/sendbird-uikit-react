@@ -228,7 +228,6 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
                       onLeaveChannel={() => onLeaveChannel(channel, null)}
                       isActive={channel?.url === currentChannel?.url}
                       isTyping={typingChannels?.some(({ url }) => url === channel?.url)}
-                      isEphmeral={channel?.isEphemeral}
                       renderChannelAction={(() => (
                         <ChannelPreviewAction
                           channel={channel}
