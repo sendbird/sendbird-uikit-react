@@ -1,6 +1,6 @@
 import './message-list.scss';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 
 import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
@@ -117,48 +117,15 @@ const MessageList: React.FC<MessageListProps> = ({
     }
   };
 
-  // Because every message components are re-rendered everytime by every scroll events
-  const memoizedAllMessages = useMemo(() => {
-    return (
-      allMessages.map((m, idx) => {
-        const {
-          chainTop,
-          chainBottom,
-          hasSeparator,
-        } = getMessagePartsInfo({
-          allMessages,
-          replyType,
-          isMessageGroupingEnabled,
-          currentIndex: idx,
-          currentMessage: m,
-          currentChannel: currentGroupChannel,
-        });
-
-        const handleScroll = () => {
-          const current = scrollRef?.current;
-          if (current) {
-            const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
-            if (scrollBottom < bottom) {
-              current.scrollTop += bottom - scrollBottom;
-            }
-          }
-        };
-
-        return (
-          <Message
-            key={m?.messageId}
-            handleScroll={handleScroll}
-            renderMessage={renderMessage}
-            message={m}
-            hasSeparator={hasSeparator}
-            chainTop={chainTop}
-            chainBottom={chainBottom}
-            renderCustomSeparator={renderCustomSeparator}
-          />
-        );
-      })
-    );
-  }, [allMessages]);
+  const handleScroll = () => {
+    const current = scrollRef?.current;
+    if (current) {
+      const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
+      if (scrollBottom < bottom) {
+        current.scrollTop += bottom - scrollBottom;
+      }
+    }
+  };
 
   if (loading) {
     if (renderPlaceholderLoader && typeof renderPlaceholderLoader === 'function') {
@@ -181,7 +148,32 @@ const MessageList: React.FC<MessageListProps> = ({
           ref={scrollRef}
           onScroll={onScroll}
         >
-          {memoizedAllMessages}
+          {allMessages.map((m, idx) => {
+            const {
+              chainTop,
+              chainBottom,
+              hasSeparator,
+            } = getMessagePartsInfo({
+              allMessages,
+              replyType,
+              isMessageGroupingEnabled,
+              currentIndex: idx,
+              currentMessage: m,
+              currentChannel: currentGroupChannel,
+            });
+            return (
+              <Message
+                key={m?.messageId}
+                handleScroll={handleScroll}
+                renderMessage={renderMessage}
+                message={m}
+                hasSeparator={hasSeparator}
+                chainTop={chainTop}
+                chainBottom={chainBottom}
+                renderCustomSeparator={renderCustomSeparator}
+              />
+            );
+          })}
         </div>
       </div>
       {
