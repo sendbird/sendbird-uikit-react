@@ -2250,8 +2250,10 @@ declare module '@sendbird/uikit-react/ui/OpenChannelFileMessage' {
 
 declare module '@sendbird/uikit-react/ui/OpenChannelOGMessage' {
   import type SenbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  interface OOpenChannelOGMessageProps {
+  interface OpenChannelOGMessageProps {
     message: SenbirdUIKitGlobal.ClientUserMessage;
+    isOperator?: boolean;
+    isEphemeral?: boolean;
     className?: string | Array<string>;
     disabled?: boolean;
     showEdit(bool: boolean): void;
@@ -2261,8 +2263,8 @@ declare module '@sendbird/uikit-react/ui/OpenChannelOGMessage' {
     chainBottom?: boolean;
     userId: string;
   }
-  const OOpenChannelOGMessage: React.FC<OOpenChannelOGMessageProps>;
-  export default OOpenChannelOGMessage;
+  const OpenChannelOGMessage: React.FC<OpenChannelOGMessageProps>;
+  export default OpenChannelOGMessage;
 }
 
 declare module '@sendbird/uikit-react/ui/OpenChannelThumbnailMessage' {

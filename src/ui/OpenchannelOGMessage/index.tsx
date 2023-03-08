@@ -34,7 +34,7 @@ import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import useLongPress from '../../hooks/useLongPress';
 import OpenChannelMobileMenu from '../OpenChannelMobileMenu';
 
-interface Props {
+interface OpenChannelOGMessageProps {
   message: UserMessage;
   isOperator?: boolean;
   isEphemeral?: boolean;
@@ -59,7 +59,7 @@ export default function OpenchannelOGMessage({
   resendMessage,
   chainTop,
   userId,
-}: Props): JSX.Element {
+}: OpenChannelOGMessageProps): JSX.Element {
   if (!message || message.messageType !== 'user') {
     return null;
   }
