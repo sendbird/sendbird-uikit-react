@@ -11,7 +11,8 @@ import Message from '../Message';
 import { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { isAboutSame } from '../../context/utils';
 
-export type MessageListProps = {
+export interface MessageListProps {
+  className?: string;
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
@@ -19,12 +20,12 @@ export type MessageListProps = {
 
 const SCROLL_REF_CLASS_NAME = '.sendbird-msg--scroll-ref';
 
-const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
-  const {
-    renderMessage,
-    renderPlaceholderEmpty,
-    renderCustomSeparator,
-  } = props;
+const MessageList: React.FC<MessageListProps> = ({
+  className = '',
+  renderMessage,
+  renderPlaceholderEmpty,
+  renderCustomSeparator,
+}) => {
   const {
     allMessages,
     hasMorePrev,
@@ -170,7 +171,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
     );
   }
   return (
-    <div className="sendbird-conversation__messages">
+    <div className={`sendbird-conversation__messages ${className}`}>
       <div className="sendbird-conversation__scroll-container">
         <div className="sendbird-conversation__padding" />
         <div

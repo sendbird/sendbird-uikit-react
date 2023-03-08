@@ -17,9 +17,9 @@ interface ChannelHeaderProps {
   className?: string;
 }
 
-const ChannelHeader: React.FC = ({
+const ChannelHeader: React.FC<ChannelHeaderProps> = ({
   className = '',
-}: ChannelHeaderProps): React.ReactElement => {
+}) => {
   const globalStore = useSendbirdStateContext();
   const userId = globalStore?.config?.userId;
   const theme = globalStore?.config?.theme;
