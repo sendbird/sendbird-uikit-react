@@ -1,15 +1,14 @@
 import './message-list.scss';
 
 import React, { useState, useMemo } from 'react';
-import isSameDay from 'date-fns/isSameDay';
 
 import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
-import { compareMessagesForGrouping } from '../../context/utils';
 import Message from '../Message';
 import { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { isAboutSame } from '../../context/utils';
+import { getMessagePartsInfo } from './getMessagePartsInfo';
 
 export interface MessageListProps {
   className?: string;
@@ -122,17 +121,18 @@ const MessageList: React.FC<MessageListProps> = ({
   const memoizedAllMessages = useMemo(() => {
     return (
       allMessages.map((m, idx) => {
-        const previousMessage = allMessages[idx - 1];
-        const nextMessage = allMessages[idx + 1];
-        const [chainTop, chainBottom] = isMessageGroupingEnabled
-          ? compareMessagesForGrouping(previousMessage, m, nextMessage, currentGroupChannel, replyType)
-          : [false, false];
-        const previousMessageCreatedAt = previousMessage?.createdAt;
-        const currentCreatedAt = m.createdAt;
-        // https://stackoverflow.com/a/41855608
-        const hasSeparator = !(previousMessageCreatedAt && (
-          isSameDay(currentCreatedAt, previousMessageCreatedAt)
-        ));
+        const {
+          chainTop,
+          chainBottom,
+          hasSeparator,
+        } = getMessagePartsInfo({
+          allMessages,
+          replyType,
+          isMessageGroupingEnabled,
+          currentIndex: idx,
+          currentMessage: m,
+          currentChannel: currentGroupChannel,
+        });
 
         const handleScroll = () => {
           const current = scrollRef?.current;
