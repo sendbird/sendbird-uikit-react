@@ -25,7 +25,7 @@ export const getMessagePartsInfo = ({
   currentMessage,
   currentChannel,
   replyType,
-}): OutPuts => {
+}: GetMessagePartsInfoProps): OutPuts => {
   const previousMessage = allMessages[currentIndex - 1];
   const nextMessage = allMessages[currentIndex + 1];
   const [chainTop, chainBottom] = isMessageGroupingEnabled

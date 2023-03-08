@@ -16,7 +16,7 @@ export interface MessageListProps {
   renderPlaceholderEmpty?: () => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
   renderPlaceholderLoader?: () => React.ReactElement;
-};
+}
 
 const SCROLL_REF_CLASS_NAME = '.sendbird-msg--scroll-ref';
 
@@ -174,6 +174,8 @@ const MessageList: React.FC<MessageListProps> = ({
               />
             );
           })}
+          {/* show frozen notifications */}
+          {/* show new message notifications */}
         </div>
       </div>
       {
