@@ -16,6 +16,7 @@ export interface MessageListProps {
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
+  renderPlaceholderLoader?: () => React.ReactElement;
 };
 
 const SCROLL_REF_CLASS_NAME = '.sendbird-msg--scroll-ref';
@@ -25,6 +26,7 @@ const MessageList: React.FC<MessageListProps> = ({
   renderMessage,
   renderPlaceholderEmpty,
   renderCustomSeparator,
+  renderPlaceholderLoader,
 }) => {
   const {
     allMessages,
@@ -41,6 +43,7 @@ const MessageList: React.FC<MessageListProps> = ({
     currentGroupChannel,
     disableMarkAsRead,
     replyType,
+    loading,
   } = useChannelContext();
   const [scrollBottom, setScrollBottom] = useState(0);
 
@@ -157,18 +160,17 @@ const MessageList: React.FC<MessageListProps> = ({
     );
   }, [allMessages]);
 
+  if (loading) {
+    if (renderPlaceholderLoader && typeof renderPlaceholderLoader === 'function') {
+      return renderPlaceholderLoader();
+    }
+    return <PlaceHolder type={PlaceHolderTypes.LOADING} />;
+  }
   if (allMessages.length < 1) {
-    return (
-      <>
-        {
-          renderPlaceholderEmpty?.() || (
-            <PlaceHolder
-              className="sendbird-conversation__no-messages"
-              type={PlaceHolderTypes.NO_MESSAGES}
-            />)
-        }
-      </>
-    );
+    if (renderPlaceholderEmpty && typeof renderPlaceholderEmpty === 'function') {
+      return renderPlaceholderEmpty();
+    }
+    return <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />;
   }
   return (
     <div className={`sendbird-conversation__messages ${className}`}>
