@@ -2272,6 +2272,8 @@ declare module '@sendbird/uikit-react/ui/OpenChannelThumbnailMessage' {
   interface OpenChannelThumbnailMessageProps {
     className?: string | Array<string>;
     message: SenbirdUIKitGlobal.ClientFileMessage;
+    isOperator?: boolean;
+    isEphemeral?: boolean;
     disabled: boolean;
     userId: string;
     chainTop: boolean;
