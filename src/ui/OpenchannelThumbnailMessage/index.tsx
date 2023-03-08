@@ -36,7 +36,7 @@ import useLongPress from '../../hooks/useLongPress';
 interface LocalUrl {
   localUrl?: string;
 }
-interface Props {
+interface OpenChannelThumbnailMessageProps {
   className?: string | Array<string>;
   message: FileMessage;
   isOperator?: boolean;
@@ -61,7 +61,7 @@ export default function OpenchannelThumbnailMessage({
   onClick,
   showRemove,
   resendMessage,
-}: Props): JSX.Element {
+}: OpenChannelThumbnailMessageProps): JSX.Element {
   const {
     type,
     url,
