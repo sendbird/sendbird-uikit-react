@@ -9,6 +9,8 @@ import Message from '../Message';
 import { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { isAboutSame } from '../../context/utils';
 import { getMessagePartsInfo } from './getMessagePartsInfo';
+import UnreadCount from '../UnreadCount';
+import FrozenNotification from '../FrozenNotification';
 
 export interface MessageListProps {
   className?: string;
@@ -43,6 +45,7 @@ const MessageList: React.FC<MessageListProps> = ({
     disableMarkAsRead,
     replyType,
     loading,
+    unreadSince,
   } = useChannelContext();
   const [scrollBottom, setScrollBottom] = useState(0);
 
@@ -178,6 +181,33 @@ const MessageList: React.FC<MessageListProps> = ({
           {/* show new message notifications */}
         </div>
       </div>
+      {currentGroupChannel?.isFrozen && (
+        <FrozenNotification className="sendbird-conversation__messages__notification" />
+      )}
+      <UnreadCount
+        className="sendbird-conversation__messages__notification"
+        count={currentGroupChannel?.unreadMessageCount}
+        time={unreadSince}
+        onClick={() => {
+          if (scrollRef?.current?.scrollTop) {
+            scrollRef.current.scrollTop = scrollRef?.current?.scrollHeight - scrollRef?.current?.offsetHeight;
+          }
+          if (!disableMarkAsRead) {
+            try {
+              currentGroupChannel?.markAsRead();
+            } catch {
+              //
+            }
+            messagesDispatcher({
+              type: messageActionTypes.MARK_AS_READ,
+              payload: { channel: currentGroupChannel },
+            });
+          }
+          setInitialTimeStamp(null);
+          setAnimatedMessageId(null);
+          setHighLightedMessageId(null);
+        }}
+      />
       {
         // This flag is an unmatched variable
         (scrollBottom > 1) && (

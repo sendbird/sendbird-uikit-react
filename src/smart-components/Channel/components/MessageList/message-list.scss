@@ -1,7 +1,9 @@
 @import '../../../../styles/variables';
 
 .sendbird-conversation__messages {
+  position: relative;
   .sendbird-conversation__messages-padding {
+    position: relative;
     padding-left: 24px;
     padding-right: 24px;
     height: 100%;
@@ -13,6 +15,13 @@
     padding-top: 8px;
     padding-bottom: 8px;
   }
+}
+
+.sendbird-conversation__messages__notification {
+  position: fixed;
+  top: 0px;
+  width: calc(100% - 50px);
+  margin-left: 25px;
 }
 
 .sendbird-conversation__scroll-bottom-button {
