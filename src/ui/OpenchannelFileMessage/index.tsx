@@ -27,7 +27,7 @@ import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import OpenChannelMobileMenu from '../OpenChannelMobileMenu';
 import useLongPress from '../../hooks/useLongPress';
 
-interface Props {
+interface OpenChannelFileMessageProps {
   className?: string | Array<string>;
   message: FileMessage;
   isOperator?: boolean;
@@ -50,7 +50,7 @@ export default function OpenchannelFileMessage({
   chainTop,
   showRemove,
   resendMessage,
-}: Props): JSX.Element {
+}: OpenChannelFileMessageProps): JSX.Element {
   const status = message?.sendingStatus;
   const { dateLocale, stringSet } = useLocalization();
   const contextMenuRef = useRef(null);
