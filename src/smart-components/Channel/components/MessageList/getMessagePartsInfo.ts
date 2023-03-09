@@ -1,15 +1,16 @@
-import { AdminMessage, BaseMessage, FileMessage } from '@sendbird/chat/message';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { AdminMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
 import isSameDay from 'date-fns/isSameDay';
 
 import { compareMessagesForGrouping } from '../../context/utils';
 
 export interface GetMessagePartsInfoProps {
-  allMessages: Array<BaseMessage | FileMessage | AdminMessage>,
-  isMessageGroupingEnabled,
-  currentIndex,
-  currentMessage,
-  currentChannel,
-  replyType,
+  allMessages: Array<UserMessage | FileMessage | AdminMessage>;
+  isMessageGroupingEnabled: boolean;
+  currentIndex: number;
+  currentMessage: UserMessage | FileMessage | AdminMessage;
+  currentChannel: GroupChannel;
+  replyType: string;
 }
 
 interface OutPuts {
@@ -19,12 +20,12 @@ interface OutPuts {
 }
 
 export const getMessagePartsInfo = ({
-  allMessages,
-  isMessageGroupingEnabled,
-  currentIndex,
-  currentMessage,
-  currentChannel,
-  replyType,
+  allMessages = [],
+  isMessageGroupingEnabled = true,
+  currentIndex = 0,
+  currentMessage = null,
+  currentChannel = null,
+  replyType = '',
 }: GetMessagePartsInfoProps): OutPuts => {
   const previousMessage = allMessages[currentIndex - 1];
   const nextMessage = allMessages[currentIndex + 1];
