@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const useDidMountEffect = (func: Function, deps: Array<unknown>): void => {
+const useDidMountEffect = (func: () => void, deps: Array<unknown>): void => {
     const [didMount, setDidmount] = useState(false);
     useEffect(() => {
         if (didMount) {
