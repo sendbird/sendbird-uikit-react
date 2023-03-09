@@ -64,8 +64,11 @@ function useHandleChannelEvents({
               type: messageActions.ON_MESSAGE_RECEIVED,
               payload: { channel, message },
             });
-
-            if (scrollToEnd) {
+            if (scrollToEnd
+              && document.getElementById('sendbird-dropdown-portal').childElementCount === 0
+              && document.getElementById('sendbird-emoji-list-portal').childElementCount === 0
+            ) {
+              // and !openContextMenu
               try {
                 setTimeout(() => {
                   if (!disableMarkAsRead) {
