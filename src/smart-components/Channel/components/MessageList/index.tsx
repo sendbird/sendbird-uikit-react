@@ -11,6 +11,7 @@ import { isAboutSame } from '../../context/utils';
 import { getMessagePartsInfo } from './getMessagePartsInfo';
 import UnreadCount from '../UnreadCount';
 import FrozenNotification from '../FrozenNotification';
+import { MESSAGE_SCROLL_BUFFER } from '../../context/const';
 
 export interface MessageListProps {
   className?: string;
@@ -76,7 +77,7 @@ const MessageList: React.FC<MessageListProps> = ({
       });
     }
 
-    if (isAboutSame(clientHeight + scrollTop, scrollHeight, 10)) {
+    if (isAboutSame(clientHeight + scrollTop, scrollHeight, MESSAGE_SCROLL_BUFFER)) {
       onScrollDownCallback(([messages]) => {
         if (messages) {
           try {
@@ -95,7 +96,7 @@ const MessageList: React.FC<MessageListProps> = ({
       setScrollBottom(current.scrollHeight - current.scrollTop - current.offsetHeight)
     }
 
-    if (!disableMarkAsRead && isAboutSame(clientHeight + scrollTop, scrollHeight, 10)) {
+    if (!disableMarkAsRead && isAboutSame(clientHeight + scrollTop, scrollHeight, MESSAGE_SCROLL_BUFFER)) {
       // Mark as read if scroll is at end
       setTimeout(() => {
         messagesDispatcher({
@@ -124,7 +125,7 @@ const MessageList: React.FC<MessageListProps> = ({
     const current = scrollRef?.current;
     if (current) {
       const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
-      if (scrollBottom < bottom) {
+      if (scrollBottom < bottom && scrollBottom <= MESSAGE_SCROLL_BUFFER) {
         current.scrollTop += bottom - scrollBottom;
       }
     }

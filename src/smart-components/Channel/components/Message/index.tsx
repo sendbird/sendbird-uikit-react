@@ -8,6 +8,7 @@ import React, {
 import type { FileMessage } from '@sendbird/chat/message';
 import format from 'date-fns/format';
 
+import useDidMountEffect from '../../../../utils/useDidMountEffect';
 import SuggestedMentionList from '../SuggestedMentionList';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelContext } from '../../context/ChannelProvider';
@@ -128,8 +129,10 @@ const Message = ({
     }));
   }, [mentionedUserIds]);
 
-  useLayoutEffect(() => {
-    handleScroll?.();
+  useDidMountEffect(() => {
+    if (currentGroupChannel?.lastMessage?.messageId === message?.messageId) {
+      handleScroll?.();
+    }
   }, [showEdit, message?.reactions?.length]);
 
   useLayoutEffect(() => {
