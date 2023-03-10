@@ -25,6 +25,7 @@ export default function useSendMessageCallback({
         // mentionedUserIds,
         mentionedUsers,
       } = props;
+      debugger
       const createParamsDefault = () => {
         const params = {};
         params.message = message?.trim() || message;

@@ -187,6 +187,7 @@ const MessageInputWrapper = (
                 channel?.startTyping();
               }}
               onSendMessage={({ message, mentionTemplate }) => {
+                debugger
                 sendMessage({
                   message,
                   quoteMessage,
