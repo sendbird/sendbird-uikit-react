@@ -19,7 +19,8 @@ Fixes:
   * Open channel
     * Remove the message edit
     * Remove the message delete
-* Improve stability to remove leak memory warning when sending message
+* Clear timeout in useLayoutEffect of Message
+  * This removes memory leak warnings
 
 ## [v3.4.0] (Mar 6 2023)
 
