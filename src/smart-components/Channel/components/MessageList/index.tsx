@@ -1,30 +1,35 @@
 import './message-list.scss';
 
-import React, { useState, useMemo } from 'react';
-import isSameDay from 'date-fns/isSameDay';
+import React, { useState } from 'react';
 
 import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
-import { compareMessagesForGrouping } from '../../context/utils';
 import Message from '../Message';
 import { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { isAboutSame } from '../../context/utils';
+import { getMessagePartsInfo } from './getMessagePartsInfo';
+import UnreadCount from '../UnreadCount';
+import FrozenNotification from '../FrozenNotification';
+import { MESSAGE_SCROLL_BUFFER } from '../../context/const';
 
-export type MessageListProps = {
+export interface MessageListProps {
+  className?: string;
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
-};
+  renderPlaceholderLoader?: () => React.ReactElement;
+}
 
 const SCROLL_REF_CLASS_NAME = '.sendbird-msg--scroll-ref';
 
-const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
-  const {
-    renderMessage,
-    renderPlaceholderEmpty,
-    renderCustomSeparator,
-  } = props;
+const MessageList: React.FC<MessageListProps> = ({
+  className = '',
+  renderMessage,
+  renderPlaceholderEmpty,
+  renderCustomSeparator,
+  renderPlaceholderLoader,
+}) => {
   const {
     allMessages,
     hasMorePrev,
@@ -40,6 +45,8 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
     currentGroupChannel,
     disableMarkAsRead,
     replyType,
+    loading,
+    unreadSince,
   } = useChannelContext();
   const [scrollBottom, setScrollBottom] = useState(0);
 
@@ -70,7 +77,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
       });
     }
 
-    if (isAboutSame(clientHeight + scrollTop, scrollHeight, 10)) {
+    if (isAboutSame(clientHeight + scrollTop, scrollHeight, MESSAGE_SCROLL_BUFFER)) {
       onScrollDownCallback(([messages]) => {
         if (messages) {
           try {
@@ -89,7 +96,7 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
       setScrollBottom(current.scrollHeight - current.scrollTop - current.offsetHeight)
     }
 
-    if (!disableMarkAsRead && isAboutSame(clientHeight + scrollTop, scrollHeight, 10)) {
+    if (!disableMarkAsRead && isAboutSame(clientHeight + scrollTop, scrollHeight, MESSAGE_SCROLL_BUFFER)) {
       // Mark as read if scroll is at end
       setTimeout(() => {
         messagesDispatcher({
@@ -114,63 +121,29 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
     }
   };
 
-  // Because every message components are re-rendered everytime by every scroll events
-  const memoizedAllMessages = useMemo(() => {
-    return (
-      allMessages.map((m, idx) => {
-        const previousMessage = allMessages[idx - 1];
-        const nextMessage = allMessages[idx + 1];
-        const [chainTop, chainBottom] = isMessageGroupingEnabled
-          ? compareMessagesForGrouping(previousMessage, m, nextMessage, currentGroupChannel, replyType)
-          : [false, false];
-        const previousMessageCreatedAt = previousMessage?.createdAt;
-        const currentCreatedAt = m.createdAt;
-        // https://stackoverflow.com/a/41855608
-        const hasSeparator = !(previousMessageCreatedAt && (
-          isSameDay(currentCreatedAt, previousMessageCreatedAt)
-        ));
+  const handleScroll = () => {
+    const current = scrollRef?.current;
+    if (current) {
+      const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
+      if (scrollBottom < bottom && scrollBottom <= MESSAGE_SCROLL_BUFFER) {
+        current.scrollTop += bottom - scrollBottom;
+      }
+    }
+  };
 
-        const handleScroll = () => {
-          const current = scrollRef?.current;
-          if (current) {
-            const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
-            if (scrollBottom < bottom) {
-              current.scrollTop += bottom - scrollBottom;
-            }
-          }
-        };
-
-        return (
-          <Message
-            key={m?.messageId}
-            handleScroll={handleScroll}
-            renderMessage={renderMessage}
-            message={m}
-            hasSeparator={hasSeparator}
-            chainTop={chainTop}
-            chainBottom={chainBottom}
-            renderCustomSeparator={renderCustomSeparator}
-          />
-        );
-      })
-    );
-  }, [allMessages]);
-
+  if (loading) {
+    return (typeof renderPlaceholderLoader === 'function')
+      ? renderPlaceholderLoader()
+      : <PlaceHolder type={PlaceHolderTypes.LOADING} />;
+  }
   if (allMessages.length < 1) {
-    return (
-      <>
-        {
-          renderPlaceholderEmpty?.() || (
-            <PlaceHolder
-              className="sendbird-conversation__no-messages"
-              type={PlaceHolderTypes.NO_MESSAGES}
-            />)
-        }
-      </>
-    );
+    if (renderPlaceholderEmpty && typeof renderPlaceholderEmpty === 'function') {
+      return renderPlaceholderEmpty();
+    }
+    return <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />;
   }
   return (
-    <div className="sendbird-conversation__messages">
+    <div className={`sendbird-conversation__messages ${className}`}>
       <div className="sendbird-conversation__scroll-container">
         <div className="sendbird-conversation__padding" />
         <div
@@ -178,9 +151,63 @@ const MessageList: React.FC<MessageListProps> = (props: MessageListProps) => {
           ref={scrollRef}
           onScroll={onScroll}
         >
-          {memoizedAllMessages}
+          {allMessages.map((m, idx) => {
+            const {
+              chainTop,
+              chainBottom,
+              hasSeparator,
+            } = getMessagePartsInfo({
+              allMessages,
+              replyType,
+              isMessageGroupingEnabled,
+              currentIndex: idx,
+              currentMessage: m,
+              currentChannel: currentGroupChannel,
+            });
+            return (
+              <Message
+                key={m?.messageId}
+                handleScroll={handleScroll}
+                renderMessage={renderMessage}
+                message={m}
+                hasSeparator={hasSeparator}
+                chainTop={chainTop}
+                chainBottom={chainBottom}
+                renderCustomSeparator={renderCustomSeparator}
+              />
+            );
+          })}
+          {/* show frozen notifications */}
+          {/* show new message notifications */}
         </div>
       </div>
+      {currentGroupChannel?.isFrozen && (
+        <FrozenNotification className="sendbird-conversation__messages__notification" />
+      )}
+      <UnreadCount
+        className="sendbird-conversation__messages__notification"
+        count={currentGroupChannel?.unreadMessageCount}
+        time={unreadSince}
+        onClick={() => {
+          if (scrollRef?.current?.scrollTop) {
+            scrollRef.current.scrollTop = scrollRef?.current?.scrollHeight - scrollRef?.current?.offsetHeight;
+          }
+          if (!disableMarkAsRead) {
+            try {
+              currentGroupChannel?.markAsRead();
+            } catch {
+              //
+            }
+            messagesDispatcher({
+              type: messageActionTypes.MARK_AS_READ,
+              payload: { channel: currentGroupChannel },
+            });
+          }
+          setInitialTimeStamp(null);
+          setAnimatedMessageId(null);
+          setHighLightedMessageId(null);
+        }}
+      />
       {
         // This flag is an unmatched variable
         (scrollBottom > 1) && (

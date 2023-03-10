@@ -1,6 +1,6 @@
 import './channel-ui.scss';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
 import { useChannelContext } from '../../context/ChannelProvider';
@@ -9,11 +9,8 @@ import ConnectionStatus from '../../../../ui/ConnectionStatus';
 import ChannelHeader from '../ChannelHeader';
 import MessageList from '../MessageList';
 import TypingIndicator from '../TypingIndicator';
-import FrozenNotification from '../FrozenNotification';
-import UnreadCount from '../UnreadCount';
 import MessageInputWrapper from '../MessageInput';
 import { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
-import * as messageActionTypes from '../../context/dux/actionTypes';
 
 export interface ChannelUIProps {
   isLoading?: boolean;
@@ -23,9 +20,9 @@ export interface ChannelUIProps {
   renderChannelHeader?: () => React.ReactElement;
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderMessageInput?: () => React.ReactElement;
-  renderFileUploadIcon?: () =>  React.ReactElement;
-  renderVoiceMessageIcon?: () =>  React.ReactElement;
-  renderSendMessageIcon?: () =>  React.ReactElement;
+  renderFileUploadIcon?: () => React.ReactElement;
+  renderVoiceMessageIcon?: () => React.ReactElement;
+  renderSendMessageIcon?: () => React.ReactElement;
   renderTypingIndicator?: () => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
 }
@@ -45,28 +42,9 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
   renderSendMessageIcon,
 }: ChannelUIProps) => {
   const {
-    currentGroupChannel,
     channelUrl,
     isInvalid,
-    unreadSince,
-    loading,
-    setInitialTimeStamp,
-    setAnimatedMessageId,
-    setHighLightedMessageId,
-    scrollRef,
-    messagesDispatcher,
-    disableMarkAsRead,
   } = useChannelContext();
-  const [unreadCount, setUnreadCount] = useState(0);
-  useEffect(() => {
-    // simple debounce to avoid flicker of UnreadCount badge
-    const handler = setTimeout(() => {
-      setUnreadCount(currentGroupChannel?.unreadMessageCount);
-    }, 1000);
-    return () => {
-      clearTimeout(handler);
-    }
-  }, [currentGroupChannel?.unreadMessageCount]);
 
   const globalStore = useSendbirdStateContext();
   const sdkError = globalStore?.stores?.sdkStore?.error;
@@ -122,62 +100,16 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
   }
   return (
     <div className='sendbird-conversation'>
-      {
-        renderChannelHeader?.() || (
-          <ChannelHeader />
-        )
-      }
-      {
-        currentGroupChannel?.isFrozen && (
-          <FrozenNotification />
-        )
-      }
-      {
-        unreadCount > 0 && (
-          <UnreadCount
-            count={unreadCount}
-            time={unreadSince}
-            onClick={() => {
-              setUnreadCount(0);
-              if (scrollRef?.current?.scrollTop) {
-                scrollRef.current.scrollTop = scrollRef?.current?.scrollHeight - scrollRef?.current?.offsetHeight;
-              }
-              if (!disableMarkAsRead) {
-                try {
-                  currentGroupChannel?.markAsRead();
-                } catch {
-                  //
-                }
-                messagesDispatcher({
-                  type: messageActionTypes.MARK_AS_READ,
-                  payload: { channel: currentGroupChannel },
-                });
-              }
-              setInitialTimeStamp(null);
-              setAnimatedMessageId(null);
-              setHighLightedMessageId(null);
-            }}
-          />
-        )
-      }
-      {
-        loading
-          ? (
-            <div className="sendbird-conversation">
-              {
-                renderPlaceholderLoader?.() || (
-                  <PlaceHolder type={PlaceHolderTypes.LOADING} />
-                )
-              }
-            </div>
-          ) : (
-            <MessageList
-              renderMessage={renderMessage}
-              renderPlaceholderEmpty={renderPlaceholderEmpty}
-              renderCustomSeparator={renderCustomSeparator}
-            />
-          )
-      }
+      {renderChannelHeader?.() || (
+        <ChannelHeader className="sendbird-conversation__channel-header" />
+      )}
+      <MessageList
+        className="sendbird-conversation__message-list"
+        renderMessage={renderMessage}
+        renderPlaceholderEmpty={renderPlaceholderEmpty}
+        renderCustomSeparator={renderCustomSeparator}
+        renderPlaceholderLoader={renderPlaceholderLoader}
+      />
       <div className="sendbird-conversation__footer">
         {
           renderMessageInput?.() || (

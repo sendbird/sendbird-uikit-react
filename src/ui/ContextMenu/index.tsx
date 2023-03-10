@@ -55,6 +55,8 @@ export const MenuRoot = (): ReactElement => (
     className="sendbird-dropdown-portal"
   />
 );
+
+// For the test environment
 export const EmojiReactionListRoot = (): ReactElement => <div id="sendbird-emoji-list-portal" />;
 
 type MenuDisplayingFunc = () => void;

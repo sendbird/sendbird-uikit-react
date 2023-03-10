@@ -8,6 +8,7 @@ import React, {
 import type { FileMessage } from '@sendbird/chat/message';
 import format from 'date-fns/format';
 
+import useDidMountEffect from '../../../../utils/useDidMountEffect';
 import SuggestedMentionList from '../SuggestedMentionList';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelContext } from '../../context/ChannelProvider';
@@ -39,19 +40,17 @@ type MessageUIProps = {
 };
 
 // todo: Refactor this component, is too complex now
-const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactElement => {
-  const {
-    message,
-    hasSeparator,
-    chainTop,
-    chainBottom,
-    handleScroll,
-    renderCustomSeparator,
-    renderEditInput,
-    renderMessage,
-    renderMessageContent,
-  } = props;
-
+const Message = ({
+  message,
+  hasSeparator,
+  chainTop,
+  chainBottom,
+  handleScroll,
+  renderCustomSeparator,
+  renderEditInput,
+  renderMessage,
+  renderMessageContent,
+}: MessageUIProps): React.ReactElement => {
   const { dateLocale } = useLocalization();
   const globalStore = useSendbirdStateContext();
   const {
@@ -130,8 +129,10 @@ const Message = (props: MessageUIProps): React.FC<MessageUIProps> | React.ReactE
     }));
   }, [mentionedUserIds]);
 
-  useLayoutEffect(() => {
-    handleScroll?.();
+  useDidMountEffect(() => {
+    if (currentGroupChannel?.lastMessage?.messageId === message?.messageId) {
+      handleScroll?.();
+    }
   }, [showEdit, message?.reactions?.length]);
 
   useLayoutEffect(() => {

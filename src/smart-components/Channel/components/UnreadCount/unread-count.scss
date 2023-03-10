@@ -1,5 +1,10 @@
 @import '../../../../styles/variables';
 
+.sendbird-notification--hide,
+.sendbird-notification {
+  position: absolute;
+}
+
 .sendbird-notification {
   margin-top: 8px;
   margin-left: 24px;
@@ -37,4 +42,8 @@
     justify-content: center;
     margin-right: 8px;
   }
+}
+
+.sendbird-notification--hide {
+  display: none;
 }

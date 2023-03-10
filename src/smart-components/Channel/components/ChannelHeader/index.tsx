@@ -13,7 +13,13 @@ import { useChannelContext } from '../../context/ChannelProvider';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import { noop } from '../../../../utils/utils'
 
-const ChannelHeader: React.FC = () => {
+interface ChannelHeaderProps {
+  className?: string;
+}
+
+const ChannelHeader: React.FC<ChannelHeaderProps> = ({
+  className = '',
+}) => {
   const globalStore = useSendbirdStateContext();
   const userId = globalStore?.config?.userId;
   const theme = globalStore?.config?.theme;
@@ -33,7 +39,7 @@ const ChannelHeader: React.FC = () => {
 
   const { stringSet } = useContext(LocalizationContext);
   return (
-    <div className="sendbird-chat-header">
+    <div className={`sendbird-chat-header ${className}`}>
       <div className="sendbird-chat-header__left">
         {
           isMobile && (

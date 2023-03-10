@@ -6,28 +6,27 @@ import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 
 export interface UnreadCountProps {
+  className?: string;
   count: number;
   time: string;
   onClick(): void;
 }
 
-const UnreadCount: React.FC<UnreadCountProps> = (props: UnreadCountProps) => {
-  const {
-    count,
-    time = '',
-    onClick,
-  } = props;
-
+const UnreadCount: React.FC<UnreadCountProps> = ({
+  className = '',
+  count,
+  time = '',
+  onClick,
+}: UnreadCountProps) => {
   const { stringSet } = useContext(LocalizationContext);
   const timeArray = time?.toString?.()?.split(' ') || [];
   timeArray?.splice(-2, 0, stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__ON);
 
-  if (count < 1) {
-    return;
-  }
-
   return (
-    <div className="sendbird-notification" onClick={onClick}>
+    <div
+      className={`sendbird-notification${count < 1 ? '--hide' : ''} ${className}`}
+      onClick={onClick}
+    >
       <Label className="sendbird-notification__text" color={LabelColors.ONCONTENT_1} type={LabelTypography.CAPTION_2}>
         {`${count} `}
         {stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__NEW_MESSAGE}
