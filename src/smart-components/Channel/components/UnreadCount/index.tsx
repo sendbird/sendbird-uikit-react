@@ -24,7 +24,7 @@ const UnreadCount: React.FC<UnreadCountProps> = ({
 
   return (
     <div
-      className={`sendbird-notification${count < 1 ? '--undisplay' : ''} ${className}`}
+      className={`sendbird-notification${count < 1 ? '--hide' : ''} ${className}`}
       onClick={onClick}
     >
       <Label className="sendbird-notification__text" color={LabelColors.ONCONTENT_1} type={LabelTypography.CAPTION_2}>

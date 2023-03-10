@@ -132,10 +132,9 @@ const MessageList: React.FC<MessageListProps> = ({
   };
 
   if (loading) {
-    if (renderPlaceholderLoader && typeof renderPlaceholderLoader === 'function') {
-      return renderPlaceholderLoader();
-    }
-    return <PlaceHolder type={PlaceHolderTypes.LOADING} />;
+    return (typeof renderPlaceholderLoader === 'function')
+      ? renderPlaceholderLoader()
+      : <PlaceHolder type={PlaceHolderTypes.LOADING} />;
   }
   if (allMessages.length < 1) {
     if (renderPlaceholderEmpty && typeof renderPlaceholderEmpty === 'function') {

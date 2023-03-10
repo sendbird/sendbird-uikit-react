@@ -1,6 +1,6 @@
 @import '../../../../styles/variables';
 
-.sendbird-notification--undisplay,
+.sendbird-notification--hide,
 .sendbird-notification {
   position: absolute;
 }
@@ -44,6 +44,6 @@
   }
 }
 
-.sendbird-notification--undisplay {
+.sendbird-notification--hide {
   display: none;
 }
