@@ -86,9 +86,11 @@ export default function ThreadListItemContent({
     && !disableQuoteMessage
   );
   const supposedHoverClassName = supposedHover ? 'sendbird-mouse-hover' : '';
+  const isReactionEnabledInChannel = isReactionEnabled && !channel?.isEphemeral;
+
   return (
     <div className={`sendbird-thread-list-item-content ${className} ${isByMe ? 'outgoing' : 'incoming'}`}>
-      <div className={`sendbird-thread-list-item-content__left ${isReactionEnabled ? 'use-reaction' : ''} ${isByMe ? 'outgoing' : 'incoming'}`}>
+      <div className={`sendbird-thread-list-item-content__left ${isReactionEnabledInChannel ? 'use-reaction' : ''} ${isByMe ? 'outgoing' : 'incoming'}`}>
         {(!isByMe && !chainBottom) && (
           <ContextMenu
             menuTrigger={(toggleDropdown) => (
@@ -122,7 +124,7 @@ export default function ThreadListItemContent({
         )}
         {isByMe && (
           <div
-            className={`sendbird-thread-list-item-content-menu ${isReactionEnabled ? 'use-reaction' : ''
+            className={`sendbird-thread-list-item-content-menu ${isReactionEnabledInChannel ? 'use-reaction' : ''
               } ${isByMe ? 'outgoing' : 'incoming'
               } ${supposedHoverClassName}`}
           >
@@ -139,7 +141,7 @@ export default function ThreadListItemContent({
               setSupposedHover={setSupposedHover}
               onReplyInThread={onReplyInThread}
             />
-            {isReactionEnabled && (
+            {isReactionEnabledInChannel && (
               <MessageItemReactionMenu
                 className="sendbird-thread-list-item-content-menu__reaction-menu"
                 message={message as UserMessage | FileMessage}
@@ -186,7 +188,7 @@ export default function ThreadListItemContent({
               message={message as UserMessage}
               isByMe={isByMe}
               isMentionEnabled={isMentionEnabled}
-              isReactionEnabled={isReactionEnabled}
+              isReactionEnabled={isReactionEnabledInChannel}
             />
           )}
           {(isOGMessage(message as UserMessage)) && (
@@ -195,7 +197,7 @@ export default function ThreadListItemContent({
               message={message as UserMessage}
               isByMe={isByMe}
               isMentionEnabled={isMentionEnabled}
-              isReactionEnabled={isReactionEnabled}
+              isReactionEnabled={isReactionEnabledInChannel}
             />
           )}
           {isVoiceMessage(message as FileMessage) && (
@@ -204,7 +206,7 @@ export default function ThreadListItemContent({
               message={message as FileMessage}
               channelUrl={channel?.url}
               isByMe={isByMe}
-              isReactionEnabled={isReactionEnabled}
+              isReactionEnabled={isReactionEnabledInChannel}
             />
           )}
           {(getUIKitMessageType((message as FileMessage)) === messageTypes.FILE) && (
@@ -212,7 +214,7 @@ export default function ThreadListItemContent({
               className="sendbird-thread-list-item-content__middle__message-item-body"
               message={message as FileMessage}
               isByMe={isByMe}
-              isReactionEnabled={isReactionEnabled}
+              isReactionEnabled={isReactionEnabledInChannel}
               truncateLimit={isByMe ? 18 : 14}
             />
           )}
@@ -221,7 +223,7 @@ export default function ThreadListItemContent({
               className="sendbird-thread-list-item-content__middle__message-item-body"
               message={message as FileMessage}
               isByMe={isByMe}
-              isReactionEnabled={isReactionEnabled}
+              isReactionEnabled={isReactionEnabledInChannel}
               showFileViewer={showFileViewer}
               style={{
                 width: '200px',
@@ -234,11 +236,11 @@ export default function ThreadListItemContent({
               className="sendbird-thread-list-item-content__middle__message-item-body"
               message={message}
               isByMe={isByMe}
-              isReactionEnabled={isReactionEnabled}
+              isReactionEnabled={isReactionEnabledInChannel}
             />
           )}
           {/* reactions */}
-          {(isReactionEnabled && message?.reactions?.length > 0) && (
+          {(isReactionEnabledInChannel && message?.reactions?.length > 0) && (
             <div className={getClassName([
               'sendbird-thread-list-item-content-reactions',
               (!isByMe || isThumbnailMessage(message as FileMessage) || isOGMessage(message as UserMessage)) ? '' : 'primary',
@@ -272,7 +274,7 @@ export default function ThreadListItemContent({
       >
         {!isByMe && (
           <div className={`sendbird-thread-list-item-content-menu ${supposedHoverClassName}`}>
-            {isReactionEnabled && (
+            {isReactionEnabledInChannel && (
               <MessageItemReactionMenu
                 className="sendbird-thread-list-item-content-menu__reaction-menu"
                 message={message as UserMessage | FileMessage}

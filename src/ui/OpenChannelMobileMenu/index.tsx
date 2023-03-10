@@ -21,6 +21,7 @@ type Props = {
   copyToClipboard?(): void;
   showEdit?(): void;
   hideMenu(): void;
+  isEphemeral?: boolean;
 };
 
 const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
@@ -32,6 +33,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
     showRemove,
     copyToClipboard,
     hideMenu,
+    isEphemeral = false,
   } = props;
   const userMessage = message as UserMessage;
   const status = message?.sendingStatus;
@@ -61,7 +63,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
             )
           }
           {
-            isFineEdit({ message, userId, status }) && (
+            (!isEphemeral && isFineEdit({ message, userId, status })) && (
               <MenuItem
                 className="sendbird-openchannel-og-message__top__context-menu__edit"
                 onClick={() => {
@@ -84,7 +86,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
             )
           }
           {
-            isFineDelete({ message, userId, status }) && (
+            (!isEphemeral && isFineDelete({ message, userId, status })) && (
               <MenuItem
                 onClick={() => {
                   showRemove();

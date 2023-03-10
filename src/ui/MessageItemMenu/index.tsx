@@ -57,9 +57,9 @@ export default function MessageItemMenu({
   const containerRef = useRef(null);
 
   const showMenuItemCopy: boolean = isUserMessage(message as UserMessage);
-  const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe);
+  const showMenuItemEdit: boolean = (!channel?.isEphemeral && isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe);
   const showMenuItemResend: boolean = (isFailedMessage(message) && message?.isResendable && isByMe);
-  const showMenuItemDelete: boolean = !isPendingMessage(message) && isByMe;
+  const showMenuItemDelete: boolean = !channel?.isEphemeral && !isPendingMessage(message) && isByMe;
   const showMenuItemOpenInChannel: boolean = onMoveToParentMessage !== null;
   /**
    * TODO: Manage timing issue
@@ -68,6 +68,7 @@ export default function MessageItemMenu({
   const isReplyTypeEnabled = !isFailedMessage(message)
     && !isPendingMessage(message)
     && (channel?.isGroupChannel?.()
+    && !channel?.isEphemeral
     && (
       ((channel as GroupChannel)?.isBroadcast && channel?.myRole === Role.OPERATOR)
       || !(channel as GroupChannel)?.isBroadcast

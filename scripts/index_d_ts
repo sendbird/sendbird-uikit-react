@@ -539,9 +539,9 @@ declare module "SendbirdUIKitGlobal" {
     renderMessageInput?: () => React.ReactNode | React.ReactElement;
     renderTypingIndicator?: () => React.ReactNode | React.ReactElement;
     renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactNode | React.ReactElement;
-    renderFileUploadIcon?: () =>  React.ReactElement;
-    renderVoiceMessageIcon?: () =>  React.ReactElement;
-    renderSendMessageIcon?: () =>  React.ReactElement;
+    renderFileUploadIcon?: () => React.ReactElement;
+    renderVoiceMessageIcon?: () => React.ReactElement;
+    renderSendMessageIcon?: () => React.ReactElement;
   }
 
   export type CoreMessageType = AdminMessage | UserMessage | FileMessage;
@@ -600,9 +600,9 @@ declare module "SendbirdUIKitGlobal" {
     // value is removed when channelURL changes
     value?: string;
     ref?: React.MutableRefObject<any>;
-    renderFileUploadIcon?: () =>  React.ReactElement;
-    renderVoiceMessageIcon?: () =>  React.ReactElement;
-    renderSendMessageIcon?: () =>  React.ReactElement;
+    renderFileUploadIcon?: () => React.ReactElement;
+    renderVoiceMessageIcon?: () => React.ReactElement;
+    renderSendMessageIcon?: () => React.ReactElement;
   };
 
   export type MessageListProps = {
@@ -1011,9 +1011,9 @@ declare module "SendbirdUIKitGlobal" {
     renderCustomSeparator?: () => React.ReactElement;
     renderParentMessageInfoPlaceholder?: (type: ParentMessageStateTypes) => React.ReactElement;
     renderThreadListPlaceHolder?: (type: ThreadListStateTypes) => React.ReactElement;
-    renderFileUploadIcon?: () =>  React.ReactElement;
-    renderVoiceMessageIcon?: () =>  React.ReactElement;
-    renderSendMessageIcon?: () =>  React.ReactElement;
+    renderFileUploadIcon?: () => React.ReactElement;
+    renderVoiceMessageIcon?: () => React.ReactElement;
+    renderSendMessageIcon?: () => React.ReactElement;
   }
 
   type EventType = React.MouseEvent<HTMLDivElement | HTMLButtonElement> | React.KeyboardEvent<HTMLDivElement>;
@@ -1060,9 +1060,9 @@ declare module "SendbirdUIKitGlobal" {
 
   export interface ThreadMessageInputProps {
     className?: string;
-    renderFileUploadIcon?: () =>  React.ReactElement;
-    renderVoiceMessageIcon?: () =>  React.ReactElement;
-    renderSendMessageIcon?: () =>  React.ReactElement;
+    renderFileUploadIcon?: () => React.ReactElement;
+    renderVoiceMessageIcon?: () => React.ReactElement;
+    renderSendMessageIcon?: () => React.ReactElement;
   }
 
   /**
@@ -2059,9 +2059,9 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
     onKeyUp?: (e: React.KeyboardEvent<HTMLDivElement>) => void,
     onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void,
     onVoiceMessageIconClick?: () => void;
-    renderFileUploadIcon?: () =>  React.ReactElement;
-    renderVoiceMessageIcon?: () =>  React.ReactElement;
-    renderSendMessageIcon?: () =>  React.ReactElement;
+    renderFileUploadIcon?: () => React.ReactElement;
+    renderVoiceMessageIcon?: () => React.ReactElement;
+    renderSendMessageIcon?: () => React.ReactElement;
   }
   const MessageInput: React.FC<MessageInputProps>;
   export default MessageInput;
@@ -2235,6 +2235,8 @@ declare module '@sendbird/uikit-react/ui/OpenChannelFileMessage' {
   interface OpenChannelFileMessageProps {
     className?: string | Array<string>;
     message: SenbirdUIKitGlobal.ClientFileMessage;
+    isOperator?: boolean;
+    isEphemeral?: boolean;
     userId: string;
     disabled?: boolean;
     chainTop?: boolean;
@@ -2248,8 +2250,10 @@ declare module '@sendbird/uikit-react/ui/OpenChannelFileMessage' {
 
 declare module '@sendbird/uikit-react/ui/OpenChannelOGMessage' {
   import type SenbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  interface OOpenChannelOGMessageProps {
+  interface OpenChannelOGMessageProps {
     message: SenbirdUIKitGlobal.ClientUserMessage;
+    isOperator?: boolean;
+    isEphemeral?: boolean;
     className?: string | Array<string>;
     disabled?: boolean;
     showEdit(bool: boolean): void;
@@ -2259,8 +2263,8 @@ declare module '@sendbird/uikit-react/ui/OpenChannelOGMessage' {
     chainBottom?: boolean;
     userId: string;
   }
-  const OOpenChannelOGMessage: React.FC<OOpenChannelOGMessageProps>;
-  export default OOpenChannelOGMessage;
+  const OpenChannelOGMessage: React.FC<OpenChannelOGMessageProps>;
+  export default OpenChannelOGMessage;
 }
 
 declare module '@sendbird/uikit-react/ui/OpenChannelThumbnailMessage' {
@@ -2268,6 +2272,8 @@ declare module '@sendbird/uikit-react/ui/OpenChannelThumbnailMessage' {
   interface OpenChannelThumbnailMessageProps {
     className?: string | Array<string>;
     message: SenbirdUIKitGlobal.ClientFileMessage;
+    isOperator?: boolean;
+    isEphemeral?: boolean;
     disabled: boolean;
     userId: string;
     chainTop: boolean;
@@ -2281,15 +2287,17 @@ declare module '@sendbird/uikit-react/ui/OpenChannelThumbnailMessage' {
 }
 
 declare module '@sendbird/uikit-react/ui/OpenChannelUserMessage' {
-  import type SenbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  import type SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
   interface OpenChannelUserMessageProps {
     className?: string | Array<string>;
-    message: SenbirdUIKitGlobal.ClientUserMessage;
+    message: SendbirdUIKitGlobal.ClientUserMessage;
+    isOperator?: boolean;
+    isEphemeral?: boolean;
     userId: string;
     disabled?: boolean;
     showEdit(bool: boolean): void;
     showRemove(bool: boolean): void;
-    resendMessage(message: SenbirdUIKitGlobal.ClientUserMessage): void;
+    resendMessage(message: SendbirdUIKitGlobal.ClientUserMessage): void;
     chainTop?: boolean;
     chainBottom?: boolean;
   }

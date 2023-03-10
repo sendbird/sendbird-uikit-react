@@ -83,7 +83,7 @@ const ChannelHeader: React.FC = () => {
             )
         }
         {
-          showSearchIcon && (
+          (showSearchIcon && !currentGroupChannel?.isEphemeral) && (
             <IconButton
               className="sendbird-chat-header__right__search"
               width="32px"
