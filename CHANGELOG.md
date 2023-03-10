@@ -1,5 +1,26 @@
 # Changelog - v3
 
+## [v3.4.1] (Mar 10 2023)
+
+Fixes:
+* Keep scroll if context menu is opened when receiving messages
+* Handle Ephemeral channel
+  * Group channel list
+    * Remove the message receipt status (channel preview)
+    * Remove the unread message count (channel preview)
+  * Group channel
+    * Remove the message edit
+    * Remove the message delete
+    * Remove the message reactions
+    * Remove the message receipt status (message)
+    * Remove the message reply (quote_reply, thread)
+  * Group channel settings
+    * Remove the search in channel
+  * Open channel
+    * Remove the message edit
+    * Remove the message delete
+* Improve stability to remove leak memory warning when sending message
+
 ## [v3.4.0] (Mar 6 2023)
 
 ### Voice Message
