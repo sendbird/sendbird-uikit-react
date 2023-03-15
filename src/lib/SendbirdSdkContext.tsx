@@ -1,8 +1,13 @@
 import React from 'react';
 
-export const SendbirdSdkContext = React.createContext();
+type ContextAwareComponentType = {
+  (props: any): JSX.Element;
+  displayName: string;
+}
 
-const withSendbirdContext = (OriginalComponent, mapStoreToProps) => {
+export const SendbirdSdkContext = React.createContext({});
+
+const withSendbirdContext = (OriginalComponent, mapStoreToProps): ContextAwareComponentType => {
   const ContextAwareComponent = (props) => (
     <SendbirdSdkContext.Consumer>
       {(context) => {
