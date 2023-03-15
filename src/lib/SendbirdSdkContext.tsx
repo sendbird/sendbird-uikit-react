@@ -7,7 +7,8 @@ type ContextAwareComponentType = {
 
 export const SendbirdSdkContext = React.createContext({});
 
-const withSendbirdContext = (OriginalComponent, mapStoreToProps): ContextAwareComponentType => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const withSendbirdContext = (OriginalComponent: any, mapStoreToProps: Record<string, any>): ContextAwareComponentType => {
   const ContextAwareComponent = (props) => (
     <SendbirdSdkContext.Consumer>
       {(context) => {

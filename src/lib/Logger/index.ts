@@ -45,10 +45,11 @@ interface LoggerInterface {
   warning: LoggerLogType;
 }
 
+const noop = () => {/* noop */};
 export const getDefaultLogger = (): LoggerInterface => ({
-  info: () => {},
-  error: () => {},
-  warning: () => {},
+  info: noop,
+  error: noop,
+  warning: noop,
 });
 
 export const LoggerFactory = (
