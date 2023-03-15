@@ -16,7 +16,7 @@ import messagesInitialState, {
 } from './dux/initialState';
 import * as messageActionTypes from './dux/actionTypes';
 import { scrollIntoLast } from './utils';
-import * as topics from '../../../lib/pubSub/topics';
+import topics from '../../../lib/pubSub/topics';
 
 // hooks
 import useSetChannel from './hooks/useSetChannel';

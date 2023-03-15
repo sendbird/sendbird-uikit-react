@@ -4,7 +4,7 @@ import { FileMessage, FileMessageCreateParams } from "@sendbird/chat/message";
 
 import { CustomUseReducerDispatcher, Logger } from "../../../../lib/SendbirdState";
 import { ThreadContextActionTypes } from "../dux/actionTypes";
-import * as topics from '../../../../lib/pubSub/topics';
+import topics from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from "../utils";
 
 interface DynamicProps {

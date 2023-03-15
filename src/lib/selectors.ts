@@ -1,4 +1,4 @@
-import * as topics from './pubSub/topics';
+import topics from './pubSub/topics';
 import type {
   User,
   UserUpdateParams,

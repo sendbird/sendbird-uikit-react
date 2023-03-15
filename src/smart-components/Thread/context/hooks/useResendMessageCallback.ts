@@ -3,7 +3,7 @@ import { FileMessage, MessageType, SendingStatus, UserMessage } from "@sendbird/
 import { useCallback } from "react";
 import { CustomUseReducerDispatcher, Logger } from "../../../../lib/SendbirdState";
 import { ThreadContextActionTypes } from "../dux/actionTypes";
-import * as topics from '../../../../lib/pubSub/topics';
+import topics from '../../../../lib/pubSub/topics';
 
 interface DynamicProps {
   currentChannel: GroupChannel;

@@ -1,6 +1,6 @@
 import format from 'date-fns/format';
 import * as channelActions from './dux/actionTypes';
-import * as topics from '../../../lib/pubSub/topics';
+import topics from '../../../lib/pubSub/topics';
 
 import { getSendingMessageStatus, isReadMessage } from '../../../utils';
 import { OutgoingMessageStates } from '../../../utils/exports/getOutgoingMessageState';

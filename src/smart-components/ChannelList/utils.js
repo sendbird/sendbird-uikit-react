@@ -1,6 +1,6 @@
 import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
 import * as channelActions from './dux/actionTypes';
-import * as topics from '../../lib/pubSub/topics';
+import topics from '../../lib/pubSub/topics';
 
 const DELIVERY_RECIPT = 'delivery_receipt';
 

@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';
-import * as topics from '../../../../lib/pubSub/topics';
+import topics from '../../../../lib/pubSub/topics';
 
 export default function useSendFileMessageCallback({
   currentGroupChannel,

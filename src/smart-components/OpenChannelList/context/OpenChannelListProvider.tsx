@@ -1,6 +1,6 @@
 import React, { useContext, useReducer, useMemo, useEffect } from 'react';
 
-import * as pubSubTopics from '../../../lib/pubSub/topics';
+import pubSubTopics from '../../../lib/pubSub/topics';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 
 import openChannelListReducer from './dux/reducer';
