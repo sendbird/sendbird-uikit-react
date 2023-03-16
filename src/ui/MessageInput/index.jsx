@@ -82,6 +82,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     onCancelEdit,
     onStartTyping,
     channelUrl,
+    channel,
     mentionSelectedUser,
     onUserMentioned,
     onMentionStringChange,
@@ -92,6 +93,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     renderFileUploadIcon,
     renderVoiceMessageIcon,
     renderSendMessageIcon,
+    setMentionedUsers,
   } = props;
   const textFieldId = messageFieldId || TEXT_FIELD_ID;
   const { stringSet } = useContext(LocalizationContext);
@@ -340,7 +342,6 @@ const MessageInput = React.forwardRef((props, ref) => {
           mentionTemplate += textContent;
         }
       });
-      // debugger
       const params = { message: messageText, mentionTemplate };
       onSendMessage(params);
       resetInput(ref);
@@ -378,6 +379,8 @@ const MessageInput = React.forwardRef((props, ref) => {
   const onPaste = usePaste({
     ref,
     setMentionedUserIds,
+    setMentionedUsers,
+    channel,
     setIsInput,
     setHeight,
   });
@@ -585,6 +588,7 @@ MessageInput.propTypes = {
     userId: PropTypes.string,
     nickname: PropTypes.string,
   }),
+  setMentionedUsers: PropTypes.func,
   onUserMentioned: PropTypes.func,
   onMentionStringChange: PropTypes.func,
   onMentionedUserIdsUpdated: PropTypes.func,

@@ -11,13 +11,17 @@ export function inserTemplateToDOM(templateList: Word[], parent: HTMLDivElement)
     if (userId) {
       return (
         renderToString(
-          <MentionUserLabel userId={userId}>
-            {text}
-          </MentionUserLabel>
+          <>
+            <MentionUserLabel userId={userId}>
+              {text}
+            </MentionUserLabel>
+            {/* if this is not here, cursor wont work */}
+            &nbsp;
+          </>
         )
       );
     }
     return sanitizeString(text);
   }).join(' ');
-  parent.innerHTML = nodes;
+  document.execCommand('insertHTML', false, nodes);
 }

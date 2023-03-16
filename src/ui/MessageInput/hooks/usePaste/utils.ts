@@ -1,5 +1,7 @@
+import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { PASTE_NODE, MENTION_CLASS } from './consts';
-import { Word } from './types';
+import { MentionedUser, Word } from './types';
+import { User } from '@sendbird/chat';
 
 export function createPasteNode(): HTMLDivElement | null {
   const pasteNode = document.body.querySelector(`#${PASTE_NODE}`);
@@ -44,12 +46,13 @@ export function domToMessageTemplate(nodeArray: HTMLSpanElement[]): Word[] {
   return templates;
 }
 
-export function generateUniqueUserIds(templates: Word[]): string[] {
-  const uniqueUserIds = new Set<string>();
+export function getUsersFromWords(templates: Word[], channel: GroupChannel): MentionedUser[] {
+  const userMap = {};
+  const users = channel.members;
   templates.forEach((template) => {
     if (template.userId) {
-      uniqueUserIds.add(template.userId);
+      userMap[template.userId] = users.find((user) => user.userId === template.userId);
     }
   });
-  return Array.from(uniqueUserIds);
+  return Object.values(userMap);
 }

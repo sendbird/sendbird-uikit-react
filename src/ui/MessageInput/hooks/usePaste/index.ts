@@ -9,17 +9,19 @@ import {
   createPasteNode,
   hasMention,
   domToMessageTemplate,
-  generateUniqueUserIds,
+  getUsersFromWords,
 } from './utils';
 
 export default function usePaste({
   ref,
   setIsInput,
   setHeight,
-  setUniqueUserIds,
+  channel,
+  setMentionedUsers,
 }: DynamicProps) {
   return useCallback((e) => {
     e.preventDefault();
+    // getCaretPosition(e.target);
     const html = e?.clipboardData.getData('text/html');
     // simple text, continue as normal
     if (!html) {
@@ -29,6 +31,7 @@ export default function usePaste({
       setHeight();
       return;
     }
+
     // has html, check if there are mentions, sanitize and insert
     const purifier = DOMPurify(window);
     const clean = purifier.sanitize(html);
@@ -50,13 +53,13 @@ export default function usePaste({
     const nodeArray = Array.from(childNodes);
     const words = domToMessageTemplate(nodeArray);
 
-    const uniqueUserIds = generateUniqueUserIds(words);
-    // setUniqueUserIds(uniqueUserIds);
+    const mentionedUsers = getUsersFromWords(words, channel);
+    setMentionedUsers(mentionedUsers);
     inserTemplateToDOM(words, ref.current);
     pasteNode.remove();
     setIsInput(true);
     setHeight();
     return;
 
-  }, [ref, setIsInput, setHeight]);
+  }, [ref, setIsInput, setHeight, channel, setMentionedUsers]);
 }
