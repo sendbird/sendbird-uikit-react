@@ -1,7 +1,8 @@
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { PASTE_NODE, MENTION_CLASS } from './consts';
-import { MentionedUser, Word } from './types';
 import { User } from '@sendbird/chat';
+
+import { PASTE_NODE, MENTION_CLASS } from './consts';
+import { Word } from './types';
 
 export function createPasteNode(): HTMLDivElement | null {
   const pasteNode = document.body.querySelector(`#${PASTE_NODE}`);
@@ -46,7 +47,7 @@ export function domToMessageTemplate(nodeArray: HTMLSpanElement[]): Word[] {
   return templates;
 }
 
-export function getUsersFromWords(templates: Word[], channel: GroupChannel): MentionedUser[] {
+export function getUsersFromWords(templates: Word[], channel: GroupChannel): User[] {
   const userMap = {};
   const users = channel.members;
   templates.forEach((template) => {

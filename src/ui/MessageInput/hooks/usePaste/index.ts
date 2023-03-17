@@ -18,7 +18,7 @@ export default function usePaste({
   setHeight,
   channel,
   setMentionedUsers,
-}: DynamicProps) {
+}: DynamicProps): (e: React.ClipboardEvent<HTMLDivElement>) => void {
   return useCallback((e) => {
     e.preventDefault();
     // getCaretPosition(e.target);
@@ -55,7 +55,7 @@ export default function usePaste({
 
     const mentionedUsers = getUsersFromWords(words, channel);
     setMentionedUsers(mentionedUsers);
-    inserTemplateToDOM(words, ref.current);
+    inserTemplateToDOM(words);
     pasteNode.remove();
     setIsInput(true);
     setHeight();

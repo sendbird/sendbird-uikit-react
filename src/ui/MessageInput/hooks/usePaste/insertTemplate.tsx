@@ -5,7 +5,7 @@ import { Word } from './types';
 import { sanitizeString } from '../../utils';
 import MentionUserLabel from '../../../MentionUserLabel';
 
-export function inserTemplateToDOM(templateList: Word[], parent: HTMLDivElement): string {
+export function inserTemplateToDOM(templateList: Word[]) {
   const nodes = templateList.map((template) => {
     const { text, userId } = template;
     if (userId) {
@@ -15,13 +15,14 @@ export function inserTemplateToDOM(templateList: Word[], parent: HTMLDivElement)
             <MentionUserLabel userId={userId}>
               {text}
             </MentionUserLabel>
-            {/* if this is not here, cursor wont work */}
-            &nbsp;
           </>
         )
       );
     }
     return sanitizeString(text);
-  }).join(' ');
+  })
+  .join(' ')
+  // add a space at the end of the mention, else cursor/caret wont work
+  .concat(' ');
   document.execCommand('insertHTML', false, nodes);
 }
