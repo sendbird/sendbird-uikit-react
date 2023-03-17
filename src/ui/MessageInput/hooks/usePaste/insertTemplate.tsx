@@ -5,7 +5,7 @@ import { Word } from './types';
 import { sanitizeString } from '../../utils';
 import MentionUserLabel from '../../../MentionUserLabel';
 
-export function inserTemplateToDOM(templateList: Word[]) {
+export function inserTemplateToDOM(templateList: Word[]): void {
   const nodes = templateList.map((template) => {
     const { text, userId } = template;
     if (userId) {

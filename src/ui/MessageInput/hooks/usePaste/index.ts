@@ -4,12 +4,13 @@ import DOMPurify from 'dompurify';
 import { inserTemplateToDOM } from './insertTemplate';
 import { sanitizeString } from '../../utils';
 import { DynamicProps } from './types';
-import { TEXT_MESSAGE_CLASS } from './consts';
+import { MENTION_CLASS, TEXT_MESSAGE_CLASS } from './consts';
 import {
   createPasteNode,
   hasMention,
   domToMessageTemplate,
   getUsersFromWords,
+  extractTextFromNodes,
 } from './utils';
 
 export default function usePaste({
@@ -37,10 +38,10 @@ export default function usePaste({
     const clean = purifier.sanitize(html);
     const pasteNode = createPasteNode();
     pasteNode.innerHTML = clean;
-
     // does not have mention, continue as normal
     if (!hasMention(pasteNode)) {
-      const text = e?.clipboardData.getData('text');
+      const text = extractTextFromNodes(Array.from(pasteNode.children) as HTMLSpanElement[]);
+      // const text = e?.clipboardData.getData('text');
       document.execCommand('insertHTML', false, sanitizeString(text));
       pasteNode.remove();
       setIsInput(true);
@@ -48,9 +49,13 @@ export default function usePaste({
       return;
     }
 
-    // has nickname, sanitize and insert
+    // has mention, sanitize and insert
     const childNodes = pasteNode.querySelectorAll(`.${TEXT_MESSAGE_CLASS}`) as NodeListOf<HTMLSpanElement>;
-    const nodeArray = Array.from(childNodes);
+    let nodeArray = Array.from(childNodes);
+    // handle paste when there is only one child
+    if (pasteNode.children.length === 1 && pasteNode.querySelectorAll(`.${MENTION_CLASS}`).length === 1) {
+      nodeArray = Array.from(pasteNode.children) as HTMLSpanElement[];
+    }
     const words = domToMessageTemplate(nodeArray);
 
     const mentionedUsers = getUsersFromWords(words, channel);
