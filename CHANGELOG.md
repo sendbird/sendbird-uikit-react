@@ -1,5 +1,28 @@
 # Changelog - v3
 
+## [v3.4.1] (Mar 17 2023)
+
+Features:
+* Mentions should be preserved when copy pasted from sendbird-messages and message input
+  * Make sure you are posting mentions of users from same channel
+  * We dont support pasting of rich text from other applications
+  * For copying simple text, we recommend using paste option in message context-menu
+
+  * Conditions tested:
+    1. paste simple text
+    2. paste text with mention
+    3. paste text with mention and text
+    4. paste text with mention and text and paste again before and after
+    5. copy message with mention(only one mention, no other text) and paste
+    6. copy message with mention from input and paste(before and after)
+
+Chores:
+* Arrange the order of the string set table
+Some string-set were missing on the current string set table, so our customers werent able to use the latest state of the string set feature
+
+Library added:
+* [dompurify@3.0.1](https://www.npmjs.com/package/dompurify): +8Kb Gzipped
+
 ## [v3.4.1] (Mar 10 2023)
 
 Fixes:
