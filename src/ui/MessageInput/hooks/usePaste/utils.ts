@@ -6,6 +6,7 @@ import {
   MENTION_CLASS,
   TEXT_MESSAGE_CLASS,
   MENTION_CLASS_COMBINED_QUERY,
+  MENTION_CLASS_IN_INPUT,
 } from './consts';
 import { Word } from './types';
 
@@ -24,7 +25,7 @@ export function createPasteNode(): HTMLDivElement | null {
 }
 
 export function hasMention(parent: HTMLDivElement): boolean {
-  return parent?.querySelector(`.${MENTION_CLASS}`) ? true : false;
+  return parent?.querySelector(MENTION_CLASS_COMBINED_QUERY) ? true : false;
 }
 
 export const extractTextFromNodes = (nodes: HTMLSpanElement[]): string => {
@@ -42,11 +43,14 @@ export const extractTextFromNodes = (nodes: HTMLSpanElement[]): string => {
 
 export function domToMessageTemplate(nodeArray: HTMLSpanElement[]): Word[] {
   const templates: Word[] = nodeArray?.reduce((accumulator, currentValue) => {
-    let mentionNode = currentValue.querySelector(`.${MENTION_CLASS}`) as HTMLSpanElement;
+    let mentionNode = currentValue.querySelector(MENTION_CLASS_COMBINED_QUERY) as HTMLSpanElement;
+    // sometimes the mention node is the parent node
+    // in this case querySelector will return null
     if (!mentionNode) {
-      mentionNode = currentValue.classList.contains(MENTION_CLASS)
-        ? currentValue
-        : null;
+      mentionNode = (
+        currentValue.classList.contains(MENTION_CLASS)  // for nodes copied from message
+        || currentValue.classList.contains(MENTION_CLASS_IN_INPUT) // for nodes copied from input
+      ) ? currentValue : null;
     }
     const text = currentValue.innerText;
     if (mentionNode) {
