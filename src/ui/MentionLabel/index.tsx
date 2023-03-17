@@ -63,6 +63,8 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
           `}
           onClick={() => fetchUser(toggleDropdown)}
           ref={mentionRef}
+          data-userid={mentionedUserId}
+          data-nickname={mentionedUserNickname}
         >
           <Label
             type={LabelTypography.CAPTION_1}

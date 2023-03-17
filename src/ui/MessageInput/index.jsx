@@ -26,6 +26,7 @@ import {
   StringObjType,
   convertWordToStringObj,
 } from '../../utils';
+import usePaste from './hooks/usePaste';
 
 const TEXT_FIELD_ID = 'sendbird-message-input-text-field';
 const LINE_HEIGHT = 76;
@@ -81,6 +82,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     onCancelEdit,
     onStartTyping,
     channelUrl,
+    channel,
     mentionSelectedUser,
     onUserMentioned,
     onMentionStringChange,
@@ -91,6 +93,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     renderFileUploadIcon,
     renderVoiceMessageIcon,
     renderSendMessageIcon,
+    setMentionedUsers,
   } = props;
   const textFieldId = messageFieldId || TEXT_FIELD_ID;
   const { stringSet } = useContext(LocalizationContext);
@@ -373,6 +376,14 @@ const MessageInput = React.forwardRef((props, ref) => {
       resetInput(ref);
     }
   };
+  const onPaste = usePaste({
+    ref,
+    setMentionedUserIds,
+    setMentionedUsers,
+    channel,
+    setIsInput,
+    setHeight,
+  });
 
   return (
     <form
@@ -432,10 +443,7 @@ const MessageInput = React.forwardRef((props, ref) => {
             setIsInput(ref?.current?.innerText?.length > 0);
             useMentionedLabelDetection();
           }}
-          onPaste={(e) => {
-            e.preventDefault();
-            document.execCommand("insertHTML", false, sanitizeString(e?.clipboardData.getData('text')));
-          }}
+          onPaste={onPaste}
         />
         {/* placeholder */}
         {!isInput && (
@@ -580,6 +588,7 @@ MessageInput.propTypes = {
     userId: PropTypes.string,
     nickname: PropTypes.string,
   }),
+  setMentionedUsers: PropTypes.func,
   onUserMentioned: PropTypes.func,
   onMentionStringChange: PropTypes.func,
   onMentionedUserIdsUpdated: PropTypes.func,

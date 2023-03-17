@@ -48,6 +48,7 @@ module.exports = ({
     'react-dom',
     'css-vars-ponyfill',
     'date-fns',
+    'dompurify',
   ],
   plugins: [
     postcss({

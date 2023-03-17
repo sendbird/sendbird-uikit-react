@@ -54,6 +54,7 @@ const MessageInputWrapper = (
 
   const { stringSet } = useContext(LocalizationContext);
   const [mentionNickname, setMentionNickname] = useState('');
+  // todo: set type
   const [mentionedUsers, setMentionedUsers] = useState([]);
   const [mentionedUserIds, setMentionedUserIds] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -173,6 +174,8 @@ const MessageInputWrapper = (
               onVoiceMessageIconClick={() => {
                 setShowVoiceMessageInput(true);
               }}
+              setMentionedUsers={setMentionedUsers}
+              channel={channel}
               placeholder={
                 (quoteMessage && stringSet.MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER)
                 || (utils.isDisabledBecauseFrozen(channel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
