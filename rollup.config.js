@@ -113,6 +113,10 @@ module.exports = ({
           dest: 'dist',
         },
         {
+          src: './.size-snapshot.json',
+          dest: 'dist',
+        },
+        {
           src: './README.md',
           dest: 'dist',
         },
