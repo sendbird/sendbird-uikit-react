@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from "react";
-import withSendBird from "../../../lib/SendbirdSdkContext";
-import * as sendbirdSelectors from "../../../lib/selectors";
 import uuidv4 from '../../../../src/utils/uuid';
 
 import "./community-channel-list.scss";
 import OpenChannelPreview from "./OpenChannelPreview";
 import Profile from "./Profile";
+import useSendbirdStateContext from "@sendbird/uikit-react/useSendbirdStateContext";
 
-function CommunityChannelList({
-  sdk,
-  user,
+export default function CommunityChannelList({
   currentChannelUrl,
   setCurrentChannel
 }) {
+  const store = useSendbirdStateContext();
+  const sdk = store?.stores?.sdkStore?.sdk;
+  const user = store?.stores?.userStore?.user;
   const [channels, setChannels] = useState([]);
   useEffect(() => {
-    if (!sdk || !sdk.OpenChannel) {
+    if (!sdk || !sdk.openChannel) {
       return;
     }
-    const openChannelListQuery = sdk.OpenChannel.createOpenChannelListQuery();
+    const openChannelListQuery = sdk.openChannel.createOpenChannelListQuery();
     const channelHandlerId = uuidv4();
     // @ts-ignore: Unreachable code error
     openChannelListQuery.customTypes = ["SB_COMMUNITY_TYPE"];
-    openChannelListQuery.next(function (openChannels, error) {
+    openChannelListQuery.next().then(function (openChannels, error) {
       if (error) {
         return;
       }
@@ -81,10 +81,3 @@ function CommunityChannelList({
     </div>
   );
 }
-
-export default withSendBird(CommunityChannelList, (store) => {
-  return {
-    sdk: sendbirdSelectors.getSdk(store),
-    user: store.stores.userStore.user
-  };
-});

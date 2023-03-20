@@ -48,7 +48,7 @@ export default function OpenChannelPreview({
         <div className="channel-preview__name">{channel.name}</div>
         {isStreaming && (
           <div className="channel-preview__creator-name">
-            {streamInfo.creator_info.name}
+            {streamInfo?.creator_info?.name}
           </div>
         )}
         {isStreaming && (
