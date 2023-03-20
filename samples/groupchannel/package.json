@@ -1,30 +1,22 @@
 {
-  "name": "1-2-customization-basic-format",
-  "version": "1.0.0",
-  "description": "",
-  "keywords": [],
-  "main": "src/index.js",
+  "name": "groupchannel",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
   "dependencies": {
-    "prop-types": "^15.7.2",
-    "react": "17.0.0",
-    "react-dom": "17.0.0",
-    "react-scripts": "3.0.1",
-    "@sendbird/uikit-react": "3.0.0-beta"
+    "@sendbird/uikit-react": "^3.4.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.1",
-    "typescript": "3.8.3"
-  },
-  "scripts": {
-    "start": "REACT_APP_SECRET_CODE=123 react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@vitejs/plugin-react": "^3.1.0",
+    "vite": "^4.2.0"
+  }
 }

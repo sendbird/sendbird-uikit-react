@@ -3,12 +3,11 @@ import React, { useState } from "react";
 import "./streaming.scss";
 import "./theme.scss";
 
-import {
-  SendBirdProvider as Sendbird,
-  OpenChannel,
-  OpenChannelSettings
-} from "sendbird-uikit";
-import "sendbird-uikit/dist/index.css";
+import Sendbird from '@sendbird/uikit-react/SendbirdProvider';
+import OpenChannel from "@sendbird/uikit-react/OpenChannel";
+import OpenChannelSettings from "@sendbird/uikit-react/OpenChannelSettings";
+
+import "@sendbird/uikit-react/dist/index.css";
 
 import ChannelList from "./components/StreamingChannelList";
 import DummyStream from "./components/DummyStream";

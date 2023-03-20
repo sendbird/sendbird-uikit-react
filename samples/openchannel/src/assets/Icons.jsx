@@ -1,8 +1,8 @@
 import React from "react";
 
-import { ReactComponent as CollapseIcon } from "./ic-collapse.svg";
-import { ReactComponent as ExpandIcon } from "./ic-expand.svg";
-import { ReactComponent as MembersIcon } from "./icon-members.svg";
+import CollapseIcon from "./ic-collapse.jsx";
+import ExpandIcon from "./ic-expand.jsx";
+import MembersIcon from "./icon-members.jsx";
 
 export const Collapse = () => <CollapseIcon />;
 export const Expand = () => <ExpandIcon />;
