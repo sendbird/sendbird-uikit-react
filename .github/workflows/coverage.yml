@@ -1,11 +1,12 @@
 on:
-    pull_request:
-        branches:
-            - master
-            - main
+  issue_comment:                                     
+    types: [created, edited, deleted]
 jobs:
     coverage:
+        if: contains(github.event.comment.html_url, '/pull/')
         runs-on: ubuntu-latest
         steps:
+            - name: coverage
+              if: contains(github.event.comment.body, '/coverage | /LGTM')  # check the comment if it contains the keywords
             - uses: actions/checkout@v3
             - uses: ArtiomTr/jest-coverage-report-action@v2
