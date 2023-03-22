@@ -1,11 +1,13 @@
+name: "Code coverage"
+
 on:
-    pull_request:
-        branches:
-            - master
-            - main
+  issue_comment:
+    types: [created]
+
 jobs:
     coverage:
         runs-on: ubuntu-latest
+        if: github.event.issue.pull_request && (contains(github.event.comment.body, '/coverage') || contains(github.event.comment.body, 'LGTM'))
         steps:
             - uses: actions/checkout@v3
             - uses: ArtiomTr/jest-coverage-report-action@v2
