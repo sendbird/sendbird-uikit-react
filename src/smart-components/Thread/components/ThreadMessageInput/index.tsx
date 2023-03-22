@@ -14,6 +14,7 @@ import { Role } from '../../../../lib/types';
 
 export interface ThreadMessageInputProps {
   className?: string;
+  disabled?: boolean;
   renderFileUploadIcon?: () =>  React.ReactElement;
   renderVoiceMessageIcon?: () =>  React.ReactElement;
   renderSendMessageIcon?: () =>  React.ReactElement;
@@ -29,6 +30,7 @@ const ThreadMessageInput = (
     renderVoiceMessageIcon,
     renderSendMessageIcon,
   } = props;
+  const propsDisabled = props.disabled;
   const { config } = useSendbirdStateContext();
   const { stringSet } = useLocalization();
   const {
@@ -49,7 +51,9 @@ const ThreadMessageInput = (
   } = useThreadContext();
   const messageInputRef = useRef();
 
-  const disabled = isMuted || (!(currentChannel?.myRole === Role.OPERATOR) && isChannelFrozen) || parentMessage === null;
+  const disabled = propsDisabled
+    || isMuted
+    || (!(currentChannel?.myRole === Role.OPERATOR) && isChannelFrozen) || parentMessage === null;
 
   // mention
   const [mentionNickname, setMentionNickname] = useState('');

@@ -14,6 +14,7 @@ import VoiceMessageInputWrapper from './VoiceMessageInputWrapper';
 
 export type MessageInputWrapperProps = {
   value?: string;
+  disabled?: boolean;
   renderFileUploadIcon?: () =>  React.ReactElement;
   renderVoiceMessageIcon?: () =>  React.ReactElement;
   renderSendMessageIcon?: () =>  React.ReactElement;
@@ -29,6 +30,7 @@ const MessageInputWrapper = (
     renderVoiceMessageIcon,
     renderSendMessageIcon,
   } = props;
+  const propDisabled = props.disabled;
   const {
     currentGroupChannel,
     initialized,
@@ -62,7 +64,8 @@ const MessageInputWrapper = (
   const [ableMention, setAbleMention] = useState(true);
   const [messageInputEvent, setMessageInputEvent] = useState(null);
   const [showVoiceMessageInput, setShowVoiceMessageInput] = useState(false);
-  const disabled = !initialized
+  const disabled = propDisabled
+    || !initialized
     || utils.isDisabledBecauseFrozen(channel)
     || utils.isDisabledBecauseMuted(channel)
     || !isOnline;

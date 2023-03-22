@@ -599,6 +599,7 @@ declare module "SendbirdUIKitGlobal" {
   export type MessageInputProps = {
     // value is removed when channelURL changes
     value?: string;
+    disabled?: boolean;
     ref?: React.MutableRefObject<any>;
     renderFileUploadIcon?: () => React.ReactElement;
     renderVoiceMessageIcon?: () => React.ReactElement;
@@ -1060,6 +1061,7 @@ declare module "SendbirdUIKitGlobal" {
 
   export interface ThreadMessageInputProps {
     className?: string;
+    disabled?: boolean;
     renderFileUploadIcon?: () => React.ReactElement;
     renderVoiceMessageIcon?: () => React.ReactElement;
     renderSendMessageIcon?: () => React.ReactElement;
