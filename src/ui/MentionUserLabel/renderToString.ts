@@ -7,17 +7,13 @@ type renderToStringParams = {
 };
 
 export default function renderToString({ userId, nickname }: renderToStringParams): string {
-  const el = `
-    <span
-      contenteditable='false'
-      data-userid="${userId}"
-      data-sendbird-mention="true"
-      class="sendbird-mention-user-label"
-    >
-      ${nickname}
-    </span>
-  `;
+  // donot change this template, it wont work
+  const el = `<span data-userid="${userId}" data-sb-mention="true" class="sendbird-mention-user-label">${nickname}</span>`;
   const purifier = DOMPurify(window);
-  const sanitized = purifier.sanitize(el, { ALLOWED_TAGS: ['span'] });
+  const sanitized_ = purifier.sanitize(el);
+  const token = sanitized_.split(' ');
+  const [spanTag, ...rest] = token;
+  // we do this because DOMPurify removes the contenteditable attribute
+  const sanitized = [spanTag, 'contenteditable="false"', ...rest].join(' ');
   return sanitized;
 }
