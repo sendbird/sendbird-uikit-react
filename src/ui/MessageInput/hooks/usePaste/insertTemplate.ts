@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Word } from './types';
 import { sanitizeString } from '../../utils';
 import renderMentionLabelToString from '../../../MentionUserLabel/renderToString';
