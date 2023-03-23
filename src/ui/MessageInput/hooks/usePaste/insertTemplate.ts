@@ -1,23 +1,12 @@
-import React from 'react';
-import { renderToString } from 'react-dom/server';
-
 import { Word } from './types';
 import { sanitizeString } from '../../utils';
-import MentionUserLabel from '../../../MentionUserLabel';
+import renderMentionLabelToString from '../../../MentionUserLabel/renderToString';
 
 export function inserTemplateToDOM(templateList: Word[]): void {
   const nodes = templateList.map((template) => {
     const { text, userId } = template;
     if (userId) {
-      return (
-        renderToString(
-          <>
-            <MentionUserLabel userId={userId}>
-              {text}
-            </MentionUserLabel>
-          </>
-        )
-      );
+      return renderMentionLabelToString({ userId, nickname: text });
     }
     return sanitizeString(text);
   })

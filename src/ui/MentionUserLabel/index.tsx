@@ -1,5 +1,7 @@
-import React from 'react';
 import './index.scss';
+
+import React from 'react';
+import { MENTION_USER_LABEL_CLASSNAME } from './consts';
 
 interface MentionUserLabelProps {
   className?: string
@@ -18,9 +20,10 @@ export default function MentionUserLabel({
 }: MentionUserLabelProps): JSX.Element {
   return (
     <span
-      className={`sendbird-mention-user-label ${className} ${isReverse ? 'reverse' : ''} ${color}`}
+      className={`${MENTION_USER_LABEL_CLASSNAME} ${className} ${isReverse ? 'reverse' : ''} ${color}`}
       contentEditable={false}
       data-userid={userId}
+      data-sb-mention={true}
     >
       {children}
     </span>
