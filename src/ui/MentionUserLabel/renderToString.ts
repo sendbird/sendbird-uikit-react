@@ -1,6 +1,5 @@
 // cretes a sanitized string from a mention user label
 import DOMPurify from 'dompurify';
-import { MENTION_CLASS } from '../MessageInput/hooks/usePaste/consts';
 import { MENTION_USER_LABEL_CLASSNAME } from './consts';
 
 type renderToStringParams = {
