@@ -1,4 +1,4 @@
-type ObjectValues<T> = T[keyof T];// Replace after merging the PR#435
+import { ObjectValues } from "../../utils/typeHelpers/objectValues";
 
 export const PUBSUB_TOPICS = {
   // Group Channel

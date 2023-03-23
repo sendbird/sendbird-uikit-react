@@ -1,5 +1,8 @@
 // Logger, pretty much explains it
 // in SendbirdProvider
+
+import { ObjectValues } from "../../utils/typeHelpers/objectValues";
+
 // const [logger, setLogger] = useState(LoggerFactory(logLevel));
 export const LOG_LEVELS = {
   DEBUG: 'debug',
@@ -8,7 +11,7 @@ export const LOG_LEVELS = {
   INFO: 'info',
   ALL: 'all',
 } as const;
-export type LogLevel = typeof LOG_LEVELS[keyof typeof LOG_LEVELS];
+export type LogLevel = ObjectValues<typeof LOG_LEVELS>;
 
 const colorLog = (level: LogLevel): string => {
   switch (level) {
