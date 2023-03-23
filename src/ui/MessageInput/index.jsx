@@ -6,7 +6,6 @@ import React, {
   useCallback,
   useContext,
 } from 'react';
-import { renderToString } from 'react-dom/server';
 import PropTypes from 'prop-types';
 
 import './index.scss';
@@ -15,7 +14,7 @@ import { MessageInputKeys, NodeNames, NodeTypes } from './const';
 import { USER_MENTION_TEMP_CHAR } from '../../smart-components/Channel/context/const';
 import IconButton from '../IconButton';
 import Button, { ButtonTypes, ButtonSizes } from '../Button';
-import MentionUserLabel from '../MentionUserLabel';
+import renderMentionLabelToString from '../MentionUserLabel/renderToString';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { LocalizationContext } from '../../lib/LocalizationContext';
@@ -161,16 +160,11 @@ const MessageInput = React.forwardRef((props, ref) => {
           convertWordToStringObj(word, mentionedUsers).map((stringObj) => {
             const { type, value, userId } = stringObj;
             if (type === StringObjType.mention && mentionedUsers.some((user) => user?.userId === userId)) {
-              return renderToString(
-                <MentionUserLabel userId={userId}>
-                  {
-                    `${USER_MENTION_TEMP_CHAR}${mentionedUsers.find((user) => user?.userId === userId)?.nickname
-                    || value
-                    || stringSet.MENTION_NAME__NO_NAME
-                    }`
-                  }
-                </MentionUserLabel>,
-              );
+              const nickname = `${USER_MENTION_TEMP_CHAR}${mentionedUsers.find((user) => user?.userId === userId)?.nickname
+                || value
+                || stringSet.MENTION_NAME__NO_NAME
+              }`
+              return renderMentionLabelToString({ userId, nickname });
             }
             return sanitizeString(value);
           }).join('')
@@ -220,11 +214,10 @@ const MessageInput = React.forwardRef((props, ref) => {
         const backTextNode = document?.createTextNode(
           `\u00A0${childNodes[endNodeIndex]?.textContent.slice(endOffsetIndex)}`,
         );
-        const mentionLabel = renderToString(
-          <MentionUserLabel userId={mentionSelectedUser?.userId}>
-            {`${USER_MENTION_TEMP_CHAR}${mentionSelectedUser?.nickname || stringSet.MENTION_NAME__NO_NAME}`}
-          </MentionUserLabel>,
-        );
+        const mentionLabel = renderMentionLabelToString({
+          userId: mentionSelectedUser?.userId,
+          nickname: `${USER_MENTION_TEMP_CHAR}${mentionSelectedUser?.nickname || stringSet.MENTION_NAME__NO_NAME}`,
+        });
         const div = document.createElement('div');
         div.innerHTML = mentionLabel;
         const newNodes = [
