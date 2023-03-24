@@ -17,6 +17,9 @@ interface MenuItemsState {
   handleClickOutside: (e: MouseEvent) => void;
 }
 
+// padding to handle height of last item in message-list
+const HEIGHT_PADDING = 60;
+
 export default class MenuItems extends React.Component<MenuItemsProps, MenuItemsState> {
   constructor(props: MenuItemsProps) {
     super(props);
@@ -70,7 +73,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
     if (!this.menuRef.current) return menuStyle;
     const { innerWidth, innerHeight } = window;
     const rect = this.menuRef.current.getBoundingClientRect();
-    if (y + rect.height > innerHeight) {
+    if (y + rect.height + HEIGHT_PADDING > innerHeight) {
       menuStyle.top -= rect.height;
     }
     if (x + rect.width > innerWidth && !openLeft) {
@@ -79,9 +82,6 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
     if (menuStyle.top < 0) {
       menuStyle.top = rect.height < innerHeight ? (innerHeight - rect.height) / 2 : 0;
     }
-    if (menuStyle.left < 0) {
-      menuStyle.left = rect.width < innerWidth ? (innerWidth - rect.width) / 2 : 0;
-    }
     menuStyle.top += 32;
     if (openLeft) {
       const padding = Number.isNaN(rect.width - 30)
@@ -89,6 +89,12 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
         : rect.width - 30;
       menuStyle.left -= padding;
     }
+    // warning: this section has to be executed after the openLeft is calculated
+    // menu is outside viewport
+    if (menuStyle.left < 0) {
+      menuStyle.left = rect.width < innerWidth ? (innerWidth - rect.width) / 2 : 0;
+    }
+
     this.setState({ menuStyle })
     return menuStyle;
   }
