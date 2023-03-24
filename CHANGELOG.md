@@ -1,6 +1,32 @@
 # Changelog - v3
 
-## [v3.4.1] (Mar 17 2023)
+## [v3.4.3] (Mar 24 2023)
+
+Features:
+* Add rollup-plugin-size-snapshot for bundle-size
+  Run rollup-plugin-size-snapshot on build,
+  we will check bundle size before every release
+* Move old samples to use vite
+  React team these days are using vite for their samples,
+  CRA is discourged
+* Run code coverage on commenting `./coverage`
+  Check code coverage on PR comment
+* Add prop to disable Channel & Thread inputs
+  Add prop: `disabled?: false` for Channel & Thread MessageInputWrapper
+* Replace renderToString(react-dom) with custom fn
+  Replace renderToString from react-dom/server with custom function
+  This function was creating issue in customers with cra@4 & react@17
+
+Fixes:
+* Replace outdated CSS rules
+  `justify-content: start;` and  `height: fill-available;`
+* Menu position in tight screens
+  * Condition where some menus get clipped in left side:
+    * Usually user profile in channel moderation
+  * Context menu of last item in channel gets clipped in the bottom
+
+
+## [v3.4.2] (Mar 17 2023)
 
 Features:
 * Mentions should be preserved when copy pasted from sendbird-messages and message input
