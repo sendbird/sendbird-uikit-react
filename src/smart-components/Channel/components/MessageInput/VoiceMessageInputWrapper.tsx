@@ -77,6 +77,8 @@ export const VoiceMessageInputWrapper = ({
     if (isSubmited && audioFile) {
       onSubmitClick(audioFile, recordingTime);
     }
+  }, [isSubmited, audioFile, recordingTime]);
+  useEffect(() => {
     if (audioFile) {
       if (recordingTime < minRecordingTime) {
         setVoiceInputState(VoiceMessageInputStatus.READY_TO_RECORD);
