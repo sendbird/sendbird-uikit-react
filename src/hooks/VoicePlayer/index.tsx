@@ -19,6 +19,7 @@ import {
   VOICE_PLAYER_AUDIO_ID,
   VOICE_PLAYER_ROOT_ID,
 } from '../../utils/consts';
+import useSendbirdStateContext from '../useSendbirdStateContext';
 
 // VoicePlayerProvider interface
 export interface VoicePlayerProps {
@@ -59,15 +60,19 @@ export const VoicePlayerProvider = ({
     currentPlayer,
     audioStorage,
   } = voicePlayerStore;
+  const { config } = useSendbirdStateContext();
+  const { logger } = config;
 
   const stop = (text = '') => {
     if (currentGroupKey.includes(text)) {
+      logger.info('VoicePlayer: Pause playing(by text).');
       pause(currentGroupKey);
     }
   };
 
   const pause = (groupKey: string) => {
     if (currentGroupKey === groupKey && currentPlayer !== null) {
+      logger.info('VoicePlayer: Pause playing(by group key).');
       currentPlayer?.pause();
     }
   };
@@ -111,6 +116,7 @@ export const VoicePlayerProvider = ({
           resolve(audioFile);
         });
     }).then((audioFile: File) => {
+      logger.info('VoicePlayer: Succeeded getting audio file.', audioFile);
       const currentAudioUnit = audioStorage[groupKey] || AudioUnitDefaultValue() as AudioStorageUnit;
       const audioPlayer = new Audio(URL?.createObjectURL?.(audioFile));
       audioPlayer.id = VOICE_PLAYER_AUDIO_ID;
@@ -118,6 +124,7 @@ export const VoicePlayerProvider = ({
       audioPlayer.volume = 1;
       audioPlayer.loop = false;
       audioPlayer.onplaying = () => {
+        logger.info('VoicePlayer: OnPlaying event is called from audioPlayer', { groupKey, audioPlayer });
         voicePlayerDispatcher({
           type: ON_VOICE_PLAYER_PLAY,
           payload: {
@@ -127,6 +134,7 @@ export const VoicePlayerProvider = ({
         });
       };
       audioPlayer.onpause = () => {
+        logger.info('VoicePlayer: OnPause event is called from audioPlayer', { groupKey, audioPlayer });
         voicePlayerDispatcher({
           type: ON_VOICE_PLAYER_PAUSE,
           payload: {
@@ -135,6 +143,7 @@ export const VoicePlayerProvider = ({
         });
       };
       audioPlayer.ontimeupdate = () => {
+        logger.info('VoicePlayer: OnTimeUpdate event is called from audioPlayer', { groupKey, audioPlayer });
         voicePlayerDispatcher({
           type: ON_CURRENT_TIME_UPDATE,
           payload: {
@@ -152,6 +161,7 @@ export const VoicePlayerProvider = ({
           audioPlayer,
         },
       });
+      logger.info('VoicePlayer: Succeeded playing audio player.', { groupKey, audioPlayer });
     })
   };
 

@@ -6,6 +6,7 @@ import {
   VOICE_RECORDER_AUDIO_BITS,
   VOICE_RECORDER_MIME_TYPE,
 } from '../../utils/consts';
+import useSendbirdStateContext from '../useSendbirdStateContext';
 
 // Input props of VoiceRecorder
 export interface VoiceRecorderProps {
@@ -31,23 +32,29 @@ const VoiceRecorderContext = createContext<VoiceRecorderContext>({
 });
 
 export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactElement => {
+  const { children } = props;
+  const { config } = useSendbirdStateContext();
+  const { logger } = config;
+
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>(null);
   const [isRecordable, setIsRecordable] = useState<boolean>(false);
 
-  const { children } = props;
-
   const start = useCallback((eventHandler: VoiceRecorderEventHandler): void => {
+    logger.info('VoiceRecorder: Start recording.');
     if (mediaRecorder) {
       stop();
+      logger.info('VoiceRecorder: Previous mediaRecorder is stopped.');
     }
     navigator?.mediaDevices?.getUserMedia?.({ audio: true })
       .then((stream) => {
+        logger.info('VoiceRecorder: Succeeded getting media stream.', stream);
         setIsRecordable(true);
         const mediaRecorder = new MediaRecorder(stream, {
           mimeType: VOICE_RECORDER_MIME_TYPE,
           audioBitsPerSecond: VOICE_RECORDER_AUDIO_BITS,
         });
         mediaRecorder.ondataavailable = (e) => {// when recording stops
+          logger.info('VoiceRecorder: Succeeded getting an available data.', e.data);
           const audioFile = new File([e.data], VOICE_MESSAGE_FILE_NAME, {
             lastModified: new Date().getTime(),
             type: VOICE_MESSAGE_MIME_TYPE,
@@ -60,6 +67,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
               type: VOICE_MESSAGE_MIME_TYPE,
             });
             eventHandler?.onRecordingEnded(convertedAudioFile);
+            logger.info('VoiceRecorder: Succeeded converting audio file.', convertedAudioFile);
           });
           stream?.getAudioTracks?.().forEach?.(track => track?.stop());
           setIsRecordable(false);
@@ -68,8 +76,8 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
         setMediaRecorder(mediaRecorder);
         eventHandler?.onRecordingStarted();
       })
-      .catch(() => {
-        // error
+      .catch((err) => {
+        logger.error('VoiceRecorder: Failed getting media stream.', err);
         setMediaRecorder(null);
       });
   }, [mediaRecorder]);
@@ -79,7 +87,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
     mediaRecorder?.stop();
     setMediaRecorder(null);
     setIsRecordable(false);
-    // TODO: logger
+    logger.info('VoiceRecorder: Stop recording.');
   }, [mediaRecorder]);
 
   return (
