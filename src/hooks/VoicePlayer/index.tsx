@@ -143,7 +143,6 @@ export const VoicePlayerProvider = ({
         });
       };
       audioPlayer.ontimeupdate = () => {
-        logger.info('VoicePlayer: OnTimeUpdate event is called from audioPlayer', { groupKey, audioPlayer });
         voicePlayerDispatcher({
           type: ON_CURRENT_TIME_UPDATE,
           payload: {
