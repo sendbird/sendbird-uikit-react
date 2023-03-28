@@ -106,6 +106,7 @@ export const VoiceMessageInputWrapper = ({
             setVoiceInputState(VoiceMessageInputStatus.READY_TO_RECORD);
           } else {
             stop();
+            pause();
             setSubmit(true);
           }
         }}
