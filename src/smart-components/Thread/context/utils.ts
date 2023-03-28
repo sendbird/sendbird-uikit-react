@@ -12,6 +12,22 @@ export const getNicknamesMapFromMembers = (members = []): Map<string, string> =>
   return nicknamesMap;
 };
 
+export const isParentMessage = (message: UserMessage | FileMessage): boolean => {
+  return (
+    message?.parentMessage === null
+    && message?.parentMessageId === null
+    && message?.threadInfo !== null
+  );
+};
+
+export const isThreadMessage = (message: UserMessage | FileMessage): boolean => {
+  return (
+    message?.parentMessage !== null
+    && message?.parentMessageId !== null
+    && message?.threadInfo === null
+  );
+};
+
 export const isAboutSame = (a: number, b: number, px: number): boolean => (Math.abs(a - b) <= px);
 
 export const isEmpty = (val: unknown): boolean => (val === null || val === undefined);
