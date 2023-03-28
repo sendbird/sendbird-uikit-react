@@ -8,7 +8,6 @@ import { ChannelType } from '@sendbird/chat';
 
 interface DynamicProps {
   channelUrl: string;
-  parentMessageId: number;
   sdkInit: boolean;
   parentMessage?: BaseMessage;
 }
@@ -21,7 +20,6 @@ interface StaticProps {
 
 export default function useGetParentMessage({
   channelUrl,
-  parentMessageId,
   sdkInit,
   parentMessage,
 }: DynamicProps, {
@@ -39,7 +37,7 @@ export default function useGetParentMessage({
       const params: MessageRetrievalParams = {
         channelUrl,
         channelType: ChannelType.GROUP,
-        messageId: parentMessageId,
+        messageId: parentMessage?.messageId,
         includeMetaArray: true,
         includeReactions: true,
         includeThreadInfo: true,
@@ -67,7 +65,7 @@ export default function useGetParentMessage({
           });
         });
     }
-  }, [sdkInit, parentMessageId]);
+  }, [sdkInit, parentMessage?.messageId]);
   /**
    * We don't use channelUrl here,
    * because Thread must operate independently of the channel.
