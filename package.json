@@ -18,9 +18,10 @@
   "scripts": {
     "test": "jest",
     "test-update-snapshot": "jest -u",
+    "afterbuild": "node ./scripts/post_build.js;",
     "cp-css": "./scripts/copy-css.sh",
     "clean-release": "rm -rf ./release; rm -rf ./dist",
-    "build": "npm run clean-release; rollup -c",
+    "build": "npm run clean-release; rollup -c; npm run afterbuild",
     "start": "rollup -c -w",
     "reset": "rm -rf ./node_modules; npm install",
     "prepublishOnly": "npm run build",

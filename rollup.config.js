@@ -107,10 +107,6 @@ module.exports = ({
           rename: 'index.d.ts',
         },
         {
-          src: './package-lock.json',
-          dest: 'dist',
-        },
-        {
           src: './README.md',
           dest: 'dist',
         },
@@ -121,15 +117,6 @@ module.exports = ({
         {
           src: './CHANGELOG.md',
           dest: 'dist',
-        },
-        {
-          src: './.size-snapshot.json',
-          dest: 'dist',
-        },
-        {
-          src: './scripts/package.template.json',
-          dest: 'dist',
-          rename: 'package.json',
         },
       ],
     }),
