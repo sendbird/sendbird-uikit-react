@@ -134,11 +134,10 @@ module.exports = ({
       ],
     }),
     visualizer({
-      filename: 'bundle-analysis.yml',
-      title: `${pkg.name} - Rollup Visualizer`,
-      open: false,
+      filename: 'bundle-analysis.json',
       gzipSize: true,
-      template: 'list',
+      template: 'raw-data',
+      brotliSize: false,
     }),
     // Uncomment the below line, if you want to see box-graph of bundle size
     // visualizer(),
