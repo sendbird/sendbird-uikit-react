@@ -3,7 +3,7 @@ import { User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { BaseMessage, FileMessage, FileMessageCreateParams, UserMessage } from '@sendbird/chat/message';
 
-import { getNicknamesMapFromMembers, isThreadMessage } from './utils';
+import { getNicknamesMapFromMembers, getParentMessageFrom } from './utils';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
@@ -73,7 +73,7 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
     onUserProfileMessage,
   } = props;
   const propsMessage = props?.message;
-  const propsParentMessage = isThreadMessage(propsMessage) ? propsMessage?.parentMessage : propsMessage;
+  const propsParentMessage = getParentMessageFrom(propsMessage);
   // Context from SendbirdProvider
   const globalStore = useSendbirdStateContext();
   const { stores, config } = globalStore;

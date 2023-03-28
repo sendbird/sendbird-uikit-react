@@ -1,5 +1,5 @@
 import { UserMessage } from "@sendbird/chat/message";
-import { isParentMessage, isThreadMessage } from "../utils";
+import { getParentMessageFrom, isParentMessage, isThreadMessage } from "../utils";
 
 const mockParentMessage = {
   messageId: 1,
@@ -34,5 +34,14 @@ describe('Thread/utils - isThreadMessage', () => {
   });
   it('should comfirm if the message is not a thread message', () => {
     expect(isThreadMessage(mockParentMessage as UserMessage)).toBe(false);
+  });
+});
+
+describe('Thread/utils - getParentMessageFrom', () => {
+  it('should return parent message if it has a parent message', () => {
+    expect(getParentMessageFrom(mockThreadMessage as UserMessage)).toBe(mockParentMessage);
+  });
+  it('should return itself if it is a parent message', () => {
+    expect(getParentMessageFrom(mockParentMessage as UserMessage)).toBe(mockParentMessage);
   });
 });

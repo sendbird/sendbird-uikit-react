@@ -51,7 +51,7 @@ export default function useGetParentMessage({
       fetchParentMessage()
         .then((parentMsg) => {
           logger.info('Thread | useGetParentMessage: Get parent message succeeded.', parentMessage);
-          parentMsg.ogMetaData = parentMessage.ogMetaData;// ogMetaData is not included for now
+          parentMsg.ogMetaData = parentMessage?.ogMetaData || null;// ogMetaData is not included for now
           threadDispatcher({
             type: ThreadContextActionTypes.GET_PARENT_MESSAGE_SUCCESS,
             payload: { parentMessage: parentMsg },
