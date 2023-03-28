@@ -20,15 +20,19 @@ const mockThreadMessage = {
 };
 
 describe('Thread/utils - isParentMessage', () => {
-  it('should comfirm if messages are parent message', () => {
+  it('should comfirm if the message is a parent message', () => {
     expect(isParentMessage(mockParentMessage as UserMessage)).toBe(true);
+  });
+  it('should confirm if the message is not a parent message', () => {
     expect(isParentMessage(mockThreadMessage as UserMessage)).toBe(false);
   });
 });
 
 describe('Thread/utils - isThreadMessage', () => {
-  it('should comfirm if messages are parent message', () => {
-    expect(isThreadMessage(mockParentMessage as UserMessage)).toBe(false);
+  it('should comfirm if the message is a thread message', () => {
     expect(isThreadMessage(mockThreadMessage as UserMessage)).toBe(true);
+  });
+  it('should comfirm if the message is not a thread message', () => {
+    expect(isThreadMessage(mockParentMessage as UserMessage)).toBe(false);
   });
 });
