@@ -107,10 +107,6 @@ module.exports = ({
           rename: 'index.d.ts',
         },
         {
-          src: './package-lock.json',
-          dest: 'dist',
-        },
-        {
           src: './README.md',
           dest: 'dist',
         },
