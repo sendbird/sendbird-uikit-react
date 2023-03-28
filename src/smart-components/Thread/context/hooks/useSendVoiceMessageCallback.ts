@@ -62,7 +62,7 @@ export const useSendVoiceMessageCallback = ({
       messageParams.isReplyToChannel = true;
       messageParams.parentMessageId = quoteMessage.messageId;
     }
-
+    logger.info('Thread | useSendVoiceMessageCallback:  Start sending voice message', messageParams);
     currentChannel?.sendFileMessage(messageParams)
       .onPending((pendingMessage) => {
         threadDispatcher({
