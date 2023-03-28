@@ -13,6 +13,6 @@
 
 ## Step 2 - Actual release
 10. Commit all changes
-11. Update the version in `package.json` and `package-lock.json` to the new Release Candidate version: Run `npm version patch/minor/major`
+11. Update the version in `package.json` and `package-lock.json` to the new real release version: Run `npm version patch/minor/major`
 12. Run `npm run build`
 13. Inside `./<root>/dist`, Run `npm publish`
