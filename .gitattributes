@@ -1,0 +1,3 @@
+# to use UTF16 file as diff(otherwise git think this is binaryfile),
+# you need to set the following property
+bundle-analysis.yml diff

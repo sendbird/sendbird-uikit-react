@@ -114,7 +114,7 @@
     "rollup-plugin-polyfill-node": "^0.10.1",
     "rollup-plugin-postcss": "^4.0.0",
     "rollup-plugin-scss": "^3.0.0",
-    "rollup-plugin-size-snapshot": "^0.12.0",
+    "rollup-plugin-visualizer": "^5.9.0",
     "sass": "^1.55.0",
     "sass-loader": "^10.2.0",
     "style-loader": "^1.1.3",

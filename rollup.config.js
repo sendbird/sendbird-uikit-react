@@ -1,9 +1,7 @@
 // plugins
 import { babel } from '@rollup/plugin-babel';
-// import external from 'rollup-plugin-peer-deps-external';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
-// import extensions from 'rollup-plugin-extensions';
 import svgr from '@svgr/rollup';
 import scss from 'rollup-plugin-scss';
 import postcss from 'rollup-plugin-postcss';
@@ -12,7 +10,7 @@ import typescript from '@rollup/plugin-typescript';
 import autoprefixer from 'autoprefixer';
 import copy from 'rollup-plugin-copy';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
-import { sizeSnapshot } from 'rollup-plugin-size-snapshot';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 // config from package.json
 import pkg from './package.json';
@@ -135,8 +133,14 @@ module.exports = ({
         },
       ],
     }),
-    sizeSnapshot({
-      printInfo: false,
+    visualizer({
+      filename: 'bundle-analysis.yml',
+      title: `${pkg.name} - Rollup Visualizer`,
+      open: false,
+      gzipSize: true,
+      template: 'list',
     }),
+    // Uncomment the below line, if you want to see box-graph of bundle size
+    // visualizer(),
   ],
 });
