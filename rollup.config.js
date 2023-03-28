@@ -118,15 +118,6 @@ module.exports = ({
           src: './CHANGELOG.md',
           dest: 'dist',
         },
-        {
-          src: './.size-snapshot.json',
-          dest: 'dist',
-        },
-        {
-          src: './scripts/package.template.json',
-          dest: 'dist',
-          rename: 'package.json',
-        },
       ],
     }),
     visualizer({
