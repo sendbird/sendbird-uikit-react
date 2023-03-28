@@ -46,7 +46,6 @@ type OpenChannelQueries = {
     // includeReactions?: boolean,
     // UIKit doesn't support message threading in OpenChannel
     // includeThreadInfo?: boolean,
-    includePollDetails?: boolean,
     includeParentMessageInfo?: boolean,
     showSubchannelMessagesOnly?: boolean,
     customTypes?: Array<string>,

@@ -43,7 +43,6 @@ export default function useGetParentMessage({
         includeMetaArray: true,
         includeReactions: true,
         includeThreadInfo: true,
-        includePollDetails: true,
         includeParentMessageInfo: true,
       };
       logger.info('Thread | useGetParentMessage: Get parent message start.', params);
