@@ -24,6 +24,11 @@ function appendVersionToTypeDefn() {
  * Remove all the unnecessary fields from package.json in root of the project
  */
 function cleanupPackageJSON(json) {
+  /**
+   * We remove scripts, module, main, types, and private fields from package.json
+   * Becuase folder structure is different in dist
+   * And, we don't want to run obligatory scripts in dist
+  */
   const cleanedPkgJSON = {
     version: json.version,
     ...packageTemplate,
