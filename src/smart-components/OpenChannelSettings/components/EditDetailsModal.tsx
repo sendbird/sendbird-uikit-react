@@ -7,7 +7,7 @@ import React, {
 import { OpenChannelUpdateParams } from '@sendbird/chat/openChannel';
 
 import { LocalizationContext } from '../../../lib/LocalizationContext';
-import * as pubSubTopics from '../../../lib/pubSub/topics';
+import pubSubTopics from '../../../lib/pubSub/topics';
 import Modal from '../../../ui/Modal';
 import Input, { InputLabel } from '../../../ui/Input';
 import Avatar from '../../../ui/Avatar/index';

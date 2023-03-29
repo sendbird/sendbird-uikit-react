@@ -1,0 +1,18 @@
+import { ObjectValues } from "../../utils/typeHelpers/objectValues";
+
+export const PUBSUB_TOPICS = {
+  // Group Channel
+  USER_UPDATED: 'USER_UPDATED',
+  SEND_MESSAGE_START: 'SEND_MESSAGE_START',
+  SEND_USER_MESSAGE: 'SEND_USER_MESSAGE',
+  SEND_FILE_MESSAGE: 'SEND_FILE_MESSAGE',
+  UPDATE_USER_MESSAGE: 'UPDATE_USER_MESSAGE',
+  DELETE_MESSAGE: 'DELETE_MESSAGE',
+  LEAVE_CHANNEL: 'LEAVE_CHANNEL',
+  CREATE_CHANNEL: 'CREATE_CHANNEL',
+  // Open Channel
+  UPDATE_OPEN_CHANNEL: 'UPDATE_OPEN_CHANNEL',
+} as const;
+export type pubSubTopic = ObjectValues<typeof PUBSUB_TOPICS>;
+
+export default PUBSUB_TOPICS;

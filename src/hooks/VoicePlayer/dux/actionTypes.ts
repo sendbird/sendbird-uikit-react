@@ -1,3 +1,5 @@
+import { ObjectValues } from "../../../utils/typeHelpers/objectValues";
+
 export const actionTypes = {
   INITIALIZE_AUDIO_UNIT: 'INITIALIZE_AUDIO_UNIT',
   SET_CURRENT_PLAYER: 'SET_CURRENT_PLAYER',
@@ -6,7 +8,6 @@ export const actionTypes = {
   ON_CURRENT_TIME_UPDATE: 'ON_CURRENT_TIME_UPDATE',
 } as const;
 
-type ObjectValues<T> = T[keyof T];
 export type VoicePlayerActionType = ObjectValues<typeof actionTypes>;
 
 export const INITIALIZE_AUDIO_UNIT: VoicePlayerActionType = 'INITIALIZE_AUDIO_UNIT';

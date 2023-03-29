@@ -4,7 +4,7 @@ import { FileMessage, FileMessageCreateParams, MessageMetaArray, UserMessage } f
 import { Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';
-import * as topics from '../../../../lib/pubSub/topics';
+import topics from '../../../../lib/pubSub/topics';
 import {
   META_ARRAY_MESSAGE_TYPE_KEY,
   META_ARRAY_MESSAGE_TYPE_VALUE__VOICE,

@@ -3,7 +3,7 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { FileMessage, FileMessageCreateParams, MessageMetaArray, UserMessage } from '@sendbird/chat/message';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from "../dux/actionTypes";
-import * as topics from '../../../../lib/pubSub/topics';
+import topics from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from "../utils";
 import {
   META_ARRAY_MESSAGE_TYPE_KEY,

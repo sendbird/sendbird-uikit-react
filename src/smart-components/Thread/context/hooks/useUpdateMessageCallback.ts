@@ -5,7 +5,7 @@ import { UserMessage, UserMessageUpdateParams } from "@sendbird/chat/message";
 import { CustomUseReducerDispatcher, Logger } from "../../../../lib/SendbirdState";
 import { ThreadContextActionTypes } from "../dux/actionTypes";
 
-import * as topics from '../../../../lib/pubSub/topics';
+import topics from '../../../../lib/pubSub/topics';
 
 interface DynamicProps {
   currentChannel: GroupChannel;

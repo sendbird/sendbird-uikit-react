@@ -1,5 +1,8 @@
 // Logger, pretty much explains it
 // in SendbirdProvider
+
+import { ObjectValues } from "../../utils/typeHelpers/objectValues";
+
 // const [logger, setLogger] = useState(LoggerFactory(logLevel));
 export const LOG_LEVELS = {
   DEBUG: 'debug',
@@ -7,9 +10,10 @@ export const LOG_LEVELS = {
   ERROR: 'error',
   INFO: 'info',
   ALL: 'all',
-};
+} as const;
+export type LogLevel = ObjectValues<typeof LOG_LEVELS>;
 
-const colorLog = (level) => {
+const colorLog = (level: LogLevel): string => {
   switch (level) {
     case LOG_LEVELS.WARNING:
       return ('color: Orange');
@@ -20,11 +24,16 @@ const colorLog = (level) => {
   }
 };
 
+interface PrintLogProps {
+  level: LogLevel;
+  title: string;
+  description?: string;
+}
 export const printLog = ({
   level,
   title,
   description = '',
-}) => {
+}: PrintLogProps): void => {
   // eslint-disable-next-line no-console
   console.log(
     `%c SendbirdUIKit | ${level} | ${new Date().toISOString()} | ${title} ${description && '|'}`, colorLog(level),
@@ -32,17 +41,28 @@ export const printLog = ({
   );
 };
 
-export const getDefaultLogger = () => ({
-  info: () => {},
-  error: () => {},
-  warning: () => {},
+type LoggerLogType = (title?: string, description?: string) => void;
+interface LoggerInterface {
+  info: LoggerLogType;
+  error: LoggerLogType;
+  warning: LoggerLogType;
+}
+
+const noop = () => {/* noop */};
+export const getDefaultLogger = (): LoggerInterface => ({
+  info: noop,
+  error: noop,
+  warning: noop,
 });
 
-export const LoggerFactory = (lvl, customInterface) => {
+export const LoggerFactory = (
+  lvl: LogLevel,
+  customInterface: () => void,
+): LoggerInterface => {
   const logInterface = customInterface || printLog;
-  const lvlArray = Array.isArray(lvl) ? lvl : [lvl];
+  const lvlArray: Array<LogLevel> = Array.isArray(lvl) ? lvl : [lvl];
 
-  const applyLog = (lgLvl) => (title, description) => logInterface({
+  const applyLog = (lgLvl: LogLevel) => (title?: string, description?: string) => logInterface({
     level: lgLvl,
     title,
     description,
@@ -83,3 +103,5 @@ export const LoggerFactory = (lvl, customInterface) => {
   }, getDefaultLogger());
   return logger;
 };
+
+// TODO: Make this to hook, useLogger

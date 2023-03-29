@@ -2,7 +2,7 @@ import './index.scss';
 import './__experimental__typography.scss';
 
 import React, { useEffect, useReducer, useState } from 'react';
-import PropTypes from 'prop-types';
+import { User } from '@sendbird/chat';
 
 import { SendbirdSdkContext } from './SendbirdSdkContext';
 import { handleConnection } from './dux/sdk/thunks';
@@ -26,39 +26,93 @@ import { MediaQueryProvider } from './MediaQueryContext';
 import getStringSet from '../ui/Label/stringSet';
 import { VOICE_RECORDER_DEFAULT_MAX, VOICE_RECORDER_DEFAULT_MIN } from '../utils/consts';
 
-export default function Sendbird(props) {
-  const {
-    userId,
-    dateLocale,
-    appId,
-    accessToken,
-    configureSession,
-    // mediaQueryBreakPoint,
-    customApiHost,
-    customWebSocketHost,
-    children,
-    disableUserProfile,
-    disableMarkAsDelivered,
-    renderUserProfile,
-    onUserProfileMessage,
-    allowProfileEdit,
-    theme,
-    nickname,
-    profileUrl,
-    userListQuery,
-    config = {},
-    colorSet,
-    stringSet,
-    imageCompression,
-    isReactionEnabled,
-    isMentionEnabled,
-    isVoiceMessageEnabled,
-    voiceRecord,
-    isTypingIndicatorEnabledOnChannelList,
-    isMessageReceiptStatusEnabledOnChannelList,
-    replyType,
-  } = props;
+export type UserListQueryType = {
+  hasNext?: boolean;
+  next: () => Promise<Array<User>>;
+}
 
+interface VoiceRecordOptions {
+  maxRecordingTime?: number;
+  minRecordingTime?: number;
+}
+
+export interface ImageCompressionOptions {
+  compressionRate?: number;
+  resizingWidth?: number | string;
+  resizingHeight?: number | string;
+}
+
+export interface SendbirdConfig {
+  logLevel?: string | Array<string>;
+  pubSub?: () => void;// TODO: Define pubSub type and apply it here
+  userMention?: {
+    maxMentionCount?: number;
+    maxSuggestionCount?: number;
+  };
+  isREMUnitEnabled?: boolean;
+}
+
+export interface SendbirdProviderProps {
+  appId: string;
+  userId: string;
+  children: React.ReactElement;
+  accessToken?: string;
+  customApiHost?: string;
+  customWebSocketHost?: string;
+  configureSession?: () => void;
+  theme?: 'light' | 'dark';
+  config?: SendbirdConfig;
+  nickname?: string;
+  colorSet?: Record<string, string>;
+  stringSet?: Record<string, string>;
+  replyType?: 'NONE' | 'QUOTE_REPLY' | 'THREAD';
+  dateLocale?: Locale;
+  profileUrl?: string;
+  voiceRecord?: VoiceRecordOptions;
+  userListQuery?: UserListQueryType;
+  imageCompression?: ImageCompressionOptions;
+  allowProfileEdit?: boolean;
+  isMentionEnabled?: boolean;
+  isReactionEnabled?: boolean;
+  disableUserProfile?: boolean;
+  isVoiceMessageEnabled?: boolean;
+  disableMarkAsDelivered?: boolean;
+  isTypingIndicatorEnabledOnChannelList?: boolean;
+  isMessageReceiptStatusEnabledOnChannelList?: boolean;
+  renderUserProfile?: () => React.ReactElement;
+  onUserProfileMessage?: () => void;
+}
+
+const Sendbird = ({
+  appId,
+  userId,
+  children,
+  accessToken = '',
+  customApiHost = '',
+  customWebSocketHost = '',
+  configureSession = null,
+  theme = 'light',
+  config = {},
+  nickname = '',
+  colorSet = null,
+  stringSet = null,
+  replyType = 'NONE',
+  dateLocale = null,
+  profileUrl = '',
+  voiceRecord = { maxRecordingTime: VOICE_RECORDER_DEFAULT_MAX, minRecordingTime: VOICE_RECORDER_DEFAULT_MIN },
+  userListQuery = null,
+  imageCompression = {},
+  allowProfileEdit = false,
+  isMentionEnabled = false,
+  isReactionEnabled = true,
+  disableUserProfile = false,
+  isVoiceMessageEnabled = true,
+  disableMarkAsDelivered = false,
+  isTypingIndicatorEnabledOnChannelList = false,
+  isMessageReceiptStatusEnabledOnChannelList = false,
+  renderUserProfile = null,
+  onUserProfileMessage = null,
+}: SendbirdProviderProps): React.ReactElement => {
   const mediaQueryBreakPoint = false;
 
   const {
@@ -223,98 +277,4 @@ export default function Sendbird(props) {
   );
 }
 
-Sendbird.propTypes = {
-  userId: PropTypes.string.isRequired,
-  appId: PropTypes.string.isRequired,
-  accessToken: PropTypes.string,
-  customApiHost: PropTypes.string,
-  customWebSocketHost: PropTypes.string,
-  // mediaQueryBreakPoint: PropTypes.string,
-  configureSession: PropTypes.func,
-  children: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element),
-    PropTypes.any,
-  ]).isRequired,
-  theme: PropTypes.string,
-  nickname: PropTypes.string,
-  dateLocale: PropTypes.shape({}),
-  profileUrl: PropTypes.string,
-  disableUserProfile: PropTypes.bool,
-  disableMarkAsDelivered: PropTypes.bool,
-  renderUserProfile: PropTypes.func,
-  onUserProfileMessage: PropTypes.func,
-  allowProfileEdit: PropTypes.bool,
-  userListQuery: PropTypes.func,
-  config: PropTypes.shape({
-    // None Error Warning Info 'All/Debug'
-    logLevel: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.arrayOf(PropTypes.string),
-    ]),
-    pubSub: PropTypes.shape({
-      subscribe: PropTypes.func,
-      publish: PropTypes.func,
-    }),
-    userMention: PropTypes.shape({
-      maxMentionCount: PropTypes.number,
-      maxSuggestionCount: PropTypes.number,
-    }),
-    isREMUnitEnabled: PropTypes.bool,
-  }),
-  stringSet: PropTypes.objectOf(PropTypes.string),
-  colorSet: PropTypes.objectOf(PropTypes.string),
-  isReactionEnabled: PropTypes.bool,
-  isMentionEnabled: PropTypes.bool,
-  isVoiceMessageEnabled: PropTypes.bool,
-  voiceRecord: PropTypes.shape({
-    maxRecordingTime: PropTypes.number,
-    minRecordingTime: PropTypes.number,
-  }),
-  imageCompression: PropTypes.shape({
-    compressionRate: PropTypes.number,
-    resizingWidth: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.string,
-    ]),
-    resizingHeight: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.string,
-    ]),
-  }),
-  isTypingIndicatorEnabledOnChannelList: PropTypes.bool,
-  isMessageReceiptStatusEnabledOnChannelList: PropTypes.bool,
-  replyType: PropTypes.oneOf(['NONE', 'QUOTE_REPLY', 'THREAD']),
-};
-
-Sendbird.defaultProps = {
-  accessToken: '',
-  customApiHost: null,
-  customWebSocketHost: null,
-  configureSession: null,
-  theme: 'light',
-  // mediaQueryBreakPoint: null,
-  nickname: '',
-  dateLocale: null,
-  profileUrl: '',
-  disableUserProfile: false,
-  disableMarkAsDelivered: false,
-  renderUserProfile: null,
-  onUserProfileMessage: null,
-  allowProfileEdit: false,
-  userListQuery: null,
-  config: {},
-  stringSet: null,
-  colorSet: null,
-  imageCompression: {},
-  isReactionEnabled: true,
-  isMentionEnabled: false,
-  isVoiceMessageEnabled: true,
-  voiceRecord: {
-    maxRecordingTime: VOICE_RECORDER_DEFAULT_MAX,
-    minRecordingTime: VOICE_RECORDER_DEFAULT_MIN,
-  },
-  isTypingIndicatorEnabledOnChannelList: false,
-  isMessageReceiptStatusEnabledOnChannelList: false,
-  replyType: 'NONE',
-};
+export default Sendbird;

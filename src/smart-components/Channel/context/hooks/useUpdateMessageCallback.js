@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
 import * as messageActionTypes from '../dux/actionTypes';
-import * as topics from '../../../../lib/pubSub/topics';
+import topics from '../../../../lib/pubSub/topics';
 
 function useUpdateMessageCallback({
   currentGroupChannel,

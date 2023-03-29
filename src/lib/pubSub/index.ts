@@ -3,7 +3,14 @@
 // for example, if customer sends a message from their custom component
 // without pubsub,we would not be able to listen to it
 // in our ChannelList or Conversation
-export default () => {
+
+interface PubSubTypes {
+  __getTopics: () => Record<string, string>;
+  subscribe: (topic: string, listener: unknown) => { remove: () => void };
+  publish: (topic: string, info: unknown) => void;
+}
+
+const pubSubFactory = (): PubSubTypes => {
   const topics = {};
   const hOP = topics.hasOwnProperty;
 
@@ -34,3 +41,5 @@ export default () => {
     },
   };
 };
+
+export default pubSubFactory;
