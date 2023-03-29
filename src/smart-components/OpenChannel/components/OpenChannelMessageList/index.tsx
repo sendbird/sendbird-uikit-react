@@ -1,6 +1,6 @@
 import './openchannel-message-list.scss';
 
-import React, { ReactElement, useRef, useState, useMemo } from 'react';
+import React, { ReactElement, useRef, useState, useMemo, useLayoutEffect, useEffect } from 'react';
 import isSameDay from 'date-fns/isSameDay';
 
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
@@ -30,6 +30,10 @@ function OpenchannelMessageList(
   const scrollRef = ref || useRef(null);
   const [showScrollDownButton, setShowScrollDownButton] = useState(false);
 
+  // page scroll states
+  const [pageScrollHeight, setPageScrollHeight] = useState(0);
+  const [pageScrollTop, setPageScrollTop] = useState(0);
+
   const handleOnScroll = (e) => {
     const element = e.target;
     const {
@@ -37,6 +41,9 @@ function OpenchannelMessageList(
       scrollHeight,
       clientHeight,
     } = element;
+    if (scrollTop !== pageScrollTop) {
+      setPageScrollTop(scrollTop);
+    }
     if (scrollHeight > scrollTop + clientHeight + 1) {
       setShowScrollDownButton(true);
     } else {
@@ -47,12 +54,8 @@ function OpenchannelMessageList(
       return;
     }
     if (scrollTop === 0) {
-      const nodes = scrollRef.current.querySelectorAll('.sendbird-msg--scroll-ref');
-      const first = nodes && nodes[0];
       onScroll(() => {
-        try {
-          first.scrollIntoView();
-        } catch (error) { }
+        // noop
       });
     }
   };
@@ -63,6 +66,18 @@ function OpenchannelMessageList(
       setShowScrollDownButton(false);
     }
   };
+
+  useEffect(() => {
+    setPageScrollHeight(scrollRef?.current?.scrollHeight || 0);
+  }, [scrollRef?.current?.scrollHeight]);
+  useLayoutEffect(() => {
+    /**
+     * The pageScrollHeight and pageScrollTop have different values
+     * with the scrollHeight and scrollTop of srollRef.current at this moment
+     */
+    const previousScrollBottom = pageScrollHeight - pageScrollTop;
+    scrollRef.current.scrollTop = scrollRef.current.scrollHeight - previousScrollBottom;
+  }, [allMessages?.length]);
 
   const memoizedMessageList = useMemo(() => {
     if (allMessages.length > 0) {
