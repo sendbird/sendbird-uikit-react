@@ -26,4 +26,3 @@ export const VOICE_MESSAGE_MIME_TYPE = 'audio/mp3;sbu_type=voice';
 export const META_ARRAY_VOICE_DURATION_KEY = 'KEY_VOICE_MESSAGE_DURATION';
 export const META_ARRAY_MESSAGE_TYPE_KEY = 'KEY_INTERNAL_MESSAGE_TYPE';
 export const META_ARRAY_MESSAGE_TYPE_VALUE__VOICE = 'voice/mp3';
-``
