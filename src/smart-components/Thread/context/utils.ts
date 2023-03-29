@@ -1,6 +1,6 @@
 import format from 'date-fns/format';
 import { GroupChannel } from "@sendbird/chat/groupChannel";
-import { FileMessage, UserMessage } from "@sendbird/chat/message";
+import { BaseMessage, FileMessage, UserMessage } from "@sendbird/chat/message";
 import { getOutgoingMessageState, OutgoingMessageStates } from "../../../utils/exports/getOutgoingMessageState";
 
 export const getNicknamesMapFromMembers = (members = []): Map<string, string> => {
@@ -10,6 +10,32 @@ export const getNicknamesMapFromMembers = (members = []): Map<string, string> =>
     nicknamesMap.set(userId, nickname);
   }
   return nicknamesMap;
+};
+
+export const getParentMessageFrom = (message: UserMessage | FileMessage): UserMessage | FileMessage | BaseMessage => {
+  if (isParentMessage(message)) {
+    return message;
+  }
+  if (isThreadMessage(message)) {
+    return message?.parentMessage;
+  }
+  return null;
+};
+
+export const isParentMessage = (message: UserMessage | FileMessage): boolean => {
+  return (
+    message?.parentMessage === null
+    && message?.parentMessageId === null
+    && message?.threadInfo !== null
+  );
+};
+
+export const isThreadMessage = (message: UserMessage | FileMessage): boolean => {
+  return (
+    message?.parentMessage !== null
+    && message?.parentMessageId !== null
+    && message?.threadInfo === null
+  );
 };
 
 export const isAboutSame = (a: number, b: number, px: number): boolean => (Math.abs(a - b) <= px);

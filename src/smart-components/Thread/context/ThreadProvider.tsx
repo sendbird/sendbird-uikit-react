@@ -3,7 +3,7 @@ import { User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { BaseMessage, FileMessage, FileMessageCreateParams, UserMessage } from '@sendbird/chat/message';
 
-import { getNicknamesMapFromMembers } from './utils';
+import { getNicknamesMapFromMembers, getParentMessageFrom } from './utils';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
@@ -64,7 +64,6 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
   const {
     children,
     channelUrl,
-    message,
     onHeaderActionClick,
     onMoveToParentMessage,
     onBeforeSendVoiceMessage,
@@ -73,6 +72,8 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
     renderUserProfile,
     onUserProfileMessage,
   } = props;
+  const propsMessage = props?.message;
+  const propsParentMessage = getParentMessageFrom(propsMessage);
   // Context from SendbirdProvider
   const globalStore = useSendbirdStateContext();
   const { stores, config } = globalStore;
@@ -120,19 +121,19 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
   useGetChannel({
     channelUrl,
     sdkInit,
-    message,
+    message: propsMessage,
   }, { sdk, logger, threadDispatcher });
   useGetParentMessage({
     channelUrl,
     sdkInit,
-    parentMessageId: message?.parentMessageId,
-    parentMessage: message?.parentMessage,
+    parentMessage: propsParentMessage,
   }, { sdk, logger, threadDispatcher });
   useGetThreadList({
     sdkInit,
     parentMessage,
     isReactionEnabled,
-    anchorMessage: message?.messageId ? message : null,
+    anchorMessage: propsMessage?.messageId !== propsParentMessage?.messageId ? propsMessage : null,
+    // anchorMessage should be null when parentMessage doesn't exist
   }, { logger, threadDispatcher });
   useGetAllEmoji({ sdk }, { logger, threadDispatcher });
   // Handle channel events
@@ -193,7 +194,7 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
       value={{
         // ThreadProviderProps
         channelUrl,
-        message,
+        message: propsMessage,
         onHeaderActionClick,
         onMoveToParentMessage,
         // ThreadContextInitialState

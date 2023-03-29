@@ -8,7 +8,6 @@ import { ChannelType } from '@sendbird/chat';
 
 interface DynamicProps {
   channelUrl: string;
-  parentMessageId: number;
   sdkInit: boolean;
   parentMessage?: BaseMessage;
 }
@@ -21,7 +20,6 @@ interface StaticProps {
 
 export default function useGetParentMessage({
   channelUrl,
-  parentMessageId,
   sdkInit,
   parentMessage,
 }: DynamicProps, {
@@ -39,11 +37,10 @@ export default function useGetParentMessage({
       const params: MessageRetrievalParams = {
         channelUrl,
         channelType: ChannelType.GROUP,
-        messageId: parentMessageId,
+        messageId: parentMessage?.messageId,
         includeMetaArray: true,
         includeReactions: true,
         includeThreadInfo: true,
-        includePollDetails: true,
         includeParentMessageInfo: true,
       };
       logger.info('Thread | useGetParentMessage: Get parent message start.', params);
@@ -54,7 +51,7 @@ export default function useGetParentMessage({
       fetchParentMessage()
         .then((parentMsg) => {
           logger.info('Thread | useGetParentMessage: Get parent message succeeded.', parentMessage);
-          parentMsg.ogMetaData = parentMessage.ogMetaData;// ogMetaData is not included for now
+          parentMsg.ogMetaData = parentMessage?.ogMetaData || null;// ogMetaData is not included for now
           threadDispatcher({
             type: ThreadContextActionTypes.GET_PARENT_MESSAGE_SUCCESS,
             payload: { parentMessage: parentMsg },
@@ -68,7 +65,7 @@ export default function useGetParentMessage({
           });
         });
     }
-  }, [sdkInit, parentMessageId]);
+  }, [sdkInit, parentMessage?.messageId]);
   /**
    * We don't use channelUrl here,
    * because Thread must operate independently of the channel.

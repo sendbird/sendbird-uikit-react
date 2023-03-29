@@ -7,7 +7,6 @@ import Channel from '../Channel';
 import ChannelSettings from '../ChannelSettings';
 import MessageSearchPannel from '../MessageSearch';
 import Thread from '../Thread';
-import { BaseMessage, UserMessage } from '@sendbird/chat/message';
 
 export const DesktopLayout: React.FC<DesktopLayoutProps> = (
   props: DesktopLayoutProps,
@@ -77,10 +76,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
             setShowSettings(false);
             setShowSearch(false);
             if (replyType === 'THREAD') {
-              setThreadTargetMessage({
-                parentMessage: message as BaseMessage,
-                parentMessageId: message?.messageId,
-              } as UserMessage);
+              setThreadTargetMessage(message);
               setShowThread(true);
             }
           }}

@@ -55,7 +55,6 @@ export type MessageListParams = {
   includeMetaArray?: boolean,
   includeReactions?: boolean,
   includeThreadInfo?: boolean,
-  includePollDetails?: boolean,
   includeParentMessageInfo?: boolean,
   showSubchannelMessagesOnly?: boolean,
   customTypes?: Array<string>,
