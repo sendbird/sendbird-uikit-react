@@ -13,6 +13,7 @@ import { useOpenChannelListContext } from '../../context/OpenChannelListProvider
 import OpenChannelListActionTypes from '../../context/dux/actionTypes';
 import CreateOpenChannel from '../../../CreateOpenChannel';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
+import { SCROLL_BUFFER } from '../../../../utils/consts';
 
 interface RenderOpenChannelPreviewProps {
   channel: OpenChannel;
@@ -57,7 +58,7 @@ function OpenChannelListUI({
       scrollHeight,
     } = element;
     const isAboutSame = (a, b, px) => (Math.abs(a - b) <= px);
-    if (isAboutSame(clientHeight + scrollTop, scrollHeight, 10)) {
+    if (isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER)) {
       fetchNextChannels((messages) => {
         if (messages) {
           try {

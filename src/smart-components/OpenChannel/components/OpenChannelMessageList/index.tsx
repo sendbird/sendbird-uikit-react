@@ -1,6 +1,7 @@
 import './openchannel-message-list.scss';
 
 import React, { ReactElement, useRef, useState, useMemo, useLayoutEffect, useEffect } from 'react';
+import { FileMessage, UserMessage } from '@sendbird/chat/message';
 import isSameDay from 'date-fns/isSameDay';
 
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
@@ -10,7 +11,7 @@ import { compareMessagesForGrouping } from '../../context/utils';
 import { useOpenChannelContext } from '../../context/OpenChannelProvider';
 import OpenChannelMessage from '../OpenChannelMessage';
 import { RenderMessageProps } from '../../../../types';
-import { FileMessage, UserMessage } from '@sendbird/chat/message';
+import { SCROLL_BUFFER } from '../../../../utils/consts';
 
 export type OpenchannelMessageListProps = {
   renderMessage?: (props: RenderMessageProps) => React.ElementType<RenderMessageProps>;
@@ -53,7 +54,7 @@ function OpenchannelMessageList(
     if (!hasMore) {
       return;
     }
-    if (scrollTop === 0) {
+    if (scrollTop < SCROLL_BUFFER) {
       onScroll(() => {
         // noop
       });
