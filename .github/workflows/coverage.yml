@@ -1,11 +1,13 @@
-on:
-  issue_comment:
-    types: [created, edited]
+name: Codecov
+on: [push]
+# on:
+#   issue_comment:
+#     types: [created, edited]
 
 jobs:
     coverage:
         runs-on: ubuntu-latest
-        if: github.event.issue.pull_request && contains(github.event.comment.body, './coverage')
+        # if: github.event.issue.pull_request && contains(github.event.comment.body, './coverage')
         steps:
           - uses: actions/checkout@master
           - uses: codecov/codecov-action@v3
