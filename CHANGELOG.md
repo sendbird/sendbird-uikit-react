@@ -2,14 +2,16 @@
 
 ## [v3.4.4] (Mar 31 2023)
 Features:
-* Increase the default maximum recording time of Voice Message to 10-minute
+* Increase default maximum recording time of Voice Message to 10 minutes
 * Add logger to VoicePlayer, VoiceRecorder, and useSendVoiceMessage hook
 
 Fixes:
-* Do not allow to scroll the whole page when OpenChannel is inside of the page that has scroll
-* Fix the issue that sending two voice messages when play audio before send the message
-* Clean up the interface of Thread
-  * <Thread message={message} />: The props message will be able to be the parent message of thread message
+* Prevent whole page from scrolling when OpenChannel scrolls
+  This issue occurs when customer implements an OpenChannel in a web page with scroll
+* Fix conditions in which two voice messages were send instead of one
+* Clean up Thread interface
+  If message.parentMessage doesnt exist, treat message as parentMessage
+  `<Thread message={message} />`
 
 ## [v3.4.3] (Mar 24 2023)
 
