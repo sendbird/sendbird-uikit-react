@@ -1,6 +1,7 @@
 import './openchannel-message-list.scss';
 
 import React, { ReactElement, useRef, useState, useMemo } from 'react';
+import { FileMessage, UserMessage } from '@sendbird/chat/message';
 import isSameDay from 'date-fns/isSameDay';
 
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
@@ -10,7 +11,7 @@ import { compareMessagesForGrouping } from '../../context/utils';
 import { useOpenChannelContext } from '../../context/OpenChannelProvider';
 import OpenChannelMessage from '../OpenChannelMessage';
 import { RenderMessageProps } from '../../../../types';
-import { FileMessage, UserMessage } from '@sendbird/chat/message';
+import { useHandleOnScrollCallback } from './useHandleOnScrollCallback';
 
 export type OpenchannelMessageListProps = {
   renderMessage?: (props: RenderMessageProps) => React.ElementType<RenderMessageProps>;
@@ -30,39 +31,19 @@ function OpenchannelMessageList(
   const scrollRef = ref || useRef(null);
   const [showScrollDownButton, setShowScrollDownButton] = useState(false);
 
-  const handleOnScroll = (e) => {
-    const element = e.target;
-    const {
-      scrollTop,
-      scrollHeight,
-      clientHeight,
-    } = element;
-    if (scrollHeight > scrollTop + clientHeight + 1) {
-      setShowScrollDownButton(true);
-    } else {
-      setShowScrollDownButton(false);
-    }
-
-    if (!hasMore) {
-      return;
-    }
-    if (scrollTop === 0) {
-      const nodes = scrollRef.current.querySelectorAll('.sendbird-msg--scroll-ref');
-      const first = nodes && nodes[0];
-      onScroll(() => {
-        try {
-          first.scrollIntoView();
-        } catch (error) { }
-      });
-    }
-  };
-
   const scrollToBottom = () => {
     if (scrollRef && scrollRef.current) {
       scrollRef.current.scrollTo(0, scrollRef.current.scrollHeight);
       setShowScrollDownButton(false);
     }
   };
+
+  const handleOnScroll = useHandleOnScrollCallback({
+    setShowScrollDownButton,
+    hasMore,
+    onScroll,
+    scrollRef,
+  });
 
   const memoizedMessageList = useMemo(() => {
     if (allMessages.length > 0) {
