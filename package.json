@@ -16,9 +16,8 @@
     "node": "16.x"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "test-update-snapshot": "jest -u",
-    "coverage": "jest --coverage",
     "afterbuild": "node ./scripts/post_build.js;",
     "cp-css": "./scripts/copy-css.sh",
     "clean-release": "rm -rf ./release; rm -rf ./dist",
