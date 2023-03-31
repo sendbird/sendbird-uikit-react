@@ -228,6 +228,7 @@ declare module "SendbirdUIKitGlobal" {
     customWebSocketHost?: string,
     children?: React.ReactElement;
     theme?: 'light' | 'dark';
+    replyType?: ReplyType;
     nickname?: string;
     profileUrl?: string;
     dateLocale?: Locale;
