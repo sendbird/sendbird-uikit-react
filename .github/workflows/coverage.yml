@@ -1,7 +1,11 @@
-name: Caching with npm
+name: Test and coverage
 on: push
+# on:
+#   pull_request_review:
+#     types: [submitted]
 jobs:
-  lint:
+  test:
+    # if: github.event.review.state == 'approved'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -31,8 +35,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Lint
-        run: npm run lint
+      - name: Coverage
+        run: npm run coverage
 
-      - name: Test
-        run: npm run test
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/*.json
+          fail_ci_if_error: true
