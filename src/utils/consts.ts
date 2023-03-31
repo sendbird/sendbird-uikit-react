@@ -2,8 +2,8 @@ export const SCROLL_BUFFER = 10;
 
 // voice message record
 export const VOICE_RECORDER_CLICK_BUFFER_TIME = 250;
-export const VOICE_RECORDER_DEFAULT_MIN = 1000;
-export const VOICE_RECORDER_DEFAULT_MAX = 60000;
+export const VOICE_RECORDER_DEFAULT_MIN = 1000; // 1 seconds
+export const VOICE_RECORDER_DEFAULT_MAX = 600000; // 10 minutes
 export const VOICE_RECORDER_MIME_TYPE = 'audio/webm';
 export const VOICE_RECORDER_AUDIO_BITS = 128000;
 
