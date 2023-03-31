@@ -10,6 +10,9 @@ dist
 .rpt2_cache
 release
 
+# coverage
+coverage
+
 # misc
 .vscode
 .DS_Store

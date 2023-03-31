@@ -5,11 +5,26 @@ on: [push]
 #     types: [created, edited]
 
 jobs:
+    strategy:
+      matrix:
+        node-version: [16]
     coverage:
         runs-on: ubuntu-latest
         # if: github.event.issue.pull_request && contains(github.event.comment.body, './coverage')
         steps:
+          - uses: actions/checkout@v2
+          - name: Use Node.js ${{ matrix.node-version }}
+            uses: actions/setup-node@v2.2.0
+            with:
+              node-version: ${{ matrix.node-version }}
+
+          - name: Upgrade npm
+            run: npm install -g npm@7
+
+          - run: npm install
+          - run: npm run coverage
           - uses: actions/checkout@master
           - uses: codecov/codecov-action@v3
             with:
               verbose: true # optional (default = false)
+              directory: ./coverage
