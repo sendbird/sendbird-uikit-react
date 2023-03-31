@@ -1,10 +1,11 @@
 name: Test and coverage
-on:
-  pull_request_review:
-    types: [submitted]
+on: push
+# on:
+#   pull_request_review:
+#     types: [submitted]
 jobs:
   test:
-    if: github.event.review.state == 'approved'
+    # if: github.event.review.state == 'approved'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -41,5 +42,5 @@ jobs:
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/*.json
+          files: ./coverage/clover.xml
           fail_ci_if_error: true
