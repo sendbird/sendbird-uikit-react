@@ -4,16 +4,16 @@ export default {
 
   // lame-js
   // remove when they remove 1.2.2
-  'lame.all': 'src/_externals/lamejs/lame.all.js',
+  // 'lame.all': 'src/_externals/lamejs/lame.all.js',
 
   // Easy to use app
   App: 'src/smart-components/App/index.jsx',
 
   // SendbirdProvider
-  SendbirdProvider: 'src/lib/Sendbird.jsx',
+  SendbirdProvider: 'src/lib/Sendbird.tsx',
   sendbirdSelectors: 'src/lib/selectors.ts',
   useSendbirdStateContext: 'src/hooks/useSendbirdStateContext.tsx',
-  withSendbird: 'src/lib/SendbirdSdkContext.jsx',
+  withSendbird: 'src/lib/SendbirdSdkContext.tsx',
 
   // Voice message
   'VoiceRecorder/context': 'src/hooks/VoiceRecorder/index.tsx',
