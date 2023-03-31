@@ -1,5 +1,18 @@
 # Changelog - v3
 
+## [v3.4.4] (Mar 31 2023)
+Features:
+* Increase default maximum recording time of Voice Message to 10 minutes
+* Add logger to VoicePlayer, VoiceRecorder, and useSendVoiceMessage hook
+
+Fixes:
+* Prevent whole page from scrolling when OpenChannel scrolls
+  This issue occurs when customer implements an OpenChannel in a web page with scroll
+* Fix edgecase in which voice messages were sent twice
+* Clean up Thread interface
+  If message.parentMessage doesnt exist, treat message as parentMessage
+  `<Thread message={message} />`
+
 ## [v3.4.3] (Mar 24 2023)
 
 Features:

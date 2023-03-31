@@ -10,10 +10,10 @@ export default {
   App: 'src/smart-components/App/index.jsx',
 
   // SendbirdProvider
-  SendbirdProvider: 'src/lib/Sendbird.jsx',
+  SendbirdProvider: 'src/lib/Sendbird.tsx',
   sendbirdSelectors: 'src/lib/selectors.ts',
   useSendbirdStateContext: 'src/hooks/useSendbirdStateContext.tsx',
-  withSendbird: 'src/lib/SendbirdSdkContext.jsx',
+  withSendbird: 'src/lib/SendbirdSdkContext.tsx',
 
   // Voice message
   'VoiceRecorder/context': 'src/hooks/VoiceRecorder/index.tsx',
