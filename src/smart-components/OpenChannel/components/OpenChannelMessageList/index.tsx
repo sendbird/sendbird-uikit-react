@@ -1,6 +1,6 @@
 import './openchannel-message-list.scss';
 
-import React, { ReactElement, useRef, useState, useMemo, useLayoutEffect, useEffect } from 'react';
+import React, { ReactElement, useRef, useState, useMemo } from 'react';
 import { FileMessage, UserMessage } from '@sendbird/chat/message';
 import isSameDay from 'date-fns/isSameDay';
 
@@ -11,7 +11,7 @@ import { compareMessagesForGrouping } from '../../context/utils';
 import { useOpenChannelContext } from '../../context/OpenChannelProvider';
 import OpenChannelMessage from '../OpenChannelMessage';
 import { RenderMessageProps } from '../../../../types';
-import { SCROLL_BUFFER } from '../../../../utils/consts';
+import { useHandleOnScrollCallback } from './useHandleOnScrollCallback';
 
 export type OpenchannelMessageListProps = {
   renderMessage?: (props: RenderMessageProps) => React.ElementType<RenderMessageProps>;
@@ -31,36 +31,6 @@ function OpenchannelMessageList(
   const scrollRef = ref || useRef(null);
   const [showScrollDownButton, setShowScrollDownButton] = useState(false);
 
-  // page scroll states
-  const [pageScrollHeight, setPageScrollHeight] = useState(0);
-  const [pageScrollTop, setPageScrollTop] = useState(0);
-
-  const handleOnScroll = (e) => {
-    const element = e.target;
-    const {
-      scrollTop,
-      scrollHeight,
-      clientHeight,
-    } = element;
-    if (scrollTop !== pageScrollTop) {
-      setPageScrollTop(scrollTop);
-    }
-    if (scrollHeight > scrollTop + clientHeight + 1) {
-      setShowScrollDownButton(true);
-    } else {
-      setShowScrollDownButton(false);
-    }
-
-    if (!hasMore) {
-      return;
-    }
-    if (scrollTop < SCROLL_BUFFER) {
-      onScroll(() => {
-        // noop
-      });
-    }
-  };
-
   const scrollToBottom = () => {
     if (scrollRef && scrollRef.current) {
       scrollRef.current.scrollTo(0, scrollRef.current.scrollHeight);
@@ -68,17 +38,12 @@ function OpenchannelMessageList(
     }
   };
 
-  useEffect(() => {
-    setPageScrollHeight(scrollRef?.current?.scrollHeight || 0);
-  }, [scrollRef?.current?.scrollHeight]);
-  useLayoutEffect(() => {
-    /**
-     * The pageScrollHeight and pageScrollTop have different values
-     * with the scrollHeight and scrollTop of srollRef.current at this moment
-     */
-    const previousScrollBottom = pageScrollHeight - pageScrollTop;
-    scrollRef.current.scrollTop = scrollRef.current.scrollHeight - previousScrollBottom;
-  }, [allMessages?.length]);
+  const handleOnScroll = useHandleOnScrollCallback({
+    setShowScrollDownButton,
+    hasMore,
+    onScroll,
+    scrollRef,
+  });
 
   const memoizedMessageList = useMemo(() => {
     if (allMessages.length > 0) {
