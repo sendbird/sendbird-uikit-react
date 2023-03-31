@@ -1,11 +1,10 @@
 name: Test and coverage
-on: push
-# on:
-#   pull_request_review:
-#     types: [submitted]
+on:
+  pull_request_review:
+    types: [submitted]
 jobs:
   test:
-    # if: github.event.review.state == 'approved'
+    if: github.event.review.state == 'approved'
     runs-on: ubuntu-latest
     strategy:
       matrix:
