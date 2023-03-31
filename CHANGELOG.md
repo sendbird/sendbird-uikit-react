@@ -8,7 +8,7 @@ Features:
 Fixes:
 * Prevent whole page from scrolling when OpenChannel scrolls
   This issue occurs when customer implements an OpenChannel in a web page with scroll
-* Fix conditions in which two voice messages were send instead of one
+* Fix edgecase in which voice messages were sent twice
 * Clean up Thread interface
   If message.parentMessage doesnt exist, treat message as parentMessage
   `<Thread message={message} />`
