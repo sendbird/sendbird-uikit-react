@@ -25,15 +25,16 @@ export const getParentMessageFrom = (message: UserMessage | FileMessage): UserMe
 export const isParentMessage = (message: UserMessage | FileMessage): boolean => {
   return (
     message?.parentMessage === null
-    && message?.parentMessageId === null
-    && message?.threadInfo !== null
+    && typeof message?.parentMessageId === 'number'
+    && !message?.parentMessageId
   );
 };
 
 export const isThreadMessage = (message: UserMessage | FileMessage): boolean => {
   return (
     message?.parentMessage !== null
-    && message?.parentMessageId !== null
+    && typeof message?.parentMessageId === 'number'
+    && message?.parentMessageId > 0
     && message?.threadInfo === null
   );
 };

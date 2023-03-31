@@ -2,20 +2,20 @@ import { UserMessage } from "@sendbird/chat/message";
 import { getParentMessageFrom, isParentMessage, isThreadMessage } from "../utils";
 
 const mockParentMessage = {
-  messageId: 1,
+  messageId: 111111,
   parentMessage: null,
-  parentMessageId: null,
+  parentMessageId: 0,
   threadInfo: {
-    lastRepliedAt: 100000,
+    lastRepliedAt: 1000,
     replyCount: 1,
     mostRepliedUsers: [],
-    updatedAt: 100000,
+    updatedAt: 1000,
   },
 };
 const mockThreadMessage = {
-  messageId: 2,
+  messageId: 111112,
   parentMessage: mockParentMessage,
-  parentMessageId: 1,
+  parentMessageId: 111111,
   threadInfo: null,
 };
 
@@ -26,6 +26,9 @@ describe('Thread/utils - isParentMessage', () => {
   it('should confirm if the message is not a parent message', () => {
     expect(isParentMessage(mockThreadMessage as UserMessage)).toBe(false);
   });
+  it('should check type of the parentMessageId', () => {
+    expect(isParentMessage({ ...mockParentMessage, parentMessageId: '1' } as UserMessage)).toBe(false);
+  });
 });
 
 describe('Thread/utils - isThreadMessage', () => {
@@ -34,6 +37,9 @@ describe('Thread/utils - isThreadMessage', () => {
   });
   it('should comfirm if the message is not a thread message', () => {
     expect(isThreadMessage(mockParentMessage as UserMessage)).toBe(false);
+  });
+  it('should check type of the parentMessageId', () => {
+    expect(isThreadMessage({ ...mockThreadMessage, parentMessageId: '1' } as UserMessage)).toBe(false);
   });
 });
 

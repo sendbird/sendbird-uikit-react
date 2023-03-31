@@ -145,7 +145,7 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
     sdkInit,
     currentChannel,
     parentMessage,
-  }, { logger, pubSub, threadDispatcher })
+  }, { logger, pubSub, threadDispatcher });
 
   // callbacks
   const fetchPrevThreads = useGetPrevThreadsCallback({
