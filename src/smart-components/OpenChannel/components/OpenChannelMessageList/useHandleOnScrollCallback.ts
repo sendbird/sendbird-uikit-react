@@ -8,6 +8,10 @@ export interface UseHandleOnScrollCallbackProps {
   scrollRef: React.RefObject<HTMLDivElement>;
 }
 
+export function calcScrollBottom(scrollHeight: number, scrollTop: number): number {
+  return scrollHeight - scrollTop
+}
+
 export function useHandleOnScrollCallback({
   setShowScrollDownButton,
   hasMore,
@@ -21,7 +25,12 @@ export function useHandleOnScrollCallback({
       scrollHeight,
       clientHeight,
     } = element;
-    const scrollBottom = scrollHeight - scrollTop;
+    // https://sendbird.atlassian.net/browse/SBISSUE-11759
+    // the edge case where channel is inside a page that already has scroll
+    // scrollintoView will move the whole page, which we dont want
+    const scrollBottom = calcScrollBottom(scrollHeight, scrollTop);
+    // even if there is more to fetch or not,
+    // we still have to show the scroll to bottom button
     if (scrollHeight > scrollTop + clientHeight + 1) {
       setShowScrollDownButton(true);
     } else {
@@ -32,7 +41,7 @@ export function useHandleOnScrollCallback({
     }
     if (scrollTop < SCROLL_BUFFER) {
       onScroll(() => {
-        // Fetch more messages
+        // sets the scroll position to the bottom of the new messages
         scrollRef.current.scrollTop = scrollRef.current.scrollHeight - scrollBottom;
       });
     }
