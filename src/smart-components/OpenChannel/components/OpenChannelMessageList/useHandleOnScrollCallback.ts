@@ -19,9 +19,6 @@ export function useHandleOnScrollCallback({
   scrollRef,
 }: UseHandleOnScrollCallbackProps): (e: React.UIEvent<HTMLElement>) => void {
   return useCallback((e) => {
-    if (!hasMore) {
-      return;
-    }
     const element = e.target as Element;
     const {
       scrollTop,
@@ -32,10 +29,15 @@ export function useHandleOnScrollCallback({
     // the edge case where channel is inside a page that already has scroll
     // scrollintoView will move the whole page, which we dont want
     const scrollBottom = calcScrollBottom(scrollHeight, scrollTop);
+    // even if there is more to fetch or not,
+    // we still have to show the scroll to bottom button
     if (scrollHeight > scrollTop + clientHeight + 1) {
       setShowScrollDownButton(true);
     } else {
       setShowScrollDownButton(false);
+    }
+    if (!hasMore) {
+      return;
     }
     if (scrollTop < SCROLL_BUFFER) {
       onScroll(() => {

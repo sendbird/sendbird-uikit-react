@@ -1,7 +1,7 @@
 import { useHandleOnScrollCallback, calcScrollBottom } from '../useHandleOnScrollCallback';
 import { renderHook } from '@testing-library/react'
 
-const prepareMockEvent = ({
+const prepareMockScrollEvent = ({
   scrollTop = 0,
   scrollHeight = 0,
   clientHeight = 0,
@@ -37,11 +37,41 @@ const prepareMockParams = () => {
 };
 
 describe('useHandleOnScrollCallback', () => {
-  it('should not execute if hasMore is false', () => {
+  it('should call setShowScrollDownButton with true when scrollHeight is larger', () => {
+    // prepare
+    const params = prepareMockParams();
+    const event = prepareMockScrollEvent({ scrollHeight: 100, scrollTop: 5 });
+    params.hasMore = false;
+
+    // call
+    const { result } = renderHook(() => useHandleOnScrollCallback(params));
+    const handleOnScroll = result.current;
+    handleOnScroll(event);
+
+    // assert
+    expect(params.setShowScrollDownButton).toHaveBeenCalledWith(true);
+  });
+
+  it('should call setShowScrollDownButton with false when scrollHeight is shorter', () => {
+    // prepare
+    const params = prepareMockParams();
+    const event = prepareMockScrollEvent({ scrollHeight: 5, scrollTop: 100 });
+
+    // call
+    const { result } = renderHook(() => useHandleOnScrollCallback(params));
+    const handleOnScroll = result.current;
+    handleOnScroll(event);
+
+    // assert
+    expect(params.setShowScrollDownButton).toHaveBeenCalledWith(false);
+    expect(params.onScroll).not.toHaveBeenCalled();
+  });
+
+  it('should not call onScroll if hasMore is false', () => {
     // prepare
     const params = prepareMockParams();
     params.hasMore = false;
-    const event = prepareMockEvent({});
+    const event = prepareMockScrollEvent({});
 
     // call
     const { result } = renderHook(() => useHandleOnScrollCallback(params));
@@ -52,10 +82,10 @@ describe('useHandleOnScrollCallback', () => {
     expect(params.onScroll).not.toHaveBeenCalled();
   });
 
-  it('should not execute if scrollTop is greater than SCROLL_BUFFER', () => {
+  it('should not execute onScroll if scrollTop is greater than SCROLL_BUFFER', () => {
     // prepare
     const params = prepareMockParams();
-    const event = prepareMockEvent({ scrollTop: 100 });
+    const event = prepareMockScrollEvent({ scrollTop: 100 });
 
     // call
     const { result } = renderHook(() => useHandleOnScrollCallback(params));
@@ -71,7 +101,7 @@ describe('useHandleOnScrollCallback', () => {
     const params = prepareMockParams();
     // @ts-ignore
     params.scrollRef.current.scrollHeight = 4459;
-    const event = prepareMockEvent({
+    const event = prepareMockScrollEvent({
       clientHeight: 723,
       scrollHeight: 1174,
       scrollTop: 0
@@ -88,33 +118,5 @@ describe('useHandleOnScrollCallback', () => {
     // assert
     expect(params.onScroll).toHaveBeenCalled();
     expect(params.scrollRef.current.scrollTop).toEqual(newScrollHeight);
-  });
-
-  it('should call setShowScrollDownButton with true when scrollHeight is larger', () => {
-    // prepare
-    const params = prepareMockParams();
-    const event = prepareMockEvent({ scrollHeight: 100, scrollTop: 5 });
-
-    // call
-    const { result } = renderHook(() => useHandleOnScrollCallback(params));
-    const handleOnScroll = result.current;
-    handleOnScroll(event);
-
-    // assert
-    expect(params.setShowScrollDownButton).toHaveBeenCalledWith(true);
-  });
-
-  it('should call setShowScrollDownButton with false when scrollHeight is shorter', () => {
-    // prepare
-    const params = prepareMockParams();
-    const event = prepareMockEvent({ scrollHeight: 5, scrollTop: 100 });
-
-    // call
-    const { result } = renderHook(() => useHandleOnScrollCallback(params));
-    const handleOnScroll = result.current;
-    handleOnScroll(event);
-
-    // assert
-    expect(params.setShowScrollDownButton).toHaveBeenCalledWith(false);
   });
 });
