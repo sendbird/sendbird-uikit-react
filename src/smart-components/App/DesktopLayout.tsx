@@ -40,6 +40,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
       <div className="sendbird-app__channellist-wrap">
         <ChannelList
           allowProfileEdit={allowProfileEdit}
+          activeChannelUrl={currentChannel?.url}
           onProfileEditSuccess={onProfileEditSuccess}
           disableAutoSelect={disableAutoSelect}
           onChannelSelect={(channel) => {
