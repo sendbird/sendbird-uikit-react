@@ -8,9 +8,9 @@ const prepareMockScrollEvent = ({
 }) => {
   return {
     target: {
-      scrollTop: scrollTop || 0,
-      scrollHeight: scrollHeight || 0,
-      clientHeight: clientHeight || 0,
+      scrollTop,
+      scrollHeight,
+      clientHeight,
     },
   } as unknown as React.UIEvent<HTMLDivElement, UIEvent>;
 };
