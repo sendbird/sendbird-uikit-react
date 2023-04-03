@@ -1,7 +1,8 @@
 ## Step 0 - Setup
-1. Create a new branch for the release: `git checkout -b release/vX.X.X`
-2. Write changelog in CHANGELOG.md
-3. Commit all changes
+1. Create a new branch for the release: `git checkout -b release/{X.X.X}` (before it was `release/v{X.X.X}`) 
+2. Write/Generate changelog in CHANGELOG.md
+3. Commit all changes, push to remote
+4. Comment `/bot create ticket` on github PR to make release ticket automatically
 
 ## Step 1 - Release Candidate
 4. Update the version in `package.json` and `package-lock.json` to the new Release Candidate version: Run `npm version prepatch/preminor/premajor`
