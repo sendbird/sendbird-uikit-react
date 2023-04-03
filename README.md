@@ -41,10 +41,11 @@ You need to install:
 * nodejs 16 LTS https://nodejs.org/en/download/
 * npm 8 or above
 
-We tried development on Mac OS / Linux systems. You might encounter problems in running `npm run build` in Windows machines
+**Caveats**
+ - We tried development on Mac OS / Linux systems. You might encounter problems in running `npm run build` in Windows machines
+ - If you use node.js >= 17 and see `ERR_OSSL_EVP_UNSUPPORTED` error on any run cmd, try to set `export NODE_OPTIONS=--openssl-legacy-provider` in the terminal
 
 ### Development
-
 We use storybook for development and rollup for building the npm distribution(bundled JS file)
 Make sure you have nodejs and npm installed and run
 
