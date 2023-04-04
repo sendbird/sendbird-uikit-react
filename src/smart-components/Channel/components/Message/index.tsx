@@ -98,7 +98,7 @@ const Message = ({
   const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState([]);
   const [ableMention, setAbleMention] = useState(true);
   const editMessageInputRef = useRef(null);
-  const messageScrollRef = useRef(null);
+  const useMessageScrollRef = useRef(null);
   const displaySuggestedMentionList = isOnline
     && isMentionEnabled
     && mentionNickname.length > 0
@@ -138,8 +138,8 @@ const Message = ({
   useLayoutEffect(() => {
     let animationTimeout = null;
     let messageHighlightedTimeout = null;
-    if (highLightedMessageId === message.messageId && messageScrollRef?.current) {
-      messageScrollRef.current.scrollIntoView({ block: 'center', inline: 'center' });
+    if (highLightedMessageId === message.messageId && useMessageScrollRef?.current) {
+      useMessageScrollRef.current.scrollIntoView({ block: 'center', inline: 'center' });
       setIsAnimated(false);
       animationTimeout = setTimeout(() => {
         setIsHighlighted(true);
@@ -155,13 +155,13 @@ const Message = ({
       clearTimeout(animationTimeout);
       clearTimeout(messageHighlightedTimeout);
     }
-  }, [highLightedMessageId, messageScrollRef.current, message.messageId]);
+  }, [highLightedMessageId, useMessageScrollRef.current, message.messageId]);
 
   useLayoutEffect(() => {
     let animationTimeout = null;
     let messageAnimatedTimeout = null;
-    if (animatedMessageId === message.messageId && messageScrollRef?.current) {
-      messageScrollRef.current.scrollIntoView({ block: 'center', inline: 'center' });
+    if (animatedMessageId === message.messageId && useMessageScrollRef?.current) {
+      useMessageScrollRef.current.scrollIntoView({ block: 'center', inline: 'center' });
       setIsHighlighted(false);
       animationTimeout = setTimeout(() => {
         setIsAnimated(true);
@@ -177,7 +177,7 @@ const Message = ({
       clearTimeout(animationTimeout);
       clearTimeout(messageAnimatedTimeout);
     }
-  }, [animatedMessageId, messageScrollRef.current, message.messageId, onMessageAnimated]);
+  }, [animatedMessageId, useMessageScrollRef.current, message.messageId, onMessageAnimated]);
   const renderedMessage = useMemo(() => {
     return renderMessage?.({
       message,
@@ -195,7 +195,7 @@ const Message = ({
   if (renderedMessage) {
     return (
       <div
-        ref={messageScrollRef}
+        ref={useMessageScrollRef}
         className={getClassName([
           'sendbird-msg-hoc sendbird-msg--scroll-ref',
           isAnimated ? 'sendbird-msg-hoc__animated' : '',
@@ -311,7 +311,7 @@ const Message = ({
         isHighlighted ? 'sendbird-msg-hoc__highlighted' : '',
       ])}
       style={{ marginBottom: '2px' }}
-      ref={messageScrollRef}
+      ref={useMessageScrollRef}
     >
       {/* date-separator */}
       {
