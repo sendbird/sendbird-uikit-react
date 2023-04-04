@@ -21,10 +21,15 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Upgrade npm
-      run: npm install -g npm@7
+    - name: Install yarn
+      run: |
+        COREPACK_PATH=$HOME/.local/bin
+        mkdir -p $COREPACK_PATH
+        eval "$(echo PATH=$COREPACK_PATH:\$PATH | tee -a $BASH_ENV)"
+        corepack enable --install-directory $COREPACK_PATH
+        yarn install --immutable --immutable-cache
 
-    - run: npm install
-    - run: npm run eslint
-    - run: npm run eslint-ts
-    - run: npm run test
+    - run: yarn install --immutable --immutable-cache
+    - run: yarn run eslint
+    - run: yarn run eslint-ts
+    - run: yarn run test

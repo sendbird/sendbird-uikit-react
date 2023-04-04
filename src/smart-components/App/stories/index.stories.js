@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import kr from 'date-fns/locale/ko';
 
-import pkg from '../../../../package-lock.json'
-
 import App from '../index';
 import Sendbird from '../../../lib/Sendbird';
 import ChannelList from '../../ChannelList';
@@ -18,29 +16,6 @@ const appId = process.env.STORYBOOK_APP_ID;
 const userId = 'sendbird';
 
 export default { title: 'App-Component' };
-
-export const versionInfo = () => {
-  const [showAll, setshowAll] = useState(false);
-  return (
-    <>
-      <div>UIKit: {pkg.version}</div>
-      <div>Sendbird SDK: {pkg.dependencies['@sendbird/chat'].version}</div>
-      <button onClick={() => { setshowAll(!showAll) }}>Show all</button>
-      {
-        showAll && (
-          <div>
-            {
-              Object.keys(pkg.dependencies)
-                .map((p) => (
-                  <div key={p}>{p}: {pkg.dependencies[p].version}</div>
-                ))
-            }
-          </div>
-        )
-      }
-    </>
-  );
-}
 
 export const basicSDK = () => fitPageSize(
   <App
