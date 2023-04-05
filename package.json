@@ -145,5 +145,6 @@
   "browserslist": [
     "defaults",
     "IE 11"
-  ]
+  ],
+  "packageManager": "yarn@3.5.0"
 }
