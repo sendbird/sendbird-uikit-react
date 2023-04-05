@@ -8,7 +8,7 @@ import type {
 
 import { getCreateGroupChannel } from '../../../lib/selectors';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
-import { CHANNEL_TYPE } from '../types';
+import { CHANNEL_TYPE, CustomButton } from '../types';
 
 const CreateChannelContext = React.createContext(undefined);
 
@@ -29,6 +29,7 @@ export interface CreateChannelProviderProps {
   overrideInviteUser?(params: OverrideInviteUserType): void;
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
   userListQuery?(): UserListQuery;
+  customNewButton: CustomButton
 }
 
 type CreateChannel = (channelParams: GroupChannelCreateParams) => Promise<GroupChannel>;
@@ -44,6 +45,7 @@ export interface CreateChannelContextInterface {
   setStep: React.Dispatch<React.SetStateAction<number>>,
   type: CHANNEL_TYPE,
   setType: React.Dispatch<React.SetStateAction<CHANNEL_TYPE>>,
+  customNewButton: CustomButton
 }
 
 const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: CreateChannelProviderProps) => {
@@ -53,6 +55,8 @@ const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: Crea
     onBeforeCreateChannel,
     overrideInviteUser,
     userListQuery,
+    customNewButton,
+
   } = props;
 
   const store = useSendbirdStateContext();
@@ -74,6 +78,7 @@ const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: Crea
       setStep,
       type,
       setType,
+      customNewButton
     }}>
       {children}
     </CreateChannelContext.Provider>

@@ -25,6 +25,7 @@ const ChannelList: React.FC<ChannelListProps> = (props: ChannelListProps) => {
       activeChannelUrl={props?.activeChannelUrl}
       isTypingIndicatorEnabled={props?.isTypingIndicatorEnabled}
       isMessageReceiptStatusEnabled={props?.isMessageReceiptStatusEnabled}
+      customNewButton={props?.customNewButton}
     >
       <ChannelListUI
         renderChannelPreview={props?.renderChannelPreview}

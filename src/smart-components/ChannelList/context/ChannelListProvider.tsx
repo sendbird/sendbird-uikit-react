@@ -32,7 +32,7 @@ import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 import channelListReducers from '../dux/reducers';
 import channelListInitialState from '../dux/initialState';
-import { CHANNEL_TYPE } from '../../CreateChannel/types';
+import { CHANNEL_TYPE, CustomButton } from '../../CreateChannel/types';
 import useActiveChannelUrl from './hooks/useActiveChannelUrl';
 
 interface ApplicationUserListQuery {
@@ -62,6 +62,7 @@ interface GroupChannelListQuery {
   unreadChannelFilter?: 'all' | 'unread_message';
   includeFrozen?: boolean;
   userIdsFilter?: GroupChannelUserIdsFilter;
+  customNewButton?: CustomButton | null
 }
 
 interface ChannelListQueries {
@@ -93,6 +94,7 @@ export interface ChannelListProviderProps {
   typingChannels?: Array<GroupChannel>;
   isTypingIndicatorEnabled?: boolean;
   isMessageReceiptStatusEnabled?: boolean;
+  customNewButton?: CustomButton | null
 }
 
 export interface ChannelListProviderInterface extends ChannelListProviderProps {
@@ -137,6 +139,7 @@ const ChannelListContext = React.createContext<ChannelListProviderInterface | nu
   channelListDispatcher: null,
   channelSource: null,
   typingChannels: [],
+  customNewButton: null
 });
 
 const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelListProviderProps) => {
@@ -155,6 +158,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     activeChannelUrl,
     isTypingIndicatorEnabled = null,
     isMessageReceiptStatusEnabled = null,
+    customNewButton
   } = props;
   // disable autoselect, if activeChannelUrl is provided
   // useActiveChannelUrl should be executed when activeChannelUrl is present
@@ -385,6 +389,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
       typingChannels,
       isTypingIndicatorEnabled: (isTypingIndicatorEnabled !== null) ? isTypingIndicatorEnabled : isTypingIndicatorEnabledOnChannelList,
       isMessageReceiptStatusEnabled: (isMessageReceiptStatusEnabled !== null) ? isMessageReceiptStatusEnabled : isMessageReceiptStatusEnabledOnChannelList,
+      customNewButton: customNewButton
     }}>
       <UserProfileProvider
         disableUserProfile={userDefinedDisableUserProfile}

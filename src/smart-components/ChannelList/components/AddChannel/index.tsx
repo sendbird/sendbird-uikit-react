@@ -15,6 +15,7 @@ export const AddChannel: React.VoidFunctionComponent = () => {
   const {
     overrideInviteUser,
     onBeforeCreateChannel,
+    customNewButton
   } = useChannelListContext();
 
   return (
@@ -37,6 +38,7 @@ export const AddChannel: React.VoidFunctionComponent = () => {
       {
         showModal && (
           <CreateChannel
+            customNewButton={customNewButton}
             onCancel={() => {
               setShowModal(false);
             }}

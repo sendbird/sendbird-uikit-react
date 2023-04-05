@@ -3,3 +3,8 @@ export enum CHANNEL_TYPE {
   SUPERGROUP = 'supergroup',
   BROADCAST = 'broadcast',
 }
+
+export type CustomButton = {
+  label: string;
+  channelType: CHANNEL_TYPE;
+};

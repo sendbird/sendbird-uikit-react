@@ -148,6 +148,22 @@ export const EditProfile = () => (
   </Sendbird>
 );
 
+export const CustomSelectTypeCreateChannel = () => (
+  <Sendbird
+    appId={appId}
+    userId={userId}
+  >
+    <div style={{ height: '520px' }}>
+      <ChannelList
+        customNewButton={{
+          "label": 'Private Chat',
+          "channelType": "group"
+        }}
+      />
+    </div>
+  </Sendbird>
+);
+
 const ChannelWithOnBeforeCreateChannel = ({ sdk }) => (
   <div style={{ height: '520px' }}>
     <ChannelList
