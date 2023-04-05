@@ -93,6 +93,7 @@ export interface ChannelListProviderProps {
   typingChannels?: Array<GroupChannel>;
   isTypingIndicatorEnabled?: boolean;
   isMessageReceiptStatusEnabled?: boolean;
+  isShowParticipantsCount?: boolean;
 }
 
 export interface ChannelListProviderInterface extends ChannelListProviderProps {
@@ -137,6 +138,7 @@ const ChannelListContext = React.createContext<ChannelListProviderInterface | nu
   channelListDispatcher: null,
   channelSource: null,
   typingChannels: [],
+  isShowParticipantsCount: true
 });
 
 const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelListProviderProps) => {
@@ -155,6 +157,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     activeChannelUrl,
     isTypingIndicatorEnabled = null,
     isMessageReceiptStatusEnabled = null,
+    isShowParticipantsCount = true
   } = props;
   // disable autoselect, if activeChannelUrl is provided
   // useActiveChannelUrl should be executed when activeChannelUrl is present
@@ -233,6 +236,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
         sortChannelList,
         disableAutoSelect,
         setChannelsToMarkAsRead,
+        isShowParticipantsCount
       });
     } else {
       logger.info('ChannelList: Removing channelHandlers');
@@ -383,6 +387,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
       ...channelListStore,
       allChannels: sortedChannels,
       typingChannels,
+      isShowParticipantsCount: isShowParticipantsCount,
       isTypingIndicatorEnabled: (isTypingIndicatorEnabled !== null) ? isTypingIndicatorEnabled : isTypingIndicatorEnabledOnChannelList,
       isMessageReceiptStatusEnabled: (isMessageReceiptStatusEnabled !== null) ? isMessageReceiptStatusEnabled : isMessageReceiptStatusEnabledOnChannelList,
     }}>

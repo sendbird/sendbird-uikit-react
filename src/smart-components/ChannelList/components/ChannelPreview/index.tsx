@@ -46,6 +46,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
   const {
     isTypingIndicatorEnabled = false,
     isMessageReceiptStatusEnabled = false,
+    isShowParticipantsCount = true,
   } = useChannelListContext();
   const { dateLocale, stringSet } = useLocalization();
   const { isMobile } = useMediaQueryContext();
@@ -58,6 +59,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
   const isFrozen = channel?.isFrozen || false;
   const isBroadcast = channel?.isBroadcast || false;
   const isChannelTyping = isTypingIndicatorEnabled && isTyping;
+  const isShowParticipantsCountOnList = isShowParticipantsCount;
   const isMessageStatusEnabled = isMessageReceiptStatusEnabled
     && (channel?.lastMessage?.messageType === 'user' || channel?.lastMessage?.messageType === 'file')
     && (channel?.lastMessage as UserMessage | FileMessage)?.sender?.userId === userId;
@@ -123,7 +125,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
                 type={LabelTypography.CAPTION_2}
                 color={LabelColors.ONBACKGROUND_2}
               >
-                {utils.getTotalMembers(channel)}
+                {isShowParticipantsCountOnList && utils.getTotalMembers(channel)}
               </Label>
               {
                 isFrozen

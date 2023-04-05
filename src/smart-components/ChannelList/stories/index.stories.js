@@ -128,6 +128,20 @@ export const CustomSort = () => {
     </Sendbird>
   )};
 
+
+  export const ChannelWithOptionToHideParticipants = () => (
+    <Sendbird
+      appId={appId}
+      userId={userId}
+    >
+      <div style={{ height: '520px' }}>
+        <ChannelList
+          isShowParticipantsCount={false}
+        />
+      </div>
+    </Sendbird>
+  );
+
 export const EditProfile = () => (
   <Sendbird
     appId={appId}
