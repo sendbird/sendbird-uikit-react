@@ -160,7 +160,7 @@ const MessageInput = React.forwardRef((props, ref) => {
         /* mention enabled */
         const { mentionedUsers = [] } = message;
         const tokens = tokenizeMessage({
-          message: message?.mentionedMessageTemplate,
+          messageText: message?.mentionedMessageTemplate,
           mentionedUsers,
         });
         textField.innerHTML = tokens.map((token) => {

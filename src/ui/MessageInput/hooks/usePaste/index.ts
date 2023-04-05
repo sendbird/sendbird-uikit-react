@@ -11,6 +11,7 @@ import {
   domToMessageTemplate,
   getUsersFromWords,
   extractTextFromNodes,
+  getLeafNodes,
 } from './utils';
 
 // conditions to test:
@@ -55,26 +56,17 @@ export default function usePaste({
       return;
     }
 
-    // has mention, sanitize and insert
-    let childNodes = pasteNode.querySelectorAll(`.${TEXT_MESSAGE_CLASS}`) as NodeListOf<HTMLSpanElement>;
-    if (pasteNode.querySelectorAll(`.${MENTION_CLASS_IN_INPUT}`).length > 0) {
-      // @ts-ignore
-      childNodes = pasteNode.children;
-    }
-    let nodeArray = Array.from(childNodes);
-    // handle paste when there is only one child
-    if (pasteNode.children.length === 1 && pasteNode.querySelectorAll(MENTION_CLASS_COMBINED_QUERY).length === 1) {
-      nodeArray = Array.from(pasteNode.children) as HTMLSpanElement[];
-    }
-    const words = domToMessageTemplate(nodeArray);
-
+    // has mention, collect leaf nodes and parse words
+    const leafNodes = getLeafNodes(pasteNode);
+    const words = domToMessageTemplate(leafNodes);
     const mentionedUsers = getUsersFromWords(words, channel);
+
+    // side effects
     setMentionedUsers(mentionedUsers);
     inserTemplateToDOM(words);
     pasteNode.remove();
     setIsInput(true);
     setHeight();
     return;
-
   }, [ref, setIsInput, setHeight, channel, setMentionedUsers]);
 }

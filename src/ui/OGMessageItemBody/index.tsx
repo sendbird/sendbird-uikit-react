@@ -16,6 +16,7 @@ import { getClassName, isEditedMessage } from '../../utils';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import TextFragment from '../../smart-components/Message/components/TextFragment';
 import { tokenizeMessage } from '../../smart-components/Message/utils/tokens/tokenize';
+import { OG_MESSAGE_BODY_CLASSNAME } from './consts';
 
 interface Props {
   className?: string | Array<string>;
@@ -63,7 +64,7 @@ export default function OGMessageItemBody({
         type={LabelTypography.BODY_1}
         color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
       >
-        <div className="sendbird-og-message-item-body__text-bubble">
+        <div className={OG_MESSAGE_BODY_CLASSNAME}>
           <TextFragment tokens={tokens} />
           {
             isEditedMessage(message) && (

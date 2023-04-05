@@ -25,7 +25,6 @@ import RemoveMessageModal from '../RemoveMessageModal';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { useLocalization } from '../../../../lib/LocalizationContext';
-import { MessageProvider } from '../../../Message/context/MessageProvider';
 
 type MessageUIProps = {
   message: EveryMessage;

@@ -27,9 +27,8 @@ export default function TextFragment({ tokens }: TextFragmentProps) {
           switch (token.type) {
             case TOKEN_TYPES.mention:
               return (
-                <span className="sendbird-word">
+                <span className="sendbird-word" key={key}>
                   <MentionLabel
-                    key={key}
                     mentionTemplate={USER_MENTION_PREFIX}
                     mentionedUserId={token.userId}
                     mentionedUserNickname={token.value}
@@ -39,9 +38,8 @@ export default function TextFragment({ tokens }: TextFragmentProps) {
               );
             case TOKEN_TYPES.url:
               return (
-                <span className='sendbird-word'>
+                <span className='sendbird-word' key={key}>
                   <LinkLabel
-                    key={key}
                     className="sendbird-word__url"
                     src={token.value}
                     type={LabelTypography.BODY_1}
