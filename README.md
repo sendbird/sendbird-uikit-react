@@ -41,7 +41,7 @@ And many more...
 
 You need to install:
 * nodejs 16 LTS https://nodejs.org/en/download/
-* npm or yarn >= 2
+* npm 8 >= or yarn
 
 **Caveats**
  - We tried development on Mac OS / Linux systems. You might encounter problems in running `npm run build` or `yarn run build` in Windows machines
