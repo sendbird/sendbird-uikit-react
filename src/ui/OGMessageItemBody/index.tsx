@@ -14,6 +14,8 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import uuidv4 from '../../utils/uuid';
 import { getClassName, isEditedMessage } from '../../utils';
 import { LocalizationContext } from '../../lib/LocalizationContext';
+import TextFragment from '../../smart-components/Message/components/TextFragment';
+import { tokenizeMessage } from '../../smart-components/Message/utils/tokens/tokenize';
 
 interface Props {
   className?: string | Array<string>;
@@ -38,12 +40,17 @@ export default function OGMessageItemBody({
     if (message?.ogMetaData?.url) window.open(message?.ogMetaData?.url);
   };
   const isMessageMentioned = isMentionEnabled && message?.mentionedMessageTemplate?.length > 0 && message?.mentionedUsers?.length > 0;
-  const sentences: Array<Array<string>> = useMemo(() => {
+  const tokens = useMemo(() => {
     if (isMessageMentioned) {
-      return message?.mentionedMessageTemplate?.split(/\n/).map((sentence) => sentence.split(/\s/));
+      return tokenizeMessage({
+        mentionedUsers: message?.mentionedUsers,
+        messageText: message?.mentionedMessageTemplate,
+      });
     }
-    return message?.message?.split(/\n/).map((sentence) => sentence.split(/\s/));
-  }, [message?.mentionedMessageTemplate]);
+    return tokenizeMessage({
+      messageText: message?.message,
+    });
+  }, [message?.updatedAt]);
   return (
     <div className={getClassName([
       className,
@@ -53,28 +60,11 @@ export default function OGMessageItemBody({
       (isReactionEnabled && message?.reactions?.length > 0) ? 'reactions' : '',
     ])}>
       <Label
-        key={uuidv4()}
         type={LabelTypography.BODY_1}
         color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
       >
         <div className="sendbird-og-message-item-body__text-bubble">
-          {
-            sentences?.map((sentence, index) => {
-              return [
-                sentence?.map((word) => {
-                  return (
-                    <Word
-                      key={uuidv4()}
-                      word={word}
-                      message={message}
-                      isByMe={isByMe}
-                    />
-                  );
-                }),
-                sentences?.[index + 1] ? <br /> : null,
-              ]
-            })
-          }
+          <TextFragment tokens={tokens} />
           {
             isEditedMessage(message) && (
               <Label

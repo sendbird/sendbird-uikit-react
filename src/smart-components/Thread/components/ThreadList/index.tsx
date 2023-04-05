@@ -7,6 +7,7 @@ import { useThreadContext } from '../../context/ThreadProvider';
 import { compareMessagesForGrouping } from '../../context/utils';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { isSameDay } from 'date-fns';
+import { MessageProvider } from '../../../Message/context/MessageProvider';
 
 export interface ThreadListProps {
   className?: string;
@@ -31,7 +32,7 @@ export default function ThreadList({
   scrollBottom,
 }: ThreadListProps): React.ReactElement {
   const { config } = useSendbirdStateContext();
-  const { replyType } = config;
+  const { replyType, userId } = config;
   const {
     currentChannel,
   } = useThreadContext();
@@ -57,6 +58,8 @@ export default function ThreadList({
   return (
     <div className={`sendbird-thread-list ${className}`}>
       {allThreadMessages.map((message, idx) => {
+        // @ts-ignore
+        const isByMe = message?.sender?.userId === userId;
         const prevMessage = allThreadMessages[idx - 1];
         const nextMessage = allThreadMessages[idx + 1];
         const [chainTop, chainBottom] = true// isMessageGroupingEnabled
@@ -88,14 +91,16 @@ export default function ThreadList({
           chainBottom,
           hasSeparator,
         }) || (
-            <ThreadListItem
-              message={message as UserMessage | FileMessage}
-              chainTop={chainTop}
-              chainBottom={chainBottom}
-              hasSeparator={hasSeparator}
-              renderCustomSeparator={renderCustomSeparator}
-              handleScroll={handleScroll}
-            />
+            <MessageProvider message={message} isByMe={isByMe}>
+              <ThreadListItem
+                message={message as UserMessage | FileMessage}
+                chainTop={chainTop}
+                chainBottom={chainBottom}
+                hasSeparator={hasSeparator}
+                renderCustomSeparator={renderCustomSeparator}
+                handleScroll={handleScroll}
+              />
+            </MessageProvider>
           );
       })}
     </div>

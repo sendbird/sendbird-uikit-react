@@ -33,6 +33,8 @@ import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import useLongPress from '../../hooks/useLongPress';
 import OpenChannelMobileMenu from '../OpenChannelMobileMenu';
+import TextFragment from '../../smart-components/Message/components/TextFragment';
+import { tokenizeMessage } from '../../smart-components/Message/utils/tokens/tokenize';
 
 interface OpenChannelOGMessageProps {
   message: UserMessage;
@@ -93,34 +95,11 @@ export default function OpenchannelOGMessage({
   const sender = getSenderFromMessage(message);
   const { isMobile } = useMediaQueryContext();
 
-  const MemoizedMessageText = useMemo(() => () => {
-    const wordClassName = 'sendbird-openchannel-og-message--word';
-    const splitMessage = message.message.split(' ');
-    const matchedMessage = splitMessage
-      .map((word) => (
-        <Word
-          key={uuidv4()}
-          word={word}
-          message={message}
-          isByMe={message?.sender?.userId === sdk?.currentUser?.userId}
-        />
-      ));
-
-    if (message.updatedAt > 0) {
-      matchedMessage.push(
-        <Label
-          key={uuidv4()}
-          className={wordClassName}
-          type={LabelTypography.BODY_1}
-          color={LabelColors.ONBACKGROUND_2}
-        >
-          {stringSet.MESSAGE_EDITED}
-        </Label>,
-      );
-    }
-
-    return matchedMessage;
-  }, [message, message.updatedAt]);
+  const tokens = useMemo(() => {
+    return tokenizeMessage({
+      messageText: message.message,
+    });
+  }, [message?.updatedAt]);
 
   // place conxt menu top depending clientHeight of message component
   useEffect(() => {
@@ -228,7 +207,19 @@ export default function OpenchannelOGMessage({
               type={LabelTypography.BODY_1}
               color={LabelColors.ONBACKGROUND_1}
             >
-              {MemoizedMessageText()}
+              <TextFragment tokens={tokens} />
+              {
+                (message?.updatedAt > 0) && (
+                  <Label
+                    key={uuidv4()}
+                    className='sendbird-openchannel-og-message--word'
+                    type={LabelTypography.BODY_1}
+                    color={LabelColors.ONBACKGROUND_2}
+                  >
+                    {stringSet.MESSAGE_EDITED}
+                  </Label>
+                )
+              }
             </Label>
           </div>
         </div>
