@@ -27,7 +27,7 @@ export default function TextFragment({ tokens }: TextFragmentProps) {
           switch (token.type) {
             case TOKEN_TYPES.mention:
               return (
-                <span className='sendbird-word'>
+                <span className="sendbird-word">
                   <MentionLabel
                     key={key}
                     mentionTemplate={USER_MENTION_PREFIX}
