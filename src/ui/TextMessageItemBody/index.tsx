@@ -7,7 +7,6 @@ import { getClassName, isEditedMessage } from '../../utils';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { tokenizeMessage } from '../../smart-components/Message/utils/tokens/tokenize';
 import TextFragment from '../../smart-components/Message/components/TextFragment';
-import { TEXT_MESSAGE_CLASS } from '../MessageInput/hooks/usePaste/consts';
 import { TEXT_MESSAGE_BODY_CLASSNAME } from './consts';
 
 interface Props {

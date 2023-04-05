@@ -1,18 +1,18 @@
 import { User } from "@sendbird/chat";
 import { USER_MENTION_PREFIX } from "../../consts";
-import { Token, TOKEN_TYPES, TokenParams } from "./types";
+import { IdentifyMentionsType, Token, TOKEN_TYPES, TokenParams } from "./types";
 import { isUrl } from "../../../../utils";
 
-export function getUserMentionRegex(mentionedUsers: User[], templatePrefix: string): RegExp {
-  // return RegExp(`${templatePrefix}{(${mentionedUsers.map((user) => user?.userId).join('|')})}`, 'g');
-  return RegExp(`(${mentionedUsers.map(u => `@{${u.userId}}`).join('|')})`, 'g');
+export function getUserMentionRegex(mentionedUsers: User[], templatePrefix_: string): RegExp {
+  const templatePrefix = templatePrefix_ || USER_MENTION_PREFIX;
+  return RegExp(`(${mentionedUsers.map(u => `${templatePrefix}{${u.userId}}`).join('|')})`, 'g');
 }
 
 export function identifyMentions({
   tokens,
   mentionedUsers = [],
   templatePrefix = USER_MENTION_PREFIX,
-}): Token[] {
+}: IdentifyMentionsType): Token[] {
   if (!mentionedUsers?.length) {
     return tokens;
   }
@@ -78,8 +78,7 @@ export function tokenizeMessage({
   mentionedUsers = [],
   templatePrefix = USER_MENTION_PREFIX,
 }: TokenParams): Token[] {
-  // mention can be merged with other mentions and urls
-  // urls cannot be merged with other urls or normal text
+  // mention can be squeezed-in(no-space-between) with other mentions and urls
   // if no users are mentioned, return the messageText as a single token
 
   // const tokenize = pipe(

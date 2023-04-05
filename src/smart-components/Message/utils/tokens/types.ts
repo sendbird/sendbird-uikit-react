@@ -10,32 +10,37 @@ export const TOKEN_TYPES = {
 
 export type TokenType = ObjectValues<typeof TOKEN_TYPES>;
 
-
 export type StringToken = {
-  type: typeof TOKEN_TYPES.string,
-  value: string,
+  type: typeof TOKEN_TYPES.string;
+  value: string;
 };
 
 export type MentionToken = {
-  type: typeof TOKEN_TYPES.mention,
-  value: string,
-  userId: string,
+  type: typeof TOKEN_TYPES.mention;
+  value: string;
+  userId: string;
 };
 
 export type UrlToken = {
-  type: typeof TOKEN_TYPES.url,
-  value: string,
+  type: typeof TOKEN_TYPES.url;
+  value: string;
 };
 
 export type UndeterminedToken = {
-  type: typeof TOKEN_TYPES.undetermined,
-  value: string,
+  type: typeof TOKEN_TYPES.undetermined;
+  value: string;
 };
 
 export type Token = StringToken | MentionToken | UrlToken | UndeterminedToken;
 
 export type TokenParams = {
-  messageText: string,
-  mentionedUsers?: User[],
-  templatePrefix?: string,
+  messageText: string;
+  mentionedUsers?: User[];
+  templatePrefix?: string;
+};
+
+export type IdentifyMentionsType = {
+  tokens: Token[];
+  mentionedUsers: User[];
+  templatePrefix: string;
 };

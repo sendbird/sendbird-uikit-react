@@ -13,7 +13,9 @@ export type TextFragmentProps = {
   tokens: Token[];
 }
 
-export default function TextFragment({ tokens }: TextFragmentProps) {
+export default function TextFragment({
+  tokens,
+}: TextFragmentProps): React.ReactElement {
   const messageStore = useMessageContext();
 
   const message = messageStore?.message as UserMessage;

@@ -7,11 +7,9 @@ import React, {
 } from 'react';
 import type { UserMessage } from '@sendbird/chat/message';
 
-import Word from '../Word';
 import ImageRenderer from '../ImageRenderer';
 import Icon, { IconTypes } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
-import uuidv4 from '../../utils/uuid';
 import { getClassName, isEditedMessage } from '../../utils';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import TextFragment from '../../smart-components/Message/components/TextFragment';

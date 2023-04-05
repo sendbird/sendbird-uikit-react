@@ -91,7 +91,7 @@ export default function ThreadList({
           chainBottom,
           hasSeparator,
         }) || (
-            <MessageProvider message={message} isByMe={isByMe}>
+            <MessageProvider message={message} isByMe={isByMe} key={message?.messageId}>
               <ThreadListItem
                 message={message as UserMessage | FileMessage}
                 chainTop={chainTop}

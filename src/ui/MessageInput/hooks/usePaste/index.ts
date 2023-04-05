@@ -4,7 +4,6 @@ import DOMPurify from 'dompurify';
 import { inserTemplateToDOM } from './insertTemplate';
 import { sanitizeString } from '../../utils';
 import { DynamicProps } from './types';
-import { MENTION_CLASS_COMBINED_QUERY, MENTION_CLASS_IN_INPUT, TEXT_MESSAGE_CLASS } from './consts';
 import {
   createPasteNode,
   hasMention,

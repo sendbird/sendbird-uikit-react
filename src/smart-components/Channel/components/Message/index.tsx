@@ -109,9 +109,6 @@ const Message = ({
     || isDisabledBecauseMuted(currentGroupChannel)
     || !isOnline;
 
-  // @ts-ignore
-  const senderId = message?.sender?.userId;
-
   useEffect(() => {
     if (mentionedUsers?.length >= maxUserMentionCount) {
       setAbleMention(false);

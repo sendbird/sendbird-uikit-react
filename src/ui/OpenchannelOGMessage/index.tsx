@@ -12,7 +12,6 @@ import LinkLabel from '../LinkLabel';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import Loader from '../Loader';
 import UserProfile from '../UserProfile';
-import Word from '../Word';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 
 import uuidv4 from '../../utils/uuid';
@@ -29,7 +28,6 @@ import {
   showMenuTrigger,
 } from '../../utils/openChannelUtils';
 import { getSenderFromMessage } from '../../utils/openChannelUtils';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import useLongPress from '../../hooks/useLongPress';
 import OpenChannelMobileMenu from '../OpenChannelMobileMenu';
@@ -76,7 +74,6 @@ export default function OpenchannelOGMessage({
   const status = message?.sendingStatus;
   const { ogMetaData } = message;
   const { defaultImage } = ogMetaData;
-  const sdk = useSendbirdStateContext?.()?.stores?.sdkStore?.sdk;
   const { stringSet, dateLocale } = useLocalization();
   const { disableUserProfile, renderUserProfile } = useContext<UserProfileContext>(UserProfileContext);
   const [contextStyle, setContextStyle] = useState({});
