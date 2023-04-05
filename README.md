@@ -9,6 +9,8 @@ We are introducing a new version of the Sendbird Chat UIKit. Version 3 features 
 
 ## Installation
 
+`npm i @sendbird/uikit-react`
+or if you're using yarn
 `yarn add @sendbird/uikit-react`
 
 For typescript projects, add `node_modules/@sendbird/uikit-react/index.d.ts` to your `include` section in tsconfig file to get type definitions
@@ -39,21 +41,27 @@ And many more...
 
 You need to install:
 * nodejs 16 LTS https://nodejs.org/en/download/
-* yarn 3
+* npm or yarn >= 2
 
 **Caveats**
- - We tried development on Mac OS / Linux systems. You might encounter problems in running `yarn run build` in Windows machines
+ - We tried development on Mac OS / Linux systems. You might encounter problems in running `npm run build` or `yarn run build` in Windows machines
  - If you use node.js >= 17 and see `ERR_OSSL_EVP_UNSUPPORTED` error on any run cmd, try to set `export NODE_OPTIONS=--openssl-legacy-provider` in the terminal
 
 ### Development
-We use storybook for development and rollup for building the yarn distribution(bundled JS file)
-Make sure you have nodejs and yarn installed and run
+We use storybook for development and rollup for building the npm distribution(bundled JS file)
+Make sure you have nodejs and npm (or yarn) installed and run
 
-```
 Make a copy of .env.example and save it as .env
 Set your appId STORYBOOK_APP_ID
+
+```
+npm install
+npm run storybook
+```
+or
+```
 yarn install
-yarn run storybook
+yarn storybook
 ```
 > `yarn run generate-component` generates a UI component skeleton in `src/ui`
 
@@ -69,6 +77,10 @@ We use rollupJS for building the production bundle script that you want to use i
 We have both esm and commonjs output
 
 ```
+npm run build
+```
+or
+```
 yarn run build
 ```
 
@@ -80,11 +92,19 @@ The CSS is in `./release/dist/index.css`
 We have implemented tests for dumb ui components only. Technologies used: Jest and testing-library
 
 ```
+npm run test
+```
+or
+```
 yarn run test
 ```
 
 ### Lint
 
+```
+npm run lint
+```
+or
 ```
 yarn run lint
 ```
