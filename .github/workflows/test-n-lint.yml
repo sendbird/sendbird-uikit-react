@@ -27,7 +27,7 @@ jobs:
         mkdir -p $COREPACK_PATH
         eval "$(echo PATH=$COREPACK_PATH:\$PATH | tee -a $BASH_ENV)"
         corepack enable --install-directory $COREPACK_PATH
-        yarn install --immutable --immutable-cache
+        yarn install --immutable
         yarn --version
 
     - run: yarn run eslint
