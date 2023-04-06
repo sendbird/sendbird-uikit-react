@@ -18,6 +18,7 @@ export type MessageInputWrapperProps = {
   renderFileUploadIcon?: () =>  React.ReactElement;
   renderVoiceMessageIcon?: () =>  React.ReactElement;
   renderSendMessageIcon?: () =>  React.ReactElement;
+  processAudio?: (audioFile: File) => Promise<File>;
 };
 
 const MessageInputWrapper = (
@@ -154,6 +155,7 @@ const MessageInputWrapper = (
       {
         showVoiceMessageInput
           ? (
+            // laztload
             <VoiceMessageInputWrapper
               channel={channel}
               onSubmitClick={(recordedFile, duration) => {
@@ -161,6 +163,7 @@ const MessageInputWrapper = (
                 setQuoteMessage(null);
                 setShowVoiceMessageInput(false);
               }}
+              processAudio={props.processAudio}
               onCancelClick={() => {
                 setShowVoiceMessageInput(false);
               }}

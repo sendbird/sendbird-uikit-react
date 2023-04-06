@@ -1,5 +1,4 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
-import { downsampleToWav, encodeMp3 } from './WebAudioUtils';
 import {
   VOICE_MESSAGE_FILE_NAME,
   VOICE_MESSAGE_MIME_TYPE,
@@ -23,13 +22,23 @@ export interface VoiceRecorderContext {
   start: (eventHandler?: VoiceRecorderEventHandler) => void,
   stop: () => void,
   isRecordable: boolean;
+  setAudioProcessor: React.Dispatch<React.SetStateAction<AudioProcessorType>>;
 }
+
 const noop = () => {/* noop */ };
 const VoiceRecorderContext = createContext<VoiceRecorderContext>({
   start: noop,
   stop: noop,
   isRecordable: false,
+  setAudioProcessor: noop,
 });
+
+// Todo: File type should be:
+// const convertedAudioFile = new File([mp3blob], VOICE_MESSAGE_FILE_NAME, {
+//   lastModified: new Date().getTime(),
+//   type: VOICE_MESSAGE_MIME_TYPE,
+// });
+type AudioProcessorType = (audioFile: File) => Promise<File>;
 
 export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactElement => {
   const { children } = props;
@@ -37,6 +46,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
   const { logger } = config;
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>(null);
   const [isRecordable, setIsRecordable] = useState<boolean>(false);
+  const [audioProcessor, setAudioProcessor] = useState<AudioProcessorType>(null);
 
   const start = useCallback((eventHandler: VoiceRecorderEventHandler): void => {
     logger.info('VoiceRecorder: Start recording.');
@@ -58,16 +68,17 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
             lastModified: new Date().getTime(),
             type: VOICE_MESSAGE_MIME_TYPE,
           });
-          downsampleToWav(audioFile, (buffer) => {
-            const mp3Buffer = encodeMp3(buffer);
-            const mp3blob = new Blob(mp3Buffer, { type: VOICE_MESSAGE_MIME_TYPE });
-            const convertedAudioFile = new File([mp3blob], VOICE_MESSAGE_FILE_NAME, {
-              lastModified: new Date().getTime(),
-              type: VOICE_MESSAGE_MIME_TYPE,
-            });
-            eventHandler?.onRecordingEnded(convertedAudioFile);
-            logger.info('VoiceRecorder: Succeeded converting audio file.', convertedAudioFile);
+          if (!audioProcessor) {
+            // TODO: Add a default audio processor -> no conversion
+            logger.error('VoiceRecorder: Failed converting audio file. audioProcessor not detected', audioFile);
+            logger.error('VoiceRecorder: Set audioProcessor through', audioFile);
+            return;
+          }
+          audioProcessor(audioFile).then((processedAudioFile) => {
+            eventHandler?.onRecordingEnded(processedAudioFile);
+            logger.info('VoiceRecorder: Succeeded converting audio file.', processedAudioFile);
           });
+
           stream?.getAudioTracks?.().forEach?.(track => track?.stop());
           setIsRecordable(false);
         };
@@ -94,6 +105,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
       start,
       stop,
       isRecordable,
+      setAudioProcessor,
     }}>
       {children}
     </VoiceRecorderContext.Provider>

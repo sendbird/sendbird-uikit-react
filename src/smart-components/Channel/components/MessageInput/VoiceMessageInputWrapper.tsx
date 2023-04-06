@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import './voice-message-wrapper.scss';
 
+
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useVoicePlayer } from '../../../../hooks/VoicePlayer/useVoicePlayer';
 import { useVoiceRecorder, VoiceRecorderStatus } from '../../../../hooks/VoiceRecorder/useVoiceRecorder';
@@ -15,17 +16,21 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { VOICE_RECORDER_DEFAULT_MIN } from '../../../../utils/consts';
 import { VoicePlayerStatus } from '../../../../hooks/VoicePlayer/dux/initialState';
 import uuidv4 from '../../../../utils/uuid';
+import { useVoiceRecorderContext } from '../../../../hooks/VoiceRecorder';
+import { processAudio as processAudioDefault } from './processAudio';
 
 export interface VoiceMessageInputWrapperProps {
   channel?: GroupChannel;
   onCancelClick?: () => void;
   onSubmitClick?: (file: File, duration: number) => void;
+  processAudio?: (file: File) => Promise<File>;
 }
 
 export const VoiceMessageInputWrapper = ({
   channel,
   onCancelClick,
   onSubmitClick,
+  processAudio,
 }: VoiceMessageInputWrapperProps): React.ReactElement => {
   const [audioFile, setAudioFile] = useState<File>(null);
   const [uuid] = useState<string>(uuidv4());
@@ -36,6 +41,10 @@ export const VoiceMessageInputWrapper = ({
   const { stringSet } = useLocalization();
   const { config } = useSendbirdStateContext();
   const minRecordingTime = config?.voiceRecord?.minRecordingTime || VOICE_RECORDER_DEFAULT_MIN;
+  const { setAudioProcessor } = useVoiceRecorderContext();
+  useEffect(() => {
+    setAudioProcessor?.(processAudio || processAudioDefault);
+  }, [setAudioProcessor]);
   const {
     start,
     stop,
