@@ -329,6 +329,11 @@ const MessageInput = React.forwardRef((props, ref) => {
         } else if (node.nodeType === NodeTypes.ElementNode && node.nodeName === NodeNames.Br) {
           messageText += '\n';
           mentionTemplate += '\n';
+        } else if (node?.nodeType === NodeTypes.ElementNode && node?.nodeName === NodeNames.Div) {
+          // handles newline in safari
+          const { textContent = '' } = node;
+          messageText += `\n${textContent}`;
+          mentionTemplate += `\n${textContent}`;
         } else { // other nodes including text node
           const { textContent = '' } = node;
           messageText += textContent;
