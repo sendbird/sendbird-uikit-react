@@ -196,7 +196,7 @@ export default function AdminPannel(): ReactElement {
                         });
                       }}
                       type={IconTypes.TOGGLE_OFF}
-                      fillColor={IconColors.PRIMARY}
+                      fillColor={IconColors.PRIMARY_2}
                       width={44}
                       height={24}
                     />
