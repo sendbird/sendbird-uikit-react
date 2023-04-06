@@ -28,6 +28,7 @@ const Channel: React.FC<ChannelProps> = (props: ChannelProps) => {
       threadReplySelectType={props?.threadReplySelectType}
       queries={props?.queries}
       renderUserProfile={props?.renderUserProfile}
+      filterMessageList={props?.filterMessageList}
       disableUserProfile={props?.disableUserProfile}
       disableMarkAsRead={props?.disableMarkAsRead}
       onReplyInThread={props?.onReplyInThread}

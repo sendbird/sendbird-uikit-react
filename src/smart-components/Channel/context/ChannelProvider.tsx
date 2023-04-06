@@ -8,6 +8,7 @@ import React, {
 
 import type { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 import type {
+  BaseMessage,
   FileMessage,
   FileMessageCreateParams,
   UserMessage,
@@ -90,6 +91,7 @@ export type ChannelContextProps = {
   threadReplySelectType?: ThreadReplySelectType;
   queries?: ChannelQueries;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
+  filterMessageList?(messages: BaseMessage): boolean;
   disableUserProfile?: boolean;
   disableMarkAsRead?: boolean;
   onReplyInThread?: (props: { message: UserMessage | FileMessage }) => void;
@@ -182,6 +184,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     replyType,
     threadReplySelectType = ThreadReplySelectType.THREAD,
     queries,
+    filterMessageList,
     disableMarkAsRead = false,
     onReplyInThread,
     onQuoteMessageClick,
@@ -441,6 +444,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       replyType,
       threadReplySelectType,
       queries,
+      filterMessageList,
       disableMarkAsRead,
       onReplyInThread,
       onQuoteMessageClick,
