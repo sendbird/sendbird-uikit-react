@@ -69,32 +69,13 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
   const sdkStore = state?.stores?.sdkStore;
   const config = state?.config;
   const {
-    logger = null,
+    logger,
     isOnline = false,
-    disableMarkAsDelivered = false,
+    markAsRead,
   } = config;
 
   const sdk = sdkStore?.sdk as SendbirdGroupChat;
   const sdkError = sdkStore?.error;
-
-  const [channelsTomarkAsRead, setChannelsToMarkAsRead] = useState([]);
-  useEffect(() => {
-    // https://stackoverflow.com/a/60907638
-    let isMounted = true;
-    if (channelsTomarkAsRead?.length > 0 && !disableMarkAsDelivered) {
-      channelsTomarkAsRead?.forEach((c, idx) => {
-        // Plan-based rate limits - minimum limit is 5 requests per second
-        setTimeout(() => {
-          if (isMounted) {
-            c?.markAsDelivered();
-          }
-        }, 2000 * idx);
-      });
-    }
-    return () => {
-      isMounted = false;
-    }
-  }, [channelsTomarkAsRead]);
 
   return (
     <>
@@ -149,7 +130,11 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
               if (canSetMarkAsDelivered) {
                 logger.info('ChannelList: Marking all channels as read');
                 // eslint-disable-next-line no-unused-expressions
-                setChannelsToMarkAsRead(channelList);
+                channelList?.forEach((channel) => {
+                  if (channel?.unreadMessageCount > 0) {
+                    markAsRead.push(channel);
+                  }
+                });
               }
             }).catch((err) => {
               logger.info('ChannelList: Fetching channels failed', err);

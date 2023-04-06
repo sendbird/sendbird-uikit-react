@@ -9,7 +9,7 @@ export type MarkAsReadSchedulerType = {
 
 const TIMEOUT = 5000;
 
-const schedulerFactory = (logger: Logger): MarkAsReadSchedulerType => {
+export const schedulerFactory = (logger: Logger): MarkAsReadSchedulerType => {
   let queue: GroupChannel[] = [];
   let interval = null;
   const push = (channel: GroupChannel) => {

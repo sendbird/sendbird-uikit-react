@@ -13,6 +13,7 @@ import UnreadCount from '../UnreadCount';
 import FrozenNotification from '../FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
 import { EveryMessage } from '../../../..';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
 export interface MessageListProps {
   className?: string;
@@ -54,6 +55,8 @@ const MessageList: React.FC<MessageListProps> = ({
   const allMessagesFiltered = (typeof filterMessageList === 'function')
     ? allMessages.filter((filterMessageList as (message: EveryMessage) => boolean))
     : allMessages;
+  const store = useSendbirdStateContext();
+  const markAsRead = store.config.markAsRead;
 
   const onScroll = (e) => {
     const element = e.target;
@@ -102,18 +105,11 @@ const MessageList: React.FC<MessageListProps> = ({
     }
 
     if (!disableMarkAsRead && isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER)) {
-      // Mark as read if scroll is at end
-      setTimeout(() => {
-        messagesDispatcher({
-          type: messageActionTypes.MARK_AS_READ,
-          payload: { channel: currentGroupChannel },
-        });
-        try {
-          currentGroupChannel?.markAsRead?.();
-        } catch {
-          //
-        }
-      }, 500);
+      messagesDispatcher({
+        type: messageActionTypes.MARK_AS_READ,
+        payload: { channel: currentGroupChannel },
+      });
+      markAsRead?.push(currentGroupChannel);
     }
   };
 
@@ -198,11 +194,7 @@ const MessageList: React.FC<MessageListProps> = ({
             scrollRef.current.scrollTop = scrollRef?.current?.scrollHeight - scrollRef?.current?.offsetHeight;
           }
           if (!disableMarkAsRead) {
-            try {
-              currentGroupChannel?.markAsRead();
-            } catch {
-              //
-            }
+            markAsRead?.push(currentGroupChannel);
             messagesDispatcher({
               type: messageActionTypes.MARK_AS_READ,
               payload: { channel: currentGroupChannel },
