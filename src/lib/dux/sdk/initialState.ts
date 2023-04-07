@@ -1,13 +1,13 @@
 import SendbirdChat from "@sendbird/chat";
 
-export interface SdkStoreInitialState {
+export interface SdkStoreStateType {
   initialized: boolean;
   loading: boolean;
   sdk: SendbirdChat,
   error: boolean;
 }
 
-const initialState: SdkStoreInitialState = {
+const initialState: SdkStoreStateType = {
   initialized: false,
   loading: false,
   sdk: {} as SendbirdChat,

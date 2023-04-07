@@ -124,6 +124,7 @@ const Sendbird = ({
   const [logger, setLogger] = useState(LoggerFactory(logLevel));
   const [pubSub] = useState(pubSubFactory());
   const [sdkStore, sdkDispatcher] = useReducer(sdkReducers, sdkInitialState);
+
   const [userStore, userDispatcher] = useReducer(userReducers, userInitialState);
 
   useTheme(colorSet);

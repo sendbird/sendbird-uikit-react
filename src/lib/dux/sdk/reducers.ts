@@ -1,35 +1,29 @@
-import SendbirdChat from '@sendbird/chat';
-import sdkActions, { SdkStoreActionTypes } from './actionTypes';
-import initialState, { SdkStoreInitialState } from './initialState';
+import { SdkActionTypes, SDK_ACTIONS } from './actionTypes';
+import initialState, { SdkStoreStateType } from './initialState';
 
-type ActionType = {
-  type: SdkStoreActionTypes;
-  payload: unknown;
-}
-
-export default function reducer(state: SdkStoreInitialState, action: ActionType): SdkStoreInitialState {
+export default function reducer(state: SdkStoreStateType, action: SdkActionTypes): SdkStoreStateType {
   switch (action.type) {
-    case sdkActions.SET_SDK_LOADING:
+    case SDK_ACTIONS.SET_SDK_LOADING:
       return {
         ...state,
         initialized: false,
-        loading: action.payload as boolean,
+        loading: action.payload,
       };
-    case sdkActions.SDK_ERROR:
+    case SDK_ACTIONS.SDK_ERROR:
       return {
         ...state,
         initialized: false,
         loading: false,
         error: true,
       };
-    case sdkActions.INIT_SDK:
+    case SDK_ACTIONS.INIT_SDK:
       return {
-        sdk: action.payload as SendbirdChat,
+        sdk: action.payload,
         initialized: true,
         loading: false,
         error: false,
       };
-    case sdkActions.RESET_SDK:
+    case SDK_ACTIONS.RESET_SDK:
       return initialState;
     default:
       return state;

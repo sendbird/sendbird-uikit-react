@@ -1,0 +1,17 @@
+import { {{pascalCase name}}ActionTypes, {{constantCase name}}_ACTIONS } from "./actionTypes";
+import { {{pascalCase name}}StateType } from "./initialState";
+
+export function {{camelCase name}}Reducer(
+  state: {{pascalCase name}}StateType,
+  action: {{pascalCase name}}ActionTypes,
+): {{pascalCase name}}StateType {
+  switch (action.type) {
+    case {{constantCase name}}_ACTIONS.INIT_{{constantCase name}}:
+      return {
+        ...state,
+        {{camelCase name}}: action.payload.{{camelCase name}},
+      };
+    default:
+      return state;
+  }
+};
