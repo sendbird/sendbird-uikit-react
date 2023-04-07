@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useMemo, useState } from 'react';
 import { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 import './ParentMessageInfoItem.scss';
@@ -18,10 +18,8 @@ import {
   isVideoMessage,
   truncateString,
 } from '../../../../utils';
-import uuidv4 from '../../../../utils/uuid';
 
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
-import Word from '../../../../ui/Word';
 import ImageRenderer from '../../../../ui/ImageRenderer';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import TextButton from '../../../../ui/TextButton';
@@ -29,6 +27,8 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import EmojiReactions from '../../../../ui/EmojiReactions';
 import { useThreadContext } from '../../context/ThreadProvider';
 import VoiceMessageItemBody from '../../../../ui/VoiceMessageItemBody';
+import TextFragment from '../../../Message/components/TextFragment';
+import { tokenizeMessage } from '../../../Message/utils/tokens/tokenize';
 
 export interface ParentMessageInfoItemProps {
   className?: string;
@@ -67,12 +67,17 @@ export default function ParentMessageInfoItem({
     && !currentChannel?.isBroadcast
     && message?.reactions?.length > 0;
 
-  // OG message
-  // const openUrl = () => {
-  //   if (isOGMessage(message) && message?.ogMetaData?.url) {
-  //     window.open(message.ogMetaData.url);
-  //   }
-  // };
+  const tokens = useMemo(() => {
+    if (isMentionedMessage) {
+      return tokenizeMessage({
+        mentionedUsers: message?.mentionedUsers,
+        messageText: message?.mentionedMessageTemplate,
+      });
+    }
+    return tokenizeMessage({
+      messageText: (message as UserMessage)?.message,
+    });
+  }, [message?.updatedAt]);
 
   // Thumbnail mesage
   const [isImageRendered, setImageRendered] = useState(false);
@@ -87,25 +92,7 @@ export default function ParentMessageInfoItem({
           type={LabelTypography.BODY_1}
           color={LabelColors.ONBACKGROUND_1}
         >
-          {isMentionedMessage
-            ? (
-              message.mentionedMessageTemplate.split(' ').map((word: string) => (
-                <Word
-                  key={uuidv4()}
-                  word={word}
-                  message={message as UserMessage}
-                />
-              ))
-            )
-            : (
-              (message as UserMessage)?.message.split(' ').map((word: string) => (
-                <Word
-                  key={uuidv4()}
-                  word={word}
-                  message={message as UserMessage}
-                />
-              ))
-            )}
+          <TextFragment tokens={tokens} />
           {isEditedMessage(message) && (
             <Label
               className="sendbird-parent-message-info-item__text-message edited"

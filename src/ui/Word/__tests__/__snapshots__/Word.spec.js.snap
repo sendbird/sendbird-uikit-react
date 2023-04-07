@@ -16,6 +16,7 @@ exports[`ui/Word should do a snapshot test of the Word DOM 1`] = `
             
           "
         data-nickname="Hoon Baek"
+        data-sb-mention="true"
         data-userid="hoon"
       >
         <span

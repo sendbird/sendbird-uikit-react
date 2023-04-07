@@ -1,6 +1,7 @@
 @import '../../styles/variables';
 
 .sendbird-word {
+  white-space: break-spaces;
   .sendbird-word__mention {
     &:hover {
       cursor: pointer;

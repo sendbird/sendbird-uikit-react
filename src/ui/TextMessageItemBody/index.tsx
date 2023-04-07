@@ -5,8 +5,9 @@ import type { UserMessage } from '@sendbird/chat/message';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { getClassName, isEditedMessage } from '../../utils';
 import { LocalizationContext } from '../../lib/LocalizationContext';
-import uuidv4 from '../../utils/uuid';
-import Word from '../Word';
+import { tokenizeMessage } from '../../smart-components/Message/utils/tokens/tokenize';
+import TextFragment from '../../smart-components/Message/components/TextFragment';
+import { TEXT_MESSAGE_BODY_CLASSNAME } from './consts';
 
 interface Props {
   className?: string | Array<string>;
@@ -26,13 +27,20 @@ export default function TextMessageItemBody({
   isReactionEnabled = false,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
-  const isMessageMentioned = isMentionEnabled && message?.mentionedMessageTemplate?.length > 0 && message?.mentionedUsers?.length > 0;
-  const sentences: Array<Array<string>> = useMemo(() => {
+  const isMessageMentioned = isMentionEnabled
+    && message?.mentionedMessageTemplate?.length > 0
+    && message?.mentionedUsers?.length > 0;
+  const tokens = useMemo(() => {
     if (isMessageMentioned) {
-      return message?.mentionedMessageTemplate?.split(/\n/).map((sentence) => sentence.split(/\s/));
+      return tokenizeMessage({
+        mentionedUsers: message?.mentionedUsers,
+        messageText: message?.mentionedMessageTemplate,
+      });
     }
-    return message?.message?.split(/\n/).map((sentence) => sentence.split(/\s/));
-  }, [message?.mentionedMessageTemplate]);
+    return tokenizeMessage({
+      messageText: message?.message,
+    });
+  }, [message?.updatedAt]);
   return (
     <Label
       type={LabelTypography.BODY_1}
@@ -40,28 +48,12 @@ export default function TextMessageItemBody({
     >
       <div className={getClassName([
         className,
-        'sendbird-text-message-item-body',
+        TEXT_MESSAGE_BODY_CLASSNAME,
         isByMe ? 'outgoing' : 'incoming',
         mouseHover ? 'mouse-hover' : '',
         (isReactionEnabled && message?.reactions?.length > 0) ? 'reactions' : '',
       ])}>
-        {
-          sentences.map((sentence, index) => {
-            return [
-              sentence.map((word) => {
-                return (
-                  <Word
-                    key={uuidv4()}
-                    word={word}
-                    message={message}
-                    isByMe={isByMe}
-                  />
-                );
-              }),
-              sentences?.[index + 1] ? <br /> : null,
-            ]
-          })
-        }
+        <TextFragment tokens={tokens} />
         {
           isEditedMessage(message) && (
             <Label

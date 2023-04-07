@@ -1,3 +1,7 @@
+/**
+ * @deprecated  This component is deprecated and will be removed in the next major version.
+ * Use TextFragment instead.
+ */
 import './index.scss';
 import React from 'react';
 import type { UserMessage } from '@sendbird/chat/message';

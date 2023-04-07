@@ -65,6 +65,7 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
           ref={mentionRef}
           data-userid={mentionedUserId}
           data-nickname={mentionedUserNickname}
+          data-sb-mention={true}
         >
           <Label
             type={LabelTypography.CAPTION_1}

@@ -2,11 +2,10 @@
 
 .sendbird-word {
   display: inline;
-  margin-right: 4px;
   height: fit-content;
-  white-space: nowrap;
   .sendbird-word__url,
   .sendbird-word__normal {
+    margin-right: 4px;
     display: inline-block;
     color: inherit;
   }

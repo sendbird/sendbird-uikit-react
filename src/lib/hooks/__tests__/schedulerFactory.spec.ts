@@ -6,7 +6,7 @@ import { LoggerFactory } from '../../Logger';
 jest.useFakeTimers();
 jest.spyOn(global, 'setInterval');
 
-const logger = LoggerFactory('all');
+const logger = LoggerFactory('info');
 
 describe('schedulerFactory', () => {
   it('should return a scheduler with push and clear methods', () => {

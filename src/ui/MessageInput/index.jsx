@@ -26,6 +26,9 @@ import {
   convertWordToStringObj,
 } from '../../utils';
 import usePaste from './hooks/usePaste';
+import { tokenizeMessage } from '../../smart-components/Message/utils/tokens/tokenize';
+import { USER_MENTION_PREFIX } from '../../smart-components/Message/consts';
+import { TOKEN_TYPES } from '../../smart-components/Message/utils/tokens/types';
 
 const TEXT_FIELD_ID = 'sendbird-message-input-text-field';
 const LINE_HEIGHT = 76;
@@ -156,19 +159,21 @@ const MessageInput = React.forwardRef((props, ref) => {
       ) {
         /* mention enabled */
         const { mentionedUsers = [] } = message;
-        textField.innerHTML = message?.mentionedMessageTemplate?.split(' ').map((word) => (
-          convertWordToStringObj(word, mentionedUsers).map((stringObj) => {
-            const { type, value, userId } = stringObj;
-            if (type === StringObjType.mention && mentionedUsers.some((user) => user?.userId === userId)) {
-              const nickname = `${USER_MENTION_TEMP_CHAR}${mentionedUsers.find((user) => user?.userId === userId)?.nickname
-                || value
-                || stringSet.MENTION_NAME__NO_NAME
-              }`
-              return renderMentionLabelToString({ userId, nickname });
-            }
-            return sanitizeString(value);
-          }).join('')
-        )).join(' ');
+        const tokens = tokenizeMessage({
+          messageText: message?.mentionedMessageTemplate,
+          mentionedUsers,
+        });
+        textField.innerHTML = tokens.map((token) => {
+          if (token.type === TOKEN_TYPES.mention) {
+            const mentionedUser = mentionedUsers.find((user) => user.userId === token.userId);
+            const nickname = `${USER_MENTION_PREFIX}${mentionedUser?.nickname || token.value || stringSet.MENTION_NAME__NO_NAME}`;
+            return renderMentionLabelToString({
+              userId: token.userId,
+              nickname,
+            });
+          }
+          return sanitizeString(token.value);
+        }).join(' ');
       } else {
         /* mention disabled */
         try {

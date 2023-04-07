@@ -17,6 +17,7 @@ import useMemorizedParentMessageInfo from './useMemorizedParentMessageInfo';
 import useMemorizedThreadList from './useMemorizedThreadList';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { isAboutSame } from '../../context/utils';
+import { MessageProvider } from '../../../Message/context/MessageProvider';
 
 export interface ThreadUIProps {
   renderHeader?: () => React.ReactElement;
@@ -69,6 +70,7 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
     onMoveToParentMessage,
   } = useThreadContext();
   const replyCount = allThreadMessages.length;
+  const isByMe = currentUserId === parentMessage?.sender?.userId;
 
   // Memoized custom components
   const MemorizedHeader = useMemorizedHeader({ renderHeader });
@@ -146,13 +148,15 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
         ref={scrollRef}
         onScroll={onScroll}
       >
-        {
-          MemorizedParentMessageInfo || (
-            <ParentMessageInfo
-              className="sendbird-thread-ui__parent-message-info"
-            />
-          )
-        }
+        <MessageProvider message={parentMessage} isByMe={isByMe}>
+          {
+            MemorizedParentMessageInfo || (
+              <ParentMessageInfo
+                className="sendbird-thread-ui__parent-message-info"
+              />
+            )
+          }
+        </MessageProvider>
         {
           replyCount > 0 && (
             <div className="sendbird-thread-ui__reply-counts">

@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 import TextMessageItemBody from "../index";
+import { MessageProvider } from '../../../smart-components/Message/context/MessageProvider';
 
 const createMockMessage = (process) => {
   const mockMessage = {
@@ -17,11 +18,14 @@ const createMockMessage = (process) => {
 describe('ui/TextMessageItemBody', () => {
   it('should have class names of own basic status', () => {
     const insertingClassName = 'test-class-name';
+    const message = createMockMessage();
     const { container } = render(
-      <TextMessageItemBody
-        className={insertingClassName}
-        message={createMockMessage()}
-      />
+      <MessageProvider message={message}>
+        <TextMessageItemBody
+          className={insertingClassName}
+          message={message}
+        />
+      </MessageProvider>
     );
     expect(
       container.getElementsByClassName(insertingClassName)
@@ -50,11 +54,14 @@ describe('ui/TextMessageItemBody', () => {
   });
 
   it('should have class name by isByMe is true', () => {
+    const message = createMockMessage();
     const { container } = render(
-      <TextMessageItemBody
-        message={createMockMessage()}
-        isByMe
-      />
+      <MessageProvider message={message}>
+        <TextMessageItemBody
+          message={message}
+          isByMe
+        />
+      </MessageProvider>
     );
     expect(
       container.querySelectorAll('.sendbird-text-message-item-body.outgoing')
@@ -64,11 +71,14 @@ describe('ui/TextMessageItemBody', () => {
     ).toHaveLength(0);
   });
   it('should have class name by isByMe is false', () => {
+    const message = createMockMessage();
     const { container } = render(
-      <TextMessageItemBody
-        message={createMockMessage()}
-        isByMe={false}
-      />
+      <MessageProvider message={message}>
+        <TextMessageItemBody
+          message={message}
+          isByMe={false}
+        />
+      </MessageProvider>
     );
     expect(
       container.querySelectorAll('.sendbird-text-message-item-body.outgoing')
@@ -79,11 +89,14 @@ describe('ui/TextMessageItemBody', () => {
   });
 
   it('should have class name by mouse hover prop', () => {
+    const message = createMockMessage();
     const { container } = render(
-      <TextMessageItemBody
-        message={createMockMessage()}
-        mouseHover
-      />
+      <MessageProvider message={message}>
+        <TextMessageItemBody
+          message={message}
+          mouseHover
+        />
+      </MessageProvider>
     );
     expect(
       container.querySelectorAll('.sendbird-text-message-item-body.mouse-hover')
@@ -94,14 +107,17 @@ describe('ui/TextMessageItemBody', () => {
   });
 
   it('should have class name by reactions of message prop', () => {
+    const message = createMockMessage((mockMessage) => ({
+      ...mockMessage,
+      reactions: [{}, {}, {}],
+    }))
     const { container } = render(
-      <TextMessageItemBody
-        isReactionEnabled
-        message={createMockMessage((mockMessage) => ({
-          ...mockMessage,
-          reactions: [{}, {}, {}],
-        }))}
-      />
+      <MessageProvider message={message}>
+        <TextMessageItemBody
+          isReactionEnabled
+          message={message}
+        />
+      </MessageProvider>
     );
     expect(
       container.querySelectorAll('.sendbird-text-message-item-body.reactions')
@@ -110,13 +126,16 @@ describe('ui/TextMessageItemBody', () => {
 
   it('should have words component by split message', () => {
     const messageText = 'First second third fourth fifth';
+    const message = createMockMessage((mockMessage) => ({
+      ...mockMessage,
+      message: messageText,
+    }))
     const { container } = render(
-      <TextMessageItemBody
-        message={createMockMessage((mockMessage) => ({
-          ...mockMessage,
-          message: messageText,
-        }))}
-      />
+      <MessageProvider message={message}>
+        <TextMessageItemBody
+          message={message}
+        />
+      </MessageProvider>
     );
     expect(
       container.querySelectorAll('.sendbird-text-message-item-body__message.edited')
@@ -124,14 +143,17 @@ describe('ui/TextMessageItemBody', () => {
   });
   it('should have words component by split message when message has updatedAt', () => {
     const messageText = 'First second third fourth fifth';
+    const message = createMockMessage((mockMessage) => ({
+      ...mockMessage,
+      message: messageText,
+      updatedAt: 10101010,
+    }))
     const { container } = render(
-      <TextMessageItemBody
-        message={createMockMessage((mockMessage) => ({
-          ...mockMessage,
-          message: messageText,
-          updatedAt: 10101010,
-        }))}
-      />
+      <MessageProvider message={message}>
+        <TextMessageItemBody
+          message={message}
+        />
+      </MessageProvider>
     );
     expect(
       container.querySelectorAll('.sendbird-text-message-item-body__message.edited')
@@ -139,18 +161,21 @@ describe('ui/TextMessageItemBody', () => {
   });
 
   it('should do a snapshot test of the TextMessageItemBody DOM', function () {
+    const message = createMockMessage((mock) => ({
+      ...mock,
+      message: 'First second third fourth fifth',
+      updatedAt: 1010,
+      reactions: [{}, {}, {}],
+    }))
     const { asFragment } = render(
-      <TextMessageItemBody
-        className="class-name-for-snapshot"
-        message={createMockMessage((mock) => ({
-          ...mock,
-          message: 'First second third fourth fifth',
-          updatedAt: 1010,
-          reactions: [{}, {}, {}],
-        }))}
-        isByMe
-        mouseHover
-      />
+      <MessageProvider message={message}>
+        <TextMessageItemBody
+          className="class-name-for-snapshot"
+          message={message}
+          isByMe
+          mouseHover
+        />
+      </MessageProvider>
     );
     expect(asFragment()).toMatchSnapshot();
   });
