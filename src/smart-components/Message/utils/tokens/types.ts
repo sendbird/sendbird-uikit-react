@@ -40,7 +40,7 @@ export type TokenParams = {
 };
 
 export type IdentifyMentionsType = {
-  tokens: Token[];
+  tokens: (UndeterminedToken)[];
   mentionedUsers: User[];
   templatePrefix: string;
 };

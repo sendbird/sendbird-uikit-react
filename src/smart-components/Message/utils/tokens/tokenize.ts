@@ -1,6 +1,6 @@
 import { User } from "@sendbird/chat";
 import { USER_MENTION_PREFIX } from "../../consts";
-import { IdentifyMentionsType, Token, TOKEN_TYPES, TokenParams } from "./types";
+import { IdentifyMentionsType, MentionToken, Token, TOKEN_TYPES, TokenParams, UndeterminedToken } from "./types";
 import { isUrl } from "../../../../utils";
 
 export function getUserMentionRegex(mentionedUsers: User[], templatePrefix_: string): RegExp {
@@ -12,13 +12,14 @@ export function identifyMentions({
   tokens,
   mentionedUsers = [],
   templatePrefix = USER_MENTION_PREFIX,
-}: IdentifyMentionsType): Token[] {
+}: IdentifyMentionsType): (MentionToken|UndeterminedToken)[] {
   if (!mentionedUsers?.length) {
     return tokens;
   }
   const userMentionRegex = getUserMentionRegex(mentionedUsers, templatePrefix);
-  const results: Token[] = tokens.map((token) => {
+  const results: (UndeterminedToken | MentionToken)[] = tokens.map((token) => {
     // if the token is not undetermined, return it as is
+    // is kinda unnecessary with TS, but just in case
     if (token.type !== TOKEN_TYPES.undetermined) {
       return token;
     }
@@ -85,6 +86,8 @@ export function tokenizeMessage({
     value: messageText,
   }];
 
+  // order is important because we want to identify mentions first
+  // identifyMentions will return a token with type mention or undetermined
   const partialWithMentions = identifyMentions({
     tokens: partialResult,
     mentionedUsers,
