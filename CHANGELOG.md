@@ -1,13 +1,15 @@
 # Changelog - v3
 
 ## [v3.4.5] (Apr 07 2023)
-fix: Rename useMessageScrollRef to messageScrollRef (#472)
-fix: Set current channel on ChannelList when opening channel from Thread (#469)
-test: add unit test for useHandleOnScrollCallback (#468)
-ci/cd: added pr-comment-bot.yml (#464)
-chore: add workaround for ERR_OSSL_EVP_UNSUPPORTED (#467)
+
+* fix: Rename useMessageScrollRef to messageScrollRef (#472)
+* fix: Set current channel on ChannelList when opening channel from Thread (#469)
+* test: add unit test for useHandleOnScrollCallback (#468)
+* ci/cd: added pr-comment-bot.yml (#464)
+* chore: add workaround for ERR_OSSL_EVP_UNSUPPORTED (#467)
 
 ## [v3.4.4] (Mar 31 2023)
+
 Features:
 * Increase default maximum recording time of Voice Message to 10 minutes
 * Add logger to VoicePlayer, VoiceRecorder, and useSendVoiceMessage hook
