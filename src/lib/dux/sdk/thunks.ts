@@ -1,26 +1,37 @@
-import SendbirdChat from '@sendbird/chat';
+import SendbirdChat, { SessionHandler } from '@sendbird/chat';
 import { OpenChannelModule } from '@sendbird/chat/openChannel';
 import { GroupChannelModule } from '@sendbird/chat/groupChannel';
 
-import {
-  INIT_SDK,
-  SET_SDK_LOADING,
-  RESET_SDK,
-  SDK_ERROR,
-} from './actionTypes';
-import { INIT_USER, UPDATE_USER_INFO, RESET_USER } from '../user/actionTypes';
+import sdkStoreActionTypes, { SdkStoreActionTypes } from './actionTypes';
+import userStoreActionTypes, { UserStoreActionTypes } from '../user/actionTypes';
 import { isTextuallyNull } from '../../../utils';
+import React from 'react';
+import { Logger } from '../../SendbirdState';
 
+const { INIT_SDK, SET_SDK_LOADING, RESET_SDK, SDK_ERROR } = sdkStoreActionTypes;
+const { INIT_USER, UPDATE_USER_INFO, RESET_USER } = userStoreActionTypes;
 const APP_VERSION_STRING = '__uikit_app_version__';
 const IS_ROLLUP = '__is_rollup__';
 const IS_ROLLUP_REPLACE = '__is_rollup_replace__';
+
+type SdkDispatcher = React.Dispatch<{ type: SdkStoreActionTypes, payload?: any }>;
+type UserDispatcher = React.Dispatch<{ type: UserStoreActionTypes, payload?: any }>;
+type Dispatchers = { sdkDispatcher: SdkDispatcher, userDispatcher: UserDispatcher };
+
+interface DisconnectSdkProps {
+  sdkDispatcher: SdkDispatcher;
+  userDispatcher: UserDispatcher;
+  sdk: SendbirdChat;
+  logger: Logger;
+  onDisconnect: () => void;
+}
 
 export const disconnectSdk = ({
   sdkDispatcher,
   userDispatcher,
   sdk,
   onDisconnect,
-}) => {
+}: DisconnectSdkProps): void => {
   sdkDispatcher({ type: SET_SDK_LOADING, payload: true });
   if (sdk && sdk.disconnect) {
     sdk.disconnect()
@@ -36,6 +47,19 @@ export const disconnectSdk = ({
   }
 };
 
+interface HandleConnectionProps {
+  userId: string;
+  appId: string;
+  nickname: string;
+  profileUrl: string;
+  accessToken: string;
+  configureSession: (sdk: SendbirdChat) => SessionHandler;
+  customApiHost: string;
+  customWebSocketHost: string;
+  sdk: SendbirdChat;
+  logger: Logger;
+}
+
 export const handleConnection = ({
   userId,
   appId,
@@ -47,7 +71,7 @@ export const handleConnection = ({
   customWebSocketHost,
   sdk,
   logger,
-}, dispatchers) => {
+}: HandleConnectionProps, dispatchers: Dispatchers): void => {
   const {
     sdkDispatcher,
     userDispatcher,
@@ -70,10 +94,10 @@ export const handleConnection = ({
           ],
         };
         if (customApiHost) {
-          params.customApiHost = customApiHost;
+          params['customApiHost'] = customApiHost;
         }
         if (customWebSocketHost) {
-          params.customWebSocketHost = customWebSocketHost;
+          params['customWebSocketHost'] = customWebSocketHost;
         }
         const newSdk = SendbirdChat.init(params);
         if (configureSession && typeof configureSession === 'function') {
@@ -82,6 +106,7 @@ export const handleConnection = ({
         }
         // to check if code is released version from rollup and *not from storybook*
         // see rollup config file
+        // @ts-ignore
         if (IS_ROLLUP === IS_ROLLUP_REPLACE) {
           newSdk.addExtension('sb_uikit', APP_VERSION_STRING);
         }
@@ -105,7 +130,7 @@ export const handleConnection = ({
         const connectCbError = (e) => {
           logger.error('Connection failed', `${e}`);
           sdkDispatcher({ type: RESET_SDK });
-          sdkDispatcher({ type: RESET_USER });
+          userDispatcher({ type: RESET_USER });
           sdkDispatcher({ type: SDK_ERROR });
         };
 

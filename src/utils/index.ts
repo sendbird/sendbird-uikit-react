@@ -83,8 +83,6 @@ const SendingMessageStatus: SendingMessageStatus = {
   PENDING: 'pending',
 };
 
-
-
 export type CoreMessageType = EveryMessage;
 
 export const isTextuallyNull = (text: string): boolean => {
