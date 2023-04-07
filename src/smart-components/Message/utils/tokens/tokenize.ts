@@ -43,7 +43,7 @@ export function identifyUrlsAndStrings(token: Token[]): Token[] {
     if (token.type !== TOKEN_TYPES.undetermined) {
       return token;
     }
-    const { value } = token;
+    const { value = "" } = token;
     const parts = value.split(' ');
     const tokens = parts.map((part) => {
       if (isUrl(part)) {
