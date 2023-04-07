@@ -58,7 +58,6 @@ const MessageList: React.FC<MessageListProps> = ({
   const allMessagesFiltered = (typeof filterMessageList === 'function')
     ? allMessages.filter((filterMessageList as (message: EveryMessage) => boolean))
     : allMessages;
-  const store = useSendbirdStateContext();
   const markAsReadScheduler = store.config.markAsReadScheduler;
 
   const onScroll = (e) => {

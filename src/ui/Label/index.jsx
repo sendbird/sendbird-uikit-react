@@ -13,6 +13,9 @@ export default function Label({
   children,
 }) {
   return (
+    // Donot make this into div
+    // Mention uses Label. If we use div, it would break the mention detection on Paste
+    // https://github.com/sendbird/sendbird-uikit-react/pull/479
     <span
       className={[
         ...(Array.isArray(className) ? className : [className]),
