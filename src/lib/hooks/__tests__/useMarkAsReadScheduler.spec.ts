@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 
-import { useMarkAsReadScheduler } from '../useMarkAsReadSchedulerScheduler';
+import { useMarkAsReadScheduler } from '../useMarkAsReadScheduler';
 import { LoggerFactory } from '../../Logger';
 
 const logger = LoggerFactory('all');
