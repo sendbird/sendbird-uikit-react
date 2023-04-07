@@ -36,6 +36,13 @@
   @include themed() {
     border-top: 1px solid t(on-bg-4);
   }
+  .sendbird-word__mention {
+    .sendbird-label {
+      @include themed() {
+        color: t(on-bg-1);
+      }
+    }
+  }
 }
 
 .sendbird-thread-ui__reply-counts {
