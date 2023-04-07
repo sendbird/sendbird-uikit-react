@@ -7,6 +7,8 @@
 
     const modalRoot = document.createElement('div');
     modalRoot.setAttribute('id', 'sendbird-modal-root');
+    modalRoot.style.position = 'fixed';
+    modalRoot.style.zIndex = '99999999999';
     body.appendChild(modalRoot);
   });
 </script>

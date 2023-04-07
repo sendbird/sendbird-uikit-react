@@ -148,15 +148,15 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
         ref={scrollRef}
         onScroll={onScroll}
       >
-        {
-          MemorizedParentMessageInfo || (
-            <MessageProvider message={parentMessage} isByMe={isByMe}>
+        <MessageProvider message={parentMessage} isByMe={isByMe}>
+          {
+            MemorizedParentMessageInfo || (
               <ParentMessageInfo
                 className="sendbird-thread-ui__parent-message-info"
               />
-            </MessageProvider>
-          )
-        }
+            )
+          }
+        </MessageProvider>
         {
           replyCount > 0 && (
             <div className="sendbird-thread-ui__reply-counts">

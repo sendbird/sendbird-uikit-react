@@ -939,6 +939,16 @@ declare module "SendbirdUIKitGlobal" {
   }
 
   /**
+   * Message
+   */
+  export interface MessageProviderProps {
+    message: BaseMessage;
+    isByMe?: boolean;
+    children?: React.ReactElement;
+  }
+  export type MessageProviderInterface = Exclude<MessageProviderProps, 'children'>;
+
+  /**
    * Thread
    */
   export enum ChannelStateTypes {
@@ -1556,6 +1566,15 @@ declare module '@sendbird/uikit-react/MessageSearch/components/MessageSearchUI' 
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
   const MessageSearchUI: React.FC<SendbirdUIKitGlobal.MessageSearchUIProps>;
   export default MessageSearchUI;
+}
+
+/**
+ * Message
+ */
+declare module '@sendbird/uikit-react/Message/context' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  export const useMessageContext: () => SendbirdUIKitGlobal.MessageProviderInterface;
+  export const MessageProvider: React.FC<SendbirdUIKitGlobal.MessageProviderProps>;
 }
 
 /**

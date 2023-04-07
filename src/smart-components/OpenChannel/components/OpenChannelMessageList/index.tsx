@@ -67,10 +67,10 @@ function OpenchannelMessageList(
             ? compareMessagesForGrouping(previousMessage, message, nextMessage)
             : [false, false];
           const isByMe = (message as UserMessage)?.sender?.userId === userId;
+          const key = message?.messageId || (message as UserMessage)?.reqId;
           return (
-            <MessageProvider message={message} isByMe={isByMe}>
+            <MessageProvider message={message} isByMe={isByMe} key={key}>
               <OpenChannelMessage
-                key={message?.messageId || (message as UserMessage | FileMessage)?.reqId}
                 message={message}
                 chainTop={chainTop}
                 chainBottom={chainBottom}

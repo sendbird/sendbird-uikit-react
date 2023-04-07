@@ -84,23 +84,27 @@ export default function ThreadList({
           }
         };
 
-        return MemorizedMessage({
-          message,
-          chainTop,
-          chainBottom,
-          hasSeparator,
-        }) || (
-            <MessageProvider message={message} isByMe={isByMe} key={message?.messageId}>
-              <ThreadListItem
-                message={message as UserMessage | FileMessage}
-                chainTop={chainTop}
-                chainBottom={chainBottom}
-                hasSeparator={hasSeparator}
-                renderCustomSeparator={renderCustomSeparator}
-                handleScroll={handleScroll}
-              />
-            </MessageProvider>
-          );
+        return(
+          <MessageProvider message={message} isByMe={isByMe} key={message?.messageId}>
+            {
+              MemorizedMessage({
+                message,
+                chainTop,
+                chainBottom,
+                hasSeparator,
+              }) || (
+                <ThreadListItem
+                  message={message as UserMessage | FileMessage}
+                  chainTop={chainTop}
+                  chainBottom={chainBottom}
+                  hasSeparator={hasSeparator}
+                  renderCustomSeparator={renderCustomSeparator}
+                  handleScroll={handleScroll}
+                />
+              )
+            }
+          </MessageProvider>
+        );
       })}
     </div>
   );
