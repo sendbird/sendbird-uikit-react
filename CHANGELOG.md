@@ -1,7 +1,9 @@
 # Changelog - v3
 
 ## [v3.4.5] (Apr 7 2023)
+
 Features:
+
 * Add a message list filter of UI level in the `Channel` module
   * Add `Channel.filterMessageList?: (messages: BaseMessage): boolean;`, a UI level filter prop
     to Channel. This function will be used to filter messages in `<MessageList />`
@@ -24,6 +26,44 @@ Features:
       );
     };
     ```
+
+* Improve structure of message UI for copying
+    Before:
+    * The words inside messages were kept in separate spans
+    * This would lead to unfavourable formatting when pasted in other applications
+
+    After:
+    * Remove span for wrapping simple strings in message body
+    * Urls and Mentions will still be wrapped in spans(for formatting)
+    * Apply new logic & components(TextFragment) to tokenize strings
+    * Improve keys used in rendering inside message,
+      * UUIDs are not the optimal way to improve rendering
+      * Create a composite key with message.updatedAt
+    * Refactor usePaste hook to make mentions work ~
+    * Fix overflow of long strings
+    * Deprecate `Word` and `convertWordToStringObj`
+
+* Export MessageProvider, a simple provider to avoid prop drilling into Messages
+    Note - this is still in works, but these props will remain
+    * In the future, we will add methods - to this module - to:
+      * Edit & delete callbacks
+      * Menu render options(ACLs)
+      * Reaction configs
+      * This will improve the customizability and remove a lot of prop drilling in Messages
+
+    ```
+    export type MessageProviderProps = {
+      children: React.ReactNode;
+      message: BaseMessage;
+      isByMe?: boolean;
+    }
+
+    import { MessageProvider, useMessageContext } from '@sendbird/uikit-react/Message/context'
+    ```
+    Incase if you were using MessageComponents and see error message
+    `useMessageContext must be used within a MessageProvider `
+    use: `<MessageProvider message={message}><CustomMessage /></MessageProvider>`
+
 * Add a scheduler for calling markAsRead intervally
   * The `markAsRead` is called on individual channels is un-optimal(causes command ack. error)
 because we have a list of channels that do this
