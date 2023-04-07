@@ -92,6 +92,12 @@ declare module "SendbirdUIKitGlobal" {
     warning?(title?: unknown, description?: unknown): void;
   }
 
+  export type MarkAsReadSchedulerType = {
+    push: (channel: GroupChannel) => void;
+    clear: () => void;
+    getQueue: () => GroupChannel[];
+  };
+
   export type MessageHandler = (message: UserMessage | FileMessage) => void;
 
   export interface UikitMessageHandler {
@@ -232,6 +238,7 @@ declare module "SendbirdUIKitGlobal" {
     nickname?: string;
     profileUrl?: string;
     dateLocale?: Locale;
+    markAsReadScheduler?: MarkAsReadSchedulerType;
     disableUserProfile?: boolean;
     disableMarkAsDelivered?: boolean;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;

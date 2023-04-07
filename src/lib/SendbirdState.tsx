@@ -56,7 +56,7 @@ interface SendBirdStateConfig {
   };
   isTypingIndicatorEnabledOnChannelList?: boolean;
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
-  markAsRead?: MarkAsReadSchedulerType;
+  markAsReadScheduler?: MarkAsReadSchedulerType;
 }
 
 export interface SdkStore {
