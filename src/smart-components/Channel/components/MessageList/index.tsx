@@ -56,7 +56,7 @@ const MessageList: React.FC<MessageListProps> = ({
     ? allMessages.filter((filterMessageList as (message: EveryMessage) => boolean))
     : allMessages;
   const store = useSendbirdStateContext();
-  const markAsRead = store.config.markAsRead;
+  const markAsReadScheduler = store.config.markAsReadScheduler;
 
   const onScroll = (e) => {
     const element = e.target;
@@ -109,7 +109,7 @@ const MessageList: React.FC<MessageListProps> = ({
         type: messageActionTypes.MARK_AS_READ,
         payload: { channel: currentGroupChannel },
       });
-      markAsRead?.push(currentGroupChannel);
+      markAsReadScheduler?.push(currentGroupChannel);
     }
   };
 
@@ -194,7 +194,7 @@ const MessageList: React.FC<MessageListProps> = ({
             scrollRef.current.scrollTop = scrollRef?.current?.scrollHeight - scrollRef?.current?.offsetHeight;
           }
           if (!disableMarkAsRead) {
-            markAsRead?.push(currentGroupChannel);
+            markAsReadScheduler?.push(currentGroupChannel);
             messagesDispatcher({
               type: messageActionTypes.MARK_AS_READ,
               payload: { channel: currentGroupChannel },

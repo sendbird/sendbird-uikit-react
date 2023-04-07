@@ -8,6 +8,7 @@ import { CustomUseReducerDispatcher, Logger } from "../../../../lib/SendbirdStat
 import uuidv4 from "../../../../utils/uuid";
 import compareIds from '../../../../utils/compareIds';
 import * as messageActions from '../dux/actionTypes';
+import { MarkAsReadSchedulerType } from "../../../../lib/hooks/useMarkAsReadScheduler";
 
 /**
  * Handles ChannelEvents and send values to dispatcher using messagesDispatcher
@@ -29,6 +30,7 @@ interface StaticParams {
   scrollRef: React.RefObject<HTMLDivElement>;
   setQuoteMessage: React.Dispatch<React.SetStateAction<UserMessage | FileMessage>>;
   messagesDispatcher: CustomUseReducerDispatcher;
+  markAsReadScheduler: MarkAsReadSchedulerType;
 }
 
 function useHandleChannelEvents({
@@ -38,6 +40,7 @@ function useHandleChannelEvents({
   currentGroupChannel,
 }: DynamicParams, {
   sdk,
+  markAsReadScheduler,
   logger,
   scrollRef,
   setQuoteMessage,
@@ -70,10 +73,10 @@ function useHandleChannelEvents({
             ) {
               // and !openContextMenu
               try {
+                if (!disableMarkAsRead) {
+                  markAsReadScheduler?.push?.(currentGroupChannel);
+                }
                 setTimeout(() => {
-                  if (!disableMarkAsRead) {
-                    currentGroupChannel?.markAsRead?.();
-                  }
                   scrollIntoLast(0, scrollRef);
                 });
               } catch (error) {

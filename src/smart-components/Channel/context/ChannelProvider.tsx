@@ -342,6 +342,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       logger,
       scrollRef,
       setQuoteMessage,
+      markAsReadScheduler,
     },
   );
 
@@ -383,6 +384,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     currentGroupChannel,
     messagesDispatcher,
     userFilledMessageListQuery,
+    markAsReadScheduler,
   });
 
   // callbacks for Message CURD actions

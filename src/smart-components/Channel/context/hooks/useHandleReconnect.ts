@@ -7,6 +7,7 @@ import { PREV_RESULT_SIZE } from '../const';
 import * as messageActionTypes from '../dux/actionTypes';
 import { Logger } from '../../../../lib/SendbirdState';
 import { NEXT_RESULT_SIZE } from '../const';
+import { MarkAsReadSchedulerType } from '../../../../lib/hooks/useMarkAsReadScheduler';
 interface DynamicParams {
   isOnline: boolean;
   replyType?: string;
@@ -18,6 +19,7 @@ interface StaticParams {
   sdk: SendbirdGroupChat;
   currentGroupChannel: GroupChannel;
   scrollRef: React.RefObject<HTMLDivElement>;
+  markAsReadScheduler: MarkAsReadSchedulerType;
   messagesDispatcher: (props: { type: string, payload: any }) => void;
   userFilledMessageListQuery?: Record<string, any>;
 }
@@ -30,6 +32,7 @@ function useHandleReconnect(
     scrollRef,
     currentGroupChannel,
     messagesDispatcher,
+    markAsReadScheduler,
     userFilledMessageListQuery,
   }: StaticParams,
 ): void {
@@ -89,11 +92,7 @@ function useHandleReconnect(
                 });
               })
               if (!disableMarkAsRead) {
-                try {
-                  currentGroupChannel?.markAsRead?.();
-                } catch {
-                  //
-                }
+                markAsReadScheduler?.push(currentGroupChannel);
               }
           });
       }
