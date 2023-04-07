@@ -12,6 +12,7 @@ import { getMessagePartsInfo } from './getMessagePartsInfo';
 import UnreadCount from '../UnreadCount';
 import FrozenNotification from '../FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
+import { EveryMessage } from '../../../..';
 
 export interface MessageListProps {
   className?: string;
@@ -44,11 +45,15 @@ const MessageList: React.FC<MessageListProps> = ({
     messageActionTypes,
     currentGroupChannel,
     disableMarkAsRead,
+    filterMessageList,
     replyType,
     loading,
     unreadSince,
   } = useChannelContext();
   const [scrollBottom, setScrollBottom] = useState(0);
+  const allMessagesFiltered = (typeof filterMessageList === 'function')
+    ? allMessages.filter((filterMessageList as (message: EveryMessage) => boolean))
+    : allMessages;
 
   const onScroll = (e) => {
     const element = e.target;
@@ -136,7 +141,7 @@ const MessageList: React.FC<MessageListProps> = ({
       ? renderPlaceholderLoader()
       : <PlaceHolder type={PlaceHolderTypes.LOADING} />;
   }
-  if (allMessages.length < 1) {
+  if (allMessagesFiltered.length < 1) {
     if (renderPlaceholderEmpty && typeof renderPlaceholderEmpty === 'function') {
       return renderPlaceholderEmpty();
     }
@@ -151,13 +156,13 @@ const MessageList: React.FC<MessageListProps> = ({
           ref={scrollRef}
           onScroll={onScroll}
         >
-          {allMessages.map((m, idx) => {
+          {allMessagesFiltered.map((m, idx) => {
             const {
               chainTop,
               chainBottom,
               hasSeparator,
             } = getMessagePartsInfo({
-              allMessages,
+              allMessages: allMessagesFiltered,
               replyType,
               isMessageGroupingEnabled,
               currentIndex: idx,

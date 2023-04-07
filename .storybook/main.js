@@ -1,6 +1,6 @@
 module.exports = {
   stories: [
-    '../src/**/*.stories.@(js|mdx)',
+    '../src/**/*.stories.@(js|tsx|mdx)',
     // todo - print docs on storybook later
     // '../docs/**/*.@(js|mdx)',
   ],

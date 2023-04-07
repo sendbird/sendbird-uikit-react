@@ -521,6 +521,7 @@ declare module "SendbirdUIKitGlobal" {
     replyType?: ReplyType;
     threadReplySelectType?: ThreadReplySelectType;
     queries?: ChannelQueries;
+    filterMessageList?(messages: BaseMessage): boolean;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
     disableUserProfile?: boolean;
     disableMarkAsRead?: boolean;
