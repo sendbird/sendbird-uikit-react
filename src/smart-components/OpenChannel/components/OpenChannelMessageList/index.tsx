@@ -12,6 +12,8 @@ import { useOpenChannelContext } from '../../context/OpenChannelProvider';
 import OpenChannelMessage from '../OpenChannelMessage';
 import { RenderMessageProps } from '../../../../types';
 import { useHandleOnScrollCallback } from './useHandleOnScrollCallback';
+import { MessageProvider } from '../../../Message/context/MessageProvider';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
 export type OpenchannelMessageListProps = {
   renderMessage?: (props: RenderMessageProps) => React.ElementType<RenderMessageProps>;
@@ -28,6 +30,8 @@ function OpenchannelMessageList(
     hasMore,
     onScroll,
   } = useOpenChannelContext();
+  const store = useSendbirdStateContext();
+  const userId = store.config.userId;
   const scrollRef = ref || useRef(null);
   const [showScrollDownButton, setShowScrollDownButton] = useState(false);
 
@@ -62,15 +66,18 @@ function OpenchannelMessageList(
           const [chainTop, chainBottom] = isMessageGroupingEnabled
             ? compareMessagesForGrouping(previousMessage, message, nextMessage)
             : [false, false];
+          const isByMe = (message as UserMessage)?.sender?.userId === userId;
           return (
-            <OpenChannelMessage
-              key={message?.messageId || (message as UserMessage | FileMessage)?.reqId}
-              message={message}
-              chainTop={chainTop}
-              chainBottom={chainBottom}
-              hasSeparator={hasSeparator}
-              renderMessage={props?.renderMessage}
-            />
+            <MessageProvider message={message} isByMe={isByMe}>
+              <OpenChannelMessage
+                key={message?.messageId || (message as UserMessage | FileMessage)?.reqId}
+                message={message}
+                chainTop={chainTop}
+                chainBottom={chainBottom}
+                hasSeparator={hasSeparator}
+                renderMessage={props?.renderMessage}
+              />
+            </MessageProvider>
           )
         })
       );
