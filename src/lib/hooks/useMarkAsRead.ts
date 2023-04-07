@@ -5,15 +5,22 @@ import { Logger } from "../SendbirdState";
 export type MarkAsReadSchedulerType = {
   push: (channel: GroupChannel) => void;
   clear: () => void;
+  getQueue: () => GroupChannel[];
 };
 
 const TIMEOUT = 5000;
 
-export const schedulerFactory = (logger: Logger): MarkAsReadSchedulerType => {
+export const schedulerFactory = (logger: Logger, timeout?: number): MarkAsReadSchedulerType => {
   let queue: GroupChannel[] = [];
   let interval = null;
   const push = (channel: GroupChannel) => {
-    queue.push(channel);
+    const channelPresent = queue.find((c) => c.url === channel.url);
+    if (!channelPresent) {
+      queue.push(channel)
+    } else {
+      logger.info('Channel: Mark as read already in queue', channel);
+    }
+    // start the interval if it's not already running
     if (interval) {
       return;
     }
@@ -31,7 +38,7 @@ export const schedulerFactory = (logger: Logger): MarkAsReadSchedulerType => {
           logger.error('Channel: Mark as read failed', error);
         }
       }
-    }, TIMEOUT);
+    }, (timeout || TIMEOUT));
   };
   const clear = () => {
     queue = [];
@@ -43,6 +50,7 @@ export const schedulerFactory = (logger: Logger): MarkAsReadSchedulerType => {
   return {
     push,
     clear,
+    getQueue: () => queue,
   };
 }
 
@@ -59,7 +67,7 @@ export function useMarkAsRead({
 }: DynamicParams, {
   logger,
 }: StaticParams): MarkAsReadSchedulerType  {
-  const markAsReadScheduler = useMemo(() => schedulerFactory(logger), [logger]);
+  const markAsReadScheduler = useMemo(() => schedulerFactory(logger), []);
 
   useEffect(() => {
     // for simplicity, we clear the queue when the connection is lost
