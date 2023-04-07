@@ -58,8 +58,7 @@ export default function ThreadList({
   return (
     <div className={`sendbird-thread-list ${className}`}>
       {allThreadMessages.map((message, idx) => {
-        // @ts-ignore
-        const isByMe = message?.sender?.userId === userId;
+        const isByMe = (message as UserMessage)?.sender?.userId === userId;
         const prevMessage = allThreadMessages[idx - 1];
         const nextMessage = allThreadMessages[idx + 1];
         const [chainTop, chainBottom] = true// isMessageGroupingEnabled

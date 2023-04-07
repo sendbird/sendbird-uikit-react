@@ -27,7 +27,7 @@ export function identifyMentions({
     const tokens = parts.map((part) => {
       if (part.match(userMentionRegex)) {
         const matchedUser = mentionedUsers.find((user) => `@{${user?.userId}}` === part);
-        const nickname = matchedUser?.nickname || '(No name)'
+        const nickname = matchedUser?.nickname || '(No name)';
         return { value: nickname, type: TOKEN_TYPES.mention, userId: matchedUser?.userId };
       } else {
         return { value: part, type: TOKEN_TYPES.undetermined };
@@ -80,13 +80,6 @@ export function tokenizeMessage({
 }: TokenParams): Token[] {
   // mention can be squeezed-in(no-space-between) with other mentions and urls
   // if no users are mentioned, return the messageText as a single token
-
-  // const tokenize = pipe(
-  //   identifyMentions,
-  //   identifyUrlsAndStrings,
-  //   combineNearbyStrings,
-  // );
-  // const result = tokenize(messageText);
   const partialResult = [{
     type: TOKEN_TYPES.undetermined,
     value: messageText,

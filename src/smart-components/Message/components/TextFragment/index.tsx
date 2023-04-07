@@ -24,7 +24,7 @@ export default function TextFragment({
   return (
     <>
       {
-        tokens.map((token, idx) => {
+        tokens?.map((token, idx) => {
           const key = keyGenerator(createdAt, updatedAt, idx);
           switch (token.type) {
             case TOKEN_TYPES.mention:
