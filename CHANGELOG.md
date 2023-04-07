@@ -1,12 +1,43 @@
 # Changelog - v3
 
-## [v3.4.5] (Apr 07 2023)
+## [v3.4.5] (Apr 7 2023)
+Features:
+* Add a message list filter of UI level in the `Channel` module
+  * Add `Channel.filterMessageList?: (messages: BaseMessage): boolean;`, a UI level filter prop
+    to Channel. This function will be used to filter messages in `<MessageList />`
 
-* fix: Rename useMessageScrollRef to messageScrollRef (#472)
-* fix: Set current channel on ChannelList when opening channel from Thread (#469)
-* test: add unit test for useHandleOnScrollCallback (#468)
-* ci/cd: added pr-comment-bot.yml (#464)
-* chore: add workaround for ERR_OSSL_EVP_UNSUPPORTED (#467)
+    example:
+    ```javascript
+    // set your channel URL
+    const channel = "";
+    export const ChannelWithFilter = () => {
+      const channelFilter = useCallback((message) => {
+        const now = Date.now();
+        const twoWeeksAgo = now - 1000 * 60 * 60 * 24 * 14;
+        return message.createdAt > twoWeeksAgo;
+      }, []);
+      return (
+        <Channel
+              channelUrl={channel}
+              filterMessageList={channelFilter}
+            />
+      );
+    };
+    ```
+* Add a scheduler for calling markAsRead intervally
+  * The `markAsRead` is called on individual channels is un-optimal(causes command ack. error)
+because we have a list of channels that do this
+ideally this should be fixed in server/SDK
+this is a work around for the meantime to un-throttle the customer
+
+Fixes:
+* Set current channel on `ChannelList` when opening channel from the parent message of `Thread`
+  * Issue: The ChannelPreview item is not selected when opening the channel from
+  the ParentMessage of the Thread
+  * Fix: Set activeChannelUrl of ChannelList
+* Detect new lines in safari on the `MessageInput` component
+  * Safari puts `<div>text</div>` for new lines inside content editable div(input)
+  * Other browsers put newline or `br`
 
 ## [v3.4.4] (Mar 31 2023)
 
