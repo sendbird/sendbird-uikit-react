@@ -71,7 +71,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
   const {
     logger,
     isOnline = false,
-    markAsRead,
+    markAsReadScheduler,
   } = config;
 
   const sdk = sdkStore?.sdk as SendbirdGroupChat;
@@ -132,7 +132,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
                 // eslint-disable-next-line no-unused-expressions
                 channelList?.forEach((channel) => {
                   if (channel?.unreadMessageCount > 0) {
-                    markAsRead.push(channel);
+                    markAsReadScheduler.push(channel);
                   }
                 });
               }

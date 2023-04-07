@@ -1,6 +1,6 @@
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 
-import { schedulerFactory } from '../useMarkAsRead';
+import { schedulerFactory } from '../useMarkAsReadScheduler';
 import { LoggerFactory } from '../../Logger';
 
 jest.useFakeTimers();

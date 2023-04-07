@@ -166,7 +166,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   const { sdkStore } = stores;
   const { pubSub, logger, onUserProfileMessage } = config;
   const {
-    markAsRead,
+    markAsReadScheduler,
     disableMarkAsDelivered = false,
     isTypingIndicatorEnabledOnChannelList = false,
     isMessageReceiptStatusEnabledOnChannelList = false,
@@ -234,7 +234,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
         sortChannelList,
         disableAutoSelect,
         setChannelsToMarkAsRead,
-        markAsRead,
+        markAsReadScheduler,
       });
     } else {
       logger.info('ChannelList: Removing channelHandlers');

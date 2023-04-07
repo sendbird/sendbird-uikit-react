@@ -62,7 +62,7 @@ interface StaticParams {
   logger: Logger;
 }
 
-export function useMarkAsRead({
+export function useMarkAsReadScheduler({
   isConnected,
 }: DynamicParams, {
   logger,

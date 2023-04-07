@@ -203,7 +203,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     isMentionEnabled,
     isVoiceMessageEnabled,
     onUserProfileMessage,
-    markAsRead,
+    markAsReadScheduler,
   } = config;
   const sdk = globalStore?.stores?.sdkStore?.sdk as SendbirdGroupChat;
   const sdkInit = globalStore?.stores?.sdkStore?.initialized;
@@ -320,7 +320,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   // this hook sets currentGroupChannel asynchronously
   useGetChannel(
     { channelUrl, sdkInit, disableMarkAsRead },
-    { messagesDispatcher, sdk, logger, markAsRead },
+    { messagesDispatcher, sdk, logger, markAsReadScheduler },
   );
 
   // to set quote message as null

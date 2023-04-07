@@ -1,13 +1,13 @@
 import { renderHook } from '@testing-library/react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 
-import { useMarkAsRead } from '../useMarkAsRead';
+import { useMarkAsReadScheduler } from '../useMarkAsReadSchedulerScheduler';
 import { LoggerFactory } from '../../Logger';
 
 const logger = LoggerFactory('all');
-describe('useMarkAsRead', () => {
+describe('useMarkAsReadScheduler', () => {
   it('should return a markAsReadScheduler', () => {
-    const { result } = renderHook(() => useMarkAsRead({ isConnected: true }, { logger }));
+    const { result } = renderHook(() => useMarkAsReadScheduler({ isConnected: true }, { logger }));
     expect(result.current.push).toBeDefined();
     expect(result.current.clear).toBeDefined();
   });
@@ -15,7 +15,7 @@ describe('useMarkAsRead', () => {
   it('should call clear queue when offline', () => {
     const { result, rerender } = renderHook(
       ({ isConnected, logger }) => {
-        return useMarkAsRead({ isConnected }, { logger });
+        return useMarkAsReadScheduler({ isConnected }, { logger });
       }, {
         initialProps: {
           isConnected: true,
