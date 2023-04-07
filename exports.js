@@ -103,7 +103,7 @@ export default {
   'MessageSearch/components/MessageSearchUI': 'src/smart-components/MessageSearch/components/MessageSearchUI/index.tsx',
 
   // Message
-  'Message/context': 'src/smart-components/Message/context/index.tsx',
+  'Message/context': 'src/smart-components/Message/context/MessageProvider.tsx',
 
   // Thread
   Thread: 'src/smart-components/Thread/index.tsx',
