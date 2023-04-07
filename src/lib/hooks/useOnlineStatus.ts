@@ -1,9 +1,10 @@
-import { ConnectionHandler } from '@sendbird/chat';
+import SendbirdChat, { ConnectionHandler } from '@sendbird/chat';
 import { useState, useEffect } from 'react';
 
 import { uuidv4 } from '../../utils/uuid';
+import { Logger } from '../SendbirdState';
 
-function useConnectionStatus(sdk, logger) {
+function useConnectionStatus(sdk: SendbirdChat, logger: Logger): boolean {
   const [isOnline, setIsOnline] = useState(true);
 
   useEffect(() => {
