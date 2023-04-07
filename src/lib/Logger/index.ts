@@ -57,7 +57,7 @@ export const getDefaultLogger = (): LoggerInterface => ({
 
 export const LoggerFactory = (
   lvl: LogLevel,
-  customInterface: () => void,
+  customInterface?: () => void,
 ): LoggerInterface => {
   const logInterface = customInterface || printLog;
   const lvlArray: Array<LogLevel> = Array.isArray(lvl) ? lvl : [lvl];

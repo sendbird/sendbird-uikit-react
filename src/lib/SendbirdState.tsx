@@ -2,6 +2,7 @@ import type SendbirdChat from '@sendbird/chat';
 import type { User } from '@sendbird/chat';
 import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import { Dispatch } from 'react';
+import { MarkAsReadSchedulerType } from './hooks/useMarkAsReadScheduler';
 
 export type CustomUseReducerDispatcher = Dispatch<{ type: string, payload: any }>;
 
@@ -55,6 +56,7 @@ interface SendBirdStateConfig {
   };
   isTypingIndicatorEnabledOnChannelList?: boolean;
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
+  markAsReadScheduler?: MarkAsReadSchedulerType;
 }
 
 export interface SdkStore {

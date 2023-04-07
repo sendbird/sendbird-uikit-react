@@ -6,6 +6,7 @@ function useSetChannel({ channelUrl, sdkInit, disableMarkAsRead }, {
   messagesDispatcher,
   sdk,
   logger,
+  markAsReadScheduler,
 }) {
   useEffect(() => {
     if (channelUrl && sdkInit && sdk && sdk.groupChannel) {
@@ -20,12 +21,7 @@ function useSetChannel({ channelUrl, sdkInit, disableMarkAsRead }, {
 
           logger.info('Channel: Mark as read', groupChannel);
           if (!disableMarkAsRead) {
-            // this order is important - this mark as read should update the event handler up above
-            try {
-              groupChannel.markAsRead();
-            } catch {
-              //
-            }
+            markAsReadScheduler.push(groupChannel);
           }
         })
         .catch((e) => {

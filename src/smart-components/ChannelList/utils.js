@@ -168,7 +168,7 @@ function setupChannelList({
   logger,
   sortChannelList,
   disableAutoSelect,
-  setChannelsToMarkAsRead,
+  markAsReadScheduler,
 }) {
   if (sdk?.groupChannel) {
     createEventHandler({
@@ -223,7 +223,11 @@ function setupChannelList({
         ?.find((feature) => (feature === DELIVERY_RECIPT));
 
       if (canSetMarkAsDelivered) {
-        setChannelsToMarkAsRead(sortedChannelList);
+        sortChannelList.forEach((channel) => {
+          if (channel?.unreadMessageCount > 0) {
+            markAsReadScheduler.push(channel);
+          }
+        });
       }
     }).catch((err) => {
       if (err) {

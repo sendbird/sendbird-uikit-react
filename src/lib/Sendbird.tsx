@@ -25,6 +25,7 @@ import { LocalizationProvider } from './LocalizationContext';
 import { MediaQueryProvider } from './MediaQueryContext';
 import getStringSet from '../ui/Label/stringSet';
 import { VOICE_RECORDER_DEFAULT_MAX, VOICE_RECORDER_DEFAULT_MIN } from '../utils/consts';
+import { useMarkAsReadScheduler } from './hooks/useMarkAsReadScheduler';
 
 export type UserListQueryType = {
   hasNext?: boolean;
@@ -197,6 +198,8 @@ const Sendbird = ({
 
   const isOnline = useOnlineStatus(sdkStore.sdk, logger);
 
+  const markAsReadScheduler = useMarkAsReadScheduler({ isConnected: isOnline }, { logger });
+
   const localeStringSet = React.useMemo(() => {
     if (!stringSet) {
       return getStringSet('en');
@@ -263,6 +266,7 @@ const Sendbird = ({
           isTypingIndicatorEnabledOnChannelList,
           isMessageReceiptStatusEnabledOnChannelList,
           replyType,
+          markAsReadScheduler,
         },
       }}
     >
