@@ -2,19 +2,19 @@ import SendbirdChat, { SessionHandler } from '@sendbird/chat';
 import { OpenChannelModule } from '@sendbird/chat/openChannel';
 import { GroupChannelModule } from '@sendbird/chat/groupChannel';
 
-import sdkStoreActionTypes, { SdkStoreActionTypes } from './actionTypes';
-import userStoreActionTypes, { UserStoreActionTypes } from '../user/actionTypes';
-import { isTextuallyNull } from '../../../utils';
+import { SDK_ACTIONS, SdkActionTypes } from '../dux/sdk/actionTypes';
+import userStoreActionTypes, { UserStoreActionTypes } from '../dux/user/actionTypes';
+import { isTextuallyNull } from '../../utils';
 import React from 'react';
-import { Logger } from '../../SendbirdState';
+import { Logger } from '../SendbirdState';
 
-const { INIT_SDK, SET_SDK_LOADING, RESET_SDK, SDK_ERROR } = sdkStoreActionTypes;
+const { INIT_SDK, SET_SDK_LOADING, RESET_SDK, SDK_ERROR } = SDK_ACTIONS;
 const { INIT_USER, UPDATE_USER_INFO, RESET_USER } = userStoreActionTypes;
 const APP_VERSION_STRING = '__uikit_app_version__';
 const IS_ROLLUP = '__is_rollup__';
 const IS_ROLLUP_REPLACE = '__is_rollup_replace__';
 
-type SdkDispatcher = React.Dispatch<{ type: SdkStoreActionTypes, payload?: any }>;
+type SdkDispatcher = React.Dispatch<SdkActionTypes>;
 type UserDispatcher = React.Dispatch<{ type: UserStoreActionTypes, payload?: any }>;
 type Dispatchers = { sdkDispatcher: SdkDispatcher, userDispatcher: UserDispatcher };
 
@@ -33,7 +33,7 @@ export const disconnectSdk = ({
   onDisconnect,
 }: DisconnectSdkProps): void => {
   sdkDispatcher({ type: SET_SDK_LOADING, payload: true });
-  if (sdk && sdk.disconnect) {
+  if (sdk?.disconnect) {
     sdk.disconnect()
       .then(() => {
         sdkDispatcher({ type: RESET_SDK });

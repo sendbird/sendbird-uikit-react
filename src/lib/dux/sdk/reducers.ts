@@ -1,31 +1,36 @@
+import { match } from 'ts-pattern';
 import { SdkActionTypes, SDK_ACTIONS } from './actionTypes';
 import initialState, { SdkStoreStateType } from './initialState';
 
 export default function reducer(state: SdkStoreStateType, action: SdkActionTypes): SdkStoreStateType {
-  switch (action.type) {
-    case SDK_ACTIONS.SET_SDK_LOADING:
+  return match(action)
+    .with({ type: SDK_ACTIONS.SET_SDK_LOADING }, ({ payload }) => {
       return {
         ...state,
         initialized: false,
-        loading: action.payload,
+        loading: payload,
       };
-    case SDK_ACTIONS.SDK_ERROR:
+    })
+    .with({ type: SDK_ACTIONS.SDK_ERROR }, () => {
       return {
         ...state,
         initialized: false,
         loading: false,
         error: true,
       };
-    case SDK_ACTIONS.INIT_SDK:
+    })
+    .with({ type: SDK_ACTIONS.INIT_SDK }, ({ payload }) => {
       return {
-        sdk: action.payload,
+        sdk: payload,
         initialized: true,
         loading: false,
         error: false,
       };
-    case SDK_ACTIONS.RESET_SDK:
+    })
+    .with({ type: SDK_ACTIONS.RESET_SDK }, () => {
       return initialState;
-    default:
+    })
+    .otherwise(() => {
       return state;
-  }
+    });
 }

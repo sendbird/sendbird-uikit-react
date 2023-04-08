@@ -2,10 +2,10 @@ import './index.scss';
 import './__experimental__typography.scss';
 
 import React, { useEffect, useReducer, useState } from 'react';
-import { User } from '@sendbird/chat';
+import SendbirdChat, { SessionHandler, User } from '@sendbird/chat';
 
 import { SendbirdSdkContext } from './SendbirdSdkContext';
-import { handleConnection } from './dux/sdk/thunks';
+import { handleConnection } from './hooks/thunks';
 
 import useTheme from './hooks/useTheme';
 
@@ -16,7 +16,7 @@ import userInitialState from './dux/user/initialState';
 
 import useOnlineStatus from './hooks/useOnlineStatus';
 
-import { LoggerFactory } from './Logger';
+import { LogLevel, LoggerFactory } from './Logger';
 import pubSubFactory from './pubSub/index';
 import useAppendDomNode from '../hooks/useAppendDomNode';
 
@@ -60,7 +60,7 @@ export interface SendbirdProviderProps {
   accessToken?: string;
   customApiHost?: string;
   customWebSocketHost?: string;
-  configureSession?: () => void;
+  configureSession?: (sdk: SendbirdChat) => SessionHandler;
   theme?: 'light' | 'dark';
   config?: SendbirdConfig;
   nickname?: string;
@@ -121,7 +121,7 @@ const Sendbird = ({
     userMention = {},
     isREMUnitEnabled = false,
   } = config;
-  const [logger, setLogger] = useState(LoggerFactory(logLevel));
+  const [logger, setLogger] = useState(LoggerFactory((logLevel as LogLevel)));
   const [pubSub] = useState(pubSubFactory());
   const [sdkStore, sdkDispatcher] = useReducer(sdkReducers, sdkInitialState);
 
@@ -136,7 +136,6 @@ const Sendbird = ({
       userId,
       appId,
       accessToken,
-      sdkStore,
       nickname,
       profileUrl,
       configureSession,
@@ -152,7 +151,7 @@ const Sendbird = ({
 
   // to create a pubsub to communicate between parent and child
   useEffect(() => {
-    setLogger(LoggerFactory(logLevel));
+    setLogger(LoggerFactory((logLevel as LogLevel)));
   }, [logLevel]);
 
   useAppendDomNode([
@@ -226,11 +225,13 @@ const Sendbird = ({
               userId,
               appId,
               accessToken,
-              sdkStore,
               nickname,
               profileUrl,
-              logger,
+              configureSession,
+              customApiHost,
+              customWebSocketHost,
               sdk: sdkStore.sdk,
+              logger,
             }, {
               sdkDispatcher,
               userDispatcher,
