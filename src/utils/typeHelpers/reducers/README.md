@@ -12,8 +12,8 @@ complex, you can move to useReducer and move sideeffects into customHooks
 
 # RULES for this project(April 10 2023)
 
-Patterns for keeping reducers simple, typesafe, uniform and readable
-Use Plop to generate boilerplate code
+* Patterns for keeping reducers simple, typesafe, uniform and readable
+* Use Plop to generate boilerplate code
 
 ```javascript
 
@@ -53,20 +53,15 @@ export const ${prefix}Reducer = (
   state: ${Prefix}StateType,
   action: ${Prefix}ActionTypes,
 ): ${Prefix}StateType => {
-  switch (action.type) {
-    case ${PREFIX}_ACTIONS.SET_SDK:
-      return {
-        ...state,
-        sdk: action.payload.sdk,
-      };
-    case ${PREFIX}_ACTIONS.SET_LOADING:
-      return {
-        ...state,
-        loading: action.payload,
-      };
-    default:
-      return state;
-  }
+  return  match(action)
+    .with({ type: ${PREFIX}_ACTIONS.SET_SDK }, (action) => ({
+      ...state,
+      sdk: action.payload.sdk,
+    }))
+    .with({ type: ${PREFIX}_ACTIONS.SET_LOADING }, (action) => ({
+      ...state,
+      loading: action.payload,
+    }))
 };
 
 // in component
