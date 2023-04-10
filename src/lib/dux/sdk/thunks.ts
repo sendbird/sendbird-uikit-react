@@ -2,11 +2,11 @@ import SendbirdChat, { SessionHandler } from '@sendbird/chat';
 import { OpenChannelModule } from '@sendbird/chat/openChannel';
 import { GroupChannelModule } from '@sendbird/chat/groupChannel';
 
-import { SDK_ACTIONS, SdkActionTypes } from '../dux/sdk/actionTypes';
-import userStoreActionTypes, { UserStoreActionTypes } from '../dux/user/actionTypes';
-import { isTextuallyNull } from '../../utils';
+import { SDK_ACTIONS, SdkActionTypes } from './actionTypes';
+import userStoreActionTypes, { UserStoreActionTypes } from '../user/actionTypes';
+import { isTextuallyNull } from '../../../utils';
 import React from 'react';
-import { Logger } from '../SendbirdState';
+import { Logger } from '../../SendbirdState';
 
 const { INIT_SDK, SET_SDK_LOADING, RESET_SDK, SDK_ERROR } = SDK_ACTIONS;
 const { INIT_USER, UPDATE_USER_INFO, RESET_USER } = userStoreActionTypes;

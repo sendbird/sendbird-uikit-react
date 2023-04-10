@@ -5,7 +5,7 @@ import React, { useEffect, useReducer, useState } from 'react';
 import SendbirdChat, { SessionHandler, User } from '@sendbird/chat';
 
 import { SendbirdSdkContext } from './SendbirdSdkContext';
-import { handleConnection } from './hooks/thunks';
+import { handleConnection } from './dux/sdk/thunks';
 
 import useTheme from './hooks/useTheme';
 
