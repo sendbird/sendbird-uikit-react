@@ -69,7 +69,8 @@
     "css-vars-ponyfill": "^2.3.2",
     "date-fns": "^2.16.1",
     "dompurify": "^3.0.1",
-    "prop-types": "^15.7.2"
+    "prop-types": "^15.7.2",
+    "ts-pattern": "^4.2.2"
   },
   "bugs": {
     "url": "https://community.sendbird.com"

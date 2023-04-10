@@ -27,7 +27,7 @@ function useSendMessageCallback(
     if (sdk) {
       const text = messageInputRef.current.innerText;
       const createParamsDefault = (txt: string | number): UserMessageCreateParams => {
-        const message = (txt as string)?.trim() || txt as string;
+        const message = txt as string;
         const params: UserMessageCreateParams = {
           message: message,
         };

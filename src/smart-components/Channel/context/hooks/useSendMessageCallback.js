@@ -27,7 +27,7 @@ export default function useSendMessageCallback({
       } = props;
       const createParamsDefault = () => {
         const params = {};
-        params.message = message?.trim() || message;
+        params.message = message;
         // if (isMentionEnabled && mentionedUserIds?.length > 0) {
         if (isMentionEnabled && mentionedUsers?.length > 0) {
           // params.mentionedUserIds = mentionedUserIds;
@@ -35,7 +35,7 @@ export default function useSendMessageCallback({
         }
         // if (isMentionEnabled && mentionTemplate && mentionedUserIds?.length > 0) {
         if (isMentionEnabled && mentionTemplate && mentionedUsers?.length > 0) {
-          params.mentionedMessageTemplate = mentionTemplate?.trim() || mentionTemplate;
+          params.mentionedMessageTemplate = mentionTemplate;
         }
         if (quoteMessage) {
           params.isReplyToChannel = true;

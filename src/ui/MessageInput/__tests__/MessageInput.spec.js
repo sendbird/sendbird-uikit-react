@@ -19,6 +19,32 @@ describe('ui/MessageInput', () => {
     ).toBe(0);
   });
 
+  it("should render upload icon even though only white spaces are present", () => {
+    const { container } = render(
+      <MessageInput onSendMessage={noop} value="   " />
+    );
+    expect(
+      container.getElementsByClassName("sendbird-message-input--send").length
+    ).toBe(0);
+    expect(
+      container.getElementsByClassName("sendbird-message-input--attach").length
+    ).toBe(1);
+    expect(
+      container.getElementsByClassName("sendbird-message-input--edit-action")
+        .length
+    ).toBe(0);
+  });
+
+  it("should not render the placeholder text if only white spaces are present", () => {
+    const { container } = render(
+      <MessageInput onSendMessage={noop} value="   " />
+    );
+    expect(
+      container.getElementsByClassName("sendbird-message-input--placeholder")
+        .length
+    ).toBe(0);
+  });
+
   it.skip('should render send icon if text is present', () => {
     const component = shallow(
       <MessageInput

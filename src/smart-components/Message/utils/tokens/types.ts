@@ -16,7 +16,7 @@ export type StringToken = {
 };
 
 export type MentionToken = {
-  type: typeof TOKEN_TYPES.mention;
+  type: TokenType;
   value: string;
   userId: string;
 };

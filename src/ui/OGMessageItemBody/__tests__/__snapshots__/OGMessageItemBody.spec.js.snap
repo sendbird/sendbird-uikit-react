@@ -11,7 +11,11 @@ exports[`ui/OGMessageItemBody should do a snapshot test of the OGMessageItemBody
       <div
         class="sendbird-og-message-item-body__text-bubble"
       >
-        example-text
+        <span
+          class="sendbird-word"
+        >
+          example-text
+        </span>
       </div>
     </span>
     <div

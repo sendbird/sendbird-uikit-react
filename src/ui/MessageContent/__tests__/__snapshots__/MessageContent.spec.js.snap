@@ -52,7 +52,11 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
           <div
             class="sendbird-message-content__middle__message-item-body sendbird-text-message-item-body incoming  "
           >
-            First second third
+            <span
+              class="sendbird-word"
+            >
+              First second third
+            </span>
           </div>
         </span>
         <span

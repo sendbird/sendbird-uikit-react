@@ -33,12 +33,12 @@ export default function useSendUserMessageCallback({
     } = props;
     const createDefaultParams = () => {
       const params = {} as UserMessageCreateParams;
-      params.message = message?.trim() || message;
+      params.message = message;
       if (isMentionEnabled && mentionedUsers?.length > 0) {
         params.mentionedUsers = mentionedUsers;
       }
       if (isMentionEnabled && mentionTemplate && mentionedUsers?.length > 0) {
-        params.mentionedMessageTemplate = mentionTemplate?.trim() || mentionTemplate;
+        params.mentionedMessageTemplate = mentionTemplate;
       }
       if (quoteMessage) {
         params.isReplyToChannel = true;
