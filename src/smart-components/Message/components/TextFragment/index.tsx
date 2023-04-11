@@ -50,7 +50,7 @@ export default function TextFragment({
               </LinkLabel>
             </span>
           ))
-          .otherwise(() => <>{getWhiteSpacePreservedText(token.value)}</>);
+          .otherwise(() => <React.Fragment key={key}>{getWhiteSpacePreservedText(token.value)}</React.Fragment>);
       })}
     </>
   );
