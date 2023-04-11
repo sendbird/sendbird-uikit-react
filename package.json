@@ -69,8 +69,7 @@
     "css-vars-ponyfill": "^2.3.2",
     "date-fns": "^2.16.1",
     "dompurify": "^3.0.1",
-    "prop-types": "^15.7.2",
-    "ts-pattern": "^4.2.2"
+    "prop-types": "^15.7.2"
   },
   "bugs": {
     "url": "https://community.sendbird.com"
@@ -111,6 +110,7 @@
     "css-loader": "^3.4.2",
     "dts-bundle-generator": "^6.5.0",
     "eslint": "^6.8.0",
+    "ts-pattern": "^4.2.2",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-babel": "^5.3.1",
     "eslint-plugin-import": "^2.20.0",
