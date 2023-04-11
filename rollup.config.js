@@ -47,6 +47,8 @@ module.exports = ({
     'css-vars-ponyfill',
     'date-fns',
     'dompurify',
+    // we do not add ts-pattern as dep to avoid conflict with client base
+    'ts-pattern',
   ],
   plugins: [
     postcss({

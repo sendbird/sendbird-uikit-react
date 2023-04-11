@@ -4,6 +4,7 @@ import {
   identifyMentions,
   identifyUrlsAndStrings,
   combineNearbyStrings,
+  getWhiteSpacePreservedText,
 } from '../tokenize';
 import { Token, UndeterminedToken } from '../types';
 
@@ -99,5 +100,18 @@ describe('combineNearbyStrings', () => {
     }];
     const result = combineNearbyStrings(tokens);
     expect(result).toEqual(expected);
+  });
+});
+
+describe('getWhiteSpacePreservedText', () => {
+  it('should keep the leading and trailing white spaces', () => {
+    const text = ' aaa ';
+    const result = getWhiteSpacePreservedText(text);
+    expect(result).toEqual(' aaa\u00A0');
+  });
+  it('should keep the new lines', () => {
+    const text = ' aaa\naa';
+    const result = getWhiteSpacePreservedText(text);
+    expect(result).toEqual(' aaa\naa');
   });
 });

@@ -99,3 +99,16 @@ export function tokenizeMessage({
   return result;
 }
 
+/**
+ * To preserve the original text which has 
+ * leading & trailing white spaces & new-lines in the middle
+ * @link https://sendbird.slack.com/archives/GPGHESTL3/p1681180484341369
+ */
+export function getWhiteSpacePreservedText(text: string): string {
+  return text
+    // convert any space or tab into the non-breaking space
+    // to preserve the leading & trailing white spaces
+    .replace(/(?<!^)[ \t]+/g, '\u00A0')
+    // and keep the new line as well
+    .replace(/\n/g, '\n');
+}

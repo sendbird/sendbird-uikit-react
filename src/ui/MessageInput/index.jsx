@@ -97,6 +97,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     renderSendMessageIcon,
     setMentionedUsers,
   } = props;
+  const textField = ref?.current;
   const textFieldId = messageFieldId || TEXT_FIELD_ID;
   const { stringSet } = useContext(LocalizationContext);
   const fileInputRef = useRef(null);
@@ -136,7 +137,7 @@ const MessageInput = React.forwardRef((props, ref) => {
       displayCaret(textField, initialValue?.length);
     } catch { }
     setMentionedUserIds([]);
-    setIsInput(textField?.innerText?.length > 0);
+    setIsInput(textField?.innerText?.trim().length > 0);
     setHeight();
   }, [initialValue]);
 
@@ -181,7 +182,7 @@ const MessageInput = React.forwardRef((props, ref) => {
         } catch { }
         setMentionedUserIds([]);
       }
-      setIsInput(textField?.innerText?.length > 0);
+      setIsInput(textField?.innerText?.trim().length > 0);
       setHeight();
     }
   }, [isEdit, message]);
@@ -196,7 +197,7 @@ const MessageInput = React.forwardRef((props, ref) => {
         setMentionedUserIds(newMentionedUserIds);
       }
     }
-    setIsInput(textField.innerText.length > 0);
+    setIsInput(textField.innerText.trim().length > 0);
   }, [targetStringInfo, isMentionEnabled]);
 
   // #Mention | Replace selected user nickname to the MentionedUserLabel
@@ -352,7 +353,7 @@ const MessageInput = React.forwardRef((props, ref) => {
       setHeight();
     }
   };
-  const isEditDisabled = !(ref?.current?.innerText?.trim());
+  const isEditDisabled = !(textField?.innerText?.trim());
   const editMessage = () => {
     const textField = ref?.current;
     const messageId = message?.messageId;
@@ -443,13 +444,13 @@ const MessageInput = React.forwardRef((props, ref) => {
           onInput={() => {
             setHeight();
             onStartTyping();
-            setIsInput(ref?.current?.innerText?.length > 0);
+            setIsInput(textField.innerText?.trim().length > 0);
             useMentionedLabelDetection();
           }}
           onPaste={onPaste}
         />
         {/* placeholder */}
-        {!isInput && (
+        {textField?.innerText?.length === 0 && (
           <Label
             className="sendbird-message-input--placeholder"
             type={LabelTypography.BODY_1}
