@@ -9,6 +9,7 @@ import MentionLabel from '../../../../ui/MentionLabel';
 import { USER_MENTION_PREFIX } from '../../consts';
 import LinkLabel from '../../../../ui/LinkLabel';
 import { LabelTypography } from '../../../../ui/Label';
+import { getWhiteSpacePreservedText } from '../../utils/tokens/tokenize';
 
 export type TextFragmentProps = {
   tokens: Token[];
@@ -49,18 +50,7 @@ export default function TextFragment({
               </LinkLabel>
             </span>
           ))
-          .otherwise(() => {
-            /**
-             * To preserve the leading / trailing white spaces
-             * by not using additional span tag convert them like below
-             * '160' is the Unicode code point for the non-breaking space character (&nbsp; entity)
-             * @link https://sendbird.slack.com/archives/GPGHESTL3/p1681180484341369
-             */
-            const whiteSpacePreservedText = token.value.replace(/\s/g, () => String.fromCharCode(160));
-            return (
-              <>{whiteSpacePreservedText}</>
-            );
-          });
+          .otherwise(() => <>{getWhiteSpacePreservedText(token.value)}</>);
       })}
     </>
   );
