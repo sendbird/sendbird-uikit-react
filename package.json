@@ -69,8 +69,7 @@
     "css-vars-ponyfill": "^2.3.2",
     "date-fns": "^2.16.1",
     "dompurify": "^3.0.1",
-    "prop-types": "^15.7.2",
-    "ts-pattern": "^4.2.2"
+    "prop-types": "^15.7.2"
   },
   "bugs": {
     "url": "https://community.sendbird.com"
@@ -139,6 +138,7 @@
     "stylelint": "^13.0.0",
     "stylelint-config-sass-guidelines": "^7.0.0",
     "ts-loader": "^7.0.5",
+    "ts-pattern": "^4.2.2",
     "tslib": "^2.0.0",
     "typescript": "^4.7.4"
   },
