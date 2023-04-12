@@ -10,6 +10,8 @@ We are introducing a new version of the Sendbird Chat UIKit. Version 3 features 
 ## Installation
 
 `npm i @sendbird/uikit-react`
+or if you're using yarn
+`yarn add @sendbird/uikit-react`
 
 For typescript projects, add `node_modules/@sendbird/uikit-react/index.d.ts` to your `include` section in tsconfig file to get type definitions
 
@@ -39,23 +41,29 @@ And many more...
 
 You need to install:
 * nodejs 16 LTS https://nodejs.org/en/download/
-* npm 8 or above
+* npm 8 >= or yarn
 
 **Caveats**
- - We tried development on Mac OS / Linux systems. You might encounter problems in running `npm run build` in Windows machines
+ - We tried development on Mac OS / Linux systems. You might encounter problems in running `npm run build` or `yarn run build` in Windows machines
  - If you use node.js >= 17 and see `ERR_OSSL_EVP_UNSUPPORTED` error on any run cmd, try to set `export NODE_OPTIONS=--openssl-legacy-provider` in the terminal
 
 ### Development
 We use storybook for development and rollup for building the npm distribution(bundled JS file)
-Make sure you have nodejs and npm installed and run
+Make sure you have nodejs and npm (or yarn) installed and run
 
-```
 Make a copy of .env.example and save it as .env
 Set your appId STORYBOOK_APP_ID
+
+```
 npm install
 npm run storybook
 ```
-> `npm run generate-component` generates a UI component skeleton in `src/ui`
+or
+```
+yarn install
+yarn storybook
+```
+> `yarn run generate-component` generates a UI component skeleton in `src/ui`
 
 * By default, storybook opens in http://localhost:6006/
 * Smart Components such as ChannelList, Channel, ChannelSetting, App can be found under `OTHERS`
@@ -71,6 +79,10 @@ We have both esm and commonjs output
 ```
 npm run build
 ```
+or
+```
+yarn run build
+```
 
 The bundled JS code can be found in `./release`
 The CSS is in `./release/dist/index.css`
@@ -82,11 +94,19 @@ We have implemented tests for dumb ui components only. Technologies used: Jest a
 ```
 npm run test
 ```
+or
+```
+yarn run test
+```
 
 ### Lint
 
 ```
 npm run lint
+```
+or
+```
+yarn run lint
 ```
 * .eslintrc.json lints ts files and .eslintrc.js lints js files
 

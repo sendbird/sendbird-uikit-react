@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import kr from 'date-fns/locale/ko';
 
-import pkg from '../../../../package-lock.json'
+import pkg from '../../../../package.json'
 
 import App from '../index';
 import Sendbird from '../../../lib/Sendbird';
