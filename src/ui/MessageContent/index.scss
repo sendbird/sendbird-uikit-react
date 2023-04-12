@@ -15,7 +15,7 @@
   .sendbird-message-content__middle {
     max-width: 400px;
     @include mobile() {
-      max-width: calc(100vw - 100px);
+      max-width: calc(100vw - 140px);
     }
   }
 
