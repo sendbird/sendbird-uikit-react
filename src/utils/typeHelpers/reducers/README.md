@@ -7,8 +7,7 @@ should not mutate the state, but return a new state object
 In this project we recommend using minimal external dependencies,
 so we recommend using built in hooks like useState and useReducer
 
-If the component is simple, you can use useState, but if the component is
-complex, you can move to useReducer and move sideeffects into customHooks
+You can use useState if the component is simple, otherwise you can move to useReducer and move side effects into customHooks
 
 # RULES for this project(April 10 2023)
 
