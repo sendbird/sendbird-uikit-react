@@ -99,7 +99,10 @@ export const VoiceMessageInputWrapper = ({
         currentValue={recordingStatus === VoiceRecorderStatus.COMPLETED ? playbackTime : recordingTime}
         maximumValue={recordingStatus === VoiceRecorderStatus.COMPLETED ? recordingTime : recordingLimit}
         currentType={voiceInputState}
-        onCancelClick={onCancelClick}
+        onCancelClick={() => {
+          onCancelClick();
+          cancel();
+        }}
         onSubmitClick={() => {
           if (isDisabled) {
             setShowModal(true);
