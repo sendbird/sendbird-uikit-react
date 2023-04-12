@@ -8,11 +8,11 @@ export const SDK_ACTIONS = {
   SDK_ERROR: 'SDK_ERROR',
 } as const;
 
-type PAYLOAD_TYPES = {
+type SDK_PAYLOAD_TYPES = {
   [SDK_ACTIONS.SET_SDK_LOADING]: boolean,
   [SDK_ACTIONS.INIT_SDK]: SendbirdChat,
   [SDK_ACTIONS.SDK_ERROR]: null,
   [SDK_ACTIONS.RESET_SDK]: null,
 };
 
-export type SdkActionTypes = CreateAction<PAYLOAD_TYPES>;
+export type SdkActionTypes = CreateAction<SDK_PAYLOAD_TYPES>;

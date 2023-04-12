@@ -36,7 +36,7 @@ export const ${PREFIX}_ACTIONS = {
   SET_LOADING: "SET_LOADING",
 } as const;
 
-type PAYLOAD_TYPES = {
+type ${PREFIX}_PAYLOAD_TYPES = {
   [${PREFIX}_ACTIONS.SET_SDK]: {
     sdk: SendbirdChat,
   },
