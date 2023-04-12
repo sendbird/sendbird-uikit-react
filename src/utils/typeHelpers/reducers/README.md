@@ -5,7 +5,7 @@ and return a new state. Reducers are pure functions, which means they
 should not mutate the state, but return a new state object
 
 In this project we recommend using minimal external dependencies,
-so we recommend using built in hooks like useState and useReducer
+so we recommend using built-in hooks like useState and useReducer
 
 You can use useState if the component is simple, otherwise you can move to useReducer and move side effects into customHooks
 
