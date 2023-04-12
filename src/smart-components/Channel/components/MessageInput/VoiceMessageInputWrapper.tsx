@@ -30,7 +30,7 @@ export const VoiceMessageInputWrapper = ({
   const [audioFile, setAudioFile] = useState<File>(null);
   const [uuid] = useState<string>(uuidv4());
   const [voiceInputState, setVoiceInputState] = useState<VoiceMessageInputStatus>(VoiceMessageInputStatus.READY_TO_RECORD);
-  const [isSubmited, setSubmit] = useState(false);
+  const [isSubmitted, setSubmit] = useState(false);
   const [isDisabled, setDisabled] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { stringSet } = useLocalization();
@@ -74,12 +74,12 @@ export const VoiceMessageInputWrapper = ({
   }, [channel?.myRole, channel?.isFrozen, channel?.myMutedState]);
 
   useEffect(() => {
-    if (isSubmited && audioFile) {
+    if (isSubmitted && audioFile) {
       onSubmitClick(audioFile, recordingTime);
       setSubmit(false);
       setAudioFile(null);
     }
-  }, [isSubmited, audioFile, recordingTime]);
+  }, [isSubmitted, audioFile, recordingTime]);
   useEffect(() => {
     if (audioFile) {
       if (recordingTime < minRecordingTime) {
@@ -91,7 +91,7 @@ export const VoiceMessageInputWrapper = ({
         setVoiceInputState(VoiceMessageInputStatus.READY_TO_PLAY);
       }
     }
-  }, [isSubmited, audioFile, recordingTime, playingStatus]);
+  }, [isSubmitted, audioFile, recordingTime, playingStatus]);
 
   return (
     <div className="sendbird-voice-message-input-wrapper">
