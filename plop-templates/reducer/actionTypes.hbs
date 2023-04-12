@@ -1,0 +1,14 @@
+// import from correct place
+import { CreateAction } from "../../../../utils/typeHelpers/reducers/createAction";
+
+export const {{constantCase name}}_ACTIONS = {
+  INIT_{{constantCase name}}: 'INIT_{{constantCase name}}',
+} as const;
+
+type {{constantCase name}}_PAYLOAD_TYPES = {
+  [{{constantCase name}}_ACTIONS.INIT_{{constantCase name}}]: {
+    {{camelCase name }}: any;
+  },
+};
+
+export type {{pascalCase name}}ActionTypes = CreateAction<{{constantCase name}}_PAYLOAD_TYPES>;
