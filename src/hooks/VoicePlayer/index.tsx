@@ -93,12 +93,15 @@ export const VoicePlayerProvider = ({
       voicePlayerRoot.removeChild(voicePlayerAudioElement);
     }
 
+    logger.info('VoicePlayer: Start getting audio file.');
     new Promise((resolve) => {
       if (audioFile) {
         resolve(audioFile);
+        logger.info('VoicePlayer: Use the audioFile instance.');
       }
       if (audioStorage?.[groupKey]?.audioFile) {
-        resolve(audioStorage[groupKey].audioFile)
+        resolve(audioStorage[groupKey].audioFile);
+        logger.info('VoicePlayer: Get from the audioStorage.');
       }
       voicePlayerDispatcher({
         type: INITIALIZE_AUDIO_UNIT,
@@ -112,6 +115,7 @@ export const VoicePlayerProvider = ({
             type: VOICE_MESSAGE_MIME_TYPE,
           });
           resolve(audioFile);
+          logger.info('VoicePlayer: Get the audioFile from URL.');
         });
     }).then((audioFile: File) => {
       logger.info('VoicePlayer: Succeeded getting audio file.', audioFile);
