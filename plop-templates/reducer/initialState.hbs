@@ -1,0 +1,9 @@
+export interface {{pascalCase name}}StateType {
+  {{camelCase name}}: SendbirdChat,
+  loading: boolean,
+}
+
+const initialState: {{pascalCase name}}StateType = {
+  loading: false,
+  {{camelCase name}}: {} as SendbirdChat,
+};
