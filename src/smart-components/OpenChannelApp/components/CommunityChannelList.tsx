@@ -185,7 +185,7 @@ function CommunityChannelList({
         {
           channels.length === 0
             ? (
-              "No Channels"
+              'No Channels'
             )
             : (
               <div className="community-channel-list__scroll-wrap">

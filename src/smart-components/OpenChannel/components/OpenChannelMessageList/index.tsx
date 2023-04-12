@@ -1,7 +1,7 @@
 import './openchannel-message-list.scss';
 
 import React, { ReactElement, useRef, useState, useMemo } from 'react';
-import { FileMessage, UserMessage } from '@sendbird/chat/message';
+import { UserMessage } from '@sendbird/chat/message';
 import isSameDay from 'date-fns/isSameDay';
 
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';

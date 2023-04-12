@@ -21,7 +21,7 @@ describe('useMarkAsReadScheduler', () => {
           isConnected: true,
           logger: logger,
         },
-      }
+      },
     );
     const channel = { markAsRead: jest.fn() } as unknown as GroupChannel;
     result.current.push(channel);

@@ -1,10 +1,10 @@
-import { GroupChannel } from "@sendbird/chat/groupChannel";
-import { FileMessage, ReactionEvent, UserMessage } from "@sendbird/chat/message";
-import { NEXT_THREADS_FETCH_SIZE, PREV_THREADS_FETCH_SIZE } from "../../consts";
-import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from "../../types";
-import { compareIds } from "../utils";
-import { ThreadContextActionTypes as actionTypes } from "./actionTypes";
-import { ThreadContextInitialState } from "./initialState";
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { FileMessage, ReactionEvent, UserMessage } from '@sendbird/chat/message';
+import { NEXT_THREADS_FETCH_SIZE, PREV_THREADS_FETCH_SIZE } from '../../consts';
+import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from '../../types';
+import { compareIds } from '../utils';
+import { ThreadContextActionTypes as actionTypes } from './actionTypes';
+import { ThreadContextInitialState } from './initialState';
 
 interface ActionInterface {
   type: actionTypes;
@@ -227,7 +227,7 @@ export default function reducer(
             return m;
           }
           return m;
-        })
+        }),
       };
     }
     // event handlers - user status change
@@ -313,7 +313,7 @@ export default function reducer(
         allThreadMessages: [
           ...state.allThreadMessages,
           message,
-        ]
+        ],
       };
     }
     case actionTypes.SEND_MESSAGE_SUCESS: {
@@ -337,7 +337,7 @@ export default function reducer(
           compareIds((m as UserMessage)?.reqId, message?.reqId)
             ? message
             : m
-        ))
+        )),
       };
     }
     case actionTypes.RESEND_MESSAGE_START: {

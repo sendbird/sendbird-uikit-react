@@ -1,5 +1,5 @@
-import { User } from "@sendbird/chat";
-import { ObjectValues } from "../../../../utils/typeHelpers/objectValues";
+import { User } from '@sendbird/chat';
+import { ObjectValues } from '../../../../utils/typeHelpers/objectValues';
 
 export const TOKEN_TYPES = {
   string: 'string',

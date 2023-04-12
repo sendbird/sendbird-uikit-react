@@ -1,5 +1,5 @@
-import { UserMessage } from "@sendbird/chat/message";
-import { getParentMessageFrom, isParentMessage, isThreadMessage } from "../utils";
+import { UserMessage } from '@sendbird/chat/message';
+import { getParentMessageFrom, isParentMessage, isThreadMessage } from '../utils';
 
 const mockParentMessage = {
   messageId: 111111,

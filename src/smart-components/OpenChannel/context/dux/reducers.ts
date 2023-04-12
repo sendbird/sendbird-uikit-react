@@ -1,7 +1,7 @@
 import { State as initialStateInterface } from './initialState';
 import * as actionTypes from './actionTypes';
 
-import compareIds from '../../../../utils/compareIds.js';
+import compareIds from '../../../../utils/compareIds';
 import { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -232,7 +232,7 @@ export default function reducer(
       const receivedMessage = action.payload.message;
 
       const {
-        currentOpenChannel
+        currentOpenChannel,
       } = state;
 
       if (

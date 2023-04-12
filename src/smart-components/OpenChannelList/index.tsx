@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import OpenChannelListUI, { OpenChannelListUIProps } from './components/OpenChannelListUI';
 import { OpenChannelListProvider } from './context/OpenChannelListProvider';
-import { OpenChannelListProviderProps }  from './context/OpenChannelListInterfaces';
+import { OpenChannelListProviderProps } from './context/OpenChannelListInterfaces';
 
 export interface OpenChannelListProps extends OpenChannelListProviderProps, OpenChannelListUIProps { }
 

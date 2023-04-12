@@ -1,11 +1,11 @@
-import { useCallback } from "react";
+import { useCallback } from 'react';
 
-import { SendbirdError } from "@sendbird/chat";
-import { OpenChannel, OpenChannelListQuery } from "@sendbird/chat/openChannel";
+import { SendbirdError } from '@sendbird/chat';
+import { OpenChannel, OpenChannelListQuery } from '@sendbird/chat/openChannel';
 
-import { Logger } from "../../../../lib/SendbirdState";
-import OpenChannelListActionTypes from "../dux/actionTypes";
-import { OpenChannelListDispatcherType } from "../OpenChannelListInterfaces";
+import { Logger } from '../../../../lib/SendbirdState';
+import OpenChannelListActionTypes from '../dux/actionTypes';
+import { OpenChannelListDispatcherType } from '../OpenChannelListInterfaces';
 
 interface DynamicParams {
   sdkInitialized: boolean;

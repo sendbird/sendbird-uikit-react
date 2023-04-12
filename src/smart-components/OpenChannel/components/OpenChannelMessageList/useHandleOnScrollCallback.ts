@@ -1,5 +1,5 @@
-import React, { useCallback } from "react";
-import { SCROLL_BUFFER } from "../../../../utils/consts";
+import React, { useCallback } from 'react';
+import { SCROLL_BUFFER } from '../../../../utils/consts';
 
 export interface UseHandleOnScrollCallbackProps {
   setShowScrollDownButton: React.Dispatch<React.SetStateAction<boolean>>;

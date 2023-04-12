@@ -36,7 +36,7 @@ import {
   isVoiceMessage,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
-import { ReplyType } from '../../index.js';
+import { ReplyType } from '../../index';
 import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';

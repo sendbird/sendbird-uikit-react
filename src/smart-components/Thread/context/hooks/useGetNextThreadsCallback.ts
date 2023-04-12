@@ -1,9 +1,9 @@
-import { BaseMessage, FileMessage, ThreadedMessageListParams, UserMessage } from "@sendbird/chat/message";
-import { useCallback } from "react";
-import { CustomUseReducerDispatcher, Logger } from "../../../../lib/SendbirdState";
-import { NEXT_THREADS_FETCH_SIZE } from "../../consts";
-import { ThreadListStateTypes } from "../../types";
-import { ThreadContextActionTypes } from "../dux/actionTypes";
+import { BaseMessage, FileMessage, ThreadedMessageListParams, UserMessage } from '@sendbird/chat/message';
+import { useCallback } from 'react';
+import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
+import { NEXT_THREADS_FETCH_SIZE } from '../../consts';
+import { ThreadListStateTypes } from '../../types';
+import { ThreadContextActionTypes } from '../dux/actionTypes';
 
 interface DynamicProps {
   hasMoreNext: boolean;

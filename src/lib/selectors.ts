@@ -410,15 +410,19 @@ export const getUnfreezeChannel = () => (
 // 4. Message
 export class UikitMessageHandler {
   private _onPending: MessageHandler = noop;
+
   private _onFailed: FailedMessageHandler = noop;
+
   private _onSucceeded: MessageHandler = noop;
 
   public triggerPending(message: SendableMessage): void {
     this._onPending(message);
   }
+
   public triggerFailed(error: Error, message: SendableMessage): void {
     this._onFailed(error, message.isResendable ? message : null);
   }
+
   public triggerSucceeded(message: SendableMessage): void {
     this._onSucceeded(message);
   }
@@ -429,12 +433,14 @@ export class UikitMessageHandler {
     }
     return this;
   }
+
   public onFailed(handler: FailedMessageHandler): UikitMessageHandler {
     if (typeof handler === 'function') {
       this._onFailed = handler;
     }
     return this;
   }
+
   public onSucceeded(handler: MessageHandler): UikitMessageHandler {
     if (typeof handler === 'function') {
       this._onSucceeded = handler;

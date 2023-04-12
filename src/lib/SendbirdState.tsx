@@ -46,7 +46,7 @@ interface SendBirdStateConfig {
     maxMentionCount: number,
     maxSuggestionCount: number,
   };
-  /* eslint-disable @typescript-eslint/no-explicit-any*/
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   pubSub: any,
   logger: Logger;
   imageCompression?: {

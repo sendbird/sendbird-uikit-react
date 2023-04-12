@@ -41,13 +41,13 @@ const BottomSheet: React.FunctionComponent<BottomSheetProps> = (props: BottomShe
         className={`
           sendbird-bottomsheet__backdrop
         `}
-        onClick={(e) =>{
+        onClick={(e) => {
           e?.stopPropagation();
           onBackdropClick();
         }}
       />
-    </div>
-  , portalRoot.current);
+    </div>,
+    portalRoot.current);
 };
 
 export default BottomSheet;

@@ -16,7 +16,7 @@ export interface ProgressBarProps {
 }
 
 export const ProgressBar = ({
-  className ='',
+  className = '',
   disabled = false,
   maxSize,
   currentSize = 0,

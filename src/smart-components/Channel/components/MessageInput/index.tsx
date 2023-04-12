@@ -15,9 +15,9 @@ import VoiceMessageInputWrapper from './VoiceMessageInputWrapper';
 export type MessageInputWrapperProps = {
   value?: string;
   disabled?: boolean;
-  renderFileUploadIcon?: () =>  React.ReactElement;
-  renderVoiceMessageIcon?: () =>  React.ReactElement;
-  renderSendMessageIcon?: () =>  React.ReactElement;
+  renderFileUploadIcon?: () => React.ReactElement;
+  renderVoiceMessageIcon?: () => React.ReactElement;
+  renderSendMessageIcon?: () => React.ReactElement;
 };
 
 const MessageInputWrapper = (

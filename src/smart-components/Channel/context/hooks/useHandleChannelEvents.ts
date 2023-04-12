@@ -1,14 +1,14 @@
-import { useEffect } from "react";
-import { GroupChannel, GroupChannelHandler, SendbirdGroupChat } from "@sendbird/chat/groupChannel";
-import { FileMessage, UserMessage } from "@sendbird/chat/message";
+import { useEffect } from 'react';
+import { GroupChannel, GroupChannelHandler, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 import { scrollIntoLast } from '../utils';
 
-import { CustomUseReducerDispatcher, Logger } from "../../../../lib/SendbirdState";
-import uuidv4 from "../../../../utils/uuid";
+import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
+import uuidv4 from '../../../../utils/uuid';
 import compareIds from '../../../../utils/compareIds';
 import * as messageActions from '../dux/actionTypes';
-import { MarkAsReadSchedulerType } from "../../../../lib/hooks/useMarkAsReadScheduler";
+import { MarkAsReadSchedulerType } from '../../../../lib/hooks/useMarkAsReadScheduler';
 
 /**
  * Handles ChannelEvents and send values to dispatcher using messagesDispatcher

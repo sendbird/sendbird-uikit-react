@@ -1,1 +1,1 @@
-export const USER_MENTION_PREFIX = "@";
+export const USER_MENTION_PREFIX = '@';

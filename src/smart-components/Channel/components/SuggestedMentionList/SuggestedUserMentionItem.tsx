@@ -33,9 +33,9 @@ function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Ele
   useEffect(() => {
     if (isFocused) {
       if (parentScrollRef?.current?.scrollTop >= scrollRef?.current?.offsetTop) {
-        scrollRef?.current?.scrollIntoView({ block: "nearest", inline: "nearest" });
+        scrollRef?.current?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
       } else if (parentScrollRef?.current?.scrollTop + parentScrollRef?.current?.clientHeight <= scrollRef?.current?.offsetTop) {
-        scrollRef?.current?.scrollIntoView({ block: "nearest", inline: "nearest" });
+        scrollRef?.current?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
       }
     }
   }, [isFocused]);

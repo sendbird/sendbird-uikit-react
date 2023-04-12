@@ -9,7 +9,7 @@ import React, {
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Accordion, { AccordionGroup } from '../../../../ui/Accordion';
 import
-  Label, {
+Label, {
   LabelTypography,
   LabelColors,
 } from '../../../../ui/Label';
@@ -25,7 +25,7 @@ import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider
 
 const kFormatter = (num: number): string|number => {
   return Math.abs(num) > 999
-    ? `${(Math.abs(num)/1000).toFixed(1)}K`
+    ? `${(Math.abs(num) / 1000).toFixed(1)}K`
     : num;
 }
 
@@ -34,7 +34,6 @@ export default function AdminPannel(): ReactElement {
 
   const { stringSet } = useContext(LocalizationContext);
   const { channel } = useChannelSettingsContext();
-
 
   // work around for
   // https://sendbird.slack.com/archives/G01290GCDCN/p1595922832000900

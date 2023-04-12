@@ -1,4 +1,4 @@
-import type { SendbirdGroupChat } from "@sendbird/chat/groupChannel";
+import type { SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 
 export const isBroadcastChannelEnabled = (sdk: SendbirdGroupChat): boolean => {
   const ALLOW_BROADCAST_CHANNEL = 'allow_broadcast_channel';

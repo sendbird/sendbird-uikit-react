@@ -125,8 +125,8 @@ export default function ThreadListItemContent({
         {isByMe && (
           <div
             className={`sendbird-thread-list-item-content-menu ${isReactionEnabledInChannel ? 'use-reaction' : ''
-              } ${isByMe ? 'outgoing' : 'incoming'
-              } ${supposedHoverClassName}`}
+            } ${isByMe ? 'outgoing' : 'incoming'
+            } ${supposedHoverClassName}`}
           >
             <MessageItemMenu
               className="sendbird-thread-list-item-content-menu__normal-menu"
@@ -270,7 +270,7 @@ export default function ThreadListItemContent({
       </div>
       <div
         className={`sendbird-thread-list-item-content__right ${chainTop ? 'chain-top' : ''
-          } ${isByMe ? 'outgoing' : 'incoming'}`}
+        } ${isByMe ? 'outgoing' : 'incoming'}`}
       >
         {!isByMe && (
           <div className={`sendbird-thread-list-item-content-menu ${supposedHoverClassName}`}>

@@ -1,7 +1,7 @@
-import { User } from "@sendbird/chat";
-import { USER_MENTION_PREFIX } from "../../consts";
-import { IdentifyMentionsType, MentionToken, Token, TOKEN_TYPES, TokenParams, UndeterminedToken } from "./types";
-import { isUrl } from "../../../../utils";
+import { User } from '@sendbird/chat';
+import { USER_MENTION_PREFIX } from '../../consts';
+import { IdentifyMentionsType, MentionToken, Token, TOKEN_TYPES, TokenParams, UndeterminedToken } from './types';
+import { isUrl } from '../../../../utils';
 
 export function getUserMentionRegex(mentionedUsers: User[], templatePrefix_: string): RegExp {
   const templatePrefix = templatePrefix_ || USER_MENTION_PREFIX;
@@ -44,7 +44,7 @@ export function identifyUrlsAndStrings(token: Token[]): Token[] {
     if (token.type !== TOKEN_TYPES.undetermined) {
       return token;
     }
-    const { value = "" } = token;
+    const { value = '' } = token;
     const parts = value.split(' ');
     const tokens = parts.map((part) => {
       if (isUrl(part)) {
@@ -100,7 +100,7 @@ export function tokenizeMessage({
 }
 
 /**
- * To preserve the original text which has 
+ * To preserve the original text which has
  * leading & trailing white spaces & new-lines in the middle
  * @link https://sendbird.slack.com/archives/GPGHESTL3/p1681180484341369
  */

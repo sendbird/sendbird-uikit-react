@@ -1,19 +1,19 @@
-import type { User } from "@sendbird/chat";
-import type { GroupChannel } from "@sendbird/chat/groupChannel";
-import type { FileMessage, UserMessage } from "@sendbird/chat/message";
+import type { User } from '@sendbird/chat';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 
-import type { Locale } from "date-fns";
+import type { Locale } from 'date-fns';
 
 import {
   ReplyType,
   UserListQuery,
   RenderUserProfileProps,
   SendBirdProviderConfig,
-} from "../../types";
+} from '../../types';
 
 export interface AppLayoutProps {
   isReactionEnabled?: boolean;
-  replyType?: "NONE" | "QUOTE_REPLY" | "THREAD";
+  replyType?: 'NONE' | 'QUOTE_REPLY' | 'THREAD';
   isMessageGroupingEnabled?: boolean;
   allowProfileEdit?: boolean;
   showSearchIcon?: boolean;

@@ -1,11 +1,11 @@
-import { useEffect } from "react";
-import { GroupChannel } from "@sendbird/chat/groupChannel";
-import { FileMessage, UserMessage } from "@sendbird/chat/message";
+import { useEffect } from 'react';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { FileMessage, UserMessage } from '@sendbird/chat/message';
 
-import { CustomUseReducerDispatcher, Logger } from "../../../../lib/SendbirdState";
+import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import topics from '../../../../lib/pubSub/topics';
-import { scrollIntoLast } from "../utils";
-import { ThreadContextActionTypes } from "../dux/actionTypes";
+import { scrollIntoLast } from '../utils';
+import { ThreadContextActionTypes } from '../dux/actionTypes';
 
 interface DynamicProps {
   sdkInit: boolean;

@@ -1,5 +1,10 @@
 {
   "root": true,
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest": true
+  },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2020,
@@ -11,6 +16,16 @@
   "settings": {
     "react": {
       "version": "detect"
+    },
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ]
+      }
     }
   },
   "rules": {
@@ -18,11 +33,65 @@
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-expressions": "error",
-    "react/display-name": "off"
+    "react/display-name": "off",
+    "import/extensions": [
+      // TODO(Ahyoung): change this to error after find a way not to get an error \w type.d.ts
+      "warn",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    // TODO(Ahyoung): fix and remove one by one
+    "no-floating-decimal": "off",
+    "no-shadow": "off",
+    "no-useless-return": "off",
+    "no-else-return": "off",
+    "no-param-reassign": "off",
+    "no-useless-escape": "off",
+    "no-underscore-dangle": "off",
+    "no-confusing-arrow": "off",
+    "no-mixed-operators": "off",
+    "no-nested-ternary": "off",
+    "no-unneeded-ternary": "off",
+    "no-use-before-define": "off",
+    "no-cond-assign": "off",
+    "no-plusplus": "off",
+    "no-bitwise": "off",
+    "no-restricted-syntax": "off",
+    "no-prototype-builtins": "off",
+    "import/no-unresolved": "off",
+    "import/no-extraneous-dependencies": "off",
+    "import/no-useless-path-segments": "off",
+    "import/prefer-default-export": "off",
+    "import/order": "off",
+    "object-curly-newline": "off",
+    "object-shorthand": "off",
+    "consistent-return": "off",
+    "max-len": "off",
+    "arrow-body-style": "off",
+    "function-paren-newline": "off",
+    "prefer-template": "off",
+    "semi": "off",
+    "padded-blocks": "off",
+    "arrow-parens": "off",
+    "dot-notation": "off",
+    "camelcase": "off",
+    "radix": "off",
+    "prefer-destructuring": "off",
+    "default-case": "off",
+    "curly": "off",
+    "yoda": "off",
+    "brace-style": "off",
+    "nonblock-statement-body-position": "off"
   },
   "extends": [
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "airbnb-base"
   ],
   "plugins": [
     "react",

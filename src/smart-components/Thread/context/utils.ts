@@ -1,7 +1,7 @@
 import format from 'date-fns/format';
-import { GroupChannel } from "@sendbird/chat/groupChannel";
-import { BaseMessage, FileMessage, UserMessage } from "@sendbird/chat/message";
-import { getOutgoingMessageState, OutgoingMessageStates } from "../../../utils/exports/getOutgoingMessageState";
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { BaseMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
+import { getOutgoingMessageState, OutgoingMessageStates } from '../../../utils/exports/getOutgoingMessageState';
 
 export const getNicknamesMapFromMembers = (members = []): Map<string, string> => {
   const nicknamesMap = new Map();

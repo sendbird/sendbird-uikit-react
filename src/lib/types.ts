@@ -116,7 +116,6 @@ export interface SendBirdStateStore {
   userStore: UserStore;
 }
 
-
 export type SendBirdState = {
   config: SendBirdStateConfig;
   stores: SendBirdStateStore;

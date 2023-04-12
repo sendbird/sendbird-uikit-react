@@ -27,7 +27,7 @@ const ReactionBadge = React.forwardRef((props: ReactionBadgeProps, ref: RefObjec
     count = '',
     isAdd = false,
     selected = false,
-    onClick = () => {/* noop */},
+    onClick = () => { /* noop */ },
   } = props;
 
   const getClassNameTail = (): string => {

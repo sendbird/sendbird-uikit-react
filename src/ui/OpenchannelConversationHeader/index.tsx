@@ -75,8 +75,8 @@ export default function OpenchannelConversationHeader({
           <Icon
             type={(
               amIOperator
-              ? IconTypes.INFO
-              : IconTypes.MEMBERS
+                ? IconTypes.INFO
+                : IconTypes.MEMBERS
             )}
             fillColor={IconColors.PRIMARY}
             width="24px"

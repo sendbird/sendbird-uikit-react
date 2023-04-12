@@ -38,36 +38,36 @@ const SUPPORTED_MIMES = {
 };
 
 export interface UIKitMessageTypes {
-  ADMIN: "ADMIN",
-  TEXT: "TEXT",
-  FILE: "FILE",
-  THUMBNAIL: "THUMBNAIL",
-  OG: "OG",
-  UNKNOWN: "UNKNOWN",
+  ADMIN: 'ADMIN',
+  TEXT: 'TEXT',
+  FILE: 'FILE',
+  THUMBNAIL: 'THUMBNAIL',
+  OG: 'OG',
+  UNKNOWN: 'UNKNOWN',
 }
 export const UIKitMessageTypes: UIKitMessageTypes = {
-  ADMIN: "ADMIN",
-  TEXT: "TEXT",
-  FILE: "FILE",
-  THUMBNAIL: "THUMBNAIL",
-  OG: "OG",
-  UNKNOWN: "UNKNOWN",
+  ADMIN: 'ADMIN',
+  TEXT: 'TEXT',
+  FILE: 'FILE',
+  THUMBNAIL: 'THUMBNAIL',
+  OG: 'OG',
+  UNKNOWN: 'UNKNOWN',
 };
 export interface UIKitFileTypes {
-  IMAGE: "IMAGE",
-  AUDIO: "AUDIO",
-  VIDEO: "VIDEO",
-  GIF: "GIF",
-  VOICE: "VOICE",
-  OTHERS: "OTHERS",
+  IMAGE: 'IMAGE',
+  AUDIO: 'AUDIO',
+  VIDEO: 'VIDEO',
+  GIF: 'GIF',
+  VOICE: 'VOICE',
+  OTHERS: 'OTHERS',
 }
 export const UIKitFileTypes: UIKitFileTypes = {
-  IMAGE: "IMAGE",
-  AUDIO: "AUDIO",
-  VIDEO: "VIDEO",
-  GIF: "GIF",
-  VOICE: "VOICE",
-  OTHERS: "OTHERS",
+  IMAGE: 'IMAGE',
+  AUDIO: 'AUDIO',
+  VIDEO: 'VIDEO',
+  GIF: 'GIF',
+  VOICE: 'VOICE',
+  OTHERS: 'OTHERS',
 };
 
 export interface SendingMessageStatus {
@@ -82,8 +82,6 @@ const SendingMessageStatus: SendingMessageStatus = {
   FAILED: 'failed',
   PENDING: 'pending',
 };
-
-
 
 export type CoreMessageType = EveryMessage;
 
@@ -544,7 +542,7 @@ export const filterChannelListParams = (params: GroupChannelListQuery, channel: 
   return true;
 };
 
-export const binarySearch = (list: Array<number>, number: number): number => {// [100, 99, 98, 97, ...]
+export const binarySearch = (list: Array<number>, number: number): number => { // [100, 99, 98, 97, ...]
   const pivot = Math.floor(list.length / 2);
   if (list[pivot] === number) {
     return pivot;
@@ -564,7 +562,7 @@ export const getChannelsWithUpsertedChannel = (channels: Array<GroupChannel>, ch
   }
   const targetIndex = binarySearch(
     channels.map((channel: GroupChannel) => channel?.lastMessage?.createdAt || channel?.createdAt),
-    channel?.lastMessage?.createdAt || channel?.createdAt
+    channel?.lastMessage?.createdAt || channel?.createdAt,
   );
   return [...channels.slice(0, targetIndex), channel, ...channels.slice(targetIndex, channels.length)];
 };
@@ -618,7 +616,7 @@ export const convertWordToStringObj = (word: string, _users: Array<User>, _templ
     if (!mentionedUser) {
       resultArray.push({
         type: StringObjType.normal,
-        value: template,  // because template is the origin text
+        value: template, // because template is the origin text
       });
     } else {
       resultArray.push({

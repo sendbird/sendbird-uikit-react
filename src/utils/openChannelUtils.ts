@@ -6,7 +6,7 @@ const OpenChannelMessageStatusTypes = {
   PENDING: 'pending',
   FAILED: 'failed',
   CANCELED: 'canceled',
-  SUCCEEDED: 'succeeded'
+  SUCCEEDED: 'succeeded',
 };
 
 export const getSenderFromMessage = (message: UserMessage | FileMessage): User => {

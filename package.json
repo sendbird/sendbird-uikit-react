@@ -46,6 +46,7 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "lint": "yarn run eslint; yarn run eslint-ts",
+    "lint:fix": "yarn run eslint -- --fix; yarn run eslint-ts -- --fix",
     "eslint": "eslint --no-eslintrc  -c .eslintrc.js 'src/**'",
     "eslint-ts": "eslint --no-eslintrc -c .eslintrc.json './src/**/*.ts*'",
     "stylelint": "stylelint 'src/**'",

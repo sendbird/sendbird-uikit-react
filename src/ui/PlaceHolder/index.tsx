@@ -37,14 +37,14 @@ export default function PlaceHolder({
       {
         type === PlaceHolderTypes.LOADING && (
           <Loader
-            width={iconSize || "48px"}
-            height={iconSize || "48px"}
+            width={iconSize || '48px'}
+            height={iconSize || '48px'}
           >
             <Icon
               type={IconTypes.SPINNER}
               fillColor={IconColors.PRIMARY}
-              width={iconSize || "48px"}
-              height={iconSize || "48px"}
+              width={iconSize || '48px'}
+              height={iconSize || '48px'}
             />
           </Loader>
         )
@@ -62,8 +62,8 @@ export default function PlaceHolder({
                   className="sendbird-place-holder__body__icon"
                   type={IconTypes.CHAT}
                   fillColor={IconColors.ON_BACKGROUND_3}
-                  width={iconSize || "64px"}
-                  height={iconSize || "64px"}
+                  width={iconSize || '64px'}
+                  height={iconSize || '64px'}
                 />
               )
             }
@@ -73,8 +73,8 @@ export default function PlaceHolder({
                   className="sendbird-place-holder__body__icon"
                   type={IconTypes.ERROR}
                   fillColor={IconColors.ON_BACKGROUND_3}
-                  width={iconSize || "64px"}
-                  height={iconSize || "64px"}
+                  width={iconSize || '64px'}
+                  height={iconSize || '64px'}
                 />
               )
             }
@@ -84,8 +84,8 @@ export default function PlaceHolder({
                   className="sendbird-place-holder__body__icon"
                   type={IconTypes.MESSAGE}
                   fillColor={IconColors.ON_BACKGROUND_3}
-                  width={iconSize || "64px"}
-                  height={iconSize || "64px"}
+                  width={iconSize || '64px'}
+                  height={iconSize || '64px'}
                 />
               )
             }

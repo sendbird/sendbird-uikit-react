@@ -160,7 +160,7 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
     parentMessage,
     threadListState,
     isReactionEnabled,
-    latestMessageTimeStamp: allThreadMessages[allThreadMessages.length - 1]?.createdAt || 0
+    latestMessageTimeStamp: allThreadMessages[allThreadMessages.length - 1]?.createdAt || 0,
   }, { logger, threadDispatcher });
   const toggleReaction = useToggleReactionCallback({ currentChannel }, { logger });
   const sendMessage = useSendUserMessageCallback({

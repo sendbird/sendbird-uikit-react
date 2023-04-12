@@ -1,11 +1,11 @@
-import { EmojiContainer } from "@sendbird/chat";
-import { GroupChannel } from "@sendbird/chat/groupChannel";
-import { BaseMessage, FileMessage, UserMessage } from "@sendbird/chat/message";
+import { EmojiContainer } from '@sendbird/chat';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { BaseMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
 import {
   ChannelStateTypes,
   ParentMessageStateTypes,
   ThreadListStateTypes,
-} from "../../types";
+} from '../../types';
 
 export interface ThreadContextInitialState {
   currentChannel: GroupChannel;

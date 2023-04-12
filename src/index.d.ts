@@ -1,3 +1,4 @@
+/* eslint-disable  no-undef */
 /**
  * Type Definitions for SendbirdUIKit v3
  * homepage: https://sendbird.com/
@@ -43,7 +44,7 @@ import {
 import { UikitMessageHandler } from './lib/selectors';
 import { RenderCustomSeparatorProps } from './types';
 
-type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
+type ReplyType = 'NONE' | 'QUOTE_REPLY' | 'THREAD';
 
 type Logger = {
   info?(title?: unknown, description?: unknown): void;
@@ -747,9 +748,9 @@ interface ChannelUIProps {
   renderChannelHeader?: () => React.ReactElement;
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderMessageInput?: () => React.ReactElement;
-  renderFileUploadIcon?: () =>  React.ReactElement;
-  renderVoiceMessageIcon?: () =>  React.ReactElement;
-  renderSendMessageIcon?: () =>  React.ReactElement;
+  renderFileUploadIcon?: () => React.ReactElement;
+  renderVoiceMessageIcon?: () => React.ReactElement;
+  renderSendMessageIcon?: () => React.ReactElement;
   renderTypingIndicator?: () => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
 }
@@ -1278,7 +1279,7 @@ export interface MessageSearchProviderProps {
 type MessageSearchScrollCallbackReturn = (
   callback: (
     messages: Array<UserMessage | FileMessage | AdminMessage>,
-    /* eslint-disable @typescript-eslint/no-explicit-any*/
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     error: any,
   ) => void
 ) => void;

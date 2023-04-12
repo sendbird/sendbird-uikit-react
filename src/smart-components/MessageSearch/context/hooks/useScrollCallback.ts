@@ -23,7 +23,7 @@ interface ToolProps {
 export type CallbackReturn = (
   callback: (
     messages: Array<UserMessage | FileMessage | AdminMessage>,
-    /* eslint-disable @typescript-eslint/no-explicit-any*/
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     error: any,
   ) => void
 ) => void;

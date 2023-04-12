@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from 'react';
 
 import Sendbird from '../../../lib/Sendbird';
+import Channel from '../../Channel';
+
 const appId = process.env.STORYBOOK_APP_ID;
 const userId = 'sendbird';
-
-import Channel from '../../Channel';
 
 export default { title: 'Channel' };
 

@@ -27,7 +27,7 @@ const MobileMenu: React.FC<MobileBottomSheetProps> = (props: MobileBottomSheetPr
     <>
       {
         isReactionEnabled
-        ? (
+          ? (
             <MobileBottomSheet
               channel={channel}
               message={message}
@@ -44,7 +44,7 @@ const MobileMenu: React.FC<MobileBottomSheetProps> = (props: MobileBottomSheetPr
               toggleReaction={toggleReaction}
               isReactionEnabled={isReactionEnabled}
             />
-          ): (
+          ) : (
             <MobileContextMenu
               channel={channel}
               userId={userId}

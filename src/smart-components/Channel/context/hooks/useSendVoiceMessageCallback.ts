@@ -29,12 +29,12 @@ export const useSendVoiceMessageCallback = ({
   currentGroupChannel,
   onBeforeSendVoiceMessage,
 }: DynamicParams,
-  {
-    logger,
-    pubSub,
-    scrollRef,
-    messagesDispatcher,
-  }: StaticParams): Array<FuncType> => {
+{
+  logger,
+  pubSub,
+  scrollRef,
+  messagesDispatcher,
+}: StaticParams): Array<FuncType> => {
   const sendMessage = useCallback((file: File, duration: number, quoteMessage: UserMessage | FileMessage) => {
     const messageParams: FileMessageCreateParams = (
       onBeforeSendVoiceMessage
@@ -53,7 +53,7 @@ export const useSendVoiceMessageCallback = ({
           new MessageMetaArray({
             key: META_ARRAY_MESSAGE_TYPE_KEY,
             value: [META_ARRAY_MESSAGE_TYPE_VALUE__VOICE],
-          })
+          }),
         ],
       };
     if (quoteMessage) {

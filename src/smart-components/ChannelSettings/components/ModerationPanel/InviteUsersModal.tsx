@@ -27,7 +27,7 @@ export default function InviteUsers({
   const globalUserListQuery = state?.config?.userListQuery;
 
   const { channel, overrideInviteUser, queries } = useChannelSettingsContext();
-  const userFilledQuery =  {
+  const userFilledQuery = {
     ...queries?.applicationUserListQuery,
   };
   const { stringSet } = useLocalization();

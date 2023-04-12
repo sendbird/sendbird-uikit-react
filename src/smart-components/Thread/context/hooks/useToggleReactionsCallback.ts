@@ -12,7 +12,7 @@ interface StaticProps {
 export default function useToggleReactionCallback({
   currentChannel,
 }: DynamicProps, {
-  logger
+  logger,
 }: StaticProps): (message, key, isReacted) => void {
   return useCallback((message, key, isReacted) => {
     if (isReacted) {

@@ -426,7 +426,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       pubSub,
       scrollRef,
       messagesDispatcher,
-    }
+    },
   );
 
   return (

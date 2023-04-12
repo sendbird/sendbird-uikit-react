@@ -1,11 +1,11 @@
-import { useCallback } from "react";
-import { GroupChannel } from "@sendbird/chat/groupChannel";
-import { FileMessage, FileMessageCreateParams } from "@sendbird/chat/message";
+import { useCallback } from 'react';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { FileMessage, FileMessageCreateParams } from '@sendbird/chat/message';
 
-import { CustomUseReducerDispatcher, Logger } from "../../../../lib/SendbirdState";
-import { ThreadContextActionTypes } from "../dux/actionTypes";
+import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
+import { ThreadContextActionTypes } from '../dux/actionTypes';
 import topics from '../../../../lib/pubSub/topics';
-import { scrollIntoLast } from "../utils";
+import { scrollIntoLast } from '../utils';
 
 interface DynamicProps {
   currentChannel: GroupChannel;

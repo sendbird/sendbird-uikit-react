@@ -10,8 +10,8 @@ export function inserTemplateToDOM(templateList: Word[]): void {
     }
     return sanitizeString(text);
   })
-  .join(' ')
+    .join(' ')
   // add a space at the end of the mention, else cursor/caret wont work
-  .concat(' ');
+    .concat(' ');
   document.execCommand('insertHTML', false, nodes);
 }

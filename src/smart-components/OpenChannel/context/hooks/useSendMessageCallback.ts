@@ -49,7 +49,7 @@ function useSendMessageCallback(
             payload: {
               message: pendingMessage,
               channel: currentOpenChannel,
-            }
+            },
           });
           pendingMsg = pendingMessage;
         })

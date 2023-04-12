@@ -24,7 +24,7 @@ export interface VoiceRecorderContext {
   stop: () => void,
   isRecordable: boolean;
 }
-const noop = () => {/* noop */ };
+const noop = () => { /* noop */ };
 const VoiceRecorderContext = createContext<VoiceRecorderContext>({
   start: noop,
   stop: noop,
@@ -52,7 +52,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
           mimeType: VOICE_RECORDER_MIME_TYPE,
           audioBitsPerSecond: VOICE_RECORDER_AUDIO_BITS,
         });
-        mediaRecorder.ondataavailable = (e) => {// when recording stops
+        mediaRecorder.ondataavailable = (e) => { // when recording stops
           logger.info('VoiceRecorder: Succeeded getting an available data.', e.data);
           const audioFile = new File([e.data], VOICE_MESSAGE_FILE_NAME, {
             lastModified: new Date().getTime(),

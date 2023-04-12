@@ -1,7 +1,7 @@
 // Logger, pretty much explains it
 // in SendbirdProvider
 
-import { ObjectValues } from "../../utils/typeHelpers/objectValues";
+import { ObjectValues } from '../../utils/typeHelpers/objectValues';
 
 // const [logger, setLogger] = useState(LoggerFactory(logLevel));
 export const LOG_LEVELS = {
@@ -48,7 +48,7 @@ interface LoggerInterface {
   warning: LoggerLogType;
 }
 
-const noop = () => {/* noop */};
+const noop = () => { /* noop */ };
 export const getDefaultLogger = (): LoggerInterface => ({
   info: noop,
   error: noop,

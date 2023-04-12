@@ -18,7 +18,7 @@ function ChannelAvatar({
   theme,
   height = 56,
   width = 56,
-}: Props): JSX.Element{
+}: Props): JSX.Element {
   const { stringSet } = useContext(LocalizationContext);
   const memoizedAvatar = useMemo(() => {
     return (

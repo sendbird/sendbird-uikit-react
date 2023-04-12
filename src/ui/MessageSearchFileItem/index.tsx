@@ -62,7 +62,7 @@ export default function MessageSearchFileItem(props: Props): ReactElement {
         </Label>
         <div className="sendbird-message-search-file-item__right__content">
           {!isVoiceMsg && (
-            <div className={`sendbird-message-search-file-item__right__content__type-icon`}>
+            <div className={'sendbird-message-search-file-item__right__content__type-icon'}>
               <Icon
                 type={getIconOfFileType(message)}
                 fillColor={IconColors.PRIMARY}

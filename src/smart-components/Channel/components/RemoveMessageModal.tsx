@@ -14,7 +14,7 @@ export interface RemoveMessageProps {
 
 const RemoveMessage: React.FC<RemoveMessageProps> = (props: RemoveMessageProps) => {
   const {
-    onSubmit = () => {/* noop */},
+    onSubmit = () => { /* noop */ },
     onCancel,
     message,
   } = props;

@@ -25,7 +25,7 @@ export interface UseVoiceRecorderContext {
   recordingStatus: VoiceRecorderStatus;
 }
 
-const noop = () => {/* noop */};
+const noop = () => { /* noop */ };
 
 export const useVoiceRecorder = ({
   onRecordingStarted = noop,

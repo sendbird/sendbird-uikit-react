@@ -19,6 +19,7 @@ import {
   truncateString,
   UIKitMessageTypes,
 } from '../../utils';
+
 interface Props {
   className?: string | Array<string>;
   message?: UserMessage | FileMessage;

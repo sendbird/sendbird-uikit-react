@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { SendbirdGroupChat } from "@sendbird/chat/groupChannel";
-import { CustomUseReducerDispatcher, Logger } from "../../../../lib/SendbirdState";
+import { SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 
 interface DanamicPrpos {

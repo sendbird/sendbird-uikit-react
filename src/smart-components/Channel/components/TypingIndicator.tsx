@@ -52,7 +52,7 @@ const TypingIndicator: React.FC = () => {
             const members = groupChannel.getTypingUsers();
             setTypingMembers(members);
           }
-        }
+        },
       });
       sb.groupChannel.addGroupChannelHandler(newHandlerId, handler);
       setHandlerId(newHandlerId);

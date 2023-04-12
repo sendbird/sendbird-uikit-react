@@ -26,8 +26,8 @@ import {
   isFineResend,
   isFineDelete,
   showMenuTrigger,
+  getSenderFromMessage,
 } from '../../utils/openChannelUtils';
-import { getSenderFromMessage } from '../../utils/openChannelUtils';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import useLongPress from '../../hooks/useLongPress';
 import OpenChannelMobileMenu from '../OpenChannelMobileMenu';

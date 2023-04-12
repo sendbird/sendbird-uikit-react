@@ -29,8 +29,8 @@ function useFileUploadCallback({
   checkScrollBottom,
   imageCompression = {},
   onBeforeSendFileMessage,
-  }: DynamicParams,
-  { sdk, logger, messagesDispatcher, scrollRef }: StaticParams,
+}: DynamicParams,
+{ sdk, logger, messagesDispatcher, scrollRef }: StaticParams,
 ): CallbackReturn {
   return useCallback((file) => {
     if (sdk) {
@@ -101,7 +101,7 @@ function useFileUploadCallback({
                           requestState: 'pending',
                         },
                         channel: currentOpenChannel,
-                      }
+                      },
                     });
                   })
                   .onSucceeded((message) => {
@@ -155,7 +155,7 @@ function useFileUploadCallback({
                   requestState: 'pending',
                 },
                 channel: currentOpenChannel,
-              }
+              },
             });
           })
           .onSucceeded((message) => {

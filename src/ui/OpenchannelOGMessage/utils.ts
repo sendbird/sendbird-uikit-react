@@ -1,4 +1,4 @@
-import type { UserMessage } from "@sendbird/chat/message";
+import type { UserMessage } from '@sendbird/chat/message';
 
 export const URL_REG = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
 export const createUrlTester = (regexp: RegExp) => (text: string): boolean => regexp.test(text);

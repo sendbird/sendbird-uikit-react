@@ -15,8 +15,8 @@ export default function Profile({
       <div className="profile-avatar">
         {
           user.profileUrl
-          ? (<img src={user.profileUrl} alt={user.nickname} />)
-          : (<ProfileAvatar />)
+            ? (<img src={user.profileUrl} alt={user.nickname} />)
+            : (<ProfileAvatar />)
         }
       </div>
       <div className="profile-text">

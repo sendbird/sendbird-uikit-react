@@ -84,7 +84,9 @@ export const OpenChannelListProvider: React.FC<OpenChannelListProviderProps> = (
     );
     return () => {
       subscriber?.forEach((s) => {
-        try { s.remove() } catch { }
+        try { s.remove() } catch {
+          //
+        }
       });
     };
   }, [sdkInitialized, pubSub]);

@@ -3,7 +3,7 @@ import type { ApplicationUserListQuery } from '@sendbird/chat';
 
 import './invite-users.scss';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { useCreateChannelContext } from '../../context/CreateChannelProvider';
+import { useCreateChannelContext, UserListQuery } from '../../context/CreateChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import type { GroupChannelCreateParams, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 
@@ -14,7 +14,6 @@ import Label, {
 } from '../../../../ui/Label';
 import { ButtonTypes } from '../../../../ui/Button';
 import UserListItem from '../../../../ui/UserListItem';
-import { UserListQuery } from '../../context/CreateChannelProvider';
 
 import {
   filterUser,
@@ -30,8 +29,10 @@ export interface InviteUsersProps {
 const appHeight = () => {
   try {
     const doc = document.documentElement;
-    doc.style.setProperty('--sendbird-vh', (window.innerHeight*.01) + 'px');
-  } catch {}
+    doc.style.setProperty('--sendbird-vh', (window.innerHeight * .01) + 'px');
+  } catch {
+    //
+  }
 }
 
 const InviteUsers: React.FC<InviteUsersProps> = ({

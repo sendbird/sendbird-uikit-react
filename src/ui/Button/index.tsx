@@ -26,7 +26,7 @@ export default function Button({
   size = ButtonSizes.BIG,
   children = 'Button',
   disabled = false,
-  onClick = () => {/* noop */ },
+  onClick = () => { /* noop */ },
 }: ButtonProps): ReactElement {
   const injectingClassNames = [
     ...((Array.isArray(className)) ? className : [className]),

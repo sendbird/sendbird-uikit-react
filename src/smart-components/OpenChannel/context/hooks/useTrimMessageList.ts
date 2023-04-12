@@ -7,7 +7,6 @@ interface DynamicParams {
   messageLimit: number;
 }
 
-
 type MessagesDispatcherType = {
   type: string,
   payload: { messageLimit: number }

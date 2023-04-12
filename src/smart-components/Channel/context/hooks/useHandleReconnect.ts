@@ -3,11 +3,11 @@ import { useEffect } from 'react';
 import type { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 import { MessageListParams, ReplyType } from '@sendbird/chat/message';
 import * as utils from '../utils';
-import { PREV_RESULT_SIZE } from '../const';
+import { PREV_RESULT_SIZE, NEXT_RESULT_SIZE } from '../const';
 import * as messageActionTypes from '../dux/actionTypes';
 import { Logger } from '../../../../lib/SendbirdState';
-import { NEXT_RESULT_SIZE } from '../const';
 import { MarkAsReadSchedulerType } from '../../../../lib/hooks/useMarkAsReadScheduler';
+
 interface DynamicParams {
   isOnline: boolean;
   replyType?: string;
@@ -91,9 +91,9 @@ function useHandleReconnect(
                   payload: { currentGroupChannel },
                 });
               })
-              if (!disableMarkAsRead) {
+            if (!disableMarkAsRead) {
                 markAsReadScheduler?.push(currentGroupChannel);
-              }
+            }
           });
       }
     };

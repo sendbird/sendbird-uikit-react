@@ -26,8 +26,8 @@ describe('schedulerFactory', () => {
 
   it('should call markAsRead on intervals', () => {
     const scheduler = schedulerFactory(logger, 200);
-    const channel1 = { markAsRead: jest.fn(), url:'123' } as unknown as GroupChannel;
-    const channel2 = { markAsRead: jest.fn(), url:'124' } as unknown as GroupChannel;
+    const channel1 = { markAsRead: jest.fn(), url: '123' } as unknown as GroupChannel;
+    const channel2 = { markAsRead: jest.fn(), url: '124' } as unknown as GroupChannel;
     scheduler.push(channel1);
     scheduler.push(channel2);
     jest.advanceTimersByTime(1000);
@@ -38,8 +38,8 @@ describe('schedulerFactory', () => {
 
   it('should not push duplicate channel to queue', () => {
     const scheduler = schedulerFactory(logger, 200);
-    const channel1 = { markAsRead: jest.fn(), url:'123' } as unknown as GroupChannel;
-    const channel2 = { markAsRead: jest.fn(), url:'123' } as unknown as GroupChannel;
+    const channel1 = { markAsRead: jest.fn(), url: '123' } as unknown as GroupChannel;
+    const channel2 = { markAsRead: jest.fn(), url: '123' } as unknown as GroupChannel;
     scheduler.push(channel1);
     scheduler.push(channel2);
     expect(scheduler.getQueue().length).toBe(1);

@@ -32,7 +32,7 @@ export default function MessageItemReactionMenu({
   const triggerRef = useRef(null);
   const containerRef = useRef(null);
 
-  if(isPendingMessage(message) || isFailedMessage(message)) {
+  if (isPendingMessage(message) || isFailedMessage(message)) {
     return null;
   }
 

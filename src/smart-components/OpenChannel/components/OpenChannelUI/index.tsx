@@ -43,18 +43,18 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
     || !currentOpenChannel?.url
     || amIBanned
   ) {
-    return (renderPlaceHolderError?.() ||
-      <div className={COMPONENT_CLASS_NAME}><PlaceHolder type={PlaceHolderTypes.NO_CHANNELS} /></div>
+    return (renderPlaceHolderError?.()
+      || <div className={COMPONENT_CLASS_NAME}><PlaceHolder type={PlaceHolderTypes.NO_CHANNELS} /></div>
     );
   }
   if (loading) {
-    return (renderPlaceHolderLoading?.() ||
-      <div className={COMPONENT_CLASS_NAME}><PlaceHolder type={PlaceHolderTypes.LOADING} /></div>
+    return (renderPlaceHolderLoading?.()
+      || <div className={COMPONENT_CLASS_NAME}><PlaceHolder type={PlaceHolderTypes.LOADING} /></div>
     );
   }
   if (isInvalid) {
-    return (renderPlaceHolderError?.() ||
-      <div className={COMPONENT_CLASS_NAME}><PlaceHolder type={PlaceHolderTypes.WRONG} /></div>
+    return (renderPlaceHolderError?.()
+      || <div className={COMPONENT_CLASS_NAME}><PlaceHolder type={PlaceHolderTypes.WRONG} /></div>
     );
   }
 

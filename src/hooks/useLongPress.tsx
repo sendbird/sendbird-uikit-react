@@ -61,7 +61,7 @@ interface UseLongPressType<T> {
   onTouchEnd: (e: React.TouchEvent<T>) => void;
 }
 
-export default function useLongPress<T> ({
+export default function useLongPress<T>({
   onLongPress,
   onClick,
 }: PressHandlers<T>, {
@@ -117,7 +117,7 @@ export default function useLongPress<T> ({
     if (shouldPreventDefault && target.current) {
       target.current.removeEventListener('touchend', preventDefault);
     }
-  },[shouldPreventDefault, onClick, longPressTriggered, dragTriggered]);
+  }, [shouldPreventDefault, onClick, longPressTriggered, dragTriggered]);
 
   return {
     onMouseDown: (e: React.MouseEvent<T>) => start(e),

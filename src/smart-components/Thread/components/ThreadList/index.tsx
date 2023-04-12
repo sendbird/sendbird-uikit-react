@@ -84,7 +84,7 @@ export default function ThreadList({
           }
         };
 
-        return(
+        return (
           <MessageProvider message={message} isByMe={isByMe} key={message?.messageId}>
             {
               MemorizedMessage({

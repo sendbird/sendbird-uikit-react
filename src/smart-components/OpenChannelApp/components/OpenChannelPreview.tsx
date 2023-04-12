@@ -3,7 +3,7 @@ import React, { ReactElement, useMemo } from 'react'
 import './open-channel-preview.scss';
 
 import { ChannelMeta } from './DummyStream';
-import { Freeze } from '../assets/Icons.jsx';
+import { Freeze } from '../assets/Icons';
 import Avatar from '../../../ui/Avatar';
 import Icon, { IconTypes, IconColors } from '../../../ui/Icon';
 
@@ -14,7 +14,7 @@ interface Props {
   isStreaming?: boolean;
 }
 
-const kFormat = (num: number): string|number => {
+const kFormat = (num: number): string | number => {
   if (num < 1000) {
     return num
   }
@@ -44,29 +44,29 @@ export default function OpenChannelPreview({
       className={`
         channel-preview
         ${selected ? 'channel-preview--selected' : null}
-        ${isStreaming ? 'channel-preview--streaming': null}
+        ${isStreaming ? 'channel-preview--streaming' : null}
       `}
       onClick={onClick}
-      >
+    >
       <div className="channel-preview__selection" />
       <div className="channel-preview__inner-left">
-          <Avatar
-            className="channel-preview__avatar"
-            src={channel?.coverUrl}
-            alt={channel?.name}
-            width="32px"
-            height="32px"
-            customDefaultComponent={(style) => (
-              <div style={{ ...style }}>
-                <Icon
-                  type={IconTypes.CHANNELS}
-                  fillColor={IconColors.CONTENT}
-                  width="18px"
-                  height="18px"
-                />
-              </div>
-            )}
-          />
+        <Avatar
+          className="channel-preview__avatar"
+          src={channel?.coverUrl}
+          alt={channel?.name}
+          width="32px"
+          height="32px"
+          customDefaultComponent={(style) => (
+            <div style={{ ...style }}>
+              <Icon
+                type={IconTypes.CHANNELS}
+                fillColor={IconColors.CONTENT}
+                width="18px"
+                height="18px"
+              />
+            </div>
+          )}
+        />
       </div>
       <div className="channel-preview__inner-right">
         <div className="channel-preview__name">
@@ -89,7 +89,7 @@ export default function OpenChannelPreview({
             <div className="channel-preview__count">
               <div className="channel-preview__count-icon" />
               <div className="channel-preview__count-text">
-                { kFormat(channel?.participantCount) }
+                {kFormat(channel?.participantCount)}
               </div>
             </div>
           )

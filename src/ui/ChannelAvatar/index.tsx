@@ -22,7 +22,7 @@ function ChannelAvatar({
   theme,
   width = 56,
   height = 56,
-}: Props): JSX.Element{
+}: Props): JSX.Element {
   const isBroadcast = channel?.isBroadcast;
   const memoizedAvatar = useMemo(() => (
     isBroadcast
@@ -66,7 +66,7 @@ function ChannelAvatar({
           alt={channel?.name}
         />
       )
-  ),[channel?.members, channel?.coverUrl, theme]);
+  ), [channel?.members, channel?.coverUrl, theme]);
   return (
     <>{ memoizedAvatar }</>
   );

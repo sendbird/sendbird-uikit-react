@@ -142,5 +142,4 @@ export const BannedUserList = (): ReactElement => {
   );
 }
 
-
 export default BannedUserList;

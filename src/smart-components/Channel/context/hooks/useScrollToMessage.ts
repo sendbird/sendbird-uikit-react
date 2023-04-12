@@ -18,7 +18,7 @@ function useScrollToMessage({
   setAnimatedMessageId,
   allMessages,
 }: DynamicParams,
-  { logger }: StaticParams,
+{ logger }: StaticParams,
 ): (createdAt: number, messageId: number) => void {
   return useCallback(
     (createdAt: number, messageId: number) => {
@@ -38,10 +38,10 @@ function useScrollToMessage({
         }
       });
     }, [
-    setInitialTimeStamp,
-    setAnimatedMessageId,
-    allMessages,
-  ],
+      setInitialTimeStamp,
+      setAnimatedMessageId,
+      allMessages,
+    ],
   );
 }
 

@@ -1,12 +1,12 @@
-import type { User } from "@sendbird/chat";
-import type { Member } from "@sendbird/chat/groupChannel";
+import type { User } from '@sendbird/chat';
+import type { Member } from '@sendbird/chat/groupChannel';
 import type {
   AdminMessage,
   FileMessage,
   UserMessage,
-} from "@sendbird/chat/message";
+} from '@sendbird/chat/message';
 
-export type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
+export type ReplyType = 'NONE' | 'QUOTE_REPLY' | 'THREAD';
 
 export interface UserListQuery {
   hasNext?: boolean;

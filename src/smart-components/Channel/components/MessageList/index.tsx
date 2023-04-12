@@ -79,7 +79,7 @@ const MessageList: React.FC<MessageListProps> = ({
           // https://github.com/scabbiaza/react-scroll-position-on-updating-dom
           // Set block to nearest to prevent unexpected scrolling from outer components
           try {
-            first.scrollIntoView({ block: "start", inline: "nearest" });
+            first.scrollIntoView({ block: 'start', inline: 'nearest' });
           } catch (error) {
             //
           }

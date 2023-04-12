@@ -92,7 +92,7 @@ export default function Streaming({
                     }}
                   />
                 )
-                : (
+                  : (
                   <OpenChannelConversation
                     channelUrl={currentChannelUrl}
                     renderHeader={() => {
@@ -104,7 +104,7 @@ export default function Streaming({
                       );
                     }}
                   />
-                )
+                  )
               }
             </div>
 

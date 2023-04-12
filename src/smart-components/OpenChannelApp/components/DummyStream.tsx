@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 
 import './dummy-stream.scss';
-import { LiveBadge } from '../assets/Icons.jsx';
+import { LiveBadge } from '../assets/Icons';
 
 export interface ChannelMeta {
   name: string;

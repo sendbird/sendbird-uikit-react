@@ -211,7 +211,7 @@ export default function ParticipantsAccordion(props: ParticipantsAccordionProps)
                     >
                       {stringSet.OPEN_CHANNEL_SETTINGS__EMPTY_LIST}
                     </Label>
-                ): null
+                ) : null
             }
           </div>
           {

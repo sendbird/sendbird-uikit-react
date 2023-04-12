@@ -17,10 +17,10 @@ export type StaticProps = {
 function useActiveChannelUrl({
   activeChannelUrl,
   channels,
-  sdk
+  sdk,
 }: DynamicProps, {
   logger,
-  channelListDispatcher
+  channelListDispatcher,
 }: StaticProps): void {
   return useEffect(() => {
     if (activeChannelUrl) {
