@@ -86,7 +86,8 @@
     "curly": "off",
     "yoda": "off",
     "brace-style": "off",
-    "nonblock-statement-body-position": "off"
+    "nonblock-statement-body-position": "off",
+    "import/no-named-as-default-member": "off"
   },
   "extends": [
     "plugin:react/recommended",

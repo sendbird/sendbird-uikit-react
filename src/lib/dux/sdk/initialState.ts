@@ -1,4 +1,4 @@
-import SendbirdChat from "@sendbird/chat";
+import SendbirdChat from '@sendbird/chat';
 
 export interface SdkStoreStateType {
   initialized: boolean;

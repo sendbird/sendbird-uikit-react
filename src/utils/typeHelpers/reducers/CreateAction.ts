@@ -9,4 +9,3 @@
 export type CreateAction<T> = {
   [K in keyof T]: T[K] extends null ? { type: K, payload?: null } : { type: K, payload: T[K] }
 }[keyof T];
-

@@ -5,6 +5,7 @@ import { OpenChannelModule } from '@sendbird/chat/openChannel';
 import { GroupChannelModule } from '@sendbird/chat/groupChannel';
 
 import { SDK_ACTIONS, SdkActionTypes } from './actionTypes';
+/* eslint-disable-next-line import/named */
 import userStoreActionTypes, { UserStoreActionTypes } from '../user/actionTypes';
 import { isTextuallyNull } from '../../../utils';
 import { Logger } from '../../SendbirdState';
