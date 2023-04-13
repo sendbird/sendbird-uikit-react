@@ -55,6 +55,7 @@
     margin-left: 16px;
     @include mobile() {
       position: relative;
+      max-width: calc(100% - 72px);
     }
 
     .sendbird-channel-preview__content__upper {

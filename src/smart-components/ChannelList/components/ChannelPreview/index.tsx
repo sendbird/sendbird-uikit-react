@@ -114,9 +114,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
                 type={LabelTypography.SUBTITLE_2}
                 color={LabelColors.ONBACKGROUND_1}
               >
-                <div>
-                  {channelName}
-                </div>
+                {channelName}
               </Label>
               <Label
                 className="sendbird-channel-preview__content__upper__header__total-members"

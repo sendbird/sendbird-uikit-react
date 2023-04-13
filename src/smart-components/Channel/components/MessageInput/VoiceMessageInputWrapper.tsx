@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import './voice-message-wrapper.scss';
 
@@ -27,10 +27,10 @@ export const VoiceMessageInputWrapper = ({
   onCancelClick,
   onSubmitClick,
 }: VoiceMessageInputWrapperProps): React.ReactElement => {
+  const uuid = useRef<string>(uuidv4()).current;
   const [audioFile, setAudioFile] = useState<File>(null);
-  const [uuid] = useState<string>(uuidv4());
   const [voiceInputState, setVoiceInputState] = useState<VoiceMessageInputStatus>(VoiceMessageInputStatus.READY_TO_RECORD);
-  const [isSubmited, setSubmit] = useState(false);
+  const [isSubmitted, setSubmit] = useState(false);
   const [isDisabled, setDisabled] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { stringSet } = useLocalization();
@@ -73,13 +73,15 @@ export const VoiceMessageInputWrapper = ({
     }
   }, [channel?.myRole, channel?.isFrozen, channel?.myMutedState]);
 
+  // call onSubmitClick when submit button is clicked and recorded audio file is created
   useEffect(() => {
-    if (isSubmited && audioFile) {
+    if (isSubmitted && audioFile) {
       onSubmitClick(audioFile, recordingTime);
       setSubmit(false);
       setAudioFile(null);
     }
-  }, [isSubmited, audioFile, recordingTime]);
+  }, [isSubmitted, audioFile, recordingTime]);
+  // operate which control button should be displayed
   useEffect(() => {
     if (audioFile) {
       if (recordingTime < minRecordingTime) {
@@ -91,7 +93,7 @@ export const VoiceMessageInputWrapper = ({
         setVoiceInputState(VoiceMessageInputStatus.READY_TO_PLAY);
       }
     }
-  }, [isSubmited, audioFile, recordingTime, playingStatus]);
+  }, [audioFile, recordingTime, playingStatus]);
 
   return (
     <div className="sendbird-voice-message-input-wrapper">
@@ -99,7 +101,10 @@ export const VoiceMessageInputWrapper = ({
         currentValue={recordingStatus === VoiceRecorderStatus.COMPLETED ? playbackTime : recordingTime}
         maximumValue={recordingStatus === VoiceRecorderStatus.COMPLETED ? recordingTime : recordingLimit}
         currentType={voiceInputState}
-        onCancelClick={onCancelClick}
+        onCancelClick={() => {
+          onCancelClick();
+          cancel();
+        }}
         onSubmitClick={() => {
           if (isDisabled) {
             setShowModal(true);
