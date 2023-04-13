@@ -34,17 +34,18 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-expressions": "error",
     "react/display-name": "off",
-    "import/extensions": [
-      // TODO(Ahyoung): change this to error after find a way not to get an error \w type.d.ts
-      "warn",
-      "ignorePackages",
-      {
-        "js": "never",
-        "jsx": "never",
-        "ts": "never",
-        "tsx": "never"
-      }
-    ],
+    "import/extensions": "off",
+    // TODO(Ahyoung): uncomment below after find a way not to get an error \w type.d.ts
+    // "import/extensions": [
+    //   "warn",
+    //   "ignorePackages",
+    //   {
+    //     "js": "never",
+    //     "jsx": "never",
+    //     "ts": "never",
+    //     "tsx": "never"
+    //   }
+    // ],
     // TODO(Ahyoung): fix and remove one by one
     "no-floating-decimal": "off",
     "no-shadow": "off",
@@ -68,6 +69,7 @@
     "import/no-useless-path-segments": "off",
     "import/prefer-default-export": "off",
     "import/order": "off",
+    "import/no-named-as-default-member": "off",
     "object-curly-newline": "off",
     "object-shorthand": "off",
     "consistent-return": "off",
@@ -87,7 +89,7 @@
     "yoda": "off",
     "brace-style": "off",
     "nonblock-statement-body-position": "off",
-    "import/no-named-as-default-member": "off"
+    "func-names": "off"
   },
   "extends": [
     "plugin:react/recommended",

@@ -68,6 +68,7 @@ function downsampleToWav(file: File, callback: (buffer: ArrayBuffer) => void): v
           offlineAudioCtx
             .startRendering()
             .then(renderCompleteHandler)
+            // eslint-disable-next-line no-console
             .catch((err) => console.warn(err));
         }
       };

@@ -94,15 +94,18 @@ function CommunityChannelList({
                   customType: SB_COMMUNITY_TYPE,
                   operatorUserIds: [user.userId],
                 };
+                // eslint-disable-next-line no-console
                 console.log('CommunityChannelList: Creating channel with OpenChannelCreateParams', params);
                 sdk.openChannel.createChannel(params)
                   .then((openChannel) => {
+                    // eslint-disable-next-line no-console
                     console.log('CommunityChannelList: OpenChannel has been created', openChannel);
                     setChannels([openChannel, ...channels]);
                     setCurrentChannel(openChannel);
                     setShowModal(false);
                   })
                   .catch((error) => {
+                    // eslint-disable-next-line no-console
                     console.log('CommunityChannelList: Failed to create OpenChannel', error);
                   });
               }}
