@@ -1,22 +1,26 @@
+import { match } from 'ts-pattern';
 import { UserActionTypes, USER_ACTIONS } from './actionTypes';
 import initialState, { UserStoreStateType } from './initialState';
 
 export default function reducer(state: UserStoreStateType, action: UserActionTypes): UserStoreStateType {
-  switch (action.type) {
-    case USER_ACTIONS.INIT_USER:
+  return match(action)
+    .with({ type: USER_ACTIONS.INIT_USER }, ({ payload }) => {
       return {
         initialized: true,
         loading: false,
-        user: action.payload,
+        user: payload,
       };
-    case USER_ACTIONS.RESET_USER:
+    })
+    .with({ type: USER_ACTIONS.RESET_USER }, () => {
       return initialState;
-    case USER_ACTIONS.UPDATE_USER_INFO:
+    })
+    .with({ type: USER_ACTIONS.UPDATE_USER_INFO }, ({ payload }) => {
       return {
         ...state,
-        user: action.payload,
+        user: payload,
       };
-    default:
+    })
+    .otherwise(() => {
       return state;
-  }
+    }) as UserStoreStateType;
 }
