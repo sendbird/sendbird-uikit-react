@@ -9,7 +9,7 @@ import {
   MENTION_CLASS_IN_INPUT,
 } from './consts';
 import { Word } from './types';
-import { TEXT_MESSAGE_BODY_CLASSNAME } from "../../../TextMessageItemBody/consts";
+import { TEXT_MESSAGE_BODY_CLASSNAME } from '../../../TextMessageItemBody/consts';
 import { OG_MESSAGE_BODY_CLASSNAME } from '../../../OGMessageItemBody/consts';
 
 export function querySelectorIncludingSelf(
@@ -18,7 +18,7 @@ export function querySelectorIncludingSelf(
 ): HTMLElement | null {
   const result = [
     master,
-    ...Array.from(master.querySelectorAll(selector))
+    ...Array.from(master.querySelectorAll(selector)),
   ].find((el) => el.matches(selector)) as HTMLElement | null;
   return result;
 }

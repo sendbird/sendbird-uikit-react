@@ -87,8 +87,8 @@ export default function OpenchannelConversationHeader(): JSX.Element {
           <Icon
             type={(
               amIOperator
-              ? IconTypes.INFO
-              : IconTypes.MEMBERS
+                ? IconTypes.INFO
+                : IconTypes.MEMBERS
             )}
             fillColor={IconColors.PRIMARY}
             width="24px"

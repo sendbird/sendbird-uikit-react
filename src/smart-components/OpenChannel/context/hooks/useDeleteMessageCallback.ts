@@ -41,7 +41,7 @@ function useDeleteMessageCallback(
         callback();
       }
     } else {
-      if (!(message.messageType ==='file' || message.messageType === 'user')) {
+      if (!(message.messageType === 'file' || message.messageType === 'user')) {
         return;
       }
       const messageToDelete = message as UserMessage;

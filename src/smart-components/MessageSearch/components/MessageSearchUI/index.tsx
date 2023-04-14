@@ -10,7 +10,6 @@ import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import MessageSearchFileItem from '../../../../ui/MessageSearchFileItem';
 import { ClientSentMessages } from '../../../../types';
 
-
 const COMPONENT_CLASS_NAME = 'sendbird-message-search';
 
 export interface MessageSearchUIProps {
@@ -160,7 +159,7 @@ export const MessageSearchUI: React.FC<MessageSearchUIProps> = ({
           )
           : renderPlaceHolderEmptyList?.() || (
             <PlaceHolder type={PlaceHolderTypes.NO_RESULTS} />
-          )
+        )
       }
     </div>
   );

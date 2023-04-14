@@ -15,7 +15,7 @@ interface StaticParams {
   logger: Logger;
   messagesDispatcher: CustomUseReducerDispatcher;
   hasMore: boolean;
-  /* eslint-disable @typescript-eslint/no-explicit-any*/
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   userFilledMessageListParams?: Record<string, any>;
 }
 type CallbackReturn = (callback: () => void) => void;
@@ -53,7 +53,7 @@ function useScrollCallback(
             messages,
             hasMore,
             lastMessageTimestamp,
-          }
+          },
         });
         setTimeout(() => {
           callback();
@@ -67,7 +67,7 @@ function useScrollCallback(
             messages: [],
             hasMore: false,
             lastMessageTimestamp: 0,
-          }
+          },
         });
       });
     }

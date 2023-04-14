@@ -63,7 +63,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
     setTimer(
       setTimeout(() => {
         setSearchString(targetNickname);
-      }, DEBOUNCING_TIME)
+      }, DEBOUNCING_TIME),
     );
   }, [targetNickname]);
 
@@ -105,7 +105,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
     }
 
     const query = channelInstance?.createMemberListQuery({
-      limit: maxSuggestionCount + 1,  // because current user could be included
+      limit: maxSuggestionCount + 1, // because current user could be included
       nicknameStartsWithFilter: searchString.slice(USER_MENTION_TEMP_CHAR.length),
     });
     // Add member list query for customization

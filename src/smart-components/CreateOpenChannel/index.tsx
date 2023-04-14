@@ -1,7 +1,7 @@
 import React from 'react';
 
 import CreateOpenChannelUI, { CreateOpenChannelUIProps } from './components/CreateOpenChannelUI';
-import {  CreateOpenChannelProvider, CreateOpenChannelProviderProps } from './context/CreateOpenChannelProvider';
+import { CreateOpenChannelProvider, CreateOpenChannelProviderProps } from './context/CreateOpenChannelProvider';
 
 export interface CreateOpenChannelProps extends CreateOpenChannelProviderProps, CreateOpenChannelUIProps { }
 

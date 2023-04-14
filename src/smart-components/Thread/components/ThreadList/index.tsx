@@ -61,6 +61,7 @@ export default function ThreadList({
         const isByMe = (message as UserMessage)?.sender?.userId === userId;
         const prevMessage = allThreadMessages[idx - 1];
         const nextMessage = allThreadMessages[idx + 1];
+        // eslint-disable-next-line no-constant-condition
         const [chainTop, chainBottom] = true// isMessageGroupingEnabled
           ? compareMessagesForGrouping(
             prevMessage as UserMessage | FileMessage,
@@ -84,7 +85,7 @@ export default function ThreadList({
           }
         };
 
-        return(
+        return (
           <MessageProvider message={message} isByMe={isByMe} key={message?.messageId}>
             {
               MemorizedMessage({

@@ -23,7 +23,7 @@ function useSearchStringEffect(
       setDebouncingTimer(
         setTimeout(() => {
           setRequestString(searchString);
-        }, DEBOUNCING_TIME)
+        }, DEBOUNCING_TIME),
       );
     } else {
       setRequestString('');

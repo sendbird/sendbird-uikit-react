@@ -9,7 +9,7 @@ import { BannedUserListQueryParams } from '@sendbird/chat';
 
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import
-  Label, {
+Label, {
   LabelTypography,
   LabelColors,
 } from '../../../../ui/Label';

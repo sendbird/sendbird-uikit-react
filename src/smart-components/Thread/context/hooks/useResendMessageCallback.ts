@@ -1,8 +1,8 @@
-import { GroupChannel } from "@sendbird/chat/groupChannel";
-import { FileMessage, MessageType, SendingStatus, UserMessage } from "@sendbird/chat/message";
-import { useCallback } from "react";
-import { CustomUseReducerDispatcher, Logger } from "../../../../lib/SendbirdState";
-import { ThreadContextActionTypes } from "../dux/actionTypes";
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { FileMessage, MessageType, SendingStatus, UserMessage } from '@sendbird/chat/message';
+import { useCallback } from 'react';
+import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
+import { ThreadContextActionTypes } from '../dux/actionTypes';
 import topics from '../../../../lib/pubSub/topics';
 
 interface DynamicProps {

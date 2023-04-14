@@ -35,7 +35,7 @@ const ChannelHeader: React.FC<ChannelHeaderProps> = ({
   } = channelStore;
   const subTitle = (currentGroupChannel?.members
     && currentGroupChannel?.members?.length !== 2);
-  const isMuted = currentGroupChannel?.myMutedState === "muted";
+  const isMuted = currentGroupChannel?.myMutedState === 'muted';
 
   const { stringSet } = useContext(LocalizationContext);
   return (

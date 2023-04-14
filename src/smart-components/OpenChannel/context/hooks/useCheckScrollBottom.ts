@@ -18,7 +18,7 @@ function useCheckScrollBottom(
       try {
         const conversationScroll = conversationScrollRef.current;
         isBottom = conversationScroll.scrollHeight <= conversationScroll.scrollTop + conversationScroll.clientHeight;
-      } catch(error) {
+      } catch (error) {
         logger.error('OpenChannel | useCheckScrollBottom', error);
       }
     }

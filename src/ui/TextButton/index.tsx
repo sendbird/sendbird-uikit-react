@@ -21,7 +21,7 @@ const TextButton = ({
   color = Colors.ONBACKGROUND_1,
   disabled = false,
   disableUnderline = false,
-  onClick = () => {/* noop */},
+  onClick = () => { /* noop */ },
   children,
 }: TextButtonProps): ReactElement => {
   return (

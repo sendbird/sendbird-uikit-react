@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 
-import Label, { LabelTypography, LabelColors } from '../index.jsx';
-import { changeTypographyToClassName, changeColorToClassName } from '../utils.js';
+import Label, { LabelTypography, LabelColors } from '../index';
+import { changeTypographyToClassName, changeColorToClassName } from '../utils';
 
 describe('ui/Label', () => {
   it('should have default classname if props are not provided', function () {

@@ -148,8 +148,8 @@ export default function UserListItem({
         isOperator && (
           <Label
             className={[
-              "sendbird-user-list-item__operator",
-              checkBox ? "checkbox" : "",
+              'sendbird-user-list-item__operator',
+              checkBox ? 'checkbox' : '',
             ].join(' ')}
             type={LabelTypography.SUBTITLE_2}
             color={LabelColors.ONBACKGROUND_2}

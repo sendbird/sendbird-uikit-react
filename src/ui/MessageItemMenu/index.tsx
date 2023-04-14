@@ -210,8 +210,8 @@ export default function MessageItemMenu({
                   }}
                   disable={
                     typeof disableDeleteMessage === 'boolean'
-                    ? disableDeleteMessage
-                    : message?.threadInfo?.replyCount > 0
+                      ? disableDeleteMessage
+                      : message?.threadInfo?.replyCount > 0
                   }
                 >
                   {stringSet.MESSAGE_MENU__DELETE}

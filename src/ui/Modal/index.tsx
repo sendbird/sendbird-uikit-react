@@ -91,8 +91,8 @@ export default function Modal(props: ModalProps): ReactElement {
     disabled = false,
     hideFooter = false,
     type = ButtonTypes.DANGER,
-    onCancel = () => {/* noop */ },
-    onSubmit = () => {/* noop */ },
+    onCancel = () => { /* noop */ },
+    onSubmit = () => { /* noop */ },
     renderHeader,
   } = props;
 
@@ -138,7 +138,7 @@ export default function Modal(props: ModalProps): ReactElement {
           sendbird-modal__backdrop
           ${isCloseOnClickOutside && 'sendbird-modal__backdrop--clickoutside'}
         `}
-        onClick={(e) =>{
+        onClick={(e) => {
           e?.stopPropagation();
           if (isCloseOnClickOutside) {
             onCancel();

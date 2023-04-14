@@ -8,7 +8,7 @@ import { scrollIntoLast } from '../utils';
 
 interface DynamicParams {
   currentOpenChannel: OpenChannel;
-  /* eslint-disable @typescript-eslint/no-explicit-any*/
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   userFilledMessageListParams?: Record<string, any>;
 }
 interface StaticParams {

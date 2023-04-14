@@ -1,5 +1,5 @@
-import { OpenChannel, OpenChannelListQuery } from "@sendbird/chat/openChannel";
-import { OpenChannelListFetchingStatus } from "../OpenChannelListInterfaces";
+import { OpenChannel, OpenChannelListQuery } from '@sendbird/chat/openChannel';
+import { OpenChannelListFetchingStatus } from '../OpenChannelListInterfaces';
 
 export interface OpenChannelListInitialInterface {
   allChannels: Array<OpenChannel>;

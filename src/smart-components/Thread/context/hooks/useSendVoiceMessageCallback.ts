@@ -2,15 +2,15 @@ import { useCallback } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { FileMessage, FileMessageCreateParams, MessageMetaArray, UserMessage } from '@sendbird/chat/message';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
-import { ThreadContextActionTypes } from "../dux/actionTypes";
+import { ThreadContextActionTypes } from '../dux/actionTypes';
 import topics from '../../../../lib/pubSub/topics';
-import { scrollIntoLast } from "../utils";
+import { scrollIntoLast } from '../utils';
 import {
   META_ARRAY_MESSAGE_TYPE_KEY,
   META_ARRAY_MESSAGE_TYPE_VALUE__VOICE,
   META_ARRAY_VOICE_DURATION_KEY,
   VOICE_MESSAGE_FILE_NAME,
-  VOICE_MESSAGE_MIME_TYPE
+  VOICE_MESSAGE_MIME_TYPE,
 } from '../../../../utils/consts';
 
 interface DynamicParams {
@@ -32,11 +32,11 @@ export const useSendVoiceMessageCallback = ({
   currentChannel,
   onBeforeSendVoiceMessage,
 }: DynamicParams,
-  {
-    logger,
-    pubSub,
-    threadDispatcher,
-  }: StaticParams): FuncType => {
+{
+  logger,
+  pubSub,
+  threadDispatcher,
+}: StaticParams): FuncType => {
   const sendMessage = useCallback((file: File, duration: number, quoteMessage: UserMessage | FileMessage) => {
     const messageParams: FileMessageCreateParams = (
       onBeforeSendVoiceMessage
@@ -55,7 +55,7 @@ export const useSendVoiceMessageCallback = ({
           new MessageMetaArray({
             key: META_ARRAY_MESSAGE_TYPE_KEY,
             value: [META_ARRAY_MESSAGE_TYPE_VALUE__VOICE],
-          })
+          }),
         ],
       };
     if (quoteMessage) {

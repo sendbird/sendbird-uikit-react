@@ -1,5 +1,5 @@
-import type { GroupChannel } from "@sendbird/chat/groupChannel";
-import type { OpenChannel } from "@sendbird/chat/openChannel";
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import type { OpenChannel } from '@sendbird/chat/openChannel';
 
 export const DEFAULT_URL_PREFIX = 'https://static.sendbird.com/sample/cover/cover_';
 

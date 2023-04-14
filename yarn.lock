@@ -2402,8 +2402,9 @@ __metadata:
     dts-bundle-generator: ^6.5.0
     eslint: ^6.8.0
     eslint-config-airbnb: ^18.0.1
+    eslint-config-airbnb-base: ^14.0.0
     eslint-plugin-babel: ^5.3.1
-    eslint-plugin-import: ^2.20.0
+    eslint-plugin-import: ^2.25.2
     eslint-plugin-jsx-a11y: ^6.2.3
     eslint-plugin-react: ^7.18.0
     eslint-plugin-react-hooks: ^1.7.0
@@ -8370,7 +8371,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-airbnb-base@npm:^14.2.1":
+"eslint-config-airbnb-base@npm:^14.0.0, eslint-config-airbnb-base@npm:^14.2.1":
   version: 14.2.1
   resolution: "eslint-config-airbnb-base@npm:14.2.1"
   dependencies:
@@ -8435,7 +8436,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-import@npm:^2.20.0":
+"eslint-plugin-import@npm:^2.25.2":
   version: 2.27.5
   resolution: "eslint-plugin-import@npm:2.27.5"
   dependencies:

@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { useVoicePlayerContext } from ".";
-import { VOICE_PLAYER_AUDIO_ID } from "../../utils/consts";
-import { useVoiceRecorderContext } from "../VoiceRecorder";
+import { useEffect, useState } from 'react';
+import { useVoicePlayerContext } from '.';
+import { VOICE_PLAYER_AUDIO_ID } from '../../utils/consts';
+import { useVoiceRecorderContext } from '../VoiceRecorder';
 
-import { AudioUnitDefaultValue, VoicePlayerStatus } from "./dux/initialState";
-import { generateGroupKey } from "./utils";
+import { AudioUnitDefaultValue, VoicePlayerStatus } from './dux/initialState';
+import { generateGroupKey } from './utils';
 
 export interface UseVoicePlayerProps {
   key: string;

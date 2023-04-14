@@ -26,13 +26,13 @@ export const dummyFileMessageImage = {
     friendDiscoveryKey: null,
     friendName: null,
     _preferredLanguages: null,
-    isBlockedByMe: false
+    isBlockedByMe: false,
   },
   reqId: '1583104547956',
   requireAuth: false,
   requestState: 'succeeded',
   requestedMentionUserIds: [],
-  errorCode: 0
+  errorCode: 0,
 };
 
 export const dummyFileMessageAudio = {
@@ -63,13 +63,13 @@ export const dummyFileMessageAudio = {
     friendDiscoveryKey: null,
     friendName: null,
     _preferredLanguages: null,
-    isBlockedByMe: false
+    isBlockedByMe: false,
   },
   reqId: '1583104547956',
   requireAuth: false,
   requestState: 'succeeded',
   requestedMentionUserIds: [],
-  errorCode: 0
+  errorCode: 0,
 };
 
 type generatorType = (callback?: (message: Record<string, any>) => Record<string, any>) => Record<string, any>;

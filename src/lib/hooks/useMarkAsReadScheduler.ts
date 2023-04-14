@@ -1,6 +1,6 @@
-import { GroupChannel } from "@sendbird/chat/groupChannel";
-import { useEffect, useMemo } from "react";
-import { Logger } from "../SendbirdState";
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { useEffect, useMemo } from 'react';
+import { Logger } from '../SendbirdState';
 
 export type MarkAsReadSchedulerType = {
   push: (channel: GroupChannel) => void;
@@ -66,7 +66,7 @@ export function useMarkAsReadScheduler({
   isConnected,
 }: DynamicParams, {
   logger,
-}: StaticParams): MarkAsReadSchedulerType  {
+}: StaticParams): MarkAsReadSchedulerType {
   const markAsReadScheduler = useMemo(() => schedulerFactory(logger), []);
 
   useEffect(() => {

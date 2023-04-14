@@ -67,7 +67,6 @@ export interface OpenChannelProviderProps {
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
 }
 
-
 interface OpenChannelInterface extends OpenChannelProviderProps, MessageStoreState {
   // derived/utils
   messageInputRef: React.RefObject<HTMLInputElement>;
@@ -201,7 +200,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
 
   useTrimMessageList(
     { messagesLength: allMessages?.length, messageLimit },
-    { messagesDispatcher, logger }
+    { messagesDispatcher, logger },
   );
 
   // handle API calls from withSendbird

@@ -26,13 +26,13 @@ export const docMock = {
     friendDiscoveryKey: null,
     friendName: null,
     _preferredLanguages: null,
-    isBlockedByMe: false
+    isBlockedByMe: false,
   },
   reqId: '1583104547956',
   requireAuth: false,
   requestState: 'succeeded',
   requestedMentionUserIds: [],
-  errorCode: 0
+  errorCode: 0,
 };
 
 export const imageMock = {
@@ -63,13 +63,13 @@ export const imageMock = {
     friendDiscoveryKey: null,
     friendName: null,
     _preferredLanguages: null,
-    isBlockedByMe: false
+    isBlockedByMe: false,
   },
   reqId: '1583104547956',
   requireAuth: false,
   requestState: 'succeeded',
   requestedMentionUserIds: [],
-  errorCode: 0
+  errorCode: 0,
 };
 
 export const audioMock = {
@@ -100,13 +100,13 @@ export const audioMock = {
     friendDiscoveryKey: null,
     friendName: null,
     _preferredLanguages: null,
-    isBlockedByMe: false
+    isBlockedByMe: false,
   },
   reqId: '1583104547956',
   requireAuth: false,
   requestState: 'succeeded',
   requestedMentionUserIds: [],
-  errorCode: 0
+  errorCode: 0,
 };
 
 export const videoMock = {
@@ -137,13 +137,13 @@ export const videoMock = {
     friendDiscoveryKey: null,
     friendName: null,
     _preferredLanguages: null,
-    isBlockedByMe: false
+    isBlockedByMe: false,
   },
   reqId: '1583104547956',
   requireAuth: false,
   requestState: 'succeeded',
   requestedMentionUserIds: [],
-  errorCode: 0
+  errorCode: 0,
 };
 
 export const gifMock = {
@@ -174,12 +174,11 @@ export const gifMock = {
     friendDiscoveryKey: null,
     friendName: null,
     _preferredLanguages: null,
-    isBlockedByMe: false
+    isBlockedByMe: false,
   },
   reqId: '1583104547956',
   requireAuth: false,
   requestState: 'succeeded',
   requestedMentionUserIds: [],
-  errorCode: 0
+  errorCode: 0,
 };
-

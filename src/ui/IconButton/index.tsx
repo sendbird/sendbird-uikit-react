@@ -32,8 +32,8 @@ const IconButton = React.forwardRef((
     height = '56px',
     type = 'button',
     style = {},
-    onBlur = () => {/* noop */},
-    onClick = () => {/* noop */},
+    onBlur = () => { /* noop */ },
+    onClick = () => { /* noop */ },
   } = props;
   const [isPressed, setIsPressed] = useState(false);
   return (

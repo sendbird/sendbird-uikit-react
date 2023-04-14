@@ -1,4 +1,4 @@
-import { GroupChannelHandler } from "@sendbird/chat/groupChannel";
+import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
 
 /**
  * Returns the instance of GroupChannelHandler

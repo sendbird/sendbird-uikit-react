@@ -25,9 +25,10 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
     super(props);
     this.state = {
       menuStyle: {},
-      handleClickOutside: () => {/* noop */ },
+      handleClickOutside: () => { /* noop */ },
     };
   }
+
   menuRef: React.RefObject<HTMLUListElement> = React.createRef();
 
   componentDidMount(): void {
@@ -101,7 +102,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
 
   render(): ReactElement {
     const { menuStyle } = this.state;
-    const { children, style, className="" } = this.props;
+    const { children, style, className = '' } = this.props;
     return (
       createPortal(
         (

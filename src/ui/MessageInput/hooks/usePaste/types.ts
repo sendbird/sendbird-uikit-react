@@ -1,5 +1,5 @@
-import type { User } from "@sendbird/chat";
-import type { GroupChannel } from "@sendbird/chat/groupChannel";
+import type { User } from '@sendbird/chat';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 export type Word = {
   text: string;

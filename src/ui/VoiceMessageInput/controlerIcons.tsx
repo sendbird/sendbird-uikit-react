@@ -8,7 +8,7 @@ export interface ControlerIconProps {
 }
 
 export const ControlerIcon = ({
-  inputState
+  inputState,
 }: ControlerIconProps): React.ReactElement => {
   switch (inputState) {
     case VoiceMessageInputStatus.READY_TO_RECORD: {

@@ -46,10 +46,10 @@ function StreamingChannelList({
       <div className="streaming-channel-list__list">
         {
           channels.length === 0
-          ? (
-            "No Channels"
-          )
-          : (
+            ? (
+              'No Channels'
+            )
+            : (
             <div className="streaming-channel-list__scroll-wrap">
               <div>
                 {
@@ -60,14 +60,14 @@ function StreamingChannelList({
                       channel={c}
                       selected={c.url === currentChannelUrl}
                       onClick={
-                        () => {setCurrentChannel(c)}
+                        () => { setCurrentChannel(c) }
                       }
                     />
                   ))
                 }
               </div>
             </div>
-          )
+            )
         }
         <p className="streaming-channel-list__placeholder">
           Preset channels developed by UI Kit

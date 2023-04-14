@@ -1,3 +1,3 @@
-import { isVoiceMessage as _isVoiceMessage } from ".";
+import { isVoiceMessage as _isVoiceMessage } from '.';
 
 export const isVoiceMessage = _isVoiceMessage;

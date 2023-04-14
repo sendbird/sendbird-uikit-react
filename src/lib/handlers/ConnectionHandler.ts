@@ -1,4 +1,4 @@
-import { ConnectionHandler } from "@sendbird/chat";
+import { ConnectionHandler } from '@sendbird/chat';
 
 /**
  * Returns the instance of ConnectionHandler

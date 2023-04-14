@@ -362,7 +362,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     activeChannelUrl,
     channels: sortedChannels,
     sdk,
-  } , {
+  }, {
     logger,
     channelListDispatcher,
   });

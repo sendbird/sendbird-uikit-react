@@ -28,13 +28,13 @@ export const dummyFileMessageImage = {
     friendDiscoveryKey: null,
     friendName: null,
     _preferredLanguages: null,
-    isBlockedByMe: false
+    isBlockedByMe: false,
   },
   reqId: '1583104547956',
   requireAuth: false,
   requestState: 'succeeded',
   requestedMentionUserIds: [],
-  errorCode: 0
+  errorCode: 0,
 };
 
 export const dummyFileMessageVideo = {
@@ -57,17 +57,17 @@ export const dummyFileMessageVideo = {
   size: 0,
   type: 'video/mp4',
   thumbnails: [{
-    url: "https://static.sendbird.com/sample/user_sdk/user_sdk_16.png",
+    url: 'https://static.sendbird.com/sample/user_sdk/user_sdk_16.png',
     real_height: 20,
     real_width: 20,
     width: 240,
-    height: 240
+    height: 240,
   }, {
-    url: "https://static.sendbird.com/sample/user_sdk/user_sdk_16.png",
+    url: 'https://static.sendbird.com/sample/user_sdk/user_sdk_16.png',
     real_height: 20,
     real_width: 20,
     width: 320,
-    height: 320
+    height: 320,
   }],
   sender: {
     nickname: 'ME',
@@ -79,13 +79,13 @@ export const dummyFileMessageVideo = {
     friendDiscoveryKey: null,
     friendName: null,
     _preferredLanguages: null,
-    isBlockedByMe: false
+    isBlockedByMe: false,
   },
   reqId: '1583104547956',
   requireAuth: false,
   requestState: 'succeeded',
   requestedMentionUserIds: [],
-  errorCode: 0
+  errorCode: 0,
 };
 
 export const dummyFileMessageAudio = {
@@ -118,7 +118,7 @@ export const dummyFileMessageAudio = {
     friendDiscoveryKey: null,
     friendName: null,
     _preferredLanguages: null,
-    isBlockedByMe: false
+    isBlockedByMe: false,
   },
   reqId: '1583104547956',
   requireAuth: false,
@@ -157,65 +157,65 @@ export const dummyFileMessageGif = {
     friendDiscoveryKey: null,
     friendName: null,
     _preferredLanguages: null,
-    isBlockedByMe: false
+    isBlockedByMe: false,
   },
   reqId: '1583104547956',
   requireAuth: false,
   requestState: 'succeeded',
   requestedMentionUserIds: [],
-  errorCode: 0
+  errorCode: 0,
 };
 
 export const dummyFileMessageWithThumbnail = {
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   isFileMessage: () => true,
   messageId: 751865890,
-  messageType: "file",
-  channelUrl: "sendbird_group_channel_19238732_8e44958ac5c2fb88203146f42a18a9a4f4472dde",
-  data: "",
-  customType: "",
+  messageType: 'file',
+  channelUrl: 'sendbird_group_channel_19238732_8e44958ac5c2fb88203146f42a18a9a4f4472dde',
+  data: '',
+  customType: '',
   createdAt: 1583104853295,
   updatedAt: 0,
-  channelType: "group",
+  channelType: 'group',
   metaArrays: [],
   reactions: [],
-  mentionType: "users",
+  mentionType: 'users',
   mentionedUsers: [],
-  url: "https://static.sendbird.com/sample/user_sdk/user_sdk_16.png",
-  name: "ic-close.svg",
+  url: 'https://static.sendbird.com/sample/user_sdk/user_sdk_16.png',
+  name: 'ic-close.svg',
   size: 404,
-  type: "image/svg+xml",
+  type: 'image/svg+xml',
   thumbnails: [{
-    url: "https://static.sendbird.com/sample/user_sdk/user_sdk_16.png",
+    url: 'https://static.sendbird.com/sample/user_sdk/user_sdk_16.png',
     real_height: 20,
     real_width: 20,
     width: 240,
-    height: 240
+    height: 240,
   }, {
-    url: "https://static.sendbird.com/sample/user_sdk/user_sdk_16.png",
+    url: 'https://static.sendbird.com/sample/user_sdk/user_sdk_16.png',
     real_height: 20,
     real_width: 20,
     width: 320,
-    height: 320
+    height: 320,
   }],
   sender: {
-    nickname: "hoon1000",
-    profileUrl: "https://static.sendbird.com/sample/user_sdk/user_sdk_16.png",
-    userId: "hoon1000",
-    connectionStatus: "nonavailable",
+    nickname: 'hoon1000',
+    profileUrl: 'https://static.sendbird.com/sample/user_sdk/user_sdk_16.png',
+    userId: 'hoon1000',
+    connectionStatus: 'nonavailable',
     lastSeenAt: 0,
     metaData: {},
     isActive: true,
     friendDiscoveryKey: null,
     friendName: null,
     _preferredLanguages: null,
-    isBlockedByMe: false
+    isBlockedByMe: false,
   },
-  reqId: "1583104837675",
+  reqId: '1583104837675',
   requireAuth: true,
-  requestState: "succeeded",
+  requestState: 'succeeded',
   requestedMentionUserIds: [],
-  errorCode: 0
+  errorCode: 0,
 };
 
 export default { dummyFileMessageAudio, dummyFileMessageVideo, dummyFileMessageImage, dummyFileMessageWithThumbnail }

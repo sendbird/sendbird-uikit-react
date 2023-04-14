@@ -18,7 +18,7 @@ export default function Checkbox({
   return (
     <label
       className={[
-        "sendbird-checkbox",
+        'sendbird-checkbox',
         disabled ? 'disabled' : '',
       ].join(' ')}
       htmlFor={id}
@@ -35,7 +35,7 @@ export default function Checkbox({
       />
       <span
         className={[
-          "sendbird-checkbox--checkmark",
+          'sendbird-checkbox--checkmark',
           disabled ? 'disabled' : '',
         ].join(' ')}
       />

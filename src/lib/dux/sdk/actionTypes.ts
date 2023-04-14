@@ -1,5 +1,5 @@
-import SendbirdChat from "@sendbird/chat";
-import { CreateAction } from "../../../utils/typeHelpers/reducers/CreateAction";
+import SendbirdChat from '@sendbird/chat';
+import { CreateAction } from '../../../utils/typeHelpers/reducers/CreateAction';
 
 export const SDK_ACTIONS = {
   INIT_SDK: 'INIT_SDK',

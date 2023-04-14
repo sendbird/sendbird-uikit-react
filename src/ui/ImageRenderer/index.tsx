@@ -33,8 +33,8 @@ const ImageRenderer = ({
   fixedSize = false,
   placeHolder = null,
   defaultComponent = null,
-  onLoad = () => {/* noop */},
-  onError = () => {/* noop */},
+  onLoad = () => { /* noop */ },
+  onError = () => { /* noop */ },
 }: ImageRendererProps): ReactElement => {
   const [showDefaultComponent, setShowDefaultComponent] = useState(false);
   const [showPlaceHolder, setShowPlaceHolder] = useState(true);
@@ -57,7 +57,7 @@ const ImageRenderer = ({
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-        }
+        },
       })
       : null;
   }, [placeHolder]);

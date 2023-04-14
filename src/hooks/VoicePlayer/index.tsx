@@ -37,7 +37,7 @@ export interface VoicePlayerContext {
   voicePlayerStore: VoicePlayerInitialState;
 }
 
-const noop = () => {/* noop */ };
+const noop = () => { /* noop */ };
 const VoicePlayerStoreDefaultValue = {
   currentGroupKey: '',
   currentPlayer: null,

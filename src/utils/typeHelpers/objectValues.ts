@@ -14,5 +14,5 @@
  * both of the below options are valid
  * const logLevel: logLevel = LOG_LEVEL.INFO;
  * const logLevel: logLevel = 'INFO';
-**/
+* */
 export type ObjectValues<T> = T[keyof T];

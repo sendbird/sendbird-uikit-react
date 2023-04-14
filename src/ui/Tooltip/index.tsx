@@ -10,7 +10,7 @@ export interface TooltipProps {
 }
 export default function Tooltip({
   className = '',
-  children= '',
+  children = '',
 }: TooltipProps): ReactElement {
   return (
     <div

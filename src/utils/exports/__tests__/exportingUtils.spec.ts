@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { UserMessage } from '@sendbird/chat/message';
 import { getOutgoingMessageState, OutgoingMessageStates } from '../getOutgoingMessageState';
@@ -18,7 +19,7 @@ describe('Global-export-utils-getOutgoingMessageState', () => {
       getOutgoingMessageState(
         {} as GroupChannel,
         { sendingStatus: 'pending' } as UserMessage,
-      )
+      ),
     ).toBe(OutgoingMessageStates.PENDING);
   });
   it('should return failed', () => {
@@ -26,7 +27,7 @@ describe('Global-export-utils-getOutgoingMessageState', () => {
       getOutgoingMessageState(
         {} as GroupChannel,
         { sendingStatus: 'failed' } as UserMessage,
-      )
+      ),
     ).toBe(OutgoingMessageStates.FAILED);
   });
   it('should return sent', () => {
@@ -35,14 +36,14 @@ describe('Global-export-utils-getOutgoingMessageState', () => {
       getOutgoingMessageState(
         { isGroupChannel: () => false } as GroupChannel,
         { sendingStatus: 'succeeded' } as UserMessage,
-      )
+      ),
     ).toBe(OutgoingMessageStates.SENT);
     // when getUnreadMemberCount or getUndeliveredMemberCount doesn't exist
     expect(
       getOutgoingMessageState(
         { isGroupChannel: () => true } as GroupChannel,
         { sendingStatus: 'succeeded' } as UserMessage,
-      )
+      ),
     ).toBe(OutgoingMessageStates.SENT);
     // when getUnreadMemberCount and getUndeliveredMemberCount return a number(0<)
     expect(
@@ -53,7 +54,7 @@ describe('Global-export-utils-getOutgoingMessageState', () => {
           getUndeliveredMemberCount: (_) => 1,
         } as GroupChannel,
         { sendingStatus: 'succeeded' } as UserMessage,
-      )
+      ),
     ).toBe(OutgoingMessageStates.SENT);
   });
   it('should return delivered', () => {
@@ -65,7 +66,7 @@ describe('Global-export-utils-getOutgoingMessageState', () => {
           getUndeliveredMemberCount: (_) => 0,
         } as GroupChannel,
         { sendingStatus: 'succeeded' } as UserMessage,
-      )
+      ),
     ).toBe(OutgoingMessageStates.DELIVERED);
     // when getUnreadMemberCount returns a number(0<) & getUndeliveredMemberCount returns 0
     expect(
@@ -76,7 +77,7 @@ describe('Global-export-utils-getOutgoingMessageState', () => {
           getUndeliveredMemberCount: (_) => 0,
         } as GroupChannel,
         { sendingStatus: 'succeeded' } as UserMessage,
-      )
+      ),
     ).toBe(OutgoingMessageStates.DELIVERED);
   });
   it('should return read', () => {
@@ -88,7 +89,7 @@ describe('Global-export-utils-getOutgoingMessageState', () => {
           getUnreadMemberCount: (_) => 0,
         } as GroupChannel,
         { sendingStatus: 'succeeded' } as UserMessage,
-      )
+      ),
     ).toBe(OutgoingMessageStates.READ);
     // when getUnreadMemberCount returns 0
     expect(
@@ -99,7 +100,7 @@ describe('Global-export-utils-getOutgoingMessageState', () => {
           getUndeliveredMemberCount: (_) => 1,
         } as GroupChannel,
         { sendingStatus: 'succeeded' } as UserMessage,
-      )
+      ),
     ).toBe(OutgoingMessageStates.READ);
   })
 });

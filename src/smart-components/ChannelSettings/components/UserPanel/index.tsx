@@ -4,7 +4,7 @@ import React, { useContext, useState } from 'react';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import
-  Label, {
+Label, {
   LabelTypography,
   LabelColors,
 } from '../../../../ui/Label';
@@ -16,7 +16,7 @@ import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider
 
 const kFormatter = (num: number): string|number => {
   return Math.abs(num) > 999
-    ? `${(Math.abs(num)/1000).toFixed(1)}K`
+    ? `${(Math.abs(num) / 1000).toFixed(1)}K`
     : num;
 }
 
@@ -50,7 +50,7 @@ const UserPanel: React.FC = () => {
         >
           {stringSet.CHANNEL_SETTING__MEMBERS__TITLE}
           <Badge
-            className={"sendbird-channel-settings__badge"}
+            className={'sendbird-channel-settings__badge'}
             count={kFormatter(channel?.memberCount)}
           />
         </Label>

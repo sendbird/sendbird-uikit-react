@@ -1,6 +1,6 @@
-import { OpenChannelListQuery, OpenChannelListQueryParams, SendbirdOpenChat } from "@sendbird/chat/openChannel";
-import { Logger } from "../../../../lib/SendbirdState";
-import OpenChannelListActionTypes from "../dux/actionTypes";
+import { OpenChannelListQuery, OpenChannelListQueryParams, SendbirdOpenChat } from '@sendbird/chat/openChannel';
+import { Logger } from '../../../../lib/SendbirdState';
+import OpenChannelListActionTypes from '../dux/actionTypes';
 import { OpenChannelListDispatcherType, UserFilledOpenChannelListQuery } from '../OpenChannelListInterfaces';
 
 interface createChannelListQueryProps {

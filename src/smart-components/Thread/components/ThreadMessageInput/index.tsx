@@ -15,9 +15,9 @@ import { Role } from '../../../../lib/types';
 export interface ThreadMessageInputProps {
   className?: string;
   disabled?: boolean;
-  renderFileUploadIcon?: () =>  React.ReactElement;
-  renderVoiceMessageIcon?: () =>  React.ReactElement;
-  renderSendMessageIcon?: () =>  React.ReactElement;
+  renderFileUploadIcon?: () => React.ReactElement;
+  renderVoiceMessageIcon?: () => React.ReactElement;
+  renderSendMessageIcon?: () => React.ReactElement;
 }
 
 const ThreadMessageInput = (

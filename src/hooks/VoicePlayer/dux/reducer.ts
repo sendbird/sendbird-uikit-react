@@ -4,13 +4,13 @@ import {
   ON_VOICE_PLAYER_PAUSE,
   ON_VOICE_PLAYER_PLAY,
   SET_CURRENT_PLAYER,
-} from "./actionTypes";
+} from './actionTypes';
 import {
   AudioStorageUnit,
   AudioUnitDefaultValue,
   VoicePlayerInitialState,
   VoicePlayerStatus,
-} from "./initialState";
+} from './initialState';
 
 type InitializeAudioUnitPayload = { groupKey: string };
 type SetCurrentPlayerPayload = { audioPlayer: HTMLAudioElement, groupKey: string };

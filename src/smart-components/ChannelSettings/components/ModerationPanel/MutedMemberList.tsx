@@ -20,7 +20,6 @@ import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 
-
 export const MutedMemberList = (): ReactElement => {
   const [members, setMembers] = useState([]);
   const [hasNext, setHasNext] = useState(false);

@@ -12,8 +12,7 @@ import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { ClientSentMessages } from '../../../types';
 
 import messageSearchReducer from './dux/reducers';
-import messageSearchInitialState from './dux/initialState';
-import { State as MessageSearchReducerState } from './dux/initialState';
+import messageSearchInitialState, { State as MessageSearchReducerState } from './dux/initialState';
 
 import useSetChannel from './hooks/useSetChannel';
 import useGetSearchMessages from './hooks/useGetSearchedMessages';
@@ -50,7 +49,7 @@ interface MessageSearchProviderInterface extends MessageSearchProviderProps {
   handleOnScroll: (e: React.BaseSyntheticEvent) => void;
 }
 
-const MessageSearchContext = React.createContext<MessageSearchProviderInterface|null>(undefined);
+const MessageSearchContext = React.createContext<MessageSearchProviderInterface | null>(undefined);
 
 const MessageSearchProvider: React.FC<MessageSearchProviderProps> = (props: MessageSearchProviderProps) => {
   const {

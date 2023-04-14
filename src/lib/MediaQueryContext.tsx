@@ -45,10 +45,10 @@ const MediaQueryProvider = (props: MediaQueryProviderProps): React.ReactElement 
       if (typeof mediaQueryBreakPoint === 'boolean') {
         setIsMobile(mediaQueryBreakPoint);
         if (mediaQueryBreakPoint) {
-          logger?.info?.(`MediaQueryProvider: isMobile: true`);
+          logger?.info?.('MediaQueryProvider: isMobile: true');
           addClassNameToBody();
         } else {
-          logger?.info?.(`MediaQueryProvider: isMobile: false`);
+          logger?.info?.('MediaQueryProvider: isMobile: false');
           removeClassNameFromBody();
         }
       } else {
@@ -57,20 +57,20 @@ const MediaQueryProvider = (props: MediaQueryProviderProps): React.ReactElement 
         if (mq.matches) {
           setIsMobile(true);
           addClassNameToBody();
-          logger?.info?.(`MediaQueryProvider: isMobile: true`);
+          logger?.info?.('MediaQueryProvider: isMobile: true');
         } else {
           setIsMobile(false);
           removeClassNameFromBody();
-          logger?.info?.(`MediaQueryProvider: isMobile: false`);
+          logger?.info?.('MediaQueryProvider: isMobile: false');
         }
       }
     }
     updateSize();
     window.addEventListener('resize', updateSize);
-    logger?.info?.(`MediaQueryProvider: addEventListener`, updateSize);
+    logger?.info?.('MediaQueryProvider: addEventListener', updateSize);
     return () => {
       window.removeEventListener('resize', updateSize);
-      logger?.info?.(`MediaQueryProvider: removeEventListener`, updateSize);
+      logger?.info?.('MediaQueryProvider: removeEventListener', updateSize);
     }
   }, [mediaQueryBreakPoint]);
   return (

@@ -25,7 +25,7 @@ const prepareMockParams = () => {
     current: {
       scrollTop: 0,
       scrollHeight: 0,
-      clientHeight: 0
+      clientHeight: 0,
     },
   } as React.RefObject<HTMLDivElement>;
   return {
@@ -104,7 +104,7 @@ describe('useHandleOnScrollCallback', () => {
     const event = prepareMockScrollEvent({
       clientHeight: 723,
       scrollHeight: 1174,
-      scrollTop: 0
+      scrollTop: 0,
     });
     // @ts-ignore
     const scrollBottom = calcScrollBottom(event.target.scrollHeight, event.target.scrollTop);
