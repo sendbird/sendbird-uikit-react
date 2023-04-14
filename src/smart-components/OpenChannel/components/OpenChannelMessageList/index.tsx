@@ -11,9 +11,10 @@ import { compareMessagesForGrouping } from '../../context/utils';
 import { useOpenChannelContext } from '../../context/OpenChannelProvider';
 import OpenChannelMessage from '../OpenChannelMessage';
 import { RenderMessageProps } from '../../../../types';
-import { useHandleOnScrollCallback } from './useHandleOnScrollCallback';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
+
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 
 export type OpenchannelMessageListProps = {
   renderMessage?: (props: RenderMessageProps) => React.ElementType<RenderMessageProps>;

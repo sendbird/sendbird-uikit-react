@@ -16,6 +16,7 @@ import { EveryMessage } from '../../../..';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { UserMessage } from '@sendbird/chat/message';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
+import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback'
 
 export interface MessageListProps {
   className?: string;
@@ -55,6 +56,8 @@ const MessageList: React.FC<MessageListProps> = ({
   } = useChannelContext();
   const store = useSendbirdStateContext();
   const [scrollBottom, setScrollBottom] = useState(0);
+  const [showScrollDownButton, setShowScrollDownButton] = useState(false);
+
   const allMessagesFiltered = (typeof filterMessageList === 'function')
     ? allMessages.filter((filterMessageList as (message: EveryMessage) => boolean))
     : allMessages;
@@ -124,15 +127,12 @@ const MessageList: React.FC<MessageListProps> = ({
     }
   };
 
-  const handleScroll = () => {
-    const current = scrollRef?.current;
-    if (current) {
-      const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
-      if (scrollBottom < bottom && scrollBottom <= SCROLL_BUFFER) {
-        current.scrollTop += bottom - scrollBottom;
-      }
-    }
-  };
+  const handleOnScroll = useHandleOnScrollCallback({
+    setShowScrollDownButton,
+    hasMore: hasMorePrev,
+    onScroll,
+    scrollRef,
+  });
 
   if (loading) {
     return (typeof renderPlaceholderLoader === 'function')
@@ -171,7 +171,7 @@ const MessageList: React.FC<MessageListProps> = ({
             return (
               <MessageProvider message={m} key={m?.messageId} isByMe={isByMe}>
                 <Message
-                  handleScroll={handleScroll}
+                  handleScroll={handleOnScroll}
                   renderMessage={renderMessage}
                   message={m}
                   hasSeparator={hasSeparator}
@@ -211,7 +211,7 @@ const MessageList: React.FC<MessageListProps> = ({
       />
       {
         // This flag is an unmatched variable
-        (scrollBottom > 1) && (
+        showScrollDownButton && (
           <div
             className="sendbird-conversation__scroll-bottom-button"
             onClick={onClickScrollBot}

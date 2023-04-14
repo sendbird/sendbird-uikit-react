@@ -1,5 +1,5 @@
-import { useHandleOnScrollCallback, calcScrollBottom } from '../useHandleOnScrollCallback';
 import { renderHook } from '@testing-library/react';
+import { useHandleOnScrollCallback, calcScrollBottom } from '../index';
 
 const prepareMockScrollEvent = ({
   scrollTop = 0,
