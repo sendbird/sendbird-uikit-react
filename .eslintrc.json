@@ -23,7 +23,8 @@
           ".js",
           ".jsx",
           ".ts",
-          ".tsx"
+          ".tsx",
+          ".d.ts"
         ]
       }
     }
@@ -34,18 +35,16 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-expressions": "error",
     "react/display-name": "off",
-    "import/extensions": "off",
-    // TODO(Ahyoung): uncomment below after find a way not to get an error \w type.d.ts
-    // "import/extensions": [
-    //   "warn",
-    //   "ignorePackages",
-    //   {
-    //     "js": "never",
-    //     "jsx": "never",
-    //     "ts": "never",
-    //     "tsx": "never"
-    //   }
-    // ],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
     // TODO(Ahyoung): fix and remove one by one
     "no-floating-decimal": "off",
     "no-shadow": "off",
