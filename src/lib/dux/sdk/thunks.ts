@@ -5,19 +5,18 @@ import { OpenChannelModule } from '@sendbird/chat/openChannel';
 import { GroupChannelModule } from '@sendbird/chat/groupChannel';
 
 import { SDK_ACTIONS, SdkActionTypes } from './actionTypes';
-/* eslint-disable-next-line import/named */
-import userStoreActionTypes, { UserStoreActionTypes } from '../user/actionTypes';
+import { USER_ACTIONS, UserActionTypes } from '../user/actionTypes';
 import { isTextuallyNull } from '../../../utils';
 import { Logger } from '../../SendbirdState';
 
 const { INIT_SDK, SET_SDK_LOADING, RESET_SDK, SDK_ERROR } = SDK_ACTIONS;
-const { INIT_USER, UPDATE_USER_INFO, RESET_USER } = userStoreActionTypes;
+const { INIT_USER, UPDATE_USER_INFO, RESET_USER } = USER_ACTIONS;
 const APP_VERSION_STRING = '__uikit_app_version__';
 const IS_ROLLUP = '__is_rollup__';
 const IS_ROLLUP_REPLACE = '__is_rollup_replace__';
 
 type SdkDispatcher = React.Dispatch<SdkActionTypes>;
-type UserDispatcher = React.Dispatch<{ type: UserStoreActionTypes, payload?: any }>;
+type UserDispatcher = React.Dispatch<{ type: UserActionTypes, payload?: any }>;
 type Dispatchers = { sdkDispatcher: SdkDispatcher, userDispatcher: UserDispatcher };
 
 interface DisconnectSdkProps {
@@ -55,9 +54,9 @@ interface HandleConnectionProps {
   nickname: string;
   profileUrl: string;
   accessToken: string;
-  configureSession: (sdk: SendbirdChat) => SessionHandler;
-  customApiHost: string;
-  customWebSocketHost: string;
+  configureSession?: (sdk: SendbirdChat) => SessionHandler;
+  customApiHost?: string;
+  customWebSocketHost?: string;
   sdk: SendbirdChat;
   logger: Logger;
 }

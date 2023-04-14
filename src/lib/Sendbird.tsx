@@ -2,9 +2,8 @@ import './index.scss';
 import './__experimental__typography.scss';
 
 import React, { useEffect, useReducer, useState } from 'react';
-import { User } from '@sendbird/chat';
+import SendbirdChat, { User, SessionHandler } from '@sendbird/chat';
 
-import { SendbirdSdkContext } from './SendbirdSdkContext';
 import { handleConnection } from './dux/sdk/thunks';
 
 import useTheme from './hooks/useTheme';
@@ -16,7 +15,7 @@ import userInitialState from './dux/user/initialState';
 
 import useOnlineStatus from './hooks/useOnlineStatus';
 
-import { LoggerFactory } from './Logger';
+import { LoggerFactory, LogLevel } from './Logger';
 import pubSubFactory from './pubSub/index';
 import useAppendDomNode from '../hooks/useAppendDomNode';
 
@@ -26,6 +25,7 @@ import { MediaQueryProvider } from './MediaQueryContext';
 import getStringSet from '../ui/Label/stringSet';
 import { VOICE_RECORDER_DEFAULT_MAX, VOICE_RECORDER_DEFAULT_MIN } from '../utils/consts';
 import { useMarkAsReadScheduler } from './hooks/useMarkAsReadScheduler';
+import { SendbirdSdkContext } from './SendbirdSdkContext';
 
 export type UserListQueryType = {
   hasNext?: boolean;
@@ -60,7 +60,7 @@ export interface SendbirdProviderProps {
   accessToken?: string;
   customApiHost?: string;
   customWebSocketHost?: string;
-  configureSession?: () => void;
+  configureSession?: (sdk: SendbirdChat) => SessionHandler;
   theme?: 'light' | 'dark';
   config?: SendbirdConfig;
   nickname?: string;
@@ -83,6 +83,7 @@ export interface SendbirdProviderProps {
   renderUserProfile?: () => React.ReactElement;
   onUserProfileMessage?: () => void;
 }
+
 
 const Sendbird = ({
   appId,
@@ -121,7 +122,7 @@ const Sendbird = ({
     userMention = {},
     isREMUnitEnabled = false,
   } = config;
-  const [logger, setLogger] = useState(LoggerFactory(logLevel));
+  const [logger, setLogger] = useState(LoggerFactory(logLevel as LogLevel));
   const [pubSub] = useState(pubSubFactory());
   const [sdkStore, sdkDispatcher] = useReducer(sdkReducers, sdkInitialState);
   const [userStore, userDispatcher] = useReducer(userReducers, userInitialState);
@@ -135,7 +136,6 @@ const Sendbird = ({
       userId,
       appId,
       accessToken,
-      sdkStore,
       nickname,
       profileUrl,
       configureSession,
@@ -151,7 +151,7 @@ const Sendbird = ({
 
   // to create a pubsub to communicate between parent and child
   useEffect(() => {
-    setLogger(LoggerFactory(logLevel));
+    setLogger(LoggerFactory(logLevel as LogLevel));
   }, [logLevel]);
 
   useAppendDomNode([
@@ -225,7 +225,6 @@ const Sendbird = ({
               userId,
               appId,
               accessToken,
-              sdkStore,
               nickname,
               profileUrl,
               logger,

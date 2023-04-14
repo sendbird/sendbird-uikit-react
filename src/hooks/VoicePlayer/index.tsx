@@ -23,7 +23,7 @@ import useSendbirdStateContext from '../useSendbirdStateContext';
 
 // VoicePlayerProvider interface
 export interface VoicePlayerProps {
-  children: React.ReactElement;
+  children?: React.ReactElement;
 }
 export interface VoicePlayerPlayProps {
   groupKey: string;

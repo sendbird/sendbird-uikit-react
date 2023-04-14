@@ -10,9 +10,9 @@ const MediaQueryContext = React.createContext({
 });
 
 export interface MediaQueryProviderProps {
-  children: React.ReactElement;
   mediaQueryBreakPoint?: string | boolean;
   logger?: Logger;
+  children?: React.ReactElement;
 }
 
 const addClassNameToBody = () => {

@@ -10,7 +10,7 @@ import useSendbirdStateContext from '../useSendbirdStateContext';
 
 // Input props of VoiceRecorder
 export interface VoiceRecorderProps {
-  children: React.ReactElement;
+  children?: React.ReactElement;
 }
 
 export interface VoiceRecorderEventHandler {

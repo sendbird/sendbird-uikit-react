@@ -12,7 +12,7 @@ const LocalizationContext = React.createContext({
 interface LocalizationProviderProps {
   stringSet: Record<string, string>;
   dateLocale: Locale;
-  children: React.ReactElement;
+  children?: React.ReactElement;
 }
 
 const LocalizationProvider = (props: LocalizationProviderProps): React.ReactElement => {

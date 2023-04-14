@@ -3,13 +3,13 @@ import { VoicePlayerProvider } from '../hooks/VoicePlayer';
 import { VoiceRecorderProvider } from '../hooks/VoiceRecorder';
 
 export interface VoiceMessageProviderProps {
-  children: React.ReactElement;
   isVoiceMessageEnabled?: boolean;
+  children?: React.ReactElement;
 }
 
 export const VoiceMessageProvider = ({
-  children,
   isVoiceMessageEnabled = true,
+  children,
 }: VoiceMessageProviderProps): React.ReactElement => {
   if (!isVoiceMessageEnabled) {
     return (
