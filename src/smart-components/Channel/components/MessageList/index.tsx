@@ -55,7 +55,6 @@ const MessageList: React.FC<MessageListProps> = ({
     unreadSince,
   } = useChannelContext();
   const store = useSendbirdStateContext();
-  const [scrollBottom, setScrollBottom] = useState(0);
   const [showScrollDownButton, setShowScrollDownButton] = useState(false);
 
   const allMessagesFiltered = (typeof filterMessageList === 'function')
@@ -101,12 +100,6 @@ const MessageList: React.FC<MessageListProps> = ({
           }
         }
       });
-    }
-
-    // Save the lastest scroll bottom value
-    if (scrollRef?.current) {
-      const current = scrollRef?.current;
-      setScrollBottom(current.scrollHeight - current.scrollTop - current.offsetHeight)
     }
 
     if (!disableMarkAsRead && isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER)) {
