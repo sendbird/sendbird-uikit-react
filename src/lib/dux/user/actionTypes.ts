@@ -1,4 +1,4 @@
-import { CreateAction } from "../../../utils/typeHelpers/reducers/CreateAction";
+import { CreateAction } from '../../../utils/typeHelpers/reducers/CreateAction';
 
 export const INIT_USER = 'INIT_USER';
 export const RESET_USER = 'RESET_USER';

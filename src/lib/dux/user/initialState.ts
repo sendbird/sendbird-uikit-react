@@ -1,4 +1,4 @@
-import { User } from "@sendbird/chat";
+import { User } from '@sendbird/chat';
 
 export interface UserStoreStateType {
   initialized: boolean;

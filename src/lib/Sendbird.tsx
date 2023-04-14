@@ -7,7 +7,6 @@ import SendbirdChat, { User, SessionHandler } from '@sendbird/chat';
 import { handleConnection } from './dux/sdk/thunks';
 
 import useTheme from './hooks/useTheme';
-
 import sdkReducers from './dux/sdk/reducers';
 import userReducers from './dux/user/reducers';
 import sdkInitialState from './dux/sdk/initialState';
@@ -83,7 +82,6 @@ export interface SendbirdProviderProps {
   renderUserProfile?: () => React.ReactElement;
   onUserProfileMessage?: () => void;
 }
-
 
 const Sendbird = ({
   appId,

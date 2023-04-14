@@ -1,7 +1,7 @@
-import { USER_ACTIONS } from './actionTypes';
-import initialState from './initialState';
+import { UserActionTypes, USER_ACTIONS } from './actionTypes';
+import initialState, { UserStoreStateType } from './initialState';
 
-export default function reducer(state, action) {
+export default function reducer(state: UserStoreStateType, action: UserActionTypes): UserStoreStateType {
   switch (action.type) {
     case USER_ACTIONS.INIT_USER:
       return {
