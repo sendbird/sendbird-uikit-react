@@ -16,7 +16,7 @@ const IS_ROLLUP = '__is_rollup__';
 const IS_ROLLUP_REPLACE = '__is_rollup_replace__';
 
 type SdkDispatcher = React.Dispatch<SdkActionTypes>;
-type UserDispatcher = React.Dispatch<{ type: UserActionTypes, payload?: any }>;
+type UserDispatcher = React.Dispatch<UserActionTypes>;
 type Dispatchers = { sdkDispatcher: SdkDispatcher, userDispatcher: UserDispatcher };
 
 interface DisconnectSdkProps {
