@@ -22,5 +22,5 @@ export default function reducer(state: UserStoreStateType, action: UserActionTyp
     })
     .otherwise(() => {
       return state;
-    }) as UserStoreStateType;
+    });
 }

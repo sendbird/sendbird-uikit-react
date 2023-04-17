@@ -32,5 +32,5 @@ export default function reducer(state: SdkStoreStateType, action: SdkActionTypes
     })
     .otherwise(() => {
       return state;
-    }) as SdkStoreStateType;
+    });
 }
