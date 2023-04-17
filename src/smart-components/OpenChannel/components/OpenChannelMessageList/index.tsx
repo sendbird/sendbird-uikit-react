@@ -12,7 +12,6 @@ import { useOpenChannelContext } from '../../context/OpenChannelProvider';
 import OpenChannelMessage from '../OpenChannelMessage';
 import { RenderMessageProps } from '../../../../types';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
-
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 

@@ -32,7 +32,7 @@ type MessageUIProps = {
   hasSeparator?: boolean;
   chainTop?: boolean;
   chainBottom?: boolean;
-  handleScroll: (event: React.UIEvent<HTMLElement>) => void;
+  handleScroll: () => void;
   // for extending
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;

@@ -51,10 +51,8 @@ const MessageList: React.FC<MessageListProps> = ({
     loading,
     unreadSince,
   } = useChannelContext();
-
   const store = useSendbirdStateContext();
   const [scrollBottom, setScrollBottom] = useState(0);
-
   const allMessagesFiltered = (typeof filterMessageList === 'function')
     ? allMessages.filter((filterMessageList as (message: EveryMessage) => boolean))
     : allMessages;
@@ -105,6 +103,16 @@ const MessageList: React.FC<MessageListProps> = ({
     }
   };
 
+  const handleScroll = () => {
+    const current = scrollRef?.current;
+    if (current) {
+      const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
+      if (scrollBottom < bottom && scrollBottom <= SCROLL_BUFFER) {
+        current.scrollTop += bottom - scrollBottom;
+      }
+    }
+  };
+
   const handleOnScroll = useHandleOnScrollCallback({
     hasMore: hasMorePrev,
     onScroll,
@@ -122,17 +130,6 @@ const MessageList: React.FC<MessageListProps> = ({
     }
     return <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />;
   }
-
-  const handleScroll = () => {
-    const current = scrollRef?.current;
-    if (current) {
-      const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
-      if (scrollBottom < bottom && scrollBottom <= SCROLL_BUFFER) {
-        current.scrollTop += bottom - scrollBottom;
-      }
-    }
-  };
-
   return (
     <div className={`sendbird-conversation__messages ${className}`}>
       <div className="sendbird-conversation__scroll-container">

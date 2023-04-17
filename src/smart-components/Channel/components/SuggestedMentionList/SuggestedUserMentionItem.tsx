@@ -30,7 +30,6 @@ function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Ele
   } = props;
   const scrollRef = useRef(null);
   const { stringSet = {} } = useContext(LocalizationContext);
-
   useEffect(() => {
     if (isFocused
       && (parentScrollRef?.current?.scrollTop >= scrollRef?.current?.offsetTop
@@ -39,7 +38,6 @@ function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Ele
       scrollRef?.current?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
     }
   }, [isFocused]);
-
   const customMentionItem = useMemo(() => {
     if (renderUserMentionItem) {
       return (
