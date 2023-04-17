@@ -26,8 +26,6 @@ export interface MessageListProps {
   renderPlaceholderLoader?: () => React.ReactElement;
 }
 
-const SCROLL_REF_CLASS_NAME = '.sendbird-msg--scroll-ref';
-
 const MessageList: React.FC<MessageListProps> = ({
   className = '',
   renderMessage,
@@ -43,7 +41,6 @@ const MessageList: React.FC<MessageListProps> = ({
     setHighLightedMessageId,
     isMessageGroupingEnabled,
     scrollRef,
-    onScrollCallback,
     onScrollDownCallback,
     messagesDispatcher,
     messageActionTypes,
@@ -54,8 +51,9 @@ const MessageList: React.FC<MessageListProps> = ({
     loading,
     unreadSince,
   } = useChannelContext();
+
   const store = useSendbirdStateContext();
-  const [showScrollDownButton, setShowScrollDownButton] = useState(false);
+  const [scrollBottom, setScrollBottom] = useState(0);
 
   const allMessagesFiltered = (typeof filterMessageList === 'function')
     ? allMessages.filter((filterMessageList as (message: EveryMessage) => boolean))
@@ -70,25 +68,6 @@ const MessageList: React.FC<MessageListProps> = ({
       scrollHeight,
     } = element;
 
-    if (scrollTop === 0) {
-      if (!hasMorePrev) {
-        return;
-      }
-      const nodes = scrollRef.current.querySelectorAll(SCROLL_REF_CLASS_NAME);
-      const first = nodes && nodes[0];
-      onScrollCallback(([messages]) => {
-        if (messages) {
-          // https://github.com/scabbiaza/react-scroll-position-on-updating-dom
-          // Set block to nearest to prevent unexpected scrolling from outer components
-          try {
-            first.scrollIntoView({ block: 'start', inline: 'nearest' });
-          } catch (error) {
-            //
-          }
-        }
-      });
-    }
-
     if (isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER)) {
       onScrollDownCallback(([messages]) => {
         if (messages) {
@@ -100,6 +79,12 @@ const MessageList: React.FC<MessageListProps> = ({
           }
         }
       });
+    }
+
+    // Save the lastest scroll bottom value
+    if (scrollRef?.current) {
+      const current = scrollRef?.current;
+      setScrollBottom(current.scrollHeight - current.scrollTop - current.offsetHeight)
     }
 
     if (!disableMarkAsRead && isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER)) {
@@ -121,7 +106,6 @@ const MessageList: React.FC<MessageListProps> = ({
   };
 
   const handleOnScroll = useHandleOnScrollCallback({
-    setShowScrollDownButton,
     hasMore: hasMorePrev,
     onScroll,
     scrollRef,
@@ -138,6 +122,17 @@ const MessageList: React.FC<MessageListProps> = ({
     }
     return <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />;
   }
+
+  const handleScroll = () => {
+    const current = scrollRef?.current;
+    if (current) {
+      const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
+      if (scrollBottom < bottom && scrollBottom <= SCROLL_BUFFER) {
+        current.scrollTop += bottom - scrollBottom;
+      }
+    }
+  };
+
   return (
     <div className={`sendbird-conversation__messages ${className}`}>
       <div className="sendbird-conversation__scroll-container">
@@ -145,7 +140,7 @@ const MessageList: React.FC<MessageListProps> = ({
         <div
           className="sendbird-conversation__messages-padding"
           ref={scrollRef}
-          onScroll={onScroll}
+          onScroll={handleOnScroll}
         >
           {allMessagesFiltered.map((m, idx) => {
             const {
@@ -164,7 +159,7 @@ const MessageList: React.FC<MessageListProps> = ({
             return (
               <MessageProvider message={m} key={m?.messageId} isByMe={isByMe}>
                 <Message
-                  handleScroll={handleOnScroll}
+                  handleScroll={handleScroll}
                   renderMessage={renderMessage}
                   message={m}
                   hasSeparator={hasSeparator}
@@ -204,7 +199,7 @@ const MessageList: React.FC<MessageListProps> = ({
       />
       {
         // This flag is an unmatched variable
-        showScrollDownButton && (
+        scrollBottom > 1 && (
           <div
             className="sendbird-conversation__scroll-bottom-button"
             onClick={onClickScrollBot}

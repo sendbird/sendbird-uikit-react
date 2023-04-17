@@ -25,6 +25,7 @@ import RemoveMessageModal from '../RemoveMessageModal';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { useLocalization } from '../../../../lib/LocalizationContext';
+import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback'
 
 type MessageUIProps = {
   message: EveryMessage;
@@ -84,6 +85,7 @@ const Message = ({
     onQuoteMessageClick,
     onMessageAnimated,
     onMessageHighlighted,
+    onScrollCallback,
   } = useChannelContext();
   const [showEdit, setShowEdit] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
@@ -108,6 +110,12 @@ const Message = ({
     || isDisabledBecauseFrozen(currentGroupChannel)
     || isDisabledBecauseMuted(currentGroupChannel)
     || !isOnline;
+
+  const handleOnScroll = useHandleOnScrollCallback({
+    hasMore: false,
+    onScroll: onScrollCallback,
+    scrollRef: messageScrollRef,
+  });
 
   useEffect(() => {
     if (mentionedUsers?.length >= maxUserMentionCount) {
@@ -139,7 +147,7 @@ const Message = ({
     let animationTimeout = null;
     let messageHighlightedTimeout = null;
     if (highLightedMessageId === message.messageId && messageScrollRef?.current) {
-      messageScrollRef.current.scrollIntoView({ block: 'center', inline: 'center' });
+      handleOnScroll();
       setIsAnimated(false);
       animationTimeout = setTimeout(() => {
         setIsHighlighted(true);
@@ -161,7 +169,7 @@ const Message = ({
     let animationTimeout = null;
     let messageAnimatedTimeout = null;
     if (animatedMessageId === message.messageId && messageScrollRef?.current) {
-      messageScrollRef.current.scrollIntoView({ block: 'center', inline: 'center' });
+      handleOnScroll();
       setIsHighlighted(false);
       animationTimeout = setTimeout(() => {
         setIsAnimated(true);
