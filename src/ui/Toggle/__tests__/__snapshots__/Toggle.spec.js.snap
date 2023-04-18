@@ -2,7 +2,9 @@
 
 exports[`Toggle should do a snapshot test of the Toggle DOM 1`] = `
 <DocumentFragment>
-  <div>
+  <div
+    class="sendbird-ui-toggle undefined"
+  >
     <label
       class="sendbird-input-toggle-button  --unchecked"
       style="width: 40px; height: 20px; border-radius: 12px;"
