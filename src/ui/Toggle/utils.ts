@@ -1,4 +1,4 @@
-export function filterNumber(str: string = ''): Array<number> {
+export function filterNumber(str: string): Array<number> {
   if (typeof str === 'number') {
     return [str];
   } else if (typeof str !== 'string') {
