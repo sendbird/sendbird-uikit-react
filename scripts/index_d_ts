@@ -1,3 +1,5 @@
+import { ChangeEventHandler } from 'react';
+
 /**
  * Type Definitions for @sendbird/uikit-react@{{ version }}
  * homepage: https://sendbird.com/
@@ -2468,6 +2470,37 @@ declare module '@sendbird/uikit-react/ui/ThumbnailMessageItemBody' {
   }
   const ThumbnailMessageItemBody: React.FC<ThumbnailMessageItemBodyProps>;
   export default ThumbnailMessageItemBody;
+}
+
+declare module '@sendbird/uikit-react/ui/Toggle' {
+  export interface ToggleContextInterface {
+    checked?: boolean;
+    defaultChecked?: boolean;
+    disabled?: boolean;
+    reversed?: boolean;
+    onChange?: ChangeEventHandler<HTMLInputElement>;
+    onFocus?: ChangeEventHandler<HTMLInputElement>;
+    onBlur?: ChangeEventHandler<HTMLInputElement>;
+  }
+  export interface ToggleContainerProps extends ToggleContextInterface {
+    children?: React.ReactElement;
+  }
+  export interface ToggleUIProps {
+    className?: string;
+    width?: string;
+    animationDuration?: string;
+    style?: Record<string, string>;
+    name?: string;
+    id?: string;
+    ariaLabel?: string;
+    ariaLabelledby?: string;
+  }
+  export interface ToggleProps extends ToggleContainerProps, ToggleUIProps {}
+  
+  export const Toggle: React.FC<ToggleProps>;
+  export const ToggleContainer: React.FC<ToggleContainerProps>;
+  export const ToggleUI: React.FC<ToggleUIProps>;
+  export function useToggleContext(): ToggleContextInterface;
 }
 
 declare module '@sendbird/uikit-react/ui/Tooltip' {

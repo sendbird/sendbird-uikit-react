@@ -1,0 +1,82 @@
+@import '../../styles/variables';
+
+.sendbird-input-toggle-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+
+  box-shadow: 2px solid red;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.sendbird-input-toggle-button.--checked {
+  @include themed() {
+    background-color: t(primary-3);
+    border: 1px solid t(primary-3);
+  }
+}
+.sendbird-input-toggle-button.--unchecked {
+  @include themed() {
+    background-color: t(bg-3);
+    border: 1px solid t(bg-3);
+  }
+}
+.sendbird-input-toggle-button.--disabled {
+  cursor: not-allowed;
+  @include themed() {
+    background-color: t(bg-2);
+    border: 1px solid t(bg-2);
+  }
+}
+
+.sendbird-input-toggle-button input {
+  position: absolute;
+  display: none;
+}
+
+.sendbird-input-toggle-button__inner-dot {
+  position: absolute;
+  border-radius: 50%;
+  @include themed() {
+    background-color: t(bg-0);
+  }
+  animation-iteration-count: 1;
+}
+
+/* Manage animation and position by status */
+@keyframes moveToRight {
+  0% { right: 60%; }
+  100% { right: 10%; }
+}
+@keyframes moveToLeft {
+  0% { right: 10%; }
+  100% { right: 60%; }
+}
+// normal - animation
+.sendbird-input-toggle-button.--turned-on .sendbird-input-toggle-button__inner-dot {
+  animation-name: moveToRight;
+}
+.sendbird-input-toggle-button.--turned-off .sendbird-input-toggle-button__inner-dot {
+  animation-name: moveToLeft;
+}
+// reverse - animation
+.sendbird-input-toggle-button.--reversed.--turned-on .sendbird-input-toggle-button__inner-dot {
+  animation-name: moveToLeft;
+}
+.sendbird-input-toggle-button.--reversed.--turned-off .sendbird-input-toggle-button__inner-dot {
+  animation-name: moveToRight;
+}
+// normal - position
+.sendbird-input-toggle-button.--unchecked .sendbird-input-toggle-button__inner-dot {
+  right: 60%;
+}
+.sendbird-input-toggle-button.--checked .sendbird-input-toggle-button__inner-dot {
+  right: 10%;
+}
+// reverse - position
+.sendbird-input-toggle-button.--unchecked.--reversed .sendbird-input-toggle-button__inner-dot {
+  right: 10%;
+}
+.sendbird-input-toggle-button.--checked.--reversed .sendbird-input-toggle-button__inner-dot {
+  right: 60%;
+}
