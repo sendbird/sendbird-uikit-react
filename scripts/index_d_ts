@@ -2486,7 +2486,6 @@ declare module '@sendbird/uikit-react/ui/Toggle' {
     children?: React.ReactElement;
   }
   export interface ToggleUIProps {
-    className?: string;
     width?: string;
     animationDuration?: string;
     style?: Record<string, string>;
@@ -2495,8 +2494,9 @@ declare module '@sendbird/uikit-react/ui/Toggle' {
     ariaLabel?: string;
     ariaLabelledby?: string;
   }
-  export interface ToggleProps extends ToggleContainerProps, ToggleUIProps {}
-  
+  export interface ToggleProps extends ToggleContainerProps, ToggleUIProps {
+    className?: string;
+  }
   export const Toggle: React.FC<ToggleProps>;
   export const ToggleContainer: React.FC<ToggleContainerProps>;
   export const ToggleUI: React.FC<ToggleUIProps>;

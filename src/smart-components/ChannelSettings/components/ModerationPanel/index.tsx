@@ -15,6 +15,7 @@ Label, {
 } from '../../../../ui/Label';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import Badge from '../../../../ui/Badge';
+import Toggle from '../../../../ui/Toggle';
 
 import OperatorList from './OperatorList';
 import MemberList from './MemberList';
@@ -171,37 +172,21 @@ export default function AdminPannel(): ReactElement {
             >
               {stringSet.CHANNEL_SETTING__FREEZE_CHANNEL}
             </Label>
-            <div className="sendbird-channel-settings__frozen-icon">
-              {
-                frozen
-                  ? (
-                    <Icon
-                      onClick={() => {
-                        channel?.unfreeze().then(() => {
-                          setFrozen(false);
-                        });
-                      }}
-                      type={IconTypes.TOGGLE_ON}
-                      fillColor={IconColors.PRIMARY}
-                      width={44}
-                      height={24}
-                    />
-                  )
-                  : (
-                    <Icon
-                      onClick={() => {
-                        channel?.freeze().then(() => {
-                          setFrozen(true);
-                        });
-                      }}
-                      type={IconTypes.TOGGLE_OFF}
-                      fillColor={IconColors.PRIMARY}
-                      width={44}
-                      height={24}
-                    />
-                  )
-              }
-            </div>
+            <Toggle
+              className="sendbird-channel-settings__frozen-icon"
+              checked={frozen}
+              onChange={() => {
+                if (frozen) {
+                  channel?.unfreeze().then(() => {
+                    setFrozen((prev) => !prev);
+                  });
+                } else {
+                  channel?.freeze().then(() => {
+                    setFrozen((prev) => !prev);
+                  });
+                }
+              }}
+            />
           </div>
         )
       }

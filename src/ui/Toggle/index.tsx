@@ -20,7 +20,9 @@ export const ToggleUI = _ToggleUI;
 export type ToggleUIProps = _ToggleUIProps;
 
 // export - Toggle
-export interface ToggleProps extends _ToggleContainerProps, _ToggleUIProps {}
+export interface ToggleProps extends _ToggleContainerProps, _ToggleUIProps {
+  className?: string;
+}
 export default function Toggle(props: ToggleProps): React.ReactElement {
   const {
     // ToggleProvider
@@ -43,25 +45,26 @@ export default function Toggle(props: ToggleProps): React.ReactElement {
     ariaLabelledby,
   } = props;
   return (
-    <ToggleContainer
-      checked={checked}
-      defaultChecked={defaultChecked}
-      disabled={disabled}
-      reversed={reversed}
-      onChange={onChange}
-      onFocus={onFocus}
-      onBlur={onBlur}
-    >
-      <ToggleUI
-        className={className}
-        width={width}
-        animationDuration={animationDuration}
-        style={style}
-        name={name}
-        id={id}
-        ariaLabel={ariaLabel}
-        ariaLabelledby={ariaLabelledby}
-      />
-    </ToggleContainer>
+    <div className={className}>
+      <ToggleContainer
+        checked={checked}
+        defaultChecked={defaultChecked}
+        disabled={disabled}
+        reversed={reversed}
+        onChange={onChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      >
+        <ToggleUI
+          width={width}
+          animationDuration={animationDuration}
+          style={style}
+          name={name}
+          id={id}
+          ariaLabel={ariaLabel}
+          ariaLabelledby={ariaLabelledby}
+        />
+      </ToggleContainer>
+    </div>
   );
 }

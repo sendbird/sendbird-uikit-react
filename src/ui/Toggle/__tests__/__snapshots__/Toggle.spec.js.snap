@@ -2,21 +2,23 @@
 
 exports[`Toggle should do a snapshot test of the Toggle DOM 1`] = `
 <DocumentFragment>
-  <label
-    class="sendbird-input-toggle-button  --unchecked"
-    style="width: 40px; height: 20px; border-radius: 12px;"
-  >
-    <div
-      class="sendbird-input-toggle-button__inner-dot sendbird-input-toggle-button__inner-dot--inactivate"
-      style="width: 12px; height: 12px; animation-duration: 0.5s;"
-    />
-    <input
-      aria-label=""
-      aria-labelledby=""
-      id=""
-      name=""
-      type="checkbox"
-    />
-  </label>
+  <div>
+    <label
+      class="sendbird-input-toggle-button  --unchecked"
+      style="width: 40px; height: 20px; border-radius: 12px;"
+    >
+      <div
+        class="sendbird-input-toggle-button__inner-dot sendbird-input-toggle-button__inner-dot--inactivate"
+        style="width: 12px; height: 12px; animation-duration: 0.5s;"
+      />
+      <input
+        aria-label=""
+        aria-labelledby=""
+        id=""
+        name=""
+        type="checkbox"
+      />
+    </label>
+  </div>
 </DocumentFragment>
 `;

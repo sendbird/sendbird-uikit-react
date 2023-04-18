@@ -3,7 +3,6 @@ import { useToggleContext } from './ToggleContext';
 import { filterNumber } from './utils';
 
 export interface ToggleUIProps {
-  className?: string;
   width?: string;
   animationDuration?: string;
   style?: Record<string, string>;
@@ -15,7 +14,6 @@ export interface ToggleUIProps {
 
 export function ToggleUI(props: ToggleUIProps): React.ReactElement {
   const {
-    className = '',
     width = '40px',
     animationDuration = '0.5s',
     style = {},
@@ -51,7 +49,6 @@ export function ToggleUI(props: ToggleUIProps): React.ReactElement {
     <label
       className={[
         'sendbird-input-toggle-button',
-        className || [],
         animatedClassName,
         checked ? '--checked' : '--unchecked',
         disabled ? '--disabled' : [],
