@@ -24,15 +24,23 @@ export const versionInfo = () => {
   return (
     <>
       <div>UIKit: {pkg.version}</div>
-      <div>Sendbird SDK: {pkg.dependencies['@sendbird/chat'].version}</div>
+      <div>Sendbird SDK: {pkg.dependencies['@sendbird/chat']}</div>
       <button onClick={() => { setshowAll(!showAll) }}>Show all</button>
       {
         showAll && (
           <div>
+            <p>dependencies</p>
             {
               Object.keys(pkg.dependencies)
                 .map((p) => (
-                  <div key={p}>{p}: {pkg.dependencies[p].version}</div>
+                  <div key={p}>{p}: {pkg.dependencies[p]}</div>
+                ))
+            }
+            <p>Dev-dependencies</p>
+            {
+              Object.keys(pkg.devDependencies)
+                .map((p) => (
+                  <div key={p}>{p}: {pkg.devDependencies[p]}</div>
                 ))
             }
           </div>
