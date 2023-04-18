@@ -129,7 +129,7 @@ const Sendbird = ({
 
   useTheme(colorSet);
 
-  useConnect({
+  const reconnect = useConnect({
     appId,
     userId,
     accessToken,
@@ -216,22 +216,7 @@ const Sendbird = ({
         dispatchers: {
           sdkDispatcher,
           userDispatcher,
-          reconnect: () => {
-            connect({
-              appId,
-              userId,
-              accessToken,
-              logger,
-              nickname,
-              profileUrl,
-              configureSession,
-              customApiHost,
-              customWebSocketHost,
-              sdk: sdkStore?.sdk,
-              sdkDispatcher,
-              userDispatcher,
-            });
-          },
+          reconnect,
         },
         config: {
           disableUserProfile,

@@ -38,3 +38,5 @@ export type DisconnectSdkTypes = {
   sdk: SendbirdChat;
   logger: Logger;
 }
+
+export type ReconnectType = () => void;
