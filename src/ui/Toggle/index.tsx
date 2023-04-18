@@ -45,8 +45,8 @@ export default function Toggle(props: ToggleProps): React.ReactElement {
     ariaLabelledby,
   } = props;
   return (
-    <div className={className}>
-      <ToggleContainer
+    <div className={`sendbird-ui-toggle ${className}`}>
+      <_ToggleContainer
         checked={checked}
         defaultChecked={defaultChecked}
         disabled={disabled}
@@ -55,7 +55,7 @@ export default function Toggle(props: ToggleProps): React.ReactElement {
         onFocus={onFocus}
         onBlur={onBlur}
       >
-        <ToggleUI
+        <_ToggleUI
           width={width}
           animationDuration={animationDuration}
           style={style}
@@ -64,7 +64,7 @@ export default function Toggle(props: ToggleProps): React.ReactElement {
           ariaLabel={ariaLabel}
           ariaLabelledby={ariaLabelledby}
         />
-      </ToggleContainer>
+      </_ToggleContainer>
     </div>
   );
 }
