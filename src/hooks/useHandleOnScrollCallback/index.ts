@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
-import { SCROLL_BUFFER } from '../../../../utils/consts';
+import { SCROLL_BUFFER } from '../../utils/consts';
 
 export interface UseHandleOnScrollCallbackProps {
-  setShowScrollDownButton: React.Dispatch<React.SetStateAction<boolean>>;
   hasMore: boolean;
   onScroll(fn: () => void): void;
   scrollRef: React.RefObject<HTMLDivElement>;
+  setShowScrollDownButton?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function calcScrollBottom(scrollHeight: number, scrollTop: number): number {
@@ -13,13 +13,13 @@ export function calcScrollBottom(scrollHeight: number, scrollTop: number): numbe
 }
 
 export function useHandleOnScrollCallback({
-  setShowScrollDownButton,
   hasMore,
   onScroll,
   scrollRef,
-}: UseHandleOnScrollCallbackProps): (e: React.UIEvent<HTMLElement>) => void {
-  return useCallback((e) => {
-    const element = e.target as Element;
+  setShowScrollDownButton,
+}: UseHandleOnScrollCallbackProps): () => void {
+  return useCallback(() => {
+    const element = scrollRef.current;
     const {
       scrollTop,
       scrollHeight,
@@ -31,10 +31,8 @@ export function useHandleOnScrollCallback({
     const scrollBottom = calcScrollBottom(scrollHeight, scrollTop);
     // even if there is more to fetch or not,
     // we still have to show the scroll to bottom button
-    if (scrollHeight > scrollTop + clientHeight + 1) {
-      setShowScrollDownButton(true);
-    } else {
-      setShowScrollDownButton(false);
+    if (typeof setShowScrollDownButton === 'function') {
+      setShowScrollDownButton(scrollHeight > scrollTop + clientHeight + 1)
     }
     if (!hasMore) {
       return;

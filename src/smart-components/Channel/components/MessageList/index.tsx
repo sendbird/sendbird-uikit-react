@@ -16,6 +16,7 @@ import { EveryMessage } from '../../../..';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { UserMessage } from '@sendbird/chat/message';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
+import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback'
 
 export interface MessageListProps {
   className?: string;
@@ -24,8 +25,6 @@ export interface MessageListProps {
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
   renderPlaceholderLoader?: () => React.ReactElement;
 }
-
-const SCROLL_REF_CLASS_NAME = '.sendbird-msg--scroll-ref';
 
 const MessageList: React.FC<MessageListProps> = ({
   className = '',
@@ -42,7 +41,6 @@ const MessageList: React.FC<MessageListProps> = ({
     setHighLightedMessageId,
     isMessageGroupingEnabled,
     scrollRef,
-    onScrollCallback,
     onScrollDownCallback,
     messagesDispatcher,
     messageActionTypes,
@@ -67,25 +65,6 @@ const MessageList: React.FC<MessageListProps> = ({
       clientHeight,
       scrollHeight,
     } = element;
-
-    if (scrollTop === 0) {
-      if (!hasMorePrev) {
-        return;
-      }
-      const nodes = scrollRef.current.querySelectorAll(SCROLL_REF_CLASS_NAME);
-      const first = nodes && nodes[0];
-      onScrollCallback(([messages]) => {
-        if (messages) {
-          // https://github.com/scabbiaza/react-scroll-position-on-updating-dom
-          // Set block to nearest to prevent unexpected scrolling from outer components
-          try {
-            first.scrollIntoView({ block: 'start', inline: 'nearest' });
-          } catch (error) {
-            //
-          }
-        }
-      });
-    }
 
     if (isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER)) {
       onScrollDownCallback(([messages]) => {
@@ -134,6 +113,12 @@ const MessageList: React.FC<MessageListProps> = ({
     }
   };
 
+  const handleOnScroll = useHandleOnScrollCallback({
+    hasMore: hasMorePrev,
+    onScroll,
+    scrollRef,
+  });
+
   if (loading) {
     return (typeof renderPlaceholderLoader === 'function')
       ? renderPlaceholderLoader()
@@ -152,7 +137,7 @@ const MessageList: React.FC<MessageListProps> = ({
         <div
           className="sendbird-conversation__messages-padding"
           ref={scrollRef}
-          onScroll={onScroll}
+          onScroll={handleOnScroll}
         >
           {allMessagesFiltered.map((m, idx) => {
             const {
@@ -211,7 +196,7 @@ const MessageList: React.FC<MessageListProps> = ({
       />
       {
         // This flag is an unmatched variable
-        (scrollBottom > 1) && (
+        scrollBottom > 1 && (
           <div
             className="sendbird-conversation__scroll-bottom-button"
             onClick={onClickScrollBot}
