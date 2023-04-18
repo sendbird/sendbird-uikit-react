@@ -5,7 +5,6 @@ import React, { useEffect, useReducer, useState } from 'react';
 import { User } from '@sendbird/chat';
 
 import { SendbirdSdkContext } from './SendbirdSdkContext';
-import { handleConnection } from './dux/sdk/thunks';
 
 import useTheme from './hooks/useTheme';
 
@@ -15,8 +14,8 @@ import sdkInitialState from './dux/sdk/initialState';
 import userInitialState from './dux/user/initialState';
 
 import useOnlineStatus from './hooks/useOnlineStatus';
-
-import { LoggerFactory } from './Logger';
+import useConnect from './hooks/useConnect';
+import { LoggerFactory, LogLevel } from './Logger';
 import pubSubFactory from './pubSub/index';
 import useAppendDomNode from '../hooks/useAppendDomNode';
 
@@ -26,6 +25,8 @@ import { MediaQueryProvider } from './MediaQueryContext';
 import getStringSet from '../ui/Label/stringSet';
 import { VOICE_RECORDER_DEFAULT_MAX, VOICE_RECORDER_DEFAULT_MIN } from '../utils/consts';
 import { useMarkAsReadScheduler } from './hooks/useMarkAsReadScheduler';
+import { ConfigureSessionTypes } from './hooks/useConnect/types';
+import { connect } from './hooks/useConnect/connect';
 
 export type UserListQueryType = {
   hasNext?: boolean;
@@ -60,7 +61,7 @@ export interface SendbirdProviderProps {
   accessToken?: string;
   customApiHost?: string;
   customWebSocketHost?: string;
-  configureSession?: () => void;
+  configureSession?: ConfigureSessionTypes;
   theme?: 'light' | 'dark';
   config?: SendbirdConfig;
   nickname?: string;
@@ -121,37 +122,32 @@ const Sendbird = ({
     userMention = {},
     isREMUnitEnabled = false,
   } = config;
-  const [logger, setLogger] = useState(LoggerFactory(logLevel));
+  const [logger, setLogger] = useState(LoggerFactory(logLevel as LogLevel));
   const [pubSub] = useState(pubSubFactory());
   const [sdkStore, sdkDispatcher] = useReducer(sdkReducers, sdkInitialState);
   const [userStore, userDispatcher] = useReducer(userReducers, userInitialState);
 
   useTheme(colorSet);
 
-  useEffect(() => {
-    logger.info('App Init');
-    // dispatch action
-    handleConnection({
-      userId,
-      appId,
-      accessToken,
-      sdkStore,
-      nickname,
-      profileUrl,
-      configureSession,
-      customApiHost,
-      customWebSocketHost,
-      sdk: sdkStore.sdk,
-      logger,
-    }, {
-      sdkDispatcher,
-      userDispatcher,
-    });
-  }, [userId, appId, accessToken]);
+  useConnect({
+    appId,
+    userId,
+    accessToken,
+  }, {
+    logger,
+    nickname,
+    profileUrl,
+    configureSession,
+    customApiHost,
+    customWebSocketHost,
+    sdk: sdkStore?.sdk,
+    sdkDispatcher,
+    userDispatcher,
+  });
 
   // to create a pubsub to communicate between parent and child
   useEffect(() => {
-    setLogger(LoggerFactory(logLevel));
+    setLogger(LoggerFactory(logLevel as LogLevel));
   }, [logLevel]);
 
   useAppendDomNode([
@@ -221,16 +217,17 @@ const Sendbird = ({
           sdkDispatcher,
           userDispatcher,
           reconnect: () => {
-            handleConnection({
-              userId,
+            connect({
               appId,
+              userId,
               accessToken,
-              sdkStore,
+              logger,
               nickname,
               profileUrl,
-              logger,
-              sdk: sdkStore.sdk,
-            }, {
+              configureSession,
+              customApiHost,
+              customWebSocketHost,
+              sdk: sdkStore?.sdk,
               sdkDispatcher,
               userDispatcher,
             });
