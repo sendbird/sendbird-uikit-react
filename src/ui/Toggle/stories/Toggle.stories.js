@@ -16,7 +16,7 @@ export const withText = () => (
     <h5>Noraml: disabled</h5>
     <Toggle disabled />
     <h5>Reverse: controll</h5>
-    <Toggle reverse onChange={(e) => { console.log('OnChange: ', e.currentTarget.checked) }} />
+    <Toggle reversed onChange={(e) => { console.log('OnChange: ', e.currentTarget.checked) }} />
     <h5>Size up: controll</h5>
     <Toggle onChange={(e) => { console.log('OnChange: ', e.currentTarget.checked) }} width="80px" />
     <h5>Size down: controll</h5>
