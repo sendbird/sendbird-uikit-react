@@ -1,5 +1,3 @@
-import { ChangeEventHandler } from 'react';
-
 /**
  * Type Definitions for @sendbird/uikit-react@{{ version }}
  * homepage: https://sendbird.com/
@@ -2478,9 +2476,9 @@ declare module '@sendbird/uikit-react/ui/Toggle' {
     defaultChecked?: boolean;
     disabled?: boolean;
     reversed?: boolean;
-    onChange?: ChangeEventHandler<HTMLInputElement>;
-    onFocus?: ChangeEventHandler<HTMLInputElement>;
-    onBlur?: ChangeEventHandler<HTMLInputElement>;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+    onFocus?: React.ChangeEventHandler<HTMLInputElement>;
+    onBlur?: React.ChangeEventHandler<HTMLInputElement>;
   }
   export interface ToggleContainerProps extends ToggleContextInterface {
     children?: React.ReactElement;
