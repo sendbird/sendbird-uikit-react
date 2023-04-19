@@ -164,7 +164,7 @@ export default function UserListItem({
             className="sendbird-user-list-item__action"
             ref={actionRef}
           >
-            { action({ actionRef, parentRef })}
+            {action({ actionRef, parentRef })}
           </div>
         )
       }

@@ -11,8 +11,6 @@ import ContextMenu, { MenuItems } from '../../../../ui/ContextMenu';
 
 import './user-list-item.scss';
 
-const COMPONENT_NAME = 'sendbird-user-list-item--small';
-
 interface ActionProps {
   actionRef: React.RefObject<HTMLInputElement>;
   parentRef: React.RefObject<HTMLInputElement>;
@@ -49,23 +47,30 @@ const UserListItem = ({
     <div
       ref={parentRef}
       className={[
-        COMPONENT_NAME, ...injectingClassNames,
+        'sendbird-user-list-item--small', ...injectingClassNames,
       ].join(' ')}
     >
       <ContextMenu
         menuTrigger={(toggleDropdown) => (
-          <Avatar
-            onClick={() => {
-              if (!disableUserProfile) {
-                toggleDropdown();
-              }
-            }}
-            ref={avatarRef}
-            className={`${COMPONENT_NAME}__avatar`}
-            src={user.profileUrl}
-            width={24}
-            height={24}
-          />
+          <>
+            <Avatar
+              onClick={() => {
+                if (!disableUserProfile) {
+                  toggleDropdown();
+                }
+              }}
+              ref={avatarRef}
+              className="sendbird-user-list-item--small__avatar"
+              src={user.profileUrl}
+              width={24}
+              height={24}
+            />
+            {
+              user.isMuted && (
+                <MutedAvatarOverlay />
+              )
+            }
+          </>
         )}
         menuItems={(closeDropdown) => (
           <MenuItems
@@ -95,13 +100,13 @@ const UserListItem = ({
           </MenuItems>
         )}
       />
-      {
+      {/* {
         user.isMuted && (
           <MutedAvatarOverlay />
         )
-      }
+      } */}
       <Label
-        className={`${COMPONENT_NAME}__title`}
+        className="sendbird-user-list-item--small__title"
         type={LabelTypography.SUBTITLE_1}
         color={LabelColors.ONBACKGROUND_1}
       >
@@ -115,7 +120,7 @@ const UserListItem = ({
       { // if there is now nickname, display userId
         !user.nickname && (
           <Label
-            className={`${COMPONENT_NAME}__subtitle`}
+            className="sendbird-user-list-item--small__subtitle"
             type={LabelTypography.CAPTION_3}
             color={LabelColors.ONBACKGROUND_2}
           >
@@ -126,7 +131,7 @@ const UserListItem = ({
       {
         user.role === 'operator' && (
           <Label
-            className={`${COMPONENT_NAME}__operator`}
+            className="sendbird-user-list-item--small__operator"
             type={LabelTypography.SUBTITLE_2}
             color={LabelColors.ONBACKGROUND_2}
           >
@@ -136,7 +141,7 @@ const UserListItem = ({
       }
       {
         action && (
-          <div ref={actionRef} className={`${COMPONENT_NAME}__action`}>
+          <div ref={actionRef} className="sendbird-user-list-item--small__action">
             {action({ actionRef, parentRef })}
           </div>
         )

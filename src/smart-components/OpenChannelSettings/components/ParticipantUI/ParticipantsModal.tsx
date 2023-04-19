@@ -4,7 +4,7 @@ import React, {
   useState,
   useContext,
 } from 'react';
-import type { User } from '@sendbird/chat';
+import type { Participant, User } from '@sendbird/chat';
 import type { ParticipantListQuery } from '@sendbird/chat/openChannel';
 
 import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
@@ -71,7 +71,7 @@ export default function ParticipantsModal({
           }}
         >
           {
-            participants.map((p) => {
+            participants.map((p: Participant) => {
               const isOperator = channel?.isOperator(p.userId);
               return (
                 <UserListItem
@@ -125,12 +125,22 @@ export default function ParticipantsModal({
                               </MenuItem>
                               <MenuItem
                                 onClick={() => {
-                                  channel?.muteUser(p).then(() => {
-                                    closeDropdown();
-                                  });
+                                  if (p.isMuted) {
+                                    channel?.unmuteUser(p).then(() => {
+                                      closeDropdown();
+                                    });
+                                  } else {
+                                    channel?.muteUser(p).then(() => {
+                                      closeDropdown();
+                                    });
+                                  }
                                 }}
                               >
-                                {stringSet.OPEN_CHANNEL_SETTING__MODERATION__MUTE}
+                                {
+                                  p.isMuted
+                                    ? stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNMUTE
+                                    : stringSet.OPEN_CHANNEL_SETTING__MODERATION__MUTE
+                                }
                               </MenuItem>
                               <MenuItem
                                 onClick={() => {

@@ -2,10 +2,11 @@ import React, {
   ReactElement,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
-import type { User } from '@sendbird/chat';
+import type { Participant } from '@sendbird/chat';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 
 import { UserProfileContext } from '../../../../lib/UserProfileContext';
@@ -19,6 +20,7 @@ import UserProfile from '../../../../ui/UserProfile';
 import ContextMenu, { MenuItems } from '../../../../ui/ContextMenu';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import MutedAvatarOverlay from '../../../../ui/Avatar/MutedAvatarOverlay';
 
 const SHOWN_MEMBER_MAX = 10;
 
@@ -26,7 +28,7 @@ interface ActionProps {
   actionRef: React.RefObject<HTMLInputElement>;
 }
 interface UserListItemProps {
-  user: User;
+  user: Participant;
   currentUser?: string;
   isOperator?: boolean;
   action?(props: ActionProps): ReactElement;
@@ -45,22 +47,33 @@ export const UserListItem: React.FC<UserListItemProps> = ({
     renderUserProfile,
   } = useContext(UserProfileContext);
   const { stringSet } = useContext(LocalizationContext);
+
+  const MemorizedMutedAvatarOverlay = useMemo(() => {
+    if (user?.isMuted) {
+      return <MutedAvatarOverlay />;
+    }
+    return '';
+  }, [user?.isMuted]);
   return (
     <div className="sendbird-participants-accordion__member">
       <div className="sendbird-participants-accordion__member-avatar">
         <ContextMenu
           menuTrigger={(toggleDropdown) => (
-            <Avatar
-              onClick={() => {
-                if (!disableUserProfile) {
-                  toggleDropdown();
-                }
-              }}
-              ref={avatarRef}
-              src={user.profileUrl}
-              width={24}
-              height={24}
-            />
+            <>
+              <Avatar
+                className="sendbird-participants-accordion__member-avatar__avatar"
+                onClick={() => {
+                  if (!disableUserProfile) {
+                    toggleDropdown();
+                  }
+                }}
+                ref={avatarRef}
+                src={user.profileUrl}
+                width={24}
+                height={24}
+              />
+              {MemorizedMutedAvatarOverlay}
+            </>
           )}
           menuItems={(closeDropdown) => (
             <MenuItems
