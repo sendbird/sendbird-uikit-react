@@ -2,7 +2,6 @@ import React, {
   ReactElement,
   useContext,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -47,13 +46,6 @@ export const UserListItem: React.FC<UserListItemProps> = ({
     renderUserProfile,
   } = useContext(UserProfileContext);
   const { stringSet } = useContext(LocalizationContext);
-
-  const MemorizedMutedAvatarOverlay = useMemo(() => {
-    if (user?.isMuted) {
-      return <MutedAvatarOverlay />;
-    }
-    return '';
-  }, [user?.isMuted]);
   return (
     <div className="sendbird-participants-accordion__member">
       <div className="sendbird-participants-accordion__member-avatar">
@@ -72,7 +64,7 @@ export const UserListItem: React.FC<UserListItemProps> = ({
                 width={24}
                 height={24}
               />
-              {MemorizedMutedAvatarOverlay}
+              {user?.isMuted ? (<MutedAvatarOverlay />) : ''}
             </>
           )}
           menuItems={(closeDropdown) => (
@@ -150,7 +142,7 @@ export const UserListItem: React.FC<UserListItemProps> = ({
             className="sendbird-participants-accordion__member__action"
             ref={actionRef}
           >
-            { action({ actionRef }) }
+            {action({ actionRef })}
           </div>
         )
       }
@@ -214,17 +206,16 @@ export default function ParticipantsAccordion(props: ParticipantsAccordionProps)
                 />
               ))
             }
-            {
-              (participants && participants.length === 0)
-                ? (
-                    <Label
-                      className="sendbird-channel-settings__empty-list"
-                      type={LabelTypography.SUBTITLE_2}
-                      color={LabelColors.ONBACKGROUND_3}
-                    >
-                      {stringSet.OPEN_CHANNEL_SETTINGS__EMPTY_LIST}
-                    </Label>
-                ) : null
+            {(participants && participants.length === 0)
+              ? (
+                <Label
+                  className="sendbird-channel-settings__empty-list"
+                  type={LabelTypography.SUBTITLE_2}
+                  color={LabelColors.ONBACKGROUND_3}
+                >
+                  {stringSet.OPEN_CHANNEL_SETTINGS__EMPTY_LIST}
+                </Label>
+              ) : ''
             }
           </div>
           {
