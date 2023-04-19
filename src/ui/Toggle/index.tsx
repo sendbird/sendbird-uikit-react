@@ -1,26 +1,11 @@
 import React from 'react';
 import './index.scss';
 
-import {
-  ToggleContainer as _ToggleContainer,
-  ToggleContainerProps as _ToggleContainerProps,
-} from './ToggleContainer';
-import { useToggleContext as _useToggleContext } from './ToggleContext';
-import {
-  ToggleUI as _ToggleUI,
-  ToggleUIProps as _ToggleUIProps,
-} from './ToggleUI';
+import { ToggleContainer, ToggleContainerProps } from './ToggleContainer';
+import { useToggleContext } from './ToggleContext';
+import { ToggleUI, ToggleUIProps } from './ToggleUI';
 
-// export - context
-export const ToggleContainer = _ToggleContainer;
-export type ToggleContainerProps = _ToggleContainerProps;
-export const useToggleContext = _useToggleContext;
-// export - UI
-export const ToggleUI = _ToggleUI;
-export type ToggleUIProps = _ToggleUIProps;
-
-// export - Toggle
-export interface ToggleProps extends _ToggleContainerProps, _ToggleUIProps {
+export interface ToggleProps extends ToggleContainerProps, ToggleUIProps {
   className?: string;
 }
 export default function Toggle(props: ToggleProps): React.ReactElement {
@@ -46,7 +31,7 @@ export default function Toggle(props: ToggleProps): React.ReactElement {
   } = props;
   return (
     <div className={`sendbird-ui-toggle ${className}`}>
-      <_ToggleContainer
+      <ToggleContainer
         checked={checked}
         defaultChecked={defaultChecked}
         disabled={disabled}
@@ -55,7 +40,7 @@ export default function Toggle(props: ToggleProps): React.ReactElement {
         onFocus={onFocus}
         onBlur={onBlur}
       >
-        <_ToggleUI
+        <ToggleUI
           width={width}
           animationDuration={animationDuration}
           style={style}
@@ -64,7 +49,9 @@ export default function Toggle(props: ToggleProps): React.ReactElement {
           ariaLabel={ariaLabel}
           ariaLabelledby={ariaLabelledby}
         />
-      </_ToggleContainer>
+      </ToggleContainer>
     </div>
   );
 }
+
+export { ToggleContainer, ToggleContainerProps, ToggleUI, ToggleUIProps, useToggleContext };
