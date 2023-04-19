@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { useToggleContext } from './ToggleContext';
 import { filterNumber } from './utils';
 
@@ -34,16 +34,10 @@ export function ToggleUI(props: ToggleUIProps): React.ReactElement {
   // animation should not be activated in the initialization step
   const [animatedClassName, setAnimated] = useState('');
 
-  const toggleWidth = useMemo(() => (
-    filterNumber(width)?.[0]
-  ), [width]);
-  const toggleHeight = useMemo(() => (
-    toggleWidth / 2
-  ), [toggleWidth]);
-  const dotSize = useMemo(() => (
-    toggleHeight * 0.6
-    // The size of dot should be 60% of toggle height
-  ), [toggleHeight]);
+  const toggleWidth = filterNumber(width)?.[0];
+  const toggleHeight = toggleWidth / 2;
+  // The size of dot should be 60% of toggle height
+  const dotSize = toggleHeight * 0.6;
 
   return (
     <label
