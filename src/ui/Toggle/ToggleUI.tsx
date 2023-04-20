@@ -3,6 +3,7 @@ import { useToggleContext } from './ToggleContext';
 import { filterNumber } from './utils';
 
 export interface ToggleUIProps {
+  reversed?: boolean;
   width?: string;
   animationDuration?: string;
   style?: Record<string, string>;
@@ -14,6 +15,7 @@ export interface ToggleUIProps {
 
 export function ToggleUI(props: ToggleUIProps): React.ReactElement {
   const {
+    reversed = false,
     width = '40px',
     animationDuration = '0.5s',
     style = {},
@@ -25,7 +27,6 @@ export function ToggleUI(props: ToggleUIProps): React.ReactElement {
   const {
     checked,
     disabled,
-    reversed,
     onChange,
     onFocus,
     onBlur,

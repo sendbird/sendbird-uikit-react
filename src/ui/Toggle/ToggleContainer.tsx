@@ -15,7 +15,6 @@ export function ToggleContainer({
   checked = Dvalue.checked, // null
   defaultChecked = Dvalue.defaultChecked,
   disabled = Dvalue.disabled,
-  reversed = Dvalue.reversed,
   onChange = Dvalue.onChange,
   onFocus = Dvalue.onFocus,
   onBlur = Dvalue.onBlur,
@@ -36,7 +35,6 @@ export function ToggleContainer({
     <ToggleContext.Provider value={{
       checked: checked !== null ? checked : isChecked,
       disabled,
-      reversed,
       onChange: useOnChangeCallback,
       onFocus: (e) => {
         if (!disabled) {

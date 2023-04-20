@@ -8,18 +8,18 @@ import { ToggleUI, ToggleUIProps } from './ToggleUI';
 export interface ToggleProps extends ToggleContainerProps, ToggleUIProps {
   className?: string;
 }
-export default function Toggle(props: ToggleProps): React.ReactElement {
+function Toggle(props: ToggleProps): React.ReactElement {
   const {
     // ToggleProvider
     checked,
     defaultChecked,
     disabled,
-    reversed,
     onChange,
     onFocus,
     onBlur,
     // ToggleUI
     className,
+    reversed,
     width,
     // height will be half of width
     animationDuration,
@@ -35,12 +35,12 @@ export default function Toggle(props: ToggleProps): React.ReactElement {
         checked={checked}
         defaultChecked={defaultChecked}
         disabled={disabled}
-        reversed={reversed}
         onChange={onChange}
         onFocus={onFocus}
         onBlur={onBlur}
-      >
+        >
         <ToggleUI
+          reversed={reversed}
           width={width}
           animationDuration={animationDuration}
           style={style}
@@ -54,4 +54,4 @@ export default function Toggle(props: ToggleProps): React.ReactElement {
   );
 }
 
-export { ToggleContainer, ToggleContainerProps, ToggleUI, ToggleUIProps, useToggleContext };
+export { Toggle, ToggleContainer, ToggleContainerProps, ToggleUI, ToggleUIProps, useToggleContext };

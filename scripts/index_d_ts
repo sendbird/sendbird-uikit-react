@@ -2475,7 +2475,6 @@ declare module '@sendbird/uikit-react/ui/Toggle' {
     checked?: boolean;
     defaultChecked?: boolean;
     disabled?: boolean;
-    reversed?: boolean;
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
     onFocus?: React.ChangeEventHandler<HTMLInputElement>;
     onBlur?: React.ChangeEventHandler<HTMLInputElement>;
@@ -2484,6 +2483,7 @@ declare module '@sendbird/uikit-react/ui/Toggle' {
     children?: React.ReactElement;
   }
   export interface ToggleUIProps {
+    reversed?: boolean;
     width?: string;
     animationDuration?: string;
     style?: Record<string, string>;
