@@ -1,5 +1,4 @@
-import React, { createContext, useCallback, useContext, useState } from 'react';
-import { downsampleToWav, encodeMp3 } from './WebAudioUtils';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import {
   VOICE_MESSAGE_FILE_NAME,
   VOICE_MESSAGE_MIME_TYPE,
@@ -34,11 +33,25 @@ const VoiceRecorderContext = createContext<VoiceRecorderContext>({
 export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactElement => {
   const { children } = props;
   const { config } = useSendbirdStateContext();
-  const { logger } = config;
+  const { logger, isVoiceMessageEnabled } = config;
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>(null);
   const [isRecordable, setIsRecordable] = useState<boolean>(false);
 
+  const [webAudioUtils, setWebAudioUtils] = useState(null);
+  useEffect(() => {
+    if (isVoiceMessageEnabled && !webAudioUtils) {
+      import('./WebAudioUtils').then((data) => {
+        setWebAudioUtils(data);
+      })
+    }
+  }, []);
+
   const start = useCallback((eventHandler: VoiceRecorderEventHandler): void => {
+    if (isVoiceMessageEnabled && !webAudioUtils) {
+      logger.error('VoiceRecorder: Recording audio processor is being loaded.');
+      return;
+    }
+
     logger.info('VoiceRecorder: Start recording.');
     if (mediaRecorder) {
       stop();
@@ -58,8 +71,8 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
             lastModified: new Date().getTime(),
             type: VOICE_MESSAGE_MIME_TYPE,
           });
-          downsampleToWav(audioFile, (buffer) => {
-            const mp3Buffer = encodeMp3(buffer);
+          webAudioUtils?.downsampleToWav(audioFile, (buffer) => {
+            const mp3Buffer = webAudioUtils?.encodeMp3(buffer);
             const mp3blob = new Blob(mp3Buffer, { type: VOICE_MESSAGE_MIME_TYPE });
             const convertedAudioFile = new File([mp3blob], VOICE_MESSAGE_FILE_NAME, {
               lastModified: new Date().getTime(),
@@ -79,7 +92,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
         logger.error('VoiceRecorder: Failed getting media stream.', err);
         setMediaRecorder(null);
       });
-  }, [mediaRecorder]);
+  }, [mediaRecorder, webAudioUtils]);
 
   const stop = useCallback((): void => {
     // Stop recording
