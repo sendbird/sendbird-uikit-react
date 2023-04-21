@@ -1,9 +1,16 @@
+import { User } from '@sendbird/chat';
 import { LoggerFactory } from '../../../Logger';
 import { ConnectTypes, DisconnectSdkTypes, SetupConnectionTypes, StaticTypes, TriggerTypes } from '../types';
 
+export const mockUser = {
+  userId: 'test-user-id',
+  nickname: 'test-nickname',
+  profileUrl: 'test-profile-url',
+} as unknown as User;
+
 export const mockSdk = {
-  connect: jest.fn(),
-  disconnect: jest.fn(),
+  connect: jest.fn().mockImplementation(() => Promise.resolve(mockUser)),
+  disconnect: jest.fn().mockImplementation(() => Promise.resolve(true)),
 } as unknown as ConnectTypes['sdk'];
 
 export const mockSdkDispatcher = jest.fn() as unknown as ConnectTypes['sdkDispatcher'];
@@ -40,11 +47,16 @@ export const defaultDisconnectSdkParams: DisconnectSdkTypes = {
   logger: LoggerFactory('all'),
 };
 
-type GenerateGenericType<T> = (overrides: T) => T;
+export function generateDisconnectSdkParams(overrides?: Partial<DisconnectSdkTypes>): DisconnectSdkTypes {
+  return {
+    ...defaultDisconnectSdkParams,
+    ...overrides,
+  };
+}
 
-const generateConnectParams: GenerateGenericType<ConnectTypes> = (overrides) => ({
-  ...defaultConnectParams,
-  ...overrides,
-});
-
-
+export function generateConnectParams(overrides?: Partial<ConnectTypes>): ConnectTypes {
+  return {
+    ...defaultConnectParams,
+    ...overrides,
+  };
+};
