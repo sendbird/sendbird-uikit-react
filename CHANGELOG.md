@@ -3,16 +3,18 @@
 ## [v3.4.6] (Apr 21 2023)
 
 Fixes:
-* Use markAsReadScheduler in MessageList.
-* Apply common scroll hook to GroupChannel MessageList.
+* Use markAsReadScheduler in MessageList:
+  * `markAsReadScheduler` method throttles `markAsRead` calls.
+  * Reduces cmd no ack error.
+* Apply common scroll hook to GroupChannel MessageList:
   * Prevent whole page from scrolling when <GroupChannel /> scrolls. This issue occurs when customer implements an <GroupChannel /> in a web page with scroll.
   * This is a same fix that we fixed OpenChannel in `v3.4.4`.
-* Unify send btn display condition
-  * Issue: We could send the empty message which is consisted of only white spaces. Also, a sent message which contains white spaces at the beginning of it is shown like it's trimmed.
-  * Solution: Two things have been changed on displayed. message & message input each.
-    * New line, spaces only text do not show sending button
-    * No trim before sending
-* Use dynamic import to lazy load the audio converting processor(lamejs) by isVoiceMessageEnabled props
+* To unify message sending policies with ios & android:
+	* Do not show send button when there is only new line or empty space in the input.
+	* Do not trim leading white spaces in message text.
+* Optimize lamjs import:
+	* Lazy load the audio converting processor(lamejs) only when `isVoiceMessageEnabled` is true.
+	* This saves 106KB Gzipped(85KB Brotli) if you are not using the VoiceMessage feature.
 
 ## [v3.4.5] (Apr 7 2023)
 
