@@ -19,7 +19,7 @@ import { ButtonTypes } from '../../../../ui/Button';
 import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 import TextButton from '../../../../ui/TextButton';
 import { noop } from '../../../../utils/utils';
-import * as userActions from '../../../../lib/dux/user/actionTypes';
+import { USER_ACTIONS } from '../../../../lib/dux/user/actionTypes';
 
 export default function EditUserProfile(): ReactElement {
   const editProfileProps = useEditUserProfileContext();
@@ -61,7 +61,7 @@ export default function EditUserProfile(): ReactElement {
           nickname: inputRef?.current?.value,
           profileImage: newFile,
         }).then((updatedUser) => {
-          userDispatcher({ type: userActions.UPDATE_USER_INFO, payload: updatedUser });
+          userDispatcher({ type: USER_ACTIONS.UPDATE_USER_INFO, payload: updatedUser });
           if (onEditProfile && typeof onEditProfile === 'function') {
             onEditProfile(updatedUser);
           }
