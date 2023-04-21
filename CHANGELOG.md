@@ -1,5 +1,21 @@
 # Changelog - v3
 
+## [v3.4.6] (Apr 21 2023)
+
+Fixes:
+* Use markAsReadScheduler in MessageList:
+  * `markAsReadScheduler` method throttles `markAsRead` calls.
+  * Reduces cmd no ack error.
+* Apply common scroll hook to GroupChannel MessageList:
+  * Prevent whole page from scrolling when <GroupChannel /> scrolls. This issue occurs when customer implements an <GroupChannel /> in a web page with scroll.
+  * This is a same fix that we fixed OpenChannel in `v3.4.4`.
+* To unify message sending policies with ios & android:
+  * Do not show send button when there is only new line or empty space in the input.
+  * Do not trim leading white spaces in message text.
+* Optimize lamjs import:
+  * Lazy load the audio converting processor(lamejs) only when `isVoiceMessageEnabled` is true.
+  * This saves 106KB Gzipped(85KB Brotli) if you are not using the VoiceMessage feature.
+
 ## [v3.4.5] (Apr 7 2023)
 
 Features:
