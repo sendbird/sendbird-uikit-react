@@ -5,8 +5,15 @@ import { generateDisconnectSdkParams } from "./data.mocks";
 
 describe('useConnect/disconnectSdk', () => {
   it('should call disconnectSdk when there is proper SDK', async () => {
-    const disconnectProps = generateDisconnectSdkParams({});
+    // setup
+    const disconnectProps = generateDisconnectSdkParams();
+    const mockDisconnect = disconnectProps.sdk.disconnect as jest.Mock;
+
+    // execute
     await disconnectSdk(disconnectProps);
+
+    // verify
+    expect(disconnectProps.sdkDispatcher).toHaveBeenCalledBefore(mockDisconnect);
     expect(disconnectProps.sdkDispatcher).toBeCalledWith({ type: SDK_ACTIONS.SET_SDK_LOADING, payload: true });
     expect(disconnectProps.sdk.disconnect).toHaveBeenCalled();
     expect(disconnectProps.sdkDispatcher).toBeCalledWith({ type: SDK_ACTIONS.RESET_SDK });

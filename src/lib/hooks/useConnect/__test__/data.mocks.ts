@@ -8,9 +8,25 @@ export const mockUser = {
   profileUrl: 'test-profile-url',
 } as unknown as User;
 
+export const mockUser2 = {
+  userId: 'test-user-id2',
+  nickname: 'test-nickname2',
+  profileUrl: 'test-profile-url2',
+} as unknown as User;
+
 export const mockSdk = {
-  connect: jest.fn().mockImplementation(() => Promise.resolve(mockUser)),
+  connect: jest.fn().mockImplementation((userId) => {
+    if(userId === mockUser2.userId) {
+      return Promise.resolve(mockUser2);
+    }
+    if (userId === mockUser.userId) {
+      return Promise.resolve(mockUser);
+    }
+    return Promise.reject();
+  }),
   disconnect: jest.fn().mockImplementation(() => Promise.resolve(true)),
+  updateCurrentUserInfo: jest.fn().mockImplementation(() => Promise.resolve(mockUser)),
+  setSessionHandler: jest.fn(),
 } as unknown as ConnectTypes['sdk'];
 
 export const mockSdkDispatcher = jest.fn() as unknown as ConnectTypes['sdkDispatcher'];
@@ -54,9 +70,9 @@ export function generateDisconnectSdkParams(overrides?: Partial<DisconnectSdkTyp
   };
 }
 
-export function generateConnectParams(overrides?: Partial<ConnectTypes>): ConnectTypes {
+export function generateSetUpConnectionParams(overrides?: Partial<SetupConnectionTypes>): SetupConnectionTypes {
   return {
-    ...defaultConnectParams,
+    ...defaultSetupConnectionParams,
     ...overrides,
   };
-};
+}

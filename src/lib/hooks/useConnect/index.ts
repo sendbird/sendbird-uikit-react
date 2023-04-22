@@ -16,9 +16,9 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
     sdkDispatcher,
     userDispatcher,
   } = staticTypes;
-  logger.info('SendbirdProvider | useConnect', { ...triggerTypes, ...staticTypes });
+  logger?.info?.('SendbirdProvider | useConnect', { ...triggerTypes, ...staticTypes });
   useEffect(() => {
-    logger.info('SendbirdProvider | useConnect/useEffect', { userId, appId, accessToken });
+    logger?.info?.('SendbirdProvider | useConnect/useEffect', { userId, appId, accessToken });
     connect({
       userId,
       appId,
@@ -35,7 +35,7 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
     });
   }, [userId, appId, accessToken]);
   const reconnect = useCallback(() => {
-    logger.info('SendbirdProvider | useConnect/reconnect/useCallback', { sdk });
+    logger?.info?.('SendbirdProvider | useConnect/reconnect/useCallback', { sdk });
     connect({
       userId,
       appId,
