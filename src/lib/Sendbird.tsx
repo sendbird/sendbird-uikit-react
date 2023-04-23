@@ -26,7 +26,6 @@ import getStringSet from '../ui/Label/stringSet';
 import { VOICE_RECORDER_DEFAULT_MAX, VOICE_RECORDER_DEFAULT_MIN } from '../utils/consts';
 import { useMarkAsReadScheduler } from './hooks/useMarkAsReadScheduler';
 import { ConfigureSessionTypes } from './hooks/useConnect/types';
-import { connect } from './hooks/useConnect/connect';
 
 export type UserListQueryType = {
   hasNext?: boolean;

@@ -1,7 +1,7 @@
-import { SDK_ACTIONS } from "../../../dux/sdk/actionTypes";
-import { USER_ACTIONS } from "../../../dux/user/actionTypes";
-import { disconnectSdk } from "../disconnectSdk";
-import { generateDisconnectSdkParams } from "./data.mocks";
+import { SDK_ACTIONS } from '../../../dux/sdk/actionTypes';
+import { USER_ACTIONS } from '../../../dux/user/actionTypes';
+import { disconnectSdk } from '../disconnectSdk';
+import { generateDisconnectSdkParams } from './data.mocks';
 
 describe('useConnect/disconnectSdk', () => {
   it('should call disconnectSdk when there is proper SDK', async () => {

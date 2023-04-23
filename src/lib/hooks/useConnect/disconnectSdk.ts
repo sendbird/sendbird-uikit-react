@@ -1,6 +1,6 @@
-import { SDK_ACTIONS } from "../../dux/sdk/actionTypes";
-import { USER_ACTIONS } from "../../dux/user/actionTypes";
-import { DisconnectSdkTypes } from "./types";
+import { SDK_ACTIONS } from '../../dux/sdk/actionTypes';
+import { USER_ACTIONS } from '../../dux/user/actionTypes';
+import { DisconnectSdkTypes } from './types';
 
 export async function disconnectSdk({
   sdkDispatcher,

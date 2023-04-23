@@ -1,6 +1,6 @@
-import { disconnectSdk } from "./disconnectSdk";
-import { setUpConnection } from "./setupConnection";
-import { ConnectTypes } from "./types";
+import { disconnectSdk } from './disconnectSdk';
+import { setUpConnection } from './setupConnection';
+import { ConnectTypes } from './types';
 
 export async function connect({
   logger,
@@ -15,14 +15,14 @@ export async function connect({
   profileUrl,
   accessToken,
   sdk,
-}: ConnectTypes) {
+}: ConnectTypes): Promise<void> {
   await disconnectSdk({
     logger,
     sdkDispatcher,
     userDispatcher,
     sdk,
   });
-  setUpConnection({
+  await setUpConnection({
     logger,
     sdkDispatcher,
     userDispatcher,

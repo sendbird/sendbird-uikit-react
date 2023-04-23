@@ -16,7 +16,7 @@ export const mockUser2 = {
 
 export const mockSdk = {
   connect: jest.fn().mockImplementation((userId) => {
-    if(userId === mockUser2.userId) {
+    if (userId === mockUser2.userId) {
       return Promise.resolve(mockUser2);
     }
     if (userId === mockUser.userId) {
