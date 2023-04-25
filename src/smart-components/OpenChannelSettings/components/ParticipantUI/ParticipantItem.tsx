@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import type { User } from '@sendbird/chat';
+import type { Participant } from '@sendbird/chat';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 
 import { UserProfileContext } from '../../../../lib/UserProfileContext';
@@ -19,6 +19,7 @@ import UserProfile from '../../../../ui/UserProfile';
 import ContextMenu, { MenuItems } from '../../../../ui/ContextMenu';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import MutedAvatarOverlay from '../../../../ui/Avatar/MutedAvatarOverlay';
 
 const SHOWN_MEMBER_MAX = 10;
 
@@ -26,7 +27,7 @@ interface ActionProps {
   actionRef: React.RefObject<HTMLInputElement>;
 }
 interface UserListItemProps {
-  user: User;
+  user: Participant;
   currentUser?: string;
   isOperator?: boolean;
   action?(props: ActionProps): ReactElement;
@@ -50,17 +51,21 @@ export const UserListItem: React.FC<UserListItemProps> = ({
       <div className="sendbird-participants-accordion__member-avatar">
         <ContextMenu
           menuTrigger={(toggleDropdown) => (
-            <Avatar
-              onClick={() => {
-                if (!disableUserProfile) {
-                  toggleDropdown();
-                }
-              }}
-              ref={avatarRef}
-              src={user.profileUrl}
-              width={24}
-              height={24}
-            />
+            <>
+              <Avatar
+                className="sendbird-participants-accordion__member-avatar__avatar"
+                onClick={() => {
+                  if (!disableUserProfile) {
+                    toggleDropdown();
+                  }
+                }}
+                ref={avatarRef}
+                src={user.profileUrl}
+                width={24}
+                height={24}
+              />
+              {user?.isMuted ? (<MutedAvatarOverlay />) : ''}
+            </>
           )}
           menuItems={(closeDropdown) => (
             <MenuItems
@@ -137,7 +142,7 @@ export const UserListItem: React.FC<UserListItemProps> = ({
             className="sendbird-participants-accordion__member__action"
             ref={actionRef}
           >
-            { action({ actionRef }) }
+            {action({ actionRef })}
           </div>
         )
       }
@@ -201,17 +206,16 @@ export default function ParticipantsAccordion(props: ParticipantsAccordionProps)
                 />
               ))
             }
-            {
-              (participants && participants.length === 0)
-                ? (
-                    <Label
-                      className="sendbird-channel-settings__empty-list"
-                      type={LabelTypography.SUBTITLE_2}
-                      color={LabelColors.ONBACKGROUND_3}
-                    >
-                      {stringSet.OPEN_CHANNEL_SETTINGS__EMPTY_LIST}
-                    </Label>
-                ) : null
+            {(participants && participants.length === 0)
+              ? (
+                <Label
+                  className="sendbird-channel-settings__empty-list"
+                  type={LabelTypography.SUBTITLE_2}
+                  color={LabelColors.ONBACKGROUND_3}
+                >
+                  {stringSet.OPEN_CHANNEL_SETTINGS__EMPTY_LIST}
+                </Label>
+              ) : ''
             }
           </div>
           {

@@ -11,6 +11,7 @@ import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import OperatorListModal from './OperatorsModal';
 import AddOperatorsModal from './AddOperatorsModal';
+import { Participant } from '@sendbird/chat';
 
 const OperatorList = (): ReactElement => {
   const [showAdd, setShowAdd] = useState<boolean>(false);
@@ -23,7 +24,7 @@ const OperatorList = (): ReactElement => {
   return (
     <div>
       {
-        channel?.operators?.slice(0, 10).map((operator) => (
+        channel?.operators?.slice(0, 10).map((operator: Participant) => (
           <UserListItem
             key={operator.userId}
             user={operator}
@@ -64,12 +65,22 @@ const OperatorList = (): ReactElement => {
                         </MenuItem>
                         <MenuItem
                           onClick={() => {
-                            channel?.muteUser(operator).then(() => {
-                              closeDropdown();
-                            });
+                            if (operator.isMuted) {
+                              channel?.unmuteUser(operator).then(() => {
+                                closeDropdown();
+                              });
+                            } else {
+                              channel?.muteUser(operator).then(() => {
+                                closeDropdown();
+                              });
+                            }
                           }}
                         >
-                          {stringSet.OPEN_CHANNEL_SETTING__MODERATION__MUTE}
+                          {
+                            operator.isMuted
+                              ? stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNMUTE
+                              : stringSet.OPEN_CHANNEL_SETTING__MODERATION__MUTE
+                          }
                         </MenuItem>
                         <MenuItem
                           onClick={() => {

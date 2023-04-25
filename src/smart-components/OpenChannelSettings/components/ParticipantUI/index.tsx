@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import type { User } from '@sendbird/chat';
+import type { Participant, User } from '@sendbird/chat';
 import type { ParticipantListQuery } from '@sendbird/chat/openChannel';
 
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
@@ -76,7 +76,7 @@ export default function ParticipantList({
     >
       <div>
         {
-          participants?.map((p: User) => {
+          participants?.map((p: Participant) => {
             const isOperator = channel?.isOperator(p.userId);
             return (
               <UserListItem
@@ -113,13 +113,13 @@ export default function ParticipantList({
                               onClick={() => {
                                 if (isOperator) {
                                   channel?.removeOperators([p.userId]).then(() => {
-                                    refreshList();
                                     closeDropdown();
+                                    refreshList();
                                   });
                                 } else {
                                   channel?.addOperators([p.userId]).then(() => {
-                                    refreshList();
                                     closeDropdown();
+                                    refreshList();
                                   })
                                 }
                               }}
@@ -132,19 +132,30 @@ export default function ParticipantList({
                             </MenuItem>
                             <MenuItem
                               onClick={() => {
-                                channel?.muteUser(p).then(() => {
-                                  refreshList();
-                                  closeDropdown();
-                                });
+                                if (p.isMuted) {
+                                  channel?.unmuteUser(p).then(() => {
+                                    closeDropdown();
+                                    refreshList();
+                                  });
+                                } else {
+                                  channel?.muteUser(p).then(() => {
+                                    closeDropdown();
+                                    refreshList();
+                                  });
+                                }
                               }}
                             >
-                              {stringSet.OPEN_CHANNEL_SETTING__MODERATION__MUTE}
+                              {
+                                p.isMuted
+                                  ? stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNMUTE
+                                  : stringSet.OPEN_CHANNEL_SETTING__MODERATION__MUTE
+                              }
                             </MenuItem>
                             <MenuItem
                               onClick={() => {
                                 channel?.banUser(p).then(() => {
-                                  refreshList();
                                   closeDropdown();
+                                  refreshList();
                                 });
                               }}
                             >
