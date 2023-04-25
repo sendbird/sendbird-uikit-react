@@ -8,19 +8,19 @@
   box-sizing: border-box;
   cursor: pointer;
 }
-.sendbird-input-toggle-button.--checked {
+.sendbird-input-toggle-button.sendbird-input-toggle-button--checked {
   @include themed() {
     background-color: t(primary-3);
     border: 1px solid t(primary-3);
   }
 }
-.sendbird-input-toggle-button.--unchecked {
+.sendbird-input-toggle-button.sendbird-input-toggle-button--unchecked {
   @include themed() {
     background-color: t(bg-3);
     border: 1px solid t(bg-3);
   }
 }
-.sendbird-input-toggle-button.--disabled {
+.sendbird-input-toggle-button.sendbird-input-toggle-button--disabled {
   cursor: not-allowed;
   @include themed() {
     background-color: t(bg-2);
@@ -52,30 +52,30 @@
   100% { right: 60%; }
 }
 // normal - animation
-.sendbird-input-toggle-button.--turned-on .sendbird-input-toggle-button__inner-dot {
+.sendbird-input-toggle-button.sendbird-input-toggle-button--turned-on .sendbird-input-toggle-button__inner-dot {
   animation-name: moveToRight;
 }
-.sendbird-input-toggle-button.--turned-off .sendbird-input-toggle-button__inner-dot {
+.sendbird-input-toggle-button.sendbird-input-toggle-button--turned-off .sendbird-input-toggle-button__inner-dot {
   animation-name: moveToLeft;
 }
 // reverse - animation
-.sendbird-input-toggle-button.--reversed.--turned-on .sendbird-input-toggle-button__inner-dot {
+.sendbird-input-toggle-button.sendbird-input-toggle-button--reversed.sendbird-input-toggle-button--turned-on .sendbird-input-toggle-button__inner-dot {
   animation-name: moveToLeft;
 }
-.sendbird-input-toggle-button.--reversed.--turned-off .sendbird-input-toggle-button__inner-dot {
+.sendbird-input-toggle-button.sendbird-input-toggle-button--reversed.sendbird-input-toggle-button--turned-off .sendbird-input-toggle-button__inner-dot {
   animation-name: moveToRight;
 }
 // normal - position
-.sendbird-input-toggle-button.--unchecked .sendbird-input-toggle-button__inner-dot {
+.sendbird-input-toggle-button.sendbird-input-toggle-button--unchecked .sendbird-input-toggle-button__inner-dot {
   right: 60%;
 }
-.sendbird-input-toggle-button.--checked .sendbird-input-toggle-button__inner-dot {
+.sendbird-input-toggle-button.sendbird-input-toggle-button--checked .sendbird-input-toggle-button__inner-dot {
   right: 10%;
 }
 // reverse - position
-.sendbird-input-toggle-button.--unchecked.--reversed .sendbird-input-toggle-button__inner-dot {
+.sendbird-input-toggle-button.sendbird-input-toggle-button--unchecked.sendbird-input-toggle-button--reversed .sendbird-input-toggle-button__inner-dot {
   right: 10%;
 }
-.sendbird-input-toggle-button.--checked.--reversed .sendbird-input-toggle-button__inner-dot {
+.sendbird-input-toggle-button.sendbird-input-toggle-button--checked.sendbird-input-toggle-button--reversed .sendbird-input-toggle-button__inner-dot {
   right: 60%;
 }

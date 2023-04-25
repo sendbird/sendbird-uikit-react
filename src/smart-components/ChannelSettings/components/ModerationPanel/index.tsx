@@ -15,7 +15,7 @@ Label, {
 } from '../../../../ui/Label';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import Badge from '../../../../ui/Badge';
-import Toggle from '../../../../ui/Toggle';
+import { Toggle } from '../../../../ui/Toggle';
 
 import OperatorList from './OperatorList';
 import MemberList from './MemberList';
