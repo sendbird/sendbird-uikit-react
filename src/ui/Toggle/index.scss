@@ -43,27 +43,27 @@
 }
 
 /* Manage animation and position by status */
-@keyframes moveToRight {
+@keyframes sendbirdMoveToRight {
   0% { right: 60%; }
   100% { right: 10%; }
 }
-@keyframes moveToLeft {
+@keyframes sendbirdMoveToLeft {
   0% { right: 10%; }
   100% { right: 60%; }
 }
 // normal - animation
 .sendbird-input-toggle-button.sendbird-input-toggle-button--turned-on .sendbird-input-toggle-button__inner-dot {
-  animation-name: moveToRight;
+  animation-name: sendbirdMoveToRight;
 }
 .sendbird-input-toggle-button.sendbird-input-toggle-button--turned-off .sendbird-input-toggle-button__inner-dot {
-  animation-name: moveToLeft;
+  animation-name: sendbirdMoveToLeft;
 }
 // reverse - animation
 .sendbird-input-toggle-button.sendbird-input-toggle-button--reversed.sendbird-input-toggle-button--turned-on .sendbird-input-toggle-button__inner-dot {
-  animation-name: moveToLeft;
+  animation-name: sendbirdMoveToLeft;
 }
 .sendbird-input-toggle-button.sendbird-input-toggle-button--reversed.sendbird-input-toggle-button--turned-off .sendbird-input-toggle-button__inner-dot {
-  animation-name: moveToRight;
+  animation-name: sendbirdMoveToRight;
 }
 // normal - position
 .sendbird-input-toggle-button.sendbird-input-toggle-button--unchecked .sendbird-input-toggle-button__inner-dot {
