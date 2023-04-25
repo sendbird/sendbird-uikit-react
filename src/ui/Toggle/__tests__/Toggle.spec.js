@@ -1,12 +1,37 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import Toggle from "../index";
+import { Toggle } from "../index";
 import { filterNumber } from '../utils';
 
 describe('Toggle', () => {
   it('should do a snapshot test of the Toggle DOM', function() {
     const { asFragment } = render(<Toggle />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  it('should do a snapshot test of the Toggle DOM with props', function() {
+    const mockEventHandler = () => {
+      /* noop */
+    };
+    const { asFragment } = render(
+      <Toggle
+        checked
+        defaultChecked
+        disabled
+        onChange={mockEventHandler}
+        onFocus={mockEventHandler}
+        onBlur={mockEventHandler}
+        className="mock-class-name"
+        reversed
+        width="80px"
+        animationDuration="0.1s"
+        style={{ border: '1px solid red' }}
+        name="mock-element-name"
+        id="mock-element-id"
+        ariaLabel="mock-element-aria-label"
+        ariaLabelledby="mock-element-aria-labeled-by"
+      />
+    );
     expect(asFragment()).toMatchSnapshot();
   });
 });
