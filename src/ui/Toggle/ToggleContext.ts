@@ -27,10 +27,9 @@ export interface ToggleContextInterface {
 export const ToggleContext = React.createContext<ToggleContextInterface>(TOGGLE_DEFAULT_VALUE);
 
 export function useToggleContext(): ToggleContextInterface {
-  let context = null;
-  try {
-    context = React.useContext(ToggleContext);
-    return context;
-  } catch (_) { }
+  const context = React.useContext(ToggleContext);
+  if (context === undefined) {
+    throw new Error('@sendbird/uikit-react/ui/Toggle: useToggleContext must be used within a ToggleContainer.');
+  }
   return context;
 }
