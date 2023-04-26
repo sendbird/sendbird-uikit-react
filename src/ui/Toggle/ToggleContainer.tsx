@@ -21,7 +21,7 @@ export function ToggleContainer({
   children = null,
 }: ToggleContainerProps): React.ReactElement {
   const [isChecked, setChecked] = useState(defaultChecked || false);
-  const useOnChangeCallback = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     if (disabled) {
       return;
     }
@@ -35,7 +35,7 @@ export function ToggleContainer({
     <ToggleContext.Provider value={{
       checked: checked !== null ? checked : isChecked,
       disabled,
-      onChange: useOnChangeCallback,
+      onChange: handleChange,
       onFocus: (e) => {
         if (!disabled) {
           onFocus(e);

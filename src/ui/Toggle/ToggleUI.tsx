@@ -33,7 +33,7 @@ export function ToggleUI(props: ToggleUIProps): React.ReactElement {
   } = useToggleContext();
 
   // animation should not be activated in the initialization step
-  const [animatedClassName, setAnimated] = useState('');
+  const [animatedClassName, setAnimatedClassName] = useState('');
 
   const toggleWidth = filterNumber(width)?.[0];
   const toggleHeight = toggleWidth / 2;
@@ -79,7 +79,7 @@ export function ToggleUI(props: ToggleUIProps): React.ReactElement {
         disabled={disabled}
         onChange={(e) => {
           onChange(e);
-          setAnimated(e.currentTarget.checked ? 'sendbird-input-toggle-button--turned-on' : 'sendbird-input-toggle-button--turned-off');
+          setAnimatedClassName(e.currentTarget.checked ? 'sendbird-input-toggle-button--turned-on' : 'sendbird-input-toggle-button--turned-off');
         }}
         onFocus={onFocus}
         onBlur={onBlur}
