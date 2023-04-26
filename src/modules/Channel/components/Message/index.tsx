@@ -137,6 +137,7 @@ const Message = ({
     }));
   }, [mentionedUserIds]);
 
+  // Move the messsage list scroll when the last message's height is changed by reactions
   useDidMountEffect(() => {
     if (currentGroupChannel?.lastMessage?.messageId === message?.messageId) {
       handleScroll?.();
@@ -358,6 +359,7 @@ const Message = ({
             setQuoteMessage={setQuoteMessage}
             onReplyInThread={onReplyInThread}
             onQuoteMessageClick={onQuoteMessageClick}
+            onMessageHeightChange={handleScroll}
           />
         )
       }

@@ -79,6 +79,7 @@ interface Props {
   setQuoteMessage?: (message: UserMessage | FileMessage) => void;
   onReplyInThread?: (props: { message: UserMessage | FileMessage }) => void;
   onQuoteMessageClick?: (props: { message: UserMessage | FileMessage }) => void;
+  onMessageHeightChange?: () => void;
 }
 export default function MessageContent({
   className,
@@ -103,6 +104,7 @@ export default function MessageContent({
   setQuoteMessage,
   onReplyInThread,
   onQuoteMessageClick,
+  onMessageHeightChange,
 }: Props): ReactElement {
   const messageTypes = getUIKitMessageTypes();
   const { dateLocale } = useLocalization();
@@ -311,6 +313,7 @@ export default function MessageContent({
               mouseHover={mouseHover}
               isMentionEnabled={config?.isMentionEnabled || false}
               isReactionEnabled={isReactionEnabledInChannel}
+              onMessageHeightChange={onMessageHeightChange}
             />
           )}
           {(getUIKitMessageType((message as FileMessage)) === messageTypes.FILE) && (
