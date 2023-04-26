@@ -187,7 +187,7 @@ const getStringSet = (lang = 'en') => {
       THREAD__INPUT__REPLY_IN_THREAD: 'Reply in thread',
       // Feature - Mention
       MENTION_NAME__NO_NAME: '(No name)',
-      MENTION_COUNT__OVER_LIMIT: 'You can mention up to %d times per message.',
+      MENTION_COUNT__OVER_LIMIT: 'You can mention up to %d times at a time.',
       UI__FILE_VIEWER__UNSUPPORT: 'Unsupported message',
       // Feature - Voice Message
       VOICE_MESSAGE: 'Voice Message',
