@@ -1,4 +1,4 @@
-import useSendbirdStateContext from "../../hooks/useSendbirdStateContext";
+import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 export function filterNumber(input: string | number): Array<number> {
   if (typeof input !== 'string' && typeof input !== 'number') {
@@ -6,7 +6,7 @@ export function filterNumber(input: string | number): Array<number> {
       const { config } = useSendbirdStateContext();
       const { logger } = config;
       logger.warning('@sendbird/uikit-react/ui/Toggle: TypeError - expected string or number.', input);
-    } catch (_) { }
+    } catch (_) { /* noop */ }
     return [];
   }
   if (typeof input === 'number') {
