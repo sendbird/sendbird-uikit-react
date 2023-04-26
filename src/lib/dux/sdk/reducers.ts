@@ -4,14 +4,14 @@ import initialState, { SdkStoreStateType } from './initialState';
 
 export default function reducer(state: SdkStoreStateType, action: SdkActionTypes): SdkStoreStateType {
   return match(action)
-    .with({ type: SDK_ACTIONS.SET_SDK_LOADING }, ({ payload }) => {
+    .with(SDK_ACTIONS.SET_SDK_LOADING, ({ payload }) => {
       return {
         ...state,
         initialized: false,
         loading: payload,
       };
     })
-    .with({ type: SDK_ACTIONS.SDK_ERROR }, () => {
+    .with(SDK_ACTIONS.SDK_ERROR, () => {
       return {
         ...state,
         initialized: false,
@@ -19,7 +19,7 @@ export default function reducer(state: SdkStoreStateType, action: SdkActionTypes
         error: true,
       };
     })
-    .with({ type: SDK_ACTIONS.INIT_SDK }, ({ payload }) => {
+    .with(SDK_ACTIONS.INIT_SDK, ({ payload }) => {
       return {
         sdk: payload,
         initialized: true,
@@ -27,7 +27,7 @@ export default function reducer(state: SdkStoreStateType, action: SdkActionTypes
         error: false,
       };
     })
-    .with({ type: SDK_ACTIONS.RESET_SDK }, () => {
+    .with(SDK_ACTIONS.RESET_SDK, () => {
       return initialState;
     })
     .otherwise(() => {
