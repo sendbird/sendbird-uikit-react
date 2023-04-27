@@ -2470,6 +2470,37 @@ declare module '@sendbird/uikit-react/ui/ThumbnailMessageItemBody' {
   export default ThumbnailMessageItemBody;
 }
 
+declare module '@sendbird/uikit-react/ui/Toggle' {
+  export interface ToggleContextInterface {
+    checked?: boolean;
+    defaultChecked?: boolean;
+    disabled?: boolean;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+    onFocus?: React.ChangeEventHandler<HTMLInputElement>;
+    onBlur?: React.ChangeEventHandler<HTMLInputElement>;
+  }
+  export interface ToggleContainerProps extends ToggleContextInterface {
+    children?: React.ReactElement;
+  }
+  export interface ToggleUIProps {
+    reversed?: boolean;
+    width?: string;
+    animationDuration?: string;
+    style?: Record<string, string>;
+    name?: string;
+    id?: string;
+    ariaLabel?: string;
+    ariaLabelledby?: string;
+  }
+  export interface ToggleProps extends ToggleContainerProps, ToggleUIProps {
+    className?: string;
+  }
+  export const Toggle: React.FC<ToggleProps>;
+  export const ToggleContainer: React.FC<ToggleContainerProps>;
+  export const ToggleUI: React.FC<ToggleUIProps>;
+  export function useToggleContext(): ToggleContextInterface;
+}
+
 declare module '@sendbird/uikit-react/ui/Tooltip' {
   interface TooltipProps {
     children?: React.ReactElement;

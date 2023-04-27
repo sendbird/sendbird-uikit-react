@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Toggle should do a snapshot test of the Toggle DOM 1`] = `
+<DocumentFragment>
+  <div
+    class="sendbird-ui-toggle undefined"
+  >
+    <label
+      class="sendbird-input-toggle-button  sendbird-input-toggle-button--unchecked"
+      style="width: 40px; height: 20px; border-radius: 12px;"
+    >
+      <div
+        class="sendbird-input-toggle-button__inner-dot sendbird-input-toggle-button__inner-dot--inactivate"
+        style="width: 12px; height: 12px; animation-duration: 0.5s;"
+      />
+      <input
+        aria-label=""
+        aria-labelledby=""
+        id=""
+        name=""
+        type="checkbox"
+      />
+    </label>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Toggle should do a snapshot test of the Toggle DOM with props 1`] = `
+<DocumentFragment>
+  <div
+    class="sendbird-ui-toggle mock-class-name"
+  >
+    <label
+      class="sendbird-input-toggle-button  sendbird-input-toggle-button--checked sendbird-input-toggle-button--disabled sendbird-input-toggle-button--reversed"
+      style="width: 80px; height: 40px; border-radius: 24px; border: 1px solid red;"
+    >
+      <div
+        class="sendbird-input-toggle-button__inner-dot sendbird-input-toggle-button__inner-dot--activate"
+        style="width: 24px; height: 24px; animation-duration: 0.1s;"
+      />
+      <input
+        aria-label="mock-element-aria-label"
+        aria-labelledby="mock-element-aria-labeled-by"
+        checked=""
+        disabled=""
+        id="mock-element-id"
+        name="mock-element-name"
+        type="checkbox"
+      />
+    </label>
+  </div>
+</DocumentFragment>
+`;

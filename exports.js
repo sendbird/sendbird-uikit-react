@@ -184,6 +184,7 @@ export default {
   'ui/TextMessageItemBody': 'src/ui/TextMessageItemBody/index.tsx',
   'ui/ThreadReplies': 'src/ui/ThreadReplies/index.tsx',
   'ui/ThumbnailMessageItemBody': 'src/ui/ThumbnailMessageItemBody/index.tsx',
+  'ui/Toggle': 'src/ui/Toggle/index.tsx',
   'ui/Tooltip': 'src/ui/Tooltip/index.tsx',
   'ui/TooltipWrapper': 'src/ui/TooltipWrapper/index.tsx',
   'ui/UnknownMessageItemBody': 'src/ui/UnknownMessageItemBody/index.tsx',
