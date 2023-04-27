@@ -1,4 +1,4 @@
-@import '../../styles/variables';
+@import "../../styles/variables";
 
 .sendbird-input-toggle-button {
   position: relative;
@@ -8,19 +8,19 @@
   box-sizing: border-box;
   cursor: pointer;
 }
-.sendbird-input-toggle-button.sendbird-input-toggle-button--checked {
+.sendbird-input-toggle-button--checked {
   @include themed() {
     background-color: t(primary-3);
     border: 1px solid t(primary-3);
   }
 }
-.sendbird-input-toggle-button.sendbird-input-toggle-button--unchecked {
+.sendbird-input-toggle-button--unchecked {
   @include themed() {
     background-color: t(bg-3);
     border: 1px solid t(bg-3);
   }
 }
-.sendbird-input-toggle-button.sendbird-input-toggle-button--disabled {
+.sendbird-input-toggle-button--disabled {
   cursor: not-allowed;
   @include themed() {
     background-color: t(bg-2);
@@ -44,38 +44,48 @@
 
 /* Manage animation and position by status */
 @keyframes sendbirdMoveToRight {
-  0% { right: 60%; }
-  100% { right: 10%; }
+  0% {
+    right: 60%;
+  }
+  100% {
+    right: 10%;
+  }
 }
 @keyframes sendbirdMoveToLeft {
-  0% { right: 10%; }
-  100% { right: 60%; }
+  0% {
+    right: 10%;
+  }
+  100% {
+    right: 60%;
+  }
 }
 // normal - animation
-.sendbird-input-toggle-button.sendbird-input-toggle-button--turned-on .sendbird-input-toggle-button__inner-dot {
+.sendbird-input-toggle-button--turned-on .sendbird-input-toggle-button__inner-dot {
   animation-name: sendbirdMoveToRight;
 }
-.sendbird-input-toggle-button.sendbird-input-toggle-button--turned-off .sendbird-input-toggle-button__inner-dot {
+.sendbird-input-toggle-button--turned-off .sendbird-input-toggle-button__inner-dot {
   animation-name: sendbirdMoveToLeft;
-}
-// reverse - animation
-.sendbird-input-toggle-button.sendbird-input-toggle-button--reversed.sendbird-input-toggle-button--turned-on .sendbird-input-toggle-button__inner-dot {
-  animation-name: sendbirdMoveToLeft;
-}
-.sendbird-input-toggle-button.sendbird-input-toggle-button--reversed.sendbird-input-toggle-button--turned-off .sendbird-input-toggle-button__inner-dot {
-  animation-name: sendbirdMoveToRight;
 }
 // normal - position
-.sendbird-input-toggle-button.sendbird-input-toggle-button--unchecked .sendbird-input-toggle-button__inner-dot {
+.sendbird-input-toggle-button--unchecked .sendbird-input-toggle-button__inner-dot {
   right: 60%;
 }
-.sendbird-input-toggle-button.sendbird-input-toggle-button--checked .sendbird-input-toggle-button__inner-dot {
+.sendbird-input-toggle-button--checked .sendbird-input-toggle-button__inner-dot {
   right: 10%;
 }
-// reverse - position
-.sendbird-input-toggle-button.sendbird-input-toggle-button--unchecked.sendbird-input-toggle-button--reversed .sendbird-input-toggle-button__inner-dot {
-  right: 10%;
-}
-.sendbird-input-toggle-button.sendbird-input-toggle-button--checked.sendbird-input-toggle-button--reversed .sendbird-input-toggle-button__inner-dot {
-  right: 60%;
+.sendbird-input-toggle-button--reversed {
+  // reverse - animation
+  .sendbird-input-toggle-button--turned-on .sendbird-input-toggle-button__inner-dot {
+    animation-name: sendbirdMoveToLeft;
+  }
+  .sendbird-input-toggle-button--turned-off .sendbird-input-toggle-button__inner-dot {
+    animation-name: sendbirdMoveToRight;
+  }
+  // reverse - position
+  &.sendbird-input-toggle-button--unchecked .sendbird-input-toggle-button__inner-dot {
+    right: 10%;
+  }
+  &.sendbird-input-toggle-button--checked .sendbird-input-toggle-button__inner-dot {
+    right: 60%;
+  }
 }
