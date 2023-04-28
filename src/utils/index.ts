@@ -258,8 +258,9 @@ export const isMessageSentByMe = (userId: string, message: UserMessage | FileMes
   (userId && message?.sender?.userId) && userId === message.sender.userId
 );
 
-const URL_REG = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
+const URL_REG = /^((http|https):\/\/)?([a-z\d]+\.)+[a-z]{2,6}(\:[0-9]{1,5})?(\/[-a-zA-Z\d%_.~+]*)*(\?[;&a-zA-Z\d%_.~+=-]*)?(\#[-a-zA-Z\d_]*)?$/;
 export const isUrl = (text: string): boolean => URL_REG.test(text);
+
 const MENTION_TAG_REG = /\@\{.*?\}/i;
 export const isMentionedText = (text: string): boolean => MENTION_TAG_REG.test(text);
 
