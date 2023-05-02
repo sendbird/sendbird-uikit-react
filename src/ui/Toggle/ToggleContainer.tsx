@@ -7,7 +7,7 @@ import {
 } from './ToggleContext';
 
 export interface ToggleContainerProps extends ToggleContextInterface {
-  children?: React.ReactElement;
+  children?: React.ReactElement | null;
 }
 
 // Props Explanation https://github.com/aaronshaf/react-toggle#props

@@ -54,4 +54,5 @@ function Toggle(props: ToggleProps): React.ReactElement {
   );
 }
 
-export { Toggle, ToggleContainer, ToggleContainerProps, ToggleUI, ToggleUIProps, useToggleContext };
+export type { ToggleContainerProps, ToggleUIProps };
+export { Toggle, ToggleContainer, ToggleUI, useToggleContext };
