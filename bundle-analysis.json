@@ -111,7 +111,7 @@
         "name": "App.js",
         "children": [
           {
-            "name": "src/smart-components/App",
+            "name": "src/modules/App",
             "children": [
               {
                 "uid": "206b-65",
@@ -137,7 +137,7 @@
         "name": "ChannelSettings.js",
         "children": [
           {
-            "name": "src/smart-components/ChannelSettings/index.tsx",
+            "name": "src/modules/ChannelSettings/index.tsx",
             "uid": "206b-81"
           }
         ]
@@ -146,7 +146,7 @@
         "name": "ChannelList.js",
         "children": [
           {
-            "name": "src/smart-components/ChannelList/index.tsx",
+            "name": "src/modules/ChannelList/index.tsx",
             "uid": "206b-85"
           }
         ]
@@ -155,7 +155,7 @@
         "name": "Channel.js",
         "children": [
           {
-            "name": "src/smart-components/Channel/index.tsx",
+            "name": "src/modules/Channel/index.tsx",
             "uid": "206b-89"
           }
         ]
@@ -164,7 +164,7 @@
         "name": "OpenChannel.js",
         "children": [
           {
-            "name": "src/smart-components/OpenChannel/index.tsx",
+            "name": "src/modules/OpenChannel/index.tsx",
             "uid": "206b-93"
           }
         ]
@@ -173,7 +173,7 @@
         "name": "OpenChannelSettings.js",
         "children": [
           {
-            "name": "src/smart-components/OpenChannelSettings/index.tsx",
+            "name": "src/modules/OpenChannelSettings/index.tsx",
             "uid": "206b-97"
           }
         ]
@@ -182,7 +182,7 @@
         "name": "MessageSearch.js",
         "children": [
           {
-            "name": "src/smart-components/MessageSearch/index.tsx",
+            "name": "src/modules/MessageSearch/index.tsx",
             "uid": "206b-101"
           }
         ]
@@ -218,7 +218,7 @@
         "name": "ChannelSettings/components/ChannelSettingsUI.js",
         "children": [
           {
-            "name": "src/smart-components/ChannelSettings/components/ChannelSettingsUI/index.tsx",
+            "name": "src/modules/ChannelSettings/components/ChannelSettingsUI/index.tsx",
             "uid": "206b-117"
           }
         ]
@@ -227,7 +227,7 @@
         "name": "ChannelSettings/context.js",
         "children": [
           {
-            "name": "src/smart-components/ChannelSettings/context/ChannelSettingsProvider.tsx",
+            "name": "src/modules/ChannelSettings/context/ChannelSettingsProvider.tsx",
             "uid": "206b-121"
           }
         ]
@@ -236,7 +236,7 @@
         "name": "ChannelList/components/ChannelListUI.js",
         "children": [
           {
-            "name": "src/smart-components/ChannelList/components",
+            "name": "src/modules/ChannelList/components",
             "children": [
               {
                 "uid": "206b-125",
@@ -254,7 +254,7 @@
         "name": "Channel/components/ChannelUI.js",
         "children": [
           {
-            "name": "src/smart-components/Channel/components/ChannelUI/index.tsx",
+            "name": "src/modules/Channel/components/ChannelUI/index.tsx",
             "uid": "206b-133"
           }
         ]
@@ -263,7 +263,7 @@
         "name": "OpenChannel/components/OpenChannelUI.js",
         "children": [
           {
-            "name": "src/smart-components/OpenChannel/components/OpenChannelUI/index.tsx",
+            "name": "src/modules/OpenChannel/components/OpenChannelUI/index.tsx",
             "uid": "206b-135"
           }
         ]
@@ -272,7 +272,7 @@
         "name": "OpenChannelSettings/components/OpenChannelSettingsUI.js",
         "children": [
           {
-            "name": "src/smart-components/OpenChannelSettings/components",
+            "name": "src/modules/OpenChannelSettings/components",
             "children": [
               {
                 "uid": "206b-139",
@@ -290,7 +290,7 @@
         "name": "OpenChannelSettings/context.js",
         "children": [
           {
-            "name": "src/smart-components/OpenChannelSettings/context/OpenChannelSettingsProvider.tsx",
+            "name": "src/modules/OpenChannelSettings/context/OpenChannelSettingsProvider.tsx",
             "uid": "206b-149"
           }
         ]
@@ -299,7 +299,7 @@
         "name": "MessageSearch/components/MessageSearchUI.js",
         "children": [
           {
-            "name": "src/smart-components/MessageSearch/components/MessageSearchUI/index.tsx",
+            "name": "src/modules/MessageSearch/components/MessageSearchUI/index.tsx",
             "uid": "206b-153"
           }
         ]
@@ -586,7 +586,7 @@
         "name": "MessageSearch/context.js",
         "children": [
           {
-            "name": "src/smart-components/MessageSearch/context",
+            "name": "src/modules/MessageSearch/context",
             "children": [
               {
                 "name": "dux",
@@ -647,7 +647,7 @@
         "name": "ChannelSettings/components/ChannelProfile.js",
         "children": [
           {
-            "name": "src/smart-components/ChannelSettings/components/ChannelProfile/index.tsx",
+            "name": "src/modules/ChannelSettings/components/ChannelProfile/index.tsx",
             "uid": "206b-441"
           }
         ]
@@ -656,7 +656,7 @@
         "name": "ChannelSettings/components/ModerationPanel.js",
         "children": [
           {
-            "name": "src/smart-components/ChannelSettings/components/ModerationPanel",
+            "name": "src/modules/ChannelSettings/components/ModerationPanel",
             "children": [
               {
                 "uid": "206b-445",
@@ -698,7 +698,7 @@
         "name": "ChannelSettings/components/LeaveChannel.js",
         "children": [
           {
-            "name": "src/smart-components/ChannelSettings/components/LeaveChannel/index.tsx",
+            "name": "src/modules/ChannelSettings/components/LeaveChannel/index.tsx",
             "uid": "206b-477"
           }
         ]
@@ -707,7 +707,7 @@
         "name": "ChannelSettings/components/UserPanel.js",
         "children": [
           {
-            "name": "src/smart-components/ChannelSettings/components/UserPanel/index.tsx",
+            "name": "src/modules/ChannelSettings/components/UserPanel/index.tsx",
             "uid": "206b-481"
           }
         ]
@@ -716,7 +716,7 @@
         "name": "ChannelList/components/ChannelListHeader.js",
         "children": [
           {
-            "name": "src/smart-components/ChannelList/components/ChannelListHeader/index.tsx",
+            "name": "src/modules/ChannelList/components/ChannelListHeader/index.tsx",
             "uid": "206b-485"
           }
         ]
@@ -725,7 +725,7 @@
         "name": "ChannelList/components/AddChannel.js",
         "children": [
           {
-            "name": "src/smart-components/ChannelList/components/AddChannel/index.tsx",
+            "name": "src/modules/ChannelList/components/AddChannel/index.tsx",
             "uid": "206b-489"
           }
         ]
@@ -734,7 +734,7 @@
         "name": "ChannelList/components/ChannelPreview.js",
         "children": [
           {
-            "name": "src/smart-components/ChannelList/components/ChannelPreview/index.tsx",
+            "name": "src/modules/ChannelList/components/ChannelPreview/index.tsx",
             "uid": "206b-493"
           }
         ]
@@ -743,7 +743,7 @@
         "name": "ChannelList/components/ChannelPreviewAction.js",
         "children": [
           {
-            "name": "src/smart-components/ChannelList/components",
+            "name": "src/modules/ChannelList/components",
             "children": [
               {
                 "name": "LeaveChannel/index.tsx",
@@ -761,7 +761,7 @@
         "name": "EditUserProfile.js",
         "children": [
           {
-            "name": "src/smart-components/EditUserProfile/index.tsx",
+            "name": "src/modules/EditUserProfile/index.tsx",
             "uid": "206b-505"
           }
         ]
@@ -779,7 +779,7 @@
         "name": "Channel/components/ChannelHeader.js",
         "children": [
           {
-            "name": "src/smart-components/Channel/components/ChannelHeader/index.tsx",
+            "name": "src/modules/Channel/components/ChannelHeader/index.tsx",
             "uid": "206b-513"
           }
         ]
@@ -788,7 +788,7 @@
         "name": "Channel/components/MessageList.js",
         "children": [
           {
-            "name": "src/smart-components/Channel/components/MessageList",
+            "name": "src/modules/Channel/components/MessageList",
             "children": [
               {
                 "uid": "206b-517",
@@ -806,7 +806,7 @@
         "name": "Channel/components/TypingIndicator.js",
         "children": [
           {
-            "name": "src/smart-components/Channel/components/TypingIndicator.tsx",
+            "name": "src/modules/Channel/components/TypingIndicator.tsx",
             "uid": "206b-525"
           }
         ]
@@ -815,7 +815,7 @@
         "name": "Channel/components/MessageInput.js",
         "children": [
           {
-            "name": "src/smart-components/Channel/components/MessageInput/index.tsx",
+            "name": "src/modules/Channel/components/MessageInput/index.tsx",
             "uid": "206b-529"
           }
         ]
@@ -824,7 +824,7 @@
         "name": "OpenChannel/components/OpenChannelInput.js",
         "children": [
           {
-            "name": "src/smart-components/OpenChannel/components/OpenChannelInput/index.tsx",
+            "name": "src/modules/OpenChannel/components/OpenChannelInput/index.tsx",
             "uid": "206b-533"
           }
         ]
@@ -833,7 +833,7 @@
         "name": "OpenChannel/components/FrozenChannelNotification.js",
         "children": [
           {
-            "name": "src/smart-components/OpenChannel/components/FrozenChannelNotification/index.tsx",
+            "name": "src/modules/OpenChannel/components/FrozenChannelNotification/index.tsx",
             "uid": "206b-537"
           }
         ]
@@ -842,7 +842,7 @@
         "name": "OpenChannel/components/OpenChannelHeader.js",
         "children": [
           {
-            "name": "src/smart-components/OpenChannel/components/OpenChannelHeader/index.tsx",
+            "name": "src/modules/OpenChannel/components/OpenChannelHeader/index.tsx",
             "uid": "206b-541"
           }
         ]
@@ -851,7 +851,7 @@
         "name": "OpenChannel/components/OpenChannelMessageList.js",
         "children": [
           {
-            "name": "src/smart-components/OpenChannel/components/OpenChannelMessageList/index.tsx",
+            "name": "src/modules/OpenChannel/components/OpenChannelMessageList/index.tsx",
             "uid": "206b-545"
           }
         ]
@@ -860,7 +860,7 @@
         "name": "OpenChannelSettings/components/OperatorUI.js",
         "children": [
           {
-            "name": "src/smart-components/OpenChannelSettings/components/OperatorUI",
+            "name": "src/modules/OpenChannelSettings/components/OperatorUI",
             "children": [
               {
                 "uid": "206b-549",
@@ -951,7 +951,7 @@
         "name": "Thread.js",
         "children": [
           {
-            "name": "src/smart-components/Thread/index.tsx",
+            "name": "src/modules/Thread/index.tsx",
             "uid": "206b-605"
           }
         ]
@@ -978,7 +978,7 @@
         "name": "ChannelSettings/components/EditDetailsModal.js",
         "children": [
           {
-            "name": "src/smart-components/ChannelSettings/components/EditDetailsModal/index.tsx",
+            "name": "src/modules/ChannelSettings/components/EditDetailsModal/index.tsx",
             "uid": "206b-617"
           }
         ]
@@ -1032,7 +1032,7 @@
         "name": "CreateChannel.js",
         "children": [
           {
-            "name": "src/smart-components/CreateChannel/index.tsx",
+            "name": "src/modules/CreateChannel/index.tsx",
             "uid": "206b-641"
           }
         ]
@@ -1097,7 +1097,7 @@
                 "uid": "206b-669"
               },
               {
-                "name": "smart-components/Channel/components/Message/index.tsx",
+                "name": "modules/Channel/components/Message/index.tsx",
                 "uid": "206b-671"
               }
             ]
@@ -1108,7 +1108,7 @@
         "name": "Channel/components/UnreadCount.js",
         "children": [
           {
-            "name": "src/smart-components/Channel/components/UnreadCount/index.tsx",
+            "name": "src/modules/Channel/components/UnreadCount/index.tsx",
             "uid": "206b-673"
           }
         ]
@@ -1117,7 +1117,7 @@
         "name": "Channel/components/FrozenNotification.js",
         "children": [
           {
-            "name": "src/smart-components/Channel/components/FrozenNotification/index.tsx",
+            "name": "src/modules/Channel/components/FrozenNotification/index.tsx",
             "uid": "206b-679"
           }
         ]
@@ -1126,7 +1126,7 @@
         "name": "Message/context.js",
         "children": [
           {
-            "name": "src/smart-components/Message/context/MessageProvider.tsx",
+            "name": "src/modules/Message/context/MessageProvider.tsx",
             "uid": "206b-685"
           }
         ]
@@ -1201,7 +1201,7 @@
         "name": "Channel/components/SuggestedMentionList.js",
         "children": [
           {
-            "name": "src/smart-components/Channel/components/SuggestedMentionList",
+            "name": "src/modules/Channel/components/SuggestedMentionList",
             "children": [
               {
                 "uid": "206b-725",
@@ -1222,7 +1222,7 @@
             "name": "src",
             "children": [
               {
-                "name": "smart-components/OpenChannel/components/OpenChannelMessage",
+                "name": "modules/OpenChannel/components/OpenChannelMessage",
                 "children": [
                   {
                     "uid": "206b-733",
@@ -1250,7 +1250,7 @@
         "name": "OpenChannelSettings/components/OpenChannelProfile.js",
         "children": [
           {
-            "name": "src/smart-components/OpenChannelSettings/components/OpenChannelProfile/index.tsx",
+            "name": "src/modules/OpenChannelSettings/components/OpenChannelProfile/index.tsx",
             "uid": "206b-749"
           }
         ]
@@ -1281,7 +1281,7 @@
         "name": "Thread/components/ThreadUI.js",
         "children": [
           {
-            "name": "src/smart-components/Thread/components/ThreadUI",
+            "name": "src/modules/Thread/components/ThreadUI",
             "children": [
               {
                 "uid": "206b-765",
@@ -1325,7 +1325,7 @@
         "name": "ChannelSettings/components/UserListItem.js",
         "children": [
           {
-            "name": "src/smart-components/ChannelSettings/components/UserListItem/index.tsx",
+            "name": "src/modules/ChannelSettings/components/UserListItem/index.tsx",
             "uid": "206b-789"
           }
         ]
@@ -1334,7 +1334,7 @@
         "name": "CreateChannel/components/CreateChannelUI.js",
         "children": [
           {
-            "name": "src/smart-components/CreateChannel/components/CreateChannelUI/index.tsx",
+            "name": "src/modules/CreateChannel/components/CreateChannelUI/index.tsx",
             "uid": "206b-793"
           }
         ]
@@ -1383,7 +1383,7 @@
         "name": "Channel/components/FileViewer.js",
         "children": [
           {
-            "name": "src/smart-components/Channel/components/FileViewer/index.tsx",
+            "name": "src/modules/Channel/components/FileViewer/index.tsx",
             "uid": "206b-817"
           }
         ]
@@ -1392,7 +1392,7 @@
         "name": "Channel/components/RemoveMessageModal.js",
         "children": [
           {
-            "name": "src/smart-components/Channel/components/RemoveMessageModal.tsx",
+            "name": "src/modules/Channel/components/RemoveMessageModal.tsx",
             "uid": "206b-821"
           }
         ]
@@ -1518,7 +1518,7 @@
         "name": "OpenChannelSettings/components/EditDetailsModal.js",
         "children": [
           {
-            "name": "src/smart-components/OpenChannelSettings/components/EditDetailsModal.tsx",
+            "name": "src/modules/OpenChannelSettings/components/EditDetailsModal.tsx",
             "uid": "206b-881"
           }
         ]
@@ -1545,7 +1545,7 @@
         "name": "Thread/components/ParentMessageInfo.js",
         "children": [
           {
-            "name": "src/smart-components/Thread/components/ParentMessageInfo/index.tsx",
+            "name": "src/modules/Thread/components/ParentMessageInfo/index.tsx",
             "uid": "206b-895"
           }
         ]
@@ -1554,7 +1554,7 @@
         "name": "Thread/components/ThreadHeader.js",
         "children": [
           {
-            "name": "src/smart-components/Thread/components/ThreadHeader/index.tsx",
+            "name": "src/modules/Thread/components/ThreadHeader/index.tsx",
             "uid": "206b-897"
           }
         ]
@@ -1563,7 +1563,7 @@
         "name": "Thread/components/ThreadList.js",
         "children": [
           {
-            "name": "src/smart-components/Thread/components/ThreadList/index.tsx",
+            "name": "src/modules/Thread/components/ThreadList/index.tsx",
             "uid": "206b-899"
           }
         ]
@@ -1572,7 +1572,7 @@
         "name": "Thread/components/ThreadMessageInput.js",
         "children": [
           {
-            "name": "src/smart-components/Thread/components/ThreadMessageInput/index.tsx",
+            "name": "src/modules/Thread/components/ThreadMessageInput/index.tsx",
             "uid": "206b-905"
           }
         ]
@@ -1590,7 +1590,7 @@
         "name": "CreateChannel/components/InviteUsers.js",
         "children": [
           {
-            "name": "src/smart-components/CreateChannel/components/InviteUsers",
+            "name": "src/modules/CreateChannel/components/InviteUsers",
             "children": [
               {
                 "uid": "206b-917",
@@ -1608,7 +1608,7 @@
         "name": "CreateChannel/components/SelectChannelType.js",
         "children": [
           {
-            "name": "src/smart-components/CreateChannel",
+            "name": "src/modules/CreateChannel",
             "children": [
               {
                 "uid": "206b-923",
@@ -1779,7 +1779,7 @@
         "name": "Thread/context/types.js",
         "children": [
           {
-            "name": "src/smart-components/Thread/types.tsx",
+            "name": "src/modules/Thread/types.tsx",
             "uid": "206b-995"
           }
         ]
@@ -1788,7 +1788,7 @@
         "name": "Thread/components/ParentMessageInfoItem.js",
         "children": [
           {
-            "name": "src/smart-components/Thread/components/ParentMessageInfo/ParentMessageInfoItem.tsx",
+            "name": "src/modules/Thread/components/ParentMessageInfo/ParentMessageInfoItem.tsx",
             "uid": "206b-999"
           }
         ]
@@ -1797,7 +1797,7 @@
         "name": "Thread/components/ThreadListItem.js",
         "children": [
           {
-            "name": "src/smart-components/Thread/components/ThreadList",
+            "name": "src/modules/Thread/components/ThreadList",
             "children": [
               {
                 "uid": "206b-1007",
@@ -1923,7 +1923,7 @@
         "name": "OpenChannelList.js",
         "children": [
           {
-            "name": "src/smart-components/OpenChannelList/index.tsx",
+            "name": "src/modules/OpenChannelList/index.tsx",
             "uid": "206b-1067"
           }
         ]
@@ -1932,7 +1932,7 @@
         "name": "OpenChannelList/components/OpenChannelListUI.js",
         "children": [
           {
-            "name": "src/smart-components/OpenChannelList/components/OpenChannelListUI/index.tsx",
+            "name": "src/modules/OpenChannelList/components/OpenChannelListUI/index.tsx",
             "uid": "206b-1073"
           }
         ]
@@ -1941,7 +1941,7 @@
         "name": "OpenChannelList/components/OpenChannelPreview.js",
         "children": [
           {
-            "name": "src/smart-components/OpenChannelList/components/OpenChannelPreview/index.tsx",
+            "name": "src/modules/OpenChannelList/components/OpenChannelPreview/index.tsx",
             "uid": "206b-1077"
           }
         ]
@@ -1950,7 +1950,7 @@
         "name": "CreateOpenChannel.js",
         "children": [
           {
-            "name": "src/smart-components/CreateOpenChannel/index.tsx",
+            "name": "src/modules/CreateOpenChannel/index.tsx",
             "uid": "206b-1081"
           }
         ]
@@ -1959,7 +1959,7 @@
         "name": "CreateOpenChannel/components/CreateOpenChannelUI.js",
         "children": [
           {
-            "name": "src/smart-components/CreateOpenChannel/components/CreateOpenChannelUI/index.tsx",
+            "name": "src/modules/CreateOpenChannel/components/CreateOpenChannelUI/index.tsx",
             "uid": "206b-1085"
           }
         ]
@@ -1968,7 +1968,7 @@
         "name": "CreateOpenChannel/context.js",
         "children": [
           {
-            "name": "src/smart-components/CreateOpenChannel/context/CreateOpenChannelProvider.tsx",
+            "name": "src/modules/CreateOpenChannel/context/CreateOpenChannelProvider.tsx",
             "uid": "206b-1091"
           }
         ]
@@ -1977,7 +1977,7 @@
         "name": "EditUserProfile/context.js",
         "children": [
           {
-            "name": "src/smart-components/EditUserProfile/context/EditUserProfileProvider.tsx",
+            "name": "src/modules/EditUserProfile/context/EditUserProfileProvider.tsx",
             "uid": "206b-1095"
           }
         ]
@@ -2101,7 +2101,7 @@
         "name": "ChannelListProvider-2e2a930f.js",
         "children": [
           {
-            "name": "src/smart-components/ChannelList",
+            "name": "src/modules/ChannelList",
             "children": [
               {
                 "name": "dux",
@@ -2145,7 +2145,7 @@
         "name": "ChannelProvider-89259d62.js",
         "children": [
           {
-            "name": "src/smart-components/Channel/context",
+            "name": "src/modules/Channel/context",
             "children": [
               {
                 "name": "dux",
@@ -2245,7 +2245,7 @@
         "name": "OpenChannelProvider-4e9515cf.js",
         "children": [
           {
-            "name": "src/smart-components/OpenChannel/context",
+            "name": "src/modules/OpenChannel/context",
             "children": [
               {
                 "uid": "206b-1305",
@@ -2510,7 +2510,7 @@
         "name": "index-149d9827.js",
         "children": [
           {
-            "name": "src/smart-components/OpenChannelSettings/components/ParticipantUI",
+            "name": "src/modules/OpenChannelSettings/components/ParticipantUI",
             "children": [
               {
                 "uid": "206b-1433",
@@ -2532,7 +2532,7 @@
         "name": "MemberList-01214d5d.js",
         "children": [
           {
-            "name": "src/smart-components/ChannelSettings/components/ModerationPanel",
+            "name": "src/modules/ChannelSettings/components/ModerationPanel",
             "children": [
               {
                 "uid": "206b-1440",
@@ -2566,7 +2566,7 @@
             "name": "src",
             "children": [
               {
-                "name": "smart-components/ChannelList/components/ChannelPreview/utils.js",
+                "name": "modules/ChannelList/components/ChannelPreview/utils.js",
                 "uid": "206b-1451"
               },
               {
@@ -2590,7 +2590,7 @@
         "name": "index-636f9ba3.js",
         "children": [
           {
-            "name": "src/smart-components/EditUserProfile",
+            "name": "src/modules/EditUserProfile",
             "children": [
               {
                 "name": "context/EditUserProfIleProvider.tsx",
@@ -2733,7 +2733,7 @@
         "name": "const-35afb9a0.js",
         "children": [
           {
-            "name": "src/smart-components/Channel/context/const.ts",
+            "name": "src/modules/Channel/context/const.ts",
             "uid": "206b-1618"
           }
         ]
@@ -2742,7 +2742,7 @@
         "name": "utils-1d2642e7.js",
         "children": [
           {
-            "name": "src/smart-components/Channel/components/ChannelHeader/utils.ts",
+            "name": "src/modules/Channel/components/ChannelHeader/utils.ts",
             "uid": "206b-1622"
           }
         ]
@@ -2769,7 +2769,7 @@
         "name": "VoiceMessageInputWrapper-3b676122.js",
         "children": [
           {
-            "name": "src/smart-components/Channel/components/MessageInput/VoiceMessageInputWrapper.tsx",
+            "name": "src/modules/Channel/components/MessageInput/VoiceMessageInputWrapper.tsx",
             "uid": "206b-1647"
           }
         ]
@@ -2796,7 +2796,7 @@
         "name": "ThreadProvider-5266c2fa.js",
         "children": [
           {
-            "name": "src/smart-components/Thread",
+            "name": "src/modules/Thread",
             "children": [
               {
                 "name": "context",
@@ -2941,7 +2941,7 @@
         "name": "CreateChannelProvider-45ec50ef.js",
         "children": [
           {
-            "name": "src/smart-components/CreateChannel",
+            "name": "src/modules/CreateChannel",
             "children": [
               {
                 "uid": "206b-1727",
@@ -3002,7 +3002,7 @@
         "name": "tokenize-c224a8a9.js",
         "children": [
           {
-            "name": "src/smart-components/Message",
+            "name": "src/modules/Message",
             "children": [
               {
                 "uid": "206b-1765",
@@ -3078,7 +3078,7 @@
         "name": "index-9df4e8cb.js",
         "children": [
           {
-            "name": "src/smart-components/Message",
+            "name": "src/modules/Message",
             "children": [
               {
                 "name": "utils/tokens/keyGenerator.ts",
@@ -3096,7 +3096,7 @@
         "name": "RemoveMessageModal-db492864.js",
         "children": [
           {
-            "name": "src/smart-components/Thread/components/RemoveMessageModal.tsx",
+            "name": "src/modules/Thread/components/RemoveMessageModal.tsx",
             "uid": "206b-1904"
           }
         ]
@@ -3132,7 +3132,7 @@
         "name": "OpenChannelListProvider-5e2db2c6.js",
         "children": [
           {
-            "name": "src/smart-components/OpenChannelList/context",
+            "name": "src/modules/OpenChannelList/context",
             "children": [
               {
                 "uid": "206b-1912",
@@ -6369,7 +6369,7 @@
       "isEntry": true
     },
     "206b-64": {
-      "id": "/src/smart-components/App/DesktopLayout.tsx",
+      "id": "/src/modules/App/DesktopLayout.tsx",
       "moduleParts": {
         "App.js": "206b-65"
       },
@@ -6400,7 +6400,7 @@
       ]
     },
     "206b-66": {
-      "id": "/src/smart-components/App/MobileLayout.tsx",
+      "id": "/src/modules/App/MobileLayout.tsx",
       "moduleParts": {
         "App.js": "206b-67"
       },
@@ -6440,7 +6440,7 @@
       ]
     },
     "206b-68": {
-      "id": "/src/smart-components/App/AppLayout.tsx",
+      "id": "/src/modules/App/AppLayout.tsx",
       "moduleParts": {
         "App.js": "206b-69"
       },
@@ -6465,7 +6465,7 @@
       ]
     },
     "206b-70": {
-      "id": "/src/smart-components/App/index.jsx",
+      "id": "/src/modules/App/index.jsx",
       "moduleParts": {
         "App.js": "206b-71"
       },
@@ -6497,7 +6497,7 @@
       "isEntry": true
     },
     "206b-80": {
-      "id": "/src/smart-components/ChannelSettings/index.tsx",
+      "id": "/src/modules/ChannelSettings/index.tsx",
       "moduleParts": {
         "ChannelSettings.js": "206b-81"
       },
@@ -6526,7 +6526,7 @@
       "isEntry": true
     },
     "206b-84": {
-      "id": "/src/smart-components/ChannelList/index.tsx",
+      "id": "/src/modules/ChannelList/index.tsx",
       "moduleParts": {
         "ChannelList.js": "206b-85"
       },
@@ -6555,7 +6555,7 @@
       "isEntry": true
     },
     "206b-88": {
-      "id": "/src/smart-components/Channel/index.tsx",
+      "id": "/src/modules/Channel/index.tsx",
       "moduleParts": {
         "Channel.js": "206b-89"
       },
@@ -6584,7 +6584,7 @@
       "isEntry": true
     },
     "206b-92": {
-      "id": "/src/smart-components/OpenChannel/index.tsx",
+      "id": "/src/modules/OpenChannel/index.tsx",
       "moduleParts": {
         "OpenChannel.js": "206b-93"
       },
@@ -6607,7 +6607,7 @@
       "isEntry": true
     },
     "206b-96": {
-      "id": "/src/smart-components/OpenChannelSettings/index.tsx",
+      "id": "/src/modules/OpenChannelSettings/index.tsx",
       "moduleParts": {
         "OpenChannelSettings.js": "206b-97"
       },
@@ -6630,7 +6630,7 @@
       "isEntry": true
     },
     "206b-100": {
-      "id": "/src/smart-components/MessageSearch/index.tsx",
+      "id": "/src/modules/MessageSearch/index.tsx",
       "moduleParts": {
         "MessageSearch.js": "206b-101"
       },
@@ -6953,7 +6953,7 @@
       "isEntry": true
     },
     "206b-116": {
-      "id": "/src/smart-components/ChannelSettings/components/ChannelSettingsUI/index.tsx",
+      "id": "/src/modules/ChannelSettings/components/ChannelSettingsUI/index.tsx",
       "moduleParts": {
         "ChannelSettings/components/ChannelSettingsUI.js": "206b-117"
       },
@@ -7006,7 +7006,7 @@
       "isEntry": true
     },
     "206b-120": {
-      "id": "/src/smart-components/ChannelSettings/context/ChannelSettingsProvider.tsx",
+      "id": "/src/modules/ChannelSettings/context/ChannelSettingsProvider.tsx",
       "moduleParts": {
         "ChannelSettings/context.js": "206b-121"
       },
@@ -7080,7 +7080,7 @@
       "isEntry": true
     },
     "206b-124": {
-      "id": "/src/smart-components/ChannelList/components/utils.js",
+      "id": "/src/modules/ChannelList/components/utils.js",
       "moduleParts": {
         "ChannelList/components/ChannelListUI.js": "206b-125"
       },
@@ -7092,7 +7092,7 @@
       ]
     },
     "206b-126": {
-      "id": "/src/smart-components/ChannelList/components/ChannelListUI/index.tsx",
+      "id": "/src/modules/ChannelList/components/ChannelListUI/index.tsx",
       "moduleParts": {
         "ChannelList/components/ChannelListUI.js": "206b-127"
       },
@@ -7142,7 +7142,7 @@
       "isEntry": true
     },
     "206b-132": {
-      "id": "/src/smart-components/Channel/components/ChannelUI/index.tsx",
+      "id": "/src/modules/Channel/components/ChannelUI/index.tsx",
       "moduleParts": {
         "Channel/components/ChannelUI.js": "206b-133"
       },
@@ -7186,7 +7186,7 @@
       "isEntry": true
     },
     "206b-134": {
-      "id": "/src/smart-components/OpenChannel/components/OpenChannelUI/index.tsx",
+      "id": "/src/modules/OpenChannel/components/OpenChannelUI/index.tsx",
       "moduleParts": {
         "OpenChannel/components/OpenChannelUI.js": "206b-135"
       },
@@ -7224,7 +7224,7 @@
       "isEntry": true
     },
     "206b-138": {
-      "id": "/src/smart-components/OpenChannelSettings/components/InvalidChannel.tsx",
+      "id": "/src/modules/OpenChannelSettings/components/InvalidChannel.tsx",
       "moduleParts": {
         "OpenChannelSettings/components/OpenChannelSettingsUI.js": "206b-139"
       },
@@ -7255,7 +7255,7 @@
       ]
     },
     "206b-140": {
-      "id": "/src/smart-components/OpenChannelSettings/components/OpenChannelSettingsUI/index.tsx",
+      "id": "/src/modules/OpenChannelSettings/components/OpenChannelSettingsUI/index.tsx",
       "moduleParts": {
         "OpenChannelSettings/components/OpenChannelSettingsUI.js": "206b-141"
       },
@@ -7302,7 +7302,7 @@
       "isEntry": true
     },
     "206b-148": {
-      "id": "/src/smart-components/OpenChannelSettings/context/OpenChannelSettingsProvider.tsx",
+      "id": "/src/modules/OpenChannelSettings/context/OpenChannelSettingsProvider.tsx",
       "moduleParts": {
         "OpenChannelSettings/context.js": "206b-149"
       },
@@ -7376,7 +7376,7 @@
       "isEntry": true
     },
     "206b-152": {
-      "id": "/src/smart-components/MessageSearch/components/MessageSearchUI/index.tsx",
+      "id": "/src/modules/MessageSearch/components/MessageSearchUI/index.tsx",
       "moduleParts": {
         "MessageSearch/components/MessageSearchUI.js": "206b-153"
       },
@@ -8950,7 +8950,7 @@
       "isEntry": true
     },
     "206b-404": {
-      "id": "/src/smart-components/MessageSearch/context/dux/actionTypes.ts",
+      "id": "/src/modules/MessageSearch/context/dux/actionTypes.ts",
       "moduleParts": {
         "MessageSearch/context.js": "206b-405"
       },
@@ -8974,7 +8974,7 @@
       ]
     },
     "206b-406": {
-      "id": "/src/smart-components/MessageSearch/context/dux/reducers.ts",
+      "id": "/src/modules/MessageSearch/context/dux/reducers.ts",
       "moduleParts": {
         "MessageSearch/context.js": "206b-407"
       },
@@ -8993,7 +8993,7 @@
       ]
     },
     "206b-408": {
-      "id": "/src/smart-components/MessageSearch/context/dux/initialState.ts",
+      "id": "/src/modules/MessageSearch/context/dux/initialState.ts",
       "moduleParts": {
         "MessageSearch/context.js": "206b-409"
       },
@@ -9005,7 +9005,7 @@
       ]
     },
     "206b-410": {
-      "id": "/src/smart-components/MessageSearch/context/hooks/useSetChannel.ts",
+      "id": "/src/modules/MessageSearch/context/hooks/useSetChannel.ts",
       "moduleParts": {
         "MessageSearch/context.js": "206b-411"
       },
@@ -9024,7 +9024,7 @@
       ]
     },
     "206b-412": {
-      "id": "/src/smart-components/MessageSearch/context/hooks/useGetSearchedMessages.ts",
+      "id": "/src/modules/MessageSearch/context/hooks/useGetSearchedMessages.ts",
       "moduleParts": {
         "MessageSearch/context.js": "206b-413"
       },
@@ -9046,7 +9046,7 @@
       ]
     },
     "206b-414": {
-      "id": "/src/smart-components/MessageSearch/context/hooks/useScrollCallback.ts",
+      "id": "/src/modules/MessageSearch/context/hooks/useScrollCallback.ts",
       "moduleParts": {
         "MessageSearch/context.js": "206b-415"
       },
@@ -9065,7 +9065,7 @@
       ]
     },
     "206b-416": {
-      "id": "/src/smart-components/MessageSearch/context/hooks/useSearchStringEffect.ts",
+      "id": "/src/modules/MessageSearch/context/hooks/useSearchStringEffect.ts",
       "moduleParts": {
         "MessageSearch/context.js": "206b-417"
       },
@@ -9084,7 +9084,7 @@
       ]
     },
     "206b-418": {
-      "id": "/src/smart-components/MessageSearch/context/MessageSearchProvider.tsx",
+      "id": "/src/modules/MessageSearch/context/MessageSearchProvider.tsx",
       "moduleParts": {
         "MessageSearch/context.js": "206b-419"
       },
@@ -9158,7 +9158,7 @@
       "isEntry": true
     },
     "206b-440": {
-      "id": "/src/smart-components/ChannelSettings/components/ChannelProfile/index.tsx",
+      "id": "/src/modules/ChannelSettings/components/ChannelProfile/index.tsx",
       "moduleParts": {
         "ChannelSettings/components/ChannelProfile.js": "206b-441"
       },
@@ -9199,7 +9199,7 @@
       "isEntry": true
     },
     "206b-444": {
-      "id": "/src/smart-components/ChannelSettings/components/ModerationPanel/OperatorsModal.tsx",
+      "id": "/src/modules/ChannelSettings/components/ModerationPanel/OperatorsModal.tsx",
       "moduleParts": {
         "ChannelSettings/components/ModerationPanel.js": "206b-445"
       },
@@ -9242,7 +9242,7 @@
       ]
     },
     "206b-446": {
-      "id": "/src/smart-components/ChannelSettings/components/ModerationPanel/AddOperatorsModal.tsx",
+      "id": "/src/modules/ChannelSettings/components/ModerationPanel/AddOperatorsModal.tsx",
       "moduleParts": {
         "ChannelSettings/components/ModerationPanel.js": "206b-447"
       },
@@ -9282,7 +9282,7 @@
       ]
     },
     "206b-448": {
-      "id": "/src/smart-components/ChannelSettings/components/ModerationPanel/OperatorList.tsx",
+      "id": "/src/modules/ChannelSettings/components/ModerationPanel/OperatorList.tsx",
       "moduleParts": {
         "ChannelSettings/components/ModerationPanel.js": "206b-449"
       },
@@ -9328,7 +9328,7 @@
       ]
     },
     "206b-450": {
-      "id": "/src/smart-components/ChannelSettings/components/ModerationPanel/BannedUsersModal.tsx",
+      "id": "/src/modules/ChannelSettings/components/ModerationPanel/BannedUsersModal.tsx",
       "moduleParts": {
         "ChannelSettings/components/ModerationPanel.js": "206b-451"
       },
@@ -9371,7 +9371,7 @@
       ]
     },
     "206b-452": {
-      "id": "/src/smart-components/ChannelSettings/components/ModerationPanel/BannedUserList.tsx",
+      "id": "/src/modules/ChannelSettings/components/ModerationPanel/BannedUserList.tsx",
       "moduleParts": {
         "ChannelSettings/components/ModerationPanel.js": "206b-453"
       },
@@ -9414,7 +9414,7 @@
       ]
     },
     "206b-454": {
-      "id": "/src/smart-components/ChannelSettings/components/ModerationPanel/MutedMembersModal.tsx",
+      "id": "/src/modules/ChannelSettings/components/ModerationPanel/MutedMembersModal.tsx",
       "moduleParts": {
         "ChannelSettings/components/ModerationPanel.js": "206b-455"
       },
@@ -9460,7 +9460,7 @@
       ]
     },
     "206b-456": {
-      "id": "/src/smart-components/ChannelSettings/components/ModerationPanel/MutedMemberList.tsx",
+      "id": "/src/modules/ChannelSettings/components/ModerationPanel/MutedMemberList.tsx",
       "moduleParts": {
         "ChannelSettings/components/ModerationPanel.js": "206b-457"
       },
@@ -9506,7 +9506,7 @@
       ]
     },
     "206b-458": {
-      "id": "/src/smart-components/ChannelSettings/components/ModerationPanel/index.tsx",
+      "id": "/src/modules/ChannelSettings/components/ModerationPanel/index.tsx",
       "moduleParts": {
         "ChannelSettings/components/ModerationPanel.js": "206b-459"
       },
@@ -9556,7 +9556,7 @@
       "isEntry": true
     },
     "206b-476": {
-      "id": "/src/smart-components/ChannelSettings/components/LeaveChannel/index.tsx",
+      "id": "/src/modules/ChannelSettings/components/LeaveChannel/index.tsx",
       "moduleParts": {
         "ChannelSettings/components/LeaveChannel.js": "206b-477"
       },
@@ -9600,7 +9600,7 @@
       "isEntry": true
     },
     "206b-480": {
-      "id": "/src/smart-components/ChannelSettings/components/UserPanel/index.tsx",
+      "id": "/src/modules/ChannelSettings/components/UserPanel/index.tsx",
       "moduleParts": {
         "ChannelSettings/components/UserPanel.js": "206b-481"
       },
@@ -9638,7 +9638,7 @@
       "isEntry": true
     },
     "206b-484": {
-      "id": "/src/smart-components/ChannelList/components/ChannelListHeader/index.tsx",
+      "id": "/src/modules/ChannelList/components/ChannelListHeader/index.tsx",
       "moduleParts": {
         "ChannelList/components/ChannelListHeader.js": "206b-485"
       },
@@ -9670,7 +9670,7 @@
       "isEntry": true
     },
     "206b-488": {
-      "id": "/src/smart-components/ChannelList/components/AddChannel/index.tsx",
+      "id": "/src/modules/ChannelList/components/AddChannel/index.tsx",
       "moduleParts": {
         "ChannelList/components/AddChannel.js": "206b-489"
       },
@@ -9702,7 +9702,7 @@
       "isEntry": true
     },
     "206b-492": {
-      "id": "/src/smart-components/ChannelList/components/ChannelPreview/index.tsx",
+      "id": "/src/modules/ChannelList/components/ChannelPreview/index.tsx",
       "moduleParts": {
         "ChannelList/components/ChannelPreview.js": "206b-493"
       },
@@ -9776,7 +9776,7 @@
       "isEntry": true
     },
     "206b-496": {
-      "id": "/src/smart-components/ChannelList/components/LeaveChannel/index.tsx",
+      "id": "/src/modules/ChannelList/components/LeaveChannel/index.tsx",
       "moduleParts": {
         "ChannelList/components/ChannelPreviewAction.js": "206b-497"
       },
@@ -9807,7 +9807,7 @@
       ]
     },
     "206b-498": {
-      "id": "/src/smart-components/ChannelList/components/ChannelPreviewAction.jsx",
+      "id": "/src/modules/ChannelList/components/ChannelPreviewAction.jsx",
       "moduleParts": {
         "ChannelList/components/ChannelPreviewAction.js": "206b-499"
       },
@@ -9842,7 +9842,7 @@
       "isEntry": true
     },
     "206b-504": {
-      "id": "/src/smart-components/EditUserProfile/index.tsx",
+      "id": "/src/modules/EditUserProfile/index.tsx",
       "moduleParts": {
         "EditUserProfile.js": "206b-505"
       },
@@ -9894,7 +9894,7 @@
       "isEntry": true
     },
     "206b-512": {
-      "id": "/src/smart-components/Channel/components/ChannelHeader/index.tsx",
+      "id": "/src/modules/Channel/components/ChannelHeader/index.tsx",
       "moduleParts": {
         "Channel/components/ChannelHeader.js": "206b-513"
       },
@@ -9944,7 +9944,7 @@
       "isEntry": true
     },
     "206b-516": {
-      "id": "/src/smart-components/Channel/components/MessageList/getMessagePartsInfo.ts",
+      "id": "/src/modules/Channel/components/MessageList/getMessagePartsInfo.ts",
       "moduleParts": {
         "Channel/components/MessageList.js": "206b-517"
       },
@@ -9963,7 +9963,7 @@
       ]
     },
     "206b-518": {
-      "id": "/src/smart-components/Channel/components/MessageList/index.tsx",
+      "id": "/src/modules/Channel/components/MessageList/index.tsx",
       "moduleParts": {
         "Channel/components/MessageList.js": "206b-519"
       },
@@ -10019,7 +10019,7 @@
       "isEntry": true
     },
     "206b-524": {
-      "id": "/src/smart-components/Channel/components/TypingIndicator.tsx",
+      "id": "/src/modules/Channel/components/TypingIndicator.tsx",
       "moduleParts": {
         "Channel/components/TypingIndicator.js": "206b-525"
       },
@@ -10057,7 +10057,7 @@
       "isEntry": true
     },
     "206b-528": {
-      "id": "/src/smart-components/Channel/components/MessageInput/index.tsx",
+      "id": "/src/modules/Channel/components/MessageInput/index.tsx",
       "moduleParts": {
         "Channel/components/MessageInput.js": "206b-529"
       },
@@ -10107,7 +10107,7 @@
       "isEntry": true
     },
     "206b-532": {
-      "id": "/src/smart-components/OpenChannel/components/OpenChannelInput/index.tsx",
+      "id": "/src/modules/OpenChannel/components/OpenChannelInput/index.tsx",
       "moduleParts": {
         "OpenChannel/components/OpenChannelInput.js": "206b-533"
       },
@@ -10133,7 +10133,7 @@
       "isEntry": true
     },
     "206b-536": {
-      "id": "/src/smart-components/OpenChannel/components/FrozenChannelNotification/index.tsx",
+      "id": "/src/modules/OpenChannel/components/FrozenChannelNotification/index.tsx",
       "moduleParts": {
         "OpenChannel/components/FrozenChannelNotification.js": "206b-537"
       },
@@ -10159,7 +10159,7 @@
       "isEntry": true
     },
     "206b-540": {
-      "id": "/src/smart-components/OpenChannel/components/OpenChannelHeader/index.tsx",
+      "id": "/src/modules/OpenChannel/components/OpenChannelHeader/index.tsx",
       "moduleParts": {
         "OpenChannel/components/OpenChannelHeader.js": "206b-541"
       },
@@ -10203,7 +10203,7 @@
       "isEntry": true
     },
     "206b-544": {
-      "id": "/src/smart-components/OpenChannel/components/OpenChannelMessageList/index.tsx",
+      "id": "/src/modules/OpenChannel/components/OpenChannelMessageList/index.tsx",
       "moduleParts": {
         "OpenChannel/components/OpenChannelMessageList.js": "206b-545"
       },
@@ -10250,7 +10250,7 @@
       "isEntry": true
     },
     "206b-548": {
-      "id": "/src/smart-components/OpenChannelSettings/components/OperatorUI/DeleteOpenChannel.tsx",
+      "id": "/src/modules/OpenChannelSettings/components/OperatorUI/DeleteOpenChannel.tsx",
       "moduleParts": {
         "OpenChannelSettings/components/OperatorUI.js": "206b-549"
       },
@@ -10284,7 +10284,7 @@
       ]
     },
     "206b-550": {
-      "id": "/src/smart-components/OpenChannelSettings/components/OperatorUI/OperatorsModal.tsx",
+      "id": "/src/modules/OpenChannelSettings/components/OperatorUI/OperatorsModal.tsx",
       "moduleParts": {
         "OpenChannelSettings/components/OperatorUI.js": "206b-551"
       },
@@ -10327,7 +10327,7 @@
       ]
     },
     "206b-552": {
-      "id": "/src/smart-components/OpenChannelSettings/components/OperatorUI/AddOperatorsModal.tsx",
+      "id": "/src/modules/OpenChannelSettings/components/OperatorUI/AddOperatorsModal.tsx",
       "moduleParts": {
         "OpenChannelSettings/components/OperatorUI.js": "206b-553"
       },
@@ -10364,7 +10364,7 @@
       ]
     },
     "206b-554": {
-      "id": "/src/smart-components/OpenChannelSettings/components/OperatorUI/OperatorList.tsx",
+      "id": "/src/modules/OpenChannelSettings/components/OperatorUI/OperatorList.tsx",
       "moduleParts": {
         "OpenChannelSettings/components/OperatorUI.js": "206b-555"
       },
@@ -10410,7 +10410,7 @@
       ]
     },
     "206b-556": {
-      "id": "/src/smart-components/OpenChannelSettings/components/OperatorUI/MutedParticipantsModal.tsx",
+      "id": "/src/modules/OpenChannelSettings/components/OperatorUI/MutedParticipantsModal.tsx",
       "moduleParts": {
         "OpenChannelSettings/components/OperatorUI.js": "206b-557"
       },
@@ -10456,7 +10456,7 @@
       ]
     },
     "206b-558": {
-      "id": "/src/smart-components/OpenChannelSettings/components/OperatorUI/MutedParticipantList.tsx",
+      "id": "/src/modules/OpenChannelSettings/components/OperatorUI/MutedParticipantList.tsx",
       "moduleParts": {
         "OpenChannelSettings/components/OperatorUI.js": "206b-559"
       },
@@ -10502,7 +10502,7 @@
       ]
     },
     "206b-560": {
-      "id": "/src/smart-components/OpenChannelSettings/components/OperatorUI/BannedUsersModal.tsx",
+      "id": "/src/modules/OpenChannelSettings/components/OperatorUI/BannedUsersModal.tsx",
       "moduleParts": {
         "OpenChannelSettings/components/OperatorUI.js": "206b-561"
       },
@@ -10548,7 +10548,7 @@
       ]
     },
     "206b-562": {
-      "id": "/src/smart-components/OpenChannelSettings/components/OperatorUI/BannedUserList.tsx",
+      "id": "/src/modules/OpenChannelSettings/components/OperatorUI/BannedUserList.tsx",
       "moduleParts": {
         "OpenChannelSettings/components/OperatorUI.js": "206b-563"
       },
@@ -10594,7 +10594,7 @@
       ]
     },
     "206b-564": {
-      "id": "/src/smart-components/OpenChannelSettings/components/OperatorUI/index.tsx",
+      "id": "/src/modules/OpenChannelSettings/components/OperatorUI/index.tsx",
       "moduleParts": {
         "OpenChannelSettings/components/OperatorUI.js": "206b-565"
       },
@@ -10798,7 +10798,7 @@
       "isEntry": true
     },
     "206b-604": {
-      "id": "/src/smart-components/Thread/index.tsx",
+      "id": "/src/modules/Thread/index.tsx",
       "moduleParts": {
         "Thread.js": "206b-605"
       },
@@ -10921,7 +10921,7 @@
       "isEntry": true
     },
     "206b-616": {
-      "id": "/src/smart-components/ChannelSettings/components/EditDetailsModal/index.tsx",
+      "id": "/src/modules/ChannelSettings/components/EditDetailsModal/index.tsx",
       "moduleParts": {
         "ChannelSettings/components/EditDetailsModal.js": "206b-617"
       },
@@ -11285,7 +11285,7 @@
       "isEntry": true
     },
     "206b-640": {
-      "id": "/src/smart-components/CreateChannel/index.tsx",
+      "id": "/src/modules/CreateChannel/index.tsx",
       "moduleParts": {
         "CreateChannel.js": "206b-641"
       },
@@ -11610,7 +11610,7 @@
       ]
     },
     "206b-670": {
-      "id": "/src/smart-components/Channel/components/Message/index.tsx",
+      "id": "/src/modules/Channel/components/Message/index.tsx",
       "moduleParts": {
         "Channel/components/Message.js": "206b-671"
       },
@@ -11681,7 +11681,7 @@
       "isEntry": true
     },
     "206b-672": {
-      "id": "/src/smart-components/Channel/components/UnreadCount/index.tsx",
+      "id": "/src/modules/Channel/components/UnreadCount/index.tsx",
       "moduleParts": {
         "Channel/components/UnreadCount.js": "206b-673"
       },
@@ -11710,7 +11710,7 @@
       "isEntry": true
     },
     "206b-678": {
-      "id": "/src/smart-components/Channel/components/FrozenNotification/index.tsx",
+      "id": "/src/modules/Channel/components/FrozenNotification/index.tsx",
       "moduleParts": {
         "Channel/components/FrozenNotification.js": "206b-679"
       },
@@ -11736,7 +11736,7 @@
       "isEntry": true
     },
     "206b-684": {
-      "id": "/src/smart-components/Message/context/MessageProvider.tsx",
+      "id": "/src/modules/Message/context/MessageProvider.tsx",
       "moduleParts": {
         "Message/context.js": "206b-685"
       },
@@ -12038,7 +12038,7 @@
       "isEntry": true
     },
     "206b-724": {
-      "id": "/src/smart-components/Channel/components/SuggestedMentionList/SuggestedUserMentionItem.tsx",
+      "id": "/src/modules/Channel/components/SuggestedMentionList/SuggestedUserMentionItem.tsx",
       "moduleParts": {
         "Channel/components/SuggestedMentionList.js": "206b-725"
       },
@@ -12066,7 +12066,7 @@
       ]
     },
     "206b-726": {
-      "id": "/src/smart-components/Channel/components/SuggestedMentionList/index.tsx",
+      "id": "/src/modules/Channel/components/SuggestedMentionList/index.tsx",
       "moduleParts": {
         "Channel/components/SuggestedMentionList.js": "206b-727"
       },
@@ -12128,7 +12128,7 @@
       "isEntry": true
     },
     "206b-732": {
-      "id": "/src/smart-components/OpenChannel/components/OpenChannelMessage/RemoveMessageModal.tsx",
+      "id": "/src/modules/OpenChannel/components/OpenChannelMessage/RemoveMessageModal.tsx",
       "moduleParts": {
         "OpenChannel/components/OpenChannelMessage.js": "206b-733"
       },
@@ -12166,7 +12166,7 @@
       ]
     },
     "206b-736": {
-      "id": "/src/smart-components/OpenChannel/components/OpenChannelMessage/utils.ts",
+      "id": "/src/modules/OpenChannel/components/OpenChannelMessage/utils.ts",
       "moduleParts": {
         "OpenChannel/components/OpenChannelMessage.js": "206b-737"
       },
@@ -12182,7 +12182,7 @@
       ]
     },
     "206b-738": {
-      "id": "/src/smart-components/OpenChannel/components/OpenChannelMessage/index.tsx",
+      "id": "/src/modules/OpenChannel/components/OpenChannelMessage/index.tsx",
       "moduleParts": {
         "OpenChannel/components/OpenChannelMessage.js": "206b-739"
       },
@@ -12244,7 +12244,7 @@
       "isEntry": true
     },
     "206b-748": {
-      "id": "/src/smart-components/OpenChannelSettings/components/OpenChannelProfile/index.tsx",
+      "id": "/src/modules/OpenChannelSettings/components/OpenChannelProfile/index.tsx",
       "moduleParts": {
         "OpenChannelSettings/components/OpenChannelProfile.js": "206b-749"
       },
@@ -12414,7 +12414,7 @@
       "isEntry": true
     },
     "206b-764": {
-      "id": "/src/smart-components/Thread/components/ThreadUI/useMemorizedHeader.tsx",
+      "id": "/src/modules/Thread/components/ThreadUI/useMemorizedHeader.tsx",
       "moduleParts": {
         "Thread/components/ThreadUI.js": "206b-765"
       },
@@ -12430,7 +12430,7 @@
       ]
     },
     "206b-766": {
-      "id": "/src/smart-components/Thread/components/ThreadUI/useMemorizedParentMessageInfo.tsx",
+      "id": "/src/modules/Thread/components/ThreadUI/useMemorizedParentMessageInfo.tsx",
       "moduleParts": {
         "Thread/components/ThreadUI.js": "206b-767"
       },
@@ -12452,7 +12452,7 @@
       ]
     },
     "206b-768": {
-      "id": "/src/smart-components/Thread/components/ThreadUI/useMemorizedThreadList.tsx",
+      "id": "/src/modules/Thread/components/ThreadUI/useMemorizedThreadList.tsx",
       "moduleParts": {
         "Thread/components/ThreadUI.js": "206b-769"
       },
@@ -12474,7 +12474,7 @@
       ]
     },
     "206b-770": {
-      "id": "/src/smart-components/Thread/components/ThreadUI/index.tsx",
+      "id": "/src/modules/Thread/components/ThreadUI/index.tsx",
       "moduleParts": {
         "Thread/components/ThreadUI.js": "206b-771"
       },
@@ -12588,7 +12588,7 @@
       "isEntry": true
     },
     "206b-788": {
-      "id": "/src/smart-components/ChannelSettings/components/UserListItem/index.tsx",
+      "id": "/src/modules/ChannelSettings/components/UserListItem/index.tsx",
       "moduleParts": {
         "ChannelSettings/components/UserListItem.js": "206b-789"
       },
@@ -12641,7 +12641,7 @@
       "isEntry": true
     },
     "206b-792": {
-      "id": "/src/smart-components/CreateChannel/components/CreateChannelUI/index.tsx",
+      "id": "/src/modules/CreateChannel/components/CreateChannelUI/index.tsx",
       "moduleParts": {
         "CreateChannel/components/CreateChannelUI.js": "206b-793"
       },
@@ -12902,7 +12902,7 @@
       "isEntry": true
     },
     "206b-816": {
-      "id": "/src/smart-components/Channel/components/FileViewer/index.tsx",
+      "id": "/src/modules/Channel/components/FileViewer/index.tsx",
       "moduleParts": {
         "Channel/components/FileViewer.js": "206b-817"
       },
@@ -12946,7 +12946,7 @@
       "isEntry": true
     },
     "206b-820": {
-      "id": "/src/smart-components/Channel/components/RemoveMessageModal.tsx",
+      "id": "/src/modules/Channel/components/RemoveMessageModal.tsx",
       "moduleParts": {
         "Channel/components/RemoveMessageModal.js": "206b-821"
       },
@@ -13501,7 +13501,7 @@
       "isEntry": true
     },
     "206b-880": {
-      "id": "/src/smart-components/OpenChannelSettings/components/EditDetailsModal.tsx",
+      "id": "/src/modules/OpenChannelSettings/components/EditDetailsModal.tsx",
       "moduleParts": {
         "OpenChannelSettings/components/EditDetailsModal.js": "206b-881"
       },
@@ -13702,7 +13702,7 @@
       "isEntry": true
     },
     "206b-894": {
-      "id": "/src/smart-components/Thread/components/ParentMessageInfo/index.tsx",
+      "id": "/src/modules/Thread/components/ParentMessageInfo/index.tsx",
       "moduleParts": {
         "Thread/components/ParentMessageInfo.js": "206b-895"
       },
@@ -13782,7 +13782,7 @@
       "isEntry": true
     },
     "206b-896": {
-      "id": "/src/smart-components/Thread/components/ThreadHeader/index.tsx",
+      "id": "/src/modules/Thread/components/ThreadHeader/index.tsx",
       "moduleParts": {
         "Thread/components/ThreadHeader.js": "206b-897"
       },
@@ -13817,7 +13817,7 @@
       "isEntry": true
     },
     "206b-898": {
-      "id": "/src/smart-components/Thread/components/ThreadList/index.tsx",
+      "id": "/src/modules/Thread/components/ThreadList/index.tsx",
       "moduleParts": {
         "Thread/components/ThreadList.js": "206b-899"
       },
@@ -13855,7 +13855,7 @@
       "isEntry": true
     },
     "206b-904": {
-      "id": "/src/smart-components/Thread/components/ThreadMessageInput/index.tsx",
+      "id": "/src/modules/Thread/components/ThreadMessageInput/index.tsx",
       "moduleParts": {
         "Thread/components/ThreadMessageInput.js": "206b-905"
       },
@@ -13931,7 +13931,7 @@
       "isEntry": true
     },
     "206b-916": {
-      "id": "/src/smart-components/CreateChannel/components/InviteUsers/utils.ts",
+      "id": "/src/modules/CreateChannel/components/InviteUsers/utils.ts",
       "moduleParts": {
         "CreateChannel/components/InviteUsers.js": "206b-917"
       },
@@ -13943,7 +13943,7 @@
       ]
     },
     "206b-918": {
-      "id": "/src/smart-components/CreateChannel/components/InviteUsers/index.tsx",
+      "id": "/src/modules/CreateChannel/components/InviteUsers/index.tsx",
       "moduleParts": {
         "CreateChannel/components/InviteUsers.js": "206b-919"
       },
@@ -13990,7 +13990,7 @@
       "isEntry": true
     },
     "206b-922": {
-      "id": "/src/smart-components/CreateChannel/utils.ts",
+      "id": "/src/modules/CreateChannel/utils.ts",
       "moduleParts": {
         "CreateChannel/components/SelectChannelType.js": "206b-923"
       },
@@ -14002,7 +14002,7 @@
       ]
     },
     "206b-924": {
-      "id": "/src/smart-components/CreateChannel/components/SelectChannelType.tsx",
+      "id": "/src/modules/CreateChannel/components/SelectChannelType.tsx",
       "moduleParts": {
         "CreateChannel/components/SelectChannelType.js": "206b-925"
       },
@@ -14650,7 +14650,7 @@
       "isEntry": true
     },
     "206b-994": {
-      "id": "/src/smart-components/Thread/types.tsx",
+      "id": "/src/modules/Thread/types.tsx",
       "moduleParts": {
         "Thread/context/types.js": "206b-995"
       },
@@ -14681,7 +14681,7 @@
       "isEntry": true
     },
     "206b-998": {
-      "id": "/src/smart-components/Thread/components/ParentMessageInfo/ParentMessageInfoItem.tsx",
+      "id": "/src/modules/Thread/components/ParentMessageInfo/ParentMessageInfoItem.tsx",
       "moduleParts": {
         "Thread/components/ParentMessageInfoItem.js": "206b-999"
       },
@@ -14737,7 +14737,7 @@
       "isEntry": true
     },
     "206b-1006": {
-      "id": "/src/smart-components/Thread/components/ThreadList/ThreadListItemContent.tsx",
+      "id": "/src/modules/Thread/components/ThreadList/ThreadListItemContent.tsx",
       "moduleParts": {
         "Thread/components/ThreadListItem.js": "206b-1007"
       },
@@ -14810,7 +14810,7 @@
       ]
     },
     "206b-1008": {
-      "id": "/src/smart-components/Thread/components/ThreadList/ThreadListItem.tsx",
+      "id": "/src/modules/Thread/components/ThreadList/ThreadListItem.tsx",
       "moduleParts": {
         "Thread/components/ThreadListItem.js": "206b-1009"
       },
@@ -15099,7 +15099,7 @@
       "isEntry": true
     },
     "206b-1066": {
-      "id": "/src/smart-components/OpenChannelList/index.tsx",
+      "id": "/src/modules/OpenChannelList/index.tsx",
       "moduleParts": {
         "OpenChannelList.js": "206b-1067"
       },
@@ -15118,7 +15118,7 @@
       "isEntry": true
     },
     "206b-1072": {
-      "id": "/src/smart-components/OpenChannelList/components/OpenChannelListUI/index.tsx",
+      "id": "/src/modules/OpenChannelList/components/OpenChannelListUI/index.tsx",
       "moduleParts": {
         "OpenChannelList/components/OpenChannelListUI.js": "206b-1073"
       },
@@ -15171,7 +15171,7 @@
       "isEntry": true
     },
     "206b-1076": {
-      "id": "/src/smart-components/OpenChannelList/components/OpenChannelPreview/index.tsx",
+      "id": "/src/modules/OpenChannelList/components/OpenChannelPreview/index.tsx",
       "moduleParts": {
         "OpenChannelList/components/OpenChannelPreview.js": "206b-1077"
       },
@@ -15200,7 +15200,7 @@
       "isEntry": true
     },
     "206b-1080": {
-      "id": "/src/smart-components/CreateOpenChannel/index.tsx",
+      "id": "/src/modules/CreateOpenChannel/index.tsx",
       "moduleParts": {
         "CreateOpenChannel.js": "206b-1081"
       },
@@ -15223,7 +15223,7 @@
       "isEntry": true
     },
     "206b-1084": {
-      "id": "/src/smart-components/CreateOpenChannel/components/CreateOpenChannelUI/index.tsx",
+      "id": "/src/modules/CreateOpenChannel/components/CreateOpenChannelUI/index.tsx",
       "moduleParts": {
         "CreateOpenChannel/components/CreateOpenChannelUI.js": "206b-1085"
       },
@@ -15270,7 +15270,7 @@
       "isEntry": true
     },
     "206b-1090": {
-      "id": "/src/smart-components/CreateOpenChannel/context/CreateOpenChannelProvider.tsx",
+      "id": "/src/modules/CreateOpenChannel/context/CreateOpenChannelProvider.tsx",
       "moduleParts": {
         "CreateOpenChannel/context.js": "206b-1091"
       },
@@ -15293,7 +15293,7 @@
       "isEntry": true
     },
     "206b-1094": {
-      "id": "/src/smart-components/EditUserProfile/context/EditUserProfileProvider.tsx",
+      "id": "/src/modules/EditUserProfile/context/EditUserProfileProvider.tsx",
       "moduleParts": {
         "EditUserProfile/context.js": "206b-1095"
       },
@@ -15368,7 +15368,7 @@
       "isEntry": true
     },
     "206b-1110": {
-      "id": "/src/smart-components/ChannelList/context/ChannelListProvider.tsx",
+      "id": "/src/modules/ChannelList/context/ChannelListProvider.tsx",
       "moduleParts": {
         "ChannelList/context.js": "206b-1111",
         "ChannelListProvider-2e2a930f.js": "206b-1224"
@@ -15431,7 +15431,7 @@
       "isEntry": true
     },
     "206b-1114": {
-      "id": "/src/smart-components/Channel/context/ChannelProvider.tsx",
+      "id": "/src/modules/Channel/context/ChannelProvider.tsx",
       "moduleParts": {
         "Channel/context.js": "206b-1115",
         "ChannelProvider-89259d62.js": "206b-1294"
@@ -15539,7 +15539,7 @@
       "isEntry": true
     },
     "206b-1118": {
-      "id": "/src/smart-components/OpenChannel/context/OpenChannelProvider.tsx",
+      "id": "/src/modules/OpenChannel/context/OpenChannelProvider.tsx",
       "moduleParts": {
         "OpenChannel/context.js": "206b-1119",
         "OpenChannelProvider-4e9515cf.js": "206b-1334"
@@ -16031,7 +16031,7 @@
       "isEntry": true
     },
     "206b-1130": {
-      "id": "/src/smart-components/OpenChannelSettings/components/ParticipantUI/index.tsx",
+      "id": "/src/modules/OpenChannelSettings/components/ParticipantUI/index.tsx",
       "moduleParts": {
         "OpenChannelSettings/components/ParticipantUI.js": "206b-1131",
         "index-149d9827.js": "206b-1436"
@@ -16139,7 +16139,7 @@
       "isEntry": true
     },
     "206b-1136": {
-      "id": "/src/smart-components/EditUserProfile/components/EditUserProfileUI/index.tsx",
+      "id": "/src/modules/EditUserProfile/components/EditUserProfileUI/index.tsx",
       "moduleParts": {
         "EditUserProfile/components/EditUserProfileUI.js": "206b-1137",
         "index-636f9ba3.js": "206b-1457"
@@ -16196,7 +16196,7 @@
       "isEntry": true
     },
     "206b-1138": {
-      "id": "/src/smart-components/Thread/context/ThreadProvider.tsx",
+      "id": "/src/modules/Thread/context/ThreadProvider.tsx",
       "moduleParts": {
         "Thread/context.js": "206b-1139",
         "ThreadProvider-5266c2fa.js": "206b-1703"
@@ -16301,7 +16301,7 @@
       "isEntry": true
     },
     "206b-1142": {
-      "id": "/src/smart-components/CreateChannel/context/CreateChannelProvider.tsx",
+      "id": "/src/modules/CreateChannel/context/CreateChannelProvider.tsx",
       "moduleParts": {
         "CreateChannel/context.js": "206b-1143",
         "CreateChannelProvider-45ec50ef.js": "206b-1728"
@@ -16385,7 +16385,7 @@
       "isEntry": true
     },
     "206b-1148": {
-      "id": "/src/smart-components/OpenChannelList/context/OpenChannelListProvider.tsx",
+      "id": "/src/modules/OpenChannelList/context/OpenChannelListProvider.tsx",
       "moduleParts": {
         "OpenChannelList/context.js": "206b-1149",
         "OpenChannelListProvider-5e2db2c6.js": "206b-1927"
@@ -17086,7 +17086,7 @@
       ]
     },
     "206b-1214": {
-      "id": "/src/smart-components/ChannelList/dux/actionTypes.js",
+      "id": "/src/modules/ChannelList/dux/actionTypes.js",
       "moduleParts": {
         "ChannelListProvider-2e2a930f.js": "206b-1215"
       },
@@ -17110,7 +17110,7 @@
       ]
     },
     "206b-1216": {
-      "id": "/src/smart-components/ChannelList/utils.js",
+      "id": "/src/modules/ChannelList/utils.js",
       "moduleParts": {
         "ChannelListProvider-2e2a930f.js": "206b-1217"
       },
@@ -17132,7 +17132,7 @@
       ]
     },
     "206b-1218": {
-      "id": "/src/smart-components/ChannelList/dux/initialState.js",
+      "id": "/src/modules/ChannelList/dux/initialState.js",
       "moduleParts": {
         "ChannelListProvider-2e2a930f.js": "206b-1219"
       },
@@ -17147,7 +17147,7 @@
       ]
     },
     "206b-1220": {
-      "id": "/src/smart-components/ChannelList/dux/reducers.js",
+      "id": "/src/modules/ChannelList/dux/reducers.js",
       "moduleParts": {
         "ChannelListProvider-2e2a930f.js": "206b-1221"
       },
@@ -17172,7 +17172,7 @@
       ]
     },
     "206b-1222": {
-      "id": "/src/smart-components/ChannelList/context/hooks/useActiveChannelUrl.ts",
+      "id": "/src/modules/ChannelList/context/hooks/useActiveChannelUrl.ts",
       "moduleParts": {
         "ChannelListProvider-2e2a930f.js": "206b-1223"
       },
@@ -17191,7 +17191,7 @@
       ]
     },
     "206b-1256": {
-      "id": "/src/smart-components/Channel/context/dux/actionTypes.js",
+      "id": "/src/modules/Channel/context/dux/actionTypes.js",
       "moduleParts": {
         "ChannelProvider-89259d62.js": "206b-1257"
       },
@@ -17245,7 +17245,7 @@
       ]
     },
     "206b-1258": {
-      "id": "/src/smart-components/Channel/context/utils.js",
+      "id": "/src/modules/Channel/context/utils.js",
       "moduleParts": {
         "ChannelProvider-89259d62.js": "206b-1259"
       },
@@ -17309,7 +17309,7 @@
       ]
     },
     "206b-1260": {
-      "id": "/src/smart-components/Channel/context/dux/initialState.js",
+      "id": "/src/modules/Channel/context/dux/initialState.js",
       "moduleParts": {
         "ChannelProvider-89259d62.js": "206b-1261"
       },
@@ -17321,7 +17321,7 @@
       ]
     },
     "206b-1262": {
-      "id": "/src/smart-components/Channel/context/dux/reducers.js",
+      "id": "/src/modules/Channel/context/dux/reducers.js",
       "moduleParts": {
         "ChannelProvider-89259d62.js": "206b-1263"
       },
@@ -17355,7 +17355,7 @@
       ]
     },
     "206b-1264": {
-      "id": "/src/smart-components/Channel/context/hooks/useHandleChannelEvents.ts",
+      "id": "/src/modules/Channel/context/hooks/useHandleChannelEvents.ts",
       "moduleParts": {
         "ChannelProvider-89259d62.js": "206b-1265"
       },
@@ -17386,7 +17386,7 @@
       ]
     },
     "206b-1266": {
-      "id": "/src/smart-components/Channel/context/hooks/useGetChannel.js",
+      "id": "/src/modules/Channel/context/hooks/useGetChannel.js",
       "moduleParts": {
         "ChannelProvider-89259d62.js": "206b-1267"
       },
@@ -17405,7 +17405,7 @@
       ]
     },
     "206b-1268": {
-      "id": "/src/smart-components/Channel/context/hooks/useInitialMessagesFetch.js",
+      "id": "/src/modules/Channel/context/hooks/useInitialMessagesFetch.js",
       "moduleParts": {
         "ChannelProvider-89259d62.js": "206b-1269"
       },
@@ -17433,7 +17433,7 @@
       ]
     },
     "206b-1270": {
-      "id": "/src/smart-components/Channel/context/hooks/useHandleReconnect.ts",
+      "id": "/src/modules/Channel/context/hooks/useHandleReconnect.ts",
       "moduleParts": {
         "ChannelProvider-89259d62.js": "206b-1271"
       },
@@ -17461,7 +17461,7 @@
       ]
     },
     "206b-1272": {
-      "id": "/src/smart-components/Channel/context/hooks/useScrollCallback.js",
+      "id": "/src/modules/Channel/context/hooks/useScrollCallback.js",
       "moduleParts": {
         "ChannelProvider-89259d62.js": "206b-1273"
       },
@@ -17486,7 +17486,7 @@
       ]
     },
     "206b-1274": {
-      "id": "/src/smart-components/Channel/context/hooks/useScrollDownCallback.js",
+      "id": "/src/modules/Channel/context/hooks/useScrollDownCallback.js",
       "moduleParts": {
         "ChannelProvider-89259d62.js": "206b-1275"
       },
@@ -17511,7 +17511,7 @@
       ]
     },
     "206b-1276": {
-      "id": "/src/smart-components/Channel/context/hooks/useDeleteMessageCallback.js",
+      "id": "/src/modules/Channel/context/hooks/useDeleteMessageCallback.js",
       "moduleParts": {
         "ChannelProvider-89259d62.js": "206b-1277"
       },
@@ -17530,7 +17530,7 @@
       ]
     },
     "206b-1278": {
-      "id": "/src/smart-components/Channel/context/hooks/useUpdateMessageCallback.js",
+      "id": "/src/modules/Channel/context/hooks/useUpdateMessageCallback.js",
       "moduleParts": {
         "ChannelProvider-89259d62.js": "206b-1279"
       },
@@ -17552,7 +17552,7 @@
       ]
     },
     "206b-1280": {
-      "id": "/src/smart-components/Channel/context/hooks/useResendMessageCallback.js",
+      "id": "/src/modules/Channel/context/hooks/useResendMessageCallback.js",
       "moduleParts": {
         "ChannelProvider-89259d62.js": "206b-1281"
       },
@@ -17571,7 +17571,7 @@
       ]
     },
     "206b-1282": {
-      "id": "/src/smart-components/Channel/context/hooks/useSendMessageCallback.js",
+      "id": "/src/modules/Channel/context/hooks/useSendMessageCallback.js",
       "moduleParts": {
         "ChannelProvider-89259d62.js": "206b-1283"
       },
@@ -17596,7 +17596,7 @@
       ]
     },
     "206b-1284": {
-      "id": "/src/smart-components/Channel/context/hooks/useSendFileMessageCallback.js",
+      "id": "/src/modules/Channel/context/hooks/useSendFileMessageCallback.js",
       "moduleParts": {
         "ChannelProvider-89259d62.js": "206b-1285"
       },
@@ -17624,7 +17624,7 @@
       ]
     },
     "206b-1286": {
-      "id": "/src/smart-components/Channel/context/hooks/useMemoizedEmojiListItems.jsx",
+      "id": "/src/modules/Channel/context/hooks/useMemoizedEmojiListItems.jsx",
       "moduleParts": {
         "ChannelProvider-89259d62.js": "206b-1287"
       },
@@ -17652,7 +17652,7 @@
       ]
     },
     "206b-1288": {
-      "id": "/src/smart-components/Channel/context/hooks/useToggleReactionCallback.js",
+      "id": "/src/modules/Channel/context/hooks/useToggleReactionCallback.js",
       "moduleParts": {
         "ChannelProvider-89259d62.js": "206b-1289"
       },
@@ -17668,7 +17668,7 @@
       ]
     },
     "206b-1290": {
-      "id": "/src/smart-components/Channel/context/hooks/useScrollToMessage.ts",
+      "id": "/src/modules/Channel/context/hooks/useScrollToMessage.ts",
       "moduleParts": {
         "ChannelProvider-89259d62.js": "206b-1291"
       },
@@ -17684,7 +17684,7 @@
       ]
     },
     "206b-1292": {
-      "id": "/src/smart-components/Channel/context/hooks/useSendVoiceMessageCallback.ts",
+      "id": "/src/modules/Channel/context/hooks/useSendVoiceMessageCallback.ts",
       "moduleParts": {
         "ChannelProvider-89259d62.js": "206b-1293"
       },
@@ -17715,7 +17715,7 @@
       ]
     },
     "206b-1304": {
-      "id": "/src/smart-components/OpenChannel/context/utils.ts",
+      "id": "/src/modules/OpenChannel/context/utils.ts",
       "moduleParts": {
         "OpenChannelProvider-4e9515cf.js": "206b-1305"
       },
@@ -17752,7 +17752,7 @@
       ]
     },
     "206b-1306": {
-      "id": "/src/smart-components/OpenChannel/context/dux/actionTypes.ts",
+      "id": "/src/modules/OpenChannel/context/dux/actionTypes.ts",
       "moduleParts": {
         "OpenChannelProvider-4e9515cf.js": "206b-1307"
       },
@@ -17797,7 +17797,7 @@
       ]
     },
     "206b-1308": {
-      "id": "/src/smart-components/OpenChannel/context/dux/reducers.ts",
+      "id": "/src/modules/OpenChannel/context/dux/reducers.ts",
       "moduleParts": {
         "OpenChannelProvider-4e9515cf.js": "206b-1309"
       },
@@ -17819,7 +17819,7 @@
       ]
     },
     "206b-1310": {
-      "id": "/src/smart-components/OpenChannel/context/dux/initialState.ts",
+      "id": "/src/modules/OpenChannel/context/dux/initialState.ts",
       "moduleParts": {
         "OpenChannelProvider-4e9515cf.js": "206b-1311"
       },
@@ -17831,7 +17831,7 @@
       ]
     },
     "206b-1312": {
-      "id": "/src/smart-components/OpenChannel/context/hooks/useSetChannel.ts",
+      "id": "/src/modules/OpenChannel/context/hooks/useSetChannel.ts",
       "moduleParts": {
         "OpenChannelProvider-4e9515cf.js": "206b-1313"
       },
@@ -17853,7 +17853,7 @@
       ]
     },
     "206b-1314": {
-      "id": "/src/smart-components/OpenChannel/context/hooks/useHandleChannelEvents.ts",
+      "id": "/src/modules/OpenChannel/context/hooks/useHandleChannelEvents.ts",
       "moduleParts": {
         "OpenChannelProvider-4e9515cf.js": "206b-1315"
       },
@@ -17884,7 +17884,7 @@
       ]
     },
     "206b-1316": {
-      "id": "/src/smart-components/OpenChannel/context/hooks/useInitialMessagesFetch.ts",
+      "id": "/src/modules/OpenChannel/context/hooks/useInitialMessagesFetch.ts",
       "moduleParts": {
         "OpenChannelProvider-4e9515cf.js": "206b-1317"
       },
@@ -17906,7 +17906,7 @@
       ]
     },
     "206b-1318": {
-      "id": "/src/smart-components/OpenChannel/context/hooks/useScrollCallback.ts",
+      "id": "/src/modules/OpenChannel/context/hooks/useScrollCallback.ts",
       "moduleParts": {
         "OpenChannelProvider-4e9515cf.js": "206b-1319"
       },
@@ -17925,7 +17925,7 @@
       ]
     },
     "206b-1320": {
-      "id": "/src/smart-components/OpenChannel/context/hooks/useCheckScrollBottom.ts",
+      "id": "/src/modules/OpenChannel/context/hooks/useCheckScrollBottom.ts",
       "moduleParts": {
         "OpenChannelProvider-4e9515cf.js": "206b-1321"
       },
@@ -17941,7 +17941,7 @@
       ]
     },
     "206b-1322": {
-      "id": "/src/smart-components/OpenChannel/context/hooks/useSendMessageCallback.ts",
+      "id": "/src/modules/OpenChannel/context/hooks/useSendMessageCallback.ts",
       "moduleParts": {
         "OpenChannelProvider-4e9515cf.js": "206b-1323"
       },
@@ -17963,7 +17963,7 @@
       ]
     },
     "206b-1324": {
-      "id": "/src/smart-components/OpenChannel/context/hooks/useFileUploadCallback.ts",
+      "id": "/src/modules/OpenChannel/context/hooks/useFileUploadCallback.ts",
       "moduleParts": {
         "OpenChannelProvider-4e9515cf.js": "206b-1325"
       },
@@ -17988,7 +17988,7 @@
       ]
     },
     "206b-1326": {
-      "id": "/src/smart-components/OpenChannel/context/hooks/useUpdateMessageCallback.ts",
+      "id": "/src/modules/OpenChannel/context/hooks/useUpdateMessageCallback.ts",
       "moduleParts": {
         "OpenChannelProvider-4e9515cf.js": "206b-1327"
       },
@@ -18007,7 +18007,7 @@
       ]
     },
     "206b-1328": {
-      "id": "/src/smart-components/OpenChannel/context/hooks/useDeleteMessageCallback.ts",
+      "id": "/src/modules/OpenChannel/context/hooks/useDeleteMessageCallback.ts",
       "moduleParts": {
         "OpenChannelProvider-4e9515cf.js": "206b-1329"
       },
@@ -18026,7 +18026,7 @@
       ]
     },
     "206b-1330": {
-      "id": "/src/smart-components/OpenChannel/context/hooks/useResendMessageCallback.ts",
+      "id": "/src/modules/OpenChannel/context/hooks/useResendMessageCallback.ts",
       "moduleParts": {
         "OpenChannelProvider-4e9515cf.js": "206b-1331"
       },
@@ -18045,7 +18045,7 @@
       ]
     },
     "206b-1332": {
-      "id": "/src/smart-components/OpenChannel/context/hooks/useTrimMessageList.ts",
+      "id": "/src/modules/OpenChannel/context/hooks/useTrimMessageList.ts",
       "moduleParts": {
         "OpenChannelProvider-4e9515cf.js": "206b-1333"
       },
@@ -18693,7 +18693,7 @@
       ]
     },
     "206b-1432": {
-      "id": "/src/smart-components/OpenChannelSettings/components/ParticipantUI/ParticipantsModal.tsx",
+      "id": "/src/modules/OpenChannelSettings/components/ParticipantUI/ParticipantsModal.tsx",
       "moduleParts": {
         "index-149d9827.js": "206b-1433"
       },
@@ -18742,7 +18742,7 @@
       ]
     },
     "206b-1434": {
-      "id": "/src/smart-components/OpenChannelSettings/components/ParticipantUI/ParticipantItem.tsx",
+      "id": "/src/modules/OpenChannelSettings/components/ParticipantUI/ParticipantItem.tsx",
       "moduleParts": {
         "index-149d9827.js": "206b-1435"
       },
@@ -18803,7 +18803,7 @@
       ]
     },
     "206b-1439": {
-      "id": "/src/smart-components/ChannelSettings/components/ModerationPanel/MembersModal.tsx",
+      "id": "/src/modules/ChannelSettings/components/ModerationPanel/MembersModal.tsx",
       "moduleParts": {
         "MemberList-01214d5d.js": "206b-1440"
       },
@@ -18849,7 +18849,7 @@
       ]
     },
     "206b-1441": {
-      "id": "/src/smart-components/ChannelSettings/components/ModerationPanel/InviteUsersModal.tsx",
+      "id": "/src/modules/ChannelSettings/components/ModerationPanel/InviteUsersModal.tsx",
       "moduleParts": {
         "MemberList-01214d5d.js": "206b-1442"
       },
@@ -18886,7 +18886,7 @@
       ]
     },
     "206b-1443": {
-      "id": "/src/smart-components/ChannelSettings/components/ModerationPanel/MemberList.tsx",
+      "id": "/src/modules/ChannelSettings/components/ModerationPanel/MemberList.tsx",
       "moduleParts": {
         "MemberList-01214d5d.js": "206b-1444"
       },
@@ -18977,7 +18977,7 @@
       ]
     },
     "206b-1450": {
-      "id": "/src/smart-components/ChannelList/components/ChannelPreview/utils.js",
+      "id": "/src/modules/ChannelList/components/ChannelPreview/utils.js",
       "moduleParts": {
         "index-87f6afd8.js": "206b-1451"
       },
@@ -19048,7 +19048,7 @@
       ]
     },
     "206b-1455": {
-      "id": "/src/smart-components/EditUserProfile/context/EditUserProfIleProvider.tsx",
+      "id": "/src/modules/EditUserProfile/context/EditUserProfIleProvider.tsx",
       "moduleParts": {
         "index-636f9ba3.js": "206b-1456"
       },
@@ -19780,7 +19780,7 @@
       ]
     },
     "206b-1617": {
-      "id": "/src/smart-components/Channel/context/const.ts",
+      "id": "/src/modules/Channel/context/const.ts",
       "moduleParts": {
         "const-35afb9a0.js": "206b-1618"
       },
@@ -19816,7 +19816,7 @@
       ]
     },
     "206b-1621": {
-      "id": "/src/smart-components/Channel/components/ChannelHeader/utils.ts",
+      "id": "/src/modules/Channel/components/ChannelHeader/utils.ts",
       "moduleParts": {
         "utils-1d2642e7.js": "206b-1622"
       },
@@ -19890,7 +19890,7 @@
       ]
     },
     "206b-1646": {
-      "id": "/src/smart-components/Channel/components/MessageInput/VoiceMessageInputWrapper.tsx",
+      "id": "/src/modules/Channel/components/MessageInput/VoiceMessageInputWrapper.tsx",
       "moduleParts": {
         "VoiceMessageInputWrapper-3b676122.js": "206b-1647"
       },
@@ -19995,7 +19995,7 @@
       ]
     },
     "206b-1663": {
-      "id": "/src/smart-components/Thread/context/utils.ts",
+      "id": "/src/modules/Thread/context/utils.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1664"
       },
@@ -20032,7 +20032,7 @@
       ]
     },
     "206b-1665": {
-      "id": "/src/smart-components/Thread/consts.ts",
+      "id": "/src/modules/Thread/consts.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1666"
       },
@@ -20053,7 +20053,7 @@
       ]
     },
     "206b-1667": {
-      "id": "/src/smart-components/Thread/context/dux/actionTypes.ts",
+      "id": "/src/modules/Thread/context/dux/actionTypes.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1668"
       },
@@ -20110,7 +20110,7 @@
       ]
     },
     "206b-1669": {
-      "id": "/src/smart-components/Thread/context/dux/reducer.ts",
+      "id": "/src/modules/Thread/context/dux/reducer.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1670"
       },
@@ -20138,7 +20138,7 @@
       ]
     },
     "206b-1671": {
-      "id": "/src/smart-components/Thread/context/dux/initialState.ts",
+      "id": "/src/modules/Thread/context/dux/initialState.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1672"
       },
@@ -20154,7 +20154,7 @@
       ]
     },
     "206b-1673": {
-      "id": "/src/smart-components/Thread/context/hooks/useGetChannel.ts",
+      "id": "/src/modules/Thread/context/hooks/useGetChannel.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1674"
       },
@@ -20173,7 +20173,7 @@
       ]
     },
     "206b-1675": {
-      "id": "/src/smart-components/Thread/context/hooks/useGetAllEmoji.ts",
+      "id": "/src/modules/Thread/context/hooks/useGetAllEmoji.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1676"
       },
@@ -20192,7 +20192,7 @@
       ]
     },
     "206b-1677": {
-      "id": "/src/smart-components/Thread/context/hooks/useGetThreadList.ts",
+      "id": "/src/modules/Thread/context/hooks/useGetThreadList.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1678"
       },
@@ -20214,7 +20214,7 @@
       ]
     },
     "206b-1679": {
-      "id": "/src/smart-components/Thread/context/hooks/useGetParentMessage.ts",
+      "id": "/src/modules/Thread/context/hooks/useGetParentMessage.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1680"
       },
@@ -20239,7 +20239,7 @@
       ]
     },
     "206b-1681": {
-      "id": "/src/smart-components/Thread/context/hooks/useHandlePubsubEvents.ts",
+      "id": "/src/modules/Thread/context/hooks/useHandlePubsubEvents.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1682"
       },
@@ -20264,7 +20264,7 @@
       ]
     },
     "206b-1683": {
-      "id": "/src/smart-components/Thread/context/hooks/useHandleChannelEvents.ts",
+      "id": "/src/modules/Thread/context/hooks/useHandleChannelEvents.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1684"
       },
@@ -20289,7 +20289,7 @@
       ]
     },
     "206b-1685": {
-      "id": "/src/smart-components/Thread/context/hooks/useSendFileMessage.ts",
+      "id": "/src/modules/Thread/context/hooks/useSendFileMessage.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1686"
       },
@@ -20317,7 +20317,7 @@
       ]
     },
     "206b-1687": {
-      "id": "/src/smart-components/Thread/context/hooks/useUpdateMessageCallback.ts",
+      "id": "/src/modules/Thread/context/hooks/useUpdateMessageCallback.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1688"
       },
@@ -20339,7 +20339,7 @@
       ]
     },
     "206b-1689": {
-      "id": "/src/smart-components/Thread/context/hooks/useDeleteMessageCallback.ts",
+      "id": "/src/modules/Thread/context/hooks/useDeleteMessageCallback.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1690"
       },
@@ -20358,7 +20358,7 @@
       ]
     },
     "206b-1691": {
-      "id": "/src/smart-components/Thread/context/hooks/useGetPrevThreadsCallback.ts",
+      "id": "/src/modules/Thread/context/hooks/useGetPrevThreadsCallback.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1692"
       },
@@ -20383,7 +20383,7 @@
       ]
     },
     "206b-1693": {
-      "id": "/src/smart-components/Thread/context/hooks/useGetNextThreadsCallback.ts",
+      "id": "/src/modules/Thread/context/hooks/useGetNextThreadsCallback.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1694"
       },
@@ -20408,7 +20408,7 @@
       ]
     },
     "206b-1695": {
-      "id": "/src/smart-components/Thread/context/hooks/useToggleReactionsCallback.ts",
+      "id": "/src/modules/Thread/context/hooks/useToggleReactionsCallback.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1696"
       },
@@ -20424,7 +20424,7 @@
       ]
     },
     "206b-1697": {
-      "id": "/src/smart-components/Thread/context/hooks/useSendUserMessageCallback.ts",
+      "id": "/src/modules/Thread/context/hooks/useSendUserMessageCallback.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1698"
       },
@@ -20446,7 +20446,7 @@
       ]
     },
     "206b-1699": {
-      "id": "/src/smart-components/Thread/context/hooks/useResendMessageCallback.ts",
+      "id": "/src/modules/Thread/context/hooks/useResendMessageCallback.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1700"
       },
@@ -20471,7 +20471,7 @@
       ]
     },
     "206b-1701": {
-      "id": "/src/smart-components/Thread/context/hooks/useSendVoiceMessageCallback.ts",
+      "id": "/src/modules/Thread/context/hooks/useSendVoiceMessageCallback.ts",
       "moduleParts": {
         "ThreadProvider-5266c2fa.js": "206b-1702"
       },
@@ -20589,7 +20589,7 @@
       ]
     },
     "206b-1726": {
-      "id": "/src/smart-components/CreateChannel/types.ts",
+      "id": "/src/modules/CreateChannel/types.ts",
       "moduleParts": {
         "CreateChannelProvider-45ec50ef.js": "206b-1727"
       },
@@ -20760,7 +20760,7 @@
       ]
     },
     "206b-1764": {
-      "id": "/src/smart-components/Message/consts.ts",
+      "id": "/src/modules/Message/consts.ts",
       "moduleParts": {
         "tokenize-c224a8a9.js": "206b-1765"
       },
@@ -20778,7 +20778,7 @@
       ]
     },
     "206b-1766": {
-      "id": "/src/smart-components/Message/utils/tokens/types.ts",
+      "id": "/src/modules/Message/utils/tokens/types.ts",
       "moduleParts": {
         "tokenize-c224a8a9.js": "206b-1767"
       },
@@ -20796,7 +20796,7 @@
       ]
     },
     "206b-1768": {
-      "id": "/src/smart-components/Message/utils/tokens/tokenize.ts",
+      "id": "/src/modules/Message/utils/tokens/tokenize.ts",
       "moduleParts": {
         "tokenize-c224a8a9.js": "206b-1769"
       },
@@ -20955,7 +20955,7 @@
       ]
     },
     "206b-1899": {
-      "id": "/src/smart-components/Message/utils/tokens/keyGenerator.ts",
+      "id": "/src/modules/Message/utils/tokens/keyGenerator.ts",
       "moduleParts": {
         "index-9df4e8cb.js": "206b-1900"
       },
@@ -20967,7 +20967,7 @@
       ]
     },
     "206b-1901": {
-      "id": "/src/smart-components/Message/components/TextFragment/index.tsx",
+      "id": "/src/modules/Message/components/TextFragment/index.tsx",
       "moduleParts": {
         "index-9df4e8cb.js": "206b-1902"
       },
@@ -21019,7 +21019,7 @@
       ]
     },
     "206b-1903": {
-      "id": "/src/smart-components/Thread/components/RemoveMessageModal.tsx",
+      "id": "/src/modules/Thread/components/RemoveMessageModal.tsx",
       "moduleParts": {
         "RemoveMessageModal-db492864.js": "206b-1904"
       },
@@ -21101,7 +21101,7 @@
       ]
     },
     "206b-1911": {
-      "id": "/src/smart-components/OpenChannelList/context/OpenChannelListInterfaces.ts",
+      "id": "/src/modules/OpenChannelList/context/OpenChannelListInterfaces.ts",
       "moduleParts": {
         "OpenChannelListProvider-5e2db2c6.js": "206b-1912"
       },
@@ -21122,7 +21122,7 @@
       ]
     },
     "206b-1913": {
-      "id": "/src/smart-components/OpenChannelList/context/dux/actionTypes.ts",
+      "id": "/src/modules/OpenChannelList/context/dux/actionTypes.ts",
       "moduleParts": {
         "OpenChannelListProvider-5e2db2c6.js": "206b-1914"
       },
@@ -21152,7 +21152,7 @@
       ]
     },
     "206b-1915": {
-      "id": "/src/smart-components/OpenChannelList/context/dux/reducer.ts",
+      "id": "/src/modules/OpenChannelList/context/dux/reducer.ts",
       "moduleParts": {
         "OpenChannelListProvider-5e2db2c6.js": "206b-1916"
       },
@@ -21174,7 +21174,7 @@
       ]
     },
     "206b-1917": {
-      "id": "/src/smart-components/OpenChannelList/context/dux/initialState.ts",
+      "id": "/src/modules/OpenChannelList/context/dux/initialState.ts",
       "moduleParts": {
         "OpenChannelListProvider-5e2db2c6.js": "206b-1918"
       },
@@ -21190,7 +21190,7 @@
       ]
     },
     "206b-1919": {
-      "id": "/src/smart-components/OpenChannelList/context/hooks/useFetchNextCallback.ts",
+      "id": "/src/modules/OpenChannelList/context/hooks/useFetchNextCallback.ts",
       "moduleParts": {
         "OpenChannelListProvider-5e2db2c6.js": "206b-1920"
       },
@@ -21209,7 +21209,7 @@
       ]
     },
     "206b-1921": {
-      "id": "/src/smart-components/OpenChannelList/context/hooks/createChannelListQuery.ts",
+      "id": "/src/modules/OpenChannelList/context/hooks/createChannelListQuery.ts",
       "moduleParts": {
         "OpenChannelListProvider-5e2db2c6.js": "206b-1922"
       },
@@ -21228,7 +21228,7 @@
       ]
     },
     "206b-1923": {
-      "id": "/src/smart-components/OpenChannelList/context/hooks/useSetupOpenChannelList.ts",
+      "id": "/src/modules/OpenChannelList/context/hooks/useSetupOpenChannelList.ts",
       "moduleParts": {
         "OpenChannelListProvider-5e2db2c6.js": "206b-1924"
       },
@@ -21250,7 +21250,7 @@
       ]
     },
     "206b-1925": {
-      "id": "/src/smart-components/OpenChannelList/context/hooks/useRefreshOpenChannelList.ts",
+      "id": "/src/modules/OpenChannelList/context/hooks/useRefreshOpenChannelList.ts",
       "moduleParts": {
         "OpenChannelListProvider-5e2db2c6.js": "206b-1926"
       },
@@ -22254,7 +22254,7 @@
       "isExternal": true
     },
     "206b-1934": {
-      "id": "/src/smart-components/App/index.scss",
+      "id": "/src/modules/App/index.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22264,7 +22264,7 @@
       ]
     },
     "206b-1935": {
-      "id": "/src/smart-components/MessageSearch/index.scss",
+      "id": "/src/modules/MessageSearch/index.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22389,7 +22389,7 @@
       "isExternal": true
     },
     "206b-1941": {
-      "id": "/src/smart-components/ChannelSettings/components/ChannelSettingsUI/channel-settings-ui.scss",
+      "id": "/src/modules/ChannelSettings/components/ChannelSettingsUI/channel-settings-ui.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22399,7 +22399,7 @@
       ]
     },
     "206b-1942": {
-      "id": "/src/smart-components/ChannelList/components/ChannelListUI/channel-list-ui.scss",
+      "id": "/src/modules/ChannelList/components/ChannelListUI/channel-list-ui.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22409,7 +22409,7 @@
       ]
     },
     "206b-1943": {
-      "id": "/src/smart-components/Channel/components/ChannelUI/channel-ui.scss",
+      "id": "/src/modules/Channel/components/ChannelUI/channel-ui.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22419,7 +22419,7 @@
       ]
     },
     "206b-1944": {
-      "id": "/src/smart-components/OpenChannel/components/OpenChannelUI/open-channel-ui.scss",
+      "id": "/src/modules/OpenChannel/components/OpenChannelUI/open-channel-ui.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22429,7 +22429,7 @@
       ]
     },
     "206b-1945": {
-      "id": "/src/smart-components/OpenChannelSettings/components/OpenChannelSettingsUI/open-channel-ui.scss",
+      "id": "/src/modules/OpenChannelSettings/components/OpenChannelSettingsUI/open-channel-ui.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22439,7 +22439,7 @@
       ]
     },
     "206b-1946": {
-      "id": "/src/smart-components/MessageSearch/components/MessageSearchUI/index.scss",
+      "id": "/src/modules/MessageSearch/components/MessageSearchUI/index.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22489,7 +22489,7 @@
       ]
     },
     "206b-1951": {
-      "id": "/src/smart-components/App/mobile.scss",
+      "id": "/src/modules/App/mobile.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22509,7 +22509,7 @@
       ]
     },
     "206b-1953": {
-      "id": "/src/smart-components/ChannelSettings/components/ChannelProfile/channel-profile.scss",
+      "id": "/src/modules/ChannelSettings/components/ChannelProfile/channel-profile.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22519,7 +22519,7 @@
       ]
     },
     "206b-1954": {
-      "id": "/src/smart-components/ChannelSettings/components/ModerationPanel/admin-panel.scss",
+      "id": "/src/modules/ChannelSettings/components/ModerationPanel/admin-panel.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22529,7 +22529,7 @@
       ]
     },
     "206b-1955": {
-      "id": "/src/smart-components/ChannelSettings/components/LeaveChannel/leave-channel.scss",
+      "id": "/src/modules/ChannelSettings/components/LeaveChannel/leave-channel.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22539,7 +22539,7 @@
       ]
     },
     "206b-1956": {
-      "id": "/src/smart-components/ChannelSettings/components/UserPanel/user-panel.scss",
+      "id": "/src/modules/ChannelSettings/components/UserPanel/user-panel.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22549,7 +22549,7 @@
       ]
     },
     "206b-1957": {
-      "id": "/src/smart-components/ChannelList/components/ChannelListHeader/index.scss",
+      "id": "/src/modules/ChannelList/components/ChannelListHeader/index.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22559,7 +22559,7 @@
       ]
     },
     "206b-1958": {
-      "id": "/src/smart-components/ChannelList/components/ChannelPreview/channel-preview.scss",
+      "id": "/src/modules/ChannelList/components/ChannelPreview/channel-preview.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22608,7 +22608,7 @@
       ]
     },
     "206b-1961": {
-      "id": "/src/smart-components/Channel/components/ChannelHeader/channel-header.scss",
+      "id": "/src/modules/Channel/components/ChannelHeader/channel-header.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22618,7 +22618,7 @@
       ]
     },
     "206b-1962": {
-      "id": "/src/smart-components/Channel/components/MessageList/message-list.scss",
+      "id": "/src/modules/Channel/components/MessageList/message-list.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22628,7 +22628,7 @@
       ]
     },
     "206b-1963": {
-      "id": "/src/smart-components/Channel/components/MessageInput/message-input.scss",
+      "id": "/src/modules/Channel/components/MessageInput/message-input.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22638,7 +22638,7 @@
       ]
     },
     "206b-1964": {
-      "id": "/src/smart-components/OpenChannel/components/FrozenChannelNotification/frozen-channel-notification.scss",
+      "id": "/src/modules/OpenChannel/components/FrozenChannelNotification/frozen-channel-notification.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22648,7 +22648,7 @@
       ]
     },
     "206b-1965": {
-      "id": "/src/smart-components/OpenChannel/components/OpenChannelHeader/open-channel-header.scss",
+      "id": "/src/modules/OpenChannel/components/OpenChannelHeader/open-channel-header.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22658,7 +22658,7 @@
       ]
     },
     "206b-1966": {
-      "id": "/src/smart-components/OpenChannel/components/OpenChannelMessageList/openchannel-message-list.scss",
+      "id": "/src/modules/OpenChannel/components/OpenChannelMessageList/openchannel-message-list.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22804,7 +22804,7 @@
       ]
     },
     "206b-1979": {
-      "id": "/src/smart-components/EditUserProfile/components/EditUserProfileUI/edit-user-profile.scss",
+      "id": "/src/modules/EditUserProfile/components/EditUserProfileUI/edit-user-profile.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22848,7 +22848,7 @@
       ]
     },
     "206b-1983": {
-      "id": "/src/smart-components/Channel/components/UnreadCount/unread-count.scss",
+      "id": "/src/modules/Channel/components/UnreadCount/unread-count.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22858,7 +22858,7 @@
       ]
     },
     "206b-1984": {
-      "id": "/src/smart-components/Channel/components/FrozenNotification/frozen-notification.scss",
+      "id": "/src/modules/Channel/components/FrozenNotification/frozen-notification.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22888,7 +22888,7 @@
       ]
     },
     "206b-1987": {
-      "id": "/src/smart-components/Channel/components/SuggestedMentionList/index.scss",
+      "id": "/src/modules/Channel/components/SuggestedMentionList/index.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22898,7 +22898,7 @@
       ]
     },
     "206b-1988": {
-      "id": "/src/smart-components/Channel/components/MessageInput/voice-message-wrapper.scss",
+      "id": "/src/modules/Channel/components/MessageInput/voice-message-wrapper.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22908,7 +22908,7 @@
       ]
     },
     "206b-1989": {
-      "id": "/src/smart-components/OpenChannelSettings/components/OpenChannelProfile/channel-profile.scss",
+      "id": "/src/modules/OpenChannelSettings/components/OpenChannelProfile/channel-profile.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22928,7 +22928,7 @@
       ]
     },
     "206b-1991": {
-      "id": "/src/smart-components/Thread/components/ThreadUI/index.scss",
+      "id": "/src/modules/Thread/components/ThreadUI/index.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22958,7 +22958,7 @@
       ]
     },
     "206b-1994": {
-      "id": "/src/smart-components/ChannelSettings/components/UserListItem/user-list-item.scss",
+      "id": "/src/modules/ChannelSettings/components/UserListItem/user-list-item.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22968,7 +22968,7 @@
       ]
     },
     "206b-1995": {
-      "id": "/src/smart-components/CreateChannel/components/CreateChannelUI/create-channel-ui.scss",
+      "id": "/src/modules/CreateChannel/components/CreateChannelUI/create-channel-ui.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -22998,7 +22998,7 @@
       ]
     },
     "206b-1998": {
-      "id": "/src/smart-components/Channel/components/FileViewer/file-viewer.scss",
+      "id": "/src/modules/Channel/components/FileViewer/file-viewer.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -23112,7 +23112,7 @@
       ]
     },
     "206b-2009": {
-      "id": "/src/smart-components/Thread/components/ParentMessageInfo/index.scss",
+      "id": "/src/modules/Thread/components/ParentMessageInfo/index.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -23122,7 +23122,7 @@
       ]
     },
     "206b-2010": {
-      "id": "/src/smart-components/Thread/components/ThreadHeader/index.scss",
+      "id": "/src/modules/Thread/components/ThreadHeader/index.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -23132,7 +23132,7 @@
       ]
     },
     "206b-2011": {
-      "id": "/src/smart-components/Thread/components/ThreadList/index.scss",
+      "id": "/src/modules/Thread/components/ThreadList/index.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -23153,7 +23153,7 @@
       "isExternal": true
     },
     "206b-2013": {
-      "id": "/src/smart-components/Thread/components/ThreadMessageInput/index.scss",
+      "id": "/src/modules/Thread/components/ThreadMessageInput/index.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -23173,7 +23173,7 @@
       ]
     },
     "206b-2015": {
-      "id": "/src/smart-components/CreateChannel/components/InviteUsers/invite-users.scss",
+      "id": "/src/modules/CreateChannel/components/InviteUsers/invite-users.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -23363,7 +23363,7 @@
       ]
     },
     "206b-2034": {
-      "id": "/src/smart-components/Thread/components/ParentMessageInfo/ParentMessageInfoItem.scss",
+      "id": "/src/modules/Thread/components/ParentMessageInfo/ParentMessageInfoItem.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -23413,7 +23413,7 @@
       ]
     },
     "206b-2039": {
-      "id": "/src/smart-components/Thread/components/ThreadList/ThreadListItemContent.scss",
+      "id": "/src/modules/Thread/components/ThreadList/ThreadListItemContent.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -23433,7 +23433,7 @@
       ]
     },
     "206b-2041": {
-      "id": "/src/smart-components/OpenChannelList/components/OpenChannelListUI/index.scss",
+      "id": "/src/modules/OpenChannelList/components/OpenChannelListUI/index.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -23443,7 +23443,7 @@
       ]
     },
     "206b-2042": {
-      "id": "/src/smart-components/OpenChannelList/components/OpenChannelPreview/index.scss",
+      "id": "/src/modules/OpenChannelList/components/OpenChannelPreview/index.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
@@ -23453,7 +23453,7 @@
       ]
     },
     "206b-2043": {
-      "id": "/src/smart-components/CreateOpenChannel/components/CreateOpenChannelUI/index.scss",
+      "id": "/src/modules/CreateOpenChannel/components/CreateOpenChannelUI/index.scss",
       "moduleParts": {},
       "imported": [],
       "importedBy": [

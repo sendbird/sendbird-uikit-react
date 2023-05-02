@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 
 import OpenchannelOGMessage from "../index";
-import { MessageProvider } from '../../../smart-components/Message/context/MessageProvider';
+import { MessageProvider } from '../../../modules/Message/context/MessageProvider';
 
 // mock date-fns to avoid problems from snapshot timestamping
 // between testing in different locations

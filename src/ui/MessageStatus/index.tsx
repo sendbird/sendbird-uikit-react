@@ -13,7 +13,7 @@ import {
   getOutgoingMessageState,
   OutgoingMessageStates,
 } from '../../utils/exports/getOutgoingMessageState';
-import { getLastMessageCreatedAt } from '../../smart-components/ChannelList/components/ChannelPreview/utils';
+import { getLastMessageCreatedAt } from '../../modules/ChannelList/components/ChannelPreview/utils';
 import { useLocalization } from '../../lib/LocalizationContext';
 
 export const MessageStatusTypes = OutgoingMessageStates;

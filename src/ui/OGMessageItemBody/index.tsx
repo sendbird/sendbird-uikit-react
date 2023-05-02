@@ -12,8 +12,8 @@ import Icon, { IconTypes } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { getClassName, isEditedMessage } from '../../utils';
 import { LocalizationContext } from '../../lib/LocalizationContext';
-import TextFragment from '../../smart-components/Message/components/TextFragment';
-import { tokenizeMessage } from '../../smart-components/Message/utils/tokens/tokenize';
+import TextFragment from '../../modules/Message/components/TextFragment';
+import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
 import { OG_MESSAGE_BODY_CLASSNAME } from './consts';
 
 interface Props {

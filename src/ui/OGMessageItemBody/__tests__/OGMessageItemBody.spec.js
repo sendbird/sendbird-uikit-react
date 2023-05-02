@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 import OGMessageItemBody from "../index";
-import { MessageProvider } from '../../../smart-components/Message/context/MessageProvider';
+import { MessageProvider } from '../../../modules/Message/context/MessageProvider';
 
 describe('ui/OGMessageItemBody', () => {
   it('should do a snapshot test of the OGMessageItemBody DOM', function() {

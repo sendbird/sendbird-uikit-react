@@ -31,8 +31,8 @@ import {
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import useLongPress from '../../hooks/useLongPress';
 import OpenChannelMobileMenu from '../OpenChannelMobileMenu';
-import TextFragment from '../../smart-components/Message/components/TextFragment';
-import { tokenizeMessage } from '../../smart-components/Message/utils/tokens/tokenize';
+import TextFragment from '../../modules/Message/components/TextFragment';
+import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
 
 interface OpenChannelOGMessageProps {
   message: UserMessage;
