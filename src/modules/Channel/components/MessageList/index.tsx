@@ -103,7 +103,7 @@ const MessageList: React.FC<MessageListProps> = ({
     }
   };
 
-  const handleScroll = () => {
+  const handleMessageHeightChange = () => {
     const current = scrollRef?.current;
     if (current) {
       const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
@@ -156,7 +156,7 @@ const MessageList: React.FC<MessageListProps> = ({
             return (
               <MessageProvider message={m} key={m?.messageId} isByMe={isByMe}>
                 <Message
-                  handleScroll={handleScroll}
+                  handleScroll={handleMessageHeightChange}
                   renderMessage={renderMessage}
                   message={m}
                   hasSeparator={hasSeparator}

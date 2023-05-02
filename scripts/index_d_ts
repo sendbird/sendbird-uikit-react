@@ -597,7 +597,7 @@ declare module "SendbirdUIKitGlobal" {
     hasSeparator?: boolean;
     chainTop?: boolean;
     chainBottom?: boolean;
-    handleScroll: () => void;
+    handleScroll?: () => void;
     // for extending
     renderMessage?: (props: RenderMessageProps) => React.ReactNode | React.ReactElement;
     renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactNode | React.ReactElement;

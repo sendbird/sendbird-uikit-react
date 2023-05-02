@@ -23,6 +23,7 @@ interface Props {
   mouseHover?: boolean;
   isMentionEnabled?: boolean;
   isReactionEnabled?: boolean;
+  onMessageHeightChange?: () => void;
 }
 
 export default function OGMessageItemBody({
@@ -32,6 +33,7 @@ export default function OGMessageItemBody({
   mouseHover = false,
   isMentionEnabled = false,
   isReactionEnabled = false,
+  onMessageHeightChange = () => { /* noop */ },
 }: Props): ReactElement {
   const imageRef = useRef<HTMLDivElement>(null);
   const { stringSet } = useContext(LocalizationContext);
@@ -85,6 +87,7 @@ export default function OGMessageItemBody({
         onClick={openOGUrl}
       >
         <ImageRenderer
+          onLoad={onMessageHeightChange}
           onError={() => {
             try {
               imageRef?.current?.classList?.add('sendbird-og-message-item-body__og-thumbnail__empty');
