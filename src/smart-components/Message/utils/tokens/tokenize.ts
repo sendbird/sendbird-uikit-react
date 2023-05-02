@@ -100,15 +100,13 @@ export function tokenizeMessage({
 }
 
 /**
- * To preserve the original text which has
- * leading & trailing white spaces & new-lines in the middle
+ * Don't need to use this util in DOM element since the white spaces will be kept as is,
+ * but will need if the text is wrapped \w React.Fragement or </>
  * @link https://sendbird.slack.com/archives/GPGHESTL3/p1681180484341369
  */
 export function getWhiteSpacePreservedText(text: string): string {
   return text
     // convert any space or tab into the non-breaking space
     // to preserve the leading & trailing white spaces
-    .replace(/(?<!^)[ \t]+/g, '\u00A0')
-    // and keep the new line as well
-    .replace(/\n/g, '\n');
+    .replace(/([ \t]+)/g, (_, spaces) => '\u00A0'.repeat(spaces.length))
 }

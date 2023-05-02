@@ -107,11 +107,11 @@ describe('getWhiteSpacePreservedText', () => {
   it('should keep the leading and trailing white spaces', () => {
     const text = ' aaa ';
     const result = getWhiteSpacePreservedText(text);
-    expect(result).toEqual(' aaa\u00A0');
+    expect(result).toEqual('\u00A0aaa\u00A0');
   });
   it('should keep the new lines', () => {
     const text = ' aaa\naa';
     const result = getWhiteSpacePreservedText(text);
-    expect(result).toEqual(' aaa\naa');
+    expect(result).toEqual('\u00A0aaa\naa');
   });
 });
