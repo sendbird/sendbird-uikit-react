@@ -2472,7 +2472,7 @@ declare module '@sendbird/uikit-react/ui/ThumbnailMessageItemBody' {
 
 declare module '@sendbird/uikit-react/ui/Toggle' {
   export interface ToggleContextInterface {
-    checked?: boolean;
+    checked?: boolean | null;
     defaultChecked?: boolean;
     disabled?: boolean;
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
@@ -2480,7 +2480,7 @@ declare module '@sendbird/uikit-react/ui/Toggle' {
     onBlur?: React.ChangeEventHandler<HTMLInputElement>;
   }
   export interface ToggleContainerProps extends ToggleContextInterface {
-    children?: React.ReactElement;
+    children?: React.ReactElement | null;
   }
   export interface ToggleUIProps {
     reversed?: boolean;
