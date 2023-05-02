@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 import TextMessageItemBody from "../index";
-import { MessageProvider } from '../../../smart-components/Message/context/MessageProvider';
+import { MessageProvider } from '../../../modules/Message/context/MessageProvider';
 
 const createMockMessage = (process) => {
   const mockMessage = {

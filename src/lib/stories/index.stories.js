@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import SendBirdProvider from '../Sendbird';
 import withSendBird from '../SendbirdSdkContext';
 import sendbirdSelectors from '../selectors';
-import ChannelList from '../../smart-components/ChannelList';
+import ChannelList from '../../modules/ChannelList';
 
 const appId = process.env.STORYBOOK_APP_ID;
 const userId = '__test_user--selectors';

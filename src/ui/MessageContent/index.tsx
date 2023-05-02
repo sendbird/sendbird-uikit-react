@@ -46,7 +46,7 @@ import useLongPress from '../../hooks/useLongPress';
 import MobileMenu from '../MobileMenu';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import ThreadReplies from '../ThreadReplies';
-import { ThreadReplySelectType } from '../../smart-components/Channel/context/const';
+import { ThreadReplySelectType } from '../../modules/Channel/context/const';
 import VoiceMessageItemBody from '../VoiceMessageItemBody';
 
 // should initialize in UserProfileContext.jsx

@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import './index.scss';
 import { MessageInputKeys, NodeNames, NodeTypes } from './const';
 
-import { USER_MENTION_TEMP_CHAR } from '../../smart-components/Channel/context/const';
+import { USER_MENTION_TEMP_CHAR } from '../../modules/Channel/context/const';
 import IconButton from '../IconButton';
 import Button, { ButtonTypes, ButtonSizes } from '../Button';
 import renderMentionLabelToString from '../MentionUserLabel/renderToString';
@@ -26,9 +26,9 @@ import {
   convertWordToStringObj,
 } from '../../utils';
 import usePaste from './hooks/usePaste';
-import { tokenizeMessage } from '../../smart-components/Message/utils/tokens/tokenize';
-import { USER_MENTION_PREFIX } from '../../smart-components/Message/consts';
-import { TOKEN_TYPES } from '../../smart-components/Message/utils/tokens/types';
+import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
+import { USER_MENTION_PREFIX } from '../../modules/Message/consts';
+import { TOKEN_TYPES } from '../../modules/Message/utils/tokens/types';
 
 const TEXT_FIELD_ID = 'sendbird-message-input-text-field';
 const LINE_HEIGHT = 76;

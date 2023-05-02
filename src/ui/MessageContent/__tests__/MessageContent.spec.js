@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 import MessageContent from "../index";
-import { MessageProvider } from '../../../smart-components/Message/context/MessageProvider';
+import { MessageProvider } from '../../../modules/Message/context/MessageProvider';
 jest.mock('date-fns/format', () => () => ('mock-date'));
 
 const createMockChannel = (process) => {

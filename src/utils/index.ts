@@ -593,7 +593,7 @@ export interface StringObj {
 
 /**
  * @deprecated
- * use smart-components/message/utils/tokenize instead
+ * use modules/message/utils/tokenize instead
  */
 export const convertWordToStringObj = (word: string, _users: Array<User>, _template?: string): Array<StringObj> => {
   const users = _users || [];
