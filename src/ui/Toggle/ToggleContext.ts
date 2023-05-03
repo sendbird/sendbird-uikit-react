@@ -16,7 +16,7 @@ export const TOGGLE_DEFAULT_VALUE = {
 };
 
 export interface ToggleContextInterface {
-  checked?: boolean;
+  checked?: boolean | null;
   defaultChecked?: boolean;
   disabled?: boolean;
   onChange?: ChangeEventHandler<HTMLInputElement>;

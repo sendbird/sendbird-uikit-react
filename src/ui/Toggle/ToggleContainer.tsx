@@ -18,7 +18,7 @@ export function ToggleContainer({
   onChange = Dvalue.onChange,
   onFocus = Dvalue.onFocus,
   onBlur = Dvalue.onBlur,
-  children = null,
+  children,
 }: ToggleContainerProps): React.ReactElement {
   const [isChecked, setChecked] = useState(defaultChecked || false);
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
