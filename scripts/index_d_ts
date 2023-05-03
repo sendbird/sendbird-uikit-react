@@ -2480,7 +2480,7 @@ declare module '@sendbird/uikit-react/ui/Toggle' {
     onBlur?: React.ChangeEventHandler<HTMLInputElement>;
   }
   export interface ToggleContainerProps extends ToggleContextInterface {
-    children?: React.ReactElement | null;
+    children?: React.ReactElement;
   }
   export interface ToggleUIProps {
     reversed?: boolean;

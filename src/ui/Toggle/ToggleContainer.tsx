@@ -7,7 +7,7 @@ import {
 } from './ToggleContext';
 
 export interface ToggleContainerProps extends ToggleContextInterface {
-  children?: React.ReactElement | null;
+  children?: React.ReactElement;
 }
 
 // Props Explanation https://github.com/aaronshaf/react-toggle#props
@@ -18,7 +18,7 @@ export function ToggleContainer({
   onChange = Dvalue.onChange,
   onFocus = Dvalue.onFocus,
   onBlur = Dvalue.onBlur,
-  children = null,
+  children,
 }: ToggleContainerProps): React.ReactElement {
   const [isChecked, setChecked] = useState(defaultChecked || false);
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
