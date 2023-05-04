@@ -1,4 +1,6 @@
 import SendbirdChat, { SessionHandler } from '@sendbird/chat';
+import { SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import { SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
 import { SdkActionTypes } from '../../dux/sdk/actionTypes';
 import { UserActionTypes } from '../../dux/user/actionTypes';
@@ -14,7 +16,7 @@ export type TriggerTypes = {
   accessToken?: string;
 }
 
-export type ConfigureSessionTypes = (sdk: SendbirdChat) => SessionHandler;
+export type ConfigureSessionTypes = (sdk: SendbirdChat | SendbirdGroupChat | SendbirdOpenChat) => SessionHandler;
 
 export type StaticTypes = {
   nickname: string;

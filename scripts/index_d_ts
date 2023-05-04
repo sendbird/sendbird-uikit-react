@@ -5,7 +5,6 @@
  */
 declare module "SendbirdUIKitGlobal" {
   import type React from 'react';
-  import type Locale from 'date-fns';
   import type SendbirdChat from '@sendbird/chat';
   import type {
     SendbirdError,
@@ -148,7 +147,7 @@ declare module "SendbirdUIKitGlobal" {
   export type EveryMessage = ClientUserMessage | ClientFileMessage | ClientAdminMessage;
   export type ClientSentMessages = ClientUserMessage | ClientFileMessage;
 
-  export type GetSdk = SendbirdChat | undefined;
+  export type GetSdk = SendbirdChat | SendbirdGroupChat | SendbirdOpenChat | undefined;
   export type GetConnect = (
     userId: string,
     accessToken?: string
@@ -229,7 +228,7 @@ declare module "SendbirdUIKitGlobal" {
     userId: string;
     appId: string;
     accessToken?: string;
-    configureSession?: (sdk: SendbirdChat) => SessionHandler;
+    configureSession?: (sdk: SendbirdChat | SendbirdGroupChat | SendbirdOpenChat) => SessionHandler;
     customApiHost?: string,
     customWebSocketHost?: string,
     children?: React.ReactElement;
