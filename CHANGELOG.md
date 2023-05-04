@@ -1,5 +1,54 @@
 # Changelog - v3
 
+## [v3.4.7] (May 4 2023)
+
+Important Notes:
+* @sendbird/chat@4.8.0 has an issue with `abortcontroller-polyfill` plugin. Please use version 4.7.2 or install it separately.
+
+Features: 
+* Set Chat SDK v4.3.0 as the minimum required version.
+* Add a new UI component, Toggle:
+  * `ToggleContainer`: A context provider component that manages only the toggle status.
+  * `ToggleUI`: A UI component that does not include the status managing logic.
+  * `Toggle`: A combination of ToggleContainer and ToggleUI components.
+  * `useToggleContext`: A custom useContext hook that provides context from ToggleContainer.
+  ```javascript
+  import { Toggle, ToggleContainer, ToggleUI,  useToggleContext } from '@sendbird/ui/Toggle';
+  ```
+  
+Fixes:
+* Apply `isMuted` to the participant list. Operators can now unmute the muted participants from the participant list.
+* Update the max mention count notice message.
+* Modify the URL Regex to filter various types of formats.
+* Give a left margin to the link text inside the message.
+* Move the message list scroll after the OG image is loaded.
+* Specify that getSdk returns SendbirdGroupChannel or SendbirdOpenChannel.
+* Fix the issue where the current channel flickers on the ChannelList while creating a new group channel.
+
+Chores: 
+* Rewrite the connection logic in sdk/thunks to hooks/useConnect
+  ```
+  const reconnect = useConnect({
+    appId,
+    userId,
+    accessToken,
+  }, {
+    logger,
+    nickname,
+    profileUrl,
+    configureSession,
+    customApiHost,
+    customWebSocketHost,
+    sdk: sdkStore?.sdk,
+    sdkDispatcher,
+    userDispatcher,
+  });
+  ```
+* Rename `smart-components/` to `modules/`.
+* Modify Logger method:
+  * The first parameter (log message) of the method is now required.
+  * Any other values can be passed to the second parameter of the method in a key-value format.
+
 ## [v3.4.6] (Apr 21 2023)
 
 Fixes:
