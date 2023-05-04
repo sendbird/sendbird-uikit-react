@@ -25,7 +25,7 @@ function useActiveChannelUrl({
   return useEffect(() => {
     if (activeChannelUrl) {
       logger.info('ChannelListProvider: looking for active channel', { activeChannelUrl });
-      const activeChannel = channels.find(channel => channel.url === activeChannelUrl);
+      const activeChannel = channels?.find(channel => channel.url === activeChannelUrl);
       if (activeChannel) {
         channelListDispatcher({
           type: messageActionTypes.SET_CURRENT_CHANNEL,
@@ -49,7 +49,7 @@ function useActiveChannelUrl({
           });
       }
     }
-  }, [activeChannelUrl, channels, sdk]);
+  }, [activeChannelUrl]);
 }
 
 export default useActiveChannelUrl;
