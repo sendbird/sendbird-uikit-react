@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 import type { AppLayoutProps } from './types';
@@ -19,8 +18,9 @@ export const AppLayout: React.FC<AppLayoutProps> = (
     showSearchIcon,
     onProfileEditSuccess,
     disableAutoSelect,
+    currentChannel,
+    setCurrentChannel,
   } = props;
-  const [currentChannel, setCurrentChannel] = useState<GroupChannel | null>(null);
   const [showThread, setShowThread] = useState(false);
   const [threadTargetMessage, setThreadTargetMessage] = useState<UserMessage | FileMessage>(null);
   const [showSettings, setShowSettings] = useState(false);

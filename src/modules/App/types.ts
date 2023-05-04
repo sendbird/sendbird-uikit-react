@@ -19,21 +19,18 @@ export interface AppLayoutProps {
   showSearchIcon?: boolean;
   onProfileEditSuccess?(user: User): void;
   disableAutoSelect?: boolean;
+  currentChannel?: GroupChannel;
+  setCurrentChannel: React.Dispatch<GroupChannel>;
 }
 
-interface CommontLayoutProps {
-  currentChannel?: GroupChannel | null;
-  setCurrentChannel?: React.Dispatch<GroupChannel>;
-}
-
-export interface MobileLayoutProps extends AppLayoutProps, CommontLayoutProps {
+export interface MobileLayoutProps extends AppLayoutProps {
   highlightedMessage?: number;
   setHighlightedMessage?: React.Dispatch<number>;
   startingPoint?: number;
   setStartingPoint?: React.Dispatch<number>;
 }
 
-export interface DesktopLayoutProps extends AppLayoutProps, CommontLayoutProps {
+export interface DesktopLayoutProps extends AppLayoutProps {
   showSettings: boolean;
   setShowSettings: React.Dispatch<boolean>;
   showSearch: boolean;

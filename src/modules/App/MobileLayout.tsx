@@ -107,7 +107,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
           <div className='sb_mobile__panelwrap'>
             <Channel
               replyType={replyType}
-              channelUrl={currentChannel?.url}
+              channelUrl={currentChannel?.url || ''}
               onSearchClick={() => {
                 setPanel(PANELS.MESSAGE_SEARCH);
               }}
@@ -130,7 +130,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
         panel === PANELS?.CHANNEL_SETTINGS && (
           <div className='sb_mobile__panelwrap'>
             <ChannelSettings
-              channelUrl={currentChannel?.url}
+              channelUrl={currentChannel?.url || ''}
               onCloseClick={() => {
                 setPanel(PANELS.CHANNEL);
               }}
@@ -145,7 +145,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
         panel === PANELS?.MESSAGE_SEARCH && (
           <div className='sb_mobile__panelwrap'>
             <MessageSearch
-              channelUrl={currentChannel?.url}
+              channelUrl={currentChannel?.url || ''}
               onCloseClick={() => {
                 setPanel(PANELS.CHANNEL);
               }}
