@@ -58,8 +58,12 @@ const MessageList: React.FC<MessageListProps> = ({
     : allMessages;
   const markAsReadScheduler = store.config.markAsReadScheduler;
 
-  const onScroll = (e) => {
-    const element = e.target;
+  const onScroll = () => {
+    const element = scrollRef?.current;
+    if (element == null) {
+      return;
+    }
+
     const {
       scrollTop,
       clientHeight,
@@ -80,10 +84,7 @@ const MessageList: React.FC<MessageListProps> = ({
     }
 
     // Save the lastest scroll bottom value
-    if (scrollRef?.current) {
-      const current = scrollRef?.current;
-      setScrollBottom(current.scrollHeight - current.scrollTop - current.offsetHeight)
-    }
+    setScrollBottom(element.scrollHeight - element.scrollTop - element.offsetHeight)
 
     if (!disableMarkAsRead && isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER)) {
       messagesDispatcher({

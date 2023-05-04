@@ -19,7 +19,11 @@ export function useHandleOnScrollCallback({
   setShowScrollDownButton,
 }: UseHandleOnScrollCallbackProps): () => void {
   return useCallback(() => {
-    const element = scrollRef.current;
+    const element = scrollRef?.current;
+    if (element == null) {
+      return;
+    }
+
     const {
       scrollTop,
       scrollHeight,
@@ -40,7 +44,7 @@ export function useHandleOnScrollCallback({
     if (scrollTop < SCROLL_BUFFER) {
       onScroll(() => {
         // sets the scroll position to the bottom of the new messages
-        scrollRef.current.scrollTop = scrollRef.current.scrollHeight - scrollBottom;
+        element.scrollTop = element.scrollHeight - scrollBottom;
       });
     }
   }, [
