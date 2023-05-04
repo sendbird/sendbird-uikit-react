@@ -1,5 +1,5 @@
 import type { User } from '@sendbird/chat';
-import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 import type { Locale } from 'date-fns';
@@ -19,18 +19,21 @@ export interface AppLayoutProps {
   showSearchIcon?: boolean;
   onProfileEditSuccess?(user: User): void;
   disableAutoSelect?: boolean;
-  currentChannel?: GroupChannel;
+}
+
+interface CommontLayoutProps {
+  currentChannel?: GroupChannel | null;
   setCurrentChannel?: React.Dispatch<GroupChannel>;
 }
 
-export interface MobileLayoutProps extends AppLayoutProps {
+export interface MobileLayoutProps extends AppLayoutProps, CommontLayoutProps {
   highlightedMessage?: number;
   setHighlightedMessage?: React.Dispatch<number>;
   startingPoint?: number;
   setStartingPoint?: React.Dispatch<number>;
 }
 
-export interface DesktopLayoutProps extends AppLayoutProps {
+export interface DesktopLayoutProps extends AppLayoutProps, CommontLayoutProps {
   showSettings: boolean;
   setShowSettings: React.Dispatch<boolean>;
   showSearch: boolean;
