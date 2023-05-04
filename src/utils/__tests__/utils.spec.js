@@ -43,6 +43,7 @@ describe('isURL', () => {
       'https://example.com/path/to/page.html?query=string',
       'www.example.com/path/to/page.html?query=string',
       'example.com/path/to/page.html?query=string',
+      'https://www.amazon.com/Hacker-Playbook-Practical-Penetration-Testing/dp/1494932636/ref=sr_1_5?crid=1IKVPDXYF5NQG&keywords=hacker+guide&qid=1681333238&sprefix=hacker+guid%2Caps%2C148&sr=8-5'
     ]
     validURLs.forEach((url) => {
       expect(isUrl(url)).toBe(true);
