@@ -1,5 +1,5 @@
 import type { User } from '@sendbird/chat';
-import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 import type { Locale } from 'date-fns';
@@ -20,7 +20,7 @@ export interface AppLayoutProps {
   onProfileEditSuccess?(user: User): void;
   disableAutoSelect?: boolean;
   currentChannel?: GroupChannel;
-  setCurrentChannel?: React.Dispatch<GroupChannel>;
+  setCurrentChannel: React.Dispatch<GroupChannel>;
 }
 
 export interface MobileLayoutProps extends AppLayoutProps {

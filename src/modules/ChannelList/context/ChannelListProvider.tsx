@@ -81,7 +81,7 @@ export interface ChannelListProviderProps {
   overrideInviteUser?(params: OverrideInviteUserType): void;
   onThemeChange?(theme: string): void;
   onProfileEditSuccess?(user: User): void;
-  onChannelSelect?(channel: GroupChannel): void;
+  onChannelSelect?(channel: GroupChannel | null): void;
   sortChannelList?: (channels: GroupChannel[]) => GroupChannel[];
   queries?: ChannelListQueries;
   children?: React.ReactElement;
@@ -104,7 +104,7 @@ export interface ChannelListProviderInterface extends ChannelListProviderProps {
   channelListQuery: GroupChannelListQuery;
   currentUserId: string;
   channelListDispatcher: CustomUseReducerDispatcher;
-  channelSource: GroupChannelListQuerySb;
+  channelSource: GroupChannelListQuerySb | null;
 }
 
 interface ChannelListStoreInterface {
@@ -188,12 +188,12 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     channelListReducers,
     channelListInitialState,
   ) as [ChannelListStoreInterface, CustomUseReducerDispatcher];
-  const { loading, currentChannel } = channelListStore;
+  const { currentChannel } = channelListStore;
 
-  const [channelSource, setChannelSource] = useState<GroupChannelListQuerySb>();
+  const [channelSource, setChannelSource] = useState<GroupChannelListQuerySb | null>(null);
   const [typingChannels, setTypingChannels] = useState<Array<GroupChannel>>([]);
 
-  const [channelsTomarkAsRead, setChannelsToMarkAsRead] = useState([]);
+  const [channelsTomarkAsRead, setChannelsToMarkAsRead] = useState<Array<GroupChannel>>([]);
   useEffect(() => {
     // https://stackoverflow.com/a/60907638
     let isMounted = true;
@@ -378,7 +378,6 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
       overrideInviteUser,
       onChannelSelect,
       sortChannelList,
-      loading,
       allowProfileEdit: enableEditProfile,
       channelListDispatcher,
       channelSource,

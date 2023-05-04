@@ -79,8 +79,6 @@ export default function App(props) {
       replyType={replyType}
     >
       <AppLayout
-        currentChannel={currentChannel}
-        setCurrentChannel={setCurrentChannel}
         isReactionEnabled={isReactionEnabled}
         replyType={replyType}
         isMessageGroupingEnabled={isMessageGroupingEnabled}
@@ -88,6 +86,8 @@ export default function App(props) {
         showSearchIcon={showSearchIcon}
         onProfileEditSuccess={onProfileEditSuccess}
         disableAutoSelect={disableAutoSelect}
+        currentChannel={currentChannel}
+        setCurrentChannel={setCurrentChannel}
       />
     </Sendbird>
   );
