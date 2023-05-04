@@ -2,6 +2,9 @@
 
 ## [v3.4.7] (May 4 2023)
 
+Important Notes:
+* @sendbird/chat@4.8.0 has an issue with `abortcontroller-polyfill` plugin. Please use version 4.7.2 or install it separately.
+
 Features: 
 * Set Chat SDK v4.3.0 as the minimum required version.
 * Add a new UI component, Toggle:
@@ -19,6 +22,8 @@ Fixes:
 * Modify the URL Regex to filter various types of formats.
 * Give a left margin to the link text inside the message.
 * Move the message list scroll after the OG image is loaded.
+* Specify that getSdk returns SendbirdGroupChannel or SendbirdOpenChannel.
+* Fix the issue where the current channel flickers on the ChannelList while creating a new group channel.
 
 Chores: 
 * Rewrite the connection logic in sdk/thunks to hooks/useConnect
