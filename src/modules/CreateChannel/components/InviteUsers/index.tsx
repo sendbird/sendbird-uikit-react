@@ -29,7 +29,7 @@ export interface InviteUsersProps {
 const appHeight = () => {
   try {
     const doc = document.documentElement;
-    doc.style.setProperty('--sendbird-vh', (window.innerHeight * .01) + 'px');
+    doc.style.setProperty('--sendbird-vh', (window.innerHeight * 0.01) + 'px');
   } catch {
     //
   }

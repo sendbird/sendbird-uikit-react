@@ -46,7 +46,6 @@
       }
     ],
     // TODO(Ahyoung): fix and remove one by one
-    "no-floating-decimal": "off",
     "no-shadow": "off",
     "no-else-return": "off",
     "no-param-reassign": "off",
