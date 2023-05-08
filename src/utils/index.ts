@@ -189,7 +189,7 @@ export const getUIKitMessageType = (message: UserMessage | FileMessage | AdminMe
       return UIKitMessageTypes.THUMBNAIL;
     }
     if (isVoiceMessage(message as FileMessage)) {
-      return UIKitFileTypes.VOICE
+      return UIKitFileTypes.VOICE;
     }
     return UIKitMessageTypes.FILE;
   }
@@ -339,7 +339,7 @@ export const hasSameMembers = <T>(a: T[], b: T[]): boolean => {
     }
   }
   return true;
-}
+};
 export const isFriend = (user: User): boolean => !!(user.friendDiscoveryKey || user.friendName);
 
 export const filterMessageListParams = (params: MessageListParams, message: UserMessage | FileMessage): boolean => {

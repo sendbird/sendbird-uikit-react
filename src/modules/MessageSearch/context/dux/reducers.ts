@@ -52,14 +52,14 @@ export default function reducer(
       return {
         ...state,
         isInvalid: true,
-      }
+      };
     }
     case actionTypes.START_MESSAGE_SEARCH: {
       return {
         ...state,
         isInvalid: false,
         loading: false,
-      }
+      };
     }
     case actionTypes.START_GETTING_SEARCHED_MESSAGES: {
       const currentMessageSearchQuery = action.payload;

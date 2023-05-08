@@ -131,7 +131,7 @@ function useFileUploadCallback({
               file.type,
               compressionRate,
             );
-          }
+          };
         } catch (error) {
           logger.warning('OpenChannel | useFileUploadCallback: Sending file message with image compression failed', error);
         }

@@ -185,7 +185,7 @@ export type SendBirdState = {
   dispatchers: {
     userDispatcher: UserDispatcher,
   },
-}
+};
 
 type UserDispatcherParams = {
   type: string,
@@ -515,7 +515,7 @@ type ChannelSettingsContextProps = {
   queries?: ChannelSettingsQueries;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   disableUserProfile?: boolean;
-}
+};
 
 interface ChannelSettingsProps extends ChannelSettingsUIProps, ChannelSettingsContextProps {
 }
@@ -523,12 +523,12 @@ interface ChannelSettingsProps extends ChannelSettingsUIProps, ChannelSettingsCo
 type ChannelSettingsEditDetailsProps = {
   onSubmit: () => void;
   onCancel: () => void;
-}
+};
 
 type CustomUser = User & {
   isMuted: boolean;
   role: string;
-}
+};
 
 interface UserListItemActionProps {
   actionRef: React.RefObject<HTMLInputElement>;
@@ -553,10 +553,10 @@ declare module '@sendbird/uikit-react' {
   export type sendbirdSelectors = sendbirdSelectorsInterface;
   export type ChannelList = React.FunctionComponent<ChannelListProps>;
   export type ChannelSettings = React.FunctionComponent<ChannelSettingsProps>;
-  export type Channel = React.FunctionComponent<ChannelProps>
-  export type OpenChannel = React.FunctionComponent<OpenChannelProps>
-  export type OpenChannelSettings = React.FunctionComponent<OpenChannelSettingsProps>
-  export type MessageSearch = React.FunctionComponent<MessageSearchProps>
+  export type Channel = React.FunctionComponent<ChannelProps>;
+  export type OpenChannel = React.FunctionComponent<OpenChannelProps>;
+  export type OpenChannelSettings = React.FunctionComponent<OpenChannelSettingsProps>;
+  export type MessageSearch = React.FunctionComponent<MessageSearchProps>;
   export function withSendBird(
     ChildComp: React.Component | React.ElementType | React.ReactElement,
     mapStoreToProps?: (store: SendBirdState) => unknown
@@ -814,7 +814,7 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
 type FileViewerProps = {
   onCancel: () => void;
   message: ClientFileMessage;
-}
+};
 
 type MessageUIProps = {
   message: EveryMessage;
@@ -1020,7 +1020,7 @@ interface OpenChannelProps extends OpenChannelProviderProps, OpenChannelUIProps 
 type OpenchannelMessageListProps = {
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderPlaceHolderEmptyList?: () => React.ReactElement;
-}
+};
 
 type OpenChannelMessageProps = {
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
@@ -1086,7 +1086,7 @@ interface UserFilledOpenChannelListQuery {
 type OpenChannelListFetchingStatus = 'EMPTY' | 'FETCHING' | 'DONE' | 'ERROR';
 type CustomUseReducerDispatcher = (props: { type: string, payload: any }) => void;
 type OnOpenChannelSelected = (channel: OpenChannel, e?: React.MouseEvent<HTMLDivElement | unknown>) => void;
-type FetchNextCallbackType = (callback: (channels?: Array<OpenChannel>, err?: SendbirdError) => void) => void
+type FetchNextCallbackType = (callback: (channels?: Array<OpenChannel>, err?: SendbirdError) => void) => void;
 
 interface OpenChannelListProviderProps {
   className?: string;

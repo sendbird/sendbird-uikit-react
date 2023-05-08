@@ -22,7 +22,7 @@ export const setChannelType = (
 type CreateDefaultUserListQueryType = {
   sdk: SendbirdGroupChat;
   userFilledApplicationUserListQuery?: ApplicationUserListQuery;
-}
+};
 
 export const createDefaultUserListQuery = (
   { sdk, userFilledApplicationUserListQuery }: CreateDefaultUserListQueryType,

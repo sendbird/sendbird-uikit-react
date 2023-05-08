@@ -3,7 +3,7 @@ import React, {
   useContext,
   useEffect,
   useState,
-} from 'react'
+} from 'react';
 
 import Modal from '../../../../ui/Modal';
 import UserListItem from '../../../../ui/UserListItem';
@@ -34,7 +34,7 @@ export default function OperatorListModal({ onCancel }: Props): ReactElement {
       setUsers(participants);
     });
     setOperatorQuery(operatorListQuery);
-  }, [])
+  }, []);
   return (
     <div>
       <Modal
@@ -57,7 +57,7 @@ export default function OperatorListModal({ onCancel }: Props): ReactElement {
                 setUsers([
                   ...users,
                   ...o,
-                ])
+                ]);
               });
             }
           }}
@@ -117,5 +117,5 @@ export default function OperatorListModal({ onCancel }: Props): ReactElement {
         </div>
       </Modal>
     </div>
-  )
+  );
 }

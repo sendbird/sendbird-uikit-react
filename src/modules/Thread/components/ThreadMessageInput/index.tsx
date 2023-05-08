@@ -66,7 +66,7 @@ const ThreadMessageInput = (
   const [showVoiceMessageInput, setShowVoiceMessageInput] = useState(false);
   const displaySuggestedMentionList = isOnline
     && isMentionEnabled
-    && mentionNickname.length > 0
+    && mentionNickname.length > 0;
   // && !utils.isDisabledBecauseFrozen(channel)
   // && !utils.isDisabledBecauseMuted(channel);
 
@@ -209,6 +209,6 @@ const ThreadMessageInput = (
       }
     </div>
   );
-}
+};
 
 export default React.forwardRef(ThreadMessageInput);

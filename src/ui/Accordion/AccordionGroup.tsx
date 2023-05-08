@@ -18,5 +18,5 @@ export default function AccordionGroup({
     <Provider value={{ opened, setOpened }}>
       <div className={className}>{ children }</div>
     </Provider>
-  )
+  );
 }

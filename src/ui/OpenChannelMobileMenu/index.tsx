@@ -117,7 +117,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
         </MenuItems>
       )
     }/>
-  )
-}
+  );
+};
 
 export default OpenChannelMobileMenu;

@@ -200,7 +200,7 @@ function CommunityChannelList({
                         channel={c}
                         selected={c.url === currentChannelUrl}
                         onClick={
-                          () => { setCurrentChannel(c) }
+                          () => { setCurrentChannel(c); }
                         }
                       />
                     ))
@@ -217,7 +217,7 @@ function CommunityChannelList({
         <Profile user={user} />
       </div>
     </div>
-  )
+  );
 }
 
 export default withSendBird(CommunityChannelList, (store) => {

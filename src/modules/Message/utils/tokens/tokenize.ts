@@ -108,5 +108,5 @@ export function getWhiteSpacePreservedText(text: string): string {
   return text
     // convert any space or tab into the non-breaking space
     // to preserve the leading & trailing white spaces
-    .replace(/([ \t]+)/g, (_, spaces) => '\u00A0'.repeat(spaces.length))
+    .replace(/([ \t]+)/g, (_, spaces) => '\u00A0'.repeat(spaces.length));
 }

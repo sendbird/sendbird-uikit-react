@@ -12,7 +12,7 @@ const isEmpty = (obj) => {
     }
   }
   return JSON.stringify(obj) === JSON.stringify({});
-}
+};
 
 const useTheme = (overrides: Record<string, string>): void => {
   useLayoutEffect(() => {

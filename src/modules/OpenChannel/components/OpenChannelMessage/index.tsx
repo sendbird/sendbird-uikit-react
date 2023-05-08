@@ -138,7 +138,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
             if (message?.messageType === 'admin') {
               return (
                 <OpenChannelAdminMessage message={message as AdminMessage} />
-              )
+              );
             }
           })(),
           [MessageTypes.FILE]: (() => {

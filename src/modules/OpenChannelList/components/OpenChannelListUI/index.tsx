@@ -136,7 +136,7 @@ function OpenChannelListUI({
               key={channel?.url}
             />
           );
-      })
+      });
     }
     return null;
   }, [allChannels, allChannels.length, currentChannel]);

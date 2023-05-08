@@ -27,7 +27,7 @@ type PayloadType = (
 type ActionType = {
   type: string;
   payload: PayloadType;
-}
+};
 
 export default function voicePlayerReducer(
   state: VoicePlayerInitialState,

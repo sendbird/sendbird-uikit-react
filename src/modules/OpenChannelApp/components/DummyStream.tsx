@@ -75,5 +75,5 @@ export default function DummyStream({
         </div>
       </div>
     </div>
-  )
+  );
 }

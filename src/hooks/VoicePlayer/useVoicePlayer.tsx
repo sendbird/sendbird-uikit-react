@@ -63,7 +63,7 @@ export const useVoicePlayer = ({
         const voiceAudioPlayerElement = document.getElementById(VOICE_PLAYER_AUDIO_ID);
         (voiceAudioPlayerElement as HTMLAudioElement)?.pause?.();
       }
-    }
+    };
   }, []);
 
   return ({

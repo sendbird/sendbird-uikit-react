@@ -148,6 +148,6 @@ const UserListItem = ({
       }
     </div>
   );
-}
+};
 
 export default UserListItem;

@@ -16,7 +16,7 @@ import uuidv4 from '../../../../utils/uuid';
 export type EditDetailsProps = {
   onSubmit: () => void;
   onCancel: () => void;
-}
+};
 
 const EditDetails: React.FC<EditDetailsProps> = (props: EditDetailsProps) => {
   const {

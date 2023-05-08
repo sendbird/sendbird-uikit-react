@@ -94,5 +94,5 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
         </MenuItems>
       )}
     />
-  )
+  );
 }

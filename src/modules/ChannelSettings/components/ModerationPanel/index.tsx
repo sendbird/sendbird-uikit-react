@@ -28,7 +28,7 @@ const kFormatter = (num: number): string|number => {
   return Math.abs(num) > 999
     ? `${(Math.abs(num) / 1000).toFixed(1)}K`
     : num;
-}
+};
 
 export default function AdminPannel(): ReactElement {
   const [frozen, setFrozen] = useState(false);

@@ -41,7 +41,7 @@ export default function AddOperatorsModal({
       setMembers(members);
     });
     setMemberQuery(memberListQuery);
-  }, [])
+  }, []);
 
   const selectedCount = Object.keys(selectedMembers).filter((m) => selectedMembers[m]).length;
   return (
@@ -55,7 +55,7 @@ export default function AddOperatorsModal({
           const members = Object.keys(selectedMembers).filter((m) => selectedMembers[m]);
           channel?.addOperators(members).then(() => {
             onSubmit(members);
-          })
+          });
         }}
         titleText={stringSet.CHANNEL_SETTING__MEMBERS__SELECT_TITLE}
       >
@@ -78,7 +78,7 @@ export default function AddOperatorsModal({
                 setMembers([
                   ...members,
                   ...o,
-                ])
+                ]);
               });
             }
           }}

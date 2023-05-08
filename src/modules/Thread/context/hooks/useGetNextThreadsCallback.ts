@@ -47,7 +47,7 @@ export default function useGetNextThreadsCallback({
         } as ThreadedMessageListParams,
       )
         .then(({ parentMessage, threadedMessages }) => {
-          logger.info('Thread | useGetNextThreadsCallback: Fetch next threads succeeded.', { parentMessage, threadedMessages })
+          logger.info('Thread | useGetNextThreadsCallback: Fetch next threads succeeded.', { parentMessage, threadedMessages });
           threadDispatcher({
             type: ThreadContextActionTypes.GET_NEXT_MESSAGES_SUCESS,
             payload: { parentMessage, threadedMessages },

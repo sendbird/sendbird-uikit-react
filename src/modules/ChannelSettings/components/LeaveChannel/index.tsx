@@ -19,7 +19,7 @@ import Label, {
 export type LeaveChannelProps = {
   onSubmit: () => void;
   onCancel: () => void;
-}
+};
 
 const LeaveChannel: React.FC<LeaveChannelProps> = (props: LeaveChannelProps) => {
   const {

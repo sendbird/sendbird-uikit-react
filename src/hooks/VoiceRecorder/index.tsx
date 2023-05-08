@@ -42,7 +42,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
     if (isVoiceMessageEnabled && !webAudioUtils) {
       import('./WebAudioUtils').then((data) => {
         setWebAudioUtils(data);
-      })
+      });
     }
   }, []);
 
@@ -110,7 +110,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
     }}>
       {children}
     </VoiceRecorderContext.Provider>
-  )
+  );
 };
 
 export const useVoiceRecorderContext = (): VoiceRecorderContext => useContext(VoiceRecorderContext);

@@ -4,7 +4,7 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from 'react'
+} from 'react';
 import type { Participant } from '@sendbird/chat';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 

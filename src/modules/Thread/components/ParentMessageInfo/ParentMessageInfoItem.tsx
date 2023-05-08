@@ -179,7 +179,7 @@ export default function ParentMessageInfoItem({
             </div>
             <TextButton
               className="sendbird-parent-message-info-item__file-message__file-name"
-              onClick={() => { window.open((message as FileMessage)?.url) }}
+              onClick={() => { window.open((message as FileMessage)?.url); }}
               color={LabelColors.ONBACKGROUND_1}
             >
               <Label
@@ -221,7 +221,7 @@ export default function ParentMessageInfoItem({
             alt={(message as FileMessage)?.type}
             width="200px"
             height="148px"
-            onLoad={() => { setImageRendered(true) }}
+            onLoad={() => { setImageRendered(true); }}
             placeHolder={(style_: Record<string, any>) => (
               <div
                 className="sendbird-parent-message-info-item__thumbnail-message__placeholder"

@@ -76,7 +76,6 @@
     "arrow-body-style": "off",
     "function-paren-newline": "off",
     "prefer-template": "off",
-    "semi": "off",
     "padded-blocks": "off",
     "arrow-parens": "off",
     "dot-notation": "off",
@@ -88,7 +87,9 @@
     "yoda": "off",
     "brace-style": "off",
     "nonblock-statement-body-position": "off",
-    "func-names": "off"
+    "func-names": "off",
+    "semi": "off",
+    "@typescript-eslint/semi": ["error"]
   },
   "extends": [
     "plugin:react/recommended",

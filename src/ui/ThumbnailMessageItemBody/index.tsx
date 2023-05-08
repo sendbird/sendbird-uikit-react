@@ -49,7 +49,7 @@ export default function ThumbnailMessageItemBody({
         alt={message?.type}
         width={style?.width || '360px'}
         height={style?.height || '270px'}
-        onLoad={() => { setImageRendered(true) }}
+        onLoad={() => { setImageRendered(true); }}
         placeHolder={(style_: Record<string, any>) => (
           <div
             className="sendbird-thumbnail-message-item-body__placeholder"

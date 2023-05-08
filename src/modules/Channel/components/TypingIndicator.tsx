@@ -75,6 +75,6 @@ const TypingIndicator: React.FC = () => {
       <TypingIndicatorText members={typingMembers} />
     </Label>
   );
-}
+};
 
 export default TypingIndicator;

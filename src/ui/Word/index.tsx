@@ -93,7 +93,7 @@ export default function Word(props: WordProps): JSX.Element {
               </LinkLabel>
             );
           } else {
-            return value
+            return value;
           }
         })
       }

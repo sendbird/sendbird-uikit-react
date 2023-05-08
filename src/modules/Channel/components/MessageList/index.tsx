@@ -16,7 +16,7 @@ import { EveryMessage } from '../../../..';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { UserMessage } from '@sendbird/chat/message';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
-import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback'
+import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 
 export interface MessageListProps {
   className?: string;
@@ -84,7 +84,7 @@ const MessageList: React.FC<MessageListProps> = ({
     }
 
     // Save the lastest scroll bottom value
-    setScrollBottom(element.scrollHeight - element.scrollTop - element.offsetHeight)
+    setScrollBottom(element.scrollHeight - element.scrollTop - element.offsetHeight);
 
     if (!disableMarkAsRead && isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER)) {
       messagesDispatcher({

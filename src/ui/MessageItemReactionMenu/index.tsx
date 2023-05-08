@@ -78,9 +78,9 @@ export default function MessageItemReactionMenu({
               spaceFromTrigger={spaceFromTrigger}
             >
               {getEmojiListAll(emojiContainer).map((emoji: Emoji): ReactElement => {
-                const isReacted: boolean = message?.reactions?.
-                  filter((reaction: Reaction) => reaction.key === emoji.key)[0]?.userIds?.
-                  some((reactorId: string) => reactorId === userId);
+                const isReacted: boolean = message?.reactions
+                  ?.filter((reaction: Reaction) => reaction.key === emoji.key)[0]?.userIds
+                  ?.some((reactorId: string) => reactorId === userId);
                 return (
                   <ReactionButton
                     key={emoji.key}

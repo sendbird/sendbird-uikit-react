@@ -7,10 +7,10 @@ export const checkFileType = (fileUrl: string): string => {
     return IconTypes.FILE_AUDIO;
   }
   if (gifFile.test(fileUrl)) {
-    return IconTypes.GIF
+    return IconTypes.GIF;
   }
   return IconTypes.FILE_DOCUMENT;
-}
+};
 
 export const truncate = (fullStr:string, strLen: number): string => {
   if (fullStr === null || fullStr === undefined) return '';

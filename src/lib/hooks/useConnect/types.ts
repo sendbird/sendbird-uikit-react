@@ -14,7 +14,7 @@ export type TriggerTypes = {
   appId: string;
   // todo: doulbe check this type before merge
   accessToken?: string;
-}
+};
 
 export type ConfigureSessionTypes = (sdk: SendbirdChat | SendbirdGroupChat | SendbirdOpenChat) => SessionHandler;
 
@@ -28,7 +28,7 @@ export type StaticTypes = {
   logger: Logger;
   sdkDispatcher: SdkDispatcher;
   userDispatcher: UserDispatcher;
-}
+};
 
 export type ConnectTypes = TriggerTypes & StaticTypes;
 
@@ -39,6 +39,6 @@ export type DisconnectSdkTypes = {
   userDispatcher: UserDispatcher;
   sdk: SendbirdChat;
   logger: Logger;
-}
+};
 
 export type ReconnectType = () => void;

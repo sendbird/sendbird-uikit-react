@@ -28,4 +28,4 @@ export const getSupportingFileType = (type: string): string => {
     return SUPPORTING_TYPES.VIDEO;
   }
   return SUPPORTING_TYPES.UNSUPPORTED;
-}
+};

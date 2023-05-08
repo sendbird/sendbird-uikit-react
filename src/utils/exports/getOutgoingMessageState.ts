@@ -16,7 +16,7 @@ export const getOutgoingMessageState = (channel: GroupChannel | OpenChannel, mes
     return OutgoingMessageStates.PENDING;
   }
   if (message.sendingStatus === 'failed') {
-    return OutgoingMessageStates.FAILED
+    return OutgoingMessageStates.FAILED;
   }
   if (channel?.isGroupChannel?.()) {
     /* GroupChannel only */
@@ -27,7 +27,7 @@ export const getOutgoingMessageState = (channel: GroupChannel | OpenChannel, mes
     }
   }
   if (message.sendingStatus === 'succeeded') {
-    return OutgoingMessageStates.SENT
+    return OutgoingMessageStates.SENT;
   }
   return OutgoingMessageStates.NONE;
 };

@@ -35,6 +35,6 @@ const initialState: ThreadContextInitialState = {
   isMuted: false,
   isChannelFrozen: false,
   currentUserId: '',
-}
+};
 
 export default initialState;

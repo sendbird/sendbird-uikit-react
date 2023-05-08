@@ -82,6 +82,6 @@ export default function useHandlePubsubEvents({
           //
         }
       });
-    }
+    };
   }, [sdkInit, currentChannel]);
 }

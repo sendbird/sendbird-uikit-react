@@ -102,5 +102,5 @@ describe('Global-export-utils-getOutgoingMessageState', () => {
         { sendingStatus: 'succeeded' } as UserMessage,
       ),
     ).toBe(OutgoingMessageStates.READ);
-  })
+  });
 });

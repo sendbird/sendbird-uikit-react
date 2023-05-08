@@ -80,8 +80,8 @@ export default function OpenchannelThumbnailMessage({
   const avatarRef = useRef(null);
   const onLongPress = useLongPress({
     onLongPress: () => { setContextMenu(true); },
-    onClick: () => { onClick(true) },
-  })
+    onClick: () => { onClick(true); },
+  });
   const { isMobile } = useMediaQueryContext();
 
   const memorizedThumbnailPlaceHolder = useMemo(() => (type) => ({ style }) => ( // eslint-disable-line

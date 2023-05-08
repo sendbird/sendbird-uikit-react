@@ -28,4 +28,4 @@ export const generateDefaultAvatar = (channel: GroupChannel): boolean => {
     return false;
   }
   return true;
-}
+};

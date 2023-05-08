@@ -47,7 +47,7 @@ export default function useGetParentMessage({
       const fetchParentMessage = async () => {
         const data = await sdk.message.getMessage?.(params);
         return data;
-      }
+      };
       fetchParentMessage()
         .then((parentMsg) => {
           logger.info('Thread | useGetParentMessage: Get parent message succeeded.', parentMessage);

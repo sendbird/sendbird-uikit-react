@@ -68,5 +68,5 @@ export default function useUpdateMessageCallback({
           },
         );
       });
-  }, [currentChannel, isMentionEnabled])
+  }, [currentChannel, isMentionEnabled]);
 }

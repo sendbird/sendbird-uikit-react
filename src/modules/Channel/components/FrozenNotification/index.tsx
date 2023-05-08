@@ -23,6 +23,6 @@ const FrozenNotification = ({
       </Label>
     </div>
   );
-}
+};
 
 export default FrozenNotification;

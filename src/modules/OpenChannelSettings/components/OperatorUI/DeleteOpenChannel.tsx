@@ -29,7 +29,7 @@ export default function DeleteChannel(): ReactElement {
     }).catch((error) => {
       logger.warning('OpenChannelSettings: Delete channel failed', error);
     });
-  }
+  };
   return (
     <>
       <div
@@ -84,5 +84,5 @@ export default function DeleteChannel(): ReactElement {
         )
       }
     </>
-  )
+  );
 }

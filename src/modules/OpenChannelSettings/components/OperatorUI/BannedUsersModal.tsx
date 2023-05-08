@@ -60,7 +60,7 @@ export default function BannedUsersModal({
                 setBannedUsers([
                   ...bannedUsers,
                   ...o,
-                ])
+                ]);
               });
             }
           }}
@@ -102,7 +102,7 @@ export default function BannedUsersModal({
                                   setBannedUsers(bannedUsers.filter((u) => {
                                     return (u.userId !== bannedUser.userId);
                                   }));
-                                })
+                                });
                               }}
                             >
                               {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNBAN}
