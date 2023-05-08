@@ -73,7 +73,6 @@ export function useMarkAsReadScheduler({
     // for simplicity, we clear the queue when the connection is lost
     if (!isConnected) {
       markAsReadScheduler.clear();
-      return;
     }
   }, [isConnected]);
 
