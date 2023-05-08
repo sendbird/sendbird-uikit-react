@@ -39,7 +39,7 @@ export default function AddOperatorsModal({
       setParticipants(users);
     });
     setParticipantQuery(participantListQuery);
-  }, [])
+  }, []);
 
   const selectedCount = Object.keys(selectedUsers).filter((m) => selectedUsers[m]).length;
   return (
@@ -53,7 +53,7 @@ export default function AddOperatorsModal({
           const users = Object.keys(selectedUsers).filter((m) => selectedUsers[m]);
           channel?.addOperators(users).then(() => {
             onSubmit(users);
-          })
+          });
         }}
         titleText={stringSet.OPEN_CHANNEL_CONVERSATION__SELECT_PARTICIPANTS}
       >
@@ -76,7 +76,7 @@ export default function AddOperatorsModal({
                 setParticipants([
                   ...participants,
                   ...o,
-                ])
+                ]);
               });
             }
           }}

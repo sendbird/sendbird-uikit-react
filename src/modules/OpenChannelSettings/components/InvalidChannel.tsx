@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext } from 'react'
+import React, { ReactElement, useContext } from 'react';
 
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 
@@ -36,5 +36,5 @@ export default function InvalidChannel({
         <PlaceHolder type={PlaceHolderTypes.WRONG} />
       </div>
     </div>
-  )
+  );
 }

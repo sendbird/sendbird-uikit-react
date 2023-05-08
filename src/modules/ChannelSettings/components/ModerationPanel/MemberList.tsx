@@ -125,7 +125,7 @@ export const MemberList = (): ReactElement => {
                                   channel?.unmuteUser(member).then(() => {
                                     refreshList();
                                     closeDropdown();
-                                  })
+                                  });
                                 } else {
                                   channel?.muteUser(member).then(() => {
                                     refreshList();
@@ -206,6 +206,6 @@ export const MemberList = (): ReactElement => {
       }
     </div>
   );
-}
+};
 
 export default MemberList;

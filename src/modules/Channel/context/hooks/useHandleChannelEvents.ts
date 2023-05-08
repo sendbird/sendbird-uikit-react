@@ -219,7 +219,7 @@ function useHandleChannelEvents({
       } else if (sdk?.groupChannel) {
         logger.error('Channel | useHandleChannelEvents: Not found the removeGroupChannelHandler');
       }
-    }
+    };
   }, [currentGroupChannel?.url, sdkInit]);
 }
 

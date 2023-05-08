@@ -107,9 +107,9 @@ const EmojiReactions = ({
               spacefromTrigger={spaceFromTrigger}
             >
               {getEmojiListAll(emojiContainer).map((emoji: Emoji): ReactElement => {
-                const isReacted: boolean = (message?.reactions?.
-                  find((reaction: Reaction): boolean => reaction.key === emoji.key)?.userIds?.
-                  some((reactorId: string): boolean => reactorId === userId));
+                const isReacted: boolean = (message?.reactions
+                  ?.find((reaction: Reaction): boolean => reaction.key === emoji.key)?.userIds
+                  ?.some((reactorId: string): boolean => reactorId === userId));
                 return (
                   <ReactionButton
                     key={emoji.key}
@@ -146,6 +146,6 @@ const EmojiReactions = ({
       )}
     </div>
   );
-}
+};
 
 export default EmojiReactions;

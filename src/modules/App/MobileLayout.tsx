@@ -77,11 +77,11 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
           }
         },
       });
-      sdk?.groupChannel?.addGroupChannelHandler(handlerId, handler)
+      sdk?.groupChannel?.addGroupChannelHandler(handlerId, handler);
     }
     return () => {
       sdk?.groupChannel?.removeGroupChannelHandler?.(handlerId);
-    }
+    };
   }, [sdk]);
 
   return (

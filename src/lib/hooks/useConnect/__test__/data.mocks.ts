@@ -39,7 +39,7 @@ export const defaultStaticParams: StaticTypes = {
   logger: LoggerFactory('all'),
   sdkDispatcher: mockSdkDispatcher,
   userDispatcher: mockUserDispatcher,
-}
+};
 
 export const defaultTriggerParams: TriggerTypes = {
   userId: 'test-user-id',

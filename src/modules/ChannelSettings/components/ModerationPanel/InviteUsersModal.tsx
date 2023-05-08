@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react';
 
 import Modal from '../../../../ui/Modal';
 import { ButtonTypes } from '../../../../ui/Button';
@@ -78,7 +78,7 @@ export default function InviteUsers({
                 setMembers([
                   ...members,
                   ...users,
-                ])
+                ]);
               });
             }
           }}

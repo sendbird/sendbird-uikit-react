@@ -61,7 +61,7 @@ export default function ParentMessageInfo({
   const [showRemove, setShowRemove] = useState(false);
   const [supposedHover, setSupposedHover] = useState(false);
   const [showFileViewer, setShowFileViewer] = useState(false);
-  const usingReaction = isReactionEnabled && !currentChannel?.isSuper && !currentChannel?.isBroadcast
+  const usingReaction = isReactionEnabled && !currentChannel?.isSuper && !currentChannel?.isBroadcast;
 
   // Edit message
   const [showEditInput, setShowEditInput] = useState(false);
@@ -161,7 +161,7 @@ export default function ParentMessageInfo({
             setMentionNickname('');
             setMentionedUsers([]);
             setMentionedUserIds([]);
-            setMentionSuggestedUsers([])
+            setMentionSuggestedUsers([]);
             setShowEditInput(false);
             currentChannel?.endTyping?.();
           }}

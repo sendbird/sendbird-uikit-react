@@ -8,7 +8,7 @@ import { Logger } from '../../../../lib/SendbirdState';
 
 type MessagesDispatcherType = {
   type: string, payload: any,
-}
+};
 interface DynamicParams {
   currentOpenChannel: OpenChannel;
   checkScrollBottom: () => boolean;
@@ -216,7 +216,7 @@ function useHandleChannelEvents(
         logger.info('OpenChannel | useHandleChannelEvents: Removing message receiver handler', messageReceiverId);
         sdk.openChannel.removeOpenChannelHandler(messageReceiverId);
       }
-    }
+    };
   }, [currentOpenChannel]);
 }
 

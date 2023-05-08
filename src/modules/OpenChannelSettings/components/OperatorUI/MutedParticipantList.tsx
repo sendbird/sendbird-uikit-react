@@ -94,7 +94,7 @@ export const MutedParticipantList = (): ReactElement => {
                             channel?.unmuteUser(mutedUser).then(() => {
                               refreshList();
                               closeDropdown();
-                            })
+                            });
                           }}
                         >
                           {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNMUTE}
@@ -147,6 +147,6 @@ export const MutedParticipantList = (): ReactElement => {
       }
     </>
   );
-}
+};
 
 export default MutedParticipantList;

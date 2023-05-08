@@ -140,7 +140,7 @@ export const getUpdateUserInfo = (state: SendBirdState) => (
         reject(new Error('Sdk not found'));
       }
       if (!(sdk.updateCurrentUserInfo && typeof sdk.updateCurrentUserInfo === 'function')) {
-        reject(new Error('Not found the function "updateCurrentUserInfo"'))
+        reject(new Error('Not found the function "updateCurrentUserInfo"'));
       }
       const userParams: UserUpdateParams = { nickname };
       if (profileUrl) {
@@ -173,7 +173,7 @@ export const getCreateGroupChannel = (state: SendBirdState) => (
         reject(new Error('Not found GroupChannelModule'));
       }
       if (!(sdk.groupChannel.createChannel && typeof sdk.groupChannel.createChannel === 'function')) {
-        reject(new Error('Not found the function "createChannel"'))
+        reject(new Error('Not found the function "createChannel"'));
       }
       sdk.groupChannel.createChannel(params)
         .then((channel) => {
@@ -183,7 +183,7 @@ export const getCreateGroupChannel = (state: SendBirdState) => (
             { channel },
           );
         })
-        .catch(reject)
+        .catch(reject);
     })
   )
 );
@@ -206,14 +206,14 @@ export const getCreateOpenChannel = (state: SendBirdState) => (
         reject(new Error('Not found OpenChannelModule'));
       }
       if (!(sdk.openChannel.createChannel && typeof sdk.openChannel.createChannel === 'function')) {
-        reject(new Error('Not found the function "createChannel"'))
+        reject(new Error('Not found the function "createChannel"'));
       }
       sdk.openChannel.createChannel(params)
         .then((channel) => {
           resolve(channel);
           // Consider pubSub process
         })
-        .catch(reject)
+        .catch(reject);
     })
   )
 );
@@ -240,14 +240,14 @@ export const getGetGroupChannel = (state: SendBirdState) => (
         reject(new Error('Not found GroupChannelModule'));
       }
       if (!(sdk.groupChannel.getChannel && typeof sdk.groupChannel.getChannel === 'function')) {
-        reject(new Error('Not found the function "getChannel"'))
+        reject(new Error('Not found the function "getChannel"'));
       }
       sdk.groupChannel.getChannel(channelUrl)
         .then((channel) => {
           resolve(channel);
           // Add pubSub with isSelected
         })
-        .catch(reject)
+        .catch(reject);
     })
   )
 );
@@ -274,14 +274,14 @@ export const getGetOpenChannel = (state: SendBirdState) => (
         reject(new Error('Not found OpenChannelModule'));
       }
       if (!(sdk.openChannel.getChannel && typeof sdk.openChannel.getChannel === 'function')) {
-        reject(new Error('Not found the function "getChannel"'))
+        reject(new Error('Not found the function "getChannel"'));
       }
       sdk.openChannel.getChannel(channelUrl)
         .then((channel) => {
           resolve(channel);
           // Add pubSub with isSelected
         })
-        .catch(reject)
+        .catch(reject);
     })
   )
 );
@@ -302,9 +302,9 @@ export const getLeaveGroupChannel = (state: SendBirdState) => (
               resolve();
               // Add pubSub process
             })
-            .catch(reject)
+            .catch(reject);
         })
-        .catch(reject)
+        .catch(reject);
     })
   )
 );
@@ -325,12 +325,12 @@ export const getEnterOpenChannel = (state: SendBirdState) => (
               resolve(channel);
               // Add pubSub process
             })
-            .catch(reject)
+            .catch(reject);
         })
-        .catch(reject)
+        .catch(reject);
     })
   )
-)
+);
 
 /**
  * const exitChannel = selectors.getExitOpenChannel(state);
@@ -348,12 +348,12 @@ export const getExitOpenChannel = (state: SendBirdState) => (
               resolve(channel);
               // Add pubSub process
             })
-            .catch(reject)
+            .catch(reject);
         })
-        .catch(reject)
+        .catch(reject);
     })
   )
-)
+);
 
 /**
  * const freezeChannel = selectors.getFreezeChannel(currentChannel);
@@ -376,10 +376,10 @@ export const getFreezeChannel = () => (
            * _freezeGroupChannel and _freezeOpenChannel
            */
         })
-        .catch(reject)
+        .catch(reject);
     })
   )
-)
+);
 
 /**
  * const unfreezeChannel = selectors.getUnfreezeChannel(currentChannel);
@@ -402,10 +402,10 @@ export const getUnfreezeChannel = () => (
            * _unfreezeGroupChannel and _unfreezeOpenChannel
            */
         })
-        .catch(reject)
+        .catch(reject);
     })
   )
-)
+);
 
 // 4. Message
 export class UikitMessageHandler {

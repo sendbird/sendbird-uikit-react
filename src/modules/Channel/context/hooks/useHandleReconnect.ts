@@ -90,9 +90,9 @@ function useHandleReconnect(
                   type: messageActionTypes.FETCH_INITIAL_MESSAGES_FAILURE,
                   payload: { currentGroupChannel },
                 });
-              })
+              });
             if (!disableMarkAsRead) {
-                markAsReadScheduler?.push(currentGroupChannel);
+              markAsReadScheduler?.push(currentGroupChannel);
             }
           });
       }

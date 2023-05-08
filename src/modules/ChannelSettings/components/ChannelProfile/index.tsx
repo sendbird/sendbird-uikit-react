@@ -84,6 +84,6 @@ const ChannelProfile: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export default ChannelProfile;

@@ -78,7 +78,7 @@ const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: Crea
       {children}
     </CreateChannelContext.Provider>
   );
-}
+};
 
 const useCreateChannelContext = (): CreateChannelContextInterface => (
   React.useContext(CreateChannelContext)

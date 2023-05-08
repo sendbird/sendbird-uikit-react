@@ -37,7 +37,7 @@ const EditUserProfileProvider: React.FC<EditUserProfileProps> = (props: EditUser
       {children}
     </EditUserProfileProviderContext.Provider>
   );
-}
+};
 
 const useEditUserProfileContext = (): EditUserProfileProviderInterface => (
   React.useContext(EditUserProfileProviderContext)

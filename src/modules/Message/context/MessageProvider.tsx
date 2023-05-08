@@ -8,7 +8,7 @@ export type MessageProviderProps = {
   children: React.ReactNode;
   message: BaseMessage;
   isByMe?: boolean;
-}
+};
 
 export type MessageProviderInterface = Exclude<MessageProviderProps, 'children'>;
 
@@ -29,7 +29,7 @@ const MessageProvider: React.FC<MessageProviderInterface> = (props: MessageProvi
       {children}
     </MessageContext.Provider>
   );
-}
+};
 
 const useMessageContext = (): MessageProviderInterface => {
   const value = React.useContext(MessageContext);

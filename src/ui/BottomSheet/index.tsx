@@ -21,7 +21,7 @@ const BottomSheet: React.FunctionComponent<BottomSheetProps> = (props: BottomShe
   const portalRoot = useRef<HTMLElement>();
   portalRoot.current = document.getElementById(MODAL_ROOT);
   if (!portalRoot.current) {
-    portalRoot.current = document.createElement('div')
+    portalRoot.current = document.createElement('div');
     portalRoot.current.setAttribute('id', MODAL_ROOT);
     document.body.appendChild(portalRoot.current);
   }

@@ -158,5 +158,5 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
         />
       )}
     </div>
-  )
+  );
 };

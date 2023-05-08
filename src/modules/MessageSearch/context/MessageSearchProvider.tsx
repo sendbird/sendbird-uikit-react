@@ -145,7 +145,7 @@ const MessageSearchProvider: React.FC<MessageSearchProviderProps> = (props: Mess
       {props?.children}
     </MessageSearchContext.Provider>
   );
-}
+};
 
 export type UseMessageSearchType = () => MessageSearchProviderInterface;
 const useMessageSearchContext: UseMessageSearchType = () => React.useContext(MessageSearchContext);

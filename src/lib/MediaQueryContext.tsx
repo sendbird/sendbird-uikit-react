@@ -64,14 +64,14 @@ const MediaQueryProvider = (props: MediaQueryProviderProps): React.ReactElement 
           logger?.info?.('MediaQueryProvider: isMobile: false');
         }
       }
-    }
+    };
     updateSize();
     window.addEventListener('resize', updateSize);
     logger?.info?.('MediaQueryProvider: addEventListener', updateSize);
     return () => {
       window.removeEventListener('resize', updateSize);
       logger?.info?.('MediaQueryProvider: removeEventListener', updateSize);
-    }
+    };
   }, [mediaQueryBreakPoint]);
   return (
     <MediaQueryContext.Provider value={{ mediaQueryBreakPoint, isMobile }}>

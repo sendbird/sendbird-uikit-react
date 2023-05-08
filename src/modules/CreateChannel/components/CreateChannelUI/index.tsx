@@ -44,7 +44,7 @@ const CreateChannel: React.FC<CreateChannelUIProps> = (props: CreateChannelUIPro
         )
       }
     </>
-  )
-}
+  );
+};
 
 export default CreateChannel;

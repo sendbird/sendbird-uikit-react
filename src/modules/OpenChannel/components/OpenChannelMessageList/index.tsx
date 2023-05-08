@@ -18,7 +18,7 @@ import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCa
 export type OpenchannelMessageListProps = {
   renderMessage?: (props: RenderMessageProps) => React.ElementType<RenderMessageProps>;
   renderPlaceHolderEmptyList?: () => React.ReactElement;
-}
+};
 
 function OpenchannelMessageList(
   props: OpenchannelMessageListProps,
@@ -78,7 +78,7 @@ function OpenchannelMessageList(
                 renderMessage={props?.renderMessage}
               />
             </MessageProvider>
-          )
+          );
         })
       );
     }

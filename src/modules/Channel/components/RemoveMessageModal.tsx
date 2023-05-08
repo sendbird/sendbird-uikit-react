@@ -30,7 +30,7 @@ const RemoveMessage: React.FC<RemoveMessageProps> = (props: RemoveMessageProps) 
       onSubmit={() => { deleteMessage(message).then(() => {
         onSubmit();
         onCancel();
-      }) }}
+      }); }}
       submitText={stringSet.MESSAGE_MENU__DELETE}
       titleText={stringSet.MODAL__DELETE_MESSAGE__TITLE}
     />

@@ -34,7 +34,7 @@ export function generateNormalMessage(pretreatment?: (msg: MockMessage) => MockM
     errorCode: 0,
     getUnreadMemberCount: () => 10,
     getUndeliveredMemberCount: () => 10,
-  }
+  };
   if (pretreatment) {
     return pretreatment(message);
   } else {
@@ -75,7 +75,7 @@ export function generateLongMessage(pretreatment?: (msg: MockMessage) => MockMes
     sendingStatus: 'succeeded',
     requestedMentionUserIds: [],
     errorCode: 0,
-  }
+  };
   if (pretreatment) {
     return pretreatment(message);
   } else {

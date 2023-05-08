@@ -161,7 +161,7 @@ export default function reducer(
         return {
           ...state,
           allMessages: allMessages.slice(sliceAt),
-        }
+        };
       }
       return state;
     }
@@ -368,12 +368,12 @@ export default function reducer(
         return {
           ...state,
           currentOpenChannel: null,
-        }
+        };
       } else if (currentChannel?.url === eventedChannel?.url) {
         return {
           ...state,
           bannedParticipantIds: [...state.bannedParticipantIds, bannedUser.userId],
-        }
+        };
       }
       return state;
     }
@@ -385,7 +385,7 @@ export default function reducer(
         return {
           ...state,
           bannedParticipantIds: state.bannedParticipantIds.filter((userId) => userId !== unbannedUser.userId),
-        }
+        };
       }
       return state;
     }
@@ -429,7 +429,7 @@ export default function reducer(
         return {
           ...state,
           currentOpenChannel: null,
-        }
+        };
       }
       return state;
     }

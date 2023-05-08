@@ -130,6 +130,6 @@ const SelectChannelType: React.FC<SelectChannelTypeProps> = (props: SelectChanne
       </div>
     </Modal>
   );
-}
+};
 
 export default SelectChannelType;

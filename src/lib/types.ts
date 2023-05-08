@@ -122,7 +122,7 @@ export type SendBirdState = {
   dispatchers: {
     userDispatcher: UserDispatcher,
   },
-}
+};
 
 type UserDispatcherParams = {
   type: string,

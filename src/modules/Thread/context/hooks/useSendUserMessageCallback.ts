@@ -45,7 +45,7 @@ export default function useSendUserMessageCallback({
         params.parentMessageId = quoteMessage.messageId;
       }
       return params;
-    }
+    };
 
     const params = createDefaultParams();
     logger.info('Thread | useSendUserMessageCallback: Sending user message start.', params);

@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo } from 'react'
+import React, { ReactElement, useMemo } from 'react';
 
 import './open-channel-preview.scss';
 
@@ -16,11 +16,11 @@ interface Props {
 
 const kFormat = (num: number): string | number => {
   if (num < 1000) {
-    return num
+    return num;
   }
   const trimmed = num / 1000;
   return `${trimmed.toFixed(2)} k`;
-}
+};
 
 export default function OpenChannelPreview({
   channel,
@@ -96,5 +96,5 @@ export default function OpenChannelPreview({
         }
       </div>
     </div>
-  )
+  );
 }

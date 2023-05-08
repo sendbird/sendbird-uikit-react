@@ -43,7 +43,7 @@ export const VoiceMessageInput = ({
     if (currentType === VoiceMessageInputStatus.READY_TO_RECORD
       || currentType === VoiceMessageInputStatus.RECORDING
     ) {
-      return minRecordTime > currentValue
+      return minRecordTime > currentValue;
     }
     return false;
   }, [currentType, minRecordTime, currentValue]);

@@ -32,7 +32,7 @@ function useSendMessageCallback(
           message: message,
         };
         return params;
-      }
+      };
       const createCustomParams = onBeforeSendUserMessage && typeof onBeforeSendUserMessage === 'function';
       if (createCustomParams) {
         logger.info('OpenChannel | useSendMessageCallback: Creating params using onBeforeSendUserMessage', onBeforeSendUserMessage);

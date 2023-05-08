@@ -46,8 +46,8 @@ const ChannelListHeader: React.FC<ChannelListHeaderInterface> = ({
           <div
             className="sendbird-channel-header__title"
             role="button"
-            onClick={() => { onEdit?.() }}
-            onKeyDown={() => { onEdit?.() }}
+            onClick={() => { onEdit?.(); }}
+            onKeyDown={() => { onEdit?.(); }}
             tabIndex={0}
           >
             <div className="sendbird-channel-header__title__left">
@@ -82,6 +82,6 @@ const ChannelListHeader: React.FC<ChannelListHeaderInterface> = ({
       </div>
     </div>
   );
-}
+};
 
 export default ChannelListHeader;

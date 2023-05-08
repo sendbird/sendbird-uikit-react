@@ -25,7 +25,7 @@ import RemoveMessageModal from '../RemoveMessageModal';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { useLocalization } from '../../../../lib/LocalizationContext';
-import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback'
+import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 
 type MessageUIProps = {
   message: EveryMessage;
@@ -163,7 +163,7 @@ const Message = ({
     return () => {
       clearTimeout(animationTimeout);
       clearTimeout(messageHighlightedTimeout);
-    }
+    };
   }, [highLightedMessageId, messageScrollRef.current, message.messageId]);
 
   useLayoutEffect(() => {
@@ -185,7 +185,7 @@ const Message = ({
     return () => {
       clearTimeout(animationTimeout);
       clearTimeout(messageAnimatedTimeout);
-    }
+    };
   }, [animatedMessageId, messageScrollRef.current, message.messageId, onMessageAnimated]);
   const renderedMessage = useMemo(() => {
     return renderMessage?.({
@@ -282,7 +282,7 @@ const Message = ({
             setMentionNickname('');
             setMentionedUsers([]);
             setMentionedUserIds([]);
-            setMentionSuggestedUsers([])
+            setMentionSuggestedUsers([]);
             setShowEdit(false);
             currentGroupChannel?.endTyping?.();
           }}

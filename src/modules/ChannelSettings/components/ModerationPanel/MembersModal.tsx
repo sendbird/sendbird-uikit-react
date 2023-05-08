@@ -3,7 +3,7 @@ import React, {
   useContext,
   useEffect,
   useState,
-} from 'react'
+} from 'react';
 
 import Modal from '../../../../ui/Modal';
 import UserListItem from '../../../../ui/UserListItem';
@@ -38,7 +38,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
       setMembers(members);
     });
     setMemberQuery(memberListQuery);
-  }, [])
+  }, []);
   return (
     <div>
       <Modal
@@ -62,7 +62,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                 setMembers([
                   ...members,
                   ...o,
-                ])
+                ]);
               });
             }
           }}
@@ -154,7 +154,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                           return m;
                                         }));
                                         closeDropdown();
-                                      })
+                                      });
                                     } else {
                                       channel?.muteUser(member).then(() => {
                                         setMembers(members.map(m => {

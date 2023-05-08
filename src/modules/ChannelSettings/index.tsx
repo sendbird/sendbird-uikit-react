@@ -33,6 +33,6 @@ const ChannelSettings: React.FC<ChannelSettingsProps> = (props: ChannelSettingsP
       />
     </ChannelSettingsProvider>
   );
-}
+};
 
 export default ChannelSettings;

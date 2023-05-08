@@ -50,6 +50,6 @@ export const AddChannel: React.VoidFunctionComponent = () => {
       }
     </>
   );
-}
+};
 
 export default AddChannel;

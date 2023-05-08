@@ -69,7 +69,7 @@ export default function ParticipantList({
             setParticipants([
               ...participants,
               ...fetchedParticipants,
-            ])
+            ]);
           });
         }
       }}
@@ -120,7 +120,7 @@ export default function ParticipantList({
                                   channel?.addOperators([p.userId]).then(() => {
                                     closeDropdown();
                                     refreshList();
-                                  })
+                                  });
                                 }
                               }}
                             >
@@ -208,5 +208,5 @@ export default function ParticipantList({
         }
       </div>
     </div>
-  )
+  );
 }

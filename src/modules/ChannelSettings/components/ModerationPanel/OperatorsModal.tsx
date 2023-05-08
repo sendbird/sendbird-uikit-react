@@ -3,7 +3,7 @@ import React, {
   useContext,
   useEffect,
   useState,
-} from 'react'
+} from 'react';
 
 import Modal from '../../../../ui/Modal';
 import UserListItem from '../../../../ui/UserListItem';
@@ -57,7 +57,7 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
                 setOperators([
                   ...operators,
                   ...o,
-                ])
+                ]);
               });
             }
           }}
@@ -114,5 +114,5 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
         </div>
       </Modal>
     </div>
-  )
+  );
 }

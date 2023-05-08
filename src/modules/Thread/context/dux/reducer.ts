@@ -53,7 +53,7 @@ export default function reducer(
       return {
         ...state,
         emojiContainer: emojiContainer,
-      }
+      };
     }
     case actionTypes.GET_PARENT_MESSAGE_START: {
       return {
@@ -301,7 +301,7 @@ export default function reducer(
         return {
           ...state,
           currentChannel: channel,
-        }
+        };
       }
       return state;
     }

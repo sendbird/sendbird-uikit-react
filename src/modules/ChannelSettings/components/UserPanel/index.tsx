@@ -18,7 +18,7 @@ const kFormatter = (num: number): string|number => {
   return Math.abs(num) > 999
     ? `${(Math.abs(num) / 1000).toFixed(1)}K`
     : num;
-}
+};
 
 const UserPanel: React.FC = () => {
   const { stringSet } = useContext(LocalizationContext);
@@ -72,6 +72,6 @@ const UserPanel: React.FC = () => {
       }
     </div>
   );
-}
+};
 
 export default UserPanel;

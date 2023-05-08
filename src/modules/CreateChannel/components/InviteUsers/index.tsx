@@ -33,7 +33,7 @@ const appHeight = () => {
   } catch {
     //
   }
-}
+};
 
 const InviteUsers: React.FC<InviteUsersProps> = ({
   onCancel,
@@ -80,7 +80,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
     window.addEventListener('resize', appHeight);
     return () => {
       window.removeEventListener('resize', appHeight);
-    }
+    };
   }, []);
 
   return (

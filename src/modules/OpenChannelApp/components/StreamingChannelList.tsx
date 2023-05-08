@@ -60,7 +60,7 @@ function StreamingChannelList({
                       channel={c}
                       selected={c.url === currentChannelUrl}
                       onClick={
-                        () => { setCurrentChannel(c) }
+                        () => { setCurrentChannel(c); }
                       }
                     />
                   ))
@@ -77,7 +77,7 @@ function StreamingChannelList({
         <Profile user={user} />
       </div>
     </div>
-  )
+  );
 }
 
 export default withSendBird(StreamingChannelList, (store) => {

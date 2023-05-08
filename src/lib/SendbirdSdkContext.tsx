@@ -3,7 +3,7 @@ import React from 'react';
 type ContextAwareComponentType = {
   (props: any): JSX.Element;
   displayName: string;
-}
+};
 
 export const SendbirdSdkContext = React.createContext({});
 

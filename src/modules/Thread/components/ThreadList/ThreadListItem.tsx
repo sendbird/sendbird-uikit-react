@@ -178,7 +178,7 @@ export default function ThreadListItem({
             setMentionNickname('');
             setMentionedUsers([]);
             setMentionedUserIds([]);
-            setMentionSuggestedUsers([])
+            setMentionSuggestedUsers([]);
             setShowEdit(false);
             currentChannel?.endTyping?.();
           }}

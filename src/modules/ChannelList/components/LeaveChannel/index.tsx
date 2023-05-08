@@ -12,7 +12,7 @@ export type LeaveChannelProps = {
   channel?: GroupChannel;
   onSubmit: () => void;
   onCancel: () => void;
-}
+};
 
 const LeaveChannel: React.FC<LeaveChannelProps> = (props: LeaveChannelProps) => {
   const {

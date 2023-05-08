@@ -84,7 +84,7 @@ export const OpenChannelListProvider: React.FC<OpenChannelListProviderProps> = (
     );
     return () => {
       subscriber?.forEach((s) => {
-        try { s.remove() } catch {
+        try { s.remove(); } catch {
           //
         }
       });
@@ -131,7 +131,7 @@ export const OpenChannelListProvider: React.FC<OpenChannelListProviderProps> = (
       </div>
     </OpenChannelListContext.Provider>
   );
-}
+};
 
 export default {
   OpenChannelListProvider,

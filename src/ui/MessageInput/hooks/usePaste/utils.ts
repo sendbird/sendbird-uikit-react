@@ -70,7 +70,7 @@ export const extractTextFromNodes = (nodes: HTMLSpanElement[]): string => {
     text += (node.innerText + ' ');
   });
   return text;
-}
+};
 
 export function domToMessageTemplate(nodeArray: ChildNode[]): Word[] {
   const templates: Word[] = nodeArray?.reduce((accumulator, currentValue) => {

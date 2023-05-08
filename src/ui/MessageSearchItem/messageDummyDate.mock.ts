@@ -33,7 +33,7 @@ export function generateNormalMessage(pretreatment?: (message: MockUserMessage) 
     requestState: 'succeeded',
     requestedMentionUserIds: [],
     errorCode: 0,
-  }
+  };
   if (pretreatment) {
     return pretreatment(message);
   } else {
@@ -73,7 +73,7 @@ export function generateLongMessage(pretreatment?: (message: MockUserMessage) =>
     requestState: 'succeeded',
     requestedMentionUserIds: [],
     errorCode: 0,
-  }
+  };
   if (pretreatment) {
     return pretreatment(message);
   } else {

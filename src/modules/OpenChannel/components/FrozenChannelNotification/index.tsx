@@ -17,6 +17,6 @@ const FrozenNotification = (): JSX.Element => {
       </Label>
     </div>
   );
-}
+};
 
 export default FrozenNotification;

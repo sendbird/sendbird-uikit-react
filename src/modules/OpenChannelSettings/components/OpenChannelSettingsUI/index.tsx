@@ -81,7 +81,7 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
         }
       </div>
     </UserProfileProvider>
-  )
+  );
 };
 
 export default OpenChannelUI;

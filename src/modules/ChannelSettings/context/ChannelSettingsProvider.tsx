@@ -42,7 +42,7 @@ export type ChannelSettingsContextProps = {
   queries?: ChannelSettingsQueries;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   disableUserProfile?: boolean;
-}
+};
 
 interface ChannelSettingsProviderInterface {
   channelUrl: string;
@@ -89,7 +89,7 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
 
   const forceUpdateUI = () => {
     setChannelUpdateId(uuidv4());
-  }
+  };
 
   useEffect(() => {
     logger.info('ChannelSettings: Setting up');
@@ -139,7 +139,7 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
       </UserProfileProvider>
     </ChannelSettingsContext.Provider>
   );
-}
+};
 
 export type UseChannelSettingsType = () => ChannelSettingsProviderInterface;
 const useChannelSettingsContext: UseChannelSettingsType = () => React.useContext(ChannelSettingsContext);

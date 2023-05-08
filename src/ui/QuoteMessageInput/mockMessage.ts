@@ -218,4 +218,4 @@ export const dummyFileMessageWithThumbnail = {
   errorCode: 0,
 };
 
-export default { dummyFileMessageAudio, dummyFileMessageVideo, dummyFileMessageImage, dummyFileMessageWithThumbnail }
+export default { dummyFileMessageAudio, dummyFileMessageVideo, dummyFileMessageImage, dummyFileMessageWithThumbnail };

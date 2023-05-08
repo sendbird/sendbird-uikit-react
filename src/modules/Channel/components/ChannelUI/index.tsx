@@ -135,6 +135,6 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
       </div>
     </div>
   );
-}
+};
 
 export default ChannelUI;
