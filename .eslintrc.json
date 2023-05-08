@@ -47,7 +47,6 @@
     ],
     // TODO(Ahyoung): fix and remove one by one
     "no-shadow": "off",
-    "no-useless-return": "off",
     "no-else-return": "off",
     "no-param-reassign": "off",
     "no-useless-escape": "off",

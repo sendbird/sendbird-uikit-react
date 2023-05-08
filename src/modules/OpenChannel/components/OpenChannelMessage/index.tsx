@@ -157,7 +157,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
                 />
               );
             }
-            return;
+
           })(),
           [MessageTypes.OG]: (() => {
             if (message?.messageType === 'user') {
@@ -176,7 +176,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
                 />
               );
             }
-            return;
+
           })(),
           [MessageTypes.THUMBNAIL]: (() => {
             if (message?.messageType === 'file') {
@@ -195,7 +195,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
                 />
               );
             }
-            return;
+
           })(),
           [MessageTypes.USER]: (() => {
             if (message?.messageType === 'user') {
@@ -214,10 +214,10 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
                 />
               );
             }
-            return;
+
           })(),
           [MessageTypes.UNKNOWN]: (() => {
-            return;
+
             // return (
             //   <OpenChannelUnknownMessage message={message} />
             // );
