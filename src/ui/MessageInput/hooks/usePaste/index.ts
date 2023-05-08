@@ -66,6 +66,5 @@ export default function usePaste({
     pasteNode.remove();
     setIsInput(true);
     setHeight();
-    return;
   }, [ref, setIsInput, setHeight, channel, setMentionedUsers]);
 }
