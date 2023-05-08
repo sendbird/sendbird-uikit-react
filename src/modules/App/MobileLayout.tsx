@@ -45,9 +45,9 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
   const userId = store?.config?.userId;
 
   const goToMessage = (message?: BaseMessage | null) => {
-    setStartingPoint(message?.createdAt);
+    setStartingPoint?.(message?.createdAt || null);
     setTimeout(() => {
-      setHighlightedMessage(message?.messageId);
+      setHighlightedMessage?.(message?.messageId || null);
     });
   };
 

@@ -77,9 +77,9 @@ export type ChannelContextProps = {
   isReactionEnabled?: boolean;
   isMessageGroupingEnabled?: boolean;
   showSearchIcon?: boolean;
-  animatedMessage?: number;
-  highlightedMessage?: number;
-  startingPoint?: number;
+  animatedMessage?: number | null;
+  highlightedMessage?: number | null;
+  startingPoint?: number | null;
   onBeforeSendUserMessage?(text: string, quotedMessage?: UserMessage | FileMessage): UserMessageCreateParams;
   onBeforeSendFileMessage?(file: File, quotedMessage?: UserMessage | FileMessage): FileMessageCreateParams;
   onBeforeUpdateUserMessage?(text: string): UserMessageUpdateParams;

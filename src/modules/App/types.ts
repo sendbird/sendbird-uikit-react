@@ -20,14 +20,14 @@ export interface AppLayoutProps {
   onProfileEditSuccess?(user: User): void;
   disableAutoSelect?: boolean;
   currentChannel?: GroupChannel;
-  setCurrentChannel: React.Dispatch<GroupChannel>;
+  setCurrentChannel: React.Dispatch<GroupChannel | null>;
 }
 
 export interface MobileLayoutProps extends AppLayoutProps {
-  highlightedMessage?: number;
-  setHighlightedMessage?: React.Dispatch<number>;
-  startingPoint?: number;
-  setStartingPoint?: React.Dispatch<number>;
+  highlightedMessage?: number | null;
+  setHighlightedMessage?: React.Dispatch<number | null>;
+  startingPoint?: number | null;
+  setStartingPoint?: React.Dispatch<number | null>;
 }
 
 export interface DesktopLayoutProps extends AppLayoutProps {
@@ -35,13 +35,13 @@ export interface DesktopLayoutProps extends AppLayoutProps {
   setShowSettings: React.Dispatch<boolean>;
   showSearch: boolean;
   setShowSearch: React.Dispatch<boolean>;
-  highlightedMessage?: number;
-  setHighlightedMessage?: React.Dispatch<number>;
-  startingPoint?: number;
-  setStartingPoint?: React.Dispatch<number>;
+  highlightedMessage?: number | null;
+  setHighlightedMessage?: React.Dispatch<number | null>;
+  startingPoint?: number | null;
+  setStartingPoint?: React.Dispatch<number | null>;
   showThread: boolean;
   setShowThread: React.Dispatch<boolean>;
-  threadTargetMessage: UserMessage | FileMessage;
+  threadTargetMessage: UserMessage | FileMessage | null;
   setThreadTargetMessage: React.Dispatch<UserMessage | FileMessage>;
 }
 
