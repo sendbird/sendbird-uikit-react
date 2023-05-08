@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import type { Logger } from './SendbirdState';
 
-const DEFAULT_MOBILE = '0px';
+const DEFAULT_MOBILE = '768px';
 const MOBILE_CLASSNAME = 'sendbird--mobile-mode';
 
 const MediaQueryContext = React.createContext({
@@ -11,14 +11,14 @@ const MediaQueryContext = React.createContext({
 
 export interface MediaQueryProviderProps {
   children: React.ReactElement;
-  mediaQueryBreakPoint?: string | boolean;
+  mediaQueryBreakPoint?: string;
   logger?: Logger;
 }
 
 const addClassNameToBody = () => {
   try {
     const body = document.querySelector('body');
-    body.classList.add(MOBILE_CLASSNAME);
+    body?.classList.add(MOBILE_CLASSNAME);
   } catch {
     // noop
   }
@@ -27,7 +27,7 @@ const addClassNameToBody = () => {
 const removeClassNameFromBody = () => {
   try {
     const body = document.querySelector('body');
-    body.classList.remove(MOBILE_CLASSNAME);
+    body?.classList.remove(MOBILE_CLASSNAME);
   } catch {
     // noop
   }
@@ -67,11 +67,11 @@ const MediaQueryProvider = (props: MediaQueryProviderProps): React.ReactElement 
     };
     updateSize();
     window.addEventListener('resize', updateSize);
-    logger?.info?.('MediaQueryProvider: addEventListener', updateSize);
+    logger?.info?.('MediaQueryProvider: addEventListener', { updateSize });
     return () => {
       window.removeEventListener('resize', updateSize);
-      logger?.info?.('MediaQueryProvider: removeEventListener', updateSize);
-    };
+      logger?.info?.('MediaQueryProvider: removeEventListener', { updateSize });
+    }
   }, [mediaQueryBreakPoint]);
   return (
     <MediaQueryContext.Provider value={{ mediaQueryBreakPoint, isMobile }}>
