@@ -36,6 +36,6 @@ const ChannelList: React.FC<ChannelListProps> = (props: ChannelListProps) => {
       />
     </ChannelListProvider>
   );
-}
+};
 
 export default ChannelList;

@@ -72,7 +72,7 @@ export const CreateOpenChannelProvider: React.FC<CreateOpenChannelProviderProps>
       </div>
     </CreateOpenChannelContext.Provider>
   );
-}
+};
 
 export const useCreateOpenChannelContext = (): CreateOpenChannelContextInterface => (
   React.useContext(CreateOpenChannelContext)

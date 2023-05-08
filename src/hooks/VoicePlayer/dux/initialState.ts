@@ -14,7 +14,7 @@ export type AudioStorageUnit = {
   audioFile: null | File;
   playbackTime: number;
   duration: number;
-}
+};
 export const AudioUnitDefaultValue = (): AudioStorageUnit => ({
   audioFile: null,
   playbackTime: 0,

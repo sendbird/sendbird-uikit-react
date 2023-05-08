@@ -178,7 +178,7 @@ export default function MessageContent({
                 ref={avatarRef}
                 width="28px"
                 height="28px"
-                onClick={(): void => { if (!disableUserProfile) toggleDropdown() }}
+                onClick={(): void => { if (!disableUserProfile) toggleDropdown(); }}
               />
             )}
             menuItems={(closeDropdown: () => void): ReactElement => (
@@ -436,7 +436,7 @@ export default function MessageContent({
           <MobileMenu
             parentRef={contentRef}
             channel={channel}
-            hideMenu={() => { setShowMenu(false) }}
+            hideMenu={() => { setShowMenu(false); }}
             message={message}
             isReactionEnabled={isReactionEnabledInChannel}
             isByMe={isByMe}

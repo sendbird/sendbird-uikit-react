@@ -164,6 +164,6 @@ export const OperatorList = (): ReactElement => {
       }
     </>
   );
-}
+};
 
 export default OperatorList;

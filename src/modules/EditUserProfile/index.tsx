@@ -21,7 +21,7 @@ const EditProfile: React.FC<EditUserProfileProps> = (props: EditUserProfileProps
     >
       <EditUserProfile />
     </EditUserProfileProvider>
-  )
-}
+  );
+};
 
 export default EditProfile;

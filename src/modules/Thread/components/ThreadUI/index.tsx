@@ -127,7 +127,7 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
     // save the lastest scroll bottom value
     if (scrollRef?.current) {
       const current = scrollRef?.current;
-      setScrollBottom(current.scrollHeight - current.scrollTop - current.offsetHeight)
+      setScrollBottom(current.scrollHeight - current.scrollTop - current.offsetHeight);
     }
   };
 

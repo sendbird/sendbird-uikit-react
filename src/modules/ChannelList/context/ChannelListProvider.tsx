@@ -209,7 +209,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     }
     return () => {
       isMounted = false;
-    }
+    };
   }, [channelsTomarkAsRead]);
 
   useEffect(() => {
@@ -264,12 +264,12 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
       typingHandlerId = uuidv4();
       const handler = new GroupChannelHandler({
         onTypingStatusUpdated: (channel) => {
-          const typingMemberCount = channel?.getTypingUsers()?.length
-          const channelList = typingChannels.filter(ch => ch.url !== channel.url)
+          const typingMemberCount = channel?.getTypingUsers()?.length;
+          const channelList = typingChannels.filter(ch => ch.url !== channel.url);
           if (typingMemberCount > 0) {
-            setTypingChannels([...channelList, channel])
+            setTypingChannels([...channelList, channel]);
           } else {
-            setTypingChannels(channelList)
+            setTypingChannels(channelList);
           }
         },
         onUnreadMemberStatusUpdated(channel) {
@@ -317,7 +317,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
       if (sdk?.groupChannel?.removeGroupChannelHandler && typingHandlerId) {
         sdk.groupChannel.removeGroupChannelHandler(typingHandlerId);
       }
-    }
+    };
   }, [sdk?.currentUser?.userId]);
 
   const queries_ = useMemo(() => {
@@ -328,7 +328,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   }, [
     userFilledApplicationUserListQuery,
     userFilledChannelListQuery,
-  ])
+  ]);
 
   const { allChannels } = channelListStore;
   const sortedChannels = (sortChannelList && typeof sortChannelList === 'function')

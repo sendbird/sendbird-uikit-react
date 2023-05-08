@@ -254,6 +254,6 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
       }
     </>
   );
-}
+};
 
 export default ChannelPreview;

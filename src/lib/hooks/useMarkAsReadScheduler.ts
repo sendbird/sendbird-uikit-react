@@ -16,7 +16,7 @@ export const schedulerFactory = (logger: Logger, timeout?: number): MarkAsReadSc
   const push = (channel: GroupChannel) => {
     const channelPresent = queue.find((c) => c.url === channel.url);
     if (!channelPresent) {
-      queue.push(channel)
+      queue.push(channel);
     } else {
       logger.info('Channel: Mark as read already in queue', channel);
     }
@@ -52,7 +52,7 @@ export const schedulerFactory = (logger: Logger, timeout?: number): MarkAsReadSc
     clear,
     getQueue: () => queue,
   };
-}
+};
 
 interface DynamicParams {
   isConnected: boolean;
@@ -72,7 +72,7 @@ export function useMarkAsReadScheduler({
   useEffect(() => {
     // for simplicity, we clear the queue when the connection is lost
     if (!isConnected) {
-      markAsReadScheduler.clear()
+      markAsReadScheduler.clear();
 
     }
   }, [isConnected]);

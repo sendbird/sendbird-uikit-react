@@ -65,7 +65,7 @@ export default function ParticipantsModal({
                 setParticipants([
                   ...participants,
                   ...fetchedParticipants,
-                ])
+                ]);
               });
             }
           }}
@@ -158,11 +158,11 @@ export default function ParticipantsModal({
                       : null
                   }
                 />
-              )
+              );
             })
           }
         </div>
       </Modal>
     </div>
-  )
+  );
 }

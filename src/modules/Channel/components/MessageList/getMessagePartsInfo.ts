@@ -42,5 +42,5 @@ export const getMessagePartsInfo = ({
     chainTop,
     chainBottom,
     hasSeparator,
-  }
+  };
 };

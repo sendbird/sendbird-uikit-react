@@ -504,7 +504,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       </UserProfileProvider>
     </ChannelContext.Provider>
   );
-}
+};
 
 export type UseChannelType = () => ChannelProviderInterface;
 const useChannelContext: UseChannelType = () => React.useContext(ChannelContext);

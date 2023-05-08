@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement } from 'react';
 
 import './login.scss';
 
@@ -48,5 +48,5 @@ export default function Login({
         </div>
       </form>
     </div>
-  )
+  );
 }

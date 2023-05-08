@@ -173,6 +173,6 @@ const FileViewer: React.FC<FileViewerProps> = ({ onCancel, message }: FileViewer
     ),
     document.getElementById(MODAL_ROOT),
   );
-}
+};
 
 export default FileViewer;

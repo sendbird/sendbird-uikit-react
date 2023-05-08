@@ -53,7 +53,7 @@ export default function FileMessageItemBody({
       </div>
       <TextButton
         className="sendbird-file-message-item-body__file-name"
-        onClick={() => { window.open(message?.url) }}
+        onClick={() => { window.open(message?.url); }}
         color={isByMe ? Colors.ONCONTENT_1 : Colors.ONBACKGROUND_1}
       >
         <Label

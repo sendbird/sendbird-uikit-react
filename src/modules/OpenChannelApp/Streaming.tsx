@@ -42,8 +42,8 @@ const ChannelTitle = (props: ChannelTitleProps) => {
         <Members />
       </div>
     </div>
-  )
-}
+  );
+};
 interface Props {
   appId: string;
   userId: string;

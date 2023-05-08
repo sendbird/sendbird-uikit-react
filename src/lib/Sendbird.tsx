@@ -30,7 +30,7 @@ import { ConfigureSessionTypes } from './hooks/useConnect/types';
 export type UserListQueryType = {
   hasNext?: boolean;
   next: () => Promise<Array<User>>;
-}
+};
 
 interface VoiceRecordOptions {
   maxRecordingTime?: number;
@@ -260,6 +260,6 @@ const Sendbird = ({
       </MediaQueryProvider>
     </SendbirdSdkContext.Provider>
   );
-}
+};
 
 export default Sendbird;

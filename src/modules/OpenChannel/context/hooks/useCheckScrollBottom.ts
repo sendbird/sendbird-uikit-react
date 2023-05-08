@@ -23,7 +23,7 @@ function useCheckScrollBottom(
       }
     }
     return isBottom;
-  }, [conversationScrollRef])
+  }, [conversationScrollRef]);
 }
 
 export default useCheckScrollBottom;

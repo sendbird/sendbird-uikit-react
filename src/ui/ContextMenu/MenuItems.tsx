@@ -53,14 +53,14 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
     });
 
     document.addEventListener('mousedown', handleClickOutside);
-  }
+  };
 
   cleanUpEvents = (): void => {
     const {
       handleClickOutside,
     } = this.state;
     document.removeEventListener('mousedown', handleClickOutside);
-  }
+  };
 
   getMenuPosition = (): MenuStyleType => {
     const { parentRef, openLeft } = this.props;
@@ -96,9 +96,9 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
       menuStyle.left = rect.width < innerWidth ? (innerWidth - rect.width) / 2 : 0;
     }
 
-    this.setState({ menuStyle })
+    this.setState({ menuStyle });
     return menuStyle;
-  }
+  };
 
   render(): ReactElement {
     const { menuStyle } = this.state;

@@ -62,7 +62,7 @@ export default function MutedParticipantsModal({
                 setMutedUsers([
                   ...mutedUsers,
                   ...o,
-                ])
+                ]);
               });
             }
           }}

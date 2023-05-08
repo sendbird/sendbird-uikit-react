@@ -89,7 +89,7 @@ export const BannedUserList = (): ReactElement => {
                             channel?.unbanUser(bannedUser).then(() => {
                               closeDropdown();
                               refreshList();
-                            })
+                            });
                           }}
                         >
                           {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNBAN}
@@ -140,6 +140,6 @@ export const BannedUserList = (): ReactElement => {
       }
     </>
   );
-}
+};
 
 export default BannedUserList;

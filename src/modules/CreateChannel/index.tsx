@@ -33,6 +33,6 @@ const CreateChannel: React.FC<CreateChannelProps> = (props: CreateChannelProps) 
       />
     </CreateChannelProvider>
   );
-}
+};
 
 export default CreateChannel;

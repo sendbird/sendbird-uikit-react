@@ -30,7 +30,7 @@ const DEFAULT_DURATION = 300;
 
 function preventDefault(e: Event) {
   if (!isTouchEvent(e)) {
-    return
+    return;
   }
 
   if (e.touches.length < 2 && e.preventDefault) {

@@ -88,7 +88,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
             logger.warning('OpenChannelSettings | Failed to exit channel', error);
           });
       }
-    }
+    };
   }, [channelUrl, isSDKInitialized]);
 
   useEffect(() => {
@@ -138,7 +138,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
         logger.info('OpenChannelSettings | Removing channel handlers', channelHandlerId);
         sdk.openChannel.removeOpenChannelHandler?.(channelHandlerId);
       }
-    }
+    };
   }, [channelUrl]);
 
   return (
@@ -161,7 +161,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
       </UserProfileProvider>
     </OpenChannelSettingsContext.Provider>
   );
-}
+};
 
 type useOpenChannelSettingsType = () => OpenChannelSettingsContextType;
 const useOpenChannelSettingsContext: useOpenChannelSettingsType = () => React.useContext(OpenChannelSettingsContext);

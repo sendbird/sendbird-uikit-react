@@ -318,7 +318,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
       </UserProfileProvider>
     </OpenChannelContext.Provider>
   );
-}
+};
 
 export type UseOpenChannelType = () => OpenChannelInterface;
 const useOpenChannelContext: UseOpenChannelType = () => React.useContext(OpenChannelContext);

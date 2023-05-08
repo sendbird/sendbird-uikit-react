@@ -39,7 +39,7 @@ export default function Accordion({
             } else {
               setOpened(id);
             }
-          }
+          };
           return (
             <>
               <div
@@ -86,7 +86,7 @@ export default function Accordion({
         }
       }
     </Consumer>
-  )
+  );
 }
 
 export const AccordionGroup = AccordionGroup_;

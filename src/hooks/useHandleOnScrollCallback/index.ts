@@ -9,7 +9,7 @@ export interface UseHandleOnScrollCallbackProps {
 }
 
 export function calcScrollBottom(scrollHeight: number, scrollTop: number): number {
-  return scrollHeight - scrollTop
+  return scrollHeight - scrollTop;
 }
 
 export function useHandleOnScrollCallback({
@@ -36,7 +36,7 @@ export function useHandleOnScrollCallback({
     // even if there is more to fetch or not,
     // we still have to show the scroll to bottom button
     if (typeof setShowScrollDownButton === 'function') {
-      setShowScrollDownButton(scrollHeight > scrollTop + clientHeight + 1)
+      setShowScrollDownButton(scrollHeight > scrollTop + clientHeight + 1);
     }
     if (!hasMore) {
       return;

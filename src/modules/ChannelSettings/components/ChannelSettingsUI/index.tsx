@@ -168,6 +168,6 @@ const ChannelSettingsUI: React.FC<ChannelSettingsUIProps> = (props: ChannelSetti
       </div>
     </>
   );
-}
+};
 
 export default ChannelSettingsUI;

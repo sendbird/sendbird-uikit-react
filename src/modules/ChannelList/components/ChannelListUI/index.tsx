@@ -247,6 +247,6 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
       </div>
     </>
   );
-}
+};
 
 export default ChannelListUI;

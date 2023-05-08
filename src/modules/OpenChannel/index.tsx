@@ -29,6 +29,6 @@ const OpenChannel: React.FC<OpenChannelProps> = (props: OpenChannelProps) => {
       />
     </OpenChannelProvider>
   );
-}
+};
 
 export default OpenChannel;

@@ -1,6 +1,6 @@
 import './muted-avatar-overlay.scss';
 
-import React, { ReactElement } from 'react'
+import React, { ReactElement } from 'react';
 import Icon, { IconTypes, IconColors } from '../Icon';
 
 interface Props {

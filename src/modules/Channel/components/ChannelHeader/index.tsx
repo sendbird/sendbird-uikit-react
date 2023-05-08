@@ -11,7 +11,7 @@ import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelContext } from '../../context/ChannelProvider';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
-import { noop } from '../../../../utils/utils'
+import { noop } from '../../../../utils/utils';
 
 interface ChannelHeaderProps {
   className?: string;
@@ -121,6 +121,6 @@ const ChannelHeader: React.FC<ChannelHeaderProps> = ({
       </div>
     </div>
   );
-}
+};
 
 export default ChannelHeader;

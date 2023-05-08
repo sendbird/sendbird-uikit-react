@@ -40,6 +40,6 @@ const UnreadCount: React.FC<UnreadCountProps> = ({
       />
     </div>
   );
-}
+};
 
 export default UnreadCount;

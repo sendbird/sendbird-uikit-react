@@ -19,7 +19,7 @@ export const shouldFetchMore = (messageLength: number, maxMessages: number): boo
     return true;
   }
   return false;
-}
+};
 
 export const scrollIntoLast = (initialTry = 0, scrollRef: React.RefObject<HTMLElement>): void => {
   const MAX_TRIES = 10;
@@ -56,7 +56,7 @@ export const isSameGroup = (
     && (message as UserMessage | FileMessage)?.sender?.userId
     && (comparingMessage as UserMessage | FileMessage)?.sender?.userId
   )) {
-    return false
+    return false;
   }
   // to fix typecasting
   const message_ = message as UserMessage;

@@ -63,7 +63,7 @@ export default function MutedMembersModal({
                 setMembers([
                   ...members,
                   ...o,
-                ])
+                ]);
               });
             }
           }}
@@ -104,7 +104,7 @@ export default function MutedMembersModal({
                             setMembers(members.filter(m => {
                               return (m.userId !== member.userId);
                             }));
-                          })
+                          });
                         }}
                       >
                         {stringSet.CHANNEL_SETTING__MODERATION__UNMUTE}

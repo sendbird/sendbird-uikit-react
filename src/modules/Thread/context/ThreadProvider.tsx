@@ -39,7 +39,7 @@ export type ThreadProviderProps = {
   disableUserProfile?: boolean;
   renderUserProfile?: (props: { user: User, close: () => void }) => ReactElement;
   onUserProfileMessage?: (channel: GroupChannel) => void;
-}
+};
 export interface ThreadProviderInterface extends ThreadProviderProps, ThreadContextInitialState {
   // hooks for fetching threads
   fetchPrevThreads: (callback?: (messages?: Array<BaseMessage>) => void) => void;
