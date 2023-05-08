@@ -12,12 +12,15 @@ export const getNicknamesMapFromMembers = (members = []): Map<string, string> =>
   return nicknamesMap;
 };
 
-export const getParentMessageFrom = (message: UserMessage | FileMessage): UserMessage | FileMessage | BaseMessage => {
+export const getParentMessageFrom = (message: UserMessage | FileMessage | null): UserMessage | FileMessage | BaseMessage | null => {
+  if (!message) {
+    return null;
+  }
   if (isParentMessage(message)) {
     return message;
   }
   if (isThreadMessage(message)) {
-    return message?.parentMessage;
+    return message?.parentMessage || null;
   }
   return null;
 };

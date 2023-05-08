@@ -22,11 +22,11 @@ export const AppLayout: React.FC<AppLayoutProps> = (
     setCurrentChannel,
   } = props;
   const [showThread, setShowThread] = useState(false);
-  const [threadTargetMessage, setThreadTargetMessage] = useState<UserMessage | FileMessage>(null);
+  const [threadTargetMessage, setThreadTargetMessage] = useState<UserMessage | FileMessage | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
-  const [highlightedMessage, setHighlightedMessage] = useState<number>(null);
-  const [startingPoint, setStartingPoint] = useState<number>(null);
+  const [highlightedMessage, setHighlightedMessage] = useState<number | null>(null);
+  const [startingPoint, setStartingPoint] = useState<number | null>(null);
   const { isMobile } = useMediaQueryContext();
   return (
     <>
