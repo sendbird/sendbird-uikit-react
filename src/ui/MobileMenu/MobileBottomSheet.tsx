@@ -1,6 +1,6 @@
 import type { Emoji } from '@sendbird/chat';
 import { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 
 import type { MobileBottomSheetProps } from './types';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
