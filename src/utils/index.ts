@@ -37,6 +37,7 @@ const SUPPORTED_MIMES = {
   ],
 };
 
+/* eslint-disable no-redeclare */
 export interface UIKitMessageTypes {
   ADMIN: 'ADMIN',
   TEXT: 'TEXT',
@@ -53,6 +54,7 @@ export const UIKitMessageTypes: UIKitMessageTypes = {
   OG: 'OG',
   UNKNOWN: 'UNKNOWN',
 };
+/* eslint-disable no-redeclare */
 export interface UIKitFileTypes {
   IMAGE: 'IMAGE',
   AUDIO: 'AUDIO',
@@ -70,6 +72,7 @@ export const UIKitFileTypes: UIKitFileTypes = {
   OTHERS: 'OTHERS',
 };
 
+/* eslint-disable no-redeclare */
 export interface SendingMessageStatus {
   NONE: 'none',
   SUCCEEDED: 'succeeded',

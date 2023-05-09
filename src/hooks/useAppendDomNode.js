@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 
+/* eslint-disable default-param-last */
 function useAppendDomNode(ids = [], rootSelector) {
   useEffect(() => {
     const root = document.querySelector(rootSelector);

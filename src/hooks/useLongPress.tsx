@@ -84,7 +84,8 @@ export default function useLongPress<T>({
     if (shouldPreventDefault && e.target) {
       e.target.addEventListener(
         'touchend',
-        preventDefault, {
+        preventDefault,
+        {
           passive: false,
         },
       );

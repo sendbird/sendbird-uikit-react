@@ -1,3 +1,4 @@
+/* eslint-disable no-redeclare */
 export const Types = {
   ADD: 'ADD',
   ARROW_LEFT: 'ARROW_LEFT',

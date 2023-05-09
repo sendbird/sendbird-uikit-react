@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import './index.scss';
 
+/* eslint-disable no-redeclare */
 export const ProgressBarColorTypes = {
   PRIMARY: 'progress-bar-color--primary',
   GRAY: 'progress-bar-color--gray',

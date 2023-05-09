@@ -61,8 +61,8 @@ export const EmojiReactionListRoot = (): ReactElement => <div id="sendbird-emoji
 
 type MenuDisplayingFunc = () => void;
 export interface ContextMenuProps {
-  menuTrigger?: (MenuDisplayingFunc) => ReactElement;
-  menuItems: (MenuDisplayingFunc) => ReactElement;
+  menuTrigger?: (func: MenuDisplayingFunc) => ReactElement;
+  menuItems: (func: MenuDisplayingFunc) => ReactElement;
   isOpen?: boolean;
 }
 export default function ContextMenu({

@@ -1,3 +1,4 @@
+/* eslint-disable no-redeclare */
 export const Colors = {
   DEFAULT: 'DEFAULT',
   PRIMARY: 'PRIMARY',

@@ -6,6 +6,7 @@ import isYesterday from 'date-fns/isYesterday';
 import { truncateString } from '../../../../utils';
 import { LabelStringSet } from '../../../../ui/Label';
 
+/* eslint-disable default-param-last */
 export const getChannelTitle = (channel = {}, currentUserId, stringSet = LabelStringSet) => {
   if (!channel?.name && !channel?.members) {
     return stringSet.NO_TITLE;

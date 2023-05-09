@@ -12,7 +12,7 @@ module.exports = {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
   },
-  parser: 'babel-eslint',
+  parser: "@babel/eslint-parser",
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -36,6 +36,8 @@ module.exports = {
       },
     ],
     "react/forbid-prop-types": 0,
+    // we don't want to force to define function component only
+    "react/function-component-definition": "off",
     "no-unused-expressions": "off",
     "@typescript-eslint/no-unused-expressions": ["error"],
   },

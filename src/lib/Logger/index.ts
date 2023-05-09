@@ -36,8 +36,7 @@ export const printLog = ({
 }: PrintLogProps): void => {
   // eslint-disable-next-line no-console
   console.log(
-    `%c SendbirdUIKit | ${level} | ${new Date().toISOString()} | ${title} ${description && '|'}`, colorLog(level),
-    description,
+    `%c SendbirdUIKit | ${level} | ${new Date().toISOString()} | ${title} ${description && '|'}`, colorLog(level), description,
   );
 };
 

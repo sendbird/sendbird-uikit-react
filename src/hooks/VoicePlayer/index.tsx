@@ -44,7 +44,7 @@ const VoicePlayerStoreDefaultValue = {
   audioStorage: {},
 };
 
-const VoicePlayerContext = createContext<VoicePlayerContext>({
+const Context = createContext<VoicePlayerContext>({
   play: noop,
   pause: noop,
   stop: noop,
@@ -157,7 +157,7 @@ export const VoicePlayerProvider = ({
   };
 
   return (
-    <VoicePlayerContext.Provider value={{
+    <Context.Provider value={{
       play,
       pause,
       stop,
@@ -165,8 +165,8 @@ export const VoicePlayerProvider = ({
     }}>
       <div id={VOICE_PLAYER_ROOT_ID} style={{ display: 'none' }} />
       {children}
-    </VoicePlayerContext.Provider>
+    </Context.Provider>
   );
 };
 
-export const useVoicePlayerContext = (): VoicePlayerContext => useContext(VoicePlayerContext);
+export const useVoicePlayerContext = (): VoicePlayerContext => useContext(Context);

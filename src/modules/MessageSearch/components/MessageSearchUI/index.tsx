@@ -159,7 +159,7 @@ export const MessageSearchUI: React.FC<MessageSearchUIProps> = ({
           )
           : renderPlaceHolderEmptyList?.() || (
             <PlaceHolder type={PlaceHolderTypes.NO_RESULTS} />
-        )
+          )
       }
     </div>
   );

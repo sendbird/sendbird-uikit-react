@@ -8,6 +8,7 @@ import useSendbirdStateContext from '../useSendbirdStateContext';
 //    * onRecordingEnded
 //    */
 // }
+/* eslint-disable no-redeclare */
 export const VoiceRecorderStatus = {
   PREPARING: 'PREPARING',
   READY_TO_RECORD: 'READY_TO_RECORD',
