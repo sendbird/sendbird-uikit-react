@@ -23,7 +23,7 @@ const ChannelSettings: React.FC<ChannelSettingsProps> = (props: ChannelSettingsP
       queries={props?.queries}
       className={props?.className}
       disableUserProfile={props?.disableUserProfile}
-      renderUserProfile={props?.renderChannelProfile}
+      renderUserProfile={props?.renderUserProfile}
     >
       <ChannelSettingsUI
         renderPlaceholderError={props?.renderPlaceholderError}
