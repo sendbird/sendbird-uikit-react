@@ -53,9 +53,8 @@ export default function Word(props: WordProps): JSX.Element {
               />
             );
           } else if (type === StringObjType.url) {
-            /* eslint-disable prefer-regex-literals */
-            const urlRegex = new RegExp('([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?');
-            const targetUrl = urlRegex.exec(value)?.[0];
+            const urlRegex = /([a-zA-Z0-9]+:\/\/)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\.[A-Za-z]{2,4})(:[0-9]+)?(\/.*)?/;
+            const targetUrl = value.match(urlRegex)?.[0];
             const stringUrl = { front: '', url: '', back: '' };
             if (targetUrl) {
               const targetUrlIndex = value.indexOf(targetUrl);
