@@ -266,7 +266,7 @@ export default function MessageContent({
               message={message as UserMessage | FileMessage}
               userId={userId}
               isByMe={isByMe}
-              isUnavailable={(replyType === 'THREAD' && (channel?.joinedAt * 1000) > message?.parentMessage?.createdAt)}
+              isUnavailable={(replyType === 'THREAD' && (channel.joinedAt * 1000) > (message.parentMessage?.createdAt ?? 0))}
               onClick={() => {
                 if (replyType === 'THREAD' && threadReplySelectType === ThreadReplySelectType.THREAD) {
                   onQuoteMessageClick?.({ message: message as UserMessage | FileMessage });

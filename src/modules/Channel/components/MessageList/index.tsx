@@ -100,7 +100,7 @@ const MessageList: React.FC<MessageListProps> = ({
     setAnimatedMessageId?.(null);
     setHighLightedMessageId?.(null);
     if (scrollRef?.current?.scrollTop > -1) {
-      scrollRef.current.scrollTop = scrollRef?.current?.scrollHeight - scrollRef?.current?.offsetHeight;
+      scrollRef.current.scrollTop = (scrollRef?.current?.scrollHeight ?? 0) - (scrollRef?.current?.offsetHeight ?? 0);
     }
   };
 
@@ -181,7 +181,7 @@ const MessageList: React.FC<MessageListProps> = ({
         time={unreadSince}
         onClick={() => {
           if (scrollRef?.current?.scrollTop) {
-            scrollRef.current.scrollTop = scrollRef?.current?.scrollHeight - scrollRef?.current?.offsetHeight;
+            scrollRef.current.scrollTop = (scrollRef?.current?.scrollHeight ?? 0) - (scrollRef?.current?.offsetHeight ?? 0);
           }
           if (!disableMarkAsRead) {
             markAsReadScheduler?.push(currentGroupChannel);

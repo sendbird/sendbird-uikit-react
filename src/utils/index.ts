@@ -163,11 +163,11 @@ export const isVoiceMessage = (message: FileMessage): boolean => {
   if (!(message && isFileMessage(message))) {
     return false;
   }
-  const [mimeType, typeParameter] = message.type?.split(';');
+  const [mimeType, typeParameter] = message.type.split(';');
   if (!isAudioMessageMimeType(mimeType) || !typeParameter) {
     return false;
   }
-  const [key, value] = typeParameter?.split('=');
+  const [key, value] = typeParameter.split('=');
   if (key === 'sbu_type' && value === 'voice') {
     return true;
   }

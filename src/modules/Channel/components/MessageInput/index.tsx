@@ -50,7 +50,7 @@ const MessageInputWrapper = (
     isMentionEnabled,
     userMention,
     isVoiceMessageEnabled,
-  } = globalStore?.config;
+  } = globalStore.config;
   const maxUserMentionCount = userMention?.maxMentionCount || 10;
   const maxUserSuggestionCount = userMention?.maxSuggestionCount || 15;
 

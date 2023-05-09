@@ -71,7 +71,6 @@
     "no-bitwise": "off",
     "no-restricted-syntax": "off",
     "no-prototype-builtins": "off",
-    "no-unsafe-optional-chaining": "off",
     "import/no-unresolved": "off",
     "import/no-extraneous-dependencies": "off",
     "import/no-useless-path-segments": "off",

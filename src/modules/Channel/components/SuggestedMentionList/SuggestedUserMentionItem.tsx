@@ -28,14 +28,14 @@ function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Ele
     onMouseMove,
     renderUserMentionItem,
   } = props;
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const { stringSet = {} } = useContext(LocalizationContext);
   useEffect(() => {
-    if (isFocused
-      && (parentScrollRef?.current?.scrollTop >= scrollRef?.current?.offsetTop
-        || parentScrollRef?.current?.scrollTop + parentScrollRef?.current?.clientHeight <= scrollRef?.current?.offsetTop
+    if (isFocused && parentScrollRef?.current != null && scrollRef?.current != null
+      && (parentScrollRef.current.scrollTop >= scrollRef.current.offsetTop
+        || parentScrollRef.current.scrollTop + parentScrollRef.current.clientHeight <= scrollRef.current.offsetTop
       )) {
-      scrollRef?.current?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      scrollRef.current.scrollIntoView({ block: 'nearest', inline: 'nearest' });
     }
   }, [isFocused]);
   const customMentionItem = useMemo(() => {

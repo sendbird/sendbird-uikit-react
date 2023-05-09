@@ -54,12 +54,13 @@ const Message = ({
 }: MessageUIProps): React.ReactElement => {
   const { dateLocale } = useLocalization();
   const globalStore = useSendbirdStateContext();
+
   const {
     userId,
     isOnline,
     isMentionEnabled,
     userMention,
-  } = globalStore?.config;
+  } = globalStore.config;
   const maxUserMentionCount = userMention?.maxMentionCount || MAX_USER_MENTION_COUNT;
   const maxUserSuggestionCount = userMention?.maxSuggestionCount || MAX_USER_SUGGESTION_COUNT;
 
