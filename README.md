@@ -138,8 +138,8 @@ To read more: https://webpack.js.org/configuration/resolve/#resolvefallback
 ### Creating/exporting new components
 
 1. Define your component inside './src'
-2. Add the following line to './src/index.js'
-  `export NewComponent from './src/location/of/NewComponent';`
+2. Add the following line to './src/index.ts'
+  `export { default as NewComponent } from './src/location/of/NewComponent';`
 3. Add the following line to './exports.js'
   `NewComponent: 'src/location/of/NewComponent',`
 

@@ -1,5 +1,14 @@
 {
   "root": true,
+  "globals": {
+    "JSX": true,
+    "React": true,
+    "ChildNode": true,
+    "ReactElement": true,
+    "globalThis": true,
+    "Locale": true,
+    "SendBird": true
+  },
   "env": {
     "browser": true,
     "es6": true,
@@ -35,6 +44,7 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-expressions": "error",
     "react/display-name": "off",
+    "react/function-component-definition": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -61,6 +71,7 @@
     "no-bitwise": "off",
     "no-restricted-syntax": "off",
     "no-prototype-builtins": "off",
+    "no-unsafe-optional-chaining": "off",
     "import/no-unresolved": "off",
     "import/no-extraneous-dependencies": "off",
     "import/no-useless-path-segments": "off",
@@ -89,7 +100,11 @@
     // In some cases, eslint requires semicolon and wants it removed at the same time
     // https://stackoverflow.com/questions/58474874/eslint-demands-semicolon-and-wants-it-removed-at-the-same-time
     "semi": "off",
-    "@typescript-eslint/semi": ["error"]
+    "@typescript-eslint/semi": ["error"],
+    // Not to make ESLint complains a type is only being used as type but recognized as a unused variable
+    // https://stackoverflow.com/questions/57802057/eslint-configuring-no-unused-vars-for-typescript
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["error"]
   },
   "extends": [
     "plugin:react/recommended",

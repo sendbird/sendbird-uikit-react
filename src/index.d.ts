@@ -494,6 +494,7 @@ interface ChannelSettingsUIProps {
   renderLeaveChannel?: () => React.ReactElement;
 }
 
+/* eslint-disable no-redeclare */
 interface ApplicationUserListQuery {
   limit?: number;
   userIdsFilter?: Array<string>;

@@ -22,8 +22,6 @@ import { sanitizeString } from './utils';
 import {
   arrayEqual,
   getClassName,
-  StringObjType,
-  convertWordToStringObj,
 } from '../../utils';
 import usePaste from './hooks/usePaste';
 import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
@@ -49,15 +47,16 @@ const displayCaret = (element, position) => {
   sel.removeAllRanges();
   sel.addRange(range);
   element.focus();
-}
+};
 
 const resetInput = (ref) => {
   try {
+    /* eslint-disable no-param-reassign */
     ref.current.innerHTML = '';
   } catch {
     //
   }
-}
+};
 
 const initialTargetStringInfo = {
   targetString: '',
@@ -97,7 +96,6 @@ const MessageInput = React.forwardRef((props, ref) => {
     renderSendMessageIcon,
     setMentionedUsers,
   } = props;
-  const textField = ref?.current;
   const textFieldId = messageFieldId || TEXT_FIELD_ID;
   const { stringSet } = useContext(LocalizationContext);
   const fileInputRef = useRef(null);
@@ -135,7 +133,9 @@ const MessageInput = React.forwardRef((props, ref) => {
     try {
       textField.innerHTML = initialValue;
       displayCaret(textField, initialValue?.length);
-    } catch { }
+    } catch {
+      //
+    }
     setMentionedUserIds([]);
     setIsInput(textField?.innerText?.trim().length > 0);
     setHeight();
@@ -179,7 +179,9 @@ const MessageInput = React.forwardRef((props, ref) => {
         /* mention disabled */
         try {
           textField.innerHTML = sanitizeString(message?.message);
-        } catch { }
+        } catch {
+          //
+        }
         setMentionedUserIds([]);
       }
       setIsInput(textField?.innerText?.trim().length > 0);
@@ -213,7 +215,7 @@ const MessageInput = React.forwardRef((props, ref) => {
       if (targetString && startNodeIndex !== null && startOffsetIndex !== null) {
         // const textField = document.getElementById(textFieldId);
         const textField = ref?.current;
-        const childNodes = [...textField?.childNodes];
+        const childNodes = textField?.childNodes;
         const frontTextNode = document?.createTextNode(
           childNodes[startNodeIndex]?.textContent.slice(0, startOffsetIndex),
         );
@@ -353,7 +355,7 @@ const MessageInput = React.forwardRef((props, ref) => {
       setHeight();
     }
   };
-  const isEditDisabled = !(textField?.innerText?.trim());
+  const isEditDisabled = !(ref?.current?.innerText?.trim());
   const editMessage = () => {
     const textField = ref?.current;
     const messageId = message?.messageId;
@@ -366,7 +368,6 @@ const MessageInput = React.forwardRef((props, ref) => {
           const { userid = '' } = dataset;
           messageText += innerText;
           mentionTemplate += `${USER_MENTION_TEMP_CHAR}{${userid}}`;
-        } else if (node.nodeType === NodeTypes.ElementNode && node.nodeName === NodeNames.Span) {
           messageText += '\n';
           mentionTemplate += '\n';
         } else { // other nodes including text node
@@ -389,6 +390,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     setHeight,
   });
 
+  const textField = ref?.current;
   return (
     <form
       className={getClassName([
@@ -417,7 +419,9 @@ const MessageInput = React.forwardRef((props, ref) => {
             if (preventEvent) {
               e.preventDefault();
             } else {
-              if (!e.shiftKey && e.key === MessageInputKeys.Enter && e?.nativeEvent?.isComposing !== true) {
+              if (!e.shiftKey && e.key === MessageInputKeys.Enter
+                && e?.nativeEvent?.isComposing !== true
+              ) {
                 e.preventDefault();
                 sendMessage();
               }
@@ -454,7 +458,7 @@ const MessageInput = React.forwardRef((props, ref) => {
           <Label
             className="sendbird-message-input--placeholder"
             type={LabelTypography.BODY_1}
-            color={disabled? LabelColors.ONBACKGROUND_4 : LabelColors.ONBACKGROUND_3}
+            color={disabled ? LabelColors.ONBACKGROUND_4 : LabelColors.ONBACKGROUND_3}
           >
             {placeholder || stringSet.MESSAGE_INPUT__PLACE_HOLDER}
           </Label>
@@ -598,6 +602,10 @@ MessageInput.propTypes = {
   onMentionedUserIdsUpdated: PropTypes.func,
   onKeyUp: PropTypes.func,
   onKeyDown: PropTypes.func,
+  renderVoiceMessageIcon: PropTypes.func,
+  renderSendMessageIcon: PropTypes.func,
+  renderFileUploadIcon: PropTypes.func,
+  channel: PropTypes.shape({}),
 };
 
 MessageInput.defaultProps = {
@@ -624,6 +632,11 @@ MessageInput.defaultProps = {
   onMentionedUserIdsUpdated: noop,
   onKeyUp: noop,
   onKeyDown: noop,
+  setMentionedUsers: noop,
+  renderVoiceMessageIcon: noop,
+  renderFileUploadIcon: noop,
+  renderSendMessageIcon: noop,
+  channel: {},
 };
 
 export default MessageInput;

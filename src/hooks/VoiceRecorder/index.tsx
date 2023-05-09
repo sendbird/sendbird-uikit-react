@@ -24,7 +24,7 @@ export interface VoiceRecorderContext {
   isRecordable: boolean;
 }
 const noop = () => { /* noop */ };
-const VoiceRecorderContext = createContext<VoiceRecorderContext>({
+const Context = createContext<VoiceRecorderContext>({
   start: noop,
   stop: noop,
   isRecordable: false,
@@ -103,17 +103,17 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
   }, [mediaRecorder]);
 
   return (
-    <VoiceRecorderContext.Provider value={{
+    <Context.Provider value={{
       start,
       stop,
       isRecordable,
     }}>
       {children}
-    </VoiceRecorderContext.Provider>
+    </Context.Provider>
   );
 };
 
-export const useVoiceRecorderContext = (): VoiceRecorderContext => useContext(VoiceRecorderContext);
+export const useVoiceRecorderContext = (): VoiceRecorderContext => useContext(Context);
 
 export default {
   VoiceRecorderProvider,

@@ -8,6 +8,7 @@ import { OutgoingMessageStates } from '../../../utils/exports/getOutgoingMessage
 const UNDEFINED = 'undefined';
 const { SUCCEEDED, FAILED, PENDING } = getSendingMessageStatus();
 
+/* eslint-disable default-param-last */
 export const scrollIntoLast = (initialTry = 0, scrollRef) => {
   const MAX_TRIES = 10;
   const currentTry = initialTry;

@@ -1,6 +1,6 @@
 export default {
   // legacy
-  index: 'src/index.js',
+  index: 'src/index.ts',
 
   // lame-js
   // remove when they remove 1.2.2

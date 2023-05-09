@@ -31,6 +31,7 @@ export default function ChannelPreviewAction({
       ref={parentContainerRef}
     >
       <ContextMenu
+      /* eslint-disable react/no-unstable-nested-components */
         menuTrigger={(toggleDropdown) => (
           <IconButton
             ref={parentRef}
@@ -46,6 +47,7 @@ export default function ChannelPreviewAction({
             />
           </IconButton>
         )}
+        /* eslint-disable react/no-unstable-nested-components */
         menuItems={(closeDropdown) => (
           <MenuItems
             parentRef={parentRef}

@@ -21,6 +21,7 @@ export const shouldFetchMore = (messageLength: number, maxMessages: number): boo
   return false;
 };
 
+/* eslint-disable default-param-last */
 export const scrollIntoLast = (initialTry = 0, scrollRef: React.RefObject<HTMLElement>): void => {
   const MAX_TRIES = 10;
   const currentTry = initialTry;
