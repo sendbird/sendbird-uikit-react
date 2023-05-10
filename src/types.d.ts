@@ -7,6 +7,7 @@ import type {
 } from '@sendbird/chat/message';
 
 export type ReplyType = 'NONE' | 'QUOTE_REPLY' | 'THREAD';
+export type Nullable<T> = T | null;
 
 export interface UserListQuery {
   hasNext?: boolean;

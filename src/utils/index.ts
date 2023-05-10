@@ -4,7 +4,7 @@ import { AdminMessage, FileMessage, MessageListParams, Reaction, UserMessage } f
 import { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
 import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOutgoingMessageState';
-import { EveryMessage } from '../types';
+import { EveryMessage, Nullable } from '../types';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 const SUPPORTED_MIMES = {
@@ -158,7 +158,7 @@ export const isGifMessage = (message: UserMessage | FileMessage): boolean => (
 );
 export const isAudioMessage = (message: FileMessage): boolean => message && isFileMessage(message) && isAudio(message.type);
 export const isAudioMessageMimeType = (type: string): boolean => (/^audio\//.test(type));
-export const isVoiceMessage = (message: FileMessage): boolean => {
+export const isVoiceMessage = (message: Nullable<FileMessage>): boolean => {
   // ex) audio/m4a OR audio/m4a;sbu_type=voice
   if (!(message && isFileMessage(message))) {
     return false;
@@ -172,7 +172,7 @@ export const isVoiceMessage = (message: FileMessage): boolean => {
     return true;
   }
   // ex) message.metaArrays = [{ key: 'KEY_INTERNAL_MESSAGE_TYPE', value: ['voice/m4a'] }]
-  return isVoiceMessageMimeType(message.metaArrays.find((metaArray) => metaArray.key === 'KEY_INTERNAL_MESSAGE_TYPE')?.value?.[0]);
+  return isVoiceMessageMimeType(message?.metaArrays?.find((metaArray) => metaArray.key === 'KEY_INTERNAL_MESSAGE_TYPE')?.value?.[0] ?? '');
 };
 export const isVoiceMessageMimeType = (type: string): boolean => (/^voice\//.test(type));
 

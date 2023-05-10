@@ -17,7 +17,7 @@ import type {
 } from '@sendbird/chat/message';
 import type { SendbirdError, User } from '@sendbird/chat';
 
-import { ReplyType, RenderUserProfileProps } from '../../../types';
+import { ReplyType, RenderUserProfileProps, Nullable } from '../../../types';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { CoreMessageType } from '../../../utils';
@@ -106,7 +106,7 @@ interface MessageStoreInterface {
   initialized: boolean;
   unreadSince: string;
   isInvalid: boolean;
-  currentGroupChannel: GroupChannel;
+  currentGroupChannel: Nullable<GroupChannel>;
   hasMorePrev: boolean;
   oldestMessageTimeStamp: number;
   hasMoreNext: boolean;
