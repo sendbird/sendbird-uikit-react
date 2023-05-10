@@ -42,7 +42,7 @@ export default function ParentMessageInfo({
     isOnline,
     userMention,
   } = config;
-  const userId = stores.userStore.user.userId;
+  const userId = stores.userStore.user?.userId ?? '';
   const { dateLocale } = useLocalization();
   const {
     currentChannel,
