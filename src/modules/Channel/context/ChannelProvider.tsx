@@ -39,7 +39,6 @@ import useUpdateMessageCallback from './hooks/useUpdateMessageCallback';
 import useResendMessageCallback from './hooks/useResendMessageCallback';
 import useSendMessageCallback from './hooks/useSendMessageCallback';
 import useSendFileMessageCallback from './hooks/useSendFileMessageCallback';
-import useMemoizedEmojiListItems from './hooks/useMemoizedEmojiListItems';
 import useToggleReactionCallback from './hooks/useToggleReactionCallback';
 import useScrollToMessage from './hooks/useScrollToMessage';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
@@ -144,7 +143,6 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   emojiAllMap: any;
   onScrollCallback: any;
   onScrollDownCallback: any;
-  memoizedEmojiListItems: any;
   scrollRef: React.MutableRefObject<HTMLDivElement>;
   setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
   setHighLightedMessageId: React.Dispatch<React.SetStateAction<number>>;
@@ -306,15 +304,6 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   });
 
   const toggleReaction = useToggleReactionCallback({ currentGroupChannel }, { logger });
-
-  const memoizedEmojiListItems = useMemoizedEmojiListItems({
-    emojiContainer, toggleReaction,
-  }, {
-    isReactionEnabled: usingReaction,
-    logger,
-    userId,
-    emojiAllList,
-  });
 
   // to create message-datasource
   // this hook sets currentGroupChannel asynchronously
@@ -491,7 +480,6 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       emojiAllMap,
       onScrollCallback,
       onScrollDownCallback,
-      memoizedEmojiListItems,
       scrollRef,
       toggleReaction,
     }}>
