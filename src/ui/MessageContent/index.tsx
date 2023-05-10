@@ -48,6 +48,7 @@ import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import ThreadReplies from '../ThreadReplies';
 import { ThreadReplySelectType } from '../../modules/Channel/context/const';
 import VoiceMessageItemBody from '../VoiceMessageItemBody';
+import { Nullable } from '../../types';
 
 // should initialize in UserProfileContext.jsx
 export interface UserProfileContextInterface {
@@ -59,7 +60,7 @@ export interface UserProfileContextInterface {
 interface Props {
   className?: string | Array<string>;
   userId: string;
-  channel: GroupChannel;
+  channel: Nullable<GroupChannel>;
   message: AdminMessage | UserMessage | FileMessage;
   disabled?: boolean;
   chainTop?: boolean;
@@ -266,7 +267,7 @@ export default function MessageContent({
               message={message as UserMessage | FileMessage}
               userId={userId}
               isByMe={isByMe}
-              isUnavailable={(replyType === 'THREAD' && (channel?.joinedAt * 1000) > message?.parentMessage?.createdAt)}
+              isUnavailable={(replyType === 'THREAD' && (channel?.joinedAt ?? 0 * 1000) > (message.parentMessage?.createdAt ?? 0))}
               onClick={() => {
                 if (replyType === 'THREAD' && threadReplySelectType === ThreadReplySelectType.THREAD) {
                   onQuoteMessageClick?.({ message: message as UserMessage | FileMessage });
@@ -329,7 +330,7 @@ export default function MessageContent({
             <VoiceMessageItemBody
               className="sendbird-message-content__middle__message-item-body"
               message={message as FileMessage}
-              channelUrl={channel?.url}
+              channelUrl={channel?.url ?? ''}
               isByMe={isByMe}
               isReactionEnabled={isReactionEnabledInChannel}
             />

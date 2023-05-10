@@ -22,8 +22,8 @@ const ChannelListHeader: React.FC<ChannelListHeaderInterface> = ({
   onEdit,
   allowProfileEdit,
 }: ChannelListHeaderInterface) => {
-  const { stores, config } = useSendbirdStateContext?.();
-  const { user } = stores?.userStore;
+  const { stores, config } = useSendbirdStateContext();
+  const { user } = stores.userStore;
   const { logger } = config;
 
   const { stringSet } = useContext(LocalizationContext);

@@ -15,13 +15,14 @@ import {
 } from '../../utils/exports/getOutgoingMessageState';
 import { getLastMessageCreatedAt } from '../../modules/ChannelList/components/ChannelPreview/utils';
 import { useLocalization } from '../../lib/LocalizationContext';
+import { Nullable } from '../../types';
 
 export const MessageStatusTypes = OutgoingMessageStates;
 
 interface MessageStatusProps {
   className?: string;
   message: UserMessage | FileMessage;
-  channel: GroupChannel;
+  channel: Nullable<GroupChannel>;
   isDateSeparatorConsidered?: boolean;
 }
 

@@ -74,7 +74,7 @@ export default function OpenchannelThumbnailMessage({
   const { disableUserProfile, renderUserProfile } = useContext<UserProfileContext>(UserProfileContext);
   const [messageWidth, setMessageWidth] = useState(360);
   const [contextMenu, setContextMenu] = useState(false);
-  const messageRef = useRef(null);
+  const messageRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef(null);
   const contextMenuRef = useRef(null);
   const avatarRef = useRef(null);
@@ -101,7 +101,7 @@ export default function OpenchannelThumbnailMessage({
   const sender = getSenderFromMessage(message);
 
   useEffect(() => {
-    const thumbnailWidth = messageRef?.current?.clientWidth - 80;
+    const thumbnailWidth = (messageRef?.current?.clientWidth ?? 0) - 80;
     setMessageWidth(thumbnailWidth > 360 ? 360 : thumbnailWidth);
   }, []);
 

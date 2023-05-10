@@ -53,7 +53,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
   const disableReaction = message?.parentMessageId > 0;
 
   const fileMessage = message as FileMessage;
-  const maxEmojisPerRow = Math.floor(window?.innerWidth / EMOJI_SIZE) - 1;
+  const maxEmojisPerRow = Math.floor(window.innerWidth / EMOJI_SIZE) - 1;
   const [showEmojisOnly, setShowEmojisOnly] = useState<boolean>(false);
   const emojis = getEmojiListAll(emojiContainer);
   // calculate max emojis that can be shown in screen

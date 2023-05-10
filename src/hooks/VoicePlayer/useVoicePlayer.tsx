@@ -70,9 +70,9 @@ export const useVoicePlayer = ({
     play: playVoicePlayer,
     pause: pauseVoicePlayer,
     stop: stopVoicePlayer,
-    playbackTime: currentAudioUnit?.playbackTime * 1000,
-    duration: currentAudioUnit?.duration * 1000,
+    playbackTime: currentAudioUnit.playbackTime * 1000,
+    duration: currentAudioUnit.duration * 1000,
     // the unit of playbackTime and duration should be millisecond
-    playingStatus: currentAudioUnit?.playingStatus,
+    playingStatus: currentAudioUnit.playingStatus,
   });
 };
