@@ -63,7 +63,6 @@ or
 yarn install
 yarn storybook
 ```
-> `yarn run generate-component` generates a UI component skeleton in `src/ui`
 
 * By default, storybook opens in http://localhost:6006/
 * Smart Components such as ChannelList, Channel, ChannelSetting, App can be found under `OTHERS`
@@ -138,10 +137,18 @@ To read more: https://webpack.js.org/configuration/resolve/#resolvefallback
 ### Creating/exporting new components
 
 1. Define your component inside './src'
-2. Add the following line to './src/index.ts'
-  `export { default as NewComponent } from './src/location/of/NewComponent';`
+2. ~Add the following line to './src/index.ts'
+  `export { default as NewComponent } from './src/location/of/NewComponent';`~
+   * We donot do this anymore, we prefer fine-grained exports
+   *  
 3. Add the following line to './exports.js'
   `NewComponent: 'src/location/of/NewComponent',`
+4. Add type defns to `scripts/index_d_ts`
+ 
+### Scaffolding new components
+1. `yarn run generate-component` uses [plop.js](https://plopjs.com/) to generates a UI component in `src/ui`
+2. It can also be used to generate [reducers](/src/utils/typeHelpers/reducers/README.md)
+3. Plop templates are found in [here](/plop-templates)
 
 ## Acknowledgments
 ### LameJS
