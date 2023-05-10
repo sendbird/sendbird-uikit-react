@@ -249,11 +249,6 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       ? utils.getAllEmojisMapFromEmojiContainer(emojiContainer)
       : new Map()
   ), [emojiContainer]);
-  const emojiAllList = useMemo(() => (
-    usingReaction
-      ? utils.getAllEmojisFromEmojiContainer(emojiContainer)
-      : []
-  ), [emojiContainer]);
   const nicknamesMap: Map<string, string> = useMemo(() => (
     (usingReaction && currentGroupChannel)
       ? utils.getNicknamesMapFromMembers(currentGroupChannel?.members)
