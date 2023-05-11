@@ -3,7 +3,7 @@ import { useVoicePlayerContext } from '.';
 import { VOICE_PLAYER_AUDIO_ID } from '../../utils/consts';
 import { useVoiceRecorderContext } from '../VoiceRecorder';
 
-import { AudioUnitDefaultValue, VoicePlayerStatus } from './dux/initialState';
+import { AudioUnitDefaultValue, VoicePlayerStatusType } from './dux/initialState';
 import { generateGroupKey } from './utils';
 
 export interface UseVoicePlayerProps {
@@ -19,7 +19,7 @@ export interface UseVoicePlayerContext {
   stop: (text?: string) => void;
   playbackTime: number;
   duration: number;
-  playingStatus: VoicePlayerStatus;
+  playingStatus: VoicePlayerStatusType;
 }
 
 export const useVoicePlayer = ({

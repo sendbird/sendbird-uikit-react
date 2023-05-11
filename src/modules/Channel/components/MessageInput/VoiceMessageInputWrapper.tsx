@@ -13,7 +13,7 @@ import Modal from '../../../../ui/Modal';
 import Button, { ButtonSizes, ButtonTypes } from '../../../../ui/Button';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { VOICE_RECORDER_DEFAULT_MIN } from '../../../../utils/consts';
-import { VoicePlayerStatus } from '../../../../hooks/VoicePlayer/dux/initialState';
+import { VOICE_PLAYER_STATUS } from '../../../../hooks/VoicePlayer/dux/initialState';
 import uuidv4 from '../../../../utils/uuid';
 
 export interface VoiceMessageInputWrapperProps {
@@ -87,7 +87,7 @@ export const VoiceMessageInputWrapper = ({
       if (recordingTime < minRecordingTime) {
         setVoiceInputState(VoiceMessageInputStatus.READY_TO_RECORD);
         setAudioFile(null);
-      } else if (playingStatus === VoicePlayerStatus.PLAYING) {
+      } else if (playingStatus === VOICE_PLAYER_STATUS.PLAYING) {
         setVoiceInputState(VoiceMessageInputStatus.PLAYING);
       } else {
         setVoiceInputState(VoiceMessageInputStatus.READY_TO_PLAY);
