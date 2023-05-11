@@ -12,6 +12,7 @@ if ! (echo "Running ESLint..." && yarn run lint:fix) ; then
   echo "Linting failed, push not allowed"
   exit 1
 fi 
+
 # if ! yarn test ; then
 #   echo "Tests failed, push not allowed"
 #   exit 1
