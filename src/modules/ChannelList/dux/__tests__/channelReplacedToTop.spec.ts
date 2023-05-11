@@ -77,7 +77,7 @@ describe('Channels-Reducers/CHANNEL_REPLACED_TO_TOP', () => {
     const customChannel = {
       ...channel1,
       customType: CUSTOM_FILTER,
-    }
+    };
     const action = {
       type: actionTypes.CHANNEL_REPLACED_TO_TOP,
       payload: customChannel,

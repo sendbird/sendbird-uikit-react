@@ -4,7 +4,6 @@ export default {
   loading: true,
   allChannels: [],
   currentChannel: null,
-  showSettings: false,
   channelListQuery: null,
   currentUserId: '',
   disableAutoSelect: false,
