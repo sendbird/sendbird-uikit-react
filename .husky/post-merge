@@ -1,4 +1,7 @@
 #!/bin/bash
 
-# Install dependencies
-yarn install
+# Run yarn install only when package.json has been changed
+if git diff-tree --name-only --no-commit-id ORIG_HEAD HEAD | grep 'package.json'; then
+  echo "package.json has been changed, running yarn install..."
+  yarn install
+fi
