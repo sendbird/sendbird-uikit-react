@@ -1,4 +1,4 @@
-import { ModuleNamespaces } from '@sendbird/chat/lib/__definition';
+import { GroupChannelModule, ModuleNamespaces, OpenChannelModule } from '@sendbird/chat/lib/__definition';
 
 /**
  * Type Definitions for @sendbird/uikit-react@{{ version }}
@@ -149,7 +149,7 @@ declare module "SendbirdUIKitGlobal" {
   export type EveryMessage = ClientUserMessage | ClientFileMessage | ClientAdminMessage;
   export type ClientSentMessages = ClientUserMessage | ClientFileMessage;
 
-  export type GetSdk = SendbirdChat & ModuleNamespaces<[SendbirdGroupChat | SendbirdOpenChat]> | undefined;
+  export type GetSdk = SendbirdChat & ModuleNamespaces<[GroupChannelModule, OpenChannelModule]> | undefined;
   export type GetConnect = (
     userId: string,
     accessToken?: string
