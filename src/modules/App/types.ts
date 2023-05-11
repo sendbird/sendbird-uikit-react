@@ -23,26 +23,26 @@ export interface AppLayoutProps {
   setCurrentChannel: React.Dispatch<GroupChannel | null>;
 }
 
-export interface MobileLayoutProps extends AppLayoutProps {
+interface SubLayoutCommonProps {
   highlightedMessage?: number | null;
   setHighlightedMessage?: React.Dispatch<number | null>;
   startingPoint?: number | null;
   setStartingPoint?: React.Dispatch<number | null>;
+  threadTargetMessage: UserMessage | FileMessage | null;
+  setThreadTargetMessage: React.Dispatch<UserMessage | FileMessage>;
 }
 
-export interface DesktopLayoutProps extends AppLayoutProps {
+export interface MobileLayoutProps extends AppLayoutProps, SubLayoutCommonProps { }
+
+export interface DesktopLayoutProps extends AppLayoutProps, SubLayoutCommonProps {
+  // modertion pannel
   showSettings: boolean;
   setShowSettings: React.Dispatch<boolean>;
   showSearch: boolean;
   setShowSearch: React.Dispatch<boolean>;
-  highlightedMessage?: number | null;
-  setHighlightedMessage?: React.Dispatch<number | null>;
-  startingPoint?: number | null;
-  setStartingPoint?: React.Dispatch<number | null>;
+  // thread
   showThread: boolean;
   setShowThread: React.Dispatch<boolean>;
-  threadTargetMessage: UserMessage | FileMessage | null;
-  setThreadTargetMessage: React.Dispatch<UserMessage | FileMessage>;
 }
 
 export default interface AppProps {
