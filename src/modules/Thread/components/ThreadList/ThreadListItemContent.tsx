@@ -25,6 +25,9 @@ import FileMessageItemBody from '../../../../ui/FileMessageItemBody';
 import ThumbnailMessageItemBody from '../../../../ui/ThumbnailMessageItemBody';
 import UnknownMessageItemBody from '../../../../ui/UnknownMessageItemBody';
 import VoiceMessageItemBody from '../../../../ui/VoiceMessageItemBody';
+import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
+import useLongPress from '../../../../hooks/useLongPress';
+import MobileMenu from '../../../../ui/MobileMenu';
 
 export interface ThreadListItemContentProps {
   className?: string;
@@ -70,6 +73,7 @@ export default function ThreadListItemContent({
   onReplyInThread,
 }: ThreadListItemContentProps): React.ReactElement {
   const messageTypes = getUIKitMessageTypes();
+  const { isMobile } = useMediaQueryContext();
   const { dateLocale } = useLocalization();
   const [supposedHover, setSupposedHover] = useState(false);
   const {
@@ -88,8 +92,23 @@ export default function ThreadListItemContent({
   const supposedHoverClassName = supposedHover ? 'sendbird-mouse-hover' : '';
   const isReactionEnabledInChannel = isReactionEnabled && !channel?.isEphemeral;
 
+  // Mobile
+  const mobileMenuRef = useRef(null);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const longPress = useLongPress({
+    onLongPress: () => {
+      if (isMobile) {
+        setShowMobileMenu(true);
+      }
+    },
+  });
+
   return (
-    <div className={`sendbird-thread-list-item-content ${className} ${isByMe ? 'outgoing' : 'incoming'}`}>
+    <div
+      className={`sendbird-thread-list-item-content ${className} ${isByMe ? 'outgoing' : 'incoming'}`}
+      {...(isMobile) ? { ...longPress } : {}}
+      ref={mobileMenuRef}
+    >
       <div className={`sendbird-thread-list-item-content__left ${isReactionEnabledInChannel ? 'use-reaction' : ''} ${isByMe ? 'outgoing' : 'incoming'}`}>
         {(!isByMe && !chainBottom) && (
           <ContextMenu
@@ -122,7 +141,7 @@ export default function ThreadListItemContent({
             )}
           />
         )}
-        {isByMe && (
+        {(isByMe && !isMobile) && (
           <div
             className={`sendbird-thread-list-item-content-menu ${isReactionEnabledInChannel ? 'use-reaction' : ''
             } ${isByMe ? 'outgoing' : 'incoming'
@@ -272,7 +291,7 @@ export default function ThreadListItemContent({
         className={`sendbird-thread-list-item-content__right ${chainTop ? 'chain-top' : ''
         } ${isByMe ? 'outgoing' : 'incoming'}`}
       >
-        {!isByMe && (
+        {(!isByMe && !isMobile) && (
           <div className={`sendbird-thread-list-item-content-menu ${supposedHoverClassName}`}>
             {isReactionEnabledInChannel && (
               <MessageItemReactionMenu
@@ -300,6 +319,25 @@ export default function ThreadListItemContent({
           </div>
         )}
       </div>
+      {showMobileMenu && (
+        <MobileMenu
+          parentRef={mobileMenuRef}
+          channel={channel}
+          message={message}
+          userId={userId}
+          replyType={replyType}
+          hideMenu={() => {
+            setShowMobileMenu(false);
+          }}
+          isReactionEnabled={isReactionEnabled}
+          isByMe={isByMe}
+          emojiContainer={emojiContainer}
+          showEdit={showEdit}
+          showRemove={showRemove}
+          toggleReaction={toggleReaction}
+          isOpenedFromThread
+        />
+      )}
     </div>
   );
 }

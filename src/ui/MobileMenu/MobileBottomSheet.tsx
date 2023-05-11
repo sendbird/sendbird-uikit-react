@@ -13,6 +13,7 @@ import {
   isUserMessage,
   copyToClipboard,
   isFileMessage,
+  isParentMessage,
 } from '../../utils';
 import BottomSheet from '../BottomSheet';
 import ImageRenderer from '../ImageRenderer';
@@ -37,6 +38,8 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     showEdit,
     showRemove,
     setQuoteMessage,
+    onReplyInThread,
+    isOpenedFromThread = false,
   } = props;
   const isByMe = message?.sender?.userId === userId;
   const { stringSet } = useLocalization();
@@ -47,6 +50,10 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
   const showMenuItemDownload: boolean = !isPendingMessage(message) && isFileMessage(message);
   const showReaction: boolean = !isFailedMessage(message) && !isPendingMessage(message) && isReactionEnabled;
   const showMenuItemReply: boolean = (replyType === 'QUOTE_REPLY')
+    && !isFailedMessage(message)
+    && !isPendingMessage(message)
+    && (channel?.isGroupChannel() && !(channel as GroupChannel)?.isBroadcast);
+  const showMenuItemThread: boolean = (replyType === 'THREAD') && !isOpenedFromThread
     && !isFailedMessage(message)
     && !isPendingMessage(message)
     && (channel?.isGroupChannel() && !(channel as GroupChannel)?.isBroadcast);
@@ -209,7 +216,6 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
               }
               {
                 showMenuItemReply && (
-
                   <div
                     className={`sendbird-message__bottomsheet--action
                       ${disableReaction ? 'sendbird-message__bottomsheet--action-disabled' : ''}
@@ -241,6 +247,25 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                   </div>
                 )
               }
+              {showMenuItemThread && (
+                <div
+                  className='sendbird-message__bottomsheet--action'
+                  onClick={() => {
+                    hideMenu();
+                    onReplyInThread?.({ message });
+                  }}
+                >
+                  <Icon
+                    type={IconTypes.THREAD}
+                    fillColor={IconColors.PRIMARY}
+                    width="24px"
+                    height="24px"
+                  />
+                  <Label type={LabelTypography.SUBTITLE_1}>
+                    {isParentMessage(message) ? stringSet.THREAD__INPUT__REPLY_IN_THREAD : stringSet.MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER}
+                  </Label>
+                </div>
+              )}
               {
                 showMenuItemDelete && (
                   <div
