@@ -1,7 +1,6 @@
 import { ObjectValues } from '../../../utils/typeHelpers/objectValues';
 import { GroupKey } from '../utils';
 
-/* eslint-disable no-redeclare */
 export const VOICE_PLAYER_STATUS = {
   IDLE: 'IDLE',
   PREPARING: 'PREPARING',
@@ -25,7 +24,6 @@ export const AudioUnitDefaultValue = (): AudioStorageUnit => ({
   playingStatus: VOICE_PLAYER_STATUS.IDLE,
 });
 
-/* eslint-disable no-redeclare */
 export interface VoicePlayerInitialState {
   currentPlayer: null | HTMLAudioElement;
   currentGroupKey: string;
