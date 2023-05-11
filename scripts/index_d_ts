@@ -1,3 +1,5 @@
+import { ModuleNamespaces } from '@sendbird/chat/lib/__definition';
+
 /**
  * Type Definitions for @sendbird/uikit-react@{{ version }}
  * homepage: https://sendbird.com/
@@ -147,7 +149,7 @@ declare module "SendbirdUIKitGlobal" {
   export type EveryMessage = ClientUserMessage | ClientFileMessage | ClientAdminMessage;
   export type ClientSentMessages = ClientUserMessage | ClientFileMessage;
 
-  export type GetSdk = SendbirdChat | SendbirdGroupChat | SendbirdOpenChat | undefined;
+  export type GetSdk = SendbirdChat & ModuleNamespaces<[SendbirdGroupChat | SendbirdOpenChat]> | undefined;
   export type GetConnect = (
     userId: string,
     accessToken?: string
@@ -483,13 +485,15 @@ declare module "SendbirdUIKitGlobal" {
     onCancel: () => void;
   };
 
-  export enum VoicePlayerStatus {
+  export enum VoicePlayerStatusType {
     IDLE = 'IDLE',
     PREPARING = 'PREPARING',
     READY_TO_PLAY = 'READY_TO_PLAY',
     PLAYING = 'PLAYING',
     COMPLETED = 'COMPLETED',
   }
+  // should be deprecated / for backward
+  export type VoicePlayerStatus = VoicePlayerStatusType;
 
   /**
    * Channel
@@ -1895,11 +1899,18 @@ declare module '@sendbird/uikit-react/ui/FileMessageItemBody' {
 }
 
 declare module '@sendbird/uikit-react/ui/VoiceMessageItemBody' {
+  enum VoicePlayerStatusType {
+    IDLE = 'IDLE',
+    PREPARING = 'PREPARING',
+    READY_TO_PLAY = 'READY_TO_PLAY',
+    PLAYING = 'PLAYING',
+    COMPLETED = 'COMPLETED',
+  }
   interface VoiceMessageItemBodyProps {
     minRecordTime?: number;
     maximumValue: number;
     currentValue?: number;
-    currentType: VoicePlayerStatus;
+    currentType: VoicePlayerStatusType;
   }
   type VoiceMessageItemBody = React.FC<VoiceMessageItemBodyProps>;
   export default VoiceMessageItemBody;

@@ -1,17 +1,19 @@
+import { ObjectValues } from '../../../utils/typeHelpers/objectValues';
 import { GroupKey } from '../utils';
 
 /* eslint-disable no-redeclare */
-export const VoicePlayerStatus = {
+export const VOICE_PLAYER_STATUS = {
   IDLE: 'IDLE',
   PREPARING: 'PREPARING',
   PLAYING: 'PLAYING',
   PAUSED: 'PAUSED',
   COMPLETED: 'COMPLETED',
 } as const;
-export type VoicePlayerStatus = typeof VoicePlayerStatus[keyof typeof VoicePlayerStatus];
+export const VoicePlayerStatus = VOICE_PLAYER_STATUS;
+export type VoicePlayerStatusType = ObjectValues<typeof VOICE_PLAYER_STATUS>;
 
 export type AudioStorageUnit = {
-  playingStatus: VoicePlayerStatus;
+  playingStatus: VoicePlayerStatusType;
   audioFile: null | File;
   playbackTime: number;
   duration: number;
@@ -20,7 +22,7 @@ export const AudioUnitDefaultValue = (): AudioStorageUnit => ({
   audioFile: null,
   playbackTime: 0,
   duration: 1000,
-  playingStatus: VoicePlayerStatus.IDLE,
+  playingStatus: VOICE_PLAYER_STATUS.IDLE,
 });
 
 /* eslint-disable no-redeclare */

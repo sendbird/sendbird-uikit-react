@@ -9,7 +9,7 @@ import PlaybackTime from '../PlaybackTime';
 import Loader from '../Loader';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import { LabelTypography, LabelColors } from '../Label';
-import { VoicePlayerStatus } from '../../hooks/VoicePlayer/dux/initialState';
+import { VOICE_PLAYER_STATUS } from '../../hooks/VoicePlayer/dux/initialState';
 
 export interface VoiceMessageItemBodyProps {
   className?: string;
@@ -32,7 +32,7 @@ export const VoiceMessageItemBody = ({
     pause,
     playbackTime = 0,
     duration,
-    playingStatus = VoicePlayerStatus.IDLE,
+    playingStatus = VOICE_PLAYER_STATUS.IDLE,
   } = useVoicePlayer({
     channelUrl,
     key: `${message?.messageId}`,
@@ -63,7 +63,7 @@ export const VoiceMessageItemBody = ({
         colorType={isByMe ? ProgressBarColorTypes.PRIMARY : ProgressBarColorTypes.GRAY}
       />
       <div className="sendbird-voice-message-item-body__status-button">
-        {(playingStatus === VoicePlayerStatus.IDLE || playingStatus === VoicePlayerStatus.PAUSED) && (
+        {(playingStatus === VOICE_PLAYER_STATUS.IDLE || playingStatus === VOICE_PLAYER_STATUS.PAUSED) && (
           <div
             className="sendbird-voice-message-item-body__status-button__button"
             onClick={play}
@@ -76,7 +76,7 @@ export const VoiceMessageItemBody = ({
             />
           </div>
         )}
-        {playingStatus === VoicePlayerStatus.PREPARING && (
+        {playingStatus === VOICE_PLAYER_STATUS.PREPARING && (
           <Loader width="22.2px" height="22.2px">
             <Icon
               width="22.2px"
@@ -86,7 +86,7 @@ export const VoiceMessageItemBody = ({
             />
           </Loader>
         )}
-        {playingStatus === VoicePlayerStatus.PLAYING && (
+        {playingStatus === VOICE_PLAYER_STATUS.PLAYING && (
           <div
             className="sendbird-voice-message-item-body__status-button__button"
             onClick={() => { pause(); }}
