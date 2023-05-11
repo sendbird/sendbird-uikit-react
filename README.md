@@ -63,7 +63,6 @@ or
 yarn install
 yarn storybook
 ```
-> `yarn run generate-component` generates a UI component skeleton in `src/ui`
 
 * By default, storybook opens in http://localhost:6006/
 * Smart Components such as ChannelList, Channel, ChannelSetting, App can be found under `OTHERS`
@@ -135,13 +134,27 @@ module.exports = {
 ```
 To read more: https://webpack.js.org/configuration/resolve/#resolvefallback
 
-### Creating/exporting new components
+### Creating/Exporting New Components
 
-1. Define your component inside './src'
-2. Add the following line to './src/index.ts'
-  `export { default as NewComponent } from './src/location/of/NewComponent';`
-3. Add the following line to './exports.js'
-  `NewComponent: 'src/location/of/NewComponent',`
+1. Define your component inside `./src`.
+2. ~~Add the following line to `./src/index.ts`:~~
+    ```
+    export { default as NewComponent } from './src/location/of/NewComponent';
+    ```
+    - Will be imported as: `import { NewComponent } from '@sendbird/uikit-react';`
+    - We don't do this anymore for new components; we prefer fine-grained exports (as in step 3).
+3. Add the following line to `./exports.js`:
+    ```
+    NewComponent/SubComponent: 'location/of/NewComponent/SubComponent',
+    ```
+    - This component can be imported by the consumer as: `import SubComponent from '@sendbird/uikit-react/NewComponent/SubComponent';`
+4. Add type definitions to `scripts/index_d_ts`.
+
+### Scaffolding New Components
+
+1. Use `yarn run generate-component` to generate a UI component in `src/ui`. It uses [Plop.js](https://plopjs.com/) to generate the component.
+2. It can also be used to generate [reducers](/src/utils/typeHelpers/reducers/README.md).
+3. Plop templates are found in [here](/plop-templates).
 
 ## Acknowledgments
 ### LameJS
