@@ -139,10 +139,11 @@ To read more: https://webpack.js.org/configuration/resolve/#resolvefallback
 1. Define your component inside './src'
 2. ~Add the following line to './src/index.ts'
   `export { default as NewComponent } from './src/location/of/NewComponent';`~
-   * We donot do this anymore, we prefer fine-grained exports
-   *  
+   * Will be imported as: `import { NewComponent } from '@sendbird/uikit-react';`
+   * We donot do this anymore, we prefer fine-grained exports(as step 3)
 3. Add the following line to './exports.js'
-  `NewComponent: 'src/location/of/NewComponent',`
+  * `NewComponent/SubComponent: 'location/of/NewComponent/SubComponent',`
+  * This component can be imported on consumer as: `import SubComponent from '@sendbird/uikit-react/NewComponent/SubComponent'`
 4. Add type defns to `scripts/index_d_ts`
  
 ### Scaffolding new components
