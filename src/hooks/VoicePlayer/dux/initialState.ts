@@ -8,6 +8,7 @@ export const VOICE_PLAYER_STATUS = {
   PAUSED: 'PAUSED',
   COMPLETED: 'COMPLETED',
 } as const;
+// VoicePlayerStatus should be deprecated / It's left for backward legacy
 export const VoicePlayerStatus = VOICE_PLAYER_STATUS;
 export type VoicePlayerStatusType = ObjectValues<typeof VOICE_PLAYER_STATUS>;
 
