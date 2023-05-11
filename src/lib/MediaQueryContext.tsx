@@ -71,7 +71,7 @@ const MediaQueryProvider = (props: MediaQueryProviderProps): React.ReactElement 
     return () => {
       window.removeEventListener('resize', updateSize);
       logger?.info?.('MediaQueryProvider: removeEventListener', { updateSize });
-    }
+    };
   }, [mediaQueryBreakPoint]);
   return (
     <MediaQueryContext.Provider value={{ mediaQueryBreakPoint, isMobile }}>
