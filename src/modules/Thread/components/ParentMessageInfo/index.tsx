@@ -26,6 +26,9 @@ import { UserProfileContextInterface } from '../../../../ui/MessageContent';
 import MessageInput from '../../../../ui/MessageInput';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import { Role } from '../../../../lib/types';
+import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
+import useLongPress from '../../../../hooks/useLongPress';
+import MobileMenu from '../../../../ui/MobileMenu';
 
 export interface ParentMessageInfoProps {
   className?: string;
@@ -57,11 +60,24 @@ export default function ParentMessageInfo({
     isMuted,
     isChannelFrozen,
   } = useThreadContext();
+  const { isMobile } = useMediaQueryContext();
 
   const [showRemove, setShowRemove] = useState(false);
   const [supposedHover, setSupposedHover] = useState(false);
   const [showFileViewer, setShowFileViewer] = useState(false);
   const usingReaction = isReactionEnabled && !currentChannel?.isSuper && !currentChannel?.isBroadcast;
+  const isByMe = userId === parentMessage.sender.userId;
+
+  // Mobile
+  const mobileMenuRef = useRef(null);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const longPress = useLongPress({
+    onLongPress: () => {
+      if (isMobile) {
+        setShowMobileMenu(true);
+      }
+    },
+  });
 
   // Edit message
   const [showEditInput, setShowEditInput] = useState(false);
@@ -192,7 +208,11 @@ export default function ParentMessageInfo({
   }
 
   return (
-    <div className={`sendbird-parent-message-info ${className}`}>
+    <div
+      className={`sendbird-parent-message-info ${className}`}
+      {...(isMobile) ? { ...longPress } : {}}
+      ref={mobileMenuRef}
+    >
       <ContextMenu
         menuTrigger={(toggleDropdown) => (
           <Avatar
@@ -258,21 +278,23 @@ export default function ParentMessageInfo({
         />
       </div>
       {/* context menu */}
-      <MessageItemMenu
-        className={`sendbird-parent-message-info__context-menu ${usingReaction ? 'use-reaction' : ''} ${supposedHover ? 'sendbird-mouse-hover' : ''}`}
-        channel={currentChannel}
-        message={parentMessage}
-        isByMe={userId === parentMessage?.sender?.userId}
-        disableDeleteMessage={allThreadMessages.length > 0}
-        replyType={replyType}
-        showEdit={setShowEditInput}
-        showRemove={setShowRemove}
-        setSupposedHover={setSupposedHover}
-        onMoveToParentMessage={() => {
-          onMoveToParentMessage({ message: parentMessage, channel: currentChannel });
-        }}
-      />
-      {usingReaction && (
+      {!isMobile && (
+        <MessageItemMenu
+          className={`sendbird-parent-message-info__context-menu ${usingReaction ? 'use-reaction' : ''} ${supposedHover ? 'sendbird-mouse-hover' : ''}`}
+          channel={currentChannel}
+          message={parentMessage}
+          isByMe={userId === parentMessage?.sender?.userId}
+          disableDeleteMessage={allThreadMessages.length > 0}
+          replyType={replyType}
+          showEdit={setShowEditInput}
+          showRemove={setShowRemove}
+          setSupposedHover={setSupposedHover}
+          onMoveToParentMessage={() => {
+            onMoveToParentMessage({ message: parentMessage, channel: currentChannel });
+          }}
+        />
+      )}
+      {(usingReaction && !isMobile) && (
         <MessageItemReactionMenu
           className={`sendbird-parent-message-info__reaction-menu ${supposedHover ? 'sendbird-mouse-hover' : ''}`}
           message={parentMessage}
@@ -301,6 +323,25 @@ export default function ParentMessageInfo({
                 setShowFileViewer(false);
               });
           }}
+        />
+      )}
+      {showMobileMenu && (
+        <MobileMenu
+          parentRef={mobileMenuRef}
+          channel={currentChannel}
+          message={parentMessage}
+          userId={userId}
+          replyType={replyType}
+          hideMenu={() => {
+            setShowMobileMenu(false);
+          }}
+          isReactionEnabled={isReactionEnabled}
+          isByMe={isByMe}
+          emojiContainer={emojiContainer}
+          showEdit={setShowEditInput}
+          showRemove={setShowRemove}
+          toggleReaction={toggleReaction}
+          isOpenedFromThread
         />
       )}
     </div>
