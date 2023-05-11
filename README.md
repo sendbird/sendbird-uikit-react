@@ -134,22 +134,27 @@ module.exports = {
 ```
 To read more: https://webpack.js.org/configuration/resolve/#resolvefallback
 
-### Creating/exporting new components
+### Creating/Exporting New Components
 
-1. Define your component inside './src'
-2. ~Add the following line to './src/index.ts'
-  `export { default as NewComponent } from './src/location/of/NewComponent';`~
-   * Will be imported as: `import { NewComponent } from '@sendbird/uikit-react';`
-   * We donot do this anymore, we prefer fine-grained exports(as step 3)
-3. Add the following line to './exports.js'
-  * `NewComponent/SubComponent: 'location/of/NewComponent/SubComponent',`
-  * This component can be imported on consumer as: `import SubComponent from '@sendbird/uikit-react/NewComponent/SubComponent'`
-4. Add type defns to `scripts/index_d_ts`
- 
-### Scaffolding new components
-1. `yarn run generate-component` uses [plop.js](https://plopjs.com/) to generates a UI component in `src/ui`
-2. It can also be used to generate [reducers](/src/utils/typeHelpers/reducers/README.md)
-3. Plop templates are found in [here](/plop-templates)
+1. Define your component inside `./src`.
+2. ~~Add the following line to `./src/index.ts`:~~
+    ```
+    export { default as NewComponent } from './src/location/of/NewComponent';
+    ```
+    - Will be imported as: `import { NewComponent } from '@sendbird/uikit-react';`
+    - We don't do this anymore for new components; we prefer fine-grained exports (as in step 3).
+3. Add the following line to `./exports.js`:
+    ```
+    NewComponent/SubComponent: 'location/of/NewComponent/SubComponent',
+    ```
+    - This component can be imported by the consumer as: `import SubComponent from '@sendbird/uikit-react/NewComponent/SubComponent';`
+4. Add type definitions to `scripts/index_d_ts`.
+
+### Scaffolding New Components
+
+1. Use `yarn run generate-component` to generate a UI component in `src/ui`. It uses [Plop.js](https://plopjs.com/) to generate the component.
+2. It can also be used to generate [reducers](/src/utils/typeHelpers/reducers/README.md).
+3. Plop templates are found in [here](/plop-templates).
 
 ## Acknowledgments
 ### LameJS
