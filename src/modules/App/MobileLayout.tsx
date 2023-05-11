@@ -39,6 +39,8 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
     setHighlightedMessage,
     startingPoint,
     setStartingPoint,
+    threadTargetMessage,
+    setThreadTargetMessage,
   } = props;
   const [panel, setPanel] = useState(PANELS?.CHANNEL_LIST);
   const [animatedMessageId, setAnimatedMessageId] = useState<number | null>(null);
@@ -126,6 +128,18 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
               onChatHeaderActionClick={() => {
                 setPanel(PANELS.CHANNEL_SETTINGS);
               }}
+              onReplyInThread={({ message }) => {
+                if (replyType === 'THREAD') {
+                  setPanel(PANELS.THREAD);
+                  setThreadTargetMessage(message);
+                }
+              }}
+              onQuoteMessageClick={({ message }) => { // thread message
+                if (replyType === 'THREAD') {
+                  setThreadTargetMessage(message);
+                  setPanel(PANELS.THREAD);
+                }
+              }}
             />
           </div>
         )
@@ -168,7 +182,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
           <div className='sb_mobile__panelwrap'>
             <Thread
               channelUrl={currentChannel?.url || ''}
-              message={null}
+              message={threadTargetMessage}
               onHeaderActionClick={() => {
                 setPanel(PANELS.CHANNEL);
               }}

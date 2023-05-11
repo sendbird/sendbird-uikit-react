@@ -46,6 +46,8 @@ export const AppLayout: React.FC<AppLayoutProps> = (
               setHighlightedMessage={setHighlightedMessage}
               startingPoint={startingPoint}
               setStartingPoint={setStartingPoint}
+              threadTargetMessage={threadTargetMessage}
+              setThreadTargetMessage={setThreadTargetMessage}
             />
           )
           : (
