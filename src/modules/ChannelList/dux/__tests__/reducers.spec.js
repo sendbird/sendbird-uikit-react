@@ -96,20 +96,6 @@ describe('Channels-Reducers', () => {
     expect(nextState.currentChannel).toEqual(mockData.allChannels[0].url);
   });
 
-  it('should handle SHOW_CHANNEL_SETTINGS', () => {
-    const nextState = reducers(initialState, {
-      type: actionTypes.SHOW_CHANNEL_SETTINGS,
-    });
-    expect(nextState.showSettings).toEqual(true);
-  });
-
-  it('should handle HIDE_CHANNEL_SETTINGS', () => {
-    const nextState = reducers(initialState, {
-      type: actionTypes.HIDE_CHANNEL_SETTINGS,
-    });
-    expect(nextState.showSettings).toEqual(false);
-  });
-
   it('should attach more channels on FETCH_CHANNELS_SUCCESS', () => {
     const nextState = reducers(mockData, {
       type: actionTypes.FETCH_CHANNELS_SUCCESS,

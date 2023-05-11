@@ -194,16 +194,6 @@ export default function reducer(state, action) {
         ...state,
         currentChannel: action.payload,
       };
-    case actions.SHOW_CHANNEL_SETTINGS:
-      return {
-        ...state,
-        showSettings: true,
-      };
-    case actions.HIDE_CHANNEL_SETTINGS:
-      return {
-        ...state,
-        showSettings: false,
-      };
     case actions.ON_LAST_MESSAGE_UPDATED: {
       return {
         ...state,
