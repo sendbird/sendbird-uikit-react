@@ -1,4 +1,9 @@
 #!/bin/bash
 
-# Install dependencies
-yarn install
+declare -a FILES=("package.json" "yarn.lock" ".yarn/")
+
+# Run yarn install only when there's any change in the above listed files
+if git diff-tree --name-only --no-commit-id ORIG_HEAD HEAD | grep -E $(IFS="|" ; echo "${FILES[*]}"); then
+  echo "package.json or yarn config has been changed, running yarn install..."
+  yarn install
+fi
