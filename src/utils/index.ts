@@ -378,7 +378,7 @@ export const filterChannelListParams = (params: GroupChannelListQuery, channel: 
     return false;
   }
   const searchFilter = params?.searchFilter;
-  if (searchFilter?.query && searchFilter.fields && searchFilter.fields.length > 0) {
+  if (searchFilter?.query && (searchFilter?.fields?.length ?? 0) > 0) {
     const searchQuery = searchFilter.query;
     const searchFields = searchFilter.fields;
     if (searchQuery && searchFields && searchFields.length > 0) {
