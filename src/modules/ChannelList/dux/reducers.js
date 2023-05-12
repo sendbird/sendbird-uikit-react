@@ -194,16 +194,6 @@ export default function reducer(state, action) {
         ...state,
         currentChannel: action.payload,
       };
-    case actions.SHOW_CHANNEL_SETTINGS:
-      return {
-        ...state,
-        showSettings: true,
-      };
-    case actions.HIDE_CHANNEL_SETTINGS:
-      return {
-        ...state,
-        showSettings: false,
-      };
     case actions.ON_LAST_MESSAGE_UPDATED: {
       return {
         ...state,
@@ -274,6 +264,18 @@ export default function reducer(state, action) {
       };
     }
     case actions.CHANNEL_REPLACED_TO_TOP: {
+      if (state.channelListQuery) {
+        if (filterChannelListParams(state.channelListQuery, action.payload, state.currentUserId)) {
+          return {
+            ...state,
+            allChannels: [
+              action.payload,
+              ...state.allChannels.filter((channel) => channel?.url !== action.payload.url),
+            ],
+          };
+        }
+        return state;
+      }
       return {
         ...state,
         allChannels: [

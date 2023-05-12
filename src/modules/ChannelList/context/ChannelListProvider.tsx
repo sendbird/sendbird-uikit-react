@@ -100,7 +100,6 @@ export interface ChannelListProviderInterface extends ChannelListProviderProps {
   loading: boolean;
   allChannels: GroupChannel[];
   currentChannel: GroupChannel;
-  showSettings: boolean;
   channelListQuery: GroupChannelListQuery;
   currentUserId: string;
   channelListDispatcher: CustomUseReducerDispatcher;
@@ -112,7 +111,6 @@ interface ChannelListStoreInterface {
   loading: boolean;
   allChannels: GroupChannel[];
   currentChannel: GroupChannel;
-  showSettings: boolean;
   channelListQuery: GroupChannelListQuery;
   currentUserId: string;
   disableAutoSelect: boolean;
@@ -131,7 +129,6 @@ const ChannelListContext = React.createContext<ChannelListProviderInterface | nu
   loading: false,
   allChannels: [],
   currentChannel: null,
-  showSettings: false,
   channelListQuery: {},
   currentUserId: null,
   channelListDispatcher: null,
