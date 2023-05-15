@@ -6,10 +6,7 @@ describe('MessageInputUtils/nodeListToArray', () => {
   it('should convert node list to array', () => {
     const P_COUNT = 4;
     const dom = new jsdom.JSDOM(`
-      <div>
-        ${
-          Array(P_COUNT).fill(0).map(() => '<p>test</p>').join('')
-        }
+      <div>${Array(P_COUNT).fill(0).map(() => '<p></p>').join('')}
       </div>
     `);
     const nodes = nodeListToArray(dom.window.document.querySelectorAll('p'));
