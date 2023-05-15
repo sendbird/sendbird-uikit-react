@@ -69,6 +69,13 @@ yarn storybook
 * Dumb components such as inputs, buttons etc can be found under `OTHERS/UI Components` in storybook sidebar
 * Overridden storybook configs can be found in: `./storybook`
 
+### Husky
+
+We use Husky for githooks
+
+To enable Husky in local, run:
+`yarn husky install` or `npx husky install`
+
 ### Build
 
 We use rollupJS for building the production bundle script that you want to use inside your applications.
