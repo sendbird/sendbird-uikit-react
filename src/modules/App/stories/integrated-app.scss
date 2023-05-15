@@ -20,6 +20,9 @@
   height: 120px;
   justify-content: center;
   align-items: center;
+  @include mobile() {
+    height: 80px;
+  }
 }
 
 .sendbird-integrated-sample-app__moderations {
@@ -27,8 +30,7 @@
   padding: 18px;
   display: flex;
   flex-direction: column;
-  margin-left: calc((100% - 520px) / 2);
-  margin-right: calc((100% - 520px) / 2);
+  align-items: center;
   @include themed() {
     background-color: t(bg-1);
   }
@@ -48,19 +50,49 @@
   @include themed() {
     border-bottom: 1px solid t(on-bg-1);
   }
+  @include mobile() {
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+}
+.sendbird-integrated-sample-app__moderations__option--toggle {
+  @include mobile() {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between
+  }
+  .sendbird-integrated-sample-app__moderations__option__name,
+  .sendbird-integrated-sample-app__moderations__option__input {
+    @include mobile() {
+      width: auto;
+    }
+  }
+  .sendbird-integrated-sample-app-toggle-button {
+    text-align: right;
+  }
 }
 .sendbird-integrated-sample-app__moderations__option__name {
   width: 140px;
+  @include mobile() {
+    width: 100%;
+  }
 }
 .sendbird-integrated-sample-app__moderations__option__input {
   margin-left: 20px;
+  @include mobile() {
+    width: 100%;
+    margin-left: 0px;
+  }
 }
 
 .sendbird-integrated-app-submit-area {
   display: flex;
   width: 100%;
   justify-content: center;
-  gap: 10px
+  gap: 10px;
+  margin: 16px 0px;
 }
 
 // text input
