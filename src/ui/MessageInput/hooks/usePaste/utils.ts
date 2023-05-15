@@ -11,6 +11,7 @@ import {
 import { Word } from './types';
 import { TEXT_MESSAGE_BODY_CLASSNAME } from '../../../TextMessageItemBody/consts';
 import { OG_MESSAGE_BODY_CLASSNAME } from '../../../OGMessageItemBody/consts';
+import { nodeListToArray } from '../../utils';
 
 export function querySelectorIncludingSelf(
   master: HTMLElement,
@@ -30,15 +31,15 @@ export function getLeafNodes(master: HTMLElement): ChildNode[] {
   // og message
   const ogMessage = querySelectorIncludingSelf(master, `.${OG_MESSAGE_BODY_CLASSNAME}`);
   if (ogMessage) {
-    return Array.from(ogMessage.childNodes);
+    return nodeListToArray(ogMessage.childNodes);
   }
 
   const textMessageBody = querySelectorIncludingSelf(master, `.${TEXT_MESSAGE_BODY_CLASSNAME}`);
   if (textMessageBody) {
-    return Array.from(textMessageBody.childNodes);
+    return nodeListToArray(textMessageBody.childNodes);
   }
 
-  return Array.from(master.childNodes);
+  return nodeListToArray(master.childNodes);
 }
 
 export function createPasteNode(): HTMLDivElement | null {
