@@ -18,7 +18,7 @@ import renderMentionLabelToString from '../MentionUserLabel/renderToString';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { LocalizationContext } from '../../lib/LocalizationContext';
-import { sanitizeString } from './utils';
+import { nodeListToArray, sanitizeString } from './utils';
 import {
   arrayEqual,
   getClassName,
@@ -215,7 +215,7 @@ const MessageInput = React.forwardRef((props, ref) => {
       if (targetString && startNodeIndex !== null && startOffsetIndex !== null) {
         // const textField = document.getElementById(textFieldId);
         const textField = ref?.current;
-        const childNodes = textField?.childNodes;
+        const childNodes = nodeListToArray(textField?.childNodes);
         const frontTextNode = document?.createTextNode(
           childNodes[startNodeIndex]?.textContent.slice(0, startOffsetIndex),
         );

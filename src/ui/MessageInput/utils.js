@@ -25,4 +25,17 @@ export const sanitizeString = (str) => (
   str?.replace(/[\u00A0-\u9999<>]/gim, (i) => ''.concat('&#', i.charCodeAt(0), ';'))
 );
 
+/**
+ * NodeList cannot be used with Array methods
+ * @param {childNodes} NodeList
+ * @returns Array of child nodes
+ */
+export const nodeListToArray = (childNodes) => {
+  try {
+    return Array.from(childNodes);
+  } catch (error) {
+    return [];
+  }
+};
+
 export default debounce;
