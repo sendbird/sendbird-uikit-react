@@ -1,5 +1,5 @@
 import './index.scss';
-import React, { ReactElement, useContext, useRef } from 'react';
+import React, { ReactElement, useContext, useRef, useState } from 'react';
 import type { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
 import type { Emoji, EmojiContainer } from '@sendbird/chat';
 
@@ -13,6 +13,9 @@ import ContextMenu, { EmojiListItems } from '../ContextMenu';
 
 import { getClassName, getEmojiListAll, getEmojiMapAll, getEmojiTooltipString, isReactedBy } from '../../utils';
 import { LocalizationContext } from '../../lib/LocalizationContext';
+import { MobileEmojisBottomSheet } from '../MobileMenu/MobileEmojisBottomSheet';
+import { useMediaQueryContext } from '../../lib/MediaQueryContext';
+import useLongPress from '../../hooks/useLongPress';
 
 interface Props {
   className?: string | Array<string>;
@@ -26,7 +29,7 @@ interface Props {
 }
 
 const EmojiReactions = ({
-  className,
+  className = '',
   userId,
   message,
   emojiContainer,
@@ -38,14 +41,27 @@ const EmojiReactions = ({
   const { stringSet } = useContext(LocalizationContext);
   const emojisMap = getEmojiMapAll(emojiContainer);
   const addReactionRef = useRef(null);
+  const [showEmojisBottomSheet, setShowEmojisBottomSheet] = useState('');
+  const { isMobile } = useMediaQueryContext();
+
+  // const longPress = useLongPress({
+  //   onLongPress: (e) => {
+  //     setShowEmojisBottomSheet(reaction.key);
+  //   },
+  //   onClick: () => {
+  //     toggleReaction?.(message, reaction.key, reactedByMe);
+  //   },
+  // }, {
+  //   shouldPreventDefault: true,
+  // });
 
   return (
     <div className={getClassName([
       className, 'sendbird-emoji-reactions',
       isByMe ? 'outgoing' : 'incoming',
     ])}>
-      {(message?.reactions?.length > 0) && (
-        message.reactions.map((reaction: Reaction): ReactElement => {
+      {((message.reactions?.length ?? 0) > 0) && (
+        message.reactions?.map((reaction: Reaction): ReactElement => {
           const reactedByMe = isReactedBy(userId, reaction);
           return (
             <TooltipWrapper
@@ -57,29 +73,42 @@ const EmojiReactions = ({
                 </Tooltip>
               )}
             >
-              <ReactionBadge
-                count={reaction.userIds.length}
-                selected={reactedByMe}
-                onClick={(e) => {
-                  toggleReaction(message, reaction.key, reactedByMe);
-                  e?.stopPropagation?.();
-                }}
+              <div
+                data-reactionkey={reaction.key}
+                data-reactedbyme={reactedByMe}
+                {...(isMobile ? useLongPress({
+                  onLongPress: () => {
+                    setShowEmojisBottomSheet(reaction.key);
+                  },
+                  onClick: () => {
+                    toggleReaction?.(message, reaction.key, reactedByMe);
+                  },
+                }, { shouldPreventDefault: true }) : {})}
               >
-                <ImageRenderer
-                  circle
-                  url={emojisMap.get(reaction?.key)?.url || ''}
-                  width="20px"
-                  height="20px"
-                  defaultComponent={(
-                    <Icon width="20px" height="20px" type={IconTypes.QUESTION} />
-                  )}
-                />
-              </ReactionBadge>
+                <ReactionBadge
+                  count={reaction.userIds.length}
+                  selected={reactedByMe}
+                  onClick={(e) => {
+                    toggleReaction?.(message, reaction.key, reactedByMe);
+                    e?.stopPropagation?.();
+                  }}
+                >
+                  <ImageRenderer
+                    circle
+                    url={emojisMap.get(reaction?.key)?.url || ''}
+                    width="20px"
+                    height="20px"
+                    defaultComponent={(
+                      <Icon width="20px" height="20px" type={IconTypes.QUESTION} />
+                    )}
+                  />
+                </ReactionBadge>
+              </div>
             </TooltipWrapper>
           );
         })
       )}
-      {(message?.reactions?.length < emojisMap.size) && (
+      {((message.reactions?.length ?? 0) < emojisMap.size) && (
         <ContextMenu
           menuTrigger={(toggleDropdown: () => void): ReactElement => (
             <ReactionBadge
@@ -118,7 +147,7 @@ const EmojiReactions = ({
                     selected={isReacted}
                     onClick={(e): void => {
                       closeDropdown();
-                      toggleReaction(message, emoji.key, isReacted);
+                      toggleReaction?.(message, emoji.key, isReacted);
                       e?.stopPropagation();
                     }}
                   >
@@ -142,6 +171,16 @@ const EmojiReactions = ({
               })}
             </EmojiListItems>
           )}
+        />
+      )}
+      {showEmojisBottomSheet && (
+        <MobileEmojisBottomSheet
+          message={message}
+          emojiKey={showEmojisBottomSheet}
+          hideMenu={() => {
+            setShowEmojisBottomSheet('');
+          }}
+          emojiContainer={emojiContainer}
         />
       )}
     </div>
