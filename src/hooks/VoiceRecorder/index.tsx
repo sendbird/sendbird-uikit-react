@@ -1,9 +1,8 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import {
   VOICE_MESSAGE_FILE_NAME,
   VOICE_MESSAGE_MIME_TYPE,
   VOICE_RECORDER_AUDIO_BITS,
-  VOICE_RECORDER_MIME_TYPE,
 } from '../../utils/consts';
 import useSendbirdStateContext from '../useSendbirdStateContext';
 
@@ -37,6 +36,16 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>(null);
   const [isRecordable, setIsRecordable] = useState<boolean>(false);
 
+  const browserSupportMimeType: string = useMemo((): string => {
+    const mimeTypes = ['audio/webm', 'audio/mp4'];
+    const supportedMimeType = mimeTypes.find((mimeType) => MediaRecorder.isTypeSupported(mimeType));
+    if (!supportedMimeType) {
+      logger.error('VoiceRecorder: Browser does not support mimeType', { mimeTypes });
+      return '';
+    }
+    return supportedMimeType;
+  }, []);
+
   const [webAudioUtils, setWebAudioUtils] = useState(null);
   useEffect(() => {
     if (isVoiceMessageEnabled && !webAudioUtils) {
@@ -62,7 +71,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
         logger.info('VoiceRecorder: Succeeded getting media stream.', stream);
         setIsRecordable(true);
         const mediaRecorder = new MediaRecorder(stream, {
-          mimeType: VOICE_RECORDER_MIME_TYPE,
+          mimeType: browserSupportMimeType,
           audioBitsPerSecond: VOICE_RECORDER_AUDIO_BITS,
         });
         mediaRecorder.ondataavailable = (e) => { // when recording stops
