@@ -39,6 +39,7 @@ export const MobileEmojisBottomSheet = (props: MobileEmojisBottomSheetProps): Re
       <div className="sendbird-message__bottomsheet__reactor-list">
         {memberList?.map((member) => (
           <UserListItem
+            key={member.userId}
             className="sendbird-message__bottomsheet__reactor-list__item"
             user={member}
             avatarSize="36px"
