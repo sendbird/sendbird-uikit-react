@@ -8,6 +8,7 @@ import Streamnig from '../../OpenChannelApp/Streaming';
 import Label, { LabelTypography, LabelColors } from '../../../ui/Label';
 import Icon, { IconTypes, IconColors } from '../../../ui/Icon';
 import Button, { ButtonSizes, ButtonTypes } from '../../../ui/Button';
+import { MediaQueryProvider } from '../../../lib/MediaQueryContext';
 
 const STORAGE_KEY = 'sendbird-integrated-app-v1-groupchannel';
 
@@ -45,12 +46,22 @@ const ChannelType = {
   LIVE: 'LIVE',
 };
 
+const TYPES = {
+  TOGGLE: 'TOGGLE',
+};
+
 const ModerationOptionItem = ({
   subTitle,
   children,
+  type,
 }) => {
   return (
-    <div className='sendbird-integrated-sample-app__moderations__option'>
+    <div
+      className={`
+        sendbird-integrated-sample-app__moderations__option
+        ${type === TYPES.TOGGLE ? 'sendbird-integrated-sample-app__moderations__option--toggle' : '' }
+      `}
+    >
       <div className='sendbird-integrated-sample-app__moderations__option__name'>
         <Label
           type={LabelTypography.SUBTITLE_1}
@@ -280,6 +291,8 @@ export const GroupChannel = () => {
         backgroundColor: sampleOptions.theme === 'light' ? 'white' : 'black'
       }}
     >
+      {/* We need it for helping QA team on mobile */}
+      <MediaQueryProvider />
       <div className='sendbird-integrated-sample-app__title'>
         <Label
           type={LabelTypography.H_1}
@@ -348,7 +361,7 @@ export const GroupChannel = () => {
               }}
             />
           </ModerationOptionItem>
-          <ModerationOptionItem subTitle="Message Search">
+          <ModerationOptionItem subTitle="Message Search" type={TYPES.TOGGLE}>
             <ToggleButton
               isEnabled={sampleOptions.messageSearch}
               onClick={() => {
@@ -359,7 +372,7 @@ export const GroupChannel = () => {
               }}
             />
           </ModerationOptionItem>
-          <ModerationOptionItem subTitle="Edit User Profile">
+          <ModerationOptionItem subTitle="Edit User Profile" type={TYPES.TOGGLE}>
             <ToggleButton
               isEnabled={sampleOptions.editUserProfile}
               onClick={() => {
@@ -370,7 +383,7 @@ export const GroupChannel = () => {
               }}
             />
           </ModerationOptionItem>
-          <ModerationOptionItem subTitle="Message Grouping">
+          <ModerationOptionItem subTitle="Message Grouping" type={TYPES.TOGGLE}>
             <ToggleButton
               isEnabled={sampleOptions.messageGrouping}
               onClick={() => {
@@ -381,7 +394,7 @@ export const GroupChannel = () => {
               }}
             />
           </ModerationOptionItem>
-          <ModerationOptionItem subTitle="Emoji Reaction">
+          <ModerationOptionItem subTitle="Emoji Reaction" type={TYPES.TOGGLE}>
             <ToggleButton
               isEnabled={sampleOptions.emojiReaction}
               onClick={() => {
@@ -392,7 +405,7 @@ export const GroupChannel = () => {
               }}
             />
           </ModerationOptionItem>
-          <ModerationOptionItem subTitle="Voice Message">
+          <ModerationOptionItem subTitle="Voice Message" type={TYPES.TOGGLE}>
             <ToggleButton
               isEnabled={sampleOptions.isVoiceMessageEnabled}
               onClick={() => {
@@ -403,7 +416,7 @@ export const GroupChannel = () => {
               }}
             />
           </ModerationOptionItem>
-          <ModerationOptionItem subTitle="Mention">
+          <ModerationOptionItem subTitle="Mention" type={TYPES.TOGGLE}>
             <ToggleButton
               isEnabled={sampleOptions.mention}
               onClick={() => {
@@ -414,7 +427,7 @@ export const GroupChannel = () => {
               }}
             />
           </ModerationOptionItem>
-          <ModerationOptionItem subTitle="Typing Indicator">
+          <ModerationOptionItem subTitle="Typing Indicator" type={TYPES.TOGGLE}>
             <ToggleButton
               isEnabled={sampleOptions.typingIndicator}
               onClick={() => {
@@ -425,7 +438,7 @@ export const GroupChannel = () => {
               }}
             />
           </ModerationOptionItem>
-          <ModerationOptionItem subTitle="Message Status">
+          <ModerationOptionItem subTitle="Message Status" type={TYPES.TOGGLE}>
             <ToggleButton
               isEnabled={sampleOptions.messageStatus}
               onClick={() => {
@@ -436,7 +449,7 @@ export const GroupChannel = () => {
               }}
             />
           </ModerationOptionItem>
-          <ModerationOptionItem subTitle="Image Compression">
+          <ModerationOptionItem subTitle="Image Compression" type={TYPES.TOGGLE}>
             <ToggleButton
               isEnabled={sampleOptions.imageCompression}
               onClick={() => {
