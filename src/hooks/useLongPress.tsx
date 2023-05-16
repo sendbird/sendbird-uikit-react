@@ -50,6 +50,7 @@ interface PressHandlers<T> {
 interface Options {
   delay?: number;
   shouldPreventDefault?: boolean;
+  shouldStopPropagation?: boolean;
 }
 
 interface UseLongPressType<T> {
@@ -67,6 +68,7 @@ export default function useLongPress<T>({
 }: PressHandlers<T>, {
   delay = DEFAULT_DURATION,
   shouldPreventDefault = true,
+  shouldStopPropagation = false,
 }: Options = {}): UseLongPressType<T> {
   const { isMobile } = useMediaQueryContext();
   const [longPressTriggered, setLongPressTriggered] = useState(false);
@@ -81,6 +83,9 @@ export default function useLongPress<T>({
       ...e,
     };
     setDragTriggered(false);
+    if (shouldStopPropagation) {
+      e.stopPropagation();
+    }
     if (shouldPreventDefault && e.target) {
       e.target.addEventListener(
         'touchend',
@@ -96,7 +101,7 @@ export default function useLongPress<T>({
       onLongPress(clonedEvent);
       setLongPressTriggered(true);
     }, delay);
-  }, [onLongPress, delay, shouldPreventDefault, isMobile]);
+  }, [onLongPress, delay, shouldPreventDefault, shouldStopPropagation, isMobile]);
 
   const clear = useCallback((
     e: React.MouseEvent<T> | React.TouchEvent<T>,
