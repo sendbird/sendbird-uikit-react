@@ -11,7 +11,7 @@ const MediaQueryContext = React.createContext({
 
 export interface MediaQueryProviderProps {
   children: React.ReactElement;
-  mediaQueryBreakPoint?: string;
+  mediaQueryBreakPoint?: string | boolean;
   logger?: Logger;
 }
 
