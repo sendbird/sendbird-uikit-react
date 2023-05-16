@@ -59,7 +59,7 @@ describe('ui/MessageInput', () => {
     expect(input.textContent).toBe(mockText);
 
     fireEvent.keyDown(input, { key: 'Enter' });
-    expect(onSendMessage).toHaveBeenCalled();
+    expect(onSendMessage).toHaveBeenCalledWith({ mentionTemplate: mockText, message: mockText });
   });
 
   it('should call sendMessage with valid string; new lines included', async () => {
@@ -74,7 +74,7 @@ describe('ui/MessageInput', () => {
     expect(input.textContent).toBe(mockText);
 
     fireEvent.keyDown(input, { key: 'Enter' });
-    expect(onSendMessage).toHaveBeenCalled();
+    expect(onSendMessage).toHaveBeenCalledWith({ mentionTemplate: mockText, message: mockText });
   });
 
   it('should not call sendMessage with invalid string; only white spaces', async() => {
@@ -89,7 +89,7 @@ describe('ui/MessageInput', () => {
     expect(input.textContent).toBe(mockText);
 
     fireEvent.keyDown(input, { key: 'Enter' });
-    expect(onSendMessage).not.toHaveBeenCalled();
+    expect(onSendMessage).not.toHaveBeenCalledWith({ mentionTemplate: mockText, message: mockText });
   });
   
   it('should render send icon if text is present', async() => {
