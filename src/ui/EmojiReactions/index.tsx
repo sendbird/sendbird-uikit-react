@@ -1,10 +1,8 @@
 import './index.scss';
-import React, { ReactElement, useContext, useRef, useState } from 'react';
+import React, { ReactElement, useRef, useState } from 'react';
 import type { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
 import type { Emoji, EmojiContainer } from '@sendbird/chat';
 
-import Tooltip from '../Tooltip';
-import TooltipWrapper from '../TooltipWrapper';
 import ReactionBadge from '../ReactionBadge';
 import ReactionButton from '../ReactionButton';
 import ImageRenderer from '../ImageRenderer';
@@ -12,10 +10,8 @@ import Icon, { IconTypes, IconColors } from '../Icon';
 import ContextMenu, { EmojiListItems } from '../ContextMenu';
 
 import { getClassName, getEmojiListAll, getEmojiMapAll, getEmojiTooltipString, isReactedBy } from '../../utils';
-import { LocalizationContext } from '../../lib/LocalizationContext';
 import { MobileEmojisBottomSheet } from '../MobileMenu/MobileEmojisBottomSheet';
-import { useMediaQueryContext } from '../../lib/MediaQueryContext';
-import useLongPress from '../../hooks/useLongPress';
+import ReactionItem from './ReactionItem';
 
 interface Props {
   className?: string | Array<string>;
@@ -38,22 +34,9 @@ const EmojiReactions = ({
   isByMe = false,
   toggleReaction,
 }: Props): ReactElement => {
-  const { stringSet } = useContext(LocalizationContext);
   const emojisMap = getEmojiMapAll(emojiContainer);
   const addReactionRef = useRef(null);
   const [showEmojisBottomSheet, setShowEmojisBottomSheet] = useState('');
-  const { isMobile } = useMediaQueryContext();
-
-  // const longPress = useLongPress({
-  //   onLongPress: (e) => {
-  //     setShowEmojisBottomSheet(reaction.key);
-  //   },
-  //   onClick: () => {
-  //     toggleReaction?.(message, reaction.key, reactedByMe);
-  //   },
-  // }, {
-  //   shouldPreventDefault: true,
-  // });
 
   return (
     <div className={getClassName([
@@ -62,49 +45,15 @@ const EmojiReactions = ({
     ])}>
       {((message.reactions?.length ?? 0) > 0) && (
         message.reactions?.map((reaction: Reaction): ReactElement => {
-          const reactedByMe = isReactedBy(userId, reaction);
           return (
-            <TooltipWrapper
-              className="sendbird-emoji-reactions__reaction-badge"
+            <ReactionItem
               key={reaction?.key}
-              hoverTooltip={(reaction?.userIds?.length > 0) && (
-                <Tooltip>
-                  {getEmojiTooltipString(reaction, userId, memberNicknamesMap, stringSet)}
-                </Tooltip>
-              )}
-            >
-              <div
-                data-reactionkey={reaction.key}
-                data-reactedbyme={reactedByMe}
-                {...(isMobile ? useLongPress({
-                  onLongPress: () => {
-                    setShowEmojisBottomSheet(reaction.key);
-                  },
-                  onClick: () => {
-                    toggleReaction?.(message, reaction.key, reactedByMe);
-                  },
-                }, { shouldPreventDefault: true }) : {})}
-              >
-                <ReactionBadge
-                  count={reaction.userIds.length}
-                  selected={reactedByMe}
-                  onClick={(e) => {
-                    toggleReaction?.(message, reaction.key, reactedByMe);
-                    e?.stopPropagation?.();
-                  }}
-                >
-                  <ImageRenderer
-                    circle
-                    url={emojisMap.get(reaction?.key)?.url || ''}
-                    width="20px"
-                    height="20px"
-                    defaultComponent={(
-                      <Icon width="20px" height="20px" type={IconTypes.QUESTION} />
-                    )}
-                  />
-                </ReactionBadge>
-              </div>
-            </TooltipWrapper>
+              reaction={reaction}
+              memberNicknamesMap={memberNicknamesMap}
+              setShowEmojisBottomSheet={setShowEmojisBottomSheet}
+              toggleReaction={toggleReaction}
+              emojisMap={emojisMap}
+            />
           );
         })
       )}
