@@ -1,0 +1,37 @@
+.sendbird-message__bottomsheet__emoji-list {
+  position: relative;
+  padding: 0px 16px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 46px;
+  overflow-x: scroll;
+
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 16px;
+}
+.sendbird-message__bottomsheet__emoji-list__item {
+  position: relative;
+  height: 100%;
+
+  display: inline-flex;
+  gap: 4px;
+  flex-direction: row;
+  align-items: center;;
+}
+
+.sendbird-message__bottomsheet__reactor-list {
+  position: relative;
+  padding: 0px 16px;
+  width: 100%;
+  height: 216px;
+  box-sizing: border-box;
+
+  display: inline-flex;
+  flex-direction: column;
+  overflow-y: scroll;
+}
+.sendbird-message__bottomsheet__reactor-list__item.sendbird-user-list-item {
+  border-bottom: 0px;
+}
