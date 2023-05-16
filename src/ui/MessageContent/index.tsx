@@ -154,6 +154,7 @@ export default function MessageContent({
     },
   }, {
     delay: 300,
+    shouldPreventDefault: false,
   });
 
   if (message?.isAdminMessage?.() || message?.messageType === 'admin') {
