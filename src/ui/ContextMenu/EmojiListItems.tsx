@@ -8,7 +8,7 @@ type ReactionStyle = { left: number, top: number };
 export interface EmojiListItemsProps {
   closeDropdown: () => void;
   children: ReactNode;
-  parentRef: RefObject<HTMLDivElement>;
+  parentRef: RefObject<HTMLDivElement> | null;
   parentContainRef: RefObject<HTMLDivElement>;
   spaceFromTrigger?: SpaceFromTrigger;
 }
