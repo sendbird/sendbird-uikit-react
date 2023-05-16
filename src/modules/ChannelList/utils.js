@@ -224,10 +224,8 @@ function setupChannelList({
         ?.find((feature) => (feature === DELIVERY_RECIPT));
 
       if (canSetMarkAsDelivered) {
-        sortChannelList.forEach((channel) => {
-          if (channel?.unreadMessageCount > 0) {
-            markAsReadScheduler.push(channel);
-          }
+        sortedChannelList.forEach((channel) => {
+          channel.markAsDelivered();
         });
       }
     }).catch((err) => {

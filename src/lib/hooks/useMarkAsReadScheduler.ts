@@ -18,7 +18,7 @@ export const schedulerFactory = (logger: Logger, timeout?: number): MarkAsReadSc
     if (!channelPresent) {
       queue.push(channel);
     } else {
-      logger.info('Channel: Mark as read already in queue', channel);
+      logger.info('Channel: Mark as read already in queue', { channel });
     }
     // start the interval if it's not already running
     if (interval) {
