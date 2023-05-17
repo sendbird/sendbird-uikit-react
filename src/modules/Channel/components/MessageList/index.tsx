@@ -2,8 +2,6 @@ import './message-list.scss';
 
 import React from 'react';
 
-import { GroupChannel } from '@sendbird/chat/groupChannel';
-
 import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';

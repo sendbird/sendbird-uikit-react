@@ -34,7 +34,7 @@ describe('useMarkAsDeliveredScheduler', () => {
   });
 
   it('should call markAsRead on intervals', () => {
-    const { result, } = renderHook(
+    const { result } = renderHook(
       ({ isConnected, logger }) => {
         return useMarkAsDeliveredScheduler({ isConnected }, { logger });
       }, {
