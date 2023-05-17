@@ -101,6 +101,8 @@ export default function ThreadListItemContent({
         setShowMobileMenu(true);
       }
     },
+  }, {
+    shouldPreventDefault: false,
   });
 
   return (
