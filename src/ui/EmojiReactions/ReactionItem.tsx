@@ -41,6 +41,7 @@ export default function ReactionItem({
       setShowEmojisBottomSheet(reaction.key);
     },
     onClick: () => {
+      setShowEmojisBottomSheet('');
       toggleReaction?.((message), reaction.key, reactedByMe);
     },
   }, {
@@ -74,10 +75,6 @@ export default function ReactionItem({
         <ReactionBadge
           count={reaction.userIds.length}
           selected={reactedByMe}
-          onClick={(e) => {
-            toggleReaction?.(message, reaction.key, reactedByMe);
-            e?.stopPropagation?.();
-          }}
         >
           <ImageRenderer
             circle
