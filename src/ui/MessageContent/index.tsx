@@ -365,6 +365,7 @@ export default function MessageContent({
               <EmojiReactions
                 userId={userId}
                 message={message as UserMessage | FileMessage}
+                channel={channel}
                 isByMe={isByMe}
                 emojiContainer={emojiContainer}
                 memberNicknamesMap={nicknamesMap}

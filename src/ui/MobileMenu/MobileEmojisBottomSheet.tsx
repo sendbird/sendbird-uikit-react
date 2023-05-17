@@ -1,6 +1,6 @@
 import React, { ReactElement, useMemo, useState } from 'react';
 import { EmojiContainer } from '@sendbird/chat';
-import { Member } from '@sendbird/chat/groupChannel';
+import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
 
 import './mobile-menu-emojis.scss';
@@ -10,11 +10,11 @@ import { getEmojiUrl } from '../../utils';
 import ImageRenderer from '../ImageRenderer';
 import Icon, { IconColors, IconTypes } from '../Icon';
 import Label, { LabelColors, LabelTypography } from '../Label';
-import { useChannelContext } from '../../modules/Channel/context/ChannelProvider';
 import UserListItem from '../UserListItem';
 
 export interface MobileEmojisBottomSheetProps {
   message: UserMessage | FileMessage;
+  channel: GroupChannel;
   emojiKey: string;
   hideMenu: () => void;
   emojiContainer?: EmojiContainer;
@@ -23,12 +23,12 @@ export interface MobileEmojisBottomSheetProps {
 export const MobileEmojisBottomSheet = (props: MobileEmojisBottomSheetProps): ReactElement => {
   const {
     message,
+    channel,
     emojiKey = '',
     hideMenu,
     emojiContainer,
   } = props;
-  const { currentGroupChannel } = useChannelContext();
-  const { members = [] } = currentGroupChannel;
+  const { members = [] } = channel;
   const [selectedEmoji, setSelectedEmoji] = useState(emojiKey);
 
   const ReactorList = useMemo(() => {

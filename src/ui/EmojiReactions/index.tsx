@@ -1,13 +1,15 @@
 import './index.scss';
 import React, { ReactElement, useRef, useState } from 'react';
-import type { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
 import type { Emoji, EmojiContainer } from '@sendbird/chat';
+import type { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import ReactionBadge from '../ReactionBadge';
 import ReactionButton from '../ReactionButton';
 import ImageRenderer from '../ImageRenderer';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import ContextMenu, { EmojiListItems } from '../ContextMenu';
+import { Nullable } from '../../types';
 
 import { getClassName, getEmojiListAll, getEmojiMapAll } from '../../utils';
 import { MobileEmojisBottomSheet } from '../MobileMenu/MobileEmojisBottomSheet';
@@ -17,6 +19,7 @@ interface Props {
   className?: string | Array<string>;
   userId: string;
   message: UserMessage | FileMessage;
+  channel: Nullable<GroupChannel>;
   emojiContainer: EmojiContainer;
   memberNicknamesMap: Map<string, string>;
   spaceFromTrigger?: { x: number, y: number };
@@ -28,6 +31,7 @@ const EmojiReactions = ({
   className = '',
   userId,
   message,
+  channel,
   emojiContainer,
   memberNicknamesMap,
   spaceFromTrigger = { x: 0, y: 0 },
@@ -122,9 +126,10 @@ const EmojiReactions = ({
           )}
         />
       )}
-      {showEmojisBottomSheet && (
+      {(showEmojisBottomSheet && channel !== null) && (
         <MobileEmojisBottomSheet
           message={message}
+          channel={channel}
           emojiKey={showEmojisBottomSheet}
           hideMenu={() => {
             setShowEmojisBottomSheet('');
