@@ -1,22 +1,31 @@
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 
-import { schedulerFactory } from '../useMarkAsReadScheduler';
+import { schedulerFactory } from '../schedulerFactory';
 import { LoggerFactory } from '../../Logger';
+import { Logger } from '../../SendbirdState';
 
 jest.useFakeTimers();
 jest.spyOn(global, 'setInterval');
 
-const logger = LoggerFactory('info');
+const logger = LoggerFactory('info') as Logger;
 
 describe('schedulerFactory', () => {
   it('should return a scheduler with push and clear methods', () => {
-    const scheduler = schedulerFactory(logger, 200);
+    const scheduler = schedulerFactory({
+      logger,
+      timeout: 200,
+      cb: () => { /* noop */ },
+    });
     expect(scheduler.push).toBeDefined();
     expect(scheduler.clear).toBeDefined();
   });
 
   it('should clear timeout when cleared', () => {
-    const scheduler = schedulerFactory(logger, 200);
+    const scheduler = schedulerFactory({
+      logger,
+      timeout: 200,
+      cb: () => { /* noop */ },
+    });
     const channel = { markAsRead: jest.fn() } as unknown as GroupChannel;
     scheduler.push(channel);
     scheduler.push(channel);
@@ -25,7 +34,11 @@ describe('schedulerFactory', () => {
   });
 
   it('should call markAsRead on intervals', () => {
-    const scheduler = schedulerFactory(logger, 200);
+    const scheduler = schedulerFactory<GroupChannel>({
+      logger,
+      timeout: 200,
+      cb: (c) => { c.markAsRead(); },
+    });
     const channel1 = { markAsRead: jest.fn(), url: '123' } as unknown as GroupChannel;
     const channel2 = { markAsRead: jest.fn(), url: '124' } as unknown as GroupChannel;
     scheduler.push(channel1);
@@ -37,7 +50,11 @@ describe('schedulerFactory', () => {
   });
 
   it('should not push duplicate channel to queue', () => {
-    const scheduler = schedulerFactory(logger, 200);
+    const scheduler = schedulerFactory<GroupChannel>({
+      logger,
+      timeout: 200,
+      cb: (c) => { c.markAsRead(); },
+    });
     const channel1 = { markAsRead: jest.fn(), url: '123' } as unknown as GroupChannel;
     const channel2 = { markAsRead: jest.fn(), url: '123' } as unknown as GroupChannel;
     scheduler.push(channel1);

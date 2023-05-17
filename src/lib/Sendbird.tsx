@@ -27,6 +27,7 @@ import { MediaQueryProvider } from './MediaQueryContext';
 import getStringSet from '../ui/Label/stringSet';
 import { VOICE_RECORDER_DEFAULT_MAX, VOICE_RECORDER_DEFAULT_MIN } from '../utils/consts';
 import { useMarkAsReadScheduler } from './hooks/useMarkAsReadScheduler';
+import { useMarkAsDeliveredScheduler } from './hooks/useMarkAsDeliveredScheduler';
 import { ConfigureSessionTypes } from './hooks/useConnect/types';
 
 export type UserListQueryType = {
@@ -196,6 +197,7 @@ const Sendbird = ({
   const isOnline = useOnlineStatus(sdkStore.sdk, logger);
 
   const markAsReadScheduler = useMarkAsReadScheduler({ isConnected: isOnline }, { logger });
+  const markAsDeliveredScheduler = useMarkAsDeliveredScheduler({ isConnected: isOnline }, { logger });
 
   const localeStringSet = React.useMemo(() => {
     if (!stringSet) {
@@ -259,6 +261,7 @@ const Sendbird = ({
             maxSuggestionCount: userMention?.maxSuggestionCount || 15,
           },
           markAsReadScheduler,
+          markAsDeliveredScheduler,
           ...uikitConfigurations,
         },
       }}

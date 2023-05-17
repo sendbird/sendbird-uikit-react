@@ -3,8 +3,9 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import { useMarkAsReadScheduler } from '../useMarkAsReadScheduler';
 import { LoggerFactory } from '../../Logger';
+import { Logger } from '../../SendbirdState';
 
-const logger = LoggerFactory('all');
+const logger = LoggerFactory('all') as Logger;
 describe('useMarkAsReadScheduler', () => {
   it('should return a markAsReadScheduler', () => {
     const { result } = renderHook(() => useMarkAsReadScheduler({ isConnected: true }, { logger }));
