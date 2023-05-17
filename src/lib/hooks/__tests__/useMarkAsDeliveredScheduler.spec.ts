@@ -1,11 +1,11 @@
 import { renderHook } from '@testing-library/react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 
-jest.useFakeTimers();
-
 import { useMarkAsDeliveredScheduler } from '../useMarkAsDeliveredScheduler';
 import { LoggerFactory } from '../../Logger';
 import { Logger } from '../../SendbirdState';
+
+jest.useFakeTimers();
 
 const logger = LoggerFactory('all') as Logger;
 describe('useMarkAsDeliveredScheduler', () => {
@@ -34,7 +34,7 @@ describe('useMarkAsDeliveredScheduler', () => {
   });
 
   it('should call markAsRead on intervals', () => {
-    const { result, rerender } = renderHook(
+    const { result, } = renderHook(
       ({ isConnected, logger }) => {
         return useMarkAsDeliveredScheduler({ isConnected }, { logger });
       }, {
@@ -51,6 +51,6 @@ describe('useMarkAsDeliveredScheduler', () => {
     jest.advanceTimersByTime(10000);
     expect(channel1.markAsRead).toHaveBeenCalledTimes(1);
     expect(channel2.markAsRead).toHaveBeenCalledTimes(1);
-    expect(scheduler.getQueue().length).toBe(0);
+    expect(result.current.getQueue().length).toBe(0);
   });
 });

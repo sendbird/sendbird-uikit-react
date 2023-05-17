@@ -68,8 +68,8 @@ function useHandleChannelEvents({
               payload: { channel, message },
             });
             if (scrollToEnd
-              && document.getElementById('sendbird-dropdown-portal').childElementCount === 0
-              && document.getElementById('sendbird-emoji-list-portal').childElementCount === 0
+              && document.getElementById('sendbird-dropdown-portal')?.childElementCount === 0
+              && document.getElementById('sendbird-emoji-list-portal')?.childElementCount === 0
             ) {
               // and !openContextMenu
               try {

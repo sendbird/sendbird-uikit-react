@@ -42,7 +42,7 @@ export function useMarkAsDeliveredScheduler({
     }
   }, [isConnected]);
 
-  useUnmount(() => { markAsDeliveredScheduler.clear(); })
+  useUnmount(() => { markAsDeliveredScheduler.clear(); });
 
   return markAsDeliveredScheduler;
 }

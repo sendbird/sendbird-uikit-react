@@ -13,7 +13,7 @@ export function schedulerFactory<T>({
   cb: (item: T) => void;
 }) {
   let queue: GroupChannel[] = [];
-  let interval: NodeJS.Timer | null = null;
+  let interval: ReturnType<typeof setTimeout> | null = null;
   const push = (channel: GroupChannel) => {
     const channelPresent = queue.find((c) => c.url === channel.url);
     if (!channelPresent) {
@@ -51,4 +51,4 @@ export function schedulerFactory<T>({
     clear,
     getQueue: () => queue,
   };
-};
+}
