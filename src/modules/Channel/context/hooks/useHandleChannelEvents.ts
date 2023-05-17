@@ -74,7 +74,7 @@ function useHandleChannelEvents({
               // and !openContextMenu
               try {
                 if (!disableMarkAsRead) {
-                  markAsReadScheduler?.push?.(currentGroupChannel);
+                  markAsReadScheduler.push(currentGroupChannel);
                 }
                 setTimeout(() => {
                   scrollIntoLast(0, scrollRef);

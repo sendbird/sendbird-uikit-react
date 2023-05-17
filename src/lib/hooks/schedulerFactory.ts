@@ -1,7 +1,7 @@
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { Logger } from '../SendbirdState';
 
-const TIMEOUT = 5000;
+const TIMEOUT = 2000;
 
 export function schedulerFactory<T>({
   logger,
@@ -25,6 +25,8 @@ export function schedulerFactory<T>({
     if (interval) {
       return;
     }
+    const item = queue.shift();
+    cb(item as T);
     interval = setInterval(() => {
       if (queue.length === 0 && interval) {
         clearInterval(interval);
@@ -32,7 +34,9 @@ export function schedulerFactory<T>({
         return;
       }
       const item = queue.shift();
-      cb(item as T);
+      if (item) {
+        cb(item as T);
+      }
     }, (timeout || TIMEOUT));
   };
   const clear = () => {

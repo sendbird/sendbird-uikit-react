@@ -2,6 +2,8 @@ import './message-list.scss';
 
 import React from 'react';
 
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+
 import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
@@ -99,12 +101,15 @@ const MessageList: React.FC<MessageListProps> = ({
       });
     }
 
-    if (!disableMarkAsRead && isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER)) {
+    if (!disableMarkAsRead
+      && isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER)
+      && !!currentGroupChannel
+    ) {
       messagesDispatcher({
         type: messageActionTypes.MARK_AS_READ,
         payload: { channel: currentGroupChannel },
       });
-      markAsReadScheduler?.push(currentGroupChannel);
+      markAsReadScheduler.push(currentGroupChannel);
     }
   };
 
@@ -214,8 +219,8 @@ const MessageList: React.FC<MessageListProps> = ({
           if (scrollRef?.current?.scrollTop) {
             scrollRef.current.scrollTop = (scrollRef?.current?.scrollHeight ?? 0) - (scrollRef?.current?.offsetHeight ?? 0);
           }
-          if (!disableMarkAsRead) {
-            markAsReadScheduler?.push(currentGroupChannel);
+          if (!disableMarkAsRead && !!currentGroupChannel) {
+            markAsReadScheduler.push(currentGroupChannel);
             messagesDispatcher({
               type: messageActionTypes.MARK_AS_READ,
               payload: { channel: currentGroupChannel },
