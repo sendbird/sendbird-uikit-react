@@ -88,7 +88,7 @@ export const MobileEmojisBottomSheet = (props: MobileEmojisBottomSheetProps): Re
                   {reaction.userIds.length}
                 </Label>
               </div>
-            )
+            );
           })}
         </div>
         {ReactorList}

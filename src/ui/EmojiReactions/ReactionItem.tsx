@@ -21,7 +21,7 @@ type Props = {
   setShowEmojisBottomSheet: React.Dispatch<React.SetStateAction<string>>;
   toggleReaction?: (message: UserMessage | FileMessage, key: string, byMe: boolean) => void;
   emojisMap: Map<string, Emoji>;
-}
+};
 
 export default function ReactionItem({
   reaction,
@@ -57,7 +57,7 @@ export default function ReactionItem({
         <Tooltip>
           {getEmojiTooltipString(reaction, userId, memberNicknamesMap, stringSet)}
         </Tooltip>
-      ): <></>}
+      ) : <></>}
     >
       <div
         {
@@ -90,5 +90,5 @@ export default function ReactionItem({
         </ReactionBadge>
       </div>
     </TooltipWrapper>
-  )
+  );
 }

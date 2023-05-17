@@ -9,7 +9,7 @@ import ImageRenderer from '../ImageRenderer';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import ContextMenu, { EmojiListItems } from '../ContextMenu';
 
-import { getClassName, getEmojiListAll, getEmojiMapAll, getEmojiTooltipString, isReactedBy } from '../../utils';
+import { getClassName, getEmojiListAll, getEmojiMapAll } from '../../utils';
 import { MobileEmojisBottomSheet } from '../MobileMenu/MobileEmojisBottomSheet';
 import ReactionItem from './ReactionItem';
 
