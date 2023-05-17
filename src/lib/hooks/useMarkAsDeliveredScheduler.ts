@@ -3,6 +3,7 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import { schedulerFactory } from './schedulerFactory';
 import { Logger } from '../SendbirdState';
+import { useUnmount } from '../../hooks/useUnmount';
 
 export type MarkAsDeliveredSchedulerType = {
   push: (channel: GroupChannel) => void;
@@ -40,6 +41,8 @@ export function useMarkAsDeliveredScheduler({
       markAsDeliveredScheduler.clear();
     }
   }, [isConnected]);
+
+  useUnmount(() => { markAsDeliveredScheduler.clear(); })
 
   return markAsDeliveredScheduler;
 }

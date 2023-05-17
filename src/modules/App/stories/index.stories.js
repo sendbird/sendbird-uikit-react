@@ -12,6 +12,7 @@ import MessageSearch from '../../MessageSearch';
 import { withSendBird } from '../../..';
 import { sendbirdSelectors } from '../../..';
 import { fitPageSize } from './utils';
+import uuidv4 from '../../../utils/uuid';
 
 const appId = process.env.STORYBOOK_APP_ID;
 // const userId = 'leo.sub';
@@ -53,8 +54,8 @@ export const versionInfo = () => {
 export const basicSDK = () => fitPageSize(
   <App
     appId={appId}
-    userId={userId}
-    nickname={userId}
+    userId={uuidv4()}
+    nickname={uuidv4()}
     showSearchIcon
     replyType="QUOTE_REPLY"
     isMentionEnabled

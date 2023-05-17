@@ -169,7 +169,8 @@ function setupChannelList({
   logger,
   sortChannelList,
   disableAutoSelect,
-  markAsReadScheduler,
+  markAsDeliveredScheduler,
+  disableMarkAsDelivered,
 }) {
   if (sdk?.groupChannel) {
     createEventHandler({
@@ -223,9 +224,9 @@ function setupChannelList({
       const canSetMarkAsDelivered = sdk?.appInfo?.premiumFeatureList
         ?.find((feature) => (feature === DELIVERY_RECIPT));
 
-      if (canSetMarkAsDelivered) {
+      if (canSetMarkAsDelivered && !disableMarkAsDelivered) {
         sortedChannelList.forEach((channel) => {
-          channel.markAsDelivered();
+          markAsDeliveredScheduler.push(channel);
         });
       }
     }).catch((err) => {
