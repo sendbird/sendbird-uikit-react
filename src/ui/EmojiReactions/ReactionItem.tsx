@@ -45,6 +45,7 @@ export default function ReactionItem({
     },
   }, {
     shouldPreventDefault: true,
+    shouldStopPropagation: true,
   });
 
   const userId = store.config.userId;
