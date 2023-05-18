@@ -15,6 +15,8 @@ import { getClassName, getEmojiListAll, getEmojiMapAll } from '../../utils';
 import { ReactedMembersBottomSheet } from '../MobileMenu/ReactedMembersBottomSheet';
 import ReactionItem from './ReactionItem';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
+import { AddReactionBadgeItem } from './AddReactionBadgeItem';
+import { MobileEmojisBottomSheet } from '../MobileMenu/MobileEmojisBottomSheet';
 
 interface Props {
   className?: string | Array<string>;
@@ -40,9 +42,12 @@ const EmojiReactions = ({
   toggleReaction,
 }: Props): ReactElement => {
   const { isMobile } = useMediaQueryContext();
-  const emojisMap = getEmojiMapAll(emojiContainer);
   const addReactionRef = useRef(null);
+  const [showEmojiList, setShowEmojiList] = useState(false);
   const [showEmojisBottomSheet, setShowEmojisBottomSheet] = useState('');
+
+  const emojisMap = getEmojiMapAll(emojiContainer);
+  const showAddReactionBadge = (message.reactions?.length ?? 0) < emojisMap.size;
 
   return (
     <div className={getClassName([
@@ -63,7 +68,7 @@ const EmojiReactions = ({
           );
         })
       )}
-      {((message.reactions?.length ?? 0) < emojisMap.size) && (
+      {(!isMobile && showAddReactionBadge) && (
         <ContextMenu
           menuTrigger={(toggleDropdown: () => void): ReactElement => (
             <ReactionBadge
@@ -93,7 +98,7 @@ const EmojiReactions = ({
               {getEmojiListAll(emojiContainer).map((emoji: Emoji): ReactElement => {
                 const isReacted: boolean = (message?.reactions
                   ?.find((reaction: Reaction): boolean => reaction.key === emoji.key)?.userIds
-                  ?.some((reactorId: string): boolean => reactorId === userId));
+                  ?.some((reactorId: string): boolean => reactorId === userId)) || false;
                 return (
                   <ReactionButton
                     key={emoji.key}
@@ -126,6 +131,24 @@ const EmojiReactions = ({
               })}
             </EmojiListItems>
           )}
+        />
+      )}
+      {(isMobile && showAddReactionBadge) && (
+        <AddReactionBadgeItem
+          onClick={() => {
+            setShowEmojiList(true);
+          }}
+        />
+      )}
+      {(isMobile && showEmojiList) && (
+        <MobileEmojisBottomSheet
+          userId={userId}
+          message={message}
+          emojiContainer={emojiContainer}
+          hideMenu={() => {
+            setShowEmojiList(false);
+          }}
+          toggleReaction={toggleReaction}
         />
       )}
       {(isMobile && showEmojisBottomSheet && channel !== null) && (
