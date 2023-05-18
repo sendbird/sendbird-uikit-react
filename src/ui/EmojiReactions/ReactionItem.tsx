@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useCallback, useContext } from 'react';
 
 import { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
 
@@ -33,24 +33,25 @@ export default function ReactionItem({
   const store = useSendbirdStateContext();
   const { isMobile } = useMediaQueryContext();
   const messageStore = useMessageContext();
+  const message = messageStore?.message as UserMessage;
   const { stringSet } = useContext(LocalizationContext);
 
-  const message = messageStore?.message as UserMessage;
+  const userId = store.config.userId;
+  const reactedByMe = isReactedBy(userId, reaction);
+
+  const handleOnClick = () => {
+    setShowEmojisBottomSheet('');
+    toggleReaction?.((message), reaction.key, reactedByMe);
+  };
   const longPress = useLongPress({
     onLongPress: () => {
       setShowEmojisBottomSheet(reaction.key);
     },
-    onClick: () => {
-      setShowEmojisBottomSheet('');
-      toggleReaction?.((message), reaction.key, reactedByMe);
-    },
+    onClick: handleOnClick,
   }, {
     shouldPreventDefault: true,
     shouldStopPropagation: true,
   });
-
-  const userId = store.config.userId;
-  const reactedByMe = isReactedBy(userId, reaction);
 
   return (
     <TooltipWrapper
@@ -63,11 +64,11 @@ export default function ReactionItem({
     >
       <div
         {
-          ...(
-            isMobile
-              ? { ...longPress }
-              : {}
-          )
+        ...(
+          isMobile
+            ? { ...longPress }
+            : { onClick: handleOnClick }
+        )
         }
         data-reaction-key={reaction.key}
         data-is-reacted-by-me={reactedByMe}
