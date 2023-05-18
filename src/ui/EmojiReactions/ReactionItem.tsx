@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useContext } from 'react';
 
 import { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
 
@@ -63,15 +63,11 @@ export default function ReactionItem({
       ) : <></>}
     >
       <div
-        {
-        ...(
+        {...(
           isMobile
             ? { ...longPress }
             : { onClick: handleOnClick }
-        )
-        }
-        data-reaction-key={reaction.key}
-        data-is-reacted-by-me={reactedByMe}
+        )}
       >
         <ReactionBadge
           count={reaction.userIds.length}
