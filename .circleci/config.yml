@@ -20,18 +20,15 @@ jobs:
   job-lint_and_test:
     docker:
       - image: cimg/node:16.19.1
+    parallelism: 4
+    resource_class: large
     steps:
       - checkout
       - run: node --version
       - run: corepack enable
       - run: corepack prepare yarn@stable --activate
       - run: yarn --version
-      - run: yarn install
-      # todo: cache node_modules
-      # - save_cache:
-      #   paths:
-      #       - node_modules
-      #   key: yarn-deps-{{ checksum "yarn.lock" }}-{{ epoch }}
+      - run: yarn install --immutable
       - command-lint_and_test
 
 # Invoke jobs via workflows
@@ -39,9 +36,4 @@ jobs:
 workflows:
   built-and-test:
     jobs:
-      - job-lint_and_test:
-          filters:
-            branches:
-              ignore:
-                - main
-                - develop-v3
+      - job-lint_and_test
