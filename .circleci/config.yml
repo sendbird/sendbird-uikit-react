@@ -32,13 +32,17 @@ jobs:
       - run: corepack enable
       - run: corepack prepare yarn@stable --activate
       - run: yarn --version
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - uikit-yarn-dependencies-{{ checksum "yarn.lock" }}
       - run: yarn install --immutable
       - command-lint
       - command-test
       - save_cache:
           key: uikit-yarn-dependencies-{{ checksum "yarn.lock" }}
           paths:
-            - node_modules
+            - ./.yarn/cache
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
