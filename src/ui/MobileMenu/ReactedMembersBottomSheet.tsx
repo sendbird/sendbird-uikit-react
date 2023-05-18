@@ -12,7 +12,7 @@ import Icon, { IconColors, IconTypes } from '../Icon';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import UserListItem from '../UserListItem';
 
-export interface MobileEmojisBottomSheetProps {
+export interface ReactedMembersBottomSheetProps {
   message: UserMessage | FileMessage;
   channel: GroupChannel;
   emojiKey: string;
@@ -20,7 +20,7 @@ export interface MobileEmojisBottomSheetProps {
   emojiContainer?: EmojiContainer;
 }
 
-export const MobileEmojisBottomSheet = (props: MobileEmojisBottomSheetProps): ReactElement => {
+export const ReactedMembersBottomSheet = (props: ReactedMembersBottomSheetProps): ReactElement => {
   const {
     message,
     channel,

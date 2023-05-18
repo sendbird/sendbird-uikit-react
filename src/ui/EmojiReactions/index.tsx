@@ -12,7 +12,7 @@ import ContextMenu, { EmojiListItems } from '../ContextMenu';
 import { Nullable } from '../../types';
 
 import { getClassName, getEmojiListAll, getEmojiMapAll } from '../../utils';
-import { MobileEmojisBottomSheet } from '../MobileMenu/MobileEmojisBottomSheet';
+import { ReactedMembersBottomSheet } from '../MobileMenu/ReactedMembersBottomSheet';
 import ReactionItem from './ReactionItem';
 
 interface Props {
@@ -127,7 +127,7 @@ const EmojiReactions = ({
         />
       )}
       {(showEmojisBottomSheet && channel !== null) && (
-        <MobileEmojisBottomSheet
+        <ReactedMembersBottomSheet
           message={message}
           channel={channel}
           emojiKey={showEmojisBottomSheet}
