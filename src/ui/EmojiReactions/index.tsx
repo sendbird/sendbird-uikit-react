@@ -14,6 +14,7 @@ import { Nullable } from '../../types';
 import { getClassName, getEmojiListAll, getEmojiMapAll } from '../../utils';
 import { ReactedMembersBottomSheet } from '../MobileMenu/ReactedMembersBottomSheet';
 import ReactionItem from './ReactionItem';
+import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 
 interface Props {
   className?: string | Array<string>;
@@ -38,6 +39,7 @@ const EmojiReactions = ({
   isByMe = false,
   toggleReaction,
 }: Props): ReactElement => {
+  const { isMobile } = useMediaQueryContext();
   const emojisMap = getEmojiMapAll(emojiContainer);
   const addReactionRef = useRef(null);
   const [showEmojisBottomSheet, setShowEmojisBottomSheet] = useState('');
@@ -126,7 +128,7 @@ const EmojiReactions = ({
           )}
         />
       )}
-      {(showEmojisBottomSheet && channel !== null) && (
+      {(isMobile && showEmojisBottomSheet && channel !== null) && (
         <ReactedMembersBottomSheet
           message={message}
           channel={channel}
