@@ -3,36 +3,43 @@
 version: 2.1
 
 commands:
-  command-build_and_test:
+  command-lint_and_test:
     steps:
       - run:
           name: UIKit for React build and test
           command: |
-            npm install
-            npm run build
-            npm test
+            yarn run eslint
+            yarn run eslint-ts
+            yarn run test
+
           no_output_timeout: 30m
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  job-build_and_test:
+  job-lint_and_test:
     docker:
-      - image: cimg/python:3.11.2-node
+      - image: cimg/node:16.19.1
     steps:
       - checkout
       - run: node --version
-      - add_ssh_keys:
-          fingerprints:
-            - "1a:44:ff:cc:11:16:9c:28:f3:9b:c2:ec:47:85:d0:46"
-      - command-build_and_test
-      
+      - run: corepack enable
+      - run: corepack prepare yarn@stable --activate
+      - run: yarn --version
+      - run: yarn install
+      # todo: cache node_modules
+      # - save_cache:
+      #   paths:
+      #       - node_modules
+      #   key: yarn-deps-{{ checksum "yarn.lock" }}-{{ epoch }}
+      - command-lint_and_test
+
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   built-and-test:
     jobs:
-      - job-build_and_test:
+      - job-lint_and_test:
           filters:
             branches:
               ignore:
