@@ -61,7 +61,7 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
           <span
             class="sendbird-openchannel-og-message__top__right__description__message sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
           >
-            I am the Message
+            I am the Message
           </span>
         </div>
       </div>
