@@ -114,14 +114,32 @@ describe('combineNearbyStrings', () => {
 });
 
 describe('getWhiteSpacePreservedText', () => {
-  it('should keep the leading and trailing white spaces', () => {
+  it('should convert leading, trailing white space to nbsp', () => {
     const text = ' aaa ';
     const result = getWhiteSpacePreservedText(text);
     expect(result).toEqual('\u00A0aaa\u00A0');
+  });
+
+  it('should convert leading, trailing white space to nbsp, while preserving space in between', () => {
+    const text = ' aaa   cc  dd ';
+    const result = getWhiteSpacePreservedText(text);
+    expect(result).toEqual('\u00A0aaa   cc  dd\u00A0');
   });
   it('should keep the new lines', () => {
     const text = ' aaa\naa';
     const result = getWhiteSpacePreservedText(text);
     expect(result).toEqual('\u00A0aaa\naa');
+  });
+
+  it('should keep the tabs', () => {
+    const text = ' aaa\taa';
+    const result = getWhiteSpacePreservedText(text);
+    expect(result).toEqual('\u00A0aaa\taa');
+  });
+
+  it('should handle empty string', () => {
+    const text = '';
+    const result = getWhiteSpacePreservedText(text);
+    expect(result).toEqual('');
   });
 });
