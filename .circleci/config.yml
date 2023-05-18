@@ -35,12 +35,12 @@ jobs:
       - restore_cache:
           name: Restore Yarn Package Cache
           keys:
-            - uikit-yarn-dependencies-{{ checksum "yarn.lock" }}{{ checksum "package.json" }}
+            - uikit-yarn-dependencies-{{ checksum "yarn.lock" }}
       - run: yarn install --immutable
       - command-lint
       - command-test
       - save_cache:
-          key: uikit-yarn-dependencies-{{ checksum "yarn.lock" }}{{ checksum "package.json" }}
+          key: uikit-yarn-dependencies-{{ checksum "yarn.lock" }}
           paths:
             - ./.yarn/cache
 
