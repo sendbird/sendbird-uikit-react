@@ -35,6 +35,10 @@ jobs:
       - run: yarn install --immutable
       - command-lint
       - command-test
+      - save_cache:
+          key: uikit-yarn-dependencies-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
