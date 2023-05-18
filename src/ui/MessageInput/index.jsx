@@ -137,7 +137,7 @@ const MessageInput = React.forwardRef((props, ref) => {
       //
     }
     setMentionedUserIds([]);
-    setIsInput(textField?.innerText?.trim().length > 0);
+    setIsInput(textField?.textContent?.trim().length > 0);
     setHeight();
   }, [initialValue]);
 
@@ -184,7 +184,7 @@ const MessageInput = React.forwardRef((props, ref) => {
         }
         setMentionedUserIds([]);
       }
-      setIsInput(textField?.innerText?.trim().length > 0);
+      setIsInput(textField?.textContent?.trim().length > 0);
       setHeight();
     }
   }, [isEdit, message]);
@@ -199,7 +199,7 @@ const MessageInput = React.forwardRef((props, ref) => {
         setMentionedUserIds(newMentionedUserIds);
       }
     }
-    setIsInput(textField.innerText.trim().length > 0);
+    setIsInput(textField.textContent?.trim().length > 0);
   }, [targetStringInfo, isMentionEnabled]);
 
   // #Mention | Replace selected user nickname to the MentionedUserLabel
@@ -325,7 +325,7 @@ const MessageInput = React.forwardRef((props, ref) => {
 
   const sendMessage = () => {
     const textField = ref?.current;
-    if (!isEdit && textField?.innerText) {
+    if (!isEdit && textField?.textContent) {
       let messageText = '';
       let mentionTemplate = '';
       textField.childNodes.forEach((node) => {
@@ -355,7 +355,7 @@ const MessageInput = React.forwardRef((props, ref) => {
       setHeight();
     }
   };
-  const isEditDisabled = !(ref?.current?.innerText?.trim());
+  const isEditDisabled = !(ref?.current?.textContent?.trim());
   const editMessage = () => {
     const textField = ref?.current;
     const messageId = message?.messageId;
@@ -420,6 +420,7 @@ const MessageInput = React.forwardRef((props, ref) => {
               e.preventDefault();
             } else {
               if (!e.shiftKey && e.key === MessageInputKeys.Enter
+                && textField?.textContent?.trim().length > 0
                 && e?.nativeEvent?.isComposing !== true
               ) {
                 e.preventDefault();
@@ -448,7 +449,7 @@ const MessageInput = React.forwardRef((props, ref) => {
           onInput={() => {
             setHeight();
             onStartTyping();
-            setIsInput(textField.innerText?.trim().length > 0);
+            setIsInput(textField?.textContent?.trim().length > 0);
             useMentionedLabelDetection();
           }}
           onPaste={onPaste}
