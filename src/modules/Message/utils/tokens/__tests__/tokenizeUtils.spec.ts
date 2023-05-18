@@ -18,6 +18,16 @@ describe('getUserMentionRegex', () => {
     const result = getUserMentionRegex(mentionedUsers, templatePrefix);
     expect(result).toEqual(/(@{1}|@{2})/g);
   });
+
+  it('should return a correct regex pattern; userId includes some patterns need to be escaped', () => {
+    const mentionedUsers = [
+      { userId: '1*', nickname: 'user1' },
+      { userId: '2+', nickname: 'user2' },
+    ] as User[];
+    const templatePrefix = '@';
+    const result = getUserMentionRegex(mentionedUsers, templatePrefix);
+    expect(result).toEqual(/(@{1\*}|@{2\+})/g);
+  });
 });
 
 describe('identifyMentions', () => {

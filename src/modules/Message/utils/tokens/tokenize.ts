@@ -5,7 +5,14 @@ import { isUrl } from '../../../../utils';
 
 export function getUserMentionRegex(mentionedUsers: User[], templatePrefix_: string): RegExp {
   const templatePrefix = templatePrefix_ || USER_MENTION_PREFIX;
-  return RegExp(`(${mentionedUsers.map(u => `${templatePrefix}{${u.userId}}`).join('|')})`, 'g');
+
+  return RegExp(`(${mentionedUsers.map(u => {
+    const userId = u.userId.replace(
+      // If user.id includes these patterns, need to convert it into an escaped one
+      /([.*+?^${}()|[\]\\])/g,
+      '\\$1');
+    return `${templatePrefix}{${userId}}`;
+  }).join('|')})`, 'g');
 }
 
 export function identifyMentions({
@@ -25,6 +32,7 @@ export function identifyMentions({
     }
     const { value } = token;
     const parts = value.split(userMentionRegex);
+
     const tokens = parts.map((part) => {
       if (part.match(userMentionRegex)) {
         const matchedUser = mentionedUsers.find((user) => `@{${user?.userId}}` === part);
