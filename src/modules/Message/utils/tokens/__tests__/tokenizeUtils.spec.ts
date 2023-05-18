@@ -120,6 +120,12 @@ describe('getWhiteSpacePreservedText', () => {
     expect(result).toEqual('\u00A0aaa\u00A0');
   });
 
+  it('should convert leading, trailing white space to nbsp', () => {
+    const text = '  aaa  ';
+    const result = getWhiteSpacePreservedText(text);
+    expect(result).toEqual('\u00A0\u00A0aaa\u00A0\u00A0');
+  });
+
   it('should convert leading, trailing white space to nbsp, while preserving space in between', () => {
     const text = ' aaa   cc  dd ';
     const result = getWhiteSpacePreservedText(text);

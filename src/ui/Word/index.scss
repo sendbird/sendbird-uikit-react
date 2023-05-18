@@ -3,10 +3,11 @@
 .sendbird-word {
   display: inline;
   height: fit-content;
-  .sendbird-word__url,
-  .sendbird-word__normal {
-    margin: 0 4px;
-    display: inline-block;
-    color: inherit;
-  }
+}
+
+.sendbird-word__url {
+  margin: 0 4px;
+  display: inline;
+  color: inherit;
+  word-break: break-all;
 }

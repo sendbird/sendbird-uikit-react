@@ -115,8 +115,8 @@ export function tokenizeMessage({
  * to preserve the leading & trailing white spaces
  */
 export function getWhiteSpacePreservedText(text: string): string {
-  // Replace leading and trailing spaces with non-breaking spaces
-  const trimmedStr = text.replace(/^\s+|\s+$/g, '\u00A0');
+  const leadingTrailingSpaces = /^\s+|\s+$/g;
+  const NON_BREAKING_SPACE = '\u00A0';
 
-  return trimmedStr;
+  return text.replace(leadingTrailingSpaces, match => match.replace(/\s/g, NON_BREAKING_SPACE));
 }
