@@ -3,7 +3,7 @@ import { EmojiContainer } from '@sendbird/chat';
 import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
 
-import './mobile-menu-emojis.scss';
+import './mobile-menu-reacted-members.scss';
 
 import BottomSheet from '../BottomSheet';
 import { getEmojiUrl } from '../../utils';
@@ -20,14 +20,13 @@ export interface ReactedMembersBottomSheetProps {
   emojiContainer?: EmojiContainer;
 }
 
-export const ReactedMembersBottomSheet = (props: ReactedMembersBottomSheetProps): ReactElement => {
-  const {
-    message,
-    channel,
-    emojiKey = '',
-    hideMenu,
-    emojiContainer,
-  } = props;
+export const ReactedMembersBottomSheet = ({
+  message,
+  channel,
+  emojiKey = '',
+  hideMenu,
+  emojiContainer,
+}: ReactedMembersBottomSheetProps): ReactElement => {
   const { members = [] } = channel;
   const [selectedEmoji, setSelectedEmoji] = useState(emojiKey);
 
@@ -52,15 +51,15 @@ export const ReactedMembersBottomSheet = (props: ReactedMembersBottomSheetProps)
   return (
     <BottomSheet onBackdropClick={hideMenu}>
       <div className="sendbird-message__bottomsheet">
-        <div className="sendbird-message__bottomsheet__emoji-list">
+        <div className="sendbird-message__bottomsheet__reacted-members">
           {message.reactions?.map((reaction: Reaction): ReactElement => {
             const emojiUrl = getEmojiUrl(emojiContainer, reaction.key);
             return (
               <div
                 key={reaction.key}
                 className={`
-                  sendbird-message__bottomsheet__emoji-list__item
-                  ${selectedEmoji === reaction.key ? 'sendbird-message__bottomsheet__emoji-list__item__selected' : ''}
+                  sendbird-message__bottomsheet__reacted-members__item
+                  ${selectedEmoji === reaction.key ? 'sendbird-message__bottomsheet__reacted-members__item__selected' : ''}
                 `}
                 onClick={() => {
                   setSelectedEmoji(reaction.key);
