@@ -1,13 +1,12 @@
-import { GroupChannelModule, ModuleNamespaces, OpenChannelModule } from '@sendbird/chat/lib/__definition';
-
 /**
  * Type Definitions for @sendbird/uikit-react@{{ version }}
  * homepage: https://sendbird.com/
  * git: https://github.com/sendbird/sendbird-uikit-react
- */
+*/
 declare module "SendbirdUIKitGlobal" {
   import type React from 'react';
   import type SendbirdChat from '@sendbird/chat';
+  import { GroupChannelModule, ModuleNamespaces, OpenChannelModule } from '@sendbird/chat/lib/__definition';
   import type {
     SendbirdError,
     SessionHandler,
