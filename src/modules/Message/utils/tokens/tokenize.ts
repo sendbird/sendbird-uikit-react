@@ -115,8 +115,23 @@ export function tokenizeMessage({
  * to preserve the leading & trailing white spaces
  */
 export function getWhiteSpacePreservedText(text: string): string {
-  const leadingTrailingSpaces = /^\s+|\s+$/g;
   const NON_BREAKING_SPACE = '\u00A0';
+  // Split the input string into lines
+  const lines = text.split('\n');
 
-  return text.replace(leadingTrailingSpaces, match => match.replace(/\s/g, NON_BREAKING_SPACE));
+  // Process each line and convert leading and trailing white spaces to "\u00A0"
+  const processedLines = lines.map((line) => {
+    const leadingWhitespace = line.match(/^\s*/)?.[0] || '';
+    const trailingWhitespace = line.match(/\s*$/)?.[0] || '';
+
+    const convertedLeadingWhitespace = leadingWhitespace.replace(/ /g, NON_BREAKING_SPACE);
+    const convertedTrailingWhitespace = trailingWhitespace.replace(/ /g, NON_BREAKING_SPACE);
+
+    return convertedLeadingWhitespace + line.trim() + convertedTrailingWhitespace;
+  });
+
+  // Combine the processed lines into a new string with "\n"
+  const result = processedLines.join('\n');
+
+  return result;
 }
