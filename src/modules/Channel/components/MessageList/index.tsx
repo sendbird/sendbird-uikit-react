@@ -36,6 +36,7 @@ const MessageList: React.FC<MessageListProps> = ({
   const {
     allMessages,
     hasMorePrev,
+    hasMoreNext,
     setInitialTimeStamp,
     setAnimatedMessageId,
     setHighLightedMessageId,
@@ -75,7 +76,7 @@ const MessageList: React.FC<MessageListProps> = ({
       onScrollCallback((messages) => {
         if (messages) {
           try {
-            // 
+            //
           } catch (error) {
             //
           }
@@ -83,7 +84,7 @@ const MessageList: React.FC<MessageListProps> = ({
       });
     }
 
-    if (isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER)) {
+    if (isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER) && hasMoreNext) {
       onScrollDownCallback(([messages]) => {
         if (messages) {
           try {
@@ -129,6 +130,7 @@ const MessageList: React.FC<MessageListProps> = ({
 
   const handleOnScroll = useHandleOnScrollCallback({
     hasMore: hasMorePrev,
+    hasNext: hasMoreNext,
     onScroll,
     scrollRef,
   });

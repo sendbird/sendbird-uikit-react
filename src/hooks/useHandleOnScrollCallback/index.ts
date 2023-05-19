@@ -1,9 +1,13 @@
 import React, { useCallback } from 'react';
 import { SCROLL_BUFFER } from '../../utils/consts';
+import { useDebounce } from '../useDebounce';
+
+const DELAY = 500;
 
 export interface UseHandleOnScrollCallbackProps {
   hasMore: boolean;
-  onScroll(fn: () => void): void;
+  hasNext?: boolean;
+  onScroll(callback: () => void): void;
   scrollRef: React.RefObject<HTMLDivElement>;
   setShowScrollDownButton?: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -14,11 +18,12 @@ export function calcScrollBottom(scrollHeight: number, scrollTop: number): numbe
 
 export function useHandleOnScrollCallback({
   hasMore,
+  hasNext,
   onScroll,
   scrollRef,
   setShowScrollDownButton,
 }: UseHandleOnScrollCallbackProps): () => void {
-  return useCallback(() => {
+  const scrollCb = useCallback(() => {
     const element = scrollRef?.current;
     if (element == null) {
       return;
@@ -38,13 +43,16 @@ export function useHandleOnScrollCallback({
     if (typeof setShowScrollDownButton === 'function') {
       setShowScrollDownButton(scrollHeight > scrollTop + clientHeight + 1);
     }
-    if (!hasMore) {
-      return;
-    }
-    if (scrollTop < SCROLL_BUFFER) {
+    if (hasMore && scrollTop < SCROLL_BUFFER) {
       onScroll(() => {
         // sets the scroll position to the bottom of the new messages
         element.scrollTop = element.scrollHeight - scrollBottom;
+      });
+    }
+    if (hasNext) {
+      onScroll(() => {
+        // sets the scroll position to the top of the new messages
+        element.scrollTop = scrollTop - (scrollHeight - element.scrollHeight);
       });
     }
   }, [
@@ -53,4 +61,6 @@ export function useHandleOnScrollCallback({
     onScroll,
     scrollRef,
   ]);
+
+  return useDebounce(scrollCb, DELAY);
 }
