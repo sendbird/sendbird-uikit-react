@@ -41,6 +41,7 @@ const MessageList: React.FC<MessageListProps> = ({
     setHighLightedMessageId,
     isMessageGroupingEnabled,
     scrollRef,
+    onScrollCallback,
     onScrollDownCallback,
     messagesDispatcher,
     messageActionTypes,
@@ -71,6 +72,18 @@ const MessageList: React.FC<MessageListProps> = ({
     } = element;
 
     if (isAboutSame(scrollTop, 0, SCROLL_BUFFER)) {
+      onScrollCallback((messages) => {
+        if (messages) {
+          try {
+            // 
+          } catch (error) {
+            //
+          }
+        }
+      });
+    }
+
+    if (isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER)) {
       onScrollDownCallback(([messages]) => {
         if (messages) {
           try {
