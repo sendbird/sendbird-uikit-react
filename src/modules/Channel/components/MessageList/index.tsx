@@ -70,7 +70,7 @@ const MessageList: React.FC<MessageListProps> = ({
       scrollHeight,
     } = element;
 
-    if (isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER)) {
+    if (isAboutSame(scrollTop, 0, SCROLL_BUFFER)) {
       onScrollDownCallback(([messages]) => {
         if (messages) {
           try {
