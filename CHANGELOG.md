@@ -1,5 +1,31 @@
 # Changelog - v3
 
+## [v3.4.8] (May 19 2023)
+
+Fixes:
+* Prevent white space only text sending
+* Mentioned user Regex parsing
+  Mention will now work even if userId has `.*+?^${}()|[\]\\` characters.
+* ChannelList blink when when message is send
+  Happened when there were two channelLists in the same page with
+  different query params.
+* ChannelSetting `renderUserProfile` prop
+  We were applying `renderChannelProfile` in place of `renderUserProfile`.
+* MessageBody: Words break mid word
+  Words were breaking midword because all white spaces
+  were converted into nbsps. CSS couldnt distinguish nbsps
+  as whitespaces, so wrapping didnt work well.
+
+Chores:
+* Setup CircleCI
+  * We are moving from Github Actions to CircleCI
+* Setup Husky
+  * Setup lint on post push
+  * Auto run yarn install on post pull
+* Update EsLint
+  * Update version to 8.40.x
+  * Apply more strict rules
+
 ## [v3.4.7] (May 4 2023)
 
 Important Notes:
