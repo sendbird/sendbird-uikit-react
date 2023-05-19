@@ -35,7 +35,7 @@ function MessageSearchPannel(props: MessageSearchPannelProps): JSX.Element {
   const [loading, setLoading] = useState(false);
   const { stringSet } = useContext(LocalizationContext);
 
-  let timeout = null;
+  let timeout: any = null;
   useEffect(() => {
     if (timeout) {
       clearTimeout(timeout);

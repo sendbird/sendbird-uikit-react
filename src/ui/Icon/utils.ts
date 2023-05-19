@@ -76,6 +76,7 @@ export function changeTypeToIconClassName(type: Types): string {
     case Types.SETTINGS_FILLED: return 'sendbird-icon-settings-filled';
     case Types.SPINNER: return 'sendbird-icon-spinner';
     case Types.SUPERGROUP: return 'sendbird-icon-supergroup';
+    case Types.THREAD: return 'sendbird-icon-thread';
     case Types.THUMBNAIL_NONE: return 'sendbird-icon-thumbnail-none';
     case Types.TOGGLE_OFF: return 'sendbird-icon-toggle-off';
     case Types.TOGGLE_ON: return 'sendbird-icon-toggle-on';

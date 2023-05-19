@@ -22,6 +22,8 @@ const MobileMenu: React.FC<MobileBottomSheetProps> = (props: MobileBottomSheetPr
     emojiContainer,
     toggleReaction,
     parentRef,
+    onReplyInThread,
+    isOpenedFromThread,
   } = props;
   return (
     <>
@@ -43,6 +45,8 @@ const MobileMenu: React.FC<MobileBottomSheetProps> = (props: MobileBottomSheetPr
               emojiContainer={emojiContainer}
               toggleReaction={toggleReaction}
               isReactionEnabled={isReactionEnabled}
+              onReplyInThread={onReplyInThread}
+              isOpenedFromThread={isOpenedFromThread}
             />
           ) : (
             <MobileContextMenu
@@ -58,6 +62,7 @@ const MobileMenu: React.FC<MobileBottomSheetProps> = (props: MobileBottomSheetPr
               resendMessage={resendMessage}
               setQuoteMessage={setQuoteMessage}
               parentRef={parentRef}
+              onReplyInThread={onReplyInThread}
             />
           )
       }

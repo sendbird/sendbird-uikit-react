@@ -450,6 +450,13 @@ export default function MessageContent({
             setQuoteMessage={setQuoteMessage}
             toggleReaction={toggleReaction}
             showEdit={showEdit}
+            onReplyInThread={({ message }) => {
+              if (threadReplySelectType === ThreadReplySelectType.THREAD) {
+                onReplyInThread?.({ message });
+              } else if (threadReplySelectType === ThreadReplySelectType.PARENT) {
+                scrollToMessage?.(message?.parentMessage?.createdAt || 0, message?.parentMessageId || 0);
+              }
+            }}
           />
         )
       }

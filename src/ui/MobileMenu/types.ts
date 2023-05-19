@@ -22,6 +22,8 @@ export interface BaseMenuProps {
   setQuoteMessage?: (message: UserMessage | FileMessage) => void;
   isReactionEnabled?: boolean;
   parentRef?: React.RefObject<HTMLElement>;
+  onReplyInThread?: (props: { message: UserMessage | FileMessage }) => void;
+  isOpenedFromThread?: boolean;
 }
 
 export interface MobileBottomSheetProps extends BaseMenuProps {

@@ -61,6 +61,7 @@ import IconSend from '../../svgs/icon-send.svg';
 import IconSettingsFilled from '../../svgs/icon-settings-filled.svg';
 import IconSpinner from '../../svgs/icon-spinner.svg';
 import IconSupergroup from '../../svgs/icon-supergroup.svg';
+import IconThread from '../../svgs/icon-thread.svg';
 import IconThumbnailNone from '../../svgs/icon-thumbnail-none.svg';
 import IconToggleOff from '../../svgs/icon-toggleoff.svg';
 import IconToggleOn from '../../svgs/icon-toggleon.svg';
@@ -120,6 +121,7 @@ function changeTypeToIconComponent(type) {
     case Types.SETTINGS_FILLED: return <IconSettingsFilled />;
     case Types.SPINNER: return <IconSpinner />;
     case Types.SUPERGROUP: return <IconSupergroup />;
+    case Types.THREAD: return <IconThread />;
     case Types.THUMBNAIL_NONE: return <IconThumbnailNone />;
     case Types.TOGGLE_OFF: return <IconToggleOff />;
     case Types.TOGGLE_ON: return <IconToggleOn />;

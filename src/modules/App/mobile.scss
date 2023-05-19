@@ -6,3 +6,14 @@
 .sb-show-main {
   padding: 0 !important;
 }
+
+.sb_mobile__panelwrap .sendbird-thread {
+  width: 100%;
+  height: 100%;
+  & .sendbird-thread-ui {
+    max-width: 100%;
+    & .sendbird-thread-ui__header {
+      width: 100%;
+    }
+  }
+}
