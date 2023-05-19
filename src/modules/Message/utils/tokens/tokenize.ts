@@ -111,10 +111,27 @@ export function tokenizeMessage({
  * Don't need to use this util in DOM element since the white spaces will be kept as is,
  * but will need if the text is wrapped \w React.Fragement or </>
  * @link https://sendbird.slack.com/archives/GPGHESTL3/p1681180484341369
+ * Or!!! -> convert any space or tab in leading/trailing to nbsp
+ * to preserve the leading & trailing white spaces
  */
 export function getWhiteSpacePreservedText(text: string): string {
-  return text
-    // convert any space or tab into the non-breaking space
-    // to preserve the leading & trailing white spaces
-    .replace(/([ \t]+)/g, (_, spaces) => '\u00A0'.repeat(spaces.length));
+  const NON_BREAKING_SPACE = '\u00A0';
+  // Split the input string into lines
+  const lines = text.split('\n');
+
+  // Process each line and convert leading and trailing white spaces to "\u00A0"
+  const processedLines = lines.map((line) => {
+    const leadingWhitespace = line.match(/^\s*/)?.[0] || '';
+    const trailingWhitespace = line.match(/\s*$/)?.[0] || '';
+
+    const convertedLeadingWhitespace = leadingWhitespace.replace(/ /g, NON_BREAKING_SPACE);
+    const convertedTrailingWhitespace = trailingWhitespace.replace(/ /g, NON_BREAKING_SPACE);
+
+    return convertedLeadingWhitespace + line.trim() + convertedTrailingWhitespace;
+  });
+
+  // Combine the processed lines into a new string with "\n"
+  const result = processedLines.join('\n');
+
+  return result;
 }

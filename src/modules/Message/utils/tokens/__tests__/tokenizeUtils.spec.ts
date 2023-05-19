@@ -114,14 +114,46 @@ describe('combineNearbyStrings', () => {
 });
 
 describe('getWhiteSpacePreservedText', () => {
-  it('should keep the leading and trailing white spaces', () => {
+  it('should convert leading, trailing white space to nbsp', () => {
     const text = ' aaa ';
     const result = getWhiteSpacePreservedText(text);
     expect(result).toEqual('\u00A0aaa\u00A0');
   });
+
+  it('should convert leading, trailing white space to nbsp', () => {
+    const text = '  aaa  ';
+    const result = getWhiteSpacePreservedText(text);
+    expect(result).toEqual('\u00A0\u00A0aaa\u00A0\u00A0');
+  });
+
+  it('should convert leading, trailing white space to nbsp, while preserving space in between', () => {
+    const text = ' aaa   cc  dd ';
+    const result = getWhiteSpacePreservedText(text);
+    expect(result).toEqual('\u00A0aaa   cc  dd\u00A0');
+  });
+
   it('should keep the new lines', () => {
     const text = ' aaa\naa';
     const result = getWhiteSpacePreservedText(text);
     expect(result).toEqual('\u00A0aaa\naa');
+  });
+
+  it('should add the padding after new lines', () => {
+    const text = 'line1\n  line2_with_prefix_space\n line3_with_prefix_space\nline4';
+    const expected = 'line1\n\u00A0\u00A0line2_with_prefix_space\n\u00A0line3_with_prefix_space\nline4';
+    const result = getWhiteSpacePreservedText(text);
+    expect(result).toEqual(expected);
+  });
+
+  it('should keep the tabs', () => {
+    const text = ' aaa\taa';
+    const result = getWhiteSpacePreservedText(text);
+    expect(result).toEqual('\u00A0aaa\taa');
+  });
+
+  it('should handle empty string', () => {
+    const text = '';
+    const result = getWhiteSpacePreservedText(text);
+    expect(result).toEqual('');
   });
 });

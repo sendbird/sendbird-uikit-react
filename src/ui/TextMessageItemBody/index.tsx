@@ -19,7 +19,7 @@ interface Props {
 }
 
 export default function TextMessageItemBody({
-  className,
+  className = '',
   message,
   isByMe = false,
   mouseHover = false,
