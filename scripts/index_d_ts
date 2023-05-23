@@ -1863,6 +1863,7 @@ declare module '@sendbird/uikit-react/ui/Dropdown' {
 declare module '@sendbird/uikit-react/ui/EmojiReactions' {
   import type { EmojiCategory } from '@sendbird/chat';
   import type { FileMessage, UserMessage } from '@sendbird/chat/message';
+  import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
   interface EmojiContainer {
     emojiCategories: Array<EmojiCategory>;
@@ -1872,6 +1873,7 @@ declare module '@sendbird/uikit-react/ui/EmojiReactions' {
     className?: string | Array<string>;
     userId: string;
     message: UserMessage | FileMessage;
+    channel: GroupChannel;
     emojiContainer: EmojiContainer;
     memberNicknamesMap: Map<string, string>;
     spaceFromTrigger?: Record<string, unknown>;

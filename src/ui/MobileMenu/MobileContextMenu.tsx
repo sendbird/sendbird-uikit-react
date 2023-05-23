@@ -12,12 +12,13 @@ import {
   isUserMessage,
   copyToClipboard,
   isFileMessage,
+  isParentMessage,
 } from '../../utils';
 import { useLocalization } from '../../lib/LocalizationContext';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography } from '../Label';
 
-const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMenuProps) => {
+const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMenuProps): React.ReactElement => {
   const {
     hideMenu,
     channel,
@@ -29,6 +30,8 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
     showRemove,
     setQuoteMessage,
     parentRef,
+    onReplyInThread,
+    isOpenedFromThread = false,
   } = props;
   const isByMe = message?.sender?.userId === userId;
   const { stringSet } = useLocalization();
@@ -41,6 +44,10 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
     && !isFailedMessage(message)
     && !isPendingMessage(message)
     && (channel?.isGroupChannel() && !(channel as GroupChannel)?.isBroadcast);
+  const showMenuItemThread: boolean = (replyType === 'THREAD') && !isOpenedFromThread
+    && !isFailedMessage(message)
+    && !isPendingMessage(message)
+    && channel?.isGroupChannel();
 
   const fileMessage = message as FileMessage;
   return (
@@ -86,6 +93,25 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               </Label>
               <Icon
                 type={IconTypes.REPLY}
+                fillColor={IconColors.PRIMARY}
+                width="24px"
+                height="24px"
+              />
+            </MenuItem>
+          )}
+          {showMenuItemThread && (
+            <MenuItem
+              className="sendbird-message__mobile-context-menu-item menu-item-reply"
+              onClick={() => {
+                hideMenu();
+                onReplyInThread?.({ message });
+              }}
+            >
+              <Label type={LabelTypography.SUBTITLE_1}>
+                {isParentMessage(message) ? stringSet.THREAD__INPUT__REPLY_IN_THREAD : stringSet.MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER}
+              </Label>
+              <Icon
+                type={IconTypes.THREAD}
                 fillColor={IconColors.PRIMARY}
                 width="24px"
                 height="24px"

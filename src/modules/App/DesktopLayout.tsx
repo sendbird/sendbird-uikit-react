@@ -34,7 +34,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
     threadTargetMessage,
     setThreadTargetMessage,
   } = props;
-  const [animatedMessageId, setAnimatedMessageId] = useState(null);
+  const [animatedMessageId, setAnimatedMessageId] = useState<number | null>(null);
   return (
     <div className="sendbird-app__wrap">
       <div className="sendbird-app__channellist-wrap">
@@ -44,8 +44,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
           onProfileEditSuccess={onProfileEditSuccess}
           disableAutoSelect={disableAutoSelect}
           onChannelSelect={(channel) => {
-            setStartingPoint(null);
-            setHighlightedMessage(null);
+            setStartingPoint?.(null);
+            setHighlightedMessage?.(null);
             if (channel) {
               setCurrentChannel(channel);
             } else {
@@ -93,7 +93,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
             setAnimatedMessageId(null);
           }}
           onMessageHighlighted={() => {
-            setHighlightedMessage(null);
+            setHighlightedMessage?.(null);
           }}
           showSearchIcon={showSearchIcon}
           startingPoint={startingPoint}
@@ -121,13 +121,13 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
             channelUrl={currentChannel?.url || ''}
             onResultClick={(message) => {
               if (message.messageId === highlightedMessage) {
-                setHighlightedMessage(null);
+                setHighlightedMessage?.(null);
                 setTimeout(() => {
-                  setHighlightedMessage(message.messageId);
+                  setHighlightedMessage?.(message.messageId);
                 });
               } else {
-                setStartingPoint(message.createdAt);
-                setHighlightedMessage(message.messageId);
+                setStartingPoint?.(message.createdAt);
+                setHighlightedMessage?.(message.messageId);
               }
             }}
             onCloseClick={() => {
@@ -149,7 +149,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
               setCurrentChannel(channel);
             }
             if (message?.messageId !== animatedMessageId) {
-              setStartingPoint(message?.createdAt);
+              setStartingPoint?.(message?.createdAt);
             }
             setTimeout(() => {
               setAnimatedMessageId(message?.messageId);

@@ -1,85 +1,74 @@
 import './index.scss';
-import React, { ReactElement, useContext, useRef } from 'react';
-import type { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
+import React, { ReactElement, useRef, useState } from 'react';
 import type { Emoji, EmojiContainer } from '@sendbird/chat';
+import type { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
-import Tooltip from '../Tooltip';
-import TooltipWrapper from '../TooltipWrapper';
 import ReactionBadge from '../ReactionBadge';
 import ReactionButton from '../ReactionButton';
 import ImageRenderer from '../ImageRenderer';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import ContextMenu, { EmojiListItems } from '../ContextMenu';
+import { Nullable, SpaceFromTriggerType } from '../../types';
 
-import { getClassName, getEmojiListAll, getEmojiMapAll, getEmojiTooltipString, isReactedBy } from '../../utils';
-import { LocalizationContext } from '../../lib/LocalizationContext';
+import { getClassName, getEmojiListAll, getEmojiMapAll } from '../../utils';
+import { ReactedMembersBottomSheet } from '../MobileMenu/ReactedMembersBottomSheet';
+import ReactionItem from './ReactionItem';
+import { useMediaQueryContext } from '../../lib/MediaQueryContext';
+import { AddReactionBadgeItem } from './AddReactionBadgeItem';
+import { MobileEmojisBottomSheet } from '../MobileMenu/MobileEmojisBottomSheet';
 
 interface Props {
   className?: string | Array<string>;
   userId: string;
   message: UserMessage | FileMessage;
+  channel: Nullable<GroupChannel>;
   emojiContainer: EmojiContainer;
   memberNicknamesMap: Map<string, string>;
-  spaceFromTrigger?: { x: number, y: number };
+  spaceFromTrigger?: SpaceFromTriggerType;
   isByMe?: boolean;
   toggleReaction?: (message: UserMessage | FileMessage, key: string, byMe: boolean) => void;
 }
 
 const EmojiReactions = ({
-  className,
+  className = '',
   userId,
   message,
+  channel,
   emojiContainer,
   memberNicknamesMap,
   spaceFromTrigger = { x: 0, y: 0 },
   isByMe = false,
   toggleReaction,
 }: Props): ReactElement => {
-  const { stringSet } = useContext(LocalizationContext);
-  const emojisMap = getEmojiMapAll(emojiContainer);
+  const { isMobile } = useMediaQueryContext();
   const addReactionRef = useRef(null);
+  const [showEmojiList, setShowEmojiList] = useState(false);
+  const [selectedEmojiKey, setSelectedEmojiKey] = useState('');
+
+  const emojisMap = getEmojiMapAll(emojiContainer);
+  const showAddReactionBadge = (message.reactions?.length ?? 0) < emojisMap.size;
 
   return (
     <div className={getClassName([
       className, 'sendbird-emoji-reactions',
       isByMe ? 'outgoing' : 'incoming',
     ])}>
-      {(message?.reactions?.length > 0) && (
-        message.reactions.map((reaction: Reaction): ReactElement => {
-          const reactedByMe = isReactedBy(userId, reaction);
+      {((message.reactions?.length ?? 0) > 0) && (
+        message.reactions?.map((reaction: Reaction): ReactElement => {
           return (
-            <TooltipWrapper
-              className="sendbird-emoji-reactions__reaction-badge"
+            <ReactionItem
               key={reaction?.key}
-              hoverTooltip={(reaction?.userIds?.length > 0) && (
-                <Tooltip>
-                  {getEmojiTooltipString(reaction, userId, memberNicknamesMap, stringSet)}
-                </Tooltip>
-              )}
-            >
-              <ReactionBadge
-                count={reaction.userIds.length}
-                selected={reactedByMe}
-                onClick={(e) => {
-                  toggleReaction(message, reaction.key, reactedByMe);
-                  e?.stopPropagation?.();
-                }}
-              >
-                <ImageRenderer
-                  circle
-                  url={emojisMap.get(reaction?.key)?.url || ''}
-                  width="20px"
-                  height="20px"
-                  defaultComponent={(
-                    <Icon width="20px" height="20px" type={IconTypes.QUESTION} />
-                  )}
-                />
-              </ReactionBadge>
-            </TooltipWrapper>
+              reaction={reaction}
+              memberNicknamesMap={memberNicknamesMap}
+              setEmojiKey={setSelectedEmojiKey}
+              toggleReaction={toggleReaction}
+              emojisMap={emojisMap}
+            />
           );
         })
       )}
-      {(message?.reactions?.length < emojisMap.size) && (
+      {(!isMobile && showAddReactionBadge) && (
         <ContextMenu
           menuTrigger={(toggleDropdown: () => void): ReactElement => (
             <ReactionBadge
@@ -104,12 +93,12 @@ const EmojiReactions = ({
               parentRef={addReactionRef}
               parentContainRef={addReactionRef}
               closeDropdown={closeDropdown}
-              spacefromTrigger={spaceFromTrigger}
+              spaceFromTrigger={spaceFromTrigger}
             >
               {getEmojiListAll(emojiContainer).map((emoji: Emoji): ReactElement => {
                 const isReacted: boolean = (message?.reactions
                   ?.find((reaction: Reaction): boolean => reaction.key === emoji.key)?.userIds
-                  ?.some((reactorId: string): boolean => reactorId === userId));
+                  ?.some((reactorId: string): boolean => reactorId === userId)) || false;
                 return (
                   <ReactionButton
                     key={emoji.key}
@@ -118,7 +107,7 @@ const EmojiReactions = ({
                     selected={isReacted}
                     onClick={(e): void => {
                       closeDropdown();
-                      toggleReaction(message, emoji.key, isReacted);
+                      toggleReaction?.(message, emoji.key, isReacted);
                       e?.stopPropagation();
                     }}
                   >
@@ -142,6 +131,35 @@ const EmojiReactions = ({
               })}
             </EmojiListItems>
           )}
+        />
+      )}
+      {(isMobile && showAddReactionBadge) && (
+        <AddReactionBadgeItem
+          onClick={() => {
+            setShowEmojiList(true);
+          }}
+        />
+      )}
+      {(isMobile && showEmojiList) && (
+        <MobileEmojisBottomSheet
+          userId={userId}
+          message={message}
+          emojiContainer={emojiContainer}
+          hideMenu={() => {
+            setShowEmojiList(false);
+          }}
+          toggleReaction={toggleReaction}
+        />
+      )}
+      {(isMobile && selectedEmojiKey && channel !== null) && (
+        <ReactedMembersBottomSheet
+          message={message}
+          channel={channel}
+          emojiKey={selectedEmojiKey}
+          hideMenu={() => {
+            setSelectedEmojiKey('');
+          }}
+          emojiContainer={emojiContainer}
         />
       )}
     </div>

@@ -2,7 +2,9 @@ import React, { ReactElement, ReactNode, RefObject, useEffect, useRef, useState 
 import { createPortal } from 'react-dom';
 
 import SortByRow from '../SortByRow';
+import { Nullable } from '../../types';
 
+const defaultParentRect = { x: 0, y: 0, left: 0, top: 0, height: 0 };
 type SpaceFromTrigger = { x: number, y: number };
 type ReactionStyle = { left: number, top: number };
 export interface EmojiListItemsProps {
@@ -13,15 +15,15 @@ export interface EmojiListItemsProps {
   spaceFromTrigger?: SpaceFromTrigger;
 }
 
-const EmojiListItems = ({
+export const EmojiListItems = ({
   children,
   parentRef,
   parentContainRef,
   spaceFromTrigger = { x: 0, y: 0 },
   closeDropdown,
-}: EmojiListItemsProps): ReactElement => {
+}: EmojiListItemsProps): Nullable<ReactElement> => {
   const [reactionStyle, setReactionStyle] = useState<ReactionStyle>({ left: 0, top: 0 });
-  const reactionRef = useRef(null);
+  const reactionRef: RefObject<HTMLUListElement> = useRef(null);
 
   /* showParent & hideParent */
   useEffect(() => {
@@ -52,7 +54,7 @@ const EmojiListItems = ({
   useEffect(() => {
     const spaceFromTriggerX = spaceFromTrigger?.x || 0;
     const spaceFromTriggerY = spaceFromTrigger?.y || 0;
-    const parentRect = parentRef?.current?.getBoundingClientRect();
+    const parentRect = parentRef?.current?.getBoundingClientRect() ?? defaultParentRect;
     const x = parentRect.x || parentRect.left;
     const y = parentRect.y || parentRect.top;
     const reactionStyle = {
@@ -84,33 +86,37 @@ const EmojiListItems = ({
     }
   }, []);
 
-  return (
-    createPortal(
-      <>
-        <div className="sendbird-dropdown__menu-backdrop" />
-        <ul
-          className="sendbird-dropdown__reaction-bar"
-          ref={reactionRef}
-          style={{
-            display: 'inline-block',
-            position: 'fixed',
-            left: `${Math.round(reactionStyle.left)}px`,
-            top: `${Math.round(reactionStyle.top)}px`,
-          }}
-        >
-          <SortByRow
-            className="sendbird-dropdown__reaction-bar__row"
-            maxItemCount={8}
-            itemWidth={44}
-            itemHeight={40}
+  const rootElement = document.getElementById('sendbird-emoji-list-portal');
+  if (rootElement) {
+    return (
+      createPortal(
+        <>
+          <div className="sendbird-dropdown__menu-backdrop" />
+          <ul
+            className="sendbird-dropdown__reaction-bar"
+            ref={reactionRef}
+            style={{
+              display: 'inline-block',
+              position: 'fixed',
+              left: `${Math.round(reactionStyle.left)}px`,
+              top: `${Math.round(reactionStyle.top)}px`,
+            }}
           >
-            {children}
-          </SortByRow>
-        </ul>
-      </>,
-      document.getElementById('sendbird-emoji-list-portal'),
-    )
-  );
+            <SortByRow
+              className="sendbird-dropdown__reaction-bar__row"
+              maxItemCount={8}
+              itemWidth={44}
+              itemHeight={40}
+            >
+              {children}
+            </SortByRow>
+          </ul>
+        </>,
+        rootElement,
+      )
+    );
+  }
+  return null;
 };
 
 export default EmojiListItems;

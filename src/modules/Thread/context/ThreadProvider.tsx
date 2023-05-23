@@ -31,7 +31,7 @@ import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 export type ThreadProviderProps = {
   children?: React.ReactElement;
   channelUrl: string;
-  message: UserMessage | FileMessage;
+  message: UserMessage | FileMessage | null;
   onHeaderActionClick?: () => void;
   onMoveToParentMessage?: (props: { message: UserMessage | FileMessage, channel: GroupChannel }) => void;
   onBeforeSendVoiceMessage?: (file: File, quotedMessage?: UserMessage | FileMessage) => FileMessageCreateParams;

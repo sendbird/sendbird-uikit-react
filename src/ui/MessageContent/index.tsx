@@ -154,6 +154,7 @@ export default function MessageContent({
     },
   }, {
     delay: 300,
+    shouldPreventDefault: false,
   });
 
   if (message?.isAdminMessage?.() || message?.messageType === 'admin') {
@@ -364,6 +365,7 @@ export default function MessageContent({
               <EmojiReactions
                 userId={userId}
                 message={message as UserMessage | FileMessage}
+                channel={channel}
                 isByMe={isByMe}
                 emojiContainer={emojiContainer}
                 memberNicknamesMap={nicknamesMap}
@@ -450,6 +452,13 @@ export default function MessageContent({
             setQuoteMessage={setQuoteMessage}
             toggleReaction={toggleReaction}
             showEdit={showEdit}
+            onReplyInThread={({ message }) => {
+              if (threadReplySelectType === ThreadReplySelectType.THREAD) {
+                onReplyInThread?.({ message });
+              } else if (threadReplySelectType === ThreadReplySelectType.PARENT) {
+                scrollToMessage?.(message?.parentMessage?.createdAt || 0, message?.parentMessageId || 0);
+              }
+            }}
           />
         )
       }

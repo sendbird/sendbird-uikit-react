@@ -26,6 +26,7 @@ export interface UserListItemProps {
     parentRef?: MutableRefObject<any>,
   }): ReactElement;
   onChange?(e: ChangeEvent<HTMLInputElement>): void;
+  avatarSize?: string;
 }
 
 export default function UserListItem({
@@ -39,6 +40,7 @@ export default function UserListItem({
   currentUser,
   action,
   onChange,
+  avatarSize = '40px',
 }: UserListItemProps): ReactElement {
   const uniqueKey = user.userId;
   const actionRef = React.useRef(null);
@@ -68,8 +70,8 @@ export default function UserListItem({
             className="sendbird-user-list-item__avatar"
             ref={avatarRef}
             src={user.profileUrl}
-            width="40px"
-            height="40px"
+            width={avatarSize}
+            height={avatarSize}
             onClick={() => {
               if (!disableUserProfile) {
                 toggleDropdown();

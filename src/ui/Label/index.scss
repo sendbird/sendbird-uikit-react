@@ -1,5 +1,10 @@
 @import '../../styles/variables';
 
+.sendbird-label {
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
 [class*=sendbird-label] {
   font-family: var(--sendbird-font-family-default);
 }
