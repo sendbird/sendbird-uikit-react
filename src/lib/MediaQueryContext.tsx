@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import type { Logger } from './SendbirdState';
 
-const DEFAULT_MOBILE = '768px';
+const DEFAULT_MOBILE = false;
+// const DEFAULT_MOBILE = '768px';
 const MOBILE_CLASSNAME = 'sendbird--mobile-mode';
 
 const MediaQueryContext = React.createContext({
