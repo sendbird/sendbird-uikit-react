@@ -10,8 +10,11 @@ import useTheme from './hooks/useTheme';
 
 import sdkReducers from './dux/sdk/reducers';
 import userReducers from './dux/user/reducers';
+import uikitConfigReducers from './dux/uikitConfiguration/reducers';
+
 import sdkInitialState from './dux/sdk/initialState';
 import userInitialState from './dux/user/initialState';
+import uikitConfigInitialState from './dux/uikitConfiguration/initialState';
 
 import useOnlineStatus from './hooks/useOnlineStatus';
 import useConnect from './hooks/useConnect';
@@ -125,6 +128,7 @@ const Sendbird = ({
   const [pubSub] = useState(pubSubFactory());
   const [sdkStore, sdkDispatcher] = useReducer(sdkReducers, sdkInitialState);
   const [userStore, userDispatcher] = useReducer(userReducers, userInitialState);
+  const [uikitConfigStore, uikitConfigDispatcher] = useReducer(uikitConfigReducers, uikitConfigInitialState);
 
   useTheme(colorSet);
 
@@ -142,6 +146,7 @@ const Sendbird = ({
     sdk: sdkStore?.sdk,
     sdkDispatcher,
     userDispatcher,
+    uikitConfigDispatcher,
   });
 
   // to create a pubsub to communicate between parent and child
@@ -211,6 +216,7 @@ const Sendbird = ({
         stores: {
           sdkStore,
           userStore,
+          uikitConfigStore,
         },
         dispatchers: {
           sdkDispatcher,

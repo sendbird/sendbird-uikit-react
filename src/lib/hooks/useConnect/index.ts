@@ -15,6 +15,7 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
     sdk,
     sdkDispatcher,
     userDispatcher,
+    uikitConfigDispatcher,
   } = staticTypes;
   logger?.info?.('SendbirdProvider | useConnect', { ...triggerTypes, ...staticTypes });
   useEffect(() => {
@@ -33,6 +34,7 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
         sdk,
         sdkDispatcher,
         userDispatcher,
+        uikitConfigDispatcher,
       });
     } catch (error) {
       logger?.error?.('SendbirdProvider | useConnect/useEffect', error);
@@ -54,6 +56,7 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
         sdk,
         sdkDispatcher,
         userDispatcher,
+        uikitConfigDispatcher,
       });
     } catch (error) {
       logger?.error?.('SendbirdProvider | useConnect/reconnect/useCallback', error);
