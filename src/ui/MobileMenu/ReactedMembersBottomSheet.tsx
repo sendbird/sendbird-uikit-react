@@ -30,24 +30,6 @@ export const ReactedMembersBottomSheet = ({
   const { members = [] } = channel;
   const [selectedEmoji, setSelectedEmoji] = useState(emojiKey);
 
-  const ReactorList = useMemo(() => {
-    const memberList = message.reactions?.find(reaction => reaction.key === selectedEmoji)
-      ?.userIds.map((userId) => members.find((member) => member.userId === userId) ?? null)
-      .filter((member) => member !== null) as Array<Member>;
-    return (
-      <div className="sendbird-message__bottomsheet__reactor-list">
-        {memberList?.map((member) => (
-          <UserListItem
-            key={member.userId}
-            className="sendbird-message__bottomsheet__reactor-list__item"
-            user={member}
-            avatarSize="36px"
-          />
-        ))}
-      </div>
-    );
-  }, [selectedEmoji, message.reactions]);
-
   return (
     <BottomSheet onBackdropClick={hideMenu}>
       <div className="sendbird-message__bottomsheet">
@@ -90,7 +72,23 @@ export const ReactedMembersBottomSheet = ({
             );
           })}
         </div>
-        {ReactorList}
+        <div className="sendbird-message__bottomsheet__reactor-list">
+          { // making a member list who reacted to the message with the `selectedEmoji`
+            (
+              message.reactions?.find(reaction => reaction.key === selectedEmoji)
+                ?.userIds.map((userId) => members.find((member) => member.userId === userId))
+                .filter((member) => member !== undefined) as Array<Member>
+            )
+              .map((member) => (
+                <UserListItem
+                  key={member.userId}
+                  className="sendbird-message__bottomsheet__reactor-list__item"
+                  user={member}
+                  avatarSize="36px"
+                />
+              ))
+          }
+        </div>
       </div>
     </BottomSheet>
   );
