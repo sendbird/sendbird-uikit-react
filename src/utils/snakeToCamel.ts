@@ -18,12 +18,10 @@ export function snakeToCamel<T>(obj: T): CamelCase<T> {
   }
 
   const result = {} as CamelCase<T>;
-  for (const key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      const camelKey = key.replace(/_\w/g, (m) => m[1].toUpperCase());
-      result[camelKey] = snakeToCamel(obj[key]);
-    }
-  }
+  Object.keys(obj).forEach((key) => {
+    const camelKey = key.replace(/_\w/g, (m) => m[1].toUpperCase());
+    result[camelKey] = snakeToCamel(obj[key]);
+  });
 
   return result;
 }
