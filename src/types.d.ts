@@ -9,6 +9,14 @@ import type {
 export type ReplyType = 'NONE' | 'QUOTE_REPLY' | 'THREAD';
 export type Nullable<T> = T | null;
 
+export type SpaceFromTriggerType = {
+  x: number,
+  y: number,
+  top?: number,
+  left?: number,
+  height?: number,
+};
+
 export interface UserListQuery {
   hasNext?: boolean;
   next(): Promise<Array<User>>;

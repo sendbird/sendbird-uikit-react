@@ -9,7 +9,7 @@ import ReactionButton from '../ReactionButton';
 import ImageRenderer from '../ImageRenderer';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import ContextMenu, { EmojiListItems } from '../ContextMenu';
-import { Nullable } from '../../types';
+import { Nullable, SpaceFromTriggerType } from '../../types';
 
 import { getClassName, getEmojiListAll, getEmojiMapAll } from '../../utils';
 import { ReactedMembersBottomSheet } from '../MobileMenu/ReactedMembersBottomSheet';
@@ -25,7 +25,7 @@ interface Props {
   channel: Nullable<GroupChannel>;
   emojiContainer: EmojiContainer;
   memberNicknamesMap: Map<string, string>;
-  spaceFromTrigger?: { x: number, y: number };
+  spaceFromTrigger?: SpaceFromTriggerType;
   isByMe?: boolean;
   toggleReaction?: (message: UserMessage | FileMessage, key: string, byMe: boolean) => void;
 }
@@ -93,7 +93,7 @@ const EmojiReactions = ({
               parentRef={addReactionRef}
               parentContainRef={addReactionRef}
               closeDropdown={closeDropdown}
-              spacefromTrigger={spaceFromTrigger}
+              spaceFromTrigger={spaceFromTrigger}
             >
               {getEmojiListAll(emojiContainer).map((emoji: Emoji): ReactElement => {
                 const isReacted: boolean = (message?.reactions

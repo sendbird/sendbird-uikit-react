@@ -9,12 +9,13 @@ import IconButton from '../IconButton';
 import ImageRenderer from '../ImageRenderer';
 import ReactionButton from '../ReactionButton';
 import { getClassName, getEmojiListAll, isPendingMessage, isFailedMessage } from '../../utils';
+import { SpaceFromTriggerType } from '../../types';
 
 interface Props {
   className?: string | Array<string>;
   message: UserMessage | FileMessage;
   userId: string;
-  spaceFromTrigger?: Record<string, unknown>;
+  spaceFromTrigger?: SpaceFromTriggerType;
   emojiContainer?: EmojiContainer;
   toggleReaction?: (message: UserMessage | FileMessage, reactionKey: string, isReacted: boolean) => void;
   setSupposedHover?: (bool: boolean) => void;
@@ -24,7 +25,7 @@ export default function MessageItemReactionMenu({
   className,
   message,
   userId,
-  spaceFromTrigger = {},
+  spaceFromTrigger = { x: 0, y: 0 },
   emojiContainer,
   toggleReaction,
   setSupposedHover,
