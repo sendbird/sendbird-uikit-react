@@ -2,6 +2,7 @@
 import { babel } from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
+import json from "@rollup/plugin-json";
 import svgr from '@svgr/rollup';
 import scss from 'rollup-plugin-scss';
 import postcss from 'rollup-plugin-postcss';
@@ -52,6 +53,9 @@ module.exports = ({
     // 'ts-pattern',
   ],
   plugins: [
+    json({
+      compact: true,
+    }),
     postcss({
       preprocessor: (content, id) => new Promise((resolvecss) => {
         const result = scss.renderSync({ file: id });
