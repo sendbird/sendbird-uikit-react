@@ -320,12 +320,13 @@ export const getEmojiMapAll = (emojiContainer: EmojiContainer): Map<string, Emoj
   });
   return emojiMap;
 };
-const findingEmojiUrl = (targetKey: string) => ({ key }: { key: string }) => key === targetKey;
+const findEmojiUrl = (targetKey: string) => ({ key }) => key === targetKey;
 export const getEmojiUrl = (emojiContainer?: EmojiContainer, emojiKey?: string): string => {
-  const isFindingKey = findingEmojiUrl(emojiKey ?? '');
+  const isFindingKey = findEmojiUrl(emojiKey ?? '');
   return emojiContainer?.emojiCategories
     .find((category) => category.emojis.some(isFindingKey))?.emojis
-    .find(isFindingKey)?.url || '';
+    .find(isFindingKey)
+    ?.url || '';
 };
 
 export const getUserName = (user: User): string => (user?.friendName || user?.nickname || user?.userId);
