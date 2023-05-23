@@ -11,6 +11,41 @@ import Button, { ButtonSizes, ButtonTypes } from '../../../ui/Button';
 
 const STORAGE_KEY = 'sendbird-integrated-app-v1-groupchannel';
 
+/**
+ * Polyfill for localStorage
+ * localStorage wont work in some browsers, in incognito
+ * and no-cookie modes
+ * @returns { getItem: (key), setItem: (key, value) }
+ */
+const storePolyfill = () =>{
+  let _store = {};
+  return {
+    /**
+     * @param {string} key
+     * @returns {string | null} value
+     */
+    getItem: (key) => {
+      try {
+        return localStorage.getItem(key);
+      } catch (error) {
+        return _store[key];
+      }
+    },
+    /**
+     * @param {string} key
+     * @param {string} value
+     * @returns {undefined}
+     */
+    setItem: (key, value) => {
+      try {
+        localStorage.setItem(key, value)
+      } catch (error) {
+        _store[key] = value;
+      }
+    }
+  }
+}
+
 // Local storage format
 // key: sendbird-integrated-app-v1-groupchannel
 // value: {
@@ -117,6 +152,7 @@ const MultipleButtons = ({
             onClick={() => {
               onClick(option);
             }}
+            key={option}
           >
             {option}
           </Button>
@@ -128,7 +164,16 @@ const MultipleButtons = ({
 };
 
 export const GroupChannel = () => {
-  const globalEnvironments = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { currentAppId: '', apps: {}, login: false };
+  const store = useRef(storePolyfill());
+  let globalEnvironments;
+  try {
+    globalEnvironments = JSON.parse(store.current.getItem(STORAGE_KEY));
+  } catch {
+    // no-op
+  }
+  if (globalEnvironments === null || globalEnvironments === undefined) {
+    globalEnvironments = { currentAppId: '', apps: {}, login: false };
+  }
   const appIdInputRef = useRef(null);
   const userIdInputRef = useRef(null);
   const [isLoggedin, setIsLoggedin] = useState(globalEnvironments.login);
@@ -199,7 +244,7 @@ export const GroupChannel = () => {
       <div className={`sendbird-integrated-sample-app sendbird-theme--${sampleOptions.theme}`}>
         <input value="Logout" type="button" onClick={() => {
           setIsLoggedin(false);
-          localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          store.current.setItem(STORAGE_KEY, JSON.stringify({
             login: false,
             currentAppId: sampleOptions.appId,
             apps: {
@@ -529,7 +574,7 @@ export const GroupChannel = () => {
               onClick={() => {
                 setIsLoggedin(true);
                 // save to Local Storage
-                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                store.current.setItem(STORAGE_KEY, JSON.stringify({
                   login: true,
                   currentAppId: sampleOptions.appId,
                   apps: {
