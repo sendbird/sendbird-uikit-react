@@ -1,5 +1,5 @@
 import { User } from '@sendbird/chat';
-import { CreateAction } from '../../../utils/typeHelpers/reducers/CreateAction';
+import { CreateAction } from '../../../utils/typeHelpers/reducers/createAction';
 
 export const USER_ACTIONS = {
   INIT_USER: 'INIT_USER',
