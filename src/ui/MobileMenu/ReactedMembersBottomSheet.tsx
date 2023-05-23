@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo, useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { EmojiContainer } from '@sendbird/chat';
 import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';

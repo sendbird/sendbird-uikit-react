@@ -5,6 +5,7 @@ export const VOICE_RECORDER_CLICK_BUFFER_TIME = 250;
 export const VOICE_RECORDER_DEFAULT_MIN = 1000; // 1 seconds
 export const VOICE_RECORDER_DEFAULT_MAX = 600000; // 10 minutes
 export const VOICE_RECORDER_AUDIO_BITS = 128000;
+export const BROWSER_SUPPORT_MIME_TYPE_LIST = ['audio/webm', 'audio/mp4', 'audio/mpeg', 'audio/ogg'];
 
 // voice message play
 export const VOICE_PLAYER_PLAYBACK_BUFFER = 0.01;

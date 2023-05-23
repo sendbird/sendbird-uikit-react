@@ -1,5 +1,6 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import {
+  BROWSER_SUPPORT_MIME_TYPE_LIST,
   VOICE_MESSAGE_FILE_NAME,
   VOICE_MESSAGE_MIME_TYPE,
   VOICE_RECORDER_AUDIO_BITS,
@@ -36,15 +37,10 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>(null);
   const [isRecordable, setIsRecordable] = useState<boolean>(false);
 
-  const browserSupportMimeType: string = useMemo((): string => {
-    const mimeTypes = ['audio/webm', 'audio/mp4'];
-    const supportedMimeType = mimeTypes.find((mimeType) => MediaRecorder.isTypeSupported(mimeType));
-    if (!supportedMimeType) {
-      logger.error('VoiceRecorder: Browser does not support mimeType', { mimeTypes });
-      return '';
-    }
-    return supportedMimeType;
-  }, []);
+  const browserSupportMimeType = BROWSER_SUPPORT_MIME_TYPE_LIST.find((mimeType) => MediaRecorder.isTypeSupported(mimeType)) ?? '';
+  if (!browserSupportMimeType) {
+    logger.error('VoiceRecorder: Browser does not support mimeType', { mimmeTypes: BROWSER_SUPPORT_MIME_TYPE_LIST });
+  }
 
   const [webAudioUtils, setWebAudioUtils] = useState(null);
   useEffect(() => {
