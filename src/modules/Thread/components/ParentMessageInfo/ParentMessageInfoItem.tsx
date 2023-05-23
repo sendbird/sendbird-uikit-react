@@ -283,6 +283,7 @@ export default function ParentMessageInfoItem({
           <EmojiReactions
             userId={currentUserId}
             message={message}
+            channel={currentChannel}
             isByMe={false}
             emojiContainer={emojiContainer}
             memberNicknamesMap={nicknamesMap}

@@ -101,6 +101,8 @@ export default function ThreadListItemContent({
         setShowMobileMenu(true);
       }
     },
+  }, {
+    shouldPreventDefault: false,
   });
 
   return (
@@ -267,6 +269,7 @@ export default function ThreadListItemContent({
               <EmojiReactions
                 userId={userId}
                 message={message as UserMessage | FileMessage}
+                channel={channel}
                 isByMe={isByMe}
                 emojiContainer={emojiContainer}
                 memberNicknamesMap={nicknamesMap}

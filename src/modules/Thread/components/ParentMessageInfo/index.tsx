@@ -77,6 +77,8 @@ export default function ParentMessageInfo({
         setShowMobileMenu(true);
       }
     },
+  }, {
+    shouldPreventDefault: false,
   });
 
   // Edit message

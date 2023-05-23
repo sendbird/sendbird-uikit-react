@@ -154,6 +154,7 @@ export default function MessageContent({
     },
   }, {
     delay: 300,
+    shouldPreventDefault: false,
   });
 
   if (message?.isAdminMessage?.() || message?.messageType === 'admin') {
@@ -364,6 +365,7 @@ export default function MessageContent({
               <EmojiReactions
                 userId={userId}
                 message={message as UserMessage | FileMessage}
+                channel={channel}
                 isByMe={isByMe}
                 emojiContainer={emojiContainer}
                 memberNicknamesMap={nicknamesMap}

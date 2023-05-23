@@ -63,6 +63,7 @@ const MobileMenu: React.FC<MobileBottomSheetProps> = (props: MobileBottomSheetPr
               setQuoteMessage={setQuoteMessage}
               parentRef={parentRef}
               onReplyInThread={onReplyInThread}
+              isOpenedFromThread={isOpenedFromThread}
             />
           )
       }
