@@ -44,7 +44,7 @@ const EmojiReactions = ({
   const { isMobile } = useMediaQueryContext();
   const addReactionRef = useRef(null);
   const [showEmojiList, setShowEmojiList] = useState(false);
-  const [showEmojisBottomSheet, setShowEmojisBottomSheet] = useState('');
+  const [selectedEmojiKey, setSelectedEmojiKey] = useState('');
 
   const emojisMap = getEmojiMapAll(emojiContainer);
   const showAddReactionBadge = (message.reactions?.length ?? 0) < emojisMap.size;
@@ -61,7 +61,7 @@ const EmojiReactions = ({
               key={reaction?.key}
               reaction={reaction}
               memberNicknamesMap={memberNicknamesMap}
-              setShowEmojisBottomSheet={setShowEmojisBottomSheet}
+              setEmojiKey={setSelectedEmojiKey}
               toggleReaction={toggleReaction}
               emojisMap={emojisMap}
             />
@@ -151,13 +151,13 @@ const EmojiReactions = ({
           toggleReaction={toggleReaction}
         />
       )}
-      {(isMobile && showEmojisBottomSheet && channel !== null) && (
+      {(isMobile && selectedEmojiKey && channel !== null) && (
         <ReactedMembersBottomSheet
           message={message}
           channel={channel}
-          emojiKey={showEmojisBottomSheet}
+          emojiKey={selectedEmojiKey}
           hideMenu={() => {
-            setShowEmojisBottomSheet('');
+            setSelectedEmojiKey('');
           }}
           emojiContainer={emojiContainer}
         />

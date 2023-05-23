@@ -18,7 +18,7 @@ import { Emoji } from '@sendbird/chat';
 type Props = {
   reaction: Reaction;
   memberNicknamesMap: Map<string, string>;
-  setShowEmojisBottomSheet: React.Dispatch<React.SetStateAction<string>>;
+  setEmojiKey: React.Dispatch<React.SetStateAction<string>>;
   toggleReaction?: (message: UserMessage | FileMessage, key: string, byMe: boolean) => void;
   emojisMap: Map<string, Emoji>;
 };
@@ -26,7 +26,7 @@ type Props = {
 export default function ReactionItem({
   reaction,
   memberNicknamesMap,
-  setShowEmojisBottomSheet,
+  setEmojiKey,
   toggleReaction,
   emojisMap,
 }: Props) {
@@ -40,12 +40,12 @@ export default function ReactionItem({
   const reactedByMe = isReactedBy(userId, reaction);
 
   const handleOnClick = () => {
-    setShowEmojisBottomSheet('');
+    setEmojiKey('');
     toggleReaction?.((message), reaction.key, reactedByMe);
   };
   const longPress = useLongPress({
     onLongPress: () => {
-      setShowEmojisBottomSheet(reaction.key);
+      setEmojiKey(reaction.key);
     },
     onClick: handleOnClick,
   }, {
@@ -56,7 +56,7 @@ export default function ReactionItem({
   return (
     <TooltipWrapper
       className="sendbird-emoji-reactions__reaction-badge"
-      hoverTooltip={(reaction?.userIds?.length > 0) ? (
+      hoverTooltip={(reaction.userIds.length > 0) ? (
         <Tooltip>
           {getEmojiTooltipString(reaction, userId, memberNicknamesMap, stringSet)}
         </Tooltip>
@@ -65,7 +65,7 @@ export default function ReactionItem({
       <div
         {...(
           isMobile
-            ? { ...longPress }
+            ? longPress
             : { onClick: handleOnClick }
         )}
       >
