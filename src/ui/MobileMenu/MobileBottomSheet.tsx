@@ -14,6 +14,7 @@ import {
   copyToClipboard,
   isFileMessage,
   isParentMessage,
+  isVoiceMessage,
 } from '../../utils';
 import BottomSheet from '../BottomSheet';
 import ImageRenderer from '../ImageRenderer';
@@ -46,8 +47,8 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
   const showMenuItemCopy: boolean = isUserMessage(message as UserMessage);
   const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe);
   const showMenuItemResend: boolean = (isFailedMessage(message) && message?.isResendable && isByMe);
-  const showMenuItemDelete: boolean = !isPendingMessage(message) && isByMe;
-  const showMenuItemDownload: boolean = !isPendingMessage(message) && isFileMessage(message);
+  const showMenuItemDelete: boolean = !isPendingMessage(message) && isByMe && !isParentMessage(message);
+  const showMenuItemDownload: boolean = !isPendingMessage(message) && isFileMessage(message) && !isVoiceMessage(message);
   const showReaction: boolean = !isFailedMessage(message) && !isPendingMessage(message) && isReactionEnabled;
   const showMenuItemReply: boolean = (replyType === 'QUOTE_REPLY')
     && !isFailedMessage(message)
