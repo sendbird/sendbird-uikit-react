@@ -69,6 +69,13 @@ describe('useConnect/setupConnection', () => {
     expect(mockSdk.connect).toHaveBeenCalledWith(mockUser.userId, undefined);
   });
 
+  it('should call connect with userId & access token', async () => {
+    const setUpConnectionProps = generateSetUpConnectionParams();
+    const params = { ...setUpConnectionProps, accessToken: setUpConnectionProps.accessToken };
+    await setUpConnection(params);
+    expect(mockSdk.connect).toHaveBeenCalledWith(mockUser.userId, setUpConnectionProps.accessToken);
+  });
+
   it('should call configureSession if provided', async () => {
     const configureSession = jest.fn().mockImplementation(() => 'mock_session');
     const setUpConnectionProps = generateSetUpConnectionParams();
