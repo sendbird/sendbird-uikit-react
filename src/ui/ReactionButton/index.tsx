@@ -33,7 +33,7 @@ const ReactionButton = React.forwardRef((props: ReactionButtonProps, ref: Forwar
 
   const onClickHandler = useLongPress({
     onLongPress: noop,
-    onClick: onClick,
+    onClick,
   }, {
     shouldPreventDefault: true,
     shouldStopPropagation: true,
