@@ -16,9 +16,7 @@ import { visualizer } from 'rollup-plugin-visualizer';
 import pkg from './package.json';
 import inputs from './exports';
 
-const APP_VERSION_STRING = '__uikit_app_version__';
-const IS_ROLLUP = '__is_rollup__';
-const IS_ROLLUP_REPLACE = '__is_rollup_replace__';
+const APP_VERSION_STRING = '__react_dev_mode__';
 
 module.exports = ({
   // To bundle split
@@ -68,7 +66,6 @@ module.exports = ({
       preventAssignment: false,
       exclude: 'node_modules/**',
       [APP_VERSION_STRING]: pkg.version,
-      [IS_ROLLUP]: IS_ROLLUP_REPLACE,
     }),
     typescript({ jsx: 'preserve' }),
     svgr(),

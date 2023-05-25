@@ -6,6 +6,7 @@ export async function connect({
   logger,
   sdkDispatcher,
   userDispatcher,
+  uikitConfigDispatcher,
   userId,
   appId,
   customApiHost,
@@ -20,12 +21,14 @@ export async function connect({
     logger,
     sdkDispatcher,
     userDispatcher,
+    uikitConfigDispatcher,
     sdk,
   });
   await setUpConnection({
     logger,
     sdkDispatcher,
     userDispatcher,
+    uikitConfigDispatcher,
     userId,
     appId,
     customApiHost,

@@ -2430,15 +2430,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sendbird/chat@npm:^4.3.0":
-  version: 4.7.2
-  resolution: "@sendbird/chat@npm:4.7.2"
+"@sendbird/chat@npm:^4.8.4":
+  version: 4.8.4
+  resolution: "@sendbird/chat@npm:4.8.4"
   peerDependencies:
     "@react-native-async-storage/async-storage": ^1.17.6
   peerDependenciesMeta:
     "@react-native-async-storage/async-storage":
       optional: true
-  checksum: 74e865395a843c7987c5a929ce78b1430e4ba2b120fd8ec16e97d7f63c50251e872c0e8a0e94e7bc3276752a7ae1d5bd435dabab34420f59c3ae0c960d047fb3
+  checksum: 5b21d8dc69c5b7886fcab2427c96b43b4475c51846c74490c34071fa0d12db36462e93bcfc1ff2082e846410a35834e7aaa8b26ccae42392b0fbaf6476cf7f26
   languageName: node
   linkType: hard
 
@@ -2459,7 +2459,7 @@ __metadata:
     "@rollup/plugin-node-resolve": ^7.1.3
     "@rollup/plugin-replace": ^2.4.2
     "@rollup/plugin-typescript": ^8.2.1
-    "@sendbird/chat": ^4.3.0
+    "@sendbird/chat": ^4.8.4
     "@storybook/addon-actions": ^6.5.10
     "@storybook/addon-docs": ^6.5.10
     "@storybook/addon-links": ^6.5.10

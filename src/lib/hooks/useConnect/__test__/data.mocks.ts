@@ -27,10 +27,13 @@ export const mockSdk = {
   disconnect: jest.fn().mockImplementation(() => Promise.resolve(true)),
   updateCurrentUserInfo: jest.fn().mockImplementation(() => Promise.resolve(mockUser)),
   setSessionHandler: jest.fn(),
+  addExtension: jest.fn(),
+  getUIKitConfiguration: jest.fn().mockImplementation(() => Promise.resolve({})),
 } as unknown as ConnectTypes['sdk'];
 
 export const mockSdkDispatcher = jest.fn() as unknown as ConnectTypes['sdkDispatcher'];
 export const mockUserDispatcher = jest.fn() as unknown as ConnectTypes['userDispatcher'];
+export const mockUikitConfigDispatcher = jest.fn() as unknown as ConnectTypes['uikitConfigDispatcher'];
 
 export const defaultStaticParams: StaticTypes = {
   nickname: 'test-nickname',
@@ -39,6 +42,7 @@ export const defaultStaticParams: StaticTypes = {
   logger: LoggerFactory('all'),
   sdkDispatcher: mockSdkDispatcher,
   userDispatcher: mockUserDispatcher,
+  uikitConfigDispatcher: mockUikitConfigDispatcher,
 };
 
 export const defaultTriggerParams: TriggerTypes = {

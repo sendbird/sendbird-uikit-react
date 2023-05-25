@@ -28,7 +28,7 @@ const initialState: ${Prefix}StateType = {
 };
 
 // actionTypes.ts
-import { CreateAction } from "./utils/typeHelpers/CreateAction/reducers";
+import { CreateAction } from "./utils/typeHelpers/reducers/createAction";
 
 export const ${PREFIX}_ACTIONS = {
   SET_SDK: "SET_SDK",

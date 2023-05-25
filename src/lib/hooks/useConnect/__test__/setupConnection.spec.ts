@@ -66,7 +66,14 @@ describe('useConnect/setupConnection', () => {
     const setUpConnectionProps = generateSetUpConnectionParams();
     const params = { ...setUpConnectionProps, accessToken: undefined };
     await setUpConnection(params);
-    expect(mockSdk.connect).toHaveBeenCalledWith(mockUser.userId);
+    expect(mockSdk.connect).toHaveBeenCalledWith(mockUser.userId, undefined);
+  });
+
+  it('should call connect with userId & access token', async () => {
+    const setUpConnectionProps = generateSetUpConnectionParams();
+    const params = { ...setUpConnectionProps, accessToken: setUpConnectionProps.accessToken };
+    await setUpConnection(params);
+    expect(mockSdk.connect).toHaveBeenCalledWith(mockUser.userId, setUpConnectionProps.accessToken);
   });
 
   it('should call configureSession if provided', async () => {

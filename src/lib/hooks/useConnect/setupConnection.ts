@@ -4,14 +4,18 @@ import { GroupChannelModule } from '@sendbird/chat/groupChannel';
 
 import { SDK_ACTIONS } from '../../dux/sdk/actionTypes';
 import { USER_ACTIONS } from '../../dux/user/actionTypes';
+import { UIKIT_CONFIGURATION_ACTIONS } from '../../dux/uikitConfiguration/actionTypes';
+
 import { isTextuallyNull } from '../../../utils';
+import { snakeToCamel } from '../../../utils/snakeToCamel';
+
 import { SetupConnectionTypes } from './types';
+
+const APP_VERSION_STRING = '__react_dev_mode__';
 
 const { INIT_SDK, SET_SDK_LOADING, RESET_SDK, SDK_ERROR } = SDK_ACTIONS;
 const { INIT_USER, UPDATE_USER_INFO, RESET_USER } = USER_ACTIONS;
-const APP_VERSION_STRING = '__uikit_app_version__';
-const IS_ROLLUP = '__is_rollup__';
-const IS_ROLLUP_REPLACE = '__is_rollup_replace__';
+const { INIT_UIKIT_CONFIGURATION, RESET_UIKIT_CONFIGURATION } = UIKIT_CONFIGURATION_ACTIONS;
 
 export function getMissingParamError({ userId, appId }: { userId?: string, appId?: string }): string {
   return `SendbirdProvider | useConnect/setupConnection/Connection failed UserId: ${userId} or appId: ${appId} missing`;
@@ -52,7 +56,7 @@ export function setUpParams({
 //  1.b. If yes, continue
 // 2. Set up params with custom host if provided
 // 3. Set up session handler if provided
-// 4. Set up version if not storybook
+// 4. Set up version
 // 5. Connect to Sendbird -> either using user ID or (user ID + access token)
 // 6. If connected, connectCbSucess
 //  6.a check if nickname is to be updated -> no > !resolve immediately
@@ -62,6 +66,7 @@ export async function setUpConnection({
   logger,
   sdkDispatcher,
   userDispatcher,
+  uikitConfigDispatcher,
   userId,
   appId,
   customApiHost,
@@ -74,6 +79,7 @@ export async function setUpConnection({
   return new Promise((resolve, reject) => {
     logger?.info?.('SendbirdProvider | useConnect/setupConnection/init', { userId, appId });
     sdkDispatcher({ type: SET_SDK_LOADING, payload: true });
+
     if (userId && appId) {
       const newSdk = setUpParams({
         appId,
@@ -86,17 +92,30 @@ export async function setUpConnection({
         logger?.info?.('SendbirdProvider | useConnect/setupConnection/configureSession', sessionHandler);
         newSdk.setSessionHandler(sessionHandler);
       }
-      // to check if code is released version from rollup and *not from storybook*
-      // see rollup config file
-      // @ts-ignore
-      if (IS_ROLLUP === IS_ROLLUP_REPLACE) {
-        logger?.info?.('SendbirdProvider | useConnect/setupConnection/setVersion', APP_VERSION_STRING);
-        newSdk.addExtension('sb_uikit', APP_VERSION_STRING);
-      }
+
+      logger?.info?.('SendbirdProvider | useConnect/setupConnection/setVersion', { version: APP_VERSION_STRING });
+      newSdk.addExtension('sb_uikit', APP_VERSION_STRING);
+
       const connectCbSucess = (user: User) => {
         logger?.info?.('SendbirdProvider | useConnect/setupConnection/connectCbSucess', user);
         sdkDispatcher({ type: INIT_SDK, payload: newSdk });
         userDispatcher({ type: INIT_USER, payload: user });
+
+        newSdk.getUIKitConfiguration()
+          .then(config => {
+            const payload = snakeToCamel(config.json)?.uikitConfigurations;
+            logger?.info?.('SendbirdProvider | useConnect/setupConnection/getUIKitConfiguration success', {
+              payload,
+            });
+            uikitConfigDispatcher({ type: INIT_UIKIT_CONFIGURATION, payload });
+          })
+          .catch(error => {
+            logger?.error?.('SendbirdProvider | useConnect/setupConnection/getUIKitConfiguration failed', {
+              error,
+            });
+            uikitConfigDispatcher({ type: RESET_UIKIT_CONFIGURATION });
+          });
+
         // use nickname/profileUrl if provided
         // or set userID as nickname
         if ((nickname !== user.nickname || profileUrl !== user.profileUrl)
@@ -132,22 +151,17 @@ export async function setUpConnection({
         });
         sdkDispatcher({ type: RESET_SDK });
         userDispatcher({ type: RESET_USER });
+        uikitConfigDispatcher({ type: RESET_UIKIT_CONFIGURATION });
+
         sdkDispatcher({ type: SDK_ERROR });
         // exit promise with error
         reject(errorMessage);
       };
 
-      if (accessToken) {
-        logger?.info?.('SendbirdProvider | useConnect/setupConnection/connect connecting using accessToken');
-        newSdk.connect(userId, accessToken)
-          .then((res) => connectCbSucess(res))
-          .catch((err) => connectCbError(err));
-      } else {
-        logger?.info?.('SendbirdProvider | useConnect/setupConnection/connect connecting using userId');
-        newSdk.connect(userId)
-          .then((res) => connectCbSucess(res))
-          .catch((err) => connectCbError(err));
-      }
+      logger?.info?.(`SendbirdProvider | useConnect/setupConnection/connect connecting using ${accessToken ?? userId}`);
+      newSdk.connect(userId, accessToken)
+        .then((res) => connectCbSucess(res))
+        .catch((err) => connectCbError(err));
     } else {
       const errorMessage = getMissingParamError({ userId, appId });
       sdkDispatcher({ type: SDK_ERROR });
