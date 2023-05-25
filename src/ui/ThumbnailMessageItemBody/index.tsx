@@ -5,6 +5,8 @@ import type { FileMessage } from '@sendbird/chat/message';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import ImageRenderer from '../ImageRenderer';
 import { getClassName, isGifMessage, isSentMessage, isVideoMessage } from '../../utils';
+import { noop } from '../../utils/utils';
+import useLongPress from '../../hooks/useLongPress';
 
 interface Props {
   className?: string | Array<string>;
@@ -17,17 +19,30 @@ interface Props {
 }
 
 export default function ThumbnailMessageItemBody({
-  className,
+  className = '',
   message,
   isByMe = false,
   mouseHover = false,
   isReactionEnabled = false,
-  showFileViewer,
+  showFileViewer = noop,
   style = {},
 }: Props): ReactElement {
   const { thumbnails = [] } = message;
   const thumbnailUrl: string = thumbnails.length > 0 ? thumbnails[0]?.url : '';
   const [imageRendered, setImageRendered] = useState(false);
+
+  const onClickHandler = useLongPress({
+    onLongPress: noop,
+    onClick: () => {
+      if (isSentMessage(message)) {
+        showFileViewer?.(true);
+      }
+    }
+  }, {
+    shouldPreventDefault: true,
+    shouldStopPropagation: true,
+  });
+
   return (
     <div
       className={getClassName([
@@ -35,13 +50,9 @@ export default function ThumbnailMessageItemBody({
         'sendbird-thumbnail-message-item-body',
         isByMe ? 'outgoing' : 'incoming',
         mouseHover ? 'mouse-hover' : '',
-        (isReactionEnabled && message?.reactions?.length > 0) ? 'reactions' : '',
+        (isReactionEnabled && (message.reactions?.length ?? 0) > 0) ? 'reactions' : '',
       ])}
-      onClick={() => {
-        if (isSentMessage(message)) {
-          showFileViewer(true);
-        }
-      }}
+      {...onClickHandler}
     >
       <ImageRenderer
         className="sendbird-thumbnail-message-item-body__thumbnail"
