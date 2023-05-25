@@ -186,10 +186,8 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
               onHeaderActionClick={() => {
                 setPanel(PANELS.CHANNEL);
               }}
-              onMoveToParentMessage={({ message, channel }) => {
-                if (channel?.url !== currentChannel?.url) {
-                  setPanel(PANELS.CHANNEL);
-                }
+              onMoveToParentMessage={({ message }) => {
+                setPanel(PANELS.CHANNEL);
                 if (message?.messageId !== animatedMessageId) {
                   goToMessage(message, (messageId) => {
                     setAnimatedMessageId(messageId);

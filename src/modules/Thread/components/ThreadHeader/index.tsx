@@ -44,7 +44,7 @@ export default function ThreadHeader({
         {stringSet.THREAD__HEADER_TITLE}
       </Label>
       <TextButton
-        onClick={(e) => onChannelNameClick(e)}
+        onClick={(e) => onChannelNameClick?.(e)}
         disableUnderline
       >
         <Label
