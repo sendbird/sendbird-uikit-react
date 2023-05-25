@@ -38,7 +38,8 @@ const createEventHandler = ({
       logger.info('ChannelList: onUserReceivedInvitation', { channel, inviter, invitees });
       const { currentUser } = sdk;
       const isInvited = invitees.find((user) => user?.userId === currentUser?.userId);
-      if (isInvited) {
+      // The newly created channel should be displayed only when there's a message
+      if (isInvited && channel?.lastMessage) {
         channelListDispatcher({
           type: channelActions.USER_INVITED,
           payload: channel,
