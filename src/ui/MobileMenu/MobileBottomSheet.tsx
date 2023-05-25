@@ -15,6 +15,7 @@ import {
   isFileMessage,
   isParentMessage,
   isVoiceMessage,
+  isThreadMessage,
 } from '../../utils';
 import BottomSheet from '../BottomSheet';
 import ImageRenderer from '../ImageRenderer';
@@ -57,6 +58,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
   const showMenuItemThread: boolean = (replyType === 'THREAD') && !isOpenedFromThread
     && !isFailedMessage(message)
     && !isPendingMessage(message)
+    && !isThreadMessage(message)
     && (channel?.isGroupChannel() && !(channel as GroupChannel)?.isBroadcast);
   const disableReaction = message?.parentMessageId > 0;
 
@@ -263,7 +265,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                     height="24px"
                   />
                   <Label type={LabelTypography.SUBTITLE_1}>
-                    {isParentMessage(message) ? stringSet.THREAD__INPUT__REPLY_IN_THREAD : stringSet.MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER}
+                    {stringSet.MESSAGE_MENU__THREAD}
                   </Label>
                 </div>
               )}

@@ -139,6 +139,9 @@ export const isFileMessage = (message: AdminMessage | UserMessage | FileMessage)
 export const isParentMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => (
   !message.parentMessageId && !message.parentMessage && message.threadInfo !== null
 );
+export const isThreadMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => (
+  !!message.parentMessageId && !!message.parentMessage
+);
 export const isOGMessage = (message: UserMessage | FileMessage): boolean => !!(
   message && isUserMessage(message) && message?.ogMetaData && (
     message.ogMetaData?.url

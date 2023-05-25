@@ -12,7 +12,7 @@ import {
   isUserMessage,
   copyToClipboard,
   isFileMessage,
-  isParentMessage,
+  isThreadMessage,
 } from '../../utils';
 import { useLocalization } from '../../lib/LocalizationContext';
 import Icon, { IconTypes, IconColors } from '../Icon';
@@ -47,6 +47,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
   const showMenuItemThread: boolean = (replyType === 'THREAD') && !isOpenedFromThread
     && !isFailedMessage(message)
     && !isPendingMessage(message)
+    && !isThreadMessage(message)
     && channel?.isGroupChannel();
 
   const fileMessage = message as FileMessage;
@@ -108,7 +109,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               }}
             >
               <Label type={LabelTypography.SUBTITLE_1}>
-                {isParentMessage(message) ? stringSet.THREAD__INPUT__REPLY_IN_THREAD : stringSet.MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER}
+                {stringSet.MESSAGE_MENU__THREAD}
               </Label>
               <Icon
                 type={IconTypes.THREAD}
