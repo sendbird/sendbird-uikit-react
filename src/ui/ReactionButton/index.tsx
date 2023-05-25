@@ -1,5 +1,4 @@
 import React, {
-  ForwardRefExoticComponent,
   ForwardedRef,
   KeyboardEvent,
   MouseEvent,
@@ -21,7 +20,8 @@ export interface ReactionButtonProps {
     e: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>
   ) => void;
 }
-const ReactionButton: ForwardRefExoticComponent<ReactionButtonProps> = React.forwardRef((props: ReactionButtonProps, ref: ForwardedRef<HTMLDivElement>) => {
+
+const ReactionButton = React.forwardRef((props: ReactionButtonProps, ref: ForwardedRef<HTMLDivElement>) => {
   const {
     className,
     width,
