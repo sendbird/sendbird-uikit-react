@@ -1,6 +1,6 @@
 import './message-list.scss';
 
-import React, { useState } from 'react';
+import React from 'react';
 
 import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
@@ -17,6 +17,9 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { UserMessage } from '@sendbird/chat/message';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
+import { useSetScrollToBottom } from './hooks/useSetScrollToBottom';
+
+const SCROLL_BOTTOM_PADDING = 200;
 
 export interface MessageListProps {
   className?: string;
@@ -54,7 +57,6 @@ const MessageList: React.FC<MessageListProps> = ({
     unreadSince,
   } = useChannelContext();
   const store = useSendbirdStateContext();
-  const [scrollBottom, setScrollBottom] = useState(0);
   const allMessagesFiltered = (typeof filterMessageList === 'function')
     ? allMessages.filter((filterMessageList as (message: EveryMessage) => boolean))
     : allMessages;
@@ -97,9 +99,6 @@ const MessageList: React.FC<MessageListProps> = ({
       });
     }
 
-    // Save the lastest scroll bottom value
-    setScrollBottom(element.scrollHeight - element.scrollTop - element.offsetHeight);
-
     if (!disableMarkAsRead && isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER)) {
       messagesDispatcher({
         type: messageActionTypes.MARK_AS_READ,
@@ -135,6 +134,8 @@ const MessageList: React.FC<MessageListProps> = ({
     scrollRef,
   });
 
+  const { scrollToBottomHandler, scrollBottom } = useSetScrollToBottom();
+
   if (loading) {
     return (typeof renderPlaceholderLoader === 'function')
       ? renderPlaceholderLoader()
@@ -153,7 +154,10 @@ const MessageList: React.FC<MessageListProps> = ({
         <div
           className="sendbird-conversation__messages-padding"
           ref={scrollRef}
-          onScroll={handleOnScroll}
+          onScroll={(e) => {
+            handleOnScroll();
+            scrollToBottomHandler(e);
+          }}
         >
           {allMessagesFiltered.map((m, idx) => {
             const {
@@ -212,7 +216,7 @@ const MessageList: React.FC<MessageListProps> = ({
       />
       {
         // This flag is an unmatched variable
-        scrollBottom > 1 && (
+        scrollBottom > SCROLL_BOTTOM_PADDING && (
           <div
             className="sendbird-conversation__scroll-bottom-button"
             onClick={onClickScrollBot}
