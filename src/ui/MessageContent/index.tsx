@@ -32,7 +32,6 @@ import {
   isOGMessage,
   isThumbnailMessage,
   getSenderName,
-  isSentMessage,
   isVoiceMessage,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
@@ -49,6 +48,7 @@ import ThreadReplies from '../ThreadReplies';
 import { ThreadReplySelectType } from '../../modules/Channel/context/const';
 import VoiceMessageItemBody from '../VoiceMessageItemBody';
 import { Nullable } from '../../types';
+import { noop } from '../../utils/utils';
 
 // should initialize in UserProfileContext.jsx
 export interface UserProfileContextInterface {
@@ -146,12 +146,7 @@ export default function MessageContent({
         setShowMenu(true);
       }
     },
-    onClick: () => {
-      // @ts-ignore
-      if (isMobile && isThumbnailMessage(message) && isSentMessage(message)) {
-        showFileViewer(true);
-      }
-    },
+    onClick: noop,
   }, {
     delay: 300,
     shouldPreventDefault: false,
