@@ -9,6 +9,7 @@ import React, {
 
 import './index.scss';
 import useLongPress from '../../hooks/useLongPress';
+import { noop } from '../../utils/utils';
 
 export interface ReactionButtonProps {
   children: ReactElement;
@@ -20,7 +21,7 @@ export interface ReactionButtonProps {
     e: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>
   ) => void;
 }
-const ReactionButton: ForwardRefExoticComponent<ReactionButtonProps> = React.forwardRef((props, ref: ForwardedRef<HTMLDivElement>) => {
+const ReactionButton: ForwardRefExoticComponent<ReactionButtonProps> = React.forwardRef((props: ReactionButtonProps, ref: ForwardedRef<HTMLDivElement>) => {
   const {
     className,
     width,
@@ -31,7 +32,7 @@ const ReactionButton: ForwardRefExoticComponent<ReactionButtonProps> = React.for
   } = props;
 
   const onClickHandler = useLongPress({
-    onLongPress: () => {/* noop */},
+    onLongPress: noop,
     onClick: onClick,
   }, {
     shouldPreventDefault: true,

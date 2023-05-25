@@ -32,7 +32,6 @@ import {
   isOGMessage,
   isThumbnailMessage,
   getSenderName,
-  isSentMessage,
   isVoiceMessage,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
