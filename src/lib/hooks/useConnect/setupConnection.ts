@@ -11,7 +11,7 @@ import { snakeToCamel } from '../../../utils/snakeToCamel';
 
 import { SetupConnectionTypes } from './types';
 
-const APP_VERSION_STRING = '__uikit_app_version__';
+const APP_VERSION_STRING = '__react_dev_mode__';
 
 const { INIT_SDK, SET_SDK_LOADING, RESET_SDK, SDK_ERROR } = SDK_ACTIONS;
 const { INIT_USER, UPDATE_USER_INFO, RESET_USER } = USER_ACTIONS;

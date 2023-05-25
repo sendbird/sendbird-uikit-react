@@ -16,7 +16,7 @@ import { visualizer } from 'rollup-plugin-visualizer';
 import pkg from './package.json';
 import inputs from './exports';
 
-const APP_VERSION_STRING = '__uikit_app_version__';
+const APP_VERSION_STRING = '__react_dev_mode__';
 
 module.exports = ({
   // To bundle split
