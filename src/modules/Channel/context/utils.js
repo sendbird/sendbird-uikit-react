@@ -8,6 +8,24 @@ import { OutgoingMessageStates } from '../../../utils/exports/getOutgoingMessage
 const UNDEFINED = 'undefined';
 const { SUCCEEDED, FAILED, PENDING } = getSendingMessageStatus();
 
+export const scrollToRenderedMessage = (scrollRef, initialTimeStamp) => {
+  try {
+    const container = scrollRef.current;
+    // scroll into the message with initialTimeStamp
+    const element = container.querySelectorAll(`[data-sb-created-at="${initialTimeStamp}"]`)?.[0];
+    if (element) {
+      // Calculate the offset of the element from the top of the container
+      const containerHeight = container.offsetHeight;
+      const elementHeight = element.offsetHeight;
+      const elementOffset = (containerHeight - elementHeight) / 2;
+      // Set the scroll position of the container to bring the element to the middle
+      container.scrollTop = element.offsetTop - elementOffset;
+    }
+  } catch {
+    // do nothing
+  }
+};
+
 /* eslint-disable default-param-last */
 export const scrollIntoLast = (initialTry = 0, scrollRef) => {
   const MAX_TRIES = 10;
