@@ -1,12 +1,14 @@
 import React, {
+  ForwardRefExoticComponent,
+  ForwardedRef,
   KeyboardEvent,
   MouseEvent,
   ReactElement,
-  RefObject,
   TouchEvent,
 } from 'react';
 
 import './index.scss';
+import useLongPress from '../../hooks/useLongPress';
 
 export interface ReactionButtonProps {
   children: ReactElement;
@@ -18,7 +20,7 @@ export interface ReactionButtonProps {
     e: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>
   ) => void;
 }
-const ReactionButton = React.forwardRef((props: ReactionButtonProps, ref: RefObject<HTMLDivElement>): ReactElement => {
+const ReactionButton: ForwardRefExoticComponent<ReactionButtonProps> = React.forwardRef((props, ref: ForwardedRef<HTMLDivElement>) => {
   const {
     className,
     width,
@@ -27,6 +29,14 @@ const ReactionButton = React.forwardRef((props: ReactionButtonProps, ref: RefObj
     onClick,
     children,
   } = props;
+
+  const onClickHandler = useLongPress({
+    onLongPress: () => {/* noop */},
+    onClick: onClick,
+  }, {
+    shouldPreventDefault: true,
+    shouldStopPropagation: true,
+  });
 
   return (
     <div
@@ -37,14 +47,7 @@ const ReactionButton = React.forwardRef((props: ReactionButtonProps, ref: RefObj
       ref={ref}
       role="button"
       style={{ width, height }}
-      onClick={(e) => onClick(e)}
-      onKeyDown={(e) => onClick(e)}
-      onTouchEnd={(e) => {
-        onClick(e);
-        // to stop longpress
-        e.stopPropagation();
-        e.nativeEvent.stopImmediatePropagation();
-      }}
+      {...onClickHandler}
       tabIndex={0}
     >
       <div className="sendbird-reaction-button__inner">
