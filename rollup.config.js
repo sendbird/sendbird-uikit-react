@@ -2,7 +2,6 @@
 import { babel } from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
-import json from "@rollup/plugin-json";
 import svgr from '@svgr/rollup';
 import scss from 'rollup-plugin-scss';
 import postcss from 'rollup-plugin-postcss';
@@ -18,8 +17,6 @@ import pkg from './package.json';
 import inputs from './exports';
 
 const APP_VERSION_STRING = '__uikit_app_version__';
-const IS_ROLLUP = '__is_rollup__';
-const IS_ROLLUP_REPLACE = '__is_rollup_replace__';
 
 module.exports = ({
   // To bundle split
@@ -53,9 +50,6 @@ module.exports = ({
     // 'ts-pattern',
   ],
   plugins: [
-    json({
-      compact: true,
-    }),
     postcss({
       preprocessor: (content, id) => new Promise((resolvecss) => {
         const result = scss.renderSync({ file: id });
@@ -72,7 +66,6 @@ module.exports = ({
       preventAssignment: false,
       exclude: 'node_modules/**',
       [APP_VERSION_STRING]: pkg.version,
-      [IS_ROLLUP]: IS_ROLLUP_REPLACE,
     }),
     typescript({ jsx: 'preserve' }),
     svgr(),

@@ -10,7 +10,8 @@ import { isTextuallyNull } from '../../../utils';
 import { snakeToCamel } from '../../../utils/snakeToCamel';
 
 import { SetupConnectionTypes } from './types';
-import { version as app_version } from '../../../../package.json';
+
+const APP_VERSION_STRING = '__uikit_app_version__';
 
 const { INIT_SDK, SET_SDK_LOADING, RESET_SDK, SDK_ERROR } = SDK_ACTIONS;
 const { INIT_USER, UPDATE_USER_INFO, RESET_USER } = USER_ACTIONS;
@@ -92,8 +93,8 @@ export async function setUpConnection({
         newSdk.setSessionHandler(sessionHandler);
       }
 
-      logger?.info?.('SendbirdProvider | useConnect/setupConnection/setVersion', { version: app_version });
-      newSdk.addExtension('sb_uikit', app_version);
+      logger?.info?.('SendbirdProvider | useConnect/setupConnection/setVersion', { version: APP_VERSION_STRING });
+      newSdk.addExtension('sb_uikit', APP_VERSION_STRING);
 
       const connectCbSucess = (user: User) => {
         logger?.info?.('SendbirdProvider | useConnect/setupConnection/connectCbSucess', user);
