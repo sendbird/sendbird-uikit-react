@@ -205,6 +205,10 @@ const Message = ({
   if (renderedMessage) {
     return (
       <div
+        // donot delete this data attribute, used for scroll to given message
+        // and also for testing
+        data-sb-message-id={message.messageId}
+        data-sb-created-at={message.createdAt}
         ref={messageScrollRef}
         className={getClassName([
           'sendbird-msg-hoc sendbird-msg--scroll-ref',
@@ -321,6 +325,8 @@ const Message = ({
         isHighlighted ? 'sendbird-msg-hoc__highlighted' : '',
       ])}
       style={{ marginBottom: '2px' }}
+      data-sb-message-id={message.messageId}
+      data-sb-created-at={message.createdAt}
       ref={messageScrollRef}
     >
       {/* date-separator */}

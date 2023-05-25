@@ -77,8 +77,27 @@ function useInitialMessagesFetch({
           });
         })
         .finally(() => {
-          if (!initialTimeStamp) {
-            setTimeout(() => utils.scrollIntoLast(0, scrollRef));
+          try {
+            if (!initialTimeStamp) {
+              setTimeout(() => utils.scrollIntoLast(0, scrollRef));
+            } else {
+              setTimeout(() => {
+                const container = scrollRef.current;
+                // scroll into the message with initialTimeStamp
+                const element = container.querySelectorAll(`[data-sb-created-at="${initialTimeStamp}"]`)?.[0];
+                if (element) {
+                  // Calculate the offset of the element from the top of the container
+                  const containerHeight = container.offsetHeight;
+                  const elementHeight = element.offsetHeight;
+                  const elementOffset = (containerHeight - elementHeight) / 2;
+
+                  // Set the scroll position of the container to bring the element to the middle
+                  container.scrollTop = element.offsetTop - elementOffset;
+                }
+              });
+            }
+          } catch (error) {
+            logger.error('Channel: scrolling to message failed', error);
           }
         });
     }

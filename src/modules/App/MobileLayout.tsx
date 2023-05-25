@@ -42,7 +42,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
     threadTargetMessage,
     setThreadTargetMessage,
   } = props;
-  const [panel, setPanel] = useState(PANELS?.CHANNEL_LIST);
+  const [panel, setPanel] = useState(PANELS.CHANNEL_LIST);
   const [animatedMessageId, setAnimatedMessageId] = useState<number | null>(null);
 
   const store = useSendbirdStateContext();
@@ -57,8 +57,8 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
   };
 
   useEffect(() => {
-    if (panel !== PANELS?.CHANNEL) {
-      goToMessage();
+    if (panel !== PANELS.CHANNEL) {
+      goToMessage(null, () => setAnimatedMessageId(null));
     }
   }, [panel]);
 
@@ -92,7 +92,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
   return (
     <div>
       {
-        panel === PANELS?.CHANNEL_LIST && (
+        panel === PANELS.CHANNEL_LIST && (
           <div className='sb_mobile__panelwrap'>
             <ChannelList
               onProfileEditSuccess={onProfileEditSuccess}
@@ -108,7 +108,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
         )
       }
       {
-        panel === PANELS?.CHANNEL && (
+        panel === PANELS.CHANNEL && (
           <div className='sb_mobile__panelwrap'>
             <Channel
               replyType={replyType}
@@ -145,7 +145,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
         )
       }
       {
-        panel === PANELS?.CHANNEL_SETTINGS && (
+        panel === PANELS.CHANNEL_SETTINGS && (
           <div className='sb_mobile__panelwrap'>
             <ChannelSettings
               channelUrl={currentChannel?.url || ''}
@@ -160,7 +160,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
         )
       }
       {
-        panel === PANELS?.MESSAGE_SEARCH && (
+        panel === PANELS.MESSAGE_SEARCH && (
           <div className='sb_mobile__panelwrap'>
             <MessageSearch
               channelUrl={currentChannel?.url || ''}
@@ -178,7 +178,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
         )
       }
       {
-        panel === PANELS?.THREAD && (
+        panel === PANELS.THREAD && (
           <div className='sb_mobile__panelwrap'>
             <Thread
               channelUrl={currentChannel?.url || ''}
@@ -186,16 +186,12 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
               onHeaderActionClick={() => {
                 setPanel(PANELS.CHANNEL);
               }}
-              onMoveToParentMessage={({ message }) => {
-                setPanel(PANELS.CHANNEL);
-                if (message?.messageId !== animatedMessageId) {
-                  goToMessage(message, (messageId) => {
-                    setAnimatedMessageId(messageId);
-                  });
-                }
-                setTimeout(() => {
-                  setAnimatedMessageId(message?.messageId);
-                }, 500);
+              onMoveToParentMessage={({ message, channel }) => {
+                setCurrentChannel(channel);
+                goToMessage(message, (messageId) => {
+                  setPanel(PANELS.CHANNEL);
+                  setAnimatedMessageId(messageId);
+                });
               }}
             />
           </div>
