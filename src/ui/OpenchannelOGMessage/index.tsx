@@ -60,28 +60,29 @@ export default function OpenchannelOGMessage({
   chainTop,
   userId,
 }: OpenChannelOGMessageProps): JSX.Element {
-  if (!message || message.messageType !== 'user') {
-    return null;
-  }
+  const status = message?.sendingStatus;
+  const ogMetaData = message.ogMetaData ?? null;
+  const defaultImage = ogMetaData?.defaultImage;
+  const { stringSet, dateLocale } = useLocalization();
+  const { isMobile } = useMediaQueryContext();
+
+  const { disableUserProfile, renderUserProfile } = useContext<UserProfileContext>(UserProfileContext);
+  const [contextStyle, setContextStyle] = useState({});
+  const [showContextMenu, setShowContextMenu] = useState(false);
 
   const openLink = () => {
-    if (checkOGIsEnalbed(message)) {
-      const { url } = ogMetaData;
-      window.open(url);
+    if (checkOGIsEnalbed(message) && ogMetaData?.url) {
+      window.open(ogMetaData.url);
     }
   };
 
-  const status = message?.sendingStatus;
-  const { ogMetaData } = message;
-  const { defaultImage } = ogMetaData;
-  const { stringSet, dateLocale } = useLocalization();
-  const { disableUserProfile, renderUserProfile } = useContext<UserProfileContext>(UserProfileContext);
-  const [contextStyle, setContextStyle] = useState({});
-  const [contextMenu, setContextMenu] = useState(false);
   const onLongPress = useLongPress({
-    onLongPress: () => setContextMenu(true),
+    onLongPress: () => setShowContextMenu(true),
     onClick: openLink,
-  }, { delay: 300 });
+  }, {
+    delay: 300,
+  });
+
   const messageComponentRef = useRef(null);
   const contextMenuRef = useRef(null);
   const mobileMenuRef = useRef(null);
@@ -90,7 +91,6 @@ export default function OpenchannelOGMessage({
   const isPending = checkIsPending(status);
   const isFailed = checkIsFailed(status);
   const sender = getSenderFromMessage(message);
-  const { isMobile } = useMediaQueryContext();
 
   const tokens = useMemo(() => {
     return tokenizeMessage({
@@ -107,6 +107,10 @@ export default function OpenchannelOGMessage({
     }
   }, [window.innerWidth]);
 
+  if (!message || message.messageType !== 'user') {
+    return <></>;
+  }
+
   return (
     <div
       className={[
@@ -114,6 +118,7 @@ export default function OpenchannelOGMessage({
         'sendbird-openchannel-og-message',
       ].join(' ')}
       ref={messageComponentRef}
+      {...(isMobile ? { ...onLongPress } : {})}
     >
       <div
         className="sendbird-openchannel-og-message__top"
@@ -206,7 +211,7 @@ export default function OpenchannelOGMessage({
             >
               <TextFragment tokens={tokens} />
               {
-                (message?.updatedAt > 0) && (
+                ((message?.updatedAt ?? 0) > 0) && (
                   <Label
                     key={uuidv4()}
                     className='sendbird-openchannel-og-message--word'
@@ -365,7 +370,6 @@ export default function OpenchannelOGMessage({
                 onClick={openLink}
                 onKeyDown={openLink}
                 tabIndex={0}
-                {...(isMobile ? { ...onLongPress } : {})}
               >
                 {
                   defaultImage && (
@@ -425,27 +429,27 @@ export default function OpenchannelOGMessage({
         }
       </div>
       {
-        contextMenu && (
+        showContextMenu && (
           <OpenChannelMobileMenu
             message={message}
             parentRef={mobileMenuRef}
             hideMenu={() => {
-              setContextMenu(false);
+              setShowContextMenu(false);
             }}
             showRemove={() => {
-              setContextMenu(false);
+              setShowContextMenu(false);
               showRemove(true);
             }}
             showEdit={() => {
-              setContextMenu(false);
+              setShowContextMenu(false);
               showEdit(true);
             }}
             copyToClipboard={() => {
-              setContextMenu(false);
+              setShowContextMenu(false);
               copyToClipboard(message?.message);
             }}
             resendMessage={() => {
-              setContextMenu(false);
+              setShowContextMenu(false);
               resendMessage(message);
             }}
           />
