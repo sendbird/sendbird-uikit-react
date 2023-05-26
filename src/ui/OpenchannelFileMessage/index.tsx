@@ -262,7 +262,7 @@ export default function OpenchannelFileMessage({
                               resendMessage(message);
                               closeDropdown();
                             }}
-                            dataId="resend"
+                            dataSbId="resend"
                           >
                             {stringSet.CONTEXT_MENU_DROPDOWN__RESEND}
                           </MenuItem>
@@ -276,7 +276,7 @@ export default function OpenchannelFileMessage({
                               showRemove(true);
                               closeDropdown();
                             }}
-                            dataId="delete"
+                            dataSbId="delete"
                           >
                             {stringSet.CONTEXT_MENU_DROPDOWN__DELETE}
                           </MenuItem>

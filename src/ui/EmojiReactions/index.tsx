@@ -110,7 +110,7 @@ const EmojiReactions = ({
                       toggleReaction?.(message, emoji.key, isReacted);
                       e?.stopPropagation();
                     }}
-                    dataId={emoji.key}
+                    dataSbId={emoji.key}
                   >
                     <ImageRenderer
                       url={emoji?.url || ''}

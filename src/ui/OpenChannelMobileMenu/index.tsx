@@ -57,7 +57,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
                 onClick={() => {
                   copyToClipboard();
                 }}
-                dataId="copy"
+                dataSbId="copy"
               >
                 <>{stringSet.CONTEXT_MENU_DROPDOWN__COPY}</>
               </MenuItem>
@@ -70,7 +70,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
                 onClick={() => {
                   showEdit();
                 }}
-                dataId="edit"
+                dataSbId="edit"
               >
                 <>{stringSet.CONTEXT_MENU_DROPDOWN__EDIT}</>
               </MenuItem>
@@ -82,7 +82,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
                 onClick={() => {
                   resendMessage();
                 }}
-                dataId="resend"
+                dataSbId="resend"
               >
                 <>{stringSet.CONTEXT_MENU_DROPDOWN__RESEND}</>
               </MenuItem>
@@ -94,7 +94,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
                 onClick={() => {
                   showRemove();
                 }}
-                dataId="delete"
+                dataSbId="delete"
               >
                 <>{stringSet.CONTEXT_MENU_DROPDOWN__DELETE}</>
               </MenuItem>
@@ -106,7 +106,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
                   onClick={() => {
                     hideMenu();
                   }}
-                  dataId="download_file"
+                  dataSbId="download_file"
                 >
                   <a
                     className="sendbird-openchannel__mobile-menu-hyperlink"

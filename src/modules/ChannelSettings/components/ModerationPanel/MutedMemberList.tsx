@@ -103,7 +103,7 @@ export const MutedMemberList = (): ReactElement => {
                             closeDropdown();
                           });
                         }}
-                        dataId="unmute"
+                        dataSbId="unmute"
                       >
                         {stringSet?.CHANNEL_SETTING__UNMUTE || stringSet.CHANNEL_SETTING__MODERATION__UNMUTE}
                       </MenuItem>

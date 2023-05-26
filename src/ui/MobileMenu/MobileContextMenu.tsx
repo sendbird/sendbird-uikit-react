@@ -68,7 +68,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
                 hideMenu();
                 copyToClipboard((message as UserMessage)?.message);
               }}
-              dataId="mobile_copy"
+              dataSbId="mobile_copy"
             >
               <Label type={LabelTypography.SUBTITLE_1}>
                 {stringSet?.MESSAGE_MENU__COPY}
@@ -89,7 +89,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
                 setQuoteMessage(message);
               }}
               disable={message?.parentMessageId > 0}
-              dataId="mobile_reply"
+              dataSbId="mobile_reply"
             >
               <Label type={LabelTypography.SUBTITLE_1}>
                 {stringSet.MESSAGE_MENU__REPLY}
@@ -109,7 +109,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
                 hideMenu();
                 onReplyInThread?.({ message });
               }}
-              dataId="mobile_thread"
+              dataSbId="mobile_thread"
             >
               <Label type={LabelTypography.SUBTITLE_1}>
                 {stringSet.MESSAGE_MENU__THREAD}
@@ -129,7 +129,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
                 hideMenu();
                 showEdit(true);
               }}
-              dataId="mobile_edit"
+              dataSbId="mobile_edit"
             >
               <Label type={LabelTypography.SUBTITLE_1}>
                 {stringSet.MESSAGE_MENU__EDIT}
@@ -149,7 +149,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
                 hideMenu();
                 resendMessage(message);
               }}
-              dataId="mobile_resend"
+              dataSbId="mobile_resend"
             >
               <Label type={LabelTypography.SUBTITLE_1}>
                 {stringSet.MESSAGE_MENU__RESEND}
@@ -170,7 +170,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
                 showRemove(true);
               }}
               disable={message?.threadInfo?.replyCount > 0}
-              dataId="mobile_delete"
+              dataSbId="mobile_delete"
             >
               <Label type={LabelTypography.SUBTITLE_1}>
                 {stringSet.MESSAGE_MENU__DELETE}
@@ -189,7 +189,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               onClick={() => {
                 hideMenu();
               }}
-              dataId="mobile_download_file"
+              dataSbId="mobile_download_file"
             >
               <a
                 className="sendbird-message__contextmenu--hyperlink"

@@ -101,7 +101,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                           hideMenu();
                           toggleReaction(message, emoji.key, isReacted);
                         }}
-                        dataId={emoji.key}
+                        dataSbId={emoji.key}
                       >
                         <ImageRenderer
                           url={emoji?.url || ''}
@@ -130,7 +130,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                         onClick={(): void => {
                           setShowEmojisOnly(true);
                         }}
-                        dataId="add-emoji"
+                        dataSbId="add-emoji"
                       >
                         <ImageRenderer
                           url={''}

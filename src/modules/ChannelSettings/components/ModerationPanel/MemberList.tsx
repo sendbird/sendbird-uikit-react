@@ -110,7 +110,7 @@ export const MemberList = (): ReactElement => {
                               });
                             }
                           }}
-                          dataId={
+                          dataSbId={
                             member.role !== 'operator'
                               ? 'register_as_operator' : 'unregister_operator'
                           }
@@ -138,7 +138,7 @@ export const MemberList = (): ReactElement => {
                                   });
                                 }
                               }}
-                              dataId={member.isMuted ? 'unmute' : 'mute'}
+                              dataSbId={member.isMuted ? 'unmute' : 'mute'}
                             >
                               {
                                 member.isMuted
@@ -155,7 +155,7 @@ export const MemberList = (): ReactElement => {
                               closeDropdown();
                             });
                           }}
-                          dataId="ban"
+                          dataSbId="ban"
                         >
                           {stringSet.CHANNEL_SETTING__MODERATION__BAN}
                         </MenuItem>

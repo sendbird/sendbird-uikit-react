@@ -52,7 +52,7 @@ const ReactionButton = React.forwardRef((props: ReactionButtonProps, ref: Forwar
       style={{ width, height }}
       {...onClickHandler}
       tabIndex={0}
-      data-sendbird-id={`emoji-reaction-button${dataId ? `_${dataId}` : ''}`}
+      data-sb-id={`emoji-reaction-button${dataId ? `_${dataId}` : ''}`}
     >
       <div className="sendbird-reaction-button__inner">
         {children}

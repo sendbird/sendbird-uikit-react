@@ -39,7 +39,7 @@ export const MenuItem = ({
       onClick={handleClickEvent}
       onKeyPress={(e) => { if (e.keyCode === ENTER_KEY) handleClickEvent(e); }}
       tabIndex={0}
-      data-sendbird-id={`message_context_menu${dataId ? `_${dataId}` : ''}`}
+      data-sb-id={`message_context_menu${dataId ? `_${dataId}` : ''}`}
     >
       <Label
         className="sendbird-dropdown__menu-item__text"

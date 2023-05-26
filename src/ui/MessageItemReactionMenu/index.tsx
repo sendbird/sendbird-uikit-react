@@ -92,7 +92,7 @@ export default function MessageItemReactionMenu({
                       closeDropdown();
                       toggleReaction(message, emoji.key, isReacted);
                     }}
-                    dataId={emoji.key}
+                    dataSbId={emoji.key}
                   >
                     <ImageRenderer
                       url={emoji.url}
