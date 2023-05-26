@@ -60,10 +60,6 @@ export default function OpenchannelOGMessage({
   chainTop,
   userId,
 }: OpenChannelOGMessageProps): JSX.Element {
-  if (!message || message.messageType !== 'user') {
-    return <></>;
-  }
-
   const status = message?.sendingStatus;
   const ogMetaData = message.ogMetaData ?? null;
   const defaultImage = ogMetaData?.defaultImage;
@@ -110,6 +106,10 @@ export default function OpenchannelOGMessage({
       setContextStyle({ top: '2px' });
     }
   }, [window.innerWidth]);
+
+  if (!message || message.messageType !== 'user') {
+    return <></>;
+  }
 
   return (
     <div
