@@ -106,6 +106,7 @@ export const OperatorList = (): ReactElement => {
                           });
                           closeDropdown();
                         }}
+                        dataId="unregister_operator"
                       >
                         {stringSet.CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
                       </MenuItem>

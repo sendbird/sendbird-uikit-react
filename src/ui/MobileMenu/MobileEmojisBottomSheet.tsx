@@ -44,6 +44,7 @@ export const MobileEmojisBottomSheet = ({
                 toggleReaction?.(message, emoji.key, isReacted);
                 hideMenu();
               }}
+              dataId={emoji.key}
             >
               <ImageRenderer
                 url={emoji.url}

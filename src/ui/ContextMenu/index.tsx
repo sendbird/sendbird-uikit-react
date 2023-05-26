@@ -17,12 +17,14 @@ export interface MenuItemProps {
   children: ReactElement | ReactElement[] | ReactNode;
   onClick?: (e: MouseEvent<HTMLLIElement>) => void;
   disable?: boolean;
+  dataId?: string;
 }
 export const MenuItem = ({
   className = '',
   children,
   onClick,
   disable = false,
+  dataId = '',
 }: MenuItemProps): ReactElement => {
   const handleClickEvent = (e) => {
     if (!disable && onClick) {
@@ -37,6 +39,7 @@ export const MenuItem = ({
       onClick={handleClickEvent}
       onKeyPress={(e) => { if (e.keyCode === ENTER_KEY) handleClickEvent(e); }}
       tabIndex={0}
+      data-sendbird-id={`message_context_menu${dataId ? `_${dataId}` : ''}`}
     >
       <Label
         className="sendbird-dropdown__menu-item__text"

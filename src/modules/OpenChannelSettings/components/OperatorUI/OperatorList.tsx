@@ -60,6 +60,7 @@ const OperatorList = (): ReactElement => {
                               closeDropdown();
                             });
                           }}
+                          dataId="unregister_operator"
                         >
                           {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
                         </MenuItem>
@@ -75,6 +76,7 @@ const OperatorList = (): ReactElement => {
                               });
                             }
                           }}
+                          dataId={operator.isMuted ? 'unmute' : 'mute'}
                         >
                           {
                             operator.isMuted
@@ -88,6 +90,7 @@ const OperatorList = (): ReactElement => {
                               closeDropdown();
                             });
                           }}
+                          dataId="ban"
                         >
                           {stringSet.OPEN_CHANNEL_SETTING__MODERATION__BAN}
                         </MenuItem>

@@ -283,6 +283,7 @@ export default function OpenchannelUserMessage({
                           copyToClipboard(message.message);
                           closeDropdown();
                         }}
+                        dataId="copy"
                       >
                         {stringSet.CONTEXT_MENU_DROPDOWN__COPY}
                       </MenuItem>
@@ -299,6 +300,7 @@ export default function OpenchannelUserMessage({
                           showEdit(true);
                           closeDropdown();
                         }}
+                        dataId="edit"
                       >
                         {stringSet.CONTEXT_MENU_DROPDOWN__EDIT}
                       </MenuItem>
@@ -312,6 +314,7 @@ export default function OpenchannelUserMessage({
                           resendMessage(message);
                           closeDropdown();
                         }}
+                        dataId="resend"
                       >
                         {stringSet.CONTEXT_MENU_DROPDOWN__RESEND}
                       </MenuItem>
@@ -328,6 +331,7 @@ export default function OpenchannelUserMessage({
                           showRemove(true);
                           closeDropdown();
                         }}
+                        dataId="delete"
                       >
                         {stringSet.CONTEXT_MENU_DROPDOWN__DELETE}
                       </MenuItem>

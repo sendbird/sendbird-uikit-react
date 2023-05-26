@@ -60,6 +60,7 @@ export default function ChannelPreviewAction({
                 setShowModal(true);
                 closeDropdown();
               }}
+              dataId="leave_channel"
             >
               {stringSet.CHANNEL_SETTING__LEAVE_CHANNEL__TITLE}
             </MenuItem>

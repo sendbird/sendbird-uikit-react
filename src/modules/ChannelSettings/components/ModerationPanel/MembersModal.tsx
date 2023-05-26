@@ -130,6 +130,10 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                   });
                                 }
                               }}
+                              dataId={
+                                member.role !== 'operator'
+                                  ? 'register_as_operator' : 'unregister_operator'
+                              }
                             >
                               {
                                 member.role !== 'operator'
@@ -170,6 +174,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                       });
                                     }
                                   }}
+                                  dataId={member.isMuted ? 'unmute' : 'mute'}
                                 >
                                   {
                                     member.isMuted
@@ -187,6 +192,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                   }));
                                 });
                               }}
+                              dataId="ban"
                             >
                               {stringSet.CHANNEL_SETTING__MODERATION__BAN}
                             </MenuItem>

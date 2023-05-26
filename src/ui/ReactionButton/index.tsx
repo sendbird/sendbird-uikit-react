@@ -16,6 +16,7 @@ export interface ReactionButtonProps {
   width?: string | number;
   height?: string | number;
   selected?: boolean;
+  dataId?: string;
   onClick?: (
     e: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>
   ) => void;
@@ -27,6 +28,7 @@ const ReactionButton = React.forwardRef((props: ReactionButtonProps, ref: Forwar
     width,
     height,
     selected,
+    dataId = '',
     onClick,
     children,
   } = props;
@@ -50,6 +52,7 @@ const ReactionButton = React.forwardRef((props: ReactionButtonProps, ref: Forwar
       style={{ width, height }}
       {...onClickHandler}
       tabIndex={0}
+      data-sendbird-id={`emoji-reaction-button${dataId ? `_${dataId}` : ''}`}
     >
       <div className="sendbird-reaction-button__inner">
         {children}

@@ -96,6 +96,7 @@ export const MutedParticipantList = (): ReactElement => {
                               closeDropdown();
                             });
                           }}
+                          dataId="unmute"
                         >
                           {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNMUTE}
                         </MenuItem>

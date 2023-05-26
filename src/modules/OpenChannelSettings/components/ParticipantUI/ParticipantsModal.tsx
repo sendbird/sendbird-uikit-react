@@ -116,6 +116,7 @@ export default function ParticipantsModal({
                                     });
                                   }
                                 }}
+                                dataId={isOperator ? 'unregister_operator' : 'register_as_operator'}
                               >
                                 {
                                   isOperator
@@ -135,6 +136,7 @@ export default function ParticipantsModal({
                                     });
                                   }
                                 }}
+                                dataId={p.isMuted ? 'unmute' : 'mute'}
                               >
                                 {
                                   p.isMuted
@@ -148,6 +150,7 @@ export default function ParticipantsModal({
                                     closeDropdown();
                                   });
                                 }}
+                                dataId="ban"
                               >
                                 {stringSet.OPEN_CHANNEL_SETTING__MODERATION__BAN}
                               </MenuItem>

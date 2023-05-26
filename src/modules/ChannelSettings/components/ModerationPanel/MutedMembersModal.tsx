@@ -106,6 +106,7 @@ export default function MutedMembersModal({
                             }));
                           });
                         }}
+                        dataId="unmute"
                       >
                         {stringSet.CHANNEL_SETTING__MODERATION__UNMUTE}
                       </MenuItem>

@@ -135,6 +135,7 @@ export default function MessageItemMenu({
                     copyToClipboard((message as UserMessage)?.message);
                     closeDropdown();
                   }}
+                  dataId="copy"
                 >
                   {stringSet.MESSAGE_MENU__COPY}
                 </MenuItem>
@@ -147,6 +148,7 @@ export default function MessageItemMenu({
                     closeDropdown();
                   }}
                   disable={message?.parentMessageId > 0}
+                  dataId="reply"
                 >
                   {stringSet.MESSAGE_MENU__REPLY}
                 </MenuItem>
@@ -158,6 +160,7 @@ export default function MessageItemMenu({
                     onReplyInThread?.({ message });
                     closeDropdown();
                   }}
+                  dataId="thread"
                 >
                   {stringSet.MESSAGE_MENU__THREAD}
                 </MenuItem>
@@ -169,6 +172,7 @@ export default function MessageItemMenu({
                     onMoveToParentMessage?.();
                     closeDropdown();
                   }}
+                  dataId="open_in_channel"
                 >
                   {stringSet.MESSAGE_MENU__OPEN_IN_CHANNEL}
                 </MenuItem>
@@ -182,6 +186,7 @@ export default function MessageItemMenu({
                       closeDropdown();
                     }
                   }}
+                  dataId="edit"
                 >
                   {stringSet.MESSAGE_MENU__EDIT}
                 </MenuItem>
@@ -195,6 +200,7 @@ export default function MessageItemMenu({
                       closeDropdown();
                     }
                   }}
+                  dataId="resend"
                 >
                   {stringSet.MESSAGE_MENU__RESEND}
                 </MenuItem>
@@ -213,6 +219,7 @@ export default function MessageItemMenu({
                       ? disableDeleteMessage
                       : message?.threadInfo?.replyCount > 0
                   }
+                  dataId="delete"
                 >
                   {stringSet.MESSAGE_MENU__DELETE}
                 </MenuItem>

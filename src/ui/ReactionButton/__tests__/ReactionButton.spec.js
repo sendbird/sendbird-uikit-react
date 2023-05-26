@@ -21,7 +21,7 @@ describe('ui/ReactionButton', () => {
   it('should do a snapshot test of the ReactionButton DOM', function () {
     const text = "example-text";
     const { asFragment } = render(
-      <ReactionButton className={text} width="36px" height="36px">
+      <ReactionButton className={text} width="36px" height="36px" dataId="reaction-button">
         {children}
       </ReactionButton>
     );

@@ -101,6 +101,7 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
                             });
                             closeDropdown();
                           }}
+                          dataId="unregister_operator"
                         >
                           {stringSet.CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
                         </MenuItem>

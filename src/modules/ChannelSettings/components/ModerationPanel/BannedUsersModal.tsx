@@ -98,6 +98,7 @@ export default function BannedUsersModal({
                             }));
                           });
                         }}
+                        dataId="ban"
                       >
                         {stringSet.CHANNEL_SETTING__MODERATION__BAN}
                       </MenuItem>

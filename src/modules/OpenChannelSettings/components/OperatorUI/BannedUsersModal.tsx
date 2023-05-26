@@ -104,6 +104,7 @@ export default function BannedUsersModal({
                                   }));
                                 });
                               }}
+                              dataId="unban"
                             >
                               {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNBAN}
                             </MenuItem>
