@@ -33,7 +33,6 @@ export const mockSdk = {
 
 export const mockSdkDispatcher = jest.fn() as unknown as ConnectTypes['sdkDispatcher'];
 export const mockUserDispatcher = jest.fn() as unknown as ConnectTypes['userDispatcher'];
-export const mockUikitConfigDispatcher = jest.fn() as unknown as ConnectTypes['uikitConfigDispatcher'];
 
 export const defaultStaticParams: StaticTypes = {
   nickname: 'test-nickname',
@@ -42,7 +41,6 @@ export const defaultStaticParams: StaticTypes = {
   logger: LoggerFactory('all'),
   sdkDispatcher: mockSdkDispatcher,
   userDispatcher: mockUserDispatcher,
-  uikitConfigDispatcher: mockUikitConfigDispatcher,
 };
 
 export const defaultTriggerParams: TriggerTypes = {

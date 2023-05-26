@@ -1,8 +1,10 @@
-interface CommonConfig {
+import { CaseInsensitive } from './utils/types';
+
+export interface CommonConfig {
   enableUsingDefaultUserProfile: boolean;
 }
 
-interface GroupChannelConfig {
+export interface GroupChannelConfig {
   channel: {
     enableMention: boolean;
     enableOgtag: boolean;
@@ -20,7 +22,7 @@ interface GroupChannelConfig {
         enableVideo: boolean;
       };
     };
-    replyType: 'none' | 'quote_reply' | 'thread';
+    replyType: CaseInsensitive<'none' | 'quote_reply' | 'thread'>;
     threadReplySelectType: 'thread';
   };
   channelList: {
