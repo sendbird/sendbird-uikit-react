@@ -205,7 +205,7 @@ const Message = ({
   if (renderedMessage) {
     return (
       <div
-        // donot delete this data attribute, used for scroll to given message
+        // do not delete this data attribute, used for scroll to given message
         // and also for testing
         data-sb-message-id={message.messageId}
         data-sb-created-at={message.createdAt}
