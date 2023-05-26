@@ -79,11 +79,13 @@ interface UIKitConfigProviderProps {
 }
 
 const UIKitConfigProvider = ({ storage, children, onError, onSuccess /* appConfigurations */ }: UIKitConfigProviderProps) => {
+  // TODO: Implement
   // const localConfigs = mergeConfigs(initialConfig, mapToUIKItConfig(configurations));
   const [remoteConfigs, setRemoteConfigs] = useState(initialConfig);
 
   const initDashboardConfigs = useCallback(async (sdk: SendbirdChat) => {
     try {
+    // TODO: Implement
     // const manager = new UIKitConfigStorageManager(storage)
     // const storedConfigs = await manager.init(sdk.appId);
 
@@ -92,6 +94,7 @@ const UIKitConfigProvider = ({ storage, children, onError, onSuccess /* appConfi
         setRemoteConfigs(snakeToCamel(payload.last_updated_at));
       }
 
+      // TODO: Implement
       // Compare the sdk uikitConfig's lastUpdatedAt <-> stored one
       // if(sdk.appInfo.uikitConfigInfo.lastUpdatedAt === storedConfigs.lastUpdatedAt) {
       //   setRemoteConfigs(storedConfigs);
