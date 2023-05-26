@@ -22,6 +22,11 @@ export interface GroupChannelConfig {
         enableVideo: boolean;
       };
     };
+    /**
+     * To allow both cases
+     * Lowercase: from dashboard config
+     * Capital letters: from UIkit app config
+     */
     replyType: CaseInsensitive<'none' | 'quote_reply' | 'thread'>;
     threadReplySelectType: 'thread';
   };
