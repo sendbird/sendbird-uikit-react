@@ -29,7 +29,7 @@ export type StaticTypes = {
   logger: Logger;
   sdkDispatcher: SdkDispatcher;
   userDispatcher: UserDispatcher;
-  initDashboardConfigs: (sdk: SendbirdChat) => void;
+  initDashboardConfigs: (sdk: SendbirdChat) => Promise<void>;
 };
 
 export type ConnectTypes = TriggerTypes & StaticTypes;

@@ -59,13 +59,12 @@ const initialConfig = {
 };
 
 interface UIKitConfigContextInterface {
-  initDashboardConfigs: (sdk: SendbirdChat) => void;
+  initDashboardConfigs: (sdk: SendbirdChat) => Promise<void>;
   configs: UIKitConfigInfo;
 }
 const UIKitConfigContext = createContext<UIKitConfigContextInterface>({
-  /* eslint-disable @typescript-eslint/no-empty-function */
-  initDashboardConfigs: () => {},
-  configs: {} as UIKitConfigInfo,
+  initDashboardConfigs: () => Promise.resolve(),
+  configs: initialConfig,
 });
 
 interface UIKitConfigProviderProps {
@@ -74,11 +73,9 @@ interface UIKitConfigProviderProps {
   // If the storage value is not provided,
   // it'll fetch the new configs set by dashboard everytime
   storage?: any;
-  onSuccess?: () => void;
-  onError?: (error: any) => void;
 }
 
-const UIKitConfigProvider = ({ storage, children, onError, onSuccess /* appConfigurations */ }: UIKitConfigProviderProps) => {
+const UIKitConfigProvider = ({ storage, children /* appConfigurations */ }: UIKitConfigProviderProps) => {
   // TODO: Implement
   // const localConfigs = mergeConfigs(initialConfig, mapToUIKItConfig(configurations));
   const [remoteConfigs, setRemoteConfigs] = useState(initialConfig);
@@ -91,7 +88,7 @@ const UIKitConfigProvider = ({ storage, children, onError, onSuccess /* appConfi
 
       if (storage == null) {
         const payload = await sdk.getUIKitConfiguration().json;
-        setRemoteConfigs(snakeToCamel(payload.last_updated_at));
+        setRemoteConfigs(snakeToCamel(payload.uikit_configurations));
       }
 
       // TODO: Implement
@@ -103,9 +100,8 @@ const UIKitConfigProvider = ({ storage, children, onError, onSuccess /* appConfi
       //   const updatedConfigs = await manager.update(newConfigs);
       //   setRemoteConfigs(updatedConfigs);
       // }
-      onSuccess?.();
     } catch (error) {
-      onError?.(error);
+      //
     }
   }, []);
 

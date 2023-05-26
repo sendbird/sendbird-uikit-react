@@ -98,7 +98,18 @@ export async function setUpConnection({
         sdkDispatcher({ type: INIT_SDK, payload: newSdk });
         userDispatcher({ type: INIT_USER, payload: user });
 
-        await initDashboardConfigs(newSdk);
+        initDashboardConfigs(newSdk)
+          .then(config => {
+            logger?.info?.('SendbirdProvider | useConnect/setupConnection/getUIKitConfiguration success', {
+              config,
+            });
+          })
+          .catch(error => {
+            logger?.error?.('SendbirdProvider | useConnect/setupConnection/getUIKitConfiguration failed', {
+              error,
+            });
+          });
+
         // use nickname/profileUrl if provided
         // or set userID as nickname
         if ((nickname !== user.nickname || profileUrl !== user.profileUrl)

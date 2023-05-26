@@ -264,12 +264,6 @@ const Sendbird = ({
       }}
     >
     <UIKitConfigProvider
-      onSuccess={() => {
-        logger?.info?.('SendbirdProvider | useConnect/setupConnection/getUIKitConfiguration succeed');
-      }}
-      onError={error => {
-        logger?.error?.('SendbirdProvider | useConnect/setupConnection/getUIKitConfiguration failed', error);
-      }}
       appConfigurations={{
         common: {
           enableUsingDefaultUserProfile: !uikitConfigurations.disableUserProfile,
