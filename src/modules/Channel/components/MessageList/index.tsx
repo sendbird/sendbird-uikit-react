@@ -19,7 +19,7 @@ import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 import { useSetScrollToBottom } from './hooks/useSetScrollToBottom';
 
-const SCROLL_BOTTOM_PADDING = 200;
+const SCROLL_BOTTOM_PADDING = 50;
 
 export interface MessageListProps {
   className?: string;
