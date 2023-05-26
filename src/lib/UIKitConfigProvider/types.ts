@@ -1,5 +1,3 @@
-import { CaseInsensitive } from './utils/types';
-
 export interface CommonConfig {
   enableUsingDefaultUserProfile: boolean;
 }
@@ -22,12 +20,7 @@ export interface GroupChannelConfig {
         enableVideo: boolean;
       };
     };
-    /**
-     * To allow both cases
-     * Lowercase: from dashboard config
-     * Capital letters: from UIkit app config
-     */
-    replyType: CaseInsensitive<'none' | 'quote_reply' | 'thread'>;
+    replyType: 'none' | 'quote_reply' | 'thread';
     threadReplySelectType: 'thread';
   };
   channelList: {

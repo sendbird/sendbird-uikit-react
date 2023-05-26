@@ -273,7 +273,12 @@ const Sendbird = ({
             enableReactions: uikitConfigurations.isReactionEnabled,
             enableMention: uikitConfigurations.isMentionEnabled,
             enableVoiceMessage: uikitConfigurations.isVoiceMessageEnabled,
-            replyType: uikitConfigurations.replyType,
+            /**
+             * Since dashbord UIKit Configuration's replyType is consisted of all lowercase letters,
+             * we convert it from here.
+             * i.e. 'THREAD' -> 'thread'
+             */
+            replyType: uikitConfigurations.replyType.toLowerCase(),
           },
           channelList: {
             enableTypingIndicator: uikitConfigurations.isTypingIndicatorEnabledOnChannelList,
