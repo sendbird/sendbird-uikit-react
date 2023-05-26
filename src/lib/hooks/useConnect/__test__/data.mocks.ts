@@ -33,7 +33,7 @@ export const mockSdk = {
 
 export const mockSdkDispatcher = jest.fn() as unknown as ConnectTypes['sdkDispatcher'];
 export const mockUserDispatcher = jest.fn() as unknown as ConnectTypes['userDispatcher'];
-export const mockInitDashboardConfigs = jest.fn() as unknown as ConnectTypes['initDashboardConfigs'];
+export const mockInitDashboardConfigs = jest.fn().mockImplementation(() => Promise.resolve({})) as unknown as ConnectTypes['initDashboardConfigs'];
 
 export const defaultStaticParams: StaticTypes = {
   nickname: 'test-nickname',
