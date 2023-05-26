@@ -4,6 +4,7 @@ exports[`ui/ReactionButton should do a snapshot test of the ReactionButton DOM 1
 <DocumentFragment>
   <div
     class="example-text sendbird-reaction-button"
+    data-sendbird-id="emoji-reaction-button_reaction-button"
     role="button"
     style="width: 36px; height: 36px;"
     tabindex="0"
