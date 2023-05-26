@@ -280,6 +280,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     setInitialTimeStamp,
     setAnimatedMessageId,
     allMessages,
+    scrollRef,
   }, { logger });
 
   // onScrollDownCallback is added for navigation to different timestamps on messageSearch

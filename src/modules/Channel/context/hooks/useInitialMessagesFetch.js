@@ -79,6 +79,10 @@ function useInitialMessagesFetch({
         .finally(() => {
           if (!initialTimeStamp) {
             setTimeout(() => utils.scrollIntoLast(0, scrollRef));
+          } else {
+            setTimeout(() => {
+              utils.scrollToRenderedMessage(scrollRef, initialTimeStamp);
+            }, 500);
           }
         });
     }

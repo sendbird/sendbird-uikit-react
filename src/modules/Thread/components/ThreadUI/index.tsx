@@ -87,7 +87,7 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
 
   // scroll
   const [scrollBottom, setScrollBottom] = useState(0);
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const onScroll = (e) => {
     const element = e.target;
     const {
@@ -96,7 +96,7 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
       scrollHeight,
     } = element;
 
-    const threadItemNodes = scrollRef.current.querySelectorAll('.sendbird-thread-list-item');
+    const threadItemNodes = scrollRef.current?.querySelectorAll('.sendbird-thread-list-item');
     const firstNode = threadItemNodes?.[0];
     if (isAboutSame(scrollTop, 0, 10) && hasMorePrev) {
       fetchPrevThreads((messages) => {
@@ -139,7 +139,9 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
             className="sendbird-thread-ui__header"
             channelName={getChannelTitle(currentChannel, currentUserId, stringSet)}
             onActionIconClick={onHeaderActionClick}
-            onChannelNameClick={() => onMoveToParentMessage({ message: parentMessage, channel: currentChannel })}
+            onChannelNameClick={() => {
+              onMoveToParentMessage?.({ message: parentMessage, channel: currentChannel });
+            }}
           />
         )
       }
