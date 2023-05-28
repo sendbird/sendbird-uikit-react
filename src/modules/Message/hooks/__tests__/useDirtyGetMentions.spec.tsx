@@ -39,7 +39,7 @@ const TestComponent = ({
       }
     </div>
   );
-}
+};
 
 describe('useDirtyGetMentions', () => {
   it('should get mention nodes when Input is visible', () => {

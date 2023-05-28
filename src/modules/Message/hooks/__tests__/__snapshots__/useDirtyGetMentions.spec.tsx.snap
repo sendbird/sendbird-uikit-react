@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`useDirtyGetMentions should get empty list of mentions when Input is not rendered 1`] = `
+exports['useDirtyGetMentions should get empty list of mentions when Input is not rendered 1'] = `
 <DocumentFragment>
   <div>
     <div
@@ -10,7 +10,7 @@ exports[`useDirtyGetMentions should get empty list of mentions when Input is not
 </DocumentFragment>
 `;
 
-exports[`useDirtyGetMentions should get list of mentions when Input is changed 1`] = `
+exports['useDirtyGetMentions should get list of mentions when Input is changed 1'] = `
 <DocumentFragment>
   <div>
     <div
@@ -20,7 +20,7 @@ exports[`useDirtyGetMentions should get list of mentions when Input is changed 1
 </DocumentFragment>
 `;
 
-exports[`useDirtyGetMentions should get list of mentions when Input is changed 2`] = `
+exports['useDirtyGetMentions should get list of mentions when Input is changed 2'] = `
 <DocumentFragment>
   <div>
     <div
@@ -58,7 +58,7 @@ exports[`useDirtyGetMentions should get list of mentions when Input is changed 2
 </DocumentFragment>
 `;
 
-exports[`useDirtyGetMentions should get mention nodes when Input is visible 1`] = `
+exports['useDirtyGetMentions should get mention nodes when Input is visible 1'] = `
 <DocumentFragment>
   <div>
     <div
