@@ -37,11 +37,9 @@ export function useDirtyGetMentions({
 
     // Callback function to execute when mutations are observed
     const callback = (mutationList: MutationRecord[]): void => {
-      for (const mutation of mutationList) {
-        if (mutation.type === 'childList') {
-          // setMentionNodes
-          setMentionNodes(getMentionNodes(targetNode));
-        }
+      const hasMutation = mutationList.length > 0;
+      if (hasMutation) {
+        setMentionNodes(getMentionNodes(targetNode));
       }
     };
 

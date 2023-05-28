@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`useDirtyGetMentions should get empty list of mentions when Input is not rendered 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      id="mentions"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`useDirtyGetMentions should get list of mentions when Input is changed 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      id="mentions"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`useDirtyGetMentions should get list of mentions when Input is changed 2`] = `
+<DocumentFragment>
+  <div>
+    <div
+      id="mentions"
+    />
+    <div
+      id="input"
+    >
+      <div
+        data-sb-mention="true"
+        id="1"
+      >
+        mention-1
+      </div>
+      <div
+        data-sb-mention="true"
+        id="2"
+      >
+        mention-2
+      </div>
+      <div
+        data-sb-mention="true"
+        id="3"
+      >
+        mention-3
+      </div>
+      <div
+        data-sb-mention="true"
+        id="4"
+      >
+        mention-4
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`useDirtyGetMentions should get mention nodes when Input is visible 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      id="mentions"
+    />
+    <div
+      id="input"
+    >
+      <div
+        data-sb-mention="true"
+        id="1"
+      >
+        mention-1
+      </div>
+      <div
+        data-sb-mention="true"
+        id="2"
+      >
+        mention-2
+      </div>
+      <div
+        data-sb-mention="true"
+        id="3"
+      >
+        mention-3
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
