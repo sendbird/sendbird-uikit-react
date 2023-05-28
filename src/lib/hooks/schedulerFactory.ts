@@ -3,6 +3,12 @@ import { Logger } from '../SendbirdState';
 
 const TIMEOUT = 2000;
 
+/*
+  * This is a factory function that returns a scheduler.
+  * The scheduler is a queue that calls the callback function on intervals.
+  * If interval is empty, the callback function is called immediately.
+  * If interval is not empty, the callback function is called after the interval.
+*/
 export function schedulerFactory<T>({
   logger,
   timeout,
