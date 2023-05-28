@@ -60,9 +60,9 @@ describe('schedulerFactory', () => {
     scheduler.push(channel1);
     scheduler.push(channel2);
     expect(scheduler.getQueue().length).toBe(1);
-    jest.advanceTimersByTime(1000);
     expect(channel1.markAsRead).toHaveBeenCalledTimes(1);
     expect(channel2.markAsRead).toHaveBeenCalledTimes(0);
+    jest.advanceTimersByTime(1000);
     expect(scheduler.getQueue().length).toBe(0);
   });
 });

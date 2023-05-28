@@ -9,7 +9,7 @@ jest.useFakeTimers();
 
 const logger = LoggerFactory('all') as Logger;
 describe('useMarkAsDeliveredScheduler', () => {
-  it('should return a markAsReadScheduler', () => {
+  it('should return a markAsDeliveredScheduler', () => {
     const { result } = renderHook(() => useMarkAsDeliveredScheduler({ isConnected: true }, { logger }));
     expect(result.current.push).toBeDefined();
     expect(result.current.clear).toBeDefined();
@@ -26,14 +26,16 @@ describe('useMarkAsDeliveredScheduler', () => {
         },
       },
     );
-    const channel = { markAsRead: jest.fn() } as unknown as GroupChannel;
-    result.current.push(channel);
+    const channel1 = { markAsDelivered: jest.fn(), url: '1' } as unknown as GroupChannel;
+    const channel2 = { markAsDelivered: jest.fn(), url: '2' } as unknown as GroupChannel;
+    result.current.push(channel1);
+    result.current.push(channel2);
     expect(result.current.getQueue().length).toBe(1);
     rerender({ isConnected: false, logger });
     expect(result.current.getQueue().length).toBe(0);
   });
 
-  it('should call markAsRead on intervals', () => {
+  it('should call markAsDelivered on intervals', () => {
     const { result } = renderHook(
       ({ isConnected, logger }) => {
         return useMarkAsDeliveredScheduler({ isConnected }, { logger });
@@ -44,13 +46,13 @@ describe('useMarkAsDeliveredScheduler', () => {
         },
       },
     );
-    const channel1 = { markAsRead: jest.fn(), url: '123' } as unknown as GroupChannel;
-    const channel2 = { markAsRead: jest.fn(), url: '124' } as unknown as GroupChannel;
+    const channel1 = { markAsDelivered: jest.fn(), url: '123' } as unknown as GroupChannel;
+    const channel2 = { markAsDelivered: jest.fn(), url: '124' } as unknown as GroupChannel;
     result.current.push(channel1);
+    expect(channel1.markAsDelivered).toHaveBeenCalledTimes(1);
     result.current.push(channel2);
     jest.advanceTimersByTime(10000);
-    expect(channel1.markAsRead).toHaveBeenCalledTimes(1);
-    expect(channel2.markAsRead).toHaveBeenCalledTimes(1);
+    expect(channel2.markAsDelivered).toHaveBeenCalledTimes(1);
     expect(result.current.getQueue().length).toBe(0);
   });
 });
