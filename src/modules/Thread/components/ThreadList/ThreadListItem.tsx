@@ -15,6 +15,7 @@ import { ThreadListStateTypes } from '../../types';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import ThreadListItemContent from './ThreadListItemContent';
 import { Role } from '../../../../lib/types';
+import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 
 export interface ThreadListItemProps {
   className?: string;
@@ -42,6 +43,7 @@ export default function ThreadListItem({
     isOnline,
     replyType,
     userMention,
+    logger,
   } = config;
   const userId = stores?.userStore?.user?.userId;
   const { dateLocale } = useLocalization();
@@ -86,19 +88,15 @@ export default function ThreadListItem({
   const [messageInputEvent, setMessageInputEvent] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState([]);
-  const [ableMention, setAbleMention] = useState(true);
   const displaySuggestedMentionList = isOnline
     && isMentionEnabled
     && mentionNickname.length > 0
     && !isMuted
     && !(isChannelFrozen && !(currentChannel.myRole === Role.OPERATOR));
-  useEffect(() => {
-    if (mentionedUsers?.length >= userMention?.maxMentionCount) {
-      setAbleMention(false);
-    } else {
-      setAbleMention(true);
-    }
-  }, [mentionedUsers]);
+
+  const mentionNodes = useDirtyGetMentions({ ref: editMessageInputRef }, { logger });
+  const ableMention = mentionNodes?.length < userMention?.maxMentionCount;
+
   useEffect(() => {
     setMentionedUsers(mentionedUsers.filter(({ userId }) => {
       const i = mentionedUserIds.indexOf(userId);

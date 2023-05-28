@@ -11,6 +11,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import SuggestedMentionList from '../SuggestedMentionList';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import VoiceMessageInputWrapper from './VoiceMessageInputWrapper';
+import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 
 export type MessageInputWrapperProps = {
   value?: string;
@@ -50,6 +51,7 @@ const MessageInputWrapper = (
     isMentionEnabled,
     userMention,
     isVoiceMessageEnabled,
+    logger,
   } = globalStore.config;
   const maxUserMentionCount = userMention?.maxMentionCount || 10;
   const maxUserSuggestionCount = userMention?.maxSuggestionCount || 15;
@@ -61,7 +63,6 @@ const MessageInputWrapper = (
   const [mentionedUserIds, setMentionedUserIds] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState([]);
-  const [ableMention, setAbleMention] = useState(true);
   const [messageInputEvent, setMessageInputEvent] = useState(null);
   const [showVoiceMessageInput, setShowVoiceMessageInput] = useState(false);
   const disabled = propDisabled
@@ -85,18 +86,12 @@ const MessageInputWrapper = (
     setMentionedUserIds([]);
     setSelectedUser(null);
     setMentionSuggestedUsers([]);
-    setAbleMention(true);
     setMessageInputEvent(null);
     setShowVoiceMessageInput(false);
   }, [channel?.url]);
 
-  useEffect(() => {
-    if (mentionedUsers?.length >= maxUserMentionCount) {
-      setAbleMention(false);
-    } else {
-      setAbleMention(true);
-    }
-  }, [mentionedUsers]);
+  const mentionNodes = useDirtyGetMentions({ ref: ref || messageInputRef }, { logger });
+  const ableMention = mentionNodes?.length < maxUserMentionCount;
 
   useEffect(() => {
     setMentionedUsers(mentionedUsers.filter(({ userId }) => {
