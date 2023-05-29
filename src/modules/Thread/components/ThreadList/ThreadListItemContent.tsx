@@ -108,7 +108,6 @@ export default function ThreadListItemContent({
   return (
     <div
       className={`sendbird-thread-list-item-content ${className} ${isByMe ? 'outgoing' : 'incoming'}`}
-      {...(isMobile) ? { ...longPress } : {}}
       ref={mobileMenuRef}
     >
       <div className={`sendbird-thread-list-item-content__left ${isReactionEnabledInChannel ? 'use-reaction' : ''} ${isByMe ? 'outgoing' : 'incoming'}`}>
@@ -176,7 +175,10 @@ export default function ThreadListItemContent({
           </div>
         )}
       </div>
-      <div className="sendbird-thread-list-item-content__middle">
+      <div
+        className="sendbird-thread-list-item-content__middle"
+        {...(isMobile) ? { ...longPress } : {}}
+      >
         {(!isByMe && !chainTop && !useReplying) && (
           <Label
             className="sendbird-thread-list-item-content__middle__sender-name"
