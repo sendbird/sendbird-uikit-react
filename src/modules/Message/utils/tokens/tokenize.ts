@@ -11,7 +11,11 @@ export function getUserMentionRegex(mentionedUsers: User[], templatePrefix_: str
       // If user.id includes these patterns, need to convert it into an escaped one
       /([.*+?^${}()|[\]\\])/g,
       '\\$1');
-    return `${templatePrefix}{${userId}}`;
+      /**
+       * //{ And //} are also for escaping
+       * because curly braces `{}` are metacharacters in regular expressions used to specify repetition
+       */
+    return `${templatePrefix}\\{${userId}\\}`;
   }).join('|')})`, 'g');
 }
 
@@ -19,7 +23,7 @@ export function identifyMentions({
   tokens,
   mentionedUsers = [],
   templatePrefix = USER_MENTION_PREFIX,
-}: IdentifyMentionsType): (MentionToken|UndeterminedToken)[] {
+}: IdentifyMentionsType): (MentionToken | UndeterminedToken)[] {
   if (!mentionedUsers?.length) {
     return tokens;
   }
