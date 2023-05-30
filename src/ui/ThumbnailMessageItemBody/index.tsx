@@ -38,9 +38,6 @@ export default function ThumbnailMessageItemBody({
         showFileViewer?.(true);
       }
     },
-  }, {
-    shouldPreventDefault: true,
-    shouldStopPropagation: true,
   });
 
   return (
