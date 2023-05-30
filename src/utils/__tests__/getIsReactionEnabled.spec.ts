@@ -34,22 +34,28 @@ describe('Global-utils/getIsReactionEnabled', () => {
     })).toBeTrue();
   });
 
-  it('should disable if it is turned off from one level', () => {
+  it('should disable if one level does not allow', () => {
     expect(getIsReactionEnabled({
       appLevel: false,
       globalLevel: true,
-      moduleLevel: true,
     })).toBeFalse();
     expect(getIsReactionEnabled({
       appLevel: true,
       globalLevel: false,
-      moduleLevel: true,
     })).toBeFalse();
+  });
+
+  it('should have higher priority to the moduleLevel', () => {
     expect(getIsReactionEnabled({
       appLevel: true,
       globalLevel: true,
       moduleLevel: false,
     })).toBeFalse();
+    expect(getIsReactionEnabled({
+      appLevel: false,
+      globalLevel: false,
+      moduleLevel: true,
+    })).toBeTrue();
   });
 
   it('should be disabled in the special channels', () => {
