@@ -4,10 +4,8 @@ import { GroupChannelModule } from '@sendbird/chat/groupChannel';
 
 import { SDK_ACTIONS } from '../../dux/sdk/actionTypes';
 import { USER_ACTIONS } from '../../dux/user/actionTypes';
-import { UIKIT_CONFIGURATION_ACTIONS } from '../../dux/uikitConfiguration/actionTypes';
 
 import { isTextuallyNull } from '../../../utils';
-import { snakeToCamel } from '../../../utils/snakeToCamel';
 
 import { SetupConnectionTypes } from './types';
 
@@ -15,7 +13,6 @@ const APP_VERSION_STRING = '__react_dev_mode__';
 
 const { INIT_SDK, SET_SDK_LOADING, RESET_SDK, SDK_ERROR } = SDK_ACTIONS;
 const { INIT_USER, UPDATE_USER_INFO, RESET_USER } = USER_ACTIONS;
-const { INIT_UIKIT_CONFIGURATION, RESET_UIKIT_CONFIGURATION } = UIKIT_CONFIGURATION_ACTIONS;
 
 export function getMissingParamError({ userId, appId }: { userId?: string, appId?: string }): string {
   return `SendbirdProvider | useConnect/setupConnection/Connection failed UserId: ${userId} or appId: ${appId} missing`;
@@ -66,7 +63,7 @@ export async function setUpConnection({
   logger,
   sdkDispatcher,
   userDispatcher,
-  uikitConfigDispatcher,
+  initDashboardConfigs,
   userId,
   appId,
   customApiHost,
@@ -96,24 +93,21 @@ export async function setUpConnection({
       logger?.info?.('SendbirdProvider | useConnect/setupConnection/setVersion', { version: APP_VERSION_STRING });
       newSdk.addExtension('sb_uikit', APP_VERSION_STRING);
 
-      const connectCbSucess = (user: User) => {
+      const connectCbSucess = async (user: User) => {
         logger?.info?.('SendbirdProvider | useConnect/setupConnection/connectCbSucess', user);
         sdkDispatcher({ type: INIT_SDK, payload: newSdk });
         userDispatcher({ type: INIT_USER, payload: user });
 
-        newSdk.getUIKitConfiguration()
+        initDashboardConfigs(newSdk)
           .then(config => {
-            const payload = snakeToCamel(config.json)?.uikitConfigurations;
             logger?.info?.('SendbirdProvider | useConnect/setupConnection/getUIKitConfiguration success', {
-              payload,
+              config,
             });
-            uikitConfigDispatcher({ type: INIT_UIKIT_CONFIGURATION, payload });
           })
           .catch(error => {
             logger?.error?.('SendbirdProvider | useConnect/setupConnection/getUIKitConfiguration failed', {
               error,
             });
-            uikitConfigDispatcher({ type: RESET_UIKIT_CONFIGURATION });
           });
 
         // use nickname/profileUrl if provided
@@ -151,7 +145,6 @@ export async function setUpConnection({
         });
         sdkDispatcher({ type: RESET_SDK });
         userDispatcher({ type: RESET_USER });
-        uikitConfigDispatcher({ type: RESET_UIKIT_CONFIGURATION });
 
         sdkDispatcher({ type: SDK_ERROR });
         // exit promise with error

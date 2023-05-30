@@ -10,11 +10,9 @@ import useTheme from './hooks/useTheme';
 
 import sdkReducers from './dux/sdk/reducers';
 import userReducers from './dux/user/reducers';
-import uikitConfigReducers from './dux/uikitConfiguration/reducers';
 
 import sdkInitialState from './dux/sdk/initialState';
 import userInitialState from './dux/user/initialState';
-import uikitConfigInitialState from './dux/uikitConfiguration/initialState';
 
 import useOnlineStatus from './hooks/useOnlineStatus';
 import useConnect from './hooks/useConnect';
@@ -22,6 +20,7 @@ import { LoggerFactory, LogLevel } from './Logger';
 import pubSubFactory from './pubSub/index';
 import useAppendDomNode from '../hooks/useAppendDomNode';
 
+import { UIKitConfigProvider } from './UIKitConfigProvider';
 import { VoiceMessageProvider } from './VoiceMessageProvider';
 import { LocalizationProvider } from './LocalizationContext';
 import { MediaQueryProvider } from './MediaQueryContext';
@@ -128,7 +127,6 @@ const Sendbird = ({
   const [pubSub] = useState(pubSubFactory());
   const [sdkStore, sdkDispatcher] = useReducer(sdkReducers, sdkInitialState);
   const [userStore, userDispatcher] = useReducer(userReducers, userInitialState);
-  const [uikitConfigStore, uikitConfigDispatcher] = useReducer(uikitConfigReducers, uikitConfigInitialState);
 
   useTheme(colorSet);
 
@@ -146,7 +144,6 @@ const Sendbird = ({
     sdk: sdkStore?.sdk,
     sdkDispatcher,
     userDispatcher,
-    uikitConfigDispatcher,
   });
 
   // to create a pubsub to communicate between parent and child
@@ -210,13 +207,28 @@ const Sendbird = ({
     };
   }, [stringSet]);
 
+  const uikitConfigurations = {
+    // common.enable_using_default_user_profile
+    disableUserProfile,
+    // group_channel.enable_reactions
+    isReactionEnabled,
+    // group_channel.enable_mention
+    isMentionEnabled: isMentionEnabled || false,
+    // group_channel.enable_voice_message
+    isVoiceMessageEnabled,
+    // group_channel.reply_type
+    replyType,
+    // group_channel_list.enable_typing_indicator
+    isTypingIndicatorEnabledOnChannelList,
+    // group_channel_list.enable_message_receipt_status
+    isMessageReceiptStatusEnabledOnChannelList,
+  };
   return (
     <SendbirdSdkContext.Provider
       value={{
         stores: {
           sdkStore,
           userStore,
-          uikitConfigStore,
         },
         dispatchers: {
           sdkDispatcher,
@@ -224,7 +236,6 @@ const Sendbird = ({
           reconnect,
         },
         config: {
-          disableUserProfile,
           disableMarkAsDelivered,
           renderUserProfile,
           onUserProfileMessage,
@@ -242,18 +253,37 @@ const Sendbird = ({
             compressionRate: 0.7,
             ...imageCompression,
           },
-          isReactionEnabled,
-          isMentionEnabled: isMentionEnabled || false,
-          isVoiceMessageEnabled,
           voiceRecord,
           userMention: {
             maxMentionCount: userMention?.maxMentionCount || 10,
             maxSuggestionCount: userMention?.maxSuggestionCount || 15,
           },
-          isTypingIndicatorEnabledOnChannelList,
-          isMessageReceiptStatusEnabledOnChannelList,
-          replyType,
           markAsReadScheduler,
+          ...uikitConfigurations,
+        },
+      }}
+    >
+    <UIKitConfigProvider
+      appConfigurations={{
+        common: {
+          enableUsingDefaultUserProfile: !uikitConfigurations.disableUserProfile,
+        },
+        groupChannel: {
+          channel: {
+            enableReactions: uikitConfigurations.isReactionEnabled,
+            enableMention: uikitConfigurations.isMentionEnabled,
+            enableVoiceMessage: uikitConfigurations.isVoiceMessageEnabled,
+            /**
+             * Since dashbord UIKit Configuration's replyType is consisted of all lowercase letters,
+             * we convert it from here.
+             * i.e. 'THREAD' -> 'thread'
+             */
+            replyType: uikitConfigurations.replyType.toLowerCase(),
+          },
+          channelList: {
+            enableTypingIndicator: uikitConfigurations.isTypingIndicatorEnabledOnChannelList,
+            enableMessageReceiptStatus: uikitConfigurations.isMessageReceiptStatusEnabledOnChannelList,
+          },
         },
       }}
     >
@@ -264,6 +294,7 @@ const Sendbird = ({
           </VoiceMessageProvider>
         </LocalizationProvider>
       </MediaQueryProvider>
+      </UIKitConfigProvider>
     </SendbirdSdkContext.Provider>
   );
 };

@@ -1,8 +1,8 @@
-interface CommonConfig {
+export interface CommonConfig {
   enableUsingDefaultUserProfile: boolean;
 }
 
-interface GroupChannelConfig {
+export interface GroupChannelConfig {
   channel: {
     enableMention: boolean;
     enableOgtag: boolean;

@@ -4,13 +4,11 @@ import { SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
 import { SdkActionTypes } from '../../dux/sdk/actionTypes';
 import { UserActionTypes } from '../../dux/user/actionTypes';
-import { UikitConfigurationActionTypes } from '../../dux/uikitConfiguration/actionTypes';
 
 import { Logger } from '../../SendbirdState';
 
 type SdkDispatcher = React.Dispatch<SdkActionTypes>;
 type UserDispatcher = React.Dispatch<UserActionTypes>;
-type UIKitConfigDispatcher = React.Dispatch<UikitConfigurationActionTypes>;
 
 export type TriggerTypes = {
   userId: string;
@@ -31,7 +29,7 @@ export type StaticTypes = {
   logger: Logger;
   sdkDispatcher: SdkDispatcher;
   userDispatcher: UserDispatcher;
-  uikitConfigDispatcher: UIKitConfigDispatcher;
+  initDashboardConfigs: (sdk: SendbirdChat) => Promise<void>;
 };
 
 export type ConnectTypes = TriggerTypes & StaticTypes;
@@ -41,7 +39,6 @@ export type SetupConnectionTypes = Omit<ConnectTypes, 'sdk'>;
 export type DisconnectSdkTypes = {
   sdkDispatcher: SdkDispatcher;
   userDispatcher: UserDispatcher;
-  uikitConfigDispatcher: UIKitConfigDispatcher;
   sdk: SendbirdChat;
   logger: Logger;
 };
