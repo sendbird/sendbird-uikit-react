@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import type { ApplicationUserListQuery } from '@sendbird/chat';
+import type { ApplicationUserListQuery, User } from '@sendbird/chat';
 
 import './invite-users.scss';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
@@ -35,6 +35,8 @@ const appHeight = () => {
   }
 };
 
+const BUFFER = 50;
+
 const InviteUsers: React.FC<InviteUsersProps> = ({
   onCancel,
   userListQuery,
@@ -51,7 +53,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
   const userId = globalStore?.config?.userId;
   const sdk = globalStore?.stores?.sdkStore?.sdk as SendbirdGroupChat;
   const idsToFilter = [userId];
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState({});
   const { stringSet } = useContext(LocalizationContext);
   const [usersDataSource, setUsersDataSource] = useState<ApplicationUserListQuery | UserListQuery>(null);
@@ -134,11 +136,12 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
         </Label>
         <div
           className="sendbird-create-channel--scroll"
+
           onScroll={(e) => {
             const eventTarget = e.target as HTMLDivElement;
             const { hasNext } = usersDataSource;
             const fetchMore = (
-              eventTarget.clientHeight + eventTarget.scrollTop === eventTarget.scrollHeight
+              (eventTarget.clientHeight + eventTarget.scrollTop + BUFFER) > eventTarget.scrollHeight
             );
 
             if (hasNext && fetchMore) {
