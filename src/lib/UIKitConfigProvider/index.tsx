@@ -113,4 +113,4 @@ const UIKitConfigProvider = ({ storage, children, localConfigs }: UIKitConfigPro
 
 const useUIKitConfig = () => useContext(UIKitConfigContext);
 
-export { UIKitConfigProvider, useUIKitConfig };
+export { UIKitConfigProvider, UIKitConfigContext, useUIKitConfig };
