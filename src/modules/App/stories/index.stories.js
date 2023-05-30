@@ -22,31 +22,35 @@ export default { title: 'App-Component' };
 export const versionInfo = () => {
   const [showAll, setshowAll] = useState(false);
   return (
-    <>
-      <div>UIKit: {pkg.version}</div>
-      <div>Sendbird SDK: {pkg.dependencies['@sendbird/chat']}</div>
-      <button onClick={() => { setshowAll(!showAll) }}>Show all</button>
-      {
-        showAll && (
-          <div>
-            <p>dependencies</p>
-            {
-              Object.keys(pkg.dependencies)
-                .map((p) => (
-                  <div key={p}>{p}: {pkg.dependencies[p]}</div>
-                ))
-            }
-            <p>Dev-dependencies</p>
-            {
-              Object.keys(pkg.devDependencies)
-                .map((p) => (
-                  <div key={p}>{p}: {pkg.devDependencies[p]}</div>
-                ))
-            }
-          </div>
-        )
-      }
-    </>
+    <div className='sendbird-welcome'>
+      <div className='sendbird-welcome__content'>
+        <h1>@sendbird/uikit-react</h1>
+        <a href='https://www.npmjs.com/package/@sendbird/uikit-react'>npm</a>
+        <h4>UIKit: {pkg.version}</h4>
+        <h4>Sendbird SDK: {pkg.dependencies['@sendbird/chat']}</h4>
+        <button onClick={() => { setshowAll(!showAll) }}>Show all</button>
+        {
+          showAll && (
+            <div className='sendbird-welcome__dependencies'>
+              <h5>Dependencies</h5>
+              {
+                Object.keys(pkg.dependencies)
+                  .map((p) => (
+                    <div key={p}>{p}: {pkg.dependencies[p]}</div>
+                  ))
+              }
+              <h5>Dev.dependencies</h5>
+              {
+                Object.keys(pkg.devDependencies)
+                  .map((p) => (
+                    <div key={p}>{p}: {pkg.devDependencies[p]}</div>
+                  ))
+              }
+            </div>
+          )
+        }
+      </div>
+    </div>
   );
 }
 
