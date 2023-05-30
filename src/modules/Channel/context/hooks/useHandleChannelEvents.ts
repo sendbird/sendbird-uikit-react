@@ -8,7 +8,8 @@ import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdStat
 import uuidv4 from '../../../../utils/uuid';
 import compareIds from '../../../../utils/compareIds';
 import * as messageActions from '../dux/actionTypes';
-import { MarkAsReadSchedulerType } from '../../../../lib/hooks/useMarkAsReadScheduler';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { useChannelContext } from '../ChannelProvider';
 
 /**
  * Handles ChannelEvents and send values to dispatcher using messagesDispatcher
@@ -21,7 +22,6 @@ import { MarkAsReadSchedulerType } from '../../../../lib/hooks/useMarkAsReadSche
 interface DynamicParams {
   sdkInit: boolean;
   currentUserId: string;
-  disableMarkAsRead: boolean;
   currentGroupChannel: GroupChannel;
 }
 interface StaticParams {
@@ -30,22 +30,32 @@ interface StaticParams {
   scrollRef: React.RefObject<HTMLDivElement>;
   setQuoteMessage: React.Dispatch<React.SetStateAction<UserMessage | FileMessage>>;
   messagesDispatcher: CustomUseReducerDispatcher;
-  markAsReadScheduler: MarkAsReadSchedulerType;
 }
+
+const DELIVERY_RECIPT = 'delivery_receipt';
 
 function useHandleChannelEvents({
   sdkInit,
   currentUserId,
-  disableMarkAsRead,
   currentGroupChannel,
 }: DynamicParams, {
   sdk,
-  markAsReadScheduler,
   logger,
   scrollRef,
   setQuoteMessage,
   messagesDispatcher,
 }: StaticParams): void {
+  const channelStore = useChannelContext();
+  const store = useSendbirdStateContext();
+  const { disableMarkAsRead } = channelStore;
+  const {
+    markAsReadScheduler,
+    markAsDeliveredScheduler,
+    disableMarkAsDelivered,
+  } = store.config;
+  const canSetMarkAsDelivered = store.stores.sdkStore.sdk?.appInfo?.premiumFeatureList
+    ?.find((feature) => (feature === DELIVERY_RECIPT));
+
   useEffect(() => {
     const channelUrl = currentGroupChannel?.url;
     const channelHandlerId = uuidv4();
@@ -68,17 +78,20 @@ function useHandleChannelEvents({
               payload: { channel, message },
             });
             if (scrollToEnd
-              && document.getElementById('sendbird-dropdown-portal').childElementCount === 0
-              && document.getElementById('sendbird-emoji-list-portal').childElementCount === 0
+              && document.getElementById('sendbird-dropdown-portal')?.childElementCount === 0
+              && document.getElementById('sendbird-emoji-list-portal')?.childElementCount === 0
             ) {
               // and !openContextMenu
               try {
-                if (!disableMarkAsRead) {
-                  markAsReadScheduler?.push?.(currentGroupChannel);
-                }
                 setTimeout(() => {
                   scrollIntoLast(0, scrollRef);
                 });
+                if (!disableMarkAsRead) {
+                  markAsReadScheduler.push(currentGroupChannel);
+                }
+                if (canSetMarkAsDelivered && !disableMarkAsDelivered) {
+                  markAsDeliveredScheduler.push(currentGroupChannel);
+                }
               } catch (error) {
                 logger.warning('Channel | onMessageReceived | scroll to end failed');
               }

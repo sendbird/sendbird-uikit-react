@@ -7,14 +7,14 @@ import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 
 export interface UnreadCountProps {
   className?: string;
-  count: number;
+  count: number | undefined;
   time: string;
   onClick(): void;
 }
 
 const UnreadCount: React.FC<UnreadCountProps> = ({
   className = '',
-  count,
+  count = 0,
   time = '',
   onClick,
 }: UnreadCountProps) => {

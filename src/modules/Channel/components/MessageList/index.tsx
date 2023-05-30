@@ -6,13 +6,12 @@ import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import Message from '../Message';
-import { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
+import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { isAboutSame } from '../../context/utils';
 import { getMessagePartsInfo } from './getMessagePartsInfo';
 import UnreadCount from '../UnreadCount';
 import FrozenNotification from '../FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
-import { EveryMessage } from '../../../..';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { UserMessage } from '@sendbird/chat/message';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
@@ -99,12 +98,15 @@ const MessageList: React.FC<MessageListProps> = ({
       });
     }
 
-    if (!disableMarkAsRead && isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER)) {
+    if (!disableMarkAsRead
+      && isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER)
+      && !!currentGroupChannel
+    ) {
       messagesDispatcher({
         type: messageActionTypes.MARK_AS_READ,
         payload: { channel: currentGroupChannel },
       });
-      markAsReadScheduler?.push(currentGroupChannel);
+      markAsReadScheduler.push(currentGroupChannel);
     }
   };
 
@@ -214,8 +216,8 @@ const MessageList: React.FC<MessageListProps> = ({
           if (scrollRef?.current?.scrollTop) {
             scrollRef.current.scrollTop = (scrollRef?.current?.scrollHeight ?? 0) - (scrollRef?.current?.offsetHeight ?? 0);
           }
-          if (!disableMarkAsRead) {
-            markAsReadScheduler?.push(currentGroupChannel);
+          if (!disableMarkAsRead && !!currentGroupChannel) {
+            markAsReadScheduler.push(currentGroupChannel);
             messagesDispatcher({
               type: messageActionTypes.MARK_AS_READ,
               payload: { channel: currentGroupChannel },

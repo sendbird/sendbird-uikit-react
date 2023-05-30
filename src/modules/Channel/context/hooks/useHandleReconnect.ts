@@ -92,7 +92,7 @@ function useHandleReconnect(
                 });
               });
             if (!disableMarkAsRead) {
-              markAsReadScheduler?.push(currentGroupChannel);
+              markAsReadScheduler.push(currentGroupChannel);
             }
           });
       }

@@ -5,7 +5,7 @@ import { schedulerFactory } from './schedulerFactory';
 import { Logger } from '../SendbirdState';
 import { useUnmount } from '../../hooks/useUnmount';
 
-export type MarkAsReadSchedulerType = {
+export type MarkAsDeliveredSchedulerType = {
   push: (channel: GroupChannel) => void;
   clear: () => void;
   getQueue: () => GroupChannel[];
@@ -19,16 +19,16 @@ interface StaticParams {
   logger: Logger;
 }
 
-export function useMarkAsReadScheduler({
+export function useMarkAsDeliveredScheduler({
   isConnected,
 }: DynamicParams, {
   logger,
-}: StaticParams): MarkAsReadSchedulerType {
-  const markAsReadScheduler = useMemo(() => schedulerFactory<GroupChannel>({
+}: StaticParams): MarkAsDeliveredSchedulerType {
+  const markAsDeliveredScheduler = useMemo(() => schedulerFactory<GroupChannel>({
     logger,
     cb: (channel) => {
       try {
-        channel.markAsRead();
+        channel.markAsDelivered();
       } catch (error) {
         logger.warning('Channel: Mark as delivered failed', { channel, error });
       }
@@ -38,11 +38,11 @@ export function useMarkAsReadScheduler({
   useEffect(() => {
     // for simplicity, we clear the queue when the connection is lost
     if (!isConnected) {
-      markAsReadScheduler.clear();
+      markAsDeliveredScheduler.clear();
     }
   }, [isConnected]);
 
-  useUnmount(() => { markAsReadScheduler.clear(); });
+  useUnmount(() => { markAsDeliveredScheduler.clear(); });
 
-  return markAsReadScheduler;
+  return markAsDeliveredScheduler;
 }

@@ -71,7 +71,8 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
   const {
     logger,
     isOnline = false,
-    markAsReadScheduler,
+    markAsDeliveredScheduler,
+    disableMarkAsDelivered,
   } = config;
 
   const sdk = sdkStore?.sdk as SendbirdGroupChat;
@@ -127,12 +128,12 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
               const canSetMarkAsDelivered = sdk?.appInfo?.premiumFeatureList
                 ?.find((feature) => (feature === DELIVERY_RECIPT));
 
-              if (canSetMarkAsDelivered) {
+              if (canSetMarkAsDelivered && !disableMarkAsDelivered) {
                 logger.info('ChannelList: Marking all channels as read');
                 // eslint-disable-next-line no-unused-expressions
                 channelList?.forEach((channel) => {
                   if (channel?.unreadMessageCount > 0) {
-                    markAsReadScheduler.push(channel);
+                    markAsDeliveredScheduler.push(channel);
                   }
                 });
               }

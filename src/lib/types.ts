@@ -24,6 +24,7 @@ import { UikitMessageHandler } from './selectors';
 import { Logger } from './SendbirdState';
 import { ReplyType } from 'SendbirdUIKitGlobal';
 import { MarkAsReadSchedulerType } from './hooks/useMarkAsReadScheduler';
+import { MarkAsDeliveredSchedulerType } from './hooks/useMarkAsDeliveredScheduler';
 
 // note to SDK team:
 // using enum inside .d.ts won’t work for jest, but const enum will work.
@@ -96,6 +97,7 @@ export interface SendBirdStateConfig {
     resizingHeight?: number | string,
   };
   markAsReadScheduler: MarkAsReadSchedulerType;
+  markAsDeliveredScheduler: MarkAsDeliveredSchedulerType;
   isTypingIndicatorEnabledOnChannelList?: boolean;
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
   replyType: ReplyType;

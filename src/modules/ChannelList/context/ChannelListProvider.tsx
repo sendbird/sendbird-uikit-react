@@ -163,7 +163,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   const { sdkStore } = stores;
   const { pubSub, logger, onUserProfileMessage } = config;
   const {
-    markAsReadScheduler,
+    markAsDeliveredScheduler,
     disableMarkAsDelivered = false,
     isTypingIndicatorEnabledOnChannelList = false,
     isMessageReceiptStatusEnabledOnChannelList = false,
@@ -190,25 +190,6 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   const [channelSource, setChannelSource] = useState<GroupChannelListQuerySb | null>(null);
   const [typingChannels, setTypingChannels] = useState<Array<GroupChannel>>([]);
 
-  const [channelsTomarkAsRead, setChannelsToMarkAsRead] = useState<Array<GroupChannel>>([]);
-  useEffect(() => {
-    // https://stackoverflow.com/a/60907638
-    let isMounted = true;
-    if (channelsTomarkAsRead?.length > 0 && !disableMarkAsDelivered) {
-      channelsTomarkAsRead?.forEach((c, idx) => {
-        // Plan-based rate limits - minimum limit is 5 requests per second
-        setTimeout(() => {
-          if (isMounted) {
-            c?.markAsDelivered();
-          }
-        }, 2000 * idx);
-      });
-    }
-    return () => {
-      isMounted = false;
-    };
-  }, [channelsTomarkAsRead]);
-
   useEffect(() => {
     const subscriber = pubSubHandler(pubSub, channelListDispatcher);
     return () => {
@@ -230,8 +211,8 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
         logger,
         sortChannelList,
         disableAutoSelect,
-        setChannelsToMarkAsRead,
-        markAsReadScheduler,
+        markAsDeliveredScheduler,
+        disableMarkAsDelivered,
       });
     } else {
       logger.info('ChannelList: Removing channelHandlers');
@@ -256,7 +237,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   }, [sdkIntialized, userFilledChannelListQuery, sortChannelList]);
 
   useEffect(() => {
-    let typingHandlerId = null;
+    let typingHandlerId = '';
     if (sdk?.groupChannel?.addGroupChannelHandler) {
       typingHandlerId = uuidv4();
       const handler = new GroupChannelHandler({
@@ -311,7 +292,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
       sdk?.groupChannel?.addGroupChannelHandler(typingHandlerId, handler);
     }
     return () => {
-      if (sdk?.groupChannel?.removeGroupChannelHandler && typingHandlerId) {
+      if (sdk?.groupChannel?.removeGroupChannelHandler && typingHandlerId !== '') {
         sdk.groupChannel.removeGroupChannelHandler(typingHandlerId);
       }
     };

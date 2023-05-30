@@ -319,7 +319,6 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       currentGroupChannel,
       sdkInit,
       currentUserId: userId,
-      disableMarkAsRead,
     },
     {
       messagesDispatcher,
@@ -327,7 +326,6 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       logger,
       scrollRef,
       setQuoteMessage,
-      markAsReadScheduler,
     },
   );
 
