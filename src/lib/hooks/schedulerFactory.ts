@@ -32,7 +32,9 @@ export function schedulerFactory<T>({
       return;
     }
     const item = queue.shift();
-    cb(item as T);
+    if (item) {
+      cb(item as T);
+    }
     interval = setInterval(() => {
       if (queue.length === 0 && interval) {
         clearInterval(interval);
