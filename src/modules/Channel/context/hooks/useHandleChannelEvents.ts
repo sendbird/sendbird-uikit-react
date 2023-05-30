@@ -9,7 +9,6 @@ import uuidv4 from '../../../../utils/uuid';
 import compareIds from '../../../../utils/compareIds';
 import * as messageActions from '../dux/actionTypes';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useChannelContext } from '../ChannelProvider';
 
 /**
  * Handles ChannelEvents and send values to dispatcher using messagesDispatcher
@@ -23,6 +22,7 @@ interface DynamicParams {
   sdkInit: boolean;
   currentUserId: string;
   currentGroupChannel: GroupChannel;
+  disableMarkAsRead: boolean;
 }
 interface StaticParams {
   sdk: SendbirdGroupChat;
@@ -38,6 +38,7 @@ function useHandleChannelEvents({
   sdkInit,
   currentUserId,
   currentGroupChannel,
+  disableMarkAsRead,
 }: DynamicParams, {
   sdk,
   logger,
@@ -45,9 +46,7 @@ function useHandleChannelEvents({
   setQuoteMessage,
   messagesDispatcher,
 }: StaticParams): void {
-  const channelStore = useChannelContext();
   const store = useSendbirdStateContext();
-  const { disableMarkAsRead = {} } = channelStore ?? {};
   const {
     markAsReadScheduler,
     markAsDeliveredScheduler,
