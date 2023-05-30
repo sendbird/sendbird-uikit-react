@@ -29,6 +29,7 @@ import { VOICE_RECORDER_DEFAULT_MAX, VOICE_RECORDER_DEFAULT_MIN } from '../utils
 import { useMarkAsReadScheduler } from './hooks/useMarkAsReadScheduler';
 import { useMarkAsDeliveredScheduler } from './hooks/useMarkAsDeliveredScheduler';
 import { ConfigureSessionTypes } from './hooks/useConnect/types';
+import { getIsReactionEnabled } from '../utils/getIsReactionEnabled';
 
 export type UserListQueryType = {
   hasNext?: boolean;
@@ -213,7 +214,10 @@ const Sendbird = ({
     // common.enable_using_default_user_profile
     disableUserProfile,
     // group_channel.enable_reactions
-    isReactionEnabled,
+    isReactionEnabled: getIsReactionEnabled({
+      appLevel: sdkStore?.sdk?.appInfo?.useReaction,
+      globalLevel: isReactionEnabled,
+    }),
     // group_channel.enable_mention
     isMentionEnabled: isMentionEnabled || false,
     // group_channel.enable_voice_message

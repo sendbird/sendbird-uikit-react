@@ -23,6 +23,7 @@ import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { CoreMessageType } from '../../../utils';
 
 import * as utils from './utils';
+import { getIsReactionEnabled } from '../../../utils/getIsReactionEnabled';
 
 import messagesInitialState from './dux/initialState';
 import messagesReducer from './dux/reducers';
@@ -242,7 +243,13 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   const isSuper = currentGroupChannel?.isSuper || false;
   const isBroadcast = currentGroupChannel?.isBroadcast || false;
   const { appInfo } = sdk;
-  const usingReaction = appInfo?.useReaction && !isBroadcast && !isSuper && (config?.isReactionEnabled || isReactionEnabled);
+  const usingReaction = getIsReactionEnabled({
+    appLevel: appInfo?.useReaction,
+    isBroadcast,
+    isSuper,
+    globalLevel: config?.isReactionEnabled,
+    moduleLevel: isReactionEnabled,
+  });
 
   const emojiAllMap = useMemo(() => (
     usingReaction

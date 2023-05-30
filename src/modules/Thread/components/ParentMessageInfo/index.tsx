@@ -6,9 +6,8 @@ import './index.scss';
 import RemoveMessage from '../RemoveMessageModal';
 import ParentMessageInfoItem from './ParentMessageInfoItem';
 
-import {
-  getSenderName,
-} from '../../../../utils';
+import { getSenderName } from '../../../../utils';
+import { getIsReactionEnabled } from '../../../../utils/getIsReactionEnabled';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useThreadContext } from '../../context/ThreadProvider';
@@ -67,7 +66,11 @@ export default function ParentMessageInfo({
   const [showRemove, setShowRemove] = useState(false);
   const [supposedHover, setSupposedHover] = useState(false);
   const [showFileViewer, setShowFileViewer] = useState(false);
-  const usingReaction = isReactionEnabled && !currentChannel?.isSuper && !currentChannel?.isBroadcast;
+  const usingReaction = getIsReactionEnabled({
+    globalLevel: isReactionEnabled,
+    isSuper: currentChannel.isSuper,
+    isBroadcast: currentChannel.isBroadcast,
+  });
   const isByMe = userId === parentMessage.sender.userId;
 
   // Mobile
@@ -335,7 +338,7 @@ export default function ParentMessageInfo({
           hideMenu={() => {
             setShowMobileMenu(false);
           }}
-          isReactionEnabled={isReactionEnabled}
+          isReactionEnabled={usingReaction}
           isByMe={isByMe}
           emojiContainer={emojiContainer}
           showEdit={setShowEditInput}
