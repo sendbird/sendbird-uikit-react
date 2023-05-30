@@ -1,5 +1,5 @@
 import SendbirdChat from '@sendbird/chat';
-import React, { useCallback, useState, createContext, useContext } from 'react';
+import React, { useMemo, useCallback, useState, createContext, useContext } from 'react';
 
 import { snakeToCamel } from './utils/snakeToCamel';
 import { DeepPartial } from './utils/types';
@@ -89,8 +89,8 @@ const UIKitConfigProvider = ({ storage, children, localConfigs }: UIKitConfigPro
     // const storedConfigs = await manager.init(sdk.appId);
 
       if (storage == null) {
-        const payload = await sdk.getUIKitConfiguration().json;
-        setRemoteConfigs(snakeToCamel(payload.uikit_configurations));
+        const payload = await sdk.getUIKitConfiguration();
+        setRemoteConfigs(snakeToCamel(payload.json.uikit_configurations));
       }
 
       // TODO: Implement
@@ -108,9 +108,14 @@ const UIKitConfigProvider = ({ storage, children, localConfigs }: UIKitConfigPro
   }, []);
 
   const configs = getConfigsByPriority(localConfigs, remoteConfigs);
-  return <UIKitConfigContext.Provider value={{ initDashboardConfigs, configs }}>{children}</UIKitConfigContext.Provider>;
+  const contextValue = useMemo(() => ({
+    initDashboardConfigs,
+    configs,
+  }), [initDashboardConfigs, configs]);
+
+  return <UIKitConfigContext.Provider value={contextValue}>{children}</UIKitConfigContext.Provider>;
 };
 
 const useUIKitConfig = () => useContext(UIKitConfigContext);
 
-export { UIKitConfigProvider, UIKitConfigContext, useUIKitConfig };
+export { UIKitConfigProvider, useUIKitConfig };

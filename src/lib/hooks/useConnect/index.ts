@@ -1,7 +1,5 @@
 import { useCallback, useEffect } from 'react';
 
-import { useUIKitConfig } from '../../UIKitConfigProvider';
-
 import { ReconnectType, StaticTypes, TriggerTypes } from './types';
 import { connect } from './connect';
 
@@ -17,10 +15,9 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
     sdk,
     sdkDispatcher,
     userDispatcher,
+    initDashboardConfigs,
   } = staticTypes;
   logger?.info?.('SendbirdProvider | useConnect', { ...triggerTypes, ...staticTypes });
-
-  const { initDashboardConfigs } = useUIKitConfig();
 
   useEffect(() => {
     logger?.info?.('SendbirdProvider | useConnect/useEffect', { userId, appId, accessToken });
@@ -46,6 +43,7 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
   }, [userId, appId, accessToken]);
   const reconnect = useCallback(() => {
     logger?.info?.('SendbirdProvider | useConnect/reconnect/useCallback', { sdk });
+
     try {
       connect({
         userId,
