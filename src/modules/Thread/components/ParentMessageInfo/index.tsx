@@ -29,6 +29,7 @@ import { Role } from '../../../../lib/types';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import useLongPress from '../../../../hooks/useLongPress';
 import MobileMenu from '../../../../ui/MobileMenu';
+import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 
 export interface ParentMessageInfoProps {
   className?: string;
@@ -44,6 +45,7 @@ export default function ParentMessageInfo({
     replyType,
     isOnline,
     userMention,
+    logger,
   } = config;
   const userId = stores.userStore.user?.userId ?? '';
   const { dateLocale } = useLocalization();
@@ -93,19 +95,15 @@ export default function ParentMessageInfo({
   const [messageInputEvent, setMessageInputEvent] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState([]);
-  const [ableMention, setAbleMention] = useState(true);
   const displaySuggestedMentionList = isOnline
     && isMentionEnabled
     && mentionNickname.length > 0
     && !isMuted
     && !(isChannelFrozen && !(currentChannel.myRole === Role.OPERATOR));
-  useEffect(() => {
-    if (mentionedUsers?.length >= userMention?.maxMentionCount) {
-      setAbleMention(false);
-    } else {
-      setAbleMention(true);
-    }
-  }, [mentionedUsers]);
+
+  const mentionNodes = useDirtyGetMentions({ ref: editMessageInputRef }, { logger });
+  const ableMention = mentionNodes?.length < userMention?.maxMentionCount;
+
   useEffect(() => {
     setMentionedUsers(mentionedUsers.filter(({ userId }) => {
       const i = mentionedUserIds.indexOf(userId);

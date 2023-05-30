@@ -10,11 +10,16 @@ export type MessageProviderProps = {
   isByMe?: boolean;
 };
 
-export type MessageProviderInterface = Exclude<MessageProviderProps, 'children'>;
+export type MessageProviderInterface = Omit<MessageProviderProps, 'children'>;
 
-const MessageContext = React.createContext(undefined);
+const defaultValue = {
+  message: {} as BaseMessage,
+  isByMe: false,
+};
 
-const MessageProvider: React.FC<MessageProviderInterface> = (props: MessageProviderProps) => {
+const MessageContext = React.createContext<MessageProviderInterface>(defaultValue);
+
+const MessageProvider: React.FC<MessageProviderProps> = (props) => {
   const {
     children,
     message,

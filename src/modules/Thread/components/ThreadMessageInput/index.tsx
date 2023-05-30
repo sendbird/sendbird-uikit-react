@@ -11,6 +11,7 @@ import { useThreadContext } from '../../context/ThreadProvider';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import VoiceMessageInputWrapper from '../../../Channel/components/MessageInput/VoiceMessageInputWrapper';
 import { Role } from '../../../../lib/types';
+import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 
 export interface ThreadMessageInputProps {
   className?: string;
@@ -38,6 +39,7 @@ const ThreadMessageInput = (
     isOnline,
     userMention,
     isVoiceMessageEnabled,
+    logger,
   } = config;
   const {
     currentChannel,
@@ -61,7 +63,6 @@ const ThreadMessageInput = (
   const [mentionedUserIds, setMentionedUserIds] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState([]);
-  const [ableMention, setAbleMention] = useState(true);
   const [messageInputEvent, setMessageInputEvent] = useState(null);
   const [showVoiceMessageInput, setShowVoiceMessageInput] = useState(false);
   const displaySuggestedMentionList = isOnline
@@ -75,13 +76,9 @@ const ThreadMessageInput = (
     setShowVoiceMessageInput(false);
   }, [currentChannel?.url]);
 
-  useEffect(() => {
-    if (mentionedUsers?.length >= userMention?.maxMentionCount) {
-      setAbleMention(false);
-    } else {
-      setAbleMention(true);
-    }
-  }, [mentionedUsers]);
+  const mentionNodes = useDirtyGetMentions({ ref: ref || messageInputRef }, { logger });
+  const ableMention = mentionNodes?.length < userMention?.maxMentionCount;
+
   useEffect(() => {
     setMentionedUsers(mentionedUsers.filter(({ userId }) => {
       const i = mentionedUserIds.indexOf(userId);

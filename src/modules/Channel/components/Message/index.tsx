@@ -26,6 +26,7 @@ import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
+import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 
 type MessageUIProps = {
   message: EveryMessage;
@@ -62,6 +63,7 @@ const Message = ({
     isOnline,
     isMentionEnabled,
     userMention,
+    logger,
   } = globalStore.config;
   const maxUserMentionCount = userMention?.maxMentionCount || MAX_USER_MENTION_COUNT;
   const maxUserSuggestionCount = userMention?.maxSuggestionCount || MAX_USER_SUGGESTION_COUNT;
@@ -101,7 +103,6 @@ const Message = ({
   const [messageInputEvent, setMessageInputEvent] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState([]);
-  const [ableMention, setAbleMention] = useState(true);
   const editMessageInputRef = useRef(null);
   const messageScrollRef = useRef(null);
   const displaySuggestedMentionList = isOnline
@@ -120,13 +121,8 @@ const Message = ({
     scrollRef: messageScrollRef,
   });
 
-  useEffect(() => {
-    if (mentionedUsers?.length >= maxUserMentionCount) {
-      setAbleMention(false);
-    } else {
-      setAbleMention(true);
-    }
-  }, [mentionedUsers]);
+  const mentionNodes = useDirtyGetMentions({ ref: editMessageInputRef }, { logger });
+  const ableMention = mentionNodes?.length < maxUserMentionCount;
 
   useEffect(() => {
     setMentionedUsers(mentionedUsers.filter(({ userId }) => {
