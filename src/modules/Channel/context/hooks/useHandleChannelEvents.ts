@@ -47,7 +47,7 @@ function useHandleChannelEvents({
 }: StaticParams): void {
   const channelStore = useChannelContext();
   const store = useSendbirdStateContext();
-  const { disableMarkAsRead } = channelStore;
+  const { disableMarkAsRead = {} } = channelStore ?? {};
   const {
     markAsReadScheduler,
     markAsDeliveredScheduler,
