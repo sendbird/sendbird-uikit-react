@@ -16,5 +16,5 @@ export function getIsReactionEnabled({
   globalLevel = true,
   moduleLevel,
 }: IsReactionEnabledProps): boolean {
-  return (isBroadcast || isSuper) ? false : (moduleLevel ?? globalLevel);
+  return !(isBroadcast || isSuper) && (moduleLevel ?? globalLevel);
 }
