@@ -4,6 +4,8 @@ import React, { useCallback, useState, createContext, useContext } from 'react';
 import { snakeToCamel } from './utils/snakeToCamel';
 import { DeepPartial } from './utils/types';
 
+import getConfigsByPriority from './utils/getConfigsByPriority';
+
 import { UIKitConfigInfo } from './types';
 
 // @link: https://docs.google.com/spreadsheets/d/1-AozBMHRYOXS74vZ-7x2ptQcBL6nnM-orJWRvUgmkd4/edit#gid=0
@@ -68,16 +70,16 @@ const UIKitConfigContext = createContext<UIKitConfigContextInterface>({
 });
 
 interface UIKitConfigProviderProps {
-  appConfigurations: DeepPartial<UIKitConfigInfo>;
+  // Configurations set by code level
+  localConfigs: DeepPartial<UIKitConfigInfo>;
   children: React.ReactElement;
   // If the storage value is not provided,
   // it'll fetch the new configs set by dashboard everytime
   storage?: any;
 }
 
-const UIKitConfigProvider = ({ storage, children /* appConfigurations */ }: UIKitConfigProviderProps) => {
-  // TODO: Implement
-  // const localConfigs = mergeConfigs(initialConfig, mapToUIKItConfig(configurations));
+const UIKitConfigProvider = ({ storage, children, localConfigs }: UIKitConfigProviderProps) => {
+  // Set by Feature Config setting in Dashboard
   const [remoteConfigs, setRemoteConfigs] = useState(initialConfig);
 
   const initDashboardConfigs = useCallback(async (sdk: SendbirdChat) => {
@@ -105,10 +107,7 @@ const UIKitConfigProvider = ({ storage, children /* appConfigurations */ }: UIKi
     }
   }, []);
 
-  // TODO: Implement
-  // const configs = getByPriority(localConfigs, remoteConfigs);
-  const configs = remoteConfigs;
-
+  const configs = getConfigsByPriority(localConfigs, remoteConfigs);
   return <UIKitConfigContext.Provider value={{ initDashboardConfigs, configs }}>{children}</UIKitConfigContext.Provider>;
 };
 

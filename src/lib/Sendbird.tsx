@@ -267,7 +267,7 @@ const Sendbird = ({
       }}
     >
     <UIKitConfigProvider
-      appConfigurations={{
+      localConfigs={{
         common: {
           enableUsingDefaultUserProfile: !uikitConfigurations.disableUserProfile,
         },
