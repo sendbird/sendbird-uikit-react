@@ -170,7 +170,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                     width="24px"
                     height="24px"
                   />
-                  <Label type={LabelTypography.SUBTITLE_1}>
+                  <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
                     {stringSet?.MESSAGE_MENU__COPY}
                   </Label>
                 </div>
@@ -190,7 +190,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                       width="24px"
                       height="24px"
                     />
-                    <Label type={LabelTypography.SUBTITLE_1}>
+                    <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
                       {stringSet?.MESSAGE_MENU__EDIT}
                     </Label>
                   </div>
@@ -211,7 +211,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                       width="24px"
                       height="24px"
                     />
-                    <Label type={LabelTypography.SUBTITLE_1}>
+                    <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
                       {stringSet?.MESSAGE_MENU__RESEND}
                     </Label>
                   </div>
@@ -243,7 +243,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                     />
                     <Label
                       type={LabelTypography.SUBTITLE_1}
-                      color={disableReaction && LabelColors.ONBACKGROUND_4}
+                      color={disableReaction ? LabelColors.ONBACKGROUND_4 : LabelColors.ONBACKGROUND_1}
                     >
                       {stringSet?.MESSAGE_MENU__REPLY}
                     </Label>
@@ -264,7 +264,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                     width="24px"
                     height="24px"
                   />
-                  <Label type={LabelTypography.SUBTITLE_1}>
+                  <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
                     {stringSet.MESSAGE_MENU__THREAD}
                   </Label>
                 </div>
@@ -284,7 +284,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                       width="24px"
                       height="24px"
                     />
-                    <Label type={LabelTypography.SUBTITLE_1}>
+                    <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
                       {stringSet?.MESSAGE_MENU__DELETE}
                     </Label>
                   </div>
@@ -310,7 +310,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                         width="24px"
                         height="24px"
                       />
-                      <Label type={LabelTypography.SUBTITLE_1}>
+                      <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
                         {stringSet?.MESSAGE_MENU__SAVE}
                       </Label>
                     </a>
