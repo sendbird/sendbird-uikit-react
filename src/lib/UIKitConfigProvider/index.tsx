@@ -1,5 +1,5 @@
 import SendbirdChat from '@sendbird/chat';
-import React, { useMemo, useCallback, useState, createContext, useContext } from 'react';
+import React, { useCallback, useState, createContext, useContext } from 'react';
 
 import { snakeToCamel } from './utils/snakeToCamel';
 import { DeepPartial } from './utils/types';
@@ -9,7 +9,7 @@ import getConfigsByPriority from './utils/getConfigsByPriority';
 import { UIKitConfigInfo } from './types';
 
 // @link: https://docs.google.com/spreadsheets/d/1-AozBMHRYOXS74vZ-7x2ptQcBL6nnM-orJWRvUgmkd4/edit#gid=0
-const initialConfig = {
+const initialConfig: UIKitConfigInfo = {
   common: {
     enableUsingDefaultUserProfile: false,
   },
@@ -80,14 +80,13 @@ interface UIKitConfigProviderProps {
 
 const UIKitConfigProvider = ({ storage, children, localConfigs }: UIKitConfigProviderProps) => {
   // Set by Feature Config setting in Dashboard
-  const [remoteConfigs, setRemoteConfigs] = useState(initialConfig);
+  const [remoteConfigs, setRemoteConfigs] = useState<UIKitConfigInfo>(initialConfig);
 
   const initDashboardConfigs = useCallback(async (sdk: SendbirdChat) => {
     try {
     // TODO: Implement
     // const manager = new UIKitConfigStorageManager(storage)
     // const storedConfigs = await manager.init(sdk.appId);
-
       if (storage == null) {
         const payload = await sdk.getUIKitConfiguration();
         setRemoteConfigs(snakeToCamel(payload.json.uikit_configurations));
@@ -108,12 +107,11 @@ const UIKitConfigProvider = ({ storage, children, localConfigs }: UIKitConfigPro
   }, []);
 
   const configs = getConfigsByPriority(localConfigs, remoteConfigs);
-  const contextValue = useMemo(() => ({
+
+  return <UIKitConfigContext.Provider value={{
     initDashboardConfigs,
     configs,
-  }), [initDashboardConfigs, configs]);
-
-  return <UIKitConfigContext.Provider value={contextValue}>{children}</UIKitConfigContext.Provider>;
+  }}>{children}</UIKitConfigContext.Provider>;
 };
 
 const useUIKitConfig = () => useContext(UIKitConfigContext);
