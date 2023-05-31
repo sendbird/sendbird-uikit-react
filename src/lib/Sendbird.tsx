@@ -213,7 +213,7 @@ const Sendbird = ({
     // common.enable_using_default_user_profile
     disableUserProfile,
     // group_channel.enable_reactions
-    isReactionEnabled,
+    isReactionEnabled: isReactionEnabled,
     // group_channel.enable_mention
     isMentionEnabled: isMentionEnabled || false,
     // group_channel.enable_voice_message

@@ -16,6 +16,7 @@ import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import ThreadListItemContent from './ThreadListItemContent';
 import { Role } from '../../../../lib/types';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
+import { getIsReactionEnabled } from '../../../../utils/getIsReactionEnabled';
 
 export interface ThreadListItemProps {
   className?: string;
@@ -65,7 +66,11 @@ export default function ThreadListItem({
   const [showEdit, setShowEdit] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
   const [showFileViewer, setShowFileViewer] = useState(false);
-  const usingReaction = isReactionEnabled && !currentChannel?.isSuper && !currentChannel?.isBroadcast;
+  const usingReaction = getIsReactionEnabled({
+    globalLevel: isReactionEnabled,
+    isSuper: currentChannel.isSuper,
+    isBroadcast: currentChannel.isBroadcast,
+  });
 
   // Move to message
   const messageScrollRef = useRef(null);
