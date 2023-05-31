@@ -1,9 +1,5 @@
-import { DeepPartial } from './types';
+import { DeepPartial, isSameType } from './types';
 import { UIKitConfigInfo } from '../types';
-
-function isSameType<T, U>(a: T, b: U): boolean {
-  return typeof a === typeof b;
-}
 
 /**
  * @param localConfigs Set directly in code level. It has higher priority than remote ones
