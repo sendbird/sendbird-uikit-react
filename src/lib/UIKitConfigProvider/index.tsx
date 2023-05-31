@@ -9,7 +9,7 @@ import getConfigsByPriority from './utils/getConfigsByPriority';
 import { UIKitConfigInfo } from './types';
 
 // @link: https://docs.google.com/spreadsheets/d/1-AozBMHRYOXS74vZ-7x2ptQcBL6nnM-orJWRvUgmkd4/edit#gid=0
-const initialConfig = {
+const initialConfig: UIKitConfigInfo = {
   common: {
     enableUsingDefaultUserProfile: false,
   },
@@ -80,17 +80,16 @@ interface UIKitConfigProviderProps {
 
 const UIKitConfigProvider = ({ storage, children, localConfigs }: UIKitConfigProviderProps) => {
   // Set by Feature Config setting in Dashboard
-  const [remoteConfigs, setRemoteConfigs] = useState(initialConfig);
+  const [remoteConfigs, setRemoteConfigs] = useState<UIKitConfigInfo>(initialConfig);
 
   const initDashboardConfigs = useCallback(async (sdk: SendbirdChat) => {
     try {
     // TODO: Implement
     // const manager = new UIKitConfigStorageManager(storage)
     // const storedConfigs = await manager.init(sdk.appId);
-
       if (storage == null) {
-        const payload = await sdk.getUIKitConfiguration().json;
-        setRemoteConfigs(snakeToCamel(payload.uikit_configurations));
+        const payload = await sdk.getUIKitConfiguration();
+        setRemoteConfigs(snakeToCamel(payload.json.uikit_configurations));
       }
 
       // TODO: Implement
@@ -108,7 +107,11 @@ const UIKitConfigProvider = ({ storage, children, localConfigs }: UIKitConfigPro
   }, []);
 
   const configs = getConfigsByPriority(localConfigs, remoteConfigs);
-  return <UIKitConfigContext.Provider value={{ initDashboardConfigs, configs }}>{children}</UIKitConfigContext.Provider>;
+
+  return <UIKitConfigContext.Provider value={{
+    initDashboardConfigs,
+    configs,
+  }}>{children}</UIKitConfigContext.Provider>;
 };
 
 const useUIKitConfig = () => useContext(UIKitConfigContext);

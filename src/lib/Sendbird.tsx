@@ -20,14 +20,13 @@ import { LoggerFactory, LogLevel } from './Logger';
 import pubSubFactory from './pubSub/index';
 import useAppendDomNode from '../hooks/useAppendDomNode';
 
-import { UIKitConfigProvider } from './UIKitConfigProvider';
+import { UIKitConfigProvider, useUIKitConfig } from './UIKitConfigProvider';
 import { VoiceMessageProvider } from './VoiceMessageProvider';
 import { LocalizationProvider } from './LocalizationContext';
 import { MediaQueryProvider } from './MediaQueryContext';
 import getStringSet from '../ui/Label/stringSet';
 import { VOICE_RECORDER_DEFAULT_MAX, VOICE_RECORDER_DEFAULT_MIN } from '../utils/consts';
 import { useMarkAsReadScheduler } from './hooks/useMarkAsReadScheduler';
-import { useMarkAsDeliveredScheduler } from './hooks/useMarkAsDeliveredScheduler';
 import { ConfigureSessionTypes } from './hooks/useConnect/types';
 
 export type UserListQueryType = {
@@ -56,7 +55,16 @@ export interface SendbirdConfig {
   isREMUnitEnabled?: boolean;
 }
 
-export interface SendbirdProviderProps {
+interface CommonUIKitConfigProps {
+  replyType?: 'NONE' | 'QUOTE_REPLY' | 'THREAD';
+  isMentionEnabled?: boolean;
+  isReactionEnabled?: boolean;
+  disableUserProfile?: boolean;
+  isVoiceMessageEnabled?: boolean;
+  isTypingIndicatorEnabledOnChannelList?: boolean;
+  isMessageReceiptStatusEnabledOnChannelList?: boolean;
+}
+export interface SendbirdProviderProps extends CommonUIKitConfigProps {
   appId: string;
   userId: string;
   children: React.ReactElement;
@@ -69,25 +77,58 @@ export interface SendbirdProviderProps {
   nickname?: string;
   colorSet?: Record<string, string>;
   stringSet?: Record<string, string>;
-  replyType?: 'NONE' | 'QUOTE_REPLY' | 'THREAD';
   dateLocale?: Locale;
   profileUrl?: string;
   voiceRecord?: VoiceRecordOptions;
   userListQuery?: UserListQueryType;
   imageCompression?: ImageCompressionOptions;
   allowProfileEdit?: boolean;
-  isMentionEnabled?: boolean;
-  isReactionEnabled?: boolean;
-  disableUserProfile?: boolean;
-  isVoiceMessageEnabled?: boolean;
   disableMarkAsDelivered?: boolean;
-  isTypingIndicatorEnabledOnChannelList?: boolean;
-  isMessageReceiptStatusEnabledOnChannelList?: boolean;
   renderUserProfile?: () => React.ReactElement;
   onUserProfileMessage?: () => void;
 }
 
-const Sendbird = ({
+function Sendbird(props: SendbirdProviderProps) {
+  const {
+    replyType = 'NONE',
+    isMentionEnabled = false,
+    isReactionEnabled = true,
+    disableUserProfile = false,
+    isVoiceMessageEnabled = true,
+    isTypingIndicatorEnabledOnChannelList = false,
+    isMessageReceiptStatusEnabledOnChannelList = false,
+  } = props;
+
+  return (
+    <UIKitConfigProvider
+      localConfigs={{
+        common: {
+          enableUsingDefaultUserProfile: !disableUserProfile,
+        },
+        groupChannel: {
+          channel: {
+            enableReactions: isReactionEnabled,
+            enableMention: isMentionEnabled,
+            enableVoiceMessage: isVoiceMessageEnabled,
+            /**
+             * Since dashbord UIKit Configuration's replyType is consisted of all lowercase letters,
+             * we convert it from here.
+             * i.e. 'THREAD' -> 'thread'
+             */
+            replyType: replyType.toLowerCase(),
+          },
+          channelList: {
+            enableTypingIndicator: isTypingIndicatorEnabledOnChannelList,
+            enableMessageReceiptStatus: isMessageReceiptStatusEnabledOnChannelList,
+          },
+        },
+      }}
+    >
+      <SendbirdSDK {...props} />
+    </UIKitConfigProvider>
+  );
+}
+const SendbirdSDK = ({
   appId,
   userId,
   children,
@@ -100,20 +141,13 @@ const Sendbird = ({
   nickname = '',
   colorSet = null,
   stringSet = null,
-  replyType = 'NONE',
   dateLocale = null,
   profileUrl = '',
   voiceRecord = { maxRecordingTime: VOICE_RECORDER_DEFAULT_MAX, minRecordingTime: VOICE_RECORDER_DEFAULT_MIN },
   userListQuery = null,
   imageCompression = {},
   allowProfileEdit = false,
-  isMentionEnabled = false,
-  isReactionEnabled = true,
-  disableUserProfile = false,
-  isVoiceMessageEnabled = true,
   disableMarkAsDelivered = false,
-  isTypingIndicatorEnabledOnChannelList = false,
-  isMessageReceiptStatusEnabledOnChannelList = false,
   renderUserProfile = null,
   onUserProfileMessage = null,
 }: SendbirdProviderProps): React.ReactElement => {
@@ -128,6 +162,8 @@ const Sendbird = ({
   const [pubSub] = useState(pubSubFactory());
   const [sdkStore, sdkDispatcher] = useReducer(sdkReducers, sdkInitialState);
   const [userStore, userDispatcher] = useReducer(userReducers, userInitialState);
+
+  const { configs, initDashboardConfigs } = useUIKitConfig();
 
   useTheme(colorSet);
 
@@ -145,6 +181,7 @@ const Sendbird = ({
     sdk: sdkStore?.sdk,
     sdkDispatcher,
     userDispatcher,
+    initDashboardConfigs,
   });
 
   // to create a pubsub to communicate between parent and child
@@ -197,7 +234,6 @@ const Sendbird = ({
   const isOnline = useOnlineStatus(sdkStore.sdk, logger);
 
   const markAsReadScheduler = useMarkAsReadScheduler({ isConnected: isOnline }, { logger });
-  const markAsDeliveredScheduler = useMarkAsDeliveredScheduler({ isConnected: isOnline }, { logger });
 
   const localeStringSet = React.useMemo(() => {
     if (!stringSet) {
@@ -209,22 +245,6 @@ const Sendbird = ({
     };
   }, [stringSet]);
 
-  const uikitConfigurations = {
-    // common.enable_using_default_user_profile
-    disableUserProfile,
-    // group_channel.enable_reactions
-    isReactionEnabled: isReactionEnabled,
-    // group_channel.enable_mention
-    isMentionEnabled: isMentionEnabled || false,
-    // group_channel.enable_voice_message
-    isVoiceMessageEnabled,
-    // group_channel.reply_type
-    replyType,
-    // group_channel_list.enable_typing_indicator
-    isTypingIndicatorEnabledOnChannelList,
-    // group_channel_list.enable_message_receipt_status
-    isMessageReceiptStatusEnabledOnChannelList,
-  };
   return (
     <SendbirdSdkContext.Provider
       value={{
@@ -261,43 +281,38 @@ const Sendbird = ({
             maxSuggestionCount: userMention?.maxSuggestionCount || 15,
           },
           markAsReadScheduler,
-          markAsDeliveredScheduler,
-          ...uikitConfigurations,
-        },
-      }}
-    >
-    <UIKitConfigProvider
-      localConfigs={{
-        common: {
-          enableUsingDefaultUserProfile: !uikitConfigurations.disableUserProfile,
-        },
-        groupChannel: {
-          channel: {
-            enableReactions: uikitConfigurations.isReactionEnabled,
-            enableMention: uikitConfigurations.isMentionEnabled,
-            enableVoiceMessage: uikitConfigurations.isVoiceMessageEnabled,
+          // From UIKitConfigProvider.localConfigs
+          disableUserProfile:
+            !configs.common.enableUsingDefaultUserProfile,
+          isReactionEnabled:
+            configs.groupChannel.channel.enableReactions,
+          isMentionEnabled:
+            configs.groupChannel.channel.enableMention,
+          isVoiceMessageEnabled:
+            configs.groupChannel.channel.enableVoiceMessage,
+          replyType:
             /**
-             * Since dashbord UIKit Configuration's replyType is consisted of all lowercase letters,
-             * we convert it from here.
-             * i.e. 'THREAD' -> 'thread'
+             * Since UIKitConfigContext's replyType is consisted of all lowercase letters,
+             * we need to convert it into all uppercase ones like
+             *  - 'thread' -> 'THREAD'
+             *  - 'quote_reply' -> 'QUOTE_REPLY'
              */
-            replyType: uikitConfigurations.replyType.toLowerCase(),
-          },
-          channelList: {
-            enableTypingIndicator: uikitConfigurations.isTypingIndicatorEnabledOnChannelList,
-            enableMessageReceiptStatus: uikitConfigurations.isMessageReceiptStatusEnabledOnChannelList,
-          },
+            configs.groupChannel.channel.replyType.toUpperCase(),
+          isTypingIndicatorEnabledOnChannelList:
+            configs.groupChannel.channelList.enableTypingIndicator,
+          isMessageReceiptStatusEnabledOnChannelList:
+            configs.groupChannel.channelList.enableMessageReceiptStatus,
+          // TODO(Ahyoung): add more configs from UIKitConfigProvider.remoteConfigs
         },
       }}
     >
       <MediaQueryProvider logger={logger} mediaQueryBreakPoint={mediaQueryBreakPoint}>
         <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
-          <VoiceMessageProvider isVoiceMessageEnabled={isVoiceMessageEnabled}>
+          <VoiceMessageProvider isVoiceMessageEnabled={configs.groupChannel.channel.enableVoiceMessage}>
             {children}
           </VoiceMessageProvider>
         </LocalizationProvider>
       </MediaQueryProvider>
-      </UIKitConfigProvider>
     </SendbirdSdkContext.Provider>
   );
 };
