@@ -117,7 +117,7 @@ const Sendbird = ({
   renderUserProfile = null,
   onUserProfileMessage = null,
 }: SendbirdProviderProps): React.ReactElement => {
-  const mediaQueryBreakPoint = false;
+  const breakpoint = false;
 
   const {
     logLevel = '',
@@ -290,7 +290,7 @@ const Sendbird = ({
         },
       }}
     >
-      <MediaQueryProvider logger={logger} mediaQueryBreakPoint={mediaQueryBreakPoint}>
+      <MediaQueryProvider logger={logger} breakpoint={breakpoint}>
         <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
           <VoiceMessageProvider isVoiceMessageEnabled={isVoiceMessageEnabled}>
             {children}

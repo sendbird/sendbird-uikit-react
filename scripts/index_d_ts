@@ -51,7 +51,7 @@ declare module "SendbirdUIKitGlobal" {
     customApiHost?: string,
     customWebSocketHost?: string,
     // not-ready yet
-    // mediaQueryBreakPoint?: string | boolean,
+    // breakpoint?: string | boolean,
     theme?: 'light' | 'dark';
     userListQuery?(): UserListQuery;
     nickname?: string;

@@ -6,13 +6,13 @@ const DEFAULT_MOBILE = false;
 const MOBILE_CLASSNAME = 'sendbird--mobile-mode';
 
 const MediaQueryContext = React.createContext({
-  mediaQueryBreakPoint: DEFAULT_MOBILE,
+  breakpoint: DEFAULT_MOBILE,
   isMobile: false,
 });
 
 export interface MediaQueryProviderProps {
   children: React.ReactElement;
-  mediaQueryBreakPoint?: string | boolean;
+  breakpoint?: string | boolean;
   logger?: Logger;
 }
 
@@ -39,13 +39,13 @@ const MediaQueryProvider = (props: MediaQueryProviderProps): React.ReactElement 
     children,
     logger,
   } = props;
-  const mediaQueryBreakPoint = props?.mediaQueryBreakPoint || DEFAULT_MOBILE;
+  const breakpoint = props?.breakpoint || DEFAULT_MOBILE;
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const updateSize = () => {
-      if (typeof mediaQueryBreakPoint === 'boolean') {
-        setIsMobile(mediaQueryBreakPoint);
-        if (mediaQueryBreakPoint) {
+      if (typeof breakpoint === 'boolean') {
+        setIsMobile(breakpoint);
+        if (breakpoint) {
           logger?.info?.('MediaQueryProvider: isMobile: true');
           addClassNameToBody();
         } else {
@@ -53,8 +53,8 @@ const MediaQueryProvider = (props: MediaQueryProviderProps): React.ReactElement 
           removeClassNameFromBody();
         }
       } else {
-        const mq = window.matchMedia(`(max-width: ${mediaQueryBreakPoint})`);
-        logger?.info?.(`MediaQueryProvider: Screensize updated to ${mediaQueryBreakPoint}`);
+        const mq = window.matchMedia(`(max-width: ${breakpoint})`);
+        logger?.info?.(`MediaQueryProvider: Screensize updated to ${breakpoint}`);
         if (mq.matches) {
           setIsMobile(true);
           addClassNameToBody();
@@ -73,16 +73,16 @@ const MediaQueryProvider = (props: MediaQueryProviderProps): React.ReactElement 
       window.removeEventListener('resize', updateSize);
       logger?.info?.('MediaQueryProvider: removeEventListener', { updateSize });
     };
-  }, [mediaQueryBreakPoint]);
+  }, [breakpoint]);
   return (
-    <MediaQueryContext.Provider value={{ mediaQueryBreakPoint, isMobile }}>
+    <MediaQueryContext.Provider value={{ breakpoint, isMobile }}>
       {children}
     </MediaQueryContext.Provider>
   );
 };
 
 export type useMediaQueryContextType = () => ({
-  mediaQueryBreakPoint: string | boolean;
+  breakpoint: string | boolean;
   isMobile: boolean;
 });
 
