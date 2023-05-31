@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import ReactionButton from "../index";
 import Icon, { IconTypes } from '../../Icon';
@@ -21,7 +21,7 @@ describe('ui/ReactionButton', () => {
   it('should do a snapshot test of the ReactionButton DOM', function () {
     const text = "example-text";
     const { asFragment } = render(
-      <ReactionButton className={text} width="36px" height="36px" dataSbId="reaction-button">
+      <ReactionButton className={text} width="36px" height="36px" dataSbId="ui_emoji-reaction-button_reaction-button">
         {children}
       </ReactionButton>
     );
