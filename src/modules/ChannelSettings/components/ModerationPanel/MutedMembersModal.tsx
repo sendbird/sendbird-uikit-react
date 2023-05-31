@@ -106,7 +106,7 @@ export default function MutedMembersModal({
                             }));
                           });
                         }}
-                        dataSbId="unmute"
+                        dataSbId="channel_setting_muted_member_context_menu_unmute"
                       >
                         {stringSet.CHANNEL_SETTING__MODERATION__UNMUTE}
                       </MenuItem>

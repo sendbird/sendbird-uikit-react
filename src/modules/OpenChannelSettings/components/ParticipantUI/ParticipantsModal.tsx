@@ -116,7 +116,9 @@ export default function ParticipantsModal({
                                     });
                                   }
                                 }}
-                                dataSbId={isOperator ? 'unregister_operator' : 'register_as_operator'}
+                                dataSbId={`open_channel_setting_participant_context_menu_${(
+                                  isOperator) ? 'unregister_operator' : 'register_as_operator'}`
+                                }
                               >
                                 {
                                   isOperator
@@ -136,7 +138,8 @@ export default function ParticipantsModal({
                                     });
                                   }
                                 }}
-                                dataSbId={p.isMuted ? 'unmute' : 'mute'}
+                                dataSbId={`open_channel_setting_participant_context_menu_${p.isMuted ? 'unmute' : 'mute'}`
+                                }
                               >
                                 {
                                   p.isMuted
@@ -150,7 +153,7 @@ export default function ParticipantsModal({
                                     closeDropdown();
                                   });
                                 }}
-                                dataSbId="ban"
+                                dataSbId="open_channel_setting_participant_context_menu_ban"
                               >
                                 {stringSet.OPEN_CHANNEL_SETTING__MODERATION__BAN}
                               </MenuItem>

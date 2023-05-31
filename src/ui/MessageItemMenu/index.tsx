@@ -135,7 +135,7 @@ export default function MessageItemMenu({
                     copyToClipboard((message as UserMessage)?.message);
                     closeDropdown();
                   }}
-                  dataSbId="copy"
+                  dataSbId="ui_message_item_menu_copy"
                 >
                   {stringSet.MESSAGE_MENU__COPY}
                 </MenuItem>
@@ -148,7 +148,7 @@ export default function MessageItemMenu({
                     closeDropdown();
                   }}
                   disable={message?.parentMessageId > 0}
-                  dataSbId="reply"
+                  dataSbId="ui_message_item_menu_reply"
                 >
                   {stringSet.MESSAGE_MENU__REPLY}
                 </MenuItem>
@@ -160,7 +160,7 @@ export default function MessageItemMenu({
                     onReplyInThread?.({ message });
                     closeDropdown();
                   }}
-                  dataSbId="thread"
+                  dataSbId="ui_message_item_menu_thread"
                 >
                   {stringSet.MESSAGE_MENU__THREAD}
                 </MenuItem>
@@ -172,7 +172,7 @@ export default function MessageItemMenu({
                     onMoveToParentMessage?.();
                     closeDropdown();
                   }}
-                  dataSbId="open_in_channel"
+                  dataSbId="ui_message_item_menu_open_in_channel"
                 >
                   {stringSet.MESSAGE_MENU__OPEN_IN_CHANNEL}
                 </MenuItem>
@@ -186,7 +186,7 @@ export default function MessageItemMenu({
                       closeDropdown();
                     }
                   }}
-                  dataSbId="edit"
+                  dataSbId="ui_message_item_menu_edit"
                 >
                   {stringSet.MESSAGE_MENU__EDIT}
                 </MenuItem>
@@ -200,7 +200,7 @@ export default function MessageItemMenu({
                       closeDropdown();
                     }
                   }}
-                  dataSbId="resend"
+                  dataSbId="ui_message_item_menu_resend"
                 >
                   {stringSet.MESSAGE_MENU__RESEND}
                 </MenuItem>
@@ -219,7 +219,7 @@ export default function MessageItemMenu({
                       ? disableDeleteMessage
                       : message?.threadInfo?.replyCount > 0
                   }
-                  dataSbId="delete"
+                  dataSbId="ui_message_item_menu_delete"
                 >
                   {stringSet.MESSAGE_MENU__DELETE}
                 </MenuItem>

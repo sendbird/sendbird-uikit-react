@@ -60,7 +60,7 @@ const OperatorList = (): ReactElement => {
                               closeDropdown();
                             });
                           }}
-                          dataSbId="unregister_operator"
+                          dataSbId="open_channel_setting_operator_context_menu_unregister_operator"
                         >
                           {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
                         </MenuItem>
@@ -76,7 +76,7 @@ const OperatorList = (): ReactElement => {
                               });
                             }
                           }}
-                          dataSbId={operator.isMuted ? 'unmute' : 'mute'}
+                          dataSbId={`open_channel_setting_operator_context_menu_${operator.isMuted ? 'unmute' : 'mute'}`}
                         >
                           {
                             operator.isMuted
@@ -90,7 +90,7 @@ const OperatorList = (): ReactElement => {
                               closeDropdown();
                             });
                           }}
-                          dataSbId="ban"
+                          dataSbId="open_channel_setting_operator_context_menu_ban"
                         >
                           {stringSet.OPEN_CHANNEL_SETTING__MODERATION__BAN}
                         </MenuItem>
