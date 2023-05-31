@@ -88,4 +88,37 @@ describe('Global-utils/getIsReactionEnabled', () => {
       isSuper: true,
     })).toBeFalse();
   });
+
+  it('should disable if only one special channel type is true', () => {
+    expect(getIsReactionEnabled({
+      globalLevel: true,
+      moduleLevel: true,
+      isBroadcast: false,
+      isSuper: true,
+    })).toBeFalse();
+    expect(getIsReactionEnabled({
+      globalLevel: true,
+      moduleLevel: true,
+      isBroadcast: true,
+      isSuper: false,
+    })).toBeFalse();
+    expect(getIsReactionEnabled({
+      globalLevel: true,
+      isBroadcast: false,
+      isSuper: true,
+    })).toBeFalse();
+    expect(getIsReactionEnabled({
+      moduleLevel: true,
+      isBroadcast: true,
+      isSuper: false,
+    })).toBeFalse();
+    expect(getIsReactionEnabled({
+      isBroadcast: false,
+      isSuper: true,
+    })).toBeFalse();
+    expect(getIsReactionEnabled({
+      isBroadcast: true,
+      isSuper: false,
+    })).toBeFalse();
+  });
 });
