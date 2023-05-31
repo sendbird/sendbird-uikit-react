@@ -1,6 +1,7 @@
 import getConfigsByPriority from '../getConfigsByPriority';
+import { UIKitConfigInfo } from '../../types';
 
-const mockRemoteConfigs = {
+const mockRemoteConfigs: UIKitConfigInfo = {
   common: {
     enableUsingDefaultUserProfile: false,
   },
@@ -58,7 +59,7 @@ describe('getConfigsByPriority', () => {
         enableUsingDefaultUserProfile: true,
       },
     };
-    const remoteConfigs = {
+    const remoteConfigs: UIKitConfigInfo = {
       // Non-existing configs in localConfigs should be merged too
       ...mockRemoteConfigs,
       common: {
