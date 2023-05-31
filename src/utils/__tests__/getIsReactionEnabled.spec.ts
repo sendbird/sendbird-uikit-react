@@ -17,7 +17,21 @@ describe('Global-utils/getIsReactionEnabled', () => {
     })).toBeTrue();
   });
 
-  it('should have higher priority to the moduleLevel', () => {
+  it('should disable if set values are false', () => {
+    expect(getIsReactionEnabled({
+      globalLevel: false,
+    })).toBeFalse();
+    expect(getIsReactionEnabled({
+      moduleLevel: false,
+    })).toBeFalse();
+
+    expect(getIsReactionEnabled({
+      globalLevel: false,
+      moduleLevel: false,
+    })).toBeFalse();
+  });
+
+  it('should have higher priority to the moduleLevel than globalLevel', () => {
     expect(getIsReactionEnabled({
       globalLevel: true,
       moduleLevel: false,
@@ -28,7 +42,7 @@ describe('Global-utils/getIsReactionEnabled', () => {
     })).toBeTrue();
   });
 
-  it('should be disabled by the special channels', () => {
+  it('should disable in the special type channels', () => {
     expect(getIsReactionEnabled({
       globalLevel: true,
       isBroadcast: true,
