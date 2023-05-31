@@ -7,14 +7,14 @@ export interface IsReactionEnabledProps {
   isBroadcast?: boolean;
   isSuper?: boolean;
   globalLevel?: boolean;
-  moduleLevel?: boolean | null;
+  moduleLevel?: boolean;
 }
 
 export function getIsReactionEnabled({
   isBroadcast = false,
   isSuper = false,
   globalLevel = true,
-  moduleLevel = null,
+  moduleLevel,
 }: IsReactionEnabledProps): boolean {
   if (moduleLevel) {
     return !isBroadcast && !isSuper;
