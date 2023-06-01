@@ -28,6 +28,7 @@ import getStringSet from '../ui/Label/stringSet';
 import { VOICE_RECORDER_DEFAULT_MAX, VOICE_RECORDER_DEFAULT_MIN } from '../utils/consts';
 import { useMarkAsReadScheduler } from './hooks/useMarkAsReadScheduler';
 import { ConfigureSessionTypes } from './hooks/useConnect/types';
+import { useMarkAsDeliveredScheduler } from './hooks/useMarkAsDeliveredScheduler';
 
 export type UserListQueryType = {
   hasNext?: boolean;
@@ -234,6 +235,7 @@ const SendbirdSDK = ({
   const isOnline = useOnlineStatus(sdkStore.sdk, logger);
 
   const markAsReadScheduler = useMarkAsReadScheduler({ isConnected: isOnline }, { logger });
+  const markAsDeliveredScheduler = useMarkAsDeliveredScheduler({ isConnected: isOnline }, { logger });
 
   const localeStringSet = React.useMemo(() => {
     if (!stringSet) {
@@ -281,6 +283,7 @@ const SendbirdSDK = ({
             maxSuggestionCount: userMention?.maxSuggestionCount || 15,
           },
           markAsReadScheduler,
+          markAsDeliveredScheduler,
           // From UIKitConfigProvider.localConfigs
           disableUserProfile:
             !configs.common.enableUsingDefaultUserProfile,
