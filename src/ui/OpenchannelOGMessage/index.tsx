@@ -267,6 +267,7 @@ export default function OpenchannelOGMessage({
                             copyToClipboard(message.message);
                             closeDropdown();
                           }}
+                          dataSbId="open_channel_og_message_menu_copy"
                         >
                           {stringSet.CONTEXT_MENU_DROPDOWN__COPY}
                         </MenuItem>
@@ -283,6 +284,7 @@ export default function OpenchannelOGMessage({
                             showEdit(true);
                             closeDropdown();
                           }}
+                          dataSbId="open_channel_og_message_menu_edit"
                         >
                           {stringSet.CONTEXT_MENU_DROPDOWN__EDIT}
                         </MenuItem>
@@ -296,6 +298,7 @@ export default function OpenchannelOGMessage({
                             resendMessage(message);
                             closeDropdown();
                           }}
+                          dataSbId="open_channel_og_message_menu_resend"
                         >
                           {stringSet.CONTEXT_MENU_DROPDOWN__RESEND}
                         </MenuItem>
@@ -312,6 +315,7 @@ export default function OpenchannelOGMessage({
                             showRemove(true);
                             closeDropdown();
                           }}
+                          dataSbId="open_channel_og_message_menu_delete"
                         >
                           {stringSet.CONTEXT_MENU_DROPDOWN__DELETE}
                         </MenuItem>

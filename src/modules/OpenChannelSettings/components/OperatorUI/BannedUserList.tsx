@@ -91,6 +91,7 @@ export const BannedUserList = (): ReactElement => {
                               refreshList();
                             });
                           }}
+                          dataSbId="open_channel_setting_banned_user_context_menu_unban"
                         >
                           {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNBAN}
                         </MenuItem>

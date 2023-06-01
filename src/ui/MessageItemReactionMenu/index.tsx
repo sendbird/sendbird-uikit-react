@@ -92,6 +92,7 @@ export default function MessageItemReactionMenu({
                       closeDropdown();
                       toggleReaction(message, emoji.key, isReacted);
                     }}
+                    dataSbId={`ui_emoji_reactions_menu_${emoji.key}`}
                   >
                     <ImageRenderer
                       url={emoji.url}

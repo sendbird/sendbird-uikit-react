@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useContext,
 } from 'react';
+import type { Member } from '@sendbird/chat/groupChannel';
 
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import IconButton from '../../../../ui/IconButton';
@@ -20,7 +21,7 @@ import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import uuidv4 from '../../../../utils/uuid';
 
 export const MemberList = (): ReactElement => {
-  const [members, setMembers] = useState([]);
+  const [members, setMembers] = useState<Array<Member>>([]);
   const [hasNext, setHasNext] = useState(false);
   const [showAllMembers, setShowAllMembers] = useState(false);
   const [showInviteUsers, setShowInviteUsers] = useState(false);
@@ -109,6 +110,9 @@ export const MemberList = (): ReactElement => {
                               });
                             }
                           }}
+                          dataSbId={`channel_setting_member_context_menu_${(
+                            member.role !== 'operator'
+                          ) ? 'register_as_operator' : 'unregister_operator'}`}
                         >
                           {
                             member.role !== 'operator'
@@ -133,6 +137,9 @@ export const MemberList = (): ReactElement => {
                                   });
                                 }
                               }}
+                              dataSbId={`channel_setting_member_context_menu_${(
+                                member.isMuted) ? 'unmute' : 'mute'}`
+                              }
                             >
                               {
                                 member.isMuted
@@ -149,6 +156,7 @@ export const MemberList = (): ReactElement => {
                               closeDropdown();
                             });
                           }}
+                          dataSbId="channel_setting_member_context_menu_ban"
                         >
                           {stringSet.CHANNEL_SETTING__MODERATION__BAN}
                         </MenuItem>

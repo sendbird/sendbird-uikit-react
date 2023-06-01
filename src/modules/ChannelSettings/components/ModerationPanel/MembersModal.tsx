@@ -130,6 +130,9 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                   });
                                 }
                               }}
+                              dataSbId={`channel_setting_member_context_menu_${(
+                                member.role !== 'operator'
+                              ) ? 'register_as_operator' : 'unregister_operator'}`}
                             >
                               {
                                 member.role !== 'operator'
@@ -170,6 +173,9 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                       });
                                     }
                                   }}
+                                  dataSbId={`channel_setting_member_context_menu_${(
+                                    member.isMuted) ? 'unmute' : 'mute'}`
+                                  }
                                 >
                                   {
                                     member.isMuted
@@ -187,6 +193,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                   }));
                                 });
                               }}
+                              dataSbId="channel_setting_member_context_menu_ban"
                             >
                               {stringSet.CHANNEL_SETTING__MODERATION__BAN}
                             </MenuItem>

@@ -16,6 +16,7 @@ export interface ReactionButtonProps {
   width?: string | number;
   height?: string | number;
   selected?: boolean;
+  dataSbId?: string;
   onClick?: (
     e: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>
   ) => void;
@@ -27,6 +28,7 @@ const ReactionButton = React.forwardRef((props: ReactionButtonProps, ref: Forwar
     width,
     height,
     selected,
+    dataSbId = '',
     onClick,
     children,
   } = props;
@@ -50,6 +52,7 @@ const ReactionButton = React.forwardRef((props: ReactionButtonProps, ref: Forwar
       style={{ width, height }}
       {...onClickHandler}
       tabIndex={0}
+      data-sb-id={dataSbId}
     >
       <div className="sendbird-reaction-button__inner">
         {children}
