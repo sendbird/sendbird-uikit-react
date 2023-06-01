@@ -249,7 +249,7 @@ export default function ThreadListItemContent({
               isReactionEnabled={isReactionEnabledInChannel}
               showFileViewer={showFileViewer}
               style={{
-                width: '200px',
+                width: isMobile ? '100%' : '200px',
                 height: '148px',
               }}
             />
