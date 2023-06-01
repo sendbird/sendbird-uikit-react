@@ -61,7 +61,6 @@ export default function ChannelPreviewAction({
                 closeDropdown();
               }}
               dataSbId="channel_list_item_context_menu_leave_channel"
-
             >
               {stringSet.CHANNEL_SETTING__LEAVE_CHANNEL__TITLE}
             </MenuItem>
