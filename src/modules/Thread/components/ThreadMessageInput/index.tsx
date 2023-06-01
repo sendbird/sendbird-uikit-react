@@ -12,8 +12,7 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import VoiceMessageInputWrapper from '../../../Channel/components/MessageInput/VoiceMessageInputWrapper';
 import { Role } from '../../../../lib/types';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
-import { isDisabledBecauseFrozen } from '../../../Channel/context/utils';
-import { isDisabledBecauseMuted } from '../../../Channel/context/utils';
+import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../../Channel/context/utils';
 
 export interface ThreadMessageInputProps {
   className?: string;
