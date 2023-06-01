@@ -10,7 +10,7 @@ const mockStorage = {
 };
 
 // Mock mergeConfigs function
-jest.mock('../../utils/getConfigsByPriority', () => jest.fn());
+jest.mock('../../utils/mergeConfigs', () => jest.fn());
 
 const mockAppId = 'abc123';
 
@@ -38,15 +38,33 @@ describe('UIKitConfigStorageManager', () => {
       const storageManager = new UIKitConfigStorageManager(mockStorage);
       const payload = {
         lastUpdatedAt: 123456789,
-        uikitConfigurations: [{ name: 'config1' }, { name: 'config2' }],
+        uikitConfigurations: {
+          common: {
+            enableUsingDefaultUserProfile: false,
+          },
+          groupChannel: {
+            channel: {
+              enableMention: false,
+            },
+          },
+        },
       };
       const storedConfig = {
         lastUpdatedAt: 987654321,
-        uikitConfigurations: [{ name: 'config3' }, { name: 'config4' }],
+        uikitConfigurations: {
+          common: {
+            enableUsingDefaultUserProfile: true,
+          },
+          groupChannel: {
+            channel: {
+              enableMention: true,
+            },
+          },
+        },
       };
       const mergedConfig = {
         lastUpdatedAt: payload.lastUpdatedAt,
-        uikitConfigurations: [{ name: 'config3' }, { name: 'config4' }, { name: 'config1' }, { name: 'config2' }],
+        uikitConfigurations: payload.uikitConfigurations,
       };
 
       storageManager.get = jest.fn().mockResolvedValueOnce(storedConfig);
@@ -59,7 +77,7 @@ describe('UIKitConfigStorageManager', () => {
       const result = await storageManager.update(payload);
 
       expect(storageManager.get).toHaveBeenCalledTimes(1);
-      expect(mergeConfigs).toHaveBeenCalledWith(storedConfig.uikitConfigurations, payload.uikitConfigurations);
+      expect(mergeConfigs).toHaveBeenCalledWith(payload.uikitConfigurations, storedConfig.uikitConfigurations);
       expect(mockStorage.setItem).toHaveBeenCalledWith(
         storageManager.key,
         JSON.stringify(mergedConfig),

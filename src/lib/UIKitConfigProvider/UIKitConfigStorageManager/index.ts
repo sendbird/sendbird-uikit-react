@@ -25,7 +25,7 @@ export class UIKitConfigStorageManager {
     const storedConfig = await this.get();
     const mergedConfig = {
       lastUpdatedAt: payload.lastUpdatedAt,
-      uikitConfigurations: mergeConfigs(storedConfig?.uikitConfigurations, payload?.uikitConfigurations),
+      uikitConfigurations: mergeConfigs(payload?.uikitConfigurations, storedConfig?.uikitConfigurations),
     };
     await this.storage.setItem(this.key, JSON.stringify(mergedConfig));
     return mergedConfig;
