@@ -12,6 +12,7 @@ import SuggestedMentionList from '../SuggestedMentionList';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import VoiceMessageInputWrapper from './VoiceMessageInputWrapper';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
+import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 
 export type MessageInputWrapperProps = {
   value?: string;
@@ -44,6 +45,7 @@ const MessageInputWrapper = (
     renderUserMentionItem,
   } = useChannelContext();
   const globalStore = useSendbirdStateContext();
+  const { isMobile } = useMediaQueryContext();
   const channel = currentGroupChannel;
 
   const {
@@ -177,7 +179,9 @@ const MessageInputWrapper = (
               placeholder={
                 (quoteMessage && stringSet.MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER)
                 || (utils.isDisabledBecauseFrozen(channel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
-                || (utils.isDisabledBecauseMuted(channel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED)
+                || (utils.isDisabledBecauseMuted(channel) && (
+                  isMobile ? stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT : stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED
+                ))
               }
               ref={ref || messageInputRef}
               disabled={disabled}
