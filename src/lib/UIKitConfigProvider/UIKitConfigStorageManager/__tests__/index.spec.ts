@@ -10,7 +10,7 @@ const mockStorage = {
 };
 
 // Mock mergeConfigs function
-jest.mock('../../utils/mergeConfigs', () => jest.fn());
+jest.mock('../../utils/getConfigsByPriority', () => jest.fn());
 
 const mockAppId = 'abc123';
 
