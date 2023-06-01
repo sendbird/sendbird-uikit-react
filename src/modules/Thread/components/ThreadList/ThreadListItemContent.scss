@@ -48,9 +48,6 @@
     align-items: flex-start;
 
     .sendbird-thread-list-item-content__middle__body-container {
-      .sendbird-thread-list-item-content__middle__message-item-body {
-        max-width: 198px;
-      }
       .sendbird-thread-list-item-content__middle__body-container__created-at {
         position: absolute;
         bottom: 6px;
@@ -171,11 +168,6 @@
     .sendbird-thread-list-item-content__middle__body-container {
       position: relative;
       width: fit-content;
-
-      .sendbird-thread-list-item-content__middle__message-item-body {
-        max-width: 200px;
-      }
-
       .sendbird-thread-list-item-content__middle__body-container__created-at {
         position: absolute;
         bottom: 2px;
