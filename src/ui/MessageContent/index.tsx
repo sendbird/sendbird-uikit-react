@@ -260,6 +260,7 @@ export default function MessageContent({
         {(useReplying) ? (
           <div className={getClassName(['sendbird-message-content__middle__quote-message', isByMe ? 'outgoing' : 'incoming', useReplyingClassName])}>
             <QuoteMessage
+              className="sendbird-message-content__middle__quote-message__quote"
               message={message as UserMessage | FileMessage}
               userId={userId}
               isByMe={isByMe}

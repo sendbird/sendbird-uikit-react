@@ -7,6 +7,7 @@
   flex-direction: column;
   &.incoming { align-items: flex-start; }
   &.outgoing { align-items: flex-end; }
+  width: 100%;
   max-width: 400px;
 
   .sendbird-quote-message__replied-to {
@@ -16,6 +17,7 @@
     align-items: center;
     height: 16px;
     padding: 0px 12px;
+    width: 100%;
     .sendbird-quote-message__replied-to__icon {
       position: relative;
       margin-bottom: 4px;
