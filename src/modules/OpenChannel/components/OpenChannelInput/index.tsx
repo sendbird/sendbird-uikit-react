@@ -7,21 +7,32 @@ export type MessageInputWrapperProps = {
   value?: string;
 };
 
-const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.RefObject<HTMLInputElement>): JSX.Element => {
+const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.RefObject<HTMLInputElement>): React.ReactNode => {
   const {
     currentOpenChannel,
     disabled,
     handleSendMessage,
     handleFileUpload,
+    amIMuted,
   } = useOpenChannelContext();
 
   const channel = currentOpenChannel;
   if (!channel) {
-    return;
+    return null;
   }
 
   const { stringSet } = useContext(LocalizationContext);
   const { value } = props;
+
+  function getPlaceHolderString() {
+    if (amIMuted) {
+      return stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED;
+    }
+    if (disabled) {
+      return stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED;
+    }
+    return '';
+  }
 
   return (
     <div className="sendbird-openchannel-footer">
@@ -32,11 +43,7 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.RefObje
         isVoiceMessageEnabled={false}
         onSendMessage={handleSendMessage}
         onFileUpload={handleFileUpload}
-        placeholder={(
-          disabled
-          && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED
-          // add disabled because of muted state
-        )}
+        placeholder={getPlaceHolderString()}
       />
     </div>
   );
