@@ -131,6 +131,12 @@
     background-color: t(bg-1);
   }
 }
+// mobile should have higher priority than themed
+.sendbird-parent-message-info.sendbird-thread-ui__parent-message-info:hover {
+  @include mobile() {
+    background-color: transparent;
+  }
+}
 .sendbird-parent-message-info:hover .sendbird-emoji-reactions {
   @include themed() {
     border: 1px solid t(bg-1);
