@@ -7,58 +7,8 @@ import { DeepPartial } from './utils/types';
 import getConfigsByPriority from './utils/getConfigsByPriority';
 
 import { UIKitConfigInfo } from './types';
-
-// @link: https://docs.google.com/spreadsheets/d/1-AozBMHRYOXS74vZ-7x2ptQcBL6nnM-orJWRvUgmkd4/edit#gid=0
-const initialConfig: UIKitConfigInfo = {
-  common: {
-    enableUsingDefaultUserProfile: false,
-  },
-  groupChannel: {
-    channel: {
-      enableMention: false,
-      enableOgtag: true,
-      enableReactions: true,
-      enableTypingIndicator: true,
-      enableVoiceMessage: false,
-      input: {
-        camera: {
-          enablePhoto: true,
-          enableVideo: true,
-        },
-        enableDocument: true,
-        gallery: {
-          enablePhoto: true,
-          enableVideo: true,
-        },
-      },
-      replyType: 'quote_reply',
-      threadReplySelectType: 'thread',
-    },
-    channelList: {
-      enableMessageReceiptStatus: false,
-      enableTypingIndicator: false,
-    },
-    setting: {
-      enableMessageSearch: false,
-    },
-  },
-  openChannel: {
-    channel: {
-      enableOgtag: true,
-      input: {
-        camera: {
-          enablePhoto: true,
-          enableVideo: true,
-        },
-        enableDocument: true,
-        gallery: {
-          enablePhoto: true,
-          enableVideo: true,
-        },
-      },
-    },
-  },
-};
+import initialConfig from './const/initialConfig';
+import { UIKitConfigStorageManager, type StorageInterface } from './UIKitConfigStorageManager';
 
 interface UIKitConfigContextInterface {
   initDashboardConfigs: (sdk: SendbirdChat) => Promise<void>;
@@ -75,7 +25,7 @@ interface UIKitConfigProviderProps {
   children: React.ReactElement;
   // If the storage value is not provided,
   // it'll fetch the new configs set by dashboard everytime
-  storage?: any;
+  storage?: StorageInterface;
 }
 
 const UIKitConfigProvider = ({ storage, children, localConfigs }: UIKitConfigProviderProps) => {
@@ -84,23 +34,23 @@ const UIKitConfigProvider = ({ storage, children, localConfigs }: UIKitConfigPro
 
   const initDashboardConfigs = useCallback(async (sdk: SendbirdChat) => {
     try {
-    // TODO: Implement
-    // const manager = new UIKitConfigStorageManager(storage)
-    // const storedConfigs = await manager.init(sdk.appId);
       if (storage == null) {
         const payload = await sdk.getUIKitConfiguration();
         setRemoteConfigs(snakeToCamel(payload.json.uikit_configurations));
+        return;
       }
 
-      // TODO: Implement
       // Compare the sdk uikitConfig's lastUpdatedAt <-> stored one
-      // if(sdk.appInfo.uikitConfigInfo.lastUpdatedAt === storedConfigs.lastUpdatedAt) {
-      //   setRemoteConfigs(storedConfigs);
-      // } else {
-      //   const newConfigs = await sdk.getUIKitConfig();
-      //   const updatedConfigs = await manager.update(newConfigs);
-      //   setRemoteConfigs(updatedConfigs);
-      // }
+      const manager = new UIKitConfigStorageManager(storage);
+      const storedConfigs = await manager.init(sdk.appId);
+
+      if (sdk.appInfo.uikitConfigInfo.lastUpdatedAt === storedConfigs.lastUpdatedAt) {
+        setRemoteConfigs(storedConfigs.uikitConfigurations);
+      } else {
+        const payload = await sdk.getUIKitConfiguration();
+        const updatedPayloed = await manager.update(snakeToCamel(payload.json));
+        setRemoteConfigs(updatedPayloed.uikitConfigurations);
+      }
     } catch (error) {
       //
     }
