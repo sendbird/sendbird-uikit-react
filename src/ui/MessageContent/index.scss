@@ -121,6 +121,15 @@
         }
       }
     }
+    @include mobile() {
+      .sendbird-message-content__middle {
+        .sendbird-message-content__middle__body-container {
+          .sendbird-message-content__middle__body-container__created-at {
+            display: inline-flex;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -204,6 +213,15 @@
       .sendbird-message-content__middle__body-container {
         .sendbird-message-content__middle__body-container__created-at {
           display: none;
+        }
+      }
+    }
+    @include mobile {
+      .sendbird-message-content__middle {
+        .sendbird-message-content__middle__body-container {
+          .sendbird-message-content__middle__body-container__created-at {
+            display: inline-flex;
+          }
         }
       }
     }
