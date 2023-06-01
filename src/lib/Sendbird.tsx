@@ -151,7 +151,7 @@ const SendbirdSDK = ({
   renderUserProfile = null,
   onUserProfileMessage = null,
 }: SendbirdProviderProps): React.ReactElement => {
-  const mediaQueryBreakPoint = false;
+  const breakpoint = false;
 
   const {
     logLevel = '',
@@ -306,7 +306,7 @@ const SendbirdSDK = ({
         },
       }}
     >
-      <MediaQueryProvider logger={logger} mediaQueryBreakPoint={mediaQueryBreakPoint}>
+      <MediaQueryProvider logger={logger} breakpoint={breakpoint}>
         <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
           <VoiceMessageProvider isVoiceMessageEnabled={configs.groupChannel.channel.enableVoiceMessage}>
             {children}

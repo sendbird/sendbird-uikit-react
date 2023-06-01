@@ -20,7 +20,7 @@ export default function App(props) {
     accessToken,
     customApiHost,
     customWebSocketHost,
-    mediaQueryBreakPoint,
+    breakpoint,
     theme,
     userListQuery,
     nickname,
@@ -55,7 +55,7 @@ export default function App(props) {
       accessToken={accessToken}
       customApiHost={customApiHost}
       customWebSocketHost={customWebSocketHost}
-      mediaQueryBreakPoint={mediaQueryBreakPoint}
+      breakpoint={breakpoint}
       theme={theme}
       nickname={nickname}
       profileUrl={profileUrl}
@@ -103,7 +103,7 @@ App.propTypes = {
   userListQuery: PropTypes.func,
   nickname: PropTypes.string,
   profileUrl: PropTypes.string,
-  mediaQueryBreakPoint: PropTypes.string,
+  breakpoint: PropTypes.string,
   allowProfileEdit: PropTypes.bool,
   disableUserProfile: PropTypes.bool,
   disableMarkAsDelivered: PropTypes.bool,
@@ -154,7 +154,7 @@ App.defaultProps = {
   nickname: '',
   profileUrl: '',
   userListQuery: null,
-  mediaQueryBreakPoint: null,
+  breakpoint: null,
   dateLocale: null,
   allowProfileEdit: false,
   onProfileEditSuccess: null,
