@@ -339,6 +339,7 @@ export default function MessageContent({
               mouseHover={mouseHover}
               isReactionEnabled={isReactionEnabledInChannel}
               showFileViewer={showFileViewer}
+              style={isMobile ? { width: '100%' } : {}}
             />
           )}
           {(getUIKitMessageType((message as FileMessage)) === messageTypes.UNKNOWN) && (
