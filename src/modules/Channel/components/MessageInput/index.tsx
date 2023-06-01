@@ -79,7 +79,8 @@ const MessageInputWrapper = (
     && isMentionEnabled
     && mentionNickname.length > 0
     && !utils.isDisabledBecauseFrozen(channel)
-    && !utils.isDisabledBecauseMuted(channel);
+    && !utils.isDisabledBecauseMuted(channel)
+    && !isBroadcast;
 
   // Reset when channel changes
   useEffect(() => {

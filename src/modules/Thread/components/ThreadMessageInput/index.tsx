@@ -12,6 +12,7 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import VoiceMessageInputWrapper from '../../../Channel/components/MessageInput/VoiceMessageInputWrapper';
 import { Role } from '../../../../lib/types';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
+import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../../Channel/context/utils';
 
 export interface ThreadMessageInputProps {
   className?: string;
@@ -67,9 +68,10 @@ const ThreadMessageInput = (
   const [showVoiceMessageInput, setShowVoiceMessageInput] = useState(false);
   const displaySuggestedMentionList = isOnline
     && isMentionEnabled
-    && mentionNickname.length > 0;
-  // && !utils.isDisabledBecauseFrozen(channel)
-  // && !utils.isDisabledBecauseMuted(channel);
+    && mentionNickname.length > 0
+    && !isDisabledBecauseFrozen(currentChannel)
+    && !isDisabledBecauseMuted(currentChannel)
+    && !currentChannel?.isBroadcast;
 
   // Reset when changing channel
   useEffect(() => {
