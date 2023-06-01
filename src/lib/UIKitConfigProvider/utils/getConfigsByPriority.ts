@@ -15,6 +15,8 @@ export default function getConfigsByPriority(localConfigs: DeepPartial<UIKitConf
         // Recursively call getConfigsByPriority only when the value of the key is Object
         ? getConfigsByPriority(localConfigs[key], prioritizedConfigs[key])
         : localConfigs[key];
+    } else {
+      prioritizedConfigs[key] = localConfigs[key];
     }
   });
 

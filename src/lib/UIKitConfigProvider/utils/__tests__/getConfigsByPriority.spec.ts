@@ -78,4 +78,38 @@ describe('getConfigsByPriority', () => {
     const remoteConfigs = mockRemoteConfigs;
     expect(getConfigsByPriority(localConfigs, remoteConfigs)).toEqual(remoteConfigs);
   });
+
+  it('should merge correctly even localConfigs has empty object or nullable fields', () => {
+    const localConfigs = {
+      common: {
+        enableUsingDefaultUserProfile: true,
+      },
+      groupChannel: {
+        channel: {
+          enableMention: false,
+          enableOgtag: true,
+          enableReactions: true,
+          enableTypingIndicator: true,
+          enableVoiceMessage: false,
+        } },
+    };
+    const remoteConfigs = {
+      common: {
+        enableUsingDefaultUserProfile: false,
+      },
+    };
+    expect(getConfigsByPriority(localConfigs, remoteConfigs)).toEqual({
+      common: {
+        enableUsingDefaultUserProfile: true,
+      },
+      groupChannel: {
+        channel: {
+          enableMention: false,
+          enableOgtag: true,
+          enableReactions: true,
+          enableTypingIndicator: true,
+          enableVoiceMessage: false,
+        } },
+    });
+  });
 });
