@@ -1,7 +1,6 @@
 import React from 'react';
 import type { BaseMenuProps } from './types';
 import type { FileMessage, UserMessage } from '@sendbird/chat/message';
-import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import ContextMenu, { MenuItems, MenuItem } from '../ContextMenu';
 
