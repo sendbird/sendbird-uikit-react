@@ -19,7 +19,7 @@ import TextButton from '../../../../ui/TextButton';
 import { useChannelListContext } from '../../context/ChannelListProvider';
 import { TypingIndicatorText } from '../../../Channel/components/TypingIndicator';
 import MessageStatus from '../../../../ui/MessageStatus';
-import { isEditedMessage, isVoiceMessage } from '../../../../utils';
+import { isVoiceMessage } from '../../../../utils';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import useLongPress from '../../../../hooks/useLongPress';
 
@@ -176,7 +176,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
               }
               {
                 !isChannelTyping && !isVoiceMessage(channel?.lastMessage as FileMessage) && (
-                  utils.getLastMessage(channel) + (isEditedMessage(channel?.lastMessage as UserMessage | FileMessage) ? ` ${stringSet.MESSAGE_EDITED}` : '')
+                  utils.getLastMessage(channel)
                 )
               }
               {
