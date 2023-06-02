@@ -446,6 +446,7 @@ declare module "SendbirdUIKitGlobal" {
     channelUrl: string;
     className?: string;
     onCloseClick?(): void;
+    onLeaveChannel?(): void;
     onChannelModified?(channel: GroupChannel): void;
     overrideInviteUser?(params: OverrideInviteMemberType): void;
     onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): GroupChannelUpdateParams;
