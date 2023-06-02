@@ -1,5 +1,47 @@
 # Changelog - v3
 
+## [v3.4.9] (June 02 2023)
+
+Fixes:
+* ChannelList
+  * Display a channel on channel list only when there's a message
+  * Remove edited message from ChannelPreview
+
+* MarkAsRead & MarkAsDelivered
+  * Batch markAsRead & markAsDelivered requests
+
+* Scrolling
+  * Various scroll issues in Channel component
+  * Shaky scroll on messages when fetching messages
+  * Scroll into view when starting point is set
+  * Scroll into message on clicking quote reply
+  * Inconsistent rendering on scrollToBottom button
+
+* Mention
+  * Improve max mention count logic in Messages
+  * Improve mention detection when there are curly braces in user's name Mentions
+  were not working when user nickname had curly braces
+
+* Special channels
+  * Disable mention in the broadcast channel
+  * Change OpenChannelInput muted state notice text in broadcast channel
+
+* Reply
+  * Apply ellipsis to a sender of quote and admin message
+
+* Thread
+  * Add border bottom to the ParentMessageInfo component
+  * Modify string set for thread menu "Reply to Thread" -> "Reply in Thread"
+    Do not display "Reply in Thread" to the reply messages
+  * Prevent hover style of ParentMessageInfo component
+
+* OpenChannel
+  * Apply theme to the OpenChannelList header
+
+Chores:
+* Add a sample with router
+* Add dataId to the every menu items
+
 ## [v3.4.8] (May 19 2023)
 
 Fixes:
@@ -31,7 +73,7 @@ Chores:
 Important Notes:
 * @sendbird/chat@4.8.0 has an issue with `abortcontroller-polyfill` plugin. Please use version 4.7.2 or install it separately.
 
-Features: 
+Features:
 * Set Chat SDK v4.3.0 as the minimum required version.
 * Add a new UI component, Toggle:
   * `ToggleContainer`: A context provider component that manages only the toggle status.
