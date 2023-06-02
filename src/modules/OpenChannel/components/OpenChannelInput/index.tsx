@@ -17,9 +17,6 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.RefObje
   } = useOpenChannelContext();
 
   const channel = currentOpenChannel;
-  if (!channel) {
-    return null;
-  }
 
   const { stringSet } = useContext(LocalizationContext);
   const { value } = props;
@@ -34,6 +31,9 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.RefObje
     return '';
   }
 
+  if (!channel) {
+    return null;
+  }
   return (
     <div className="sendbird-openchannel-footer">
       <MessageInput
