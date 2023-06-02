@@ -1,7 +1,6 @@
 import React from 'react';
 import type { BaseMenuProps } from './types';
 import type { FileMessage, UserMessage } from '@sendbird/chat/message';
-import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import ContextMenu, { MenuItems, MenuItem } from '../ContextMenu';
 
@@ -16,7 +15,7 @@ import {
 } from '../../utils';
 import { useLocalization } from '../../lib/LocalizationContext';
 import Icon, { IconTypes, IconColors } from '../Icon';
-import Label, { LabelTypography } from '../Label';
+import Label, { LabelColors, LabelTypography } from '../Label';
 
 const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMenuProps): React.ReactElement => {
   const {
@@ -43,7 +42,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
   const showMenuItemReply: boolean = (replyType === 'QUOTE_REPLY')
     && !isFailedMessage(message)
     && !isPendingMessage(message)
-    && (channel?.isGroupChannel() && !(channel as GroupChannel)?.isBroadcast);
+    && channel?.isGroupChannel();
   const showMenuItemThread: boolean = (replyType === 'THREAD') && !isOpenedFromThread
     && !isFailedMessage(message)
     && !isPendingMessage(message)
@@ -70,7 +69,10 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               }}
               dataSbId="ui_mobile_message_item_menu_copy"
             >
-              <Label type={LabelTypography.SUBTITLE_1}>
+              <Label
+                type={LabelTypography.SUBTITLE_1}
+                color={LabelColors.ONBACKGROUND_1}
+              >
                 {stringSet?.MESSAGE_MENU__COPY}
               </Label>
               <Icon
@@ -88,15 +90,26 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
                 hideMenu();
                 setQuoteMessage(message);
               }}
-              disable={message?.parentMessageId > 0}
+              disable={(message?.parentMessageId ?? 0) > 0}
               dataSbId="ui_mobile_message_item_menu_reply"
             >
-              <Label type={LabelTypography.SUBTITLE_1}>
+              <Label
+                type={LabelTypography.SUBTITLE_1}
+                color={
+                  (message?.parentMessageId ?? 0) > 0
+                    ? LabelColors.ONBACKGROUND_4
+                    : LabelColors.ONBACKGROUND_1
+                }
+              >
                 {stringSet.MESSAGE_MENU__REPLY}
               </Label>
               <Icon
                 type={IconTypes.REPLY}
-                fillColor={IconColors.PRIMARY}
+                fillColor={
+                  (message?.parentMessageId ?? 0) > 0
+                    ? IconColors.ON_BACKGROUND_4
+                    : IconColors.PRIMARY
+                }
                 width="24px"
                 height="24px"
               />
@@ -111,7 +124,10 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               }}
               dataSbId="ui_mobile_message_item_menu_thread"
             >
-              <Label type={LabelTypography.SUBTITLE_1}>
+              <Label
+                type={LabelTypography.SUBTITLE_1}
+                color={LabelColors.ONBACKGROUND_1}
+              >
                 {stringSet.MESSAGE_MENU__THREAD}
               </Label>
               <Icon
@@ -131,7 +147,10 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               }}
               dataSbId="ui_mobile_message_item_menu_edit"
             >
-              <Label type={LabelTypography.SUBTITLE_1}>
+              <Label
+                type={LabelTypography.SUBTITLE_1}
+                color={LabelColors.ONBACKGROUND_1}
+              >
                 {stringSet.MESSAGE_MENU__EDIT}
               </Label>
               <Icon
@@ -151,7 +170,10 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               }}
               dataSbId="ui_mobile_message_item_menu_resend"
             >
-              <Label type={LabelTypography.SUBTITLE_1}>
+              <Label
+                type={LabelTypography.SUBTITLE_1}
+                color={LabelColors.ONBACKGROUND_1}
+              >
                 {stringSet.MESSAGE_MENU__RESEND}
               </Label>
               <Icon
@@ -169,15 +191,26 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
                 hideMenu();
                 showRemove(true);
               }}
-              disable={message?.threadInfo?.replyCount > 0}
+              disable={(message?.threadInfo?.replyCount ?? 0) > 0}
               dataSbId="ui_mobile_message_item_menu_delete"
             >
-              <Label type={LabelTypography.SUBTITLE_1}>
+              <Label
+                type={LabelTypography.SUBTITLE_1}
+                color={
+                  (message?.threadInfo?.replyCount ?? 0) > 0
+                    ? LabelColors.ONBACKGROUND_4
+                    : LabelColors.ONBACKGROUND_1
+                }
+              >
                 {stringSet.MESSAGE_MENU__DELETE}
               </Label>
               <Icon
                 type={IconTypes.DELETE}
-                fillColor={IconColors.PRIMARY}
+                fillColor={
+                  (message?.threadInfo?.replyCount ?? 0) > 0
+                    ? IconColors.ON_BACKGROUND_4
+                    : IconColors.PRIMARY
+                }
                 width="24px"
                 height="24px"
               />
@@ -197,7 +230,10 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
                 href={fileMessage?.url}
                 target="_blank"
               >
-                <Label type={LabelTypography.SUBTITLE_1}>
+                <Label
+                  type={LabelTypography.SUBTITLE_1}
+                  color={LabelColors.ONBACKGROUND_1}
+                >
                   {stringSet.MESSAGE_MENU__SAVE}
                 </Label>
                 <Icon
