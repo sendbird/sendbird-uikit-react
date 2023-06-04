@@ -27,6 +27,10 @@
   }
 }
 
+.sendbird-thread-list-item-content__middle__body-container {
+  width: 100%;
+}
+
 // incoming
 .sendbird-thread-list-item-content.incoming {
   .sendbird-thread-list-item-content__left {
@@ -167,7 +171,6 @@
 
     .sendbird-thread-list-item-content__middle__body-container {
       position: relative;
-      width: fit-content;
       .sendbird-thread-list-item-content__middle__body-container__created-at {
         position: absolute;
         bottom: 2px;
@@ -211,7 +214,6 @@
 
 .sendbird-thread-list-item-content__middle__body-container {
   position: relative;
-  width: fit-content;
   display: flex;
   flex-direction: column;
 
