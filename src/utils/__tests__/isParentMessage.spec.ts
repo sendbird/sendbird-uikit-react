@@ -13,7 +13,7 @@ const mockParentMessage = {
   threadInfo: {
     lastRepliedAt: 0,
     mostRepliedUsers: [],
-    replyCount: 0,
+    replyCount: 3,
     updatedAt: 0,
   },
 };
@@ -24,10 +24,17 @@ const mockThreadMessage = {
 };
 
 describe('Global-utils/isParentMessage', () => {
-  it('should verify thread message', () => {
+  it('should verify parent message', () => {
     expect(
       isParentMessage(mockParentMessage as unknown as UserMessage),
     ).toBeTrue();
+  });
+  it('should return false when the message does not have replyCount', () => {
+    const normalMessage = { ...mockParentMessage };
+    normalMessage.threadInfo.replyCount = 0;
+    expect(
+      isParentMessage(normalMessage as unknown as UserMessage),
+    ).toBeFalse();
   });
   it('should filter the other messages', () => {
     expect(

@@ -137,7 +137,7 @@ export const isFileMessage = (message: AdminMessage | UserMessage | FileMessage)
   message && (message?.isFileMessage?.() || (message?.messageType === 'file'))
 );
 export const isParentMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => (
-  !message.parentMessageId && !message.parentMessage && message.threadInfo !== null
+  !message.parentMessageId && !message.parentMessage && (message.threadInfo?.replyCount ?? 0) > 0
 );
 export const isThreadMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => (
   !!message.parentMessageId && !!message.parentMessage
