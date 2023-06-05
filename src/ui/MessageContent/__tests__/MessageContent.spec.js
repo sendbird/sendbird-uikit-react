@@ -1,9 +1,26 @@
-import React from 'react';
-import { render } from '@testing-library/react';
+import React, { useContext } from 'react';
+import { render, renderHook } from '@testing-library/react';
 
 import MessageContent from "../index";
-import { MessageProvider } from '../../../modules/Message/context/MessageProvider';
+import { useMessageContext } from '../../../modules/Message/context/MessageProvider';
+import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
+import { useLocalization } from '../../../lib/LocalizationContext';
+
 jest.mock('date-fns/format', () => () => ('mock-date'));
+
+// to mock useSendbirdStateContext
+jest.mock('react', () => ({
+  ...jest.requireActual('react'),
+  useContext: jest.fn(),
+}));
+jest.mock('../../../lib/LocalizationContext', () => ({
+  ...jest.requireActual('../../../lib/LocalizationContext'),
+  useLocalization: jest.fn(),
+}));
+jest.mock('../../../modules/Message/context/MessageProvider', () => ({
+  ...jest.requireActual('../../../modules/Message/context/MessageProvider'),
+  useMessageContext: jest.fn(),
+}));
 
 const createMockChannel = (process) => {
   const mockChannel = {
@@ -43,6 +60,30 @@ const createMockMessage = (process) => {
 };
 
 describe('ui/MessageContent', () => {
+  /** Mocking necessary hooks */
+  beforeEach(() => {
+    const stateContextValue = {
+      config: {
+        groupChannel: {
+          enableOgTag: true,
+        }
+      }
+    };
+    const localeContextValue = {
+      dateLocale: {},
+    };
+    const messageContextValue = {
+      message: {},
+    }
+
+    useContext.mockReturnValue(stateContextValue);
+    useLocalization.mockReturnValue(localeContextValue);
+    useMessageContext.mockReturnValue(messageContextValue)
+
+    renderHook(() => useSendbirdStateContext());
+    renderHook(() => useLocalization());
+    renderHook(() => useMessageContext());
+  })
   // TODO: Add tests after message threading is applied
   // useReplying <-> replyType
   // it('should render components by replyType', () => {});
@@ -50,15 +91,13 @@ describe('ui/MessageContent', () => {
   it('should have class names by own user basic status', () => {
     const className = "test-classname";
     const message = createMockMessage();
-    const { container, queryByTestId } = render(
-      <MessageProvider message={message}>
-        <MessageContent
-          className={className}
-          userId="sendbird-user-000"
-          message={message}
-          channel={createMockChannel()}
-        />
-      </MessageProvider>
+    const { container } = render(
+      <MessageContent
+        className={className}
+        userId="sendbird-user-000"
+        message={message}
+        channel={createMockChannel()}
+      />
     );
     expect(
       container.getElementsByClassName('sendbird-message-content')[0].className
@@ -116,14 +155,12 @@ describe('ui/MessageContent', () => {
   it('should render components when isByMe is true', () => {
     const message = createMockMessage();
     const { container } = render(
-      <MessageProvider message={message}>
-        <MessageContent
-          userId="user-id-001"
-          message={message}
-          channel={createMockChannel()}
-          isByMe
-        />
-      </MessageProvider>
+      <MessageContent
+        userId="user-id-001"
+        message={message}
+        channel={createMockChannel()}
+        isByMe
+      />
     );
     expect(
       container.querySelector('.sendbird-message-content.outgoing')
@@ -147,14 +184,12 @@ describe('ui/MessageContent', () => {
   it('should render components when isByMe is false', () => {
     const message = createMockMessage();
     const { container } = render(
-      <MessageProvider message={message}>
-        <MessageContent
-          userId="user-id-002"
-          message={message}
-          channel={createMockChannel()}
-          isByMe={false}
-        />
-      </MessageProvider>
+      <MessageContent
+        userId="user-id-002"
+        message={message}
+        channel={createMockChannel()}
+        isByMe={false}
+      />
     );
     expect(
       container.querySelector('.sendbird-message-content.outgoing')
@@ -179,14 +214,12 @@ describe('ui/MessageContent', () => {
   it('should not render components when chainTop is true', () => {
     const message = createMockMessage();
     const { container } = render(
-      <MessageProvider message={message}>
-        <MessageContent
-          userId="sendbird-user-000"
-          message={message}
-          channel={createMockChannel()}
-          chainTop
-        />
-      </MessageProvider>
+      <MessageContent
+        userId="sendbird-user-000"
+        message={message}
+        channel={createMockChannel()}
+        chainTop
+      />
     );
     expect(
       container.getElementsByClassName('sendbird-message-content__middle__sender-name').length
@@ -202,15 +235,13 @@ describe('ui/MessageContent', () => {
   it('should not render components when chainBottom is true & isByMe is true', () => {
     const message = createMockMessage();
     const { container } = render(
-      <MessageProvider message={message}>
-        <MessageContent
-          userId="sendbird-user-001"
-          message={message}
-          channel={createMockChannel()}
-          isByMe
-          chainBottom
-        />
-      </MessageProvider>
+      <MessageContent
+        userId="sendbird-user-001"
+        message={message}
+        channel={createMockChannel()}
+        isByMe
+        chainBottom
+      />
     );
     expect(
       container.getElementsByClassName('sendbird-message-content__left__avatar').length
@@ -222,15 +253,13 @@ describe('ui/MessageContent', () => {
   it('should not render components when chainBottom is true & isByMe is false', () => {
     const message = createMockMessage();
     const { container } = render(
-      <MessageProvider message={message}>
-        <MessageContent
-          userId="sendbird-user-002"
-          message={message}
-          channel={createMockChannel()}
-          isByMe={false}
-          chainBottom
-        />
-      </MessageProvider>
+      <MessageContent
+        userId="sendbird-user-002"
+        message={message}
+        channel={createMockChannel()}
+        isByMe={false}
+        chainBottom
+      />
     );
     expect(
       container.getElementsByClassName('sendbird-message-content__left__avatar').length
@@ -245,15 +274,61 @@ describe('ui/MessageContent', () => {
   it('should do a snapshot test of the MessageContent DOM', function () {
     const message = createMockMessage();
     const { asFragment }  = render(
-      <MessageProvider message={message}>
-        <MessageContent
-          className="classname-for-snapshot"
-          message={message}
-          channel={createMockChannel()}
-          userId="user-id-000"
-        />
-      </MessageProvider>
+      <MessageContent
+        className="classname-for-snapshot"
+        message={message}
+        channel={createMockChannel()}
+        userId="user-id-000"
+      />
     );
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('should render OGMessageItemBody if config.groupChannel.enableOgTag == true', function () {
+    const message = createMockMessage();
+    const contextValue = {
+      config: {
+        groupChannel: { enableOgTag: true },
+      }
+    };
+    useContext.mockReturnValue(contextValue);
+    const { container } = render(
+      <MessageContent
+        className="classname-for-snapshot"
+        message={{
+          ...message,
+          ogMetaData: { url: 'test' },
+        }}
+        channel={createMockChannel()}
+        userId="user-id-000"
+      />
+    );
+    expect(
+      container.querySelector('.sendbird-og-message-item-body')
+    ).toBeTruthy();
+  });
+
+  it('should not render OGMessageItemBody if config.groupChannel.enableOgTag == false', function () {
+    const message = createMockMessage();
+    const contextValue = {
+      config: {
+        groupChannel: { enableOgTag: false },
+      }
+    };
+    useContext.mockReturnValue(contextValue);
+    const { container } = render(
+      <MessageContent
+        className="classname-for-snapshot"
+        message={{
+          ...message,
+          ogMetaData: { url: 'test' },
+        }}
+        channel={createMockChannel()}
+        userId="user-id-000"
+      />
+    );
+    expect(
+      container.querySelector('.sendbird-og-message-item-body')
+    ).toBe(null);
   });
 });
