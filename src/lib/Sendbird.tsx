@@ -310,9 +310,11 @@ const SendbirdSDK = ({
           // Remote configs set from dashboard by UIKit feature configuration
           groupChannel: {
             enableOgtag: configs.groupChannel.channel.enableOgtag,
+            enableDocument: configs.groupChannel.channel.input.enableDocument,
           },
           openChannel: {
             enableOgtag: configs.openChannel.channel.enableOgtag,
+            enableDocument: configs.openChannel.channel.input.enableDocument,
           },
         },
       }}

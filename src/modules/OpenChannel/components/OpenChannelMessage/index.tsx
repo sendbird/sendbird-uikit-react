@@ -105,6 +105,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
     return (
       <MessageInput
         isEdit
+        channel={currentOpenChannel}
         disabled={editDisabled}
         ref={editMessageInputRef}
         message={message as UserMessage}

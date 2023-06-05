@@ -106,9 +106,11 @@ export interface SendBirdStateConfig {
   // Remote configs set from dashboard by UIKit feature configuration
   groupChannel: {
     enableOgtag: SBUConfig['groupChannel']['channel']['enableOgtag'];
+    enableDocument: SBUConfig['groupChannel']['channel']['input']['enableDocument'];
   },
   openChannel: {
     enableOgtag: SBUConfig['openChannel']['channel']['enableOgtag'];
+    enableDocument: SBUConfig['openChannel']['channel']['input']['enableDocument'];
   },
 }
 export interface SdkStore {

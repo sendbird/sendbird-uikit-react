@@ -37,6 +37,7 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.RefObje
   return (
     <div className="sendbird-openchannel-footer">
       <MessageInput
+        channel={currentOpenChannel}
         ref={ref}
         value={value}
         disabled={disabled}
