@@ -330,5 +330,10 @@ describe('ui/MessageContent', () => {
     expect(
       container.querySelector('.sendbird-og-message-item-body')
     ).toBe(null);
+
+    // then TextMessageItemBody should be rendered instead
+    expect(
+      container.querySelector('.sendbird-text-message-item-body')
+    ).toBeTruthy();
   });
 });
