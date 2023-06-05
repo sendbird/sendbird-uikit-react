@@ -12,6 +12,7 @@ import {
   copyToClipboard,
   isFileMessage,
   isThreadMessage,
+  isVoiceMessage,
 } from '../../utils';
 import { useLocalization } from '../../lib/LocalizationContext';
 import Icon, { IconTypes, IconColors } from '../Icon';
@@ -39,10 +40,8 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
   const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe);
   const showMenuItemResend: boolean = (isFailedMessage(message) && message?.isResendable && isByMe);
   const showMenuItemDelete: boolean = !isPendingMessage(message) && isByMe;
-  const showMenuItemDownload: boolean = !isPendingMessage(message)
-    && isFileMessage(message)
-    && !(channel as GroupChannel)?.isSuper
-    && !(channel as GroupChannel)?.isBroadcast;
+  const showMenuItemDownload: boolean = !isPendingMessage(message) && isFileMessage(message)
+    && !(isVoiceMessage(message) && ((channel as GroupChannel)?.isSuper || (channel as GroupChannel)?.isBroadcast));
   const showMenuItemReply: boolean = (replyType === 'QUOTE_REPLY')
     && !isFailedMessage(message)
     && !isPendingMessage(message)
