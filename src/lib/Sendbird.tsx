@@ -21,6 +21,9 @@ import pubSubFactory from './pubSub/index';
 import useAppendDomNode from '../hooks/useAppendDomNode';
 
 import { UIKitConfigProvider, useUIKitConfig } from './UIKitConfigProvider';
+import initialConfig from './UIKitConfigProvider/const/initialConfig';
+import { GroupChannelConfig } from './UIKitConfigProvider/types';
+
 import { VoiceMessageProvider } from './VoiceMessageProvider';
 import { LocalizationProvider } from './LocalizationContext';
 import { MediaQueryProvider } from './MediaQueryContext';
@@ -116,7 +119,9 @@ function Sendbird(props: SendbirdProviderProps) {
              * we convert it from here.
              * i.e. 'THREAD' -> 'thread'
              */
-            replyType: replyType.toLowerCase(),
+            replyType: replyType == null
+              ? initialConfig.groupChannel.channel.replyType
+              : replyType.toLowerCase() as GroupChannelConfig['channel']['replyType'],
           },
           channelList: {
             enableTypingIndicator: isTypingIndicatorEnabledOnChannelList,
