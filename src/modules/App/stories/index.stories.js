@@ -275,6 +275,7 @@ export const user1 = () => fitPageSize(
     replyType="THREAD"
     isReactionEnabled
     isMentionEnabled
+    isVoiceMessageEnabled
     isTypingIndicatorEnabledOnChannelList
     isMessageReceiptStatusEnabledOnChannelList
   />
@@ -295,6 +296,7 @@ export const user2 = () => fitPageSize(
       resizingWidth: 100,
       resizingHeight: '100px',
     }}
+    isVoiceMessageEnabled
     isMentionEnabled
     isTypingIndicatorEnabledOnChannelList
     isMessageReceiptStatusEnabledOnChannelList
@@ -313,6 +315,7 @@ export const user3 = () => fitPageSize(
     replyType="QUOTE_REPLY"
     isReactionEnabled
     isMentionEnabled
+    isVoiceMessageEnabled
     isTypingIndicatorEnabledOnChannelList
     isMessageReceiptStatusEnabledOnChannelList
   />
@@ -330,6 +333,7 @@ export const user4 = () => fitPageSize(
     config={{ logLevel: 'all' }}
     replyType="QUOTE_REPLY"
     isMentionEnabled
+    isVoiceMessageEnabled
     isTypingIndicatorEnabledOnChannelList
     isMessageReceiptStatusEnabledOnChannelList
   />

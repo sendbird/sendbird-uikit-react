@@ -91,13 +91,13 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps {
 
 function Sendbird(props: SendbirdProviderProps) {
   const {
-    replyType = 'NONE',
-    isMentionEnabled = false,
-    isReactionEnabled = true,
-    disableUserProfile = false,
-    isVoiceMessageEnabled = true,
-    isTypingIndicatorEnabledOnChannelList = false,
-    isMessageReceiptStatusEnabledOnChannelList = false,
+    replyType,
+    isMentionEnabled,
+    isReactionEnabled,
+    disableUserProfile,
+    isVoiceMessageEnabled,
+    isTypingIndicatorEnabledOnChannelList,
+    isMessageReceiptStatusEnabledOnChannelList,
   } = props;
 
   return (
