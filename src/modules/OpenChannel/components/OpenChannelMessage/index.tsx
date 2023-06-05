@@ -60,6 +60,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
 
   const globalState = useSendbirdStateContext();
   const userId = globalState?.config?.userId;
+  const isOgMessageEnabledInOpenChannel = globalState.config.openChannel.enableOgTag;
 
   let sender: User = null;
   if (message?.messageType !== 'admin') {
@@ -159,7 +160,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
             }
           })(),
           [MessageTypes.OG]: (() => {
-            if (message?.messageType === 'user') {
+            if (message?.messageType === 'user' && isOgMessageEnabledInOpenChannel) {
               return (
                 <OpenChannelOGMessage
                   message={message as UserMessage}

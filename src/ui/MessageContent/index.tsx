@@ -132,6 +132,8 @@ export default function MessageContent({
   );
   const useReplyingClassName = useReplying ? 'use-quote' : '';
 
+  const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableOgTag;
+
   // Thread replies
   const displayThreadReplies = message?.threadInfo?.replyCount > 0 && replyType === 'THREAD';
 
@@ -293,17 +295,7 @@ export default function MessageContent({
             </div>
           )}
           {/* message item body components */}
-          {isTextMessage(message as UserMessage) && (
-            <TextMessageItemBody
-              className="sendbird-message-content__middle__message-item-body"
-              message={message as UserMessage}
-              isByMe={isByMe}
-              mouseHover={mouseHover}
-              isMentionEnabled={config?.isMentionEnabled || false}
-              isReactionEnabled={isReactionEnabledInChannel}
-            />
-          )}
-          {(isOGMessage(message as UserMessage)) && (
+          {isOgMessageEnabledInGroupChannel && isOGMessage(message as UserMessage) ? (
             <OGMessageItemBody
               className="sendbird-message-content__middle__message-item-body"
               message={message as UserMessage}
@@ -312,6 +304,15 @@ export default function MessageContent({
               isMentionEnabled={config?.isMentionEnabled || false}
               isReactionEnabled={isReactionEnabledInChannel}
               onMessageHeightChange={onMessageHeightChange}
+            />
+          ) : isTextMessage(message as UserMessage) && (
+            <TextMessageItemBody
+              className="sendbird-message-content__middle__message-item-body"
+              message={message as UserMessage}
+              isByMe={isByMe}
+              mouseHover={mouseHover}
+              isMentionEnabled={config?.isMentionEnabled || false}
+              isReactionEnabled={isReactionEnabledInChannel}
             />
           )}
           {(getUIKitMessageType((message as FileMessage)) === messageTypes.FILE) && (

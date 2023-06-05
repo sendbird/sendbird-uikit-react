@@ -32,7 +32,7 @@ export interface GroupChannelConfig {
   };
 }
 
-interface OpenChannelConfig {
+export interface OpenChannelConfig {
   channel: Pick<GroupChannelConfig['channel'], 'enableOgtag' | 'input'>;
 }
 

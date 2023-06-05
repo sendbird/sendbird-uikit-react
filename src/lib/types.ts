@@ -26,6 +26,8 @@ import { ReplyType } from 'SendbirdUIKitGlobal';
 import { MarkAsReadSchedulerType } from './hooks/useMarkAsReadScheduler';
 import { MarkAsDeliveredSchedulerType } from './hooks/useMarkAsDeliveredScheduler';
 
+import { GroupChannelConfig, OpenChannelConfig } from './UIKitConfigProvider/types';
+
 // note to SDK team:
 // using enum inside .d.ts won’t work for jest, but const enum will work.
 export const Role = {
@@ -101,6 +103,13 @@ export interface SendBirdStateConfig {
   isTypingIndicatorEnabledOnChannelList?: boolean;
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
   replyType: ReplyType;
+  // Remote configs set from dashboard by UIKit feature configuration
+  groupChannel: {
+    enableOgTag: GroupChannelConfig['channel']['enableOgtag'];
+  },
+  openChannel: {
+    enableOgTag: OpenChannelConfig['channel']['enableOgtag'];
+  },
 }
 export interface SdkStore {
   error: boolean;
