@@ -65,7 +65,7 @@ describe('ui/MessageContent', () => {
     const stateContextValue = {
       config: {
         groupChannel: {
-          enableOgTag: true,
+          enableOgtag: true,
         }
       }
     };
@@ -284,11 +284,11 @@ describe('ui/MessageContent', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it('should render OGMessageItemBody if config.groupChannel.enableOgTag == true', function () {
+  it('should render OGMessageItemBody if config.groupChannel.enableOgtag == true', function () {
     const message = createMockMessage();
     const contextValue = {
       config: {
-        groupChannel: { enableOgTag: true },
+        groupChannel: { enableOgtag: true },
       }
     };
     useContext.mockReturnValue(contextValue);
@@ -308,11 +308,11 @@ describe('ui/MessageContent', () => {
     ).toBeTruthy();
   });
 
-  it('should not render OGMessageItemBody if config.groupChannel.enableOgTag == false', function () {
+  it('should not render OGMessageItemBody if config.groupChannel.enableOgtag == false', function () {
     const message = createMockMessage();
     const contextValue = {
       config: {
-        groupChannel: { enableOgTag: false },
+        groupChannel: { enableOgtag: false },
       }
     };
     useContext.mockReturnValue(contextValue);

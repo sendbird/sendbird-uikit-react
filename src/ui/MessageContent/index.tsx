@@ -132,7 +132,7 @@ export default function MessageContent({
   );
   const useReplyingClassName = useReplying ? 'use-quote' : '';
 
-  const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableOgTag;
+  const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableOgtag;
 
   // Thread replies
   const displayThreadReplies = message?.threadInfo?.replyCount > 0 && replyType === 'THREAD';

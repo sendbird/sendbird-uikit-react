@@ -105,10 +105,10 @@ export interface SendBirdStateConfig {
   replyType: ReplyType;
   // Remote configs set from dashboard by UIKit feature configuration
   groupChannel: {
-    enableOgTag: GroupChannelConfig['channel']['enableOgtag'];
+    enableOgtag: GroupChannelConfig['channel']['enableOgtag'];
   },
   openChannel: {
-    enableOgTag: OpenChannelConfig['channel']['enableOgtag'];
+    enableOgtag: OpenChannelConfig['channel']['enableOgtag'];
   },
 }
 export interface SdkStore {

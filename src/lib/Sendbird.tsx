@@ -307,10 +307,10 @@ const SendbirdSDK = ({
             configs.groupChannel.channelList.enableMessageReceiptStatus,
           // Remote configs set from dashboard by UIKit feature configuration
           groupChannel: {
-            enableOgTag: configs.groupChannel.channel.enableOgtag,
+            enableOgtag: configs.groupChannel.channel.enableOgtag,
           },
           openChannel: {
-            enableOgTag: configs.openChannel.channel.enableOgtag,
+            enableOgtag: configs.openChannel.channel.enableOgtag,
           },
         },
       }}
