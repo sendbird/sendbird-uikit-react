@@ -150,7 +150,7 @@ export const isOGMessage = (message: UserMessage | FileMessage): boolean => !!(
     || message.ogMetaData?.defaultImage
   )
 );
-export const isTextMessage = (message: UserMessage | FileMessage): boolean => isUserMessage(message) && !isOGMessage(message);
+export const isTextMessage = (message: UserMessage | FileMessage): boolean => isUserMessage(message);
 export const isThumbnailMessage = (message: UserMessage | FileMessage): boolean => (
   message && isFileMessage(message) && isSupportedFileView((message as FileMessage).type)
 );

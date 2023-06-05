@@ -305,7 +305,13 @@ const SendbirdSDK = ({
             configs.groupChannel.channelList.enableTypingIndicator,
           isMessageReceiptStatusEnabledOnChannelList:
             configs.groupChannel.channelList.enableMessageReceiptStatus,
-          // TODO(Ahyoung): add more configs from UIKitConfigProvider.remoteConfigs
+          // Remote configs set from dashboard by UIKit feature configuration
+          groupChannel: {
+            enableOgtag: configs.groupChannel.channel.enableOgtag,
+          },
+          openChannel: {
+            enableOgtag: configs.openChannel.channel.enableOgtag,
+          },
         },
       }}
     >

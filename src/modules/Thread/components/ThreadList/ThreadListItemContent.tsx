@@ -28,6 +28,7 @@ import VoiceMessageItemBody from '../../../../ui/VoiceMessageItemBody';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import useLongPress from '../../../../hooks/useLongPress';
 import MobileMenu from '../../../../ui/MobileMenu';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
 export interface ThreadListItemContentProps {
   className?: string;
@@ -75,6 +76,7 @@ export default function ThreadListItemContent({
   const messageTypes = getUIKitMessageTypes();
   const { isMobile } = useMediaQueryContext();
   const { dateLocale } = useLocalization();
+  const { config } = useSendbirdStateContext();
   const [supposedHover, setSupposedHover] = useState(false);
   const {
     disableUserProfile,
@@ -91,6 +93,7 @@ export default function ThreadListItemContent({
   );
   const supposedHoverClassName = supposedHover ? 'sendbird-mouse-hover' : '';
   const isReactionEnabledInChannel = isReactionEnabled && !channel?.isEphemeral;
+  const isOgMessageEnabledInGroupChannel = channel.isGroupChannel() && config.groupChannel.enableOgtag;
 
   // Mobile
   const mobileMenuRef = useRef(null);
@@ -205,7 +208,15 @@ export default function ThreadListItemContent({
             </div>
           )}
           {/* message item body components */}
-          {isTextMessage(message as UserMessage) && (
+          {isOgMessageEnabledInGroupChannel && isOGMessage(message as UserMessage)
+            ? (<OGMessageItemBody
+              className="sendbird-thread-list-item-content__middle__message-item-body"
+              message={message as UserMessage}
+              isByMe={isByMe}
+              isMentionEnabled={isMentionEnabled}
+              isReactionEnabled={isReactionEnabledInChannel}
+            />
+            ) : isTextMessage(message as UserMessage) && (
             <TextMessageItemBody
               className="sendbird-thread-list-item-content__middle__message-item-body"
               message={message as UserMessage}
@@ -213,16 +224,7 @@ export default function ThreadListItemContent({
               isMentionEnabled={isMentionEnabled}
               isReactionEnabled={isReactionEnabledInChannel}
             />
-          )}
-          {(isOGMessage(message as UserMessage)) && (
-            <OGMessageItemBody
-              className="sendbird-thread-list-item-content__middle__message-item-body"
-              message={message as UserMessage}
-              isByMe={isByMe}
-              isMentionEnabled={isMentionEnabled}
-              isReactionEnabled={isReactionEnabledInChannel}
-            />
-          )}
+            )}
           {isVoiceMessage(message as FileMessage) && (
             <VoiceMessageItemBody
               className="sendbird-thread-list-item-content__middle__message-item-body"
@@ -266,7 +268,7 @@ export default function ThreadListItemContent({
           {(isReactionEnabledInChannel && message?.reactions?.length > 0) && (
             <div className={getClassName([
               'sendbird-thread-list-item-content-reactions',
-              (!isByMe || isThumbnailMessage(message as FileMessage) || isOGMessage(message as UserMessage)) ? '' : 'primary',
+              (!isByMe || isThumbnailMessage(message as FileMessage) || (isOgMessageEnabledInGroupChannel && isOGMessage(message as UserMessage))) ? '' : 'primary',
             ])}>
               <EmojiReactions
                 userId={userId}

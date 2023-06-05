@@ -36,7 +36,7 @@ const UIKitConfigProvider = ({ storage, children, localConfigs }: UIKitConfigPro
     try {
       if (storage == null) {
         const payload = await sdk.getUIKitConfiguration();
-        setRemoteConfigs(snakeToCamel(payload.json.uikit_configurations));
+        setRemoteConfigs(snakeToCamel(payload.json));
         return;
       }
 
