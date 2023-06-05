@@ -39,7 +39,7 @@ const MediaQueryProvider = (props: MediaQueryProviderProps): React.ReactElement 
     children,
     logger,
   } = props;
-  const breakpoint = props?.breakpoint || DEFAULT_MOBILE;
+  const breakpoint = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const updateSize = () => {
