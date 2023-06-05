@@ -266,6 +266,7 @@ const Message = ({
         }
         <MessageInput
           isEdit
+          channel={currentGroupChannel}
           disabled={disabled}
           ref={editMessageInputRef}
           mentionSelectedUser={selectedUser}

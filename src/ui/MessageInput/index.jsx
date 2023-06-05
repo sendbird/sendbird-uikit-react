@@ -9,6 +9,7 @@ import React, {
 import PropTypes from 'prop-types';
 
 import './index.scss';
+import { ChannelType } from '@sendbird/chat';
 import { MessageInputKeys, NodeNames, NodeTypes } from './const';
 
 import { USER_MENTION_TEMP_CHAR } from '../../modules/Channel/context/const';
@@ -18,6 +19,8 @@ import renderMentionLabelToString from '../MentionUserLabel/renderToString';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { LocalizationContext } from '../../lib/LocalizationContext';
+import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
+
 import { nodeListToArray, sanitizeString } from './utils';
 import {
   arrayEqual,
@@ -98,6 +101,12 @@ const MessageInput = React.forwardRef((props, ref) => {
   } = props;
   const textFieldId = messageFieldId || TEXT_FIELD_ID;
   const { stringSet } = useContext(LocalizationContext);
+  const { config } = useSendbirdStateContext();
+
+  const isFileUploadEnabled = channel?.channelType === ChannelType.OPEN
+    ? config.openChannel.enableDocument
+    : config.groupChannel.enableDocument;
+
   const fileInputRef = useRef(null);
   const [isInput, setIsInput] = useState(false);
   const [mentionedUserIds, setMentionedUserIds] = useState([]);
@@ -489,7 +498,10 @@ const MessageInput = React.forwardRef((props, ref) => {
         {/* file upload icon */}
         {
           (!isEdit && !isInput) && (
-            (renderFileUploadIcon?.() || (
+            (renderFileUploadIcon?.()
+              // UIKit Dashboard configuration should have lower priority than
+              // renderFileUploadIcon which is set in code level
+              || (isFileUploadEnabled && (
               <IconButton
                 className={`sendbird-message-input--attach ${isVoiceMessageEnabled ? 'is-voice-message-enabled' : ''}`}
                 height="32px"
@@ -512,7 +524,8 @@ const MessageInput = React.forwardRef((props, ref) => {
                   onChange={handleUploadFile(onFileUpload)}
                 />
               </IconButton>
-            ))
+              )
+              ))
           )
         }
         {/* voice message input trigger */}
@@ -606,7 +619,9 @@ MessageInput.propTypes = {
   renderVoiceMessageIcon: PropTypes.func,
   renderSendMessageIcon: PropTypes.func,
   renderFileUploadIcon: PropTypes.func,
-  channel: PropTypes.shape({}),
+  channel: PropTypes.shape({
+    channelType: PropTypes.string,
+  }).isRequired,
 };
 
 MessageInput.defaultProps = {
@@ -637,7 +652,6 @@ MessageInput.defaultProps = {
   renderVoiceMessageIcon: noop,
   renderFileUploadIcon: noop,
   renderSendMessageIcon: noop,
-  channel: {},
 };
 
 export default MessageInput;

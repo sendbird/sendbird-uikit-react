@@ -159,6 +159,7 @@ export default function ThreadListItem({
         }
         <MessageInput
           isEdit
+          channel={currentChannel}
           disabled={disabled}
           ref={editMessageInputRef}
           mentionSelectedUser={selectedUser}
