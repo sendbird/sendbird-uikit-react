@@ -37,6 +37,8 @@ export interface VoicePlayerContext {
   voicePlayerStore: VoicePlayerInitialState;
 }
 
+export const ALL = 'ALL';
+
 const noop = () => { /* noop */ };
 const VoicePlayerStoreDefaultValue = {
   currentGroupKey: '',
@@ -70,9 +72,13 @@ export const VoicePlayerProvider = ({
     }
   };
 
-  const pause = (groupKey: string) => {
+  const pause = (groupKey: string|null) => {
     if (currentGroupKey === groupKey && currentPlayer !== null) {
       logger.info('VoicePlayer: Pause playing(by group key).');
+      currentPlayer?.pause();
+    }
+    if (groupKey === ALL) {
+      logger.info('VoicePlayer: Pause playing(all).');
       currentPlayer?.pause();
     }
   };
