@@ -1,4 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+
+import { useLocalization } from '../../lib/LocalizationContext';
+import Modal from '../../ui/Modal';
 import {
   BROWSER_SUPPORT_MIME_TYPE_LIST,
   VOICE_MESSAGE_FILE_NAME,
@@ -36,6 +39,25 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
   const { logger, isVoiceMessageEnabled } = config;
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>(null);
   const [isRecordable, setIsRecordable] = useState<boolean>(false);
+  const [permissionWarning, setPermissionWarning] = useState<boolean>(false);
+  const { stringSet } = useLocalization();
+
+  const checkPermission = () => {
+    try {
+      // Type '"microphone"' is not assignable to type 'PermissionName'.ts(2322)
+      // this is typescript issue
+      // https://github.com/microsoft/TypeScript/issues/33923
+      // @ts-expect-error
+      navigator.permissions.query({ name: 'microphone' }).then((result) => {
+        if (result.state === 'denied') {
+          logger.warning('VoiceRecorder: Permission denied.');
+          setPermissionWarning(true);
+        }
+      });
+    } catch (error) {
+      logger.warning('VoiceRecorder: Failed to check permission.', error);
+    }
+  };
 
   const browserSupportMimeType = BROWSER_SUPPORT_MIME_TYPE_LIST.find((mimeType) => MediaRecorder.isTypeSupported(mimeType)) ?? '';
   if (!browserSupportMimeType) {
@@ -62,6 +84,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
       stop();
       logger.info('VoiceRecorder: Previous mediaRecorder is stopped.');
     }
+    checkPermission();
     navigator?.mediaDevices?.getUserMedia?.({ audio: true })
       .then((stream) => {
         logger.info('VoiceRecorder: Succeeded getting media stream.', stream);
@@ -114,6 +137,16 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
       isRecordable,
     }}>
       {children}
+      {
+        permissionWarning && (
+          <Modal
+            hideFooter
+            onCancel={() => setPermissionWarning(false)}
+          >
+            <>{stringSet.VOICE_RECORDING_PERMISSION_DENIED}</>
+          </Modal>
+        )
+      }
     </Context.Provider>
   );
 };
