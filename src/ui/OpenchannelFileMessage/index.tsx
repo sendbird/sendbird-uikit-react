@@ -74,147 +74,217 @@ export default function OpenchannelFileMessage({
     onClick: openFileUrl,
   }, { delay: 300 });
   return (
-    <div
-      className={[
-        ...(Array.isArray(className) ? className : [className]),
-        'sendbird-openchannel-file-message',
-      ].join(' ')}
-      ref={mobileMenuRef}
-    >
-      <div className="sendbird-openchannel-file-message__left">
-        {
-          !chainTop && (
-            <ContextMenu
-              menuTrigger={(toggleDropdown) => (
-                <Avatar
-                  className="sendbird-openchannel-file-message__left__avatar"
-                  src={sender.profileUrl || ''}
-                  ref={avatarRef}
-                  width="28px"
-                  height="28px"
-                  onClick={() => {
-                    if (!disableUserProfile) {
-                      toggleDropdown();
-                    }
-                  }}
-                />
-              )}
-              menuItems={(closeDropdown) => (
-                <MenuItems
-                  parentRef={avatarRef}
-                  parentContainRef={avatarRef}
-                  closeDropdown={closeDropdown}
-                  style={{ paddingTop: '0px', paddingBottom: '0px' }}
-                >
-                  {
-                    renderUserProfile
-                      ? (
-                        renderUserProfile({
-                          user: sender,
-                          close: closeDropdown,
-                        })
-                      )
-                      : (
-                        <UserProfile
-                          user={sender}
-                          onSuccess={closeDropdown}
-                          disableMessaging
-                        />
-                      )
-                  }
-                </MenuItems>
-              )}
-            />
-          )
-        }
-      </div>
-      <div className="sendbird-openchannel-file-message__right">
-        {
-          !chainTop && (
-            <div className="sendbird-openchannel-file-message__right__title">
-              <Label
-                className="sendbird-openchannel-file-message__right__title__sender-name"
-                type={LabelTypography.CAPTION_2}
-                color={isOperator ? LabelColors.SECONDARY_3 : LabelColors.ONBACKGROUND_2}
-              >
-                {
-                  sender && (
-                    sender.friendName
-                    || sender.nickname
-                    || sender.userId
-                  )
-                }
-              </Label>
-              <Label
-                className="sendbird-openchannel-file-message__right__title__sent-at"
-                type={LabelTypography.CAPTION_3}
-                color={LabelColors.ONBACKGROUND_3}
-              >
-                {
-                  message?.createdAt && (
-                    format(message.createdAt, 'p', {
-                      locale: dateLocale,
-                    })
-                  )
-                }
-              </Label>
-            </div>
-          )
-        }
-        <div
-          className="sendbird-openchannel-file-message__right__body"
-          {...(isMobile ? { ...longPress } : {})}
-        >
+    <>
+      <div
+        className={[
+          ...(Array.isArray(className) ? className : [className]),
+          'sendbird-openchannel-file-message',
+        ].join(' ')}
+        ref={mobileMenuRef}
+      >
+        <div className="sendbird-openchannel-file-message__left">
           {
-            checkFileType(message.url) && (
-              <Icon
-                className="sendbird-openchannel-file-message__right__body__icon"
-                type={checkFileType(message.url)}
-                fillColor={IconColors.PRIMARY}
-                width="48px"
-                height="48px"
+            !chainTop && (
+              <ContextMenu
+                menuTrigger={(toggleDropdown) => (
+                  <Avatar
+                    className="sendbird-openchannel-file-message__left__avatar"
+                    src={sender.profileUrl || ''}
+                    ref={avatarRef}
+                    width="28px"
+                    height="28px"
+                    onClick={() => {
+                      if (!disableUserProfile) {
+                        toggleDropdown();
+                      }
+                    }}
+                  />
+                )}
+                menuItems={(closeDropdown) => (
+                  <MenuItems
+                    parentRef={avatarRef}
+                    parentContainRef={avatarRef}
+                    closeDropdown={closeDropdown}
+                    style={{ paddingTop: '0px', paddingBottom: '0px' }}
+                  >
+                    {
+                      renderUserProfile
+                        ? (
+                          renderUserProfile({
+                            user: sender,
+                            close: closeDropdown,
+                          })
+                        )
+                        : (
+                          <UserProfile
+                            user={sender}
+                            onSuccess={closeDropdown}
+                            disableMessaging
+                          />
+                        )
+                    }
+                  </MenuItems>
+                )}
               />
             )
           }
-          <TextButton
-            className="sendbird-openchannel-file-message__right__body__file-name"
-            onClick={openFileUrl}
-          >
-            <Label
-              type={LabelTypography.BODY_1}
-              color={LabelColors.ONBACKGROUND_1}
-            >
-              {truncate(message.name || message.url, 40)}
-            </Label>
-          </TextButton>
         </div>
-        {
-          (isPending || isFailed) && (
-            <div className="sendbird-openchannel-file-message__right__tail">
-              {
-                isPending && (
-                  <Loader
-                    width="16px"
-                    height="16px"
-                  >
+        <div className="sendbird-openchannel-file-message__right">
+          {
+            !chainTop && (
+              <div className="sendbird-openchannel-file-message__right__title">
+                <Label
+                  className="sendbird-openchannel-file-message__right__title__sender-name"
+                  type={LabelTypography.CAPTION_2}
+                  color={isOperator ? LabelColors.SECONDARY_3 : LabelColors.ONBACKGROUND_2}
+                >
+                  {
+                    sender && (
+                      sender.friendName
+                      || sender.nickname
+                      || sender.userId
+                    )
+                  }
+                </Label>
+                <Label
+                  className="sendbird-openchannel-file-message__right__title__sent-at"
+                  type={LabelTypography.CAPTION_3}
+                  color={LabelColors.ONBACKGROUND_3}
+                >
+                  {
+                    message?.createdAt && (
+                      format(message.createdAt, 'p', {
+                        locale: dateLocale,
+                      })
+                    )
+                  }
+                </Label>
+              </div>
+            )
+          }
+          <div
+            className="sendbird-openchannel-file-message__right__body"
+            {...(isMobile ? { ...longPress } : {})}
+          >
+            {
+              checkFileType(message.url) && (
+                <Icon
+                  className="sendbird-openchannel-file-message__right__body__icon"
+                  type={checkFileType(message.url)}
+                  fillColor={IconColors.PRIMARY}
+                  width="48px"
+                  height="48px"
+                />
+              )
+            }
+            <TextButton
+              className="sendbird-openchannel-file-message__right__body__file-name"
+              onClick={openFileUrl}
+            >
+              <Label
+                type={LabelTypography.BODY_1}
+                color={LabelColors.ONBACKGROUND_1}
+              >
+                {truncate(message.name || message.url, 40)}
+              </Label>
+            </TextButton>
+          </div>
+          {
+            (isPending || isFailed) && (
+              <div className="sendbird-openchannel-file-message__right__tail">
+                {
+                  isPending && (
+                    <Loader
+                      width="16px"
+                      height="16px"
+                    >
+                      <Icon
+                        className="sendbird-openchannel-file-message__right__tail__pending"
+                        type={IconTypes.SPINNER}
+                        fillColor={IconColors.PRIMARY}
+                        width="16px"
+                        height="16px"
+                      />
+                    </Loader>
+                  )
+                }
+                {
+                  isFailed && (
                     <Icon
-                      className="sendbird-openchannel-file-message__right__tail__pending"
-                      type={IconTypes.SPINNER}
-                      fillColor={IconColors.PRIMARY}
+                      className="sendbird-openchannel-file-message__right__tail__failed"
+                      type={IconTypes.ERROR}
+                      fillColor={IconColors.ERROR}
                       width="16px"
                       height="16px"
                     />
-                  </Loader>
-                )
-              }
+                  )
+                }
+              </div>
+            )
+          }
+        </div>
+        {
+          !isMobile && (
+            <div
+              className="sendbird-openchannel-file-message__context-menu"
+              ref={contextMenuRef}
+            >
               {
-                isFailed && (
-                  <Icon
-                    className="sendbird-openchannel-file-message__right__tail__failed"
-                    type={IconTypes.ERROR}
-                    fillColor={IconColors.ERROR}
-                    width="16px"
-                    height="16px"
+                (isFineResend({ message, userId, status }) || !isEphemeral) && (
+                  <ContextMenu
+                    menuTrigger={(toggleDropdown) => (
+                      showMenuTrigger({ message, userId, status }) && (
+                        <IconButton
+                          className="sendbird-openchannel-file-message__context-menu__icon"
+                          width="32px"
+                          height="32px"
+                          onClick={toggleDropdown}
+                        >
+                          <Icon
+                            type={IconTypes.MORE}
+                            width="24px"
+                            height="24px"
+                          />
+                        </IconButton>
+                      )
+                    )}
+                    menuItems={(closeDropdown) => (
+                      <MenuItems
+                        parentRef={contextMenuRef}
+                        parentContainRef={contextMenuRef}
+                        closeDropdown={closeDropdown}
+                        openLeft
+                      >
+                        {
+                          isFineResend({ message, userId, status }) && (
+                            <MenuItem
+                              onClick={() => {
+                                if (disabled) { return; }
+                                resendMessage(message);
+                                closeDropdown();
+                              }}
+                              dataSbId="open_channel_file_message_context_menu_resend"
+                            >
+                              {stringSet.CONTEXT_MENU_DROPDOWN__RESEND}
+                            </MenuItem>
+                          )
+                        }
+                        {
+                          (!isEphemeral && isFineDelete({ message, userId, status })) && (
+                            <MenuItem
+                              onClick={() => {
+                                if (disabled) { return; }
+                                showRemove(true);
+                                closeDropdown();
+                              }}
+                              dataSbId="open_channel_file_message_context_menu_delete"
+                            >
+                              {stringSet.CONTEXT_MENU_DROPDOWN__DELETE}
+                            </MenuItem>
+                          )
+                        }
+                      </MenuItems>
+                    )}
                   />
                 )
               }
@@ -222,74 +292,6 @@ export default function OpenchannelFileMessage({
           )
         }
       </div>
-      {
-        !isMobile && (
-          <div
-            className="sendbird-openchannel-file-message__context-menu"
-            ref={contextMenuRef}
-          >
-            {
-              (isFineResend({ message, userId, status }) || !isEphemeral) && (
-                <ContextMenu
-                  menuTrigger={(toggleDropdown) => (
-                    showMenuTrigger({ message, userId, status }) && (
-                      <IconButton
-                        className="sendbird-openchannel-file-message__context-menu__icon"
-                        width="32px"
-                        height="32px"
-                        onClick={toggleDropdown}
-                      >
-                        <Icon
-                          type={IconTypes.MORE}
-                          width="24px"
-                          height="24px"
-                        />
-                      </IconButton>
-                    )
-                  )}
-                  menuItems={(closeDropdown) => (
-                    <MenuItems
-                      parentRef={contextMenuRef}
-                      parentContainRef={contextMenuRef}
-                      closeDropdown={closeDropdown}
-                      openLeft
-                    >
-                      {
-                        isFineResend({ message, userId, status }) && (
-                          <MenuItem
-                            onClick={() => {
-                              if (disabled) { return; }
-                              resendMessage(message);
-                              closeDropdown();
-                            }}
-                            dataSbId="open_channel_file_message_context_menu_resend"
-                          >
-                            {stringSet.CONTEXT_MENU_DROPDOWN__RESEND}
-                          </MenuItem>
-                        )
-                      }
-                      {
-                        (!isEphemeral && isFineDelete({ message, userId, status })) && (
-                          <MenuItem
-                            onClick={() => {
-                              if (disabled) { return; }
-                              showRemove(true);
-                              closeDropdown();
-                            }}
-                            dataSbId="open_channel_file_message_context_menu_delete"
-                          >
-                            {stringSet.CONTEXT_MENU_DROPDOWN__DELETE}
-                          </MenuItem>
-                        )
-                      }
-                    </MenuItems>
-                  )}
-                />
-              )
-            }
-          </div>
-        )
-      }
       {
         contextMenu && (
           <OpenChannelMobileMenu
@@ -305,6 +307,6 @@ export default function OpenchannelFileMessage({
           />
         )
       }
-    </div>
+    </>
   );
 }

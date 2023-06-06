@@ -72,7 +72,7 @@ export default function OpenchannelOGMessage({
 
   const openLink = () => {
     if (checkOGIsEnalbed(message) && ogMetaData?.url) {
-      window.open(ogMetaData.url);
+      window.open(ogMetaData.url, '_blank', 'noopener,noreferrer');
     }
   };
 
@@ -112,325 +112,327 @@ export default function OpenchannelOGMessage({
   }
 
   return (
-    <div
-      className={[
-        ...(Array.isArray(className) ? className : [className]),
-        'sendbird-openchannel-og-message',
-      ].join(' ')}
-      ref={messageComponentRef}
-      {...(isMobile ? { ...onLongPress } : {})}
-    >
+    <>
       <div
-        className="sendbird-openchannel-og-message__top"
+        className={[
+          ...(Array.isArray(className) ? className : [className]),
+          'sendbird-openchannel-og-message',
+        ].join(' ')}
+        ref={messageComponentRef}
+        {...(isMobile ? { ...onLongPress } : {})}
       >
-        <div className="sendbird-openchannel-og-message__top__left">
-          {
-            !chainTop && (
-              <ContextMenu
-                menuTrigger={(toggleDropdown) => (
-                  <Avatar
-                    className="sendbird-openchannel-og-message__top__left__avatar"
-                    src={sender.profileUrl || ''}
-                    ref={avatarRef}
-                    width="28px"
-                    height="28px"
-                    onClick={() => {
-                      if (!disableUserProfile) {
-                        toggleDropdown();
-                      }
-                    }}
-                  />
-                )}
-                menuItems={(closeDropdown) => (
-                  <MenuItems
-                    parentRef={avatarRef}
-                    parentContainRef={avatarRef}
-                    closeDropdown={closeDropdown}
-                    style={{ paddingTop: '0px', paddingBottom: '0px' }}
-                  >
-                    {
-                      renderUserProfile
-                        ? (
-                          renderUserProfile({
-                            user: sender,
-                            close: closeDropdown,
-                          })
-                        )
-                        : (
-                          <UserProfile
-                            user={sender}
-                            onSuccess={closeDropdown}
-                            disableMessaging
-                          />
-                        )
-                    }
-                  </MenuItems>
-                )}
-              />
-            )
-          }
-        </div>
-        <div className="sendbird-openchannel-og-message__top__right">
-          {
-            !chainTop && (
-              <div className="sendbird-openchannel-og-message__top__right__title">
-                <Label
-                  className="sendbird-openchannel-og-message__top__right__title__sender-name"
-                  type={LabelTypography.CAPTION_2}
-                  color={isOperator ? LabelColors.SECONDARY_3 : LabelColors.ONBACKGROUND_2}
-                >
-                  {
-                    sender && (
-                      sender.friendName
-                      || sender.nickname
-                      || sender.userId
-                    )
-                  }
-                </Label>
-                <Label
-                  className="sendbird-openchannel-og-message__top__right__title__sent-at"
-                  type={LabelTypography.CAPTION_3}
-                  color={LabelColors.ONBACKGROUND_3}
-                >
-                  {
-                    message?.createdAt && (
-                      format(message?.createdAt, 'p', {
-                        locale: dateLocale,
-                      })
-                    )
-                  }
-                </Label>
-              </div>
-            )
-          }
-          <div className="sendbird-openchannel-og-message__top__right__description">
-            <Label
-              className="sendbird-openchannel-og-message__top__right__description__message"
-              type={LabelTypography.BODY_1}
-              color={LabelColors.ONBACKGROUND_1}
-            >
-              <TextFragment tokens={tokens} />
-              {
-                ((message?.updatedAt ?? 0) > 0) && (
-                  <Label
-                    key={uuidv4()}
-                    className='sendbird-openchannel-og-message--word'
-                    type={LabelTypography.BODY_1}
-                    color={LabelColors.ONBACKGROUND_2}
-                  >
-                    {stringSet.MESSAGE_EDITED}
-                  </Label>
-                )
-              }
-            </Label>
-          </div>
-        </div>
-        {
-          !isMobile && (
-            <div
-              className="sendbird-openchannel-og-message__top__context-menu"
-              ref={contextMenuRef}
-              style={contextStyle}
-            >
-              <ContextMenu
-                menuTrigger={(toggleDropdown) => (
-                  showMenuTrigger({ message: message, userId: userId, status: status }) && (
-                    <IconButton
-                      className="sendbird-openchannel-og-message__top__context-menu--icon"
-                      width="32px"
-                      height="32px"
+        <div
+          className="sendbird-openchannel-og-message__top"
+        >
+          <div className="sendbird-openchannel-og-message__top__left">
+            {
+              !chainTop && (
+                <ContextMenu
+                  menuTrigger={(toggleDropdown) => (
+                    <Avatar
+                      className="sendbird-openchannel-og-message__top__left__avatar"
+                      src={sender.profileUrl || ''}
+                      ref={avatarRef}
+                      width="28px"
+                      height="28px"
                       onClick={() => {
-                        toggleDropdown();
+                        if (!disableUserProfile) {
+                          toggleDropdown();
+                        }
                       }}
+                    />
+                  )}
+                  menuItems={(closeDropdown) => (
+                    <MenuItems
+                      parentRef={avatarRef}
+                      parentContainRef={avatarRef}
+                      closeDropdown={closeDropdown}
+                      style={{ paddingTop: '0px', paddingBottom: '0px' }}
                     >
-                      <Icon
-                        type={IconTypes.MORE}
-                        fillColor={IconColors.CONTENT_INVERSE}
-                        width="24px"
-                        height="24px"
-                      />
-                    </IconButton>
-                  )
-                )}
-                menuItems={(closeDropdown) => (
-                  <MenuItems
-                    parentRef={contextMenuRef}
-                    parentContainRef={contextMenuRef}
-                    closeDropdown={closeDropdown}
-                    openLeft
+                      {
+                        renderUserProfile
+                          ? (
+                            renderUserProfile({
+                              user: sender,
+                              close: closeDropdown,
+                            })
+                          )
+                          : (
+                            <UserProfile
+                              user={sender}
+                              onSuccess={closeDropdown}
+                              disableMessaging
+                            />
+                          )
+                      }
+                    </MenuItems>
+                  )}
+                />
+              )
+            }
+          </div>
+          <div className="sendbird-openchannel-og-message__top__right">
+            {
+              !chainTop && (
+                <div className="sendbird-openchannel-og-message__top__right__title">
+                  <Label
+                    className="sendbird-openchannel-og-message__top__right__title__sender-name"
+                    type={LabelTypography.CAPTION_2}
+                    color={isOperator ? LabelColors.SECONDARY_3 : LabelColors.ONBACKGROUND_2}
                   >
                     {
-                      isFineCopy({ message, userId, status }) && (
-                        <MenuItem
-                          className="sendbird-openchannel-og-message__top__context-menu__copy"
-                          onClick={() => {
-                            copyToClipboard(message.message);
-                            closeDropdown();
-                          }}
-                          dataSbId="open_channel_og_message_menu_copy"
-                        >
-                          {stringSet.CONTEXT_MENU_DROPDOWN__COPY}
-                        </MenuItem>
+                      sender && (
+                        sender.friendName
+                        || sender.nickname
+                        || sender.userId
                       )
                     }
+                  </Label>
+                  <Label
+                    className="sendbird-openchannel-og-message__top__right__title__sent-at"
+                    type={LabelTypography.CAPTION_3}
+                    color={LabelColors.ONBACKGROUND_3}
+                  >
                     {
-                      (!isEphemeral && isFineEdit({ message, userId, status })) && (
-                        <MenuItem
-                          className="sendbird-openchannel-og-message__top__context-menu__edit"
-                          onClick={() => {
-                            if (disabled) {
-                              return;
-                            }
-                            showEdit(true);
-                            closeDropdown();
-                          }}
-                          dataSbId="open_channel_og_message_menu_edit"
-                        >
-                          {stringSet.CONTEXT_MENU_DROPDOWN__EDIT}
-                        </MenuItem>
+                      message?.createdAt && (
+                        format(message?.createdAt, 'p', {
+                          locale: dateLocale,
+                        })
                       )
                     }
-                    {
-                      isFineResend({ message, userId, status }) && (
-                        <MenuItem
-                          className="sendbird-openchannel-og-message__top__context-menu__resend"
-                          onClick={() => {
-                            resendMessage(message);
-                            closeDropdown();
-                          }}
-                          dataSbId="open_channel_og_message_menu_resend"
-                        >
-                          {stringSet.CONTEXT_MENU_DROPDOWN__RESEND}
-                        </MenuItem>
-                      )
-                    }
-                    {
-                      (!isEphemeral && isFineDelete({ message, userId, status })) && (
-                        <MenuItem
-                          className="sendbird-openchannel-og-message__top__context-menu__delete"
-                          onClick={() => {
-                            if (disabled) {
-                              return;
-                            }
-                            showRemove(true);
-                            closeDropdown();
-                          }}
-                          dataSbId="open_channel_og_message_menu_delete"
-                        >
-                          {stringSet.CONTEXT_MENU_DROPDOWN__DELETE}
-                        </MenuItem>
-                      )
-                    }
-                  </MenuItems>
-                )}
-              />
-            </div>
-          )
-        }
-      </div>
-      <div className="sendbird-openchannel-og-message__bottom">
-        <div className="sendbird-openchannel-og-message__bottom__og-tag" ref={mobileMenuRef}>
-          {
-            ogMetaData.url && (
+                  </Label>
+                </div>
+              )
+            }
+            <div className="sendbird-openchannel-og-message__top__right__description">
               <Label
-                className="sendbird-openchannel-og-message__bottom__og-tag__url"
-                type={LabelTypography.CAPTION_3}
-                color={LabelColors.ONBACKGROUND_2}
-              >
-                {ogMetaData.url}
-              </Label>
-            )
-          }
-          {
-            ogMetaData.title && (
-              <LinkLabel
-                className="sendbird-openchannel-og-message__bottom__og-tag__title"
-                src={ogMetaData.url}
-                type={LabelTypography.SUBTITLE_2}
-                color={LabelColors.PRIMARY}
-              >
-                {
-                  ogMetaData.title
-                }
-              </LinkLabel>
-            )
-          }
-          {
-            ogMetaData.description && (
-              <Label
-                className="sendbird-openchannel-og-message__bottom__og-tag__description"
-                type={LabelTypography.BODY_2}
+                className="sendbird-openchannel-og-message__top__right__description__message"
+                type={LabelTypography.BODY_1}
                 color={LabelColors.ONBACKGROUND_1}
               >
-                {ogMetaData.description}
-              </Label>
-            )
-          }
-          {
-            ogMetaData.url && (
-              <div
-                className="sendbird-openchannel-og-message__bottom__og-tag__thumbnail"
-                role="button"
-                onClick={openLink}
-                onKeyDown={openLink}
-                tabIndex={0}
-              >
+                <TextFragment tokens={tokens} />
                 {
-                  defaultImage && (
-                    <ImageRenderer
-                      className="sendbird-openchannel-og-message__bottom__og-tag__thumbnail__image"
-                      url={defaultImage.url || ''}
-                      alt={defaultImage.alt || ''}
-                      height="189px"
-                      defaultComponent={(
-                        <div className="sendbird-openchannel-og-message__bottom__og-tag__thumbnail__image--placeholder">
-                          <Icon
-                            type={IconTypes.THUMBNAIL_NONE}
-                            width="56px"
-                            height="56px"
-                          />
-                        </div>
-                      )}
-                    />
+                  ((message?.updatedAt ?? 0) > 0) && (
+                    <Label
+                      key={uuidv4()}
+                      className='sendbird-openchannel-og-message--word'
+                      type={LabelTypography.BODY_1}
+                      color={LabelColors.ONBACKGROUND_2}
+                    >
+                      {stringSet.MESSAGE_EDITED}
+                    </Label>
                   )
                 }
+              </Label>
+            </div>
+          </div>
+          {
+            !isMobile && (
+              <div
+                className="sendbird-openchannel-og-message__top__context-menu"
+                ref={contextMenuRef}
+                style={contextStyle}
+              >
+                <ContextMenu
+                  menuTrigger={(toggleDropdown) => (
+                    showMenuTrigger({ message: message, userId: userId, status: status }) && (
+                      <IconButton
+                        className="sendbird-openchannel-og-message__top__context-menu--icon"
+                        width="32px"
+                        height="32px"
+                        onClick={() => {
+                          toggleDropdown();
+                        }}
+                      >
+                        <Icon
+                          type={IconTypes.MORE}
+                          fillColor={IconColors.CONTENT_INVERSE}
+                          width="24px"
+                          height="24px"
+                        />
+                      </IconButton>
+                    )
+                  )}
+                  menuItems={(closeDropdown) => (
+                    <MenuItems
+                      parentRef={contextMenuRef}
+                      parentContainRef={contextMenuRef}
+                      closeDropdown={closeDropdown}
+                      openLeft
+                    >
+                      {
+                        isFineCopy({ message, userId, status }) && (
+                          <MenuItem
+                            className="sendbird-openchannel-og-message__top__context-menu__copy"
+                            onClick={() => {
+                              copyToClipboard(message.message);
+                              closeDropdown();
+                            }}
+                            dataSbId="open_channel_og_message_menu_copy"
+                          >
+                            {stringSet.CONTEXT_MENU_DROPDOWN__COPY}
+                          </MenuItem>
+                        )
+                      }
+                      {
+                        (!isEphemeral && isFineEdit({ message, userId, status })) && (
+                          <MenuItem
+                            className="sendbird-openchannel-og-message__top__context-menu__edit"
+                            onClick={() => {
+                              if (disabled) {
+                                return;
+                              }
+                              showEdit(true);
+                              closeDropdown();
+                            }}
+                            dataSbId="open_channel_og_message_menu_edit"
+                          >
+                            {stringSet.CONTEXT_MENU_DROPDOWN__EDIT}
+                          </MenuItem>
+                        )
+                      }
+                      {
+                        isFineResend({ message, userId, status }) && (
+                          <MenuItem
+                            className="sendbird-openchannel-og-message__top__context-menu__resend"
+                            onClick={() => {
+                              resendMessage(message);
+                              closeDropdown();
+                            }}
+                            dataSbId="open_channel_og_message_menu_resend"
+                          >
+                            {stringSet.CONTEXT_MENU_DROPDOWN__RESEND}
+                          </MenuItem>
+                        )
+                      }
+                      {
+                        (!isEphemeral && isFineDelete({ message, userId, status })) && (
+                          <MenuItem
+                            className="sendbird-openchannel-og-message__top__context-menu__delete"
+                            onClick={() => {
+                              if (disabled) {
+                                return;
+                              }
+                              showRemove(true);
+                              closeDropdown();
+                            }}
+                            dataSbId="open_channel_og_message_menu_delete"
+                          >
+                            {stringSet.CONTEXT_MENU_DROPDOWN__DELETE}
+                          </MenuItem>
+                        )
+                      }
+                    </MenuItems>
+                  )}
+                />
               </div>
             )
           }
         </div>
-        {
-          (isPending || isFailed) && (
-            <div className="sendbird-openchannel-og-message__top__right__tail">
-              {
-                isPending && (
-                  <Loader
-                    width="16px"
-                    height="16px"
-                  >
+        <div className="sendbird-openchannel-og-message__bottom">
+          <div className="sendbird-openchannel-og-message__bottom__og-tag" ref={mobileMenuRef}>
+            {
+              ogMetaData.url && (
+                <Label
+                  className="sendbird-openchannel-og-message__bottom__og-tag__url"
+                  type={LabelTypography.CAPTION_3}
+                  color={LabelColors.ONBACKGROUND_2}
+                >
+                  {ogMetaData.url}
+                </Label>
+              )
+            }
+            {
+              ogMetaData.title && (
+                <LinkLabel
+                  className="sendbird-openchannel-og-message__bottom__og-tag__title"
+                  src={ogMetaData.url}
+                  type={LabelTypography.SUBTITLE_2}
+                  color={LabelColors.PRIMARY}
+                >
+                  {
+                    ogMetaData.title
+                  }
+                </LinkLabel>
+              )
+            }
+            {
+              ogMetaData.description && (
+                <Label
+                  className="sendbird-openchannel-og-message__bottom__og-tag__description"
+                  type={LabelTypography.BODY_2}
+                  color={LabelColors.ONBACKGROUND_1}
+                >
+                  {ogMetaData.description}
+                </Label>
+              )
+            }
+            {
+              ogMetaData.url && (
+                <div
+                  className="sendbird-openchannel-og-message__bottom__og-tag__thumbnail"
+                  role="button"
+                  onClick={openLink}
+                  onKeyDown={openLink}
+                  tabIndex={0}
+                >
+                  {
+                    defaultImage && (
+                      <ImageRenderer
+                        className="sendbird-openchannel-og-message__bottom__og-tag__thumbnail__image"
+                        url={defaultImage.url || ''}
+                        alt={defaultImage.alt || ''}
+                        height="189px"
+                        defaultComponent={(
+                          <div className="sendbird-openchannel-og-message__bottom__og-tag__thumbnail__image--placeholder">
+                            <Icon
+                              type={IconTypes.THUMBNAIL_NONE}
+                              width="56px"
+                              height="56px"
+                            />
+                          </div>
+                        )}
+                      />
+                    )
+                  }
+                </div>
+              )
+            }
+          </div>
+          {
+            (isPending || isFailed) && (
+              <div className="sendbird-openchannel-og-message__top__right__tail">
+                {
+                  isPending && (
+                    <Loader
+                      width="16px"
+                      height="16px"
+                    >
+                      <Icon
+                        className="sendbird-openchannel-og-message__top__right__tail__pending"
+                        type={IconTypes.SPINNER}
+                        fillColor={IconColors.PRIMARY}
+                        width="16px"
+                        height="16px"
+                      />
+                    </Loader>
+                  )
+                }
+                {
+                  isFailed && (
                     <Icon
-                      className="sendbird-openchannel-og-message__top__right__tail__pending"
-                      type={IconTypes.SPINNER}
-                      fillColor={IconColors.PRIMARY}
+                      className="sendbird-openchannel-og-message__top__right__tail__failed"
+                      type={IconTypes.ERROR}
+                      fillColor={IconColors.ERROR}
                       width="16px"
                       height="16px"
                     />
-                  </Loader>
-                )
-              }
-              {
-                isFailed && (
-                  <Icon
-                    className="sendbird-openchannel-og-message__top__right__tail__failed"
-                    type={IconTypes.ERROR}
-                    fillColor={IconColors.ERROR}
-                    width="16px"
-                    height="16px"
-                  />
-                )
-              }
-            </div>
-          )
-        }
+                  )
+                }
+              </div>
+            )
+          }
+        </div>
       </div>
       {
         showContextMenu && (
@@ -459,6 +461,6 @@ export default function OpenchannelOGMessage({
           />
         )
       }
-    </div>
+    </>
   );
 }

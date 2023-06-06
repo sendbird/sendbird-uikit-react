@@ -17,9 +17,17 @@ export const SendingMessageStatus = {
   PENDING: 'pending',
 };
 
-export const getMessageType = (message: UserMessage | FileMessage | AdminMessage): string => {
+type MessageTypeOptions = {
+  isOgMessageEnabledInOpenChannel?: boolean;
+};
+
+export const getMessageType = (
+  message: UserMessage | FileMessage | AdminMessage,
+  options?: MessageTypeOptions,
+): string => {
+  const isOgMessageEnabledInOpenChannel = options?.isOgMessageEnabledInOpenChannel;
   if ((message?.isUserMessage?.()) || message?.messageType === 'user') {
-    return (message?.ogMetaData)
+    return (message?.ogMetaData && isOgMessageEnabledInOpenChannel)
       ? MessageTypes.OG
       : MessageTypes.USER;
   }
