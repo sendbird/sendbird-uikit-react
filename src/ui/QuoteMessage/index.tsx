@@ -33,7 +33,7 @@ export default function QuoteMessage({
   message,
   userId = '',
   isByMe = false,
-  className,
+  className = '',
   isUnavailable = false,
   onClick,
 }: Props): ReactElement {
