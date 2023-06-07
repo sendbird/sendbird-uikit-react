@@ -70,6 +70,7 @@ export default function App(props) {
       isReactionEnabled={isReactionEnabled}
       isMentionEnabled={isMentionEnabled}
       isVoiceMessageEnabled={isVoiceMessageEnabled}
+      // isVoiceMessageEnabled
       voiceRecord={voiceRecord}
       onUserProfileMessage={(channel) => {
         setCurrentChannel(channel);
@@ -104,7 +105,10 @@ App.propTypes = {
   userListQuery: PropTypes.func,
   nickname: PropTypes.string,
   profileUrl: PropTypes.string,
-  breakpoint: PropTypes.string,
+  breakpoint: PropTypes.oneOf([
+    PropTypes.string,
+    PropTypes.bool,
+  ]),
   allowProfileEdit: PropTypes.bool,
   disableUserProfile: PropTypes.bool,
   disableMarkAsDelivered: PropTypes.bool,

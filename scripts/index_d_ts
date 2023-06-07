@@ -51,7 +51,7 @@ declare module "SendbirdUIKitGlobal" {
     customApiHost?: string,
     customWebSocketHost?: string,
     // not-ready yet
-    // breakpoint?: string | boolean,
+    breakpoint?: string | boolean,
     theme?: 'light' | 'dark';
     userListQuery?(): UserListQuery;
     nickname?: string;
@@ -232,6 +232,7 @@ declare module "SendbirdUIKitGlobal" {
     configureSession?: (sdk: SendbirdChat | SendbirdGroupChat | SendbirdOpenChat) => SessionHandler;
     customApiHost?: string,
     customWebSocketHost?: string,
+    breakpoint?: string | boolean,
     children?: React.ReactElement;
     theme?: 'light' | 'dark';
     replyType?: ReplyType;
