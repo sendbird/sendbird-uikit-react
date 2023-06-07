@@ -82,7 +82,9 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                             className="sendbird-user-message__more__menu"
                             width="32px"
                             height="32px"
-                            onClick={toggleDropdown}
+                            onClick={() => {
+                              toggleDropdown();
+                            }}
                           >
                             <Icon
                               width="24px"
