@@ -1,12 +1,100 @@
-import React, { useRef } from 'react';
-import { render, screen,fireEvent, waitFor } from '@testing-library/react';
+import React, { useContext } from 'react';
+import { render, renderHook, screen,fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
+import { useLocalization } from '../../../lib/LocalizationContext';
 import MessageInput from "../index";
 
 const noop = () => {};
 
+// to mock useSendbirdStateContext
+jest.mock('react', () => ({
+  ...jest.requireActual('react'),
+  useContext: jest.fn(),
+}));
+jest.mock('../../../lib/LocalizationContext', () => ({
+  ...jest.requireActual('../../../lib/LocalizationContext'),
+  useLocalization: jest.fn(),
+}));
+
 describe('ui/MessageInput', () => {
+  /** Mocking necessary hooks */
+  beforeEach(() => {
+    const stateContextValue = {
+      config: {
+        groupChannel: {
+          enableDocument: true,
+        }
+      }
+    };
+    const localeContextValue = {
+      stringSet: {},
+    };
+
+    useContext.mockReturnValue(stateContextValue);
+    useLocalization.mockReturnValue(localeContextValue);
+
+    renderHook(() => useSendbirdStateContext());
+    renderHook(() => useLocalization());
+  })
+
+  describe('Dashboard enableDocument config', () => {
+    it('should not render file upload icon if groupChannel.enableDocument: false', () => {
+      const stateContextValue = {
+        config: {
+          groupChannel: {
+            enableDocument: false,
+          }
+        }
+      };
+
+      useContext.mockReturnValue(stateContextValue);
+      renderHook(() => useSendbirdStateContext());
+
+      const { container } = render(<MessageInput onSendMessage={noop} value="" />);
+      expect(
+        container.getElementsByClassName('sendbird-message-input--attach').length
+      ).toBe(0);
+    });
+
+    it('should not render file upload icon if openChannel.enableDocument: false', () => {
+      const stateContextValue = {
+        config: {
+          openChannel: {
+            enableDocument: false,
+          }
+        }
+      };
+
+      useContext.mockReturnValue(stateContextValue);
+      renderHook(() => useSendbirdStateContext());
+
+      const { container } = render(<MessageInput onSendMessage={noop} value="" channel={{channelType: 'open'}} />);
+      expect(
+        container.getElementsByClassName('sendbird-message-input--attach').length
+      ).toBe(0);
+    });
+
+    it('should not render file upload icon if openChannel.enableDocument: true', () => {
+      const stateContextValue = {
+        config: {
+          openChannel: {
+            enableDocument: true,
+          }
+        }
+      };
+
+      useContext.mockReturnValue(stateContextValue);
+      renderHook(() => useSendbirdStateContext());
+
+      const { container } = render(<MessageInput onSendMessage={noop} value="" channel={{channelType: 'open'}} />);
+      expect(
+        container.getElementsByClassName('sendbird-message-input--attach').length
+      ).toBe(1);
+    });
+  })
+
   it('should render upload icon if no text is present', () => {
     const { container } = render(<MessageInput onSendMessage={noop} value="" />);
     expect(
