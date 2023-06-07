@@ -104,6 +104,7 @@ export const VoiceMessageInputWrapper = ({
         onCancelClick={() => {
           onCancelClick();
           cancel();
+          stopVoicePlayer();
         }}
         onSubmitClick={() => {
           if (isDisabled) {
