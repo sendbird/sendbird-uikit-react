@@ -190,6 +190,8 @@ const getStringSet = (lang = 'en') => {
       MENTION_COUNT__OVER_LIMIT: 'You can mention up to %d times at a time.',
       UI__FILE_VIEWER__UNSUPPORT: 'Unsupported message',
       // Feature - Voice Message
+      VOICE_RECORDING_PERMISSION_DENIED: `You cannot record the voice since
+        voice recording is not permitted in your device system setting`,
       VOICE_MESSAGE: 'Voice Message',
     },
   };
