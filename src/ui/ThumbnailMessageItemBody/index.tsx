@@ -62,16 +62,7 @@ export default function ThumbnailMessageItemBody({
           <div
             className="sendbird-thumbnail-message-item-body__placeholder"
             style={style_}
-          >
-            <div className="sendbird-thumbnail-message-item-body__placeholder__icon">
-              <Icon
-                type={isVideoMessage(message) ? IconTypes.PLAY : IconTypes.PHOTO}
-                fillColor={IconColors.ON_BACKGROUND_2}
-                width="34px"
-                height="34px"
-              />
-            </div>
-          </div>
+          />
         )}
       />
       {

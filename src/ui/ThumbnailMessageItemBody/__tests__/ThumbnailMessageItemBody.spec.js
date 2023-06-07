@@ -63,9 +63,6 @@ describe('ui/ThumbnailMessageItemBody', () => {
       container.querySelectorAll('.sendbird-thumbnail-message-item-body__icon-wrapper')
     ).toHaveLength(0);
     expect(
-      container.querySelectorAll('.sendbird-icon-photo')
-    ).toHaveLength(1);
-    expect(
       container.querySelectorAll('sendbird-icon-play')
     ).toHaveLength(0);
     expect(
@@ -137,7 +134,7 @@ describe('ui/ThumbnailMessageItemBody', () => {
     ).toHaveLength(0);
     expect(
       container.querySelectorAll('.sendbird-icon-play')
-    ).toHaveLength(2);
+    ).toHaveLength(1);
     expect(
       container.querySelectorAll('.sendbird-icon-gif')
     ).toHaveLength(0);
@@ -162,9 +159,6 @@ describe('ui/ThumbnailMessageItemBody', () => {
       container.querySelectorAll('.sendbird-thumbnail-message-item-body__icon-wrapper')
     ).toHaveLength(1);
 
-    expect(
-      container.querySelectorAll('.sendbird-icon-photo')
-    ).toHaveLength(1); // as a default component
     expect(
       container.querySelectorAll('.sendbird-icon-play')
     ).toHaveLength(0);
