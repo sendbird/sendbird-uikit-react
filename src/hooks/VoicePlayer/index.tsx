@@ -94,19 +94,25 @@ export const VoicePlayerProvider = ({
     }
 
     logger.info('VoicePlayer: Start getting audio file.');
-    new Promise((resolve) => {
-      if (audioFile) {
-        resolve(audioFile);
-        logger.info('VoicePlayer: Use the audioFile instance.');
-      }
-      if (audioStorage?.[groupKey]?.audioFile) {
-        resolve(audioStorage[groupKey].audioFile);
-        logger.info('VoicePlayer: Get from the audioStorage.');
-      }
+    new Promise<File>((resolve) => {
       voicePlayerDispatcher({
         type: INITIALIZE_AUDIO_UNIT,
         payload: { groupKey },
       });
+      // audio file passed as a parameter
+      if (audioFile) {
+        logger.info('VoicePlayer: Use the audioFile instance.');
+        resolve(audioFile);
+        return;
+      }
+      // audio file from the audioStorage
+      const cachedAudioFile = audioStorage?.[groupKey]?.audioFile;
+      if (cachedAudioFile) {
+        logger.info('VoicePlayer: Get from the audioStorage.');
+        resolve(cachedAudioFile);
+        return;
+      }
+      // fetch the audio file from URL
       fetch(audioFileUrl)
         .then((res) => res.blob())
         .then((blob) => {
@@ -118,7 +124,8 @@ export const VoicePlayerProvider = ({
           logger.info('VoicePlayer: Get the audioFile from URL.');
         });
     }).then((audioFile: File) => {
-      logger.info('VoicePlayer: Succeeded getting audio file.', audioFile);
+      const voicePlayerRoot = document.getElementById(VOICE_PLAYER_ROOT_ID);
+      logger.info('VoicePlayer: Succeeded getting audio file.', { audioFile });
       const currentAudioUnit = audioStorage[groupKey] || AudioUnitDefaultValue() as AudioStorageUnit;
       const audioPlayer = new Audio(URL?.createObjectURL?.(audioFile));
       audioPlayer.id = VOICE_PLAYER_AUDIO_ID;
@@ -145,14 +152,31 @@ export const VoicePlayerProvider = ({
           payload: { groupKey },
         });
       };
-      audioPlayer?.play();
-      const voicePlayerRoot = document.getElementById(VOICE_PLAYER_ROOT_ID);
-      voicePlayerRoot.appendChild(audioPlayer);
-      voicePlayerDispatcher({
-        type: SET_CURRENT_PLAYER,
-        payload: { groupKey, audioPlayer },
-      });
-      logger.info('VoicePlayer: Succeeded playing audio player.', { groupKey, audioPlayer });
+      audioPlayer.dataset.sbGroupId = groupKey;
+      // clean up the previous audio player
+      try {
+        voicePlayerRoot?.childNodes.forEach((node) => {
+          const element = node as HTMLAudioElement;
+          const thisGroupKey = element.dataset?.sbGroupKey;
+          if (thisGroupKey !== groupKey) {
+            element?.pause?.();
+            voicePlayerDispatcher({
+              type: ON_VOICE_PLAYER_PAUSE,
+              payload: { groupKey },
+            });
+            voicePlayerRoot.removeChild(element);
+            logger.info('VoicePlayer: Removed other player.', { element });
+          }
+        });
+      } finally {
+        audioPlayer?.play();
+        voicePlayerRoot?.appendChild(audioPlayer);
+        voicePlayerDispatcher({
+          type: SET_CURRENT_PLAYER,
+          payload: { groupKey, audioPlayer },
+        });
+        logger.info('VoicePlayer: Succeeded playing audio player.', { groupKey, audioPlayer });
+      }
     });
   };
 
