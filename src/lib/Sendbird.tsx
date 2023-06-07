@@ -88,6 +88,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps {
   imageCompression?: ImageCompressionOptions;
   allowProfileEdit?: boolean;
   disableMarkAsDelivered?: boolean;
+  breakpoint?: string | boolean;
   renderUserProfile?: () => React.ReactElement;
   onUserProfileMessage?: () => void;
 }
@@ -156,9 +157,8 @@ const SendbirdSDK = ({
   disableMarkAsDelivered = false,
   renderUserProfile = null,
   onUserProfileMessage = null,
+  breakpoint = false,
 }: SendbirdProviderProps): React.ReactElement => {
-  const breakpoint = false;
-
   const {
     logLevel = '',
     userMention = {},
