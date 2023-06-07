@@ -36,7 +36,7 @@ const UIKitConfigProvider = ({ storage, children, localConfigs }: UIKitConfigPro
     try {
       if (storage == null) {
         const payload = await sdk.getUIKitConfiguration();
-        setRemoteConfigs(snakeToCamel(payload.json));
+        setRemoteConfigs(snakeToCamel(payload.json).configuration.uikitConfigurations);
         return;
       }
 
@@ -48,7 +48,7 @@ const UIKitConfigProvider = ({ storage, children, localConfigs }: UIKitConfigPro
         setRemoteConfigs(storedConfigs.uikitConfigurations);
       } else {
         const payload = await sdk.getUIKitConfiguration();
-        const updatedPayloed = await manager.update(snakeToCamel(payload.json));
+        const updatedPayloed = await manager.update(snakeToCamel(payload.json).configuration);
         setRemoteConfigs(updatedPayloed.uikitConfigurations);
       }
     } catch (error) {
