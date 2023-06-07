@@ -218,7 +218,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
             //   <OpenChannelUnknownMessage message={message} />
             // );
           })(),
-        }[getMessageType(message)]
+        }[getMessageType(message, { isOgMessageEnabledInOpenChannel })]
       }
       {/* Modal */}
       {

@@ -62,10 +62,6 @@ export default function OpenchannelUserMessage({
   showRemove,
   chainTop,
 }: OpenChannelUserMessageProps): ReactElement {
-  if (!message || message.messageType !== 'user') {
-    return null;
-  }
-
   // hooks
   const { stringSet, dateLocale } = useLocalization();
   const { disableUserProfile, renderUserProfile } = useContext<UserProfileContext>(UserProfileContext);
@@ -98,252 +94,258 @@ export default function OpenchannelUserMessage({
   });
 
   const { isMobile } = useMediaQueryContext();
+  if (!message || message.messageType !== 'user') {
+    return <></>;
+  }
+
   return (
-    <div
-      className={[
-        ...(Array.isArray(className) ? className : [className]),
-        'sendbird-openchannel-user-message',
-      ].join(' ')}
-      ref={messageRef}
-    >
-      <div className="sendbird-openchannel-user-message__left">
-        {
-          !chainTop && (
-            <ContextMenu
-              menuTrigger={(toggleDropdown) => (
-                <Avatar
-                  className="sendbird-openchannel-user-message__left__avatar"
-                  src={sender.profileUrl || ''}
-                  ref={avatarRef}
-                  width="28px"
-                  height="28px"
-                  onClick={() => {
-                    if (!disableUserProfile) {
-                      toggleDropdown();
+    <>
+      <div
+        className={[
+          ...(Array.isArray(className) ? className : [className]),
+          'sendbird-openchannel-user-message',
+        ].join(' ')}
+        ref={messageRef}
+      >
+        <div className="sendbird-openchannel-user-message__left">
+          {
+            !chainTop && (
+              <ContextMenu
+                menuTrigger={(toggleDropdown) => (
+                  <Avatar
+                    className="sendbird-openchannel-user-message__left__avatar"
+                    src={sender.profileUrl || ''}
+                    ref={avatarRef}
+                    width="28px"
+                    height="28px"
+                    onClick={() => {
+                      if (!disableUserProfile) {
+                        toggleDropdown();
+                      }
+                    }}
+                  />
+                )}
+                menuItems={(closeDropdown) => (
+                  <MenuItems
+                    parentRef={avatarRef}
+                    parentContainRef={avatarRef}
+                    closeDropdown={closeDropdown}
+                    style={{ paddingTop: '0px', paddingBottom: '0px' }}
+                  >
+                    {
+                      renderUserProfile
+                        ? (
+                          renderUserProfile({
+                            user: sender,
+                            close: closeDropdown,
+                          })
+                        )
+                        : (
+                          <UserProfile
+                            user={sender}
+                            onSuccess={closeDropdown}
+                            disableMessaging
+                          />
+                        )
                     }
-                  }}
-                />
-              )}
-              menuItems={(closeDropdown) => (
-                <MenuItems
-                  parentRef={avatarRef}
-                  parentContainRef={avatarRef}
-                  closeDropdown={closeDropdown}
-                  style={{ paddingTop: '0px', paddingBottom: '0px' }}
+                  </MenuItems>
+                )}
+              />
+            )
+          }
+        </div>
+        <div className="sendbird-openchannel-user-message__right">
+          {
+            !chainTop && (
+              <div className="sendbird-openchannel-user-message__right__top">
+                <Label
+                  className="sendbird-openchannel-user-message__right__top__sender-name"
+                  type={LabelTypography.CAPTION_2}
+                  color={isOperator ? LabelColors.SECONDARY_3 : LabelColors.ONBACKGROUND_2}
                 >
                   {
-                    renderUserProfile
-                      ? (
-                        renderUserProfile({
-                          user: sender,
-                          close: closeDropdown,
-                        })
-                      )
-                      : (
-                        <UserProfile
-                          user={sender}
-                          onSuccess={closeDropdown}
-                          disableMessaging
-                        />
-                      )
+                    sender && (
+                      sender.friendName
+                      || sender.nickname
+                      || sender.userId
+                    )
                   }
-                </MenuItems>
+                </Label>
+                <Label
+                  className="sendbird-openchannel-user-message__right__top__sent-at"
+                  type={LabelTypography.CAPTION_3}
+                  color={LabelColors.ONBACKGROUND_3}
+                >
+                  {
+                    message?.createdAt && (
+                      format(message?.createdAt, 'p', {
+                        locale: dateLocale,
+                      })
+                    )
+                  }
+                </Label>
+              </div>
+            )
+          }
+          <div
+            {...(isMobile ? { ...onLongPress } : {})}
+            className="sendbird-openchannel-user-message__right__bottom" ref={mobileMenuRef}>
+            <Label
+              className="sendbird-openchannel-user-message__right__bottom__message"
+              type={LabelTypography.BODY_1}
+              color={LabelColors.ONBACKGROUND_1}
+            >
+              {message?.message}
+              {isEditedMessage(message) && (
+                <Label
+                  key={uuidv4()}
+                  type={LabelTypography.BODY_1}
+                  color={LabelColors.ONBACKGROUND_2}
+                  calssName="sendbird-openchannel-user-message-word"
+                >
+                  {` ${stringSet.MESSAGE_EDITED} `}
+                </Label>
               )}
-            />
-          )
-        }
-      </div>
-      <div className="sendbird-openchannel-user-message__right">
-        {
-          !chainTop && (
-            <div className="sendbird-openchannel-user-message__right__top">
-              <Label
-                className="sendbird-openchannel-user-message__right__top__sender-name"
-                type={LabelTypography.CAPTION_2}
-                color={isOperator ? LabelColors.SECONDARY_3 : LabelColors.ONBACKGROUND_2}
-              >
+            </Label>
+          </div>
+          {
+            (isPending || isFailed) && (
+              <div className="sendbird-openchannel-user-message__right__tail">
                 {
-                  sender && (
-                    sender.friendName
-                    || sender.nickname
-                    || sender.userId
+                  isPending && (
+                    <Loader
+                      width="16px"
+                      height="16px"
+                    >
+                      <Icon
+                        className="sendbird-openchannel-user-message__right__tail__pending"
+                        type={IconTypes.SPINNER}
+                        fillColor={IconColors.PRIMARY}
+                        width="16px"
+                        height="16px"
+                      />
+                    </Loader>
                   )
                 }
-              </Label>
-              <Label
-                className="sendbird-openchannel-user-message__right__top__sent-at"
-                type={LabelTypography.CAPTION_3}
-                color={LabelColors.ONBACKGROUND_3}
-              >
                 {
-                  message?.createdAt && (
-                    format(message?.createdAt, 'p', {
-                      locale: dateLocale,
-                    })
-                  )
-                }
-              </Label>
-            </div>
-          )
-        }
-        <div
-          {...(isMobile ? { ...onLongPress } : {})}
-          className="sendbird-openchannel-user-message__right__bottom" ref={mobileMenuRef}>
-          <Label
-            className="sendbird-openchannel-user-message__right__bottom__message"
-            type={LabelTypography.BODY_1}
-            color={LabelColors.ONBACKGROUND_1}
-          >
-            {message?.message}
-            {isEditedMessage(message) && (
-              <Label
-                key={uuidv4()}
-                type={LabelTypography.BODY_1}
-                color={LabelColors.ONBACKGROUND_2}
-                calssName="sendbird-openchannel-user-message-word"
-              >
-                {` ${stringSet.MESSAGE_EDITED} `}
-              </Label>
-            )}
-          </Label>
-        </div>
-        {
-          (isPending || isFailed) && (
-            <div className="sendbird-openchannel-user-message__right__tail">
-              {
-                isPending && (
-                  <Loader
-                    width="16px"
-                    height="16px"
-                  >
+                  isFailed && (
                     <Icon
-                      className="sendbird-openchannel-user-message__right__tail__pending"
-                      type={IconTypes.SPINNER}
-                      fillColor={IconColors.PRIMARY}
+                      className="sendbird-openchannel-user-message__right__tail__failed"
+                      type={IconTypes.ERROR}
+                      fillColor={IconColors.ERROR}
                       width="16px"
                       height="16px"
                     />
-                  </Loader>
-                )
-              }
-              {
-                isFailed && (
-                  <Icon
-                    className="sendbird-openchannel-user-message__right__tail__failed"
-                    type={IconTypes.ERROR}
-                    fillColor={IconColors.ERROR}
-                    width="16px"
-                    height="16px"
-                  />
-                )
-              }
+                  )
+                }
+              </div>
+            )
+          }
+        </div>
+        {
+          !isMobile && (
+            <div
+              className="sendbird-openchannel-user-message__context-menu"
+              ref={contextMenuRef}
+              style={contextStyle}
+            >
+              <ContextMenu
+                menuTrigger={(toggleDropdown) => (
+                  showMenuTrigger({ message: message, userId: userId, status: status }) && (
+                    <IconButton
+                      className="sendbird-openchannel-user-message__context-menu--icon"
+                      width="32px"
+                      height="32px"
+                      onClick={() => {
+                        toggleDropdown();
+                      }}
+                    >
+                      <Icon
+                        type={IconTypes.MORE}
+                        fillColor={IconColors.CONTENT_INVERSE}
+                        width="24px"
+                        height="24px"
+                      />
+                    </IconButton>
+                  )
+                )}
+                menuItems={(closeDropdown) => (
+                  <MenuItems
+                    parentRef={contextMenuRef}
+                    parentContainRef={contextMenuRef}
+                    closeDropdown={closeDropdown}
+                    openLeft
+                  >
+                    {
+                      isFineCopy({ message: message, userId: userId, status: status }) && (
+                        <MenuItem
+                          className="sendbird-openchannel-user-message__context-menu__copy"
+                          onClick={() => {
+                            copyToClipboard(message.message);
+                            closeDropdown();
+                          }}
+                          dataSbId="open_channel_user_message_menu_copy"
+                        >
+                          {stringSet.CONTEXT_MENU_DROPDOWN__COPY}
+                        </MenuItem>
+                      )
+                    }
+                    {
+                      (!isEphemeral && isFineEdit({ message: message, userId: userId, status: status })) && (
+                        <MenuItem
+                          className="sendbird-openchannel-user-message__context-menu__edit"
+                          onClick={() => {
+                            if (disabled) {
+                              return;
+                            }
+                            showEdit(true);
+                            closeDropdown();
+                          }}
+                          dataSbId="open_channel_user_message_menu_edit"
+                        >
+                          {stringSet.CONTEXT_MENU_DROPDOWN__EDIT}
+                        </MenuItem>
+                      )
+                    }
+                    {
+                      isFineResend({ message: message, userId: userId, status: status }) && (
+                        <MenuItem
+                          className="sendbird-openchannel-user-message__context-menu__resend"
+                          onClick={() => {
+                            resendMessage(message);
+                            closeDropdown();
+                          }}
+                          dataSbId="open_channel_user_message_menu_resend"
+                        >
+                          {stringSet.CONTEXT_MENU_DROPDOWN__RESEND}
+                        </MenuItem>
+                      )
+                    }
+                    {
+                      (!isEphemeral && isFineDelete({ message: message, userId: userId, status: status })) && (
+                        <MenuItem
+                          className="sendbird-openchannel-user-message__context-menu__delete"
+                          onClick={() => {
+                            if (disabled) {
+                              return;
+                            }
+                            showRemove(true);
+                            closeDropdown();
+                          }}
+                          dataSbId="open_channel_user_message_menu_delete"
+                        >
+                          {stringSet.CONTEXT_MENU_DROPDOWN__DELETE}
+                        </MenuItem>
+                      )
+                    }
+                  </MenuItems>
+                )}
+              />
             </div>
+
           )
         }
       </div>
-      {
-        !isMobile && (
-          <div
-            className="sendbird-openchannel-user-message__context-menu"
-            ref={contextMenuRef}
-            style={contextStyle}
-          >
-            <ContextMenu
-              menuTrigger={(toggleDropdown) => (
-                showMenuTrigger({ message: message, userId: userId, status: status }) && (
-                  <IconButton
-                    className="sendbird-openchannel-user-message__context-menu--icon"
-                    width="32px"
-                    height="32px"
-                    onClick={() => {
-                      toggleDropdown();
-                    }}
-                  >
-                    <Icon
-                      type={IconTypes.MORE}
-                      fillColor={IconColors.CONTENT_INVERSE}
-                      width="24px"
-                      height="24px"
-                    />
-                  </IconButton>
-                )
-              )}
-              menuItems={(closeDropdown) => (
-                <MenuItems
-                  parentRef={contextMenuRef}
-                  parentContainRef={contextMenuRef}
-                  closeDropdown={closeDropdown}
-                  openLeft
-                >
-                  {
-                    isFineCopy({ message: message, userId: userId, status: status }) && (
-                      <MenuItem
-                        className="sendbird-openchannel-user-message__context-menu__copy"
-                        onClick={() => {
-                          copyToClipboard(message.message);
-                          closeDropdown();
-                        }}
-                        dataSbId="open_channel_user_message_menu_copy"
-                      >
-                        {stringSet.CONTEXT_MENU_DROPDOWN__COPY}
-                      </MenuItem>
-                    )
-                  }
-                  {
-                    (!isEphemeral && isFineEdit({ message: message, userId: userId, status: status })) && (
-                      <MenuItem
-                        className="sendbird-openchannel-user-message__context-menu__edit"
-                        onClick={() => {
-                          if (disabled) {
-                            return;
-                          }
-                          showEdit(true);
-                          closeDropdown();
-                        }}
-                        dataSbId="open_channel_user_message_menu_edit"
-                      >
-                        {stringSet.CONTEXT_MENU_DROPDOWN__EDIT}
-                      </MenuItem>
-                    )
-                  }
-                  {
-                    isFineResend({ message: message, userId: userId, status: status }) && (
-                      <MenuItem
-                        className="sendbird-openchannel-user-message__context-menu__resend"
-                        onClick={() => {
-                          resendMessage(message);
-                          closeDropdown();
-                        }}
-                        dataSbId="open_channel_user_message_menu_resend"
-                      >
-                        {stringSet.CONTEXT_MENU_DROPDOWN__RESEND}
-                      </MenuItem>
-                    )
-                  }
-                  {
-                    (!isEphemeral && isFineDelete({ message: message, userId: userId, status: status })) && (
-                      <MenuItem
-                        className="sendbird-openchannel-user-message__context-menu__delete"
-                        onClick={() => {
-                          if (disabled) {
-                            return;
-                          }
-                          showRemove(true);
-                          closeDropdown();
-                        }}
-                        dataSbId="open_channel_user_message_menu_delete"
-                      >
-                        {stringSet.CONTEXT_MENU_DROPDOWN__DELETE}
-                      </MenuItem>
-                    )
-                  }
-                </MenuItems>
-              )}
-            />
-          </div>
-
-        )
-      }
       {
         contextMenu && (
           <OpenChannelMobileMenu
@@ -371,6 +373,6 @@ export default function OpenchannelUserMessage({
           />
         )
       }
-    </div>
+    </>
   );
 }
