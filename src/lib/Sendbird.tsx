@@ -20,7 +20,7 @@ import { LoggerFactory, LogLevel } from './Logger';
 import pubSubFactory from './pubSub/index';
 import useAppendDomNode from '../hooks/useAppendDomNode';
 
-import { UIKitConfigProvider, useUIKitConfig, initialConfig, SBUConfig } from '@sendbird/uikit-tools';
+import { UIKitConfigProvider, useUIKitConfig, initialConfig } from '@sendbird/uikit-tools';
 
 import { VoiceMessageProvider } from './VoiceMessageProvider';
 import { LocalizationProvider } from './LocalizationContext';
@@ -30,6 +30,7 @@ import { VOICE_RECORDER_DEFAULT_MAX, VOICE_RECORDER_DEFAULT_MIN } from '../utils
 import { useMarkAsReadScheduler } from './hooks/useMarkAsReadScheduler';
 import { ConfigureSessionTypes } from './hooks/useConnect/types';
 import { useMarkAsDeliveredScheduler } from './hooks/useMarkAsDeliveredScheduler';
+import getCaseResolvedReplyType from './utils/resolvedReplyType';
 
 export type UserListQueryType = {
   hasNext?: boolean;
@@ -117,9 +118,7 @@ function Sendbird(props: SendbirdProviderProps) {
              * we convert it from here.
              * i.e. 'THREAD' -> 'thread'
              */
-            replyType: replyType == null
-              ? initialConfig.groupChannel.channel.replyType
-              : replyType.toLowerCase() as SBUConfig['groupChannel']['channel']['replyType'],
+            replyType: getCaseResolvedReplyType(replyType ?? initialConfig.groupChannel.channel.replyType).lowerCase,
           },
           channelList: {
             enableTypingIndicator: isTypingIndicatorEnabledOnChannelList,
@@ -303,7 +302,7 @@ const SendbirdSDK = ({
              *  - 'thread' -> 'THREAD'
              *  - 'quote_reply' -> 'QUOTE_REPLY'
              */
-            configs.groupChannel.channel.replyType.toUpperCase(),
+            getCaseResolvedReplyType(configs.groupChannel.channel.replyType).upperCase,
           isTypingIndicatorEnabledOnChannelList:
             configs.groupChannel.channelList.enableTypingIndicator,
           isMessageReceiptStatusEnabledOnChannelList:
