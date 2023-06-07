@@ -20,9 +20,7 @@ import { LoggerFactory, LogLevel } from './Logger';
 import pubSubFactory from './pubSub/index';
 import useAppendDomNode from '../hooks/useAppendDomNode';
 
-import { UIKitConfigProvider, useUIKitConfig } from './UIKitConfigProvider';
-import initialConfig from './UIKitConfigProvider/const/initialConfig';
-import { GroupChannelConfig } from './UIKitConfigProvider/types';
+import { UIKitConfigProvider, useUIKitConfig, initialConfig, SBUConfig } from '@sendbird/uikit-tools';
 
 import { VoiceMessageProvider } from './VoiceMessageProvider';
 import { LocalizationProvider } from './LocalizationContext';
@@ -121,7 +119,7 @@ function Sendbird(props: SendbirdProviderProps) {
              */
             replyType: replyType == null
               ? initialConfig.groupChannel.channel.replyType
-              : replyType.toLowerCase() as GroupChannelConfig['channel']['replyType'],
+              : replyType.toLowerCase() as SBUConfig['groupChannel']['channel']['replyType'],
           },
           channelList: {
             enableTypingIndicator: isTypingIndicatorEnabledOnChannelList,
