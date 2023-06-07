@@ -4,12 +4,10 @@ import React, {
   useState,
   useEffect,
   useCallback,
-  useContext,
 } from 'react';
 import PropTypes from 'prop-types';
 
 import './index.scss';
-import { ChannelType } from '@sendbird/chat';
 import { MessageInputKeys, NodeNames, NodeTypes } from './const';
 
 import { USER_MENTION_TEMP_CHAR } from '../../modules/Channel/context/const';
@@ -18,7 +16,7 @@ import Button, { ButtonTypes, ButtonSizes } from '../Button';
 import renderMentionLabelToString from '../MentionUserLabel/renderToString';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
-import { LocalizationContext } from '../../lib/LocalizationContext';
+import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 import { nodeListToArray, sanitizeString } from './utils';
@@ -100,10 +98,10 @@ const MessageInput = React.forwardRef((props, ref) => {
     setMentionedUsers,
   } = props;
   const textFieldId = messageFieldId || TEXT_FIELD_ID;
-  const { stringSet } = useContext(LocalizationContext);
+  const { stringSet } = useLocalization();
   const { config } = useSendbirdStateContext();
 
-  const isFileUploadEnabled = channel?.channelType === ChannelType.OPEN
+  const isFileUploadEnabled = channel?.channelType === 'open'
     ? config.openChannel.enableDocument
     : config.groupChannel.enableDocument;
 
