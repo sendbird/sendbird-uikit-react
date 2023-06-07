@@ -29,6 +29,9 @@ export const VoiceMessageItemBody = ({
   const [usingReaction, setUsingReaction] = useState(false);
   const {
     play,
+    // do not pause on unmount, because on desktop layout
+    // the component can be paused when it is played from
+    // channel and same message is unmounted from the thread
     pause,
     playbackTime = 0,
     duration,

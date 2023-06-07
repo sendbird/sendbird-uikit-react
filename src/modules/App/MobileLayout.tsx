@@ -14,6 +14,7 @@ import MessageSearch from '../MessageSearch';
 import Thread from '../Thread';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import uuidv4 from '../../utils/uuid';
+import { ALL, useVoicePlayerContext } from '../../hooks/VoicePlayer';
 
 enum PANELS {
   CHANNEL_LIST = 'CHANNEL_LIST',
@@ -48,6 +49,8 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
   const store = useSendbirdStateContext();
   const sdk = store?.stores?.sdkStore?.sdk as SendbirdGroupChat;
   const userId = store?.config?.userId;
+
+  const { pause } = useVoicePlayerContext();
 
   const goToMessage = (message?: BaseMessage | null, timeoutCb?: (msgId: number | null) => void) => {
     setStartingPoint?.(message?.createdAt || null);
@@ -118,6 +121,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
               }}
               onBackClick={() => {
                 setPanel(PANELS.CHANNEL_LIST);
+                pause(ALL);
               }}
               isReactionEnabled={isReactionEnabled}
               showSearchIcon={showSearchIcon}
@@ -185,6 +189,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
               message={threadTargetMessage}
               onHeaderActionClick={() => {
                 setPanel(PANELS.CHANNEL);
+                pause(ALL);
               }}
               onMoveToParentMessage={({ message, channel }) => {
                 setCurrentChannel(channel);
