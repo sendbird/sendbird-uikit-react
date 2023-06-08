@@ -30,7 +30,7 @@ import { VOICE_RECORDER_DEFAULT_MAX, VOICE_RECORDER_DEFAULT_MIN } from '../utils
 import { useMarkAsReadScheduler } from './hooks/useMarkAsReadScheduler';
 import { ConfigureSessionTypes } from './hooks/useConnect/types';
 import { useMarkAsDeliveredScheduler } from './hooks/useMarkAsDeliveredScheduler';
-import getCaseResolvedReplyType from './utils/resolvedReplyType';
+import { getCaseResolvedReplyType, getCaseResolvedThreadReplySelectType } from './utils/resolvedReplyType';
 
 export type UserListQueryType = {
   hasNext?: boolean;
@@ -115,11 +115,6 @@ function Sendbird(props: SendbirdProviderProps) {
             enableReactions: isReactionEnabled,
             enableMention: isMentionEnabled,
             enableVoiceMessage: isVoiceMessageEnabled,
-            /**
-             * Since dashbord UIKit Configuration's replyType is consisted of all lowercase letters,
-             * we convert it from here.
-             * i.e. 'THREAD' -> 'thread'
-             */
             replyType: getCaseResolvedReplyType(replyType ?? initialConfig.groupChannel.channel.replyType).lowerCase,
           },
           channelList: {
@@ -301,12 +296,6 @@ const SendbirdSDK = ({
           isVoiceMessageEnabled:
             configs.groupChannel.channel.enableVoiceMessage,
           replyType:
-            /**
-             * Since UIKitConfigContext's replyType is consisted of all lowercase letters,
-             * we need to convert it into all uppercase ones like
-             *  - 'thread' -> 'THREAD'
-             *  - 'quote_reply' -> 'QUOTE_REPLY'
-             */
             getCaseResolvedReplyType(configs.groupChannel.channel.replyType).upperCase,
           isTypingIndicatorEnabledOnChannelList:
             configs.groupChannel.channelList.enableTypingIndicator,
@@ -317,6 +306,7 @@ const SendbirdSDK = ({
           groupChannel: {
             enableOgtag: configs.groupChannel.channel.enableOgtag,
             enableTypingIndicator: configs.groupChannel.channel.enableTypingIndicator,
+            threadReplySelectType: getCaseResolvedThreadReplySelectType(configs.groupChannel.channel.threadReplySelectType).upperCase,
           },
           openChannel: {
             enableOgtag: configs.openChannel.channel.enableOgtag,
