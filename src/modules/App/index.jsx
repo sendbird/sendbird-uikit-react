@@ -70,7 +70,6 @@ export default function App(props) {
       isReactionEnabled={isReactionEnabled}
       isMentionEnabled={isMentionEnabled}
       isVoiceMessageEnabled={isVoiceMessageEnabled}
-      // isVoiceMessageEnabled
       voiceRecord={voiceRecord}
       onUserProfileMessage={(channel) => {
         setCurrentChannel(channel);
