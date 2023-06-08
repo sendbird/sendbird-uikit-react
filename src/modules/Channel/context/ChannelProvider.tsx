@@ -21,6 +21,7 @@ import { ReplyType, RenderUserProfileProps, Nullable } from '../../../types';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { CoreMessageType } from '../../../utils';
+import { ThreadReplySelectType } from './const';
 
 import * as utils from './utils';
 import { getIsReactionEnabled } from '../../../utils/getIsReactionEnabled';
@@ -44,6 +45,7 @@ import useToggleReactionCallback from './hooks/useToggleReactionCallback';
 import useScrollToMessage from './hooks/useScrollToMessage';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
+import { getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
 
 export type MessageListParams = {
   // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
@@ -65,11 +67,6 @@ export type MessageListParams = {
 export type ChannelQueries = {
   messageListParams?: MessageListParams;
 };
-
-export enum ThreadReplySelectType {
-  PARENT = 'PARENT',
-  THREAD = 'THREAD',
-}
 
 export type ChannelContextProps = {
   children?: React.ReactElement;
@@ -181,7 +178,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     onSearchClick,
     onBackClick,
     replyType,
-    threadReplySelectType = ThreadReplySelectType.THREAD,
+    threadReplySelectType,
     queries,
     filterMessageList,
     disableMarkAsRead = false,
@@ -203,6 +200,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     isVoiceMessageEnabled,
     onUserProfileMessage,
     markAsReadScheduler,
+    groupChannel,
   } = config;
   const sdk = globalStore?.stores?.sdkStore?.sdk as SendbirdGroupChat;
   const sdkInit = globalStore?.stores?.sdkStore?.initialized;
@@ -435,7 +433,9 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       onSearchClick,
       onBackClick,
       replyType,
-      threadReplySelectType,
+      threadReplySelectType: threadReplySelectType
+        ?? getCaseResolvedThreadReplySelectType(groupChannel.threadReplySelectType).upperCase
+        ?? ThreadReplySelectType.THREAD,
       queries,
       filterMessageList,
       disableMarkAsRead,
