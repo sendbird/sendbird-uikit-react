@@ -28,6 +28,7 @@ import usePaste from './hooks/usePaste';
 import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
 import { USER_MENTION_PREFIX } from '../../modules/Message/consts';
 import { TOKEN_TYPES } from '../../modules/Message/utils/tokens/types';
+import { checkIfFileUploadEnabled } from './messageInputUtils';
 
 const TEXT_FIELD_ID = 'sendbird-message-input-text-field';
 const LINE_HEIGHT = 76;
@@ -101,9 +102,10 @@ const MessageInput = React.forwardRef((props, ref) => {
   const { stringSet } = useLocalization();
   const { config } = useSendbirdStateContext();
 
-  const isFileUploadEnabled = channel?.channelType === 'open'
-    ? config.openChannel.enableDocument
-    : config.groupChannel.enableDocument;
+  const isFileUploadEnabled = checkIfFileUploadEnabled({
+    channel,
+    config,
+  });
 
   const fileInputRef = useRef(null);
   const [isInput, setIsInput] = useState(false);

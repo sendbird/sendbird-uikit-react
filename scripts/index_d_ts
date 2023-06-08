@@ -2097,7 +2097,7 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
     onCancelEdit?: () => void,
     onStartTyping?: () => void,
     channelUrl: string,
-    channel: OpenChannel | GroupChannel | null,
+    channel?: OpenChannel | GroupChannel,
     mentionSelectedUser?: Array<User>,
     onUserMentioned?: (user: User) => void,
     onMentionStringChange?: (str: string) => void,
