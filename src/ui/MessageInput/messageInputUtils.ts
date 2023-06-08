@@ -2,13 +2,23 @@
  * Write new utils here
  * Migrate old utils as needed, and delete utils.js
  */
-import type { ChannelType } from '@sendbird/chat';
+// import { ChannelType } from '@sendbird/chat';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
 import { match } from 'ts-pattern';
 
 import type { SendBirdStateConfig } from '../../lib/types';
 
+/**
+ * FIXME:
+ * Import this ChannelType enum from @sendbird/chat
+ * once MessageInput.spec unit tests can be run \wo jest <-> ESM issue
+ */
+enum ChannelType {
+  BASE = 'base',
+  GROUP = 'group',
+  OPEN = 'open',
+}
 /**
  * FIXME: Simplify this in UIKit@v4
  * If customer is using MessageInput inside our modules(ie: Channel, Thread, etc),
@@ -27,5 +37,6 @@ export const checkIfFileUploadEnabled = ({ channel, config }: {
     .with(ChannelType.GROUP, () => config?.groupChannel?.enableDocument)
     .with(ChannelType.OPEN, () => config?.openChannel?.enableDocument)
     .otherwise(() => true);
+
   return isEnabled;
 };
