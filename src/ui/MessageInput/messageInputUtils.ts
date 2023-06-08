@@ -24,8 +24,8 @@ export const checkIfFileUploadEnabled = ({ channel, config }: {
   config?: SendBirdStateConfig,
 }) => {
   const isEnabled = match(channel?.channelType)
-    .with(ChannelType.GROUP, () => config?.openChannel?.enableDocument)
-    .with(ChannelType.OPEN, () => config?.groupChannel?.enableDocument)
+    .with(ChannelType.GROUP, () => config?.groupChannel?.enableDocument)
+    .with(ChannelType.OPEN, () => config?.openChannel?.enableDocument)
     .otherwise(() => true);
   return isEnabled;
 };
