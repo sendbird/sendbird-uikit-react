@@ -206,6 +206,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   } = config;
   const sdk = globalStore?.stores?.sdkStore?.sdk as SendbirdGroupChat;
   const sdkInit = globalStore?.stores?.sdkStore?.initialized;
+  const globalConfigs = globalStore?.config;
 
   const [initialTimeStamp, setInitialTimeStamp] = useState(startingPoint);
   useEffect(() => {
@@ -424,7 +425,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       channelUrl,
       isReactionEnabled: usingReaction,
       isMessageGroupingEnabled,
-      showSearchIcon,
+      showSearchIcon: showSearchIcon ?? globalConfigs.showSearchIcon,
       highlightedMessage,
       startingPoint,
       onBeforeSendUserMessage,

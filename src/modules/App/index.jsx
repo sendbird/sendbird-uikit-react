@@ -77,6 +77,7 @@ export default function App(props) {
       isTypingIndicatorEnabledOnChannelList={isTypingIndicatorEnabledOnChannelList}
       isMessageReceiptStatusEnabledOnChannelList={isMessageReceiptStatusEnabledOnChannelList}
       replyType={replyType}
+      showSearchIcon={showSearchIcon}
     >
       <AppLayout
         isReactionEnabled={isReactionEnabled}

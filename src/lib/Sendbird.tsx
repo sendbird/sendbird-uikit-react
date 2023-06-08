@@ -87,6 +87,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps {
   imageCompression?: ImageCompressionOptions;
   allowProfileEdit?: boolean;
   disableMarkAsDelivered?: boolean;
+  showSearchIcon?: boolean;
   renderUserProfile?: () => React.ReactElement;
   onUserProfileMessage?: () => void;
 }
@@ -100,6 +101,7 @@ function Sendbird(props: SendbirdProviderProps) {
     isVoiceMessageEnabled,
     isTypingIndicatorEnabledOnChannelList,
     isMessageReceiptStatusEnabledOnChannelList,
+    showSearchIcon,
   } = props;
 
   return (
@@ -123,6 +125,9 @@ function Sendbird(props: SendbirdProviderProps) {
           channelList: {
             enableTypingIndicator: isTypingIndicatorEnabledOnChannelList,
             enableMessageReceiptStatus: isMessageReceiptStatusEnabledOnChannelList,
+          },
+          setting: {
+            enableMessageSearch: showSearchIcon,
           },
         },
       }}
@@ -307,6 +312,7 @@ const SendbirdSDK = ({
             configs.groupChannel.channelList.enableTypingIndicator,
           isMessageReceiptStatusEnabledOnChannelList:
             configs.groupChannel.channelList.enableMessageReceiptStatus,
+          showSearchIcon: configs.groupChannel.setting.enableMessageSearch,
           // Remote configs set from dashboard by UIKit feature configuration
           groupChannel: {
             enableOgtag: configs.groupChannel.channel.enableOgtag,

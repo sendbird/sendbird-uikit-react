@@ -103,6 +103,7 @@ export interface SendBirdStateConfig {
   isTypingIndicatorEnabledOnChannelList?: boolean;
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
   replyType: ReplyType;
+  showSearchIcon?: boolean;
   // Remote configs set from dashboard by UIKit feature configuration
   groupChannel: {
     enableOgtag: SBUConfig['groupChannel']['channel']['enableOgtag'];
