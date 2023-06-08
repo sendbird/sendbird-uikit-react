@@ -52,7 +52,7 @@ describe('ui/MessageInput', () => {
       useContext.mockReturnValue(stateContextValue);
       renderHook(() => useSendbirdStateContext());
 
-      const { container } = render(<MessageInput onSendMessage={noop} value="" />);
+      const { container } = render(<MessageInput onSendMessage={noop} value=""  channel={{channelType: 'group'}} />);
       expect(
         container.getElementsByClassName('sendbird-message-input--attach').length
       ).toBe(0);
