@@ -88,6 +88,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps {
   allowProfileEdit?: boolean;
   disableMarkAsDelivered?: boolean;
   showSearchIcon?: boolean;
+  breakpoint?: string | boolean;
   renderUserProfile?: () => React.ReactElement;
   onUserProfileMessage?: () => void;
 }
@@ -158,9 +159,8 @@ const SendbirdSDK = ({
   disableMarkAsDelivered = false,
   renderUserProfile = null,
   onUserProfileMessage = null,
+  breakpoint = false,
 }: SendbirdProviderProps): React.ReactElement => {
-  const breakpoint = false;
-
   const {
     logLevel = '',
     userMention = {},

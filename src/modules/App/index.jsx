@@ -104,7 +104,10 @@ App.propTypes = {
   userListQuery: PropTypes.func,
   nickname: PropTypes.string,
   profileUrl: PropTypes.string,
-  breakpoint: PropTypes.string,
+  breakpoint: PropTypes.oneOf([
+    PropTypes.string,
+    PropTypes.bool,
+  ]),
   allowProfileEdit: PropTypes.bool,
   disableUserProfile: PropTypes.bool,
   disableMarkAsDelivered: PropTypes.bool,

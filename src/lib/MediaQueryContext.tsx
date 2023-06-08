@@ -5,7 +5,12 @@ const DEFAULT_MOBILE = false;
 // const DEFAULT_MOBILE = '768px';
 const MOBILE_CLASSNAME = 'sendbird--mobile-mode';
 
-const MediaQueryContext = React.createContext({
+export type useMediaQueryContextType = () => ({
+  breakpoint: string | boolean;
+  isMobile: boolean;
+});
+
+const MediaQueryContext = React.createContext<ReturnType<useMediaQueryContextType>>({
   breakpoint: DEFAULT_MOBILE,
   isMobile: false,
 });
@@ -39,7 +44,7 @@ const MediaQueryProvider = (props: MediaQueryProviderProps): React.ReactElement 
     children,
     logger,
   } = props;
-  const breakpoint = props?.breakpoint || DEFAULT_MOBILE;
+  const breakpoint = props?.breakpoint || false;
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const updateSize = () => {
@@ -80,11 +85,6 @@ const MediaQueryProvider = (props: MediaQueryProviderProps): React.ReactElement 
     </MediaQueryContext.Provider>
   );
 };
-
-export type useMediaQueryContextType = () => ({
-  breakpoint: string | boolean;
-  isMobile: boolean;
-});
 
 const useMediaQueryContext: useMediaQueryContextType = () => React.useContext(MediaQueryContext);
 
