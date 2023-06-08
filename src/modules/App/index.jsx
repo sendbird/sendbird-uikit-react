@@ -163,7 +163,6 @@ App.defaultProps = {
   allowProfileEdit: false,
   onProfileEditSuccess: null,
   disableMarkAsDelivered: false,
-  showSearchIcon: false,
   renderUserProfile: null,
   config: {},
   voiceRecord: {
@@ -175,11 +174,16 @@ App.defaultProps = {
   colorSet: null,
   imageCompression: {},
   disableAutoSelect: false,
-  isMentionEnabled: false,
-  isReactionEnabled: true,
-  replyType: 'QUOTE_REPLY',
-  disableUserProfile: false,
-  isVoiceMessageEnabled: false,
-  isTypingIndicatorEnabledOnChannelList: false,
-  isMessageReceiptStatusEnabledOnChannelList: false,
+
+  // The below configs are duplicates of the Dashboard UIKit Configs.
+  // Since their default values will be set in the Sendbird component,
+  // we don't need to set them here.
+  showSearchIcon: undefined,
+  isMentionEnabled: undefined,
+  isReactionEnabled: undefined,
+  replyType: undefined,
+  disableUserProfile: undefined,
+  isVoiceMessageEnabled: undefined,
+  isTypingIndicatorEnabledOnChannelList: undefined,
+  isMessageReceiptStatusEnabledOnChannelList: undefined,
 };
