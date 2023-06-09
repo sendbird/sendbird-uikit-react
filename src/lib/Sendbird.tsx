@@ -67,6 +67,7 @@ interface CommonUIKitConfigProps {
   isTypingIndicatorEnabledOnChannelList?: boolean;
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
 }
+
 export interface SendbirdProviderProps extends CommonUIKitConfigProps {
   appId: string;
   userId: string;
@@ -166,7 +167,9 @@ const SendbirdSDK = ({
   const [sdkStore, sdkDispatcher] = useReducer(sdkReducers, sdkInitialState);
   const [userStore, userDispatcher] = useReducer(userReducers, userInitialState);
 
-  const { configs, initDashboardConfigs } = useUIKitConfig();
+  const { configs, configsWithAppAttr, initDashboardConfigs } = useUIKitConfig();
+  const sdkInitialized = sdkStore.initialized;
+  const sdk = sdkStore?.sdk;
 
   useTheme(colorSet);
 
@@ -181,7 +184,7 @@ const SendbirdSDK = ({
     configureSession,
     customApiHost,
     customWebSocketHost,
-    sdk: sdkStore?.sdk,
+    sdk,
     sdkDispatcher,
     userDispatcher,
     initDashboardConfigs,
@@ -290,7 +293,7 @@ const SendbirdSDK = ({
           disableUserProfile:
             !configs.common.enableUsingDefaultUserProfile,
           isReactionEnabled:
-            configs.groupChannel.channel.enableReactions,
+            sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableReactions,
           isMentionEnabled:
             configs.groupChannel.channel.enableMention,
           isVoiceMessageEnabled:
@@ -301,16 +304,19 @@ const SendbirdSDK = ({
             configs.groupChannel.channelList.enableTypingIndicator,
           isMessageReceiptStatusEnabledOnChannelList:
             configs.groupChannel.channelList.enableMessageReceiptStatus,
-          showSearchIcon: configs.groupChannel.setting.enableMessageSearch,
+          showSearchIcon:
+            sdkInitialized && configsWithAppAttr(sdk).groupChannel.setting.enableMessageSearch,
           // Remote configs set from dashboard by UIKit feature configuration
           groupChannel: {
-            enableOgtag: configs.groupChannel.channel.enableOgtag,
+            enableOgtag:
+              sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableOgtag,
             enableTypingIndicator: configs.groupChannel.channel.enableTypingIndicator,
             enableDocument: configs.groupChannel.channel.input.enableDocument,
             threadReplySelectType: getCaseResolvedThreadReplySelectType(configs.groupChannel.channel.threadReplySelectType).upperCase,
           },
           openChannel: {
-            enableOgtag: configs.openChannel.channel.enableOgtag,
+            enableOgtag:
+              sdkInitialized && configsWithAppAttr(sdk).openChannel.channel.enableOgtag,
             enableDocument: configs.openChannel.channel.input.enableDocument,
           },
         },
