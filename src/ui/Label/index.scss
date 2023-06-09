@@ -1,8 +1,10 @@
 @import '../../styles/variables';
 
 .sendbird-label {
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
+  @include mobile() {
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
 }
 
 [class*=sendbird-label] {
@@ -46,12 +48,12 @@
 }
 
 .sendbird-label--body-1 {
- font-size: 14px;
- font-weight: normal;
- font-stretch: normal;
- font-style: normal;
- line-height: 1.43;
- letter-spacing: normal;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
 }
 
 .sendbird-label--body-2 {
@@ -82,20 +84,20 @@
 }
 
 .sendbird-label--caption-1 {
- font-size: 14px;
- font-weight: 600;
- font-stretch: normal;
- font-style: normal;
- line-height: 1.43;
- letter-spacing: normal;
+  font-size: 14px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
 }
 
 .sendbird-label--caption-2 {
- font-size: 12px;
- font-weight: bold;
- font-style: normal;
- line-height: 1;
- letter-spacing: normal;
+  font-size: 12px;
+  font-weight: bold;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
 }
 
 .sendbird-label--caption-3 {
