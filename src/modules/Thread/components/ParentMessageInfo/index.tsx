@@ -157,6 +157,7 @@ export default function ParentMessageInfo({
           )
         }
         <MessageInput
+          channel={currentChannel}
           isEdit
           disabled={disabled}
           ref={editMessageInputRef}

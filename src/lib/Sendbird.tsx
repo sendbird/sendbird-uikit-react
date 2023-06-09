@@ -306,10 +306,12 @@ const SendbirdSDK = ({
           groupChannel: {
             enableOgtag: configs.groupChannel.channel.enableOgtag,
             enableTypingIndicator: configs.groupChannel.channel.enableTypingIndicator,
+            enableDocument: configs.groupChannel.channel.input.enableDocument,
             threadReplySelectType: getCaseResolvedThreadReplySelectType(configs.groupChannel.channel.threadReplySelectType).upperCase,
           },
           openChannel: {
             enableOgtag: configs.openChannel.channel.enableOgtag,
+            enableDocument: configs.openChannel.channel.input.enableDocument,
           },
         },
       }}

@@ -2077,6 +2077,8 @@ declare module '@sendbird/uikit-react/ui/MessageContent' {
 }
 
 declare module '@sendbird/uikit-react/ui/MessageInput' {
+  import type { GroupChannel } from '@sendbird/chat/groupChannel';
+  import type { OpenChannel } from '@sendbird/chat/openChannel';
   import type { User } from '@sendbird/chat';
 
   interface MessageInputProps {
@@ -2095,6 +2097,7 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
     onCancelEdit?: () => void,
     onStartTyping?: () => void,
     channelUrl: string,
+    channel?: OpenChannel | GroupChannel,
     mentionSelectedUser?: Array<User>,
     onUserMentioned?: (user: User) => void,
     onMentionStringChange?: (str: string) => void,

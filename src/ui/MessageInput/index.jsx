@@ -4,7 +4,6 @@ import React, {
   useState,
   useEffect,
   useCallback,
-  useContext,
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -17,7 +16,9 @@ import Button, { ButtonTypes, ButtonSizes } from '../Button';
 import renderMentionLabelToString from '../MentionUserLabel/renderToString';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
-import { LocalizationContext } from '../../lib/LocalizationContext';
+import { useLocalization } from '../../lib/LocalizationContext';
+import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
+
 import { nodeListToArray, sanitizeString } from './utils';
 import {
   arrayEqual,
@@ -27,6 +28,7 @@ import usePaste from './hooks/usePaste';
 import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
 import { USER_MENTION_PREFIX } from '../../modules/Message/consts';
 import { TOKEN_TYPES } from '../../modules/Message/utils/tokens/types';
+import { checkIfFileUploadEnabled } from './messageInputUtils';
 
 const TEXT_FIELD_ID = 'sendbird-message-input-text-field';
 const LINE_HEIGHT = 76;
@@ -97,7 +99,14 @@ const MessageInput = React.forwardRef((props, ref) => {
     setMentionedUsers,
   } = props;
   const textFieldId = messageFieldId || TEXT_FIELD_ID;
-  const { stringSet } = useContext(LocalizationContext);
+  const { stringSet } = useLocalization();
+  const { config } = useSendbirdStateContext();
+
+  const isFileUploadEnabled = checkIfFileUploadEnabled({
+    channel,
+    config,
+  });
+
   const fileInputRef = useRef(null);
   const [isInput, setIsInput] = useState(false);
   const [mentionedUserIds, setMentionedUserIds] = useState([]);
@@ -489,7 +498,10 @@ const MessageInput = React.forwardRef((props, ref) => {
         {/* file upload icon */}
         {
           (!isEdit && !isInput) && (
-            (renderFileUploadIcon?.() || (
+            (renderFileUploadIcon?.()
+              // UIKit Dashboard configuration should have lower priority than
+              // renderFileUploadIcon which is set in code level
+              || (isFileUploadEnabled && (
               <IconButton
                 className={`sendbird-message-input--attach ${isVoiceMessageEnabled ? 'is-voice-message-enabled' : ''}`}
                 height="32px"
@@ -512,7 +524,8 @@ const MessageInput = React.forwardRef((props, ref) => {
                   onChange={handleUploadFile(onFileUpload)}
                 />
               </IconButton>
-            ))
+              )
+              ))
           )
         }
         {/* voice message input trigger */}
@@ -606,7 +619,9 @@ MessageInput.propTypes = {
   renderVoiceMessageIcon: PropTypes.func,
   renderSendMessageIcon: PropTypes.func,
   renderFileUploadIcon: PropTypes.func,
-  channel: PropTypes.shape({}),
+  channel: PropTypes.shape({
+    channelType: PropTypes.string,
+  }).isRequired,
 };
 
 MessageInput.defaultProps = {
@@ -637,7 +652,6 @@ MessageInput.defaultProps = {
   renderVoiceMessageIcon: noop,
   renderFileUploadIcon: noop,
   renderSendMessageIcon: noop,
-  channel: {},
 };
 
 export default MessageInput;

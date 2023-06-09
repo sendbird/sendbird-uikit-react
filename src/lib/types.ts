@@ -108,10 +108,12 @@ export interface SendBirdStateConfig {
   groupChannel: {
     enableOgtag: SBUConfig['groupChannel']['channel']['enableOgtag'];
     enableTypingIndicator: SBUConfig['groupChannel']['channel']['enableTypingIndicator'];
+    enableDocument: SBUConfig['groupChannel']['channel']['input']['enableDocument'];
     threadReplySelectType: SBUConfig['groupChannel']['channel']['threadReplySelectType'];
   },
   openChannel: {
     enableOgtag: SBUConfig['openChannel']['channel']['enableOgtag'];
+    enableDocument: SBUConfig['openChannel']['channel']['input']['enableDocument'];
   },
 }
 export interface SdkStore {
