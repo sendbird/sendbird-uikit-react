@@ -7,6 +7,7 @@ import Streamnig from '../../OpenChannelApp/Streaming';
 
 import Label, { LabelTypography, LabelColors } from '../../../ui/Label';
 import Icon, { IconTypes, IconColors } from '../../../ui/Icon';
+import Checkbox from '../../../ui/Checkbox';
 import Button, { ButtonSizes, ButtonTypes } from '../../../ui/Button';
 import { MediaQueryProvider } from '../../../lib/MediaQueryContext';
 
@@ -84,6 +85,41 @@ const ChannelType = {
 const TYPES = {
   TOGGLE: 'TOGGLE',
 };
+
+const toggleItems = {
+  messageSearch: {
+    title: 'Message Search',
+    defaultValue: true,
+  },
+  editUserProfile: {
+    title: 'Edit User Profile',
+    defaultValue: true,
+  },
+  messageGrouping: {
+    title: 'Message Grouping',
+    defaultValue: true,
+  },
+  emojiReaction: {
+    title: 'Emoji Reaction',
+    defaultValue: true,
+  },
+  isVoiceMessageEnabled: {
+    title: 'Voice Message',
+    defaultValue: true,
+  },
+  mention: {
+    title: 'Mention',
+    defaultValue: true,
+  },
+  typingIndicator: {
+    title: 'Typing Indicator',
+    defaultValue: true,
+  },
+  messageStatus: {
+    title: 'Message Status',
+    defaultValue: true,
+  },
+}
 
 const ModerationOptionItem = ({
   subTitle,
@@ -193,20 +229,17 @@ export const GroupChannel = () => {
     userId: '',
     nickname: '',
     theme: ThemeType.light,
-    messageSearch: true,
-    editUserProfile: true,
-    messageGrouping: true,
-    emojiReaction: true,
-    mention: true,
-    typingIndicator: true,
-    messageStatus: true,
-    imageCompression: true,
-    isVoiceMessageEnabled: true,
     compressionRate: 0.7,
     resizingHeight: '',
     resizingWidth: '',
-    replyType: ReplyType.THREAD,
+    replyType: ReplyType.QUOTE_REPLY,
     channelType: ChannelType.GROUP,
+    ...Object
+      .entries(toggleItems)
+      .reduce((acc, [path, item]) => ({
+        ...acc,
+        [path]: item.defaultValue,
+      }), {})
   });
 
   useEffect(() => {
@@ -406,94 +439,29 @@ export const GroupChannel = () => {
               }}
             />
           </ModerationOptionItem>
-          <ModerationOptionItem subTitle="Message Search" type={TYPES.TOGGLE}>
-            <ToggleButton
-              isEnabled={sampleOptions.messageSearch}
-              onClick={() => {
-                setSampleOptions({
-                  ...sampleOptions,
-                  messageSearch: !sampleOptions.messageSearch,
-                });
-              }}
-            />
-          </ModerationOptionItem>
-          <ModerationOptionItem subTitle="Edit User Profile" type={TYPES.TOGGLE}>
-            <ToggleButton
-              isEnabled={sampleOptions.editUserProfile}
-              onClick={() => {
-                setSampleOptions({
-                  ...sampleOptions,
-                  editUserProfile: !sampleOptions.editUserProfile,
-                });
-              }}
-            />
-          </ModerationOptionItem>
-          <ModerationOptionItem subTitle="Message Grouping" type={TYPES.TOGGLE}>
-            <ToggleButton
-              isEnabled={sampleOptions.messageGrouping}
-              onClick={() => {
-                setSampleOptions({
-                  ...sampleOptions,
-                  messageGrouping: !sampleOptions.messageGrouping,
-                });
-              }}
-            />
-          </ModerationOptionItem>
-          <ModerationOptionItem subTitle="Emoji Reaction" type={TYPES.TOGGLE}>
-            <ToggleButton
-              isEnabled={sampleOptions.emojiReaction}
-              onClick={() => {
-                setSampleOptions({
-                  ...sampleOptions,
-                  emojiReaction: !sampleOptions.emojiReaction,
-                });
-              }}
-            />
-          </ModerationOptionItem>
-          <ModerationOptionItem subTitle="Voice Message" type={TYPES.TOGGLE}>
-            <ToggleButton
-              isEnabled={sampleOptions.isVoiceMessageEnabled}
-              onClick={() => {
-                setSampleOptions({
-                  ...sampleOptions,
-                  isVoiceMessageEnabled: !sampleOptions.isVoiceMessageEnabled,
-                });
-              }}
-            />
-          </ModerationOptionItem>
-          <ModerationOptionItem subTitle="Mention" type={TYPES.TOGGLE}>
-            <ToggleButton
-              isEnabled={sampleOptions.mention}
-              onClick={() => {
-                setSampleOptions({
-                  ...sampleOptions,
-                  mention: !sampleOptions.mention,
-                });
-              }}
-            />
-          </ModerationOptionItem>
-          <ModerationOptionItem subTitle="Typing Indicator" type={TYPES.TOGGLE}>
-            <ToggleButton
-              isEnabled={sampleOptions.typingIndicator}
-              onClick={() => {
-                setSampleOptions({
-                  ...sampleOptions,
-                  typingIndicator: !sampleOptions.typingIndicator,
-                });
-              }}
-            />
-          </ModerationOptionItem>
-          <ModerationOptionItem subTitle="Message Status" type={TYPES.TOGGLE}>
-            <ToggleButton
-              isEnabled={sampleOptions.messageStatus}
-              onClick={() => {
-                setSampleOptions({
-                  ...sampleOptions,
-                  messageStatus: !sampleOptions.messageStatus,
-                });
-              }}
-            />
-          </ModerationOptionItem>
+          {Object.entries(toggleItems).map(([path, { title }]) => (
+            <ModerationOptionItem key={path} subTitle={title} type={TYPES.TOGGLE}>
+              {typeof sampleOptions[path] === 'boolean' && <ToggleButton
+                isEnabled={sampleOptions[path]}
+                onClick={() => {
+                  setSampleOptions(prevOptions => ({
+                    ...prevOptions,
+                    [path]: !prevOptions[path],
+                  }));
+                }}
+              />}
+              <Checkbox
+                id={path}
+                checked={sampleOptions[path]}
+                onChange={() => {
+                  setSampleOptions(prevOptions => ({
+                    ...prevOptions,
+                    [path]: prevOptions[path] ? undefined : true,
+                  }));
+                }}
+              />
+            </ModerationOptionItem>
+          ))}
           <ModerationOptionItem subTitle="Image Compression" type={TYPES.TOGGLE}>
             <ToggleButton
               isEnabled={sampleOptions.imageCompression}
