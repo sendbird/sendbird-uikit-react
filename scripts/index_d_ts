@@ -6,7 +6,7 @@
 declare module "SendbirdUIKitGlobal" {
   import type React from 'react';
   import type SendbirdChat from '@sendbird/chat';
-  import { GroupChannel, GroupChannelModule, ModuleNamespaces, OpenChannel, OpenChannelModule } from '@sendbird/chat/lib/__definition';
+  import { GroupChannelModule, ModuleNamespaces, OpenChannelModule } from '@sendbird/chat/lib/__definition';
   import type {
     SendbirdError,
     SessionHandler,
