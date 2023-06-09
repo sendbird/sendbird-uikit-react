@@ -8,6 +8,9 @@ import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
 import React from 'react';
 
+// Fixme@v4 - deleteMessageOption type, rethink options
+export type DeleteMenuStates = 'DISABLE' | 'HIDE' | 'ACTIVE';
+
 export interface BaseMenuProps {
   channel: GroupChannel | OpenChannel;
   message: UserMessage | FileMessage;
@@ -16,6 +19,8 @@ export interface BaseMenuProps {
   isByMe?: boolean;
   replyType?: ReplyType;
   disabled?: boolean;
+  // This should take precedence over logic inside the component
+  deleteMenuState?: DeleteMenuStates;
   showEdit?: (bool: boolean) => void;
   showRemove?: (bool: boolean) => void;
   resendMessage?: (message: UserMessage | FileMessage) => Promise<UserMessage | FileMessage>;

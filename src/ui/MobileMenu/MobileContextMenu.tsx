@@ -29,6 +29,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
     resendMessage,
     showEdit,
     showRemove,
+    deleteMenuState,
     setQuoteMessage,
     parentRef,
     onReplyInThread,
@@ -39,7 +40,16 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
   const showMenuItemCopy: boolean = isUserMessage(message as UserMessage);
   const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe);
   const showMenuItemResend: boolean = (isFailedMessage(message) && message?.isResendable && isByMe);
+
   const showMenuItemDelete: boolean = !isPendingMessage(message) && isByMe;
+  const showMenuItemDeleteByState = isByMe && (deleteMenuState === undefined || deleteMenuState !== 'HIDE');
+  const showMenuItemDeleteFinal = showMenuItemDeleteByState && showMenuItemDelete;
+
+  const disableDelete = (
+    (deleteMenuState !== undefined && deleteMenuState === 'DISABLE')
+    || (message?.threadInfo?.replyCount ?? 0) > 0
+  );
+
   const showMenuItemDownload: boolean = !isPendingMessage(message) && isFileMessage(message)
     && !(isVoiceMessage(message) && ((channel as GroupChannel)?.isSuper || (channel as GroupChannel)?.isBroadcast));
   const showMenuItemReply: boolean = (replyType === 'QUOTE_REPLY')
@@ -187,20 +197,22 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               />
             </MenuItem>
           )}
-          {showMenuItemDelete && (
+          {showMenuItemDeleteFinal && (
             <MenuItem
               className="sendbird-message__mobile-context-menu-item menu-item-delete"
               onClick={() => {
-                hideMenu();
-                showRemove(true);
+                if (!disableDelete) {
+                  hideMenu();
+                  showRemove(true);
+                }
               }}
-              disable={(message?.threadInfo?.replyCount ?? 0) > 0}
+              disable={disableDelete}
               dataSbId="ui_mobile_message_item_menu_delete"
             >
               <Label
                 type={LabelTypography.SUBTITLE_1}
                 color={
-                  (message?.threadInfo?.replyCount ?? 0) > 0
+                  disableDelete
                     ? LabelColors.ONBACKGROUND_4
                     : LabelColors.ONBACKGROUND_1
                 }
@@ -210,7 +222,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               <Icon
                 type={IconTypes.DELETE}
                 fillColor={
-                  (message?.threadInfo?.replyCount ?? 0) > 0
+                  disableDelete
                     ? IconColors.ON_BACKGROUND_4
                     : IconColors.PRIMARY
                 }

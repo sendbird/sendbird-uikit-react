@@ -13,7 +13,6 @@ import {
   isUserMessage,
   copyToClipboard,
   isFileMessage,
-  isParentMessage,
   isVoiceMessage,
   isThreadMessage,
 } from '../../utils';
@@ -39,6 +38,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     isReactionEnabled,
     showEdit,
     showRemove,
+    deleteMenuState,
     setQuoteMessage,
     onReplyInThread,
     isOpenedFromThread = false,
@@ -48,7 +48,16 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
   const showMenuItemCopy: boolean = isUserMessage(message as UserMessage);
   const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe);
   const showMenuItemResend: boolean = (isFailedMessage(message) && message?.isResendable && isByMe);
-  const showMenuItemDelete: boolean = !isPendingMessage(message) && isByMe && !isParentMessage(message);
+
+  const showMenuItemDelete: boolean = !isPendingMessage(message) && isByMe;
+  const showMenuItemDeleteByState = isByMe && (deleteMenuState === undefined || deleteMenuState !== 'HIDE');
+  const showMenuItemDeleteFinal = showMenuItemDeleteByState && showMenuItemDelete;
+
+  const disableDelete = (
+    (deleteMenuState !== undefined && deleteMenuState === 'DISABLE')
+    || (message?.threadInfo?.replyCount ?? 0) > 0
+  );
+
   const showMenuItemDownload: boolean = !isPendingMessage(message) && isFileMessage(message) && !isVoiceMessage(message);
   const showReaction: boolean = !isFailedMessage(message) && !isPendingMessage(message) && isReactionEnabled;
   const showMenuItemReply: boolean = (replyType === 'QUOTE_REPLY')
@@ -272,21 +281,34 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                 </div>
               )}
               {
-                showMenuItemDelete && (
+                showMenuItemDeleteFinal && (
                   <div
                     className='sendbird-message__bottomsheet--action'
                     onClick={() => {
-                      hideMenu();
-                      showRemove(true);
+                      if (!disableDelete) {
+                        hideMenu();
+                        showRemove?.(true);
+                      }
                     }}
                   >
                     <Icon
                       type={IconTypes.DELETE}
-                      fillColor={IconColors.PRIMARY}
+                      fillColor={
+                        disableDelete
+                          ? IconColors.ON_BACKGROUND_4
+                          : IconColors.PRIMARY
+                      }
                       width="24px"
                       height="24px"
                     />
-                    <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
+                    <Label
+                      type={LabelTypography.SUBTITLE_1}
+                      color={
+                        disableDelete
+                          ? LabelColors.ONBACKGROUND_4
+                          : LabelColors.ONBACKGROUND_1
+                      }
+                    >
                       {stringSet?.MESSAGE_MENU__DELETE}
                     </Label>
                   </div>
