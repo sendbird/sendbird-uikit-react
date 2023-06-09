@@ -313,7 +313,7 @@ export const GroupChannel = () => {
                 theme={sampleOptions.theme}
                 allowProfileEdit
                 showSearchIcon={sampleOptions.messageSearch}
-                disableUserProfile={!sampleOptions.editUserProfile}
+                disableUserProfile={typeof sampleOptions.editUserProfile === 'boolean' ? !sampleOptions.editUserProfile : undefined}
                 isMessageGroupingEnabled={sampleOptions.messageGrouping}
                 isReactionEnabled={sampleOptions.emojiReaction}
                 isMentionEnabled={sampleOptions.mention}

@@ -109,7 +109,9 @@ function Sendbird(props: SendbirdProviderProps) {
     <UIKitConfigProvider
       localConfigs={{
         common: {
-          enableUsingDefaultUserProfile: !disableUserProfile,
+          enableUsingDefaultUserProfile: typeof disableUserProfile === 'boolean'
+            ? !disableUserProfile
+            : undefined,
         },
         groupChannel: {
           channel: {
