@@ -38,7 +38,6 @@ export type ThreadProviderProps = {
   // User Profile
   disableUserProfile?: boolean;
   renderUserProfile?: (props: { user: User, close: () => void }) => ReactElement;
-  onUserProfileMessage?: (channel: GroupChannel) => void;
 };
 export interface ThreadProviderInterface extends ThreadProviderProps, ThreadContextInitialState {
   // hooks for fetching threads
@@ -70,7 +69,6 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
     // User Profile
     disableUserProfile,
     renderUserProfile,
-    onUserProfileMessage,
   } = props;
   const propsMessage = props?.message;
   const propsParentMessage = getParentMessageFrom(propsMessage);
@@ -89,6 +87,7 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
     replyType,
     isMentionEnabled,
     isReactionEnabled,
+    onUserProfileMessage,
   } = config;
 
   // dux of Thread

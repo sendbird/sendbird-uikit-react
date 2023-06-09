@@ -92,6 +92,14 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
     };
   }, [sdk]);
 
+  // if currentChannel is changed while on Thread
+  // then change panel type to CHANNEL
+  useEffect(() => {
+    if (panel === PANELS.THREAD) {
+      setPanel(PANELS.CHANNEL);
+    }
+  }, [currentChannel?.url]);
+
   return (
     <div>
       {
