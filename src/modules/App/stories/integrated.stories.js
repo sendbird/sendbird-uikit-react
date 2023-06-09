@@ -123,6 +123,7 @@ const toggleItems = {
 
 const ModerationOptionItem = ({
   subTitle,
+  description,
   children,
   type,
 }) => {
@@ -139,6 +140,14 @@ const ModerationOptionItem = ({
           color={LabelColors.ONBACKGROUND_1}
         >
           {subTitle}
+        </Label>
+      </div>
+      <div>
+        <Label
+            type={LabelTypography.SUBTITLE_2}
+            color={LabelColors.ONBACKGROUND_3}
+          >
+          {description}
         </Label>
       </div>
       <div className='sendbird-integrated-sample-app__moderations__option__input'>
@@ -440,16 +449,20 @@ export const GroupChannel = () => {
             />
           </ModerationOptionItem>
           {Object.entries(toggleItems).map(([path, { title }]) => (
-            <ModerationOptionItem key={path} subTitle={title} type={TYPES.TOGGLE}>
-              {typeof sampleOptions[path] === 'boolean' && <ToggleButton
-                isEnabled={sampleOptions[path]}
-                onClick={() => {
-                  setSampleOptions(prevOptions => ({
-                    ...prevOptions,
-                    [path]: !prevOptions[path],
-                  }));
-                }}
-              />}
+            <ModerationOptionItem key={path} subTitle={title} description={String(sampleOptions[path])} type={TYPES.TOGGLE}>
+              {/** Toggle is for setting the value to true or false */}
+              {typeof sampleOptions[path] === 'boolean' &&
+                <ToggleButton
+                  isEnabled={sampleOptions[path]}
+                  onClick={() => {
+                    setSampleOptions(prevOptions => ({
+                      ...prevOptions,
+                      [path]: !prevOptions[path],
+                    }));
+                  }}
+                />
+              }
+              {/** Checkbox is for setting the value to 'undefined' */}
               <Checkbox
                 id={path}
                 checked={sampleOptions[path]}
