@@ -1004,7 +1004,6 @@ declare module "SendbirdUIKitGlobal" {
     onMoveToParentMessage?: (props: { message: UserMessage | FileMessage, channel: GroupChannel }) => void;
     disableUserProfile?: boolean;
     renderUserProfile?: (props: { user: User, close: () => void }) => React.ReactElement;
-    onUserProfileMessage?: (channel: GroupChannel) => void;
   }
 
   export interface ThreadContextInitialState {
