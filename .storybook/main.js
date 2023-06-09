@@ -20,7 +20,15 @@ module.exports = {
     config.module.rules.push({
       test: /\.svg$/,
       use: ["@svgr/webpack"],
+    }, {
+      test: /\.(ts|tsx)$/,
+      use: [
+        {
+          loader: require.resolve('babel-loader'),
+        },
+      ]
     });
+    config.resolve.extensions.push('.ts', '.tsx');
     return config;
   },
 };
