@@ -20,7 +20,7 @@ import { LoggerFactory, LogLevel } from './Logger';
 import pubSubFactory from './pubSub/index';
 import useAppendDomNode from '../hooks/useAppendDomNode';
 
-import { UIKitConfigProvider, useUIKitConfig, initialConfig } from '@sendbird/uikit-tools';
+import { UIKitConfigProvider, useUIKitConfig } from '@sendbird/uikit-tools';
 
 import { VoiceMessageProvider } from './VoiceMessageProvider';
 import { LocalizationProvider } from './LocalizationContext';
@@ -118,7 +118,7 @@ function Sendbird(props: SendbirdProviderProps) {
             enableReactions: isReactionEnabled,
             enableMention: isMentionEnabled,
             enableVoiceMessage: isVoiceMessageEnabled,
-            replyType: getCaseResolvedReplyType(replyType ?? initialConfig.groupChannel.channel.replyType).lowerCase,
+            replyType: replyType != null ? getCaseResolvedReplyType(replyType).lowerCase : undefined,
           },
           channelList: {
             enableTypingIndicator: isTypingIndicatorEnabledOnChannelList,
