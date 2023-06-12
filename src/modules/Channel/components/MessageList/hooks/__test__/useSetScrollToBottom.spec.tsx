@@ -8,7 +8,7 @@ jest.mock('../../../../../../hooks/useDebounce', () => ({
 }));
 
 const ScrollComponent = () => {
-  const { scrollBottom, scrollToBottomHandler } = useSetScrollToBottom();
+  const { scrollBottom, scrollToBottomHandler } = useSetScrollToBottom({ loading: true });
 
   return (
     <div style={{ height: '100px', overflowY: 'scroll' }} onScroll={scrollToBottomHandler}>
@@ -20,11 +20,23 @@ const ScrollComponent = () => {
 describe('Channel/useSetScrollToBottom ', () => {
   it('should set scrollBottom as zero on initial render', () => {
     const { result } = renderHook(() => {
-      const myGreeting = useSetScrollToBottom();
+      const myGreeting = useSetScrollToBottom({ loading: true });
       return myGreeting;
     }, {
       initialProps: { a: 'Alice', b: 'Bob' },
     });
+    const { scrollBottom } = result.current;
+    expect(scrollBottom).toBe(0);
+  });
+
+  it('should reset scrollToBottom when loading state changes', () => {
+    const { result, rerender } = renderHook(({ loading }) => {
+      const myGreeting = useSetScrollToBottom({ loading });
+      return myGreeting;
+    }, {
+      initialProps: { loading: true },
+    });
+    rerender({ loading: false });
     const { scrollBottom } = result.current;
     expect(scrollBottom).toBe(0);
   });

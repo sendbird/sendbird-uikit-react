@@ -147,7 +147,7 @@ const MessageList: React.FC<MessageListProps> = ({
     scrollRef,
   });
 
-  const { scrollToBottomHandler, scrollBottom } = useSetScrollToBottom();
+  const { scrollToBottomHandler, scrollBottom } = useSetScrollToBottom({ loading });
 
   if (loading) {
     return (typeof renderPlaceholderLoader === 'function')
