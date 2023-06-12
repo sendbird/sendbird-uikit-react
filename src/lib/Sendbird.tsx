@@ -31,6 +31,8 @@ import { useMarkAsReadScheduler } from './hooks/useMarkAsReadScheduler';
 import { ConfigureSessionTypes } from './hooks/useConnect/types';
 import { useMarkAsDeliveredScheduler } from './hooks/useMarkAsDeliveredScheduler';
 import { getCaseResolvedReplyType, getCaseResolvedThreadReplySelectType } from './utils/resolvedReplyType';
+import { useUnmount } from '../hooks/useUnmount';
+import { disconnectSdk } from './hooks/useConnect/disconnectSdk';
 
 export type UserListQueryType = {
   hasNext?: boolean;
@@ -191,6 +193,17 @@ const SendbirdSDK = ({
     userDispatcher,
     initDashboardConfigs,
   });
+
+  useUnmount(() => {
+    if (typeof sdk.disconnect === 'function') {
+      disconnectSdk({
+        logger,
+        sdkDispatcher,
+        userDispatcher,
+        sdk,
+      });
+    }
+  }, [sdk.disconnect]);
 
   // to create a pubsub to communicate between parent and child
   useEffect(() => {
