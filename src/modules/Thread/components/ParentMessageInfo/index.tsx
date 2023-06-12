@@ -339,6 +339,11 @@ export default function ParentMessageInfo({
           hideMenu={() => {
             setShowMobileMenu(false);
           }}
+          deleteMenuState={
+            allThreadMessages?.length === 0
+              ? 'ACTIVE'
+              : 'HIDE'
+          }
           isReactionEnabled={usingReaction}
           isByMe={isByMe}
           emojiContainer={emojiContainer}

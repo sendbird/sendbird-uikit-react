@@ -15,6 +15,7 @@ const MobileMenu: React.FC<MobileBottomSheetProps> = (props: MobileBottomSheetPr
     isByMe,
     replyType,
     disabled,
+    deleteMenuState,
     showRemove,
     showEdit,
     resendMessage,
@@ -40,6 +41,7 @@ const MobileMenu: React.FC<MobileBottomSheetProps> = (props: MobileBottomSheetPr
               disabled={disabled}
               showRemove={showRemove}
               showEdit={showEdit}
+              deleteMenuState={deleteMenuState}
               resendMessage={resendMessage}
               setQuoteMessage={setQuoteMessage}
               emojiContainer={emojiContainer}
@@ -58,6 +60,7 @@ const MobileMenu: React.FC<MobileBottomSheetProps> = (props: MobileBottomSheetPr
               showEdit={showEdit}
               replyType={replyType}
               disabled={disabled}
+              deleteMenuState={deleteMenuState}
               showRemove={showRemove}
               resendMessage={resendMessage}
               setQuoteMessage={setQuoteMessage}
