@@ -88,6 +88,11 @@
   }
   .sendbird-integrated-sample-app__moderations__option__name,
   .sendbird-integrated-sample-app__moderations__option__input {
+    display: flex;
+
+    .sendbird-checkbox {
+      margin: 2px 0 0 4px;
+    }
     @include mobile() {
       width: auto;
     }
