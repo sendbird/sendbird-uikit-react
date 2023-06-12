@@ -59,7 +59,7 @@
     display: inline-flex;
     flex-direction: column;
 
-    max-width: 178px;
+    width: calc(100% - 100px);
     box-sizing: border-box;
 
     .sendbird-open-channel-preview__context__title {
@@ -76,8 +76,10 @@
         position: relative;
         display: inline-block;
 
-        max-width: 100%;
-        height: 100%;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         &.frozen {
           max-width: calc(100% - 20px);
         }
@@ -86,6 +88,9 @@
         overflow-x: hidden;
         text-overflow: ellipsis;
         word-break: keep-all;
+        @include mobile() {
+          overflow-y: hidden;
+        }
       }
 
       .sendbird-open-channel-preview__context__title__frozen {
@@ -126,6 +131,9 @@
         overflow-x: hidden;
         text-overflow: ellipsis;
         word-break: keep-all;
+        @include mobile() {
+          overflow-y: hidden;
+        }
       }
     }
   }
