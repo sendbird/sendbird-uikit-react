@@ -160,3 +160,16 @@
 .sendbird-quote-message.unavailable:hover {
   cursor: default;
 }
+
+.sendbird-message-content.outgoing {
+  .sendbird-quote-message__replied-to {
+    flex-direction: row-reverse;
+    padding-right: 0px;
+  }
+}
+
+.sendbird-message-content.incoming {
+  .sendbird-quote-message__replied-to {
+    padding-left: 0px;
+  }
+}

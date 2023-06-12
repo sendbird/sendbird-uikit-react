@@ -14,7 +14,6 @@ import { sendbirdSelectors } from '../../..';
 import { fitPageSize } from './utils';
 
 const appId = process.env.STORYBOOK_APP_ID;
-// const userId = 'leo.sub';
 const userId = 'sendbird';
 
 export default { title: 'App-Component' };
