@@ -436,17 +436,42 @@ export const GroupChannel = () => {
               }}
             />
           </ModerationOptionItem>
-          <ModerationOptionItem subTitle="Reply Type">
-            <MultipleButtons
-              options={ReplyType}
-              value={sampleOptions.replyType}
-              onClick={(selectedOption) => {
-                setSampleOptions({
-                  ...sampleOptions,
-                  replyType: selectedOption,
-                })
+          <ModerationOptionItem
+            subTitle="Reply Type"
+            description={String(sampleOptions.replyType)}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
               }}
-            />
+            >
+              {typeof sampleOptions.replyType !== 'undefined' &&
+                <MultipleButtons
+                  options={ReplyType}
+                  value={sampleOptions.replyType}
+                  onClick={(selectedOption) => {
+                    setSampleOptions({
+                      ...sampleOptions,
+                      replyType: selectedOption,
+                    })
+                  }}
+                />
+              }
+              {/** Checkbox is for setting the replyType value to 'undefined' */}
+              <div style={{ marginLeft: 8 }}>
+                <Checkbox
+                  id="sampleOptions.replyType"
+                  checked={sampleOptions.replyType}
+                  onChange={() => {
+                    setSampleOptions(prevOptions => ({
+                      ...prevOptions,
+                      replyType: prevOptions.replyType ? undefined : true,
+                    }));
+                  }}
+                />
+              </div>
+            </div>
           </ModerationOptionItem>
           {Object.entries(toggleItems).map(([path, { title }]) => (
             <ModerationOptionItem key={path} subTitle={title} description={String(sampleOptions[path])} type={TYPES.TOGGLE}>
