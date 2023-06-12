@@ -1,18 +1,21 @@
 import SbMessageSearch from '@sendbird/uikit-react/MessageSearch'
 import { useParams, useNavigate } from 'react-router-dom'
 
+import { useNavigateOnBan } from '../hooks/useNavigateOnBan'
+
 export function MessageSearch() {
-  const { channelUrl } = useParams();
-  const navigator = useNavigate();
+  const { channelUrl } = useParams()
+  const navigator = useNavigate()
+  useNavigateOnBan()
   return (
     <div style={{ height: '100vh' }}>
       <SbMessageSearch
         channelUrl={channelUrl as string}
         onCloseClick={() => {
-          navigator(`/channel/${channelUrl}`)
+          navigator(`/channels/${channelUrl}`)
         }}
         onResultClick={(message) => {
-          navigator(`/channel/${channelUrl}?messageId=${message?.messageId}&createdAt=${message?.createdAt}`)
+          navigator(`/channels/${channelUrl}?messageId=${message?.messageId}&createdAt=${message?.createdAt}`)
         }}
       />
     </div>

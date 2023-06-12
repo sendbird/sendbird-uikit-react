@@ -1,48 +1,25 @@
-import '@sendbird/uikit-react/dist/index.css'
+import './App.css'
 
 import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider'
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from 'react-router-dom'
-
-import { ErrorPage } from './routes/Error'
-import { ChannelList } from './routes/ChannelList'
-import { Channel } from './routes/Channel'
-import { ChannelSettings } from './routes/ChannelSettings'
-import { MessageSearch } from './routes/MessageSearch'
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <ChannelList />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: 'channel/:channelUrl',
-    element: <Channel />,
-  },
-  {
-    path: 'channel/:channelUrl/settings',
-    element: <ChannelSettings />,
-  },
-  {
-    path: 'channel/:channelUrl/search',
-    element: <MessageSearch />,
-  },
-])
+import { RouterProvider } from 'react-router-dom'
+import { router as mobileRouter } from './MobileLayout/Router'
+import { router as desktopRouter } from './DesktopLayout/Router'
 
 function App() {
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
   return (
-    <div className="sendbird-app">
-      <SendbirdProvider
-        appId={import.meta.env.VITE_SB_APP_ID}
-        userId='sendbird'
-        nickname='sendbird'
-      >
-        <RouterProvider router={router} />
-      </SendbirdProvider>
-    </div>
+    <>
+      <div className="sendbird-app">
+        <SendbirdProvider
+          appId="YOUR_APP_ID"
+          userId='YOUR_USER_ID'
+          nickname='YOUR_NICKNAME'
+          breakpoint={isMobile}
+        >
+          <RouterProvider router={isMobile ? mobileRouter : desktopRouter} />
+        </SendbirdProvider>
+      </div>
+    </>
   )
 }
 

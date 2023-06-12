@@ -1,0 +1,28 @@
+.sendbird-chat-desktop {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+}
+
+.sendbird-chat-desktop__channel-list {
+  grid-column: 1;
+}
+
+.sendbird-chat-desktop__channel {
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.sendbird-chat-desktop__channel-settings,
+.sendbird-chat-desktop__channel-message-search {
+  grid-column: 2;
+  width: 320px;
+}
+
+.sendbird-chat-desktop__channel-list,
+.sendbird-chat-desktop__channel,
+.sendbird-chat-desktop__channel-settings,
+.sendbird-chat-desktop__channel-message-search {
+  height: 100%;
+}

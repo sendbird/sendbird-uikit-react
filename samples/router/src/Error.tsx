@@ -12,7 +12,7 @@ export function ErrorPage() {
   return (
     <div id="error-page">
       <h1>Oops! an error has occurred</h1>
-      <p> {error.statusText || error.message}</p>
+      <p> {error?.statusText || error?.message}</p>
     </div>
-  );
+  )
 }
