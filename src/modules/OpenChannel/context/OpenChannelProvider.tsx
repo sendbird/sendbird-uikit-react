@@ -312,7 +312,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
       <UserProfileProvider
         isOpenChannel
         renderUserProfile={props?.renderUserProfile}
-        disableUserProfile={props?.disableUserProfile}
+        disableUserProfile={props?.disableUserProfile ?? config?.disableUserProfile}
       >
         {children}
       </UserProfileProvider>

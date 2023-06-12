@@ -130,7 +130,7 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
     }}>
       <UserProfileProvider
         renderUserProfile={props?.renderUserProfile}
-        disableUserProfile={props?.disableUserProfile}
+        disableUserProfile={props?.disableUserProfile ?? config?.disableUserProfile}
         onUserProfileMessage={onUserProfileMessage}
       >
         <div className={`sendbird-channel-settings ${className}`}>

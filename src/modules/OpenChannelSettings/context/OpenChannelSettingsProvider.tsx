@@ -155,7 +155,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
       <UserProfileProvider
         isOpenChannel
         renderUserProfile={props?.renderUserProfile}
-        disableUserProfile={props?.disableUserProfile}
+        disableUserProfile={props?.disableUserProfile ?? globalStore?.config?.disableUserProfile}
       >
         {children}
       </UserProfileProvider>

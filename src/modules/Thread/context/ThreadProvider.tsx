@@ -225,7 +225,7 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
     >
       {/* UserProfileProvider */}
       <UserProfileProvider
-        disableUserProfile={disableUserProfile}
+        disableUserProfile={disableUserProfile ?? config.disableUserProfile}
         renderUserProfile={renderUserProfile}
         onUserProfileMessage={onUserProfileMessage}
       >
