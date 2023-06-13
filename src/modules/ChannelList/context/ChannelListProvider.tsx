@@ -366,7 +366,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
       isMessageReceiptStatusEnabled: (isMessageReceiptStatusEnabled !== null) ? isMessageReceiptStatusEnabled : isMessageReceiptStatusEnabledOnChannelList,
     }}>
       <UserProfileProvider
-        disableUserProfile={userDefinedDisableUserProfile}
+        disableUserProfile={userDefinedDisableUserProfile ?? config?.disableUserProfile}
         renderUserProfile={userDefinedRenderProfile}
         onUserProfileMessage={onUserProfileMessage}
       >

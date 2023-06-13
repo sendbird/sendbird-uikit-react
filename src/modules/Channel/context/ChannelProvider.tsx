@@ -486,7 +486,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       toggleReaction,
     }}>
       <UserProfileProvider
-        disableUserProfile={props?.disableUserProfile}
+        disableUserProfile={props?.disableUserProfile ?? config?.disableUserProfile}
         renderUserProfile={props?.renderUserProfile}
         onUserProfileMessage={onUserProfileMessage}
       >
