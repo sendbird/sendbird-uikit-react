@@ -12,14 +12,13 @@
 
 Template
 ```
-// PR title (good to be less than 70 chars, no problems if its longer, this is not dogma)
+// PR title
 [type]: A short description of changes in imperative language
 
 // Section: PR description. Optional!
 
 Add a brief description of the changes that you have involved in this PR
 Bullet points are also fine
-Good to wrap at 120 chars, no problems if its longer, this is not dogma
 
 // Section: Footer. Recommended!
 // Recommended! if you are dealing with SB_ISSUES(Customer issues) or release tickets
