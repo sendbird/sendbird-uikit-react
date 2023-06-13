@@ -220,7 +220,7 @@ export default function MessageContent({
                 if (threadReplySelectType === ThreadReplySelectType.THREAD) {
                   onReplyInThread({ message });
                 } else if (threadReplySelectType === ThreadReplySelectType.PARENT) {
-                  scrollToMessage(message.parentMessage.createdAt, message.parentMessageId);
+                  scrollToMessage(message.parentMessage?.createdAt, message.parentMessageId);
                 }
               }}
             />
@@ -423,7 +423,7 @@ export default function MessageContent({
                 if (threadReplySelectType === ThreadReplySelectType.THREAD) {
                   onReplyInThread({ message });
                 } else if (threadReplySelectType === ThreadReplySelectType.PARENT) {
-                  scrollToMessage(message.parentMessage.createdAt, message.parentMessageId);
+                  scrollToMessage(message.parentMessage?.createdAt, message.parentMessageId);
                 }
               }}
             />
