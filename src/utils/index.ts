@@ -165,10 +165,10 @@ export const isAudioMessage = (message: FileMessage): boolean => message && isFi
 export const isAudioMessageMimeType = (type: string): boolean => (/^audio\//.test(type));
 export const isVoiceMessage = (message: Nullable<FileMessage | UserMessage>): boolean => {
   // ex) audio/m4a OR audio/m4a;sbu_type=voice
-  if (!(message && isFileMessage(message))) {
+  if (!(message && isFileMessage(message)) || !(message as FileMessage).type) {
     return false;
   }
-  const [mimeType, typeParameter] = message.type.split(';');
+  const [mimeType, typeParameter] = (message as FileMessage).type.split(';');
   if (!isAudioMessageMimeType(mimeType) || !typeParameter) {
     return false;
   }
