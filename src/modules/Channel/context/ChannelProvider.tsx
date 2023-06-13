@@ -177,7 +177,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     onChatHeaderActionClick,
     onSearchClick,
     onBackClick,
-    replyType,
+    replyType: channelReplyType,
     threadReplySelectType,
     queries,
     filterMessageList,
@@ -190,6 +190,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
 
   const globalStore = useSendbirdStateContext();
   const { config } = globalStore;
+  const replyType = channelReplyType ?? config.replyType;
   const {
     pubSub,
     logger,
