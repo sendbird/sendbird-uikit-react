@@ -1,5 +1,5 @@
-import { FileMessage, UserMessage } from "@sendbird/chat/message";
-import { isVoiceMessage } from "..";
+import { FileMessage, UserMessage } from '@sendbird/chat/message';
+import { isVoiceMessage } from '..';
 
 const mockVoiceMessage = {
   message: null,
