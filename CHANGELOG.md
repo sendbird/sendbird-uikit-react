@@ -34,7 +34,6 @@
   Other props:
   * SendbirdProvider?.onUserProfileMessage?: (channel: GroupChannel) => void
   Callback for handling when user sends a user profile message.
-
   * Channel?.onBackClick?: () => void
   Callback for handling when user clicks on back button in channel.
   This is only applicable for mobile devices.
