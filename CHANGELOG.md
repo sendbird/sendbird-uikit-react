@@ -48,9 +48,9 @@
 * TSC error in typescript sample
 * Samples -> Upgrade vite to 4.3.9
 
-### Fix:
+### Fixes:
 * Connection
-  * SDK on Sendbird component unmount
+  * Disconnect SDK on Sendbird provider component unmount
 * Message
   * Desktop - allow text select on Labels
   * Remove loading placeholder on ThumbnailMessage
