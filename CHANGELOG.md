@@ -1,5 +1,79 @@
 # Changelog - v3
 
+## [v3.5.0] (June 14 2023)
+
+### Feat:
+* Mobile Browser UX Revamp
+  We have revamped the UX to support mobile devices -
+  * Revamped Modals
+  * Revamped Context Menu -> Long press to open context menu
+  * Revamped Message Input
+
+  This feature is disabled by default. To enable this feature, add the following prop to `SendBirdProvider` & `App` component.
+  ```javascript
+  breakpoint?: string | boolean
+  ```
+
+  Example:
+  ```javascript
+  <SendBirdProvider breakpoint="768px">
+  ```
+  ```javascript
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  return (
+    <SendbirdProvider breakpoint={isMobile} />
+      {
+        isMobile
+          ? <MobileChatLayout />
+          : <DesktopChatLayout />
+      }
+    </SendbirdProvider>
+  )
+  ```
+
+  Other props:
+  * SendbirdProvider?.onUserProfileMessage?: (channel: GroupChannel) => void
+  Callback for handling when user sends a user profile message.
+  * Channel?.onBackClick?: () => void
+  Callback for handling when user clicks on back button in channel.
+  This is only applicable for mobile devices.
+
+* Configure UIKit through Dashboard(not released yet)
+  We are doing groundwork to support configuring  UIKit through
+  the dashboard. This will allow you to configure UIKit without
+  having to add props to each component. This feature *will not* be a
+  breaking change and will be backwards compatible.
+
+### Chore:
+* TSC error in typescript sample
+* Samples -> Upgrade vite to 4.3.9
+
+### Fixes:
+* Connection
+  * Disconnect SDK on Sendbird provider component unmount
+* Message
+  * Desktop - allow text select on Labels
+  * Remove loading placeholder on ThumbnailMessage
+  * OGMessage width overflow while adding reaction
+  * Center align & remove ellipsis from admin message
+* Voice Message
+  * Hide download option for voice message
+  * Show warning when there is no voice recording permission
+  * Race condition in playing audio files simultaneously
+  * Stop voice player when recorder exits
+  * Pause voice when component is removed from layout
+* Replies
+  * Quoted text alignment for reply messages
+  * MessageList: Triggering of random clicks while scroll to parent
+* Thread
+  * Improve parent message detection
+  * Emoji reactions overflow in message
+* Settings
+  * <AllMemebers />: Show context menu on click
+* Open Channel
+  * OpenChannel Context menu click leak
+  * Vertical scroll on labels in open channel list
+
 ## [v3.4.9] (June 02 2023)
 
 Fixes:
