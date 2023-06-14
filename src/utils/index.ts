@@ -163,23 +163,25 @@ export const isGifMessage = (message: UserMessage | FileMessage): boolean => (
 );
 export const isAudioMessage = (message: FileMessage): boolean => message && isFileMessage(message) && isAudio(message.type);
 export const isAudioMessageMimeType = (type: string): boolean => (/^audio\//.test(type));
+export const isVoiceMessageMimeType = (type: string): boolean => (/^voice\//.test(type));
 export const isVoiceMessage = (message: Nullable<FileMessage | UserMessage>): boolean => {
   // ex) audio/m4a OR audio/m4a;sbu_type=voice
-  if (!(message && isFileMessage(message))) {
+  if (!(message && isFileMessage(message)) || !(message as FileMessage).type) {
     return false;
   }
-  const [mimeType, typeParameter] = message.type.split(';');
-  if (!isAudioMessageMimeType(mimeType) || !typeParameter) {
+  const [mimeType, typeParameter] = (message as FileMessage).type.split(';');
+
+  if (!isAudioMessageMimeType(mimeType)) {
     return false;
   }
-  const [key, value] = typeParameter.split('=');
-  if (key === 'sbu_type' && value === 'voice') {
-    return true;
+
+  if (typeParameter) {
+    const [key, value] = typeParameter.split('=');
+    return key === 'sbu_type' && value === 'voice';
   }
   // ex) message.metaArrays = [{ key: 'KEY_INTERNAL_MESSAGE_TYPE', value: ['voice/m4a'] }]
   return isVoiceMessageMimeType(message?.metaArrays?.find((metaArray) => metaArray.key === 'KEY_INTERNAL_MESSAGE_TYPE')?.value?.[0] ?? '');
 };
-export const isVoiceMessageMimeType = (type: string): boolean => (/^voice\//.test(type));
 
 export const isEditedMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => isUserMessage(message) && (message?.updatedAt > 0);
 export const isEnabledOGMessage = (message: UserMessage): boolean => (
