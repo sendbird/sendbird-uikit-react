@@ -1,5 +1,17 @@
 # Changelog - v3
 
+## [v3.5.1] (June 15 2023)
+
+Fixes:
+* Set fallback values \w global configs in App comp
+* Use global config's replyType if channel one is undefined
+* Use global disableUserProfile if each context's one is defined
+* Clear `scrollBottom` on channel state loading
+* Fixes a runtime error
+  caused by clicking "Reply in thread" menu from a parent message
+* Check if the `message.type` property is empty
+  and return false when it is empty in the isVoiceMessage function
+
 ## [v3.5.0] (June 14 2023)
 
 ### Feat:
