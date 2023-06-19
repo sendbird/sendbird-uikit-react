@@ -9,8 +9,7 @@ export function ChannelList() {
       <SbChannelList
         disableAutoSelect
         onChannelSelect={(channel) => {
-          console.log(channel)
-          navigate(`/channel/${channel.url}`)
+          navigate(`/channels/${channel.url}`)
         }}
       />
     </div>

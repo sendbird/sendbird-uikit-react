@@ -1,7 +1,13 @@
 import SbChannel from '@sendbird/uikit-react/Channel'
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 
-export function Channel() {
+import {
+  Outlet,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom'
+
+export default function Channel() {
   const { channelUrl } = useParams()
   const [searchParams] = useSearchParams()
   const messageId = searchParams.get('messageId')
@@ -9,14 +15,14 @@ export function Channel() {
   const numCreatedAt = Number(createdAt)
   const navigate = useNavigate()
   return (
-    <div style={{ height: '100vh' }}>
+    <div className='sendbird-chat-desktop__channel'>
       <SbChannel
         channelUrl={channelUrl as string}
         onBackClick={() => {
           navigate('/')
         }}
         onSearchClick={() => {
-          navigate(`/channel/${channelUrl}/search`)
+          navigate(`/channels/${channelUrl}/search`)
         }}
         { ...(messageId && typeof numCreatedAt === 'number') && {
           startingPoint: numCreatedAt,
@@ -25,9 +31,10 @@ export function Channel() {
         }}
         showSearchIcon
         onChatHeaderActionClick={() => {
-          navigate(`/channel/${channelUrl}/settings`)
+          navigate(`/channels/${channelUrl}/settings`)
         }}
       />
+      <Outlet />
     </div>
   )
 }
