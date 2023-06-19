@@ -12,6 +12,7 @@ function useConnectionStatus(sdk, logger) {
       logger.warning('sdk changed', uniqueHandlerId);
       const handler = new ConnectionHandler();
       handler.onDisconnected = () => {
+        setIsOnline(false);
         logger.warning('onDisconnected', { isOnline });
       };
       handler.onReconnectStarted = () => {
