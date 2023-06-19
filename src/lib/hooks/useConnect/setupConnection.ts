@@ -36,6 +36,7 @@ export function setUpParams({
       new GroupChannelModule(),
       new OpenChannelModule(),
     ],
+    newInstance: true,
   };
   if (customApiHost) {
     params['customApiHost'] = customApiHost;
