@@ -3,6 +3,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const readline = require('readline');
 const packageJson = require('../package.json');
 const packageTemplate = require('./package.template.json');
 
@@ -50,7 +51,34 @@ function movePackageJSON() {
   );
 }
 
+// see exports.js // legacy
+// Font import should be on top of index.css
+// eslint-disable-next-line camelcase
+async function test_should_import_url_be_on_top_of_bundled_css() {
+  const expected = '@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap");';
+  const cssPath = path.resolve(distPath, 'dist/index.css');
+  const cssFileStream = fs.createReadStream(cssPath);
+  // reads the first line of the file instead of the whole file
+  const reader = readline.createInterface({ input: cssFileStream });
+  const line = await new Promise((resolve) => {
+    reader.on('line', (l) => {
+      reader.close();
+      resolve(l);
+    });
+  });
+  cssFileStream.close();
+  if (line !== expected) {
+    const err = `CSS integrity check failed.
+      Expected: ${expected} to be on top of ${cssPath} file,
+      Actual: ${line}
+    `;
+    throw new Error(err);
+  }
+}
+
 /** Add version information to index.d.ts in dist */
 appendVersionToTypeDefn();
 /** Copy content of package.json to dist, but remove unnecessary fields */
 movePackageJSON();
+
+test_should_import_url_be_on_top_of_bundled_css();

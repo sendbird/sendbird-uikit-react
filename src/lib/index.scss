@@ -1,4 +1,7 @@
-// Too keep all the important CSS to boot and  makes sure things arent repeated
+// To keep all the important CSS to boot and  makes sure things arent repeated
+// TLDR: If we wont keep it here, the `@import url("fonts.google.com")` will be
+// moved to the middle of the bundled CSS file
+// or see scripts/post_build.js[checkCSSIntegrity]
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap');
 @import '../styles/light-theme';
 @import '../styles/dark-theme';

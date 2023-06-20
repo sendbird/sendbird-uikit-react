@@ -3,7 +3,6 @@ import { babel } from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import svgr from '@svgr/rollup';
-import scss from 'rollup-plugin-scss';
 import postcss from 'rollup-plugin-postcss';
 import replace from '@rollup/plugin-replace';
 import typescript from '@rollup/plugin-typescript';
@@ -51,10 +50,6 @@ module.exports = ({
   ],
   plugins: [
     postcss({
-      preprocessor: (content, id) => new Promise((resolvecss) => {
-        const result = scss.renderSync({ file: id });
-        resolvecss({ code: result.css.toString() });
-      }),
       plugins: [
         autoprefixer,
       ],

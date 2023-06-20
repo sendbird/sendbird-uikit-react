@@ -2510,7 +2510,6 @@ __metadata:
     rollup-plugin-copy: ^3.4.0
     rollup-plugin-polyfill-node: ^0.10.1
     rollup-plugin-postcss: ^4.0.0
-    rollup-plugin-scss: ^3.0.0
     rollup-plugin-visualizer: ^5.9.0
     sass: ^1.55.0
     sass-loader: ^10.2.0
@@ -17116,15 +17115,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-scss@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "rollup-plugin-scss@npm:3.0.0"
-  dependencies:
-    rollup-pluginutils: ^2.3.3
-  checksum: 6f7ef820693db0a355f8477d2d2b629e709709eb257e26d427264fb21481fc3ec7f35acefe4c6c131c4536ce7f4993a0d8abadc6652531ccc2e9ee0fc46225a1
-  languageName: node
-  linkType: hard
-
 "rollup-plugin-visualizer@npm:^5.9.0":
   version: 5.9.0
   resolution: "rollup-plugin-visualizer@npm:5.9.0"
@@ -17144,7 +17134,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-pluginutils@npm:^2.3.3, rollup-pluginutils@npm:^2.8.2":
+"rollup-pluginutils@npm:^2.8.2":
   version: 2.8.2
   resolution: "rollup-pluginutils@npm:2.8.2"
   dependencies:
