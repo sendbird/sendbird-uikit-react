@@ -43,6 +43,7 @@ import {
 } from '@sendbird/chat/openChannel';
 import { UikitMessageHandler } from './lib/selectors';
 import { RenderCustomSeparatorProps } from './types';
+import { UIKitOptions } from './lib/types';
 
 type ReplyType = 'NONE' | 'QUOTE_REPLY' | 'THREAD';
 
@@ -123,6 +124,7 @@ interface SendBirdProviderProps {
   };
   isTypingIndicatorEnabledOnChannelList?: boolean;
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
+  uikitOptions?: UIKitOptions;
 }
 
 interface SendBirdStateConfig {
@@ -309,6 +311,7 @@ interface AppProps {
   isMentionEnabled?: boolean;
   isTypingIndicatorEnabledOnChannelList?: boolean;
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
+  uikitOptions?: UIKitOptions;
 }
 
 interface ApplicationUserListQuery {
