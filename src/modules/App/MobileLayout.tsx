@@ -101,7 +101,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
   }, [currentChannel?.url]);
 
   return (
-    <div>
+    <div className='sb_mobile'>
       {
         panel === PANELS.CHANNEL_LIST && (
           <div className='sb_mobile__panelwrap'>
