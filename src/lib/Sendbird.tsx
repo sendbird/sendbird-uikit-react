@@ -27,12 +27,15 @@ import { LocalizationProvider } from './LocalizationContext';
 import { MediaQueryProvider } from './MediaQueryContext';
 import getStringSet from '../ui/Label/stringSet';
 import { VOICE_RECORDER_DEFAULT_MAX, VOICE_RECORDER_DEFAULT_MIN } from '../utils/consts';
+import { uikitConfigMapper } from './utils/uikitConfigMapper';
+
 import { useMarkAsReadScheduler } from './hooks/useMarkAsReadScheduler';
 import { ConfigureSessionTypes } from './hooks/useConnect/types';
 import { useMarkAsDeliveredScheduler } from './hooks/useMarkAsDeliveredScheduler';
 import { getCaseResolvedReplyType, getCaseResolvedThreadReplySelectType } from './utils/resolvedReplyType';
 import { useUnmount } from '../hooks/useUnmount';
 import { disconnectSdk } from './hooks/useConnect/disconnectSdk';
+import { UIKitOptions, CommonUIKitConfigProps } from './types';
 
 export type UserListQueryType = {
   hasNext?: boolean;
@@ -59,17 +62,6 @@ export interface SendbirdConfig {
   };
   isREMUnitEnabled?: boolean;
 }
-
-interface CommonUIKitConfigProps {
-  replyType?: 'NONE' | 'QUOTE_REPLY' | 'THREAD';
-  isMentionEnabled?: boolean;
-  isReactionEnabled?: boolean;
-  disableUserProfile?: boolean;
-  isVoiceMessageEnabled?: boolean;
-  isTypingIndicatorEnabledOnChannelList?: boolean;
-  isMessageReceiptStatusEnabledOnChannelList?: boolean;
-}
-
 export interface SendbirdProviderProps extends CommonUIKitConfigProps {
   appId: string;
   userId: string;
@@ -90,46 +82,40 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps {
   imageCompression?: ImageCompressionOptions;
   allowProfileEdit?: boolean;
   disableMarkAsDelivered?: boolean;
-  showSearchIcon?: boolean;
   breakpoint?: string | boolean;
   renderUserProfile?: () => React.ReactElement;
   onUserProfileMessage?: () => void;
+  uikitOptions?: UIKitOptions;
 }
 
 function Sendbird(props: SendbirdProviderProps) {
-  const {
-    replyType,
-    isMentionEnabled,
-    isReactionEnabled,
-    disableUserProfile,
-    isVoiceMessageEnabled,
-    isTypingIndicatorEnabledOnChannelList,
-    isMessageReceiptStatusEnabledOnChannelList,
-    showSearchIcon,
-  } = props;
+  const localConfigs = uikitConfigMapper({
+    legacyConfig: {
+      replyType: props.replyType,
+      isMentionEnabled: props.isMentionEnabled,
+      isReactionEnabled: props.isReactionEnabled,
+      disableUserProfile: props.disableUserProfile,
+      isVoiceMessageEnabled: props.isVoiceMessageEnabled,
+      isTypingIndicatorEnabledOnChannelList:
+        props.isTypingIndicatorEnabledOnChannelList,
+      isMessageReceiptStatusEnabledOnChannelList:
+        props.isMessageReceiptStatusEnabledOnChannelList,
+      showSearchIcon: props.showSearchIcon,
+    },
+    uikitOptions: props.uikitOptions,
+  });
 
   return (
     <UIKitConfigProvider
       localConfigs={{
-        common: {
-          enableUsingDefaultUserProfile: typeof disableUserProfile === 'boolean'
-            ? !disableUserProfile
-            : undefined,
-        },
+        common: localConfigs?.common,
         groupChannel: {
-          channel: {
-            enableReactions: isReactionEnabled,
-            enableMention: isMentionEnabled,
-            enableVoiceMessage: isVoiceMessageEnabled,
-            replyType: replyType != null ? getCaseResolvedReplyType(replyType).lowerCase : undefined,
-          },
-          channelList: {
-            enableTypingIndicator: isTypingIndicatorEnabledOnChannelList,
-            enableMessageReceiptStatus: isMessageReceiptStatusEnabledOnChannelList,
-          },
-          setting: {
-            enableMessageSearch: showSearchIcon,
-          },
+          channel: localConfigs?.groupChannel,
+          channelList: localConfigs?.groupChannelList,
+          setting: localConfigs?.groupChannelSettings,
+        },
+        openChannel: {
+          channel: localConfigs?.openChannel,
         },
       }}
     >

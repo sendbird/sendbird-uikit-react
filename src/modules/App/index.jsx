@@ -45,6 +45,7 @@ export default function App(props) {
     disableAutoSelect,
     isTypingIndicatorEnabledOnChannelList,
     isMessageReceiptStatusEnabledOnChannelList,
+    uikitOptions,
   } = props;
   const [currentChannel, setCurrentChannel] = useState(null);
   return (
@@ -78,13 +79,14 @@ export default function App(props) {
       isMessageReceiptStatusEnabledOnChannelList={isMessageReceiptStatusEnabledOnChannelList}
       replyType={replyType}
       showSearchIcon={showSearchIcon}
+      uikitOptions={uikitOptions}
     >
       <AppLayout
         isReactionEnabled={isReactionEnabled}
         replyType={replyType}
+        showSearchIcon={showSearchIcon}
         isMessageGroupingEnabled={isMessageGroupingEnabled}
         allowProfileEdit={allowProfileEdit}
-        showSearchIcon={showSearchIcon}
         onProfileEditSuccess={onProfileEditSuccess}
         disableAutoSelect={disableAutoSelect}
         currentChannel={currentChannel}
@@ -122,6 +124,7 @@ App.propTypes = {
     ]),
     isREMUnitEnabled: PropTypes.bool,
   }),
+  uikitOptions: PropTypes.shape({}),
   isReactionEnabled: PropTypes.bool,
   replyType: PropTypes.oneOf(['NONE', 'QUOTE_REPLY', 'THREAD']),
   showSearchIcon: PropTypes.bool,
@@ -174,6 +177,7 @@ App.defaultProps = {
   colorSet: null,
   imageCompression: {},
   disableAutoSelect: false,
+  uikitOptions: undefined,
 
   // The below configs are duplicates of the Dashboard UIKit Configs.
   // Since their default values will be set in the Sendbird component,

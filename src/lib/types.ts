@@ -25,6 +25,7 @@ import { Logger } from './SendbirdState';
 import { ReplyType } from 'SendbirdUIKitGlobal';
 import { MarkAsReadSchedulerType } from './hooks/useMarkAsReadScheduler';
 import { MarkAsDeliveredSchedulerType } from './hooks/useMarkAsDeliveredScheduler';
+import { PartialDeep } from '../utils/typeHelpers/partialDeep';
 
 import { SBUConfig } from '@sendbird/uikit-tools';
 
@@ -224,3 +225,22 @@ export interface sendbirdSelectorsInterface {
   getResendUserMessage: (store: SendBirdState) => GetResendUserMessage;
   getResendFileMessage: (store: SendBirdState) => GetResendFileMessage;
 }
+
+export interface CommonUIKitConfigProps {
+  replyType?: 'NONE' | 'QUOTE_REPLY' | 'THREAD';
+  isMentionEnabled?: boolean;
+  isReactionEnabled?: boolean;
+  disableUserProfile?: boolean;
+  isVoiceMessageEnabled?: boolean;
+  isTypingIndicatorEnabledOnChannelList?: boolean;
+  isMessageReceiptStatusEnabledOnChannelList?: boolean;
+  showSearchIcon?: boolean;
+}
+
+export type UIKitOptions = PartialDeep<{
+  common: SBUConfig['common'];
+  groupChannel: SBUConfig['groupChannel']['channel'];
+  groupChannelList: SBUConfig['groupChannel']['channelList'];
+  groupChannelSettings: SBUConfig['groupChannel']['setting'];
+  openChannel: SBUConfig['openChannel']['channel'];
+}>;
