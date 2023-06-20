@@ -60,4 +60,18 @@ describe('uikitConfigMapper', () => {
     expect(result.groupChannel?.enableMention).toBe(false);
     expect(result.groupChannelSettings?.enableMessageSearch).toBe(false);
   });
+  it('should return true <-> false flipped result for disableUserProfile when its converted into enableUsingDefaultUserProfile', () => {
+    expect(
+      uikitConfigMapper({ legacyConfig: { disableUserProfile: false } })
+        .common?.enableUsingDefaultUserProfile,
+    ).toBe(true);
+    expect(
+      uikitConfigMapper({ legacyConfig: { disableUserProfile: undefined } })
+        .common?.enableUsingDefaultUserProfile,
+    ).toBe(undefined);
+    expect(
+      uikitConfigMapper({ legacyConfig: { disableUserProfile: true } })
+        .common?.enableUsingDefaultUserProfile,
+    ).toBe(false);
+  });
 });

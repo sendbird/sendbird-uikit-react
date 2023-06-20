@@ -18,9 +18,9 @@ export function uikitConfigMapper({
   return {
     common: {
       enableUsingDefaultUserProfile: uikitOptions.common?.enableUsingDefaultUserProfile
-        ?? typeof disableUserProfile === 'boolean'
-        ? !disableUserProfile
-        : undefined,
+        ?? (typeof disableUserProfile === 'boolean'
+          ? !disableUserProfile
+          : undefined),
     },
     groupChannel: {
       enableOgtag: uikitOptions.groupChannel?.enableOgtag,
