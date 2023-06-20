@@ -1,7 +1,4 @@
 export default {
-  // legacy
-  index: 'src/index.ts',
-
   // lame-js
   // remove when they remove 1.2.2
   'lame.all': 'src/_externals/lamejs/lame.all.js',
@@ -193,4 +190,7 @@ export default {
   'ui/VoiceMessgeInput': 'src/ui/VoiceMessageInput/index.tsx',
   'ui/VoiceMessageItemBody': 'src/ui/VoiceMessageItemBody/index.tsx',
   'ui/Word': 'src/ui/Word/index.tsx',
+
+  // legacy
+  index: 'src/index.ts',
 };
