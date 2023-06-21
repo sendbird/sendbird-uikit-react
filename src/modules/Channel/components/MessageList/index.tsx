@@ -208,26 +208,28 @@ const MessageList: React.FC<MessageListProps> = ({
       {currentGroupChannel?.isFrozen && (
         <FrozenNotification className="sendbird-conversation__messages__notification" />
       )}
-      <UnreadCount
-        className="sendbird-conversation__messages__notification"
-        count={currentGroupChannel?.unreadMessageCount}
-        time={unreadSince}
-        onClick={() => {
-          if (scrollRef?.current?.scrollTop) {
-            scrollRef.current.scrollTop = (scrollRef?.current?.scrollHeight ?? 0) - (scrollRef?.current?.offsetHeight ?? 0);
-          }
-          if (!disableMarkAsRead && !!currentGroupChannel) {
-            markAsReadScheduler.push(currentGroupChannel);
-            messagesDispatcher({
-              type: messageActionTypes.MARK_AS_READ,
-              payload: { channel: currentGroupChannel },
-            });
-          }
-          setInitialTimeStamp(null);
-          setAnimatedMessageId(null);
-          setHighLightedMessageId(null);
-        }}
-      />
+      {unreadSince && (
+        <UnreadCount
+          className="sendbird-conversation__messages__notification"
+          count={currentGroupChannel?.unreadMessageCount}
+          time={unreadSince}
+          onClick={() => {
+            if (scrollRef?.current?.scrollTop) {
+              scrollRef.current.scrollTop = (scrollRef?.current?.scrollHeight ?? 0) - (scrollRef?.current?.offsetHeight ?? 0);
+            }
+            if (!disableMarkAsRead && !!currentGroupChannel) {
+              markAsReadScheduler.push(currentGroupChannel);
+              messagesDispatcher({
+                type: messageActionTypes.MARK_AS_READ,
+                payload: { channel: currentGroupChannel },
+              });
+            }
+            setInitialTimeStamp(null);
+            setAnimatedMessageId(null);
+            setHighLightedMessageId(null);
+          }}
+        />
+      )}
       {
         // This flag is an unmatched variable
         scrollBottom > SCROLL_BOTTOM_PADDING && (
