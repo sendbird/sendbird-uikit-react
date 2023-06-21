@@ -14,6 +14,10 @@ export default {
   latestMessageTimeStamp: 0,
   emojiContainer: {},
   unreadSince: null,
+  /**
+   * unreadSince is a formatted date information string
+   * It's used only for the {unreadSince && <UnreadCount time={unreadSince} />}
+   */
   isInvalid: false,
   messageListParams: null,
 };
