@@ -136,11 +136,12 @@ const Message = ({
     }));
   }, [mentionedUserIds]);
 
-  // Move the messsage list scroll when the last message's height is changed by reactions
+  /**
+   * Move the messsage list scroll
+   * when the message's height is changed by `showEdit` OR `message.reactions`
+   */
   useDidMountEffect(() => {
-    if (currentGroupChannel?.lastMessage?.messageId === message?.messageId) {
-      handleScroll?.();
-    }
+    handleScroll?.();
   }, [showEdit, message?.reactions?.length]);
   useLayoutEffect(() => {
     handleMessageListHeightChange?.();

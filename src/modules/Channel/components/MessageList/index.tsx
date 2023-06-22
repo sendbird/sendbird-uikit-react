@@ -124,7 +124,7 @@ const MessageList: React.FC<MessageListProps> = ({
     const current = scrollRef?.current;
     if (current) {
       const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
-      if (scrollBottom < bottom && scrollBottom <= SCROLL_BUFFER) {
+      if (scrollBottom < bottom) {
         current.scrollTop += bottom - scrollBottom;
       }
     }
