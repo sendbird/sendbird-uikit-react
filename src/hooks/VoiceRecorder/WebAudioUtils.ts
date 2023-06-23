@@ -1,4 +1,5 @@
 // Thanks to https://codesandbox.io/s/media-recorder-api-downsampling-16k-mp3-encode-using-lame-js-forked-n1pblw
+import { VOICE_RECORDER_AUDIO_SAMPLE_RATE } from '../../utils/consts';
 import { WavHeader, Mp3Encoder } from '../../_externals/lamejs/lame.all';
 
 function encodeMp3(arrayBuffer: ArrayBuffer): WavHeader {
@@ -39,7 +40,7 @@ function encodeMp3(arrayBuffer: ArrayBuffer): WavHeader {
 function downsampleToWav(file: File, callback: (buffer: ArrayBuffer) => void): void {
   // Browser compatibility
   // https://caniuse.com/?search=AudioContext
-  const audioCtx = new AudioContext();
+  const audioCtx = new AudioContext({ sampleRate: VOICE_RECORDER_AUDIO_SAMPLE_RATE });
   const fileReader = new FileReader();
   fileReader.onload = function (ev) {
     // Decode audio

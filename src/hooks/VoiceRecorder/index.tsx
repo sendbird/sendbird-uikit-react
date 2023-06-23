@@ -6,7 +6,7 @@ import {
   BROWSER_SUPPORT_MIME_TYPE_LIST,
   VOICE_MESSAGE_FILE_NAME,
   VOICE_MESSAGE_MIME_TYPE,
-  VOICE_RECORDER_AUDIO_BITS,
+  VOICE_RECORDER_AUDIO_BIT_RATE,
 } from '../../utils/consts';
 import useSendbirdStateContext from '../useSendbirdStateContext';
 
@@ -91,7 +91,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
         setIsRecordable(true);
         const mediaRecorder = new MediaRecorder(stream, {
           mimeType: browserSupportMimeType,
-          audioBitsPerSecond: VOICE_RECORDER_AUDIO_BITS,
+          audioBitsPerSecond: VOICE_RECORDER_AUDIO_BIT_RATE,
         });
         mediaRecorder.ondataavailable = (e) => { // when recording stops
           logger.info('VoiceRecorder: Succeeded getting an available data.', e.data);
