@@ -119,12 +119,16 @@ const MessageList: React.FC<MessageListProps> = ({
     }
   };
 
-  // Move the messsage list scroll when the last message's height is changed by reactions
+  /**
+   * Move the messsage list scroll
+   * when each message's height is changed by `reactions` OR `showEdit`
+   */
   const handleMessageHeightChange = () => {
     const current = scrollRef?.current;
     if (current) {
       const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
       if (scrollBottom < bottom) {
+        // Move the scroll as much as the height of the message has changed
         current.scrollTop += bottom - scrollBottom;
       }
     }
