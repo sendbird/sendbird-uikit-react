@@ -40,7 +40,6 @@ function encodeMp3(arrayBuffer: ArrayBuffer): WavHeader {
 function downsampleToWav(file: File, callback: (buffer: ArrayBuffer) => void): void {
   // Browser compatibility
   // https://caniuse.com/?search=AudioContext
-  // const audioCtx = new AudioContext();
   const audioCtx = new AudioContext({ sampleRate: VOICE_RECORDER_AUDIO_SAMPLE_RATE });
   const fileReader = new FileReader();
   fileReader.onload = function (ev) {
