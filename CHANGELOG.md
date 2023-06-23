@@ -4,7 +4,7 @@
 
 Fixes:
 * Allow to reduce the mobile app height
-  It was not able to reduce the height of the mobile app with some wrapper component
+  It was not able to reduce the height of the mobile app with some wrapper components
 * Do not display the UnreadCount(new message notification) comp when unreadSince is null
 * Improve sampling and bitrate of Voice Recording
   * sampling rate: 11025
