@@ -12,21 +12,19 @@
 
 Template
 ```
-// PR title
-[type]: A short description of changes in imperative language
+// PR title (Required)
+[type]: A short description of the changes in imperative language.
 
-// Section: PR description. Optional!
+// Section: PR description (Optional)
+Add a brief description of the changes that you have involved in this PR.
+Bullet points are also fine.
 
-Add a brief description of the changes that you have involved in this PR
-Bullet points are also fine
-
-// Section: Footer. Recommended!
-// Recommended! if you are dealing with SB_ISSUES(Customer issues) or release tickets
+// Section: Footer (Recommended)
+// Recommended if you are dealing with SB_ISSUES (Customer issues) or release tickets.
 Fixes: [<TICKET_ID>](https://sendbird.atlassian.net/browse/<TICKET_ID>)
 
-// If you want to add coauthors - say you pair programmed or they made significant contributions to the ideas in code
-// and you want to thank them
-Co-authored-by: name <name@example.com>, name2 <name@example.com>
+// If you want to add coauthors - for example, if you pair programmed or they made significant contributions to the ideas in the code and you want to thank them.
+Co-authored-by: Name <name@example.com>, Name2 <name@example.com>
 ```
 
 ## External Contributions
