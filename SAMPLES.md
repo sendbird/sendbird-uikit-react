@@ -55,7 +55,7 @@ import SendbirdApp from '@sendbird/uikit-react/App';
 
 Here is a list of the essential components that you need to import before you start customizing chat. Note that the names of the components are changed as shown in the code below.
 
-Try [importing components on CodeSandbox](https://codesandbox.io/s/1-2-customization-basic-format-9skqq3).
+Try [importing components on StackBlitz](https://stackblitz.com/edit/sendbird-react-uikit-customized-app).
 
 ```javascript
 import SBConversation from '@sendbird/uikit-react/Channel';
