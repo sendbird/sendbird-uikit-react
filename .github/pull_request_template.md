@@ -1,13 +1,13 @@
 ## For Internal Contributors
 
-* Follow trunk workflow(https://trunkbaseddevelopment.com/)
-* Branch naming -> `{type}/TICKET_ID/description`
+* Follow the trunk workflow(https://trunkbaseddevelopment.com/)
+* Branch naming format -> `{type}/TICKET_ID/description`
   * Where type = `feat` / `feature` / `fix` / `chore` / `doc` / `release`
-* Always recive PR review approvals
-* Rebase your branch with main, wait for CI to pass
+* Always receive PR review approvals
+* Rebase your branch with the main branch, and wait for CI to pass
 * Squash merge your commit
-  * Follow the following template for both PR description and squashing to main
-  * Use imperative language in title and description
+  * Follow the provided template for both the PR description and squashing to the main branch
+  * Use imperative language in the title and description
   * The template is very similar to conventional commits. [Read More](https://www.conventionalcommits.org/en/v1.0.0/)
 
 Template
