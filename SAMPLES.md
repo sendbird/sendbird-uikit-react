@@ -64,11 +64,11 @@ import SBChannelSettings from '@sendbird/uikit-react/ChannelSettings';
 import withSendBird from '@sendbird/uikit-react/withSendbird';
 ```
 
-### Referring to CodeSandbox
+### Referring to StackBlitz
 
-Each CodeSandbox sample has `App.js` and `CustomizedApp.js` which operate based on the imported `const.js`. CodeSandbox is a code editor that provides an instant live preview. The preview has two buttons placed at the top center. If you click the left button, you will see unaltered `App.js`. If you click the right button, you will see the customized component from `CustomizedApp.js`, and any changes you make on them applied and rendered on the live preview.
+Each StackBlitz sample has `App.js` and `CustomizedApp.js` which operate based on the imported `const.js`. StackBlitz is a code editor that provides an instant live preview. The preview has two buttons placed at the top center. If you click the left button, you will see unaltered `App.js`. If you click the right button, you will see the customized component from `CustomizedApp.js`, and any changes you make on them applied and rendered on the live preview.
 
-If you would like to get a deeper understanding of how CodeSandbox works, refer to **CustomizedMessageItems**, **CustomizedHeader**, **CustomizedMessageInput**, and **CustomizedChannelPreviewItem** which you can find on corresponding CodeSandbox samples.
+If you would like to get a deeper understanding of how StackBlitz works, refer to **CustomizedMessageItems**, **CustomizedHeader**, **CustomizedMessageInput**, and **CustomizedChannelPreviewItem** which you can find on corresponding StackBlitz samples.
 
 <br />
 
@@ -80,7 +80,7 @@ This section explains what you need to know before testing the sample app.
 
 The **renderChatItem** is a `ReactElement` prop in the Channel component which you can use to customize `message` by setting a function. This prop provides three arguments: **message**, **onUpdateMessage**, and **onDeleteMessage**. The **message** represents an already sent or received message of an `BaseMessage` object; **onUpdateMessage** and **onDeleteMessage** are callback functions which you can implement with custom code for events related to the corresponding user actions.
 
-Try your [message item on CodeSandbox](https://codesandbox.io/s/2-1-customizing-messageitem-q38cg5).
+Try your [message item on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-message-item).
 
 ```javascript
 <Channel
