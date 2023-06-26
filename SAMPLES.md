@@ -96,29 +96,29 @@ Try your [message item on StackBlitz](https://stackblitz.com/edit/sendbird-uikit
 >
 ```
 
-> Note: You can try making your own customized message item by using `<CustomizedMessageItem />` on the CodeSandbox sample.
+> Note: You can try making your own customized message item by using `<CustomizedMessageItem />` on the StackBlitz sample.
 
 ### Message list params
 
 The **queries.messageListParams** is an `instance` prop in the **channel** component which you can use to retrieve a list of messages by specifying the properties of `MessageListParams`.
 
-Try your [message list params on CodeSandbox](https://codesandbox.io/s/2-2-customizing-messagelistparams-3ipi0g).
+Try your [message list params on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-message-list-params).
 
-> Note: On CodeSandbox’s preview, only the messages you sent will be displayed.
+> Note: On StackBlitz preview, only the messages you sent will be displayed.
 
 ```javascript
 // Pass arguments in JSON data input format to the query instance.
-const [queries] = useState({
+const queries = useMemo(() => ({
   // use object json type input, don't create sendbird query instance
-  // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
-  // https://github.com/sendbird/SendBird-SDK-JavaScript/blob/master/SendBird.d.ts#L488
+  // https://sendbird.com/docs/chat/v4/javascript/ref/interfaces/_sendbird_chat_message.MessageListParams.html
+  // https://github.com/sendbird/SendBird-SDK-JavaScript/blob/master/SendBird.d.ts#L780
   messageListParams: {
-    senderUserIds: [USER_ID],
+    senderUserIdsFilter: [USER_ID],
     prevResultSize: 30,
     includeReplies: false,
     includeReactions: false,
   },
-});
+}));
 
 <Channel queries={queries} />;
 ```
