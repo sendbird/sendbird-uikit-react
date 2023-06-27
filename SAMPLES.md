@@ -246,7 +246,7 @@ Find out more about `ChannelListQuery` and `ApplicationUserListQuery` on the [AP
 
 The **onBeforeCreateChannel** is a prop of the **ChannelList** component which can be implemented with custom code for events related to the corresponding user actions.
 
-Try your [channel param on CodeSandbox](https://codesandbox.io/s/3-3-customizing-channelparams-vgcgtj)
+Try your [channel param on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-channel-params)
 
 > Note: you can create a channel using `GroupChannelParams`.
 
