@@ -214,34 +214,33 @@ const CustomizedChannelPreviewItem = (props) => {
 
 The **queries.channelListQuery** is an `instance` prop in the **ChannelList** component which filters channels by using its options.
 
-Try your [channel list query item on CodeSandbox](https://codesandbox.io/s/3-2-customizing-channellistquery-d0t2l8)
+Try your [channel list query item on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-channel-list-queries)
 
-> Note: On the CodeSandbox’s preview, the empty channels that you see means that the channels are successfully created and there are no messages sent by users.
+> Note: On the StackBlitz’s preview, the empty channels that you see means that the channels are successfully created and there are no messages sent by users.
 
 ```javascript
 // Pass arguments in JSON data input format to the query instance.
-  const [queries] = useState({
+  const queries = useMemo(() => ({
     channelListQuery: {
+      // Should be an instance of GroupChannelListQueryParams
+      // https://sendbird.com/docs/chat/v4/javascript/ref/interfaces/_sendbird_chat_groupChannel.GroupChannelListQueryParams.html
       includeEmpty: true,
       limit: 50,
-      order: "chronological"
-      // channelListQuery
-      // https://sendbird.github.io/core-sdk-javascript/module-model_query_groupChannelListQuery-GroupChannelListQuery.html
+      order: 'chronological',
     },
     applicationUserListQuery: {
-      limit: 50
-      // ex) userIdsFilter: ["sendbirdian", ...]
-      // applicationUserListQuery
-      // https://sendbird.github.io/core-sdk-javascript/module-model_query_applicationUserListQuery-ApplicationUserListQuery.html
-    }
-  });
+      // Should be an instance of ApplicaitonUserListQuery
+      // https://sendbird.com/docs/chat/v4/javascript/ref/interfaces/_sendbird_chat.ApplicationUserListQueryParams.html
+      nicknameStartsWithFilter: 'Jackson',
+    },
+  }));
 
 <ChannelList
     queries={queries}
 >
 ```
 
-Find out more about `ChannelListQuery` and `ApplicationUserListQuery` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.com/docs/chat/v4/javascript/ref/classes/_sendbird_chat_groupChannel.GroupChannelListQuery.html).
+Find out more about `ChannelListQuery` and `ApplicationUserListQuery` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.com/docs/chat/v4/javascript/ref/modules/_sendbird_chat_groupChannel.html).
 
 ### Channel params
 
