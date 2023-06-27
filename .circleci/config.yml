@@ -6,6 +6,11 @@ version: 2.1
 orbs:
   slack: circleci/slack@4.10.1
 
+executors:
+  node-executor:
+    docker:
+      - image: cimg/node:16.19.1
+
 # MARK: Worflow parameters
 parameters:
   run_workflow_create_ticket:
@@ -40,8 +45,7 @@ commands:
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   job-lint_and_test:
-    docker:
-      - image: cimg/node:16.19.1
+    executor: node-executor
     parallelism: 4
     resource_class: large
     steps:
@@ -62,8 +66,7 @@ jobs:
           paths:
             - ./.yarn/cache
   create-ticket:
-    docker:
-      - image: cimg/node:16.19.1
+    executor: node-executor
     steps:
       - checkout
       - clone_deployment_script
