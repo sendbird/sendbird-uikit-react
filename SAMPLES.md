@@ -155,7 +155,7 @@ Find out more about `UserMessageCreateParams`, `UserMessageUpdateParams` and `Fi
 
 The **renderChatHeader** is a `ReactElement` prop in the **channel** component which you can use to customize the header of `channel` by setting a function. This prop provides two arguments: **channel** and **user**. The channel refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **user** refers to a `User` object which represents the current user.
 
-Try your [chat header on CodeSandbox](https://codesandbox.io/s/2-4-customizing-chatheader-mi5ijz)
+Try your [chat header on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-chat-header)
 
 ```javascript
 <Channel
@@ -165,7 +165,7 @@ Try your [chat header on CodeSandbox](https://codesandbox.io/s/2-4-customizing-c
 >
 ```
 
-> Note: You can try making your own customized chat header item by using `<CustomizedHeader />` on the CodeSandbox sample.
+> Note: You can try making your own customized chat header item by using `<CustomizedHeader />` on the StackBlitz sample.
 
 ### Message input
 
