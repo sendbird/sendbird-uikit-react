@@ -10,7 +10,7 @@ jobs:
   trigger-release-ticket-creation:
     name: Trigger release ticket creation
     runs-on: ubuntu-latest
-    # The branch name should starte with 'release/v'
+    # The branch name should starts with 'release/v'
     if: startsWith(github.event.inputs.branch_name, 'release/v')
     steps:
       - name: Checkout repository
