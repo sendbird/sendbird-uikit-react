@@ -2,6 +2,21 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+# MARK: Orbs
+orbs:
+  slack: circleci/slack@4.10.1
+
+executors:
+  node-executor:
+    docker:
+      - image: cimg/node:16.19.1
+
+# MARK: Worflow parameters
+parameters:
+  run_workflow_create_ticket:
+    type: boolean
+    default: false
+
 commands:
   command-lint:
     steps:
@@ -17,13 +32,22 @@ commands:
           name: UIKit for React test
           command: yarn run test
           no_output_timeout: 15m
+  clone_deployment_script:
+    steps:
+      - run:
+          name: Git - Clone deployment scripts
+          when: always
+          environment:
+            SDK_DEPLOYMENT_BOT_EMAIL: ${{ secrets.SDK_DEPLOYMENT_BOT_EMAIL }}
+          command: |
+            git config --global user.email $SDK_DEPLOYMENT_BOT_EMAIL
+            git clone --depth 1 --branch 1.0.1 git@github.com:sendbird/sdk-deployment.git ~/sdk-deployment
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   job-lint_and_test:
-    docker:
-      - image: cimg/node:16.19.1
+    executor: node-executor
     parallelism: 4
     resource_class: large
     steps:
@@ -43,6 +67,58 @@ jobs:
           key: uikit-yarn-dependencies-{{ checksum "yarn.lock" }}
           paths:
             - ./.yarn/cache
+  create-ticket:
+    executor: node-executor
+    steps:
+      - checkout
+      - clone_deployment_script
+      - run:
+          name: Extract release version
+          command: |
+            release_version=$(python3 ~/sdk-deployment/scripts/v1.2/extract_version.py --branch_name $CIRCLE_BRANCH)
+            echo "export RELEASE_VERSION=$release_version" >> $BASH_ENV
+            source $BASH_ENV
+      - run:
+          name: Jira - Create release version
+          command: |
+            python3 ~/sdk-deployment/scripts/v1.2/create_version.py\
+              --jira_auth_user $JIRA_AUTH_USER\
+              --jira_auth_api_token $JIRA_AUTH_API_TOKEN\
+              --project SDKRLSD\
+              --name js_uikit@$RELEASE_VERSION\
+              --description 'Created by automation @ $CIRCLE_PROJECT_REPONAME'
+      - run:
+          name: Jira - Create release ticket
+          command: |
+            release_ticket_key=$(python3 ~/sdk-deployment/scripts/v1.2/create_ticket.py\
+              --jira_auth_user $JIRA_AUTH_USER\
+              --jira_auth_api_token $JIRA_AUTH_API_TOKEN\
+              --project SDKRLSD\
+              --version js_uikit@$RELEASE_VERSION\
+              --title "[UIKit] js_uikit@$RELEASE_VERSION"\
+              --description 'Created by automation @ $CIRCLE_PROJECT_REPONAME'\
+              --source_repo $CIRCLE_PROJECT_REPONAME\
+              --source_branch $CIRCLE_BRANCH\
+              --source_jira_project CORE\
+              --source_jira_version js_uikit@$RELEASE_VERSION)
+            echo "export RELEASE_TICKET_KEY=$release_ticket_key" >> $BASH_ENV
+            source $BASH_ENV
+      - slack/notify:
+          channel: $SLACK_RELEASE_APPOVER_CHANNEL_ID # sdk-release-approver
+          event: pass
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "@chat-approver <https://sendbird.atlassian.net/browse/$RELEASE_TICKET_KEY|🔖 UIKit JS $RELEASE_VERSION release ticket> has been created!"
+                  }
+                }
+              ]
+            }
+            
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -50,3 +126,8 @@ workflows:
   built-and-test:
     jobs:
       - job-lint_and_test
+  create-release-ticket-workflow:
+    when: << pipeline.parameters.run_workflow_create_ticket >>
+    jobs:
+      - create-ticket:
+          context: sdk-release-bot
