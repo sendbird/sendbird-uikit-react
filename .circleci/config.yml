@@ -37,8 +37,10 @@ commands:
       - run:
           name: Git - Clone deployment scripts
           when: always
+          environment:
+            SDK_DEPLOYMENT_BOT_EMAIL: ${{ secrets.SDK_DEPLOYMENT_BOT_EMAIL }}
           command: |
-            git config --global user.email "sha.sdk_deployment@sendbird.com"
+            git config --global user.email $SDK_DEPLOYMENT_BOT_EMAIL
             git clone --depth 1 --branch 1.0.1 git@github.com:sendbird/sdk-deployment.git ~/sdk-deployment
 
 # Define a job to be invoked later in a workflow.
