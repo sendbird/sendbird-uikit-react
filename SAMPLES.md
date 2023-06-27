@@ -187,7 +187,7 @@ Try your [message input on StackBlitz](https://stackblitz.com/edit/sendbird-uiki
 
 The **renderChannelPreview** is a `ReactElement` prop in the **ChannelList** component which allows you to customize channel preview by setting a function. This prop provides two arguments: **channel** and **onLeaveChannel**. The **channel** refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **onLeaveChannel** has a callback function as an argument which can be implemented with custom code for events related to the corresponding user action.
 
-Try your [channel preview item on CodeSandbox](https://codesandbox.io/s/3-1-customizing-channelpreviewitem-7c9xz6)
+Try your [channel preview item on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-channel-preview)
 
 ```javascript
 <ChannelList
