@@ -111,7 +111,7 @@ Try your [message list params on StackBlitz](https://stackblitz.com/edit/sendbir
 const queries = useMemo(() => ({
   // use object json type input, don't create sendbird query instance
   // https://sendbird.com/docs/chat/v4/javascript/ref/interfaces/_sendbird_chat_message.MessageListParams.html
-  // https://github.com/sendbird/SendBird-SDK-JavaScript/blob/master/SendBird.d.ts#L780
+  // https://github.com/sendbird/sendbird-chat-sdk-javascript/blob/main/lib/__definition.d.ts#L764
   messageListParams: {
     senderUserIdsFilter: [USER_ID],
     prevResultSize: 30,
@@ -127,9 +127,9 @@ const queries = useMemo(() => ({
 
 The **onBeforeSendUserMessage**, **onBeforeSendFileMessage**, and **onBeforeUpdateUserMessage** are `callback function` props in the **channel** component. The first two execute additional operations for a user message and a file message respectively; the corresponding modified messages are returned through the **text** and the **file** arguments respectively. The **onBeforeUpdateUserMessage** executes additional operations for a user message before updating it.
 
-Try your [message params on CodeSandbox](https://codesandbox.io/s/2-3-customizing-messageparams-606156)
+Try your [message params on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-message-params)
 
-> Note: On the CodeSandbox’s preview, you can send or update a message in highlight.
+> Note: On the StackBlitz preview, you can send or update a message in highlight.
 
 ```javascript
 <Channel
@@ -139,7 +139,7 @@ Try your [message params on CodeSandbox](https://codesandbox.io/s/2-3-customizin
 >
 ```
 
-In order to complete an operation you intend to carry out with each function, you should return `UserMessageParams` and `FileMessageParams` objects.
+In order to complete an operation you intend to carry out with each function, you should return `UserMessageCreateParams`, `UserMessageUpdateParams` and `FileMessageCreateParams` objects.
 
 ```javascript
 const handleUpdateUserMessage = (text) => {
@@ -149,7 +149,7 @@ const handleUpdateUserMessage = (text) => {
 };
 ```
 
-Find out more about `UserMessageParams` and `FileMessageParams` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.com/docs/chat/v4/javascript/ref/interfaces/_sendbird_chat_message.UserMessageCreateParams.html).
+Find out more about `UserMessageCreateParams`, `UserMessageUpdateParams` and `FileMessageCreateParams` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.com/docs/chat/v4/javascript/ref/modules/_sendbird_chat_message.html).
 
 ### Chat header
 
