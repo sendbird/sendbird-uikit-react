@@ -62,8 +62,8 @@ jobs:
           paths:
             - ./.yarn/cache
   create-ticket:
-    macos:
-      xcode: "14.1"
+    docker:
+      - image: cimg/node:16.19.1
     steps:
       - checkout
       - clone_deployment_script
@@ -80,8 +80,8 @@ jobs:
               --jira_auth_user $JIRA_AUTH_USER\
               --jira_auth_api_token $JIRA_AUTH_API_TOKEN\
               --project SDKRLSD\
-              --name ios_core@$RELEASE_VERSION\
-              --description 'Created by automation'
+              --name js_uikit@$RELEASE_VERSION\
+              --description 'Created by automation @ $CIRCLE_PROJECT_REPONAME'
       - run:
           name: Jira - Create release ticket
           command: |
@@ -89,13 +89,13 @@ jobs:
               --jira_auth_user $JIRA_AUTH_USER\
               --jira_auth_api_token $JIRA_AUTH_API_TOKEN\
               --project SDKRLSD\
-              --version ios_core@$RELEASE_VERSION\
-              --title "[Chat] iOS@$RELEASE_VERSION"\
-              --description 'Created by automation'\
+              --version js_uikit@$RELEASE_VERSION\
+              --title "[UIKit] js_uikit@$RELEASE_VERSION"\
+              --description 'Created by automation @ $CIRCLE_PROJECT_REPONAME'\
               --source_repo $CIRCLE_PROJECT_REPONAME\
               --source_branch $CIRCLE_BRANCH\
               --source_jira_project CORE\
-              --source_jira_version ios@$RELEASE_VERSION)
+              --source_jira_version js_uikit@$RELEASE_VERSION)
             echo "export RELEASE_TICKET_KEY=$release_ticket_key" >> $BASH_ENV
             source $BASH_ENV
       - slack/notify:
@@ -108,7 +108,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "@chat-approver <https://sendbird.atlassian.net/browse/$RELEASE_TICKET_KEY|🔖 Chat iOS $RELEASE_VERSION release ticket> has been created!"
+                    "text": "@chat-approver <https://sendbird.atlassian.net/browse/$RELEASE_TICKET_KEY|🔖 UIKit JS $RELEASE_VERSION release ticket> has been created!"
                   }
                 }
               ]
