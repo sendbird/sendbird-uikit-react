@@ -1,4 +1,57 @@
 # Changelog - v3
+## [v3.6.0] (June 28 2023)
+
+### Feat:
+* Official support for Feature Configuration
+  - You can now configure the features of UIKit through the `uikitOptions` prop of `<SendbirdProvider />` or `<App />` component. You can also find the detailed sample usage from [SAMPLE.md#UIKit-Configuration-Samples](./SAMPLES.md#UIKit-Configuration-Samples)
+  - The minimum `@sendbird/chat` version has been increased to 4.9.2.
+```jsx
+  <SendbirdProvider
+    uikitOptions={{
+      common: {
+        enableUsingDefaultUserProfile: true,
+      },
+      groupChannel: {
+        enableMention: false,
+        enableOgtag: true,
+        enableReaction: true,
+        enableTypingIndicator: true,
+        input: {
+          camera: {
+            enablePhoto: true,
+            enableVideo: true,
+          },
+          gallery: {
+            enablePhoto: true,
+            enableVideo: true,
+          },
+          enableDocument: true,
+        },
+      },
+      groupChannelList: {
+        enableTypingIndicator: true,
+        enableMessageReceiptStatus: true,
+      },
+      groupChannelSettings: {
+        enableMessageSearch: true,
+      },
+      openChannel: {
+        enableOgtag: true,
+        input: {
+          camera: {
+            enablePhoto: true,
+            enableVideo: true,
+          },
+          gallery: {
+            enablePhoto: true,
+            enableVideo: true,
+          },
+          enableDocument: true,
+        },
+      },
+    }}
+  />
+```
 
 ## [v3.5.2] (June 23 2023)
 
