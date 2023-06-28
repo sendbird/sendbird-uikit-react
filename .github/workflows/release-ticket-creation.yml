@@ -3,33 +3,36 @@ on:
   workflow_dispatch:
     inputs:
       branch_name:
-        description: 'Release target branch name'
+        description: 'Type a branch name starting with `release/v`'
         required: true
 
 jobs:
   trigger-release-ticket-creation:
     name: Trigger release ticket creation
     runs-on: ubuntu-latest
-    # The branch name should starts with 'release/v'
-    if: startsWith(github.event.inputs.branch_name, 'release/v')
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - name: Verify branch name
+        run: |
+          if [[ ! ${{ github.event.inputs.branch_name }} =~ ^release/v ]]; then
+            echo "Branch name should start with 'release/v'"
+            exit 1
+          fi
+
       - name: Trigger CircleCI Job
         run: |
           API_RESULT=$(curl --request POST \
             --url "https://circleci.com/api/v2/project/gh/${{ github.repository }}/pipeline" \
-            --header "Circle-Token: ${{ secrets.CIRCLE_CI_API_TOKEN }}" \
+            --header "Circle-Token: ${{ secrets.CIRCLECI_API_TOKEN }}" \
             --header "content-type: application/json" \
             --data '{
               "branch": "${{ github.event.inputs.branch_name }}",
               "parameters": {
-                "run_workflow_create_ticket": true,
+                "run_workflow_create_ticket": true
               }
             }')
           echo "API_RESULT: ${API_RESULT}"
           CIRCLE_CI_JOB_NUMBER=$(echo "${API_RESULT}" | jq -r '.number')
           echo "::set-output name=DEPLOY_COMMENT_BODY::https://app.circleci.com/pipelines/github/${{ github.repository }}/$CIRCLE_CI_JOB_NUMBER"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CIRCLE_CI_API_TOKEN: ${{ secrets.CIRCLE_CI_API_TOKEN }}
