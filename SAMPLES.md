@@ -286,3 +286,7 @@ See how open channel on live stream works on [CodeSandBox](https://codesandbox.i
 ### Community Sample
 
 See how you can create community channels on [CodeSandBox](https://codesandbox.io/s/openchannel-2-forked-5kpnqj).
+
+## UIKit Configuration Samples
+Starting from version `@sendbird/uikit-react` + v3.6.0, we provide the ability to control certain UIKit configurations by passing `uikitOptions` prop to either the `SendbirdProvider` or `App` component.
+For more detailed information on the available configuration options, please refer to the [UIKit Configurations in React](REPLACE THIS WITH THE DOCS LINK) section in our official documentation. Additionally, you can explore a real example on [CodeSandbox](https://codesandbox.io/s/uikit-configuration-xgh3rw) to see it in action.
