@@ -289,4 +289,4 @@ See how you can create community channels on [CodeSandBox](https://codesandbox.i
 
 ## UIKit Configuration Samples
 Starting from version `@sendbird/uikit-react` + v3.6.0, we provide the ability to control certain UIKit configurations by passing `uikitOptions` prop to either the `SendbirdProvider` or `App` component.
-For more detailed information on the available configuration options, please refer to the [UIKit Configurations in React](REPLACE THIS WITH THE DOCS LINK) section in our official documentation. Additionally, you can explore a real example on [CodeSandbox](https://codesandbox.io/s/uikit-configuration-xgh3rw) to see it in action.
+For more detailed information on the available configuration options, please refer to the [UIKit Configurations in React](https://sendbird.com/docs/uikit/v3/react/uikit-config-guide/uikit-config-in-dashboard#2-uikit-config-setup-3-step-3-code-configuration) section in our official documentation. Additionally, you can explore a real example on [CodeSandbox](https://codesandbox.io/s/uikit-configuration-xgh3rw) to see it in action.
