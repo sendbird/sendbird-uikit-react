@@ -6,7 +6,7 @@
   - You can now configure the features of UIKit through the `uikitOptions` prop of `<SendbirdProvider />` or `<App />` component. You can also find the detailed sample usage from [SAMPLE.md#UIKit-Configuration-Samples](./SAMPLES.md#UIKit-Configuration-Samples)
   - The minimum `@sendbird/chat` version has been increased to 4.9.2.
 ```jsx
-  <SendbirdUIKitContainer
+  <SendbirdProvider
     uikitOptions={{
       common: {
         enableUsingDefaultUserProfile: true,
