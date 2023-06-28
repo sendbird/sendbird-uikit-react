@@ -23,7 +23,7 @@ Find out more about Sendbird UIKit for React at [UIKit for React doc](https://se
 
 ## UIKit components and ways to customize
 
-These samples are here to help you better understand UIKit for React by going over the core components and ways to customize. On each core component sample, there is an attached StackBlitz link in which you can see the sample codes and alter them to see how the changes are rendered.
+These samples are here to help you better understand UIKit for React by going over the core components and ways to customize. On each core component sample, there is an attached [StackBlitz](https://stackblitz.com/) link in which you can see the sample codes and alter them to see how the changes are rendered.
 
 <br />
 
