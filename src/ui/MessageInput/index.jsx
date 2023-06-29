@@ -360,6 +360,8 @@ const MessageInput = React.forwardRef((props, ref) => {
       const params = { message: messageText, mentionTemplate };
       onSendMessage(params);
       resetInput(ref);
+      // important: keeps the keyboard open -> must add test on refactor
+      textField.focus();
       setIsInput(false);
       setHeight();
     }
