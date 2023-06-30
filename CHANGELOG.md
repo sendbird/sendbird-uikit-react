@@ -1,4 +1,23 @@
 # Changelog - v3
+
+## [v3.6.1] (June 30 2023)
+
+### Feat:
+* Enable channel creation when no user present to select
+* Mobile: Keep keyboard open after sending the message
+
+### Fixes:
+* Update @sendbird/uikit-tools to 0.0.1-alpha.39
+    alpha.39 has CJS support, otherwise, UIKit wont work
+    on next-js page router
+
+### Chore:
+* Update all examples to V4 + StackBlitz
+  * Update all sample code to V4
+  * Convert CodeSandbox to StackBlitz
+  * Render all examples with Vite
+  * Thanks @tylerhammer
+
 ## [v3.6.0] (June 28 2023)
 
 ### Feat:
