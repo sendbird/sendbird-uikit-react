@@ -1,5 +1,17 @@
 # Changelog - v3
 
+## [v3.6.2] (June 30 2023)
+
+### Fixes:
+* UIKit@3.6.0 build error on CRA (#668)
+  UIKit@3.6.0 wouldnt work by default on CRA
+  because of module resolution error on uikit-tools
+  This is fixed in uikit-tools, and released in 40.alpha
+  see: https://github.com/sendbird/sendbird-uikit-core-ts/pull/55
+* Improve invitation modal submit btn disable condition
+  Modify the invitation modal disable condition to not include the
+  logged-in user for the user counting logic
+
 ## [v3.6.1] (June 30 2023)
 
 ### Feat:
