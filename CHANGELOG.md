@@ -4,6 +4,8 @@
 
 ### Feat:
 * Enable channel creation when no user present to select
+  If there are no users in the channel creation menu,
+  User still get to create an empty channel with themselves
 * Mobile: Keep keyboard open after sending the message
 
 ### Fixes:
