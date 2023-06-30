@@ -91,10 +91,14 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
       titleText={titleText}
       submitText={submitText}
       type={ButtonTypes.PRIMARY}
-      disabled={Object.keys(selectedUsers).length === 0}
+      // Disable the create button if no users are selected,
+      // but if there's no users to display, then the create button should be enabled
+      disabled={users.length > 0 && Object.keys(selectedUsers).length === 0}
       onCancel={onCancel}
       onSubmit={() => {
-        const selectedUserList = Object.keys(selectedUsers);
+        const selectedUserList = Object.keys(selectedUsers).length > 0
+          ? Object.keys(selectedUsers)
+          : [userId];
         if (typeof overrideInviteUser === 'function') {
           overrideInviteUser({
             users: selectedUserList,
@@ -103,28 +107,27 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
           });
           return;
         }
-        if (selectedUserList.length > 0) {
-          if (onBeforeCreateChannel) {
-            const params = onBeforeCreateChannel(selectedUserList);
-            setChannelType(params, type);
-            createChannel(params).then((channel) => {
-              onCreateChannel(channel);
-            });
-          } else {
-            const params: GroupChannelCreateParams = {};
-            params.invitedUserIds = selectedUserList;
-            params.isDistinct = false;
-            if (userId) {
-              params.operatorUserIds = [userId];
-            }
-            setChannelType(params, type);
-            // do not have custom params
-            createChannel(params).then((channel) => {
-              onCreateChannel(channel);
-            });
+
+        if (onBeforeCreateChannel) {
+          const params = onBeforeCreateChannel(selectedUserList);
+          setChannelType(params, type);
+          createChannel(params).then((channel) => {
+            onCreateChannel(channel);
+          });
+        } else {
+          const params: GroupChannelCreateParams = {};
+          params.invitedUserIds = selectedUserList;
+          params.isDistinct = false;
+          if (userId) {
+            params.operatorUserIds = [userId];
           }
-          onCancel();
+          setChannelType(params, type);
+          // do not have custom params
+          createChannel(params).then((channel) => {
+            onCreateChannel(channel);
+          });
         }
+        onCancel();
       }}
     >
       <div>
