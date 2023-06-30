@@ -23,6 +23,7 @@ jobs:
 
       - name: Trigger CircleCI Job
         run: |
+          set -x
           API_RESULT=$(curl --request POST \
             --url "https://circleci.com/api/v2/project/gh/${{ github.repository }}/pipeline" \
             --header "Circle-Token: ${{ secrets.CIRCLECI_API_TOKEN }}" \
@@ -35,4 +36,21 @@ jobs:
             }')
           echo "API_RESULT: ${API_RESULT}"
           CIRCLE_CI_JOB_NUMBER=$(echo "${API_RESULT}" | jq -r '.number')
-          echo "::set-output name=DEPLOY_COMMENT_BODY::https://app.circleci.com/pipelines/github/${{ github.repository }}/$CIRCLE_CI_JOB_NUMBER"
+
+          if [[ $? -eq 0 ]]; then
+            HTTP_STATUS=$(echo "${API_RESULT}" | jq -r '.status')
+
+            if [[ $HTTP_STATUS == "success" ]]; then
+              echo "CircleCI Job Triggered: $CIRCLE_CI_JOB_NUMBER"
+              echo "DEPLOY_COMMENT_BODY=https://app.circleci.com/pipelines/github/${{ github.repository }}/$CIRCLE_CI_JOB_NUMBER" >> $GITHUB_ENV
+              echo "JOB_STATUS=success" >> $GITHUB_OUTPUT
+            else
+              echo "CircleCI Job Trigger Failed"
+              echo "JOB_STATUS=failure" >> $GITHUB_OUTPUT
+              exit 1
+            fi
+          else
+            echo "API request failed"
+            echo "JOB_STATUS=failure" >> $GITHUB_OUTPUT
+            exit 1
+          fi
