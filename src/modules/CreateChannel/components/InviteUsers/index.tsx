@@ -92,8 +92,9 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
       submitText={submitText}
       type={ButtonTypes.PRIMARY}
       // Disable the create button if no users are selected,
-      // but if there's no users to display, then the create button should be enabled
-      disabled={users.length > 0 && Object.keys(selectedUsers).length === 0}
+      // but if there's only the logged-in user in the user list,
+      // then the create button should be enabled
+      disabled={users.length > 1 && Object.keys(selectedUsers).length === 0}
       onCancel={onCancel}
       onSubmit={() => {
         const selectedUserList = Object.keys(selectedUsers).length > 0
