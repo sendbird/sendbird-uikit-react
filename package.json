@@ -54,7 +54,8 @@
     "generate-component": "plop",
     "deploy-storybook": "storybook-to-ghpages",
     "inspect": "yarn run test; yarn run lint;",
-    "bundle": "dts-bundle-generator -o ./dist/my.d.ts ./src/index.d.ts"
+    "bundle": "dts-bundle-generator -o ./dist/my.d.ts ./src/index.d.ts",
+    "postinstall": "yarn build"
   },
   "repository": {
     "type": "git",
