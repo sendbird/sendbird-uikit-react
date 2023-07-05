@@ -21,6 +21,26 @@ jobs:
             exit 1
           fi
 
+      - name: Check if branch exists
+        id: check_branch
+        run: |
+          set -x
+          set -o pipefail
+          branch_name="${{ github.event.inputs.branch_name }}"
+          git ls-remote --exit-code --heads origin "$branch_name" | grep -q "$branch_name"
+          if [[ ${PIPESTATUS[1]} -eq 0 ]]; then
+            echo "BRANCH_EXISTS=true" >> $GITHUB_ENV
+          else
+            echo "BRANCH_EXISTS=false" >> $GITHUB_ENV
+          fi
+
+      - name: Create branch if it doesn't exist
+        if: steps.check_branch.outputs.branch_exists == 1
+        run: |
+          branch_name="${{ github.event.inputs.branch_name }}"
+          git checkout -b "$branch_name"
+          git push origin "$branch_name"
+
       - name: Trigger CircleCI Job
         run: |
           set -x
