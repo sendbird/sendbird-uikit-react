@@ -743,6 +743,7 @@ type ChannelContextProps = {
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   disableUserProfile?: boolean;
   disableMarkAsRead?: boolean;
+  scrollBehavior?: 'smooth' | 'auto';
 };
 
 interface ChannelUIProps {
