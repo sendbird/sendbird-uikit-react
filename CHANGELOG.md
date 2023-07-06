@@ -1,5 +1,19 @@
 # Changelog - v3
 
+
+## [v3.6.3] (July 6 2023)
+### Feat:
+* Add new scrollBehavior prop to Channel (#676)
+  The default option is set to "auto," preserving the existing scroll behavior.
+  Possible to set smooth for smooth scroll effect.
+
+### Fixes:
+* Move message list scroll when the last message is edited (#674)
+  Added optional parameters to moveScroll to scroll only when the last message reaches the bottom.
+  Scroll is now moved only when the updatedAt property of the last message is changed.
+* Add missing `UIKitConfig` to type definition (#677)
+  Reported by [GitHub PR #650](https://github.com/sendbird/sendbird-uikit-react/pull/650#issuecomment-1622331367).
+
 ## [v3.6.2] (June 30 2023)
 
 ### Fixes:
