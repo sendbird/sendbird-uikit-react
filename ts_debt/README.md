@@ -7,5 +7,11 @@ They are split into three categories:
 
 See the list in respective .yml files.
 
-* If you have free time, please migrate a file from the list
-* When you migrate a file, please remove it from the list
+* If you have free time:
+  * Add a ticket under the epic: https://sendbird.atlassian.net/browse/CLNP-289
+  * Migrate the file(in priority order)
+  * Add tests
+  * Remove the file from the list
+
+* The script used to generate the list:
+  https://gist.github.com/sravan-s/096c3d442539b2a9434bfb23c53a5c2c
