@@ -583,6 +583,7 @@ declare module "SendbirdUIKitGlobal" {
     onQuoteMessageClick?: (props: { message: UserMessage | FileMessage }) => void;
     onMessageAnimated?: () => void;
     onMessageHighlighted?: () => void;
+    scrollBehavior?: 'smooth' | 'auto';
   };
 
   export interface ChannelUIProps {
