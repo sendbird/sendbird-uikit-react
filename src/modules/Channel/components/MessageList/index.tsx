@@ -17,6 +17,7 @@ import { UserMessage } from '@sendbird/chat/message';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 import { useSetScrollToBottom } from './hooks/useSetScrollToBottom';
+import { useScrollBehavior } from './hooks/useScrollBehavior';
 
 const SCROLL_BOTTOM_PADDING = 50;
 
@@ -60,6 +61,8 @@ const MessageList: React.FC<MessageListProps> = ({
     ? allMessages.filter((filterMessageList as (message: EveryMessage) => boolean))
     : allMessages;
   const markAsReadScheduler = store.config.markAsReadScheduler;
+
+  useScrollBehavior();
 
   const onScroll = () => {
     const element = scrollRef?.current;

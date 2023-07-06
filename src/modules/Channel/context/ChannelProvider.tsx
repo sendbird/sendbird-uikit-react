@@ -95,6 +95,7 @@ export type ChannelContextProps = {
   onQuoteMessageClick?: (props: { message: UserMessage | FileMessage }) => void;
   onMessageAnimated?: () => void;
   onMessageHighlighted?: () => void;
+  scrollBehavior?: 'smooth' | 'auto';
 };
 
 interface MessageStoreInterface {
@@ -186,6 +187,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     onQuoteMessageClick,
     onMessageAnimated,
     onMessageHighlighted,
+    scrollBehavior = 'auto',
   } = props;
 
   const globalStore = useSendbirdStateContext();
@@ -483,6 +485,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       onScrollCallback,
       onScrollDownCallback,
       scrollRef,
+      scrollBehavior,
       toggleReaction,
     }}>
       <UserProfileProvider
