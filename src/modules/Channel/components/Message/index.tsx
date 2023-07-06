@@ -33,8 +33,7 @@ type MessageUIProps = {
   hasSeparator?: boolean;
   chainTop?: boolean;
   chainBottom?: boolean;
-  handleScroll?: () => void;
-  handleMessageListHeightChange?: () => void;
+  handleScroll?: (isAffectedOnlyGround?: boolean) => void;
   // for extending
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
@@ -49,7 +48,6 @@ const Message = ({
   chainTop,
   chainBottom,
   handleScroll,
-  handleMessageListHeightChange,
   renderCustomSeparator,
   renderEditInput,
   renderMessage,
@@ -136,6 +134,10 @@ const Message = ({
     }));
   }, [mentionedUserIds]);
 
+  useLayoutEffect(() => {
+    // Keep the scrollBottom value after fetching new message list
+    handleScroll?.();
+  }, []);
   /**
    * Move the messsage list scroll
    * when the message's height is changed by `showEdit` OR `message.reactions`
@@ -143,9 +145,9 @@ const Message = ({
   useDidMountEffect(() => {
     handleScroll?.();
   }, [showEdit, message?.reactions?.length]);
-  useLayoutEffect(() => {
-    handleMessageListHeightChange?.();
-  }, []);
+  useDidMountEffect(() => {
+    handleScroll?.(true);
+  }, [message?.updatedAt]);
 
   useLayoutEffect(() => {
     let animationTimeout = null;

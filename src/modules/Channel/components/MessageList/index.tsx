@@ -120,25 +120,18 @@ const MessageList: React.FC<MessageListProps> = ({
   };
 
   /**
-   * Move the messsage list scroll
-   * when each message's height is changed by `reactions` OR `showEdit`
+   * 1. Move the messsage list scroll
+   *    when each message's height is changed by `reactions` OR `showEdit`
+   * 2. Keep the scrollBottom value after fetching new message list
    */
-  const handleMessageHeightChange = () => {
+  const moveScroll = (_isAffectedOnlyGround?: boolean): void => {
+    const isAffectedOnlyGround = _isAffectedOnlyGround ?? false;
     const current = scrollRef?.current;
     if (current) {
       const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
-      if (scrollBottom < bottom) {
+      if (scrollBottom < bottom
+        && (!isAffectedOnlyGround || scrollBottom < SCROLL_BUFFER)) {
         // Move the scroll as much as the height of the message has changed
-        current.scrollTop += bottom - scrollBottom;
-      }
-    }
-  };
-  // Keep the scrollBottom value after fetching new message list
-  const handleMessageListHeightChange = () => {
-    const current = scrollRef?.current;
-    if (current) {
-      const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
-      if (scrollBottom < bottom) {
         current.scrollTop += bottom - scrollBottom;
       }
     }
@@ -193,8 +186,7 @@ const MessageList: React.FC<MessageListProps> = ({
             return (
               <MessageProvider message={m} key={m?.messageId} isByMe={isByMe}>
                 <Message
-                  handleScroll={handleMessageHeightChange}
-                  handleMessageListHeightChange={handleMessageListHeightChange}
+                  handleScroll={moveScroll}
                   renderMessage={renderMessage}
                   message={m}
                   hasSeparator={hasSeparator}
