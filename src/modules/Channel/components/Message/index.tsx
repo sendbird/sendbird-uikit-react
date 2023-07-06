@@ -41,6 +41,10 @@ type MessageUIProps = {
   renderMessageContent?: () => React.ReactElement;
 };
 
+interface MessageMeta {
+  stream: boolean;
+}
+
 // todo: Refactor this component, is too complex now
 const Message = ({
   message,
@@ -113,6 +117,16 @@ const Message = ({
     || isDisabledBecauseMuted(currentGroupChannel)
     || !isOnline;
 
+  const messageMeta = useMemo(() => {
+    let messageMeta: MessageMeta | null;
+    try {
+      messageMeta = message?.data ? JSON.parse(message.data) : null;
+    } catch (error) {
+      messageMeta = null;
+    }
+    return messageMeta;
+  }, [message?.data]);
+
   const handleOnScroll = useHandleOnScrollCallback({
     hasMore: false,
     onScroll: onScrollCallback,
@@ -147,7 +161,7 @@ const Message = ({
   }, [showEdit, message?.reactions?.length]);
   useDidMountEffect(() => {
     handleScroll?.(true);
-  }, [message?.updatedAt]);
+  }, [message?.updatedAt, messageMeta?.stream]);
 
   useLayoutEffect(() => {
     let animationTimeout = null;
