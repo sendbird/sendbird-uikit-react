@@ -1,5 +1,8 @@
 import React, { useContext } from 'react';
 
+import { Emoji } from '@sendbird/chat';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { OpenChannel } from '@sendbird/chat/openChannel';
 import { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
 
 import Tooltip from '../Tooltip';
@@ -7,13 +10,14 @@ import TooltipWrapper from '../TooltipWrapper';
 import ReactionBadge from '../ReactionBadge';
 import ImageRenderer from '../ImageRenderer';
 import Icon, { IconTypes } from '../Icon';
+
+import { Nullable } from '../../types';
+import { getEmojiTooltipString, isReactedBy } from '../../utils';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import useLongPress from '../../hooks/useLongPress';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
-import { getEmojiTooltipString, isReactedBy } from '../../utils';
 import { useMessageContext } from '../../modules/Message/context/MessageProvider';
-import { Emoji } from '@sendbird/chat';
 
 type Props = {
   reaction: Reaction;
@@ -21,6 +25,7 @@ type Props = {
   setEmojiKey: React.Dispatch<React.SetStateAction<string>>;
   toggleReaction?: (message: UserMessage | FileMessage, key: string, byMe: boolean) => void;
   emojisMap: Map<string, Emoji>;
+  channel: Nullable<GroupChannel | OpenChannel>;
 };
 
 export default function ReactionItem({
@@ -29,6 +34,7 @@ export default function ReactionItem({
   setEmojiKey,
   toggleReaction,
   emojisMap,
+  channel,
 }: Props) {
   const store = useSendbirdStateContext();
   const { isMobile } = useMediaQueryContext();
@@ -38,6 +44,8 @@ export default function ReactionItem({
 
   const userId = store.config.userId;
   const reactedByMe = isReactedBy(userId, reaction);
+  const showHoverTooltip = (reaction.userIds.length > 0)
+    && (channel?.isGroupChannel() && !channel.isSuper);
 
   const handleOnClick = () => {
     setEmojiKey('');
@@ -56,7 +64,7 @@ export default function ReactionItem({
   return (
     <TooltipWrapper
       className="sendbird-emoji-reactions__reaction-badge"
-      hoverTooltip={(reaction.userIds.length > 0) ? (
+      hoverTooltip={showHoverTooltip ? (
         <Tooltip>
           {getEmojiTooltipString(reaction, userId, memberNicknamesMap, stringSet)}
         </Tooltip>

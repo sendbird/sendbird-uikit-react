@@ -64,6 +64,7 @@ const EmojiReactions = ({
               setEmojiKey={setSelectedEmojiKey}
               toggleReaction={toggleReaction}
               emojisMap={emojisMap}
+              channel={channel}
             />
           );
         })
