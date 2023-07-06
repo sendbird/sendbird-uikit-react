@@ -124,13 +124,13 @@ const MessageList: React.FC<MessageListProps> = ({
    *    when each message's height is changed by `reactions` OR `showEdit`
    * 2. Keep the scrollBottom value after fetching new message list
    */
-  const moveScroll = (_isAffectedOnlyGround?: boolean): void => {
-    const isAffectedOnlyGround = _isAffectedOnlyGround ?? false;
+  const moveScroll = (_isBottomMessageAffected?: boolean): void => {
+    const isBottomMessageAffected = _isBottomMessageAffected ?? false;
     const current = scrollRef?.current;
     if (current) {
       const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
       if (scrollBottom < bottom
-        && (!isAffectedOnlyGround || scrollBottom < SCROLL_BUFFER)) {
+        && (!isBottomMessageAffected || scrollBottom < SCROLL_BUFFER)) {
         // Move the scroll as much as the height of the message has changed
         current.scrollTop += bottom - scrollBottom;
       }

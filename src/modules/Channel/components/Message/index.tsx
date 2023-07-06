@@ -33,7 +33,7 @@ type MessageUIProps = {
   hasSeparator?: boolean;
   chainTop?: boolean;
   chainBottom?: boolean;
-  handleScroll?: (isAffectedOnlyGround?: boolean) => void;
+  handleScroll?: (isBottomMessageAffected?: boolean) => void;
   // for extending
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
