@@ -7,6 +7,7 @@ declare module "SendbirdUIKitGlobal" {
   import type React from 'react';
   import type SendbirdChat from '@sendbird/chat';
   import { GroupChannelModule, ModuleNamespaces, OpenChannelModule } from '@sendbird/chat/lib/__definition';
+  import { SBUConfig } from '@sendbird/uikit-tools';
   import type {
     SendbirdError,
     SessionHandler,
@@ -42,6 +43,33 @@ declare module "SendbirdUIKitGlobal" {
     OpenChannelUpdateParams,
     SendbirdOpenChat,
   } from '@sendbird/chat/openChannel';
+
+  export type PartialDeep<T> = T extends object
+  ? T extends (...args: any[]) => any
+    ? T
+    : {
+        [P in keyof T]?: PartialDeep<T[P]>;
+      }
+  : T;
+
+  export interface CommonUIKitConfigProps {
+    replyType?: 'NONE' | 'QUOTE_REPLY' | 'THREAD';
+    isMentionEnabled?: boolean;
+    isReactionEnabled?: boolean;
+    disableUserProfile?: boolean;
+    isVoiceMessageEnabled?: boolean;
+    isTypingIndicatorEnabledOnChannelList?: boolean;
+    isMessageReceiptStatusEnabledOnChannelList?: boolean;
+    showSearchIcon?: boolean;
+  }
+
+  export type UIKitOptions = PartialDeep<{
+    common: SBUConfig['common'];
+    groupChannel: SBUConfig['groupChannel']['channel'];
+    groupChannelList: SBUConfig['groupChannel']['channelList'];
+    groupChannelSettings: SBUConfig['groupChannel']['setting'];
+    openChannel: SBUConfig['openChannel']['channel'];
+  }>;
 
   export type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
   export interface AppProps {
@@ -84,6 +112,7 @@ declare module "SendbirdUIKitGlobal" {
     isReactionEnabled?: boolean;
     isTypingIndicatorEnabledOnChannelList?: boolean;
     isMessageReceiptStatusEnabledOnChannelList?: boolean;
+    uikitOptions?: UIKitOptions;
   }
 
   export type Logger = {
@@ -262,6 +291,7 @@ declare module "SendbirdUIKitGlobal" {
     };
     isTypingIndicatorEnabledOnChannelList?: boolean;
     isMessageReceiptStatusEnabledOnChannelList?: boolean;
+    uikitOptions?: UIKitOptions;
   }
 
   export interface SendBirdStateConfig {
@@ -297,6 +327,18 @@ declare module "SendbirdUIKitGlobal" {
     isTypingIndicatorEnabledOnChannelList?: boolean;
     isMessageReceiptStatusEnabledOnChannelList?: boolean;
     replyType: ReplyType;
+    showSearchIcon?: boolean;
+    // Remote configs set from dashboard by UIKit feature configuration
+    groupChannel: {
+      enableOgtag: SBUConfig['groupChannel']['channel']['enableOgtag'];
+      enableTypingIndicator: SBUConfig['groupChannel']['channel']['enableTypingIndicator'];
+      enableDocument: SBUConfig['groupChannel']['channel']['input']['enableDocument'];
+      threadReplySelectType: SBUConfig['groupChannel']['channel']['threadReplySelectType'];
+    },
+    openChannel: {
+      enableOgtag: SBUConfig['openChannel']['channel']['enableOgtag'];
+      enableDocument: SBUConfig['openChannel']['channel']['input']['enableDocument'];
+    },
   }
   export interface SdkStore {
     error: boolean;
