@@ -86,6 +86,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps {
   renderUserProfile?: () => React.ReactElement;
   onUserProfileMessage?: () => void;
   uikitOptions?: UIKitOptions;
+  isUserIdUsedForNickname?: boolean;
 }
 
 function Sendbird(props: SendbirdProviderProps) {
@@ -146,6 +147,7 @@ const SendbirdSDK = ({
   renderUserProfile = null,
   onUserProfileMessage = null,
   breakpoint = false,
+  isUserIdUsedForNickname = true,
 }: SendbirdProviderProps): React.ReactElement => {
   const {
     logLevel = '',
@@ -167,6 +169,7 @@ const SendbirdSDK = ({
     appId,
     userId,
     accessToken,
+    isUserIdUsedForNickname,
   }, {
     logger,
     nickname,
