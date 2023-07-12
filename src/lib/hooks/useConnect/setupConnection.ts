@@ -73,6 +73,7 @@ export async function setUpConnection({
   nickname,
   profileUrl,
   accessToken,
+  isUserIdUsedForNickname,
 }: SetupConnectionTypes): Promise<void> {
   return new Promise((resolve, reject) => {
     logger?.info?.('SendbirdProvider | useConnect/setupConnection/init', { userId, appId });
@@ -121,7 +122,7 @@ export async function setUpConnection({
             profileUrl,
           });
           newSdk.updateCurrentUserInfo({
-            nickname: nickname || user.nickname,
+            nickname: nickname || user.nickname || (isUserIdUsedForNickname ? user.userId : ''),
             profileUrl: profileUrl || user.profileUrl,
           }).then((namedUser) => {
             logger?.info?.('SendbirdProvider | useConnect/setupConnection/updateCurrentUserInfo success', {
