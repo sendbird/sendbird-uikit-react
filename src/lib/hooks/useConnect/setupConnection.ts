@@ -1,4 +1,4 @@
-import SendbirdChat, { SendbirdError, User } from '@sendbird/chat';
+import SendbirdChat, { DeviceOsPlatform, SendbirdError, SendbirdPlatform, SendbirdProduct, User } from '@sendbird/chat';
 import { OpenChannelModule } from '@sendbird/chat/openChannel';
 import { GroupChannelModule } from '@sendbird/chat/groupChannel';
 
@@ -80,6 +80,7 @@ export async function setUpConnection({
   accessToken,
   isUserIdUsedForNickname,
   sdkInitParams,
+  isMobile = false,
 }: SetupConnectionTypes): Promise<void> {
   return new Promise((resolve, reject) => {
     logger?.info?.('SendbirdProvider | useConnect/setupConnection/init', { userId, appId });
@@ -100,6 +101,16 @@ export async function setUpConnection({
       }
 
       logger?.info?.('SendbirdProvider | useConnect/setupConnection/setVersion', { version: APP_VERSION_STRING });
+      newSdk.addSendbirdExtensions(
+        [
+          {
+            product: SendbirdProduct.UIKIT_CHAT,
+            version: APP_VERSION_STRING,
+            platform: SendbirdPlatform.JS,
+          },
+        ],
+        isMobile ? DeviceOsPlatform.MOBILE_WEB : DeviceOsPlatform.WEB,
+      );
       newSdk.addExtension('sb_uikit', APP_VERSION_STRING);
 
       const connectCbSucess = async (user: User) => {
