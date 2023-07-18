@@ -54,7 +54,8 @@
     "generate-component": "plop",
     "deploy-storybook": "storybook-to-ghpages",
     "inspect": "yarn run test; yarn run lint;",
-    "bundle": "dts-bundle-generator -o ./dist/my.d.ts ./src/index.d.ts"
+    "bundle": "dts-bundle-generator -o ./dist/my.d.ts ./src/index.d.ts",
+    "version-bump": "node ./scripts/version_bump.js"
   },
   "repository": {
     "type": "git",
@@ -141,6 +142,8 @@
     "rollup-plugin-visualizer": "^5.9.0",
     "sass": "^1.55.0",
     "sass-loader": "^10.2.0",
+    "semver": "^7.5.3",
+    "simple-git": "^3.19.1",
     "style-loader": "^1.1.3",
     "stylelint": "^13.0.0",
     "stylelint-config-sass-guidelines": "^7.0.0",
