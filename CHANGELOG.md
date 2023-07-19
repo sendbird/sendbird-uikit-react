@@ -1,5 +1,15 @@
 # Changelog - v3
 
+## [v3.6.4] (July 19 2023)
+### Feat:
+* Created a separate package.json for CommonJS (cjs) module during build time. This package.json is located under dist/cjs directory. (#687)
+* Added a new prop `isUserIdUsedForNickname` to the public interface. This prop allows using the userId as the nickname. (#683)
+
+### Fixes:
+* Fixed an issue where the server returns 32 messages even when requesting 31 messages in the Channel. Now, hasMorePrev will not be set to false when the result size is larger than the query. (#688)
+* Verified the fetched message list size with the requested size of the MessageListParams. Added a test case for verifying the fetched message list size. (#686)
+* Addressed the incorrect cjs path in package.json. The common js module path in the pacakge.json has been fixed. (#685)
+
 
 ## [v3.6.3] (July 6 2023)
 ### Feat:
