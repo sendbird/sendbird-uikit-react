@@ -22,10 +22,13 @@ export const mockSdk = {
     if (userId === mockUser.userId) {
       return Promise.resolve(mockUser);
     }
+    if (userId?.length > 0) {
+      return Promise.resolve({ userId: userId });
+    }
     return Promise.reject();
   }),
   disconnect: jest.fn().mockImplementation(() => Promise.resolve(true)),
-  updateCurrentUserInfo: jest.fn().mockImplementation(() => Promise.resolve(mockUser)),
+  updateCurrentUserInfo: jest.fn().mockImplementation((user) => Promise.resolve(user)),
   setSessionHandler: jest.fn(),
   addExtension: jest.fn(),
   getUIKitConfiguration: jest.fn().mockImplementation(() => Promise.resolve({})),

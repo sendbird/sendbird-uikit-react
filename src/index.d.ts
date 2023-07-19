@@ -125,6 +125,7 @@ interface SendBirdProviderProps {
   isTypingIndicatorEnabledOnChannelList?: boolean;
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
   uikitOptions?: UIKitOptions;
+  isUserIdUsedForNickname?: boolean;
 }
 
 interface SendBirdStateConfig {
@@ -312,6 +313,7 @@ interface AppProps {
   isTypingIndicatorEnabledOnChannelList?: boolean;
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
   uikitOptions?: UIKitOptions;
+  isUserIdUsedForNickname?: boolean;
 }
 
 interface ApplicationUserListQuery {

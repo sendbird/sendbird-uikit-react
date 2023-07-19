@@ -15,6 +15,7 @@ export type TriggerTypes = {
   appId: string;
   // todo: doulbe check this type before merge
   accessToken?: string;
+  isUserIdUsedForNickname?: boolean;
 };
 
 export type ConfigureSessionTypes = (sdk: SendbirdChat | SendbirdGroupChat | SendbirdOpenChat) => SessionHandler;
