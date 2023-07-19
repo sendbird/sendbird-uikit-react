@@ -746,6 +746,7 @@ type ChannelContextProps = {
   disableUserProfile?: boolean;
   disableMarkAsRead?: boolean;
   scrollBehavior?: 'smooth' | 'auto';
+  reconnectOnIdle?: boolean;
 };
 
 interface ChannelUIProps {

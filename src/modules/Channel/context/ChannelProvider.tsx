@@ -96,6 +96,7 @@ export type ChannelContextProps = {
   onMessageAnimated?: () => void;
   onMessageHighlighted?: () => void;
   scrollBehavior?: 'smooth' | 'auto';
+  reconnectOnIdle?: boolean;
 };
 
 interface MessageStoreInterface {
@@ -188,6 +189,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     onMessageAnimated,
     onMessageHighlighted,
     scrollBehavior = 'auto',
+    reconnectOnIdle,
   } = props;
 
   const globalStore = useSendbirdStateContext();
@@ -368,7 +370,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   }, [channelUrl, sdkInit]);
 
   // handling connection breaks
-  useHandleReconnect({ isOnline, replyType, disableMarkAsRead }, {
+  useHandleReconnect({ isOnline, replyType, disableMarkAsRead, reconnectOnIdle }, {
     logger,
     sdk,
     scrollRef,

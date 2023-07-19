@@ -37,6 +37,7 @@ const Channel: React.FC<ChannelProps> = (props: ChannelProps) => {
       onMessageAnimated={props?.onMessageAnimated}
       onMessageHighlighted={props?.onMessageHighlighted}
       scrollBehavior={props.scrollBehavior}
+      reconnectOnIdle={props.reconnectOnIdle}
     >
       <ChannelUI
         isLoading={props?.isLoading}

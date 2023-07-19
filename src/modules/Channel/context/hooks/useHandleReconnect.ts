@@ -7,11 +7,13 @@ import { PREV_RESULT_SIZE, NEXT_RESULT_SIZE } from '../const';
 import * as messageActionTypes from '../dux/actionTypes';
 import { Logger } from '../../../../lib/SendbirdState';
 import { MarkAsReadSchedulerType } from '../../../../lib/hooks/useMarkAsReadScheduler';
+import useReconnectOnIdle from './useReconnectOnIdle';
 
 interface DynamicParams {
   isOnline: boolean;
   replyType?: string;
   disableMarkAsRead: boolean;
+  reconnectOnIdle?: boolean;
 }
 
 interface StaticParams {
@@ -25,7 +27,7 @@ interface StaticParams {
 }
 
 function useHandleReconnect(
-  { isOnline, replyType, disableMarkAsRead }: DynamicParams,
+  { isOnline, replyType, disableMarkAsRead, reconnectOnIdle = true }: DynamicParams,
   {
     logger,
     sdk,
@@ -36,11 +38,12 @@ function useHandleReconnect(
     userFilledMessageListQuery,
   }: StaticParams,
 ): void {
+  const { shouldReconnect } = useReconnectOnIdle(isOnline, currentGroupChannel, reconnectOnIdle);
+
   useEffect(() => {
-    const wasOffline = !isOnline;
     return () => {
-      // state changed from offline to online
-      if (wasOffline && currentGroupChannel?.url) {
+      // state changed from offline to online AND tab is visible
+      if (shouldReconnect) {
         logger.info('Refreshing conversation state');
         const isReactionEnabled = sdk?.appInfo?.useReaction || false;
 
@@ -97,7 +100,7 @@ function useHandleReconnect(
           });
       }
     };
-  }, [isOnline, replyType]);
+  }, [shouldReconnect, replyType]);
 }
 
 export default useHandleReconnect;
