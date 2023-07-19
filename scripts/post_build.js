@@ -7,10 +7,10 @@ const packageJson = require('../package.json');
 const packageTemplate = require('./package.template.json');
 
 const { version } = packageJson;
-const distPath = path.resolve(__dirname, '../dist');
+const getDistPath = (subPath) => path.resolve(__dirname, subPath != null ? `../dist${subPath}` : '../dist');
 
 function appendVersionToTypeDefn() {
-  const indexDtsPath = path.resolve(distPath, 'index.d.ts');
+  const indexDtsPath = path.resolve(getDistPath(), 'index.d.ts');
   const indexDts = fs.readFileSync(indexDtsPath, 'utf8');
   const indexDtsWithVersion = indexDts.replace(
     'Type Definitions for @sendbird/uikit-react@{{ version }}',
@@ -41,7 +41,7 @@ function cleanupPackageJSON(json) {
 }
 
 function movePackageJSON() {
-  const packageJSONDistPath = path.resolve(distPath, 'package.json');
+  const packageJSONDistPath = path.resolve(getDistPath(), 'package.json');
   const cleanedUpPackageJSON = cleanupPackageJSON(packageJson);
   fs.writeFileSync(
     packageJSONDistPath,
@@ -50,7 +50,31 @@ function movePackageJSON() {
   );
 }
 
+function copyCJSPackageJSON() {
+  const packageJSONDistPath = path.resolve(getDistPath('/cjs'), 'package.json');
+  const cleanedUpPackageJSON = cleanupPackageJSON(packageJson);
+
+  delete cleanedUpPackageJSON.files;
+  delete cleanedUpPackageJSON.scripts;
+  delete cleanedUpPackageJSON.devDependencies;
+  delete cleanedUpPackageJSON.module;
+
+  fs.writeFileSync(
+    packageJSONDistPath,
+    JSON.stringify({
+      ...cleanedUpPackageJSON,
+      main: 'index.js',
+      type: 'commonjs',
+      typings: '../index.d.ts',
+    }, null, 2),
+    { flag: 'w' },
+  );
+}
+
+
 /** Add version information to index.d.ts in dist */
 appendVersionToTypeDefn();
 /** Copy content of package.json to dist, but remove unnecessary fields */
 movePackageJSON();
+/** Copy content of package.json to dist/cjs, to support cjs module separately */
+copyCJSPackageJSON();
