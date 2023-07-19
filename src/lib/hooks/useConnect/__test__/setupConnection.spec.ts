@@ -65,6 +65,27 @@ describe('useConnect/setupConnection', () => {
     });
   });
 
+  it('should not replace nickname with userId when isUserIdUsedForNickname is false', async () => {
+    const newUser = {
+      userId: 'new-userid',
+      nickname: '',
+      profileUrl: 'new-user-profile-url',
+    };
+    const setUpConnectionProps = generateSetUpConnectionParams();
+    await setUpConnection({
+      ...setUpConnectionProps,
+      ...newUser,
+      isUserIdUsedForNickname: false,
+    });
+
+    const updatedUser = { nickname: '', profileUrl: newUser.profileUrl };
+    expect(mockSdk.updateCurrentUserInfo).toHaveBeenCalledWith(updatedUser);
+    expect(setUpConnectionProps.userDispatcher).toHaveBeenCalledWith({
+      type: USER_ACTIONS.UPDATE_USER_INFO,
+      payload: updatedUser,
+    });
+  });
+
   it('should call setUpConnection when there is proper SDK', async () => {
     const setUpConnectionProps = generateSetUpConnectionParams();
     await setUpConnection(setUpConnectionProps);
