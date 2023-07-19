@@ -80,6 +80,144 @@ describe('Messages-Reducers', () => {
     expect(nextState.latestMessageTimeStamp).not.toEqual(mockData.allMessages[mockData.allMessages.length - 1].createdAt);
   });
 
+  it('should get prev message list considering messageListParams FETCH_PREV_MESSAGES_SUCCESS', () => {
+    const MESSAGE_LIST_SIZE = 20;
+    const mockData = generateMockChannel();
+    const nextState = reducers({
+      ...mockData,
+      hasMorePrev: true,
+      hasMoreNext: true,
+      messageListParams: {
+        prevResultSize: MESSAGE_LIST_SIZE,
+        nextResultSize: MESSAGE_LIST_SIZE,
+      }
+    }, {
+      type: actionTypes.FETCH_PREV_MESSAGES_SUCCESS,
+      payload: {
+        currentGroupChannel: mockData.currentGroupChannel,
+        messages: new Array(MESSAGE_LIST_SIZE + 1).fill({}),
+        // MESSAGE_LIST_SIZE + 1: because server gives the response including a current message
+      }
+    });
+    expect(nextState.hasMorePrev).toEqual(true);
+    expect(nextState.hasMoreNext).toEqual(true);
+  });
+
+  it('should verify there is no more messages FETCH_PREV_MESSAGES_SUCCESS', () => {
+    // request size > response size
+    const MESSAGE_LIST_SIZE = 20;
+    const mockData = generateMockChannel();
+    const nextState = reducers({
+      ...mockData,
+      hasMorePrev: true,
+      hasMoreNext: true,
+      messageListParams: {
+        prevResultSize: 30,
+        nextResultSize: 30,
+      }
+    }, {
+      type: actionTypes.FETCH_PREV_MESSAGES_SUCCESS,
+      payload: {
+        currentGroupChannel: mockData.currentGroupChannel,
+        messages: new Array(MESSAGE_LIST_SIZE + 1).fill({}),
+      }
+    });
+    expect(nextState.hasMorePrev).toEqual(false);
+    expect(nextState.hasMoreNext).toEqual(true);
+  });
+
+  it('should validate unexpected additional messages are fetched FETCH_PREV_MESSAGES_SUCCESS', () => {
+    // request size < response size
+    const MESSAGE_LIST_SIZE = 20;
+    const mockData = generateMockChannel();
+    const nextState = reducers({
+      ...mockData,
+      hasMorePrev: true,
+      hasMoreNext: true,
+      messageListParams: {
+        prevResultSize: 10,
+        nextResultSize: 10,
+      }
+    }, {
+      type: actionTypes.FETCH_PREV_MESSAGES_SUCCESS,
+      payload: {
+        currentGroupChannel: mockData.currentGroupChannel,
+        messages: new Array(MESSAGE_LIST_SIZE + 1).fill({}),
+      }
+    });
+    expect(nextState.hasMorePrev).toEqual(false);
+    expect(nextState.hasMoreNext).toEqual(true);
+  });
+
+  it('should get next message list considering messageListParams FETCH_NEXT_MESSAGES_SUCCESS', () => {
+    const MESSAGE_LIST_SIZE = 20;
+    const mockData = generateMockChannel();
+    const nextState = reducers({
+      ...mockData,
+      hasMorePrev: true,
+      hasMoreNext: true,
+      messageListParams: {
+        prevResultSize: MESSAGE_LIST_SIZE,
+        nextResultSize: MESSAGE_LIST_SIZE,
+      }
+    }, {
+      type: actionTypes.FETCH_NEXT_MESSAGES_SUCCESS,
+      payload: {
+        currentGroupChannel: mockData.currentGroupChannel,
+        messages: new Array(MESSAGE_LIST_SIZE + 1).fill({}),
+        // MESSAGE_LIST_SIZE + 1: because server gives the response including a current message
+      }
+    });
+    expect(nextState.hasMorePrev).toEqual(true);
+    expect(nextState.hasMoreNext).toEqual(true);
+  });
+
+  it('should verify there is no more messages FETCH_NEXT_MESSAGES_SUCCESS', () => {
+    // request size > response size
+    const MESSAGE_LIST_SIZE = 20;
+    const mockData = generateMockChannel();
+    const nextState = reducers({
+      ...mockData,
+      hasMorePrev: true,
+      hasMoreNext: true,
+      messageListParams: {
+        prevResultSize: 30,
+        nextResultSize: 30,
+      }
+    }, {
+      type: actionTypes.FETCH_NEXT_MESSAGES_SUCCESS,
+      payload: {
+        currentGroupChannel: mockData.currentGroupChannel,
+        messages: new Array(MESSAGE_LIST_SIZE + 1).fill({}),
+      }
+    });
+    expect(nextState.hasMorePrev).toEqual(true);
+    expect(nextState.hasMoreNext).toEqual(false);
+  });
+
+  it('should validate unexpected additional messages are fetched FETCH_NEXT_MESSAGES_SUCCESS', () => {
+    // request size < response size
+    const MESSAGE_LIST_SIZE = 20;
+    const mockData = generateMockChannel();
+    const nextState = reducers({
+      ...mockData,
+      hasMorePrev: true,
+      hasMoreNext: true,
+      messageListParams: {
+        prevResultSize: 10,
+        nextResultSize: 10,
+      }
+    }, {
+      type: actionTypes.FETCH_NEXT_MESSAGES_SUCCESS,
+      payload: {
+        currentGroupChannel: mockData.currentGroupChannel,
+        messages: new Array(MESSAGE_LIST_SIZE + 1).fill({}),
+      }
+    });
+    expect(nextState.hasMorePrev).toEqual(true);
+    expect(nextState.hasMoreNext).toEqual(false);
+  });
+
   it('should set pending message on SEND_MESSAGEGE_START', () => {
     const mockData = generateMockChannel();
     const nextState = reducers(mockData, {

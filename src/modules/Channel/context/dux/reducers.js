@@ -69,7 +69,8 @@ export default function reducer(state, action) {
       if (!(currentGroupChannel?.url === state.currentGroupChannel?.url)) {
         return state;
       }
-      const hasMorePrev = messages && messages.length === PREV_RESULT_SIZE + 1;
+      const hasMorePrev = ((messages?.length ?? 0)
+        === (state?.messageListParams?.prevResultSize ?? PREV_RESULT_SIZE) + 1);
       const oldestMessageTimeStamp = getOldestMessageTimeStamp(messages);
 
       // Remove duplicated messages
@@ -108,7 +109,8 @@ export default function reducer(state, action) {
       if (!(currentGroupChannel?.url === state.currentGroupChannel?.url)) {
         return state;
       }
-      const hasMoreNext = messages && messages.length === NEXT_RESULT_SIZE + 1;
+      const hasMoreNext = ((messages?.length ?? 0)
+        === (state?.messageListParams?.nextResultSize ?? NEXT_RESULT_SIZE) + 1);
       const latestMessageTimeStamp = getLatestMessageTimeStamp(messages);
 
       // sort ~
