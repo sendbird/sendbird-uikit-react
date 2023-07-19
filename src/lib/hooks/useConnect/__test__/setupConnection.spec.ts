@@ -2,7 +2,7 @@
 /* eslint-disable global-require */
 import { SDK_ACTIONS } from '../../../dux/sdk/actionTypes';
 import { USER_ACTIONS } from '../../../dux/user/actionTypes';
-import { getConnectSbError, getMissingParamError, setUpConnection, setUpParams } from '../setupConnection';
+import { getMissingParamError, setUpConnection, setUpParams } from '../setupConnection';
 import { SetupConnectionTypes } from '../types';
 import { generateSetUpConnectionParams, mockSdk, mockUser, mockUser2 } from './data.mocks';
 
@@ -42,6 +42,27 @@ describe('useConnect/setupConnection', () => {
     expect(setUpConnectionProps.sdkDispatcher).toHaveBeenCalledWith({ type: SDK_ACTIONS.SET_SDK_LOADING, payload: true });
     expect(mockSdk.connect).not.toBeCalledWith({ type: SDK_ACTIONS.SET_SDK_LOADING, payload: true });
     expect(setUpConnectionProps.sdkDispatcher).toBeCalledWith({ type: SDK_ACTIONS.SDK_ERROR });
+  });
+
+  it('should replace nickname with userId when isUserIdUsedForNickname is true', async () => {
+    const newUser = {
+      userId: 'new-userid',
+      nickname: '',
+      profileUrl: 'new-user-profile-url',
+    };
+    const setUpConnectionProps = generateSetUpConnectionParams();
+    await setUpConnection({
+      ...setUpConnectionProps,
+      ...newUser,
+      isUserIdUsedForNickname: true,
+    });
+
+    const updatedUser = { nickname: newUser.userId, profileUrl: newUser.profileUrl };
+    expect(mockSdk.updateCurrentUserInfo).toHaveBeenCalledWith(updatedUser);
+    expect(setUpConnectionProps.userDispatcher).toHaveBeenCalledWith({
+      type: USER_ACTIONS.UPDATE_USER_INFO,
+      payload: updatedUser,
+    });
   });
 
   it('should call setUpConnection when there is proper SDK', async () => {
@@ -107,8 +128,11 @@ describe('useConnect/setupConnection', () => {
 
   it('should call connectCbError if connection fails', async () => {
     const setUpConnectionProps = generateSetUpConnectionParams();
-    setUpConnectionProps.userId = 'unknown';
-    const errorMessage = getConnectSbError();
+    setUpConnectionProps.userId = '';
+    const errorMessage = getMissingParamError({
+      userId: '',
+      appId: setUpConnectionProps.appId,
+    });
 
     await expect(setUpConnection(setUpConnectionProps))
       .rejects.toMatch(errorMessage);
