@@ -70,7 +70,7 @@ export default function reducer(state, action) {
         return state;
       }
       const hasMorePrev = ((messages?.length ?? 0)
-        === (state?.messageListParams?.prevResultSize ?? PREV_RESULT_SIZE) + 1);
+        >= (state?.messageListParams?.prevResultSize ?? PREV_RESULT_SIZE) + 1);
       const oldestMessageTimeStamp = getOldestMessageTimeStamp(messages);
 
       // Remove duplicated messages
