@@ -126,7 +126,7 @@ describe('Messages-Reducers', () => {
     expect(nextState.hasMoreNext).toEqual(true);
   });
 
-  it('should validate unexpected additional messages are fetched FETCH_PREV_MESSAGES_SUCCESS', () => {
+  it('should not set `hasMorePrev: false` when additional messages are fetched in FETCH_PREV_MESSAGES_SUCCESS', () => {
     // request size < response size
     const MESSAGE_LIST_SIZE = 20;
     const mockData = generateMockChannel();
@@ -145,7 +145,7 @@ describe('Messages-Reducers', () => {
         messages: new Array(MESSAGE_LIST_SIZE + 1).fill({}),
       }
     });
-    expect(nextState.hasMorePrev).toEqual(false);
+    expect(nextState.hasMorePrev).toEqual(true);
     expect(nextState.hasMoreNext).toEqual(true);
   });
 
