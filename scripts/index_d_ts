@@ -584,6 +584,7 @@ declare module "SendbirdUIKitGlobal" {
     onMessageAnimated?: () => void;
     onMessageHighlighted?: () => void;
     scrollBehavior?: 'smooth' | 'auto';
+    reconnectOnIdle?: boolean;
   };
 
   export interface ChannelUIProps {
