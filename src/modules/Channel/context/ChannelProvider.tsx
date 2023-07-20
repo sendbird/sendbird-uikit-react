@@ -189,7 +189,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     onMessageAnimated,
     onMessageHighlighted,
     scrollBehavior = 'auto',
-    reconnectOnIdle,
+    reconnectOnIdle = true,
   } = props;
 
   const globalStore = useSendbirdStateContext();

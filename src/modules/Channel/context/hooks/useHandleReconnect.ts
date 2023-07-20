@@ -13,7 +13,7 @@ interface DynamicParams {
   isOnline: boolean;
   replyType?: string;
   disableMarkAsRead: boolean;
-  reconnectOnIdle?: boolean;
+  reconnectOnIdle: boolean;
 }
 
 interface StaticParams {
@@ -27,7 +27,7 @@ interface StaticParams {
 }
 
 function useHandleReconnect(
-  { isOnline, replyType, disableMarkAsRead, reconnectOnIdle = true }: DynamicParams,
+  { isOnline, replyType, disableMarkAsRead, reconnectOnIdle }: DynamicParams,
   {
     logger,
     sdk,
