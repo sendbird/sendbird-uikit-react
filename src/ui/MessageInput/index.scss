@@ -119,7 +119,7 @@
 
 .sendbird-message-input__disabled {
   pointer-events: none;
-  cursor: disabled;
+  cursor: not-allowed;
   .sendbird-message-input--textarea {
     @include themed() {
       color: t(on-bg-4);
