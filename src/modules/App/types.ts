@@ -9,8 +9,9 @@ import {
   UserListQuery,
   RenderUserProfileProps,
   SendBirdProviderConfig,
-  SendbirdChatInitParams,
 } from '../../types';
+
+import { SendbirdChatInitParams } from '../../lib/types';
 
 export interface AppLayoutProps {
   isReactionEnabled?: boolean;

@@ -247,4 +247,4 @@ export type UIKitOptions = PartialDeep<{
   openChannel: SBUConfig['openChannel']['channel'];
 }>;
 
-export type SendbirdChatInitParams = SendbirdChatParams<Module[]>;
+export type SendbirdChatInitParams = Omit<SendbirdChatParams<Module[]>, 'appId'>;

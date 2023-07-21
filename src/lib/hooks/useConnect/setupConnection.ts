@@ -34,13 +34,14 @@ export function setUpParams({
   sdkInitParams?: SendbirdChatInitParams;
 }): SendbirdChat {
   const params = {
-    appId,
     modules: [
       new GroupChannelModule(),
       new OpenChannelModule(),
     ],
     newInstance: true,
-    ...sdkInitParams,
+    ...(sdkInitParams ?? {}),
+    // appId shouldn't be overrided
+    appId,
   };
   if (customApiHost) {
     params['customApiHost'] = customApiHost;
