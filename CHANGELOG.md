@@ -1,6 +1,21 @@
 # Changelog - v3
 
-## [v3.6.4] (July 19 2023)
+## [v3.6.5] (July 21 2023)
+### Feat:
+* Add a new prop `sdkInitParams` that allows passing custom parameters when `sdk.init(params)` is called from outside of UIKit.
+
+e.g.
+```
+<SendbirdProvider
+  sdkInitParams={{
+    appStateToggleEnabled: false,
+    debugMode: true,
+    // more options can be found here https://sendbird.com/docs/chat/v4/javascript/ref/interfaces/_sendbird_chat.SendbirdChatParams.html
+  }}
+/>
+```
+
+## [v3.6.4] (July 20 2023)
 ### Feat:
 * Create a separate package.json for CommonJS (cjs) module during build time. This package.json is located under dist/cjs directory. (#687)
 * Add a new prop `isUserIdUsedForNickname` to the public interface. This prop allows using the userId as the nickname. (#683)
