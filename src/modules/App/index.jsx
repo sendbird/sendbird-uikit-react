@@ -47,6 +47,7 @@ export default function App(props) {
     isMessageReceiptStatusEnabledOnChannelList,
     uikitOptions,
     isUserIdUsedForNickname,
+    sdkInitParams,
   } = props;
   const [currentChannel, setCurrentChannel] = useState(null);
   return (
@@ -82,6 +83,7 @@ export default function App(props) {
       showSearchIcon={showSearchIcon}
       uikitOptions={uikitOptions}
       isUserIdUsedForNickname={isUserIdUsedForNickname}
+      sdkInitParams={sdkInitParams}
     >
       <AppLayout
         isReactionEnabled={isReactionEnabled}
@@ -154,6 +156,7 @@ App.propTypes = {
   isTypingIndicatorEnabledOnChannelList: PropTypes.bool,
   isMessageReceiptStatusEnabledOnChannelList: PropTypes.bool,
   isUserIdUsedForNickname: PropTypes.bool,
+  sdkInitParams: PropTypes.shape({}),
 };
 
 App.defaultProps = {
@@ -194,4 +197,5 @@ App.defaultProps = {
   isTypingIndicatorEnabledOnChannelList: undefined,
   isMessageReceiptStatusEnabledOnChannelList: undefined,
   isUserIdUsedForNickname: true,
+  sdkInitParams: undefined,
 };

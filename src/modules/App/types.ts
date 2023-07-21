@@ -9,6 +9,7 @@ import {
   UserListQuery,
   RenderUserProfileProps,
   SendBirdProviderConfig,
+  SendbirdChatInitParams,
 } from '../../types';
 
 export interface AppLayoutProps {
@@ -75,4 +76,5 @@ export default interface AppProps {
   disableAutoSelect?: boolean;
   isTypingIndicatorEnabledOnChannelList?: boolean;
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
+  sdkInitParams?: SendbirdChatInitParams;
 }

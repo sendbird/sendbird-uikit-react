@@ -16,6 +16,7 @@ export async function connect({
   profileUrl,
   accessToken,
   sdk,
+  sdkInitParams,
 }: ConnectTypes): Promise<void> {
   await disconnectSdk({
     logger,
@@ -36,5 +37,6 @@ export async function connect({
     nickname,
     profileUrl,
     accessToken,
+    sdkInitParams,
   });
 }
