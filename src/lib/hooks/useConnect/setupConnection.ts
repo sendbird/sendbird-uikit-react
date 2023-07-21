@@ -8,6 +8,7 @@ import { USER_ACTIONS } from '../../dux/user/actionTypes';
 import { isTextuallyNull } from '../../../utils';
 
 import { SetupConnectionTypes } from './types';
+import { SendbirdChatInitParams } from '../../types';
 
 const APP_VERSION_STRING = '__react_dev_mode__';
 
@@ -25,10 +26,12 @@ export function setUpParams({
   appId,
   customApiHost,
   customWebSocketHost,
+  sdkInitParams,
 }: {
   appId: string;
   customApiHost?: string;
   customWebSocketHost?: string;
+  sdkInitParams?: SendbirdChatInitParams;
 }): SendbirdChat {
   const params = {
     appId,
@@ -37,6 +40,7 @@ export function setUpParams({
       new OpenChannelModule(),
     ],
     newInstance: true,
+    ...sdkInitParams,
   };
   if (customApiHost) {
     params['customApiHost'] = customApiHost;
@@ -74,6 +78,7 @@ export async function setUpConnection({
   profileUrl,
   accessToken,
   isUserIdUsedForNickname,
+  sdkInitParams,
 }: SetupConnectionTypes): Promise<void> {
   return new Promise((resolve, reject) => {
     logger?.info?.('SendbirdProvider | useConnect/setupConnection/init', { userId, appId });
@@ -84,6 +89,7 @@ export async function setUpConnection({
         appId,
         customApiHost,
         customWebSocketHost,
+        sdkInitParams,
       });
 
       if (configureSession && typeof configureSession === 'function') {

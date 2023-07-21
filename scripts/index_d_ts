@@ -6,7 +6,7 @@
 declare module "SendbirdUIKitGlobal" {
   import type React from 'react';
   import type SendbirdChat from '@sendbird/chat';
-  import { GroupChannelModule, ModuleNamespaces, OpenChannelModule } from '@sendbird/chat/lib/__definition';
+  import { GroupChannelModule, ModuleNamespaces, OpenChannelModule, SendbirdChatParams, Module } from '@sendbird/chat/lib/__definition';
   import { SBUConfig } from '@sendbird/uikit-tools';
   import type {
     SendbirdError,
@@ -113,6 +113,7 @@ declare module "SendbirdUIKitGlobal" {
     isTypingIndicatorEnabledOnChannelList?: boolean;
     isMessageReceiptStatusEnabledOnChannelList?: boolean;
     uikitOptions?: UIKitOptions;
+    sdkInitParams?: SendbirdChatParams<Module[]>;
   }
 
   export type Logger = {
@@ -292,6 +293,7 @@ declare module "SendbirdUIKitGlobal" {
     isTypingIndicatorEnabledOnChannelList?: boolean;
     isMessageReceiptStatusEnabledOnChannelList?: boolean;
     uikitOptions?: UIKitOptions;
+    sdkInitParams?: SendbirdChatParams<Module[]>;
   }
 
   export interface SendBirdStateConfig {

@@ -1,5 +1,5 @@
 import type SendbirdChat from '@sendbird/chat';
-import type { User } from '@sendbird/chat';
+import type { User, SendbirdChatParams } from '@sendbird/chat';
 import type {
   GroupChannel,
   GroupChannelCreateParams,
@@ -28,6 +28,8 @@ import { MarkAsDeliveredSchedulerType } from './hooks/useMarkAsDeliveredSchedule
 import { PartialDeep } from '../utils/typeHelpers/partialDeep';
 
 import { SBUConfig } from '@sendbird/uikit-tools';
+
+import { Module } from '@sendbird/chat/lib/__definition';
 
 // note to SDK team:
 // using enum inside .d.ts won’t work for jest, but const enum will work.
@@ -244,3 +246,5 @@ export type UIKitOptions = PartialDeep<{
   groupChannelSettings: SBUConfig['groupChannel']['setting'];
   openChannel: SBUConfig['openChannel']['channel'];
 }>;
+
+export type SendbirdChatInitParams = SendbirdChatParams<Module[]>;

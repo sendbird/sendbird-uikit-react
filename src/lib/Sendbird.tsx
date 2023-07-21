@@ -35,7 +35,7 @@ import { useMarkAsDeliveredScheduler } from './hooks/useMarkAsDeliveredScheduler
 import { getCaseResolvedReplyType, getCaseResolvedThreadReplySelectType } from './utils/resolvedReplyType';
 import { useUnmount } from '../hooks/useUnmount';
 import { disconnectSdk } from './hooks/useConnect/disconnectSdk';
-import { UIKitOptions, CommonUIKitConfigProps } from './types';
+import { UIKitOptions, CommonUIKitConfigProps, SendbirdChatInitParams } from './types';
 
 export type UserListQueryType = {
   hasNext?: boolean;
@@ -87,6 +87,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps {
   onUserProfileMessage?: () => void;
   uikitOptions?: UIKitOptions;
   isUserIdUsedForNickname?: boolean;
+  sdkInitParams?: SendbirdChatInitParams;
 }
 
 function Sendbird(props: SendbirdProviderProps) {
@@ -148,6 +149,7 @@ const SendbirdSDK = ({
   onUserProfileMessage = null,
   breakpoint = false,
   isUserIdUsedForNickname = true,
+  sdkInitParams,
 }: SendbirdProviderProps): React.ReactElement => {
   const {
     logLevel = '',
@@ -177,6 +179,7 @@ const SendbirdSDK = ({
     configureSession,
     customApiHost,
     customWebSocketHost,
+    sdkInitParams,
     sdk,
     sdkDispatcher,
     userDispatcher,
