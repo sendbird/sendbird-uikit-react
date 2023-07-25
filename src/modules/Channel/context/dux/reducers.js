@@ -146,7 +146,9 @@ export default function reducer(state, action) {
         ...state,
         allMessages: [
           ...state.allMessages,
-          { ...action.payload },
+          // Message should not be spread here
+          // it will loose some methods like `isUserMessage`
+          action.payload,
         ],
       };
     case actionTypes.SEND_MESSAGEGE_SUCESS: {
