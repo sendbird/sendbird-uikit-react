@@ -1,6 +1,6 @@
 ## For Internal Contributors
 
-* Follow the trunk workflow(https://trunkbaseddevelopment.com/)
+* Follow the Scaled Trunk-Based Development workflow(https://trunkbaseddevelopment.com/)
 * Branch naming format -> `{type}/TICKET_ID/description`
   * Where type = `feat` / `feature` / `fix` / `chore` / `doc` / `release`
 * Always receive PR review approvals
