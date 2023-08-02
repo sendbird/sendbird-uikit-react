@@ -101,15 +101,21 @@ export async function setUpConnection({
       }
 
       logger?.info?.('SendbirdProvider | useConnect/setupConnection/setVersion', { version: APP_VERSION_STRING });
-      newSdk.addSendbirdExtensions(
+      /**
+       * Keep optional chaining to the addSendbirdExtensions
+       * for supporting the ChatSDK v4.9.5 or less
+       */
+      newSdk?.addSendbirdExtensions?.(
         [
           {
-            product: SendbirdProduct.UIKIT_CHAT,
+            product: SendbirdProduct?.UIKIT_CHAT ?? 'uikit-chat',
             version: APP_VERSION_STRING,
-            platform: SendbirdPlatform.JS,
+            platform: SendbirdPlatform?.JS ?? 'js',
           },
         ],
-        isMobile ? DeviceOsPlatform.MOBILE_WEB : DeviceOsPlatform.WEB,
+        isMobile
+          ? (DeviceOsPlatform?.MOBILE_WEB ?? 'mobile_web')
+          : (DeviceOsPlatform?.WEB ?? 'web'),
       );
       newSdk.addExtension('sb_uikit', APP_VERSION_STRING);
 
