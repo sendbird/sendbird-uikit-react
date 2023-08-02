@@ -4,7 +4,7 @@ import { ReconnectType, StaticTypes, TriggerTypes } from './types';
 import { connect } from './connect';
 
 export default function useConnect(triggerTypes: TriggerTypes, staticTypes: StaticTypes): ReconnectType {
-  const { userId, appId, accessToken, isUserIdUsedForNickname } = triggerTypes;
+  const { userId, appId, accessToken, isMobile, isUserIdUsedForNickname } = triggerTypes;
   const {
     logger,
     nickname,
@@ -39,6 +39,7 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
         initDashboardConfigs,
         isUserIdUsedForNickname,
         sdkInitParams,
+        isMobile,
       });
     } catch (error) {
       logger?.error?.('SendbirdProvider | useConnect/useEffect', error);
@@ -64,6 +65,7 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
         initDashboardConfigs,
         isUserIdUsedForNickname,
         sdkInitParams,
+        isMobile,
       });
     } catch (error) {
       logger?.error?.('SendbirdProvider | useConnect/reconnect/useCallback', error);
