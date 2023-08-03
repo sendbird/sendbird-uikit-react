@@ -17,6 +17,7 @@ export async function connect({
   accessToken,
   sdk,
   sdkInitParams,
+  customExtensionParams,
   isMobile,
 }: ConnectTypes): Promise<void> {
   await disconnectSdk({
@@ -39,6 +40,7 @@ export async function connect({
     profileUrl,
     accessToken,
     sdkInitParams,
+    customExtensionParams,
     isMobile,
   });
 }

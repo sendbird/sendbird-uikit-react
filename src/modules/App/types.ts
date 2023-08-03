@@ -11,7 +11,7 @@ import {
   SendBirdProviderConfig,
 } from '../../types';
 
-import { SendbirdChatInitParams } from '../../lib/types';
+import { CustomExtensionParams, SendbirdChatInitParams } from '../../lib/types';
 
 export interface AppLayoutProps {
   isReactionEnabled?: boolean;
@@ -78,4 +78,5 @@ export default interface AppProps {
   isTypingIndicatorEnabledOnChannelList?: boolean;
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
   sdkInitParams?: SendbirdChatInitParams;
+  customExtensionParams?: CustomExtensionParams;
 }

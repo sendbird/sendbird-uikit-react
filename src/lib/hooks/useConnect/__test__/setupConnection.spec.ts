@@ -221,4 +221,23 @@ describe('useConnect/setupConnection/setUpParams', () => {
     });
     expect(newSdk).toEqual(mockSdk);
   });
+
+  it('should call init with customExtensionParams', async () => {
+    const setUpConnectionProps = generateSetUpConnectionParams();
+    const { appId, customExtensionParams } = setUpConnectionProps;
+    const newSdk = setUpParams({ appId, customExtensionParams });
+    // @ts-ignore
+    expect(require('@sendbird/chat').init).toBeCalledWith({
+      appId,
+      newInstance: true,
+      modules: [
+        // @ts-ignore
+        new (require('@sendbird/chat/groupChannel').GroupChannelModule)(),
+        // @ts-ignore
+        new (require('@sendbird/chat/openChannel').OpenChannelModule)(),
+      ],
+      customExtensionParams,
+    });
+    expect(newSdk).toEqual(mockSdk);
+  });
 });

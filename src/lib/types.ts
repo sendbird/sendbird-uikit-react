@@ -248,3 +248,4 @@ export type UIKitOptions = PartialDeep<{
 }>;
 
 export type SendbirdChatInitParams = Omit<SendbirdChatParams<Module[]>, 'appId'>;
+export type CustomExtensionParams = Record<string, string>;

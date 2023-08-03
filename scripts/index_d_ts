@@ -294,6 +294,7 @@ declare module "SendbirdUIKitGlobal" {
     isMessageReceiptStatusEnabledOnChannelList?: boolean;
     uikitOptions?: UIKitOptions;
     sdkInitParams?: SendbirdChatParams<Module[]>;
+    customExtensionParams?: Record<string, string>;
   }
 
   export interface SendBirdStateConfig {

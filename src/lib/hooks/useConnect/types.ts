@@ -7,7 +7,7 @@ import { UserActionTypes } from '../../dux/user/actionTypes';
 
 import { Logger } from '../../SendbirdState';
 
-import { SendbirdChatInitParams } from '../../types';
+import { SendbirdChatInitParams, CustomExtensionParams } from '../../types';
 
 type SdkDispatcher = React.Dispatch<SdkActionTypes>;
 type UserDispatcher = React.Dispatch<UserActionTypes>;
@@ -35,6 +35,7 @@ export type StaticTypes = {
   userDispatcher: UserDispatcher;
   initDashboardConfigs: (sdk: SendbirdChat) => Promise<void>;
   sdkInitParams?: SendbirdChatInitParams;
+  customExtensionParams?: CustomExtensionParams;
 };
 
 export type ConnectTypes = TriggerTypes & StaticTypes;

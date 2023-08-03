@@ -8,7 +8,7 @@ import { USER_ACTIONS } from '../../dux/user/actionTypes';
 import { isTextuallyNull } from '../../../utils';
 
 import { SetupConnectionTypes } from './types';
-import { SendbirdChatInitParams } from '../../types';
+import { CustomExtensionParams, SendbirdChatInitParams } from '../../types';
 
 const APP_VERSION_STRING = '__react_dev_mode__';
 
@@ -32,6 +32,7 @@ export function setUpParams({
   customApiHost?: string;
   customWebSocketHost?: string;
   sdkInitParams?: SendbirdChatInitParams;
+  customExtensionParams?: CustomExtensionParams;
 }): SendbirdChat {
   const params = {
     modules: [
@@ -80,6 +81,7 @@ export async function setUpConnection({
   accessToken,
   isUserIdUsedForNickname,
   sdkInitParams,
+  customExtensionParams,
   isMobile = false,
 }: SetupConnectionTypes): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -116,6 +118,7 @@ export async function setUpConnection({
         isMobile
           ? (DeviceOsPlatform?.MOBILE_WEB ?? 'mobile_web')
           : (DeviceOsPlatform?.WEB ?? 'web'),
+        customExtensionParams,
       );
       newSdk.addExtension('sb_uikit', APP_VERSION_STRING);
 

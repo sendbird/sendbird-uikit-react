@@ -48,6 +48,7 @@ export default function App(props) {
     uikitOptions,
     isUserIdUsedForNickname,
     sdkInitParams,
+    customExtensionParams,
   } = props;
   const [currentChannel, setCurrentChannel] = useState(null);
   return (
@@ -84,6 +85,7 @@ export default function App(props) {
       uikitOptions={uikitOptions}
       isUserIdUsedForNickname={isUserIdUsedForNickname}
       sdkInitParams={sdkInitParams}
+      customExtensionParams={customExtensionParams}
     >
       <AppLayout
         isReactionEnabled={isReactionEnabled}
@@ -157,6 +159,7 @@ App.propTypes = {
   isMessageReceiptStatusEnabledOnChannelList: PropTypes.bool,
   isUserIdUsedForNickname: PropTypes.bool,
   sdkInitParams: PropTypes.shape({}),
+  customExtensionParams: PropTypes.shape({}),
 };
 
 App.defaultProps = {
@@ -198,4 +201,5 @@ App.defaultProps = {
   isMessageReceiptStatusEnabledOnChannelList: undefined,
   isUserIdUsedForNickname: true,
   sdkInitParams: undefined,
+  customExtensionParams: undefined,
 };
