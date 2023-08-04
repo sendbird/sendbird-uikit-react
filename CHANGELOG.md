@@ -1,17 +1,47 @@
 # Changelog - v3
 
+## [v3.6.6] (Aug 3 2023)
+### Feat:
+* Add `customExtensionParams` for `sdk.addSendbirdExtensions` (#698)
+  The 3rd parameter customData to the `sdk.addSendbirdExtension` function, allowing it to be delivered from outside of UIKit React.
+  e.g.
+  ```
+  // its recommended to memoize customExtensionParams
+  const memoizedCustomExtensionParams = useRef({
+    // the key-value sets will be passed when sdk.addSendbirdExtensions is called
+    ...
+  })
+  <SendbirdProvider
+    customExtensionParams={memoizedCustomExtensionParams.current}
+  />
+  ```
+* Call `sdk.addSendbirdExtensions` during the connection process (#682)
+
+### Fixes:
+* Change the MessageInput cursor style from disabled to not-allowed; Thanks @roderickhsiao (#697)
+* PendingMsg is missing isUserMessage method (#695)
+  This resolves the issue where spreading the message object in the reducer loses some methods like `isUserMessage` and `isFileMessage`
+* fix util functions logic of verifying message type. We updated logic in util functions to verify the message type. (#700)
+
+
+### Chore:
+* Update Trunk-Based Development to Scaled Trunk-Based Development (#696)
+  It describes the flow with short-lived feature branches, code review, and build automation before integrating into main.
+
 ## [v3.6.5] (July 21 2023)
 ### Feat:
 * Add a new prop `sdkInitParams` that allows passing custom parameters when `sdk.init(params)` is called from outside of UIKit.
 
 e.g.
 ```
+// its recommended to memoize sdkInitParams
+const memoizedSdkInitParams = useRef({
+  appStateToggleEnabled: false,
+  debugMode: true,
+  // more options can be found here https://sendbird.com/docs/chat/v4/javascript/ref/interfaces/_sendbird_chat.SendbirdChatParams.html
+})
 <SendbirdProvider
-  sdkInitParams={{
-    appStateToggleEnabled: false,
-    debugMode: true,
-    // more options can be found here https://sendbird.com/docs/chat/v4/javascript/ref/interfaces/_sendbird_chat.SendbirdChatParams.html
-  }}
+  sdkInitParams={memoizedSdkInitParams.current}
 />
 ```
 
