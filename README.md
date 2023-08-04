@@ -45,14 +45,15 @@ You need to install:
 
 **Caveats**
  - We tried development on Mac OS / Linux systems. You might encounter problems in running `npm run build` or `yarn run build` in Windows machines
- - If you use node.js >= 17 and see `ERR_OSSL_EVP_UNSUPPORTED` error on any run cmd, try to set `export NODE_OPTIONS=--openssl-legacy-provider` in the terminal
+ 
+> If you use node.js >= 17 and see `ERR_OSSL_EVP_UNSUPPORTED` error on any run cmd, try to set `export NODE_OPTIONS=--openssl-legacy-provider` in the terminal
 
 ### Development
 We use storybook for development and rollup for building the npm distribution(bundled JS file)
 Make sure you have nodejs and npm (or yarn) installed and run
 
-Make a copy of .env.example and save it as .env
-Set your appId STORYBOOK_APP_ID
+> Make a copy of .env.example and save it as .env 
+> Set your appId STORYBOOK_APP_ID
 
 ```
 npm install
