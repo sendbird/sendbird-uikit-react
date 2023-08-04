@@ -128,13 +128,25 @@ export const isSentStatus = (state: string): boolean => (
 );
 
 export const isAdminMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => (
-  message && (message?.isAdminMessage?.() || (message?.messageType === 'admin'))
+  message && (
+    message['isAdminMessage'] && typeof message.isAdminMessage === 'function'
+      ? message.isAdminMessage()
+      : message?.messageType === 'admin'
+  )
 );
 export const isUserMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => (
-  message && (message?.isUserMessage?.() || (message?.messageType === 'user'))
+  message && (
+    message['isUserMessage'] && typeof message.isUserMessage === 'function'
+      ? message.isUserMessage()
+      : message?.messageType === 'user'
+  )
 );
 export const isFileMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => (
-  message && (message?.isFileMessage?.() || (message?.messageType === 'file'))
+  message && (
+    message['isFileMessage'] && typeof message.isFileMessage === 'function'
+      ? message.isFileMessage()
+      : message?.messageType === 'file'
+  )
 );
 export const isParentMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => (
   !message.parentMessageId && !message.parentMessage && (message.threadInfo?.replyCount ?? 0) > 0
