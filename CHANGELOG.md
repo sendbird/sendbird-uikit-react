@@ -6,10 +6,13 @@
   The 3rd parameter customData to the `sdk.addSendbirdExtension` function, allowing it to be delivered from outside of UIKit React.
   e.g.
   ```
+  // its recommended to memoize customExtensionParams
+  const memoizedCustomExtensionParams = useRef({
+    // the key-value sets will be passed when sdk.addSendbirdExtensions is called
+    ...
+  })
   <SendbirdProvider
-    customExtensionParams={{
-      a: 'a', // the key-value set will be passed when sdk.addSendbirdExtensions is called
-    }}
+    customExtensionParams={memoizedCustomExtensionParams.current}
   />
   ```
 * Call `sdk.addSendbirdExtensions` during the connection process (#682)
@@ -29,12 +32,14 @@
 
 e.g.
 ```
+// its recommended to memoize sdkInitParams
+const memoizedSdkInitParams = useRef({
+  appStateToggleEnabled: false,
+  debugMode: true,
+  // more options can be found here https://sendbird.com/docs/chat/v4/javascript/ref/interfaces/_sendbird_chat.SendbirdChatParams.html
+})
 <SendbirdProvider
-  sdkInitParams={{
-    appStateToggleEnabled: false,
-    debugMode: true,
-    // more options can be found here https://sendbird.com/docs/chat/v4/javascript/ref/interfaces/_sendbird_chat.SendbirdChatParams.html
-  }}
+  sdkInitParams={memoizedSdkInitParams.current}
 />
 ```
 
