@@ -21,6 +21,8 @@
 * Change the MessageInput cursor style from disabled to not-allowed; Thanks @roderickhsiao (#697)
 * PendingMsg is missing isUserMessage method (#695)
   This resolves the issue where spreading the message object in the reducer loses some methods like `isUserMessage` and `isFileMessage`
+* fix util functions logic of verifying message type. We updated logic in util functions to verify the message type. (#700)
+
 
 ### Chore:
 * Update Trunk-Based Development to Scaled Trunk-Based Development (#696)
