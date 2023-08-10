@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ui/ImageGrid should do a snapshot test of the ImageGrid DOM 1`] = `
+<DocumentFragment>
+  <div
+    class="sendbird-image-grid-container"
+  >
+    <div
+      class="sendbird-image-grid"
+    />
+  </div>
+</DocumentFragment>
+`;

@@ -1,4 +1,4 @@
-import numberToPx from "../numberToPx";
+import numberToPx from '../numberToPx';
 
 describe('Global-utils/numberToPx', () => {
   it('when given number, should return pixel string.', () => {

@@ -1,14 +1,17 @@
 @import '../../styles/variables';
 
-.sendbird-text {
-  color: var(--primary-1);
+.sendbird-image-grid-wrap {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .sendbird-image-grid {
   border-radius: 12px;
   direction: rtl;
   display: grid;
+  gap: 4px;
   grid-template-columns: repeat(2, 1fr);
+  padding: 4px;
   width: fit-content;
   @include themed() {
     background-color: t(bg-1);

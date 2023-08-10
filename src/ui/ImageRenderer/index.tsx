@@ -1,6 +1,7 @@
 import React, { useState, useMemo, ReactElement } from 'react';
 
 import './index.scss';
+import numberToPx from "../../utils/numberToPx";
 
 /*
   ImageRenderer displays image with url or source
@@ -8,6 +9,13 @@ import './index.scss';
   if it exists onLoad is called, if not onError is called
   and those properties switch img tag to real purposing element
 */
+
+export function getBorderRadiusForImageRenderer(
+  circle: boolean = false,
+  borderRadius: string | number = null
+): string {
+  return circle ? '50%' : numberToPx(borderRadius);
+}
 
 export interface ImageRendererProps {
   className?: string | Array<string>;
@@ -114,7 +122,7 @@ const ImageRenderer = ({
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
                 backgroundImage: `url(${url})`,
-                borderRadius: circle ? '50%' : borderRadius,
+                borderRadius: getBorderRadiusForImageRenderer(circle, borderRadius),
               }}
             />
           )

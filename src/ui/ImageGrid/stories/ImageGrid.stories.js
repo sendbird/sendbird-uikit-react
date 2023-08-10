@@ -70,28 +70,6 @@ export const withImages = () => {
         <Icon type={IconTypes.ADD} fillColor={IconColors.PRIMARY} />
       }
     />,
-    <ImageRenderer
-      url={EARTH_IMAGE}
-      width='200px'
-      height='200px'
-      borderRadius='6px'
-      defaultComponent={
-        <Icon type={IconTypes.ADD} fillColor={IconColors.PRIMARY} />
-      }
-    />,
-    <ImageRenderer
-      url={EARTH_IMAGE}
-      width='200px'
-      height='200px'
-      borderRadius='6px'
-      defaultComponent={
-        <Icon type={IconTypes.ADD} fillColor={IconColors.PRIMARY} />
-      }
-    />,
   ];
-  return <ImageGrid
-    items={imageRenderers}
-    gap={4}
-    borderRadius={12}
-  />;
+  return <ImageGrid>{ imageRenderers }</ImageGrid>;
 }
