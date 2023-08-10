@@ -74,7 +74,7 @@ export const useSendVoiceMessageCallback = ({
       .onFailed((err, failedMessage) => {
         logger.error('Channel: Sending voice message failed!', { failedMessage, err });
         messagesDispatcher({
-          type: messageActionTypes.SEND_MESSAGEGE_FAILURE,
+          type: messageActionTypes.SEND_MESSAGE_FAILURE,
           payload: failedMessage,
         });
       })

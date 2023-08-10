@@ -69,7 +69,7 @@ export default function useSendMessageCallback({
         .onFailed((err, msg) => {
           logger.warning('Channel: Sending message failed!', { message: msg, error: err });
           messagesDispatcher({
-            type: messageActionTypes.SEND_MESSAGEGE_FAILURE,
+            type: messageActionTypes.SEND_MESSAGE_FAILURE,
             payload: msg,
           });
         })

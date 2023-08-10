@@ -97,7 +97,7 @@ export default function useSendFileMessageCallback({
                   // eslint-disable-next-line no-param-reassign
                   failedMessage.file = compressedFile;
                   messagesDispatcher({
-                    type: messageActionTypes.SEND_MESSAGEGE_FAILURE,
+                    type: messageActionTypes.SEND_MESSAGE_FAILURE,
                     payload: failedMessage,
                   });
                 })
@@ -147,7 +147,7 @@ export default function useSendFileMessageCallback({
           // eslint-disable-next-line no-param-reassign
           message.file = file;
           messagesDispatcher({
-            type: messageActionTypes.SEND_MESSAGEGE_FAILURE,
+            type: messageActionTypes.SEND_MESSAGE_FAILURE,
             payload: message,
           });
         })

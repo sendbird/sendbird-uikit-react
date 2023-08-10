@@ -39,7 +39,7 @@ function useResendMessageCallback({
             // eslint-disable-next-line no-param-reassign
             failedMessage.sendingStatus = 'failed';
             messagesDispatcher({
-              type: messageActionTypes.SEND_MESSAGEGE_FAILURE,
+              type: messageActionTypes.SEND_MESSAGE_FAILURE,
               payload: failedMessage,
             });
           });
@@ -72,7 +72,7 @@ function useResendMessageCallback({
             // eslint-disable-next-line no-param-reassign
             failedMessage.sendingStatus = 'failed';
             messagesDispatcher({
-              type: messageActionTypes.SEND_MESSAGEGE_FAILURE,
+              type: messageActionTypes.SEND_MESSAGE_FAILURE,
               payload: failedMessage,
             });
           });
