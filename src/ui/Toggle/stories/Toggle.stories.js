@@ -1,7 +1,9 @@
 import React from 'react';
 import { Toggle, ToggleContainer, ToggleUI } from '../index.tsx';
 
-export default { title: 'UI Components/Toggle' };
+export default {
+  title: '@sendbird/uikit-react/ui/Toggle',
+};
 
 export const withText = () => {
   return (
