@@ -45,8 +45,6 @@ You need to install:
 
 **Caveats**
  - We tried development on Mac OS / Linux systems. You might encounter problems in running `npm run build` or `yarn run build` in Windows machines
- 
-> If you use node.js >= 17 and see `ERR_OSSL_EVP_UNSUPPORTED` error on any run cmd, try to set `export NODE_OPTIONS=--openssl-legacy-provider` in the terminal
 
 ### Development
 We use storybook for development and rollup for building the npm distribution(bundled JS file)
@@ -163,6 +161,10 @@ To read more: https://webpack.js.org/configuration/resolve/#resolvefallback
 1. Use `yarn run generate-component` to generate a UI component in `src/ui`. It uses [Plop.js](https://plopjs.com/) to generate the component.
 2. It can also be used to generate [reducers](/src/utils/typeHelpers/reducers/README.md).
 3. Plop templates are found in [here](/plop-templates).
+
+## Troubleshooting Guide
+- If you use node.js >= 17 and see `ERR_OSSL_EVP_UNSUPPORTED` error on any run cmd, try to set `export NODE_OPTIONS=--openssl-legacy-provider` in the terminal
+
 
 ## Acknowledgments
 ### LameJS
