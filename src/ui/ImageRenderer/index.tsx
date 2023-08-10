@@ -19,6 +19,7 @@ export interface ImageRendererProps {
   fixedSize?: boolean;
   placeHolder?: ((props: { style: { [key: string]: string | number } }) => ReactElement) | ReactElement;
   defaultComponent?: (() => ReactElement) | ReactElement;
+  borderRadius?: string | number;
   onLoad?: () => void;
   onError?: () => void;
 }
@@ -33,6 +34,7 @@ const ImageRenderer = ({
   fixedSize = false,
   placeHolder = null,
   defaultComponent = null,
+  borderRadius = null,
   onLoad = () => { /* noop */ },
   onError = () => { /* noop */ },
 }: ImageRendererProps): ReactElement => {
@@ -112,7 +114,7 @@ const ImageRenderer = ({
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
                 backgroundImage: `url(${url})`,
-                borderRadius: circle ? '50%' : null,
+                borderRadius: circle ? '50%' : borderRadius,
               }}
             />
           )

@@ -1,0 +1,16 @@
+@import '../../styles/variables';
+
+.sendbird-text {
+  color: var(--primary-1);
+}
+
+.sendbird-image-grid {
+  border-radius: 12px;
+  direction: rtl;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: fit-content;
+  @include themed() {
+    background-color: t(bg-1);
+  }
+}
