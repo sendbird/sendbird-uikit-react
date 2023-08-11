@@ -82,7 +82,6 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
     disableMarkAsDelivered,
   }, {
     channelListDispatcher,
-    logSubtitle: 'ChannelListUI',
     logger,
     markAsDeliveredScheduler,
   });

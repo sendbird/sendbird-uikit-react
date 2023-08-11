@@ -17,7 +17,6 @@ interface GlobalContextType {
   logger: Nullable<Logger>,
 }
 const mockPremiumFeatureList = [DELIVERY_RECEIPT];
-const mockLogSubtitle = 'TestSubtitle';
 const globalContext = {} as GlobalContextType;
 
 describe('useFetchChannelList', () => {
@@ -59,7 +58,6 @@ describe('useFetchChannelList', () => {
         disableMarkAsDelivered: false,
       }, {
         channelListDispatcher: channelListDispatcher as CustomUseReducerDispatcher,
-        logSubtitle: mockLogSubtitle,
         logger: logger as Logger,
         markAsDeliveredScheduler: markAsDeliveredScheduler as MarkAsDeliveredSchedulerType,
       }),
@@ -99,7 +97,6 @@ describe('useFetchChannelList', () => {
         disableMarkAsDelivered: false,
       }, {
         channelListDispatcher: channelListDispatcher as CustomUseReducerDispatcher,
-        logSubtitle: mockLogSubtitle,
         logger: logger as Logger,
         markAsDeliveredScheduler: markAsDeliveredScheduler as MarkAsDeliveredSchedulerType,
       }),
@@ -138,7 +135,6 @@ describe('useFetchChannelList', () => {
         disableMarkAsDelivered: false,
       }, {
         channelListDispatcher: channelListDispatcher as CustomUseReducerDispatcher,
-        logSubtitle: mockLogSubtitle,
         logger: logger as Logger,
         markAsDeliveredScheduler: markAsDeliveredScheduler as MarkAsDeliveredSchedulerType,
       }),
