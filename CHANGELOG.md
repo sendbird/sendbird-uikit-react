@@ -1,5 +1,16 @@
 # Changelog - v3
 
+## [v3.6.7] (Aug 11 2023)
+### Fixes:
+* Removed duplicated getEmoji API call from the `useGetChannel` hook. (#705)
+* fix: Publish `SEND_MESSAGE_FAILED` event (#704)
+  * Added handling for failure state in `sendbirdSelectors.getSendUserMessage` and publish the `SEND_MESSAGE_FAILED` event.
+  * Fixed typo SEND_MESSAGEGE_FAILURE.
+
+### Chores:
+* Added a troubleshooting guide to the README. (#702)
+* Made minor improvements to the onboarding process. (#701)
+
 ## [v3.6.6] (Aug 3 2023)
 ### Feat:
 * Add `customExtensionParams` for `sdk.addSendbirdExtensions` (#698)
