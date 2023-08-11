@@ -30,23 +30,23 @@ export const useFetchChannelList = ({
   return useCallback(async () => {
     const setMarkAsDelivered = premiumFeatureList.find((feature) => feature === DELIVERY_RECEIPT);
     if (!channelSource?.hasNext) {
-      logger.info(`ChannelList: not able to fetch`);
+      logger.info('ChannelList: not able to fetch');
       return;
     }
-    logger.info(`ChannelList: starting fetch`);
+    logger.info('ChannelList: starting fetch');
     channelListDispatcher({
       type: channelListActions.FETCH_CHANNELS_START,
       payload: null,
     });
     try {
       const channelList: GroupChannel[] = await channelSource.next();
-      logger.info(`ChannelList: succeeded fetch`, { channelList });
+      logger.info('ChannelList: succeeded fetch', { channelList });
       channelListDispatcher({
         type: channelListActions.FETCH_CHANNELS_SUCCESS,
         payload: channelList,
       });
       if (setMarkAsDelivered && !disableMarkAsDelivered) {
-        logger.info(`ChannelList: mark as delivered to fetched channels`);
+        logger.info('ChannelList: mark as delivered to fetched channels');
         // eslint-disable-next-line no-unused-expressions
         channelList?.forEach((channel) => {
           if (channel?.unreadMessageCount > 0) {
@@ -55,7 +55,7 @@ export const useFetchChannelList = ({
         });
       }
     } catch (error) {
-      logger.error(`ChannelList: failed fetch`, { error });
+      logger.error('ChannelList: failed fetch', { error });
       channelListDispatcher({
         type: channelListActions.FETCH_CHANNELS_FAILURE,
         payload: error,

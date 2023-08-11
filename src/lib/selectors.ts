@@ -16,8 +16,6 @@ import {
   SendBirdStateStore,
 } from './types';
 import { noop } from '../utils/utils';
-import { ChannelListProviderInterface } from '../modules/ChannelList/context/ChannelListProvider';
-import { useFetchChannelList } from '../modules/ChannelList/context/hooks/useFetchChannelList';
 
 /**
  * 1. UIKit Instances
