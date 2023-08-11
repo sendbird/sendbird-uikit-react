@@ -3,15 +3,7 @@
 ## [v3.6.7] (Aug 11 2023)
 ### Feats:
 * Added a new ImageGrid UI component (for internal use only) (#703)
-
-### Fixes:
-* Removed duplicated getEmoji API call from the `useGetChannel` hook (#705).
-* Fixed missing `SEND_MESSAGE_FAILED` event publishing (#704):
-  * Addressed the failure state in `sendbirdSelectors.getSendUserMessage` and published the `SEND_MESSAGE_FAILED` event.
-  * Corrected typo `SEND_MESSAGEGE_FAILURE`.
-
-* Resolved an issue where the `allChannels` couldn't be updated due to state updates occurring only through an internal dispatcher (#708):
-  * Introduced `fetchChannelList` to the `ChannelListContext`.
+* Introduced `fetchChannelList` to the `ChannelListContext`.
   * Implemented a custom hook function `useFetchChannelList`.
   * Utilized this function to fetch the channel list within the `ChannelListUI` component.
   * Added relevant tests for this function.
@@ -59,6 +51,12 @@
       );
     };
     ```
+### Fixes:
+* Removed duplicated getEmoji API call from the `useGetChannel` hook (#705).
+* Fixed missing `SEND_MESSAGE_FAILED` event publishing (#704):
+  * Addressed the failure state in `sendbirdSelectors.getSendUserMessage` and published the `SEND_MESSAGE_FAILED` event.
+  * Corrected typo `SEND_MESSAGEGE_FAILURE`.
+
 ### Chores:
 * Added a troubleshooting guide to the README. (#702)
 * Made minor improvements to the onboarding process. (#701)
