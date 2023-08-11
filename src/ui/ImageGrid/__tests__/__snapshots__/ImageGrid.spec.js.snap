@@ -3,7 +3,7 @@
 exports[`ui/ImageGrid should do a snapshot test of the ImageGrid DOM 1`] = `
 <DocumentFragment>
   <div
-    class="sendbird-image-grid-container"
+    class="sendbird-image-grid-wrap"
   >
     <div
       class="sendbird-image-grid"
