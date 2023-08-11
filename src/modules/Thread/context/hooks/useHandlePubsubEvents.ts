@@ -44,6 +44,17 @@ export default function useHandlePubsubEvents({
         }
         scrollIntoLast?.();
       }));
+      subscriber.set(topics.SEND_MESSAGE_FAILED, pubSub.subscribe(topics.SEND_MESSAGE_FAILED, (props) => {
+        const { channel, message } = props;
+        if (currentChannel?.url === channel?.url
+          && message?.parentMessageId === parentMessage?.messageId
+        ) {
+          threadDispatcher({
+            type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
+            payload: { message },
+          });
+        }
+      }));
       subscriber.set(topics.SEND_FILE_MESSAGE, pubSub.subscribe(topics.SEND_FILE_MESSAGE, (props) => {
         const { channel, message } = props;
         if (currentChannel?.url === channel?.url) {

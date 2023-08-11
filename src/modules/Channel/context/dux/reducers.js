@@ -173,7 +173,7 @@ export default function reducer(state, action) {
           ],
       };
     }
-    case actionTypes.SEND_MESSAGEGE_FAILURE: {
+    case actionTypes.SEND_MESSAGE_FAILURE: {
       // eslint-disable-next-line no-param-reassign
       action.payload.failed = true;
       return {

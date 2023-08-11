@@ -465,7 +465,13 @@ export const getSendUserMessage = (state: SendBirdState) => (
     const handler = new UikitMessageHandler();
     const pubSub = getPubSub(state);
     channel.sendUserMessage(params)
-      .onFailed((error, message) => handler.triggerFailed(error, message))
+      .onFailed((error, message) => {
+        pubSub.publish(
+          topics.SEND_MESSAGE_FAILED,
+          { error, message, channel },
+        );
+        handler.triggerFailed(error, message);
+      })
       .onPending((message) => {
         pubSub.publish(
           topics.SEND_MESSAGE_START,
@@ -499,7 +505,13 @@ export const getSendFileMessage = (state: SendBirdState) => (
     const handler = new UikitMessageHandler();
     const pubSub = getPubSub(state);
     channel.sendFileMessage(params)
-      .onFailed((error, message) => handler.triggerFailed(error, message))
+      .onFailed((error, message) => {
+        pubSub.publish(
+          topics.SEND_MESSAGE_FAILED,
+          { error, message, channel },
+        );
+        handler.triggerFailed(error, message);
+      })
       .onPending((message) => {
         pubSub.publish(
           topics.SEND_MESSAGE_START,
