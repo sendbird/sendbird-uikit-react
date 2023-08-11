@@ -655,32 +655,6 @@ export const getResendFileMessage = (state: SendBirdState) => (
   )
 );
 
-export const getFetchChannelList = (state: SendBirdState) => (
-  (context: ChannelListProviderInterface) => {
-    const { premiumFeatureList = [] } = state?.stores?.sdkStore?.sdk?.appInfo ?? {};
-    const {
-      logger,
-      markAsDeliveredScheduler,
-      disableMarkAsDelivered,
-    } = state.config;
-    const {
-      channelSource,
-      channelListDispatcher,
-    } = context;
-
-    useFetchChannelList({
-      channelSource,
-      premiumFeatureList,
-      disableMarkAsDelivered,
-    }, {
-      channelListDispatcher,
-      logSubtitle: 'SendbirdSelectors - getFetchChannelList',
-      logger,
-      markAsDeliveredScheduler,
-    });
-  }
-);
-
 const sendbirdSelectors = {
   getSdk,
   getPubSub,
@@ -702,7 +676,6 @@ const sendbirdSelectors = {
   getDeleteMessage,
   getResendUserMessage,
   getResendFileMessage,
-  getFetchChannelList,
 };
 
 export default sendbirdSelectors;
