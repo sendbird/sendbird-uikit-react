@@ -1,5 +1,6 @@
 import topics from './pubSub/topics';
 import type {
+  SendbirdError,
   User,
   UserUpdateParams,
 } from '@sendbird/chat';
@@ -16,6 +17,9 @@ import {
   SendBirdStateStore,
 } from './types';
 import { noop } from '../utils/utils';
+import { ChannelListProviderInterface } from '../modules/ChannelList/context/ChannelListProvider';
+import * as ChannelListActions from '../modules/ChannelList/dux/actionTypes';
+import { useFetchChannelList } from '../modules/ChannelList/context/hooks/useFetchChannelList';
 
 /**
  * 1. UIKit Instances
@@ -653,6 +657,32 @@ export const getResendFileMessage = (state: SendBirdState) => (
   )
 );
 
+export const getFetchChannelList = (state: SendBirdState) => (
+  (context: ChannelListProviderInterface) => {
+    const { premiumFeatureList = [] } = state?.stores?.sdkStore?.sdk?.appInfo ?? {};
+    const {
+      logger,
+      markAsDeliveredScheduler,
+      disableMarkAsDelivered,
+    } = state?.config;
+    const {
+      channelSource,
+      channelListDispatcher,
+    } = context;
+
+    useFetchChannelList({
+      channelSource,
+      premiumFeatureList,
+      disableMarkAsDelivered,
+    }, {
+      channelListDispatcher,
+      logSubtitle: 'SendbirdSelectors - getFetchChannelList',
+      logger,
+      markAsDeliveredScheduler,
+    });
+  }
+);
+
 const sendbirdSelectors = {
   getSdk,
   getPubSub,
@@ -674,6 +704,7 @@ const sendbirdSelectors = {
   getDeleteMessage,
   getResendUserMessage,
   getResendFileMessage,
+  getFetchChannelList,
 };
 
 export default sendbirdSelectors;
