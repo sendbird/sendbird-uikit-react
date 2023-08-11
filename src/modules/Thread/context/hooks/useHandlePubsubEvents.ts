@@ -44,7 +44,7 @@ export default function useHandlePubsubEvents({
         }
         scrollIntoLast?.();
       }));
-      subscriber.set(topics.SEND_MESSAGE_FAILED, pubSub.subscribe(topics.SEND_USER_MESSAGE, (props) => {
+      subscriber.set(topics.SEND_MESSAGE_FAILED, pubSub.subscribe(topics.SEND_MESSAGE_FAILED, (props) => {
         const { channel, message } = props;
         if (currentChannel?.url === channel?.url
           && message?.parentMessageId === parentMessage?.messageId

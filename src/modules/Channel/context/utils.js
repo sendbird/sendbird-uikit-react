@@ -81,7 +81,7 @@ export const pubSubHandler = ({
       });
     }
   }));
-  subscriber.set(topics.SEND_MESSAGE_FAILED, pubSub.subscribe(topics.LEAVE_CHANNEL, (msg) => {
+  subscriber.set(topics.SEND_MESSAGE_FAILED, pubSub.subscribe(topics.SEND_MESSAGE_FAILED, (msg) => {
     const { channel, message } = msg;
     if (channelUrl === channel?.url) {
       dispatcher({
