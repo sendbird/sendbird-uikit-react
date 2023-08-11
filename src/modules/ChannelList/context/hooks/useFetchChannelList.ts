@@ -30,41 +30,40 @@ export const useFetchChannelList = ({
   logger,
   markAsDeliveredScheduler,
 }: StaticProps) => {
-  return useCallback(() => {
+  return useCallback(async () => {
     const setMarkAsDelivered = premiumFeatureList.find((feature) => feature === DELIVERY_RECEIPT);
-    if (channelSource?.hasNext) {
-      logger.info(`${logSubtitle}: starting fetch`);
-      channelListDispatcher({
-        type: channelListActions.FETCH_CHANNELS_START,
-        payload: null,
-      });
-      channelSource.next()
-        .then((channelList: GroupChannel[]) => {
-          logger.info(`${logSubtitle}: succeeded fetch`, { channelList });
-          channelListDispatcher({
-            type: channelListActions.FETCH_CHANNELS_SUCCESS,
-            payload: channelList,
-          });
-          if (setMarkAsDelivered && !disableMarkAsDelivered) {
-            logger.info(`${logSubtitle}: mark as delivered to fetched channels`);
-            // eslint-disable-next-line no-unused-expressions
-            channelList?.forEach((channel) => {
-              if (channel?.unreadMessageCount > 0) {
-                markAsDeliveredScheduler.push(channel);
-              }
-            });
-          }
-        })
-        .catch((err: SendbirdError) => {
-          console.log('훈')
-          logger.error(`${logSubtitle}: failed fetch`, { err });
-          channelListDispatcher({
-            type: channelListActions.FETCH_CHANNELS_FAILURE,
-            payload: err,
-          });
-        });
-    } else {
+    if (!channelSource?.hasNext) {
       logger.info(`${logSubtitle}: not able to fetch`);
+      return;
+    }
+    logger.info(`${logSubtitle}: starting fetch`);
+    channelListDispatcher({
+      type: channelListActions.FETCH_CHANNELS_START,
+      payload: null,
+    });
+    try {
+      const channelList: GroupChannel[] = await channelSource.next()
+      logger.info(`${logSubtitle}: succeeded fetch`, { channelList });
+        channelListDispatcher({
+          type: channelListActions.FETCH_CHANNELS_SUCCESS,
+          payload: channelList,
+        });
+        if (setMarkAsDelivered && !disableMarkAsDelivered) {
+          logger.info(`${logSubtitle}: mark as delivered to fetched channels`);
+          // eslint-disable-next-line no-unused-expressions
+          channelList?.forEach((channel) => {
+            if (channel?.unreadMessageCount > 0) {
+              markAsDeliveredScheduler.push(channel);
+            }
+          });
+        }
+    } catch (error) {
+      console.log('훈')
+      logger.error(`${logSubtitle}: failed fetch`, { error });
+      channelListDispatcher({
+        type: channelListActions.FETCH_CHANNELS_FAILURE,
+        payload: error,
+      });
     }
   }, [
     channelSource,

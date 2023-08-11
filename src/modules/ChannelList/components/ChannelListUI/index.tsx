@@ -80,12 +80,12 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
   const fetchChannelList = useFetchChannelList({
     channelSource,
     premiumFeatureList,
+    disableMarkAsDelivered,
   }, {
     channelListDispatcher,
     logSubtitle: 'ChannelListUI',
     logger,
     markAsDeliveredScheduler,
-    disableMarkAsDelivered,
   });
 
   return (

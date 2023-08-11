@@ -51,7 +51,7 @@ describe('useFetchChannelList', () => {
     globalContext.logger = null;
   });
 
-  it('should update allChannels after successful fetch channel list', () => {
+  it('should update allChannels after successful fetch channel list', async () => {
     const {
       mockChannelSource,
       channelListDispatcher,
@@ -71,8 +71,8 @@ describe('useFetchChannelList', () => {
       })
     );
     const resultCallback= hook.result.current as unknown as () => void;
-    act(() => {
-      resultCallback();
+    await act(async () => {
+      await resultCallback();
     });
 
     jest.advanceTimersByTime(1000);
