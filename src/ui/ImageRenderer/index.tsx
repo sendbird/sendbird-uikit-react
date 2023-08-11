@@ -1,7 +1,7 @@
 import React, { useState, useMemo, ReactElement } from 'react';
 
 import './index.scss';
-import numberToPx from "../../utils/numberToPx";
+import numberToPx from '../../utils/numberToPx';
 
 /*
   ImageRenderer displays image with url or source
@@ -11,8 +11,8 @@ import numberToPx from "../../utils/numberToPx";
 */
 
 export function getBorderRadiusForImageRenderer(
-  circle: boolean = false,
-  borderRadius: string | number = null
+  circle = false,
+  borderRadius: string | number = null,
 ): string {
   return circle ? '50%' : numberToPx(borderRadius);
 }

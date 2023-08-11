@@ -1,4 +1,4 @@
-import {getBorderRadiusForImageRenderer} from "../index";
+import { getBorderRadiusForImageRenderer } from '../index';
 
 describe('Global-utils/getBorderRadiusForImageRenderer', () => {
   it('when given nothing, return null', () => {
