@@ -39,7 +39,6 @@ function useSetChannel({ channelUrl, sdkInit, disableMarkAsRead }, {
       }).catch((err) => {
         logger.error('Channel: Getting emojis failed', err);
       });
-      sdk.getAllEmoji();
     }
   }, [channelUrl, sdkInit]);
 }
