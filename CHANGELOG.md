@@ -1,12 +1,64 @@
 # Changelog - v3
 
 ## [v3.6.7] (Aug 11 2023)
-### Fixes:
-* Removed duplicated getEmoji API call from the `useGetChannel` hook. (#705)
-* fix: Publish `SEND_MESSAGE_FAILED` event (#704)
-  * Added handling for failure state in `sendbirdSelectors.getSendUserMessage` and publish the `SEND_MESSAGE_FAILED` event.
-  * Fixed typo SEND_MESSAGEGE_FAILURE.
+### Feats:
+* Added a new ImageGrid UI component (for internal use only) (#703)
 
+### Fixes:
+* Removed duplicated getEmoji API call from the `useGetChannel` hook (#705).
+* Fixed missing `SEND_MESSAGE_FAILED` event publishing (#704):
+  * Addressed the failure state in `sendbirdSelectors.getSendUserMessage` and published the `SEND_MESSAGE_FAILED` event.
+  * Corrected typo `SEND_MESSAGEGE_FAILURE`.
+
+* Resolved an issue where the `allChannels` couldn't be updated due to state updates occurring only through an internal dispatcher (#708):
+  * Introduced `fetchChannelList` to the `ChannelListContext`.
+  * Implemented a custom hook function `useFetchChannelList`.
+  * Utilized this function to fetch the channel list within the `ChannelListUI` component.
+  * Added relevant tests for this function.
+  * Provided the method through the `ChannelListContext`: `fetchChannelList`.
+  Example Usage:
+    ```jsx
+    import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider'
+    import useSendbirdStateContext from '@sendbird/uikit-react/useSendbirdStateContext'
+    import { ChannelListProvider, useChannelListContext } from '@sendbird/uikit-react/ChannelList/context'
+
+    const isAboutSame = (a, b, px) => (Math.abs(a - b) <= px);
+
+    const CustomChannelList = () => {
+      const {
+        allChannels,
+        fetchChannelList,
+      } = useChannelListContext();
+
+      return (
+        <div
+          className="custom-channel-list"
+          onScroll={(e) => {
+            const target = e.target;
+            if (isAboutSame(target.clientHeight + target.scrollTop, target.scrollHeight, 10)) {
+              fetchChannelList();
+            }
+          }}
+        >
+          {allChannels.map((channel) => {
+            return // custom channel list item
+          })}
+        </div>
+      );
+    };
+
+    const CustomApp = () => {
+      return (
+        <div className="custom-app">
+          <SendbirdProvider ... >
+            <ChannelListProvider ... >
+              <CustomChannelList />
+            </ChannelListProvider>
+          </SendbirdProvider>
+        </div>
+      );
+    };
+    ```
 ### Chores:
 * Added a troubleshooting guide to the README. (#702)
 * Made minor improvements to the onboarding process. (#701)
