@@ -15,7 +15,6 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import EditUserProfile from '../../../EditUserProfile';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import { isAboutSame } from '../utils';
-import { useFetchChannelList } from '../../context/hooks/useFetchChannelList';
 
 interface RenderChannelPreviewProps {
   channel: GroupChannel;
@@ -58,9 +57,9 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
     loading,
     currentChannel,
     channelListDispatcher,
-    channelSource,
     typingChannels,
     initialized,
+    fetchChannelList,
   } = useChannelListContext();
 
   const state = useSendbirdStateContext();
@@ -69,22 +68,8 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
   const {
     logger,
     isOnline = false,
-    markAsDeliveredScheduler,
-    disableMarkAsDelivered,
   } = config;
-
   const sdkError = sdkStore?.error;
-  const { premiumFeatureList = [] } = state?.stores?.sdkStore?.sdk?.appInfo ?? {};
-
-  const fetchChannelList = useFetchChannelList({
-    channelSource,
-    premiumFeatureList,
-    disableMarkAsDelivered,
-  }, {
-    channelListDispatcher,
-    logger,
-    markAsDeliveredScheduler,
-  });
 
   return (
     <>

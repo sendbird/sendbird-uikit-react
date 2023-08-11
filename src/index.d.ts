@@ -439,6 +439,8 @@ export interface ChannelListProviderInterface extends ChannelListProviderProps {
   currentUserId: string;
   // channelListDispatcher: CustomUseReducerDispatcher;
   channelSource: GroupChannelListQuery;
+  typingChannels: GroupChannel[];
+  fetchChannelList: () => void;
 }
 
 interface RenderChannelPreviewProps {

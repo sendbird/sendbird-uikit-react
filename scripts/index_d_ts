@@ -416,6 +416,7 @@ declare module "SendbirdUIKitGlobal" {
     // channelListDispatcher: CustomUseReducerDispatcher;
     channelSource: GroupChannelListQuery;
     typingChannels: GroupChannel[];
+    fetchChannelList: () => void;
   }
 
 
