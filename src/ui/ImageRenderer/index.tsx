@@ -49,6 +49,9 @@ const ImageRenderer = ({
   const [showDefaultComponent, setShowDefaultComponent] = useState(false);
   const [showPlaceHolder, setShowPlaceHolder] = useState(true);
 
+  const parsedWidth = numberToPx(width);
+  const parsedHeight = numberToPx(height);
+
   const DefaultComponent = useMemo(() => {
     return typeof defaultComponent === 'function'
       ? defaultComponent()
@@ -60,9 +63,9 @@ const ImageRenderer = ({
       ? placeHolder({
         style: {
           width: '100%',
-          minWidth: width,
-          maxWidth: fixedSize ? width : '400px',
-          height,
+          minWidth: parsedWidth,
+          maxWidth: fixedSize ? parsedWidth : '400px',
+          height: parsedHeight,
           position: 'absolute',
           display: 'flex',
           justifyContent: 'center',
@@ -100,9 +103,9 @@ const ImageRenderer = ({
       ].join(' ')}
       style={{
         width: '100%',
-        minWidth: width,
-        maxWidth: fixedSize ? width : '400px',
-        height,
+        minWidth: parsedWidth,
+        maxWidth: fixedSize ? parsedWidth : '400px',
+        height: parsedHeight,
       }}
     >
       {showPlaceHolder && PlaceHolder}
@@ -114,9 +117,9 @@ const ImageRenderer = ({
               className="sendbird-image-renderer__image"
               style={{
                 width: '100%',
-                minWidth: width,
-                maxWidth: fixedSize ? width : '400px',
-                height,
+                minWidth: parsedWidth,
+                maxWidth: fixedSize ? parsedWidth : '400px',
+                height: parsedHeight,
                 position: 'absolute',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
