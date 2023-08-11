@@ -3,7 +3,7 @@ import { renderHook } from '@testing-library/react';
 import { GroupChannelListQuery } from '@sendbird/chat/groupChannel';
 
 import { useFetchChannelList } from '../useFetchChannelList';
-import { mockChannelList } from '../channellist.mock';
+import { mockChannelList } from '../channelList.mock';
 import { DELIVERY_RECEIPT } from '../../../../../utils/consts';
 import { CustomUseReducerDispatcher, Logger } from '../../../../../lib/SendbirdState';
 import { Nullable } from '../../../../../types';
