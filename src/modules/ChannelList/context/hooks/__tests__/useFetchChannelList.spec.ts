@@ -1,14 +1,14 @@
-import { act } from "react-dom/test-utils";
-import { renderHook } from "@testing-library/react";
-import { GroupChannelListQuery } from "@sendbird/chat/groupChannel";
+import { act } from 'react-dom/test-utils';
+import { renderHook } from '@testing-library/react';
+import { GroupChannelListQuery } from '@sendbird/chat/groupChannel';
 
-import { useFetchChannelList } from "../useFetchChannelList";
-import { mockChannelList } from "./channellist.mock";
-import { DELIVERY_RECEIPT } from "../../../../../utils/consts";
-import { CustomUseReducerDispatcher, Logger } from "../../../../../lib/SendbirdState";
-import { Nullable } from "../../../../../types";
-import { MarkAsDeliveredSchedulerType } from "../../../../../lib/hooks/useMarkAsDeliveredScheduler";
-import * as channelListActions from "../../../dux/actionTypes";
+import { useFetchChannelList } from '../useFetchChannelList';
+import { mockChannelList } from '../channellist.mock';
+import { DELIVERY_RECEIPT } from '../../../../../utils/consts';
+import { CustomUseReducerDispatcher, Logger } from '../../../../../lib/SendbirdState';
+import { Nullable } from '../../../../../types';
+import { MarkAsDeliveredSchedulerType } from '../../../../../lib/hooks/useMarkAsDeliveredScheduler';
+import * as channelListActions from '../../../dux/actionTypes';
 
 interface GlobalContextType {
   mockChannelSource: Nullable<GroupChannelListQuery>,
@@ -24,12 +24,6 @@ describe('useFetchChannelList', () => {
   beforeEach(() => {
     globalContext.mockChannelSource = {
       hasNext: true,
-      // next: jest.fn(() => (
-      //   new Promise((resolve) => {
-      //     const channelList = mockChannelList;
-      //     resolve(channelList);
-      //   })
-      // )),
       next: jest.fn(() => Promise.resolve(mockChannelList)),
     } as unknown as GroupChannelListQuery;
     globalContext.channelListDispatcher = jest.fn() as CustomUseReducerDispatcher;
@@ -68,35 +62,26 @@ describe('useFetchChannelList', () => {
         logSubtitle: mockLogSubtitle,
         logger: logger as Logger,
         markAsDeliveredScheduler: markAsDeliveredScheduler as MarkAsDeliveredSchedulerType,
-      })
+      }),
     );
-    const resultCallback= hook.result.current as unknown as () => void;
+    const resultCallback = hook.result.current as unknown as () => void;
     await act(async () => {
       await resultCallback();
     });
 
-    jest.advanceTimersByTime(1000);
-
-    // expect(logger?.warning).not.toHaveBeenCalled();
-    // expect(logger?.error).not.toHaveBeenCalled();
-
     expect(channelListDispatcher).toHaveBeenCalledTimes(2);
-    // expect(logger?.info).toHaveBeenNthCalledWith(1, `${mockLogSubtitle}: starting fetch`);
+    expect(mockChannelSource?.next).toHaveBeenCalledOnce();
     expect(channelListDispatcher).toHaveBeenNthCalledWith(1, {
       type: channelListActions.FETCH_CHANNELS_START,
       payload: null,
     });
-    expect(mockChannelSource?.next).toHaveBeenCalledOnce();
-
-    // expect(logger?.info).toHaveBeenNthCalledWith(2, `${mockLogSubtitle}: succeeded fetch`, { channelList: mockChannelList });
     expect(channelListDispatcher).toHaveBeenNthCalledWith(2, {
       type: channelListActions.FETCH_CHANNELS_SUCCESS,
       payload: mockChannelList,
     });
-    // expect(logger?.info).not.toHaveBeenNthCalledWith(3, `${mockLogSubtitle}: mark as delivered to fetched channels`);
   });
 
-  it('should expect failure when failed fetching channel list', () => {
+  it('should expect failure when failed fetching channel list', async () => {
     const mockError = { code: 0, message: 'Error message' };
     const {
       mockChannelSource,
@@ -117,19 +102,53 @@ describe('useFetchChannelList', () => {
         logSubtitle: mockLogSubtitle,
         logger: logger as Logger,
         markAsDeliveredScheduler: markAsDeliveredScheduler as MarkAsDeliveredSchedulerType,
-      })
+      }),
     );
-    const resultCallback= hook.result.current as unknown as () => void;
-    act(() => {
-      resultCallback();
+    const resultCallback = hook.result.current as unknown as () => void;
+    await act(async () => {
+      await resultCallback();
     });
 
-    expect(logger?.info).toHaveBeenCalledOnce();
-    expect(logger?.error).toHaveBeenCalledOnce();
+    expect(channelListDispatcher).toHaveBeenCalledTimes(2);
+    expect(mockChannelSource?.next).not.toHaveBeenCalled();
+    expect(channelListDispatcher).toHaveBeenNthCalledWith(1, {
+      type: channelListActions.FETCH_CHANNELS_START,
+      payload: null,
+    });
+    expect(channelListDispatcher).toHaveBeenNthCalledWith(2, {
+      type: channelListActions.FETCH_CHANNELS_FAILURE,
+      payload: mockError,
+    });
+  });
 
-    expect(logger?.warning).not.toHaveBeenCalled();
+  it('should not try to fetch channel list when hasNext is false', async () => {
+    const {
+      mockChannelSource,
+      channelListDispatcher,
+      markAsDeliveredScheduler,
+      logger,
+    } = globalContext;
+    const hook = renderHook(
+      () => useFetchChannelList({
+        channelSource: {
+          ...mockChannelSource,
+          hasNext: false,
+        } as unknown as GroupChannelListQuery,
+        premiumFeatureList: mockPremiumFeatureList,
+        disableMarkAsDelivered: false,
+      }, {
+        channelListDispatcher: channelListDispatcher as CustomUseReducerDispatcher,
+        logSubtitle: mockLogSubtitle,
+        logger: logger as Logger,
+        markAsDeliveredScheduler: markAsDeliveredScheduler as MarkAsDeliveredSchedulerType,
+      }),
+    );
+    const resultCallback = hook.result.current as unknown as () => void;
+    await act(async () => {
+      await resultCallback();
+    });
+
+    expect(mockChannelSource?.next).not.toHaveBeenCalled();
     expect(channelListDispatcher).not.toHaveBeenCalled();
-
-    expect(logger?.error).toHaveBeenCalledWith(`${mockLogSubtitle}: failed fetch`, { err: mockError });
   });
 });
