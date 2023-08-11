@@ -1,7 +1,7 @@
 import './channel-list-ui.scss';
 
 import React, { useState } from 'react';
-import type { GroupChannel, Member, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import type { User } from '@sendbird/chat';
 
 import ChannelListHeader from '../ChannelListHeader';
@@ -15,8 +15,6 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import EditUserProfile from '../../../EditUserProfile';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import { isAboutSame } from '../utils';
-
-const DELIVERY_RECIPT = 'delivery_receipt';
 
 interface RenderChannelPreviewProps {
   channel: GroupChannel;
@@ -59,23 +57,18 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
     loading,
     currentChannel,
     channelListDispatcher,
-    channelSource,
     typingChannels,
     initialized,
+    fetchChannelList,
   } = useChannelListContext();
 
   const state = useSendbirdStateContext();
-
   const sdkStore = state?.stores?.sdkStore;
   const config = state?.config;
   const {
     logger,
     isOnline = false,
-    markAsDeliveredScheduler,
-    disableMarkAsDelivered,
   } = config;
-
-  const sdk = sdkStore?.sdk as SendbirdGroupChat;
   const sdkError = sdkStore?.error;
 
   return (
@@ -112,38 +105,8 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
         className="sendbird-channel-list__body"
         onScroll={(e) => {
           const target = e?.target as HTMLDivElement;
-          const fetchMore = isAboutSame(target.clientHeight + target.scrollTop, target.scrollHeight, 10);
-          if (fetchMore && channelSource?.hasNext) {
-            logger.info('ChannelList: Fetching more channels');
-            channelListDispatcher({
-              type: channelListActions.FETCH_CHANNELS_START,
-              payload: null,
-            });
-            channelSource.next().then((channelList) => {
-              logger.info('ChannelList: Fetching channels successful', channelList);
-              channelListDispatcher({
-                type: channelListActions.FETCH_CHANNELS_SUCCESS,
-                payload: channelList,
-              });
-              const canSetMarkAsDelivered = sdk?.appInfo?.premiumFeatureList
-                ?.find((feature) => (feature === DELIVERY_RECIPT));
-
-              if (canSetMarkAsDelivered && !disableMarkAsDelivered) {
-                logger.info('ChannelList: Marking all channels as read');
-                // eslint-disable-next-line no-unused-expressions
-                channelList?.forEach((channel) => {
-                  if (channel?.unreadMessageCount > 0) {
-                    markAsDeliveredScheduler.push(channel);
-                  }
-                });
-              }
-            }).catch((err) => {
-              logger.info('ChannelList: Fetching channels failed', err);
-              channelListDispatcher({
-                type: channelListActions.FETCH_CHANNELS_FAILURE,
-                payload: err,
-              });
-            });
+          if (isAboutSame(target.clientHeight + target.scrollTop, target.scrollHeight, 10)) {
+            fetchChannelList();
           }
         }}
       >

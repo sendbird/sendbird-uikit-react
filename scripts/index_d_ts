@@ -230,7 +230,8 @@ declare module "SendbirdUIKitGlobal" {
   ) => Promise<UserMessage>;
   export type GetResendFileMessage = (
     channel: GroupChannel | OpenChannel,
-    failedMessage: FileMessage
+    failedMessage: FileMessage,
+    blob: Blob,
   ) => Promise<FileMessage>;
 
   export interface sendbirdSelectorsInterface {
@@ -415,6 +416,7 @@ declare module "SendbirdUIKitGlobal" {
     // channelListDispatcher: CustomUseReducerDispatcher;
     channelSource: GroupChannelListQuery;
     typingChannels: GroupChannel[];
+    fetchChannelList: () => void;
   }
 
 

@@ -34,6 +34,7 @@ import channelListReducers from '../dux/reducers';
 import channelListInitialState from '../dux/initialState';
 import { CHANNEL_TYPE } from '../../CreateChannel/types';
 import useActiveChannelUrl from './hooks/useActiveChannelUrl';
+import { useFetchChannelList } from './hooks/useFetchChannelList';
 
 interface ApplicationUserListQuery {
   limit?: number;
@@ -104,6 +105,7 @@ export interface ChannelListProviderInterface extends ChannelListProviderProps {
   currentUserId: string;
   channelListDispatcher: CustomUseReducerDispatcher;
   channelSource: GroupChannelListQuerySb | null;
+  fetchChannelList: () => void;
 }
 
 interface ChannelListStoreInterface {
@@ -169,6 +171,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     isMessageReceiptStatusEnabledOnChannelList = false,
   } = config;
   const sdk = sdkStore?.sdk as SendbirdGroupChat;
+  const { premiumFeatureList = [] } = sdk?.appInfo ?? {};
 
   // derive some variables
   // enable if it is true atleast once(both are flase by default)
@@ -345,6 +348,16 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     channelListDispatcher,
   });
 
+  const fetchChannelList = useFetchChannelList({
+    channelSource,
+    premiumFeatureList,
+    disableMarkAsDelivered,
+  }, {
+    channelListDispatcher,
+    logger,
+    markAsDeliveredScheduler,
+  });
+
   return (
     <ChannelListContext.Provider value={{
       className,
@@ -364,6 +377,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
       typingChannels,
       isTypingIndicatorEnabled: (isTypingIndicatorEnabled !== null) ? isTypingIndicatorEnabled : isTypingIndicatorEnabledOnChannelList,
       isMessageReceiptStatusEnabled: (isMessageReceiptStatusEnabled !== null) ? isMessageReceiptStatusEnabled : isMessageReceiptStatusEnabledOnChannelList,
+      fetchChannelList,
     }}>
       <UserProfileProvider
         disableUserProfile={userDefinedDisableUserProfile ?? config?.disableUserProfile}
