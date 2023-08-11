@@ -1,12 +1,11 @@
-import { useCallback } from "react";
-import { GroupChannel, GroupChannelListQuery } from "@sendbird/chat/groupChannel";
+import { useCallback } from 'react';
+import { GroupChannel, GroupChannelListQuery } from '@sendbird/chat/groupChannel';
 
-import { Nullable } from "../../../../types";
-import { CustomUseReducerDispatcher, Logger } from "../../../../lib/SendbirdState";
-import { MarkAsDeliveredSchedulerType } from "../../../../lib/hooks/useMarkAsDeliveredScheduler";
-import * as channelListActions from "../../dux/actionTypes";
-import { DELIVERY_RECEIPT } from "../../../../utils/consts";
-import { SendbirdError } from "@sendbird/chat";
+import { Nullable } from '../../../../types';
+import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
+import { MarkAsDeliveredSchedulerType } from '../../../../lib/hooks/useMarkAsDeliveredScheduler';
+import * as channelListActions from '../../dux/actionTypes';
+import { DELIVERY_RECEIPT } from '../../../../utils/consts';
 
 interface DynamicProps {
   channelSource: Nullable<GroupChannelListQuery>;
@@ -42,23 +41,22 @@ export const useFetchChannelList = ({
       payload: null,
     });
     try {
-      const channelList: GroupChannel[] = await channelSource.next()
+      const channelList: GroupChannel[] = await channelSource.next();
       logger.info(`${logSubtitle}: succeeded fetch`, { channelList });
-        channelListDispatcher({
-          type: channelListActions.FETCH_CHANNELS_SUCCESS,
-          payload: channelList,
+      channelListDispatcher({
+        type: channelListActions.FETCH_CHANNELS_SUCCESS,
+        payload: channelList,
+      });
+      if (setMarkAsDelivered && !disableMarkAsDelivered) {
+        logger.info(`${logSubtitle}: mark as delivered to fetched channels`);
+        // eslint-disable-next-line no-unused-expressions
+        channelList?.forEach((channel) => {
+          if (channel?.unreadMessageCount > 0) {
+            markAsDeliveredScheduler.push(channel);
+          }
         });
-        if (setMarkAsDelivered && !disableMarkAsDelivered) {
-          logger.info(`${logSubtitle}: mark as delivered to fetched channels`);
-          // eslint-disable-next-line no-unused-expressions
-          channelList?.forEach((channel) => {
-            if (channel?.unreadMessageCount > 0) {
-              markAsDeliveredScheduler.push(channel);
-            }
-          });
-        }
+      }
     } catch (error) {
-      console.log('훈')
       logger.error(`${logSubtitle}: failed fetch`, { error });
       channelListDispatcher({
         type: channelListActions.FETCH_CHANNELS_FAILURE,

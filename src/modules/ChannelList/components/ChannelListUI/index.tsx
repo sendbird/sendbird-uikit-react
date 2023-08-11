@@ -1,7 +1,7 @@
 import './channel-list-ui.scss';
 
 import React, { useState } from 'react';
-import type { GroupChannel, Member, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import type { User } from '@sendbird/chat';
 
 import ChannelListHeader from '../ChannelListHeader';
@@ -73,7 +73,6 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
     disableMarkAsDelivered,
   } = config;
 
-  const sdk = sdkStore?.sdk as SendbirdGroupChat;
   const sdkError = sdkStore?.error;
   const { premiumFeatureList = [] } = state?.stores?.sdkStore?.sdk?.appInfo ?? {};
 

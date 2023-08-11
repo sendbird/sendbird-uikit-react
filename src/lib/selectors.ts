@@ -1,6 +1,5 @@
 import topics from './pubSub/topics';
 import type {
-  SendbirdError,
   User,
   UserUpdateParams,
 } from '@sendbird/chat';
@@ -18,7 +17,6 @@ import {
 } from './types';
 import { noop } from '../utils/utils';
 import { ChannelListProviderInterface } from '../modules/ChannelList/context/ChannelListProvider';
-import * as ChannelListActions from '../modules/ChannelList/dux/actionTypes';
 import { useFetchChannelList } from '../modules/ChannelList/context/hooks/useFetchChannelList';
 
 /**
@@ -664,7 +662,7 @@ export const getFetchChannelList = (state: SendBirdState) => (
       logger,
       markAsDeliveredScheduler,
       disableMarkAsDelivered,
-    } = state?.config;
+    } = state.config;
     const {
       channelSource,
       channelListDispatcher,
