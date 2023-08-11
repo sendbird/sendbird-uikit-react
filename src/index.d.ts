@@ -249,8 +249,12 @@ type GetResendUserMessage = (
 ) => Promise<UserMessage>;
 type GetResendFileMessage = (
   channel: GroupChannel | OpenChannel,
-  failedMessage: FileMessage
+  failedMessage: FileMessage,
+  blob: Blob,
 ) => Promise<FileMessage>;
+type GetFetchChannelListType = (
+  context: ChannelListProviderInterface,
+) => Promise<void>;
 
 interface sendbirdSelectorsInterface {
   getSdk: (store: SendBirdState) => GetSdk;
@@ -273,6 +277,7 @@ interface sendbirdSelectorsInterface {
   getDeleteMessage: (store: SendBirdState) => GetDeleteMessage;
   getResendUserMessage: (store: SendBirdState) => GetResendUserMessage;
   getResendFileMessage: (store: SendBirdState) => GetResendFileMessage;
+  getFetchChannelList: (store: SendBirdState) => GetFetchChannelListType;
 }
 
 interface AppProps {

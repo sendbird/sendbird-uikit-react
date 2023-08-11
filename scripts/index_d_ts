@@ -230,8 +230,12 @@ declare module "SendbirdUIKitGlobal" {
   ) => Promise<UserMessage>;
   export type GetResendFileMessage = (
     channel: GroupChannel | OpenChannel,
-    failedMessage: FileMessage
+    failedMessage: FileMessage,
+    blob: Blob,
   ) => Promise<FileMessage>;
+  export type GetFetchChannelListType = (
+    context: ChannelListProviderInterface,
+  ) => Promise<void>;
 
   export interface sendbirdSelectorsInterface {
     getSdk: (store: SendBirdState) => GetSdk;
@@ -254,6 +258,7 @@ declare module "SendbirdUIKitGlobal" {
     getDeleteMessage: (store: SendBirdState) => GetDeleteMessage;
     getResendUserMessage: (store: SendBirdState) => GetResendUserMessage;
     getResendFileMessage: (store: SendBirdState) => GetResendFileMessage;
+    getFetchChannelList: (store: SendBirdState) => GetFetchChannelListType;
   }
   export interface SendbirdProviderProps {
     userId: string;
