@@ -11,6 +11,7 @@ import {
 
 import IconAdd from '../../svgs/icon-add.svg';
 import IconArrowLeft from '../../svgs/icon-arrow-left.svg';
+import IconArrowRight from '../../svgs/icon-arrow-right.svg';
 import IconAttach from '../../svgs/icon-attach.svg';
 import IconAudioOnLined from '../../svgs/icon-audio-on-lined.svg';
 import IconBan from '../../svgs/icon-ban.svg';
@@ -71,6 +72,7 @@ function changeTypeToIconComponent(type) {
   switch (type) {
     case Types.ADD: return <IconAdd />;
     case Types.ARROW_LEFT: return <IconArrowLeft />;
+    case Types.ARROW_RIGHT: return <IconArrowRight />;
     case Types.ATTACH: return <IconAttach />;
     case Types.AUDIO_ON_LINED: return <IconAudioOnLined />;
     case Types.BAN: return <IconBan />;
