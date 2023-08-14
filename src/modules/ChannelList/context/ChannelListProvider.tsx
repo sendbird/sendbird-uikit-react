@@ -24,6 +24,7 @@ import setupChannelList, {
 } from '../utils';
 import { uuidv4 } from '../../../utils/uuid';
 import { noop } from '../../../utils/utils';
+import { DELIVERY_RECEIPT } from '../../../utils/consts';
 
 import * as channelListActions from '../dux/actionTypes';
 
@@ -350,8 +351,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
 
   const fetchChannelList = useFetchChannelList({
     channelSource,
-    premiumFeatureList,
-    disableMarkAsDelivered,
+    disableMarkAsDelivered: disableMarkAsDelivered || !premiumFeatureList.some((feature) => feature === DELIVERY_RECEIPT),
   }, {
     channelListDispatcher,
     logger,
