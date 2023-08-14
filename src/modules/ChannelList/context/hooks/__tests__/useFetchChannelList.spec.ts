@@ -4,7 +4,6 @@ import { GroupChannelListQuery } from '@sendbird/chat/groupChannel';
 
 import { useFetchChannelList } from '../useFetchChannelList';
 import { mockChannelList } from '../channelList.mock';
-import { DELIVERY_RECEIPT } from '../../../../../utils/consts';
 import { CustomUseReducerDispatcher, Logger } from '../../../../../lib/SendbirdState';
 import { Nullable } from '../../../../../types';
 import { MarkAsDeliveredSchedulerType } from '../../../../../lib/hooks/useMarkAsDeliveredScheduler';
@@ -16,7 +15,6 @@ interface GlobalContextType {
   markAsDeliveredScheduler: Nullable<MarkAsDeliveredSchedulerType>,
   logger: Nullable<Logger>,
 }
-const mockPremiumFeatureList = [DELIVERY_RECEIPT];
 const globalContext = {} as GlobalContextType;
 
 describe('useFetchChannelList', () => {
@@ -54,7 +52,6 @@ describe('useFetchChannelList', () => {
     const hook = renderHook(
       () => useFetchChannelList({
         channelSource: mockChannelSource,
-        premiumFeatureList: mockPremiumFeatureList,
         disableMarkAsDelivered: false,
       }, {
         channelListDispatcher: channelListDispatcher as CustomUseReducerDispatcher,
@@ -93,7 +90,6 @@ describe('useFetchChannelList', () => {
           ...mockChannelSource,
           next: jest.fn(() => Promise.reject(mockError)),
         } as unknown as GroupChannelListQuery,
-        premiumFeatureList: mockPremiumFeatureList,
         disableMarkAsDelivered: false,
       }, {
         channelListDispatcher: channelListDispatcher as CustomUseReducerDispatcher,
@@ -131,7 +127,6 @@ describe('useFetchChannelList', () => {
           ...mockChannelSource,
           hasNext: false,
         } as unknown as GroupChannelListQuery,
-        premiumFeatureList: mockPremiumFeatureList,
         disableMarkAsDelivered: false,
       }, {
         channelListDispatcher: channelListDispatcher as CustomUseReducerDispatcher,

@@ -5,11 +5,9 @@ import { Nullable } from '../../../../types';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { MarkAsDeliveredSchedulerType } from '../../../../lib/hooks/useMarkAsDeliveredScheduler';
 import * as channelListActions from '../../dux/actionTypes';
-import { DELIVERY_RECEIPT } from '../../../../utils/consts';
 
 interface DynamicProps {
   channelSource: Nullable<GroupChannelListQuery>;
-  premiumFeatureList: string[];
   disableMarkAsDelivered: boolean;
 }
 interface StaticProps {
@@ -20,7 +18,6 @@ interface StaticProps {
 
 export const useFetchChannelList = ({
   channelSource,
-  premiumFeatureList,
   disableMarkAsDelivered,
 }: DynamicProps, {
   channelListDispatcher,
@@ -28,7 +25,6 @@ export const useFetchChannelList = ({
   markAsDeliveredScheduler,
 }: StaticProps) => {
   return useCallback(async () => {
-    const setMarkAsDelivered = premiumFeatureList.find((feature) => feature === DELIVERY_RECEIPT);
     if (!channelSource?.hasNext) {
       logger.info('ChannelList: not able to fetch');
       return;
@@ -45,7 +41,7 @@ export const useFetchChannelList = ({
         type: channelListActions.FETCH_CHANNELS_SUCCESS,
         payload: channelList,
       });
-      if (setMarkAsDelivered && !disableMarkAsDelivered) {
+      if (!disableMarkAsDelivered) {
         logger.info('ChannelList: mark as delivered to fetched channels');
         // eslint-disable-next-line no-unused-expressions
         channelList?.forEach((channel) => {
@@ -63,7 +59,6 @@ export const useFetchChannelList = ({
     }
   }, [
     channelSource,
-    premiumFeatureList,
     disableMarkAsDelivered,
   ]);
 };
