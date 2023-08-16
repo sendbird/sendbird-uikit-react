@@ -6,6 +6,8 @@ import { isImage, isSupportedFileView } from '../../utils';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import Icon, { IconColors, IconTypes } from '../Icon';
 
+const BUTTON_ICON_SIDE_LENGTH = '24px';
+
 export interface FileInfo {
   name: string;
   type: string;
@@ -81,8 +83,8 @@ export default function MultipleFilesViewer({
                 <Icon
                   type={IconTypes.DOWNLOAD}
                   fillColor={IconColors.ON_BACKGROUND_1}
-                  height="24px"
-                  width="24px"
+                  height={BUTTON_ICON_SIDE_LENGTH}
+                  width={BUTTON_ICON_SIDE_LENGTH}
                 />
               </a>
             </div>
@@ -92,8 +94,8 @@ export default function MultipleFilesViewer({
           <Icon
             type={IconTypes.CLOSE}
             fillColor={IconColors.ON_BACKGROUND_1}
-            height="24px"
-            width="24px"
+            height={BUTTON_ICON_SIDE_LENGTH}
+            width={BUTTON_ICON_SIDE_LENGTH}
             onClick={() => onClose?.()}
           />
         </div>
@@ -110,48 +112,37 @@ export default function MultipleFilesViewer({
             </Label>
           </div>
         </div>
-        : <div
-          className="sendbird-fileviewer__content"
-          style={{
-            position: 'relative',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div
-            style={{
-              left: 0,
-              top: '50%',
-              margin: '20px',
-              cursor: 'pointer',
-            }}
-          >
+        : <div className="sendbird-multiplefilesviewer-content">
+          <div className="sendbird-multiplefilesviewer-arrow left">
             <Icon
               type={IconTypes.ARROW_LEFT}
               fillColor={IconColors.ON_BACKGROUND_1}
-              height="24px"
-              width="24px"
+              height={BUTTON_ICON_SIDE_LENGTH}
+              width={BUTTON_ICON_SIDE_LENGTH}
               onClick={() => onClickLeft?.()}
             />
           </div>
-          <img
-            src={url}
-            alt={name}
-            className="sendbird-fileviewer__content__img"
-          />
+          <div>
+            <img
+              src={url}
+              alt={name}
+              className="sendbird-fileviewer__content__img"
+            />
+            <div className="sendbird-multiplefilesviewer-image-content">
+              {`${(currentIndex + 1)} / ${fileInfoList.length}`}
+            </div>
+          </div>
           <div
+            className="sendbird-multiplefilesviewer-arrow right"
             style={{
-              right: 0,
-              top: '50%',
-              margin: '20px',
-              transform: 'rotate(180deg)',
-              cursor: 'pointer',
+              transform: 'rotate(180deg)', // FIXME: Remove this after replacing with correct right arrow image.
             }}
           >
             <Icon
               type={IconTypes.ARROW_RIGHT}
               fillColor={IconColors.ON_BACKGROUND_1}
-              height="24px"
-              width="24px"
+              height={BUTTON_ICON_SIDE_LENGTH}
+              width={BUTTON_ICON_SIDE_LENGTH}
               onClick={() => onClickRight?.()}
             />
           </div>
