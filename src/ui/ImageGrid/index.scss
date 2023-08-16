@@ -11,6 +11,7 @@
   display: grid;
   gap: 4px;
   grid-template-columns: repeat(2, 1fr);
+  //justify-content: end; // FIXME: This is not working for some reason.
   padding: 4px;
   width: fit-content;
   @include themed() {

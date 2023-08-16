@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import MultipleFilesViewer, { FileInfo } from '../index';
+import FilesViewer, { FileInfo } from '../index';
 import ImageRenderer from '../../ImageRenderer';
 import Icon, { IconColors, IconTypes } from '../../Icon';
 import ImageGrid from '../../ImageGrid';
 
 const description = `
-  \`import MultipleFilesViewer from "@sendbird/uikit-react/ui/MultipleFilesViewer";\`
+  \`import FilesViewer from "@sendbird/uikit-react/ui/FilesViewer";\`
 `;
 
 export default {
-  title: '@sendbird/uikit-react/ui/MultipleFilesViewer',
-  component: MultipleFilesViewer,
+  title: '@sendbird/uikit-react/ui/FilesViewer',
+  component: FilesViewer,
   parameters: {
     docs: {
       description: {
@@ -68,7 +68,7 @@ export const withImageGrid = () => {
   return (
     <>
       {
-        currentIndex > -1 && <MultipleFilesViewer
+        currentIndex > -1 && <FilesViewer
           nickname='hoon102'
           profileUrl='https://static.sendbird.com/sample/profiles/profile_15_512px.png'
           fileInfoList={fileInfoList}

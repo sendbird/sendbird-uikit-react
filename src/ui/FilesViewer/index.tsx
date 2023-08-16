@@ -23,7 +23,7 @@ interface Props {
   onClose: () => void;
 }
 
-export default function MultipleFilesViewer({
+export default function FilesViewer({
   profileUrl,
   nickname,
   fileInfoList,
@@ -112,8 +112,8 @@ export default function MultipleFilesViewer({
             </Label>
           </div>
         </div>
-        : <div className="sendbird-multiplefilesviewer-content">
-          <div className="sendbird-multiplefilesviewer-arrow left">
+        : <div className="sendbird-filesviewer-content">
+          <div className="sendbird-filesviewer-arrow left">
             <Icon
               type={IconTypes.ARROW_LEFT}
               fillColor={IconColors.ON_BACKGROUND_1}
@@ -128,12 +128,12 @@ export default function MultipleFilesViewer({
               alt={name}
               className="sendbird-fileviewer__content__img"
             />
-            <div className="sendbird-multiplefilesviewer-image-content">
+            <div className="sendbird-filesviewer-image-content">
               {`${(currentIndex + 1)} / ${fileInfoList.length}`}
             </div>
           </div>
           <div
-            className="sendbird-multiplefilesviewer-arrow right"
+            className="sendbird-filesviewer-arrow right"
             style={{
               transform: 'rotate(180deg)', // FIXME: Remove this after replacing with correct right arrow image.
             }}

@@ -1,6 +1,6 @@
 @import '../../styles/variables';
 
-.sendbird-multiplefilesviewer-arrow {
+.sendbird-filesviewer-arrow {
   cursor: pointer;
   margin: 20px;
   top: 50%;
@@ -14,7 +14,7 @@
   }
 }
 
-.sendbird-multiplefilesviewer-content {
+.sendbird-filesviewer-content {
   align-items: center;
   display: flex;
   height: calc(100% - 72px);
@@ -24,7 +24,7 @@
   position: relative;
 }
 
-.sendbird-multiplefilesviewer-image-content {
+.sendbird-filesviewer-image-content {
   display: flex;
   justify-content: center;
   margin-top: 16px;
