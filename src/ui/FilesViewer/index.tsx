@@ -43,6 +43,29 @@ export default function FilesViewer({
     }
   }, [fileInfoList, currentIndex]);
 
+  const onKeyDown = (event) => {
+    switch (event.key) {
+      case 'Escape':
+        onClose?.();
+        break;
+      case 'ArrowLeft':
+        onClickLeft?.();
+        break;
+      case 'ArrowRight':
+        onClickRight?.();
+        break;
+      default:
+    }
+    event.preventDefault();
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [onKeyDown]);
+
   if (!currentFileInfo) return null;
 
   const { name, type, url } = currentFileInfo;
