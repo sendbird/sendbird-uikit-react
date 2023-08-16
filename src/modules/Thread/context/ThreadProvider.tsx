@@ -24,7 +24,7 @@ import useDeleteMessageCallback from './hooks/useDeleteMessageCallback';
 import useGetPrevThreadsCallback from './hooks/useGetPrevThreadsCallback';
 import useGetNextThreadsCallback from './hooks/useGetNextThreadsCallback';
 import useToggleReactionCallback from './hooks/useToggleReactionsCallback';
-import useSendUserMessageCallback from './hooks/useSendUserMessageCallback';
+import useSendUserMessageCallback, { SendMessageParams } from './hooks/useSendUserMessageCallback';
 import useResendMessageCallback from './hooks/useResendMessageCallback';
 import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 
@@ -44,12 +44,7 @@ export interface ThreadProviderInterface extends ThreadProviderProps, ThreadCont
   fetchPrevThreads: (callback?: (messages?: Array<BaseMessage>) => void) => void;
   fetchNextThreads: (callback?: (messages?: Array<BaseMessage>) => void) => void;
   toggleReaction: (message, key, isReacted) => void;
-  sendMessage: (props: {
-    message: UserMessage,
-    quoteMessage?: UserMessage | FileMessage,
-    mentionTemplate?: string,
-    mentionedUsers?: Array<User>,
-  }) => void;
+  sendMessage: (props: SendMessageParams) => void;
   sendFileMessage: (file: File, quoteMessage: UserMessage | FileMessage) => void;
   sendVoiceMessage: (file: File, duration: number, quoteMessage?: UserMessage | FileMessage) => void;
   resendMessage: (failedMessage: UserMessage | FileMessage) => void;

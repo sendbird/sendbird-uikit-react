@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { UserMessageCreateParams } from '@sendbird/chat/message';
+import { FileMessage, UserMessage, UserMessageCreateParams } from '@sendbird/chat/message';
+import { User } from '@sendbird/chat';
 
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
@@ -16,6 +17,13 @@ interface StaticProps {
   threadDispatcher: CustomUseReducerDispatcher;
 }
 
+export type SendMessageParams = {
+  message: string;
+  quoteMessage?: UserMessage | FileMessage;
+  mentionTemplate?: string;
+  mentionedUsers?: Array<User>;
+};
+
 export default function useSendUserMessageCallback({
   isMentionEnabled,
   currentChannel,
@@ -23,8 +31,8 @@ export default function useSendUserMessageCallback({
   logger,
   pubSub,
   threadDispatcher,
-}: StaticProps): (props) => void {
-  const sendMessage = useCallback((props) => {
+}: StaticProps): (props: SendMessageParams) => void {
+  const sendMessage = useCallback((props: SendMessageParams) => {
     const {
       message,
       quoteMessage = null,
@@ -34,10 +42,11 @@ export default function useSendUserMessageCallback({
     const createDefaultParams = () => {
       const params = {} as UserMessageCreateParams;
       params.message = message;
-      if (isMentionEnabled && mentionedUsers?.length > 0) {
+      const mentionedUsersLength = mentionedUsers?.length || 0;
+      if (isMentionEnabled && mentionedUsersLength) {
         params.mentionedUsers = mentionedUsers;
       }
-      if (isMentionEnabled && mentionTemplate && mentionedUsers?.length > 0) {
+      if (isMentionEnabled && mentionTemplate && mentionedUsersLength) {
         params.mentionedMessageTemplate = mentionTemplate;
       }
       if (quoteMessage) {

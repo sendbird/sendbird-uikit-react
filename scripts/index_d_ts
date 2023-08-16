@@ -628,7 +628,7 @@ declare module "SendbirdUIKitGlobal" {
     scrollToMessage?(createdAt: number, messageId: number): void;
     messageActionTypes: Record<string, string>;
     quoteMessage: CoreMessageType;
-    setQuoteMessage: React.Dispatch<React.SetStateAction<CoreMessageType>>;
+    setQuoteMessage: React.Dispatch<React.SetStateAction<UserMessage | FileMessage>>;
     initialTimeStamp: number;
     setInitialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
     animatedMessageId: number;
@@ -1033,7 +1033,7 @@ declare module "SendbirdUIKitGlobal" {
     fetchNextThreads: (callback?: (messages?: Array<BaseMessage>) => void) => void;
     toggleReaction: (message, key, isReacted) => void;
     sendMessage: (props: {
-      message: UserMessage,
+      message: string,
       quoteMessage?: UserMessage | FileMessage,
       mentionTemplate?: string,
       mentionedUsers?: Array<User>,
