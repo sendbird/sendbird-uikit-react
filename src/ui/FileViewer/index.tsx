@@ -1,8 +1,9 @@
-import React, { MouseEvent, ReactElement, useContext } from 'react';
+import './index.scss';
+
+import React, { MouseEvent, ReactElement, useContext, useRef } from 'react';
 import { FileMessage } from '@sendbird/chat/message';
 import { createPortal } from 'react-dom';
 
-import './index.scss';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { MODAL_ROOT } from '../../hooks/useModal/ModalRoot';
 import { isImage, isVideo, isSupportedFileView } from '../../utils';
@@ -10,37 +11,44 @@ import { isImage, isVideo, isSupportedFileView } from '../../utils';
 import Avatar from '../Avatar/index';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import Icon, { IconColors, IconTypes } from '../Icon';
+import { FileViewerComponentProps, ViewerType, ViewerTypes } from './types';
+import { useViewerState } from './hooks/useViewerState';
+import { useKeyPress } from './hooks/useKeyPress';
+import { noop } from '../../utils/utils';
 
-interface SenderInfo {
-  profileUrl: string;
-  nickname: string;
-}
-interface FileInfo {
-  name: string;
-  type: string;
-  url: string;
-}
-export interface FileViewerComponentProps extends SenderInfo, FileInfo {
-  isByMe?: boolean;
-  disableDelete?: boolean;
-  onClose: (e: MouseEvent<HTMLDivElement>) => void;
-  onDelete: (e: MouseEvent<HTMLDivElement>) => void;
-}
+export const FileViewerComponent = (props: FileViewerComponentProps): ReactElement => {
+  const ref = useRef<HTMLDivElement>(null);
+  // these are common props
+  const { profileUrl, nickname, onClose, isByMe } = props;
+  // , onDelete and disableDelete might also be common props
 
-export const FileViewerComponent = ({
-  profileUrl,
-  nickname,
-  name,
-  type,
-  url,
-  isByMe = true,
-  disableDelete = false,
-  onClose,
-  onDelete,
-}: FileViewerComponentProps): ReactElement => {
+  // validate viewerType -> maybe move to separate function
+  const viewerType: ViewerType = props.viewerType || ViewerTypes.SINGLE;
+  // is better to handle after prop calls maybe?
+  if (viewerType !== ViewerTypes.MULTI && viewerType !== ViewerTypes.SINGLE) {
+    // logger.warning('FileViewer: Invalid viewer type');
+  }
+
+  const {
+    idx,
+    incrementIdx,
+    decrementIdx,
+    hasPrev,
+    hasNext,
+    name,
+    type,
+    url,
+  } = useViewerState({ props });
+  useKeyPress({
+    ref,
+    incrementIdx,
+    decrementIdx,
+    onClose: onClose || noop,
+  });
   const { stringSet } = useContext(LocalizationContext);
+
   return (
-    <div className="sendbird-fileviewer">
+    <div className="sendbird-fileviewer" ref={ref}>
       <div className="sendbird-fileviewer__header">
         <div className="sendbird-fileviewer__header__left">
           <div className="sendbird-fileviewer__header__left__avatar">
@@ -80,7 +88,9 @@ export const FileViewerComponent = ({
                     width="24px"
                   />
                 </a>
-                {
+                {/* decide this  - do you imeplemnt for MULTI?*/}
+                {/* Either way, move to useViewerState */}
+                {/* {
                   onDelete && isByMe && (
                     <div className="sendbird-fileviewer__header__right__actions__delete">
                       <Icon
@@ -93,7 +103,7 @@ export const FileViewerComponent = ({
                       />
                     </div>
                   )
-                }
+                } */}
               </div>
             )
           }
@@ -138,6 +148,11 @@ export const FileViewerComponent = ({
           )
         }
       </div>
+      {/*
+        if multi, add left/right buttons
+        if hasPrev, show left button
+        if hasNext, show right button
+       */}
     </div>
   );
 };
@@ -155,6 +170,21 @@ export default function FileViewer({
   onClose,
   onDelete,
 }: FileViewerProps): ReactElement {
+  // check if the message is single/multi
+  if (message?.isMultipleFilesMessage()) {
+    return (
+      <FileViewerComponent
+        profileUrl={message?.sender?.profileUrl}
+        nickname={message?.sender?.nickname}
+        viewerType={ViewerTypes.MULTI}
+        fileInfoList={message?.fileInfoList}
+        currentIndex={0}
+        onClickLeft={() => { }}
+        onClickRight={() => { }}
+        onClose={onClose}
+      />
+    )
+  }
   return createPortal(
     (
       <FileViewerComponent
