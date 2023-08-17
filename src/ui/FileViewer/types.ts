@@ -36,12 +36,6 @@ export const unSupported = (type: SupportedMimesType): boolean => (
 
 export default { ...SUPPORTED_MIMES };
 
-export const ViewerTypes = {
-  SINGLE: 'SINGLE',
-  MULTI: 'MULTI',
-} as const;
-export type ViewerType = keyof typeof ViewerTypes;
-
 export interface SenderInfo {
   profileUrl: string;
   nickname: string;
@@ -53,7 +47,6 @@ export interface FileInfo {
 }
 export interface SingleFileViewer extends SenderInfo, FileInfo {
   // this is a type guard
-  viewerType?: typeof ViewerTypes.SINGLE,
   isByMe?: boolean;
   disableDelete?: boolean;
   onClose: (e: MouseEvent) => void;
@@ -61,7 +54,6 @@ export interface SingleFileViewer extends SenderInfo, FileInfo {
 }
 
 export interface MultiFileViewer extends SenderInfo {
-  viewerType: typeof ViewerTypes.MULTI;
   onClose: (e: MouseEvent) => void;
   fileInfoList: UploadedFileInfo[];
   currentIndex: number;
@@ -73,3 +65,46 @@ export interface MultiFileViewer extends SenderInfo {
 }
 
 export type FileViewerComponentProps = SingleFileViewer | MultiFileViewer;
+
+
+interface BaseFileViewerProps {
+  profileUrl: string;
+  nickname: string;
+  onClose: (e: MouseEvent) => void;
+}
+
+interface SingleFileViewerProps {
+  name?: string;
+  type?: string;
+  url?: string;
+  isByMe?: boolean;
+  disableDelete?: boolean;
+  onDelete?: (e: MouseEvent) => void;
+}
+
+interface MultiFilesViewerProps {
+  fileInfoList?: UploadedFileInfo[];
+  currentIndex?: number;
+  onClickLeft?: () => void;
+  onClickRight?: () => void;
+}
+
+export type FileViewerComponentProps = BaseFileViewerProps & SingleFileViewerProps & MultiFilesViewerProps;
+
+// export interface FileViewerComponentProps {
+//   profileUrl: string;
+//   nickname: string;
+//   onClose: (e: MouseEvent) => void;
+//
+//   name?: string;
+//   type?: string;
+//   url?: string;
+//   isByMe?: boolean;
+//   disableDelete?: boolean;
+//   onDelete?: (e: MouseEvent) => void;
+//
+//   fileInfoList?: UploadedFileInfo[];
+//   currentIndex?: number;
+//   onClickLeft?: () => void;
+//   onClickRight?: () => void;
+// }

@@ -15,36 +15,29 @@ import { FileViewerComponentProps, ViewerType, ViewerTypes } from './types';
 import { useViewerState } from './hooks/useViewerState';
 import { useKeyPress } from './hooks/useKeyPress';
 import { noop } from '../../utils/utils';
+import ImageGrid from "../ImageGrid";
 
 export const FileViewerComponent = (props: FileViewerComponentProps): ReactElement => {
   const ref = useRef<HTMLDivElement>(null);
-  // these are common props
-  const { profileUrl, nickname, onClose, isByMe } = props;
-  // , onDelete and disableDelete might also be common props
+  // common props
+  const { profileUrl, nickname, onClose, isByMe, fileInfoList } = props;
 
-  // validate viewerType -> maybe move to separate function
-  const viewerType: ViewerType = props.viewerType || ViewerTypes.SINGLE;
-  // is better to handle after prop calls maybe?
-  if (viewerType !== ViewerTypes.MULTI && viewerType !== ViewerTypes.SINGLE) {
-    // logger.warning('FileViewer: Invalid viewer type');
-  }
-
-  const {
-    idx,
-    incrementIdx,
-    decrementIdx,
-    hasPrev,
-    hasNext,
-    name,
-    type,
-    url,
-  } = useViewerState({ props });
-  useKeyPress({
-    ref,
-    incrementIdx,
-    decrementIdx,
-    onClose: onClose || noop,
-  });
+  // const {
+  //   idx,
+  //   incrementIdx,
+  //   decrementIdx,
+  //   hasPrev,
+  //   hasNext,
+  //   name,
+  //   type,
+  //   url,
+  // } = useViewerState({ props });
+  // useKeyPress({
+  //   ref,
+  //   incrementIdx,
+  //   decrementIdx,
+  //   onClose: onClose || noop,
+  // });
   const { stringSet } = useContext(LocalizationContext);
 
   return (
@@ -148,6 +141,9 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
           )
         }
       </div>
+      {
+        fileInfoList?.length > 1 && <ImageGrid />
+      }
       {/*
         if multi, add left/right buttons
         if hasPrev, show left button

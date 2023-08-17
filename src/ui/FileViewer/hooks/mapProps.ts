@@ -1,17 +1,14 @@
-import { FileInfo, FileViewerComponentProps, SingleFileViewer, ViewerType, ViewerTypes } from "../types";
+import {FileInfo, FileViewerComponentProps, MultiFileViewer, SingleFileViewer} from "../types";
 
 /**
  * Converts file/fileinfo[] into nice props for FileViewer
  * // shouldnt even need to be a hook. maybe simplify this to a function
  */
 export function mapProps({ props, idx }: {
-  props: FileViewerComponentProps;
+  props: SingleFileViewer | MultiFileViewer;
   idx: number;
 }): FileInfo {
-  if (props.viewerType !== ViewerTypes.SINGLE && props.viewerType !== ViewerTypes.MULTI) {
-    throw new Error('FileViewer: props is required');
-  }
-  if (props.viewerType === ViewerTypes.MULTI) {
+  if (props.fileInfoList) {
     const file = props.fileInfoList[idx];
     return {
       // do default props
