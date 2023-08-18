@@ -13,6 +13,7 @@ import {
   getLeafNodes,
 } from './utils';
 
+// exported, should be backwords compatible
 // conditions to test:
 // 1. paste simple text
 // 2. paste text with mention
@@ -20,7 +21,7 @@ import {
 // 4. paste text with mention and text and paste again before and after
 // 5. copy message with mention(only one mention, no other text) and paste
 // 6. copy message with mention from input and paste(before and after)
-export default function usePaste({
+export function usePaste({
   ref,
   setIsInput,
   setHeight,
@@ -68,3 +69,6 @@ export default function usePaste({
     setHeight();
   }, [ref, setIsInput, setHeight, channel, setMentionedUsers]);
 }
+
+// to do -> In the future donot export default
+export default usePaste;

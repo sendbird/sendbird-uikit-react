@@ -1402,6 +1402,43 @@ declare module '@sendbird/uikit-react/Channel/context' {
   export enum ThreadReplySelectType { PARENT, THREAD }
 }
 
+declare module '@sendbird/uikit-react/Channel/utils/getMessagePartsInfo' {
+  import type { FileMessage, UserMessage, AdminMessage } from '@sendbird/chat/message';
+  import type { GroupChannel } from '@sendbird/chat/groupChannel';
+  export interface GetMessagePartsInfoProps {
+    allMessages: Array<UserMessage | FileMessage | AdminMessage>;
+    isMessageGroupingEnabled: boolean;
+    currentIndex: number;
+    currentMessage: UserMessage | FileMessage | AdminMessage;
+    currentChannel: GroupChannel;
+    replyType: string;
+  }
+  interface OutPuts {
+    chainTop: boolean,
+    chainBottom: boolean,
+    hasSeparator: boolean,
+  }
+  export function getMessagePartsInfo(args: GetMessagePartsInfoProps): OutPuts;
+}
+
+declare module '@sendbird/uikit-react/Channel/utils/compareMessagesForGrouping' {
+  import type { FileMessage, UserMessage, AdminMessage } from '@sendbird/chat/message';
+  import type { GroupChannel } from '@sendbird/chat/groupChannel';
+
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+
+  export function compareMessagesForGrouping(
+    prevMessage: UserMessage | FileMessage | AdminMessage,
+    currMessage: UserMessage | FileMessage | AdminMessage,
+    nextMessage: UserMessage | FileMessage | AdminMessage,
+    currentChannel: GroupChannel,
+    replyType: SendbirdUIKitGlobal.ReplyType,
+  ): [
+    chainTop: boolean,
+    chainBottom: boolean,
+  ]
+}
+
 declare module '@sendbird/uikit-react/Channel/components/ChannelHeader' {
   const ChannelHeader: React.FunctionComponent;
   export default ChannelHeader;
@@ -1628,6 +1665,19 @@ declare module '@sendbird/uikit-react/Message/context' {
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
   export const useMessageContext: () => SendbirdUIKitGlobal.MessageProviderInterface;
   export const MessageProvider: React.FC<SendbirdUIKitGlobal.MessageProviderProps>;
+}
+
+declare module '@sendbird/uikit-react/Message/hooks/useDirtyGetMentions' {
+  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  interface DynamicParams {
+    ref: React.RefObject<HTMLElement>;
+  }
+
+  interface StaticParams {
+    logger: SendbirdUIKitGlobal.Logger;
+  }
+
+  export function useDirtyGetMentions({ ref }: DynamicParams, { logger }: StaticParams): Element[];
 }
 
 /**
@@ -2159,6 +2209,32 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
   }
   const MessageInput: React.FC<MessageInputProps>;
   export default MessageInput;
+}
+
+declare module '@sendbird/uikit-react/ui/MessageInput/hooks/usePaste' {
+  import type { GroupChannel } from '@sendbird/chat/groupChannel';
+  import type { User } from '@sendbird/chat';
+
+  export type DynamicProps = {
+    // reference to the div element(content editable)
+    ref: React.RefObject<HTMLDivElement>;
+    channel: GroupChannel;
+    // a function that keeps track of the unique user ids
+    setUniqueUserIds: React.Dispatch<React.SetStateAction<string[]>>;
+    // a function that keeps track of the mentioned users
+    setMentionedUsers: React.Dispatch<React.SetStateAction<User[]>>;
+    setIsInput: React.Dispatch<React.SetStateAction<boolean>>;
+    // sets the height of the input div
+    setHeight: () => void;
+  };
+
+  export function usePaste({
+    ref,
+    setIsInput,
+    setHeight,
+    channel,
+    setMentionedUsers,
+  }: DynamicProps): (e: React.ClipboardEvent<HTMLDivElement>) => void
 }
 
 declare module '@sendbird/uikit-react/ui/VoiceMessageInput' {
