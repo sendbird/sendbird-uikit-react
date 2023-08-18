@@ -1,15 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { FileViewerComponentProps, ViewerTypes } from './types';
 import Icon, { IconColors, IconTypes } from '../Icon';
 import { isImage } from '../../utils';
 import Label, { LabelTypography, LabelColors } from '../Label';
+import { LocalizationContext } from '../../lib/LocalizationContext';
 
 const BUTTON_ICON_SIDE_LENGTH = '24px';
 
-export function ImagesView({ props, stringSet }: {
-  props: FileViewerComponentProps,
-  stringSet?: any,
-}) {
+export function ImagesView(props: FileViewerComponentProps): React.ReactElement {
+  const { stringSet } = useContext(LocalizationContext);
   if (props.viewerType === ViewerTypes.MULTI) {
     const { fileInfoList, currentIndex, onClickLeft, onClickRight } = props;
     const { name, url, type } = fileInfoList[currentIndex];

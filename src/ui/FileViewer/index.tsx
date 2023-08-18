@@ -17,7 +17,7 @@ import { ImagesView } from './ImagesView';
 
 export const FileViewerComponent = (props: FileViewerComponentProps): ReactElement => {
   const ref = useRef<HTMLDivElement>(null);
-  const { profileUrl, nickname, onClose, viewerType } = props;
+  const { profileUrl, nickname, onClose } = props;
   useKeyPress({ props, ref });
   const { name, type, url } = mapFileViewerComponentProps({ props });
   const { stringSet } = useContext(LocalizationContext);
@@ -63,7 +63,7 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
                     width="24px"
                   />
                 </a>
-                <CloseButton props={props}/>
+                <CloseButton {...props} />
               </div>
             )
           }
@@ -108,7 +108,7 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
           )
         }
       </div>
-      <ImagesView props={props} stringSet={stringSet}/>
+      <ImagesView {...props} />
     </div>
   );
 };
@@ -145,7 +145,7 @@ export default function FileViewer({
             url: fileInfo.url,
           };
         })}
-        currentIndex={currentIndex}
+        currentIndex={currentIndex }
         onClickLeft={onClickLeft}
         onClickRight={onClickRight}
         onClose={onClose}
