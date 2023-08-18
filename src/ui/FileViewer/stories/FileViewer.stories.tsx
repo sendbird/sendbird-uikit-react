@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import FileViewer from '../index';
-import {FILE_INFO_LIST, msg0, msg2 } from '../data.mock';
+import { FILE_INFO_LIST, msg0, msg2 } from '../data.mock';
 import ImageRenderer from '../../ImageRenderer';
 import Icon, { IconColors, IconTypes } from '../../Icon';
 import ImageGrid from '../../ImageGrid';
 import { FileInfo } from '../types';
-import {FileMessage, MultipleFilesMessage} from "@sendbird/chat/message";
+import { FileMessage, MultipleFilesMessage } from '@sendbird/chat/message';
 
 const description = `
   \`import FileViewer from "@sendbird/uikit-react/ui/FileViewer";\`
@@ -26,8 +26,8 @@ export default {
 export const WithControl = (arg) => (
   <FileViewer
     {...arg}
-    onClose={() => {}}
-    onDelete={() => {}}
+    onClose={() => null}
+    onDelete={() => null}
     message={msg0 as unknown as FileMessage}
   />
 );
@@ -93,4 +93,3 @@ export const withImageGrid = () => {
     </>
   );
 };
-

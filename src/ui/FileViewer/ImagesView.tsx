@@ -26,9 +26,9 @@ export function ImagesView(props: FileViewerComponentProps): React.ReactElement 
             className="sendbird-fileviewer__content__img"
           />
           {/* This maybe supported in the future. It displays which image is currently viewing. */}
-          {/*<div className="sendbird-filesviewer-image-content">*/}
-          {/*  {`${(currentIndex + 1)} / ${fileInfoList.length}`}*/}
-          {/*</div>*/}
+          {/* <div className="sendbird-filesviewer-image-content"> */}
+          {/*  {`${(currentIndex + 1)} / ${fileInfoList.length}`} */}
+          {/* </div> */}
         </div>
         <div
           className="sendbird-filesviewer-arrow right"

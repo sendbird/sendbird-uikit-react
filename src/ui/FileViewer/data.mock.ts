@@ -1,5 +1,5 @@
-import {FileInfo} from "./types";
-import {UploadedFileInfo} from "@sendbird/chat/message";
+import { FileInfo } from './types';
+import { UploadedFileInfo } from '@sendbird/chat/message';
 
 const PROFILE_FILE_INFO: FileInfo = {
   name: 'profile image',
@@ -52,7 +52,7 @@ export const msg0 = {
   },
   isMultipleFilesMessage: () => {
     return false;
-  }
+  },
 };
 
 export const msg1 = {
@@ -85,7 +85,7 @@ export const msg1 = {
   },
   isMultipleFilesMessage: () => {
     return false;
-  }
+  },
 };
 
 export const msg2 = {
@@ -121,7 +121,7 @@ export const msg2 = {
   },
   isMultipleFilesMessage: () => {
     return true;
-  }
+  },
 };
 
 export default msg0;

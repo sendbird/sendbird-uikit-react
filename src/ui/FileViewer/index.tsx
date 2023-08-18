@@ -1,7 +1,7 @@
 import './index.scss';
 
 import React, { MouseEvent, ReactElement, useContext, useRef } from 'react';
-import {FileMessage, MultipleFilesMessage, UploadedFileInfo} from '@sendbird/chat/message';
+import { FileMessage, MultipleFilesMessage, UploadedFileInfo } from '@sendbird/chat/message';
 import { createPortal } from 'react-dom';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { MODAL_ROOT } from '../../hooks/useModal/ModalRoot';
