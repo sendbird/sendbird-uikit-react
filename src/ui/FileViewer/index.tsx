@@ -1,43 +1,25 @@
 import './index.scss';
 
 import React, { MouseEvent, ReactElement, useContext, useRef } from 'react';
-import { FileMessage } from '@sendbird/chat/message';
+import {FileMessage, UploadedFileInfo} from '@sendbird/chat/message';
 import { createPortal } from 'react-dom';
-
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { MODAL_ROOT } from '../../hooks/useModal/ModalRoot';
 import { isImage, isVideo, isSupportedFileView } from '../../utils';
-
 import Avatar from '../Avatar/index';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import Icon, { IconColors, IconTypes } from '../Icon';
-import { FileViewerComponentProps, ViewerType, ViewerTypes } from './types';
-import { useViewerState } from './hooks/useViewerState';
+import {FileInfo, FileViewerComponentProps, ViewerTypes} from './types';
 import { useKeyPress } from './hooks/useKeyPress';
-import { noop } from '../../utils/utils';
-import ImageGrid from "../ImageGrid";
+import {mapFileViewerComponentProps} from "./utils";
+import {CloseButton} from "./CloseButton";
+import {ImagesView} from "./ImagesView";
 
 export const FileViewerComponent = (props: FileViewerComponentProps): ReactElement => {
   const ref = useRef<HTMLDivElement>(null);
-  // common props
-  const { profileUrl, nickname, onClose, isByMe, fileInfoList } = props;
-
-  // const {
-  //   idx,
-  //   incrementIdx,
-  //   decrementIdx,
-  //   hasPrev,
-  //   hasNext,
-  //   name,
-  //   type,
-  //   url,
-  // } = useViewerState({ props });
-  // useKeyPress({
-  //   ref,
-  //   incrementIdx,
-  //   decrementIdx,
-  //   onClose: onClose || noop,
-  // });
+  const { profileUrl, nickname, onClose, viewerType } = props;
+  useKeyPress({ props, ref });
+  const { name, type, url } = mapFileViewerComponentProps({ props });
   const { stringSet } = useContext(LocalizationContext);
 
   return (
@@ -81,22 +63,7 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
                     width="24px"
                   />
                 </a>
-                {/* decide this  - do you imeplemnt for MULTI?*/}
-                {/* Either way, move to useViewerState */}
-                {/* {
-                  onDelete && isByMe && (
-                    <div className="sendbird-fileviewer__header__right__actions__delete">
-                      <Icon
-                        className={disableDelete ? 'disabled' : ''}
-                        type={IconTypes.DELETE}
-                        fillColor={disableDelete ? IconColors.GRAY : IconColors.ON_BACKGROUND_1}
-                        height="24px"
-                        width="24px"
-                        onClick={(e) => { if (!disableDelete) { onDelete?.(e); } }}
-                      />
-                    </div>
-                  )
-                } */}
+                <CloseButton props={props}/>
               </div>
             )
           }
@@ -141,42 +108,46 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
           )
         }
       </div>
-      {
-        fileInfoList?.length > 1 && <ImageGrid />
-      }
-      {/*
-        if multi, add left/right buttons
-        if hasPrev, show left button
-        if hasNext, show right button
-       */}
+      <ImagesView props={props} stringSet={stringSet}/>
     </div>
   );
 };
 
 export interface FileViewerProps {
   message: FileMessage;
+  onClose: (e: MouseEvent) => void;
   isByMe?: boolean;
-  onClose: (e: MouseEvent<HTMLDivElement>) => void;
-  onDelete: (e: MouseEvent<HTMLDivElement>) => void;
+  onDelete?: (e: MouseEvent) => void;
+  currentIndex?: number;
+  onClickLeft?: () => void;
+  onClickRight?: () => void;
 }
 
 export default function FileViewer({
   message,
-  isByMe = false,
   onClose,
+  isByMe = false,
   onDelete,
+  currentIndex,
+  onClickLeft,
+  onClickRight,
 }: FileViewerProps): ReactElement {
-  // check if the message is single/multi
   if (message?.isMultipleFilesMessage()) {
     return (
       <FileViewerComponent
         profileUrl={message?.sender?.profileUrl}
         nickname={message?.sender?.nickname}
         viewerType={ViewerTypes.MULTI}
-        fileInfoList={message?.fileInfoList}
-        currentIndex={0}
-        onClickLeft={() => { }}
-        onClickRight={() => { }}
+        fileInfoList={message?.fileInfoList.map((fileInfo: UploadedFileInfo): FileInfo => {
+          return {
+            name: fileInfo.fileName,
+            type: fileInfo.mimeType,
+            url: fileInfo.url,
+          };
+        })}
+        currentIndex={currentIndex}
+        onClickLeft={onClickLeft}
+        onClickRight={onClickRight}
         onClose={onClose}
       />
     )
