@@ -40,6 +40,15 @@ export const withImageGrid = () => {
     setCurrentIndex(-1);
   }
 
+  // memoize these if you want to super optimize - but this is unnecessary
+  // const onClickLeft = useCallback(() => {
+  //   setCurrentIndex((idx) => {
+  //     return idx === 0
+  //       ? fileInfoList.length - 1
+  //       : idx - 1;
+  //   });
+  // }, [setCurrentIndex, fileInfoList.length]);
+
   function onClickLeft() {
     setCurrentIndex(
       currentIndex === 0

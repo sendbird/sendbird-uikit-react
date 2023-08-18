@@ -14,17 +14,23 @@ import { FileInfo, FileViewerComponentProps, ViewerTypes } from './types';
 import { useKeyDown } from './hooks/useKeyDown';
 import { mapFileViewerComponentProps } from './utils';
 import { DeleteButton } from './DeleteButton';
-import { ImagesView } from './ImagesView';
+import { Slider } from './Slider';
 
 export const FileViewerComponent = (props: FileViewerComponentProps): ReactElement => {
   const ref = useRef<HTMLDivElement>(null);
-  const { profileUrl, nickname, onClose, viewerType } = props;
-  useKeyDown({ props, ref });
+  const { profileUrl, nickname, onClose } = props;
+  const { onKeyDown } = useKeyDown({ props, ref });
   const { name, type, url } = mapFileViewerComponentProps({ props });
   const { stringSet } = useContext(LocalizationContext);
 
   return (
-    <div className="sendbird-fileviewer" ref={ref}>
+    <div
+      className="sendbird-fileviewer"
+      onKeyDown={onKeyDown}
+      // to focus
+      tabIndex={1}
+      ref={ref}
+    >
       <div className="sendbird-fileviewer__header">
         <div className="sendbird-fileviewer__header__left">
           <div className="sendbird-fileviewer__header__left__avatar">
@@ -79,40 +85,37 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
           </div>
         </div>
       </div>
-      {
-        viewerType !== ViewerTypes.MULTI
-          ? <div className="sendbird-fileviewer__content">
-            {isVideo(type) && (
-              <video
-                controls
-                className="sendbird-fileviewer__content__video"
-              >
-                <source src={url} type={type} />
-              </video>
-            )}
-            {
-              isImage(type) && (
-                <img
-                  src={url}
-                  alt={name}
-                  className="sendbird-fileviewer__content__img"
-                />
-              )
-            }
-            {
-              !isSupportedFileView(type) && (
-                <div
-                  className="sendbird-fileviewer__content__unsupported"
-                >
-                  <Label type={LabelTypography.H_1} color={LabelColors.ONBACKGROUND_1}>
-                    {stringSet?.UI__FILE_VIEWER__UNSUPPORT || 'Unsupported message'}
-                  </Label>
-                </div>
-              )
-            }
-          </div>
-          : <ImagesView {...props} />
-      }
+      <div className="sendbird-fileviewer__content">
+        {isVideo(type) && (
+          <video
+            controls
+            className="sendbird-fileviewer__content__video"
+          >
+            <source src={url} type={type} />
+          </video>
+        )}
+        {
+          isImage(type) && (
+            <img
+              src={url}
+              alt={name}
+              className="sendbird-fileviewer__content__img"
+            />
+          )
+        }
+        {
+          !isSupportedFileView(type) && (
+            <div
+              className="sendbird-fileviewer__content__unsupported"
+            >
+              <Label type={LabelTypography.H_1} color={LabelColors.ONBACKGROUND_1}>
+                {stringSet?.UI__FILE_VIEWER__UNSUPPORT || 'Unsupported message'}
+              </Label>
+            </div>
+          )
+        }
+        <Slider {...props} />
+      </div>
     </div>
   );
 };
@@ -173,4 +176,5 @@ export default function FileViewer({
       (document.getElementById(MODAL_ROOT) as HTMLElement),
     );
   }
+  return <></>;
 }
