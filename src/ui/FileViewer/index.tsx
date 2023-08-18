@@ -11,7 +11,7 @@ import Avatar from '../Avatar/index';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import Icon, { IconColors, IconTypes } from '../Icon';
 import { FileInfo, FileViewerComponentProps, ViewerTypes } from './types';
-import { useKeyPress } from './hooks/useKeyPress';
+import { useKeyDown } from './hooks/useKeyDown';
 import { mapFileViewerComponentProps } from './utils';
 import { DeleteButton } from './DeleteButton';
 import { ImagesView } from './ImagesView';
@@ -19,7 +19,7 @@ import { ImagesView } from './ImagesView';
 export const FileViewerComponent = (props: FileViewerComponentProps): ReactElement => {
   const ref = useRef<HTMLDivElement>(null);
   const { profileUrl, nickname, onClose, viewerType } = props;
-  useKeyPress({ props, ref });
+  useKeyDown({ props, ref });
   const { name, type, url } = mapFileViewerComponentProps({ props });
   const { stringSet } = useContext(LocalizationContext);
 

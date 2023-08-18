@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { FileViewerComponentProps, ViewerTypes } from '../types';
 
-export function useKeyPress({
+export function useKeyDown({
   props,
   ref,
 }: {
