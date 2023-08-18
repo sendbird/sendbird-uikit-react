@@ -1,7 +1,7 @@
 import './index.scss';
 
 import React, { MouseEvent, ReactElement, useContext, useRef } from 'react';
-import { FileMessage, UploadedFileInfo } from '@sendbird/chat/message';
+import {FileMessage, MultipleFilesMessage, UploadedFileInfo} from '@sendbird/chat/message';
 import { createPortal } from 'react-dom';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { MODAL_ROOT } from '../../hooks/useModal/ModalRoot';
@@ -18,7 +18,7 @@ import { ImagesView } from './ImagesView';
 
 export const FileViewerComponent = (props: FileViewerComponentProps): ReactElement => {
   const ref = useRef<HTMLDivElement>(null);
-  const { profileUrl, nickname, onClose } = props;
+  const { profileUrl, nickname, onClose, viewerType } = props;
   useKeyPress({ props, ref });
   const { name, type, url } = mapFileViewerComponentProps({ props });
   const { stringSet } = useContext(LocalizationContext);
@@ -79,43 +79,46 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
           </div>
         </div>
       </div>
-      <div className="sendbird-fileviewer__content">
-        {isVideo(type) && (
-          <video
-            controls
-            className="sendbird-fileviewer__content__video"
-          >
-            <source src={url} type={type} />
-          </video>
-        )}
-        {
-          isImage(type) && (
-            <img
-              src={url}
-              alt={name}
-              className="sendbird-fileviewer__content__img"
-            />
-          )
-        }
-        {
-          !isSupportedFileView(type) && (
-            <div
-              className="sendbird-fileviewer__content__unsupported"
-            >
-              <Label type={LabelTypography.H_1} color={LabelColors.ONBACKGROUND_1}>
-                {stringSet?.UI__FILE_VIEWER__UNSUPPORT || 'Unsupported message'}
-              </Label>
-            </div>
-          )
-        }
-      </div>
-      <ImagesView {...props} />
+      {
+        viewerType !== ViewerTypes.MULTI
+          ? <div className="sendbird-fileviewer__content">
+            {isVideo(type) && (
+              <video
+                controls
+                className="sendbird-fileviewer__content__video"
+              >
+                <source src={url} type={type} />
+              </video>
+            )}
+            {
+              isImage(type) && (
+                <img
+                  src={url}
+                  alt={name}
+                  className="sendbird-fileviewer__content__img"
+                />
+              )
+            }
+            {
+              !isSupportedFileView(type) && (
+                <div
+                  className="sendbird-fileviewer__content__unsupported"
+                >
+                  <Label type={LabelTypography.H_1} color={LabelColors.ONBACKGROUND_1}>
+                    {stringSet?.UI__FILE_VIEWER__UNSUPPORT || 'Unsupported message'}
+                  </Label>
+                </div>
+              )
+            }
+          </div>
+          : <ImagesView {...props} />
+      }
     </div>
   );
 };
 
 export interface FileViewerProps {
-  message: FileMessage;
+  message: FileMessage | MultipleFilesMessage;
   onClose: (e: MouseEvent) => void;
   isByMe?: boolean;
   onDelete?: (e: MouseEvent) => void;
@@ -133,13 +136,13 @@ export default function FileViewer({
   onClickLeft,
   onClickRight,
 }: FileViewerProps): ReactElement {
-  if (message?.isMultipleFilesMessage()) {
+  if (message.isMultipleFilesMessage()) {
     return (
       <FileViewerComponent
-        profileUrl={message?.sender?.profileUrl}
-        nickname={message?.sender?.nickname}
+        profileUrl={message.sender?.profileUrl}
+        nickname={message.sender?.nickname}
         viewerType={ViewerTypes.MULTI}
-        fileInfoList={message?.fileInfoList.map((fileInfo: UploadedFileInfo): FileInfo => {
+        fileInfoList={message.fileInfoList.map((fileInfo: UploadedFileInfo): FileInfo => {
           return {
             name: fileInfo.fileName || '',
             type: fileInfo.mimeType || '',
@@ -152,21 +155,22 @@ export default function FileViewer({
         onClose={onClose}
       />
     );
+  } else if (message.isFileMessage()) {
+    return createPortal(
+      (
+        <FileViewerComponent
+          profileUrl={message.sender?.profileUrl}
+          nickname={message.sender?.nickname}
+          name={message.name}
+          type={message.type}
+          url={message?.url}
+          isByMe={isByMe}
+          disableDelete={(message?.threadInfo?.replyCount || 0) > 0}
+          onClose={onClose}
+          onDelete={onDelete || noop}
+        />
+      ),
+      (document.getElementById(MODAL_ROOT) as HTMLElement),
+    );
   }
-  return createPortal(
-    (
-      <FileViewerComponent
-        profileUrl={message?.sender?.profileUrl}
-        nickname={message?.sender?.nickname}
-        name={message?.name}
-        type={message?.type}
-        url={message?.url}
-        isByMe={isByMe}
-        disableDelete={(message?.threadInfo?.replyCount || 0) > 0}
-        onClose={onClose}
-        onDelete={onDelete || noop}
-      />
-    ),
-    (document.getElementById(MODAL_ROOT) as HTMLElement),
-  );
 }
