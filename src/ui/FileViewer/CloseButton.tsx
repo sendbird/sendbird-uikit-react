@@ -1,5 +1,5 @@
-import React from "react";
-import {FileViewerComponentProps, ViewerTypes} from "./types";
+import React from 'react';
+import { FileViewerComponentProps, ViewerTypes } from './types';
 import Icon, { IconColors, IconTypes } from '../Icon';
 
 export function CloseButton({ props }: {
@@ -18,7 +18,7 @@ export function CloseButton({ props }: {
           onClick={(e) => { if (!disableDelete) { onDelete?.(e); } }}
         />
       </div>
-    )
+    );
   }
   return null;
 }

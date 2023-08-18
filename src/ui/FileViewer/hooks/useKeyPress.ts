@@ -1,5 +1,5 @@
-import { useCallback, useEffect } from "react";
-import { FileViewerComponentProps, ViewerTypes } from "../types";
+import { useCallback, useEffect } from 'react';
+import { FileViewerComponentProps, ViewerTypes } from '../types';
 
 export function useKeyPress({
   props,

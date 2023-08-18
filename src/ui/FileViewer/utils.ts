@@ -1,4 +1,4 @@
-import {FileInfo, FileViewerComponentProps, MultiFilesViewer, SingleFileViewer, ViewerTypes} from "./types";
+import { FileInfo, FileViewerComponentProps, MultiFilesViewer, SingleFileViewer, ViewerTypes } from './types';
 
 export function mapFileViewerComponentProps({ props }: {
   props: FileViewerComponentProps;

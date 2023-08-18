@@ -1,7 +1,7 @@
 import './index.scss';
 
 import React, { MouseEvent, ReactElement, useContext, useRef } from 'react';
-import {FileMessage, UploadedFileInfo} from '@sendbird/chat/message';
+import { FileMessage, UploadedFileInfo } from '@sendbird/chat/message';
 import { createPortal } from 'react-dom';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { MODAL_ROOT } from '../../hooks/useModal/ModalRoot';
@@ -9,11 +9,11 @@ import { isImage, isVideo, isSupportedFileView } from '../../utils';
 import Avatar from '../Avatar/index';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import Icon, { IconColors, IconTypes } from '../Icon';
-import {FileInfo, FileViewerComponentProps, ViewerTypes} from './types';
+import { FileInfo, FileViewerComponentProps, ViewerTypes } from './types';
 import { useKeyPress } from './hooks/useKeyPress';
-import {mapFileViewerComponentProps} from "./utils";
-import {CloseButton} from "./CloseButton";
-import {ImagesView} from "./ImagesView";
+import { mapFileViewerComponentProps } from './utils';
+import { CloseButton } from './CloseButton';
+import { ImagesView } from './ImagesView';
 
 export const FileViewerComponent = (props: FileViewerComponentProps): ReactElement => {
   const ref = useRef<HTMLDivElement>(null);
@@ -150,7 +150,7 @@ export default function FileViewer({
         onClickRight={onClickRight}
         onClose={onClose}
       />
-    )
+    );
   }
   return createPortal(
     (

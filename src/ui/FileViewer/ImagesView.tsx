@@ -1,7 +1,7 @@
-import React from "react";
-import {FileViewerComponentProps, ViewerTypes} from "./types";
+import React from 'react';
+import { FileViewerComponentProps, ViewerTypes } from './types';
 import Icon, { IconColors, IconTypes } from '../Icon';
-import {isImage} from "../../utils";
+import { isImage } from '../../utils';
 import Label, { LabelTypography, LabelColors } from '../Label';
 
 const BUTTON_ICON_SIDE_LENGTH = '24px';
@@ -11,7 +11,7 @@ export function ImagesView({ props, stringSet }: {
   stringSet?: any,
 }) {
   if (props.viewerType === ViewerTypes.MULTI) {
-    const {fileInfoList, currentIndex, onClickLeft, onClickRight } = props;
+    const { fileInfoList, currentIndex, onClickLeft, onClickRight } = props;
     const { name, url, type } = fileInfoList[currentIndex];
     return (
       !isImage(type) || fileInfoList.length <= 1

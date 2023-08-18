@@ -1,8 +1,8 @@
-import {useEffect, useState} from "react";
-import {FileInfo} from "../index";
+import { useEffect, useState } from 'react';
+import { FileInfo } from '../index';
 
-export function useKeyDown({ viewerRef, fileInfoList, currentIndex,   onClickLeft,
-  onClickRight, onClose
+export function useKeyDown({ viewerRef, fileInfoList, currentIndex, onClickLeft,
+  onClickRight, onClose,
 }) {
   const [currentFileInfo, setCurrentFileInfo] = useState<FileInfo>();
   useEffect(() => {
@@ -34,7 +34,7 @@ export function useKeyDown({ viewerRef, fileInfoList, currentIndex,   onClickLef
         default:
       }
       event.preventDefault();
-    }
+    };
     viewerRef.current.addEventListener('keydown', onKeyDown);
     return () => {
       viewerRef.current.removeEventListener('keydown', onKeyDown);
