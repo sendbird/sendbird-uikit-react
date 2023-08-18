@@ -1,18 +1,24 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import { FileViewerComponentProps, ViewerTypes } from './types';
 import Icon, { IconColors, IconTypes } from '../Icon';
 
 const BUTTON_ICON_SIDE_LENGTH = '24px';
 
 export function ImagesView(props: FileViewerComponentProps): React.ReactElement {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    ref.current.focus();
+  }, []);
+
   if (props.viewerType === ViewerTypes.MULTI) {
     const { fileInfoList, currentIndex, onClickLeft, onClickRight } = props;
     const { name, url } = fileInfoList[currentIndex];
     return (
-      <div className="sendbird-filesviewer-content">
+      <div className="sendbird-filesviewer-content" ref={ref}>
         <div className="sendbird-filesviewer-arrow left">
           <Icon
-            type={IconTypes.ARROW_LEFT}
+            type={IconTypes.SLIDE_LEFT}
             fillColor={IconColors.ON_BACKGROUND_1}
             height={BUTTON_ICON_SIDE_LENGTH}
             width={BUTTON_ICON_SIDE_LENGTH}
@@ -37,7 +43,7 @@ export function ImagesView(props: FileViewerComponentProps): React.ReactElement 
           }}
         >
           <Icon
-            type={IconTypes.ARROW_RIGHT}
+            type={IconTypes.SLIDE_LEFT}
             fillColor={IconColors.ON_BACKGROUND_1}
             height={BUTTON_ICON_SIDE_LENGTH}
             width={BUTTON_ICON_SIDE_LENGTH}

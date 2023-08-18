@@ -11,7 +11,6 @@ import {
 
 import IconAdd from '../../svgs/icon-add.svg';
 import IconArrowLeft from '../../svgs/icon-arrow-left.svg';
-import IconArrowRight from '../../svgs/icon-arrow-right.svg';
 import IconAttach from '../../svgs/icon-attach.svg';
 import IconAudioOnLined from '../../svgs/icon-audio-on-lined.svg';
 import IconBan from '../../svgs/icon-ban.svg';
@@ -60,6 +59,7 @@ import IconReply from '../../svgs/icon-reply-filled.svg';
 import IconSearch from '../../svgs/icon-search.svg';
 import IconSend from '../../svgs/icon-send.svg';
 import IconSettingsFilled from '../../svgs/icon-settings-filled.svg';
+import IconSlideLeft from '../../svgs/icon-slide-left.svg';
 import IconSpinner from '../../svgs/icon-spinner.svg';
 import IconSupergroup from '../../svgs/icon-supergroup.svg';
 import IconThread from '../../svgs/icon-thread.svg';
@@ -72,7 +72,6 @@ function changeTypeToIconComponent(type) {
   switch (type) {
     case Types.ADD: return <IconAdd />;
     case Types.ARROW_LEFT: return <IconArrowLeft />;
-    case Types.ARROW_RIGHT: return <IconArrowRight />;
     case Types.ATTACH: return <IconAttach />;
     case Types.AUDIO_ON_LINED: return <IconAudioOnLined />;
     case Types.BAN: return <IconBan />;
@@ -121,6 +120,7 @@ function changeTypeToIconComponent(type) {
     case Types.SEARCH: return <IconSearch />;
     case Types.SEND: return <IconSend />;
     case Types.SETTINGS_FILLED: return <IconSettingsFilled />;
+    case Types.SLIDE_LEFT: return <IconSlideLeft />;
     case Types.SPINNER: return <IconSpinner />;
     case Types.SUPERGROUP: return <IconSupergroup />;
     case Types.THREAD: return <IconThread />;

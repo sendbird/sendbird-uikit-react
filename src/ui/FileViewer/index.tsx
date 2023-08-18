@@ -13,7 +13,7 @@ import Icon, { IconColors, IconTypes } from '../Icon';
 import { FileInfo, FileViewerComponentProps, ViewerTypes } from './types';
 import { useKeyPress } from './hooks/useKeyPress';
 import { mapFileViewerComponentProps } from './utils';
-import { CloseButton } from './CloseButton';
+import { DeleteButton } from './DeleteButton';
 import { ImagesView } from './ImagesView';
 
 export const FileViewerComponent = (props: FileViewerComponentProps): ReactElement => {
@@ -64,7 +64,7 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
                     width="24px"
                   />
                 </a>
-                <CloseButton {...props} />
+                <DeleteButton {...props} />
               </div>
             )
           }

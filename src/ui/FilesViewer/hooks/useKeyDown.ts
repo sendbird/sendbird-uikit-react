@@ -15,12 +15,6 @@ export function useKeyDown({ viewerRef, fileInfoList, currentIndex, onClickLeft,
 
   useEffect(() => {
     const onKeyDown = (event) => {
-      // const html = match(event.key)
-      //   .with('Escape', () => ``)
-      //   .with({ type: 'ok', data: { type: 'text' } }, (res) => `<p>${res.data.content}</p>`)
-      //   .with({ type: 'ok', data: { type: 'img', src: P.select() } }, (src) => `<img src=${src} />`)
-      //   .exhaustive();
-
       switch (event.key) {
         case 'Escape':
           onClose?.();
