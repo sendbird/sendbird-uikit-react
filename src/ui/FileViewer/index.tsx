@@ -6,6 +6,7 @@ import { createPortal } from 'react-dom';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { MODAL_ROOT } from '../../hooks/useModal/ModalRoot';
 import { isImage, isVideo, isSupportedFileView } from '../../utils';
+import { noop } from '../../utils/utils';
 import Avatar from '../Avatar/index';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import Icon, { IconColors, IconTypes } from '../Icon';
@@ -140,14 +141,14 @@ export default function FileViewer({
         viewerType={ViewerTypes.MULTI}
         fileInfoList={message?.fileInfoList.map((fileInfo: UploadedFileInfo): FileInfo => {
           return {
-            name: fileInfo.fileName,
-            type: fileInfo.mimeType,
+            name: fileInfo.fileName || '',
+            type: fileInfo.mimeType || '',
             url: fileInfo.url,
           };
         })}
-        currentIndex={currentIndex }
-        onClickLeft={onClickLeft}
-        onClickRight={onClickRight}
+        currentIndex={currentIndex || 0}
+        onClickLeft={onClickLeft || noop}
+        onClickRight={onClickRight || noop}
         onClose={onClose}
       />
     );
@@ -161,11 +162,11 @@ export default function FileViewer({
         type={message?.type}
         url={message?.url}
         isByMe={isByMe}
-        disableDelete={message?.threadInfo?.replyCount > 0}
+        disableDelete={(message?.threadInfo?.replyCount || 0) > 0}
         onClose={onClose}
-        onDelete={onDelete}
+        onDelete={onDelete || noop}
       />
     ),
-    document.getElementById(MODAL_ROOT),
+    (document.getElementById(MODAL_ROOT) as HTMLElement),
   );
 }
