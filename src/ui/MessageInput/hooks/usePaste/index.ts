@@ -13,7 +13,7 @@ import {
   getLeafNodes,
 } from './utils';
 
-// exported, should be backwords compatible
+// exported, should be backward compatible
 // conditions to test:
 // 1. paste simple text
 // 2. paste text with mention
