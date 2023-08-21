@@ -1,13 +1,19 @@
-import {renderHook, act, render, screen, fireEvent} from '@testing-library/react';
+import {act, render, screen, fireEvent} from '@testing-library/react';
 import {useKeyDown} from "../hooks/useKeyDown";
 import {FileViewerComponentProps, ViewerTypes} from "../types";
 import {FILE_INFO_LIST} from "../data.mock";
 import React, {useRef} from "react";
 
-export function DUMMY_COMPONENT(props: FileViewerComponentProps): React.ReactElement {
+const testId = 'dummy';
+
+function DummyComponent(props: FileViewerComponentProps): React.ReactElement {
   const ref = useRef<HTMLDivElement>(null);
-  renderHook(() => useKeyDown({ props, ref }));
-  return <div id='dummy' ref={ref}>DUMMY</div>;
+  const { onKeyDown } =  useKeyDown({ props, ref });
+  return <div
+    ref={ref}
+    onKeyDown={onKeyDown}
+    data-testid={testId}
+  ></div>;
 }
 
 describe('useKeyDown', () => {
@@ -30,24 +36,18 @@ describe('useKeyDown', () => {
       onClickRight,
       onClose,
     };
-    const { container, baseElement, rerender } = render(<DUMMY_COMPONENT {...props}/>);
-    const dummy = container.querySelector('#dummy');
-    console.log('## dummy: ', dummy);
-    // const keyboardState = userEvent.keyboard('[ArrowLeft>]');
-    // await userEvent.keyboard('keydown', {keyboardState}) // press [KeyA] with active ctrlKey modifier
-    fireEvent.keyDown(dummy, { key: "ArrowLeft" });
+    render(<DummyComponent {...props} />);
+    const dummy = screen.getAllByTestId(testId)[0];
+    expect(dummy).toBeTruthy();
 
-
-    // await user.click(container.querySelector('#dummy'));
-
-    // act(() => {
-    //   const event = new KeyboardEvent('keydown', {'key': 'ArrowLeft'});
-    //   // document.body.dispatchEvent(event);
-    //   container.querySelector('#dummy').dispatchEvent(event);
-    // });
+    act(() => {
+      fireEvent.keyDown(dummy, { key: 'ArrowLeft', code: 'ArrowLeft' });
+    });
 
     expect(onClickLeft).toHaveBeenCalledTimes(1);
     expect(onClickRight).toHaveBeenCalledTimes(0);
     expect(onClose).toHaveBeenCalledTimes(0);
   });
+
+  // try implementing test for onClose and onClickRight
 });
