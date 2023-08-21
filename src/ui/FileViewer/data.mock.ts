@@ -17,8 +17,9 @@ const EARTH_FILE_INFO: FileInfo = {
 export const FILE_INFO_LIST: FileInfo[] = [
   PROFILE_FILE_INFO,
   EARTH_FILE_INFO,
-  PROFILE_FILE_INFO,
   EARTH_FILE_INFO,
+  PROFILE_FILE_INFO,
+  PROFILE_FILE_INFO,
 ];
 
 export const msg0 = {
@@ -122,5 +123,3 @@ export const msg2 = {
     return true;
   },
 };
-
-export default msg0;

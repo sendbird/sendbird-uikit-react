@@ -10,13 +10,9 @@ export function Slider(props: FileViewerComponentProps): React.ReactElement {
     const { onClickLeft, onClickRight } = props;
     return (
       <div className="sendbird-file-viewer-slider">
-        {/* Remove this lol, is me playing around */}
-        <div style={{ position: 'absolute', bottom: '12px', left: '50%' }}>
-          { props.currentIndex + 1 } / { props.fileInfoList.length }
-        </div>
         <div className="sendbird-file-viewer-arrow--left">
           <Icon
-            type={IconTypes.ARROW_LEFT}
+            type={IconTypes.SLIDE_LEFT}
             fillColor={IconColors.ON_BACKGROUND_1}
             height={BUTTON_ICON_SIDE_LENGTH}
             width={BUTTON_ICON_SIDE_LENGTH}
@@ -26,9 +22,14 @@ export function Slider(props: FileViewerComponentProps): React.ReactElement {
             }}
           />
         </div>
-        <div className="sendbird-file-viewer-arrow--right">
+        <div
+          className="sendbird-file-viewer-arrow--right"
+          style={{
+            transform: 'rotate(180deg)', // FIXME: Remove this after replacing with correct right arrow image.
+          }}
+        >
           <Icon
-            type={IconTypes.ARROW_LEFT}
+            type={IconTypes.SLIDE_LEFT}
             fillColor={IconColors.ON_BACKGROUND_1}
             height={BUTTON_ICON_SIDE_LENGTH}
             width={BUTTON_ICON_SIDE_LENGTH}

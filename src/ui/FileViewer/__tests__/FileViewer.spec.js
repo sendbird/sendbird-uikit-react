@@ -3,9 +3,11 @@ import { render, screen } from '@testing-library/react';
 
 import { FileViewerComponent as FileViewer } from "../index";
 import { msg0, msg1 } from '../data.mock';
+import {DeleteButton} from "../DeleteButton";
+import {ViewerTypes} from "../types";
 
-describe('ui/FileViewer', () => {
-  it('should display image', function() {
+describe('ui/DeleteButton', () => {
+  it('should return empty component when viewerType is ViewerTypes.MULTI', function() {
     const {
       sender,
       type,
@@ -14,7 +16,7 @@ describe('ui/FileViewer', () => {
     } = msg0;
     const { profileUrl, nickname = '' } = sender;
     render(
-      <FileViewer
+      <DeleteButton
         profileUrl={profileUrl}
         nickname={nickname}
         type={type}
@@ -22,7 +24,8 @@ describe('ui/FileViewer', () => {
         name={name}
         onClose={() => {}}
         onDelete={() => {}}
-        />
+        viewerType={ViewerTypes.MULTI}
+      />
     );
     expect(
       screen.getByAltText(msg0.name).className
