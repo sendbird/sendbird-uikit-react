@@ -28,7 +28,7 @@ export function useSwipe(props: SwipeProps) {
   }
   window.addEventListener('touchstart', handleTouchStart);
   window.addEventListener('touchend', handleTouchEnd);
-  
+
   return () => {
     window.removeEventListener('touchstart', handleTouchStart);
     window.removeEventListener('touchend', handleTouchEnd);
