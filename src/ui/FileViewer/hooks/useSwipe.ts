@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState } from 'react';
 
 interface SwipeProps {
   moveSliderLeft: () => void;
@@ -17,10 +17,6 @@ export function useSwipe(props: SwipeProps) {
     setTouchStart(e.targetTouches[0].clientX);
   }
 
-  function handleTouchMove(e) {
-    setTouchEnd(e.targetTouches[0].clientX);
-  }
-
   function handleTouchEnd() {
     if (touchStart - touchEnd > SWIPE_THRESHOLD_IN_MILLIES) {
       moveSliderRight();
@@ -30,11 +26,11 @@ export function useSwipe(props: SwipeProps) {
       moveSliderLeft();
     }
   }
-
   window.addEventListener('touchstart', handleTouchStart);
   window.addEventListener('touchend', handleTouchEnd);
+  
   return () => {
     window.removeEventListener('touchstart', handleTouchStart);
     window.removeEventListener('touchend', handleTouchEnd);
   };
-};
+}
