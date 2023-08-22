@@ -4,7 +4,7 @@ import { FILE_INFO_LIST } from '../data.mock';
 
 const noop = () => { /* noop */ };
 
-describe('Global-utils/getBorderRadiusForImageRenderer', () => {
+describe('Global-utils/mapFileViewerComponentProps', () => {
   it('when given MULTI props, return indexed file viewer component props for index zero.', () => {
     const props: FileViewerComponentProps = {
       nickname: 'hoon100',

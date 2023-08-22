@@ -14,11 +14,12 @@ const EARTH_FILE_INFO: FileInfo = {
   type: 'image/jpg',
 };
 
+
 export const FILE_INFO_LIST: FileInfo[] = [
   PROFILE_FILE_INFO,
   EARTH_FILE_INFO,
-  EARTH_FILE_INFO,
   PROFILE_FILE_INFO,
+  EARTH_FILE_INFO,
   PROFILE_FILE_INFO,
 ];
 

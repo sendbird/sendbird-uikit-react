@@ -24,9 +24,6 @@ export function Slider(props: FileViewerComponentProps): React.ReactElement {
         </div>
         <div
           className="sendbird-file-viewer-arrow--right"
-          style={{
-            transform: 'rotate(180deg)', // FIXME: Remove this after replacing with correct right arrow image.
-          }}
         >
           <Icon
             type={IconTypes.SLIDE_LEFT}
