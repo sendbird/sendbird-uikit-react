@@ -98,6 +98,10 @@
       max-width: 90%;
       max-height: 90%;
     }
+    .sendbird-fileviewer__content__img__multi {
+      max-width: calc(100% - 64px - 56px);
+      max-height: calc(100% - 64px - 56px);
+    }
     .sendbird-fileviewer__content__unsupported {
       max-width: 100%;
       max-height: 100%;
@@ -112,8 +116,9 @@
 .sendbird-file-viewer-arrow--right {
   cursor: pointer;
   position: absolute;
-  // half-joke, half-serious, its better to have some color change on hover
-  // ask gabie for suggestion
+  height: 32px;
+  width: 32px;
+  top: calc(50% - 16px);
   &:hover {
     border-radius: 50%;
     background-color: rgb(98, 144, 144);

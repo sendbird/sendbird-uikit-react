@@ -2,7 +2,7 @@ import React from 'react';
 import { FileViewerComponentProps, ViewerTypes } from './types';
 import Icon, { IconColors, IconTypes } from '../Icon';
 
-const BUTTON_ICON_SIDE_LENGTH = '24px';
+const BUTTON_ICON_SIDE_LENGTH = '32px';
 
 // this is a slider component that is used to navigate between images
 export function Slider(props: FileViewerComponentProps): React.ReactElement {
