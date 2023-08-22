@@ -1,14 +1,14 @@
-import {act, render, screen, fireEvent} from '@testing-library/react';
-import {useKeyDown} from "../hooks/useKeyDown";
-import {FileViewerComponentProps, ViewerTypes} from "../types";
-import {FILE_INFO_LIST} from "../data.mock";
-import React, {useRef} from "react";
+import { act, render, screen, fireEvent } from '@testing-library/react';
+import { useKeyDown } from '../hooks/useKeyDown';
+import { FileViewerComponentProps, ViewerTypes } from '../types';
+import { FILE_INFO_LIST } from '../data.mock';
+import React, { useRef } from 'react';
 
 const testId = 'dummy';
 
 function DummyComponent(props: FileViewerComponentProps): React.ReactElement {
   const ref = useRef<HTMLDivElement>(null);
-  const { onKeyDown } =  useKeyDown({ props, ref });
+  const { onKeyDown } = useKeyDown({ props, ref });
   return <div
     ref={ref}
     onKeyDown={onKeyDown}

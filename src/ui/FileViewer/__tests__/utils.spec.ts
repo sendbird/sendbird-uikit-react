@@ -1,6 +1,6 @@
-import {mapFileViewerComponentProps} from "../utils";
-import {FileViewerComponentProps, ViewerTypes} from "../types";
-import {FILE_INFO_LIST} from "../data.mock";
+import { mapFileViewerComponentProps } from '../utils';
+import { FileViewerComponentProps, ViewerTypes } from '../types';
+import { FILE_INFO_LIST } from '../data.mock';
 
 const noop = () => { /* noop */ };
 

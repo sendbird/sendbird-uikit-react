@@ -17,7 +17,7 @@ export function Slider(props: FileViewerComponentProps): React.ReactElement {
             height={BUTTON_ICON_SIDE_LENGTH}
             width={BUTTON_ICON_SIDE_LENGTH}
             onClick={(e) => {
-              onClickLeft?.()
+              onClickLeft?.();
               e.stopPropagation();
             }}
           />
@@ -35,7 +35,7 @@ export function Slider(props: FileViewerComponentProps): React.ReactElement {
             width={BUTTON_ICON_SIDE_LENGTH}
             onClick={(e) => {
               e.stopPropagation();
-              onClickRight?.()
+              onClickRight?.();
             }}
           />
         </div>
