@@ -41,13 +41,65 @@ describe('useKeyDown', () => {
     expect(dummy).toBeTruthy();
 
     act(() => {
-      fireEvent.keyDown(dummy, { key: 'ArrowLeft', code: 'ArrowLeft' });
+      fireEvent.keyDown(dummy, { key: 'ArrowLeft' });
     });
 
     expect(onClickLeft).toHaveBeenCalledTimes(1);
     expect(onClickRight).toHaveBeenCalledTimes(0);
     expect(onClose).toHaveBeenCalledTimes(0);
   });
+  it('should call onClickRight on keydown ArrowRight', async () => {
+    const onClickLeft = jest.fn(() => null);
+    const onClickRight = jest.fn(() => null);
+    const onClose = jest.fn(() => null);
 
-  // try implementing test for onClose and onClickRight
+    const props: FileViewerComponentProps = {
+      nickname: 'hoon100',
+      profileUrl: 'https://static.sendbird.com/sample/profiles/profile_34_512px.png',
+      viewerType: ViewerTypes.MULTI,
+      fileInfoList: FILE_INFO_LIST,
+      currentIndex: 0,
+      onClickLeft,
+      onClickRight,
+      onClose,
+    };
+    render(<DummyComponent {...props} />);
+    const dummy = screen.getAllByTestId(testId)[0];
+    expect(dummy).toBeTruthy();
+
+    act(() => {
+      fireEvent.keyDown(dummy, { key: 'ArrowRight' });
+    });
+
+    expect(onClickLeft).toHaveBeenCalledTimes(0);
+    expect(onClickRight).toHaveBeenCalledTimes(1);
+    expect(onClose).toHaveBeenCalledTimes(0);
+  });
+  it('should call onClose on keydown Escape', async () => {
+    const onClickLeft = jest.fn(() => null);
+    const onClickRight = jest.fn(() => null);
+    const onClose = jest.fn(() => null);
+
+    const props: FileViewerComponentProps = {
+      nickname: 'hoon100',
+      profileUrl: 'https://static.sendbird.com/sample/profiles/profile_34_512px.png',
+      viewerType: ViewerTypes.MULTI,
+      fileInfoList: FILE_INFO_LIST,
+      currentIndex: 0,
+      onClickLeft,
+      onClickRight,
+      onClose,
+    };
+    render(<DummyComponent {...props} />);
+    const dummy = screen.getAllByTestId(testId)[0];
+    expect(dummy).toBeTruthy();
+
+    act(() => {
+      fireEvent.keyDown(dummy, { key: 'Escape' });
+    });
+
+    expect(onClickLeft).toHaveBeenCalledTimes(0);
+    expect(onClickRight).toHaveBeenCalledTimes(0);
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
 });
