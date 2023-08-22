@@ -1,8 +1,8 @@
-import {render} from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { FileViewerComponentProps, ViewerTypes } from '../types';
 import { FILE_INFO_LIST } from '../data.mock';
 import React from 'react';
-import {DeleteButton} from "../DeleteButton";
+import { DeleteButton } from '../DeleteButton';
 
 describe('DeleteButton', () => {
   afterEach(() => {
@@ -25,7 +25,7 @@ describe('DeleteButton', () => {
       onClose,
     };
 
-    const className = "sendbird-fileviewer__header__right__actions__delete";
+    const className = 'sendbird-fileviewer__header__right__actions__delete';
     const { container } = render(<DeleteButton {...props} />);
     const elements = container.getElementsByClassName(`${className}`);
     expect(elements).toHaveLength(0);
@@ -45,7 +45,7 @@ describe('DeleteButton', () => {
       onDelete: noop,
     };
 
-    const className = "sendbird-fileviewer__header__right__actions__delete";
+    const className = 'sendbird-fileviewer__header__right__actions__delete';
     const { container } = render(<DeleteButton {...props} />);
     const elements = container.getElementsByClassName(`${className}`);
     expect(elements).toHaveLength(1);
@@ -65,7 +65,7 @@ describe('DeleteButton', () => {
       onDelete: noop,
     };
 
-    const className = "sendbird-fileviewer__header__right__actions__delete";
+    const className = 'sendbird-fileviewer__header__right__actions__delete';
     const { container } = render(<DeleteButton {...props} />);
     const elements = container.getElementsByClassName(`${className}`);
     expect(elements).toHaveLength(0);
