@@ -31,7 +31,7 @@ describe('DeleteButton', () => {
     expect(elements).toHaveLength(0);
   });
   it('should render component tree when viewerType is SINGLE, and message is by me', () => {
-    const noop = () => {};
+    const noop = () => { /* noop */};
     const props: FileViewerComponentProps = {
       nickname: 'hoon100',
       profileUrl: 'https://static.sendbird.com/sample/profiles/profile_34_512px.png',
@@ -51,7 +51,7 @@ describe('DeleteButton', () => {
     expect(elements).toHaveLength(1);
   });
   it('should return empty component when viewerType is SINGLE and message is not by me', () => {
-    const noop = () => {};
+    const noop = () => { /* noop */};
     const props: FileViewerComponentProps = {
       nickname: 'hoon100',
       profileUrl: 'https://static.sendbird.com/sample/profiles/profile_34_512px.png',
