@@ -11,21 +11,21 @@ const SWIPE_THRESHOLD_IN_MILLIES = 150;
 export function useSwipe(props: SwipeProps) {
   const { moveSliderLeft, moveSliderRight } = props;
   const [touchStart, setTouchStart] = useState(0);
-  const [touchEnd, setTouchEnd] = useState(0);
 
   function handleTouchStart(e) {
     setTouchStart(e.targetTouches[0].clientX);
   }
 
-  function handleTouchEnd() {
+  function handleTouchEnd(e) {
+    const touchEnd = e.changedTouches[0].clientX;
     if (touchStart - touchEnd > SWIPE_THRESHOLD_IN_MILLIES) {
       moveSliderRight();
     }
-
     if (touchStart - touchEnd < -SWIPE_THRESHOLD_IN_MILLIES) {
       moveSliderLeft();
     }
   }
+
   window.addEventListener('touchstart', handleTouchStart);
   window.addEventListener('touchend', handleTouchEnd);
 
