@@ -15,7 +15,7 @@ import { useKeyDown } from './hooks/useKeyDown';
 import { mapFileViewerComponentProps } from './utils';
 import { DeleteButton } from './DeleteButton';
 import { Slider } from './Slider';
-import {MediaQueryProvider} from "../../lib/MediaQueryContext";
+import { MediaQueryProvider } from '../../lib/MediaQueryContext';
 
 export const FileViewerComponent = (props: FileViewerComponentProps): ReactElement => {
   const ref = useRef<HTMLDivElement>(null);
@@ -103,8 +103,8 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
                 alt={name}
                 className={
                   props.viewerType === ViewerTypes.MULTI
-                    ? "sendbird-fileviewer__content__img__multi"
-                    : "sendbird-fileviewer__content__img"
+                    ? 'sendbird-fileviewer__content__img__multi'
+                    : 'sendbird-fileviewer__content__img'
                 }
               />
             )
