@@ -1,7 +1,7 @@
 import React from 'react';
 import { FileViewerComponentProps, ViewerTypes } from './types';
 import Icon, { IconColors, IconTypes } from '../Icon';
-import {SLIDER_BUTTON_ICON_SIDE_LENGTH} from "../../utils/consts";
+import { SLIDER_BUTTON_ICON_SIDE_LENGTH } from '../../utils/consts';
 
 // this is a slider component that is used to navigate between images
 export function Slider(props: FileViewerComponentProps): React.ReactElement {

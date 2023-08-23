@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {SWIPE_THRESHOLD_IN_MILLIES} from "../../../utils/consts";
+import { SWIPE_THRESHOLD_IN_MILLIES } from '../../../utils/consts';
 
 interface SwipeProps {
   moveSliderLeft: () => void;
