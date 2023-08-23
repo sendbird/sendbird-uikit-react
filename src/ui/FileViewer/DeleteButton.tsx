@@ -2,7 +2,7 @@ import React from 'react';
 import { FileViewerComponentProps, ViewerTypes } from './types';
 import Icon, { IconColors, IconTypes } from '../Icon';
 
-export function DeleteButton(props: FileViewerComponentProps & { className: string }): React.ReactElement {
+export function DeleteButton(props: FileViewerComponentProps & { className?: string }): React.ReactElement {
   if (props.viewerType !== ViewerTypes.MULTI) {
     const { onDelete, isByMe, disableDelete, className } = props;
     return (isByMe)
