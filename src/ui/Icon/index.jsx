@@ -59,6 +59,7 @@ import IconReply from '../../svgs/icon-reply-filled.svg';
 import IconSearch from '../../svgs/icon-search.svg';
 import IconSend from '../../svgs/icon-send.svg';
 import IconSettingsFilled from '../../svgs/icon-settings-filled.svg';
+import IconSlideLeft from '../../svgs/icon-slide-left.svg';
 import IconSpinner from '../../svgs/icon-spinner.svg';
 import IconSupergroup from '../../svgs/icon-supergroup.svg';
 import IconThread from '../../svgs/icon-thread.svg';
@@ -119,6 +120,7 @@ function changeTypeToIconComponent(type) {
     case Types.SEARCH: return <IconSearch />;
     case Types.SEND: return <IconSend />;
     case Types.SETTINGS_FILLED: return <IconSettingsFilled />;
+    case Types.SLIDE_LEFT: return <IconSlideLeft />;
     case Types.SPINNER: return <IconSpinner />;
     case Types.SUPERGROUP: return <IconSupergroup />;
     case Types.THREAD: return <IconThread />;
