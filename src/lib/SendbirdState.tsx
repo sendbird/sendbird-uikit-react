@@ -34,6 +34,7 @@ interface SendBirdStateConfig {
   onUserProfileMessage?: (props: GroupChannel) => void;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   allowProfileEdit: boolean;
+  uikitMultipleFilesMessageLimit?: number;
   isOnline: boolean;
   userId: string;
   appId: string;

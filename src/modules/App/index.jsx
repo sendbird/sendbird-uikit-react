@@ -43,6 +43,7 @@ export default function App(props) {
     onProfileEditSuccess,
     imageCompression,
     disableAutoSelect,
+    uikitMultipleFilesMessageLimit,
     isTypingIndicatorEnabledOnChannelList,
     isMessageReceiptStatusEnabledOnChannelList,
     uikitOptions,
@@ -78,6 +79,7 @@ export default function App(props) {
       onUserProfileMessage={(channel) => {
         setCurrentChannel(channel);
       }}
+      uikitMultipleFilesMessageLimit={uikitMultipleFilesMessageLimit}
       isTypingIndicatorEnabledOnChannelList={isTypingIndicatorEnabledOnChannelList}
       isMessageReceiptStatusEnabledOnChannelList={isMessageReceiptStatusEnabledOnChannelList}
       replyType={replyType}
@@ -130,6 +132,7 @@ App.propTypes = {
     ]),
     isREMUnitEnabled: PropTypes.bool,
   }),
+  uikitMultipleFilesMessageLimit: PropTypes.number,
   uikitOptions: PropTypes.shape({}),
   isReactionEnabled: PropTypes.bool,
   replyType: PropTypes.oneOf(['NONE', 'QUOTE_REPLY', 'THREAD']),
@@ -181,6 +184,7 @@ App.defaultProps = {
     maxRecordingTime: VOICE_RECORDER_DEFAULT_MAX,
     minRecordingTime: VOICE_RECORDER_DEFAULT_MIN,
   },
+  uikitMultipleFilesMessageLimit: null,
   isMessageGroupingEnabled: true,
   stringSet: null,
   colorSet: null,

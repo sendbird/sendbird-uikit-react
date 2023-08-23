@@ -95,6 +95,8 @@ declare module "SendbirdUIKitGlobal" {
     useReaction?: boolean;
     useMessageGrouping?: boolean;
     isVoiceMessageEnabled?: boolean;
+    // UIKIT-4298
+    // uikitMultipleFilesMessageLimit?: number;
     voiceRecord?: {
       maxRecordingTime?: number,
       minRecordingTime?: number,
@@ -285,6 +287,8 @@ declare module "SendbirdUIKitGlobal" {
       resizingWidth?: number | string,
       resizingHeight?: number | string,
     };
+    // UIKIT-4298
+    // uikitMultipleFilesMessageLimit?: number;
     isMentionEnabled?: boolean;
     isVoiceMessageEnabled?: boolean;
     voiceRecord?: {
@@ -316,6 +320,8 @@ declare module "SendbirdUIKitGlobal" {
     theme: string;
     pubSub: any;
     logger: Logger;
+    // UIKIT-4298
+    // uikitMultipleFilesMessageLimit?: number;
     setCurrenttheme: (theme: string) => void;
     userListQuery?(): UserListQuery;
     imageCompression?: {
@@ -644,6 +650,7 @@ declare module "SendbirdUIKitGlobal" {
   export type FileViewerProps = {
     onCancel: () => void;
     message: ClientFileMessage;
+
   }
 
   export type MessageUIProps = {

@@ -89,6 +89,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps {
   isUserIdUsedForNickname?: boolean;
   sdkInitParams?: SendbirdChatInitParams;
   customExtensionParams?: CustomExtensionParams;
+  uikitMultipleFilesMessageLimit?: number;
 }
 
 function Sendbird(props: SendbirdProviderProps) {
@@ -152,6 +153,7 @@ const SendbirdSDK = ({
   isUserIdUsedForNickname = true,
   sdkInitParams,
   customExtensionParams,
+  uikitMultipleFilesMessageLimit,
 }: SendbirdProviderProps): React.ReactElement => {
   const {
     logLevel = '',
@@ -287,6 +289,7 @@ const SendbirdSDK = ({
           accessToken,
           theme: currenttheme,
           setCurrenttheme,
+          uikitMultipleFilesMessageLimit,
           userListQuery,
           logger,
           pubSub,
