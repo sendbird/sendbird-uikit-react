@@ -12,13 +12,14 @@ interface StaticParams {
 }
 
 /**
+ * exported, should be backwords compatible
  * This is a dirty way to get the mentions given DOM node
  */
 export function useDirtyGetMentions({
   ref,
 }: DynamicParams, {
   logger,
-}: StaticParams) {
+}: StaticParams): Element[] {
   // Select the node that will be observed for mutations
   const targetNode = ref.current as HTMLElement;
   const [mentionNodes, setMentionNodes] = useState<Element[]>([]);

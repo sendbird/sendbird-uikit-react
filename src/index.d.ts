@@ -249,7 +249,8 @@ type GetResendUserMessage = (
 ) => Promise<UserMessage>;
 type GetResendFileMessage = (
   channel: GroupChannel | OpenChannel,
-  failedMessage: FileMessage
+  failedMessage: FileMessage,
+  blob: Blob,
 ) => Promise<FileMessage>;
 
 interface sendbirdSelectorsInterface {
@@ -438,6 +439,8 @@ export interface ChannelListProviderInterface extends ChannelListProviderProps {
   currentUserId: string;
   // channelListDispatcher: CustomUseReducerDispatcher;
   channelSource: GroupChannelListQuery;
+  typingChannels: GroupChannel[];
+  fetchChannelList: () => void;
 }
 
 interface RenderChannelPreviewProps {

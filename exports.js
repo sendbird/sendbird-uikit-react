@@ -55,6 +55,8 @@ export default {
   // Channel
   Channel: 'src/modules/Channel/index.tsx',
   'Channel/context': 'src/modules/Channel/context/ChannelProvider.tsx',
+  'Channel/utils/getMessagePartsInfo': 'src/modules/Channel/components/MessageList/getMessagePartsInfo.ts',
+  'Channel/utils/compareMessagesForGrouping': 'src/modules/Channel/context/compareMessagesForGrouping.ts',
   'Channel/components/ChannelHeader': 'src/modules/Channel/components/ChannelHeader/index.tsx',
   'Channel/components/ChannelUI': 'src/modules/Channel/components/ChannelUI/index.tsx',
   'Channel/components/FileViewer': 'src/modules/Channel/components/FileViewer/index.tsx',
@@ -104,6 +106,7 @@ export default {
 
   // Message
   'Message/context': 'src/modules/Message/context/MessageProvider.tsx',
+  'Message/hooks/useDirtyGetMentions': 'src/modules/Message/hooks/useDirtyGetMentions.ts',
 
   // Thread
   Thread: 'src/modules/Thread/index.tsx',
@@ -157,7 +160,9 @@ export default {
   'ui/MentionUserLabel': 'src/ui/MentionUserLabel/index.tsx',
   'ui/MentionLabel': 'src/ui/MentionLabel/index.tsx',
   'ui/MessageContent': 'src/ui/MessageContent/index.tsx',
+  // MessageInput is a special case - shouldbe turned into a module
   'ui/MessageInput': 'src/ui/MessageInput/index.jsx',
+  'ui/MessageInput/hooks/usePaste': 'src/ui/MessageInput/hooks/usePaste/index.ts',
   'ui/MessageItemMenu': 'src/ui/MessageItemMenu/index.tsx',
   'ui/MessageItemReactionMenu': 'src/ui/MessageItemReactionMenu/index.tsx',
   'ui/MessageSearchFileItem': 'src/ui/MessageSearchFileItem/index.tsx',

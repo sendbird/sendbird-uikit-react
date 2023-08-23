@@ -261,24 +261,6 @@ export const isSameGroup = (message, comparingMessage, currentChannel) => {
   );
 };
 
-export const compareMessagesForGrouping = (
-  prevMessage,
-  currMessage,
-  nextMessage,
-  currentChannel,
-  replyType,
-) => {
-  if (replyType === 'THREAD' && currMessage?.threadInfo) {
-    return [false, false];
-  }
-  const sendingStatus = currMessage?.sendingStatus || '';
-  const isAcceptable = sendingStatus !== 'pending' && sendingStatus !== 'failed';
-  return [
-    isSameGroup(prevMessage, currMessage, currentChannel) && isAcceptable,
-    isSameGroup(currMessage, nextMessage, currentChannel) && isAcceptable,
-  ];
-};
-
 export const hasOwnProperty = (property) => (payload) => {
   // eslint-disable-next-line no-prototype-builtins
   if (payload && payload.hasOwnProperty && payload.hasOwnProperty(property)) {
