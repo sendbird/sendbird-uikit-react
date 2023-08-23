@@ -34,5 +34,3 @@ export const DELIVERY_RECEIPT = 'delivery_receipt';
 // file viewer slider
 export const SLIDER_BUTTON_ICON_SIDE_LENGTH = '32px';
 
-// useSwipe
-export const SWIPE_THRESHOLD_IN_MILLIES = 150;
