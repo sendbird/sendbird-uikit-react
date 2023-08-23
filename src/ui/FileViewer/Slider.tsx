@@ -1,8 +1,7 @@
 import React from 'react';
 import { FileViewerComponentProps, ViewerTypes } from './types';
 import Icon, { IconColors, IconTypes } from '../Icon';
-
-const BUTTON_ICON_SIDE_LENGTH = '32px';
+import {SLIDER_BUTTON_ICON_SIDE_LENGTH} from "../../utils/consts";
 
 // this is a slider component that is used to navigate between images
 export function Slider(props: FileViewerComponentProps): React.ReactElement {
@@ -14,22 +13,20 @@ export function Slider(props: FileViewerComponentProps): React.ReactElement {
           <Icon
             type={IconTypes.SLIDE_LEFT}
             fillColor={IconColors.ON_BACKGROUND_1}
-            height={BUTTON_ICON_SIDE_LENGTH}
-            width={BUTTON_ICON_SIDE_LENGTH}
+            height={SLIDER_BUTTON_ICON_SIDE_LENGTH}
+            width={SLIDER_BUTTON_ICON_SIDE_LENGTH}
             onClick={(e) => {
               onClickLeft?.();
               e.stopPropagation();
             }}
           />
         </div>
-        <div
-          className="sendbird-file-viewer-arrow--right"
-        >
+        <div className="sendbird-file-viewer-arrow--right">
           <Icon
             type={IconTypes.SLIDE_LEFT}
             fillColor={IconColors.ON_BACKGROUND_1}
-            height={BUTTON_ICON_SIDE_LENGTH}
-            width={BUTTON_ICON_SIDE_LENGTH}
+            height={SLIDER_BUTTON_ICON_SIDE_LENGTH}
+            width={SLIDER_BUTTON_ICON_SIDE_LENGTH}
             onClick={(e) => {
               e.stopPropagation();
               onClickRight?.();

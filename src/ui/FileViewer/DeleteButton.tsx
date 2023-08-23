@@ -2,12 +2,12 @@ import React from 'react';
 import { FileViewerComponentProps, ViewerTypes } from './types';
 import Icon, { IconColors, IconTypes } from '../Icon';
 
-export function DeleteButton(props: FileViewerComponentProps): React.ReactElement {
+export function DeleteButton(props: FileViewerComponentProps & { className: string }): React.ReactElement {
   if (props.viewerType !== ViewerTypes.MULTI) {
-    const { onDelete, isByMe, disableDelete } = props;
+    const { onDelete, isByMe, disableDelete, className } = props;
     return (isByMe)
       ? (
-        <div className="sendbird-fileviewer__header__right__actions__delete">
+        <div className={`sendbird-fileviewer__header__right__actions__delete ${className}`}>
           <Icon
             className={disableDelete ? 'disabled' : ''}
             type={IconTypes.DELETE}

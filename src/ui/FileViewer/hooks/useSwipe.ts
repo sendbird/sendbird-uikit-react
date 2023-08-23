@@ -1,13 +1,17 @@
 import { useState } from 'react';
+import {SWIPE_THRESHOLD_IN_MILLIES} from "../../../utils/consts";
 
 interface SwipeProps {
   moveSliderLeft: () => void;
   moveSliderRight: () => void;
 }
 
-const SWIPE_THRESHOLD_IN_MILLIES = 150;
-
-// Code reference: https://stackoverflow.com/questions/40463173/swipe-effect-in-react-js
+/**
+ * Code reference: https://stackoverflow.com/questions/40463173/swipe-effect-in-react-js
+ * Warning: It is not supported in Safari.
+ * https://developer.mozilla.org/en-US/docs/Web/API/Element/touchstart_event#browser_compatibility
+ * @param props
+ */
 export function useSwipe(props: SwipeProps) {
   const { moveSliderLeft, moveSliderRight } = props;
   const [touchStart, setTouchStart] = useState(0);

@@ -72,7 +72,10 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
                       width="24px"
                     />
                   </a>
-                  <DeleteButton {...props} />
+                  <DeleteButton
+                    className='sendbird-fileviewer__header__right__actions__delete'
+                    {...props}
+                  />
                 </div>
               )
             }
@@ -111,9 +114,7 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
           }
           {
             !isSupportedFileView(type) && (
-              <div
-                className="sendbird-fileviewer__content__unsupported"
-              >
+              <div className="sendbird-fileviewer__content__unsupported">
                 <Label type={LabelTypography.H_1} color={LabelColors.ONBACKGROUND_1}>
                   {stringSet?.UI__FILE_VIEWER__UNSUPPORT || 'Unsupported message'}
                 </Label>
