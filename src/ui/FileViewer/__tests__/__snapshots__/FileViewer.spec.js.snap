@@ -4,6 +4,7 @@ exports[`ui/FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
 <DocumentFragment>
   <div
     class="sendbird-fileviewer"
+    tabindex="1"
   >
     <div
       class="sendbird-fileviewer__header"
@@ -68,18 +69,6 @@ exports[`ui/FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
               <test-file-stub />
             </div>
           </a>
-          <div
-            class="sendbird-fileviewer__header__right__actions__delete"
-          >
-            <div
-              class=" sendbird-icon sendbird-icon-delete sendbird-icon-color--on-background-1"
-              role="button"
-              style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
-              tabindex="0"
-            >
-              <test-file-stub />
-            </div>
-          </div>
         </div>
         <div
           class="sendbird-fileviewer__header__right__actions__close"
