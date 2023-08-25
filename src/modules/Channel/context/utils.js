@@ -67,7 +67,7 @@ export const pubSubHandler = ({
     scrollIntoLast(0, scrollRef);
     if (channelUrl === channel?.url) {
       dispatcher({
-        type: channelActions.SEND_MESSAGEGE_SUCESS,
+        type: channelActions.SEND_MESSAGE_SUCESS,
         payload: message,
       });
     }
@@ -76,7 +76,7 @@ export const pubSubHandler = ({
     const { channel, message } = msg;
     if (channelUrl === channel?.url) {
       dispatcher({
-        type: channelActions.SEND_MESSAGEGE_START,
+        type: channelActions.SEND_MESSAGE_START,
         payload: message,
       });
     }
@@ -95,7 +95,7 @@ export const pubSubHandler = ({
     scrollIntoLast(0, scrollRef);
     if (channelUrl === channel?.url) {
       dispatcher({
-        type: channelActions.SEND_MESSAGEGE_SUCESS,
+        type: channelActions.SEND_MESSAGE_SUCESS,
         payload: message,
       });
     }

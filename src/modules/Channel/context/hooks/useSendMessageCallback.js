@@ -60,7 +60,7 @@ export default function useSendMessageCallback({
         .onPending((pendingMsg) => {
           pubSub.publish(topics.SEND_MESSAGE_START, {
             /* pubSub is used instead of messagesDispatcher
-              to avoid redundantly calling `messageActionTypes.SEND_MESSAGEGE_START` */
+              to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
             message: pendingMsg,
             channel: currentGroupChannel,
           });
@@ -76,7 +76,7 @@ export default function useSendMessageCallback({
         .onSucceeded((msg) => {
           logger.info('Channel: Sending message success!', msg);
           messagesDispatcher({
-            type: messageActionTypes.SEND_MESSAGEGE_SUCESS,
+            type: messageActionTypes.SEND_MESSAGE_SUCESS,
             payload: msg,
           });
         });

@@ -69,7 +69,7 @@ export const useSendVoiceMessageCallback = ({
           type: ThreadContextActionTypes.SEND_MESSAGE_START,
           payload: {
             /* pubSub is used instead of messagesDispatcher
-            to avoid redundantly calling `messageActionTypes.SEND_MESSAGEGE_START` */
+            to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
             message: {
               ...pendingMessage,
               url: URL.createObjectURL(file),

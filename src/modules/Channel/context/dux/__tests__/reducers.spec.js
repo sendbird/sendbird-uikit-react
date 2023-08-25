@@ -218,17 +218,17 @@ describe('Messages-Reducers', () => {
     expect(nextState.hasMoreNext).toEqual(false);
   });
 
-  it('should set pending message on SEND_MESSAGEGE_START', () => {
+  it('should set pending message on SEND_MESSAGE_START', () => {
     const mockData = generateMockChannel();
     const nextState = reducers(mockData, {
-      type: actionTypes.SEND_MESSAGEGE_START,
+      type: actionTypes.SEND_MESSAGE_START,
       payload: mockMessage1,
     });
     expect(nextState.allMessages.length).toEqual(mockData.allMessages.length + 1);
     expect(nextState.allMessages[nextState.allMessages.length - 1]).toEqual(mockMessage1);
   });
 
-  it('should handle SEND_MESSAGEGE_SUCESS', () => {
+  it('should handle SEND_MESSAGE_SUCESS', () => {
     const mockData = generateMockChannel();
     const currentState = { ...mockData };
     currentState.allMessages[2].status = 'failed';
@@ -238,7 +238,7 @@ describe('Messages-Reducers', () => {
       status: 'success',
     };
     const nextState = reducers(currentState, {
-      type: actionTypes.SEND_MESSAGEGE_SUCESS,
+      type: actionTypes.SEND_MESSAGE_SUCESS,
       payload: succededMessage,
     });
     expect(nextState.allMessages.length).toEqual(mockData.allMessages.length);
