@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { FileMessage, MultipleFilesMessageCreateParams, UserMessage } from '@sendbird/chat/message';
+import { FileMessage, MultipleFilesMessageCreateParams, UploadableFileInfo, UserMessage } from '@sendbird/chat/message';
 
 import { Logger } from '../../../../lib/SendbirdState';
 import { scrollIntoLast } from '../utils';
@@ -40,7 +40,12 @@ export const useSendMultipleFilesMessage = ({
       return;
     }
     let messageParams: MultipleFilesMessageCreateParams = {
-      fileInfoList: files.map((file) => ({ file })),
+      fileInfoList: files.map((file: File): UploadableFileInfo => ({
+        file,
+        fileName: file.name,
+        fileSize: file.size,
+        mimeType: file.type,
+      })),
     };
     if (quoteMessage) {
       messageParams.isReplyToChannel = true;
@@ -55,7 +60,9 @@ export const useSendMultipleFilesMessage = ({
        * We don't operate the onFileUploaded event for now
        * until we will add UI/UX for it
        */
-      // .onFileUploaded((requestId, index, uploadableFileInfo, err) => {})
+      .onFileUploaded((requestId, index, uploadableFileInfo, error) => {
+        logger.info('Channel: onFileUploaded during sending MFM', { requestId, index, error, uploadableFileInfo });
+      })
       .onPending((pendingMessage) => {
         pubSub.publish(PUBSUB_TOPICS.SEND_MESSAGE_START, {
           message: pendingMessage,

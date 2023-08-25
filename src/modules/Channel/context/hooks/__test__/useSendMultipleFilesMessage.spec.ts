@@ -54,7 +54,22 @@ describe('useSendMultipleFilesMessage', () => {
     sendMultipleFilesMessage(mockFileList);
 
     expect(globalContext.currentChannel?.sendMultipleFilesMessage)
-      .toHaveBeenCalledWith({ fileInfoList: [{ file: mockFileList[0] }, { file: mockFileList[1] }] });
+      .toHaveBeenCalledWith({
+        fileInfoList: [
+          {
+            file: mockFileList[0],
+            fileName: mockFileList[0].name,
+            fileSize: mockFileList[0].size,
+            mimeType: mockFileList[0].type,
+          },
+          {
+            file: mockFileList[1],
+            fileName: mockFileList[1].name,
+            fileSize: mockFileList[1].size,
+            mimeType: mockFileList[1].type,
+          },
+        ],
+      });
     expect(globalContext.pubSub?.publish)
       .toHaveBeenCalledWith(
         PUBSUB_TOPICS.SEND_MESSAGE_START,
@@ -205,7 +220,20 @@ describe('useSendMultipleFilesMessage', () => {
 
     expect(globalContext.currentChannel?.sendMultipleFilesMessage)
       .toHaveBeenCalledWith({
-        fileInfoList: [{ file: mockFileList[0] }, { file: mockFileList[1] }],
+        fileInfoList: [
+          {
+            file: mockFileList[0],
+            fileName: mockFileList[0].name,
+            fileSize: mockFileList[0].size,
+            mimeType: mockFileList[0].type,
+          },
+          {
+            file: mockFileList[1],
+            fileName: mockFileList[1].name,
+            fileSize: mockFileList[1].size,
+            mimeType: mockFileList[1].type,
+          },
+        ],
         isReplyToChannel: true,
         parentMessageId: mockSentMessage.messageId,
       });
