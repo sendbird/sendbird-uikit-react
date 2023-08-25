@@ -2,10 +2,9 @@ import { useCallback } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { FileMessage, MultipleFilesMessageCreateParams, UserMessage } from '@sendbird/chat/message';
 
-import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
+import { Logger } from '../../../../lib/SendbirdState';
 import { scrollIntoLast } from '../utils';
 import PUBSUB_TOPICS from '../../../../lib/pubSub/topics';
-import * as messageActionTypes from '../dux/actionTypes';
 
 export type OnBeforeSendMFMType = (
   params: MultipleFilesMessageCreateParams,
@@ -20,10 +19,13 @@ export interface UseSendMFMStaticParams {
   logger: Logger,
   pubSub: any,
   scrollRef: React.RefObject<HTMLDivElement>;
-  messagesDispatcher: CustomUseReducerDispatcher;
 }
-type FunctionType = (files: Array<File>, quoteMessage?: UserMessage | FileMessage) => void;
+type SendMFMFunctionType = (files: Array<File>, quoteMessage?: UserMessage | FileMessage) => void;
 
+/**
+ * pubSub is used instead of messagesDispatcher to avoid redundantly calling
+ * because this useSendMultipleFilesMessage is used in the Channel and Thread both
+ */
 export const useSendMultipleFilesMessage = ({
   currentChannel,
   onBeforeSendMultipleFilesMessage,
@@ -31,8 +33,7 @@ export const useSendMultipleFilesMessage = ({
   logger,
   pubSub,
   scrollRef,
-  messagesDispatcher,
-}: UseSendMFMStaticParams): Array<FunctionType> => {
+}: UseSendMFMStaticParams): Array<SendMFMFunctionType> => {
   const sendMessage = useCallback((files: Array<File>, quoteMessage?: UserMessage | FileMessage): void => {
     if (files.length <= 1) {
       logger.error('Channel: Sending MFM failed, because there are no multiple files.', { files });
@@ -56,10 +57,6 @@ export const useSendMultipleFilesMessage = ({
        */
       // .onFileUploaded((requestId, index, uploadableFileInfo, err) => {})
       .onPending((pendingMessage) => {
-        /**
-         * pubSub is used instead of messagesDispatcher
-         * to avoid redundantly calling `messageActionTypes.SEND_MESSAGEGE_START`
-         */
         pubSub.publish(PUBSUB_TOPICS.SEND_MESSAGE_START, {
           message: pendingMessage,
           channel: currentChannel,
@@ -68,16 +65,16 @@ export const useSendMultipleFilesMessage = ({
       })
       .onFailed((error, failedMessage) => {
         logger.error('Channel: Sending MFM failed.', { error, failedMessage });
-        messagesDispatcher({
-          type: messageActionTypes.SEND_MESSAGE_FAILURE,
-          payload: failedMessage,
+        pubSub.publish(PUBSUB_TOPICS.SEND_MESSAGE_FAILED, {
+          channel: currentChannel,
+          message: failedMessage,
         });
       })
       .onSucceeded((succeededMessage) => {
         logger.info('Channel: Sending voice message success!', { succeededMessage });
-        messagesDispatcher({
-          type: messageActionTypes.SEND_MESSAGEGE_SUCESS,
-          payload: succeededMessage,
+        pubSub.publish(PUBSUB_TOPICS.SEND_FILE_MESSAGE, {
+          channel: currentChannel,
+          message: succeededMessage,
         });
       });
   }, [

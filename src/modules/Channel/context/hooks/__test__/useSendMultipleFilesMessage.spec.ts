@@ -1,5 +1,6 @@
 import { RefObject, createRef } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { UserMessage } from '@sendbird/chat/message';
 import { renderHook } from '@testing-library/react';
 
 import {
@@ -7,15 +8,14 @@ import {
   UseSendMFMStaticParams,
   useSendMultipleFilesMessage,
 } from '../useSendMultipleFilesMessage';
-import { CustomUseReducerDispatcher, Logger } from '../../../../../lib/SendbirdState';
+import { Logger } from '../../../../../lib/SendbirdState';
 import {
   MockMessageRequestHandlerType,
   getMockMessageRequestHandler,
 } from '../../../../../utils/testMocks/messageRequestHandler';
 import PUBSUB_TOPICS from '../../../../../lib/pubSub/topics';
-import { SEND_MESSAGEGE_SUCESS, SEND_MESSAGE_FAILURE } from '../../dux/actionTypes';
 import { MockMessageStateType, mockSentMessage } from '../../../../../utils/testMocks/message';
-import { UserMessage } from '@sendbird/chat/message';
+import uuidv4 from '../../../../../utils/uuid';
 
 interface UseSendMFMParams extends UseSendMFMDynamicParams, UseSendMFMStaticParams {
   messageRequestHandler: MockMessageRequestHandlerType;
@@ -28,12 +28,14 @@ const mockFileList = [new File([], 'fileOne'), new File([], 'fileTwo')];
 
 describe('useSendMultipleFilesMessage', () => {
   beforeEach(() => {
-    globalContext.currentChannel = { sendMultipleFilesMessage: jest.fn(() => getMockMessageRequestHandler()) } as unknown as GroupChannel;
+    globalContext.currentChannel = {
+      url: uuidv4(),
+      sendMultipleFilesMessage: jest.fn(() => getMockMessageRequestHandler()),
+    } as unknown as GroupChannel;
     globalContext.onBeforeSendMultipleFilesMessage = (params) => params;
     globalContext.logger = { info: jest.fn(), warning: jest.fn(), error: jest.fn() };
     globalContext.pubSub = { publish: jest.fn() };
     globalContext.scrollRef = createRef<HTMLDivElement>();
-    globalContext.messagesDispatcher = jest.fn();
   });
 
   it('should check sending MFM', () => {
@@ -45,7 +47,6 @@ describe('useSendMultipleFilesMessage', () => {
         logger: globalContext.logger as Logger,
         pubSub: globalContext.pubSub,
         scrollRef: globalContext.scrollRef as RefObject<HTMLDivElement>,
-        messagesDispatcher: globalContext.messagesDispatcher as CustomUseReducerDispatcher,
       })
     ));
     const [sendMultipleFilesMessage] = result.current;
@@ -59,32 +60,49 @@ describe('useSendMultipleFilesMessage', () => {
         PUBSUB_TOPICS.SEND_MESSAGE_START,
         {
           message: { mockMessageType: MockMessageStateType.PENDING },
-          channel: globalContext.currentChannel,
+          channel: {
+            url: globalContext.currentChannel?.url,
+            sendMultipleFilesMessage: expect.any(Function),
+          },
         },
       );
-    expect(globalContext.messagesDispatcher)
-      .not.toHaveBeenCalledWith({
-        type: SEND_MESSAGE_FAILURE,
-        payload: { mockMessageType: MockMessageStateType.FAILED },
-      });
-    expect(globalContext.messagesDispatcher)
-      .toHaveBeenCalledWith({
-        type: SEND_MESSAGEGE_SUCESS,
-        payload: { mockMessageType: MockMessageStateType.SUCCEEDED },
-      });
+    expect(globalContext.pubSub?.publish)
+      .not.toHaveBeenCalledWith(
+        PUBSUB_TOPICS.SEND_MESSAGE_FAILED,
+        {
+          message: { mockMessageType: MockMessageStateType.FAILED },
+          channel: {
+            url: globalContext.currentChannel?.url,
+            sendMultipleFilesMessage: expect.any(Function),
+          },
+        },
+      );
+    expect(globalContext.pubSub?.publish)
+      .toHaveBeenCalledWith(
+        PUBSUB_TOPICS.SEND_FILE_MESSAGE,
+        {
+          message: { mockMessageType: MockMessageStateType.SUCCEEDED },
+          channel: {
+            url: globalContext.currentChannel?.url,
+            sendMultipleFilesMessage: expect.any(Function),
+          },
+        },
+      );
   });
 
   it('should check sending MFM failed', () => {
     const { result } = renderHook(() => (
       useSendMultipleFilesMessage({
         // this mock channel will fail sending MFM -> getMockMessageRequestHandler(false)
-        currentChannel: { sendMultipleFilesMessage: jest.fn(() => getMockMessageRequestHandler(false)) } as unknown as GroupChannel,
+        currentChannel: {
+          ...globalContext.currentChannel,
+          sendMultipleFilesMessage: jest.fn(() => getMockMessageRequestHandler(false)),
+        } as unknown as GroupChannel,
         onBeforeSendMultipleFilesMessage: globalContext.onBeforeSendMultipleFilesMessage,
       }, {
         logger: globalContext.logger as Logger,
         pubSub: globalContext.pubSub,
         scrollRef: globalContext.scrollRef as RefObject<HTMLDivElement>,
-        messagesDispatcher: globalContext.messagesDispatcher as CustomUseReducerDispatcher,
       })
     ));
     const [sendMultipleFilesMessage] = result.current;
@@ -94,29 +112,46 @@ describe('useSendMultipleFilesMessage', () => {
     expect(globalContext.currentChannel?.sendMultipleFilesMessage)
       .not.toHaveBeenCalled();
     expect(globalContext.pubSub?.publish)
-      .not.toHaveBeenCalled();
-    expect(globalContext.messagesDispatcher)
-      .toHaveBeenCalledWith({
-        type: SEND_MESSAGE_FAILURE,
-        payload: { mockMessageType: MockMessageStateType.FAILED },
-      });
-    expect(globalContext.messagesDispatcher)
-      .not.toHaveBeenCalledWith({
-        type: SEND_MESSAGEGE_SUCESS,
-        payload: { mockMessageType: MockMessageStateType.SUCCEEDED },
-      });
+      .not.toHaveBeenCalledWith(
+        PUBSUB_TOPICS.SEND_MESSAGE_START,
+        {
+          message: { mockMessageType: MockMessageStateType.PENDING },
+          channel: {
+            url: globalContext.currentChannel?.url,
+            sendMultipleFilesMessage: expect.any(Function),
+          },
+        },
+      );
+    expect(globalContext.pubSub?.publish)
+      .toHaveBeenCalledWith(
+        PUBSUB_TOPICS.SEND_MESSAGE_FAILED,
+        {
+          message: { mockMessageType: MockMessageStateType.FAILED },
+          channel: {
+            url: globalContext.currentChannel?.url,
+            sendMultipleFilesMessage: expect.any(Function),
+          },
+        },
+      );
+    expect(globalContext.pubSub?.publish)
+      .not.toHaveBeenCalledWith(
+        PUBSUB_TOPICS.SEND_FILE_MESSAGE,
+        {
+          message: { mockMessageType: MockMessageStateType.SUCCEEDED },
+          channel: globalContext.currentChannel,
+        },
+      );
   });
 
   it('should not send message when receiving empty files', () => {
     const { result } = renderHook(() => (
       useSendMultipleFilesMessage({
-        currentChannel: { sendMultipleFilesMessage: jest.fn(() => getMockMessageRequestHandler()) } as unknown as GroupChannel,
+        currentChannel: globalContext.currentChannel as GroupChannel,
         onBeforeSendMultipleFilesMessage: globalContext.onBeforeSendMultipleFilesMessage,
       }, {
         logger: globalContext.logger as Logger,
         pubSub: globalContext.pubSub,
         scrollRef: globalContext.scrollRef as RefObject<HTMLDivElement>,
-        messagesDispatcher: globalContext.messagesDispatcher as CustomUseReducerDispatcher,
       })
     ));
     const [sendMultipleFilesMessage] = result.current;
@@ -128,20 +163,17 @@ describe('useSendMultipleFilesMessage', () => {
       .not.toHaveBeenCalled();
     expect(globalContext.pubSub?.publish)
       .not.toHaveBeenCalled();
-    expect(globalContext.messagesDispatcher)
-      .not.toHaveBeenCalled();
   });
 
   it('should not send message when receiving an array of one file', () => {
     const { result } = renderHook(() => (
       useSendMultipleFilesMessage({
-        currentChannel: { sendMultipleFilesMessage: jest.fn(() => getMockMessageRequestHandler()) } as unknown as GroupChannel,
+        currentChannel: globalContext.currentChannel as GroupChannel,
         onBeforeSendMultipleFilesMessage: globalContext.onBeforeSendMultipleFilesMessage,
       }, {
         logger: globalContext.logger as Logger,
         pubSub: globalContext.pubSub,
         scrollRef: globalContext.scrollRef as RefObject<HTMLDivElement>,
-        messagesDispatcher: globalContext.messagesDispatcher as CustomUseReducerDispatcher,
       })
     ));
     const [sendMultipleFilesMessage] = result.current;
@@ -152,8 +184,6 @@ describe('useSendMultipleFilesMessage', () => {
     expect(globalContext.currentChannel?.sendMultipleFilesMessage)
       .not.toHaveBeenCalled();
     expect(globalContext.pubSub?.publish)
-      .not.toHaveBeenCalled();
-    expect(globalContext.messagesDispatcher)
       .not.toHaveBeenCalled();
   });
 
@@ -166,7 +196,6 @@ describe('useSendMultipleFilesMessage', () => {
         logger: globalContext.logger as Logger,
         pubSub: globalContext.pubSub,
         scrollRef: globalContext.scrollRef as RefObject<HTMLDivElement>,
-        messagesDispatcher: globalContext.messagesDispatcher as CustomUseReducerDispatcher,
       })
     ));
     const [sendMultipleFilesMessage] = result.current;
@@ -188,16 +217,23 @@ describe('useSendMultipleFilesMessage', () => {
           channel: globalContext.currentChannel,
         },
       );
-    expect(globalContext.messagesDispatcher)
-      .not.toHaveBeenCalledWith({
-        type: SEND_MESSAGE_FAILURE,
-        payload: { mockMessageType: MockMessageStateType.FAILED },
-      });
-    expect(globalContext.messagesDispatcher)
-      .toHaveBeenCalledWith({
-        type: SEND_MESSAGEGE_SUCESS,
-        payload: { mockMessageType: MockMessageStateType.SUCCEEDED },
-      });
+
+    expect(globalContext.pubSub?.publish)
+      .not.toHaveBeenCalledWith(
+        PUBSUB_TOPICS.SEND_MESSAGE_FAILED,
+        {
+          message: { mockMessageType: MockMessageStateType.FAILED },
+          channel: globalContext.currentChannel,
+        },
+      );
+    expect(globalContext.pubSub?.publish)
+      .toHaveBeenCalledWith(
+        PUBSUB_TOPICS.SEND_FILE_MESSAGE,
+        {
+          message: { mockMessageType: MockMessageStateType.SUCCEEDED },
+          channel: globalContext.currentChannel,
+        },
+      );
   });
 
   it('should apply the onBeforeSendMultipleFilesMessage', () => {
@@ -217,7 +253,6 @@ describe('useSendMultipleFilesMessage', () => {
         logger: globalContext.logger as Logger,
         pubSub: globalContext.pubSub,
         scrollRef: globalContext.scrollRef as RefObject<HTMLDivElement>,
-        messagesDispatcher: globalContext.messagesDispatcher as CustomUseReducerDispatcher,
       })
     ));
     const [sendMultipleFilesMessage] = result.current;
@@ -234,16 +269,22 @@ describe('useSendMultipleFilesMessage', () => {
           channel: globalContext.currentChannel,
         },
       );
-    expect(globalContext.messagesDispatcher)
-      .not.toHaveBeenCalledWith({
-        type: SEND_MESSAGE_FAILURE,
-        payload: { mockMessageType: MockMessageStateType.FAILED },
-      });
-    expect(globalContext.messagesDispatcher)
-      .toHaveBeenCalledWith({
-        type: SEND_MESSAGEGE_SUCESS,
-        payload: { mockMessageType: MockMessageStateType.SUCCEEDED },
-      });
+    expect(globalContext.pubSub?.publish)
+      .not.toHaveBeenCalledWith(
+        PUBSUB_TOPICS.SEND_MESSAGE_FAILED,
+        {
+          message: { mockMessageType: MockMessageStateType.FAILED },
+          channel: globalContext.currentChannel,
+        },
+      );
+    expect(globalContext.pubSub?.publish)
+      .toHaveBeenCalledWith(
+        PUBSUB_TOPICS.SEND_FILE_MESSAGE,
+        {
+          message: { mockMessageType: MockMessageStateType.SUCCEEDED },
+          channel: globalContext.currentChannel,
+        },
+      );
   });
 
   it('should have higher priority with onBeforeSendMultipleFilesMessage rather than quoteMessage', () => {
@@ -265,7 +306,6 @@ describe('useSendMultipleFilesMessage', () => {
         logger: globalContext.logger as Logger,
         pubSub: globalContext.pubSub,
         scrollRef: globalContext.scrollRef as RefObject<HTMLDivElement>,
-        messagesDispatcher: globalContext.messagesDispatcher as CustomUseReducerDispatcher,
       })
     ));
     const [sendMultipleFilesMessage] = result.current;
@@ -293,15 +333,21 @@ describe('useSendMultipleFilesMessage', () => {
           channel: globalContext.currentChannel,
         },
       );
-    expect(globalContext.messagesDispatcher)
-      .not.toHaveBeenCalledWith({
-        type: SEND_MESSAGE_FAILURE,
-        payload: { mockMessageType: MockMessageStateType.FAILED },
-      });
-    expect(globalContext.messagesDispatcher)
-      .toHaveBeenCalledWith({
-        type: SEND_MESSAGEGE_SUCESS,
-        payload: { mockMessageType: MockMessageStateType.SUCCEEDED },
-      });
+    expect(globalContext.pubSub?.publish)
+      .not.toHaveBeenCalledWith(
+        PUBSUB_TOPICS.SEND_MESSAGE_FAILED,
+        {
+          message: { mockMessageType: MockMessageStateType.FAILED },
+          channel: globalContext.currentChannel,
+        },
+      );
+    expect(globalContext.pubSub?.publish)
+      .toHaveBeenCalledWith(
+        PUBSUB_TOPICS.SEND_FILE_MESSAGE,
+        {
+          message: { mockMessageType: MockMessageStateType.SUCCEEDED },
+          channel: globalContext.currentChannel,
+        },
+      );
   });
 });
