@@ -79,7 +79,7 @@ export default function useSendFileMessageCallback({
                 .onPending((pendingMessage) => {
                   pubSub.publish(topics.SEND_MESSAGE_START, {
                     /* pubSub is used instead of messagesDispatcher
-                      to avoid redundantly calling `messageActionTypes.SEND_MESSAGEGE_START` */
+                      to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
                     message: {
                       ...pendingMessage,
                       url: URL.createObjectURL(compressedFile),
@@ -104,7 +104,7 @@ export default function useSendFileMessageCallback({
                 .onSucceeded((succeededMessage) => {
                   logger.info('Channel: Sending file message success!', succeededMessage);
                   messagesDispatcher({
-                    type: messageActionTypes.SEND_MESSAGEGE_SUCESS,
+                    type: messageActionTypes.SEND_MESSAGE_SUCESS,
                     payload: succeededMessage,
                   });
                 });
@@ -129,7 +129,7 @@ export default function useSendFileMessageCallback({
         .onPending((pendingMsg) => {
           pubSub.publish(topics.SEND_MESSAGE_START, {
             /* pubSub is used instead of messagesDispatcher
-              to avoid redundantly calling `messageActionTypes.SEND_MESSAGEGE_START` */
+              to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
             message: {
               ...pendingMsg,
               url: URL.createObjectURL(file),
@@ -154,7 +154,7 @@ export default function useSendFileMessageCallback({
         .onSucceeded((message) => {
           logger.info('Channel: Sending message success!', message);
           messagesDispatcher({
-            type: messageActionTypes.SEND_MESSAGEGE_SUCESS,
+            type: messageActionTypes.SEND_MESSAGE_SUCESS,
             payload: message,
           });
         });

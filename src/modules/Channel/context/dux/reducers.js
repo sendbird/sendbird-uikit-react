@@ -141,7 +141,7 @@ export default function reducer(state, action) {
         latestMessageTimeStamp: null,
       };
     }
-    case actionTypes.SEND_MESSAGEGE_START:
+    case actionTypes.SEND_MESSAGE_START:
       return {
         ...state,
         allMessages: [
@@ -151,7 +151,7 @@ export default function reducer(state, action) {
           action.payload,
         ],
       };
-    case actionTypes.SEND_MESSAGEGE_SUCESS: {
+    case actionTypes.SEND_MESSAGE_SUCESS: {
       const message = action.payload;
       const filteredMessages = state.allMessages.filter((m) => (
         m?.reqId !== message?.reqId
@@ -293,7 +293,7 @@ export default function reducer(state, action) {
         }),
       };
     }
-    case actionTypes.RESEND_MESSAGEGE_START:
+    case actionTypes.RESEND_MESSAGE_START:
       return {
         ...state,
         allMessages: state.allMessages.map((m) => (

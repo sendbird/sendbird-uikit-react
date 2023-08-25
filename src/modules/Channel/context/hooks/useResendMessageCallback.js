@@ -18,7 +18,7 @@ function useResendMessageCallback({
       // eslint-disable-next-line no-param-reassign
       failedMessage.sendingStatus = 'pending';
       messagesDispatcher({
-        type: messageActionTypes.RESEND_MESSAGEGE_START,
+        type: messageActionTypes.RESEND_MESSAGE_START,
         payload: failedMessage,
       });
 
@@ -28,7 +28,7 @@ function useResendMessageCallback({
           .then((message) => {
             logger.info('Channel: Resending message success!', message);
             messagesDispatcher({
-              type: messageActionTypes.SEND_MESSAGEGE_SUCESS,
+              type: messageActionTypes.SEND_MESSAGE_SUCESS,
               payload: message,
             });
           })
@@ -49,7 +49,7 @@ function useResendMessageCallback({
         // eslint-disable-next-line no-param-reassign
         failedMessage.sendingStatus = 'pending';
         messagesDispatcher({
-          type: messageActionTypes.RESEND_MESSAGEGE_START,
+          type: messageActionTypes.RESEND_MESSAGE_START,
           payload: failedMessage,
         });
         return;
@@ -61,7 +61,7 @@ function useResendMessageCallback({
           .then((message) => {
             logger.info('Channel: Resending file message success!', message);
             messagesDispatcher({
-              type: messageActionTypes.SEND_MESSAGEGE_SUCESS,
+              type: messageActionTypes.SEND_MESSAGE_SUCESS,
               payload: message,
             });
           })
@@ -82,7 +82,7 @@ function useResendMessageCallback({
         // eslint-disable-next-line no-param-reassign
         failedMessage.sendingStatus = 'pending';
         messagesDispatcher({
-          type: messageActionTypes.RESEND_MESSAGEGE_START,
+          type: messageActionTypes.RESEND_MESSAGE_START,
           payload: failedMessage,
         });
       }

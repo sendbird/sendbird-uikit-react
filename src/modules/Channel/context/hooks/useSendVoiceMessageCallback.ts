@@ -65,7 +65,7 @@ export const useSendVoiceMessageCallback = ({
       .onPending((pendingMessage) => {
         pubSub.publish(topics.SEND_MESSAGE_START, {
           /* pubSub is used instead of messagesDispatcher
-            to avoid redundantly calling `messageActionTypes.SEND_MESSAGEGE_START` */
+            to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
           message: pendingMessage,
           channel: currentGroupChannel,
         });
@@ -81,7 +81,7 @@ export const useSendVoiceMessageCallback = ({
       .onSucceeded((succeededMessage) => {
         logger.info('Channel: Sending voice message success!', succeededMessage);
         messagesDispatcher({
-          type: messageActionTypes.SEND_MESSAGEGE_SUCESS,
+          type: messageActionTypes.SEND_MESSAGE_SUCESS,
           payload: succeededMessage,
         });
       });
