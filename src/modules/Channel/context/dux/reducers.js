@@ -156,6 +156,8 @@ export default function reducer(state, action) {
       const filteredMessages = state.allMessages.filter((m) => (
         m?.reqId !== message?.reqId
       ));
+      // [Policy] Pending messages and failed messages
+      // must always be at the end of the message list
       const pendingIndex = filteredMessages.findIndex((msg) => (
         msg?.sendingStatus === 'pending' || msg?.sendingStatus === 'failed'
       ));
