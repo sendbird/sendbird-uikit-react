@@ -19,7 +19,7 @@ import TextButton from '../../../../ui/TextButton';
 import { useChannelListContext } from '../../context/ChannelListProvider';
 import { TypingIndicatorText } from '../../../Channel/components/TypingIndicator';
 import MessageStatus from '../../../../ui/MessageStatus';
-import { isVoiceMessage } from '../../../../utils';
+import {isVoiceMessage, SendableMessageType} from '../../../../utils';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import useLongPress from '../../../../hooks/useLongPress';
 
@@ -60,7 +60,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
   const isChannelTyping = isTypingIndicatorEnabled && isTyping;
   const isMessageStatusEnabled = isMessageReceiptStatusEnabled
     && (channel?.lastMessage?.messageType === 'user' || channel?.lastMessage?.messageType === 'file')
-    && (channel?.lastMessage as UserMessage | FileMessage)?.sender?.userId === userId;
+    && (channel?.lastMessage as SendableMessageType)?.sender?.userId === userId;
 
   const onLongPress = useLongPress({
     onLongPress: () => {
@@ -142,7 +142,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
                 <MessageStatus
                   className="sendbird-channel-preview__content__upper__last-message-at"
                   channel={channel}
-                  message={channel?.lastMessage as UserMessage | FileMessage}
+                  message={channel?.lastMessage as SendableMessageType}
                   isDateSeparatorConsidered={false}
                 />
               )

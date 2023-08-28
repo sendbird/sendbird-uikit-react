@@ -14,7 +14,7 @@ interface StaticParams {
   logger: Logger;
   messagesDispatcher: (dispatcher: MessagesDispatcherType) => void;
 }
-type CallbackReturn = (failedMessage: UserMessage | FileMessage) => void;
+type CallbackReturn = (failedMessage: SendableMessageType) => void;
 
 function useResendMessageCallback(
   { currentOpenChannel }: DynamicParams,

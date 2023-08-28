@@ -32,10 +32,9 @@ import {
   isOGMessage,
   isThumbnailMessage,
   getSenderName,
-  isVoiceMessage,
+  isVoiceMessage, SendableMessageType, CoreMessageType,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
-import { ReplyType } from '../../index';
 import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
@@ -47,7 +46,7 @@ import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import ThreadReplies from '../ThreadReplies';
 import { ThreadReplySelectType } from '../../modules/Channel/context/const';
 import VoiceMessageItemBody from '../VoiceMessageItemBody';
-import { Nullable } from '../../types';
+import {Nullable, ReplyType} from '../../types';
 import { noop } from '../../utils/utils';
 
 // should initialize in UserProfileContext.jsx
@@ -61,7 +60,7 @@ interface Props {
   className?: string | Array<string>;
   userId: string;
   channel: Nullable<GroupChannel>;
-  message: AdminMessage | UserMessage | FileMessage;
+  message: CoreMessageType;
   disabled?: boolean;
   chainTop?: boolean;
   chainBottom?: boolean;
@@ -75,11 +74,11 @@ interface Props {
   showEdit?: (bool: boolean) => void;
   showRemove?: (bool: boolean) => void;
   showFileViewer?: (bool: boolean) => void;
-  resendMessage?: (message: UserMessage | FileMessage) => Promise<UserMessage | FileMessage>;
-  toggleReaction?: (message: UserMessage | FileMessage, reactionKey: string, isReacted: boolean) => void;
-  setQuoteMessage?: (message: UserMessage | FileMessage) => void;
-  onReplyInThread?: (props: { message: UserMessage | FileMessage }) => void;
-  onQuoteMessageClick?: (props: { message: UserMessage | FileMessage }) => void;
+  resendMessage?: (message: SendableMessageType) => Promise<SendableMessageType>;
+  toggleReaction?: (message: SendableMessageType, reactionKey: string, isReacted: boolean) => void;
+  setQuoteMessage?: (message: SendableMessageType) => void;
+  onReplyInThread?: (props: { message: SendableMessageType }) => void;
+  onQuoteMessageClick?: (props: { message: SendableMessageType }) => void;
   onMessageHeightChange?: () => void;
 }
 export default function MessageContent({
@@ -118,9 +117,9 @@ export default function MessageContent({
   const [mouseHover, setMouseHover] = useState(false);
   const [supposedHover, setSupposedHover] = useState(false);
 
-  const isByMe = (userId === (message as UserMessage | FileMessage)?.sender?.userId)
-    || ((message as UserMessage | FileMessage)?.sendingStatus === 'pending')
-    || ((message as UserMessage | FileMessage)?.sendingStatus === 'failed');
+  const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
+    || ((message as SendableMessageType)?.sendingStatus === 'pending')
+    || ((message as SendableMessageType)?.sendingStatus === 'failed');
   const isByMeClassName = isByMe ? 'outgoing' : 'incoming';
   const chainTopClassName = chainTop ? 'chain-top' : '';
   const isReactionEnabledInChannel = isReactionEnabled && !channel?.isEphemeral;
@@ -207,7 +206,7 @@ export default function MessageContent({
             <MessageItemMenu
               className="sendbird-message-content-menu__normal-menu"
               channel={channel}
-              message={message as UserMessage | FileMessage}
+              message={message as SendableMessageType}
               isByMe={isByMe}
               replyType={replyType}
               disabled={disabled}
@@ -227,7 +226,7 @@ export default function MessageContent({
             {isReactionEnabledInChannel && (
               <MessageItemReactionMenu
                 className="sendbird-message-content-menu__reaction-menu"
-                message={message as UserMessage | FileMessage}
+                message={message as SendableMessageType}
                 userId={userId}
                 spaceFromTrigger={{}}
                 emojiContainer={emojiContainer}
@@ -253,7 +252,7 @@ export default function MessageContent({
             {
               // @ts-ignore
               channel?.members?.find((member) => member?.userId === message?.sender?.userId)?.nickname
-              || getSenderName(message as UserMessage | FileMessage)
+              || getSenderName(message as SendableMessageType)
               // TODO: Divide getting profileUrl logic to utils
             }
           </Label>
@@ -263,13 +262,13 @@ export default function MessageContent({
           <div className={getClassName(['sendbird-message-content__middle__quote-message', isByMe ? 'outgoing' : 'incoming', useReplyingClassName])}>
             <QuoteMessage
               className="sendbird-message-content__middle__quote-message__quote"
-              message={message as UserMessage | FileMessage}
+              message={message as SendableMessageType}
               userId={userId}
               isByMe={isByMe}
               isUnavailable={(replyType === 'THREAD' && (channel?.joinedAt ?? 0 * 1000) > (message.parentMessage?.createdAt ?? 0))}
               onClick={() => {
                 if (replyType === 'THREAD' && threadReplySelectType === ThreadReplySelectType.THREAD) {
-                  onQuoteMessageClick?.({ message: message as UserMessage | FileMessage });
+                  onQuoteMessageClick?.({ message: message as SendableMessageType });
                 }
                 if (
                   (replyType === 'QUOTE_REPLY' || (replyType === 'THREAD' && threadReplySelectType === ThreadReplySelectType.PARENT))
@@ -288,7 +287,7 @@ export default function MessageContent({
             <div className={getClassName(['sendbird-message-content__middle__body-container__created-at', 'left', supposedHoverClassName])}>
               <div className="sendbird-message-content__middle__body-container__created-at__component-container">
                 <MessageStatus
-                  message={message as UserMessage | FileMessage}
+                  message={message as SendableMessageType}
                   channel={channel}
                 />
               </div>
@@ -362,7 +361,7 @@ export default function MessageContent({
             ])}>
               <EmojiReactions
                 userId={userId}
-                message={message as UserMessage | FileMessage}
+                message={message as SendableMessageType}
                 channel={channel}
                 isByMe={isByMe}
                 emojiContainer={emojiContainer}
@@ -388,7 +387,7 @@ export default function MessageContent({
           <ThreadReplies
             className="sendbird-message-content__middle__thread-replies"
             threadInfo={message?.threadInfo}
-            onClick={() => onReplyInThread?.({ message: message as UserMessage | FileMessage })}
+            onClick={() => onReplyInThread?.({ message: message as SendableMessageType })}
           />
         )}
       </div>
@@ -400,7 +399,7 @@ export default function MessageContent({
             {isReactionEnabledInChannel && (
               <MessageItemReactionMenu
                 className="sendbird-message-content-menu__reaction-menu"
-                message={message as UserMessage | FileMessage}
+                message={message as SendableMessageType}
                 userId={userId}
                 spaceFromTrigger={{}}
                 emojiContainer={emojiContainer}
@@ -411,7 +410,7 @@ export default function MessageContent({
             <MessageItemMenu
               className="sendbird-message-content-menu__normal-menu"
               channel={channel}
-              message={message as UserMessage | FileMessage}
+              message={message as SendableMessageType}
               isByMe={isByMe}
               replyType={replyType}
               disabled={disabled}

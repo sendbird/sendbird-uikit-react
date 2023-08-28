@@ -1,5 +1,5 @@
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { FileMessage, MessageType, SendingStatus, UserMessage } from '@sendbird/chat/message';
+import {FileMessage, MessageType, MultipleFilesMessage, SendingStatus, UserMessage} from '@sendbird/chat/message';
 import { useCallback } from 'react';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
@@ -20,9 +20,9 @@ export default function useResendMessageCallback({
   logger,
   pubSub,
   threadDispatcher,
-}: StaticProps): (failedMessage: UserMessage | FileMessage) => void {
-  return useCallback((failedMessage: UserMessage | FileMessage) => {
-    if ((failedMessage as UserMessage | FileMessage)?.isResendable) {
+}: StaticProps): (failedMessage: SendableMessageType) => void {
+  return useCallback((failedMessage: SendableMessageType) => {
+    if ((failedMessage as SendableMessageType)?.isResendable) {
       failedMessage.sendingStatus = SendingStatus.PENDING;
       logger.info('Thread | useResendMessageCallback: Resending failedMessage start.', failedMessage);
       threadDispatcher({

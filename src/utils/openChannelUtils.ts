@@ -1,5 +1,6 @@
 import type { User } from '@sendbird/chat';
 import type { FileMessage, UserMessage } from '@sendbird/chat/message';
+import {SendableMessageType} from "./index";
 
 const OpenChannelMessageStatusTypes = {
   NONE: 'none',
@@ -9,7 +10,7 @@ const OpenChannelMessageStatusTypes = {
   SUCCEEDED: 'succeeded',
 };
 
-export const getSenderFromMessage = (message: UserMessage | FileMessage): User => {
+export const getSenderFromMessage = (message: SendableMessageType): User => {
   // @ts-ignore
   return message.sender || message._sender;
 };
@@ -18,7 +19,7 @@ export const checkIsSent = (status: string): boolean => (status === OpenChannelM
 export const checkIsPending = (status: string): boolean => (status === OpenChannelMessageStatusTypes.PENDING);
 export const checkIsFailed = (status: string): boolean => (status === OpenChannelMessageStatusTypes.FAILED);
 
-export const checkIsByMe = (message: UserMessage | FileMessage, userId: string): boolean => (getSenderFromMessage(message).userId === userId);
+export const checkIsByMe = (message: SendableMessageType, userId: string): boolean => (getSenderFromMessage(message).userId === userId);
 
 interface isFineCopyParams {
   message: UserMessage;
@@ -30,7 +31,7 @@ export const isFineCopy = ({ message }: isFineCopyParams): boolean => {
 };
 
 interface isFineResendParams {
-  message: UserMessage | FileMessage;
+  message: SendableMessageType;
   status: string;
   userId: string;
 }
@@ -42,7 +43,7 @@ export const isFineResend = ({ message, status, userId }: isFineResendParams): b
 };
 
 interface isFineEditParams {
-  message: UserMessage | FileMessage;
+  message: SendableMessageType;
   status: string;
   userId: string;
 }
@@ -51,7 +52,7 @@ export const isFineEdit = ({ message, status, userId }: isFineEditParams): boole
 };
 
 interface isFineDeleteParams {
-  message: UserMessage | FileMessage;
+  message: SendableMessageType;
   status: string;
   userId: string;
 }
@@ -72,7 +73,7 @@ export const isFineDownload = ({ message, status }: IsFineDownloadParams): boole
 };
 
 interface showMenuTriggerParams {
-  message: UserMessage | FileMessage;
+  message: SendableMessageType;
   status: string;
   userId: string;
 }

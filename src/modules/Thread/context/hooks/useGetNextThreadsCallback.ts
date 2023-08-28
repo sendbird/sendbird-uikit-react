@@ -4,10 +4,11 @@ import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdStat
 import { NEXT_THREADS_FETCH_SIZE } from '../../consts';
 import { ThreadListStateTypes } from '../../types';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
+import {SendableMessageType} from "../../../../utils";
 
 interface DynamicProps {
   hasMoreNext: boolean;
-  parentMessage: UserMessage | FileMessage;
+  parentMessage: SendableMessageType;
   threadListState: ThreadListStateTypes;
   latestMessageTimeStamp: number;
   isReactionEnabled?: boolean;

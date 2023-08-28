@@ -1,7 +1,7 @@
 import './index.scss';
 import React, { ReactElement, useRef, useState } from 'react';
 import type { Emoji, EmojiContainer } from '@sendbird/chat';
-import type { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
+import type { Reaction } from '@sendbird/chat/message';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import ReactionBadge from '../ReactionBadge';
@@ -11,7 +11,7 @@ import Icon, { IconTypes, IconColors } from '../Icon';
 import ContextMenu, { EmojiListItems } from '../ContextMenu';
 import { Nullable, SpaceFromTriggerType } from '../../types';
 
-import { getClassName, getEmojiListAll, getEmojiMapAll } from '../../utils';
+import {getClassName, getEmojiListAll, getEmojiMapAll, SendableMessageType} from '../../utils';
 import { ReactedMembersBottomSheet } from '../MobileMenu/ReactedMembersBottomSheet';
 import ReactionItem from './ReactionItem';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
@@ -21,13 +21,13 @@ import { MobileEmojisBottomSheet } from '../MobileMenu/MobileEmojisBottomSheet';
 interface Props {
   className?: string | Array<string>;
   userId: string;
-  message: UserMessage | FileMessage;
+  message: SendableMessageType;
   channel: Nullable<GroupChannel>;
   emojiContainer: EmojiContainer;
   memberNicknamesMap: Map<string, string>;
   spaceFromTrigger?: SpaceFromTriggerType;
   isByMe?: boolean;
-  toggleReaction?: (message: UserMessage | FileMessage, key: string, byMe: boolean) => void;
+  toggleReaction?: (message: SendableMessageType, key: string, byMe: boolean) => void;
 }
 
 const EmojiReactions = ({

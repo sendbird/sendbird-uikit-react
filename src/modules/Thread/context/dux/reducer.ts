@@ -5,6 +5,7 @@ import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from
 import { compareIds } from '../utils';
 import { ThreadContextActionTypes as actionTypes } from './actionTypes';
 import { ThreadContextInitialState } from './initialState';
+import {SendableMessageType} from "../../../../utils";
 
 interface ActionInterface {
   type: actionTypes;
@@ -146,7 +147,7 @@ export default function reducer(
     }
     // event handlers - message status change
     case actionTypes.ON_MESSAGE_RECEIVED: {
-      const { channel, message }: { channel: GroupChannel, message: UserMessage | FileMessage } = action.payload;
+      const { channel, message }: { channel: GroupChannel, message: SendableMessageType } = action.payload;
 
       if (
         state.currentChannel?.url !== channel?.url
@@ -166,7 +167,7 @@ export default function reducer(
             m.messageId === message.messageId ? message : m
           ))
           : [
-            ...state.allThreadMessages.filter((m) => (m as UserMessage | FileMessage)?.reqId !== message?.reqId),
+            ...state.allThreadMessages.filter((m) => (m as SendableMessageType)?.reqId !== message?.reqId),
             message,
           ],
       };
@@ -210,7 +211,7 @@ export default function reducer(
       return {
         ...state,
         allThreadMessages: state.allThreadMessages.filter((m) => (
-          !compareIds((m as UserMessage | FileMessage).reqId, action.payload)
+          !compareIds((m as SendableMessageType).reqId, action.payload)
         )),
       };
     }

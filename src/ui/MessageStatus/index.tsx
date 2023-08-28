@@ -2,13 +2,10 @@ import './index.scss';
 import React from 'react';
 import format from 'date-fns/format';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { FileMessage, UserMessage } from '@sendbird/chat/message';
-
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import Loader from '../Loader';
-
-import { isSentStatus } from '../../utils';
+import {isSentStatus, SendableMessageType} from '../../utils';
 import {
   getOutgoingMessageState,
   OutgoingMessageStates,
@@ -21,7 +18,7 @@ export const MessageStatusTypes = OutgoingMessageStates;
 
 interface MessageStatusProps {
   className?: string;
-  message: UserMessage | FileMessage;
+  message: SendableMessageType;
   channel: Nullable<GroupChannel>;
   isDateSeparatorConsidered?: boolean;
 }

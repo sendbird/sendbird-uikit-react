@@ -14,7 +14,17 @@ import UserProfile from '../../../../ui/UserProfile';
 import MessageItemMenu from '../../../../ui/MessageItemMenu';
 import MessageItemReactionMenu from '../../../../ui/MessageItemReactionMenu';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
-import { getClassName, getSenderName, getUIKitMessageType, getUIKitMessageTypes, isOGMessage, isTextMessage, isThumbnailMessage, isVoiceMessage } from '../../../../utils';
+import {
+  getClassName,
+  getSenderName,
+  getUIKitMessageType,
+  getUIKitMessageTypes,
+  isOGMessage,
+  isTextMessage,
+  isThumbnailMessage,
+  isVoiceMessage,
+  SendableMessageType
+} from '../../../../utils';
 import MessageStatus from '../../../../ui/MessageStatus';
 import EmojiReactions from '../../../../ui/EmojiReactions';
 import format from 'date-fns/format';
@@ -34,7 +44,7 @@ export interface ThreadListItemContentProps {
   className?: string;
   userId: string;
   channel: GroupChannel;
-  message: UserMessage | FileMessage;
+  message: SendableMessageType;
   disabled?: boolean;
   chainTop?: boolean;
   chainBottom?: boolean;
@@ -47,9 +57,9 @@ export interface ThreadListItemContentProps {
   showEdit?: (bool: boolean) => void;
   showRemove?: (bool: boolean) => void;
   showFileViewer?: (bool: boolean) => void;
-  resendMessage?: (message: UserMessage | FileMessage) => void;
-  toggleReaction?: (message: UserMessage | FileMessage, reactionKey: string, isReacted: boolean) => void;
-  onReplyInThread?: (props: { message: UserMessage | FileMessage }) => void;
+  resendMessage?: (message: SendableMessageType) => void;
+  toggleReaction?: (message: SendableMessageType, reactionKey: string, isReacted: boolean) => void;
+  onReplyInThread?: (props: { message: SendableMessageType }) => void;
 }
 
 export default function ThreadListItemContent({
@@ -84,9 +94,9 @@ export default function ThreadListItemContent({
   } = useContext<UserProfileContextInterface>(UserProfileContext);
   const avatarRef = useRef(null);
 
-  const isByMe = (userId === (message as UserMessage | FileMessage)?.sender?.userId)
-    || ((message as UserMessage | FileMessage)?.sendingStatus === 'pending')
-    || ((message as UserMessage | FileMessage)?.sendingStatus === 'failed');
+  const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
+    || ((message as SendableMessageType)?.sendingStatus === 'pending')
+    || ((message as SendableMessageType)?.sendingStatus === 'failed');
   const useReplying = !!((replyType === 'QUOTE_REPLY' || replyType === 'THREAD')
     && message?.parentMessageId && message?.parentMessage
     && !disableQuoteMessage
@@ -154,7 +164,7 @@ export default function ThreadListItemContent({
             <MessageItemMenu
               className="sendbird-thread-list-item-content-menu__normal-menu"
               channel={channel}
-              message={message as UserMessage | FileMessage}
+              message={message as SendableMessageType}
               isByMe={isByMe}
               replyType={replyType}
               disabled={disabled}
@@ -167,7 +177,7 @@ export default function ThreadListItemContent({
             {isReactionEnabledInChannel && (
               <MessageItemReactionMenu
                 className="sendbird-thread-list-item-content-menu__reaction-menu"
-                message={message as UserMessage | FileMessage}
+                message={message as SendableMessageType}
                 userId={userId}
                 spaceFromTrigger={{}}
                 emojiContainer={emojiContainer}
@@ -190,7 +200,7 @@ export default function ThreadListItemContent({
           >
             {
               channel?.members?.find((member) => member?.userId === message?.sender?.userId)?.nickname
-              || getSenderName(message as UserMessage | FileMessage)
+              || getSenderName(message as SendableMessageType)
               // TODO: Divide getting profileUrl logic to utils
             }
           </Label>
@@ -201,7 +211,7 @@ export default function ThreadListItemContent({
             <div className={getClassName(['sendbird-thread-list-item-content__middle__body-container__created-at', 'left', supposedHoverClassName])}>
               <div className="sendbird-thread-list-item-content__middle__body-container__created-at__component-container">
                 <MessageStatus
-                  message={message as UserMessage | FileMessage}
+                  message={message as SendableMessageType}
                   channel={channel}
                 />
               </div>
@@ -272,7 +282,7 @@ export default function ThreadListItemContent({
             ])}>
               <EmojiReactions
                 userId={userId}
-                message={message as UserMessage | FileMessage}
+                message={message as SendableMessageType}
                 channel={channel}
                 isByMe={isByMe}
                 emojiContainer={emojiContainer}
@@ -303,7 +313,7 @@ export default function ThreadListItemContent({
             {isReactionEnabledInChannel && (
               <MessageItemReactionMenu
                 className="sendbird-thread-list-item-content-menu__reaction-menu"
-                message={message as UserMessage | FileMessage}
+                message={message as SendableMessageType}
                 userId={userId}
                 spaceFromTrigger={{}}
                 emojiContainer={emojiContainer}
@@ -314,7 +324,7 @@ export default function ThreadListItemContent({
             <MessageItemMenu
               className="sendbird-thread-list-item-content-menu__normal-menu"
               channel={channel}
-              message={message as UserMessage | FileMessage}
+              message={message as SendableMessageType}
               isByMe={isByMe}
               replyType={replyType}
               disabled={disabled}

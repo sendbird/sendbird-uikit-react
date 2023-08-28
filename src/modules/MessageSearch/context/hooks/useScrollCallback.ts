@@ -1,14 +1,15 @@
 import type { SendbirdError } from '@sendbird/chat';
-import type { AdminMessage, FileMessage, MessageSearchQuery, UserMessage } from '@sendbird/chat/message';
+import type { MessageSearchQuery } from '@sendbird/chat/message';
 import { useCallback } from 'react';
 import { Logger } from '../../../..';
 import * as messageActionTypes from '../dux/actionTypes';
+import {CoreMessageType} from "../../../../utils";
 
 interface MainProps {
   currentMessageSearchQuery: MessageSearchQuery;
   hasMoreResult: boolean;
   onResultLoaded?: (
-    messages?: Array<UserMessage | FileMessage | AdminMessage>,
+    messages?: Array<CoreMessageType>,
     error?: SendbirdError,
   ) => void;
 }
@@ -22,7 +23,7 @@ interface ToolProps {
 
 export type CallbackReturn = (
   callback: (
-    messages: Array<UserMessage | FileMessage | AdminMessage>,
+    messages: Array<CoreMessageType>,
     /* eslint-disable @typescript-eslint/no-explicit-any */
     error: any,
   ) => void

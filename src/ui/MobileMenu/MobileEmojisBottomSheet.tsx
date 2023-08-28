@@ -1,19 +1,19 @@
 import React, { ReactElement, useMemo } from 'react';
 import { EmojiContainer } from '@sendbird/chat';
-import { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
+import { Reaction } from '@sendbird/chat/message';
 
 import BottomSheet from '../BottomSheet';
-import { getEmojiListAll } from '../../utils';
+import {getEmojiListAll, SendableMessageType} from '../../utils';
 import ReactionButton from '../ReactionButton';
 import ImageRenderer from '../ImageRenderer';
 import Icon, { IconColors, IconTypes } from '../Icon';
 
 export interface MobileEmojisBottomSheetProps {
   userId: string;
-  message: UserMessage | FileMessage;
+  message: SendableMessageType;
   emojiContainer: EmojiContainer;
   hideMenu: () => void;
-  toggleReaction?: (message: UserMessage | FileMessage, key: string, byMe: boolean) => void;
+  toggleReaction?: (message: SendableMessageType, key: string, byMe: boolean) => void;
 }
 
 export const MobileEmojisBottomSheet = ({

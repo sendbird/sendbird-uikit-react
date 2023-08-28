@@ -6,7 +6,7 @@ import './index.scss';
 import RemoveMessage from '../RemoveMessageModal';
 import ParentMessageInfoItem from './ParentMessageInfoItem';
 
-import { getSenderName } from '../../../../utils';
+import {getSenderName, SendableMessageType} from '../../../../utils';
 import { getIsReactionEnabled } from '../../../../utils/getIsReactionEnabled';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
@@ -264,7 +264,7 @@ export default function ParentMessageInfo({
           >
             {
               currentChannel?.members?.find((member) => member?.userId === parentMessage?.sender?.userId)
-                ?.nickname || getSenderName?.(parentMessage as UserMessage | FileMessage)
+                ?.nickname || getSenderName?.(parentMessage as SendableMessageType)
             }
           </Label>
           <Label

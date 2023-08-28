@@ -1,16 +1,17 @@
-import { UserMessage, FileMessage, AdminMessage } from '@sendbird/chat/message';
+import { UserMessage } from '@sendbird/chat/message';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import { isSameGroup } from './utils';
 import { ReplyType } from '../../../types';
+import {CoreMessageType} from "../../../utils";
 
 /**
  * exported, should be backward compatible
  */
 export const compareMessagesForGrouping = (
-  prevMessage: UserMessage | FileMessage | AdminMessage,
-  currMessage: UserMessage | FileMessage | AdminMessage,
-  nextMessage: UserMessage | FileMessage | AdminMessage,
+  prevMessage: CoreMessageType,
+  currMessage: CoreMessageType,
+  nextMessage: CoreMessageType,
   currentChannel: GroupChannel,
   replyType: ReplyType,
 ): [

@@ -20,11 +20,11 @@ import { getIsReactionEnabled } from '../../../../utils/getIsReactionEnabled';
 
 export interface ThreadListItemProps {
   className?: string;
-  message: UserMessage | FileMessage;
+  message: SendableMessageType;
   chainTop?: boolean;
   chainBottom?: boolean;
   hasSeparator?: boolean;
-  renderCustomSeparator?: (props: { message: UserMessage | FileMessage }) => React.ReactElement;
+  renderCustomSeparator?: (props: { message: SendableMessageType }) => React.ReactElement;
   handleScroll?: () => void;
 }
 

@@ -9,7 +9,7 @@ import { FileMessage, UserMessage } from '@sendbird/chat/message';
 export interface RemoveMessageProps {
   onCancel: () => void; // rename to onClose
   onSubmit?: () => void;
-  message: UserMessage | FileMessage;
+  message: SendableMessageType;
 }
 
 const RemoveMessage: React.FC<RemoveMessageProps> = (props: RemoveMessageProps) => {

@@ -10,7 +10,7 @@ import {
 export interface ThreadContextInitialState {
   currentChannel: GroupChannel;
   allThreadMessages: Array<BaseMessage>;
-  parentMessage: UserMessage | FileMessage;
+  parentMessage: SendableMessageType;
   channelState: ChannelStateTypes;
   parentMessageState: ParentMessageStateTypes;
   threadListState: ThreadListStateTypes;

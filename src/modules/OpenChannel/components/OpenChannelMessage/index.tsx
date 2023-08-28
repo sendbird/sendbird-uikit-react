@@ -30,10 +30,11 @@ import { useOpenChannelContext } from '../../context/OpenChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import type { RenderMessageProps } from '../../../../types';
 import { useLocalization } from '../../../../lib/LocalizationContext';
+import {CoreMessageType, SendableMessageType} from "../../../../utils";
 
 export type OpenChannelMessageProps = {
   renderMessage?: (props: RenderMessageProps) => React.ElementType<RenderMessageProps>;
-  message: UserMessage | FileMessage | AdminMessage;
+  message: CoreMessageType;
   chainTop?: boolean;
   chainBottom?: boolean;
   hasSeparator?: boolean;
@@ -64,7 +65,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
 
   let sender: User = null;
   if (message?.messageType !== 'admin') {
-    sender = (message as UserMessage | FileMessage)?.sender;
+    sender = (message as SendableMessageType)?.sender;
   }
 
   const RenderedMessage = useMemo(() => (props: RenderMessageProps) => {
@@ -89,8 +90,8 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
   if (sender && message?.messageType !== 'admin') {
     // pending and failed messages are by me
     isByMe = (userId === sender.userId)
-      || ((message as UserMessage | FileMessage)?.sendingStatus === SendingMessageStatus.PENDING)
-      || ((message as UserMessage | FileMessage)?.sendingStatus === SendingMessageStatus.FAILED);
+      || ((message as SendableMessageType)?.sendingStatus === SendingMessageStatus.PENDING)
+      || ((message as SendableMessageType)?.sendingStatus === SendingMessageStatus.FAILED);
   }
 
   if (renderMessage && RenderedMessage) {

@@ -8,7 +8,7 @@ import { FileMessage, UserMessage } from '@sendbird/chat/message';
 interface DynamicProps {
   channelUrl: string;
   sdkInit: boolean;
-  message: UserMessage | FileMessage;
+  message: SendableMessageType;
 }
 
 interface StaticProps {

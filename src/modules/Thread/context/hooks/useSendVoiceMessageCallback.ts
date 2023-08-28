@@ -15,14 +15,14 @@ import {
 
 interface DynamicParams {
   currentChannel: GroupChannel;
-  onBeforeSendVoiceMessage?: (file: File, quoteMessage?: UserMessage | FileMessage) => FileMessageCreateParams;
+  onBeforeSendVoiceMessage?: (file: File, quoteMessage?: SendableMessageType) => FileMessageCreateParams;
 }
 interface StaticParams {
   logger: Logger;
   pubSub: any;
   threadDispatcher: CustomUseReducerDispatcher;
 }
-type FuncType = (file: File, duration: number, quoteMessage: UserMessage | FileMessage) => void;
+type FuncType = (file: File, duration: number, quoteMessage: SendableMessageType) => void;
 interface LocalFileMessage extends FileMessage {
   localUrl: string;
   file: File;
@@ -37,7 +37,7 @@ export const useSendVoiceMessageCallback = ({
   pubSub,
   threadDispatcher,
 }: StaticParams): FuncType => {
-  const sendMessage = useCallback((file: File, duration: number, quoteMessage: UserMessage | FileMessage) => {
+  const sendMessage = useCallback((file: File, duration: number, quoteMessage: SendableMessageType) => {
     const messageParams: FileMessageCreateParams = (
       onBeforeSendVoiceMessage
       && typeof onBeforeSendVoiceMessage === 'function'

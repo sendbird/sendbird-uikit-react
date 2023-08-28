@@ -12,7 +12,7 @@ import ImageRenderer from '../ImageRenderer';
 import Icon, { IconTypes } from '../Icon';
 
 import { Nullable } from '../../types';
-import { getEmojiTooltipString, isReactedBy } from '../../utils';
+import {getEmojiTooltipString, isReactedBy, SendableMessageType} from '../../utils';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import useLongPress from '../../hooks/useLongPress';
 import { LocalizationContext } from '../../lib/LocalizationContext';
@@ -23,7 +23,7 @@ type Props = {
   reaction: Reaction;
   memberNicknamesMap: Map<string, string>;
   setEmojiKey: React.Dispatch<React.SetStateAction<string>>;
-  toggleReaction?: (message: UserMessage | FileMessage, key: string, byMe: boolean) => void;
+  toggleReaction?: (message: SendableMessageType, key: string, byMe: boolean) => void;
   emojisMap: Map<string, Emoji>;
   channel: Nullable<GroupChannel | OpenChannel>;
 };

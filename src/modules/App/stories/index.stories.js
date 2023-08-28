@@ -15,6 +15,7 @@ import { fitPageSize } from './utils';
 
 const appId = process.env.STORYBOOK_APP_ID;
 const userId = 'sendbird';
+const multipleFilesMessageUserId = 'sendbird1';
 
 export default { title: 'App-Component' };
 
@@ -531,5 +532,19 @@ export const userListQuery = () => fitPageSize(
     userId={array[2]}
     nickname={array[2]}
     userListQuery={getCustomPaginatedQuery}
+  />
+);
+
+export const multipleFilesMessage = () => fitPageSize(
+  <App
+    appId={appId}
+    userId={multipleFilesMessageUserId}
+    nickname={multipleFilesMessageUserId}
+    showSearchIcon
+    isMentionEnabled
+    isReactionEnabled
+    isTypingIndicatorEnabledOnChannelList
+    isMessageReceiptStatusEnabledOnChannelList
+    config={{ logLevel: 'all', isREMUnitEnabled: true }}
   />
 );

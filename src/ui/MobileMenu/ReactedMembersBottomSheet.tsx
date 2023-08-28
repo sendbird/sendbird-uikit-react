@@ -1,19 +1,19 @@
 import React, { ReactElement, useState } from 'react';
 import { EmojiContainer } from '@sendbird/chat';
 import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
-import { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
+import { Reaction } from '@sendbird/chat/message';
 
 import './mobile-menu-reacted-members.scss';
 
 import BottomSheet from '../BottomSheet';
-import { getEmojiUrl } from '../../utils';
+import {getEmojiUrl, SendableMessageType} from '../../utils';
 import ImageRenderer from '../ImageRenderer';
 import Icon, { IconColors, IconTypes } from '../Icon';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import UserListItem from '../UserListItem';
 
 export interface ReactedMembersBottomSheetProps {
-  message: UserMessage | FileMessage;
+  message: SendableMessageType;
   channel: GroupChannel;
   emojiKey: string;
   hideMenu: () => void;

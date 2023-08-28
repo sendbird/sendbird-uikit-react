@@ -12,6 +12,7 @@ import {
 } from '../../types';
 
 import { CustomExtensionParams, SendbirdChatInitParams } from '../../lib/types';
+import {SendableMessageType} from "../../utils";
 
 export interface AppLayoutProps {
   isReactionEnabled?: boolean;
@@ -30,8 +31,8 @@ interface SubLayoutCommonProps {
   setHighlightedMessage: React.Dispatch<number | null>;
   startingPoint?: number | null;
   setStartingPoint: React.Dispatch<number | null>;
-  threadTargetMessage: UserMessage | FileMessage | null;
-  setThreadTargetMessage: React.Dispatch<UserMessage | FileMessage>;
+  threadTargetMessage: SendableMessageType | null;
+  setThreadTargetMessage: React.Dispatch<SendableMessageType>;
 }
 
 export interface MobileLayoutProps extends AppLayoutProps, SubLayoutCommonProps { }

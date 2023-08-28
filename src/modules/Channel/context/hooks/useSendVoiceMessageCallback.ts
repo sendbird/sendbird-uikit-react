@@ -12,10 +12,11 @@ import {
   VOICE_MESSAGE_FILE_NAME,
   VOICE_MESSAGE_MIME_TYPE,
 } from '../../../../utils/consts';
+import {SendableMessageType} from "../../../../utils";
 
 interface DynamicParams {
   currentGroupChannel: GroupChannel;
-  onBeforeSendVoiceMessage?: (file: File, quoteMessage?: UserMessage | FileMessage) => FileMessageCreateParams;
+  onBeforeSendVoiceMessage?: (file: File, quoteMessage?: SendableMessageType) => FileMessageCreateParams;
 }
 interface StaticParams {
   logger: Logger;
@@ -23,7 +24,7 @@ interface StaticParams {
   scrollRef: React.RefObject<HTMLDivElement>;
   messagesDispatcher: (props: { type: string, payload: any }) => void;
 }
-type FuncType = (file: File, duration: number, quoteMessage: UserMessage | FileMessage) => void;
+type FuncType = (file: File, duration: number, quoteMessage: SendableMessageType) => void;
 
 export const useSendVoiceMessageCallback = ({
   currentGroupChannel,
@@ -35,7 +36,7 @@ export const useSendVoiceMessageCallback = ({
   scrollRef,
   messagesDispatcher,
 }: StaticParams): Array<FuncType> => {
-  const sendMessage = useCallback((file: File, duration: number, quoteMessage: UserMessage | FileMessage) => {
+  const sendMessage = useCallback((file: File, duration: number, quoteMessage: SendableMessageType) => {
     const messageParams: FileMessageCreateParams = (
       onBeforeSendVoiceMessage
       && typeof onBeforeSendVoiceMessage === 'function'

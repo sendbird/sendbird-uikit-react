@@ -13,11 +13,11 @@ import { SpaceFromTriggerType } from '../../types';
 
 interface Props {
   className?: string | Array<string>;
-  message: UserMessage | FileMessage;
+  message: SendableMessageType;
   userId: string;
   spaceFromTrigger?: SpaceFromTriggerType;
   emojiContainer?: EmojiContainer;
-  toggleReaction?: (message: UserMessage | FileMessage, reactionKey: string, isReacted: boolean) => void;
+  toggleReaction?: (message: SendableMessageType, reactionKey: string, isReacted: boolean) => void;
   setSupposedHover?: (bool: boolean) => void;
 }
 

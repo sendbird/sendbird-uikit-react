@@ -17,6 +17,7 @@ import {
   isUserMessage,
   isVideoMessage,
   truncateString,
+  SendableMessageType,
 } from '../../../../utils';
 
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
@@ -32,7 +33,7 @@ import { tokenizeMessage } from '../../../Message/utils/tokens/tokenize';
 
 export interface ParentMessageInfoItemProps {
   className?: string;
-  message: UserMessage | FileMessage;
+  message: SendableMessageType;
   showFileViewer?: (bool: boolean) => void;
 }
 

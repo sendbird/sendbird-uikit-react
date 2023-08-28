@@ -1,5 +1,6 @@
 import { AdminMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
 import { isImage, isVideo } from '../../../../ui/FileViewer/types';
+import {CoreMessageType} from "../../../../utils";
 
 export const MessageTypes = {
   ADMIN: 'ADMIN',
@@ -22,7 +23,7 @@ type MessageTypeOptions = {
 };
 
 export const getMessageType = (
-  message: UserMessage | FileMessage | AdminMessage,
+  message: CoreMessageType,
   options?: MessageTypeOptions,
 ): string => {
   const isOgMessageEnabledInOpenChannel = options?.isOgMessageEnabledInOpenChannel;

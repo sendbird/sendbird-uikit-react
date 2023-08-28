@@ -1,8 +1,8 @@
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { FileMessage, UserMessage } from '@sendbird/chat/message';
 import { useCallback } from 'react';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
+import {SendableMessageType} from "../../../../utils";
 
 interface DynamicProps {
   currentChannel: GroupChannel;
@@ -17,8 +17,8 @@ export default function useDeleteMessageCallback({
   threadDispatcher,
 }: DynamicProps, {
   logger,
-}: StaticProps): (message: UserMessage | FileMessage) => Promise<UserMessage | FileMessage> {
-  return useCallback((message: UserMessage | FileMessage): Promise<UserMessage | FileMessage> => {
+}: StaticProps): (message: SendableMessageType) => Promise<SendableMessageType> {
+  return useCallback((message: SendableMessageType): Promise<SendableMessageType> => {
     logger.info('Thread | useDeleteMessageCallback: Deleting message.', message);
     const { sendingStatus } = message;
     return new Promise((resolve, reject) => {

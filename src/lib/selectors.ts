@@ -16,6 +16,7 @@ import {
   SendBirdStateStore,
 } from './types';
 import { noop } from '../utils/utils';
+import {SendableMessageType} from "../utils";
 
 /**
  * 1. UIKit Instances
@@ -595,7 +596,7 @@ export const getUpdateUserMessage = (state: SendBirdState) => (
  *  .catch((error) => {})
  */
 export const getDeleteMessage = (state: SendBirdState) => (
-  (channel: GroupChannel | OpenChannel, message: UserMessage | FileMessage): Promise<UserMessage | FileMessage> => (
+  (channel: GroupChannel | OpenChannel, message: SendableMessageType): Promise<SendableMessageType> => (
     new Promise((resolve, reject) => {
       const pubSub = getPubSub(state);
       const { messageId } = message;
