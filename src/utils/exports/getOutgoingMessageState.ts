@@ -1,6 +1,5 @@
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { OpenChannel } from '@sendbird/chat/openChannel';
-import { UserMessage, FileMessage, MultipleFilesMessage } from '@sendbird/chat/message';
 import { Nullable } from '../../types';
 
 export enum OutgoingMessageStates {

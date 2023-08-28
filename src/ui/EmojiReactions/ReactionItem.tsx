@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { Emoji } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { OpenChannel } from '@sendbird/chat/openChannel';
-import { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
+import { Reaction, UserMessage } from '@sendbird/chat/message';
 
 import Tooltip from '../Tooltip';
 import TooltipWrapper from '../TooltipWrapper';

@@ -1,7 +1,3 @@
-import type {
-  FileMessage,
-  UserMessage,
-} from '@sendbird/chat/message';
 import type { ReplyType } from 'SendbirdUIKitGlobal';
 import type { EmojiContainer } from '@sendbird/chat';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';

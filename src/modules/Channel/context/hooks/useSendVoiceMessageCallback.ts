@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { FileMessage, FileMessageCreateParams, MessageMetaArray, UserMessage } from '@sendbird/chat/message';
+import { FileMessageCreateParams, MessageMetaArray } from '@sendbird/chat/message';
 import { Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';

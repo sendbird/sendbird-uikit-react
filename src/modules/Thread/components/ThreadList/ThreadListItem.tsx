@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useRef, useEffect, useLayoutEffect } from 'react';
 import format from 'date-fns/format';
-import { FileMessage, UserMessage } from '@sendbird/chat/message';
+import { FileMessage } from '@sendbird/chat/message';
 
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import DateSeparator from '../../../../ui/DateSeparator';

@@ -3,7 +3,6 @@ import { SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 
 import { Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
-import { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 interface DynamicProps {
   channelUrl: string;

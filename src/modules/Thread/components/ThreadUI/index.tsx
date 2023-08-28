@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 import './index.scss';
 

@@ -11,7 +11,6 @@ import type {
   SendbirdOpenChat,
 } from '@sendbird/chat/openChannel';
 import type {
-  AdminMessage,
   FileMessage,
   FileMessageCreateParams,
   UserMessage,

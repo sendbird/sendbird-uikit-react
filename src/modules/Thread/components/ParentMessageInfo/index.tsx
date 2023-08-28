@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import format from 'date-fns/format';
-import { FileMessage, UserMessage } from '@sendbird/chat/message';
+import { FileMessage } from '@sendbird/chat/message';
 
 import './index.scss';
 import RemoveMessage from '../RemoveMessageModal';

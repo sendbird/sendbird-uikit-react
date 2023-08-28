@@ -1,4 +1,4 @@
-import { BaseMessage, FileMessage, ThreadedMessageListParams, UserMessage } from '@sendbird/chat/message';
+import { BaseMessage, ThreadedMessageListParams } from '@sendbird/chat/message';
 import { useCallback } from 'react';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { NEXT_THREADS_FETCH_SIZE } from '../../consts';

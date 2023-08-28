@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { GroupChannel, GroupChannelHandler, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
-import { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 import { scrollIntoLast } from '../utils';
 

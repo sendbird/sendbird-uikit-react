@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 import type { AppLayoutProps } from './types';
 

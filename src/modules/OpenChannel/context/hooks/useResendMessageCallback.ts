@@ -1,4 +1,4 @@
-import type { FileMessage, UserMessage } from '@sendbird/chat/message';
+import type { FileMessage } from '@sendbird/chat/message';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
 import { useCallback } from 'react';
 import { Logger } from '../../../..';

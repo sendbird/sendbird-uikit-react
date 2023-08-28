@@ -1,5 +1,5 @@
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { FileMessage, ReactionEvent, UserMessage } from '@sendbird/chat/message';
+import { ReactionEvent, UserMessage } from '@sendbird/chat/message';
 import { NEXT_THREADS_FETCH_SIZE, PREV_THREADS_FETCH_SIZE } from '../../consts';
 import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from '../../types';
 import { compareIds } from '../utils';

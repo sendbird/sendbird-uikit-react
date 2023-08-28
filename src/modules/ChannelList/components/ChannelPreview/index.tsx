@@ -2,7 +2,7 @@ import './channel-preview.scss';
 
 import React, { useState } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
-import type { FileMessage, UserMessage } from '@sendbird/chat/message';
+import type { FileMessage } from '@sendbird/chat/message';
 
 import ChannelAvatar from '../../../../ui/ChannelAvatar';
 import Badge from '../../../../ui/Badge';

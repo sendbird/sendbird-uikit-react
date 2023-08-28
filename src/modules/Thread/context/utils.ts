@@ -1,6 +1,6 @@
 import format from 'date-fns/format';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { BaseMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
+import { BaseMessage } from '@sendbird/chat/message';
 import { getOutgoingMessageState, OutgoingMessageStates } from '../../../utils/exports/getOutgoingMessageState';
 import { SendableMessageType } from '../../../utils';
 

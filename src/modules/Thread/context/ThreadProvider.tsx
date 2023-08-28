@@ -1,7 +1,7 @@
 import React, { useReducer, useMemo, useEffect, ReactElement } from 'react';
 import { User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { BaseMessage, FileMessage, FileMessageCreateParams, UserMessage } from '@sendbird/chat/message';
+import { BaseMessage, FileMessageCreateParams } from '@sendbird/chat/message';
 
 import { getNicknamesMapFromMembers, getParentMessageFrom } from './utils';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';

@@ -2,7 +2,6 @@ import { State as initialStateInterface } from './initialState';
 import * as actionTypes from './actionTypes';
 
 import compareIds from '../../../../utils/compareIds';
-import { FileMessage, UserMessage } from '@sendbird/chat/message';
 import { SendableMessageType } from '../../../../utils';
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */

@@ -1,6 +1,6 @@
 import './index.scss';
 import React, { ReactElement, useRef } from 'react';
-import type { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
+import type { Reaction } from '@sendbird/chat/message';
 import type { Emoji, EmojiContainer } from '@sendbird/chat';
 
 import ContextMenu, { EmojiListItems } from '../ContextMenu';

@@ -1,4 +1,4 @@
-import { AdminMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
+import { FileMessage } from '@sendbird/chat/message';
 import { isImage, isVideo } from '../../../../ui/FileViewer/types';
 import { CoreMessageType } from '../../../../utils';
 

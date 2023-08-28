@@ -1,6 +1,5 @@
 import type { User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 import type { Locale } from 'date-fns';
 
