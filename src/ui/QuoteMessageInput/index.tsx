@@ -10,7 +10,7 @@ import {
   isImageMessage,
   isUserMessage,
   isVideoMessage,
-  isVoiceMessage,
+  isVoiceMessage, SendableMessageType,
   UIKitMessageTypes,
 } from '../../utils';
 

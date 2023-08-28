@@ -8,7 +8,7 @@ import Icon, { IconTypes, IconColors } from '../Icon';
 import IconButton from '../IconButton';
 import ImageRenderer from '../ImageRenderer';
 import ReactionButton from '../ReactionButton';
-import { getClassName, getEmojiListAll, isPendingMessage, isFailedMessage } from '../../utils';
+import { getClassName, getEmojiListAll, isPendingMessage, isFailedMessage, SendableMessageType } from '../../utils';
 import { SpaceFromTriggerType } from '../../types';
 
 interface Props {

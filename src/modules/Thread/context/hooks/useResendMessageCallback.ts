@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import topics from '../../../../lib/pubSub/topics';
+import { SendableMessageType } from '../../../../utils';
 
 interface DynamicProps {
   currentChannel: GroupChannel;

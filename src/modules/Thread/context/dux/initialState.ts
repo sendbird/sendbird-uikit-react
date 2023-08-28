@@ -6,6 +6,7 @@ import {
   ParentMessageStateTypes,
   ThreadListStateTypes,
 } from '../../types';
+import { SendableMessageType } from '../../../../utils';
 
 export interface ThreadContextInitialState {
   currentChannel: GroupChannel;

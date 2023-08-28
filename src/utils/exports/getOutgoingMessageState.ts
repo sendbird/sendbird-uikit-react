@@ -1,6 +1,7 @@
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { OpenChannel } from '@sendbird/chat/openChannel';
 import { Nullable } from '../../types';
+import { SendableMessageType } from '../index';
 
 export enum OutgoingMessageStates {
   NONE = 'NONE',
