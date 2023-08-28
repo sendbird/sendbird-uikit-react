@@ -6,7 +6,7 @@ import { Reaction } from '@sendbird/chat/message';
 import './mobile-menu-reacted-members.scss';
 
 import BottomSheet from '../BottomSheet';
-import {getEmojiUrl, SendableMessageType} from '../../utils';
+import { getEmojiUrl, SendableMessageType } from '../../utils';
 import ImageRenderer from '../ImageRenderer';
 import Icon, { IconColors, IconTypes } from '../Icon';
 import Label, { LabelColors, LabelTypography } from '../Label';

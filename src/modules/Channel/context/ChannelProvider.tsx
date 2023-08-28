@@ -20,7 +20,7 @@ import type { SendbirdError, User } from '@sendbird/chat';
 import { ReplyType, RenderUserProfileProps, Nullable } from '../../../types';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
-import {CoreMessageType, SendableMessageType} from '../../../utils';
+import { CoreMessageType, SendableMessageType } from '../../../utils';
 import { ThreadReplySelectType } from './const';
 
 import * as utils from './utils';

@@ -6,12 +6,12 @@ import {
   MessageListParams,
   MultipleFilesMessage,
   Reaction,
-  UserMessage
+  UserMessage,
 } from '@sendbird/chat/message';
 import { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
 import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOutgoingMessageState';
-import {Nullable} from '../types';
+import { Nullable } from '../types';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 const SUPPORTED_MIMES = {
@@ -121,27 +121,27 @@ export const getUIKitFileType = (type: string): string => {
 };
 
 export const isSentMessage = (
-  message: SendableMessageType
+  message: SendableMessageType,
 ): boolean => (message.sendingStatus === 'succeeded');
 export const isDeliveredMessage = (
   channel: GroupChannel,
-  message: SendableMessageType
+  message: SendableMessageType,
 ): boolean => (
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.DELIVERED
   || getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
 );
 export const isReadMessage = (
   channel: GroupChannel,
-  message: SendableMessageType
+  message: SendableMessageType,
 ): boolean => (
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
 );
 // TODO: Remove channel from the params, it seems unnecessary
 export const isFailedMessage = (
-  message: SendableMessageType
+  message: SendableMessageType,
 ): boolean => (message?.sendingStatus === 'failed');
 export const isPendingMessage = (
-  message: SendableMessageType
+  message: SendableMessageType,
 ): boolean => (message?.sendingStatus === 'pending');
 export const isSentStatus = (state: string): boolean => (
   state === OutgoingMessageStates.SENT
@@ -171,14 +171,14 @@ export const isFileMessage = (message: CoreMessageType): boolean => (
   )
 );
 export const isMultipleFilesMessage = (
-  message: CoreMessageType
+  message: CoreMessageType,
 ): boolean => (
   message && (
     message['isMultipleFilesMessage'] && typeof message.isMultipleFilesMessage === 'function'
       ? message.isMultipleFilesMessage()
       : (
         message.messageType === 'file'
-        && Object.prototype.hasOwnProperty.call(this,'fileInfoList')
+        && Object.prototype.hasOwnProperty.call(this, 'fileInfoList')
       )
   )
 );
@@ -232,7 +232,7 @@ export const isVoiceMessage = (message: Nullable<FileMessage | UserMessage>): bo
 };
 
 export const isEditedMessage = (
-  message: CoreMessageType
+  message: CoreMessageType,
 ): boolean => isUserMessage(message) && (message?.updatedAt > 0);
 export const isEnabledOGMessage = (message: UserMessage): boolean => (
   (!message || !message.ogMetaData || !message.ogMetaData.url) ? false : true
@@ -240,7 +240,7 @@ export const isEnabledOGMessage = (message: UserMessage): boolean => (
 
 export const getUIKitMessageTypes = (): UIKitMessageTypes => ({ ...UIKitMessageTypes });
 export const getUIKitMessageType = (
-  message: CoreMessageType
+  message: CoreMessageType,
 ): string => {
   if (isAdminMessage(message as AdminMessage)) return UIKitMessageTypes.ADMIN;
   if (isUserMessage(message as UserMessage)) {
@@ -318,7 +318,7 @@ export const getUseReaction = (store: UIKitStore, channel: GroupChannel | OpenCh
 
 export const isMessageSentByMe = (
   userId: string,
-  message: SendableMessageType
+  message: SendableMessageType,
 ): boolean => (
   (userId && message?.sender?.userId) && userId === message.sender.userId
 );
@@ -419,7 +419,7 @@ export const isFriend = (user: User): boolean => !!(user.friendDiscoveryKey || u
 
 export const filterMessageListParams = (
   params: MessageListParams,
-  message: SendableMessageType
+  message: SendableMessageType,
 ): boolean => {
   // @ts-ignore
   if (params?.messageTypeFilter && params.messageTypeFilter !== message.messageType) {

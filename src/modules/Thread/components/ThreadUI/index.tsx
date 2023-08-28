@@ -18,7 +18,7 @@ import useMemorizedThreadList from './useMemorizedThreadList';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { isAboutSame } from '../../context/utils';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
-import {SendableMessageType} from "../../../../utils";
+import { SendableMessageType } from '../../../../utils';
 
 export interface ThreadUIProps {
   renderHeader?: () => React.ReactElement;

@@ -23,7 +23,7 @@ import {
   isTextMessage,
   isThumbnailMessage,
   isVoiceMessage,
-  SendableMessageType
+  SendableMessageType,
 } from '../../../../utils';
 import MessageStatus from '../../../../ui/MessageStatus';
 import EmojiReactions from '../../../../ui/EmojiReactions';

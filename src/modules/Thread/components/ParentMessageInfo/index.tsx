@@ -6,7 +6,7 @@ import './index.scss';
 import RemoveMessage from '../RemoveMessageModal';
 import ParentMessageInfoItem from './ParentMessageInfoItem';
 
-import {getSenderName, SendableMessageType} from '../../../../utils';
+import { getSenderName, SendableMessageType } from '../../../../utils';
 import { getIsReactionEnabled } from '../../../../utils/getIsReactionEnabled';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';

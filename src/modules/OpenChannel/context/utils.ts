@@ -5,7 +5,7 @@ import type { OpenChannel, ParticipantListQuery } from '@sendbird/chat/openChann
 import format from 'date-fns/format';
 
 import { Logger } from '../../../lib/SendbirdState';
-import {CoreMessageType, SendableMessageType} from "../../../utils";
+import { CoreMessageType, SendableMessageType } from '../../../utils';
 
 export const getMessageCreatedAt = (message: SendableMessageType): string => format(message.createdAt, 'p');
 

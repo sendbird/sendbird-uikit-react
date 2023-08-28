@@ -1,6 +1,6 @@
 import type { User } from '@sendbird/chat';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
-import {CoreMessageType} from "../../../../utils";
+import { CoreMessageType } from '../../../../utils';
 
 export interface State {
   allMessages: Array<CoreMessageType>;

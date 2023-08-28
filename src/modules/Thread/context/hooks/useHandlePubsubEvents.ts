@@ -4,7 +4,7 @@ import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdStat
 import topics from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from '../utils';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
-import {SendableMessageType} from "../../../../utils";
+import { SendableMessageType } from '../../../../utils';
 
 interface DynamicProps {
   sdkInit: boolean;

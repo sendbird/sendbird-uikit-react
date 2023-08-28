@@ -27,7 +27,7 @@ import useToggleReactionCallback from './hooks/useToggleReactionsCallback';
 import useSendUserMessageCallback, { SendMessageParams } from './hooks/useSendUserMessageCallback';
 import useResendMessageCallback from './hooks/useResendMessageCallback';
 import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
-import {SendableMessageType} from "../../../utils";
+import { SendableMessageType } from '../../../utils';
 
 export type ThreadProviderProps = {
   children?: React.ReactElement;

@@ -5,7 +5,7 @@ import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdStat
 import { PREV_THREADS_FETCH_SIZE } from '../../consts';
 import { ThreadListStateTypes } from '../../types';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
-import {SendableMessageType} from "../../../../utils";
+import { SendableMessageType } from '../../../../utils';
 
 interface DynamicProps {
   hasMorePrev: boolean;

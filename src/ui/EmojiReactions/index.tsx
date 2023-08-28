@@ -11,7 +11,7 @@ import Icon, { IconTypes, IconColors } from '../Icon';
 import ContextMenu, { EmojiListItems } from '../ContextMenu';
 import { Nullable, SpaceFromTriggerType } from '../../types';
 
-import {getClassName, getEmojiListAll, getEmojiMapAll, SendableMessageType} from '../../utils';
+import { getClassName, getEmojiListAll, getEmojiMapAll, SendableMessageType } from '../../utils';
 import { ReactedMembersBottomSheet } from '../MobileMenu/ReactedMembersBottomSheet';
 import ReactionItem from './ReactionItem';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';

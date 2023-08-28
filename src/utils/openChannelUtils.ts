@@ -1,6 +1,6 @@
 import type { User } from '@sendbird/chat';
 import type { FileMessage, UserMessage } from '@sendbird/chat/message';
-import {SendableMessageType} from "./index";
+import { SendableMessageType } from './index';
 
 const OpenChannelMessageStatusTypes = {
   NONE: 'none',

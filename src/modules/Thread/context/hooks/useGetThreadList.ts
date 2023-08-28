@@ -3,7 +3,7 @@ import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdStat
 import { ThreadedMessageListParams } from '@sendbird/chat/message';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import { NEXT_THREADS_FETCH_SIZE, PREV_THREADS_FETCH_SIZE } from '../../consts';
-import {SendableMessageType} from "../../../../utils";
+import { SendableMessageType } from '../../../../utils';
 
 interface DynamicProps {
   sdkInit: boolean;

@@ -6,7 +6,7 @@ import type {
   MultipleFilesMessage,
   UserMessage,
 } from '@sendbird/chat/message';
-import {CoreMessageType} from "./utils";
+import { CoreMessageType } from './utils';
 
 export type ReplyType = 'NONE' | 'QUOTE_REPLY' | 'THREAD';
 export type Nullable<T> = T | null;

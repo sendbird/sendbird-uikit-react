@@ -12,7 +12,7 @@ import {
   VOICE_MESSAGE_FILE_NAME,
   VOICE_MESSAGE_MIME_TYPE,
 } from '../../../../utils/consts';
-import {SendableMessageType} from "../../../../utils";
+import { SendableMessageType } from '../../../../utils';
 
 interface DynamicParams {
   currentGroupChannel: GroupChannel;

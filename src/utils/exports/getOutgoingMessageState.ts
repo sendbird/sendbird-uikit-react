@@ -1,6 +1,6 @@
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { OpenChannel } from '@sendbird/chat/openChannel';
-import {UserMessage, FileMessage, MultipleFilesMessage} from '@sendbird/chat/message';
+import { UserMessage, FileMessage, MultipleFilesMessage } from '@sendbird/chat/message';
 import { Nullable } from '../../types';
 
 export enum OutgoingMessageStates {
@@ -14,7 +14,7 @@ export enum OutgoingMessageStates {
 
 export const getOutgoingMessageState = (
   channel: Nullable<GroupChannel | OpenChannel>,
-  message: SendableMessageType
+  message: SendableMessageType,
 ): string => {
   if (message.sendingStatus === 'pending') {
     return OutgoingMessageStates.PENDING;

@@ -3,7 +3,7 @@ import type { MessageSearchQuery } from '@sendbird/chat/message';
 import { useCallback } from 'react';
 import { Logger } from '../../../..';
 import * as messageActionTypes from '../dux/actionTypes';
-import {CoreMessageType} from "../../../../utils";
+import { CoreMessageType } from '../../../../utils';
 
 interface MainProps {
   currentMessageSearchQuery: MessageSearchQuery;

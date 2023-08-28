@@ -3,7 +3,7 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import { isSameGroup } from './utils';
 import { ReplyType } from '../../../types';
-import {CoreMessageType} from "../../../utils";
+import { CoreMessageType } from '../../../utils';
 
 /**
  * exported, should be backward compatible

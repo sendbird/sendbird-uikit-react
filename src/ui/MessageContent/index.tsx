@@ -46,7 +46,7 @@ import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import ThreadReplies from '../ThreadReplies';
 import { ThreadReplySelectType } from '../../modules/Channel/context/const';
 import VoiceMessageItemBody from '../VoiceMessageItemBody';
-import {Nullable, ReplyType} from '../../types';
+import { Nullable, ReplyType } from '../../types';
 import { noop } from '../../utils/utils';
 
 // should initialize in UserProfileContext.jsx

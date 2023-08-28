@@ -3,7 +3,7 @@ import isSameDay from 'date-fns/isSameDay';
 
 import { compareMessagesForGrouping } from '../../context/compareMessagesForGrouping';
 import { ReplyType } from '../../../../types';
-import {CoreMessageType} from "../../../../utils";
+import { CoreMessageType } from '../../../../utils';
 
 export interface GetMessagePartsInfoProps {
   allMessages: Array<CoreMessageType>;

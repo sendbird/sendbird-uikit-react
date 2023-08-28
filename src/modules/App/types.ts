@@ -12,7 +12,7 @@ import {
 } from '../../types';
 
 import { CustomExtensionParams, SendbirdChatInitParams } from '../../lib/types';
-import {SendableMessageType} from "../../utils";
+import { SendableMessageType } from '../../utils';
 
 export interface AppLayoutProps {
   isReactionEnabled?: boolean;

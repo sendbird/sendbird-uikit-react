@@ -12,7 +12,7 @@ import type { SendbirdError } from '@sendbird/chat';
 
 import type { Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
-import {CoreMessageType} from "../../../../utils";
+import { CoreMessageType } from '../../../../utils';
 
 enum MessageSearchOrder {
   SCORE = 'score',

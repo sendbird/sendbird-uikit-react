@@ -16,7 +16,7 @@ import {
   SendBirdStateStore,
 } from './types';
 import { noop } from '../utils/utils';
-import {SendableMessageType} from "../utils";
+import { SendableMessageType } from '../utils';
 
 /**
  * 1. UIKit Instances

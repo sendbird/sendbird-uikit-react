@@ -5,7 +5,7 @@ import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from
 import { compareIds } from '../utils';
 import { ThreadContextActionTypes as actionTypes } from './actionTypes';
 import { ThreadContextInitialState } from './initialState';
-import {SendableMessageType} from "../../../../utils";
+import { SendableMessageType } from '../../../../utils';
 
 interface ActionInterface {
   type: actionTypes;

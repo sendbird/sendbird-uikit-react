@@ -17,7 +17,7 @@ import {
 } from '../../utils/index';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { Role } from '../../lib/types';
-import {ReplyType} from "../../types";
+import { ReplyType } from '../../types';
 
 interface Props {
   className?: string | Array<string>;

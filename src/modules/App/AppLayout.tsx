@@ -8,7 +8,7 @@ import { DesktopLayout } from './DesktopLayout';
 import { MobileLayout } from './MobileLayout';
 
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
-import {SendableMessageType} from "../../utils";
+import { SendableMessageType } from '../../utils';
 
 export const AppLayout: React.FC<AppLayoutProps> = (
   props: AppLayoutProps,

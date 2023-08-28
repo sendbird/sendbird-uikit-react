@@ -12,7 +12,7 @@ import ImageRenderer from '../ImageRenderer';
 import Icon, { IconTypes } from '../Icon';
 
 import { Nullable } from '../../types';
-import {getEmojiTooltipString, isReactedBy, SendableMessageType} from '../../utils';
+import { getEmojiTooltipString, isReactedBy, SendableMessageType } from '../../utils';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import useLongPress from '../../hooks/useLongPress';
 import { LocalizationContext } from '../../lib/LocalizationContext';

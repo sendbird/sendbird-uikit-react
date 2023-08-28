@@ -2,7 +2,7 @@ import React, { ReactElement, useMemo } from 'react';
 
 import { ParentMessageStateTypes } from '../../types';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
-import {SendableMessageType} from "../../../../utils";
+import { SendableMessageType } from '../../../../utils';
 
 export interface UseMemorizedParentMessageInfoProps {
   parentMessage: SendableMessageType;

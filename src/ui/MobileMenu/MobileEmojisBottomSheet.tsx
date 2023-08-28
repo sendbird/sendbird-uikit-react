@@ -3,7 +3,7 @@ import { EmojiContainer } from '@sendbird/chat';
 import { Reaction } from '@sendbird/chat/message';
 
 import BottomSheet from '../BottomSheet';
-import {getEmojiListAll, SendableMessageType} from '../../utils';
+import { getEmojiListAll, SendableMessageType } from '../../utils';
 import ReactionButton from '../ReactionButton';
 import ImageRenderer from '../ImageRenderer';
 import Icon, { IconColors, IconTypes } from '../Icon';

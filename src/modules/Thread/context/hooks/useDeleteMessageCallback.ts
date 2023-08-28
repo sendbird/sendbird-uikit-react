@@ -2,7 +2,7 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { useCallback } from 'react';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
-import {SendableMessageType} from "../../../../utils";
+import { SendableMessageType } from '../../../../utils';
 
 interface DynamicProps {
   currentChannel: GroupChannel;
