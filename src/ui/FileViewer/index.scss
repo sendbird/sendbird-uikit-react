@@ -1,5 +1,9 @@
 @import '../../styles/variables';
 
+$file-viewer-slide-buttons-side-length: 64px;
+$file-viewer-slide-buttons-margin-length: 56px;
+$file-viewer-img-max-width: calc(100% - #{$file-viewer-slide-buttons-side-length} - #{$file-viewer-slide-buttons-margin-length});
+
 .sendbird-fileviewer__header__right__actions__download,
 .sendbird-fileviewer__header__right__actions__delete,
 .sendbird-fileviewer__header__right__actions__close {
@@ -99,11 +103,11 @@
       max-height: 90%;
     }
     .sendbird-fileviewer__content__img__multi {
-      max-width: calc(100% - 64px - 56px);
-      max-height: calc(100% - 64px - 56px);
+      max-width: $file-viewer-img-max-width;
+      max-height: 100%;
       @include mobile() {
         max-width: 100%;
-        max-height:100%;
+        max-height: 100%;
       }
     }
     .sendbird-fileviewer__content__unsupported {
