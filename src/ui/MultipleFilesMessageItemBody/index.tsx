@@ -52,7 +52,7 @@ export default function MultipleFilesMessageItemBody({
     <>
       {
         currentIndex > -1 && <FileViewer
-          message={msg2 as unknown as MultipleFilesMessage}
+          message={message}
           currentIndex={currentIndex}
           onClickLeft={onClickLeft}
           onClickRight={onClickRight}
