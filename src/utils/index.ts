@@ -178,7 +178,7 @@ export const isMultipleFilesMessage = (
       ? message.isMultipleFilesMessage()
       : (
         message.messageType === 'file'
-        && Object.prototype.hasOwnProperty.call(this, 'fileInfoList')
+        && Object.prototype.hasOwnProperty.call(message, 'fileInfoList')
       )
   )
 );

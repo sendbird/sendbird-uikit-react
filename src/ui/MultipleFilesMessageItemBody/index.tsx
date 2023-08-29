@@ -1,8 +1,6 @@
-import './index.scss';
 import React, { ReactElement, useState } from 'react';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
-import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import { MultipleFilesMessage, UploadedFileInfo } from '@sendbird/chat/message';
 import ImageRenderer from '../ImageRenderer';
 import ImageGrid from '../ImageGrid';
