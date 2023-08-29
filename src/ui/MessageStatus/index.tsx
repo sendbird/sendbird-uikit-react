@@ -5,7 +5,7 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import Loader from '../Loader';
-import {CoreMessageType, isSentStatus} from '../../utils';
+import { CoreMessageType, isSentStatus } from '../../utils';
 import {
   getOutgoingMessageState,
   OutgoingMessageStates,
