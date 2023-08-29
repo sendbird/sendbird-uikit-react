@@ -60,7 +60,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
   const isChannelTyping = isTypingIndicatorEnabled && isTyping;
   const isMessageStatusEnabled = isMessageReceiptStatusEnabled
     && (channel?.lastMessage?.messageType === 'user' || channel?.lastMessage?.messageType === 'file')
-    && (channel?.lastMessage as SendableMessageType)?.sender?.userId === userId;
+    && (channel?.lastMessage as CoreMessageType)?.sender?.userId === userId;
 
   const onLongPress = useLongPress({
     onLongPress: () => {
