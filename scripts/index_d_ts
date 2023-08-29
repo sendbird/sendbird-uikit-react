@@ -130,7 +130,7 @@ declare module "SendbirdUIKitGlobal" {
     getQueue: () => GroupChannel[];
   };
 
-  export type MessageHandler = (message: UserMessage | FileMessage) => void;
+  export type MessageHandler = (message: SendableMessageType) => void;
 
   export interface UikitMessageHandler {
     onPending: (handler: MessageHandler) => UikitMessageHandler;
@@ -171,7 +171,7 @@ declare module "SendbirdUIKitGlobal" {
     chainBottom: boolean;
   }
   export interface RenderCustomSeparatorProps {
-    message: AdminMessage | UserMessage | FileMessage;
+    message: CoreMessageType;
   }
 
   export interface ClientUserMessage extends UserMessage, ClientMessage { }
@@ -224,7 +224,7 @@ declare module "SendbirdUIKitGlobal" {
   // ) => Promise<FileMessage>;
   export type GetDeleteMessage = (
     channel: GroupChannel | OpenChannel,
-    message: UserMessage | FileMessage
+    message: SendableMessageType
   ) => Promise<void>;
   export type GetResendUserMessage = (
     channel: GroupChannel | OpenChannel,
@@ -577,8 +577,8 @@ declare module "SendbirdUIKitGlobal" {
     animatedMessage?: number;
     highlightedMessage?: number;
     startingPoint?: number;
-    onBeforeSendUserMessage?(text: string, quotedMessage?: UserMessage | FileMessage): UserMessageCreateParams;
-    onBeforeSendFileMessage?(file: File, quotedMessage?: UserMessage | FileMessage): FileMessageCreateParams;
+    onBeforeSendUserMessage?(text: string, quotedMessage?: SendableMessageType): UserMessageCreateParams;
+    onBeforeSendFileMessage?(file: File, quotedMessage?: SendableMessageType): FileMessageCreateParams;
     onBeforeUpdateUserMessage?(text: string): UserMessageUpdateParams;
     onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
     onSearchClick?(): void;
@@ -590,8 +590,8 @@ declare module "SendbirdUIKitGlobal" {
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
     disableUserProfile?: boolean;
     disableMarkAsRead?: boolean;
-    onReplyInThread?: (props: { message: UserMessage | FileMessage }) => void;
-    onQuoteMessageClick?: (props: { message: UserMessage | FileMessage }) => void;
+    onReplyInThread?: (props: { message: SendableMessageType }) => void;
+    onQuoteMessageClick?: (props: { message: SendableMessageType }) => void;
     onMessageAnimated?: () => void;
     onMessageHighlighted?: () => void;
     scrollBehavior?: 'smooth' | 'auto';
@@ -613,7 +613,8 @@ declare module "SendbirdUIKitGlobal" {
     renderSendMessageIcon?: () => React.ReactElement;
   }
 
-  export type CoreMessageType = AdminMessage | UserMessage | FileMessage;
+  export type CoreMessageType = AdminMessage | UserMessage | FileMessage | MultipleFilesMessage;
+  export type SendableMessageType = UserMessage | FileMessage | MultipleFilesMessage;
 
   export interface MessageStoreInterface {
     allMessages: CoreMessageType[];
@@ -634,7 +635,7 @@ declare module "SendbirdUIKitGlobal" {
     scrollToMessage?(createdAt: number, messageId: number): void;
     messageActionTypes: Record<string, string>;
     quoteMessage: CoreMessageType;
-    setQuoteMessage: React.Dispatch<React.SetStateAction<UserMessage | FileMessage>>;
+    setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType>>;
     initialTimeStamp: number;
     setInitialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
     animatedMessageId: number;
@@ -644,7 +645,7 @@ declare module "SendbirdUIKitGlobal" {
     setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
     setHighLightedMessageId: React.Dispatch<React.SetStateAction<number>>;
     messageInputRef: React.MutableRefObject<HTMLInputElement>,
-    toggleReaction(message: UserMessage | FileMessage, emojiKey: string, isReacted: boolean): void,
+    toggleReaction(message: SendableMessageType, emojiKey: string, isReacted: boolean): void,
   }
 
   export type FileViewerProps = {
@@ -954,7 +955,7 @@ declare module "SendbirdUIKitGlobal" {
 
   export type MessageSearchScrollCallbackReturn = (
     callback: (
-      messages: Array<UserMessage | FileMessage | AdminMessage>,
+      messages: Array<SendableMessageType>,
       /* eslint-disable @typescript-eslint/no-explicit-any*/
       error: any,
     ) => void
@@ -1041,23 +1042,23 @@ declare module "SendbirdUIKitGlobal" {
     toggleReaction: (message, key, isReacted) => void;
     sendMessage: (props: {
       message: string,
-      quoteMessage?: UserMessage | FileMessage,
+      quoteMessage?: SendableMessageType,
       mentionTemplate?: string,
       mentionedUsers?: Array<User>,
     }) => void;
-    sendFileMessage: (file: File, quoteMessage: UserMessage | FileMessage) => void;
-    resendMessage: (failedMessage: UserMessage | FileMessage) => void;
+    sendFileMessage: (file: File, quoteMessage: SendableMessageType) => void;
+    resendMessage: (failedMessage: SendableMessageType) => void;
     updateMessage: (props, callback?: () => void) => void;
-    deleteMessage: (message: UserMessage | FileMessage) => Promise<UserMessage | FileMessage>;
+    deleteMessage: (message: SendableMessageType) => Promise<SendableMessageType>;
     nicknamesMap: Map<string, string>;
   }
 
   export type ThreadProviderProps = {
     children?: React.ReactElement;
     channelUrl: string;
-    message: UserMessage | FileMessage;
+    message: SendableMessageType;
     onHeaderActionClick?: () => void;
-    onMoveToParentMessage?: (props: { message: UserMessage | FileMessage, channel: GroupChannel }) => void;
+    onMoveToParentMessage?: (props: { message: SendableMessageType, channel: GroupChannel }) => void;
     disableUserProfile?: boolean;
     renderUserProfile?: (props: { user: User, close: () => void }) => React.ReactElement;
   }
@@ -1065,7 +1066,7 @@ declare module "SendbirdUIKitGlobal" {
   export interface ThreadContextInitialState {
     currentChannel: GroupChannel;
     allThreadMessages: Array<BaseMessage>;
-    parentMessage: UserMessage | FileMessage;
+    parentMessage: SendableMessageType;
     channelState: ChannelStateTypes;
     parentMessageState: ParentMessageStateTypes;
     threadListState: ThreadListStateTypes;
@@ -1081,7 +1082,7 @@ declare module "SendbirdUIKitGlobal" {
     renderHeader?: () => React.ReactElement;
     renderParentMessageInfo?: () => React.ReactElement;
     renderMessage?: (props: {
-      message: UserMessage | FileMessage,
+      message: SendableMessageType,
       chainTop: boolean,
       chainBottom: boolean,
       hasSeparator: boolean,
@@ -1110,30 +1111,30 @@ declare module "SendbirdUIKitGlobal" {
 
   export interface ParentMessageInfoItemProps {
     className?: string;
-    message: UserMessage | FileMessage;
+    message: SendableMessageType;
     showFileViewer?: (bool: boolean) => void;
   }
 
   export interface ThreadListProps {
     className?: string;
-    allThreadMessages: Array<UserMessage | FileMessage | BaseMessage>;
+    allThreadMessages: Array<SendableMessageType>;
     renderMessage?: (props: {
-      message: UserMessage | FileMessage,
+      message: SendableMessageType,
       chainTop: boolean,
       chainBottom: boolean,
       hasSeparator: boolean,
     }) => React.ReactElement;
-    renderCustomSeparator?: (props: { message: UserMessage | FileMessage }) => React.ReactElement;
+    renderCustomSeparator?: (props: { message: SendableMessageType }) => React.ReactElement;
     scrollRef?: React.RefObject<HTMLDivElement>;
     scrollBottom?: number;
   }
   export interface ThreadListItemProps {
     className?: string;
-    message: UserMessage | FileMessage;
+    message: SendableMessageType;
     chainTop?: boolean;
     chainBottom?: boolean;
     hasSeparator?: boolean;
-    renderCustomSeparator?: (props: { message: UserMessage | FileMessage }) => React.ReactElement;
+    renderCustomSeparator?: (props: { message: SendableMessageType }) => React.ReactElement;
     handleScroll?: () => void;
   }
 
@@ -1290,7 +1291,7 @@ declare module '@sendbird/uikit-react/utils/message/getOutgoingMessageState' {
   }
   export function getOutgoingMessageState(
     channel: GroupChannel | OpenChannel,
-    message: UserMessage | FileMessage,
+    message: SendableMessageType,
   ): OutgoingMessageStates;
 }
 
@@ -1413,10 +1414,10 @@ declare module '@sendbird/uikit-react/Channel/utils/getMessagePartsInfo' {
   import type { FileMessage, UserMessage, AdminMessage } from '@sendbird/chat/message';
   import type { GroupChannel } from '@sendbird/chat/groupChannel';
   export interface GetMessagePartsInfoProps {
-    allMessages: Array<UserMessage | FileMessage | AdminMessage>;
+    allMessages: Array<CoreMessageType>;
     isMessageGroupingEnabled: boolean;
     currentIndex: number;
-    currentMessage: UserMessage | FileMessage | AdminMessage;
+    currentMessage: CoreMessageType;
     currentChannel: GroupChannel;
     replyType: string;
   }
@@ -1435,9 +1436,9 @@ declare module '@sendbird/uikit-react/Channel/utils/compareMessagesForGrouping' 
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
 
   export function compareMessagesForGrouping(
-    prevMessage: UserMessage | FileMessage | AdminMessage,
-    currMessage: UserMessage | FileMessage | AdminMessage,
-    nextMessage: UserMessage | FileMessage | AdminMessage,
+    prevMessage: CoreMessageType,
+    currMessage: CoreMessageType,
+    nextMessage: CoreMessageType,
     currentChannel: GroupChannel,
     replyType: SendbirdUIKitGlobal.ReplyType,
   ): [
@@ -1980,13 +1981,13 @@ declare module '@sendbird/uikit-react/ui/EmojiReactions' {
   interface EmojiReactionsProps {
     className?: string | Array<string>;
     userId: string;
-    message: UserMessage | FileMessage;
+    message: SendableMessageType;
     channel: GroupChannel;
     emojiContainer: EmojiContainer;
     memberNicknamesMap: Map<string, string>;
     spaceFromTrigger?: Record<string, unknown>;
     isByMe?: boolean;
-    toggleReaction?: (message: UserMessage | FileMessage, key: string, byMe: boolean) => void;
+    toggleReaction?: (message: SendableMessageType, key: string, byMe: boolean) => void;
   }
   const EmojiReactions: React.FC<EmojiReactionsProps>;
   export default EmojiReactions;
@@ -2173,9 +2174,9 @@ declare module '@sendbird/uikit-react/ui/MessageContent' {
     showEdit?: (bool: boolean) => void;
     showRemove?: (bool: boolean) => void;
     showFileViewer?: (bool: boolean) => void;
-    resendMessage?: (message: UserMessage | FileMessage) => void;
-    toggleReaction?: (message: UserMessage | FileMessage, reactionKey: string, isReacted: boolean) => void;
-    setQuoteMessage?: (message: UserMessage | FileMessage) => void;
+    resendMessage?: (message: SendableMessageType) => void;
+    toggleReaction?: (message: SendableMessageType, reactionKey: string, isReacted: boolean) => void;
+    setQuoteMessage?: (message: SendableMessageType) => void;
   }
   const MessageContent: React.FC<MessageContentProps>;
   export default MessageContent;
@@ -2275,7 +2276,7 @@ declare module '@sendbird/uikit-react/ui/MessageItemMenu' {
 
   interface MessageItemMenuProps {
     className?: string | Array<string>;
-    message: UserMessage | FileMessage;
+    message: SendableMessageType;
     channel: GroupChannel | OpenChannel;
     isByMe?: boolean;
     disabled?: boolean;
@@ -2283,10 +2284,10 @@ declare module '@sendbird/uikit-react/ui/MessageItemMenu' {
     disableDeleteMessage?: boolean;
     showEdit?: (bool: boolean) => void;
     showRemove?: (bool: boolean) => void;
-    resendMessage?: (message: UserMessage | FileMessage) => void;
-    setQuoteMessage?: (message: UserMessage | FileMessage) => void;
+    resendMessage?: (message: SendableMessageType) => void;
+    setQuoteMessage?: (message: SendableMessageType) => void;
     setSupposedHover?: (bool: boolean) => void;
-    onReplyInThread?: (props: { message: UserMessage | FileMessage }) => void;
+    onReplyInThread?: (props: { message: SendableMessageType }) => void;
     onMoveToParentMessage?: () => void;
   }
   const MessageItemMenu: React.FC<MessageItemMenuProps>;
@@ -2300,11 +2301,11 @@ declare module '@sendbird/uikit-react/ui/MessageItemReactionMenu' {
 
   interface MessageItemReactionMenuProps {
     className?: string | Array<string>;
-    message: UserMessage | FileMessage;
+    message: SendableMessageType;
     userId: string;
     spaceFromTrigger?: Record<string, unknown>;
     emojiContainer?: EmojiContainer;
-    toggleReaction?: (message: UserMessage | FileMessage, reactionKey: string, isReacted: boolean) => void;
+    toggleReaction?: (message: SendableMessageType, reactionKey: string, isReacted: boolean) => void;
     setSupposedHover?: (bool: boolean) => void;
   }
   const MessageItemReactionMenu: React.FC<MessageItemReactionMenuProps>;
@@ -2345,7 +2346,7 @@ declare module '@sendbird/uikit-react/ui/MessageStatus' {
 
   interface MessageStatusProps {
     className?: string;
-    message: UserMessage | FileMessage;
+    message: SendableMessageType;
     channel: GroupChannel;
     isDateSeparatorConsidered?: boolean;
   }
@@ -2497,7 +2498,7 @@ declare module '@sendbird/uikit-react/ui/PlaceHolder' {
 declare module '@sendbird/uikit-react/ui/QuoteMessage' {
   import type { UserMessage, FileMessage } from '@sendbird/chat/message';
   interface QuoteMessageProps {
-    message?: UserMessage | FileMessage;
+    message?: SendableMessageType;
     userId?: string;
     isByMe?: boolean;
     className?: string | Array<string>;

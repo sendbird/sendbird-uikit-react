@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
-import { FileMessage, ThreadedMessageListParams, UserMessage } from '@sendbird/chat/message';
+import { ThreadedMessageListParams } from '@sendbird/chat/message';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import { NEXT_THREADS_FETCH_SIZE, PREV_THREADS_FETCH_SIZE } from '../../consts';
+import { SendableMessageType } from '../../../../utils';
 
 interface DynamicProps {
   sdkInit: boolean;
-  parentMessage: UserMessage | FileMessage;
-  anchorMessage?: UserMessage | FileMessage;
+  parentMessage: SendableMessageType;
+  anchorMessage?: SendableMessageType;
   isReactionEnabled?: boolean;
 }
 

@@ -1,7 +1,7 @@
 import React, { useReducer, useMemo, useEffect, ReactElement } from 'react';
 import { User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { BaseMessage, FileMessage, FileMessageCreateParams, UserMessage } from '@sendbird/chat/message';
+import { BaseMessage, FileMessageCreateParams } from '@sendbird/chat/message';
 
 import { getNicknamesMapFromMembers, getParentMessageFrom } from './utils';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
@@ -27,14 +27,15 @@ import useToggleReactionCallback from './hooks/useToggleReactionsCallback';
 import useSendUserMessageCallback, { SendMessageParams } from './hooks/useSendUserMessageCallback';
 import useResendMessageCallback from './hooks/useResendMessageCallback';
 import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
+import { SendableMessageType } from '../../../utils';
 
 export type ThreadProviderProps = {
   children?: React.ReactElement;
   channelUrl: string;
-  message: UserMessage | FileMessage | null;
+  message: SendableMessageType | null;
   onHeaderActionClick?: () => void;
-  onMoveToParentMessage?: (props: { message: UserMessage | FileMessage, channel: GroupChannel }) => void;
-  onBeforeSendVoiceMessage?: (file: File, quotedMessage?: UserMessage | FileMessage) => FileMessageCreateParams;
+  onMoveToParentMessage?: (props: { message: SendableMessageType, channel: GroupChannel }) => void;
+  onBeforeSendVoiceMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
   // User Profile
   disableUserProfile?: boolean;
   renderUserProfile?: (props: { user: User, close: () => void }) => ReactElement;
@@ -45,11 +46,11 @@ export interface ThreadProviderInterface extends ThreadProviderProps, ThreadCont
   fetchNextThreads: (callback?: (messages?: Array<BaseMessage>) => void) => void;
   toggleReaction: (message, key, isReacted) => void;
   sendMessage: (props: SendMessageParams) => void;
-  sendFileMessage: (file: File, quoteMessage: UserMessage | FileMessage) => void;
-  sendVoiceMessage: (file: File, duration: number, quoteMessage?: UserMessage | FileMessage) => void;
-  resendMessage: (failedMessage: UserMessage | FileMessage) => void;
+  sendFileMessage: (file: File, quoteMessage: SendableMessageType) => void;
+  sendVoiceMessage: (file: File, duration: number, quoteMessage?: SendableMessageType) => void;
+  resendMessage: (failedMessage: SendableMessageType) => void;
   updateMessage: (props, callback?: () => void) => void;
-  deleteMessage: (message: UserMessage | FileMessage) => Promise<UserMessage | FileMessage>;
+  deleteMessage: (message: SendableMessageType) => Promise<SendableMessageType>;
   nicknamesMap: Map<string, string>;
 }
 const ThreadContext = React.createContext<ThreadProviderInterface | null>(null);

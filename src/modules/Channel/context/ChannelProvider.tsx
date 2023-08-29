@@ -20,7 +20,7 @@ import type { SendbirdError, User } from '@sendbird/chat';
 import { ReplyType, RenderUserProfileProps, Nullable } from '../../../types';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
-import { CoreMessageType } from '../../../utils';
+import { CoreMessageType, SendableMessageType } from '../../../utils';
 import { ThreadReplySelectType } from './const';
 
 import * as utils from './utils';
@@ -77,11 +77,11 @@ export type ChannelContextProps = {
   animatedMessage?: number | null;
   highlightedMessage?: number | null;
   startingPoint?: number | null;
-  onBeforeSendUserMessage?(text: string, quotedMessage?: UserMessage | FileMessage): UserMessageCreateParams;
-  onBeforeSendFileMessage?(file: File, quotedMessage?: UserMessage | FileMessage): FileMessageCreateParams;
+  onBeforeSendUserMessage?(text: string, quotedMessage?: SendableMessageType): UserMessageCreateParams;
+  onBeforeSendFileMessage?(file: File, quotedMessage?: SendableMessageType): FileMessageCreateParams;
   onBeforeUpdateUserMessage?(text: string): UserMessageUpdateParams;
   onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
-  onBeforeSendVoiceMessage?: (file: File, quotedMessage?: UserMessage | FileMessage) => FileMessageCreateParams;
+  onBeforeSendVoiceMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
   onSearchClick?(): void;
   onBackClick?(): void;
   replyType?: ReplyType;
@@ -91,8 +91,8 @@ export type ChannelContextProps = {
   filterMessageList?(messages: BaseMessage): boolean;
   disableUserProfile?: boolean;
   disableMarkAsRead?: boolean;
-  onReplyInThread?: (props: { message: UserMessage | FileMessage }) => void;
-  onQuoteMessageClick?: (props: { message: UserMessage | FileMessage }) => void;
+  onReplyInThread?: (props: { message: SendableMessageType }) => void;
+  onQuoteMessageClick?: (props: { message: SendableMessageType }) => void;
   onMessageAnimated?: () => void;
   onMessageHighlighted?: () => void;
   scrollBehavior?: 'smooth' | 'auto';
@@ -116,7 +116,7 @@ interface MessageStoreInterface {
 
 interface SendMessageParams {
   message: string;
-  quoteMessage?: UserMessage | FileMessage;
+  quoteMessage?: SendableMessageType;
   // mentionedUserIds?: Array<string>;
   mentionedUsers?: Array<User>;
   mentionTemplate?: string;
@@ -133,8 +133,8 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   scrollToMessage?(createdAt: number, messageId: number): void;
   messageActionTypes: Record<string, string>;
   messagesDispatcher: CustomUseReducerDispatcher;
-  quoteMessage: UserMessage | FileMessage;
-  setQuoteMessage: React.Dispatch<React.SetStateAction<UserMessage | FileMessage>>;
+  quoteMessage: SendableMessageType;
+  setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType>>;
   initialTimeStamp: number;
   setInitialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
   animatedMessageId: number;
@@ -149,14 +149,14 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   messageInputRef: React.MutableRefObject<HTMLInputElement>,
   deleteMessage(message: CoreMessageType): Promise<CoreMessageType>,
   updateMessage(props: UpdateMessageProps, callback?: (err: SendbirdError, message: UserMessage) => void): Promise<CoreMessageType>,
-  resendMessage(failedMessage: UserMessage | FileMessage): Promise<UserMessage | FileMessage>,
+  resendMessage(failedMessage: SendableMessageType): Promise<SendableMessageType>,
   // TODO: Good to change interface to using params / This part need refactoring
   sendMessage(props: SendMessageParams): Promise<UserMessage>,
-  sendFileMessage(file: File, quoteMessage: UserMessage | FileMessage): Promise<FileMessage>,
-  sendVoiceMessage: (file: File, duration: number, quoteMessage?: UserMessage | FileMessage) => void,
+  sendFileMessage(file: File, quoteMessage: SendableMessageType): Promise<FileMessage>,
+  sendVoiceMessage: (file: File, duration: number, quoteMessage?: SendableMessageType) => void,
   // sendMessage(messageParams: SendBird.UserMessageParams): Promise<SendBird.UserMessage>,
   // sendFileMessage(messageParams: SendBird.FileMessageParams): Promise<SendBird.FileMessage>,
-  toggleReaction(message: UserMessage | FileMessage, emojiKey: string, isReacted: boolean): void,
+  toggleReaction(message: SendableMessageType, emojiKey: string, isReacted: boolean): void,
   renderUserMentionItem?: (props: { user: User }) => JSX.Element;
 }
 
@@ -221,7 +221,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     setHighLightedMessageId(highlightedMessage);
   }, [highlightedMessage]);
   const userFilledMessageListQuery = queries?.messageListParams;
-  const [quoteMessage, setQuoteMessage] = useState<UserMessage | FileMessage>(null);
+  const [quoteMessage, setQuoteMessage] = useState<SendableMessageType>(null);
 
   const [messagesStore, messagesDispatcher] = useReducer(
     messagesReducer,

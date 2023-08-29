@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 import type { AppLayoutProps } from './types';
 
@@ -8,6 +7,7 @@ import { DesktopLayout } from './DesktopLayout';
 import { MobileLayout } from './MobileLayout';
 
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
+import { SendableMessageType } from '../../utils';
 
 export const AppLayout: React.FC<AppLayoutProps> = (
   props: AppLayoutProps,
@@ -25,7 +25,7 @@ export const AppLayout: React.FC<AppLayoutProps> = (
   const globalConfigs = globalStore?.config;
 
   const [showThread, setShowThread] = useState(false);
-  const [threadTargetMessage, setThreadTargetMessage] = useState<UserMessage | FileMessage | null>(null);
+  const [threadTargetMessage, setThreadTargetMessage] = useState<SendableMessageType | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [highlightedMessage, setHighlightedMessage] = useState<number | null>(null);

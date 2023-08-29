@@ -2,16 +2,12 @@ import { useEffect } from 'react';
 
 import type { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 import type { MessageSearchQueryParams } from '@sendbird/chat/lib/__definition';
-import type {
-  AdminMessage,
-  BaseMessage,
-  FileMessage,
-  UserMessage,
-} from '@sendbird/chat/message';
+
 import type { SendbirdError } from '@sendbird/chat';
 
 import type { Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
+import { CoreMessageType } from '../../../../utils';
 
 enum MessageSearchOrder {
   SCORE = 'score',
@@ -24,7 +20,7 @@ interface MainProps {
   requestString?: string;
   messageSearchQuery?: MessageSearchQueryParams;
   onResultLoaded?: (
-    messages?: Array<BaseMessage | UserMessage | FileMessage | AdminMessage>,
+    messages?: Array<CoreMessageType>,
     error?: SendbirdError,
   ) => void;
   retryCount: number;

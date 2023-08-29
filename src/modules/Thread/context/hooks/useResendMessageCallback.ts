@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import topics from '../../../../lib/pubSub/topics';
+import { SendableMessageType } from '../../../../utils';
 
 interface DynamicProps {
   currentChannel: GroupChannel;
@@ -20,9 +21,9 @@ export default function useResendMessageCallback({
   logger,
   pubSub,
   threadDispatcher,
-}: StaticProps): (failedMessage: UserMessage | FileMessage) => void {
-  return useCallback((failedMessage: UserMessage | FileMessage) => {
-    if ((failedMessage as UserMessage | FileMessage)?.isResendable) {
+}: StaticProps): (failedMessage: SendableMessageType) => void {
+  return useCallback((failedMessage: SendableMessageType) => {
+    if ((failedMessage as SendableMessageType)?.isResendable) {
       failedMessage.sendingStatus = SendingStatus.PENDING;
       logger.info('Thread | useResendMessageCallback: Resending failedMessage start.', failedMessage);
       threadDispatcher({

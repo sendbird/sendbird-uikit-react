@@ -10,7 +10,7 @@ import {
   isImageMessage,
   isUserMessage,
   isVideoMessage,
-  isVoiceMessage,
+  isVoiceMessage, SendableMessageType,
   UIKitMessageTypes,
 } from '../../utils';
 
@@ -22,8 +22,8 @@ import QuoteMessageThumbnail from './QuoteMessageThumbnail';
 
 interface Props {
   className?: string | Array<string>;
-  replyingMessage: UserMessage | FileMessage;
-  onClose?: (message: UserMessage | FileMessage) => void;
+  replyingMessage: SendableMessageType;
+  onClose?: (message: SendableMessageType) => void;
 }
 
 export default function QuoteMessageInput({
@@ -33,7 +33,7 @@ export default function QuoteMessageInput({
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   const fileMessage = replyingMessage as FileMessage;
-  const sender = (replyingMessage as UserMessage | FileMessage)?.sender;
+  const sender = (replyingMessage as SendableMessageType)?.sender;
   const displayFileIcon = isFileMessage(replyingMessage) && !isVoiceMessage(replyingMessage as FileMessage);
 
   return (

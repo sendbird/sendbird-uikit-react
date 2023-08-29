@@ -1,12 +1,13 @@
 import type React from 'react';
 import type { User } from '@sendbird/chat';
-import type { AdminMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
+import type { UserMessage } from '@sendbird/chat/message';
 import type { OpenChannel, ParticipantListQuery } from '@sendbird/chat/openChannel';
 import format from 'date-fns/format';
 
 import { Logger } from '../../../lib/SendbirdState';
+import { CoreMessageType, SendableMessageType } from '../../../utils';
 
-export const getMessageCreatedAt = (message: UserMessage | FileMessage): string => format(message.createdAt, 'p');
+export const getMessageCreatedAt = (message: SendableMessageType): string => format(message.createdAt, 'p');
 
 export const shouldFetchMore = (messageLength: number, maxMessages: number): boolean => {
   if (typeof maxMessages !== 'number') {
@@ -40,8 +41,8 @@ export const scrollIntoLast = (initialTry = 0, scrollRef: React.RefObject<HTMLEl
 };
 
 export const isSameGroup = (
-  message: AdminMessage | UserMessage | FileMessage,
-  comparingMessage: AdminMessage | UserMessage | FileMessage,
+  message: CoreMessageType,
+  comparingMessage: CoreMessageType,
 ): boolean => {
   if (!(
     message
@@ -50,12 +51,12 @@ export const isSameGroup = (
     && message.messageType !== 'admin'
     && comparingMessage?.messageType
     && comparingMessage.messageType !== 'admin'
-    && (message as UserMessage | FileMessage)?.sender
-    && (comparingMessage as UserMessage | FileMessage)?.sender
+    && (message as SendableMessageType)?.sender
+    && (comparingMessage as SendableMessageType)?.sender
     && message?.createdAt
     && comparingMessage?.createdAt
-    && (message as UserMessage | FileMessage)?.sender?.userId
-    && (comparingMessage as UserMessage | FileMessage)?.sender?.userId
+    && (message as SendableMessageType)?.sender?.userId
+    && (comparingMessage as SendableMessageType)?.sender?.userId
   )) {
     return false;
   }
@@ -66,15 +67,15 @@ export const isSameGroup = (
     message_?.sendingStatus === comparingMessage_?.sendingStatus
     && message_?.sender?.userId === comparingMessage_?.sender?.userId
     && (
-      getMessageCreatedAt(message as UserMessage | FileMessage) === getMessageCreatedAt(comparingMessage as UserMessage | FileMessage)
+      getMessageCreatedAt(message as SendableMessageType) === getMessageCreatedAt(comparingMessage as SendableMessageType)
     )
   );
 };
 
 export const compareMessagesForGrouping = (
-  prevMessage: AdminMessage | UserMessage | FileMessage,
-  currMessage: AdminMessage | UserMessage | FileMessage,
-  nextMessage: AdminMessage | UserMessage | FileMessage,
+  prevMessage: CoreMessageType,
+  currMessage: CoreMessageType,
+  nextMessage: CoreMessageType,
 ): [boolean, boolean] => (
   [
     isSameGroup(prevMessage, currMessage),

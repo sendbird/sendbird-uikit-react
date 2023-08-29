@@ -11,7 +11,6 @@ import type {
   SendbirdOpenChat,
 } from '@sendbird/chat/openChannel';
 import type {
-  AdminMessage,
   FileMessage,
   FileMessageCreateParams,
   UserMessage,
@@ -30,6 +29,7 @@ import { PartialDeep } from '../utils/typeHelpers/partialDeep';
 import { SBUConfig } from '@sendbird/uikit-tools';
 
 import { Module } from '@sendbird/chat/lib/__definition';
+import { CoreMessageType } from '../utils';
 
 // note to SDK team:
 // using enum inside .d.ts won’t work for jest, but const enum will work.
@@ -194,7 +194,7 @@ type GetUpdateUserMessage = (
 // ) => Promise<FileMessage>;
 type GetDeleteMessage = (
   channel: GroupChannel | OpenChannel,
-  message: AdminMessage | UserMessage | FileMessage
+  message: CoreMessageType
 ) => Promise<void>;
 type GetResendUserMessage = (
   channel: GroupChannel | OpenChannel,

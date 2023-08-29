@@ -1,7 +1,8 @@
 import format from 'date-fns/format';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { BaseMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
+import { BaseMessage } from '@sendbird/chat/message';
 import { getOutgoingMessageState, OutgoingMessageStates } from '../../../utils/exports/getOutgoingMessageState';
+import { SendableMessageType } from '../../../utils';
 
 export const getNicknamesMapFromMembers = (members = []): Map<string, string> => {
   const nicknamesMap = new Map();
@@ -12,7 +13,7 @@ export const getNicknamesMapFromMembers = (members = []): Map<string, string> =>
   return nicknamesMap;
 };
 
-export const getParentMessageFrom = (message: UserMessage | FileMessage | null): UserMessage | FileMessage | BaseMessage | null => {
+export const getParentMessageFrom = (message: SendableMessageType | null): SendableMessageType | BaseMessage => {
   if (!message) {
     return null;
   }
@@ -25,7 +26,7 @@ export const getParentMessageFrom = (message: UserMessage | FileMessage | null):
   return null;
 };
 
-export const isParentMessage = (message: UserMessage | FileMessage): boolean => {
+export const isParentMessage = (message: SendableMessageType): boolean => {
   return (
     message?.parentMessage === null
     && typeof message?.parentMessageId === 'number'
@@ -33,7 +34,7 @@ export const isParentMessage = (message: UserMessage | FileMessage): boolean => 
   );
 };
 
-export const isThreadMessage = (message: UserMessage | FileMessage): boolean => {
+export const isThreadMessage = (message: SendableMessageType): boolean => {
   return (
     message?.parentMessage !== null
     && typeof message?.parentMessageId === 'number'
@@ -57,13 +58,13 @@ export function compareIds(a: number | string, b: number | string): boolean {
   return aString === bString;
 }
 
-export const getMessageCreatedAt = (message: UserMessage | FileMessage): string => format(message.createdAt, 'p');
-export const isReadMessage = (channel: GroupChannel, message: UserMessage | FileMessage): boolean => (
+export const getMessageCreatedAt = (message: SendableMessageType): string => format(message.createdAt, 'p');
+export const isReadMessage = (channel: GroupChannel, message: SendableMessageType): boolean => (
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
 );
 export const isSameGroup = (
-  message: UserMessage | FileMessage,
-  comparingMessage: UserMessage | FileMessage,
+  message: SendableMessageType,
+  comparingMessage: SendableMessageType,
   currentChannel: GroupChannel,
 ): boolean => {
   if (!(message
@@ -90,9 +91,9 @@ export const isSameGroup = (
 };
 
 export const compareMessagesForGrouping = (
-  prevMessage: UserMessage | FileMessage,
-  currMessage: UserMessage | FileMessage,
-  nextMessage: UserMessage | FileMessage,
+  prevMessage: SendableMessageType,
+  currMessage: SendableMessageType,
+  nextMessage: SendableMessageType,
   currentChannel: GroupChannel,
   replyType: string,
 ): [boolean, boolean] => {

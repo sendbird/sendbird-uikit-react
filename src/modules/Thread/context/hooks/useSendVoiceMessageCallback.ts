@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { FileMessage, FileMessageCreateParams, MessageMetaArray, UserMessage } from '@sendbird/chat/message';
+import { FileMessage, FileMessageCreateParams, MessageMetaArray } from '@sendbird/chat/message';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import topics from '../../../../lib/pubSub/topics';
@@ -12,17 +12,18 @@ import {
   VOICE_MESSAGE_FILE_NAME,
   VOICE_MESSAGE_MIME_TYPE,
 } from '../../../../utils/consts';
+import { SendableMessageType } from '../../../../utils';
 
 interface DynamicParams {
   currentChannel: GroupChannel;
-  onBeforeSendVoiceMessage?: (file: File, quoteMessage?: UserMessage | FileMessage) => FileMessageCreateParams;
+  onBeforeSendVoiceMessage?: (file: File, quoteMessage?: SendableMessageType) => FileMessageCreateParams;
 }
 interface StaticParams {
   logger: Logger;
   pubSub: any;
   threadDispatcher: CustomUseReducerDispatcher;
 }
-type FuncType = (file: File, duration: number, quoteMessage: UserMessage | FileMessage) => void;
+type FuncType = (file: File, duration: number, quoteMessage: SendableMessageType) => void;
 interface LocalFileMessage extends FileMessage {
   localUrl: string;
   file: File;
@@ -37,7 +38,7 @@ export const useSendVoiceMessageCallback = ({
   pubSub,
   threadDispatcher,
 }: StaticParams): FuncType => {
-  const sendMessage = useCallback((file: File, duration: number, quoteMessage: UserMessage | FileMessage) => {
+  const sendMessage = useCallback((file: File, duration: number, quoteMessage: SendableMessageType) => {
     const messageParams: FileMessageCreateParams = (
       onBeforeSendVoiceMessage
       && typeof onBeforeSendVoiceMessage === 'function'

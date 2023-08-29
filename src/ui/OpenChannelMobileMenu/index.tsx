@@ -12,9 +12,10 @@ import {
 } from '../../utils/openChannelUtils';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../lib/LocalizationContext';
+import { SendableMessageType } from '../../utils';
 
 type Props = {
-  message: UserMessage | FileMessage;
+  message: SendableMessageType;
   parentRef: React.RefObject<HTMLDivElement>;
   resendMessage?(): void;
   showRemove?(): void;

@@ -1,6 +1,6 @@
 import './index.scss';
 import React, { ReactElement, useRef } from 'react';
-import type { FileMessage, Reaction, UserMessage } from '@sendbird/chat/message';
+import type { Reaction } from '@sendbird/chat/message';
 import type { Emoji, EmojiContainer } from '@sendbird/chat';
 
 import ContextMenu, { EmojiListItems } from '../ContextMenu';
@@ -8,16 +8,16 @@ import Icon, { IconTypes, IconColors } from '../Icon';
 import IconButton from '../IconButton';
 import ImageRenderer from '../ImageRenderer';
 import ReactionButton from '../ReactionButton';
-import { getClassName, getEmojiListAll, isPendingMessage, isFailedMessage } from '../../utils';
+import { getClassName, getEmojiListAll, isPendingMessage, isFailedMessage, SendableMessageType } from '../../utils';
 import { SpaceFromTriggerType } from '../../types';
 
 interface Props {
   className?: string | Array<string>;
-  message: UserMessage | FileMessage;
+  message: SendableMessageType;
   userId: string;
   spaceFromTrigger?: SpaceFromTriggerType;
   emojiContainer?: EmojiContainer;
-  toggleReaction?: (message: UserMessage | FileMessage, reactionKey: string, isReacted: boolean) => void;
+  toggleReaction?: (message: SendableMessageType, reactionKey: string, isReacted: boolean) => void;
   setSupposedHover?: (bool: boolean) => void;
 }
 

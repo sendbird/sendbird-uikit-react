@@ -1,11 +1,12 @@
 import { useCallback } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { FileMessage, UserMessage, UserMessageCreateParams } from '@sendbird/chat/message';
+import { UserMessageCreateParams } from '@sendbird/chat/message';
 import { User } from '@sendbird/chat';
 
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import topics from '../../../../lib/pubSub/topics';
+import { SendableMessageType } from '../../../../utils';
 
 interface DynamicProps {
   isMentionEnabled: boolean;
@@ -19,7 +20,7 @@ interface StaticProps {
 
 export type SendMessageParams = {
   message: string;
-  quoteMessage?: UserMessage | FileMessage;
+  quoteMessage?: SendableMessageType;
   mentionTemplate?: string;
   mentionedUsers?: Array<User>;
 };

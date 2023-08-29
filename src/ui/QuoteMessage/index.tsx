@@ -16,13 +16,14 @@ import {
   isUserMessage,
   isVideo,
   isVoiceMessage,
+  SendableMessageType,
   truncateString,
   UIKitMessageTypes,
 } from '../../utils';
 
 interface Props {
   className?: string | Array<string>;
-  message?: UserMessage | FileMessage;
+  message?: SendableMessageType;
   userId?: string;
   isByMe?: boolean;
   isUnavailable?: boolean;
@@ -40,7 +41,7 @@ export default function QuoteMessage({
   const { stringSet } = useContext(LocalizationContext);
 
   const { parentMessage } = message;
-  const parentMessageSender = (parentMessage as UserMessage | FileMessage)?.sender;
+  const parentMessageSender = (parentMessage as SendableMessageType)?.sender;
   const parentMessageSenderNickname = (userId === parentMessageSender?.userId) ? stringSet.QUOTED_MESSAGE__CURRENT_USER : parentMessageSender?.nickname;
   const parentMessageUrl = (parentMessage as FileMessage)?.url || '';
   const parentMessageType = (parentMessage as FileMessage)?.type;

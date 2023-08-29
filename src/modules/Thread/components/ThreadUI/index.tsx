@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import { FileMessage, UserMessage } from '@sendbird/chat/message';
 
 import './index.scss';
 
@@ -18,12 +17,13 @@ import useMemorizedThreadList from './useMemorizedThreadList';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { isAboutSame } from '../../context/utils';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
+import { SendableMessageType } from '../../../../utils';
 
 export interface ThreadUIProps {
   renderHeader?: () => React.ReactElement;
   renderParentMessageInfo?: () => React.ReactElement;
   renderMessage?: (props: {
-    message: UserMessage | FileMessage,
+    message: SendableMessageType,
     chainTop: boolean,
     chainBottom: boolean,
     hasSeparator: boolean,

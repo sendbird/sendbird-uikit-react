@@ -2,10 +2,10 @@ import React, { ReactElement, useMemo } from 'react';
 
 import { ParentMessageStateTypes } from '../../types';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
-import { FileMessage, UserMessage } from '@sendbird/chat/message';
+import { SendableMessageType } from '../../../../utils';
 
 export interface UseMemorizedParentMessageInfoProps {
-  parentMessage: UserMessage | FileMessage;
+  parentMessage: SendableMessageType;
   parentMessageState: ParentMessageStateTypes;
   renderParentMessageInfo?: () => React.ReactElement;
   renderParentMessageInfoPlaceholder?: (type: ParentMessageStateTypes) => React.ReactElement;

@@ -1,16 +1,17 @@
 import { EmojiContainer } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { BaseMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
+import { BaseMessage } from '@sendbird/chat/message';
 import {
   ChannelStateTypes,
   ParentMessageStateTypes,
   ThreadListStateTypes,
 } from '../../types';
+import { SendableMessageType } from '../../../../utils';
 
 export interface ThreadContextInitialState {
   currentChannel: GroupChannel;
   allThreadMessages: Array<BaseMessage>;
-  parentMessage: UserMessage | FileMessage;
+  parentMessage: SendableMessageType;
   channelState: ChannelStateTypes;
   parentMessageState: ParentMessageStateTypes;
   threadListState: ThreadListStateTypes;

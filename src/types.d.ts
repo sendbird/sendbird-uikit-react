@@ -3,8 +3,10 @@ import type { Member } from '@sendbird/chat/groupChannel';
 import type {
   AdminMessage,
   FileMessage,
+  MultipleFilesMessage,
   UserMessage,
 } from '@sendbird/chat/message';
+import { CoreMessageType } from './utils';
 
 export type ReplyType = 'NONE' | 'QUOTE_REPLY' | 'THREAD';
 export type Nullable<T> = T | null;
@@ -45,17 +47,18 @@ export interface ClientMessage {
 }
 
 export interface RenderMessageProps {
-  message: UserMessage | FileMessage | AdminMessage;
+  message: CoreMessageType;
   chainTop: boolean;
   chainBottom: boolean;
 }
 
 export interface RenderCustomSeparatorProps {
-  message: AdminMessage | UserMessage | FileMessage;
+  message: CoreMessageType;
 }
 
 export interface ClientUserMessage extends UserMessage, ClientMessage { }
 export interface ClientFileMessage extends FileMessage, ClientMessage { }
 export interface ClientAdminMessage extends AdminMessage, ClientMessage { }
-export type EveryMessage = ClientUserMessage | ClientFileMessage | ClientAdminMessage;
-export type ClientSentMessages = ClientUserMessage | ClientFileMessage;
+export interface ClientMultipleFilesMessage extends MultipleFilesMessage, ClientMessage { }
+export type EveryMessage = ClientUserMessage | ClientFileMessage | ClientMultipleFilesMessage | ClientAdminMessage;
+export type ClientSentMessages = ClientUserMessage | ClientFileMessage | ClientMultipleFilesMessage;

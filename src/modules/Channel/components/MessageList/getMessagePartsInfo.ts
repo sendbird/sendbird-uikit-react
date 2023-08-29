@@ -1,15 +1,15 @@
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { AdminMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
 import isSameDay from 'date-fns/isSameDay';
 
 import { compareMessagesForGrouping } from '../../context/compareMessagesForGrouping';
 import { ReplyType } from '../../../../types';
+import { CoreMessageType } from '../../../../utils';
 
 export interface GetMessagePartsInfoProps {
-  allMessages: Array<UserMessage | FileMessage | AdminMessage>;
+  allMessages: Array<CoreMessageType>;
   isMessageGroupingEnabled: boolean;
   currentIndex: number;
-  currentMessage: UserMessage | FileMessage | AdminMessage;
+  currentMessage: CoreMessageType;
   currentChannel: GroupChannel;
   replyType: string;
 }

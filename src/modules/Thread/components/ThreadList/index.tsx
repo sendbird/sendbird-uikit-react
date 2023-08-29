@@ -1,5 +1,5 @@
 import React, { RefObject, useMemo } from 'react';
-import { BaseMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
+import { UserMessage } from '@sendbird/chat/message';
 
 import './index.scss';
 import ThreadListItem from './ThreadListItem';
@@ -8,17 +8,18 @@ import { compareMessagesForGrouping } from '../../context/utils';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { isSameDay } from 'date-fns';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
+import { SendableMessageType } from '../../../../utils';
 
 export interface ThreadListProps {
   className?: string;
-  allThreadMessages: Array<UserMessage | FileMessage | BaseMessage>;
+  allThreadMessages: Array<SendableMessageType>;
   renderMessage?: (props: {
-    message: UserMessage | FileMessage,
+    message: SendableMessageType,
     chainTop: boolean,
     chainBottom: boolean,
     hasSeparator: boolean,
   }) => React.ReactElement;
-  renderCustomSeparator?: (props: { message: UserMessage | FileMessage }) => React.ReactElement;
+  renderCustomSeparator?: (props: { message: SendableMessageType }) => React.ReactElement;
   scrollRef?: RefObject<HTMLDivElement>;
   scrollBottom?: number;
 }
@@ -46,7 +47,7 @@ export default function ThreadList({
 
     if (typeof renderMessage === 'function') {
       return renderMessage({
-        message: message as UserMessage | FileMessage,
+        message: message as SendableMessageType,
         chainTop,
         chainBottom,
         hasSeparator,
@@ -64,9 +65,9 @@ export default function ThreadList({
         // eslint-disable-next-line no-constant-condition
         const [chainTop, chainBottom] = true// isMessageGroupingEnabled
           ? compareMessagesForGrouping(
-            prevMessage as UserMessage | FileMessage,
-            message as UserMessage | FileMessage,
-            nextMessage as UserMessage | FileMessage,
+            prevMessage as SendableMessageType,
+            message as SendableMessageType,
+            nextMessage as SendableMessageType,
             currentChannel,
             replyType,
           )
@@ -95,7 +96,7 @@ export default function ThreadList({
                 hasSeparator,
               }) || (
                 <ThreadListItem
-                  message={message as UserMessage | FileMessage}
+                  message={message as SendableMessageType}
                   chainTop={chainTop}
                   chainBottom={chainBottom}
                   hasSeparator={hasSeparator}

@@ -1,6 +1,6 @@
 import './index.scss';
 import React, { ReactElement, useContext, useRef } from 'react';
-import type { FileMessage, UserMessage } from '@sendbird/chat/message';
+import type { UserMessage } from '@sendbird/chat/message';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
 
@@ -13,15 +13,15 @@ import {
   isUserMessage,
   isSentMessage,
   isFailedMessage,
-  isPendingMessage,
+  isPendingMessage, SendableMessageType,
 } from '../../utils/index';
 import { LocalizationContext } from '../../lib/LocalizationContext';
-import { ReplyType } from '../../index';
 import { Role } from '../../lib/types';
+import { ReplyType } from '../../types';
 
 interface Props {
   className?: string | Array<string>;
-  message: UserMessage | FileMessage;
+  message: SendableMessageType;
   channel: GroupChannel | OpenChannel;
   isByMe?: boolean;
   disabled?: boolean;
@@ -29,10 +29,10 @@ interface Props {
   disableDeleteMessage?: boolean;
   showEdit?: (bool: boolean) => void;
   showRemove?: (bool: boolean) => void;
-  resendMessage?: (message: UserMessage | FileMessage) => void;
-  setQuoteMessage?: (message: UserMessage | FileMessage) => void;
+  resendMessage?: (message: SendableMessageType) => void;
+  setQuoteMessage?: (message: SendableMessageType) => void;
   setSupposedHover?: (bool: boolean) => void;
-  onReplyInThread?: (props: { message: UserMessage | FileMessage }) => void;
+  onReplyInThread?: (props: { message: SendableMessageType }) => void;
   onMoveToParentMessage?: () => void;
 }
 

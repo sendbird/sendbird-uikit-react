@@ -1,10 +1,17 @@
 import SendbirdChat, { Emoji, EmojiCategory, EmojiContainer, User } from '@sendbird/chat';
 import { GroupChannel, Member, SendbirdGroupChat, GroupChannelListQuery } from '@sendbird/chat/groupChannel';
-import { AdminMessage, FileMessage, MessageListParams, Reaction, UserMessage } from '@sendbird/chat/message';
+import {
+  AdminMessage,
+  FileMessage,
+  MessageListParams,
+  MultipleFilesMessage,
+  Reaction,
+  UserMessage,
+} from '@sendbird/chat/message';
 import { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
 import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOutgoingMessageState';
-import { EveryMessage, Nullable } from '../types';
+import { Nullable } from '../types';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 const SUPPORTED_MIMES = {
@@ -42,6 +49,7 @@ export interface UIKitMessageTypes {
   ADMIN: 'ADMIN',
   TEXT: 'TEXT',
   FILE: 'FILE',
+  MULTIPLE_FILES: 'MULTIPLE_FILES',
   THUMBNAIL: 'THUMBNAIL',
   OG: 'OG',
   UNKNOWN: 'UNKNOWN',
@@ -50,6 +58,7 @@ export const UIKitMessageTypes: UIKitMessageTypes = {
   ADMIN: 'ADMIN',
   TEXT: 'TEXT',
   FILE: 'FILE',
+  MULTIPLE_FILES: 'MULTIPLE_FILES',
   THUMBNAIL: 'THUMBNAIL',
   OG: 'OG',
   UNKNOWN: 'UNKNOWN',
@@ -86,7 +95,8 @@ const SendingMessageStatus: SendingMessageStatus = {
   PENDING: 'pending',
 };
 
-export type CoreMessageType = EveryMessage;
+export type CoreMessageType = AdminMessage | UserMessage | FileMessage | MultipleFilesMessage;
+export type SendableMessageType = UserMessage | FileMessage | MultipleFilesMessage;
 
 export const isTextuallyNull = (text: string): boolean => {
   if (text === '' || text === null) {
@@ -110,51 +120,75 @@ export const getUIKitFileType = (type: string): string => {
   return UIKitFileTypes.OTHERS;
 };
 
-export const isSentMessage = (message: UserMessage | FileMessage): boolean => (message.sendingStatus === 'succeeded');
-export const isDeliveredMessage = (channel: GroupChannel, message: UserMessage | FileMessage): boolean => (
+export const isSentMessage = (
+  message: SendableMessageType,
+): boolean => (message.sendingStatus === 'succeeded');
+export const isDeliveredMessage = (
+  channel: GroupChannel,
+  message: SendableMessageType,
+): boolean => (
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.DELIVERED
   || getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
 );
-export const isReadMessage = (channel: GroupChannel, message: UserMessage | FileMessage): boolean => (
+export const isReadMessage = (
+  channel: GroupChannel,
+  message: SendableMessageType,
+): boolean => (
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
 );
 // TODO: Remove channel from the params, it seems unnecessary
-export const isFailedMessage = (message: UserMessage | FileMessage): boolean => (message?.sendingStatus === 'failed');
-export const isPendingMessage = (message: UserMessage | FileMessage): boolean => (message?.sendingStatus === 'pending');
+export const isFailedMessage = (
+  message: SendableMessageType,
+): boolean => (message?.sendingStatus === 'failed');
+export const isPendingMessage = (
+  message: SendableMessageType,
+): boolean => (message?.sendingStatus === 'pending');
 export const isSentStatus = (state: string): boolean => (
   state === OutgoingMessageStates.SENT
   || state === OutgoingMessageStates.DELIVERED
   || state === OutgoingMessageStates.READ
 );
 
-export const isAdminMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => (
+export const isAdminMessage = (message: CoreMessageType): boolean => (
   message && (
     message['isAdminMessage'] && typeof message.isAdminMessage === 'function'
       ? message.isAdminMessage()
       : message?.messageType === 'admin'
   )
 );
-export const isUserMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => (
+export const isUserMessage = (message: CoreMessageType): boolean => (
   message && (
     message['isUserMessage'] && typeof message.isUserMessage === 'function'
       ? message.isUserMessage()
       : message?.messageType === 'user'
   )
 );
-export const isFileMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => (
+export const isFileMessage = (message: CoreMessageType): boolean => (
   message && (
     message['isFileMessage'] && typeof message.isFileMessage === 'function'
       ? message.isFileMessage()
       : message?.messageType === 'file'
   )
 );
-export const isParentMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => (
+export const isMultipleFilesMessage = (
+  message: CoreMessageType,
+): boolean => (
+  message && (
+    message['isMultipleFilesMessage'] && typeof message.isMultipleFilesMessage === 'function'
+      ? message.isMultipleFilesMessage()
+      : (
+        message.messageType === 'file'
+        && Object.prototype.hasOwnProperty.call(this, 'fileInfoList')
+      )
+  )
+);
+export const isParentMessage = (message: CoreMessageType): boolean => (
   !message.parentMessageId && !message.parentMessage && (message.threadInfo?.replyCount ?? 0) > 0
 );
-export const isThreadMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => (
+export const isThreadMessage = (message: CoreMessageType): boolean => (
   !!message.parentMessageId && !!message.parentMessage
 );
-export const isOGMessage = (message: UserMessage | FileMessage): boolean => !!(
+export const isOGMessage = (message: SendableMessageType): boolean => !!(
   message && isUserMessage(message) && message?.ogMetaData && (
     message.ogMetaData?.url
     || message.ogMetaData?.title
@@ -162,15 +196,17 @@ export const isOGMessage = (message: UserMessage | FileMessage): boolean => !!(
     || message.ogMetaData?.defaultImage
   )
 );
-export const isTextMessage = (message: UserMessage | FileMessage): boolean => isUserMessage(message);
-export const isThumbnailMessage = (message: UserMessage | FileMessage): boolean => (
+export const isTextMessage = (message: SendableMessageType): boolean => (
+  isUserMessage(message)
+);
+export const isThumbnailMessage = (message: SendableMessageType): boolean => (
   message && isFileMessage(message) && isSupportedFileView((message as FileMessage).type)
 );
 export const isImageMessage = (message: FileMessage): boolean => message && isThumbnailMessage(message) && isImage(message.type);
-export const isVideoMessage = (message: UserMessage | FileMessage): boolean => (
+export const isVideoMessage = (message: SendableMessageType): boolean => (
   message && isThumbnailMessage(message) && isVideo((message as FileMessage).type)
 );
-export const isGifMessage = (message: UserMessage | FileMessage): boolean => (
+export const isGifMessage = (message: SendableMessageType): boolean => (
   message && isThumbnailMessage(message) && isGif((message as FileMessage).type)
 );
 export const isAudioMessage = (message: FileMessage): boolean => message && isFileMessage(message) && isAudio(message.type);
@@ -195,13 +231,17 @@ export const isVoiceMessage = (message: Nullable<FileMessage | UserMessage>): bo
   return isVoiceMessageMimeType(message?.metaArrays?.find((metaArray) => metaArray.key === 'KEY_INTERNAL_MESSAGE_TYPE')?.value?.[0] ?? '');
 };
 
-export const isEditedMessage = (message: AdminMessage | UserMessage | FileMessage): boolean => isUserMessage(message) && (message?.updatedAt > 0);
+export const isEditedMessage = (
+  message: CoreMessageType,
+): boolean => isUserMessage(message) && (message?.updatedAt > 0);
 export const isEnabledOGMessage = (message: UserMessage): boolean => (
   (!message || !message.ogMetaData || !message.ogMetaData.url) ? false : true
 );
 
 export const getUIKitMessageTypes = (): UIKitMessageTypes => ({ ...UIKitMessageTypes });
-export const getUIKitMessageType = (message: UserMessage | FileMessage | AdminMessage): string => {
+export const getUIKitMessageType = (
+  message: CoreMessageType,
+): string => {
   if (isAdminMessage(message as AdminMessage)) return UIKitMessageTypes.ADMIN;
   if (isUserMessage(message as UserMessage)) {
     return isOGMessage(message as UserMessage) ? UIKitMessageTypes.OG : UIKitMessageTypes.TEXT;
@@ -276,7 +316,10 @@ export const getUseReaction = (store: UIKitStore, channel: GroupChannel | OpenCh
   return store?.config?.isReactionEnabled;
 };
 
-export const isMessageSentByMe = (userId: string, message: UserMessage | FileMessage): boolean => (
+export const isMessageSentByMe = (
+  userId: string,
+  message: SendableMessageType,
+): boolean => (
   (userId && message?.sender?.userId) && userId === message.sender.userId
 );
 
@@ -347,7 +390,9 @@ export const getEmojiUrl = (emojiContainer?: EmojiContainer, emojiKey?: string):
 };
 
 export const getUserName = (user: User): string => (user?.friendName || user?.nickname || user?.userId);
-export const getSenderName = (message: UserMessage | FileMessage): string => (message?.sender && getUserName(message?.sender));
+export const getSenderName = (message: SendableMessageType): string => (
+  message?.sender && getUserName(message?.sender)
+);
 
 export const hasSameMembers = <T>(a: T[], b: T[]): boolean => {
   if (a === b) {
@@ -372,7 +417,10 @@ export const hasSameMembers = <T>(a: T[], b: T[]): boolean => {
 };
 export const isFriend = (user: User): boolean => !!(user.friendDiscoveryKey || user.friendName);
 
-export const filterMessageListParams = (params: MessageListParams, message: UserMessage | FileMessage): boolean => {
+export const filterMessageListParams = (
+  params: MessageListParams,
+  message: SendableMessageType,
+): boolean => {
   // @ts-ignore
   if (params?.messageTypeFilter && params.messageTypeFilter !== message.messageType) {
     return false;
@@ -386,7 +434,7 @@ export const filterMessageListParams = (params: MessageListParams, message: User
   }
   if (params?.senderUserIdsFilter && params?.senderUserIdsFilter?.length > 0) {
     if (message?.isUserMessage?.() || message?.isFileMessage?.()) {
-      const messageSender = (message as UserMessage | FileMessage).sender || message['_sender'];
+      const messageSender = (message as SendableMessageType).sender || message['_sender'];
       if (!params?.senderUserIdsFilter?.includes(messageSender?.userId)) {
         return false;
       }

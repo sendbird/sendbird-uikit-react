@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useRef, useEffect, useLayoutEffect } from 'react';
 import format from 'date-fns/format';
-import { FileMessage, UserMessage } from '@sendbird/chat/message';
+import { FileMessage } from '@sendbird/chat/message';
 
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import DateSeparator from '../../../../ui/DateSeparator';
@@ -17,14 +17,15 @@ import ThreadListItemContent from './ThreadListItemContent';
 import { Role } from '../../../../lib/types';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import { getIsReactionEnabled } from '../../../../utils/getIsReactionEnabled';
+import { SendableMessageType } from '../../../../utils';
 
 export interface ThreadListItemProps {
   className?: string;
-  message: UserMessage | FileMessage;
+  message: SendableMessageType;
   chainTop?: boolean;
   chainBottom?: boolean;
   hasSeparator?: boolean;
-  renderCustomSeparator?: (props: { message: UserMessage | FileMessage }) => React.ReactElement;
+  renderCustomSeparator?: (props: { message: SendableMessageType }) => React.ReactElement;
   handleScroll?: () => void;
 }
 
