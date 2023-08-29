@@ -142,7 +142,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
                 <MessageStatus
                   className="sendbird-channel-preview__content__upper__last-message-at"
                   channel={channel}
-                  message={channel?.lastMessage as SendableMessageType}
+                  message={channel?.lastMessage as CoreMessageType}
                   isDateSeparatorConsidered={false}
                 />
               )
