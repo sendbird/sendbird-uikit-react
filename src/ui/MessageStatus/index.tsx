@@ -18,7 +18,7 @@ export const MessageStatusTypes = OutgoingMessageStates;
 
 interface MessageStatusProps {
   className?: string;
-  message: SendableMessageType;
+  message?: CoreMessageType | null;
   channel: Nullable<GroupChannel>;
   isDateSeparatorConsidered?: boolean;
 }
