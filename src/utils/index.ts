@@ -178,10 +178,14 @@ export const isAudioMessageMimeType = (type: string): boolean => (/^audio\//.tes
 export const isVoiceMessageMimeType = (type: string): boolean => (/^voice\//.test(type));
 export const isVoiceMessage = (message: Nullable<FileMessage | UserMessage>): boolean => {
   // ex) audio/m4a OR audio/m4a;sbu_type=voice
-  if (!(message && isFileMessage(message)) || !(message as FileMessage).type) {
+  if (!message
+    || !isFileMessage(message)
+    || !(message as FileMessage)?.type
+    || (typeof (message as FileMessage).type) !== 'string'
+  ) {
     return false;
   }
-  const [mimeType, typeParameter] = (message as FileMessage).type.split(';');
+  const [mimeType = '', typeParameter = ''] = (message as FileMessage).type?.split(';') ?? [];
 
   if (!isAudioMessageMimeType(mimeType)) {
     return false;
