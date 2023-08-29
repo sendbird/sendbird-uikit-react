@@ -255,6 +255,9 @@ export const getUIKitMessageType = (
     }
     return UIKitMessageTypes.FILE;
   }
+  if (isMultipleFilesMessage(message as FileMessage)) {
+    return UIKitMessageTypes.MULTIPLE_FILES;
+  }
   return UIKitMessageTypes.UNKNOWN;
 };
 export const getSendingMessageStatus = (): SendingMessageStatus => ({ ...SendingMessageStatus });
