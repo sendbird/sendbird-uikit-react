@@ -955,7 +955,7 @@ declare module "SendbirdUIKitGlobal" {
 
   export type MessageSearchScrollCallbackReturn = (
     callback: (
-      messages: Array<CoreMessageType>,
+      messages: Array<SendableMessageType>,
       /* eslint-disable @typescript-eslint/no-explicit-any*/
       error: any,
     ) => void
