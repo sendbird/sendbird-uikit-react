@@ -1,8 +1,9 @@
-import type { ReplyType } from 'SendbirdUIKitGlobal';
 import type { EmojiContainer } from '@sendbird/chat';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
 import React from 'react';
+import { SendableMessageType } from '../../utils';
+import { ReplyType } from '../../types';
 
 // Fixme@v4 - deleteMessageOption type, rethink options
 export type DeleteMenuStates = 'DISABLE' | 'HIDE' | 'ACTIVE';

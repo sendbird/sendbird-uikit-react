@@ -17,6 +17,7 @@ import ThreadListItemContent from './ThreadListItemContent';
 import { Role } from '../../../../lib/types';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import { getIsReactionEnabled } from '../../../../utils/getIsReactionEnabled';
+import { SendableMessageType } from '../../../../utils';
 
 export interface ThreadListItemProps {
   className?: string;

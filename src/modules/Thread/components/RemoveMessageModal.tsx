@@ -4,6 +4,7 @@ import Modal from '../../../ui/Modal';
 import { ButtonTypes } from '../../../ui/Button';
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 import { useThreadContext } from '../context/ThreadProvider';
+import { SendableMessageType } from '../../../utils';
 
 export interface RemoveMessageProps {
   onCancel: () => void; // rename to onClose
