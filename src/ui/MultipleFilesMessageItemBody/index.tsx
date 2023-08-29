@@ -4,7 +4,6 @@ import Icon, { IconTypes, IconColors } from '../Icon';
 import { MultipleFilesMessage, UploadedFileInfo } from '@sendbird/chat/message';
 import ImageRenderer from '../ImageRenderer';
 import ImageGrid from '../ImageGrid';
-import { msg2 } from '../FileViewer/data.mock';
 import FileViewer from '../FileViewer';
 
 interface Props {
