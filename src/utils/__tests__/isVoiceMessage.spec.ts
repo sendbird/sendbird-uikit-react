@@ -66,6 +66,11 @@ describe('Global-utils/isVoiceMessage', () => {
         type: undefined,
       } as unknown as FileMessage),
     ).toBeFalse();
+    const cloneMockVoiceMessage = { ...mockVoiceMessage } as any;
+    delete cloneMockVoiceMessage.type;
+    expect(
+      isVoiceMessage(cloneMockVoiceMessage as unknown as FileMessage),
+    ).toBeFalse();
   });
   it('should filter user messages', () => {
     expect(
