@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import './index.scss';
-import {getClassName} from "../../utils";
-import {MultipleFilesMessage} from "@sendbird/chat/message";
+import { getClassName } from '../../utils';
+import { MultipleFilesMessage } from '@sendbird/chat/message';
 
 interface ImageGridProps {
   children: ReactElement[];
