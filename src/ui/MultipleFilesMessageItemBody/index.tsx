@@ -5,6 +5,7 @@ import { MultipleFilesMessage, UploadedFileInfo } from '@sendbird/chat/message';
 import ImageRenderer from '../ImageRenderer';
 import ImageGrid from '../ImageGrid';
 import FileViewer from '../FileViewer';
+import {MULTIPLE_FILES_IMAGE_BORDER_RADIUS, MULTIPLE_FILES_IMAGE_SIDE_LENGTH} from "./const";
 
 interface Props {
   className?: string;
@@ -14,10 +15,6 @@ interface Props {
   isReactionEnabled?: boolean;
   truncateLimit?: number;
 }
-
-// Full width is 400px. There are two items in a row which means image width is 200px. padding is 4px and gap is 4px.
-const MULTIPLE_FILES_IMAGE_SIDE_LENGTH = 'calc(200px - 6px)';
-const MULTIPLE_FILES_IMAGE_BORDER_RADIUS = '6px';
 
 export default function MultipleFilesMessageItemBody({
   className,
@@ -68,10 +65,8 @@ export default function MultipleFilesMessageItemBody({
         {
           fileInfoList.map((fileInfo: UploadedFileInfo, index: number) => {
             return <div
+              className='multiple-files-image-renderer-wrapper'
               onClick={() => setCurrentIndex(index)}
-              style={{
-                cursor: 'pointer',
-              }}
               key={`multiple-files-image-renderer-${index}-${fileInfo.plainUrl}`}
             >
               <ImageRenderer
