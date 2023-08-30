@@ -642,11 +642,11 @@ export const filterChannelListParams = (params: GroupChannelListQuery, channel: 
         break;
     }
   }
-  const { cachedMetaData } = channel;
+  const { cachedMetaData = {} } = channel;
   const metadataValue: string = cachedMetaData[metadataKey];
   if (metadataKey && (metadataValues || metadataValueStartsWith)) {
     if (!metadataValue) {
-      return false
+      return false;
     }
     if (metadataValues?.length > 0 && !metadataValues.every(value => metadataValue.includes(value))) {
       return false;
