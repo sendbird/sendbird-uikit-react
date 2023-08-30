@@ -424,11 +424,7 @@ export const filterMessageListParams = (
   params: MessageListParams,
   message: SendableMessageType,
 ): boolean => {
-  const {
-    customTypesFilter = [],
-  } = params as MessageListParams & {
-    customTypesFilter: Array<string>;
-  };
+  const { customTypesFilter = [] } = params;
   // @ts-ignore
   if (params?.messageTypeFilter && params.messageTypeFilter !== message.messageType) {
     return false;
