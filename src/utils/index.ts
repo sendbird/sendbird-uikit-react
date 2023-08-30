@@ -320,7 +320,7 @@ export const isMessageSentByMe = (
   userId: string,
   message: SendableMessageType,
 ): boolean => (
-  (userId && message?.sender?.userId) && userId === message.sender.userId
+  !!(userId && message?.sender?.userId && userId === message.sender.userId)
 );
 
 const URL_REG = /^((http|https):\/\/)?([a-z\d]+\.)+[a-z]{2,6}(\:[0-9]{1,5})?(\/[-a-zA-Z\d%_.~+&=]*)*(\?[;&a-zA-Z\d%_.~+=-]*)?(\#[-a-zA-Z\d_]*)?$/;
@@ -415,18 +415,22 @@ export const hasSameMembers = <T>(a: T[], b: T[]): boolean => {
   }
   return true;
 };
-export const isFriend = (user: User): boolean => !!(user.friendDiscoveryKey || user.friendName);
+export const isFriend = (user: Nullable<User>): boolean => {
+  if (!user) return false;
+  return !!(user.friendDiscoveryKey || user.friendName);
+};
 
 export const filterMessageListParams = (
   params: MessageListParams,
   message: SendableMessageType,
 ): boolean => {
+  const { customTypesFilter = [] } = params;
   // @ts-ignore
   if (params?.messageTypeFilter && params.messageTypeFilter !== message.messageType) {
     return false;
   }
-  if (params?.customTypesFilter?.length > 0) {
-    const customTypes = params.customTypesFilter.filter((item) => item !== '*');
+  if (customTypesFilter?.length > 0) {
+    const customTypes = customTypesFilter.filter((item) => item !== '*');
     // Because Chat SDK inserts '*' when customTypes is empty
     if (customTypes.length > 0 && !customTypes.includes(message.customType)) {
       return false;
@@ -676,7 +680,7 @@ export interface StringObj {
 export const convertWordToStringObj = (word: string, _users: Array<User>, _template?: string): Array<StringObj> => {
   const users = _users || [];
   const template = _template || '@'; // Use global variable
-  const resultArray = [];
+  const resultArray: Array<StringObj> = [];
   const regex = RegExp(`${template}{(${users.map((user) => user?.userId).join('|')})}`, 'g');
   let excutionResult;
   let lastIndex = 0;
