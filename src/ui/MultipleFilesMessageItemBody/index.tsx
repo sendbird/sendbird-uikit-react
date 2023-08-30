@@ -50,13 +50,15 @@ export default function MultipleFilesMessageItemBody({
   return (
     <>
       {
-        currentIndex > -1 && <FileViewer
-          message={message}
-          currentIndex={currentIndex}
-          onClickLeft={onClickLeft}
-          onClickRight={onClickRight}
-          onClose={onClose}
-        />
+        currentIndex > -1 && (
+          <FileViewer
+            message={message}
+            currentIndex={currentIndex}
+            onClickLeft={onClickLeft}
+            onClickRight={onClickRight}
+            onClose={onClose}
+          />
+        )
       }
       <ImageGrid
         className={className}
