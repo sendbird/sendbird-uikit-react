@@ -2,7 +2,6 @@ import isToday from 'date-fns/isToday';
 import format from 'date-fns/format';
 import isThisYear from 'date-fns/isThisYear';
 import isYesterday from 'date-fns/isYesterday';
-
 import { truncateString } from '../../../../utils';
 import { LabelStringSet } from '../../../../ui/Label';
 
@@ -51,13 +50,20 @@ export const getTotalMembers = (channel) => (
     : 0
 );
 
-const getPrettyLastMessage = (message = {}) => {
+const getPrettyLastMessage = (message = null) => {
   const MAXLEN = 30;
-  const { messageType, name } = message;
-  if (messageType === 'file') {
-    return truncateString(name, MAXLEN);
+  if (!message) return '';
+  if (message.isFileMessage()) {
+    return truncateString(message.name, MAXLEN);
   }
-  return message.message;
+  if (message.isMultipleFilesMessage()) {
+    const { fileInfoList } = message;
+    if (fileInfoList.length > 0) {
+      return truncateString(fileInfoList[0].fileName, MAXLEN);
+    }
+    return '';
+  }
+  return message.message ?? '';
 };
 
 export const getLastMessage = (channel) => (channel?.lastMessage ? getPrettyLastMessage(channel?.lastMessage) : '');

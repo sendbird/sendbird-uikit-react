@@ -12,7 +12,7 @@ module.exports = {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
   },
-  parser: "@babel/eslint-parser",
+  parser: '@babel/eslint-parser',
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -20,31 +20,31 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  plugins: [ 'react', 'babel', '@typescript-eslint' ],
+  plugins: ['react', 'babel', '@typescript-eslint'],
   rules: {
     // uncomment 'linebreak-style' to build in windows - its not adviced to commit from windows
     // read more - https://community.perforce.com/s/article/3096
     // ['linebreak-style']: 0,
-    "import/extensions": [
-      "error",
-      "ignorePackages",
+    'import/extensions': [
+      'error',
+      'ignorePackages',
       {
-        "js": "never",
-        "jsx": "never",
-        "ts": "never",
-        "tsx": "never",
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
       },
     ],
-    "react/forbid-prop-types": 0,
+    'react/forbid-prop-types': 0,
     // we don't want to force to define function component only
-    "react/function-component-definition": "off",
-    "no-unused-expressions": "off",
-    "@typescript-eslint/no-unused-expressions": ["error"],
+    'react/function-component-definition': 'off',
+    'no-unused-expressions': 'off',
+    '@typescript-eslint/no-unused-expressions': ['error'],
   },
   settings: {
-    "import/resolver": {
+    'import/resolver': {
       node: {
-        extensions: [".js", ".jsx", ".ts", ".tsx"],
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
       },
     },
   },
