@@ -49,8 +49,10 @@
 }
 
 .sendbird-parent-message-info-item__multiple-files-message-wrapper {
-  background-color: transparent !important;
   padding: 0;
+  @include themed() {
+    background-color: t(bg-0);
+  }
 }
 
 .sendbird-parent-message-info-item__thumbnail-message__thumbnail {

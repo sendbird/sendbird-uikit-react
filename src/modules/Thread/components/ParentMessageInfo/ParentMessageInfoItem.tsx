@@ -17,7 +17,8 @@ import {
   isUserMessage,
   isVideoMessage,
   truncateString,
-  SendableMessageType, isMultipleFilesMessage,
+  SendableMessageType,
+  isMultipleFilesMessage,
 } from '../../../../utils';
 
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
