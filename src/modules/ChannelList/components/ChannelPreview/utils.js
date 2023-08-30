@@ -2,12 +2,8 @@ import isToday from 'date-fns/isToday';
 import format from 'date-fns/format';
 import isThisYear from 'date-fns/isThisYear';
 import isYesterday from 'date-fns/isYesterday';
-
 import { truncateString } from '../../../../utils';
 import { LabelStringSet } from '../../../../ui/Label';
-import {match} from "ts-pattern";
-import {TOKEN_TYPES} from "../../../Message/utils/tokens/types";
-import {BaseMessage, MessageType} from "@sendbird/chat/message";
 
 /* eslint-disable default-param-last */
 export const getChannelTitle = (channel = {}, currentUserId, stringSet = LabelStringSet) => {
