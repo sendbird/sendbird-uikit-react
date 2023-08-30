@@ -83,9 +83,9 @@ export default function MultipleFilesMessageItemBody({
             >
               <ImageRenderer
                 url={fileInfo.url}
-                width={ gridItemProps?.sideLength ?? MULTIPLE_FILES_IMAGE_SIDE_LENGTH}
-                height={ gridItemProps?.sideLength ?? MULTIPLE_FILES_IMAGE_SIDE_LENGTH}
-                borderRadius={ gridItemProps?.borderRadius ?? MULTIPLE_FILES_IMAGE_BORDER_RADIUS}
+                width={gridItemProps?.sideLength ?? MULTIPLE_FILES_IMAGE_SIDE_LENGTH}
+                height={gridItemProps?.sideLength ?? MULTIPLE_FILES_IMAGE_SIDE_LENGTH}
+                borderRadius={gridItemProps?.borderRadius ?? MULTIPLE_FILES_IMAGE_BORDER_RADIUS}
                 defaultComponent={
                   <div
                     className="sendbird-multiple-files-image-renderer__thumbnail__placeholder"
