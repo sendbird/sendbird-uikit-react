@@ -58,7 +58,9 @@ const getPrettyLastMessage = (message = null) => {
   }
   if (message.isMultipleFilesMessage()) {
     const { fileInfoList } = message;
-    if (fileInfoList.length > 0) return fileInfoList[0].fileName;
+    if (fileInfoList.length > 0) {
+      return truncateString(fileInfoList[0].fileName, MAXLEN);
+    }
     return '';
   }
   return message.message ?? '';
