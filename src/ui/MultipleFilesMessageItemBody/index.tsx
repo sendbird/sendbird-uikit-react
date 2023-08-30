@@ -70,7 +70,7 @@ export default function MultipleFilesMessageItemBody({
               style={{
                 cursor: 'pointer',
               }}
-              key={`image-renderer-${index}`}
+              key={`multiple-files-image-renderer-${index}-${fileInfo.plainUrl}`}
             >
               <ImageRenderer
                 url={fileInfo.url}
