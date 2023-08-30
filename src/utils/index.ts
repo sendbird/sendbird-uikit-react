@@ -467,13 +467,7 @@ export const filterChannelListParams = (params: GroupChannelListQuery, channel: 
     metadataKey = '',
     metadataValues = ['a', 'b'],
     metadataValueStartsWith,
-  } = params as GroupChannelListQuery & {
-    // make the properties to not optional
-    metadataKey: string,
-    customTypesFilter: Array<string>,
-    channelUrlsFilter: Array<string>,
-    metadataValues: Array<string>,
-  };
+  } = params;
 
   if (!includeEmpty && channel?.lastMessage === null) {
     return false;
@@ -539,7 +533,7 @@ export const filterChannelListParams = (params: GroupChannelListQuery, channel: 
   if (includeFrozen === false && channel?.isFrozen === true) {
     return false;
   }
-  if (customTypesFilter?.length > 0 && !customTypesFilter.includes(channel?.customType)) {
+  if (customTypesFilter && !customTypesFilter.includes(channel?.customType)) {
     return false;
   }
   if (customTypeStartsWithFilter && !new RegExp(`^${customTypeStartsWithFilter}`).test(channel?.customType)) {
@@ -554,7 +548,7 @@ export const filterChannelListParams = (params: GroupChannelListQuery, channel: 
       return false;
     }
   }
-  if (channelUrlsFilter?.length > 0 && !channelUrlsFilter.includes(channel?.url)) {
+  if (channelUrlsFilter && !channelUrlsFilter.includes(channel?.url)) {
     return false;
   }
   if (myMemberStateFilter) {
@@ -643,12 +637,12 @@ export const filterChannelListParams = (params: GroupChannelListQuery, channel: 
     }
   }
   const { cachedMetaData = {} } = channel;
-  const metadataValue: string = cachedMetaData[metadataKey];
   if (metadataKey && (metadataValues || metadataValueStartsWith)) {
+    const metadataValue: string = cachedMetaData[metadataKey];
     if (!metadataValue) {
       return false;
     }
-    if (metadataValues?.length > 0 && !metadataValues.every(value => metadataValue.includes(value))) {
+    if (metadataValues && !metadataValues.every(value => metadataValue.includes(value))) {
       return false;
     }
     if (metadataValueStartsWith && !metadataValue.startsWith(metadataValueStartsWith)) {
