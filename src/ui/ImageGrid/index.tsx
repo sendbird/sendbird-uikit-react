@@ -5,7 +5,7 @@ import { MultipleFilesMessage } from '@sendbird/chat/message';
 
 interface ImageGridProps {
   children: ReactElement[];
-  className?: string | Array<string>;
+  className?: string;
   message: MultipleFilesMessage;
   isReactionEnabled?: boolean;
 }

@@ -7,7 +7,7 @@ import ImageGrid from '../ImageGrid';
 import FileViewer from '../FileViewer';
 
 interface Props {
-  className?: string | Array<string>;
+  className?: string;
   message: MultipleFilesMessage;
   isByMe?: boolean;
   mouseHover?: boolean;
