@@ -5,6 +5,9 @@ import isYesterday from 'date-fns/isYesterday';
 
 import { truncateString } from '../../../../utils';
 import { LabelStringSet } from '../../../../ui/Label';
+import {match} from "ts-pattern";
+import {TOKEN_TYPES} from "../../../Message/utils/tokens/types";
+import {BaseMessage, MessageType} from "@sendbird/chat/message";
 
 /* eslint-disable default-param-last */
 export const getChannelTitle = (channel = {}, currentUserId, stringSet = LabelStringSet) => {
@@ -51,13 +54,18 @@ export const getTotalMembers = (channel) => (
     : 0
 );
 
-const getPrettyLastMessage = (message = {}) => {
+const getPrettyLastMessage = (message = null) => {
   const MAXLEN = 30;
-  const { messageType, name } = message;
-  if (messageType === 'file') {
-    return truncateString(name, MAXLEN);
+  if (!message) return '';
+  if (message.isFileMessage()) {
+    return truncateString(message.name, MAXLEN);
   }
-  return message.message;
+  if (message.isMultipleFilesMessage()) {
+    const { fileInfoList } = message;
+    if (fileInfoList.length > 0) return fileInfoList[0].fileName;
+    return '';
+  }
+  return message.message ?? '';
 };
 
 export const getLastMessage = (channel) => (channel?.lastMessage ? getPrettyLastMessage(channel?.lastMessage) : '');

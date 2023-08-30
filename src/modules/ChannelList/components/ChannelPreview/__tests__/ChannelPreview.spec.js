@@ -13,9 +13,45 @@ jest.setSystemTime(new Date('March 2, 2022 08:15:52'));
 describe('ChannelPreview', () => {
   test('utils/getLastMessage returns lastMessage', function () {
     const text = 'example-text';
-    const channel = {};
-    const channel2 = { lastMessage: { message: '' } };
-    const channel3 = { lastMessage: { message: text } };
+    const channel = {
+      lastMessage: {
+        isUserMessage: () => true,
+        isFileMessage: () => false,
+        isMultipleFilesMessage: () => false,
+      }
+    };
+    const channel2 = {
+      lastMessage: {
+        message: '',
+        isUserMessage: () => true,
+        isFileMessage: () => false,
+        isMultipleFilesMessage: () => false,
+      }
+    };
+    const channel3 = {
+      lastMessage: {
+        message: text,
+        isUserMessage: () => true,
+        isFileMessage: () => false,
+        isMultipleFilesMessage: () => false,
+      }
+    };
+    const channel4 = {
+      lastMessage: {
+        name: 'file1',
+        isUserMessage: () => false,
+        isFileMessage: () => true,
+        isMultipleFilesMessage: () => false,
+      }
+    };
+    const channel5 = {
+      lastMessage: {
+        fileInfoList: [{ fileName: 'file1' }, { fileName: 'file2' }],
+        isUserMessage: () => false,
+        isFileMessage: () => false,
+        isMultipleFilesMessage: () => true,
+      }
+    };
     expect(
       getLastMessage(channel)
     ).toBe('');
@@ -25,6 +61,12 @@ describe('ChannelPreview', () => {
     expect(
       getLastMessage(channel3)
     ).toBe(text);
+    expect(
+      getLastMessage(channel4)
+    ).toBe('file1');
+    expect(
+      getLastMessage(channel5)
+    ).toBe('file1');
   });
 
   test('utils/getChannelTitle returns channelTitle', function () {

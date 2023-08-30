@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 
 import Sendbird from '../../../lib/Sendbird';
 const appId = process.env.STORYBOOK_APP_ID;;
-const userId = 'sendbird';
+const userId = 'sendbird'; // Change this to 'sendbird1' for testing MultipleFilesMessage.
 
 import ChannelList from '../../ChannelList';
 import { getSdk } from '../../../lib/selectors';
