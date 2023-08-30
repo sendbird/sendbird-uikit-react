@@ -1,5 +1,5 @@
 import React, { ReactElement, useMemo, useState } from 'react';
-import {FileMessage, MultipleFilesMessage, UserMessage} from '@sendbird/chat/message';
+import { FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
 
 import './ParentMessageInfoItem.scss';
 
@@ -30,7 +30,7 @@ import { useThreadContext } from '../../context/ThreadProvider';
 import VoiceMessageItemBody from '../../../../ui/VoiceMessageItemBody';
 import TextFragment from '../../../Message/components/TextFragment';
 import { tokenizeMessage } from '../../../Message/utils/tokens/tokenize';
-import MultipleFilesMessageItemBody from "../../../../ui/MultipleFilesMessageItemBody";
+import MultipleFilesMessageItemBody from '../../../../ui/MultipleFilesMessageItemBody';
 
 export interface ParentMessageInfoItemProps {
   className?: string;
@@ -201,7 +201,7 @@ export default function ParentMessageInfoItem({
             className="sendbird-parent-message-info-item__multiple-files-message-wrapper"
             gridItemProps={{
               sideLength: '98px',
-              borderRadius: '8px'
+              borderRadius: '8px',
             }}
             message={message as MultipleFilesMessage}
             isByMe={false}
