@@ -453,10 +453,29 @@ export const filterMessageListParams = (
 };
 
 export const filterChannelListParams = (params: GroupChannelListQuery, channel: GroupChannel, currentUserId: string): boolean => {
-  if (!params?.includeEmpty && channel?.lastMessage === null) {
+  const {
+    includeEmpty,
+    includeFrozen,
+    searchFilter,
+    userIdsFilter,
+    customTypesFilter,
+    channelUrlsFilter,
+    customTypeStartsWithFilter,
+    channelNameContainsFilter,
+    nicknameContainsFilter,
+    myMemberStateFilter,
+    hiddenChannelFilter,
+    unreadChannelFilter,
+    publicChannelFilter,
+    superChannelFilter,
+    metadataKey = '',
+    metadataValues = ['a', 'b'],
+    metadataValueStartsWith,
+  } = params;
+
+  if (!includeEmpty && channel?.lastMessage === null) {
     return false;
   }
-  const searchFilter = params?.searchFilter;
   if (searchFilter?.query && (searchFilter?.fields?.length ?? 0) > 0) {
     const searchQuery = searchFilter.query;
     const searchFields = searchFilter.fields;
@@ -478,7 +497,6 @@ export const filterChannelListParams = (params: GroupChannelListQuery, channel: 
       }
     }
   }
-  const userIdsFilter = params?.userIdsFilter;
   if (userIdsFilter?.userIds?.length > 0) {
     const { includeMode, queryType } = userIdsFilter;
     const userIds: string[] = userIdsFilter.userIds;
@@ -513,32 +531,32 @@ export const filterChannelListParams = (params: GroupChannelListQuery, channel: 
       }
     }
   }
-  if (params?.includeEmpty === false && channel?.lastMessage === null) {
+  if (includeEmpty === false && channel?.lastMessage === null) {
     return false;
   }
-  if (params?.includeFrozen === false && channel?.isFrozen === true) {
+  if (includeFrozen === false && channel?.isFrozen === true) {
     return false;
   }
-  if (params?.customTypesFilter?.length > 0 && !params.customTypesFilter.includes(channel?.customType)) {
+  if (customTypesFilter && !customTypesFilter.includes(channel?.customType)) {
     return false;
   }
-  if (params?.customTypeStartsWithFilter && !new RegExp(`^${params.customTypeStartsWithFilter}`).test(channel?.customType)) {
+  if (customTypeStartsWithFilter && !new RegExp(`^${customTypeStartsWithFilter}`).test(channel?.customType)) {
     return false;
   }
-  if (params?.channelNameContainsFilter && !channel?.name?.toLowerCase().includes(params.channelNameContainsFilter.toLowerCase())) {
+  if (channelNameContainsFilter && !channel?.name?.toLowerCase().includes(channelNameContainsFilter.toLowerCase())) {
     return false;
   }
-  if (params?.nicknameContainsFilter) {
-    const lowerCasedSubString = params.nicknameContainsFilter.toLowerCase();
+  if (nicknameContainsFilter) {
+    const lowerCasedSubString = nicknameContainsFilter.toLowerCase();
     if (channel?.members?.every((member: Member) => !member.nickname.toLowerCase().includes(lowerCasedSubString))) {
       return false;
     }
   }
-  if (params?.channelUrlsFilter?.length > 0 && !params.channelUrlsFilter.includes(channel?.url)) {
+  if (channelUrlsFilter && !channelUrlsFilter.includes(channel?.url)) {
     return false;
   }
-  if (params?.myMemberStateFilter) {
-    switch (params.myMemberStateFilter) {
+  if (myMemberStateFilter) {
+    switch (myMemberStateFilter) {
       case 'joined_only':
         if (channel?.myMemberState !== 'joined') {
           return false;
@@ -561,8 +579,8 @@ export const filterChannelListParams = (params: GroupChannelListQuery, channel: 
         break;
     }
   }
-  if (params?.hiddenChannelFilter) {
-    switch (params.hiddenChannelFilter) {
+  if (hiddenChannelFilter) {
+    switch (hiddenChannelFilter) {
       case 'unhidden_only':
         if (channel?.isHidden || channel?.hiddenState !== 'unhidden') {
           return false;
@@ -585,8 +603,8 @@ export const filterChannelListParams = (params: GroupChannelListQuery, channel: 
         break;
     }
   }
-  if (params?.unreadChannelFilter) {
-    switch (params.unreadChannelFilter) {
+  if (unreadChannelFilter) {
+    switch (unreadChannelFilter) {
       case 'unread_message':
         if (channel?.unreadMessageCount === 0) {
           return false;
@@ -594,8 +612,8 @@ export const filterChannelListParams = (params: GroupChannelListQuery, channel: 
         break;
     }
   }
-  if (params?.publicChannelFilter) {
-    switch (params.publicChannelFilter) {
+  if (publicChannelFilter) {
+    switch (publicChannelFilter) {
       case 'public':
         if (!channel?.isPublic) {
           return false;
@@ -608,8 +626,8 @@ export const filterChannelListParams = (params: GroupChannelListQuery, channel: 
         break;
     }
   }
-  if (params?.superChannelFilter) {
-    switch (params.superChannelFilter) {
+  if (superChannelFilter) {
+    switch (superChannelFilter) {
       case 'super':
         if (!channel?.isSuper) {
           return false;
@@ -620,6 +638,19 @@ export const filterChannelListParams = (params: GroupChannelListQuery, channel: 
           return false;
         }
         break;
+    }
+  }
+  const { cachedMetaData = {} } = channel;
+  if (metadataKey && (metadataValues || metadataValueStartsWith)) {
+    const metadataValue: string = cachedMetaData[metadataKey];
+    if (!metadataValue) {
+      return false;
+    }
+    if (metadataValues && !metadataValues.every(value => metadataValue.includes(value))) {
+      return false;
+    }
+    if (metadataValueStartsWith && !metadataValue.startsWith(metadataValueStartsWith)) {
+      return false;
     }
   }
   return true;
