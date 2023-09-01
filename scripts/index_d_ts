@@ -33,6 +33,7 @@ declare module "SendbirdUIKitGlobal" {
     MessageListParams,
     MessageSearchQuery,
     MessageSearchQueryParams,
+    MultipleFilesMessage,
     UserMessage,
     UserMessageCreateParams,
     UserMessageUpdateParams,
@@ -45,12 +46,12 @@ declare module "SendbirdUIKitGlobal" {
   } from '@sendbird/chat/openChannel';
 
   export type PartialDeep<T> = T extends object
-  ? T extends (...args: any[]) => any
+    ? T extends (...args: any[]) => any
     ? T
     : {
-        [P in keyof T]?: PartialDeep<T[P]>;
-      }
-  : T;
+      [P in keyof T]?: PartialDeep<T[P]>;
+    }
+    : T;
 
   export interface CommonUIKitConfigProps {
     replyType?: 'NONE' | 'QUOTE_REPLY' | 'THREAD';
@@ -134,7 +135,7 @@ declare module "SendbirdUIKitGlobal" {
 
   export interface UikitMessageHandler {
     onPending: (handler: MessageHandler) => UikitMessageHandler;
-    onFailed: (handler: FailedMessageHandler) => UikitMessageHandler;
+    onFailed: (handler: FailedMessageHandler<SendableMessageType>) => UikitMessageHandler;
     onSucceeded: (handler: MessageHandler) => UikitMessageHandler;
   }
 
@@ -648,11 +649,29 @@ declare module "SendbirdUIKitGlobal" {
     toggleReaction(message: SendableMessageType, emojiKey: string, isReacted: boolean): void,
   }
 
-  export type FileViewerProps = {
+  export type FileViewerComponentProps = {
+    // sender
+    profileUrl: string;
+    nickname: string;
+    // file
+    name: string;
+    type: string;
+    url: string;
+    // others
+    isByMe: boolean;
     onCancel: () => void;
-    message: ClientFileMessage;
-
-  }
+    onDelete: () => void;
+    disableDelete: boolean;
+  };
+  export type FileViewerProps = {
+    message: FileMessage | MultipleFilesMessage;
+    onClose: (e: MouseEvent) => void;
+    isByMe?: boolean;
+    onDelete?: (e: MouseEvent) => void;
+    currentIndex?: number;
+    onClickLeft?: () => void;
+    onClickRight?: () => void;
+  };
 
   export type MessageUIProps = {
     message: EveryMessage;
@@ -1222,34 +1241,34 @@ declare module '@sendbird/uikit-react' {
 }
 
 declare module '@sendbird/uikit-react/App' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  const App: React.FunctionComponent<SendbirdUIKitGlobal.AppProps>
+  import type { AppProps } from 'SendbirdUIKitGlobal';
+  const App: React.FunctionComponent<AppProps>
   export default App;
 }
 
 declare module '@sendbird/uikit-react/SendbirdProvider' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  const SendbirdProvider: React.FunctionComponent<SendbirdUIKitGlobal.SendbirdProviderProps>;
+  import type { SendbirdProviderProps } from 'SendbirdUIKitGlobal';
+  const SendbirdProvider: React.FunctionComponent<SendbirdProviderProps>;
   export default SendbirdProvider;
 }
 
 declare module '@sendbird/uikit-react/sendbirdSelectors' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  const sendBirdSelectors: SendbirdUIKitGlobal.sendbirdSelectorsInterface;
+  import type { sendbirdSelectorsInterface } from 'SendbirdUIKitGlobal';
+  const sendBirdSelectors: sendbirdSelectorsInterface;
   export default sendBirdSelectors;
 }
 
 declare module '@sendbird/uikit-react/useSendbirdStateContext' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  function useSendbirdStateContext(): SendbirdUIKitGlobal.SendBirdState;
+  import type { SendBirdState } from 'SendbirdUIKitGlobal';
+  function useSendbirdStateContext(): SendBirdState;
   export default useSendbirdStateContext;
 }
 
 declare module '@sendbird/uikit-react/withSendbird' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  import type { SendBirdState } from 'SendbirdUIKitGlobal';
   function withSendbird(
     ChildComp: React.Component | React.ElementType | React.ReactNode | React.ReactElement,
-    mapStoreToProps?: (store: SendbirdUIKitGlobal.SendBirdState) => unknown
+    mapStoreToProps?: (store: SendBirdState) => unknown
   ): (props: unknown) => React.ReactNode | React.ReactElement;
   export default withSendbird;
 }
@@ -1278,9 +1297,9 @@ declare module '@sendbird/uikit-react/handlers/UserEventHandler' {
 
 /** utils */
 declare module '@sendbird/uikit-react/utils/message/getOutgoingMessageState' {
-  import { GroupChannel } from '@sendbird/chat/groupChannel';
-  import { OpenChannel } from '@sendbird/chat/openChannel';
-  import { UserMessage, FileMessage } from '@sendbird/chat/message';
+  import type { GroupChannel } from '@sendbird/chat/groupChannel';
+  import type { OpenChannel } from '@sendbird/chat/openChannel';
+  import type { SendableMessageType } from 'SendbirdUIKitGlobal';
   export enum OutgoingMessageStates {
     NONE = 'NONE',
     PENDING = 'PENDING',
@@ -1302,16 +1321,16 @@ declare module '@sendbird/uikit-react/utils/message/isVoiceMessage' {
 
 /** ChannelList */
 declare module '@sendbird/uikit-react/ChannelList' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  const ChannelList: React.FunctionComponent<SendbirdUIKitGlobal.ChannelListProps>;
+  import type { ChannelListProps } from 'SendbirdUIKitGlobal';
+  const ChannelList: React.FunctionComponent<ChannelListProps>;
   export default ChannelList;
 }
 
 declare module '@sendbird/uikit-react/ChannelList/context' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  export const ChannelListProvider: React.FunctionComponent<SendbirdUIKitGlobal.ChannelListProviderProps>;
-  export function useChannelListContext(): SendbirdUIKitGlobal.ChannelListProviderInterface;
-  export function useChannelList(): SendbirdUIKitGlobal.ChannelListProviderInterface;
+  import type { ChannelListProviderProps, ChannelListProviderInterface } from 'SendbirdUIKitGlobal';
+  export const ChannelListProvider: React.FunctionComponent<ChannelListProviderProps>;
+  export function useChannelListContext(): ChannelListProviderInterface;
+  export function useChannelList(): ChannelListProviderInterface;
 }
 
 declare module '@sendbird/uikit-react/ChannelList/components/AddChannel' {
@@ -1320,39 +1339,39 @@ declare module '@sendbird/uikit-react/ChannelList/components/AddChannel' {
 }
 
 declare module '@sendbird/uikit-react/ChannelList/components/ChannelListUI' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  const ChannelListUI: React.FunctionComponent<SendbirdUIKitGlobal.ChannelListUIProps>;
+  import type { ChannelListUIProps } from 'SendbirdUIKitGlobal';
+  const ChannelListUI: React.FunctionComponent<ChannelListUIProps>;
   export default ChannelListUI;
 }
 
 declare module '@sendbird/uikit-react/ChannelList/components/ChannelListHeader' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  const ChannelListHeader: React.FunctionComponent<SendbirdUIKitGlobal.ChannelListHeaderInterface>;
+  import { ChannelListHeaderInterface } from 'SendbirdUIKitGlobal';
+  const ChannelListHeader: React.FunctionComponent<ChannelListHeaderInterface>;
   export default ChannelListHeader;
 }
 
 declare module '@sendbird/uikit-react/ChannelList/components/ChannelPreview' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  const ChannelPreview: React.FunctionComponent<SendbirdUIKitGlobal.ChannelPreviewInterface>;
+  import type { ChannelPreviewInterface } from 'SendbirdUIKitGlobal';
+  const ChannelPreview: React.FunctionComponent<ChannelPreviewInterface>;
   export default ChannelPreview;
 }
 
 declare module '@sendbird/uikit-react/ChannelList/components/ChannelPreviewAction' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  const ChannelPreviewAction: React.FunctionComponent<SendbirdUIKitGlobal.ChannelPreviewActionInterface>;
+  import type { ChannelPreviewActionInterface } from 'SendbirdUIKitGlobal';
+  const ChannelPreviewAction: React.FunctionComponent<ChannelPreviewActionInterface>;
   export default ChannelPreviewAction;
 }
 
 declare module '@sendbird/uikit-react/ChannelSettings' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  const ChannelSettings: React.FunctionComponent<SendbirdUIKitGlobal.ChannelSettingsProps>;
+  import type { ChannelSettingsProps } from 'SendbirdUIKitGlobal';
+  const ChannelSettings: React.FunctionComponent<ChannelSettingsProps>;
   export default ChannelSettings;
 }
 
 declare module '@sendbird/uikit-react/ChannelSettings/context' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  export const ChannelSettingsProvider: React.FC<SendbirdUIKitGlobal.ChannelSettingsContextProps>;
-  export const useChannelSettingsContext: () => SendbirdUIKitGlobal.ChannelSettingsProviderInterface;
+  import type { ChannelSettingsContextProps, ChannelSettingsProviderInterface } from 'SendbirdUIKitGlobal';
+  export const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps>;
+  export const useChannelSettingsContext: () => ChannelSettingsProviderInterface;
 }
 
 declare module '@sendbird/uikit-react/ChannelSettings/components/ModerationPanel' {
@@ -1366,26 +1385,26 @@ declare module '@sendbird/uikit-react/ChannelSettings/components/ChannelProfile'
 }
 
 declare module '@sendbird/uikit-react/ChannelSettings/components/ChannelSettingsUI' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  const ChannelSettingsUI: React.FC<SendbirdUIKitGlobal.ChannelSettingsUIProps>;
+  import type { ChannelSettingsUIProps } from 'SendbirdUIKitGlobal';
+  const ChannelSettingsUI: React.FC<ChannelSettingsUIProps>;
   export default ChannelSettingsUI;
 }
 
 declare module '@sendbird/uikit-react/ChannelSettings/components/EditDetailsModal' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  const EditDetailsModal: React.FC<SendbirdUIKitGlobal.ChannelSettingsEditDetailsProps>;
+  import type { ChannelSettingsEditDetailsProps } from 'SendbirdUIKitGlobal';
+  const EditDetailsModal: React.FC<ChannelSettingsEditDetailsProps>;
   export default EditDetailsModal;
 }
 
 declare module '@sendbird/uikit-react/ChannelSettings/components/LeaveChannel' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  const LeaveChannel: React.FC<SendbirdUIKitGlobal.LeaveChannelProps>;
+  import type { LeaveChannelProps } from 'SendbirdUIKitGlobal';
+  const LeaveChannel: React.FC<LeaveChannelProps>;
   export default LeaveChannel;
 }
 
 declare module '@sendbird/uikit-react/ChannelSettings/components/UserListItem' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  const UserListItem: React.FC<SendbirdUIKitGlobal.UserListItemProps>;
+  import type { UserListItemProps } from 'SendbirdUIKitGlobal';
+  const UserListItem: React.FC<UserListItemProps>;
   export default UserListItem;
 }
 
@@ -1398,20 +1417,20 @@ declare module '@sendbird/uikit-react/ChannelSettings/components/UserPanel' {
  * Channel
  */
 declare module '@sendbird/uikit-react/Channel' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  const Channel: React.FC<SendbirdUIKitGlobal.ChannelProps>;
+  import type { ChannelProps } from 'SendbirdUIKitGlobal';
+  const Channel: React.FC<ChannelProps>;
   export default Channel;
 }
 
 declare module '@sendbird/uikit-react/Channel/context' {
-  import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
-  export const ChannelProvider: React.FunctionComponent<SendbirdUIKitGlobal.ChannelContextProps>;
-  export function useChannelContext(): SendbirdUIKitGlobal.ChannelProviderInterface;
+  import type { ChannelContextProps, ChannelProviderInterface } from 'SendbirdUIKitGlobal';
+  export const ChannelProvider: React.FunctionComponent<ChannelContextProps>;
+  export function useChannelContext(): ChannelProviderInterface;
   export enum ThreadReplySelectType { PARENT, THREAD }
 }
 
 declare module '@sendbird/uikit-react/Channel/utils/getMessagePartsInfo' {
-  import type { FileMessage, UserMessage, AdminMessage } from '@sendbird/chat/message';
+  import type { CoreMessageType } from 'SendbirdUIKitGlobal'
   import type { GroupChannel } from '@sendbird/chat/groupChannel';
   export interface GetMessagePartsInfoProps {
     allMessages: Array<CoreMessageType>;
@@ -1430,7 +1449,7 @@ declare module '@sendbird/uikit-react/Channel/utils/getMessagePartsInfo' {
 }
 
 declare module '@sendbird/uikit-react/Channel/utils/compareMessagesForGrouping' {
-  import type { FileMessage, UserMessage, AdminMessage } from '@sendbird/chat/message';
+  import type { CoreMessageType } from 'SendbirdUIKitGlobal';
   import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
@@ -1442,9 +1461,9 @@ declare module '@sendbird/uikit-react/Channel/utils/compareMessagesForGrouping' 
     currentChannel: GroupChannel,
     replyType: SendbirdUIKitGlobal.ReplyType,
   ): [
-    chainTop: boolean,
-    chainBottom: boolean,
-  ]
+      chainTop: boolean,
+      chainBottom: boolean,
+    ]
 }
 
 declare module '@sendbird/uikit-react/Channel/components/ChannelHeader' {
@@ -1460,6 +1479,8 @@ declare module '@sendbird/uikit-react/Channel/components/ChannelUI' {
 
 declare module '@sendbird/uikit-react/Channel/components/FileViewer' {
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  export const FileViewerComponent: React.FunctionComponent<SendbirdUIKitGlobal.FileViewerComponentProps>
+
   const FileViewer: React.FunctionComponent<SendbirdUIKitGlobal.FileViewerProps>;
   export default FileViewer;
 }
@@ -1971,7 +1992,7 @@ declare module '@sendbird/uikit-react/ui/Dropdown' {
 
 declare module '@sendbird/uikit-react/ui/EmojiReactions' {
   import type { EmojiCategory } from '@sendbird/chat';
-  import type { FileMessage, UserMessage } from '@sendbird/chat/message';
+  import type { SendableMessageType } from 'SendbirdUIKitGlobal';
   import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
   interface EmojiContainer {
@@ -2027,16 +2048,55 @@ declare module '@sendbird/uikit-react/ui/VoiceMessageItemBody' {
 }
 
 declare module '@sendbird/uikit-react/ui/FileViewer' {
-  import type { FileMessage } from '@sendbird/chat/message';
+  import type { FileMessage, MultipleFilesMessage } from '@sendbird/chat/message';
 
-  interface FileViewerBodyProps {
-    message: FileMessage;
-    isByMe?: boolean;
-    onClose?: () => void,
-    onDelete?: () => void,
+  /**
+   * This FileViwer is `ui/FileViewer`
+   * it's different from the `Channel/component/FileViwer`
+   */
+  export enum ViewerTypes {
+    SINGLE = 'SINGLE',
+    MULTI = 'MULTI',
   }
-  const FileViewerBody: React.FC<FileViewerBodyProps>;
-  export default FileViewerBody;
+  interface SenderInfo {
+    profileUrl: string;
+    nickname: string;
+  }
+  interface FileInfo {
+    name: string;
+    type: string;
+    url: string;
+  }
+  interface BaseViewer {
+    onClose: (e: React.MouseEvent) => void;
+  }
+  interface SingleFileViewer extends SenderInfo, FileInfo, BaseViewer {
+    viewerType?: typeof ViewerTypes.SINGLE;
+    isByMe?: boolean;
+    disableDelete?: boolean;
+    onDelete: (e: React.MouseEvent) => void;
+  }
+  interface MultiFilesViewer extends SenderInfo, BaseViewer {
+    viewerType: typeof ViewerTypes.MULTI;
+    fileInfoList: FileInfo[];
+    currentIndex: number;
+    onClickLeft: () => void;
+    onClickRight: () => void;
+  }
+  export type FileViewerComponentProps = SingleFileViewer | MultiFilesViewer;
+  export const FileViewerComponent: React.FC<FileViewerComponentProps>
+
+  interface FileViewerProps {
+    message: FileMessage | MultipleFilesMessage;
+    isByMe?: boolean;
+    currentIndex?: number;
+    onClose: (e: MouseEvent) => void;
+    onDelete?: (e: MouseEvent) => void;
+    onClickLeft?: () => void;
+    onClickRight?: () => void;
+  }
+  const FileViewer: React.FC<FileViewerProps>;
+  export default FileViewer;
 }
 
 declare module '@sendbird/uikit-react/ui/Icon' {
@@ -2154,10 +2214,10 @@ declare module '@sendbird/uikit-react/ui/MentionLabel' {
 }
 
 declare module '@sendbird/uikit-react/ui/MessageContent' {
-  import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
+  import type { GroupChannel } from '@sendbird/chat/groupChannel';
   import type { EmojiContainer } from '@sendbird/chat';
   import type { AdminMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
-  import type SenbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  import type { ReplyType, SendableMessageType } from 'SendbirdUIKitGlobal';
   interface MessageContentProps {
     className?: string | Array<string>;
     userId: string;
@@ -2167,7 +2227,7 @@ declare module '@sendbird/uikit-react/ui/MessageContent' {
     chainTop?: boolean;
     chainBottom?: boolean;
     useReaction?: boolean;
-    replyType?: SenbirdUIKitGlobal.ReplyType;
+    replyType?: ReplyType;
     nicknamesMap?: Map<string, string>;
     emojiContainer?: EmojiContainer;
     scrollToMessage?: (createdAt: number, messageId: number) => void;
@@ -2270,8 +2330,8 @@ declare module '@sendbird/uikit-react/ui/VoiceMessageInput' {
 
 declare module '@sendbird/uikit-react/ui/MessageItemMenu' {
   import type { GroupChannel } from '@sendbird/chat/groupChannel';
-  import type { FileMessage, UserMessage } from '@sendbird/chat/message';
   import type { OpenChannel } from '@sendbird/chat/openChannel';
+  import type { SendableMessageType } from 'SendbirdUIKitGlobal';
   type ReplyType = "NONE" | "QUOTE_REPLY" | "THREAD";
 
   interface MessageItemMenuProps {
@@ -2297,7 +2357,7 @@ declare module '@sendbird/uikit-react/ui/MessageItemMenu' {
 
 declare module '@sendbird/uikit-react/ui/MessageItemReactionMenu' {
   import type { EmojiContainer } from '@sendbird/chat';
-  import type { FileMessage, UserMessage } from '@sendbird/chat/message';
+  import type { SendableMessageType } from 'SendbirdUIKitGlobal';
 
   interface MessageItemReactionMenuProps {
     className?: string | Array<string>;
@@ -2313,13 +2373,13 @@ declare module '@sendbird/uikit-react/ui/MessageItemReactionMenu' {
 }
 
 declare module '@sendbird/uikit-react/ui/MessageSearchFileItem' {
-  import type SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  import type { ClientFileMessage } from 'SendbirdUIKitGlobal';
 
   interface MessageSearchFileItemProps {
     className?: string | Array<string>;
-    message: SendbirdUIKitGlobal.ClientFileMessage;
+    message: ClientFileMessage;
     selected?: boolean;
-    onClick?: (message: SendbirdUIKitGlobal.ClientFileMessage) => void;
+    onClick?: (message: ClientFileMessage) => void;
   }
   const MessageSearchFileItem: React.FC<MessageSearchFileItemProps>;
   export default MessageSearchFileItem;
@@ -2327,13 +2387,13 @@ declare module '@sendbird/uikit-react/ui/MessageSearchFileItem' {
 }
 
 declare module '@sendbird/uikit-react/ui/MessageSearchItem' {
-  import type SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  import type { ClientUserMessage, ClientMessage } from 'SendbirdUIKitGlobal';
 
   interface MessageSearchItemProps {
     className?: string | Array<string>;
-    message: SendbirdUIKitGlobal.ClientUserMessage;
+    message: ClientUserMessage;
     selected?: boolean;
-    onClick?: (message: SendbirdUIKitGlobal.ClientMessage) => void;
+    onClick?: (message: ClientMessage) => void;
   }
   const MessageSearchItem: React.FC<MessageSearchItemProps>;
   export default MessageSearchItem;
@@ -2341,7 +2401,7 @@ declare module '@sendbird/uikit-react/ui/MessageSearchItem' {
 }
 
 declare module '@sendbird/uikit-react/ui/MessageStatus' {
-  import type { UserMessage, FileMessage } from '@sendbird/chat/message';
+  import type { SendableMessageType } from 'SendbirdUIKitGlobal';
   import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
   interface MessageStatusProps {
@@ -2409,10 +2469,10 @@ declare module '@sendbird/uikit-react/ui/OpenChannelConversationHeader' {
 }
 
 declare module '@sendbird/uikit-react/ui/OpenChannelFileMessage' {
-  import type SenbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  import type { ClientFileMessage } from 'SendbirdUIKitGlobal';
   interface OpenChannelFileMessageProps {
     className?: string | Array<string>;
-    message: SenbirdUIKitGlobal.ClientFileMessage;
+    message: ClientFileMessage;
     isOperator?: boolean;
     isEphemeral?: boolean;
     userId: string;
@@ -2420,23 +2480,23 @@ declare module '@sendbird/uikit-react/ui/OpenChannelFileMessage' {
     chainTop?: boolean;
     chainBottom?: boolean;
     showRemove(bool: boolean): void;
-    resendMessage(message: SenbirdUIKitGlobal.ClientFileMessage): void;
+    resendMessage(message: ClientFileMessage): void;
   }
   const OpenChannelFileMessage: React.FC<OpenChannelFileMessageProps>;
   export default OpenChannelFileMessage;
 }
 
 declare module '@sendbird/uikit-react/ui/OpenChannelOGMessage' {
-  import type SenbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  import type { ClientUserMessage } from 'SendbirdUIKitGlobal';
   interface OpenChannelOGMessageProps {
-    message: SenbirdUIKitGlobal.ClientUserMessage;
+    message: ClientUserMessage;
     isOperator?: boolean;
     isEphemeral?: boolean;
     className?: string | Array<string>;
     disabled?: boolean;
     showEdit(bool: boolean): void;
     showRemove(bool: boolean): void;
-    resendMessage(message: SenbirdUIKitGlobal.ClientUserMessage): void;
+    resendMessage(message: ClientUserMessage): void;
     chainTop?: boolean;
     chainBottom?: boolean;
     userId: string;
@@ -2446,10 +2506,10 @@ declare module '@sendbird/uikit-react/ui/OpenChannelOGMessage' {
 }
 
 declare module '@sendbird/uikit-react/ui/OpenChannelThumbnailMessage' {
-  import type SenbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  import type { ClientFileMessage } from 'SendbirdUIKitGlobal';
   interface OpenChannelThumbnailMessageProps {
     className?: string | Array<string>;
-    message: SenbirdUIKitGlobal.ClientFileMessage;
+    message: ClientFileMessage;
     isOperator?: boolean;
     isEphemeral?: boolean;
     disabled: boolean;
@@ -2458,24 +2518,24 @@ declare module '@sendbird/uikit-react/ui/OpenChannelThumbnailMessage' {
     chainBottom: boolean;
     onClick(bool: boolean): void,
     showRemove(bool: boolean): void,
-    resendMessage(message: SenbirdUIKitGlobal.ClientFileMessage): void;
+    resendMessage(message: ClientFileMessage): void;
   }
   const OpenChannelThumbnailMessage: React.FC<OpenChannelThumbnailMessageProps>;
   export default OpenChannelThumbnailMessage;
 }
 
 declare module '@sendbird/uikit-react/ui/OpenChannelUserMessage' {
-  import type SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  import type { ClientUserMessage } from 'SendbirdUIKitGlobal';
   interface OpenChannelUserMessageProps {
     className?: string | Array<string>;
-    message: SendbirdUIKitGlobal.ClientUserMessage;
+    message: ClientUserMessage;
     isOperator?: boolean;
     isEphemeral?: boolean;
     userId: string;
     disabled?: boolean;
     showEdit(bool: boolean): void;
     showRemove(bool: boolean): void;
-    resendMessage(message: SendbirdUIKitGlobal.ClientUserMessage): void;
+    resendMessage(message: ClientUserMessage): void;
     chainTop?: boolean;
     chainBottom?: boolean;
   }
@@ -2496,7 +2556,7 @@ declare module '@sendbird/uikit-react/ui/PlaceHolder' {
 }
 
 declare module '@sendbird/uikit-react/ui/QuoteMessage' {
-  import type { UserMessage, FileMessage } from '@sendbird/chat/message';
+  import type { SendableMessageType } from 'SendbirdUIKitGlobal';
   interface QuoteMessageProps {
     message?: SendableMessageType;
     userId?: string;
@@ -2509,11 +2569,11 @@ declare module '@sendbird/uikit-react/ui/QuoteMessage' {
 }
 
 declare module '@sendbird/uikit-react/ui/QuoteMessageInput' {
-  import type SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  import type { CoreMessageType } from 'SendbirdUIKitGlobal';
   interface QuoteMessageInputProps {
     className?: string | Array<string>;
-    replyingMessage: SendbirdUIKitGlobal.CoreMessageType;
-    onClose?: (message: SendbirdUIKitGlobal.CoreMessageType) => void;
+    replyingMessage: CoreMessageType;
+    onClose?: (message: CoreMessageType) => void;
   }
   const QuoteMessageInput: React.FC<QuoteMessageInputProps>;
   export default QuoteMessageInput;
@@ -2670,11 +2730,11 @@ declare module '@sendbird/uikit-react/ui/TooltipWrapper' {
 }
 
 declare module '@sendbird/uikit-react/ui/UnknownMessageItemBody' {
-  import type SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  import type { CoreMessageType } from 'SendbirdUIKitGlobal';
   interface UnknownMessageItemBodyProps {
     className?: string | Array<string>;
     isByMe?: boolean;
-    message: SendbirdUIKitGlobal.CoreMessageType;
+    message: CoreMessageType;
     mouseHover?: boolean;
     isReactionEnabled?: boolean;
   }
@@ -2702,12 +2762,12 @@ declare module '@sendbird/uikit-react/ui/UserProfile' {
   import type { User } from '@sendbird/chat';
   import type { SendbirdGroupChat, GroupChannelCreateParams, GroupChannel } from '@sendbird/chat/groupChannel';
   import type { SendbirdOpenChat } from '@sendbird/chat/openChannel';
-  import type SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
+  import type { Logger } from 'SendbirdUIKitGlobal';
   interface UserProfileProps {
     user: User;
     currentUserId?: string;
     sdk?: SendbirdGroupChat | SendbirdOpenChat;
-    logger?: SendbirdUIKitGlobal.Logger;
+    logger?: Logger;
     disableMessaging?: boolean;
     createChannel?(params: GroupChannelCreateParams): Promise<GroupChannel>;
     onSuccess?(): void;
