@@ -127,10 +127,10 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
 
 export interface FileViewerProps {
   message: FileMessage | MultipleFilesMessage;
-  onClose: (e: MouseEvent) => void;
   isByMe?: boolean;
-  onDelete?: (e: MouseEvent) => void;
   currentIndex?: number;
+  onClose: (e: MouseEvent) => void;
+  onDelete?: (e: MouseEvent) => void;
   onClickLeft?: () => void;
   onClickRight?: () => void;
 }
