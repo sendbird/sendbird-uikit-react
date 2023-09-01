@@ -1,5 +1,69 @@
 # Changelog - v3
 
+## [v3.6.8] (Sep 1 2023)
+### Feats:
+* Update `ui/FileViewer` to support multiple images
+  * Modify the props structure
+    ```typescript
+    export enum ViewerTypes {
+      SINGLE = 'SINGLE',
+      MULTI = 'MULTI',
+    }
+    interface SenderInfo {
+      profileUrl: string;
+      nickname: string;
+    }
+    interface FileInfo {
+      name: string;
+      type: string;
+      url: string;
+    }
+    interface BaseViewer {
+      onClose: (e: React.MouseEvent) => void;
+    }
+    interface SingleFileViewer extends SenderInfo, FileInfo, BaseViewer {
+      viewerType?: typeof ViewerTypes.SINGLE;
+      isByMe?: boolean;
+      disableDelete?: boolean;
+      onDelete: (e: React.MouseEvent) => void;
+    }
+    interface MultiFilesViewer extends SenderInfo, BaseViewer {
+      viewerType: typeof ViewerTypes.MULTI;
+      fileInfoList: FileInfo[];
+      currentIndex: number;
+      onClickLeft: () => void;
+      onClickRight: () => void;
+    }
+    export type FileViewerComponentProps = SingleFileViewer | MultiFilesViewer;
+    ```
+* Export misc. utils
+  * `Channel/utils/getMessagePartsInfo`
+  * `Channel/utils/compareMessagesForGrouping`
+  * `Message/hooks/useDirtyGetMentions`
+  * `ui/MessageInput/hooks/usePaste`
+* Provide fetchChannelList method via ChannelListContext
+
+### Fixes:
+* Apply some props which is related to the `metadata` to the ChannelListQuery
+  * Add metadataKey, metadataValues, and metadataStartsWith to the Channel.queries.channelListQuery
+  * How to use
+    ```javascript
+    <Channel or ChannelProvider
+      queries={{
+        channelListQuery: {
+          metadataKey: 'isMatching',
+          metadataValues: ['true'],
+        }
+      }}
+    />
+    ```
+* Improve types of `ui/FileViewer` and `Channel/component/FileViewer`
+  * Add some props that have been missed
+* Fix `<ImageRenderer />` not converting number to pixel string
+* Modify the yypes on useChannelContext & useThreadContext
+  * `useChannelContext.setQuoteMessage` should accept `UserMessage | FileMessage`
+  * `useThreadContext.sendMessage` should be `string`
+
 ## [v3.6.7] (Aug 11 2023)
 ### Feats:
 * Added a new ImageGrid UI component (for internal use only) (#703)
