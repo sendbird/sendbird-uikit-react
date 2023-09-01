@@ -266,7 +266,7 @@ export const Korean = () => fitPageSize(
 export const user1 = () => fitPageSize(
   <App
     appId={appId}
-    userId={'sendbird1'}
+    userId={'sendbird1'} // FIXME: Put this back to array[0] before merging
     nickname={array[0]}
     profileUrl={addProfile}
     breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}

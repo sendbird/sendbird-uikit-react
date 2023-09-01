@@ -1,5 +1,5 @@
 import React, { ReactElement, useMemo, useState } from 'react';
-import { FileMessage, UserMessage } from '@sendbird/chat/message';
+import {FileMessage, MultipleFilesMessage, UserMessage} from '@sendbird/chat/message';
 
 import './ParentMessageInfoItem.scss';
 
@@ -17,7 +17,7 @@ import {
   isUserMessage,
   isVideoMessage,
   truncateString,
-  SendableMessageType,
+  SendableMessageType, isMultipleFilesMessage,
 } from '../../../../utils';
 
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
@@ -30,6 +30,7 @@ import { useThreadContext } from '../../context/ThreadProvider';
 import VoiceMessageItemBody from '../../../../ui/VoiceMessageItemBody';
 import TextFragment from '../../../Message/components/TextFragment';
 import { tokenizeMessage } from '../../../Message/utils/tokens/tokenize';
+import MultipleFilesMessageItemBody from "../../../../ui/MultipleFilesMessageItemBody";
 
 export interface ParentMessageInfoItemProps {
   className?: string;
@@ -192,6 +193,20 @@ export default function ParentMessageInfoItem({
               </Label>
             </TextButton>
           </div>
+        )
+      }
+      {
+        isMultipleFilesMessage(message) && (
+          <MultipleFilesMessageItemBody
+            className="sendbird-parent-message-info-item__multiple-files-message-wrapper"
+            gridItemProps={{
+              sideLength: '98px',
+              borderRadius: '8px'
+            }}
+            message={message as MultipleFilesMessage}
+            isByMe={false}
+            isReactionEnabled={isReactionEnabled}
+          />
         )
       }
       {

@@ -12,8 +12,14 @@ import {
 } from './const';
 import './index.scss';
 
+interface GridItemProps {
+  sideLength?: string;
+  borderRadius?: string;
+}
+
 interface Props {
   className?: string;
+  gridItemProps?: GridItemProps;
   message: MultipleFilesMessage;
   isByMe?: boolean;
   mouseHover?: boolean;
@@ -23,6 +29,7 @@ interface Props {
 
 export default function MultipleFilesMessageItemBody({
   className,
+  gridItemProps,
   message,
   isReactionEnabled = false,
 }: Props): ReactElement {
@@ -76,9 +83,9 @@ export default function MultipleFilesMessageItemBody({
             >
               <ImageRenderer
                 url={fileInfo.url}
-                width={MULTIPLE_FILES_IMAGE_SIDE_LENGTH}
-                height={MULTIPLE_FILES_IMAGE_SIDE_LENGTH}
-                borderRadius={MULTIPLE_FILES_IMAGE_BORDER_RADIUS}
+                width={ gridItemProps?.sideLength ?? MULTIPLE_FILES_IMAGE_SIDE_LENGTH}
+                height={ gridItemProps?.sideLength ?? MULTIPLE_FILES_IMAGE_SIDE_LENGTH}
+                borderRadius={ gridItemProps?.borderRadius ?? MULTIPLE_FILES_IMAGE_BORDER_RADIUS}
                 defaultComponent={
                   <div
                     className="sendbird-multiple-files-image-renderer__thumbnail__placeholder"
