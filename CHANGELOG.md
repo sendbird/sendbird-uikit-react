@@ -43,7 +43,7 @@
   * `ui/MessageInput/hooks/usePaste`
 
 ### Fixes:
-* Apply some props which is related to the `metadata` to the ChannelListQuery
+* Apply some props which are related to the `metadata` to the ChannelListQuery
   * Add metadataKey, metadataValues, and metadataStartsWith to the Channel.queries.channelListQuery
   * How to use
     ```javascript
