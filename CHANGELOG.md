@@ -41,7 +41,6 @@
   * `Channel/utils/compareMessagesForGrouping`
   * `Message/hooks/useDirtyGetMentions`
   * `ui/MessageInput/hooks/usePaste`
-* Provide fetchChannelList method via ChannelListContext
 
 ### Fixes:
 * Apply some props which is related to the `metadata` to the ChannelListQuery
