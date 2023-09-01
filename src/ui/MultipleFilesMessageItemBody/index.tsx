@@ -5,7 +5,12 @@ import { MultipleFilesMessage, UploadedFileInfo } from '@sendbird/chat/message';
 import ImageRenderer from '../ImageRenderer';
 import ImageGrid from '../ImageGrid';
 import FileViewer from '../FileViewer';
-import { MULTIPLE_FILES_IMAGE_BORDER_RADIUS, MULTIPLE_FILES_IMAGE_SIDE_LENGTH } from './const';
+import {
+  MULTIPLE_FILES_IMAGE_BORDER_RADIUS,
+  MULTIPLE_FILES_IMAGE_SIDE_LENGTH,
+  MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH
+} from './const';
+import './index.scss';
 
 interface Props {
   className?: string;
@@ -65,9 +70,9 @@ export default function MultipleFilesMessageItemBody({
         {
           fileInfoList.map((fileInfo: UploadedFileInfo, index: number) => {
             return <div
-              className='multiple-files-image-renderer-wrapper'
+              className='sendbird-multiple-files-image-renderer-wrapper'
               onClick={() => setCurrentIndex(index)}
-              key={`multiple-files-image-renderer-${index}-${fileInfo.plainUrl}`}
+              key={`sendbird-multiple-files-image-renderer-${index}-${fileInfo.plainUrl}`}
             >
               <ImageRenderer
                 url={fileInfo.url}
@@ -75,7 +80,18 @@ export default function MultipleFilesMessageItemBody({
                 height={MULTIPLE_FILES_IMAGE_SIDE_LENGTH}
                 borderRadius={MULTIPLE_FILES_IMAGE_BORDER_RADIUS}
                 defaultComponent={
-                  <Icon type={IconTypes.ADD} fillColor={IconColors.PRIMARY}/>
+                  <div
+                    className="sendbird-multiple-files-image-renderer__thumbnail__placeholder"
+                  >
+                    <div className="sendbird-multiple-files-image-renderer__thumbnail__placeholder__icon">
+                      <Icon
+                        type={IconTypes.THUMBNAIL_NONE}
+                        fillColor={IconColors.ON_BACKGROUND_2}
+                        width={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
+                        height={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
+                      />
+                    </div>
+                  </div>
                 }
               />
             </div>;
