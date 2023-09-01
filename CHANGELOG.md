@@ -59,7 +59,7 @@
 * Improve types of `ui/FileViewer` and `Channel/component/FileViewer`
   * Add some props that have been missed
 * Fix `<ImageRenderer />` not converting number to pixel string
-* Modify the yypes on useChannelContext & useThreadContext
+* Modify the types on useChannelContext & useThreadContext
   * `useChannelContext.setQuoteMessage` should accept `UserMessage | FileMessage`
   * `useThreadContext.sendMessage` should be `string`
 
