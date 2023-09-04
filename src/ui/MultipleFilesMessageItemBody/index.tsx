@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import React, {ReactElement, useEffect, useState} from 'react';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
 import { MultipleFilesMessage, UploadedFileInfo } from '@sendbird/chat/message';
@@ -6,13 +6,14 @@ import ImageRenderer from '../ImageRenderer';
 import ImageGrid from '../ImageGrid';
 import FileViewer from '../FileViewer';
 import {
-  MULTIPLE_FILES_IMAGE_BORDER_RADIUS, MULTIPLE_FILES_IMAGE_BORDER_RADIUS_THREAD,
-  MULTIPLE_FILES_IMAGE_SIDE_LENGTH, MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD,
-  MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD_MOBILE,
+  MULTIPLE_FILES_IMAGE_BORDER_RADIUS,
+  MULTIPLE_FILES_IMAGE_BORDER_RADIUS_THREAD,
+  MULTIPLE_FILES_IMAGE_SIDE_LENGTH,
   MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH,
 } from './const';
 import './index.scss';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
+import {useDynamicSideLength} from "./useGridImageSideLength";
 
 interface Props {
   className?: string;
@@ -24,6 +25,7 @@ interface Props {
   isThread?: boolean;
 }
 
+
 export default function MultipleFilesMessageItemBody({
   className,
   message,
@@ -32,6 +34,7 @@ export default function MultipleFilesMessageItemBody({
 }: Props): ReactElement {
   const { isMobile } = useMediaQueryContext();
   const [fileInfoList] = useState<UploadedFileInfo[]>(message.fileInfoList);
+  const [imageSideLength] = useDynamicSideLength({ isThread, isMobile });
   const [currentIndex, setCurrentIndex] = useState(-1);
 
   function onClose() {
@@ -54,7 +57,7 @@ export default function MultipleFilesMessageItemBody({
     );
   }
 
-  return (
+  return imageSideLength && (
     <>
       {
         currentIndex > -1 && (
@@ -81,23 +84,14 @@ export default function MultipleFilesMessageItemBody({
             >
               <ImageRenderer
                 url={fileInfo.url}
-                width={(!isThread
-                  ? MULTIPLE_FILES_IMAGE_SIDE_LENGTH
-                  : (isMobile
-                    ? MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD_MOBILE
-                    : MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD)
-                )}
-                height={(!isThread
-                  ? MULTIPLE_FILES_IMAGE_SIDE_LENGTH
-                  : (isMobile
-                    ? MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD_MOBILE
-                    : MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD)
-                )}
+                fixedSize={false}
+                width={imageSideLength}
+                maxSideLength={MULTIPLE_FILES_IMAGE_SIDE_LENGTH}
+                height={imageSideLength}
                 borderRadius={!isThread
                   ? MULTIPLE_FILES_IMAGE_BORDER_RADIUS
                   : MULTIPLE_FILES_IMAGE_BORDER_RADIUS_THREAD
                 }
-                fixedSize={true}
                 defaultComponent={
                   <div
                     className="sendbird-multiple-files-image-renderer__thumbnail__placeholder"

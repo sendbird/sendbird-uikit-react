@@ -1,7 +1,8 @@
-import React, { useState, useMemo, ReactElement } from 'react';
+import React, {useState, useMemo, ReactElement, useEffect} from 'react';
 
 import './index.scss';
 import numberToPx from '../../utils/numberToPx';
+import {useDynamicSideLength} from "./useDynamicSideLength";
 
 /*
   ImageRenderer displays image with url or source
@@ -22,6 +23,7 @@ export interface ImageRendererProps {
   url: string;
   alt?: string;
   width?: string | number;
+  maxSideLength?: string;
   height?: string | number;
   circle?: boolean;
   fixedSize?: boolean;
@@ -37,6 +39,7 @@ const ImageRenderer = ({
   url,
   alt = '',
   width = null,
+  maxSideLength = null,
   height = null,
   circle = false,
   fixedSize = false,
@@ -48,9 +51,12 @@ const ImageRenderer = ({
 }: ImageRendererProps): ReactElement => {
   const [showDefaultComponent, setShowDefaultComponent] = useState(false);
   const [showPlaceHolder, setShowPlaceHolder] = useState(true);
-
-  const parsedWidth = numberToPx(width);
-  const parsedHeight = numberToPx(height);
+  const [dynamicMinWidth, dynamicMinHeight] = useDynamicSideLength({
+    width,
+    height,
+    maxSideLength,
+    defaultMinLength: '400px',
+  });
 
   const DefaultComponent = useMemo(() => {
     return typeof defaultComponent === 'function'
@@ -63,9 +69,9 @@ const ImageRenderer = ({
       ? placeHolder({
         style: {
           width: '100%',
-          minWidth: parsedWidth,
-          maxWidth: fixedSize ? parsedWidth : '400px',
-          height: parsedHeight,
+          minWidth: dynamicMinWidth,
+          maxWidth: fixedSize ? dynamicMinWidth : '400px',
+          height: dynamicMinHeight,
           position: 'absolute',
           display: 'flex',
           justifyContent: 'center',
@@ -95,7 +101,7 @@ const ImageRenderer = ({
     );
   }, [url]);
 
-  return (
+  return dynamicMinWidth && dynamicMinHeight && (
     <div
       className={[
         ...(Array.isArray(className) ? className : [className]),
@@ -103,9 +109,9 @@ const ImageRenderer = ({
       ].join(' ')}
       style={{
         width: '100%',
-        minWidth: parsedWidth,
-        maxWidth: fixedSize ? parsedWidth : '400px',
-        height: parsedHeight,
+        minWidth: dynamicMinWidth,
+        maxWidth: fixedSize ? dynamicMinWidth : '400px',
+        height: dynamicMinHeight,
       }}
     >
       {showPlaceHolder && PlaceHolder}
@@ -117,9 +123,9 @@ const ImageRenderer = ({
               className="sendbird-image-renderer__image"
               style={{
                 width: '100%',
-                minWidth: parsedWidth,
-                maxWidth: fixedSize ? parsedWidth : '400px',
-                height: parsedHeight,
+                minWidth: dynamicMinWidth,
+                maxWidth: fixedSize ? dynamicMinWidth : '400px',
+                height: dynamicMinHeight,
                 position: 'absolute',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
