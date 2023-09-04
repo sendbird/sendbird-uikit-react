@@ -12,7 +12,7 @@ import {
   MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH,
 } from './const';
 import './index.scss';
-import {useMediaQueryContext} from "../../lib/MediaQueryContext";
+import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 
 interface Props {
   className?: string;
@@ -82,16 +82,16 @@ export default function MultipleFilesMessageItemBody({
               <ImageRenderer
                 url={fileInfo.url}
                 width={(!isThread
-                    ? MULTIPLE_FILES_IMAGE_SIDE_LENGTH
-                    : (isMobile
-                      ? MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD_MOBILE
-                      : MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD)
+                  ? MULTIPLE_FILES_IMAGE_SIDE_LENGTH
+                  : (isMobile
+                    ? MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD_MOBILE
+                    : MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD)
                 )}
                 height={(!isThread
-                    ? MULTIPLE_FILES_IMAGE_SIDE_LENGTH
-                    : (isMobile
-                      ? MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD_MOBILE
-                      : MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD)
+                  ? MULTIPLE_FILES_IMAGE_SIDE_LENGTH
+                  : (isMobile
+                    ? MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD_MOBILE
+                    : MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD)
                 )}
                 borderRadius={!isThread
                   ? MULTIPLE_FILES_IMAGE_BORDER_RADIUS
