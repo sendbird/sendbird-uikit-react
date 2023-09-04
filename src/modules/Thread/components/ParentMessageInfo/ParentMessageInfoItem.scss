@@ -50,8 +50,9 @@
 
 .sendbird-parent-message-info-item__multiple-files-message-wrapper {
   padding: 0;
+
   @include themed() {
-    background-color: t(bg-0);
+    background-color: transparent;
   }
 }
 

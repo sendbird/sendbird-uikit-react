@@ -6,33 +6,31 @@ import ImageRenderer from '../ImageRenderer';
 import ImageGrid from '../ImageGrid';
 import FileViewer from '../FileViewer';
 import {
-  MULTIPLE_FILES_IMAGE_BORDER_RADIUS,
-  MULTIPLE_FILES_IMAGE_SIDE_LENGTH,
+  MULTIPLE_FILES_IMAGE_BORDER_RADIUS, MULTIPLE_FILES_IMAGE_BORDER_RADIUS_THREAD,
+  MULTIPLE_FILES_IMAGE_SIDE_LENGTH, MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD,
+  MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD_MOBILE,
   MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH,
 } from './const';
 import './index.scss';
-
-interface GridItemProps {
-  sideLength?: string;
-  borderRadius?: string;
-}
+import {useMediaQueryContext} from "../../lib/MediaQueryContext";
 
 interface Props {
   className?: string;
-  gridItemProps?: GridItemProps;
   message: MultipleFilesMessage;
   isByMe?: boolean;
   mouseHover?: boolean;
   isReactionEnabled?: boolean;
   truncateLimit?: number;
+  isThread?: boolean;
 }
 
 export default function MultipleFilesMessageItemBody({
   className,
-  gridItemProps,
   message,
   isReactionEnabled = false,
+  isThread = false,
 }: Props): ReactElement {
+  const { isMobile } = useMediaQueryContext();
   const [fileInfoList] = useState<UploadedFileInfo[]>(message.fileInfoList);
   const [currentIndex, setCurrentIndex] = useState(-1);
 
@@ -83,9 +81,23 @@ export default function MultipleFilesMessageItemBody({
             >
               <ImageRenderer
                 url={fileInfo.url}
-                width={gridItemProps?.sideLength ?? MULTIPLE_FILES_IMAGE_SIDE_LENGTH}
-                height={gridItemProps?.sideLength ?? MULTIPLE_FILES_IMAGE_SIDE_LENGTH}
-                borderRadius={gridItemProps?.borderRadius ?? MULTIPLE_FILES_IMAGE_BORDER_RADIUS}
+                width={(!isThread
+                    ? MULTIPLE_FILES_IMAGE_SIDE_LENGTH
+                    : (isMobile
+                      ? MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD_MOBILE
+                      : MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD)
+                )}
+                height={(!isThread
+                    ? MULTIPLE_FILES_IMAGE_SIDE_LENGTH
+                    : (isMobile
+                      ? MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD_MOBILE
+                      : MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD)
+                )}
+                borderRadius={!isThread
+                  ? MULTIPLE_FILES_IMAGE_BORDER_RADIUS
+                  : MULTIPLE_FILES_IMAGE_BORDER_RADIUS_THREAD
+                }
+                fixedSize={true}
                 defaultComponent={
                   <div
                     className="sendbird-multiple-files-image-renderer__thumbnail__placeholder"

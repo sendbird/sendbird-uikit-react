@@ -200,13 +200,10 @@ export default function ParentMessageInfoItem({
         isMultipleFilesMessage(message) && (
           <MultipleFilesMessageItemBody
             className="sendbird-parent-message-info-item__multiple-files-message-wrapper"
-            gridItemProps={{
-              sideLength: '98px',
-              borderRadius: '8px',
-            }}
             message={message as MultipleFilesMessage}
             isByMe={false}
             isReactionEnabled={isReactionEnabled}
+            isThread={true}
           />
         )
       }
