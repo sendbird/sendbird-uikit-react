@@ -15,8 +15,8 @@ export function useDynamicSideLength({
   defaultMinLength,
 }: DynamicSideLengthProps): string[] {
 
-  const [dynamicMinWidth, setDynamicMinWidth] = useState('');
-  const [dynamicMinHeight, setDynamicMinHeight] = useState('');
+  const [dynamicMinWidth, setDynamicMinWidth] = useState<string>('');
+  const [dynamicMinHeight, setDynamicMinHeight] = useState<string>('');
 
   useEffect(() => {
     setDynamicMinWidth(getDynamicMinLengthInPx(width, maxSideLength, defaultMinLength));
