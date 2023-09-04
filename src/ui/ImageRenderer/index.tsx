@@ -1,8 +1,8 @@
-import React, {useState, useMemo, ReactElement, useEffect} from 'react';
+import React, { useState, useMemo, ReactElement } from 'react';
 
 import './index.scss';
 import numberToPx from '../../utils/numberToPx';
-import {useDynamicSideLength} from "./useDynamicSideLength";
+import { useDynamicSideLength } from './useDynamicSideLength';
 
 /*
   ImageRenderer displays image with url or source

@@ -1,4 +1,4 @@
-import React, {ReactElement, useEffect, useState} from 'react';
+import React, { ReactElement, useState } from 'react';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
 import { MultipleFilesMessage, UploadedFileInfo } from '@sendbird/chat/message';
@@ -13,7 +13,7 @@ import {
 } from './const';
 import './index.scss';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
-import {useDynamicSideLength} from "./useGridImageSideLength";
+import { useDynamicSideLength } from './useGridImageSideLength';
 
 interface Props {
   className?: string;
@@ -24,7 +24,6 @@ interface Props {
   truncateLimit?: number;
   isThread?: boolean;
 }
-
 
 export default function MultipleFilesMessageItemBody({
   className,

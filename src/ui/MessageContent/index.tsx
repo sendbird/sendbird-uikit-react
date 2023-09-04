@@ -241,8 +241,8 @@ export default function MessageContent({
       {/* middle */}
       <div
         className={isMobile
-          ? ""
-          : "sendbird-message-content__middle"
+          ? ''
+          : 'sendbird-message-content__middle'
         }
         {...(isMobile ? { ...longPress } : {})}
         ref={contentRef}

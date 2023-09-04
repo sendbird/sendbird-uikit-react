@@ -1,5 +1,5 @@
-import {useEffect, useState} from 'react';
-import {getDynamicMinLengthInPx} from "./utils";
+import { useEffect, useState } from 'react';
+import { getDynamicMinLengthInPx } from './utils';
 
 interface DynamicSideLengthProps {
   width: string | number;
