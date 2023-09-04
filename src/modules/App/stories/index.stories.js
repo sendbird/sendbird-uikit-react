@@ -266,7 +266,7 @@ export const Korean = () => fitPageSize(
 export const user1 = () => fitPageSize(
   <App
     appId={appId}
-    userId={array[0]}
+    userId={'sendbird1'}
     nickname={array[0]}
     profileUrl={addProfile}
     breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
