@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import React, {ReactElement, useMemo, useState} from 'react';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
 import { MultipleFilesMessage, UploadedFileInfo } from '@sendbird/chat/message';
@@ -34,6 +34,14 @@ export default function MultipleFilesMessageItemBody({
   const { isMobile } = useMediaQueryContext();
   const [fileInfoList] = useState<UploadedFileInfo[]>(message.fileInfoList);
   const [imageSideLength] = useDynamicSideLength({ isThread, isMobile });
+  const [dynamicMinWidth, dynamicMinHeight] = useMemo(() => {
+    return useDynamicSideLength({
+      width,
+      height,
+      maxSideLength,
+      defaultMinLength: '400px',
+    });
+  }, [width]);
   const [currentIndex, setCurrentIndex] = useState(-1);
 
   function onClose() {

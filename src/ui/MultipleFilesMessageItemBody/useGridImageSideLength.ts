@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import {
   MULTIPLE_FILES_IMAGE_SIDE_LENGTH,
   MULTIPLE_FILES_IMAGE_SIDE_LENGTH_MOBILE,
@@ -15,10 +15,7 @@ export function useDynamicSideLength({
   isThread,
   isMobile,
 }: DynamicSideLengthProps): string[] {
-
-  const [imageSideLength, setImageSideLength] = useState<string>();
-
-  useEffect(() => {
+  const imageSideLength = useMemo(() => {
     let newImageSideLength = '';
     if (isThread) {
       newImageSideLength = isMobile
@@ -29,7 +26,8 @@ export function useDynamicSideLength({
         ? MULTIPLE_FILES_IMAGE_SIDE_LENGTH_MOBILE
         : MULTIPLE_FILES_IMAGE_SIDE_LENGTH;
     }
-    setImageSideLength(newImageSideLength);
+    return newImageSideLength;
   }, [isMobile, isThread]);
+  
   return [imageSideLength];
 }

@@ -58,6 +58,7 @@ const ImageRenderer = ({
     defaultMinLength: '400px',
   });
 
+
   const DefaultComponent = useMemo(() => {
     return typeof defaultComponent === 'function'
       ? defaultComponent()
