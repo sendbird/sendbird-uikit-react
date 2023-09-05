@@ -20,11 +20,11 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
         >
           <div
             class="sendbird-avatar-img sendbird-image-renderer"
-            style="width: 100%; min-width: 28px; max-width: 400px; height: 28px;"
+            style="width: 100%; min-width: min(400px, 28px); max-width: 400px;"
           >
             <div
               class="sendbird-image-renderer__image"
-              style="width: 100%; min-width: 28px; max-width: 400px; height: 28px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url();"
+              style="width: 100%; min-width: min(400px, 28px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url();"
             />
             <img
               alt=""

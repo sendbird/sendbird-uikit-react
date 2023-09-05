@@ -262,6 +262,9 @@
       @include themed() { background-color: t(primary-4) }
     }
   }
+  &.image-grid {
+    @include themed() { background-color: t(bg-1) }
+  }
 }
 
 // threads

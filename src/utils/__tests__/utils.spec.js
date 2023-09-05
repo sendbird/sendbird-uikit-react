@@ -1,4 +1,11 @@
-import { UIKitMessageTypes, binarySearch, getUIKitMessageType, isAdminMessage, isFileMessage, isUrl, isUserMessage } from '../index';
+import {
+  binarySearch,
+  isAdminMessage,
+  isFileMessage,
+  isUrl,
+  isUserMessage,
+  isMultipleFilesMessage
+} from '../index';
 
 describe('Global-utils', () => {
   it('should find right index with binarySearch', () => {
@@ -25,31 +32,49 @@ describe('Global-utils: verify message type util functions', () => {
       isUserMessage: () => true,
       isFileMessage: () => false,
       isAdminMessage: () => false,
+      isMultipleFilesMessage: () => false,
       messageType: 'user',
     };
     expect(isUserMessage(mockUserMessage)).toBe(true);
     expect(isFileMessage(mockUserMessage)).toBe(false);
     expect(isAdminMessage(mockUserMessage)).toBe(false);
+    expect(isMultipleFilesMessage(mockUserMessage)).toBe(false);
     const mockFileMessage = {
       messageId: 1,
       isUserMessage: () => false,
       isFileMessage: () => true,
       isAdminMessage: () => false,
+      isMultipleFilesMessage: () => false,
       messageType: 'file',
     };
     expect(isUserMessage(mockFileMessage)).toBe(false);
     expect(isFileMessage(mockFileMessage)).toBe(true);
     expect(isAdminMessage(mockFileMessage)).toBe(false);
+    expect(isMultipleFilesMessage(mockUserMessage)).toBe(false);
     const mockAdminMessage = {
       messageId: 2,
       isUserMessage: () => false,
       isFileMessage: () => false,
       isAdminMessage: () => true,
+      isMultipleFilesMessage: () => false,
       messageType: 'admin',
     };
     expect(isUserMessage(mockAdminMessage)).toBe(false);
     expect(isFileMessage(mockAdminMessage)).toBe(false);
     expect(isAdminMessage(mockAdminMessage)).toBe(true);
+    expect(isMultipleFilesMessage(mockUserMessage)).toBe(false);
+    const mockMulipleFilesMessage = {
+      messageId: 3,
+      isUserMessage: () => false,
+      isFileMessage: () => false,
+      isAdminMessage: () => false,
+      isMultipleFilesMessage: () => true,
+      messageType: 'file',
+    };
+    expect(isUserMessage(mockMulipleFilesMessage)).toBe(false);
+    expect(isFileMessage(mockMulipleFilesMessage)).toBe(false);
+    expect(isAdminMessage(mockMulipleFilesMessage)).toBe(false);
+    expect(isMultipleFilesMessage(mockMulipleFilesMessage)).toBe(true);
   });
 
   it('should return true with incomplete properties', () => {
@@ -59,6 +84,8 @@ describe('Global-utils: verify message type util functions', () => {
     expect(isFileMessage({ messageType: 'file' })).toBe(true);
     expect(isAdminMessage({ isAdminMessage: () => true })).toBe(true);
     expect(isAdminMessage({ messageType: 'admin' })).toBe(true);
+    expect(isMultipleFilesMessage({ isMultipleFilesMessage: () => true })).toBe(true);
+    expect(isMultipleFilesMessage({ messageType: 'file', fileInfoList: [] })).toBe(true);
   });
 
   it('should refer to the method first rather than messageType', () => {
@@ -67,44 +94,54 @@ describe('Global-utils: verify message type util functions', () => {
       isUserMessage: () => true,
       isFileMessage: () => false,
       isAdminMessage: () => false,
+      isMultipleFilesMessage: () => false,
       messageType: 'file',
     };
     expect(isUserMessage(mockUserMessage)).toBe(true);
     expect(isFileMessage(mockUserMessage)).toBe(false);
     expect(isAdminMessage(mockUserMessage)).toBe(false);
+    expect(isMultipleFilesMessage(mockUserMessage)).toBe(false);
     expect(isUserMessage({ isUserMessage: () => false, messageType: 'user' })).toBe(false);
     const mockFileMessage = {
       messageId: 1,
       isUserMessage: () => false,
       isFileMessage: () => true,
       isAdminMessage: () => false,
+      isMultipleFilesMessage: () => false,
       messageType: 'admin',
     };
     expect(isUserMessage(mockFileMessage)).toBe(false);
     expect(isFileMessage(mockFileMessage)).toBe(true);
     expect(isAdminMessage(mockFileMessage)).toBe(false);
+    expect(isMultipleFilesMessage(mockFileMessage)).toBe(false);
     expect(isFileMessage({ isFileMessage: () => false, messsageType: 'file' })).toBe(false);
     const mockAdminMessage = {
       messageId: 2,
       isUserMessage: () => false,
       isFileMessage: () => false,
       isAdminMessage: () => true,
+      isMultipleFilesMessage: () => false,
       messageType: 'user',
     };
     expect(isUserMessage(mockAdminMessage)).toBe(false);
     expect(isFileMessage(mockAdminMessage)).toBe(false);
     expect(isAdminMessage(mockAdminMessage)).toBe(true);
+    expect(isMultipleFilesMessage(mockAdminMessage)).toBe(false);
     expect(isAdminMessage({ isAdminMessage: () => false, messageType: 'admin' })).toBe(false);
+    const mockMultipleFilesMessage = {
+      messageId: 2,
+      isUserMessage: () => false,
+      isFileMessage: () => false,
+      isAdminMessage: () => false,
+      isMultipleFilesMessage: () => true,
+      messageType: 'file',
+    };
+    expect(isUserMessage(mockMultipleFilesMessage)).toBe(false);
+    expect(isFileMessage(mockMultipleFilesMessage)).toBe(false);
+    expect(isAdminMessage(mockMultipleFilesMessage)).toBe(false);
+    expect(isMultipleFilesMessage(mockMultipleFilesMessage)).toBe(true);
+    expect(isMultipleFilesMessage({ isMultipleFilesMessage: () => false, messageType: 'file' })).toBe(false);
   });
-
-  it('should verify edge case of MultipleFilesMessage', () => {
-    expect(
-      getUIKitMessageType({
-        isFileMessage: () => false,
-        messageType: 'file',
-      })
-    ).toBe(UIKitMessageTypes.UNKNOWN);
-  })
 });
 
 describe('isURL', () => {

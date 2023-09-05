@@ -39,7 +39,7 @@ import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { EmojiContainer } from '@sendbird/chat';
-import { AdminMessage, FileMessage, Sender, UserMessage } from '@sendbird/chat/message';
+import { AdminMessage, FileMessage, MultipleFilesMessage, Sender, UserMessage } from '@sendbird/chat/message';
 import useLongPress from '../../hooks/useLongPress';
 import MobileMenu from '../MobileMenu';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
@@ -48,6 +48,7 @@ import { ThreadReplySelectType } from '../../modules/Channel/context/const';
 import VoiceMessageItemBody from '../VoiceMessageItemBody';
 import { Nullable, ReplyType } from '../../types';
 import { noop } from '../../utils/utils';
+import MultipleFilesMessageItemBody from '../MultipleFilesMessageItemBody';
 
 // should initialize in UserProfileContext.jsx
 export interface UserProfileContextInterface {
@@ -239,7 +240,10 @@ export default function MessageContent({
       </div>
       {/* middle */}
       <div
-        className="sendbird-message-content__middle"
+        className={isMobile
+          ? ''
+          : 'sendbird-message-content__middle'
+        }
         {...(isMobile ? { ...longPress } : {})}
         ref={contentRef}
       >
@@ -314,10 +318,19 @@ export default function MessageContent({
               isReactionEnabled={isReactionEnabledInChannel}
             />
           )}
-          {(getUIKitMessageType((message as FileMessage)) === messageTypes.FILE) && (
+          {(getUIKitMessageType((message as CoreMessageType)) === messageTypes.FILE) && (
             <FileMessageItemBody
               className="sendbird-message-content__middle__message-item-body"
               message={message as FileMessage}
+              isByMe={isByMe}
+              mouseHover={mouseHover}
+              isReactionEnabled={isReactionEnabledInChannel}
+            />
+          )}
+          {(getUIKitMessageType((message as CoreMessageType)) === messageTypes.MULTIPLE_FILES) && (
+            <MultipleFilesMessageItemBody
+              className="sendbird-message-content__middle__message-item-body"
+              message={message as MultipleFilesMessage}
               isByMe={isByMe}
               mouseHover={mouseHover}
               isReactionEnabled={isReactionEnabledInChannel}
@@ -343,7 +356,7 @@ export default function MessageContent({
               style={isMobile ? { width: '100%' } : {}}
             />
           )}
-          {(getUIKitMessageType((message as FileMessage)) === messageTypes.UNKNOWN) && (
+          {(getUIKitMessageType((message as CoreMessageType)) === messageTypes.UNKNOWN) && (
             <UnknownMessageItemBody
               className="sendbird-message-content__middle__message-item-body"
               message={message}
@@ -356,7 +369,10 @@ export default function MessageContent({
           {(isReactionEnabledInChannel && message?.reactions?.length > 0) && (
             <div className={getClassName([
               'sendbird-message-content-reactions',
-              (!isByMe || isThumbnailMessage(message as FileMessage) || isOGMessage(message as UserMessage)) ? '' : 'primary',
+              (getUIKitMessageType((message as CoreMessageType)) === messageTypes.MULTIPLE_FILES)
+                ? 'image-grid'
+                : (!isByMe || isThumbnailMessage(message as FileMessage) || isOGMessage(message as UserMessage))
+                  ? '' : 'primary',
               mouseHover ? 'mouse-hover' : '',
             ])}>
               <EmojiReactions

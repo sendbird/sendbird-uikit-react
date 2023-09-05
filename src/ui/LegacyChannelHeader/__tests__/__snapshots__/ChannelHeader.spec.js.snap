@@ -21,11 +21,11 @@ exports[`ui/LegacyChannelHeader should create a snapshot of a default ChannelHea
         >
           <div
             class="sendbird-avatar-img sendbird-image-renderer"
-            style="width: 100%; min-width: 32px; max-width: 400px; height: 32px;"
+            style="width: 100%; min-width: min(400px, 32px); max-width: 400px;"
           >
             <div
               class="sendbird-image-renderer__image"
-              style="width: 100%; min-width: 32px; max-width: 400px; height: 32px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url();"
+              style="width: 100%; min-width: min(400px, 32px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url();"
             />
             <img
               alt=""

@@ -1,0 +1,18 @@
+@import '../../styles/variables';
+
+.sendbird-multiple-files-image-renderer-wrapper {
+  cursor: pointer;
+  width: 100%;
+}
+
+.sendbird-multiple-files-image-renderer__thumbnail__placeholder {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  border-radius: 12px;
+  align-items: center;
+  @include themed() {
+    background-color: t(bg-2);
+  }
+}

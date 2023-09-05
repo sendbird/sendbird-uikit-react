@@ -178,7 +178,7 @@ export const isMultipleFilesMessage = (
       ? message.isMultipleFilesMessage()
       : (
         message.messageType === 'file'
-        && Object.prototype.hasOwnProperty.call(this, 'fileInfoList')
+        && Object.prototype.hasOwnProperty.call(message, 'fileInfoList')
       )
   )
 );
@@ -254,6 +254,9 @@ export const getUIKitMessageType = (
       return UIKitFileTypes.VOICE;
     }
     return UIKitMessageTypes.FILE;
+  }
+  if (isMultipleFilesMessage(message as FileMessage)) {
+    return UIKitMessageTypes.MULTIPLE_FILES;
   }
   return UIKitMessageTypes.UNKNOWN;
 };

@@ -3,6 +3,7 @@
 .sendbird-image-grid-wrap {
   display: flex;
   justify-content: flex-end;
+  width: 100%;
 }
 
 .sendbird-image-grid {
@@ -14,5 +15,9 @@
   width: fit-content;
   @include themed() {
     background-color: t(bg-1);
+  }
+
+  &.reactions {
+    border-radius: 12px 12px 0 0;
   }
 }

@@ -16,11 +16,11 @@ exports[`ui/MessageSearchFileItem should do a snapshot test of the MessageSearch
       >
         <div
           class="sendbird-avatar-img sendbird-image-renderer"
-          style="width: 100%; min-width: 56px; max-width: 400px; height: 56px;"
+          style="width: 100%; min-width: min(400px, 56px); max-width: 400px;"
         >
           <div
             class="sendbird-image-renderer__image"
-            style="width: 100%; min-width: 56px; max-width: 400px; height: 56px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://static.sendbird.com/sample/profiles/profile_19_512px.png);"
+            style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://static.sendbird.com/sample/profiles/profile_19_512px.png);"
           />
           <img
             alt="profile image"
