@@ -28,6 +28,6 @@ export function useDynamicSideLength({
     }
     return newImageSideLength;
   }, [isMobile, isThread]);
-  
+
   return [imageSideLength];
 }
