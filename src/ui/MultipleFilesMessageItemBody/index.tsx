@@ -7,10 +7,13 @@ import ImageGrid from '../ImageGrid';
 import FileViewer from '../FileViewer';
 import {
   MULTIPLE_FILES_IMAGE_BORDER_RADIUS,
+  MULTIPLE_FILES_IMAGE_BORDER_RADIUS_THREAD,
   MULTIPLE_FILES_IMAGE_SIDE_LENGTH,
   MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH,
 } from './const';
 import './index.scss';
+import { useMediaQueryContext } from '../../lib/MediaQueryContext';
+import { useDynamicSideLength } from './useGridImageSideLength';
 
 interface Props {
   className?: string;
@@ -19,14 +22,18 @@ interface Props {
   mouseHover?: boolean;
   isReactionEnabled?: boolean;
   truncateLimit?: number;
+  isThread?: boolean;
 }
 
 export default function MultipleFilesMessageItemBody({
   className,
   message,
   isReactionEnabled = false,
+  isThread = false,
 }: Props): ReactElement {
+  const { isMobile } = useMediaQueryContext();
   const [fileInfoList] = useState<UploadedFileInfo[]>(message.fileInfoList);
+  const [imageSideLength] = useDynamicSideLength({ isThread, isMobile });
   const [currentIndex, setCurrentIndex] = useState(-1);
 
   function onClose() {
@@ -49,7 +56,7 @@ export default function MultipleFilesMessageItemBody({
     );
   }
 
-  return (
+  return imageSideLength && (
     <>
       {
         currentIndex > -1 && (
@@ -76,9 +83,14 @@ export default function MultipleFilesMessageItemBody({
             >
               <ImageRenderer
                 url={fileInfo.url}
-                width={MULTIPLE_FILES_IMAGE_SIDE_LENGTH}
-                height={MULTIPLE_FILES_IMAGE_SIDE_LENGTH}
-                borderRadius={MULTIPLE_FILES_IMAGE_BORDER_RADIUS}
+                fixedSize={false}
+                width={imageSideLength}
+                maxSideLength={MULTIPLE_FILES_IMAGE_SIDE_LENGTH}
+                height={imageSideLength}
+                borderRadius={!isThread
+                  ? MULTIPLE_FILES_IMAGE_BORDER_RADIUS
+                  : MULTIPLE_FILES_IMAGE_BORDER_RADIUS_THREAD
+                }
                 defaultComponent={
                   <div
                     className="sendbird-multiple-files-image-renderer__thumbnail__placeholder"
