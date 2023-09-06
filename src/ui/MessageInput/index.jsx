@@ -525,6 +525,8 @@ const MessageInput = React.forwardRef((props, ref) => {
                   type="file"
                   ref={fileInputRef}
                   onChange={handleUploadFile(onFileUpload)}
+                  // onChange={onFileUpload}
+                  // It will affect to <Channel /> and <Thread />
                   multiple
                   accept={getMimeTypesUIKitAccepts()}
                 />

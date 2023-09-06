@@ -46,6 +46,7 @@ import useScrollToMessage from './hooks/useScrollToMessage';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 import { getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
+import { useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
 
 export type MessageListParams = {
   // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
@@ -134,7 +135,7 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   messageActionTypes: Record<string, string>;
   messagesDispatcher: CustomUseReducerDispatcher;
   quoteMessage: SendableMessageType;
-  setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType>>;
+  setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
   initialTimeStamp: number;
   setInitialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
   animatedMessageId: number;
@@ -421,6 +422,15 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       messagesDispatcher,
     },
   );
+  const [sendMultipleFilesMessage] = useSendMultipleFilesMessage({
+    currentChannel: currentGroupChannel,
+    // Open interface to <Channel /> & <ChannelProvider >
+    // onBeforeSendMultipleFilesMessage: (params) => params,
+  }, {
+    logger,
+    pubSub,
+    scrollRef,
+  });
 
   return (
     <ChannelContext.Provider value={{
@@ -474,6 +484,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       sendMessage,
       sendFileMessage,
       sendVoiceMessage,
+      sendMultipleFilesMessage,
       initialTimeStamp,
       messageActionTypes,
       messagesDispatcher,

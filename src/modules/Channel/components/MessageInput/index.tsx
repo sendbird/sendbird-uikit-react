@@ -3,6 +3,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import './message-input.scss';
 import * as utils from '../../context/utils';
 
+import type { Nullable } from '../../../../types';
 import MessageInput from '../../../../ui/MessageInput';
 import QuoteMessageInput from '../../../../ui/QuoteMessageInput';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
@@ -13,6 +14,7 @@ import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import VoiceMessageInputWrapper from './VoiceMessageInputWrapper';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
+import { useHandleUploadFiles } from './useHandleUploadFiles';
 
 export type MessageInputWrapperProps = {
   value?: string;
@@ -25,7 +27,7 @@ export type MessageInputWrapperProps = {
 const MessageInputWrapper = (
   props: MessageInputWrapperProps,
   ref: React.MutableRefObject<any>,
-): JSX.Element => {
+): Nullable<JSX.Element> => {
   const {
     value,
     renderFileUploadIcon,
@@ -107,6 +109,15 @@ const MessageInputWrapper = (
       }
     }));
   }, [mentionedUserIds]);
+
+  const [handleUploadFiles] = useHandleUploadFiles({
+    onUploadFiles: () => {},
+    // sendFileMessage
+    // sendMultipleFilesMessage
+    // quoteMessage
+  }, {
+    logger,
+  });
 
   // broadcast channel + not operator
   if (isBroadcast && !isOperator) {
@@ -204,7 +215,9 @@ const MessageInputWrapper = (
                 setQuoteMessage(null);
                 channel?.endTyping?.();
               }}
+              // onFileUpload={handleUploadFiles} from useHandleUploadFiles
               onFileUpload={(file) => {
+                // sendMultipleFilesMessage(fileList, quoteMessage);
                 sendFileMessage(file, quoteMessage);
                 setQuoteMessage(null);
               }}

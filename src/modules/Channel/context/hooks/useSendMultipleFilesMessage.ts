@@ -1,10 +1,17 @@
 import { useCallback } from 'react';
-import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { FileMessage, MultipleFilesMessageCreateParams, UploadableFileInfo, UserMessage } from '@sendbird/chat/message';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import type {
+  FileMessage,
+  MultipleFilesMessageCreateParams,
+  UploadableFileInfo,
+  UserMessage,
+} from '@sendbird/chat/message';
 
-import { Logger } from '../../../../lib/SendbirdState';
-import { scrollIntoLast } from '../utils';
+import type { Logger } from '../../../../lib/SendbirdState';
+import type { Nullable } from '../../../../types';
 import PUBSUB_TOPICS from '../../../../lib/pubSub/topics';
+import { scrollIntoLast } from '../utils';
+import { noop } from '../../../../utils/utils';
 
 export type OnBeforeSendMFMType = (
   params: MultipleFilesMessageCreateParams,
@@ -12,7 +19,7 @@ export type OnBeforeSendMFMType = (
 ) => MultipleFilesMessageCreateParams;
 
 export interface UseSendMFMDynamicParams {
-  currentChannel: GroupChannel,
+  currentChannel: Nullable<GroupChannel>,
   onBeforeSendMultipleFilesMessage?: OnBeforeSendMFMType,
 }
 export interface UseSendMFMStaticParams {
@@ -34,6 +41,9 @@ export const useSendMultipleFilesMessage = ({
   pubSub,
   scrollRef,
 }: UseSendMFMStaticParams): Array<SendMFMFunctionType> => {
+  if (!currentChannel) {
+    return [noop];
+  }
   const sendMessage = useCallback((files: Array<File>, quoteMessage?: UserMessage | FileMessage): void => {
     if (files.length <= 1) {
       logger.error('Channel: Sending MFM failed, because there are no multiple files.', { files });
