@@ -4,10 +4,17 @@ import {
   isFileMessage,
   isUrl,
   isUserMessage,
-  isMultipleFilesMessage
+  isMultipleFilesMessage,
+  getMimeTypesUIKitAccepts
 } from '../index';
 
 describe('Global-utils', () => {
+  it('should return expected string with getMimeTypesUIKitAccepts', () => {
+    expect(getMimeTypesUIKitAccepts()).toBe(
+        'image/jpeg,image/jpg,image/png,image/gif,image/svg+xml,image/webp,video/mpeg,video/ogg,video/webm,video/mp4,audio/aac,audio/midi,audio/x-midi,audio/mpeg,audio/ogg,audio/opus,audio/wav,audio/webm,audio/3gpp,audio/3gpp2,audio/mp3'
+    );
+  });
+
   it('should find right index with binarySearch', () => {
     const criterionArray = [99, 88, 77, 66, 55, 44, 33, 22, 11, 0];
 

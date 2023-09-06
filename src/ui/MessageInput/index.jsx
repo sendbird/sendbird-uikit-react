@@ -23,6 +23,7 @@ import { nodeListToArray, sanitizeString } from './utils';
 import {
   arrayEqual,
   getClassName,
+  getMimeTypesUIKitAccepts,
 } from '../../utils';
 import usePaste from './hooks/usePaste';
 import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
@@ -524,6 +525,8 @@ const MessageInput = React.forwardRef((props, ref) => {
                   type="file"
                   ref={fileInputRef}
                   onChange={handleUploadFile(onFileUpload)}
+                  multiple
+                  accept={getMimeTypesUIKitAccepts()}
                 />
               </IconButton>
               )
