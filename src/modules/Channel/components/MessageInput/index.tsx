@@ -42,6 +42,7 @@ const MessageInputWrapper = (
     sendMessage,
     sendFileMessage,
     sendVoiceMessage,
+    sendMultipleFilesMessage,
     setQuoteMessage,
     messageInputRef,
     renderUserMentionItem,
@@ -111,10 +112,9 @@ const MessageInputWrapper = (
   }, [mentionedUserIds]);
 
   const [handleUploadFiles] = useHandleUploadFiles({
-    onUploadFiles: () => {},
-    // sendFileMessage
-    // sendMultipleFilesMessage
-    // quoteMessage
+    sendFileMessage,
+    sendMultipleFilesMessage,
+    quoteMessage,
   }, {
     logger,
   });
@@ -183,6 +183,7 @@ const MessageInputWrapper = (
               mentionSelectedUser={selectedUser}
               isMentionEnabled={isMentionEnabled}
               isVoiceMessageEnabled={isVoiceMessageEnabled}
+              isSelectingMultipleFilesEnabled
               onVoiceMessageIconClick={() => {
                 setShowVoiceMessageInput(true);
               }}
@@ -215,12 +216,7 @@ const MessageInputWrapper = (
                 setQuoteMessage(null);
                 channel?.endTyping?.();
               }}
-              // onFileUpload={handleUploadFiles} from useHandleUploadFiles
-              onFileUpload={(file) => {
-                // sendMultipleFilesMessage(fileList, quoteMessage);
-                sendFileMessage(file, quoteMessage);
-                setQuoteMessage(null);
-              }}
+              onFileUpload={handleUploadFiles}
               onUserMentioned={(user) => {
                 if (selectedUser?.userId === user?.userId) {
                   setSelectedUser(null);

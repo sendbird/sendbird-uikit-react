@@ -11,6 +11,7 @@ import type {
   BaseMessage,
   FileMessage,
   FileMessageCreateParams,
+  MultipleFilesMessage,
   UserMessage,
   UserMessageCreateParams,
   UserMessageUpdateParams,
@@ -153,8 +154,9 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   resendMessage(failedMessage: SendableMessageType): Promise<SendableMessageType>,
   // TODO: Good to change interface to using params / This part need refactoring
   sendMessage(props: SendMessageParams): Promise<UserMessage>,
-  sendFileMessage(file: File, quoteMessage: SendableMessageType): Promise<FileMessage>,
+  sendFileMessage(file: File, quoteMessage?: SendableMessageType): Promise<FileMessage>,
   sendVoiceMessage: (file: File, duration: number, quoteMessage?: SendableMessageType) => void,
+  sendMultipleFilesMessage: (files: Array<File>, quoteMessage?: SendableMessageType) => Promise<MultipleFilesMessage>,
   // sendMessage(messageParams: SendBird.UserMessageParams): Promise<SendBird.UserMessage>,
   // sendFileMessage(messageParams: SendBird.FileMessageParams): Promise<SendBird.FileMessage>,
   toggleReaction(message: SendableMessageType, emojiKey: string, isReacted: boolean): void,
