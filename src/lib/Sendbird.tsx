@@ -29,7 +29,7 @@ import getStringSet from '../ui/Label/stringSet';
 import {
   DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT,
   VOICE_RECORDER_DEFAULT_MAX,
-  VOICE_RECORDER_DEFAULT_MIN
+  VOICE_RECORDER_DEFAULT_MIN,
 } from '../utils/consts';
 import { uikitConfigMapper } from './utils/uikitConfigMapper';
 

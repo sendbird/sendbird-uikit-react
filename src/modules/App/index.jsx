@@ -14,7 +14,7 @@ import './index.scss';
 import {
   DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT,
   VOICE_RECORDER_DEFAULT_MAX,
-  VOICE_RECORDER_DEFAULT_MIN
+  VOICE_RECORDER_DEFAULT_MIN,
 } from '../../utils/consts';
 
 export default function App(props) {
