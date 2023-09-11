@@ -34,13 +34,6 @@ import { checkIfFileUploadEnabled } from './messageInputUtils';
 const TEXT_FIELD_ID = 'sendbird-message-input-text-field';
 const LINE_HEIGHT = 76;
 const noop = () => { };
-const handleUploadFile = (callback) => (event) => {
-  if (event.target.files && event.target.files[0]) {
-    callback(event.target.files[0]);
-  }
-  // eslint-disable-next-line no-param-reassign
-  event.target.value = '';
-};
 
 const displayCaret = (element, position) => {
   const range = document.createRange();
@@ -76,6 +69,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     isEdit,
     isMentionEnabled,
     isVoiceMessageEnabled,
+    isSelectingMultipleFilesEnabled,
     disabled,
     message,
     placeholder,
@@ -524,11 +518,13 @@ const MessageInput = React.forwardRef((props, ref) => {
                   className="sendbird-message-input--attach-input"
                   type="file"
                   ref={fileInputRef}
-                  onChange={handleUploadFile(onFileUpload)}
-                  // onChange={onFileUpload}
                   // It will affect to <Channel /> and <Thread />
-                  multiple
+                  onChange={(event) => {
+                    onFileUpload([...event.currentTarget.files]);
+                    event.target.value = '';
+                  }}
                   accept={getMimeTypesUIKitAccepts()}
+                  multiple={isSelectingMultipleFilesEnabled}
                 />
               </IconButton>
               )
@@ -598,6 +594,7 @@ MessageInput.propTypes = {
   isEdit: PropTypes.bool,
   isMentionEnabled: PropTypes.bool,
   isVoiceMessageEnabled: PropTypes.bool,
+  isSelectingMultipleFilesEnabled: PropTypes.bool,
   onVoiceMessageIconClick: PropTypes.func,
   message: PropTypes.shape({
     messageId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -642,6 +639,7 @@ MessageInput.defaultProps = {
   isEdit: false,
   isMentionEnabled: false,
   isVoiceMessageEnabled: true,
+  isSelectingMultipleFilesEnabled: false,
   onVoiceMessageIconClick: noop,
   disabled: false,
   placeholder: '',
