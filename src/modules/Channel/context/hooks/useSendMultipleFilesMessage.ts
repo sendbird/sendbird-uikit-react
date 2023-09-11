@@ -1,12 +1,11 @@
 import { useCallback } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type {
-  FileMessage,
   MultipleFilesMessageCreateParams,
   UploadableFileInfo,
-  UserMessage,
 } from '@sendbird/chat/message';
 
+import { SendableMessageType } from 'SendbirdUIKitGlobal';
 import type { Logger } from '../../../../lib/SendbirdState';
 import type { Nullable } from '../../../../types';
 import PUBSUB_TOPICS from '../../../../lib/pubSub/topics';
@@ -15,7 +14,7 @@ import { noop } from '../../../../utils/utils';
 
 export type OnBeforeSendMFMType = (
   params: MultipleFilesMessageCreateParams,
-  quoteMessage?: UserMessage | FileMessage,
+  quoteMessage?: SendableMessageType,
 ) => MultipleFilesMessageCreateParams;
 
 export interface UseSendMFMDynamicParams {
@@ -27,7 +26,7 @@ export interface UseSendMFMStaticParams {
   pubSub: any,
   scrollRef: React.RefObject<HTMLDivElement>;
 }
-type SendMFMFunctionType = (files: Array<File>, quoteMessage?: UserMessage | FileMessage) => void;
+export type SendMFMFunctionType = (files: Array<File>, quoteMessage?: SendableMessageType) => void;
 
 /**
  * pubSub is used instead of messagesDispatcher to avoid redundantly calling
@@ -44,7 +43,7 @@ export const useSendMultipleFilesMessage = ({
   if (!currentChannel) {
     return [noop];
   }
-  const sendMessage = useCallback((files: Array<File>, quoteMessage?: UserMessage | FileMessage): void => {
+  const sendMessage = useCallback((files: Array<File>, quoteMessage?: SendableMessageType): void => {
     if (files.length <= 1) {
       logger.error('Channel: Sending MFM failed, because there are no multiple files.', { files });
       return;

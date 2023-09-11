@@ -2258,7 +2258,7 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
     name: string,
     placeholder?: string,
     maxLength?: number,
-    onFileUpload?: () => void,
+    onFileUpload?: (files: Array<File>) => void,
     onSendMessage?: () => void,
     onCancelEdit?: () => void,
     onStartTyping?: () => void,
