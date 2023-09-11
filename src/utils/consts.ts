@@ -33,3 +33,7 @@ export const DELIVERY_RECEIPT = 'delivery_receipt';
 
 // file viewer slider
 export const SLIDER_BUTTON_ICON_SIDE_LENGTH = '32px';
+
+// multiple files message file info count limit
+export const DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT = 10;
+

@@ -11,7 +11,11 @@ import Sendbird from '../../lib/Sendbird';
 import { AppLayout } from './AppLayout';
 
 import './index.scss';
-import { VOICE_RECORDER_DEFAULT_MAX, VOICE_RECORDER_DEFAULT_MIN } from '../../utils/consts';
+import {
+  DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT,
+  VOICE_RECORDER_DEFAULT_MAX,
+  VOICE_RECORDER_DEFAULT_MIN
+} from '../../utils/consts';
 
 export default function App(props) {
   const {
@@ -184,7 +188,7 @@ App.defaultProps = {
     maxRecordingTime: VOICE_RECORDER_DEFAULT_MAX,
     minRecordingTime: VOICE_RECORDER_DEFAULT_MIN,
   },
-  uikitMultipleFilesMessageLimit: null,
+  uikitMultipleFilesMessageLimit: DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT,
   isMessageGroupingEnabled: true,
   stringSet: null,
   colorSet: null,
