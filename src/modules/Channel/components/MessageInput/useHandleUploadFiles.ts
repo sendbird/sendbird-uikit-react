@@ -33,7 +33,7 @@ export const useHandleUploadFiles = ({
   const { config } = useSendbirdStateContext();
   const uikitMultipleFilesMessageLimit = config?.uikitMultipleFilesMessageLimit;
 
-  const handleUploadeFiles = useCallback((fileList: FileList) => {
+  const handleUploadFiles = useCallback((fileList: FileList) => {
     const files: File[] = Array.from(fileList);
 
     // Validate Paremeters
@@ -46,11 +46,11 @@ export const useHandleUploadFiles = ({
       return;
     }
     if (files.length > uikitMultipleFilesMessageLimit) {
-      logger.info(`Channel|useHandleUploadeFiles: Cannot upload files more than ${uikitMultipleFilesMessageLimit}`);
+      logger.info(`Channel|usehandleUploadFiles: Cannot upload files more than ${uikitMultipleFilesMessageLimit}`);
       return;
     }
     if (files.some((file: File) => file.size > FILE_SIZE_LIMIT)) {
-      logger.info(`Channel|useHandleUploadeFiles: Cannot upload file size exceeding ${FILE_SIZE_LIMIT}`);
+      logger.info(`Channel|usehandleUploadFiles: Cannot upload file size exceeding ${FILE_SIZE_LIMIT}`);
       return;
     }
 
@@ -87,5 +87,5 @@ export const useHandleUploadFiles = ({
     quoteMessage,
   ]);
 
-  return [handleUploadeFiles];
+  return [handleUploadFiles];
 };
