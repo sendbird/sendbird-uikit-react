@@ -21,8 +21,8 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 
 import QuoteMessageThumbnail from './QuoteMessageThumbnail';
-import {getMessageFirstFileName} from "../QuoteMessage/utils";
-import {MultipleFilesMessage} from "@sendbird/chat/message";
+import { getMessageFirstFileName } from '../QuoteMessage/utils';
+import { MultipleFilesMessage } from '@sendbird/chat/message';
 
 interface Props {
   className?: string | Array<string>;

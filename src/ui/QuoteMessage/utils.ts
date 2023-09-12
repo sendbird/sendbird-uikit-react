@@ -1,7 +1,7 @@
-import {CoreMessageType, isFileMessage, isMultipleFilesMessage} from "../../utils";
-import {match} from "ts-pattern";
-import {FileMessage, MultipleFilesMessage, UploadedFileInfo} from "@sendbird/chat/message";
-import {Thumbnail} from "@sendbird/chat/lib/__definition";
+import { CoreMessageType, isFileMessage, isMultipleFilesMessage } from '../../utils';
+import { match } from 'ts-pattern';
+import { FileMessage, MultipleFilesMessage, UploadedFileInfo } from '@sendbird/chat/message';
+import { Thumbnail } from '@sendbird/chat/lib/__definition';
 
 export function getMessageFirstFileType(message: CoreMessageType): string {
   return match(message)

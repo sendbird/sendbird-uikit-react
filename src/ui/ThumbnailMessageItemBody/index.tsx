@@ -7,8 +7,8 @@ import ImageRenderer from '../ImageRenderer';
 import { getClassName, isGifMessage, isSentMessage, isVideoMessage } from '../../utils';
 import { noop } from '../../utils/utils';
 import useLongPress from '../../hooks/useLongPress';
-import {MultipleFilesMessage} from "@sendbird/chat/message";
-import {getMessageFirstFileType, getMessageFirstFileUrl, getMessageFirstFileThumbnailUrl} from "../QuoteMessage/utils";
+import { MultipleFilesMessage } from '@sendbird/chat/message';
+import { getMessageFirstFileType, getMessageFirstFileUrl, getMessageFirstFileThumbnailUrl } from '../QuoteMessage/utils';
 
 interface Props {
   className?: string | Array<string>;

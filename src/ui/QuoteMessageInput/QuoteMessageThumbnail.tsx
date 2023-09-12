@@ -9,10 +9,10 @@ import {
   isImageMessage,
   isMultipleFilesMessage,
   isThumbnailMessage,
-  isVoiceMessage
+  isVoiceMessage,
 } from '../../utils';
-import {MultipleFilesMessage} from "@sendbird/chat/message";
-import {getMessageFirstFileType, getMessageFirstFileUrl, getMessageFirstFileThumbnailUrl} from "../QuoteMessage/utils";
+import { MultipleFilesMessage } from '@sendbird/chat/message';
+import { getMessageFirstFileType, getMessageFirstFileUrl, getMessageFirstFileThumbnailUrl } from '../QuoteMessage/utils';
 
 interface Props {
   message: FileMessage | MultipleFilesMessage;

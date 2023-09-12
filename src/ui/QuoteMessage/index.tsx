@@ -22,7 +22,7 @@ import {
   truncateString,
   UIKitMessageTypes,
 } from '../../utils';
-import {getMessageFirstFileName, getMessageFirstFileType, getMessageFirstFileUrl} from "./utils";
+import { getMessageFirstFileName, getMessageFirstFileType, getMessageFirstFileUrl } from './utils';
 
 interface Props {
   className?: string | Array<string>;
