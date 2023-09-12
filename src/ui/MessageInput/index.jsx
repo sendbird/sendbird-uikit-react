@@ -585,24 +585,13 @@ MessageInput.propTypes = {
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string),
   ]),
-  messageFieldId: PropTypes.string,
-  placeholder: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
-  value: PropTypes.string,
   isEdit: PropTypes.bool,
   isMentionEnabled: PropTypes.bool,
   isVoiceMessageEnabled: PropTypes.bool,
   isSelectingMultipleFilesEnabled: PropTypes.bool,
-  onVoiceMessageIconClick: PropTypes.func,
-  message: PropTypes.shape({
-    messageId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    message: PropTypes.string,
-    mentionedMessageTemplate: PropTypes.string,
-    mentionedUsers: PropTypes.arrayOf(PropTypes.shape({})),
-  }),
   disabled: PropTypes.bool,
+  value: PropTypes.string,
+  placeholder: PropTypes.string,
   maxLength: PropTypes.number,
   onFileUpload: PropTypes.func,
   onSendMessage: PropTypes.func,
@@ -610,22 +599,32 @@ MessageInput.propTypes = {
   onStartTyping: PropTypes.func,
   onCancelEdit: PropTypes.func,
   channelUrl: PropTypes.string,
+  channel: PropTypes.shape({
+    channelType: PropTypes.string,
+  }).isRequired,
+  messageFieldId: PropTypes.string,
+  // Mention
+  message: PropTypes.shape({
+    messageId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    message: PropTypes.string,
+    mentionedMessageTemplate: PropTypes.string,
+    mentionedUsers: PropTypes.arrayOf(PropTypes.shape({})),
+  }),
+  setMentionedUsers: PropTypes.func,
   mentionSelectedUser: PropTypes.shape({
     userId: PropTypes.string,
     nickname: PropTypes.string,
   }),
-  setMentionedUsers: PropTypes.func,
   onUserMentioned: PropTypes.func,
   onMentionStringChange: PropTypes.func,
   onMentionedUserIdsUpdated: PropTypes.func,
   onKeyUp: PropTypes.func,
   onKeyDown: PropTypes.func,
+  // Voice Message
+  onVoiceMessageIconClick: PropTypes.func,
   renderVoiceMessageIcon: PropTypes.func,
   renderSendMessageIcon: PropTypes.func,
   renderFileUploadIcon: PropTypes.func,
-  channel: PropTypes.shape({
-    channelType: PropTypes.string,
-  }).isRequired,
 };
 
 MessageInput.defaultProps = {

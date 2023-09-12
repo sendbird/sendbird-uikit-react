@@ -6,7 +6,7 @@
 declare module "SendbirdUIKitGlobal" {
   import type React from 'react';
   import type SendbirdChat from '@sendbird/chat';
-  import { GroupChannelModule, ModuleNamespaces, OpenChannelModule, SendbirdChatParams, Module } from '@sendbird/chat/lib/__definition';
+  import { GroupChannelModule, ModuleNamespaces, OpenChannelModule, SendbirdChatParams, Module, SendableMessage } from '@sendbird/chat/lib/__definition';
   import { SBUConfig } from '@sendbird/uikit-tools';
   import type {
     SendbirdError,
@@ -2243,9 +2243,14 @@ declare module '@sendbird/uikit-react/ui/MessageContent' {
 }
 
 declare module '@sendbird/uikit-react/ui/MessageInput' {
+  import type { KeyboardEvent, MouseEvent, ReactElement } from 'react';
   import type { GroupChannel } from '@sendbird/chat/groupChannel';
   import type { OpenChannel } from '@sendbird/chat/openChannel';
   import type { User } from '@sendbird/chat';
+  import type { SendableMessageType } from 'SendbirdUIKitGlobal';
+
+  type OnSendMessageType = (props: { message: string, mentionTemplate: string }) => void;
+  type OnUpdateMessageType = (props: { messageId: string, message: string, mentionTemplate: string }) => void;
 
   interface MessageInputProps {
     className?: Array<string>,
@@ -2255,25 +2260,30 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
     disabled?: boolean,
     // value is removed when channelURL changes
     value?: string,
-    name: string,
     placeholder?: string,
     maxLength?: number,
-    onFileUpload?: () => void,
-    onSendMessage?: () => void,
-    onCancelEdit?: () => void,
+    onFileUpload?: (fileList: FileList) => void,
+    onSendMessage?: OnSendMessageType,
+    onUpdateMessage?: OnUpdateMessageType,
     onStartTyping?: () => void,
-    channelUrl: string,
+    onCancelEdit?: (e: MouseEvent<HTMLButtonElement>) => void,
+    channelUrl?: string,
     channel?: OpenChannel | GroupChannel,
+    messageFieldId?: string,
+    // Mention
+    message?: SendableMessageType,
+    setMentionedUsers?: () => void,
     mentionSelectedUser?: Array<User>,
     onUserMentioned?: (user: User) => void,
     onMentionStringChange?: (str: string) => void,
     onMentionedUserIdsUpdated?: (userIds: Array<string>) => void,
-    onKeyUp?: (e: React.KeyboardEvent<HTMLDivElement>) => void,
-    onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void,
+    onKeyUp?: (e: KeyboardEvent<HTMLDivElement>) => void,
+    onKeyDown?: (e: KeyboardEvent<HTMLDivElement>) => void,
+    // Voice Message
     onVoiceMessageIconClick?: () => void;
-    renderFileUploadIcon?: () => React.ReactElement;
-    renderVoiceMessageIcon?: () => React.ReactElement;
-    renderSendMessageIcon?: () => React.ReactElement;
+    renderFileUploadIcon?: () => ReactElement;
+    renderVoiceMessageIcon?: () => ReactElement;
+    renderSendMessageIcon?: () => ReactElement;
   }
   const MessageInput: React.FC<MessageInputProps>;
   export default MessageInput;
