@@ -269,7 +269,7 @@ export default function MessageContent({
               message={message as SendableMessageType}
               userId={userId}
               isByMe={isByMe}
-              isUnavailable={(replyType === 'THREAD' && (channel?.joinedAt ?? 0 * 1000) > (message.parentMessage?.createdAt ?? 0))}
+              isUnavailable={(channel?.messageOffsetTimestamp ?? 0) > (message.parentMessage?.createdAt ?? 0)}
               onClick={() => {
                 if (replyType === 'THREAD' && threadReplySelectType === ThreadReplySelectType.THREAD) {
                   onQuoteMessageClick?.({ message: message as SendableMessageType });
