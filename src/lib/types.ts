@@ -17,20 +17,21 @@ import type {
   UserMessageCreateParams,
   UserMessageUpdateParams,
 } from '@sendbird/chat/message';
+import { SBUConfig } from '@sendbird/uikit-tools';
+import { Module } from '@sendbird/chat/lib/__definition';
 
-import type SendBirdTypes from '../types';
+import type {
+  RenderUserProfileProps,
+  ReplyType,
+  SendBirdProviderConfig,
+  UserListQuery,
+} from '../types';
 import { UikitMessageHandler } from './selectors';
 import { Logger } from './SendbirdState';
-import { ReplyType } from 'SendbirdUIKitGlobal';
 import { MarkAsReadSchedulerType } from './hooks/useMarkAsReadScheduler';
 import { MarkAsDeliveredSchedulerType } from './hooks/useMarkAsDeliveredScheduler';
 import { PartialDeep } from '../utils/typeHelpers/partialDeep';
-
-import { SBUConfig } from '@sendbird/uikit-tools';
-
-import { Module } from '@sendbird/chat/lib/__definition';
 import { CoreMessageType } from '../utils';
-import { Nullable } from '../types';
 
 // note to SDK team:
 // using enum inside .d.ts won’t work for jest, but const enum will work.
@@ -50,10 +51,10 @@ export interface SendBirdProviderProps {
   dateLocale?: Locale;
   disableUserProfile?: boolean;
   disableMarkAsDelivered?: boolean;
-  renderUserProfile?: (props: SendBirdTypes.RenderUserProfileProps) => React.ReactElement;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   allowProfileEdit?: boolean;
-  userListQuery?(): SendBirdTypes.UserListQuery;
-  config?: SendBirdTypes.SendBirdProviderConfig;
+  userListQuery?(): UserListQuery;
+  config?: SendBirdProviderConfig;
   stringSet?: Record<string, string>;
   colorSet?: Record<string, string>;
   isMentionEnabled?: boolean;
@@ -74,7 +75,7 @@ export interface SendBirdProviderProps {
 export interface SendBirdStateConfig {
   disableUserProfile: boolean;
   disableMarkAsDelivered: boolean;
-  renderUserProfile?: (props: SendBirdTypes.RenderUserProfileProps) => React.ReactElement;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   onUserProfileMessage?: (props: GroupChannel) => void;
   allowProfileEdit: boolean;
   isOnline: boolean;
@@ -85,11 +86,11 @@ export interface SendBirdStateConfig {
   pubSub: any;
   logger: Logger;
   setCurrenttheme: (theme: string) => void;
-  userListQuery?(): SendBirdTypes.UserListQuery;
+  userListQuery?(): UserListQuery;
   isReactionEnabled: boolean;
   isMentionEnabled: boolean;
   isVoiceMessageEnabled?: boolean;
-  uikitMultipleFilesMessageLimit: Nullable<number>; // shouldn't be nullable
+  uikitMultipleFilesMessageLimit: number;
   voiceRecord?: {
     maxRecordingTime: number;
     minRecordingTime: number;
