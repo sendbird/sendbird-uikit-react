@@ -24,7 +24,7 @@ export interface UseSendMFMDynamicParams {
 export interface UseSendMFMStaticParams {
   logger: Logger,
   pubSub: any,
-  scrollRef: React.RefObject<HTMLDivElement>;
+  scrollRef?: React.RefObject<HTMLDivElement>;
 }
 export type SendMFMFunctionType = (files: Array<File>, quoteMessage?: SendableMessageType) => void;
 
@@ -40,12 +40,13 @@ export const useSendMultipleFilesMessage = ({
   pubSub,
   scrollRef,
 }: UseSendMFMStaticParams): Array<SendMFMFunctionType> => {
-  if (!currentChannel) {
-    return [noop];
-  }
   const sendMessage = useCallback((files: Array<File>, quoteMessage?: SendableMessageType): void => {
+    if (!currentChannel) {
+      logger.warning('Channel: Sending MFm failed, because currentChannel is null.', { currentChannel });
+      return;
+    }
     if (files.length <= 1) {
-      logger.error('Channel: Sending MFM failed, because there are no multiple files.', { files });
+      logger.warning('Channel: Sending MFM failed, because there are no multiple files.', { files });
       return;
     }
     let messageParams: MultipleFilesMessageCreateParams = {
@@ -78,7 +79,9 @@ export const useSendMultipleFilesMessage = ({
             message: pendingMessage,
             channel: currentChannel,
           });
-          setTimeout(() => scrollIntoLast(0, scrollRef));
+          if (scrollRef) {
+            setTimeout(() => scrollIntoLast(0, scrollRef));
+          }
         })
         .onFailed((error, failedMessage) => {
           logger.error('Channel: Sending MFM failed.', { error, failedMessage });
