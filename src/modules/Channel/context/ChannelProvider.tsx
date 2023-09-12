@@ -9,7 +9,6 @@ import React, {
 import type { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 import type {
   BaseMessage,
-  FileMessage,
   FileMessageCreateParams,
   UserMessage,
   UserMessageCreateParams,
@@ -46,6 +45,7 @@ import useScrollToMessage from './hooks/useScrollToMessage';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 import { getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
+import { useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
 
 export type MessageListParams = {
   // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
@@ -134,7 +134,7 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   messageActionTypes: Record<string, string>;
   messagesDispatcher: CustomUseReducerDispatcher;
   quoteMessage: SendableMessageType;
-  setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType>>;
+  setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
   initialTimeStamp: number;
   setInitialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
   animatedMessageId: number;
@@ -151,9 +151,10 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   updateMessage(props: UpdateMessageProps, callback?: (err: SendbirdError, message: UserMessage) => void): Promise<CoreMessageType>,
   resendMessage(failedMessage: SendableMessageType): Promise<SendableMessageType>,
   // TODO: Good to change interface to using params / This part need refactoring
-  sendMessage(props: SendMessageParams): Promise<UserMessage>,
-  sendFileMessage(file: File, quoteMessage: SendableMessageType): Promise<FileMessage>,
+  sendMessage: (props: SendMessageParams) => void,
+  sendFileMessage: (file: File, quoteMessage?: SendableMessageType) => void,
   sendVoiceMessage: (file: File, duration: number, quoteMessage?: SendableMessageType) => void,
+  sendMultipleFilesMessage: (files: Array<File>, quoteMessage?: SendableMessageType) => void,
   // sendMessage(messageParams: SendBird.UserMessageParams): Promise<SendBird.UserMessage>,
   // sendFileMessage(messageParams: SendBird.FileMessageParams): Promise<SendBird.FileMessage>,
   toggleReaction(message: SendableMessageType, emojiKey: string, isReacted: boolean): void,
@@ -421,6 +422,15 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       messagesDispatcher,
     },
   );
+  const [sendMultipleFilesMessage] = useSendMultipleFilesMessage({
+    currentChannel: currentGroupChannel,
+    // Open interface to <Channel /> & <ChannelProvider >
+    // onBeforeSendMultipleFilesMessage: (params) => params,
+  }, {
+    logger,
+    pubSub,
+    scrollRef,
+  });
 
   return (
     <ChannelContext.Provider value={{
@@ -474,6 +484,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       sendMessage,
       sendFileMessage,
       sendVoiceMessage,
+      sendMultipleFilesMessage,
       initialTimeStamp,
       messageActionTypes,
       messagesDispatcher,

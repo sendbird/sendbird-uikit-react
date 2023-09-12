@@ -3,6 +3,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import './message-input.scss';
 import * as utils from '../../context/utils';
 
+import type { Nullable } from '../../../../types';
 import MessageInput from '../../../../ui/MessageInput';
 import QuoteMessageInput from '../../../../ui/QuoteMessageInput';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
@@ -13,6 +14,7 @@ import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import VoiceMessageInputWrapper from './VoiceMessageInputWrapper';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
+import { useHandleUploadFiles } from './useHandleUploadFiles';
 
 export type MessageInputWrapperProps = {
   value?: string;
@@ -25,7 +27,7 @@ export type MessageInputWrapperProps = {
 const MessageInputWrapper = (
   props: MessageInputWrapperProps,
   ref: React.MutableRefObject<any>,
-): JSX.Element => {
+): Nullable<JSX.Element> => {
   const {
     value,
     renderFileUploadIcon,
@@ -40,6 +42,7 @@ const MessageInputWrapper = (
     sendMessage,
     sendFileMessage,
     sendVoiceMessage,
+    sendMultipleFilesMessage,
     setQuoteMessage,
     messageInputRef,
     renderUserMentionItem,
@@ -108,6 +111,15 @@ const MessageInputWrapper = (
     }));
   }, [mentionedUserIds]);
 
+  // MFM
+  const [handleUploadFiles] = useHandleUploadFiles({
+    sendFileMessage,
+    sendMultipleFilesMessage,
+    quoteMessage,
+  }, {
+    logger,
+  });
+
   // broadcast channel + not operator
   if (isBroadcast && !isOperator) {
     return null;
@@ -172,6 +184,7 @@ const MessageInputWrapper = (
               mentionSelectedUser={selectedUser}
               isMentionEnabled={isMentionEnabled}
               isVoiceMessageEnabled={isVoiceMessageEnabled}
+              isSelectingMultipleFilesEnabled
               onVoiceMessageIconClick={() => {
                 setShowVoiceMessageInput(true);
               }}
@@ -204,10 +217,7 @@ const MessageInputWrapper = (
                 setQuoteMessage(null);
                 channel?.endTyping?.();
               }}
-              onFileUpload={(file) => {
-                sendFileMessage(file, quoteMessage);
-                setQuoteMessage(null);
-              }}
+              onFileUpload={handleUploadFiles}
               onUserMentioned={(user) => {
                 if (selectedUser?.userId === user?.userId) {
                   setSelectedUser(null);

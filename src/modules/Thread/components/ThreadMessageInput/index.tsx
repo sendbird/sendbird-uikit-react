@@ -13,6 +13,7 @@ import VoiceMessageInputWrapper from '../../../Channel/components/MessageInput/V
 import { Role } from '../../../../lib/types';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../../Channel/context/utils';
+import { useHandleUploadFiles } from '../../../Channel/components/MessageInput/useHandleUploadFiles';
 
 export interface ThreadMessageInputProps {
   className?: string;
@@ -48,6 +49,7 @@ const ThreadMessageInput = (
     sendMessage,
     sendFileMessage,
     sendVoiceMessage,
+    sendMultipleFilesMessage,
     isMuted,
     isChannelFrozen,
     allThreadMessages,
@@ -57,6 +59,15 @@ const ThreadMessageInput = (
   const disabled = propsDisabled
     || isMuted
     || (!(currentChannel?.myRole === Role.OPERATOR) && isChannelFrozen) || parentMessage === null;
+
+  // MFM
+  const [handleUploadFiles] = useHandleUploadFiles({
+    sendFileMessage,
+    sendMultipleFilesMessage,
+    quoteMessage: parentMessage,
+  }, {
+    logger,
+  });
 
   // mention
   const [mentionNickname, setMentionNickname] = useState('');
@@ -150,6 +161,7 @@ const ThreadMessageInput = (
               mentionSelectedUser={selectedUser}
               isMentionEnabled={isMentionEnabled}
               isVoiceMessageEnabled={isVoiceMessageEnabled}
+              isSelectingMultipleFilesEnabled
               onVoiceMessageIconClick={() => {
                 setShowVoiceMessageInput(true);
               }}
@@ -179,9 +191,7 @@ const ThreadMessageInput = (
                 setMentionedUsers([]);
                 currentChannel?.endTyping?.();
               }}
-              onFileUpload={(file) => {
-                sendFileMessage(file, parentMessage);
-              }}
+              onFileUpload={handleUploadFiles}
               onUserMentioned={(user) => {
                 if (selectedUser?.userId === user?.userId) {
                   setSelectedUser(null);
