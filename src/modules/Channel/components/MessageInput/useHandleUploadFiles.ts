@@ -5,6 +5,8 @@ import { Logger } from '../../../../lib/SendbirdState';
 import { SendMFMFunctionType } from '../../context/hooks/useSendMultipleFilesMessage';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { SendableMessageType, isImage } from '../../../../utils';
+// TODO: get SendFileMessageFunctionType from Channel
+import { SendFileMessageFunctionType } from '../../../Thread/context/hooks/useSendFileMessage';
 
 /**
  * The handleUploadFiles is a function sending a FileMessage and MultipleFilesMessage
@@ -14,7 +16,7 @@ import { SendableMessageType, isImage } from '../../../../utils';
 const FILE_SIZE_LIMIT = 300000000; // 300MB
 
 interface UseHandleUploadFilesDynamicProps {
-  sendFileMessage: (file: File, quoteMessage?: SendableMessageType) => void;
+  sendFileMessage: SendFileMessageFunctionType;
   sendMultipleFilesMessage: SendMFMFunctionType;
   quoteMessage?: SendableMessageType;
 }

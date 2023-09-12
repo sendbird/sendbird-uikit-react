@@ -6,6 +6,7 @@ import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdStat
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import topics from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from '../utils';
+import { SendableMessageType } from '../../../../utils';
 
 interface DynamicProps {
   currentChannel: GroupChannel;
@@ -21,13 +22,15 @@ interface LocalFileMessage extends FileMessage {
   file: File;
 }
 
+export type SendFileMessageFunctionType = (file: File, quoteMessage?: SendableMessageType) => void;
+
 export default function useSendFileMessageCallback({
   currentChannel,
 }: DynamicProps, {
   logger,
   pubSub,
   threadDispatcher,
-}: StaticProps): (file, quoteMessage) => void {
+}: StaticProps): SendFileMessageFunctionType {
   const sendMessage = useCallback((file, quoteMessage) => {
     const createParamsDefault = () => {
       const params = {} as FileMessageCreateParams;
