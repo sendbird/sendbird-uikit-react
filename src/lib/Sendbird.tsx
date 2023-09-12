@@ -26,7 +26,11 @@ import { VoiceMessageProvider } from './VoiceMessageProvider';
 import { LocalizationProvider } from './LocalizationContext';
 import { MediaQueryProvider, useMediaQueryContext } from './MediaQueryContext';
 import getStringSet from '../ui/Label/stringSet';
-import { VOICE_RECORDER_DEFAULT_MAX, VOICE_RECORDER_DEFAULT_MIN } from '../utils/consts';
+import {
+  DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT,
+  VOICE_RECORDER_DEFAULT_MAX,
+  VOICE_RECORDER_DEFAULT_MIN,
+} from '../utils/consts';
 import { uikitConfigMapper } from './utils/uikitConfigMapper';
 
 import { useMarkAsReadScheduler } from './hooks/useMarkAsReadScheduler';
@@ -153,7 +157,7 @@ const SendbirdSDK = ({
   isUserIdUsedForNickname = true,
   sdkInitParams,
   customExtensionParams,
-  uikitMultipleFilesMessageLimit,
+  uikitMultipleFilesMessageLimit = DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT,
 }: SendbirdProviderProps): React.ReactElement => {
   const {
     logLevel = '',
