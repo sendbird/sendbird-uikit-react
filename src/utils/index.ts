@@ -242,7 +242,9 @@ export const isEnabledOGMessage = (message: UserMessage): boolean => (
 
 export const getUIKitMessageTypes = (): UIKitMessageTypes => ({ ...UIKitMessageTypes });
 
-// Do not use this for MultipleFilesMessage. Use isMultipleFilesMessage() instead.
+/**
+ * Do not use this for MultipleFilesMessage. Use isMultipleFilesMessage() instead.
+ */
 export const getUIKitMessageType = (
   message: CoreMessageType,
 ): string => {
