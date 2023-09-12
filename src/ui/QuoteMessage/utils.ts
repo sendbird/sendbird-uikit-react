@@ -17,7 +17,7 @@ export function getMessageFirstFileType(message: CoreMessageType): string {
     });
 }
 
-function getFirstFileInfo(message: MultipleFilesMessage): UploadedFileInfo {
+function getFirstFileInfo(message: MultipleFilesMessage): UploadedFileInfo | null {
   const fileInfoList: UploadedFileInfo[] = message.fileInfoList;
   return fileInfoList.length > 0 ? fileInfoList[0] : null;
 }
