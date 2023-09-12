@@ -64,35 +64,39 @@ export const useSendMultipleFilesMessage = ({
       messageParams = onBeforeSendMultipleFilesMessage(messageParams);
     }
     logger.info('Channel: Start sending MFM', { messageParams });
-    currentChannel.sendMultipleFilesMessage(messageParams)
-      /**
-       * We don't operate the onFileUploaded event for now
-       * until we will add UI/UX for it
-       */
-      .onFileUploaded((requestId, index, uploadableFileInfo, error) => {
-        logger.info('Channel: onFileUploaded during sending MFM', { requestId, index, error, uploadableFileInfo });
-      })
-      .onPending((pendingMessage) => {
-        pubSub.publish(PUBSUB_TOPICS.SEND_MESSAGE_START, {
-          message: pendingMessage,
-          channel: currentChannel,
+    try {
+      currentChannel.sendMultipleFilesMessage(messageParams)
+        /**
+         * We don't operate the onFileUploaded event for now
+         * until we will add UI/UX for it
+         */
+        .onFileUploaded((requestId, index, uploadableFileInfo, error) => {
+          logger.info('Channel: onFileUploaded during sending MFM', { requestId, index, error, uploadableFileInfo });
+        })
+        .onPending((pendingMessage) => {
+          pubSub.publish(PUBSUB_TOPICS.SEND_MESSAGE_START, {
+            message: pendingMessage,
+            channel: currentChannel,
+          });
+          setTimeout(() => scrollIntoLast(0, scrollRef));
+        })
+        .onFailed((error, failedMessage) => {
+          logger.error('Channel: Sending MFM failed.', { error, failedMessage });
+          pubSub.publish(PUBSUB_TOPICS.SEND_MESSAGE_FAILED, {
+            channel: currentChannel,
+            message: failedMessage,
+          });
+        })
+        .onSucceeded((succeededMessage) => {
+          logger.info('Channel: Sending voice message success!', { succeededMessage });
+          pubSub.publish(PUBSUB_TOPICS.SEND_FILE_MESSAGE, {
+            channel: currentChannel,
+            message: succeededMessage,
+          });
         });
-        setTimeout(() => scrollIntoLast(0, scrollRef));
-      })
-      .onFailed((error, failedMessage) => {
-        logger.error('Channel: Sending MFM failed.', { error, failedMessage });
-        pubSub.publish(PUBSUB_TOPICS.SEND_MESSAGE_FAILED, {
-          channel: currentChannel,
-          message: failedMessage,
-        });
-      })
-      .onSucceeded((succeededMessage) => {
-        logger.info('Channel: Sending voice message success!', { succeededMessage });
-        pubSub.publish(PUBSUB_TOPICS.SEND_FILE_MESSAGE, {
-          channel: currentChannel,
-          message: succeededMessage,
-        });
-      });
+    } catch (error) {
+      logger.error('Channel: Sending MFM failed.', { error });
+    }
   }, [
     currentChannel,
     onBeforeSendMultipleFilesMessage,
