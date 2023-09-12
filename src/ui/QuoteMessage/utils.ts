@@ -9,8 +9,7 @@ export function getMessageFirstFileType(message: CoreMessageType): string {
       return (message as FileMessage)?.type ?? '';
     })
     .when(isMultipleFilesMessage, () => {
-      const castedMessage: MultipleFilesMessage = message as MultipleFilesMessage;
-      return getFirstFileInfo(castedMessage)?.mimeType ?? '';
+      return getFirstFileInfo(message as MultipleFilesMessage)?.mimeType ?? '';
     })
     .otherwise(() => {
       return '';
@@ -24,13 +23,11 @@ function getFirstFileInfo(message: MultipleFilesMessage): UploadedFileInfo | nul
 
 export function getMessageFirstFileName(message: CoreMessageType): string {
   return match(message)
-    .when(m => isFileMessage(m), () => {
-      const castedMessage: FileMessage = message as FileMessage;
-      return castedMessage?.name ?? '';
+    .when(isFileMessage, () => {
+      return (message as FileMessage)?.name ?? '';
     })
-    .when(m => isMultipleFilesMessage(m), () => {
-      const castedMessage: MultipleFilesMessage = message as MultipleFilesMessage;
-      return getFirstFileInfo(castedMessage)?.fileName ?? '';
+    .when(isMultipleFilesMessage, () => {
+      return getFirstFileInfo(message as MultipleFilesMessage)?.fileName ?? '';
     })
     .otherwise(() => {
       return '';
@@ -39,13 +36,11 @@ export function getMessageFirstFileName(message: CoreMessageType): string {
 
 export function getMessageFirstFileUrl(message: CoreMessageType): string {
   return match(message)
-    .when(m => isFileMessage(m), () => {
-      const castedMessage: FileMessage = message as FileMessage;
-      return castedMessage?.url ?? '';
+    .when(isFileMessage, () => {
+      return (message as FileMessage)?.url ?? '';
     })
-    .when(m => isMultipleFilesMessage(m), () => {
-      const castedMessage: MultipleFilesMessage = message as MultipleFilesMessage;
-      return getFirstFileInfo(castedMessage)?.url ?? '';
+    .when(isMultipleFilesMessage, () => {
+      return getFirstFileInfo(message as MultipleFilesMessage)?.url ?? '';
     })
     .otherwise(() => {
       return '';
@@ -54,13 +49,11 @@ export function getMessageFirstFileUrl(message: CoreMessageType): string {
 
 export function getMessageFirstFileThumbnails(message: CoreMessageType): Thumbnail[] {
   return match(message)
-    .when(m => isFileMessage(m), () => {
-      const castedMessage: FileMessage = message as FileMessage;
-      return castedMessage.thumbnails;
+    .when(isFileMessage, () => {
+      return (message as FileMessage).thumbnails;
     })
-    .when(m => isMultipleFilesMessage(m), () => {
-      const castedMessage: MultipleFilesMessage = message as MultipleFilesMessage;
-      return getFirstFileInfo(castedMessage)?.thumbnails ?? [];
+    .when(isMultipleFilesMessage, () => {
+      return getFirstFileInfo(message as MultipleFilesMessage)?.thumbnails ?? [];
     })
     .otherwise(() => {
       return [];
