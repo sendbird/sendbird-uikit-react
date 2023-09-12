@@ -10,7 +10,6 @@ import type { Logger } from '../../../../lib/SendbirdState';
 import type { Nullable } from '../../../../types';
 import PUBSUB_TOPICS from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from '../utils';
-import { noop } from '../../../../utils/utils';
 
 export type OnBeforeSendMFMType = (
   params: MultipleFilesMessageCreateParams,

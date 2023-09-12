@@ -9,9 +9,7 @@ import React, {
 import type { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 import type {
   BaseMessage,
-  FileMessage,
   FileMessageCreateParams,
-  MultipleFilesMessage,
   UserMessage,
   UserMessageCreateParams,
   UserMessageUpdateParams,
