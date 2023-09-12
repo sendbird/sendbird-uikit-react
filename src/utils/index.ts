@@ -44,6 +44,12 @@ const SUPPORTED_MIMES = {
   ],
 };
 
+export const getMimeTypesUIKitAccepts = (): string => {
+  const { IMAGE, VIDEO, AUDIO } = SUPPORTED_MIMES;
+  return IMAGE.concat(VIDEO).concat(AUDIO).join();
+  // concat() is fater than flat()
+};
+
 /* eslint-disable no-redeclare */
 export interface UIKitMessageTypes {
   ADMIN: 'ADMIN',

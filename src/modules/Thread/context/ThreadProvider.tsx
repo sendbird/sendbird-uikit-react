@@ -27,6 +27,7 @@ import useToggleReactionCallback from './hooks/useToggleReactionsCallback';
 import useSendUserMessageCallback, { SendMessageParams } from './hooks/useSendUserMessageCallback';
 import useResendMessageCallback from './hooks/useResendMessageCallback';
 import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
+import { useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
 import { SendableMessageType } from '../../../utils';
 
 export type ThreadProviderProps = {
@@ -46,8 +47,9 @@ export interface ThreadProviderInterface extends ThreadProviderProps, ThreadCont
   fetchNextThreads: (callback?: (messages?: Array<BaseMessage>) => void) => void;
   toggleReaction: (message, key, isReacted) => void;
   sendMessage: (props: SendMessageParams) => void;
-  sendFileMessage: (file: File, quoteMessage: SendableMessageType) => void;
+  sendFileMessage: (file: File, quoteMessage?: SendableMessageType) => void;
   sendVoiceMessage: (file: File, duration: number, quoteMessage?: SendableMessageType) => void;
+  sendMultipleFilesMessage: (files: Array<File>, quoteMessage?: SendableMessageType) => void,
   resendMessage: (failedMessage: SendableMessageType) => void;
   updateMessage: (props, callback?: () => void) => void;
   deleteMessage: (message: SendableMessageType) => Promise<SendableMessageType>;
@@ -168,6 +170,12 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
   const sendVoiceMessage = useSendVoiceMessageCallback({
     currentChannel, onBeforeSendVoiceMessage,
   }, { logger, pubSub, threadDispatcher });
+  const [sendMultipleFilesMessage] = useSendMultipleFilesMessage({
+    currentChannel,
+  }, {
+    logger,
+    pubSub,
+  });
   const resendMessage = useResendMessageCallback({
     currentChannel,
   }, { logger, pubSub, threadDispatcher });
@@ -209,6 +217,7 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
         sendMessage,
         sendFileMessage,
         sendVoiceMessage,
+        sendMultipleFilesMessage,
         resendMessage,
         updateMessage,
         deleteMessage,
