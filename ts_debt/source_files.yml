@@ -2,9 +2,6 @@
 ./hooks/onClickOutside.jsx: onClickOutside.jsx
 ./hooks/onMouseHover.jsx: onMouseHover.jsx
 ./hooks/useAppendDomNode.js: useAppendDomNode.js
-./hooks/useModal/Components.jsx: Components.jsx
-./hooks/useModal/ModalRoot/index.jsx: index.jsx
-./hooks/useModal/index.jsx: index.jsx
 ./lib/UserProfileContext.jsx: UserProfileContext.jsx
 ./lib/hooks/useOnlineStatus.js: useOnlineStatus.js
 ./modules/App/index.jsx: index.jsx
