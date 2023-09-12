@@ -1,23 +1,22 @@
 // idea from https://github.com/shibe97/react-hooks-use-modal
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, ReactElement } from 'react';
 import { createPortal } from 'react-dom';
-import PropTypes from 'prop-types';
 
 import './index.scss';
 import { MODAL_ROOT } from './ModalRoot';
 
-import {
-  ModalHeader,
-  ModalClose,
-  ModalFooter,
-} from './Components';
-
+interface ModalProps {
+  children: ReactElement;
+  isOpen?: boolean;
+  modalRoot?: string;
+  className?: string;
+}
 const Modal = ({
   children,
   isOpen = false,
   modalRoot = MODAL_ROOT,
   className = '',
-}) => {
+}: ModalProps): ReactElement | null => {
   if (isOpen === false) {
     return null;
   }
@@ -26,25 +25,8 @@ const Modal = ({
       <div className="sendbird-modal__mask" />
       <div className="sendbird-modal__container">{children}</div>
     </div>,
-    document.getElementById(modalRoot),
+    document.getElementById(modalRoot) as HTMLElement,
   );
-};
-
-Modal.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element),
-    PropTypes.any,
-  ]).isRequired,
-  isOpen: PropTypes.bool,
-  modalRoot: PropTypes.string,
-  className: PropTypes.string,
-};
-
-Modal.defaultProps = {
-  isOpen: false,
-  modalRoot: MODAL_ROOT,
-  className: '',
 };
 
 const useModal = (className) => {
@@ -53,21 +35,16 @@ const useModal = (className) => {
   const close = useCallback(() => setOpen(false), [setOpen]);
 
   const ModalWrapper = ({ children }) => (
-    <Modal isOpen={isOpen} close={close} className={className}>
+    <Modal
+      className={className}
+      isOpen={isOpen}
+    >
       {children}
     </Modal>
   );
-
-  ModalWrapper.propTypes = {
-    children: PropTypes.element.isRequired,
-  };
 
   return [ModalWrapper, open, close];
 };
 
 export default useModal;
-export const ModalComponents = {
-  ModalHeader,
-  ModalClose,
-  ModalFooter,
-};
+export * from './Components';
