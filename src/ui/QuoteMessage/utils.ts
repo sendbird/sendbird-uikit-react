@@ -5,10 +5,10 @@ import {Thumbnail} from "@sendbird/chat/lib/__definition";
 
 export function getMessageFirstFileType(message: CoreMessageType): string {
   return match(message)
-    .when(m => isFileMessage(m), () => {
+    .when(isFileMessage, () => {
       return (message as FileMessage)?.type ?? '';
     })
-    .when(m => isMultipleFilesMessage(m), () => {
+    .when(isMultipleFilesMessage, () => {
       const castedMessage: MultipleFilesMessage = message as MultipleFilesMessage;
       return getFirstFileInfo(castedMessage)?.mimeType ?? '';
     })
