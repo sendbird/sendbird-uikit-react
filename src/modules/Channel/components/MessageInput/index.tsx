@@ -111,6 +111,7 @@ const MessageInputWrapper = (
     }));
   }, [mentionedUserIds]);
 
+  // MFM
   const [handleUploadFiles] = useHandleUploadFiles({
     sendFileMessage,
     sendMultipleFilesMessage,
