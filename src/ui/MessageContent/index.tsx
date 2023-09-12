@@ -32,7 +32,10 @@ import {
   isOGMessage,
   isThumbnailMessage,
   getSenderName,
-  isVoiceMessage, SendableMessageType, CoreMessageType,
+  isVoiceMessage,
+  SendableMessageType,
+  CoreMessageType,
+  isMultipleFilesMessage,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 import { useLocalization } from '../../lib/LocalizationContext';
@@ -157,6 +160,7 @@ export default function MessageContent({
   if (message?.isAdminMessage?.() || message?.messageType === 'admin') {
     return (<ClientAdminMessage message={message as AdminMessage} />);
   }
+
   return (
     <div
       className={getClassName([className, 'sendbird-message-content', isByMeClassName])}
@@ -327,7 +331,7 @@ export default function MessageContent({
               isReactionEnabled={isReactionEnabledInChannel}
             />
           )}
-          {(getUIKitMessageType((message as CoreMessageType)) === messageTypes.MULTIPLE_FILES) && (
+          {isMultipleFilesMessage(message as CoreMessageType) && (
             <MultipleFilesMessageItemBody
               className="sendbird-message-content__middle__message-item-body"
               message={message as MultipleFilesMessage}
@@ -369,7 +373,7 @@ export default function MessageContent({
           {(isReactionEnabledInChannel && message?.reactions?.length > 0) && (
             <div className={getClassName([
               'sendbird-message-content-reactions',
-              (getUIKitMessageType((message as CoreMessageType)) === messageTypes.MULTIPLE_FILES)
+              isMultipleFilesMessage(message as CoreMessageType)
                 ? 'image-grid'
                 : (!isByMe || isThumbnailMessage(message as FileMessage) || isOGMessage(message as UserMessage))
                   ? '' : 'primary',

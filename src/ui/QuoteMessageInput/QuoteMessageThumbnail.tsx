@@ -3,33 +3,44 @@ import type { FileMessage } from '@sendbird/chat/message';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
 import ImageRenderer from '../ImageRenderer';
-import { isAudioMessage, isFileMessage, isImageMessage, isThumbnailMessage, isVoiceMessage } from '../../utils';
+import {
+  isAudioMessage,
+  isFileMessage, isImageFileInfo,
+  isImageMessage,
+  isMultipleFilesMessage,
+  isThumbnailMessage,
+  isVoiceMessage
+} from '../../utils';
+import {MultipleFilesMessage} from "@sendbird/chat/message";
+import {getMessageFirstFileType, getMessageFirstFileUrl, getMessageFirstFileThumbnailUrl} from "../QuoteMessage/utils";
 
 interface Props {
-  message: FileMessage;
+  message: FileMessage | MultipleFilesMessage;
 }
 
 const componentClassname = 'sendbird-quote_message_input__avatar';
 
 export default function QuoteMessageThumbnail({ message }: Props): ReactElement {
-  if (!isFileMessage(message) || isVoiceMessage(message)) {
+  if (!isFileMessage(message) && !isMultipleFilesMessage(message) || isVoiceMessage(message as FileMessage)) {
     return null;
   }
-
-  const thumbnailUrl: string = (message.thumbnails && message.thumbnails.length > 0 && message.thumbnails[0].url)
-    || (isImageMessage(message) && message.url);
-  if (isThumbnailMessage(message) && thumbnailUrl) {
+  const thumbnailUrl: string = isFileMessage(message)
+    ? (getMessageFirstFileThumbnailUrl(message) || (isImageMessage(message as FileMessage) && getMessageFirstFileUrl(message)))
+    : (getMessageFirstFileThumbnailUrl(message)
+      || isImageFileInfo((message as MultipleFilesMessage).fileInfoList[0])
+      && getMessageFirstFileUrl(message));
+  if ((isThumbnailMessage(message) || isMultipleFilesMessage(message)) && thumbnailUrl) {
     return (
       <ImageRenderer
         className={componentClassname}
         url={thumbnailUrl}
-        alt={message.type}
+        alt={getMessageFirstFileType(message)}
         width="44px"
         height="44px"
         fixedSize
       />
     );
-  } else if (isAudioMessage(message)) {
+  } else if (isAudioMessage(message as FileMessage)) {
     return (
       <div className={componentClassname}>
         <Icon

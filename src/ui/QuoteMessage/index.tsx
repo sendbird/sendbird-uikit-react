@@ -7,11 +7,13 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import ImageRenderer from '../ImageRenderer';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import {
+  CoreMessageType,
   getClassName,
   getUIKitFileType,
   getUIKitFileTypes,
   getUIKitMessageType,
   isGif,
+  isMultipleFilesMessage,
   isThumbnailMessage,
   isUserMessage,
   isVideo,
@@ -20,6 +22,7 @@ import {
   truncateString,
   UIKitMessageTypes,
 } from '../../utils';
+import {getMessageFirstFileName, getMessageFirstFileType, getMessageFirstFileUrl} from "./utils";
 
 interface Props {
   className?: string | Array<string>;
@@ -43,13 +46,13 @@ export default function QuoteMessage({
   const { parentMessage } = message;
   const parentMessageSender = (parentMessage as SendableMessageType)?.sender;
   const parentMessageSenderNickname = (userId === parentMessageSender?.userId) ? stringSet.QUOTED_MESSAGE__CURRENT_USER : parentMessageSender?.nickname;
-  const parentMessageUrl = (parentMessage as FileMessage)?.url || '';
-  const parentMessageType = (parentMessage as FileMessage)?.type;
+  const parentMessageUrl = getMessageFirstFileUrl(parentMessage as CoreMessageType);
+  const parentMessageType = getMessageFirstFileType(parentMessage as CoreMessageType);
   const currentMessageSenderNickname = (userId === message?.sender?.userId) ? stringSet.QUOTED_MESSAGE__CURRENT_USER : message?.sender?.nickname;
 
   const [isThumbnailLoaded, setThumbnailLoaded] = useState(false);
   const uikitFileTypes = getUIKitFileTypes();
-  const splitFileName = (parentMessage as FileMessage)?.name ? (parentMessage as FileMessage).name.split('/') : parentMessageUrl.split('/');
+  const splitFileName = getMessageFirstFileName(parentMessage as CoreMessageType)?.split('/') ?? parentMessageUrl.split('/');
 
   return (
     <div
@@ -120,8 +123,15 @@ export default function QuoteMessage({
             </Label>
           </div>
         )}
-        {/* thumbnail message */}
-        {(isThumbnailMessage(parentMessage as FileMessage) && parentMessageUrl && !isUnavailable) && (
+        {/* thumbnail message or multiple files message */}
+        {(
+          (
+            isThumbnailMessage(parentMessage as FileMessage)
+            || isMultipleFilesMessage(parentMessage as CoreMessageType)
+          )
+          && parentMessageUrl
+          && !isUnavailable
+        ) && (
           <div className="sendbird-quote-message__replied-message__thumbnail-message">
             <ImageRenderer
               className="sendbird-quote-message__replied-message__thumbnail-message__image"
