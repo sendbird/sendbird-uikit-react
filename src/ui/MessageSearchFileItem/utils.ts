@@ -6,6 +6,7 @@ import isThisYear from 'date-fns/isThisYear';
 import isYesterday from 'date-fns/isYesterday';
 import { IconTypes } from '../Icon';
 import { isVoiceMessage } from '../../utils';
+import { getMessageFirstFileUrl } from '../QuoteMessage/utils';
 
 export interface GetCreatedAtProps {
   createdAt: number;
@@ -31,9 +32,8 @@ export function getCreatedAt({ createdAt, locale, stringSet }: GetCreatedAtProps
 }
 
 export function getIconOfFileType(message: FileMessage): string {
-  const { url } = message;
-  const fileMessageUrl = url;
-  const fileExtension = (fileMessageUrl.match(/\.([^.]*?)(?=\?|#|$)/))[1];
+  const fileMessageUrl = getMessageFirstFileUrl(message) ?? '';
+  const fileExtension = (fileMessageUrl.match(/\.([^.]*?)(?=\?|#|$)/))?.[1] ?? '';
 
   if (/(jpg|jpeg|png)$/i.test(fileExtension)) {
     return IconTypes.PHOTO;
