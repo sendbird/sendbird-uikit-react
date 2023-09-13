@@ -7,19 +7,21 @@ import Modal, { type ModalProps } from '../../ui/Modal';
 import { MODAL_ROOT } from './ModalRoot';
 
 export type OpenGlobalModalWithProps = {
-  modalProps: ModalProps,
-  childElement: ReactElement,
+  modalProps: ModalProps;
+  childElement: ReactElement;
+};
+export interface GlobalModalProviderProps {
+  children: ReactElement;
 }
-
 export interface GlobalModalContextInterface {
-  openGlobalModalWith: (props: OpenGlobalModalWithProps) => void,
+  openGlobalModalWith: (props: OpenGlobalModalWithProps) => void;
 }
 
 const GlobalModalContext = createContext<GlobalModalContextInterface>({
   openGlobalModalWith: noop,
 });
 
-export const GlobalModalProvider = ({ children }) => {
+export const GlobalModalProvider = ({ children }: GlobalModalProviderProps) => {
   // Idea from https://dev.to/nurislamov/simple-modals-queue-in-react-4g6c
   const [globalModalQueue, setGlobalModalQueue] = useState<Array<OpenGlobalModalWithProps>>([]);
 
@@ -28,7 +30,7 @@ export const GlobalModalProvider = ({ children }) => {
   }, []);
 
   const closeModal = useCallback(() => {
-    setGlobalModalQueue((currentQue) =>  currentQue.slice(1));
+    setGlobalModalQueue((currentQue) => currentQue.slice(1));
   }, []);
 
   const ModalComponent = useMemo(() => () => {
@@ -62,7 +64,7 @@ export const GlobalModalProvider = ({ children }) => {
       <ModalComponent />
       {children}
     </GlobalModalContext.Provider>
-  )
+  );
 };
 export const useGlobalModal = (): GlobalModalContextInterface => useContext(GlobalModalContext);
 
