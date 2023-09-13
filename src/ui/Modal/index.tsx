@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 
 import './index.scss';
 
-import { MODAL_ROOT } from '../../hooks/useModal/ModalRoot';
+import { MODAL_ROOT } from '../../hooks/useModal';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 
 import Button, { ButtonTypes } from '../Button';
@@ -146,5 +146,5 @@ export default function Modal(props: ModalProps): ReactElement {
         }}
       />
     </div>
-  ), document.getElementById(MODAL_ROOT));
+  ), document.getElementById(MODAL_ROOT) as HTMLElement);
 }
