@@ -3,18 +3,12 @@ import React, { ReactElement } from 'react';
 import './index.scss';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { changeTypeToClassName, changeSizeToClassName } from './utils';
-import {
-  ButtonTypes as ButtonTypes_,
-  ButtonSizes as ButtonSizes_,
-} from './types';
-
-export const ButtonTypes = ButtonTypes_;
-export const ButtonSizes = ButtonSizes_;
+import { ButtonTypes, ButtonSizes } from './types';
 
 export interface ButtonProps {
   className?: string | Array<string>;
-  type?: ButtonTypes_;
-  size?: ButtonSizes_;
+  type?: ButtonTypes;
+  size?: ButtonSizes;
   children: string | ReactElement;
   disabled?: boolean;
   onClick?: () => void;
@@ -53,3 +47,5 @@ export default function Button({
     </button>
   );
 }
+
+export * from './types';
