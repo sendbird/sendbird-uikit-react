@@ -1,8 +1,5 @@
-// idea from https://github.com/shibe97/react-hooks-use-modal
 import React, { useState, useCallback, ReactElement, createContext, useMemo, useContext } from 'react';
 import { createPortal } from 'react-dom';
-
-import './index.scss';
 
 import { noop } from '../../utils/utils';
 import Modal, { type ModalProps } from '../../ui/Modal';
@@ -24,6 +21,7 @@ const GlobalModalContext = createContext<GlobalModalContextInterface>({
 });
 
 export const GlobalModalProvider = ({ children }) => {
+  // TODO: Add queing
   const [globalModalProps, setGlobalModalProps] = useState<ModalProps | null>(null);
   const [globalModalContents, setGlobalModalContents] = useState<ReactElement | null>(null);
 
@@ -33,7 +31,10 @@ export const GlobalModalProvider = ({ children }) => {
     }
     return createPortal(
       <Modal
-        {...globalModalProps}
+        {...{
+          ...globalModalProps,
+          className: `sendbird-global-modal ${globalModalProps?.className}`,
+        }}
       >
         {globalModalContents}
       </Modal>,
@@ -68,4 +69,3 @@ export const GlobalModalProvider = ({ children }) => {
 export const useGlobalModal = (): GlobalModalContextInterface => useContext(GlobalModalContext);
 
 export { MODAL_ROOT } from './ModalRoot';
-export * from './Components';
