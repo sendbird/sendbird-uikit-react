@@ -6,7 +6,7 @@ import { noop } from '../../utils/utils';
 import Modal, { type ModalProps } from '../../ui/Modal';
 import { MODAL_ROOT } from './ModalRoot';
 
-export type OpenGlobalModalWithProps = {
+export type OpenGlobalModalProps = {
   modalProps: ModalProps;
   childElement: ReactElement;
 };
@@ -14,18 +14,18 @@ export interface GlobalModalProviderProps {
   children: ReactElement;
 }
 export interface GlobalModalContextInterface {
-  openGlobalModalWith: (props: OpenGlobalModalWithProps) => void;
+  openModal: (props: OpenGlobalModalProps) => void;
 }
 
 const GlobalModalContext = createContext<GlobalModalContextInterface>({
-  openGlobalModalWith: noop,
+  openModal: noop,
 });
 
 export const GlobalModalProvider = ({ children }: GlobalModalProviderProps) => {
   // Idea from https://dev.to/nurislamov/simple-modals-queue-in-react-4g6c
-  const [globalModalQueue, setGlobalModalQueue] = useState<Array<OpenGlobalModalWithProps>>([]);
+  const [globalModalQueue, setGlobalModalQueue] = useState<Array<OpenGlobalModalProps>>([]);
 
-  const openModal = useCallback((props: OpenGlobalModalWithProps) => {
+  const openModal = useCallback((props: OpenGlobalModalProps) => {
     setGlobalModalQueue((currentQue) => [...currentQue, props]);
   }, []);
 
@@ -45,7 +45,10 @@ export const GlobalModalProvider = ({ children }: GlobalModalProviderProps) => {
             {...{
               ...modalProps,
               className: `sendbird-global-modal ${modalProps?.className}`,
-              onClose: closeModal,
+              onClose: () => {
+                modalProps?.onClose?.();
+                closeModal();
+              },
             }}
           >
             {childElement}
@@ -58,7 +61,7 @@ export const GlobalModalProvider = ({ children }: GlobalModalProviderProps) => {
   return (
     <GlobalModalContext.Provider
       value={{
-        openGlobalModalWith: openModal,
+        openModal,
       }}
     >
       <ModalComponent />
@@ -66,6 +69,6 @@ export const GlobalModalProvider = ({ children }: GlobalModalProviderProps) => {
     </GlobalModalContext.Provider>
   );
 };
-export const useGlobalModal = (): GlobalModalContextInterface => useContext(GlobalModalContext);
+export const useGlobalModalContext = (): GlobalModalContextInterface => useContext(GlobalModalContext);
 
 export * from './ModalRoot';
