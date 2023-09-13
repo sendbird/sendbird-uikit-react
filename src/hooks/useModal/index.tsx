@@ -1,10 +1,8 @@
 import React, { useState, useCallback, ReactElement, createContext, useMemo, useContext } from 'react';
-import { createPortal } from 'react-dom';
 import { match } from 'ts-pattern';
 
 import { noop } from '../../utils/utils';
 import Modal, { type ModalProps } from '../../ui/Modal';
-import { MODAL_ROOT } from './ModalRoot';
 
 export type OpenGlobalModalProps = {
   modalProps: ModalProps;
@@ -40,20 +38,17 @@ export const GlobalModalProvider = ({ children }: GlobalModalProviderProps) => {
       })
       .otherwise(() => {
         const { modalProps, childElement } = globalModalQueue[0];
-        return createPortal(
+        return (
           <Modal
-            {...{
-              ...modalProps,
-              className: `sendbird-global-modal ${modalProps?.className}`,
-              onClose: () => {
-                modalProps?.onClose?.();
-                closeModal();
-              },
+            {...modalProps}
+            className={`sendbird-global-modal ${modalProps?.className}`}
+            onClose={() => {
+              modalProps?.onClose?.();
+              closeModal();
             }}
           >
             {childElement}
-          </Modal>,
-          document.getElementById(MODAL_ROOT) as HTMLElement,
+          </Modal>
         );
       });
   }, [globalModalQueue]);
