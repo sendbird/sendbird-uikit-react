@@ -3,11 +3,13 @@ import './index.scss';
 import React, { ReactElement, useContext } from 'react';
 import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 import {
+  CoreMessageType,
   getClassName,
   getUIKitMessageType,
   isFileMessage,
   isGifMessage,
   isImageMessage,
+  isMultipleFilesMessage,
   isUserMessage,
   isVideoMessage,
   isVoiceMessage, SendableMessageType,
@@ -19,6 +21,8 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 
 import QuoteMessageThumbnail from './QuoteMessageThumbnail';
+import { getMessageFirstFileName } from '../QuoteMessage/utils';
+import { MultipleFilesMessage } from '@sendbird/chat/message';
 
 interface Props {
   className?: string | Array<string>;
@@ -32,9 +36,10 @@ export default function QuoteMessageInput({
   onClose,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
-  const fileMessage = replyingMessage as FileMessage;
+  const fileMessage = replyingMessage as FileMessage | MultipleFilesMessage;
   const sender = (replyingMessage as SendableMessageType)?.sender;
-  const displayFileIcon = isFileMessage(replyingMessage) && !isVoiceMessage(replyingMessage as FileMessage);
+  const displayFileIcon = (isFileMessage(replyingMessage) || isMultipleFilesMessage(replyingMessage))
+    && !isVoiceMessage(replyingMessage as FileMessage);
 
   return (
     <div className={getClassName(['sendbird-quote_message_input', className])}>
@@ -66,7 +71,8 @@ export default function QuoteMessageInput({
           {isVideoMessage(fileMessage) && stringSet.QUOTE_MESSAGE_INPUT__FILE_TYPE__VIDEO}
           {isGifMessage(fileMessage) && stringSet.QUOTE_MESSAGE_INPUT__FILE_TYPE_GIF}
           {isUserMessage(replyingMessage as UserMessage) && (replyingMessage as UserMessage).message}
-          {getUIKitMessageType(replyingMessage) === UIKitMessageTypes.FILE && fileMessage.name}
+          {getUIKitMessageType(replyingMessage) === UIKitMessageTypes.FILE && getMessageFirstFileName(fileMessage)}
+          {isMultipleFilesMessage(replyingMessage as CoreMessageType) && getMessageFirstFileName(fileMessage)}
           {isVoiceMessage(replyingMessage as FileMessage) && stringSet.VOICE_MESSAGE}
         </Label>
       </div>

@@ -7,10 +7,12 @@ import ImageRenderer from '../ImageRenderer';
 import { getClassName, isGifMessage, isSentMessage, isVideoMessage } from '../../utils';
 import { noop } from '../../utils/utils';
 import useLongPress from '../../hooks/useLongPress';
+import { MultipleFilesMessage } from '@sendbird/chat/message';
+import { getMessageFirstFileType, getMessageFirstFileUrl, getMessageFirstFileThumbnailUrl } from '../QuoteMessage/utils';
 
 interface Props {
   className?: string | Array<string>;
-  message: FileMessage;
+  message: FileMessage | MultipleFilesMessage;
   isByMe?: boolean;
   mouseHover?: boolean;
   isReactionEnabled?: boolean;
@@ -27,8 +29,7 @@ export default function ThumbnailMessageItemBody({
   showFileViewer = noop,
   style = {},
 }: Props): ReactElement {
-  const { thumbnails = [] } = message;
-  const thumbnailUrl: string = thumbnails.length > 0 ? thumbnails[0]?.url : '';
+  const thumbnailUrl: string = getMessageFirstFileThumbnailUrl(message);
   const [imageRendered, setImageRendered] = useState(false);
 
   const onClickHandler = useLongPress({
@@ -53,8 +54,8 @@ export default function ThumbnailMessageItemBody({
     >
       <ImageRenderer
         className="sendbird-thumbnail-message-item-body__thumbnail"
-        url={thumbnailUrl || message?.url}
-        alt={message?.type}
+        url={thumbnailUrl || getMessageFirstFileUrl(message)}
+        alt={getMessageFirstFileType(message)}
         width={style?.width || '360px'}
         height={style?.height || '270px'}
         onLoad={() => { setImageRendered(true); }}
@@ -68,7 +69,7 @@ export default function ThumbnailMessageItemBody({
       {
         (isVideoMessage(message) && !thumbnailUrl) && !imageRendered && (
           <video className="sendbird-thumbnail-message-item-body__video">
-            <source src={message?.url} type={message?.type} />
+            <source src={getMessageFirstFileUrl(message)} type={getMessageFirstFileType(message)} />
           </video>
         )
       }

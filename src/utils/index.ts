@@ -6,6 +6,7 @@ import {
   MessageListParams,
   MultipleFilesMessage,
   Reaction,
+  UploadedFileInfo,
   UserMessage,
 } from '@sendbird/chat/message';
 import { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
@@ -209,6 +210,7 @@ export const isThumbnailMessage = (message: SendableMessageType): boolean => (
   message && isFileMessage(message) && isSupportedFileView((message as FileMessage).type)
 );
 export const isImageMessage = (message: FileMessage): boolean => message && isThumbnailMessage(message) && isImage(message.type);
+export const isImageFileInfo = (fileInfo: UploadedFileInfo): boolean => fileInfo && isImage(fileInfo.mimeType);
 export const isVideoMessage = (message: SendableMessageType): boolean => (
   message && isThumbnailMessage(message) && isVideo((message as FileMessage).type)
 );
@@ -245,6 +247,10 @@ export const isEnabledOGMessage = (message: UserMessage): boolean => (
 );
 
 export const getUIKitMessageTypes = (): UIKitMessageTypes => ({ ...UIKitMessageTypes });
+
+/**
+ * Do not use this for MultipleFilesMessage. Use isMultipleFilesMessage() instead.
+ */
 export const getUIKitMessageType = (
   message: CoreMessageType,
 ): string => {
@@ -261,6 +267,7 @@ export const getUIKitMessageType = (
     }
     return UIKitMessageTypes.FILE;
   }
+  // This is only a safeguard to not return UNKNOWN for MFM.
   if (isMultipleFilesMessage(message as FileMessage)) {
     return UIKitMessageTypes.MULTIPLE_FILES;
   }
