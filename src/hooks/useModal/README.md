@@ -2,7 +2,6 @@
 
 ```tsx
 import React, { useCallback } from 'react';
-import { render } from 'react-dom';
 import { GlobalModalProvider, useGlobalModalContext } from 'src/hooks/useModal';
 
 export const CustomComponent = () => {
