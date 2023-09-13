@@ -3,14 +3,15 @@ import { createPortal } from 'react-dom';
 
 import './index.scss';
 
-import { MODAL_ROOT } from '../../hooks/useModal/ModalRoot';
+import { noop } from '../../utils/utils';
+import { MODAL_ROOT } from '../../hooks/useModal';
 import { LocalizationContext } from '../../lib/LocalizationContext';
+import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 
+import IconButton from '../IconButton';
 import Button, { ButtonTypes } from '../Button';
 import Icon, { IconTypes, IconColors } from '../Icon';
-import IconButton from '../IconButton';
 import Label, { LabelTypography, LabelColors } from '../Label';
-import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 
 export interface ModalHeaderProps {
   titleText: string;
@@ -42,7 +43,7 @@ export interface ModalFooterProps {
   disabled?: boolean;
   type?: ButtonTypes;
   onCancel: () => void;
-  onSubmit: (e: SubmitEvent) => void;
+  onSubmit: () => void;
 }
 export const ModalFooter = ({
   submitText,
@@ -76,11 +77,15 @@ export interface ModalProps {
   disabled?: boolean;
   hideFooter?: boolean;
   type?: ButtonTypes;
+  /**
+   * Do not use this! We will deprecate onCancel in v4.
+   */
   onCancel?: () => void;
-  onSubmit?: (e: SubmitEvent) => void;
+  onClose?: () => void;
+  onSubmit?: () => void;
   renderHeader?: () => ReactElement;
 }
-export default function Modal(props: ModalProps): ReactElement {
+export function Modal(props: ModalProps): ReactElement {
   const {
     children = null,
     className = '',
@@ -91,10 +96,15 @@ export default function Modal(props: ModalProps): ReactElement {
     disabled = false,
     hideFooter = false,
     type = ButtonTypes.DANGER,
-    onCancel = () => { /* noop */ },
-    onSubmit = () => { /* noop */ },
+    /**
+     * Do not use this! We will deprecate onCancel in v4.
+     */
+    onCancel = noop,
+    onClose,
+    onSubmit = noop,
     renderHeader,
   } = props;
+  const handleClose = onClose ?? onCancel;
 
   const { isMobile } = useMediaQueryContext();
   return createPortal((
@@ -104,16 +114,16 @@ export default function Modal(props: ModalProps): ReactElement {
     `}>
       <div className="sendbird-modal__content">
         {renderHeader?.() || (
-          <ModalHeader titleText={titleText} />
+          <ModalHeader titleText={titleText ?? ''} />
         )}
-        <ModalBody>{children}</ModalBody>
+        <ModalBody>{children ?? <></>}</ModalBody>
         {
           !hideFooter && (
             <ModalFooter
               disabled={disabled}
-              onCancel={onCancel}
+              onCancel={handleClose}
               onSubmit={onSubmit}
-              submitText={submitText}
+              submitText={submitText ?? ''}
               type={type}
             />
           )
@@ -122,7 +132,7 @@ export default function Modal(props: ModalProps): ReactElement {
           <IconButton
             width="32px"
             height="32px"
-            onClick={onCancel}
+            onClick={handleClose}
           >
             <Icon
               type={IconTypes.CLOSE}
@@ -141,10 +151,11 @@ export default function Modal(props: ModalProps): ReactElement {
         onClick={(e) => {
           e?.stopPropagation();
           if (isCloseOnClickOutside) {
-            onCancel();
+            handleClose();
           }
         }}
       />
     </div>
-  ), document.getElementById(MODAL_ROOT));
+  ), document.getElementById(MODAL_ROOT) as HTMLElement);
 }
+export default Modal;

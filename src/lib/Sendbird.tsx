@@ -40,6 +40,7 @@ import { getCaseResolvedReplyType, getCaseResolvedThreadReplySelectType } from '
 import { useUnmount } from '../hooks/useUnmount';
 import { disconnectSdk } from './hooks/useConnect/disconnectSdk';
 import { UIKitOptions, CommonUIKitConfigProps, SendbirdChatInitParams, CustomExtensionParams } from './types';
+import { GlobalModalProvider } from '../hooks/useModal';
 
 export type UserListQueryType = {
   hasNext?: boolean;
@@ -344,7 +345,9 @@ const SendbirdSDK = ({
       <MediaQueryProvider logger={logger} breakpoint={breakpoint}>
         <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
           <VoiceMessageProvider isVoiceMessageEnabled={configs.groupChannel.channel.enableVoiceMessage}>
-            {children}
+            <GlobalModalProvider>
+              {children}
+            </GlobalModalProvider>
           </VoiceMessageProvider>
         </LocalizationProvider>
       </MediaQueryProvider>

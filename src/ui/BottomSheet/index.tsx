@@ -2,7 +2,7 @@ import './bottom-sheet.scss';
 import React, { useRef } from 'react';
 import { createPortal } from 'react-dom';
 
-import { MODAL_ROOT } from '../../hooks/useModal/ModalRoot';
+import { MODAL_ROOT } from '../../hooks/useModal';
 
 interface BottomSheetProps {
   className?: string;

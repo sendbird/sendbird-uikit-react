@@ -6,7 +6,7 @@ import './file-viewer.scss';
 import Avatar from '../../../../ui/Avatar';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
-import { MODAL_ROOT } from '../../../../hooks/useModal/ModalRoot';
+import { MODAL_ROOT } from '../../../../hooks/useModal';
 
 import { isImage, isVideo, isSupportedFileView } from '../../../../utils';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
