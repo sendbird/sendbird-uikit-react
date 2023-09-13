@@ -7,7 +7,7 @@ import isYesterday from 'date-fns/isYesterday';
 import { IconTypes } from '../Icon';
 import { isVoiceMessage } from '../../utils';
 import { getMessageFirstFileUrl } from '../QuoteMessage/utils';
-import {MultipleFilesMessage} from "@sendbird/chat/message";
+import { MultipleFilesMessage } from '@sendbird/chat/message';
 
 export interface GetCreatedAtProps {
   createdAt: number;

@@ -7,9 +7,9 @@ import Icon, { IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 import { getCreatedAt, getIconOfFileType } from './utils';
-import {isMultipleFilesMessage, isVoiceMessage} from '../../utils';
-import {MultipleFilesMessage} from "@sendbird/chat/message";
-import {getMessageFirstFileName, getMessageFirstFileUrl} from "../QuoteMessage/utils";
+import { isVoiceMessage } from '../../utils';
+import { MultipleFilesMessage } from '@sendbird/chat/message';
+import { getMessageFirstFileName, getMessageFirstFileUrl } from '../QuoteMessage/utils';
 
 interface Props {
   className?: string | Array<string>;
