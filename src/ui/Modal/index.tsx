@@ -80,7 +80,7 @@ export interface ModalProps {
   onSubmit?: (e: SubmitEvent) => void;
   renderHeader?: () => ReactElement;
 }
-export default function Modal(props: ModalProps): ReactElement {
+export function Modal(props: ModalProps): ReactElement {
   const {
     children = null,
     className = '',
@@ -148,3 +148,4 @@ export default function Modal(props: ModalProps): ReactElement {
     </div>
   ), document.getElementById(MODAL_ROOT) as HTMLElement);
 }
+export default Modal;
