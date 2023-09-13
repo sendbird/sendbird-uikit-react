@@ -5,7 +5,7 @@ import { ButtonTypes } from '../../../ui/Button';
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 import { useThreadContext } from '../context/ThreadProvider';
 import { SendableMessageType } from '../../../utils';
-import {getModalDeleteMessageTitle} from "../../../ui/Label/stringFormatterUtils";
+import { getModalDeleteMessageTitle } from '../../../ui/Label/stringFormatterUtils';
 
 export interface RemoveMessageProps {
   onCancel: () => void; // rename to onClose

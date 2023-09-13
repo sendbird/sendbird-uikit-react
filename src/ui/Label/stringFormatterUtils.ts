@@ -1,6 +1,6 @@
-import {CoreMessageType, isMultipleFilesMessage} from "../../utils";
-import {match} from "ts-pattern";
-import {MultipleFilesMessage} from "@sendbird/chat/message";
+import { CoreMessageType, isMultipleFilesMessage } from '../../utils';
+import { match } from 'ts-pattern';
+import { MultipleFilesMessage } from '@sendbird/chat/message';
 
 export function getModalDeleteMessageTitle(stringSet: Record<string, string>, message: CoreMessageType): string {
   return match(message)

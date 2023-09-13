@@ -5,7 +5,7 @@ import { ButtonTypes } from '../../../ui/Button';
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 import { useChannelContext } from '../context/ChannelProvider';
 import { EveryMessage } from '../../../types';
-import {getModalDeleteMessageTitle} from "../../../ui/Label/stringFormatterUtils";
+import { getModalDeleteMessageTitle } from '../../../ui/Label/stringFormatterUtils';
 
 export interface RemoveMessageProps {
   onSubmit?: () => void;

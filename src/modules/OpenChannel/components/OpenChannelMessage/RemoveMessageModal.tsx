@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import Modal from '../../../../ui/Modal';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import {ClientFileMessage, ClientUserMessage} from "../../../../types";
-import {getModalDeleteMessageTitle} from "../../../../ui/Label/stringFormatterUtils";
-import {CoreMessageType} from "../../../../utils";
+import { ClientFileMessage, ClientUserMessage } from '../../../../types';
+import { getModalDeleteMessageTitle } from '../../../../ui/Label/stringFormatterUtils';
+import { CoreMessageType } from '../../../../utils';
 
 interface Props {
   message: CoreMessageType;
