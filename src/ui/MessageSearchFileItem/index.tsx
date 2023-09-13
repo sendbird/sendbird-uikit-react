@@ -7,13 +7,15 @@ import Icon, { IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 import { getCreatedAt, getIconOfFileType } from './utils';
-import { isVoiceMessage } from '../../utils';
+import {isMultipleFilesMessage, isVoiceMessage} from '../../utils';
+import {MultipleFilesMessage} from "@sendbird/chat/message";
+import {getMessageFirstFileName, getMessageFirstFileUrl} from "../QuoteMessage/utils";
 
 interface Props {
   className?: string | Array<string>;
-  message: FileMessage;
+  message: FileMessage | MultipleFilesMessage;
   selected?: boolean;
-  onClick?: (message: FileMessage) => void;
+  onClick?: (message: FileMessage | MultipleFilesMessage) => void;
 }
 
 export default function MessageSearchFileItem(props: Props): ReactElement {
@@ -23,7 +25,9 @@ export default function MessageSearchFileItem(props: Props): ReactElement {
     selected,
     onClick,
   } = props;
-  const { createdAt, url, name } = message;
+  const { createdAt } = message;
+  const url: string = getMessageFirstFileUrl(message);
+  const name: string = getMessageFirstFileName(message);
   // @ts-ignore
   const sender = message.sender || message._sender;
   const { profileUrl, nickname } = sender;

@@ -220,7 +220,7 @@ export const isGifMessage = (message: SendableMessageType): boolean => (
 export const isAudioMessage = (message: FileMessage): boolean => message && isFileMessage(message) && isAudio(message.type);
 export const isAudioMessageMimeType = (type: string): boolean => (/^audio\//.test(type));
 export const isVoiceMessageMimeType = (type: string): boolean => (/^voice\//.test(type));
-export const isVoiceMessage = (message: Nullable<FileMessage | UserMessage>): boolean => {
+export const isVoiceMessage = (message: Nullable<SendableMessageType>): boolean => {
   // ex) audio/m4a OR audio/m4a;sbu_type=voice
   if (!(message && isFileMessage(message)) || !(message as FileMessage).type) {
     return false;
