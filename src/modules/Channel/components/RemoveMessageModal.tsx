@@ -5,6 +5,7 @@ import { ButtonTypes } from '../../../ui/Button';
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 import { useChannelContext } from '../context/ChannelProvider';
 import { EveryMessage } from '../../../types';
+import {getModalDeleteMessageTitle} from "../../../ui/Label/stringFormatterUtils";
 
 export interface RemoveMessageProps {
   onSubmit?: () => void;
@@ -32,7 +33,7 @@ const RemoveMessage: React.FC<RemoveMessageProps> = (props: RemoveMessageProps) 
         onCancel();
       }); }}
       submitText={stringSet.MESSAGE_MENU__DELETE}
-      titleText={stringSet.MODAL__DELETE_MESSAGE__TITLE}
+      titleText={getModalDeleteMessageTitle(stringSet, message)}
     />
   );
 };
