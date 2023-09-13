@@ -20,6 +20,7 @@ const GlobalModalContext = createContext<GlobalModalContextInterface>({
 });
 
 export const GlobalModalProvider = ({ children }) => {
+  // Idea from https://dev.to/nurislamov/simple-modals-queue-in-react-4g6c
   const [globalModalQueue, setGlobalModalQueue] = useState<Array<OpenGlobalModalWithProps>>([]);
 
   const openModal = useCallback((props: OpenGlobalModalWithProps) => {
