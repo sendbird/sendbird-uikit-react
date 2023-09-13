@@ -78,7 +78,7 @@ export interface ModalProps {
   hideFooter?: boolean;
   type?: ButtonTypes;
   /**
-   * Do not use this! onCancel has been deprecated.
+   * Do not use this! We will deprecate onCancel in v4.
    */
   onCancel?: () => void;
   onClose?: () => void;
@@ -97,7 +97,7 @@ export function Modal(props: ModalProps): ReactElement {
     hideFooter = false,
     type = ButtonTypes.DANGER,
     /**
-     * Do not use this! onCancel has been deprecated.
+     * Do not use this! We will deprecate onCancel in v4.
      */
     onCancel = noop,
     onClose,

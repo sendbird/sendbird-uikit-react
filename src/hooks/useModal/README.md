@@ -20,8 +20,18 @@ export const CustomComponent = () => {
 
   return (
     <div className="custom-button">
-      <button onClick={open}>OPEN</button>
+      <button onClick={showUpAlert}>OPEN</button>
     </div>
   );
 };
+
+const CustomApp = () => {
+  return (
+    <div className="custom-app" styles={{ ... }}>
+      <GlobalModalProvider>
+        <CustomComponent />
+      </GlobalModalProvider>
+    </div>
+  )
+}
 ```

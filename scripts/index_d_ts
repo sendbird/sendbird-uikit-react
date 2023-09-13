@@ -2435,7 +2435,7 @@ declare module '@sendbird/uikit-react/ui/Modal' {
     isCloseOnClickOutside?: boolean;
     children: React.ReactElement | string;
     /**
-     * Do not use this! onCancel will be deprecated. Use onClose instead.
+     * Do not use this! onCancel will be deprecated in v4. Use onClose instead.
      */
     onCancel?: () => void;
     onClose?: () => void;
