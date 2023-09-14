@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
-import {ThreadMessageKind} from "./index";
-import {match} from "ts-pattern";
+import {ThreadMessageKind, ThreadMessageKindType} from './index';
+import { match } from 'ts-pattern';
 
 interface DynamicSideLengthProps {
-  threadMessageKind: ThreadMessageKind;
+  threadMessageKind: ThreadMessageKindType;
   isMobile: boolean;
 }
 
@@ -14,16 +14,16 @@ export function useDynamicSideLength({
   const imageSideLength = useMemo(() => {
     return match(threadMessageKind)
       .with(ThreadMessageKind.PARENT, () => (isMobile
-          ? 'THREAD_PARENT_MOBILE'
-          : 'THREAD_PARENT_WEB'
+        ? 'THREAD_PARENT_MOBILE'
+        : 'THREAD_PARENT_WEB'
       ))
       .with(ThreadMessageKind.CHILD, () => (isMobile
-          ? 'THREAD_CHILD_MOBILE'
-          : 'THREAD_CHILD_WEB'
+        ? 'THREAD_CHILD_MOBILE'
+        : 'THREAD_CHILD_WEB'
       ))
       .otherwise(() => (isMobile
-          ? 'CHAT_MOBILE'
-          : 'CHAT_WEB'
+        ? 'CHAT_MOBILE'
+        : 'CHAT_WEB'
       ));
   }, [isMobile, threadMessageKind]);
   return [imageSideLength];

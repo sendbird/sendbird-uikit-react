@@ -11,15 +11,15 @@ import { useDynamicSideLength } from './useGridImageSideLength';
 import {
   MULTIPLE_FILES_IMAGE_BORDER_RADIUS,
   MULTIPLE_FILES_IMAGE_SIDE_LENGTH,
-  MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH
-} from "./const";
+  MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH,
+} from './const';
 
 export const ThreadMessageKind = {
   PARENT: 'parent',
   CHILD: 'child',
 } as const;
 
-export type ThreadMessageKind = typeof ThreadMessageKind[keyof typeof ThreadMessageKind];
+export type ThreadMessageKindType = typeof ThreadMessageKind[keyof typeof ThreadMessageKind];
 
 interface Props {
   className?: string;
@@ -28,7 +28,7 @@ interface Props {
   mouseHover?: boolean;
   isReactionEnabled?: boolean;
   truncateLimit?: number;
-  threadMessageKind?: ThreadMessageKind;
+  threadMessageKind?: ThreadMessageKindType;
 }
 
 export default function MultipleFilesMessageItemBody({

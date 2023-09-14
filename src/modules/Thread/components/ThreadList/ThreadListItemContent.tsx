@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from 'react';
 import { EmojiContainer } from '@sendbird/chat';
-import {FileMessage, MultipleFilesMessage, UserMessage} from '@sendbird/chat/message';
+import { FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import './ThreadListItemContent.scss';
@@ -39,7 +39,7 @@ import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import useLongPress from '../../../../hooks/useLongPress';
 import MobileMenu from '../../../../ui/MobileMenu';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import MultipleFilesMessageItemBody, {ThreadMessageKind} from "../../../../ui/MultipleFilesMessageItemBody";
+import MultipleFilesMessageItemBody, { ThreadMessageKind } from '../../../../ui/MultipleFilesMessageItemBody';
 
 export interface ThreadListItemContentProps {
   className?: string;

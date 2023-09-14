@@ -31,7 +31,7 @@ import { useThreadContext } from '../../context/ThreadProvider';
 import VoiceMessageItemBody from '../../../../ui/VoiceMessageItemBody';
 import TextFragment from '../../../Message/components/TextFragment';
 import { tokenizeMessage } from '../../../Message/utils/tokens/tokenize';
-import MultipleFilesMessageItemBody, {ThreadMessageKind} from '../../../../ui/MultipleFilesMessageItemBody';
+import MultipleFilesMessageItemBody, { ThreadMessageKind } from '../../../../ui/MultipleFilesMessageItemBody';
 
 export interface ParentMessageInfoItemProps {
   className?: string;
