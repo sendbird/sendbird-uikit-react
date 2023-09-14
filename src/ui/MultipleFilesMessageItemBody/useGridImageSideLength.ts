@@ -1,33 +1,30 @@
 import { useMemo } from 'react';
-import {
-  MULTIPLE_FILES_IMAGE_SIDE_LENGTH,
-  MULTIPLE_FILES_IMAGE_SIDE_LENGTH_MOBILE,
-  MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD,
-  MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD_MOBILE,
-} from './const';
+import {ThreadMessageKind} from "./index";
+import {match} from "ts-pattern";
 
 interface DynamicSideLengthProps {
-  isThread: boolean;
+  threadMessageKind: ThreadMessageKind;
   isMobile: boolean;
 }
 
 export function useDynamicSideLength({
-  isThread,
+  threadMessageKind,
   isMobile,
 }: DynamicSideLengthProps): string[] {
   const imageSideLength = useMemo(() => {
-    let newImageSideLength = '';
-    if (isThread) {
-      newImageSideLength = isMobile
-        ? MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD_MOBILE
-        : MULTIPLE_FILES_IMAGE_SIDE_LENGTH_THREAD;
-    } else {
-      newImageSideLength = isMobile
-        ? MULTIPLE_FILES_IMAGE_SIDE_LENGTH_MOBILE
-        : MULTIPLE_FILES_IMAGE_SIDE_LENGTH;
-    }
-    return newImageSideLength;
-  }, [isMobile, isThread]);
-
+    return match(threadMessageKind)
+      .with(ThreadMessageKind.PARENT, () => (isMobile
+          ? 'THREAD_PARENT_MOBILE'
+          : 'THREAD_PARENT_WEB'
+      ))
+      .with(ThreadMessageKind.CHILD, () => (isMobile
+          ? 'THREAD_CHILD_MOBILE'
+          : 'THREAD_CHILD_WEB'
+      ))
+      .otherwise(() => (isMobile
+          ? 'CHAT_MOBILE'
+          : 'CHAT_WEB'
+      ));
+  }, [isMobile, threadMessageKind]);
   return [imageSideLength];
 }

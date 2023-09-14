@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from 'react';
 import { EmojiContainer } from '@sendbird/chat';
-import { FileMessage, UserMessage } from '@sendbird/chat/message';
+import {FileMessage, MultipleFilesMessage, UserMessage} from '@sendbird/chat/message';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import './ThreadListItemContent.scss';
@@ -18,7 +18,7 @@ import {
   getClassName,
   getSenderName,
   getUIKitMessageType,
-  getUIKitMessageTypes,
+  getUIKitMessageTypes, isMultipleFilesMessage,
   isOGMessage,
   isTextMessage,
   isThumbnailMessage,
@@ -39,6 +39,7 @@ import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import useLongPress from '../../../../hooks/useLongPress';
 import MobileMenu from '../../../../ui/MobileMenu';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import MultipleFilesMessageItemBody, {ThreadMessageKind} from "../../../../ui/MultipleFilesMessageItemBody";
 
 export interface ThreadListItemContentProps {
   className?: string;
@@ -253,6 +254,17 @@ export default function ThreadListItemContent({
               truncateLimit={isByMe ? 18 : 14}
             />
           )}
+          {
+            isMultipleFilesMessage(message) && (
+              <MultipleFilesMessageItemBody
+                className="sendbird-thread-list-item-content__middle__message-item-body"
+                message={message as MultipleFilesMessage}
+                isByMe={isByMe}
+                isReactionEnabled={isReactionEnabled}
+                threadMessageKind={ThreadMessageKind.CHILD}
+              />
+            )
+          }
           {(isThumbnailMessage(message as FileMessage)) && (
             <ThumbnailMessageItemBody
               className="sendbird-thread-list-item-content__middle__message-item-body"
@@ -278,7 +290,12 @@ export default function ThreadListItemContent({
           {(isReactionEnabledInChannel && message?.reactions?.length > 0) && (
             <div className={getClassName([
               'sendbird-thread-list-item-content-reactions',
-              (!isByMe || isThumbnailMessage(message as FileMessage) || (isOgMessageEnabledInGroupChannel && isOGMessage(message as UserMessage))) ? '' : 'primary',
+              (
+                !isByMe
+                || isThumbnailMessage(message as FileMessage)
+                || (isOgMessageEnabledInGroupChannel && isOGMessage(message as UserMessage))
+                || isMultipleFilesMessage(message)
+              ) ? '' : 'primary',
             ])}>
               <EmojiReactions
                 userId={userId}

@@ -31,7 +31,7 @@ import { useThreadContext } from '../../context/ThreadProvider';
 import VoiceMessageItemBody from '../../../../ui/VoiceMessageItemBody';
 import TextFragment from '../../../Message/components/TextFragment';
 import { tokenizeMessage } from '../../../Message/utils/tokens/tokenize';
-import MultipleFilesMessageItemBody from '../../../../ui/MultipleFilesMessageItemBody';
+import MultipleFilesMessageItemBody, {ThreadMessageKind} from '../../../../ui/MultipleFilesMessageItemBody';
 
 export interface ParentMessageInfoItemProps {
   className?: string;
@@ -203,7 +203,7 @@ export default function ParentMessageInfoItem({
             message={message as MultipleFilesMessage}
             isByMe={false}
             isReactionEnabled={isReactionEnabled}
-            isThread={true}
+            threadMessageKind={ThreadMessageKind.PARENT}
           />
         )
       }
