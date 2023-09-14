@@ -82,7 +82,7 @@ export interface ModalProps {
    */
   onCancel?: () => void;
   onClose?: () => void;
-  onSubmit?: () => void;
+  onSubmit?: (...args: any[]) => void;
   renderHeader?: () => ReactElement;
 }
 export function Modal(props: ModalProps): ReactElement {

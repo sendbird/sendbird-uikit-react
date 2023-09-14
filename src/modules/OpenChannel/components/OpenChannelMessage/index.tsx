@@ -226,6 +226,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
       {
         showRemove && (
           <RemoveMessageModal
+            message={message}
             onCloseModal={() => setShowRemove(false)}
             onDeleteMessage={() => {
               if (message?.messageType !== 'admin') {
