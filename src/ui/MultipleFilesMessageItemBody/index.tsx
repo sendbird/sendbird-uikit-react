@@ -7,7 +7,7 @@ import ImageGrid from '../ImageGrid';
 import FileViewer from '../FileViewer';
 import './index.scss';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
-import { useDynamicSideLength } from './useGridImageSideLength';
+import { useThreadMessageKindKeySelector } from './useThreadMessageKindKeySelector';
 import {
   MULTIPLE_FILES_IMAGE_BORDER_RADIUS,
   MULTIPLE_FILES_IMAGE_SIDE_LENGTH,
@@ -39,7 +39,7 @@ export default function MultipleFilesMessageItemBody({
 }: Props): ReactElement {
   const { isMobile } = useMediaQueryContext();
   const [fileInfoList] = useState<UploadedFileInfo[]>(message.fileInfoList);
-  const [imageSideLength] = useDynamicSideLength({ threadMessageKind, isMobile });
+  const threadMessageKindKey = useThreadMessageKindKeySelector({ threadMessageKind, isMobile });
   const [currentIndex, setCurrentIndex] = useState(-1);
 
   function onClose() {
@@ -62,7 +62,7 @@ export default function MultipleFilesMessageItemBody({
     );
   }
 
-  return imageSideLength && (
+  return threadMessageKindKey && (
     <>
       {
         currentIndex > -1 && (
@@ -90,10 +90,10 @@ export default function MultipleFilesMessageItemBody({
               <ImageRenderer
                 url={fileInfo.url}
                 fixedSize={false}
-                width={MULTIPLE_FILES_IMAGE_SIDE_LENGTH[imageSideLength]}
+                width={MULTIPLE_FILES_IMAGE_SIDE_LENGTH[threadMessageKindKey]}
                 maxSideLength={MULTIPLE_FILES_IMAGE_SIDE_LENGTH.CHAT_WEB}
-                height={MULTIPLE_FILES_IMAGE_SIDE_LENGTH[imageSideLength]}
-                borderRadius={MULTIPLE_FILES_IMAGE_BORDER_RADIUS[imageSideLength]}
+                height={MULTIPLE_FILES_IMAGE_SIDE_LENGTH[threadMessageKindKey]}
+                borderRadius={MULTIPLE_FILES_IMAGE_BORDER_RADIUS[threadMessageKindKey]}
                 defaultComponent={
                   <div
                     className="sendbird-multiple-files-image-renderer__thumbnail__placeholder"
