@@ -90,7 +90,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
     return () => {
       sdk?.groupChannel?.removeGroupChannelHandler?.(handlerId);
     };
-  }, [sdk]);
+  }, [sdk, currentChannel?.url]);
 
   // if currentChannel is changed while on Thread
   // then change panel type to CHANNEL
