@@ -94,6 +94,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps {
   isUserIdUsedForNickname?: boolean;
   sdkInitParams?: SendbirdChatInitParams;
   customExtensionParams?: CustomExtensionParams;
+  isMultipleFilesMessageEnabled?: boolean;
 }
 
 function Sendbird(props: SendbirdProviderProps) {
@@ -157,6 +158,7 @@ const SendbirdSDK = ({
   isUserIdUsedForNickname = true,
   sdkInitParams,
   customExtensionParams,
+  isMultipleFilesMessageEnabled = false,
 }: SendbirdProviderProps): React.ReactElement => {
   const {
     logLevel = '',
@@ -271,6 +273,7 @@ const SendbirdSDK = ({
   }, [stringSet]);
 
   /**
+   * Feature Configuration - TODO
    * This will be moved into the UIKitConfigProvider, aftering Dashboard applies
    */
   const uikitMultipleFilesMessageLimit = useMemo(() => {
@@ -304,6 +307,7 @@ const SendbirdSDK = ({
           accessToken,
           theme: currenttheme,
           setCurrenttheme,
+          isMultipleFilesMessageEnabled,
           uikitMultipleFilesMessageLimit,
           userListQuery,
           logger,

@@ -55,6 +55,7 @@ interface SendBirdStateConfig {
     resizingWidth?: number | string,
     resizingHeight?: number | string,
   };
+  isMultipleFilesMessageEnabled: boolean;
   uikitMultipleFilesMessageLimit: number;
   isTypingIndicatorEnabledOnChannelList?: boolean;
   isMessageReceiptStatusEnabledOnChannelList?: boolean;

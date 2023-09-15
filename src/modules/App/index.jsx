@@ -37,6 +37,7 @@ export default function App(props) {
     voiceRecord,
     replyType,
     isMessageGroupingEnabled,
+    isMultipleFilesMessageEnabled,
     colorSet,
     stringSet,
     allowProfileEdit,
@@ -78,6 +79,7 @@ export default function App(props) {
       isReactionEnabled={isReactionEnabled}
       isMentionEnabled={isMentionEnabled}
       isVoiceMessageEnabled={isVoiceMessageEnabled}
+      isMultipleFilesMessageEnabled={isMultipleFilesMessageEnabled}
       voiceRecord={voiceRecord}
       onUserProfileMessage={(channel) => {
         setCurrentChannel(channel);
@@ -159,6 +161,7 @@ App.propTypes = {
     maxRecordingTime: PropTypes.number,
     minRecordingTime: PropTypes.number,
   }),
+  isMultipleFilesMessageEnabled: PropTypes.bool,
   isTypingIndicatorEnabledOnChannelList: PropTypes.bool,
   isMessageReceiptStatusEnabledOnChannelList: PropTypes.bool,
   isUserIdUsedForNickname: PropTypes.bool,
@@ -200,6 +203,7 @@ App.defaultProps = {
   replyType: undefined,
   disableUserProfile: undefined,
   isVoiceMessageEnabled: undefined,
+  isMultipleFilesMessageEnabled: undefined,
   isTypingIndicatorEnabledOnChannelList: undefined,
   isMessageReceiptStatusEnabledOnChannelList: undefined,
   isUserIdUsedForNickname: true,

@@ -111,6 +111,7 @@ declare module "SendbirdUIKitGlobal" {
     disableAutoSelect?: boolean;
     isMentionEnabled?: boolean;
     isReactionEnabled?: boolean;
+    isMultipleFilesMessageEnabled?: boolean;
     isTypingIndicatorEnabledOnChannelList?: boolean;
     isMessageReceiptStatusEnabledOnChannelList?: boolean;
     uikitOptions?: UIKitOptions;
@@ -292,6 +293,7 @@ declare module "SendbirdUIKitGlobal" {
       maxRecordingTime?: number,
       minRecordingTime?: number,
     };
+    isMultipleFilesMessageEnabled?: boolean;
     isTypingIndicatorEnabledOnChannelList?: boolean;
     isMessageReceiptStatusEnabledOnChannelList?: boolean;
     uikitOptions?: UIKitOptions;
@@ -569,6 +571,7 @@ declare module "SendbirdUIKitGlobal" {
     channelUrl: string;
     isReactionEnabled?: boolean;
     isMessageGroupingEnabled?: boolean;
+    isMultipleFilesMessageEnabled?: boolean;
     showSearchIcon?: boolean;
     animatedMessage?: number;
     highlightedMessage?: number;
