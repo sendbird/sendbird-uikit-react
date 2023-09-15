@@ -1,7 +1,7 @@
 import './index.scss';
 import './__experimental__typography.scss';
 
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useMemo, useReducer, useState } from 'react';
 import { User } from '@sendbird/chat';
 
 import { SendbirdSdkContext } from './SendbirdSdkContext';
@@ -94,7 +94,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps {
   isUserIdUsedForNickname?: boolean;
   sdkInitParams?: SendbirdChatInitParams;
   customExtensionParams?: CustomExtensionParams;
-  uikitMultipleFilesMessageLimit?: number;
+  isMultipleFilesMessageEnabled?: boolean;
 }
 
 function Sendbird(props: SendbirdProviderProps) {
@@ -158,7 +158,7 @@ const SendbirdSDK = ({
   isUserIdUsedForNickname = true,
   sdkInitParams,
   customExtensionParams,
-  uikitMultipleFilesMessageLimit = DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT,
+  isMultipleFilesMessageEnabled = false,
 }: SendbirdProviderProps): React.ReactElement => {
   const {
     logLevel = '',
@@ -174,6 +174,7 @@ const SendbirdSDK = ({
   const { configs, configsWithAppAttr, initDashboardConfigs } = useUIKitConfig();
   const sdkInitialized = sdkStore.initialized;
   const sdk = sdkStore?.sdk;
+  const { multipleFilesMessageFileCountLimit } = sdk?.appInfo ?? {};
 
   useTheme(colorSet);
 
@@ -271,6 +272,14 @@ const SendbirdSDK = ({
     };
   }, [stringSet]);
 
+  /**
+   * Feature Configuration - TODO
+   * This will be moved into the UIKitConfigProvider, aftering Dashboard applies
+   */
+  const uikitMultipleFilesMessageLimit = useMemo(() => {
+    return Math.min(DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT, multipleFilesMessageFileCountLimit ?? Number.MAX_SAFE_INTEGER);
+  }, [multipleFilesMessageFileCountLimit]);
+
   return (
     <SendbirdSdkContext.Provider
       value={{
@@ -294,6 +303,7 @@ const SendbirdSDK = ({
           accessToken,
           theme: currenttheme,
           setCurrenttheme,
+          isMultipleFilesMessageEnabled,
           uikitMultipleFilesMessageLimit,
           userListQuery,
           logger,

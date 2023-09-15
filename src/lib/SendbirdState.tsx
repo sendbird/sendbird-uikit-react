@@ -34,7 +34,6 @@ interface SendBirdStateConfig {
   onUserProfileMessage?: (props: GroupChannel) => void;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   allowProfileEdit: boolean;
-  uikitMultipleFilesMessageLimit?: number;
   isOnline: boolean;
   userId: string;
   appId: string;
@@ -56,6 +55,8 @@ interface SendBirdStateConfig {
     resizingWidth?: number | string,
     resizingHeight?: number | string,
   };
+  isMultipleFilesMessageEnabled: boolean;
+  uikitMultipleFilesMessageLimit: number;
   isTypingIndicatorEnabledOnChannelList?: boolean;
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
   markAsReadScheduler?: MarkAsReadSchedulerType;

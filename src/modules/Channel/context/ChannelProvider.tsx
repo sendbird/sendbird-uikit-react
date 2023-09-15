@@ -73,6 +73,7 @@ export type ChannelContextProps = {
   channelUrl: string;
   isReactionEnabled?: boolean;
   isMessageGroupingEnabled?: boolean;
+  isMultipleFilesMessageEnabled?: boolean;
   showSearchIcon?: boolean;
   animatedMessage?: number | null;
   highlightedMessage?: number | null;
@@ -169,6 +170,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     children,
     isReactionEnabled,
     isMessageGroupingEnabled = true,
+    isMultipleFilesMessageEnabled = false,
     showSearchIcon,
     animatedMessage,
     highlightedMessage,
@@ -438,6 +440,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       channelUrl,
       isReactionEnabled: usingReaction,
       isMessageGroupingEnabled,
+      isMultipleFilesMessageEnabled,
       showSearchIcon: showSearchIcon ?? globalConfigs.showSearchIcon,
       highlightedMessage,
       startingPoint,

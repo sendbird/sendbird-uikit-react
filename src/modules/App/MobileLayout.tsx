@@ -30,6 +30,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
   const {
     replyType,
     isMessageGroupingEnabled,
+    isMultipleFilesMessageEnabled,
     allowProfileEdit,
     isReactionEnabled,
     showSearchIcon,
@@ -134,6 +135,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
               isReactionEnabled={isReactionEnabled}
               showSearchIcon={showSearchIcon}
               isMessageGroupingEnabled={isMessageGroupingEnabled}
+              isMultipleFilesMessageEnabled={isMultipleFilesMessageEnabled}
               startingPoint={startingPoint}
               animatedMessage={animatedMessageId}
               highlightedMessage={highlightedMessage}

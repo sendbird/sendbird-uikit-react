@@ -12,7 +12,6 @@ import { AppLayout } from './AppLayout';
 
 import './index.scss';
 import {
-  DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT,
   VOICE_RECORDER_DEFAULT_MAX,
   VOICE_RECORDER_DEFAULT_MIN,
 } from '../../utils/consts';
@@ -37,6 +36,7 @@ export default function App(props) {
     voiceRecord,
     replyType,
     isMessageGroupingEnabled,
+    isMultipleFilesMessageEnabled,
     colorSet,
     stringSet,
     allowProfileEdit,
@@ -47,7 +47,6 @@ export default function App(props) {
     onProfileEditSuccess,
     imageCompression,
     disableAutoSelect,
-    uikitMultipleFilesMessageLimit,
     isTypingIndicatorEnabledOnChannelList,
     isMessageReceiptStatusEnabledOnChannelList,
     uikitOptions,
@@ -79,11 +78,11 @@ export default function App(props) {
       isReactionEnabled={isReactionEnabled}
       isMentionEnabled={isMentionEnabled}
       isVoiceMessageEnabled={isVoiceMessageEnabled}
+      isMultipleFilesMessageEnabled={isMultipleFilesMessageEnabled}
       voiceRecord={voiceRecord}
       onUserProfileMessage={(channel) => {
         setCurrentChannel(channel);
       }}
-      uikitMultipleFilesMessageLimit={uikitMultipleFilesMessageLimit}
       isTypingIndicatorEnabledOnChannelList={isTypingIndicatorEnabledOnChannelList}
       isMessageReceiptStatusEnabledOnChannelList={isMessageReceiptStatusEnabledOnChannelList}
       replyType={replyType}
@@ -136,7 +135,6 @@ App.propTypes = {
     ]),
     isREMUnitEnabled: PropTypes.bool,
   }),
-  uikitMultipleFilesMessageLimit: PropTypes.number,
   uikitOptions: PropTypes.shape({}),
   isReactionEnabled: PropTypes.bool,
   replyType: PropTypes.oneOf(['NONE', 'QUOTE_REPLY', 'THREAD']),
@@ -162,6 +160,7 @@ App.propTypes = {
     maxRecordingTime: PropTypes.number,
     minRecordingTime: PropTypes.number,
   }),
+  isMultipleFilesMessageEnabled: PropTypes.bool,
   isTypingIndicatorEnabledOnChannelList: PropTypes.bool,
   isMessageReceiptStatusEnabledOnChannelList: PropTypes.bool,
   isUserIdUsedForNickname: PropTypes.bool,
@@ -188,14 +187,12 @@ App.defaultProps = {
     maxRecordingTime: VOICE_RECORDER_DEFAULT_MAX,
     minRecordingTime: VOICE_RECORDER_DEFAULT_MIN,
   },
-  uikitMultipleFilesMessageLimit: DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT,
   isMessageGroupingEnabled: true,
   stringSet: null,
   colorSet: null,
   imageCompression: {},
   disableAutoSelect: false,
   uikitOptions: undefined,
-
   // The below configs are duplicates of the Dashboard UIKit Configs.
   // Since their default values will be set in the Sendbird component,
   // we don't need to set them here.
@@ -205,6 +202,7 @@ App.defaultProps = {
   replyType: undefined,
   disableUserProfile: undefined,
   isVoiceMessageEnabled: undefined,
+  isMultipleFilesMessageEnabled: undefined,
   isTypingIndicatorEnabledOnChannelList: undefined,
   isMessageReceiptStatusEnabledOnChannelList: undefined,
   isUserIdUsedForNickname: true,
