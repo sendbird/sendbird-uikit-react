@@ -47,7 +47,6 @@ export default function App(props) {
     onProfileEditSuccess,
     imageCompression,
     disableAutoSelect,
-    uikitMultipleFilesMessageLimit,
     isTypingIndicatorEnabledOnChannelList,
     isMessageReceiptStatusEnabledOnChannelList,
     uikitOptions,
@@ -83,7 +82,6 @@ export default function App(props) {
       onUserProfileMessage={(channel) => {
         setCurrentChannel(channel);
       }}
-      uikitMultipleFilesMessageLimit={uikitMultipleFilesMessageLimit}
       isTypingIndicatorEnabledOnChannelList={isTypingIndicatorEnabledOnChannelList}
       isMessageReceiptStatusEnabledOnChannelList={isMessageReceiptStatusEnabledOnChannelList}
       replyType={replyType}
@@ -136,7 +134,6 @@ App.propTypes = {
     ]),
     isREMUnitEnabled: PropTypes.bool,
   }),
-  uikitMultipleFilesMessageLimit: PropTypes.number,
   uikitOptions: PropTypes.shape({}),
   isReactionEnabled: PropTypes.bool,
   replyType: PropTypes.oneOf(['NONE', 'QUOTE_REPLY', 'THREAD']),
@@ -188,14 +185,12 @@ App.defaultProps = {
     maxRecordingTime: VOICE_RECORDER_DEFAULT_MAX,
     minRecordingTime: VOICE_RECORDER_DEFAULT_MIN,
   },
-  uikitMultipleFilesMessageLimit: DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT,
   isMessageGroupingEnabled: true,
   stringSet: null,
   colorSet: null,
   imageCompression: {},
   disableAutoSelect: false,
   uikitOptions: undefined,
-
   // The below configs are duplicates of the Dashboard UIKit Configs.
   // Since their default values will be set in the Sendbird component,
   // we don't need to set them here.
