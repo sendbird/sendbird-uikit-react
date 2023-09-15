@@ -277,11 +277,7 @@ const SendbirdSDK = ({
    * This will be moved into the UIKitConfigProvider, aftering Dashboard applies
    */
   const uikitMultipleFilesMessageLimit = useMemo(() => {
-    return (
-      multipleFilesMessageFileCountLimit
-        ? Math.min(DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT, multipleFilesMessageFileCountLimit)
-        : DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT
-    );
+    return Math.min(DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT, multipleFilesMessageFileCountLimit ?? Number.MAX_SAFE_INTEGER);
   }, [multipleFilesMessageFileCountLimit]);
 
   return (
