@@ -17,6 +17,7 @@ export interface AppLayoutProps {
   isReactionEnabled?: boolean;
   replyType?: 'NONE' | 'QUOTE_REPLY' | 'THREAD';
   isMessageGroupingEnabled?: boolean;
+  isMultipleFilesMessageEnabled?: boolean;
   allowProfileEdit?: boolean;
   showSearchIcon?: boolean;
   onProfileEditSuccess?(user: User): void;

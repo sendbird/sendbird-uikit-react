@@ -15,6 +15,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
     isReactionEnabled,
     replyType,
     isMessageGroupingEnabled,
+    isMultipleFilesMessageEnabled,
     allowProfileEdit,
     showSearchIcon,
     onProfileEditSuccess,
@@ -102,6 +103,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
           isReactionEnabled={isReactionEnabled}
           replyType={replyType}
           isMessageGroupingEnabled={isMessageGroupingEnabled}
+          isMultipleFilesMessageEnabled={isMultipleFilesMessageEnabled}
         />
       </div>
       {showSettings && (
