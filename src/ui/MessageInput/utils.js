@@ -39,5 +39,9 @@ export const nodeListToArray = (childNodes) => {
 };
 
 export function isChannelTypeSupportsMultipleFilesMessage(channel) {
-  return channel.isGroupChannel() && !channel.isBroadcast && !channel.isSuper;
+  return channel
+    && typeof channel.isGroupChannel === 'function'
+    && channel.isGroupChannel()
+    && !channel.isBroadcast
+    && !channel.isSuper;
 }
