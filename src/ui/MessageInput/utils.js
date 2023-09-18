@@ -38,4 +38,9 @@ export const nodeListToArray = (childNodes) => {
   }
 };
 
-export default debounce;
+export function isChannelTypeSupportsMultipleFilesMessage(channel) {
+  return channel
+    && channel?.isGroupChannel?.()
+    && !channel.isBroadcast
+    && !channel.isSuper;
+}
