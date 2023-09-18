@@ -19,7 +19,7 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
-import { nodeListToArray, sanitizeString } from './utils';
+import {isChannelTypeSupportsMultipleFilesMessage, nodeListToArray, sanitizeString} from './utils';
 import {
   arrayEqual,
   getClassName,
@@ -524,7 +524,10 @@ const MessageInput = React.forwardRef((props, ref) => {
                     event.target.value = '';
                   }}
                   accept={getMimeTypesUIKitAccepts()}
-                  multiple={isSelectingMultipleFilesEnabled}
+                  multiple={
+                    isSelectingMultipleFilesEnabled
+                    && isChannelTypeSupportsMultipleFilesMessage(channel)
+                  }
                 />
               </IconButton>
               )
