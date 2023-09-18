@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 
 import * as messageActionTypes from '../dux/actionTypes';
+import {isMultipleFilesMessage} from "../../../../utils";
 
 function useResendMessageCallback({
   currentGroupChannel,
@@ -85,6 +86,38 @@ function useResendMessageCallback({
           type: messageActionTypes.RESEND_MESSAGE_START,
           payload: failedMessage,
         });
+      }
+
+      if (isMultipleFilesMessage(failedMessage)) {
+        currentGroupChannel.resendMessage(failedMessage)
+          .onPending((message) => {
+            messagesDispatcher({
+              type: messageActionTypes.RESEND_MESSAGE_START,
+              payload: message,
+            });
+          })
+          // TODO: Handle on file info upload event.
+          // .onFileUploaded((
+          //   requestId,
+          //   index,
+          //   uploadableFileInfo,
+          //   err
+          // ) => {
+          // })
+          .onSucceeded((message) => {
+            logger.info('Channel: Resending multiple files message success!', message);
+            messagesDispatcher({
+              type: messageActionTypes.SEND_MESSAGE_SUCESS,
+              payload: message,
+            });
+          })
+          .onFailed((e, message) => {
+            logger.warning('Channel: Resending file message failed!', e);
+            messagesDispatcher({
+              type: messageActionTypes.SEND_MESSAGE_FAILURE,
+              payload: message,
+            });
+          });
       }
     } else {
       // to alert user on console
