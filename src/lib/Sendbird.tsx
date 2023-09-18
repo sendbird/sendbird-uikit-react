@@ -174,7 +174,10 @@ const SendbirdSDK = ({
   const { configs, configsWithAppAttr, initDashboardConfigs } = useUIKitConfig();
   const sdkInitialized = sdkStore.initialized;
   const sdk = sdkStore?.sdk;
-  const { multipleFilesMessageFileCountLimit } = sdk?.appInfo ?? {};
+  const {
+    uploadSizeLimit,
+    multipleFilesMessageFileCountLimit,
+  } = sdk?.appInfo ?? {};
 
   useTheme(colorSet);
 
@@ -279,6 +282,9 @@ const SendbirdSDK = ({
   const uikitMultipleFilesMessageLimit = useMemo(() => {
     return Math.min(DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT, multipleFilesMessageFileCountLimit ?? Number.MAX_SAFE_INTEGER);
   }, [multipleFilesMessageFileCountLimit]);
+  const uikitUploadSizeLimit = useMemo(() => {
+    return uploadSizeLimit;
+  }, [uploadSizeLimit]);
 
   return (
     <SendbirdSdkContext.Provider
@@ -304,6 +310,7 @@ const SendbirdSDK = ({
           theme: currenttheme,
           setCurrenttheme,
           isMultipleFilesMessageEnabled,
+          uikitUploadSizeLimit,
           uikitMultipleFilesMessageLimit,
           userListQuery,
           logger,

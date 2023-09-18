@@ -34,7 +34,6 @@ export function uikitConfigMapper({
       input: {
         enableDocument: uikitOptions.groupChannel?.input?.enableDocument,
       },
-      uikitMultipleFilesMessageLimit: uikitOptions.groupChannel?.uikitMultipleFilesMessageLimit,
     },
     groupChannelList: {
       enableTypingIndicator: uikitOptions.groupChannelList?.enableTypingIndicator ?? isTypingIndicatorEnabledOnChannelList,
