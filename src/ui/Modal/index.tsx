@@ -44,10 +44,12 @@ export interface ModalFooterProps {
   type?: ButtonTypes;
   onCancel: () => void;
   onSubmit: () => void;
+  hideCancelButton?: boolean;
 }
 export const ModalFooter = ({
   submitText,
   disabled = false,
+  hideCancelButton = false,
   type = ButtonTypes.DANGER,
   onSubmit,
   onCancel,
@@ -55,11 +57,13 @@ export const ModalFooter = ({
   const { stringSet } = useContext(LocalizationContext);
   return (
     <div className="sendbird-modal__footer">
-      <Button type={ButtonTypes.SECONDARY} onClick={onCancel}>
-        <Label type={LabelTypography.BUTTON_1} color={LabelColors.ONBACKGROUND_1}>
-          {stringSet.BUTTON__CANCEL}
-        </Label>
-      </Button>
+      {!hideCancelButton && (
+        <Button type={ButtonTypes.SECONDARY} onClick={onCancel}>
+          <Label type={LabelTypography.BUTTON_1} color={LabelColors.ONBACKGROUND_1}>
+            {stringSet.BUTTON__CANCEL}
+          </Label>
+        </Button>
+      )}
       <Button type={type} disabled={disabled} onClick={onSubmit}>
         {submitText}
       </Button>
