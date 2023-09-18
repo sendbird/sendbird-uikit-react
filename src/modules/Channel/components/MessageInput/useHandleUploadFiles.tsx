@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 
 import { Logger } from '../../../../lib/SendbirdState';
 import { SendMFMFunctionType } from '../../context/hooks/useSendMultipleFilesMessage';
@@ -6,6 +6,10 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { SendableMessageType, isImage } from '../../../../utils';
 // TODO: get SendFileMessageFunctionType from Channel
 import { SendFileMessageFunctionType } from '../../../Thread/context/hooks/useSendFileMessage';
+import { useGlobalModalContext } from '../../../../hooks/useModal';
+import { ButtonTypes } from '../../../../ui/Button';
+import { useLocalization } from '../../../../lib/LocalizationContext';
+import { ModalFooter } from '../../../../ui/Modal';
 
 /**
  * The handleUploadFiles is a function sending a FileMessage and MultipleFilesMessage
@@ -31,8 +35,10 @@ export const useHandleUploadFiles = ({
 }: useHandleUploadFilesDynamicProps, {
   logger,
 }: useHandleUploadFilesStaticProps): Array<HandleUploadFunctionType> => {
+  const { stringSet } = useLocalization();
   const { config } = useSendbirdStateContext();
   const uikitMultipleFilesMessageLimit = config?.uikitMultipleFilesMessageLimit;
+  const { openModal } = useGlobalModalContext();
 
   const handleUploadFiles = useCallback((fileList: FileList) => {
     const files: File[] = Array.from(fileList);
@@ -48,10 +54,40 @@ export const useHandleUploadFiles = ({
     }
     if (files.length > uikitMultipleFilesMessageLimit) {
       logger.info(`Channel|useHandleUploadFiles: Cannot upload files more than ${uikitMultipleFilesMessageLimit}`);
+      openModal({
+        modalProps: {
+          titleText: `Up to ${uikitMultipleFilesMessageLimit} files can be attached.`,
+          hideFooter: true,
+        },
+        childElement: ({ closeModal }) => (
+          <ModalFooter
+            type={ButtonTypes.PRIMARY}
+            submitText={stringSet.BUTTON__OK}
+            hideCancelButton
+            onCancel={closeModal}
+            onSubmit={closeModal}
+          />
+        ),
+      });
       return;
     }
     if (files.some((file: File) => file.size > FILE_SIZE_LIMIT)) {
       logger.info(`Channel|useHandleUploadFiles: Cannot upload file size exceeding ${FILE_SIZE_LIMIT}`);
+      openModal({
+        modalProps: {
+          titleText: `The maximum size per file is ${Math.floor(FILE_SIZE_LIMIT / 1000000)} MB.`,
+          hideFooter: true,
+        },
+        childElement: ({ closeModal }) => (
+          <ModalFooter
+            type={ButtonTypes.PRIMARY}
+            submitText={stringSet.BUTTON__OK}
+            hideCancelButton
+            onCancel={closeModal}
+            onSubmit={closeModal}
+          />
+        ),
+      });
       return;
     }
 
