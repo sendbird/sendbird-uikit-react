@@ -6,7 +6,6 @@ import Modal, { type ModalProps } from '../../ui/Modal';
 
 export type OpenGlobalModalProps = {
   modalProps: ModalProps;
-  // childElement: ReactElement;
   childElement: (props: { closeModal: () => void }) => ReactElement;
 };
 export interface GlobalModalProviderProps {
