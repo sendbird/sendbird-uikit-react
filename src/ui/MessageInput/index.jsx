@@ -19,7 +19,7 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
-import {isChannelTypeSupportsMultipleFilesMessage, nodeListToArray, sanitizeString} from './utils';
+import { isChannelTypeSupportsMultipleFilesMessage, nodeListToArray, sanitizeString } from './utils';
 import {
   arrayEqual,
   getClassName,
