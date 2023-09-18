@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
 import * as messageActionTypes from '../dux/actionTypes';
-import {isMultipleFilesMessage} from "../../../../utils";
+import { isMultipleFilesMessage } from '../../../../utils';
 
 function useResendMessageCallback({
   currentGroupChannel,
