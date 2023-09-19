@@ -1,5 +1,5 @@
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { FileMessage, MessageType, SendingStatus, UserMessage } from '@sendbird/chat/message';
+import {FileMessage, MessageType, MultipleFilesMessage, SendingStatus, UserMessage} from '@sendbird/chat/message';
 import { useCallback } from 'react';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
@@ -71,6 +71,28 @@ export default function useResendMessageCallback({
             pubSub.publish(topics.SEND_FILE_MESSAGE, {
               channel: currentChannel,
               message: failedMessage,
+            });
+          });
+      } else if (failedMessage?.isMultipleFilesMessage?.()) {
+        currentChannel?.resendMessage?.(failedMessage as MultipleFilesMessage)
+          // TODO: Handle on pending event (Same goes for the other message types).
+          // TODO: Handle on file info upload event.
+          .onSucceeded((message: MultipleFilesMessage) => {
+            logger.info('Thread | useResendMessageCallback: Resending failedMessage succeeded.', message);
+            threadDispatcher({
+              type: ThreadContextActionTypes.SEND_MESSAGE_SUCESS,
+              payload: { message },
+            });
+          })
+          .onFailed((error: Error, message: MultipleFilesMessage) => {
+            logger.warning('Thread | useResendMessageCallback: Resending failedMessage failed.', error);
+            threadDispatcher({
+              type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
+              payload: { message },
+            });
+            pubSub.publish(topics.SEND_FILE_MESSAGE, {
+              channel: currentChannel,
+              message,
             });
           });
       } else {
