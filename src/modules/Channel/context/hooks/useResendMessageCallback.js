@@ -97,13 +97,6 @@ function useResendMessageCallback({
             });
           })
           // TODO: Handle on file info upload event.
-          // .onFileUploaded((
-          //   requestId,
-          //   index,
-          //   uploadableFileInfo,
-          //   err
-          // ) => {
-          // })
           .onSucceeded((message) => {
             logger.info('Channel: Resending multiple files message success!', message);
             messagesDispatcher({
@@ -112,7 +105,7 @@ function useResendMessageCallback({
             });
           })
           .onFailed((e, message) => {
-            logger.warning('Channel: Resending file message failed!', e);
+            logger.warning('Channel: Resending multiple files message failed!', e);
             messagesDispatcher({
               type: messageActionTypes.SEND_MESSAGE_FAILURE,
               payload: message,
