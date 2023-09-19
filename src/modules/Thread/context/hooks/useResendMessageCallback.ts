@@ -1,5 +1,5 @@
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import {FileMessage, MessageType, MultipleFilesMessage, SendingStatus, UserMessage} from '@sendbird/chat/message';
+import { FileMessage, MessageType, MultipleFilesMessage, SendingStatus, UserMessage } from '@sendbird/chat/message';
 import { useCallback } from 'react';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
