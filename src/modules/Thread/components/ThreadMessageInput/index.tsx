@@ -42,6 +42,7 @@ const ThreadMessageInput = (
     userMention,
     isVoiceMessageEnabled,
     logger,
+    isMultipleFilesMessageEnabled,
   } = config;
   const {
     currentChannel,
@@ -161,7 +162,7 @@ const ThreadMessageInput = (
               mentionSelectedUser={selectedUser}
               isMentionEnabled={isMentionEnabled}
               isVoiceMessageEnabled={isVoiceMessageEnabled}
-              isSelectingMultipleFilesEnabled
+              isSelectingMultipleFilesEnabled={isMultipleFilesMessageEnabled}
               onVoiceMessageIconClick={() => {
                 setShowVoiceMessageInput(true);
               }}

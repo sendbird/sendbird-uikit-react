@@ -57,6 +57,7 @@ const MessageInputWrapper = (
     userMention,
     isVoiceMessageEnabled,
     logger,
+    isMultipleFilesMessageEnabled,
   } = globalStore.config;
   const maxUserMentionCount = userMention?.maxMentionCount || 10;
   const maxUserSuggestionCount = userMention?.maxSuggestionCount || 15;
@@ -184,7 +185,7 @@ const MessageInputWrapper = (
               mentionSelectedUser={selectedUser}
               isMentionEnabled={isMentionEnabled}
               isVoiceMessageEnabled={isVoiceMessageEnabled}
-              isSelectingMultipleFilesEnabled
+              isSelectingMultipleFilesEnabled={isMultipleFilesMessageEnabled}
               onVoiceMessageIconClick={() => {
                 setShowVoiceMessageInput(true);
               }}

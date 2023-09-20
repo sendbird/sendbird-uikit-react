@@ -119,7 +119,11 @@ const toggleItems = {
     title: 'Message Status',
     defaultValue: true,
   },
-}
+  multipleFiles: {
+    title: "Multiple Files",
+    defaultValue: true,
+  },
+};
 
 const ModerationOptionItem = ({
   subTitle,
@@ -254,7 +258,10 @@ export const GroupChannel = () => {
   useEffect(() => {
     if (isLoggedin) {
       const currentApp = globalEnvironments.apps?.[globalEnvironments.currentAppId];
-      setSampleOptions(currentApp.users?.[currentApp?.currentUserId]);
+      setSampleOptions({
+        ...sampleOptions,
+        ...currentApp.users?.[currentApp?.currentUserId],
+      });
     } else {
       const currentAppId = globalEnvironments.currentAppId;
       const appIds = Object.keys(globalEnvironments.apps);
@@ -329,6 +336,7 @@ export const GroupChannel = () => {
                 isTypingIndicatorEnabledOnChannelList={sampleOptions.typingIndicator}
                 isMessageReceiptStatusEnabledOnChannelList={sampleOptions.messageStatus}
                 isVoiceMessageEnabled={sampleOptions.isVoiceMessageEnabled}
+                isMultipleFilesMessageEnabled={sampleOptions.multipleFiles}
                 imageCompression={{ compressionRate: sampleOptions.imageCompression ? 0.7 : 1 }}
                 replyType={sampleOptions.replyType}
                 config={{ logLevel: 'all' }}
