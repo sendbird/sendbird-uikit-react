@@ -448,7 +448,7 @@ export default function MessageContent({
       </div>
       {
         showMenu && (
-          message?.isUserMessage?.() || message?.isFileMessage?.()
+          message?.isUserMessage?.() || message?.isFileMessage?.() || message?.isMultipleFilesMessage?.()
         ) && (
           <MobileMenu
             parentRef={contentRef}
