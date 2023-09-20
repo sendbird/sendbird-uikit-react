@@ -89,6 +89,7 @@ export interface SendBirdStateConfig {
   userListQuery?(): UserListQuery;
   isReactionEnabled: boolean;
   isMentionEnabled: boolean;
+  isMultipleFilesMessageEnabled: boolean;
   isVoiceMessageEnabled?: boolean;
   uikitUploadSizeLimit: number;
   uikitMultipleFilesMessageLimit: number;
