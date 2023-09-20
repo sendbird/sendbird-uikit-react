@@ -13,9 +13,10 @@ import { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
 import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOutgoingMessageState';
 import { Nullable } from '../types';
+import {match} from "ts-pattern";
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
-const SUPPORTED_MIMES = {
+export const SUPPORTED_MIMES = {
   IMAGE: [
     'image/jpeg',
     'image/jpg',
@@ -45,8 +46,20 @@ const SUPPORTED_MIMES = {
   ],
 };
 
-export const getMimeTypesUIKitAccepts = (): string => {
+export const getMimeTypesUIKitAccepts = (acceptableMimeTypes?: string[]): string => {
   const { IMAGE, VIDEO, AUDIO } = SUPPORTED_MIMES;
+
+  if (Array.isArray(acceptableMimeTypes) && acceptableMimeTypes.length > 0) {
+    return acceptableMimeTypes.reduce((accumulator: string[], acceptableMimeType: string): string[] => {
+      return accumulator.concat(
+        match(acceptableMimeType)
+          .with('image', () => IMAGE)
+          .with('video', () => VIDEO)
+          .with('audio', () => AUDIO)
+          .otherwise(() => [])
+      );
+    }, []).join();
+  }
   return IMAGE.concat(VIDEO).concat(AUDIO).join();
   // concat() is fater than flat()
 };

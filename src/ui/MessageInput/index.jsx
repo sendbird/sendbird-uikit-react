@@ -92,6 +92,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     renderVoiceMessageIcon,
     renderSendMessageIcon,
     setMentionedUsers,
+    acceptableMimeTypes,
   } = props;
   const textFieldId = messageFieldId || TEXT_FIELD_ID;
   const { stringSet } = useLocalization();
@@ -523,7 +524,7 @@ const MessageInput = React.forwardRef((props, ref) => {
                     onFileUpload([...event.currentTarget.files]);
                     event.target.value = '';
                   }}
-                  accept={getMimeTypesUIKitAccepts()}
+                  accept={getMimeTypesUIKitAccepts(acceptableMimeTypes)}
                   multiple={
                     isSelectingMultipleFilesEnabled
                     && isChannelTypeSupportsMultipleFilesMessage(channel)
