@@ -1,6 +1,6 @@
 import { RefObject, createRef } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { UserMessage } from '@sendbird/chat/message';
+import { MultipleFilesMessageCreateParams, UserMessage } from '@sendbird/chat/message';
 import { renderHook } from '@testing-library/react';
 
 import {
@@ -32,7 +32,21 @@ describe('useSendMultipleFilesMessage', () => {
       url: uuidv4(),
       sendMultipleFilesMessage: jest.fn(() => getMockMessageRequestHandler()),
     } as unknown as GroupChannel;
-    globalContext.onBeforeSendMultipleFilesMessage = (params) => params;
+    globalContext.onBeforeSendMultipleFilesMessage = (files, quoteMessage) => {
+      const params = {
+        fileInfoList: files.map((file: File) => ({
+          file,
+          fileName: file.name,
+          fileSize: file.size,
+          mimeType: file.type,
+        })),
+      } as MultipleFilesMessageCreateParams;
+      if (quoteMessage) {
+        params.isReplyToChannel = true;
+        params.parentMessageId = quoteMessage.messageId;
+      }
+      return params;
+    };
     globalContext.logger = { info: jest.fn(), warning: jest.fn(), error: jest.fn() };
     globalContext.pubSub = { publish: jest.fn() };
     globalContext.scrollRef = createRef<HTMLDivElement>();
@@ -273,8 +287,8 @@ describe('useSendMultipleFilesMessage', () => {
       useSendMultipleFilesMessage({
         currentChannel: globalContext.currentChannel as GroupChannel,
         // modify the message create params before sending a message
-        onBeforeSendMultipleFilesMessage: (params) => ({
-          ...params,
+        onBeforeSendMultipleFilesMessage: (files, quotedMessage) => ({
+          ...globalContext?.onBeforeSendMultipleFilesMessage?.(files, quotedMessage),
           ...newParamsOptions,
         }),
       }, {
@@ -325,8 +339,8 @@ describe('useSendMultipleFilesMessage', () => {
       useSendMultipleFilesMessage({
         currentChannel: globalContext.currentChannel as GroupChannel,
         // modify the message create params before sending a message
-        onBeforeSendMultipleFilesMessage: (params) => ({
-          ...params,
+        onBeforeSendMultipleFilesMessage: (files, quotedMessage) => ({
+          ...globalContext?.onBeforeSendMultipleFilesMessage?.(files, quotedMessage),
           // upsert the properties for the quote message
           ...newParamsOptions,
         }),

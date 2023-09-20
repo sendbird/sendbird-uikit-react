@@ -22,6 +22,8 @@ const Channel: React.FC<ChannelProps> = (props: ChannelProps) => {
       onBeforeSendUserMessage={props?.onBeforeSendUserMessage}
       onBeforeSendFileMessage={props?.onBeforeSendFileMessage}
       onBeforeUpdateUserMessage={props?.onBeforeUpdateUserMessage}
+      onBeforeSendVoiceMessage={props?.onBeforeSendVoiceMessage}
+      onBeforeSendMultipleFilesMessage={props?.onBeforeSendMultipleFilesMessage}
       onChatHeaderActionClick={props?.onChatHeaderActionClick}
       onSearchClick={props?.onSearchClick}
       onBackClick={props?.onBackClick}
