@@ -19,6 +19,11 @@ const Thread: React.FC<ThreadProps> = (props: ThreadProps) => {
     message,
     onHeaderActionClick,
     onMoveToParentMessage,
+    // onBeforeSend~~~Message
+    onBeforeSendUserMessage,
+    onBeforeSendFileMessage,
+    onBeforeSendVoiceMessage,
+    onBeforeSendMultipleFilesMessage,
     // ThreadUIProps
     renderHeader,
     renderParentMessageInfo,
@@ -38,6 +43,10 @@ const Thread: React.FC<ThreadProps> = (props: ThreadProps) => {
         message={message}
         onHeaderActionClick={onHeaderActionClick}
         onMoveToParentMessage={onMoveToParentMessage}
+        onBeforeSendUserMessage={onBeforeSendUserMessage}
+        onBeforeSendFileMessage={onBeforeSendFileMessage}
+        onBeforeSendVoiceMessage={onBeforeSendVoiceMessage}
+        onBeforeSendMultipleFilesMessage={onBeforeSendMultipleFilesMessage}
       >
         <ThreadUI
           renderHeader={renderHeader}

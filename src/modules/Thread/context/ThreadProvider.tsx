@@ -1,7 +1,12 @@
 import React, { useReducer, useMemo, useEffect, ReactElement } from 'react';
 import { User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { BaseMessage, FileMessageCreateParams } from '@sendbird/chat/message';
+import type {
+  BaseMessage,
+  FileMessageCreateParams,
+  MultipleFilesMessageCreateParams,
+  UserMessageCreateParams,
+} from '@sendbird/chat/message';
 
 import { getNicknamesMapFromMembers, getParentMessageFrom } from './utils';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
@@ -36,7 +41,10 @@ export type ThreadProviderProps = {
   message: SendableMessageType | null;
   onHeaderActionClick?: () => void;
   onMoveToParentMessage?: (props: { message: SendableMessageType, channel: GroupChannel }) => void;
+  onBeforeSendUserMessage?: (message: string, quotedMessage?: SendableMessageType) => UserMessageCreateParams;
+  onBeforeSendFileMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
   onBeforeSendVoiceMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
+  onBeforeSendMultipleFilesMessage?: (files: Array<File>, quotedMessage?: SendableMessageType) => MultipleFilesMessageCreateParams;
   // User Profile
   disableUserProfile?: boolean;
   renderUserProfile?: (props: { user: User, close: () => void }) => ReactElement;
@@ -63,7 +71,10 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
     channelUrl,
     onHeaderActionClick,
     onMoveToParentMessage,
+    onBeforeSendUserMessage,
+    onBeforeSendFileMessage,
     onBeforeSendVoiceMessage,
+    onBeforeSendMultipleFilesMessage,
     // User Profile
     disableUserProfile,
     renderUserProfile,
@@ -160,22 +171,41 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
     latestMessageTimeStamp: allThreadMessages[allThreadMessages.length - 1]?.createdAt || 0,
   }, { logger, threadDispatcher });
   const toggleReaction = useToggleReactionCallback({ currentChannel }, { logger });
+
+  // Send Message Hooks
   const sendMessage = useSendUserMessageCallback({
     isMentionEnabled,
     currentChannel,
-  }, { logger, pubSub, threadDispatcher });
+    onBeforeSendUserMessage,
+  }, {
+    logger,
+    pubSub,
+    threadDispatcher,
+  });
   const sendFileMessage = useSendFileMessageCallback({
     currentChannel,
-  }, { logger, pubSub, threadDispatcher });
+    onBeforeSendFileMessage,
+  }, {
+    logger,
+    pubSub,
+    threadDispatcher,
+  });
   const sendVoiceMessage = useSendVoiceMessageCallback({
-    currentChannel, onBeforeSendVoiceMessage,
-  }, { logger, pubSub, threadDispatcher });
+    currentChannel,
+    onBeforeSendVoiceMessage,
+  }, {
+    logger,
+    pubSub,
+    threadDispatcher,
+  });
   const [sendMultipleFilesMessage] = useSendMultipleFilesMessage({
     currentChannel,
+    onBeforeSendMultipleFilesMessage,
   }, {
     logger,
     pubSub,
   });
+
   const resendMessage = useResendMessageCallback({
     currentChannel,
   }, { logger, pubSub, threadDispatcher });
