@@ -107,7 +107,9 @@
     // In some cases, eslint requires semicolon and wants it removed at the same time
     // https://stackoverflow.com/questions/58474874/eslint-demands-semicolon-and-wants-it-removed-at-the-same-time
     "semi": "off",
-    "@typescript-eslint/semi": ["error"]
+    "@typescript-eslint/semi": ["error"],
+    "object-curly-spacing": ["error", "always"],
+    "quotes": ["error", "single"]
   },
   "extends": [
     "plugin:react/recommended",

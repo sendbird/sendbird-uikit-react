@@ -13,7 +13,7 @@ import { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
 import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOutgoingMessageState';
 import { Nullable } from '../types';
-import {match} from "ts-pattern";
+import { match } from 'ts-pattern';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 export const SUPPORTED_MIMES = {
@@ -56,7 +56,7 @@ export const getMimeTypesUIKitAccepts = (acceptableMimeTypes?: string[]): string
           .with('image', () => IMAGE)
           .with('video', () => VIDEO)
           .with('audio', () => AUDIO)
-          .otherwise(() => [])
+          .otherwise(() => []),
       );
     }, []).join();
   }

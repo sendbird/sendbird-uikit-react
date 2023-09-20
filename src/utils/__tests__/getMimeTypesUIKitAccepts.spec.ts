@@ -1,4 +1,4 @@
-import {getMimeTypesUIKitAccepts, SUPPORTED_MIMES} from "../index";
+import { getMimeTypesUIKitAccepts, SUPPORTED_MIMES } from '../index';
 
 describe('Global-utils/getMimeTypesUIKitAccepts', () => {
   it('when no input, should return all SUPPORTED_MIMES.', () => {
