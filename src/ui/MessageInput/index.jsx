@@ -607,6 +607,7 @@ MessageInput.propTypes = {
     channelType: PropTypes.string,
   }).isRequired,
   messageFieldId: PropTypes.string,
+  acceptableMimeTypes: PropTypes.arrayOf(PropTypes.string),
   // Mention
   message: PropTypes.shape({
     messageId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -660,6 +661,7 @@ MessageInput.defaultProps = {
   renderVoiceMessageIcon: noop,
   renderFileUploadIcon: noop,
   renderSendMessageIcon: noop,
+  acceptableMimeTypes: null,
 };
 
 export default MessageInput;
