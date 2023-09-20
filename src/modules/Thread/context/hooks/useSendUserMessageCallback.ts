@@ -8,9 +8,11 @@ import { ThreadContextActionTypes } from '../dux/actionTypes';
 import topics from '../../../../lib/pubSub/topics';
 import { SendableMessageType } from '../../../../utils';
 
+export type OnBeforeSendUserMessageType = (message: string, quoteMessage?: SendableMessageType) => UserMessageCreateParams;
 interface DynamicProps {
   isMentionEnabled: boolean;
   currentChannel: GroupChannel;
+  onBeforeSendUserMessage?: OnBeforeSendUserMessageType;
 }
 interface StaticProps {
   logger: Logger;
@@ -28,6 +30,7 @@ export type SendMessageParams = {
 export default function useSendUserMessageCallback({
   isMentionEnabled,
   currentChannel,
+  onBeforeSendUserMessage,
 }: DynamicProps, {
   logger,
   pubSub,
@@ -36,7 +39,7 @@ export default function useSendUserMessageCallback({
   const sendMessage = useCallback((props: SendMessageParams) => {
     const {
       message,
-      quoteMessage = null,
+      quoteMessage,
       mentionTemplate,
       mentionedUsers,
     } = props;
@@ -57,7 +60,7 @@ export default function useSendUserMessageCallback({
       return params;
     };
 
-    const params = createDefaultParams();
+    const params = onBeforeSendUserMessage?.(message, quoteMessage) ?? createDefaultParams();
     logger.info('Thread | useSendUserMessageCallback: Sending user message start.', params);
 
     if (currentChannel?.sendUserMessage) {

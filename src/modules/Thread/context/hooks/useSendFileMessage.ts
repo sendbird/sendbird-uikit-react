@@ -10,6 +10,7 @@ import { SendableMessageType } from '../../../../utils';
 
 interface DynamicProps {
   currentChannel: GroupChannel;
+  onBeforeSendFileMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
 }
 interface StaticProps {
   logger: Logger;
@@ -26,6 +27,7 @@ export type SendFileMessageFunctionType = (file: File, quoteMessage?: SendableMe
 
 export default function useSendFileMessageCallback({
   currentChannel,
+  onBeforeSendFileMessage,
 }: DynamicProps, {
   logger,
   pubSub,
@@ -41,7 +43,7 @@ export default function useSendFileMessageCallback({
       }
       return params;
     };
-    const params = createParamsDefault();
+    const params = onBeforeSendFileMessage?.(file, quoteMessage) ?? createParamsDefault();
     logger.info('Thread | useSendFileMessageCallback: Sending file message start.', params);
 
     currentChannel?.sendFileMessage(params)
