@@ -68,6 +68,13 @@ yarn storybook
 * Dumb components such as inputs, buttons etc can be found under `OTHERS/UI Components` in storybook sidebar
 * Overridden storybook configs can be found in: `./storybook`
 
+> If you face the error during running storybook<br />
+> `Error: error: 0308010C:digital envelope rountines::unsupported` <br />
+> try to run below in termial, and run storybook again
+```
+export NODE_OPTIONS=--openssl-legacy-provider
+```
+
 ### Husky
 
 We use Husky for githooks
