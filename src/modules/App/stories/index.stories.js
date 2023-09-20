@@ -277,6 +277,7 @@ export const user1 = () => fitPageSize(
     isReactionEnabled
     isMentionEnabled
     isVoiceMessageEnabled
+    isMultipleFilesMessageEnabled
     isTypingIndicatorEnabledOnChannelList
     isMessageReceiptStatusEnabledOnChannelList
   />
@@ -299,6 +300,7 @@ export const user2 = () => fitPageSize(
     }}
     isVoiceMessageEnabled
     isMentionEnabled
+    isMultipleFilesMessageEnabled
     isTypingIndicatorEnabledOnChannelList
     isMessageReceiptStatusEnabledOnChannelList
   />
@@ -317,6 +319,7 @@ export const user3 = () => fitPageSize(
     isReactionEnabled
     isMentionEnabled
     isVoiceMessageEnabled
+    isMultipleFilesMessageEnabled
     isTypingIndicatorEnabledOnChannelList
     isMessageReceiptStatusEnabledOnChannelList
   />
