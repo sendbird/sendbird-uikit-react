@@ -90,6 +90,7 @@ export interface SendBirdStateConfig {
   isReactionEnabled: boolean;
   isMentionEnabled: boolean;
   isVoiceMessageEnabled?: boolean;
+  uikitUploadSizeLimit: number;
   uikitMultipleFilesMessageLimit: number;
   voiceRecord?: {
     maxRecordingTime: number;

@@ -16,8 +16,6 @@ import { ModalFooter } from '../../../../ui/Modal';
  * by the received FileList from the ChangeEvent of MessageInput component.
  */
 
-const FILE_SIZE_LIMIT = 300000000; // 300MB
-
 interface useHandleUploadFilesDynamicProps {
   sendFileMessage: SendFileMessageFunctionType;
   sendMultipleFilesMessage: SendMFMFunctionType;
@@ -37,6 +35,7 @@ export const useHandleUploadFiles = ({
 }: useHandleUploadFilesStaticProps): Array<HandleUploadFunctionType> => {
   const { stringSet } = useLocalization();
   const { config } = useSendbirdStateContext();
+  const uikitUploadSizeLimit = config?.uikitUploadSizeLimit;
   const uikitMultipleFilesMessageLimit = config?.uikitMultipleFilesMessageLimit;
   const { openModal } = useGlobalModalContext();
 
@@ -71,11 +70,12 @@ export const useHandleUploadFiles = ({
       });
       return;
     }
-    if (files.some((file: File) => file.size > FILE_SIZE_LIMIT)) {
-      logger.info(`Channel|useHandleUploadFiles: Cannot upload file size exceeding ${FILE_SIZE_LIMIT}`);
+    if (files.some((file: File) => file.size > uikitUploadSizeLimit)) {
+      // The default value of uikitUploadSizeLimit is 26MB
+      logger.info(`Channel|useHandleUploadFiles: Cannot upload file size exceeding ${uikitUploadSizeLimit}`);
       openModal({
         modalProps: {
-          titleText: `The maximum size per file is ${Math.floor(FILE_SIZE_LIMIT / 1000000)} MB.`,
+          titleText: `The maximum size per file is ${Math.floor(uikitUploadSizeLimit / 1000000)} MB.`,
           hideFooter: true,
         },
         childElement: ({ closeModal }) => (
