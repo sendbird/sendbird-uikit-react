@@ -2255,6 +2255,8 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
     isEdit?: boolean,
     isMentionEnabled?: boolean;
     isVoiceMessageEnabled?: boolean;
+    isSelectingMultipleFilesEnabled?: boolean;
+    acceptableMimeTypes?: Array<'image' | 'video' | 'audio'>;
     disabled?: boolean,
     // value is removed when channelURL changes
     value?: string,
