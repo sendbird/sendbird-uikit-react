@@ -34,6 +34,7 @@ declare module "SendbirdUIKitGlobal" {
     MessageSearchQuery,
     MessageSearchQueryParams,
     MultipleFilesMessage,
+    MultipleFilesMessageCreateParams,
     UserMessage,
     UserMessageCreateParams,
     UserMessageUpdateParams,
@@ -578,6 +579,8 @@ declare module "SendbirdUIKitGlobal" {
     startingPoint?: number;
     onBeforeSendUserMessage?(text: string, quotedMessage?: SendableMessageType): UserMessageCreateParams;
     onBeforeSendFileMessage?(file: File, quotedMessage?: SendableMessageType): FileMessageCreateParams;
+    onBeforeSendVoiceMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
+    onBeforeSendMultipleFilesMessage?: (files: Array<File>, quotedMessage?: SendableMessageType) => MultipleFilesMessageCreateParams;
     onBeforeUpdateUserMessage?(text: string): UserMessageUpdateParams;
     onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
     onSearchClick?(): void;
@@ -1076,6 +1079,10 @@ declare module "SendbirdUIKitGlobal" {
     message: SendableMessageType;
     onHeaderActionClick?: () => void;
     onMoveToParentMessage?: (props: { message: SendableMessageType, channel: GroupChannel }) => void;
+    onBeforeSendUserMessage?: (message: string, quotedMessage?: SendableMessageType) => UserMessageCreateParams;
+    onBeforeSendFileMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
+    onBeforeSendVoiceMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
+    onBeforeSendMultipleFilesMessage?: (files: Array<File>, quotedMessage?: SendableMessageType) => MultipleFilesMessageCreateParams;
     disableUserProfile?: boolean;
     renderUserProfile?: (props: { user: User, close: () => void }) => React.ReactElement;
   }

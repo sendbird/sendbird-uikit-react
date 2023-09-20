@@ -10,6 +10,7 @@ import type { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChanne
 import type {
   BaseMessage,
   FileMessageCreateParams,
+  MultipleFilesMessageCreateParams,
   UserMessage,
   UserMessageCreateParams,
   UserMessageUpdateParams,
@@ -81,8 +82,9 @@ export type ChannelContextProps = {
   onBeforeSendUserMessage?(text: string, quotedMessage?: SendableMessageType): UserMessageCreateParams;
   onBeforeSendFileMessage?(file: File, quotedMessage?: SendableMessageType): FileMessageCreateParams;
   onBeforeUpdateUserMessage?(text: string): UserMessageUpdateParams;
-  onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
   onBeforeSendVoiceMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
+  onBeforeSendMultipleFilesMessage?: (files: Array<File>, quotedMessage?: SendableMessageType) => MultipleFilesMessageCreateParams;
+  onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
   onSearchClick?(): void;
   onBackClick?(): void;
   replyType?: ReplyType;
@@ -179,6 +181,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     onBeforeSendFileMessage,
     onBeforeUpdateUserMessage,
     onBeforeSendVoiceMessage,
+    onBeforeSendMultipleFilesMessage,
     onChatHeaderActionClick,
     onSearchClick,
     onBackClick,
@@ -395,7 +398,11 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     { logger },
   );
   const [messageInputRef, sendMessage] = useSendMessageCallback(
-    { currentGroupChannel, onBeforeSendUserMessage, isMentionEnabled },
+    {
+      currentGroupChannel,
+      isMentionEnabled,
+      onBeforeSendUserMessage,
+    },
     {
       logger,
       pubSub,
@@ -404,7 +411,11 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     },
   );
   const [sendFileMessage] = useSendFileMessageCallback(
-    { currentGroupChannel, onBeforeSendFileMessage, imageCompression },
+    {
+      currentGroupChannel,
+      imageCompression,
+      onBeforeSendFileMessage,
+    },
     {
       logger,
       pubSub,
@@ -426,8 +437,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   );
   const [sendMultipleFilesMessage] = useSendMultipleFilesMessage({
     currentChannel: currentGroupChannel,
-    // Open interface to <Channel /> & <ChannelProvider >
-    // onBeforeSendMultipleFilesMessage: (params) => params,
+    onBeforeSendMultipleFilesMessage,
   }, {
     logger,
     pubSub,

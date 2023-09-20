@@ -5,14 +5,14 @@ import type {
   UploadableFileInfo,
 } from '@sendbird/chat/message';
 
-import { SendableMessageType } from 'SendbirdUIKitGlobal';
 import type { Logger } from '../../../../lib/SendbirdState';
 import type { Nullable } from '../../../../types';
 import PUBSUB_TOPICS from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from '../utils';
+import { SendableMessageType } from '../../../../utils';
 
 export type OnBeforeSendMFMType = (
-  params: MultipleFilesMessageCreateParams,
+  files: Array<File>,
   quoteMessage?: SendableMessageType,
 ) => MultipleFilesMessageCreateParams;
 
@@ -61,7 +61,7 @@ export const useSendMultipleFilesMessage = ({
       messageParams.parentMessageId = quoteMessage.messageId;
     }
     if (typeof onBeforeSendMultipleFilesMessage === 'function') {
-      messageParams = onBeforeSendMultipleFilesMessage(messageParams);
+      messageParams = onBeforeSendMultipleFilesMessage(files, quoteMessage);
     }
     logger.info('Channel: Start sending MFM', { messageParams });
     try {
