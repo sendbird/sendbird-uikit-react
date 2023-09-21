@@ -13,7 +13,7 @@ import {
   MULTIPLE_FILES_IMAGE_SIDE_LENGTH,
   MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH,
 } from './const';
-import { isGifFileInfo } from "../../utils";
+import { isGifFileInfo } from '../../utils';
 
 export const ThreadMessageKind = {
   PARENT: 'parent',
