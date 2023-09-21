@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 
 import Sendbird from '../../../lib/Sendbird';
-const appId = process.env.STORYBOOK_APP_ID;;
+const appId = process.env.STORYBOOK_APP_ID;
 const userId = 'sendbird';
 
 import ChannelList from '../../ChannelList';
