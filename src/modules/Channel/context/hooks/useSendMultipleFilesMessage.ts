@@ -74,8 +74,15 @@ export const useSendMultipleFilesMessage = ({
           logger.info('Channel: onFileUploaded during sending MFM', { requestId, index, error, uploadableFileInfo });
         })
         .onPending((pendingMessage) => {
+          logger.info('Channel: in progress of sending MFM', { pendingMessage, fileInfoList: messageParams.fileInfoList });
           pubSub.publish(PUBSUB_TOPICS.SEND_MESSAGE_START, {
-            message: pendingMessage,
+            message: {
+              ...pendingMessage,
+              fileInfoList: messageParams.fileInfoList.map((fileInfo) => ({
+                ...fileInfo,
+                url: URL.createObjectURL(fileInfo.file as File),
+              })),
+            },
             channel: currentChannel,
           });
           if (scrollRef) {

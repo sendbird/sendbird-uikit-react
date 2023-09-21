@@ -271,6 +271,10 @@ export const getUIKitMessageType = (
   if (isUserMessage(message as UserMessage)) {
     return isOGMessage(message as UserMessage) ? UIKitMessageTypes.OG : UIKitMessageTypes.TEXT;
   }
+  // This is only a safeguard to not return UNKNOWN for MFM.
+  if (isMultipleFilesMessage(message as FileMessage)) {
+    return UIKitMessageTypes.MULTIPLE_FILES;
+  }
   if (isFileMessage(message as FileMessage)) {
     if (isThumbnailMessage(message as FileMessage)) {
       return UIKitMessageTypes.THUMBNAIL;
@@ -279,10 +283,6 @@ export const getUIKitMessageType = (
       return UIKitFileTypes.VOICE;
     }
     return UIKitMessageTypes.FILE;
-  }
-  // This is only a safeguard to not return UNKNOWN for MFM.
-  if (isMultipleFilesMessage(message as FileMessage)) {
-    return UIKitMessageTypes.MULTIPLE_FILES;
   }
   return UIKitMessageTypes.UNKNOWN;
 };

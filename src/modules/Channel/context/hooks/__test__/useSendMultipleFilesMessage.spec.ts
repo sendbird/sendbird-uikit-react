@@ -27,6 +27,14 @@ const globalContext: GlobalContextType = {};
 const mockFileList = [new File([], 'fileOne'), new File([], 'fileTwo')];
 
 describe('useSendMultipleFilesMessage', () => {
+  // URL.createObjectURL seems it doesn't work in the jest env.
+  beforeAll(() => {
+    global.URL.createObjectURL = jest.fn();
+  });
+  afterAll(() => {
+    (global.URL.createObjectURL as jest.Mock).mockReset();
+  });
+
   beforeEach(() => {
     globalContext.currentChannel = {
       url: uuidv4(),
@@ -84,11 +92,15 @@ describe('useSendMultipleFilesMessage', () => {
           },
         ],
       });
+
     expect(globalContext.pubSub?.publish)
       .toHaveBeenCalledWith(
         PUBSUB_TOPICS.SEND_MESSAGE_START,
         {
-          message: { mockMessageType: MockMessageStateType.PENDING },
+          message: {
+            mockMessageType: MockMessageStateType.PENDING,
+            fileInfoList: expect.any(Array<2>),
+          },
           channel: {
             url: globalContext.currentChannel?.url,
             sendMultipleFilesMessage: expect.any(Function),
@@ -255,7 +267,10 @@ describe('useSendMultipleFilesMessage', () => {
       .toHaveBeenCalledWith(
         PUBSUB_TOPICS.SEND_MESSAGE_START,
         {
-          message: { mockMessageType: MockMessageStateType.PENDING },
+          message: {
+            mockMessageType: MockMessageStateType.PENDING,
+            fileInfoList: expect.any(Array<2>),
+          },
           channel: globalContext.currentChannel,
         },
       );
@@ -307,7 +322,10 @@ describe('useSendMultipleFilesMessage', () => {
       .toHaveBeenCalledWith(
         PUBSUB_TOPICS.SEND_MESSAGE_START,
         {
-          message: { mockMessageType: MockMessageStateType.PENDING },
+          message: {
+            mockMessageType: MockMessageStateType.PENDING,
+            fileInfoList: expect.any(Array<2>),
+          },
           channel: globalContext.currentChannel,
         },
       );
@@ -371,7 +389,10 @@ describe('useSendMultipleFilesMessage', () => {
       .toHaveBeenCalledWith(
         PUBSUB_TOPICS.SEND_MESSAGE_START,
         {
-          message: { mockMessageType: MockMessageStateType.PENDING },
+          message: {
+            mockMessageType: MockMessageStateType.PENDING,
+            fileInfoList: expect.any(Array<2>),
+          },
           channel: globalContext.currentChannel,
         },
       );
