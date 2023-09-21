@@ -13,6 +13,7 @@ import {
   MULTIPLE_FILES_IMAGE_SIDE_LENGTH,
   MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH,
 } from './const';
+import { isGifFileInfo } from "../../utils";
 
 export const ThreadMessageKind = {
   PARENT: 'parent',
@@ -94,6 +95,8 @@ export default function MultipleFilesMessageItemBody({
                 maxSideLength={MULTIPLE_FILES_IMAGE_SIDE_LENGTH.CHAT_WEB}
                 height={MULTIPLE_FILES_IMAGE_SIDE_LENGTH[threadMessageKindKey]}
                 borderRadius={MULTIPLE_FILES_IMAGE_BORDER_RADIUS[threadMessageKindKey]}
+                shadeOnHover={true}
+                isGif={isGifFileInfo(fileInfo)}
                 defaultComponent={
                   <div
                     className="sendbird-multiple-files-image-renderer__thumbnail__placeholder"
