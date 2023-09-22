@@ -619,7 +619,14 @@ declare module "SendbirdUIKitGlobal" {
   export type SendableMessageType = UserMessage | FileMessage | MultipleFilesMessage;
 
   export interface MessageStoreInterface {
+    /**
+     * Note: allMessages will contain only 'succeeded' messages from the next minor version - v3.7.0
+     */
     allMessages: CoreMessageType[];
+    /**
+     * localMessages: An array of 'pending' and 'failed' messages
+     */
+    localMessages: CoreMessageType[];
     loading?: boolean;
     initialized?: boolean;
     unreadSince?: string;

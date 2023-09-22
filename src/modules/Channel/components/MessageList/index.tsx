@@ -38,6 +38,7 @@ const MessageList: React.FC<MessageListProps> = ({
 }) => {
   const {
     allMessages,
+    localMessages,
     hasMorePrev,
     hasMoreNext,
     setInitialTimeStamp,
@@ -192,6 +193,32 @@ const MessageList: React.FC<MessageListProps> = ({
                   renderMessage={renderMessage}
                   message={m}
                   hasSeparator={hasSeparator}
+                  chainTop={chainTop}
+                  chainBottom={chainBottom}
+                  renderCustomSeparator={renderCustomSeparator}
+                />
+              </MessageProvider>
+            );
+          })}
+          {localMessages.map((m, idx) => {
+            const {
+              chainTop,
+              chainBottom,
+            } = getMessagePartsInfo({
+              allMessages: allMessagesFiltered,
+              replyType,
+              isMessageGroupingEnabled,
+              currentIndex: idx,
+              currentMessage: m,
+              currentChannel: currentGroupChannel,
+            });
+            const isByMe = (m as UserMessage)?.sender?.userId === store?.config?.userId;
+            return (
+              <MessageProvider message={m} key={m?.messageId} isByMe={isByMe}>
+                <Message
+                  handleScroll={moveScroll}
+                  renderMessage={renderMessage}
+                  message={m}
                   chainTop={chainTop}
                   chainBottom={chainBottom}
                   renderCustomSeparator={renderCustomSeparator}

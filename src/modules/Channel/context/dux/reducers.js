@@ -142,14 +142,11 @@ export default function reducer(state, action) {
       };
     }
     case actionTypes.SEND_MESSAGE_START:
+      // Message should not be spread here
+      // it will loose some methods like `isUserMessage`
       return {
         ...state,
-        allMessages: [
-          ...state.allMessages,
-          // Message should not be spread here
-          // it will loose some methods like `isUserMessage`
-          action.payload,
-        ],
+        localMessages: [...state.localMessages, action.payload],
       };
     case actionTypes.SEND_MESSAGE_SUCESS: {
       const message = action.payload;
@@ -158,21 +155,10 @@ export default function reducer(state, action) {
       ));
       // [Policy] Pending messages and failed messages
       // must always be at the end of the message list
-      const pendingIndex = filteredMessages.findIndex((msg) => (
-        msg?.sendingStatus === 'pending' || msg?.sendingStatus === 'failed'
-      ));
       return {
         ...state,
-        allMessages: pendingIndex > -1
-          ? [
-            ...filteredMessages.slice(0, pendingIndex),
-            message,
-            ...filteredMessages.slice(pendingIndex),
-          ]
-          : [
-            ...filteredMessages,
-            message,
-          ],
+        allMessages: [...filteredMessages, message],
+        localMessages: state.localMessages.filter((m) => m?.reqId !== message?.reqId),
       };
     }
     case actionTypes.SEND_MESSAGE_FAILURE: {
@@ -180,7 +166,7 @@ export default function reducer(state, action) {
       action.payload.failed = true;
       return {
         ...state,
-        allMessages: state.allMessages.map((m) => (
+        localMessages: state.localMessages.map((m) => (
           compareIds(m.reqId, action.payload.reqId)
             ? action.payload
             : m
