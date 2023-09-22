@@ -156,7 +156,7 @@ const ImageRenderer = ({
             <div className="sendbird-multiple-files-image-renderer__icon-wrapper__icon">
               <Icon
                 type={IconTypes.GIF}
-                fillColor={IconColors.GRAY}
+                fillColor={IconColors.ON_BACKGROUND_2}
                 width="34px"
                 height="34px"
               />
