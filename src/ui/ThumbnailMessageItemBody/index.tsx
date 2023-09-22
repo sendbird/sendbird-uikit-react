@@ -80,7 +80,7 @@ export default function ThumbnailMessageItemBody({
             <div className="sendbird-thumbnail-message-item-body__icon-wrapper__icon">
               <Icon
                 type={isVideoMessage(message) ? IconTypes.PLAY : IconTypes.GIF}
-                fillColor={IconColors.GRAY}
+                fillColor={IconColors.ON_BACKGROUND_2}
                 width="34px"
                 height="34px"
               />

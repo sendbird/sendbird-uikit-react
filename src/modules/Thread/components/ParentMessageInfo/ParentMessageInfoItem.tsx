@@ -263,7 +263,7 @@ export default function ParentMessageInfoItem({
               <div className="sendbird-parent-message-info-item__thumbnail-message__icon-wrapper__icon">
                 <Icon
                   type={isVideoMessage(message) ? IconTypes.PLAY : IconTypes.GIF}
-                  fillColor={IconColors.GRAY}
+                  fillColor={IconColors.ON_BACKGROUND_2}
                   width="34px"
                   height="34px"
                 />
