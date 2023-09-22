@@ -6,9 +6,10 @@ import {
 import * as actionTypes from '../actionTypes';
 import reducers from '../reducers';
 import initialState from '../initialState';
-import uuid from '../../../../../utils/uuid';
+import { uuidv4 } from '../../../../../utils/uuid';
 
-const randomBoolean = () => Math.random() >= 0.5;
+const getLastMessageOf = (messageList) => messageList[messageList.length - 1];
+
 describe('Messages-Reducers', () => {
   const stateWithCurrentChannel = {
     ...initialState,
@@ -40,7 +41,7 @@ describe('Messages-Reducers', () => {
     expect(nextState.hasMorePrev).toEqual(true);
     expect(nextState.hasMoreNext).toEqual(true);
     expect(nextState.oldestMessageTimeStamp).toEqual(mockData.allMessages[0].createdAt);
-    expect(nextState.latestMessageTimeStamp).toEqual(mockData.allMessages[mockData.allMessages.length - 1].createdAt);
+    expect(nextState.latestMessageTimeStamp).toEqual(getLastMessageOf(mockData.allMessages).createdAt);
     expect(nextState.allMessages).toEqual(mockData.allMessages);
   });
 
@@ -59,7 +60,7 @@ describe('Messages-Reducers', () => {
     expect(nextState.hasMoreNext).toEqual(mockData.hasMoreNext);
     expect(nextState.oldestMessageTimeStamp).toEqual(mockMessage1.createdAt);
     expect(nextState.oldestMessageTimeStamp).not.toEqual(mockData.allMessages[0].createdAt);
-    expect(nextState.latestMessageTimeStamp).toEqual(mockData.allMessages[mockData.allMessages.length - 1].createdAt);
+    expect(nextState.latestMessageTimeStamp).toEqual(getLastMessageOf(mockData.allMessages).createdAt);
   });
 
   it('should append next messages FETCH_NEXT_MESSAGES_SUCCESS', () => {
@@ -77,7 +78,7 @@ describe('Messages-Reducers', () => {
     expect(nextState.hasMoreNext).toEqual(false);
     expect(nextState.oldestMessageTimeStamp).toEqual(mockData.allMessages[0].createdAt);
     expect(nextState.latestMessageTimeStamp).toEqual(mockMessage1.createdAt);
-    expect(nextState.latestMessageTimeStamp).not.toEqual(mockData.allMessages[mockData.allMessages.length - 1].createdAt);
+    expect(nextState.latestMessageTimeStamp).not.toEqual(getLastMessageOf(mockData.allMessages).createdAt);
   });
 
   it('should get prev message list considering messageListParams FETCH_PREV_MESSAGES_SUCCESS', () => {
@@ -224,25 +225,37 @@ describe('Messages-Reducers', () => {
       type: actionTypes.SEND_MESSAGE_START,
       payload: mockMessage1,
     });
-    expect(nextState.allMessages.length).toEqual(mockData.allMessages.length + 1);
-    expect(nextState.allMessages[nextState.allMessages.length - 1]).toEqual(mockMessage1);
+    expect(nextState.allMessages.length).toEqual(mockData.allMessages.length);
+    expect(nextState.localMessages.length).toEqual(mockData.localMessages.length + 1);
+    expect(getLastMessageOf(nextState.localMessages)).toEqual(mockMessage1);
   });
 
   it('should handle SEND_MESSAGE_SUCESS', () => {
     const mockData = generateMockChannel();
-    const currentState = { ...mockData };
-    currentState.allMessages[2].status = 'failed';
-    expect(currentState.allMessages[2].status).toEqual('failed');
-    const succededMessage = {
-      ...currentState.allMessages[2],
-      status: 'success',
+
+    const succeededMessageId = uuidv4();
+    const succededMessage = generateMockMessage(succeededMessageId);
+    succededMessage.sendingStatus = 'succeeded';
+
+    const currentState = {
+      ...mockData,
+      localMessages: [
+        {
+          ...succededMessage,
+          sendingStatus: 'pending',
+        },
+      ],
     };
     const nextState = reducers(currentState, {
       type: actionTypes.SEND_MESSAGE_SUCESS,
       payload: succededMessage,
     });
-    expect(nextState.allMessages.length).toEqual(mockData.allMessages.length);
-    expect(nextState.allMessages[nextState.allMessages.length - 1].status).toEqual('success');
+    expect(nextState.allMessages.length).toEqual(currentState.allMessages.length + 1);
+    expect(nextState.localMessages.length).toEqual(currentState.localMessages.length - 1);
+    expect(getLastMessageOf(currentState.localMessages).sendingStatus).toEqual('pending');
+    expect(getLastMessageOf(nextState.allMessages).sendingStatus).toEqual('succeeded');
+    expect(getLastMessageOf(nextState.allMessages).messageId)
+      .toEqual(getLastMessageOf(currentState.localMessages).messageId);
   });
 
   it('should append message to end of list ON_MESSAGE_RECEIVED', () => {
@@ -252,7 +265,7 @@ describe('Messages-Reducers', () => {
       payload: { message: mockMessage1, channel: { url: mockMessage1.channelUrl } },
     });
     expect(nextState.allMessages.length).toEqual(mockData.allMessages.length + 1);
-    expect(nextState.allMessages[nextState.allMessages.length - 1]).toEqual(mockMessage1);
+    expect(getLastMessageOf(nextState.allMessages)).toEqual(mockMessage1);
   });
 
   it('should not add message when get overlap message ON_MESSAGE_RECEIVED', () => {
@@ -282,7 +295,7 @@ describe('Messages-Reducers', () => {
       },
     });
     expect(nextState.allMessages.length).toEqual(mockData.allMessages.length);
-    expect(nextState.allMessages[nextState.allMessages.length - 1].status).toEqual('updated');
+    expect(getLastMessageOf(nextState.allMessages).status).toEqual('updated');
   });
 
   it('should not update message if the message is not on the list ON_MESSAGE_UPDATED', () => {
@@ -479,11 +492,11 @@ describe('Messages-Reducers', () => {
         });
         if (messageTypes.ADMIN === messageType) {
           expect(
-            receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+            getLastMessageOf(receivedMessageState.allMessages).messageId
           ).toEqual(receivedMessage.messageId);
         } else {
           expect(
-            receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+            getLastMessageOf(receivedMessageState.allMessages).messageId
           ).not.toEqual(receivedMessage.messageId);
         }
       });
@@ -503,11 +516,11 @@ describe('Messages-Reducers', () => {
         });
         if (messageTypes.USER === messageType) {
           expect(
-            receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+            getLastMessageOf(receivedMessageState.allMessages).messageId
           ).toEqual(receivedMessage.messageId);
         } else {
           expect(
-            receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+            getLastMessageOf(receivedMessageState.allMessages).messageId
           ).not.toEqual(receivedMessage.messageId);
         }
       });
@@ -527,11 +540,11 @@ describe('Messages-Reducers', () => {
         });
         if (messageTypes.FILE === messageType) {
           expect(
-            receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+            getLastMessageOf(receivedMessageState.allMessages).messageId
           ).toEqual(receivedMessage.messageId);
         } else {
           expect(
-            receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+            getLastMessageOf(receivedMessageState.allMessages).messageId
           ).not.toEqual(receivedMessage.messageId);
         }
       });
@@ -555,11 +568,11 @@ describe('Messages-Reducers', () => {
       });
       if (paramsCustomTypes.some((paramsCustomType) => paramsCustomType === customType)) {
         expect(
-          receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+          getLastMessageOf(receivedMessageState.allMessages).messageId
         ).toEqual(receivedMessage.messageId);
       } else {
         expect(
-          receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+          getLastMessageOf(receivedMessageState.allMessages).messageId
         ).not.toEqual(receivedMessage.messageId);
       }
     });
@@ -582,11 +595,11 @@ describe('Messages-Reducers', () => {
       });
       if (paramsSenderUserIds.some((paramsSenderUserId) => paramsSenderUserId === messageSenderId)) {
         expect(
-          receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+          getLastMessageOf(receivedMessageState.allMessages).messageId
         ).toEqual(receivedMessage.messageId);
       } else {
         expect(
-          receivedMessageState.allMessages[receivedMessageState.allMessages.length - 1].messageId
+          getLastMessageOf(receivedMessageState.allMessages).messageId
         ).not.toEqual(receivedMessage.messageId);
       }
     });
@@ -594,7 +607,7 @@ describe('Messages-Reducers', () => {
 
   it('should filter by MESSAGE_LIST_PARAMS_CHANGED when ON_MESSAGE_UPDATED', () => {
     const mockData = generateMockChannel();
-    const changingMessage = uuid();
+    const changingMessage = uuidv4();
     const updatingMessage = {
       ...mockData.allMessages[0],
       messageId: 1010,
@@ -661,7 +674,7 @@ describe('Messages-Reducers', () => {
 
   it('should not update with coming message when received message already exsits', () => {
     const mockData = generateMockChannel();
-    const changingMessage = uuid();
+    const changingMessage = uuidv4();
     const updatingMessage = {
       ...mockData.allMessages[0],
       messageId: 1010,
