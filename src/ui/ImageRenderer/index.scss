@@ -1,3 +1,5 @@
+@import '../../styles/variables';
+
 .sendbird-image-renderer {
   overflow: hidden;
   position: relative;
@@ -11,4 +13,39 @@
 .sendbird-image-renderer__image {
   width: 320px;
   height: 180px;
+}
+
+.sendbird-multiple-files-image-renderer__image-cover {
+  position: absolute;
+  top: 0px;
+  display: none;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  background-color: var(--sendbird-light-overlay-01);
+}
+
+.sendbird-image-renderer:hover {
+  .sendbird-multiple-files-image-renderer__image-cover {
+    display: inline-flex;
+  }
+}
+
+.sendbird-multiple-files-image-renderer__icon-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .sendbird-multiple-files-image-renderer__icon-wrapper__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--sendbird-light-background-50);
+  }
 }

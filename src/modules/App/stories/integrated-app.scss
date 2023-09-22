@@ -6,7 +6,7 @@
   width: 100vw;
   justify-content: center;
   align-items: center;
-  font-family: var(--sendbird-font-family-default);;
+  font-family: var(--sendbird-font-family-default);
   @include themed() {
     background-color: t(bg-8);
     color: t(on-bg-1);

@@ -230,6 +230,9 @@ export const isVideoMessage = (message: SendableMessageType): boolean => (
 export const isGifMessage = (message: SendableMessageType): boolean => (
   message && isThumbnailMessage(message) && isGif((message as FileMessage).type)
 );
+export const isGifFileInfo = (fileInfo: UploadedFileInfo): boolean => (
+  fileInfo && isGif(fileInfo.mimeType)
+);
 export const isAudioMessage = (message: FileMessage): boolean => message && isFileMessage(message) && isAudio(message.type);
 export const isAudioMessageMimeType = (type: string): boolean => (/^audio\//.test(type));
 export const isVoiceMessageMimeType = (type: string): boolean => (/^voice\//.test(type));

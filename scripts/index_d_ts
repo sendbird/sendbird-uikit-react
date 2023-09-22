@@ -2145,6 +2145,8 @@ declare module '@sendbird/uikit-react/ui/ImageRenderer' {
     defaultComponent?: (() => React.ReactElement) | React.ReactElement;
     onLoad?: () => void;
     onError?: () => void;
+    shadeOnHover?: boolean;
+    isGif?: boolean;
   }
   const ImageRenderer: React.FC<ImageRendererProps>;
   export default ImageRenderer;

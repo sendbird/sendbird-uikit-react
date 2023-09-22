@@ -3,6 +3,7 @@ import React, { useState, useMemo, ReactElement } from 'react';
 import './index.scss';
 import numberToPx from '../../utils/numberToPx';
 import { useDynamicSideLength } from './useDynamicSideLength';
+import Icon, { IconTypes, IconColors } from '../Icon';
 
 /*
   ImageRenderer displays image with url or source
@@ -32,6 +33,8 @@ export interface ImageRendererProps {
   borderRadius?: string | number;
   onLoad?: () => void;
   onError?: () => void;
+  shadeOnHover?: boolean;
+  isGif?: boolean;
 }
 
 const ImageRenderer = ({
@@ -48,6 +51,8 @@ const ImageRenderer = ({
   borderRadius = null,
   onLoad = () => { /* noop */ },
   onError = () => { /* noop */ },
+  shadeOnHover,
+  isGif = false,
 }: ImageRendererProps): ReactElement => {
   const [showDefaultComponent, setShowDefaultComponent] = useState(false);
   const [showPlaceHolder, setShowPlaceHolder] = useState(true);
@@ -137,6 +142,28 @@ const ImageRenderer = ({
           )
       }
       {HiddenImageLoader}
+      {
+        shadeOnHover && <div
+        className="sendbird-multiple-files-image-renderer__image-cover"
+        style={{
+          borderRadius: getBorderRadiusForImageRenderer(circle, borderRadius),
+        }}
+      />
+      }
+      {
+        isGif && (
+          <div className="sendbird-multiple-files-image-renderer__icon-wrapper">
+            <div className="sendbird-multiple-files-image-renderer__icon-wrapper__icon">
+              <Icon
+                type={IconTypes.GIF}
+                fillColor={IconColors.GRAY}
+                width="34px"
+                height="34px"
+              />
+            </div>
+          </div>
+        )
+      }
     </div>
   );
 };
