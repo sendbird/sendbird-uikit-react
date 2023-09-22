@@ -2,6 +2,10 @@ export default {
   initialized: false,
   loading: true,
   allMessages: [],
+  /**
+   * localMessages: pending & failed messages
+   */
+  localMessages: [],
   currentGroupChannel: { members: [] },
   // for scrollup
   hasMorePrev: false,

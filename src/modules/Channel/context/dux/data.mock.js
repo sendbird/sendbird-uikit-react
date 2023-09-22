@@ -7,6 +7,7 @@ export const generateMockChannel = () => ({
   messageListParams: null,
   oldestMessageTimeStamp: 1582004042250,
   latestMessageTimeStamp: 1582004214188,
+  localMessages: [],
   allMessages: [{
     "messageId": 390280166,
     "messageType": "user",

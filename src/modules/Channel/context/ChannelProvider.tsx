@@ -104,6 +104,7 @@ export type ChannelContextProps = {
 
 interface MessageStoreInterface {
   allMessages: CoreMessageType[];
+  localMessages: CoreMessageType[];
   loading: boolean;
   initialized: boolean;
   unreadSince: string;
@@ -237,6 +238,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
 
   const {
     allMessages,
+    localMessages,
     loading,
     initialized,
     unreadSince,
@@ -474,6 +476,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
 
       // messagesStore
       allMessages,
+      localMessages,
       loading,
       initialized,
       unreadSince,
