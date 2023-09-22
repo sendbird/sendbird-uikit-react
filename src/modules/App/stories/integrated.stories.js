@@ -340,6 +340,7 @@ export const GroupChannel = () => {
                 imageCompression={{ compressionRate: sampleOptions.imageCompression ? 0.7 : 1 }}
                 replyType={sampleOptions.replyType}
                 config={{ logLevel: 'all' }}
+                breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
                 stringSet={{
                   // CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR: '오퍼레이터 등록',
                   // CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR: '오퍼레이터 해제',

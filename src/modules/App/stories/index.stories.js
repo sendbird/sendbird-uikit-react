@@ -251,6 +251,7 @@ export const Korean = () => fitPageSize(
     nickname={array[0]}
     showSearchIcon
     dateLocale={kr}
+    breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
     stringSet={{
       CHANNEL_LIST__TITLE: '채널 목록',
       MESSAGE_INPUT__PLACE_HOLDER: '메시지 보내기',
@@ -291,6 +292,7 @@ export const user2 = () => fitPageSize(
     allowProfileEdit
     profileUrl={addProfile}
     config={{ logLevel: 'all' }}
+    breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
     replyType="THREAD"
     disableAutoSelect
     imageCompression={{
@@ -315,6 +317,7 @@ export const user3 = () => fitPageSize(
     allowProfileEdit
     profileUrl={addProfile}
     config={{ logLevel: 'all' }}
+    breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
     replyType="QUOTE_REPLY"
     isReactionEnabled
     isMentionEnabled
@@ -335,6 +338,7 @@ export const user4 = () => fitPageSize(
     isMessageGroupingEnabled={false}
     profileUrl={addProfile}
     config={{ logLevel: 'all' }}
+    breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
     replyType="QUOTE_REPLY"
     isMentionEnabled
     isVoiceMessageEnabled
@@ -408,6 +412,7 @@ const CustomApp = () => {
       allowProfileEdit
       profileUrl={addProfile}
       imageCompression={{ compressionRate: 0.5, resizingWidth: 100, resizingHeight: '100px' }}
+      breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
     >
       <div style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'row' }}>
         <SBChannelList setChannelUrl={setChannelUrl} />
@@ -546,6 +551,7 @@ export const multipleFilesMessage = () => fitPageSize(
     showSearchIcon
     isMentionEnabled
     isReactionEnabled
+    breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
     isTypingIndicatorEnabledOnChannelList
     isMessageReceiptStatusEnabledOnChannelList
     config={{ logLevel: 'all', isREMUnitEnabled: true }}
