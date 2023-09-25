@@ -52,6 +52,10 @@
   fill: var(--sendbird-light-onlight-04);
 }
 
+.sendbird-icon-color--thumbnail-icon [class*='fill'] {
+  fill: var(--sendbird-light-onlight-02);
+}
+
 .sendbird-icon-color--sent [class*='fill'] {
   @include themed() {
     fill: t(inverse-on-content-3);

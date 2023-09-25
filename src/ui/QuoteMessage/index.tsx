@@ -175,7 +175,7 @@ export default function QuoteMessage({
                 <div className="sendbird-quote-message__replied-message__thumbnail-message__cover__icon">
                   <Icon
                     type={IconTypes.GIF}
-                    fillColor={IconColors.ON_BACKGROUND_2}
+                    fillColor={IconColors.THUMBNAIL_ICON}
                     width="14px"
                     height="14px"
                   />
