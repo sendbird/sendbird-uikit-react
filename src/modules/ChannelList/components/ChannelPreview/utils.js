@@ -2,7 +2,9 @@ import isToday from 'date-fns/isToday';
 import format from 'date-fns/format';
 import isThisYear from 'date-fns/isThisYear';
 import isYesterday from 'date-fns/isYesterday';
-import { truncateString } from '../../../../utils';
+import {
+  isGif, isImage, isVideo,
+} from '../../../../utils';
 import { LabelStringSet } from '../../../../ui/Label';
 
 /* eslint-disable default-param-last */
@@ -50,18 +52,29 @@ export const getTotalMembers = (channel) => (
     : 0
 );
 
+const getChannelPreviewFileDisplayString = (mimeType) => {
+  if (isGif(mimeType)) {
+    return 'GIF';
+  }
+  if (isImage(mimeType)) {
+    return 'Photo';
+  }
+  if (isVideo(mimeType)) {
+    return 'Video';
+  }
+  return 'File';
+};
+
 const getPrettyLastMessage = (message = null) => {
-  const MAXLEN = 30;
   if (!message) return '';
   if (message.isFileMessage()) {
-    return truncateString(message.name, MAXLEN);
+    return getChannelPreviewFileDisplayString(message.type);
   }
   if (message.isMultipleFilesMessage()) {
     const { fileInfoList } = message;
-    if (fileInfoList.length > 0) {
-      return truncateString(fileInfoList[0].fileName, MAXLEN);
-    }
-    return '';
+    return fileInfoList.length > 0
+      ? getChannelPreviewFileDisplayString(fileInfoList[0].mimeType)
+      : '';
   }
   return message.message ?? '';
 };

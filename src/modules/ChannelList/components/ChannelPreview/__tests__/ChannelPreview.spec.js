@@ -39,6 +39,7 @@ describe('ChannelPreview', () => {
     const channel4 = {
       lastMessage: {
         name: 'file1',
+        type: 'wefiwfiwj',
         isUserMessage: () => false,
         isFileMessage: () => true,
         isMultipleFilesMessage: () => false,
@@ -46,7 +47,28 @@ describe('ChannelPreview', () => {
     };
     const channel5 = {
       lastMessage: {
-        fileInfoList: [{ fileName: 'file1' }, { fileName: 'file2' }],
+        name: 'file2',
+        type: 'image/jpg',
+        isUserMessage: () => false,
+        isFileMessage: () => true,
+        isMultipleFilesMessage: () => false,
+      }
+    };
+    const channel6 = {
+      lastMessage: {
+        name: 'file3',
+        type: 'image/gif',
+        isUserMessage: () => false,
+        isFileMessage: () => true,
+        isMultipleFilesMessage: () => false,
+      }
+    };
+    const channel7 = {
+      lastMessage: {
+        fileInfoList: [
+          { fileName: 'file1', mimeType: 'video/mp4', },
+          { fileName: 'file2', mimeType: 'image/gif', }
+        ],
         isUserMessage: () => false,
         isFileMessage: () => false,
         isMultipleFilesMessage: () => true,
@@ -63,10 +85,16 @@ describe('ChannelPreview', () => {
     ).toBe(text);
     expect(
       getLastMessage(channel4)
-    ).toBe('file1');
+    ).toBe('File');
     expect(
       getLastMessage(channel5)
-    ).toBe('file1');
+    ).toBe('Photo');
+    expect(
+      getLastMessage(channel6)
+    ).toBe('GIF');
+    expect(
+      getLastMessage(channel7)
+    ).toBe('Video');
   });
 
   test('utils/getChannelTitle returns channelTitle', function () {
