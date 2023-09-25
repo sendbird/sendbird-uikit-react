@@ -2192,6 +2192,7 @@ declare module '@sendbird/uikit-react/ui/Icon' {
     CONTENT_INVERSE = 'CONTENT_INVERSE',
     WHITE = 'WHITE',
     GRAY = 'GRAY',
+    THUMBNAIL_ICON = 'THUMBNAIL_ICON',
     SENT = 'SENT',
     READ = 'READ',
     ON_BACKGROUND_1 = 'ON_BACKGROUND_1',
