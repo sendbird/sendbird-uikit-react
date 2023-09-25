@@ -2,10 +2,10 @@ import isToday from 'date-fns/isToday';
 import format from 'date-fns/format';
 import isThisYear from 'date-fns/isThisYear';
 import isYesterday from 'date-fns/isYesterday';
-import {isGif, isImage, isVideo, truncateString} from '../../../../utils';
+import {
+  isGif, isImage, isVideo,
+} from '../../../../utils';
 import { LabelStringSet } from '../../../../ui/Label';
-import {match} from "ts-pattern";
-import {getSupportingFileType} from "../../../../ui/OpenchannelThumbnailMessage/utils";
 
 /* eslint-disable default-param-last */
 export const getChannelTitle = (channel = {}, currentUserId, stringSet = LabelStringSet) => {
@@ -53,14 +53,17 @@ export const getTotalMembers = (channel) => (
 );
 
 const getChannelPreviewFileDisplayString = (mimeType) => {
-  return mimeType
-    ? match(mimeType)
-      .when(isGif, () => 'GIF')
-      .when(isImage, () => 'Photo')
-      .when(isVideo, () => 'Video')
-      .otherwise(() => 'File')
-    : 'File';
-}
+  if (isGif(mimeType)) {
+    return 'GIF';
+  }
+  if (isImage(mimeType)) {
+    return 'Photo';
+  }
+  if (isVideo(mimeType)) {
+    return 'Video';
+  }
+  return 'File';
+};
 
 const getPrettyLastMessage = (message = null) => {
   if (!message) return '';
