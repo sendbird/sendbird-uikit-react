@@ -38,6 +38,7 @@ export const scrollIntoLast = (initialTry = 0, scrollRef) => {
     // eslint-disable-next-line no-multi-assign
     scrollDOM.scrollTop = scrollDOM.scrollHeight;
   } catch (error) {
+    alert(`Sendbird Alert: ScrollIntoLast has been retried for ${currentTry + 1} times.`);
     setTimeout(() => {
       scrollIntoLast(currentTry + 1, scrollRef);
     }, 500 * currentTry);
