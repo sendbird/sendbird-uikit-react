@@ -1912,10 +1912,21 @@ declare module '@sendbird/uikit-react/ui/Badge' {
 }
 
 declare module '@sendbird/uikit-react/ui/Button' {
+  export enum ButtonTypes {
+    PRIMARY = 'PRIMARY',
+    SECONDARY = 'SECONDARY',
+    DANGER = 'DANGER',
+    DISABLED = 'DISABLED',
+  }
+  export enum ButtonSizes {
+    BIG = 'BIG',
+    SMALL = 'SMALL',
+  }
+
   interface ButtonProps {
     className?: string | Array<string>;
-    type?: 'PRIMARY' | 'SECONDARY' | 'DANGER' | 'DISABLED';
-    size?: 'BIG' | 'SMALL';
+    type?: ButtonTypes;
+    size?: ButtonSizes;
     children?: string | React.ReactElement;
     disabled?: boolean;
     onClick?: () => void;
@@ -2112,10 +2123,91 @@ declare module '@sendbird/uikit-react/ui/FileViewer' {
 }
 
 declare module '@sendbird/uikit-react/ui/Icon' {
+  export enum IconTypes {
+    ADD = 'ADD',
+    ARROW_LEFT = 'ARROW_LEFT',
+    ATTACH = 'ATTACH',
+    AUDIO_ON_LINED = 'AUDIO_ON_LINED',
+    BAN = 'BAN',
+    BROADCAST = 'BROADCAST',
+    CAMERA = 'CAMERA',
+    CHANNELS = 'CHANNELS',
+    CHAT = 'CHAT',
+    CHAT_FILLED = 'CHAT_FILLED',
+    CHEVRON_DOWN = 'CHEVRON_DOWN',
+    CHEVRON_RIGHT = 'CHEVRON_RIGHT',
+    CLOSE = 'CLOSE',
+    COLLAPSE = 'COLLAPSE',
+    COPY = 'COPY',
+    CREATE = 'CREATE',
+    DELETE = 'DELETE',
+    DISCONNECTED = 'DISCONNECTED',
+    DOCUMENT = 'DOCUMENT',
+    DONE = 'DONE',
+    DONE_ALL = 'DONE_ALL',
+    DOWNLOAD = 'DOWNLOAD',
+    EDIT = 'EDIT',
+    EMOJI_MORE = 'EMOJI_MORE',
+    ERROR = 'ERROR',
+    EXPAND = 'EXPAND',
+    FILE_AUDIO = 'FILE_AUDIO',
+    FILE_DOCUMENT = 'FILE_DOCUMENT',
+    FREEZE = 'FREEZE',
+    GIF = 'GIF',
+    INFO = 'INFO',
+    LEAVE = 'LEAVE',
+    MEMBERS = 'MEMBERS',
+    MESSAGE = 'MESSAGE',
+    MODERATIONS = 'MODERATIONS',
+    MORE = 'MORE',
+    MUTE = 'MUTE',
+    NOTIFICATIONS = 'NOTIFICATIONS',
+    NOTIFICATIONS_OFF_FILLED = 'NOTIFICATIONS_OFF_FILLED',
+    OPERATOR = 'OPERATOR',
+    PHOTO = 'PHOTO',
+    PLAY = 'PLAY',
+    PLUS = 'PLUS',
+    QUESTION = 'QUESTION',
+    REFRESH = 'REFRESH',
+    REPLY = 'REPLY',
+    REMOVE = 'REMOVE',
+    SEARCH = 'SEARCH',
+    SEND = 'SEND',
+    SETTINGS_FILLED = 'SETTINGS_FILLED',
+    SLIDE_LEFT = 'SLIDE_LEFT',
+    SPINNER = 'SPINNER',
+    SUPERGROUP = 'SUPERGROUP',
+    THREAD = 'THREAD',
+    THUMBNAIL_NONE = 'THUMBNAIL_NONE',
+    TOGGLE_OFF = 'TOGGLE_OFF',
+    TOGGLE_ON = 'TOGGLE_ON',
+    USER = 'USER',
+  }
+  export enum IconColors {
+    DEFAULT = 'DEFAULT',
+    PRIMARY = 'PRIMARY',
+    PRIMARY_2 = 'PRIMARY_2',
+    SECONDARY = 'SECONDARY',
+    CONTENT = 'CONTENT',
+    CONTENT_INVERSE = 'CONTENT_INVERSE',
+    WHITE = 'WHITE',
+    GRAY = 'GRAY',
+    THUMBNAIL_ICON = 'THUMBNAIL_ICON',
+    SENT = 'SENT',
+    READ = 'READ',
+    ON_BACKGROUND_1 = 'ON_BACKGROUND_1',
+    ON_BACKGROUND_2 = 'ON_BACKGROUND_2',
+    ON_BACKGROUND_3 = 'ON_BACKGROUND_3',
+    ON_BACKGROUND_4 = 'ON_BACKGROUND_4',
+    BACKGROUND_3 = 'BACKGROUND_3',
+    ERROR = 'ERROR',
+  }
+
   interface IconProps {
     className?: string,
     children?: string | React.ReactElement,
-    fillColor?: string,
+    type?: IconTypes,
+    fillColor?: IconColors,
     width?: number,
     height?: number,
     onClick?: () => void,
