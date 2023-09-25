@@ -30,6 +30,7 @@ export const SUPPORTED_MIMES = {
     'video/ogg',
     'video/webm',
     'video/mp4',
+    'video/quicktime', // .mov
   ],
   AUDIO: [
     'audio/aac',
@@ -44,23 +45,81 @@ export const SUPPORTED_MIMES = {
     'audio/3gpp2',
     'audio/mp3',
   ],
+  DOCUMENT: [
+    'text/plain',
+    'text/css',
+    'text/csv',
+    'text/html',
+    'text/calendar',
+    'text/javascript',
+    'text/xml',
+  ],
+  APPLICATION: [
+    'application/x-abiword',
+    'application/x-freearc',
+    'application/vnd.amazon.ebook',
+    'application/octet-stream',
+    'application/x-bzip',
+    'application/x-bzip2',
+    'application/x-cdf',
+    'application/x-csh',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-fontobject',
+    'application/epub+zip',
+    'application/gzip',
+    'application/java-archive',
+    'application/json',
+    'application/ld+json',
+    'application/vnd.apple.installer+xml',
+    'application/vnd.oasis.opendocument.presentation',
+    'application/vnd.oasis.opendocument.spreadsheet',
+    'application/vnd.oasis.opendocument.text',
+    'application/ogg',
+    'application/pdf',
+    'application/x-httpd-php',
+    'application/vnd.ms-powerpoint',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'application/vnd.rar',
+    'application/rtf',
+    'application/x-sh',
+    'application/x-tar',
+    'application/vnd.visio',
+    'application/xhtml+xml',
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/xml',
+    'application/vnd.mozilla.xul+xml',
+    'application/zip',
+    'application/x-7z-compressed',
+  ],
 };
 
-export const getMimeTypesUIKitAccepts = (acceptableMimeTypes?: string[]): string => {
+export const getMimeTypesUIKitAccepts = (acceptableMimeTypes?: Array<string>): string => {
   const { IMAGE, VIDEO, AUDIO } = SUPPORTED_MIMES;
 
   if (Array.isArray(acceptableMimeTypes) && acceptableMimeTypes.length > 0) {
-    return acceptableMimeTypes.reduce((accumulator: string[], acceptableMimeType: string): string[] => {
-      return accumulator.concat(
-        match(acceptableMimeType)
-          .with('image', () => IMAGE)
-          .with('video', () => VIDEO)
-          .with('audio', () => AUDIO)
-          .otherwise(() => []),
-      );
-    }, []).join();
+    return (
+      acceptableMimeTypes
+        .reduce((accumulator: Array<string>, acceptableMimeType: string): Array<string> => (
+          accumulator.concat(
+            match(acceptableMimeType)
+              .with('image', () => IMAGE)
+              .with('video', () => VIDEO)
+              .with('audio', () => AUDIO)
+              .otherwise(() => []),
+          )
+        ), [])
+        .join()
+    );
   }
-  return IMAGE.concat(VIDEO).concat(AUDIO).join();
+  return (
+    Object.values(SUPPORTED_MIMES)
+      .reduce((accumulator: Array<string>, mimeTypes: Array<string>) => (
+        accumulator.concat(mimeTypes)
+      ), [])
+      .join()
+  );
   // concat() is fater than flat()
 };
 
@@ -531,7 +590,7 @@ export const filterChannelListParams = (params: GroupChannelListQuery, channel: 
   }
   if (userIdsFilter?.userIds?.length > 0) {
     const { includeMode, queryType } = userIdsFilter;
-    const userIds: string[] = userIdsFilter.userIds;
+    const userIds: Array<string> = userIdsFilter.userIds;
     const memberIds = channel?.members?.map((member: Member) => member.userId);
     if (!includeMode) { // exact match
       if (!userIds.includes(currentUserId)) {
