@@ -2,8 +2,10 @@ import isToday from 'date-fns/isToday';
 import format from 'date-fns/format';
 import isThisYear from 'date-fns/isThisYear';
 import isYesterday from 'date-fns/isYesterday';
-import { truncateString } from '../../../../utils';
+import {isGif, isImage, isVideo, truncateString} from '../../../../utils';
 import { LabelStringSet } from '../../../../ui/Label';
+import {match} from "ts-pattern";
+import {getSupportingFileType} from "../../../../ui/OpenchannelThumbnailMessage/utils";
 
 /* eslint-disable default-param-last */
 export const getChannelTitle = (channel = {}, currentUserId, stringSet = LabelStringSet) => {
@@ -50,18 +52,26 @@ export const getTotalMembers = (channel) => (
     : 0
 );
 
+const getChannelPreviewFileDisplayString = (mimeType) => {
+  return mimeType
+    ? match(mimeType)
+      .when(isGif, () => 'GIF')
+      .when(isImage, () => 'Photo')
+      .when(isVideo, () => 'Video')
+      .otherwise(() => 'File')
+    : 'File';
+}
+
 const getPrettyLastMessage = (message = null) => {
-  const MAXLEN = 30;
   if (!message) return '';
   if (message.isFileMessage()) {
-    return truncateString(message.name, MAXLEN);
+    return getChannelPreviewFileDisplayString(message.type);
   }
   if (message.isMultipleFilesMessage()) {
     const { fileInfoList } = message;
-    if (fileInfoList.length > 0) {
-      return truncateString(fileInfoList[0].fileName, MAXLEN);
-    }
-    return '';
+    return fileInfoList.length > 0
+      ? getChannelPreviewFileDisplayString(fileInfoList[0].mimeType)
+      : '';
   }
   return message.message ?? '';
 };
