@@ -1,7 +1,7 @@
 import React, { ReactElement, useState } from 'react';
 
-import Icon, { IconTypes, IconColors } from '../Icon';
-import { MultipleFilesMessage, UploadedFileInfo } from '@sendbird/chat/message';
+import Icon, { IconColors, IconTypes } from '../Icon';
+import { MultipleFilesMessage } from '@sendbird/chat/message';
 import ImageRenderer from '../ImageRenderer';
 import ImageGrid from '../ImageGrid';
 import FileViewer from '../FileViewer';
@@ -13,7 +13,9 @@ import {
   MULTIPLE_FILES_IMAGE_SIDE_LENGTH,
   MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH,
 } from './const';
-import { isGifFileInfo } from '../../utils';
+import { isGif } from '../../utils';
+import { useDynamicUploadedIndex } from './useDynamicUploadedIndex';
+import { StatefulFileInfo } from '../../utils/createStatefulFileInfoList';
 
 export const ThreadMessageKind = {
   PARENT: 'parent',
@@ -39,37 +41,37 @@ export default function MultipleFilesMessageItemBody({
   threadMessageKind,
 }: Props): ReactElement {
   const { isMobile } = useMediaQueryContext();
-  const [fileInfoList] = useState<UploadedFileInfo[]>(message.fileInfoList);
   const threadMessageKindKey = useThreadMessageKindKeySelector({ threadMessageKind, isMobile });
-  const [currentIndex, setCurrentIndex] = useState(-1);
+  const [currentFileViewerIndex, setCurrentFileViewerIndex] = useState(-1);
+  const updatedFileInfoList = useDynamicUploadedIndex(message);
 
   function onClose() {
-    setCurrentIndex(-1);
+    setCurrentFileViewerIndex(-1);
   }
 
   function onClickLeft() {
-    setCurrentIndex(
-      currentIndex === 0
-        ? fileInfoList.length - 1
-        : currentIndex - 1,
+    setCurrentFileViewerIndex(
+      currentFileViewerIndex === 0
+        ? updatedFileInfoList.length - 1
+        : currentFileViewerIndex - 1,
     );
   }
 
   function onClickRight() {
-    setCurrentIndex(
-      currentIndex === fileInfoList.length - 1
+    setCurrentFileViewerIndex(
+      currentFileViewerIndex === updatedFileInfoList.length - 1
         ? 0
-        : currentIndex + 1,
+        : currentFileViewerIndex + 1,
     );
   }
 
   return threadMessageKindKey && (
     <>
       {
-        currentIndex > -1 && (
+        currentFileViewerIndex > -1 && (
           <FileViewer
             message={message}
-            currentIndex={currentIndex}
+            currentIndex={currentFileViewerIndex}
             onClickLeft={onClickLeft}
             onClickRight={onClickRight}
             onClose={onClose}
@@ -82,10 +84,10 @@ export default function MultipleFilesMessageItemBody({
         isReactionEnabled={isReactionEnabled}
       >
         {
-          fileInfoList.map((fileInfo: UploadedFileInfo, index: number) => {
+          updatedFileInfoList.map((fileInfo: StatefulFileInfo, index: number) => {
             return <div
               className='sendbird-multiple-files-image-renderer-wrapper'
-              onClick={() => setCurrentIndex(index)}
+              onClick={() => setCurrentFileViewerIndex(index)}
               key={`sendbird-multiple-files-image-renderer-${index}-${fileInfo.plainUrl}`}
             >
               <ImageRenderer
@@ -96,7 +98,8 @@ export default function MultipleFilesMessageItemBody({
                 height={MULTIPLE_FILES_IMAGE_SIDE_LENGTH[threadMessageKindKey]}
                 borderRadius={MULTIPLE_FILES_IMAGE_BORDER_RADIUS[threadMessageKindKey]}
                 shadeOnHover={true}
-                isGif={isGifFileInfo(fileInfo)}
+                isGif={isGif(fileInfo.mimeType)}
+                isUploaded={fileInfo.isUploaded}
                 defaultComponent={
                   <div
                     className="sendbird-multiple-files-image-renderer__thumbnail__placeholder"

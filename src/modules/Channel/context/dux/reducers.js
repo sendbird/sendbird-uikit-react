@@ -338,6 +338,34 @@ export default function reducer(state, action) {
         messageListParams: action.payload,
       };
     }
+    case actionTypes.ON_FILE_INFO_UPLOADED: {
+      const {
+        channelUrl,
+        requestId,
+        index,
+        error,
+      } = action.payload;
+      if (!compareIds(channelUrl, state?.currentGroupChannel?.url)) {
+        return state;
+      }
+
+      const copiedLocalMessages = [...state.localMessages];
+
+      if (error) {
+        return state;
+      }
+      const messageToUpdate = copiedLocalMessages.find((message) => (
+        compareIds(message.reqId, requestId)
+      ));
+      if (messageToUpdate && messageToUpdate.statefulFileInfoList) {
+        messageToUpdate.statefulFileInfoList[index].isUploaded = true;
+        return {
+          ...state,
+          localMessages: copiedLocalMessages,
+        };
+      }
+      return state;
+    }
     default:
       return state;
   }

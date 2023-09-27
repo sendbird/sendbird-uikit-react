@@ -10,6 +10,8 @@ import type { Nullable } from '../../../../types';
 import PUBSUB_TOPICS from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from '../utils';
 import { SendableMessageType } from '../../../../utils';
+import { createStatefulFileInfoList } from '../../../../utils/createStatefulFileInfoList';
+import { MultipleFilesMessage } from '@sendbird/chat/message';
 
 export type OnBeforeSendMFMType = (
   files: Array<File>,
@@ -71,17 +73,26 @@ export const useSendMultipleFilesMessage = ({
          * until we will add UI/UX for it
          */
         .onFileUploaded((requestId, index, uploadableFileInfo, error) => {
-          logger.info('Channel: onFileUploaded during sending MFM', { requestId, index, error, uploadableFileInfo });
+          logger.info('Channel: onFileUploaded during sending MFM', {
+            requestId,
+            index,
+            error,
+            uploadableFileInfo,
+          });
+          pubSub.publish(PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED, {
+            channelUrl: currentChannel.url,
+            requestId,
+            index,
+            uploadableFileInfo,
+            error,
+          });
         })
-        .onPending((pendingMessage) => {
+        .onPending((pendingMessage: MultipleFilesMessage) => {
           logger.info('Channel: in progress of sending MFM', { pendingMessage, fileInfoList: messageParams.fileInfoList });
           pubSub.publish(PUBSUB_TOPICS.SEND_MESSAGE_START, {
             message: {
               ...pendingMessage,
-              fileInfoList: messageParams.fileInfoList.map((fileInfo) => ({
-                ...fileInfo,
-                url: URL.createObjectURL(fileInfo.file as File),
-              })),
+              statefulFileInfoList: createStatefulFileInfoList(pendingMessage),
             },
             channel: currentChannel,
           });
@@ -89,11 +100,14 @@ export const useSendMultipleFilesMessage = ({
             setTimeout(() => scrollIntoLast(0, scrollRef));
           }
         })
-        .onFailed((error, failedMessage) => {
+        .onFailed((error, failedMessage: MultipleFilesMessage) => {
           logger.error('Channel: Sending MFM failed.', { error, failedMessage });
           pubSub.publish(PUBSUB_TOPICS.SEND_MESSAGE_FAILED, {
             channel: currentChannel,
-            message: failedMessage,
+            message: {
+              ...failedMessage,
+              statefulFileInfoList: createStatefulFileInfoList(failedMessage),
+            },
           });
         })
         .onSucceeded((succeededMessage) => {

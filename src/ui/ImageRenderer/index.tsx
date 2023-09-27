@@ -35,6 +35,7 @@ export interface ImageRendererProps {
   onError?: () => void;
   shadeOnHover?: boolean;
   isGif?: boolean;
+  isUploaded?: boolean;
 }
 
 const ImageRenderer = ({
@@ -53,6 +54,7 @@ const ImageRenderer = ({
   onError = () => { /* noop */ },
   shadeOnHover,
   isGif = false,
+  isUploaded = true,
 }: ImageRendererProps): ReactElement => {
   const [showDefaultComponent, setShowDefaultComponent] = useState(false);
   const [showPlaceHolder, setShowPlaceHolder] = useState(true);
@@ -144,11 +146,12 @@ const ImageRenderer = ({
       {HiddenImageLoader}
       {
         shadeOnHover && <div
-        className="sendbird-multiple-files-image-renderer__image-cover"
-        style={{
-          borderRadius: getBorderRadiusForImageRenderer(circle, borderRadius),
-        }}
-      />
+          className="sendbird-multiple-files-image-renderer__image-cover"
+          style={{
+            ...{ borderRadius: getBorderRadiusForImageRenderer(circle, borderRadius) },
+            ...(isUploaded ? {} : { display: 'inline-flex' }),
+          }}
+        />
       }
       {
         isGif && (

@@ -1,14 +1,14 @@
 import './index.scss';
 
 import React, { MouseEvent, ReactElement, useContext, useRef } from 'react';
-import { FileMessage, MultipleFilesMessage, UploadedFileInfo } from '@sendbird/chat/message';
+import { FileMessage, MultipleFilesMessage, SendingStatus, UploadedFileInfo } from '@sendbird/chat/message';
 import { createPortal } from 'react-dom';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { MODAL_ROOT } from '../../hooks/useModal';
-import { isImage, isVideo, isSupportedFileView } from '../../utils';
+import { isFileMessage, isImage, isMultipleFilesMessage, isSupportedFileView, isVideo } from '../../utils';
 import { noop } from '../../utils/utils';
 import Avatar from '../Avatar/index';
-import Label, { LabelTypography, LabelColors } from '../Label';
+import Label, { LabelColors, LabelTypography } from '../Label';
 import Icon, { IconColors, IconTypes } from '../Icon';
 import { FileInfo, FileViewerComponentProps, ViewerTypes } from './types';
 import { useKeyDown } from './hooks/useKeyDown';
@@ -126,7 +126,7 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
 };
 
 export interface FileViewerProps {
-  message: FileMessage | MultipleFilesMessage;
+  message?: FileMessage | MultipleFilesMessage;
   isByMe?: boolean;
   currentIndex?: number;
   onClose: (e: MouseEvent) => void;
@@ -144,36 +144,43 @@ export default function FileViewer({
   onClickLeft,
   onClickRight,
 }: FileViewerProps): ReactElement {
-  if (message.isMultipleFilesMessage()) {
+  if (isMultipleFilesMessage(message)) {
+    const castedMessage = message as MultipleFilesMessage;
     return (
       <FileViewerComponent
-        profileUrl={message.sender?.profileUrl}
-        nickname={message.sender?.nickname}
+        profileUrl={castedMessage.sender?.profileUrl}
+        nickname={castedMessage.sender?.nickname}
         viewerType={ViewerTypes.MULTI}
-        fileInfoList={message.fileInfoList.map((fileInfo: UploadedFileInfo): FileInfo => {
-          return {
-            name: fileInfo.fileName || '',
-            type: fileInfo.mimeType || '',
-            url: fileInfo.url,
-          };
-        })}
+        fileInfoList={
+          (castedMessage.sendingStatus === SendingStatus.SUCCEEDED
+            ? castedMessage.fileInfoList
+            : castedMessage['statefulFileInfoList']
+          ).map((fileInfo: UploadedFileInfo): FileInfo => {
+            return {
+              name: fileInfo.fileName || '',
+              type: fileInfo.mimeType || '',
+              url: fileInfo.url,
+            };
+          })
+        }
         currentIndex={currentIndex || 0}
         onClickLeft={onClickLeft || noop}
         onClickRight={onClickRight || noop}
         onClose={onClose}
       />
     );
-  } else if (message.isFileMessage()) {
+  } else if (isFileMessage(message)) {
+    const castedMessage = message as FileMessage;
     return createPortal(
       (
         <FileViewerComponent
-          profileUrl={message.sender?.profileUrl}
-          nickname={message.sender?.nickname}
-          name={message.name}
-          type={message.type}
-          url={message?.url}
+          profileUrl={castedMessage.sender?.profileUrl}
+          nickname={castedMessage.sender?.nickname}
+          name={castedMessage.name}
+          type={castedMessage.type}
+          url={castedMessage?.url}
           isByMe={isByMe}
-          disableDelete={(message?.threadInfo?.replyCount || 0) > 0}
+          disableDelete={(castedMessage?.threadInfo?.replyCount || 0) > 0}
           onClose={onClose}
           onDelete={onDelete || noop}
         />

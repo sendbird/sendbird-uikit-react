@@ -85,6 +85,17 @@ export const pubSubHandler = ({
       });
     }
   }));
+  subscriber.set(topics.ON_FILE_INFO_UPLOADED, pubSub.subscribe(
+    topics.ON_FILE_INFO_UPLOADED,
+    (msg) => {
+      if (channelUrl === msg.channelUrl) {
+        dispatcher({
+          type: channelActions.ON_FILE_INFO_UPLOADED,
+          payload: msg,
+        });
+      }
+    },
+  ));
   subscriber.set(topics.SEND_MESSAGE_FAILED, pubSub.subscribe(topics.SEND_MESSAGE_FAILED, (msg) => {
     const { channel, message } = msg;
     if (channelUrl === channel?.url) {
