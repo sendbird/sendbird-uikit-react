@@ -11,7 +11,7 @@ function useResendMessageCallback({
   return useCallback((failedMessage) => {
     logger.info('Channel: Resending message has started', failedMessage);
     const { messageType, file } = failedMessage;
-    if (failedMessage?.isResendable) {
+    if (typeof failedMessage?.isResendable === 'boolean') {
       // Move the logic setting sendingStatus to pending into the reducer
       // eslint-disable-next-line no-param-reassign
       failedMessage.requestState = 'pending';
