@@ -148,8 +148,8 @@ export default function FileViewer({
     const castedMessage = message as MultipleFilesMessage;
     return (
       <FileViewerComponent
-        profileUrl={castedMessage.sender?.profileUrl}
-        nickname={castedMessage.sender?.nickname}
+        profileUrl={castedMessage.sender.profileUrl}
+        nickname={castedMessage.sender.nickname}
         viewerType={ViewerTypes.MULTI}
         fileInfoList={
           (castedMessage.sendingStatus === SendingStatus.SUCCEEDED
