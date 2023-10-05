@@ -87,11 +87,11 @@ export const pubSubHandler = ({
   }));
   subscriber.set(topics.ON_FILE_INFO_UPLOADED, pubSub.subscribe(
     topics.ON_FILE_INFO_UPLOADED,
-    (msg) => {
-      if (channelUrl === msg.channelUrl) {
+    (payload) => {
+      if (channelUrl === payload.channelUrl) {
         dispatcher({
           type: channelActions.ON_FILE_INFO_UPLOADED,
-          payload: msg,
+          payload,
         });
       }
     },

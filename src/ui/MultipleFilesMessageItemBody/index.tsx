@@ -6,15 +6,12 @@ import ImageRenderer from '../ImageRenderer';
 import ImageGrid from '../ImageGrid';
 import FileViewer from '../FileViewer';
 import './index.scss';
-import { useMediaQueryContext } from '../../lib/MediaQueryContext';
-import { useThreadMessageKindKeySelector } from './useThreadMessageKindKeySelector';
 import {
   MULTIPLE_FILES_IMAGE_BORDER_RADIUS,
   MULTIPLE_FILES_IMAGE_SIDE_LENGTH,
   MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH,
 } from './const';
 import { isGif } from '../../utils';
-import { useDynamicUploadedIndex } from './useDynamicUploadedIndex';
 import { StatefulFileInfo } from '../../utils/createStatefulFileInfoList';
 
 export const ThreadMessageKind = {
@@ -31,19 +28,18 @@ interface Props {
   mouseHover?: boolean;
   isReactionEnabled?: boolean;
   truncateLimit?: number;
-  threadMessageKind?: ThreadMessageKindType;
+  threadMessageKindKey?: string;
+  updatedFileInfoList?: StatefulFileInfo[];
 }
 
 export default function MultipleFilesMessageItemBody({
   className,
   message,
   isReactionEnabled = false,
-  threadMessageKind,
+  threadMessageKindKey,
+  updatedFileInfoList = [],
 }: Props): ReactElement {
-  const { isMobile } = useMediaQueryContext();
-  const threadMessageKindKey = useThreadMessageKindKeySelector({ threadMessageKind, isMobile });
   const [currentFileViewerIndex, setCurrentFileViewerIndex] = useState(-1);
-  const updatedFileInfoList = useDynamicUploadedIndex(message);
 
   function onClose() {
     setCurrentFileViewerIndex(-1);

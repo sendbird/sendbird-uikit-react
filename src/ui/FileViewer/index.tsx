@@ -180,7 +180,7 @@ export default function FileViewer({
           type={castedMessage.type}
           url={castedMessage?.url}
           isByMe={isByMe}
-          disableDelete={(castedMessage?.threadInfo?.replyCount || 0) > 0}
+          disableDelete={(castedMessage.threadInfo?.replyCount || 0) > 0}
           onClose={onClose}
           onDelete={onDelete || noop}
         />
