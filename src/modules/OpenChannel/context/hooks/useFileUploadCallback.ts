@@ -22,7 +22,7 @@ interface StaticParams {
   messagesDispatcher: (props: { type: string, payload: any }) => void;
 }
 
-type CallbackReturn = (file: File) => void;
+type CallbackReturn = (files: Array<File> | File) => void;
 
 function useFileUploadCallback({
   currentOpenChannel,
@@ -32,8 +32,13 @@ function useFileUploadCallback({
 }: DynamicParams,
 { sdk, logger, messagesDispatcher, scrollRef }: StaticParams,
 ): CallbackReturn {
-  return useCallback((file) => {
+  return useCallback((files) => {
     if (sdk) {
+      /**
+       * OpenChannel does not currently support file lists.
+       * However, this change is made to maintain interface consistency with group channels.
+       */
+      const file = Array.isArray(files) ? files[0] : files;
       const {
         compressionRate,
         resizingWidth,
