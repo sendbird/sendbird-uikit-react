@@ -200,7 +200,7 @@ const MessageList: React.FC<MessageListProps> = ({
               </MessageProvider>
             );
           })}
-          {localMessages.map((m, idx) => {
+          {/* {localMessages.map((m, idx) => {
             const {
               chainTop,
               chainBottom,
@@ -225,7 +225,7 @@ const MessageList: React.FC<MessageListProps> = ({
                 />
               </MessageProvider>
             );
-          })}
+          })} */}
           {/* show frozen notifications */}
           {/* show new message notifications */}
         </div>
