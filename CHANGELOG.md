@@ -1,5 +1,172 @@
 # Changelog - v3
 
+## [v3.6.9] (Oct 6 2023)
+### Fixes:
+* (in Safari) Display the placeholder of the MessageInput when the input text is cleared
+* Remove duplicated CSS line
+* Able to see the quoted messages regardless of the ReplyType
+* Improve the types of the function props of `ui/MessageInput` component
+  ```ts
+  interface MessageInputProps {
+    ...
+    onFileUpload?: (fileList: FileList) => void;
+    onSendMessage?: (props: { message: string, mentionTemplate: string }) => void;
+    onUpdateMessage?: (props: { messageId: string, message: string, mentionTemplate: string }) => void;
+  }
+  ```
+* Move to the channel list when current user is banned or the channel is deleted in MobileLayout
+* Add new iconColor: THUMBNAIL_ICON which doesn't change by theme
+* Add some props types that we have missed in the public interface
+  * ChannelProvider
+    * Add
+      ```ts
+      interface ChannelContextProps {
+        onBeforeSendVoiceMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
+      }
+      ```
+    * Usage
+      ```tsx
+      import { ChannelProvider } from '@sendbird/uikit-react/Channel/context'
+
+      <ChannelProvider
+        onBeforeSendVoiceMessage={() => {}}
+      />
+      ```
+  * ThreadProvider
+    * Add
+      ```ts
+      interface ThreadProviderProps {
+        onBeforeSendUserMessage?: (message: string, quotedMessage?: SendableMessageType) => UserMessageCreateParams;
+        onBeforeSendFileMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
+        onBeforeSendVoiceMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
+      }
+      ```
+    * Usage
+      ```tsx
+      import { ThreadProvider } from '@sendbird/uikit-react/Thread/context'
+
+      <ThreadProvider
+        onBeforeSendUserMessage={() => {}}
+        onBeforeSendFileMessage={() => {}}
+        onBeforeSendVoiceMessage={() => {}}
+      />
+      ```
+  * ui/Button
+    * Add
+      ```ts
+      enum ButtonTypes {
+        PRIMARY = 'PRIMARY',
+        SECONDARY = 'SECONDARY',
+        DANGER = 'DANGER',
+        DISABLED = 'DISABLED',
+      }
+      enum ButtonSizes {
+        BIG = 'BIG',
+        SMALL = 'SMALL',
+      }
+      ```
+    * Usage
+      ```ts
+      import Button, { ButtonTypes, ButtonSizes } from '@sendbird/uikit-react/ui/Button'
+
+      <Button
+        type={ButtonTypes.PRIMARY}
+        size={ButtonSizes.BIG}
+      />
+      ```
+  * ui/Icon
+    * Add
+      ```ts
+      export enum IconTypes {
+        ADD = 'ADD',
+        ARROW_LEFT = 'ARROW_LEFT',
+        ATTACH = 'ATTACH',
+        AUDIO_ON_LINED = 'AUDIO_ON_LINED',
+        BAN = 'BAN',
+        BROADCAST = 'BROADCAST',
+        CAMERA = 'CAMERA',
+        CHANNELS = 'CHANNELS',
+        CHAT = 'CHAT',
+        CHAT_FILLED = 'CHAT_FILLED',
+        CHEVRON_DOWN = 'CHEVRON_DOWN',
+        CHEVRON_RIGHT = 'CHEVRON_RIGHT',
+        CLOSE = 'CLOSE',
+        COLLAPSE = 'COLLAPSE',
+        COPY = 'COPY',
+        CREATE = 'CREATE',
+        DELETE = 'DELETE',
+        DISCONNECTED = 'DISCONNECTED',
+        DOCUMENT = 'DOCUMENT',
+        DONE = 'DONE',
+        DONE_ALL = 'DONE_ALL',
+        DOWNLOAD = 'DOWNLOAD',
+        EDIT = 'EDIT',
+        EMOJI_MORE = 'EMOJI_MORE',
+        ERROR = 'ERROR',
+        EXPAND = 'EXPAND',
+        FILE_AUDIO = 'FILE_AUDIO',
+        FILE_DOCUMENT = 'FILE_DOCUMENT',
+        FREEZE = 'FREEZE',
+        GIF = 'GIF',
+        INFO = 'INFO',
+        LEAVE = 'LEAVE',
+        MEMBERS = 'MEMBERS',
+        MESSAGE = 'MESSAGE',
+        MODERATIONS = 'MODERATIONS',
+        MORE = 'MORE',
+        MUTE = 'MUTE',
+        NOTIFICATIONS = 'NOTIFICATIONS',
+        NOTIFICATIONS_OFF_FILLED = 'NOTIFICATIONS_OFF_FILLED',
+        OPERATOR = 'OPERATOR',
+        PHOTO = 'PHOTO',
+        PLAY = 'PLAY',
+        PLUS = 'PLUS',
+        QUESTION = 'QUESTION',
+        REFRESH = 'REFRESH',
+        REPLY = 'REPLY',
+        REMOVE = 'REMOVE',
+        SEARCH = 'SEARCH',
+        SEND = 'SEND',
+        SETTINGS_FILLED = 'SETTINGS_FILLED',
+        SLIDE_LEFT = 'SLIDE_LEFT',
+        SPINNER = 'SPINNER',
+        SUPERGROUP = 'SUPERGROUP',
+        THREAD = 'THREAD',
+        THUMBNAIL_NONE = 'THUMBNAIL_NONE',
+        TOGGLE_OFF = 'TOGGLE_OFF',
+        TOGGLE_ON = 'TOGGLE_ON',
+        USER = 'USER',
+      }
+      export enum IconColors {
+        DEFAULT = 'DEFAULT',
+        PRIMARY = 'PRIMARY',
+        PRIMARY_2 = 'PRIMARY_2',
+        SECONDARY = 'SECONDARY',
+        CONTENT = 'CONTENT',
+        CONTENT_INVERSE = 'CONTENT_INVERSE',
+        WHITE = 'WHITE',
+        GRAY = 'GRAY',
+        THUMBNAIL_ICON = 'THUMBNAIL_ICON',
+        SENT = 'SENT',
+        READ = 'READ',
+        ON_BACKGROUND_1 = 'ON_BACKGROUND_1',
+        ON_BACKGROUND_2 = 'ON_BACKGROUND_2',
+        ON_BACKGROUND_3 = 'ON_BACKGROUND_3',
+        ON_BACKGROUND_4 = 'ON_BACKGROUND_4',
+        BACKGROUND_3 = 'BACKGROUND_3',
+        ERROR = 'ERROR',
+      }
+      ```
+    * Usage
+      ```ts
+      import Icon, { IconTypes, IconColors } from '@sendbird/uikit-react/ui/Icon'
+
+      <Icon
+        type={IconTypes.INFO}
+        fillColor={IconColors.PRIMARY}
+      />
+      ```
+
 ## [v3.6.8] (Sep 1 2023)
 ### Feats:
 * Update `ui/FileViewer` to support multiple images

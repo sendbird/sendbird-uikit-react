@@ -19,7 +19,8 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
-import { isChannelTypeSupportsMultipleFilesMessage, nodeListToArray, sanitizeString } from './utils';
+// import { isChannelTypeSupportsMultipleFilesMessage } from './utils';
+import { nodeListToArray, sanitizeString } from './utils';
 import {
   arrayEqual,
   getClassName,
@@ -69,7 +70,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     isEdit,
     isMentionEnabled,
     isVoiceMessageEnabled,
-    isSelectingMultipleFilesEnabled,
+    // isSelectingMultipleFilesEnabled,
     disabled,
     message,
     placeholder,
@@ -521,14 +522,14 @@ const MessageInput = React.forwardRef((props, ref) => {
                   // It will affect to <Channel /> and <Thread />
                   onChange={(event) => {
                     const { files } = event.currentTarget;
-                    onFileUpload(files && files.length === 1 ? files[0] : [...files]);
+                    onFileUpload(files && files.length === 1 ? [files[0]] : [...files]);
                     event.target.value = '';
                   }}
                   accept={getMimeTypesUIKitAccepts(acceptableMimeTypes)}
-                  multiple={
-                    isSelectingMultipleFilesEnabled
-                    && isChannelTypeSupportsMultipleFilesMessage(channel)
-                  }
+                  // multiple={
+                  //   isSelectingMultipleFilesEnabled
+                  //   && isChannelTypeSupportsMultipleFilesMessage(channel)
+                  // }
                 />
               </IconButton>
               )
@@ -592,7 +593,7 @@ MessageInput.propTypes = {
   isEdit: PropTypes.bool,
   isMentionEnabled: PropTypes.bool,
   isVoiceMessageEnabled: PropTypes.bool,
-  isSelectingMultipleFilesEnabled: PropTypes.bool,
+  // isSelectingMultipleFilesEnabled: PropTypes.bool,
   disabled: PropTypes.bool,
   value: PropTypes.string,
   placeholder: PropTypes.string,
@@ -643,7 +644,7 @@ MessageInput.defaultProps = {
   isEdit: false,
   isMentionEnabled: false,
   isVoiceMessageEnabled: true,
-  isSelectingMultipleFilesEnabled: false,
+  // isSelectingMultipleFilesEnabled: false,
   onVoiceMessageIconClick: noop,
   disabled: false,
   placeholder: '',
