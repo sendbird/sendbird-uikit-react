@@ -522,14 +522,14 @@ const MessageInput = React.forwardRef((props, ref) => {
                   // It will affect to <Channel /> and <Thread />
                   onChange={(event) => {
                     const { files } = event.currentTarget;
-                    onFileUpload(files && files.length === 1 ? files[0] : [...files]);
+                    onFileUpload(files && files.length === 1 ? [files[0]] : [...files]);
                     event.target.value = '';
                   }}
                   accept={getMimeTypesUIKitAccepts(acceptableMimeTypes)}
-                  multiple={
-                    isSelectingMultipleFilesEnabled
-                    && isChannelTypeSupportsMultipleFilesMessage(channel)
-                  }
+                  // multiple={
+                  //   isSelectingMultipleFilesEnabled
+                  //   && isChannelTypeSupportsMultipleFilesMessage(channel)
+                  // }
                 />
               </IconButton>
               )
