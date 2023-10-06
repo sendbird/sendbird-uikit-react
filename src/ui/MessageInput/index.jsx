@@ -397,7 +397,6 @@ const MessageInput = React.forwardRef((props, ref) => {
     setHeight,
   });
 
-  const textField = ref?.current;
   return (
     <form
       className={getClassName([
@@ -427,7 +426,7 @@ const MessageInput = React.forwardRef((props, ref) => {
               e.preventDefault();
             } else {
               if (!e.shiftKey && e.key === MessageInputKeys.Enter
-                && textField?.textContent?.trim().length > 0
+                && ref?.current?.textContent?.trim().length > 0
                 && e?.nativeEvent?.isComposing !== true
               ) {
                 e.preventDefault();
@@ -456,13 +455,13 @@ const MessageInput = React.forwardRef((props, ref) => {
           onInput={() => {
             setHeight();
             onStartTyping();
-            setIsInput(textField?.textContent?.trim().length > 0);
+            setIsInput(ref?.current?.textContent?.trim().length > 0);
             useMentionedLabelDetection();
           }}
           onPaste={onPaste}
         />
         {/* placeholder */}
-        {textField?.innerText?.length === 0 && (
+        {(ref?.current?.textContent?.length ?? 0) === 0 && (
           <Label
             className="sendbird-message-input--placeholder"
             type={LabelTypography.BODY_1}
