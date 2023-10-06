@@ -124,14 +124,30 @@ describe('ui/MessageInput', () => {
     ).toBe(0);
   });
 
-  it("should not render the placeholder text if only white spaces are present", () => {
-    const { container } = render(
-      <MessageInput onSendMessage={noop} value="   " />
-    );
+  it("should not render the placeholder text if only white spaces are present", async () => {
+    const textRef = { current: { textContent: null } };
+    const mockText = '   ';
+    const { container, rerender } = render(<MessageInput ref={textRef} />);
+    const input = screen.getByRole('textbox');
+    await userEvent.clear(input);
+    await userEvent.type(input, mockText);
+    expect(input.textContent).toBe(mockText);
+
+    await rerender(<MessageInput ref={textRef} />);
     expect(
       container.getElementsByClassName("sendbird-message-input--placeholder")
         .length
     ).toBe(0);
+  });
+
+  it("should render the placeholder text if there's no text in the input", async() => {
+    const textRef = { current: { textContent: null } };
+    const { container } = render(<MessageInput ref={textRef} />);
+
+    expect(
+      container.getElementsByClassName("sendbird-message-input--placeholder")
+        .length
+    ).toBe(1);
   });
 
   it('should call sendMessage with valid string', async () => {
