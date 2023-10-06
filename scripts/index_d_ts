@@ -112,7 +112,7 @@ declare module "SendbirdUIKitGlobal" {
     disableAutoSelect?: boolean;
     isMentionEnabled?: boolean;
     isReactionEnabled?: boolean;
-    // isMultipleFilesMessageEnabled?: boolean;
+    isMultipleFilesMessageEnabled?: boolean;
     isTypingIndicatorEnabledOnChannelList?: boolean;
     isMessageReceiptStatusEnabledOnChannelList?: boolean;
     uikitOptions?: UIKitOptions;
@@ -294,7 +294,7 @@ declare module "SendbirdUIKitGlobal" {
       maxRecordingTime?: number,
       minRecordingTime?: number,
     };
-    // isMultipleFilesMessageEnabled?: boolean;
+    isMultipleFilesMessageEnabled?: boolean;
     isTypingIndicatorEnabledOnChannelList?: boolean;
     isMessageReceiptStatusEnabledOnChannelList?: boolean;
     uikitOptions?: UIKitOptions;
@@ -572,7 +572,7 @@ declare module "SendbirdUIKitGlobal" {
     channelUrl: string;
     isReactionEnabled?: boolean;
     isMessageGroupingEnabled?: boolean;
-    // isMultipleFilesMessageEnabled?: boolean;
+    isMultipleFilesMessageEnabled?: boolean;
     showSearchIcon?: boolean;
     animatedMessage?: number;
     highlightedMessage?: number;
@@ -580,7 +580,7 @@ declare module "SendbirdUIKitGlobal" {
     onBeforeSendUserMessage?(text: string, quotedMessage?: SendableMessageType): UserMessageCreateParams;
     onBeforeSendFileMessage?(file: File, quotedMessage?: SendableMessageType): FileMessageCreateParams;
     onBeforeSendVoiceMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
-    // onBeforeSendMultipleFilesMessage?: (files: Array<File>, quotedMessage?: SendableMessageType) => MultipleFilesMessageCreateParams;
+    onBeforeSendMultipleFilesMessage?: (files: Array<File>, quotedMessage?: SendableMessageType) => MultipleFilesMessageCreateParams;
     onBeforeUpdateUserMessage?(text: string): UserMessageUpdateParams;
     onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
     onSearchClick?(): void;
@@ -672,8 +672,7 @@ declare module "SendbirdUIKitGlobal" {
     disableDelete: boolean;
   };
   export type FileViewerProps = {
-    // message: FileMessage | MultipleFilesMessage;
-    message: FileMessage;
+    message: FileMessage | MultipleFilesMessage;
     onClose: (e: MouseEvent) => void;
     isByMe?: boolean;
     onDelete?: (e: MouseEvent) => void;
@@ -1090,7 +1089,7 @@ declare module "SendbirdUIKitGlobal" {
     onBeforeSendUserMessage?: (message: string, quotedMessage?: SendableMessageType) => UserMessageCreateParams;
     onBeforeSendFileMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
     onBeforeSendVoiceMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
-    // onBeforeSendMultipleFilesMessage?: (files: Array<File>, quotedMessage?: SendableMessageType) => MultipleFilesMessageCreateParams;
+    onBeforeSendMultipleFilesMessage?: (files: Array<File>, quotedMessage?: SendableMessageType) => MultipleFilesMessageCreateParams;
     disableUserProfile?: boolean;
     renderUserProfile?: (props: { user: User, close: () => void }) => React.ReactElement;
   }
@@ -2111,8 +2110,7 @@ declare module '@sendbird/uikit-react/ui/FileViewer' {
   export const FileViewerComponent: React.FC<FileViewerComponentProps>
 
   interface FileViewerProps {
-    // message: FileMessage | MultipleFilesMessage;
-    message: FileMessage;
+    message: FileMessage | MultipleFilesMessage;
     isByMe?: boolean;
     currentIndex?: number;
     onClose: (e: MouseEvent) => void;
@@ -2365,7 +2363,7 @@ declare module '@sendbird/uikit-react/ui/MessageInput' {
     isEdit?: boolean,
     isMentionEnabled?: boolean;
     isVoiceMessageEnabled?: boolean;
-    // isSelectingMultipleFilesEnabled?: boolean;
+    isSelectingMultipleFilesEnabled?: boolean;
     acceptableMimeTypes?: Array<'image' | 'video' | 'audio'>;
     disabled?: boolean,
     // value is removed when channelURL changes

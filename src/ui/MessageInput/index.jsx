@@ -19,8 +19,11 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
-// import { isChannelTypeSupportsMultipleFilesMessage } from './utils';
-import { nodeListToArray, sanitizeString } from './utils';
+import {
+  isChannelTypeSupportsMultipleFilesMessage,
+  nodeListToArray,
+  sanitizeString,
+} from './utils';
 import {
   arrayEqual,
   getClassName,
@@ -70,7 +73,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     isEdit,
     isMentionEnabled,
     isVoiceMessageEnabled,
-    // isSelectingMultipleFilesEnabled,
+    isSelectingMultipleFilesEnabled,
     disabled,
     message,
     placeholder,
@@ -526,10 +529,10 @@ const MessageInput = React.forwardRef((props, ref) => {
                     event.target.value = '';
                   }}
                   accept={getMimeTypesUIKitAccepts(acceptableMimeTypes)}
-                  // multiple={
-                  //   isSelectingMultipleFilesEnabled
-                  //   && isChannelTypeSupportsMultipleFilesMessage(channel)
-                  // }
+                  multiple={
+                    isSelectingMultipleFilesEnabled
+                    && isChannelTypeSupportsMultipleFilesMessage(channel)
+                  }
                 />
               </IconButton>
               )
@@ -593,7 +596,7 @@ MessageInput.propTypes = {
   isEdit: PropTypes.bool,
   isMentionEnabled: PropTypes.bool,
   isVoiceMessageEnabled: PropTypes.bool,
-  // isSelectingMultipleFilesEnabled: PropTypes.bool,
+  isSelectingMultipleFilesEnabled: PropTypes.bool,
   disabled: PropTypes.bool,
   value: PropTypes.string,
   placeholder: PropTypes.string,
@@ -644,7 +647,7 @@ MessageInput.defaultProps = {
   isEdit: false,
   isMentionEnabled: false,
   isVoiceMessageEnabled: true,
-  // isSelectingMultipleFilesEnabled: false,
+  isSelectingMultipleFilesEnabled: false,
   onVoiceMessageIconClick: noop,
   disabled: false,
   placeholder: '',
