@@ -475,8 +475,8 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       onMessageHighlighted,
 
       // messagesStore
-      allMessages: [...allMessages, ...localMessages],
-      // localMessages,
+      allMessages,
+      localMessages,
       loading,
       initialized,
       unreadSince,
