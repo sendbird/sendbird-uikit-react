@@ -140,7 +140,6 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
         </Label>
         <div
           className="sendbird-create-channel--scroll"
-
           onScroll={(e) => {
             const eventTarget = e.target as HTMLDivElement;
             const { hasNext } = usersDataSource;
