@@ -19,7 +19,8 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
-import { isChannelTypeSupportsMultipleFilesMessage, nodeListToArray, sanitizeString } from './utils';
+// import { isChannelTypeSupportsMultipleFilesMessage } from './utils';
+import { nodeListToArray, sanitizeString } from './utils';
 import {
   arrayEqual,
   getClassName,
@@ -69,7 +70,7 @@ const MessageInput = React.forwardRef((props, ref) => {
     isEdit,
     isMentionEnabled,
     isVoiceMessageEnabled,
-    isSelectingMultipleFilesEnabled,
+    // isSelectingMultipleFilesEnabled,
     disabled,
     message,
     placeholder,
@@ -593,7 +594,7 @@ MessageInput.propTypes = {
   isEdit: PropTypes.bool,
   isMentionEnabled: PropTypes.bool,
   isVoiceMessageEnabled: PropTypes.bool,
-  isSelectingMultipleFilesEnabled: PropTypes.bool,
+  // isSelectingMultipleFilesEnabled: PropTypes.bool,
   disabled: PropTypes.bool,
   value: PropTypes.string,
   placeholder: PropTypes.string,
@@ -644,7 +645,7 @@ MessageInput.defaultProps = {
   isEdit: false,
   isMentionEnabled: false,
   isVoiceMessageEnabled: true,
-  isSelectingMultipleFilesEnabled: false,
+  // isSelectingMultipleFilesEnabled: false,
   onVoiceMessageIconClick: noop,
   disabled: false,
   placeholder: '',

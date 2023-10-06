@@ -38,7 +38,7 @@ const MessageList: React.FC<MessageListProps> = ({
 }) => {
   const {
     allMessages,
-    localMessages,
+    // localMessages,
     hasMorePrev,
     hasMoreNext,
     setInitialTimeStamp,
