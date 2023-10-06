@@ -25,7 +25,7 @@ function useResendMessageCallback(
     logger.info('OpenChannel | useResendMessageCallback: Resending message has started', failedMessage);
     // eslint-disable-next-line no-param-reassign
     const { messageType, file } = failedMessage as FileMessage;
-    if (failedMessage && typeof failedMessage.isResendable === 'function' && failedMessage.isResendable) {
+    if (typeof failedMessage?.isResendable === 'boolean' && failedMessage.isResendable) {
       // eslint-disable-next-line no-param-reassign
       failedMessage.requestState = 'pending';
       messagesDispatcher({
