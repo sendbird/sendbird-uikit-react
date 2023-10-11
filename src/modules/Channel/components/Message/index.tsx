@@ -89,6 +89,7 @@ const Message = ({
     onMessageAnimated,
     onMessageHighlighted,
     onScrollCallback,
+    setIsScrolled,
   } = useChannelContext();
   const [showEdit, setShowEdit] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
@@ -117,6 +118,7 @@ const Message = ({
     hasMore: false,
     onScroll: onScrollCallback,
     scrollRef: messageScrollRef,
+    setIsScrolled,
   });
 
   const mentionNodes = useDirtyGetMentions({ ref: editMessageInputRef }, { logger });

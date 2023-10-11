@@ -107,7 +107,6 @@ interface MessageStoreInterface {
   localMessages: CoreMessageType[];
   loading: boolean;
   initialized: boolean;
-  isScrolled: boolean;
   unreadSince: string;
   isInvalid: boolean;
   currentGroupChannel: Nullable<GroupChannel>;
@@ -136,6 +135,8 @@ interface UpdateMessageProps {
 
 interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInterface {
   scrollToMessage?(createdAt: number, messageId: number): void;
+  isScrolled?: boolean;
+  setIsScrolled?: React.Dispatch<React.SetStateAction<boolean>>;
   messageActionTypes: Record<string, string>;
   messagesDispatcher: CustomUseReducerDispatcher;
   quoteMessage: SendableMessageType;
@@ -230,6 +231,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   }, [highlightedMessage]);
   const userFilledMessageListQuery = queries?.messageListParams;
   const [quoteMessage, setQuoteMessage] = useState<SendableMessageType>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const [messagesStore, messagesDispatcher] = useReducer(
     messagesReducer,
@@ -352,13 +354,14 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   // to be clear here useGetChannel sets currentGroupChannel
   // and useInitialMessagesFetch executes when currentGroupChannel changes
   // p.s This one executes on initialTimeStamp change too
-  const [isScrolled] = useInitialMessagesFetch({
+  useInitialMessagesFetch({
     currentGroupChannel,
     userFilledMessageListQuery,
     initialTimeStamp,
     latestMessageTimeStamp,
     replyType,
     isVoiceMessageEnabled,
+    setIsScrolled,
   }, {
     logger,
     scrollRef,
@@ -518,6 +521,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       scrollBehavior,
       toggleReaction,
       isScrolled,
+      setIsScrolled,
     }}>
       <UserProfileProvider
         disableUserProfile={props?.disableUserProfile ?? config?.disableUserProfile}

@@ -10,6 +10,7 @@ export interface UseHandleOnScrollCallbackProps {
   onScroll(callback: () => void): void;
   scrollRef: React.RefObject<HTMLDivElement>;
   setShowScrollDownButton?: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsScrolled?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function calcScrollBottom(scrollHeight: number, scrollTop: number): number {
