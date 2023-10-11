@@ -107,6 +107,7 @@ interface MessageStoreInterface {
   localMessages: CoreMessageType[];
   loading: boolean;
   initialized: boolean;
+  isScrolled: boolean;
   unreadSince: string;
   isInvalid: boolean;
   currentGroupChannel: Nullable<GroupChannel>;
@@ -241,6 +242,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     localMessages,
     loading,
     initialized,
+    isScrolled,
     unreadSince,
     isInvalid,
     currentGroupChannel,
@@ -479,6 +481,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       localMessages,
       loading,
       initialized,
+      isScrolled,
       unreadSince,
       isInvalid,
       currentGroupChannel,

@@ -8,7 +8,7 @@ import { OutgoingMessageStates } from '../../../utils/exports/getOutgoingMessage
 const UNDEFINED = 'undefined';
 const { SUCCEEDED, FAILED, PENDING } = getSendingMessageStatus();
 
-export const scrollToRenderedMessage = (scrollRef, initialTimeStamp) => {
+export const scrollToRenderedMessage = (scrollRef, initialTimeStamp, dispatchIsScrolled) => {
   try {
     const container = scrollRef.current;
     // scroll into the message with initialTimeStamp
@@ -23,23 +23,27 @@ export const scrollToRenderedMessage = (scrollRef, initialTimeStamp) => {
     }
   } catch {
     // do nothing
+  } finally {
+    dispatchIsScrolled?.();
   }
 };
 
 /* eslint-disable default-param-last */
-export const scrollIntoLast = (initialTry = 0, scrollRef) => {
+export const scrollIntoLast = (initialTry = 0, scrollRef, dispatchIsScrolled) => {
   const MAX_TRIES = 10;
   const currentTry = initialTry;
   if (currentTry > MAX_TRIES) {
+    dispatchIsScrolled?.();
     return;
   }
   try {
     const scrollDOM = scrollRef?.current || document.querySelector('.sendbird-conversation__messages-padding');
     // eslint-disable-next-line no-multi-assign
     scrollDOM.scrollTop = scrollDOM.scrollHeight;
+    dispatchIsScrolled?.();
   } catch (error) {
     setTimeout(() => {
-      scrollIntoLast(currentTry + 1, scrollRef);
+      scrollIntoLast(currentTry + 1, scrollRef, dispatchIsScrolled);
     }, 500 * currentTry);
   }
 };

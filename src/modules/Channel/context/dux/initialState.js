@@ -1,6 +1,7 @@
 export default {
   initialized: false,
   loading: true,
+  isScrolled: false,
   allMessages: [],
   /**
    * localMessages: pending & failed messages

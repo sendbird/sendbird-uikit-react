@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ReplyType } from '@sendbird/chat/message';
 
 import * as utils from '../utils';
@@ -15,9 +15,21 @@ function useInitialMessagesFetch({
   scrollRef,
   messagesDispatcher,
 }) {
+  const [isScrolled, setIsScrolled] = useState(false);
   const channelUrl = currentGroupChannel?.url;
+
+  function dispatchIsScrolled() {
+    messagesDispatcher({
+      type: messageActionTypes.INITIAL_MESSAGES_IS_SCROLLED,
+      payload: {
+        currentGroupChannel,
+      },
+    });
+  }
+
   useEffect(() => {
     logger.info('Channel useInitialMessagesFetch: Setup started', currentGroupChannel);
+    setIsScrolled(false);
     messagesDispatcher({
       type: messageActionTypes.RESET_MESSAGES,
       payload: null,
@@ -78,10 +90,10 @@ function useInitialMessagesFetch({
         })
         .finally(() => {
           if (!initialTimeStamp) {
-            setTimeout(() => utils.scrollIntoLast(0, scrollRef));
+            setTimeout(() => utils.scrollIntoLast(0, scrollRef, dispatchIsScrolled));
           } else {
             setTimeout(() => {
-              utils.scrollToRenderedMessage(scrollRef, initialTimeStamp);
+              utils.scrollToRenderedMessage(scrollRef, initialTimeStamp, dispatchIsScrolled);
             }, 500);
           }
         });
@@ -95,6 +107,7 @@ function useInitialMessagesFetch({
    * Again, this hook is supposed to execute when currentGroupChannel changes
    * The 'channelUrl' here is not the same memory reference from Conversation.props
    */
+  return [isScrolled];
 }
 
 export default useInitialMessagesFetch;

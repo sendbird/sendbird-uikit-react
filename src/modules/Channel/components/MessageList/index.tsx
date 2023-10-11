@@ -55,8 +55,10 @@ const MessageList: React.FC<MessageListProps> = ({
     filterMessageList,
     replyType,
     loading,
+    isScrolled,
     unreadSince,
   } = useChannelContext();
+
   const store = useSendbirdStateContext();
   const allMessagesFiltered = (typeof filterMessageList === 'function')
     ? allMessages.filter((filterMessageList as (message: EveryMessage) => boolean))
@@ -149,6 +151,72 @@ const MessageList: React.FC<MessageListProps> = ({
 
   const { scrollToBottomHandler, scrollBottom } = useSetScrollToBottom({ loading });
 
+  function getSentMessages() {
+    return allMessagesFiltered.map((m, idx) => {
+      const {
+        chainTop,
+        chainBottom,
+        hasSeparator,
+      } = getMessagePartsInfo({
+        allMessages: allMessagesFiltered,
+        replyType,
+        isMessageGroupingEnabled,
+        currentIndex: idx,
+        currentMessage: m,
+        currentChannel: currentGroupChannel,
+      });
+      const isByMe = (m as UserMessage)?.sender?.userId === store?.config?.userId;
+      return (
+        <MessageProvider message={m} key={m?.messageId} isByMe={isByMe}>
+          <Message
+            handleScroll={moveScroll}
+            renderMessage={renderMessage}
+            message={m}
+            hasSeparator={hasSeparator}
+            chainTop={chainTop}
+            chainBottom={chainBottom}
+            renderCustomSeparator={renderCustomSeparator}
+          />
+        </MessageProvider>
+      );
+    });
+  }
+
+  function getLocalMessages() {
+    return localMessages.map((m, idx) => {
+      const {
+        chainTop,
+        chainBottom,
+      } = getMessagePartsInfo({
+        allMessages: allMessagesFiltered,
+        replyType,
+        isMessageGroupingEnabled,
+        currentIndex: idx,
+        currentMessage: m,
+        currentChannel: currentGroupChannel,
+      });
+      const isByMe = (m as UserMessage)?.sender?.userId === store?.config?.userId;
+      return (
+        <MessageProvider message={m} key={m?.messageId} isByMe={isByMe}>
+          <Message
+            handleScroll={moveScroll}
+            renderMessage={renderMessage}
+            message={m}
+            chainTop={chainTop}
+            chainBottom={chainBottom}
+            renderCustomSeparator={renderCustomSeparator}
+          />
+        </MessageProvider>
+      );
+    });
+  }
+
+  function getAllMessages() {
+    return getSentMessages().concat(getLocalMessages());
+    // show frozen notifications,
+    // show new message notifications,
+  }
+
   if (loading) {
     return (typeof renderPlaceholderLoader === 'function')
       ? renderPlaceholderLoader()
@@ -160,6 +228,7 @@ const MessageList: React.FC<MessageListProps> = ({
     }
     return <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />;
   }
+
   return (
     <div className={`sendbird-conversation__messages ${className}`}>
       <div className="sendbird-conversation__scroll-container">
@@ -172,62 +241,11 @@ const MessageList: React.FC<MessageListProps> = ({
             scrollToBottomHandler(e);
           }}
         >
-          {allMessagesFiltered.map((m, idx) => {
-            const {
-              chainTop,
-              chainBottom,
-              hasSeparator,
-            } = getMessagePartsInfo({
-              allMessages: allMessagesFiltered,
-              replyType,
-              isMessageGroupingEnabled,
-              currentIndex: idx,
-              currentMessage: m,
-              currentChannel: currentGroupChannel,
-            });
-            const isByMe = (m as UserMessage)?.sender?.userId === store?.config?.userId;
-            return (
-              <MessageProvider message={m} key={m?.messageId} isByMe={isByMe}>
-                <Message
-                  handleScroll={moveScroll}
-                  renderMessage={renderMessage}
-                  message={m}
-                  hasSeparator={hasSeparator}
-                  chainTop={chainTop}
-                  chainBottom={chainBottom}
-                  renderCustomSeparator={renderCustomSeparator}
-                />
-              </MessageProvider>
-            );
-          })}
-          {localMessages.map((m, idx) => {
-            const {
-              chainTop,
-              chainBottom,
-            } = getMessagePartsInfo({
-              allMessages: allMessagesFiltered,
-              replyType,
-              isMessageGroupingEnabled,
-              currentIndex: idx,
-              currentMessage: m,
-              currentChannel: currentGroupChannel,
-            });
-            const isByMe = (m as UserMessage)?.sender?.userId === store?.config?.userId;
-            return (
-              <MessageProvider message={m} key={m?.messageId} isByMe={isByMe}>
-                <Message
-                  handleScroll={moveScroll}
-                  renderMessage={renderMessage}
-                  message={m}
-                  chainTop={chainTop}
-                  chainBottom={chainBottom}
-                  renderCustomSeparator={renderCustomSeparator}
-                />
-              </MessageProvider>
-            );
-          })}
-          {/* show frozen notifications */}
-          {/* show new message notifications */}
+          {
+            isScrolled
+              ? getAllMessages()
+              : <PlaceHolder type={PlaceHolderTypes.LOADING} />
+          }
         </div>
       </div>
       {currentGroupChannel?.isFrozen && (
