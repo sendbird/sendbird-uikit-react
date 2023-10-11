@@ -55,8 +55,11 @@ const MessageList: React.FC<MessageListProps> = ({
     filterMessageList,
     replyType,
     loading,
+    isScrolled,
+    setIsScrolled,
     unreadSince,
   } = useChannelContext();
+
   const store = useSendbirdStateContext();
   const allMessagesFiltered = (typeof filterMessageList === 'function')
     ? allMessages.filter((filterMessageList as (message: EveryMessage) => boolean))
@@ -160,121 +163,131 @@ const MessageList: React.FC<MessageListProps> = ({
     }
     return <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />;
   }
+
   return (
-    <div className={`sendbird-conversation__messages ${className}`}>
-      <div className="sendbird-conversation__scroll-container">
-        <div className="sendbird-conversation__padding" />
-        <div
-          className="sendbird-conversation__messages-padding"
-          ref={scrollRef}
-          onScroll={(e) => {
-            handleOnScroll();
-            scrollToBottomHandler(e);
-          }}
-        >
-          {allMessagesFiltered.map((m, idx) => {
-            const {
-              chainTop,
-              chainBottom,
-              hasSeparator,
-            } = getMessagePartsInfo({
-              allMessages: allMessagesFiltered,
-              replyType,
-              isMessageGroupingEnabled,
-              currentIndex: idx,
-              currentMessage: m,
-              currentChannel: currentGroupChannel,
-            });
-            const isByMe = (m as UserMessage)?.sender?.userId === store?.config?.userId;
-            return (
-              <MessageProvider message={m} key={m?.messageId} isByMe={isByMe}>
-                <Message
-                  handleScroll={moveScroll}
-                  renderMessage={renderMessage}
-                  message={m}
-                  hasSeparator={hasSeparator}
-                  chainTop={chainTop}
-                  chainBottom={chainBottom}
-                  renderCustomSeparator={renderCustomSeparator}
-                />
-              </MessageProvider>
-            );
-          })}
-          {localMessages.map((m, idx) => {
-            const {
-              chainTop,
-              chainBottom,
-            } = getMessagePartsInfo({
-              allMessages: allMessagesFiltered,
-              replyType,
-              isMessageGroupingEnabled,
-              currentIndex: idx,
-              currentMessage: m,
-              currentChannel: currentGroupChannel,
-            });
-            const isByMe = (m as UserMessage)?.sender?.userId === store?.config?.userId;
-            return (
-              <MessageProvider message={m} key={m?.messageId} isByMe={isByMe}>
-                <Message
-                  handleScroll={moveScroll}
-                  renderMessage={renderMessage}
-                  message={m}
-                  chainTop={chainTop}
-                  chainBottom={chainBottom}
-                  renderCustomSeparator={renderCustomSeparator}
-                />
-              </MessageProvider>
-            );
-          })}
-          {/* show frozen notifications */}
-          {/* show new message notifications */}
-        </div>
-      </div>
-      {currentGroupChannel?.isFrozen && (
-        <FrozenNotification className="sendbird-conversation__messages__notification" />
-      )}
-      {unreadSince && (
-        <UnreadCount
-          className="sendbird-conversation__messages__notification"
-          count={currentGroupChannel?.unreadMessageCount}
-          time={unreadSince}
-          onClick={() => {
-            if (scrollRef?.current?.scrollTop) {
-              scrollRef.current.scrollTop = (scrollRef?.current?.scrollHeight ?? 0) - (scrollRef?.current?.offsetHeight ?? 0);
-            }
-            if (!disableMarkAsRead && !!currentGroupChannel) {
-              markAsReadScheduler.push(currentGroupChannel);
-              messagesDispatcher({
-                type: messageActionTypes.MARK_AS_READ,
-                payload: { channel: currentGroupChannel },
-              });
-            }
-            setInitialTimeStamp(null);
-            setAnimatedMessageId(null);
-            setHighLightedMessageId(null);
-          }}
-        />
-      )}
+    <>
       {
-        // This flag is an unmatched variable
-        scrollBottom > SCROLL_BOTTOM_PADDING && (
-          <div
-            className="sendbird-conversation__scroll-bottom-button"
-            onClick={onClickScrollBot}
-            onKeyDown={onClickScrollBot}
-            tabIndex={0}
-            role="button"
-          >
-            <Icon
-              width="24px"
-              height="24px"
-              type={IconTypes.CHEVRON_DOWN}
-              fillColor={IconColors.PRIMARY}
-            />
-          </div>
-        )
+        !isScrolled && <PlaceHolder type={PlaceHolderTypes.LOADING} />
       }
-    </div>
+      <div className={`sendbird-conversation__messages ${className}`}>
+        <div className="sendbird-conversation__scroll-container">
+          <div className="sendbird-conversation__padding" />
+          <div
+            className="sendbird-conversation__messages-padding"
+            ref={scrollRef}
+            onScroll={(e) => {
+              handleOnScroll();
+              scrollToBottomHandler(e);
+            }}
+          >
+            {
+              allMessagesFiltered.map((m, idx) => {
+                const {
+                  chainTop,
+                  chainBottom,
+                  hasSeparator,
+                } = getMessagePartsInfo({
+                  allMessages: allMessagesFiltered,
+                  replyType,
+                  isMessageGroupingEnabled,
+                  currentIndex: idx,
+                  currentMessage: m,
+                  currentChannel: currentGroupChannel,
+                });
+                const isByMe = (m as UserMessage)?.sender?.userId === store?.config?.userId;
+                return (
+                  <MessageProvider message={m} key={m?.messageId} isByMe={isByMe}>
+                    <Message
+                      handleScroll={moveScroll}
+                      renderMessage={renderMessage}
+                      message={m}
+                      hasSeparator={hasSeparator}
+                      chainTop={chainTop}
+                      chainBottom={chainBottom}
+                      renderCustomSeparator={renderCustomSeparator}
+                    />
+                  </MessageProvider>
+                );
+              })
+            }
+            {
+              localMessages.map((m, idx) => {
+                const {
+                  chainTop,
+                  chainBottom,
+                } = getMessagePartsInfo({
+                  allMessages: allMessagesFiltered,
+                  replyType,
+                  isMessageGroupingEnabled,
+                  currentIndex: idx,
+                  currentMessage: m,
+                  currentChannel: currentGroupChannel,
+                });
+                const isByMe = (m as UserMessage)?.sender?.userId === store?.config?.userId;
+                return (
+                  <MessageProvider message={m} key={m?.messageId} isByMe={isByMe}>
+                    <Message
+                      handleScroll={moveScroll}
+                      renderMessage={renderMessage}
+                      message={m}
+                      chainTop={chainTop}
+                      chainBottom={chainBottom}
+                      renderCustomSeparator={renderCustomSeparator}
+                    />
+                  </MessageProvider>
+                );
+              })
+            }
+            {/* show frozen notifications, */}
+            {/* show new message notifications, */}
+          </div>
+        </div>
+        {currentGroupChannel?.isFrozen && (
+          <FrozenNotification className="sendbird-conversation__messages__notification" />
+        )}
+        {unreadSince && (
+          <UnreadCount
+            className="sendbird-conversation__messages__notification"
+            count={currentGroupChannel?.unreadMessageCount}
+            time={unreadSince}
+            onClick={() => {
+              if (scrollRef?.current?.scrollTop) {
+                scrollRef.current.scrollTop = (scrollRef?.current?.scrollHeight ?? 0) - (scrollRef?.current?.offsetHeight ?? 0);
+              }
+              if (!disableMarkAsRead && !!currentGroupChannel) {
+                markAsReadScheduler.push(currentGroupChannel);
+                messagesDispatcher({
+                  type: messageActionTypes.MARK_AS_READ,
+                  payload: { channel: currentGroupChannel },
+                });
+              }
+              setInitialTimeStamp(null);
+              setAnimatedMessageId(null);
+              setHighLightedMessageId(null);
+            }}
+          />
+        )}
+        {
+          // This flag is an unmatched variable
+          scrollBottom > SCROLL_BOTTOM_PADDING && (
+            <div
+              className="sendbird-conversation__scroll-bottom-button"
+              onClick={onClickScrollBot}
+              onKeyDown={onClickScrollBot}
+              tabIndex={0}
+              role="button"
+            >
+              <Icon
+                width="24px"
+                height="24px"
+                type={IconTypes.CHEVRON_DOWN}
+                fillColor={IconColors.PRIMARY}
+              />
+            </div>
+          )
+        }
+      </div>
+    </>
   );
 };
 

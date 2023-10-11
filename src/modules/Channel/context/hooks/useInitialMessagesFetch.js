@@ -10,14 +10,17 @@ function useInitialMessagesFetch({
   userFilledMessageListQuery,
   initialTimeStamp,
   replyType,
+  setIsScrolled,
 }, {
   logger,
   scrollRef,
   messagesDispatcher,
 }) {
   const channelUrl = currentGroupChannel?.url;
+
   useEffect(() => {
     logger.info('Channel useInitialMessagesFetch: Setup started', currentGroupChannel);
+    setIsScrolled(false);
     messagesDispatcher({
       type: messageActionTypes.RESET_MESSAGES,
       payload: null,
@@ -78,10 +81,10 @@ function useInitialMessagesFetch({
         })
         .finally(() => {
           if (!initialTimeStamp) {
-            setTimeout(() => utils.scrollIntoLast(0, scrollRef));
+            setTimeout(() => utils.scrollIntoLast(0, scrollRef, setIsScrolled));
           } else {
             setTimeout(() => {
-              utils.scrollToRenderedMessage(scrollRef, initialTimeStamp);
+              utils.scrollToRenderedMessage(scrollRef, initialTimeStamp, setIsScrolled);
             }, 500);
           }
         });
