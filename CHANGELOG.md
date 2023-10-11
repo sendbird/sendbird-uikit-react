@@ -1,9 +1,13 @@
 # Changelog - v3
-
-## [v3.6.9] (Oct 6 2023)
+## [v3.6.10] (Oct 11 2023)
 ### Fixes:
 * (in Safari) Display the placeholder of the MessageInput when the input text is cleared
 * Remove duplicated CSS line
+* (in iOS) fix focusing on the chat screen starts from the top in Mobile device
+* Move to the top in the ChannelList when the current user but a different peer sends a message
+  
+## [v3.6.9] (Oct 6 2023)
+### Fixes:
 * Able to see the quoted messages regardless of the ReplyType
 * Improve the types of the function props of `ui/MessageInput` component
   ```ts
