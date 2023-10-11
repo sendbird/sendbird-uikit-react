@@ -23,12 +23,14 @@ export function useHandleOnScrollCallback({
   onScroll,
   scrollRef,
   setShowScrollDownButton,
+  setIsScrolled,
 }: UseHandleOnScrollCallbackProps): () => void {
   const scrollCb = useCallback(() => {
     const element = scrollRef?.current;
     if (element == null) {
       return;
     }
+    setIsScrolled(false);
 
     const {
       scrollTop,
@@ -56,6 +58,7 @@ export function useHandleOnScrollCallback({
         element.scrollTop = scrollTop - (scrollHeight - element.scrollHeight);
       });
     }
+    setIsScrolled(true);
   }, [
     setShowScrollDownButton,
     hasMore,
