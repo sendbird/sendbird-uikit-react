@@ -29,6 +29,7 @@ export interface CreateChannelProviderProps {
   overrideInviteUser?(params: OverrideInviteUserType): void;
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
   userListQuery?(): UserListQuery;
+  excludeSelf?: boolean;
 }
 
 type CreateChannel = (channelParams: GroupChannelCreateParams) => Promise<GroupChannel>;
@@ -44,6 +45,7 @@ export interface CreateChannelContextInterface {
   setStep: React.Dispatch<React.SetStateAction<number>>,
   type: CHANNEL_TYPE,
   setType: React.Dispatch<React.SetStateAction<CHANNEL_TYPE>>,
+  excludeSelf?: boolean
 }
 
 const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: CreateChannelProviderProps) => {
@@ -53,6 +55,7 @@ const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: Crea
     onBeforeCreateChannel,
     overrideInviteUser,
     userListQuery,
+    excludeSelf
   } = props;
 
   const store = useSendbirdStateContext();
@@ -74,6 +77,7 @@ const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: Crea
       setStep,
       type,
       setType,
+      excludeSelf
     }}>
       {children}
     </CreateChannelContext.Provider>
