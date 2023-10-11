@@ -61,18 +61,6 @@ export default function reducer(state, action) {
         allMessages: [...messages],
       };
     }
-    case actionTypes.INITIAL_MESSAGES_IS_SCROLLED: {
-      const {
-        currentGroupChannel,
-      } = action.payload;
-      if (!(currentGroupChannel?.url === state.currentGroupChannel?.url)) {
-        return state;
-      }
-      return {
-        ...state,
-        isScrolled: true,
-      };
-    }
     case actionTypes.FETCH_PREV_MESSAGES_SUCCESS: {
       const {
         currentGroupChannel,

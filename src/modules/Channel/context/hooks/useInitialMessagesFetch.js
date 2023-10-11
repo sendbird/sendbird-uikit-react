@@ -18,15 +18,6 @@ function useInitialMessagesFetch({
   const [isScrolled, setIsScrolled] = useState(false);
   const channelUrl = currentGroupChannel?.url;
 
-  function dispatchIsScrolled() {
-    messagesDispatcher({
-      type: messageActionTypes.INITIAL_MESSAGES_IS_SCROLLED,
-      payload: {
-        currentGroupChannel,
-      },
-    });
-  }
-
   useEffect(() => {
     logger.info('Channel useInitialMessagesFetch: Setup started', currentGroupChannel);
     setIsScrolled(false);
@@ -90,10 +81,10 @@ function useInitialMessagesFetch({
         })
         .finally(() => {
           if (!initialTimeStamp) {
-            setTimeout(() => utils.scrollIntoLast(0, scrollRef, dispatchIsScrolled));
+            setTimeout(() => utils.scrollIntoLast(0, scrollRef, setIsScrolled));
           } else {
             setTimeout(() => {
-              utils.scrollToRenderedMessage(scrollRef, initialTimeStamp, dispatchIsScrolled);
+              utils.scrollToRenderedMessage(scrollRef, initialTimeStamp, setIsScrolled);
             }, 500);
           }
         });

@@ -242,7 +242,6 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     localMessages,
     loading,
     initialized,
-    isScrolled,
     unreadSince,
     isInvalid,
     currentGroupChannel,
@@ -353,7 +352,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   // to be clear here useGetChannel sets currentGroupChannel
   // and useInitialMessagesFetch executes when currentGroupChannel changes
   // p.s This one executes on initialTimeStamp change too
-  useInitialMessagesFetch({
+  const [isScrolled] = useInitialMessagesFetch({
     currentGroupChannel,
     userFilledMessageListQuery,
     initialTimeStamp,
@@ -481,7 +480,6 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       localMessages,
       loading,
       initialized,
-      isScrolled,
       unreadSince,
       isInvalid,
       currentGroupChannel,
@@ -519,6 +517,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       scrollRef,
       scrollBehavior,
       toggleReaction,
+      isScrolled,
     }}>
       <UserProfileProvider
         disableUserProfile={props?.disableUserProfile ?? config?.disableUserProfile}

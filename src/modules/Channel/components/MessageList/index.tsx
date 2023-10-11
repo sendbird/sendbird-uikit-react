@@ -228,7 +228,7 @@ const MessageList: React.FC<MessageListProps> = ({
     }
     return <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />;
   }
-  
+
   return (
     <>
       {
