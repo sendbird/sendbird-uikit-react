@@ -160,7 +160,7 @@ export default function reducer(state, action) {
             allChannels: getChannelsWithUpsertedChannel(allChannels, channel),
           };
         }
-        const nextChannel = (channel?.url === state.currentChannel?.url)
+        const nextChannel = (channel?.url === state?.currentChannel?.url)
           ? state.allChannels[state.allChannels[0].url === channel?.url ? 1 : 0]
           // if coming channel is first of channel list, current channel will be the next one
           : state.currentChannel;
@@ -170,16 +170,17 @@ export default function reducer(state, action) {
           allChannels: state.allChannels.filter(({ url }) => url !== channel?.url),
         };
       }
-      // if its only an unread message count change, dont push to top
-      if (unreadMessageCount === 0) {
-        const currentChannel = allChannels.find(({ url }) => url === channel?.url);
-        const currentUnreadCount = currentChannel && currentChannel.unreadMessageCount;
-        if (currentUnreadCount === 0) {
-          return {
-            ...state,
-            allChannels: state.allChannels.map((ch) => (ch.url === channel?.url ? channel : ch)),
-          };
-        }
+
+      if (
+        unreadMessageCount === 0
+        // Do not move to the top when marking as read the channel
+        && channel?.lastMessage?.sender?.userId !== state.currentUserId
+        // Move to the top when the current user but different peer sends the message
+      ) {
+        return {
+          ...state,
+          allChannels: state.allChannels.map((ch) => (ch.url === channel?.url ? channel : ch)),
+        };
       }
       return {
         ...state,
