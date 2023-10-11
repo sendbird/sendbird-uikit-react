@@ -56,7 +56,6 @@ const MessageList: React.FC<MessageListProps> = ({
     replyType,
     loading,
     isScrolled,
-    setIsScrolled,
     unreadSince,
   } = useChannelContext();
 
