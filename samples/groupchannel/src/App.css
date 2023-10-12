@@ -1,15 +1,13 @@
-.customized-app {
-  height: calc(100vh - 20px);
+.App {
+  height: 100vh;
+  display: flex;
 }
 
-/* will be duplicated */
-.sendbird-channel-preview__avatar .sendbird-chat-header__avatar {
-  width: 56px !important;
-  height: 56px !important;
+.sendbird-app__conversation-wrap {
+  flex: 1;
 }
-.sendbird-channel-preview__avatar
-  .sendbird-chat-header__avatar
-  .sendbird-image-renderer.sendbird-avatar-img {
-  width: 56px !important;
-  height: 56px !important;
+
+/* Cheap trick to hide info button */
+.sendbird-chat-header__right__info {
+  display: none;
 }
