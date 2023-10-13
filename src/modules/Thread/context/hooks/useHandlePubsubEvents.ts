@@ -4,7 +4,7 @@ import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdStat
 import topics from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from '../utils';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
-import { SendableMessageType } from '../../../../utils';
+import {isMultipleFilesMessage, SendableMessageType} from '../../../../utils';
 
 interface DynamicProps {
   sdkInit: boolean;
@@ -31,6 +31,28 @@ export default function useHandlePubsubEvents({
       if (!pubSub || !pubSub.subscribe) {
         return subscriber;
       }
+      subscriber.set(topics.SEND_MESSAGE_START, pubSub.subscribe(topics.SEND_MESSAGE_START, (props) => {
+        const { channel, message } = props;
+        if (currentChannel?.url === channel?.url
+          && message?.parentMessageId === parentMessage?.messageId
+        ) {
+          if (isMultipleFilesMessage(message)) {
+            threadDispatcher({
+              type: ThreadContextActionTypes.SEND_MESSAGE_START,
+              payload: {
+                message: {
+                  ...message,
+                  fileInfoList: message.messageParams.fileInfoList.map((fileInfo) => ({
+                    ...fileInfo,
+                    url: URL.createObjectURL(fileInfo.file as File),
+                  })),
+                },
+              },
+            });
+          }
+        }
+        scrollIntoLast?.();
+      }));
       subscriber.set(topics.SEND_USER_MESSAGE, pubSub.subscribe(topics.SEND_USER_MESSAGE, (props) => {
         const { channel, message } = props;
         if (currentChannel?.url === channel?.url
@@ -93,5 +115,5 @@ export default function useHandlePubsubEvents({
         }
       });
     };
-  }, [sdkInit, currentChannel]);
+  }, [sdkInit, currentChannel, parentMessage?.messageId]);
 }
