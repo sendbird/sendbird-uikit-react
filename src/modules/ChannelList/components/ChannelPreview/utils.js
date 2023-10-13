@@ -78,10 +78,7 @@ const getPrettyLastMessage = (message = null) => {
     return getChannelPreviewFileDisplayString(message.type);
   }
   if (message.isMultipleFilesMessage()) {
-    const { fileInfoList } = message;
-    return fileInfoList.length > 0
-      ? getChannelPreviewFileDisplayString(fileInfoList[0].mimeType)
-      : '';
+    return 'Photo';
   }
   return message.message ?? '';
 };
