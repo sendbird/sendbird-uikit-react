@@ -3,7 +3,8 @@ import format from 'date-fns/format';
 import isThisYear from 'date-fns/isThisYear';
 import isYesterday from 'date-fns/isYesterday';
 import {
-  isGif, isImage, isVideo,
+  isAudio,
+  isGif, isImage, isVideo, isVoiceMessageMimeType,
 } from '../../../../utils';
 import { LabelStringSet } from '../../../../ui/Label';
 
@@ -61,6 +62,12 @@ const getChannelPreviewFileDisplayString = (mimeType) => {
   }
   if (isVideo(mimeType)) {
     return 'Video';
+  }
+  if (isAudio(mimeType)) {
+    return 'Audio';
+  }
+  if (isVoiceMessageMimeType(mimeType)) {
+    return 'Voice message';
   }
   return 'File';
 };
