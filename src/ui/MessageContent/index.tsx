@@ -163,7 +163,7 @@ export default function MessageContent({
     isMobile,
   });
   // For MultipleFilesMessage only.
-  const updatedFileInfoList = useStatefulFileInfoList(message);
+  const statefulFileInfoList = useStatefulFileInfoList(message);
 
   if (message?.isAdminMessage?.() || message?.messageType === 'admin') {
     return (<ClientAdminMessage message={message as AdminMessage} />);
@@ -344,7 +344,7 @@ export default function MessageContent({
               mouseHover={mouseHover}
               isReactionEnabled={isReactionEnabledInChannel}
               threadMessageKindKey={threadMessageKindKey}
-              updatedFileInfoList={updatedFileInfoList}
+              statefulFileInfoList={statefulFileInfoList}
             />
           )}
           {isVoiceMessage(message as FileMessage) && (

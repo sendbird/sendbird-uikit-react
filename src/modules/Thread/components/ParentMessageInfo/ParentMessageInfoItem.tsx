@@ -67,7 +67,7 @@ export default function ParentMessageInfoItem({
     isMobile,
   });
   // For MultipleFilesMessage only.
-  const updatedFileInfoList = useStatefulFileInfoList(message);
+  const statefulFileInfoList = useStatefulFileInfoList(message);
   const isMentionedMessage = isMentionEnabled
     && message?.mentionedMessageTemplate?.length > 0
     && message?.mentionedUsers?.length > 0;
@@ -213,7 +213,7 @@ export default function ParentMessageInfoItem({
             isByMe={false}
             isReactionEnabled={isReactionEnabled}
             threadMessageKindKey={threadMessageKindKey}
-            updatedFileInfoList={updatedFileInfoList}
+            statefulFileInfoList={statefulFileInfoList}
           />
         )
       }

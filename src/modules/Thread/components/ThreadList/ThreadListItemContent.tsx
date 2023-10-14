@@ -127,7 +127,7 @@ export default function ThreadListItemContent({
     isMobile,
   });
   // For MultipleFilesMessage only.
-  const updatedFileInfoList = useStatefulFileInfoList(message);
+  const statefulFileInfoList = useStatefulFileInfoList(message);
 
   return (
     <div
@@ -272,7 +272,7 @@ export default function ThreadListItemContent({
                 isByMe={isByMe}
                 isReactionEnabled={isReactionEnabled}
                 threadMessageKindKey={threadMessageKindKey}
-                updatedFileInfoList={updatedFileInfoList}
+                statefulFileInfoList={statefulFileInfoList}
               />
             )
           }

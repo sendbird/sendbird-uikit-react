@@ -29,7 +29,7 @@ interface Props {
   isReactionEnabled?: boolean;
   truncateLimit?: number;
   threadMessageKindKey?: string;
-  updatedFileInfoList?: StatefulFileInfo[];
+  statefulFileInfoList?: StatefulFileInfo[];
 }
 
 export default function MultipleFilesMessageItemBody({
@@ -37,7 +37,7 @@ export default function MultipleFilesMessageItemBody({
   message,
   isReactionEnabled = false,
   threadMessageKindKey,
-  updatedFileInfoList = [],
+  statefulFileInfoList = [],
 }: Props): ReactElement {
   const [currentFileViewerIndex, setCurrentFileViewerIndex] = useState(-1);
 
@@ -48,14 +48,14 @@ export default function MultipleFilesMessageItemBody({
   function onClickLeft() {
     setCurrentFileViewerIndex(
       currentFileViewerIndex === 0
-        ? updatedFileInfoList.length - 1
+        ? statefulFileInfoList.length - 1
         : currentFileViewerIndex - 1,
     );
   }
 
   function onClickRight() {
     setCurrentFileViewerIndex(
-      currentFileViewerIndex === updatedFileInfoList.length - 1
+      currentFileViewerIndex === statefulFileInfoList.length - 1
         ? 0
         : currentFileViewerIndex + 1,
     );
@@ -80,11 +80,11 @@ export default function MultipleFilesMessageItemBody({
         isReactionEnabled={isReactionEnabled}
       >
         {
-          updatedFileInfoList.map((fileInfo: StatefulFileInfo, index: number) => {
+          statefulFileInfoList.map((fileInfo: StatefulFileInfo, index: number) => {
             return <div
               className='sendbird-multiple-files-image-renderer-wrapper'
               onClick={() => setCurrentFileViewerIndex(index)}
-              key={`sendbird-multiple-files-image-renderer-${index}-${fileInfo.plainUrl}`}
+              key={`sendbird-multiple-files-image-renderer-${index}-${fileInfo.url}`}
             >
               <ImageRenderer
                 url={fileInfo.url}
