@@ -13,7 +13,7 @@ import {
   isUserMessage,
   isSentMessage,
   isFailedMessage,
-  isPendingMessage, SendableMessageType,
+  isPendingMessage, SendableMessageType, isMultipleFilesMessage,
 } from '../../utils/index';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { Role } from '../../lib/types';
@@ -209,7 +209,7 @@ export default function MessageItemMenu({
                 <MenuItem
                   className="sendbird-message-item-menu__list__menu-item menu-item-delete"
                   onClick={() => {
-                    if (!disabled) {
+                    if (isMultipleFilesMessage(message) || !disabled) {
                       showRemove(true);
                       closeDropdown();
                     }

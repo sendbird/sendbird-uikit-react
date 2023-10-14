@@ -8,6 +8,9 @@
   .sendbird-dropdown__menu .sendbird-dropdown__menu-item {
     cursor: not-allowed;
   }
+  .sendbird-message-item-menu__list__menu-item.menu-item-delete {
+    cursor: pointer;
+  }
 }
 
 .sendbird-dropdown__menu {
