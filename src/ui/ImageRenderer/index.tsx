@@ -1,4 +1,4 @@
-import React, { useState, useMemo, ReactElement } from 'react';
+import React, { useState, useMemo, ReactElement, useEffect } from 'react';
 
 import './index.scss';
 import numberToPx from '../../utils/numberToPx';
@@ -64,7 +64,6 @@ const ImageRenderer = ({
     maxSideLength,
     defaultMinLength: '400px',
   });
-
   const DefaultComponent = useMemo(() => {
     return typeof defaultComponent === 'function'
       ? defaultComponent()
@@ -87,6 +86,18 @@ const ImageRenderer = ({
       })
       : null;
   }, [placeHolder]);
+
+  /**
+   * This hook displays default component if url is undefined.
+   */
+  useEffect(() => {
+    if (!url) {
+      setShowDefaultComponent(true);
+      onError();
+    } else {
+      setShowDefaultComponent(false);
+    }
+  }, [url]);
 
   const HiddenImageLoader = useMemo(() => {
     setShowDefaultComponent(false);

@@ -1,7 +1,7 @@
 import './index.scss';
 
 import React, { MouseEvent, ReactElement, useContext, useRef } from 'react';
-import { FileMessage, MultipleFilesMessage, SendingStatus, UploadedFileInfo } from '@sendbird/chat/message';
+import { FileMessage, MultipleFilesMessage } from '@sendbird/chat/message';
 import { createPortal } from 'react-dom';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { MODAL_ROOT } from '../../hooks/useModal';
@@ -15,6 +15,7 @@ import { useKeyDown } from './hooks/useKeyDown';
 import { mapFileViewerComponentProps } from './utils';
 import { DeleteButton } from './DeleteButton';
 import { Slider } from './Slider';
+import { StatefulFileInfo } from '../../utils/createStatefulFileInfoList';
 
 export const FileViewerComponent = (props: FileViewerComponentProps): ReactElement => {
   const ref = useRef<HTMLDivElement>(null);
@@ -127,6 +128,7 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
 
 export interface FileViewerProps {
   message?: FileMessage | MultipleFilesMessage;
+  statefulFileInfoList?: StatefulFileInfo[]
   isByMe?: boolean;
   currentIndex?: number;
   onClose: (e: MouseEvent) => void;
@@ -137,6 +139,7 @@ export interface FileViewerProps {
 
 export default function FileViewer({
   message,
+  statefulFileInfoList = [],
   onClose,
   isByMe = false,
   onDelete,
@@ -152,10 +155,9 @@ export default function FileViewer({
         nickname={castedMessage.sender.nickname}
         viewerType={ViewerTypes.MULTI}
         fileInfoList={
-          (castedMessage.sendingStatus === SendingStatus.SUCCEEDED
-            ? castedMessage.fileInfoList
-            : castedMessage['statefulFileInfoList']
-          ).map((fileInfo: UploadedFileInfo): FileInfo => {
+          statefulFileInfoList.filter((fileInfo: StatefulFileInfo) => {
+            return fileInfo.url; // Caution: This assumes that defined url means file upload has completed.
+          }).map((fileInfo: StatefulFileInfo): FileInfo => {
             return {
               name: fileInfo.fileName || '',
               type: fileInfo.mimeType || '',

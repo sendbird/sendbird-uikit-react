@@ -58,9 +58,18 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with four element
         style="width: 100%; min-width: min(400px, 56px); max-width: 400px;"
       >
         <div
-          class="sendbird-image-renderer__image"
-          style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url();"
-        />
+          class="sendbird-avatar-img--default"
+          style="width: 56px; height: 56px;"
+        >
+          <div
+            class=" sendbird-icon sendbird-icon-user sendbird-icon-color--content"
+            role="button"
+            style="width: 32.199999999999996px; min-width: 32.199999999999996px; height: 32.199999999999996px; min-height: 32.199999999999996px;"
+            tabindex="0"
+          >
+            <test-file-stub />
+          </div>
+        </div>
         <img
           alt=""
           class="sendbird-image-renderer__hidden-image-loader"
@@ -217,9 +226,18 @@ exports[`ui/Avatar should render default image if src is empty 1`] = `
       style="width: 100%; min-width: min(400px, 56px); max-width: 400px;"
     >
       <div
-        class="sendbird-image-renderer__image"
-        style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url();"
-      />
+        class="sendbird-avatar-img--default"
+        style="width: 56px; height: 56px;"
+      >
+        <div
+          class=" sendbird-icon sendbird-icon-user sendbird-icon-color--content"
+          role="button"
+          style="width: 32.199999999999996px; min-width: 32.199999999999996px; height: 32.199999999999996px; min-height: 32.199999999999996px;"
+          tabindex="0"
+        >
+          <test-file-stub />
+        </div>
+      </div>
       <img
         alt=""
         class="sendbird-image-renderer__hidden-image-loader"

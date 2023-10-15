@@ -1,7 +1,7 @@
 import React, { ReactElement, useState } from 'react';
 
 import Icon, { IconColors, IconTypes } from '../Icon';
-import { MultipleFilesMessage } from '@sendbird/chat/message';
+import { MultipleFilesMessage, SendingStatus } from '@sendbird/chat/message';
 import ImageRenderer from '../ImageRenderer';
 import ImageGrid from '../ImageGrid';
 import FileViewer from '../FileViewer';
@@ -67,6 +67,7 @@ export default function MultipleFilesMessageItemBody({
         currentFileViewerIndex > -1 && (
           <FileViewer
             message={message}
+            statefulFileInfoList={statefulFileInfoList}
             currentIndex={currentFileViewerIndex}
             onClickLeft={onClickLeft}
             onClickRight={onClickRight}
@@ -81,9 +82,14 @@ export default function MultipleFilesMessageItemBody({
       >
         {
           statefulFileInfoList.map((fileInfo: StatefulFileInfo, index: number) => {
+            const isGifValue = isGif(fileInfo.mimeType);
             return <div
               className='sendbird-multiple-files-image-renderer-wrapper'
-              onClick={() => setCurrentFileViewerIndex(index)}
+              onClick={
+                message.sendingStatus === SendingStatus.SUCCEEDED
+                  ? () => setCurrentFileViewerIndex(index)
+                  : undefined
+              }
               key={`sendbird-multiple-files-image-renderer-${index}-${fileInfo.url}`}
             >
               <ImageRenderer
@@ -94,18 +100,27 @@ export default function MultipleFilesMessageItemBody({
                 height={MULTIPLE_FILES_IMAGE_SIDE_LENGTH[threadMessageKindKey]}
                 borderRadius={MULTIPLE_FILES_IMAGE_BORDER_RADIUS[threadMessageKindKey]}
                 shadeOnHover={true}
-                isGif={isGif(fileInfo.mimeType)}
-                isUploaded={fileInfo.isUploaded}
+                isGif={isGifValue}
+                isUploaded={!!fileInfo.url} // Caution: This assumes that defined url means file upload has completed.
                 defaultComponent={
-                  <div
-                    className="sendbird-multiple-files-image-renderer__thumbnail__placeholder"
-                  >
-                    <Icon
-                      type={IconTypes.THUMBNAIL_NONE}
-                      fillColor={IconColors.ON_BACKGROUND_2}
-                      width={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
-                      height={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
-                    />
+                  <div className="sendbird-multiple-files-image-renderer__thumbnail__placeholder">
+                    {
+                      isGifValue
+                        ? <div className="sendbird-multiple-files-image-renderer__thumbnail__placeholder__icon">
+                          <Icon
+                            type={IconTypes.GIF}
+                            fillColor={IconColors.THUMBNAIL_ICON}
+                            width={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
+                            height={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
+                          />
+                        </div>
+                        : <Icon
+                          type={IconTypes.THUMBNAIL_NONE}
+                          fillColor={IconColors.ON_BACKGROUND_2}
+                          width={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
+                          height={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
+                        />
+                    }
                   </div>
                 }
               />

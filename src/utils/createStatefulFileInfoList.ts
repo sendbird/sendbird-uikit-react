@@ -34,6 +34,15 @@ export function createStatefulFileInfoList(message: MultipleFilesMessage): State
       fileSize: fileInfo.fileSize,
       mimeType: fileInfo.mimeType,
       url: fileInfo.fileUrl,
+      // Or we can replace above with the one below instead but it will
+      // rerender image upon upload success which looks bad and slow.
+      /*
+      url: fileInfo.fileUrl ?? (
+        fileInfo.file instanceof Blob
+          ? URL.createObjectURL(fileInfo.file)
+          : undefined
+      ),
+       */
       /**
        * Side note: It was a bad design to not include this property by SDK.
        * Because if original object has fileUrl set and no file, then uploaded result remains
