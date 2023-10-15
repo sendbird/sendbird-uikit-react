@@ -235,26 +235,44 @@ export default function reducer(state, action) {
     }
     case actions.ON_CHANNEL_UNFROZEN: {
       const channel = action.payload;
-      if (state.channelListQuery) {
-        if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
+      const {
+        allChannels,
+        currentUserId,
+        currentChannel,
+        channelListQuery,
+        disableAutoSelect,
+      } = state;
+      if (channelListQuery) {
+        if (filterChannelListParams(channelListQuery, channel, currentUserId)) {
+          // Good to [add to/keep in] the ChannelList
           return {
             ...state,
-            allChannels: getChannelsWithUpsertedChannel(state.allChannels, channel),
+            allChannels: getChannelsWithUpsertedChannel(allChannels, channel),
           };
         }
-        const nextChannel = (channel?.url === state.currentChannel?.url)
-          ? state.allChannels[state.allChannels[0].url === channel?.url ? 1 : 0]
-          // if coming channel is first of channel list, current channel will be the next one
-          : state.currentChannel;
+        // Filter the channel from the ChannelList
+        // Replace the currentChannel if it's filtered channel
+        const filteredChannel = channel;
+        let nextChannel = null;
+        if (currentChannel?.url === filteredChannel.url) {
+          if (!disableAutoSelect && allChannels.length > 0) {
+            const [firstChannel, secondChannel = null] = allChannels;
+            nextChannel = firstChannel.url === filteredChannel.url ? secondChannel : firstChannel;
+          }
+        } else {
+          nextChannel = currentChannel;
+        }
         return {
           ...state,
-          allChannels: state.allChannels.filter(({ url }) => url !== channel?.url),
-          currentChannel: state.disableAutoSelect ? null : nextChannel,
+          currentChannel: nextChannel,
+          allChannels: allChannels.filter(({ url }) => url !== channel?.url),
         };
       }
+
+      // No channelListQuery
       return {
         ...state,
-        allChannels: state.allChannels.map((ch) => {
+        allChannels: allChannels.map((ch) => {
           if (ch.url === channel?.url) {
             // eslint-disable-next-line no-param-reassign
             ch.isFrozen = false;
