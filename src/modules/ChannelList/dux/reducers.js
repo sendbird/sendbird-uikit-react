@@ -145,48 +145,69 @@ export default function reducer(state, action) {
         allChannels: filteredChannels,
       };
     }
-    case actions.ON_USER_JOINED:
+    case actions.ON_USER_JOINED: {
+      const channel = action.payload;
+      // Do not display the channel when it's created (and not sent a message yet)
+      if (!channel?.lastMessage) return state;
+    }
     case actions.ON_CHANNEL_CHANGED:
     case actions.ON_READ_RECEIPT_UPDATED:
     case actions.ON_DELIVERY_RECEIPT_UPDATED: {
-      const { allChannels = [] } = state;
       const channel = action.payload;
+      const {
+        allChannels = [],
+        currentUserId,
+        currentChannel,
+        channelListQuery,
+        disableAutoSelect,
+      } = state;
       const { unreadMessageCount } = channel;
-      if (!channel?.lastMessage) return state;
-      if (state.channelListQuery) {
-        if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
+
+      if (channelListQuery) {
+        if (filterChannelListParams(channelListQuery, channel, currentUserId)) {
+          // Good to [add to/keep in] the ChannelList
           return {
             ...state,
             allChannels: getChannelsWithUpsertedChannel(allChannels, channel),
           };
         }
-        const nextChannel = (channel?.url === state?.currentChannel?.url)
-          ? state.allChannels[state.allChannels[0].url === channel?.url ? 1 : 0]
-          // if coming channel is first of channel list, current channel will be the next one
-          : state.currentChannel;
+        // Filter the channel from the ChannelList
+        // Replace the currentChannel if it's filtered channel
+        const filteredChannel = channel;
+        let nextChannel = null;
+        if (currentChannel?.url === filteredChannel.url) {
+          if (!disableAutoSelect && allChannels.length > 0) {
+            const [firstChannel, secondChannel = null] = allChannels;
+            nextChannel = firstChannel.url === filteredChannel.url ? secondChannel : firstChannel;
+          }
+        } else {
+          nextChannel = currentChannel;
+        }
         return {
           ...state,
-          currentChannel: state.disableAutoSelect ? null : nextChannel,
-          allChannels: state.allChannels.filter(({ url }) => url !== channel?.url),
+          currentChannel: nextChannel,
+          allChannels: allChannels.filter(({ url }) => url !== channel?.url),
         };
       }
 
       if (
+        // When marking as read the channel
         unreadMessageCount === 0
-        // Do not move to the top when marking as read the channel
-        && channel?.lastMessage?.sender?.userId !== state.currentUserId
-        // Move to the top when the current user but different peer sends the message
+        // When sending a message by the current peer
+        && channel?.lastMessage?.sender?.userId !== currentUserId
       ) {
+        // Don't move to the top
         return {
           ...state,
-          allChannels: state.allChannels.map((ch) => (ch.url === channel?.url ? channel : ch)),
+          allChannels: allChannels.map((ch) => (ch.url === channel?.url ? channel : ch)),
         };
       }
+      // Move to the top
       return {
         ...state,
         allChannels: [
           channel,
-          ...state.allChannels.filter(({ url }) => url !== action.payload.url),
+          ...allChannels.filter(({ url }) => url !== channel.url),
         ],
       };
     }
