@@ -115,7 +115,7 @@ export default function MultipleFilesMessageItemBody({
                           />
                         </div>
                         : <Icon
-                          type={IconTypes.THUMBNAIL_NONE}
+                          type={IconTypes.PHOTO}
                           fillColor={IconColors.ON_BACKGROUND_2}
                           width={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
                           height={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
