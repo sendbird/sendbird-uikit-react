@@ -4,43 +4,48 @@ import SendbirdProvider from '../../../lib/Sendbird';
 
 import { useVoiceRecorder } from '../useVoiceRecorder';
 import { useVoicePlayer } from '../../VoicePlayer/useVoicePlayer';
+import { LoggerFactory } from '../../../lib/Logger';
 
 export default { title: 'globalcontext/voice-recorder' };
-
+const logger = LoggerFactory('all');
 const Tester = () => {
   const [currentAudio, setAudioFile] = useState(null);
 
   const { start, stop, recordingTime, recordingStatus } = useVoiceRecorder({
     onRecordingStarted: () => {
-      console.log('onRecordingStarted')
+      logger.info('onRecordingStarted');
     },
     onRecordingEnded: (recordedFile) => {
-      console.log('onRecordingEnded', recordedFile)
+      logger.info('onRecordingEnded', recordedFile);
       setAudioFile(recordedFile);
     },
   });
-  const { play, pause, playbackTime, playingStatus, duration } = useVoicePlayer({
-    key: 'unique-key',
-    channelUrl: 'channel-url',
-    audioFile: currentAudio,
-  });
+  const { play, pause, playbackTime, playingStatus, duration } = useVoicePlayer(
+    {
+      key: 'unique-key',
+      channelUrl: 'channel-url',
+      audioFile: currentAudio,
+    },
+  );
 
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '18px',
-      justifyContent: 'center',
-      alignItems: 'center',
-      position: 'relative',
-      width: '98vw',
-      height: '98vh',
-    }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '18px',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'relative',
+        width: '98vw',
+        height: '98vh',
+      }}
+    >
       <input
         value="start"
         type="button"
         onClick={() => {
-          console.log('on start clicked')
+          logger.info('on start clicked');
           start();
         }}
       />
@@ -48,7 +53,7 @@ const Tester = () => {
         value="stop"
         type="button"
         onClick={() => {
-          console.log('on stop clicked')
+          logger.info('on stop clicked');
           stop();
         }}
       />
@@ -58,7 +63,7 @@ const Tester = () => {
         value="play"
         type="button"
         onClick={() => {
-          console.log('on play clicked')
+          logger.info('on play clicked');
           play();
         }}
       />
@@ -66,12 +71,14 @@ const Tester = () => {
         value="pause"
         type="button"
         onClick={() => {
-          console.log('on pause clicked')
+          logger.info('on pause clicked');
           pause();
         }}
       />
-      {`${Math.floor(playbackTime)} / ${Math.floor(duration || recordingTime)}`}
-      {playingStatus}
+      <p>
+        {`${Math.floor(playbackTime)} / ${Math.floor(duration || recordingTime)}`}
+      </p>
+      <p>{`status: ${playingStatus}`}</p>
     </div>
   );
 };
@@ -79,10 +86,7 @@ const Tester = () => {
 export const normal = () => {
   return (
     <div>
-      <SendbirdProvider
-        appId={process.env.STORYBOOK_APP_ID}
-        userId="hoon"
-      >
+      <SendbirdProvider appId={process.env.STORYBOOK_APP_ID} userId="hoon">
         <Tester />
       </SendbirdProvider>
     </div>
