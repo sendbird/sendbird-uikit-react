@@ -28,10 +28,14 @@ const RemoveMessage: React.FC<RemoveMessageProps> = (props: RemoveMessageProps) 
       type={ButtonTypes.DANGER}
       disabled={message?.threadInfo?.replyCount > 0}
       onCancel={onCancel}
-      onSubmit={() => { deleteMessage(message).then(() => {
-        onSubmit();
-        onCancel();
-      }); }}
+      onSubmit={() => {
+        deleteMessage(message).then(() => {
+          // For other status such as PENDING, SCHEDULED, and CANCELED,
+          // invalid parameters error is thrown so nothing happens.
+          onSubmit();
+          onCancel();
+        });
+      }}
       submitText={stringSet.MESSAGE_MENU__DELETE}
       titleText={getModalDeleteMessageTitle(stringSet, message)}
     />

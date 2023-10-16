@@ -308,7 +308,7 @@ export default function reducer(state, action) {
     case actionTypes.ON_MESSAGE_DELETED_BY_REQ_ID:
       return {
         ...state,
-        allMessages: state.allMessages.filter((m) => (
+        localMessages: state.localMessages.filter((m) => (
           !compareIds(m.reqId, action.payload)
         )),
       };
