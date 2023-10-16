@@ -141,8 +141,8 @@ export default function reducer(state, action) {
       }
       // Replace the currentChannel if I left the currentChannel
       if (isMe && channel.url === currentChannel?.url) {
-        if (!disableAutoSelect && filteredChannels.length > 0) {
-          const [firstChannel, secondChannel = null] = filteredChannels;
+        if (!disableAutoSelect && allChannels.length > 0) {
+          const [firstChannel, secondChannel = null] = allChannels;
           nextChannel = firstChannel.url === channel.url ? secondChannel : firstChannel;
         }
       } else {
@@ -151,14 +151,10 @@ export default function reducer(state, action) {
       return {
         ...state,
         currentChannel: nextChannel,
-        allChannels: filteredChannels,
+        allChannels: nextChannels,
       };
     }
-    case actions.ON_USER_JOINED: {
-      const channel = action.payload;
-      // Do not display the channel when it's created (and not sent a message yet)
-      if (!channel?.lastMessage) return state;
-    }
+    case actions.ON_USER_JOINED:
     case actions.ON_CHANNEL_CHANGED:
     case actions.ON_READ_RECEIPT_UPDATED:
     case actions.ON_DELIVERY_RECEIPT_UPDATED: {
@@ -171,6 +167,9 @@ export default function reducer(state, action) {
         disableAutoSelect,
       } = state;
       const { unreadMessageCount } = channel;
+
+      // Do not display the channel when it's created (and not sent a message yet)
+      if (action.type === actions.ON_USER_JOINED && !channel?.lastMessage) return state;
 
       if (channelListQuery) {
         if (filterChannelListParams(channelListQuery, channel, currentUserId)) {
