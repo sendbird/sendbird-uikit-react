@@ -1,4 +1,3 @@
-./hooks/useModal/ModalRoot/__tests__/ModalRoot.spec.js: ModalRoot.spec.js
 ./modules/Channel/components/MessageList/__test__/getMessagePartsInfo.spec.js: getMessagePartsInfo.spec.js
 ./modules/Channel/context/__test__/utils.spec.js: utils.spec.js
 ./modules/Channel/context/dux/__tests__/reducers.spec.js: reducers.spec.js
