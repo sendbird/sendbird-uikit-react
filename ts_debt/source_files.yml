@@ -1,6 +1,5 @@
 (Wont do) ./_externals/lamejs/lame.all.js: lame.all.js
 ./hooks/onClickOutside.jsx: onClickOutside.jsx
-./hooks/onMouseHover.jsx: onMouseHover.jsx
 ./hooks/useAppendDomNode.js: useAppendDomNode.js
 ./modules/App/index.jsx: index.jsx
 ./modules/Channel/components/FileViewer/types.js: types.js
