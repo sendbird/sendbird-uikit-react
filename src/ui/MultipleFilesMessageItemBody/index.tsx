@@ -104,7 +104,6 @@ export default function MultipleFilesMessageItemBody({
                   statefulFileInfoList.length,
                 )}
                 shadeOnHover={true}
-                isGif={isGifValue}
                 isUploaded={!!fileInfo.isUploaded}
                 defaultComponent={
                   <div className="sendbird-multiple-files-image-renderer__thumbnail__placeholder">

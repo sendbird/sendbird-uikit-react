@@ -48,7 +48,6 @@ export interface ImageRendererProps {
   onLoad?: () => void;
   onError?: () => void;
   shadeOnHover?: boolean;
-  isGif?: boolean;
   isUploaded?: boolean;
 }
 
@@ -67,7 +66,6 @@ const ImageRenderer = ({
   onLoad = () => { /* noop */ },
   onError = () => { /* noop */ },
   shadeOnHover,
-  isGif = false,
   isUploaded = true,
 }: ImageRendererProps): ReactElement => {
   const [showDefaultComponent, setShowDefaultComponent] = useState(false);
@@ -177,20 +175,6 @@ const ImageRenderer = ({
             ...(isUploaded ? {} : { display: 'inline-flex' }),
           }}
         />
-      }
-      {
-        isGif && (
-          <div className="sendbird-multiple-files-image-renderer__icon-wrapper">
-            <div className="sendbird-multiple-files-image-renderer__icon-wrapper__icon">
-              <Icon
-                type={IconTypes.GIF}
-                fillColor={IconColors.THUMBNAIL_ICON}
-                width="34px"
-                height="34px"
-              />
-            </div>
-          </div>
-        )
       }
     </div>
   );
