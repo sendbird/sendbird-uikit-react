@@ -2,7 +2,6 @@
 ./hooks/onClickOutside.jsx: onClickOutside.jsx
 ./hooks/onMouseHover.jsx: onMouseHover.jsx
 ./hooks/useAppendDomNode.js: useAppendDomNode.js
-./lib/UserProfileContext.jsx: UserProfileContext.jsx
 ./modules/App/index.jsx: index.jsx
 ./modules/Channel/components/FileViewer/types.js: types.js
 ./modules/Channel/context/dux/actionTypes.js: actionTypes.js

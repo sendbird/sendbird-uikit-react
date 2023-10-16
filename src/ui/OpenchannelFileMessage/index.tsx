@@ -56,7 +56,7 @@ export default function OpenchannelFileMessage({
   const contextMenuRef = useRef(null);
   const mobileMenuRef = useRef(null);
   const avatarRef = useRef(null);
-  const { disableUserProfile, renderUserProfile } = useContext<UserProfileContext>(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
 
   const { isMobile } = useMediaQueryContext();
   const openFileUrl = () => { window.open(message.url); };
@@ -113,6 +113,7 @@ export default function OpenchannelFileMessage({
                           renderUserProfile({
                             user: sender,
                             close: closeDropdown,
+                            currentUserId: userId,
                           })
                         )
                         : (

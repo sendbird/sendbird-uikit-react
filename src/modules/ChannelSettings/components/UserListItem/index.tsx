@@ -38,10 +38,7 @@ const UserListItem = ({
   const parentRef = useRef(null);
   const avatarRef = useRef(null);
   const { stringSet } = useContext(LocalizationContext);
-  const {
-    disableUserProfile,
-    renderUserProfile,
-  } = useContext<UserProfileContext>(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const injectingClassNames = Array.isArray(className) ? className : [className];
   return (
     <div

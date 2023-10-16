@@ -36,13 +36,14 @@ import {
   SendableMessageType,
   CoreMessageType,
   isMultipleFilesMessage,
+  isSendableMessage,
 } from '../../utils';
 import { UserProfileContext } from '../../lib/UserProfileContext';
 import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { EmojiContainer } from '@sendbird/chat';
-import { AdminMessage, FileMessage, MultipleFilesMessage, Sender, UserMessage } from '@sendbird/chat/message';
+import { AdminMessage, FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
 import useLongPress from '../../hooks/useLongPress';
 import MobileMenu from '../MobileMenu';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
@@ -54,13 +55,6 @@ import { noop } from '../../utils/utils';
 import MultipleFilesMessageItemBody from '../MultipleFilesMessageItemBody';
 import { useThreadMessageKindKeySelector } from '../../modules/Channel/context/hooks/useThreadMessageKindKeySelector';
 import { useStatefulFileInfoList } from '../../modules/Channel/context/hooks/useStatefulFileInfoList';
-
-// should initialize in UserProfileContext.jsx
-export interface UserProfileContextInterface {
-  disableUserProfile: boolean;
-  isOpenChannel: boolean;
-  renderUserProfile?: (props: { user: Sender, close: () => void }) => React.ReactElement,
-}
 
 interface Props {
   className?: string | Array<string>;
@@ -115,7 +109,7 @@ export default function MessageContent({
   const messageTypes = getUIKitMessageTypes();
   const { dateLocale } = useLocalization();
   const { config } = useSendbirdStateContext?.() || {};
-  const { disableUserProfile, renderUserProfile }: UserProfileContextInterface = useContext(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const avatarRef = useRef(null);
   const contentRef = useRef(null);
   const { isMobile } = useMediaQueryContext();
@@ -177,14 +171,14 @@ export default function MessageContent({
     >
       {/* left */}
       <div className={getClassName(['sendbird-message-content__left', isReactionEnabledClassName, isByMeClassName, useReplyingClassName])}>
-        {(!isByMe && !chainBottom) && (
+        {(!isByMe && !chainBottom && isSendableMessage(message)) && (
           /** user profile */
           <ContextMenu
             menuTrigger={(toggleDropdown: () => void): ReactElement => (
               <Avatar
                 className={`sendbird-message-content__left__avatar ${displayThreadReplies ? 'use-thread-replies' : ''}`}
                 // @ts-ignore
-                src={channel?.members?.find((member) => member?.userId === message?.sender?.userId)?.profileUrl || message?.sender?.profileUrl || ''}
+                src={channel?.members?.find((member) => member?.userId === message.sender.userId)?.profileUrl || message.sender.profileUrl || ''}
                 // TODO: Divide getting profileUrl logic to utils
                 ref={avatarRef}
                 width="28px"
@@ -204,9 +198,7 @@ export default function MessageContent({
                 style={{ paddingTop: '0px', paddingBottom: '0px' }}
               >
                 {renderUserProfile
-                  // @ts-ignore
-                  ? renderUserProfile({ user: message?.sender, close: closeDropdown })
-                  // @ts-ignore
+                  ? renderUserProfile({ user: message.sender, close: closeDropdown, currentUserId: userId })
                   : (<UserProfile user={message.sender} onSuccess={closeDropdown} />)
                 }
               </MenuItems>
@@ -241,7 +233,6 @@ export default function MessageContent({
                 className="sendbird-message-content-menu__reaction-menu"
                 message={message as SendableMessageType}
                 userId={userId}
-                spaceFromTrigger={{}}
                 emojiContainer={emojiContainer}
                 toggleReaction={toggleReaction}
                 setSupposedHover={setSupposedHover}
@@ -428,7 +419,6 @@ export default function MessageContent({
                 className="sendbird-message-content-menu__reaction-menu"
                 message={message as SendableMessageType}
                 userId={userId}
-                spaceFromTrigger={{}}
                 emojiContainer={emojiContainer}
                 toggleReaction={toggleReaction}
                 setSupposedHover={setSupposedHover}

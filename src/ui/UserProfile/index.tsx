@@ -35,7 +35,6 @@ function UserProfile({
   const logger = store?.config?.logger;
   const { stringSet } = useContext(LocalizationContext);
   const currentUserId_ = currentUserId || store?.config?.userId;
-  // @ts-ignore
   const { onUserProfileMessage } = useContext(UserProfileContext);
   return (
     <div className="sendbird__user-profile">

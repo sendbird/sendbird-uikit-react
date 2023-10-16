@@ -9,7 +9,6 @@ import { ReplyType } from '../../../../types';
 import ContextMenu, { MenuItems } from '../../../../ui/ContextMenu';
 import Avatar from '../../../../ui/Avatar';
 import { UserProfileContext } from '../../../../lib/UserProfileContext';
-import { UserProfileContextInterface } from '../../../../ui/MessageContent';
 import UserProfile from '../../../../ui/UserProfile';
 import MessageItemMenu from '../../../../ui/MessageItemMenu';
 import MessageItemReactionMenu from '../../../../ui/MessageItemReactionMenu';
@@ -92,10 +91,7 @@ export default function ThreadListItemContent({
   const { dateLocale } = useLocalization();
   const { config } = useSendbirdStateContext();
   const [supposedHover, setSupposedHover] = useState(false);
-  const {
-    disableUserProfile,
-    renderUserProfile,
-  } = useContext<UserProfileContextInterface>(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const avatarRef = useRef(null);
 
   const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
@@ -159,7 +155,7 @@ export default function ThreadListItemContent({
                 style={{ paddingTop: '0px', paddingBottom: '0px' }}
               >
                 {renderUserProfile
-                  ? renderUserProfile({ user: message?.sender, close: closeDropdown })
+                  ? renderUserProfile({ user: message?.sender, close: closeDropdown, currentUserId: userId })
                   : <UserProfile user={message?.sender} onSuccess={closeDropdown} />
                 }
               </MenuItems>
@@ -190,7 +186,6 @@ export default function ThreadListItemContent({
                 className="sendbird-thread-list-item-content-menu__reaction-menu"
                 message={message as SendableMessageType}
                 userId={userId}
-                spaceFromTrigger={{}}
                 emojiContainer={emojiContainer}
                 toggleReaction={toggleReaction}
                 setSupposedHover={setSupposedHover}
@@ -343,7 +338,6 @@ export default function ThreadListItemContent({
                 className="sendbird-thread-list-item-content-menu__reaction-menu"
                 message={message as SendableMessageType}
                 userId={userId}
-                spaceFromTrigger={{}}
                 emojiContainer={emojiContainer}
                 toggleReaction={toggleReaction}
                 setSupposedHover={setSupposedHover}
