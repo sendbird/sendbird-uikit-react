@@ -11,8 +11,8 @@ export default function useOutsideAlerter({
 }: UseOutsideAlerterParams) {
   const handleClickOutside = (event: MouseEvent) => {
     if (
-      event.target instanceof HTMLElement &&
-      ref.current?.contains(event.target)
+      event.target instanceof HTMLElement
+      && ref.current?.contains(event.target)
     ) {
       callback();
     }

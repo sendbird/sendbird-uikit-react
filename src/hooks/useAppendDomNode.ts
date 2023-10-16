@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 function useAppendDomNode(
   ids: string[] = [],
-  rootSelector: string = 'unknown'
+  rootSelector = 'unknown',
 ) {
   useEffect(() => {
     const root = document.querySelector(rootSelector);
