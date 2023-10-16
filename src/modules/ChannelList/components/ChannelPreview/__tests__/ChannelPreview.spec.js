@@ -94,7 +94,7 @@ describe('ChannelPreview', () => {
     ).toBe('GIF');
     expect(
       getLastMessage(channel7)
-    ).toBe('Video');
+    ).toBe('Photo');
   });
 
   test('utils/getChannelTitle returns channelTitle', function () {
