@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import type { ApplicationUserListQuery, User } from '@sendbird/chat';
+import type { GroupChannelCreateParams, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 
 import './invite-users.scss';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { useCreateChannelContext, UserListQuery } from '../../context/CreateChannelProvider';
+import { useCreateChannelContext } from '../../context/CreateChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import type { GroupChannelCreateParams, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 
 import Modal from '../../../../ui/Modal';
 import Label, {
@@ -20,10 +20,11 @@ import {
   setChannelType,
   createDefaultUserListQuery,
 } from './utils';
+import { noop } from '../../../../utils/utils';
 
 export interface InviteUsersProps {
   onCancel?: () => void;
-  userListQuery?(): UserListQuery;
+  userListQuery?(): ApplicationUserListQuery;
 }
 
 const appHeight = () => {
@@ -56,7 +57,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState({});
   const { stringSet } = useContext(LocalizationContext);
-  const [usersDataSource, setUsersDataSource] = useState<ApplicationUserListQuery | UserListQuery>(null);
+  const [usersDataSource, setUsersDataSource] = useState<ApplicationUserListQuery | null>(null);
   const selectedCount = Object.keys(selectedUsers).length;
   const titleText = stringSet.MODAL__CREATE_CHANNEL__TITLE;
   const submitText = stringSet.BUTTON__CREATE;
@@ -103,7 +104,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
         if (typeof overrideInviteUser === 'function') {
           overrideInviteUser({
             users: selectedUserList,
-            onClose: onCancel,
+            onClose: onCancel ?? noop,
             channelType: type,
           });
           return;
@@ -113,7 +114,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
           const params = onBeforeCreateChannel(selectedUserList);
           setChannelType(params, type);
           createChannel(params).then((channel) => {
-            onCreateChannel(channel);
+            onCreateChannel?.(channel);
           });
         } else {
           const params: GroupChannelCreateParams = {};
@@ -125,10 +126,10 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
           setChannelType(params, type);
           // do not have custom params
           createChannel(params).then((channel) => {
-            onCreateChannel(channel);
+            onCreateChannel?.(channel);
           });
         }
-        onCancel();
+        onCancel?.();
       }}
     >
       <div>
@@ -141,13 +142,14 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
         <div
           className="sendbird-create-channel--scroll"
           onScroll={(e) => {
+            if (!usersDataSource) return;
             const eventTarget = e.target as HTMLDivElement;
-            const { hasNext } = usersDataSource;
+            const { hasNext, isLoading } = usersDataSource;
             const fetchMore = (
               (eventTarget.clientHeight + eventTarget.scrollTop + BUFFER) > eventTarget.scrollHeight
             );
 
-            if (hasNext && fetchMore) {
+            if (hasNext && fetchMore && !isLoading) {
               usersDataSource.next().then((usersBatch) => {
                 setUsers([
                   ...users,
