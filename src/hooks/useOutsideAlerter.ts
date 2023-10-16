@@ -1,11 +1,19 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+
+type UseOutsideAlerterParams = {
+  ref: React.MutableRefObject<HTMLElement>;
+  callback: () => void;
+};
 
 export default function useOutsideAlerter({
   ref,
   callback,
-}) {
-  const handleClickOutside = (event) => {
-    if (ref.current && !ref.current.contains(event.target)) {
+}: UseOutsideAlerterParams) {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      event.target instanceof HTMLElement &&
+      ref.current?.contains(event.target)
+    ) {
       callback();
     }
   };
