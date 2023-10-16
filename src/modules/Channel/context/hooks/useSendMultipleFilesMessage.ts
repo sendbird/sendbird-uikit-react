@@ -93,7 +93,8 @@ export const useSendMultipleFilesMessage = ({
             channel: currentChannel,
           });
           if (scrollRef) {
-            setTimeout(() => scrollIntoLast(0, scrollRef));
+            // We need this delay because rendering MFM takes time due to large image files.
+            setTimeout(() => scrollIntoLast(0, scrollRef), 100);
           }
         })
         .onFailed((error, failedMessage: MultipleFilesMessage) => {
@@ -109,6 +110,10 @@ export const useSendMultipleFilesMessage = ({
             channel: currentChannel,
             message: succeededMessage,
           });
+          if (scrollRef) {
+            // We need this delay because rendering MFM takes time due to large image files.
+            setTimeout(() => scrollIntoLast(0, scrollRef), 100);
+          }
         });
     } catch (error) {
       logger.error('Channel: Sending MFM failed.', { error });

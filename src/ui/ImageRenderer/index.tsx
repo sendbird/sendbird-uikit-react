@@ -19,6 +19,20 @@ export function getBorderRadiusForImageRenderer(
   return circle ? '50%' : numberToPx(borderRadius);
 }
 
+export function getBorderRadiusForMultipleImageRenderer(
+  borderRadius: string | number,
+  index: number,
+  totalCount: number,
+): string {
+  const value: number = parseInt(borderRadius);
+  const lastIndex: number = totalCount - 1;
+  const topLeft: string = index === 0 ? value * 2 : value;
+  const topRight: string = index === 1 ? value * 2 : value;
+  const bottomRight: string = index === lastIndex ? value * 2 : value;
+  const bottomLeft: string = index === lastIndex - 1 ? value * 2 : value;
+  return `${topLeft}px ${topRight}px ${bottomRight}px ${bottomLeft}px`;
+}
+
 export interface ImageRendererProps {
   className?: string | Array<string>;
   url: string;

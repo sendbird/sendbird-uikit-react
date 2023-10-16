@@ -8,7 +8,10 @@ export const useStatefulFileInfoList = (message: CoreMessageType): StatefulFileI
 
   useEffect(() => {
     if (isMultipleFilesMessage(message)) {
-      const newStatefulFileInfoList: StatefulFileInfo[] = createStatefulFileInfoList(message as MultipleFilesMessage);
+      const newStatefulFileInfoList: StatefulFileInfo[] = createStatefulFileInfoList(
+        message as MultipleFilesMessage,
+        statefulFileInfoList,
+      );
       setStatefulFileInfoList(newStatefulFileInfoList);
     }
   }, [

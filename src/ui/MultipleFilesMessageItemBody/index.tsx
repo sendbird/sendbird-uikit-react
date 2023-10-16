@@ -2,7 +2,7 @@ import React, { ReactElement, useState } from 'react';
 
 import Icon, { IconColors, IconTypes } from '../Icon';
 import { MultipleFilesMessage, SendingStatus } from '@sendbird/chat/message';
-import ImageRenderer from '../ImageRenderer';
+import ImageRenderer, { getBorderRadiusForMultipleImageRenderer } from '../ImageRenderer';
 import ImageGrid from '../ImageGrid';
 import FileViewer from '../FileViewer';
 import './index.scss';
@@ -98,10 +98,14 @@ export default function MultipleFilesMessageItemBody({
                 width={MULTIPLE_FILES_IMAGE_SIDE_LENGTH[threadMessageKindKey]}
                 maxSideLength={MULTIPLE_FILES_IMAGE_SIDE_LENGTH.CHAT_WEB}
                 height={MULTIPLE_FILES_IMAGE_SIDE_LENGTH[threadMessageKindKey]}
-                borderRadius={MULTIPLE_FILES_IMAGE_BORDER_RADIUS[threadMessageKindKey]}
+                borderRadius={getBorderRadiusForMultipleImageRenderer(
+                  MULTIPLE_FILES_IMAGE_BORDER_RADIUS[threadMessageKindKey],
+                  index,
+                  statefulFileInfoList.length,
+                )}
                 shadeOnHover={true}
                 isGif={isGifValue}
-                isUploaded={!!fileInfo.url} // Caution: This assumes that defined url means file upload has completed.
+                isUploaded={!!fileInfo.isUploaded}
                 defaultComponent={
                   <div className="sendbird-multiple-files-image-renderer__thumbnail__placeholder">
                     {
