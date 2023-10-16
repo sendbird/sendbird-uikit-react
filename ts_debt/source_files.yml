@@ -38,5 +38,3 @@
 ./ui/LinkLabel/index.jsx: index.jsx
 ./ui/MessageInput/index.jsx: index.jsx
 ./ui/MessageInput/utils.js: utils.js
-./utils/compareIds.js: compareIds.js
-./utils/utils.js: utils.js
