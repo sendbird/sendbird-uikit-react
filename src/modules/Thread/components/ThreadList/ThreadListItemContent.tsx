@@ -41,6 +41,8 @@ import useLongPress from '../../../../hooks/useLongPress';
 import MobileMenu from '../../../../ui/MobileMenu';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import MultipleFilesMessageItemBody, { ThreadMessageKind } from '../../../../ui/MultipleFilesMessageItemBody';
+import { useThreadMessageKindKeySelector } from '../../../Channel/context/hooks/useThreadMessageKindKeySelector';
+import { useStatefulFileInfoList } from '../../../Channel/context/hooks/useStatefulFileInfoList';
 
 export interface ThreadListItemContentProps {
   className?: string;
@@ -119,6 +121,13 @@ export default function ThreadListItemContent({
   }, {
     shouldPreventDefault: false,
   });
+
+  const threadMessageKindKey = useThreadMessageKindKeySelector({
+    threadMessageKind: ThreadMessageKind.CHILD,
+    isMobile,
+  });
+  // For MultipleFilesMessage only.
+  const statefulFileInfoList = useStatefulFileInfoList(message);
 
   return (
     <div
@@ -262,7 +271,8 @@ export default function ThreadListItemContent({
                 message={message as MultipleFilesMessage}
                 isByMe={isByMe}
                 isReactionEnabled={isReactionEnabled}
-                threadMessageKind={ThreadMessageKind.CHILD}
+                threadMessageKindKey={threadMessageKindKey}
+                statefulFileInfoList={statefulFileInfoList}
               />
             )
           }

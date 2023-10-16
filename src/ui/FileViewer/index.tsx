@@ -1,20 +1,21 @@
 import './index.scss';
 
 import React, { MouseEvent, ReactElement, useContext, useRef } from 'react';
-import { FileMessage, MultipleFilesMessage, UploadedFileInfo } from '@sendbird/chat/message';
+import { FileMessage, MultipleFilesMessage } from '@sendbird/chat/message';
 import { createPortal } from 'react-dom';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { MODAL_ROOT } from '../../hooks/useModal';
-import { isImage, isVideo, isSupportedFileView } from '../../utils';
+import { isFileMessage, isImage, isMultipleFilesMessage, isSupportedFileView, isVideo } from '../../utils';
 import { noop } from '../../utils/utils';
 import Avatar from '../Avatar/index';
-import Label, { LabelTypography, LabelColors } from '../Label';
+import Label, { LabelColors, LabelTypography } from '../Label';
 import Icon, { IconColors, IconTypes } from '../Icon';
 import { FileInfo, FileViewerComponentProps, ViewerTypes } from './types';
 import { useKeyDown } from './hooks/useKeyDown';
 import { mapFileViewerComponentProps } from './utils';
 import { DeleteButton } from './DeleteButton';
 import { Slider } from './Slider';
+import { StatefulFileInfo } from '../../utils/createStatefulFileInfoList';
 
 export const FileViewerComponent = (props: FileViewerComponentProps): ReactElement => {
   const ref = useRef<HTMLDivElement>(null);
@@ -126,7 +127,8 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
 };
 
 export interface FileViewerProps {
-  message: FileMessage | MultipleFilesMessage;
+  message?: FileMessage | MultipleFilesMessage;
+  statefulFileInfoList?: StatefulFileInfo[]
   isByMe?: boolean;
   currentIndex?: number;
   onClose: (e: MouseEvent) => void;
@@ -137,6 +139,7 @@ export interface FileViewerProps {
 
 export default function FileViewer({
   message,
+  statefulFileInfoList = [],
   onClose,
   isByMe = false,
   onDelete,
@@ -144,36 +147,42 @@ export default function FileViewer({
   onClickLeft,
   onClickRight,
 }: FileViewerProps): ReactElement {
-  if (message.isMultipleFilesMessage()) {
+  if (isMultipleFilesMessage(message)) {
+    const castedMessage = message as MultipleFilesMessage;
     return (
       <FileViewerComponent
-        profileUrl={message.sender?.profileUrl}
-        nickname={message.sender?.nickname}
+        profileUrl={castedMessage.sender.profileUrl}
+        nickname={castedMessage.sender.nickname}
         viewerType={ViewerTypes.MULTI}
-        fileInfoList={message.fileInfoList.map((fileInfo: UploadedFileInfo): FileInfo => {
-          return {
-            name: fileInfo.fileName || '',
-            type: fileInfo.mimeType || '',
-            url: fileInfo.url,
-          };
-        })}
+        fileInfoList={
+          statefulFileInfoList.filter((fileInfo: StatefulFileInfo) => {
+            return fileInfo.url; // Caution: This assumes that defined url means file upload has completed.
+          }).map((fileInfo: StatefulFileInfo): FileInfo => {
+            return {
+              name: fileInfo.fileName || '',
+              type: fileInfo.mimeType || '',
+              url: fileInfo.url,
+            };
+          })
+        }
         currentIndex={currentIndex || 0}
         onClickLeft={onClickLeft || noop}
         onClickRight={onClickRight || noop}
         onClose={onClose}
       />
     );
-  } else if (message.isFileMessage()) {
+  } else if (isFileMessage(message)) {
+    const castedMessage = message as FileMessage;
     return createPortal(
       (
         <FileViewerComponent
-          profileUrl={message.sender?.profileUrl}
-          nickname={message.sender?.nickname}
-          name={message.name}
-          type={message.type}
-          url={message?.url}
+          profileUrl={castedMessage.sender?.profileUrl}
+          nickname={castedMessage.sender?.nickname}
+          name={castedMessage.name}
+          type={castedMessage.type}
+          url={castedMessage?.url}
           isByMe={isByMe}
-          disableDelete={(message?.threadInfo?.replyCount || 0) > 0}
+          disableDelete={(castedMessage.threadInfo?.replyCount || 0) > 0}
           onClose={onClose}
           onDelete={onDelete || noop}
         />

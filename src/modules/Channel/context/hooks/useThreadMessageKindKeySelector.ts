@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
-import { ThreadMessageKind, ThreadMessageKindType } from './index';
+import { ThreadMessageKind, ThreadMessageKindType } from '../../../../ui/MultipleFilesMessageItemBody';
 import { match } from 'ts-pattern';
 
 interface DynamicSideLengthProps {
-  threadMessageKind: ThreadMessageKindType;
+  threadMessageKind?: ThreadMessageKindType;
   isMobile: boolean;
 }
 

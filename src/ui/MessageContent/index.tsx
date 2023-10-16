@@ -52,6 +52,8 @@ import VoiceMessageItemBody from '../VoiceMessageItemBody';
 import { Nullable, ReplyType } from '../../types';
 import { noop } from '../../utils/utils';
 import MultipleFilesMessageItemBody from '../MultipleFilesMessageItemBody';
+import { useThreadMessageKindKeySelector } from '../../modules/Channel/context/hooks/useThreadMessageKindKeySelector';
+import { useStatefulFileInfoList } from '../../modules/Channel/context/hooks/useStatefulFileInfoList';
 
 // should initialize in UserProfileContext.jsx
 export interface UserProfileContextInterface {
@@ -156,6 +158,12 @@ export default function MessageContent({
     delay: 300,
     shouldPreventDefault: false,
   });
+
+  const threadMessageKindKey = useThreadMessageKindKeySelector({
+    isMobile,
+  });
+  // For MultipleFilesMessage only.
+  const statefulFileInfoList = useStatefulFileInfoList(message);
 
   if (message?.isAdminMessage?.() || message?.messageType === 'admin') {
     return (<ClientAdminMessage message={message as AdminMessage} />);
@@ -335,6 +343,8 @@ export default function MessageContent({
               isByMe={isByMe}
               mouseHover={mouseHover}
               isReactionEnabled={isReactionEnabledInChannel}
+              threadMessageKindKey={threadMessageKindKey}
+              statefulFileInfoList={statefulFileInfoList}
             />
           )}
           {isVoiceMessage(message as FileMessage) && (

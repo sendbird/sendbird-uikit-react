@@ -32,6 +32,9 @@ import VoiceMessageItemBody from '../../../../ui/VoiceMessageItemBody';
 import TextFragment from '../../../Message/components/TextFragment';
 import { tokenizeMessage } from '../../../Message/utils/tokens/tokenize';
 import MultipleFilesMessageItemBody, { ThreadMessageKind } from '../../../../ui/MultipleFilesMessageItemBody';
+import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
+import { useThreadMessageKindKeySelector } from '../../../Channel/context/hooks/useThreadMessageKindKeySelector';
+import { useStatefulFileInfoList } from '../../../Channel/context/hooks/useStatefulFileInfoList';
 
 export interface ParentMessageInfoItemProps {
   className?: string;
@@ -58,7 +61,13 @@ export default function ParentMessageInfoItem({
     nicknamesMap,
     toggleReaction,
   } = useThreadContext();
-
+  const { isMobile } = useMediaQueryContext();
+  const threadMessageKindKey = useThreadMessageKindKeySelector({
+    threadMessageKind: ThreadMessageKind.PARENT,
+    isMobile,
+  });
+  // For MultipleFilesMessage only.
+  const statefulFileInfoList = useStatefulFileInfoList(message);
   const isMentionedMessage = isMentionEnabled
     && message?.mentionedMessageTemplate?.length > 0
     && message?.mentionedUsers?.length > 0;
@@ -203,7 +212,8 @@ export default function ParentMessageInfoItem({
             message={message as MultipleFilesMessage}
             isByMe={false}
             isReactionEnabled={isReactionEnabled}
-            threadMessageKind={ThreadMessageKind.PARENT}
+            threadMessageKindKey={threadMessageKindKey}
+            statefulFileInfoList={statefulFileInfoList}
           />
         )
       }

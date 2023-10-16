@@ -1,19 +1,18 @@
 import React, { ReactElement, useState } from 'react';
 
-import Icon, { IconTypes, IconColors } from '../Icon';
-import { MultipleFilesMessage, UploadedFileInfo } from '@sendbird/chat/message';
-import ImageRenderer from '../ImageRenderer';
+import Icon, { IconColors, IconTypes } from '../Icon';
+import { MultipleFilesMessage, SendingStatus } from '@sendbird/chat/message';
+import ImageRenderer, { getBorderRadiusForMultipleImageRenderer } from '../ImageRenderer';
 import ImageGrid from '../ImageGrid';
 import FileViewer from '../FileViewer';
 import './index.scss';
-import { useMediaQueryContext } from '../../lib/MediaQueryContext';
-import { useThreadMessageKindKeySelector } from './useThreadMessageKindKeySelector';
 import {
   MULTIPLE_FILES_IMAGE_BORDER_RADIUS,
   MULTIPLE_FILES_IMAGE_SIDE_LENGTH,
   MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH,
 } from './const';
-import { isGifFileInfo } from '../../utils';
+import { isGif } from '../../utils';
+import { StatefulFileInfo } from '../../utils/createStatefulFileInfoList';
 
 export const ThreadMessageKind = {
   PARENT: 'parent',
@@ -29,47 +28,47 @@ interface Props {
   mouseHover?: boolean;
   isReactionEnabled?: boolean;
   truncateLimit?: number;
-  threadMessageKind?: ThreadMessageKindType;
+  threadMessageKindKey?: string;
+  statefulFileInfoList?: StatefulFileInfo[];
 }
 
 export default function MultipleFilesMessageItemBody({
   className,
   message,
   isReactionEnabled = false,
-  threadMessageKind,
+  threadMessageKindKey,
+  statefulFileInfoList = [],
 }: Props): ReactElement {
-  const { isMobile } = useMediaQueryContext();
-  const [fileInfoList] = useState<UploadedFileInfo[]>(message.fileInfoList);
-  const threadMessageKindKey = useThreadMessageKindKeySelector({ threadMessageKind, isMobile });
-  const [currentIndex, setCurrentIndex] = useState(-1);
+  const [currentFileViewerIndex, setCurrentFileViewerIndex] = useState(-1);
 
   function onClose() {
-    setCurrentIndex(-1);
+    setCurrentFileViewerIndex(-1);
   }
 
   function onClickLeft() {
-    setCurrentIndex(
-      currentIndex === 0
-        ? fileInfoList.length - 1
-        : currentIndex - 1,
+    setCurrentFileViewerIndex(
+      currentFileViewerIndex === 0
+        ? statefulFileInfoList.length - 1
+        : currentFileViewerIndex - 1,
     );
   }
 
   function onClickRight() {
-    setCurrentIndex(
-      currentIndex === fileInfoList.length - 1
+    setCurrentFileViewerIndex(
+      currentFileViewerIndex === statefulFileInfoList.length - 1
         ? 0
-        : currentIndex + 1,
+        : currentFileViewerIndex + 1,
     );
   }
 
   return threadMessageKindKey && (
     <>
       {
-        currentIndex > -1 && (
+        currentFileViewerIndex > -1 && (
           <FileViewer
             message={message}
-            currentIndex={currentIndex}
+            statefulFileInfoList={statefulFileInfoList}
+            currentIndex={currentFileViewerIndex}
             onClickLeft={onClickLeft}
             onClickRight={onClickRight}
             onClose={onClose}
@@ -82,11 +81,16 @@ export default function MultipleFilesMessageItemBody({
         isReactionEnabled={isReactionEnabled}
       >
         {
-          fileInfoList.map((fileInfo: UploadedFileInfo, index: number) => {
+          statefulFileInfoList.map((fileInfo: StatefulFileInfo, index: number) => {
+            const isGifValue = isGif(fileInfo.mimeType);
             return <div
               className='sendbird-multiple-files-image-renderer-wrapper'
-              onClick={() => setCurrentIndex(index)}
-              key={`sendbird-multiple-files-image-renderer-${index}-${fileInfo.plainUrl}`}
+              onClick={
+                message.sendingStatus === SendingStatus.SUCCEEDED
+                  ? () => setCurrentFileViewerIndex(index)
+                  : undefined
+              }
+              key={`sendbird-multiple-files-image-renderer-${index}-${fileInfo.url}`}
             >
               <ImageRenderer
                 url={fileInfo.url}
@@ -94,19 +98,49 @@ export default function MultipleFilesMessageItemBody({
                 width={MULTIPLE_FILES_IMAGE_SIDE_LENGTH[threadMessageKindKey]}
                 maxSideLength={MULTIPLE_FILES_IMAGE_SIDE_LENGTH.CHAT_WEB}
                 height={MULTIPLE_FILES_IMAGE_SIDE_LENGTH[threadMessageKindKey]}
-                borderRadius={MULTIPLE_FILES_IMAGE_BORDER_RADIUS[threadMessageKindKey]}
+                borderRadius={getBorderRadiusForMultipleImageRenderer(
+                  MULTIPLE_FILES_IMAGE_BORDER_RADIUS[threadMessageKindKey],
+                  index,
+                  statefulFileInfoList.length,
+                )}
                 shadeOnHover={true}
-                isGif={isGifFileInfo(fileInfo)}
+                isUploaded={!!fileInfo.isUploaded}
+                placeHolder={
+                  (style_: Record<string, any>) => (
+                    <div
+                      className="sendbird-multiple-files-image-renderer__thumbnail__placeholder"
+                      style={style_}
+                    >
+                      {
+                        isGifValue
+                          ? <div className="sendbird-multiple-files-image-renderer__thumbnail__placeholder__icon">
+                            <Icon
+                              type={IconTypes.GIF}
+                              fillColor={IconColors.THUMBNAIL_ICON}
+                              width={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
+                              height={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
+                            />
+                          </div>
+                          : <Icon
+                            type={IconTypes.PHOTO}
+                            fillColor={IconColors.ON_BACKGROUND_2}
+                            width={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
+                            height={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
+                          />
+                      }
+                    </div>
+                  )
+                }
                 defaultComponent={
-                  <div
-                    className="sendbird-multiple-files-image-renderer__thumbnail__placeholder"
-                  >
-                    <Icon
-                      type={IconTypes.THUMBNAIL_NONE}
-                      fillColor={IconColors.ON_BACKGROUND_2}
-                      width={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
-                      height={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
-                    />
+                  <div className="sendbird-multiple-files-image-renderer__thumbnail__placeholder">
+                    {
+                      <Icon
+                        type={IconTypes.THUMBNAIL_NONE}
+                        fillColor={IconColors.ON_BACKGROUND_2}
+                        width={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
+                        height={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
+                      />
+                    }
                   </div>
                 }
               />

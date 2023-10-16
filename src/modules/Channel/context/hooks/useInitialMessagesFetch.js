@@ -4,6 +4,7 @@ import { ReplyType } from '@sendbird/chat/message';
 import * as utils from '../utils';
 import * as messageActionTypes from '../dux/actionTypes';
 import { PREV_RESULT_SIZE, NEXT_RESULT_SIZE } from '../const';
+import { isMultipleFilesMessage } from '../../../../utils';
 
 function useInitialMessagesFetch({
   currentGroupChannel,
@@ -59,6 +60,7 @@ function useInitialMessagesFetch({
         payload: null,
       });
 
+      let multipleFilesMessageCount = 0;
       currentGroupChannel.getMessagesByTimestamp(
         initialTimeStamp || new Date().getTime(),
         messageListParams,
@@ -71,6 +73,8 @@ function useInitialMessagesFetch({
               messages,
             },
           });
+          multipleFilesMessageCount = messages
+            .filter((message) => isMultipleFilesMessage(message)).length;
         })
         .catch((error) => {
           logger.error('Channel: Fetching messages failed', error);
@@ -81,7 +85,14 @@ function useInitialMessagesFetch({
         })
         .finally(() => {
           if (!initialTimeStamp) {
-            setTimeout(() => utils.scrollIntoLast(0, scrollRef, setIsScrolled));
+            setTimeout(
+              () => utils.scrollIntoLast(0, scrollRef, setIsScrolled),
+              /**
+               * Rendering MFM takes long time so we need this.
+               * But later we should find better solution.
+               */
+              Math.min(multipleFilesMessageCount * 100, 1000),
+            );
           } else {
             setTimeout(() => {
               utils.scrollToRenderedMessage(scrollRef, initialTimeStamp, setIsScrolled);

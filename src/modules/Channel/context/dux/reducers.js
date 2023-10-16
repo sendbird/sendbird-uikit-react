@@ -338,6 +338,35 @@ export default function reducer(state, action) {
         messageListParams: action.payload,
       };
     }
+    case actionTypes.ON_FILE_INFO_UPLOADED: {
+      const {
+        channelUrl,
+        requestId,
+        index,
+        uploadableFileInfo,
+        error,
+      } = action.payload;
+      if (!compareIds(channelUrl, state?.currentGroupChannel?.url)) {
+        return state;
+      }
+      /**
+       * We don't have to do anything here because
+       * onFailed() will be called so handle error there instead.
+       */
+      if (error) return state;
+      const { localMessages } = state;
+      const messageToUpdate = localMessages.find((message) => (
+        compareIds(message.reqId, requestId)
+      ));
+      const fileInfoList = messageToUpdate.messageParams?.fileInfoList;
+      if (Array.isArray(fileInfoList)) {
+        fileInfoList[index] = uploadableFileInfo;
+      }
+      return {
+        ...state,
+        localMessages,
+      };
+    }
     default:
       return state;
   }

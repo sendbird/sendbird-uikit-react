@@ -10,6 +10,7 @@ import type { Nullable } from '../../../../types';
 import PUBSUB_TOPICS from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from '../utils';
 import { SendableMessageType } from '../../../../utils';
+import { MultipleFilesMessage } from '@sendbird/chat/message';
 
 export type OnBeforeSendMFMType = (
   files: Array<File>,
@@ -70,26 +71,33 @@ export const useSendMultipleFilesMessage = ({
          * We don't operate the onFileUploaded event for now
          * until we will add UI/UX for it
          */
-        .onFileUploaded((requestId, index, uploadableFileInfo, error) => {
-          logger.info('Channel: onFileUploaded during sending MFM', { requestId, index, error, uploadableFileInfo });
+        .onFileUploaded((requestId, index, uploadableFileInfo: UploadableFileInfo, error) => {
+          logger.info('Channel: onFileUploaded during sending MFM', {
+            requestId,
+            index,
+            error,
+            uploadableFileInfo,
+          });
+          pubSub.publish(PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED, {
+            channelUrl: currentChannel.url,
+            requestId,
+            index,
+            uploadableFileInfo,
+            error,
+          });
         })
-        .onPending((pendingMessage) => {
+        .onPending((pendingMessage: MultipleFilesMessage) => {
           logger.info('Channel: in progress of sending MFM', { pendingMessage, fileInfoList: messageParams.fileInfoList });
           pubSub.publish(PUBSUB_TOPICS.SEND_MESSAGE_START, {
-            message: {
-              ...pendingMessage,
-              fileInfoList: messageParams.fileInfoList.map((fileInfo) => ({
-                ...fileInfo,
-                url: URL.createObjectURL(fileInfo.file as File),
-              })),
-            },
+            message: pendingMessage,
             channel: currentChannel,
           });
           if (scrollRef) {
-            setTimeout(() => scrollIntoLast(0, scrollRef));
+            // We need this delay because rendering MFM takes time due to large image files.
+            setTimeout(() => scrollIntoLast(0, scrollRef), 100);
           }
         })
-        .onFailed((error, failedMessage) => {
+        .onFailed((error, failedMessage: MultipleFilesMessage) => {
           logger.error('Channel: Sending MFM failed.', { error, failedMessage });
           pubSub.publish(PUBSUB_TOPICS.SEND_MESSAGE_FAILED, {
             channel: currentChannel,
@@ -102,6 +110,10 @@ export const useSendMultipleFilesMessage = ({
             channel: currentChannel,
             message: succeededMessage,
           });
+          if (scrollRef) {
+            // We need this delay because rendering MFM takes time due to large image files.
+            setTimeout(() => scrollIntoLast(0, scrollRef), 100);
+          }
         });
     } catch (error) {
       logger.error('Channel: Sending MFM failed.', { error });
