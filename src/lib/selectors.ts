@@ -409,40 +409,40 @@ export const getUnfreezeChannel = () => (
 );
 
 // 4. Message
-export class UikitMessageHandler {
-  private _onPending: MessageHandler = noop;
+export class UikitMessageHandler<T extends SendableMessage = SendableMessage> {
+  private _onPending: MessageHandler<T> = noop;
 
-  private _onFailed: FailedMessageHandler = noop;
+  private _onFailed: FailedMessageHandler<T> = noop;
 
-  private _onSucceeded: MessageHandler = noop;
+  private _onSucceeded: MessageHandler<T> = noop;
 
-  public triggerPending(message: SendableMessage): void {
+  public triggerPending(message: T): void {
     this._onPending(message);
   }
 
-  public triggerFailed(error: Error, message: SendableMessage): void {
+  public triggerFailed(error: Error, message: T): void {
     this._onFailed(error, message.isResendable ? message : null);
   }
 
-  public triggerSucceeded(message: SendableMessage): void {
+  public triggerSucceeded(message: T): void {
     this._onSucceeded(message);
   }
 
-  public onPending(handler: MessageHandler): UikitMessageHandler {
+  public onPending(handler: MessageHandler<T>): UikitMessageHandler {
     if (typeof handler === 'function') {
       this._onPending = handler;
     }
     return this;
   }
 
-  public onFailed(handler: FailedMessageHandler): UikitMessageHandler {
+  public onFailed(handler: FailedMessageHandler<T>): UikitMessageHandler {
     if (typeof handler === 'function') {
       this._onFailed = handler;
     }
     return this;
   }
 
-  public onSucceeded(handler: MessageHandler): UikitMessageHandler {
+  public onSucceeded(handler: MessageHandler<T>): UikitMessageHandler {
     if (typeof handler === 'function') {
       this._onSucceeded = handler;
     }
