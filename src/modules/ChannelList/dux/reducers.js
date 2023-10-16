@@ -131,7 +131,7 @@ export default function reducer(state, action) {
         channelListQuery,
         disableAutoSelect,
       } = state;
-      let nextChannels = null;
+      let nextChannels = allChannels.filter((ch) => ch.url !== channel.url);
       let nextChannel = null;
       if (channelListQuery) {
         if (filterChannelListParams(channelListQuery, channel, currentUserId)) {
