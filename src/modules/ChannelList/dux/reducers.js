@@ -63,22 +63,32 @@ export default function reducer(state, action) {
     }
     case actions.CREATE_CHANNEL: {
       const channel = action.payload;
-      if (state.channelListQuery) {
-        if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
+      const {
+        allChannels,
+        currentUserId,
+        channelListQuery,
+      } = state;
+      if (channelListQuery) {
+        if (filterChannelListParams(channelListQuery, channel, currentUserId)) {
+          // Good to add to the ChannelList
           return {
             ...state,
-            allChannels: getChannelsWithUpsertedChannel(state.allChannels, channel),
+            currentChannel: channel,
+            allChannels: getChannelsWithUpsertedChannel(allChannels, channel),
           };
         }
+        // Do not add to the ChannelList
         return {
           ...state,
           currentChannel: channel,
         };
       }
+      // No channelListQuery
+      // Add to the top of the ChannelList
       return {
         ...state,
-        allChannels: [channel, ...state.allChannels.filter((ch) => ch.url !== channel?.url)],
         currentChannel: channel,
+        allChannels: [channel, ...allChannels.filter((ch) => ch.url !== channel?.url)],
       };
     }
     // A hidden channel will be unhidden when getting new message
