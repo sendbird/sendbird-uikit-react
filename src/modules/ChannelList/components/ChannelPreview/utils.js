@@ -54,22 +54,23 @@ export const getTotalMembers = (channel) => (
 );
 
 const getChannelPreviewFileDisplayString = (mimeType) => {
+  const stringSet = LabelStringSet;
   if (isGif(mimeType)) {
-    return 'GIF';
+    return stringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GIF;
   }
   if (isImage(mimeType)) {
-    return 'Photo';
+    return stringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_PHOTO;
   }
   if (isVideo(mimeType)) {
-    return 'Video';
+    return stringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_VIDEO;
   }
   if (isAudio(mimeType)) {
-    return 'Audio';
+    return stringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_AUDIO;
   }
   if (isVoiceMessageMimeType(mimeType)) {
-    return 'Voice message';
+    return stringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_VOICE_MESSAGE;
   }
-  return 'File';
+  return stringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GENERAL;
 };
 
 const getPrettyLastMessage = (message = null) => {
