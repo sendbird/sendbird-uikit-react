@@ -81,24 +81,43 @@ export default function reducer(state, action) {
         currentChannel: channel,
       };
     }
+    // A hidden channel will be unhidden when getting new message
     case actions.ON_CHANNEL_ARCHIVED: {
       const channel = action.payload;
-      if (state.channelListQuery) {
-        if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
+      const {
+        allChannels,
+        currentUserId,
+        currentChannel,
+        channelListQuery,
+        disableAutoSelect,
+      } = state;
+      if (channelListQuery) {
+        if (filterChannelListParams(channelListQuery, channel, currentUserId)) {
+          // Good to [add to/keep in] the ChannelList
           return {
             ...state,
-            allChannels: getChannelsWithUpsertedChannel(state.allChannels, channel),
+            allChannels: getChannelsWithUpsertedChannel(allChannels, channel),
           };
-          // TODO: Check if we have to set current channel
         }
+        // * Remove the channel from the ChannelList: because the channel is filtered
       }
-      const nextChannel = (channel?.url === state.currentChannel?.url)
-        ? state.allChannels[state.allChannels[0].url === channel?.url ? 1 : 0]
-        : state.currentChannel;
+
+      // No channelListQuery
+      // * Remove the channel from the ChannelList: because the channel is hidden
+      // Replace the currentChannel if it's filtered or hidden
+      let nextChannel = null;
+      if (currentChannel?.url === channel.url) {
+        if (!disableAutoSelect && allChannels.length > 0) {
+          const [firstChannel, secondChannel = null] = allChannels;
+          nextChannel = firstChannel.url === channel.url ? secondChannel : firstChannel;
+        }
+      } else {
+        nextChannel = currentChannel;
+      }
       return {
         ...state,
-        allChannels: state.allChannels.filter(({ url }) => url !== channel?.url),
-        currentChannel: state.disableAutoSelect ? null : nextChannel,
+        currentChannel: nextChannel,
+        allChannels: allChannels.filter(({ url }) => url !== channel?.url),
       };
     }
     case actions.LEAVE_CHANNEL_SUCCESS:
