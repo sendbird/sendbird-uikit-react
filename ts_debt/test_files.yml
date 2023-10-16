@@ -61,4 +61,3 @@
 ./ui/UnknownMessageItemBody/__tests__/UnknownMessageItemBody.spec.js: UnknownMessageItemBody.spec.js
 ./ui/UserListItem/__tests__/UserListItem.spec.js: UserListItem.spec.js
 ./ui/Word/__tests__/Word.spec.js: Word.spec.js
-./utils/__tests__/utils.spec.js: utils.spec.js
