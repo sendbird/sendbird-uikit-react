@@ -105,24 +105,41 @@ export default function MultipleFilesMessageItemBody({
                 )}
                 shadeOnHover={true}
                 isUploaded={!!fileInfo.isUploaded}
-                defaultComponent={
-                  <div className="sendbird-multiple-files-image-renderer__thumbnail__placeholder">
-                    {
-                      isGifValue
-                        ? <div className="sendbird-multiple-files-image-renderer__thumbnail__placeholder__icon">
-                          <Icon
-                            type={IconTypes.GIF}
-                            fillColor={IconColors.THUMBNAIL_ICON}
+                placeHolder={
+                  (style_: Record<string, any>) => (
+                    <div
+                      className="sendbird-multiple-files-image-renderer__thumbnail__placeholder"
+                      style={style_}
+                    >
+                      {
+                        isGifValue
+                          ? <div className="sendbird-multiple-files-image-renderer__thumbnail__placeholder__icon">
+                            <Icon
+                              type={IconTypes.GIF}
+                              fillColor={IconColors.THUMBNAIL_ICON}
+                              width={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
+                              height={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
+                            />
+                          </div>
+                          : <Icon
+                            type={IconTypes.PHOTO}
+                            fillColor={IconColors.ON_BACKGROUND_2}
                             width={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
                             height={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
                           />
-                        </div>
-                        : <Icon
-                          type={IconTypes.PHOTO}
-                          fillColor={IconColors.ON_BACKGROUND_2}
-                          width={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
-                          height={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
-                        />
+                      }
+                    </div>
+                  )
+                }
+                defaultComponent={
+                  <div className="sendbird-multiple-files-image-renderer__thumbnail__placeholder">
+                    {
+                      <Icon
+                        type={IconTypes.THUMBNAIL_NONE}
+                        fillColor={IconColors.ON_BACKGROUND_2}
+                        width={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
+                        height={MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH}
+                      />
                     }
                   </div>
                 }

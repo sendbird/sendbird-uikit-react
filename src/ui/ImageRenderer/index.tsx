@@ -99,18 +99,6 @@ const ImageRenderer = ({
       : null;
   }, [placeHolder]);
 
-  /**
-   * This hook displays default component if url is undefined.
-   */
-  useEffect(() => {
-    if (!url) {
-      setShowDefaultComponent(true);
-      onError();
-    } else {
-      setShowDefaultComponent(false);
-    }
-  }, [url]);
-
   const HiddenImageLoader = useMemo(() => {
     setShowDefaultComponent(false);
     // reset the state when url is changed
