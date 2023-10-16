@@ -114,34 +114,33 @@ export default function reducer(state, action) {
     }
     case actions.ON_USER_LEFT: {
       const { channel, isMe } = action.payload;
-      if (state.channelListQuery) {
-        if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
-          const filteredChannels = getChannelsWithUpsertedChannel(state.allChannels, channel);
-          const nextChannel = (isMe && (channel?.url === state.currentChannel?.url))
-            ? filteredChannels[0]
-            : state.currentChannel;
-          return {
-            ...state,
-            currentChannel: state.disableAutoSelect ? null : nextChannel,
-            allChannels: filteredChannels,
-          };
+      const {
+        allChannels,
+        currentUserId,
+        currentChannel,
+        channelListQuery,
+        disableAutoSelect,
+      } = state;
+      let nextChannels = null;
+      let nextChannel = null;
+      if (channelListQuery) {
+        if (filterChannelListParams(channelListQuery, channel, currentUserId)) {
+          // Good to [add to/keep in] the ChannelList
+          nextChannels = getChannelsWithUpsertedChannel(allChannels, channel);
         }
-        const nextChannel = (channel?.url === state.currentChannel?.url)
-          ? state.allChannels[0]
-          : state.currentChannel;
-        return {
-          ...state,
-          currentChannel: state.disableAutoSelect ? null : nextChannel,
-          allChannels: state.allChannels.filter(({ url }) => url !== channel?.url),
-        };
       }
-      const filteredChannels = state.allChannels.filter((c) => !(c.url === channel?.url && isMe));
-      const nextChannel = (isMe && (channel?.url === state.currentChannel?.url))
-        ? filteredChannels[0]
-        : state.currentChannel;
+      // Replace the currentChannel if I left the currentChannel
+      if (isMe && channel.url === currentChannel?.url) {
+        if (!disableAutoSelect && filteredChannels.length > 0) {
+          const [firstChannel, secondChannel = null] = filteredChannels;
+          nextChannel = firstChannel.url === channel.url ? secondChannel : firstChannel;
+        }
+      } else {
+        nextChannel = currentChannel;
+      }
       return {
         ...state,
-        currentChannel: state.disableAutoSelect ? null : nextChannel,
+        currentChannel: nextChannel,
         allChannels: filteredChannels,
       };
     }
