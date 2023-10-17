@@ -72,7 +72,9 @@ export default function QuoteMessageInput({
           {isGifMessage(fileMessage) && stringSet.QUOTE_MESSAGE_INPUT__FILE_TYPE_GIF}
           {isUserMessage(replyingMessage as UserMessage) && (replyingMessage as UserMessage).message}
           {getUIKitMessageType(replyingMessage) === UIKitMessageTypes.FILE && getMessageFirstFileName(fileMessage)}
-          {isMultipleFilesMessage(replyingMessage as CoreMessageType) && getMessageFirstFileName(fileMessage)}
+          {
+            isMultipleFilesMessage(replyingMessage as CoreMessageType)
+            && `${(fileMessage as MultipleFilesMessage).fileInfoList.length} Photos`}
           {isVoiceMessage(replyingMessage as FileMessage) && stringSet.VOICE_MESSAGE}
         </Label>
       </div>
