@@ -1,5 +1,6 @@
 import { filterChannelListParams, getChannelsWithUpsertedChannel } from '../../../utils';
 import * as actions from './actionTypes';
+import { getNextChannel } from './getNextChannel';
 import initialState from './initialState';
 
 export default function reducer(state, action) {
@@ -96,15 +97,12 @@ export default function reducer(state, action) {
       // No channelListQuery
       // * Remove the channel from the ChannelList: because the channel is hidden
       // Replace the currentChannel if it's filtered or hidden
-      let nextChannel = null;
-      if (currentChannel?.url === channel.url) {
-        if (!disableAutoSelect && allChannels.length > 0) {
-          const [firstChannel, secondChannel = null] = allChannels;
-          nextChannel = firstChannel.url === channel.url ? secondChannel : firstChannel;
-        }
-      } else {
-        nextChannel = currentChannel;
-      }
+      const nextChannel = getNextChannel({
+        channel,
+        currentChannel,
+        allChannels,
+        disableAutoSelect,
+      });
       return {
         ...state,
         currentChannel: nextChannel,
@@ -181,16 +179,12 @@ export default function reducer(state, action) {
         }
         // Filter the channel from the ChannelList
         // Replace the currentChannel if it's filtered channel
-        const filteredChannel = channel;
-        let nextChannel = null;
-        if (currentChannel?.url === filteredChannel.url) {
-          if (!disableAutoSelect && allChannels.length > 0) {
-            const [firstChannel, secondChannel = null] = allChannels;
-            nextChannel = firstChannel.url === filteredChannel.url ? secondChannel : firstChannel;
-          }
-        } else {
-          nextChannel = currentChannel;
-        }
+        const nextChannel = getNextChannel({
+          channel,
+          currentChannel,
+          allChannels,
+          disableAutoSelect,
+        });
         return {
           ...state,
           currentChannel: nextChannel,
@@ -250,16 +244,12 @@ export default function reducer(state, action) {
         }
         // Filter the channel from the ChannelList
         // Replace the currentChannel if it's filtered channel
-        const filteredChannel = channel;
-        let nextChannel = null;
-        if (currentChannel?.url === filteredChannel.url) {
-          if (!disableAutoSelect && allChannels.length > 0) {
-            const [firstChannel, secondChannel = null] = allChannels;
-            nextChannel = firstChannel.url === filteredChannel.url ? secondChannel : firstChannel;
-          }
-        } else {
-          nextChannel = currentChannel;
-        }
+        const nextChannel = getNextChannel({
+          channel,
+          currentChannel,
+          allChannels,
+          disableAutoSelect,
+        });
         return {
           ...state,
           currentChannel: nextChannel,
@@ -297,16 +287,12 @@ export default function reducer(state, action) {
         }
         // Filter the channel from the ChannelList
         // Replace the currentChannel if it's filtered channel
-        const filteredChannel = channel;
-        let nextChannel = null;
-        if (currentChannel?.url === filteredChannel.url) {
-          if (!disableAutoSelect && allChannels.length > 0) {
-            const [firstChannel, secondChannel = null] = allChannels;
-            nextChannel = firstChannel.url === filteredChannel.url ? secondChannel : firstChannel;
-          }
-        } else {
-          nextChannel = currentChannel;
-        }
+        const nextChannel = getNextChannel({
+          channel,
+          currentChannel,
+          allChannels,
+          disableAutoSelect,
+        });
         return {
           ...state,
           currentChannel: nextChannel,
