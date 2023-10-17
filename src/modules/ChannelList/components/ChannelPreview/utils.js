@@ -53,39 +53,38 @@ export const getTotalMembers = (channel) => (
     : 0
 );
 
-const getChannelPreviewFileDisplayString = (mimeType) => {
-  const stringSet = LabelStringSet;
+const getChannelPreviewFileDisplayString = (mimeType, stringSet) => {
   if (isGif(mimeType)) {
-    return stringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GIF;
+    return stringSet?.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GIF ?? '';
   }
   if (isImage(mimeType)) {
-    return stringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_PHOTO;
+    return stringSet?.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_PHOTO ?? '';
   }
   if (isVideo(mimeType)) {
-    return stringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_VIDEO;
+    return stringSet?.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_VIDEO ?? '';
   }
   if (isAudio(mimeType)) {
-    return stringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_AUDIO;
+    return stringSet?.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_AUDIO ?? '';
   }
   if (isVoiceMessageMimeType(mimeType)) {
-    return stringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_VOICE_MESSAGE;
+    return stringSet?.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_VOICE_MESSAGE ?? '';
   }
-  return stringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GENERAL;
+  return stringSet?.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GENERAL ?? '';
 };
 
-const getPrettyLastMessage = (message = null) => {
+const getPrettyLastMessage = (message = null, stringSet) => {
   if (!message) return '';
   if (message.isFileMessage()) {
-    return getChannelPreviewFileDisplayString(message.type);
+    return getChannelPreviewFileDisplayString(message.type, stringSet);
   }
   if (message.isMultipleFilesMessage()) {
-    const stringSet = LabelStringSet;
-    return stringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_PHOTO;
+    const mimeType = message.fileInfoList?.[0]?.mimeType;
+    return getChannelPreviewFileDisplayString(mimeType, stringSet);
   }
   return message.message ?? '';
 };
 
-export const getLastMessage = (channel) => (channel?.lastMessage ? getPrettyLastMessage(channel?.lastMessage) : '');
+export const getLastMessage = (channel, stringSet) => (channel?.lastMessage ? getPrettyLastMessage(channel?.lastMessage, stringSet) : '');
 
 export const getChannelUnreadMessageCount = (channel) => (
   channel?.unreadMessageCount

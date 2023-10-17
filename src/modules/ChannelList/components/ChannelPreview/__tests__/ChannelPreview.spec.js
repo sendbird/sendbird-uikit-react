@@ -75,26 +75,26 @@ describe('ChannelPreview', () => {
       }
     };
     expect(
-      getLastMessage(channel)
+      getLastMessage(channel, LabelStringSet)
     ).toBe('');
     expect(
-      getLastMessage(channel2)
+      getLastMessage(channel2, LabelStringSet)
     ).toBe('');
     expect(
-      getLastMessage(channel3)
+      getLastMessage(channel3, LabelStringSet)
     ).toBe(text);
     expect(
-      getLastMessage(channel4)
-    ).toBe('File');
+      getLastMessage(channel4, LabelStringSet)
+    ).toBe(LabelStringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GENERAL);
     expect(
-      getLastMessage(channel5)
-    ).toBe('Photo');
+      getLastMessage(channel5, LabelStringSet)
+    ).toBe(LabelStringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_PHOTO);
     expect(
-      getLastMessage(channel6)
-    ).toBe('GIF');
+      getLastMessage(channel6, LabelStringSet)
+    ).toBe(LabelStringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GIF);
     expect(
-      getLastMessage(channel7)
-    ).toBe('Photo');
+      getLastMessage(channel7, LabelStringSet)
+    ).toBe(LabelStringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_VIDEO);
   });
 
   test('utils/getChannelTitle returns channelTitle', function () {
