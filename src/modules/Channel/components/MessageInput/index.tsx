@@ -218,7 +218,10 @@ const MessageInputWrapper = (
                 setQuoteMessage(null);
                 channel?.endTyping?.();
               }}
-              onFileUpload={handleUploadFiles}
+              onFileUpload={(fileList: FileList) => {
+                handleUploadFiles(fileList);
+                setQuoteMessage(null);
+              }}
               onUserMentioned={(user) => {
                 if (selectedUser?.userId === user?.userId) {
                   setSelectedUser(null);
