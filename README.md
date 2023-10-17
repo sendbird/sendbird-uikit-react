@@ -127,7 +127,7 @@ yarn run lint
 
 * We are trying to progressively move our source code to typescript - which means older JS code and newly written TS code will coxist while we migrate older JS code to TS
 * .eslintrc.json lints ts files and .eslintrc.js lints js files
-* Type definition file can be `src/index.d.ts` which will be copied to `/release` directory
+* Type definition file can be `scripts/index.d.ts` which will be copied to `/dist` directory
 
 ### Webpack 5
 
@@ -156,12 +156,12 @@ To read more: https://webpack.js.org/configuration/resolve/#resolvefallback
     ```
     - Will be imported as: `import { NewComponent } from '@sendbird/uikit-react';`
     - We don't do this anymore for new components; we prefer fine-grained exports (as in step 3).
-3. Add the following line to `./exports.js`:
+3. Add the following line to `./rollup.module-exports.js`:
     ```
-    NewComponent/SubComponent: 'location/of/NewComponent/SubComponent',
+    'NewComponent/SubComponent': 'location/of/NewComponent/SubComponent',
     ```
     - This component can be imported by the consumer as: `import SubComponent from '@sendbird/uikit-react/NewComponent/SubComponent';`
-4. Add type definitions to `scripts/index_d_ts`.
+4. Add type definitions to `scripts/index.d.ts`.
 
 ### Scaffolding New Components
 

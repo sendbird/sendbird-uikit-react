@@ -2,11 +2,12 @@
  * Type Definitions for @sendbird/uikit-react@{{ version }}
  * homepage: https://sendbird.com/
  * git: https://github.com/sendbird/sendbird-uikit-react
-*/
+ */
 declare module "SendbirdUIKitGlobal" {
   import type React from 'react';
+  import type { Locale } from 'date-fns';
   import type SendbirdChat from '@sendbird/chat';
-  import { GroupChannelModule, ModuleNamespaces, OpenChannelModule, SendbirdChatParams, Module, SendableMessage } from '@sendbird/chat/lib/__definition';
+  import { GroupChannelModule, ModuleNamespaces, OpenChannelModule, SendbirdChatParams, Module } from '@sendbird/chat/lib/__definition';
   import { SBUConfig } from '@sendbird/uikit-tools';
   import type {
     SendbirdError,
@@ -47,12 +48,12 @@ declare module "SendbirdUIKitGlobal" {
   } from '@sendbird/chat/openChannel';
 
   export type PartialDeep<T> = T extends object
-    ? T extends (...args: any[]) => any
-    ? T
-    : {
-      [P in keyof T]?: PartialDeep<T[P]>;
-    }
-    : T;
+      ? T extends (...args: any[]) => any
+          ? T
+          : {
+            [P in keyof T]?: PartialDeep<T[P]>;
+          }
+      : T;
 
   export interface CommonUIKitConfigProps {
     replyType?: 'NONE' | 'QUOTE_REPLY' | 'THREAD';
@@ -430,7 +431,7 @@ declare module "SendbirdUIKitGlobal" {
     onLeaveChannel(
       channel: GroupChannel,
       onLeaveChannelCb?: (c: GroupChannel) => void,
-    );
+    ): void;
   }
 
   export interface ChannelListUIProps {
@@ -1012,15 +1013,10 @@ declare module "SendbirdUIKitGlobal" {
     renderPlaceHolderLoading?: (props: void) => React.ReactNode | React.ReactElement;
     renderPlaceHolderNoString?: (props: void) => React.ReactNode | React.ReactElement;
     renderPlaceHolderEmptyList?: (props: void) => React.ReactNode | React.ReactElement;
-    renderSearchItem?(
-      {
-        message,
-        onResultClick,
-      }: {
-        message: ClientSentMessages,
-        onResultClick?: (message: ClientSentMessages) => void,
-      }
-    ): JSX.Element;
+    renderSearchItem?(props: {
+      message: ClientSentMessages,
+      onResultClick?: (message: ClientSentMessages) => void,
+    }): JSX.Element;
   }
 
   export interface MessageSearchProps extends MessageSearchUIProps, MessageSearchProviderProps {
@@ -1473,9 +1469,9 @@ declare module '@sendbird/uikit-react/Channel/utils/compareMessagesForGrouping' 
     currentChannel: GroupChannel,
     replyType: SendbirdUIKitGlobal.ReplyType,
   ): [
-      chainTop: boolean,
-      chainBottom: boolean,
-    ]
+    chainTop: boolean,
+    chainBottom: boolean,
+  ]
 }
 
 declare module '@sendbird/uikit-react/Channel/components/ChannelHeader' {
@@ -2414,13 +2410,7 @@ declare module '@sendbird/uikit-react/ui/MessageInput/hooks/usePaste' {
     setHeight: () => void;
   };
 
-  export function usePaste({
-    ref,
-    setIsInput,
-    setHeight,
-    channel,
-    setMentionedUsers,
-  }: DynamicProps): (e: React.ClipboardEvent<HTMLDivElement>) => void
+  export function usePaste(props: DynamicProps): (e: React.ClipboardEvent<HTMLDivElement>) => void
 }
 
 declare module '@sendbird/uikit-react/ui/VoiceMessageInput' {

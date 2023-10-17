@@ -14,7 +14,7 @@ import { visualizer } from 'rollup-plugin-visualizer';
 
 // config from package.json
 import pkg from './package.json';
-import inputs from './exports';
+import inputs from './rollup.module-exports';
 
 const APP_VERSION_STRING = '__react_dev_mode__';
 
@@ -102,7 +102,7 @@ module.exports = ({
       verbose: true,
       targets: [
         {
-          src: './scripts/index_d_ts',
+          src: './scripts/index.d.ts',
           dest: 'dist',
           rename: 'index.d.ts',
         },
