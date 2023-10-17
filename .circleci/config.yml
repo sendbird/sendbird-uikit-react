@@ -48,7 +48,6 @@ commands:
 jobs:
   job-lint_and_test:
     executor: node-executor
-    parallelism: 4
     resource_class: large
     steps:
       - checkout
