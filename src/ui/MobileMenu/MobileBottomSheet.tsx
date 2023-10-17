@@ -22,6 +22,7 @@ import ReactionButton from '../ReactionButton';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
+import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 const EMOJI_SIZE = 38;
 
@@ -45,9 +46,13 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
   } = props;
   const isByMe = message?.sender?.userId === userId;
   const { stringSet } = useLocalization();
+  const globalStore = useSendbirdStateContext();
+  const {
+    isOnline,
+  } = globalStore.config;
   const showMenuItemCopy: boolean = isUserMessage(message as UserMessage);
   const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe);
-  const showMenuItemResend: boolean = (isFailedMessage(message) && message?.isResendable && isByMe);
+  const showMenuItemResend: boolean = (isOnline && isFailedMessage(message) && message?.isResendable && isByMe);
 
   const showMenuItemDelete: boolean = !isPendingMessage(message) && isByMe;
   const showMenuItemDeleteByState = isByMe && (deleteMenuState === undefined || deleteMenuState !== 'HIDE');
@@ -58,7 +63,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     || (message?.threadInfo?.replyCount ?? 0) > 0
   );
 
-  const showMenuItemDownload: boolean = !isPendingMessage(message) && isFileMessage(message) && !isVoiceMessage(message);
+  const showMenuItemDownload: boolean = isSentMessage(message) && isFileMessage(message) && !isVoiceMessage(message);
   const showReaction: boolean = !isFailedMessage(message) && !isPendingMessage(message) && isReactionEnabled;
   const showMenuItemReply: boolean = (replyType === 'QUOTE_REPLY')
     && !isFailedMessage(message)
