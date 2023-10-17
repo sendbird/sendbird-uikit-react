@@ -16,22 +16,22 @@ function useDeleteMessageCallback({ currentGroupChannel, messagesDispatcher }, {
           payload: message.reqId,
         });
         resolve(message);
-      }
-
-      logger.info('Channel | useDeleteMessageCallback: Deleting message from remote:', sendingStatus);
-      currentGroupChannel.deleteMessage(message)
-        .then(() => {
-          logger.info('Channel | useDeleteMessageCallback: Deleting message success!', message);
-          messagesDispatcher({
-            type: messageActionTypes.ON_MESSAGE_DELETED,
-            payload: message.messageId,
+      } else {
+        logger.info('Channel | useDeleteMessageCallback: Deleting message from remote:', sendingStatus);
+        currentGroupChannel.deleteMessage(message)
+          .then(() => {
+            logger.info('Channel | useDeleteMessageCallback: Deleting message success!', message);
+            messagesDispatcher({
+              type: messageActionTypes.ON_MESSAGE_DELETED,
+              payload: message.messageId,
+            });
+            resolve(message);
+          })
+          .catch((err) => {
+            logger.warning('Channel | useDeleteMessageCallback: Deleting message failed!', err);
+            reject(err);
           });
-          resolve(message);
-        })
-        .catch((err) => {
-          logger.warning('Channel | useDeleteMessageCallback: Deleting message failed!', err);
-          reject(err);
-        });
+      }
     });
   }, [currentGroupChannel, messagesDispatcher]);
 }
