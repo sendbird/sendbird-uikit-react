@@ -13,11 +13,12 @@ import {
   isUserMessage,
   isSentMessage,
   isFailedMessage,
-  isPendingMessage, SendableMessageType, isMultipleFilesMessage,
+  isPendingMessage, SendableMessageType,
 } from '../../utils/index';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { Role } from '../../lib/types';
 import { ReplyType } from '../../types';
+import { useChannelContext } from '../../modules/Channel/context/ChannelProvider';
 
 interface Props {
   className?: string | Array<string>;
@@ -55,6 +56,7 @@ export default function MessageItemMenu({
   const { stringSet } = useContext(LocalizationContext);
   const triggerRef = useRef(null);
   const containerRef = useRef(null);
+  const channelStore = useChannelContext();
 
   const showMenuItemCopy: boolean = isUserMessage(message as UserMessage);
   const showMenuItemEdit: boolean = (!channel?.isEphemeral && isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe);
@@ -209,9 +211,13 @@ export default function MessageItemMenu({
                 <MenuItem
                   className="sendbird-message-item-menu__list__menu-item menu-item-delete"
                   onClick={() => {
-                    if (isMultipleFilesMessage(message) || !disabled) {
-                      showRemove(true);
-                      closeDropdown();
+                    if (!disabled || isFailedMessage(message)) {
+                      if (isFailedMessage(message)) {
+                        channelStore?.deleteMessage?.(message);
+                      } else {
+                        showRemove(true);
+                        closeDropdown();
+                      }
                     }
                   }}
                   disable={
