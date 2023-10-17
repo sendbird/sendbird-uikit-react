@@ -14,7 +14,6 @@ import {
 } from '../../utils';
 import { MultipleFilesMessage } from '@sendbird/chat/message';
 import { getMessageFirstFileType, getMessageFirstFileUrl, getMessageFirstFileThumbnailUrl } from '../QuoteMessage/utils';
-import { match } from 'ts-pattern';
 
 interface Props {
   message: FileMessage | MultipleFilesMessage;
@@ -26,30 +25,27 @@ export default function QuoteMessageThumbnail({ message }: Props): ReactElement 
   if (!isFileMessage(message) && !isMultipleFilesMessage(message) || isVoiceMessage(message as FileMessage)) {
     return null;
   }
-  const thumbnailUrl: string = match(message)
-    .when(isFileMessage, () => {
-      return getMessageFirstFileThumbnailUrl(message)
-        || (
-          (
-            isImageMessage(message as FileMessage)
-            || isVideoMessage(message as FileMessage)
-          )
-          && getMessageFirstFileUrl(message)
-        );
-    })
-    .when(isMultipleFilesMessage, () => {
-      const castedMessage: MultipleFilesMessage = message as MultipleFilesMessage;
-      return getMessageFirstFileThumbnailUrl(castedMessage)
-        || (
-          castedMessage.fileInfoList.length > 0
-          && isImageFileInfo((message as MultipleFilesMessage).fileInfoList[0])
-          && getMessageFirstFileUrl(message)
-        );
-    })
-    .otherwise(() => {
-      return getMessageFirstFileThumbnailUrl(message);
-    });
-  if (!isVideoMessage(message) && (isThumbnailMessage(message) || isMultipleFilesMessage(message)) && thumbnailUrl) {
+  let thumbnailUrl = getMessageFirstFileThumbnailUrl(message);
+  if (!thumbnailUrl) {
+    if (
+      message.isFileMessage?.()
+      && (
+        isImageMessage(message as FileMessage)
+        || isVideoMessage(message as FileMessage)
+      )
+    ) {
+      thumbnailUrl = getMessageFirstFileUrl(message);
+    } else if (
+      message.isMultipleFilesMessage?.()
+      && (
+        message.fileInfoList.length > 0
+        && isImageFileInfo((message as MultipleFilesMessage).fileInfoList[0])
+      )
+    ) {
+      thumbnailUrl = message.fileInfoList[0].url;
+    }
+  }
+  if (thumbnailUrl) {
     return (
       <ImageRenderer
         className={componentClassname}
@@ -60,7 +56,8 @@ export default function QuoteMessageThumbnail({ message }: Props): ReactElement 
         fixedSize
       />
     );
-  } else if (isVideoMessage(message as FileMessage) && thumbnailUrl) {
+  }
+  if (isVideoMessage(message as FileMessage) && thumbnailUrl) {
     return (
       <div className={componentClassname}>
         <video
@@ -71,6 +68,17 @@ export default function QuoteMessageThumbnail({ message }: Props): ReactElement 
           src={thumbnailUrl}
         />
       </div>
+    );
+  } else if ((isThumbnailMessage(message) || isMultipleFilesMessage(message)) && thumbnailUrl) {
+    return (
+      <ImageRenderer
+        className={componentClassname}
+        url={thumbnailUrl}
+        alt={getMessageFirstFileType(message)}
+        width="44px"
+        height="44px"
+        fixedSize
+      />
     );
   } else if (isAudioMessage(message as FileMessage)) {
     return (
