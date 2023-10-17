@@ -1,18 +1,12 @@
 import React from 'react';
-// import { SendBirdState } from './SendbirdState';
+import type { SendBirdState } from './types';
 
 type ContextAwareComponentType = {
   (props: any): JSX.Element;
   displayName: string;
 };
 
-/**
- * TODO
- *  1. Add type to the SendbirdSdkContext
- *  2. Migrate the interface names and file strctures of each module
-*/
-// export const SendbirdSdkContext = React.createContext<SendBirdState>({});
-export const SendbirdSdkContext = React.createContext({});
+export const SendbirdSdkContext = React.createContext<SendBirdState | null>(null);
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const withSendbirdContext = (OriginalComponent: any, mapStoreToProps: Record<string, any>): ContextAwareComponentType => {

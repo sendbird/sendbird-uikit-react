@@ -4,6 +4,7 @@
     "target": "es5",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
     "typeRoots": ["node_modules/@types", "node_modules/jest-extended"]
   },
   "include": ["src"]

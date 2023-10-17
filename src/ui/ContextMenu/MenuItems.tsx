@@ -7,7 +7,7 @@ interface MenuItemsProps {
   openLeft?: boolean;
   children: React.ReactElement | Array<React.ReactElement> | React.ReactNode;
   parentRef: React.RefObject<HTMLElement>;
-  parentContainRef: React.RefObject<HTMLElement>;
+  parentContainRef?: React.RefObject<HTMLElement>;
   closeDropdown: () => void;
 }
 

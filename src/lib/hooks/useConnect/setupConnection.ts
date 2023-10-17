@@ -110,14 +110,16 @@ export async function setUpConnection({
       newSdk?.addSendbirdExtensions?.(
         [
           {
-            product: SendbirdProduct?.UIKIT_CHAT ?? 'uikit-chat',
+            product: SendbirdProduct?.UIKIT_CHAT ?? 'uikit-chat' as SendbirdProduct,
             version: APP_VERSION_STRING,
-            platform: SendbirdPlatform?.JS ?? 'js',
+            platform: SendbirdPlatform?.JS ?? 'js' as SendbirdPlatform,
           },
         ],
-        isMobile
-          ? (DeviceOsPlatform?.MOBILE_WEB ?? 'mobile_web')
-          : (DeviceOsPlatform?.WEB ?? 'web'),
+        {
+          platform: (isMobile
+            ? DeviceOsPlatform?.MOBILE_WEB ?? 'mobile_web'
+            : DeviceOsPlatform?.WEB ?? 'web') as DeviceOsPlatform,
+        },
         customExtensionParams,
       );
       newSdk.addExtension('sb_uikit', APP_VERSION_STRING);

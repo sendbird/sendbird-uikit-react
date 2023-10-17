@@ -137,6 +137,7 @@ const ChannelListContext = React.createContext<ChannelListProviderInterface | nu
   channelListDispatcher: null,
   channelSource: null,
   typingChannels: [],
+  fetchChannelList: noop,
 });
 
 const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelListProviderProps) => {
