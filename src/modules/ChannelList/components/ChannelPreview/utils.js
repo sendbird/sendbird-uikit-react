@@ -79,7 +79,7 @@ const getPrettyLastMessage = (message = null) => {
     return getChannelPreviewFileDisplayString(message.type);
   }
   if (message.isMultipleFilesMessage()) {
-    return 'Photo';
+    return stringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_PHOTO;
   }
   return message.message ?? '';
 };
