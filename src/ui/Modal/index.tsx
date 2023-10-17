@@ -25,7 +25,7 @@ export const ModalHeader = ({ titleText }: ModalHeaderProps): ReactElement => (
 );
 
 export interface ModalBodyProps {
-  children?: ReactElement;
+  children?: ReactElement | ReactElement[] | null;
 }
 export const ModalBody = ({ children }: ModalBodyProps): ReactElement => (
   <div className="sendbird-modal__body">
@@ -72,7 +72,7 @@ export const ModalFooter = ({
 };
 
 export interface ModalProps {
-  children?: ReactElement;
+  children?: ReactElement | ReactElement[];
   className?: string;
   isCloseOnClickOutside?: boolean;
   isFullScreenOnMobile?: boolean;
@@ -120,7 +120,7 @@ export function Modal(props: ModalProps): ReactElement {
         {renderHeader?.() || (
           <ModalHeader titleText={titleText ?? ''} />
         )}
-        <ModalBody>{children ?? <></>}</ModalBody>
+        <ModalBody>{children}</ModalBody>
         {
           !hideFooter && (
             <ModalFooter

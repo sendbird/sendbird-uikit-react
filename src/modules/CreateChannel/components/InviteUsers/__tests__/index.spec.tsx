@@ -3,6 +3,9 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import '@testing-library/jest-dom/matchers';
 import InviteUsers from '../index';
+import { ApplicationUserListQuery } from '@sendbird/chat';
+import { SendbirdSdkContext } from '../../../../../lib/SendbirdSdkContext';
+import { SendBirdState } from '../../../../../lib/types';
 
 jest.mock('../../../context/CreateChannelProvider', () => ({
   useCreateChannelContext: jest.fn(() => ({
@@ -21,18 +24,21 @@ jest.mock('react-dom', () => ({
 }));
 
 describe('InviteUsers', () => {
-  it('should enable the modal submit button when there is only the logged-in user is in the user list', () => {
-    const userListQuery = jest.fn(() => ({
-      hasNext: false,
-      next: jest.fn().mockResolvedValue([
-        { userId: 'user1' },
-      ]),
-    }));
+  it('should enable the modal submit button when there is only the logged-in user is in the user list', async () => {
+    const userListQuery = jest.fn(
+      () => ({
+        hasNext: false,
+        next: jest.fn().mockResolvedValue([{ userId: 'user1' }]),
+      } as unknown as ApplicationUserListQuery),
+    );
 
-    render(<InviteUsers userListQuery={userListQuery} />);
+    render(
+      <SendbirdSdkContext.Provider value={{} as SendBirdState}>
+        <InviteUsers userListQuery={userListQuery} />
+      </SendbirdSdkContext.Provider>,
+    );
 
-    const submitButton = screen.getByText('Create');
-    expect(submitButton).toBeEnabled();
+    expect(await screen.findByText('Create')).toBeEnabled();
   });
 
   // TODO: add this case too
