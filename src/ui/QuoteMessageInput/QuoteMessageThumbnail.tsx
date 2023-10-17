@@ -8,7 +8,8 @@ import {
   isFileMessage, isImageFileInfo,
   isImageMessage,
   isMultipleFilesMessage,
-  isThumbnailMessage, isVideoMessage,
+  isThumbnailMessage,
+  isVideoMessage,
   isVoiceMessage,
 } from '../../utils';
 import { MultipleFilesMessage } from '@sendbird/chat/message';
