@@ -30,8 +30,8 @@ export default function QuoteMessageThumbnail({ message }: Props): ReactElement 
     if (
       message.isFileMessage?.()
       && (
-        isImageMessage(message as FileMessage)
-        || isVideoMessage(message as FileMessage)
+        isImageMessage(message)
+        || isVideoMessage(message)
       )
     ) {
       thumbnailUrl = getMessageFirstFileUrl(message);
@@ -39,23 +39,11 @@ export default function QuoteMessageThumbnail({ message }: Props): ReactElement 
       message.isMultipleFilesMessage?.()
       && (
         message.fileInfoList.length > 0
-        && isImageFileInfo((message as MultipleFilesMessage).fileInfoList[0])
+        && isImageFileInfo((message).fileInfoList[0])
       )
     ) {
       thumbnailUrl = message.fileInfoList[0].url;
     }
-  }
-  if (thumbnailUrl) {
-    return (
-      <ImageRenderer
-        className={componentClassname}
-        url={thumbnailUrl}
-        alt={getMessageFirstFileType(message)}
-        width="44px"
-        height="44px"
-        fixedSize
-      />
-    );
   }
   if (isVideoMessage(message as FileMessage) && thumbnailUrl) {
     return (
