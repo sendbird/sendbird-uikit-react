@@ -4,6 +4,7 @@
     "target": "es5",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "typeRoots": ["node_modules/@types", "node_modules/jest-extended"]
   },
-  "files": ["node_modules/jest-extended/types/index.d.ts"],
+  "include": ["src"]
 }
