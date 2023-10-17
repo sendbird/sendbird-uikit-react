@@ -1838,7 +1838,7 @@ declare module '@sendbird/uikit-react/EditUserProfile' {
 declare module '@sendbird/uikit-react/EditUserProfile/context' {
   import SendbirdUIKitGlobal from 'SendbirdUIKitGlobal';
   export const EditUserProfileProvider: React.FC<SendbirdUIKitGlobal.EditUserProfileProps>;
-  export function useEditUserProfileProviderContext(): SendbirdUIKitGlobal.EditUserProfileProviderInterface;
+  export function useEditUserProfileContext(): SendbirdUIKitGlobal.EditUserProfileProviderInterface;
 }
 
 declare module '@sendbird/uikit-react/EditUserProfile/components/EditUserProfileUI' {
