@@ -139,7 +139,7 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   setIsScrolled?: React.Dispatch<React.SetStateAction<boolean>>;
   messageActionTypes: Record<string, string>;
   messagesDispatcher: CustomUseReducerDispatcher;
-  quoteMessage: SendableMessageType;
+  quoteMessage: SendableMessageType | null;
   setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
   initialTimeStamp: number;
   setInitialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
