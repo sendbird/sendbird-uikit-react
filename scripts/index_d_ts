@@ -643,8 +643,8 @@ declare module "SendbirdUIKitGlobal" {
   export interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInterface {
     scrollToMessage?(createdAt: number, messageId: number): void;
     messageActionTypes: Record<string, string>;
-    quoteMessage: CoreMessageType;
-    setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType>>;
+    quoteMessage: SendableMessageType | null;
+    setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
     initialTimeStamp: number;
     setInitialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
     animatedMessageId: number;
