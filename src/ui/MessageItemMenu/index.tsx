@@ -13,7 +13,8 @@ import {
   isUserMessage,
   isSentMessage,
   isFailedMessage,
-  isPendingMessage, SendableMessageType,
+  isPendingMessage,
+  SendableMessageType,
 } from '../../utils/index';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { Role } from '../../lib/types';
