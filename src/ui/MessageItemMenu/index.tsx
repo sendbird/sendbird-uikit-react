@@ -211,13 +211,15 @@ export default function MessageItemMenu({
                 <MenuItem
                   className="sendbird-message-item-menu__list__menu-item menu-item-delete"
                   onClick={() => {
-                    if (!disabled || isFailedMessage(message)) {
-                      if (isFailedMessage(message)) {
-                        channelStore?.deleteMessage?.(message);
-                      } else {
-                        showRemove(true);
-                        closeDropdown();
-                      }
+                    if (disabled) {
+                      return;
+                    }
+                    if (isFailedMessage(message)) {
+                      channelStore?.deleteMessage?.(message);
+                    } else {
+                      showRemove(true);
+                      closeDropdown();
+                    }
                     }
                   }}
                   disable={
