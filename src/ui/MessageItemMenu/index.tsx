@@ -220,8 +220,8 @@ export default function MessageItemMenu({
                       showRemove(true);
                       closeDropdown();
                     }
-                    }
-                  }}
+                  }
+                  }
                   disable={
                     typeof disableDeleteMessage === 'boolean'
                       ? disableDeleteMessage
