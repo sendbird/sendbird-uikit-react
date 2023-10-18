@@ -63,11 +63,22 @@ describe('ChannelPreview', () => {
         isMultipleFilesMessage: () => false,
       }
     };
-    const channel7 = {
+    const mfmGifChannel = {
       lastMessage: {
         fileInfoList: [
-          { fileName: 'file1', mimeType: 'video/mp4', },
-          { fileName: 'file2', mimeType: 'image/gif', }
+          { fileName: 'file1', mimeType: 'image/gif', },
+          { fileName: 'file2', mimeType: 'video/mp4', }
+        ],
+        isUserMessage: () => false,
+        isFileMessage: () => false,
+        isMultipleFilesMessage: () => true,
+      }
+    };
+    const mfmPhotoChannel = {
+      lastMessage: {
+        fileInfoList: [
+          { fileName: 'file1', mimeType: 'image/jpeg', },
+          { fileName: 'file2', mimeType: 'video/mp4', }
         ],
         isUserMessage: () => false,
         isFileMessage: () => false,
@@ -93,8 +104,11 @@ describe('ChannelPreview', () => {
       getLastMessage(channel6, LabelStringSet)
     ).toBe(LabelStringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GIF);
     expect(
-      getLastMessage(channel7, LabelStringSet)
-    ).toBe(LabelStringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_VIDEO);
+      getLastMessage(mfmGifChannel, LabelStringSet)
+    ).toBe(LabelStringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_PHOTO);
+    expect(
+        getLastMessage(mfmPhotoChannel, LabelStringSet)
+    ).toBe(LabelStringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_PHOTO);
   });
 
   test('utils/getChannelTitle returns channelTitle', function () {
