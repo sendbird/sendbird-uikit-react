@@ -37,36 +37,60 @@ commands:
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  run-lint:
+  prepare:
     executor: default
     steps:
       - checkout
+      - attach_project
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "yarn.lock" }}
+            - v1-dependencies-
+      - run:
+          name: Install dependencies
+          command: |
+            yarn install --immutable
+      - save_cache:
+          key: v1-dependencies-{{ checksum "yarn.lock" }}
+          paths:
+            # pattern match not supported: https://ideas.circleci.com/cloud-feature-requests/p/support-wildcards-in-savecachepaths
+            - node_modules
+            - .yarn/cache
+      - persist_to_workspace:
+          root: .
+          paths: .
+
+  run-lint:
+    executor: default
+    steps:
+      - attach_project
       - run:
           name: Run lint
           command: |
-            yarn install --immutable
             yarn lint
 
   run-build:
     executor: default
     steps:
-      - checkout
+      - attach_project
       - run:
           name: Run build
           command: |
-            yarn install --immutable
             yarn build
 
   run-test:
     executor: default
     resource_class: large
     steps:
-      - checkout
+      - attach_project
       - run:
+          no_output_timeout: 15m
           name: Run test
           command: |
-            yarn install --immutable
             yarn test --coverage --forceExit
+      - store_artifacts:
+          path: coverage
+          destination: coverage
 
   create-ticket:
     executor: default
@@ -125,9 +149,16 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-      - run-lint
-      - run-build
-      - run-test
+      - prepare
+      - run-lint:
+          requires:
+            - prepare
+      - run-build:
+          requires:
+            - prepare
+      - run-test:
+          requires:
+            - prepare
 
   create-release-ticket-workflow:
     when: << pipeline.parameters.run_workflow_create_ticket >>

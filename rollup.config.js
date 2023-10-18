@@ -15,8 +15,18 @@ import { visualizer } from 'rollup-plugin-visualizer';
 // config from package.json
 import pkg from './package.json';
 import inputs from './rollup.module-exports';
+import * as path from 'path';
+import * as fs from "fs";
 
 const APP_VERSION_STRING = '__react_dev_mode__';
+
+Object.keys(inputs).forEach((key) => {
+  inputs[key] = path.resolve(__dirname, inputs[key]);
+
+  const existed = fs.existsSync(inputs[key]);
+  console.log('exist:', existed, inputs[key]);
+});
+
 
 module.exports = ({
   // To bundle split
