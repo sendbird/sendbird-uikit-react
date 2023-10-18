@@ -281,6 +281,14 @@ export const user1 = () => fitPageSize(
     isMultipleFilesMessageEnabled
     isTypingIndicatorEnabledOnChannelList
     isMessageReceiptStatusEnabledOnChannelList
+    // TODO: Remove this before merging.
+    eventHandlers={{
+      reaction: {
+        onPressUserProfile: (user) => {
+          console.log('## onPressUserProfile called: ', user);
+        },
+      },
+    }}
   />
 );
 export const user2 = () => fitPageSize(

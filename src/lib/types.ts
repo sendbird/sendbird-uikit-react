@@ -70,6 +70,15 @@ export interface SendBirdProviderProps {
   };
   isTypingIndicatorEnabledOnChannelList?: boolean;
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
+
+  // Customer provided callbacks
+  eventHandlers?: SBUEventHandlers;
+}
+
+export interface SBUEventHandlers {
+  reaction?: {
+    onPressUserProfile?(member: User): void;
+  },
 }
 
 export interface SendBirdStateConfig {
@@ -146,6 +155,8 @@ export type SendBirdState = {
   dispatchers: {
     userDispatcher: UserDispatcher,
   },
+  // Customer provided callbacks
+  eventHandlers?: SBUEventHandlers;
 };
 
 type UserDispatcherParams = {

@@ -118,6 +118,15 @@ declare module "SendbirdUIKitGlobal" {
     isMessageReceiptStatusEnabledOnChannelList?: boolean;
     uikitOptions?: UIKitOptions;
     sdkInitParams?: SendbirdChatParams<Module[]>;
+
+    // Customer provided callbacks
+    eventHandlers?: SBUEventHandlers;
+  }
+
+  export interface SBUEventHandlers {
+    reaction?: {
+      onPressUserProfile?(member: User): void;
+    },
   }
 
   export type Logger = {
@@ -301,6 +310,9 @@ declare module "SendbirdUIKitGlobal" {
     uikitOptions?: UIKitOptions;
     sdkInitParams?: SendbirdChatParams<Module[]>;
     customExtensionParams?: Record<string, string>;
+
+    // Customer provided callbacks
+    eventHandlers?: SBUEventHandlers;
   }
 
   export interface SendBirdStateConfig {

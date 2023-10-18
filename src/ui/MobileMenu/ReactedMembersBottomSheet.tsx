@@ -11,6 +11,7 @@ import ImageRenderer from '../ImageRenderer';
 import Icon, { IconColors, IconTypes } from '../Icon';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import UserListItem from '../UserListItem';
+import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 export interface ReactedMembersBottomSheetProps {
   message: SendableMessageType;
@@ -28,7 +29,16 @@ export const ReactedMembersBottomSheet = ({
   emojiContainer,
 }: ReactedMembersBottomSheetProps): ReactElement => {
   const { members = [] } = channel;
+  const globalState = useSendbirdStateContext?.();
+  const onPressUserProfileHandler = globalState?.eventHandlers?.reaction?.onPressUserProfile;
   const [selectedEmoji, setSelectedEmoji] = useState(emojiKey);
+
+  function onPressUserProfileCallBack() {
+    if (onPressUserProfileHandler && message) {
+      const sender = (message as SendableMessageType)?.sender;
+      onPressUserProfileHandler(sender);
+    }
+  }
 
   return (
     <BottomSheet onBackdropClick={hideMenu}>
@@ -85,6 +95,7 @@ export const ReactedMembersBottomSheet = ({
                   className="sendbird-message__bottomsheet__reactor-list__item"
                   user={member}
                   avatarSize="36px"
+                  onClick={onPressUserProfileCallBack}
                 />
               ))
           }

@@ -53,6 +53,7 @@ export default function App(props) {
     isUserIdUsedForNickname,
     sdkInitParams,
     customExtensionParams,
+    eventHandlers,
   } = props;
   const [currentChannel, setCurrentChannel] = useState(null);
   return (
@@ -91,6 +92,7 @@ export default function App(props) {
       isUserIdUsedForNickname={isUserIdUsedForNickname}
       sdkInitParams={sdkInitParams}
       customExtensionParams={customExtensionParams}
+      eventHandlers={eventHandlers}
     >
       <AppLayout
         isReactionEnabled={isReactionEnabled}
@@ -166,6 +168,9 @@ App.propTypes = {
   isUserIdUsedForNickname: PropTypes.bool,
   sdkInitParams: PropTypes.shape({}),
   customExtensionParams: PropTypes.shape({}),
+
+  // Customer provided callbacks
+  eventHandlers: PropTypes.shape({}),
 };
 
 App.defaultProps = {
@@ -208,4 +213,7 @@ App.defaultProps = {
   isUserIdUsedForNickname: true,
   sdkInitParams: undefined,
   customExtensionParams: undefined,
+
+  // Customer provided callbacks
+  eventHandlers: undefined,
 };

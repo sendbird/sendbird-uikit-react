@@ -1,16 +1,13 @@
 import type { User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-
 import type { Locale } from 'date-fns';
-
 import {
   ReplyType,
   UserListQuery,
   RenderUserProfileProps,
   SendBirdProviderConfig,
 } from '../../types';
-
-import { CustomExtensionParams, SendbirdChatInitParams } from '../../lib/types';
+import { CustomExtensionParams, SBUEventHandlers, SendbirdChatInitParams } from '../../lib/types';
 import { SendableMessageType } from '../../utils';
 
 export interface AppLayoutProps {
@@ -80,4 +77,7 @@ export default interface AppProps {
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
   sdkInitParams?: SendbirdChatInitParams;
   customExtensionParams?: CustomExtensionParams;
+
+  // Customer provided callbacks
+  eventHandlers?: SBUEventHandlers;
 }
