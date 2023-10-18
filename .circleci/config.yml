@@ -84,7 +84,7 @@ jobs:
       - run:
           name: Run test
           command: |
-            yarn test --coverage
+            yarn test --coverage --forceExit
       - store_artifacts:
           path: coverage
           destination: coverage
