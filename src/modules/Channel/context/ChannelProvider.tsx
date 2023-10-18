@@ -34,7 +34,7 @@ import useHandleChannelEvents from './hooks/useHandleChannelEvents';
 import useGetChannel from './hooks/useGetChannel';
 import useInitialMessagesFetch from './hooks/useInitialMessagesFetch';
 import useHandleReconnect from './hooks/useHandleReconnect';
-import useScrollCallback, { UseScrollCallbackReturn } from './hooks/useScrollCallback';
+import useScrollCallback from './hooks/useScrollCallback';
 import useScrollDownCallback from './hooks/useScrollDownCallback';
 import useDeleteMessageCallback from './hooks/useDeleteMessageCallback';
 import useUpdateMessageCallback from './hooks/useUpdateMessageCallback';
@@ -148,7 +148,7 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   highLightedMessageId: number;
   nicknamesMap: Map<string, string>;
   emojiAllMap: any;
-  onScrollCallback: UseScrollCallbackReturn;
+  onScrollCallback: () => void;
   onScrollDownCallback: any;
   scrollRef: React.MutableRefObject<HTMLDivElement>;
   setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
