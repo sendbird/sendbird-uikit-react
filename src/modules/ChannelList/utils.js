@@ -27,12 +27,10 @@ const createEventHandler = ({
     },
     onUserJoined: (channel) => {
       logger.info('ChannelList: onUserJoined', channel);
-      if (channel?.lastMessage) {
-        channelListDispatcher({
-          type: channelActions.ON_USER_JOINED,
-          payload: channel,
-        });
-      }
+      channelListDispatcher({
+        type: channelActions.ON_USER_JOINED,
+        payload: channel,
+      });
     },
     onUserBanned: (channel, user) => {
       const { currentUser } = sdk;
