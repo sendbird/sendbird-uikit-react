@@ -46,10 +46,7 @@ export default function UserListItem({
   const actionRef = React.useRef(null);
   const parentRef = React.useRef(null);
   const avatarRef = React.useRef(null);
-  const {
-    disableUserProfile,
-    renderUserProfile,
-  } = useContext<UserProfileContext>(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const { stringSet } = useContext(LocalizationContext);
   return (
     <div

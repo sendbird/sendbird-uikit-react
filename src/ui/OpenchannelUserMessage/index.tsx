@@ -64,7 +64,7 @@ export default function OpenchannelUserMessage({
 }: OpenChannelUserMessageProps): ReactElement {
   // hooks
   const { stringSet, dateLocale } = useLocalization();
-  const { disableUserProfile, renderUserProfile } = useContext<UserProfileContext>(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const messageRef = useRef(null);
   const avatarRef = useRef(null);
   const contextMenuRef = useRef(null);
@@ -138,6 +138,7 @@ export default function OpenchannelUserMessage({
                           renderUserProfile({
                             user: sender,
                             close: closeDropdown,
+                            currentUserId: userId,
                           })
                         )
                         : (

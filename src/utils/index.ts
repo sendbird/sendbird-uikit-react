@@ -2,6 +2,7 @@ import SendbirdChat, { Emoji, EmojiCategory, EmojiContainer, User } from '@sendb
 import { GroupChannel, Member, SendbirdGroupChat, GroupChannelListQuery } from '@sendbird/chat/groupChannel';
 import {
   AdminMessage,
+  BaseMessage,
   FileMessage,
   MessageListParams,
   MultipleFilesMessage,
@@ -851,4 +852,10 @@ export const arrayEqual = (array1: Array<unknown>, array2: Array<unknown>): bool
     return true;
   }
   return false;
+};
+
+export const isSendableMessage = (
+  message?: BaseMessage,
+): message is SendableMessageType => {
+  return 'sender' in message;
 };

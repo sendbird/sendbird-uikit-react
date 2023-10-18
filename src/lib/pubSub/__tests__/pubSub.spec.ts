@@ -9,8 +9,8 @@ describe('PubSub', () => {
 
   it('should be able to subscribe to a topic', (done) => {
     const pubsub = pubsubFactory();
-    const topic = "TOPIC";
-    const event = { event: "event" };
+    const topic = 'TOPIC';
+    const event = { event: 'event' };
     pubsub.subscribe(topic, (event) => {
       expect(event).toBe(event);
       done();
@@ -20,10 +20,12 @@ describe('PubSub', () => {
 
   it('should be able to unsubscribe from a topic', () => {
     const pubsub = pubsubFactory();
-    const topic = "TOPIC";
-    const sub = pubsub.subscribe(topic);
+    const topic = 'TOPIC';
+    const sub = pubsub.subscribe(topic, () => {
+      throw new Error('should not be called');
+    });
     sub.remove();
     // list of topics -> empty
-    expect(pubsub.__getTopics()).toEqual({[topic]: [undefined]});
+    expect(pubsub.__getTopics()).toEqual({ [topic]: [undefined] });
   });
 });

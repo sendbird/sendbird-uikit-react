@@ -21,7 +21,6 @@ import MessageItemMenu from '../../../../ui/MessageItemMenu';
 import MessageItemReactionMenu from '../../../../ui/MessageItemReactionMenu';
 import ContextMenu, { MenuItems } from '../../../../ui/ContextMenu';
 import ConnectedUserProfile from '../../../../ui/UserProfile';
-import { UserProfileContextInterface } from '../../../../ui/MessageContent';
 import MessageInput from '../../../../ui/MessageInput';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import { Role } from '../../../../lib/types';
@@ -121,10 +120,7 @@ export default function ParentMessageInfo({
 
   // User Profile
   const avatarRef = useRef(null);
-  const {
-    disableUserProfile,
-    renderUserProfile,
-  } = useContext<UserProfileContextInterface>(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
 
   if (showEditInput && parentMessage?.isUserMessage?.()) {
     return (
@@ -244,7 +240,7 @@ export default function ParentMessageInfo({
             style={{ paddingTop: '0px', paddingBottom: '0px' }}
           >
             {renderUserProfile
-              ? renderUserProfile({ user: parentMessage?.sender, close: closeDropdown })
+              ? renderUserProfile({ user: parentMessage?.sender, close: closeDropdown, currentUserId: userId })
               : (
                 <ConnectedUserProfile
                   user={parentMessage?.sender}

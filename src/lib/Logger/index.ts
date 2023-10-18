@@ -2,6 +2,7 @@
 // in SendbirdProvider
 
 import { ObjectValues } from '../../utils/typeHelpers/objectValues';
+import { noop } from '../../utils/utils';
 
 // const [logger, setLogger] = useState(LoggerFactory(logLevel));
 export const LOG_LEVELS = {
@@ -28,26 +29,26 @@ interface PrintLogProps {
   level: LogLevel;
   title: string;
   description?: string;
+  payload?: unknown[];
 }
 export const printLog = ({
   level,
   title,
   description = '',
+  payload = [],
 }: PrintLogProps): void => {
   // eslint-disable-next-line no-console
   console.log(
-    `%c SendbirdUIKit | ${level} | ${new Date().toISOString()} | ${title} ${description && '|'}`, colorLog(level), description,
+    `%c SendbirdUIKit | ${level} | ${new Date().toISOString()} | ${title} ${description && '|'}`, colorLog(level), description, ...payload,
   );
 };
 
-type LoggerLogType = (title?: string, description?: string) => void;
-interface LoggerInterface {
-  info: LoggerLogType;
-  error: LoggerLogType;
-  warning: LoggerLogType;
+export interface LoggerInterface {
+  info(title?: string, ...payload: unknown[]): void;
+  error(title?: string, ...payload: unknown[]): void;
+  warning(title?: string, ...payload: unknown[]): void;
 }
 
-const noop = () => { /* noop */ };
 export const getDefaultLogger = (): LoggerInterface => ({
   info: noop,
   error: noop,
@@ -61,13 +62,14 @@ export const LoggerFactory = (
   const logInterface = customInterface || printLog;
   const lvlArray: Array<LogLevel> = Array.isArray(lvl) ? lvl : [lvl];
 
-  const applyLog = (lgLvl: LogLevel) => (title?: string, description?: string) => logInterface({
+  const applyLog = (lgLvl: LogLevel) => (title?: string, description?: string, ...payload: unknown[]) => logInterface({
     level: lgLvl,
     title,
     description,
+    payload,
   });
 
-  const logger = lvlArray.reduce((accumulator, currentLvl) => {
+  return lvlArray.reduce((accumulator, currentLvl) => {
     if (currentLvl === LOG_LEVELS.DEBUG || currentLvl === LOG_LEVELS.ALL) {
       return ({
         ...accumulator,
@@ -100,7 +102,6 @@ export const LoggerFactory = (
 
     return { ...accumulator };
   }, getDefaultLogger());
-  return logger;
 };
 
 // TODO: Make this to hook, useLogger

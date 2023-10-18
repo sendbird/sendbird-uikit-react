@@ -41,10 +41,7 @@ export const UserListItem: React.FC<UserListItemProps> = ({
 }: UserListItemProps) => {
   const avatarRef = useRef(null);
   const actionRef = useRef(null);
-  const {
-    disableUserProfile,
-    renderUserProfile,
-  } = useContext(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const { stringSet } = useContext(LocalizationContext);
   return (
     <div className="sendbird-participants-accordion__member">
@@ -158,7 +155,7 @@ export default function ParticipantsAccordion(props: ParticipantsAccordionProps)
   const maxMembers = props?.maxMembers || SHOWN_MEMBER_MAX;
   const { channel } = useOpenChannelSettingsContext();
   const globalState = useSendbirdStateContext();
-  const currentUser = globalState?.config?.userId;
+  const currentUserId = globalState?.config?.userId;
   const [participants, setParticipants] = useState([]);
   const [showMoreModal, setShowMoreModal] = useState(false);
   const { stringSet } = useContext(LocalizationContext);
@@ -201,7 +198,7 @@ export default function ParticipantsAccordion(props: ParticipantsAccordionProps)
               participants.slice(0, maxMembers).map((p) => (
                 <UserListItem
                   user={p}
-                  currentUser={currentUser}
+                  currentUser={currentUserId}
                   key={p.userId}
                 />
               ))

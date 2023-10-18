@@ -66,7 +66,7 @@ export default function OpenchannelOGMessage({
   const { stringSet, dateLocale } = useLocalization();
   const { isMobile } = useMediaQueryContext();
 
-  const { disableUserProfile, renderUserProfile } = useContext<UserProfileContext>(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const [contextStyle, setContextStyle] = useState({});
   const [showContextMenu, setShowContextMenu] = useState(false);
 
@@ -155,6 +155,7 @@ export default function OpenchannelOGMessage({
                             renderUserProfile({
                               user: sender,
                               close: closeDropdown,
+                              currentUserId: userId,
                             })
                           )
                           : (

@@ -1,37 +1,42 @@
+import type SendbirdChat from '@sendbird/chat';
 import { ConnectionHandler } from '@sendbird/chat';
 import { useState, useEffect } from 'react';
 
 import { uuidv4 } from '../../utils/uuid';
+import { LoggerInterface } from '../Logger';
 
-function useConnectionStatus(sdk, logger) {
-  const [isOnline, setIsOnline] = useState(true);
+function useOnlineStatus(sdk: SendbirdChat, logger: LoggerInterface) {
+  const [isOnline, setIsOnline] = useState(window?.navigator?.onLine ?? true);
 
   useEffect(() => {
     const uniqueHandlerId = uuidv4();
     try {
       logger.warning('sdk changed', uniqueHandlerId);
-      const handler = new ConnectionHandler();
-      handler.onDisconnected = () => {
-        setIsOnline(false);
-        logger.warning('onDisconnected', { isOnline });
-      };
-      handler.onReconnectStarted = () => {
-        setIsOnline(false);
-        logger.warning('onReconnectStarted', { isOnline });
-      };
-      handler.onReconnectSucceeded = () => {
-        setIsOnline(true);
-        logger.warning('onReconnectSucceeded', { isOnline });
-      };
-      handler.onReconnectFailed = () => {
-        sdk.reconnect();
-        logger.warning('onReconnectFailed');
-      };
-      logger.info('Added ConnectionHandler', uniqueHandlerId);
-      // workaround -> addConnectionHandler invalidates session handler
-      // provided through configureSession
+      const handler = new ConnectionHandler({
+        onDisconnected() {
+          setIsOnline(false);
+          logger.warning('onDisconnected', { isOnline });
+        },
+        onReconnectStarted() {
+          setIsOnline(false);
+          logger.warning('onReconnectStarted', { isOnline });
+
+        },
+        onReconnectSucceeded() {
+          setIsOnline(true);
+          logger.warning('onReconnectSucceeded', { isOnline });
+        },
+        onReconnectFailed() {
+          sdk.reconnect();
+          logger.warning('onReconnectFailed');
+        },
+      });
+
       if (sdk?.addConnectionHandler) {
+        // workaround -> addConnectionHandler invalidates session handler
+        // provided through configureSession
         sdk.addConnectionHandler(uniqueHandlerId, handler);
+        logger.info('Added ConnectionHandler', uniqueHandlerId);
       }
     } catch {
       //
@@ -87,4 +92,4 @@ function useConnectionStatus(sdk, logger) {
   return isOnline;
 }
 
-export default useConnectionStatus;
+export default useOnlineStatus;

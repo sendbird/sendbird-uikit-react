@@ -60,7 +60,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
   const editDisabled = currentOpenChannel?.isFrozen;
 
   const globalState = useSendbirdStateContext();
-  const userId = globalState?.config?.userId;
+  const currentUserId = globalState?.config?.userId;
   const isOgMessageEnabledInOpenChannel = globalState.config.openChannel.enableOgtag;
 
   let sender: User = null;
@@ -89,7 +89,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
 
   if (sender && message?.messageType !== 'admin') {
     // pending and failed messages are by me
-    isByMe = (userId === sender.userId)
+    isByMe = (currentUserId === sender.userId)
       || ((message as SendableMessageType)?.sendingStatus === SendingMessageStatus.PENDING)
       || ((message as SendableMessageType)?.sendingStatus === SendingMessageStatus.FAILED);
   }
@@ -152,7 +152,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
                   isOperator={currentOpenChannel?.isOperator((message as FileMessage)?.sender?.userId)}
                   isEphemeral={currentOpenChannel?.isEphemeral}
                   disabled={editDisabled}
-                  userId={userId}
+                  userId={currentUserId}
                   showRemove={setShowRemove}
                   resendMessage={resendMessage}
                   chainTop={chainTop}
@@ -168,7 +168,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
                   message={message as UserMessage}
                   isOperator={currentOpenChannel?.isOperator((message as UserMessage)?.sender?.userId)}
                   isEphemeral={currentOpenChannel?.isEphemeral}
-                  userId={userId}
+                  userId={currentUserId}
                   showEdit={setShowEdit}
                   disabled={editDisabled}
                   showRemove={setShowRemove}
@@ -187,7 +187,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
                   isOperator={currentOpenChannel?.isOperator((message as FileMessage)?.sender?.userId)}
                   isEphemeral={currentOpenChannel?.isEphemeral}
                   disabled={editDisabled}
-                  userId={userId}
+                  userId={currentUserId}
                   showRemove={setShowRemove}
                   resendMessage={resendMessage}
                   onClick={setShowFileViewer}
@@ -204,7 +204,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
                   message={message as UserMessage}
                   isOperator={currentOpenChannel?.isOperator((message as UserMessage)?.sender?.userId)}
                   isEphemeral={currentOpenChannel?.isEphemeral}
-                  userId={userId}
+                  userId={currentUserId}
                   disabled={editDisabled}
                   showEdit={setShowEdit}
                   showRemove={setShowRemove}
