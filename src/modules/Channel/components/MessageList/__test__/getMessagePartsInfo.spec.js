@@ -12,7 +12,7 @@ const timeList = [1, 2, 3].map((gap) => {
   time.setMinutes(time.getMinutes() + gap);
   return time.valueOf();
 });
-const users = [{ userId: 1 }, { userId: 2 }];
+const users = [{ userId: 1 }, { userId: 2 }, { userId: 3}];
 
 // same sender & same sent at
 const messageGroup1 = [1, 2, 3].map((n) => ({
