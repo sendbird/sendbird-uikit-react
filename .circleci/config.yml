@@ -41,8 +41,6 @@ jobs:
     executor: default
     steps:
       - checkout
-      - run:
-          command: ls ./src/modules/EditUserProfile/context
       - attach_project
       - restore_cache:
           keys:
@@ -52,8 +50,6 @@ jobs:
           name: Install dependencies
           command: |
             yarn install --immutable
-      - run:
-          command: ls ./src/modules/EditUserProfile/context
       - save_cache:
           key: v1-dependencies-{{ checksum "yarn.lock" }}
           paths:
@@ -69,8 +65,6 @@ jobs:
     steps:
       - attach_project
       - run:
-          command: ls ./src/modules/EditUserProfile/context
-      - run:
           name: Run lint
           command: |
             yarn lint
@@ -79,8 +73,6 @@ jobs:
     executor: default
     steps:
       - attach_project
-      - run:
-          command: ls ./src/modules/EditUserProfile/context
       - run:
           name: Run build
           command: |
@@ -91,8 +83,6 @@ jobs:
     resource_class: large
     steps:
       - attach_project
-      - run:
-          command: ls ./src/modules/EditUserProfile/context
       - run:
           no_output_timeout: 15m
           name: Run test
