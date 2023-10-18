@@ -3,7 +3,7 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 type CurrentChannelType = GroupChannel | null;
 
-export interface GetNextChannelProps {
+export interface GetNextChannelParams {
   channel: GroupChannel;
   currentChannel: CurrentChannelType;
   allChannels: GroupChannel[];
@@ -19,7 +19,7 @@ export const getNextChannel = ({
   currentChannel,
   allChannels,
   disableAutoSelect,
-}: GetNextChannelProps): CurrentChannelType => {
+}: GetNextChannelParams): CurrentChannelType => {
   let nextChannel: CurrentChannelType = null;
   if (currentChannel?.url === channel.url) {
     if (!disableAutoSelect && allChannels.length > 0) {
