@@ -6,7 +6,7 @@ import React, {
   useState,
   useContext,
 } from 'react';
-import { useEditUserProfileContext } from '../../context/EditUserProfIleProvider';
+import { useEditUserProfileContext } from '../../context/EditUserProfileProvider';
 
 import Modal from '../../../../ui/Modal';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';

@@ -3,7 +3,7 @@ import React from 'react';
 import {
   EditUserProfileProvider,
   EditUserProfileProps,
-} from './context/EditUserProfIleProvider';
+} from './context/EditUserProfileProvider';
 
 import EditUserProfile from './components/EditUserProfileUI';
 
