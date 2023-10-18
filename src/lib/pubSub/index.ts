@@ -4,7 +4,7 @@
 // without pubsub,we would not be able to listen to it
 // in our ChannelList or Conversation
 
-interface PubSubTypes {
+export interface PubSubTypes {
   __getTopics: () => Record<string, string>;
   subscribe: (topic: string, listener: unknown) => { remove: () => void };
   publish: (topic: string, info: unknown) => void;
