@@ -3,7 +3,8 @@ import format from 'date-fns/format';
 import isThisYear from 'date-fns/isThisYear';
 import isYesterday from 'date-fns/isYesterday';
 import {
-  isGif, isImage, isVideo,
+  isAudio,
+  isGif, isImage, isVideo, isVoiceMessageMimeType,
 } from '../../../../utils';
 import { LabelStringSet } from '../../../../ui/Label';
 
@@ -52,34 +53,41 @@ export const getTotalMembers = (channel) => (
     : 0
 );
 
-const getChannelPreviewFileDisplayString = (mimeType) => {
+const getChannelPreviewFileDisplayString = (mimeType, stringSet) => {
   if (isGif(mimeType)) {
-    return 'GIF';
+    return stringSet?.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GIF ?? '';
   }
   if (isImage(mimeType)) {
-    return 'Photo';
+    return stringSet?.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_PHOTO ?? '';
   }
   if (isVideo(mimeType)) {
-    return 'Video';
+    return stringSet?.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_VIDEO ?? '';
   }
-  return 'File';
+  if (isAudio(mimeType)) {
+    return stringSet?.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_AUDIO ?? '';
+  }
+  if (isVoiceMessageMimeType(mimeType)) {
+    return stringSet?.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_VOICE_MESSAGE ?? '';
+  }
+  return stringSet?.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GENERAL ?? '';
 };
 
-const getPrettyLastMessage = (message = null) => {
+const getPrettyLastMessage = (message = null, stringSet) => {
   if (!message) return '';
   if (message.isFileMessage()) {
-    return getChannelPreviewFileDisplayString(message.type);
+    return getChannelPreviewFileDisplayString(message.type, stringSet);
   }
   if (message.isMultipleFilesMessage()) {
-    const { fileInfoList } = message;
-    return fileInfoList.length > 0
-      ? getChannelPreviewFileDisplayString(fileInfoList[0].mimeType)
-      : '';
+    const mimeType = message.fileInfoList?.[0]?.mimeType;
+    if (isImage(mimeType) || isGif(mimeType)) {
+      return stringSet?.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_PHOTO ?? '';
+    }
+    return getChannelPreviewFileDisplayString(mimeType, stringSet);
   }
   return message.message ?? '';
 };
 
-export const getLastMessage = (channel) => (channel?.lastMessage ? getPrettyLastMessage(channel?.lastMessage) : '');
+export const getLastMessage = (channel, stringSet) => (channel?.lastMessage ? getPrettyLastMessage(channel?.lastMessage, stringSet) : '');
 
 export const getChannelUnreadMessageCount = (channel) => (
   channel?.unreadMessageCount

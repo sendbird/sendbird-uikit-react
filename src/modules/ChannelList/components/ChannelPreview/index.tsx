@@ -176,7 +176,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
               }
               {
                 !isChannelTyping && !isVoiceMessage(channel?.lastMessage as FileMessage) && (
-                  utils.getLastMessage(channel)
+                  utils.getLastMessage(channel, stringSet)
                 )
               }
               {

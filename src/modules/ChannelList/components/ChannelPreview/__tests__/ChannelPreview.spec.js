@@ -63,11 +63,22 @@ describe('ChannelPreview', () => {
         isMultipleFilesMessage: () => false,
       }
     };
-    const channel7 = {
+    const mfmGifChannel = {
       lastMessage: {
         fileInfoList: [
-          { fileName: 'file1', mimeType: 'video/mp4', },
-          { fileName: 'file2', mimeType: 'image/gif', }
+          { fileName: 'file1', mimeType: 'image/gif', },
+          { fileName: 'file2', mimeType: 'video/mp4', }
+        ],
+        isUserMessage: () => false,
+        isFileMessage: () => false,
+        isMultipleFilesMessage: () => true,
+      }
+    };
+    const mfmPhotoChannel = {
+      lastMessage: {
+        fileInfoList: [
+          { fileName: 'file1', mimeType: 'image/jpeg', },
+          { fileName: 'file2', mimeType: 'video/mp4', }
         ],
         isUserMessage: () => false,
         isFileMessage: () => false,
@@ -75,26 +86,29 @@ describe('ChannelPreview', () => {
       }
     };
     expect(
-      getLastMessage(channel)
+      getLastMessage(channel, LabelStringSet)
     ).toBe('');
     expect(
-      getLastMessage(channel2)
+      getLastMessage(channel2, LabelStringSet)
     ).toBe('');
     expect(
-      getLastMessage(channel3)
+      getLastMessage(channel3, LabelStringSet)
     ).toBe(text);
     expect(
-      getLastMessage(channel4)
-    ).toBe('File');
+      getLastMessage(channel4, LabelStringSet)
+    ).toBe(LabelStringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GENERAL);
     expect(
-      getLastMessage(channel5)
-    ).toBe('Photo');
+      getLastMessage(channel5, LabelStringSet)
+    ).toBe(LabelStringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_PHOTO);
     expect(
-      getLastMessage(channel6)
-    ).toBe('GIF');
+      getLastMessage(channel6, LabelStringSet)
+    ).toBe(LabelStringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GIF);
     expect(
-      getLastMessage(channel7)
-    ).toBe('Video');
+      getLastMessage(mfmGifChannel, LabelStringSet)
+    ).toBe(LabelStringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_PHOTO);
+    expect(
+        getLastMessage(mfmPhotoChannel, LabelStringSet)
+    ).toBe(LabelStringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_PHOTO);
   });
 
   test('utils/getChannelTitle returns channelTitle', function () {

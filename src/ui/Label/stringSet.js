@@ -193,6 +193,13 @@ const getStringSet = (lang = 'en') => {
       VOICE_RECORDING_PERMISSION_DENIED: `You cannot record the voice since
         voice recording is not permitted in your device system setting`,
       VOICE_MESSAGE: 'Voice Message',
+      // Channel preview last message file type display strings
+      CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GIF: 'GIF',
+      CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_PHOTO: 'Photo',
+      CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_VIDEO: 'Video',
+      CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_AUDIO: 'Audio',
+      CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_VOICE_MESSAGE: 'Voice message',
+      CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GENERAL: 'File',
     },
   };
   return stringSet[lang];
