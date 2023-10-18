@@ -86,11 +86,14 @@ export const useSendMultipleFilesMessage = ({
             uploadableFileInfo,
           });
           pubSub.publish(PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED, {
-            channelUrl: currentChannel.url,
-            requestId,
-            index,
-            uploadableFileInfo,
-            error,
+            response: {
+              channelUrl: currentChannel.url,
+              requestId,
+              index,
+              uploadableFileInfo,
+              error,
+            },
+            subscribedModules,
           });
         })
         .onPending((pendingMessage: MultipleFilesMessage) => {
@@ -118,6 +121,7 @@ export const useSendMultipleFilesMessage = ({
           pubSub.publish(PUBSUB_TOPICS.SEND_FILE_MESSAGE, {
             channel: currentChannel,
             message: succeededMessage,
+            subscribedModules,
           });
           if (scrollRef) {
             // We need this delay because rendering MFM takes time due to large image files.
