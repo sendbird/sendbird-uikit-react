@@ -10,8 +10,7 @@ import { useGlobalModalContext } from '../../../../hooks/useModal';
 import { ButtonTypes } from '../../../../ui/Button';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { ModalFooter } from '../../../../ui/Modal';
-import {SendableMessage} from "@sendbird/chat/lib/__definition";
-import {FileMessage, MultipleFilesMessage} from "@sendbird/chat/message";
+import { FileMessage, MultipleFilesMessage } from '@sendbird/chat/message';
 
 /**
  * The handleUploadFiles is a function sending a FileMessage and MultipleFilesMessage
@@ -112,14 +111,14 @@ export const useHandleUploadFiles = ({
 
       return otherFiles.reduce((
         previousPromise: Promise<MultipleFilesMessage | FileMessage>,
-        item: File
+        item: File,
       ) => {
         return previousPromise.then(() => {
           return sendFileMessage(item as File, quoteMessage);
         });
       }, imageFiles.length > 1
         ? sendMultipleFilesMessage(imageFiles, quoteMessage)
-        : sendFileMessage(imageFiles[0], quoteMessage)
+        : sendFileMessage(imageFiles[0], quoteMessage),
       );
     }
   }, [

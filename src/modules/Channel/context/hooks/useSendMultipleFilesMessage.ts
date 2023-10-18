@@ -49,7 +49,7 @@ export const useSendMultipleFilesMessage = ({
 }: UseSendMFMStaticParams): Array<SendMFMFunctionType> => {
   const sendMessage = useCallback((
     files: Array<File>,
-    quoteMessage?: SendableMessageType
+    quoteMessage?: SendableMessageType,
   ): Promise<MultipleFilesMessage> => {
     return new Promise((resolve, reject) => {
       if (!currentChannel) {
@@ -120,7 +120,7 @@ export const useSendMultipleFilesMessage = ({
               publishingModules,
             });
           })
-          .onSucceeded((succeededMessage) => {
+          .onSucceeded((succeededMessage: MultipleFilesMessage) => {
             logger.info('Channel: Sending voice message success!', { succeededMessage });
             pubSub.publish(PUBSUB_TOPICS.SEND_FILE_MESSAGE, {
               channel: currentChannel,
@@ -131,6 +131,7 @@ export const useSendMultipleFilesMessage = ({
               // We need this delay because rendering MFM takes time due to large image files.
               setTimeout(() => scrollIntoLast(0, scrollRef), 100);
             }
+            resolve(succeededMessage);
           });
       } catch (error) {
         logger.error('Channel: Sending MFM failed.', { error });
