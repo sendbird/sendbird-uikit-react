@@ -44,17 +44,18 @@ jobs:
       - attach_project
       - restore_cache:
           keys:
-            - v2-dependencies-{{ checksum "yarn.lock" }}
-            - v2-dependencies-
+            - v1-dependencies-{{ checksum "yarn.lock" }}
+            - v1-dependencies-
       - run:
           name: Install dependencies
           command: |
             yarn install --immutable
       - save_cache:
-          key: v2-dependencies-{{ checksum "yarn.lock" }}
+          key: v1-dependencies-{{ checksum "yarn.lock" }}
           paths:
             # pattern match not supported: https://ideas.circleci.com/cloud-feature-requests/p/support-wildcards-in-savecachepaths
             - node_modules
+            - .yarn/cache
       - persist_to_workspace:
           root: .
           paths: .
