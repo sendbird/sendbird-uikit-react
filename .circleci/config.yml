@@ -59,6 +59,7 @@ jobs:
 
   run-test:
     executor: default
+    resource_class: large
     steps:
       - checkout
       - run:
