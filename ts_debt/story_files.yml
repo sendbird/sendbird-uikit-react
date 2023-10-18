@@ -1,4 +1,3 @@
-./hooks/VoiceRecorder/stories/index.stories.js: index.stories.js
 ./modules/App/stories/index.stories.js: index.stories.js
 ./modules/App/stories/integrated.stories.js: integrated.stories.js
 ./modules/App/stories/theme.stories.js: theme.stories.js
