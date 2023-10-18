@@ -6,7 +6,7 @@ import { CustomUseReducerDispatcher } from '../../../../lib/SendbirdState';
 import { PUBSUB_TOPICS } from '../../../../lib/pubSub/topics';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { SendableMessageType } from '../../../../utils';
-import { SubscribedModuleType } from './useSendMultipleFilesMessage';
+import { PublishingModuleType } from './useSendMultipleFilesMessage';
 
 export interface UseHandlePubsubEventsParams {
   channelUrl: string;
@@ -40,10 +40,10 @@ export const useHandlePubsubEvents = ({
         const {
           channel,
           message,
-          subscribedModules,
-        } = props as { channel: GroupChannel, message: SendableMessageType, subscribedModules: SubscribedModuleType[] };
+          publishingModules,
+        } = props as { channel: GroupChannel, message: SendableMessageType, publishingModules: PublishingModuleType[] };
         if (channelUrl === channel?.url
-          && subscribedModules.includes(SubscribedModuleType.CHANNEL)
+          && publishingModules.includes(PublishingModuleType.CHANNEL)
         ) {
           dispatcher({
             type: channelActions.SEND_MESSAGE_START,
@@ -54,26 +54,26 @@ export const useHandlePubsubEvents = ({
       subscriber.set(PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED, pubSub.subscribe(PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED, (props) => {
         const {
           response,
-          subscribedModules,
-        } = props as { response: object, subscribedModules: SubscribedModuleType[] };
-          if (channelUrl === props.channelUrl
-            && subscribedModules.includes(SubscribedModuleType.CHANNEL)
-          ) {
-            dispatcher({
-              type: channelActions.ON_FILE_INFO_UPLOADED,
-              payload: response,
-            });
-          }
-        },
+          publishingModules,
+        } = props as { response: object, publishingModules: PublishingModuleType[] };
+        if (channelUrl === props.channelUrl
+            && publishingModules.includes(PublishingModuleType.CHANNEL)
+        ) {
+          dispatcher({
+            type: channelActions.ON_FILE_INFO_UPLOADED,
+            payload: response,
+          });
+        }
+      },
       ));
       subscriber.set(PUBSUB_TOPICS.SEND_MESSAGE_FAILED, pubSub.subscribe(PUBSUB_TOPICS.SEND_MESSAGE_FAILED, (props) => {
         const {
           channel,
           message,
-          subscribedModules,
-        } = props as { channel: GroupChannel, message: SendableMessageType, subscribedModules: SubscribedModuleType[] };
+          publishingModules,
+        } = props as { channel: GroupChannel, message: SendableMessageType, publishingModules: PublishingModuleType[] };
         if (channelUrl === channel?.url
-          && subscribedModules.includes(SubscribedModuleType.CHANNEL)
+          && publishingModules.includes(PublishingModuleType.CHANNEL)
         ) {
           dispatcher({
             type: channelActions.SEND_MESSAGE_FAILURE,

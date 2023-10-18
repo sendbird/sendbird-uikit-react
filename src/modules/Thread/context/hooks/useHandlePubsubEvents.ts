@@ -5,7 +5,7 @@ import topics from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from '../utils';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import { SendableMessageType } from '../../../../utils';
-import { SubscribedModuleType } from './useSendMultipleFilesMessage';
+import { PublishingModuleType } from './useSendMultipleFilesMessage';
 
 interface DynamicProps {
   sdkInit: boolean;
@@ -37,11 +37,11 @@ export default function useHandlePubsubEvents({
         const {
           channel,
           message,
-          subscribedModules,
-        } = props as { channel: GroupChannel, message: SendableMessageType, subscribedModules: SubscribedModuleType[] };
+          publishingModules,
+        } = props as { channel: GroupChannel, message: SendableMessageType, publishingModules: PublishingModuleType[] };
         if (currentChannel?.url === channel?.url
           && message?.parentMessageId === parentMessage?.messageId
-          && subscribedModules.includes(SubscribedModuleType.THREAD)
+          && publishingModules.includes(PublishingModuleType.THREAD)
         ) {
           // TODO: const clonedMessage = cloneMessage(message);
           const nextMessage: Record<string, any> = { ...message };
@@ -79,11 +79,11 @@ export default function useHandlePubsubEvents({
         const {
           channel,
           message,
-          subscribedModules,
-        } = props as { channel: GroupChannel, message: SendableMessageType, subscribedModules: SubscribedModuleType[] };
+          publishingModules,
+        } = props as { channel: GroupChannel, message: SendableMessageType, publishingModules: PublishingModuleType[] };
         if (currentChannel?.url === channel?.url
           && message?.parentMessageId === parentMessage?.messageId
-          && subscribedModules.includes(SubscribedModuleType.THREAD)
+          && publishingModules.includes(PublishingModuleType.THREAD)
         ) {
           threadDispatcher({
             type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
@@ -95,10 +95,10 @@ export default function useHandlePubsubEvents({
         const {
           channel,
           message,
-          subscribedModules,
-        } = props as { channel: GroupChannel, message: SendableMessageType, subscribedModules: SubscribedModuleType[] };
+          publishingModules,
+        } = props as { channel: GroupChannel, message: SendableMessageType, publishingModules: PublishingModuleType[] };
         if (currentChannel?.url === channel?.url
-          && subscribedModules.includes(SubscribedModuleType.THREAD)
+          && publishingModules.includes(PublishingModuleType.THREAD)
         ) {
           threadDispatcher({
             type: ThreadContextActionTypes.SEND_MESSAGE_SUCESS,

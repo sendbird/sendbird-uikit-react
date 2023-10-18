@@ -46,7 +46,7 @@ import useScrollToMessage from './hooks/useScrollToMessage';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 import { getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
-import { SubscribedModuleType, useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
+import { PublishingModuleType, useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
 import { useHandlePubsubEvents } from './hooks/useHandlePubsubEvents';
 
 export type MessageListParams = {
@@ -441,7 +441,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   const [sendMultipleFilesMessage] = useSendMultipleFilesMessage({
     currentChannel: currentGroupChannel,
     onBeforeSendMultipleFilesMessage,
-    subscribedModules: [SubscribedModuleType.CHANNEL],
+    publishingModules: [PublishingModuleType.CHANNEL],
   }, {
     logger,
     pubSub,

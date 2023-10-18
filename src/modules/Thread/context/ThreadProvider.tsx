@@ -32,7 +32,7 @@ import useToggleReactionCallback from './hooks/useToggleReactionsCallback';
 import useSendUserMessageCallback, { SendMessageParams } from './hooks/useSendUserMessageCallback';
 import useResendMessageCallback from './hooks/useResendMessageCallback';
 import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
-import { SubscribedModuleType, useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
+import { PublishingModuleType, useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
 import { SendableMessageType } from '../../../utils';
 
 export type ThreadProviderProps = {
@@ -201,7 +201,7 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
   const [sendMultipleFilesMessage] = useSendMultipleFilesMessage({
     currentChannel,
     onBeforeSendMultipleFilesMessage,
-    subscribedModules: [SubscribedModuleType.THREAD],
+    publishingModules: [PublishingModuleType.THREAD],
   }, {
     logger,
     pubSub,
