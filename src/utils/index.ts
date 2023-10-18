@@ -282,7 +282,8 @@ export const isThumbnailMessage = (message: SendableMessageType): boolean => (
   message && isFileMessage(message) && isSupportedFileView((message as FileMessage).type)
 );
 export const isImageMessage = (message: FileMessage): boolean => message && isThumbnailMessage(message) && isImage(message.type);
-export const isImageFileInfo = (fileInfo: UploadedFileInfo): boolean => fileInfo && isImage(fileInfo.mimeType);
+export const isImageFileInfo = (fileInfo: UploadedFileInfo): boolean => fileInfo
+  && (isImage(fileInfo.mimeType) || isGif(fileInfo.mimeType));
 export const isVideoMessage = (message: SendableMessageType): boolean => (
   message && isThumbnailMessage(message) && isVideo((message as FileMessage).type)
 );
