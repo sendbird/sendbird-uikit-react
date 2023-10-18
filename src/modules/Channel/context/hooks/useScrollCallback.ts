@@ -64,7 +64,7 @@ function useScrollCallback(
           payload: { currentGroupChannel, messages },
         });
       })
-      .catch((error) => {
+      .catch(() => {
         messagesDispatcher({
           type: messageActionTypes.FETCH_PREV_MESSAGES_FAILURE,
           payload: { currentGroupChannel },
