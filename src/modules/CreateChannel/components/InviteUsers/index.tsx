@@ -48,6 +48,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
     overrideInviteUser,
     createChannel,
     type,
+    excludeSelf
   } = useCreateChannelContext();
 
   const globalStore = useSendbirdStateContext();
@@ -160,7 +161,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
           }}
         >
           {
-            users.map((user) => (!filterUser(idsToFilter)(user.userId)) && (
+            users.map((user) => (!excludeSelf && !filterUser(idsToFilter)(user.userId)) && (
               <UserListItem
                 key={user.userId}
                 user={user}
