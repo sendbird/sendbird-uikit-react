@@ -75,7 +75,7 @@ jobs:
       - run:
           name: Run build
           command: |
-            yarn build --stream
+            yarn build
 
   run-test:
     executor: default
