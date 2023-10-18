@@ -5,7 +5,7 @@ import * as channelActions from '../dux/actionTypes';
 import { CustomUseReducerDispatcher } from '../../../../lib/SendbirdState';
 import { PUBSUB_TOPICS } from '../../../../lib/pubSub/topics';
 
-export interface UseSubscribePubSubHandlerParams {
+export interface UseHandlePubsubEventsParams {
   channelUrl: string;
   sdkInit: boolean;
   pubSub: any;
@@ -13,13 +13,13 @@ export interface UseSubscribePubSubHandlerParams {
   scrollRef: RefObject<HTMLElement>;
 }
 
-export const useSubscribePubSubHandler = ({
+export const useHandlePubsubEvents = ({
   channelUrl,
   sdkInit,
   pubSub,
   dispatcher,
   scrollRef,
-}: UseSubscribePubSubHandlerParams): void => {
+}: UseHandlePubsubEventsParams): void => {
   const subscriber = new Map();
   useEffect(() => {
     if (pubSub?.subscribe) {
