@@ -2,36 +2,26 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-# MARK: Orbs
-orbs:
-  slack: circleci/slack@4.10.1
-
-executors:
-  node-executor:
-    docker:
-      - image: cimg/node:16.19.1
-
-# MARK: Worflow parameters
 parameters:
   run_workflow_create_ticket:
     type: boolean
     default: false
 
+executors:
+  default:
+    docker:
+      - image: cimg/node:16.19.1
+    working_directory: ~/project
+
+orbs:
+  slack: circleci/slack@4.10.1
+
 commands:
-  command-lint:
+  attach_project:
     steps:
-      - run:
-          name: UIKit for React lint
-          command: |
-            yarn run eslint
-            yarn run eslint-ts
-          no_output_timeout: 5m
-  command-test:
-    steps:
-      - run:
-          name: UIKit for React test
-          command: yarn run test
-          no_output_timeout: 15m
+      - attach_workspace:
+          at: ~/project
+
   clone_deployment_script:
     steps:
       - run:
@@ -43,31 +33,64 @@ commands:
             git config --global user.email $SDK_DEPLOYMENT_BOT_EMAIL
             git clone --depth 1 --branch 1.0.1 git@github.com:sendbird/sdk-deployment.git ~/sdk-deployment
 
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  job-lint_and_test:
-    executor: node-executor
-    resource_class: large
+  prepare:
+    executor: default
     steps:
       - checkout
-      - run: node --version
-      - run: corepack enable
-      - run: corepack prepare yarn@stable --activate
-      - run: yarn --version
+      - attach_project
       - restore_cache:
-          name: Restore Yarn Package Cache
           keys:
-            - uikit-yarn-dependencies-{{ checksum "yarn.lock" }}
-      - run: yarn install --immutable
-      - command-lint
-      - command-test
+            - v2-dependencies-{{ checksum "yarn.lock" }}
+            - v2-dependencies-
+      - run:
+          name: Install dependencies
+          command: |
+            yarn install --immutable
       - save_cache:
-          key: uikit-yarn-dependencies-{{ checksum "yarn.lock" }}
+          key: v2-dependencies-{{ checksum "yarn.lock" }}
           paths:
-            - ./.yarn/cache
+            # pattern match not supported: https://ideas.circleci.com/cloud-feature-requests/p/support-wildcards-in-savecachepaths
+            - node_modules
+      - persist_to_workspace:
+          root: .
+          paths: .
+
+  run-lint:
+    executor: default
+    steps:
+      - attach_project
+      - run:
+          name: Run lint
+          command: |
+            yarn lint
+
+  run-build:
+    executor: default
+    steps:
+      - attach_project
+      - run:
+          name: Run build
+          command: |
+            yarn build --stream
+
+  run-test:
+    executor: default
+    steps:
+      - attach_project
+      - run:
+          name: Run test
+          command: |
+            yarn test --coverage
+      - store_artifacts:
+          path: coverage
+          destination: coverage
+
   create-ticket:
-    executor: node-executor
+    executor: default
     steps:
       - checkout
       - clone_deployment_script
@@ -117,14 +140,23 @@ jobs:
                 }
               ]
             }
-            
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  built-and-test:
+  build-and-test:
     jobs:
-      - job-lint_and_test
+      - prepare
+      - run-lint:
+          requires:
+            - prepare
+      - run-build:
+          requires:
+            - prepare
+      - run-test:
+          requires:
+            - prepare
+
   create-release-ticket-workflow:
     when: << pipeline.parameters.run_workflow_create_ticket >>
     jobs:
