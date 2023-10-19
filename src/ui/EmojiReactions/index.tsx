@@ -17,6 +17,7 @@ import ReactionItem from './ReactionItem';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import { AddReactionBadgeItem } from './AddReactionBadgeItem';
 import { MobileEmojisBottomSheet } from '../MobileMenu/MobileEmojisBottomSheet';
+import { User } from '@sendbird/chat';
 
 interface Props {
   className?: string | Array<string>;
@@ -28,6 +29,7 @@ interface Props {
   spaceFromTrigger?: SpaceFromTriggerType;
   isByMe?: boolean;
   toggleReaction?: (message: SendableMessageType, key: string, byMe: boolean) => void;
+  onPressUserProfile?: (member: User) => void;
 }
 
 const EmojiReactions = ({
@@ -40,6 +42,7 @@ const EmojiReactions = ({
   spaceFromTrigger = { x: 0, y: 0 },
   isByMe = false,
   toggleReaction,
+  onPressUserProfile,
 }: Props): ReactElement => {
   const { isMobile } = useMediaQueryContext();
   const addReactionRef = useRef(null);
@@ -162,6 +165,7 @@ const EmojiReactions = ({
             setSelectedEmojiKey('');
           }}
           emojiContainer={emojiContainer}
+          onPressUserProfileHandler={onPressUserProfile}
         />
       )}
     </div>

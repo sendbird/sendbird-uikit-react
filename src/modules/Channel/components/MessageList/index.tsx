@@ -80,15 +80,7 @@ const MessageList: React.FC<MessageListProps> = ({
     } = element;
 
     if (isAboutSame(scrollTop, 0, SCROLL_BUFFER)) {
-      onScrollCallback((messages) => {
-        if (messages) {
-          try {
-            //
-          } catch (error) {
-            //
-          }
-        }
-      });
+      onScrollCallback();
     }
 
     if (isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER) && hasMoreNext) {
@@ -199,7 +191,7 @@ const MessageList: React.FC<MessageListProps> = ({
                     <Message
                       handleScroll={moveScroll}
                       renderMessage={renderMessage}
-                      message={m}
+                      message={m as EveryMessage}
                       hasSeparator={hasSeparator}
                       chainTop={chainTop}
                       chainBottom={chainBottom}
@@ -228,7 +220,7 @@ const MessageList: React.FC<MessageListProps> = ({
                     <Message
                       handleScroll={moveScroll}
                       renderMessage={renderMessage}
-                      message={m}
+                      message={m as EveryMessage}
                       chainTop={chainTop}
                       chainBottom={chainBottom}
                       renderCustomSeparator={renderCustomSeparator}

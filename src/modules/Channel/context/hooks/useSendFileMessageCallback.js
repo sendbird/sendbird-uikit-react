@@ -14,7 +14,10 @@ export default function useSendFileMessageCallback({
   scrollRef,
   messagesDispatcher,
 }) {
-  const sendMessage = useCallback((file, quoteMessage = null) => {
+  const sendMessage = useCallback((
+    file,
+    quoteMessage = null,
+  ) => new Promise((resolve, reject) => {
     const {
       compressionRate,
       resizingWidth,
@@ -79,7 +82,7 @@ export default function useSendFileMessageCallback({
                 .onPending((pendingMessage) => {
                   pubSub.publish(topics.SEND_MESSAGE_START, {
                     /* pubSub is used instead of messagesDispatcher
-                      to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
+                        to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
                     message: {
                       ...pendingMessage,
                       url: URL.createObjectURL(compressedFile),
@@ -100,6 +103,7 @@ export default function useSendFileMessageCallback({
                     type: messageActionTypes.SEND_MESSAGE_FAILURE,
                     payload: failedMessage,
                   });
+                  reject(err);
                 })
                 .onSucceeded((succeededMessage) => {
                   logger.info('Channel: Sending file message success!', succeededMessage);
@@ -107,6 +111,7 @@ export default function useSendFileMessageCallback({
                     type: messageActionTypes.SEND_MESSAGE_SUCESS,
                     payload: succeededMessage,
                   });
+                  resolve(succeededMessage);
                 });
             },
             file.type,
@@ -115,6 +120,7 @@ export default function useSendFileMessageCallback({
         };
       } catch (error) {
         logger.error('Channel: Sending file message failed!', error);
+        reject(error);
       }
     } else { // Not using image compression
       if (createCustomParams) {
@@ -129,7 +135,7 @@ export default function useSendFileMessageCallback({
         .onPending((pendingMsg) => {
           pubSub.publish(topics.SEND_MESSAGE_START, {
             /* pubSub is used instead of messagesDispatcher
-              to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
+                to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
             message: {
               ...pendingMsg,
               url: URL.createObjectURL(file),
@@ -150,6 +156,7 @@ export default function useSendFileMessageCallback({
             type: messageActionTypes.SEND_MESSAGE_FAILURE,
             payload: message,
           });
+          reject(error);
         })
         .onSucceeded((message) => {
           logger.info('Channel: Sending message success!', message);
@@ -157,8 +164,9 @@ export default function useSendFileMessageCallback({
             type: messageActionTypes.SEND_MESSAGE_SUCESS,
             payload: message,
           });
+          resolve(message);
         });
     }
-  }, [currentGroupChannel, onBeforeSendFileMessage, imageCompression]);
+  }), [currentGroupChannel, onBeforeSendFileMessage, imageCompression]);
   return [sendMessage];
 }

@@ -47,7 +47,8 @@ export default function ParentMessageInfoItem({
   message,
   showFileViewer,
 }: ParentMessageInfoItemProps): ReactElement {
-  const { stores, config } = useSendbirdStateContext();
+  const { stores, config, eventHandlers } = useSendbirdStateContext?.() || {};
+  const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const {
     replyType,
     isMentionEnabled,
@@ -312,6 +313,7 @@ export default function ParentMessageInfoItem({
             emojiContainer={emojiContainer}
             memberNicknamesMap={nicknamesMap}
             toggleReaction={toggleReaction}
+            onPressUserProfile={onPressUserProfileHandler}
           />
         </div>
       )}
