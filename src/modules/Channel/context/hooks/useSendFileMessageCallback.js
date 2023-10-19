@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';
 import topics from '../../../../lib/pubSub/topics';
+import { PublishingModuleType } from '../../../internalInterfaces';
 
 export default function useSendFileMessageCallback({
   currentGroupChannel,
@@ -90,6 +91,7 @@ export default function useSendFileMessageCallback({
                       requestState: 'pending',
                     },
                     channel: currentGroupChannel,
+                    publishingModules: [PublishingModuleType.CHANNEL],
                   });
                   setTimeout(() => utils.scrollIntoLast(0, scrollRef), 1000);
                 })
@@ -143,6 +145,7 @@ export default function useSendFileMessageCallback({
               requestState: 'pending',
             },
             channel: currentGroupChannel,
+            publishingModules: [PublishingModuleType.CHANNEL],
           });
           setTimeout(() => utils.scrollIntoLast(0, scrollRef), 1000);
         })

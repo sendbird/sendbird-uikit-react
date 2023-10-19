@@ -7,6 +7,7 @@ import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdStat
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import topics from '../../../../lib/pubSub/topics';
 import { SendableMessageType } from '../../../../utils';
+import { PublishingModuleType } from '../../../internalInterfaces';
 
 export type OnBeforeSendUserMessageType = (message: string, quoteMessage?: SendableMessageType) => UserMessageCreateParams;
 interface DynamicProps {
@@ -88,6 +89,7 @@ export default function useSendUserMessageCallback({
           pubSub.publish(topics.SEND_USER_MESSAGE, {
             channel: currentChannel,
             message: message,
+            publishingModules: [PublishingModuleType.THREAD],
           });
         });
     }

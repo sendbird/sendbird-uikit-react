@@ -1,26 +1,19 @@
 import { useCallback } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
-import type {
-  MultipleFilesMessageCreateParams,
-  UploadableFileInfo,
-} from '@sendbird/chat/message';
+import type { MultipleFilesMessageCreateParams, UploadableFileInfo } from '@sendbird/chat/message';
+import { MultipleFilesMessage } from '@sendbird/chat/message';
 
 import type { Logger } from '../../../../lib/SendbirdState';
 import type { Nullable } from '../../../../types';
 import PUBSUB_TOPICS from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from '../utils';
 import { SendableMessageType } from '../../../../utils';
-import { MultipleFilesMessage } from '@sendbird/chat/message';
+import { PublishingModuleType } from '../../../internalInterfaces';
 
 export type OnBeforeSendMFMType = (
   files: Array<File>,
   quoteMessage?: SendableMessageType,
 ) => MultipleFilesMessageCreateParams;
-
-export enum PublishingModuleType {
-  CHANNEL = 'CHANNEL',
-  THREAD = 'THREAD',
-}
 
 export interface UseSendMFMDynamicParams {
   currentChannel: Nullable<GroupChannel>;

@@ -5,6 +5,7 @@ import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdStat
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import topics from '../../../../lib/pubSub/topics';
 import { SendableMessageType } from '../../../../utils';
+import { PublishingModuleType } from '../../../internalInterfaces';
 
 interface DynamicProps {
   currentChannel: GroupChannel;
@@ -42,6 +43,8 @@ export default function useResendMessageCallback({
             pubSub.publish(topics.SEND_USER_MESSAGE, {
               channel: currentChannel,
               message: message,
+              publishingModules: [PublishingModuleType.THREAD],
+
             });
           })
           .catch((error) => {
@@ -71,6 +74,7 @@ export default function useResendMessageCallback({
             pubSub.publish(topics.SEND_FILE_MESSAGE, {
               channel: currentChannel,
               message: failedMessage,
+              publishingModules: [PublishingModuleType.THREAD],
             });
           });
       } else if (failedMessage?.isMultipleFilesMessage?.()) {
@@ -93,6 +97,7 @@ export default function useResendMessageCallback({
             pubSub.publish(topics.SEND_FILE_MESSAGE, {
               channel: currentChannel,
               message,
+              publishingModules: [PublishingModuleType.THREAD],
             });
           });
       } else {
