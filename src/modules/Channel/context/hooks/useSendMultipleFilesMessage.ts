@@ -119,6 +119,7 @@ export const useSendMultipleFilesMessage = ({
               message: failedMessage,
               publishingModules,
             });
+            reject(error);
           })
           .onSucceeded((succeededMessage: MultipleFilesMessage) => {
             logger.info('Channel: Sending voice message success!', { succeededMessage });
