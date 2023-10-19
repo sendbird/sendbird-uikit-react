@@ -138,13 +138,13 @@ export default function reducer(state, action) {
         }
       }
       // Replace the currentChannel if I left the currentChannel
-      if (isMe && channel.url === currentChannel?.url) {
-        if (!disableAutoSelect && allChannels.length > 0) {
-          const [firstChannel, secondChannel = null] = allChannels;
-          nextChannel = firstChannel.url === channel.url ? secondChannel : firstChannel;
-        }
-      } else {
-        nextChannel = currentChannel;
+      if (isMe) {
+        nextChannel = getNextChannel({
+          channel,
+          currentChannel,
+          allChannels,
+          disableAutoSelect,
+        });
       }
       return {
         ...state,
