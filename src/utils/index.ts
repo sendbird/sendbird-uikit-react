@@ -347,6 +347,9 @@ export const getUIKitMessageType = (
   }
   return UIKitMessageTypes.UNKNOWN;
 };
+/**
+ * @deprecated use SendingStatus of @sendbird/chat instead
+ * */
 export const getSendingMessageStatus = (): SendingMessageStatus => ({ ...SendingMessageStatus });
 
 const reducer = (accumulator: Array<string>, currentValue: string | Array<string>): Array<any> => {

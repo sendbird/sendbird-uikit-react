@@ -11,7 +11,6 @@
 ./modules/Channel/context/hooks/useSendMessageCallback.js: useSendMessageCallback.js
 ./modules/Channel/context/hooks/useToggleReactionCallback.js: useToggleReactionCallback.js
 ./modules/Channel/context/hooks/useUpdateMessageCallback.js: useUpdateMessageCallback.js
-./modules/Channel/context/utils.js: utils.js
 ./modules/ChannelList/components/ChannelPreview/utils.js: utils.js
 ./modules/ChannelList/components/ChannelPreviewAction.jsx: ChannelPreviewAction.jsx
 ./modules/ChannelList/components/Placeholder.jsx: Placeholder.jsx
