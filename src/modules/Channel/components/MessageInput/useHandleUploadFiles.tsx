@@ -110,16 +110,21 @@ export const useHandleUploadFiles = ({
       });
 
       return otherFiles.reduce((
-        previousPromise: Promise<MultipleFilesMessage | FileMessage>,
+        previousPromise: Promise<MultipleFilesMessage | FileMessage | void>,
         item: File,
       ) => {
         return previousPromise.then(() => {
           return sendFileMessage(item as File, quoteMessage);
         });
-      }, imageFiles.length > 1
-        ? sendMultipleFilesMessage(imageFiles, quoteMessage)
-        : sendFileMessage(imageFiles[0], quoteMessage),
-      );
+      }, (() => {
+        if (imageFiles.length === 0) {
+          return Promise.resolve();
+        } else if (imageFiles.length === 1) {
+          return sendFileMessage(imageFiles[0], quoteMessage);
+        } else {
+          return sendMultipleFilesMessage(imageFiles, quoteMessage);
+        }
+      })());
     }
   }, [
     sendFileMessage,
