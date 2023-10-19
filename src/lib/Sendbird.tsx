@@ -3,6 +3,8 @@ import './__experimental__typography.scss';
 
 import React, { useEffect, useMemo, useReducer, useState } from 'react';
 import { User } from '@sendbird/chat';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { UIKitConfigProvider, useUIKitConfig } from '@sendbird/uikit-tools';
 
 import { SendbirdSdkContext } from './SendbirdSdkContext';
 
@@ -17,10 +19,8 @@ import userInitialState from './dux/user/initialState';
 import useOnlineStatus from './hooks/useOnlineStatus';
 import useConnect from './hooks/useConnect';
 import { LoggerFactory, LogLevel } from './Logger';
-import pubSubFactory from './pubSub/index';
+import pubSubFactory, { PubSubTypes } from './pubSub/index';
 import useAppendDomNode from '../hooks/useAppendDomNode';
-
-import { UIKitConfigProvider, useUIKitConfig } from '@sendbird/uikit-tools';
 
 import { VoiceMessageProvider } from './VoiceMessageProvider';
 import { LocalizationProvider } from './LocalizationContext';
@@ -66,7 +66,7 @@ export interface ImageCompressionOptions {
 
 export interface SendbirdConfig {
   logLevel?: string | Array<string>;
-  pubSub?: () => void;// TODO: Define pubSub type and apply it here
+  pubSub?: PubSubTypes;
   userMention?: {
     maxMentionCount?: number;
     maxSuggestionCount?: number;
@@ -89,13 +89,13 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
   dateLocale?: Locale;
   profileUrl?: string;
   voiceRecord?: VoiceRecordOptions;
-  userListQuery?: UserListQueryType;
+  userListQuery?(): UserListQueryType;
   imageCompression?: ImageCompressionOptions;
   allowProfileEdit?: boolean;
   disableMarkAsDelivered?: boolean;
   breakpoint?: string | boolean;
   renderUserProfile?: () => React.ReactElement;
-  onUserProfileMessage?: () => void;
+  onUserProfileMessage?: (channel: GroupChannel) => void;
   uikitOptions?: UIKitOptions;
   isUserIdUsedForNickname?: boolean;
   sdkInitParams?: SendbirdChatInitParams;
@@ -156,7 +156,7 @@ const SendbirdSDK = ({
   stringSet = null,
   dateLocale = null,
   profileUrl = '',
-  voiceRecord = { maxRecordingTime: VOICE_RECORDER_DEFAULT_MAX, minRecordingTime: VOICE_RECORDER_DEFAULT_MIN },
+  voiceRecord,
   userListQuery = null,
   imageCompression = {},
   allowProfileEdit = false,
@@ -174,10 +174,11 @@ const SendbirdSDK = ({
     logLevel = '',
     userMention = {},
     isREMUnitEnabled = false,
+    pubSub: customPubSub,
   } = config;
   const { isMobile } = useMediaQueryContext();
   const [logger, setLogger] = useState(LoggerFactory(logLevel as LogLevel));
-  const [pubSub] = useState(pubSubFactory());
+  const [pubSub] = useState(() => customPubSub ?? pubSubFactory());
   const [sdkStore, sdkDispatcher] = useReducer(sdkReducers, sdkInitialState);
   const [userStore, userDispatcher] = useReducer(userReducers, userInitialState);
 
@@ -235,9 +236,9 @@ const SendbirdSDK = ({
   ], 'body');
 
   // should move to reducer
-  const [currenttheme, setCurrenttheme] = useState(theme);
+  const [currentTheme, setCurrentTheme] = useState(theme);
   useEffect(() => {
-    setCurrenttheme(theme);
+    setCurrentTheme(theme);
   }, [theme]);
 
   useEffect(() => {
@@ -249,12 +250,12 @@ const SendbirdSDK = ({
   }, [isREMUnitEnabled]);
   // add-remove theme from body
   useEffect(() => {
-    logger.info('Setup theme', `Theme: ${currenttheme}`);
+    logger.info('Setup theme', `Theme: ${currentTheme}`);
     try {
       const body = document.querySelector('body');
       body.classList.remove('sendbird-theme--light');
       body.classList.remove('sendbird-theme--dark');
-      body.classList.add(`sendbird-theme--${currenttheme || 'light'}`);
+      body.classList.add(`sendbird-theme--${currentTheme || 'light'}`);
       logger.info('Finish setup theme');
       // eslint-disable-next-line no-empty
     } catch (e) {
@@ -268,7 +269,7 @@ const SendbirdSDK = ({
         // eslint-disable-next-line no-empty
       } catch { }
     };
-  }, [currenttheme]);
+  }, [currentTheme]);
 
   const isOnline = useOnlineStatus(sdkStore.sdk, logger);
 
@@ -317,8 +318,9 @@ const SendbirdSDK = ({
           userId,
           appId,
           accessToken,
-          theme: currenttheme,
-          setCurrenttheme,
+          theme: currentTheme,
+          setCurrentTheme,
+          setCurrenttheme: setCurrentTheme,
           isMultipleFilesMessageEnabled,
           uikitUploadSizeLimit,
           uikitMultipleFilesMessageLimit,
@@ -329,7 +331,10 @@ const SendbirdSDK = ({
             compressionRate: 0.7,
             ...imageCompression,
           },
-          voiceRecord,
+          voiceRecord: {
+            maxRecordingTime: voiceRecord?.maxRecordingTime ?? VOICE_RECORDER_DEFAULT_MAX,
+            minRecordingTime: voiceRecord?.minRecordingTime ?? VOICE_RECORDER_DEFAULT_MIN,
+          },
           userMention: {
             maxMentionCount: userMention?.maxMentionCount || 10,
             maxSuggestionCount: userMention?.maxSuggestionCount || 15,
@@ -359,7 +364,7 @@ const SendbirdSDK = ({
               sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableOgtag,
             enableTypingIndicator: configs.groupChannel.channel.enableTypingIndicator,
             enableDocument: configs.groupChannel.channel.input.enableDocument,
-            threadReplySelectType: getCaseResolvedThreadReplySelectType(configs.groupChannel.channel.threadReplySelectType).upperCase,
+            threadReplySelectType: getCaseResolvedThreadReplySelectType(configs.groupChannel.channel.threadReplySelectType).lowerCase,
           },
           openChannel: {
             enableOgtag:
