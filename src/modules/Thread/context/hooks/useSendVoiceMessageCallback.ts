@@ -13,6 +13,7 @@ import {
   VOICE_MESSAGE_MIME_TYPE,
 } from '../../../../utils/consts';
 import { SendableMessageType } from '../../../../utils';
+import { PublishingModuleType } from '../../../internalInterfaces';
 
 interface DynamicParams {
   currentChannel: GroupChannel;
@@ -95,6 +96,7 @@ export const useSendVoiceMessageCallback = ({
         pubSub.publish(topics.SEND_FILE_MESSAGE, {
           channel: currentChannel,
           message: message,
+          publishingModules: [PublishingModuleType.THREAD],
         });
       });
   }, [
