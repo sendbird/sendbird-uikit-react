@@ -32,17 +32,6 @@ describe('Channels-Reducers', () => {
     expect(nextState.currentChannel.url).toEqual(newChannel.url);
   });
 
-  it('should not set with new channel when calling USER_INVITED', () => {
-    const newChannel = mockData.allChannels[1];
-    const nextState = reducers(mockData, {
-      type: actionTypes.USER_INVITED,
-      payload: newChannel,
-    });
-
-    expect(nextState.allChannels[0].url).toEqual(newChannel.url);
-    expect(nextState.currentChannel.url).not.toEqual(newChannel.url);
-  });
-
   it('should handle leave channel action LEAVE_CHANNEL_SUCCESS', () => {
     const channelUrl = "sendbird_group_channel_13883929_89ea0faddf24ba6328e95ff56b0b37960f400c83";
     const nextState = reducers(mockData, {

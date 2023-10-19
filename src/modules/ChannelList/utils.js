@@ -27,24 +27,10 @@ const createEventHandler = ({
     },
     onUserJoined: (channel) => {
       logger.info('ChannelList: onUserJoined', channel);
-      if (channel?.lastMessage) {
-        channelListDispatcher({
-          type: channelActions.ON_USER_JOINED,
-          payload: channel,
-        });
-      }
-    },
-    onUserReceivedInvitation: (channel, inviter, invitees) => {
-      logger.info('ChannelList: onUserReceivedInvitation', { channel, inviter, invitees });
-      const { currentUser } = sdk;
-      const isInvited = invitees.find((user) => user?.userId === currentUser?.userId);
-      // The newly created channel should be displayed only when there's a message
-      if (isInvited && channel?.lastMessage) {
-        channelListDispatcher({
-          type: channelActions.USER_INVITED,
-          payload: channel,
-        });
-      }
+      channelListDispatcher({
+        type: channelActions.ON_USER_JOINED,
+        payload: channel,
+      });
     },
     onUserBanned: (channel, user) => {
       const { currentUser } = sdk;
@@ -80,16 +66,16 @@ const createEventHandler = ({
       });
     },
 
-    onReadStatus: (channel) => {
-      logger.info('ChannelList: onReadStatus', channel);
+    onUnreadMemberStatusUpdated: (channel) => {
+      logger.info('ChannelList: onUnreadMemberStatusUpdated', channel);
       channelListDispatcher({
         type: channelActions.ON_READ_RECEIPT_UPDATED,
         payload: channel,
       });
     },
 
-    onDeliveryReceiptUpdated: (channel) => {
-      logger.info('ChannelList: onDeliveryReceiptUpdated', channel);
+    onUndeliveredMemberStatusUpdated: (channel) => {
+      logger.info('ChannelList: onUndeliveredMemberStatusUpdated', channel);
       if (channel?.lastMessage) {
         channelListDispatcher({
           type: channelActions.ON_DELIVERY_RECEIPT_UPDATED,

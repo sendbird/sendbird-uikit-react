@@ -1,5 +1,6 @@
 import { filterChannelListParams, getChannelsWithUpsertedChannel } from '../../../utils';
 import * as actions from './actionTypes';
+import { getNextChannel } from './getNextChannel';
 import initialState from './initialState';
 
 export default function reducer(state, action) {
@@ -42,63 +43,70 @@ export default function reducer(state, action) {
         ],
       };
     }
-    case actions.USER_INVITED: {
-      const channel = action.payload;
-      if (state.channelListQuery) {
-        if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
-          return {
-            ...state,
-            allChannels: getChannelsWithUpsertedChannel(state.allChannels, channel),
-          };
-        }
-        return {
-          ...state,
-          currentChannel: channel,
-        };
-      }
-      return {
-        ...state,
-        allChannels: [channel, ...state.allChannels.filter((ch) => ch.url !== channel?.url)],
-      };
-    }
     case actions.CREATE_CHANNEL: {
       const channel = action.payload;
-      if (state.channelListQuery) {
-        if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
+      const {
+        allChannels,
+        currentUserId,
+        channelListQuery,
+      } = state;
+      if (channelListQuery) {
+        if (filterChannelListParams(channelListQuery, channel, currentUserId)) {
+          // Good to add to the ChannelList
           return {
             ...state,
-            allChannels: getChannelsWithUpsertedChannel(state.allChannels, channel),
+            currentChannel: channel,
+            allChannels: getChannelsWithUpsertedChannel(allChannels, channel),
           };
         }
+        // Do not add to the ChannelList
         return {
           ...state,
           currentChannel: channel,
         };
       }
+      // No channelListQuery
+      // Add to the top of the ChannelList
       return {
         ...state,
-        allChannels: [channel, ...state.allChannels.filter((ch) => ch.url !== channel?.url)],
         currentChannel: channel,
+        allChannels: [channel, ...allChannels.filter((ch) => ch.url !== channel?.url)],
       };
     }
+    // A hidden channel will be unhidden when getting new message
     case actions.ON_CHANNEL_ARCHIVED: {
       const channel = action.payload;
-      if (state.channelListQuery) {
-        if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
+      const {
+        allChannels,
+        currentUserId,
+        currentChannel,
+        channelListQuery,
+        disableAutoSelect,
+      } = state;
+      if (channelListQuery) {
+        if (filterChannelListParams(channelListQuery, channel, currentUserId)) {
+          // Good to [add to/keep in] the ChannelList
           return {
             ...state,
-            allChannels: getChannelsWithUpsertedChannel(state.allChannels, channel),
+            allChannels: getChannelsWithUpsertedChannel(allChannels, channel),
           };
-          // TODO: Check if we have to set current channel
         }
+        // * Remove the channel from the ChannelList: because the channel is filtered
       }
-      const nextChannel = (channel?.url === state.currentChannel?.url)
-        ? state.allChannels[state.allChannels[0].url === channel?.url ? 1 : 0]
-        : state.currentChannel;
+
+      // No channelListQuery
+      // * Remove the channel from the ChannelList: because the channel is hidden
+      // Replace the currentChannel if it's filtered or hidden
+      const nextChannel = getNextChannel({
+        channel,
+        currentChannel,
+        allChannels,
+        disableAutoSelect,
+      });
       return {
         ...state,
-        allChannels: state.allChannels.filter(({ url }) => url !== channel?.url),
-        currentChannel: state.disableAutoSelect ? null : nextChannel,
+        currentChannel: nextChannel,
+        allChannels: allChannels.filter(({ url }) => url !== channel?.url),
       };
     }
     case actions.LEAVE_CHANNEL_SUCCESS:
@@ -114,79 +122,94 @@ export default function reducer(state, action) {
     }
     case actions.ON_USER_LEFT: {
       const { channel, isMe } = action.payload;
-      if (state.channelListQuery) {
-        if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
-          const filteredChannels = getChannelsWithUpsertedChannel(state.allChannels, channel);
-          const nextChannel = (isMe && (channel?.url === state.currentChannel?.url))
-            ? filteredChannels[0]
-            : state.currentChannel;
-          return {
-            ...state,
-            currentChannel: state.disableAutoSelect ? null : nextChannel,
-            allChannels: filteredChannels,
-          };
+      const {
+        allChannels,
+        currentUserId,
+        currentChannel,
+        channelListQuery,
+        disableAutoSelect,
+      } = state;
+      let nextChannels = allChannels.filter((ch) => ch.url !== channel.url);
+      let nextChannel = null;
+      if (channelListQuery) {
+        if (filterChannelListParams(channelListQuery, channel, currentUserId)) {
+          // Good to [add to/keep in] the ChannelList
+          nextChannels = getChannelsWithUpsertedChannel(allChannels, channel);
         }
-        const nextChannel = (channel?.url === state.currentChannel?.url)
-          ? state.allChannels[0]
-          : state.currentChannel;
-        return {
-          ...state,
-          currentChannel: state.disableAutoSelect ? null : nextChannel,
-          allChannels: state.allChannels.filter(({ url }) => url !== channel?.url),
-        };
       }
-      const filteredChannels = state.allChannels.filter((c) => !(c.url === channel?.url && isMe));
-      const nextChannel = (isMe && (channel?.url === state.currentChannel?.url))
-        ? filteredChannels[0]
-        : state.currentChannel;
+      // Replace the currentChannel if I left the currentChannel
+      if (isMe) {
+        nextChannel = getNextChannel({
+          channel,
+          currentChannel,
+          allChannels,
+          disableAutoSelect,
+        });
+      }
       return {
         ...state,
-        currentChannel: state.disableAutoSelect ? null : nextChannel,
-        allChannels: filteredChannels,
+        currentChannel: nextChannel,
+        allChannels: nextChannels,
       };
     }
     case actions.ON_USER_JOINED:
     case actions.ON_CHANNEL_CHANGED:
     case actions.ON_READ_RECEIPT_UPDATED:
     case actions.ON_DELIVERY_RECEIPT_UPDATED: {
-      const { allChannels = [] } = state;
       const channel = action.payload;
+      const {
+        allChannels = [],
+        currentUserId,
+        currentChannel,
+        channelListQuery,
+        disableAutoSelect,
+      } = state;
       const { unreadMessageCount } = channel;
-      if (!channel?.lastMessage) return state;
-      if (state.channelListQuery) {
-        if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
+
+      // Do not display the channel when it's created (and not sent a message yet)
+      if (action.type === actions.ON_USER_JOINED && !channel?.lastMessage) return state;
+
+      if (channelListQuery) {
+        if (filterChannelListParams(channelListQuery, channel, currentUserId)) {
+          // Good to [add to/keep in] the ChannelList
           return {
             ...state,
             allChannels: getChannelsWithUpsertedChannel(allChannels, channel),
           };
         }
-        const nextChannel = (channel?.url === state?.currentChannel?.url)
-          ? state.allChannels[state.allChannels[0].url === channel?.url ? 1 : 0]
-          // if coming channel is first of channel list, current channel will be the next one
-          : state.currentChannel;
+        // Filter the channel from the ChannelList
+        // Replace the currentChannel if it's filtered channel
+        const nextChannel = getNextChannel({
+          channel,
+          currentChannel,
+          allChannels,
+          disableAutoSelect,
+        });
         return {
           ...state,
-          currentChannel: state.disableAutoSelect ? null : nextChannel,
-          allChannels: state.allChannels.filter(({ url }) => url !== channel?.url),
+          currentChannel: nextChannel,
+          allChannels: allChannels.filter(({ url }) => url !== channel?.url),
         };
       }
 
       if (
+        // When marking as read the channel
         unreadMessageCount === 0
-        // Do not move to the top when marking as read the channel
-        && channel?.lastMessage?.sender?.userId !== state.currentUserId
-        // Move to the top when the current user but different peer sends the message
+        // When sending a message by the current peer
+        && channel?.lastMessage?.sender?.userId !== currentUserId
       ) {
+        // Don't move to the top
         return {
           ...state,
-          allChannels: state.allChannels.map((ch) => (ch.url === channel?.url ? channel : ch)),
+          allChannels: allChannels.map((ch) => (ch.url === channel?.url ? channel : ch)),
         };
       }
+      // Move to the top
       return {
         ...state,
         allChannels: [
           channel,
-          ...state.allChannels.filter(({ url }) => url !== action.payload.url),
+          ...allChannels.filter(({ url }) => url !== channel.url),
         ],
       };
     }
@@ -204,26 +227,38 @@ export default function reducer(state, action) {
     }
     case actions.ON_CHANNEL_FROZEN: {
       const channel = action.payload;
-      if (state.channelListQuery) {
-        if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
+      const {
+        allChannels,
+        currentUserId,
+        currentChannel,
+        channelListQuery,
+        disableAutoSelect,
+      } = state;
+      if (channelListQuery) {
+        if (filterChannelListParams(channelListQuery, channel, currentUserId)) {
+          // Good to [add to/keep in] the ChannelList
           return {
             ...state,
-            allChannels: getChannelsWithUpsertedChannel(state.allChannels, channel),
+            allChannels: getChannelsWithUpsertedChannel(allChannels, channel),
           };
         }
-        const nextChannel = (channel?.url === state.currentChannel?.url)
-          ? state.allChannels[state.allChannels[0].url === channel?.url ? 1 : 0]
-          // if coming channel is first of channel list, current channel will be the next one
-          : state.currentChannel;
+        // Filter the channel from the ChannelList
+        // Replace the currentChannel if it's filtered channel
+        const nextChannel = getNextChannel({
+          channel,
+          currentChannel,
+          allChannels,
+          disableAutoSelect,
+        });
         return {
           ...state,
-          allChannels: state.allChannels.filter(({ url }) => url !== channel?.url),
-          currentChannel: state.disableAutoSelect ? null : nextChannel,
+          currentChannel: nextChannel,
+          allChannels: allChannels.filter(({ url }) => url !== channel?.url),
         };
       }
       return {
         ...state,
-        allChannels: state.allChannels.map((ch) => {
+        allChannels: allChannels.map((ch) => {
           if (ch.url === channel?.url) {
             // eslint-disable-next-line no-param-reassign
             ch.isFrozen = true;
@@ -235,26 +270,40 @@ export default function reducer(state, action) {
     }
     case actions.ON_CHANNEL_UNFROZEN: {
       const channel = action.payload;
-      if (state.channelListQuery) {
-        if (filterChannelListParams(state.channelListQuery, channel, state.currentUserId)) {
+      const {
+        allChannels,
+        currentUserId,
+        currentChannel,
+        channelListQuery,
+        disableAutoSelect,
+      } = state;
+      if (channelListQuery) {
+        if (filterChannelListParams(channelListQuery, channel, currentUserId)) {
+          // Good to [add to/keep in] the ChannelList
           return {
             ...state,
-            allChannels: getChannelsWithUpsertedChannel(state.allChannels, channel),
+            allChannels: getChannelsWithUpsertedChannel(allChannels, channel),
           };
         }
-        const nextChannel = (channel?.url === state.currentChannel?.url)
-          ? state.allChannels[state.allChannels[0].url === channel?.url ? 1 : 0]
-          // if coming channel is first of channel list, current channel will be the next one
-          : state.currentChannel;
+        // Filter the channel from the ChannelList
+        // Replace the currentChannel if it's filtered channel
+        const nextChannel = getNextChannel({
+          channel,
+          currentChannel,
+          allChannels,
+          disableAutoSelect,
+        });
         return {
           ...state,
-          allChannels: state.allChannels.filter(({ url }) => url !== channel?.url),
-          currentChannel: state.disableAutoSelect ? null : nextChannel,
+          currentChannel: nextChannel,
+          allChannels: allChannels.filter(({ url }) => url !== channel?.url),
         };
       }
+
+      // No channelListQuery
       return {
         ...state,
-        allChannels: state.allChannels.map((ch) => {
+        allChannels: allChannels.map((ch) => {
           if (ch.url === channel?.url) {
             // eslint-disable-next-line no-param-reassign
             ch.isFrozen = false;
