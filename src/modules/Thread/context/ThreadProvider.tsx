@@ -21,7 +21,7 @@ import useGetChannel from './hooks/useGetChannel';
 import useGetAllEmoji from './hooks/useGetAllEmoji';
 import useGetThreadList from './hooks/useGetThreadList';
 import useGetParentMessage from './hooks/useGetParentMessage';
-import useHandlePubsubEvents from './hooks/useHandlePubsubEvents';
+import useHandleThreadPubsubEvents from './hooks/useHandleThreadPubsubEvents';
 import useHandleChannelEvents from './hooks/useHandleChannelEvents';
 import useSendFileMessageCallback from './hooks/useSendFileMessage';
 import useUpdateMessageCallback from './hooks/useUpdateMessageCallback';
@@ -32,7 +32,7 @@ import useToggleReactionCallback from './hooks/useToggleReactionsCallback';
 import useSendUserMessageCallback, { SendMessageParams } from './hooks/useSendUserMessageCallback';
 import useResendMessageCallback from './hooks/useResendMessageCallback';
 import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
-import { useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
+import { PublishingModuleType, useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
 import { SendableMessageType } from '../../../utils';
 
 export type ThreadProviderProps = {
@@ -149,7 +149,7 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
     sdk,
     currentChannel,
   }, { logger, threadDispatcher });
-  useHandlePubsubEvents({
+  useHandleThreadPubsubEvents({
     sdkInit,
     currentChannel,
     parentMessage,
@@ -201,6 +201,7 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
   const [sendMultipleFilesMessage] = useSendMultipleFilesMessage({
     currentChannel,
     onBeforeSendMultipleFilesMessage,
+    publishingModules: [PublishingModuleType.THREAD],
   }, {
     logger,
     pubSub,

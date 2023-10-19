@@ -17,9 +17,15 @@ export type OnBeforeSendMFMType = (
   quoteMessage?: SendableMessageType,
 ) => MultipleFilesMessageCreateParams;
 
+export enum PublishingModuleType {
+  CHANNEL = 'CHANNEL',
+  THREAD = 'THREAD',
+}
+
 export interface UseSendMFMDynamicParams {
-  currentChannel: Nullable<GroupChannel>,
-  onBeforeSendMultipleFilesMessage?: OnBeforeSendMFMType,
+  currentChannel: Nullable<GroupChannel>;
+  onBeforeSendMultipleFilesMessage?: OnBeforeSendMFMType;
+  publishingModules: PublishingModuleType[];
 }
 export interface UseSendMFMStaticParams {
   logger: Logger,
@@ -35,6 +41,7 @@ export type SendMFMFunctionType = (files: Array<File>, quoteMessage?: SendableMe
 export const useSendMultipleFilesMessage = ({
   currentChannel,
   onBeforeSendMultipleFilesMessage,
+  publishingModules,
 }: UseSendMFMDynamicParams, {
   logger,
   pubSub,
@@ -79,11 +86,14 @@ export const useSendMultipleFilesMessage = ({
             uploadableFileInfo,
           });
           pubSub.publish(PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED, {
-            channelUrl: currentChannel.url,
-            requestId,
-            index,
-            uploadableFileInfo,
-            error,
+            response: {
+              channelUrl: currentChannel.url,
+              requestId,
+              index,
+              uploadableFileInfo,
+              error,
+            },
+            publishingModules,
           });
         })
         .onPending((pendingMessage: MultipleFilesMessage) => {
@@ -91,6 +101,7 @@ export const useSendMultipleFilesMessage = ({
           pubSub.publish(PUBSUB_TOPICS.SEND_MESSAGE_START, {
             message: pendingMessage,
             channel: currentChannel,
+            publishingModules,
           });
           if (scrollRef) {
             // We need this delay because rendering MFM takes time due to large image files.
@@ -102,6 +113,7 @@ export const useSendMultipleFilesMessage = ({
           pubSub.publish(PUBSUB_TOPICS.SEND_MESSAGE_FAILED, {
             channel: currentChannel,
             message: failedMessage,
+            publishingModules,
           });
         })
         .onSucceeded((succeededMessage) => {
@@ -109,6 +121,7 @@ export const useSendMultipleFilesMessage = ({
           pubSub.publish(PUBSUB_TOPICS.SEND_FILE_MESSAGE, {
             channel: currentChannel,
             message: succeededMessage,
+            publishingModules,
           });
           if (scrollRef) {
             // We need this delay because rendering MFM takes time due to large image files.
@@ -121,6 +134,7 @@ export const useSendMultipleFilesMessage = ({
   }, [
     currentChannel,
     onBeforeSendMultipleFilesMessage,
+    publishingModules,
   ]);
   return [sendMessage];
 };
