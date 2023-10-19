@@ -15,7 +15,7 @@ import type {
   UserMessageCreateParams,
   UserMessageUpdateParams,
 } from '@sendbird/chat/message';
-import type { SendbirdError, User } from '@sendbird/chat';
+import type { EmojiContainer, SendbirdError, User } from '@sendbird/chat';
 
 import { ReplyType, RenderUserProfileProps, Nullable } from '../../../types';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
@@ -34,7 +34,7 @@ import useHandleChannelEvents from './hooks/useHandleChannelEvents';
 import useGetChannel from './hooks/useGetChannel';
 import useInitialMessagesFetch from './hooks/useInitialMessagesFetch';
 import useHandleReconnect from './hooks/useHandleReconnect';
-import useScrollCallback from './hooks/useScrollCallback';
+import useScrollCallback, { UseScrollCallbackReturn } from './hooks/useScrollCallback';
 import useScrollDownCallback from './hooks/useScrollDownCallback';
 import useDeleteMessageCallback from './hooks/useDeleteMessageCallback';
 import useUpdateMessageCallback from './hooks/useUpdateMessageCallback';
@@ -115,7 +115,7 @@ interface MessageStoreInterface {
   oldestMessageTimeStamp: number;
   hasMoreNext: boolean;
   latestMessageTimeStamp: number;
-  emojiContainer: any;
+  emojiContainer: EmojiContainer;
   readStatus: any;
 }
 
@@ -138,7 +138,7 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   scrollToMessage?(createdAt: number, messageId: number): void;
   isScrolled?: boolean;
   setIsScrolled?: React.Dispatch<React.SetStateAction<boolean>>;
-  messageActionTypes: Record<string, string>;
+  messageActionTypes: typeof messageActionTypes;
   messagesDispatcher: CustomUseReducerDispatcher;
   quoteMessage: SendableMessageType | null;
   setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
@@ -148,7 +148,7 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   highLightedMessageId: number;
   nicknamesMap: Map<string, string>;
   emojiAllMap: any;
-  onScrollCallback: any;
+  onScrollCallback: UseScrollCallbackReturn;
   onScrollDownCallback: any;
   scrollRef: React.MutableRefObject<HTMLDivElement>;
   setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
@@ -289,7 +289,6 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     oldestMessageTimeStamp,
     userFilledMessageListQuery,
     replyType,
-    isVoiceMessageEnabled,
   }, {
     hasMorePrev,
     logger,
@@ -359,9 +358,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     currentGroupChannel,
     userFilledMessageListQuery,
     initialTimeStamp,
-    latestMessageTimeStamp,
     replyType,
-    isVoiceMessageEnabled,
     setIsScrolled,
   }, {
     logger,

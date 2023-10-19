@@ -1,22 +1,40 @@
-import { useEffect } from 'react';
-import { ReplyType } from '@sendbird/chat/message';
+import React, { useEffect } from 'react';
+import { MessageListParams, ReplyType } from '@sendbird/chat/message';
 
 import * as utils from '../utils';
 import * as messageActionTypes from '../dux/actionTypes';
 import { PREV_RESULT_SIZE, NEXT_RESULT_SIZE } from '../const';
-import { isMultipleFilesMessage } from '../../../../utils';
+import { CoreMessageType, isMultipleFilesMessage } from '../../../../utils';
+import { MessageListParams as MessageListParamsInternal } from '../ChannelProvider';
+import { ReplyType as ReplyTypeInternal } from '../../../../types';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { CustomUseReducerDispatcher } from '../../../../lib/SendbirdState';
+import { LoggerInterface } from '../../../../lib/Logger';
 
-function useInitialMessagesFetch({
-  currentGroupChannel,
-  userFilledMessageListQuery,
-  initialTimeStamp,
-  replyType,
-  setIsScrolled,
-}, {
-  logger,
-  scrollRef,
-  messagesDispatcher,
-}) {
+type UseInitialMessagesFetchOptions = {
+  currentGroupChannel: GroupChannel;
+  initialTimeStamp: number;
+  userFilledMessageListQuery: MessageListParamsInternal;
+  replyType: ReplyTypeInternal;
+  setIsScrolled: (val: boolean) => void;
+};
+
+type UseInitialMessagesFetchParams = {
+  logger: LoggerInterface
+  messagesDispatcher: CustomUseReducerDispatcher;
+  scrollRef: React.RefObject<HTMLElement>;
+};
+
+function useInitialMessagesFetch(
+  {
+    currentGroupChannel,
+    initialTimeStamp,
+    userFilledMessageListQuery,
+    replyType,
+    setIsScrolled,
+  }: UseInitialMessagesFetchOptions,
+  { logger, scrollRef, messagesDispatcher }: UseInitialMessagesFetchParams,
+) {
   const channelUrl = currentGroupChannel?.url;
 
   useEffect(() => {
@@ -28,15 +46,16 @@ function useInitialMessagesFetch({
     });
 
     if (currentGroupChannel && currentGroupChannel?.getMessagesByTimestamp) {
-      const messageListParams = {};
-      messageListParams.prevResultSize = PREV_RESULT_SIZE;
+      const messageListParams: MessageListParamsInternal = {
+        prevResultSize: PREV_RESULT_SIZE,
+        isInclusive: true,
+        includeReactions: true,
+        includeMetaArray: true,
+      };
       if (initialTimeStamp) {
         messageListParams.nextResultSize = NEXT_RESULT_SIZE;
       }
-      messageListParams.isInclusive = true;
-      messageListParams.includeReactions = true;
-      messageListParams.includeMetaArray = true;
-      if (replyType && (replyType === 'QUOTE_REPLY' || replyType === 'THREAD')) {
+      if (replyType === 'QUOTE_REPLY' || replyType === 'THREAD') {
         messageListParams.includeThreadInfo = true;
         messageListParams.includeParentMessageInfo = true;
         messageListParams.replyType = ReplyType.ONLY_REPLY_TO_CHANNEL;
@@ -46,7 +65,11 @@ function useInitialMessagesFetch({
           messageListParams[key] = userFilledMessageListQuery[key];
         });
       }
-      if ((replyType && (replyType === 'QUOTE_REPLY' || replyType === 'THREAD')) || userFilledMessageListQuery) {
+      if (
+        (replyType
+          && (replyType === 'QUOTE_REPLY' || replyType === 'THREAD'))
+        || userFilledMessageListQuery
+      ) {
         logger.info('Channel useInitialMessagesFetch: Setup messageListParams', messageListParams);
         messagesDispatcher({
           type: messageActionTypes.MESSAGE_LIST_PARAMS_CHANGED,
@@ -61,10 +84,11 @@ function useInitialMessagesFetch({
       });
 
       let multipleFilesMessageCount = 0;
-      currentGroupChannel.getMessagesByTimestamp(
-        initialTimeStamp || new Date().getTime(),
-        messageListParams,
-      )
+      currentGroupChannel
+        .getMessagesByTimestamp(
+          initialTimeStamp || new Date().getTime(),
+          messageListParams as MessageListParams,
+        )
         .then((messages) => {
           messagesDispatcher({
             type: messageActionTypes.FETCH_INITIAL_MESSAGES_SUCCESS,
@@ -73,8 +97,8 @@ function useInitialMessagesFetch({
               messages,
             },
           });
-          multipleFilesMessageCount = messages
-            .filter((message) => isMultipleFilesMessage(message)).length;
+          multipleFilesMessageCount = messages.filter((message) => isMultipleFilesMessage(message as CoreMessageType),
+          ).length;
         })
         .catch((error) => {
           logger.error('Channel: Fetching messages failed', error);
@@ -95,7 +119,11 @@ function useInitialMessagesFetch({
             );
           } else {
             setTimeout(() => {
-              utils.scrollToRenderedMessage(scrollRef, initialTimeStamp, setIsScrolled);
+              utils.scrollToRenderedMessage(
+                scrollRef,
+                initialTimeStamp,
+                setIsScrolled,
+              );
             }, 500);
           }
         });

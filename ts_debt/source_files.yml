@@ -5,9 +5,7 @@
 ./modules/Channel/context/dux/reducers.js: reducers.js
 ./modules/Channel/context/hooks/useDeleteMessageCallback.js: useDeleteMessageCallback.js
 ./modules/Channel/context/hooks/useGetChannel.js: useGetChannel.js
-./modules/Channel/context/hooks/useInitialMessagesFetch.js: useInitialMessagesFetch.js
 ./modules/Channel/context/hooks/useResendMessageCallback.js: useResendMessageCallback.js
-./modules/Channel/context/hooks/useScrollCallback.js: useScrollCallback.js
 ./modules/Channel/context/hooks/useScrollDownCallback.js: useScrollDownCallback.js
 ./modules/Channel/context/hooks/useSendFileMessageCallback.js: useSendFileMessageCallback.js
 ./modules/Channel/context/hooks/useSendMessageCallback.js: useSendMessageCallback.js
