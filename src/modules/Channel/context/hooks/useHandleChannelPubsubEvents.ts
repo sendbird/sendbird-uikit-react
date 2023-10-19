@@ -56,16 +56,13 @@ export const useHandleChannelPubsubEvents = ({
           response,
           publishingModules,
         } = props as { response: object, publishingModules: PublishingModuleType[] };
-        if (channelUrl === props.channelUrl
-            && publishingModules.includes(PublishingModuleType.CHANNEL)
-        ) {
+        if (channelUrl === response['channelUrl'] && publishingModules.includes(PublishingModuleType.CHANNEL)) {
           dispatcher({
             type: channelActions.ON_FILE_INFO_UPLOADED,
             payload: response,
           });
         }
-      },
-      ));
+      }));
       subscriber.set(PUBSUB_TOPICS.SEND_MESSAGE_FAILED, pubSub.subscribe(PUBSUB_TOPICS.SEND_MESSAGE_FAILED, (props) => {
         const {
           channel,
