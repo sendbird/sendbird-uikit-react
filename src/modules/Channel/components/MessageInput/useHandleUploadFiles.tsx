@@ -73,9 +73,10 @@ export const useHandleUploadFiles = ({
     if (files.some((file: File) => file.size > uikitUploadSizeLimit)) {
       // The default value of uikitUploadSizeLimit is 26MB
       logger.info(`Channel|useHandleUploadFiles: Cannot upload file size exceeding ${uikitUploadSizeLimit}`);
+      const ONE_MiB = 1024 * 1024;
       openModal({
         modalProps: {
-          titleText: `The maximum size per file is ${Math.floor(uikitUploadSizeLimit / 1000000)} MB.`,
+          titleText: `The maximum size per file is ${Math.floor(uikitUploadSizeLimit / ONE_MiB)} MB.`,
           hideFooter: true,
         },
         childElement: ({ closeModal }) => (
