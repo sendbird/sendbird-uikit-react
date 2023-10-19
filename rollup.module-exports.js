@@ -7,7 +7,7 @@ export default {
   'lame.all': 'src/_externals/lamejs/lame.all.js',
 
   // Easy to use app
-  App: 'src/modules/App/index.jsx',
+  App: 'src/modules/App/index.tsx',
 
   // SendbirdProvider
   SendbirdProvider: 'src/lib/Sendbird.tsx',
