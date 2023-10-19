@@ -3,6 +3,7 @@ import { useRef, useCallback } from 'react';
 import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';
 import topics from '../../../../lib/pubSub/topics';
+import { PublishingModuleType } from '../../../internalInterfaces';
 
 export default function useSendMessageCallback({
   isMentionEnabled,
@@ -63,6 +64,7 @@ export default function useSendMessageCallback({
               to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
             message: pendingMsg,
             channel: currentGroupChannel,
+            publishingModules: [PublishingModuleType.CHANNEL],
           });
           setTimeout(() => utils.scrollIntoLast(0, scrollRef));
         })

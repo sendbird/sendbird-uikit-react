@@ -6,7 +6,8 @@ import { CustomUseReducerDispatcher } from '../../../../lib/SendbirdState';
 import { PUBSUB_TOPICS } from '../../../../lib/pubSub/topics';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { SendableMessageType } from '../../../../utils';
-import {FileUploadedPayload, PublishingModuleType} from './useSendMultipleFilesMessage';
+import { FileUploadedPayload } from './useSendMultipleFilesMessage';
+import { PublishingModuleType } from '../../../internalInterfaces';
 
 export interface UseHandlePubsubEventsParams {
   channelUrl: string;

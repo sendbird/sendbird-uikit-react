@@ -15,6 +15,7 @@ import {
 } from '../../../../utils/consts';
 import type { SendableMessageType } from '../../../../utils';
 import type { Nullable } from '../../../../types';
+import { PublishingModuleType } from '../../../internalInterfaces';
 
 interface DynamicParams {
   currentGroupChannel: Nullable<GroupChannel>;
@@ -74,6 +75,7 @@ export const useSendVoiceMessageCallback = ({
             to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
           message: pendingMessage,
           channel: currentGroupChannel,
+          publishingModules: [PublishingModuleType.CHANNEL],
         });
         setTimeout(() => utils.scrollIntoLast(0, scrollRef), 1000);
       })

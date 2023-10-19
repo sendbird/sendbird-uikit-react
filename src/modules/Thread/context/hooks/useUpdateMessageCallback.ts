@@ -6,6 +6,7 @@ import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdStat
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 
 import topics from '../../../../lib/pubSub/topics';
+import { PublishingModuleType } from '../../../internalInterfaces';
 
 interface DynamicProps {
   currentChannel: GroupChannel;
@@ -65,6 +66,7 @@ export default function useUpdateMessageCallback({
             fromSelector: true,
             channel: currentChannel,
             message: message,
+            publishingModules: [PublishingModuleType.THREAD],
           },
         );
       });

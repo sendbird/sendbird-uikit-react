@@ -46,8 +46,9 @@ import useScrollToMessage from './hooks/useScrollToMessage';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 import { getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
-import { PublishingModuleType, useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
+import { useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
 import { useHandleChannelPubsubEvents } from './hooks/useHandleChannelPubsubEvents';
+import { PublishingModuleType } from '../../internalInterfaces';
 
 export type MessageListParams = {
   // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html

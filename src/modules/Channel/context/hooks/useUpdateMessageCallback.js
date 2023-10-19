@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 
 import * as messageActionTypes from '../dux/actionTypes';
 import topics from '../../../../lib/pubSub/topics';
+import { PublishingModuleType } from '../../../internalInterfaces';
 
 function useUpdateMessageCallback({
   currentGroupChannel,
@@ -63,6 +64,7 @@ function useUpdateMessageCallback({
         {
           message: msg,
           channel: currentGroupChannel,
+          publishingModules: [PublishingModuleType.CHANNEL],
         },
       );
     });
