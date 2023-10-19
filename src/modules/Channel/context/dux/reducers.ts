@@ -1,5 +1,9 @@
 import format from 'date-fns/format';
-import { MessageListParams, MultipleFilesMessage, SendingStatus } from '@sendbird/chat/message';
+import {
+  MessageListParams,
+  MultipleFilesMessage,
+  SendingStatus,
+} from '@sendbird/chat/message';
 import { match, P } from 'ts-pattern';
 
 import * as channelActions from './actionTypes';
@@ -7,7 +11,11 @@ import type { ChannelActionTypes } from './actionTypes';
 import compareIds from '../../../../utils/compareIds';
 import { PREV_RESULT_SIZE, NEXT_RESULT_SIZE } from '../const';
 import { passUnsuccessfullMessages, mergeAndSortMessages } from '../utils';
-import { CoreMessageType, filterMessageListParams, isSendableMessage } from '../../../../utils';
+import {
+  CoreMessageType,
+  filterMessageListParams,
+  isSendableMessage,
+} from '../../../../utils';
 import { ChannelInitialStateType } from './initialState';
 
 const getOldestMessageTimeStamp = (messages: CoreMessageType[] = []) => {
@@ -18,6 +26,12 @@ const getLatestMessageTimeStamp = (messages: CoreMessageType[] = []) => {
   const latestMessage = messages[messages.length - 1];
   return (latestMessage && latestMessage.createdAt) || null;
 };
+
+function hasReqId<T extends object>(
+  message: T,
+): message is T & { reqId: string } {
+  return 'reqId' in message;
+}
 
 export default function channelReducer(
   state: ChannelInitialStateType,
@@ -38,7 +52,9 @@ export default function channelReducer(
       return {
         ...state,
         loading: true,
-        allMessages: state.allMessages.filter((m) => isSendableMessage(m) ? m.sendingStatus !== SendingStatus.SUCCEEDED : true,
+        allMessages: state.allMessages.filter((m) => isSendableMessage(m)
+          ? m.sendingStatus !== SendingStatus.SUCCEEDED
+          : true,
         ),
       };
     })
@@ -65,21 +81,28 @@ export default function channelReducer(
       if (!(currentGroupChannel?.url === state.currentGroupChannel?.url)) {
         return state;
       }
-      const hasMorePrev = (messages?.length ?? 0) >= (state?.messageListParams?.prevResultSize ?? PREV_RESULT_SIZE) + 1;
+      const hasMorePrev = (messages?.length ?? 0)
+        >= (state?.messageListParams?.prevResultSize ?? PREV_RESULT_SIZE) + 1;
       const oldestMessageTimeStamp = getOldestMessageTimeStamp(messages);
 
       // Remove duplicated messages
       const duplicatedMessageIds = [];
       const updatedOldMessages = state.allMessages.map((msg) => {
-        const duplicatedMessage = messages.find(({ messageId }) => compareIds(messageId, msg.messageId));
+        const duplicatedMessage = messages.find(({ messageId }) => compareIds(messageId, msg.messageId),
+        );
         if (!duplicatedMessage) {
           return msg;
         }
         duplicatedMessageIds.push(duplicatedMessage.messageId);
-        return duplicatedMessage.updatedAt > msg.updatedAt ? duplicatedMessage : msg;
+        return duplicatedMessage.updatedAt > msg.updatedAt
+          ? duplicatedMessage
+          : msg;
       });
       const filteredNewMessages = duplicatedMessageIds.length > 0
-        ? messages.filter((msg) => !duplicatedMessageIds.find((messageId) => compareIds(messageId, msg.messageId)))
+        ? messages.filter(
+          (msg) => !duplicatedMessageIds.find((messageId) => compareIds(messageId, msg.messageId),
+          ),
+        )
         : messages;
 
       return {
@@ -94,7 +117,8 @@ export default function channelReducer(
       if (!(currentGroupChannel?.url === state.currentGroupChannel?.url)) {
         return state;
       }
-      const hasMoreNext = (messages?.length ?? 0) === (state?.messageListParams?.nextResultSize ?? NEXT_RESULT_SIZE) + 1;
+      const hasMoreNext = (messages?.length ?? 0)
+        === (state?.messageListParams?.nextResultSize ?? NEXT_RESULT_SIZE) + 1;
       const latestMessageTimeStamp = getLatestMessageTimeStamp(messages);
 
       // sort ~
@@ -142,13 +166,17 @@ export default function channelReducer(
     })
     .with({ type: channelActions.SEND_MESSAGE_SUCCESS }, (action) => {
       const message = action.payload;
-      const filteredMessages = state.allMessages.filter((m) => isSendableMessage(m) && m?.reqId !== message?.reqId);
+      const filteredMessages = state.allMessages.filter(
+        (m) => hasReqId(m) && m?.reqId !== message?.reqId,
+      );
       // [Policy] Pending messages and failed messages
       // must always be at the end of the message list
       return {
         ...state,
         allMessages: [...filteredMessages, message],
-        localMessages: state.localMessages.filter((m) => isSendableMessage(m) && m?.reqId !== message?.reqId),
+        localMessages: state.localMessages.filter(
+          (m) => hasReqId(m) && m?.reqId !== message?.reqId,
+        ),
       };
     })
     .with({ type: channelActions.SEND_MESSAGE_FAILURE }, (action) => {
@@ -156,7 +184,9 @@ export default function channelReducer(
       action.payload.failed = true;
       return {
         ...state,
-        localMessages: state.localMessages.map((m) => compareIds(isSendableMessage(m) && m.reqId, action.payload.reqId) ? action.payload : m,
+        localMessages: state.localMessages.map((m) => compareIds(hasReqId(m) && m.reqId, action.payload.reqId)
+          ? action.payload
+          : m,
         ),
       };
     })
@@ -186,11 +216,19 @@ export default function channelReducer(
         return state;
       }
       // Excluded overlapping messages
-      if (state.allMessages.some((msg) => msg.messageId === message.messageId)) {
+      if (
+        state.allMessages.some((msg) => msg.messageId === message.messageId)
+      ) {
         return state;
       }
       // Filter by userFilledQuery
-      if (state.messageListParams && !filterMessageListParams(state.messageListParams as MessageListParams, message)) {
+      if (
+        state.messageListParams
+        && !filterMessageListParams(
+          state.messageListParams as MessageListParams,
+          message,
+        )
+      ) {
         return state;
       }
 
@@ -219,7 +257,9 @@ export default function channelReducer(
       return {
         ...state,
         currentGroupChannel: channel,
-        unreadSince: state?.unreadSince ? unreadSince : format(new Date(), 'p MMM dd'),
+        unreadSince: state?.unreadSince
+          ? unreadSince
+          : format(new Date(), 'p MMM dd'),
         allMessages: passUnsuccessfullMessages(state.allMessages, message),
       };
     })
@@ -229,11 +269,19 @@ export default function channelReducer(
       if (!compareIds(channel?.url, currentGroupChannelUrl)) {
         return state; // Ignore event when it is not for the current channel
       }
-      if (state.messageListParams && !filterMessageListParams(state.messageListParams as MessageListParams, message)) {
+      if (
+        state.messageListParams
+        && !filterMessageListParams(
+          state.messageListParams as MessageListParams,
+          message,
+        )
+      ) {
         // Delete the message if it doesn't match to the params anymore
         return {
           ...state,
-          allMessages: state.allMessages.filter((m) => !compareIds(m.messageId, message?.messageId)),
+          allMessages: state.allMessages.filter(
+            (m) => !compareIds(m.messageId, message?.messageId),
+          ),
         };
       }
       return {
@@ -253,7 +301,10 @@ export default function channelReducer(
       const { channel, event } = action.payload;
       const { channelUrl, threadInfo, targetMessageId } = event;
       const currentGroupChannelUrl = state?.currentGroupChannel?.url || '';
-      if (!compareIds(channel?.url, currentGroupChannelUrl) || !compareIds(channel?.url, channelUrl)) {
+      if (
+        !compareIds(channel?.url, currentGroupChannelUrl)
+        || !compareIds(channel?.url, channelUrl)
+      ) {
         return state; // Ignore event when it is not for the current channel
       }
       return {
@@ -270,7 +321,9 @@ export default function channelReducer(
     .with({ type: channelActions.RESEND_MESSAGE_START }, (action) => {
       return {
         ...state,
-        allMessages: state.allMessages.map((m) => compareIds(isSendableMessage(m) && m.reqId, action.payload.reqId) ? action.payload : m,
+        allMessages: state.allMessages.map((m) => compareIds(hasReqId(m) && m.reqId, action.payload.reqId)
+          ? action.payload
+          : m,
         ),
       };
     })
@@ -286,13 +339,17 @@ export default function channelReducer(
     .with({ type: channelActions.ON_MESSAGE_DELETED }, (action) => {
       return {
         ...state,
-        allMessages: state.allMessages.filter((m) => !compareIds(m.messageId, action.payload)),
+        allMessages: state.allMessages.filter(
+          (m) => !compareIds(m.messageId, action.payload),
+        ),
       };
     })
     .with({ type: channelActions.ON_MESSAGE_DELETED_BY_REQ_ID }, (action) => {
       return {
         ...state,
-        localMessages: state.localMessages.filter((m) => !compareIds(isSendableMessage(m) && m.reqId, action.payload)),
+        localMessages: state.localMessages.filter(
+          (m) => !compareIds(hasReqId(m) && m.reqId, action.payload),
+        ),
       };
     })
     .with({ type: channelActions.SET_EMOJI_CONTAINER }, (action) => {
@@ -306,7 +363,10 @@ export default function channelReducer(
         ...state,
         allMessages: state.allMessages.map((m) => {
           if (compareIds(m.messageId, action.payload.messageId)) {
-            if (m.applyReactionEvent && typeof m.applyReactionEvent === 'function') {
+            if (
+              m.applyReactionEvent
+              && typeof m.applyReactionEvent === 'function'
+            ) {
               m.applyReactionEvent(action.payload);
             }
             return m;
@@ -332,9 +392,10 @@ export default function channelReducer(
        */
       if (error) return state;
       const { localMessages } = state;
-      const messageToUpdate = localMessages.find((message) => compareIds(isSendableMessage(message) && message.reqId, requestId),
+      const messageToUpdate = localMessages.find((message) => compareIds(hasReqId(message) && message.reqId, requestId),
       );
-      const fileInfoList = (messageToUpdate as MultipleFilesMessage).messageParams?.fileInfoList;
+      const fileInfoList = (messageToUpdate as MultipleFilesMessage)
+        .messageParams?.fileInfoList;
       if (Array.isArray(fileInfoList)) {
         fileInfoList[index] = uploadableFileInfo;
       }

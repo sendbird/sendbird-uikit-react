@@ -91,7 +91,7 @@ type CHANNEL_PAYLOAD_TYPES = {
   };
 };
 
-type MessageId = string;
-type RequestId = number;
+type MessageId = number;
+type RequestId = string;
 
 export type ChannelActionTypes = CreateAction<CHANNEL_PAYLOAD_TYPES>;
