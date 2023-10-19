@@ -44,9 +44,9 @@ export default function useHandleThreadPubsubEvents({
           && publishingModules.includes(PublishingModuleType.THREAD)
         ) {
           // TODO: const clonedMessage = cloneMessage(message);
-          const nextMessage: Record<string, any> = { ...message };
+          const pendingMessage: Record<string, any> = { ...message };
           if (message.isMultipleFilesMessage()) {
-            nextMessage.fileInfoList = message.messageParams.fileInfoList.map((fileInfo) => ({
+            pendingMessage.fileInfoList = message.messageParams.fileInfoList.map((fileInfo) => ({
               ...fileInfo,
               url: URL.createObjectURL(fileInfo.file as File),
             }));
@@ -54,7 +54,7 @@ export default function useHandleThreadPubsubEvents({
           threadDispatcher({
             type: ThreadContextActionTypes.SEND_MESSAGE_START,
             payload: {
-              message: nextMessage,
+              message: pendingMessage,
             },
           });
         }
