@@ -16,6 +16,7 @@ build
 dist
 .rpt2_cache
 release
+bundle-analysis.json
 
 # test
 /coverage
