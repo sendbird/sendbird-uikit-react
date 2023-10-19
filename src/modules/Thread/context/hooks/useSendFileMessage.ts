@@ -7,6 +7,7 @@ import { ThreadContextActionTypes } from '../dux/actionTypes';
 import topics from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from '../utils';
 import { SendableMessageType } from '../../../../utils';
+import { PublishingModuleType } from './useSendMultipleFilesMessage';
 
 interface DynamicProps {
   currentChannel: GroupChannel;
@@ -79,6 +80,7 @@ export default function useSendFileMessageCallback({
           pubSub.publish(topics.SEND_FILE_MESSAGE, {
             channel: currentChannel,
             message: message,
+            publishingModules: [PublishingModuleType.THREAD],
           });
           resolve(message);
         });
