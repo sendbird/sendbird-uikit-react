@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react';
-import { EmojiContainer } from '@sendbird/chat';
+import { EmojiContainer, User } from '@sendbird/chat';
 import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import { Reaction } from '@sendbird/chat/message';
 
@@ -18,6 +18,7 @@ export interface ReactedMembersBottomSheetProps {
   emojiKey: string;
   hideMenu: () => void;
   emojiContainer?: EmojiContainer;
+  onPressUserProfileHandler?: (member: User) => void;
 }
 
 export const ReactedMembersBottomSheet = ({
@@ -26,9 +27,17 @@ export const ReactedMembersBottomSheet = ({
   emojiKey = '',
   hideMenu,
   emojiContainer,
+  onPressUserProfileHandler,
 }: ReactedMembersBottomSheetProps): ReactElement => {
   const { members = [] } = channel;
   const [selectedEmoji, setSelectedEmoji] = useState(emojiKey);
+
+  function onPressUserProfileCallBack() {
+    if (onPressUserProfileHandler && message) {
+      const sender = (message as SendableMessageType)?.sender;
+      onPressUserProfileHandler(sender);
+    }
+  }
 
   return (
     <BottomSheet onBackdropClick={hideMenu}>
@@ -85,6 +94,7 @@ export const ReactedMembersBottomSheet = ({
                   className="sendbird-message__bottomsheet__reactor-list__item"
                   user={member}
                   avatarSize="36px"
+                  onClick={onPressUserProfileCallBack}
                 />
               ))
           }

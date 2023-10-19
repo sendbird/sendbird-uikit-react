@@ -27,6 +27,7 @@ export interface UserListItemProps {
   }): ReactElement;
   onChange?(e: ChangeEvent<HTMLInputElement>): void;
   avatarSize?: string;
+  onClick?(): void,
 }
 
 export default function UserListItem({
@@ -41,6 +42,7 @@ export default function UserListItem({
   action,
   onChange,
   avatarSize = '40px',
+  onClick,
 }: UserListItemProps): ReactElement {
   const uniqueKey = user.userId;
   const actionRef = React.useRef(null);
@@ -72,6 +74,7 @@ export default function UserListItem({
             onClick={() => {
               if (!disableUserProfile) {
                 toggleDropdown();
+                onClick?.();
               }
             }}
           />

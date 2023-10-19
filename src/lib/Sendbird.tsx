@@ -39,7 +39,13 @@ import { useMarkAsDeliveredScheduler } from './hooks/useMarkAsDeliveredScheduler
 import { getCaseResolvedReplyType, getCaseResolvedThreadReplySelectType } from './utils/resolvedReplyType';
 import { useUnmount } from '../hooks/useUnmount';
 import { disconnectSdk } from './hooks/useConnect/disconnectSdk';
-import { UIKitOptions, CommonUIKitConfigProps, SendbirdChatInitParams, CustomExtensionParams } from './types';
+import {
+  UIKitOptions,
+  CommonUIKitConfigProps,
+  SendbirdChatInitParams,
+  CustomExtensionParams,
+  SBUEventHandlers,
+} from './types';
 import { GlobalModalProvider } from '../hooks/useModal';
 
 export type UserListQueryType = {
@@ -67,6 +73,7 @@ export interface SendbirdConfig {
   };
   isREMUnitEnabled?: boolean;
 }
+
 export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.PropsWithChildren {
   appId: string;
   userId: string;
@@ -94,6 +101,9 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
   sdkInitParams?: SendbirdChatInitParams;
   customExtensionParams?: CustomExtensionParams;
   isMultipleFilesMessageEnabled?: boolean;
+
+  // Customer provided callbacks
+  eventHandlers?: SBUEventHandlers;
 }
 
 function Sendbird(props: SendbirdProviderProps) {
@@ -158,6 +168,7 @@ const SendbirdSDK = ({
   sdkInitParams,
   customExtensionParams,
   isMultipleFilesMessageEnabled = false,
+  eventHandlers,
 }: SendbirdProviderProps): React.ReactElement => {
   const {
     logLevel = '',
@@ -356,6 +367,7 @@ const SendbirdSDK = ({
             enableDocument: configs.openChannel.channel.input.enableDocument,
           },
         },
+        eventHandlers,
       }}
     >
       <MediaQueryProvider logger={logger} breakpoint={breakpoint}>

@@ -108,7 +108,8 @@ export default function MessageContent({
 }: Props): ReactElement {
   const messageTypes = getUIKitMessageTypes();
   const { dateLocale } = useLocalization();
-  const { config } = useSendbirdStateContext?.() || {};
+  const { config, eventHandlers } = useSendbirdStateContext?.() || {};
+  const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const avatarRef = useRef(null);
   const contentRef = useRef(null);
@@ -385,6 +386,7 @@ export default function MessageContent({
                 emojiContainer={emojiContainer}
                 memberNicknamesMap={nicknamesMap}
                 toggleReaction={toggleReaction}
+                onPressUserProfile={onPressUserProfileHandler}
               />
             </div>
           )}

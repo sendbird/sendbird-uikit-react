@@ -67,17 +67,20 @@ export interface ContextMenuProps {
   menuTrigger?: (func: MenuDisplayingFunc) => ReactElement;
   menuItems: (func: MenuDisplayingFunc) => ReactElement;
   isOpen?: boolean;
+  onClick?: (...args: any[]) => void;
 }
 export default function ContextMenu({
   menuTrigger,
   menuItems,
   isOpen,
+  onClick,
 }: ContextMenuProps): ReactElement {
   const [showMenu, setShowMenu] = useState(false);
   return (
     <div
       className="sendbird-context-menu"
       style={{ display: 'inline' }}
+      onClick={onClick}
     >
       {menuTrigger?.(() => setShowMenu(!showMenu))}
       {(showMenu || isOpen) && menuItems(() => setShowMenu(false))}
