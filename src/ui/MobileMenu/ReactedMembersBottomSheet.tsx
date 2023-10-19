@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react';
-import { EmojiContainer } from '@sendbird/chat';
+import { EmojiContainer, User } from '@sendbird/chat';
 import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import { Reaction } from '@sendbird/chat/message';
 
@@ -11,7 +11,6 @@ import ImageRenderer from '../ImageRenderer';
 import Icon, { IconColors, IconTypes } from '../Icon';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import UserListItem from '../UserListItem';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 export interface ReactedMembersBottomSheetProps {
   message: SendableMessageType;
@@ -19,6 +18,7 @@ export interface ReactedMembersBottomSheetProps {
   emojiKey: string;
   hideMenu: () => void;
   emojiContainer?: EmojiContainer;
+  onPressUserProfileHandler?: (member: User) => void;
 }
 
 export const ReactedMembersBottomSheet = ({
@@ -27,10 +27,9 @@ export const ReactedMembersBottomSheet = ({
   emojiKey = '',
   hideMenu,
   emojiContainer,
+  onPressUserProfileHandler,
 }: ReactedMembersBottomSheetProps): ReactElement => {
   const { members = [] } = channel;
-  const globalState = useSendbirdStateContext?.();
-  const onPressUserProfileHandler = globalState?.eventHandlers?.reaction?.onPressUserProfile;
   const [selectedEmoji, setSelectedEmoji] = useState(emojiKey);
 
   function onPressUserProfileCallBack() {

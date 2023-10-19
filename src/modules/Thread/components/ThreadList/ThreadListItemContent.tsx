@@ -89,7 +89,8 @@ export default function ThreadListItemContent({
   const messageTypes = getUIKitMessageTypes();
   const { isMobile } = useMediaQueryContext();
   const { dateLocale } = useLocalization();
-  const { config } = useSendbirdStateContext();
+  const { config, eventHandlers } = useSendbirdStateContext?.() || {};
+  const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const [supposedHover, setSupposedHover] = useState(false);
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const avatarRef = useRef(null);
@@ -311,6 +312,7 @@ export default function ThreadListItemContent({
                 emojiContainer={emojiContainer}
                 memberNicknamesMap={nicknamesMap}
                 toggleReaction={toggleReaction}
+                onPressUserProfile={onPressUserProfileHandler}
               />
             </div>
           )}
