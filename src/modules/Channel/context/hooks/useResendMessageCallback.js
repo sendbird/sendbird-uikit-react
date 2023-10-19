@@ -29,7 +29,7 @@ function useResendMessageCallback({
           .then((message) => {
             logger.info('Channel: Resending message success!', message);
             messagesDispatcher({
-              type: messageActionTypes.SEND_MESSAGE_SUCESS,
+              type: messageActionTypes.SEND_MESSAGE_SUCCESS,
               payload: message,
             });
           })
@@ -62,7 +62,7 @@ function useResendMessageCallback({
           .then((message) => {
             logger.info('Channel: Resending file message success!', message);
             messagesDispatcher({
-              type: messageActionTypes.SEND_MESSAGE_SUCESS,
+              type: messageActionTypes.SEND_MESSAGE_SUCCESS,
               payload: message,
             });
           })
@@ -100,7 +100,7 @@ function useResendMessageCallback({
           .onSucceeded((message) => {
             logger.info('Channel: Resending multiple files message success!', message);
             messagesDispatcher({
-              type: messageActionTypes.SEND_MESSAGE_SUCESS,
+              type: messageActionTypes.SEND_MESSAGE_SUCCESS,
               payload: message,
             });
           })

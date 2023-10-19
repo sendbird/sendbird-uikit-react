@@ -28,7 +28,7 @@ import { getIsReactionEnabled } from '../../../utils/getIsReactionEnabled';
 
 import messagesInitialState from './dux/initialState';
 import messagesReducer from './dux/reducers';
-import * as messageActionTypes from './dux/actionTypes';
+import * as channelActions from './dux/actionTypes';
 
 import useHandleChannelEvents from './hooks/useHandleChannelEvents';
 import useGetChannel from './hooks/useGetChannel';
@@ -139,7 +139,7 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   scrollToMessage?(createdAt: number, messageId: number): void;
   isScrolled?: boolean;
   setIsScrolled?: React.Dispatch<React.SetStateAction<boolean>>;
-  messageActionTypes: typeof messageActionTypes;
+  messageActionTypes: typeof channelActions;
   messagesDispatcher: CustomUseReducerDispatcher;
   quoteMessage: SendableMessageType | null;
   setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
@@ -502,7 +502,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       sendVoiceMessage,
       sendMultipleFilesMessage,
       initialTimeStamp,
-      messageActionTypes,
+      messageActionTypes: channelActions,
       messagesDispatcher,
       setInitialTimeStamp,
       setAnimatedMessageId,

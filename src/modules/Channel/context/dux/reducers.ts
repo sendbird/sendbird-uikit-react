@@ -1,26 +1,30 @@
 import format from 'date-fns/format';
+import { MessageListParams, MultipleFilesMessage, SendingStatus } from '@sendbird/chat/message';
+import { match, P } from 'ts-pattern';
 
-import * as actionTypes from './actionTypes';
+import * as channelActions from './actionTypes';
+import type { ChannelActionTypes } from './actionTypes';
 import compareIds from '../../../../utils/compareIds';
 import { PREV_RESULT_SIZE, NEXT_RESULT_SIZE } from '../const';
 import { passUnsuccessfullMessages, mergeAndSortMessages } from '../utils';
-import { filterMessageListParams, getSendingMessageStatus } from '../../../../utils';
+import { CoreMessageType, filterMessageListParams, isSendableMessage } from '../../../../utils';
+import { ChannelInitialStateType } from './initialState';
 
-const {
-  SUCCEEDED,
-} = getSendingMessageStatus();
-const getOldestMessageTimeStamp = (messages = []) => {
+const getOldestMessageTimeStamp = (messages: CoreMessageType[] = []) => {
   const oldestMessage = messages[0];
   return (oldestMessage && oldestMessage.createdAt) || null;
 };
-const getLatestMessageTimeStamp = (messages = []) => {
+const getLatestMessageTimeStamp = (messages: CoreMessageType[] = []) => {
   const latestMessage = messages[messages.length - 1];
   return (latestMessage && latestMessage.createdAt) || null;
 };
 
-export default function reducer(state, action) {
-  switch (action.type) {
-    case actionTypes.RESET_MESSAGES:
+export default function channelReducer(
+  state: ChannelInitialStateType,
+  action: ChannelActionTypes,
+): ChannelInitialStateType {
+  return match(action)
+    .with({ type: channelActions.RESET_MESSAGES }, () => {
       return {
         ...state,
         // when user switches channel, if the previous channel `hasMorePrev`
@@ -29,22 +33,17 @@ export default function reducer(state, action) {
         hasMoreNext: false,
         allMessages: [],
       };
-    case actionTypes.FETCH_INITIAL_MESSAGES_START: {
+    })
+    .with({ type: channelActions.FETCH_INITIAL_MESSAGES_START }, () => {
       return {
         ...state,
         loading: true,
-        allMessages: [
-          ...state.allMessages.filter((m) => (
-            m.sendingStatus !== SUCCEEDED
-          )),
-        ],
+        allMessages: state.allMessages.filter((m) => isSendableMessage(m) ? m.sendingStatus !== SendingStatus.SUCCEEDED : true,
+        ),
       };
-    }
-    case actionTypes.FETCH_INITIAL_MESSAGES_SUCCESS: {
-      const {
-        currentGroupChannel,
-        messages,
-      } = action.payload;
+    })
+    .with({ type: channelActions.FETCH_INITIAL_MESSAGES_SUCCESS }, (action) => {
+      const { currentGroupChannel, messages } = action.payload;
       if (!(currentGroupChannel?.url === state.currentGroupChannel?.url)) {
         return state;
       }
@@ -60,57 +59,42 @@ export default function reducer(state, action) {
         latestMessageTimeStamp,
         allMessages: [...messages],
       };
-    }
-    case actionTypes.FETCH_PREV_MESSAGES_SUCCESS: {
-      const {
-        currentGroupChannel,
-        messages,
-      } = action.payload;
+    })
+    .with({ type: channelActions.FETCH_PREV_MESSAGES_SUCCESS }, (action) => {
+      const { currentGroupChannel, messages } = action.payload;
       if (!(currentGroupChannel?.url === state.currentGroupChannel?.url)) {
         return state;
       }
-      const hasMorePrev = ((messages?.length ?? 0)
-        >= (state?.messageListParams?.prevResultSize ?? PREV_RESULT_SIZE) + 1);
+      const hasMorePrev = (messages?.length ?? 0) >= (state?.messageListParams?.prevResultSize ?? PREV_RESULT_SIZE) + 1;
       const oldestMessageTimeStamp = getOldestMessageTimeStamp(messages);
 
       // Remove duplicated messages
       const duplicatedMessageIds = [];
       const updatedOldMessages = state.allMessages.map((msg) => {
-        const duplicatedMessage = messages.find(({ messageId }) => (
-          compareIds(messageId, msg.messageId)
-        ));
+        const duplicatedMessage = messages.find(({ messageId }) => compareIds(messageId, msg.messageId));
         if (!duplicatedMessage) {
           return msg;
         }
         duplicatedMessageIds.push(duplicatedMessage.messageId);
-        return (duplicatedMessage.updatedAt > msg.updatedAt) ? duplicatedMessage : msg;
+        return duplicatedMessage.updatedAt > msg.updatedAt ? duplicatedMessage : msg;
       });
-      const filteredNewMessages = (duplicatedMessageIds.length > 0)
-        ? messages.filter((msg) => (
-          !duplicatedMessageIds.find((messageId) => compareIds(messageId, msg.messageId))
-        ))
+      const filteredNewMessages = duplicatedMessageIds.length > 0
+        ? messages.filter((msg) => !duplicatedMessageIds.find((messageId) => compareIds(messageId, msg.messageId)))
         : messages;
 
       return {
         ...state,
         hasMorePrev,
         oldestMessageTimeStamp,
-        allMessages: [
-          ...filteredNewMessages,
-          ...updatedOldMessages,
-        ],
+        allMessages: [...filteredNewMessages, ...updatedOldMessages],
       };
-    }
-    case actionTypes.FETCH_NEXT_MESSAGES_SUCCESS: {
-      const {
-        currentGroupChannel,
-        messages,
-      } = action.payload;
+    })
+    .with({ type: channelActions.FETCH_NEXT_MESSAGES_SUCCESS }, (action) => {
+      const { currentGroupChannel, messages } = action.payload;
       if (!(currentGroupChannel?.url === state.currentGroupChannel?.url)) {
         return state;
       }
-      const hasMoreNext = ((messages?.length ?? 0)
-        === (state?.messageListParams?.nextResultSize ?? NEXT_RESULT_SIZE) + 1);
+      const hasMoreNext = (messages?.length ?? 0) === (state?.messageListParams?.nextResultSize ?? NEXT_RESULT_SIZE) + 1;
       const latestMessageTimeStamp = getLatestMessageTimeStamp(messages);
 
       // sort ~
@@ -122,76 +106,80 @@ export default function reducer(state, action) {
         latestMessageTimeStamp,
         allMessages: sortedMessages,
       };
-    }
-    case actionTypes.FETCH_INITIAL_MESSAGES_FAILURE:
-    case actionTypes.FETCH_PREV_MESSAGES_FAILURE:
-    case actionTypes.FETCH_NEXT_MESSAGES_FAILURE: {
-      const { currentGroupChannel } = action.payload;
-      if (currentGroupChannel?.url !== state?.currentGroupChannel?.url) {
-        return state;
-      }
-      return {
-        ...state,
-        loading: false,
-        initialized: false,
-        allMessages: [],
-        hasMorePrev: false,
-        hasMoreNext: false,
-        oldestMessageTimeStamp: null,
-        latestMessageTimeStamp: null,
-      };
-    }
-    case actionTypes.SEND_MESSAGE_START:
+    })
+    .with(
+      {
+        type: P.union(
+          channelActions.FETCH_INITIAL_MESSAGES_FAILURE,
+          channelActions.FETCH_PREV_MESSAGES_FAILURE,
+          channelActions.FETCH_NEXT_MESSAGES_FAILURE,
+        ),
+      },
+      (action) => {
+        const { currentGroupChannel } = action.payload;
+        if (currentGroupChannel?.url !== state?.currentGroupChannel?.url) {
+          return state;
+        }
+        return {
+          ...state,
+          loading: false,
+          initialized: false,
+          allMessages: [],
+          hasMorePrev: false,
+          hasMoreNext: false,
+          oldestMessageTimeStamp: null,
+          latestMessageTimeStamp: null,
+        };
+      },
+    )
+    .with({ type: channelActions.SEND_MESSAGE_START }, (action) => {
       // Message should not be spread here
       // it will loose some methods like `isUserMessage`
       return {
         ...state,
         localMessages: [...state.localMessages, action.payload],
       };
-    case actionTypes.SEND_MESSAGE_SUCESS: {
+    })
+    .with({ type: channelActions.SEND_MESSAGE_SUCCESS }, (action) => {
       const message = action.payload;
-      const filteredMessages = state.allMessages.filter((m) => (
-        m?.reqId !== message?.reqId
-      ));
+      const filteredMessages = state.allMessages.filter((m) => isSendableMessage(m) && m?.reqId !== message?.reqId);
       // [Policy] Pending messages and failed messages
       // must always be at the end of the message list
       return {
         ...state,
         allMessages: [...filteredMessages, message],
-        localMessages: state.localMessages.filter((m) => m?.reqId !== message?.reqId),
+        localMessages: state.localMessages.filter((m) => isSendableMessage(m) && m?.reqId !== message?.reqId),
       };
-    }
-    case actionTypes.SEND_MESSAGE_FAILURE: {
-      // eslint-disable-next-line no-param-reassign
+    })
+    .with({ type: channelActions.SEND_MESSAGE_FAILURE }, (action) => {
+      // @ts-ignore
       action.payload.failed = true;
       return {
         ...state,
-        localMessages: state.localMessages.map((m) => (
-          compareIds(m.reqId, action.payload.reqId)
-            ? action.payload
-            : m
-        )),
+        localMessages: state.localMessages.map((m) => compareIds(isSendableMessage(m) && m.reqId, action.payload.reqId) ? action.payload : m,
+        ),
       };
-    }
-    case actionTypes.SET_CURRENT_CHANNEL: {
+    })
+    .with({ type: channelActions.SET_CURRENT_CHANNEL }, (action) => {
       return {
         ...state,
         currentGroupChannel: action.payload,
         isInvalid: false,
       };
-    }
-    case actionTypes.SET_CHANNEL_INVALID: {
+    })
+    .with({ type: channelActions.SET_CHANNEL_INVALID }, () => {
       return {
         ...state,
         currentGroupChannel: null,
         isInvalid: true,
       };
-    }
-    case actionTypes.ON_MESSAGE_RECEIVED: {
+    })
+    .with({ type: channelActions.ON_MESSAGE_RECEIVED }, (action) => {
       const { channel, message } = action.payload;
       const { members } = channel;
       const { sender } = message;
-      const { currentGroupChannel = {}, unreadSince } = state;
+      const { currentGroupChannel, unreadSince } = state;
+
       const currentGroupChannelUrl = currentGroupChannel?.url;
 
       if (!compareIds(channel?.url, currentGroupChannelUrl)) {
@@ -202,7 +190,7 @@ export default function reducer(state, action) {
         return state;
       }
       // Filter by userFilledQuery
-      if (state.messageListParams && !filterMessageListParams(state.messageListParams, message)) {
+      if (state.messageListParams && !filterMessageListParams(state.messageListParams as MessageListParams, message)) {
         return state;
       }
 
@@ -214,10 +202,13 @@ export default function reducer(state, action) {
       }
 
       // Update members when sender profileUrl, nickname, friendName has been changed
-      const senderMember = members?.find((m) => (m?.userId === sender?.userId));
-      if ((senderMember?.profileUrl !== sender?.profileUrl)
-        || (senderMember?.friendName !== sender?.friendName)
-        || (senderMember?.nickname !== sender?.nickname)) {
+      const senderMember = members?.find((m) => m?.userId === sender?.userId);
+      if (
+        senderMember?.profileUrl !== sender?.profileUrl
+        || senderMember?.friendName !== sender?.friendName
+        || senderMember?.nickname !== sender?.nickname
+      ) {
+        // @ts-ignore
         channel.members = members.map((member) => {
           if (member.userId === sender.userId) {
             return sender;
@@ -231,20 +222,18 @@ export default function reducer(state, action) {
         unreadSince: state?.unreadSince ? unreadSince : format(new Date(), 'p MMM dd'),
         allMessages: passUnsuccessfullMessages(state.allMessages, message),
       };
-    }
-    case actionTypes.ON_MESSAGE_UPDATED: {
+    })
+    .with({ type: channelActions.ON_MESSAGE_UPDATED }, (action) => {
       const { channel, message } = action.payload;
       const currentGroupChannelUrl = state?.currentGroupChannel?.url || '';
       if (!compareIds(channel?.url, currentGroupChannelUrl)) {
         return state; // Ignore event when it is not for the current channel
       }
-      if (state.messageListParams && !filterMessageListParams(state.messageListParams, message)) {
+      if (state.messageListParams && !filterMessageListParams(state.messageListParams as MessageListParams, message)) {
         // Delete the message if it doesn't match to the params anymore
         return {
           ...state,
-          allMessages: state.allMessages.filter((m) => (
-            !compareIds(m.messageId, message?.messageId)
-          )),
+          allMessages: state.allMessages.filter((m) => !compareIds(m.messageId, message?.messageId)),
         };
       }
       return {
@@ -254,20 +243,17 @@ export default function reducer(state, action) {
             return message;
           }
           if (compareIds(m.parentMessageId, message.messageId)) {
-            m.parentMessage = message;// eslint-disable-line no-param-reassign
+            m.parentMessage = message; // eslint-disable-line no-param-reassign
           }
           return m;
         }),
       };
-    }
-    case actionTypes.ON_MESSAGE_THREAD_INFO_UPDATED: {
+    })
+    .with({ type: channelActions.ON_MESSAGE_THREAD_INFO_UPDATED }, (action) => {
       const { channel, event } = action.payload;
       const { channelUrl, threadInfo, targetMessageId } = event;
       const currentGroupChannelUrl = state?.currentGroupChannel?.url || '';
-      if (
-        !compareIds(channel?.url, currentGroupChannelUrl)
-        || !compareIds(channel?.url, channelUrl)
-      ) {
+      if (!compareIds(channel?.url, currentGroupChannelUrl) || !compareIds(channel?.url, channelUrl)) {
         return state; // Ignore event when it is not for the current channel
       }
       return {
@@ -280,17 +266,15 @@ export default function reducer(state, action) {
           return m;
         }),
       };
-    }
-    case actionTypes.RESEND_MESSAGE_START:
+    })
+    .with({ type: channelActions.RESEND_MESSAGE_START }, (action) => {
       return {
         ...state,
-        allMessages: state.allMessages.map((m) => (
-          compareIds(m.reqId, action.payload.reqId)
-            ? action.payload
-            : m
-        )),
+        allMessages: state.allMessages.map((m) => compareIds(isSendableMessage(m) && m.reqId, action.payload.reqId) ? action.payload : m,
+        ),
       };
-    case actionTypes.MARK_AS_READ:
+    })
+    .with({ type: channelActions.MARK_AS_READ }, (action) => {
       if (state.currentGroupChannel?.url !== action.payload?.channel?.url) {
         return state;
       }
@@ -298,27 +282,26 @@ export default function reducer(state, action) {
         ...state,
         unreadSince: null,
       };
-    case actionTypes.ON_MESSAGE_DELETED:
+    })
+    .with({ type: channelActions.ON_MESSAGE_DELETED }, (action) => {
       return {
         ...state,
-        allMessages: state.allMessages.filter((m) => (
-          !compareIds(m.messageId, action.payload)
-        )),
+        allMessages: state.allMessages.filter((m) => !compareIds(m.messageId, action.payload)),
       };
-    case actionTypes.ON_MESSAGE_DELETED_BY_REQ_ID:
+    })
+    .with({ type: channelActions.ON_MESSAGE_DELETED_BY_REQ_ID }, (action) => {
       return {
         ...state,
-        localMessages: state.localMessages.filter((m) => (
-          !compareIds(m.reqId, action.payload)
-        )),
+        localMessages: state.localMessages.filter((m) => !compareIds(isSendableMessage(m) && m.reqId, action.payload)),
       };
-    case actionTypes.SET_EMOJI_CONTAINER: {
+    })
+    .with({ type: channelActions.SET_EMOJI_CONTAINER }, (action) => {
       return {
         ...state,
         emojiContainer: action.payload,
       };
-    }
-    case actionTypes.ON_REACTION_UPDATED: {
+    })
+    .with({ type: channelActions.ON_REACTION_UPDATED }, (action) => {
       return {
         ...state,
         allMessages: state.allMessages.map((m) => {
@@ -331,21 +314,15 @@ export default function reducer(state, action) {
           return m;
         }),
       };
-    }
-    case actionTypes.MESSAGE_LIST_PARAMS_CHANGED: {
+    })
+    .with({ type: channelActions.MESSAGE_LIST_PARAMS_CHANGED }, (action) => {
       return {
         ...state,
         messageListParams: action.payload,
       };
-    }
-    case actionTypes.ON_FILE_INFO_UPLOADED: {
-      const {
-        channelUrl,
-        requestId,
-        index,
-        uploadableFileInfo,
-        error,
-      } = action.payload;
+    })
+    .with({ type: channelActions.ON_FILE_INFO_UPLOADED }, (action) => {
+      const { channelUrl, requestId, index, uploadableFileInfo, error } = action.payload;
       if (!compareIds(channelUrl, state?.currentGroupChannel?.url)) {
         return state;
       }
@@ -355,10 +332,9 @@ export default function reducer(state, action) {
        */
       if (error) return state;
       const { localMessages } = state;
-      const messageToUpdate = localMessages.find((message) => (
-        compareIds(message.reqId, requestId)
-      ));
-      const fileInfoList = messageToUpdate.messageParams?.fileInfoList;
+      const messageToUpdate = localMessages.find((message) => compareIds(isSendableMessage(message) && message.reqId, requestId),
+      );
+      const fileInfoList = (messageToUpdate as MultipleFilesMessage).messageParams?.fileInfoList;
       if (Array.isArray(fileInfoList)) {
         fileInfoList[index] = uploadableFileInfo;
       }
@@ -366,8 +342,6 @@ export default function reducer(state, action) {
         ...state,
         localMessages,
       };
-    }
-    default:
-      return state;
-  }
+    })
+    .otherwise(() => state);
 }

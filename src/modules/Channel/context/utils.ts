@@ -2,18 +2,14 @@ import React from 'react';
 import { EmojiContainer } from '@sendbird/chat';
 import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import format from 'date-fns/format';
-import * as channelActions from './dux/actionTypes';
-import topics from '../../../lib/pubSub/topics';
 
-import { isReadMessage, SendableMessageType } from '../../../utils';
+import { CoreMessageType, isReadMessage, SendableMessageType } from '../../../utils';
 import { BaseMessage, SendingStatus } from '@sendbird/chat/message';
-import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
-import { PubSubTypes } from '../../../lib/pubSub';
 
 export const scrollToRenderedMessage = (
   scrollRef: React.MutableRefObject<HTMLElement>,
   initialTimeStamp: number,
-  setIsScrolled: (val: boolean) => void,
+  setIsScrolled?: (val: boolean) => void,
 ) => {
   try {
     const container = scrollRef.current;
@@ -55,114 +51,6 @@ export const scrollIntoLast = (
       scrollIntoLast(currentTry + 1, scrollRef, setIsScrolled);
     }, 500 * currentTry);
   }
-};
-
-export const pubSubHandleRemover = (subscriber: Map<string, { remove(): void }>) => {
-  subscriber.forEach((s) => {
-    try {
-      s.remove();
-    } catch {
-      //
-    }
-  });
-};
-
-type Params = {
-  channelUrl: string;
-  pubSub: PubSubTypes;
-  dispatcher: CustomUseReducerDispatcher;
-  scrollRef: React.RefObject<HTMLElement>;
-};
-export const pubSubHandler = ({ channelUrl, pubSub, dispatcher, scrollRef }: Params) => {
-  const subscriber = new Map();
-  if (!pubSub || !pubSub.subscribe) return subscriber;
-  subscriber.set(
-    topics.SEND_USER_MESSAGE,
-    pubSub.subscribe(topics.SEND_USER_MESSAGE, (msg) => {
-      const { channel, message } = msg;
-      scrollIntoLast(0, scrollRef);
-      if (channelUrl === channel?.url) {
-        dispatcher({
-          type: channelActions.SEND_MESSAGE_SUCESS,
-          payload: message,
-        });
-      }
-    }),
-  );
-  subscriber.set(
-    topics.SEND_MESSAGE_START,
-    pubSub.subscribe(topics.SEND_MESSAGE_START, (msg) => {
-      const { channel, message } = msg;
-      if (channelUrl === channel?.url) {
-        dispatcher({
-          type: channelActions.SEND_MESSAGE_START,
-          payload: message,
-        });
-      }
-    }),
-  );
-  subscriber.set(
-    topics.ON_FILE_INFO_UPLOADED,
-    pubSub.subscribe(topics.ON_FILE_INFO_UPLOADED, (payload) => {
-      if (channelUrl === payload.channelUrl) {
-        dispatcher({
-          type: channelActions.ON_FILE_INFO_UPLOADED,
-          payload,
-        });
-      }
-    }),
-  );
-  subscriber.set(
-    topics.SEND_MESSAGE_FAILED,
-    pubSub.subscribe(topics.SEND_MESSAGE_FAILED, (msg) => {
-      const { channel, message } = msg;
-      if (channelUrl === channel?.url) {
-        dispatcher({
-          type: channelActions.SEND_MESSAGE_FAILURE,
-          payload: message,
-        });
-      }
-    }),
-  );
-  subscriber.set(
-    topics.SEND_FILE_MESSAGE,
-    pubSub.subscribe(topics.SEND_FILE_MESSAGE, (msg) => {
-      const { channel, message } = msg;
-      scrollIntoLast(0, scrollRef);
-      if (channelUrl === channel?.url) {
-        dispatcher({
-          type: channelActions.SEND_MESSAGE_SUCESS,
-          payload: message,
-        });
-      }
-    }),
-  );
-  subscriber.set(
-    topics.UPDATE_USER_MESSAGE,
-    pubSub.subscribe(topics.UPDATE_USER_MESSAGE, (msg) => {
-      const { channel, message, fromSelector } = msg;
-      if (fromSelector && channelUrl === channel?.url) {
-        dispatcher({
-          type: channelActions.ON_MESSAGE_UPDATED,
-          payload: { channel, message },
-        });
-      }
-    }),
-  );
-  subscriber.set(
-    topics.DELETE_MESSAGE,
-    pubSub.subscribe(topics.DELETE_MESSAGE, (msg) => {
-      const { channel, messageId } = msg;
-      if (channelUrl === channel?.url) {
-        dispatcher({
-          type: channelActions.ON_MESSAGE_DELETED,
-          payload: messageId,
-        });
-      }
-    }),
-  );
-
-  return subscriber;
 };
 
 export const isOperator = (groupChannel?: GroupChannel) => {
@@ -264,13 +152,17 @@ export const isSameGroup = (
   );
 };
 
-export const passUnsuccessfullMessages = (allMessages: SendableMessageType[], newMessage: SendableMessageType) => {
-  const { sendingStatus } = newMessage;
-
-  if (sendingStatus === SendingStatus.SUCCEEDED || sendingStatus === SendingStatus.PENDING) {
+export const passUnsuccessfullMessages = (
+  allMessages: (CoreMessageType | SendableMessageType)[],
+  newMessage: CoreMessageType | SendableMessageType,
+) => {
+  if (
+    'sendingStatus' in newMessage
+    && (newMessage.sendingStatus === SendingStatus.SUCCEEDED || newMessage.sendingStatus === SendingStatus.PENDING)
+  ) {
     const lastIndexOfSucceededMessage = allMessages
       .map((message) => {
-        if (message.sendingStatus) return message.sendingStatus;
+        if ('sendingStatus' in message && message.sendingStatus) return message.sendingStatus;
         return message.isAdminMessage() ? SendingStatus.SUCCEEDED : null;
       })
       .lastIndexOf(SendingStatus.SUCCEEDED);

@@ -230,7 +230,7 @@ describe('Messages-Reducers', () => {
     expect(getLastMessageOf(nextState.localMessages)).toEqual(mockMessage1);
   });
 
-  it('should handle SEND_MESSAGE_SUCESS', () => {
+  it('should handle SEND_MESSAGE_SUCCESS', () => {
     const mockData = generateMockChannel();
 
     const succeededMessageId = uuidv4();
@@ -247,7 +247,7 @@ describe('Messages-Reducers', () => {
       ],
     };
     const nextState = reducers(currentState, {
-      type: actionTypes.SEND_MESSAGE_SUCESS,
+      type: actionTypes.SEND_MESSAGE_SUCCESS,
       payload: succededMessage,
     });
     expect(nextState.allMessages.length).toEqual(currentState.allMessages.length + 1);

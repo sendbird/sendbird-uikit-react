@@ -32,7 +32,7 @@ export const useHandleChannelPubsubEvents = ({
         scrollIntoLast(0, scrollRef);
         if (channelUrl === channel?.url) {
           dispatcher({
-            type: channelActions.SEND_MESSAGE_SUCESS,
+            type: channelActions.SEND_MESSAGE_SUCCESS,
             payload: message,
           });
         }
@@ -84,7 +84,7 @@ export const useHandleChannelPubsubEvents = ({
         scrollIntoLast(0, scrollRef);
         if (channelUrl === channel?.url) {
           dispatcher({
-            type: channelActions.SEND_MESSAGE_SUCESS,
+            type: channelActions.SEND_MESSAGE_SUCCESS,
             payload: message,
           });
         }

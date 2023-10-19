@@ -110,7 +110,7 @@ export default function useSendFileMessageCallback({
                 .onSucceeded((succeededMessage) => {
                   logger.info('Channel: Sending file message success!', succeededMessage);
                   messagesDispatcher({
-                    type: messageActionTypes.SEND_MESSAGE_SUCESS,
+                    type: messageActionTypes.SEND_MESSAGE_SUCCESS,
                     payload: succeededMessage,
                   });
                   resolve(succeededMessage);
@@ -164,7 +164,7 @@ export default function useSendFileMessageCallback({
         .onSucceeded((message) => {
           logger.info('Channel: Sending message success!', message);
           messagesDispatcher({
-            type: messageActionTypes.SEND_MESSAGE_SUCESS,
+            type: messageActionTypes.SEND_MESSAGE_SUCCESS,
             payload: message,
           });
           resolve(message);
