@@ -32,6 +32,13 @@ export interface UseSendMFMStaticParams {
   pubSub: any,
   scrollRef?: React.RefObject<HTMLDivElement>;
 }
+export interface FileUploadedPayload {
+  channelUrl: string,
+  requestId: string,
+  index: number,
+  uploadableFileInfo: UploadableFileInfo,
+  error: Error,
+}
 export type SendMFMFunctionType = (files: Array<File>, quoteMessage?: SendableMessageType) => void;
 
 /**

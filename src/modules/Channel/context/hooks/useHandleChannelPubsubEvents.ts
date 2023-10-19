@@ -6,7 +6,7 @@ import { CustomUseReducerDispatcher } from '../../../../lib/SendbirdState';
 import { PUBSUB_TOPICS } from '../../../../lib/pubSub/topics';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { SendableMessageType } from '../../../../utils';
-import { PublishingModuleType } from './useSendMultipleFilesMessage';
+import {FileUploadedPayload, PublishingModuleType} from './useSendMultipleFilesMessage';
 
 export interface UseHandlePubsubEventsParams {
   channelUrl: string;
@@ -55,8 +55,8 @@ export const useHandleChannelPubsubEvents = ({
         const {
           response,
           publishingModules,
-        } = props as { response: object, publishingModules: PublishingModuleType[] };
-        if (channelUrl === response['channelUrl'] && publishingModules.includes(PublishingModuleType.CHANNEL)) {
+        } = props as { response: FileUploadedPayload, publishingModules: PublishingModuleType[] };
+        if (channelUrl === response.channelUrl && publishingModules.includes(PublishingModuleType.CHANNEL)) {
           dispatcher({
             type: channelActions.ON_FILE_INFO_UPLOADED,
             payload: response,
