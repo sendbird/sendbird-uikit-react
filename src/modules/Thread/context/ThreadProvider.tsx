@@ -21,7 +21,7 @@ import useGetChannel from './hooks/useGetChannel';
 import useGetAllEmoji from './hooks/useGetAllEmoji';
 import useGetThreadList from './hooks/useGetThreadList';
 import useGetParentMessage from './hooks/useGetParentMessage';
-import useHandlePubsubEvents from './hooks/useHandlePubsubEvents';
+import useHandleThreadPubsubEvents from './hooks/useHandleThreadPubsubEvents';
 import useHandleChannelEvents from './hooks/useHandleChannelEvents';
 import useSendFileMessageCallback from './hooks/useSendFileMessage';
 import useUpdateMessageCallback from './hooks/useUpdateMessageCallback';
@@ -149,7 +149,7 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
     sdk,
     currentChannel,
   }, { logger, threadDispatcher });
-  useHandlePubsubEvents({
+  useHandleThreadPubsubEvents({
     sdkInit,
     currentChannel,
     parentMessage,

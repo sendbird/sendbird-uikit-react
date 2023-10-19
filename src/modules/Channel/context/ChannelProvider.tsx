@@ -47,7 +47,7 @@ import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 import { getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
 import { PublishingModuleType, useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
-import { useHandlePubsubEvents } from './hooks/useHandlePubsubEvents';
+import { useHandleChannelPubsubEvents } from './hooks/useHandleChannelPubsubEvents';
 
 export type MessageListParams = {
   // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
@@ -370,7 +370,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   });
 
   // handles API calls from withSendbird
-  useHandlePubsubEvents({
+  useHandleChannelPubsubEvents({
     channelUrl,
     sdkInit,
     pubSub,

@@ -16,7 +16,7 @@ export interface UseHandlePubsubEventsParams {
   scrollRef: RefObject<HTMLElement>;
 }
 
-export const useHandlePubsubEvents = ({
+export const useHandleChannelPubsubEvents = ({
   channelUrl,
   sdkInit,
   pubSub,

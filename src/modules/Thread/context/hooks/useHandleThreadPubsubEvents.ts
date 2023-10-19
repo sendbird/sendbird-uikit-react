@@ -18,7 +18,7 @@ interface StaticProps {
   threadDispatcher: CustomUseReducerDispatcher;
 }
 
-export default function useHandlePubsubEvents({
+export default function useHandleThreadPubsubEvents({
   sdkInit,
   currentChannel,
   parentMessage,
