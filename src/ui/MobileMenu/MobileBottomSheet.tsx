@@ -35,6 +35,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     replyType,
     userId,
     resendMessage,
+    deleteMessage,
     toggleReaction,
     isReactionEnabled,
     showEdit,
@@ -290,7 +291,10 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                   <div
                     className='sendbird-message__bottomsheet--action'
                     onClick={() => {
-                      if (!disableDelete) {
+                      if (isFailedMessage(message)) {
+                        hideMenu();
+                        deleteMessage?.(message);
+                      } else if (!disableDelete) {
                         hideMenu();
                         showRemove?.(true);
                       }

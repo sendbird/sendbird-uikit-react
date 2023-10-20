@@ -83,6 +83,7 @@ const Message = ({
     nicknamesMap,
     setQuoteMessage,
     resendMessage,
+    deleteMessage,
     renderUserMentionItem,
     onReplyInThread,
     onQuoteMessageClick,
@@ -369,6 +370,7 @@ const Message = ({
             showRemove={setShowRemove}
             showFileViewer={setShowFileViewer}
             resendMessage={resendMessage}
+            deleteMessage={deleteMessage}
             toggleReaction={toggleReaction}
             setQuoteMessage={setQuoteMessage}
             onReplyInThread={onReplyInThread}
