@@ -78,7 +78,7 @@ export default function useSendMessageCallback({
         .onSucceeded((msg) => {
           logger.info('Channel: Sending message success!', msg);
           messagesDispatcher({
-            type: messageActionTypes.SEND_MESSAGE_SUCESS,
+            type: messageActionTypes.SEND_MESSAGE_SUCCESS,
             payload: msg,
           });
         });

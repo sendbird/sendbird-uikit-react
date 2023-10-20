@@ -89,7 +89,7 @@ export const useSendVoiceMessageCallback = ({
       .onSucceeded((succeededMessage) => {
         logger.info('Channel: Sending voice message success!', succeededMessage);
         messagesDispatcher({
-          type: messageActionTypes.SEND_MESSAGE_SUCESS,
+          type: messageActionTypes.SEND_MESSAGE_SUCCESS,
           payload: succeededMessage,
         });
       });

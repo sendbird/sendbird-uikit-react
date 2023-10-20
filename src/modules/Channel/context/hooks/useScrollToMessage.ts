@@ -1,8 +1,8 @@
 import type { BaseMessage } from '@sendbird/chat/message';
 import { useCallback } from 'react';
 
-import { Logger } from '../../../../index';
 import { scrollToRenderedMessage } from '../utils';
+import { LoggerInterface } from '../../../../lib/Logger';
 
 interface DynamicParams {
   setInitialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
@@ -12,7 +12,7 @@ interface DynamicParams {
 }
 
 interface StaticParams {
-  logger: Logger;
+  logger: LoggerInterface;
 }
 
 // To prevent multiple clicks on the message in the channel while scrolling
