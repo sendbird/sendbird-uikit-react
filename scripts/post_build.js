@@ -52,17 +52,9 @@ function movePackageJSON() {
 
 function copyCJSPackageJSON() {
   const packageJSONDistPath = path.resolve(getDistPath('/cjs'), 'package.json');
-  const cleanedUpPackageJSON = cleanupPackageJSON(packageJson);
-
-  delete cleanedUpPackageJSON.files;
-  delete cleanedUpPackageJSON.scripts;
-  delete cleanedUpPackageJSON.devDependencies;
-  delete cleanedUpPackageJSON.module;
-
   fs.writeFileSync(
     packageJSONDistPath,
     JSON.stringify({
-      ...cleanedUpPackageJSON,
       main: 'index.js',
       type: 'commonjs',
       typings: '../index.d.ts',
