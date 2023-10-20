@@ -1,15 +1,12 @@
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import isToday from 'date-fns/isToday';
 import format from 'date-fns/format';
 import isThisYear from 'date-fns/isThisYear';
 import isYesterday from 'date-fns/isYesterday';
-import {
-  isAudio,
-  isGif, isImage, isVideo, isVoiceMessageMimeType,
-} from '../../../../utils';
+import { isAudio, isGif, isImage, isVideo, isVoiceMessageMimeType } from '../../../../utils';
 import { LabelStringSet } from '../../../../ui/Label';
 
-/* eslint-disable default-param-last */
-export const getChannelTitle = (channel = {}, currentUserId, stringSet = LabelStringSet) => {
+export const getChannelTitle = (channel?: GroupChannel, currentUserId?: string, stringSet = LabelStringSet) => {
   if (!channel?.name && !channel?.members) {
     return stringSet.NO_TITLE;
   }
@@ -21,15 +18,11 @@ export const getChannelTitle = (channel = {}, currentUserId, stringSet = LabelSt
   }
   return (channel?.members || [])
     .filter(({ userId }) => userId !== currentUserId)
-    .map(({ nickname }) => (nickname || stringSet.NO_NAME))
+    .map(({ nickname }) => nickname || stringSet.NO_NAME)
     .join(', ');
 };
 
-export const getLastMessageCreatedAt = ({
-  channel,
-  locale,
-  stringSet,
-}) => {
+export const getLastMessageCreatedAt = ({ channel, locale, stringSet = LabelStringSet }) => {
   const createdAt = channel?.lastMessage?.createdAt;
   const optionalParam = locale ? { locale } : null;
   if (!createdAt) {
@@ -39,7 +32,7 @@ export const getLastMessageCreatedAt = ({
     return format(createdAt, 'p', optionalParam);
   }
   if (isYesterday(createdAt)) {
-    return stringSet?.MESSAGE_STATUS__YESTERDAY || 'Yesterday';
+    return stringSet.MESSAGE_STATUS__YESTERDAY || 'Yesterday';
   }
   if (isThisYear(createdAt)) {
     return format(createdAt, 'MMM d', optionalParam);
@@ -47,13 +40,9 @@ export const getLastMessageCreatedAt = ({
   return format(createdAt, 'yyyy/M/d', optionalParam);
 };
 
-export const getTotalMembers = (channel) => (
-  channel?.memberCount
-    ? channel.memberCount
-    : 0
-);
+export const getTotalMembers = (channel?: GroupChannel) => (channel?.memberCount ? channel.memberCount : 0);
 
-const getChannelPreviewFileDisplayString = (mimeType, stringSet) => {
+const getChannelPreviewFileDisplayString = (mimeType: string, stringSet = LabelStringSet) => {
   if (isGif(mimeType)) {
     return stringSet?.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GIF ?? '';
   }
@@ -72,7 +61,7 @@ const getChannelPreviewFileDisplayString = (mimeType, stringSet) => {
   return stringSet?.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GENERAL ?? '';
 };
 
-const getPrettyLastMessage = (message = null, stringSet) => {
+const getPrettyLastMessage = (message = null, stringSet = LabelStringSet) => {
   if (!message) return '';
   if (message.isFileMessage()) {
     return getChannelPreviewFileDisplayString(message.type, stringSet);
@@ -87,10 +76,6 @@ const getPrettyLastMessage = (message = null, stringSet) => {
   return message.message ?? '';
 };
 
-export const getLastMessage = (channel, stringSet) => (channel?.lastMessage ? getPrettyLastMessage(channel?.lastMessage, stringSet) : '');
+export const getLastMessage = (channel?: GroupChannel, stringSet = LabelStringSet) => channel?.lastMessage ? getPrettyLastMessage(channel?.lastMessage, stringSet) : '';
 
-export const getChannelUnreadMessageCount = (channel) => (
-  channel?.unreadMessageCount
-    ? channel.unreadMessageCount
-    : 0
-);
+export const getChannelUnreadMessageCount = (channel?: GroupChannel) => channel?.unreadMessageCount ? channel.unreadMessageCount : 0;
