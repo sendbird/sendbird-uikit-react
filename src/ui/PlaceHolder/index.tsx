@@ -1,19 +1,25 @@
 import React, { ReactElement, useContext } from 'react';
 
 import './index.scss';
-
-import _PlaceHolderTypes from './type';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import Loader from '../Loader';
 
-export const PlaceHolderTypes = _PlaceHolderTypes;
+export const PlaceHolderTypes = {
+  LOADING: 'LOADING',
+  NO_CHANNELS: 'NO_CHANNELS',
+  NO_MESSAGES: 'NO_MESSAGES',
+  WRONG: 'WRONG',
+  SEARCH_IN: 'SEARCH_IN',
+  SEARCHING: 'SEARCHING',
+  NO_RESULTS: 'NO_RESULTS',
+} as const;
 
 export interface PlaceHolderProps {
   className?: string | Array<string>;
-  type: typeof PlaceHolderTypes[keyof typeof PlaceHolderTypes];
+  type: keyof typeof PlaceHolderTypes;
   iconSize?: string | number;
   searchInString?: string;
   retryToConnect?: () => void;

@@ -1,8 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import PlaceHolder from "../index";
-import PlaceHolderTypes from '../type';
+import PlaceHolder, { PlaceHolderTypes } from "../index";
 
 describe('ui/PlaceHolder', () => {
   it('should should contain className', function () {
