@@ -9,6 +9,7 @@ export const getSenderName = (message: SendableMessageType) => (
     || message.sender.userId
   )
 );
+export const isAboutSame = (a: number, b: number, px: number) => Math.abs(a - b) <= px;
 
 export default {
   getSenderName,
