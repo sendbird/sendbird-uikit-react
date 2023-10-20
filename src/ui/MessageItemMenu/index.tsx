@@ -212,12 +212,9 @@ export default function MessageItemMenu({
                 <MenuItem
                   className="sendbird-message-item-menu__list__menu-item menu-item-delete"
                   onClick={() => {
-                    if (disabled) {
-                      return;
-                    }
                     if (isFailedMessage(message)) {
                       channelStore?.deleteMessage?.(message);
-                    } else {
+                    } else if (!disabled) {
                       showRemove(true);
                       closeDropdown();
                     }
