@@ -164,7 +164,7 @@ export function EditUserProfile({
 const mapStoreToProps = (store) => {
   return {
     theme: store.config.theme,
-    changeTheme: store.config.setCurrenttheme,
+    changeTheme: store.config.setCurrentTheme,
   };
 };
 

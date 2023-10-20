@@ -1,3 +1,4 @@
+import React from 'react';
 import type SendbirdChat from '@sendbird/chat';
 import type { User, SendbirdChatParams } from '@sendbird/chat';
 import type {
@@ -23,7 +24,6 @@ import { Module } from '@sendbird/chat/lib/__definition';
 import type {
   RenderUserProfileProps,
   ReplyType,
-  SendBirdProviderConfig,
   UserListQuery,
 } from '../types';
 import { UikitMessageHandler } from './selectors';
@@ -32,6 +32,9 @@ import { MarkAsReadSchedulerType } from './hooks/useMarkAsReadScheduler';
 import { MarkAsDeliveredSchedulerType } from './hooks/useMarkAsDeliveredScheduler';
 import { PartialDeep } from '../utils/typeHelpers/partialDeep';
 import { CoreMessageType } from '../utils';
+import { UserActionTypes } from './dux/user/actionTypes';
+import { SdkActionTypes } from './dux/sdk/actionTypes';
+import { ReconnectType } from './hooks/useConnect/types';
 
 // note to SDK team:
 // using enum inside .d.ts won’t work for jest, but const enum will work.
@@ -39,41 +42,6 @@ export const Role = {
   OPERATOR: 'operator',
   NONE: 'none',
 } as const;
-
-export interface SendBirdProviderProps {
-  userId: string;
-  appId: string;
-  accessToken?: string;
-  children?: React.ReactElement;
-  theme?: 'light' | 'dark';
-  nickname?: string;
-  profileUrl?: string;
-  dateLocale?: Locale;
-  disableUserProfile?: boolean;
-  disableMarkAsDelivered?: boolean;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
-  allowProfileEdit?: boolean;
-  userListQuery?(): UserListQuery;
-  config?: SendBirdProviderConfig;
-  stringSet?: Record<string, string>;
-  colorSet?: Record<string, string>;
-  isMentionEnabled?: boolean;
-  isVoiceMessageEnabled?: boolean;
-  voiceRecord?: {
-    maxRecordingTime: number;
-    minRecordingTime: number;
-  };
-  imageCompression?: {
-    compressionRate?: number,
-    resizingWidth?: number | string,
-    resizingHeight?: number | string,
-  };
-  isTypingIndicatorEnabledOnChannelList?: boolean;
-  isMessageReceiptStatusEnabledOnChannelList?: boolean;
-
-  // Customer provided callbacks
-  eventHandlers?: SBUEventHandlers;
-}
 
 export interface SBUEventHandlers {
   reaction?: {
@@ -94,7 +62,9 @@ export interface SendBirdStateConfig {
   theme: string;
   pubSub: any;
   logger: Logger;
-  setCurrenttheme: (theme: string) => void;
+  setCurrentTheme: (theme: 'light' | 'dark') => void;
+  /** @deprecated Please use setCurrentTheme instead * */
+  setCurrenttheme: (theme: 'light' | 'dark') => void;
   userListQuery?(): UserListQuery;
   isReactionEnabled: boolean;
   isMentionEnabled: boolean;
@@ -153,18 +123,13 @@ export type SendBirdState = {
   config: SendBirdStateConfig;
   stores: SendBirdStateStore;
   dispatchers: {
-    userDispatcher: UserDispatcher,
+    sdkDispatcher: React.Dispatch<SdkActionTypes>,
+    userDispatcher: React.Dispatch<UserActionTypes>,
+    reconnect: ReconnectType,
   },
   // Customer provided callbacks
   eventHandlers?: SBUEventHandlers;
 };
-
-type UserDispatcherParams = {
-  type: string,
-  payload: User,
-};
-
-type UserDispatcher = (params: UserDispatcherParams) => void;
 
 type GetSdk = SendbirdChat | undefined;
 type GetConnect = (

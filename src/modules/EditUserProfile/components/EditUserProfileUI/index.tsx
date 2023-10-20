@@ -38,7 +38,7 @@ export default function EditUserProfile(): ReactElement {
   } = editProfileProps;
 
   const theme = store?.config?.theme || 'light';
-  const changeTheme = store?.config?.setCurrenttheme || noop;
+  const changeTheme = store?.config?.setCurrentTheme || noop;
   const user = store?.stores?.userStore?.user;
   const sdk = store?.stores?.sdkStore?.sdk;
   const userDispatcher = store?.dispatchers?.userDispatcher;

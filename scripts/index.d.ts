@@ -129,17 +129,31 @@ declare module "SendbirdUIKitGlobal" {
     },
   }
 
+  export type SdkActionTypes =
+    | { type: 'SET_SDK_LOADING'; payload: boolean }
+    | { type: 'INIT_SDK'; payload: SendbirdChat }
+    | { type: 'SDK_ERROR'; payload?: null }
+    | { type: 'RESET_SDK'; payload?: null };
+
+  export type UserActionTypes =
+    | { type: 'INIT_USER'; payload: User }
+    | { type: 'RESET_USER'; payload?: null }
+    | { type: 'UPDATE_USER_INFO'; payload: User };
+
   export type Logger = {
     info(title?: string, ...payload: unknown[]): void;
     error(title?: string, ...payload: unknown[]): void;
     warning(title?: string, ...payload: unknown[]): void;
   }
 
-  export type MarkAsReadSchedulerType = {
+  type MarkAsSchedulerType = {
     push: (channel: GroupChannel) => void;
     clear: () => void;
     getQueue: () => GroupChannel[];
-  };
+  }
+
+  export type MarkAsReadSchedulerType = MarkAsSchedulerType;
+  export type MarkAsDeliveredSchedulerType = MarkAsSchedulerType;
 
   export type MessageHandler = (message: SendableMessageType) => void;
 
@@ -318,34 +332,41 @@ declare module "SendbirdUIKitGlobal" {
   export interface SendBirdStateConfig {
     disableUserProfile: boolean;
     disableMarkAsDelivered: boolean;
-    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactNode | React.ReactElement;
+    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
+    onUserProfileMessage?: (props: GroupChannel) => void;
     allowProfileEdit: boolean;
     isOnline: boolean;
-    isReactionEnabled: boolean;
-    isMentionEnabled: boolean;
-    userMention: {
-      maxMentionCount: number;
-      maxSuggestionCount: number;
-    };
     userId: string;
     appId: string;
     accessToken: string;
     theme: string;
     pubSub: any;
     logger: Logger;
-    uikitMultipleFilesMessageLimit: number;
-    setCurrenttheme: (theme: string) => void;
+    setCurrentTheme: (theme: 'light' | 'dark') => void;
+    /** @deprecated Please use setCurrentTheme instead **/
+    setCurrenttheme: (theme: 'light' | 'dark') => void;
     userListQuery?(): UserListQuery;
+    isReactionEnabled: boolean;
+    isMentionEnabled: boolean;
+    isMultipleFilesMessageEnabled: boolean;
+    isVoiceMessageEnabled?: boolean;
+    uikitUploadSizeLimit: number;
+    uikitMultipleFilesMessageLimit: number;
+    voiceRecord?: {
+      maxRecordingTime: number;
+      minRecordingTime: number;
+    };
+    userMention: {
+      maxMentionCount: number,
+      maxSuggestionCount: number,
+    };
     imageCompression?: {
       compressionRate?: number,
       resizingWidth?: number | string,
       resizingHeight?: number | string,
     };
-    isVoiceMessageEnabled?: boolean;
-    voiceRecord?: {
-      maxRecordingTime?: number,
-      minRecordingTime?: number,
-    };
+    markAsReadScheduler: MarkAsReadSchedulerType;
+    markAsDeliveredScheduler: MarkAsDeliveredSchedulerType;
     isTypingIndicatorEnabledOnChannelList?: boolean;
     isMessageReceiptStatusEnabledOnChannelList?: boolean;
     replyType: ReplyType;
@@ -382,16 +403,13 @@ declare module "SendbirdUIKitGlobal" {
     config: SendBirdStateConfig;
     stores: SendBirdStateStore;
     dispatchers: {
-      userDispatcher: UserDispatcher,
+      sdkDispatcher: React.Dispatch<SdkActionTypes>,
+      userDispatcher: React.Dispatch<UserActionTypes>,
+      reconnect: () => void,
     },
+    // Customer provided callbacks
+    eventHandlers?: SBUEventHandlers;
   }
-
-  export type UserDispatcherParams = {
-    type: string,
-    payload: User;
-  };
-
-  export type UserDispatcher = (params: UserDispatcherParams) => void;
 
   export interface ChannelListQueries {
     applicationUserListQuery?: ApplicationUserListQueryParams;
