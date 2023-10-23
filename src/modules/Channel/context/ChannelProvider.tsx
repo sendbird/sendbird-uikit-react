@@ -157,14 +157,12 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   messageInputRef: React.MutableRefObject<HTMLInputElement>,
   deleteMessage(message: CoreMessageType): Promise<CoreMessageType>,
   updateMessage(props: UpdateMessageProps, callback?: (err: SendbirdError, message: UserMessage) => void): Promise<CoreMessageType>,
-  resendMessage(failedMessage: SendableMessageType): Promise<SendableMessageType>,
+  resendMessage(failedMessage: SendableMessageType): void,
   // TODO: Good to change interface to using params / This part need refactoring
-  sendMessage: (props: SendMessageParams) => void,
+  sendMessage: (params: SendMessageParams) => void,
   sendFileMessage: (file: File, quoteMessage?: SendableMessageType) => void,
   sendVoiceMessage: (file: File, duration: number, quoteMessage?: SendableMessageType) => void,
   sendMultipleFilesMessage: (files: Array<File>, quoteMessage?: SendableMessageType) => void,
-  // sendMessage(messageParams: SendBird.UserMessageParams): Promise<SendBird.UserMessage>,
-  // sendFileMessage(messageParams: SendBird.FileMessageParams): Promise<SendBird.FileMessage>,
   toggleReaction(message: SendableMessageType, emojiKey: string, isReacted: boolean): void,
   renderUserMentionItem?: (props: { user: User }) => JSX.Element;
 }

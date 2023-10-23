@@ -72,9 +72,7 @@ type CHANNEL_PAYLOAD_TYPES = {
     channel: GroupChannel;
     event: any;
   };
-  [RESEND_MESSAGE_START]: {
-    reqId: number;
-  };
+  [RESEND_MESSAGE_START]: SendableMessageType;
   [MARK_AS_READ]: {
     channel: null | GroupChannel;
   };
