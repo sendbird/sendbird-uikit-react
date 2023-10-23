@@ -1333,6 +1333,19 @@ declare module '@sendbird/uikit-react/handlers/UserEventHandler' {
   export default UserEventHandler;
 }
 
+/** hooks */
+declare module '@sendbird/uikit-react/hooks/useModal' {
+  export type OpenGlobalModalProps = {
+    modalProps: ModalProps;
+    childElement: (props: { closeModal: () => void }) => ReactElement;
+  };
+  export interface GlobalModalContextInterface {
+    openModal: (props: OpenGlobalModalProps) => void;
+  }
+  export const GlobalModalProvider: React.FunctionComponent<OpenGlobalModalProps>;
+  export function useGlobalModalContext(): GlobalModalContextInterface;
+}
+
 /** utils */
 declare module '@sendbird/uikit-react/utils/message/getOutgoingMessageState' {
   import type { GroupChannel } from '@sendbird/chat/groupChannel';

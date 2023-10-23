@@ -28,6 +28,8 @@ export default {
   'handlers/UserEventHandler': 'src/lib/handlers/UserEventHandler.ts',
   'handlers/SessionHandler': 'src/lib/handlers/SessionHandler.ts',
 
+  // hooks
+  'hooks/useModal': 'src/hooks/useModal/index.tsx',
   // utils
   'utils/message/getOutgoingMessageState': 'src/utils/exports/getOutgoingMessageState.ts',
   'utils/message/isVoiceMessage': 'src/utils/isVoiceMessage.ts',
