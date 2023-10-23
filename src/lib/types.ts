@@ -3,13 +3,11 @@ import type SendbirdChat from '@sendbird/chat';
 import type { User, SendbirdChatParams } from '@sendbird/chat';
 import type {
   GroupChannel,
-  GroupChannelCreateParams,
-  SendbirdGroupChat,
+  GroupChannelCreateParams, GroupChannelModule,
 } from '@sendbird/chat/groupChannel';
 import type {
   OpenChannel,
-  OpenChannelCreateParams,
-  SendbirdOpenChat,
+  OpenChannelCreateParams, OpenChannelModule,
 } from '@sendbird/chat/openChannel';
 import type {
   FileMessage,
@@ -19,7 +17,7 @@ import type {
   UserMessageUpdateParams,
 } from '@sendbird/chat/message';
 import { SBUConfig } from '@sendbird/uikit-tools';
-import { Module } from '@sendbird/chat/lib/__definition';
+import { Module, ModuleNamespaces } from '@sendbird/chat/lib/__definition';
 
 import type {
   RenderUserProfileProps,
@@ -107,8 +105,9 @@ export interface SdkStore {
   error: boolean;
   initialized: boolean;
   loading: boolean;
-  sdk: SendbirdChat & SendbirdGroupChat & SendbirdOpenChat;
+  sdk: SendbirdChat & ModuleNamespaces<[GroupChannelModule, OpenChannelModule]>;
 }
+
 export interface UserStore {
   initialized: boolean;
   loading: boolean;

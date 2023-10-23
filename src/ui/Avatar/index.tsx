@@ -17,10 +17,10 @@ interface DefaultComponentProps {
 const DefaultComponent = ({ width, height }: DefaultComponentProps): ReactElement => {
   let iconWidth = pxToNumber(width);
   let iconHeight = pxToNumber(height);
-  if (typeof iconWidth === 'number') {
+  if (typeof iconWidth === 'number' && !Number.isNaN(iconWidth)) {
     iconWidth *= 0.575;
   }
-  if (typeof iconHeight === 'number') {
+  if (typeof iconHeight === 'number' && !Number.isNaN(iconHeight)) {
     iconHeight *= 0.575;
   }
 

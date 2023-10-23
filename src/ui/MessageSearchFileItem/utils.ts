@@ -8,6 +8,7 @@ import { IconTypes } from '../Icon';
 import { isVoiceMessage } from '../../utils';
 import { getMessageFirstFileUrl } from '../QuoteMessage/utils';
 import { MultipleFilesMessage } from '@sendbird/chat/message';
+import { Types } from '../Icon/type';
 
 export interface GetCreatedAtProps {
   createdAt: number;
@@ -32,7 +33,7 @@ export function getCreatedAt({ createdAt, locale, stringSet }: GetCreatedAtProps
   return format(createdAt, 'yyyy/M/d', optionalParam);
 }
 
-export function getIconOfFileType(message: FileMessage | MultipleFilesMessage): string {
+export function getIconOfFileType(message: FileMessage | MultipleFilesMessage): Types {
   const fileMessageUrl = getMessageFirstFileUrl(message) ?? '';
   const fileExtension = (fileMessageUrl.match(/\.([^.]*?)(?=\?|#|$)/))?.[1] ?? '';
 

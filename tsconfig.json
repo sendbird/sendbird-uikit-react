@@ -2,10 +2,19 @@
   "compilerOptions": {
     "jsx": "react",
     "target": "es5",
+    "module": "es2020",
     "esModuleInterop": true,
+    "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "typeRoots": ["node_modules/@types", "node_modules/jest-extended", "types"]
+    "typeRoots": ["./node_modules/@types", "./types"]
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": [
+    "**/__tests__/**",
+    "**/__tests__/**",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/*.stories.*"
+  ]
 }

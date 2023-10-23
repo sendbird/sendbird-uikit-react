@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import type { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import { MessageListParams, ReplyType } from '@sendbird/chat/message';
 import * as utils from '../utils';
 import { PREV_RESULT_SIZE, NEXT_RESULT_SIZE } from '../const';
@@ -10,6 +10,7 @@ import { MarkAsReadSchedulerType } from '../../../../lib/hooks/useMarkAsReadSche
 import useReconnectOnIdle from './useReconnectOnIdle';
 import { ChannelActionTypes } from '../dux/actionTypes';
 import { CoreMessageType } from '../../../../utils';
+import { SdkStore } from '../../../../lib/types';
 
 interface DynamicParams {
   isOnline: boolean;
@@ -20,7 +21,7 @@ interface DynamicParams {
 
 interface StaticParams {
   logger: Logger;
-  sdk: SendbirdGroupChat;
+  sdk: SdkStore['sdk'];
   currentGroupChannel: GroupChannel;
   scrollRef: React.RefObject<HTMLDivElement>;
   markAsReadScheduler: MarkAsReadSchedulerType;

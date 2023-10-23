@@ -10,7 +10,7 @@ import { LoggerInterface } from '../../../../lib/Logger';
 import { PubSubTypes } from '../../../../lib/pubSub';
 import { SendableMessageType } from '../../../../utils';
 import { SendBirdState } from '../../../../lib/types';
-import { FileMessageCreateParams } from '@sendbird/chat/message';
+import { FileMessage, FileMessageCreateParams } from '@sendbird/chat/message';
 
 type UseSendFileMessageCallbackOptions = {
   currentGroupChannel: null | GroupChannel;
@@ -28,7 +28,7 @@ export default function useSendFileMessageCallback(
   { logger, pubSub, scrollRef, messagesDispatcher }: UseSendFileMessageCallbackParams,
 ) {
   const sendMessage = useCallback(
-    (file: File, quoteMessage = null) => new Promise((resolve, reject) => {
+    (file: File, quoteMessage = null) => new Promise<FileMessage>((resolve, reject) => {
       const { compressionRate, resizingWidth, resizingHeight } = imageCompression ?? {};
       const shouldCreateCustomParams = onBeforeSendFileMessage && typeof onBeforeSendFileMessage === 'function';
 
@@ -126,7 +126,7 @@ export default function useSendFileMessageCallback(
                       type: messageActionTypes.SEND_MESSAGE_SUCCESS,
                       payload: succeededMessage as SendableMessageType,
                     });
-                    resolve(succeededMessage);
+                    resolve(succeededMessage as FileMessage);
                   });
               },
               file.type,
@@ -188,7 +188,7 @@ export default function useSendFileMessageCallback(
               type: messageActionTypes.SEND_MESSAGE_SUCCESS,
               payload: message as SendableMessageType,
             });
-            resolve(message);
+            resolve(message as FileMessage);
           });
       }
     }),

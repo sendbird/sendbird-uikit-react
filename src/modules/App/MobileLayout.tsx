@@ -2,7 +2,6 @@ import './mobile.scss';
 
 import React, { useState, useEffect } from 'react';
 import type { BaseMessage } from '@sendbird/chat/message';
-import type { SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
 
 import type { MobileLayoutProps } from './types';
@@ -48,7 +47,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
   const [animatedMessageId, setAnimatedMessageId] = useState<number | null>(null);
 
   const store = useSendbirdStateContext();
-  const sdk = store?.stores?.sdkStore?.sdk as SendbirdGroupChat;
+  const sdk = store?.stores?.sdkStore?.sdk;
   const userId = store?.config?.userId;
 
   const { pause } = useVoicePlayerContext();

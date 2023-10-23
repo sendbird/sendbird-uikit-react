@@ -19,10 +19,10 @@
     "API"
   ],
   "type": "module",
-  "main": "cjs/index.js",
-  "style": "dist/index.css",
-  "typings": "index.d.ts",
   "module": "index.js",
+  "main": "cjs/index.js",
+  "types": "types/index.d.ts",
+  "style": "dist/index.css",
   "files": [
     "**/*"
   ],

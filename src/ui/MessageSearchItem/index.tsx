@@ -22,6 +22,7 @@ export default function MessageSearchItem({
 }: Props): JSX.Element {
   const { createdAt } = message;
   const messageText = message.message;
+  // @ts-ignore
   const sender = message.sender || message._sender;
   const { profileUrl, nickname } = sender;
   const { stringSet, dateLocale } = useLocalization();

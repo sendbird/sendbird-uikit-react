@@ -8,7 +8,7 @@ import React, {
 
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type {
-  BaseMessage,
+  BaseMessage, FileMessage,
   FileMessageCreateParams,
   MultipleFilesMessageCreateParams,
   UserMessage,
@@ -49,6 +49,7 @@ import { useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage
 import { useHandleChannelPubsubEvents } from './hooks/useHandleChannelPubsubEvents';
 import { PublishingModuleType } from '../../internalInterfaces';
 import { ChannelActionTypes } from './dux/actionTypes';
+import { MultipleFilesMessage } from '@sendbird/chat/message';
 
 export type MessageListParams = {
   // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
@@ -162,9 +163,9 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   resendMessage(failedMessage: SendableMessageType): void,
   // TODO: Good to change interface to using params / This part need refactoring
   sendMessage: (params: SendMessageParams) => void,
-  sendFileMessage: (file: File, quoteMessage?: SendableMessageType) => void,
+  sendFileMessage: (file: File, quoteMessage?: SendableMessageType) => Promise<FileMessage>,
   sendVoiceMessage: (file: File, duration: number, quoteMessage?: SendableMessageType) => void,
-  sendMultipleFilesMessage: (files: Array<File>, quoteMessage?: SendableMessageType) => void,
+  sendMultipleFilesMessage: (files: Array<File>, quoteMessage?: SendableMessageType) => Promise<MultipleFilesMessage>,
   toggleReaction(message: SendableMessageType, emojiKey: string, isReacted: boolean): void,
   renderUserMentionItem?: (props: { user: User }) => JSX.Element;
 }

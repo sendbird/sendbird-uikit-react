@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
-import { Logger } from '../../../..';
+import { LoggerInterface } from '../../../../lib/Logger';
 
 interface DynamicParams {
   conversationScrollRef: React.RefObject<HTMLDivElement>;
 }
 interface StaticParams {
-  logger: Logger;
+  logger: LoggerInterface;
 }
 
 function useCheckScrollBottom(

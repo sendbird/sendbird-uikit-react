@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import type { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { MessageSearchQueryParams } from '@sendbird/chat/lib/__definition';
 
 import type { SendbirdError } from '@sendbird/chat';
@@ -8,6 +8,7 @@ import type { SendbirdError } from '@sendbird/chat';
 import type { Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
 import { CoreMessageType } from '../../../../utils';
+import { SdkStore } from '../../../../lib/types';
 
 enum MessageSearchOrder {
   SCORE = 'score',
@@ -26,7 +27,7 @@ interface MainProps {
   retryCount: number;
 }
 interface ToolProps {
-  sdk: SendbirdGroupChat;
+  sdk: SdkStore['sdk'];
   logger: Logger;
   messageSearchDispatcher: (props: { type: string, payload: any }) => void;
 }
@@ -61,7 +62,7 @@ function useGetSearchedMessages(
               },
             });
             if (onResultLoaded && typeof onResultLoaded === 'function') {
-              onResultLoaded(messages, null);
+              onResultLoaded(messages as CoreMessageType[], null);
             }
           }).catch((error) => {
             logger.warning('MessageSearch | useGetSearchedMessages: getting failed', error);

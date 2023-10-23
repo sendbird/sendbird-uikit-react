@@ -15,6 +15,7 @@ const CreateChannelContext = React.createContext(undefined);
 export interface UserListQuery {
   hasNext?: boolean;
   next(): Promise<Array<User>>;
+  get isLoading(): boolean;
 }
 
 type OverrideInviteUserType = {

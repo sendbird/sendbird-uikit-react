@@ -5,6 +5,7 @@ import React, {
 
 import './dummy-stream.scss';
 import { LiveBadge } from '../assets/Icons';
+import { OpenChannel } from '@sendbird/chat/openChannel';
 
 export interface ChannelMeta {
   name: string;
@@ -20,7 +21,7 @@ export interface CreatorInfo {
 }
 
 interface Props {
-  currentChannel: SendBird.OpenChannel;
+  currentChannel: OpenChannel;
 }
 
 export default function DummyStream({

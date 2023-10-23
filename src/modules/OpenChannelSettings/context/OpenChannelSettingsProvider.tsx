@@ -2,7 +2,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { OpenChannel, OpenChannelHandler, OpenChannelUpdateParams, SendbirdOpenChat } from '@sendbird/chat/openChannel';
+import { OpenChannel, OpenChannelHandler, OpenChannelUpdateParams } from '@sendbird/chat/openChannel';
 
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
@@ -45,7 +45,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
 
   // fetch store from <SendbirdProvider />
   const globalStore = useSendbirdStateContext();
-  const sdk = globalStore?.stores?.sdkStore?.sdk as SendbirdOpenChat;
+  const sdk = globalStore?.stores?.sdkStore?.sdk;
   const isSDKInitialized = globalStore?.stores?.sdkStore?.initialized;
 
   const logger = globalStore?.config?.logger;

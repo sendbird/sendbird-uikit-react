@@ -5,7 +5,6 @@ import React, {
   useMemo,
 } from 'react';
 import type { FileMessageCreateParams, UserMessageCreateParams } from '@sendbird/chat/message';
-import type { SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
 import * as utils from './utils';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
@@ -97,17 +96,18 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
     messageLimit,
     onBeforeSendFileMessage,
     onChatHeaderActionClick,
-    onBackClick,
+    onBackClick, disableUserProfile, renderUserProfile,
   } = props;
 
   // We didn't decide to support fetching participant list
   const fetchingParticipants = false;
   const globalStore = useSendbirdStateContext();
 
-  const sdk = globalStore?.stores?.sdkStore?.sdk as SendbirdOpenChat;
+  const sdk = globalStore?.stores?.sdkStore?.sdk;
   const sdkInit = globalStore?.stores?.sdkStore?.initialized;
   const user = globalStore?.stores?.userStore?.user;
   const config = globalStore?.config;
+
   const {
     userId,
     isOnline,
@@ -308,6 +308,10 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
       updateMessage,
       deleteMessage,
       resendMessage,
+      frozen: messagesStore.frozen,
+      disableUserProfile,
+      renderUserProfile,
+      participants: messagesStore.participants,
     }}>
       <UserProfileProvider
         isOpenChannel

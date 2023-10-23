@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Logger } from '../../../..';
 import * as messageActionTypes from '../dux/actionTypes';
+import { LoggerInterface } from '../../../../lib/Logger';
 
 interface DynamicParams {
   messagesLength: number;
@@ -14,7 +14,7 @@ type MessagesDispatcherType = {
 
 interface StaticParams {
   messagesDispatcher: (dispatcher: MessagesDispatcherType) => void;
-  logger: Logger;
+  logger: LoggerInterface;
 }
 
 const THROTTLE_TIMER = 5000;

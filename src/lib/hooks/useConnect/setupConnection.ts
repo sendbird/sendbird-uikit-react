@@ -26,32 +26,23 @@ export function setUpParams({
   appId,
   customApiHost,
   customWebSocketHost,
-  sdkInitParams,
+  sdkInitParams = {},
 }: {
   appId: string;
   customApiHost?: string;
   customWebSocketHost?: string;
   sdkInitParams?: SendbirdChatInitParams;
   customExtensionParams?: CustomExtensionParams;
-}): SendbirdChat {
-  const params = {
-    modules: [
-      new GroupChannelModule(),
-      new OpenChannelModule(),
-    ],
-    newInstance: true,
+}) {
+  delete sdkInitParams['appId'];
+  return SendbirdChat.init({
     ...(sdkInitParams ?? {}),
-    // appId shouldn't be overrided
     appId,
-  };
-  if (customApiHost) {
-    params['customApiHost'] = customApiHost;
-  }
-  if (customWebSocketHost) {
-    params['customWebSocketHost'] = customWebSocketHost;
-  }
-  const newSdk = SendbirdChat.init(params);
-  return newSdk;
+    modules: [new GroupChannelModule(), new OpenChannelModule()],
+    newInstance: true,
+    customApiHost,
+    customWebSocketHost,
+  });
 }
 
 // Steps

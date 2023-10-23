@@ -61,7 +61,7 @@ export const ReactedMembersBottomSheet = ({
                   width="28px"
                   height="28px"
                   placeHolder={(style) => (
-                    <div style={style}>
+                    <div style={style as any}>
                       <Icon
                         type={IconTypes.QUESTION}
                         fillColor={IconColors.ON_BACKGROUND_3}

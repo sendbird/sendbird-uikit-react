@@ -1,4 +1,4 @@
-export default (px: string | number): number | void => {
+export default (px: string | number): number => {
   if (typeof px === 'number') {
     return px;
   }
@@ -8,5 +8,5 @@ export default (px: string | number): number | void => {
       return parsed;
     }
   }
-  return null;
+  return NaN;
 };

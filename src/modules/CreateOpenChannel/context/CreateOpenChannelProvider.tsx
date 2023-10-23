@@ -1,14 +1,15 @@
 import React, { useCallback } from 'react';
-import { OpenChannel, OpenChannelCreateParams, SendbirdOpenChat } from '@sendbird/chat/openChannel';
+import { OpenChannel, OpenChannelCreateParams } from '@sendbird/chat/openChannel';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { Logger } from '../../../lib/SendbirdState';
+import { SdkStore } from '../../../lib/types';
 
 export interface CreateNewOpenChannelCallbackProps {
   name: string;
   coverUrlOrImage?: string;
 }
 export interface CreateOpenChannelContextInterface extends CreateOpenChannelProviderProps {
-  sdk: SendbirdOpenChat;
+  sdk: SdkStore['sdk'];
   sdkInitialized: boolean;
   logger: Logger;
   createNewOpenChannel: (props: CreateNewOpenChannelCallbackProps) => void;

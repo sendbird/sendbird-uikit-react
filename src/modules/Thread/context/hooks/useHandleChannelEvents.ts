@@ -1,11 +1,12 @@
-import { GroupChannel, GroupChannelHandler, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import { GroupChannel, GroupChannelHandler } from '@sendbird/chat/groupChannel';
 import { useEffect } from 'react';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import uuidv4 from '../../../../utils/uuid';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
+import { SdkStore } from '../../../../lib/types';
 
 interface DynamicProps {
-  sdk: SendbirdGroupChat;
+  sdk: SdkStore['sdk'];
   currentChannel: GroupChannel;
 }
 interface StaticProps {

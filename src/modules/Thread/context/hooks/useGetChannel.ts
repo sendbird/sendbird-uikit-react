@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
-import { SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 
 import { Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import { SendableMessageType } from '../../../../utils';
+import { SdkStore } from '../../../../lib/types';
 
 interface DynamicProps {
   channelUrl: string;
@@ -12,7 +12,7 @@ interface DynamicProps {
 }
 
 interface StaticProps {
-  sdk: SendbirdGroupChat;
+  sdk: SdkStore['sdk'];
   logger: Logger;
   threadDispatcher: (props: { type: string, payload?: any }) => void;
 }

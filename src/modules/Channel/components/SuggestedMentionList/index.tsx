@@ -173,7 +173,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
               type={LabelTypography.SUBTITLE_2}
               color={LabelColors.ONBACKGROUND_2}
             >
-              {stringSet.MENTION_COUNT__OVER_LIMIT.replace('%d', maxMentionCount)}
+              {stringSet.MENTION_COUNT__OVER_LIMIT.replace('%d', String(maxMentionCount))}
             </Label>
           </div>
         )

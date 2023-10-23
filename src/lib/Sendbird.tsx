@@ -53,6 +53,7 @@ export { useSendbirdStateContext } from '../hooks/useSendbirdStateContext';
 export type UserListQueryType = {
   hasNext?: boolean;
   next: () => Promise<Array<User>>;
+  get isLoading(): boolean;
 };
 
 interface VoiceRecordOptions {

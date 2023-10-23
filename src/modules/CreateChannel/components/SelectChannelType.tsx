@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import type { SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 
 import * as sendbirdSelectors from '../../../lib/selectors';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
@@ -26,7 +25,7 @@ const SelectChannelType: React.FC<SelectChannelTypeProps> = (props: SelectChanne
   const { onCancel } = props;
   const store = useSendbirdStateContext();
 
-  const sdk = sendbirdSelectors.getSdk(store) as SendbirdGroupChat;
+  const sdk = sendbirdSelectors.getSdk(store);
 
   const createChannelProps = useCreateChannelContext();
   const {
