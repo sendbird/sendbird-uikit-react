@@ -1,5 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ui/Icon should do a snapshot test of the default Icon DOM 1`] = `
+<DocumentFragment>
+  <div
+    class=" sendbird-icon sendbird-icon-add "
+    role="button"
+    style="width: 26px; min-width: 26px; height: 26px; min-height: 26px;"
+    tabindex="0"
+  >
+    <test-file-stub />
+  </div>
+</DocumentFragment>
+`;
+
 exports[`ui/Icon should do a snapshot test of the defualt Icon DOM 1`] = `
 <DocumentFragment>
   <div

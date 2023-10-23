@@ -66,6 +66,7 @@ import IconThumbnailNone from '../../svgs/icon-thumbnail-none.svg';
 import IconToggleOff from '../../svgs/icon-toggleoff.svg';
 import IconToggleOn from '../../svgs/icon-toggleon.svg';
 import IconUser from '../../svgs/icon-user.svg';
+import {noop} from "../../utils/utils";
 
 function changeTypeToIconComponent(type: Types) {
   switch (type) {
@@ -143,13 +144,13 @@ type IconProps = {
   children?: React.ReactNode;
 };
 export default function Icon({
-  className,
+  className = '',
   type,
-  fillColor,
-  width,
-  height,
-  onClick,
-  children,
+  fillColor = Colors.DEFAULT,
+  width = 26,
+  height = 26,
+  onClick = noop,
+  children = null,
 }: IconProps) {
   const iconStyle = {
     width: typeof width === 'string' ? width : `${width}px`,
