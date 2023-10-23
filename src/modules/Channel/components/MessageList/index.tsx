@@ -18,8 +18,7 @@ import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 import { useSetScrollToBottom } from './hooks/useSetScrollToBottom';
 import { useScrollBehavior } from './hooks/useScrollBehavior';
-import * as utils from "../../context/utils";
-import {CoreMessageType, isMultipleFilesMessage} from "../../../../utils";
+import * as utils from '../../context/utils';
 
 const SCROLL_BOTTOM_PADDING = 50;
 
