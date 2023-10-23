@@ -76,6 +76,7 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
     onBeforeSendFileMessage,
     onBeforeSendVoiceMessage,
     onBeforeSendMultipleFilesMessage,
+    isMultipleFilesMessageEnabled,
     // User Profile
     disableUserProfile,
     renderUserProfile,
@@ -233,6 +234,7 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
         message: propsMessage,
         onHeaderActionClick,
         onMoveToParentMessage,
+        isMultipleFilesMessageEnabled,
         // ThreadContextInitialState
         currentChannel,
         allThreadMessages,
