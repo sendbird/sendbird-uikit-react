@@ -24,8 +24,8 @@ export const useHandleChannelPubsubEvents = ({
   dispatcher,
   scrollRef,
 }: UseHandlePubsubEventsParams): void => {
-  const subscriber = new Map();
   useEffect(() => {
+    const subscriber = new Map();
     if (pubSub?.subscribe) {
       subscriber.set(PUBSUB_TOPICS.SEND_USER_MESSAGE, pubSub.subscribe(PUBSUB_TOPICS.SEND_USER_MESSAGE, (props) => {
         const { channel, message } = props;
