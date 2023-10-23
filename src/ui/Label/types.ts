@@ -10,7 +10,7 @@ export const Typography = {
   CAPTION_1: 'CAPTION_1',
   CAPTION_2: 'CAPTION_2',
   CAPTION_3: 'CAPTION_3',
-};
+} as const;
 
 export const Colors = {
   ONBACKGROUND_1: 'ONBACKGROUND_1',
@@ -22,4 +22,4 @@ export const Colors = {
   PRIMARY: 'PRIMARY',
   ERROR: 'ERROR',
   SECONDARY_3: 'SECONDARY_3',
-};
+} as const;

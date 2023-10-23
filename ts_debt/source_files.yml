@@ -1,7 +1,5 @@
 (Wont do) ./_externals/lamejs/lame.all.js: lame.all.js
 ./ui/Label/index.jsx: index.jsx
-./ui/Label/types.js: types.js
-./ui/Label/utils.js: utils.js
 ./ui/LegacyChannelHeader/index.jsx: index.jsx
 ./ui/LinkLabel/index.jsx: index.jsx
 ./ui/MessageInput/index.jsx: index.jsx
