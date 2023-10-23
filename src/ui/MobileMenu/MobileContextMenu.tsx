@@ -30,6 +30,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
     showEdit,
     showRemove,
     deleteMenuState,
+    deleteMessage,
     setQuoteMessage,
     parentRef,
     onReplyInThread,
@@ -201,9 +202,12 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
             <MenuItem
               className="sendbird-message__mobile-context-menu-item menu-item-delete"
               onClick={() => {
-                if (!disableDelete) {
+                if (isFailedMessage(message)) {
                   hideMenu();
-                  showRemove(true);
+                  deleteMessage?.(message);
+                } else if (!disableDelete) {
+                  hideMenu();
+                  showRemove?.(true);
                 }
               }}
               disable={disableDelete}

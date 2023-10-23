@@ -75,6 +75,7 @@ interface Props {
   showRemove?: (bool: boolean) => void;
   showFileViewer?: (bool: boolean) => void;
   resendMessage?: (message: SendableMessageType) => Promise<SendableMessageType>;
+  deleteMessage?: (message: CoreMessageType) => Promise<CoreMessageType>;
   toggleReaction?: (message: SendableMessageType, reactionKey: string, isReacted: boolean) => void;
   setQuoteMessage?: (message: SendableMessageType) => void;
   onReplyInThread?: (props: { message: SendableMessageType }) => void;
@@ -100,6 +101,7 @@ export default function MessageContent({
   showRemove,
   showFileViewer,
   resendMessage,
+  deleteMessage,
   toggleReaction,
   setQuoteMessage,
   onReplyInThread,
@@ -465,6 +467,7 @@ export default function MessageContent({
             showRemove={showRemove}
             emojiContainer={emojiContainer}
             resendMessage={resendMessage}
+            deleteMessage={deleteMessage}
             setQuoteMessage={setQuoteMessage}
             toggleReaction={toggleReaction}
             showEdit={showEdit}

@@ -335,6 +335,7 @@ export default function ParentMessageInfo({
           hideMenu={() => {
             setShowMobileMenu(false);
           }}
+          deleteMessage={deleteMessage}
           deleteMenuState={
             allThreadMessages?.length === 0
               ? 'ACTIVE'

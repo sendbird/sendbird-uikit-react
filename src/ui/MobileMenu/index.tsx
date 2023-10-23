@@ -19,6 +19,7 @@ const MobileMenu: React.FC<MobileBottomSheetProps> = (props: MobileBottomSheetPr
     showRemove,
     showEdit,
     resendMessage,
+    deleteMessage,
     setQuoteMessage,
     emojiContainer,
     toggleReaction,
@@ -43,6 +44,7 @@ const MobileMenu: React.FC<MobileBottomSheetProps> = (props: MobileBottomSheetPr
               showEdit={showEdit}
               deleteMenuState={deleteMenuState}
               resendMessage={resendMessage}
+              deleteMessage={deleteMessage}
               setQuoteMessage={setQuoteMessage}
               emojiContainer={emojiContainer}
               toggleReaction={toggleReaction}
@@ -63,6 +65,7 @@ const MobileMenu: React.FC<MobileBottomSheetProps> = (props: MobileBottomSheetPr
               deleteMenuState={deleteMenuState}
               showRemove={showRemove}
               resendMessage={resendMessage}
+              deleteMessage={deleteMessage}
               setQuoteMessage={setQuoteMessage}
               parentRef={parentRef}
               onReplyInThread={onReplyInThread}
