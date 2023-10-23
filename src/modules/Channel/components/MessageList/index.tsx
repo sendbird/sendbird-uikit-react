@@ -18,6 +18,7 @@ import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 import { useSetScrollToBottom } from './hooks/useSetScrollToBottom';
 import { useScrollBehavior } from './hooks/useScrollBehavior';
+import * as utils from '../../context/utils';
 
 const SCROLL_BOTTOM_PADDING = 50;
 
@@ -87,6 +88,13 @@ const MessageList: React.FC<MessageListProps> = ({
       onScrollDownCallback(([messages]) => {
         if (messages) {
           try {
+            setTimeout(() => utils.scrollIntoLast(0, scrollRef),
+              /**
+               * Rendering MFM takes long time so we need this.
+               * But later we should find better solution.
+               */
+              1000,
+            );
             // element.scrollTop = scrollHeight - clientHeight;
             // scrollRef.current.scrollTop = scrollHeight - clientHeight;
           } catch (error) {
