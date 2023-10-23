@@ -1,6 +1,5 @@
 (Wont do) ./_externals/lamejs/lame.all.js: lame.all.js
 ./modules/Channel/context/hooks/useDeleteMessageCallback.js: useDeleteMessageCallback.js
-./modules/Channel/context/hooks/useGetChannel.js: useGetChannel.js
 ./modules/Channel/context/hooks/useResendMessageCallback.js: useResendMessageCallback.js
 ./modules/Channel/context/hooks/useScrollDownCallback.js: useScrollDownCallback.js
 ./modules/Channel/context/hooks/useSendFileMessageCallback.js: useSendFileMessageCallback.js
