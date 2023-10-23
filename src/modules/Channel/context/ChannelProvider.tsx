@@ -211,7 +211,6 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     isOnline,
     imageCompression,
     isMentionEnabled,
-    isVoiceMessageEnabled,
     onUserProfileMessage,
     markAsReadScheduler,
     groupChannel,
@@ -308,7 +307,6 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     userFilledMessageListQuery,
     hasMoreNext,
     replyType,
-    isVoiceMessageEnabled,
   }, {
     logger,
     messagesDispatcher,
