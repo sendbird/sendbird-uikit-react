@@ -42,7 +42,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import MultipleFilesMessageItemBody, { ThreadMessageKind } from '../../../../ui/MultipleFilesMessageItemBody';
 import { useThreadMessageKindKeySelector } from '../../../Channel/context/hooks/useThreadMessageKindKeySelector';
 import { useStatefulFileInfoList } from '../../../Channel/context/hooks/useStatefulFileInfoList';
-import { useChannelContext } from '../../../Channel/context/ChannelProvider';
+import { useThreadContext } from '../../context/ThreadProvider';
 
 export interface ThreadListItemContentProps {
   className?: string;
@@ -94,7 +94,7 @@ export default function ThreadListItemContent({
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const [supposedHover, setSupposedHover] = useState(false);
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
-  const { deleteMessage } = useChannelContext();
+  const { deleteMessage } = useThreadContext();
   const avatarRef = useRef(null);
 
   const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
