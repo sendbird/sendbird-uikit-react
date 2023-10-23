@@ -66,7 +66,7 @@ import IconThumbnailNone from '../../svgs/icon-thumbnail-none.svg';
 import IconToggleOff from '../../svgs/icon-toggleoff.svg';
 import IconToggleOn from '../../svgs/icon-toggleon.svg';
 import IconUser from '../../svgs/icon-user.svg';
-import {noop} from "../../utils/utils";
+import { noop } from '../../utils/utils';
 
 function changeTypeToIconComponent(type: Types) {
   switch (type) {
