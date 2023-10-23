@@ -1,5 +1,5 @@
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { ReactionEvent, UserMessage } from '@sendbird/chat/message';
+import { MultipleFilesMessage, ReactionEvent, UserMessage } from '@sendbird/chat/message';
 import { NEXT_THREADS_FETCH_SIZE, PREV_THREADS_FETCH_SIZE } from '../../consts';
 import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from '../../types';
 import { compareIds } from '../utils';
@@ -351,8 +351,37 @@ export default function reducer(
         ...state,
       };
     }
+    case actionTypes.ON_FILE_INFO_UPLOADED: {
+      const { channelUrl, requestId, index, uploadableFileInfo, error } = action.payload;
+      if (!compareIds(channelUrl, state.currentChannel?.url)) {
+        return state;
+      }
+      /**
+       * We don't have to do anything here because
+       * onFailed() will be called so handle error there instead.
+       */
+      if (error) return state;
+      const { localThreadMessages } = state;
+      const messageToUpdate = localThreadMessages.find((message) => compareIds(hasReqId(message) && message.reqId, requestId),
+      );
+      const fileInfoList = (messageToUpdate as MultipleFilesMessage)
+        .messageParams?.fileInfoList;
+      if (Array.isArray(fileInfoList)) {
+        fileInfoList[index] = uploadableFileInfo;
+      }
+      return {
+        ...state,
+        localThreadMessages,
+      };
+    }
     default: {
       return state;
     }
   }
+}
+
+function hasReqId<T extends object>(
+  message: T,
+): message is T & { reqId: string } {
+  return 'reqId' in message;
 }

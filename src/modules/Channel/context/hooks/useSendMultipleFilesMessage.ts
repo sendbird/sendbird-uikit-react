@@ -6,9 +6,10 @@ import { MultipleFilesMessage } from '@sendbird/chat/message';
 import type { Logger } from '../../../../lib/SendbirdState';
 import type { Nullable } from '../../../../types';
 import PUBSUB_TOPICS from '../../../../lib/pubSub/topics';
-import { scrollIntoLast } from '../utils';
+import { scrollIntoLast as scrollIntoLastForChannel } from '../utils';
 import { SendableMessageType } from '../../../../utils';
 import { PublishingModuleType } from '../../../internalInterfaces';
+import { scrollIntoLast as scrollIntoLastForThread } from '../../../Thread/context/utils';
 
 export type OnBeforeSendMFMType = (
   files: Array<File>,
@@ -107,10 +108,15 @@ export const useSendMultipleFilesMessage = ({
               channel: currentChannel,
               publishingModules,
             });
-            if (scrollRef) {
-              // We need this delay because rendering MFM takes time due to large image files.
-              setTimeout(() => scrollIntoLast(0, scrollRef), 100);
-            }
+            // We need this delay because rendering MFM takes time due to large image files.
+            setTimeout(() => {
+              if (scrollRef && publishingModules.includes(PublishingModuleType.CHANNEL)) {
+                scrollIntoLastForChannel(0, scrollRef);
+              }
+              if (publishingModules.includes(PublishingModuleType.THREAD)) {
+                scrollIntoLastForThread(0);
+              }
+            }, 100);
           })
           .onFailed((error, failedMessage: MultipleFilesMessage) => {
             logger.error('Channel: Sending MFM failed.', { error, failedMessage });
@@ -128,10 +134,15 @@ export const useSendMultipleFilesMessage = ({
               message: succeededMessage,
               publishingModules,
             });
-            if (scrollRef) {
-              // We need this delay because rendering MFM takes time due to large image files.
-              setTimeout(() => scrollIntoLast(0, scrollRef), 100);
-            }
+            // We need this delay because rendering MFM takes time due to large image files.
+            setTimeout(() => {
+              if (scrollRef && publishingModules.includes(PublishingModuleType.CHANNEL)) {
+                scrollIntoLastForChannel(0, scrollRef);
+              }
+              if (publishingModules.includes(PublishingModuleType.THREAD)) {
+                scrollIntoLastForThread(0);
+              }
+            }, 100);
             resolve(succeededMessage);
           });
       } catch (error) {
