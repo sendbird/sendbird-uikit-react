@@ -322,7 +322,7 @@ const SendbirdSDK = ({
           accessToken,
           theme: currentTheme,
           setCurrentTheme,
-          setCurrenttheme: setCurrentTheme,// deprecated: typo
+          setCurrenttheme: setCurrentTheme, // deprecated: typo
           isMultipleFilesMessageEnabled,
           uikitUploadSizeLimit,
           uikitMultipleFilesMessageLimit,
