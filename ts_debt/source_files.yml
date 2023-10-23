@@ -1,5 +1,4 @@
 (Wont do) ./_externals/lamejs/lame.all.js: lame.all.js
-./ui/Icon/index.jsx: index.jsx
 ./ui/Label/index.jsx: index.jsx
 ./ui/Label/stringSet.js: stringSet.js
 ./ui/Label/types.js: types.js
