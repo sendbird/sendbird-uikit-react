@@ -35,6 +35,7 @@ const MessageInputWrapper = (
     renderSendMessageIcon,
   } = props;
   const propDisabled = props.disabled;
+  const channelContext = useChannelContext();
   const {
     currentGroupChannel,
     initialized,
@@ -46,7 +47,7 @@ const MessageInputWrapper = (
     setQuoteMessage,
     messageInputRef,
     renderUserMentionItem,
-  } = useChannelContext();
+  } = channelContext;
   const globalStore = useSendbirdStateContext();
   const { isMobile } = useMediaQueryContext();
   const channel = currentGroupChannel;
@@ -57,8 +58,11 @@ const MessageInputWrapper = (
     userMention,
     isVoiceMessageEnabled,
     logger,
-    isMultipleFilesMessageEnabled,
   } = globalStore.config;
+  const isMultipleFilesMessageEnabled = (
+    channelContext.isMultipleFilesMessageEnabled
+    ?? globalStore.config.isMultipleFilesMessageEnabled
+  );
   const maxUserMentionCount = userMention?.maxMentionCount || 10;
   const maxUserSuggestionCount = userMention?.maxSuggestionCount || 15;
 

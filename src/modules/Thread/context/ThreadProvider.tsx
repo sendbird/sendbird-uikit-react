@@ -48,6 +48,7 @@ export type ThreadProviderProps = {
   // User Profile
   disableUserProfile?: boolean;
   renderUserProfile?: (props: { user: User, close: () => void }) => ReactElement;
+  isMultipleFilesMessageEnabled?: boolean;
 };
 export interface ThreadProviderInterface extends ThreadProviderProps, ThreadContextInitialState {
   // hooks for fetching threads
