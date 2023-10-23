@@ -33,7 +33,10 @@ async function cleanupPackageJSON(json) {
         },
       };
     },
-    {}
+    {
+      './package.json': './package.json',
+      './dist/index.css': './dist/index.css',
+    },
   );
   return {
     ...packageTemplate,
