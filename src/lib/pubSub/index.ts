@@ -26,7 +26,7 @@ const pubSubFactory = (): PubSubTypes => {
       // Provide handle back for removal of topic
       return {
         remove: () => {
-          delete topics[topic][index];
+          topics[topic].splice(index, 1);
         },
       };
     },
