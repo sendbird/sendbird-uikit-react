@@ -123,15 +123,15 @@ interface MessageStoreInterface {
 interface SendMessageParams {
   message: string;
   quoteMessage?: SendableMessageType;
-  // mentionedUserIds?: Array<string>;
-  mentionedUsers?: Array<User>;
+  // mentionedUserIds?: string;
+  mentionedUsers?: User[];
   mentionTemplate?: string;
 }
 
 interface UpdateMessageProps {
   messageId: string | number;
   message: string;
-  mentionedUsers?: Array<User>;
+  mentionedUsers?: User[];
   mentionTemplate?: string;
 }
 
