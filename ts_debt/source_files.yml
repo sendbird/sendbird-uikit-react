@@ -8,15 +8,6 @@
 ./modules/Channel/context/hooks/useSendMessageCallback.js: useSendMessageCallback.js
 ./modules/Channel/context/hooks/useToggleReactionCallback.js: useToggleReactionCallback.js
 ./modules/Channel/context/hooks/useUpdateMessageCallback.js: useUpdateMessageCallback.js
-./modules/ChannelList/components/ChannelPreview/utils.js: utils.js
-./modules/ChannelList/components/ChannelPreviewAction.jsx: ChannelPreviewAction.jsx
-./modules/ChannelList/components/Placeholder.jsx: Placeholder.jsx
-./modules/ChannelList/components/utils.js: utils.js
-./modules/ChannelList/dux/actionTypes.js: actionTypes.js
-./modules/ChannelList/dux/initialState.js: initialState.js
-./modules/ChannelList/dux/reducers.js: reducers.js
-./modules/ChannelList/utils.js: utils.js
-./modules/OpenChannelApp/assets/Icons.jsx: Icons.jsx
 ./ui/Icon/index.jsx: index.jsx
 ./ui/Label/index.jsx: index.jsx
 ./ui/Label/stringSet.js: stringSet.js

@@ -11,7 +11,7 @@ interface Props {
   channelUrl: string;
   userId: string;
   nickname: string;
-  theme?: string;
+  theme?: 'light' | 'dark';
   imageCompression?: {
     compressionRate?: number,
     resizingWidth?: number | string,

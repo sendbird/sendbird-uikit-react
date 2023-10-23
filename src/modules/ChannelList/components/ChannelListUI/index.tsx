@@ -14,14 +14,14 @@ import * as channelListActions from '../../dux/actionTypes';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import EditUserProfile from '../../../EditUserProfile';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
-import { isAboutSame } from '../utils';
+import { isAboutSame } from '../../../../utils/utils';
 
 interface RenderChannelPreviewProps {
   channel: GroupChannel;
   onLeaveChannel(
     channel: GroupChannel,
     onLeaveChannelCb?: (c: GroupChannel) => void,
-  );
+  ): void;
 }
 
 interface RenderUserProfileProps {

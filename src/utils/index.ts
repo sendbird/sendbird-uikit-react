@@ -857,8 +857,6 @@ export const arrayEqual = (array1: Array<unknown>, array2: Array<unknown>): bool
   return false;
 };
 
-export const isSendableMessage = (
-  message?: BaseMessage,
-): message is SendableMessageType => {
-  return 'sender' in message;
+export const isSendableMessage = (message?: BaseMessage | null): message is SendableMessageType => {
+  return Boolean(message) && 'sender' in message;
 };

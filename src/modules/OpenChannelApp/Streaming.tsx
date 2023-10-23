@@ -48,7 +48,7 @@ interface Props {
   appId: string;
   userId: string;
   nickname: string;
-  theme?: string;
+  theme?: 'light' | 'dark';
 }
 
 export default function Streaming({

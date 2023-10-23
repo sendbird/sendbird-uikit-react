@@ -41,7 +41,7 @@ export default {
   'ChannelList/components/ChannelListUI': 'src/modules/ChannelList/components/ChannelListUI/index.tsx',
   'ChannelList/components/ChannelListHeader': 'src/modules/ChannelList/components/ChannelListHeader/index.tsx',
   'ChannelList/components/ChannelPreview': 'src/modules/ChannelList/components/ChannelPreview/index.tsx',
-  'ChannelList/components/ChannelPreviewAction': 'src/modules/ChannelList/components/ChannelPreviewAction.jsx',
+  'ChannelList/components/ChannelPreviewAction': 'src/modules/ChannelList/components/ChannelPreviewAction.tsx',
 
   // ChannelSettings
   ChannelSettings: 'src/modules/ChannelSettings/index.tsx',

@@ -4,16 +4,18 @@ import { GroupChannelListQuery } from '@sendbird/chat/groupChannel';
 
 import { useFetchChannelList } from '../useFetchChannelList';
 import { mockChannelList } from '../channelList.mock';
-import { CustomUseReducerDispatcher, Logger } from '../../../../../lib/SendbirdState';
 import { Nullable } from '../../../../../types';
 import { MarkAsDeliveredSchedulerType } from '../../../../../lib/hooks/useMarkAsDeliveredScheduler';
 import * as channelListActions from '../../../dux/actionTypes';
+import React from 'react';
+import { ChannelListActionTypes } from '../../../dux/actionTypes';
+import { LoggerInterface } from '../../../../../lib/Logger';
 
 interface GlobalContextType {
   mockChannelSource: Nullable<GroupChannelListQuery>,
-  channelListDispatcher: Nullable<CustomUseReducerDispatcher>,
+  channelListDispatcher: Nullable<React.Dispatch<ChannelListActionTypes>>,
   markAsDeliveredScheduler: Nullable<MarkAsDeliveredSchedulerType>,
-  logger: Nullable<Logger>,
+  logger: Nullable<LoggerInterface>,
 }
 const globalContext = {} as GlobalContextType;
 
@@ -23,7 +25,7 @@ describe('useFetchChannelList', () => {
       hasNext: true,
       next: jest.fn(() => Promise.resolve(mockChannelList)),
     } as unknown as GroupChannelListQuery;
-    globalContext.channelListDispatcher = jest.fn() as CustomUseReducerDispatcher;
+    globalContext.channelListDispatcher = jest.fn() as React.Dispatch<ChannelListActionTypes>;
     globalContext.markAsDeliveredScheduler = {
       push: jest.fn(),
       clear: jest.fn(),
@@ -54,9 +56,9 @@ describe('useFetchChannelList', () => {
         channelSource: mockChannelSource,
         disableMarkAsDelivered: false,
       }, {
-        channelListDispatcher: channelListDispatcher as CustomUseReducerDispatcher,
-        logger: logger as Logger,
-        markAsDeliveredScheduler: markAsDeliveredScheduler as MarkAsDeliveredSchedulerType,
+        channelListDispatcher,
+        logger,
+        markAsDeliveredScheduler,
       }),
     );
     const resultCallback = hook.result.current as unknown as () => void;
@@ -92,9 +94,9 @@ describe('useFetchChannelList', () => {
         } as unknown as GroupChannelListQuery,
         disableMarkAsDelivered: false,
       }, {
-        channelListDispatcher: channelListDispatcher as CustomUseReducerDispatcher,
-        logger: logger as Logger,
-        markAsDeliveredScheduler: markAsDeliveredScheduler as MarkAsDeliveredSchedulerType,
+        channelListDispatcher,
+        logger,
+        markAsDeliveredScheduler,
       }),
     );
     const resultCallback = hook.result.current as unknown as () => void;
@@ -129,9 +131,9 @@ describe('useFetchChannelList', () => {
         } as unknown as GroupChannelListQuery,
         disableMarkAsDelivered: false,
       }, {
-        channelListDispatcher: channelListDispatcher as CustomUseReducerDispatcher,
-        logger: logger as Logger,
-        markAsDeliveredScheduler: markAsDeliveredScheduler as MarkAsDeliveredSchedulerType,
+        channelListDispatcher,
+        logger,
+        markAsDeliveredScheduler,
       }),
     );
     const resultCallback = hook.result.current as unknown as () => void;

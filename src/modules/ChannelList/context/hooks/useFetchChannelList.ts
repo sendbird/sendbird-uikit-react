@@ -1,17 +1,18 @@
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { GroupChannel, GroupChannelListQuery } from '@sendbird/chat/groupChannel';
 
 import { Nullable } from '../../../../types';
-import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
+import { Logger } from '../../../../lib/SendbirdState';
 import { MarkAsDeliveredSchedulerType } from '../../../../lib/hooks/useMarkAsDeliveredScheduler';
 import * as channelListActions from '../../dux/actionTypes';
+import { ChannelListActionTypes } from '../../dux/actionTypes';
 
 interface DynamicProps {
   channelSource: Nullable<GroupChannelListQuery>;
   disableMarkAsDelivered: boolean;
 }
 interface StaticProps {
-  channelListDispatcher: CustomUseReducerDispatcher;
+  channelListDispatcher: React.Dispatch<ChannelListActionTypes>;
   logger: Logger;
   markAsDeliveredScheduler: MarkAsDeliveredSchedulerType;
 }

@@ -1,50 +1,40 @@
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  useReducer,
-  useMemo,
-} from 'react';
+import React, { useContext, useEffect, useMemo, useReducer, useState } from 'react';
 
 import type { User } from '@sendbird/chat';
 import {
   GroupChannel,
   GroupChannelCreateParams,
   GroupChannelHandler,
-  SendbirdGroupChat,
   GroupChannelListQuery as GroupChannelListQuerySb,
   GroupChannelUserIdsFilter,
 } from '@sendbird/chat/groupChannel';
 
 import { RenderUserProfileProps } from '../../../types';
 
-import setupChannelList, {
-  pubSubHandler,
-  pubSubHandleRemover,
-} from '../utils';
+import setupChannelList, { pubSubHandler, pubSubHandleRemover } from '../utils';
 import { uuidv4 } from '../../../utils/uuid';
 import { noop } from '../../../utils/utils';
 import { DELIVERY_RECEIPT } from '../../../utils/consts';
 
 import * as channelListActions from '../dux/actionTypes';
+import { ChannelListActionTypes } from '../dux/actionTypes';
 
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
-import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 import channelListReducers from '../dux/reducers';
 import channelListInitialState from '../dux/initialState';
 import { CHANNEL_TYPE } from '../../CreateChannel/types';
 import useActiveChannelUrl from './hooks/useActiveChannelUrl';
 import { useFetchChannelList } from './hooks/useFetchChannelList';
 
-interface ApplicationUserListQuery {
+export interface ApplicationUserListQueryInternal {
   limit?: number;
   userIdsFilter?: Array<string>;
   metaDataKeyFilter?: string;
   metaDataValuesFilter?: Array<string>;
 }
 
-interface GroupChannelListQuery {
+export interface GroupChannelListQueryParamsInternal {
   limit?: number;
   includeEmpty?: boolean;
   order?: 'latest_last_message' | 'chronological' | 'channel_name_alphabetical' | 'metadata_value_alphabetical';
@@ -56,19 +46,24 @@ interface GroupChannelListQuery {
   customTypesFilter?: Array<string>;
   customTypeStartsWithFilter?: string;
   channelUrlsFilter?: Array<string>;
-  superChannelFilter?: 'all' | 'super' | 'nonsuper';
+  superChannelFilter?: 'all' | 'super' | 'nonsuper' | 'broadcast_only' | 'exclusive_only';
   publicChannelFilter?: 'all' | 'public' | 'private';
   metadataOrderKeyFilter?: string;
   memberStateFilter?: 'all' | 'joined_only' | 'invited_only' | 'invited_by_friend' | 'invited_by_non_friend';
-  hiddenChannelFilter?: 'unhidden_only' | 'hidden_only' | 'hidden_allow_auto_unhide' | 'hidden_prevent_auto_unhide';
+  hiddenChannelFilter?:
+    | 'all'
+    | 'unhidden_only'
+    | 'hidden_only'
+    | 'hidden_allow_auto_unhide'
+    | 'hidden_prevent_auto_unhide';
   unreadChannelFilter?: 'all' | 'unread_message';
   includeFrozen?: boolean;
   userIdsFilter?: GroupChannelUserIdsFilter;
 }
 
 interface ChannelListQueries {
-  applicationUserListQuery?: ApplicationUserListQuery;
-  channelListQuery?: GroupChannelListQuery;
+  applicationUserListQuery?: ApplicationUserListQueryInternal;
+  channelListQuery?: GroupChannelListQueryParamsInternal;
 }
 
 type OverrideInviteUserType = {
@@ -102,21 +97,11 @@ export interface ChannelListProviderInterface extends ChannelListProviderProps {
   loading: boolean;
   allChannels: GroupChannel[];
   currentChannel: GroupChannel;
-  channelListQuery: GroupChannelListQuery;
+  channelListQuery: GroupChannelListQueryParamsInternal;
   currentUserId: string;
-  channelListDispatcher: CustomUseReducerDispatcher;
+  channelListDispatcher: React.Dispatch<ChannelListActionTypes>;
   channelSource: GroupChannelListQuerySb | null;
   fetchChannelList: () => void;
-}
-
-interface ChannelListStoreInterface {
-  initialized: boolean;
-  loading: boolean;
-  allChannels: GroupChannel[];
-  currentChannel: GroupChannel;
-  channelListQuery: GroupChannelListQuery;
-  currentUserId: string;
-  disableAutoSelect: boolean;
 }
 
 const ChannelListContext = React.createContext<ChannelListProviderInterface | null>({
@@ -172,7 +157,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     isTypingIndicatorEnabledOnChannelList = false,
     isMessageReceiptStatusEnabledOnChannelList = false,
   } = config;
-  const sdk = sdkStore?.sdk as SendbirdGroupChat;
+  const sdk = sdkStore?.sdk;
   const { premiumFeatureList = [] } = sdk?.appInfo ?? {};
 
   // derive some variables
@@ -186,10 +171,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
 
   const sdkIntialized = sdkStore?.initialized;
 
-  const [channelListStore, channelListDispatcher] = useReducer(
-    channelListReducers,
-    channelListInitialState,
-  ) as [ChannelListStoreInterface, CustomUseReducerDispatcher];
+  const [channelListStore, channelListDispatcher] = useReducer(channelListReducers, channelListInitialState);
   const { currentChannel } = channelListStore;
 
   const [channelSource, setChannelSource] = useState<GroupChannelListQuerySb | null>(null);
@@ -248,7 +230,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
       const handler = new GroupChannelHandler({
         onTypingStatusUpdated: (channel) => {
           const typingMemberCount = channel?.getTypingUsers()?.length;
-          const channelList = typingChannels.filter(ch => ch.url !== channel.url);
+          const channelList = typingChannels.filter((ch) => ch.url !== channel.url);
           if (typingMemberCount > 0) {
             setTypingChannels([...channelList, channel]);
           } else {
@@ -268,30 +250,32 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
           });
         },
         onMessageUpdated(channel) {
-          channelListDispatcher({
-            type: channelListActions.ON_LAST_MESSAGE_UPDATED,
-            payload: channel,
-          });
-          sdk.groupChannel.getChannelWithoutCache(channel.url)
-            .then((ch) => {
+          if (channel.isGroupChannel()) {
+            channelListDispatcher({
+              type: channelListActions.ON_LAST_MESSAGE_UPDATED,
+              payload: channel,
+            });
+            sdk.groupChannel.getChannelWithoutCache(channel.url).then((ch) => {
               channelListDispatcher({
                 type: channelListActions.ON_LAST_MESSAGE_UPDATED,
                 payload: ch,
               });
             });
+          }
         },
         onMentionReceived(channel) {
-          channelListDispatcher({
-            type: channelListActions.ON_LAST_MESSAGE_UPDATED,
-            payload: channel,
-          });
-          sdk.groupChannel.getChannelWithoutCache(channel.url)
-            .then((ch) => {
+          if (channel.isGroupChannel()) {
+            channelListDispatcher({
+              type: channelListActions.ON_LAST_MESSAGE_UPDATED,
+              payload: channel,
+            });
+            sdk.groupChannel.getChannelWithoutCache(channel.url).then((ch) => {
               channelListDispatcher({
                 type: channelListActions.ON_LAST_MESSAGE_UPDATED,
                 payload: ch,
               });
             });
+          }
         },
       });
       sdk?.groupChannel?.addGroupChannelHandler(typingHandlerId, handler);
@@ -308,15 +292,10 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
       applicationUserListQuery: userFilledApplicationUserListQuery,
       channelListQuery: userFilledChannelListQuery,
     };
-  }, [
-    userFilledApplicationUserListQuery,
-    userFilledChannelListQuery,
-  ]);
+  }, [userFilledApplicationUserListQuery, userFilledChannelListQuery]);
 
   const { allChannels } = channelListStore;
-  const sortedChannels = (sortChannelList && typeof sortChannelList === 'function')
-    ? sortChannelList(allChannels)
-    : allChannels;
+  const sortedChannels = sortChannelList && typeof sortChannelList === 'function' ? sortChannelList(allChannels) : allChannels;
 
   if (sortedChannels.length !== allChannels.length) {
     const warning = `ChannelList: You have removed/added extra channels on sortChannelList
@@ -341,53 +320,64 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   }, [currentChannel?.url]);
 
   // Set active channel (by url)
-  useActiveChannelUrl({
-    activeChannelUrl,
-    channels: sortedChannels,
-    sdk,
-  }, {
-    logger,
-    channelListDispatcher,
-  });
+  useActiveChannelUrl(
+    {
+      activeChannelUrl,
+      channels: sortedChannels,
+      sdk,
+    },
+    {
+      logger,
+      channelListDispatcher,
+    },
+  );
 
-  const fetchChannelList = useFetchChannelList({
-    channelSource,
-    disableMarkAsDelivered: disableMarkAsDelivered || !premiumFeatureList.some((feature) => feature === DELIVERY_RECEIPT),
-  }, {
-    channelListDispatcher,
-    logger,
-    markAsDeliveredScheduler,
-  });
+  const fetchChannelList = useFetchChannelList(
+    {
+      channelSource,
+      disableMarkAsDelivered:
+        disableMarkAsDelivered || !premiumFeatureList.some((feature) => feature === DELIVERY_RECEIPT),
+    },
+    {
+      channelListDispatcher,
+      logger,
+      markAsDeliveredScheduler,
+    },
+  );
 
   return (
-    <ChannelListContext.Provider value={{
-      className,
-      disableUserProfile,
-      queries: queries_,
-      onProfileEditSuccess,
-      onThemeChange,
-      onBeforeCreateChannel,
-      overrideInviteUser,
-      onChannelSelect,
-      sortChannelList,
-      allowProfileEdit: enableEditProfile,
-      channelListDispatcher,
-      channelSource,
-      ...channelListStore,
-      allChannels: sortedChannels,
-      typingChannels,
-      isTypingIndicatorEnabled: (isTypingIndicatorEnabled !== null) ? isTypingIndicatorEnabled : isTypingIndicatorEnabledOnChannelList,
-      isMessageReceiptStatusEnabled: (isMessageReceiptStatusEnabled !== null) ? isMessageReceiptStatusEnabled : isMessageReceiptStatusEnabledOnChannelList,
-      fetchChannelList,
-    }}>
+    <ChannelListContext.Provider
+      value={{
+        className,
+        disableUserProfile,
+        queries: queries_,
+        onProfileEditSuccess,
+        onThemeChange,
+        onBeforeCreateChannel,
+        overrideInviteUser,
+        onChannelSelect,
+        sortChannelList,
+        allowProfileEdit: enableEditProfile,
+        channelListDispatcher,
+        channelSource,
+        ...channelListStore,
+        allChannels: sortedChannels,
+        typingChannels,
+        isTypingIndicatorEnabled:
+          isTypingIndicatorEnabled !== null ? isTypingIndicatorEnabled : isTypingIndicatorEnabledOnChannelList,
+        isMessageReceiptStatusEnabled:
+          isMessageReceiptStatusEnabled !== null
+            ? isMessageReceiptStatusEnabled
+            : isMessageReceiptStatusEnabledOnChannelList,
+        fetchChannelList,
+      }}
+    >
       <UserProfileProvider
         disableUserProfile={userDefinedDisableUserProfile ?? config?.disableUserProfile}
         renderUserProfile={userDefinedRenderProfile}
         onUserProfileMessage={onUserProfileMessage}
       >
-        <div className={`sendbird-channel-list ${className}`}>
-          {children}
-        </div>
+        <div className={`sendbird-channel-list ${className}`}>{children}</div>
       </UserProfileProvider>
     </ChannelListContext.Provider>
   );
@@ -398,7 +388,4 @@ function useChannelListContext(): ChannelListProviderInterface {
   return context;
 }
 
-export {
-  ChannelListProvider,
-  useChannelListContext,
-};
+export { ChannelListProvider, useChannelListContext };

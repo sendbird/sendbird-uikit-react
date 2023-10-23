@@ -1,7 +1,5 @@
 import React from 'react';
-import PlaceHolder from '../index';
-
-import PlaceHolderTypes from '../type';
+import PlaceHolder, { PlaceHolderTypes } from '../index';
 
 const description = `
   \`import PlaceHolder, { PlaceHolderTypes } from "@sendbird/uikit-react/ui/PlaceHolder";\`

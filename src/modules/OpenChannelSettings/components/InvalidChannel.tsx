@@ -5,8 +5,7 @@ import { LocalizationContext } from '../../../lib/LocalizationContext';
 import Label, { LabelTypography, LabelColors } from '../../../ui/Label';
 import Icon, { IconTypes } from '../../../ui/Icon';
 
-import PlaceHolder from '../../../ui/PlaceHolder';
-import PlaceHolderTypes from '../../../ui/PlaceHolder/type';
+import PlaceHolder, { PlaceHolderTypes } from '../../../ui/PlaceHolder';
 
 interface Props {
   onCloseClick?(): void;
