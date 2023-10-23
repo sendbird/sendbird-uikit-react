@@ -141,7 +141,7 @@ type IconProps = {
   height?: string | number;
   onClick?: React.MouseEventHandler<HTMLDivElement> & React.KeyboardEventHandler<HTMLDivElement>;
   children?: React.ReactNode;
-}
+};
 export default function Icon({
   className,
   type,
