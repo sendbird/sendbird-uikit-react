@@ -1118,6 +1118,7 @@ declare module "SendbirdUIKitGlobal" {
     onBeforeSendMultipleFilesMessage?: (files: Array<File>, quotedMessage?: SendableMessageType) => MultipleFilesMessageCreateParams;
     disableUserProfile?: boolean;
     renderUserProfile?: (props: { user: User, close: () => void }) => React.ReactElement;
+    isMultipleFilesMessageEnabled?: boolean;
   }
 
   export interface ThreadContextInitialState {
