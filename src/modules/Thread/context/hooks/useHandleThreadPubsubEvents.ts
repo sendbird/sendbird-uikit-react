@@ -28,11 +28,9 @@ export default function useHandleThreadPubsubEvents({
   threadDispatcher,
 }: StaticProps): void {
   useEffect(() => {
-    const pubSubHandler = (): Map<any, any> => {
-      const subscriber = new Map();
-      if (!pubSub || !pubSub.subscribe) {
-        return subscriber;
-      }
+    const subscriber = new Map();
+    if (pubSub?.subscribe) {
+      // TODO: subscribe ON_FILE_INFO_UPLOADED
       subscriber.set(topics.SEND_MESSAGE_START, pubSub.subscribe(topics.SEND_MESSAGE_START, (props) => {
         const {
           channel,
@@ -143,8 +141,7 @@ export default function useHandleThreadPubsubEvents({
           });
         }
       }));
-    };
-    const subscriber = pubSubHandler();
+    }
     return () => {
       subscriber?.forEach((s) => {
         try {
