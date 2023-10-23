@@ -1,14 +1,15 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { GroupChannel, GroupChannelHandler, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 
 import { scrollIntoLast } from '../utils';
 
-import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import uuidv4 from '../../../../utils/uuid';
 import compareIds from '../../../../utils/compareIds';
 import * as messageActions from '../dux/actionTypes';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { SendableMessageType } from '../../../../utils';
+import { ChannelActionTypes } from '../dux/actionTypes';
+import { LoggerInterface } from '../../../../lib/Logger';
 
 /**
  * Handles ChannelEvents and send values to dispatcher using messagesDispatcher
@@ -26,13 +27,13 @@ interface DynamicParams {
 }
 interface StaticParams {
   sdk: SendbirdGroupChat;
-  logger: Logger;
+  logger: LoggerInterface;
   scrollRef: React.RefObject<HTMLDivElement>;
   setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType>>;
-  messagesDispatcher: CustomUseReducerDispatcher;
+  messagesDispatcher: React.Dispatch<ChannelActionTypes>;
 }
 
-const DELIVERY_RECIPT = 'delivery_receipt';
+const DELIVERY_RECEIPT = 'delivery_receipt';
 
 function useHandleChannelEvents({
   sdkInit,
@@ -53,7 +54,7 @@ function useHandleChannelEvents({
     disableMarkAsDelivered,
   } = store.config;
   const canSetMarkAsDelivered = store.stores.sdkStore.sdk?.appInfo?.premiumFeatureList
-    ?.find((feature) => (feature === DELIVERY_RECIPT));
+    ?.find((feature) => (feature === DELIVERY_RECEIPT));
 
   useEffect(() => {
     const channelUrl = currentGroupChannel?.url;
@@ -61,7 +62,7 @@ function useHandleChannelEvents({
     if (channelUrl && sdkInit) {
       const channelHandler: GroupChannelHandler = {
         onMessageReceived: (channel, message) => {
-          if (compareIds(channel?.url, channelUrl)) {
+          if (channel.isGroupChannel() && compareIds(channel?.url, channelUrl)) {
             let scrollToEnd = false;
             try {
               const { current } = scrollRef;
@@ -74,7 +75,7 @@ function useHandleChannelEvents({
             logger.info('Channel | useHandleChannelEvents: onMessageReceived', message);
             messagesDispatcher({
               type: messageActions.ON_MESSAGE_RECEIVED,
-              payload: { channel, message },
+              payload: { channel, message: message as SendableMessageType },
             });
             if (scrollToEnd
               && document.getElementById('sendbird-dropdown-portal')?.childElementCount === 0
@@ -117,18 +118,22 @@ function useHandleChannelEvents({
           }
         },
         onMessageUpdated: (channel, message) => {
-          logger.info('Channel | useHandleChannelEvents: onMessageUpdated', message);
-          messagesDispatcher({
-            type: messageActions.ON_MESSAGE_UPDATED,
-            payload: { channel, message },
-          });
+          if (channel.isGroupChannel() && compareIds(channel?.url, channelUrl)) {
+            logger.info('Channel | useHandleChannelEvents: onMessageUpdated', message);
+            messagesDispatcher({
+              type: messageActions.ON_MESSAGE_UPDATED,
+              payload: { channel, message: message as SendableMessageType },
+            });
+          }
         },
         onThreadInfoUpdated: (channel, threadInfoUpdateEvent) => {
-          logger.info('Channel | useHandleChannelEvents: onThreadInfoUpdated', { channel, threadInfoUpdateEvent });
-          messagesDispatcher({
-            type: messageActions.ON_MESSAGE_THREAD_INFO_UPDATED,
-            payload: { channel, event: threadInfoUpdateEvent },
-          });
+          if (channel.isGroupChannel() && compareIds(channel?.url, channelUrl)) {
+            logger.info('Channel | useHandleChannelEvents: onThreadInfoUpdated', { channel, threadInfoUpdateEvent });
+            messagesDispatcher({
+              type: messageActions.ON_MESSAGE_THREAD_INFO_UPDATED,
+              payload: { channel, event: threadInfoUpdateEvent },
+            });
+          }
         },
         onMessageDeleted: (channel, messageId) => {
           logger.info('Channel | useHandleChannelEvents: onMessageDeleted', { channel, messageId });
@@ -146,7 +151,7 @@ function useHandleChannelEvents({
           });
         },
         onChannelChanged: (channel) => {
-          if (compareIds(channel?.url, channelUrl)) {
+          if (channel.isGroupChannel() && compareIds(channel?.url, channelUrl)) {
             logger.info('Channel | useHandleChannelEvents: onChannelChanged', channel);
             messagesDispatcher({
               type: messageActions.SET_CURRENT_CHANNEL,
@@ -155,7 +160,7 @@ function useHandleChannelEvents({
           }
         },
         onChannelFrozen: (channel) => {
-          if (compareIds(channel?.url, channelUrl)) {
+          if (channel.isGroupChannel() && compareIds(channel?.url, channelUrl)) {
             logger.info('Channel | useHandleChannelEvents: onChannelFrozen', channel);
             messagesDispatcher({
               type: messageActions.SET_CURRENT_CHANNEL,
@@ -164,7 +169,7 @@ function useHandleChannelEvents({
           }
         },
         onChannelUnfrozen: (channel) => {
-          if (compareIds(channel?.url, channelUrl)) {
+          if (channel.isGroupChannel() && compareIds(channel?.url, channelUrl)) {
             logger.info('Channel | useHandleChannelEvents: onChannelUnFrozen', channel);
             messagesDispatcher({
               type: messageActions.SET_CURRENT_CHANNEL,
@@ -173,7 +178,7 @@ function useHandleChannelEvents({
           }
         },
         onUserMuted: (channel, user) => {
-          if (compareIds(channel?.url, channelUrl)) {
+          if (channel.isGroupChannel() && compareIds(channel?.url, channelUrl)) {
             logger.info('Channel | useHandleChannelEvents: onUserMuted', { channel, user });
             messagesDispatcher({
               type: messageActions.SET_CURRENT_CHANNEL,
@@ -182,7 +187,7 @@ function useHandleChannelEvents({
           }
         },
         onUserUnmuted: (channel, user) => {
-          if (compareIds(channel?.url, channelUrl)) {
+          if (channel.isGroupChannel() && compareIds(channel?.url, channelUrl)) {
             logger.info('Channel | useHandleChannelEvents: onUserUnmuted', { channel, user });
             messagesDispatcher({
               type: messageActions.SET_CURRENT_CHANNEL,
@@ -200,7 +205,7 @@ function useHandleChannelEvents({
           }
         },
         onOperatorUpdated: (channel, users) => {
-          if (compareIds(channel?.url, channelUrl)) {
+          if (channel.isGroupChannel() && compareIds(channel?.url, channelUrl)) {
             logger.info('Channel | useHandleChannelEvents: onOperatorUpdated', { channel, users });
             messagesDispatcher({
               type: messageActions.SET_CURRENT_CHANNEL,

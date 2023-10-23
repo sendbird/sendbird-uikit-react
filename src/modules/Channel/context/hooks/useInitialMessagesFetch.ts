@@ -8,8 +8,8 @@ import { CoreMessageType, isMultipleFilesMessage } from '../../../../utils';
 import { MessageListParams as MessageListParamsInternal } from '../ChannelProvider';
 import { ReplyType as ReplyTypeInternal } from '../../../../types';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { CustomUseReducerDispatcher } from '../../../../lib/SendbirdState';
 import { LoggerInterface } from '../../../../lib/Logger';
+import { ChannelActionTypes } from '../dux/actionTypes';
 
 type UseInitialMessagesFetchOptions = {
   currentGroupChannel: GroupChannel;
@@ -21,7 +21,7 @@ type UseInitialMessagesFetchOptions = {
 
 type UseInitialMessagesFetchParams = {
   logger: LoggerInterface
-  messagesDispatcher: CustomUseReducerDispatcher;
+  messagesDispatcher: React.Dispatch<ChannelActionTypes>;
   scrollRef: React.RefObject<HTMLElement>;
 };
 
@@ -94,7 +94,7 @@ function useInitialMessagesFetch(
             type: messageActionTypes.FETCH_INITIAL_MESSAGES_SUCCESS,
             payload: {
               currentGroupChannel,
-              messages,
+              messages: messages as CoreMessageType[],
             },
           });
           multipleFilesMessageCount = messages.filter((message) => isMultipleFilesMessage(message as CoreMessageType),

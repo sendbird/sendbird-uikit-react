@@ -1,19 +1,19 @@
-import { RefObject, useEffect } from 'react';
+import React, { RefObject, useEffect } from 'react';
 
 import { scrollIntoLast } from '../utils';
 import * as channelActions from '../dux/actionTypes';
-import { CustomUseReducerDispatcher } from '../../../../lib/SendbirdState';
 import { PUBSUB_TOPICS } from '../../../../lib/pubSub/topics';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { SendableMessageType } from '../../../../utils';
 import { FileUploadedPayload } from './useSendMultipleFilesMessage';
 import { PublishingModuleType } from '../../../internalInterfaces';
+import { ChannelActionTypes } from '../dux/actionTypes';
 
 export interface UseHandlePubsubEventsParams {
   channelUrl: string;
   sdkInit: boolean;
   pubSub: any;
-  dispatcher: CustomUseReducerDispatcher;
+  dispatcher: React.Dispatch<ChannelActionTypes>;
   scrollRef: RefObject<HTMLElement>;
 }
 

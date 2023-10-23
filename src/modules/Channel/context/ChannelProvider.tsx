@@ -6,7 +6,7 @@ import React, {
   useMemo,
 } from 'react';
 
-import type { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type {
   BaseMessage,
   FileMessageCreateParams,
@@ -43,12 +43,12 @@ import useSendMessageCallback from './hooks/useSendMessageCallback';
 import useSendFileMessageCallback from './hooks/useSendFileMessageCallback';
 import useToggleReactionCallback from './hooks/useToggleReactionCallback';
 import useScrollToMessage from './hooks/useScrollToMessage';
-import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 import { getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
 import { useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
 import { useHandleChannelPubsubEvents } from './hooks/useHandleChannelPubsubEvents';
 import { PublishingModuleType } from '../../internalInterfaces';
+import { ChannelActionTypes } from './dux/actionTypes';
 
 export type MessageListParams = {
   // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
@@ -140,7 +140,7 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   isScrolled?: boolean;
   setIsScrolled?: React.Dispatch<React.SetStateAction<boolean>>;
   messageActionTypes: typeof channelActions;
-  messagesDispatcher: CustomUseReducerDispatcher;
+  messagesDispatcher: React.Dispatch<ChannelActionTypes>;
   quoteMessage: SendableMessageType | null;
   setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
   initialTimeStamp: number;
@@ -218,7 +218,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     markAsReadScheduler,
     groupChannel,
   } = config;
-  const sdk = globalStore?.stores?.sdkStore?.sdk as SendbirdGroupChat;
+  const sdk = globalStore?.stores?.sdkStore?.sdk;
   const sdkInit = globalStore?.stores?.sdkStore?.initialized;
   const globalConfigs = globalStore?.config;
 
@@ -235,10 +235,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   const [quoteMessage, setQuoteMessage] = useState<SendableMessageType>(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  const [messagesStore, messagesDispatcher] = useReducer(
-    messagesReducer,
-    messagesInitialState,
-  ) as [MessageStoreInterface, CustomUseReducerDispatcher];
+  const [messagesStore, messagesDispatcher] = useReducer(messagesReducer, messagesInitialState);
   const scrollRef = useRef(null);
 
   const {

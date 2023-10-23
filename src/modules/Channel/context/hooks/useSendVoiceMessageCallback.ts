@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { FileMessageCreateParams, MessageMetaArray } from '@sendbird/chat/message';
 
@@ -16,6 +16,7 @@ import {
 import type { SendableMessageType } from '../../../../utils';
 import type { Nullable } from '../../../../types';
 import { PublishingModuleType } from '../../../internalInterfaces';
+import { ChannelActionTypes } from '../dux/actionTypes';
 
 interface DynamicParams {
   currentGroupChannel: Nullable<GroupChannel>;
@@ -25,7 +26,7 @@ interface StaticParams {
   logger: Logger;
   pubSub: any;
   scrollRef: React.RefObject<HTMLDivElement>;
-  messagesDispatcher: (props: { type: string, payload: any }) => void;
+  messagesDispatcher: React.Dispatch<ChannelActionTypes>;
 }
 type FuncType = (file: File, duration: number, quoteMessage: SendableMessageType) => void;
 
@@ -83,14 +84,14 @@ export const useSendVoiceMessageCallback = ({
         logger.error('Channel: Sending voice message failed!', { failedMessage, err });
         messagesDispatcher({
           type: messageActionTypes.SEND_MESSAGE_FAILURE,
-          payload: failedMessage,
+          payload: failedMessage as SendableMessageType,
         });
       })
       .onSucceeded((succeededMessage) => {
         logger.info('Channel: Sending voice message success!', succeededMessage);
         messagesDispatcher({
           type: messageActionTypes.SEND_MESSAGE_SUCCESS,
-          payload: succeededMessage,
+          payload: succeededMessage as SendableMessageType,
         });
       });
   }, [
