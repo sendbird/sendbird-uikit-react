@@ -1,5 +1,5 @@
 import React from 'react';
-import Label, { LabelTypography, LabelColors } from '../index.jsx';
+import Label, { LabelTypography, LabelColors } from '../index.tsx';
 
 const description = `
   \`import Label, { LabelTypography, LabelColors }  from "@sendbird/uikit-react/ui/Accordion";\`

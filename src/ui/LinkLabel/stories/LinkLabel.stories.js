@@ -1,5 +1,5 @@
 import React from 'react';
-import LinkLabel, { LinkLabelTypography, LinkLabelColors } from '../index.jsx';
+import LinkLabel, { LinkLabelTypography, LinkLabelColors } from '../index.tsx';
 
 const description = `
   \`import LinkLabel from "@sendbird/uikit-react/ui/LinkLabel";\`
