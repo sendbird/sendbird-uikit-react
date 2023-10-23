@@ -39,7 +39,6 @@ module.exports = ({
     '@sendbird/chat/openChannel',
     '@sendbird/chat/message',
     '@sendbird/uikit-tools',
-    'prop-types',
     'react',
     'react-dom',
     'css-vars-ponyfill',

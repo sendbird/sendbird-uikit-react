@@ -35,7 +35,6 @@ module.exports = {
         tsx: 'never',
       },
     ],
-    'react/forbid-prop-types': 0,
     // we don't want to force to define function component only
     'react/function-component-definition': 'off',
     'no-unused-expressions': 'off',
