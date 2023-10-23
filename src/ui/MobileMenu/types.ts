@@ -20,7 +20,7 @@ export interface BaseMenuProps {
   deleteMenuState?: DeleteMenuStates;
   showEdit?: (bool: boolean) => void;
   showRemove?: (bool: boolean) => void;
-  resendMessage?: (message: SendableMessageType) => Promise<SendableMessageType>;
+  resendMessage?: (message: SendableMessageType) => void;
   deleteMessage?: (message: CoreMessageType) => Promise<CoreMessageType>;
   setQuoteMessage?: (message: SendableMessageType) => void;
   isReactionEnabled?: boolean;

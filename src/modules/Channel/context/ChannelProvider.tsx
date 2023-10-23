@@ -128,8 +128,8 @@ interface SendMessageParams {
   mentionTemplate?: string;
 }
 
-interface UpdateMessageProps {
-  messageId: string | number;
+interface UpdateMessageParams {
+  messageId: number;
   message: string;
   mentionedUsers?: User[];
   mentionTemplate?: string;
@@ -156,7 +156,7 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   setHighLightedMessageId: React.Dispatch<React.SetStateAction<number>>;
   messageInputRef: React.MutableRefObject<HTMLInputElement>,
   deleteMessage(message: CoreMessageType): Promise<CoreMessageType>,
-  updateMessage(props: UpdateMessageProps, callback?: (err: SendbirdError, message: UserMessage) => void): Promise<CoreMessageType>,
+  updateMessage(props: UpdateMessageParams, callback?: (err: SendbirdError, message: UserMessage) => void): void,
   resendMessage(failedMessage: SendableMessageType): void,
   // TODO: Good to change interface to using params / This part need refactoring
   sendMessage: (params: SendMessageParams) => void,
