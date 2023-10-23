@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
-import topics from '../../../../lib/pubSub/topics';
+import topics, { PUBSUB_TOPICS } from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from '../utils';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import { SendableMessageType } from '../../../../utils';
-import { PublishingModuleType } from './useSendMultipleFilesMessage';
+import { FileUploadedPayload, PublishingModuleType } from './useSendMultipleFilesMessage';
+import * as channelActions from '../../../Channel/context/dux/actionTypes';
 
 interface DynamicProps {
   sdkInit: boolean;
@@ -32,7 +33,6 @@ export default function useHandleThreadPubsubEvents({
       if (!pubSub || !pubSub.subscribe) {
         return subscriber;
       }
-      // TODO: subscribe ON_FILE_INFO_UPLOADED
       subscriber.set(topics.SEND_MESSAGE_START, pubSub.subscribe(topics.SEND_MESSAGE_START, (props) => {
         const {
           channel,
@@ -59,6 +59,21 @@ export default function useHandleThreadPubsubEvents({
           });
         }
         scrollIntoLast?.();
+      }));
+      subscriber.set(PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED, pubSub.subscribe(PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED, (props) => {
+        const {
+          response,
+          publishingModules,
+        } = props as { response: FileUploadedPayload, publishingModules: PublishingModuleType[] };
+        if (
+          currentChannel?.url === response.channelUrl
+          && publishingModules.includes(PublishingModuleType.THREAD)
+        ) {
+          threadDispatcher({
+            type: channelActions.ON_FILE_INFO_UPLOADED,
+            payload: response,
+          });
+        }
       }));
       subscriber.set(topics.SEND_USER_MESSAGE, pubSub.subscribe(topics.SEND_USER_MESSAGE, (props) => {
         const {
