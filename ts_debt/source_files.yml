@@ -1,6 +1,5 @@
 (Wont do) ./_externals/lamejs/lame.all.js: lame.all.js
 ./modules/Channel/context/hooks/useToggleReactionCallback.js: useToggleReactionCallback.js
-./modules/Channel/context/hooks/useUpdateMessageCallback.js: useUpdateMessageCallback.js
 ./ui/Icon/index.jsx: index.jsx
 ./ui/Label/index.jsx: index.jsx
 ./ui/Label/stringSet.js: stringSet.js
