@@ -1258,6 +1258,24 @@ declare module "SendbirdUIKitGlobal" {
     onThemeChange?(theme: string): void;
     onEditProfile?(updatedUser: User): void;
   }
+
+  /** UI */
+  export interface ModalProps {
+    className?: string;
+    hideFooter?: boolean;
+    disabled?: boolean;
+    type?: string;
+    isFullScreenOnMobile?: boolean;
+    isCloseOnClickOutside?: boolean;
+    children: React.ReactElement | string;
+    /**
+     * Do not use this! onCancel will be deprecated in v4. Use onClose instead.
+     */
+    onCancel?: () => void;
+    onClose?: () => void;
+    onSubmit?: () => void;
+    renderHeader?: () => React.ReactElement;
+  }
 }
 
 declare module '@sendbird/uikit-react' {
@@ -1286,9 +1304,10 @@ declare module '@sendbird/uikit-react/App' {
 }
 
 declare module '@sendbird/uikit-react/SendbirdProvider' {
-  import type { SendbirdProviderProps } from 'SendbirdUIKitGlobal';
-  const SendbirdProvider: React.FunctionComponent<SendbirdProviderProps>;
+  import type { SendbirdProviderProps, SendBirdState } from 'SendbirdUIKitGlobal';
+  export const SendbirdProvider: React.FunctionComponent<SendbirdProviderProps>;
   export default SendbirdProvider;
+  export function useSendbirdStateContext(): SendBirdState;
 }
 
 declare module '@sendbird/uikit-react/sendbirdSelectors' {
@@ -1299,7 +1318,7 @@ declare module '@sendbird/uikit-react/sendbirdSelectors' {
 
 declare module '@sendbird/uikit-react/useSendbirdStateContext' {
   import type { SendBirdState } from 'SendbirdUIKitGlobal';
-  function useSendbirdStateContext(): SendBirdState;
+  export function useSendbirdStateContext(): SendBirdState;
   export default useSendbirdStateContext;
 }
 
@@ -1334,11 +1353,36 @@ declare module '@sendbird/uikit-react/handlers/UserEventHandler' {
   export default UserEventHandler;
 }
 
+/** pubSub */
+declare module '@Sendbird/uikit-react/pubSub/topics' {
+  export enum PUBSUB_TOPICS {
+    // Group Channel
+    USER_UPDATED = 'USER_UPDATED',
+    SEND_MESSAGE_START = 'SEND_MESSAGE_START',
+    SEND_MESSAGE_FAILED = 'SEND_MESSAGE_FAILED',
+    SEND_USER_MESSAGE = 'SEND_USER_MESSAGE',
+    SEND_FILE_MESSAGE = 'SEND_FILE_MESSAGE',
+    ON_FILE_INFO_UPLOADED = 'ON_FILE_INFO_UPLOADED',
+    UPDATE_USER_MESSAGE = 'UPDATE_USER_MESSAGE',
+    DELETE_MESSAGE = 'DELETE_MESSAGE',
+    LEAVE_CHANNEL = 'LEAVE_CHANNEL',
+    CREATE_CHANNEL = 'CREATE_CHANNEL',
+    // Open Channel
+    UPDATE_OPEN_CHANNEL = 'UPDATE_OPEN_CHANNEL',
+  }
+  export enum PublishingModuleType {
+    CHANNEL = 'CHANNEL',
+    THREAD = 'THREAD',
+  }
+  export default PUBSUB_TOPICS;
+}
+
 /** hooks */
 declare module '@sendbird/uikit-react/hooks/useModal' {
+  import type { ModalProps } from 'SendbirdUIKitGlobal';
   export type OpenGlobalModalProps = {
     modalProps: ModalProps;
-    childElement: (props: { closeModal: () => void }) => ReactElement;
+    childElement: (props: { closeModal: () => void }) => React.ReactElement;
   };
   export interface GlobalModalContextInterface {
     openModal: (props: OpenGlobalModalProps) => void;
@@ -2568,22 +2612,7 @@ declare module '@sendbird/uikit-react/ui/MessageStatus' {
 }
 
 declare module '@sendbird/uikit-react/ui/Modal' {
-  interface ModalProps {
-    className?: string;
-    hideFooter?: boolean;
-    disabled?: boolean;
-    type?: string;
-    isFullScreenOnMobile?: boolean;
-    isCloseOnClickOutside?: boolean;
-    children: React.ReactElement | string;
-    /**
-     * Do not use this! onCancel will be deprecated in v4. Use onClose instead.
-     */
-    onCancel?: () => void;
-    onClose?: () => void;
-    onSubmit?: () => void;
-    renderHeader?: () => React.ReactElement;
-  }
+  import type { ModalProps } from 'SendbirdUIKitGlobal';
   const Modal: React.FC<ModalProps>;
   export default Modal;
 }
