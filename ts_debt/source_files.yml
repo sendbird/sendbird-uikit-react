@@ -1,5 +1,4 @@
 (Wont do) ./_externals/lamejs/lame.all.js: lame.all.js
-./modules/Channel/context/hooks/useSendFileMessageCallback.js: useSendFileMessageCallback.js
 ./modules/Channel/context/hooks/useSendMessageCallback.js: useSendMessageCallback.js
 ./modules/Channel/context/hooks/useToggleReactionCallback.js: useToggleReactionCallback.js
 ./modules/Channel/context/hooks/useUpdateMessageCallback.js: useUpdateMessageCallback.js
