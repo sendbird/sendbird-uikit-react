@@ -110,7 +110,6 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
         disabled={editDisabled}
         ref={editMessageInputRef}
         message={message as UserMessage}
-        name={message?.messageId}
         onUpdateMessage={({ messageId, message }) => {
           updateMessage(messageId, message);
           setShowEdit(false);

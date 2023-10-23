@@ -222,7 +222,7 @@ const MessageInputWrapper = (
                 setQuoteMessage(null);
                 channel?.endTyping?.();
               }}
-              onFileUpload={(fileList: FileList) => {
+              onFileUpload={(fileList) => {
                 handleUploadFiles(fileList);
                 setQuoteMessage(null);
               }}
