@@ -81,10 +81,6 @@ export default function useSendUserMessageCallback({
         })
         .onSucceeded((message) => {
           logger.info('Thread | useSendUserMessageCallback: Sending user message succeeded.', message);
-          threadDispatcher({
-            type: ThreadContextActionTypes.SEND_MESSAGE_SUCESS,
-            payload: { message },
-          });
           // because Thread doesn't subscribe SEND_USER_MESSAGE
           pubSub.publish(topics.SEND_USER_MESSAGE, {
             channel: currentChannel,

@@ -205,12 +205,15 @@ export default function reducer(
         allThreadMessages: state.allThreadMessages?.filter((msg) => (
           msg?.messageId !== messageId
         )),
+        localThreadMessages: state.localThreadMessages?.filter((msg) => (
+          msg?.messageId !== messageId
+        )),
       };
     }
     case actionTypes.ON_MESSAGE_DELETED_BY_REQ_ID: {
       return {
         ...state,
-        allThreadMessages: state.allThreadMessages.filter((m) => (
+        localThreadMessages: state.localThreadMessages.filter((m) => (
           !compareIds((m as SendableMessageType).reqId, action.payload)
         )),
       };
@@ -311,30 +314,32 @@ export default function reducer(
       const { message } = action.payload;
       return {
         ...state,
-        allThreadMessages: [
-          ...state.allThreadMessages,
+        localThreadMessages: [
+          ...state.localThreadMessages,
           message,
         ],
       };
     }
     case actionTypes.SEND_MESSAGE_SUCESS: {
       const { message } = action.payload;
-      const filteredThreadMessages = state.allThreadMessages.filter((m) => (
-        !compareIds((m as UserMessage)?.reqId, message?.reqId)
-      ));
       return {
         ...state,
         allThreadMessages: [
-          ...filteredThreadMessages,
+          ...state.allThreadMessages.filter((m) => (
+            !compareIds((m as UserMessage)?.reqId, message?.reqId)
+          )),
           message,
         ],
+        localThreadMessages: state.localThreadMessages.filter((m) => (
+          !compareIds((m as UserMessage)?.reqId, message?.reqId)
+        )),
       };
     }
     case actionTypes.SEND_MESSAGE_FAILURE: {
       const { message } = action.payload;
       return {
         ...state,
-        allThreadMessages: state.allThreadMessages.map((m) => (
+        localThreadMessages: state.localThreadMessages.map((m) => (
           compareIds((m as UserMessage)?.reqId, message?.reqId)
             ? message
             : m

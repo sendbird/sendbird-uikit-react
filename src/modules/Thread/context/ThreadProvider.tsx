@@ -107,6 +107,7 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
   const {
     currentChannel,
     allThreadMessages,
+    localThreadMessages,
     parentMessage,
     channelState,
     threadListState,
@@ -234,6 +235,7 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
         // ThreadContextInitialState
         currentChannel,
         allThreadMessages,
+        localThreadMessages,
         parentMessage,
         channelState,
         threadListState,

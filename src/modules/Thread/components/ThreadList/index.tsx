@@ -12,7 +12,6 @@ import { SendableMessageType } from '../../../../utils';
 
 export interface ThreadListProps {
   className?: string;
-  allThreadMessages: Array<SendableMessageType>;
   renderMessage?: (props: {
     message: SendableMessageType,
     chainTop: boolean,
@@ -26,7 +25,6 @@ export interface ThreadListProps {
 
 export default function ThreadList({
   className,
-  allThreadMessages,
   renderMessage,
   renderCustomSeparator,
   scrollRef,
@@ -36,6 +34,8 @@ export default function ThreadList({
   const { replyType, userId } = config;
   const {
     currentChannel,
+    allThreadMessages,
+    localThreadMessages,
   } = useThreadContext();
 
   const MemorizedMessage = useMemo(() => ({
@@ -100,6 +100,54 @@ export default function ThreadList({
                   chainTop={chainTop}
                   chainBottom={chainBottom}
                   hasSeparator={hasSeparator}
+                  renderCustomSeparator={renderCustomSeparator}
+                  handleScroll={handleScroll}
+                />
+              )
+            }
+          </MessageProvider>
+        );
+      })}
+      {localThreadMessages.map((message, idx) => {
+        const isByMe = (message as UserMessage)?.sender?.userId === userId;
+        const prevMessage = localThreadMessages[idx - 1];
+        const nextMessage = localThreadMessages[idx + 1];
+        // eslint-disable-next-line no-constant-condition
+        const [chainTop, chainBottom] = true// isMessageGroupingEnabled
+          ? compareMessagesForGrouping(
+            prevMessage as SendableMessageType,
+            message as SendableMessageType,
+            nextMessage as SendableMessageType,
+            currentChannel,
+            replyType,
+          )
+          : [false, false];
+        const hasSeparator = !(prevMessage?.createdAt > 0 && (
+          isSameDay(message?.createdAt, prevMessage?.createdAt)
+        ));
+
+        const handleScroll = () => {
+          const current = scrollRef?.current;
+          if (current) {
+            const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
+            if (scrollBottom < bottom) {
+              current.scrollTop += bottom - scrollBottom;
+            }
+          }
+        };
+
+        return (
+          <MessageProvider message={message} isByMe={isByMe} key={message?.messageId}>
+            {
+              MemorizedMessage({
+                message,
+                chainTop,
+                chainBottom,
+                hasSeparator,
+              }) || (
+                <ThreadListItem
+                  message={message as SendableMessageType}
+                  hasSeparator={false}
                   renderCustomSeparator={renderCustomSeparator}
                   handleScroll={handleScroll}
                 />

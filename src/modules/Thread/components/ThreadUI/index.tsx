@@ -175,7 +175,6 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
           MemorizedThreadList || (
             <ThreadList
               className="sendbird-thread-ui__thread-list"
-              allThreadMessages={allThreadMessages}
               renderMessage={renderMessage}
               renderCustomSeparator={renderCustomSeparator}
               scrollRef={scrollRef}
