@@ -1122,7 +1122,8 @@ declare module "SendbirdUIKitGlobal" {
 
   export interface ThreadContextInitialState {
     currentChannel: GroupChannel;
-    allThreadMessages: Array<BaseMessage>;
+    allThreadMessages: Array<CoreMessageType>;
+    localThreadMessages: Array<CoreMessageType>;
     parentMessage: SendableMessageType;
     channelState: ChannelStateTypes;
     parentMessageState: ParentMessageStateTypes;
