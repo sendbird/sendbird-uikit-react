@@ -42,8 +42,8 @@ const ThreadMessageInput = (
     userMention,
     isVoiceMessageEnabled,
     logger,
-    isMultipleFilesMessageEnabled,
   } = config;
+  const threadContext = useThreadContext();
   const {
     currentChannel,
     parentMessage,
@@ -54,8 +54,12 @@ const ThreadMessageInput = (
     isMuted,
     isChannelFrozen,
     allThreadMessages,
-  } = useThreadContext();
+  } = threadContext;
   const messageInputRef = useRef();
+  const isMultipleFilesMessageEnabled = (
+    threadContext.isMultipleFilesMessageEnabled
+    ?? config.isMultipleFilesMessageEnabled
+  );
 
   const disabled = propsDisabled
     || isMuted

@@ -15,6 +15,7 @@ const Channel: React.FC<ChannelProps> = (props: ChannelProps) => {
       channelUrl={props?.channelUrl}
       isReactionEnabled={props?.isReactionEnabled}
       isMessageGroupingEnabled={props?.isMessageGroupingEnabled}
+      isMultipleFilesMessageEnabled={props?.isMultipleFilesMessageEnabled}
       showSearchIcon={props?.showSearchIcon}
       animatedMessage={props?.animatedMessage}
       highlightedMessage={props?.highlightedMessage}

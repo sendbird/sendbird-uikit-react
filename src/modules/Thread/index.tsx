@@ -19,6 +19,7 @@ const Thread: React.FC<ThreadProps> = (props: ThreadProps) => {
     message,
     onHeaderActionClick,
     onMoveToParentMessage,
+    isMultipleFilesMessageEnabled,
     // onBeforeSend~~~Message
     onBeforeSendUserMessage,
     onBeforeSendFileMessage,
@@ -47,6 +48,7 @@ const Thread: React.FC<ThreadProps> = (props: ThreadProps) => {
         onBeforeSendFileMessage={onBeforeSendFileMessage}
         onBeforeSendVoiceMessage={onBeforeSendVoiceMessage}
         onBeforeSendMultipleFilesMessage={onBeforeSendMultipleFilesMessage}
+        isMultipleFilesMessageEnabled={isMultipleFilesMessageEnabled}
       >
         <ThreadUI
           renderHeader={renderHeader}
