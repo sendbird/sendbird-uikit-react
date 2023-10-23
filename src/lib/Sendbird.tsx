@@ -48,6 +48,8 @@ import {
 } from './types';
 import { GlobalModalProvider } from '../hooks/useModal';
 
+export { useSendbirdStateContext } from '../hooks/useSendbirdStateContext';
+
 export type UserListQueryType = {
   hasNext?: boolean;
   next: () => Promise<Array<User>>;
@@ -106,7 +108,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
   eventHandlers?: SBUEventHandlers;
 }
 
-function Sendbird(props: SendbirdProviderProps) {
+export function SendbirdProvider(props: SendbirdProviderProps) {
   const localConfigs = uikitConfigMapper({
     legacyConfig: {
       replyType: props.replyType,
@@ -320,7 +322,7 @@ const SendbirdSDK = ({
           accessToken,
           theme: currentTheme,
           setCurrentTheme,
-          setCurrenttheme: setCurrentTheme,
+          setCurrenttheme: setCurrentTheme,// deprecated: typo
           isMultipleFilesMessageEnabled,
           uikitUploadSizeLimit,
           uikitMultipleFilesMessageLimit,
@@ -388,4 +390,4 @@ const SendbirdSDK = ({
   );
 };
 
-export default Sendbird;
+export default SendbirdProvider;
