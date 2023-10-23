@@ -177,7 +177,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     children,
     isReactionEnabled,
     isMessageGroupingEnabled = true,
-    isMultipleFilesMessageEnabled = false,
+    isMultipleFilesMessageEnabled,
     showSearchIcon,
     animatedMessage,
     highlightedMessage,
