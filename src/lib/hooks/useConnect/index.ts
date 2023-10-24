@@ -43,7 +43,7 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
       isMobile,
     }).catch(error => {
       logger?.error?.('SendbirdProvider | useConnect/useEffect', error);
-    })
+    });
   }, [userId, appId, accessToken]);
   const reconnect = useCallback(async () => {
     logger?.info?.('SendbirdProvider | useConnect/reconnect/useCallback', { sdk });
@@ -67,7 +67,7 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
         sdkInitParams,
         customExtensionParams,
         isMobile,
-      })
+      });
     } catch (error) {
       logger?.error?.('SendbirdProvider | useConnect/reconnect/useCallback', error);
     }
