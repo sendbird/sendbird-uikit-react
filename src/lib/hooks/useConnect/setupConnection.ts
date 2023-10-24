@@ -34,15 +34,14 @@ export function setUpParams({
   sdkInitParams?: SendbirdChatInitParams;
   customExtensionParams?: CustomExtensionParams;
 }) {
-  delete sdkInitParams['appId'];
-  return SendbirdChat.init({
-    ...(sdkInitParams ?? {}),
+  const params = Object.assign(sdkInitParams, {
     appId,
     modules: [new GroupChannelModule(), new OpenChannelModule()],
     newInstance: true,
-    customApiHost,
-    customWebSocketHost,
   });
+  if (customApiHost) params.customApiHost = customApiHost;
+  if (customWebSocketHost) params.customWebSocketHost = customWebSocketHost;
+  return SendbirdChat.init(params);
 }
 
 // Steps
