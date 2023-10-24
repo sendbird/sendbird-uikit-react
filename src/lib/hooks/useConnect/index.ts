@@ -23,35 +23,33 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
 
   useEffect(() => {
     logger?.info?.('SendbirdProvider | useConnect/useEffect', { userId, appId, accessToken });
-    try {
-      connect({
-        userId,
-        appId,
-        accessToken,
-        logger,
-        nickname,
-        profileUrl,
-        configureSession,
-        customApiHost,
-        customWebSocketHost,
-        sdk,
-        sdkDispatcher,
-        userDispatcher,
-        initDashboardConfigs,
-        isUserIdUsedForNickname,
-        sdkInitParams,
-        customExtensionParams,
-        isMobile,
-      });
-    } catch (error) {
+    connect({
+      userId,
+      appId,
+      accessToken,
+      logger,
+      nickname,
+      profileUrl,
+      configureSession,
+      customApiHost,
+      customWebSocketHost,
+      sdk,
+      sdkDispatcher,
+      userDispatcher,
+      initDashboardConfigs,
+      isUserIdUsedForNickname,
+      sdkInitParams,
+      customExtensionParams,
+      isMobile,
+    }).catch(error => {
       logger?.error?.('SendbirdProvider | useConnect/useEffect', error);
-    }
+    })
   }, [userId, appId, accessToken]);
-  const reconnect = useCallback(() => {
+  const reconnect = useCallback(async () => {
     logger?.info?.('SendbirdProvider | useConnect/reconnect/useCallback', { sdk });
 
     try {
-      connect({
+      await connect({
         userId,
         appId,
         accessToken,
@@ -69,7 +67,7 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
         sdkInitParams,
         customExtensionParams,
         isMobile,
-      });
+      })
     } catch (error) {
       logger?.error?.('SendbirdProvider | useConnect/reconnect/useCallback', error);
     }
