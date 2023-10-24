@@ -87,7 +87,7 @@ jobs:
           no_output_timeout: 15m
           name: Run test
           command: |
-            yarn test --forceExit
+            yarn test --forceExit --runInBand
       - store_artifacts:
           path: coverage
           destination: coverage
