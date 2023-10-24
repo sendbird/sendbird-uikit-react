@@ -66,12 +66,8 @@ function copyCJSPackageJSON() {
   );
 }
 
-function moveCSS() {
-  const cjs = 'dist/cjs';
-  const dist = 'dist/dist';
-  execSync(`rm ${cjs}/index.css ${cjs}/index.css.map`, { stdio: 'inherit' });
-  execSync(`mkdir -p ${dist}`, { stdio: 'inherit' });
-  execSync(`mv dist/index.css dist/index.css.map ${dist}`, { stdio: 'inherit' });
+function removeUnusedCSS() {
+  execSync('rm -rf dist/cjs/dist', { stdio: 'inherit' });
 }
 
 function buildTypeDefinitions() {
@@ -83,5 +79,5 @@ movePackageJSON();
 /** Copy content of package.json to dist/cjs, to support cjs module separately */
 copyCJSPackageJSON();
 
-moveCSS();
+removeUnusedCSS();
 buildTypeDefinitions();

@@ -58,7 +58,7 @@ export default {
         }),
       plugins: [autoprefixer],
       sourceMap: true,
-      extract: "index.css",
+      extract: "dist/index.css",
       extensions: [".sass", ".scss", ".css"],
     }),
     replace({
