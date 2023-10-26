@@ -19,5 +19,5 @@ export const nodeListToArray = (childNodes?: Node['childNodes'] | null) => {
 };
 
 export function isChannelTypeSupportsMultipleFilesMessage(channel: BaseChannel) {
-  return channel && channel?.isGroupChannel?.() && !channel.isBroadcast && !channel.isSuper;
+  return channel && channel.isGroupChannel?.() && !channel.isBroadcast && !channel.isSuper;
 }
