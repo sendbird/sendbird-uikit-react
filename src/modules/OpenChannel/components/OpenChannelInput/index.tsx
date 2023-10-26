@@ -7,14 +7,8 @@ export type MessageInputWrapperProps = {
   value?: string;
 };
 
-const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.RefObject<HTMLInputElement>): React.ReactNode => {
-  const {
-    currentOpenChannel,
-    disabled,
-    handleSendMessage,
-    handleFileUpload,
-    amIMuted,
-  } = useOpenChannelContext();
+export default React.forwardRef<HTMLInputElement, MessageInputWrapperProps>((props, ref) => {
+  const { currentOpenChannel, disabled, handleSendMessage, handleFileUpload, amIMuted } = useOpenChannelContext();
 
   const channel = currentOpenChannel;
 
@@ -48,6 +42,4 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.RefObje
       />
     </div>
   );
-};
-
-export default React.forwardRef(MessageInputWrapper);
+});

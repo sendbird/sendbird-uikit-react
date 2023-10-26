@@ -1,11 +1,11 @@
-import React, { ReactElement, RefObject, useState } from 'react';
+import React, { ReactElement, ReactNode, RefObject, useState } from 'react';
 
 import './index.scss';
 
 import Label, { LabelTypography, LabelColors } from '../Label';
 
 export interface InputLabelProps {
-  children: ReactElement;
+  children: ReactNode;
 }
 export const InputLabel = ({ children }: InputLabelProps): ReactElement => (
   <Label

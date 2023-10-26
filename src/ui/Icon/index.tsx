@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import './index.scss';
 import { Types } from './type';
@@ -67,8 +66,9 @@ import IconThumbnailNone from '../../svgs/icon-thumbnail-none.svg';
 import IconToggleOff from '../../svgs/icon-toggleoff.svg';
 import IconToggleOn from '../../svgs/icon-toggleon.svg';
 import IconUser from '../../svgs/icon-user.svg';
+import { noop } from '../../utils/utils';
 
-function changeTypeToIconComponent(type) {
+function changeTypeToIconComponent(type: Types) {
   switch (type) {
     case Types.ADD: return <IconAdd />;
     case Types.ARROW_LEFT: return <IconArrowLeft />;
@@ -132,15 +132,26 @@ function changeTypeToIconComponent(type) {
   }
 }
 
+type IconProps = {
+  className?: string | string[];
+  /** Type: Use strings from below list */
+  type: Types;
+  /** Type: Use Colors from below list */
+  fillColor?: Colors;
+  width?: string | number;
+  height?: string | number;
+  onClick?: React.MouseEventHandler<HTMLDivElement> & React.KeyboardEventHandler<HTMLDivElement>;
+  children?: React.ReactNode;
+};
 export default function Icon({
-  className,
+  className = '',
   type,
-  fillColor,
-  width,
-  height,
-  onClick,
-  children,
-}) {
+  fillColor = Colors.DEFAULT,
+  width = 26,
+  height = 26,
+  onClick = noop,
+  children = null,
+}: IconProps) {
   const iconStyle = {
     width: typeof width === 'string' ? width : `${width}px`,
     minWidth: typeof width === 'string' ? width : `${width}px`,
@@ -150,54 +161,21 @@ export default function Icon({
   return (
     <div
       className={[
-        ...Array.isArray(className) ? className : [className],
+        ...(Array.isArray(className) ? className : [className]),
         'sendbird-icon',
         changeTypeToIconClassName(type),
         changeColorToClassName(fillColor),
       ].join(' ')}
-      role="button"
+      role={'button'}
       onClick={onClick}
       onKeyDown={onClick}
-      tabIndex="0"
+      tabIndex={0}
       style={iconStyle}
     >
       {children || changeTypeToIconComponent(type)}
     </div>
   );
 }
-
-Icon.propTypes = {
-  className: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string),
-  ]),
-  /** Type: Use strings from below list */
-  type: PropTypes.oneOfType([
-    PropTypes.oneOf(Object.keys(Types)),
-    PropTypes.string,
-  ]).isRequired,
-  /** Type: Use Colors from below list */
-  fillColor: PropTypes.oneOf(Object.keys(Colors)),
-  width: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]),
-  height: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]),
-  onClick: PropTypes.func,
-  children: PropTypes.element,
-};
-
-Icon.defaultProps = {
-  className: '',
-  fillColor: Colors.DEFAULT,
-  width: 26,
-  height: 26,
-  onClick: () => { },
-  children: null,
-};
 
 export const IconTypes = Types;
 export const IconColors = Colors;

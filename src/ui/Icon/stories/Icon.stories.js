@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon, { IconTypes, IconColors } from '../index.jsx';
+import Icon, { IconTypes, IconColors } from '../index.tsx';
 
 const description = `
   \`import Icon, { IconTypes, IconColors } from "@sendbird/uikit-react/ui/Icon";\`

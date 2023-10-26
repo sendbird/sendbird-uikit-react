@@ -1,6 +1,7 @@
 import { Typography, Colors } from './types';
+import { ObjectValues } from '../../utils/typeHelpers/objectValues';
 
-export function changeTypographyToClassName(type) {
+export function changeTypographyToClassName(type?: ObjectValues<typeof Typography>) {
   switch (type) {
     case Typography.H_1: return 'sendbird-label--h-1';
     case Typography.H_2: return 'sendbird-label--h-2';
@@ -17,7 +18,7 @@ export function changeTypographyToClassName(type) {
   }
 }
 
-export function changeColorToClassName(color) {
+export function changeColorToClassName(color?: ObjectValues<typeof Colors>) {
   switch (color) {
     case Colors.ONBACKGROUND_1: return 'sendbird-label--color-onbackground-1';
     case Colors.ONBACKGROUND_2: return 'sendbird-label--color-onbackground-2';

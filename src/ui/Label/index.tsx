@@ -1,17 +1,23 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import './index.scss';
 import { Typography, Colors } from './types';
 import { changeTypographyToClassName, changeColorToClassName } from './utils';
 import getStringSet from './stringSet';
+import { ObjectValues } from '../../utils/typeHelpers/objectValues';
 
+type LabelProps = {
+  className?: string | string[];
+  type?: ObjectValues<typeof Typography>;
+  color?: ObjectValues<typeof Colors>;
+  children?: React.ReactNode;
+};
 export default function Label({
-  className,
+  className = [],
   type,
   color,
-  children,
-}) {
+  children = null,
+}: LabelProps) {
   return (
     // Donot make this into div
     // Mention uses Label. If we use div, it would break the mention detection on Paste
@@ -20,36 +26,14 @@ export default function Label({
       className={[
         ...(Array.isArray(className) ? className : [className]),
         'sendbird-label',
-        type ? changeTypographyToClassName(type) : '',
-        color ? changeColorToClassName(color) : '',
+        changeTypographyToClassName(type),
+        changeColorToClassName(color),
       ].join(' ')}
     >
       {children}
     </span>
   );
 }
-
-Label.propTypes = {
-  className: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string),
-  ]),
-  type: PropTypes.string,
-  color: PropTypes.string,
-  children: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-    PropTypes.element,
-    PropTypes.any,
-  ]),
-};
-
-Label.defaultProps = {
-  className: [],
-  type: '',
-  color: '',
-  children: null,
-};
 
 const LabelTypography = Typography;
 const LabelColors = Colors;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import getStringSet from '../ui/Label/stringSet';
+import getStringSet, { StringSet } from '../ui/Label/stringSet';
 import type { Locale } from 'date-fns';
 import en from 'date-fns/locale/en-US';
 
@@ -10,7 +10,7 @@ const LocalizationContext = React.createContext({
 });
 
 interface LocalizationProviderProps {
-  stringSet: Record<string, string>;
+  stringSet: StringSet;
   dateLocale: Locale;
   children: React.ReactElement;
 }
@@ -25,8 +25,8 @@ const LocalizationProvider = (props: LocalizationProviderProps): React.ReactElem
 };
 
 export type UseLocalizationType = () => {
-  stringSet: Record<string, string>;
-  dateLocale: globalThis.Locale;
+  stringSet: StringSet;
+  dateLocale: Locale;
 };
 
 const useLocalization: UseLocalizationType = () => React.useContext(LocalizationContext);

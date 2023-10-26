@@ -25,7 +25,7 @@ interface useHandleUploadFilesDynamicProps {
 interface useHandleUploadFilesStaticProps {
   logger: Logger;
 }
-export type HandleUploadFunctionType = (files: FileList) => void;
+export type HandleUploadFunctionType = (files: File[]) => void;
 
 export const useHandleUploadFiles = ({
   sendFileMessage,
@@ -40,9 +40,7 @@ export const useHandleUploadFiles = ({
   const uikitMultipleFilesMessageLimit = config?.uikitMultipleFilesMessageLimit;
   const { openModal } = useGlobalModalContext();
 
-  const handleUploadFiles = useCallback((fileList: FileList) => {
-    const files: File[] = Array.from(fileList);
-
+  const handleUploadFiles = useCallback((files: File[]) => {
     // Validate Paremeters
     if (!sendFileMessage || !sendMultipleFilesMessage) {
       logger.warning('Channel|useHandleUploadFiles: required functions are undefined', { sendFileMessage, sendMultipleFilesMessage });

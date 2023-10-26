@@ -1,45 +1,36 @@
-import React, {
-  useRef,
-  useMemo,
-  useState,
-  useEffect,
-  useCallback,
-} from 'react';
-import PropTypes from 'prop-types';
+import React, { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import './index.scss';
 import { MessageInputKeys, NodeNames, NodeTypes } from './const';
 
 import { USER_MENTION_TEMP_CHAR } from '../../modules/Channel/context/const';
 import IconButton from '../IconButton';
-import Button, { ButtonTypes, ButtonSizes } from '../Button';
+import Button, { ButtonSizes, ButtonTypes } from '../Button';
 import renderMentionLabelToString from '../MentionUserLabel/renderToString';
-import Icon, { IconTypes, IconColors } from '../Icon';
-import Label, { LabelTypography, LabelColors } from '../Label';
+import Icon, { IconColors, IconTypes } from '../Icon';
+import Label, { LabelColors, LabelTypography } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
-import {
-  isChannelTypeSupportsMultipleFilesMessage,
-  nodeListToArray,
-  sanitizeString,
-} from './utils';
-import {
-  arrayEqual,
-  getClassName,
-  getMimeTypesUIKitAccepts,
-} from '../../utils';
+import { isChannelTypeSupportsMultipleFilesMessage, nodeListToArray, sanitizeString } from './utils';
+import { arrayEqual, getClassName, getMimeTypesUIKitAccepts } from '../../utils';
 import usePaste from './hooks/usePaste';
 import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
 import { USER_MENTION_PREFIX } from '../../modules/Message/consts';
 import { TOKEN_TYPES } from '../../modules/Message/utils/tokens/types';
 import { checkIfFileUploadEnabled } from './messageInputUtils';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { User } from '@sendbird/chat';
+import { OpenChannel } from '@sendbird/chat/openChannel';
+import { UserMessage } from '@sendbird/chat/message';
 
 const TEXT_FIELD_ID = 'sendbird-message-input-text-field';
 const LINE_HEIGHT = 76;
-const noop = () => { };
+const noop = () => {
+  return null;
+};
 
-const displayCaret = (element, position) => {
+const displayCaret = (element: HTMLInputElement, position: number) => {
   const range = document.createRange();
   const sel = window.getSelection();
   range.setStart(element.childNodes[0], position);
@@ -49,9 +40,8 @@ const displayCaret = (element, position) => {
   element.focus();
 };
 
-const resetInput = (ref) => {
+const resetInput = (ref: MutableRefObject<HTMLElement>) => {
   try {
-    /* eslint-disable no-param-reassign */
     ref.current.innerHTML = '';
   } catch {
     //
@@ -66,38 +56,73 @@ const initialTargetStringInfo = {
   endOffsetIndex: null,
 };
 
-const MessageInput = React.forwardRef((props, ref) => {
+type MessageInputProps = {
+  channel: GroupChannel | OpenChannel;
+  message?: UserMessage;
+  value?: null | string;
+  className?: string | string[];
+  messageFieldId?: string;
+  isEdit?: boolean;
+  isMentionEnabled?: boolean;
+  isVoiceMessageEnabled?: boolean;
+  isSelectingMultipleFilesEnabled?: boolean;
+  disabled?: boolean;
+  placeholder?: string;
+  maxLength?: number;
+  onFileUpload?: (file: File[]) => void;
+  onSendMessage?: (params: { message: string; mentionTemplate: string }) => void;
+  onUpdateMessage?: (params: { messageId: number; message: string; mentionTemplate: string }) => void;
+  onCancelEdit?: () => void;
+  onStartTyping?: () => void;
+  channelUrl?: string;
+  mentionSelectedUser?: null | User;
+  onUserMentioned?: (user: User) => void;
+  onMentionStringChange?: (mentionString: string) => void;
+  onMentionedUserIdsUpdated?: (mentionedUserIds: string[]) => void;
+  onVoiceMessageIconClick?: () => void;
+  onKeyUp?: (event: React.KeyboardEvent<HTMLDivElement>) => boolean;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => boolean;
+  renderVoiceMessageIcon?: () => React.ReactNode;
+  renderFileUploadIcon?: () => React.ReactNode;
+  renderSendMessageIcon?: () => React.ReactNode;
+  setMentionedUsers?: React.Dispatch<React.SetStateAction<User[]>>;
+  acceptableMimeTypes?: string[];
+};
+const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((props, externalRef) => {
   const {
-    className,
-    messageFieldId,
-    isEdit,
-    isMentionEnabled,
-    isVoiceMessageEnabled,
-    isSelectingMultipleFilesEnabled,
-    disabled,
-    message,
-    placeholder,
-    maxLength,
-    onFileUpload,
-    onSendMessage,
-    onUpdateMessage,
-    onCancelEdit,
-    onStartTyping,
-    channelUrl,
     channel,
-    mentionSelectedUser,
-    onUserMentioned,
-    onMentionStringChange,
-    onMentionedUserIdsUpdated,
-    onVoiceMessageIconClick,
-    onKeyUp,
-    onKeyDown,
-    renderFileUploadIcon,
-    renderVoiceMessageIcon,
-    renderSendMessageIcon,
-    setMentionedUsers,
-    acceptableMimeTypes,
+    className = '',
+    messageFieldId = '',
+    isEdit = false,
+    isMentionEnabled = false,
+    isVoiceMessageEnabled = true,
+    isSelectingMultipleFilesEnabled = false,
+    disabled = false,
+    message = null,
+    placeholder = '',
+    maxLength = 5000,
+    onFileUpload = noop,
+    onSendMessage = noop,
+    onUpdateMessage = noop,
+    onCancelEdit = noop,
+    onStartTyping = noop,
+    channelUrl = '',
+    mentionSelectedUser = null,
+    onUserMentioned = noop,
+    onMentionStringChange = noop,
+    onMentionedUserIdsUpdated = noop,
+    onVoiceMessageIconClick = noop,
+    onKeyUp = noop,
+    onKeyDown = noop,
+    renderFileUploadIcon = noop,
+    renderVoiceMessageIcon = noop,
+    renderSendMessageIcon = noop,
+    setMentionedUsers = noop,
+    acceptableMimeTypes = null,
   } = props;
+
+  const internalRef = (externalRef && 'current' in externalRef) ? externalRef : null;
+
   const textFieldId = messageFieldId || TEXT_FIELD_ID;
   const { stringSet } = useLocalization();
   const { config } = useSendbirdStateContext();
@@ -109,12 +134,12 @@ const MessageInput = React.forwardRef((props, ref) => {
 
   const fileInputRef = useRef(null);
   const [isInput, setIsInput] = useState(false);
-  const [mentionedUserIds, setMentionedUserIds] = useState([]);
+  const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
   const [targetStringInfo, setTargetStringInfo] = useState({ ...initialTargetStringInfo });
-  const setHeight = useMemo(() => (
-    () => {
+  const setHeight = useMemo(
+    () => () => {
       try {
-        const elem = ref?.current;
+        const elem = internalRef?.current;
         const MAX_HEIGHT = window.document.body.offsetHeight * 0.6;
         if (elem && elem.scrollHeight >= LINE_HEIGHT) {
           if (MAX_HEIGHT < elem.scrollHeight) {
@@ -130,15 +155,16 @@ const MessageInput = React.forwardRef((props, ref) => {
       } catch (error) {
         // error
       }
-    }
-  ), []);
+    },
+    [],
+  );
 
   // #Edit mode
   // for easilly initialize input value from outside, but
   // useEffect(_, [channelUrl]) erase it
   const initialValue = props?.value;
   useEffect(() => {
-    const textField = ref?.current;
+    const textField = internalRef?.current;
     try {
       textField.innerHTML = initialValue;
       displayCaret(textField, initialValue?.length);
@@ -154,7 +180,7 @@ const MessageInput = React.forwardRef((props, ref) => {
   useEffect(() => {
     if (!isEdit) {
       setIsInput(false);
-      resetInput(ref);
+      resetInput(internalRef);
     }
   }, [channelUrl]);
 
@@ -162,28 +188,29 @@ const MessageInput = React.forwardRef((props, ref) => {
   useEffect(() => {
     if (isEdit && message?.messageId) {
       // const textField = document.getElementById(textFieldId);
-      const textField = ref?.current;
-      if (isMentionEnabled
-        && message?.mentionedUsers?.length > 0
-        && message?.mentionedMessageTemplate?.length > 0
-      ) {
+      const textField = internalRef?.current;
+      if (isMentionEnabled && message?.mentionedUsers?.length > 0 && message?.mentionedMessageTemplate?.length > 0) {
         /* mention enabled */
         const { mentionedUsers = [] } = message;
         const tokens = tokenizeMessage({
           messageText: message?.mentionedMessageTemplate,
           mentionedUsers,
         });
-        textField.innerHTML = tokens.map((token) => {
-          if (token.type === TOKEN_TYPES.mention) {
-            const mentionedUser = mentionedUsers.find((user) => user.userId === token.userId);
-            const nickname = `${USER_MENTION_PREFIX}${mentionedUser?.nickname || token.value || stringSet.MENTION_NAME__NO_NAME}`;
-            return renderMentionLabelToString({
-              userId: token.userId,
-              nickname,
-            });
-          }
-          return sanitizeString(token.value);
-        }).join(' ');
+        textField.innerHTML = tokens
+          .map((token) => {
+            if (token.type === TOKEN_TYPES.mention) {
+              const mentionedUser = mentionedUsers.find((user) => user.userId === token.userId);
+              const nickname = `${USER_MENTION_PREFIX}${
+                mentionedUser?.nickname || token.value || stringSet.MENTION_NAME__NO_NAME
+              }`;
+              return renderMentionLabelToString({
+                userId: token.userId,
+                nickname,
+              });
+            }
+            return sanitizeString(token.value);
+          })
+          .join(' ');
       } else {
         /* mention disabled */
         try {
@@ -200,9 +227,12 @@ const MessageInput = React.forwardRef((props, ref) => {
 
   // #Mention | Detect MentionedLabel modified
   const useMentionedLabelDetection = useCallback(() => {
-    const textField = ref?.current;
+    const textField = internalRef?.current;
     if (isMentionEnabled) {
-      const newMentionedUserIds = [...textField.getElementsByClassName('sendbird-mention-user-label')].map((node) => node?.dataset?.userid);
+      const newMentionedUserIds = Array.from(textField.getElementsByClassName('sendbird-mention-user-label')).map(
+        // @ts-ignore
+        (node) => node?.dataset?.userid,
+      );
       if (!arrayEqual(mentionedUserIds, newMentionedUserIds) || newMentionedUserIds.length === 0) {
         onMentionedUserIdsUpdated(newMentionedUserIds);
         setMentionedUserIds(newMentionedUserIds);
@@ -214,16 +244,10 @@ const MessageInput = React.forwardRef((props, ref) => {
   // #Mention | Replace selected user nickname to the MentionedUserLabel
   useEffect(() => {
     if (isMentionEnabled && mentionSelectedUser) {
-      const {
-        targetString,
-        startNodeIndex,
-        startOffsetIndex,
-        endNodeIndex,
-        endOffsetIndex,
-      } = targetStringInfo;
+      const { targetString, startNodeIndex, startOffsetIndex, endNodeIndex, endOffsetIndex } = targetStringInfo;
       if (targetString && startNodeIndex !== null && startOffsetIndex !== null) {
         // const textField = document.getElementById(textFieldId);
-        const textField = ref?.current;
+        const textField = internalRef?.current;
         const childNodes = nodeListToArray(textField?.childNodes);
         const frontTextNode = document?.createTextNode(
           childNodes[startNodeIndex]?.textContent.slice(0, startOffsetIndex),
@@ -271,11 +295,13 @@ const MessageInput = React.forwardRef((props, ref) => {
   // #Mention | Detect mentioning user nickname
   const useMentionInputDetection = useCallback(() => {
     const selection = window?.getSelection?.() || document?.getSelection?.();
-    const textField = ref?.current;
+    const textField = internalRef?.current;
     if (selection.anchorNode === textField) {
       onMentionStringChange('');
     }
-    if (isMentionEnabled && selection
+    if (
+      isMentionEnabled
+      && selection
       && selection.anchorNode === selection.focusNode
       && selection.anchorOffset === selection.focusOffset
     ) {
@@ -286,7 +312,7 @@ const MessageInput = React.forwardRef((props, ref) => {
         const currentNode = textField.childNodes[index];
         if (currentNode.nodeType === NodeTypes.TextNode) {
           /* text node */
-          const textContent = (currentNode === selection.anchorNode)
+          const textContent = currentNode === selection.anchorNode
             ? currentNode?.textContent.slice(0, selection.anchorOffset) || ''
             : currentNode?.textContent || '';
           if (textStack.length > 0) {
@@ -317,7 +343,7 @@ const MessageInput = React.forwardRef((props, ref) => {
            * targetString could be ''
            * startNodeIndex and startOffsetIndex could be null
            */
-          const targetString = textStack ? textStack.slice(startOffsetIndex) : '';// include template character
+          const targetString = textStack ? textStack.slice(startOffsetIndex) : ''; // include template character
           setTargetStringInfo({
             targetString,
             startNodeIndex,
@@ -333,12 +359,13 @@ const MessageInput = React.forwardRef((props, ref) => {
   }, [isMentionEnabled]);
 
   const sendMessage = () => {
-    const textField = ref?.current;
+    const textField = internalRef?.current;
     if (!isEdit && textField?.textContent) {
       let messageText = '';
       let mentionTemplate = '';
       textField.childNodes.forEach((node) => {
         if (node.nodeType === NodeTypes.ElementNode && node.nodeName === NodeNames.Span) {
+          // @ts-ignore
           const { innerText, dataset = {} } = node;
           const { userid = '' } = dataset;
           messageText += innerText;
@@ -351,7 +378,8 @@ const MessageInput = React.forwardRef((props, ref) => {
           const { textContent = '' } = node;
           messageText += `\n${textContent}`;
           mentionTemplate += `\n${textContent}`;
-        } else { // other nodes including text node
+        } else {
+          // other nodes including text node
           const { textContent = '' } = node;
           messageText += textContent;
           mentionTemplate += textContent;
@@ -359,29 +387,31 @@ const MessageInput = React.forwardRef((props, ref) => {
       });
       const params = { message: messageText, mentionTemplate };
       onSendMessage(params);
-      resetInput(ref);
+      resetInput(internalRef);
       // important: keeps the keyboard open -> must add test on refactor
       textField.focus();
       setIsInput(false);
       setHeight();
     }
   };
-  const isEditDisabled = !(ref?.current?.textContent?.trim());
+  const isEditDisabled = !internalRef?.current?.textContent?.trim();
   const editMessage = () => {
-    const textField = ref?.current;
+    const textField = internalRef?.current;
     const messageId = message?.messageId;
     if (isEdit && messageId) {
       let messageText = '';
       let mentionTemplate = '';
       textField.childNodes.forEach((node) => {
         if (node.nodeType === NodeTypes.ElementNode && node.nodeName === NodeNames.Span) {
+          // @ts-ignore
           const { innerText, dataset = {} } = node;
           const { userid = '' } = dataset;
           messageText += innerText;
           mentionTemplate += `${USER_MENTION_TEMP_CHAR}{${userid}}`;
           messageText += '\n';
           mentionTemplate += '\n';
-        } else { // other nodes including text node
+        } else {
+          // other nodes including text node
           const { textContent = '' } = node;
           messageText += textContent;
           mentionTemplate += textContent;
@@ -389,12 +419,11 @@ const MessageInput = React.forwardRef((props, ref) => {
       });
       const params = { messageId, message: messageText, mentionTemplate };
       onUpdateMessage(params);
-      resetInput(ref);
+      resetInput(internalRef);
     }
   };
   const onPaste = usePaste({
-    ref,
-    setMentionedUserIds,
+    ref: internalRef,
     setMentionedUsers,
     channel,
     setIsInput,
@@ -409,39 +438,38 @@ const MessageInput = React.forwardRef((props, ref) => {
         disabled ? 'sendbird-message-input-form__disabled' : '',
       ])}
     >
-      <div
-        className={getClassName([
-          'sendbird-message-input',
-          disabled ? 'sendbird-message-input__disabled' : '',
-        ])}
-      >
+      <div className={getClassName(['sendbird-message-input', disabled ? 'sendbird-message-input__disabled' : ''])}>
         <div
           id={`${textFieldId}${isEdit ? message?.messageId : ''}`}
           className={`sendbird-message-input--textarea ${textFieldId}`}
           contentEditable={!disabled}
           role="textbox"
           aria-label="Text Input"
+          ref={externalRef}
+          // @ts-ignore
           disabled={disabled}
-          ref={ref}
           maxLength={maxLength}
           onKeyDown={(e) => {
             const preventEvent = onKeyDown(e);
             if (preventEvent) {
               e.preventDefault();
             } else {
-              if (!e.shiftKey && e.key === MessageInputKeys.Enter
-                && ref?.current?.textContent?.trim().length > 0
+              if (
+                !e.shiftKey
+                && e.key === MessageInputKeys.Enter
+                && internalRef?.current?.textContent?.trim().length > 0
                 && e?.nativeEvent?.isComposing !== true
               ) {
                 e.preventDefault();
                 sendMessage();
               }
-              if (e.key === MessageInputKeys.Backspace
-                && ref?.current?.childNodes?.length === 2
-                && !ref?.current?.childNodes?.[0]?.textContent
-                && ref?.current.childNodes?.[1]?.nodeType === NodeTypes.ElementNode
+              if (
+                e.key === MessageInputKeys.Backspace
+                && internalRef?.current?.childNodes?.length === 2
+                && !internalRef?.current?.childNodes?.[0]?.textContent
+                && internalRef?.current.childNodes?.[1]?.nodeType === NodeTypes.ElementNode
               ) {
-                ref?.current.removeChild(ref?.current.childNodes[1]);
+                internalRef?.current.removeChild(internalRef?.current.childNodes[1]);
               }
             }
           }}
@@ -459,13 +487,13 @@ const MessageInput = React.forwardRef((props, ref) => {
           onInput={() => {
             setHeight();
             onStartTyping();
-            setIsInput(ref?.current?.textContent?.trim().length > 0);
+            setIsInput(internalRef?.current?.textContent?.trim().length > 0);
             useMentionedLabelDetection();
           }}
           onPaste={onPaste}
         />
         {/* placeholder */}
-        {(ref?.current?.textContent?.length ?? 0) === 0 && (
+        {(internalRef?.current?.textContent?.length ?? 0) === 0 && (
           <Label
             className="sendbird-message-input--placeholder"
             type={LabelTypography.BODY_1}
@@ -475,34 +503,25 @@ const MessageInput = React.forwardRef((props, ref) => {
           </Label>
         )}
         {/* send icon */}
-        {
-          (!isEdit && isInput) && (
-            <IconButton
-              className="sendbird-message-input--send"
-              height="32px"
-              width="32px"
-              onClick={() => sendMessage()}
-            >
-              {
-                renderSendMessageIcon?.() || (
-                  <Icon
-                    type={IconTypes.SEND}
-                    fillColor={disabled ? IconColors.ON_BACKGROUND_4 : IconColors.PRIMARY}
-                    width="20px"
-                    height="20px"
-                  />
-                )
-              }
-            </IconButton>
-          )
-        }
+        {!isEdit && isInput && (
+          <IconButton className="sendbird-message-input--send" height="32px" width="32px" onClick={() => sendMessage()}>
+            {renderSendMessageIcon?.() || (
+              <Icon
+                type={IconTypes.SEND}
+                fillColor={disabled ? IconColors.ON_BACKGROUND_4 : IconColors.PRIMARY}
+                width="20px"
+                height="20px"
+              />
+            )}
+          </IconButton>
+        )}
         {/* file upload icon */}
-        {
-          (!isEdit && !isInput) && (
-            (renderFileUploadIcon?.()
-              // UIKit Dashboard configuration should have lower priority than
-              // renderFileUploadIcon which is set in code level
-              || (isFileUploadEnabled && (
+        {!isEdit
+          && !isInput
+          && (renderFileUploadIcon?.()
+            // UIKit Dashboard configuration should have lower priority than
+            // renderFileUploadIcon which is set in code level
+            || (isFileUploadEnabled && (
               <IconButton
                 className={`sendbird-message-input--attach ${isVoiceMessageEnabled ? 'is-voice-message-enabled' : ''}`}
                 height="32px"
@@ -525,147 +544,57 @@ const MessageInput = React.forwardRef((props, ref) => {
                   // It will affect to <Channel /> and <Thread />
                   onChange={(event) => {
                     const { files } = event.currentTarget;
-                    onFileUpload(files && files.length === 1 ? [files[0]] : [...files]);
+                    onFileUpload(files && files.length === 1 ? [files[0]] : Array.from(files));
                     event.target.value = '';
                   }}
                   accept={getMimeTypesUIKitAccepts(acceptableMimeTypes)}
-                  multiple={
-                    isSelectingMultipleFilesEnabled
-                    && isChannelTypeSupportsMultipleFilesMessage(channel)
-                  }
+                  multiple={isSelectingMultipleFilesEnabled && isChannelTypeSupportsMultipleFilesMessage(channel)}
                 />
               </IconButton>
-              )
-              ))
-          )
-        }
+            )))}
         {/* voice message input trigger */}
-        {(isVoiceMessageEnabled && !isEdit && !isInput) && (
+        {isVoiceMessageEnabled && !isEdit && !isInput && (
           <IconButton
             className="sendbird-message-input--voice-message"
             width="32px"
             height="32px"
             onClick={onVoiceMessageIconClick}
           >
-            {
-              renderVoiceMessageIcon?.() || (
-                <Icon
-                  type={IconTypes.AUDIO_ON_LINED}
-                  fillColor={disabled ? IconColors.ON_BACKGROUND_4 : IconColors.CONTENT_INVERSE}
-                  width="20px"
-                  height="20px"
-                />
-              )
-            }
+            {renderVoiceMessageIcon?.() || (
+              <Icon
+                type={IconTypes.AUDIO_ON_LINED}
+                fillColor={disabled ? IconColors.ON_BACKGROUND_4 : IconColors.CONTENT_INVERSE}
+                width="20px"
+                height="20px"
+              />
+            )}
           </IconButton>
         )}
       </div>
       {/* Edit */}
-      {
-        isEdit && (
-          <div className="sendbird-message-input--edit-action">
-            <Button
-              className="sendbird-message-input--edit-action__cancel"
-              type={ButtonTypes.SECONDARY}
-              size={ButtonSizes.SMALL}
-              onClick={onCancelEdit}
-            >
-              {stringSet.BUTTON__CANCEL}
-            </Button>
-            <Button
-              className="sendbird-message-input--edit-action__save"
-              type={ButtonTypes.PRIMARY}
-              size={ButtonSizes.SMALL}
-              disabled={isEditDisabled}
-              onClick={() => editMessage()}
-            >
-              {stringSet.BUTTON__SAVE}
-            </Button>
-          </div>
-        )
-      }
+      {isEdit && (
+        <div className="sendbird-message-input--edit-action">
+          <Button
+            className="sendbird-message-input--edit-action__cancel"
+            type={ButtonTypes.SECONDARY}
+            size={ButtonSizes.SMALL}
+            onClick={onCancelEdit}
+          >
+            {stringSet.BUTTON__CANCEL}
+          </Button>
+          <Button
+            className="sendbird-message-input--edit-action__save"
+            type={ButtonTypes.PRIMARY}
+            size={ButtonSizes.SMALL}
+            disabled={isEditDisabled}
+            onClick={() => editMessage()}
+          >
+            {stringSet.BUTTON__SAVE}
+          </Button>
+        </div>
+      )}
     </form>
   );
 });
-
-MessageInput.propTypes = {
-  className: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string),
-  ]),
-  isEdit: PropTypes.bool,
-  isMentionEnabled: PropTypes.bool,
-  isVoiceMessageEnabled: PropTypes.bool,
-  isSelectingMultipleFilesEnabled: PropTypes.bool,
-  disabled: PropTypes.bool,
-  value: PropTypes.string,
-  placeholder: PropTypes.string,
-  maxLength: PropTypes.number,
-  onFileUpload: PropTypes.func,
-  onSendMessage: PropTypes.func,
-  onUpdateMessage: PropTypes.func,
-  onStartTyping: PropTypes.func,
-  onCancelEdit: PropTypes.func,
-  channelUrl: PropTypes.string,
-  channel: PropTypes.shape({
-    channelType: PropTypes.string,
-  }).isRequired,
-  messageFieldId: PropTypes.string,
-  acceptableMimeTypes: PropTypes.arrayOf(PropTypes.string),
-  // Mention
-  message: PropTypes.shape({
-    messageId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    message: PropTypes.string,
-    mentionedMessageTemplate: PropTypes.string,
-    mentionedUsers: PropTypes.arrayOf(PropTypes.shape({})),
-  }),
-  setMentionedUsers: PropTypes.func,
-  mentionSelectedUser: PropTypes.shape({
-    userId: PropTypes.string,
-    nickname: PropTypes.string,
-  }),
-  onUserMentioned: PropTypes.func,
-  onMentionStringChange: PropTypes.func,
-  onMentionedUserIdsUpdated: PropTypes.func,
-  onKeyUp: PropTypes.func,
-  onKeyDown: PropTypes.func,
-  // Voice Message
-  onVoiceMessageIconClick: PropTypes.func,
-  renderVoiceMessageIcon: PropTypes.func,
-  renderSendMessageIcon: PropTypes.func,
-  renderFileUploadIcon: PropTypes.func,
-};
-
-MessageInput.defaultProps = {
-  className: '',
-  messageFieldId: '',
-  channelUrl: '',
-  onSendMessage: noop,
-  onUpdateMessage: noop,
-  value: null,
-  message: null,
-  isEdit: false,
-  isMentionEnabled: false,
-  isVoiceMessageEnabled: true,
-  isSelectingMultipleFilesEnabled: false,
-  onVoiceMessageIconClick: noop,
-  disabled: false,
-  placeholder: '',
-  maxLength: 5000,
-  onFileUpload: noop,
-  onCancelEdit: noop,
-  onStartTyping: noop,
-  mentionSelectedUser: null,
-  onUserMentioned: noop,
-  onMentionStringChange: noop,
-  onMentionedUserIdsUpdated: noop,
-  onKeyUp: noop,
-  onKeyDown: noop,
-  setMentionedUsers: noop,
-  renderVoiceMessageIcon: noop,
-  renderFileUploadIcon: noop,
-  renderSendMessageIcon: noop,
-  acceptableMimeTypes: null,
-};
 
 export default MessageInput;

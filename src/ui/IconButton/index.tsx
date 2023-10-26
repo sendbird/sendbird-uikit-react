@@ -2,6 +2,7 @@ import React, {
   FocusEvent,
   MouseEvent,
   ReactElement,
+  ReactNode,
   RefObject,
   useState,
 } from 'react';
@@ -10,7 +11,7 @@ import './index.scss';
 
 export interface IconButtonProps {
   className?: string | Array<string>;
-  children: ReactElement;
+  children: ReactNode;
   disabled?: boolean;
   width?: string;
   height?: string;

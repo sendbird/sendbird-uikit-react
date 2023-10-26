@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext } from 'react';
+import React, { ReactElement, ReactNode, useContext } from 'react';
 import { createPortal } from 'react-dom';
 
 import './index.scss';
@@ -25,7 +25,7 @@ export const ModalHeader = ({ titleText }: ModalHeaderProps): ReactElement => (
 );
 
 export interface ModalBodyProps {
-  children?: ReactElement | ReactElement[] | null;
+  children?: ReactNode;
 }
 export const ModalBody = ({ children }: ModalBodyProps): ReactElement => (
   <div className="sendbird-modal__body">
@@ -72,7 +72,7 @@ export const ModalFooter = ({
 };
 
 export interface ModalProps {
-  children?: ReactElement | ReactElement[];
+  children?: ReactNode;
   className?: string;
   isCloseOnClickOutside?: boolean;
   isFullScreenOnMobile?: boolean;
