@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 import type { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 import { MessageListParams, ReplyType } from '@sendbird/chat/message';
@@ -8,6 +8,8 @@ import * as messageActionTypes from '../dux/actionTypes';
 import { Logger } from '../../../../lib/SendbirdState';
 import { MarkAsReadSchedulerType } from '../../../../lib/hooks/useMarkAsReadScheduler';
 import useReconnectOnIdle from './useReconnectOnIdle';
+import { ChannelActionTypes } from '../dux/actionTypes';
+import { CoreMessageType } from '../../../../utils';
 
 interface DynamicParams {
   isOnline: boolean;
@@ -22,7 +24,7 @@ interface StaticParams {
   currentGroupChannel: GroupChannel;
   scrollRef: React.RefObject<HTMLDivElement>;
   markAsReadScheduler: MarkAsReadSchedulerType;
-  messagesDispatcher: (props: { type: string, payload: any }) => void;
+  messagesDispatcher: React.Dispatch<ChannelActionTypes>;
   userFilledMessageListQuery?: Record<string, any>;
 }
 
@@ -82,7 +84,7 @@ function useHandleReconnect(
                   type: messageActionTypes.FETCH_INITIAL_MESSAGES_SUCCESS,
                   payload: {
                     currentGroupChannel,
-                    messages,
+                    messages: messages as CoreMessageType[],
                   },
                 });
                 setTimeout(() => utils.scrollIntoLast(0, scrollRef));

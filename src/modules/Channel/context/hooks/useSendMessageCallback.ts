@@ -1,34 +1,53 @@
-import { useRef, useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
+import { User } from '@sendbird/chat';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { UserMessageCreateParams } from '@sendbird/chat/message';
 
 import * as messageActionTypes from '../dux/actionTypes';
+import { ChannelActionTypes } from '../dux/actionTypes';
 import * as utils from '../utils';
 import topics from '../../../../lib/pubSub/topics';
 import { PublishingModuleType } from '../../../internalInterfaces';
+import { SendableMessageType } from '../../../../utils';
+import { LoggerInterface } from '../../../../lib/Logger';
+import { PubSubTypes } from '../../../../lib/pubSub';
 
-export default function useSendMessageCallback({
-  isMentionEnabled,
-  currentGroupChannel,
-  onBeforeSendUserMessage,
-}, {
-  logger,
-  pubSub,
-  scrollRef,
-  messagesDispatcher,
-}) {
-  const messageInputRef = useRef(null);
+type UseSendMessageCallbackOptions = {
+  isMentionEnabled: boolean;
+  currentGroupChannel: null | GroupChannel;
+  onBeforeSendUserMessage?: (message: string, quoteMessage?: SendableMessageType) => UserMessageCreateParams;
+};
+type UseSendMessageCallbackParams = {
+  logger: LoggerInterface;
+  pubSub: PubSubTypes;
+  scrollRef: React.MutableRefObject<HTMLDivElement | null>;
+  messagesDispatcher: React.Dispatch<ChannelActionTypes>;
+};
+type SendMessageParams = {
+  message: string;
+  quoteMessage?: SendableMessageType;
+  // mentionedUserIds?: string[];
+  mentionedUsers?: User[];
+  mentionTemplate?: string;
+};
+export default function useSendMessageCallback(
+  { isMentionEnabled, currentGroupChannel, onBeforeSendUserMessage }: UseSendMessageCallbackOptions,
+  { logger, pubSub, scrollRef, messagesDispatcher }: UseSendMessageCallbackParams,
+) {
+  const messageInputRef = useRef<HTMLInputElement>(null);
 
   const sendMessage = useCallback(
-    (props) => {
-      const {
-        quoteMessage = null,
-        message,
-        mentionTemplate,
-        // mentionedUserIds,
-        mentionedUsers,
-      } = props;
+    ({
+      quoteMessage,
+      message,
+      mentionTemplate,
+      // mentionedUserIds,
+      mentionedUsers,
+    }: SendMessageParams) => {
       const createParamsDefault = () => {
-        const params = {};
-        params.message = message;
+        const params: UserMessageCreateParams = {
+          message,
+        };
         // if (isMentionEnabled && mentionedUserIds?.length > 0) {
         if (isMentionEnabled && mentionedUsers?.length > 0) {
           // params.mentionedUserIds = mentionedUserIds;
@@ -45,19 +64,17 @@ export default function useSendMessageCallback({
         return params;
       };
 
-      const createCustomPrams = onBeforeSendUserMessage
-        && typeof onBeforeSendUserMessage === 'function';
+      const shouldCreateCustomParams = onBeforeSendUserMessage && typeof onBeforeSendUserMessage === 'function';
 
-      if (createCustomPrams) {
+      if (shouldCreateCustomParams) {
         logger.info('Channel: creating params using onBeforeSendUserMessage', onBeforeSendUserMessage);
       }
 
-      const params = onBeforeSendUserMessage
-        ? onBeforeSendUserMessage(message, quoteMessage)
-        : createParamsDefault();
+      const params = shouldCreateCustomParams ? onBeforeSendUserMessage(message, quoteMessage) : createParamsDefault();
 
       logger.info('Channel: Sending message has started', params);
-      currentGroupChannel.sendUserMessage(params)
+      currentGroupChannel
+        .sendUserMessage(params)
         .onPending((pendingMsg) => {
           pubSub.publish(topics.SEND_MESSAGE_START, {
             /* pubSub is used instead of messagesDispatcher
@@ -72,19 +89,19 @@ export default function useSendMessageCallback({
           logger.warning('Channel: Sending message failed!', { message: msg, error: err });
           messagesDispatcher({
             type: messageActionTypes.SEND_MESSAGE_FAILURE,
-            payload: msg,
+            payload: msg as SendableMessageType,
           });
         })
         .onSucceeded((msg) => {
           logger.info('Channel: Sending message success!', msg);
           messagesDispatcher({
             type: messageActionTypes.SEND_MESSAGE_SUCCESS,
-            payload: msg,
+            payload: msg as SendableMessageType,
           });
         });
     },
     [currentGroupChannel, onBeforeSendUserMessage],
   );
 
-  return [messageInputRef, sendMessage];
+  return [messageInputRef, sendMessage] as const;
 }

@@ -2,8 +2,9 @@ import { CreateAction } from '../../../../utils/typeHelpers/reducers/createActio
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { CoreMessageType, SendableMessageType } from '../../../../utils';
 import { EmojiContainer } from '@sendbird/chat';
-import { ReactionEvent, UploadableFileInfo } from '@sendbird/chat/message';
+import { ReactionEvent } from '@sendbird/chat/message';
 import { MessageListParams } from '../ChannelProvider';
+import { FileUploadedPayload } from '../hooks/useSendMultipleFilesMessage';
 
 export const RESET_MESSAGES = 'RESET_MESSAGES';
 export const FETCH_INITIAL_MESSAGES_START = 'FETCH_INITIAL_MESSAGES_START';
@@ -71,9 +72,7 @@ type CHANNEL_PAYLOAD_TYPES = {
     channel: GroupChannel;
     event: any;
   };
-  [RESEND_MESSAGE_START]: {
-    reqId: number;
-  };
+  [RESEND_MESSAGE_START]: SendableMessageType;
   [MARK_AS_READ]: {
     channel: null | GroupChannel;
   };
@@ -82,13 +81,7 @@ type CHANNEL_PAYLOAD_TYPES = {
   [SET_EMOJI_CONTAINER]: EmojiContainer;
   [ON_REACTION_UPDATED]: ReactionEvent;
   [MESSAGE_LIST_PARAMS_CHANGED]: MessageListParams;
-  [ON_FILE_INFO_UPLOADED]: {
-    channelUrl: string;
-    requestId: number;
-    index: number;
-    uploadableFileInfo: UploadableFileInfo;
-    error?: unknown;
-  };
+  [ON_FILE_INFO_UPLOADED]: FileUploadedPayload;
 };
 
 type MessageId = number;

@@ -6,7 +6,7 @@ import React, {
   useMemo,
 } from 'react';
 
-import type { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type {
   BaseMessage,
   FileMessageCreateParams,
@@ -43,12 +43,12 @@ import useSendMessageCallback from './hooks/useSendMessageCallback';
 import useSendFileMessageCallback from './hooks/useSendFileMessageCallback';
 import useToggleReactionCallback from './hooks/useToggleReactionCallback';
 import useScrollToMessage from './hooks/useScrollToMessage';
-import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 import { getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
 import { useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
 import { useHandleChannelPubsubEvents } from './hooks/useHandleChannelPubsubEvents';
 import { PublishingModuleType } from '../../internalInterfaces';
+import { ChannelActionTypes } from './dux/actionTypes';
 
 export type MessageListParams = {
   // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
@@ -123,15 +123,15 @@ interface MessageStoreInterface {
 interface SendMessageParams {
   message: string;
   quoteMessage?: SendableMessageType;
-  // mentionedUserIds?: Array<string>;
-  mentionedUsers?: Array<User>;
+  // mentionedUserIds?: string;
+  mentionedUsers?: User[];
   mentionTemplate?: string;
 }
 
-interface UpdateMessageProps {
-  messageId: string | number;
+interface UpdateMessageParams {
+  messageId: number;
   message: string;
-  mentionedUsers?: Array<User>;
+  mentionedUsers?: User[];
   mentionTemplate?: string;
 }
 
@@ -140,7 +140,7 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   isScrolled?: boolean;
   setIsScrolled?: React.Dispatch<React.SetStateAction<boolean>>;
   messageActionTypes: typeof channelActions;
-  messagesDispatcher: CustomUseReducerDispatcher;
+  messagesDispatcher: React.Dispatch<ChannelActionTypes>;
   quoteMessage: SendableMessageType | null;
   setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
   initialTimeStamp: number;
@@ -156,15 +156,13 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   setHighLightedMessageId: React.Dispatch<React.SetStateAction<number>>;
   messageInputRef: React.MutableRefObject<HTMLInputElement>,
   deleteMessage(message: CoreMessageType): Promise<CoreMessageType>,
-  updateMessage(props: UpdateMessageProps, callback?: (err: SendbirdError, message: UserMessage) => void): Promise<CoreMessageType>,
-  resendMessage(failedMessage: SendableMessageType): Promise<SendableMessageType>,
+  updateMessage(props: UpdateMessageParams, callback?: (err: SendbirdError, message: UserMessage) => void): void,
+  resendMessage(failedMessage: SendableMessageType): void,
   // TODO: Good to change interface to using params / This part need refactoring
-  sendMessage: (props: SendMessageParams) => void,
+  sendMessage: (params: SendMessageParams) => void,
   sendFileMessage: (file: File, quoteMessage?: SendableMessageType) => void,
   sendVoiceMessage: (file: File, duration: number, quoteMessage?: SendableMessageType) => void,
   sendMultipleFilesMessage: (files: Array<File>, quoteMessage?: SendableMessageType) => void,
-  // sendMessage(messageParams: SendBird.UserMessageParams): Promise<SendBird.UserMessage>,
-  // sendFileMessage(messageParams: SendBird.FileMessageParams): Promise<SendBird.FileMessage>,
   toggleReaction(message: SendableMessageType, emojiKey: string, isReacted: boolean): void,
   renderUserMentionItem?: (props: { user: User }) => JSX.Element;
 }
@@ -213,12 +211,11 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     isOnline,
     imageCompression,
     isMentionEnabled,
-    isVoiceMessageEnabled,
     onUserProfileMessage,
     markAsReadScheduler,
     groupChannel,
   } = config;
-  const sdk = globalStore?.stores?.sdkStore?.sdk as SendbirdGroupChat;
+  const sdk = globalStore?.stores?.sdkStore?.sdk;
   const sdkInit = globalStore?.stores?.sdkStore?.initialized;
   const globalConfigs = globalStore?.config;
 
@@ -235,10 +232,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   const [quoteMessage, setQuoteMessage] = useState<SendableMessageType>(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  const [messagesStore, messagesDispatcher] = useReducer(
-    messagesReducer,
-    messagesInitialState,
-  ) as [MessageStoreInterface, CustomUseReducerDispatcher];
+  const [messagesStore, messagesDispatcher] = useReducer(messagesReducer, messagesInitialState);
   const scrollRef = useRef(null);
 
   const {
@@ -313,7 +307,6 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     userFilledMessageListQuery,
     hasMoreNext,
     replyType,
-    isVoiceMessageEnabled,
   }, {
     logger,
     messagesDispatcher,

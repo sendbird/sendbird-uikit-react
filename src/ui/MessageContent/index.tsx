@@ -74,7 +74,7 @@ interface Props {
   showEdit?: (bool: boolean) => void;
   showRemove?: (bool: boolean) => void;
   showFileViewer?: (bool: boolean) => void;
-  resendMessage?: (message: SendableMessageType) => Promise<SendableMessageType>;
+  resendMessage?: (message: SendableMessageType) => void;
   deleteMessage?: (message: CoreMessageType) => Promise<CoreMessageType>;
   toggleReaction?: (message: SendableMessageType, reactionKey: string, isReacted: boolean) => void;
   setQuoteMessage?: (message: SendableMessageType) => void;
