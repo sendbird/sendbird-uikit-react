@@ -45,42 +45,40 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
     );
   }
   return (
-    <UserProfileProvider isOpenChannel>
-      <div className='sendbird-openchannel-settings'>
-        {
-          channel?.isOperator(user) && (
-            renderOperatorUI?.() || (
-              <OperatorUI />
-            )
+    <div className='sendbird-openchannel-settings'>
+      {
+        channel?.isOperator(user) && (
+          renderOperatorUI?.() || (
+            <OperatorUI />
           )
-        }
-        {
-          !(channel?.isOperator(user)) && (
-            <div className="sendbird-openchannel-settings__participant">
-              <div className="sendbird-openchannel-settings__header">
-                <Label type={LabelTypography.H_2} color={LabelColors.ONBACKGROUND_1}>
-                  {stringSet.OPEN_CHANNEL_SETTINGS__PARTICIPANTS_TITLE}
-                </Label>
-                <Icon
-                  type={IconTypes.CLOSE}
-                  className="sendbird-openchannel-settings__close-icon"
-                  height="24px"
-                  width="24px"
-                  onClick={() => {
-                    onCloseClick();
-                  }}
-                />
-              </div>
-              {
-                renderParticipantList?.() || (
-                  <ParticipantUI />
-                )
-              }
+        )
+      }
+      {
+        !(channel?.isOperator(user)) && (
+          <div className="sendbird-openchannel-settings__participant">
+            <div className="sendbird-openchannel-settings__header">
+              <Label type={LabelTypography.H_2} color={LabelColors.ONBACKGROUND_1}>
+                {stringSet.OPEN_CHANNEL_SETTINGS__PARTICIPANTS_TITLE}
+              </Label>
+              <Icon
+                type={IconTypes.CLOSE}
+                className="sendbird-openchannel-settings__close-icon"
+                height="24px"
+                width="24px"
+                onClick={() => {
+                  onCloseClick();
+                }}
+              />
             </div>
-          )
-        }
-      </div>
-    </UserProfileProvider>
+            {
+              renderParticipantList?.() || (
+                <ParticipantUI />
+              )
+            }
+          </div>
+        )
+      }
+    </div>
   );
 };
 
