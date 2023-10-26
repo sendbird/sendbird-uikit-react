@@ -1,4 +1,138 @@
 # Changelog - v3
+
+## [v3.7.0] (Oct 23 2023)
+
+### Multiple Files Message
+Now we are supporting Multiple Files Message feature!<br/>
+You can select some **multiple files** in the message inputs, and send **multiple images** in one message.<br/>
+If you select several types of files, only images will be combined in the message and the other files will be sent separately.
+Also we have resolved many issues found during QA.
+
+#### How to enable this feature?
+You can turn it on in four places.
+
+1. App Component
+```tsx
+import App from '@sendbird/uikit-react/App'
+
+<App
+  ...
+  isMultipleFilesMessageEnabled
+/>
+```
+2. SendbirdProvider
+```tsx
+import { SendbirdProvider } from '@sendbird/uikit-react/SendbirdProvider'
+
+<SendbirdProvider
+  ...
+  isMultipleFilesMessageEnabled
+>
+  {...}
+</SendbirdProvider>
+```
+3. Channel
+```tsx
+import Channel from '@sendbird/uikit-react/Channel';
+import { ChannelProvider } from '@sendbird/uikit-react/Channel/context';
+
+<Channel
+  ...
+  isMultipleFilesMessageEnabled
+/>
+<ChannelProvider
+  ...
+  isMultipleFilesMessageEnabled
+>
+  {...}
+</ChannelProvider>
+```
+3. Thread
+```tsx
+import Thread from '@sendbird/uikit-react/Thread';
+import { ThreadProvider } from '@sendbird/uikit-react/Thread/context';
+
+<Thread
+  ...
+  isMultipleFilesMessageEnabled
+/>
+<ThreadProvider
+  ...
+  isMultipleFilesMessageEnabled
+>
+  {...}
+</ThreadProvider>
+```
+
+### Interface change/publish
+* The properties of the `ChannelContext` and `ThreadContext` has been changed little bit.
+  * `allMessages` of the ChannelContext has been divided into `allMessages` and `localMessages`
+  * `allThreadMessages` of the ThreadContext has been divided into `allThreadMessages` and `localThreadMessages`
+  * Each local messages includes `pending` and `failed` messages, and the all messages will contain only `succeeded` messages
+  * **Please keep in mind, you have to migrate to using the local messages, IF you have used the `local messages` to draw your custom message components.**
+* pubSub has been published
+  * `publishingModules` has been added to the payload of pubSub.publish
+    You can specify the particular modules that you propose for event publishing
+  ```tsx
+  import { useCallback } from 'react'
+  import { SendbirdProvider, useSendbirdStateContext } from '@sendbird/uikit-react/SendbirdProvider'
+  import { PUBSUB_TOPICS as topics, PublishingModuleTypes } from '@sendbird/uikit-react/pubSub/topics'
+
+  const CustomApp = () => {
+    const globalState = useSendbirdStateContext();
+    const { stores, config } = globalState;
+    const { sdk, initialized } = stores.sdkStore;
+    const { pubSub } = config;
+
+    const onSendFileMessageOnlyInChannel = useCallback((channel, params) => {
+      channel.sendFileMessage(params)
+        .onPending((pendingMessage) => {
+          pubSub.publish(topics.SEND_MESSAGE_START, {
+            channel,
+            message: pendingMessage,
+            publishingModules: [PublishingModuleTypes.CHANNEL],
+          });
+        })
+        .onFailed((failedMessage) => {
+          pubSub.publish(topics.SEND_MESSAGE_FAILED, {
+            channel,
+            message: failedMessage,
+            publishingModules: [PublishingModuleTypes.CHANNEL],
+          });
+        })
+        .onSucceeded((succeededMessage) => {
+          pubSub.publish(topics.SEND_FILE_MESSAGE, {
+            channel,
+            message: succeededMessage,
+            publishingModules: [PublishingModuleTypes.CHANNEL],
+          });
+        })
+    }, []);
+
+    return (<>...</>)
+  };
+
+  const App = () => (
+    <SendbirdProvider>
+      <CustomApp />
+    </SendbirdProvider>
+  );
+  ```
+
+### Fixes:
+* Improve the pubSub&dispatch logics
+* Allow deleting failed messages
+* Check applicationUserListQuery.isLoading before fetching user list
+  * Fix the error message: "Query in progress."
+* Fix missed or wrong type definitions
+  * `quoteMessage` of ChannelProviderInterface
+  * `useEditUserProfileProviderContext` has been renamed to `useEditUserProfileContext`
+    ```tsx
+    import { useEditUserProfileProviderContext } from '@sendbird/uikit-react/EditUserProfile/context'
+    // to
+    import { useEditUserProfileContext } from '@sendbird/uikit-react/EditUserProfile/context'
+    ```
+
 ## [v3.6.10] (Oct 11 2023)
 ### Fixes:
 * (in Safari) Display the placeholder of the MessageInput when the input text is cleared
