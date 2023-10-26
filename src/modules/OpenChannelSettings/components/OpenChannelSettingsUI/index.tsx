@@ -3,7 +3,6 @@ import './open-channel-ui.scss';
 import React, { useContext } from 'react';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
-import { UserProfileProvider } from '../../../../lib/UserProfileContext';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 
 import InvalidChannel from '../InvalidChannel';
