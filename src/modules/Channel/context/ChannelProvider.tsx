@@ -109,7 +109,9 @@ interface MessageStoreInterface {
   localMessages: CoreMessageType[];
   loading: boolean;
   initialized: boolean;
+  /** @deprecated Please use `unreadSinceDate` instead * */
   unreadSince: string;
+  unreadSinceDate: Date | null;
   isInvalid: boolean;
   currentGroupChannel: Nullable<GroupChannel>;
   hasMorePrev: boolean;
@@ -241,6 +243,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     loading,
     initialized,
     unreadSince,
+    unreadSinceDate,
     isInvalid,
     currentGroupChannel,
     hasMorePrev,
@@ -473,6 +476,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       loading,
       initialized,
       unreadSince,
+      unreadSinceDate,
       isInvalid,
       currentGroupChannel,
       hasMorePrev,

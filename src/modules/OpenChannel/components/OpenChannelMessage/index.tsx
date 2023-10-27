@@ -56,7 +56,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
     updateMessage,
     resendMessage,
   } = useOpenChannelContext();
-  const { dateLocale } = useLocalization();
+  const { dateLocale, stringSet } = useLocalization();
   const editDisabled = currentOpenChannel?.isFrozen;
 
   const globalState = useSendbirdStateContext();
@@ -126,9 +126,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
         (hasSeparator && message?.createdAt) && (
           <DateSeparator>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
-              {format(message?.createdAt, 'MMMM dd, yyyy', {
-                locale: dateLocale,
-              })}
+              {format(message?.createdAt, stringSet.MESSAGE_LIST__DATE_SEPARATOR_FORMAT, { locale: dateLocale })}
             </Label>
           </DateSeparator>
         )

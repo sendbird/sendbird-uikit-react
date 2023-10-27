@@ -11,7 +11,9 @@ const stringSet = {
     // Group Channel - Conversation
     MESSAGE_STATUS__YESTERDAY: 'Yesterday',
     CHANNEL__MESSAGE_LIST__NOTIFICATION__NEW_MESSAGE: 'new message(s) since',
+    /** @deprecated Please use `CHANNEL__MESSAGE_LIST__NOTIFICATION__UNREAD_SINCE_FORMAT` instead * */
     CHANNEL__MESSAGE_LIST__NOTIFICATION__ON: 'on',
+    CHANNEL__MESSAGE_LIST__NOTIFICATION__UNREAD_SINCE_FORMAT: 'p \'on\' MMM dd',
     // Channel List
     CHANNEL_PREVIEW_MOBILE_LEAVE: 'Leave channel',
     // Group Channel - Settings
@@ -99,6 +101,7 @@ const stringSet = {
     UNKNOWN__UNKNOWN_MESSAGE_TYPE: '(Unknown message type)',
     UNKNOWN__CANNOT_READ_MESSAGE: 'Cannot read this message.',
     MESSAGE_EDITED: '(edited)',
+    MESSAGE_LIST__DATE_SEPARATOR_FORMAT: 'MMMM dd, yyyy',
     // Channel - Modal
     MODAL__DELETE_MESSAGE__TITLE: 'Delete this message?',
     MODAL__CHANNEL_INFORMATION__TITLE: 'Edit channel information',

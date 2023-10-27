@@ -8,7 +8,9 @@ export interface ChannelInitialStateType {
   localMessages: (SendableMessageType | CoreMessageType)[];
   loading: boolean;
   initialized: boolean;
+  /** @deprecated Please use `unreadSinceDate` instead. * */
   unreadSince: string;
+  unreadSinceDate: Date | null;
   isInvalid: boolean;
   currentGroupChannel: GroupChannel | null;
   hasMorePrev: boolean;
@@ -39,11 +41,13 @@ const initialState: ChannelInitialStateType = {
   hasMoreNext: false,
   latestMessageTimeStamp: 0,
   emojiContainer: { emojiCategories: [], emojiHash: '' },
+  /** @deprecated Please use `unreadSinceDate` instead. * */
   unreadSince: null,
   /**
-   * unreadSince is a formatted date information string
-   * It's used only for the {unreadSince && <UnreadCount time={unreadSince} />}
+   * unreadSinceDate is a date information about message unread.
+   * It's used only for the {unreadSinceDate && <UnreadCount unreadSinceDate={unreadSinceDate} />}
    */
+  unreadSinceDate: null,
   isInvalid: false,
   readStatus: null,
   messageListParams: null,

@@ -53,7 +53,7 @@ const Message = ({
   renderMessage,
   renderMessageContent,
 }: MessageUIProps): React.ReactElement => {
-  const { dateLocale } = useLocalization();
+  const { dateLocale, stringSet } = useLocalization();
   const globalStore = useSendbirdStateContext();
 
   const {
@@ -229,7 +229,7 @@ const Message = ({
           hasSeparator && (renderedCustomSeparator || (
             <DateSeparator>
               <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
-                {format(message.createdAt, 'MMMM dd, yyyy', {
+                {format(message.createdAt, stringSet.MESSAGE_LIST__DATE_SEPARATOR_FORMAT, {
                   locale: dateLocale,
                 })}
               </Label>
@@ -342,7 +342,7 @@ const Message = ({
         hasSeparator && (renderedCustomSeparator || (
           <DateSeparator>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
-              {format(message.createdAt, 'MMMM dd, yyyy', {
+              {format(message.createdAt, stringSet.MESSAGE_LIST__DATE_SEPARATOR_FORMAT, {
                 locale: dateLocale,
               })}
             </Label>

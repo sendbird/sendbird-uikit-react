@@ -1,15 +1,18 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 
 import './unread-count.scss';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
+import format from 'date-fns/format';
 
 export interface UnreadCountProps {
   className?: string;
   count: number | undefined;
-  time: string;
   onClick(): void;
+  unreadSinceDate?: Date | null;
+  /** @deprecated Please use `unreadSinceDate` instead * */
+  time?: string;
 }
 
 const UnreadCount: React.FC<UnreadCountProps> = ({
@@ -17,10 +20,19 @@ const UnreadCount: React.FC<UnreadCountProps> = ({
   count = 0,
   time = '',
   onClick,
+  unreadSinceDate,
 }: UnreadCountProps) => {
   const { stringSet } = useContext(LocalizationContext);
-  const timeArray = time?.toString?.()?.split(' ') || [];
-  timeArray?.splice(-2, 0, stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__ON);
+
+  const unreadSince = useMemo(() => {
+    if (unreadSinceDate) {
+      return format(unreadSinceDate, stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__UNREAD_SINCE_FORMAT);
+    } else {
+      const timeArray = time?.toString?.()?.split(' ') || [];
+      timeArray?.splice(-2, 0, stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__ON);
+      return timeArray.join(' ');
+    }
+  }, [time, unreadSinceDate]);
 
   return (
     <div
@@ -30,7 +42,7 @@ const UnreadCount: React.FC<UnreadCountProps> = ({
       <Label className="sendbird-notification__text" color={LabelColors.ONCONTENT_1} type={LabelTypography.CAPTION_2}>
         {`${count} `}
         {stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__NEW_MESSAGE}
-        {` ${timeArray.join(' ')}`}
+        {` ${unreadSince}`}
       </Label>
       <Icon
         width="24px"
