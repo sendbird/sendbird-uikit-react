@@ -140,9 +140,6 @@ export default function channelListReducer(
           const { allChannels = [], currentUserId, currentChannel, channelListQuery, disableAutoSelect } = state;
           const { unreadMessageCount } = channel;
 
-          // Do not display the channel when it's created (and not sent a message yet)
-          if (action.type === channelListActions.ON_USER_JOINED && !channel?.lastMessage) return state;
-
           if (channelListQuery) {
             if (filterChannelListParams(channelListQuery, channel, currentUserId)) {
               // Good to [add to/keep in] the ChannelList
