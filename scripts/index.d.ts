@@ -302,6 +302,7 @@ declare module "SendbirdUIKitGlobal" {
     disableMarkAsDelivered?: boolean;
     showSearchIcon?: boolean;
     renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
+    onUserProfileMessage?: (channel: GroupChannel) => void;
     allowProfileEdit?: boolean;
     userListQuery?(): UserListQuery;
     config?: SendbirdProviderConfig;
