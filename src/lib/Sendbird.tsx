@@ -25,7 +25,7 @@ import useAppendDomNode from '../hooks/useAppendDomNode';
 import { VoiceMessageProvider } from './VoiceMessageProvider';
 import { LocalizationProvider } from './LocalizationContext';
 import { MediaQueryProvider, useMediaQueryContext } from './MediaQueryContext';
-import getStringSet from '../ui/Label/stringSet';
+import getStringSet, { StringSet } from '../ui/Label/stringSet';
 import {
   DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT,
   VOICE_RECORDER_DEFAULT_MAX,
@@ -88,7 +88,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
   config?: SendbirdConfig;
   nickname?: string;
   colorSet?: Record<string, string>;
-  stringSet?: Record<string, string>;
+  stringSet?: Partial<StringSet>;
   dateLocale?: Locale;
   profileUrl?: string;
   voiceRecord?: VoiceRecordOptions;
