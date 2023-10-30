@@ -47,6 +47,7 @@ import {
   SBUEventHandlers,
 } from './types';
 import { GlobalModalProvider } from '../hooks/useModal';
+import { RenderUserProfileProps } from '../types';
 
 export { useSendbirdStateContext } from '../hooks/useSendbirdStateContext';
 
@@ -97,7 +98,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
   allowProfileEdit?: boolean;
   disableMarkAsDelivered?: boolean;
   breakpoint?: string | boolean;
-  renderUserProfile?: () => React.ReactElement;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   onUserProfileMessage?: (channel: GroupChannel) => void;
   uikitOptions?: UIKitOptions;
   isUserIdUsedForNickname?: boolean;
