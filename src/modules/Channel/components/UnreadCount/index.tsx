@@ -10,8 +10,8 @@ export interface UnreadCountProps {
   className?: string;
   count: number | undefined;
   onClick(): void;
-  unreadSinceDate?: Date | null;
-  /** @deprecated Please use `unreadSinceDate` instead * */
+  lastReadAt?: Date | null;
+  /** @deprecated Please use `lastReadAt` instead * */
   time?: string;
 }
 
@@ -20,19 +20,20 @@ const UnreadCount: React.FC<UnreadCountProps> = ({
   count = 0,
   time = '',
   onClick,
-  unreadSinceDate,
+  lastReadAt,
 }: UnreadCountProps) => {
   const { stringSet } = useContext(LocalizationContext);
 
   const unreadSince = useMemo(() => {
-    if (unreadSinceDate) {
-      return format(unreadSinceDate, stringSet.DATE_FORMAT__MESSAGE_LIST__NOTIFICATION__UNREAD_SINCE);
-    } else {
+    // TODO: Remove this on v4
+    if (stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__ON !== 'on') {
       const timeArray = time?.toString?.()?.split(' ') || [];
       timeArray?.splice(-2, 0, stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__ON);
       return timeArray.join(' ');
+    } else if (lastReadAt) {
+      return format(lastReadAt, stringSet.DATE_FORMAT__MESSAGE_LIST__NOTIFICATION__UNREAD_SINCE);
     }
-  }, [time, unreadSinceDate]);
+  }, [time, lastReadAt]);
 
   return (
     <div
