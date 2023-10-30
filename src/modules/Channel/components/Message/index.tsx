@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useLayoutEffect,
 } from 'react';
-import type { FileMessage } from '@sendbird/chat/message';
+import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 import format from 'date-fns/format';
 
 import useDidMountEffect from '../../../../utils/useDidMountEffect';
@@ -93,6 +93,7 @@ const Message = ({
     onScrollCallback,
     setIsScrolled,
     sendMessage,
+    localMessages,
   } = useChannelContext();
   const [showEdit, setShowEdit] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
@@ -385,6 +386,8 @@ const Message = ({
       }
       {/** Suggested Replies */}
       {message.messageId === currentGroupChannel?.lastMessage.messageId
+        // the options should appear only when there's no failed or pending messages
+        && localMessages.every(message => (message as UserMessage).sendingStatus === 'succeeded')
         && suggestedReplies.length > 0 && (
           <SuggestedReplies replyOptions={suggestedReplies} onSendMessage={sendMessage} />
       )}
