@@ -27,6 +27,7 @@ import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '..
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
+import SuggestedReplies from '../SuggestedReplies';
 
 type MessageUIProps = {
   message: EveryMessage;
@@ -91,6 +92,7 @@ const Message = ({
     onMessageHighlighted,
     onScrollCallback,
     setIsScrolled,
+    sendMessage,
   } = useChannelContext();
   const [showEdit, setShowEdit] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
@@ -208,6 +210,10 @@ const Message = ({
     }
     return null;
   }, [message, renderCustomSeparator]);
+
+  const suggestedReplies = useMemo(() => {
+    return message.extendedMessagePayload?.suggested_replies as string[] | undefined ?? [];
+  }, [(message.extendedMessagePayload?.suggested_replies as string[] | undefined)?.length]);
 
   if (renderedMessage) {
     return (
@@ -379,6 +385,11 @@ const Message = ({
           />
         )
       }
+      {/** Suggested Replies */}
+      {message.messageId === currentGroupChannel?.lastMessage.messageId
+        && suggestedReplies.length > 0 && (
+          <SuggestedReplies replyOptions={suggestedReplies} onSendMessage={sendMessage} />
+      )}
       {/* Modal */}
       {
         showRemove && (
