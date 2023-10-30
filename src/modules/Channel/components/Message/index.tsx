@@ -229,7 +229,7 @@ const Message = ({
           hasSeparator && (renderedCustomSeparator || (
             <DateSeparator>
               <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
-                {format(message.createdAt, stringSet.MESSAGE_LIST__DATE_SEPARATOR_FORMAT, {
+                {format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, {
                   locale: dateLocale,
                 })}
               </Label>
@@ -342,7 +342,7 @@ const Message = ({
         hasSeparator && (renderedCustomSeparator || (
           <DateSeparator>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
-              {format(message.createdAt, stringSet.MESSAGE_LIST__DATE_SEPARATOR_FORMAT, {
+              {format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, {
                 locale: dateLocale,
               })}
             </Label>

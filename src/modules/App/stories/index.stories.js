@@ -257,8 +257,8 @@ export const Korean = () => fitPageSize(
       MESSAGE_INPUT__PLACE_HOLDER: '메시지 보내기',
       MESSAGE_INPUT__PLACE_HOLDER__DISABLED: '입력이 불가능 합니다',
       MESSAGE_INPUT__PLACE_HOLDER__MUTED: '음소거 되었습니다',
-      MESSAGE_LIST__DATE_SEPARATOR_FORMAT: "yyyy'년' MMMM do '('ccc')'",
-      CHANNEL__MESSAGE_LIST__NOTIFICATION__UNREAD_SINCE_FORMAT: "p '의' MMM dd",
+      DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR: "yyyy'년' MMMM do '('ccc')'",
+      DATE_FORMAT__MESSAGE_LIST__NOTIFICATION__UNREAD_SINCE: "p '의' MMM dd",
     }}
     isMentionEnabled
     isTypingIndicatorEnabledOnChannelList

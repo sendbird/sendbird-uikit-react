@@ -26,7 +26,7 @@ const UnreadCount: React.FC<UnreadCountProps> = ({
 
   const unreadSince = useMemo(() => {
     if (unreadSinceDate) {
-      return format(unreadSinceDate, stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__UNREAD_SINCE_FORMAT);
+      return format(unreadSinceDate, stringSet.DATE_FORMAT__MESSAGE_LIST__NOTIFICATION__UNREAD_SINCE);
     } else {
       const timeArray = time?.toString?.()?.split(' ') || [];
       timeArray?.splice(-2, 0, stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__ON);

@@ -126,7 +126,7 @@ export default function MessagOpenChannelMessageeHoc(props: OpenChannelMessagePr
         (hasSeparator && message?.createdAt) && (
           <DateSeparator>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
-              {format(message?.createdAt, stringSet.MESSAGE_LIST__DATE_SEPARATOR_FORMAT, { locale: dateLocale })}
+              {format(message?.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, { locale: dateLocale })}
             </Label>
           </DateSeparator>
         )
