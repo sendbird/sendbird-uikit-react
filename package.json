@@ -53,8 +53,7 @@
     "stylelint": "stylelint 'src/**'",
     "generate-component": "plop",
     "deploy-storybook": "storybook-to-ghpages",
-    "inspect": "yarn test; yarn lint;",
-    "bundle": "dts-bundle-generator -o ./dist/my.d.ts ./src/index.d.ts"
+    "inspect": "yarn test; yarn lint;"
   },
   "repository": {
     "type": "git",
@@ -111,7 +110,6 @@
     "browserslist": "^4.14.5",
     "caniuse-lite": "^1.0.30001148",
     "css-loader": "^3.4.2",
-    "dts-bundle-generator": "^6.5.0",
     "eslint": "^8.40.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-base": "^15.0.0",

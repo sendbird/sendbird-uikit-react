@@ -3877,7 +3877,6 @@ __metadata:
     css-vars-ponyfill: ^2.3.2
     date-fns: ^2.16.1
     dompurify: ^3.0.1
-    dts-bundle-generator: ^6.5.0
     eslint: ^8.40.0
     eslint-config-airbnb: ^19.0.4
     eslint-config-airbnb-base: ^15.0.0
@@ -9769,18 +9768,6 @@ __metadata:
   version: 8.6.0
   resolution: "dotenv@npm:8.6.0"
   checksum: 38e902c80b0666ab59e9310a3d24ed237029a7ce34d976796349765ac96b8d769f6df19090f1f471b77a25ca391971efde8a1ea63bb83111bd8bec8e5cc9b2cd
-  languageName: node
-  linkType: hard
-
-"dts-bundle-generator@npm:^6.5.0":
-  version: 6.13.0
-  resolution: "dts-bundle-generator@npm:6.13.0"
-  dependencies:
-    typescript: ">=3.0.1"
-    yargs: ^17.2.1
-  bin:
-    dts-bundle-generator: dist/bin/dts-bundle-generator.js
-  checksum: 4c9f51d5bdc7489ef38d8bb62eabfa37d7b48879fdb0c77e8b3d51285b65f5d3175431f46a7879cd0e0a6669c3b2ed436a5d22beccb94c3e530f3a96970435df
   languageName: node
   linkType: hard
 
@@ -20984,16 +20971,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:>=3.0.1":
-  version: 5.0.3
-  resolution: "typescript@npm:5.0.3"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 3cce0576d218cb4277ff8b6adfef1a706e9114a98b4261a38ad658a7642f1b274a8396394f6cbff8c0ba852996d7ed2e233e9b8431d5d55ac7c2f6fea645af02
-  languageName: node
-  linkType: hard
-
 "typescript@npm:^4.7.4":
   version: 4.9.5
   resolution: "typescript@npm:4.9.5"
@@ -21001,16 +20978,6 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: ee000bc26848147ad423b581bd250075662a354d84f0e06eb76d3b892328d8d4440b7487b5a83e851b12b255f55d71835b008a66cbf8f255a11e4400159237db
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@>=3.0.1#~builtin<compat/typescript>":
-  version: 5.0.3
-  resolution: "typescript@patch:typescript@npm%3A5.0.3#~builtin<compat/typescript>::version=5.0.3&hash=85af82"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 5580367025ff7ee1f2a61e5affdbddccfe6e893bc662aa33fefdbf12de7e493173fa7d47475e9e15121828691004c4ed13bcd115e57866baed97b54c60954e1c
   languageName: node
   linkType: hard
 
@@ -22243,7 +22210,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs@npm:^17.2.1, yargs@npm:^17.3.1, yargs@npm:^17.5.1":
+"yargs@npm:^17.3.1, yargs@npm:^17.5.1":
   version: 17.7.1
   resolution: "yargs@npm:17.7.1"
   dependencies:
