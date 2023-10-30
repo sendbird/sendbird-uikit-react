@@ -211,9 +211,7 @@ const Message = ({
     return null;
   }, [message, renderCustomSeparator]);
 
-  const suggestedReplies = useMemo(() => {
-    return message.extendedMessagePayload?.suggested_replies as string[] | undefined ?? [];
-  }, [(message.extendedMessagePayload?.suggested_replies as string[] | undefined)?.length]);
+  const suggestedReplies = message.extendedMessagePayload?.suggested_replies as string[] | undefined ?? [];
 
   if (renderedMessage) {
     return (

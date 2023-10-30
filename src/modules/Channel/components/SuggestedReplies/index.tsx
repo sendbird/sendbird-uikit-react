@@ -24,12 +24,12 @@ const SuggestedReplies = ({ replyOptions, onSendMessage }: Props) => {
 
   return (
     <div className="sendbird-suggested-replies">
-      {replyOptions.map((option: string) => {
+      {replyOptions.map((option: string, index: number) => {
         return (
           <div
             className="sendbird-suggested-replies__option"
             id={option}
-            key={option}
+            key={index + option}
             onClick={(e) => onClickReply(e, option)}
           >
             {option}
