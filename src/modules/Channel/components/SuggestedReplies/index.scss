@@ -1,0 +1,43 @@
+@import '../../../../styles/variables';
+
+.sendbird-suggested-replies {
+  @include themed() {
+    font-family: var(--sendbird-font-family-default);
+  }
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  column-gap: 10px;
+  row-gap: 8px;
+  margin-top: 16px;
+  flex-direction: column;
+}
+
+.sendbird-suggested-replies__option {
+  white-space: nowrap;
+  height: 32px;
+  font-size: 12px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  border-radius: 18px;
+  cursor: pointer;
+  @include themed() {
+    color: t(primary--3-2);
+    border: 1px solid t(primary--3-2);
+    background-color: t(bg-0);
+  }
+  &:hover {
+    @include themed() {
+      background-color: t(bg-1);
+    }
+  }
+  &:active {
+    @include themed() {
+      background-color: t(primary--3-2);
+      color: t(bg-0);
+    }
+  }
+}

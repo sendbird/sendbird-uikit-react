@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useLayoutEffect,
 } from 'react';
-import type { FileMessage } from '@sendbird/chat/message';
+import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 import format from 'date-fns/format';
 
 import useDidMountEffect from '../../../../utils/useDidMountEffect';
@@ -27,6 +27,7 @@ import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '..
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
+import SuggestedReplies from '../SuggestedReplies';
 
 type MessageUIProps = {
   message: EveryMessage;
@@ -91,6 +92,8 @@ const Message = ({
     onMessageHighlighted,
     onScrollCallback,
     setIsScrolled,
+    sendMessage,
+    localMessages,
   } = useChannelContext();
   const [showEdit, setShowEdit] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
@@ -208,6 +211,8 @@ const Message = ({
     }
     return null;
   }, [message, renderCustomSeparator]);
+
+  const suggestedReplies = message.extendedMessagePayload?.suggested_replies as string[] | undefined ?? [];
 
   if (renderedMessage) {
     return (
@@ -379,6 +384,13 @@ const Message = ({
           />
         )
       }
+      {/** Suggested Replies */}
+      {message.messageId === currentGroupChannel?.lastMessage.messageId
+        // the options should appear only when there's no failed or pending messages
+        && localMessages.every(message => (message as UserMessage).sendingStatus === 'succeeded')
+        && suggestedReplies.length > 0 && (
+          <SuggestedReplies replyOptions={suggestedReplies} onSendMessage={sendMessage} />
+      )}
       {/* Modal */}
       {
         showRemove && (
