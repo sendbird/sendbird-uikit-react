@@ -12,7 +12,7 @@ import useDidMountEffect from '../../../../utils/useDidMountEffect';
 import SuggestedMentionList from '../SuggestedMentionList';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelContext } from '../../context/ChannelProvider';
-import { getClassName } from '../../../../utils';
+import { getClassName, getSuggestedReplies } from '../../../../utils';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../context/utils';
 import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT } from '../../context/const';
 
@@ -212,8 +212,6 @@ const Message = ({
     return null;
   }, [message, renderCustomSeparator]);
 
-  const suggestedReplies = message.extendedMessagePayload?.suggested_replies as string[] | undefined ?? [];
-
   if (renderedMessage) {
     return (
       <div
@@ -388,8 +386,8 @@ const Message = ({
       {message.messageId === currentGroupChannel?.lastMessage?.messageId
         // the options should appear only when there's no failed or pending messages
         && localMessages.every(message => (message as UserMessage).sendingStatus === 'succeeded')
-        && suggestedReplies.length > 0 && (
-          <SuggestedReplies replyOptions={suggestedReplies} onSendMessage={sendMessage} />
+        && getSuggestedReplies(message).length > 0 && (
+          <SuggestedReplies replyOptions={getSuggestedReplies(message)} onSendMessage={sendMessage} />
       )}
       {/* Modal */}
       {
