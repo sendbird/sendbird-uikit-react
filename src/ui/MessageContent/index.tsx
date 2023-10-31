@@ -55,8 +55,9 @@ import { noop } from '../../utils/utils';
 import MultipleFilesMessageItemBody from '../MultipleFilesMessageItemBody';
 import { useThreadMessageKindKeySelector } from '../../modules/Channel/context/hooks/useThreadMessageKindKeySelector';
 import { useStatefulFileInfoList } from '../../modules/Channel/context/hooks/useStatefulFileInfoList';
+import MessageProfile from '../MessageProfile';
 
-interface Props {
+export interface MessageContentProps {
   className?: string | Array<string>;
   userId: string;
   channel: Nullable<GroupChannel>;
@@ -82,32 +83,34 @@ interface Props {
   onQuoteMessageClick?: (props: { message: SendableMessageType }) => void;
   onMessageHeightChange?: () => void;
 }
-export default function MessageContent({
-  className,
-  userId,
-  channel,
-  message,
-  disabled = false,
-  chainTop = false,
-  chainBottom = false,
-  isReactionEnabled = false,
-  disableQuoteMessage = false,
-  replyType,
-  threadReplySelectType,
-  nicknamesMap,
-  emojiContainer,
-  scrollToMessage,
-  showEdit,
-  showRemove,
-  showFileViewer,
-  resendMessage,
-  deleteMessage,
-  toggleReaction,
-  setQuoteMessage,
-  onReplyInThread,
-  onQuoteMessageClick,
-  onMessageHeightChange,
-}: Props): ReactElement {
+export default function MessageContent(props: MessageContentProps): ReactElement {
+  const {
+    className,
+    userId,
+    channel,
+    message,
+    disabled = false,
+    chainTop = false,
+    chainBottom = false,
+    isReactionEnabled = false,
+    disableQuoteMessage = false,
+    replyType,
+    threadReplySelectType,
+    nicknamesMap,
+    emojiContainer,
+    scrollToMessage,
+    showEdit,
+    showRemove,
+    showFileViewer,
+    resendMessage,
+    deleteMessage,
+    toggleReaction,
+    setQuoteMessage,
+    onReplyInThread,
+    onQuoteMessageClick,
+    onMessageHeightChange,
+  } = props;
+
   const messageTypes = getUIKitMessageTypes();
   const { dateLocale } = useLocalization();
   const { config, eventHandlers } = useSendbirdStateContext?.() || {};
@@ -173,77 +176,16 @@ export default function MessageContent({
       onMouseLeave={() => setMouseHover(false)}
     >
       {/* left */}
-      <div className={getClassName(['sendbird-message-content__left', isReactionEnabledClassName, isByMeClassName, useReplyingClassName])}>
-        {(!isByMe && !chainBottom && isSendableMessage(message)) && (
-          /** user profile */
-          <ContextMenu
-            menuTrigger={(toggleDropdown: () => void): ReactElement => (
-              <Avatar
-                className={`sendbird-message-content__left__avatar ${displayThreadReplies ? 'use-thread-replies' : ''}`}
-                // @ts-ignore
-                src={channel?.members?.find((member) => member?.userId === message.sender.userId)?.profileUrl || message.sender.profileUrl || ''}
-                // TODO: Divide getting profileUrl logic to utils
-                ref={avatarRef}
-                width="28px"
-                height="28px"
-                onClick={(): void => { if (!disableUserProfile) toggleDropdown(); }}
-              />
-            )}
-            menuItems={(closeDropdown: () => void): ReactElement => (
-              <MenuItems
-                /**
-                * parentRef: For catching location(x, y) of MenuItems
-                * parentContainRef: For toggling more options(menus & reactions)
-                */
-                parentRef={avatarRef}
-                parentContainRef={avatarRef}
-                closeDropdown={closeDropdown}
-                style={{ paddingTop: '0px', paddingBottom: '0px' }}
-              >
-                {renderUserProfile
-                  ? renderUserProfile({ user: message.sender, close: closeDropdown, currentUserId: userId })
-                  : (<UserProfile user={message.sender} onSuccess={closeDropdown} />)
-                }
-              </MenuItems>
-            )}
-          />
-        )}
-        {/* outgoing menu */}
-        {isByMe && !isMobile && (
-          <div className={getClassName(['sendbird-message-content-menu', isReactionEnabledClassName, supposedHoverClassName, isByMeClassName])}>
-            <MessageItemMenu
-              className="sendbird-message-content-menu__normal-menu"
-              channel={channel}
-              message={message as SendableMessageType}
-              isByMe={isByMe}
-              replyType={replyType}
-              disabled={disabled}
-              showEdit={showEdit}
-              showRemove={showRemove}
-              resendMessage={resendMessage}
-              setQuoteMessage={setQuoteMessage}
-              setSupposedHover={setSupposedHover}
-              onReplyInThread={({ message }) => {
-                if (threadReplySelectType === ThreadReplySelectType.THREAD) {
-                  onReplyInThread({ message });
-                } else if (threadReplySelectType === ThreadReplySelectType.PARENT) {
-                  scrollToMessage(message.parentMessage?.createdAt, message.parentMessageId);
-                }
-              }}
-            />
-            {isReactionEnabledInChannel && (
-              <MessageItemReactionMenu
-                className="sendbird-message-content-menu__reaction-menu"
-                message={message as SendableMessageType}
-                userId={userId}
-                emojiContainer={emojiContainer}
-                toggleReaction={toggleReaction}
-                setSupposedHover={setSupposedHover}
-              />
-            )}
-          </div>
-        )}
-      </div>
+      <MessageProfile
+        message={message}
+        channel={channel}
+        messageContentProps={props}
+        messageProfileClassNameProps={{
+          profileContainerClassName: getClassName(['sendbird-message-content__left', isReactionEnabledClassName, useReplyingClassName]),
+          profileAvatarClassName: `sendbird-message-content__left__avatar ${displayThreadReplies ? 'use-thread-replies' : ''}`,
+          profileMenuClassName: getClassName(['sendbird-message-content-menu', isReactionEnabledClassName, supposedHoverClassName]),
+        }}
+      />
       {/* middle */}
       <div
         className={'sendbird-message-content__middle'}
