@@ -225,6 +225,19 @@ function useHandleChannelEvents({
             }
           }
         },
+        onTypingStatusUpdated: (channel) => {
+          if (compareIds(channel?.url, channelUrl)) {
+            logger.info('Channel | onTypingStatusUpdated', { channel });
+            const typingMembers = channel.getTypingUsers();
+            messagesDispatcher({
+              type: messageActions.ON_TYPING_STATUS_UPDATED,
+              payload: {
+                channel,
+                typingMembers,
+              },
+            });
+          }
+        },
       };
       logger.info('Channel | useHandleChannelEvents: Setup event handler', { channelHandlerId, channelHandler });
       // Add this group channel handler to the Sendbird chat instance

@@ -1,5 +1,5 @@
 import { EmojiContainer } from '@sendbird/chat';
-import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import {
   ChannelStateTypes,
   ParentMessageStateTypes,
@@ -21,6 +21,7 @@ export interface ThreadContextInitialState {
   isMuted: boolean;
   isChannelFrozen: boolean;
   currentUserId: string;
+  typingMembers: Member[];
 }
 
 const initialState: ThreadContextInitialState = {
@@ -37,6 +38,7 @@ const initialState: ThreadContextInitialState = {
   isMuted: false,
   isChannelFrozen: false,
   currentUserId: '',
+  typingMembers: [],
 };
 
 export default initialState;

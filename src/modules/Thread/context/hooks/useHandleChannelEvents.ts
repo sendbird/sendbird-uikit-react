@@ -4,6 +4,8 @@ import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdStat
 import uuidv4 from '../../../../utils/uuid';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import { SdkStore } from '../../../../lib/types';
+import compareIds from '../../../../utils/compareIds';
+import * as messageActions from '../../../Channel/context/dux/actionTypes';
 
 interface DynamicProps {
   sdk: SdkStore['sdk'];
@@ -114,6 +116,19 @@ export default function useHandleChannelEvents({
             type: ThreadContextActionTypes.ON_OPERATOR_UPDATED,
             payload: { channel, users },
           });
+        },
+        onTypingStatusUpdated: (channel) => {
+          if (compareIds(channel?.url, currentChannel.url)) {
+            logger.info('Channel | onTypingStatusUpdated', { channel });
+            const typingMembers = channel.getTypingUsers();
+            threadDispatcher({
+              type: messageActions.ON_TYPING_STATUS_UPDATED,
+              payload: {
+                channel,
+                typingMembers,
+              },
+            });
+          }
         },
       };
       const channelHandler = new GroupChannelHandler(channelHandlerParams);
