@@ -58,6 +58,7 @@ const MessageList: React.FC<MessageListProps> = ({
     loading,
     isScrolled,
     unreadSince,
+    unreadSinceDate,
   } = useChannelContext();
 
   const store = useSendbirdStateContext();
@@ -244,11 +245,12 @@ const MessageList: React.FC<MessageListProps> = ({
         {currentGroupChannel?.isFrozen && (
           <FrozenNotification className="sendbird-conversation__messages__notification" />
         )}
-        {unreadSince && (
+        {(unreadSince || unreadSinceDate) && (
           <UnreadCount
             className="sendbird-conversation__messages__notification"
             count={currentGroupChannel?.unreadMessageCount}
             time={unreadSince}
+            lastReadAt={unreadSinceDate}
             onClick={() => {
               if (scrollRef?.current?.scrollTop) {
                 scrollRef.current.scrollTop = (scrollRef?.current?.scrollHeight ?? 0) - (scrollRef?.current?.offsetHeight ?? 0);

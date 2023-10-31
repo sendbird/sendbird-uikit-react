@@ -48,7 +48,7 @@ export default function ThreadListItem({
     logger,
   } = config;
   const userId = stores?.userStore?.user?.userId;
-  const { dateLocale } = useLocalization();
+  const { dateLocale, stringSet } = useLocalization();
   const threadContext = useThreadContext?.();
   const {
     currentChannel,
@@ -226,7 +226,7 @@ export default function ThreadListItem({
               type={LabelTypography.CAPTION_2}
               color={LabelColors.ONBACKGROUND_2}
             >
-              {format(message?.createdAt, 'MMM dd, yyyy', { locale: dateLocale })}
+              {format(message?.createdAt, stringSet.DATE_FORMAT__THREAD_LIST__DATE_SEPARATOR, { locale: dateLocale })}
             </Label>
           </DateSeparator>
         ))

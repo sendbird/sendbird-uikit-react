@@ -208,7 +208,7 @@ export default function channelReducer(
       const { channel, message } = action.payload;
       const { members } = channel;
       const { sender } = message;
-      const { currentGroupChannel, unreadSince } = state;
+      const { currentGroupChannel } = state;
 
       const currentGroupChannelUrl = currentGroupChannel?.url;
 
@@ -257,9 +257,8 @@ export default function channelReducer(
       return {
         ...state,
         currentGroupChannel: channel,
-        unreadSince: state?.unreadSince
-          ? unreadSince
-          : format(new Date(), 'p MMM dd'),
+        unreadSince: state.unreadSince ?? format(new Date(), 'p MMM dd'),
+        unreadSinceDate: state.unreadSinceDate ?? new Date(),
         allMessages: passUnsuccessfullMessages(state.allMessages, message),
       };
     })
@@ -334,6 +333,7 @@ export default function channelReducer(
       return {
         ...state,
         unreadSince: null,
+        unreadSinceDate: null,
       };
     })
     .with({ type: channelActions.ON_MESSAGE_DELETED }, (action) => {
