@@ -5,8 +5,8 @@ import type {
 } from '@sendbird/chat';
 
 import { FailedMessageHandler, MessageHandler, UserMessage, UserMessageCreateParams } from '@sendbird/chat/message';
-import { GroupChannel, GroupChannelCreateParams, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
-import { OpenChannel, OpenChannelCreateParams, SendbirdOpenChat } from '@sendbird/chat/openChannel';
+import { GroupChannel, GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
+import { OpenChannel, OpenChannelCreateParams } from '@sendbird/chat/openChannel';
 import { FileMessage, FileMessageCreateParams, SendableMessage, UserMessageUpdateParams } from '@sendbird/chat/lib/__definition';
 
 import {
@@ -57,7 +57,7 @@ import { SendableMessageType } from '../utils';
 /**
  * const sdk = selectors.getSdk(state);
  */
-export const getSdk = (state: SendBirdState): SendbirdGroupChat & SendbirdOpenChat => {
+export const getSdk = (state: SendBirdState) => {
   const { stores = {} } = state;
   const { sdkStore = {} } = stores as SendBirdStateStore;
   const { sdk } = sdkStore as SdkStore;

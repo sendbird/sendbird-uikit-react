@@ -33,6 +33,7 @@ export default function TextFragment({
             <span className="sendbird-word" key={key}>
               <MentionLabel
                 mentionTemplate={USER_MENTION_PREFIX}
+                // @ts-ignore
                 mentionedUserId={token.userId}
                 mentionedUserNickname={token.value}
                 isByMe={isByMe}

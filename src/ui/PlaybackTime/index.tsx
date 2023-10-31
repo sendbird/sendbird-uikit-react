@@ -1,12 +1,13 @@
 import React from 'react';
 
 import Label, { LabelTypography, LabelColors } from '../Label';
+import { ObjectValues } from '../../utils/typeHelpers/objectValues';
 
 export interface PlaybackTimeProps {
   className?: string;
   time: number;// millisec
-  labelType?: string;
-  labelColor?: string;
+  labelType?: ObjectValues<typeof LabelTypography>;
+  labelColor?: ObjectValues<typeof LabelColors>;
 }
 
 export const PlaybackTime = ({

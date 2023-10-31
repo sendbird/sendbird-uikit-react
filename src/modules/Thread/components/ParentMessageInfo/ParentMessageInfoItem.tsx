@@ -35,6 +35,7 @@ import MultipleFilesMessageItemBody, { ThreadMessageKind } from '../../../../ui/
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import { useThreadMessageKindKeySelector } from '../../../Channel/context/hooks/useThreadMessageKindKeySelector';
 import { useStatefulFileInfoList } from '../../../Channel/context/hooks/useStatefulFileInfoList';
+import { Colors } from '../../../../utils/color';
 
 export interface ParentMessageInfoItemProps {
   className?: string;
@@ -193,7 +194,7 @@ export default function ParentMessageInfoItem({
             <TextButton
               className="sendbird-parent-message-info-item__file-message__file-name"
               onClick={() => { window.open((message as FileMessage)?.url); }}
-              color={LabelColors.ONBACKGROUND_1}
+              color={Colors.ONBACKGROUND_1}
             >
               <Label
                 className="sendbird-parent-message-info-item__file-message__file-name__text"

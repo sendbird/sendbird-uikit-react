@@ -6,7 +6,7 @@ interface DynamicParams {
 }
 
 interface StaticParams {
-  messageSearchDispatcher: ({ type: string, payload: any }) => void;
+  messageSearchDispatcher: (param: { type: string, payload: any }) => void;
 }
 
 const DEBOUNCING_TIME = 500;

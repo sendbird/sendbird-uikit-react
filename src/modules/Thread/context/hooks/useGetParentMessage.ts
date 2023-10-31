@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import { SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { BaseMessage, MessageRetrievalParams } from '@sendbird/chat/message';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import { ChannelType } from '@sendbird/chat';
+import { SdkStore } from '../../../../lib/types';
 
 interface DynamicProps {
   channelUrl: string;
@@ -13,7 +13,7 @@ interface DynamicProps {
 }
 
 interface StaticProps {
-  sdk: SendbirdGroupChat;
+  sdk: SdkStore['sdk'];
   logger: Logger;
   threadDispatcher: CustomUseReducerDispatcher;
 }
@@ -51,6 +51,7 @@ export default function useGetParentMessage({
       fetchParentMessage()
         .then((parentMsg) => {
           logger.info('Thread | useGetParentMessage: Get parent message succeeded.', parentMessage);
+          // @ts-ignore
           parentMsg.ogMetaData = parentMessage?.ogMetaData || null;// ogMetaData is not included for now
           threadDispatcher({
             type: ThreadContextActionTypes.GET_PARENT_MESSAGE_SUCCESS,

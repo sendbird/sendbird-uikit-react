@@ -1,14 +1,13 @@
 import { useEffect } from 'react';
-import SendbirdChat from '@sendbird/chat';
-import { SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
 import { Logger } from '../../../../lib/SendbirdState';
 import OpenChannelListActionTypes from '../dux/actionTypes';
 import { OpenChannelListDispatcherType, UserFilledOpenChannelListQuery } from '../OpenChannelListInterfaces';
 import createChannelListQuery from './createChannelListQuery';
+import { SdkStore } from '../../../../lib/types';
 
 interface DynamicParams {
-  sdk: SendbirdChat & SendbirdOpenChat;
+  sdk: SdkStore['sdk'];
   sdkInitialized: boolean;
   openChannelListQuery: UserFilledOpenChannelListQuery;
 }

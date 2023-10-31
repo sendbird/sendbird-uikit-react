@@ -22,6 +22,7 @@ export type SpaceFromTriggerType = {
 export interface UserListQuery {
   hasNext?: boolean;
   next(): Promise<Array<User>>;
+  get isLoading(): boolean;
 }
 
 export interface RenderUserProfileProps {

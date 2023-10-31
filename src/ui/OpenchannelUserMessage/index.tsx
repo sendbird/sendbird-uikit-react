@@ -202,7 +202,7 @@ export default function OpenchannelUserMessage({
                   key={uuidv4()}
                   type={LabelTypography.BODY_1}
                   color={LabelColors.ONBACKGROUND_2}
-                  calssName="sendbird-openchannel-user-message-word"
+                  className="sendbird-openchannel-user-message-word"
                 >
                   {` ${stringSet.MESSAGE_EDITED} `}
                 </Label>

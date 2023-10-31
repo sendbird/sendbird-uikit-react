@@ -2,7 +2,6 @@ import React, { useEffect, useState, useContext } from 'react';
 import {
   GroupChannelHandler,
   Member,
-  SendbirdGroupChat,
 } from '@sendbird/chat/groupChannel';
 
 import { LocalizationContext } from '../../../lib/LocalizationContext';
@@ -15,27 +14,31 @@ export interface TypingIndicatorTextProps {
   members: Member[];
 }
 
-export const TypingIndicatorText: React.FC<TypingIndicatorTextProps> = ({ members }: TypingIndicatorTextProps) => {
-  const { stringSet } = useContext(LocalizationContext);
-  if (!members || members.length === 0) {
-    return '';
+export const TypingIndicatorText = ({ members }: TypingIndicatorTextProps) => {
+  function getText() {
+    const { stringSet } = useContext(LocalizationContext);
+    if (!members || members.length === 0) {
+      return '';
+    }
+
+    if (members && members.length === 1) {
+      return `${members[0].nickname} ${stringSet.TYPING_INDICATOR__IS_TYPING}`;
+    }
+
+    if (members && members.length === 2) {
+      return `${members[0].nickname} ${stringSet.TYPING_INDICATOR__AND} ${members[1].nickname} ${stringSet.TYPING_INDICATOR__ARE_TYPING}`;
+    }
+
+    return stringSet.TYPING_INDICATOR__MULTIPLE_TYPING;
   }
 
-  if (members && members.length === 1) {
-    return `${members[0].nickname} ${stringSet.TYPING_INDICATOR__IS_TYPING}`;
-  }
-
-  if (members && members.length === 2) {
-    return `${members[0].nickname} ${stringSet.TYPING_INDICATOR__AND} ${members[1].nickname} ${stringSet.TYPING_INDICATOR__ARE_TYPING}`;
-  }
-
-  return stringSet.TYPING_INDICATOR__MULTIPLE_TYPING;
+  return <>{getText()}</>;
 };
 
 const TypingIndicator: React.FC = () => {
   const { channelUrl } = useChannelContext();
   const globalStore = useSendbirdStateContext();
-  const sb = globalStore?.stores?.sdkStore?.sdk as SendbirdGroupChat;
+  const sb = globalStore?.stores?.sdkStore?.sdk;
   const logger = globalStore?.config?.logger;
   const [handlerId, setHandlerId] = useState(uuidv4());
   const [typingMembers, setTypingMembers] = useState<Member[]>([]);

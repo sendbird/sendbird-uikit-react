@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 import './index.scss';
 
 import { noop } from '../../utils/utils';
-import { MODAL_ROOT } from '../../hooks/useModal';
+import { MODAL_ROOT } from '../../hooks/useModal/ModalRoot';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 

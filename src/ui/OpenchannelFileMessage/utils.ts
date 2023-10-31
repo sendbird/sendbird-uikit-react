@@ -1,6 +1,6 @@
 import { IconTypes } from '../Icon';
 
-export const checkFileType = (fileUrl: string): string => {
+export const checkFileType = (fileUrl: string) => {
   const audioFile = /(\.mp3)$/i;
   const gifFile = /(\.gif)$/i;
   if (audioFile.test(fileUrl)) {

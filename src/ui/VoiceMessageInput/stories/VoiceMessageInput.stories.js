@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import VoiceMessageInput from '../index';
+import { VoiceMessageInput } from '../index';
 import { VoiceMessageInputStatus } from '../types';
 
 const description = `

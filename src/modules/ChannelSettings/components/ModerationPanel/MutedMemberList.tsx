@@ -105,6 +105,7 @@ export const MutedMemberList = (): ReactElement => {
                         }}
                         dataSbId="channel_setting_muted_member_context_menu_unmute"
                       >
+                        {/* @ts-ignore */}
                         {stringSet?.CHANNEL_SETTING__UNMUTE || stringSet.CHANNEL_SETTING__MODERATION__UNMUTE}
                       </MenuItem>
                     </MenuItems>

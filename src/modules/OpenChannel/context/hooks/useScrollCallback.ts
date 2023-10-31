@@ -1,9 +1,10 @@
 import { useCallback } from 'react';
 import type { MessageListParams } from '@sendbird/chat/message';
-import type { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
+import type { OpenChannel } from '@sendbird/chat/openChannel';
 
 import type { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
+import { SdkStore } from '../../../../lib/types';
 
 interface DynamicParams {
   currentOpenChannel: OpenChannel;
@@ -11,7 +12,7 @@ interface DynamicParams {
   fetchMore?: boolean;
 }
 interface StaticParams {
-  sdk: SendbirdOpenChat;
+  sdk: SdkStore['sdk'];
   logger: Logger;
   messagesDispatcher: CustomUseReducerDispatcher;
   hasMore: boolean;

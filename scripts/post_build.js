@@ -3,50 +3,57 @@
  */
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 const packageJson = require('../package.json');
 const packageTemplate = require('./package.template.json');
+const moduleExports = import('../rollup.module-exports.mjs');
 
-const { version } = packageJson;
-const getDistPath = (subPath) => path.resolve(__dirname, subPath != null ? `../dist${subPath}` : '../dist');
-
-function appendVersionToTypeDefn() {
-  const indexDtsPath = path.resolve(getDistPath(), 'index.d.ts');
-  const indexDts = fs.readFileSync(indexDtsPath, 'utf8');
-  const indexDtsWithVersion = indexDts.replace(
-    'Type Definitions for @sendbird/uikit-react@{{ version }}',
-    `Type Definitions for @sendbird/uikit-react@${version}`,
-  );
-
-  fs.writeFileSync(indexDtsPath, indexDtsWithVersion);
-}
+const getDistPath = (subPath) =>
+  path.resolve(__dirname, subPath != null ? `../dist${subPath}` : '../dist');
 
 /**
  * Remove all the unnecessary fields from package.json in root of the project
  */
-function cleanupPackageJSON(json) {
-  /**
-   * We remove scripts, module, main, types, and private fields from package.json
-   * Becuase folder structure is different in dist
-   * And, we don't want to run obligatory scripts in dist
-  */
-  const cleanedPkgJSON = {
-    version: json.version,
+async function createPackageJSON(json) {
+  const exportList = (await moduleExports).default;
+
+  const typesVersions = { '*': {} };
+  const exports = {
+    './package.json': './package.json',
+    './dist/index.css': './dist/index.css',
+  };
+
+  Object.entries(exportList).forEach(([module, filePath]) => {
+    const dtsPath = `./${filePath
+      .replace('src', 'types')
+      .replace(/\.tsx?$/, '.d.ts')}`;
+
+    typesVersions['*'][module === 'index' ? '.' : module] = [dtsPath];
+    exports[module === 'index' ? '.' : `./${module}`] = {
+      types: dtsPath,
+      require: `./cjs/${module}.js`,
+      import: `./${module}.js`,
+      default: `./${module}.js`,
+    };
+  });
+  return {
     ...packageTemplate,
+    version: json.version,
     peerDependencies: json.peerDependencies,
     dependencies: json.dependencies,
-    devDependencies: json.devDependencies,
     browserslist: json.browserslist,
+    exports,
+    typesVersions,
   };
-  return cleanedPkgJSON;
 }
 
-function movePackageJSON() {
+async function movePackageJSON() {
   const packageJSONDistPath = path.resolve(getDistPath(), 'package.json');
-  const cleanedUpPackageJSON = cleanupPackageJSON(packageJson);
+  const cleanedUpPackageJSON = await createPackageJSON(packageJson);
   fs.writeFileSync(
     packageJSONDistPath,
     JSON.stringify(cleanedUpPackageJSON, null, 2),
-    { flag: 'w' },
+    { flag: 'w' }
   );
 }
 
@@ -54,19 +61,23 @@ function copyCJSPackageJSON() {
   const packageJSONDistPath = path.resolve(getDistPath('/cjs'), 'package.json');
   fs.writeFileSync(
     packageJSONDistPath,
-    JSON.stringify({
-      main: 'index.js',
-      type: 'commonjs',
-      typings: '../index.d.ts',
-    }, null, 2),
-    { flag: 'w' },
+    JSON.stringify({ type: 'commonjs' }, null, 2),
+    { flag: 'w' }
   );
 }
 
+function removeUnusedCSS() {
+  execSync('rm -rf dist/cjs/dist', { stdio: 'inherit' });
+}
 
-/** Add version information to index.d.ts in dist */
-appendVersionToTypeDefn();
+function buildTypeDefinitions() {
+  execSync('tsc --project tsconfig.json --emitDeclarationOnly --declarationDir dist/types --declaration', { stdio: 'inherit' });
+}
+
 /** Copy content of package.json to dist, but remove unnecessary fields */
 movePackageJSON();
 /** Copy content of package.json to dist/cjs, to support cjs module separately */
 copyCJSPackageJSON();
+
+removeUnusedCSS();
+buildTypeDefinitions();

@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import * as messageActionTypes from '../../dux/actionTypes';
-import { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { Logger } from '../../../../lib/SendbirdState';
+import { SdkStore } from '../../../../lib/types';
 
 export type DynamicProps = {
   activeChannelUrl?: string;
   channels?: GroupChannel[];
-  sdk?: SendbirdGroupChat;
+  sdk?: SdkStore['sdk'];
 };
 
 export type StaticProps = {

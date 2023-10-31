@@ -13,8 +13,6 @@ We are introducing a new version of the Sendbird Chat UIKit. Version 3 features 
 or if you're using yarn
 `yarn add @sendbird/uikit-react`
 
-For typescript projects, add `node_modules/@sendbird/uikit-react/index.d.ts` to your `include` section in tsconfig file to get type definitions
-
 ## Getting Started
 
 With Sendbird UI Kit React, we export these components:
@@ -122,13 +120,6 @@ yarn run lint
 ```
 * .eslintrc.json lints ts files and .eslintrc.js lints js files
 
-
-### Typescript
-
-* We are trying to progressively move our source code to typescript - which means older JS code and newly written TS code will coxist while we migrate older JS code to TS
-* .eslintrc.json lints ts files and .eslintrc.js lints js files
-* Type definition file can be `scripts/index.d.ts` which will be copied to `/dist` directory
-
 ### Webpack 5
 
 Webpack 5 removes stream and buffer componets from default polyfill
@@ -161,7 +152,6 @@ To read more: https://webpack.js.org/configuration/resolve/#resolvefallback
     'NewComponent/SubComponent': 'location/of/NewComponent/SubComponent',
     ```
     - This component can be imported by the consumer as: `import SubComponent from '@sendbird/uikit-react/NewComponent/SubComponent';`
-4. Add type definitions to `scripts/index.d.ts`.
 
 ### Scaffolding New Components
 

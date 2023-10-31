@@ -1,5 +1,5 @@
-import SendbirdChat from '@sendbird/chat';
 import { CreateAction } from '../../../utils/typeHelpers/reducers/createAction';
+import { SdkStoreStateType } from './initialState';
 
 export const SDK_ACTIONS = {
   INIT_SDK: 'INIT_SDK',
@@ -10,7 +10,7 @@ export const SDK_ACTIONS = {
 
 type SDK_PAYLOAD_TYPES = {
   [SDK_ACTIONS.SET_SDK_LOADING]: boolean,
-  [SDK_ACTIONS.INIT_SDK]: SendbirdChat,
+  [SDK_ACTIONS.INIT_SDK]: SdkStoreStateType['sdk'],
   [SDK_ACTIONS.SDK_ERROR]: null,
   [SDK_ACTIONS.RESET_SDK]: null,
 };

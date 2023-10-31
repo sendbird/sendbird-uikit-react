@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import { SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
+import { SdkStore } from '../../../../lib/types';
 
 interface DanamicPrpos {
-  sdk: SendbirdGroupChat;
+  sdk: SdkStore['sdk'];
 }
 interface StaticProps {
   logger: Logger;

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { GroupChannel, GroupChannelHandler, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import { GroupChannel, GroupChannelHandler } from '@sendbird/chat/groupChannel';
 
 import { scrollIntoLast } from '../utils';
 
@@ -10,6 +10,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { SendableMessageType } from '../../../../utils';
 import { ChannelActionTypes } from '../dux/actionTypes';
 import { LoggerInterface } from '../../../../lib/Logger';
+import { SdkStore } from '../../../../lib/types';
 
 /**
  * Handles ChannelEvents and send values to dispatcher using messagesDispatcher
@@ -26,7 +27,7 @@ interface DynamicParams {
   disableMarkAsRead: boolean;
 }
 interface StaticParams {
-  sdk: SendbirdGroupChat;
+  sdk: SdkStore['sdk'];
   logger: LoggerInterface;
   scrollRef: React.RefObject<HTMLDivElement>;
   setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType>>;

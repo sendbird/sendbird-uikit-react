@@ -4,11 +4,12 @@ import { ReplyType, MessageListParams } from '@sendbird/chat/message';
 import * as messageActionTypes from '../dux/actionTypes';
 import { ReplyType as ReplyTypeInternal } from '../../../../types';
 import { PREV_RESULT_SIZE } from '../const';
-import { GroupChannel, SendbirdGroupChat } from '@sendbird/chat/groupChannel';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { MessageListParams as MessageListParamsInternal } from '../ChannelProvider';
 import { LoggerInterface } from '../../../../lib/Logger';
 import { ChannelActionTypes } from '../dux/actionTypes';
 import { CoreMessageType } from '../../../../utils';
+import { SdkStore } from '../../../../lib/types';
 
 type UseScrollCallbackOptions = {
   currentGroupChannel: GroupChannel;
@@ -21,7 +22,7 @@ type UseScrollCallbackParams = {
   hasMorePrev: boolean;
   logger: LoggerInterface;
   messagesDispatcher: React.Dispatch<ChannelActionTypes>;
-  sdk: SendbirdGroupChat;
+  sdk: SdkStore['sdk'];
 };
 
 function useScrollCallback(

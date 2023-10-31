@@ -2,8 +2,8 @@ import React, { useReducer, useMemo, useEffect, ReactElement } from 'react';
 import { User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import type {
-  BaseMessage,
-  FileMessageCreateParams,
+  BaseMessage, FileMessage,
+  FileMessageCreateParams, MultipleFilesMessage,
   MultipleFilesMessageCreateParams,
   UserMessageCreateParams,
 } from '@sendbird/chat/message';
@@ -56,9 +56,9 @@ export interface ThreadProviderInterface extends ThreadProviderProps, ThreadCont
   fetchNextThreads: (callback?: (messages?: Array<BaseMessage>) => void) => void;
   toggleReaction: (message, key, isReacted) => void;
   sendMessage: (props: SendMessageParams) => void;
-  sendFileMessage: (file: File, quoteMessage?: SendableMessageType) => void;
+  sendFileMessage: (file: File, quoteMessage?: SendableMessageType) => Promise<FileMessage>;
   sendVoiceMessage: (file: File, duration: number, quoteMessage?: SendableMessageType) => void;
-  sendMultipleFilesMessage: (files: Array<File>, quoteMessage?: SendableMessageType) => void,
+  sendMultipleFilesMessage: (files: Array<File>, quoteMessage?: SendableMessageType) => Promise<MultipleFilesMessage>,
   resendMessage: (failedMessage: SendableMessageType) => void;
   updateMessage: (props, callback?: () => void) => void;
   deleteMessage: (message: SendableMessageType) => Promise<SendableMessageType>;

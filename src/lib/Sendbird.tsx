@@ -25,7 +25,7 @@ import useAppendDomNode from '../hooks/useAppendDomNode';
 import { VoiceMessageProvider } from './VoiceMessageProvider';
 import { LocalizationProvider } from './LocalizationContext';
 import { MediaQueryProvider, useMediaQueryContext } from './MediaQueryContext';
-import getStringSet from '../ui/Label/stringSet';
+import getStringSet, { StringSet } from '../ui/Label/stringSet';
 import {
   DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT,
   VOICE_RECORDER_DEFAULT_MAX,
@@ -47,12 +47,14 @@ import {
   SBUEventHandlers,
 } from './types';
 import { GlobalModalProvider } from '../hooks/useModal';
+import { RenderUserProfileProps } from '../types';
 
 export { useSendbirdStateContext } from '../hooks/useSendbirdStateContext';
 
 export type UserListQueryType = {
   hasNext?: boolean;
   next: () => Promise<Array<User>>;
+  get isLoading(): boolean;
 };
 
 interface VoiceRecordOptions {
@@ -87,7 +89,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
   config?: SendbirdConfig;
   nickname?: string;
   colorSet?: Record<string, string>;
-  stringSet?: Record<string, string>;
+  stringSet?: Partial<StringSet>;
   dateLocale?: Locale;
   profileUrl?: string;
   voiceRecord?: VoiceRecordOptions;
@@ -96,7 +98,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
   allowProfileEdit?: boolean;
   disableMarkAsDelivered?: boolean;
   breakpoint?: string | boolean;
-  renderUserProfile?: () => React.ReactElement;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   onUserProfileMessage?: (channel: GroupChannel) => void;
   uikitOptions?: UIKitOptions;
   isUserIdUsedForNickname?: boolean;
@@ -147,9 +149,9 @@ const SendbirdSDK = ({
   appId,
   userId,
   children,
-  accessToken = '',
-  customApiHost = '',
-  customWebSocketHost = '',
+  accessToken,
+  customApiHost,
+  customWebSocketHost,
   configureSession = null,
   theme = 'light',
   config = {},

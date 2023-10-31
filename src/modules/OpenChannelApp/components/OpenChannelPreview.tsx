@@ -6,9 +6,10 @@ import { ChannelMeta } from './DummyStream';
 import { Freeze } from '../assets/Icons';
 import Avatar from '../../../ui/Avatar';
 import Icon, { IconTypes, IconColors } from '../../../ui/Icon';
+import { OpenChannel } from '@sendbird/chat/openChannel';
 
 interface Props {
-  channel: SendBird.OpenChannel;
+  channel: OpenChannel;
   selected: boolean;
   onClick(event): void;
   isStreaming?: boolean;

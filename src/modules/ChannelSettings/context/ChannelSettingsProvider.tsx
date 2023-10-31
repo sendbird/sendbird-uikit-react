@@ -5,7 +5,6 @@ import React, {
 import {
   GroupChannel,
   GroupChannelUpdateParams,
-  SendbirdGroupChat,
 } from '@sendbird/chat/groupChannel';
 
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
@@ -80,7 +79,7 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
   const { logger, onUserProfileMessage } = config;
 
   const { initialized } = sdkStore;
-  const sdk = sdkStore?.sdk as SendbirdGroupChat;
+  const sdk = sdkStore?.sdk;
 
   // hack to keep track of channel updates by triggering useEffect
   const [channelUpdateId, setChannelUpdateId] = useState(uuidv4());

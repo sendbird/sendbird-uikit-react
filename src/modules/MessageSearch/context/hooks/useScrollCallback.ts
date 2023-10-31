@@ -1,9 +1,9 @@
 import type { SendbirdError } from '@sendbird/chat';
 import type { MessageSearchQuery } from '@sendbird/chat/message';
 import { useCallback } from 'react';
-import { Logger } from '../../../..';
 import * as messageActionTypes from '../dux/actionTypes';
 import { CoreMessageType } from '../../../../utils';
+import { LoggerInterface } from '../../../../lib/Logger';
 
 interface MainProps {
   currentMessageSearchQuery: MessageSearchQuery;
@@ -17,7 +17,7 @@ interface MainProps {
 type MessageSearchDispatcherType = { type: string, payload: any };
 
 interface ToolProps {
-  logger: Logger;
+  logger: LoggerInterface;
   messageSearchDispatcher: (payload: MessageSearchDispatcherType) => void;
 }
 
@@ -44,9 +44,9 @@ function useScrollCallback(
           type: messageActionTypes.GET_NEXT_SEARCHED_MESSAGES,
           payload: messages,
         });
-        cb(messages, null);
+        cb(messages as CoreMessageType[], null);
         if (onResultLoaded && typeof onResultLoaded === 'function') {
-          onResultLoaded(messages, null);
+          onResultLoaded(messages as CoreMessageType[], null);
         }
       }).catch((error) => {
         logger.warning('MessageSearch | useScrollCallback: failed getting searched messages', error);

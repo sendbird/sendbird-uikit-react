@@ -1,16 +1,16 @@
-import type { SendbirdGroupChat } from '@sendbird/chat/groupChannel';
 import { useEffect } from 'react';
 import type { Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
+import { SdkStore } from '../../../../lib/types';
 
 interface MainProps {
   channelUrl: string;
   sdkInit: boolean;
 }
 interface ToolProps {
-  sdk: SendbirdGroupChat;
+  sdk: SdkStore['sdk'];
   logger: Logger;
-  messageSearchDispatcher: ({ type: string, payload: any }) => void;
+  messageSearchDispatcher: (param: { type: string, payload: any }) => void;
 }
 
 function useSetChannel(

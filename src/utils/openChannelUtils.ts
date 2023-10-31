@@ -1,5 +1,5 @@
 import type { User } from '@sendbird/chat';
-import type { FileMessage, UserMessage } from '@sendbird/chat/message';
+import type { UserMessage } from '@sendbird/chat/message';
 import { SendableMessageType } from './index';
 
 const OpenChannelMessageStatusTypes = {
@@ -61,7 +61,7 @@ export const isFineDelete = ({ message, userId }: isFineDeleteParams): boolean =
 };
 
 interface IsFineDownloadParams {
-  message: FileMessage | UserMessage;
+  message: SendableMessageType;
   status: string;
 }
 

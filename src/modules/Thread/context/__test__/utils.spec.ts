@@ -27,7 +27,7 @@ describe('Thread/utils - isParentMessage', () => {
     expect(isParentMessage(mockThreadMessage as UserMessage)).toBe(false);
   });
   it('should check type of the parentMessageId', () => {
-    expect(isParentMessage({ ...mockParentMessage, parentMessageId: '1' } as UserMessage)).toBe(false);
+    expect(isParentMessage({ ...mockParentMessage, parentMessageId: '1' } as any)).toBe(false);
   });
 });
 
@@ -39,7 +39,7 @@ describe('Thread/utils - isThreadMessage', () => {
     expect(isThreadMessage(mockParentMessage as UserMessage)).toBe(false);
   });
   it('should check type of the parentMessageId', () => {
-    expect(isThreadMessage({ ...mockThreadMessage, parentMessageId: '1' } as UserMessage)).toBe(false);
+    expect(isThreadMessage({ ...mockThreadMessage, parentMessageId: '1' } as any)).toBe(false);
   });
 });
 

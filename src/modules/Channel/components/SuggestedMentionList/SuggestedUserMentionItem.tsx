@@ -1,12 +1,17 @@
-import React, { useContext, useEffect, useMemo, useRef } from 'react';
+import React, { MutableRefObject, useContext, useEffect, useMemo, useRef } from 'react';
 import type { Member } from '@sendbird/chat/groupChannel';
 import type { User } from '@sendbird/chat';
 
 import Avatar from '../../../../ui/Avatar';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { MentionItemUIEvent } from '../../../..';
 import uuidv4 from '../../../../utils/uuid';
+
+type MentionItemUIEvent = {
+  event: any,
+  member: Member,
+  itemRef: MutableRefObject<HTMLElement>
+};
 
 interface SuggestedUserMentionItemProps {
   member: User | Member;
@@ -29,7 +34,7 @@ function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Ele
     renderUserMentionItem,
   } = props;
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { stringSet = {} } = useContext(LocalizationContext);
+  const { stringSet } = useContext(LocalizationContext);
   useEffect(() => {
     if (isFocused && parentScrollRef?.current != null && scrollRef?.current != null
       && (parentScrollRef.current.scrollTop >= scrollRef.current.offsetTop

@@ -22,10 +22,10 @@ const SUPPORTED_MIMES = {
   ],
 };
 
-export const isImage = (type: SupportedImageMimesType): boolean => SUPPORTED_MIMES.IMAGE.indexOf(type) >= 0;
-export const isVideo = (type: SupportedVideoMimesType): boolean => SUPPORTED_MIMES.VIDEO.indexOf(type) >= 0;
-export const isGif = (type: SupportedMimesType): boolean => type === 'image/gif';
-export const unSupported = (type: SupportedMimesType): boolean => (
+export const isImage = (type: string): boolean => SUPPORTED_MIMES.IMAGE.indexOf(type) >= 0;
+export const isVideo = (type: string): boolean => SUPPORTED_MIMES.VIDEO.indexOf(type) >= 0;
+export const isGif = (type: string): boolean => type === 'image/gif';
+export const unSupported = (type: string): boolean => (
   !(
     isImage(type as SupportedImageMimesType)
     || isVideo(type as SupportedVideoMimesType)

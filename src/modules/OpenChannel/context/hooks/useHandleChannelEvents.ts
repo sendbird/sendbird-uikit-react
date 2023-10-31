@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
 import { ChannelType } from '@sendbird/chat';
-import { OpenChannel, OpenChannelHandler, SendbirdOpenChat } from '@sendbird/chat/openChannel';
+import { OpenChannel, OpenChannelHandler } from '@sendbird/chat/openChannel';
 import * as messageActionTypes from '../dux/actionTypes';
 import uuidv4 from '../../../../utils/uuid';
 import { scrollIntoLast } from '../utils';
 import { Logger } from '../../../../lib/SendbirdState';
+import { SdkStore } from '../../../../lib/types';
 
 type MessagesDispatcherType = {
   type: string, payload: any,
@@ -14,7 +15,7 @@ interface DynamicParams {
   checkScrollBottom: () => boolean;
 }
 interface StaticParams {
-  sdk: SendbirdOpenChat;
+  sdk: SdkStore['sdk'];
   logger: Logger;
   scrollRef: React.RefObject<HTMLElement>;
   messagesDispatcher: (props: MessagesDispatcherType) => void;
