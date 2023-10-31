@@ -385,7 +385,7 @@ const Message = ({
         )
       }
       {/** Suggested Replies */}
-      {message.messageId === currentGroupChannel?.lastMessage.messageId
+      {message.messageId === currentGroupChannel?.lastMessage?.messageId
         // the options should appear only when there's no failed or pending messages
         && localMessages.every(message => (message as UserMessage).sendingStatus === 'succeeded')
         && suggestedReplies.length > 0 && (
