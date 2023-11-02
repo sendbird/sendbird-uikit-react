@@ -1,3 +1,10 @@
-
+.sendbird-message-content__middle__sender-name {
+  position: relative;
+  margin-left: 12px;
+  margin-bottom: 4px;
+  width: 100%;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
 
 

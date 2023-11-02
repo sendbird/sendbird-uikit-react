@@ -1,73 +1,66 @@
-import React, {ReactElement, useContext, useRef, useState} from 'react';
+import React, {Dispatch, ReactElement, SetStateAction, useContext, useRef} from 'react';
 import './index.scss';
-import {CoreMessageType, getClassName, isSendableMessage, SendableMessageType} from '../../utils';
+import {getClassName, isSendableMessage, SendableMessageType} from '../../utils';
 import ContextMenu, {MenuItems} from '../ContextMenu';
 import Avatar from '../Avatar';
 import UserProfile from '../UserProfile';
 import MessageItemMenu from '../MessageItemMenu';
 import {ThreadReplySelectType} from '../../modules/Channel/context/const';
 import MessageItemReactionMenu from '../MessageItemReactionMenu';
+import {MessageContentInternalProps} from '../MessageContent';
+import {Member} from '@sendbird/chat/groupChannel';
 import {UserProfileContext} from '../../lib/UserProfileContext';
-import {useMediaQueryContext} from '../../lib/MediaQueryContext';
-import {MessageContentProps} from '../MessageContent';
-import {Nullable} from '../../types';
-import {GroupChannel} from '@sendbird/chat/groupChannel';
 
-/**
- * @internal
- */
-export interface MessageProfileClassNameProps {
-  profileContainerClassName: string;
-  profileAvatarClassName: string;
-  profileMenuClassName: string;
+export type MessageProfileProps = MessageProfilePublicProps | MessageProfileInternalProps;
+
+export interface MessageProfileInternalProps extends MessageContentInternalProps {
+  setSupposedHover?: Dispatch<SetStateAction<boolean>>;
+  isMobile?: boolean;
+  isReactionEnabledInChannel?: boolean;
+  isReactionEnabledClassName?: string;
+  isByMe?: boolean;
+  isByMeClassName?: string;
+  useReplyingClassName?: string;
+  displayThreadReplies?: boolean;
+  supposedHoverClassName?: string;
 }
 
-export interface MessageProfileProps {
-  message: CoreMessageType;
-  channel: Nullable<GroupChannel>;
-  /**
-   * @internal
-   */
-  messageContentProps?: MessageContentProps;
-  /**
-   * @internal
-   */
-  messageProfileClassNameProps?: MessageProfileClassNameProps;
+export interface MessageProfilePublicProps {
+  member?: Member;
 }
 
-export default function MessageProfile({
-  message,
-  channel,
-  messageContentProps,
-  messageProfileClassNameProps,
-}: MessageProfileProps): ReactElement {
+export default function MessageProfile(props: MessageProfileProps): ReactElement {
   const avatarRef = useRef(null);
 
-  if (!messageContentProps) {
-    return (
-      <div className={'profile-container__incoming'}>
-        {isSendableMessage(message) && (
-          /** user profile */
+  if ('member' in props) {
+    const {
+      member,
+    } = props;
+
+    if (member) {
+      return (
+        <div className={'sendbird-message-content__left incoming'}>
           <Avatar
-            className={'profile-container__avatar'}
+            className={'sendbird-message-content__left__avatar'}// @ts-ignore
             // @ts-ignore
-            src={channel?.members?.find((member) => member?.userId === message.sender.userId)?.profileUrl || message.sender.profileUrl || ''}
+            src={member.profileUrl || ''}
             // TODO: Divide getting profileUrl logic to utils
             ref={avatarRef}
             width="28px"
             height="28px"
           />
-        )}
-      </div>
-    );
+        </div>
+      );
+    }
+    return <></>;
   }
 
   const {
+    message,
+    channel,
     userId,
     disabled = false,
     chainBottom = false,
-    isReactionEnabled = false,
-    disableQuoteMessage = false,
     replyType,
     threadReplySelectType,
     emojiContainer,
@@ -78,44 +71,28 @@ export default function MessageProfile({
     toggleReaction,
     setQuoteMessage,
     onReplyInThread,
-  } = messageContentProps;
+
+    setSupposedHover,
+    isMobile,
+    isReactionEnabledInChannel,
+    isReactionEnabledClassName,
+    isByMe,
+    isByMeClassName,
+    useReplyingClassName,
+    displayThreadReplies,
+    supposedHoverClassName,
+  } = props as MessageProfileInternalProps;
 
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
-  const [supposedHover, setSupposedHover] = useState(false);
-  const { isMobile } = useMediaQueryContext();
-
-  const isReactionEnabledInChannel = isReactionEnabled && !channel?.isEphemeral;
-  const isReactionEnabledClassName = isReactionEnabledInChannel ? 'use-reactions' : '';
-  const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
-    || ((message as SendableMessageType)?.sendingStatus === 'pending')
-    || ((message as SendableMessageType)?.sendingStatus === 'failed');
-  const useReplying = !!((replyType === 'QUOTE_REPLY' || replyType === 'THREAD')
-    && message?.parentMessageId && message?.parentMessage
-    && !disableQuoteMessage
-  );
-  const useReplyingClassName = useReplying ? 'use-quote' : '';
-  const displayThreadReplies = message?.threadInfo?.replyCount > 0 && replyType === 'THREAD';
-  const supposedHoverClassName = supposedHover ? 'sendbird-mouse-hover' : '';
-
-  const {
-    profileContainerClassName,
-    profileAvatarClassName,
-    profileMenuClassName,
-  } = messageProfileClassNameProps;
 
   return (
-    <div className={profileContainerClassName ?? getClassName([
-      `profile-container__${isByMe ? 'outgoing' : 'incoming'}`,
-      isReactionEnabledClassName,
-      useReplyingClassName,
-    ])}>
+    <div className={getClassName(['sendbird-message-content__left', isReactionEnabledClassName, isByMeClassName, useReplyingClassName])}>
       {(!isByMe && !chainBottom && isSendableMessage(message)) && (
         /** user profile */
         <ContextMenu
           menuTrigger={(toggleDropdown: () => void): ReactElement => (
             <Avatar
-              className={profileAvatarClassName ?? `profile-container__avatar ${displayThreadReplies ? 'use-thread-replies' : ''}`}
-              // @ts-ignore
+              className={`sendbird-message-content__left__avatar ${displayThreadReplies ? 'use-thread-replies' : ''}`}// @ts-ignore
               src={channel?.members?.find((member) => member?.userId === message.sender.userId)?.profileUrl || message.sender.profileUrl || ''}
               // TODO: Divide getting profileUrl logic to utils
               ref={avatarRef}
@@ -145,7 +122,7 @@ export default function MessageProfile({
       )}
       {/* outgoing menu */}
       {isByMe && !isMobile && (
-        <div className={profileMenuClassName ?? getClassName(['profile-menu', supposedHoverClassName])}>
+        <div className={getClassName(['sendbird-message-content-menu', supposedHoverClassName])}>
           <MessageItemMenu
             channel={channel}
             message={message as SendableMessageType}

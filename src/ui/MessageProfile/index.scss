@@ -1,21 +1,24 @@
-.profile-container__outgoing {
-  position: relative;
-  box-sizing: border-box;
-  display: inline-flex;
-  justify-content: flex-end;
-  width: 50px;
-  &.use-reactions { width: 70px }
-  &.use-quote {
-    .profile-menu {
-      top: 18px;
+.sendbird-message-content.incoming {
+  .sendbird-message-content__left {
+    position: relative;
+    display: inline-flex;
+    min-width: 40px;
+
+    .sendbird-message-content__left__avatar {
+      position: absolute;
+      left: 0px;
+      bottom: 2px;
+    }
+
+    .sendbird-message-content__left__avatar.use-thread-replies {
+      bottom: 35px;
     }
   }
 
-  .profile-menu {
-    position: absolute;
-    top: 2px;
-    right: 4px;
+  .sendbird-message-content-menu {
+    position: relative;
     flex-direction: row;
+    height: 32px;
     display: none;
     &.sendbird-mouse-hover {
       display: inline-flex;
@@ -23,19 +26,39 @@
   }
 }
 
-.profile-container__incoming {
-  position: relative;
-  display: inline-flex;
-  min-width: 40px;
+.sendbird-message-content.outgoing {
+  .sendbird-message-content__left {
+    position: relative;
+    box-sizing: border-box;
+    display: inline-flex;
+    justify-content: flex-end;
+    width: 50px;
 
-  .profile-container__avatar {
-    position: absolute;
-    left: 0px;
-    bottom: 2px;
+    &.use-reactions {
+      width: 70px
+    }
+
+    &.use-quote {
+      .sendbird-message-content-menu {
+        top: 18px;
+      }
+    }
+    .sendbird-message-content-menu {
+      position: absolute;
+      top: 2px;
+      right: 4px;
+      flex-direction: row;
+      display: none;
+      &.sendbird-mouse-hover {
+        display: inline-flex;
+      }
+    }
   }
-  .profile-container__avatar.use-thread-replies {
-    bottom: 35px;
+  &:hover {
+    .sendbird-message-content__left {
+      .sendbird-message-content-menu {
+        display: inline-flex;
+      }
+    }
   }
 }
-
-
