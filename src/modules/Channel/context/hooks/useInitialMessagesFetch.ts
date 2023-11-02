@@ -37,6 +37,13 @@ function useInitialMessagesFetch(
 ): () => void {
   const channelUrl = currentGroupChannel?.url;
 
+  /**
+   * useCallback(() => {}, [currentGroupChannel]) was buggy, that is why we did
+   * const channelUrl = currentGroupChannel && currentGroupChannel.url;
+   * useCallback(() => {}, [channelUrl])
+   * Again, this hook is supposed to execute when currentGroupChannel changes
+   * The 'channelUrl' here is not the same memory reference from Conversation.props
+   */
   const fetchMessages = useCallback(() => {
     logger.info('Channel useInitialMessagesFetch: Setup started', currentGroupChannel);
     setIsScrolled(false);
@@ -135,14 +142,6 @@ function useInitialMessagesFetch(
   }, [fetchMessages]);
 
   return fetchMessages;
-  /**
-   * Note - useEffect(() => {}, [currentGroupChannel])
-   * was buggy, that is why we did
-   * const channelUrl = currentGroupChannel && currentGroupChannel.url;
-   * useEffect(() => {}, [channelUrl])
-   * Again, this hook is supposed to execute when currentGroupChannel changes
-   * The 'channelUrl' here is not the same memory reference from Conversation.props
-   */
 }
 
 export default useInitialMessagesFetch;
