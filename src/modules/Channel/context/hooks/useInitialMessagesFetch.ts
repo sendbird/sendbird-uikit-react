@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { MessageListParams, ReplyType } from '@sendbird/chat/message';
 
 import * as utils from '../utils';
@@ -34,10 +34,17 @@ function useInitialMessagesFetch(
     setIsScrolled,
   }: UseInitialMessagesFetchOptions,
   { logger, scrollRef, messagesDispatcher }: UseInitialMessagesFetchParams,
-) {
+): () => void {
   const channelUrl = currentGroupChannel?.url;
 
-  useEffect(() => {
+  /**
+   * useCallback(() => {}, [currentGroupChannel]) was buggy, that is why we did
+   * const channelUrl = currentGroupChannel && currentGroupChannel.url;
+   * useCallback(() => {}, [channelUrl])
+   * Again, this hook is supposed to execute when currentGroupChannel changes
+   * The 'channelUrl' here is not the same memory reference from Conversation.props
+   */
+  const fetchMessages = useCallback(() => {
     logger.info('Channel useInitialMessagesFetch: Setup started', currentGroupChannel);
     setIsScrolled(false);
     messagesDispatcher({
@@ -129,14 +136,12 @@ function useInitialMessagesFetch(
         });
     }
   }, [channelUrl, userFilledMessageListQuery, initialTimeStamp]);
-  /**
-   * Note - useEffect(() => {}, [currentGroupChannel])
-   * was buggy, that is why we did
-   * const channelUrl = currentGroupChannel && currentGroupChannel.url;
-   * useEffect(() => {}, [channelUrl])
-   * Again, this hook is supposed to execute when currentGroupChannel changes
-   * The 'channelUrl' here is not the same memory reference from Conversation.props
-   */
+
+  useEffect(() => {
+    fetchMessages();
+  }, [fetchMessages]);
+
+  return fetchMessages;
 }
 
 export default useInitialMessagesFetch;

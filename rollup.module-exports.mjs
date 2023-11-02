@@ -59,6 +59,7 @@ export default {
   // Channel
   Channel: 'src/modules/Channel/index.tsx',
   'Channel/context': 'src/modules/Channel/context/ChannelProvider.tsx',
+  'Channel/hooks/useInitialMessagesFetch': 'src/modules/Channel/context/hooks/useInitialMessagesFetch.ts',
   'Channel/utils/getMessagePartsInfo': 'src/modules/Channel/components/MessageList/getMessagePartsInfo.ts',
   'Channel/utils/compareMessagesForGrouping': 'src/modules/Channel/context/compareMessagesForGrouping.ts',
   'Channel/components/ChannelHeader': 'src/modules/Channel/components/ChannelHeader/index.tsx',
