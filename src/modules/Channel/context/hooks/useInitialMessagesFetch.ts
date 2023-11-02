@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { MessageListParams, ReplyType } from '@sendbird/chat/message';
 
 import * as utils from '../utils';
@@ -34,10 +34,10 @@ function useInitialMessagesFetch(
     setIsScrolled,
   }: UseInitialMessagesFetchOptions,
   { logger, scrollRef, messagesDispatcher }: UseInitialMessagesFetchParams,
-) {
+): () => void {
   const channelUrl = currentGroupChannel?.url;
 
-  useEffect(() => {
+  const fetchMessages = useCallback(() => {
     logger.info('Channel useInitialMessagesFetch: Setup started', currentGroupChannel);
     setIsScrolled(false);
     messagesDispatcher({
@@ -129,6 +129,12 @@ function useInitialMessagesFetch(
         });
     }
   }, [channelUrl, userFilledMessageListQuery, initialTimeStamp]);
+
+  useEffect(() => {
+    fetchMessages();
+  }, [fetchMessages]);
+
+  return fetchMessages;
   /**
    * Note - useEffect(() => {}, [currentGroupChannel])
    * was buggy, that is why we did
