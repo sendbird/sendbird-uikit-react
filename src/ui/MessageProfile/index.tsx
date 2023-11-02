@@ -13,19 +13,25 @@ import {MessageContentProps} from '../MessageContent';
 import {Nullable} from '../../types';
 import {GroupChannel} from '@sendbird/chat/groupChannel';
 
+/**
+ * @internal
+ */
 export interface MessageProfileClassNameProps {
   profileContainerClassName: string;
   profileAvatarClassName: string;
   profileMenuClassName: string;
 }
 
-export interface MessageProfileForMessageContentProps {
-  profileContainerClassName: string;
-}
 export interface MessageProfileProps {
   message: CoreMessageType;
   channel: Nullable<GroupChannel>;
-  messageContentProps?: MessageContentProps; // classNames
+  /**
+   * @internal
+   */
+  messageContentProps?: MessageContentProps;
+  /**
+   * @internal
+   */
   messageProfileClassNameProps?: MessageProfileClassNameProps;
 }
 
