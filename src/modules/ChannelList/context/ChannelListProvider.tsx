@@ -221,7 +221,11 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
         sdk?.groupChannel?.removeGroupChannelHandler(sdkChannelHandlerId);
       }
     };
-  }, [sdkIntialized, userFilledChannelListQuery, sortChannelList]);
+  }, [
+    sdkIntialized,
+    sortChannelList,
+    Object.entries(userFilledChannelListQuery ?? {}).map(([key, value]) => key + value).join(),
+  ]);
 
   useEffect(() => {
     let typingHandlerId = '';
