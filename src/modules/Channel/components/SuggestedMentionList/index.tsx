@@ -58,15 +58,16 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   const [currentUser, setCurrentUser] = useState<User>(null);
   const [currentMemberList, setCurrentMemberList] = useState<Member[]>([]);
 
-  function getCurrentSearchedMemberList(): Member[] {
+  const currentSearchedMemberList(): Member[] => useMemo(() => {
     return currentChannel.members
-      .sort((a, b) => a.nickname?.localeCompare(b.nickname))
-      .filter(
-        (member) => member.nickname?.toLowerCase().startsWith(searchString.toLowerCase())
-        && member.userId !== currentUser?.userId
-        && member.isActive,
-      ).slice(0, maxSuggestionCount);
-  }
+    .sort((a, b) => a.nickname?.localeCompare(b.nickname))
+    .filter(
+      (member) =>
+        member.nickname?.toLowerCase().startsWith(searchString.toLowerCase()) &&
+        member.userId !== currentUser?.userId &&
+        member.isActive,
+    ).slice(0, maxSuggestionCount);
+  }, [currentChannel.members.length])
 
   useEffect(() => {
     clearTimeout(timer);
