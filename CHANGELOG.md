@@ -1,5 +1,30 @@
 # Changelog - v3
 
+## [v3.8.0] (Nov 3 2023)
+
+### Feat:
+* Added a feature to support predefined suggested reply options for AI chatbot trigger messages.
+* Introduced custom date format string sets, allowing users to customize the date format for `DateSeparators` and `UnreadCount`.
+* Exported the `initialMessagesFetch` callback from the hook to provide more flexibility in UIKit customization.
+
+### Fixes:
+* Removed duplicate `UserProfileProvider` in `OpenChannelSettings``.
+* Removed the logic blocking the addition of empty channels to the ChannelList.
+* Fixed a runtime error in empty channels.
+* Added precise object dependencies in effect hooks to prevent unnecessary re-renders in the Channel module.
+* Used channel members instead of fetch when searched.
+
+### Chores:
+* Migrated the rest of modules & UI components to TypeScript from Javascript.
+* Introduced new build settings:
+  * Changes have been made to export modules using the [sub-path exports](https://nodejs.org/api/packages.html#subpath-exports) in the `package.json`. If you were using the package in a Native CJS environment, this might have an impact.
+  In that case, you can migrate the path as follows:
+    ```diff
+    - const ChannelList = require('@sendbird/uikit-react/cjs/ChannelList');
+    + const ChannelList = require('@sendbird/uikit-react/ChannelList');
+    ```
+  * TypeScript support also has been improved. Now, precise types based on the source code are used.
+
 ## [v3.7.0] (Oct 23 2023)
 
 ### Multiple Files Message
