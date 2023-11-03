@@ -13,7 +13,6 @@ import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT, USER_MENTION_TEMP_CH
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import uuidv4 from '../../../../utils/uuid';
 import { useThreadContext } from '../../../Thread/context/ThreadProvider';
-import {MemberState} from '@sendbird/chat/groupChannel';
 
 export interface SuggestedMentionListProps {
   className?: string;
@@ -61,13 +60,12 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
 
   function getCurrentSearchedMemberList(): Member[] {
     return currentChannel.members
-    .sort((a, b) => a.nickname?.localeCompare(b.nickname))
-    .filter(
-      (member) =>
-        member.nickname?.toLowerCase().startsWith(searchString.toLowerCase()) &&
-        member.userId !== currentUser?.userId &&
-        member.isActive,
-    ).slice(0, maxSuggestionCount);
+      .sort((a, b) => a.nickname?.localeCompare(b.nickname))
+      .filter(
+        (member) => member.nickname?.toLowerCase().startsWith(searchString.toLowerCase())
+        && member.userId !== currentUser?.userId
+        && member.isActive,
+      ).slice(0, maxSuggestionCount);
   }
 
   useEffect(() => {
@@ -123,25 +121,25 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
         nicknameStartsWithFilter: searchString.slice(USER_MENTION_TEMP_CHAR.length),
       });
       query.next()
-      .then((memberList) => {
-        const suggestingMembers = memberList
-        .filter((member) => currentUserId !== member?.userId)
-        .slice(0, maxSuggestionCount);
-        if (suggestingMembers.length < 1) {
-          logger.info('SuggestedMentionList: Fetched member list is empty');
-        } else {
-          logger.info('SuggestedMentionList: Fetching member list succeeded', { memberListQuery: query, memberList: suggestingMembers });
-          setCurrentUser(suggestingMembers[0]);
-        }
-        setLastSearchString(searchString);
-        onFetchUsers(suggestingMembers);
-        setCurrentMemberList(suggestingMembers);
-      })
-      .catch((error) => {
-        if (error) {
-          logger.error('SuggestedMentionList: Fetching member list failed', error);
-        }
-      });
+        .then((memberList) => {
+          const suggestingMembers = memberList
+            .filter((member) => currentUserId !== member?.userId)
+            .slice(0, maxSuggestionCount);
+          if (suggestingMembers.length < 1) {
+            logger.info('SuggestedMentionList: Fetched member list is empty');
+          } else {
+            logger.info('SuggestedMentionList: Fetching member list succeeded', { memberListQuery: query, memberList: suggestingMembers });
+            setCurrentUser(suggestingMembers[0]);
+          }
+          setLastSearchString(searchString);
+          onFetchUsers(suggestingMembers);
+          setCurrentMemberList(suggestingMembers);
+        })
+        .catch((error) => {
+          if (error) {
+            logger.error('SuggestedMentionList: Fetching member list failed', error);
+          }
+        });
     } else {
       const suggestingMembers = getCurrentSearchedMemberList();
       if (suggestingMembers.length < 1) {
@@ -159,7 +157,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
     channelInstance.members.length,
     // We have to be specific like this or React would not recognize the changes in instances.
     channelInstance.members.map((member: Member) => member.state).join(),
-    searchString
+    searchString,
   ]);
 
   if (!ableAddMention && currentMemberList.length === 0) {
