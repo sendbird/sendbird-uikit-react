@@ -69,7 +69,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   }, [
     channelInstance.members.length,
     channelInstance.members.map((member: Member) => member.nickname).join(),
-    channelInstance.members.map((member: Member) => member.state).join(),
+    channelInstance.members.map((member: Member) => member.isActive).join(),
   ]);
 
   useEffect(() => {
@@ -131,7 +131,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
     channelInstance.members.length,
     // We have to be specific like this or React would not recognize the changes in instances.
     channelInstance.members.map((member: Member) => member.nickname).join(),
-    channelInstance.members.map((member: Member) => member.state).join(),
+    channelInstance.members.map((member: Member) => member.isActive).join(),
     searchString,
   ]);
 
