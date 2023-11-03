@@ -1,27 +1,26 @@
-import React, {
-  ReactElement,
-  useEffect,
-  useState,
-  useCallback,
-  useContext,
-} from 'react';
-import type { Member } from '@sendbird/chat/groupChannel';
+import React, {ReactElement, useCallback, useContext, useEffect, useState,} from 'react';
+import type {Member} from '@sendbird/chat/groupChannel';
+import {MemberState} from '@sendbird/chat/groupChannel';
 
-import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
+import Button, {ButtonSizes, ButtonTypes} from '../../../../ui/Button';
 import IconButton from '../../../../ui/IconButton';
-import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
-import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
+import Icon, {IconColors, IconTypes} from '../../../../ui/Icon';
+import ContextMenu, {MenuItem, MenuItems} from '../../../../ui/ContextMenu';
 
 import UserListItem from '../UserListItem';
 import MembersModal from './MembersModal';
 import InviteUsers from './InviteUsersModal';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
-import { LocalizationContext } from '../../../../lib/LocalizationContext';
+import {useChannelSettingsContext} from '../../context/ChannelSettingsProvider';
+import {LocalizationContext} from '../../../../lib/LocalizationContext';
 import uuidv4 from '../../../../utils/uuid';
+import {filterCurrentPageMembers, filterJoinedMembers, filterUptoCurrentPageMembers} from './utils';
+
+const PAGE_SIZE = 5;
 
 export const MemberList = (): ReactElement => {
   const [members, setMembers] = useState<Array<Member>>([]);
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const [hasNext, setHasNext] = useState(false);
   const [showAllMembers, setShowAllMembers] = useState(false);
   const [showInviteUsers, setShowInviteUsers] = useState(false);
@@ -29,24 +28,35 @@ export const MemberList = (): ReactElement => {
   const state = useSendbirdStateContext();
   const {
     channel,
-    setChannelUpdateId,
   } = useChannelSettingsContext();
   const { stringSet } = useContext(LocalizationContext);
 
   const sdk = state?.stores?.sdkStore?.sdk;
   const userId = state?.config?.userId;
 
+  function updateMembersWithCurrentPage(givenPage?: number) {
+    const page = givenPage ?? currentPage;
+    const filteredMembers: Member[] = filterCurrentPageMembers(
+      filterJoinedMembers(channel.members),
+      page,
+      PAGE_SIZE
+    );
+    setMembers(filteredMembers);
+    if (filteredMembers.length < PAGE_SIZE) {
+      setHasNext(false);
+    } else {
+      setHasNext(true);
+      setCurrentPage(page + 1);
+    }
+  }
+
   useEffect(() => {
     if (!channel) {
       setMembers([]);
       return;
     }
-
-    const memberUserListQuery = channel?.createMemberListQuery({ limit: 10 });
-    memberUserListQuery.next().then((members) => {
-      setMembers(members);
-      setHasNext(memberUserListQuery.hasNext);
-    });
+    setCurrentPage(0);
+    updateMembersWithCurrentPage(0);
   }, [channel]);
 
   const refreshList = useCallback(() => {
@@ -54,13 +64,9 @@ export const MemberList = (): ReactElement => {
       setMembers([]);
       return;
     }
-    const memberUserListQuery = channel?.createMemberListQuery({ limit: 10 });
-    memberUserListQuery.next().then((members) => {
-      setMembers(members);
-      setHasNext(memberUserListQuery.hasNext);
-      setChannelUpdateId(uuidv4());
-    });
-  }, [channel]);
+    setCurrentPage(0);
+    updateMembersWithCurrentPage(0);
+  }, [channel.members]);
 
   return (
     <div className="sendbird-channel-settings-member-list sendbird-accordion">

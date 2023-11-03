@@ -16,29 +16,49 @@ import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { Member } from '@sendbird/chat/groupChannel';
+import {filterCurrentPageMembers, filterJoinedMembers, filterUptoCurrentPageMembers} from './utils';
 
 interface Props {
   onCancel(): void;
 }
 
+const PAGE_SIZE = 10;
+
 export default function MembersModal({ onCancel }: Props): ReactElement {
   const [members, setMembers] = useState([]);
-  const [memberQuery, setMemberQuery] = useState(null);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [hasNext, setHasNext] = useState(false);
 
   const { channel } = useChannelSettingsContext();
   const state = useSendbirdStateContext();
   const currentUser = state?.config?.userId;
   const { stringSet } = useContext(LocalizationContext);
 
+  function updateMembersWithCurrentPage(givenPage?: number) {
+    const page = givenPage ?? currentPage;
+    const filteredMembers: Member[] = filterUptoCurrentPageMembers(
+      filterJoinedMembers(channel.members),
+      page,
+      PAGE_SIZE
+    );
+    setMembers(filteredMembers);
+    if (filteredMembers.length < PAGE_SIZE * page) {
+      setHasNext(false);
+    } else {
+      setHasNext(true);
+      setCurrentPage(page + 1);
+    }
+  }
+
   useEffect(() => {
-    const memberListQuery = channel?.createMemberListQuery({
-      limit: 20,
-    });
-    memberListQuery.next().then((members) => {
-      setMembers(members);
-    });
-    setMemberQuery(memberListQuery);
-  }, []);
+    if (!channel) {
+      setMembers([]);
+      return;
+    }
+    setCurrentPage(0);
+    updateMembersWithCurrentPage(0);
+  }, [channel.members]);
+
   return (
     <div>
       <Modal
@@ -51,19 +71,13 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
         <div
           className="sendbird-more-members__popup-scroll"
           onScroll={(e) => {
-            const { hasNext } = memberQuery;
             const target = e.target as HTMLTextAreaElement;
             const fetchMore = (
               target.clientHeight + target.scrollTop === target.scrollHeight
             );
 
             if (hasNext && fetchMore) {
-              memberQuery.next().then((o) => {
-                setMembers([
-                  ...members,
-                  ...o,
-                ]);
-              });
+              updateMembersWithCurrentPage();
             }
           }}
         >
