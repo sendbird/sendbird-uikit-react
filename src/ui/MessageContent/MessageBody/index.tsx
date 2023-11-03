@@ -1,23 +1,23 @@
 import React, {ReactElement} from 'react';
-import './index.scss';
+import '../index.scss';
 import {
   CoreMessageType,
   getUIKitMessageType, getUIKitMessageTypes, isMultipleFilesMessage,
   isOGMessage,
   isTextMessage, isThumbnailMessage, isVoiceMessage,
-} from '../../utils';
+} from '../../../utils';
 import {FileMessage, MultipleFilesMessage, UserMessage} from '@sendbird/chat/message';
-import OGMessageItemBody from '../OGMessageItemBody';
-import TextMessageItemBody from '../TextMessageItemBody';
-import FileMessageItemBody from '../FileMessageItemBody';
-import MultipleFilesMessageItemBody from '../MultipleFilesMessageItemBody';
-import VoiceMessageItemBody from '../VoiceMessageItemBody';
-import ThumbnailMessageItemBody from '../ThumbnailMessageItemBody';
-import UnknownMessageItemBody from '../UnknownMessageItemBody';
-import {useThreadMessageKindKeySelector} from '../../modules/Channel/context/hooks/useThreadMessageKindKeySelector';
-import {useStatefulFileInfoList} from '../../modules/Channel/context/hooks/useStatefulFileInfoList';
-import {SendBirdStateConfig} from '../../lib/types';
-import {Nullable} from '../../types';
+import OGMessageItemBody from '../../OGMessageItemBody';
+import TextMessageItemBody from '../../TextMessageItemBody';
+import FileMessageItemBody from '../../FileMessageItemBody';
+import MultipleFilesMessageItemBody from '../../MultipleFilesMessageItemBody';
+import VoiceMessageItemBody from '../../VoiceMessageItemBody';
+import ThumbnailMessageItemBody from '../../ThumbnailMessageItemBody';
+import UnknownMessageItemBody from '../../UnknownMessageItemBody';
+import {useThreadMessageKindKeySelector} from '../../../modules/Channel/context/hooks/useThreadMessageKindKeySelector';
+import {useStatefulFileInfoList} from '../../../modules/Channel/context/hooks/useStatefulFileInfoList';
+import {SendBirdStateConfig} from '../../../lib/types';
+import {Nullable} from '../../../types';
 import {GroupChannel} from '@sendbird/chat/groupChannel';
 
 const MESSAGE_ITEM_BODY_CLASSNAME = 'sendbird-message-content__middle__message-item-body';

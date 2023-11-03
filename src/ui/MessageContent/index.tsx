@@ -19,7 +19,6 @@ import {
   getClassName,
   isOGMessage,
   isThumbnailMessage,
-  getSenderName,
   SendableMessageType,
   CoreMessageType,
   isMultipleFilesMessage,
@@ -36,9 +35,9 @@ import ThreadReplies from '../ThreadReplies';
 import { ThreadReplySelectType } from '../../modules/Channel/context/const';
 import { Nullable, ReplyType } from '../../types';
 import { noop } from '../../utils/utils';
-import MessageProfile, {MessageProfileProps} from '../MessageProfile';
-import MessageBody, {MessageBodyProps} from '../MessageBody';
-import MessageHeader, {MessageHeaderProps} from '../MessageHeader';
+import MessageProfile, {MessageProfileProps} from './MessageProfile';
+import MessageBody, {MessageBodyProps} from './MessageBody';
+import MessageHeader, {MessageHeaderProps} from './MessageHeader';
 
 export interface MessageContentProps extends MessageContentInternalProps {
   renderSenderProfile?: (props: MessageProfileProps) => ReactNode;

@@ -1,19 +1,16 @@
 import React, {Dispatch, ReactElement, SetStateAction, useContext, useRef} from 'react';
-import './index.scss';
-import {getClassName, isSendableMessage, SendableMessageType} from '../../utils';
-import ContextMenu, {MenuItems} from '../ContextMenu';
-import Avatar from '../Avatar';
-import UserProfile from '../UserProfile';
-import MessageItemMenu from '../MessageItemMenu';
-import {ThreadReplySelectType} from '../../modules/Channel/context/const';
-import MessageItemReactionMenu from '../MessageItemReactionMenu';
-import {MessageContentInternalProps} from '../MessageContent';
-import {Member} from '@sendbird/chat/groupChannel';
-import {UserProfileContext} from '../../lib/UserProfileContext';
+import '../index.scss';
+import {getClassName, isSendableMessage, SendableMessageType} from '../../../utils';
+import ContextMenu, {MenuItems} from '../../ContextMenu';
+import Avatar from '../../Avatar';
+import UserProfile from '../../UserProfile';
+import MessageItemMenu from '../../MessageItemMenu';
+import {ThreadReplySelectType} from '../../../modules/Channel/context/const';
+import MessageItemReactionMenu from '../../MessageItemReactionMenu';
+import {MessageContentInternalProps} from '../index';
+import {UserProfileContext} from '../../../lib/UserProfileContext';
 
-export type MessageProfileProps = MessageProfilePublicProps | MessageProfileInternalProps;
-
-export interface MessageProfileInternalProps extends MessageContentInternalProps {
+export interface MessageProfileProps extends MessageContentInternalProps {
   setSupposedHover?: Dispatch<SetStateAction<boolean>>;
   isMobile?: boolean;
   isReactionEnabledInChannel?: boolean;
@@ -25,36 +22,9 @@ export interface MessageProfileInternalProps extends MessageContentInternalProps
   supposedHoverClassName?: string;
 }
 
-export interface MessageProfilePublicProps {
-  member: Member;
-}
-
 export default function MessageProfile(props: MessageProfileProps): ReactElement {
   const avatarRef = useRef(null);
-
-  if ('member' in props) {
-    const {
-      member,
-    } = props;
-
-    if (member) {
-      return (
-        <div className={'sendbird-message-content__left incoming'}>
-          <Avatar
-            className={'sendbird-message-content__left__avatar'}
-            // @ts-ignore
-            src={member.profileUrl || ''}
-            // TODO: Divide getting profileUrl logic to utils
-            ref={avatarRef}
-            width="28px"
-            height="28px"
-          />
-        </div>
-      );
-    }
-    return <></>;
-  }
-
+  
   const {
     message,
     channel,
@@ -81,7 +51,7 @@ export default function MessageProfile(props: MessageProfileProps): ReactElement
     useReplyingClassName,
     displayThreadReplies,
     supposedHoverClassName,
-  } = props as MessageProfileInternalProps;
+  } = props;
 
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
 
