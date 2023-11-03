@@ -69,6 +69,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
     ).slice(0, maxSuggestionCount);
   }, [
     channelInstance.members.length,
+    channelInstance.members.map((member: Member) => member.nickname).join(),
     channelInstance.members.map((member: Member) => member.state).join(),
   ])
 
@@ -130,6 +131,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
     channelInstance?.url,
     channelInstance.members.length,
     // We have to be specific like this or React would not recognize the changes in instances.
+    channelInstance.members.map((member: Member) => member.nickname).join(),
     channelInstance.members.map((member: Member) => member.state).join(),
     searchString,
   ]);
