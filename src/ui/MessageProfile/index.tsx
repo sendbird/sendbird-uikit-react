@@ -41,7 +41,7 @@ export default function MessageProfile(props: MessageProfileProps): ReactElement
       return (
         <div className={'sendbird-message-content__left incoming'}>
           <Avatar
-            className={'sendbird-message-content__left__avatar'}// @ts-ignore
+            className={'sendbird-message-content__left__avatar'}
             // @ts-ignore
             src={member.profileUrl || ''}
             // TODO: Divide getting profileUrl logic to utils
