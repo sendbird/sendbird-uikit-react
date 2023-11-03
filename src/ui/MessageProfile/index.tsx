@@ -26,7 +26,7 @@ export interface MessageProfileInternalProps extends MessageContentInternalProps
 }
 
 export interface MessageProfilePublicProps {
-  member?: Member;
+  member: Member;
 }
 
 export default function MessageProfile(props: MessageProfileProps): ReactElement {
