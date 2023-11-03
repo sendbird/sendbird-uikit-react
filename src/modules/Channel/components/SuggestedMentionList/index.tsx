@@ -103,19 +103,45 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
     }
   }, [inputEvent]);
 
-  /* Fetch member list */
+  /* Update member list for non-super channels */
   useEffect(() => {
-    if (!channelInstance?.createMemberListQuery) {
-      logger.warning('SuggestedMentionList: Creating member list query failed');
-      return;
-    }
     if (lastSearchString && searchString.indexOf(lastSearchString) === 0 && currentMemberList.length === 0) {
       // Don't need to request query again
       return;
     }
-
     // Add member list query for customization
-    if (currentChannel.isSuper) {
+    if (!channelInstance.isSuper) {
+      const suggestingMembers = getCurrentSearchedMemberList();
+      if (suggestingMembers.length < 1) {
+        logger.info('SuggestedMentionList: Channel\'s member list is empty');
+      } else {
+        logger.info('SuggestedMentionList: Channel\'s member list has been updated.', { memberList: suggestingMembers });
+        setCurrentUser(suggestingMembers[0]);
+      }
+      setLastSearchString(searchString);
+      onFetchUsers(suggestingMembers);
+      setCurrentMemberList(suggestingMembers);
+    }
+  }, [
+    channelInstance?.url,
+    channelInstance.members.length,
+    // We have to be specific like this or React would not recognize the changes in instances.
+    channelInstance.members.map((member: Member) => member.state).join(),
+    searchString,
+  ]);
+
+  /* Fetch member list for super channel */
+  useEffect(() => {
+    if (lastSearchString && searchString.indexOf(lastSearchString) === 0 && currentMemberList.length === 0) {
+      // Don't need to request query again
+      return;
+    }
+    // Add member list query for customization
+    if (channelInstance.isSuper) {
+      if (!channelInstance?.createMemberListQuery) {
+        logger.warning('SuggestedMentionList: Creating member list query failed');
+        return;
+      }
       const query = channelInstance?.createMemberListQuery({
         limit: maxSuggestionCount + 1, // because current user could be included
         nicknameStartsWithFilter: searchString.slice(USER_MENTION_TEMP_CHAR.length),
@@ -140,23 +166,9 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
             logger.error('SuggestedMentionList: Fetching member list failed', error);
           }
         });
-    } else {
-      const suggestingMembers = getCurrentSearchedMemberList();
-      if (suggestingMembers.length < 1) {
-        logger.info('SuggestedMentionList: Channel\'s member list is empty');
-      } else {
-        logger.info('SuggestedMentionList: Channel\'s member list has been updated.', { memberList: suggestingMembers });
-        setCurrentUser(suggestingMembers[0]);
-      }
-      setLastSearchString(searchString);
-      onFetchUsers(suggestingMembers);
-      setCurrentMemberList(suggestingMembers);
     }
   }, [
     channelInstance?.url,
-    channelInstance.members.length,
-    // We have to be specific like this or React would not recognize the changes in instances.
-    channelInstance.members.map((member: Member) => member.state).join(),
     searchString,
   ]);
 
