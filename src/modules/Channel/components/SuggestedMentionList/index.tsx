@@ -1,5 +1,5 @@
 import './index.scss';
-import React, {useState, useEffect, useContext, useRef, useMemo} from 'react';
+import React, { useState, useEffect, useContext, useRef, useMemo } from 'react';
 import type { User } from '@sendbird/chat';
 import type { Member } from '@sendbird/chat/groupChannel';
 
@@ -60,18 +60,17 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
 
   const getCurrentSearchedMemberList = (): Member[] => useMemo(() => {
     return currentChannel.members
-    .sort((a, b) => a.nickname?.localeCompare(b.nickname))
-    .filter(
-      (member) =>
-        member.nickname?.toLowerCase().startsWith(searchString.toLowerCase()) &&
-        member.userId !== currentUser?.userId &&
-        member.isActive,
-    ).slice(0, maxSuggestionCount);
+      .sort((a, b) => a.nickname?.localeCompare(b.nickname))
+      .filter(
+        (member) => member.nickname?.toLowerCase().startsWith(searchString.toLowerCase())
+        && member.userId !== currentUser?.userId
+        && member.isActive,
+      ).slice(0, maxSuggestionCount);
   }, [
     channelInstance.members.length,
     channelInstance.members.map((member: Member) => member.nickname).join(),
     channelInstance.members.map((member: Member) => member.state).join(),
-  ])
+  ]);
 
   useEffect(() => {
     clearTimeout(timer);
