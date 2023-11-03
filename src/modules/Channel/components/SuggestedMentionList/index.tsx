@@ -58,6 +58,13 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   const [currentUser, setCurrentUser] = useState<User>(null);
   const [currentMemberList, setCurrentMemberList] = useState<Member[]>([]);
 
+  // We have to be specific like this or React would not recognize the changes in instances.
+  const currentSearchedMemberList = [
+    channelInstance.members.map((member: Member) => member.userId).join(),
+    channelInstance.members.map((member: Member) => member.nickname).join(),
+    channelInstance.members.map((member: Member) => member.isActive).join(),
+  ];
+
   const getCurrentSearchedMemberList = (): Member[] => useMemo(() => {
     return currentChannel.members
       .sort((a, b) => a.nickname?.localeCompare(b.nickname))
@@ -66,11 +73,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
         && member.userId !== currentUser?.userId
         && member.isActive,
       ).slice(0, maxSuggestionCount);
-  }, [
-    channelInstance.members.length,
-    channelInstance.members.map((member: Member) => member.nickname).join(),
-    channelInstance.members.map((member: Member) => member.isActive).join(),
-  ]);
+  }, currentSearchedMemberList);
 
   useEffect(() => {
     clearTimeout(timer);
@@ -128,11 +131,8 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
     }
   }, [
     channelInstance?.url,
-    channelInstance.members.length,
-    // We have to be specific like this or React would not recognize the changes in instances.
-    channelInstance.members.map((member: Member) => member.nickname).join(),
-    channelInstance.members.map((member: Member) => member.isActive).join(),
     searchString,
+    ...currentSearchedMemberList,
   ]);
 
   /* Fetch member list for super channel */
