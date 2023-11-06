@@ -59,7 +59,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
   const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableOgtag;
 
   return match(message)
-    .when((message) => isOgMessageEnabledInGroupChannel
+  .when((message) => isOgMessageEnabledInGroupChannel
     && isSendableMessage(message)
     && isOGMessage(message), () => (
     <OGMessageItemBody
@@ -71,8 +71,8 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
       isReactionEnabled={isReactionEnabledInChannel}
       onMessageHeightChange={onMessageHeightChange}
     />
-    ))
-    .when(isTextMessage, () => (
+  ))
+  .when(isTextMessage, () => (
     <TextMessageItemBody
       className={MESSAGE_ITEM_BODY_CLASSNAME}
       message={message as UserMessage}
@@ -81,8 +81,8 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
       isMentionEnabled={config?.isMentionEnabled || false}
       isReactionEnabled={isReactionEnabledInChannel}
     />
-    ))
-    .when((message) => getUIKitMessageType(message) === messageTypes.FILE, () => (
+  ))
+  .when((message) => getUIKitMessageType(message) === messageTypes.FILE, () => (
     <FileMessageItemBody
       className={MESSAGE_ITEM_BODY_CLASSNAME}
       message={message as FileMessage}
@@ -90,8 +90,8 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
       mouseHover={mouseHover}
       isReactionEnabled={isReactionEnabledInChannel}
     />
-    ))
-    .when(isMultipleFilesMessage, () => (
+  ))
+  .when(isMultipleFilesMessage, () => (
     <MultipleFilesMessageItemBody
       className={MESSAGE_ITEM_BODY_CLASSNAME}
       message={message as MultipleFilesMessage}
@@ -101,8 +101,8 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
       threadMessageKindKey={threadMessageKindKey}
       statefulFileInfoList={statefulFileInfoList}
     />
-    ))
-    .when(isVoiceMessage, () => (
+  ))
+  .when(isVoiceMessage, () => (
     <VoiceMessageItemBody
       className={MESSAGE_ITEM_BODY_CLASSNAME}
       message={message as FileMessage}
@@ -110,8 +110,8 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
       isByMe={isByMe}
       isReactionEnabled={isReactionEnabledInChannel}
     />
-    ))
-    .when(isThumbnailMessage, () => (
+  ))
+  .when(isThumbnailMessage, () => (
     <ThumbnailMessageItemBody
       className={MESSAGE_ITEM_BODY_CLASSNAME}
       message={message as FileMessage}
@@ -121,14 +121,14 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
       showFileViewer={showFileViewer}
       style={isMobile ? { width: '100%' } : {}}
     />
-    ))
-    .otherwise((message) => (
-      <UnknownMessageItemBody
-        className={MESSAGE_ITEM_BODY_CLASSNAME}
-        message={message}
-        isByMe={isByMe}
-        mouseHover={mouseHover}
-        isReactionEnabled={isReactionEnabledInChannel}
-      />
-    ));
+  ))
+  .otherwise((message) => (
+    <UnknownMessageItemBody
+      className={MESSAGE_ITEM_BODY_CLASSNAME}
+      message={message}
+      isByMe={isByMe}
+      mouseHover={mouseHover}
+      isReactionEnabled={isReactionEnabledInChannel}
+    />
+  ));
 }
