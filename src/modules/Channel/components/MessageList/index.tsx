@@ -249,6 +249,16 @@ const MessageList: React.FC<MessageListProps> = ({
                   : <TypingIndicatorMessage typingMember={typingMember} />;
               })
             }
+            {
+              /**
+               * TODO: Temporary code for testing. Remove this before merging.
+               */
+              <TypingIndicatorMessage
+                typingMember={currentGroupChannel.members.find((member: Member) => (
+                  member.userId === store?.config?.userId
+                ))}
+              />
+            }
             {/* show frozen notifications, */}
             {/* show new message notifications, */}
           </div>

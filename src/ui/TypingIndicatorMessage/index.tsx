@@ -3,6 +3,7 @@ import { Member } from '@sendbird/chat/groupChannel';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import Avatar from '../Avatar';
 import Label, { LabelColors, LabelTypography } from '../Label';
+import TypingDots from './TypingDots';
 
 export interface TypingIndicatorMessageProps {
   typingMember: Member;
@@ -36,14 +37,7 @@ export default function TypingIndicatorMessage({
         >
           {`${typingMember.nickname} ${stringSet.TYPING_INDICATOR__IS_TYPING}`}
         </Label>
-        {/* TODO: Replace below with css made logo */}
-        {/* <img */}
-        {/*  src={typingIndicatorLogo} */}
-        {/*  alt={`${typingMember.nickname} ${stringSet.TYPING_INDICATOR__IS_TYPING}`} */}
-        {/*  style={{ */}
-        {/*    height: '40px', */}
-        {/*  }} */}
-        {/* /> */}
+        <TypingDots/>
       </div>
     </div>
   );
