@@ -12,8 +12,7 @@ export default function TypingIndicatorMessage({
   typingMember,
 }: TypingIndicatorMessageProps): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
-  const avatarRef = useRef(null);
-
+  
   return (
     <div
       className='sendbird-message-content incoming'
@@ -24,7 +23,6 @@ export default function TypingIndicatorMessage({
           className={'sendbird-message-content__left__avatar'}
           src={typingMember.profileUrl || ''}
           // TODO: Divide getting profileUrl logic to utils
-          ref={avatarRef}
           width="28px"
           height="28px"
         />
