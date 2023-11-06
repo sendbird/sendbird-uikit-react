@@ -374,6 +374,16 @@ export default function reducer(
         localThreadMessages,
       };
     }
+    case actionTypes.ON_TYPING_STATUS_UPDATED: {
+      const { channel, typingMembers } = action.payload;
+      if (!compareIds(channel.url, state.currentChannel?.url)) {
+        return state;
+      }
+      return {
+        ...state,
+        typingMembers,
+      };
+    }
     default: {
       return state;
     }

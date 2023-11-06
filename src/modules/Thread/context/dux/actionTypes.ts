@@ -43,4 +43,6 @@ export enum ThreadContextActionTypes {
   ON_CHANNEL_FROZEN = 'ON_CHANNEL_FROZEN',
   ON_CHANNEL_UNFROZEN = 'ON_CHANNEL_UNFROZEN',
   ON_OPERATOR_UPDATED = 'ON_OPERATOR_UPDATED',
+  // event handler - typing status change
+  ON_TYPING_STATUS_UPDATED = 'ON_TYPING_STATUS_UPDATED',
 }

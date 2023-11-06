@@ -1,62 +1,54 @@
 import React, {
-  ReactElement,
-  useContext,
+  ReactElement, ReactNode,
   useRef,
   useState,
 } from 'react';
 import format from 'date-fns/format';
 import './index.scss';
 
-import Avatar from '../Avatar';
-import UserProfile from '../UserProfile';
 import MessageStatus from '../MessageStatus';
 import MessageItemMenu from '../MessageItemMenu';
 import MessageItemReactionMenu from '../MessageItemReactionMenu';
-import ContextMenu, { MenuItems } from '../ContextMenu';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import EmojiReactions from '../EmojiReactions';
 
 import ClientAdminMessage from '../AdminMessage';
-import TextMessageItemBody from '../TextMessageItemBody';
-import FileMessageItemBody from '../FileMessageItemBody';
-import ThumbnailMessageItemBody from '../ThumbnailMessageItemBody';
-import OGMessageItemBody from '../OGMessageItemBody';
-import UnknownMessageItemBody from '../UnknownMessageItemBody';
 import QuoteMessage from '../QuoteMessage';
 
 import {
   getClassName,
-  getUIKitMessageTypes,
-  getUIKitMessageType,
-  isTextMessage,
   isOGMessage,
   isThumbnailMessage,
-  getSenderName,
-  isVoiceMessage,
   SendableMessageType,
   CoreMessageType,
   isMultipleFilesMessage,
-  isSendableMessage,
 } from '../../utils';
-import { UserProfileContext } from '../../lib/UserProfileContext';
 import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { EmojiContainer } from '@sendbird/chat';
-import { AdminMessage, FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
+import { AdminMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
 import useLongPress from '../../hooks/useLongPress';
 import MobileMenu from '../MobileMenu';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import ThreadReplies from '../ThreadReplies';
 import { ThreadReplySelectType } from '../../modules/Channel/context/const';
-import VoiceMessageItemBody from '../VoiceMessageItemBody';
 import { Nullable, ReplyType } from '../../types';
 import { noop } from '../../utils/utils';
-import MultipleFilesMessageItemBody from '../MultipleFilesMessageItemBody';
-import { useThreadMessageKindKeySelector } from '../../modules/Channel/context/hooks/useThreadMessageKindKeySelector';
-import { useStatefulFileInfoList } from '../../modules/Channel/context/hooks/useStatefulFileInfoList';
+import MessageProfile, { MessageProfileProps } from './MessageProfile';
+import MessageBody, { MessageBodyProps } from './MessageBody';
+import MessageHeader, { MessageHeaderProps } from './MessageHeader';
 
-interface Props {
+export interface MessageContentProps extends MessageContentInternalProps {
+  renderSenderProfile?: (props: MessageProfileProps) => ReactNode;
+  renderMessageBody?: (props: MessageBodyProps) => ReactNode;
+  renderMessageHeader?: (props: MessageHeaderProps) => ReactNode;
+}
+
+/**
+ * @internal
+ */
+export interface MessageContentInternalProps {
   className?: string | Array<string>;
   userId: string;
   channel: Nullable<GroupChannel>;
@@ -82,38 +74,50 @@ interface Props {
   onQuoteMessageClick?: (props: { message: SendableMessageType }) => void;
   onMessageHeightChange?: () => void;
 }
-export default function MessageContent({
-  className,
-  userId,
-  channel,
-  message,
-  disabled = false,
-  chainTop = false,
-  chainBottom = false,
-  isReactionEnabled = false,
-  disableQuoteMessage = false,
-  replyType,
-  threadReplySelectType,
-  nicknamesMap,
-  emojiContainer,
-  scrollToMessage,
-  showEdit,
-  showRemove,
-  showFileViewer,
-  resendMessage,
-  deleteMessage,
-  toggleReaction,
-  setQuoteMessage,
-  onReplyInThread,
-  onQuoteMessageClick,
-  onMessageHeightChange,
-}: Props): ReactElement {
-  const messageTypes = getUIKitMessageTypes();
+
+export default function MessageContent(props: MessageContentProps): ReactElement {
+  const {
+    // Internal props
+    className,
+    userId,
+    channel,
+    message,
+    disabled = false,
+    chainTop = false,
+    chainBottom = false,
+    isReactionEnabled = false,
+    disableQuoteMessage = false,
+    replyType,
+    threadReplySelectType,
+    nicknamesMap,
+    emojiContainer,
+    scrollToMessage,
+    showEdit,
+    showRemove,
+    showFileViewer,
+    resendMessage,
+    deleteMessage,
+    toggleReaction,
+    setQuoteMessage,
+    onReplyInThread,
+    onQuoteMessageClick,
+    onMessageHeightChange,
+
+    // Public props for customization
+    renderSenderProfile = (props: MessageProfileProps) => (
+      <MessageProfile {...props}/>
+    ),
+    renderMessageBody = (props: MessageBodyProps) => (
+      <MessageBody {...props}/>
+    ),
+    renderMessageHeader = (props: MessageHeaderProps) => (
+      <MessageHeader {...props}/>
+    ),
+  } = props;
+
   const { dateLocale } = useLocalization();
   const { config, eventHandlers } = useSendbirdStateContext?.() || {};
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
-  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
-  const avatarRef = useRef(null);
   const contentRef = useRef(null);
   const { isMobile } = useMediaQueryContext();
   const [showMenu, setShowMenu] = useState(false);
@@ -133,8 +137,6 @@ export default function MessageContent({
     && !disableQuoteMessage
   );
   const useReplyingClassName = useReplying ? 'use-quote' : '';
-
-  const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableOgtag;
 
   // Thread replies
   const displayThreadReplies = message?.threadInfo?.replyCount > 0 && replyType === 'THREAD';
@@ -156,12 +158,6 @@ export default function MessageContent({
     shouldPreventDefault: false,
   });
 
-  const threadMessageKindKey = useThreadMessageKindKeySelector({
-    isMobile,
-  });
-  // For MultipleFilesMessage only.
-  const statefulFileInfoList = useStatefulFileInfoList(message);
-
   if (message?.isAdminMessage?.() || message?.messageType === 'admin') {
     return (<ClientAdminMessage message={message as AdminMessage} />);
   }
@@ -173,97 +169,29 @@ export default function MessageContent({
       onMouseLeave={() => setMouseHover(false)}
     >
       {/* left */}
-      <div className={getClassName(['sendbird-message-content__left', isReactionEnabledClassName, isByMeClassName, useReplyingClassName])}>
-        {(!isByMe && !chainBottom && isSendableMessage(message)) && (
-          /** user profile */
-          <ContextMenu
-            menuTrigger={(toggleDropdown: () => void): ReactElement => (
-              <Avatar
-                className={`sendbird-message-content__left__avatar ${displayThreadReplies ? 'use-thread-replies' : ''}`}
-                // @ts-ignore
-                src={channel?.members?.find((member) => member?.userId === message.sender.userId)?.profileUrl || message.sender.profileUrl || ''}
-                // TODO: Divide getting profileUrl logic to utils
-                ref={avatarRef}
-                width="28px"
-                height="28px"
-                onClick={(): void => { if (!disableUserProfile) toggleDropdown(); }}
-              />
-            )}
-            menuItems={(closeDropdown: () => void): ReactElement => (
-              <MenuItems
-                /**
-                * parentRef: For catching location(x, y) of MenuItems
-                * parentContainRef: For toggling more options(menus & reactions)
-                */
-                parentRef={avatarRef}
-                parentContainRef={avatarRef}
-                closeDropdown={closeDropdown}
-                style={{ paddingTop: '0px', paddingBottom: '0px' }}
-              >
-                {renderUserProfile
-                  ? renderUserProfile({ user: message.sender, close: closeDropdown, currentUserId: userId })
-                  : (<UserProfile user={message.sender} onSuccess={closeDropdown} />)
-                }
-              </MenuItems>
-            )}
-          />
-        )}
-        {/* outgoing menu */}
-        {isByMe && !isMobile && (
-          <div className={getClassName(['sendbird-message-content-menu', isReactionEnabledClassName, supposedHoverClassName, isByMeClassName])}>
-            <MessageItemMenu
-              className="sendbird-message-content-menu__normal-menu"
-              channel={channel}
-              message={message as SendableMessageType}
-              isByMe={isByMe}
-              replyType={replyType}
-              disabled={disabled}
-              showEdit={showEdit}
-              showRemove={showRemove}
-              resendMessage={resendMessage}
-              setQuoteMessage={setQuoteMessage}
-              setSupposedHover={setSupposedHover}
-              onReplyInThread={({ message }) => {
-                if (threadReplySelectType === ThreadReplySelectType.THREAD) {
-                  onReplyInThread({ message });
-                } else if (threadReplySelectType === ThreadReplySelectType.PARENT) {
-                  scrollToMessage(message.parentMessage?.createdAt, message.parentMessageId);
-                }
-              }}
-            />
-            {isReactionEnabledInChannel && (
-              <MessageItemReactionMenu
-                className="sendbird-message-content-menu__reaction-menu"
-                message={message as SendableMessageType}
-                userId={userId}
-                emojiContainer={emojiContainer}
-                toggleReaction={toggleReaction}
-                setSupposedHover={setSupposedHover}
-              />
-            )}
-          </div>
-        )}
-      </div>
+      {
+        renderSenderProfile({
+          ...props,
+          setSupposedHover,
+          isMobile,
+          isReactionEnabledInChannel,
+          isReactionEnabledClassName,
+          isByMe,
+          isByMeClassName,
+          useReplyingClassName,
+          displayThreadReplies,
+          supposedHoverClassName,
+        })
+      }
       {/* middle */}
       <div
         className={'sendbird-message-content__middle'}
         {...(isMobile ? { ...longPress } : {})}
         ref={contentRef}
       >
-        {(!isByMe && !chainTop && !useReplying) && (
-          <Label
-            className="sendbird-message-content__middle__sender-name"
-            type={LabelTypography.CAPTION_2}
-            color={LabelColors.ONBACKGROUND_2}
-          >
-            {
-              // @ts-ignore
-              channel?.members?.find((member) => member?.userId === message?.sender?.userId)?.nickname
-              || getSenderName(message as SendableMessageType)
-              // TODO: Divide getting profileUrl logic to utils
-            }
-          </Label>
-        )}
+        {
+          !isByMe && !chainTop && !useReplying && renderMessageHeader(props)
+        }
         {/* quote message */}
         {(useReplying) ? (
           <div className={getClassName(['sendbird-message-content__middle__quote-message', isByMe ? 'outgoing' : 'incoming', useReplyingClassName])}>
@@ -289,7 +217,7 @@ export default function MessageContent({
         ) : null}
         {/* container: message item body + emoji reactions */}
         <div className={getClassName(['sendbird-message-content__middle__body-container'])} >
-          {/* message status component */}
+          {/* message status component when sent by me */}
           {(isByMe && !chainBottom) && (
             <div className={getClassName(['sendbird-message-content__middle__body-container__created-at', 'left', supposedHoverClassName])}>
               <div className="sendbird-message-content__middle__body-container__created-at__component-container">
@@ -300,76 +228,19 @@ export default function MessageContent({
               </div>
             </div>
           )}
-          {/* message item body components */}
-          {isOgMessageEnabledInGroupChannel && isOGMessage(message as UserMessage) ? (
-            <OGMessageItemBody
-              className="sendbird-message-content__middle__message-item-body"
-              message={message as UserMessage}
-              isByMe={isByMe}
-              mouseHover={mouseHover}
-              isMentionEnabled={config?.isMentionEnabled || false}
-              isReactionEnabled={isReactionEnabledInChannel}
-              onMessageHeightChange={onMessageHeightChange}
-            />
-          ) : isTextMessage(message as UserMessage) && (
-            <TextMessageItemBody
-              className="sendbird-message-content__middle__message-item-body"
-              message={message as UserMessage}
-              isByMe={isByMe}
-              mouseHover={mouseHover}
-              isMentionEnabled={config?.isMentionEnabled || false}
-              isReactionEnabled={isReactionEnabledInChannel}
-            />
-          )}
-          {(getUIKitMessageType((message as CoreMessageType)) === messageTypes.FILE) && (
-            <FileMessageItemBody
-              className="sendbird-message-content__middle__message-item-body"
-              message={message as FileMessage}
-              isByMe={isByMe}
-              mouseHover={mouseHover}
-              isReactionEnabled={isReactionEnabledInChannel}
-            />
-          )}
-          {isMultipleFilesMessage(message as CoreMessageType) && (
-            <MultipleFilesMessageItemBody
-              className="sendbird-message-content__middle__message-item-body"
-              message={message as MultipleFilesMessage}
-              isByMe={isByMe}
-              mouseHover={mouseHover}
-              isReactionEnabled={isReactionEnabledInChannel}
-              threadMessageKindKey={threadMessageKindKey}
-              statefulFileInfoList={statefulFileInfoList}
-            />
-          )}
-          {isVoiceMessage(message as FileMessage) && (
-            <VoiceMessageItemBody
-              className="sendbird-message-content__middle__message-item-body"
-              message={message as FileMessage}
-              channelUrl={channel?.url ?? ''}
-              isByMe={isByMe}
-              isReactionEnabled={isReactionEnabledInChannel}
-            />
-          )}
-          {(isThumbnailMessage(message as FileMessage)) && (
-            <ThumbnailMessageItemBody
-              className="sendbird-message-content__middle__message-item-body"
-              message={message as FileMessage}
-              isByMe={isByMe}
-              mouseHover={mouseHover}
-              isReactionEnabled={isReactionEnabledInChannel}
-              showFileViewer={showFileViewer}
-              style={isMobile ? { width: '100%' } : {}}
-            />
-          )}
-          {(getUIKitMessageType((message as CoreMessageType)) === messageTypes.UNKNOWN) && (
-            <UnknownMessageItemBody
-              className="sendbird-message-content__middle__message-item-body"
-              message={message}
-              isByMe={isByMe}
-              mouseHover={mouseHover}
-              isReactionEnabled={isReactionEnabledInChannel}
-            />
-          )}
+          {
+            renderMessageBody({
+              message,
+              channel,
+              showFileViewer,
+              onMessageHeightChange,
+              mouseHover,
+              isMobile,
+              config,
+              isReactionEnabledInChannel,
+              isByMe,
+            })
+          }
           {/* reactions */}
           {(isReactionEnabledInChannel && message?.reactions?.length > 0) && (
             <div className={getClassName([
@@ -392,6 +263,7 @@ export default function MessageContent({
               />
             </div>
           )}
+          {/* message timestamp when sent by others */}
           {(!isByMe && !chainBottom) && (
             <Label
               className={getClassName(['sendbird-message-content__middle__body-container__created-at', 'right', supposedHoverClassName])}

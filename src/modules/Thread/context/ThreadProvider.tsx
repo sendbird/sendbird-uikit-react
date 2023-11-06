@@ -120,6 +120,7 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
     isMuted,
     isChannelFrozen,
     currentUserId,
+    typingMembers,
   }: ThreadContextInitialState = threadStore;
 
   // Initialization
@@ -262,6 +263,7 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
         isMuted,
         isChannelFrozen,
         currentUserId,
+        typingMembers,
       }}
     >
       {/* UserProfileProvider */}

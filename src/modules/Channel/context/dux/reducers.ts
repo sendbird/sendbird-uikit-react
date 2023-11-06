@@ -404,5 +404,15 @@ export default function channelReducer(
         localMessages,
       };
     })
+    .with({ type: channelActions.ON_TYPING_STATUS_UPDATED }, (action) => {
+      const { channel, typingMembers } = action.payload;
+      if (!compareIds(channel.url, state?.currentGroupChannel?.url)) {
+        return state;
+      }
+      return {
+        ...state,
+        typingMembers,
+      };
+    })
     .otherwise(() => state);
 }

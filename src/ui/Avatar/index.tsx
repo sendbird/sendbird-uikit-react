@@ -197,7 +197,7 @@ function Avatar(
     onClick,
     customDefaultComponent,
   }: AvatarProps,
-  ref: RefObject<HTMLDivElement>,
+  ref?: RefObject<HTMLDivElement>,
 ): ReactElement {
   return (
     <div

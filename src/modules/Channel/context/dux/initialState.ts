@@ -1,5 +1,5 @@
 import { CoreMessageType, SendableMessageType } from '../../../../utils';
-import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import { EmojiContainer } from '@sendbird/chat';
 import type { MessageListParams as MessageListParamsInternal } from '../ChannelProvider';
 
@@ -20,6 +20,7 @@ export interface ChannelInitialStateType {
   emojiContainer: EmojiContainer;
   readStatus: any;
   messageListParams: null | MessageListParamsInternal;
+  typingMembers: Member[];
 }
 
 const initialState: ChannelInitialStateType = {
@@ -51,6 +52,7 @@ const initialState: ChannelInitialStateType = {
   isInvalid: false,
   readStatus: null,
   messageListParams: null,
+  typingMembers: [],
 };
 
 export default initialState;

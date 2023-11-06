@@ -50,6 +50,7 @@ import { useHandleChannelPubsubEvents } from './hooks/useHandleChannelPubsubEven
 import { PublishingModuleType } from '../../internalInterfaces';
 import { ChannelActionTypes } from './dux/actionTypes';
 import { MultipleFilesMessage } from '@sendbird/chat/message';
+import { Member } from '@sendbird/chat/groupChannel';
 
 export type MessageListParams = {
   // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
@@ -121,6 +122,7 @@ interface MessageStoreInterface {
   latestMessageTimeStamp: number;
   emojiContainer: EmojiContainer;
   readStatus: any;
+  typingMembers: Member[];
 }
 
 interface SendMessageParams {
@@ -253,6 +255,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     latestMessageTimeStamp,
     emojiContainer,
     readStatus,
+    typingMembers,
   } = messagesStore;
 
   const isSuper = currentGroupChannel?.isSuper || false;
@@ -486,6 +489,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       latestMessageTimeStamp,
       emojiContainer,
       readStatus,
+      typingMembers,
 
       // utils
       scrollToMessage,
