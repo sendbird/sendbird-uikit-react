@@ -9,7 +9,7 @@ const TypingDots = () => {
       <span/>
       <span/>
     </div>
-  )
-}
+  );
+};
 
 export default TypingDots;
