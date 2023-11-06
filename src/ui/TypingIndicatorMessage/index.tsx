@@ -1,11 +1,8 @@
-import React, {ReactElement, useContext, useRef} from 'react';
-import './index.scss';
-import {Member} from '@sendbird/chat/groupChannel';
-// @ts-ignore
-import typingIndicatorLogo from '../../gifs/message-typing-indicator.gif';
-import {LocalizationContext} from '../../lib/LocalizationContext';
+import React, { ReactElement, useContext, useRef } from 'react';
+import { Member } from '@sendbird/chat/groupChannel';
+import { LocalizationContext } from '../../lib/LocalizationContext';
 import Avatar from '../Avatar';
-import Label, {LabelColors, LabelTypography} from '../Label';
+import Label, { LabelColors, LabelTypography } from '../Label';
 
 export interface TypingIndicatorMessageProps {
   typingMember: Member;
@@ -18,8 +15,11 @@ export default function TypingIndicatorMessage({
   const avatarRef = useRef(null);
 
   return (
-    <div className='cutom-xxx'>
-      <div className={'sendbird-message-content__left incoming'}>
+    <div
+      className='sendbird-message-content incoming'
+      style={{ marginBottom: '2px' }}
+    >
+      <div className='sendbird-message-content__left incoming'>
         <Avatar
           className={'sendbird-message-content__left__avatar'}// @ts-ignore
           // @ts-ignore
@@ -31,23 +31,22 @@ export default function TypingIndicatorMessage({
         />
       </div>
 
-      <div className='sendbird-message-content-middle'>
-        <div>
-          <Label
-            className="sendbird-message-content__middle__sender-name"
-            type={LabelTypography.CAPTION_2}
-            color={LabelColors.ONBACKGROUND_2}
-          >
-            {`${typingMember.nickname} is typing...`}
-          </Label>
-        </div>
-        <img
-          src={typingIndicatorLogo}
-          alt={`${typingMember.nickname} ${stringSet.TYPING_INDICATOR__IS_TYPING}`}
-          style={{
-            height: '40px',
-          }}
-        />
+      <div className='sendbird-message-content__middle'>
+        <Label
+          className="sendbird-message-content__middle__sender-name"
+          type={LabelTypography.CAPTION_2}
+          color={LabelColors.ONBACKGROUND_2}
+        >
+          {`${typingMember.nickname} ${stringSet.TYPING_INDICATOR__IS_TYPING}`}
+        </Label>
+        {/* TODO: Replace below with css made logo */}
+        {/* <img */}
+        {/*  src={typingIndicatorLogo} */}
+        {/*  alt={`${typingMember.nickname} ${stringSet.TYPING_INDICATOR__IS_TYPING}`} */}
+        {/*  style={{ */}
+        {/*    height: '40px', */}
+        {/*  }} */}
+        {/* /> */}
       </div>
     </div>
   );

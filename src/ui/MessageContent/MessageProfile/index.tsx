@@ -1,14 +1,14 @@
-import React, {Dispatch, ReactElement, SetStateAction, useContext, useRef} from 'react';
+import React, { Dispatch, ReactElement, SetStateAction, useContext, useRef } from 'react';
 import '../index.scss';
-import {getClassName, isSendableMessage, SendableMessageType} from '../../../utils';
-import ContextMenu, {MenuItems} from '../../ContextMenu';
+import { getClassName, isSendableMessage, SendableMessageType } from '../../../utils';
+import ContextMenu, { MenuItems } from '../../ContextMenu';
 import Avatar from '../../Avatar';
 import UserProfile from '../../UserProfile';
 import MessageItemMenu from '../../MessageItemMenu';
-import {ThreadReplySelectType} from '../../../modules/Channel/context/const';
+import { ThreadReplySelectType } from '../../../modules/Channel/context/const';
 import MessageItemReactionMenu from '../../MessageItemReactionMenu';
-import {MessageContentInternalProps} from '../index';
-import {UserProfileContext} from '../../../lib/UserProfileContext';
+import { MessageContentInternalProps } from '../index';
+import { UserProfileContext } from '../../../lib/UserProfileContext';
 
 export interface MessageProfileProps extends MessageContentInternalProps {
   setSupposedHover?: Dispatch<SetStateAction<boolean>>;
@@ -24,7 +24,7 @@ export interface MessageProfileProps extends MessageContentInternalProps {
 
 export default function MessageProfile(props: MessageProfileProps): ReactElement {
   const avatarRef = useRef(null);
-  
+
   const {
     message,
     channel,
@@ -92,7 +92,7 @@ export default function MessageProfile(props: MessageProfileProps): ReactElement
       )}
       {/* outgoing menu */}
       {isByMe && !isMobile && (
-        <div className={getClassName(['sendbird-message-content-menu', supposedHoverClassName])}>
+        <div className={getClassName(['sendbird-message-content-menu', isReactionEnabledClassName, supposedHoverClassName, isByMeClassName])}>
           <MessageItemMenu
             channel={channel}
             message={message as SendableMessageType}

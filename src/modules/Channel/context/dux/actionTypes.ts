@@ -5,7 +5,7 @@ import { EmojiContainer } from '@sendbird/chat';
 import { ReactionEvent } from '@sendbird/chat/message';
 import { MessageListParams } from '../ChannelProvider';
 import { FileUploadedPayload } from '../hooks/useSendMultipleFilesMessage';
-import {Member} from '@sendbird/chat/lib/__definition';
+import { Member } from '@sendbird/chat/lib/__definition';
 
 export const RESET_MESSAGES = 'RESET_MESSAGES';
 export const FETCH_INITIAL_MESSAGES_START = 'FETCH_INITIAL_MESSAGES_START';
@@ -32,7 +32,6 @@ export const SET_EMOJI_CONTAINER = 'SET_EMOJI_CONTAINER';
 export const MESSAGE_LIST_PARAMS_CHANGED = 'MESSAGE_LIST_PARAMS_CHANGED';
 export const ON_FILE_INFO_UPLOADED = 'ON_FILE_INFO_UPLOADED';
 export const ON_TYPING_STATUS_UPDATED = 'ON_TYPING_STATUS_UPDATED';
-
 
 type CHANNEL_PAYLOAD_TYPES = {
   [RESET_MESSAGES]: null;

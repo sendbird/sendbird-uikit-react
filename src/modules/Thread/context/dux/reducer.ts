@@ -6,7 +6,6 @@ import { compareIds } from '../utils';
 import { ThreadContextActionTypes as actionTypes } from './actionTypes';
 import { ThreadContextInitialState } from './initialState';
 import { SendableMessageType } from '../../../../utils';
-import * as channelActions from '../../../Channel/context/dux/actionTypes';
 
 interface ActionInterface {
   type: actionTypes;

@@ -50,7 +50,7 @@ import { useHandleChannelPubsubEvents } from './hooks/useHandleChannelPubsubEven
 import { PublishingModuleType } from '../../internalInterfaces';
 import { ChannelActionTypes } from './dux/actionTypes';
 import { MultipleFilesMessage } from '@sendbird/chat/message';
-import {Member} from '@sendbird/chat/groupChannel';
+import { Member } from '@sendbird/chat/groupChannel';
 
 export type MessageListParams = {
   // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html

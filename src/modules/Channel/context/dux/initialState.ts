@@ -1,5 +1,5 @@
 import { CoreMessageType, SendableMessageType } from '../../../../utils';
-import {GroupChannel, Member} from '@sendbird/chat/groupChannel';
+import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import { EmojiContainer } from '@sendbird/chat';
 import type { MessageListParams as MessageListParamsInternal } from '../ChannelProvider';
 

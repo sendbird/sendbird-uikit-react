@@ -1,9 +1,9 @@
-import React, {ReactElement} from 'react';
+import React, { ReactElement } from 'react';
 import '../index.scss';
-import Label, {LabelColors, LabelTypography} from '../../Label';
-import {CoreMessageType, getSenderName, SendableMessageType} from '../../../utils';
-import {Nullable} from '../../../types';
-import {GroupChannel, Member} from '@sendbird/chat/groupChannel';
+import Label, { LabelColors, LabelTypography } from '../../Label';
+import { CoreMessageType, getSenderName, SendableMessageType } from '../../../utils';
+import { Nullable } from '../../../types';
+import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 
 export interface MessageHeaderProps {
   channel: Nullable<GroupChannel>;
