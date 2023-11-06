@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext, useRef } from 'react';
+import React, { ReactElement, useContext } from 'react';
 import { Member } from '@sendbird/chat/groupChannel';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import Avatar from '../Avatar';
@@ -12,7 +12,7 @@ export default function TypingIndicatorMessage({
   typingMember,
 }: TypingIndicatorMessageProps): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
-  
+
   return (
     <div
       className='sendbird-message-content incoming'

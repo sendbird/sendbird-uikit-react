@@ -59,76 +59,76 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
   const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableOgtag;
 
   return match(message)
-  .when((message) => isOgMessageEnabledInGroupChannel
-    && isSendableMessage(message)
-    && isOGMessage(message), () => (
-    <OGMessageItemBody
-      className={MESSAGE_ITEM_BODY_CLASSNAME}
-      message={message as UserMessage}
-      isByMe={isByMe}
-      mouseHover={mouseHover}
-      isMentionEnabled={config?.isMentionEnabled || false}
-      isReactionEnabled={isReactionEnabledInChannel}
-      onMessageHeightChange={onMessageHeightChange}
-    />
-  ))
-  .when(isTextMessage, () => (
-    <TextMessageItemBody
-      className={MESSAGE_ITEM_BODY_CLASSNAME}
-      message={message as UserMessage}
-      isByMe={isByMe}
-      mouseHover={mouseHover}
-      isMentionEnabled={config?.isMentionEnabled || false}
-      isReactionEnabled={isReactionEnabledInChannel}
-    />
-  ))
-  .when((message) => getUIKitMessageType(message) === messageTypes.FILE, () => (
-    <FileMessageItemBody
-      className={MESSAGE_ITEM_BODY_CLASSNAME}
-      message={message as FileMessage}
-      isByMe={isByMe}
-      mouseHover={mouseHover}
-      isReactionEnabled={isReactionEnabledInChannel}
-    />
-  ))
-  .when(isMultipleFilesMessage, () => (
-    <MultipleFilesMessageItemBody
-      className={MESSAGE_ITEM_BODY_CLASSNAME}
-      message={message as MultipleFilesMessage}
-      isByMe={isByMe}
-      mouseHover={mouseHover}
-      isReactionEnabled={isReactionEnabledInChannel}
-      threadMessageKindKey={threadMessageKindKey}
-      statefulFileInfoList={statefulFileInfoList}
-    />
-  ))
-  .when(isVoiceMessage, () => (
-    <VoiceMessageItemBody
-      className={MESSAGE_ITEM_BODY_CLASSNAME}
-      message={message as FileMessage}
-      channelUrl={channel?.url ?? ''}
-      isByMe={isByMe}
-      isReactionEnabled={isReactionEnabledInChannel}
-    />
-  ))
-  .when(isThumbnailMessage, () => (
-    <ThumbnailMessageItemBody
-      className={MESSAGE_ITEM_BODY_CLASSNAME}
-      message={message as FileMessage}
-      isByMe={isByMe}
-      mouseHover={mouseHover}
-      isReactionEnabled={isReactionEnabledInChannel}
-      showFileViewer={showFileViewer}
-      style={isMobile ? { width: '100%' } : {}}
-    />
-  ))
-  .otherwise((message) => (
-    <UnknownMessageItemBody
-      className={MESSAGE_ITEM_BODY_CLASSNAME}
-      message={message}
-      isByMe={isByMe}
-      mouseHover={mouseHover}
-      isReactionEnabled={isReactionEnabledInChannel}
-    />
-  ));
+    .when((message) => isOgMessageEnabledInGroupChannel
+      && isSendableMessage(message)
+      && isOGMessage(message), () => (
+      <OGMessageItemBody
+        className={MESSAGE_ITEM_BODY_CLASSNAME}
+        message={message as UserMessage}
+        isByMe={isByMe}
+        mouseHover={mouseHover}
+        isMentionEnabled={config?.isMentionEnabled || false}
+        isReactionEnabled={isReactionEnabledInChannel}
+        onMessageHeightChange={onMessageHeightChange}
+      />
+    ))
+    .when(isTextMessage, () => (
+      <TextMessageItemBody
+        className={MESSAGE_ITEM_BODY_CLASSNAME}
+        message={message as UserMessage}
+        isByMe={isByMe}
+        mouseHover={mouseHover}
+        isMentionEnabled={config?.isMentionEnabled || false}
+        isReactionEnabled={isReactionEnabledInChannel}
+      />
+    ))
+    .when((message) => getUIKitMessageType(message) === messageTypes.FILE, () => (
+      <FileMessageItemBody
+        className={MESSAGE_ITEM_BODY_CLASSNAME}
+        message={message as FileMessage}
+        isByMe={isByMe}
+        mouseHover={mouseHover}
+        isReactionEnabled={isReactionEnabledInChannel}
+      />
+    ))
+    .when(isMultipleFilesMessage, () => (
+      <MultipleFilesMessageItemBody
+        className={MESSAGE_ITEM_BODY_CLASSNAME}
+        message={message as MultipleFilesMessage}
+        isByMe={isByMe}
+        mouseHover={mouseHover}
+        isReactionEnabled={isReactionEnabledInChannel}
+        threadMessageKindKey={threadMessageKindKey}
+        statefulFileInfoList={statefulFileInfoList}
+      />
+    ))
+    .when(isVoiceMessage, () => (
+      <VoiceMessageItemBody
+        className={MESSAGE_ITEM_BODY_CLASSNAME}
+        message={message as FileMessage}
+        channelUrl={channel?.url ?? ''}
+        isByMe={isByMe}
+        isReactionEnabled={isReactionEnabledInChannel}
+      />
+    ))
+    .when(isThumbnailMessage, () => (
+      <ThumbnailMessageItemBody
+        className={MESSAGE_ITEM_BODY_CLASSNAME}
+        message={message as FileMessage}
+        isByMe={isByMe}
+        mouseHover={mouseHover}
+        isReactionEnabled={isReactionEnabledInChannel}
+        showFileViewer={showFileViewer}
+        style={isMobile ? { width: '100%' } : {}}
+      />
+    ))
+    .otherwise((message) => (
+      <UnknownMessageItemBody
+        className={MESSAGE_ITEM_BODY_CLASSNAME}
+        message={message}
+        isByMe={isByMe}
+        mouseHover={mouseHover}
+        isReactionEnabled={isReactionEnabledInChannel}
+      />
+    ));
 }
