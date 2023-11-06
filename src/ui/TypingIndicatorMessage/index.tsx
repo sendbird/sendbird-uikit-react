@@ -21,8 +21,7 @@ export default function TypingIndicatorMessage({
     >
       <div className='sendbird-message-content__left incoming'>
         <Avatar
-          className={'sendbird-message-content__left__avatar'}// @ts-ignore
-          // @ts-ignore
+          className={'sendbird-message-content__left__avatar'}
           src={typingMember.profileUrl || ''}
           // TODO: Divide getting profileUrl logic to utils
           ref={avatarRef}
