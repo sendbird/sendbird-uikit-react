@@ -71,7 +71,7 @@ export default function MessageProfile(props: MessageProfileProps): ReactElement
               onClick={(): void => { if (!disableUserProfile) toggleDropdown(); }}
             />
           )}
-          menuItems={(closeDropdown: () => void): ReactElement => (
+          menuItems={(closeDropdown) => (
             <MenuItems
               /**
               * parentRef: For catching location(x, y) of MenuItems
