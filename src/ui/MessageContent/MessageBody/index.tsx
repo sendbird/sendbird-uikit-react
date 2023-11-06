@@ -122,14 +122,13 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
       style={isMobile ? { width: '100%' } : {}}
     />
     ))
-    .when((message) => getUIKitMessageType((message as CoreMessageType)) === messageTypes.UNKNOWN, () => (
-    <UnknownMessageItemBody
-      className={MESSAGE_ITEM_BODY_CLASSNAME}
-      message={message}
-      isByMe={isByMe}
-      mouseHover={mouseHover}
-      isReactionEnabled={isReactionEnabledInChannel}
-    />
-    ))
-    .otherwise(() => null);
+    .otherwise((message) => (
+      <UnknownMessageItemBody
+        className={MESSAGE_ITEM_BODY_CLASSNAME}
+        message={message}
+        isByMe={isByMe}
+        mouseHover={mouseHover}
+        isReactionEnabled={isReactionEnabledInChannel}
+      />
+    ));
 }
