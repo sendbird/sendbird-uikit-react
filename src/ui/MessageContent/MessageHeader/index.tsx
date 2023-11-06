@@ -23,6 +23,9 @@ export default function MessageHeader(props: MessageHeaderProps): ReactElement {
       color={LabelColors.ONBACKGROUND_2}
     >
       {
+        /**
+         * To use the latest member profile information, message.sender might be outdated
+         */
         channel?.members?.find((member: Member) => {
           // @ts-ignore
           return member?.userId === message?.sender?.userId;
