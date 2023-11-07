@@ -1,6 +1,6 @@
 @import '../../styles/variables';
 
-$dot-diameter-default: 8px;
+$dot-diameter: 8px;
 $duration: 1.4s;
 $blinked-scale: 1.2;
 $default-opacity: 0.12;
@@ -23,8 +23,8 @@ $blinked-opacity: 0.38;
     animation: blink $duration infinite;
     animation-fill-mode: both;
     border-radius: 50%;
-    height: $dot-diameter-default;
-    width: $dot-diameter-default;
+    height: $dot-diameter;
+    width: $dot-diameter;
 
     @include themed() {
       background-color: t(bg-7);
