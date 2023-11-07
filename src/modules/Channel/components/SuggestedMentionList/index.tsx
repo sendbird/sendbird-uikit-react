@@ -56,7 +56,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   const [timer, setTimer] = useState(null);
   const [searchString, setSearchString] = useState('');
   const [lastSearchString, setLastSearchString] = useState('');
-  const [currentUser, setCurrentUser] = useState<User>(null);
+  const [currentFocusedMember, setCurrentFocusedMember] = useState<User>(null);
   const [currentMemberList, setCurrentMemberList] = useState<Member[]>([]);
 
   useEffect(() => {
@@ -71,24 +71,24 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   useEffect(() => {
     if (inputEvent?.key === MessageInputKeys.Enter) {
       if (currentMemberList.length > 0) {
-        onUserItemClick(currentUser);
+        onUserItemClick(currentFocusedMember);
       }
     }
     if (inputEvent?.key === MessageInputKeys.ArrowUp) {
       const currentUserIndex = currentMemberList.findIndex((member) => (
-        member?.userId === currentUser?.userId
+        member?.userId === currentFocusedMember?.userId
       ));
       if (0 < currentUserIndex) {
-        setCurrentUser(currentMemberList[currentUserIndex - 1]);
+        setCurrentFocusedMember(currentMemberList[currentUserIndex - 1]);
         onFocusItemChange(currentMemberList[currentUserIndex - 1]);
       }
     }
     if (inputEvent?.key === MessageInputKeys.ArrowDown) {
       const currentUserIndex = currentMemberList.findIndex((member) => (
-        member?.userId === currentUser?.userId
+        member?.userId === currentFocusedMember?.userId
       ));
       if (currentUserIndex < currentMemberList.length - 1) {
-        setCurrentUser(currentMemberList[currentUserIndex + 1]);
+        setCurrentFocusedMember(currentMemberList[currentUserIndex + 1]);
         onFocusItemChange(currentMemberList[currentUserIndex + 1]);
       }
     }
@@ -112,7 +112,7 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
           logger.info('SuggestedMentionList: Fetched member list is empty');
         } else {
           logger.info('SuggestedMentionList: Fetching member list succeeded', { memberList: suggestingMembers });
-          setCurrentUser(suggestingMembers[0]);
+          setCurrentFocusedMember(suggestingMembers[0]);
         }
         setLastSearchString(searchString);
         onFetchUsers(suggestingMembers);
@@ -126,7 +126,6 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   }, [
     channelInstance?.url,
     // We have to be specific like this or React would not recognize the changes in instances.
-    channelInstance.members.map((member: Member) => member.userId).join(),
     channelInstance.members.map((member: Member) => member.nickname).join(),
     channelInstance.members.map((member: Member) => member.isActive).join(),
     searchString,
@@ -151,13 +150,13 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
           <SuggestedUserMentionItem
             key={member?.userId || uuidv4()}
             member={member}
-            isFocused={member?.userId === currentUser?.userId}
+            isFocused={member?.userId === currentFocusedMember?.userId}
             parentScrollRef={scrollRef}
             onClick={({ member }) => {
               onUserItemClick(member);
             }}
             onMouseOver={({ member }) => {
-              setCurrentUser(member);
+              setCurrentFocusedMember(member);
             }}
             renderUserMentionItem={renderUserMentionItem}
           />
