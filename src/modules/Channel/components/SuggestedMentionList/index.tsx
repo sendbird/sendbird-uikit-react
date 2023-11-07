@@ -13,6 +13,7 @@ import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT, USER_MENTION_TEMP_CH
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import uuidv4 from '../../../../utils/uuid';
 import { useThreadContext } from '../../../Thread/context/ThreadProvider';
+import { fetchMembersFromChannel, fetchMembersFromQuery } from './utils';
 
 export interface SuggestedMentionListProps {
   className?: string;
@@ -55,8 +56,8 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   const [timer, setTimer] = useState(null);
   const [searchString, setSearchString] = useState('');
   const [lastSearchString, setLastSearchString] = useState('');
-  const [currentUser, setCurrentUser] = useState<User>(null);
-  const [currentMemberList, setCurrentMemberList] = useState<Array<Member>>([]);
+  const [currentFocusedMember, setCurrentFocusedMember] = useState<User>(null);
+  const [currentMemberList, setCurrentMemberList] = useState<Member[]>([]);
 
   useEffect(() => {
     clearTimeout(timer);
@@ -70,55 +71,48 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
   useEffect(() => {
     if (inputEvent?.key === MessageInputKeys.Enter) {
       if (currentMemberList.length > 0) {
-        onUserItemClick(currentUser);
+        onUserItemClick(currentFocusedMember);
       }
     }
     if (inputEvent?.key === MessageInputKeys.ArrowUp) {
       const currentUserIndex = currentMemberList.findIndex((member) => (
-        member?.userId === currentUser?.userId
+        member?.userId === currentFocusedMember?.userId
       ));
       if (0 < currentUserIndex) {
-        setCurrentUser(currentMemberList[currentUserIndex - 1]);
+        setCurrentFocusedMember(currentMemberList[currentUserIndex - 1]);
         onFocusItemChange(currentMemberList[currentUserIndex - 1]);
       }
     }
     if (inputEvent?.key === MessageInputKeys.ArrowDown) {
       const currentUserIndex = currentMemberList.findIndex((member) => (
-        member?.userId === currentUser?.userId
+        member?.userId === currentFocusedMember?.userId
       ));
       if (currentUserIndex < currentMemberList.length - 1) {
-        setCurrentUser(currentMemberList[currentUserIndex + 1]);
+        setCurrentFocusedMember(currentMemberList[currentUserIndex + 1]);
         onFocusItemChange(currentMemberList[currentUserIndex + 1]);
       }
     }
   }, [inputEvent]);
 
-  /* Fetch member list */
   useEffect(() => {
-    if (!channelInstance?.createMemberListQuery) {
-      logger.warning('SuggestedMentionList: Creating member list query failed');
-      return;
-    }
     if (lastSearchString && searchString.indexOf(lastSearchString) === 0 && currentMemberList.length === 0) {
       // Don't need to request query again
       return;
     }
-
-    const query = channelInstance?.createMemberListQuery({
-      limit: maxSuggestionCount + 1, // because current user could be included
-      nicknameStartsWithFilter: searchString.slice(USER_MENTION_TEMP_CHAR.length),
-    });
-    // Add member list query for customization
-    query.next()
-      .then((memberList) => {
-        const suggestingMembers = memberList
-          .filter((member) => currentUserId !== member?.userId)
-          .slice(0, maxSuggestionCount);
+    if (channelInstance.isSuper) {
+      if (!channelInstance?.createMemberListQuery) {
+        logger.warning('SuggestedMentionList: Creating member list query failed');
+        return;
+      }
+    }
+    const fetcher = channelInstance.isSuper ? fetchMembersFromQuery : fetchMembersFromChannel;
+    fetcher(currentUserId, channelInstance, maxSuggestionCount, searchString.slice(USER_MENTION_TEMP_CHAR.length))
+      .then(suggestingMembers => {
         if (suggestingMembers.length < 1) {
           logger.info('SuggestedMentionList: Fetched member list is empty');
         } else {
-          logger.info('SuggestedMentionList: Fetching member list succeeded', { memberListQuery: query, memberList: suggestingMembers });
-          setCurrentUser(suggestingMembers[0]);
+          logger.info('SuggestedMentionList: Fetching member list succeeded', { memberList: suggestingMembers });
+          setCurrentFocusedMember(suggestingMembers[0]);
         }
         setLastSearchString(searchString);
         onFetchUsers(suggestingMembers);
@@ -129,7 +123,17 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
           logger.error('SuggestedMentionList: Fetching member list failed', error);
         }
       });
-  }, [channelInstance?.url, searchString]);
+  }, [
+    channelInstance?.url,
+    // We have to be specific like this or React would not recognize the changes in instances.
+    channelInstance.members.map((member: Member) => member.nickname).join(),
+    channelInstance.members.map((member: Member) => member.isActive).join(),
+    searchString,
+    maxSuggestionCount,
+    currentUserId,
+    currentMemberList.length,
+    lastSearchString,
+  ]);
 
   if (!ableAddMention && currentMemberList.length === 0) {
     return null;
@@ -146,13 +150,13 @@ function SuggestedMentionList(props: SuggestedMentionListProps): JSX.Element {
           <SuggestedUserMentionItem
             key={member?.userId || uuidv4()}
             member={member}
-            isFocused={member?.userId === currentUser?.userId}
+            isFocused={member?.userId === currentFocusedMember?.userId}
             parentScrollRef={scrollRef}
             onClick={({ member }) => {
               onUserItemClick(member);
             }}
             onMouseOver={({ member }) => {
-              setCurrentUser(member);
+              setCurrentFocusedMember(member);
             }}
             renderUserMentionItem={renderUserMentionItem}
           />
