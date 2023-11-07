@@ -22,7 +22,7 @@ const UnreadCount: React.FC<UnreadCountProps> = ({
   onClick,
   lastReadAt,
 }: UnreadCountProps) => {
-  const { stringSet } = useContext(LocalizationContext);
+  const { stringSet, dateLocale } = useContext(LocalizationContext);
 
   const unreadSince = useMemo(() => {
     // TODO: Remove this on v4
@@ -31,7 +31,7 @@ const UnreadCount: React.FC<UnreadCountProps> = ({
       timeArray?.splice(-2, 0, stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__ON);
       return timeArray.join(' ');
     } else if (lastReadAt) {
-      return format(lastReadAt, stringSet.DATE_FORMAT__MESSAGE_LIST__NOTIFICATION__UNREAD_SINCE);
+      return format(lastReadAt, stringSet.DATE_FORMAT__MESSAGE_LIST__NOTIFICATION__UNREAD_SINCE, { locale: dateLocale });
     }
   }, [time, lastReadAt]);
 
