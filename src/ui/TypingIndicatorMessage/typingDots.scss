@@ -3,22 +3,25 @@
 $dot-diameter-default: 8px;
 $duration: 1.4s;
 $blinked-scale: 1.2;
-$default-opacity: .12;
-$blinked-opacity: .38;
+$default-opacity: 0.12;
+$blinked-opacity: 0.38;
 
 .typing-dots-container {
-  display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 16px 12px;
   border-radius: 16px;
+  display: flex;
   gap: 6px;
+  justify-content: center;
+  padding: 16px 12px;
 
   @include themed() {
     background-color: t(bg--1-4);
   }
 
   span {
+
+    animation: blink $duration infinite;
+    animation-fill-mode: both;
     border-radius: 50%;
     height: $dot-diameter-default;
     width: $dot-diameter-default;
@@ -27,40 +30,43 @@ $blinked-opacity: .38;
       background-color: t(bg-7);
     }
 
-    animation: blink $duration infinite;
-    animation-fill-mode: both;
-
     &:nth-child(1) {
-      animation-delay: .4s;
+      animation-delay: 0.4s;
     }
+
     &:nth-child(2) {
-      animation-delay: .6s;
+      animation-delay: 0.6s;
     }
+
     &:nth-child(3) {
-      animation-delay: .8s;
+      animation-delay: 0.8s;
     }
   }
 }
 
 @keyframes blink {
   0% {
-    transform: scale(1);
     opacity: $default-opacity;
+    transform: scale(1);
   }
+
   14.3% {
-    transform: scale($blinked-scale);
     opacity: $blinked-opacity;
+    transform: scale($blinked-scale);
   }
+
   28.6% {
-    transform: scale($blinked-scale);
     opacity: $blinked-opacity;
+    transform: scale($blinked-scale);
   }
+
   42.9% {
-    transform: scale(1);
     opacity: $default-opacity;
+    transform: scale(1);
   }
+
   100% {
-    transform: scale(1);
     opacity: $default-opacity;
+    transform: scale(1);
   }
 }
