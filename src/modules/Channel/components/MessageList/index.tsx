@@ -241,13 +241,21 @@ const MessageList: React.FC<MessageListProps> = ({
                 );
               })
             }
+            <TypingIndicatorMessage
+              typingMembers={typingMembers.filter((typingMember: Member) => (
+                typingMember.userId !== store?.config?.userId
+              ))}
+            />
             {
-              typingMembers.map((typingMember: Member) => {
-                const isMe = typingMember.userId === store?.config?.userId;
-                return isMe
-                  ? null
-                  : <TypingIndicatorMessage typingMember={typingMember} />;
-              })
+              /**
+               * TODO: Temporary code for testing. Remove this before merging.
+               */
+              <TypingIndicatorMessage
+                // typingMembers={[currentGroupChannel.members.find((member: Member) => (
+                //   member.userId === store?.config?.userId
+                // ))]}
+                typingMembers={currentGroupChannel.members}
+              />
             }
             {/* show frozen notifications, */}
             {/* show new message notifications, */}

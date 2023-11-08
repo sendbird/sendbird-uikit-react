@@ -12,9 +12,10 @@ const imageRendererClassName = 'sendbird-avatar-img';
 interface DefaultComponentProps {
   width: string | number,
   height: string | number,
+  text?: string,
 }
 
-const DefaultComponent = ({ width, height }: DefaultComponentProps): ReactElement => {
+export const DefaultComponent = ({ width, height, text }: DefaultComponentProps): ReactElement => {
   let iconWidth = pxToNumber(width);
   let iconHeight = pxToNumber(height);
   if (typeof iconWidth === 'number' && !Number.isNaN(iconWidth)) {
@@ -26,12 +27,19 @@ const DefaultComponent = ({ width, height }: DefaultComponentProps): ReactElemen
 
   return (
     <div className="sendbird-avatar-img--default" style={{ width, height }}>
-      <Icon
-        type={IconTypes.USER}
-        fillColor={IconColors.CONTENT}
-        width={iconWidth}
-        height={iconHeight}
-      />
+      {
+        text
+          ? <div
+            className='sendbird-label--caption-2'
+            style={{ color: 'white' }}
+          >{ text }</div>
+          : <Icon
+            type={IconTypes.USER}
+            fillColor={IconColors.CONTENT}
+            width={iconWidth}
+            height={iconHeight}
+          />
+      }
     </div>
   );
 };
@@ -181,6 +189,9 @@ interface AvatarProps {
   className?: string | Array<string>,
   height?: string | number,
   width?: string | number,
+  zIndex?: string | number,
+  left?: string,
+  border?: string,
   src?: string | Array<string>,
   alt?: string,
   onClick?(): void,
@@ -194,6 +205,9 @@ function Avatar(
     alt = '',
     width = '56px',
     height = '56px',
+    zIndex = 0,
+    left = '0px',
+    border = '0px',
     onClick,
     customDefaultComponent,
   }: AvatarProps,
@@ -207,7 +221,13 @@ function Avatar(
       ].join(' ')}
       role="button"
       ref={ref}
-      style={{ height, width }}
+      style={{
+        height,
+        width,
+        zIndex,
+        left,
+        border,
+      }}
       onClick={onClick}
       onKeyDown={onClick}
       tabIndex={0}
