@@ -2,12 +2,11 @@ import React, { useCallback } from 'react';
 
 import * as messageActionTypes from '../dux/actionTypes';
 import { ChannelActionTypes } from '../dux/actionTypes';
-import topics from '../../../../lib/pubSub/topics';
+import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { PublishingModuleType } from '../../../internalInterfaces';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { UserMessage, UserMessageUpdateParams } from '@sendbird/chat/message';
 import { LoggerInterface } from '../../../../lib/Logger';
-import { PubSubTypes } from '../../../../lib/pubSub';
 import { SendbirdError, User } from '@sendbird/chat';
 
 type UseUpdateMessageCallbackOptions = {
@@ -18,7 +17,7 @@ type UseUpdateMessageCallbackOptions = {
 };
 type UseUpdateMessageCallbackParams = {
   logger: LoggerInterface;
-  pubSub: PubSubTypes;
+  pubSub: SBUGlobalPubSub;
 };
 type UpdateMessageParams = {
   messageId: number;
