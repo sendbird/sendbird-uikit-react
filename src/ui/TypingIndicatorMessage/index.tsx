@@ -18,7 +18,7 @@ export interface AvatarStackProps {
   max: number;
 }
 
-const AvatarStack = (props : AvatarStackProps) => {
+const AvatarStack = (props: AvatarStackProps) => {
   const { sources, max } = props;
 
   return (
