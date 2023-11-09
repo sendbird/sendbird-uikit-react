@@ -1,6 +1,6 @@
-import { ImageCompressionOptions } from "../lib/Sendbird";
-import pxToNumber from "./pxToNumber";
-import { Logger } from "../lib/SendbirdState";
+import { ImageCompressionOptions } from '../lib/Sendbird';
+import pxToNumber from './pxToNumber';
+import { Logger } from '../lib/SendbirdState';
 
 interface CompressImageProps {
   imageFile: File;
@@ -58,7 +58,7 @@ const compressImage = ({
           }
         },
         imageFile.type,
-        compressionRate
+        compressionRate,
       );
     };
   });
@@ -116,13 +116,13 @@ export const compressImages = async ({
             imageFile,
           });
         }
-      })
+      }),
   );
 
   logger.info('useImageCompression: Finished compressing images', {
     compressedImages,
     notCompressedFiles,
-  })
+  });
   return {
     compressedImages,
     notCompressedFiles,
