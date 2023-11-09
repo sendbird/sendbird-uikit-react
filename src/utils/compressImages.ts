@@ -31,6 +31,7 @@ const compressImage = ({
       let targetResizingWidth = resizingWidth || originWidth;
       let targetResizingHeight = resizingHeight || originHeight;
 
+      // Use the more impactful value, so the original images' ratio won't be broken
       if (widthRatio > heightRatio) {
         targetResizingHeight = originHeight / (resizingWidth ? widthRatio : 1);
       } else if (heightRatio > widthRatio) {

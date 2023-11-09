@@ -11,7 +11,7 @@ import { ButtonTypes } from '../../../../ui/Button';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { ModalFooter } from '../../../../ui/Modal';
 import { FileMessage, MultipleFilesMessage } from '@sendbird/chat/message';
-import { compressImages } from '../../../../utils/compressImage';
+import { compressImages } from '../../../../utils/compressImages';
 
 /**
  * The handleUploadFiles is a function sending a FileMessage and MultipleFilesMessage
