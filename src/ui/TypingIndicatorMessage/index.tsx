@@ -1,15 +1,43 @@
 import React from 'react';
 import { Member } from '@sendbird/chat/groupChannel';
-import Avatar, {DefaultComponent} from '../Avatar';
+import Avatar from '../Avatar';
 import TypingDots from './TypingDots';
+import AvatarDefault from '../Avatar/AvatarDefault';
 
 export interface TypingIndicatorMessageProps {
   typingMembers: Member[];
 }
 
 const AVATAR_BORDER_SIZE = 2;
-const AVATAR_DIAMETER = 26 + AVATAR_BORDER_SIZE;
+const AVATAR_DIAMETER_WITHOUT_BORDER = 24;
+const AVATAR_DIAMETER = AVATAR_DIAMETER_WITHOUT_BORDER + (AVATAR_BORDER_SIZE * 2);
 const LEFT_GAP = 20;
+
+export interface AvatarStackProps {
+  sources: string[];
+  max: number;
+}
+
+const AvatarStack = (props : AvatarStackProps) => {
+  const { sources, max } = props;
+
+  return (
+    <> {
+      sources.slice(0, max).map((src, index) => (
+        <Avatar
+          className={'sendbird-message-content__left__avatar'}
+          src={src || ''}
+          // TODO: Divide getting profileUrl logic to utils
+          width={`${AVATAR_DIAMETER_WITHOUT_BORDER}px`}
+          height={`${AVATAR_DIAMETER_WITHOUT_BORDER}px`}
+          zIndex={index}
+          left={`${index * LEFT_GAP}px`}
+          border={`${AVATAR_BORDER_SIZE}px solid white`}
+        />
+      ))
+    } </>
+  );
+}
 
 const TypingIndicatorMessageAvatar = (props : React.PropsWithChildren<TypingIndicatorMessageProps>) => {
   const { typingMembers } = props;
@@ -26,32 +54,22 @@ const TypingIndicatorMessageAvatar = (props : React.PropsWithChildren<TypingIndi
         minWidth: (displayCount * AVATAR_DIAMETER) - superImposedWidth + rightPaddingSize,
       }}
     >
-      {
-        typingMembers.slice(0, 3).map((typingMember: Member, index: number) => (
-          <Avatar
-            className={'sendbird-message-content__left__avatar'}
-            src={typingMember.profileUrl || ''}
-            // TODO: Divide getting profileUrl logic to utils
-            width={`${AVATAR_DIAMETER}px`}
-            height={`${AVATAR_DIAMETER}px`}
-            zIndex={index}
-            left={`${index * LEFT_GAP}px`}
-            border={`${AVATAR_BORDER_SIZE}px solid white`}
-          />
-        ))
-      }
+      <AvatarStack
+        sources={typingMembers.map((member) => member.profileUrl)}
+        max={3}
+      />
       {
         hiddenCount > 0
           ? <Avatar
             className={'sendbird-message-content__left__avatar'}
             // TODO: Divide getting profileUrl logic to utils
-            width={`${AVATAR_DIAMETER}px`}
-            height={`${AVATAR_DIAMETER}px`}
+            width={`${AVATAR_DIAMETER_WITHOUT_BORDER}px`}
+            height={`${AVATAR_DIAMETER_WITHOUT_BORDER}px`}
             zIndex={3}
             left={`${3 * LEFT_GAP}px`}
             border={`${AVATAR_BORDER_SIZE}px solid white`}
             customDefaultComponent={({ width, height }) => (
-              <DefaultComponent width={width} height={height} text={`+${hiddenCount}`} />
+              <AvatarDefault width={width} height={height} text={`+${hiddenCount}`} />
             )}
           />
           : null
@@ -60,21 +78,20 @@ const TypingIndicatorMessageAvatar = (props : React.PropsWithChildren<TypingIndi
   );
 }
 
-const TypingIndicatorMessage = (props : React.PropsWithChildren<TypingIndicatorMessageProps>) => {
+const TypingIndicatorMessage = (props : TypingIndicatorMessageProps) => {
   const { typingMembers } = props;
-  return (
-    typingMembers.length === 0
-      ? <></>
-      : <div
-        className='sendbird-message-content incoming'
-        style={{ marginBottom: '2px' }}
-      >
-        <TypingIndicatorMessageAvatar typingMembers={typingMembers} />
-        <div className='sendbird-message-content__middle'>
-          <TypingDots/>
-        </div>
-      </div>
-  );
+
+  if (typingMembers.length === 0) return null;
+  return <div
+    className='sendbird-message-content incoming'
+    style={{ marginBottom: '2px' }}
+  >
+    <TypingIndicatorMessageAvatar typingMembers={typingMembers} />
+    <div className='sendbird-message-content__middle'>
+      <TypingDots/>
+    </div>
+  </div>
+
 }
 
 export default TypingIndicatorMessage;

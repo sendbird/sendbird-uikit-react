@@ -1,55 +1,10 @@
 import React, { ReactElement, RefObject } from 'react';
-
 import ImageRenderer from '../ImageRenderer';
-import Icon, { IconTypes, IconColors } from '../Icon';
-
 import './index.scss';
 import { uuidv4 } from '../../utils/uuid';
-import pxToNumber from '../../utils/pxToNumber';
+import AvatarDefault from './AvatarDefault';
 
 const imageRendererClassName = 'sendbird-avatar-img';
-
-interface DefaultComponentProps {
-  width: string | number,
-  height: string | number,
-  text?: string,
-}
-
-export const DefaultComponent = ({ width, height, text }: DefaultComponentProps): ReactElement => {
-  let iconWidth = pxToNumber(width);
-  let iconHeight = pxToNumber(height);
-  if (typeof iconWidth === 'number' && !Number.isNaN(iconWidth)) {
-    iconWidth *= 0.575;
-  }
-  if (typeof iconHeight === 'number' && !Number.isNaN(iconHeight)) {
-    iconHeight *= 0.575;
-  }
-
-  return (
-    <div className="sendbird-avatar-img--default" style={{ width, height }}>
-      {
-        text
-          ? <div
-            className='sendbird-label--caption-2'
-            style={{ color: 'white' }}
-          >{ text }</div>
-          : <Icon
-            type={IconTypes.USER}
-            fillColor={IconColors.CONTENT}
-            width={iconWidth}
-            height={iconHeight}
-          />
-      }
-    </div>
-  );
-};
-
-const _defaultComponent = ({
-  width,
-  height,
-}: DefaultComponentProps) => (
-  <DefaultComponent width={width} height={height} />
-);
 
 interface AvatarInnerProps {
   height: string | number,
@@ -66,7 +21,9 @@ export const AvatarInner = ({
   width,
   customDefaultComponent,
 }: AvatarInnerProps): ReactElement => {
-  const defaultComponent = () => customDefaultComponent ? customDefaultComponent({ width, height }) : _defaultComponent({ width, height });
+  const defaultComponent = () => customDefaultComponent
+    ? customDefaultComponent({ width, height })
+    : <AvatarDefault width={width} height={height} />;
 
   if (typeof src === 'string') {
     return (
