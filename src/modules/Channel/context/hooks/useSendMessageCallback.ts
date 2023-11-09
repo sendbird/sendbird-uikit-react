@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react';
 import { User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { UserMessageCreateParams } from '@sendbird/chat/message';
+import {UserMessage, UserMessageCreateParams} from '@sendbird/chat/message';
 
 import * as messageActionTypes from '../dux/actionTypes';
 import { ChannelActionTypes } from '../dux/actionTypes';
@@ -78,7 +78,7 @@ export default function useSendMessageCallback(
           pubSub.publish(topics.SEND_MESSAGE_START, {
             /* pubSub is used instead of messagesDispatcher
               to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
-            message: pendingMsg,
+            message: pendingMsg as UserMessage,
             channel: currentGroupChannel,
             publishingModules: [PublishingModuleType.CHANNEL],
           });
