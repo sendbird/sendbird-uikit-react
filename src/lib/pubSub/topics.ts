@@ -42,7 +42,7 @@ export type SBUGlobalPubSubTopicPayloadUnion =
   | {
       topic: PUBSUB_TOPICS.SEND_MESSAGE_FAILED;
       payload: SendMessagePayload & {
-        error: unknown;
+        error: Error;
       };
     }
   | {

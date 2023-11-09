@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { FileMessageCreateParams, MessageMetaArray } from '@sendbird/chat/message';
+import { FileMessage, FileMessageCreateParams, MessageMetaArray } from '@sendbird/chat/message';
 
 import type { Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';
-import topics from '../../../../lib/pubSub/topics';
+import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import {
   META_ARRAY_MESSAGE_TYPE_KEY,
   META_ARRAY_MESSAGE_TYPE_VALUE__VOICE,
@@ -24,7 +24,7 @@ interface DynamicParams {
 }
 interface StaticParams {
   logger: Logger;
-  pubSub: any;
+  pubSub: SBUGlobalPubSub;
   scrollRef: React.RefObject<HTMLDivElement>;
   messagesDispatcher: React.Dispatch<ChannelActionTypes>;
 }
@@ -74,7 +74,7 @@ export const useSendVoiceMessageCallback = ({
         pubSub.publish(topics.SEND_MESSAGE_START, {
           /* pubSub is used instead of messagesDispatcher
             to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
-          message: pendingMessage,
+          message: pendingMessage as FileMessage,
           channel: currentGroupChannel,
           publishingModules: [PublishingModuleType.CHANNEL],
         });

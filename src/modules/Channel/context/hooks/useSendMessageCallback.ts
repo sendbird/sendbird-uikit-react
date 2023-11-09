@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react';
 import { User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import {UserMessage, UserMessageCreateParams} from '@sendbird/chat/message';
+import { UserMessage, UserMessageCreateParams } from '@sendbird/chat/message';
 
 import * as messageActionTypes from '../dux/actionTypes';
 import { ChannelActionTypes } from '../dux/actionTypes';

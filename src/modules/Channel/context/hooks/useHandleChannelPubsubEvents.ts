@@ -3,8 +3,6 @@ import React, { RefObject, useEffect } from 'react';
 import { scrollIntoLast } from '../utils';
 import * as channelActions from '../dux/actionTypes';
 import { PUBSUB_TOPICS, SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
-import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { SendableMessageType } from '../../../../utils';
 import { PublishingModuleType } from '../../../internalInterfaces';
 import { ChannelActionTypes } from '../dux/actionTypes';
 
@@ -37,11 +35,7 @@ export const useHandleChannelPubsubEvents = ({
         }
       }));
       subscriber.set(PUBSUB_TOPICS.SEND_MESSAGE_START, pubSub.subscribe(PUBSUB_TOPICS.SEND_MESSAGE_START, (props) => {
-        const {
-          channel,
-          message,
-          publishingModules,
-        } = props as { channel: GroupChannel, message: SendableMessageType, publishingModules: PublishingModuleType[] };
+        const { channel, message, publishingModules } = props;
         if (channelUrl === channel?.url
           && publishingModules.includes(PublishingModuleType.CHANNEL)
         ) {
@@ -61,14 +55,8 @@ export const useHandleChannelPubsubEvents = ({
         }
       }));
       subscriber.set(PUBSUB_TOPICS.SEND_MESSAGE_FAILED, pubSub.subscribe(PUBSUB_TOPICS.SEND_MESSAGE_FAILED, (props) => {
-        const {
-          channel,
-          message,
-          publishingModules,
-        } = props as { channel: GroupChannel, message: SendableMessageType, publishingModules: PublishingModuleType[] };
-        if (channelUrl === channel?.url
-          && publishingModules.includes(PublishingModuleType.CHANNEL)
-        ) {
+        const { channel, message, publishingModules } = props;
+        if (channelUrl === channel?.url && publishingModules.includes(PublishingModuleType.CHANNEL)) {
           dispatcher({
             type: channelActions.SEND_MESSAGE_FAILURE,
             payload: message,

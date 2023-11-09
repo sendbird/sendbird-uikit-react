@@ -4,7 +4,7 @@ import { FileMessage, FileMessageCreateParams } from '@sendbird/chat/message';
 
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
-import topics from '../../../../lib/pubSub/topics';
+import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from '../utils';
 import { SendableMessageType } from '../../../../utils';
 import { PublishingModuleType } from './useSendMultipleFilesMessage';
@@ -15,7 +15,7 @@ interface DynamicProps {
 }
 interface StaticProps {
   logger: Logger;
-  pubSub: any;
+  pubSub: SBUGlobalPubSub;
   threadDispatcher: CustomUseReducerDispatcher;
 }
 
