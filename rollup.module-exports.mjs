@@ -29,7 +29,7 @@ export default {
   'handlers/SessionHandler': 'src/lib/handlers/SessionHandler.ts',
 
   // pubSub
-  'pubSub/topics': 'src/lib/pubSub//topics.ts',
+  'pubSub/topics': 'src/lib/pubSub/topics.ts',
   // hooks
   'hooks/useModal': 'src/hooks/useModal/index.tsx',
   // utils

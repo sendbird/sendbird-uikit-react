@@ -5,6 +5,7 @@ import { PubSubTypes } from './index';
 import { OpenChannel } from '@sendbird/chat/openChannel';
 import { SendableMessageType } from '../../utils';
 
+export { PublishingModuleType } from '../../modules/internalInterfaces';
 // NOTE: It seems not distinguish topics by channel type.
 export enum PUBSUB_TOPICS {
   // Group Channel

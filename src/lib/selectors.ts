@@ -462,7 +462,7 @@ export class UikitMessageHandler<T extends SendableMessage = SendableMessage> {
  *  .onSucceeded((message) => {})
  */
 
-export const getSendUserMessage = (state: SendBirdState, publishingModules: PublishingModuleType[] = []) => (
+export const getSendUserMessage = (state: SendBirdState, publishingModules: PublishingModuleType[] = [PublishingModuleType.CHANNEL]) => (
   (channel: GroupChannel | OpenChannel, params: UserMessageCreateParams): UikitMessageHandler => {
     const handler = new UikitMessageHandler();
     const pubSub = getPubSub(state);
@@ -502,7 +502,7 @@ export const getSendUserMessage = (state: SendBirdState, publishingModules: Publ
  *  .onFailed((error, message) => {})
  *  .onSucceeded((message) => {})
  */
-export const getSendFileMessage = (state: SendBirdState, publishingModules: PublishingModuleType[] = []) => (
+export const getSendFileMessage = (state: SendBirdState, publishingModules: PublishingModuleType[] = [PublishingModuleType.CHANNEL]) => (
   (channel: GroupChannel | OpenChannel, params: FileMessageCreateParams): UikitMessageHandler => {
     const handler = new UikitMessageHandler();
     const pubSub = getPubSub(state);
@@ -542,7 +542,7 @@ export const getSendFileMessage = (state: SendBirdState, publishingModules: Publ
  *  .then((message) => {})
  *  .catch((error) => {})
  */
-export const getUpdateUserMessage = (state: SendBirdState, publishingModules: PublishingModuleType[] = []) => (
+export const getUpdateUserMessage = (state: SendBirdState, publishingModules: PublishingModuleType[] = [PublishingModuleType.CHANNEL]) => (
   (channel: GroupChannel | OpenChannel, messageId: number, params: UserMessageUpdateParams): Promise<UserMessage> => (
     new Promise((resolve, reject) => {
       const pubSub = getPubSub(state);
@@ -623,7 +623,7 @@ export const getDeleteMessage = (state: SendBirdState) => (
  *  .then(() => {})
  *  .catch((error) => {})
  */
-export const getResendUserMessage = (state: SendBirdState, publishingModules: PublishingModuleType[] = []) => (
+export const getResendUserMessage = (state: SendBirdState, publishingModules: PublishingModuleType[] = [PublishingModuleType.CHANNEL]) => (
   (channel: GroupChannel | OpenChannel, failedMessage: UserMessage): Promise<UserMessage> => (
     new Promise((resolve, reject) => {
       const pubSub = getPubSub(state);
@@ -650,7 +650,7 @@ export const getResendUserMessage = (state: SendBirdState, publishingModules: Pu
  *  .then(() => {})
  *  .catch((error) => {})
  */
-export const getResendFileMessage = (state: SendBirdState, publishingModules: PublishingModuleType[] = []) => (
+export const getResendFileMessage = (state: SendBirdState, publishingModules: PublishingModuleType[] = [PublishingModuleType.CHANNEL]) => (
   (channel: GroupChannel | OpenChannel, failedMessage: FileMessage, blob: Blob): Promise<FileMessage> => (
     new Promise((resolve, reject) => {
       const pubSub = getPubSub(state);
