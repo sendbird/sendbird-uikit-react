@@ -94,12 +94,12 @@ export const useHandleUploadFiles = ({
     }
 
     // Image Compression
-    const { compressedImages, notCompressedFiles } = await compressImages({
+    const { compressedFiles } = await compressImages({
       files,
       imageCompression,
       logger,
     });
-    const sendingFiles = compressedImages.concat(notCompressedFiles);
+    const sendingFiles = compressedFiles;
 
     // Send File Message
     if (sendingFiles.length === 1) {

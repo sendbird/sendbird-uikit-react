@@ -2,7 +2,7 @@ import { ImageCompressionOptions } from '../lib/Sendbird';
 import pxToNumber from './pxToNumber';
 import { Logger } from '../lib/SendbirdState';
 
-interface CompressImageProps {
+interface CompressImageParams {
   imageFile: File;
   compressionRate: number;
   resizingWidth?: number;
@@ -14,7 +14,7 @@ const compressImage = ({
   compressionRate,
   resizingWidth,
   resizingHeight,
-}: CompressImageProps): Promise<File> => {
+}: CompressImageParams): Promise<File> => {
   const image = document.createElement('img');
   return new Promise((resolve, reject) => {
     image.src = URL.createObjectURL(imageFile);
@@ -65,7 +65,7 @@ const compressImage = ({
   });
 };
 
-export interface CompressImagesProps {
+export interface CompressImagesParams {
   files: File[];
   imageCompression: ImageCompressionOptions;
   logger?: Logger;
@@ -74,58 +74,54 @@ export const compressImages = async ({
   files,
   logger,
   imageCompression,
-}: CompressImagesProps) => {
+}: CompressImagesParams) => {
   const { compressionRate } = imageCompression;
   const resizingWidth = pxToNumber(imageCompression.resizingWidth);
   const resizingHeight = pxToNumber(imageCompression.resizingHeight);
 
   if (!(Array.isArray(files) && files.length > 0)) {
-    logger.warning('useImageCompression: There is no file.', files);
+    logger.warning('utils - compressImages: There are no files.', files);
     return;
   }
   if (compressionRate < 0 || 1 < compressionRate) {
-    logger.warning('useImageCompression: The compressionRate is not acceptable.', compressionRate);
+    logger.warning('utils - compressImages: The compressionRate is not acceptable.', compressionRate);
     return;
   }
 
-  const compressedImages: File[] = [];
-  const notCompressedFiles: File[] = [];
+  const failedIndexes: number[] = [];
+  const compressedFiles: File[] = [];
 
   await Promise.all(
     files
-      .filter((file, index) => {
-        if (file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/jpeg') {
-          return true;
+      .map(async (file, index) => {
+        if (!(file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/jpeg')) {
+          logger.warning('utils - compressImages: The fileType is not compressible.', { file, index });
+          failedIndexes.push(index);
+          compressedFiles.push(file);
+          return;
         }
-        notCompressedFiles.push(file);
-        logger.warning('useImageCompression: The file type is not compressible.', { file, index });
-        return false;
-      })
-      .map(async (imageFile) => {
+
         try {
           const compressedImage = await compressImage({
-            imageFile,
+            imageFile: file,
             compressionRate,
             resizingWidth,
             resizingHeight,
           });
-          compressedImages.push(compressedImage);
+          compressedFiles.push(compressedImage);
         } catch (err) {
-          notCompressedFiles.push(imageFile);
-          logger.warning('useImageCompression: Failed to compress image file', {
-            err,
-            imageFile,
-          });
+          failedIndexes.push(index);
+          logger.warning('utils - compressImages: Failed to compress image file', { err });
         }
       }),
   );
 
-  logger.info('useImageCompression: Finished compressing images', {
-    compressedImages,
-    notCompressedFiles,
+  logger.info('utils - compressImages: Finished compressing images', {
+    failedIndexes,
+    compressedFiles,
   });
   return {
-    compressedImages,
-    notCompressedFiles,
+    failedIndexes,
+    compressedFiles,
   };
 };
