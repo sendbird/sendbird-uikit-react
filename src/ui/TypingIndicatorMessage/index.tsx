@@ -12,6 +12,7 @@ const AVATAR_BORDER_SIZE = 2;
 const AVATAR_DIAMETER_WITHOUT_BORDER = 24;
 const AVATAR_DIAMETER = AVATAR_DIAMETER_WITHOUT_BORDER + (AVATAR_BORDER_SIZE * 2);
 const LEFT_GAP = 20;
+const MAX_PROFILES_COUNT = 3;
 
 export interface AvatarStackProps {
   sources: string[];
@@ -44,10 +45,10 @@ const TypingIndicatorMessageAvatar = (props : TypingIndicatorMessageProps) => {
   const { typingMembers } = props;
   const membersCount = typingMembers.length;
   const displayCount = Math.min(membersCount, 4);
-  const hiddenCount = membersCount - 3;
+  const hiddenCount = membersCount - MAX_PROFILES_COUNT;
   const superImposedWidth = ((displayCount - 1) * (AVATAR_DIAMETER - LEFT_GAP));
   const rightPaddingSize = 12;
-
+  
   return (
     <div
       className='sendbird-message-content__left incoming'
@@ -57,7 +58,7 @@ const TypingIndicatorMessageAvatar = (props : TypingIndicatorMessageProps) => {
     >
       <AvatarStack
         sources={typingMembers.map((member) => member.profileUrl)}
-        max={3}
+        max={MAX_PROFILES_COUNT}
       />
       {
         hiddenCount > 0
@@ -66,8 +67,8 @@ const TypingIndicatorMessageAvatar = (props : TypingIndicatorMessageProps) => {
             // TODO: Divide getting profileUrl logic to utils
             width={`${AVATAR_DIAMETER_WITHOUT_BORDER}px`}
             height={`${AVATAR_DIAMETER_WITHOUT_BORDER}px`}
-            zIndex={3}
-            left={`${3 * LEFT_GAP}px`}
+            zIndex={MAX_PROFILES_COUNT}
+            left={`${MAX_PROFILES_COUNT * LEFT_GAP}px`}
             border={`${AVATAR_BORDER_SIZE}px solid white`}
             customDefaultComponent={({ width, height }) => (
               <AvatarDefault width={width} height={height} text={`+${hiddenCount}`} />
