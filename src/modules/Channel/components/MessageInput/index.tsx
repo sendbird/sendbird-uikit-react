@@ -117,7 +117,7 @@ const MessageInputWrapper = (
   }, [mentionedUserIds]);
 
   // MFM
-  const [handleUploadFiles] = useHandleUploadFiles({
+  const handleUploadFiles = useHandleUploadFiles({
     sendFileMessage,
     sendMultipleFilesMessage,
     quoteMessage,
