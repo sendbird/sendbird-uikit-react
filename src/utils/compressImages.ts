@@ -79,25 +79,27 @@ export const compressImages = async ({
   const resizingWidth = pxToNumber(imageCompression.resizingWidth);
   const resizingHeight = pxToNumber(imageCompression.resizingHeight);
 
+  const result = {
+    failedIndexes: [] as number[],
+    compressedFiles: [] as File[],
+  };
+
   if (!(Array.isArray(files) && files.length > 0)) {
     logger.warning('utils - compressImages: There are no files.', files);
-    return;
+    return result;
   }
   if (compressionRate < 0 || 1 < compressionRate) {
     logger.warning('utils - compressImages: The compressionRate is not acceptable.', compressionRate);
-    return;
+    return result;
   }
-
-  const failedIndexes: number[] = [];
-  const compressedFiles: File[] = [];
 
   await Promise.all(
     files
       .map(async (file, index) => {
         if (!(file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/jpeg')) {
           logger.warning('utils - compressImages: The fileType is not compressible.', { file, index });
-          failedIndexes.push(index);
-          compressedFiles.push(file);
+          result.failedIndexes.push(index);
+          result.compressedFiles.push(file);
           return;
         }
 
@@ -108,20 +110,14 @@ export const compressImages = async ({
             resizingWidth,
             resizingHeight,
           });
-          compressedFiles.push(compressedImage);
+          result.compressedFiles.push(compressedImage);
         } catch (err) {
-          failedIndexes.push(index);
+          result.failedIndexes.push(index);
           logger.warning('utils - compressImages: Failed to compress image file', { err });
         }
       }),
   );
 
-  logger.info('utils - compressImages: Finished compressing images', {
-    failedIndexes,
-    compressedFiles,
-  });
-  return {
-    failedIndexes,
-    compressedFiles,
-  };
+  logger.info('utils - compressImages: Finished compressing images', result);
+  return result;
 };
