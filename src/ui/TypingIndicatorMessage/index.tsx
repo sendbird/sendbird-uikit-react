@@ -27,6 +27,7 @@ const AvatarStack = (props : AvatarStackProps) => {
         <Avatar
           className={'sendbird-message-content__left__avatar'}
           src={src || ''}
+          key={`avatar_stack_item_${src}`}
           // TODO: Divide getting profileUrl logic to utils
           width={`${AVATAR_DIAMETER_WITHOUT_BORDER}px`}
           height={`${AVATAR_DIAMETER_WITHOUT_BORDER}px`}
@@ -37,7 +38,7 @@ const AvatarStack = (props : AvatarStackProps) => {
       ))
     } </>
   );
-}
+};
 
 const TypingIndicatorMessageAvatar = (props : React.PropsWithChildren<TypingIndicatorMessageProps>) => {
   const { typingMembers } = props;
@@ -76,7 +77,7 @@ const TypingIndicatorMessageAvatar = (props : React.PropsWithChildren<TypingIndi
       }
     </div>
   );
-}
+};
 
 const TypingIndicatorMessage = (props : TypingIndicatorMessageProps) => {
   const { typingMembers } = props;
@@ -90,8 +91,8 @@ const TypingIndicatorMessage = (props : TypingIndicatorMessageProps) => {
     <div className='sendbird-message-content__middle'>
       <TypingDots/>
     </div>
-  </div>
+  </div>;
 
-}
+};
 
 export default TypingIndicatorMessage;

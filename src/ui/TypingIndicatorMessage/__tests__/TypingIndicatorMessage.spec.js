@@ -11,7 +11,7 @@ describe('ui/TypingIndicatorMessage', () => {
     const className = 'sendbird-message-content incoming';
     const {container} = render(
       <TypingIndicatorMessage
-        typingMember={mockMember}
+        typingMembers={[mockMember]}
       />
     );
     expect(

@@ -1,6 +1,6 @@
 import React from 'react';
 import pxToNumber from '../../utils/pxToNumber';
-import Icon, {IconColors, IconTypes} from '../Icon';
+import Icon, { IconColors, IconTypes } from '../Icon';
 
 interface AvatarDefaultProps {
   width: string | number,

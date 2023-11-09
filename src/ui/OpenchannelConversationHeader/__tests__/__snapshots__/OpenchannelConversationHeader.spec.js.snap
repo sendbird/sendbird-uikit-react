@@ -11,7 +11,7 @@ exports[`ui/OpenchannelConversationHeader should do a snapshot test of the Openc
       <div
         class="sendbird-openchannel-conversation-header__left__cover-image sendbird-avatar"
         role="button"
-        style="height: 32px; width: 32px;"
+        style="height: 32px; width: 32px; z-index: 0; left: 0px; border: 0px;"
         tabindex="0"
       >
         <div
