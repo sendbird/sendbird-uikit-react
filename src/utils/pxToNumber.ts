@@ -1,4 +1,4 @@
-export default (px: string | number): number => {
+export const pxToNumber = (px: string | number): number => {
   if (typeof px === 'number') {
     return px;
   }
@@ -10,3 +10,5 @@ export default (px: string | number): number => {
   }
   return NaN;
 };
+
+export default pxToNumber;

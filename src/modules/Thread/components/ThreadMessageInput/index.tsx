@@ -66,7 +66,7 @@ const ThreadMessageInput = (
     || (!(currentChannel?.myRole === Role.OPERATOR) && isChannelFrozen) || parentMessage === null;
 
   // MFM
-  const [handleUploadFiles] = useHandleUploadFiles({
+  const handleUploadFiles = useHandleUploadFiles({
     sendFileMessage,
     sendMultipleFilesMessage,
     quoteMessage: parentMessage,

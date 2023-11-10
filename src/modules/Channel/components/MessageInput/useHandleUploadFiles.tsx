@@ -11,6 +11,7 @@ import { ButtonTypes } from '../../../../ui/Button';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { ModalFooter } from '../../../../ui/Modal';
 import { FileMessage, MultipleFilesMessage } from '@sendbird/chat/message';
+import { compressImages } from '../../../../utils/compressImages';
 
 /**
  * The handleUploadFiles is a function sending a FileMessage and MultipleFilesMessage
@@ -25,7 +26,6 @@ interface useHandleUploadFilesDynamicProps {
 interface useHandleUploadFilesStaticProps {
   logger: Logger;
 }
-export type HandleUploadFunctionType = (files: File[]) => void;
 
 export const useHandleUploadFiles = ({
   sendFileMessage,
@@ -33,15 +33,16 @@ export const useHandleUploadFiles = ({
   quoteMessage,
 }: useHandleUploadFilesDynamicProps, {
   logger,
-}: useHandleUploadFilesStaticProps): Array<HandleUploadFunctionType> => {
+}: useHandleUploadFilesStaticProps) => {
   const { stringSet } = useLocalization();
   const { config } = useSendbirdStateContext();
+  const { imageCompression } = config;
   const uikitUploadSizeLimit = config?.uikitUploadSizeLimit;
   const uikitMultipleFilesMessageLimit = config?.uikitMultipleFilesMessageLimit;
   const { openModal } = useGlobalModalContext();
 
-  const handleUploadFiles = useCallback((files: File[]) => {
-    // Validate Paremeters
+  const handleUploadFiles = useCallback(async (files: File[]) => {
+    // Validate Parameters
     if (!sendFileMessage || !sendMultipleFilesMessage) {
       logger.warning('Channel|useHandleUploadFiles: required functions are undefined', { sendFileMessage, sendMultipleFilesMessage });
       return;
@@ -69,6 +70,7 @@ export const useHandleUploadFiles = ({
       });
       return;
     }
+    // Validate file sizes
     if (files.some((file: File) => file.size > uikitUploadSizeLimit)) {
       // The default value of uikitUploadSizeLimit is 26MB
       logger.info(`Channel|useHandleUploadFiles: Cannot upload file size exceeding ${uikitUploadSizeLimit}`);
@@ -91,15 +93,26 @@ export const useHandleUploadFiles = ({
       return;
     }
 
-    if (files.length === 1) {
+    // Image Compression
+    const { compressedFiles } = await compressImages({
+      files,
+      imageCompression,
+      logger,
+    });
+    const sendingFiles = compressedFiles;
+
+    // Send File Message
+    if (sendingFiles.length === 1) {
       logger.info('Channel|useHandleUploadFiles: sending one file.');
-      const [file] = files;
+      const [file] = sendingFiles;
       sendFileMessage(file, quoteMessage);
-    } else if (files.length > 1) {
+    } else if (sendingFiles.length > 1) {
       logger.info('Channel|useHandleUploadFiles: sending multiple files.');
+
+      // Divide to images & non-images
       const imageFiles: Array<File> = [];
       const otherFiles: Array<File> = [];
-      files.forEach((file: File) => {
+      sendingFiles.forEach((file: File) => {
         if (isImage(file.type)) {
           imageFiles.push(file);
         } else {
@@ -130,5 +143,5 @@ export const useHandleUploadFiles = ({
     quoteMessage,
   ]);
 
-  return [handleUploadFiles];
+  return handleUploadFiles;
 };
