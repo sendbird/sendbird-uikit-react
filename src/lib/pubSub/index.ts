@@ -3,16 +3,19 @@
 // without pubsub,we would not be able to listen to it
 // in our ChannelList or Conversation
 
-export type PubSubTypes<T, U extends { topic: T; payload: any }> = {
+export type PubSubTypes<
+  T extends keyof any,
+  U extends { topic: T; payload: any }
+> = {
   __getTopics: () => Record<string, Set<(data: PayloadByTopic<T, U>) => void>>;
-  subscribe: <V extends T>(
-    topic: V,
-    subscriber: (data: PayloadByTopic<V, U>) => void
+  subscribe: <K extends T>(
+    topic: K,
+    subscriber: (data: PayloadByTopic<K, U>) => void
   ) => { remove: () => void };
-  publish: <V extends T>(topic: V, data: PayloadByTopic<V, U>) => void;
+  publish: <K extends T>(topic: K, data: PayloadByTopic<K, U>) => void;
 };
 
-type PayloadByTopic<T, U> = U extends {
+type PayloadByTopic<T extends keyof any, U> = U extends {
   topic: T;
   payload: infer P;
 }
@@ -20,25 +23,25 @@ type PayloadByTopic<T, U> = U extends {
   : never;
 
 const pubSubFactory = <
-  T = any,
+  T extends keyof any = keyof any,
   U extends { topic: T; payload: any } = any
 >(): PubSubTypes<T, U> => {
-  const topics: Record<string, Set<(data: any) => void>> = {};
+  const topics = {} as Record<T, Set<(data: any) => void>>;
 
   return {
     __getTopics: () => topics,
     subscribe: (topic, listener) => {
-      topics[topic as unknown as string] ??= new Set();
-      topics[topic as unknown as string].add(listener);
+      topics[topic] ??= new Set();
+      topics[topic].add(listener);
       return {
         remove: () => {
-          topics[topic as unknown as string].delete(listener);
+          topics[topic].delete(listener);
         },
       };
     },
     publish: (topic, info) => {
-      if (topics[topic as unknown as string]) {
-        topics[topic as unknown as string].forEach((fn) => {
+      if (topics[topic]) {
+        topics[topic].forEach((fn) => {
           setTimeout(() => fn(info !== undefined ? info : {}), 0);
         });
       }
