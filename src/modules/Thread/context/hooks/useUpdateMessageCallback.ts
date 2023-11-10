@@ -5,7 +5,7 @@ import { UserMessage, UserMessageUpdateParams } from '@sendbird/chat/message';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 
-import topics from '../../../../lib/pubSub/topics';
+import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { PublishingModuleType } from '../../../internalInterfaces';
 
 interface DynamicProps {
@@ -14,7 +14,7 @@ interface DynamicProps {
 }
 interface StaticProps {
   logger: Logger;
-  pubSub: any;
+  pubSub: SBUGlobalPubSub;
   threadDispatcher: CustomUseReducerDispatcher;
 }
 
@@ -25,7 +25,8 @@ export default function useUpdateMessageCallback({
   logger,
   pubSub,
   threadDispatcher,
-}: StaticProps): (props) => void {
+}: StaticProps) {
+  // TODO: add type
   return useCallback((props) => {
     const {
       messageId,

@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
-import topics, { PUBSUB_TOPICS } from '../../../../lib/pubSub/topics';
+import topics, { PUBSUB_TOPICS, SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from '../utils';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import { SendableMessageType } from '../../../../utils';
-import { FileUploadedPayload, PublishingModuleType } from './useSendMultipleFilesMessage';
 import * as channelActions from '../../../Channel/context/dux/actionTypes';
+import { shouldPubSubPublishToThread } from '../../../internalInterfaces';
 
 interface DynamicProps {
   sdkInit: boolean;
@@ -15,7 +15,7 @@ interface DynamicProps {
 }
 interface StaticProps {
   logger: Logger;
-  pubSub: any;
+  pubSub: SBUGlobalPubSub;
   threadDispatcher: CustomUseReducerDispatcher;
 }
 
@@ -32,15 +32,8 @@ export default function useHandleThreadPubsubEvents({
     if (pubSub?.subscribe) {
       // TODO: subscribe ON_FILE_INFO_UPLOADED
       subscriber.set(topics.SEND_MESSAGE_START, pubSub.subscribe(topics.SEND_MESSAGE_START, (props) => {
-        const {
-          channel,
-          message,
-          publishingModules,
-        } = props as { channel: GroupChannel, message: SendableMessageType, publishingModules: PublishingModuleType[] };
-        if (currentChannel?.url === channel?.url
-          && message?.parentMessageId === parentMessage?.messageId
-          && publishingModules.includes(PublishingModuleType.THREAD)
-        ) {
+        const { channel, message, publishingModules } = props;
+        if (currentChannel?.url === channel?.url && message?.parentMessageId === parentMessage?.messageId && shouldPubSubPublishToThread(publishingModules)) {
           // TODO: const clonedMessage = cloneMessage(message);
           const pendingMessage: Record<string, any> = { ...message };
           if (message.isMultipleFilesMessage()) {
@@ -59,14 +52,8 @@ export default function useHandleThreadPubsubEvents({
         scrollIntoLast?.();
       }));
       subscriber.set(PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED, pubSub.subscribe(PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED, (props) => {
-        const {
-          response,
-          publishingModules,
-        } = props as { response: FileUploadedPayload, publishingModules: PublishingModuleType[] };
-        if (
-          currentChannel?.url === response.channelUrl
-          && publishingModules.includes(PublishingModuleType.THREAD)
-        ) {
+        const { response, publishingModules } = props;
+        if (currentChannel?.url === response.channelUrl && shouldPubSubPublishToThread(publishingModules)) {
           threadDispatcher({
             type: channelActions.ON_FILE_INFO_UPLOADED,
             payload: response,
@@ -89,15 +76,8 @@ export default function useHandleThreadPubsubEvents({
         scrollIntoLast?.();
       }));
       subscriber.set(topics.SEND_MESSAGE_FAILED, pubSub.subscribe(topics.SEND_MESSAGE_FAILED, (props) => {
-        const {
-          channel,
-          message,
-          publishingModules,
-        } = props as { channel: GroupChannel, message: SendableMessageType, publishingModules: PublishingModuleType[] };
-        if (currentChannel?.url === channel?.url
-          && message?.parentMessageId === parentMessage?.messageId
-          && publishingModules.includes(PublishingModuleType.THREAD)
-        ) {
+        const { channel, message, publishingModules } = props;
+        if (currentChannel?.url === channel?.url && message?.parentMessageId === parentMessage?.messageId && shouldPubSubPublishToThread(publishingModules)) {
           threadDispatcher({
             type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
             payload: { message },
@@ -105,14 +85,8 @@ export default function useHandleThreadPubsubEvents({
         }
       }));
       subscriber.set(topics.SEND_FILE_MESSAGE, pubSub.subscribe(topics.SEND_FILE_MESSAGE, (props) => {
-        const {
-          channel,
-          message,
-          publishingModules,
-        } = props as { channel: GroupChannel, message: SendableMessageType, publishingModules: PublishingModuleType[] };
-        if (currentChannel?.url === channel?.url
-          && publishingModules.includes(PublishingModuleType.THREAD)
-        ) {
+        const { channel, message, publishingModules } = props;
+        if (currentChannel?.url === channel?.url && shouldPubSubPublishToThread(publishingModules)) {
           threadDispatcher({
             type: ThreadContextActionTypes.SEND_MESSAGE_SUCESS,
             payload: { message },

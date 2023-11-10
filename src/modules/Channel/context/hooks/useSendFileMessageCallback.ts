@@ -5,10 +5,9 @@ import { FileMessage, FileMessageCreateParams } from '@sendbird/chat/message';
 import * as messageActionTypes from '../dux/actionTypes';
 import { ChannelActionTypes } from '../dux/actionTypes';
 import * as utils from '../utils';
-import topics from '../../../../lib/pubSub/topics';
+import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { PublishingModuleType } from '../../../internalInterfaces';
 import { LoggerInterface } from '../../../../lib/Logger';
-import { PubSubTypes } from '../../../../lib/pubSub';
 import { SendableMessageType } from '../../../../utils';
 import { SendBirdState } from '../../../../lib/types';
 
@@ -19,7 +18,7 @@ type UseSendFileMessageCallbackOptions = {
 };
 type UseSendFileMessageCallbackParams = {
   logger: LoggerInterface;
-  pubSub: PubSubTypes;
+  pubSub: SBUGlobalPubSub;
   scrollRef: React.MutableRefObject<HTMLDivElement | null>;
   messagesDispatcher: React.Dispatch<ChannelActionTypes>;
 };
@@ -52,7 +51,7 @@ export default function useSendFileMessageCallback(
               url: URL.createObjectURL(compressedFile),
               // pending thumbnail message seems to be failed
               requestState: 'pending',
-            },
+            } as unknown as FileMessage,
             channel: currentGroupChannel,
             publishingModules: [PublishingModuleType.CHANNEL],
           });

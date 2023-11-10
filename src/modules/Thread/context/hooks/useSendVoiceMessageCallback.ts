@@ -3,7 +3,7 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { FileMessage, FileMessageCreateParams, MessageMetaArray } from '@sendbird/chat/message';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
-import topics from '../../../../lib/pubSub/topics';
+import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from '../utils';
 import {
   META_ARRAY_MESSAGE_TYPE_KEY,
@@ -21,7 +21,7 @@ interface DynamicParams {
 }
 interface StaticParams {
   logger: Logger;
-  pubSub: any;
+  pubSub: SBUGlobalPubSub;
   threadDispatcher: CustomUseReducerDispatcher;
 }
 type FuncType = (file: File, duration: number, quoteMessage: SendableMessageType) => void;
@@ -95,7 +95,7 @@ export const useSendVoiceMessageCallback = ({
         logger.info('Thread | useSendVoiceMessageCallback: Sending voice message succeeded.', message);
         pubSub.publish(topics.SEND_FILE_MESSAGE, {
           channel: currentChannel,
-          message: message,
+          message: message as FileMessage,
           publishingModules: [PublishingModuleType.THREAD],
         });
       });

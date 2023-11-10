@@ -26,6 +26,6 @@ describe('PubSub', () => {
     });
     sub.remove();
     // list of topics -> empty
-    expect(pubsub.__getTopics()).toEqual({ [topic]: [undefined] });
+    expect(pubsub.__getTopics()).toEqual({ [topic]: new Set() });
   });
 });

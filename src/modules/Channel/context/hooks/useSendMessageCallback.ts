@@ -1,16 +1,15 @@
 import React, { useCallback, useRef } from 'react';
 import { User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { UserMessageCreateParams } from '@sendbird/chat/message';
+import { UserMessage, UserMessageCreateParams } from '@sendbird/chat/message';
 
 import * as messageActionTypes from '../dux/actionTypes';
 import { ChannelActionTypes } from '../dux/actionTypes';
 import * as utils from '../utils';
-import topics from '../../../../lib/pubSub/topics';
+import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { PublishingModuleType } from '../../../internalInterfaces';
 import { SendableMessageType } from '../../../../utils';
 import { LoggerInterface } from '../../../../lib/Logger';
-import { PubSubTypes } from '../../../../lib/pubSub';
 
 type UseSendMessageCallbackOptions = {
   isMentionEnabled: boolean;
@@ -19,7 +18,7 @@ type UseSendMessageCallbackOptions = {
 };
 type UseSendMessageCallbackParams = {
   logger: LoggerInterface;
-  pubSub: PubSubTypes;
+  pubSub: SBUGlobalPubSub;
   scrollRef: React.MutableRefObject<HTMLDivElement | null>;
   messagesDispatcher: React.Dispatch<ChannelActionTypes>;
 };
@@ -79,7 +78,7 @@ export default function useSendMessageCallback(
           pubSub.publish(topics.SEND_MESSAGE_START, {
             /* pubSub is used instead of messagesDispatcher
               to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
-            message: pendingMsg,
+            message: pendingMsg as UserMessage,
             channel: currentGroupChannel,
             publishingModules: [PublishingModuleType.CHANNEL],
           });

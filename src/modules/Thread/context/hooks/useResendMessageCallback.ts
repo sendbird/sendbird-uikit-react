@@ -3,7 +3,7 @@ import { FileMessage, MessageType, MultipleFilesMessage, SendingStatus, UserMess
 import { useCallback } from 'react';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
-import topics from '../../../../lib/pubSub/topics';
+import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { SendableMessageType } from '../../../../utils';
 import { PublishingModuleType } from '../../../internalInterfaces';
 
@@ -12,7 +12,7 @@ interface DynamicProps {
 }
 interface StaticProps {
   logger: Logger;
-  pubSub: any;
+  pubSub: SBUGlobalPubSub;
   threadDispatcher: CustomUseReducerDispatcher;
 }
 

@@ -19,7 +19,7 @@ import userInitialState from './dux/user/initialState';
 import useOnlineStatus from './hooks/useOnlineStatus';
 import useConnect from './hooks/useConnect';
 import { LoggerFactory, LogLevel } from './Logger';
-import pubSubFactory, { PubSubTypes } from './pubSub/index';
+import pubSubFactory from './pubSub/index';
 import useAppendDomNode from '../hooks/useAppendDomNode';
 
 import { VoiceMessageProvider } from './VoiceMessageProvider';
@@ -48,6 +48,7 @@ import {
 } from './types';
 import { GlobalModalProvider } from '../hooks/useModal';
 import { RenderUserProfileProps } from '../types';
+import PUBSUB_TOPICS, { SBUGlobalPubSub, SBUGlobalPubSubTopicPayloadUnion } from './pubSub/topics';
 
 export { useSendbirdStateContext } from '../hooks/useSendbirdStateContext';
 
@@ -70,7 +71,7 @@ export interface ImageCompressionOptions {
 
 export interface SendbirdConfig {
   logLevel?: string | Array<string>;
-  pubSub?: PubSubTypes;
+  pubSub?: SBUGlobalPubSub;
   userMention?: {
     maxMentionCount?: number;
     maxSuggestionCount?: number;
@@ -182,7 +183,7 @@ const SendbirdSDK = ({
   } = config;
   const { isMobile } = useMediaQueryContext();
   const [logger, setLogger] = useState(LoggerFactory(logLevel as LogLevel));
-  const [pubSub] = useState(() => customPubSub ?? pubSubFactory());
+  const [pubSub] = useState(() => customPubSub ?? pubSubFactory<PUBSUB_TOPICS, SBUGlobalPubSubTopicPayloadUnion>());
   const [sdkStore, sdkDispatcher] = useReducer(sdkReducers, sdkInitialState);
   const [userStore, userDispatcher] = useReducer(userReducers, userInitialState);
 

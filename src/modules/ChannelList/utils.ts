@@ -5,7 +5,7 @@ import {
   GroupChannelListQueryParams,
 } from '@sendbird/chat/groupChannel';
 import * as channelActions from './dux/actionTypes';
-import topics from '../../lib/pubSub/topics';
+import topics, { SBUGlobalPubSub } from '../../lib/pubSub/topics';
 import { SdkStore } from '../../lib/types';
 import React from 'react';
 import { ChannelListInitialStateType } from './dux/initialState';
@@ -13,8 +13,6 @@ import { ChannelListActionTypes } from './dux/actionTypes';
 import { GroupChannelListQueryParamsInternal } from './context/ChannelListProvider';
 import { LoggerInterface } from '../../lib/Logger';
 import { MarkAsDeliveredSchedulerType } from '../../lib/hooks/useMarkAsDeliveredScheduler';
-import { PubSubTypes } from '../../lib/pubSub';
-import { BaseMessage } from '@sendbird/chat/message';
 
 const DELIVERY_RECEIPT = 'delivery_receipt';
 
@@ -260,15 +258,15 @@ export const pubSubHandleRemover = (subscriber: ReturnType<typeof pubSubHandler>
   });
 };
 
-export const pubSubHandler = (pubSub: PubSubTypes, channelListDispatcher: React.Dispatch<ChannelListActionTypes>) => {
-  const subscriber = new Map<string, ReturnType<PubSubTypes['subscribe']>>();
+export const pubSubHandler = (pubSub: SBUGlobalPubSub, channelListDispatcher: React.Dispatch<ChannelListActionTypes>) => {
+  const subscriber = new Map<string, ReturnType<SBUGlobalPubSub['subscribe']>>();
   if (!pubSub) return subscriber;
   subscriber.set(
     topics.CREATE_CHANNEL,
     pubSub.subscribe(topics.CREATE_CHANNEL, (msg: { channel: GroupChannel }) => {
       const { channel } = msg;
       channelListDispatcher({
-        type: 'CREATE_CHANNEL',
+        type: channelActions.CREATE_CHANNEL,
         payload: channel,
       });
     }),
@@ -276,16 +274,12 @@ export const pubSubHandler = (pubSub: PubSubTypes, channelListDispatcher: React.
 
   subscriber.set(
     topics.UPDATE_USER_MESSAGE,
-    pubSub.subscribe(topics.UPDATE_USER_MESSAGE, (msg: { channel: GroupChannel; message: BaseMessage }) => {
-      const { channel, message } = msg;
-      const updatedChannel = channel;
-      if (updatedChannel?.lastMessage?.messageId === message.messageId) {
-        updatedChannel.lastMessage = message;
-      }
-      if (channel) {
+    pubSub.subscribe(topics.UPDATE_USER_MESSAGE, ({ channel, message }) => {
+      if (channel.isGroupChannel() && channel?.lastMessage?.messageId === message.messageId) {
+        channel.lastMessage = message;
         channelListDispatcher({
           type: channelActions.ON_LAST_MESSAGE_UPDATED,
-          payload: updatedChannel,
+          payload: channel,
         });
       }
     }),
@@ -304,12 +298,13 @@ export const pubSubHandler = (pubSub: PubSubTypes, channelListDispatcher: React.
 
   subscriber.set(
     topics.SEND_MESSAGE_START,
-    pubSub.subscribe(topics.SEND_MESSAGE_START, (msg: { channel: GroupChannel }) => {
-      const { channel } = msg;
-      channelListDispatcher({
-        type: channelActions.CHANNEL_REPLACED_TO_TOP,
-        payload: channel,
-      });
+    pubSub.subscribe(topics.SEND_MESSAGE_START, ({ channel }) => {
+      if (channel.isGroupChannel()) {
+        channelListDispatcher({
+          type: channelActions.CHANNEL_REPLACED_TO_TOP,
+          payload: channel,
+        });
+      }
     }),
   );
 

@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { UserMessageCreateParams } from '@sendbird/chat/message';
+import { UserMessage, UserMessageCreateParams } from '@sendbird/chat/message';
 import { User } from '@sendbird/chat';
 
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
-import topics from '../../../../lib/pubSub/topics';
+import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { SendableMessageType } from '../../../../utils';
 import { PublishingModuleType } from '../../../internalInterfaces';
 
@@ -17,7 +17,7 @@ interface DynamicProps {
 }
 interface StaticProps {
   logger: Logger;
-  pubSub: any;
+  pubSub: SBUGlobalPubSub;
   threadDispatcher: CustomUseReducerDispatcher;
 }
 
@@ -84,7 +84,7 @@ export default function useSendUserMessageCallback({
           // because Thread doesn't subscribe SEND_USER_MESSAGE
           pubSub.publish(topics.SEND_USER_MESSAGE, {
             channel: currentChannel,
-            message: message,
+            message: message as UserMessage,
             publishingModules: [PublishingModuleType.THREAD],
           });
         });

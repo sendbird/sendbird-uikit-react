@@ -33,6 +33,7 @@ import { CoreMessageType } from '../utils';
 import { UserActionTypes } from './dux/user/actionTypes';
 import { SdkActionTypes } from './dux/sdk/actionTypes';
 import { ReconnectType } from './hooks/useConnect/types';
+import { SBUGlobalPubSub } from './pubSub/topics';
 
 // note to SDK team:
 // using enum inside .d.ts won’t work for jest, but const enum will work.
@@ -58,7 +59,7 @@ export interface SendBirdStateConfig {
   appId: string;
   accessToken: string;
   theme: string;
-  pubSub: any;
+  pubSub: SBUGlobalPubSub;
   logger: Logger;
   setCurrentTheme: (theme: 'light' | 'dark') => void;
   /** @deprecated Please use setCurrentTheme instead * */
