@@ -41,7 +41,7 @@ const AvatarStack = (props: AvatarStackProps) => {
   );
 };
 
-const TypingIndicatorMessageAvatar = (props : TypingIndicatorMessageProps) => {
+const TypingIndicatorMessageAvatar = (props: TypingIndicatorMessageProps) => {
   const { typingMembers } = props;
   const membersCount = typingMembers.length;
   const displayCount = Math.min(membersCount, 4);
