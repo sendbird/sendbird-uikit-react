@@ -15,7 +15,7 @@ exports[`ui/OpenchannelUserMessage should do a snapshot test of the OpenchannelU
         <div
           class="sendbird-openchannel-user-message__left__avatar sendbird-avatar"
           role="button"
-          style="height: 28px; width: 28px; z-index: 0; left: 0px; border: 0px;"
+          style="height: 28px; width: 28px; z-index: 0; left: 0px;"
           tabindex="0"
         >
           <div

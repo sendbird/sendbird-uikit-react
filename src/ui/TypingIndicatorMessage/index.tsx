@@ -47,7 +47,7 @@ const TypingIndicatorMessageAvatar = (props: TypingIndicatorMessageProps) => {
   const hiddenCount = membersCount - MAX_PROFILES_COUNT;
   const superImposedWidth = ((displayCount - 1) * (AVATAR_DIAMETER - LEFT_GAP));
   const rightPaddingSize = 12;
-  
+
   return (
     <div
       className='sendbird-message-content__left incoming'
