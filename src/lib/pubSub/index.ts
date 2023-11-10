@@ -7,7 +7,7 @@ export type PubSubTypes<
   T extends keyof any,
   U extends { topic: T; payload: any }
 > = {
-  __getTopics: () => Record<string, Set<(data: PayloadByTopic<T, U>) => void>>;
+  __getTopics: () => Record<T, Set<(data: PayloadByTopic<T, U>) => void>>;
   subscribe: <K extends T>(
     topic: K,
     subscriber: (data: PayloadByTopic<K, U>) => void
