@@ -80,7 +80,7 @@ const TypingIndicatorMessageAvatar = (props: TypingIndicatorMessageProps) => {
   );
 };
 
-const TypingIndicatorMessage = (props : TypingIndicatorMessageProps) => {
+const TypingIndicatorMessage = (props: TypingIndicatorMessageProps) => {
   const { typingMembers } = props;
 
   if (typingMembers.length === 0) return null;
