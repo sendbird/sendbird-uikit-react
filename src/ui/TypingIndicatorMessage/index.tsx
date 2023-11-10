@@ -9,10 +9,11 @@ export interface TypingIndicatorMessageProps {
 }
 
 const AVATAR_BORDER_SIZE = 2;
-const AVATAR_DIAMETER_WITHOUT_BORDER = 24;
+const AVATAR_DIAMETER_WITHOUT_BORDER = 28;
 const AVATAR_DIAMETER = AVATAR_DIAMETER_WITHOUT_BORDER + (AVATAR_BORDER_SIZE * 2);
-const LEFT_GAP = 20;
+const LEFT_GAP = 24;
 const MAX_PROFILES_COUNT = 3;
+const LEFT_FOR_BORDER = AVATAR_BORDER_SIZE;
 
 export interface AvatarStackProps {
   sources: string[];
@@ -33,7 +34,7 @@ const AvatarStack = (props: AvatarStackProps) => {
           width={`${AVATAR_DIAMETER_WITHOUT_BORDER}px`}
           height={`${AVATAR_DIAMETER_WITHOUT_BORDER}px`}
           zIndex={index}
-          left={`${index * LEFT_GAP}px`}
+          left={`${index * LEFT_GAP - LEFT_FOR_BORDER}px`}
         />
       ))
     } </>
