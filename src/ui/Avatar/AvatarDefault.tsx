@@ -8,7 +8,7 @@ interface AvatarDefaultProps {
   text?: string,
 }
 
-const AvatarDefault = (props: React.PropsWithChildren<AvatarDefaultProps>) => {
+const AvatarDefault = (props: AvatarDefaultProps) => {
   const { width, height, text } = props;
 
   let iconWidth = pxToNumber(width);
