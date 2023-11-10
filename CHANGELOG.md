@@ -1,5 +1,59 @@
 # Changelog - v3
 
+## [v3.8.1] (Nov 10 2023)
+
+### Features:
+* `MessageContent` is not customizable with three new optional properties:
+  * `renderSenderProfile`, `renderMessageBody`, and `renderMessageHeader`
+  * How to use?
+    ```tsx
+    import Channel from '@sendbird/uikit-react/Channel'
+    import { useSendbirdStateContext } from '@sendbird/uikit-react/useSendbirdStateContext'
+    import { useChannelContext } from '@sendbird/uikit-react/Channel/context'
+    import MessageContent from '@sendbird/uikit-react/ui/MessageContent'
+
+    const CustomChannel = () => {
+      const { config } = useSendbirdStateContext();
+      const { userId } = config;
+      const { currentGroupChannel } = useChannelContext();
+      return (
+        <Channel
+          ...
+          renderMessage={({ message }) => {
+            return (
+              <MessageContent
+                userId={userId}
+                channel={currentGroupChannel}
+                message={message}
+                ...
+                renderSenderProfile={(props: MessageProfileProps) => (
+                  <MessageProfile {...props}/>
+                )}
+                renderMessageBody={(props: MessageBodyProps) => (
+                  <MessageBody {...props}/>
+                )}
+                renderMessageHeader={(props: MessageHeaderProps) => (
+                  <MessageHeader {...props}/>
+                )}
+              />
+            )
+          }}
+        />
+      )
+    }
+    ```
+
+### Fixes:
+* Fix runtime error due to publishing modules
+* Add missing date locale to the `UnreadCount` banner since string
+* Use the more impactful value between the `resizingWidth` and `resizingHeight`
+  * So, the original images' ratio won't be broken
+* Apply the `ImageCompression` to the `Thread` module
+* Apply the `ImageCompression` for sending file message and multiple files message
+
+### Improvements:
+* Use `channel.members` instead of fetching for non-super group channels in the `SuggestedMentionList`
+
 ## [v3.8.0] (Nov 3 2023)
 
 ### Feat:
