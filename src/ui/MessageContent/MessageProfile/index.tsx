@@ -7,10 +7,10 @@ import UserProfile from '../../UserProfile';
 import MessageItemMenu from '../../MessageItemMenu';
 import { ThreadReplySelectType } from '../../../modules/Channel/context/const';
 import MessageItemReactionMenu from '../../MessageItemReactionMenu';
-import { MessageContentInternalProps } from '../index';
+import { MessageContentProps } from '../index';
 import { UserProfileContext } from '../../../lib/UserProfileContext';
 
-export interface MessageProfileProps extends MessageContentInternalProps {
+export interface MessageProfileProps extends MessageContentProps {
   setSupposedHover?: Dispatch<SetStateAction<boolean>>;
   isMobile?: boolean;
   isReactionEnabledInChannel?: boolean;

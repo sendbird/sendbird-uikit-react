@@ -39,16 +39,7 @@ import MessageProfile, { MessageProfileProps } from './MessageProfile';
 import MessageBody, { MessageBodyProps } from './MessageBody';
 import MessageHeader, { MessageHeaderProps } from './MessageHeader';
 
-export interface MessageContentProps extends MessageContentInternalProps {
-  renderSenderProfile?: (props: MessageProfileProps) => ReactNode;
-  renderMessageBody?: (props: MessageBodyProps) => ReactNode;
-  renderMessageHeader?: (props: MessageHeaderProps) => ReactNode;
-}
-
-/**
- * @internal
- */
-export interface MessageContentInternalProps {
+export interface MessageContentProps {
   className?: string | Array<string>;
   userId: string;
   channel: Nullable<GroupChannel>;
@@ -73,6 +64,11 @@ export interface MessageContentInternalProps {
   onReplyInThread?: (props: { message: SendableMessageType }) => void;
   onQuoteMessageClick?: (props: { message: SendableMessageType }) => void;
   onMessageHeightChange?: () => void;
+
+  // For injecting customizable sub-components
+  renderSenderProfile?: (props: MessageProfileProps) => ReactNode;
+  renderMessageBody?: (props: MessageBodyProps) => ReactNode;
+  renderMessageHeader?: (props: MessageHeaderProps) => ReactNode;
 }
 
 export default function MessageContent(props: MessageContentProps): ReactElement {
