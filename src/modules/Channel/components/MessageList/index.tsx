@@ -241,14 +241,6 @@ const MessageList: React.FC<MessageListProps> = ({
                 );
               })
             }
-            {
-              typingMembers.map((typingMember: Member) => {
-                const isMe = typingMember.userId === store?.config?.userId;
-                return isMe
-                  ? null
-                  : <TypingIndicatorMessage typingMember={typingMember} />;
-              })
-            }
             {/* show frozen notifications, */}
             {/* show new message notifications, */}
           </div>
