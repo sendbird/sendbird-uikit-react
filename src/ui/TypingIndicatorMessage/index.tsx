@@ -26,7 +26,7 @@ const AvatarStack = (props: AvatarStackProps) => {
     <> {
       sources.slice(0, max).map((src, index) => (
         <Avatar
-          className={'sendbird-message-content__left__avatar'}
+          className={'sendbird-message-content__left__avatar multiple'}
           src={src || ''}
           key={`avatar_stack_item_${src}`}
           // TODO: Divide getting profileUrl logic to utils
@@ -34,7 +34,6 @@ const AvatarStack = (props: AvatarStackProps) => {
           height={`${AVATAR_DIAMETER_WITHOUT_BORDER}px`}
           zIndex={index}
           left={`${index * LEFT_GAP}px`}
-          border={`${AVATAR_BORDER_SIZE}px solid white`}
         />
       ))
     } </>
@@ -63,7 +62,7 @@ const TypingIndicatorMessageAvatar = (props: TypingIndicatorMessageProps) => {
       {
         hiddenCount > 0
           ? <Avatar
-            className={'sendbird-message-content__left__avatar'}
+            className={'sendbird-message-content__left__avatar multiple'}
             // TODO: Divide getting profileUrl logic to utils
             width={`${AVATAR_DIAMETER_WITHOUT_BORDER}px`}
             height={`${AVATAR_DIAMETER_WITHOUT_BORDER}px`}

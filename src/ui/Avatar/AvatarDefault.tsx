@@ -25,8 +25,7 @@ const AvatarDefault = (props: AvatarDefaultProps) => {
       {
         text
           ? <div
-            className='sendbird-label--caption-2'
-            style={{ color: 'white' }}
+            className='sendbird-avatar-text'
           >{ text }</div>
           : <Icon
             type={IconTypes.USER}

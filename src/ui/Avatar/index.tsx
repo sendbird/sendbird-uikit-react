@@ -148,7 +148,6 @@ interface AvatarProps {
   width?: string | number,
   zIndex?: string | number,
   left?: string,
-  border?: string,
   src?: string | Array<string>,
   alt?: string,
   onClick?(): void,
@@ -164,7 +163,6 @@ function Avatar(
     height = '56px',
     zIndex = 0,
     left = '0px',
-    border = '0px',
     onClick,
     customDefaultComponent,
   }: AvatarProps,
@@ -183,7 +181,6 @@ function Avatar(
         width,
         zIndex,
         left,
-        border,
       }}
       onClick={onClick}
       onKeyDown={onClick}

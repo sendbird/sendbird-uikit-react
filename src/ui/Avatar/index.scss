@@ -1,9 +1,9 @@
 @import '../../styles/variables';
 
 .sendbird-avatar {
+  border-radius: 50%;
   display: inline-block;
   overflow: hidden;
-  border-radius:50%;
   position: relative;
 
   &:focus {
@@ -11,23 +11,24 @@
   }
 
   .sendbird-avatar-img {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
     @include themed() {
       background-color: t(bg--3-3);
     }
-    position: absolute;
-    top:50%;
-    left:50%;
-    transform: translate(-50%,-50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 
-  .sendbird-avatar--inner__two-child  {
+  .sendbird-avatar--inner__two-child {
     .sendbird-avatar-img {
       &:first-child {
         transform: translate(2%, -50%);
       }
+
       &:last-child {
         transform: translate(-102%, -50%);
       }
@@ -45,8 +46,9 @@
   .sendbird-avatar--inner__three-child--lower {
     .sendbird-avatar-img {
       &:first-child {
-        transform:  translate(-77%, -23%) scale(0.5);
+        transform: translate(-77%, -23%) scale(0.5);
       }
+
       &:last-child {
         transform: translate(-23%, -23%) scale(0.5);
       }
@@ -56,14 +58,17 @@
   .sendbird-avatar--inner__four-child {
     .sendbird-avatar-img {
       &:first-child {
-        transform:  translate(-77%, -77%) scale(0.5);
+        transform: translate(-77%, -77%) scale(0.5);
       }
+
       &:nth-child(2) {
         transform: translate(-23%, -77%) scale(0.5);
       }
+
       &:nth-child(3) {
-        transform:  translate(-77%, -23%) scale(0.5);
+        transform: translate(-77%, -23%) scale(0.5);
       }
+
       &:last-child {
         transform: translate(-23%, -23%) scale(0.5);
       }
@@ -71,11 +76,24 @@
   }
 
   .sendbird-avatar-img--default {
+    align-items: center;
+    display: flex;
+    justify-content: center;
     @include themed() {
       background-color: t(bg--3-3);
     }
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  }
+  
+  .sendbird-avatar-text {
+    font-family: Roboto;
+    font-size: 8px;
+    font-style: normal;
+    font-weight: bold;
+    font-weight: 400;
+    line-height: 12px;
+    text-align: center;
+    @include themed() {
+      color: t(on-bg-2);
+    }
   }
 }
