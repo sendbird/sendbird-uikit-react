@@ -3,7 +3,7 @@ import React, { RefObject, useEffect } from 'react';
 import { scrollIntoLast } from '../utils';
 import * as channelActions from '../dux/actionTypes';
 import { PUBSUB_TOPICS, SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
-import { PublishingModuleType } from '../../../internalInterfaces';
+import { shouldPubSubPublishToChannel } from '../../../internalInterfaces';
 import { ChannelActionTypes } from '../dux/actionTypes';
 
 export interface UseHandlePubsubEventsParams {
@@ -36,9 +36,7 @@ export const useHandleChannelPubsubEvents = ({
       }));
       subscriber.set(PUBSUB_TOPICS.SEND_MESSAGE_START, pubSub.subscribe(PUBSUB_TOPICS.SEND_MESSAGE_START, (props) => {
         const { channel, message, publishingModules } = props;
-        if (channelUrl === channel?.url
-          && publishingModules.includes(PublishingModuleType.CHANNEL)
-        ) {
+        if (channelUrl === channel?.url && shouldPubSubPublishToChannel(publishingModules)) {
           dispatcher({
             type: channelActions.SEND_MESSAGE_START,
             payload: message,
@@ -47,7 +45,7 @@ export const useHandleChannelPubsubEvents = ({
       }));
       subscriber.set(PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED, pubSub.subscribe(PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED, (props) => {
         const { response, publishingModules } = props;
-        if (channelUrl === response.channelUrl && publishingModules.includes(PublishingModuleType.CHANNEL)) {
+        if (channelUrl === response.channelUrl && shouldPubSubPublishToChannel(publishingModules)) {
           dispatcher({
             type: channelActions.ON_FILE_INFO_UPLOADED,
             payload: response,
@@ -56,7 +54,7 @@ export const useHandleChannelPubsubEvents = ({
       }));
       subscriber.set(PUBSUB_TOPICS.SEND_MESSAGE_FAILED, pubSub.subscribe(PUBSUB_TOPICS.SEND_MESSAGE_FAILED, (props) => {
         const { channel, message, publishingModules } = props;
-        if (channelUrl === channel?.url && publishingModules.includes(PublishingModuleType.CHANNEL)) {
+        if (channelUrl === channel?.url && shouldPubSubPublishToChannel(publishingModules)) {
           dispatcher({
             type: channelActions.SEND_MESSAGE_FAILURE,
             payload: message,

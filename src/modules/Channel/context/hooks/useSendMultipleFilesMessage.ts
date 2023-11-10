@@ -8,7 +8,11 @@ import type { Nullable } from '../../../../types';
 import PUBSUB_TOPICS from '../../../../lib/pubSub/topics';
 import { scrollIntoLast as scrollIntoLastForChannel } from '../utils';
 import { SendableMessageType } from '../../../../utils';
-import { PublishingModuleType } from '../../../internalInterfaces';
+import {
+  PublishingModuleType,
+  shouldPubSubPublishToChannel,
+  shouldPubSubPublishToThread,
+} from '../../../internalInterfaces';
 import { scrollIntoLast as scrollIntoLastForThread } from '../../../Thread/context/utils';
 
 export type OnBeforeSendMFMType = (
@@ -110,10 +114,10 @@ export const useSendMultipleFilesMessage = ({
             });
             // We need this delay because rendering MFM takes time due to large image files.
             setTimeout(() => {
-              if (scrollRef && publishingModules.includes(PublishingModuleType.CHANNEL)) {
+              if (scrollRef && shouldPubSubPublishToChannel(publishingModules)) {
                 scrollIntoLastForChannel(0, scrollRef);
               }
-              if (publishingModules.includes(PublishingModuleType.THREAD)) {
+              if (shouldPubSubPublishToThread(publishingModules)) {
                 scrollIntoLastForThread(0);
               }
             }, 100);
@@ -136,10 +140,10 @@ export const useSendMultipleFilesMessage = ({
             });
             // We need this delay because rendering MFM takes time due to large image files.
             setTimeout(() => {
-              if (scrollRef && publishingModules.includes(PublishingModuleType.CHANNEL)) {
+              if (scrollRef && shouldPubSubPublishToChannel(publishingModules)) {
                 scrollIntoLastForChannel(0, scrollRef);
               }
-              if (publishingModules.includes(PublishingModuleType.THREAD)) {
+              if (shouldPubSubPublishToThread(publishingModules)) {
                 scrollIntoLastForThread(0);
               }
             }, 100);

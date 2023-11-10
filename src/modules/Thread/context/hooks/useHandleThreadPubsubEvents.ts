@@ -5,8 +5,8 @@ import topics, { PUBSUB_TOPICS, SBUGlobalPubSub } from '../../../../lib/pubSub/t
 import { scrollIntoLast } from '../utils';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import { SendableMessageType } from '../../../../utils';
-import { PublishingModuleType } from './useSendMultipleFilesMessage';
 import * as channelActions from '../../../Channel/context/dux/actionTypes';
+import { shouldPubSubPublishToThread } from '../../../internalInterfaces';
 
 interface DynamicProps {
   sdkInit: boolean;
@@ -33,10 +33,7 @@ export default function useHandleThreadPubsubEvents({
       // TODO: subscribe ON_FILE_INFO_UPLOADED
       subscriber.set(topics.SEND_MESSAGE_START, pubSub.subscribe(topics.SEND_MESSAGE_START, (props) => {
         const { channel, message, publishingModules } = props;
-        if (currentChannel?.url === channel?.url
-          && message?.parentMessageId === parentMessage?.messageId
-          && publishingModules.includes(PublishingModuleType.THREAD)
-        ) {
+        if (currentChannel?.url === channel?.url && message?.parentMessageId === parentMessage?.messageId && shouldPubSubPublishToThread(publishingModules)) {
           // TODO: const clonedMessage = cloneMessage(message);
           const pendingMessage: Record<string, any> = { ...message };
           if (message.isMultipleFilesMessage()) {
@@ -56,10 +53,7 @@ export default function useHandleThreadPubsubEvents({
       }));
       subscriber.set(PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED, pubSub.subscribe(PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED, (props) => {
         const { response, publishingModules } = props;
-        if (
-          currentChannel?.url === response.channelUrl
-          && publishingModules.includes(PublishingModuleType.THREAD)
-        ) {
+        if (currentChannel?.url === response.channelUrl && shouldPubSubPublishToThread(publishingModules)) {
           threadDispatcher({
             type: channelActions.ON_FILE_INFO_UPLOADED,
             payload: response,
@@ -83,10 +77,7 @@ export default function useHandleThreadPubsubEvents({
       }));
       subscriber.set(topics.SEND_MESSAGE_FAILED, pubSub.subscribe(topics.SEND_MESSAGE_FAILED, (props) => {
         const { channel, message, publishingModules } = props;
-        if (currentChannel?.url === channel?.url
-          && message?.parentMessageId === parentMessage?.messageId
-          && publishingModules.includes(PublishingModuleType.THREAD)
-        ) {
+        if (currentChannel?.url === channel?.url && message?.parentMessageId === parentMessage?.messageId && shouldPubSubPublishToThread(publishingModules)) {
           threadDispatcher({
             type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
             payload: { message },
@@ -95,9 +86,7 @@ export default function useHandleThreadPubsubEvents({
       }));
       subscriber.set(topics.SEND_FILE_MESSAGE, pubSub.subscribe(topics.SEND_FILE_MESSAGE, (props) => {
         const { channel, message, publishingModules } = props;
-        if (currentChannel?.url === channel?.url
-          && publishingModules.includes(PublishingModuleType.THREAD)
-        ) {
+        if (currentChannel?.url === channel?.url && shouldPubSubPublishToThread(publishingModules)) {
           threadDispatcher({
             type: ThreadContextActionTypes.SEND_MESSAGE_SUCESS,
             payload: { message },
