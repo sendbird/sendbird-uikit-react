@@ -47,7 +47,7 @@ import {
   SBUEventHandlers,
 } from './types';
 import { GlobalModalProvider } from '../hooks/useModal';
-import { RenderUserProfileProps } from '../types';
+import { RenderUserProfileProps, TypingIndicatorTypes } from '../types';
 import PUBSUB_TOPICS, { SBUGlobalPubSub, SBUGlobalPubSubTopicPayloadUnion } from './pubSub/topics';
 
 export { useSendbirdStateContext } from '../hooks/useSendbirdStateContext';
@@ -106,6 +106,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
   sdkInitParams?: SendbirdChatInitParams;
   customExtensionParams?: CustomExtensionParams;
   isMultipleFilesMessageEnabled?: boolean;
+  typingIndicatorTypes?: Set<TypingIndicatorTypes>;
 
   // Customer provided callbacks
   eventHandlers?: SBUEventHandlers;
@@ -173,6 +174,7 @@ const SendbirdSDK = ({
   sdkInitParams,
   customExtensionParams,
   isMultipleFilesMessageEnabled = false,
+  typingIndicatorTypes = new Set([TypingIndicatorTypes.TEXT]),
   eventHandlers,
 }: SendbirdProviderProps): React.ReactElement => {
   const {
@@ -327,6 +329,7 @@ const SendbirdSDK = ({
           setCurrentTheme,
           setCurrenttheme: setCurrentTheme, // deprecated: typo
           isMultipleFilesMessageEnabled,
+          typingIndicatorTypes,
           uikitUploadSizeLimit,
           uikitMultipleFilesMessageLimit,
           userListQuery,

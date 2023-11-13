@@ -23,6 +23,7 @@ import type {
   RenderUserProfileProps,
   ReplyType,
   UserListQuery,
+  TypingIndicatorTypes,
 } from '../types';
 import { UikitMessageHandler } from './selectors';
 import { Logger } from './SendbirdState';
@@ -68,6 +69,7 @@ export interface SendBirdStateConfig {
   isReactionEnabled: boolean;
   isMentionEnabled: boolean;
   isMultipleFilesMessageEnabled: boolean;
+  typingIndicatorTypes: Set<TypingIndicatorTypes>;
   isVoiceMessageEnabled?: boolean;
   uikitUploadSizeLimit: number;
   uikitMultipleFilesMessageLimit: number;

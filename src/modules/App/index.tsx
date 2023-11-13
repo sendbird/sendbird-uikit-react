@@ -32,6 +32,7 @@ interface AppProps {
   voiceRecord?: SendbirdProviderProps['voiceRecord'];
   replyType?: SendbirdProviderProps['replyType'];
   isMultipleFilesMessageEnabled?: SendbirdProviderProps['isMultipleFilesMessageEnabled'];
+  typingIndicatorTypes?: SendbirdProviderProps['typingIndicatorTypes'];
   colorSet?: SendbirdProviderProps['colorSet'];
   stringSet?: SendbirdProviderProps['stringSet'];
   allowProfileEdit?: SendbirdProviderProps['allowProfileEdit'];
@@ -91,6 +92,7 @@ export default function App(props: AppProps) {
     disableUserProfile,
     isVoiceMessageEnabled,
     isMultipleFilesMessageEnabled,
+    typingIndicatorTypes,
     isTypingIndicatorEnabledOnChannelList,
     isMessageReceiptStatusEnabledOnChannelList,
     isUserIdUsedForNickname = true,
@@ -120,6 +122,7 @@ export default function App(props: AppProps) {
       isMentionEnabled={isMentionEnabled}
       isVoiceMessageEnabled={isVoiceMessageEnabled}
       isMultipleFilesMessageEnabled={isMultipleFilesMessageEnabled}
+      typingIndicatorTypes={typingIndicatorTypes}
       voiceRecord={voiceRecord}
       onUserProfileMessage={(channel) => {
         setCurrentChannel(channel);
