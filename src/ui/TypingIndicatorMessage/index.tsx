@@ -69,7 +69,6 @@ const TypingIndicatorMessageAvatar = (props: TypingIndicatorMessageProps) => {
             height={`${AVATAR_DIAMETER_WITHOUT_BORDER}px`}
             zIndex={MAX_PROFILES_COUNT}
             left={`${MAX_PROFILES_COUNT * LEFT_GAP}px`}
-            border={`${AVATAR_BORDER_SIZE}px solid white`}
             customDefaultComponent={({ width, height }) => (
               <AvatarDefault width={width} height={height} text={`+${hiddenCount}`} />
             )}
