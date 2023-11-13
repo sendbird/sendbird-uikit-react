@@ -21,7 +21,10 @@ const AvatarDefault = (props: AvatarDefaultProps) => {
   }
 
   return (
-    <div className="sendbird-avatar-img--default" style={{ width, height }}>
+    <div
+      className={`sendbird-avatar-img--default ${text ? 'text' : ''}`}
+      style={{ width, height }}
+    >
       {
         text
           ? <div

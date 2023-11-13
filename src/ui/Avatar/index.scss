@@ -82,6 +82,11 @@
     @include themed() {
       background-color: t(bg--3-3);
     }
+    &.text {
+      @include themed() {
+        background-color: t(bg--1-4);
+      }
+    }
   }
   
   .sendbird-avatar-text {
