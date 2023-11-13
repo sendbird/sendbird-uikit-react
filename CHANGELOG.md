@@ -1,6 +1,6 @@
 # Changelog - v3
 
-## [v3.8.1] (Nov 10 2023)
+## [v3.8.2] (Nov 10 2023)
 
 ### Features:
 * `MessageContent` is not customizable with three new optional properties:
@@ -53,6 +53,8 @@
 
 ### Improvements:
 * Use `channel.members` instead of fetching for non-super group channels in the `SuggestedMentionList`
+
+## [v3.8.1] (Nov 10 2023) - DEPRECATED
 
 ## [v3.8.0] (Nov 3 2023)
 

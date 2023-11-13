@@ -19,8 +19,8 @@ import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCa
 import { useSetScrollToBottom } from './hooks/useSetScrollToBottom';
 import { useScrollBehavior } from './hooks/useScrollBehavior';
 import * as utils from '../../context/utils';
-import { Member } from '@sendbird/chat/groupChannel';
 import TypingIndicatorMessage from '../../../../ui/TypingIndicatorMessage';
+import { Member } from '@sendbird/chat/groupChannel';
 
 const SCROLL_BOTTOM_PADDING = 50;
 
@@ -246,17 +246,6 @@ const MessageList: React.FC<MessageListProps> = ({
                 typingMember.userId !== store?.config?.userId
               ))}
             />
-            {
-              /**
-               * TODO: Temporary code for testing. Remove this before merging.
-               */
-              <TypingIndicatorMessage
-                // typingMembers={[currentGroupChannel.members.find((member: Member) => (
-                //   member.userId === store?.config?.userId
-                // ))]}
-                typingMembers={currentGroupChannel.members}
-              />
-            }
             {/* show frozen notifications, */}
             {/* show new message notifications, */}
           </div>
