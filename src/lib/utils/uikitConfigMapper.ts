@@ -34,6 +34,7 @@ export function uikitConfigMapper({
       input: {
         enableDocument: uikitOptions.groupChannel?.input?.enableDocument,
       },
+      typingIndicatorTypes: uikitOptions.groupChannel?.typingIndicatorTypes,
     },
     groupChannelList: {
       enableTypingIndicator: uikitOptions.groupChannelList?.enableTypingIndicator ?? isTypingIndicatorEnabledOnChannelList,

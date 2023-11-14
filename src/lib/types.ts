@@ -23,7 +23,6 @@ import type {
   RenderUserProfileProps,
   ReplyType,
   UserListQuery,
-  TypingIndicatorTypes,
 } from '../types';
 import { UikitMessageHandler } from './selectors';
 import { Logger } from './SendbirdState';
@@ -69,7 +68,6 @@ export interface SendBirdStateConfig {
   isReactionEnabled: boolean;
   isMentionEnabled: boolean;
   isMultipleFilesMessageEnabled: boolean;
-  typingIndicatorTypes: Set<TypingIndicatorTypes>;
   isVoiceMessageEnabled?: boolean;
   uikitUploadSizeLimit: number;
   uikitMultipleFilesMessageLimit: number;
@@ -98,6 +96,7 @@ export interface SendBirdStateConfig {
     enableTypingIndicator: SBUConfig['groupChannel']['channel']['enableTypingIndicator'];
     enableDocument: SBUConfig['groupChannel']['channel']['input']['enableDocument'];
     threadReplySelectType: SBUConfig['groupChannel']['channel']['threadReplySelectType'];
+    typingIndicatorTypes: SBUConfig['groupChannel']['channel']['typingIndicatorTypes'];
   },
   openChannel: {
     enableOgtag: SBUConfig['openChannel']['channel']['enableOgtag'];

@@ -166,7 +166,7 @@ const MessageList: React.FC<MessageListProps> = ({
     }
     return <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />;
   }
-
+  
   return (
     <>
       {
@@ -242,8 +242,9 @@ const MessageList: React.FC<MessageListProps> = ({
               })
             }
             {
-              store?.config?.groupChannel?.enableTypingIndicator
-              && store?.config?.typingIndicatorTypes?.has(TypingIndicatorTypes.BUBBLE)
+              !hasMoreNext
+              && store?.config?.groupChannel?.enableTypingIndicator
+              && store?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorTypes.Bubble)
               && <TypingIndicatorMessage
                 typingMembers={typingMembers.filter((typingMember: Member) => (
                   typingMember.userId !== store?.config?.userId

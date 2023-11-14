@@ -125,7 +125,7 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
             renderTypingIndicator?.()
             || (
               globalStore?.config?.groupChannel?.enableTypingIndicator
-              && globalStore?.config?.typingIndicatorTypes?.has(TypingIndicatorTypes.TEXT)
+              && globalStore?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorTypes.Text)
               && (
                 <TypingIndicator />
               )

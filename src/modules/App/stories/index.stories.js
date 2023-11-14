@@ -12,7 +12,7 @@ import MessageSearch from '../../MessageSearch';
 import { withSendBird } from '../../..';
 import { sendbirdSelectors } from '../../..';
 import { fitPageSize } from './utils';
-import {TypingIndicatorTypes} from '../../../types';
+import { TypingIndicatorTypes } from '../../../types';
 
 const appId = process.env.STORYBOOK_APP_ID;
 const userId = 'sendbird';
@@ -283,16 +283,13 @@ export const user1 = () => fitPageSize(
     isMentionEnabled
     isVoiceMessageEnabled
     isMultipleFilesMessageEnabled
-    // TODO: Remove below before merging.
-    // isTypingIndicatorEnabledOnChannelList
     isMessageReceiptStatusEnabledOnChannelList
-    // TODO: Remove below before merging.
-    // uikitOptions={{
-    //   groupChannel: {
-    //     enableTypingIndicator: true,
-    //   }
-    // }}
-    typingIndicatorTypes={new Set([TypingIndicatorTypes.BUBBLE, TypingIndicatorTypes.TEXT])}
+    uikitOptions={{
+      groupChannel: {
+        // enableTypingIndicator: false,
+        typingIndicatorTypes: new Set([TypingIndicatorTypes.Bubble, TypingIndicatorTypes.Text]),
+      }
+    }}
   />
 );
 export const user2 = () => fitPageSize(

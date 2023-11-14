@@ -47,7 +47,7 @@ import {
   SBUEventHandlers,
 } from './types';
 import { GlobalModalProvider } from '../hooks/useModal';
-import { RenderUserProfileProps, TypingIndicatorTypes } from '../types';
+import { RenderUserProfileProps } from '../types';
 import PUBSUB_TOPICS, { SBUGlobalPubSub, SBUGlobalPubSubTopicPayloadUnion } from './pubSub/topics';
 
 export { useSendbirdStateContext } from '../hooks/useSendbirdStateContext';
@@ -106,14 +106,13 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
   sdkInitParams?: SendbirdChatInitParams;
   customExtensionParams?: CustomExtensionParams;
   isMultipleFilesMessageEnabled?: boolean;
-  typingIndicatorTypes?: Set<TypingIndicatorTypes>;
 
   // Customer provided callbacks
   eventHandlers?: SBUEventHandlers;
 }
 
 export function SendbirdProvider(props: SendbirdProviderProps) {
-  const localConfigs = uikitConfigMapper({
+  const localConfigs: UIKitOptions = uikitConfigMapper({
     legacyConfig: {
       replyType: props.replyType,
       isMentionEnabled: props.isMentionEnabled,
@@ -174,7 +173,6 @@ const SendbirdSDK = ({
   sdkInitParams,
   customExtensionParams,
   isMultipleFilesMessageEnabled = false,
-  typingIndicatorTypes = new Set([TypingIndicatorTypes.TEXT]),
   eventHandlers,
 }: SendbirdProviderProps): React.ReactElement => {
   const {
@@ -329,7 +327,6 @@ const SendbirdSDK = ({
           setCurrentTheme,
           setCurrenttheme: setCurrentTheme, // deprecated: typo
           isMultipleFilesMessageEnabled,
-          typingIndicatorTypes,
           uikitUploadSizeLimit,
           uikitMultipleFilesMessageLimit,
           userListQuery,
@@ -373,6 +370,7 @@ const SendbirdSDK = ({
             enableTypingIndicator: configs.groupChannel.channel.enableTypingIndicator,
             enableDocument: configs.groupChannel.channel.input.enableDocument,
             threadReplySelectType: getCaseResolvedThreadReplySelectType(configs.groupChannel.channel.threadReplySelectType).lowerCase,
+            typingIndicatorTypes: configs.groupChannel.channel.typingIndicatorTypes,
           },
           openChannel: {
             enableOgtag:

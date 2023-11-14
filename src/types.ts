@@ -26,8 +26,8 @@ export interface UserListQuery {
 }
 
 export enum TypingIndicatorTypes {
-  TEXT = 'text',
-  BUBBLE = 'bubble',
+  Text = 'text',
+  Bubble = 'bubble',
 }
 
 export interface RenderUserProfileProps {
