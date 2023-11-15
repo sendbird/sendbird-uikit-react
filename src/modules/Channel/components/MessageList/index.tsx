@@ -20,7 +20,6 @@ import { useSetScrollToBottom } from './hooks/useSetScrollToBottom';
 import { useScrollBehavior } from './hooks/useScrollBehavior';
 import * as utils from '../../context/utils';
 import TypingIndicatorMessage from '../../../../ui/TypingIndicatorMessage';
-import { Member } from '@sendbird/chat/groupChannel';
 
 const SCROLL_BOTTOM_PADDING = 50;
 
