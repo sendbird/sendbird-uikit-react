@@ -334,6 +334,12 @@ export const user3 = () => fitPageSize(
     isMultipleFilesMessageEnabled
     isTypingIndicatorEnabledOnChannelList
     isMessageReceiptStatusEnabledOnChannelList
+    uikitOptions={{
+      groupChannel: {
+        // enableTypingIndicator: false,
+        typingIndicatorTypes: new Set([TypingIndicatorTypes.Bubble, TypingIndicatorTypes.Text]),
+      }
+    }}
   />
 );
 export const user4 = () => fitPageSize(
