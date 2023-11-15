@@ -246,9 +246,7 @@ const MessageList: React.FC<MessageListProps> = ({
               && store?.config?.groupChannel?.enableTypingIndicator
               && store?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorTypes.Bubble)
               && <TypingIndicatorMessage
-                typingMembers={typingMembers.filter((typingMember: Member) => (
-                  typingMember.userId !== store?.config?.userId
-                ))}
+                typingMembers={typingMembers}
                 handleScroll={moveScroll}
               />
             }
