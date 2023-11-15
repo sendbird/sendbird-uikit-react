@@ -112,7 +112,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
 }
 
 export function SendbirdProvider(props: SendbirdProviderProps) {
-  const localConfigs = uikitConfigMapper({
+  const localConfigs: UIKitOptions = uikitConfigMapper({
     legacyConfig: {
       replyType: props.replyType,
       isMentionEnabled: props.isMentionEnabled,
@@ -370,6 +370,7 @@ const SendbirdSDK = ({
             enableTypingIndicator: configs.groupChannel.channel.enableTypingIndicator,
             enableDocument: configs.groupChannel.channel.input.enableDocument,
             threadReplySelectType: getCaseResolvedThreadReplySelectType(configs.groupChannel.channel.threadReplySelectType).lowerCase,
+            typingIndicatorTypes: configs.groupChannel.channel.typingIndicatorTypes,
           },
           openChannel: {
             enableOgtag:

@@ -10,7 +10,7 @@ import ChannelHeader from '../ChannelHeader';
 import MessageList from '../MessageList';
 import TypingIndicator from '../TypingIndicator';
 import MessageInputWrapper from '../MessageInput';
-import { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
+import { RenderCustomSeparatorProps, RenderMessageProps, TypingIndicatorTypes } from '../../../../types';
 
 export interface ChannelUIProps {
   isLoading?: boolean;
@@ -123,9 +123,13 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
         <div className="sendbird-conversation__footer__typing-indicator">
           {
             renderTypingIndicator?.()
-              || globalStore?.config?.groupChannel?.enableTypingIndicator && (
+            || (
+              globalStore?.config?.groupChannel?.enableTypingIndicator
+              && globalStore?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorTypes.Text)
+              && (
                 <TypingIndicator />
               )
+            )
           }
           {
             !isOnline && (

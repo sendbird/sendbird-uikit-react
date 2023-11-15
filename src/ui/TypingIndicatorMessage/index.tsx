@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { Member } from '@sendbird/chat/groupChannel';
 import Avatar from '../Avatar';
 import TypingDots from './TypingDots';
@@ -6,6 +6,7 @@ import AvatarDefault from '../Avatar/AvatarDefault';
 
 export interface TypingIndicatorMessageProps {
   typingMembers: Member[];
+  handleScroll?: (isBottomMessageAffected?: boolean) => void;
 }
 
 const AVATAR_BORDER_SIZE = 2;
@@ -80,9 +81,15 @@ const TypingIndicatorMessageAvatar = (props: TypingIndicatorMessageProps) => {
 };
 
 const TypingIndicatorMessage = (props: TypingIndicatorMessageProps) => {
-  const { typingMembers } = props;
+  const { typingMembers, handleScroll } = props;
 
   if (typingMembers.length === 0) return null;
+
+  useLayoutEffect(() => {
+    // Keep the scrollBottom value after fetching new message list
+    handleScroll?.(true);
+  }, []);
+
   return <div
     className='sendbird-message-content incoming'
     style={{ marginBottom: '2px' }}

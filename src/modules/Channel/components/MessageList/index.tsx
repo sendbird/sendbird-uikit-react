@@ -6,7 +6,7 @@ import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import Message from '../Message';
-import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
+import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps, TypingIndicatorTypes } from '../../../../types';
 import { isAboutSame } from '../../context/utils';
 import { getMessagePartsInfo } from './getMessagePartsInfo';
 import UnreadCount from '../UnreadCount';
@@ -241,11 +241,17 @@ const MessageList: React.FC<MessageListProps> = ({
                 );
               })
             }
-            <TypingIndicatorMessage
-              typingMembers={typingMembers.filter((typingMember: Member) => (
-                typingMember.userId !== store?.config?.userId
-              ))}
-            />
+            {
+              !hasMoreNext
+              && store?.config?.groupChannel?.enableTypingIndicator
+              && store?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorTypes.Bubble)
+              && <TypingIndicatorMessage
+                typingMembers={typingMembers.filter((typingMember: Member) => (
+                  typingMember.userId !== store?.config?.userId
+                ))}
+                handleScroll={moveScroll}
+              />
+            }
             {/* show frozen notifications, */}
             {/* show new message notifications, */}
           </div>
