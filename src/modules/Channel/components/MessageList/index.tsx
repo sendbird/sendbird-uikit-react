@@ -20,6 +20,7 @@ import { useSetScrollToBottom } from './hooks/useSetScrollToBottom';
 import { useScrollBehavior } from './hooks/useScrollBehavior';
 import * as utils from '../../context/utils';
 import TypingIndicatorBubble from '../../../../ui/TypingIndicatorBubble';
+import { useOnScrollReachedEndDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 
 const SCROLL_BOTTOM_PADDING = 50;
 
@@ -154,6 +155,23 @@ const MessageList: React.FC<MessageListProps> = ({
     scrollRef,
   });
 
+  const onScrollReachedEndDetector = useOnScrollReachedEndDetector({
+    scrollRef,
+    onReachedBottom: () => {
+      if (
+        !disableMarkAsRead
+        && !!currentGroupChannel
+        && !hasMoreNext
+      ) {
+        messagesDispatcher({
+          type: messageActionTypes.MARK_AS_READ,
+          payload: { channel: currentGroupChannel },
+        });
+        markAsReadScheduler.push(currentGroupChannel);
+      }
+    },
+  });
+
   const { scrollToBottomHandler, scrollBottom } = useSetScrollToBottom({ loading });
 
   if (loading) {
@@ -182,6 +200,7 @@ const MessageList: React.FC<MessageListProps> = ({
             onScroll={(e) => {
               handleOnScroll();
               scrollToBottomHandler(e);
+              onScrollReachedEndDetector();
             }}
           >
             {
