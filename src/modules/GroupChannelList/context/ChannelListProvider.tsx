@@ -126,7 +126,7 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
       } else {
         setTypingChannelUrls(channelList);
       }
-    }
+    },
   });
 
   return (
