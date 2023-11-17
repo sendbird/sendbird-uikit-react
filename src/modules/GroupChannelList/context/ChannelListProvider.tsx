@@ -78,16 +78,12 @@ export interface ChannelListProviderProps {
   disableUserProfile?: boolean;
   disableAutoSelect?: boolean;
   activeChannelUrl?: string;
-  typingChannels?: Array<GroupChannel>;
+  typingChannelUrls?: Array<string>;
   isTypingIndicatorEnabled?: boolean;
   isMessageReceiptStatusEnabled?: boolean;
 }
 
-export interface ChannelListProviderInterface extends ChannelListProviderProps {
-  initialized: boolean;
-  groupChannels: GroupChannel[];
-  loadMore: () => Promise<void>;
-}
+export interface ChannelListProviderInterface extends ChannelListProviderProps, ReturnType<typeof useGroupChanelList> {}
 
 const ChannelListContext = React.createContext<ChannelListProviderInterface | null>({
   disableUserProfile: true,
@@ -99,8 +95,10 @@ const ChannelListContext = React.createContext<ChannelListProviderInterface | nu
   queries: {},
   className: null,
   initialized: false,
+  refreshing: false,
   groupChannels: [],
-  typingChannels: [],
+  typingChannelUrls: [],
+  refresh: () => new Promise(noop),
   loadMore: () => new Promise(noop),
 });
 
@@ -150,8 +148,10 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
 
   const channelListStore = useGroupChanelList(sdk, {});
   const {
+    refreshing,
     initialized,
     groupChannels,
+    refresh,
     loadMore,
   } = channelListStore;
 
@@ -160,19 +160,18 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   // Removed: setupChannelList, channelSource
 
   // TypingChannels
-  const [typingChannels, setTypingChannels] = useState<Array<GroupChannel>>([]);
+  const [typingChannelUrls, setTypingChannelUrls] = useState<string[]>([]);
   useEffect(() => {
     let typingHandlerId = '';
     if (sdk?.groupChannel?.addGroupChannelHandler) {
       typingHandlerId = uuidv4();
       const handler = new GroupChannelHandler({
         onTypingStatusUpdated: (channel) => {
-          const typingMemberCount = channel?.getTypingUsers()?.length;
-          const channelList = typingChannels.filter((ch) => ch.url !== channel.url);
-          if (typingMemberCount > 0) {
-            setTypingChannels([...channelList, channel]);
+          const channelList = typingChannelUrls.filter((channelUrl) => channelUrl !== channel.url);
+          if (channel?.getTypingUsers()?.length > 0) {
+            setTypingChannelUrls(channelList.concat(channel.url));
           } else {
-            setTypingChannels(channelList);
+            setTypingChannelUrls(channelList);
           }
         },
       });
@@ -211,27 +210,28 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   return (
     <ChannelListContext.Provider
       value={{
+        // TODO: 더 좋은 grouping의 방법은?
         className,
         activeChannelUrl,
+
         disableUserProfile,
         queries: queries_,
         onProfileEditSuccess,
         onThemeChange,
         onBeforeCreateChannel,
-        overrideInviteUser,
         onChannelSelect,
+        overrideInviteUser,
         sortChannelList,
         allowProfileEdit: enableEditProfile,
+        refreshing,
         initialized,
         groupChannels: sortedChannels,
+        refresh,
         loadMore,
-        typingChannels,
-        isTypingIndicatorEnabled:
-          isTypingIndicatorEnabled !== null ? isTypingIndicatorEnabled : isTypingIndicatorEnabledOnChannelList,
-        isMessageReceiptStatusEnabled:
-          isMessageReceiptStatusEnabled !== null
-            ? isMessageReceiptStatusEnabled
-            : isMessageReceiptStatusEnabledOnChannelList,
+
+        typingChannelUrls,
+        isTypingIndicatorEnabled: isTypingIndicatorEnabled ?? isTypingIndicatorEnabledOnChannelList,
+        isMessageReceiptStatusEnabled: isMessageReceiptStatusEnabled ?? isMessageReceiptStatusEnabledOnChannelList,
       }}
     >
       <UserProfileProvider

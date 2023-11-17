@@ -36,32 +36,28 @@ interface ChannelPreviewInterface {
 const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
   channel,
   isActive,
-  isTyping = false,
+  isTyping,
   renderChannelAction,
   onLeaveChannel,
   onClick,
   tabIndex,
 }: ChannelPreviewInterface) => {
-  const sbState = useSendbirdStateContext();
+  const { config } = useSendbirdStateContext();
+  const { theme, isMentionEnabled, userId } = config;
+  const { dateLocale, stringSet } = useLocalization();
+  const { isMobile } = useMediaQueryContext();
   const {
     activeChannelUrl,
+    typingChannelUrls,
     isTypingIndicatorEnabled = false,
     isMessageReceiptStatusEnabled = false,
   } = useChannelListContext();
   const isActiveChannel = isActive || (channel?.url === activeChannelUrl);
-  const { dateLocale, stringSet } = useLocalization();
-  const { isMobile } = useMediaQueryContext();
+  const isTypingChannel = (isTyping || (typingChannelUrls.includes(channel.url))) && isTypingIndicatorEnabled;
 
   const [showMobileLeave, setShowMobileLeave] = useState(false);
-
-  const userId = sbState?.stores?.userStore?.user?.userId;
-  const theme = sbState?.config?.theme;
-  const isMentionEnabled = sbState?.config?.isMentionEnabled;
-  const isFrozen = channel?.isFrozen || false;
-  const isBroadcast = channel?.isBroadcast || false;
-  const isChannelTyping = isTypingIndicatorEnabled && isTyping;
   const isMessageStatusEnabled = isMessageReceiptStatusEnabled
-    && (channel?.lastMessage?.messageType === 'user' || channel?.lastMessage?.messageType === 'file')
+    && (!channel?.lastMessage?.isAdminMessage())
     && (channel?.lastMessage as SendableMessageType)?.sender?.userId === userId;
 
   const onLongPress = useLongPress({
@@ -99,7 +95,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
           <div className="sendbird-channel-preview__content__upper">
             <div className="sendbird-channel-preview__content__upper__header">
               {
-                isBroadcast
+                (channel?.isBroadcast || false)
                 && (
                   <div className="sendbird-channel-preview__content__upper__header__broadcast-icon">
                     <Icon
@@ -126,7 +122,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
                 {utils.getTotalMembers(channel)}
               </Label>
               {
-                isFrozen
+                (channel?.isFrozen || false)
                 && (
                   <div title="Frozen" className="sendbird-channel-preview__content__upper__header__frozen-icon">
                     <Icon
@@ -172,17 +168,17 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
               color={LabelColors.ONBACKGROUND_3}
             >
               {
-                isChannelTyping && (
+                isTypingChannel && (
                   <TypingIndicatorText members={channel?.getTypingUsers()} />
                 )
               }
               {
-                !isChannelTyping && !isVoiceMessage(channel?.lastMessage as FileMessage) && (
+                !isTypingChannel && !isVoiceMessage(channel?.lastMessage as FileMessage) && (
                   utils.getLastMessage(channel, stringSet)
                 )
               }
               {
-                !isChannelTyping && isVoiceMessage(channel?.lastMessage as FileMessage) && (
+                !isTypingChannel && isVoiceMessage(channel?.lastMessage as FileMessage) && (
                   stringSet.VOICE_MESSAGE
                 )
               }
