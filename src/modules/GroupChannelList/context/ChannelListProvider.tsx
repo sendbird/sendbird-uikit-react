@@ -70,7 +70,6 @@ export interface ChannelListProviderProps {
   onThemeChange?(theme: string): void;
   onProfileEditSuccess?(user: User): void;
   onChannelSelect?(channel: GroupChannel | null): void;
-  sortChannelList?: (channels: GroupChannel[]) => GroupChannel[];
   queries?: ChannelListQueries;
   children?: React.ReactElement;
   className?: string | string[];
@@ -113,7 +112,6 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     onProfileEditSuccess,
     onThemeChange,
     onBeforeCreateChannel,
-    sortChannelList,
     overrideInviteUser,
     activeChannelUrl,
     isTypingIndicatorEnabled = null,
@@ -191,16 +189,6 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     };
   }, [userFilledApplicationUserListQuery, userFilledChannelListQuery]);
 
-  // Sorting Channel
-  const sortedChannels = sortChannelList && typeof sortChannelList === 'function' ? sortChannelList(groupChannels) : groupChannels;
-  if (sortedChannels.length !== groupChannels.length) {
-    const warning = `ChannelList: You have removed/added extra channels on sortChannelList
-      this could cause unexpected problems`;
-    // eslint-disable-next-line no-console
-    console.warn(warning, { before: groupChannels, after: sortedChannels });
-    logger.warning(warning, { before: groupChannels, after: sortedChannels });
-  }
-
   // Removed: set currentChannel, onChannelSelect
 
   // Removed: useActiveChannelUrl
@@ -221,11 +209,10 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
         onBeforeCreateChannel,
         onChannelSelect,
         overrideInviteUser,
-        sortChannelList,
         allowProfileEdit: enableEditProfile,
         refreshing,
         initialized,
-        groupChannels: sortedChannels,
+        groupChannels,
         refresh,
         loadMore,
 

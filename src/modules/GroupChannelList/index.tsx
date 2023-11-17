@@ -19,7 +19,6 @@ const ChannelList: React.FC<ChannelListProps> = (props: ChannelListProps) => {
       overrideInviteUser={props?.overrideInviteUser}
       onProfileEditSuccess={props?.onProfileEditSuccess}
       onChannelSelect={props?.onChannelSelect}
-      sortChannelList={props?.sortChannelList}
       queries={props?.queries}
       disableAutoSelect={props?.disableAutoSelect}
       activeChannelUrl={props?.activeChannelUrl}
