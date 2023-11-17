@@ -9,7 +9,6 @@ import AddChannel from '../AddChannel';
 import ChannelPreview from '../ChannelPreview';
 import ChannelPreviewAction from '../ChannelPreviewAction';
 import { useChannelListContext } from '../../context/ChannelListProvider';
-import * as channelListActions from '../../dux/actionTypes';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import EditUserProfile from '../../../EditUserProfile';
@@ -54,9 +53,6 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
     onThemeChange,
     allowProfileEdit,
     allChannels,
-    loading,
-    currentChannel,
-    channelListDispatcher,
     typingChannels,
     initialized,
     loadMore,
@@ -111,7 +107,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
         }}
       >
         {
-          (sdkError && !loading) && (
+          (sdkError && initialized) && (
             (renderPlaceHolderError && typeof renderPlaceHolderError === 'function') ? (
               renderPlaceHolderError?.()
             ) : (
@@ -138,10 +134,6 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
                     if (cb && typeof cb === 'function') {
                       cb(res, null);
                     }
-                    channelListDispatcher({
-                      type: channelListActions.LEAVE_CHANNEL_SUCCESS,
-                      payload: channel?.url,
-                    });
                   })
                   .catch((err) => {
                     logger.error('ChannelList: Leaving channel failed', err);
@@ -154,10 +146,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
               const onClick = () => {
                 if (!isOnline) { return; }
                 logger.info('ChannelList: Clicked on channel:', channel);
-                channelListDispatcher({
-                  type: channelListActions.SET_CURRENT_CHANNEL,
-                  payload: channel,
-                });
+                // TODO: onChannelSelect(channel);
               };
 
               return (
@@ -175,7 +164,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
                       onClick={onClick}
                       channel={channel}
                       onLeaveChannel={() => onLeaveChannel(channel, null)}
-                      isActive={channel?.url === currentChannel?.url}
+                      // isActive={channel?.url === currentChannel?.url}// TODO: Apply the activeChannelUrl directly
                       isTyping={typingChannels?.some(({ url }) => url === channel?.url)}
                       renderChannelAction={(() => (
                         <ChannelPreviewAction
@@ -191,7 +180,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
           }
         </div>
         {
-          (!initialized && loading) && (
+          (!initialized) && (
             (renderPlaceHolderLoading && typeof renderPlaceHolderLoading === 'function') ? (
               renderPlaceHolderLoading?.()
             ) : (
