@@ -212,6 +212,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     <ChannelListContext.Provider
       value={{
         className,
+        activeChannelUrl,
         disableUserProfile,
         queries: queries_,
         onProfileEditSuccess,

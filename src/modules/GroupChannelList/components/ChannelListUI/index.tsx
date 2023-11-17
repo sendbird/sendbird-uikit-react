@@ -50,6 +50,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
   const [showProfileEdit, setShowProfileEdit] = useState(false);
 
   const {
+    activeChannelUrl,
     onThemeChange,
     allowProfileEdit,
     groupChannels,
@@ -164,7 +165,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
                       onClick={onClick}
                       channel={channel}
                       onLeaveChannel={() => onLeaveChannel(channel, null)}
-                      // isActive={channel?.url === currentChannel?.url}// TODO: Apply the activeChannelUrl directly
+                      isActive={channel?.url === activeChannelUrl}// TODO: Apply the activeChannelUrl directly
                       isTyping={typingChannels?.some(({ url }) => url === channel?.url)}
                       renderChannelAction={(() => (
                         <ChannelPreviewAction

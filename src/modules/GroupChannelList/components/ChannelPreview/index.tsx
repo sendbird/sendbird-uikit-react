@@ -35,7 +35,7 @@ interface ChannelPreviewInterface {
 
 const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
   channel,
-  isActive = false,
+  isActive,
   isTyping = false,
   renderChannelAction,
   onLeaveChannel,
@@ -44,9 +44,11 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
 }: ChannelPreviewInterface) => {
   const sbState = useSendbirdStateContext();
   const {
+    activeChannelUrl,
     isTypingIndicatorEnabled = false,
     isMessageReceiptStatusEnabled = false,
   } = useChannelListContext();
+  const isActiveChannel = isActive || (channel?.url === activeChannelUrl);
   const { dateLocale, stringSet } = useLocalization();
   const { isMobile } = useMediaQueryContext();
 
@@ -78,7 +80,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
       <div
         className={[
           'sendbird-channel-preview',
-          isActive ? 'sendbird-channel-preview--active' : '',
+          isActiveChannel ? 'sendbird-channel-preview--active' : '',
         ].join(' ')}
         role="link"
         tabIndex={tabIndex}
