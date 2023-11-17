@@ -16,16 +16,16 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import MentionUserLabel from '../../../../ui/MentionUserLabel';
 import Modal from '../../../../ui/Modal';
 import TextButton from '../../../../ui/TextButton';
-import { useChannelListContext } from '../../context/ChannelListProvider';
+import { useGroupChannelListContext } from '../../context/ChannelListProvider';
 import { TypingIndicatorText } from '../../../Channel/components/TypingIndicator';
 import MessageStatus from '../../../../ui/MessageStatus';
 import { CoreMessageType, isVoiceMessage, SendableMessageType } from '../../../../utils';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import useLongPress from '../../../../hooks/useLongPress';
 
-interface ChannelPreviewInterface {
+interface GroupChannelPreviewInterface extends React.PropsWithChildren {
   channel: GroupChannel;
-  isActive?: boolean;
+  isSelected?: boolean;
   isTyping?: boolean;
   onClick: () => void;
   onLeaveChannel?: () => void;
@@ -33,26 +33,26 @@ interface ChannelPreviewInterface {
   tabIndex: number;
 }
 
-const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
+export const GroupChannelPreview = ({
   channel,
-  isActive,
+  isSelected,
   isTyping,
   renderChannelAction,
   onLeaveChannel,
   onClick,
   tabIndex,
-}: ChannelPreviewInterface) => {
+}: GroupChannelPreviewInterface) => {
   const { config } = useSendbirdStateContext();
   const { theme, isMentionEnabled, userId } = config;
   const { dateLocale, stringSet } = useLocalization();
   const { isMobile } = useMediaQueryContext();
   const {
-    activeChannelUrl,
+    selectedChannelUrl,
     typingChannelUrls,
     isTypingIndicatorEnabled = false,
     isMessageReceiptStatusEnabled = false,
-  } = useChannelListContext();
-  const isActiveChannel = isActive || (channel?.url === activeChannelUrl);
+  } = useGroupChannelListContext();
+  const isSelectedChannel = isSelected || (channel?.url === selectedChannelUrl);
   const isTypingChannel = (isTyping || (typingChannelUrls.includes(channel.url))) && isTypingIndicatorEnabled;
 
   const [showMobileLeave, setShowMobileLeave] = useState(false);
@@ -76,7 +76,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
       <div
         className={[
           'sendbird-channel-preview',
-          isActiveChannel ? 'sendbird-channel-preview--active' : '',
+          isSelectedChannel ? 'sendbird-channel-preview--active' : '',
         ].join(' ')}
         role="link"
         tabIndex={tabIndex}
@@ -253,5 +253,3 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
     </>
   );
 };
-
-export default ChannelPreview;

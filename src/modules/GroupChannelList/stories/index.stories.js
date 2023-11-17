@@ -212,7 +212,7 @@ export const preSelectedChannel = () => {
       limit: 20,
     },
   };
-  const [activeChannelUrl, setActiveChannelUrl] = useState(defaultChannel);
+  const [selectedChannelUrl, setActiveChannelUrl] = useState(defaultChannel);
   const [queries, setQueries] = useState(defaultQuery);
   return (
     <Sendbird
@@ -241,7 +241,7 @@ export const preSelectedChannel = () => {
         <ChannelList
           queries={queries}
           onChannelSelect={(c) => { console.warn(c); }}
-          activeChannelUrl={activeChannelUrl}
+          selectedChannelUrl={selectedChannelUrl}
         />
       </div>
 

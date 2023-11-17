@@ -6,9 +6,9 @@ import type { User } from '@sendbird/chat';
 
 import ChannelListHeader from '../ChannelListHeader';
 import AddChannel from '../AddChannel';
-import ChannelPreview from '../ChannelPreview';
+import { GroupChannelPreview } from '../GroupChannelPreview';
 import ChannelPreviewAction from '../ChannelPreviewAction';
-import { useChannelListContext } from '../../context/ChannelListProvider';
+import { useGroupChannelListContext } from '../../context/ChannelListProvider';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import EditUserProfile from '../../../EditUserProfile';
@@ -50,14 +50,12 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
   const [showProfileEdit, setShowProfileEdit] = useState(false);
 
   const {
-    activeChannelUrl,
     onThemeChange,
     allowProfileEdit,
     groupChannels,
-    typingChannelUrls,
     initialized,
     loadMore,
-  } = useChannelListContext();
+  } = useGroupChannelListContext();
 
   const state = useSendbirdStateContext();
   const sdkStore = state?.stores?.sdkStore;
@@ -159,7 +157,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
                     </div>
                   )
                   : (
-                    <ChannelPreview
+                    <GroupChannelPreview
                       key={channel?.url}
                       tabIndex={idx}
                       onClick={onClick}
