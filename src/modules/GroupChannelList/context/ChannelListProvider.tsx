@@ -86,7 +86,7 @@ export interface ChannelListProviderProps {
 export interface ChannelListProviderInterface extends ChannelListProviderProps {
   initialized: boolean;
   allChannels: GroupChannel[];
-  fetchChannelList: () => void;
+  loadMore: () => Promise<void>;
 }
 
 const ChannelListContext = React.createContext<ChannelListProviderInterface | null>({
@@ -101,7 +101,7 @@ const ChannelListContext = React.createContext<ChannelListProviderInterface | nu
   initialized: false,
   allChannels: [],
   typingChannels: [],
-  fetchChannelList: noop,
+  loadMore: () => new Promise(noop),
 });
 
 const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelListProviderProps) => {
@@ -193,7 +193,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   }, [userFilledApplicationUserListQuery, userFilledChannelListQuery]);
 
   // Sorting Channel
-  const sortedChannels = sortChannelList && typeof sortChannelList === 'function' ? sortChannelList(allChannels) : allChannels;
+  const sortedChannels = sortChannelList && typeof sortChannelList === 'function' ? sortChannelList(groupChannels) : groupChannels;
   if (sortedChannels.length !== groupChannels.length) {
     const warning = `ChannelList: You have removed/added extra channels on sortChannelList
       this could cause unexpected problems`;
@@ -223,6 +223,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
         allowProfileEdit: enableEditProfile,
         initialized,
         allChannels: sortedChannels,
+        loadMore,
         typingChannels,
         isTypingIndicatorEnabled:
           isTypingIndicatorEnabled !== null ? isTypingIndicatorEnabled : isTypingIndicatorEnabledOnChannelList,
@@ -230,7 +231,6 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
           isMessageReceiptStatusEnabled !== null
             ? isMessageReceiptStatusEnabled
             : isMessageReceiptStatusEnabledOnChannelList,
-        fetchChannelList: loadMore,
       }}
     >
       <UserProfileProvider

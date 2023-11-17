@@ -59,7 +59,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
     channelListDispatcher,
     typingChannels,
     initialized,
-    fetchChannelList,
+    loadMore,
   } = useChannelListContext();
 
   const state = useSendbirdStateContext();
@@ -106,7 +106,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
         onScroll={(e) => {
           const target = e?.target as HTMLDivElement;
           if (isAboutSame(target.clientHeight + target.scrollTop, target.scrollHeight, 10)) {
-            fetchChannelList();
+            loadMore();
           }
         }}
       >
