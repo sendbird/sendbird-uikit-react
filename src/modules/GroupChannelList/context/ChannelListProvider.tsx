@@ -1,31 +1,22 @@
-import React, { useContext, useEffect, useMemo, useReducer, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 
 import type { User } from '@sendbird/chat';
 import {
   GroupChannel,
   GroupChannelCreateParams,
   GroupChannelHandler,
-  GroupChannelListQuery as GroupChannelListQuerySb,
   GroupChannelUserIdsFilter,
 } from '@sendbird/chat/groupChannel';
 
 import { RenderUserProfileProps } from '../../../types';
 
-import setupChannelList, { pubSubHandler, pubSubHandleRemover } from '../utils';
 import { uuidv4 } from '../../../utils/uuid';
 import { noop } from '../../../utils/utils';
-import { DELIVERY_RECEIPT } from '../../../utils/consts';
-
-import * as channelListActions from '../dux/actionTypes';
-import { ChannelListActionTypes } from '../dux/actionTypes';
 
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
-import channelListReducers from '../dux/reducers';
-import channelListInitialState from '../dux/initialState';
 import { CHANNEL_TYPE } from '../../CreateChannel/types';
-import useActiveChannelUrl from './hooks/useActiveChannelUrl';
-import { useFetchChannelList } from './hooks/useFetchChannelList';
+import { useGroupChanelList } from '@sendbird/uikit-tools';
 
 export interface ApplicationUserListQueryInternal {
   limit?: number;
@@ -94,13 +85,7 @@ export interface ChannelListProviderProps {
 
 export interface ChannelListProviderInterface extends ChannelListProviderProps {
   initialized: boolean;
-  loading: boolean;
   allChannels: GroupChannel[];
-  currentChannel: GroupChannel;
-  channelListQuery: GroupChannelListQueryParamsInternal;
-  currentUserId: string;
-  channelListDispatcher: React.Dispatch<ChannelListActionTypes>;
-  channelSource: GroupChannelListQuerySb | null;
   fetchChannelList: () => void;
 }
 
@@ -114,13 +99,7 @@ const ChannelListContext = React.createContext<ChannelListProviderInterface | nu
   queries: {},
   className: null,
   initialized: false,
-  loading: false,
   allChannels: [],
-  currentChannel: null,
-  channelListQuery: {},
-  currentUserId: null,
-  channelListDispatcher: null,
-  channelSource: null,
   typingChannels: [],
   fetchChannelList: noop,
 });
@@ -169,64 +148,19 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   const userFilledChannelListQuery = queries?.channelListQuery;
   const userFilledApplicationUserListQuery = queries?.applicationUserListQuery;
 
-  const sdkIntialized = sdkStore?.initialized;
+  const channelListStore = useGroupChanelList(sdk, {});
+  const {
+    initialized,
+    groupChannels,
+    loadMore,
+  } = channelListStore;
 
-  const [channelListStore, channelListDispatcher] = useReducer(channelListReducers, channelListInitialState);
-  const { currentChannel } = channelListStore;
+  // Removed: pubSub
 
-  const [channelSource, setChannelSource] = useState<GroupChannelListQuerySb | null>(null);
+  // Removed: setupChannelList, channelSource
+
+  // TypingChannels
   const [typingChannels, setTypingChannels] = useState<Array<GroupChannel>>([]);
-
-  useEffect(() => {
-    const subscriber = pubSubHandler(pubSub, channelListDispatcher);
-    return () => {
-      pubSubHandleRemover(subscriber);
-    };
-  }, [sdkIntialized]);
-
-  useEffect(() => {
-    const sdkChannelHandlerId = uuidv4();
-    if (sdkIntialized) {
-      logger.info('ChannelList: Setup channelHandlers');
-      setupChannelList({
-        sdk,
-        sdkChannelHandlerId,
-        channelListDispatcher,
-        setChannelSource,
-        onChannelSelect,
-        userFilledChannelListQuery,
-        logger,
-        sortChannelList,
-        disableAutoSelect,
-        markAsDeliveredScheduler,
-        disableMarkAsDelivered,
-      });
-    } else {
-      logger.info('ChannelList: Removing channelHandlers');
-      // remove previous channelHandlers
-      if (sdk?.groupChannel?.removeGroupChannelHandler) {
-        sdk.groupChannel.removeGroupChannelHandler(sdkChannelHandlerId);
-      }
-      // remove channelSource
-      setChannelSource(null);
-      // cleanup
-      channelListDispatcher({
-        type: channelListActions.RESET_CHANNEL_LIST,
-        payload: null,
-      });
-    }
-    return () => {
-      logger.info('ChannelList: Removing channelHandlers');
-      if (sdk?.groupChannel?.removeGroupChannelHandler) {
-        sdk?.groupChannel?.removeGroupChannelHandler(sdkChannelHandlerId);
-      }
-    };
-  }, [
-    sdkIntialized,
-    sortChannelList,
-    Object.entries(userFilledChannelListQuery ?? {}).map(([key, value]) => key + value).join(),
-  ]);
-
   useEffect(() => {
     let typingHandlerId = '';
     if (sdk?.groupChannel?.addGroupChannelHandler) {
@@ -239,46 +173,6 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
             setTypingChannels([...channelList, channel]);
           } else {
             setTypingChannels(channelList);
-          }
-        },
-        onUnreadMemberStatusUpdated(channel) {
-          channelListDispatcher({
-            type: channelListActions.ON_LAST_MESSAGE_UPDATED,
-            payload: channel,
-          });
-        },
-        onUndeliveredMemberStatusUpdated(channel) {
-          channelListDispatcher({
-            type: channelListActions.ON_LAST_MESSAGE_UPDATED,
-            payload: channel,
-          });
-        },
-        onMessageUpdated(channel) {
-          if (channel.isGroupChannel()) {
-            channelListDispatcher({
-              type: channelListActions.ON_LAST_MESSAGE_UPDATED,
-              payload: channel,
-            });
-            sdk.groupChannel.getChannelWithoutCache(channel.url).then((ch) => {
-              channelListDispatcher({
-                type: channelListActions.ON_LAST_MESSAGE_UPDATED,
-                payload: ch,
-              });
-            });
-          }
-        },
-        onMentionReceived(channel) {
-          if (channel.isGroupChannel()) {
-            channelListDispatcher({
-              type: channelListActions.ON_LAST_MESSAGE_UPDATED,
-              payload: channel,
-            });
-            sdk.groupChannel.getChannelWithoutCache(channel.url).then((ch) => {
-              channelListDispatcher({
-                type: channelListActions.ON_LAST_MESSAGE_UPDATED,
-                payload: ch,
-              });
-            });
           }
         },
       });
@@ -298,56 +192,21 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     };
   }, [userFilledApplicationUserListQuery, userFilledChannelListQuery]);
 
-  const { allChannels } = channelListStore;
+  // Sorting Channel
   const sortedChannels = sortChannelList && typeof sortChannelList === 'function' ? sortChannelList(allChannels) : allChannels;
-
-  if (sortedChannels.length !== allChannels.length) {
+  if (sortedChannels.length !== groupChannels.length) {
     const warning = `ChannelList: You have removed/added extra channels on sortChannelList
       this could cause unexpected problems`;
     // eslint-disable-next-line no-console
-    console.warn(warning, { before: allChannels, after: sortedChannels });
-    logger.warning(warning, { before: allChannels, after: sortedChannels });
+    console.warn(warning, { before: groupChannels, after: sortedChannels });
+    logger.warning(warning, { before: groupChannels, after: sortedChannels });
   }
 
-  // Set current channel (by on_channel_selected event)
-  useEffect(() => {
-    if (!sdk || !sdk.groupChannel || !currentChannel || !currentChannel?.url) {
-      return;
-    }
-    sdk.groupChannel.getChannel(currentChannel.url).then((groupChannel) => {
-      if (groupChannel) {
-        onChannelSelect(groupChannel);
-      } else {
-        onChannelSelect(null);
-      }
-    });
-  }, [currentChannel?.url]);
+  // Removed: set currentChannel, onChannelSelect
 
-  // Set active channel (by url)
-  useActiveChannelUrl(
-    {
-      activeChannelUrl,
-      channels: sortedChannels,
-      sdk,
-    },
-    {
-      logger,
-      channelListDispatcher,
-    },
-  );
+  // Removed: useActiveChannelUrl
 
-  const fetchChannelList = useFetchChannelList(
-    {
-      channelSource,
-      disableMarkAsDelivered:
-        disableMarkAsDelivered || !premiumFeatureList.some((feature) => feature === DELIVERY_RECEIPT),
-    },
-    {
-      channelListDispatcher,
-      logger,
-      markAsDeliveredScheduler,
-    },
-  );
+  // Removed: useFetchChannelList
 
   return (
     <ChannelListContext.Provider
@@ -362,9 +221,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
         onChannelSelect,
         sortChannelList,
         allowProfileEdit: enableEditProfile,
-        channelListDispatcher,
-        channelSource,
-        ...channelListStore,
+        initialized,
         allChannels: sortedChannels,
         typingChannels,
         isTypingIndicatorEnabled:
@@ -373,7 +230,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
           isMessageReceiptStatusEnabled !== null
             ? isMessageReceiptStatusEnabled
             : isMessageReceiptStatusEnabledOnChannelList,
-        fetchChannelList,
+        fetchChannelList: loadMore,
       }}
     >
       <UserProfileProvider
