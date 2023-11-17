@@ -44,7 +44,7 @@ describe('useFetchChannelList', () => {
     globalContext.logger = null;
   });
 
-  it('should update allChannels after successful fetch channel list', async () => {
+  it('should update groupChannels after successful fetch channel list', async () => {
     const {
       mockChannelSource,
       channelListDispatcher,

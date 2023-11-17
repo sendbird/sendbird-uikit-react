@@ -52,7 +52,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
   const {
     onThemeChange,
     allowProfileEdit,
-    allChannels,
+    groupChannels,
     typingChannels,
     initialized,
     loadMore,
@@ -124,7 +124,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
         */}
         <div>
           {
-            allChannels && allChannels.map((channel, idx) => {
+            groupChannels && groupChannels.map((channel, idx) => {
               // todo: Refactor and move this inside channel - preview
               const onLeaveChannel = (c, cb) => {
                 logger.info('ChannelList: Leaving channel', c);
@@ -189,7 +189,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
           )
         }
         {
-          (initialized && allChannels?.length === 0) && (
+          (initialized && groupChannels?.length === 0) && (
             (renderPlaceHolderEmptyList && typeof renderPlaceHolderEmptyList === 'function') ? (
               renderPlaceHolderEmptyList?.()
             ) : (

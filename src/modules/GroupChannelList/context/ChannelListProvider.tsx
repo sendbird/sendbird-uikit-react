@@ -85,7 +85,7 @@ export interface ChannelListProviderProps {
 
 export interface ChannelListProviderInterface extends ChannelListProviderProps {
   initialized: boolean;
-  allChannels: GroupChannel[];
+  groupChannels: GroupChannel[];
   loadMore: () => Promise<void>;
 }
 
@@ -99,7 +99,7 @@ const ChannelListContext = React.createContext<ChannelListProviderInterface | nu
   queries: {},
   className: null,
   initialized: false,
-  allChannels: [],
+  groupChannels: [],
   typingChannels: [],
   loadMore: () => new Promise(noop),
 });
@@ -222,7 +222,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
         sortChannelList,
         allowProfileEdit: enableEditProfile,
         initialized,
-        allChannels: sortedChannels,
+        groupChannels: sortedChannels,
         loadMore,
         typingChannels,
         isTypingIndicatorEnabled:
