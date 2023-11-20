@@ -216,6 +216,7 @@ const SendbirdSDK = ({
     sdkDispatcher,
     userDispatcher,
     initDashboardConfigs,
+    eventHandlers,
   });
 
   useUnmount(() => {

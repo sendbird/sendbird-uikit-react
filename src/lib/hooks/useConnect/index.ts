@@ -18,6 +18,7 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
     initDashboardConfigs,
     sdkInitParams,
     customExtensionParams,
+    eventHandlers,
   } = staticTypes;
   logger?.info?.('SendbirdProvider | useConnect', { ...triggerTypes, ...staticTypes });
 
@@ -41,6 +42,7 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
       sdkInitParams,
       customExtensionParams,
       isMobile,
+      eventHandlers,
     }).catch(error => {
       logger?.error?.('SendbirdProvider | useConnect/useEffect', error);
     });
@@ -67,6 +69,7 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
         sdkInitParams,
         customExtensionParams,
         isMobile,
+        eventHandlers,
       });
     } catch (error) {
       logger?.error?.('SendbirdProvider | useConnect/reconnect/useCallback', error);

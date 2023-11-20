@@ -19,6 +19,7 @@ export async function connect({
   sdkInitParams,
   customExtensionParams,
   isMobile,
+  eventHandlers,
 }: ConnectTypes): Promise<void> {
   await disconnectSdk({
     logger,
@@ -42,5 +43,6 @@ export async function connect({
     sdkInitParams,
     customExtensionParams,
     isMobile,
+    eventHandlers,
   });
 }
