@@ -4,7 +4,6 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { noop } from '../../../../utils/utils';
 
 import Modal from '../../../../ui/Modal';
-import { useChannelListContext } from '../../context/ChannelListProvider';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 
@@ -21,23 +20,21 @@ const LeaveChannel: React.FC<LeaveChannelProps> = (props: LeaveChannelProps) => 
     onCancel = noop,
   } = props;
 
-  const channelFromContext = useChannelListContext()?.currentChannel;
-  const leavingChannel = channel || channelFromContext;
   const state = useSendbirdStateContext();
   const { stringSet } = useLocalization();
 
   const logger = state?.config?.logger;
   const isOnline = state?.config?.isOnline;
-  if (leavingChannel) {
+  if (channel) {
     return (
       <Modal
         disabled={!isOnline}
         onCancel={onCancel}
         onSubmit={() => {
-          logger.info('ChannelSettings: Leaving channel', leavingChannel);
-          leavingChannel?.leave()
+          logger.info('ChannelSettings: Leaving channel', channel);
+          channel.leave()
             .then(() => {
-              logger.info('ChannelSettings: Leaving channel successful!', leavingChannel);
+              logger.info('ChannelSettings: Leaving channel successful!', channel);
               onSubmit();
             });
         }}
