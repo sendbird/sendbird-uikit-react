@@ -8,7 +8,6 @@ import './index.scss';
 import Avatar from '../../../../ui/Avatar';
 
 interface ChannelListHeaderInterface {
-  renderHeader?: (props: void) => React.ReactElement;
   renderTitle?: () => React.ReactElement;
   renderIconButton?: (props: void) => React.ReactElement;
   onEdit?: (props: void) => void;
@@ -16,23 +15,15 @@ interface ChannelListHeaderInterface {
 }
 
 const ChannelListHeader: React.FC<ChannelListHeaderInterface> = ({
-  renderHeader,
   renderTitle,
   renderIconButton,
   onEdit,
   allowProfileEdit,
 }: ChannelListHeaderInterface) => {
-  const { stores, config } = useSendbirdStateContext();
+  const { stores } = useSendbirdStateContext();
   const { user } = stores.userStore;
-  const { logger } = config;
 
   const { stringSet } = useContext(LocalizationContext);
-
-  if (renderHeader) {
-    logger?.warning('Recomend to use "renderTitle" instead of "renderHeader". It will be deprecated.');
-  }
-  // renderTitle should have higher priority
-  const titleRenderer = renderHeader || renderTitle;
 
   return (
     <div
@@ -42,7 +33,7 @@ const ChannelListHeader: React.FC<ChannelListHeaderInterface> = ({
       ].join(' ')}
     >
       {
-        titleRenderer?.() || (
+        renderTitle?.() || (
           <div
             className="sendbird-channel-header__title"
             role="button"
