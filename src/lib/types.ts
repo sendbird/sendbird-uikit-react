@@ -1,6 +1,7 @@
 import React from 'react';
 import type SendbirdChat from '@sendbird/chat';
-import type { User, SendbirdChatParams } from '@sendbird/chat';
+import type { User, SendbirdChatParams, SendbirdError } from '@sendbird/chat';
+
 import type {
   GroupChannel,
   GroupChannelCreateParams, GroupChannelModule,
@@ -46,6 +47,9 @@ export interface SBUEventHandlers {
   reaction?: {
     onPressUserProfile?(member: User): void;
   },
+  connection?: {
+    onFailed?(error: SendbirdError): void;
+  }
 }
 
 export interface SendBirdStateConfig {

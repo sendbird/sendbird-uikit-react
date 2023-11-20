@@ -6,6 +6,8 @@ import { getMissingParamError, setUpConnection, setUpParams } from '../setupConn
 import { SetupConnectionTypes } from '../types';
 import { generateSetUpConnectionParams, mockSdk, mockUser, mockUser2 } from './data.mocks';
 
+import { SendbirdError } from '@sendbird/chat';
+
 // todo: combine after mock-sdk is implemented
 jest.mock('@sendbird/chat', () => ({
   init: jest.fn().mockImplementation(() => mockSdk),
@@ -161,6 +163,22 @@ describe('useConnect/setupConnection', () => {
     expect(setUpConnectionProps.sdkDispatcher).toHaveBeenCalledWith({
       type: SDK_ACTIONS.SDK_ERROR,
     });
+  });
+
+  it('should call onConnectionFailed callback when connection fails', async () => {
+    const onConnectionFailed = jest.fn();
+    const setUpConnectionProps = generateSetUpConnectionParams();
+    setUpConnectionProps.eventHandlers = { connection: { onFailed: onConnectionFailed } };
+
+    // Force a connection failure by providing an invalid userId
+    const params = { ...setUpConnectionProps, userId: undefined };
+    const expectedErrorMessage = getMissingParamError({ userId: undefined, appId: params.appId });
+
+    // // Ensure that the onConnectionFailed callback is called with the correct error message
+    await expect(setUpConnection((params as unknown as SetupConnectionTypes)))
+      .rejects.toBe(expectedErrorMessage);
+    // Ensure that onConnectionFailed callback is called with the expected error object
+    expect(onConnectionFailed).toHaveBeenCalledWith({ message: expectedErrorMessage } as SendbirdError);
   });
 });
 
