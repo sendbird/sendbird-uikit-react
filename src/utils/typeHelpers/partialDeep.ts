@@ -10,7 +10,9 @@
  * Brought the simplified idea from https://github.com/sindresorhus/type-fest/blob/main/source/partial-deep.d.ts
  * */
 export type PartialDeep<T> = T extends object
-  ? T extends (...args: any[]) => any
+  ? T extends Set<unknown>
+    ? T
+    : T extends (...args: any[]) => any
     ? T
     : {
         [P in keyof T]?: PartialDeep<T[P]>;
