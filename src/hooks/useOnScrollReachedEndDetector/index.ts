@@ -9,13 +9,15 @@ export interface UseOnScrollReachedEndDetectorProps {
   scrollRef: React.RefObject<HTMLDivElement>;
   onReachedTop?: () => void;
   onReachedBottom?: () => void;
+  onInBetween?: () => void;
 }
 
-export function useOnScrollReachedEndDetector(props: UseOnScrollReachedEndDetectorProps): () => void {
+export function useOnScrollPositionChangeDetector(props: UseOnScrollReachedEndDetectorProps): () => void {
   const {
     scrollRef,
     onReachedTop,
     onReachedBottom,
+    onInBetween,
   } = props;
 
   const cb = useCallback(() => {
@@ -30,9 +32,11 @@ export function useOnScrollReachedEndDetector(props: UseOnScrollReachedEndDetect
         onReachedTop();
       } else if (isAboutSame(scrollHeight, clientHeight + scrollTop, SCROLL_BUFFER)) {
         onReachedBottom();
+      } else {
+        onInBetween();
       }
     }
-  }, [scrollRef, onReachedTop, onReachedBottom]);
+  }, [scrollRef, onReachedTop, onReachedBottom, onInBetween]);
 
   return useDebounce(cb, BUFFER_DELAY);
 }

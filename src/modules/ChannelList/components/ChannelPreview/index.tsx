@@ -46,6 +46,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
   const {
     isTypingIndicatorEnabled = false,
     isMessageReceiptStatusEnabled = false,
+    currentChannel,
   } = useChannelListContext();
   const { dateLocale, stringSet } = useLocalization();
   const { isMobile } = useMediaQueryContext();
@@ -186,7 +187,7 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
               }
             </Label>
             {
-              !channel?.isEphemeral && (
+              !isActive && !channel?.isEphemeral && (
                 <div className="sendbird-channel-preview__content__lower__unread-message-count">
                   {
                     (isMentionEnabled && channel?.unreadMentionCount > 0)
@@ -227,7 +228,12 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
         https://github.com/facebook/react/issues/11387#issuecomment-340019419
       */}
       {
-        showMobileLeave && isMobile && (
+        /**
+         * Do not show unread count for focused channel. This is because of the limitation where
+         * isScrollBottom and hasNext states needs to be added globally but they are from channel context
+         * so channel list cannot see them with the current architecture.
+         */
+        (channel.url !== currentChannel?.url) && showMobileLeave && isMobile && (
           <Modal
             className="sendbird-channel-preview__leave--mobile"
             titleText={channelName}

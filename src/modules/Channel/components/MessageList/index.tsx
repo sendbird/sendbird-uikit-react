@@ -1,12 +1,13 @@
 import './message-list.scss';
 
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
-import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
+import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
 import Message from '../Message';
 import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps, TypingIndicatorType } from '../../../../types';
+import * as utils from '../../context/utils';
 import { isAboutSame } from '../../context/utils';
 import { getMessagePartsInfo } from './getMessagePartsInfo';
 import UnreadCount from '../UnreadCount';
@@ -18,9 +19,8 @@ import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 import { useSetScrollToBottom } from './hooks/useSetScrollToBottom';
 import { useScrollBehavior } from './hooks/useScrollBehavior';
-import * as utils from '../../context/utils';
 import TypingIndicatorBubble from '../../../../ui/TypingIndicatorBubble';
-import { useOnScrollReachedEndDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
+import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 
 const SCROLL_BOTTOM_PADDING = 50;
 
@@ -71,6 +71,8 @@ const MessageList: React.FC<MessageListProps> = ({
     ? allMessages.filter((filterMessageList as (message: EveryMessage) => boolean))
     : allMessages;
   const markAsReadScheduler = store.config.markAsReadScheduler;
+
+  const [isScrollBottom, setIsScrollBottom] = useState(false);
 
   useScrollBehavior();
 
@@ -155,20 +157,27 @@ const MessageList: React.FC<MessageListProps> = ({
     scrollRef,
   });
 
-  const onScrollReachedEndDetector = useOnScrollReachedEndDetector({
+  const onScrollReachedEndDetector = useOnScrollPositionChangeDetector({
     scrollRef,
     onReachedBottom: () => {
-      if (
-        !disableMarkAsRead
-        && !!currentGroupChannel
-        && !hasMoreNext
-      ) {
+      /**
+       * Note that this event is already being called in onScroll() above. However, it is only being called when
+       * hasMoreNext is true but it needs to be called when hasNext is false when reached bottom as well.
+       */
+      if (!hasMoreNext && !disableMarkAsRead && !!currentGroupChannel) {
         messagesDispatcher({
           type: messageActionTypes.MARK_AS_READ,
           payload: { channel: currentGroupChannel },
         });
         markAsReadScheduler.push(currentGroupChannel);
       }
+      setIsScrollBottom(true);
+    },
+    onReachedTop: () => {
+      setIsScrollBottom(false);
+    },
+    onInBetween: () => {
+      setIsScrollBottom(false);
     },
   });
 
@@ -281,29 +290,34 @@ const MessageList: React.FC<MessageListProps> = ({
               : <FrozenNotification className="sendbird-conversation__messages__notification" />
           )
         }
-        {(unreadSince || unreadSinceDate) && (
-          <UnreadCount
-            className="sendbird-conversation__messages__notification"
-            count={currentGroupChannel?.unreadMessageCount}
-            time={unreadSince}
-            lastReadAt={unreadSinceDate}
-            onClick={() => {
-              if (scrollRef?.current?.scrollTop) {
-                scrollRef.current.scrollTop = (scrollRef?.current?.scrollHeight ?? 0) - (scrollRef?.current?.offsetHeight ?? 0);
-              }
-              if (!disableMarkAsRead && !!currentGroupChannel) {
-                markAsReadScheduler.push(currentGroupChannel);
-                messagesDispatcher({
-                  type: messageActionTypes.MARK_AS_READ,
-                  payload: { channel: currentGroupChannel },
-                });
-              }
-              setInitialTimeStamp(null);
-              setAnimatedMessageId(null);
-              setHighLightedMessageId(null);
-            }}
-          />
-        )}
+        {
+          /**
+           * Show unread count IFF scroll is not bottom or is bottom but hasNext is true.
+           */
+          (!isScrollBottom || hasMoreNext) && (unreadSince || unreadSinceDate) && (
+            <UnreadCount
+              className="sendbird-conversation__messages__notification"
+              count={currentGroupChannel?.unreadMessageCount}
+              time={unreadSince}
+              lastReadAt={unreadSinceDate}
+              onClick={() => {
+                if (scrollRef?.current?.scrollTop) {
+                  scrollRef.current.scrollTop = (scrollRef?.current?.scrollHeight ?? 0) - (scrollRef?.current?.offsetHeight ?? 0);
+                }
+                if (!disableMarkAsRead && !!currentGroupChannel) {
+                  markAsReadScheduler.push(currentGroupChannel);
+                  messagesDispatcher({
+                    type: messageActionTypes.MARK_AS_READ,
+                    payload: { channel: currentGroupChannel },
+                  });
+                }
+                setInitialTimeStamp(null);
+                setAnimatedMessageId(null);
+                setHighLightedMessageId(null);
+              }}
+            />
+          )
+        }
         {
           // This flag is an unmatched variable
           scrollBottom > SCROLL_BOTTOM_PADDING && (
