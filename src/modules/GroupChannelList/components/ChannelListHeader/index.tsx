@@ -7,19 +7,19 @@ import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import './index.scss';
 import Avatar from '../../../../ui/Avatar';
 
-interface ChannelListHeaderInterface {
+interface ChannelListHeaderProps {
   renderTitle?: () => React.ReactElement;
   renderIconButton?: (props: void) => React.ReactElement;
   onEdit?: (props: void) => void;
   allowProfileEdit?: boolean;
 }
 
-const ChannelListHeader: React.FC<ChannelListHeaderInterface> = ({
+const ChannelListHeader = ({
   renderTitle,
   renderIconButton,
   onEdit,
   allowProfileEdit,
-}: ChannelListHeaderInterface) => {
+}: ChannelListHeaderProps) => {
   const { stores } = useSendbirdStateContext();
   const { user } = stores.userStore;
 

@@ -7,7 +7,7 @@ import CreateChannel from '../../../CreateChannel';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useGroupChannelListContext } from '../../context/GroupChannelListProvider';
 
-export const AddChannel: React.VoidFunctionComponent = () => {
+export const AddChannel = () => {
   const [showModal, setShowModal] = useState(false);
   const state = useSendbirdStateContext();
   const isOnline = state?.config?.isOnline;

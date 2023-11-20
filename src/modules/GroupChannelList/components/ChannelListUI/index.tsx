@@ -38,7 +38,7 @@ export interface ChannelListUIProps {
   renderPlaceHolderEmptyList?: (props: void) => React.ReactElement;
 }
 
-const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) => {
+const ChannelListUI = (props: ChannelListUIProps) => {
   const {
     renderHeader,
     renderChannelPreview,
