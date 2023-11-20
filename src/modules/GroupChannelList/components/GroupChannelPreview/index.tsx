@@ -16,7 +16,7 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import MentionUserLabel from '../../../../ui/MentionUserLabel';
 import Modal from '../../../../ui/Modal';
 import TextButton from '../../../../ui/TextButton';
-import { useGroupChannelListContext } from '../../context/ChannelListProvider';
+import { useGroupChannelListContext } from '../../context/GroupChannelListProvider';
 import { TypingIndicatorText } from '../../../Channel/components/TypingIndicator';
 import MessageStatus from '../../../../ui/MessageStatus';
 import { CoreMessageType, isVoiceMessage, SendableMessageType } from '../../../../utils';

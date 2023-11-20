@@ -1,19 +1,19 @@
 import React from 'react';
 import {
-  ChannelListProvider,
-  ChannelListProviderProps,
-} from './context/ChannelListProvider';
+  GroupChannelListProvider,
+  GroupChannelListProviderProps,
+} from './context/GroupChannelListProvider';
 
 import ChannelListUI, { ChannelListUIProps } from './components/ChannelListUI';
 
-interface ChannelListProps extends ChannelListProviderProps, ChannelListUIProps {}
+interface GroupChannelListProps extends GroupChannelListProviderProps, ChannelListUIProps {}
 
-const ChannelList: React.FC<ChannelListProps> = (props: ChannelListProps) => {
+export const GroupChannelList: React.FC<GroupChannelListProps> = (props: GroupChannelListProps) => {
   return (
-    <ChannelListProvider {...props} >
+    <GroupChannelListProvider {...props} >
       <ChannelListUI {...props} />
-    </ChannelListProvider>
+    </GroupChannelListProvider>
   );
 };
 
-export default ChannelList;
+export default GroupChannelList;

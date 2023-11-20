@@ -5,7 +5,7 @@ import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 
 import CreateChannel from '../../../CreateChannel';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useChannelListContext } from '../../context/ChannelListProvider';
+import { useGroupChannelListContext } from '../../context/GroupChannelListProvider';
 
 export const AddChannel: React.VoidFunctionComponent = () => {
   const [showModal, setShowModal] = useState(false);
@@ -13,9 +13,9 @@ export const AddChannel: React.VoidFunctionComponent = () => {
   const isOnline = state?.config?.isOnline;
   const disabled = !isOnline;
   const {
-    overrideInviteUser,
+    // overrideInviteUser,
     onBeforeCreateChannel,
-  } = useChannelListContext();
+  } = useGroupChannelListContext();
 
   return (
     <>
@@ -40,7 +40,7 @@ export const AddChannel: React.VoidFunctionComponent = () => {
             onCancel={() => {
               setShowModal(false);
             }}
-            overrideInviteUser={overrideInviteUser}
+            // overrideInviteUser={overrideInviteUser}
             onCreateChannel={() => {
               setShowModal(false);
             }}

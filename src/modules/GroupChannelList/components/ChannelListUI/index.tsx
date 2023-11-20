@@ -8,7 +8,7 @@ import ChannelListHeader from '../ChannelListHeader';
 import AddChannel from '../AddChannel';
 import { GroupChannelPreview } from '../GroupChannelPreview';
 import ChannelPreviewAction from '../ChannelPreviewAction';
-import { useGroupChannelListContext } from '../../context/ChannelListProvider';
+import { useGroupChannelListContext } from '../../context/GroupChannelListProvider';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import EditUserProfile from '../../../EditUserProfile';
