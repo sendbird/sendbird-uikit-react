@@ -39,10 +39,10 @@ export interface CreateChannelContextInterface {
   createChannel: CreateChannel;
   sdk: SendbirdGroupChat;
   userListQuery?(): UserListQuery;
-  /**
-   * @deprecated
-   * Use the onClickCreateChannel instead
-   */
+  // /**
+  //  * @deprecated
+  //  * Use the onClickCreateChannel instead
+  //  */
   overrideInviteUser?(params: OverrideInviteUserType): void;
   // TODO: onClickCreateChannel instead of overrideInviteUser
   onCreateChannel?(channel: GroupChannel): void;
