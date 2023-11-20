@@ -73,9 +73,11 @@ export async function setUpConnection({
   sdkInitParams,
   customExtensionParams,
   isMobile = false,
+  eventHandlers,
 }: SetupConnectionTypes): Promise<void> {
   return new Promise((resolve, reject) => {
     logger?.info?.('SendbirdProvider | useConnect/setupConnection/init', { userId, appId });
+    const onConnectionFailed = eventHandlers?.connection?.onFailed;
     sdkDispatcher({ type: SET_SDK_LOADING, payload: true });
 
     if (userId && appId) {
@@ -168,6 +170,7 @@ export async function setUpConnection({
         userDispatcher({ type: RESET_USER });
 
         sdkDispatcher({ type: SDK_ERROR });
+        onConnectionFailed?.(e);
         // exit promise with error
         reject(errorMessage);
       };
@@ -179,6 +182,7 @@ export async function setUpConnection({
     } else {
       const errorMessage = getMissingParamError({ userId, appId });
       sdkDispatcher({ type: SDK_ERROR });
+      onConnectionFailed?.({ message: errorMessage } as SendbirdError);
       logger?.error?.(errorMessage);
       // exit promise with error
       reject(errorMessage);
