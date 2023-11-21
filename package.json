@@ -45,6 +45,7 @@
     "prepublishOnly": "yarn build",
     "predeploy": "yarn clean-release; yarn install; yarn build",
     "storybook": "start-storybook -p 6006",
+    "storybook:stable": "NODE_OPTIONS=--openssl-legacy-provider && start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "lint": "yarn eslint; yarn eslint-ts",
     "lint:fix": "yarn eslint --fix; yarn eslint-ts --fix",
