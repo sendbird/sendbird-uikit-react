@@ -20,7 +20,7 @@ const UserProfileContext = React.createContext<UserProfileContextInterface>({
   onUserProfileMessage: null,
 });
 
-type UserProfileProviderProps = React.PropsWithChildren<{
+export type UserProfileProviderProps = React.PropsWithChildren<{
   disableUserProfile?: boolean;
   isOpenChannel?: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
