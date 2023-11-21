@@ -19,7 +19,7 @@ import { AddReactionBadgeItem } from './AddReactionBadgeItem';
 import { MobileEmojisBottomSheet } from '../MobileMenu/MobileEmojisBottomSheet';
 import { User } from '@sendbird/chat';
 
-interface Props {
+export interface EmojiReactionsProps {
   className?: string | Array<string>;
   userId: string;
   message: SendableMessageType;
@@ -43,7 +43,7 @@ const EmojiReactions = ({
   isByMe = false,
   toggleReaction,
   onPressUserProfile,
-}: Props): ReactElement => {
+}: EmojiReactionsProps): ReactElement => {
   const { isMobile } = useMediaQueryContext();
   const addReactionRef = useRef(null);
   const [showEmojiList, setShowEmojiList] = useState(false);

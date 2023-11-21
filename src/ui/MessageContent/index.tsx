@@ -10,7 +10,7 @@ import MessageStatus from '../MessageStatus';
 import MessageItemMenu from '../MessageItemMenu';
 import MessageItemReactionMenu from '../MessageItemReactionMenu';
 import Label, { LabelTypography, LabelColors } from '../Label';
-import EmojiReactions from '../EmojiReactions';
+import EmojiReactions, { EmojiReactionsProps } from '../EmojiReactions';
 
 import ClientAdminMessage from '../AdminMessage';
 import QuoteMessage from '../QuoteMessage';
@@ -69,6 +69,9 @@ export interface MessageContentProps {
   renderSenderProfile?: (props: MessageProfileProps) => ReactNode;
   renderMessageBody?: (props: MessageBodyProps) => ReactNode;
   renderMessageHeader?: (props: MessageHeaderProps) => ReactNode;
+  renderMessageMenu?: () => ReactNode;
+  renderEmojiMenu?: () => ReactNode;
+  renderEmojiReactions?: (props: EmojiReactionsProps) => ReactNode;
 }
 
 export default function MessageContent(props: MessageContentProps): ReactElement {
@@ -108,6 +111,9 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     ),
     renderMessageHeader = (props: MessageHeaderProps) => (
       <MessageHeader {...props}/>
+    ),
+    renderEmojiReactions = (props: EmojiReactionsProps) => (
+      <EmojiReactions {...props} />
     ),
   } = props;
 
@@ -247,16 +253,18 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                   ? '' : 'primary',
               mouseHover ? 'mouse-hover' : '',
             ])}>
-              <EmojiReactions
-                userId={userId}
-                message={message as SendableMessageType}
-                channel={channel}
-                isByMe={isByMe}
-                emojiContainer={emojiContainer}
-                memberNicknamesMap={nicknamesMap}
-                toggleReaction={toggleReaction}
-                onPressUserProfile={onPressUserProfileHandler}
-              />
+              {
+                renderEmojiReactions({
+                  userId: userId,
+                  message: message as SendableMessageType,
+                  channel: channel,
+                  isByMe: isByMe,
+                  emojiContainer: emojiContainer,
+                  memberNicknamesMap: nicknamesMap,
+                  toggleReaction: toggleReaction,
+                  onPressUserProfile: onPressUserProfileHandler,
+                })
+              }
             </div>
           )}
           {/* message timestamp when sent by others */}
@@ -283,7 +291,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
       </div>
       {/* right */}
       <div className={getClassName(['sendbird-message-content__right', chainTopClassName, isReactionEnabledClassName, useReplyingClassName])}>
-        {/* incoming menu */}
         {!isByMe && !isMobile && (
           <div className={getClassName(['sendbird-message-content-menu', chainTopClassName, supposedHoverClassName, isByMeClassName])}>
             {isReactionEnabledInChannel && (
