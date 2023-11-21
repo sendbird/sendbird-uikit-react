@@ -23,6 +23,11 @@ Bullet points are also fine.
 // Recommended if you are dealing with SB_ISSUES (Customer issues) or release tickets.
 Fixes: [<TICKET_ID>](https://sendbird.atlassian.net/browse/<TICKET_ID>)
 
+// Section: Changelogs (Recommended)
+// Add (internal) at the end of each changelog if internal. 
+### Changelogs
+- 
+
 // If you want to add coauthors - for example, if you pair programmed or they made significant contributions to the ideas in the code and you want to thank them.
 Co-authored-by: Name <name@example.com>, Name2 <name@example.com>
 ```
