@@ -160,7 +160,7 @@ To read more: https://webpack.js.org/configuration/resolve/#resolvefallback
 3. Plop templates are found in [here](/plop-templates).
 
 ## Troubleshooting Guide
-- If you use node.js >= 17 and see `ERR_OSSL_EVP_UNSUPPORTED` error on any run cmd, try to set `export NODE_OPTIONS=--openssl-legacy-provider` in the terminal
+- If you use node.js >= 17 and see `ERR_OSSL_EVP_UNSUPPORTED` error on any run cmd, try to run `yarn storybook:stable` instead.
 
 
 ## Acknowledgments
