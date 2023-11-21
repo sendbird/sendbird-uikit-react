@@ -379,6 +379,9 @@ const Message = ({
             onReplyInThread={onReplyInThread}
             onQuoteMessageClick={onQuoteMessageClick}
             onMessageHeightChange={handleScroll}
+            renderEmojiMenu={() => {
+              return <div style={{ backgroundColor: 'red', height: 30, width: 30 }}></div>
+            }}
           />
         )
       }

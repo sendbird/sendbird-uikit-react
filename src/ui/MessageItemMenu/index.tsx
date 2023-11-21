@@ -21,7 +21,7 @@ import { Role } from '../../lib/types';
 import { ReplyType } from '../../types';
 import { useChannelContext } from '../../modules/Channel/context/ChannelProvider';
 
-interface Props {
+export interface MessageMenuProps {
   className?: string | Array<string>;
   message: SendableMessageType;
   channel: GroupChannel | OpenChannel;
@@ -38,7 +38,7 @@ interface Props {
   onMoveToParentMessage?: () => void;
 }
 
-export default function MessageItemMenu({
+export function MessageMenu({
   className,
   message,
   channel,
@@ -53,7 +53,7 @@ export default function MessageItemMenu({
   setSupposedHover,
   onReplyInThread,
   onMoveToParentMessage = null,
-}: Props): ReactElement {
+}: MessageMenuProps): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   const triggerRef = useRef(null);
   const containerRef = useRef(null);
@@ -236,3 +236,6 @@ export default function MessageItemMenu({
     </div>
   );
 }
+
+// MessageItemMenu - legacy name
+export default MessageMenu;
