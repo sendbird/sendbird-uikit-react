@@ -13,6 +13,27 @@ import { MediaQueryProvider } from '../../../lib/MediaQueryContext';
 
 const STORAGE_KEY = 'sendbird-integrated-app-v1-groupchannel';
 
+function storeCurrentSampleOptions({
+  store,
+  sampleOptions,
+  globalEnvironments,
+}) {
+  store.current.setItem(STORAGE_KEY, JSON.stringify({
+    login: false,
+    currentAppId: sampleOptions.appId,
+    apps: {
+      ...globalEnvironments?.apps,
+      [sampleOptions.appId]: {
+        currentUserId: sampleOptions.userId,
+        users: {
+          ...globalEnvironments?.apps?.[sampleOptions.appId]?.users,
+          [sampleOptions.userId]: sampleOptions,
+        },
+      },
+    },
+  }));
+}
+
 /**
  * Polyfill for localStorage
  * localStorage wont work in some browsers, in incognito
@@ -304,20 +325,7 @@ export const GroupChannel = () => {
       <div className={`sendbird-integrated-sample-app sendbird-theme--${sampleOptions.theme}`}>
         <input value="Logout" type="button" onClick={() => {
           setIsLoggedin(false);
-          store.current.setItem(STORAGE_KEY, JSON.stringify({
-            login: false,
-            currentAppId: sampleOptions.appId,
-            apps: {
-              ...globalEnvironments?.apps,
-              [sampleOptions.appId]: {
-                currentUserId: sampleOptions.userId,
-                users: {
-                  ...globalEnvironments?.apps?.[sampleOptions.appId]?.users,
-                  [sampleOptions.userId]: sampleOptions,
-                },
-              },
-            },
-          }));
+          storeCurrentSampleOptions({ store, sampleOptions, globalEnvironments });
         }} />
         <div style={{ height: 'calc(100% - 12px)' }}>
           {
@@ -341,6 +349,14 @@ export const GroupChannel = () => {
                 replyType={sampleOptions.replyType}
                 config={{ logLevel: 'all' }}
                 breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
+                onProfileEditSuccess={(user) => {
+                  const nextOptions = {
+                    ...sampleOptions,
+                    nickname: user.nickname,
+                  };
+                  setSampleOptions(nextOptions);
+                  storeCurrentSampleOptions({ store, sampleOptions: nextOptions, globalEnvironments });
+                }}
                 stringSet={{
                   // CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR: '오퍼레이터 등록',
                   // CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR: '오퍼레이터 해제',

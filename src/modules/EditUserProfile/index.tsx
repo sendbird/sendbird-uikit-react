@@ -5,9 +5,9 @@ import {
   EditUserProfileProps,
 } from './context/EditUserProfileProvider';
 
-import EditUserProfile from './components/EditUserProfileUI';
+import EditUserProfileUI from './components/EditUserProfileUI';
 
-const EditProfile: React.FC<EditUserProfileProps> = (props: EditUserProfileProps) => {
+const EditUserProfile: React.FC<EditUserProfileProps> = (props: EditUserProfileProps) => {
   const {
     onEditProfile,
     onCancel,
@@ -19,9 +19,9 @@ const EditProfile: React.FC<EditUserProfileProps> = (props: EditUserProfileProps
       onCancel={onCancel}
       onThemeChange={onThemeChange}
     >
-      <EditUserProfile />
+      <EditUserProfileUI />
     </EditUserProfileProvider>
   );
 };
 
-export default EditProfile;
+export default EditUserProfile;

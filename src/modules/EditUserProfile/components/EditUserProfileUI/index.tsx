@@ -21,7 +21,7 @@ import TextButton from '../../../../ui/TextButton';
 import { noop } from '../../../../utils/utils';
 import { USER_ACTIONS } from '../../../../lib/dux/user/actionTypes';
 
-export default function EditUserProfile(): ReactElement {
+export default function EditUserProfileUI(): ReactElement {
   const editProfileProps = useEditUserProfileContext();
   const store = useSendbirdStateContext();
   const hiddenInputRef = useRef(null);
