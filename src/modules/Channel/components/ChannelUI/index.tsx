@@ -25,6 +25,7 @@ export interface ChannelUIProps {
   renderSendMessageIcon?: () => React.ReactElement;
   renderTypingIndicator?: () => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
+  renderFrozenNotification?: () => React.ReactElement;
 }
 
 const ChannelUI: React.FC<ChannelUIProps> = ({
@@ -40,6 +41,7 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
   renderFileUploadIcon,
   renderVoiceMessageIcon,
   renderSendMessageIcon,
+  renderFrozenNotification,
 }: ChannelUIProps) => {
   const {
     channelUrl,
@@ -109,6 +111,7 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
         renderPlaceholderEmpty={renderPlaceholderEmpty}
         renderCustomSeparator={renderCustomSeparator}
         renderPlaceholderLoader={renderPlaceholderLoader}
+        renderFrozenNotification={renderFrozenNotification}
       />
       <div className="sendbird-conversation__footer">
         {

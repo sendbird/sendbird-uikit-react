@@ -55,6 +55,7 @@ const Channel: React.FC<ChannelProps> = (props: ChannelProps) => {
         renderFileUploadIcon={props?.renderFileUploadIcon}
         renderVoiceMessageIcon={props?.renderVoiceMessageIcon}
         renderSendMessageIcon={props?.renderSendMessageIcon}
+        renderFrozenNotification={props?.renderFrozenNotification}
       />
     </ChannelProvider>
   );

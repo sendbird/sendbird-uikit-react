@@ -1,6 +1,6 @@
 import './message-list.scss';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
@@ -28,6 +28,7 @@ export interface MessageListProps {
   renderPlaceholderEmpty?: () => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
   renderPlaceholderLoader?: () => React.ReactElement;
+  renderFrozenNotification?: () => React.ReactElement;
 }
 
 const MessageList: React.FC<MessageListProps> = ({
@@ -36,6 +37,7 @@ const MessageList: React.FC<MessageListProps> = ({
   renderPlaceholderEmpty,
   renderCustomSeparator,
   renderPlaceholderLoader,
+  renderFrozenNotification,
 }) => {
   const {
     allMessages,
@@ -152,6 +154,13 @@ const MessageList: React.FC<MessageListProps> = ({
 
   const { scrollToBottomHandler, scrollBottom } = useSetScrollToBottom({ loading });
 
+  const renderedFrozenNotification = useMemo(() => {
+    if (renderFrozenNotification) {
+      return renderFrozenNotification();
+    }
+    return null;
+  }, [renderFrozenNotification]);
+
   if (loading) {
     return (typeof renderPlaceholderLoader === 'function')
       ? renderPlaceholderLoader()
@@ -242,9 +251,13 @@ const MessageList: React.FC<MessageListProps> = ({
             {/* show new message notifications, */}
           </div>
         </div>
-        {currentGroupChannel?.isFrozen && (
-          <FrozenNotification className="sendbird-conversation__messages__notification" />
-        )}
+        {
+          currentGroupChannel?.isFrozen
+          && (
+            renderedFrozenNotification
+            || <FrozenNotification className="sendbird-conversation__messages__notification" />
+          )
+        }
         {(unreadSince || unreadSinceDate) && (
           <UnreadCount
             className="sendbird-conversation__messages__notification"
