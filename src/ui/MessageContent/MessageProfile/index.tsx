@@ -2,14 +2,14 @@ import React, {
   ReactElement,
   useContext,
   useRef,
-} from "react";
-import "../index.scss";
-import { isSendableMessage } from "../../../utils";
-import ContextMenu, { MenuItems } from "../../ContextMenu";
-import Avatar from "../../Avatar";
-import UserProfile from "../../UserProfile";
-import { MessageContentProps } from "../index";
-import { UserProfileContext } from "../../../lib/UserProfileContext";
+} from 'react';
+import '../index.scss';
+import { isSendableMessage } from '../../../utils';
+import ContextMenu, { MenuItems } from '../../ContextMenu';
+import Avatar from '../../Avatar';
+import UserProfile from '../../UserProfile';
+import { MessageContentProps } from '../index';
+import { UserProfileContext } from '../../../lib/UserProfileContext';
 
 export interface MessageProfileProps extends MessageContentProps {
   isByMe?: boolean;
@@ -17,7 +17,7 @@ export interface MessageProfileProps extends MessageContentProps {
 }
 
 export default function MessageProfile(
-  props: MessageProfileProps
+  props: MessageProfileProps,
 ): ReactElement {
   const {
     message,
@@ -29,8 +29,7 @@ export default function MessageProfile(
   } = props;
   const avatarRef = useRef(null);
 
-  const { disableUserProfile, renderUserProfile } =
-    useContext(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
 
   if (isByMe || chainBottom || !isSendableMessage(message)) {
     return null;
@@ -41,14 +40,14 @@ export default function MessageProfile(
       menuTrigger={(toggleDropdown: () => void): ReactElement => (
         <Avatar
           className={`sendbird-message-content__left__avatar ${
-            displayThreadReplies ? "use-thread-replies" : ""
+            displayThreadReplies ? 'use-thread-replies' : ''
           }`} // @ts-ignore
           src={
             channel?.members?.find(
-              (member) => member?.userId === message.sender.userId
+              (member) => member?.userId === message.sender.userId,
             )?.profileUrl
             || message.sender.profileUrl
-            || ""
+            || ''
           }
           // TODO: Divide getting profileUrl logic to utils
           ref={avatarRef}
@@ -68,7 +67,7 @@ export default function MessageProfile(
           parentRef={avatarRef}
           parentContainRef={avatarRef}
           closeDropdown={closeDropdown}
-          style={{ paddingTop: "0px", paddingBottom: "0px" }}
+          style={{ paddingTop: '0px', paddingBottom: '0px' }}
         >
           {renderUserProfile ? (
             renderUserProfile({

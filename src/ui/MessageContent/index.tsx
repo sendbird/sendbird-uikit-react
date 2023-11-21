@@ -329,7 +329,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           <div className={getClassName(['sendbird-message-content-menu', chainTopClassName, supposedHoverClassName, isByMeClassName])}>
             {isReactionEnabledInChannel && (
               renderEmojiMenu({
-                className: "sendbird-message-content-menu__reaction-menu",
+                className: 'sendbird-message-content-menu__reaction-menu',
                 message: message as SendableMessageType,
                 userId: userId,
                 emojiContainer: emojiContainer,
@@ -338,7 +338,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               })
             )}
             {renderMessageMenu({
-              className: "sendbird-message-content-menu__normal-menu",
+              className: 'sendbird-message-content-menu__normal-menu',
               channel: channel,
               message: message as SendableMessageType,
               isByMe: isByMe,
@@ -354,7 +354,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                 } else if (threadReplySelectType === ThreadReplySelectType.PARENT) {
                   scrollToMessage(message.parentMessage?.createdAt, message.parentMessageId);
                 }
-              }
+              },
             })}
           </div>
         )}
