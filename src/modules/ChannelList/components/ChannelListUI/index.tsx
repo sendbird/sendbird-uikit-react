@@ -60,6 +60,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
     typingChannels,
     initialized,
     fetchChannelList,
+    onProfileEditSuccess,
   } = useChannelListContext();
 
   const state = useSendbirdStateContext();
@@ -95,8 +96,9 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
           <EditUserProfile
             onThemeChange={onThemeChange}
             onCancel={() => { setShowProfileEdit(false); }}
-            onEditProfile={() => {
+            onEditProfile={(user: User) => {
               setShowProfileEdit(false);
+              onProfileEditSuccess(user);
             }}
           />
         )
