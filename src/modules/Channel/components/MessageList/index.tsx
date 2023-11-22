@@ -170,7 +170,6 @@ const MessageList: React.FC<MessageListProps> = ({
         });
         markAsReadScheduler.push(currentGroupChannel);
       }
-      console.log('## reached bottom: ', );
       setIsScrollBottom(true);
     },
     onReachedTop: () => {
