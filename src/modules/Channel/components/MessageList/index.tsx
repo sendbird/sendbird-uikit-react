@@ -6,7 +6,7 @@ import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import Message from '../Message';
-import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps, TypingIndicatorTypes } from '../../../../types';
+import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps, TypingIndicatorType } from '../../../../types';
 import { isAboutSame } from '../../context/utils';
 import { getMessagePartsInfo } from './getMessagePartsInfo';
 import UnreadCount from '../UnreadCount';
@@ -243,7 +243,7 @@ const MessageList: React.FC<MessageListProps> = ({
             {
               !hasMoreNext
               && store?.config?.groupChannel?.enableTypingIndicator
-              && store?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorTypes.Bubble)
+              && store?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Bubble)
               && <TypingIndicatorMessage
                 typingMembers={typingMembers}
                 handleScroll={moveScroll}

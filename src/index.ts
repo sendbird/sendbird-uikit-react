@@ -22,4 +22,4 @@ export { default as sendBirdSelectors } from './lib/selectors';
 export { default as useSendbirdStateContext } from './hooks/useSendbirdStateContext';
 
 // Public enum included in AppProps
-export { TypingIndicatorTypes } from './types';
+export { TypingIndicatorType } from './types';

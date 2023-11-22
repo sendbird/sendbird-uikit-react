@@ -12,7 +12,7 @@ import MessageSearch from '../../MessageSearch';
 import { withSendBird } from '../../..';
 import { sendbirdSelectors } from '../../..';
 import { fitPageSize } from './utils';
-import { TypingIndicatorTypes } from '../../../types';
+import { TypingIndicatorType } from '../../../types';
 
 const appId = process.env.STORYBOOK_APP_ID;
 const userId = 'sendbird';
@@ -287,7 +287,7 @@ export const user1 = () => fitPageSize(
     uikitOptions={{
       groupChannel: {
         // enableTypingIndicator: false,
-        typingIndicatorTypes: new Set([TypingIndicatorTypes.Bubble, TypingIndicatorTypes.Text]),
+        typingIndicatorTypes: new Set([TypingIndicatorType.Bubble, TypingIndicatorType.Text]),
       }
     }}
   />
@@ -337,7 +337,7 @@ export const user3 = () => fitPageSize(
     uikitOptions={{
       groupChannel: {
         // enableTypingIndicator: false,
-        typingIndicatorTypes: new Set([TypingIndicatorTypes.Bubble, TypingIndicatorTypes.Text]),
+        typingIndicatorTypes: new Set([TypingIndicatorType.Bubble, TypingIndicatorType.Text]),
       }
     }}
   />

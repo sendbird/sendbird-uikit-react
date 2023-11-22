@@ -25,7 +25,7 @@ export interface UserListQuery {
   get isLoading(): boolean;
 }
 
-export enum TypingIndicatorTypes {
+export enum TypingIndicatorType {
   Text = 'text',
   Bubble = 'bubble',
 }

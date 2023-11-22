@@ -10,7 +10,7 @@ import ChannelHeader from '../ChannelHeader';
 import MessageList from '../MessageList';
 import TypingIndicator from '../TypingIndicator';
 import MessageInputWrapper from '../MessageInput';
-import { RenderCustomSeparatorProps, RenderMessageProps, TypingIndicatorTypes } from '../../../../types';
+import { RenderCustomSeparatorProps, RenderMessageProps, TypingIndicatorType } from '../../../../types';
 
 export interface ChannelUIProps {
   isLoading?: boolean;
@@ -125,7 +125,7 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
             renderTypingIndicator?.()
             || (
               globalStore?.config?.groupChannel?.enableTypingIndicator
-              && globalStore?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorTypes.Text)
+              && globalStore?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Text)
               && (
                 <TypingIndicator />
               )

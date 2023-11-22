@@ -10,7 +10,7 @@ import Icon, { IconTypes, IconColors } from '../../../ui/Icon';
 import Checkbox from '../../../ui/Checkbox';
 import Button, { ButtonSizes, ButtonTypes } from '../../../ui/Button';
 import { MediaQueryProvider } from '../../../lib/MediaQueryContext';
-import { TypingIndicatorTypes } from '../../../types';
+import { TypingIndicatorType } from '../../../types';
 
 const STORAGE_KEY = 'sendbird-integrated-app-v1-groupchannel';
 
@@ -341,7 +341,7 @@ export const GroupChannel = () => {
                 uikitOptions={{
                   groupChannel: {
                     // enableTypingIndicator: false,
-                    typingIndicatorTypes: new Set([TypingIndicatorTypes.Bubble, TypingIndicatorTypes.Text]),
+                    typingIndicatorTypes: new Set([TypingIndicatorType.Bubble, TypingIndicatorType.Text]),
                   }
                 }}
                 imageCompression={{ compressionRate: sampleOptions.imageCompression ? 0.7 : 1 }}
