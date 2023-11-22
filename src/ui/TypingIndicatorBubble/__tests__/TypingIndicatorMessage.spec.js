@@ -6,7 +6,7 @@ const mockMember = {
   profileUrl: 'test-profile-url',
 };
 
-describe('ui/TypingIndicatorMessage', () => {
+describe('ui/TypingIndicatorBubble', () => {
   it('should have class names of own basic status', () => {
     const className = 'sendbird-message-content incoming';
     const {container} = render(
