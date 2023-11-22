@@ -289,13 +289,13 @@ export default function MessageContent(props: MessageContentProps): ReactElement
             ])}>
               {
                 renderEmojiReactions({
-                  userId: userId,
+                  userId,
                   message: message as SendableMessageType,
-                  channel: channel,
-                  isByMe: isByMe,
-                  emojiContainer: emojiContainer,
+                  channel,
+                  isByMe,
+                  emojiContainer,
                   memberNicknamesMap: nicknamesMap,
-                  toggleReaction: toggleReaction,
+                  toggleReaction,
                   onPressUserProfile: onPressUserProfileHandler,
                 })
               }
@@ -339,15 +339,15 @@ export default function MessageContent(props: MessageContentProps): ReactElement
             )}
             {renderMessageMenu({
               className: 'sendbird-message-content-menu__normal-menu',
-              channel: channel,
+              channel,
               message: message as SendableMessageType,
-              isByMe: isByMe,
-              replyType: replyType,
-              disabled: disabled,
-              showRemove: showRemove,
-              resendMessage: resendMessage,
-              setQuoteMessage: setQuoteMessage,
-              setSupposedHover: setSupposedHover,
+              isByMe,
+              replyType,
+              disabled,
+              showRemove,
+              resendMessage,
+              setQuoteMessage,
+              setSupposedHover,
               onReplyInThread: ({ message }) => {
                 if (threadReplySelectType === ThreadReplySelectType.THREAD) {
                   onReplyInThread({ message });
