@@ -10,11 +10,11 @@
  * Brought the simplified idea from https://github.com/sindresorhus/type-fest/blob/main/source/partial-deep.d.ts
  * */
 export type PartialDeep<T> = T extends object
-  ? T extends Set<unknown>
+  ? T extends Set<unknown> // Set, Map, Function, etc. are also treated as an object so we need this to skip recursion for them.
     ? T
     : T extends (...args: any[]) => any
-    ? T
-    : {
+      ? T
+      : {
         [P in keyof T]?: PartialDeep<T[P]>;
       }
   : T;

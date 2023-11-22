@@ -25,6 +25,11 @@ export interface UserListQuery {
   get isLoading(): boolean;
 }
 
+export enum TypingIndicatorType {
+  Text = 'text',
+  Bubble = 'bubble',
+}
+
 export interface RenderUserProfileProps {
   user: User | Member;
   currentUserId: string;

@@ -6,7 +6,7 @@ import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import Message from '../Message';
-import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
+import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps, TypingIndicatorType } from '../../../../types';
 import { isAboutSame } from '../../context/utils';
 import { getMessagePartsInfo } from './getMessagePartsInfo';
 import UnreadCount from '../UnreadCount';
@@ -19,6 +19,7 @@ import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCa
 import { useSetScrollToBottom } from './hooks/useSetScrollToBottom';
 import { useScrollBehavior } from './hooks/useScrollBehavior';
 import * as utils from '../../context/utils';
+import TypingIndicatorBubble from '../../../../ui/TypingIndicatorBubble';
 
 const SCROLL_BOTTOM_PADDING = 50;
 
@@ -61,6 +62,7 @@ const MessageList: React.FC<MessageListProps> = ({
     isScrolled,
     unreadSince,
     unreadSinceDate,
+    typingMembers,
   } = useChannelContext();
 
   const store = useSendbirdStateContext();
@@ -239,6 +241,15 @@ const MessageList: React.FC<MessageListProps> = ({
                   </MessageProvider>
                 );
               })
+            }
+            {
+              !hasMoreNext
+              && store?.config?.groupChannel?.enableTypingIndicator
+              && store?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Bubble)
+              && <TypingIndicatorBubble
+                typingMembers={typingMembers}
+                handleScroll={moveScroll}
+              />
             }
             {/* show frozen notifications, */}
             {/* show new message notifications, */}

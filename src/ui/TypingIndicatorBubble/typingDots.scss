@@ -50,17 +50,12 @@ $blinked-opacity: 0.38;
     transform: scale(1);
   }
 
-  14.3% {
+  21.43% {
     opacity: $blinked-opacity;
     transform: scale($blinked-scale);
   }
 
-  28.6% {
-    opacity: $blinked-opacity;
-    transform: scale($blinked-scale);
-  }
-
-  42.9% {
+  42.86% {
     opacity: $default-opacity;
     transform: scale(1);
   }

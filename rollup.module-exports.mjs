@@ -197,6 +197,7 @@ export default {
   'ui/Toggle': 'src/ui/Toggle/index.tsx',
   'ui/Tooltip': 'src/ui/Tooltip/index.tsx',
   'ui/TooltipWrapper': 'src/ui/TooltipWrapper/index.tsx',
+  'ui/TypingIndicatorBubble': 'src/ui/TypingIndicatorBubble/index.tsx',
   'ui/UnknownMessageItemBody': 'src/ui/UnknownMessageItemBody/index.tsx',
   'ui/UserListItem': 'src/ui/UserListItem/index.tsx',
   'ui/UserProfile': 'src/ui/UserProfile/index.tsx',

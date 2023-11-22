@@ -3853,7 +3853,7 @@ __metadata:
     "@rollup/plugin-replace": ^5.0.4
     "@rollup/plugin-typescript": ^11.1.5
     "@sendbird/chat": ^4.10.1
-    "@sendbird/uikit-tools": 0.0.1-alpha.40
+    "@sendbird/uikit-tools": 0.0.1-alpha.43
     "@storybook/addon-actions": ^6.5.10
     "@storybook/addon-docs": ^6.5.10
     "@storybook/addon-links": ^6.5.10
@@ -3918,13 +3918,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sendbird/uikit-tools@npm:0.0.1-alpha.40":
-  version: 0.0.1-alpha.40
-  resolution: "@sendbird/uikit-tools@npm:0.0.1-alpha.40"
+"@sendbird/uikit-tools@npm:0.0.1-alpha.43":
+  version: 0.0.1-alpha.43
+  resolution: "@sendbird/uikit-tools@npm:0.0.1-alpha.43"
   peerDependencies:
     "@sendbird/chat": ^4.9.2
     react: ">=16.8.6"
-  checksum: 328262b225ee8699857c8d9bc1d98860bf0df9db8dca20c03f33973d180785545d7d9f4fc5152ce2923882449b673aada8f1d663801f3b101abcf7516cfe98fe
+  checksum: 7aa888a2888faf7295dbdfca91cf60e70e2933e52b3158a7b4b6de8b01f406bbf429ce83ee44133e636ce8e4f1157ee6c885f3ca802780fa22e6ac5e24bf563c
   languageName: node
   linkType: hard
 

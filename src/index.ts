@@ -20,3 +20,6 @@ export { default as sendbirdSelectors } from './lib/selectors';
 // for legacy parity, slowly remove
 export { default as sendBirdSelectors } from './lib/selectors';
 export { default as useSendbirdStateContext } from './hooks/useSendbirdStateContext';
+
+// Public enum included in AppProps
+export { TypingIndicatorType } from './types';
