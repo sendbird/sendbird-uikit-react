@@ -11,7 +11,7 @@ import ReactionButton from '../ReactionButton';
 import { getClassName, getEmojiListAll, isPendingMessage, isFailedMessage, SendableMessageType } from '../../utils';
 import { SpaceFromTriggerType } from '../../types';
 
-interface Props {
+export interface MessageEmojiMenuProps {
   className?: string | Array<string>;
   message: SendableMessageType;
   userId: string;
@@ -21,7 +21,7 @@ interface Props {
   setSupposedHover?: (bool: boolean) => void;
 }
 
-export default function MessageItemReactionMenu({
+export function MessageEmojiMenu({
   className,
   message,
   userId,
@@ -29,7 +29,7 @@ export default function MessageItemReactionMenu({
   emojiContainer,
   toggleReaction,
   setSupposedHover,
-}: Props): ReactElement {
+}: MessageEmojiMenuProps): ReactElement {
   const triggerRef = useRef(null);
   const containerRef = useRef(null);
 
@@ -119,3 +119,6 @@ export default function MessageItemReactionMenu({
     </div>
   );
 }
+
+// MessageItemReactionMenu - legacy name
+export default MessageEmojiMenu;
