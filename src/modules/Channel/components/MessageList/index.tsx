@@ -158,7 +158,6 @@ const MessageList: React.FC<MessageListProps> = ({
   });
 
   const onScrollReachedEndDetector = useOnScrollPositionChangeDetector({
-    scrollRef,
     onReachedBottom: () => {
       /**
        * Note that this event is already being called in onScroll() above. However, it is only being called when
@@ -171,6 +170,7 @@ const MessageList: React.FC<MessageListProps> = ({
         });
         markAsReadScheduler.push(currentGroupChannel);
       }
+      console.log('## reached bottom: ', );
       setIsScrollBottom(true);
     },
     onReachedTop: () => {
@@ -209,7 +209,7 @@ const MessageList: React.FC<MessageListProps> = ({
             onScroll={(e) => {
               handleOnScroll();
               scrollToBottomHandler(e);
-              onScrollReachedEndDetector();
+              onScrollReachedEndDetector(e);
             }}
           >
             {

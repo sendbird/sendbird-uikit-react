@@ -46,7 +46,6 @@ const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
   const {
     isTypingIndicatorEnabled = false,
     isMessageReceiptStatusEnabled = false,
-    currentChannel,
   } = useChannelListContext();
   const { dateLocale, stringSet } = useLocalization();
   const { isMobile } = useMediaQueryContext();

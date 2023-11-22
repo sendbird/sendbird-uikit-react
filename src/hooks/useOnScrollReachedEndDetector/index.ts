@@ -7,28 +7,27 @@ import { usePreservedCallback } from '@sendbird/uikit-tools';
 const BUFFER_DELAY = 500;
 
 export interface UseOnScrollReachedEndDetectorProps {
-  scrollRef: React.RefObject<HTMLDivElement>;
   onReachedTop?: () => void;
   onReachedBottom?: () => void;
   onInBetween?: () => void;
 }
 
-export function useOnScrollPositionChangeDetector(props: UseOnScrollReachedEndDetectorProps): () => void {
+export function useOnScrollPositionChangeDetector(
+  props: UseOnScrollReachedEndDetectorProps,
+): (event: React.UIEvent<HTMLDivElement, UIEvent>) => void {
   const {
-    scrollRef,
     onReachedTop,
     onReachedBottom,
     onInBetween,
   } = props;
 
-  const cb = usePreservedCallback(() => {
-    const current = scrollRef?.current;
-    if (current) {
+  const cb = usePreservedCallback((event: React.UIEvent<HTMLDivElement, UIEvent>) => {
+    if (event?.target) {
       const {
         scrollTop,
         scrollHeight,
         clientHeight,
-      } = current;
+      } = event.target as HTMLDivElement;
       if (isAboutSame(scrollTop, 0, SCROLL_BUFFER)) {
         onReachedTop();
       } else if (isAboutSame(scrollHeight, clientHeight + scrollTop, SCROLL_BUFFER)) {
