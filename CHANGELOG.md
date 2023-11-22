@@ -1,5 +1,109 @@
 # Changelog - v3
 
+## [v3.9.0] (Nov 22 2023)
+
+### Features:
+#### Typing indicator bubble feature
+
+`TypingIndicatorBubble` is a new typing indicator UI that can be turned on through `uikitOptions`. When turned on, it will be displayed in `Channel` upon receiving typing event in real time.
+
+* Added `typingIndicatorTypes` global option
+* Added `TypingIndicatorType` enum
+  * How to use?
+  ```tsx
+  <App
+    appId={appId}
+    userId={userId}
+    uikitOptions={{
+      groupChannel: {
+        // Below turns on both bubble and text typing indicators. Default is Text only.
+        typingIndicatorTypes: new Set([TypingIndicatorType.Bubble, TypingIndicatorType.Text]),
+      }
+    }}
+  />
+  ```
+* Added `TypingIndicatorBubble`
+  * How to use?
+  ```tsx
+  const moveScroll = (): void => {
+    const current = scrollRef?.current;
+    if (current) {
+      const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
+      if (scrollBottom < bottom && scrollBottom < SCROLL_BUFFER) {
+        // Move the scroll as much as the height of the message has changed
+        current.scrollTop += bottom - scrollBottom;
+      }
+    }
+  };
+  
+  return (
+    <TypingIndicatorBubble
+      typingMembers={typingMembers}
+      handleScroll={moveScroll} // Scroll to the rendered typing indicator message IFF current scroll is bottom.
+    />
+  );
+  ```
+
+#### Others
+* Added support for `eventHandlers.connection.onFailed` callback in `setupConnection`. This callback will be called on connection failure
+  * How to use?
+  ```tsx
+    <Sendbird
+      appId={appId}
+      userId={undefined} // this will cause an error 
+      eventHandlers={{
+        connection: {
+          onFailed: (error) => {
+            alert(error?.message); // display a browser alert and print the error message inside
+          }
+        }
+      }}
+    >
+  ```
+* Added new props to the `MessageContent` component: `renderMessageMenu`, `renderEmojiMenu`, and `renderEmojiReactions`
+  * How to use?
+  ```tsx
+  <Channel
+  renderMessageContent={(props) => {
+    return <MessageContent
+      {...props}
+      renderMessageMenu={(props) => {
+        return <MessageMenu {...props} />
+      }}
+      renderEmojiMenu={(props) => {
+        return <MessageEmojiMenu {...props} />
+      }}
+      renderEmojiReactions={(props) => {
+        return <EmojiReactions {...props} />
+      }}
+    />
+  }}
+  />
+  ```
+* Added `onProfileEditSuccess` prop to `App` and `ChannelList` components
+* Added `renderFrozenNotification` in `ChannelUIProps`
+  * How to use?
+  ```tsx
+    <Channel
+      channelUrl={channelUrl}
+      renderFrozenNotification={() => {
+        return (
+          <div
+            className="sendbird-notification sendbird-notification--frozen sendbird-conversation__messages__notification"
+          >My custom Frozen Notification</div>
+        );
+      }}
+    />
+  ```
+
+### Fixes:
+* Fixed a bug where setting `startingPoint` scrolls to the middle of the target message when it should be at the top of the message
+* Applied dark theme to the slide left icon
+* Fixed a bug where changing current channel not clearing pending and failed messages from the previous channel
+* Fixed a bug where the thumbnail image of `OGMessage` being displayed as not fitting the container
+* Fixed a bug where resending a failed message in `Thread` results in displaying resulting message in `Channel`
+
+
 ## [v3.8.2] (Nov 10 2023)
 
 ### Features:
