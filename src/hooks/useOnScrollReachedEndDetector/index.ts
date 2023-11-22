@@ -1,7 +1,8 @@
-import React, { useCallback } from 'react';
+import React  from 'react';
 import { SCROLL_BUFFER } from '../../utils/consts';
 import { isAboutSame } from '../../modules/Channel/context/utils';
 import { useDebounce } from '../useDebounce';
+import { usePreservedCallback } from '@sendbird/uikit-tools';
 
 const BUFFER_DELAY = 500;
 
@@ -20,7 +21,6 @@ export function useOnScrollPositionChangeDetector(props: UseOnScrollReachedEndDe
     onInBetween,
   } = props;
 
-// import { usePreservedCallback } from "@sendbird/uikit-tools";
   const cb = usePreservedCallback(() => {
     const current = scrollRef?.current;
     if (current) {

@@ -142,7 +142,7 @@ const Message = ({
 
   useLayoutEffect(() => {
     // Keep the scrollBottom value after fetching new message list
-    handleScroll?.();
+    handleScroll?.(true);
   }, []);
   /**
    * Move the messsage list scroll
