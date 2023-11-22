@@ -33,73 +33,98 @@ export default function useResendMessageCallback({
       });
 
       if (failedMessage?.isUserMessage?.() || failedMessage?.messageType === MessageType.USER) {
-        currentChannel?.resendUserMessage(failedMessage as UserMessage)
-          .then((message) => {
-            logger.info('Thread | useResendMessageCallback: Resending failedMessage succeeded.', message);
-            threadDispatcher({
-              type: ThreadContextActionTypes.SEND_MESSAGE_SUCESS,
-              payload: { message },
+        try {
+          currentChannel?.resendMessage(failedMessage as UserMessage)
+            .onSucceeded((message) => {
+              logger.info('Thread | useResendMessageCallback: Resending user message succeeded.', message);
+              threadDispatcher({
+                type: ThreadContextActionTypes.SEND_MESSAGE_SUCESS,
+                payload: { message },
+              });
+              pubSub.publish(topics.SEND_USER_MESSAGE, {
+                channel: currentChannel,
+                message: message,
+                publishingModules: [PublishingModuleType.THREAD],
+              });
+            })
+            .onFailed((error) => {
+              logger.warning('Thread | useResendMessageCallback: Resending user message failed.', error);
+              failedMessage.sendingStatus = SendingStatus.FAILED;
+              threadDispatcher({
+                type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
+                payload: { message: failedMessage },
+              });
             });
-            pubSub.publish(topics.SEND_USER_MESSAGE, {
-              channel: currentChannel,
-              message: message,
-              publishingModules: [PublishingModuleType.THREAD],
-
-            });
-          })
-          .catch((error) => {
-            logger.warning('Thread | useResendMessageCallback: Resending failedMessage failed.', error);
-            failedMessage.sendingStatus = SendingStatus.FAILED;
-            threadDispatcher({
-              type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
-              payload: { message: failedMessage },
-            });
+        } catch (err) {
+          logger.warning('Thread | useResendMessageCallback: Resending user message failed.', err);
+          failedMessage.sendingStatus = SendingStatus.FAILED;
+          threadDispatcher({
+            type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
+            payload: { message: failedMessage },
           });
+        }
       } else if (failedMessage?.isFileMessage?.() || failedMessage?.messageType === MessageType.FILE) {
-        currentChannel?.resendFileMessage?.(failedMessage as FileMessage)
-          .then((message) => {
-            logger.info('Thread | useResendMessageCallback: Resending failedMessage succeeded.', message);
-            threadDispatcher({
-              type: ThreadContextActionTypes.SEND_MESSAGE_SUCESS,
-              payload: { message },
+        try {
+          currentChannel?.resendMessage?.(failedMessage as FileMessage)
+            .onSucceeded((message) => {
+              logger.info('Thread | useResendMessageCallback: Resending file message succeeded.', message);
+              threadDispatcher({
+                type: ThreadContextActionTypes.SEND_MESSAGE_SUCESS,
+                payload: { message },
+              });
+              pubSub.publish(topics.SEND_FILE_MESSAGE, {
+                channel: currentChannel,
+                message: failedMessage,
+                publishingModules: [PublishingModuleType.THREAD],
+              });
+            })
+            .onFailed((error) => {
+              logger.warning('Thread | useResendMessageCallback: Resending file message failed.', error);
+              failedMessage.sendingStatus = SendingStatus.FAILED;
+              threadDispatcher({
+                type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
+                payload: { message: failedMessage },
+              });
             });
-          })
-          .catch((error) => {
-            logger.warning('Thread | useResendMessageCallback: Resending failedMessage failed.', error);
-            failedMessage.sendingStatus = SendingStatus.FAILED;
-            threadDispatcher({
-              type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
-              payload: { message: failedMessage },
-            });
-            pubSub.publish(topics.SEND_FILE_MESSAGE, {
-              channel: currentChannel,
-              message: failedMessage,
-              publishingModules: [PublishingModuleType.THREAD],
-            });
+        } catch (err) {
+          logger.warning('Thread | useResendMessageCallback: Resending file message failed.', err);
+          failedMessage.sendingStatus = SendingStatus.FAILED;
+          threadDispatcher({
+            type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
+            payload: { message: failedMessage },
           });
+        }
       } else if (failedMessage?.isMultipleFilesMessage?.()) {
-        currentChannel?.resendMessage?.(failedMessage as MultipleFilesMessage)
-          // TODO: Handle on pending event (Same goes for the other message types).
-          // TODO: Handle on file info upload event.
-          .onSucceeded((message: MultipleFilesMessage) => {
-            logger.info('Thread | useResendMessageCallback: Resending failedMessage succeeded.', message);
-            threadDispatcher({
-              type: ThreadContextActionTypes.SEND_MESSAGE_SUCESS,
-              payload: { message },
+        try {
+          currentChannel?.resendMessage?.(failedMessage as MultipleFilesMessage)
+            // TODO: Handle on pending event (Same goes for the other message types).
+            // TODO: Handle on file info upload event.
+            .onSucceeded((message: MultipleFilesMessage) => {
+              logger.info('Thread | useResendMessageCallback: Resending MFM succeeded.', message);
+              threadDispatcher({
+                type: ThreadContextActionTypes.SEND_MESSAGE_SUCESS,
+                payload: { message },
+              });
+              pubSub.publish(topics.SEND_FILE_MESSAGE, {
+                channel: currentChannel,
+                message,
+                publishingModules: [PublishingModuleType.THREAD],
+              });
+            })
+            .onFailed((error: Error, message: MultipleFilesMessage) => {
+              logger.warning('Thread | useResendMessageCallback: Resending MFM failed.', error);
+              threadDispatcher({
+                type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
+                payload: { message },
+              });
             });
-          })
-          .onFailed((error: Error, message: MultipleFilesMessage) => {
-            logger.warning('Thread | useResendMessageCallback: Resending failedMessage failed.', error);
-            threadDispatcher({
-              type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
-              payload: { message },
-            });
-            pubSub.publish(topics.SEND_FILE_MESSAGE, {
-              channel: currentChannel,
-              message,
-              publishingModules: [PublishingModuleType.THREAD],
-            });
+        } catch (err) {
+          logger.warning('Thread | useResendMessageCallback: Resending MFM failed.', err);
+          threadDispatcher({
+            type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
+            payload: { message: failedMessage },
           });
+        }
       } else {
         logger.warning('Thread | useResendMessageCallback: Message is not resendable.', failedMessage);
         failedMessage.sendingStatus = SendingStatus.FAILED;
