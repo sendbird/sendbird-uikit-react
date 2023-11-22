@@ -20,7 +20,8 @@ export function useOnScrollPositionChangeDetector(props: UseOnScrollReachedEndDe
     onInBetween,
   } = props;
 
-  const cb = useCallback(() => {
+// import { usePreservedCallback } from "@sendbird/uikit-tools";
+  const cb = usePreservedCallback(() => {
     const current = scrollRef?.current;
     if (current) {
       const {
@@ -36,7 +37,7 @@ export function useOnScrollPositionChangeDetector(props: UseOnScrollReachedEndDe
         onInBetween();
       }
     }
-  }, [scrollRef, onReachedTop, onReachedBottom, onInBetween]);
+  });
 
   return useDebounce(cb, BUFFER_DELAY);
 }
