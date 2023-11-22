@@ -87,6 +87,10 @@ export default function OGMessageItemBody({
         onClick={openOGUrl}
       >
         <ImageRenderer
+          className="sendbird-og-message-item-body__og-thumbnail__image"
+          url={message?.ogMetaData?.defaultImage?.url || ''}
+          alt={message?.ogMetaData?.defaultImage?.alt}
+          width="100%"
           onLoad={onMessageHeightChange}
           onError={() => {
             try {
@@ -95,10 +99,6 @@ export default function OGMessageItemBody({
               // do nothing
             }
           }}
-          className="sendbird-og-message-item-body__og-thumbnail__image"
-          url={message?.ogMetaData?.defaultImage?.url || ''}
-          alt={message?.ogMetaData?.defaultImage?.alt}
-          // TODO: Change fixing width and height lengths
           defaultComponent={(
             <div className="sendbird-og-message-item-body__og-thumbnail__place-holder">
               <Icon
