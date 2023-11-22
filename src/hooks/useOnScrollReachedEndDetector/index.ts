@@ -1,4 +1,4 @@
-import React  from 'react';
+import React from 'react';
 import { SCROLL_BUFFER } from '../../utils/consts';
 import { isAboutSame } from '../../modules/Channel/context/utils';
 import { useDebounce } from '../useDebounce';
