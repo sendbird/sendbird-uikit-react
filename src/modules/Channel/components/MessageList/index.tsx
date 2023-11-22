@@ -1,6 +1,6 @@
 import './message-list.scss';
 
-import React, { useMemo } from 'react';
+import React from 'react';
 
 import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
@@ -154,13 +154,6 @@ const MessageList: React.FC<MessageListProps> = ({
 
   const { scrollToBottomHandler, scrollBottom } = useSetScrollToBottom({ loading });
 
-  const renderedFrozenNotification = useMemo(() => {
-    if (renderFrozenNotification) {
-      return renderFrozenNotification();
-    }
-    return null;
-  }, [renderFrozenNotification]);
-
   if (loading) {
     return (typeof renderPlaceholderLoader === 'function')
       ? renderPlaceholderLoader()
@@ -252,10 +245,10 @@ const MessageList: React.FC<MessageListProps> = ({
           </div>
         </div>
         {
-          currentGroupChannel?.isFrozen
-          && (
-            renderedFrozenNotification
-            || <FrozenNotification className="sendbird-conversation__messages__notification" />
+          currentGroupChannel?.isFrozen && (
+            renderFrozenNotification
+              ? renderFrozenNotification()
+              : <FrozenNotification className="sendbird-conversation__messages__notification" />
           )
         }
         {(unreadSince || unreadSinceDate) && (
