@@ -16,12 +16,8 @@ export const scrollToRenderedMessage = (
     // scroll into the message with initialTimeStamp
     const element = container.querySelectorAll(`[data-sb-created-at="${initialTimeStamp}"]`)?.[0];
     if (element instanceof HTMLElement) {
-      // Calculate the offset of the element from the top of the container
-      const containerHeight = container.offsetHeight;
-      const elementHeight = element.offsetHeight;
-      const elementOffset = (containerHeight - elementHeight) / 2;
-      // Set the scroll position of the container to bring the element to the middle
-      container.scrollTop = element.offsetTop - elementOffset;
+      // Set the scroll position of the container to bring the element to the top
+      container.scrollTop = element.offsetTop;
     }
   } catch {
     // do nothing
