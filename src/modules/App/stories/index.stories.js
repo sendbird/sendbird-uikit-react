@@ -352,7 +352,6 @@ export const user4 = () => fitPageSize(
 
 const UseSendbirdChannelList = (props) => {
   const [queries] = useState({ channelListQuery: { customTypesFilter: ['apple'] } });
-  const sdk = sendbirdSelectors.getSdk(props);
   const { setChannelUrl } = props;
 
   return (
@@ -360,10 +359,11 @@ const UseSendbirdChannelList = (props) => {
       onChannelSelect={(channel) => channel && setChannelUrl(channel?.url)}
       queries={queries}
       onBeforeCreateChannel={(selectedUserIds) => {
-        const params = new sdk.GroupChannelParams();
-        params.addUserIds(selectedUserIds);
-        params.isDistinct = false;
-        params.customType = 'apple';
+        const params = {
+          invitedUserIds: selectedUserIds,
+          customType: 'apple',
+          isDistinct: false,
+        };
         return params;
       }}
     />
@@ -384,6 +384,13 @@ const SBChannel = withSendBird((props) => {
       showSearchIcon={showSearchIcon}
       onSearchClick={onSearchClick}
       onChatHeaderActionClick={onChatHeaderActionClick}
+      // renderFrozenNotification={() => {
+      //   return (
+      //     <div
+      //       className="sendbird-notification sendbird-notification--frozen sendbird-conversation__messages__notification"
+      //     >My custom Frozen Notification</div>
+      //   );
+      // }}
     // renderChatItem={({ message }) => {
     //   return (
     //     <div>{message.message || '하잉'}</div>

@@ -28,6 +28,7 @@ export interface MessageListProps {
   renderPlaceholderEmpty?: () => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
   renderPlaceholderLoader?: () => React.ReactElement;
+  renderFrozenNotification?: () => React.ReactElement;
 }
 
 const MessageList: React.FC<MessageListProps> = ({
@@ -36,6 +37,7 @@ const MessageList: React.FC<MessageListProps> = ({
   renderPlaceholderEmpty,
   renderCustomSeparator,
   renderPlaceholderLoader,
+  renderFrozenNotification,
 }) => {
   const {
     allMessages,
@@ -242,9 +244,13 @@ const MessageList: React.FC<MessageListProps> = ({
             {/* show new message notifications, */}
           </div>
         </div>
-        {currentGroupChannel?.isFrozen && (
-          <FrozenNotification className="sendbird-conversation__messages__notification" />
-        )}
+        {
+          currentGroupChannel?.isFrozen && (
+            renderFrozenNotification
+              ? renderFrozenNotification()
+              : <FrozenNotification className="sendbird-conversation__messages__notification" />
+          )
+        }
         {(unreadSince || unreadSinceDate) && (
           <UnreadCount
             className="sendbird-conversation__messages__notification"
