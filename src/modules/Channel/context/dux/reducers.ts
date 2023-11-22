@@ -46,6 +46,7 @@ export default function channelReducer(
         hasMorePrev: false,
         hasMoreNext: false,
         allMessages: [],
+        localMessages: [],
       };
     })
     .with({ type: channelActions.FETCH_INITIAL_MESSAGES_START }, () => {
@@ -56,6 +57,7 @@ export default function channelReducer(
           ? m.sendingStatus !== SendingStatus.SUCCEEDED
           : true,
         ),
+        localMessages: [],
       };
     })
     .with({ type: channelActions.FETCH_INITIAL_MESSAGES_SUCCESS }, (action) => {
@@ -201,6 +203,8 @@ export default function channelReducer(
       return {
         ...state,
         currentGroupChannel: null,
+        allMessages: [],
+        localMessages: [],
         isInvalid: true,
       };
     })
