@@ -19,7 +19,7 @@ import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCa
 import { useSetScrollToBottom } from './hooks/useSetScrollToBottom';
 import { useScrollBehavior } from './hooks/useScrollBehavior';
 import * as utils from '../../context/utils';
-import TypingIndicatorMessage from '../../../../ui/TypingIndicatorMessage';
+import TypingIndicatorBubble from '../../../../ui/TypingIndicatorBubble';
 
 const SCROLL_BOTTOM_PADDING = 50;
 
@@ -244,7 +244,7 @@ const MessageList: React.FC<MessageListProps> = ({
               !hasMoreNext
               && store?.config?.groupChannel?.enableTypingIndicator
               && store?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Bubble)
-              && <TypingIndicatorMessage
+              && <TypingIndicatorBubble
                 typingMembers={typingMembers}
                 handleScroll={moveScroll}
               />

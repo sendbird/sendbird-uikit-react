@@ -4,7 +4,7 @@ import Avatar from '../Avatar';
 import TypingDots from './TypingDots';
 import AvatarDefault from '../Avatar/AvatarDefault';
 
-export interface TypingIndicatorMessageProps {
+export interface TypingIndicatorBubbleProps {
   typingMembers: Member[];
   handleScroll?: (isBottomMessageAffected?: boolean) => void;
 }
@@ -42,7 +42,7 @@ const AvatarStack = (props: AvatarStackProps) => {
   );
 };
 
-const TypingIndicatorMessageAvatar = (props: TypingIndicatorMessageProps) => {
+const TypingIndicatorBubbleAvatar = (props: TypingIndicatorBubbleProps) => {
   const { typingMembers } = props;
   const membersCount = typingMembers.length;
   const displayCount = Math.min(membersCount, 4);
@@ -80,7 +80,7 @@ const TypingIndicatorMessageAvatar = (props: TypingIndicatorMessageProps) => {
   );
 };
 
-const TypingIndicatorMessage = (props: TypingIndicatorMessageProps) => {
+const TypingIndicatorBubble = (props: TypingIndicatorBubbleProps) => {
   const { typingMembers, handleScroll } = props;
 
   if (typingMembers.length === 0) return null;
@@ -94,7 +94,7 @@ const TypingIndicatorMessage = (props: TypingIndicatorMessageProps) => {
     className='sendbird-message-content incoming'
     style={{ marginBottom: '2px' }}
   >
-    <TypingIndicatorMessageAvatar typingMembers={typingMembers} />
+    <TypingIndicatorBubbleAvatar typingMembers={typingMembers} />
     <div className='sendbird-message-content__middle'>
       <TypingDots/>
     </div>
@@ -102,4 +102,4 @@ const TypingIndicatorMessage = (props: TypingIndicatorMessageProps) => {
 
 };
 
-export default TypingIndicatorMessage;
+export default TypingIndicatorBubble;
