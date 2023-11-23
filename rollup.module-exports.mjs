@@ -201,7 +201,7 @@ export default {
   'ui/UnknownMessageItemBody': 'src/ui/UnknownMessageItemBody/index.tsx',
   'ui/UserListItem': 'src/ui/UserListItem/index.tsx',
   'ui/UserProfile': 'src/ui/UserProfile/index.tsx',
-  'ui/VoiceMessgeInput': 'src/ui/VoiceMessageInput/index.tsx',
+  'ui/VoiceMessageInput': 'src/ui/VoiceMessageInput/index.tsx',
   'ui/VoiceMessageItemBody': 'src/ui/VoiceMessageItemBody/index.tsx',
   'ui/Word': 'src/ui/Word/index.tsx',
 };
