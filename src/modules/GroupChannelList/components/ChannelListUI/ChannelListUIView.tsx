@@ -10,7 +10,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import EditUserProfile from '../../../EditUserProfile';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
-import {User} from "@sendbird/chat";
+import { User } from '@sendbird/chat';
 
 export interface Props {
   renderHeader?: (props: void) => React.ReactElement;
@@ -113,7 +113,7 @@ export const ChannelListUIView = ({
  * We hesitate to bring one more dependency to our library,
  * we are planning to implement it inside the library
  * */
-const ChannelListComponent = <T,>(props: {
+const ChannelListComponent = <T, >(props: {
   data: T[];
   renderItem: (props: { item: T; index: number }) => React.ReactNode;
   onLoadMore?: () => void;

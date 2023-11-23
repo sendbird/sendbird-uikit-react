@@ -37,7 +37,7 @@ export interface ChannelListUIProps {
 }
 
 const ChannelListUI: React.FC<ChannelListUIProps> = (
-  props: ChannelListUIProps
+  props: ChannelListUIProps,
 ) => {
   const {
     renderHeader,

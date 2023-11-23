@@ -49,17 +49,20 @@ const ChannelListUI = (props: ChannelListUIProps) => {
     groupChannels,
     initialized,
     loadMore,
-    onProfileEditSuccess, // TODO: Add onProfileEditSuccess to GroupChannelListContext
+    onUpdatedUserProfile,
   } = useGroupChannelListContext();
 
   const { config } = useSendbirdStateContext();
   const { logger, isOnline } = config;
 
-  const renderListItem = (props: { item: GroupChannel; index: number }) => {
-    const { item: channel, index } = props;
+  const renderListItem = (renderProps: { item: GroupChannel; index: number }) => {
+    const { item: channel, index } = renderProps;
 
     // todo: Refactor and move this inside channel - preview
-    const onLeaveChannel: RenderChannelPreviewProps['onLeaveChannel'] = async (targetChannel, cb) => {
+    const onLeaveChannel: RenderChannelPreviewProps['onLeaveChannel'] = async (
+      targetChannel,
+      cb,
+    ) => {
       logger.info('ChannelList: Leaving channel', targetChannel);
       await targetChannel.leave();
 
@@ -109,7 +112,7 @@ const ChannelListUI = (props: ChannelListUIProps) => {
       renderPlaceHolderEmptyList={renderPlaceHolderEmptyList}
       onChangeTheme={onThemeChange}
       allowProfileEdit={allowProfileEdit}
-      onUpdatedUserProfile={onProfileEditSuccess}
+      onUpdatedUserProfile={onUpdatedUserProfile}
       channels={groupChannels}
       onLoadMore={loadMore}
       initialized={initialized}
