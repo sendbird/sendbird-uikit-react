@@ -60,6 +60,7 @@ export default {
   Channel: 'src/modules/Channel/index.tsx',
   'Channel/context': 'src/modules/Channel/context/ChannelProvider.tsx',
   'Channel/hooks/useInitialMessagesFetch': 'src/modules/Channel/context/hooks/useInitialMessagesFetch.ts',
+  'Channel/hooks/useHandleUploadFiles': 'src/modules/Channel/components/MessageInput/useHandleUploadFiles.tsx',
   'Channel/utils/getMessagePartsInfo': 'src/modules/Channel/components/MessageList/getMessagePartsInfo.ts',
   'Channel/utils/compareMessagesForGrouping': 'src/modules/Channel/context/compareMessagesForGrouping.ts',
   'Channel/components/ChannelHeader': 'src/modules/Channel/components/ChannelHeader/index.tsx',
@@ -201,7 +202,7 @@ export default {
   'ui/UnknownMessageItemBody': 'src/ui/UnknownMessageItemBody/index.tsx',
   'ui/UserListItem': 'src/ui/UserListItem/index.tsx',
   'ui/UserProfile': 'src/ui/UserProfile/index.tsx',
-  'ui/VoiceMessgeInput': 'src/ui/VoiceMessageInput/index.tsx',
+  'ui/VoiceMessageInput': 'src/ui/VoiceMessageInput/index.tsx',
   'ui/VoiceMessageItemBody': 'src/ui/VoiceMessageItemBody/index.tsx',
   'ui/Word': 'src/ui/Word/index.tsx',
 };
