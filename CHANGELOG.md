@@ -95,6 +95,12 @@
       }}
     />
   ```
+* Exported `VoiceMessageInputWrapper` and `useHandleUploadFiles`
+  * How to use?
+  ```tsx
+  import { useHandleUploadFiles } from '@sendbird/uikit-react/Channel/hooks/useHandleUploadFiles'
+  import { VoiceMessageInputWrapper, VoiceMessageInputWrapperProps } from '@sendbird/uikit-react/Channel/components/MessageInput'
+  ```
 
 ### Fixes:
 * Fixed a bug where setting `startingPoint` scrolls to the middle of the target message when it should be at the top of the message
