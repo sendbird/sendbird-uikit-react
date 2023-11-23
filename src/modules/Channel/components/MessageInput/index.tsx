@@ -254,4 +254,9 @@ const MessageInputWrapper = (
   );
 };
 
+export {
+  VoiceMessageInputWrapper,
+  VoiceMessageInputWrapperProps,
+} from './VoiceMessageInputWrapper';
+
 export default React.forwardRef(MessageInputWrapper);
