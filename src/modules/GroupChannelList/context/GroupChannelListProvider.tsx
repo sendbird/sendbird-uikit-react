@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 
+import type { User } from '@sendbird/chat';
 import type { GroupChannel, GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
 import { useGroupChanelList, useGroupChannelHandler } from '@sendbird/uikit-tools';
 
@@ -35,6 +36,7 @@ interface GroupChannelListContextType {
   onThemeChange?(theme: string): void;
   onClickCreateChannel?(params: OverrideInviteUserType): void;
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
+  onUpdatedUserProfile?(user: User): void;
 }
 
 export interface GroupChannelListProviderProps extends Partial<GroupChannelListContextType>, UserProfileProviderProps, React.PropsWithChildren {}
@@ -56,9 +58,10 @@ export const GroupChannelListContext = React.createContext<GroupChannelListProvi
   onChannelSelect: noop,
   onCreateChannel: noop,
   // Props - Custom
-  onThemeChange: null,
-  onClickCreateChannel: null,
-  onBeforeCreateChannel: null,
+  onThemeChange: undefined,
+  onClickCreateChannel: undefined,
+  onBeforeCreateChannel: undefined,
+  onUpdatedUserProfile: undefined,
 
   // Internal Interface
   typingChannelUrls: [],
@@ -90,6 +93,7 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
     onCreateChannel,
     onClickCreateChannel,
     onBeforeCreateChannel,
+    onUpdatedUserProfile,
 
     // UserProfile
     disableUserProfile,
@@ -147,6 +151,7 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
         onThemeChange,
         onClickCreateChannel,
         onBeforeCreateChannel,
+        onUpdatedUserProfile,
         // Internal
         typingChannelUrls,
         // ReturnType<UseGroupChannelList>
