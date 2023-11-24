@@ -1,7 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 
 import Sendbird from '../../../lib/Sendbird';
-import { GroupChannelList as Component } from "../index";
+import { GroupChannelList as Component } from '../index';
+
 const appId = process.env.STORYBOOK_APP_ID;
 const userId = 'sendbird';
 
