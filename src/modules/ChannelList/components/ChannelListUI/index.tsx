@@ -51,7 +51,6 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (
     onThemeChange,
     allowProfileEdit,
     allChannels,
-    loading, // TODO: Check remove loading affect to channel list placeholder
     currentChannel,
     channelListDispatcher,
     typingChannels,
