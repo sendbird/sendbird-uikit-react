@@ -1,6 +1,6 @@
-import React from "react";
-import { GroupChannel } from "@sendbird/chat/groupChannel";
-import { LeaveChannelView } from "./LeaveChannelView";
+import React from 'react';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { LeaveChannelView } from './LeaveChannelView';
 
 export type LeaveChannelProps = {
   channel?: GroupChannel;
@@ -9,7 +9,7 @@ export type LeaveChannelProps = {
 };
 
 export const LeaveChannel: React.FC<LeaveChannelProps> = (
-  props: LeaveChannelProps
+  props: LeaveChannelProps,
 ) => {
   const { channel = null } = props;
   if (channel) {

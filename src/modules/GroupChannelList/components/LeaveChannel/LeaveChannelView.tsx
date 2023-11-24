@@ -1,9 +1,9 @@
-import React from "react";
-import Modal from "../../../../ui/Modal";
-import { GroupChannel } from "@sendbird/chat/groupChannel";
-import useSendbirdStateContext from "../../../../hooks/useSendbirdStateContext";
-import { useLocalization } from "../../../../lib/LocalizationContext";
-import { noop } from "../../../../utils/utils";
+import React from 'react';
+import Modal from '../../../../ui/Modal';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { useLocalization } from '../../../../lib/LocalizationContext';
+import { noop } from '../../../../utils/utils';
 
 export interface LeaveChannelViewProps {
   channel: GroupChannel;
@@ -24,9 +24,9 @@ export const LeaveChannelView = ({
       disabled={!isOnline}
       onCancel={onCancel}
       onSubmit={() => {
-        logger.info("ChannelSettings: Leaving channel", channel);
+        logger.info('ChannelSettings: Leaving channel', channel);
         channel.leave().then(() => {
-          logger.info("ChannelSettings: Leaving channel successful!", channel);
+          logger.info('ChannelSettings: Leaving channel successful!', channel);
           onSubmit();
         });
       }}
