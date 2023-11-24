@@ -1,8 +1,7 @@
 import './channel-list-ui.scss';
 
 import React from 'react';
-import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
-import type { User } from '@sendbird/chat';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import ChannelPreview from '../ChannelPreview';
 import ChannelPreviewAction from '../ChannelPreviewAction';
 import { useChannelListContext } from '../../context/ChannelListProvider';
@@ -19,17 +18,10 @@ interface RenderChannelPreviewProps {
   ): void;
 }
 
-interface RenderUserProfileProps {
-  user: Member | User;
-  currentUserId: string;
-  close(): void;
-}
-
 export interface ChannelListUIProps {
   renderChannelPreview?: (
     props: RenderChannelPreviewProps
   ) => React.ReactElement;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   renderHeader?: (props: void) => React.ReactElement;
   renderPlaceHolderError?: (props: void) => React.ReactElement;
   renderPlaceHolderLoading?: (props: void) => React.ReactElement;
