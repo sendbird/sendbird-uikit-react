@@ -39,11 +39,11 @@ export const GroupChannelListItem = ({
     isTypingIndicatorEnabled = false,
     isMessageReceiptStatusEnabled = false,
   } = useGroupChannelListContext();
-  const isSelectedChannel = isSelected || (channel?.url === selectedChannelUrl);
+  const isSelectedChannel = isSelected || (channel.url === selectedChannelUrl);
   const isTypingChannel = isTypingIndicatorEnabled && (isTyping || (typingChannelUrls.includes(channel.url)));
   const isMessageStatusEnabled = isMessageReceiptStatusEnabled
-    && (!channel?.lastMessage?.isAdminMessage())
-    && (channel?.lastMessage as SendableMessageType)?.sender?.userId === userId;
+    && (!channel.lastMessage?.isAdminMessage())
+    && (channel.lastMessage as SendableMessageType)?.sender?.userId === userId;
 
   const channelName = utils.getChannelTitle(channel, userId, stringSet);
   return (
