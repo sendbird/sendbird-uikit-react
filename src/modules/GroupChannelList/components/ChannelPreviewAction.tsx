@@ -4,7 +4,7 @@ import { LocalizationContext } from '../../../lib/LocalizationContext';
 import ContextMenu, { MenuItem, MenuItems } from '../../../ui/ContextMenu';
 import IconButton from '../../../ui/IconButton';
 import Icon, { IconTypes, IconColors } from '../../../ui/Icon';
-import LeaveChannelModal from './LeaveChannel';
+import LeaveChannelModal from './LeaveGroupChannel';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 type ChannelPreviewActionProps = {
