@@ -1,3 +1,10 @@
+/*
+  We are sharing the same CSS file
+  * the same components
+    1. `~/modules/GroupChannelList/components/GroupChannelListUI`
+    2. `~/modules/ChannelList/components/ChannelListUI`
+  So must to keep the same structure with the component when you make a change on the one component of them
+*/
 @import '../../../../styles/variables';
 
 .sendbird-channel-list {

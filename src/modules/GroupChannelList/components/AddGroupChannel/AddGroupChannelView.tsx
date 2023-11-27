@@ -14,7 +14,7 @@ type Props = {
   overrideInviteUser?: CreateChannelProviderProps['overrideInviteUser'];
 };
 
-export const AddChannelView = ({
+export const AddGroupChannelView = ({
   createChannelVisible,
   onChangeCreateChannelVisible,
   onBeforeCreateChannel,
@@ -49,4 +49,4 @@ export const AddChannelView = ({
   );
 };
 
-export default AddChannelView;
+export default AddGroupChannelView;

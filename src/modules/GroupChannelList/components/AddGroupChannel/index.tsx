@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import AddChannelView from './AddChannelView';
+import AddGroupChannelView from './AddGroupChannelView';
 import { useGroupChannelListContext } from '../../context/GroupChannelListProvider';
 
-export const AddChannel = () => {
+export const AddGroupChannel = () => {
   const [createChannelVisible, setCreateChannelVisible] = useState(false);
   const { onBeforeCreateChannel } = useGroupChannelListContext();
 
   return (
-    <AddChannelView
+    <AddGroupChannelView
       createChannelVisible={createChannelVisible}
       onChangeCreateChannelVisible={setCreateChannelVisible}
       onBeforeCreateChannel={onBeforeCreateChannel}
@@ -15,4 +15,4 @@ export const AddChannel = () => {
   );
 };
 
-export default AddChannel;
+export default AddGroupChannel;

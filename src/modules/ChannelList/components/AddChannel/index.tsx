@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useChannelListContext } from '../../context/ChannelListProvider';
-import AddChannelView from '../../../GroupChannelList/components/AddChannel/AddChannelView';
+import AddGroupChannelView from '../../../GroupChannelList/components/AddGroupChannel/AddGroupChannelView';
 
 export const AddChannel = () => {
   const [showModal, setShowModal] = useState(false);
   const { overrideInviteUser, onBeforeCreateChannel } = useChannelListContext();
 
   return (
-    <AddChannelView
+    <AddGroupChannelView
       createChannelVisible={showModal}
       onChangeCreateChannelVisible={setShowModal}
       onBeforeCreateChannel={onBeforeCreateChannel}

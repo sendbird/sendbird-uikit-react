@@ -13,7 +13,7 @@ type ChannelPreviewActionProps = {
   onLeaveChannel(): void;
 };
 
-export default function ChannelPreviewAction({ channel, disabled = false, onLeaveChannel }: ChannelPreviewActionProps) {
+export default function GroupChannelPreviewAction({ channel, disabled = false, onLeaveChannel }: ChannelPreviewActionProps) {
   const parentRef = useRef(null);
   const parentContainerRef = useRef(null);
   const [showModal, setShowModal] = useState(false);

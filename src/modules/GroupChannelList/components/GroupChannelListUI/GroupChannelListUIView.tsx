@@ -1,10 +1,8 @@
-import './channel-list-ui.scss';
-
 import React, { useState } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import GroupChannelListHeader from '../GroupChannelListHeader';
-import AddChannel from '../AddChannel';
+import AddChannel from '../AddGroupChannel';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import EditUserProfile from '../../../EditUserProfile';
@@ -31,7 +29,7 @@ export interface Props {
   }) => React.ReactElement;
 }
 
-export const ChannelListUIView = ({
+export const GroupChannelListUIView = ({
   renderHeader,
   renderPlaceHolderError,
   renderPlaceHolderLoading,

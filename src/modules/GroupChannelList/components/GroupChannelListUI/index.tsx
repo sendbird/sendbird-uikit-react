@@ -1,10 +1,10 @@
-import './channel-list-ui.scss';
+import './index.scss';
 
 import React from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import { useGroupChannelListContext } from '../../context/GroupChannelListProvider';
-import { ChannelListUIView } from './ChannelListUIView';
-import ChannelPreviewAction from '../ChannelPreviewAction';
+import { GroupChannelListUIView } from './GroupChannelListUIView';
+import GroupChannelPreviewAction from '../GroupChannelPreviewAction';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { GroupChannelListItem } from '../GroupChannelListItem';
 
@@ -16,7 +16,7 @@ interface RenderChannelPreviewProps {
   ): void;
 }
 
-export interface ChannelListUIProps {
+export interface GroupChannelListUIProps {
   renderChannelPreview?: (
     props: RenderChannelPreviewProps
   ) => React.ReactElement;
@@ -26,7 +26,7 @@ export interface ChannelListUIProps {
   renderPlaceHolderEmptyList?: (props: void) => React.ReactElement;
 }
 
-const ChannelListUI = (props: ChannelListUIProps) => {
+const GroupChannelListUI = (props: GroupChannelListUIProps) => {
   const {
     renderHeader,
     renderChannelPreview,
@@ -85,7 +85,7 @@ const ChannelListUI = (props: ChannelListUIProps) => {
         channel={channel}
         onLeaveChannel={() => onLeaveChannel(channel, null)}
         renderChannelAction={() => (
-          <ChannelPreviewAction
+          <GroupChannelPreviewAction
             channel={channel}
             disabled={!isOnline}
             onLeaveChannel={() => onLeaveChannel(channel, null)}
@@ -96,7 +96,7 @@ const ChannelListUI = (props: ChannelListUIProps) => {
   };
 
   return (
-    <ChannelListUIView
+    <GroupChannelListUIView
       renderHeader={renderHeader}
       renderChannel={renderListItem}
       renderPlaceHolderError={renderPlaceHolderError}
@@ -112,4 +112,4 @@ const ChannelListUI = (props: ChannelListUIProps) => {
   );
 };
 
-export default ChannelListUI;
+export default GroupChannelListUI;

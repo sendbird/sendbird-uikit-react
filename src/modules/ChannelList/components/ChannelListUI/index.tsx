@@ -8,7 +8,7 @@ import { useChannelListContext } from '../../context/ChannelListProvider';
 import * as channelListActions from '../../dux/actionTypes';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { ChannelListUIView } from '../../../GroupChannelList/components/ChannelListUI/ChannelListUIView';
+import { GroupChannelListUIView } from '../../../GroupChannelList/components/GroupChannelListUI/GroupChannelListUIView';
 
 interface RenderChannelPreviewProps {
   channel: GroupChannel;
@@ -116,7 +116,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (
   };
 
   return (
-    <ChannelListUIView
+    <GroupChannelListUIView
       renderHeader={renderHeader}
       renderChannel={renderListItem}
       renderPlaceHolderError={renderPlaceHolderError}

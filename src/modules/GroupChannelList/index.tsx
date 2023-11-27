@@ -4,9 +4,9 @@ import {
   GroupChannelListProviderProps,
 } from './context/GroupChannelListProvider';
 
-import ChannelListUI, { ChannelListUIProps } from './components/ChannelListUI';
+import ChannelListUI, { GroupChannelListUIProps } from './components/GroupChannelListUI';
 
-interface GroupChannelListProps extends GroupChannelListProviderProps, ChannelListUIProps {}
+interface GroupChannelListProps extends GroupChannelListProviderProps, GroupChannelListUIProps {}
 
 export const GroupChannelList: React.FC<GroupChannelListProps> = (props: GroupChannelListProps) => {
   return (
