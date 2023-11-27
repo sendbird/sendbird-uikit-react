@@ -11,7 +11,7 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useGroupChannelListContext } from '../../context/GroupChannelListProvider';
 import { GroupChannelListItemView } from './GroupChannelListItemView';
 
-interface GroupChannelListItemInterface extends React.PropsWithChildren {
+interface GroupChannelListItemProps extends React.PropsWithChildren {
   channel: GroupChannel;
   isSelected?: boolean;
   isTyping?: boolean;
@@ -29,7 +29,7 @@ export const GroupChannelListItem = ({
   onLeaveChannel,
   onClick,
   tabIndex,
-}: GroupChannelListItemInterface) => {
+}: GroupChannelListItemProps) => {
   const { config } = useSendbirdStateContext();
   const { userId } = config;
   const { stringSet } = useLocalization();
@@ -40,7 +40,7 @@ export const GroupChannelListItem = ({
     isMessageReceiptStatusEnabled = false,
   } = useGroupChannelListContext();
   const isSelectedChannel = isSelected || (channel?.url === selectedChannelUrl);
-  const isTypingChannel = (isTyping || (typingChannelUrls.includes(channel.url))) && isTypingIndicatorEnabled;
+  const isTypingChannel = isTypingIndicatorEnabled && (isTyping || (typingChannelUrls.includes(channel.url)));
   const isMessageStatusEnabled = isMessageReceiptStatusEnabled
     && (!channel?.lastMessage?.isAdminMessage())
     && (channel?.lastMessage as SendableMessageType)?.sender?.userId === userId;

@@ -110,7 +110,7 @@ export const GroupChannelListItemView = ({
               >
                 {getTotalMembers(channel)}
               </Label>
-              {(channel?.isFrozen || false) && (
+              {(channel.isFrozen) && (
                 <div
                   title="Frozen"
                   className="sendbird-channel-preview__content__upper__header__frozen-icon"
@@ -124,7 +124,7 @@ export const GroupChannelListItemView = ({
                 </div>
               )}
             </div>
-            {!channel?.isEphemeral && isMessageStatusEnabled && (
+            {!channel.isEphemeral && isMessageStatusEnabled && (
               <MessageStatus
                 className="sendbird-channel-preview__content__upper__last-message-at"
                 channel={channel}
@@ -132,7 +132,7 @@ export const GroupChannelListItemView = ({
                 isDateSeparatorConsidered={false}
               />
             )}
-            {!channel?.isEphemeral && !isMessageStatusEnabled && (
+            {!channel.isEphemeral && !isMessageStatusEnabled && (
               <Label
                 className="sendbird-channel-preview__content__upper__last-message-at"
                 type={LabelTypography.CAPTION_3}
@@ -153,13 +153,13 @@ export const GroupChannelListItemView = ({
               color={LabelColors.ONBACKGROUND_3}
             >
               {isTyping && (
-                <TypingIndicatorText members={channel?.getTypingUsers()} />
+                <TypingIndicatorText members={channel.getTypingUsers()} />
               )}
               {!isTyping
-                && !isVoiceMessage(channel?.lastMessage as FileMessage)
+                && !isVoiceMessage(channel.lastMessage as FileMessage | null)
                 && getLastMessage(channel, stringSet)}
               {!isTyping
-                && isVoiceMessage(channel?.lastMessage as FileMessage)
+                && isVoiceMessage(channel.lastMessage as FileMessage | null)
                 && stringSet.VOICE_MESSAGE}
             </Label>
             {
