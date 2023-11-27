@@ -71,7 +71,7 @@ const ChannelListUI = (props: ChannelListUIProps) => {
 
     if (renderChannelPreview) {
       return (
-        <div key={channel?.url} onClick={onClick}>
+        <div key={channel.url} onClick={onClick}>
           {renderChannelPreview({ channel, onLeaveChannel })}
         </div>
       );
@@ -79,7 +79,7 @@ const ChannelListUI = (props: ChannelListUIProps) => {
 
     return (
       <GroupChannelListItem
-        key={channel?.url}
+        key={channel.url}
         tabIndex={index}
         onClick={onClick}
         channel={channel}

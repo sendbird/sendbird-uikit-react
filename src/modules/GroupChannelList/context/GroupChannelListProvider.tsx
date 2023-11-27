@@ -125,7 +125,7 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
   useGroupChannelHandler(sdk, {
     onTypingStatusUpdated: (channel) => {
       const channelList = typingChannelUrls.filter((channelUrl) => channelUrl !== channel.url);
-      if (channel?.getTypingUsers()?.length > 0) {
+      if (channel.getTypingUsers()?.length > 0) {
         setTypingChannelUrls(channelList.concat(channel.url));
       } else {
         setTypingChannelUrls(channelList);

@@ -86,7 +86,7 @@ export const GroupChannelListItemView = ({
         <div className="sendbird-channel-preview__content">
           <div className="sendbird-channel-preview__content__upper">
             <div className="sendbird-channel-preview__content__upper__header">
-              {(channel?.isBroadcast || false) && (
+              {(channel.isBroadcast || false) && (
                 <div className="sendbird-channel-preview__content__upper__header__broadcast-icon">
                   <Icon
                     type={IconTypes.BROADCAST}
@@ -128,7 +128,7 @@ export const GroupChannelListItemView = ({
               <MessageStatus
                 className="sendbird-channel-preview__content__upper__last-message-at"
                 channel={channel}
-                message={channel?.lastMessage as CoreMessageType}
+                message={channel.lastMessage as CoreMessageType}
                 isDateSeparatorConsidered={false}
               />
             )}
@@ -168,9 +168,9 @@ export const GroupChannelListItemView = ({
                * isScrollBottom and hasNext states needs to be added globally but they are from channel context
                * so channel list cannot see them with the current architecture.
                */
-              !isSelected && !channel?.isEphemeral && (
+              !isSelected && !channel.isEphemeral && (
                 <div className="sendbird-channel-preview__content__lower__unread-message-count">
-                  {isMentionEnabled && channel?.unreadMentionCount > 0 ? (
+                  {isMentionEnabled && channel.unreadMentionCount > 0 ? (
                     <MentionUserLabel
                       className="sendbird-channel-preview__content__lower__unread-message-count__mention"
                       color="purple"
