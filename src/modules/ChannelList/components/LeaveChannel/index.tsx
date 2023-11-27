@@ -1,7 +1,3 @@
-import LeaveChannel from '../../../GroupChannelList/components/LeaveChannel';
+import LeaveChannel from '../../../GroupChannelList/components/LeaveGroupChannel';
 
 export default LeaveChannel;
-export {
-  LeaveChannelView,
-  LeaveChannelViewProps,
-} from '../../../GroupChannelList/components/LeaveChannel/LeaveChannelView';
