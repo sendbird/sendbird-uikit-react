@@ -11,7 +11,7 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useGroupChannelListContext } from '../../context/GroupChannelListProvider';
 import { GroupChannelListItemView } from './GroupChannelListItemView';
 
-interface GroupChannelPreviewInterface extends React.PropsWithChildren {
+interface GroupChannelListItemInterface extends React.PropsWithChildren {
   channel: GroupChannel;
   isSelected?: boolean;
   isTyping?: boolean;
@@ -21,7 +21,7 @@ interface GroupChannelPreviewInterface extends React.PropsWithChildren {
   tabIndex: number;
 }
 
-export const GroupChannelPreview = ({
+export const GroupChannelListItem = ({
   channel,
   isSelected,
   isTyping,
@@ -29,7 +29,7 @@ export const GroupChannelPreview = ({
   onLeaveChannel,
   onClick,
   tabIndex,
-}: GroupChannelPreviewInterface) => {
+}: GroupChannelListItemInterface) => {
   const { config } = useSendbirdStateContext();
   const { userId } = config;
   const { stringSet } = useLocalization();

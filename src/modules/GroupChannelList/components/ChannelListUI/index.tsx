@@ -4,9 +4,9 @@ import React from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import { useGroupChannelListContext } from '../../context/GroupChannelListProvider';
 import { ChannelListUIView } from './ChannelListUIView';
-import { GroupChannelPreview } from '../GroupChannelPreview';
 import ChannelPreviewAction from '../ChannelPreviewAction';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { GroupChannelListItem } from '../GroupChannelListItem';
 
 interface RenderChannelPreviewProps {
   channel: GroupChannel;
@@ -78,7 +78,7 @@ const ChannelListUI = (props: ChannelListUIProps) => {
     }
 
     return (
-      <GroupChannelPreview
+      <GroupChannelListItem
         key={channel?.url}
         tabIndex={index}
         onClick={onClick}

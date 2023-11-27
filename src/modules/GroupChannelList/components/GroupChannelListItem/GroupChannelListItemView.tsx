@@ -1,31 +1,31 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import type { GroupChannel } from "@sendbird/chat/groupChannel";
-import type { FileMessage } from "@sendbird/chat/message";
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import type { FileMessage } from '@sendbird/chat/message';
 
-import useSendbirdStateContext from "../../../../hooks/useSendbirdStateContext";
-import useLongPress from "../../../../hooks/useLongPress";
-import { useLocalization } from "../../../../lib/LocalizationContext";
-import { useMediaQueryContext } from "../../../../lib/MediaQueryContext";
-import { noop } from "../../../../utils/utils";
-import { CoreMessageType, isVoiceMessage } from "../../../../utils";
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import useLongPress from '../../../../hooks/useLongPress';
+import { useLocalization } from '../../../../lib/LocalizationContext';
+import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
+import { noop } from '../../../../utils/utils';
+import { CoreMessageType, isVoiceMessage } from '../../../../utils';
 import {
   getChannelUnreadMessageCount,
   getLastMessage,
   getLastMessageCreatedAt,
   getTotalMembers,
-} from "./utils";
+} from './utils';
 
-import { TypingIndicatorText } from "../../../Channel/components/TypingIndicator";
+import { TypingIndicatorText } from '../../../Channel/components/TypingIndicator';
 
-import Badge from "../../../../ui/Badge";
-import ChannelAvatar from "../../../../ui/ChannelAvatar";
-import Icon, { IconColors, IconTypes } from "../../../../ui/Icon";
-import Label, { LabelColors, LabelTypography } from "../../../../ui/Label";
-import MentionUserLabel from "../../../../ui/MentionUserLabel";
-import MessageStatus from "../../../../ui/MessageStatus";
-import Modal from "../../../../ui/Modal";
-import TextButton from "../../../../ui/TextButton";
+import Badge from '../../../../ui/Badge';
+import ChannelAvatar from '../../../../ui/ChannelAvatar';
+import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
+import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
+import MentionUserLabel from '../../../../ui/MentionUserLabel';
+import MessageStatus from '../../../../ui/MessageStatus';
+import Modal from '../../../../ui/Modal';
+import TextButton from '../../../../ui/TextButton';
 
 export interface GroupChannelListItemViewProps {
   channel: GroupChannel;
@@ -66,16 +66,16 @@ export const GroupChannelListItemView = ({
     },
     {
       delay: 1000,
-    }
+    },
   );
 
   return (
     <>
       <div
         className={[
-          "sendbird-channel-preview",
-          isSelected ? "sendbird-channel-preview--active" : "",
-        ].join(" ")}
+          'sendbird-channel-preview',
+          isSelected ? 'sendbird-channel-preview--active' : '',
+        ].join(' ')}
         role="link"
         tabIndex={tabIndex}
         {...(isMobile ? { ...onLongPress } : { onClick })}
@@ -155,12 +155,12 @@ export const GroupChannelListItemView = ({
               {isTyping && (
                 <TypingIndicatorText members={channel?.getTypingUsers()} />
               )}
-              {!isTyping &&
-                !isVoiceMessage(channel?.lastMessage as FileMessage) &&
-                getLastMessage(channel, stringSet)}
-              {!isTyping &&
-                isVoiceMessage(channel?.lastMessage as FileMessage) &&
-                stringSet.VOICE_MESSAGE}
+              {!isTyping
+                && !isVoiceMessage(channel?.lastMessage as FileMessage)
+                && getLastMessage(channel, stringSet)}
+              {!isTyping
+                && isVoiceMessage(channel?.lastMessage as FileMessage)
+                && stringSet.VOICE_MESSAGE}
             </Label>
             {
               /**
@@ -175,7 +175,7 @@ export const GroupChannelListItemView = ({
                       className="sendbird-channel-preview__content__lower__unread-message-count__mention"
                       color="purple"
                     >
-                      {"@"}
+                      {'@'}
                     </MentionUserLabel>
                   ) : null}
                   {getChannelUnreadMessageCount(channel) ? ( // return number
