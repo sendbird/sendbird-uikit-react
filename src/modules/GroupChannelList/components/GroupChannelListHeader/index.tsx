@@ -6,19 +6,19 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import Avatar from '../../../../ui/Avatar';
 import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 
-interface ChannelListHeaderProps {
+export interface GroupChannelListHeaderProps {
   renderTitle?: () => React.ReactElement;
   renderIconButton?: (props: void) => React.ReactElement;
   onEdit?: (props: void) => void;
   allowProfileEdit?: boolean;
 }
 
-const ChannelListHeader = ({
+export const GroupChannelListHeader = ({
   renderTitle,
   renderIconButton,
   onEdit,
   allowProfileEdit,
-}: ChannelListHeaderProps) => {
+}: GroupChannelListHeaderProps) => {
   const { stores } = useSendbirdStateContext();
   const { user } = stores.userStore;
 
@@ -76,4 +76,4 @@ const ChannelListHeader = ({
   );
 };
 
-export default ChannelListHeader;
+export default GroupChannelListHeader;

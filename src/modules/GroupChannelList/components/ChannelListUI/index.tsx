@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import type { User } from '@sendbird/chat';
 
-import ChannelListHeader from '../ChannelListHeader';
+import ChannelListHeader from '../GroupChannelListHeader';
 import AddChannel from '../AddChannel';
 import { GroupChannelPreview } from '../GroupChannelPreview';
 import ChannelPreviewAction from '../ChannelPreviewAction';
