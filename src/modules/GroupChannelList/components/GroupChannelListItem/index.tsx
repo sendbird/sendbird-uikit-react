@@ -1,4 +1,4 @@
-import './channel-preview.scss';
+import './index.scss';
 
 import React from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
