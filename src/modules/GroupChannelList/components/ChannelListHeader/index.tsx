@@ -15,4 +15,3 @@ const ChannelListHeader = (props: ChannelListHeaderProps) => {
 };
 
 export default ChannelListHeader;
-export { ChannelListHeaderView, ChannelListHeaderViewProps } from './ChannelListHeaderView';
