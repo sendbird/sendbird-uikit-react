@@ -3,7 +3,7 @@ import './channel-list-ui.scss';
 import React, { useState } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
-import ChannelListHeader from '../ChannelListHeader';
+import GroupChannelListHeader from '../GroupChannelListHeader';
 import AddChannel from '../AddChannel';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
@@ -77,7 +77,7 @@ export const ChannelListUIView = ({
     <React.Fragment>
       <div className="sendbird-channel-list__header">
         {renderHeader?.() || (
-          <ChannelListHeader
+          <GroupChannelListHeader
             onEdit={() => allowProfileEdit && setShowProfileEdit(true)}
             allowProfileEdit={allowProfileEdit}
             renderIconButton={() => <AddChannel />}
