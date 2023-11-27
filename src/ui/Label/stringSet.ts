@@ -3,7 +3,7 @@
  * Do not forget to update the string set table on Docs
  * When you update this string set
  *
- * `%d` will be replaced to a proper number
+ * `%d` will be replaced by a proper number
  */
 
 // TODO: Make StringSet as a interface
