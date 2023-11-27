@@ -1,4 +1,11 @@
 @import '../../../../styles/variables';
+/*
+  We are sharing the same CSS file
+  * the same components
+    1. `~/modules/GroupChannelList/components/GroupChannelListHeader`
+    2. `~/modules/ChannelList/components/ChannelListHeader`
+  So must to keep the same structure with the component when you make a change on the one component of them
+*/
 
 .sendbird-channel-header {
   position: relative;
