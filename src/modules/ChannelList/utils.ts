@@ -134,7 +134,7 @@ const createChannelListQuery = ({
   const params: GroupChannelListQueryParamsInternal = {
     includeEmpty: false,
     limit: 20, // The value of pagination limit could be set up to 100.
-    order: GroupChannelListOrder.LATEST_LAST_MESSAGE, // 'chronological', 'latest_last_message', 'channel_name_alphabetical', and 'metadata_value_alphabetical'
+    order: GroupChannelListOrder.LATEST_LAST_MESSAGE,
   };
 
   if (userFilledChannelListQuery) {
@@ -149,7 +149,7 @@ const createChannelListQuery = ({
 /**
  * Setup event listener
  * create channel source query
- * addloading screen
+ * add loading screen
  */
 type SetupChannelListParams = {
   sdk: SdkStore['sdk'];
