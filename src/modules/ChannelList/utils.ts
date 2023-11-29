@@ -126,7 +126,7 @@ type CreateChannelListQueryParams = {
   userFilledChannelListQuery: GroupChannelListQueryParamsInternal;
 };
 
-const createChannelListQuery = ({
+export const createBaseGroupChannelListQuery = ({
   sdk,
   userFilledChannelListQuery = {},
 }: CreateChannelListQueryParams): GroupChannelListQuery => {
@@ -163,6 +163,7 @@ type SetupChannelListParams = {
   markAsDeliveredScheduler: MarkAsDeliveredSchedulerType;
   disableMarkAsDelivered: boolean;
 };
+
 function setupChannelList({
   sdk,
   sdkChannelHandlerId,
@@ -188,7 +189,7 @@ function setupChannelList({
   }
 
   logger.info('ChannelList - creating query', { userFilledChannelListQuery });
-  const channelListQuery = createChannelListQuery({ sdk, userFilledChannelListQuery });
+  const channelListQuery = createBaseGroupChannelListQuery({ sdk, userFilledChannelListQuery });
   logger.info('ChannelList - created query', channelListQuery);
   setChannelSource(channelListQuery);
 

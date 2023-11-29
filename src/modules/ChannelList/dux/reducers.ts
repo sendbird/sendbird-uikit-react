@@ -298,6 +298,7 @@ export default function channelListReducer(
       })
       .with({ type: channelListActions.REFRESH_CHANNELS_START }, () => ({ ...state, refreshing: true }))
       .with({ type: channelListActions.REFRESH_CHANNELS_SUCCESS }, ({ payload }) => ({ ...state, refreshing: false, allChannels: payload.channels }))
+      .with({ type: channelListActions.REFRESH_CHANNELS_FAILURE }, () => ({ ...state, refreshing: false }))
       .otherwise(() => state)
   );
 }

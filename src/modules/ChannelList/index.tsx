@@ -8,7 +8,7 @@ import ChannelListUI, { ChannelListUIProps } from './components/ChannelListUI';
 
 interface ChannelListProps extends ChannelListProviderProps, ChannelListUIProps {}
 
-const ChannelList: React.FC<ChannelListProps> = (props: ChannelListProps) => {
+const ChannelList = (props: ChannelListProps) => {
   return (
     <ChannelListProvider
       className={props?.className}

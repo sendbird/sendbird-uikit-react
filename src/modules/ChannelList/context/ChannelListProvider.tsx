@@ -5,13 +5,13 @@ import {
   GroupChannel,
   GroupChannelCreateParams,
   GroupChannelHandler,
-  GroupChannelListQuery as GroupChannelListQuerySb,
+  GroupChannelListQuery,
   GroupChannelUserIdsFilter,
 } from '@sendbird/chat/groupChannel';
 
 import { RenderUserProfileProps } from '../../../types';
 
-import setupChannelList, { pubSubHandler, pubSubHandleRemover } from '../utils';
+import setupChannelList, { createBaseGroupChannelListQuery, pubSubHandler, pubSubHandleRemover } from '../utils';
 import { uuidv4 } from '../../../utils/uuid';
 import { noop } from '../../../utils/utils';
 import { DELIVERY_RECEIPT } from '../../../utils/consts';
@@ -26,6 +26,7 @@ import channelListInitialState from '../dux/initialState';
 import { CHANNEL_TYPE } from '../../CreateChannel/types';
 import useActiveChannelUrl from './hooks/useActiveChannelUrl';
 import { useFetchChannelList } from './hooks/useFetchChannelList';
+import { usePreservedCallback } from '@sendbird/uikit-tools';
 
 export interface ApplicationUserListQueryInternal {
   limit?: number;
@@ -100,8 +101,9 @@ export interface ChannelListProviderInterface extends ChannelListProviderProps {
   channelListQuery: GroupChannelListQueryParamsInternal;
   currentUserId: string;
   channelListDispatcher: React.Dispatch<ChannelListActionTypes>;
-  channelSource: GroupChannelListQuerySb | null;
+  channelSource: GroupChannelListQuery | null;
   fetchChannelList: () => void;
+  refreshChannelList: () => void;
 }
 
 const ChannelListContext = React.createContext<ChannelListProviderInterface | null>({
@@ -123,6 +125,7 @@ const ChannelListContext = React.createContext<ChannelListProviderInterface | nu
   channelSource: null,
   typingChannels: [],
   fetchChannelList: noop,
+  refreshChannelList: noop,
 });
 
 const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelListProviderProps) => {
@@ -169,12 +172,12 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   const userFilledChannelListQuery = queries?.channelListQuery;
   const userFilledApplicationUserListQuery = queries?.applicationUserListQuery;
 
-  const sdkIntialized = sdkStore?.initialized;
+  const sdkInitialized = sdkStore?.initialized;
 
   const [channelListStore, channelListDispatcher] = useReducer(channelListReducers, channelListInitialState);
   const { currentChannel } = channelListStore;
 
-  const [channelSource, setChannelSource] = useState<GroupChannelListQuerySb | null>(null);
+  const [channelSource, setChannelSource] = useState<GroupChannelListQuery | null>(null);
   const [typingChannels, setTypingChannels] = useState<Array<GroupChannel>>([]);
 
   useEffect(() => {
@@ -182,11 +185,11 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     return () => {
       pubSubHandleRemover(subscriber);
     };
-  }, [sdkIntialized]);
+  }, [sdkInitialized]);
 
   useEffect(() => {
     const sdkChannelHandlerId = uuidv4();
-    if (sdkIntialized) {
+    if (sdkInitialized) {
       logger.info('ChannelList: Setup channelHandlers');
       setupChannelList({
         sdk,
@@ -222,7 +225,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
       }
     };
   }, [
-    sdkIntialized,
+    sdkInitialized,
     sortChannelList,
     Object.entries(userFilledChannelListQuery ?? {}).map(([key, value]) => key + value).join(),
   ]);
@@ -325,16 +328,48 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
 
   // Set active channel (by url)
   useActiveChannelUrl(
-    {
-      activeChannelUrl,
-      channels: sortedChannels,
-      sdk,
-    },
-    {
-      logger,
-      channelListDispatcher,
-    },
+    { activeChannelUrl, channels: sortedChannels, sdk },
+    { logger, channelListDispatcher },
   );
+
+  const refreshChannelList = usePreservedCallback(async () => {
+    if (!sdkInitialized || !channelListStore.initialized) return;
+
+    channelListDispatcher({
+      type: channelListActions.REFRESH_CHANNELS_START,
+      payload: null,
+    });
+
+    const channelListQuery = createBaseGroupChannelListQuery({ sdk, userFilledChannelListQuery });
+    setChannelSource(channelListQuery);
+    if (userFilledChannelListQuery) {
+      channelListDispatcher({
+        type: channelListActions.CHANNEL_LIST_PARAMS_UPDATED,
+        payload: { channelListQuery, currentUserId: sdk.currentUser.userId },
+      });
+    }
+
+    if (channelListQuery.hasNext) {
+      try {
+        let channels = await channelListQuery.next();
+        if (sortChannelList) channels = sortChannelList(channels);
+
+        channelListDispatcher({
+          type: channelListActions.REFRESH_CHANNELS_SUCCESS,
+          payload: { channels },
+        });
+
+        if (sdk.appInfo.premiumFeatureList?.includes(DELIVERY_RECEIPT) && !disableMarkAsDelivered) {
+          channels.forEach((it) => markAsDeliveredScheduler.push(it));
+        }
+      } catch {
+        channelListDispatcher({
+          type: channelListActions.REFRESH_CHANNELS_FAILURE,
+          payload: null,
+        });
+      }
+    }
+  });
 
   const fetchChannelList = useFetchChannelList(
     {
@@ -374,6 +409,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
             ? isMessageReceiptStatusEnabled
             : isMessageReceiptStatusEnabledOnChannelList,
         fetchChannelList,
+        refreshChannelList,
       }}
     >
       <UserProfileProvider

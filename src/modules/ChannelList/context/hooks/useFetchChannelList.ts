@@ -17,14 +17,10 @@ interface StaticProps {
   markAsDeliveredScheduler: MarkAsDeliveredSchedulerType;
 }
 
-export const useFetchChannelList = ({
-  channelSource,
-  disableMarkAsDelivered,
-}: DynamicProps, {
-  channelListDispatcher,
-  logger,
-  markAsDeliveredScheduler,
-}: StaticProps) => {
+export const useFetchChannelList = (
+  { channelSource, disableMarkAsDelivered }: DynamicProps,
+  { channelListDispatcher, logger, markAsDeliveredScheduler }: StaticProps,
+) => {
   return useCallback(async () => {
     if (!channelSource?.hasNext) {
       logger.info('ChannelList: not able to fetch');
