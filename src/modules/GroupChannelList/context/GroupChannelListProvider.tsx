@@ -20,6 +20,8 @@ import type { CHANNEL_TYPE } from '../../CreateChannel/types';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { UserProfileProvider, type UserProfileProviderProps } from '../../../lib/UserProfileContext';
 import { useGroupChannelList, useGroupChannelHandler } from '@sendbird/uikit-tools';
+import { useMarkAsDeliveredScheduler } from '../../../lib/hooks/useMarkAsDeliveredScheduler';
+import useOnlineStatus from '../../../lib/hooks/useOnlineStatus';
 
 type OverrideInviteUserType = {
   users: Array<string>;
@@ -125,11 +127,15 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
     isTypingIndicatorEnabledOnChannelList = false,
     isMessageReceiptStatusEnabledOnChannelList = false,
   } = config;
-  const sdk = sdkStore?.sdk;
+
+  const sdk = sdkStore.sdk;
+  const isConnected = useOnlineStatus(sdk, config.logger);
+  const scheduler = useMarkAsDeliveredScheduler({ isConnected }, config);
 
   const channelListStore = useGroupChannelList(
     sdk,
     !channelListQuery ? {} : {
+      markAsDelivered: (channels) => channels.forEach(scheduler.push),
       collectionCreator: () => {
         const filter = new GroupChannelFilter();
         filter.includeEmpty = channelListQuery.includeEmpty ?? false;
