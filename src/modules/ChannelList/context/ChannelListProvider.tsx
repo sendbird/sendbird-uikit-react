@@ -96,6 +96,7 @@ export interface ChannelListProviderProps {
 export interface ChannelListProviderInterface extends ChannelListProviderProps {
   initialized: boolean;
   loading: boolean;
+  refreshing: boolean;
   allChannels: GroupChannel[];
   currentChannel: GroupChannel;
   channelListQuery: GroupChannelListQueryParamsInternal;
@@ -117,6 +118,7 @@ const ChannelListContext = React.createContext<ChannelListProviderInterface | nu
   className: null,
   initialized: false,
   loading: false,
+  refreshing: false,
   allChannels: [],
   currentChannel: null,
   channelListQuery: {},
