@@ -5,12 +5,6 @@ import type { GroupChannel, GroupChannelCreateParams } from '@sendbird/chat/grou
 import {
   GroupChannelFilter,
   GroupChannelListOrder,
-  QueryType,
-  SuperChannelFilter,
-  PublicChannelFilter,
-  MyMemberStateFilter,
-  HiddenChannelFilter,
-  UnreadChannelFilter,
 } from '@sendbird/chat/groupChannel';
 
 import { noop } from '../../../utils/utils';
@@ -138,27 +132,29 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
       markAsDelivered: (channels) => channels.forEach(scheduler.push),
       collectionCreator: () => {
         const filter = new GroupChannelFilter();
-        filter.includeEmpty = channelListQuery.includeEmpty ?? false;
-        filter.includeFrozen = channelListQuery.includeFrozen ?? false;
-        filter.setUserIdsFilter(
-          channelListQuery.userIdsExactFilter ?? channelListQuery.userIdsIncludeFilter ?? [],
-          channelListQuery.userIdsExactFilter ? false : true,
-          channelListQuery.userIdsIncludeFilterQueryType ?? QueryType.AND,
-        );
-        filter.nicknameContainsFilter = channelListQuery.nicknameContainsFilter ?? '';
-        filter.channelNameContainsFilter = channelListQuery.channelNameContainsFilter ?? '';
-        filter.customTypesFilter = channelListQuery.customTypesFilter ?? [];
-        filter.customTypeStartsWithFilter = channelListQuery.customTypeStartsWithFilter ?? '';
-        filter.channelUrlsFilter = channelListQuery.channelUrlsFilter ?? [];
-        filter.superChannelFilter = channelListQuery.superChannelFilter ?? SuperChannelFilter.ALL;
-        filter.publicChannelFilter = channelListQuery.publicChannelFilter ?? PublicChannelFilter.ALL;
-        filter.myMemberStateFilter = channelListQuery.memberStateFilter ?? MyMemberStateFilter.ALL;
-        filter.hiddenChannelFilter = channelListQuery.hiddenChannelFilter ?? HiddenChannelFilter.ALL;
-        filter.unreadChannelFilter = channelListQuery.unreadChannelFilter ?? UnreadChannelFilter.ALL;
+
+        filter.includeEmpty = channelListQuery.includeEmpty ?? false; // uikit default: false
+        filter.includeFrozen = channelListQuery.includeFrozen ?? filter.includeFrozen;
+        filter.nicknameContainsFilter = channelListQuery.nicknameContainsFilter ?? filter.nicknameContainsFilter;
+        filter.channelNameContainsFilter = channelListQuery.channelNameContainsFilter ?? filter.channelNameContainsFilter;
+        filter.customTypesFilter = channelListQuery.customTypesFilter ?? filter.customTypesFilter;
+        filter.customTypeStartsWithFilter = channelListQuery.customTypeStartsWithFilter ?? filter.customTypeStartsWithFilter;
+        filter.channelUrlsFilter = channelListQuery.channelUrlsFilter ?? filter.channelUrlsFilter;
+        filter.superChannelFilter = channelListQuery.superChannelFilter ?? filter.superChannelFilter;
+        filter.publicChannelFilter = channelListQuery.publicChannelFilter ?? filter.publicChannelFilter;
+        filter.myMemberStateFilter = channelListQuery.memberStateFilter ?? filter.myMemberStateFilter;
+        filter.hiddenChannelFilter = channelListQuery.hiddenChannelFilter ?? filter.hiddenChannelFilter;
+        filter.unreadChannelFilter = channelListQuery.unreadChannelFilter ?? filter.unreadChannelFilter;
+
+        const includeMode = (channelListQuery.userIdsExactFilter && channelListQuery.userIdsExactFilter.length > 0) ?? filter.userIdsFilter.includeMode;
+        const userIds = (includeMode ? channelListQuery.userIdsExactFilter : channelListQuery.userIdsIncludeFilter) ?? filter.userIdsFilter.userIds;
+        const queryType = channelListQuery.userIdsIncludeFilterQueryType ?? filter.userIdsFilter.queryType;
+        filter.setUserIdsFilter(userIds, includeMode, queryType);
+
         return sdk.groupChannel.createGroupChannelCollection({
           filter,
-          limit: channelListQuery.limit ?? 20,
-          order: channelListQuery.order ?? GroupChannelListOrder.LATEST_LAST_MESSAGE,
+          limit: channelListQuery.limit ?? 20, // uikit default: 20
+          order: channelListQuery.order ?? GroupChannelListOrder.LATEST_LAST_MESSAGE, // uikit default: LATEST_LAST_MESSAGE
         });
       },
     },
