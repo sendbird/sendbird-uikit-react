@@ -366,7 +366,7 @@ export const user4 = () => fitPageSize(
 const SBChannelList = ({
   setChannelUrl,
 }) => {
-  const [queries] = useState({ channelListQuery: { customTypesFilter: ['apple'] } });
+  const [query] = useState({ customTypesFilter: ['apple'] });
 
   const setCurrentChannel = (channel) => {
     if (channel) {
@@ -378,7 +378,7 @@ const SBChannelList = ({
     <GroupChannelList
       onChannelSelect={setCurrentChannel}
       onCreateChannel={setCurrentChannel}
-      queries={queries}
+      channelListQuery={query}
       onBeforeCreateChannel={(selectedUserIds) => {
         const params = {
           invitedUserIds: selectedUserIds,
