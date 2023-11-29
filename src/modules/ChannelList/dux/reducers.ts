@@ -296,6 +296,8 @@ export default function channelListReducer(
           channelListQuery: action.payload.channelListQuery,
         };
       })
+      .with({ type: channelListActions.REFRESH_CHANNELS_START }, () => ({ ...state, refreshing: true }))
+      .with({ type: channelListActions.REFRESH_CHANNELS_SUCCESS }, ({ payload }) => ({ ...state, refreshing: false, allChannels: payload.channels }))
       .otherwise(() => state)
   );
 }

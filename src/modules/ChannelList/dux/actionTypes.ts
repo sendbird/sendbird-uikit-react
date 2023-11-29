@@ -1,4 +1,7 @@
-import type { GroupChannel, GroupChannelListQuery } from '@sendbird/chat/groupChannel';
+import type {
+  GroupChannel,
+  GroupChannelListQuery,
+} from '@sendbird/chat/groupChannel';
 import { CreateAction } from '../../../utils/typeHelpers/reducers/createAction';
 
 export const RESET_CHANNEL_LIST = 'RESET_CHANNEL_LIST';
@@ -16,6 +19,9 @@ export const FETCH_CHANNELS_FAILURE = 'FETCH_CHANNELS_FAILURE';
 export const INIT_CHANNELS_START = 'INIT_CHANNELS_START';
 export const INIT_CHANNELS_SUCCESS = 'INIT_CHANNELS_SUCCESS';
 export const INIT_CHANNELS_FAILURE = 'INIT_CHANNELS_FAILURE';
+
+export const REFRESH_CHANNELS_START = 'REFRESH_CHANNELS_START';
+export const REFRESH_CHANNELS_SUCCESS = 'REFRESH_CHANNELS_SUCCESS';
 
 export const INVITE_MEMBERS_SUCESS = 'INVITE_MEMBERS_SUCESS';
 
@@ -70,6 +76,10 @@ type CHANNEL_LIST_PAYLOAD_TYPES = {
     channelListQuery: GroupChannelListQuery;
     currentUserId: string | undefined;
   };
+  [REFRESH_CHANNELS_START]: null;
+  [REFRESH_CHANNELS_SUCCESS]: {
+    channels: GroupChannel[];
+  }
 };
 
 type ChannelURL = string;
