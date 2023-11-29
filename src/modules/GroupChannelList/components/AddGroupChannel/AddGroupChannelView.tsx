@@ -12,6 +12,7 @@ type Props = {
   onChangeCreateChannelVisible: (value: boolean) => void;
   onBeforeCreateChannel?: CreateChannelProviderProps['onBeforeCreateChannel'];
   overrideInviteUser?: CreateChannelProviderProps['overrideInviteUser'];
+  onCreateChannel?: CreateChannelProviderProps['onCreateChannel'];
 };
 
 export const AddGroupChannelView = ({
@@ -19,6 +20,7 @@ export const AddGroupChannelView = ({
   onChangeCreateChannelVisible,
   onBeforeCreateChannel,
   overrideInviteUser,
+  onCreateChannel,
 }: Props) => {
   const { config } = useSendbirdStateContext();
 
@@ -40,7 +42,10 @@ export const AddGroupChannelView = ({
       {createChannelVisible && (
         <CreateChannel
           onCancel={() => onChangeCreateChannelVisible(false)}
-          onCreateChannel={() => onChangeCreateChannelVisible(false)}
+          onCreateChannel={(channel) => {
+            onCreateChannel?.(channel);
+            onChangeCreateChannelVisible(false);
+          }}
           onBeforeCreateChannel={onBeforeCreateChannel}
           overrideInviteUser={overrideInviteUser}
         />

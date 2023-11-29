@@ -36,6 +36,7 @@ const GroupChannelListUI = (props: GroupChannelListUIProps) => {
   } = props;
 
   const {
+    onChannelSelect,
     onThemeChange,
     allowProfileEdit,
     groupChannels,
@@ -50,7 +51,6 @@ const GroupChannelListUI = (props: GroupChannelListUIProps) => {
   const renderListItem = (renderProps: { item: GroupChannel; index: number }) => {
     const { item: channel, index } = renderProps;
 
-    // todo: Refactor and move this inside channel - preview
     const onLeaveChannel: RenderChannelPreviewProps['onLeaveChannel'] = async (
       targetChannel,
       cb,
@@ -65,7 +65,7 @@ const GroupChannelListUI = (props: GroupChannelListUIProps) => {
     const onClick = () => {
       if (isOnline) {
         logger.info('ChannelList: Clicked on channel:', channel);
-        // TODO: onChannelSelect(channel);
+        onChannelSelect(channel);
       }
     };
 

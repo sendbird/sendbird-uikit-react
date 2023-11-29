@@ -2,13 +2,24 @@ import React, { useContext, useState } from 'react';
 
 import type { User } from '@sendbird/chat';
 import type { GroupChannel, GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
-import { useGroupChanelList, useGroupChannelHandler } from '@sendbird/uikit-tools';
+import {
+  GroupChannelFilter,
+  GroupChannelListOrder,
+  QueryType,
+  SuperChannelFilter,
+  PublicChannelFilter,
+  MyMemberStateFilter,
+  HiddenChannelFilter,
+  UnreadChannelFilter,
+} from '@sendbird/chat/groupChannel';
 
 import { noop } from '../../../utils/utils';
 
-import { CHANNEL_TYPE } from '../../CreateChannel/types';
+import type { GroupChannelListQueryParamsInternal } from '../../ChannelList/context/ChannelListProvider';
+import type { CHANNEL_TYPE } from '../../CreateChannel/types';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
-import { UserProfileProvider, UserProfileProviderProps } from '../../../lib/UserProfileContext';
+import { UserProfileProvider, type UserProfileProviderProps } from '../../../lib/UserProfileContext';
+import { useGroupChannelList, useGroupChannelHandler } from '@sendbird/uikit-tools';
 
 type OverrideInviteUserType = {
   users: Array<string>;
@@ -33,15 +44,21 @@ interface GroupChannelListContextType {
 
   // Custom
   // Partial props - because we are doing null check before calling these functions
+  /**
+   * TODO: - channelListQuery
+   * Make a separated Params type for GroupChannelListProps.
+   * Because we don't need to keep the same exact input with ChannelList module.
+   */
+  channelListQuery?: GroupChannelListQueryParamsInternal;
   onThemeChange?(theme: string): void;
   onClickCreateChannel?(params: OverrideInviteUserType): void;
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
   onUpdatedUserProfile?(user: User): void;
 }
 
-export interface GroupChannelListProviderProps extends Partial<GroupChannelListContextType>, UserProfileProviderProps, React.PropsWithChildren {}
+export interface GroupChannelListProviderProps extends Partial<GroupChannelListContextType>, UserProfileProviderProps, React.PropsWithChildren { }
 
-export interface GroupChannelListProviderInterface extends GroupChannelListContextType, ReturnType<typeof useGroupChanelList> {
+export interface GroupChannelListProviderInterface extends GroupChannelListContextType, ReturnType<typeof useGroupChannelList> {
   typingChannelUrls: Array<string>;
 }
 
@@ -88,6 +105,7 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
     isMessageReceiptStatusEnabled = null,
 
     // Custom
+    channelListQuery,
     onThemeChange,
     onChannelSelect = noop,
     onCreateChannel,
@@ -109,9 +127,36 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
   } = config;
   const sdk = sdkStore?.sdk;
 
-  const channelListStore = useGroupChanelList(sdk, {
-    // TODO: Apply the filter props
-  });
+  const channelListStore = useGroupChannelList(
+    sdk,
+    !channelListQuery ? {} : {
+      collectionCreator: () => {
+        const filter = new GroupChannelFilter();
+        filter.includeEmpty = channelListQuery.includeEmpty ?? false;
+        filter.includeFrozen = channelListQuery.includeFrozen ?? false;
+        filter.setUserIdsFilter(
+          channelListQuery.userIdsExactFilter ?? channelListQuery.userIdsIncludeFilter ?? [],
+          channelListQuery.userIdsExactFilter ? false : true,
+          channelListQuery.userIdsIncludeFilterQueryType ?? QueryType.AND,
+        );
+        filter.nicknameContainsFilter = channelListQuery.nicknameContainsFilter ?? '';
+        filter.channelNameContainsFilter = channelListQuery.channelNameContainsFilter ?? '';
+        filter.customTypesFilter = channelListQuery.customTypesFilter ?? [];
+        filter.customTypeStartsWithFilter = channelListQuery.customTypeStartsWithFilter ?? '';
+        filter.channelUrlsFilter = channelListQuery.channelUrlsFilter ?? [];
+        filter.superChannelFilter = channelListQuery.superChannelFilter ?? SuperChannelFilter.ALL;
+        filter.publicChannelFilter = channelListQuery.publicChannelFilter ?? PublicChannelFilter.ALL;
+        filter.myMemberStateFilter = channelListQuery.memberStateFilter ?? MyMemberStateFilter.ALL;
+        filter.hiddenChannelFilter = channelListQuery.hiddenChannelFilter ?? HiddenChannelFilter.ALL;
+        filter.unreadChannelFilter = channelListQuery.unreadChannelFilter ?? UnreadChannelFilter.ALL;
+        return sdk.groupChannel.createGroupChannelCollection({
+          filter,
+          limit: channelListQuery.limit ?? 20,
+          order: channelListQuery.order ?? GroupChannelListOrder.LATEST_LAST_MESSAGE,
+        });
+      },
+    },
+  );
   const {
     refreshing,
     initialized,

@@ -6,6 +6,7 @@ import pkg from '../../../../package.json'
 import App from '../index';
 import Sendbird from '../../../lib/Sendbird';
 import ChannelList from '../../ChannelList';
+import GroupChannelList from '../../GroupChannelList';
 import Channel from '../../Channel';
 import ChannelSettings from '../../ChannelSettings';
 import MessageSearch from '../../MessageSearch';
@@ -362,14 +363,22 @@ export const user4 = () => fitPageSize(
   />
 );
 
-const UseSendbirdChannelList = (props) => {
-  const [queries] = useState({ channelListQuery: { customTypesFilter: ['apple'] } });
-  const { setChannelUrl } = props;
+const SBChannelList = ({
+  setChannelUrl,
+}) => {
+  const [query] = useState({ customTypesFilter: ['apple'] });
+
+  const setCurrentChannel = (channel) => {
+    if (channel) {
+      setChannelUrl(channel.url);
+    }
+  };
 
   return (
-    <ChannelList
-      onChannelSelect={(channel) => channel && setChannelUrl(channel?.url)}
-      queries={queries}
+    <GroupChannelList
+      onChannelSelect={setCurrentChannel}
+      onCreateChannel={setCurrentChannel}
+      channelListQuery={query}
       onBeforeCreateChannel={(selectedUserIds) => {
         const params = {
           invitedUserIds: selectedUserIds,
@@ -381,7 +390,6 @@ const UseSendbirdChannelList = (props) => {
     />
   );
 };
-const SBChannelList = withSendBird(UseSendbirdChannelList);
 const SBChannel = withSendBird((props) => {
   const {
     channelUrl,
@@ -427,8 +435,8 @@ const CustomApp = () => {
   return (
     <Sendbird
       appId={appId}
-      userId={array[4]}
-      nickname={array[4]}
+      userId={array[0]}
+      nickname={array[0]}
       theme="dark"
       showSearchIcon
       allowProfileEdit
