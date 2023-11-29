@@ -4,13 +4,17 @@ import { useGroupChannelListContext } from '../../context/GroupChannelListProvid
 
 export const AddGroupChannel = () => {
   const [createChannelVisible, setCreateChannelVisible] = useState(false);
-  const { onBeforeCreateChannel } = useGroupChannelListContext();
+  const {
+    onCreateChannel,
+    onBeforeCreateChannel,
+  } = useGroupChannelListContext();
 
   return (
     <AddGroupChannelView
       createChannelVisible={createChannelVisible}
       onChangeCreateChannelVisible={setCreateChannelVisible}
       onBeforeCreateChannel={onBeforeCreateChannel}
+      onCreateChannel={onCreateChannel}
     />
   );
 };

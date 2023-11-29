@@ -368,9 +368,16 @@ const SBChannelList = ({
 }) => {
   const [queries] = useState({ channelListQuery: { customTypesFilter: ['apple'] } });
 
+  const setCurrentChannel = (channel) => {
+    if (channel) {
+      setChannelUrl(channel.url);
+    }
+  };
+
   return (
     <GroupChannelList
-      onChannelSelect={(channel) => channel && setChannelUrl(channel?.url)}
+      onChannelSelect={setCurrentChannel}
+      onCreateChannel={setCurrentChannel}
       queries={queries}
       onBeforeCreateChannel={(selectedUserIds) => {
         const params = {
