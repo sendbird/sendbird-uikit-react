@@ -44,6 +44,11 @@ interface GroupChannelListContextType {
 
   // Custom
   // Partial props - because we are doing null check before calling these functions
+  /**
+   * TODO: - channelListQuery
+   * Make a separated Params type for GroupChannelListProps.
+   * Because we don't need to keep the same exact input with ChannelList module.
+   */
   channelListQuery?: GroupChannelListQueryParamsInternal;
   onThemeChange?(theme: string): void;
   onClickCreateChannel?(params: OverrideInviteUserType): void;
