@@ -28,6 +28,7 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import SuggestedReplies from '../SuggestedReplies';
+import { useLazyImageLoader } from './hooks/useLazyImageLoader';
 
 type MessageUIProps = {
   message: EveryMessage;
@@ -124,6 +125,8 @@ const Message = ({
     scrollRef: messageScrollRef,
     setIsScrolled,
   });
+
+  const { isLoaded } = useLazyImageLoader(messageScrollRef);
 
   const mentionNodes = useDirtyGetMentions({ ref: editMessageInputRef }, { logger });
   const ableMention = mentionNodes?.length < maxUserMentionCount;
@@ -379,6 +382,7 @@ const Message = ({
             onReplyInThread={onReplyInThread}
             onQuoteMessageClick={onQuoteMessageClick}
             onMessageHeightChange={handleScroll}
+            isLazyLoaded={isLoaded}
           />
         )
       }
