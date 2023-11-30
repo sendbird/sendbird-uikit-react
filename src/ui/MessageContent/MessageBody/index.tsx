@@ -123,6 +123,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         isReactionEnabled={isReactionEnabledInChannel}
         showFileViewer={showFileViewer}
         style={isMobile ? { width: '100%' } : {}}
+        isLazyLoaded={isLazyLoaded}
       />
     ))
     .otherwise((message) => (
