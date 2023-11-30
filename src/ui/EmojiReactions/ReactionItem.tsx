@@ -26,6 +26,7 @@ type Props = {
   toggleReaction?: (message: SendableMessageType, key: string, byMe: boolean) => void;
   emojisMap: Map<string, Emoji>;
   channel: Nullable<GroupChannel | OpenChannel>;
+  message?: SendableMessageType;
 };
 
 export default function ReactionItem({
@@ -35,11 +36,11 @@ export default function ReactionItem({
   toggleReaction,
   emojisMap,
   channel,
+  message,
 }: Props) {
   const store = useSendbirdStateContext();
   const { isMobile } = useMediaQueryContext();
   const messageStore = useMessageContext();
-  const message = messageStore?.message as UserMessage;
   const { stringSet } = useContext(LocalizationContext);
 
   const userId = store.config.userId;
@@ -49,7 +50,7 @@ export default function ReactionItem({
 
   const handleOnClick = () => {
     setEmojiKey('');
-    toggleReaction?.((message), reaction.key, reactedByMe);
+    toggleReaction?.((message ?? messageStore?.message as UserMessage), reaction.key, reactedByMe);
   };
   const longPress = useLongPress({
     onLongPress: () => {
