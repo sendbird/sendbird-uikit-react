@@ -41,7 +41,6 @@ export default function ReactionItem({
   const store = useSendbirdStateContext();
   const { isMobile } = useMediaQueryContext();
   const messageStore = useMessageContext();
-  const _message = message ?? messageStore?.message as UserMessage;
   const { stringSet } = useContext(LocalizationContext);
 
   const userId = store.config.userId;
@@ -51,7 +50,7 @@ export default function ReactionItem({
 
   const handleOnClick = () => {
     setEmojiKey('');
-    toggleReaction?.((_message), reaction.key, reactedByMe);
+    toggleReaction?.((message ?? messageStore?.message as UserMessage), reaction.key, reactedByMe);
   };
   const longPress = useLongPress({
     onLongPress: () => {
