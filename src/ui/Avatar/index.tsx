@@ -162,7 +162,7 @@ function Avatar(
     width = '56px',
     height = '56px',
     zIndex = 0,
-    left = '0px',
+    left = '',
     onClick,
     customDefaultComponent,
   }: AvatarProps,
