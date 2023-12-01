@@ -18,14 +18,14 @@ import Modal from '../../../../ui/Modal';
 import { ButtonTypes } from '../../../../ui/Button';
 import { EditUserProfileUIView } from './EditUserProfileUIView';
 
-export interface HandleUpdateUserInfoParams {
+interface HandleUpdateUserInfoParams {
   globalContext: SendBirdState;
   formRef: MutableRefObject<any>;
   inputRef: MutableRefObject<any>;
   profileImage: File;
   onEditProfile?: (user: User) => void;
 }
-export const handleUpdateUserInfo = ({
+const handleUpdateUserInfo = ({
   globalContext,
   formRef,
   inputRef,
@@ -50,20 +50,50 @@ export const handleUpdateUserInfo = ({
   });
 };
 
-export const EditUserProfileUI = () => {
-  const editProfileContext = useEditUserProfileContext();
+export interface UseEditUserProfileUIStateParams {
+  onEditProfile: (user: User) => void;
+}
+export const useEditUserProfileUISates = ({
+  onEditProfile,
+}: UseEditUserProfileUIStateParams) => {
   const globalContext = useSendbirdStateContext();
-  const { stringSet } = useContext(LocalizationContext);
-
   const inputRef = useRef(null);
   const formRef = useRef(null);
   const [profileImage, setProfileImage] = useState<File | null>(null);
+  const updateUserInfo = () => {
+    handleUpdateUserInfo({
+      globalContext,
+      formRef,
+      inputRef,
+      profileImage,
+      onEditProfile,
+    });
+  };
 
+  return {
+    formRef,
+    inputRef,
+    updateUserInfo,
+    setProfileImage,
+  };
+};
+
+export const EditUserProfileUI = () => {
+  const editProfileContext = useEditUserProfileContext();
   const {
     onEditProfile,
     onCancel,
     onThemeChange,
   } = editProfileContext;
+
+  const { stringSet } = useContext(LocalizationContext);
+
+  const {
+    formRef,
+    inputRef,
+    updateUserInfo,
+    setProfileImage,
+  } = useEditUserProfileUISates({ onEditProfile });
 
   return (
     <Modal
@@ -72,15 +102,7 @@ export const EditUserProfileUI = () => {
       type={ButtonTypes.PRIMARY}
       onCancel={onCancel}
       isFullScreenOnMobile
-      onSubmit={() => {
-        handleUpdateUserInfo({
-          globalContext,
-          formRef,
-          inputRef,
-          profileImage,
-          onEditProfile,
-        });
-      }}
+      onSubmit={updateUserInfo}
     >
       <EditUserProfileUIView
         formRef={formRef}
