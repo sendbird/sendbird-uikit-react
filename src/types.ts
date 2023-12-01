@@ -1,3 +1,4 @@
+import { MutableRefObject } from 'react';
 import type { User } from '@sendbird/chat';
 import type { Member } from '@sendbird/chat/groupChannel';
 import type {
@@ -34,6 +35,7 @@ export interface RenderUserProfileProps {
   user: User | Member;
   currentUserId: string;
   close(): void;
+  avatarRef: MutableRefObject<any>;
 }
 
 export interface SendBirdProviderConfig {

@@ -39,8 +39,7 @@ export default function MessageProfile(
     <ContextMenu
       menuTrigger={(toggleDropdown: () => void): ReactElement => (
         <Avatar
-          className={`sendbird-message-content__left__avatar ${
-            displayThreadReplies ? 'use-thread-replies' : ''
+          className={`sendbird-message-content__left__avatar ${displayThreadReplies ? 'use-thread-replies' : ''
           }`} // @ts-ignore
           src={
             channel?.members?.find(
@@ -59,26 +58,27 @@ export default function MessageProfile(
         />
       )}
       menuItems={(closeDropdown) => (
-        <MenuItems
-          /**
-           * parentRef: For catching location(x, y) of MenuItems
-           * parentContainRef: For toggling more options(menus & reactions)
-           */
-          parentRef={avatarRef}
-          parentContainRef={avatarRef}
-          closeDropdown={closeDropdown}
-          style={{ paddingTop: '0px', paddingBottom: '0px' }}
-        >
-          {renderUserProfile ? (
-            renderUserProfile({
-              user: message.sender,
-              close: closeDropdown,
-              currentUserId: userId,
-            })
-          ) : (
+        renderUserProfile ? (
+          renderUserProfile({
+            user: message.sender,
+            close: closeDropdown,
+            currentUserId: userId,
+            avatarRef,
+          })
+        ) : (
+          <MenuItems
+            /**
+             * parentRef: For catching location(x, y) of MenuItems
+             * parentContainRef: For toggling more options(menus & reactions)
+            */
+            parentRef={avatarRef}
+            parentContainRef={avatarRef}
+            closeDropdown={closeDropdown}
+            style={{ paddingTop: '0px', paddingBottom: '0px' }}
+          >
             <UserProfile user={message.sender} onSuccess={closeDropdown} />
-          )}
-        </MenuItems>
+          </MenuItems>
+        )
       )}
     />
   );
