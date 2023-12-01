@@ -15,6 +15,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import EditUserProfile from '../../../EditUserProfile';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import { isAboutSame } from '../../../../utils/utils';
+import type { RenderUserProfileProps } from '../../../../types';
 
 interface RenderChannelPreviewProps {
   channel: GroupChannel;
@@ -22,12 +23,6 @@ interface RenderChannelPreviewProps {
     channel: GroupChannel,
     onLeaveChannelCb?: (c: GroupChannel) => void,
   ): void;
-}
-
-interface RenderUserProfileProps {
-  user: Member | User;
-  currentUserId: string;
-  close(): void;
 }
 
 export interface ChannelListUIProps {
