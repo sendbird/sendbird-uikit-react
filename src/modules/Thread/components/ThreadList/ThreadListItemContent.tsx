@@ -151,17 +151,26 @@ export default function ThreadListItemContent({
               />
             )}
             menuItems={(closeDropdown) => (
-              <MenuItems
-                parentRef={avatarRef}
-                parentContainRef={avatarRef}
-                closeDropdown={closeDropdown}
-                style={{ paddingTop: '0px', paddingBottom: '0px' }}
-              >
-                {renderUserProfile
-                  ? renderUserProfile({ user: message?.sender, close: closeDropdown, currentUserId: userId })
-                  : <UserProfile user={message?.sender} onSuccess={closeDropdown} />
-                }
-              </MenuItems>
+              renderUserProfile
+                ? renderUserProfile({
+                  user: message?.sender,
+                  close: closeDropdown,
+                  currentUserId: userId,
+                  avatarRef,
+                })
+                : (
+                  <MenuItems
+                    parentRef={avatarRef}
+                    parentContainRef={avatarRef}
+                    closeDropdown={closeDropdown}
+                    style={{ paddingTop: '0px', paddingBottom: '0px' }}
+                  >
+                    <UserProfile
+                      user={message?.sender}
+                      onSuccess={closeDropdown}
+                    />
+                  </MenuItems>
+                )
             )}
           />
         )}
@@ -236,13 +245,13 @@ export default function ThreadListItemContent({
               isReactionEnabled={isReactionEnabledInChannel}
             />
             ) : isTextMessage(message as UserMessage) && (
-            <TextMessageItemBody
-              className="sendbird-thread-list-item-content__middle__message-item-body"
-              message={message as UserMessage}
-              isByMe={isByMe}
-              isMentionEnabled={isMentionEnabled}
-              isReactionEnabled={isReactionEnabledInChannel}
-            />
+              <TextMessageItemBody
+                className="sendbird-thread-list-item-content__middle__message-item-body"
+                message={message as UserMessage}
+                isByMe={isByMe}
+                isMentionEnabled={isMentionEnabled}
+                isReactionEnabled={isReactionEnabledInChannel}
+              />
             )}
           {isVoiceMessage(message as FileMessage) && (
             <VoiceMessageItemBody

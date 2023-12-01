@@ -233,22 +233,27 @@ export default function ParentMessageInfo({
           />
         )}
         menuItems={(closeDropdown) => (
-          <MenuItems
-            parentRef={avatarRef}
-            parentContainRef={avatarRef}
-            closeDropdown={closeDropdown}
-            style={{ paddingTop: '0px', paddingBottom: '0px' }}
-          >
-            {renderUserProfile
-              ? renderUserProfile({ user: parentMessage?.sender, close: closeDropdown, currentUserId: userId })
-              : (
+          renderUserProfile
+            ? renderUserProfile({
+              user: parentMessage?.sender,
+              close: closeDropdown,
+              currentUserId: userId,
+              avatarRef,
+            })
+            : (
+              <MenuItems
+                parentRef={avatarRef}
+                parentContainRef={avatarRef}
+                closeDropdown={closeDropdown}
+                style={{ paddingTop: '0px', paddingBottom: '0px' }}
+              >
                 <ConnectedUserProfile
                   user={parentMessage?.sender}
                   currentUserId={userId}
                   onSuccess={closeDropdown}
                 />
-              )}
-          </MenuItems>
+              </MenuItems>
+            )
         )}
       />
       <div className="sendbird-parent-message-info__content">
