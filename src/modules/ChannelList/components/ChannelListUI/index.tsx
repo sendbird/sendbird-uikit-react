@@ -1,7 +1,7 @@
 import './channel-list-ui.scss';
 
 import React, { useState } from 'react';
-import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { User } from '@sendbird/chat';
 
 import ChannelListHeader from '../ChannelListHeader';
