@@ -396,7 +396,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   );
   const resendMessage = useResendMessageCallback(
     { currentGroupChannel, messagesDispatcher },
-    { logger },
+    { logger, pubSub },
   );
   const [messageInputRef, sendMessage] = useSendMessageCallback(
     {

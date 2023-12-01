@@ -5,6 +5,8 @@ import { ChannelActionTypes } from '../dux/actionTypes';
 import { SendableMessageType } from '../../../../utils';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { LoggerInterface } from '../../../../lib/Logger';
+import { UploadableFileInfo } from '@sendbird/chat/message';
+import topics, { PublishingModuleType, SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 
 type UseResendMessageCallbackOptions = {
   currentGroupChannel: null | GroupChannel;
@@ -12,11 +14,12 @@ type UseResendMessageCallbackOptions = {
 };
 type UseResendMessageCallbackParams = {
   logger: LoggerInterface;
+  pubSub: SBUGlobalPubSub;
 };
 
 function useResendMessageCallback(
   { currentGroupChannel, messagesDispatcher }: UseResendMessageCallbackOptions,
-  { logger }: UseResendMessageCallbackParams,
+  { logger, pubSub }: UseResendMessageCallbackParams,
 ) {
   return useCallback(
     (failedMessage: SendableMessageType): void => {
@@ -75,12 +78,30 @@ function useResendMessageCallback(
           currentGroupChannel
             .resendMessage(failedMessage)
             .onPending((message) => {
+              logger.info('Channel: Resending multiple files message start!', message);
               messagesDispatcher({
                 type: messageActionTypes.RESEND_MESSAGE_START,
                 payload: message,
               });
             })
-            // TODO: Handle on file info upload event.
+            .onFileUploaded((requestId, index, uploadableFileInfo: UploadableFileInfo, error) => {
+              logger.info('Channel: Resending multiple files message file uploaded!', {
+                requestId,
+                index,
+                error,
+                uploadableFileInfo,
+              });
+              pubSub.publish(topics.ON_FILE_INFO_UPLOADED, {
+                response: {
+                  channelUrl: currentGroupChannel.url,
+                  requestId,
+                  index,
+                  uploadableFileInfo,
+                  error,
+                },
+                publishingModules: [PublishingModuleType.CHANNEL],
+              });
+            })
             .onSucceeded((message) => {
               logger.info('Channel: Resending multiple files message success!', message);
               messagesDispatcher({

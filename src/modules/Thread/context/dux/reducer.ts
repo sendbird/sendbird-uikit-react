@@ -347,8 +347,14 @@ export default function reducer(
       };
     }
     case actionTypes.RESEND_MESSAGE_START: {
+      const { message } = action.payload;
       return {
         ...state,
+        localThreadMessages: state.localThreadMessages.map((m) => (
+          compareIds((m as UserMessage)?.reqId, message?.reqId)
+            ? message
+            : m
+        )),
       };
     }
     case actionTypes.ON_FILE_INFO_UPLOADED: {
