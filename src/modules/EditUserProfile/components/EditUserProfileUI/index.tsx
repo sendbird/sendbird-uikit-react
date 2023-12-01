@@ -74,6 +74,7 @@ export const useEditUserProfileUISates = ({
     formRef,
     inputRef,
     updateUserInfo,
+    profileImage,
     setProfileImage,
   };
 };
