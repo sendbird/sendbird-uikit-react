@@ -5,12 +5,12 @@
   position: relative;
   box-sizing: border-box;
   height: 40px;
+  padding-left: 12px;
 
   &__avatar {
     cursor: pointer;
     position: absolute;
     top: 10px;
-    left: 12px;
   }
 
   .sendbird-muted-avatar {

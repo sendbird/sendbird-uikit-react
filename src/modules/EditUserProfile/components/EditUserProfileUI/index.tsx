@@ -1,47 +1,70 @@
-import './edit-user-profile.scss';
-
 import React, {
-  ReactElement,
+  type ReactElement,
+  type MutableRefObject,
   useRef,
   useState,
   useContext,
 } from 'react';
+
+import { User } from '@sendbird/chat';
+import './edit-user-profile.scss';
+
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useEditUserProfileContext } from '../../context/EditUserProfileProvider';
+import { LocalizationContext } from '../../../../lib/LocalizationContext';
+import { SendBirdState } from '../../../../lib/types';
+import { USER_ACTIONS } from '../../../../lib/dux/user/actionTypes';
 
 import Modal from '../../../../ui/Modal';
-import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-
-import Input, { InputLabel } from '../../../../ui/Input';
-import Avatar from '../../../../ui/Avatar';
-import Icon, { IconTypes } from '../../../../ui/Icon';
 import { ButtonTypes } from '../../../../ui/Button';
-import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
-import TextButton from '../../../../ui/TextButton';
-import { noop } from '../../../../utils/utils';
-import { USER_ACTIONS } from '../../../../lib/dux/user/actionTypes';
+import { EditUserProfileUIView } from './EditUserProfileUIView';
+
+export interface HandleUpdateUserInfoParams {
+  globalContext: SendBirdState;
+  formRef: MutableRefObject<any>;
+  inputRef: MutableRefObject<any>;
+  profileImage: File;
+  onEditProfile?: (user: User) => void;
+}
+export const handleUpdateUserInfo = ({
+  globalContext,
+  formRef,
+  inputRef,
+  profileImage,
+  onEditProfile,
+}: HandleUpdateUserInfoParams) => {
+  const { stores, dispatchers } = globalContext;
+  const sdk = stores.sdkStore.sdk;
+  const user = stores.userStore.user;
+  const { userDispatcher } = dispatchers;
+
+  if (user?.nickname !== '' && !inputRef.current.value) {
+    formRef.current.reportValidity?.(); // might not work in explorer
+    return;
+  }
+  sdk?.updateCurrentUserInfo({
+    nickname: inputRef?.current?.value,
+    profileImage: profileImage,
+  }).then((updatedUser) => {
+    userDispatcher({ type: USER_ACTIONS.UPDATE_USER_INFO, payload: updatedUser });
+    onEditProfile?.(updatedUser);
+  });
+};
 
 export default function EditUserProfileUI(): ReactElement {
   const editProfileProps = useEditUserProfileContext();
-  const store = useSendbirdStateContext();
-  const hiddenInputRef = useRef(null);
+  const globalContext = useSendbirdStateContext();
+  const { stringSet } = useContext(LocalizationContext);
+
   const inputRef = useRef(null);
   const formRef = useRef(null);
-  const { stringSet } = useContext(LocalizationContext);
-  const [currentImg, setCurrentImg] = useState(null);
-  const [newFile, setNewFile] = useState(null);
+  const [profileImage, setProfileImage] = useState<File | null>(null);
 
   const {
     onEditProfile,
     onCancel,
     onThemeChange,
   } = editProfileProps;
-
-  const theme = store?.config?.theme || 'light';
-  const changeTheme = store?.config?.setCurrentTheme || noop;
-  const user = store?.stores?.userStore?.user;
-  const sdk = store?.stores?.sdkStore?.sdk;
-  const userDispatcher = store?.dispatchers?.userDispatcher;
 
   return (
     <Modal
@@ -51,122 +74,23 @@ export default function EditUserProfileUI(): ReactElement {
       onCancel={onCancel}
       isFullScreenOnMobile
       onSubmit={() => {
-        if (user?.nickname !== '' && !inputRef.current.value) {
-          if (formRef.current.reportValidity) { // might not work in explorer
-            formRef.current.reportValidity();
-          }
-          return;
-        }
-        sdk?.updateCurrentUserInfo({
-          nickname: inputRef?.current?.value,
-          profileImage: newFile,
-        }).then((updatedUser) => {
-          userDispatcher({ type: USER_ACTIONS.UPDATE_USER_INFO, payload: updatedUser });
-          if (onEditProfile && typeof onEditProfile === 'function') {
-            onEditProfile(updatedUser);
-          }
+        handleUpdateUserInfo({
+          globalContext,
+          formRef,
+          inputRef,
+          profileImage,
+          onEditProfile,
         });
       }}
     >
-      <form
-        className="sendbird-edit-user-profile"
-        ref={formRef}
-        onSubmit={(e) => { e.preventDefault(); }}
-      >
-        <section className="sendbird-edit-user-profile__img">
-          <InputLabel>
-            {stringSet.EDIT_PROFILE__IMAGE_LABEL}
-          </InputLabel>
-          <div className="sendbird-edit-user-profile__img__avatar">
-            <Avatar
-              width="80px"
-              height="80px"
-              src={currentImg || user?.profileUrl}
-            />
-          </div>
-          <input
-            ref={hiddenInputRef}
-            type="file"
-            accept="image/gif, image/jpeg, image/png"
-            style={{ display: 'none' }}
-            onChange={(e) => {
-              setCurrentImg(URL.createObjectURL(e.target.files[0]));
-              setNewFile(e.target.files[0]);
-              hiddenInputRef.current.value = '';
-            }}
-          />
-          <TextButton
-            className="sendbird-edit-user-profile__img__avatar-button"
-            disableUnderline
-            onClick={() => hiddenInputRef.current.click()}
-          >
-            <Label type={LabelTypography.BUTTON_1} color={LabelColors.PRIMARY}>
-              {stringSet.EDIT_PROFILE__IMAGE_UPLOAD}
-            </Label>
-          </TextButton>
-        </section>
-        <section className="sendbird-edit-user-profile__name">
-          <InputLabel>
-            {stringSet.EDIT_PROFILE__NICKNAME_LABEL}
-          </InputLabel>
-          <Input
-            required={user?.nickname !== ''}
-            name="sendbird-edit-user-profile__name__input"
-            ref={inputRef}
-            value={user?.nickname}
-            placeHolder={stringSet.EDIT_PROFILE__NICKNAME_PLACEHOLDER}
-          />
-        </section>
-        <section className="sendbird-edit-user-profile__userid">
-          <InputLabel>
-            {/*  userID */}
-            {stringSet.EDIT_PROFILE__USERID_LABEL}
-          </InputLabel>
-          <Input
-            disabled
-            name="sendbird-edit-user-profile__userid__input"
-            value={user?.userId}
-          />
-        </section>
-        <section className="sendbird-edit-user-profile__theme">
-          <InputLabel>
-            {stringSet.EDIT_PROFILE__THEME_LABEL}
-          </InputLabel>
-          <div className="sendbird-edit-user-profile__theme__theme-icon">
-            {
-              theme === 'dark'
-                ? (
-                  <Icon
-                    onClick={() => {
-                      changeTheme('light');
-                      onThemeChange?.('light');
-                      // if (onThemeChange && typeof onThemeChange === 'function') {
-                      //   onThemeChange('light');
-                      // }
-                    }}
-                    type={IconTypes.TOGGLE_ON}
-                    width={44}
-                    height={24}
-                  />
-                )
-                : (
-                  <Icon
-                    onClick={() => {
-                      changeTheme('dark');
-                      onThemeChange?.('dark');
-                      // if (onThemeChange && typeof onThemeChange === 'function') {
-                      //   onThemeChange('dark');
-                      // }
-                    }}
-                    type={IconTypes.TOGGLE_OFF}
-                    width={44}
-                    height={24}
-                  />
-                )
-            }
-          </div>
-        </section>
-      </form>
+      <EditUserProfileUIView
+        formRef={formRef}
+        inputRef={inputRef}
+        setProfileImage={setProfileImage}
+        onThemeChange={onThemeChange}
+      />
     </Modal>
   );
 }
+
+export { EditUserProfileUIView };
