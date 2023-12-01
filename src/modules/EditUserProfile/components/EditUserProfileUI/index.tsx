@@ -90,7 +90,7 @@ export const EditUserProfileUI = () => {
       />
     </Modal>
   );
-}
+};
 
 export { EditUserProfileUIView };
 export default EditUserProfileUI;

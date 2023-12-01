@@ -1,4 +1,4 @@
-import React, { useState, useRef, type MutableRefObject, type Dispatch } from 'react'
+import React, { useState, useRef, type MutableRefObject, type Dispatch } from 'react';
 
 import Input, { InputLabel } from '../../../../ui/Input';
 import { useLocalization } from '../../../../lib/LocalizationContext';
@@ -132,4 +132,4 @@ export const EditUserProfileUIView = ({
       </section>
     </form>
   );
-}
+};
