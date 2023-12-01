@@ -1,5 +1,4 @@
 import React, {
-  type ReactElement,
   type MutableRefObject,
   useRef,
   useState,
@@ -51,8 +50,8 @@ export const handleUpdateUserInfo = ({
   });
 };
 
-export default function EditUserProfileUI(): ReactElement {
-  const editProfileProps = useEditUserProfileContext();
+export const EditUserProfileUI = () => {
+  const editProfileContext = useEditUserProfileContext();
   const globalContext = useSendbirdStateContext();
   const { stringSet } = useContext(LocalizationContext);
 
@@ -64,7 +63,7 @@ export default function EditUserProfileUI(): ReactElement {
     onEditProfile,
     onCancel,
     onThemeChange,
-  } = editProfileProps;
+  } = editProfileContext;
 
   return (
     <Modal
@@ -94,3 +93,4 @@ export default function EditUserProfileUI(): ReactElement {
 }
 
 export { EditUserProfileUIView };
+export default EditUserProfileUI;
