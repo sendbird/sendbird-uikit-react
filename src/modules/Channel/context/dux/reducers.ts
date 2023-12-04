@@ -324,7 +324,7 @@ export default function channelReducer(
     .with({ type: channelActions.RESEND_MESSAGE_START }, (action) => {
       return {
         ...state,
-        allMessages: state.allMessages.map((m) => compareIds(hasReqId(m) && m.reqId, action.payload.reqId)
+        localMessages: state.localMessages.map((m) => compareIds(hasReqId(m) && m.reqId, action.payload.reqId)
           ? action.payload
           : m,
         ),

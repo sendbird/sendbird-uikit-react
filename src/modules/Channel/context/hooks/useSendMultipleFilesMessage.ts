@@ -83,10 +83,6 @@ export const useSendMultipleFilesMessage = ({
       logger.info('Channel: Start sending MFM', { messageParams });
       try {
         currentChannel.sendMultipleFilesMessage(messageParams)
-          /**
-           * We don't operate the onFileUploaded event for now
-           * until we will add UI/UX for it
-           */
           .onFileUploaded((requestId, index, uploadableFileInfo: UploadableFileInfo, error) => {
             logger.info('Channel: onFileUploaded during sending MFM', {
               requestId,
