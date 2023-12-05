@@ -70,31 +70,30 @@ const UserListItem = ({
           </>
         )}
         menuItems={(closeDropdown) => (
-          <MenuItems
-            openLeft
-            parentRef={avatarRef}
-            // for catching location(x, y) of MenuItems
-            parentContainRef={avatarRef}
-            // for toggling more options(menus & reactions)
-            closeDropdown={closeDropdown}
-            style={{ paddingTop: '0px', paddingBottom: '0px' }}
-          >
-            {
-              renderUserProfile
-                ? renderUserProfile({
-                  user,
-                  currentUserId: currentUser,
-                  close: closeDropdown,
-                })
-                : (
-                  <UserProfile
-                    user={user}
-                    currentUserId={currentUser}
-                    onSuccess={closeDropdown}
-                  />
-                )
-            }
-          </MenuItems>
+          renderUserProfile
+            ? renderUserProfile({
+              user,
+              currentUserId: currentUser,
+              close: closeDropdown,
+              avatarRef,
+            })
+            : (
+              <MenuItems
+                openLeft
+                parentRef={avatarRef}
+                // for catching location(x, y) of MenuItems
+                parentContainRef={avatarRef}
+                // for toggling more options(menus & reactions)
+                closeDropdown={closeDropdown}
+                style={{ paddingTop: '0px', paddingBottom: '0px' }}
+              >
+                <UserProfile
+                  user={user}
+                  currentUserId={currentUser}
+                  onSuccess={closeDropdown}
+                />
+              </MenuItems>
+            )
         )}
       />
       {/* {

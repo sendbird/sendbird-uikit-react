@@ -101,30 +101,29 @@ export default function OpenchannelFileMessage({
                   />
                 )}
                 menuItems={(closeDropdown) => (
-                  <MenuItems
-                    parentRef={avatarRef}
-                    parentContainRef={avatarRef}
-                    closeDropdown={closeDropdown}
-                    style={{ paddingTop: '0px', paddingBottom: '0px' }}
-                  >
-                    {
-                      renderUserProfile
-                        ? (
-                          renderUserProfile({
-                            user: sender,
-                            close: closeDropdown,
-                            currentUserId: userId,
-                          })
-                        )
-                        : (
-                          <UserProfile
-                            user={sender}
-                            onSuccess={closeDropdown}
-                            disableMessaging
-                          />
-                        )
-                    }
-                  </MenuItems>
+                  renderUserProfile
+                    ? (
+                      renderUserProfile({
+                        user: sender,
+                        close: closeDropdown,
+                        currentUserId: userId,
+                        avatarRef,
+                      })
+                    )
+                    : (
+                      <MenuItems
+                        parentRef={avatarRef}
+                        parentContainRef={avatarRef}
+                        closeDropdown={closeDropdown}
+                        style={{ paddingTop: '0px', paddingBottom: '0px' }}
+                      >
+                        <UserProfile
+                          user={sender}
+                          onSuccess={closeDropdown}
+                          disableMessaging
+                        />
+                      </MenuItems>
+                    )
                 )}
               />
             )

@@ -1,7 +1,7 @@
 import './channel-list-ui.scss';
 
 import React, { useState } from 'react';
-import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { User } from '@sendbird/chat';
 
 import ChannelListHeader from '../ChannelListHeader';
@@ -15,6 +15,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import EditUserProfile from '../../../EditUserProfile';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import { isAboutSame } from '../../../../utils/utils';
+import type { RenderUserProfileProps } from '../../../../types';
 
 interface RenderChannelPreviewProps {
   channel: GroupChannel;
@@ -22,12 +23,6 @@ interface RenderChannelPreviewProps {
     channel: GroupChannel,
     onLeaveChannelCb?: (c: GroupChannel) => void,
   ): void;
-}
-
-interface RenderUserProfileProps {
-  user: Member | User;
-  currentUserId: string;
-  close(): void;
 }
 
 export interface ChannelListUIProps {
