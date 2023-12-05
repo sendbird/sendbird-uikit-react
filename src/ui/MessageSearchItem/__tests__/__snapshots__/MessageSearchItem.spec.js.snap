@@ -11,7 +11,7 @@ exports[`ui/MessageSearchItem should do a snapshot test of the MessageSearchItem
       <div
         class="sendbird-message-search-item__left__sender-avatar sendbird-avatar"
         role="button"
-        style="height: 56px; width: 56px; z-index: 0; left: 0px;"
+        style="height: 56px; width: 56px; z-index: 0;"
         tabindex="0"
       >
         <div
