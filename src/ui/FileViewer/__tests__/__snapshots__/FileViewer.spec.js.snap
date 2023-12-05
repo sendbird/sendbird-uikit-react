@@ -18,7 +18,7 @@ exports[`ui/FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
           <div
             class=" sendbird-avatar"
             role="button"
-            style="height: 32px; width: 32px; z-index: 0; left: 0px;"
+            style="height: 32px; width: 32px; z-index: 0;"
             tabindex="0"
           >
             <div
