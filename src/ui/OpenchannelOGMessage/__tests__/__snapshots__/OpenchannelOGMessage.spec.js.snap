@@ -18,7 +18,7 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
           <div
             class="sendbird-openchannel-og-message__top__left__avatar sendbird-avatar"
             role="button"
-            style="height: 28px; width: 28px; z-index: 0;"
+            style="height: 28px; width: 28px; z-index: 0; left: 0px;"
             tabindex="0"
           >
             <div
