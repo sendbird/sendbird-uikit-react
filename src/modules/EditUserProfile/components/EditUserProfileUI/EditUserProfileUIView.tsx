@@ -104,9 +104,6 @@ export const EditUserProfileUIView = ({
                   onClick={() => {
                     setCurrentTheme('light');
                     onThemeChange?.('light');
-                    // if (onThemeChange && typeof onThemeChange === 'function') {
-                    //   onThemeChange('light');
-                    // }
                   }}
                   type={IconTypes.TOGGLE_ON}
                   width={44}
@@ -118,9 +115,6 @@ export const EditUserProfileUIView = ({
                   onClick={() => {
                     setCurrentTheme('dark');
                     onThemeChange?.('dark');
-                    // if (onThemeChange && typeof onThemeChange === 'function') {
-                    //   onThemeChange('dark');
-                    // }
                   }}
                   type={IconTypes.TOGGLE_OFF}
                   width={44}
