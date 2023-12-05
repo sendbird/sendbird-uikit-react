@@ -196,12 +196,13 @@ function useHandleChannelEvents({
             });
           }
         },
-        onUserBanned: (channel, user) => {
-          if (compareIds(channel?.url, channelUrl) && user?.userId === sdk?.currentUser?.userId) {
+        onUserBanned: (channel: GroupChannel, user) => {
+          if (compareIds(channel?.url, channelUrl)) {
             logger.info('Channel | useHandleChannelEvents: onUserBanned', { channel, user });
+            const isByMe = user?.userId === sdk?.currentUser?.userId;
             messagesDispatcher({
               type: messageActions.SET_CURRENT_CHANNEL,
-              payload: null,
+              payload: isByMe ? null : channel,
             });
           }
         },
@@ -217,12 +218,11 @@ function useHandleChannelEvents({
         onUserLeft: (channel, user) => {
           if (compareIds(channel?.url, channelUrl)) {
             logger.info('Channel | useHandleChannelEvents: onUserLeft', { channel, user });
-            if (user?.userId === currentUserId) {
-              messagesDispatcher({
-                type: messageActions.SET_CURRENT_CHANNEL,
-                payload: null,
-              });
-            }
+            const isByMe = user?.userId === sdk?.currentUser?.userId;
+            messagesDispatcher({
+              type: messageActions.SET_CURRENT_CHANNEL,
+              payload: isByMe ? null : channel,
+            });
           }
         },
         onTypingStatusUpdated: (channel) => {
