@@ -130,8 +130,8 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
   const channelListStore = useGroupChannelList(
     sdk,
     {
-      markAsDelivered: (channels) => channels.forEach(scheduler.push),
       collectionCreator: getCollectionCreator(sdk, channelListQuery),
+      markAsDelivered: (channels) => channels.forEach(scheduler.push),
       onChannelsDeleted: (channelUrls) => {
         channelUrls.forEach((url) => {
           if (url === selectedChannelUrl) onChannelSelect(null);
