@@ -93,7 +93,7 @@ export default function useResendMessageCallback({
                 publishingModules: [PublishingModuleType.THREAD],
               });
             })
-            .onFailed((error, message) => {
+            .onFailed((error) => {
               logger.warning('Thread | useResendMessageCallback: Resending file message failed.', error);
               failedMessage.sendingStatus = SendingStatus.FAILED;
               threadDispatcher({
