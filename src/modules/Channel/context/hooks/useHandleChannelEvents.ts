@@ -38,7 +38,6 @@ const DELIVERY_RECEIPT = 'delivery_receipt';
 
 function useHandleChannelEvents({
   sdkInit,
-  currentUserId,
   currentGroupChannel,
   disableMarkAsRead,
 }: DynamicParams, {
