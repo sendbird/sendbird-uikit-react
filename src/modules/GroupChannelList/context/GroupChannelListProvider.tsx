@@ -226,9 +226,9 @@ function getCollectionCreator(sdk: SdkStore['sdk'], channelListQuery?: GroupChan
     filter.hiddenChannelFilter = channelListQuery.hiddenChannelFilter ?? filter.hiddenChannelFilter;
     filter.unreadChannelFilter = channelListQuery.unreadChannelFilter ?? filter.unreadChannelFilter;
 
-    if (typeof channelListQuery.userIdsExactFilter !== 'undefined') {
+    if (Array.isArray(channelListQuery.userIdsExactFilter)) {
       filter.setUserIdsFilter(channelListQuery.userIdsExactFilter, false);
-    } else if (typeof channelListQuery.userIdsIncludeFilter !== 'undefined') {
+    } else if (Array.isArray(channelListQuery.userIdsIncludeFilter)) {
       filter.setUserIdsFilter(channelListQuery.userIdsIncludeFilter, true, channelListQuery.userIdsIncludeFilterQueryType);
     }
 
