@@ -2,11 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 
 import type { User } from '@sendbird/chat';
 import type { GroupChannel, GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
-import {
-  GroupChannelFilter,
-  GroupChannelListOrder,
-} from '@sendbird/chat/groupChannel';
-import { useGroupChannelList, useGroupChannelHandler } from '@sendbird/uikit-tools';
+import { GroupChannelFilter } from '@sendbird/chat/groupChannel';
+import { useGroupChannelList, useGroupChannelHandler, sbuConstants } from '@sendbird/uikit-tools';
 
 import type { GroupChannelListQueryParamsInternal } from '../../ChannelList/context/ChannelListProvider';
 import type { CHANNEL_TYPE } from '../../CreateChannel/types';
@@ -213,7 +210,7 @@ function getCollectionCreator(sdk: SdkStore['sdk'], channelListQuery?: GroupChan
   return () => {
     const filter = new GroupChannelFilter();
 
-    filter.includeEmpty = channelListQuery.includeEmpty ?? false; // uikit default: false
+    filter.includeEmpty = channelListQuery.includeEmpty ?? sbuConstants.collection.groupChannel.defaultIncludeEmpty;
     filter.includeFrozen = channelListQuery.includeFrozen ?? filter.includeFrozen;
     filter.nicknameContainsFilter = channelListQuery.nicknameContainsFilter ?? filter.nicknameContainsFilter;
     filter.channelNameContainsFilter = channelListQuery.channelNameContainsFilter ?? filter.channelNameContainsFilter;
@@ -234,8 +231,8 @@ function getCollectionCreator(sdk: SdkStore['sdk'], channelListQuery?: GroupChan
 
     return sdk.groupChannel.createGroupChannelCollection({
       filter,
-      limit: channelListQuery.limit ?? 20, // uikit default: 20
-      order: channelListQuery.order ?? GroupChannelListOrder.LATEST_LAST_MESSAGE, // uikit default: LATEST_LAST_MESSAGE
+      limit: channelListQuery.limit ?? sbuConstants.collection.groupChannel.defaultLimit,
+      order: channelListQuery.order ?? sbuConstants.collection.groupChannel.defaultOrder,
     });
   };
 }
