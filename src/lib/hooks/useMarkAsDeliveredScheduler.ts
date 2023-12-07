@@ -26,9 +26,9 @@ export function useMarkAsDeliveredScheduler({
 }: StaticParams): MarkAsDeliveredSchedulerType {
   const markAsDeliveredScheduler = useMemo(() => schedulerFactory<GroupChannel>({
     logger,
-    cb: (channel) => {
+    cb: async (channel) => {
       try {
-        channel.markAsDelivered();
+        await channel.markAsDelivered();
       } catch (error) {
         logger.warning('Channel: Mark as delivered failed', { channel, error });
       }

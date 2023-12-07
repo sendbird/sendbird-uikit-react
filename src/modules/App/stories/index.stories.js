@@ -363,19 +363,16 @@ export const user4 = () => fitPageSize(
   />
 );
 
-const SBChannelList = ({
-  setChannelUrl,
-}) => {
+const SBChannelList = ({ channelUrl, setChannelUrl }) => {
   const [query] = useState({ customTypesFilter: ['apple'] });
 
   const setCurrentChannel = (channel) => {
-    if (channel) {
-      setChannelUrl(channel.url);
-    }
+    setChannelUrl(channel?.url);
   };
 
   return (
     <GroupChannelList
+      selectedChannelUrl={channelUrl}
       onChannelSelect={setCurrentChannel}
       onCreateChannel={setCurrentChannel}
       channelListQuery={query}
@@ -429,7 +426,7 @@ const SBChannel = withSendBird((props) => {
   );
 });
 const CustomApp = () => {
-  const [channelUrl, setChannelUrl] = useState('');
+  const [channelUrl, setChannelUrl] = useState();
   const [channelSettings, setChannelSettings] = useState(false);
   const [channelSearch, setChannelSearch] = useState(false);
   return (
@@ -445,7 +442,7 @@ const CustomApp = () => {
       breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
     >
       <div style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'row' }}>
-        <SBChannelList setChannelUrl={setChannelUrl} />
+        <SBChannelList channelUrl={channelUrl} setChannelUrl={setChannelUrl} />
         <div style={{ height: '100%', width: '100%', display: 'inline-flex', flexDirection: 'row' }}>
           <div style={{ width: '100%' }}>
             <SBChannel
