@@ -424,7 +424,7 @@ export const isMessageSentByMe = (
   !!(userId && message?.sender?.userId && userId === message.sender.userId)
 );
 
-const URL_REG = /^((http|https):\/\/)?([a-z\d]+\.)+[a-z]{2,6}(\:[0-9]{1,5})?(\/[-a-zA-Z\d%_.~+&=]*)*(\?[;&a-zA-Z\d%_.~+=-]*)?(\#[-a-zA-Z\d_]*)?$/;
+const URL_REG = /^((http|https):\/\/)?([a-z\d]+\.)+[a-z]{2,6}(\:[0-9]{1,5})?(\/[-a-zA-Z\d%_.~+&=]*)*(\?[;&a-zA-Z\d%_.~+=-]*)?(#\S*)?$/;
 export const isUrl = (text: string): boolean => URL_REG.test(text);
 
 const MENTION_TAG_REG = /\@\{.*?\}/i;
