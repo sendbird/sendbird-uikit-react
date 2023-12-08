@@ -69,7 +69,7 @@ const ImageRenderer = ({
   isUploaded = true,
 }: ImageRendererProps): ReactElement => {
   const ref = useRef(null);
-  const { isLoaded } = useLazyImageLoader(ref);
+  const isLoaded = useLazyImageLoader(ref);
   const internalUrl = isLoaded ? url : null;
 
   const [showDefaultComponent, setShowDefaultComponent] = useState(false);
