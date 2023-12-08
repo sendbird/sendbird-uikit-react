@@ -39,7 +39,7 @@ export const isFineResend = ({ message, status, userId }: isFineResendParams): b
   return checkIsByMe(message, userId)
     && checkIsFailed(status)
     // @ts-ignore
-    && message?.isResendable();
+    && message?.isResendable;
 };
 
 interface isFineEditParams {

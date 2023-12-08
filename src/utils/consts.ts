@@ -1,3 +1,4 @@
+export const ONE_MiB = 1024 * 1024;
 export const SCROLL_BUFFER = 10;
 
 // voice message record

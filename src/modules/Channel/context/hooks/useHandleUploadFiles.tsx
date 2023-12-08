@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 
 import { Logger } from '../../../../lib/SendbirdState';
-import { SendMFMFunctionType } from '../../context/hooks/useSendMultipleFilesMessage';
+import { SendMFMFunctionType } from './useSendMultipleFilesMessage';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { SendableMessageType, isImage } from '../../../../utils';
 // TODO: get SendFileMessageFunctionType from Channel
@@ -12,6 +12,7 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import { ModalFooter } from '../../../../ui/Modal';
 import { FileMessage, MultipleFilesMessage } from '@sendbird/chat/message';
 import { compressImages } from '../../../../utils/compressImages';
+import { ONE_MiB } from '../../../../utils/consts';
 
 /**
  * The handleUploadFiles is a function sending a FileMessage and MultipleFilesMessage
@@ -70,11 +71,13 @@ export const useHandleUploadFiles = ({
       });
       return;
     }
-    // Validate file sizes
+
+    /**
+     * Validate file sizes
+     * The default value of uikitUploadSizeLimit is 25MiB
+     */
     if (files.some((file: File) => file.size > uikitUploadSizeLimit)) {
-      // The default value of uikitUploadSizeLimit is 26MB
       logger.info(`Channel|useHandleUploadFiles: Cannot upload file size exceeding ${uikitUploadSizeLimit}`);
-      const ONE_MiB = 1024 * 1024;
       openModal({
         modalProps: {
           titleText: stringSet.FILE_UPLOAD_NOTIFICATION__SIZE_LIMIT.replace('%d', `${Math.floor(uikitUploadSizeLimit / ONE_MiB)}`),

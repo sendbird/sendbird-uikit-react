@@ -60,7 +60,7 @@ export default {
   Channel: 'src/modules/Channel/index.tsx',
   'Channel/context': 'src/modules/Channel/context/ChannelProvider.tsx',
   'Channel/hooks/useInitialMessagesFetch': 'src/modules/Channel/context/hooks/useInitialMessagesFetch.ts',
-  'Channel/hooks/useHandleUploadFiles': 'src/modules/Channel/components/MessageInput/useHandleUploadFiles.tsx',
+  'Channel/hooks/useHandleUploadFiles': 'src/modules/Channel/context/hooks/useHandleUploadFiles.tsx',
   'Channel/utils/getMessagePartsInfo': 'src/modules/Channel/components/MessageList/getMessagePartsInfo.ts',
   'Channel/utils/compareMessagesForGrouping': 'src/modules/Channel/context/compareMessagesForGrouping.ts',
   'Channel/components/ChannelHeader': 'src/modules/Channel/components/ChannelHeader/index.tsx',
