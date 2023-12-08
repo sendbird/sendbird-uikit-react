@@ -25,11 +25,12 @@ exports[`ui/OGMessageItemBody should do a snapshot test of the OGMessageItemBody
       >
         <div
           class="sendbird-image-renderer__image"
-          style="width: 100%; min-width: min(400px, 100%); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(null);"
+          style="width: 100%; min-width: min(400px, 100%); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url();"
         />
         <img
           alt=""
           class="sendbird-image-renderer__hidden-image-loader"
+          src=""
         />
       </div>
     </div>
