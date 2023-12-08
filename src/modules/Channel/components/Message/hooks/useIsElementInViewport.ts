@@ -16,5 +16,5 @@ export const useIsElementInViewport = (elementRef: React.MutableRefObject<any>) 
     return () => observer.disconnect();
   }, [elementRef]);
 
-  return { elementRef, isVisible };
+  return { isVisible };
 };

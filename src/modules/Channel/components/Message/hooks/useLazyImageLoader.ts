@@ -13,5 +13,5 @@ export const useLazyImageLoader = (elementRef: React.MutableRefObject<any>) => {
     setIsLoaded(true);
   }, [isVisible]);
 
-  return { elementRef, isLoaded };
+  return { isLoaded };
 };
