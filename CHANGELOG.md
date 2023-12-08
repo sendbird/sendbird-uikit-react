@@ -5,6 +5,9 @@
 ### Features:
   * Improved image loading speed by implementing lazy load with `IntersectionObserver`
   * Replaced lamejs binary
+  * Applied the `uikitUploadSizeLimit` to the Open Channel Message Input
+    * Check the file size limit when sending file messages from Open Channel
+    * Display the modal alert when the file size over the limit
 ### Fixes:
   * Fixed a bug where the admin message disappears when sending a message
   * Recognized the hash property in the URL
@@ -12,6 +15,8 @@
   * Group channel user left or banned event should not be ignored
   * Removed left 0px from `<Avatar />` component to fix ruined align
   * Applied StringSet for the file upload limit notification
+  * Updated currentUserId properly in the channel list initialize step.
+    * Fixed group channel doesn't move to the top in a channel list even though `latest_last_message` is the default order.
 
 ### Improvements:
   * Divided `<EditUserProfileUI />` into Modal and View parts
