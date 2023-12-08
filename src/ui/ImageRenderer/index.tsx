@@ -1,8 +1,9 @@
-import React, { useState, useMemo, ReactElement } from 'react';
+import React, { useState, useMemo, ReactElement, useRef } from 'react';
 
 import './index.scss';
 import numberToPx from '../../utils/numberToPx';
 import { useDynamicSideLength } from './useDynamicSideLength';
+import { useLazyImageLoader } from '../../modules/Channel/components/Message/hooks/useLazyImageLoader';
 
 /*
   ImageRenderer displays image with url or source
@@ -67,6 +68,10 @@ const ImageRenderer = ({
   shadeOnHover,
   isUploaded = true,
 }: ImageRendererProps): ReactElement => {
+  const ref = useRef(null);
+  const isLoaded = useLazyImageLoader(ref);
+  const internalUrl = isLoaded ? url : null;
+
   const [showDefaultComponent, setShowDefaultComponent] = useState(false);
   const [showPlaceHolder, setShowPlaceHolder] = useState(true);
   const [dynamicMinWidth, dynamicMinHeight] = useDynamicSideLength({
@@ -104,7 +109,7 @@ const ImageRenderer = ({
     return (
       <img
         className="sendbird-image-renderer__hidden-image-loader"
-        src={url}
+        src={internalUrl}
         alt={alt}
         onLoad={() => {
           setShowPlaceHolder(false);
@@ -116,7 +121,7 @@ const ImageRenderer = ({
         }}
       />
     );
-  }, [url]);
+  }, [internalUrl]);
 
   return dynamicMinWidth && dynamicMinHeight && (
     <div
@@ -130,6 +135,7 @@ const ImageRenderer = ({
         maxWidth: fixedSize ? dynamicMinWidth : '400px',
         height: dynamicMinHeight,
       }}
+      ref={ref}
     >
       {showPlaceHolder && PlaceHolder}
       {
@@ -147,7 +153,7 @@ const ImageRenderer = ({
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
-                backgroundImage: `url(${url})`,
+                backgroundImage: `url(${internalUrl})`,
                 borderRadius: getBorderRadiusForImageRenderer(circle, borderRadius),
               }}
             />

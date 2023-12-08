@@ -12,7 +12,10 @@ import useDidMountEffect from '../../../../utils/useDidMountEffect';
 import SuggestedMentionList from '../SuggestedMentionList';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelContext } from '../../context/ChannelProvider';
-import { getClassName, getSuggestedReplies } from '../../../../utils';
+import {
+  getClassName,
+  getSuggestedReplies,
+} from '../../../../utils';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../context/utils';
 import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT } from '../../context/const';
 

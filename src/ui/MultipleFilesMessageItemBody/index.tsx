@@ -93,7 +93,7 @@ export default function MultipleFilesMessageItemBody({
               key={`sendbird-multiple-files-image-renderer-${index}-${fileInfo.url}`}
             >
               <ImageRenderer
-                url={fileInfo.url}
+                url={fileInfo.thumbnails?.[0]?.url ?? fileInfo.url}
                 fixedSize={false}
                 width={MULTIPLE_FILES_IMAGE_SIDE_LENGTH[threadMessageKindKey]}
                 maxSideLength={MULTIPLE_FILES_IMAGE_SIDE_LENGTH.CHAT_WEB}
