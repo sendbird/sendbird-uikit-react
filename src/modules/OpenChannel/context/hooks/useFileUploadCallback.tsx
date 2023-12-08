@@ -1,0 +1,150 @@
+import React, { useCallback } from 'react';
+import type { OpenChannel } from '@sendbird/chat/openChannel';
+import type { FileMessageCreateParams } from '@sendbird/chat/message';
+
+import type { Logger } from '../../../../lib/SendbirdState';
+import * as messageActionTypes from '../dux/actionTypes';
+import * as utils from '../utils';
+import { SdkStore } from '../../../../lib/types';
+import { compressImages } from '../../../../utils/compressImages';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { useGlobalModalContext } from '../../../../hooks/useModal';
+import { useLocalization } from '../../../../lib/LocalizationContext';
+import { ONE_MiB } from '../../../../utils/consts';
+import { ModalFooter } from '../../../../ui/Modal';
+import { ButtonTypes } from '../../../../ui/Button';
+
+interface DynamicParams {
+  currentOpenChannel: OpenChannel;
+  onBeforeSendFileMessage: (file: File) => FileMessageCreateParams;
+  checkScrollBottom: () => boolean;
+  imageCompression?: {
+    compressionRate?: number,
+    resizingWidth?: number | string,
+    resizingHeight?: number | string,
+  };
+}
+interface StaticParams {
+  sdk: SdkStore['sdk'];
+  logger: Logger;
+  messagesDispatcher: (props: { type: string, payload: any }) => void;
+  scrollRef: React.MutableRefObject<HTMLElement>;
+}
+
+type CallbackReturn = (files: Array<File> | File) => void;
+
+function useFileUploadCallback({
+  currentOpenChannel,
+  checkScrollBottom,
+  imageCompression = {},
+  onBeforeSendFileMessage,
+}: DynamicParams,
+  { sdk, logger, messagesDispatcher, scrollRef }: StaticParams,
+): CallbackReturn {
+  const { stringSet } = useLocalization();
+  const { openModal } = useGlobalModalContext();
+  const { config } = useSendbirdStateContext();
+  const { uikitUploadSizeLimit } = config;
+
+  return useCallback(async (files) => {
+    if (sdk) {
+      /**
+       * OpenChannel does not currently support file lists.
+       * However, this change is made to maintain interface consistency with group channels.
+       */
+      const file = Array.isArray(files) ? files[0] : files;
+      const createCustomParams = onBeforeSendFileMessage && typeof onBeforeSendFileMessage === 'function';
+
+      const createParamsDefault = (file_): FileMessageCreateParams => {
+        const params: FileMessageCreateParams = {};
+        params.file = file_;
+        return params;
+      };
+
+      /**
+       * Validate file sizes
+       * The default value of uikitUploadSizeLimit is 25MiB
+       */
+      if (file.size > uikitUploadSizeLimit) {
+        logger.info(`OpenChannel | useFileUploadCallback: Cannot upload file size exceeding ${uikitUploadSizeLimit}`);
+        openModal({
+          modalProps: {
+            titleText: stringSet.FILE_UPLOAD_NOTIFICATION__SIZE_LIMIT.replace('%d', `${Math.floor(uikitUploadSizeLimit / ONE_MiB)}`),
+            hideFooter: true,
+          },
+          childElement: ({ closeModal }) => (
+            <ModalFooter
+              type={ButtonTypes.PRIMARY}
+              submitText={stringSet.BUTTON__OK}
+              hideCancelButton
+              onCancel={closeModal}
+              onSubmit={closeModal}
+            />
+          ),
+        });
+        return;
+      }
+
+      // Image compression
+      const { compressedFiles } = await compressImages({
+        files: [file],
+        imageCompression,
+        logger,
+      });
+      const [compressedFile] = compressedFiles;
+      if (!compressedFile) {
+        logger.info('')
+        return;
+      }
+
+      // Send FileMessage
+      if (createCustomParams) {
+        logger.info('OpenChannel | useFileUploadCallback: Creating params using onBeforeSendFileMessage', onBeforeSendFileMessage);
+      }
+      const params = onBeforeSendFileMessage ? onBeforeSendFileMessage(compressedFile) : createParamsDefault(compressedFile);
+      logger.info('OpenChannel | useFileUploadCallback: Uploading file message start', params);
+
+      const isBottom = checkScrollBottom();
+      currentOpenChannel.sendFileMessage(params)
+        .onPending((pendingMessage) => {
+          messagesDispatcher({
+            type: messageActionTypes.SENDING_MESSAGE_START,
+            payload: {
+              message: {
+                ...pendingMessage,
+                url: URL.createObjectURL(file),
+                // pending thumbnail message seems to be failed
+                requestState: 'pending',
+              },
+              channel: currentOpenChannel,
+            },
+          });
+        })
+        .onSucceeded((message) => {
+          logger.info('OpenChannel | useFileUploadCallback: Sending message succeeded', message);
+          messagesDispatcher({
+            type: messageActionTypes.SENDING_MESSAGE_SUCCEEDED,
+            payload: message,
+          });
+          if (isBottom) {
+            setTimeout(() => {
+              utils.scrollIntoLast(0, scrollRef);
+            });
+          }
+        })
+        .onFailed((error, message) => {
+          logger.error('OpenChannel | useFileUploadCallback: Sending file message failed', { message, error });
+          // @ts-ignore
+          message.localUrl = URL.createObjectURL(file);
+          // @ts-ignore
+          message.file = file;
+          messagesDispatcher({
+            type: messageActionTypes.SENDING_MESSAGE_FAILED,
+            payload: message,
+          });
+        });
+    }
+  }, [currentOpenChannel, onBeforeSendFileMessage, checkScrollBottom, imageCompression]);
+}
+
+export default useFileUploadCallback;

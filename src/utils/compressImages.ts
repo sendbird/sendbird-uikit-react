@@ -113,7 +113,7 @@ export const compressImages = async ({
           result.compressedFiles.push(compressedImage);
         } catch (err) {
           result.failedIndexes.push(index);
-          logger.warning('utils - compressImages: Failed to compress image file', { err });
+          logger.warning('utils - compressImages: Failed to compress image file', { file, err });
         }
       }),
   );
