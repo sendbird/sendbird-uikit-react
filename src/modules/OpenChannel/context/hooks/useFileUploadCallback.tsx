@@ -39,7 +39,7 @@ function useFileUploadCallback({
   imageCompression = {},
   onBeforeSendFileMessage,
 }: DynamicParams,
-  { sdk, logger, messagesDispatcher, scrollRef }: StaticParams,
+{ sdk, logger, messagesDispatcher, scrollRef }: StaticParams,
 ): CallbackReturn {
   const { stringSet } = useLocalization();
   const { openModal } = useGlobalModalContext();
@@ -92,10 +92,6 @@ function useFileUploadCallback({
         logger,
       });
       const [compressedFile] = compressedFiles;
-      if (!compressedFile) {
-        logger.info('')
-        return;
-      }
 
       // Send FileMessage
       if (createCustomParams) {
