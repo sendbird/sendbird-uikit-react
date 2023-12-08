@@ -1,5 +1,23 @@
 # Changelog - v3
 
+## [v3.9.1] (Dec 8 2023)
+
+### Features:
+  * Improved image loading speed by implementing lazy load with `IntersectionObserver`
+  * Replaced lamejs binary
+### Fixes:
+  * Fixed a bug where the admin message disappears when sending a message
+  * Recognized the hash property in the URL
+  * Fixed a bug where resending MFM fails in the thread
+  * Group channel user left or banned event should not be ignored
+  * Removed left 0px from `<Avatar />` component to fix ruined align
+  * Applied StringSet for the file upload limit notification
+
+### Improvements:
+  * Divided `<EditUserProfileUI />` into Modal and View parts
+  * Added a message prop to `<ReactionItem />` component
+  * Improved the storybook of `<EmojiReactions />`
+
 ## [v3.9.0] (Nov 24 2023)
 
 ### Features:
