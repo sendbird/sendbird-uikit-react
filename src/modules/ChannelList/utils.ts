@@ -194,6 +194,9 @@ function setupChannelList({
 
   channelListDispatcher({
     type: channelActions.INIT_CHANNELS_START,
+    payload: {
+      currentUserId: sdk?.currentUser?.userId ?? '',
+    }
   });
 
   if (userFilledChannelListQuery) {
@@ -202,7 +205,6 @@ function setupChannelList({
       type: channelActions.CHANNEL_LIST_PARAMS_UPDATED,
       payload: {
         channelListQuery,
-        currentUserId: sdk && sdk.currentUser && sdk.currentUser.userId,
       },
     });
   }
@@ -225,7 +227,10 @@ function setupChannelList({
         }
         channelListDispatcher({
           type: channelActions.INIT_CHANNELS_SUCCESS,
-          payload: { channelList: sortedChannelList, disableAutoSelect },
+          payload: {
+            channelList: sortedChannelList,
+            disableAutoSelect,
+          },
         });
         const canSetMarkAsDelivered = sdk?.appInfo?.premiumFeatureList?.find((feature) => feature === DELIVERY_RECEIPT);
 

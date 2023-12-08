@@ -11,7 +11,11 @@ export default function channelListReducer(
 ): ChannelListInitialStateType {
   return (
     match(action)
-      .with({ type: channelListActions.INIT_CHANNELS_START }, () => ({ ...state, loading: true }))
+      .with({ type: channelListActions.INIT_CHANNELS_START }, ({ payload }) => ({
+        ...state,
+        loading: true,
+        currentUserId: payload.currentUserId,
+      }))
       .with({ type: channelListActions.RESET_CHANNEL_LIST }, () => initialState)
       .with({ type: channelListActions.INIT_CHANNELS_SUCCESS }, (action) => {
         const { channelList, disableAutoSelect } = action.payload;
@@ -289,13 +293,10 @@ export default function channelListReducer(
           allChannels: [action.payload, ...state.allChannels.filter((channel) => channel?.url !== action.payload.url)],
         };
       })
-      .with({ type: channelListActions.CHANNEL_LIST_PARAMS_UPDATED }, (action) => {
-        return {
-          ...state,
-          currentUserId: action.payload.currentUserId,
-          channelListQuery: action.payload.channelListQuery,
-        };
-      })
+      .with({ type: channelListActions.CHANNEL_LIST_PARAMS_UPDATED }, (action) => ({
+        ...state,
+        channelListQuery: action.payload.channelListQuery,
+      }))
       .otherwise(() => state)
   );
 }
