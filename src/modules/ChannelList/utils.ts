@@ -196,7 +196,7 @@ function setupChannelList({
     type: channelActions.INIT_CHANNELS_START,
     payload: {
       currentUserId: sdk?.currentUser?.userId ?? '',
-    }
+    },
   });
 
   if (userFilledChannelListQuery) {
@@ -205,6 +205,7 @@ function setupChannelList({
       type: channelActions.CHANNEL_LIST_PARAMS_UPDATED,
       payload: {
         channelListQuery,
+        currentUserId: sdk?.currentUser?.userId ?? '',
       },
     });
   }

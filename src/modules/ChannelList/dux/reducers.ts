@@ -296,6 +296,7 @@ export default function channelListReducer(
       .with({ type: channelListActions.CHANNEL_LIST_PARAMS_UPDATED }, (action) => ({
         ...state,
         channelListQuery: action.payload.channelListQuery,
+        currentUserId: action.payload.currentUserId,
       }))
       .otherwise(() => state)
   );
