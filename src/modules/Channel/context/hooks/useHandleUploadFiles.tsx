@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 
 import { Logger } from '../../../../lib/SendbirdState';
-import { SendMFMFunctionType } from '../../context/hooks/useSendMultipleFilesMessage';
+import { SendMFMFunctionType } from './useSendMultipleFilesMessage';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { SendableMessageType, isImage } from '../../../../utils';
 // TODO: get SendFileMessageFunctionType from Channel

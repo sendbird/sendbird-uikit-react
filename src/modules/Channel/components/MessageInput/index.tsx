@@ -14,7 +14,7 @@ import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import VoiceMessageInputWrapper from './VoiceMessageInputWrapper';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
-import { useHandleUploadFiles } from './useHandleUploadFiles';
+import { useHandleUploadFiles } from '../../context/hooks/useHandleUploadFiles';
 
 export type MessageInputWrapperProps = {
   value?: string;
