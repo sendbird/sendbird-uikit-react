@@ -30,7 +30,6 @@ interface Props {
   truncateLimit?: number;
   threadMessageKindKey?: string;
   statefulFileInfoList?: StatefulFileInfo[];
-  isLazyLoaded?: boolean;
 }
 
 export default function MultipleFilesMessageItemBody({
@@ -39,7 +38,6 @@ export default function MultipleFilesMessageItemBody({
   isReactionEnabled = false,
   threadMessageKindKey,
   statefulFileInfoList = [],
-  isLazyLoaded,
 }: Props): ReactElement {
   const [currentFileViewerIndex, setCurrentFileViewerIndex] = useState(-1);
 
@@ -95,7 +93,7 @@ export default function MultipleFilesMessageItemBody({
               key={`sendbird-multiple-files-image-renderer-${index}-${fileInfo.url}`}
             >
               <ImageRenderer
-                url={isLazyLoaded ? (fileInfo.thumbnails?.[0]?.url ?? fileInfo.url) : null}
+                url={fileInfo.thumbnails?.[0]?.url ?? fileInfo.url}
                 fixedSize={false}
                 width={MULTIPLE_FILES_IMAGE_SIDE_LENGTH[threadMessageKindKey]}
                 maxSideLength={MULTIPLE_FILES_IMAGE_SIDE_LENGTH.CHAT_WEB}

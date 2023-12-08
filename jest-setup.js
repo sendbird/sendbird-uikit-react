@@ -1,3 +1,5 @@
+import './__mocks__/intersectionObserverMock';
+
 const { JSDOM } = require('jsdom');
 
 // for mount

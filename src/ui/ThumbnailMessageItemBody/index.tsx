@@ -18,7 +18,6 @@ interface Props {
   isReactionEnabled?: boolean;
   showFileViewer?: (bool: boolean) => void;
   style?: Record<string, any>;
-  isLazyLoaded?: boolean;
 }
 
 export default function ThumbnailMessageItemBody({
@@ -29,7 +28,6 @@ export default function ThumbnailMessageItemBody({
   isReactionEnabled = false,
   showFileViewer = noop,
   style = {},
-  isLazyLoaded,
 }: Props): ReactElement {
   const thumbnailUrl: string = getMessageFirstFileThumbnailUrl(message);
   const [imageRendered, setImageRendered] = useState(false);
@@ -56,7 +54,7 @@ export default function ThumbnailMessageItemBody({
     >
       <ImageRenderer
         className="sendbird-thumbnail-message-item-body__thumbnail"
-        url={isLazyLoaded ? (thumbnailUrl || getMessageFirstFileUrl(message)) : null}
+        url={thumbnailUrl || getMessageFirstFileUrl(message)}
         alt={getMessageFirstFileType(message)}
         width={style?.width || '360px'}
         height={style?.height || '270px'}

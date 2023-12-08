@@ -17,12 +17,11 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with four element
       >
         <div
           class="sendbird-image-renderer__image"
-          style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://avatars3.githubusercontent.com/u/46333979?s=460&v=4);"
+          style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(null);"
         />
         <img
           alt=""
           class="sendbird-image-renderer__hidden-image-loader"
-          src="https://avatars3.githubusercontent.com/u/46333979?s=460&v=4"
         />
       </div>
       <div
@@ -31,12 +30,11 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with four element
       >
         <div
           class="sendbird-image-renderer__image"
-          style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://avatars1.githubusercontent.com/u/1384313?s=460&v=4);"
+          style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(null);"
         />
         <img
           alt=""
           class="sendbird-image-renderer__hidden-image-loader"
-          src="https://avatars1.githubusercontent.com/u/1384313?s=460&v=4"
         />
       </div>
       <div
@@ -45,12 +43,11 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with four element
       >
         <div
           class="sendbird-image-renderer__image"
-          style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://avatars2.githubusercontent.com/u/11382805?s=460&v=4);"
+          style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(null);"
         />
         <img
           alt=""
           class="sendbird-image-renderer__hidden-image-loader"
-          src="https://avatars2.githubusercontent.com/u/11382805?s=460&v=4"
         />
       </div>
       <div
@@ -59,12 +56,11 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with four element
       >
         <div
           class="sendbird-image-renderer__image"
-          style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url();"
+          style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(null);"
         />
         <img
           alt=""
           class="sendbird-image-renderer__hidden-image-loader"
-          src=""
         />
       </div>
     </div>
@@ -86,12 +82,11 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with single eleme
     >
       <div
         class="sendbird-image-renderer__image"
-        style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://avatars3.githubusercontent.com/u/46333979?s=460&v=4);"
+        style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(null);"
       />
       <img
         alt=""
         class="sendbird-image-renderer__hidden-image-loader"
-        src="https://avatars3.githubusercontent.com/u/46333979?s=460&v=4"
       />
     </div>
   </div>
@@ -115,12 +110,11 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with three elemen
       >
         <div
           class="sendbird-image-renderer__image"
-          style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://avatars3.githubusercontent.com/u/46333979?s=460&v=4);"
+          style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(null);"
         />
         <img
           alt=""
           class="sendbird-image-renderer__hidden-image-loader"
-          src="https://avatars3.githubusercontent.com/u/46333979?s=460&v=4"
         />
       </div>
     </div>
@@ -133,12 +127,11 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with three elemen
       >
         <div
           class="sendbird-image-renderer__image"
-          style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://avatars1.githubusercontent.com/u/1384313?s=460&v=4);"
+          style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(null);"
         />
         <img
           alt=""
           class="sendbird-image-renderer__hidden-image-loader"
-          src="https://avatars1.githubusercontent.com/u/1384313?s=460&v=4"
         />
       </div>
       <div
@@ -147,12 +140,11 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with three elemen
       >
         <div
           class="sendbird-image-renderer__image"
-          style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://avatars2.githubusercontent.com/u/11382805?s=460&v=4);"
+          style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(null);"
         />
         <img
           alt=""
           class="sendbird-image-renderer__hidden-image-loader"
-          src="https://avatars2.githubusercontent.com/u/11382805?s=460&v=4"
         />
       </div>
     </div>
@@ -177,12 +169,11 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with two elements
       >
         <div
           class="sendbird-image-renderer__image"
-          style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://avatars3.githubusercontent.com/u/46333979?s=460&v=4);"
+          style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(null);"
         />
         <img
           alt=""
           class="sendbird-image-renderer__hidden-image-loader"
-          src="https://avatars3.githubusercontent.com/u/46333979?s=460&v=4"
         />
       </div>
       <div
@@ -191,12 +182,11 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with two elements
       >
         <div
           class="sendbird-image-renderer__image"
-          style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://avatars1.githubusercontent.com/u/1384313?s=460&v=4);"
+          style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(null);"
         />
         <img
           alt=""
           class="sendbird-image-renderer__hidden-image-loader"
-          src="https://avatars1.githubusercontent.com/u/1384313?s=460&v=4"
         />
       </div>
     </div>
@@ -218,12 +208,11 @@ exports[`ui/Avatar should render default image if src is empty 1`] = `
     >
       <div
         class="sendbird-image-renderer__image"
-        style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url();"
+        style="width: 100%; min-width: min(400px, 56px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(null);"
       />
       <img
         alt=""
         class="sendbird-image-renderer__hidden-image-loader"
-        src=""
       />
     </div>
   </div>

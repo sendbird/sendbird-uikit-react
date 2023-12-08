@@ -64,7 +64,6 @@ export interface MessageContentProps {
   onReplyInThread?: (props: { message: SendableMessageType }) => void;
   onQuoteMessageClick?: (props: { message: SendableMessageType }) => void;
   onMessageHeightChange?: () => void;
-  isLazyLoaded?: boolean;
 
   // For injecting customizable sub-components
   renderSenderProfile?: (props: MessageProfileProps) => ReactNode;
@@ -102,7 +101,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     onReplyInThread,
     onQuoteMessageClick,
     onMessageHeightChange,
-    isLazyLoaded,
 
     // Public props for customization
     renderSenderProfile = (props: MessageProfileProps) => (
@@ -277,7 +275,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               config,
               isReactionEnabledInChannel,
               isByMe,
-              isLazyLoaded,
             })
           }
           {/* reactions */}

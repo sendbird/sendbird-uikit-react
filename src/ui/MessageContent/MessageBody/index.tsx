@@ -28,7 +28,6 @@ export interface MessageBodyProps {
   message: CoreMessageType;
   showFileViewer?: (bool: boolean) => void;
   onMessageHeightChange?: () => void;
-  isLazyLoaded?: boolean;
 
   mouseHover: boolean;
   isMobile: boolean;
@@ -43,7 +42,6 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
     channel,
     showFileViewer,
     onMessageHeightChange,
-    isLazyLoaded,
 
     mouseHover,
     isMobile,
@@ -102,7 +100,6 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         isReactionEnabled={isReactionEnabledInChannel}
         threadMessageKindKey={threadMessageKindKey}
         statefulFileInfoList={statefulFileInfoList}
-        isLazyLoaded={isLazyLoaded}
       />
     ))
     .when(isVoiceMessage, () => (
@@ -123,7 +120,6 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         isReactionEnabled={isReactionEnabledInChannel}
         showFileViewer={showFileViewer}
         style={isMobile ? { width: '100%' } : {}}
-        isLazyLoaded={isLazyLoaded}
       />
     ))
     .otherwise((message) => (
