@@ -205,6 +205,7 @@ function setupChannelList({
       type: channelActions.CHANNEL_LIST_PARAMS_UPDATED,
       payload: {
         channelListQuery,
+        currentUserId: sdk?.currentUser?.userId ?? '',
       },
     });
   }

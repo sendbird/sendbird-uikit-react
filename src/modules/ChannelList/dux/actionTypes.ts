@@ -70,6 +70,7 @@ type CHANNEL_LIST_PAYLOAD_TYPES = {
   [CHANNEL_REPLACED_TO_TOP]: GroupChannel;
   [CHANNEL_LIST_PARAMS_UPDATED]: {
     channelListQuery: GroupChannelListQuery;
+    currentUserId?: string,
   };
 };
 
