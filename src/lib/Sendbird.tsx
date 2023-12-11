@@ -49,6 +49,7 @@ import {
 import { GlobalModalProvider } from '../hooks/useModal';
 import { RenderUserProfileProps } from '../types';
 import PUBSUB_TOPICS, { SBUGlobalPubSub, SBUGlobalPubSubTopicPayloadUnion } from './pubSub/topics';
+import { EmojiManager } from './emojiManager';
 
 export { useSendbirdStateContext } from '../hooks/useSendbirdStateContext';
 
@@ -303,6 +304,14 @@ const SendbirdSDK = ({
     return uploadSizeLimit;
   }, [uploadSizeLimit]);
 
+  // Emoji Manager
+  const emojiManager = useMemo(() => {
+    return new EmojiManager({
+      sdk,
+      logger,
+    });
+  }, [sdkStore.initialized]);
+
   return (
     <SendbirdSdkContext.Provider
       value={{
@@ -380,6 +389,7 @@ const SendbirdSDK = ({
           },
         },
         eventHandlers,
+        emojiManager,
       }}
     >
       <MediaQueryProvider logger={logger} breakpoint={breakpoint}>
