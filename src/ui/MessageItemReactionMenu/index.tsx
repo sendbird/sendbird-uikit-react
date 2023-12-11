@@ -80,8 +80,9 @@ export function MessageEmojiMenu({
             >
               {getEmojiListAll(emojiContainer).map((emoji: Emoji): ReactElement => {
                 const isReacted: boolean = message?.reactions
-                  ?.filter((reaction: Reaction) => reaction.key === emoji.key)[0]?.userIds
-                  ?.some((reactorId: string) => reactorId === userId);
+                  ?.find((reaction: Reaction) => reaction.key === emoji.key)
+                  ?.userIds
+                  ?.some((reactorId: string) => reactorId === userId) || false;
                 return (
                   <ReactionButton
                     key={emoji.key}
