@@ -8,7 +8,7 @@ export type OpenGlobalModalProps = {
   modalProps: ModalProps;
   childElement: (props: { closeModal: () => void }) => ReactElement;
 };
-export type GlobalModalProviderProps = React.PropsWithChildren;
+export type GlobalModalProviderProps = React.PropsWithChildren<unknown>;
 export interface GlobalModalContextInterface {
   openModal: (props: OpenGlobalModalProps) => void;
 }
