@@ -1,0 +1,49 @@
+@import '../../../../styles/variables';
+
+.sendbird-notification--hide,
+.sendbird-notification {
+  position: absolute;
+}
+
+.sendbird-notification {
+  margin-top: 8px;
+  margin-left: 24px;
+  margin-right: 24px;
+  border-radius: 4px;
+  padding: 0px 2px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @include themed() {
+    background-color: t(primary-3);
+  }
+  &:hover {
+    cursor: pointer;
+    @include themed() {
+      background-color: t(primary-4);
+    }
+  }
+
+  &.sendbird-notification--frozen {
+    @include themed() {
+      background-color: t(information-1);
+    }
+    .sendbird-notification__text {
+      @include themed() {
+        color: t(on-information-1);
+      }
+    }
+  }
+
+  .sendbird-notification__text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+  }
+}
+
+.sendbird-notification--hide {
+  display: none;
+}
