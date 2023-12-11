@@ -99,8 +99,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
   const [quoteMessage, setQuoteMessage] = useState<SendableMessageType>(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
-
-  useGroupChannelMessages
+  
 
   const [messagesStore, messagesDispatcher] = useReducer(messagesReducer, messagesInitialState);
   const scrollRef = useRef(null);

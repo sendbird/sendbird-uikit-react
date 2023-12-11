@@ -7,7 +7,7 @@ import type { Nullable } from '../../../../types';
 import MessageInput from '../../../../ui/MessageInput';
 import QuoteMessageInput from '../../../../ui/QuoteMessageInput';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { useChannelContext } from '../../context/ChannelProvider';
+import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import SuggestedMentionList from '../SuggestedMentionList';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
@@ -35,7 +35,7 @@ const MessageInputWrapper = (
     renderSendMessageIcon,
   } = props;
   const propDisabled = props.disabled;
-  const channelContext = useChannelContext();
+  const channelContext = useGroupChannelContext();
   const {
     currentGroupChannel,
     initialized,

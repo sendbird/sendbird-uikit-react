@@ -2,7 +2,7 @@ import './message-list.scss';
 
 import React, { useState } from 'react';
 
-import { useChannelContext } from '../../context/ChannelProvider';
+import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
 import Message from '../Message';
@@ -64,7 +64,7 @@ const MessageList: React.FC<MessageListProps> = ({
     unreadSince,
     unreadSinceDate,
     typingMembers,
-  } = useChannelContext();
+  } = useGroupChannelContext();
 
   const store = useSendbirdStateContext();
   const allMessagesFiltered = (typeof filterMessageList === 'function')

@@ -7,7 +7,7 @@ import {
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 import { uuidv4 } from '../../../utils/uuid';
 import Label, { LabelTypography, LabelColors } from '../../../ui/Label';
-import { useChannelContext } from '../context/ChannelProvider';
+import { useGroupChannelContext } from '../context/GroupChannelProvider';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 
 export interface TypingIndicatorTextProps {
@@ -36,7 +36,7 @@ export const TypingIndicatorText = ({ members }: TypingIndicatorTextProps) => {
 };
 
 const TypingIndicator: React.FC = () => {
-  const { channelUrl } = useChannelContext();
+  const { channelUrl } = useGroupChannelContext();
   const globalStore = useSendbirdStateContext();
   const sb = globalStore?.stores?.sdkStore?.sdk;
   const logger = globalStore?.config?.logger;

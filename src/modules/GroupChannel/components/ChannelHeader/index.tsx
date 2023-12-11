@@ -9,7 +9,7 @@ import IconButton from '../../../../ui/IconButton';
 import ChannelAvatar from '../../../../ui/ChannelAvatar/index';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useChannelContext } from '../../context/ChannelProvider';
+import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import { noop } from '../../../../utils/utils';
 
@@ -24,7 +24,7 @@ const ChannelHeader: React.FC<ChannelHeaderProps> = ({
   const userId = globalStore?.config?.userId;
   const theme = globalStore?.config?.theme;
 
-  const channelStore = useChannelContext();
+  const channelStore = useGroupChannelContext();
   const { isMobile } = useMediaQueryContext();
   const {
     currentGroupChannel,
