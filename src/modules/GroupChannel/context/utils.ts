@@ -1,10 +1,11 @@
 import React from 'react';
-import { EmojiContainer } from '@sendbird/chat';
-import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
+import type { EmojiContainer } from '@sendbird/chat';
+import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
+import type { BaseMessage } from '@sendbird/chat/message';
+import { SendingStatus } from '@sendbird/chat/message';
 import format from 'date-fns/format';
 
-import { CoreMessageType, isReadMessage, SendableMessageType } from '../../../utils';
-import { BaseMessage, SendingStatus } from '@sendbird/chat/message';
+import type { CoreMessageType, SendableMessageType } from '../../../utils';
 
 export const scrollToRenderedMessage = (
   scrollRef: React.MutableRefObject<HTMLElement>,
@@ -116,37 +117,6 @@ export const mergeAndSortMessages = (oldMessages: BaseMessage[], newMessages: Ba
 };
 
 export const getMessageCreatedAt = (message: BaseMessage) => format(message.createdAt, 'p');
-
-export const isSameGroup = (
-  message: SendableMessageType | BaseMessage,
-  comparingMessage: SendableMessageType | BaseMessage,
-  currentChannel: GroupChannel,
-) => {
-  if (
-    !(
-      message
-      && comparingMessage
-      && message.messageType
-      && message.messageType !== 'admin'
-      && comparingMessage.messageType
-      && comparingMessage?.messageType !== 'admin'
-      && 'sender' in message
-      && 'sender' in comparingMessage
-      && message.createdAt
-      && comparingMessage.createdAt
-      && message.sender.userId
-      && comparingMessage.sender.userId
-    )
-  ) {
-    return false;
-  }
-  return (
-    message?.sendingStatus === comparingMessage?.sendingStatus
-    && message?.sender?.userId === comparingMessage?.sender?.userId
-    && getMessageCreatedAt(message) === getMessageCreatedAt(comparingMessage)
-    && isReadMessage(currentChannel, message) === isReadMessage(currentChannel, comparingMessage)
-  );
-};
 
 export const passUnsuccessfullMessages = (
   allMessages: (CoreMessageType | SendableMessageType)[],

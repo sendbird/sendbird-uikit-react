@@ -62,51 +62,6 @@ export const getMessageCreatedAt = (message: SendableMessageType): string => for
 export const isReadMessage = (channel: GroupChannel, message: SendableMessageType): boolean => (
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
 );
-export const isSameGroup = (
-  message: SendableMessageType,
-  comparingMessage: SendableMessageType,
-  currentChannel: GroupChannel,
-): boolean => {
-  if (!(message
-    && comparingMessage
-    && message.messageType
-    && message.messageType !== 'admin'
-    && comparingMessage.messageType
-    && comparingMessage?.messageType !== 'admin'
-    && message?.sender
-    && comparingMessage?.sender
-    && message?.createdAt
-    && comparingMessage?.createdAt
-    && message?.sender?.userId
-    && comparingMessage?.sender?.userId
-  )) {
-    return false;
-  }
-  return (
-    message?.sendingStatus === comparingMessage?.sendingStatus
-    && message?.sender?.userId === comparingMessage?.sender?.userId
-    && getMessageCreatedAt(message) === getMessageCreatedAt(comparingMessage)
-    && isReadMessage(currentChannel, message) === isReadMessage(currentChannel, comparingMessage)
-  );
-};
-
-export const compareMessagesForGrouping = (
-  prevMessage: SendableMessageType,
-  currMessage: SendableMessageType,
-  nextMessage: SendableMessageType,
-  currentChannel: GroupChannel,
-  replyType: string,
-): [boolean, boolean] => {
-  if (replyType === 'THREAD' && currMessage?.threadInfo) {
-    return [false, false];
-  }
-  const sendingStatus = currMessage?.sendingStatus || '';
-  const isAcceptable = sendingStatus !== 'pending' && sendingStatus !== 'failed';
-  return [
-    isSameGroup(prevMessage, currMessage, currentChannel) && isAcceptable,
-    isSameGroup(currMessage, nextMessage, currentChannel) && isAcceptable,
-  ];
-};
 
 export const scrollIntoLast = (intialTry = 0): void => {
   const MAX_TRIES = 10;

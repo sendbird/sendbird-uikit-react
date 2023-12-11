@@ -1,9 +1,9 @@
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import isSameDay from 'date-fns/isSameDay';
 
-import { compareMessagesForGrouping } from '../../context/compareMessagesForGrouping';
-import { ReplyType } from '../../../../types';
-import { CoreMessageType } from '../../../../utils';
+import type { ReplyType } from '../../../../types';
+import type { CoreMessageType } from '../../../../utils';
+import { compareMessagesForGrouping } from '../../../../utils/messages';
 
 export interface GetMessagePartsInfoProps {
   allMessages: Array<CoreMessageType>;

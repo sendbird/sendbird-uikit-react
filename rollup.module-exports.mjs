@@ -62,7 +62,7 @@ export default {
   'Channel/hooks/useInitialMessagesFetch': 'src/modules/Channel/context/hooks/useInitialMessagesFetch.ts',
   'Channel/hooks/useHandleUploadFiles': 'src/modules/Channel/context/hooks/useHandleUploadFiles.tsx',
   'Channel/utils/getMessagePartsInfo': 'src/modules/Channel/components/MessageList/getMessagePartsInfo.ts',
-  'Channel/utils/compareMessagesForGrouping': 'src/modules/Channel/context/compareMessagesForGrouping.ts',
+  'Channel/utils/compareMessagesForGrouping': 'src/utils/messages.ts',  // TODO: export from global utils path
   'Channel/components/ChannelHeader': 'src/modules/Channel/components/ChannelHeader/index.tsx',
   'Channel/components/ChannelUI': 'src/modules/Channel/components/ChannelUI/index.tsx',
   'Channel/components/FileViewer': 'src/modules/Channel/components/FileViewer/index.tsx',
