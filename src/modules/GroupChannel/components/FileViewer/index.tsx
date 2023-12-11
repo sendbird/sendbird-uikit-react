@@ -10,7 +10,7 @@ import { MODAL_ROOT } from '../../../../hooks/useModal';
 
 import { isImage, isVideo, isSupportedFileView } from '../../../../utils';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useChannelContext } from '../../context/ChannelProvider';
+import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { EveryMessage } from '../../../../types';
 
 type FileViewerUIProps = {
@@ -141,7 +141,7 @@ type FileViewerProps = {
 };
 
 const FileViewer: React.FC<FileViewerProps> = ({ onCancel, message }: FileViewerProps) => {
-  const { deleteMessage } = useChannelContext();
+  const { deleteMessage } = useGroupChannelContext();
   const {
     sender,
     type,

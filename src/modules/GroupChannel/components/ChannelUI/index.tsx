@@ -3,7 +3,7 @@ import './channel-ui.scss';
 import React from 'react';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
-import { useChannelContext } from '../../context/ChannelProvider';
+import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import ConnectionStatus from '../../../../ui/ConnectionStatus';
 import ChannelHeader from '../ChannelHeader';
@@ -46,7 +46,7 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
   const {
     channelUrl,
     isInvalid,
-  } = useChannelContext();
+  } = useGroupChannelContext();
 
   const globalStore = useSendbirdStateContext();
   const sdkError = globalStore?.stores?.sdkStore?.error;
