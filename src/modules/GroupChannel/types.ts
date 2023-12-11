@@ -1,4 +1,4 @@
-import type { SendbirdError, User } from "@sendbird/chat";
+import type { SendbirdError, User } from '@sendbird/chat';
 import type {
   FileMessage,
   FileMessageCreateParams,
@@ -8,11 +8,11 @@ import type {
   UserMessage,
   UserMessageCreateParams,
   UserMessageUpdateParams,
-} from "@sendbird/chat/message";
+} from '@sendbird/chat/message';
 
-import type { CoreMessageType, SendableMessageType } from "../../utils";
-import type { ThreadReplySelectType } from "./context/const";
-import type { RenderUserProfileProps } from "../../types";
+import type { CoreMessageType, SendableMessageType } from '../../utils';
+import type { ThreadReplySelectType } from './context/const';
+import type { RenderUserProfileProps } from '../../types';
 
 export interface GroupChannelContextProps {
   children?: React.ReactElement;
@@ -45,7 +45,7 @@ export interface GroupChannelContextProps {
   onMessageHighlighted?: () => void;
   scrollBehavior?: 'smooth' | 'auto';
   reconnectOnIdle?: boolean;
-};
+}
 
 // replace to the useGroupChannelMessages hook
 // export interface MessageStoreInterface {

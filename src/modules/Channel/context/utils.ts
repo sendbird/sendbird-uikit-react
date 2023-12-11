@@ -3,7 +3,7 @@ import { EmojiContainer } from '@sendbird/chat';
 import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import format from 'date-fns/format';
 
-import { CoreMessageType, isReadMessage, SendableMessageType } from '../../../utils';
+import { CoreMessageType, SendableMessageType } from '../../../utils';
 import { BaseMessage, SendingStatus } from '@sendbird/chat/message';
 
 export const scrollToRenderedMessage = (
@@ -116,37 +116,6 @@ export const mergeAndSortMessages = (oldMessages: BaseMessage[], newMessages: Ba
 };
 
 export const getMessageCreatedAt = (message: BaseMessage) => format(message.createdAt, 'p');
-
-export const isSameGroup = (
-  message: SendableMessageType | BaseMessage,
-  comparingMessage: SendableMessageType | BaseMessage,
-  currentChannel: GroupChannel,
-) => {
-  if (
-    !(
-      message
-      && comparingMessage
-      && message.messageType
-      && message.messageType !== 'admin'
-      && comparingMessage.messageType
-      && comparingMessage?.messageType !== 'admin'
-      && 'sender' in message
-      && 'sender' in comparingMessage
-      && message.createdAt
-      && comparingMessage.createdAt
-      && message.sender.userId
-      && comparingMessage.sender.userId
-    )
-  ) {
-    return false;
-  }
-  return (
-    message?.sendingStatus === comparingMessage?.sendingStatus
-    && message?.sender?.userId === comparingMessage?.sender?.userId
-    && getMessageCreatedAt(message) === getMessageCreatedAt(comparingMessage)
-    && isReadMessage(currentChannel, message) === isReadMessage(currentChannel, comparingMessage)
-  );
-};
 
 export const passUnsuccessfullMessages = (
   allMessages: (CoreMessageType | SendableMessageType)[],

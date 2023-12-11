@@ -1,7 +1,7 @@
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import isSameDay from 'date-fns/isSameDay';
 
-import { compareMessagesForGrouping } from '../../context/compareMessagesForGrouping';
+import { compareMessagesForGrouping } from '../../../../utils/messages';
 import { ReplyType } from '../../../../types';
 import { CoreMessageType } from '../../../../utils';
 
