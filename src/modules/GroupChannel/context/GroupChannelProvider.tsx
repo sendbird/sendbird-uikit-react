@@ -6,10 +6,10 @@ import React, {
   useCallback,
 } from 'react';
 import type { User } from '@sendbird/chat';
-import type {
+import {
+  ReplyType as SendbirdReplyType,
   FileMessageCreateParams,
   MultipleFilesMessageCreateParams,
-  ReplyType,
   UserMessageCreateParams,
   UserMessageUpdateParams,
 } from '@sendbird/chat/message';
@@ -23,10 +23,11 @@ import { ThreadReplySelectType } from './const';
 
 import { getIsReactionEnabled } from '../../../utils/getIsReactionEnabled';
 
+import { RenderUserProfileProps, ReplyType } from '../../../types';
 import useToggleReactionCallback from './hooks/useToggleReactionCallback';
 import { getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
-import { RenderUserProfileProps } from '../../../types';
 import useScrollToMessage from './hooks/useScrollToMessage';
+import { match } from 'ts-pattern';
 
 export interface GroupChannelContextProps {
   // Default
@@ -246,7 +247,11 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     deleteMessage,
     resetWithStartingPoint,
   } = useGroupChannelMessages(sdk, currentChannel, userId, {
-    replyType,
+    replyType: match(replyType)
+      .with('NONE', () => SendbirdReplyType.NONE)
+      .with('QUOTE_REPLY', () => SendbirdReplyType.ALL)
+      .with('THREAD', () => SendbirdReplyType.ALL)
+      .otherwise(() => SendbirdReplyType.NONE),
     startingPoint: initialTimeStamp,
     // markAsRead?: (channels: GroupChannel[]) => void;
     // shouldCountNewMessages?: () => boolean;

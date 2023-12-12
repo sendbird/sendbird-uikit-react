@@ -1,8 +1,10 @@
-import { compareMessagesForGrouping, isSameGroup } from '../messages';
+import { compareMessagesForGrouping } from '../messages.ts';
+// import { compareMessagesForGrouping, isSameGroup } from '../messages.ts';
 
-jest.mock('../utils', () => ({
-  isSameGroup: jest.fn(),
-}));
+// jest.mock('../messages', () => ({
+//   isSameGroup: jest.fn(),
+// }));
+const isSameGroup = jest.fn();
 
 describe('compareMessagesForGrouping', () => {
   it('should return false for both chainTop and chainBottom when replyType is THREAD and currentMessage has threadInfo', () => {
@@ -23,6 +25,9 @@ describe('compareMessagesForGrouping', () => {
     isSameGroup.mockImplementation(() => true);
     const prevMessage = {
       sendingStatus: 'succeeded',
+      messageType: 'user',
+      sender: { userId: 'tester1' },
+      createdAt: 0,
     };
     const currMessage = {
       sendingStatus: 'succeeded',
@@ -30,8 +35,12 @@ describe('compareMessagesForGrouping', () => {
     const nextMessage = {
       sendingStatus: 'succeeded',
     };
-    const currentChannel = {};
-    const replyType = 'REPLY';
+    const currentChannel = {
+      isGroupChannel: () => true,
+      getUnreadMemberCount: () => 1,
+      getUndeliveredMemberCount: () => 1,
+    };
+    const replyType = 'QUOTE_REPLY';
     // @ts-ignore
     const result = compareMessagesForGrouping(prevMessage, currMessage, nextMessage, currentChannel, replyType);
     expect(result).toEqual([true, true]);
@@ -50,7 +59,7 @@ describe('compareMessagesForGrouping', () => {
       sendingStatus: 'succeeded',
     };
     const currentChannel = {};
-    const replyType = 'REPLY';
+    const replyType = 'QUOTE_REPLY';
     // @ts-ignore
     const result = compareMessagesForGrouping(prevMessage, currMessage, nextMessage, currentChannel, replyType);
     expect(result).toEqual([false, false]);
@@ -69,7 +78,7 @@ describe('compareMessagesForGrouping', () => {
       sendingStatus: 'succeeded',
     };
     const currentChannel = {};
-    const replyType = 'REPLY';
+    const replyType = 'QUOTE_REPLY';
     // @ts-ignore
     const result = compareMessagesForGrouping(prevMessage, currMessage, nextMessage, currentChannel, replyType);
     expect(result).toEqual([false, false]);

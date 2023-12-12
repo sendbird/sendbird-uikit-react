@@ -1,8 +1,8 @@
-import type { BaseMessage, UserMessage } from '@sendbird/chat/message';
+import { type BaseMessage, type UserMessage } from '@sendbird/chat/message';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import format from 'date-fns/format';
 
-import type { ReplyType } from '../types';
+import { ReplyType } from '../types';
 import type { CoreMessageType } from '.';
 import { isReadMessage } from '.';
 

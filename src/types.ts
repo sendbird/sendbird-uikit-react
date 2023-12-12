@@ -6,11 +6,10 @@ import type {
   FileMessage,
   MultipleFilesMessage,
   UserMessage,
-  ReplyType as SendbirdReplyType
 } from '@sendbird/chat/message';
 import { CoreMessageType } from './utils';
 
-export type ReplyType = SendbirdReplyType;
+export type ReplyType = 'NONE' | 'QUOTE_REPLY' | 'THREAD';
 export type Nullable<T> = T | null;
 
 export type SpaceFromTriggerType = {
