@@ -79,15 +79,6 @@ export const getAllEmojisMapFromEmojiContainer = (emojiContainer: EmojiContainer
   return allEmojisMap;
 };
 
-export const getNicknamesMapFromMembers = (members: Member[] = []) => {
-  const nicknamesMap = new Map<string, string>();
-  for (let memberIndex = 0; memberIndex < members.length; memberIndex += 1) {
-    const { userId, nickname } = members[memberIndex];
-    nicknamesMap.set(userId, nickname);
-  }
-  return nicknamesMap;
-};
-
 const getUniqueListBy = <T>(arr: T[], key: keyof T): T[] => {
   const entries = arr.map((item) => [item[key], item] as [T[keyof T], T]);
   return Array.from(new Map(entries).values());

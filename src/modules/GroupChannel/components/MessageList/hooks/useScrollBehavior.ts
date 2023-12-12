@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
-import { useChannelContext } from '../../../context/ChannelProvider';
+import { useGroupChannelContext } from '../../../context/GroupChannelProvider';
 
 export function useScrollBehavior() {
   const {
     scrollRef,
     scrollBehavior = 'auto',
-  } = useChannelContext();
+  } = useGroupChannelContext();
 
   useEffect(() => {
     if (scrollRef.current) {

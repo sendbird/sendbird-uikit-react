@@ -1,16 +1,13 @@
 import React, { RefObject, useEffect } from 'react';
 
 import { scrollIntoLast } from '../utils';
-import * as channelActions from '../dux/actionTypes';
 import { PUBSUB_TOPICS, SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { shouldPubSubPublishToChannel } from '../../../internalInterfaces';
-import { ChannelActionTypes } from '../dux/actionTypes';
 
 export interface UseHandlePubsubEventsParams {
   channelUrl: string;
   sdkInit: boolean;
   pubSub: SBUGlobalPubSub;
-  dispatcher: React.Dispatch<ChannelActionTypes>;
   scrollRef: RefObject<HTMLElement>;
 }
 
