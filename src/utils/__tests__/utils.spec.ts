@@ -7,6 +7,7 @@ import {
   isMultipleFilesMessage,
 } from '../index';
 import { AdminMessage, FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
+import { isMobileIOS } from '../utils';
 
 describe('Global-utils', () => {
   it('should find right index with binarySearch', () => {
@@ -188,5 +189,27 @@ describe('isURL', () => {
     invalidURLs.forEach((url) => {
       expect(isUrl(url)).toBe(false);
     });
+  });
+});
+
+describe('isMobileIOS', () => {
+  it('should return true for mobile webkit', () => {
+    const userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148';
+    expect(isMobileIOS(userAgent)).toBe(true);
+  });
+
+  it('should return true for mobile safari', () => {
+    const userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1';
+    expect(isMobileIOS(userAgent)).toBe(true);
+  });
+
+  it('should return true for ios mobile chrome', () => {
+    const chromeIOS = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/120.0.6099.101 Mobile/15E148 Safari/604.1';
+    expect(isMobileIOS(chromeIOS)).toBe(true);
+  });
+
+  it('should return false for android mobile chrome', () => {
+    const chromeAndroid = 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36';
+    expect(isMobileIOS(chromeAndroid)).toBe(false);
   });
 });
