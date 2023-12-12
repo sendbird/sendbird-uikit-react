@@ -1,389 +1,357 @@
 import React, {
   useEffect,
   useState,
-  useReducer,
   useRef,
   useMemo,
+  useCallback,
 } from 'react';
+import type { User } from '@sendbird/chat';
+import type {
+  FileMessageCreateParams,
+  MultipleFilesMessageCreateParams,
+  ReplyType,
+  UserMessageCreateParams,
+  UserMessageUpdateParams,
+} from '@sendbird/chat/message';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import { useGroupChannelMessages } from '@sendbird/uikit-tools';
 
-import type { SendableMessageType } from '../../../utils';
+import type { CoreMessageType, SendableMessageType } from '../../../utils';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { ThreadReplySelectType } from './const';
 
-import type { GroupChannelContextProps, GroupChannelProviderInterface } from '../types';
-import * as utils from './utils';
 import { getIsReactionEnabled } from '../../../utils/getIsReactionEnabled';
 
-import useHandleChannelEvents from './hooks/useHandleChannelEvents';
-import useGetChannel from './hooks/useGetChannel';
-import useInitialMessagesFetch from './hooks/useInitialMessagesFetch';
-import useHandleReconnect from './hooks/useHandleReconnect';
-import useScrollCallback from './hooks/useScrollCallback';
-import useScrollDownCallback from './hooks/useScrollDownCallback';
-import useDeleteMessageCallback from './hooks/useDeleteMessageCallback';
-import useUpdateMessageCallback from './hooks/useUpdateMessageCallback';
-import useResendMessageCallback from './hooks/useResendMessageCallback';
-import useSendMessageCallback from './hooks/useSendMessageCallback';
-import useSendFileMessageCallback from './hooks/useSendFileMessageCallback';
 import useToggleReactionCallback from './hooks/useToggleReactionCallback';
-import useScrollToMessage from './hooks/useScrollToMessage';
-import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 import { getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
-import { useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
-import { useHandleChannelPubsubEvents } from './hooks/useHandleChannelPubsubEvents';
-import { PublishingModuleType } from '../../internalInterfaces';
+import { RenderUserProfileProps } from '../../../types';
+import useScrollToMessage from './hooks/useScrollToMessage';
+
+export interface GroupChannelContextProps {
+  // Default
+  children?: React.ReactElement;
+  channelUrl: string;
+
+  // Flags
+  isReactionEnabled?: boolean;
+  isMessageGroupingEnabled?: boolean;
+  isMultipleFilesMessageEnabled?: boolean;
+  showSearchIcon?: boolean;
+  replyType?: ReplyType;
+  threadReplySelectType?: ThreadReplySelectType;
+  disableUserProfile?: boolean;
+  disableMarkAsRead?: boolean;
+  scrollBehavior?: 'smooth' | 'auto';
+  reconnectOnIdle?: boolean;
+
+  // Message Focusing
+  startingPoint?: number | null;
+  animatedMessageId?: number | null; // quote or thread
+  highlightedMessageId?: number | null; // message search
+
+  // Custom
+  // TODO: queries?: ChannelQueries; -> MessageCollectionFilter
+  filterMessageList?(messages: CoreMessageType): boolean;
+  // #Message
+  onBeforeSendUserMessage?(params: UserMessageCreateParams): UserMessageCreateParams | Promise<UserMessageCreateParams>;
+  onBeforeSendFileMessage?(params: FileMessageCreateParams): FileMessageCreateParams | Promise<FileMessageCreateParams>;
+  onBeforeSendVoiceMessage?: (params: FileMessageCreateParams) => FileMessageCreateParams | Promise<FileMessageCreateParams>;
+  onBeforeSendMultipleFilesMessage?: (params: MultipleFilesMessageCreateParams) => MultipleFilesMessageCreateParams | Promise<MultipleFilesMessageCreateParams>;
+  onBeforeUpdateUserMessage?(params: UserMessageUpdateParams): UserMessageUpdateParams | Promise<UserMessageUpdateParams>;
+  // #Focusing
+  onMessageAnimated?: () => void;
+  onMessageHighlighted?: () => void;
+  // #Click
+  onBackClick?(): void;
+  onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
+  onReplyInThreadClick?: (props: { message: SendableMessageType }) => void;
+  onSearchClick?(): void;
+  onQuoteMessageClick?: (props: { message: SendableMessageType }) => void;
+
+  // Render
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
+  renderUserMentionItem?: (props: { user: User }) => JSX.Element;
+}
+
+export interface GroupChannelProviderInterface extends GroupChannelContextProps, ReturnType<typeof useGroupChannelMessages> {
+  // Memo
+  currentChannel: GroupChannel | null;
+  nicknamesMap: Map<string, string>;
+  // Ref
+  scrollRef: React.MutableRefObject<HTMLDivElement>;
+  messageInputRef: React.MutableRefObject<HTMLDivElement>;
+  // State
+  isScrolled?: boolean;
+  setIsScrolled?: React.Dispatch<React.SetStateAction<boolean>>;
+  quoteMessage: SendableMessageType | null;
+  setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
+  initialTimeStamp: number;
+  setInitialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
+  animatedMessageId: number;
+  setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
+  highlightedMessageId: number;
+  setHighLightedMessageId: React.Dispatch<React.SetStateAction<number>>;
+  // Callback
+  scrollToMessage?(createdAt: number, messageId: number): void;
+  toggleReaction(message: SendableMessageType, emojiKey: string, isReacted: boolean): void,
+}
 
 const GroupChannelContext = React.createContext<GroupChannelProviderInterface>(null);
 
 const GroupChannelProvider = (props: GroupChannelContextProps) => {
   const {
+    // Default
     channelUrl,
     children,
-    isReactionEnabled,
+    // Flags
+    isReactionEnabled: localIsReactionEnabled,
     isMessageGroupingEnabled = true,
     isMultipleFilesMessageEnabled,
     showSearchIcon,
-    animatedMessage,
-    highlightedMessage,
+    replyType: localReplyType,
+    threadReplySelectType,
+    disableMarkAsRead = false,
+    reconnectOnIdle = true,
+    scrollBehavior = 'auto',
+    // Message Focusing
     startingPoint,
+    animatedMessageId: _animatedMessageId,
+    highlightedMessageId: _highlightedMessageId,
+    // Custom
+    // queries -> TODO: message collection filter
+    filterMessageList,
+    // #Message
     onBeforeSendUserMessage,
     onBeforeSendFileMessage,
-    onBeforeUpdateUserMessage,
     onBeforeSendVoiceMessage,
     onBeforeSendMultipleFilesMessage,
-    onChatHeaderActionClick,
-    onSearchClick,
-    onBackClick,
-    replyType: channelReplyType,
-    threadReplySelectType,
-    // queries,
-    filterMessageList,
-    disableMarkAsRead = false,
-    onReplyInThread,
-    onQuoteMessageClick,
+    onBeforeUpdateUserMessage,
+    // #Focusing
     onMessageAnimated,
     onMessageHighlighted,
-    scrollBehavior = 'auto',
-    reconnectOnIdle = true,
+    // #Click
+    onBackClick,
+    onChatHeaderActionClick,
+    onReplyInThreadClick,
+    onSearchClick,
+    onQuoteMessageClick,
+    // Render
+    renderUserMentionItem,
   } = props;
 
-  const globalStore = useSendbirdStateContext();
-  const { config } = globalStore;
-  const replyType = channelReplyType ?? config.replyType;
+  // Global context
+  const { config, stores } = useSendbirdStateContext();
   const {
-    pubSub,
     logger,
     userId,
-    isOnline,
-    imageCompression,
-    isMentionEnabled,
+    replyType: globalReplyType,
+    isReactionEnabled: globalIsReactionEnabled,
     onUserProfileMessage,
     markAsReadScheduler,
     groupChannel,
   } = config;
-  const sdk = globalStore?.stores?.sdkStore?.sdk;
-  const sdkInit = globalStore?.stores?.sdkStore?.initialized;
-  const globalConfigs = globalStore?.config;
+  const { sdkStore } = stores;
+  const sdk = sdkStore?.sdk;
+  const sdkInit = sdkStore?.initialized;
 
+  const replyType = localReplyType ?? globalReplyType;
+
+  // Get current channel
+  const [currentChannel, setCurrentChannel] = useState<GroupChannel | null>(null);
+  const getChannel = useCallback((channelUrl) => {
+    sdk.groupChannel.getChannel(channelUrl)
+      .then((ch) => {
+        setCurrentChannel(ch);
+        if (!disableMarkAsRead) {
+          markAsReadScheduler.push(ch);
+        }
+      })
+      .catch(() => setCurrentChannel(null));
+  }, [sdk.groupChannel, disableMarkAsRead]);
+  useEffect(() => {
+    getChannel(channelUrl);
+  }, [channelUrl, sdkInit]);
+
+  // Ref
+  const scrollRef = useRef(null);
+  const messageInputRef = useRef(null);
+
+  // States
   const [initialTimeStamp, setInitialTimeStamp] = useState(startingPoint);
-  useEffect(() => {
-    setInitialTimeStamp(startingPoint);
-  }, [startingPoint, channelUrl]);
-  const [animatedMessageId, setAnimatedMessageId] = useState(0);
-  const [highLightedMessageId, setHighLightedMessageId] = useState(highlightedMessage);
-  useEffect(() => {
-    setHighLightedMessageId(highlightedMessage);
-  }, [highlightedMessage]);
-  // const userFilledMessageListQuery = queries?.messageListParams;
   const [quoteMessage, setQuoteMessage] = useState<SendableMessageType>(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [animatedMessageId, setAnimatedMessageId] = useState(0);
+  const [highlightedMessageId, setHighLightedMessageId] = useState(_highlightedMessageId);
 
-  
-
-  const [messagesStore, messagesDispatcher] = useReducer(messagesReducer, messagesInitialState);
-  const scrollRef = useRef(null);
-
-  const {
-    allMessages,
-    localMessages,
-    loading,
-    initialized,
-    unreadSince,
-    unreadSinceDate,
-    isInvalid,
-    currentGroupChannel,
-    hasMorePrev,
-    oldestMessageTimeStamp,
-    hasMoreNext,
-    latestMessageTimeStamp,
-    emojiContainer,
-    readStatus,
-    typingMembers,
-  } = messagesStore;
-
-  const isSuper = currentGroupChannel?.isSuper || false;
-  const isBroadcast = currentGroupChannel?.isBroadcast || false;
-  const usingReaction = getIsReactionEnabled({
-    isBroadcast,
-    isSuper,
-    globalLevel: config?.isReactionEnabled,
-    moduleLevel: isReactionEnabled,
-  });
-
-  const emojiAllMap = useMemo(() => (
-    usingReaction
-      ? utils.getAllEmojisMapFromEmojiContainer(emojiContainer)
-      : new Map()
-  ), [emojiContainer]);
-  const nicknamesMap: Map<string, string> = useMemo(() => (
-    (usingReaction && currentGroupChannel)
-      ? utils.getNicknamesMapFromMembers(currentGroupChannel?.members)
-      : new Map()
-  ), [currentGroupChannel?.members]);
-
-  // Animate message
+  // Reset states when channel changes
   useEffect(() => {
-    if (animatedMessage) {
-      setAnimatedMessageId(animatedMessage);
-    }
-  }, [animatedMessage]);
+    setQuoteMessage(null);
+    setInitialTimeStamp(startingPoint);
+    setAnimatedMessageId(0);
+    setHighLightedMessageId(0);
+  }, [channelUrl]);
 
-  // Scrollup is default scroll for channel
-  const onScrollCallback = useScrollCallback({
-    currentGroupChannel,
-    oldestMessageTimeStamp,
-    userFilledMessageListQuery,
+  // Message Focusing
+  useEffect(() => {
+    setInitialTimeStamp(startingPoint);
+  }, [startingPoint]);
+  useEffect(() => {
+    setAnimatedMessageId(_animatedMessageId);
+  }, [_animatedMessageId]);
+  useEffect(() => {
+    setHighLightedMessageId(_highlightedMessageId);
+  }, [_highlightedMessageId]);
+
+  // Memos
+  const usingReaction = useMemo(() => {
+    return getIsReactionEnabled({
+      isSuper: currentChannel?.isSuper ?? false,
+      isBroadcast: currentChannel?.isBroadcast ?? false,
+      globalLevel: globalIsReactionEnabled,
+      moduleLevel: localIsReactionEnabled,
+    });
+  }, [
+    currentChannel.isSuper,
+    currentChannel.isBroadcast,
+    globalIsReactionEnabled,
+    localIsReactionEnabled,
+  ]);
+  const nicknamesMap = useMemo(() => (
+    (usingReaction && currentChannel?.members.length > 0)
+      ? new Map(currentChannel.members.map(({ userId, nickname }) => [userId, nickname]))
+      : new Map<string, string>()
+  ), [currentChannel?.members]);
+
+  // Callbacks
+  const toggleReaction = useToggleReactionCallback(currentChannel, logger);
+
+  // Store - useGroupChannelMessages
+  const {
+    loading,
+    refreshing,
+    messages,
+    newMessages,
+    refresh,
+    next,
+    hasNext,
+    prev,
+    hasPrev,
+    resetNewMessages,
+    sendUserMessage,
+    sendFileMessage,
+    updateUserMessage,
+    updateFileMessage,
+    resendMessage,
+    deleteMessage,
+    resetWithStartingPoint,
+  } = useGroupChannelMessages(sdk, currentChannel, userId, {
     replyType,
-  }, {
-    hasMorePrev,
+    startingPoint: initialTimeStamp,
+    // markAsRead?: (channels: GroupChannel[]) => void;
+    // shouldCountNewMessages?: () => boolean;
+    // collectionCreator?: (collectionParams?: DefaultCollectionParams) => MessageCollection;
+    // onMessagesReceived?: (messages: SendbirdMessage[]) => void;
+    // onMessagesUpdated?: (messages: SendbirdMessage[]) => void;
+    // onChannelDeleted?: (channelUrl: string) => void;
+    // onChannelUpdated?: (channel: GroupChannel) => void;
+    // onCurrentUserBanned?: () => void;
     logger,
-    messagesDispatcher,
-    sdk,
   });
 
+  // Callbacks (using context)
   const scrollToMessage = useScrollToMessage({
     setInitialTimeStamp,
     setAnimatedMessageId,
-    allMessages,
+    allMessages: messages,
     scrollRef,
   }, { logger });
 
-  // onScrollDownCallback is added for navigation to different timestamps on messageSearch
-  // hasMorePrev, onScrollCallback -> scroll up(default behavior)
-  // hasMoreNext, onScrollDownCallback -> scroll down
-  const onScrollDownCallback = useScrollDownCallback({
-    currentGroupChannel,
-    latestMessageTimeStamp,
-    userFilledMessageListQuery,
-    hasMoreNext,
-    replyType,
-  }, {
-    logger,
-    messagesDispatcher,
-    sdk,
-  });
-
-  const toggleReaction = useToggleReactionCallback({ currentGroupChannel }, { logger });
-
-  // to create message-datasource
-  // this hook sets currentGroupChannel asynchronously
-  useGetChannel(
-    { channelUrl, sdkInit, disableMarkAsRead },
-    { messagesDispatcher, sdk, logger, markAsReadScheduler },
-  );
-
-  // to set quote message as null
-  useEffect(() => {
-    setQuoteMessage(null);
-  }, [channelUrl]);
-
-  // Hook to handle ChannelEvents and send values to useReducer using messagesDispatcher
-  useHandleChannelEvents(
-    {
-      currentGroupChannel,
-      sdkInit,
-      currentUserId: userId,
-      disableMarkAsRead,
-    },
-    {
-      messagesDispatcher,
-      sdk,
-      logger,
-      scrollRef,
-      setQuoteMessage,
-    },
-  );
-
-  // hook that fetches messages when channel changes
-  // to be clear here useGetChannel sets currentGroupChannel
-  // and useInitialMessagesFetch executes when currentGroupChannel changes
-  // p.s This one executes on initialTimeStamp change too
-  useInitialMessagesFetch({
-    currentGroupChannel,
-    userFilledMessageListQuery,
-    initialTimeStamp,
-    replyType,
-    setIsScrolled,
-  }, {
-    logger,
-    scrollRef,
-    messagesDispatcher,
-  });
-
+  // 1. TODO: useGroupChannelEvents - 참고: useHandleChannelEvents
+  // 2. TODO: 없앨지 살펴보기
   // handles API calls from withSendbird
-  useHandleChannelPubsubEvents({
-    channelUrl,
-    sdkInit,
-    pubSub,
-    dispatcher: messagesDispatcher,
-    scrollRef,
-  });
-
-  // handling connection breaks
-  useHandleReconnect({ isOnline, replyType, disableMarkAsRead, reconnectOnIdle }, {
-    logger,
-    sdk,
-    scrollRef,
-    currentGroupChannel,
-    messagesDispatcher,
-    userFilledMessageListQuery,
-    markAsReadScheduler,
-  });
-
-  // callbacks for Message CURD actions
-  const deleteMessage = useDeleteMessageCallback({ currentGroupChannel, messagesDispatcher },
-    { logger });
-  const updateMessage = useUpdateMessageCallback(
-    { currentGroupChannel, messagesDispatcher, onBeforeUpdateUserMessage, isMentionEnabled },
-    { logger, pubSub },
-  );
-  const resendMessage = useResendMessageCallback(
-    { currentGroupChannel, messagesDispatcher },
-    { logger },
-  );
-  const [messageInputRef, sendMessage] = useSendMessageCallback(
-    {
-      currentGroupChannel,
-      isMentionEnabled,
-      onBeforeSendUserMessage,
-    },
-    {
-      logger,
-      pubSub,
-      scrollRef,
-      messagesDispatcher,
-    },
-  );
-  const [sendFileMessage] = useSendFileMessageCallback(
-    {
-      currentGroupChannel,
-      imageCompression,
-      onBeforeSendFileMessage,
-    },
-    {
-      logger,
-      pubSub,
-      scrollRef,
-      messagesDispatcher,
-    },
-  );
-  const [sendVoiceMessage] = useSendVoiceMessageCallback(
-    {
-      currentGroupChannel,
-      onBeforeSendVoiceMessage,
-    },
-    {
-      logger,
-      pubSub,
-      scrollRef,
-      messagesDispatcher,
-    },
-  );
-  const [sendMultipleFilesMessage] = useSendMultipleFilesMessage({
-    currentChannel: currentGroupChannel,
-    onBeforeSendMultipleFilesMessage,
-    publishingModules: [PublishingModuleType.CHANNEL],
-  }, {
-    logger,
-    pubSub,
-    scrollRef,
-  });
+  // useHandleChannelPubsubEvents({
+  //   channelUrl,
+  //   sdkInit,
+  //   pubSub,
+  //   scrollRef,
+  // });
 
   return (
     <GroupChannelContext.Provider value={{
-      // props
+      // # Props
       channelUrl,
       isReactionEnabled: usingReaction,
       isMessageGroupingEnabled,
       isMultipleFilesMessageEnabled,
-      showSearchIcon: showSearchIcon ?? globalConfigs.showSearchIcon,
-      highlightedMessage,
-      startingPoint,
-      onBeforeSendUserMessage,
-      onBeforeSendFileMessage,
-      onBeforeUpdateUserMessage,
-      onChatHeaderActionClick,
-      onSearchClick,
-      onBackClick,
+      showSearchIcon: showSearchIcon ?? config.showSearchIcon,
       replyType,
       threadReplySelectType: threadReplySelectType
         ?? getCaseResolvedThreadReplySelectType(groupChannel.threadReplySelectType).upperCase
         ?? ThreadReplySelectType.THREAD,
+      disableMarkAsRead,
+      scrollBehavior,
+      reconnectOnIdle,
+
+      // # Custom Props
       // queries,
       filterMessageList,
-      disableMarkAsRead,
-      onReplyInThread,
-      onQuoteMessageClick,
+      // ## Message
+      onBeforeSendUserMessage,
+      onBeforeSendFileMessage,
+      onBeforeSendVoiceMessage,
+      onBeforeSendMultipleFilesMessage,
+      onBeforeUpdateUserMessage,
+      // ## Focusing
       onMessageAnimated,
       onMessageHighlighted,
+      // ## Click
+      onBackClick,
+      onChatHeaderActionClick,
+      onReplyInThreadClick,
+      onSearchClick,
+      onQuoteMessageClick,
+      // ## Custom render
+      renderUserMentionItem,
 
-      // messagesStore
-      allMessages,
-      localMessages,
-      loading,
-      initialized,
-      unreadSince,
-      unreadSinceDate,
-      isInvalid,
-      currentGroupChannel,
-      hasMorePrev,
-      hasMoreNext,
-      oldestMessageTimeStamp,
-      latestMessageTimeStamp,
-      emojiContainer,
-      readStatus,
-      typingMembers,
-
-      // utils
-      scrollToMessage,
-      quoteMessage,
-      setQuoteMessage,
-      deleteMessage,
-      updateMessage,
-      resendMessage,
-      messageInputRef,
-      sendMessage,
-      sendFileMessage,
-      sendVoiceMessage,
-      sendMultipleFilesMessage,
-      initialTimeStamp,
-      messageActionTypes: channelActions,
-      messagesDispatcher,
-      setInitialTimeStamp,
-      setAnimatedMessageId,
-      setHighLightedMessageId,
-      animatedMessageId,
-      highLightedMessageId,
+      // Internal Interface
+      currentChannel,
       nicknamesMap,
-      emojiAllMap,
-      onScrollCallback,
-      onScrollDownCallback,
       scrollRef,
-      scrollBehavior,
-      toggleReaction,
+      messageInputRef,
+
       isScrolled,
       setIsScrolled,
+      quoteMessage,
+      setQuoteMessage,
+      initialTimeStamp,
+      setInitialTimeStamp,
+      animatedMessageId,
+      setAnimatedMessageId,
+      highlightedMessageId,
+      setHighLightedMessageId,
+
+      scrollToMessage,
+      toggleReaction,
+
+      // # useGroupChannelMessages
+      loading,
+      refreshing,
+      messages,
+      newMessages,
+      refresh,
+      next,
+      hasNext,
+      prev,
+      hasPrev,
+      resetNewMessages,
+      sendUserMessage,
+      sendFileMessage,
+      updateUserMessage,
+      updateFileMessage,
+      resendMessage,
+      deleteMessage,
+      resetWithStartingPoint,
     }}>
       <UserProfileProvider
         disableUserProfile={props?.disableUserProfile ?? config?.disableUserProfile}

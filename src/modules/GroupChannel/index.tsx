@@ -1,8 +1,8 @@
 import React from 'react';
 
-import type { GroupChannelContextProps } from './types';
-import ChannelUI, { ChannelUIProps } from './components/ChannelUI';
+import type { GroupChannelContextProps } from './context/GroupChannelProvider';
 import { GroupChannelProvider } from './context/GroupChannelProvider';
+import ChannelUI, { ChannelUIProps } from './components/ChannelUI';
 
 export interface GroupChannelProps extends GroupChannelContextProps, ChannelUIProps { }
 

@@ -1,9 +1,9 @@
 import { renderHook } from '@testing-library/react';
 import { useScrollBehavior } from '../useScrollBehavior';
-import { useChannelContext } from '../../../../context/ChannelProvider';
+import { useGroupChannelContext } from '../../../../context/ChannelProvider';
 
 jest.mock('../../../../context/ChannelProvider', () => ({
-  useChannelContext: jest.fn(),
+  useGroupChannelContext: jest.fn(),
 }));
 
 describe('useScrollBehavior', () => {
@@ -11,7 +11,7 @@ describe('useScrollBehavior', () => {
     const scrollRefMock = { current: { style: { scrollBehavior: 'auto' } } };
     const scrollBehaviorMock = 'smooth';
 
-    useChannelContext.mockReturnValue({
+    useGroupChannelContext.mockReturnValue({
       scrollRef: scrollRefMock,
       scrollBehavior: scrollBehaviorMock,
     });
@@ -24,7 +24,7 @@ describe('useScrollBehavior', () => {
   it('should set the scrollBehavior to `auto` by default if scrollBehavior prop is not set', () => {
     const scrollRefMock = { current: { style: { } } };
 
-    useChannelContext.mockReturnValue({
+    useGroupChannelContext.mockReturnValue({
       scrollRef: scrollRefMock,
     });
 
