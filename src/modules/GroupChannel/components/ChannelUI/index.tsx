@@ -57,7 +57,9 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
     );
   }
 
+  // TODO: only show when getChannel fails with an error
   if (channelUrl && !currentChannel) {
+    // && getCurrentChannelError
     return <div className="sendbird-conversation">{renderPlaceholderInvalid?.() || <PlaceHolder type={PlaceHolderTypes.WRONG} />}</div>;
   }
 

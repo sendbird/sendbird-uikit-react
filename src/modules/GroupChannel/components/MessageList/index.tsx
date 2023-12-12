@@ -1,5 +1,5 @@
 import './index.scss';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
@@ -11,16 +11,12 @@ import UnreadCount from '../UnreadCount';
 import FrozenNotification from '../FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { UserMessage } from '@sendbird/chat/message';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
-import { useSetScrollToBottom } from './hooks/useSetScrollToBottom';
 import { useScrollBehavior } from './hooks/useScrollBehavior';
 import TypingIndicatorBubble, { TypingIndicatorBubbleProps } from '../../../../ui/TypingIndicatorBubble';
-import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 import { CoreMessageType } from '../../../../utils';
 import { Member } from '@sendbird/chat/groupChannel';
 import { useGroupChannelHandler } from '@sendbird/uikit-tools';
-import useDidMountEffect from '../../../../utils/useDidMountEffect';
 
 const SCROLL_BOTTOM_PADDING = 50;
 
@@ -42,29 +38,30 @@ const MessageList: React.FC<MessageListProps> = ({
   renderFrozenNotification,
 }) => {
   const {
-    prev,
-    next,
     hasNext,
-    hasPrev,
     loading,
     messages,
     scrollToBottom,
 
     isScrollBottomReached,
-    setAnimatedMessageId,
     isMessageGroupingEnabled,
     scrollRef,
     scrollDistanceFromBottomRef,
     currentChannel,
-    disableMarkAsRead,
-    filterMessageList,
     replyType,
   } = useGroupChannelContext();
-
   const store = useSendbirdStateContext();
-  const markAsReadScheduler = store.config.markAsReadScheduler;
+
+  const [unreadSinceDate, setUnreadSinceDate] = useState<Date>();
 
   useScrollBehavior();
+  useEffect(() => {
+    if (isScrollBottomReached) {
+      setUnreadSinceDate(undefined);
+    } else {
+      setUnreadSinceDate(new Date());
+    }
+  }, [isScrollBottomReached]);
 
   /**
    * 1. Move the message list scroll
@@ -72,31 +69,67 @@ const MessageList: React.FC<MessageListProps> = ({
    * 2. Keep the scrollBottom value after fetching new message list
    */
   const onMessageContentSizeChanged = (isBottomMessageAffected = false): void => {
-    const current = scrollRef?.current;
-    if (current) {
+    const elem = scrollRef.current;
+    if (elem) {
       const latestDistance = scrollDistanceFromBottomRef.current;
-      const currentDistance = current.scrollHeight - current.scrollTop - current.offsetHeight;
+      const currentDistance = elem.scrollHeight - elem.scrollTop - elem.offsetHeight;
       if (latestDistance < currentDistance && (!isBottomMessageAffected || latestDistance < SCROLL_BUFFER)) {
         // Move the scroll as much as the height of the message has changed
-        current.scrollTop += currentDistance - latestDistance;
+        elem.scrollTop += currentDistance - latestDistance;
       }
     }
   };
 
+  const renderer = {
+    frozenNotification() {
+      if (!currentChannel || !currentChannel.isFrozen) return null;
+
+      if (renderFrozenNotification) return renderFrozenNotification();
+      return <FrozenNotification className="sendbird-conversation__messages__notification" />;
+    },
+    unreadMessagesNotification() {
+      if (isScrollBottomReached || !unreadSinceDate) return null;
+      return (
+        <UnreadCount
+          className="sendbird-conversation__messages__notification"
+          count={currentChannel?.unreadMessageCount}
+          lastReadAt={unreadSinceDate}
+          onClick={scrollToBottom}
+        />
+      );
+    },
+    scrollToBottomButton() {
+      // TODO: should we add `scrollDistanceFromBottomRef.current <= SCROLL_BOTTOM_PADDING` here?
+      //  if so scrollDistanceFromBottom should be changed to state
+      if (hasNext() || isScrollBottomReached) return null;
+      return (
+        <div
+          className="sendbird-conversation__scroll-bottom-button"
+          onClick={scrollToBottom}
+          onKeyDown={scrollToBottom}
+          tabIndex={0}
+          role="button"
+        >
+          <Icon width="24px" height="24px" type={IconTypes.CHEVRON_DOWN} fillColor={IconColors.PRIMARY} />
+        </div>
+      );
+    },
+  };
+
   if (loading) {
-    return typeof renderPlaceholderLoader === 'function' ? renderPlaceholderLoader() : <PlaceHolder type={PlaceHolderTypes.LOADING} />;
+    if (renderPlaceholderLoader) return renderPlaceholderLoader();
+    return <PlaceHolder type={PlaceHolderTypes.LOADING} />;
   }
 
-  if (!loading && messages.length === 0) {
-    if (renderPlaceholderEmpty && typeof renderPlaceholderEmpty === 'function') {
-      return renderPlaceholderEmpty();
-    }
+  if (messages.length === 0) {
+    if (renderPlaceholderEmpty) return renderPlaceholderEmpty();
     return <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />;
   }
 
   return (
     <>
-      {!isScrolled && <PlaceHolder type={PlaceHolderTypes.LOADING} />}
+      {/* TODO: Display the loading indicator while adjusting the scroll position */}
+      {/*{!isScrolled && <PlaceHolder type={PlaceHolderTypes.LOADING} />}*/}
       <div className={`sendbird-conversation__messages ${className}`}>
         <div className="sendbird-conversation__scroll-container">
           <div className="sendbird-conversation__padding" />
@@ -134,45 +167,11 @@ const MessageList: React.FC<MessageListProps> = ({
         </div>
 
         {/* show frozen notifications, */}
-        {currentChannel?.isFrozen &&
-          (renderFrozenNotification ? (
-            renderFrozenNotification()
-          ) : (
-            <FrozenNotification className="sendbird-conversation__messages__notification" />
-          ))}
+        {renderer.frozenNotification()}
 
         {/* show new message notifications, */}
-        {!isScrollBottomReached && unreadSinceDate && (
-          <UnreadCount
-            className="sendbird-conversation__messages__notification"
-            count={currentChannel?.unreadMessageCount}
-            lastReadAt={unreadSinceDate}
-            onClick={() => {
-              // 1. scroll to bottom
-              if (scrollRef?.current) scrollRef.current.scrollTop = Number.MAX_SAFE_INTEGER;
-              if (!disableMarkAsRead && !!currentChannel) {
-                markAsReadScheduler.push(currentChannel);
-                messagesDispatcher({
-                  type: messageActionTypes.MARK_AS_READ,
-                  payload: { channel: currentChannel },
-                });
-              }
-              setAnimatedMessageId(null);
-              setHighLightedMessageId(null);
-            }}
-          />
-        )}
-        {!isScrollBottomReached && scrollDistanceFromBottomRef.current > SCROLL_BOTTOM_PADDING && (
-          <div
-            className="sendbird-conversation__scroll-bottom-button"
-            onClick={scrollToBottom}
-            onKeyDown={scrollToBottom}
-            tabIndex={0}
-            role="button"
-          >
-            <Icon width="24px" height="24px" type={IconTypes.CHEVRON_DOWN} fillColor={IconColors.PRIMARY} />
-          </div>
-        )}
+        {renderer.unreadMessagesNotification}
+        {renderer.scrollToBottomButton}
       </div>
     </>
   );
