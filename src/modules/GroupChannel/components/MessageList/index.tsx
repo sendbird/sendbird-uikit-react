@@ -41,6 +41,7 @@ const MessageList: React.FC<MessageListProps> = ({
     hasNext,
     loading,
     messages,
+    newMessages,
     scrollToBottom,
 
     isScrollBottomReached,
@@ -92,7 +93,7 @@ const MessageList: React.FC<MessageListProps> = ({
       return (
         <UnreadCount
           className="sendbird-conversation__messages__notification"
-          count={currentChannel?.unreadMessageCount}
+          count={newMessages.length}
           lastReadAt={unreadSinceDate}
           onClick={scrollToBottom}
         />
@@ -166,10 +167,7 @@ const MessageList: React.FC<MessageListProps> = ({
           </div>
         </div>
 
-        {/* show frozen notifications, */}
         {renderer.frozenNotification()}
-
-        {/* show new message notifications, */}
         {renderer.unreadMessagesNotification}
         {renderer.scrollToBottomButton}
       </div>
