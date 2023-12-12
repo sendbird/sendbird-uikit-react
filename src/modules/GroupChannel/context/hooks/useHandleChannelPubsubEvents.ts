@@ -1,4 +1,4 @@
-import React, { RefObject, useEffect } from 'react';
+import { RefObject, useEffect } from 'react';
 
 import { scrollIntoLast } from '../utils';
 import { PUBSUB_TOPICS, SBUGlobalPubSub } from '../../../../lib/pubSub/topics';

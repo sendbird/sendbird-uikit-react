@@ -1,6 +1,6 @@
 import React from 'react';
 import type { EmojiContainer } from '@sendbird/chat';
-import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { BaseMessage } from '@sendbird/chat/message';
 import { SendingStatus } from '@sendbird/chat/message';
 import format from 'date-fns/format';
