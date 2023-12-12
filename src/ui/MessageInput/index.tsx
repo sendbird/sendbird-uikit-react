@@ -19,7 +19,7 @@ import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
 import { USER_MENTION_PREFIX } from '../../modules/Message/consts';
 import { TOKEN_TYPES } from '../../modules/Message/utils/tokens/types';
 import { checkIfFileUploadEnabled } from './messageInputUtils';
-import { isMobileWKWebviewOrSafari } from '../../utils/utils';
+import { isMobileIOS } from '../../utils/utils';
 
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { User } from '@sendbird/chat';
@@ -469,7 +469,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
                  *
                  * Due to this issue, even though reset the input with innerHTML, incomplete text compositions from the previous input are displayed in the next input.
                  * */
-                if (!isMobileWKWebviewOrSafari(navigator.userAgent)) {
+                if (!isMobileIOS(navigator.userAgent)) {
                   e.preventDefault();
                 }
                 sendMessage();
