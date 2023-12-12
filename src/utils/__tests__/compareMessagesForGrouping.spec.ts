@@ -1,4 +1,4 @@
-import { compareMessagesForGrouping } from '../messages.ts';
+import { compareMessagesForGrouping } from '../../utils/messages';
 // import { compareMessagesForGrouping, isSameGroup } from '../messages.ts';
 
 // jest.mock('../messages', () => ({

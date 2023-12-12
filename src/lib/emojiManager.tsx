@@ -1,18 +1,18 @@
 /**
  * ## How to use?
- * 
+ *
  * const { emojiManager } = useSendbirdStateContext();
  * const allEmojis = emojiManager.getAllEmojis();
  * const emojiUrl = emojiManager.getEmojiUrl(reactionKey: string);
- * 
- * 
+ *
+ *
  * ## Additional util
- * 
+ *
  * isReactedByMe(userId)
  */
 import type { Emoji, EmojiCategory, EmojiContainer } from '@sendbird/chat';
 
-import type { SendbirdChatType } from "./types";
+import type { SendbirdChatType } from './types';
 import { Logger } from './SendbirdState';
 import { match } from 'ts-pattern';
 import { Reaction } from '@sendbird/chat/message';
@@ -37,9 +37,10 @@ export class EmojiManager {
       });
   }
 
-  private get AllEmojisAsArray () {
+  private get AllEmojisAsArray() {
     return this.emojiContainer.emojiCategories.flatMap((category: EmojiCategory) => category.emojis);
   }
+
   private get AllEmojisAsMap() {
     return this.emojiContainer.emojiCategories
       .flatMap((category: EmojiCategory) => category.emojis)
@@ -48,6 +49,7 @@ export class EmojiManager {
         return map;
       }, new Map<string, string>());
   }
+
   public getAllEmojis(type: string) {
     return match(type)
       .when((type) => ['array', 'arr'].includes(type), () => this.AllEmojisAsArray)
