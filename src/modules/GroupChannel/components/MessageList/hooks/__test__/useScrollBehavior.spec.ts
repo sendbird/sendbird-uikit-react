@@ -1,8 +1,8 @@
 import { renderHook } from '@testing-library/react';
 import { useScrollBehavior } from '../useScrollBehavior';
-import { useGroupChannelContext } from '../../../../context/ChannelProvider';
+import { useGroupChannelContext } from '../../../../context/GroupChannelProvider';
 
-jest.mock('../../../../context/ChannelProvider', () => ({
+jest.mock('../../../../context/GroupChannelProvider', () => ({
   useGroupChannelContext: jest.fn(),
 }));
 
