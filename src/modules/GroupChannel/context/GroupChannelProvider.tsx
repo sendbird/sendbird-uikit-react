@@ -1,33 +1,29 @@
-import React, {
-  useEffect,
-  useState,
-  useRef,
-  useMemo,
-  useCallback,
-} from 'react';
-import { match } from 'ts-pattern';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { User } from '@sendbird/chat';
 import {
-  ReplyType as SendbirdReplyType,
   FileMessageCreateParams,
   MultipleFilesMessageCreateParams,
+  ReplyType as ChatReplyType,
   UserMessageCreateParams,
   UserMessageUpdateParams,
 } from '@sendbird/chat/message';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
-import { useGroupChannelMessages } from '@sendbird/uikit-tools';
+import { useAsyncEffect, useGroupChannelMessages, useIIFE, usePreservedCallback } from '@sendbird/uikit-tools';
 
 import type { CoreMessageType, SendableMessageType } from '../../../utils';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { ThreadReplySelectType } from './const';
-
-import { getIsReactionEnabled } from '../../../utils/getIsReactionEnabled';
-
 import { RenderUserProfileProps, ReplyType } from '../../../types';
 import useToggleReactionCallback from './hooks/useToggleReactionCallback';
-import { getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
-import useScrollToMessage from './hooks/useScrollToMessage';
+import { getCaseResolvedReplyType, getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
+import { scrollToRenderedMessage } from './utils';
+import { SCROLL_BUFFER } from '../../../utils/consts';
+import { useOnScrollPositionChangeDetectorWithRef } from '../../../hooks/useOnScrollReachedEndDetector';
+import PUBSUB_TOPICS from '../../../lib/pubSub/topics';
+import { shouldPubSubPublishToChannel } from '../../internalInterfaces';
+
+type OnBeforeHandler<T> = (params: T) => T | Promise<T>;
 
 export interface GroupChannelContextProps {
   // Default
@@ -46,23 +42,23 @@ export interface GroupChannelContextProps {
   scrollBehavior?: 'smooth' | 'auto';
   reconnectOnIdle?: boolean;
 
+  startingPoint?: number;
+
   // Message Focusing
-  startingPoint?: number | null;
-  animatedMessageId?: number | null; // quote or thread
-  highlightedMessageId?: number | null; // message search
+  animatedMessageId?: number | null;
+  onMessageAnimated?: () => void;
 
   // Custom
   // TODO: queries?: ChannelQueries; -> MessageCollectionFilter
   filterMessageList?(messages: CoreMessageType): boolean;
-  // #Message
-  onBeforeSendUserMessage?(params: UserMessageCreateParams): UserMessageCreateParams | Promise<UserMessageCreateParams>;
-  onBeforeSendFileMessage?(params: FileMessageCreateParams): FileMessageCreateParams | Promise<FileMessageCreateParams>;
-  onBeforeSendVoiceMessage?: (params: FileMessageCreateParams) => FileMessageCreateParams | Promise<FileMessageCreateParams>;
-  onBeforeSendMultipleFilesMessage?: (params: MultipleFilesMessageCreateParams) => MultipleFilesMessageCreateParams | Promise<MultipleFilesMessageCreateParams>;
-  onBeforeUpdateUserMessage?(params: UserMessageUpdateParams): UserMessageUpdateParams | Promise<UserMessageUpdateParams>;
-  // #Focusing
-  onMessageAnimated?: () => void;
-  onMessageHighlighted?: () => void;
+
+  // Handlers
+  onBeforeSendUserMessage?: OnBeforeHandler<UserMessageCreateParams>;
+  onBeforeSendFileMessage?: OnBeforeHandler<FileMessageCreateParams>;
+  onBeforeSendVoiceMessage?: OnBeforeHandler<FileMessageCreateParams>;
+  onBeforeSendMultipleFilesMessage?: OnBeforeHandler<MultipleFilesMessageCreateParams>;
+  onBeforeUpdateUserMessage?: OnBeforeHandler<UserMessageUpdateParams>;
+
   // #Click
   onBackClick?(): void;
   onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
@@ -76,26 +72,23 @@ export interface GroupChannelContextProps {
 }
 
 export interface GroupChannelProviderInterface extends GroupChannelContextProps, ReturnType<typeof useGroupChannelMessages> {
-  // Memo
   currentChannel: GroupChannel | null;
   nicknamesMap: Map<string, string>;
-  // Ref
+
   scrollRef: React.MutableRefObject<HTMLDivElement>;
+  scrollDistanceFromBottomRef: React.MutableRefObject<number>;
   messageInputRef: React.MutableRefObject<HTMLDivElement>;
-  // State
-  isScrolled?: boolean;
-  setIsScrolled?: React.Dispatch<React.SetStateAction<boolean>>;
+
   quoteMessage: SendableMessageType | null;
   setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
-  initialTimeStamp: number;
-  setInitialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
   animatedMessageId: number;
   setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
-  highlightedMessageId: number;
-  setHighLightedMessageId: React.Dispatch<React.SetStateAction<number>>;
-  // Callback
-  scrollToMessage?(createdAt: number, messageId: number): void;
-  toggleReaction(message: SendableMessageType, emojiKey: string, isReacted: boolean): void,
+  isScrollBottomReached: boolean;
+  setIsScrollBottomReached: React.Dispatch<React.SetStateAction<boolean>>;
+
+  scrollToBottom: () => void;
+  scrollToMessage: (createdAt: number, messageId: number) => void;
+  toggleReaction(message: SendableMessageType, emojiKey: string, isReacted: boolean): void;
 }
 
 const GroupChannelContext = React.createContext<GroupChannelProviderInterface>(null);
@@ -106,19 +99,20 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     channelUrl,
     children,
     // Flags
-    isReactionEnabled: localIsReactionEnabled,
+    isReactionEnabled: moduleReactionEnabled,
+    replyType: moduleReplyType,
+    threadReplySelectType: moduleThreadReplySelectType,
     isMessageGroupingEnabled = true,
     isMultipleFilesMessageEnabled,
     showSearchIcon,
-    replyType: localReplyType,
-    threadReplySelectType,
     disableMarkAsRead = false,
     reconnectOnIdle = true,
     scrollBehavior = 'auto',
+
     // Message Focusing
     startingPoint,
     animatedMessageId: _animatedMessageId,
-    highlightedMessageId: _highlightedMessageId,
+
     // Custom
     // queries -> TODO: message collection filter
     filterMessageList,
@@ -130,7 +124,6 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     onBeforeUpdateUserMessage,
     // #Focusing
     onMessageAnimated,
-    onMessageHighlighted,
     // #Click
     onBackClick,
     onChatHeaderActionClick,
@@ -143,89 +136,56 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
 
   // Global context
   const { config, stores } = useSendbirdStateContext();
-  const {
-    logger,
-    userId,
-    replyType: globalReplyType,
-    isReactionEnabled: globalIsReactionEnabled,
-    onUserProfileMessage,
-    markAsReadScheduler,
-    groupChannel,
-  } = config;
+
   const { sdkStore } = stores;
-  const sdk = sdkStore?.sdk;
-  const sdkInit = sdkStore?.initialized;
+  const { logger, userId, onUserProfileMessage, markAsReadScheduler } = config;
 
-  const replyType = localReplyType ?? globalReplyType;
-
-  // Get current channel
+  // State
+  const [quoteMessage, setQuoteMessage] = useState<SendableMessageType>(null);
+  const [animatedMessageId, setAnimatedMessageId] = useState(0);
   const [currentChannel, setCurrentChannel] = useState<GroupChannel | null>(null);
-  const getChannel = useCallback((channelUrl) => {
-    sdk.groupChannel.getChannel(channelUrl)
-      .then((ch) => {
-        setCurrentChannel(ch);
-        if (!disableMarkAsRead) {
-          markAsReadScheduler.push(ch);
-        }
-      })
-      .catch(() => setCurrentChannel(null));
-  }, [sdk.groupChannel, disableMarkAsRead]);
-  useEffect(() => {
-    getChannel(channelUrl);
-  }, [channelUrl, sdkInit]);
+  const [isScrollBottomReached, setIsScrollBottomReached] = useState(false);
 
   // Ref
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollDistanceFromBottomRef = useRef(0);
   const messageInputRef = useRef(null);
 
-  // States
-  const [initialTimeStamp, setInitialTimeStamp] = useState(startingPoint);
-  const [quoteMessage, setQuoteMessage] = useState<SendableMessageType>(null);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [animatedMessageId, setAnimatedMessageId] = useState(0);
-  const [highlightedMessageId, setHighLightedMessageId] = useState(_highlightedMessageId);
-
-  // Reset states when channel changes
-  useEffect(() => {
-    setQuoteMessage(null);
-    setInitialTimeStamp(startingPoint);
-    setAnimatedMessageId(0);
-    setHighLightedMessageId(0);
-  }, [channelUrl]);
-
-  // Message Focusing
-  useEffect(() => {
-    setInitialTimeStamp(startingPoint);
-  }, [startingPoint]);
-  useEffect(() => {
-    setAnimatedMessageId(_animatedMessageId);
-  }, [_animatedMessageId]);
-  useEffect(() => {
-    setHighLightedMessageId(_highlightedMessageId);
-  }, [_highlightedMessageId]);
-
-  // Memos
-  const usingReaction = useMemo(() => {
-    return getIsReactionEnabled({
-      isSuper: currentChannel?.isSuper ?? false,
-      isBroadcast: currentChannel?.isBroadcast ?? false,
-      globalLevel: globalIsReactionEnabled,
-      moduleLevel: localIsReactionEnabled,
-    });
-  }, [
-    currentChannel.isSuper,
-    currentChannel.isBroadcast,
-    globalIsReactionEnabled,
-    localIsReactionEnabled,
-  ]);
-  const nicknamesMap = useMemo(() => (
-    (usingReaction && currentChannel?.members.length > 0)
-      ? new Map(currentChannel.members.map(({ userId, nickname }) => [userId, nickname]))
-      : new Map<string, string>()
-  ), [currentChannel?.members]);
-
-  // Callbacks
   const toggleReaction = useToggleReactionCallback(currentChannel, logger);
+
+  const replyType = getCaseResolvedReplyType(moduleReplyType ?? config.groupChannel.replyType).upperCase;
+  const threadReplySelectType = getCaseResolvedThreadReplySelectType(
+    moduleThreadReplySelectType ?? config.groupChannel.threadReplySelectType
+  ).upperCase;
+  const chatReplyType = useIIFE(() => {
+    if (replyType === 'NONE') return ChatReplyType.NONE;
+    return ChatReplyType.ONLY_REPLY_TO_CHANNEL;
+  });
+  const isReactionEnabled = useIIFE(() => {
+    if (!currentChannel || currentChannel.isSuper || currentChannel.isBroadcast || currentChannel.isEphemeral) return false;
+    return moduleReactionEnabled ?? config.groupChannel.enableReactions;
+  });
+
+  const nicknamesMap = useMemo(
+    () => new Map((currentChannel?.members ?? []).map(({ userId, nickname }) => [userId, nickname])),
+    [currentChannel?.members]
+  );
+
+  // Initialize current channel
+  useAsyncEffect(async () => {
+    if (sdkStore.initialized) {
+      try {
+        const channel = await sdkStore.sdk.groupChannel.getChannel(channelUrl);
+        setCurrentChannel(channel);
+      } catch {
+        setCurrentChannel(null);
+      } finally {
+        // Reset states when channel changes
+        setQuoteMessage(null);
+        setAnimatedMessageId(0);
+      }
+    }
+  }, [sdkStore.initialized, sdkStore.sdk, channelUrl]);
 
   // Store - useGroupChannelMessages
   const {
@@ -246,17 +206,17 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     resendMessage,
     deleteMessage,
     resetWithStartingPoint,
-  } = useGroupChannelMessages(sdk, currentChannel, userId, {
-    replyType: match(replyType)
-      .with('NONE', () => SendbirdReplyType.NONE)
-      .with('QUOTE_REPLY', () => SendbirdReplyType.ALL)
-      .with('THREAD', () => SendbirdReplyType.ALL)
-      .otherwise(() => SendbirdReplyType.NONE),
-    startingPoint: initialTimeStamp,
-    // markAsRead?: (channels: GroupChannel[]) => void;
-    // shouldCountNewMessages?: () => boolean;
+  } = useGroupChannelMessages(sdkStore.sdk, currentChannel, userId, {
+    replyType: chatReplyType,
+    startingPoint,
+    markAsRead: (channels) => channels.forEach((it) => markAsReadScheduler.push(it)),
+    shouldCountNewMessages: () => !isScrollBottomReached,
+    onMessagesReceived: () => {
+      if (isScrollBottomReached && isContextMenuClosed()) {
+        scrollToBottom();
+      }
+    },
     // collectionCreator?: (collectionParams?: DefaultCollectionParams) => MessageCollection;
-    // onMessagesReceived?: (messages: SendbirdMessage[]) => void;
     // onMessagesUpdated?: (messages: SendbirdMessage[]) => void;
     // onChannelDeleted?: (channelUrl: string) => void;
     // onChannelUpdated?: (channel: GroupChannel) => void;
@@ -264,13 +224,79 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     logger,
   });
 
-  // Callbacks (using context)
-  const scrollToMessage = useScrollToMessage({
-    setInitialTimeStamp,
-    setAnimatedMessageId,
-    allMessages: messages,
-    scrollRef,
-  }, { logger });
+  useOnScrollPositionChangeDetectorWithRef(scrollRef, {
+    onReachedTop({ distanceFromBottom }) {
+      setIsScrollBottomReached(false);
+      scrollDistanceFromBottomRef.current = distanceFromBottom;
+
+      prev();
+    },
+    onInBetween({ distanceFromBottom }) {
+      setIsScrollBottomReached(false);
+      scrollDistanceFromBottomRef.current = distanceFromBottom;
+    },
+    onReachedBottom({ distanceFromBottom }) {
+      setIsScrollBottomReached(true);
+      scrollDistanceFromBottomRef.current = distanceFromBottom;
+
+      next();
+    },
+  });
+
+  const scrollToBottom = usePreservedCallback(() => {
+    setAnimatedMessageId(0);
+    setIsScrollBottomReached(true);
+
+    if (hasNext()) {
+      resetWithStartingPoint(Number.MAX_SAFE_INTEGER, () => {
+        scrollRef.current.scrollTop = Number.MAX_SAFE_INTEGER;
+      });
+    } else {
+      scrollRef.current.scrollTop = Number.MAX_SAFE_INTEGER;
+    }
+  });
+
+  const scrollToMessage = usePreservedCallback((createdAt: number, messageId: number, animated = true) => {
+    // NOTE: To prevent multiple clicks on the message in the channel while scrolling
+    //  Check if it can be replaced with event.stopPropagation()
+    const element = scrollRef.current;
+    const parentNode = element?.parentNode as HTMLDivElement;
+    const clickHandler = {
+      activate() {
+        if (!element || !parentNode) return;
+        element.style.pointerEvents = 'auto';
+        parentNode.style.cursor = 'auto';
+      },
+      deactivate() {
+        if (!element || !parentNode) return;
+        element.style.pointerEvents = 'none';
+        parentNode.style.cursor = 'wait';
+      },
+    };
+
+    clickHandler.deactivate();
+
+    setAnimatedMessageId(0);
+    const message = messages.find((it) => it.messageId === messageId);
+    if (message) {
+      if (animated) setAnimatedMessageId(messageId);
+      scrollToRenderedMessage(scrollRef, message.createdAt);
+    } else {
+      resetWithStartingPoint(createdAt, () => {
+        if (animated) setAnimatedMessageId(messageId);
+        scrollToRenderedMessage(scrollRef, message.createdAt);
+      });
+    }
+
+    clickHandler.activate();
+  });
+
+  useEffect(() => {
+    config.pubSub.subscribe(PUBSUB_TOPICS.SEND_USER_MESSAGE, (data) => {
+      if (shouldPubSubPublishToChannel(data.publishingModules)) {
+      }
+    });
+  }, []);
 
   // 1. TODO: useGroupChannelEvents - 참고: useHandleChannelEvents
   // 2. TODO: 없앨지 살펴보기
@@ -283,81 +309,79 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
   // });
 
   return (
-    <GroupChannelContext.Provider value={{
-      // # Props
-      channelUrl,
-      isReactionEnabled: usingReaction,
-      isMessageGroupingEnabled,
-      isMultipleFilesMessageEnabled,
-      showSearchIcon: showSearchIcon ?? config.showSearchIcon,
-      replyType,
-      threadReplySelectType: threadReplySelectType
-        ?? getCaseResolvedThreadReplySelectType(groupChannel.threadReplySelectType).upperCase
-        ?? ThreadReplySelectType.THREAD,
-      disableMarkAsRead,
-      scrollBehavior,
-      reconnectOnIdle,
+    <GroupChannelContext.Provider
+      value={{
+        // # Props
+        channelUrl,
+        isReactionEnabled,
+        isMessageGroupingEnabled,
+        isMultipleFilesMessageEnabled,
+        showSearchIcon: showSearchIcon ?? config.showSearchIcon,
+        replyType,
+        threadReplySelectType,
+        disableMarkAsRead,
+        scrollBehavior,
+        reconnectOnIdle,
 
-      // # Custom Props
-      // queries,
-      filterMessageList,
-      // ## Message
-      onBeforeSendUserMessage,
-      onBeforeSendFileMessage,
-      onBeforeSendVoiceMessage,
-      onBeforeSendMultipleFilesMessage,
-      onBeforeUpdateUserMessage,
-      // ## Focusing
-      onMessageAnimated,
-      onMessageHighlighted,
-      // ## Click
-      onBackClick,
-      onChatHeaderActionClick,
-      onReplyInThreadClick,
-      onSearchClick,
-      onQuoteMessageClick,
-      // ## Custom render
-      renderUserMentionItem,
+        // # Custom Props
+        // queries,
+        filterMessageList,
+        // ## Message
+        onBeforeSendUserMessage,
+        onBeforeSendFileMessage,
+        onBeforeSendVoiceMessage,
+        onBeforeSendMultipleFilesMessage,
+        onBeforeUpdateUserMessage,
+        // ## Focusing
+        onMessageAnimated,
+        // ## Click
+        onBackClick,
+        onChatHeaderActionClick,
+        onReplyInThreadClick,
+        onSearchClick,
+        onQuoteMessageClick,
+        // ## Custom render
+        renderUserMentionItem,
 
-      // Internal Interface
-      currentChannel,
-      nicknamesMap,
-      scrollRef,
-      messageInputRef,
+        // Internal Interface
+        currentChannel,
+        nicknamesMap,
 
-      isScrolled,
-      setIsScrolled,
-      quoteMessage,
-      setQuoteMessage,
-      initialTimeStamp,
-      setInitialTimeStamp,
-      animatedMessageId,
-      setAnimatedMessageId,
-      highlightedMessageId,
-      setHighLightedMessageId,
+        scrollRef,
+        scrollDistanceFromBottomRef,
+        messageInputRef,
 
-      scrollToMessage,
-      toggleReaction,
+        quoteMessage,
+        setQuoteMessage,
+        animatedMessageId,
+        setAnimatedMessageId,
+        isScrollBottomReached,
+        setIsScrollBottomReached,
 
-      // # useGroupChannelMessages
-      loading,
-      refreshing,
-      messages,
-      newMessages,
-      refresh,
-      next,
-      hasNext,
-      prev,
-      hasPrev,
-      resetNewMessages,
-      sendUserMessage,
-      sendFileMessage,
-      updateUserMessage,
-      updateFileMessage,
-      resendMessage,
-      deleteMessage,
-      resetWithStartingPoint,
-    }}>
+        scrollToBottom,
+        scrollToMessage,
+        toggleReaction,
+
+        // # useGroupChannelMessages
+        loading,
+        refreshing,
+        messages,
+        newMessages,
+        refresh,
+        next,
+        hasNext,
+        prev,
+        hasPrev,
+        resetNewMessages,
+        sendUserMessage,
+        sendFileMessage,
+        updateUserMessage,
+        updateFileMessage,
+        resendMessage,
+        deleteMessage,
+        resetWithStartingPoint,
+      }}
+    >
       <UserProfileProvider
         disableUserProfile={props?.disableUserProfile ?? config?.disableUserProfile}
         renderUserProfile={props?.renderUserProfile}
@@ -369,10 +393,21 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
   );
 };
 
+function isReachedToBottom(elem: HTMLDivElement) {
+  if (elem) {
+    const { clientHeight, scrollTop, scrollHeight } = elem;
+    return clientHeight + scrollTop >= scrollHeight - SCROLL_BUFFER;
+  }
+  return false;
+}
+function isContextMenuClosed() {
+  return (
+    document.getElementById('sendbird-dropdown-portal')?.childElementCount === 0 &&
+    document.getElementById('sendbird-emoji-list-portal')?.childElementCount === 0
+  );
+}
+
 export type UseGroupContextChannelType = () => GroupChannelProviderInterface;
 const useGroupChannelContext: UseGroupContextChannelType = () => React.useContext(GroupChannelContext);
 
-export {
-  GroupChannelProvider,
-  useGroupChannelContext,
-};
+export { GroupChannelProvider, useGroupChannelContext };

@@ -1,10 +1,4 @@
-import React, {
-  useRef,
-  useMemo,
-  useState,
-  useEffect,
-  useLayoutEffect,
-} from 'react';
+import React, { useRef, useMemo, useState, useEffect, useLayoutEffect } from 'react';
 import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 import format from 'date-fns/format';
 
@@ -57,21 +51,13 @@ const Message = ({
   const { dateLocale, stringSet } = useLocalization();
   const globalStore = useSendbirdStateContext();
 
-  const {
-    userId,
-    isOnline,
-    isMentionEnabled,
-    userMention,
-    logger,
-  } = globalStore.config;
+  const { userId, isOnline, isMentionEnabled, userMention, logger } = globalStore.config;
   const maxUserMentionCount = userMention?.maxMentionCount || MAX_USER_MENTION_COUNT;
   const maxUserSuggestionCount = userMention?.maxSuggestionCount || MAX_USER_SUGGESTION_COUNT;
 
   const {
-    initialized,
-    currentGroupChannel,
-    highLightedMessageId,
-    setHighLightedMessageId,
+    loading,
+    currentChannel,
     animatedMessageId,
     setAnimatedMessageId,
     updateMessage,
@@ -94,12 +80,15 @@ const Message = ({
     setIsScrolled,
     sendMessage,
     localMessages,
+    messages,
   } = useGroupChannelContext();
+
+  const initialized = !loading && Boolean(currentChannel);
+
   const [showEdit, setShowEdit] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
   const [showFileViewer, setShowFileViewer] = useState(false);
   const [isAnimated, setIsAnimated] = useState(false);
-  const [isHighlighted, setIsHighlighted] = useState(false);
   const [mentionNickname, setMentionNickname] = useState('');
   const [mentionedUsers, setMentionedUsers] = useState([]);
   const [mentionedUserIds, setMentionedUserIds] = useState([]);
@@ -107,37 +96,29 @@ const Message = ({
   const [selectedUser, setSelectedUser] = useState(null);
   const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState([]);
   const editMessageInputRef = useRef(null);
-  const messageScrollRef = useRef(null);
-  const displaySuggestedMentionList = isOnline
-    && isMentionEnabled
-    && mentionNickname.length > 0
-    && !isDisabledBecauseFrozen(currentGroupChannel)
-    && !isDisabledBecauseMuted(currentGroupChannel);
-  const disabled = !initialized
-    || isDisabledBecauseFrozen(currentGroupChannel)
-    || isDisabledBecauseMuted(currentGroupChannel)
-    || !isOnline;
-
-  const handleOnScroll = useHandleOnScrollCallback({
-    hasMore: false,
-    onScroll: onScrollCallback,
-    scrollRef: messageScrollRef,
-    setIsScrolled,
-  });
+  const displaySuggestedMentionList =
+    isOnline &&
+    isMentionEnabled &&
+    mentionNickname.length > 0 &&
+    !isDisabledBecauseFrozen(currentChannel) &&
+    !isDisabledBecauseMuted(currentChannel);
+  const disabled = !initialized || isDisabledBecauseFrozen(currentChannel) || isDisabledBecauseMuted(currentChannel) || !isOnline;
 
   const mentionNodes = useDirtyGetMentions({ ref: editMessageInputRef }, { logger });
   const ableMention = mentionNodes?.length < maxUserMentionCount;
 
   useEffect(() => {
-    setMentionedUsers(mentionedUsers.filter(({ userId }) => {
-      const i = mentionedUserIds.indexOf(userId);
-      if (i < 0) {
-        return false;
-      } else {
-        mentionedUserIds.splice(i, 1);
-        return true;
-      }
-    }));
+    setMentionedUsers(
+      mentionedUsers.filter(({ userId }) => {
+        const i = mentionedUserIds.indexOf(userId);
+        if (i < 0) {
+          return false;
+        } else {
+          mentionedUserIds.splice(i, 1);
+          return true;
+        }
+      })
+    );
   }, [mentionedUserIds]);
 
   useLayoutEffect(() => {
@@ -156,60 +137,35 @@ const Message = ({
   }, [message?.updatedAt]);
 
   useLayoutEffect(() => {
-    let animationTimeout = null;
-    let messageHighlightedTimeout = null;
-    if (highLightedMessageId === message.messageId && messageScrollRef?.current) {
-      handleOnScroll();
-      setIsAnimated(false);
-      animationTimeout = setTimeout(() => {
-        setIsHighlighted(true);
-      }, 500);
-      messageHighlightedTimeout = setTimeout(() => {
-        setHighLightedMessageId(0);
-        onMessageHighlighted?.();
-      }, 1600);
-    } else {
-      setIsHighlighted(false);
-    }
-    return () => {
-      clearTimeout(animationTimeout);
-      clearTimeout(messageHighlightedTimeout);
-    };
-  }, [highLightedMessageId, messageScrollRef.current, message.messageId]);
+    const timeouts = [];
 
-  useLayoutEffect(() => {
-    let animationTimeout = null;
-    let messageAnimatedTimeout = null;
-    if (animatedMessageId === message.messageId && messageScrollRef?.current) {
-      handleOnScroll();
-      setIsHighlighted(false);
-      animationTimeout = setTimeout(() => {
-        setIsAnimated(true);
-      }, 500);
-      messageAnimatedTimeout = setTimeout(() => {
-        setAnimatedMessageId(0);
-        onMessageAnimated?.();
-      }, 1600);
+    if (animatedMessageId === message.messageId) {
+      timeouts.push(
+        setTimeout(() => {
+          setIsAnimated(true);
+        }, 500)
+      );
+      timeouts.push(
+        setTimeout(() => {
+          setAnimatedMessageId(0);
+          onMessageAnimated?.();
+        }, 1600)
+      );
     } else {
       setIsAnimated(false);
     }
+
     return () => {
-      clearTimeout(animationTimeout);
-      clearTimeout(messageAnimatedTimeout);
+      timeouts.forEach((it) => clearTimeout(it));
     };
-  }, [animatedMessageId, messageScrollRef.current, message.messageId, onMessageAnimated]);
+  }, [animatedMessageId, setAnimatedMessageId]);
+
   const renderedMessage = useMemo(() => {
-    return renderMessage?.({
-      message,
-      chainTop,
-      chainBottom,
-    });
+    return renderMessage?.({ message, chainTop, chainBottom });
   }, [message, renderMessage]);
+
   const renderedCustomSeparator = useMemo(() => {
-    if (renderCustomSeparator) {
-      return renderCustomSeparator?.({ message: message });
-    }
-    return null;
+    return renderCustomSeparator?.({ message });
   }, [message, renderCustomSeparator]);
 
   if (renderedMessage) {
@@ -219,25 +175,21 @@ const Message = ({
         // and also for testing
         data-sb-message-id={message.messageId}
         data-sb-created-at={message.createdAt}
-        ref={messageScrollRef}
-        className={getClassName([
-          'sendbird-msg-hoc sendbird-msg--scroll-ref',
-          isAnimated ? 'sendbird-msg-hoc__animated' : '',
-          isHighlighted ? 'sendbird-msg-hoc__highlighted' : '',
-        ])}
+        className={getClassName(['sendbird-msg-hoc sendbird-msg--scroll-ref', isAnimated ? 'sendbird-msg-hoc__animated' : ''])}
       >
         {/* date-separator */}
         {
           // TODO: Add message instance as a function parameter
-          hasSeparator && (renderedCustomSeparator || (
-            <DateSeparator>
-              <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
-                {format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, {
-                  locale: dateLocale,
-                })}
-              </Label>
-            </DateSeparator>
-          ))
+          hasSeparator &&
+            (renderedCustomSeparator || (
+              <DateSeparator>
+                <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
+                  {format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, {
+                    locale: dateLocale,
+                  })}
+                </Label>
+              </DateSeparator>
+            ))
         }
         {renderedMessage}
       </div>
@@ -245,10 +197,10 @@ const Message = ({
   }
 
   if (showEdit && message?.isUserMessage?.()) {
-    return renderEditInput?.() || (
-      <>
-        {
-          displaySuggestedMentionList && (
+    return (
+      renderEditInput?.() || (
+        <>
+          {displaySuggestedMentionList && (
             <SuggestedMentionList
               targetNickname={mentionNickname}
               inputEvent={messageInputEvent}
@@ -271,78 +223,77 @@ const Message = ({
               maxMentionCount={maxUserMentionCount}
               maxSuggestionCount={maxUserSuggestionCount}
             />
-          )
-        }
-        <MessageInput
-          isEdit
-          channel={currentGroupChannel}
-          disabled={disabled}
-          ref={editMessageInputRef}
-          mentionSelectedUser={selectedUser}
-          isMentionEnabled={isMentionEnabled}
-          message={message}
-          onStartTyping={() => {
-            currentGroupChannel?.startTyping?.();
-          }}
-          onUpdateMessage={({ messageId, message, mentionTemplate }) => {
-            updateMessage({
-              messageId,
-              message,
-              mentionedUsers,
-              mentionTemplate,
-            });
-            setShowEdit(false);
-            currentGroupChannel?.endTyping?.();
-          }}
-          onCancelEdit={() => {
-            setMentionNickname('');
-            setMentionedUsers([]);
-            setMentionedUserIds([]);
-            setMentionSuggestedUsers([]);
-            setShowEdit(false);
-            currentGroupChannel?.endTyping?.();
-          }}
-          onUserMentioned={(user) => {
-            if (selectedUser?.userId === user?.userId) {
-              setSelectedUser(null);
+          )}
+          <MessageInput
+            isEdit
+            channel={currentChannel}
+            disabled={disabled}
+            ref={editMessageInputRef}
+            mentionSelectedUser={selectedUser}
+            isMentionEnabled={isMentionEnabled}
+            message={message}
+            onStartTyping={() => {
+              currentChannel?.startTyping?.();
+            }}
+            onUpdateMessage={({ messageId, message, mentionTemplate }) => {
+              updateMessage({
+                messageId,
+                message,
+                mentionedUsers,
+                mentionTemplate,
+              });
+              setShowEdit(false);
+              currentChannel?.endTyping?.();
+            }}
+            onCancelEdit={() => {
               setMentionNickname('');
-            }
-          }}
-          onMentionStringChange={(mentionText) => {
-            setMentionNickname(mentionText);
-          }}
-          onMentionedUserIdsUpdated={(userIds) => {
-            setMentionedUserIds(userIds);
-          }}
-          onKeyDown={(e) => {
-            if (displaySuggestedMentionList && mentionSuggestedUsers?.length > 0
-              && ((e.key === MessageInputKeys.Enter && ableMention) || e.key === MessageInputKeys.ArrowUp || e.key === MessageInputKeys.ArrowDown)
-            ) {
-              setMessageInputEvent(e);
-              return true;
-            }
-            return false;
-          }}
-        />
-      </>
+              setMentionedUsers([]);
+              setMentionedUserIds([]);
+              setMentionSuggestedUsers([]);
+              setShowEdit(false);
+              currentChannel?.endTyping?.();
+            }}
+            onUserMentioned={(user) => {
+              if (selectedUser?.userId === user?.userId) {
+                setSelectedUser(null);
+                setMentionNickname('');
+              }
+            }}
+            onMentionStringChange={(mentionText) => {
+              setMentionNickname(mentionText);
+            }}
+            onMentionedUserIdsUpdated={(userIds) => {
+              setMentionedUserIds(userIds);
+            }}
+            onKeyDown={(e) => {
+              if (
+                displaySuggestedMentionList &&
+                mentionSuggestedUsers?.length > 0 &&
+                ((e.key === MessageInputKeys.Enter && ableMention) ||
+                  e.key === MessageInputKeys.ArrowUp ||
+                  e.key === MessageInputKeys.ArrowDown)
+              ) {
+                setMessageInputEvent(e);
+                return true;
+              }
+              return false;
+            }}
+          />
+        </>
+      )
     );
   }
 
   return (
     <div
-      className={getClassName([
-        'sendbird-msg-hoc sendbird-msg--scroll-ref',
-        isAnimated ? 'sendbird-msg-hoc__animated' : '',
-        isHighlighted ? 'sendbird-msg-hoc__highlighted' : '',
-      ])}
+      className={getClassName(['sendbird-msg-hoc sendbird-msg--scroll-ref', isAnimated ? 'sendbird-msg-hoc__animated' : ''])}
       style={{ marginBottom: '2px' }}
       data-sb-message-id={message.messageId}
       data-sb-created-at={message.createdAt}
-      ref={messageScrollRef}
     >
       {/* date-separator */}
-      {
-        hasSeparator && (renderedCustomSeparator || (
+      {hasSeparator &&
+        (renderedCustomSeparator || (
           <DateSeparator>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
               {format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, {
@@ -350,62 +301,45 @@ const Message = ({
               })}
             </Label>
           </DateSeparator>
-        ))
-      }
+        ))}
       {/* Message */}
-      {
-        renderMessageContent?.() || (
-          <MessageContent
-            className="sendbird-message-hoc__message-content"
-            userId={userId}
-            scrollToMessage={scrollToMessage}
-            channel={currentGroupChannel}
-            message={message}
-            disabled={!isOnline}
-            chainTop={chainTop}
-            chainBottom={chainBottom}
-            isReactionEnabled={isReactionEnabled}
-            replyType={replyType}
-            threadReplySelectType={threadReplySelectType}
-            nicknamesMap={nicknamesMap}
-            emojiContainer={emojiContainer}
-            showEdit={setShowEdit}
-            showRemove={setShowRemove}
-            showFileViewer={setShowFileViewer}
-            resendMessage={resendMessage}
-            deleteMessage={deleteMessage}
-            toggleReaction={toggleReaction}
-            setQuoteMessage={setQuoteMessage}
-            onReplyInThread={onReplyInThread}
-            onQuoteMessageClick={onQuoteMessageClick}
-            onMessageHeightChange={handleScroll}
-          />
-        )
-      }
-      {/** Suggested Replies */}
-      {message.messageId === currentGroupChannel?.lastMessage?.messageId
-        // the options should appear only when there's no failed or pending messages
-        && localMessages.every(message => (message as UserMessage).sendingStatus === 'succeeded')
-        && getSuggestedReplies(message).length > 0 && (
-          <SuggestedReplies replyOptions={getSuggestedReplies(message)} onSendMessage={sendMessage} />
+      {renderMessageContent?.() || (
+        <MessageContent
+          className="sendbird-message-hoc__message-content"
+          userId={userId}
+          scrollToMessage={scrollToMessage}
+          channel={currentChannel}
+          message={message}
+          disabled={!isOnline}
+          chainTop={chainTop}
+          chainBottom={chainBottom}
+          isReactionEnabled={isReactionEnabled}
+          replyType={replyType}
+          threadReplySelectType={threadReplySelectType}
+          nicknamesMap={nicknamesMap}
+          emojiContainer={emojiContainer}
+          showEdit={setShowEdit}
+          showRemove={setShowRemove}
+          showFileViewer={setShowFileViewer}
+          resendMessage={resendMessage}
+          deleteMessage={deleteMessage}
+          toggleReaction={toggleReaction}
+          setQuoteMessage={setQuoteMessage}
+          onReplyInThread={onReplyInThread}
+          onQuoteMessageClick={onQuoteMessageClick}
+          onMessageHeightChange={handleScroll}
+        />
       )}
+      {/** Suggested Replies */}
+      {message.messageId === currentChannel?.lastMessage?.messageId &&
+        // the options should appear only when there's no failed or pending messages
+        localMessages.every((message) => (message as UserMessage).sendingStatus === 'succeeded') &&
+        getSuggestedReplies(message).length > 0 && (
+          <SuggestedReplies replyOptions={getSuggestedReplies(message)} onSendMessage={sendMessage} />
+        )}
       {/* Modal */}
-      {
-        showRemove && (
-          <RemoveMessageModal
-            message={message}
-            onCancel={() => setShowRemove(false)}
-          />
-        )
-      }
-      {
-        showFileViewer && (
-          <FileViewer
-            message={message as FileMessage}
-            onCancel={() => setShowFileViewer(false)}
-          />
-        )
-      }
+      {showRemove && <RemoveMessageModal message={message} onCancel={() => setShowRemove(false)} />}
+      {showFileViewer && <FileViewer message={message as FileMessage} onCancel={() => setShowFileViewer(false)} />}
     </div>
   );
 };

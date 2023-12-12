@@ -10,9 +10,7 @@ import type { CoreMessageType, SendableMessageType } from '../../../utils';
 export const scrollToRenderedMessage = (
   scrollRef: React.MutableRefObject<HTMLElement>,
   initialTimeStamp: number,
-  setIsScrolled?: (val: boolean) => void,
 ) => {
-  try {
     const container = scrollRef.current;
     // scroll into the message with initialTimeStamp
     const element = container.querySelectorAll(`[data-sb-created-at="${initialTimeStamp}"]`)?.[0];
@@ -20,11 +18,6 @@ export const scrollToRenderedMessage = (
       // Set the scroll position of the container to bring the element to the top
       container.scrollTop = element.offsetTop;
     }
-  } catch {
-    // do nothing
-  } finally {
-    setIsScrolled?.(true);
-  }
 };
 
 /* eslint-disable default-param-last */
