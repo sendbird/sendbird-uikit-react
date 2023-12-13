@@ -1,4 +1,5 @@
-import './channel-ui.scss';
+/* We operate the CSS files for Channel&GroupChannel modules in the GroupChannel */
+import '../../../GroupChannel/components/ChannelUI/index.scss';
 
 import React from 'react';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';

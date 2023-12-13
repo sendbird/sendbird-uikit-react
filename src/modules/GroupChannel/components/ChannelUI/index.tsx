@@ -1,5 +1,4 @@
-import './channel-ui.scss';
-
+import './index.scss';
 import React from 'react';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 

@@ -5,6 +5,7 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
+import { match } from 'ts-pattern';
 import type { User } from '@sendbird/chat';
 import {
   ReplyType as SendbirdReplyType,
@@ -27,7 +28,6 @@ import { RenderUserProfileProps, ReplyType } from '../../../types';
 import useToggleReactionCallback from './hooks/useToggleReactionCallback';
 import { getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
 import useScrollToMessage from './hooks/useScrollToMessage';
-import { match } from 'ts-pattern';
 
 export interface GroupChannelContextProps {
   // Default

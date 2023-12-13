@@ -1,6 +1,6 @@
+/* We operate the CSS files for Channel&GroupChannel modules in the GroupChannel */
+import '../../../GroupChannel/components/FrozenNotification/index.scss';
 import React, { useContext } from 'react';
-
-import './frozen-notification.scss';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Label, { LabelTypography } from '../../../../ui/Label';

@@ -1,6 +1,5 @@
+import './index.scss';
 import React, { useContext } from 'react';
-
-import './frozen-notification.scss';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Label, { LabelTypography } from '../../../../ui/Label';
