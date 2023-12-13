@@ -1,6 +1,6 @@
+import './index.scss';
 import React, { useContext, useMemo } from 'react';
 
-import './unread-count.scss';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';

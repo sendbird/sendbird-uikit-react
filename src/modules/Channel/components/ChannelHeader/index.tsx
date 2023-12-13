@@ -1,4 +1,6 @@
-import './channel-header.scss';
+/* We operate the CSS files for Channel&GroupChannel modules in the GroupChannel */
+import '../../../GroupChannel/components/ChannelHeader/index.scss';
+
 import React, { useContext } from 'react';
 
 import * as utils from './utils';

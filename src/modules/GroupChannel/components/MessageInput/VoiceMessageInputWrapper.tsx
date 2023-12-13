@@ -1,6 +1,6 @@
+import './voice-message-wrapper.scss';
 import React, { useEffect, useRef, useState } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import './voice-message-wrapper.scss';
 
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useVoicePlayer } from '../../../../hooks/VoicePlayer/useVoicePlayer';

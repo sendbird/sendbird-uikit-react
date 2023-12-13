@@ -1,4 +1,5 @@
-import './message-list.scss';
+/* We operate the CSS files for Channel&GroupChannel modules in the GroupChannel */
+import '../../../GroupChannel/components/MessageList/index.scss';
 
 import React, { useState } from 'react';
 

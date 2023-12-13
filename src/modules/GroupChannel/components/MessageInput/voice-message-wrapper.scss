@@ -1,3 +1,7 @@
+/**
+ * We operate the CSS files for Channel&GroupChannel modules in the GroupChannel.
+ * So keep in mind that you should consider both components when you make changes in this file.
+ */
 @import '../../../../styles/variables';
 
 .sendbird-voice-message-input-wrapper .sendbird-voice-message-input__indicator {
