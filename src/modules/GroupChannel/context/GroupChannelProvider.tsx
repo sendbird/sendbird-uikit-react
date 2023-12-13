@@ -414,6 +414,13 @@ function useCustomMessageActions(
       messageParams.parentMessageId = quoteMessage.messageId;
     }
 
+    // TODO: check isMentionEnabled should be handled here.
+    //  if (!isMentionEnabled) {
+    //    delete internalParams['mentionedUserIds'];
+    //    delete internalParams['mentionedUsers'];
+    //    delete internalParams['mentionedMessageTemplate'];
+    //  }
+
     return messageParams;
   }
 
@@ -422,23 +429,18 @@ function useCustomMessageActions(
       const internalParams = buildInternalMessageParams<UserMessageCreateParams>(params);
       const processedParams = await onBeforeSendUserMessage(internalParams);
 
-      // TODO: check isMentionEnabled should be handled here.
-      //  if (!isMentionEnabled) {
-      //    delete internalParams['mentionedUserIds'];
-      //    delete internalParams['mentionedUsers'];
-      //    delete internalParams['mentionedMessageTemplate'];
-      //  }
-
       return sendUserMessage(processedParams, () => scrollToBottom());
     }),
     sendFileMessage: usePreservedCallback(async (params: FileMessageCreateParams) => {
       const internalParams = buildInternalMessageParams<FileMessageCreateParams>(params);
       const processedParams = await onBeforeSendFileMessage(internalParams);
+
       return sendFileMessage(processedParams, () => scrollToBottom());
     }),
     sendMultipleFilesMessage: usePreservedCallback(async (params: MultipleFilesMessageCreateParams) => {
       const internalParams = buildInternalMessageParams<MultipleFilesMessageCreateParams>(params);
       const processedParams = await onBeforeSendMultipleFilesMessage(internalParams);
+
       return sendMultipleFilesMessage(processedParams, () => scrollToBottom());
     }),
     sendVoiceMessage: usePreservedCallback(async (params: FileMessageCreateParams, duration: number) => {
@@ -458,19 +460,13 @@ function useCustomMessageActions(
         ],
       });
       const processedParams = await onBeforeSendVoiceMessage(internalParams);
+
       return sendFileMessage(processedParams, () => scrollToBottom());
     }),
     updateUserMessage: usePreservedCallback(async (messageId: number, params: UserMessageUpdateParams) => {
       const internalParams = buildInternalMessageParams<UserMessageUpdateParams>(params);
-
-      // TODO: check isMentionEnabled should be handled here.
-      //  if (!isMentionEnabled) {
-      //    delete internalParams['mentionedUserIds'];
-      //    delete internalParams['mentionedUsers'];
-      //    delete internalParams['mentionedMessageTemplate'];
-      //  }
-
       const processedParams = await onBeforeUpdateUserMessage(internalParams);
+
       return updateUserMessage(messageId, processedParams);
     }),
   };
