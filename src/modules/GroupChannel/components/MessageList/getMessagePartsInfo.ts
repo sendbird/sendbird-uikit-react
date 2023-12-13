@@ -39,7 +39,7 @@ export const getMessagePartsInfo = ({
   const previousMessageCreatedAt = previousMessage?.createdAt;
   const currentCreatedAt = currentMessage.createdAt;
   // https://stackoverflow.com/a/41855608
-  const hasSeparator = 'sendingStatus' in currentMessage && currentMessage.sendingStatus !== 'succeeded'
+  const hasSeparator = 'sendingStatus' in currentMessage && currentMessage.sendingStatus !== 'succeeded' // NOTE: for pending/failed messages
     ? false
     : !(previousMessageCreatedAt && (isSameDay(currentCreatedAt, previousMessageCreatedAt)));
   return {

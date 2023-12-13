@@ -1,31 +1,23 @@
 import React from 'react';
-import type { EmojiContainer } from '@sendbird/chat';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { BaseMessage } from '@sendbird/chat/message';
-import { SendingStatus } from '@sendbird/chat/message';
-import format from 'date-fns/format';
 
-import type { CoreMessageType, SendableMessageType } from '../../../utils';
-
-export const scrollToRenderedMessage = (
-  scrollRef: React.MutableRefObject<HTMLElement>,
-  initialTimeStamp: number,
-) => {
+export const scrollToRenderedMessage = (scrollRef: React.MutableRefObject<HTMLElement>, initialTimeStamp: number) => {
   const container = scrollRef.current;
-  // scroll into the message with initialTimeStamp
-  const element = container.querySelectorAll(`[data-sb-created-at="${initialTimeStamp}"]`)?.[0];
-  if (element instanceof HTMLElement) {
-    // Set the scroll position of the container to bring the element to the top
-    container.scrollTop = element.offsetTop;
+  try {
+    // scroll into the message with initialTimeStamp
+    const element = container.querySelectorAll(`[data-sb-created-at="${initialTimeStamp}"]`)?.[0];
+    if (element instanceof HTMLElement) {
+      // Set the scroll position of the container to bring the element to the top
+      container.scrollTop = element.offsetTop;
+    }
+  } catch {
+    // noop
   }
 };
 
 /* eslint-disable default-param-last */
-export const scrollIntoLast = (
-  initialTry = 0,
-  scrollRef: React.MutableRefObject<HTMLElement>,
-  setIsScrolled?: (val: boolean) => void,
-) => {
+export const scrollIntoLast = (initialTry = 0, scrollRef: React.MutableRefObject<HTMLElement>, setIsScrolled?: (val: boolean) => void) => {
   const MAX_TRIES = 10;
   const currentTry = initialTry;
   if (currentTry > MAX_TRIES) {
@@ -58,20 +50,6 @@ export const isDisabledBecauseMuted = (groupChannel?: GroupChannel) => {
   return myMutedState === 'muted';
 };
 
-export const getAllEmojisMapFromEmojiContainer = (emojiContainer: EmojiContainer) => {
-  const { emojiCategories = [] } = emojiContainer;
-  const allEmojisMap = new Map();
-
-  for (let categoryIndex = 0; categoryIndex < emojiCategories.length; categoryIndex += 1) {
-    const { emojis } = emojiCategories[categoryIndex];
-    for (let emojiIndex = 0; emojiIndex < emojis.length; emojiIndex += 1) {
-      const { key, url } = emojis[emojiIndex];
-      allEmojisMap.set(key, url);
-    }
-  }
-  return allEmojisMap;
-};
-
 const getUniqueListBy = <T>(arr: T[], key: keyof T): T[] => {
   const entries = arr.map((item) => [item[key], item] as [T[keyof T], T]);
   return Array.from(new Map(entries).values());
@@ -98,32 +76,6 @@ export const mergeAndSortMessages = (oldMessages: BaseMessage[], newMessages: Ba
   const mergedMessages = [...oldMessages, ...newMessages];
   const unique = getUniqueListByMessageId(mergedMessages);
   return sortByCreatedAt(unique);
-};
-
-export const getMessageCreatedAt = (message: BaseMessage) => format(message.createdAt, 'p');
-
-export const passUnsuccessfullMessages = (
-  allMessages: (CoreMessageType | SendableMessageType)[],
-  newMessage: CoreMessageType | SendableMessageType,
-) => {
-  if (
-    'sendingStatus' in newMessage
-    && (newMessage.sendingStatus === SendingStatus.SUCCEEDED || newMessage.sendingStatus === SendingStatus.PENDING)
-  ) {
-    const lastIndexOfSucceededMessage = allMessages
-      .map((message) => {
-        if ('sendingStatus' in message && message.sendingStatus) return message.sendingStatus;
-        return message.isAdminMessage() ? SendingStatus.SUCCEEDED : null;
-      })
-      .lastIndexOf(SendingStatus.SUCCEEDED);
-
-    if (lastIndexOfSucceededMessage + 1 < allMessages.length) {
-      const messages = [...allMessages];
-      messages.splice(lastIndexOfSucceededMessage + 1, 0, newMessage);
-      return messages;
-    }
-  }
-  return [...allMessages, newMessage];
 };
 
 export const pxToNumber = (px: string | number) => {

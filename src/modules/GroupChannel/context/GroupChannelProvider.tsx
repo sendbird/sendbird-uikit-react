@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { User } from '@sendbird/chat';
 import {
   BaseMessageCreateParams,
@@ -27,7 +27,6 @@ import {
   META_ARRAY_MESSAGE_TYPE_KEY,
   META_ARRAY_MESSAGE_TYPE_VALUE__VOICE,
   META_ARRAY_VOICE_DURATION_KEY,
-  SCROLL_BUFFER,
   VOICE_MESSAGE_FILE_NAME,
   VOICE_MESSAGE_MIME_TYPE,
 } from '../../../utils/consts';
@@ -88,10 +87,10 @@ type UseGroupChannelMessagesValues = Pick<
   | 'messages'
   | 'newMessages'
   | 'refresh'
-  | 'next'
+  | 'loadNext'
   | 'hasNext'
-  | 'prev'
-  | 'hasPrev'
+  | 'loadPrevious'
+  | 'hasPrevious'
   | 'resendMessage'
   | 'deleteMessage'
   | 'resetNewMessages'
@@ -172,7 +171,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
   const { config, stores } = useSendbirdStateContext();
 
   const { sdkStore } = stores;
-  const { logger, userId, onUserProfileMessage, markAsReadScheduler } = config;
+  const { logger, onUserProfileMessage, markAsReadScheduler } = config;
 
   // State
   const [quoteMessage, setQuoteMessage] = useState<SendableMessageType>(null);
@@ -221,7 +220,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     }
   }, [sdkStore.initialized, sdkStore.sdk, channelUrl]);
 
-  const messageCollectionHook = useGroupChannelMessages(sdkStore.sdk, currentChannel, userId, {
+  const messageCollectionHook = useGroupChannelMessages(sdkStore.sdk, currentChannel, {
     replyType: chatReplyType,
     startingPoint,
     markAsRead: (channels) => channels.forEach((it) => markAsReadScheduler.push(it)),
@@ -244,7 +243,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
       setIsScrollBottomReached(false);
       scrollDistanceFromBottomRef.current = distanceFromBottom;
 
-      messageCollectionHook.prev();
+      messageCollectionHook.loadPrevious();
     },
     onInBetween({ distanceFromBottom }) {
       setIsScrollBottomReached(false);
@@ -254,9 +253,13 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
       setIsScrollBottomReached(true);
       scrollDistanceFromBottomRef.current = distanceFromBottom;
 
-      messageCollectionHook.next();
+      messageCollectionHook.loadNext();
     },
   });
+
+  useEffect(() => {
+    if (_animatedMessageId) setAnimatedMessageId(_animatedMessageId);
+  }, [_animatedMessageId]);
 
   const scrollToBottom = usePreservedCallback(() => {
     setAnimatedMessageId(0);
@@ -471,14 +474,6 @@ function useCustomMessageActions(
       return updateUserMessage(messageId, processedParams);
     }),
   };
-}
-
-function isReachedToBottom(elem: HTMLDivElement) {
-  if (elem) {
-    const { clientHeight, scrollTop, scrollHeight } = elem;
-    return clientHeight + scrollTop >= scrollHeight - SCROLL_BUFFER;
-  }
-  return false;
 }
 
 function isContextMenuClosed() {

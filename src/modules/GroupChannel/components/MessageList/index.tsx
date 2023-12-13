@@ -18,7 +18,7 @@ import { CoreMessageType } from '../../../../utils';
 import { Member } from '@sendbird/chat/groupChannel';
 import { useGroupChannelHandler } from '@sendbird/uikit-tools';
 
-const SCROLL_BOTTOM_PADDING = 50;
+// const SCROLL_BOTTOM_PADDING = 50;
 
 export interface MessageListProps {
   className?: string;
@@ -167,9 +167,9 @@ const MessageList: React.FC<MessageListProps> = ({
           </div>
         </div>
 
-        {renderer.frozenNotification()}
-        {renderer.unreadMessagesNotification}
-        {renderer.scrollToBottomButton}
+        <>{renderer.frozenNotification()}</>
+        <>{renderer.unreadMessagesNotification}</>
+        <>{renderer.scrollToBottomButton}</>
       </div>
     </>
   );
