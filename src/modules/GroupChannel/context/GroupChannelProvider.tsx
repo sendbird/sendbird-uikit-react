@@ -253,6 +253,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
       setIsScrollBottomReached(true);
       scrollDistanceFromBottomRef.current = distanceFromBottom;
 
+      messageCollectionHook.resetNewMessages();
       messageCollectionHook.loadNext();
     },
   });
