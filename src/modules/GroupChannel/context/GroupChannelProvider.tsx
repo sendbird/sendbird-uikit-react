@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import type { User } from '@sendbird/chat';
 import {
   FileMessageCreateParams,
@@ -20,8 +20,6 @@ import { getCaseResolvedReplyType, getCaseResolvedThreadReplySelectType } from '
 import { scrollToRenderedMessage } from './utils';
 import { SCROLL_BUFFER } from '../../../utils/consts';
 import { useOnScrollPositionChangeDetectorWithRef } from '../../../hooks/useOnScrollReachedEndDetector';
-import PUBSUB_TOPICS from '../../../lib/pubSub/topics';
-import { shouldPubSubPublishToChannel } from '../../internalInterfaces';
 
 type OnBeforeHandler<T> = (params: T) => T | Promise<T>;
 
@@ -290,23 +288,6 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
 
     clickHandler.activate();
   });
-
-  useEffect(() => {
-    config.pubSub.subscribe(PUBSUB_TOPICS.SEND_USER_MESSAGE, (data) => {
-      if (shouldPubSubPublishToChannel(data.publishingModules)) {
-      }
-    });
-  }, []);
-
-  // 1. TODO: useGroupChannelEvents - 참고: useHandleChannelEvents
-  // 2. TODO: 없앨지 살펴보기
-  // handles API calls from withSendbird
-  // useHandleChannelPubsubEvents({
-  //   channelUrl,
-  //   sdkInit,
-  //   pubSub,
-  //   scrollRef,
-  // });
 
   return (
     <GroupChannelContext.Provider
