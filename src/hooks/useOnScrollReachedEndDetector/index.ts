@@ -14,7 +14,7 @@ export interface UseOnScrollReachedEndDetectorParams {
 }
 
 export function useOnScrollPositionChangeDetector(
-  params: UseOnScrollReachedEndDetectorParams
+  params: UseOnScrollReachedEndDetectorParams,
 ): (event: React.UIEvent<HTMLDivElement, UIEvent>) => void {
   const { onReachedTop, onReachedBottom, onInBetween } = params;
 
@@ -40,7 +40,7 @@ export function useOnScrollPositionChangeDetector(
 }
 export function useOnScrollPositionChangeDetectorWithRef(
   scrollRef: React.RefObject<HTMLDivElement>,
-  params: UseOnScrollReachedEndDetectorParams
+  params: UseOnScrollReachedEndDetectorParams,
 ) {
   const _params = useRef(params);
   _params.current = params;

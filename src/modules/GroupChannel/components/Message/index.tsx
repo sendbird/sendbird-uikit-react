@@ -1,5 +1,5 @@
 import React, { useRef, useMemo, useState, useEffect, useLayoutEffect } from 'react';
-import type { FileMessage, UserMessage } from '@sendbird/chat/message';
+import type { FileMessage } from '@sendbird/chat/message';
 import format from 'date-fns/format';
 
 import useDidMountEffect from '../../../../utils/useDidMountEffect';
@@ -19,7 +19,6 @@ import RemoveMessageModal from '../RemoveMessageModal';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { useLocalization } from '../../../../lib/LocalizationContext';
-import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import SuggestedReplies from '../SuggestedReplies';
 import { useIIFE } from '@sendbird/uikit-tools';
@@ -94,12 +93,11 @@ const Message = ({
   const [selectedUser, setSelectedUser] = useState(null);
   const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState([]);
   const editMessageInputRef = useRef(null);
-  const displaySuggestedMentionList =
-    isOnline &&
-    isMentionEnabled &&
-    mentionNickname.length > 0 &&
-    !isDisabledBecauseFrozen(currentChannel) &&
-    !isDisabledBecauseMuted(currentChannel);
+  const displaySuggestedMentionList = isOnline
+    && isMentionEnabled
+    && mentionNickname.length > 0
+    && !isDisabledBecauseFrozen(currentChannel)
+    && !isDisabledBecauseMuted(currentChannel);
   const disabled = !initialized || isDisabledBecauseFrozen(currentChannel) || isDisabledBecauseMuted(currentChannel) || !isOnline;
 
   const mentionNodes = useDirtyGetMentions({ ref: editMessageInputRef }, { logger });
@@ -115,7 +113,7 @@ const Message = ({
           mentionedUserIds.splice(i, 1);
           return true;
         }
-      })
+      }),
     );
   }, [mentionedUserIds]);
 
@@ -141,13 +139,13 @@ const Message = ({
       timeouts.push(
         setTimeout(() => {
           setIsAnimated(true);
-        }, 500)
+        }, 500),
       );
       timeouts.push(
         setTimeout(() => {
           setAnimatedMessageId(0);
           onMessageAnimated?.();
-        }, 1600)
+        }, 1600),
       );
     } else {
       setIsAnimated(false);
@@ -178,8 +176,8 @@ const Message = ({
         {/* date-separator */}
         {
           // TODO: Add message instance as a function parameter
-          hasSeparator &&
-            (renderedCustomSeparator || (
+          hasSeparator
+            && (renderedCustomSeparator || (
               <DateSeparator>
                 <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
                   {format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, {
@@ -264,11 +262,11 @@ const Message = ({
             }}
             onKeyDown={(e) => {
               if (
-                displaySuggestedMentionList &&
-                mentionSuggestedUsers?.length > 0 &&
-                ((e.key === MessageInputKeys.Enter && ableMention) ||
-                  e.key === MessageInputKeys.ArrowUp ||
-                  e.key === MessageInputKeys.ArrowDown)
+                displaySuggestedMentionList
+                && mentionSuggestedUsers?.length > 0
+                && ((e.key === MessageInputKeys.Enter && ableMention)
+                  || e.key === MessageInputKeys.ArrowUp
+                  || e.key === MessageInputKeys.ArrowDown)
               ) {
                 setMessageInputEvent(e);
                 return true;
@@ -298,8 +296,8 @@ const Message = ({
       data-sb-created-at={message.createdAt}
     >
       {/* date-separator */}
-      {hasSeparator &&
-        (renderedCustomSeparator || (
+      {hasSeparator
+        && (renderedCustomSeparator || (
           <DateSeparator>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
               {format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, {

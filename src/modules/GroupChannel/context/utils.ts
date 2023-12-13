@@ -11,13 +11,13 @@ export const scrollToRenderedMessage = (
   scrollRef: React.MutableRefObject<HTMLElement>,
   initialTimeStamp: number,
 ) => {
-    const container = scrollRef.current;
-    // scroll into the message with initialTimeStamp
-    const element = container.querySelectorAll(`[data-sb-created-at="${initialTimeStamp}"]`)?.[0];
-    if (element instanceof HTMLElement) {
-      // Set the scroll position of the container to bring the element to the top
-      container.scrollTop = element.offsetTop;
-    }
+  const container = scrollRef.current;
+  // scroll into the message with initialTimeStamp
+  const element = container.querySelectorAll(`[data-sb-created-at="${initialTimeStamp}"]`)?.[0];
+  if (element instanceof HTMLElement) {
+    // Set the scroll position of the container to bring the element to the top
+    container.scrollTop = element.offsetTop;
+  }
 };
 
 /* eslint-disable default-param-last */

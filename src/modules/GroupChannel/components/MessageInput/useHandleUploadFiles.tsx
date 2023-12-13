@@ -26,7 +26,7 @@ interface useHandleUploadFilesStaticProps {
 
 export const useHandleUploadFiles = (
   { sendFileMessage, sendMultipleFilesMessage }: useHandleUploadFilesDynamicProps,
-  { logger }: useHandleUploadFilesStaticProps
+  { logger }: useHandleUploadFilesStaticProps,
 ) => {
   const { stringSet } = useLocalization();
   const { config } = useSendbirdStateContext();
@@ -132,10 +132,10 @@ export const useHandleUploadFiles = (
                 })),
               });
             }
-          })()
+          })(),
         );
       }
     },
-    [sendFileMessage, sendMultipleFilesMessage]
+    [sendFileMessage, sendMultipleFilesMessage],
   );
 };

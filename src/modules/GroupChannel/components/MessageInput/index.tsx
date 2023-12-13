@@ -59,23 +59,21 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.Mutable
   const [showVoiceMessageInput, setShowVoiceMessageInput] = useState(false);
 
   const initialized = !loading && Boolean(currentChannel);
-  const disabled =
-    propDisabled ||
-    !initialized ||
-    utils.isDisabledBecauseFrozen(currentChannel) ||
-    utils.isDisabledBecauseMuted(currentChannel) ||
-    !isOnline;
+  const disabled = propDisabled
+    || !initialized
+    || utils.isDisabledBecauseFrozen(currentChannel)
+    || utils.isDisabledBecauseMuted(currentChannel)
+    || !isOnline;
 
   const isOperator = utils.isOperator(currentChannel);
   const isBroadcast = currentChannel?.isBroadcast;
 
-  const displaySuggestedMentionList =
-    isOnline &&
-    isMentionEnabled &&
-    mentionNickname.length > 0 &&
-    !utils.isDisabledBecauseFrozen(currentChannel) &&
-    !utils.isDisabledBecauseMuted(currentChannel) &&
-    !isBroadcast;
+  const displaySuggestedMentionList = isOnline
+    && isMentionEnabled
+    && mentionNickname.length > 0
+    && !utils.isDisabledBecauseFrozen(currentChannel)
+    && !utils.isDisabledBecauseMuted(currentChannel)
+    && !isBroadcast;
 
   // Reset when currentChannel changes
   useEffect(() => {
@@ -101,7 +99,7 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.Mutable
           mentionedUserIds.splice(i, 1);
           return true;
         }
-      })
+      }),
     );
   }, [mentionedUserIds]);
 
@@ -171,10 +169,10 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.Mutable
           }}
           setMentionedUsers={setMentionedUsers}
           placeholder={
-            (quoteMessage && stringSet.MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER) ||
-            (utils.isDisabledBecauseFrozen(currentChannel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED) ||
-            (utils.isDisabledBecauseMuted(currentChannel) &&
-              (isMobile ? stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT : stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED))
+            (quoteMessage && stringSet.MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER)
+            || (utils.isDisabledBecauseFrozen(currentChannel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
+            || (utils.isDisabledBecauseMuted(currentChannel)
+              && (isMobile ? stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT : stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED))
           }
           ref={ref || messageInputRef}
           disabled={disabled}
@@ -213,11 +211,11 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.Mutable
           }}
           onKeyDown={(e) => {
             if (
-              displaySuggestedMentionList &&
-              mentionSuggestedUsers?.length > 0 &&
-              ((e.key === MessageInputKeys.Enter && ableMention) ||
-                e.key === MessageInputKeys.ArrowUp ||
-                e.key === MessageInputKeys.ArrowDown)
+              displaySuggestedMentionList
+              && mentionSuggestedUsers?.length > 0
+              && ((e.key === MessageInputKeys.Enter && ableMention)
+                || e.key === MessageInputKeys.ArrowUp
+                || e.key === MessageInputKeys.ArrowDown)
             ) {
               setMessageInputEvent(e);
               return true;

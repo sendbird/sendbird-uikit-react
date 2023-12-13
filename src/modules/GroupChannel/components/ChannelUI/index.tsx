@@ -98,9 +98,9 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
           />
         )}
         <div className="sendbird-conversation__footer__typing-indicator">
-          {renderTypingIndicator?.() ||
-            (globalStore?.config?.groupChannel?.enableTypingIndicator &&
-              globalStore?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Text) && <TypingIndicator />)}
+          {renderTypingIndicator?.()
+            || (globalStore?.config?.groupChannel?.enableTypingIndicator
+              && globalStore?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Text) && <TypingIndicator />)}
           {!isOnline && <ConnectionStatus />}
         </div>
       </div>
