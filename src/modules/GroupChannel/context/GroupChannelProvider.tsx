@@ -80,7 +80,7 @@ export interface GroupChannelContextProps {
   renderUserMentionItem?: (props: { user: User }) => JSX.Element;
 }
 
-type UseGroupChannelMessagesValues = Pick<
+type MessageCollectionHookValues = Pick<
   ReturnType<typeof useGroupChannelMessages>,
   | 'loading'
   | 'refreshing'
@@ -96,7 +96,7 @@ type UseGroupChannelMessagesValues = Pick<
   | 'resetNewMessages'
   | 'resetWithStartingPoint'
 >;
-interface MessagesStateAndActions extends UseGroupChannelMessagesValues {
+interface MessagesStateAndActions extends MessageCollectionHookValues {
   sendUserMessage: (params: UserMessageCreateParams) => Promise<UserMessage>;
   sendFileMessage: (params: FileMessageCreateParams) => Promise<FileMessage>;
   sendVoiceMessage: (params: FileMessageCreateParams, duration: number) => Promise<FileMessage>;
@@ -188,7 +188,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
 
   const replyType = getCaseResolvedReplyType(moduleReplyType ?? config.groupChannel.replyType).upperCase;
   const threadReplySelectType = getCaseResolvedThreadReplySelectType(
-    moduleThreadReplySelectType ?? config.groupChannel.threadReplySelectType,
+    moduleThreadReplySelectType ?? config.groupChannel.threadReplySelectType
   ).upperCase;
   const chatReplyType = useIIFE(() => {
     if (replyType === 'NONE') return ChatReplyType.NONE;
@@ -201,7 +201,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
 
   const nicknamesMap = useMemo(
     () => new Map((currentChannel?.members ?? []).map(({ userId, nickname }) => [userId, nickname])),
-    [currentChannel?.members],
+    [currentChannel?.members]
   );
 
   // Initialize current channel
@@ -381,14 +381,14 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
   );
 };
 
-const pass = <T, >(value: T) => value;
+const pass = <T,>(value: T) => value;
 
 function useCustomMessageActions(
   params: GroupChannelContextProps &
     ReturnType<typeof useGroupChannelMessages> & {
       scrollToBottom(): void;
       quoteMessage?: SendableMessageType;
-    },
+    }
 ) {
   const {
     onBeforeSendUserMessage = pass,
@@ -478,8 +478,8 @@ function useCustomMessageActions(
 
 function isContextMenuClosed() {
   return (
-    document.getElementById('sendbird-dropdown-portal')?.childElementCount === 0
-    && document.getElementById('sendbird-emoji-list-portal')?.childElementCount === 0
+    document.getElementById('sendbird-dropdown-portal')?.childElementCount === 0 &&
+    document.getElementById('sendbird-emoji-list-portal')?.childElementCount === 0
   );
 }
 
