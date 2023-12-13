@@ -223,7 +223,11 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
   const messageCollectionHook = useGroupChannelMessages(sdkStore.sdk, currentChannel, {
     replyType: chatReplyType,
     startingPoint,
-    markAsRead: (channels) => channels.forEach((it) => markAsReadScheduler.push(it)),
+    markAsRead: (channels) => {
+      if (!disableMarkAsRead && isScrollBottomReached) {
+        channels.forEach((it) => markAsReadScheduler.push(it));
+      }
+    },
     shouldCountNewMessages: () => !isScrollBottomReached,
     onMessagesReceived: () => {
       if (isScrollBottomReached && isContextMenuClosed()) {
@@ -253,8 +257,11 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
       setIsScrollBottomReached(true);
       scrollDistanceFromBottomRef.current = distanceFromBottom;
 
-      messageCollectionHook.resetNewMessages();
       messageCollectionHook.loadNext();
+      if (currentChannel) {
+        messageCollectionHook.resetNewMessages();
+        !disableMarkAsRead && markAsReadScheduler.push(currentChannel);
+      }
     },
   });
 
@@ -269,9 +276,16 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     if (messageCollectionHook.hasNext()) {
       messageCollectionHook.resetWithStartingPoint(Number.MAX_SAFE_INTEGER, () => {
         scrollRef.current.scrollTop = Number.MAX_SAFE_INTEGER;
+        scrollDistanceFromBottomRef.current = 0;
       });
     } else {
       scrollRef.current.scrollTop = Number.MAX_SAFE_INTEGER;
+      scrollDistanceFromBottomRef.current = 0;
+    }
+
+    if (currentChannel) {
+      messageCollectionHook.resetNewMessages();
+      !disableMarkAsRead && markAsReadScheduler.push(currentChannel);
     }
   });
 
