@@ -1,4 +1,6 @@
-import './index.scss';
+/* We operate the CSS files for Channel&GroupChannel modules in the GroupChannel */
+import '../../../GroupChannel/components/SuggestedReplies/index.scss';
+
 import React, { useState } from 'react';
 
 interface Props {

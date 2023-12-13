@@ -1,5 +1,4 @@
-import './message-list.scss';
-
+import './index.scss';
 import React, { useState } from 'react';
 
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';

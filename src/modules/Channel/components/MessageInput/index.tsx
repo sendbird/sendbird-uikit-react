@@ -1,6 +1,8 @@
+/* We operate the CSS files for Channel&GroupChannel modules in the GroupChannel */
+import '../../../GroupChannel/components/MessageInput/index.scss';
+
 import React, { useState, useContext, useEffect } from 'react';
 
-import './message-input.scss';
 import * as utils from '../../context/utils';
 
 import type { Nullable } from '../../../../types';

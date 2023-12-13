@@ -1,8 +1,10 @@
+/* We operate the CSS files for Channel&GroupChannel modules in the GroupChannel */
+import '../../../GroupChannel/components/FileViewer/index.scss';
+
 import React from 'react';
 import { createPortal } from 'react-dom';
 import type { FileMessage } from '@sendbird/chat/message';
 
-import './file-viewer.scss';
 import Avatar from '../../../../ui/Avatar';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';

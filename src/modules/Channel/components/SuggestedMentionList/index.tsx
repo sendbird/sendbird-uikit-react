@@ -1,4 +1,6 @@
-import './index.scss';
+/* We operate the CSS files for Channel&GroupChannel modules in the GroupChannel */
+import '../../../GroupChannel/components/SuggestedMentionList/index.scss';
+
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import type { User } from '@sendbird/chat';
 import type { Member } from '@sendbird/chat/groupChannel';

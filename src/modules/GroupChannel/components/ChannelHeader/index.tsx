@@ -1,4 +1,4 @@
-import './channel-header.scss';
+import './index.scss';
 import React, { useContext } from 'react';
 
 import * as utils from './utils';
