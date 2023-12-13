@@ -23,13 +23,13 @@ export interface EmojiManagerParams {
 }
 
 export class EmojiManager {
-  private emojiContainer: EmojiContainer;
+  private _emojiContainer: EmojiContainer;
 
   constructor(props: EmojiManagerParams) {
     const { sdk, logger } = props;
     sdk?.getAllEmoji?.()
       .then((emojiContainer) => {
-        this.emojiContainer = emojiContainer;
+        this._emojiContainer = emojiContainer;
         logger?.info('EmojiManager | Succeeded getting all emojis. ', emojiContainer);
       })
       .catch(() => {
@@ -38,11 +38,11 @@ export class EmojiManager {
   }
 
   private get AllEmojisAsArray() {
-    return this.emojiContainer.emojiCategories.flatMap((category: EmojiCategory) => category.emojis);
+    return this._emojiContainer.emojiCategories.flatMap((category: EmojiCategory) => category.emojis);
   }
 
   private get AllEmojisAsMap() {
-    return this.emojiContainer.emojiCategories
+    return this._emojiContainer.emojiCategories
       .flatMap((category: EmojiCategory) => category.emojis)
       .reduce((map: Map<string, string>, emoji: Emoji) => {
         map.set(emoji.key, emoji.url);
@@ -59,5 +59,9 @@ export class EmojiManager {
 
   public getEmojiUrl(reactionKey: Reaction['key']) {
     return this.AllEmojisAsArray.find((emoji) => emoji.key === reactionKey).url ?? '';
+  }
+
+  public get emojiContainer() {
+    return this._emojiContainer;
   }
 }

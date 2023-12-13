@@ -6,7 +6,7 @@ import useDidMountEffect from '../../../../utils/useDidMountEffect';
 import SuggestedMentionList from '../SuggestedMentionList';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
-import { getClassName, getSuggestedReplies } from '../../../../utils';
+import { getClassName, getSuggestedReplies, isSendableMessage } from '../../../../utils';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../context/utils';
 import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT } from '../../context/const';
 
@@ -22,6 +22,7 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import SuggestedReplies from '../SuggestedReplies';
+import { useIIFE } from '@sendbird/uikit-tools';
 
 type MessageUIProps = {
   message: EveryMessage;
@@ -60,28 +61,25 @@ const Message = ({
     currentChannel,
     animatedMessageId,
     setAnimatedMessageId,
-    updateMessage,
     scrollToMessage,
     replyType,
     threadReplySelectType,
     isReactionEnabled,
     toggleReaction,
-    emojiContainer,
     nicknamesMap,
     setQuoteMessage,
     resendMessage,
     deleteMessage,
     renderUserMentionItem,
-    onReplyInThread,
     onQuoteMessageClick,
+    onReplyInThreadClick,
     onMessageAnimated,
-    onMessageHighlighted,
-    onScrollCallback,
-    setIsScrolled,
-    sendMessage,
-    localMessages,
     messages,
+    updateUserMessage,
+    sendUserMessage,
   } = useGroupChannelContext();
+
+  const { emojiManager } = useSendbirdStateContext();
 
   const initialized = !loading && Boolean(currentChannel);
 
@@ -236,11 +234,10 @@ const Message = ({
               currentChannel?.startTyping?.();
             }}
             onUpdateMessage={({ messageId, message, mentionTemplate }) => {
-              updateMessage({
-                messageId,
+              updateUserMessage(messageId, {
                 message,
                 mentionedUsers,
-                mentionTemplate,
+                mentionedMessageTemplate: mentionTemplate,
               });
               setShowEdit(false);
               currentChannel?.endTyping?.();
@@ -284,6 +281,15 @@ const Message = ({
     );
   }
 
+  const shouldRenderSuggestedReplies = useIIFE(() => {
+    if (message.messageId !== currentChannel?.lastMessage?.messageId) return false;
+    if (getSuggestedReplies(message).length === 0) return false;
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage && isSendableMessage(lastMessage) && lastMessage.sendingStatus !== 'succeeded') return false;
+
+    return true;
+  });
+
   return (
     <div
       className={getClassName(['sendbird-msg-hoc sendbird-msg--scroll-ref', isAnimated ? 'sendbird-msg-hoc__animated' : ''])}
@@ -317,7 +323,7 @@ const Message = ({
           replyType={replyType}
           threadReplySelectType={threadReplySelectType}
           nicknamesMap={nicknamesMap}
-          emojiContainer={emojiContainer}
+          emojiContainer={emojiManager.emojiContainer}
           showEdit={setShowEdit}
           showRemove={setShowRemove}
           showFileViewer={setShowFileViewer}
@@ -325,18 +331,13 @@ const Message = ({
           deleteMessage={deleteMessage}
           toggleReaction={toggleReaction}
           setQuoteMessage={setQuoteMessage}
-          onReplyInThread={onReplyInThread}
+          onReplyInThread={onReplyInThreadClick}
           onQuoteMessageClick={onQuoteMessageClick}
           onMessageHeightChange={handleScroll}
         />
       )}
       {/** Suggested Replies */}
-      {message.messageId === currentChannel?.lastMessage?.messageId &&
-        // the options should appear only when there's no failed or pending messages
-        localMessages.every((message) => (message as UserMessage).sendingStatus === 'succeeded') &&
-        getSuggestedReplies(message).length > 0 && (
-          <SuggestedReplies replyOptions={getSuggestedReplies(message)} onSendMessage={sendMessage} />
-        )}
+      {shouldRenderSuggestedReplies && <SuggestedReplies replyOptions={getSuggestedReplies(message)} onSendMessage={sendUserMessage} />}
       {/* Modal */}
       {showRemove && <RemoveMessageModal message={message} onCancel={() => setShowRemove(false)} />}
       {showFileViewer && <FileViewer message={message as FileMessage} onCancel={() => setShowFileViewer(false)} />}

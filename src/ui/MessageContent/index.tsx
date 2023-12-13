@@ -61,7 +61,9 @@ export interface MessageContentProps {
   deleteMessage?: (message: CoreMessageType) => Promise<CoreMessageType>;
   toggleReaction?: (message: SendableMessageType, reactionKey: string, isReacted: boolean) => void;
   setQuoteMessage?: (message: SendableMessageType) => void;
+  // onClick listener for thread replies view (for open thread module)
   onReplyInThread?: (props: { message: SendableMessageType }) => void;
+  // onClick listener for thread quote message view (for open thread module)
   onQuoteMessageClick?: (props: { message: SendableMessageType }) => void;
   onMessageHeightChange?: () => void;
 

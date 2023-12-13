@@ -1,9 +1,14 @@
 import React, { useMemo, useRef, useState } from 'react';
 import type { User } from '@sendbird/chat';
 import {
+  BaseMessageCreateParams,
+  FileMessage,
   FileMessageCreateParams,
+  MessageMetaArray,
+  MultipleFilesMessage,
   MultipleFilesMessageCreateParams,
   ReplyType as ChatReplyType,
+  UserMessage,
   UserMessageCreateParams,
   UserMessageUpdateParams,
 } from '@sendbird/chat/message';
@@ -18,7 +23,14 @@ import { RenderUserProfileProps, ReplyType } from '../../../types';
 import useToggleReactionCallback from './hooks/useToggleReactionCallback';
 import { getCaseResolvedReplyType, getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
 import { scrollToRenderedMessage } from './utils';
-import { SCROLL_BUFFER } from '../../../utils/consts';
+import {
+  META_ARRAY_MESSAGE_TYPE_KEY,
+  META_ARRAY_MESSAGE_TYPE_VALUE__VOICE,
+  META_ARRAY_VOICE_DURATION_KEY,
+  SCROLL_BUFFER,
+  VOICE_MESSAGE_FILE_NAME,
+  VOICE_MESSAGE_MIME_TYPE,
+} from '../../../utils/consts';
 import { useOnScrollPositionChangeDetectorWithRef } from '../../../hooks/useOnScrollReachedEndDetector';
 
 type OnBeforeHandler<T> = (params: T) => T | Promise<T>;
@@ -69,7 +81,31 @@ export interface GroupChannelContextProps {
   renderUserMentionItem?: (props: { user: User }) => JSX.Element;
 }
 
-export interface GroupChannelProviderInterface extends GroupChannelContextProps, ReturnType<typeof useGroupChannelMessages> {
+type UseGroupChannelMessagesValues = Pick<
+  ReturnType<typeof useGroupChannelMessages>,
+  | 'loading'
+  | 'refreshing'
+  | 'messages'
+  | 'newMessages'
+  | 'refresh'
+  | 'next'
+  | 'hasNext'
+  | 'prev'
+  | 'hasPrev'
+  | 'resendMessage'
+  | 'deleteMessage'
+  | 'resetNewMessages'
+  | 'resetWithStartingPoint'
+>;
+interface MessagesStateAndActions extends UseGroupChannelMessagesValues {
+  sendUserMessage: (params: UserMessageCreateParams) => Promise<UserMessage>;
+  sendFileMessage: (params: FileMessageCreateParams) => Promise<FileMessage>;
+  sendVoiceMessage: (params: FileMessageCreateParams, duration: number) => Promise<FileMessage>;
+  sendMultipleFilesMessage: (params: MultipleFilesMessageCreateParams) => Promise<MultipleFilesMessage>;
+  updateUserMessage: (messageId: number, params: UserMessageUpdateParams) => Promise<UserMessage>;
+}
+
+export interface GroupChannelProviderInterface extends GroupChannelContextProps, MessagesStateAndActions {
   currentChannel: GroupChannel | null;
   nicknamesMap: Map<string, string>;
 
@@ -185,26 +221,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     }
   }, [sdkStore.initialized, sdkStore.sdk, channelUrl]);
 
-  // Store - useGroupChannelMessages
-  const {
-    loading,
-    refreshing,
-    messages,
-    newMessages,
-    refresh,
-    next,
-    hasNext,
-    prev,
-    hasPrev,
-    resetNewMessages,
-    sendUserMessage,
-    sendFileMessage,
-    updateUserMessage,
-    updateFileMessage,
-    resendMessage,
-    deleteMessage,
-    resetWithStartingPoint,
-  } = useGroupChannelMessages(sdkStore.sdk, currentChannel, userId, {
+  const messageCollectionHook = useGroupChannelMessages(sdkStore.sdk, currentChannel, userId, {
     replyType: chatReplyType,
     startingPoint,
     markAsRead: (channels) => channels.forEach((it) => markAsReadScheduler.push(it)),
@@ -227,7 +244,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
       setIsScrollBottomReached(false);
       scrollDistanceFromBottomRef.current = distanceFromBottom;
 
-      prev();
+      messageCollectionHook.prev();
     },
     onInBetween({ distanceFromBottom }) {
       setIsScrollBottomReached(false);
@@ -237,7 +254,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
       setIsScrollBottomReached(true);
       scrollDistanceFromBottomRef.current = distanceFromBottom;
 
-      next();
+      messageCollectionHook.next();
     },
   });
 
@@ -245,8 +262,8 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     setAnimatedMessageId(0);
     setIsScrollBottomReached(true);
 
-    if (hasNext()) {
-      resetWithStartingPoint(Number.MAX_SAFE_INTEGER, () => {
+    if (messageCollectionHook.hasNext()) {
+      messageCollectionHook.resetWithStartingPoint(Number.MAX_SAFE_INTEGER, () => {
         scrollRef.current.scrollTop = Number.MAX_SAFE_INTEGER;
       });
     } else {
@@ -275,12 +292,12 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     clickHandler.deactivate();
 
     setAnimatedMessageId(0);
-    const message = messages.find((it) => it.messageId === messageId);
+    const message = messageCollectionHook.messages.find((it) => it.messageId === messageId);
     if (message) {
       if (animated) setAnimatedMessageId(messageId);
       scrollToRenderedMessage(scrollRef, message.createdAt);
     } else {
-      resetWithStartingPoint(createdAt, () => {
+      messageCollectionHook.resetWithStartingPoint(createdAt, () => {
         if (animated) setAnimatedMessageId(messageId);
         scrollToRenderedMessage(scrollRef, message.createdAt);
       });
@@ -288,6 +305,8 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
 
     clickHandler.activate();
   });
+
+  const messageActions = useCustomMessageActions({ ...props, ...messageCollectionHook, scrollToBottom, quoteMessage });
 
   return (
     <GroupChannelContext.Provider
@@ -344,23 +363,8 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
         toggleReaction,
 
         // # useGroupChannelMessages
-        loading,
-        refreshing,
-        messages,
-        newMessages,
-        refresh,
-        next,
-        hasNext,
-        prev,
-        hasPrev,
-        resetNewMessages,
-        sendUserMessage,
-        sendFileMessage,
-        updateUserMessage,
-        updateFileMessage,
-        resendMessage,
-        deleteMessage,
-        resetWithStartingPoint,
+        ...messageCollectionHook,
+        ...messageActions,
       }}
     >
       <UserProfileProvider
@@ -374,6 +378,101 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
   );
 };
 
+const pass = <T,>(value: T) => value;
+
+function useCustomMessageActions(
+  params: GroupChannelContextProps &
+    ReturnType<typeof useGroupChannelMessages> & {
+      scrollToBottom(): void;
+      quoteMessage?: SendableMessageType;
+    }
+) {
+  const {
+    onBeforeSendUserMessage = pass,
+    onBeforeSendFileMessage = pass,
+    onBeforeUpdateUserMessage = pass,
+    onBeforeSendVoiceMessage = pass,
+    onBeforeSendMultipleFilesMessage = pass,
+
+    sendFileMessage,
+    sendMultipleFilesMessage,
+    sendUserMessage,
+    updateUserMessage,
+
+    quoteMessage,
+    scrollToBottom,
+  } = params;
+
+  function buildInternalMessageParams<T extends BaseMessageCreateParams>(basicParams: T): T {
+    const messageParams = { ...basicParams } as T;
+
+    if (params.quoteMessage) {
+      messageParams.isReplyToChannel = true;
+      messageParams.parentMessageId = quoteMessage.messageId;
+    }
+
+    return messageParams;
+  }
+
+  return {
+    sendUserMessage: usePreservedCallback(async (params: UserMessageCreateParams) => {
+      const internalParams = buildInternalMessageParams<UserMessageCreateParams>(params);
+      const processedParams = await onBeforeSendUserMessage(internalParams);
+
+      // TODO: check isMentionEnabled should be handled here.
+      //  if (!isMentionEnabled) {
+      //    delete internalParams['mentionedUserIds'];
+      //    delete internalParams['mentionedUsers'];
+      //    delete internalParams['mentionedMessageTemplate'];
+      //  }
+
+      return sendUserMessage(processedParams, () => scrollToBottom());
+    }),
+    sendFileMessage: usePreservedCallback(async (params: FileMessageCreateParams) => {
+      const internalParams = buildInternalMessageParams<FileMessageCreateParams>(params);
+      const processedParams = await onBeforeSendFileMessage(internalParams);
+      return sendFileMessage(processedParams, () => scrollToBottom());
+    }),
+    sendMultipleFilesMessage: usePreservedCallback(async (params: MultipleFilesMessageCreateParams) => {
+      const internalParams = buildInternalMessageParams<MultipleFilesMessageCreateParams>(params);
+      const processedParams = await onBeforeSendMultipleFilesMessage(internalParams);
+      return sendMultipleFilesMessage(processedParams, () => scrollToBottom());
+    }),
+    sendVoiceMessage: usePreservedCallback(async (params: FileMessageCreateParams, duration: number) => {
+      const internalParams = buildInternalMessageParams<FileMessageCreateParams>({
+        ...params,
+        fileName: VOICE_MESSAGE_FILE_NAME,
+        mimeType: VOICE_MESSAGE_MIME_TYPE,
+        metaArrays: [
+          new MessageMetaArray({
+            key: META_ARRAY_VOICE_DURATION_KEY,
+            value: [`${duration}`],
+          }),
+          new MessageMetaArray({
+            key: META_ARRAY_MESSAGE_TYPE_KEY,
+            value: [META_ARRAY_MESSAGE_TYPE_VALUE__VOICE],
+          }),
+        ],
+      });
+      const processedParams = await onBeforeSendVoiceMessage(internalParams);
+      return sendFileMessage(processedParams, () => scrollToBottom());
+    }),
+    updateUserMessage: usePreservedCallback(async (messageId: number, params: UserMessageUpdateParams) => {
+      const internalParams = buildInternalMessageParams<UserMessageUpdateParams>(params);
+
+      // TODO: check isMentionEnabled should be handled here.
+      //  if (!isMentionEnabled) {
+      //    delete internalParams['mentionedUserIds'];
+      //    delete internalParams['mentionedUsers'];
+      //    delete internalParams['mentionedMessageTemplate'];
+      //  }
+
+      const processedParams = await onBeforeUpdateUserMessage(internalParams);
+      return updateUserMessage(messageId, processedParams);
+    }),
+  };
+}
+
 function isReachedToBottom(elem: HTMLDivElement) {
   if (elem) {
     const { clientHeight, scrollTop, scrollHeight } = elem;
@@ -381,6 +480,7 @@ function isReachedToBottom(elem: HTMLDivElement) {
   }
   return false;
 }
+
 function isContextMenuClosed() {
   return (
     document.getElementById('sendbird-dropdown-portal')?.childElementCount === 0 &&
