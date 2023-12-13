@@ -311,9 +311,16 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
 
   // Set current channel (by on_channel_selected event)
   useEffect(() => {
-    if (!sdk || !sdk.groupChannel || !currentChannel || !currentChannel?.url) {
+    if (!sdk || !sdk.groupChannel) {
       return;
     }
+
+    // When leaving a channel, tell consumers that the prior channel is no longer selected
+    if (!currentChannel?.url) {
+      onChannelSelect(null);
+      return;
+    }
+
     sdk.groupChannel.getChannel(currentChannel.url).then((groupChannel) => {
       if (groupChannel) {
         onChannelSelect(groupChannel);

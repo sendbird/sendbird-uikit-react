@@ -97,10 +97,11 @@ export default function channelListReducer(
         { type: P.union(channelListActions.LEAVE_CHANNEL_SUCCESS, channelListActions.ON_CHANNEL_DELETED) },
         (action) => {
           const channelUrl = action.payload;
+          const allChannels = state.allChannels.filter(({ url }) => url !== channelUrl);
           return {
             ...state,
-            currentChannel: channelUrl === state.currentChannel?.url ? state.allChannels[0] : state.currentChannel,
-            allChannels: state.allChannels.filter(({ url }) => url !== channelUrl),
+            currentChannel: channelUrl === state.currentChannel?.url ? allChannels[0] : state.currentChannel,
+            allChannels,
           };
         },
       )
