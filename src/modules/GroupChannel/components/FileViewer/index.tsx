@@ -11,7 +11,6 @@ import { MODAL_ROOT } from '../../../../hooks/useModal';
 import { isImage, isVideo, isSupportedFileView } from '../../../../utils';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
-import { EveryMessage } from '../../../../types';
 
 type FileViewerUIProps = {
   profileUrl: string;
@@ -129,7 +128,7 @@ const FileViewer: React.FC<FileViewerProps> = ({ onCancel, message }: FileViewer
       isByMe={isByMe}
       disableDelete={disableDelete}
     />,
-    document.getElementById(MODAL_ROOT)
+    document.getElementById(MODAL_ROOT),
   );
 };
 
