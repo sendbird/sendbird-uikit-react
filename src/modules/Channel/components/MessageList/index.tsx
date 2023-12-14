@@ -76,7 +76,7 @@ const MessageList: React.FC<MessageListProps> = ({
 
   useScrollBehavior();
 
-  const onScroll = (callback: () => void) => {
+  const onScroll = (callback: (...params: unknown[]) => void) => {
     const element = scrollRef?.current;
     if (element == null) {
       return;
@@ -93,7 +93,10 @@ const MessageList: React.FC<MessageListProps> = ({
     }
 
     if (isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER) && hasMoreNext) {
-      onScrollDownCallback(([messages]) => {
+      onScrollDownCallback((param) => {
+        callback(param);
+
+        const messages = param[0];
         if (messages) {
           try {
             setTimeout(() => utils.scrollIntoLast(0, scrollRef),

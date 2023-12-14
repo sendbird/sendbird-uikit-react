@@ -44,16 +44,26 @@ export function useHandleOnScrollCallback({
     if (typeof setShowScrollDownButton === 'function') {
       setShowScrollDownButton(scrollHeight > scrollTop + clientHeight + 1);
     }
+
+    // Load previous messages
+    // 1. check if hasMore(hasPrevious) and reached to top
+    // 2. load previous messages (onScroll)
+    // 3. maintain scroll position
     if (hasMore && scrollTop < SCROLL_BUFFER) {
       onScroll(() => {
         // sets the scroll position to the bottom of the new messages
         element.scrollTop = element.scrollHeight - scrollBottom;
       });
     }
+
+    // Load next messages
+    // 1. check if hasNext
+    // 2. load next messages (onScroll)
+    // 3. maintain scroll position
     if (hasNext) {
       onScroll(() => {
         // sets the scroll position to the top of the new messages
-        element.scrollTop = scrollTop - (scrollHeight - element.scrollHeight);
+        element.scrollTop = scrollTop;
       });
     }
   }, [
