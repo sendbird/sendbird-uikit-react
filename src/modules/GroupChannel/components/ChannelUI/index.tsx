@@ -5,7 +5,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import ConnectionStatus from '../../../../ui/ConnectionStatus';
-import ChannelHeader from '../ChannelHeader';
+import GroupChannelHeader from '../GroupChannelHeader';
 import MessageList from '../MessageList';
 import TypingIndicator from '../TypingIndicator';
 import MessageInputWrapper from '../MessageInput';
@@ -79,8 +79,15 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
     );
   }
   return (
+<<<<<<< Updated upstream
     <div className="sendbird-conversation">
       {renderChannelHeader?.() || <ChannelHeader className="sendbird-conversation__channel-header" />}
+=======
+    <div className='sendbird-conversation'>
+      {renderChannelHeader?.() || (
+        <GroupChannelHeader className="sendbird-conversation__channel-header" />
+      )}
+>>>>>>> Stashed changes
       <MessageList
         className="sendbird-conversation__message-list"
         renderMessage={renderMessage}

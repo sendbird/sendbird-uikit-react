@@ -1,43 +1,43 @@
 import './index.scss';
-import React, { useContext } from 'react';
+import React from 'react';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
-import * as utils from './utils';
-
-import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
-import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import IconButton from '../../../../ui/IconButton';
-import ChannelAvatar from '../../../../ui/ChannelAvatar/index';
-import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useGroupChannelContext } from '../../context/GroupChannelProvider';
+import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
+import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
+import ChannelAvatar from '../../../../ui/ChannelAvatar';
+import { getChannelTitle } from './utils';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
-import { noop } from '../../../../utils/utils';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { useLocalization } from '../../../../lib/LocalizationContext';
 
-interface ChannelHeaderProps {
+export interface GroupChannelHeaderProps {
   className?: string;
+  currentChannel: GroupChannel;
+  showSearchIcon?: boolean;
+  onBackClick?: () => void;
+  onSearchClick?: () => void;
+  onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
 }
 
-const ChannelHeader: React.FC<ChannelHeaderProps> = ({
-  className = '',
-}) => {
-  const globalStore = useSendbirdStateContext();
-  const userId = globalStore?.config?.userId;
-  const theme = globalStore?.config?.theme;
-
-  const channelStore = useGroupChannelContext();
+export const GroupChannelHeaderView = ({
+  className,
+  currentChannel,
+  showSearchIcon,
+  onBackClick,
+  onSearchClick,
+  onChatHeaderActionClick,
+}: GroupChannelHeaderProps) => {
+  const { config } = useSendbirdStateContext();
+  const { userId, theme } = config;
   const { isMobile } = useMediaQueryContext();
-  const {
-    currentChannel,
-    showSearchIcon,
-    onSearchClick,
-    onChatHeaderActionClick,
-    onBackClick = noop,
-  } = channelStore;
+
+  const { stringSet } = useLocalization();
+
+  const isMuted = currentChannel.myMutedState === 'muted';
   const subTitle = (currentChannel?.members
     && currentChannel?.members?.length !== 2);
-  const isMuted = currentChannel?.myMutedState === 'muted';
 
-  const { stringSet } = useContext(LocalizationContext);
   return (
     <div className={`sendbird-chat-header ${className}`}>
       <div className="sendbird-chat-header__left">
@@ -65,7 +65,7 @@ const ChannelHeader: React.FC<ChannelHeaderProps> = ({
           type={LabelTypography.H_2}
           color={LabelColors.ONBACKGROUND_1}
         >
-          {utils.getChannelTitle(currentChannel, userId, stringSet)}
+          {getChannelTitle(currentChannel, userId, stringSet)}
         </Label>
         <Label
           className="sendbird-chat-header__left__subtitle"
@@ -78,15 +78,15 @@ const ChannelHeader: React.FC<ChannelHeaderProps> = ({
       <div className="sendbird-chat-header__right">
         {
           ((typeof isMuted === 'string' && isMuted === 'true') || (typeof isMuted === 'boolean' && isMuted))
-            && (
-              <Icon
-                className="sendbird-chat-header__right__mute"
-                type={IconTypes.NOTIFICATIONS_OFF_FILLED}
-                fillColor={IconColors.ON_BACKGROUND_2}
-                width="24px"
-                height="24px"
-              />
-            )
+          && (
+            <Icon
+              className="sendbird-chat-header__right__mute"
+              type={IconTypes.NOTIFICATIONS_OFF_FILLED}
+              fillColor={IconColors.ON_BACKGROUND_2}
+              width="24px"
+              height="24px"
+            />
+          )
         }
         {
           (showSearchIcon && !currentChannel?.isEphemeral) && (
@@ -122,5 +122,3 @@ const ChannelHeader: React.FC<ChannelHeaderProps> = ({
     </div>
   );
 };
-
-export default ChannelHeader;
