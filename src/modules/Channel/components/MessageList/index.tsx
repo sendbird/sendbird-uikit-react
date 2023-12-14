@@ -90,11 +90,11 @@ const MessageList: React.FC<MessageListProps> = ({
       scrollHeight,
     } = element;
 
-    if (isAboutSame(scrollTop, 0, SCROLL_BUFFER)) {
+    if (hasMorePrev && isAboutSame(scrollTop, 0, SCROLL_BUFFER)) {
       onScrollCallback(callback);
     }
 
-    if (isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER) && hasMoreNext) {
+    if (hasMoreNext && isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER)) {
       onScrollDownCallback(callback);
     }
 

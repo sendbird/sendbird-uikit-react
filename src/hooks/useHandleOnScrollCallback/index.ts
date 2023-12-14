@@ -1,8 +1,10 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { SCROLL_BUFFER } from '../../utils/consts';
-import { useDebounce } from '../useDebounce';
+import { useThrottleCallback } from '../useThrottleCallback';
+import { isAboutSame } from '../../modules/Channel/context/utils';
+import { usePreservedCallback } from '@sendbird/uikit-tools';
 
-const DELAY = 500;
+const DELAY = 100;
 
 export interface UseHandleOnScrollCallbackProps {
   hasMore: boolean;
@@ -13,7 +15,10 @@ export interface UseHandleOnScrollCallbackProps {
   setIsScrolled?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function calcScrollBottom(scrollHeight: number, scrollTop: number): number {
+export function calcScrollBottom(
+  scrollHeight: number,
+  scrollTop: number,
+): number {
   return scrollHeight - scrollTop;
 }
 
@@ -24,17 +29,11 @@ export function useHandleOnScrollCallback({
   scrollRef,
   setShowScrollDownButton,
 }: UseHandleOnScrollCallbackProps): () => void {
-  const scrollCb = useCallback(() => {
-    const element = scrollRef?.current;
-    if (element == null) {
-      return;
-    }
 
-    const {
-      scrollTop,
-      scrollHeight,
-      clientHeight,
-    } = element;
+  const scrollCb = usePreservedCallback(() => {
+    const element = scrollRef?.current;
+    if (element == null) return;
+    const { scrollTop, scrollHeight, clientHeight } = element;
     // https://sendbird.atlassian.net/browse/SBISSUE-11759
     // the edge case where channel is inside a page that already has scroll
     // scrollintoView will move the whole page, which we dont want
@@ -48,30 +47,25 @@ export function useHandleOnScrollCallback({
     // Load previous messages
     // 1. check if hasMore(hasPrevious) and reached to top
     // 2. load previous messages (onScroll)
-    // 3. maintain scroll position
-    if (hasMore && scrollTop < SCROLL_BUFFER) {
+    // 3. maintain scroll position (sets the scroll position to the bottom of the new messages)
+    if (hasMore && isAboutSame(scrollTop, 0, SCROLL_BUFFER)) {
       onScroll(() => {
-        // sets the scroll position to the bottom of the new messages
-        element.scrollTop = element.scrollHeight - scrollBottom;
+        const messagesAreAddedToView = element.scrollHeight > scrollHeight;
+        if (messagesAreAddedToView) element.scrollTop = element.scrollHeight - scrollBottom;
       });
     }
 
     // Load next messages
-    // 1. check if hasNext
+    // 1. check if hasNext and reached to bottom
     // 2. load next messages (onScroll)
-    // 3. maintain scroll position
-    if (hasNext) {
+    // 3. maintain scroll position (sets the scroll position to the top of the new messages)
+    if (hasNext && isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER)) {
       onScroll(() => {
-        // sets the scroll position to the top of the new messages
-        element.scrollTop = scrollTop;
+        const messagesAreAddedToView = element.scrollHeight > scrollHeight;
+        if (messagesAreAddedToView) element.scrollTop = scrollTop;
       });
     }
-  }, [
-    setShowScrollDownButton,
-    hasMore,
-    onScroll,
-    scrollRef,
-  ]);
+  });
 
-  return useDebounce(scrollCb, DELAY);
+  return useThrottleCallback(scrollCb, DELAY, { trailing: true });
 }
