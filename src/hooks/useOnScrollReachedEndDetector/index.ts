@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { SCROLL_BUFFER } from '../../utils/consts';
 import { isAboutSame } from '../../modules/Channel/context/utils';
 import { useDebounce } from '../useDebounce';
@@ -45,7 +45,7 @@ export function useOnScrollPositionChangeDetectorWithRef(
   const _params = useRef(params);
   _params.current = params;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const elem = scrollRef.current;
     if (elem) {
       // TODO: apply throttle
