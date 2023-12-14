@@ -168,8 +168,8 @@ const MessageList: React.FC<MessageListProps> = ({
         </div>
 
         <>{renderer.frozenNotification()}</>
-        <>{renderer.unreadMessagesNotification}</>
-        <>{renderer.scrollToBottomButton}</>
+        <>{renderer.unreadMessagesNotification()}</>
+        <>{renderer.scrollToBottomButton()}</>
       </div>
     </>
   );
