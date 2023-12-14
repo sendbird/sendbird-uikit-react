@@ -188,7 +188,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
 
   const replyType = getCaseResolvedReplyType(moduleReplyType ?? config.groupChannel.replyType).upperCase;
   const threadReplySelectType = getCaseResolvedThreadReplySelectType(
-    moduleThreadReplySelectType ?? config.groupChannel.threadReplySelectType
+    moduleThreadReplySelectType ?? config.groupChannel.threadReplySelectType,
   ).upperCase;
   const chatReplyType = useIIFE(() => {
     if (replyType === 'NONE') return ChatReplyType.NONE;
@@ -201,7 +201,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
 
   const nicknamesMap = useMemo(
     () => new Map((currentChannel?.members ?? []).map(({ userId, nickname }) => [userId, nickname])),
-    [currentChannel?.members]
+    [currentChannel?.members],
   );
 
   // Initialize current channel
@@ -417,14 +417,14 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
   );
 };
 
-const pass = <T,>(value: T) => value;
+const pass = <T, >(value: T) => value;
 
 function useCustomMessageActions(
   params: GroupChannelContextProps &
     ReturnType<typeof useGroupChannelMessages> & {
       scrollToBottom(): void;
       quoteMessage?: SendableMessageType;
-    }
+    },
 ) {
   const {
     onBeforeSendUserMessage = pass,
@@ -515,8 +515,8 @@ function getDistanceFromBottom(elem: HTMLDivElement) {
 
 function isContextMenuClosed() {
   return (
-    document.getElementById('sendbird-dropdown-portal')?.childElementCount === 0 &&
-    document.getElementById('sendbird-emoji-list-portal')?.childElementCount === 0
+    document.getElementById('sendbird-dropdown-portal')?.childElementCount === 0
+    && document.getElementById('sendbird-emoji-list-portal')?.childElementCount === 0
   );
 }
 
