@@ -1,11 +1,10 @@
 import React from 'react';
 
-import { useChannelContext } from '../../context/ChannelProvider';
+import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
-import { GroupChannelUIView } from '../../../GroupChannel/components/GroupChannelUI/GroupChannelUIView';
+import { GroupChannelUIView } from './GroupChannelUIView';
 
-export interface ChannelUIProps {
-  isLoading?: boolean;
+export interface GroupChannelUIProps {
   renderPlaceholderLoader?: () => React.ReactElement;
   renderPlaceholderInvalid?: () => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
@@ -20,21 +19,21 @@ export interface ChannelUIProps {
   renderFrozenNotification?: () => React.ReactElement;
 }
 
-const ChannelUI: React.FC<ChannelUIProps> = (props: ChannelUIProps) => {
+const GroupChannelUI: React.FC<GroupChannelUIProps> = (props: GroupChannelUIProps) => {
   const {
+    currentChannel,
     channelUrl,
-    isInvalid,
-    initialized,
-  } = useChannelContext();
+    loading,
+  } = useGroupChannelContext();
 
   return (
     <GroupChannelUIView
       {...props}
       requestedChannelUrl={channelUrl}
-      isInvalid={isInvalid}
-      loading={props?.isLoading ?? !initialized}
+      loading={loading}
+      isInvalid={channelUrl && !currentChannel}
     />
   );
 };
 
-export default ChannelUI;
+export default GroupChannelUI;
