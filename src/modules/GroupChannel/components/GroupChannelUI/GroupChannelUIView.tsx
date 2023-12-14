@@ -79,8 +79,14 @@ export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
         )}
         <div className="sendbird-conversation__footer__typing-indicator">
           {renderTypingIndicator?.()
-            || (config?.groupChannel?.enableTypingIndicator
-              && config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Text) && <TypingIndicator />)}
+            || (
+              config?.groupChannel?.enableTypingIndicator
+              && config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Text)
+              && (
+                <TypingIndicator channelUrl={requestedChannelUrl} />
+              )
+            )
+          }
           {!isOnline && <ConnectionStatus />}
         </div>
       </div>
