@@ -154,7 +154,7 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   highLightedMessageId: number;
   nicknamesMap: Map<string, string>;
   emojiAllMap: any;
-  onScrollCallback: () => void;
+  onScrollCallback: (callback: () => void) => void;
   onScrollDownCallback: any;
   scrollRef: React.MutableRefObject<HTMLDivElement>;
   setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
