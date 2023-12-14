@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import type { DesktopLayoutProps } from './types';
 
@@ -35,7 +35,6 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
     threadTargetMessage,
     setThreadTargetMessage,
   } = props;
-  const [animatedMessageId, setAnimatedMessageId] = useState<number | null>(null);
   return (
     <div className="sendbird-app__wrap">
       <div className="sendbird-app__channellist-wrap">
@@ -91,15 +90,14 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
             }
           }}
           onMessageAnimated={() => {
-            setAnimatedMessageId(null);
+            setHighlightedMessage(null);
           }}
           onMessageHighlighted={() => {
             setHighlightedMessage?.(null);
           }}
           showSearchIcon={showSearchIcon}
           startingPoint={startingPoint}
-          animatedMessage={animatedMessageId}
-          highlightedMessage={highlightedMessage}
+          animatedMessage={highlightedMessage}
           isReactionEnabled={isReactionEnabled}
           replyType={replyType}
           isMessageGroupingEnabled={isMessageGroupingEnabled}
@@ -150,11 +148,11 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
             if (channel?.url !== currentChannel?.url) {
               setCurrentChannel(channel);
             }
-            if (message?.messageId !== animatedMessageId) {
+            if (message?.messageId !== highlightedMessage) {
               setStartingPoint?.(message?.createdAt);
             }
             setTimeout(() => {
-              setAnimatedMessageId(message?.messageId);
+              setHighlightedMessage(message?.messageId);
             }, 500);
           }}
         />
