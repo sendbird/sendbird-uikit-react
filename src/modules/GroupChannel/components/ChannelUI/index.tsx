@@ -12,7 +12,6 @@ import MessageInputWrapper from '../MessageInput';
 import { RenderCustomSeparatorProps, RenderMessageProps, TypingIndicatorType } from '../../../../types';
 
 export interface ChannelUIProps {
-  isLoading?: boolean;
   renderPlaceholderLoader?: () => React.ReactElement;
   renderPlaceholderInvalid?: () => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
@@ -28,7 +27,6 @@ export interface ChannelUIProps {
 }
 
 const ChannelUI: React.FC<ChannelUIProps> = ({
-  isLoading,
   renderPlaceholderLoader,
   renderPlaceholderInvalid,
   renderPlaceholderEmpty,
@@ -42,68 +40,47 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
   renderSendMessageIcon,
   renderFrozenNotification,
 }: ChannelUIProps) => {
-  const {
-    channelUrl,
-    isInvalid,
-  } = useGroupChannelContext();
+  const { currentChannel, channelUrl, loading } = useGroupChannelContext();
 
   const globalStore = useSendbirdStateContext();
   const sdkError = globalStore?.stores?.sdkStore?.error;
   const logger = globalStore?.config?.logger;
   const isOnline = globalStore?.config?.isOnline;
 
-  if (isLoading) {
-    return (<div className="sendbird-conversation">
-      {
-        renderPlaceholderLoader?.() || (
-          <PlaceHolder type={PlaceHolderTypes.LOADING} />
-        )
-      }
-    </div>);
+  if (loading) {
+    return <div className="sendbird-conversation">{renderPlaceholderLoader?.() || <PlaceHolder type={PlaceHolderTypes.LOADING} />}</div>;
   }
 
   if (!channelUrl) {
-    return (<div className="sendbird-conversation">
-      {
-        renderPlaceholderInvalid?.() || (
-          <PlaceHolder type={PlaceHolderTypes.NO_CHANNELS} />
-        )
-      }
-    </div>);
-  }
-  if (isInvalid) {
     return (
-      <div className="sendbird-conversation">
-        {
-          renderPlaceholderInvalid?.() || (
-            <PlaceHolder type={PlaceHolderTypes.WRONG} />
-          )
-        }
-      </div>
+      <div className="sendbird-conversation">{renderPlaceholderInvalid?.() || <PlaceHolder type={PlaceHolderTypes.NO_CHANNELS} />}</div>
     );
   }
+
+  // TODO: only show when getChannel fails with an error
+  if (channelUrl && !currentChannel) {
+    // && getCurrentChannelError
+    return <div className="sendbird-conversation">{renderPlaceholderInvalid?.() || <PlaceHolder type={PlaceHolderTypes.WRONG} />}</div>;
+  }
+
   if (sdkError) {
     return (
       <div className="sendbird-conversation">
-        {
-          renderPlaceholderInvalid?.() || (
-            <PlaceHolder
-              type={PlaceHolderTypes.WRONG}
-              retryToConnect={() => {
-                logger.info('Channel: reconnecting');
-                // reconnect();
-              }}
-            />
-          )
-        }
+        {renderPlaceholderInvalid?.() || (
+          <PlaceHolder
+            type={PlaceHolderTypes.WRONG}
+            retryToConnect={() => {
+              logger.info('Channel: reconnecting');
+              // reconnect();
+            }}
+          />
+        )}
       </div>
     );
   }
   return (
-    <div className='sendbird-conversation'>
-      {renderChannelHeader?.() || (
-        <ChannelHeader className="sendbird-conversation__channel-header" />
-      )}
+    <div className="sendbird-conversation">
+      {renderChannelHeader?.() || <ChannelHeader className="sendbird-conversation__channel-header" />}
       <MessageList
         className="sendbird-conversation__message-list"
         renderMessage={renderMessage}
@@ -113,31 +90,18 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
         renderFrozenNotification={renderFrozenNotification}
       />
       <div className="sendbird-conversation__footer">
-        {
-          renderMessageInput?.() || (
-            <MessageInputWrapper
-              renderFileUploadIcon={renderFileUploadIcon}
-              renderVoiceMessageIcon={renderVoiceMessageIcon}
-              renderSendMessageIcon={renderSendMessageIcon}
-            />
-          )
-        }
+        {renderMessageInput?.() || (
+          <MessageInputWrapper
+            renderFileUploadIcon={renderFileUploadIcon}
+            renderVoiceMessageIcon={renderVoiceMessageIcon}
+            renderSendMessageIcon={renderSendMessageIcon}
+          />
+        )}
         <div className="sendbird-conversation__footer__typing-indicator">
-          {
-            renderTypingIndicator?.()
-            || (
-              globalStore?.config?.groupChannel?.enableTypingIndicator
-              && globalStore?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Text)
-              && (
-                <TypingIndicator />
-              )
-            )
-          }
-          {
-            !isOnline && (
-              <ConnectionStatus />
-            )
-          }
+          {renderTypingIndicator?.()
+            || (globalStore?.config?.groupChannel?.enableTypingIndicator
+              && globalStore?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Text) && <TypingIndicator />)}
+          {!isOnline && <ConnectionStatus />}
         </div>
       </div>
     </div>

@@ -375,10 +375,11 @@ const SendbirdSDK = ({
             sdkInitialized && configsWithAppAttr(sdk).groupChannel.setting.enableMessageSearch,
           // Remote configs set from dashboard by UIKit feature configuration
           groupChannel: {
-            enableOgtag:
-              sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableOgtag,
+            enableOgtag: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableOgtag,
             enableTypingIndicator: configs.groupChannel.channel.enableTypingIndicator,
             enableDocument: configs.groupChannel.channel.input.enableDocument,
+            enableReactions: configs.groupChannel.channel.enableReactions,
+            replyType: configs.groupChannel.channel.replyType,
             threadReplySelectType: getCaseResolvedThreadReplySelectType(configs.groupChannel.channel.threadReplySelectType).lowerCase,
             typingIndicatorTypes: configs.groupChannel.channel.typingIndicatorTypes,
           },

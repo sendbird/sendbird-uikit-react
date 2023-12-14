@@ -1,13 +1,13 @@
 import React from 'react';
 import { renderHook } from '@testing-library/react';
-import { useOnScrollPositionChangeDetector, UseOnScrollReachedEndDetectorProps } from '../index';
+import { useOnScrollPositionChangeDetector, UseOnScrollReachedEndDetectorParams } from '../index';
 import { SCROLL_BUFFER } from '../../../utils/consts';
 
 jest.useFakeTimers();
 
 const SAFE_DELAY = 550;
 
-const prepareMockParams = (): UseOnScrollReachedEndDetectorProps => {
+const prepareMockParams = (): UseOnScrollReachedEndDetectorParams => {
   return {
     onReachedTop: jest.fn(),
     onReachedBottom: jest.fn(),

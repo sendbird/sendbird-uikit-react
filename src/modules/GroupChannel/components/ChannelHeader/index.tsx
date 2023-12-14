@@ -27,15 +27,15 @@ const ChannelHeader: React.FC<ChannelHeaderProps> = ({
   const channelStore = useGroupChannelContext();
   const { isMobile } = useMediaQueryContext();
   const {
-    currentGroupChannel,
+    currentChannel,
     showSearchIcon,
     onSearchClick,
     onChatHeaderActionClick,
     onBackClick = noop,
   } = channelStore;
-  const subTitle = (currentGroupChannel?.members
-    && currentGroupChannel?.members?.length !== 2);
-  const isMuted = currentGroupChannel?.myMutedState === 'muted';
+  const subTitle = (currentChannel?.members
+    && currentChannel?.members?.length !== 2);
+  const isMuted = currentChannel?.myMutedState === 'muted';
 
   const { stringSet } = useContext(LocalizationContext);
   return (
@@ -55,7 +55,7 @@ const ChannelHeader: React.FC<ChannelHeaderProps> = ({
         }
         <ChannelAvatar
           theme={theme}
-          channel={currentGroupChannel}
+          channel={currentChannel}
           userId={userId}
           height={32}
           width={32}
@@ -65,7 +65,7 @@ const ChannelHeader: React.FC<ChannelHeaderProps> = ({
           type={LabelTypography.H_2}
           color={LabelColors.ONBACKGROUND_1}
         >
-          {utils.getChannelTitle(currentGroupChannel, userId, stringSet)}
+          {utils.getChannelTitle(currentChannel, userId, stringSet)}
         </Label>
         <Label
           className="sendbird-chat-header__left__subtitle"
@@ -89,7 +89,7 @@ const ChannelHeader: React.FC<ChannelHeaderProps> = ({
             )
         }
         {
-          (showSearchIcon && !currentGroupChannel?.isEphemeral) && (
+          (showSearchIcon && !currentChannel?.isEphemeral) && (
             <IconButton
               className="sendbird-chat-header__right__search"
               width="32px"

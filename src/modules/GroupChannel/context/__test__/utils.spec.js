@@ -58,7 +58,6 @@ describe('mergeAndSortMessages', () => {
 
 
 describe('scrollToRenderedMessage', () => {
-  const mockSetIsScrolled = jest.fn();
   const mockRefCurrent = { offsetHeight: 500, querySelectorAll: jest.fn() };
   const mockRef = { current: mockRefCurrent };
   const initialTimeStamp = 123456789;
@@ -70,11 +69,10 @@ describe('scrollToRenderedMessage', () => {
   it('should handle the case where the element is not found', () => {
     mockRefCurrent.querySelectorAll.mockReturnValue([]);
 
-    scrollToRenderedMessage(mockRef, initialTimeStamp, mockSetIsScrolled);
+    scrollToRenderedMessage(mockRef, initialTimeStamp);
 
     // Ensure that scrollTop is not modified
     expect(mockRefCurrent.scrollTop).toBe(undefined);
-    expect(mockSetIsScrolled).toHaveBeenCalledWith(true);
   });
 
   it('should handle errors gracefully', () => {
@@ -83,11 +81,10 @@ describe('scrollToRenderedMessage', () => {
       throw new Error('Mock error');
     });
 
-    scrollToRenderedMessage(mockRef, initialTimeStamp, mockSetIsScrolled);
+    scrollToRenderedMessage(mockRef, initialTimeStamp);
 
     // Ensure that scrollTop is not modified
     expect(mockRefCurrent.scrollTop).toBe(undefined);
-    expect(mockSetIsScrolled).toHaveBeenCalledWith(true);
   });
 
 
@@ -98,9 +95,8 @@ describe('scrollToRenderedMessage', () => {
     jest.spyOn(mockElement, 'offsetTop', 'get').mockReturnValue(200);
     mockRefCurrent.querySelectorAll.mockReturnValue([mockElement]);
 
-    scrollToRenderedMessage(mockRef, initialTimeStamp, mockSetIsScrolled);
+    scrollToRenderedMessage(mockRef, initialTimeStamp);
     // Ensure that scrollTop is modified
     expect(mockRefCurrent.scrollTop).toBe(200);
-    expect(mockSetIsScrolled).toHaveBeenCalledWith(true);
   });
 });
