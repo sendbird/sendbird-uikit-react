@@ -247,7 +247,26 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
       setIsScrollBottomReached(false);
       scrollDistanceFromBottomRef.current = distanceFromBottom;
 
-      messageCollectionHook.loadPrevious();
+      // TODO: maintain the view position.
+      const prevViewInfo = {
+        scrollTop: scrollRef.current.scrollTop,
+        scrollHeight: scrollRef.current.scrollHeight,
+        clientHeight: scrollRef.current.clientHeight,
+      };
+      messageCollectionHook.loadPrevious().then(() => {
+        setTimeout(() => {
+          const nextViewInfo = {
+            scrollTop: scrollRef.current.scrollTop,
+            scrollHeight: scrollRef.current.scrollHeight,
+            clientHeight: scrollRef.current.clientHeight,
+          };
+
+          if (prevViewInfo.scrollTop === 0 && nextViewInfo.scrollTop) {
+            const topOffset = nextViewInfo.scrollHeight - prevViewInfo.scrollHeight;
+            if (topOffset > 0) scrollRef.current.scrollTop = topOffset;
+          }
+        });
+      });
     },
     onInBetween({ distanceFromBottom }) {
       setIsScrollBottomReached(false);
@@ -260,7 +279,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
       messageCollectionHook.loadNext();
       if (currentChannel) {
         messageCollectionHook.resetNewMessages();
-        !disableMarkAsRead && markAsReadScheduler.push(currentChannel);
+        if (!disableMarkAsRead) markAsReadScheduler.push(currentChannel);
       }
     },
   });
@@ -285,7 +304,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
 
     if (currentChannel) {
       messageCollectionHook.resetNewMessages();
-      !disableMarkAsRead && markAsReadScheduler.push(currentChannel);
+      if (!disableMarkAsRead) markAsReadScheduler.push(currentChannel);
     }
   });
 
@@ -312,12 +331,14 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     setAnimatedMessageId(0);
     const message = messageCollectionHook.messages.find((it) => it.messageId === messageId);
     if (message) {
-      if (animated) setAnimatedMessageId(messageId);
       scrollToRenderedMessage(scrollRef, message.createdAt);
+      scrollDistanceFromBottomRef.current = getDistanceFromBottom(scrollRef.current);
+      if (animated) setAnimatedMessageId(messageId);
     } else {
       messageCollectionHook.resetWithStartingPoint(createdAt, () => {
-        if (animated) setAnimatedMessageId(messageId);
         scrollToRenderedMessage(scrollRef, message.createdAt);
+        scrollDistanceFromBottomRef.current = getDistanceFromBottom(scrollRef.current);
+        if (animated) setAnimatedMessageId(messageId);
       });
     }
 
@@ -485,6 +506,11 @@ function useCustomMessageActions(
       return updateUserMessage(messageId, processedParams);
     }),
   };
+}
+
+function getDistanceFromBottom(elem: HTMLDivElement) {
+  const { scrollHeight, scrollTop, clientHeight } = elem;
+  return scrollHeight - scrollTop - clientHeight;
 }
 
 function isContextMenuClosed() {
