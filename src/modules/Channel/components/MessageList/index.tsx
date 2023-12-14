@@ -7,7 +7,6 @@ import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
 import Message from '../Message';
 import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps, TypingIndicatorType } from '../../../../types';
-import * as utils from '../../context/utils';
 import { isAboutSame } from '../../context/utils';
 import { getMessagePartsInfo } from './getMessagePartsInfo';
 import UnreadCount from '../UnreadCount';
@@ -76,6 +75,9 @@ const MessageList: React.FC<MessageListProps> = ({
 
   useScrollBehavior();
 
+  /**
+   * @param {function} callback callback from useHandleOnScrollCallback, it adjusts scroll position
+   * */
   const onScroll = (callback: (...params: unknown[]) => void) => {
     const element = scrollRef?.current;
     if (element == null) {
@@ -93,26 +95,7 @@ const MessageList: React.FC<MessageListProps> = ({
     }
 
     if (isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER) && hasMoreNext) {
-      onScrollDownCallback((param) => {
-        callback(param);
-
-        const messages = param[0];
-        if (messages) {
-          try {
-            setTimeout(() => utils.scrollIntoLast(0, scrollRef),
-              /**
-               * Rendering MFM takes long time so we need this.
-               * But later we should find better solution.
-               */
-              1000,
-            );
-            // element.scrollTop = scrollHeight - clientHeight;
-            // scrollRef.current.scrollTop = scrollHeight - clientHeight;
-          } catch (error) {
-            //
-          }
-        }
-      });
+      onScrollDownCallback(callback);
     }
 
     if (!disableMarkAsRead
