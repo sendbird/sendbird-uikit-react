@@ -7,7 +7,6 @@ import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
 import Message from '../Message';
 import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps, TypingIndicatorType } from '../../../../types';
-import * as utils from '../../context/utils';
 import { isAboutSame } from '../../context/utils';
 import { getMessagePartsInfo } from './getMessagePartsInfo';
 import UnreadCount from '../UnreadCount';
@@ -76,7 +75,10 @@ const MessageList: React.FC<MessageListProps> = ({
 
   useScrollBehavior();
 
-  const onScroll = () => {
+  /**
+   * @param {function} callback callback from useHandleOnScrollCallback, it adjusts scroll position
+   * */
+  const onScroll = (callback: (...params: unknown[]) => void) => {
     const element = scrollRef?.current;
     if (element == null) {
       return;
@@ -88,28 +90,12 @@ const MessageList: React.FC<MessageListProps> = ({
       scrollHeight,
     } = element;
 
-    if (isAboutSame(scrollTop, 0, SCROLL_BUFFER)) {
-      onScrollCallback();
+    if (hasMorePrev && isAboutSame(scrollTop, 0, SCROLL_BUFFER)) {
+      onScrollCallback(callback);
     }
 
-    if (isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER) && hasMoreNext) {
-      onScrollDownCallback(([messages]) => {
-        if (messages) {
-          try {
-            setTimeout(() => utils.scrollIntoLast(0, scrollRef),
-              /**
-               * Rendering MFM takes long time so we need this.
-               * But later we should find better solution.
-               */
-              1000,
-            );
-            // element.scrollTop = scrollHeight - clientHeight;
-            // scrollRef.current.scrollTop = scrollHeight - clientHeight;
-          } catch (error) {
-            //
-          }
-        }
-      });
+    if (hasMoreNext && isAboutSame(clientHeight + scrollTop, scrollHeight, SCROLL_BUFFER)) {
+      onScrollDownCallback(callback);
     }
 
     if (!disableMarkAsRead

@@ -3,8 +3,8 @@ import { render, fireEvent, renderHook } from '@testing-library/react';
 
 import { useSetScrollToBottom } from '../useSetScrollToBottom';
 
-jest.mock('../../../../../../hooks/useDebounce', () => ({
-  useDebounce: (callback: () => void) => callback,
+jest.mock('../../../../../../hooks/useThrottleCallback', () => ({
+  useThrottleCallback: (callback: () => void) => callback,
 }));
 
 const ScrollComponent = () => {

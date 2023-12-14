@@ -25,7 +25,7 @@ export interface AppLayoutProps {
 
 interface SubLayoutCommonProps {
   highlightedMessage?: number | null;
-  setHighlightedMessage: React.Dispatch<number | null>;
+  setHighlightedMessage?: React.Dispatch<number | null>;
   startingPoint?: number | null;
   setStartingPoint: React.Dispatch<number | null>;
   threadTargetMessage: SendableMessageType | null;

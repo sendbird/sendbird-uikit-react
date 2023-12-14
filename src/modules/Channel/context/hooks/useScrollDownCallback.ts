@@ -65,7 +65,7 @@ function useScrollDownCallback(
             type: messageActionTypes.FETCH_NEXT_MESSAGES_SUCCESS,
             payload: { currentGroupChannel, messages: messages as CoreMessageType[] },
           });
-          cb([messages, null]);
+          setTimeout(() => cb([messages, null]));
         })
         .catch((error) => {
           logger.error('Channel: Fetching later messages failed', error);
@@ -73,7 +73,7 @@ function useScrollDownCallback(
             type: messageActionTypes.FETCH_NEXT_MESSAGES_FAILURE,
             payload: { currentGroupChannel },
           });
-          cb([null, error]);
+          setTimeout(() => cb([null, error]));
         });
     },
     [currentGroupChannel, latestMessageTimeStamp, hasMoreNext, replyType],

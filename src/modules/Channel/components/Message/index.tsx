@@ -28,7 +28,6 @@ import RemoveMessageModal from '../RemoveMessageModal';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { useLocalization } from '../../../../lib/LocalizationContext';
-import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import SuggestedReplies from '../SuggestedReplies';
 
@@ -93,8 +92,6 @@ const Message = ({
     onQuoteMessageClick,
     onMessageAnimated,
     onMessageHighlighted,
-    onScrollCallback,
-    setIsScrolled,
     sendMessage,
     localMessages,
   } = useChannelContext();
@@ -120,13 +117,6 @@ const Message = ({
     || isDisabledBecauseFrozen(currentGroupChannel)
     || isDisabledBecauseMuted(currentGroupChannel)
     || !isOnline;
-
-  const handleOnScroll = useHandleOnScrollCallback({
-    hasMore: false,
-    onScroll: onScrollCallback,
-    scrollRef: messageScrollRef,
-    setIsScrolled,
-  });
 
   const mentionNodes = useDirtyGetMentions({ ref: editMessageInputRef }, { logger });
   const ableMention = mentionNodes?.length < maxUserMentionCount;
@@ -162,7 +152,7 @@ const Message = ({
     let animationTimeout = null;
     let messageHighlightedTimeout = null;
     if (highLightedMessageId === message.messageId && messageScrollRef?.current) {
-      handleOnScroll();
+      messageScrollRef.current.scrollIntoView({ block: 'center', inline: 'center' });
       setIsAnimated(false);
       animationTimeout = setTimeout(() => {
         setIsHighlighted(true);
@@ -184,7 +174,7 @@ const Message = ({
     let animationTimeout = null;
     let messageAnimatedTimeout = null;
     if (animatedMessageId === message.messageId && messageScrollRef?.current) {
-      handleOnScroll();
+      messageScrollRef.current.scrollIntoView({ block: 'center', inline: 'center' });
       setIsHighlighted(false);
       animationTimeout = setTimeout(() => {
         setIsAnimated(true);
