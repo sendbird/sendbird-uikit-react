@@ -75,7 +75,7 @@ export const useVoicePlayer = ({
      * The unit of playbackTime and duration should be millisecond
      */
     playbackTime: (currentAudioUnit?.playbackTime || 0) * 1000,
-    duration: (currentAudioUnit?.duration || 0)  * 1000,
+    duration: (currentAudioUnit?.duration || 0) * 1000,
     playingStatus: currentAudioUnit.playingStatus,
   });
 };
