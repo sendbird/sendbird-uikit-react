@@ -8,7 +8,7 @@
     * Maintain scroll position when loading next messages.
     * Move the logic that delays rendering mmf to the correct location.
     * Resolve an issue where scroll position wasn't adjusting correctly when the message content size was updated (caused by debouncing scroll events).
-    * Use `animatedMessage` instead of `highlightedMessage` in the smart app component.
+    * Use message animation instead of highlighting when moving to a message with message search
   * Reset text display issue
     * Fix the appearance of incomplete text compositions from the previous input in the next input.
   * Fixed type errors
