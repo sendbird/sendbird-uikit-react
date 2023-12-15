@@ -1,5 +1,23 @@
 # Changelog - v3
 
+## [v3.9.2] (Dec 15 2023)
+
+### Fixes:
+  * Fixed scroll issues
+    * Maintain scroll position when loading previous messages.
+    * Maintain scroll position when loading next messages.
+    * Move the logic that delays rendering mmf to the correct location.
+    * Resolve an issue where scroll position wasn't adjusting correctly when the message content size was updated (caused by debouncing scroll events).
+    * Use message animation instead of highlighting when moving to a message with message search
+  * Reset text display issue
+    * Fix the appearance of incomplete text compositions from the previous input in the next input.
+  * Fixed type errors
+    * Resolve the type error related to `PropsWithChildren`.
+    * Address the issue of not being assignable to type error, where the property 'children' doesn't exist on type `PropsWithChildren`.
+    * Use `PropsWithChildren<unknown> `instead of `PropsWithChildren`.
+  * Fixed a voice message length parsing issue
+    * Include metaArray to the message list when fetching messages again by connecting
+
 ## [v3.9.1] (Dec 8 2023)
 
 ### Features:
