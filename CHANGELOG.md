@@ -15,6 +15,8 @@
     * Resolve the type error related to `PropsWithChildren`.
     * Address the issue of not being assignable to type error, where the property 'children' doesn't exist on type `PropsWithChildren`.
     * Use `PropsWithChildren<unknown> `instead of `PropsWithChildren`.
+  * Fixed a voice message length parsing issue
+    * Include metaArray to the message list when fetching messages again by connecting
 
 ## [v3.9.1] (Dec 8 2023)
 
