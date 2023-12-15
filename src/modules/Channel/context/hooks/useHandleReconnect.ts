@@ -54,6 +54,7 @@ function useHandleReconnect(
           prevResultSize: PREV_RESULT_SIZE,
           isInclusive: true,
           includeReactions: isReactionEnabled,
+          includeMetaArray: true,
           nextResultSize: NEXT_RESULT_SIZE,
         };
         if (replyType && replyType === 'QUOTE_REPLY') {

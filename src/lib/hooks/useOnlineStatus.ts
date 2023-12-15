@@ -20,7 +20,6 @@ function useOnlineStatus(sdk: SendbirdChat, logger: LoggerInterface) {
         onReconnectStarted() {
           setIsOnline(false);
           logger.warning('onReconnectStarted', { isOnline });
-
         },
         onReconnectSucceeded() {
           setIsOnline(true);
