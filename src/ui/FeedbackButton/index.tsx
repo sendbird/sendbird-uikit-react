@@ -1,5 +1,4 @@
 import React, {
-  FocusEvent,
   MouseEvent,
   ReactElement,
   ReactNode,
@@ -9,64 +8,43 @@ import React, {
 
 import './index.scss';
 
-export interface IconButtonProps {
-  className?: string | Array<string>;
+export interface FeedbackIconButtonProps {
   children: ReactNode;
-  disabled?: boolean;
-  width?: string;
-  height?: string;
-  type?: 'button' | 'submit' | 'reset';
-  style?: { [key: string]: string };
-  onBlur?: (e: FocusEvent<HTMLButtonElement>) => void;
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
 }
 
-const IconButton = React.forwardRef((
-  props: IconButtonProps,
+const FeedbackIconButton = React.forwardRef((
+  props: FeedbackIconButtonProps,
   ref: RefObject<HTMLButtonElement>,
 ): ReactElement => {
   const {
-    className = '',
     children,
-    disabled = false,
-    width = '56px',
-    height = '56px',
-    type = 'button',
-    style = {},
-    onBlur = () => { /* noop */ },
     onClick = () => { /* noop */ },
   } = props;
-  const [isPressed, setIsPressed] = useState(false);
+  const [toggle, setToggle] = useState(false);
   return (
     <button
       className={[
-        ...(Array.isArray(className) ? className : [className]),
-        'sendbird-iconbutton',
-        isPressed ? 'sendbird-iconbutton--pressed' : '',
+        'sendbird-iconbutton__feedback',
+        toggle ? 'sendbird-iconbutton__feedback__pressed' : '',
       ].join(' ')}
-      disabled={disabled}
       ref={ref}
-      type={type}
-      style={{
-        ...style,
-        height,
-        width,
-      }}
+      type='button'
       onClick={(e) => {
-        if (disabled) { return; }
-        setIsPressed(true);
+        setToggle(!toggle);
         onClick?.(e);
       }}
-      onBlur={(e) => {
-        setIsPressed(false);
-        onBlur?.(e);
-      }}
     >
-      <span className="sendbird-iconbutton__inner">
+      <span
+        className={[
+          'sendbird-iconbutton__feedback__inner',
+          toggle ? 'sendbird-iconbutton__feedback__inner__pressed' : '',
+        ].join(' ')}
+      >
         {children}
       </span>
     </button>
   );
 });
 
-export default IconButton;
+export default FeedbackIconButton;
