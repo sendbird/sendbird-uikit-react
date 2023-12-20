@@ -38,7 +38,7 @@ import { noop } from '../../utils/utils';
 import MessageProfile, { MessageProfileProps } from './MessageProfile';
 import MessageBody, { MessageBodyProps } from './MessageBody';
 import MessageHeader, { MessageHeaderProps } from './MessageHeader';
-import Icon, { IconColors, IconTypes } from '../Icon';
+import Icon, { IconTypes } from '../Icon';
 import FeedbackIconButton from '../FeedbackButton';
 
 export interface MessageContentProps {
@@ -313,7 +313,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               className='sendbird-message-content__middle__body-container__feedback-buttons-container'
             >
               <FeedbackIconButton
-                onClick={() => {}}
+                // TODO: onClick={() => {}}
               >
                 <Icon
                   type={IconTypes.FEEDBACK_LIKE}
@@ -322,7 +322,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                 />
               </FeedbackIconButton>
               <FeedbackIconButton
-                onClick={() => {}}
+                // TODO: onClick={() => {}}
               >
                 <Icon
                   type={IconTypes.FEEDBACK_DISLIKE}
