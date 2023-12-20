@@ -54,7 +54,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
   const titleText = stringSet.MODAL__CREATE_CHANNEL__TITLE;
   const submitText = stringSet.BUTTON__CREATE;
   const { isMobile } = useMediaQueryContext();
-  const [appHeight, setAppHeight] = useState<number>(window.innerHeight);
+  const [scrollableAreaHeight, setScrollableAreaHeight] = useState<number>(window.innerHeight);
 
   const userQueryCreator = userListQuery ? userListQuery() : createDefaultUserListQuery({ sdk });
 
@@ -71,12 +71,12 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
 
   // To fix navbar break in mobile we set dynamic height to the scrollable area
   useEffect(() => {
-    const appHeight = () => {
-      setAppHeight(window.innerHeight);
+    const scrollableAreaHeight = () => {
+      setScrollableAreaHeight(window.innerHeight);
     };
-    window.addEventListener('resize', appHeight);
+    window.addEventListener('resize', scrollableAreaHeight);
     return () => {
-      window.removeEventListener('resize', appHeight);
+      window.removeEventListener('resize', scrollableAreaHeight);
     };
   }, []);
 
@@ -135,7 +135,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
         </Label>
         <div
           className="sendbird-create-channel--scroll"
-          style={isMobile ? { height: `calc(${appHeight}px - 200px)` } : {}}
+          style={isMobile ? { height: `calc(${scrollableAreaHeight}px - 200px)` } : {}}
           onScroll={(e) => {
             if (!usersDataSource) return;
             const eventTarget = e.target as HTMLDivElement;
