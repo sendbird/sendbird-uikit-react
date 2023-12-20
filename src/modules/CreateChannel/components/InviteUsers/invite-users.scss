@@ -9,8 +9,4 @@
   height: 360px;
   overflow-x: hidden;
   overflow-y: scroll;
-  @include mobile() {
-    // Try to use `--sendbird-vh` for refer window.innerHeight
-    height: calc(calc(var(--sendbird-vh, 1vh) * 100) - 200px);
-  }
 }
