@@ -211,6 +211,9 @@ const stringSet = {
     // File upload
     FILE_UPLOAD_NOTIFICATION__COUNT_LIMIT: 'Up to %d files can be attached.',
     FILE_UPLOAD_NOTIFICATION__SIZE_LIMIT: 'The maximum size per file is %d MB.',
+    // Feature: Feedback message
+    FEEDBACK_LIKE: 'Like',
+    FEEDBACK_DISLIKE: 'Dislike',
   },
 };
 
