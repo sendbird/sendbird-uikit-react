@@ -38,6 +38,8 @@ import { noop } from '../../utils/utils';
 import MessageProfile, { MessageProfileProps } from './MessageProfile';
 import MessageBody, { MessageBodyProps } from './MessageBody';
 import MessageHeader, { MessageHeaderProps } from './MessageHeader';
+import Icon, { IconColors, IconTypes } from '../Icon';
+import FeedbackIconButton from '../FeedbackButton';
 
 export interface MessageContentProps {
   className?: string | Array<string>;
@@ -148,6 +150,10 @@ export default function MessageContent(props: MessageContentProps): ReactElement
 
   // Thread replies
   const displayThreadReplies = message?.threadInfo?.replyCount > 0 && replyType === 'THREAD';
+  // Feedback buttons
+  // FIXME: Replace line 155 with the commented part before merging.
+  const isFeedbackMessage = !isByMe; // !isByMe && message?.myFeedbackStatus && message.myFeedbackStatus !== FeedbackStatus.NOT_APPLICABLE;
+  const isFeedbackMessageClassName = isFeedbackMessage ? 'sendbird-message-content__feedback' : '';
 
   // onMouseDown: (e: React.MouseEvent<T>) => void;
   // onTouchStart: (e: React.TouchEvent<T>) => void;
@@ -172,7 +178,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
 
   return (
     <div
-      className={getClassName([className, 'sendbird-message-content', isByMeClassName])}
+      className={getClassName([className, 'sendbird-message-content', isByMeClassName, isFeedbackMessageClassName])}
       onMouseOver={() => setMouseHover(true)}
       onMouseLeave={() => setMouseHover(false)}
     >
@@ -301,6 +307,31 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               }
             </div>
           )}
+          {/* Feedback buttons */}
+          {
+            isFeedbackMessage && <div
+              className='sendbird-message-content__middle__body-container__feedback-buttons-container'
+            >
+              <FeedbackIconButton
+                onClick={() => {}}
+              >
+                <Icon
+                  type={IconTypes.FEEDBACK_LIKE}
+                  width='24px'
+                  height='24px'
+                />
+              </FeedbackIconButton>
+              <FeedbackIconButton
+                onClick={() => {}}
+              >
+                <Icon
+                  type={IconTypes.FEEDBACK_DISLIKE}
+                  width='24px'
+                  height='24px'
+                />
+              </FeedbackIconButton>
+            </div>
+          }
           {/* message timestamp when sent by others */}
           {(!isByMe && !chainBottom) && (
             <Label
