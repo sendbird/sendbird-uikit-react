@@ -1,0 +1,93 @@
+@import '../../styles/variables';
+
+.sendbird-iconbutton {
+  color: var(--sendbird-iconbutton-color);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3px;
+  background-color: transparent;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  outline: 0px;
+  .sendbird-iconbutton__inner {
+    height: 100%;
+    svg {
+      @include themed() {
+        fill: t(on-bg-1);
+      }
+    }
+  }
+
+  &:hover {
+    @include themed() {
+      background-color: t(bg-1);
+    }
+  }
+
+  &:active {
+    @include themed() {
+      background-color: t(bg-2);
+    }
+  }
+
+  &:disabled {
+    cursor: not-allowed !important;
+    .sendbird-iconbutton__inner {
+      svg, path {
+        @include themed() {
+          fill: t(on-bg-2);
+        }
+      }
+    }
+  }
+}
+
+.sendbird-iconbutton--pressed {
+  @include themed() {
+    background-color: t(primary--1-bg--7);
+  }
+}
+
+.sendbird-iconbutton__feedback {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  cursor: pointer;
+
+  padding: 6px;
+  border-radius: 18px;
+  border: 1px solid;
+
+  @include themed() {
+    border-color: t(on-bg-4);
+  }
+
+  .sendbird-iconbutton__feedback__inner {
+    height: 100%;
+    svg {
+      @include themed() {
+        fill: t(on-bg-2);
+      }
+    }
+  }
+}
+
+.sendbird-iconbutton__feedback__pressed {
+  @include themed() {
+    border-color: t(primary-3);
+    background-color: t(primary-3);
+  }
+
+  .sendbird-iconbutton__feedback__inner {
+    height: 100%;
+    svg {
+      @include themed() {
+        fill: t(on-bg-1);
+      }
+    }
+  }
+}
