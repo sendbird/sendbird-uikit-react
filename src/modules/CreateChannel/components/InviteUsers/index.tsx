@@ -6,7 +6,7 @@ import './invite-users.scss';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useCreateChannelContext } from '../../context/CreateChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-
+import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import Modal from '../../../../ui/Modal';
 import Label, {
   LabelColors,
@@ -27,15 +27,6 @@ export interface InviteUsersProps {
   onCancel?: () => void;
   userListQuery?(): UserListQuery;
 }
-
-const appHeight = () => {
-  try {
-    const doc = document.documentElement;
-    doc.style.setProperty('--sendbird-vh', (window.innerHeight * 0.01) + 'px');
-  } catch {
-    //
-  }
-};
 
 const BUFFER = 50;
 
@@ -62,6 +53,8 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
   const selectedCount = Object.keys(selectedUsers).length;
   const titleText = stringSet.MODAL__CREATE_CHANNEL__TITLE;
   const submitText = stringSet.BUTTON__CREATE;
+  const { isMobile } = useMediaQueryContext();
+  const [scrollableAreaHeight, setScrollableAreaHeight] = useState<number>(window.innerHeight);
 
   const userQueryCreator = userListQuery ? userListQuery() : createDefaultUserListQuery({ sdk });
 
@@ -76,14 +69,14 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
     }
   }, []);
 
-  // https://stackoverflow.com/a/70302463
-  // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/#css-custom-properties-the-trick-to-correct-sizing
-  // to fix navbar break in mobile
+  // To fix navbar break in mobile we set dynamic height to the scrollable area
   useEffect(() => {
-    appHeight();
-    window.addEventListener('resize', appHeight);
+    const scrollableAreaHeight = () => {
+      setScrollableAreaHeight(window.innerHeight);
+    };
+    window.addEventListener('resize', scrollableAreaHeight);
     return () => {
-      window.removeEventListener('resize', appHeight);
+      window.removeEventListener('resize', scrollableAreaHeight);
     };
   }, []);
 
@@ -142,6 +135,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
         </Label>
         <div
           className="sendbird-create-channel--scroll"
+          style={isMobile ? { height: `calc(${scrollableAreaHeight}px - 200px)` } : {}}
           onScroll={(e) => {
             if (!usersDataSource) return;
             const eventTarget = e.target as HTMLDivElement;
