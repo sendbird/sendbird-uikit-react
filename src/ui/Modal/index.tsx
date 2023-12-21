@@ -74,6 +74,7 @@ export const ModalFooter = ({
 export interface ModalProps {
   children?: ReactNode;
   className?: string;
+  contentClassName?: string | Array<string>;
   isCloseOnClickOutside?: boolean;
   isFullScreenOnMobile?: boolean;
   titleText?: string;
@@ -88,11 +89,13 @@ export interface ModalProps {
   onClose?: () => void;
   onSubmit?: (...args: any[]) => void;
   renderHeader?: () => ReactElement;
+  customFooter?: ReactNode;
 }
 export function Modal(props: ModalProps): ReactElement {
   const {
     children = null,
     className = '',
+    contentClassName = '',
     isCloseOnClickOutside = false,
     isFullScreenOnMobile = false,
     titleText,
@@ -107,6 +110,7 @@ export function Modal(props: ModalProps): ReactElement {
     onClose,
     onSubmit = noop,
     renderHeader,
+    customFooter,
   } = props;
   const handleClose = onClose ?? onCancel;
 
@@ -116,13 +120,18 @@ export function Modal(props: ModalProps): ReactElement {
       sendbird-modal ${className}
       ${(isFullScreenOnMobile && isMobile) ? 'sendbird-modal--full-mobile' : ''}
     `}>
-      <div className="sendbird-modal__content">
+      <div
+        className={[
+          'sendbird-modal__content',
+          ...(Array.isArray(contentClassName) ? contentClassName : [contentClassName]),
+        ].join(' ')}
+      >
         {renderHeader?.() || (
           <ModalHeader titleText={titleText ?? ''} />
         )}
         <ModalBody>{children}</ModalBody>
         {
-          !hideFooter && (
+          !hideFooter && (customFooter ?? (
             <ModalFooter
               disabled={disabled}
               onCancel={handleClose}
@@ -130,22 +139,26 @@ export function Modal(props: ModalProps): ReactElement {
               submitText={submitText ?? ''}
               type={type}
             />
+          ))
+        }
+        {
+          !isMobile && (
+            <div className="sendbird-modal__close">
+              <IconButton
+                width="32px"
+                height="32px"
+                onClick={handleClose}
+              >
+                <Icon
+                  type={IconTypes.CLOSE}
+                  fillColor={IconColors.DEFAULT}
+                  width="24px"
+                  height="24px"
+                />
+              </IconButton>
+            </div>
           )
         }
-        <div className="sendbird-modal__close">
-          <IconButton
-            width="32px"
-            height="32px"
-            onClick={handleClose}
-          >
-            <Icon
-              type={IconTypes.CLOSE}
-              fillColor={IconColors.DEFAULT}
-              width="24px"
-              height="24px"
-            />
-          </IconButton>
-        </div>
       </div>
       <div
         className={`

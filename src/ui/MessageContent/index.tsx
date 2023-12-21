@@ -41,6 +41,7 @@ import MessageHeader, { MessageHeaderProps } from './MessageHeader';
 import Icon, { IconTypes } from '../Icon';
 import FeedbackIconButton from '../FeedbackButton';
 import MobileFeedbackMenu from '../MobileFeedbackMenu';
+import MessageFeedbackModal from '../../modules/Channel/components/MessageFeedbackModal';
 
 export interface MessageContentProps {
   className?: string | Array<string>;
@@ -132,11 +133,13 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const contentRef = useRef(null);
   const { isMobile } = useMediaQueryContext();
   const [showMenu, setShowMenu] = useState(false);
-  const [showFeedbackOptionsMenu, setShowFeedbackOptionsMenu] = useState(false);
+
   const [mouseHover, setMouseHover] = useState(false);
   const [supposedHover, setSupposedHover] = useState(false);
   // Feedback states
   const [selectedFeedback, setSelectedFeedback] = useState(null);
+  const [showFeedbackOptionsMenu, setShowFeedbackOptionsMenu] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
   const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
     || ((message as SendableMessageType)?.sendingStatus === 'pending')
@@ -320,12 +323,11 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               <FeedbackIconButton
                 isSelected={selectedFeedback === IconTypes.FEEDBACK_LIKE}
                 onClick={() => {
-                  if (selectedFeedback === IconTypes.FEEDBACK_LIKE) {
-                    if (isMobile) {
-                      setShowFeedbackOptionsMenu(true);
-                    }
+                  if (isMobile && selectedFeedback === IconTypes.FEEDBACK_LIKE) {
+                    setShowFeedbackOptionsMenu(true);
                   } else {
                     setSelectedFeedback(IconTypes.FEEDBACK_LIKE);
+                    setShowFeedbackModal(true);
                   }
                 }}
               >
@@ -338,12 +340,11 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               <FeedbackIconButton
                 isSelected={selectedFeedback === IconTypes.FEEDBACK_DISLIKE}
                 onClick={() => {
-                  if (selectedFeedback === IconTypes.FEEDBACK_DISLIKE) {
-                    if (isMobile) {
-                      setShowFeedbackOptionsMenu(true);
-                    }
+                  if (isMobile && selectedFeedback === IconTypes.FEEDBACK_DISLIKE) {
+                    setShowFeedbackOptionsMenu(true);
                   } else {
                     setSelectedFeedback(IconTypes.FEEDBACK_DISLIKE);
+                    setShowFeedbackModal(true);
                   }
                 }}
               >
@@ -454,6 +455,25 @@ export default function MessageContent(props: MessageContentProps): ReactElement
             onRemoveFeedback={() => {
               setSelectedFeedback(null);
               // TODO: Remove feedback logic
+            }}
+          />
+        )
+      }
+      {/* Feedback Modal */}
+      {
+        showFeedbackModal && (
+          <MessageFeedbackModal
+            message={message}
+            onSubmit={() => {
+              setShowFeedbackModal(false);
+              // TODO: Add on feedback submit logic
+            }}
+            onCancel={() => {
+              setSelectedFeedback(null);
+              setShowFeedbackModal(false);
+            }}
+            onRemove={() => {
+              // TODO: Add on feedback remove logic
             }}
           />
         )
