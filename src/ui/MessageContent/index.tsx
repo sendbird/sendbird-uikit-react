@@ -40,6 +40,7 @@ import MessageBody, { MessageBodyProps } from './MessageBody';
 import MessageHeader, { MessageHeaderProps } from './MessageHeader';
 import Icon, { IconTypes } from '../Icon';
 import FeedbackIconButton from '../FeedbackButton';
+import MobileFeedbackMenu from '../MobileFeedbackMenu';
 
 export interface MessageContentProps {
   className?: string | Array<string>;
@@ -131,8 +132,11 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const contentRef = useRef(null);
   const { isMobile } = useMediaQueryContext();
   const [showMenu, setShowMenu] = useState(false);
+  const [showFeedbackOptionsMenu, setShowFeedbackOptionsMenu] = useState(false);
   const [mouseHover, setMouseHover] = useState(false);
   const [supposedHover, setSupposedHover] = useState(false);
+  // Feedback states
+  const [selectedFeedback, setSelectedFeedback] = useState(null);
 
   const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
     || ((message as SendableMessageType)?.sendingStatus === 'pending')
@@ -150,6 +154,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
 
   // Thread replies
   const displayThreadReplies = message?.threadInfo?.replyCount > 0 && replyType === 'THREAD';
+
   // Feedback buttons
   // FIXME: Replace line 155 with the commented part before merging.
   const isFeedbackMessage = !isByMe; // !isByMe && message?.myFeedbackStatus && message.myFeedbackStatus !== FeedbackStatus.NOT_APPLICABLE;
@@ -313,7 +318,16 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               className='sendbird-message-content__middle__body-container__feedback-buttons-container'
             >
               <FeedbackIconButton
-                // TODO: onClick={() => {}}
+                isSelected={selectedFeedback === IconTypes.FEEDBACK_LIKE}
+                onClick={() => {
+                  if (selectedFeedback === IconTypes.FEEDBACK_LIKE) {
+                    if (isMobile) {
+                      setShowFeedbackOptionsMenu(true);
+                    }
+                  } else {
+                    setSelectedFeedback(IconTypes.FEEDBACK_LIKE);
+                  }
+                }}
               >
                 <Icon
                   type={IconTypes.FEEDBACK_LIKE}
@@ -322,7 +336,16 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                 />
               </FeedbackIconButton>
               <FeedbackIconButton
-                // TODO: onClick={() => {}}
+                isSelected={selectedFeedback === IconTypes.FEEDBACK_DISLIKE}
+                onClick={() => {
+                  if (selectedFeedback === IconTypes.FEEDBACK_DISLIKE) {
+                    if (isMobile) {
+                      setShowFeedbackOptionsMenu(true);
+                    }
+                  } else {
+                    setSelectedFeedback(IconTypes.FEEDBACK_DISLIKE);
+                  }
+                }}
               >
                 <Icon
                   type={IconTypes.FEEDBACK_DISLIKE}
@@ -417,6 +440,20 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               } else if (threadReplySelectType === ThreadReplySelectType.PARENT) {
                 scrollToMessage?.(message?.parentMessage?.createdAt || 0, message?.parentMessageId || 0);
               }
+            }}
+          />
+        )
+      }
+      {
+        showFeedbackOptionsMenu && (
+          <MobileFeedbackMenu
+            hideMenu={() => setShowFeedbackOptionsMenu(false)}
+            onEditFeedback={() => {
+              // TODO: Edit feedback logic
+            }}
+            onRemoveFeedback={() => {
+              setSelectedFeedback(null);
+              // TODO: Remove feedback logic
             }}
           />
         )

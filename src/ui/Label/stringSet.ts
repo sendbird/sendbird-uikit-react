@@ -214,6 +214,9 @@ const stringSet = {
     // Feature: Feedback message
     FEEDBACK_LIKE: 'Like',
     FEEDBACK_DISLIKE: 'Dislike',
+    // Feature: Mobile feedback options menu items
+    EDIT_COMMENT: 'Edit Comment',
+    REMOVE_FEEDBACK: 'Remove Feedback',
   },
 };
 
