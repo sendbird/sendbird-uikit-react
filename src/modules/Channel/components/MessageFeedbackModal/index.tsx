@@ -2,29 +2,28 @@ import React, { ReactElement, useContext, useRef } from 'react';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Modal from '../../../../ui/Modal';
 import Button, { ButtonTypes } from '../../../../ui/Button';
-import { CoreMessageType } from '../../../../utils';
 import Input from '../../../../ui/Input';
 import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 import './index.scss';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
+import { CoreMessageType } from '../../../../utils';
 
 export interface MessageFeedbackModalProps {
   message: CoreMessageType;
   onCancel: () => void;
-  onSubmit?: () => void;
+  onSubmit?: (comment: string) => void;
   onRemove?: () => void;
 }
 
 export default function MessageFeedbackModal(props: MessageFeedbackModalProps): ReactElement {
   const {
-    // message,
+    message,
     onCancel,
-    onSubmit = () => { /* noop */ },
+    onSubmit,
     onRemove,
   } = props;
 
   const { stringSet } = useContext(LocalizationContext);
-  // const {} = useChannelContext();
   const { isMobile } = useMediaQueryContext();
 
   const inputRef = useRef(null);
@@ -35,7 +34,7 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
       type={ButtonTypes.PRIMARY}
       onCancel={onCancel}
       onSubmit={() => {
-        onSubmit();
+        onSubmit?.(inputRef.current.value ?? '');
         onCancel();
       }}
       submitText={stringSet.BUTTON__SUBMIT}
@@ -53,8 +52,8 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
       customFooter={
         <div className='sendbird-message-feedback-modal-footer__root'>
           {
-            onRemove && !isMobile
-              ? <Button type={ButtonTypes.WARNING} onClick={onCancel}>
+            !isMobile && message?.myFeedback
+              ? <Button type={ButtonTypes.WARNING} onClick={onRemove}>
                 <Label type={LabelTypography.BUTTON_3} color={LabelColors.ERROR}>
                   {stringSet.BUTTON__REMOVE_FEEDBACK}
                 </Label>
@@ -67,7 +66,7 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
                 {stringSet.BUTTON__CANCEL}
               </Label>
             </Button>
-            <Button onClick={onSubmit}>
+            <Button onClick={() => onSubmit?.(inputRef.current.value ?? '')}>
               <Label type={LabelTypography.BUTTON_3} color={LabelColors.ONCONTENT_1}>
                 {stringSet.BUTTON__SUBMIT}
               </Label>

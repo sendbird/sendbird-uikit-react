@@ -27,7 +27,7 @@ import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { EmojiContainer } from '@sendbird/chat';
-import { AdminMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
+import { AdminMessage, Feedback, FeedbackRating, FileMessage, UserMessage } from '@sendbird/chat/message';
 import useLongPress from '../../hooks/useLongPress';
 import MobileMenu from '../MobileMenu';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
@@ -137,7 +137,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const [mouseHover, setMouseHover] = useState(false);
   const [supposedHover, setSupposedHover] = useState(false);
   // Feedback states
-  const [selectedFeedback, setSelectedFeedback] = useState(null);
+  const [selectedFeedback, setSelectedFeedback] = useState<FeedbackRating>(null);
   const [showFeedbackOptionsMenu, setShowFeedbackOptionsMenu] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
@@ -159,7 +159,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const displayThreadReplies = message?.threadInfo?.replyCount > 0 && replyType === 'THREAD';
 
   // Feedback buttons
-  // FIXME: Replace line 155 with the commented part before merging.
+  // TODO: Replace line below with comment before merging.
   const isFeedbackMessage = !isByMe; // !isByMe && message?.myFeedbackStatus && message.myFeedbackStatus !== FeedbackStatus.NOT_APPLICABLE;
   const isFeedbackMessageClassName = isFeedbackMessage ? 'sendbird-message-content__feedback' : '';
 
@@ -321,12 +321,12 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               className='sendbird-message-content__middle__body-container__feedback-buttons-container'
             >
               <FeedbackIconButton
-                isSelected={selectedFeedback === IconTypes.FEEDBACK_LIKE}
+                isSelected={message?.myFeedback?.rating === FeedbackRating.GOOD}
                 onClick={() => {
-                  if (isMobile && selectedFeedback === IconTypes.FEEDBACK_LIKE) {
+                  setSelectedFeedback(FeedbackRating.GOOD);
+                  if (isMobile && message?.myFeedback?.rating === FeedbackRating.GOOD) {
                     setShowFeedbackOptionsMenu(true);
                   } else {
-                    setSelectedFeedback(IconTypes.FEEDBACK_LIKE);
                     setShowFeedbackModal(true);
                   }
                 }}
@@ -338,12 +338,12 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                 />
               </FeedbackIconButton>
               <FeedbackIconButton
-                isSelected={selectedFeedback === IconTypes.FEEDBACK_DISLIKE}
+                isSelected={message?.myFeedback?.rating === FeedbackRating.BAD}
                 onClick={() => {
-                  if (isMobile && selectedFeedback === IconTypes.FEEDBACK_DISLIKE) {
+                  setSelectedFeedback(FeedbackRating.BAD);
+                  if (isMobile && message?.myFeedback?.rating === FeedbackRating.BAD) {
                     setShowFeedbackOptionsMenu(true);
                   } else {
-                    setSelectedFeedback(IconTypes.FEEDBACK_DISLIKE);
                     setShowFeedbackModal(true);
                   }
                 }}
@@ -448,13 +448,18 @@ export default function MessageContent(props: MessageContentProps): ReactElement
       {
         showFeedbackOptionsMenu && (
           <MobileFeedbackMenu
-            hideMenu={() => setShowFeedbackOptionsMenu(false)}
-            onEditFeedback={() => {
-              // TODO: Edit feedback logic
-            }}
-            onRemoveFeedback={() => {
+            hideMenu={() => {
               setSelectedFeedback(null);
-              // TODO: Remove feedback logic
+              setShowFeedbackOptionsMenu(false);
+            }}
+            onEditFeedback={() => {
+              setShowFeedbackOptionsMenu(false);
+              setShowFeedbackModal(true);
+            }}
+            onRemoveFeedback={async () => {
+              await message.deleteFeedback(message.myFeedback.id);
+              setSelectedFeedback(null);
+              setShowFeedbackOptionsMenu(false);
             }}
           />
         )
@@ -464,16 +469,33 @@ export default function MessageContent(props: MessageContentProps): ReactElement
         showFeedbackModal && (
           <MessageFeedbackModal
             message={message}
-            onSubmit={() => {
+            onSubmit={async (comment: string) => {
+              if (selectedFeedback) {
+                if (message.myFeedback) {
+                  const newFeedback: Feedback = new Feedback({
+                    id: message.myFeedback.id,
+                    rating: selectedFeedback,
+                    comment,
+                  });
+                  await message.updateFeedback(newFeedback);
+                } else {
+                  await message.submitFeedback({
+                    rating: selectedFeedback,
+                    comment,
+                  });
+                }
+                setSelectedFeedback(null);
+              }
               setShowFeedbackModal(false);
-              // TODO: Add on feedback submit logic
             }}
             onCancel={() => {
               setSelectedFeedback(null);
               setShowFeedbackModal(false);
             }}
-            onRemove={() => {
-              // TODO: Add on feedback remove logic
+            onRemove={async () => {
+              await message.deleteFeedback(message.myFeedback.id);
+              setSelectedFeedback(null);
+              setShowFeedbackModal(false);
             }}
           />
         )
