@@ -449,7 +449,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
         showFeedbackOptionsMenu && (
           <MobileFeedbackMenu
             hideMenu={() => {
-              setSelectedFeedback(null);
               setShowFeedbackOptionsMenu(false);
             }}
             onEditFeedback={() => {
@@ -468,16 +467,19 @@ export default function MessageContent(props: MessageContentProps): ReactElement
       {
         showFeedbackModal && (
           <MessageFeedbackModal
+            selectedFeedback={selectedFeedback}
             message={message}
             onSubmit={async (comment: string) => {
               if (selectedFeedback) {
                 if (message.myFeedback) {
-                  const newFeedback: Feedback = new Feedback({
-                    id: message.myFeedback.id,
-                    rating: selectedFeedback,
-                    comment,
-                  });
-                  await message.updateFeedback(newFeedback);
+                  if (comment !== message.myFeedback.comment) {
+                    const newFeedback: Feedback = new Feedback({
+                      id: message.myFeedback.id,
+                      rating: selectedFeedback,
+                      comment,
+                    });
+                    await message.updateFeedback(newFeedback);
+                  }
                 } else {
                   await message.submitFeedback({
                     rating: selectedFeedback,

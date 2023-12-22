@@ -1,7 +1,7 @@
 @import '../../styles/variables';
 
 :root {
-  --sendbird-feedback-buttons-container-height: 40px;
+  --sendbird-feedback-buttons-container-height: -40px;
   --sendbird-feedback-buttons-container-height-margin-bottom: 4px;
 }
 
@@ -35,7 +35,7 @@
 }
 
 .sendbird-message-content__feedback {
-  margin-bottom: calc(var(--sendbird-feedback-buttons-container-height) + var(--sendbird-feedback-buttons-container-height-margin-bottom));
+  margin-bottom: calc(-1 * var(--sendbird-feedback-buttons-container-height) + var(--sendbird-feedback-buttons-container-height-margin-bottom));
 }
 
 .sendbird-message-content__middle__quote-message__quote {
@@ -315,7 +315,7 @@
 
 .sendbird-message-content__middle__body-container__feedback-buttons-container {
   position: absolute;
-  top: var(--sendbird-feedback-buttons-container-height);
+  bottom: var(--sendbird-feedback-buttons-container-height);
   display: flex;
   gap: 4px;
 }
