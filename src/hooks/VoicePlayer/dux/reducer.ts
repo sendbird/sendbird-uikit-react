@@ -90,7 +90,10 @@ export default function voicePlayerReducer(
       const { groupKey } = action.payload as OnCurrentTimeUpdatePayload;
       const { currentTime, duration } = state.currentPlayer as HTMLAudioElement;
       const audioUnit = (state.audioStorage?.[groupKey] ? state.audioStorage[groupKey] : AudioUnitDefaultValue()) as AudioStorageUnit;
-      if (currentTime > 0 && duration > 0) {
+      // sometimes the final time update is fired AFTER the pause event when audio is finished
+      if (audioUnit.playbackTime === audioUnit.duration && audioUnit.playingStatus === VOICE_PLAYER_STATUS.PAUSED) {
+        audioUnit.playbackTime = 0;
+      } else if (currentTime > 0 && duration > 0) {
         audioUnit.playbackTime = currentTime;
         audioUnit.duration = duration;
       }
