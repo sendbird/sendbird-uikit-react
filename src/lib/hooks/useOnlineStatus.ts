@@ -8,8 +8,8 @@ import { LoggerInterface } from '../Logger';
 function useOnlineStatus(sdk: SendbirdChat, logger: LoggerInterface) {
   const [isOnline, setIsOnline] = useState(
     // window is undefined in SSR env
-    window != null
-      ? (window.navigator?.onLine ?? true)
+    typeof window !== 'undefined'
+      ? (window?.navigator?.onLine ?? true)
       : true,
   );
 
