@@ -32,7 +32,7 @@ export default function MobileFeedbackMenu(
           }}
         >
           <Label type={LabelTypography.BODY_1} color={LabelColors.ONBACKGROUND_1}>
-            {stringSet?.EDIT_COMMENT}
+            {stringSet.EDIT_COMMENT}
           </Label>
         </div>
         <div
@@ -43,7 +43,7 @@ export default function MobileFeedbackMenu(
           }}
         >
           <Label type={LabelTypography.BODY_1} color={LabelColors.ERROR}>
-            {stringSet?.REMOVE_FEEDBACK}
+            {stringSet.REMOVE_FEEDBACK}
           </Label>
         </div>
       </div>
