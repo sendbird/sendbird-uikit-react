@@ -25,7 +25,7 @@ export const compressImage = ({
 
       const originWidth = image.width;
       const originHeight = image.height;
-      let targetResizingWidth =  (!resizingWidth || resizingWidth > originWidth) ? originWidth : resizingWidth;
+      let targetResizingWidth = (!resizingWidth || resizingWidth > originWidth) ? originWidth : resizingWidth;
       let targetResizingHeight = (!resizingHeight || resizingHeight > originHeight) ? originHeight : resizingHeight;
       const widthRatio = originWidth / targetResizingWidth;
       const heightRatio = originHeight / targetResizingHeight;
