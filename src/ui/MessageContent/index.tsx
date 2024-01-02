@@ -161,7 +161,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   // Feedback buttons
   // TODO: Replace line below with comment before merging.
   const isFeedbackMessage = !isByMe; // !isByMe && message?.myFeedbackStatus && message.myFeedbackStatus !== FeedbackStatus.NOT_APPLICABLE;
-  const isFeedbackMessageClassName = isFeedbackMessage ? 'sendbird-message-content__feedback' : '';
+  const feedbackMessageClassName = isFeedbackMessage ? 'sendbird-message-content__feedback' : '';
 
   // onMouseDown: (e: React.MouseEvent<T>) => void;
   // onTouchStart: (e: React.TouchEvent<T>) => void;
