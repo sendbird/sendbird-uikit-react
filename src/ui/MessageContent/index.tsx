@@ -186,7 +186,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
 
   return (
     <div
-      className={getClassName([className, 'sendbird-message-content', isByMeClassName, isFeedbackMessageClassName])}
+      className={getClassName([className, 'sendbird-message-content', isByMeClassName, feedbackMessageClassName])}
       onMouseOver={() => setMouseHover(true)}
       onMouseLeave={() => setMouseHover(false)}
     >
