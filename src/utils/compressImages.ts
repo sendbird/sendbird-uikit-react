@@ -9,7 +9,7 @@ interface CompressImageParams {
   resizingHeight?: number;
 }
 
-const compressImage = ({
+export const compressImage = ({
   imageFile,
   compressionRate,
   resizingWidth,
@@ -25,13 +25,15 @@ const compressImage = ({
 
       const originWidth = image.width;
       const originHeight = image.height;
-      const widthRatio = originWidth / (resizingWidth || originWidth);
-      const heightRatio = originHeight / (resizingHeight || originHeight);
+      let targetResizingWidth =  (!resizingWidth || resizingWidth > originWidth) ? originWidth : resizingWidth;
+      let targetResizingHeight = (!resizingHeight || resizingHeight > originHeight) ? originHeight : resizingHeight;
+      const widthRatio = originWidth / targetResizingWidth;
+      const heightRatio = originHeight / targetResizingHeight;
 
-      let targetResizingWidth = resizingWidth || originWidth;
-      let targetResizingHeight = resizingHeight || originHeight;
-
-      // Use the more impactful value, so the original images' ratio won't be broken
+      /**
+       * Set the target resizing values again with the calculated ratios
+       * to use the impactful value, so the original images' ratio won't be broken.
+       */
       if (widthRatio > heightRatio) {
         targetResizingHeight = originHeight / (resizingWidth ? widthRatio : 1);
       } else if (heightRatio > widthRatio) {
@@ -85,11 +87,11 @@ export const compressImages = async ({
   };
 
   if (!(Array.isArray(files) && files.length > 0)) {
-    logger.warning('utils - compressImages: There are no files.', files);
+    logger?.warning('utils - compressImages: There are no files.', files);
     return result;
   }
   if (compressionRate < 0 || 1 < compressionRate) {
-    logger.warning('utils - compressImages: The compressionRate is not acceptable.', compressionRate);
+    logger?.warning('utils - compressImages: The compressionRate is not acceptable.', compressionRate);
     return result;
   }
 
@@ -97,7 +99,7 @@ export const compressImages = async ({
     files
       .map(async (file, index) => {
         if (!(file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/jpeg')) {
-          logger.warning('utils - compressImages: The fileType is not compressible.', { file, index });
+          logger?.warning('utils - compressImages: The fileType is not compressible.', { file, index });
           result.failedIndexes.push(index);
           result.compressedFiles.push(file);
           return;
@@ -113,11 +115,11 @@ export const compressImages = async ({
           result.compressedFiles.push(compressedImage);
         } catch (err) {
           result.failedIndexes.push(index);
-          logger.warning('utils - compressImages: Failed to compress image file', { file, err });
+          logger?.warning('utils - compressImages: Failed to compress image file', { file, err });
         }
       }),
   );
 
-  logger.info('utils - compressImages: Finished compressing images', result);
+  logger?.info('utils - compressImages: Finished compressing images', result);
   return result;
 };
