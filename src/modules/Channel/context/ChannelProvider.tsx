@@ -140,7 +140,7 @@ interface UpdateMessageParams {
   mentionTemplate?: string;
 }
 
-interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInterface {
+export interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInterface {
   scrollToMessage?(createdAt: number, messageId: number): void;
   isScrolled?: boolean;
   setIsScrolled?: React.Dispatch<React.SetStateAction<boolean>>;

@@ -21,15 +21,17 @@ export interface ChannelUIProps {
 }
 
 const ChannelUI: React.FC<ChannelUIProps> = (props: ChannelUIProps) => {
+  const context = useChannelContext();
   const {
     channelUrl,
     isInvalid,
     initialized,
-  } = useChannelContext();
+  } = context;
 
   return (
     <GroupChannelUIView
       {...props}
+      {...context}
       requestedChannelUrl={channelUrl}
       isInvalid={isInvalid}
       loading={props?.isLoading ?? !initialized}

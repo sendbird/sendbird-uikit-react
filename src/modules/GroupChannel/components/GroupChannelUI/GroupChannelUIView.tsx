@@ -2,15 +2,17 @@ import './index.scss';
 import React from 'react';
 
 import type { GroupChannelUIProps } from '.';
+import type { GroupChannelProviderInterface } from '../../context/GroupChannelProvider';
+import type { ChannelProviderInterface } from '../../../Channel/context/ChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
 import GroupChannelHeader from '../GroupChannelHeader';
 import MessageList from '../MessageList';
-import MessageInputWrapper from '../MessageInput';
 import TypingIndicator from '../TypingIndicator';
 import { TypingIndicatorType } from '../../../../types';
 import ConnectionStatus from '../../../../ui/ConnectionStatus';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
+import MessageInputWrapper from '../MessageInputWrapper';
 
 export interface GroupChannelUIViewProps extends GroupChannelUIProps {
   requestedChannelUrl: string;
@@ -18,7 +20,7 @@ export interface GroupChannelUIViewProps extends GroupChannelUIProps {
   isInvalid: boolean;
 }
 
-export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
+export const GroupChannelUIView = (props: GroupChannelUIViewProps & (GroupChannelProviderInterface | ChannelProviderInterface)) => {
   const {
     requestedChannelUrl,
     loading,

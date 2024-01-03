@@ -1,7 +1,7 @@
 import React from 'react';
 
+import type { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
-import { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { GroupChannelUIView } from './GroupChannelUIView';
 
 export interface GroupChannelUIProps {
@@ -20,15 +20,17 @@ export interface GroupChannelUIProps {
 }
 
 const GroupChannelUI: React.FC<GroupChannelUIProps> = (props: GroupChannelUIProps) => {
+  const context = useGroupChannelContext();
   const {
     currentChannel,
     channelUrl,
     loading,
-  } = useGroupChannelContext();
+  } = context;
 
   return (
     <GroupChannelUIView
       {...props}
+      {...context}
       requestedChannelUrl={channelUrl}
       loading={loading}
       isInvalid={channelUrl && !currentChannel}
