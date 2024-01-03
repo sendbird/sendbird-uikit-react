@@ -17,7 +17,7 @@ import MentionUserLabel from '../../../../ui/MentionUserLabel';
 import Modal from '../../../../ui/Modal';
 import TextButton from '../../../../ui/TextButton';
 import { useChannelListContext } from '../../context/ChannelListProvider';
-import { TypingIndicatorText } from '../../../Channel/components/TypingIndicator';
+import { TypingIndicatorText } from '../../../GroupChannel/components/TypingIndicator';
 import MessageStatus from '../../../../ui/MessageStatus';
 import { CoreMessageType, isVoiceMessage, SendableMessageType } from '../../../../utils';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';

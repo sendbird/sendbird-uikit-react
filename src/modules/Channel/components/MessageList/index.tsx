@@ -11,7 +11,7 @@ import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps, TypingInd
 import { isAboutSame } from '../../context/utils';
 import { getMessagePartsInfo } from './getMessagePartsInfo';
 import UnreadCount from '../UnreadCount';
-import FrozenNotification from '../FrozenNotification';
+import FrozenNotification from '../../../GroupChannel/components/FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { UserMessage } from '@sendbird/chat/message';
