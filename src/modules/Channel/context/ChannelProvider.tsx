@@ -132,13 +132,14 @@ interface SendMessageParams {
   mentionedUsers?: User[];
   mentionTemplate?: string;
 }
-
 interface UpdateMessageParams {
   messageId: number;
   message: string;
   mentionedUsers?: User[];
   mentionTemplate?: string;
 }
+export type SendMessageType = (params: SendMessageParams) => void;
+export type UpdateMessageType = (props: UpdateMessageParams, callback?: (err: SendbirdError, message: UserMessage) => void) => void;
 
 export interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInterface {
   scrollToMessage?(createdAt: number, messageId: number): void;
@@ -160,11 +161,11 @@ export interface ChannelProviderInterface extends ChannelContextProps, MessageSt
   setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
   setHighLightedMessageId: React.Dispatch<React.SetStateAction<number>>;
   messageInputRef: React.MutableRefObject<HTMLInputElement>,
-  deleteMessage(message: CoreMessageType): Promise<CoreMessageType>,
-  updateMessage(props: UpdateMessageParams, callback?: (err: SendbirdError, message: UserMessage) => void): void,
+  deleteMessage(message: CoreMessageType): Promise<void>,
+  updateMessage: UpdateMessageType,
   resendMessage(failedMessage: SendableMessageType): void,
   // TODO: Good to change interface to using params / This part need refactoring
-  sendMessage: (params: SendMessageParams) => void,
+  sendMessage: SendMessageType,
   sendFileMessage: (file: File, quoteMessage?: SendableMessageType) => Promise<FileMessage>,
   sendVoiceMessage: (file: File, duration: number, quoteMessage?: SendableMessageType) => void,
   sendMultipleFilesMessage: (files: Array<File>, quoteMessage?: SendableMessageType) => Promise<MultipleFilesMessage>,
