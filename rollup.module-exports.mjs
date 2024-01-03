@@ -61,7 +61,7 @@ export default {
   'Channel/context': 'src/modules/Channel/context/ChannelProvider.tsx',
   'Channel/hooks/useInitialMessagesFetch': 'src/modules/Channel/context/hooks/useInitialMessagesFetch.ts',
   'Channel/hooks/useHandleUploadFiles': 'src/modules/Channel/context/hooks/useHandleUploadFiles.tsx',
-  'Channel/utils/getMessagePartsInfo': 'src/modules/Channel/components/MessageList/getMessagePartsInfo.ts',
+  'Channel/utils/getMessagePartsInfo': 'src/modules/GroupChannel/components/MessageList/getMessagePartsInfo.ts', // FIXME: leave for legacy
   'Channel/utils/compareMessagesForGrouping': 'src/utils/messages.ts',  // TODO: export from global utils path
   'Channel/components/ChannelHeader': 'src/modules/Channel/components/ChannelHeader/index.tsx',
   'Channel/components/ChannelUI': 'src/modules/Channel/components/ChannelUI/index.tsx',
@@ -70,7 +70,7 @@ export default {
   'Channel/components/Message': 'src/modules/Channel/components/Message/index.tsx',
   'Channel/components/MessageInput': 'src/modules/GroupChannel/components/MessageInputWrapper/index.tsx', // FIXME: leave for legacy
   'Channel/components/MessageList': 'src/modules/Channel/components/MessageList/index.tsx',
-  'Channel/components/RemoveMessageModal': 'src/modules/GroupChacnnel/components/RemoveMessageModal.tsx', // FIXME: leave for legacy
+  'Channel/components/RemoveMessageModal': 'src/modules/GroupChannel/components/RemoveMessageModal.tsx', // FIXME: leave for legacy
   'Channel/components/TypingIndicator': 'src/modules/GroupChannel/components/TypingIndicator.tsx', // FIXME: leave for legacy
   'Channel/components/UnreadCount': 'src/modules/GroupChannel/components/UnreadCount/index.tsx', // FIXME: leave for legacy
   'Channel/components/SuggestedMentionList': 'src/modules/Channel/components/SuggestedMentionList/index.tsx',

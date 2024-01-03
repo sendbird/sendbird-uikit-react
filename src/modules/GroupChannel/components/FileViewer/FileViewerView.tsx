@@ -12,7 +12,7 @@ import { isImage, isSupportedFileView, isVideo } from '../../../../utils';
 import { MODAL_ROOT } from '../../../../hooks/useModal';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
-type DeleteMessageTypeLegacy = (message: CoreMessageType) => Promise<CoreMessageType>;
+type DeleteMessageTypeLegacy = (message: CoreMessageType) => Promise<void>;
 export interface FileViewerViewProps extends FileViewerProps {
   deleteMessage: ((message: SendableMessageType) => Promise<void>) | DeleteMessageTypeLegacy;
 }

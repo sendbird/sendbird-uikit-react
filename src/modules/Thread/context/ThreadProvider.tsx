@@ -61,7 +61,7 @@ export interface ThreadProviderInterface extends ThreadProviderProps, ThreadCont
   sendMultipleFilesMessage: (files: Array<File>, quoteMessage?: SendableMessageType) => Promise<MultipleFilesMessage>,
   resendMessage: (failedMessage: SendableMessageType) => void;
   updateMessage: (props, callback?: () => void) => void;
-  deleteMessage: (message: SendableMessageType) => Promise<SendableMessageType>;
+  deleteMessage: (message: SendableMessageType) => Promise<void>;
   nicknamesMap: Map<string, string>;
 }
 const ThreadContext = React.createContext<ThreadProviderInterface | null>(null);
@@ -218,7 +218,10 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
     currentChannel,
     isMentionEnabled,
   }, { logger, pubSub, threadDispatcher });
-  const deleteMessage = useDeleteMessageCallback({ currentChannel, threadDispatcher }, { logger });
+  const deleteMessage = useDeleteMessageCallback(
+    { currentChannel, threadDispatcher },
+    { logger },
+  );
 
   // memo
   const nicknamesMap: Map<string, string> = useMemo(() => (

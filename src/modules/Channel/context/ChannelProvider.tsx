@@ -389,8 +389,10 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   });
 
   // callbacks for Message CURD actions
-  const deleteMessage = useDeleteMessageCallback({ currentGroupChannel, messagesDispatcher },
-    { logger });
+  const deleteMessage = useDeleteMessageCallback(
+    { currentGroupChannel, messagesDispatcher },
+    { logger },
+  );
   const updateMessage = useUpdateMessageCallback(
     { currentGroupChannel, messagesDispatcher, onBeforeUpdateUserMessage, isMentionEnabled },
     { logger, pubSub },

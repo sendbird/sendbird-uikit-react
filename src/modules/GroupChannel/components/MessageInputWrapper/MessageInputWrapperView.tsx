@@ -163,6 +163,7 @@ export const MessageInputWrapperView = (props: MessageInputWrapperViewProps,
     <div className={`sendbird-message-input-wrapper${showVoiceMessageInput ? '--voice-message' : ''}`}>
       {showSuggestedMentionList && (
         <SuggestedMentionList
+          currentChannel={currentChannel}
           targetNickname={mentionNickname}
           inputEvent={messageInputEvent}
           // renderUserMentionItem={renderUserMentionItem}

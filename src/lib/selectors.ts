@@ -597,7 +597,7 @@ export const getUpdateUserMessage = (state: SendBirdState, publishingModules: Pu
  *  .catch((error) => {})
  */
 export const getDeleteMessage = (state: SendBirdState) => (
-  (channel: GroupChannel | OpenChannel, message: SendableMessageType): Promise<SendableMessageType> => (
+  (channel: GroupChannel | OpenChannel, message: SendableMessageType): Promise<void> => (
     new Promise((resolve, reject) => {
       const pubSub = getPubSub(state);
       const { messageId } = message;
@@ -607,7 +607,7 @@ export const getDeleteMessage = (state: SendBirdState) => (
             topics.DELETE_MESSAGE,
             { messageId, channel },
           );
-          resolve(message);
+          resolve();
         })
         .catch(reject);
     })
