@@ -143,15 +143,15 @@ export const MessageInputWrapperView = (props: MessageInputWrapperViewProps,
 
   // Callbacks
   const handleUploadFiles = isLegacyChannel
-  ? useHandleUploadFilesLegacy({
-    sendFileMessage: sendFileMessage as SendFileMessageTypeLegacy,
-    sendMultipleFilesMessage: sendMultipleFilesMessage as SendMultipleFilesMessageTypeLegacy,
-    quoteMessage,
-  }, { logger })
-  : useHandleUploadFiles({
-    sendFileMessage: sendFileMessage as SendFileMessageType,
-    sendMultipleFilesMessage: sendMultipleFilesMessage as SendMultipleFilesMessageType,
-  }, { logger });
+    ? useHandleUploadFilesLegacy({
+      sendFileMessage: sendFileMessage as SendFileMessageTypeLegacy,
+      sendMultipleFilesMessage: sendMultipleFilesMessage as SendMultipleFilesMessageTypeLegacy,
+      quoteMessage,
+    }, { logger })
+    : useHandleUploadFiles({
+      sendFileMessage: sendFileMessage as SendFileMessageType,
+      sendMultipleFilesMessage: sendMultipleFilesMessage as SendMultipleFilesMessageType,
+    }, { logger });
 
   if (isBroadcast && !isOperator) {
     /* Only `Operator` can send messages in the Broadcast channel */
@@ -277,4 +277,4 @@ export const MessageInputWrapperView = (props: MessageInputWrapperViewProps,
       )}
     </div>
   );
-}
+};

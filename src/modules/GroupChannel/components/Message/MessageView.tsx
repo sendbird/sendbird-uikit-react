@@ -37,7 +37,7 @@ export interface MessageViewProps {
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
   renderEditInput?: () => React.ReactElement;
   renderMessageContent?: () => React.ReactElement;
-};
+}
 
 interface MessageViewChannelContextInterface {
   loading: boolean;

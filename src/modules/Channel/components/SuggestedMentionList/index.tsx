@@ -3,7 +3,7 @@ import type { SuggestedMentionListViewProps } from '../../../GroupChannel/compon
 import SuggestedMentionListView from '../../../GroupChannel/components/SuggestedMentionList/SuggestedMentionListView';
 import { useChannelContext } from '../../context/ChannelProvider';
 
-export interface SuggestedMentionListProps extends Omit<SuggestedMentionListViewProps, 'currentChannel'> { }
+export type SuggestedMentionListProps = Omit<SuggestedMentionListViewProps, 'currentChannel'>;
 
 export const SuggestedMentionList = (props: SuggestedMentionListProps) => {
   const { currentGroupChannel } = useChannelContext();

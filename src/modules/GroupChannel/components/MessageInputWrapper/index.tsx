@@ -11,7 +11,7 @@ export type MessageInputWrapperProps = {
   renderSendMessageIcon?: () => React.ReactElement;
 };
 
-const _MessageInputWrapper = (_props: MessageInputWrapperProps & (GroupChannelProviderInterface | ChannelProviderInterface), ref: React.MutableRefObject<any>) => {
+const _MessageInputWrapper = (_props: MessageInputWrapperProps & (GroupChannelProviderInterface | ChannelProviderInterface)) => {
   /**
    * GroupChannelProviderInterface has currentChannel
    * ChannelProviderInterface has currentGroupChannel

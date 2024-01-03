@@ -3,7 +3,7 @@ import type { SuggestedMentionListViewProps } from '../../GroupChannel/component
 import SuggestedMentionListView from '../../GroupChannel/components/SuggestedMentionList/SuggestedMentionListView';
 import { useThreadContext } from '../context/ThreadProvider';
 
-export interface SuggestedMentionListProps extends Omit<SuggestedMentionListViewProps, 'currentChannel'> { }
+export type SuggestedMentionListProps = Omit<SuggestedMentionListViewProps, 'currentChannel'>;
 
 export const SuggestedMentionList = (props: SuggestedMentionListProps) => {
   const { currentChannel } = useThreadContext();

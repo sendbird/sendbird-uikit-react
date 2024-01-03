@@ -4,7 +4,7 @@ import MessageListView from './MessageListView';
 import { MessageList as LegacyMessageList } from '../../../Channel/components/MessageList';
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 
-export interface MessageListProps extends MessageListViewBasicProps { }
+export type MessageListProps = MessageListViewBasicProps;
 
 export const MessageList = (props: MessageListProps) => {
   const hasLegacyChannelContext = Object.hasOwn(props, 'currentGroupChannel');

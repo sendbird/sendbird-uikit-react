@@ -170,6 +170,6 @@ export const SuggestedMentionListView = (props: SuggestedMentionListViewProps) =
       )}
     </div>
   );
-}
+};
 
 export default SuggestedMentionListView;

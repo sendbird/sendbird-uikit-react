@@ -56,7 +56,7 @@ export interface FileViewerUIProps {
   onCancel: () => void;
   onDelete: () => void;
   disableDelete: boolean;
-};
+}
 
 export const FileViewerComponent = ({
   // sender
