@@ -9,7 +9,7 @@ import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
 import Message from '../Message';
 import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps, TypingIndicatorType } from '../../../../types';
 import { isAboutSame } from '../../context/utils';
-import { getMessagePartsInfo } from './getMessagePartsInfo';
+import { getMessagePartsInfo } from '../../../GroupChannel/components/MessageList/getMessagePartsInfo';
 import UnreadCount from '../../../GroupChannel/components/UnreadCount';
 import FrozenNotification from '../../../GroupChannel/components/FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
@@ -33,14 +33,14 @@ export interface MessageListProps {
   renderFrozenNotification?: () => React.ReactElement;
 }
 
-const MessageList: React.FC<MessageListProps> = ({
+export const MessageList = ({
   className = '',
   renderMessage,
   renderPlaceholderEmpty,
   renderCustomSeparator,
   renderPlaceholderLoader,
   renderFrozenNotification,
-}) => {
+}: MessageListProps) => {
   const {
     allMessages,
     localMessages,
