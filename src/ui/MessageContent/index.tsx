@@ -470,24 +470,23 @@ export default function MessageContent(props: MessageContentProps): ReactElement
             selectedFeedback={selectedFeedback}
             message={message}
             onSubmit={async (comment: string) => {
-              if (selectedFeedback) {
-                if (message.myFeedback) {
-                  if (comment !== message.myFeedback.comment) {
-                    const newFeedback: Feedback = new Feedback({
-                      id: message.myFeedback.id,
-                      rating: selectedFeedback,
-                      comment,
-                    });
-                    await message.updateFeedback(newFeedback);
-                  }
-                } else {
-                  await message.submitFeedback({
-                    rating: selectedFeedback,
-                    comment,
-                  });
-                }
-                setSelectedFeedback(null);
+              if (!selectedFeedback) {
+                return;
               }
+              if (!message.myFeedback) {
+                await message.submitFeedback({
+                  rating: selectedFeedback,
+                  comment,
+                });
+              } else if (comment !== message.myFeedback.comment) {
+                const newFeedback: Feedback = new Feedback({
+                  id: message.myFeedback.id,
+                  rating: selectedFeedback,
+                  comment,
+                });
+                await message.updateFeedback(newFeedback);
+              }
+              setSelectedFeedback(null);
               setShowFeedbackModal(false);
             }}
             onCancel={() => {
