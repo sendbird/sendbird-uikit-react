@@ -66,14 +66,16 @@ export default {
   'Channel/components/ChannelHeader': 'src/modules/Channel/components/ChannelHeader/index.tsx',
   'Channel/components/ChannelUI': 'src/modules/Channel/components/ChannelUI/index.tsx',
   'Channel/components/FileViewer': 'src/modules/Channel/components/FileViewer/index.tsx',
-  'Channel/components/FrozenNotification': 'src/modules/Channel/components/FrozenNotification/index.tsx',
+  'Channel/components/FrozenNotification': 'src/modules/GroupChannel/components/FrozenNotification/index.tsx', // FIXME: leave for legacy
   'Channel/components/Message': 'src/modules/Channel/components/Message/index.tsx',
-  'Channel/components/MessageInput': 'src/modules/Channel/components/MessageInput/index.tsx',
+  'Channel/components/MessageInput': 'src/modules/GroupChannel/components/MessageInputWrapper/index.tsx', // FIXME: leave for legacy
   'Channel/components/MessageList': 'src/modules/Channel/components/MessageList/index.tsx',
-  'Channel/components/RemoveMessageModal': 'src/modules/Channel/components/RemoveMessageModal.tsx',
-  'Channel/components/TypingIndicator': 'src/modules/Channel/components/TypingIndicator.tsx',
-  'Channel/components/UnreadCount': 'src/modules/Channel/components/UnreadCount/index.tsx',
+  'Channel/components/RemoveMessageModal': 'src/modules/GroupChacnnel/components/RemoveMessageModal.tsx', // FIXME: leave for legacy
+  'Channel/components/TypingIndicator': 'src/modules/GroupChannel/components/TypingIndicator.tsx', // FIXME: leave for legacy
+  'Channel/components/UnreadCount': 'src/modules/GroupChannel/components/UnreadCount/index.tsx', // FIXME: leave for legacy
   'Channel/components/SuggestedMentionList': 'src/modules/Channel/components/SuggestedMentionList/index.tsx',
+
+  // TODO: Export components for GroupChannel
 
   // OpenChannel
   OpenChannel: 'src/modules/OpenChannel/index.tsx',
