@@ -29,7 +29,7 @@ import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
-import SuggestedReplies from '../SuggestedReplies';
+import SuggestedReplies from '../../../GroupChannel/components/SuggestedReplies';
 
 type MessageUIProps = {
   message: EveryMessage;
