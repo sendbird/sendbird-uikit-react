@@ -10,7 +10,7 @@ import Message from '../Message';
 import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps, TypingIndicatorType } from '../../../../types';
 import { isAboutSame } from '../../context/utils';
 import { getMessagePartsInfo } from './getMessagePartsInfo';
-import UnreadCount from '../UnreadCount';
+import UnreadCount from '../../../GroupChannel/components/UnreadCount';
 import FrozenNotification from '../../../GroupChannel/components/FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
