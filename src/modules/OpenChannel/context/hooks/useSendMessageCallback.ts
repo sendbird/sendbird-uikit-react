@@ -21,7 +21,7 @@ interface StaticParams {
 }
 
 function useSendMessageCallback(
-  { currentOpenChannel, onBeforeSendUserMessage, checkScrollBottom, messageInputRef }: DynamicParams,
+  { currentOpenChannel, onBeforeSendUserMessage, messageInputRef }: DynamicParams,
   { sdk, logger, messagesDispatcher, scrollRef }: StaticParams,
 ): () => void {
   return useCallback(() => {
@@ -41,7 +41,6 @@ function useSendMessageCallback(
       const params = onBeforeSendUserMessage ? onBeforeSendUserMessage(text) : createParamsDefault(text);
       logger.info('OpenChannel | useSendMessageCallback: Sending message has started', params);
 
-      const isBottom = checkScrollBottom();
       let pendingMsg = null;
       currentOpenChannel.sendUserMessage(params)
         .onPending((pendingMessage) => {
@@ -53,6 +52,8 @@ function useSendMessageCallback(
             },
           });
           pendingMsg = pendingMessage;
+
+          setTimeout(() => utils.scrollIntoLast(0, scrollRef));
         })
         .onSucceeded((message) => {
           logger.info('OpenChannel | useSendMessageCallback: Sending message succeeded', message);
@@ -60,11 +61,6 @@ function useSendMessageCallback(
             type: messageActionTypes.SENDING_MESSAGE_SUCCEEDED,
             payload: message,
           });
-          if (isBottom) {
-            setTimeout(() => {
-              utils.scrollIntoLast(0, scrollRef);
-            });
-          }
         })
         .onFailed((error) => {
           logger.warning('OpenChannel | useSendMessageCallback: Sending message failed', error);
@@ -86,7 +82,7 @@ function useSendMessageCallback(
           }
         });
     }
-  }, [currentOpenChannel, onBeforeSendUserMessage, checkScrollBottom, messageInputRef]);
+  }, [currentOpenChannel, onBeforeSendUserMessage, messageInputRef]);
 }
 
 export default useSendMessageCallback;

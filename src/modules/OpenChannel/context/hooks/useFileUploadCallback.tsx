@@ -35,7 +35,6 @@ type CallbackReturn = (files: Array<File> | File) => void;
 
 function useFileUploadCallback({
   currentOpenChannel,
-  checkScrollBottom,
   imageCompression = {},
   onBeforeSendFileMessage,
 }: DynamicParams,
@@ -100,7 +99,6 @@ function useFileUploadCallback({
       const params = onBeforeSendFileMessage ? onBeforeSendFileMessage(compressedFile) : createParamsDefault(compressedFile);
       logger.info('OpenChannel | useFileUploadCallback: Uploading file message start', params);
 
-      const isBottom = checkScrollBottom();
       currentOpenChannel.sendFileMessage(params)
         .onPending((pendingMessage) => {
           messagesDispatcher({
@@ -115,6 +113,8 @@ function useFileUploadCallback({
               channel: currentOpenChannel,
             },
           });
+
+          setTimeout(() => utils.scrollIntoLast(0, scrollRef));
         })
         .onSucceeded((message) => {
           logger.info('OpenChannel | useFileUploadCallback: Sending message succeeded', message);
@@ -122,11 +122,6 @@ function useFileUploadCallback({
             type: messageActionTypes.SENDING_MESSAGE_SUCCEEDED,
             payload: message,
           });
-          if (isBottom) {
-            setTimeout(() => {
-              utils.scrollIntoLast(0, scrollRef);
-            });
-          }
         })
         .onFailed((error, message) => {
           logger.error('OpenChannel | useFileUploadCallback: Sending file message failed', { message, error });
@@ -140,7 +135,7 @@ function useFileUploadCallback({
           });
         });
     }
-  }, [currentOpenChannel, onBeforeSendFileMessage, checkScrollBottom, imageCompression]);
+  }, [currentOpenChannel, onBeforeSendFileMessage, imageCompression]);
 }
 
 export default useFileUploadCallback;
