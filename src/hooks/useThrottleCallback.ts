@@ -41,5 +41,42 @@ export function useThrottleCallback<T extends(...args: any[]) => void>(
     };
 
     timer.current = setTimeout(invoke, delay);
-  });
+  }) as T;
+}
+
+export function throttle<T extends(...args: any[]) => void>(
+  callback: T,
+  delay: number,
+  options: { leading?: boolean; trailing?: boolean } = {
+    leading: true,
+    trailing: false,
+  },
+) {
+  let timer = null;
+  let trailingArgs = null;
+
+  return ((...args: any[]) => {
+    if (timer) {
+      trailingArgs = args;
+      return;
+    }
+
+    if (options.leading) {
+      callback(...args);
+    } else {
+      trailingArgs = args;
+    }
+
+    const invoke = () => {
+      if (options.trailing && trailingArgs) {
+        callback(...trailingArgs);
+        trailingArgs = null;
+        timer = setTimeout(invoke, delay);
+      } else {
+        timer = null;
+      }
+    };
+
+    timer = setTimeout(invoke, delay);
+  }) as T;
 }
