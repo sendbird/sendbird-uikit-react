@@ -4,8 +4,8 @@ import './index.scss';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { changeTypeToClassName, changeSizeToClassName } from './utils';
 import { ButtonTypes, ButtonSizes } from './types';
-import {ObjectValues} from '../../utils/typeHelpers/objectValues';
-import {Typography} from '../Label/types';
+import { ObjectValues } from '../../utils/typeHelpers/objectValues';
+import { Typography } from '../Label/types';
 
 export interface ButtonProps {
   className?: string | Array<string>;
