@@ -41,7 +41,7 @@ export default function OGMessageItemBody({
   const openOGUrl = (): void => {
     let url = message?.ogMetaData?.url;
     if (url) {
-      if (!url.startsWith('http')) {
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
         url = 'https://' + url;
       }
       window.open(url);
