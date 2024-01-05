@@ -113,13 +113,7 @@ export const MessageListView = ({
       );
     },
     scrollToBottomButton() {
-      // TODO: should we add `scrollDistanceFromBottomRef.current <= SCROLL_BOTTOM_PADDING` here?
-      //  if so scrollDistanceFromBottom should be changed to state
-
-      let shouldVisible = false;
-      if (!isScrollBottomReached) shouldVisible = true;
-      if (hasNext()) shouldVisible = true;
-      if (!shouldVisible) return null;
+      if (!hasNext() && isScrollBottomReached) return null;
 
       return (
         <div
