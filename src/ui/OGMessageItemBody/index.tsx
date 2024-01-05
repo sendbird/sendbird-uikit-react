@@ -37,8 +37,15 @@ export default function OGMessageItemBody({
 }: Props): ReactElement {
   const imageRef = useRef<HTMLDivElement>(null);
   const { stringSet } = useContext(LocalizationContext);
+
   const openOGUrl = (): void => {
-    if (message?.ogMetaData?.url) window.open(message?.ogMetaData?.url);
+    let url = message?.ogMetaData?.url;
+    if (url) {
+      if (!url.startsWith('http')) {
+        url = 'https://' + url;
+      }
+      window.open(url);
+    }
   };
   const isMessageMentioned = isMentionEnabled && message?.mentionedMessageTemplate?.length > 0 && message?.mentionedUsers?.length > 0;
   const tokens = useMemo(() => {
