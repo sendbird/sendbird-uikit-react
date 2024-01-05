@@ -9,9 +9,9 @@ We are introducing a new version of the Sendbird Chat UIKit. Version 3 features 
 
 ## Installation
 
-`npm i @sendbird/uikit-react`
-or if you're using yarn
 `yarn add @sendbird/uikit-react`
+or if you're using npm
+`npm i @sendbird/uikit-react`
 
 ## Getting Started
 
@@ -39,26 +39,24 @@ And many more...
 
 You need to install:
 * nodejs 16 LTS https://nodejs.org/en/download/
-* npm 8 >= or yarn
-
-**Caveats**
- - We tried development on Mac OS / Linux systems. You might encounter problems in running `npm run build` or `yarn run build` in Windows machines
+* npm 8>= or yarn 3>=
 
 ### Development
+ 
 We use storybook for development and rollup for building the npm distribution(bundled JS file)
-Make sure you have nodejs and npm (or yarn) installed and run
+Make sure you have nodejs and yarn(or npm) installed and run
 
 > Make a copy of .env.example and save it as .env 
-> Set your appId STORYBOOK_APP_ID
+> Set your appId `STORYBOOK_APP_ID`
 
-```
-npm install
-npm run storybook
-```
-or
 ```
 yarn install
 yarn storybook
+```
+or
+```
+npm install
+npm run storybook
 ```
 
 * By default, storybook opens in http://localhost:6006/
@@ -82,42 +80,46 @@ To enable Husky in local, run:
 
 ### Build
 
-We use rollupJS for building the production bundle script that you want to use inside your applications.
+We use RollupJS for building the production bundle script that you want to use inside your applications.
 
-We have both esm and commonjs output
+We have both `ESM` and `CJS` output
 
 ```
-npm run build
+yarn build
 ```
 or
 ```
-yarn run build
+npm run build
 ```
 
-The bundled JS code can be found in `./release`
-The CSS is in `./release/dist/index.css`
+The bundled JS code can be found in `./dist`
+The CSS is in `./dist/dist/index.css`
+
+**Caveats**
+ - We tried development on Mac OS / Linux systems. You might encounter problems in running `yarn build` or `npm run build` in Windows machines
 
 ## Running the tests
 
 We have implemented tests for dumb ui components only. Technologies used: Jest and testing-library
 
 ```
-npm run test
+yarn test
 ```
 or
 ```
-yarn run test
+npm run test
 ```
 
 ### Lint
 
 ```
-npm run lint
+yarn lint
 ```
 or
 ```
-yarn run lint
+npm run lint
 ```
+
 * .eslintrc.json lints ts files and .eslintrc.js lints js files
 
 ### Webpack 5
