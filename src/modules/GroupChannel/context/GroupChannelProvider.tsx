@@ -295,7 +295,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     if (messageDataSource.initialized) {
       scrollPubSub.publish('scrollToBottom', null);
     }
-  }, [messageDataSource.initialized]);
+  }, [messageDataSource.initialized, channelUrl]);
 
   // SideEffect: Reset MessageCollection with startingPoint prop.
   useAsyncEffect(async () => {
