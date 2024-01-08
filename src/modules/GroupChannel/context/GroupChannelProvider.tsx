@@ -234,7 +234,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
         await messageDataSource.loadPrevious();
 
         setTimeout(() => {
-          const nextViewInfo = { scrollTop: scrollRef.current.scrollTop, scrollHeight: scrollRef.current.scrollHeight };
+          const nextViewInfo = { scrollHeight: scrollRef.current.scrollHeight };
           const viewUpdated = prevViewInfo.scrollHeight < nextViewInfo.scrollHeight;
 
           if (viewUpdated) {
@@ -256,7 +256,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
         await messageDataSource.loadNext();
 
         setTimeout(() => {
-          const nextViewInfo = { scrollTop: scrollRef.current.scrollTop, scrollHeight: scrollRef.current.scrollHeight };
+          const nextViewInfo = { scrollHeight: scrollRef.current.scrollHeight };
           const viewUpdated = prevViewInfo.scrollHeight < nextViewInfo.scrollHeight;
 
           if (viewUpdated) {

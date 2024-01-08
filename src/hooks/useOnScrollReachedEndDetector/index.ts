@@ -48,7 +48,6 @@ export function useOnScrollPositionChangeDetectorWithRef(
   useLayoutEffect(() => {
     const elem = scrollRef.current;
     if (elem) {
-      // TODO: apply throttle
       const callback = throttle(
         () => {
           const { scrollTop, scrollHeight, clientHeight } = elem;

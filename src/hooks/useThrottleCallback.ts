@@ -1,6 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { usePreservedCallback } from '@sendbird/uikit-tools';
 
+/**
+ * Note: `leading` has higher priority rather than `trailing`
+ * */
 export function useThrottleCallback<T extends(...args: any[]) => void>(
   callback: T,
   delay: number,
@@ -44,6 +47,9 @@ export function useThrottleCallback<T extends(...args: any[]) => void>(
   }) as T;
 }
 
+/**
+ * Note: `leading` has higher priority rather than `trailing`
+ * */
 export function throttle<T extends(...args: any[]) => void>(
   callback: T,
   delay: number,
