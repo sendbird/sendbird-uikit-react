@@ -2,12 +2,12 @@ import { useCallback, useLayoutEffect } from 'react';
 
 type KeyDownCallbackMap = Record<string, (event: React.KeyboardEvent<HTMLDivElement>) => void>;
 
-interface UseKeyDownV2Props {
+interface UseKeyDownProps {
   ref: React.RefObject<HTMLDivElement>;
   keyDownCallbackMap: KeyDownCallbackMap;
 }
 
-export function useKeyDownV2(props: UseKeyDownV2Props): React.KeyboardEventHandler<HTMLDivElement> {
+export function useKeyDown(props: UseKeyDownProps): React.KeyboardEventHandler<HTMLDivElement> {
   const { ref, keyDownCallbackMap } = props;
 
   useLayoutEffect(() => {
@@ -40,7 +40,7 @@ export function useKeyDownV2(props: UseKeyDownV2Props): React.KeyboardEventHandl
         break;
     }
     event.stopPropagation();
-  }, []);
+  }, [keyDownCallbackMap]);
 
   return onKeyDown;
 }
