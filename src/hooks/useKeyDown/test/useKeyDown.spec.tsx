@@ -9,13 +9,10 @@ const testId = 'dummy';
 function DummyComponent(props: FileViewerComponentProps): React.ReactElement {
   const ref = useRef<HTMLDivElement>(null);
   const { onClose, onClickLeft, onClickRight } = props as MultiFilesViewer;
-  const onKeyDown = useKeyDown({
-    ref,
-    keyDownCallbackMap: {
-      Escape: (e) => onClose?.(e),
-      ArrowLeft: () => onClickLeft?.(),
-      ArrowRight: () => onClickRight?.(),
-    },
+  const onKeyDown = useKeyDown(ref, {
+    Escape: (e) => onClose?.(e),
+    ArrowLeft: () => onClickLeft?.(),
+    ArrowRight: () => onClickRight?.(),
   });
   return <div
     ref={ref}

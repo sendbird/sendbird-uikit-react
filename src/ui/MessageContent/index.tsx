@@ -39,9 +39,10 @@ import MessageProfile, { MessageProfileProps } from './MessageProfile';
 import MessageBody, { MessageBodyProps } from './MessageBody';
 import MessageHeader, { MessageHeaderProps } from './MessageHeader';
 import Icon, { IconTypes } from '../Icon';
-import FeedbackIconButton from '../FeedbackButton';
+import FeedbackIconButton from '../FeedbackIconButton';
 import MobileFeedbackMenu from '../MobileFeedbackMenu';
 import MessageFeedbackModal from '../../modules/Channel/components/MessageFeedbackModal';
+import { SbFeedbackStatus } from './types';
 
 export interface MessageContentProps {
   className?: string | Array<string>;
@@ -159,8 +160,9 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const displayThreadReplies = message?.threadInfo?.replyCount > 0 && replyType === 'THREAD';
 
   // Feedback buttons
-  // TODO: Replace line below with comment before merging.
-  const isFeedbackMessage = !isByMe; // !isByMe && message?.myFeedbackStatus && message.myFeedbackStatus !== FeedbackStatus.NOT_APPLICABLE;
+  const isFeedbackMessage = !isByMe
+    && message?.myFeedbackStatus
+    && message.myFeedbackStatus !== SbFeedbackStatus.NOT_APPLICABLE;
   const feedbackMessageClassName = isFeedbackMessage ? 'sendbird-message-content__feedback' : '';
 
   // onMouseDown: (e: React.MouseEvent<T>) => void;
