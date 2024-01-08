@@ -34,7 +34,7 @@ export const GroupChannelHeaderView = ({
 
   const { stringSet } = useLocalization();
 
-  const isMuted = currentChannel.myMutedState === 'muted';
+  const isMuted = currentChannel?.myMutedState === 'muted';
   const subTitle = (currentChannel?.members
     && currentChannel?.members?.length !== 2);
 

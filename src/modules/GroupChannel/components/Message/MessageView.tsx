@@ -73,6 +73,27 @@ export const MessageView = ({
   renderEditInput,
   renderMessage,
   renderMessageContent,
+
+  loading,
+  currentChannel,
+  animatedMessageId,
+  setAnimatedMessageId,
+  scrollToMessage,
+  replyType,
+  threadReplySelectType,
+  isReactionEnabled,
+  toggleReaction,
+  nicknamesMap,
+  setQuoteMessage,
+  renderUserMentionItem,
+  onQuoteMessageClick,
+  onReplyInThreadClick,
+  onMessageAnimated,
+  messages,
+  updateUserMessage,
+  sendUserMessage,
+  resendMessage,
+  deleteMessage,
 }: MessageViewProps & MessageViewChannelContextInterface): React.ReactElement => {
   const { dateLocale, stringSet } = useLocalization();
   const globalStore = useSendbirdStateContext();
@@ -80,29 +101,6 @@ export const MessageView = ({
   const { userId, isOnline, isMentionEnabled, userMention, logger } = globalStore.config;
   const maxUserMentionCount = userMention?.maxMentionCount || MAX_USER_MENTION_COUNT;
   const maxUserSuggestionCount = userMention?.maxSuggestionCount || MAX_USER_SUGGESTION_COUNT;
-
-  const {
-    loading,
-    currentChannel,
-    animatedMessageId,
-    setAnimatedMessageId,
-    scrollToMessage,
-    replyType,
-    threadReplySelectType,
-    isReactionEnabled,
-    toggleReaction,
-    nicknamesMap,
-    setQuoteMessage,
-    renderUserMentionItem,
-    onQuoteMessageClick,
-    onReplyInThreadClick,
-    onMessageAnimated,
-    messages,
-    updateUserMessage,
-    sendUserMessage,
-    resendMessage,
-    deleteMessage,
-  } = useGroupChannelContext();
 
   const { emojiManager } = useSendbirdStateContext();
 

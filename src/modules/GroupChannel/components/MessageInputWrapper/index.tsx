@@ -11,29 +11,33 @@ export type MessageInputWrapperProps = {
   renderSendMessageIcon?: () => React.ReactElement;
 };
 
-const _MessageInputWrapper = (_props: MessageInputWrapperProps & (GroupChannelProviderInterface | ChannelProviderInterface)) => {
+export const MessageInputWrapper = (props: MessageInputWrapperProps & (GroupChannelProviderInterface | ChannelProviderInterface)) => {
   /**
    * GroupChannelProviderInterface has currentChannel
    * ChannelProviderInterface has currentGroupChannel
    */
-  const isContextFromGroupChannel = Object.hasOwn(_props, 'currentChannel');
+  const isLegacyChannel = Object.hasOwn(props, 'currentGroupChannel');
 
-  if (isContextFromGroupChannel) {
-    const props = _props as MessageInputWrapperProps & GroupChannelProviderInterface;
+  if (!isLegacyChannel) {
+    const { disabled } = props as MessageInputWrapperProps & GroupChannelProviderInterface;
     return (
       <MessageInputWrapperView
-        {...props}
-        isDisabled={props.disabled}
+        {...props as MessageInputWrapperProps & GroupChannelProviderInterface}
+        isDisabled={disabled}
       />
     );
   } else {
-    const props = _props as MessageInputWrapperProps & ChannelProviderInterface;
+    const {
+      currentGroupChannel,
+      sendMessage,
+      disabled
+    } = props as MessageInputWrapperProps & ChannelProviderInterface;
     return (
       <MessageInputWrapperView
-        {...props}
-        currentChannel={props.currentGroupChannel}
-        sendUserMessage={props.sendMessage}
-        isDisabled={props.disabled}
+        {...props as MessageInputWrapperProps & ChannelProviderInterface}
+        currentChannel={currentGroupChannel}
+        sendUserMessage={sendMessage}
+        isDisabled={disabled}
       />
     );
   }
@@ -41,5 +45,4 @@ const _MessageInputWrapper = (_props: MessageInputWrapperProps & (GroupChannelPr
 
 export { VoiceMessageInputWrapper, VoiceMessageInputWrapperProps } from './VoiceMessageInputWrapper';
 
-export const MessageInputWrapper = React.forwardRef(_MessageInputWrapper);
 export default MessageInputWrapper;

@@ -54,7 +54,7 @@ export interface MessageInputWrapperViewProps {
   renderSendMessageIcon?: () => React.ReactElement;
 }
 
-export const MessageInputWrapperView = (props: MessageInputWrapperViewProps,
+export const MessageInputWrapperView = React.forwardRef((props: MessageInputWrapperViewProps,
   ref: React.MutableRefObject<any>,
 ) => {
   // Props
@@ -278,4 +278,4 @@ export const MessageInputWrapperView = (props: MessageInputWrapperViewProps,
       )}
     </div>
   );
-};
+});

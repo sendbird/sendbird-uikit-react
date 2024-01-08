@@ -234,7 +234,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
         scrollToBottom();
       }
     },
-    // collectionCreator?: (collectionParams?: DefaultCollectionParams) => MessageCollection;
+    // collectionCreator?: (collectionParams?: DefaultCollectionParams) => MessageCollection,
     // onMessagesUpdated?: (messages: SendbirdMessage[]) => void;
     // onChannelDeleted?: (channelUrl: string) => void;
     // onChannelUpdated?: (channel: GroupChannel) => void;
