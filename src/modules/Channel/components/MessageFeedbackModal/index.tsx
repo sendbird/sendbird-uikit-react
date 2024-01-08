@@ -32,12 +32,9 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
 
   const modalRef = useRef(null);
   const inputRef = useRef(null);
-  const onKeyDown = useKeyDown({
-    ref: modalRef,
-    keyDownCallbackMap: {
-      Enter: () => onSubmit?.(inputRef.current.value ?? ''),
-      Escape: () => onCancel?.(),
-    },
+  const onKeyDown = useKeyDown(modalRef, {
+    Enter: () => onSubmit?.(inputRef.current.value ?? ''),
+    Escape: () => onCancel?.(),
   });
 
   return (

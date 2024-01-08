@@ -21,13 +21,10 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
   const ref = useRef<HTMLDivElement>(null);
   const { profileUrl, nickname, onClose } = props;
   const { onClickLeft, onClickRight } = props as MultiFilesViewer;
-  const onKeyDown = useKeyDown({
-    ref,
-    keyDownCallbackMap: {
-      Escape: (e) => onClose?.(e),
-      ArrowLeft: () => onClickLeft?.(),
-      ArrowRight: () => onClickRight?.(),
-    },
+  const onKeyDown = useKeyDown(ref, {
+    Escape: (e) => onClose?.(e),
+    ArrowLeft: () => onClickLeft?.(),
+    ArrowRight: () => onClickRight?.(),
   });
   const { name, type, url } = mapFileViewerComponentProps({ props });
   const { stringSet } = useContext(LocalizationContext);

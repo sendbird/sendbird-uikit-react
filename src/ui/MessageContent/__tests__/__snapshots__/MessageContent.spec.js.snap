@@ -3,7 +3,7 @@
 exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1`] = `
 <DocumentFragment>
   <div
-    class="classname-for-snapshot sendbird-message-content incoming sendbird-message-content__feedback"
+    class="classname-for-snapshot sendbird-message-content incoming "
   >
     <div
       class="sendbird-message-content__left  incoming "
@@ -55,44 +55,6 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
             First second third
           </div>
         </span>
-        <div
-          class="sendbird-message-content__middle__body-container__feedback-buttons-container"
-        >
-          <button
-            class="sendbird-iconbutton__feedback "
-            type="button"
-          >
-            <span
-              class="sendbird-iconbutton__feedback__inner "
-            >
-              <div
-                class=" sendbird-icon sendbird-icon-feedback-like "
-                role="button"
-                style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
-                tabindex="0"
-              >
-                <test-file-stub />
-              </div>
-            </span>
-          </button>
-          <button
-            class="sendbird-iconbutton__feedback "
-            type="button"
-          >
-            <span
-              class="sendbird-iconbutton__feedback__inner "
-            >
-              <div
-                class=" sendbird-icon sendbird-icon-feedback-dislike "
-                role="button"
-                style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
-                tabindex="0"
-              >
-                <test-file-stub />
-              </div>
-            </span>
-          </button>
-        </div>
         <span
           class="sendbird-message-content__middle__body-container__created-at right  sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
         >
