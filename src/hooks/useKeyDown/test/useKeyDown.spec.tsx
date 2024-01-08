@@ -1,8 +1,8 @@
 import { act, render, screen, fireEvent } from '@testing-library/react';
-import { FileViewerComponentProps, MultiFilesViewer, ViewerTypes } from '../types';
 import { FILE_INFO_LIST } from '../data.mock';
 import React, { useRef } from 'react';
-import { useKeyDown } from '../../../hooks/useKeyDown/useKeyDown';
+import { useKeyDown } from '../useKeyDown';
+import { FileViewerComponentProps, MultiFilesViewer, ViewerTypes } from '../../../ui/FileViewer/types';
 
 const testId = 'dummy';
 

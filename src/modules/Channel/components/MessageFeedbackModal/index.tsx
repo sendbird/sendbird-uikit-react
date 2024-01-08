@@ -8,7 +8,7 @@ import './index.scss';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import { CoreMessageType } from '../../../../utils';
 import { FeedbackRating } from '@sendbird/chat/message';
-import { useKeyDownV2 } from './hooks/useKeyDownV2';
+import { useKeyDown } from '../../../../hooks/useKeyDown/useKeyDown';
 
 export interface MessageFeedbackModalProps {
   selectedFeedback: FeedbackRating;
@@ -32,7 +32,7 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
 
   const modalRef = useRef(null);
   const inputRef = useRef(null);
-  const onKeyDown = useKeyDownV2({
+  const onKeyDown = useKeyDown({
     ref: modalRef,
     keyDownCallbackMap: {
       Enter: () => onSubmit?.(inputRef.current.value ?? ''),
