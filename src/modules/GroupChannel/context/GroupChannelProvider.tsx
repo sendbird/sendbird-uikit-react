@@ -417,7 +417,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
   );
 };
 
-const pass = <T,>(value: T) => value;
+const pass = <T, >(value: T) => value;
 
 function useCustomMessageActions(
   params: GroupChannelContextProps &
