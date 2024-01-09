@@ -1,28 +1,32 @@
 @import '../../styles/variables';
 
 .sendbird-button {
-  display: inline-block;
-  box-shadow: none;
   border-radius: 4px;
-  padding: 0px;
-  font-family: var(--sendbird-font-family-default);
+  box-shadow: none;
   cursor: pointer;
+  display: inline-block;
+  font-family: var(--sendbird-font-family-default);
+  padding: 0;
 
   &:hover {
     box-shadow: none;
   }
+
   &:focus {
     outline: none;
   }
+
   &:active {
     box-shadow: none;
   }
+
   &.sendbird-button__disabled {
     cursor: not-allowed;
     @include themed() {
-      border: none;
       background-color: t(bg-2);
+      border: none;
     }
+
     &:hover {
       @include themed() {
         background-color: t(bg-2);
@@ -33,12 +37,15 @@
 
 .sendbird-button--big {
   height: 40px;
+
   .sendbird-button__text {
     margin: 10px 16px;
   }
 }
+
 .sendbird-button--small {
   height: 32px;
+
   .sendbird-button__text {
     margin: 6px 16px;
   }
@@ -46,8 +53,8 @@
 
 .sendbird-button--primary {
   @include themed() {
-    border: 1px solid t(primary-3);
     background-color: t(primary-3);
+    border: 1px solid t(primary-3);
   }
 
   .sendbird-button__text {
@@ -65,8 +72,8 @@
 
   &:focus {
     @include themed() {
-      box-shadow: 0px 0px 0px 2px t(primary-3);
       border: 1px solid var(--sendbird-button-border-focus);
+      box-shadow: 0 0 0 2px t(primary-3);
     }
   }
 
@@ -78,22 +85,23 @@
 
   &:focus &:hover {
     @include themed() {
-      box-shadow: 0px 0px 0px 2px t(primary-4);
+      box-shadow: 0 0 0 2px t(primary-4);
     }
   }
 
   &:focus &:active {
     @include themed() {
-      box-shadow: 0px 0px 0px 2px t(primary-5);
+      box-shadow: 0 0 0 2px t(primary-5);
     }
   }
 }
 
 .sendbird-button--secondary {
+  background-color: transparent;
   @include themed() {
     border: 1px solid t(on-bg-3);
   }
-  background-color: transparent;
+
   .sendbird-button__text {
     @include themed() {
       color: t(on-bg-1);
@@ -101,10 +109,11 @@
   }
 
   &:hover {
+    background-color: transparent;
     @include themed() {
       border: 1px solid t(primary-3);
     }
-    background-color: transparent;
+
     .sendbird-button__text {
       @include themed() {
         color: t(primary-3);
@@ -113,21 +122,24 @@
   }
 
   &.sendbird-button__disabled {
-    cursor: not-allowed;
     border: none;
+    cursor: not-allowed;
     @include themed() {
       background-color: t(bg-2);
     }
+
     .sendbird-button__text {
       @include themed() {
         color: t(on-bg-2);
       }
     }
+
     &:hover {
       border: none;
       @include themed() {
         background-color: t(bg-2);
       }
+
       .sendbird-button__text {
         @include themed() {
           color: t(on-bg-2);
@@ -145,11 +157,12 @@
   }
 
   &:focus {
-    @include themed() {
-      box-shadow: t(primary-3) 0px 0px 0px 2px;
-    }
-    border: 1px solid transparent;
     background-color: transparent;
+    border: 1px solid transparent;
+    @include themed() {
+      box-shadow: t(primary-3) 0 0 0 2px;
+    }
+
     .sendbird-button__text {
       @include themed() {
         color: t(on-bg-1);
@@ -159,11 +172,12 @@
 
 
   &:active {
-    @include themed() {
-      border: 1px solid t(primary-3);
-      background-color: t(bg-1-4);
-    }
     box-shadow: none;
+    @include themed() {
+      background-color: t(bg-1-4);
+      border: 1px solid t(primary-3);
+    }
+
     .sendbird-button__text {
       @include themed() {
         color: t(primary-3);
@@ -172,10 +186,48 @@
   }
 }
 
+.sendbird-button--warning {
+  @include themed() {
+    background-color: transparent;
+    border: 1px solid t(error--3-2);
+  }
+
+  .sendbird-button__text {
+    @include themed() {
+      color: t(on-content-1);
+    }
+  }
+
+  &:hover {
+    @include themed() {
+      border-color: t(error-4);
+    }
+  }
+
+  &:focus {
+    @include themed() {
+      border-color: var(--sendbird-button-border-focus);
+      box-shadow: 0 0 0 2px t(error-3);
+    }
+  }
+
+  &:hover &:focus {
+    @include themed() {
+      box-shadow: 0 0 0 2px t(error-4);
+    }
+  }
+
+  &:active &:focus {
+    @include themed() {
+      box-shadow: 0 0 0 2px t(error-5);
+    }
+  }
+}
+
 .sendbird-button--danger {
   @include themed() {
-    border: 1px solid t(error--3-2);
     background-color: t(error--3-2);
+    border: 1px solid t(error--3-2);
   }
 
   .sendbird-button__text {
@@ -193,8 +245,8 @@
 
   &:focus {
     @include themed() {
-      box-shadow: 0px 0px 0px 2px t(error-3);
       border-color: var(--sendbird-button-border-focus);
+      box-shadow: 0 0 0 2px t(error-3);
     }
   }
 
@@ -207,13 +259,13 @@
 
   &:hover &:focus {
     @include themed() {
-      box-shadow: 0px 0px 0px 2px t(error-4);
+      box-shadow: 0 0 0 2px t(error-4);
     }
   }
 
   &:active &:focus {
     @include themed() {
-      box-shadow: 0px 0px 0px 2px t(error-5);
+      box-shadow: 0 0 0 2px t(error-5);
     }
   }
 }
@@ -226,3 +278,4 @@
     color: t(on-content-1);
   }
 }
+

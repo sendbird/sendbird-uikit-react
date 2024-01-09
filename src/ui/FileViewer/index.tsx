@@ -10,17 +10,22 @@ import { noop } from '../../utils/utils';
 import Avatar from '../Avatar/index';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import Icon, { IconColors, IconTypes } from '../Icon';
-import { FileInfo, FileViewerComponentProps, ViewerTypes } from './types';
-import { useKeyDown } from './hooks/useKeyDown';
+import { FileInfo, FileViewerComponentProps, MultiFilesViewer, ViewerTypes } from './types';
 import { mapFileViewerComponentProps } from './utils';
 import { DeleteButton } from './DeleteButton';
 import { Slider } from './Slider';
 import { StatefulFileInfo } from '../../utils/createStatefulFileInfoList';
+import { useKeyDown } from '../../hooks/useKeyDown/useKeyDown';
 
 export const FileViewerComponent = (props: FileViewerComponentProps): ReactElement => {
   const ref = useRef<HTMLDivElement>(null);
   const { profileUrl, nickname, onClose } = props;
-  const { onKeyDown } = useKeyDown({ props, ref });
+  const { onClickLeft, onClickRight } = props as MultiFilesViewer;
+  const onKeyDown = useKeyDown(ref, {
+    Escape: (e) => onClose?.(e),
+    ArrowLeft: () => onClickLeft?.(),
+    ArrowRight: () => onClickRight?.(),
+  });
   const { name, type, url } = mapFileViewerComponentProps({ props });
   const { stringSet } = useContext(LocalizationContext);
 

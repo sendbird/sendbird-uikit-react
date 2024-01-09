@@ -58,5 +58,7 @@ export const Types = {
   TOGGLE_OFF: 'TOGGLE_OFF',
   TOGGLE_ON: 'TOGGLE_ON',
   USER: 'USER',
+  FEEDBACK_LIKE: 'FEEDBACK_LIKE',
+  FEEDBACK_DISLIKE: 'FEEDBACK_DISLIKE',
 } as const;
 export type Types = typeof Types[keyof typeof Types];

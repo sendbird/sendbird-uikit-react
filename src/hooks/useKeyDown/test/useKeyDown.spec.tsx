@@ -1,14 +1,19 @@
 import { act, render, screen, fireEvent } from '@testing-library/react';
-import { useKeyDown } from '../hooks/useKeyDown';
-import { FileViewerComponentProps, ViewerTypes } from '../types';
 import { FILE_INFO_LIST } from '../data.mock';
 import React, { useRef } from 'react';
+import { useKeyDown } from '../useKeyDown';
+import { FileViewerComponentProps, MultiFilesViewer, ViewerTypes } from '../../../ui/FileViewer/types';
 
 const testId = 'dummy';
 
 function DummyComponent(props: FileViewerComponentProps): React.ReactElement {
   const ref = useRef<HTMLDivElement>(null);
-  const { onKeyDown } = useKeyDown({ props, ref });
+  const { onClose, onClickLeft, onClickRight } = props as MultiFilesViewer;
+  const onKeyDown = useKeyDown(ref, {
+    Escape: (e) => onClose?.(e),
+    ArrowLeft: () => onClickLeft?.(),
+    ArrowRight: () => onClickRight?.(),
+  });
   return <div
     ref={ref}
     onKeyDown={onKeyDown}

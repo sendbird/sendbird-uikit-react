@@ -23,6 +23,7 @@ export interface InputProps {
   disabled?: boolean;
   value?: string;
   placeHolder?: string;
+  autoFocus?: boolean;
 }
 const Input = React.forwardRef((props: InputProps, ref: RefObject<HTMLInputElement>) => {
   const {
@@ -31,6 +32,7 @@ const Input = React.forwardRef((props: InputProps, ref: RefObject<HTMLInputEleme
     disabled,
     value,
     placeHolder,
+    autoFocus = false,
   } = props;
   const [inputValue, setInputValue] = useState(value);
   return (
@@ -45,6 +47,7 @@ const Input = React.forwardRef((props: InputProps, ref: RefObject<HTMLInputEleme
         onChange={(e) => {
           setInputValue(e.target.value);
         }}
+        autoFocus={autoFocus}
       />
       {(placeHolder && !inputValue) && (
         <Label

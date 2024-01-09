@@ -2648,7 +2648,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sendbird/chat@npm:^4.10.1":
+"@sendbird/chat@npm:^4.10.6":
   version: 4.10.6
   resolution: "@sendbird/chat@npm:4.10.6"
   peerDependencies:
@@ -2678,7 +2678,7 @@ __metadata:
     "@rollup/plugin-node-resolve": ^15.2.3
     "@rollup/plugin-replace": ^5.0.4
     "@rollup/plugin-typescript": ^11.1.5
-    "@sendbird/chat": ^4.10.1
+    "@sendbird/chat": ^4.10.6
     "@sendbird/uikit-tools": 0.0.1-alpha.43
     "@storybook/addon-actions": ^6.5.10
     "@storybook/addon-docs": ^6.5.10
