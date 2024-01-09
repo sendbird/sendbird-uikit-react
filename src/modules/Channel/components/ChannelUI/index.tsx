@@ -45,7 +45,9 @@ const ChannelUI = (props: ChannelUIProps) => {
       loading={props?.isLoading ?? !initialized}
       isInvalid={isInvalid}
       currentChannel={currentGroupChannel}
-      sendUserMessage={sendMessage}
+      sendUserMessage={(params) => (
+        sendMessage({ ...params, quoteMessage: { messageId: params.parentMessageId } as SendableMessageType })
+      )}
       sendFileMessage={(params: FileMessageCreateParams) => (
         sendFileMessage(params.file as File, { messageId: params.parentMessageId } as SendableMessageType)
       )}

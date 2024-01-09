@@ -220,6 +220,7 @@ export const MessageInputWrapper = React.forwardRef((
               message,
               mentionedUsers,
               mentionedMessageTemplate: mentionTemplate,
+              parentMessageId: quoteMessage.messageId,
             });
             setMentionNickname('');
             setMentionedUsers([]);
