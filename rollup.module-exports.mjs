@@ -71,7 +71,7 @@ export default {
   'Channel/components/MessageInput': 'src/modules/Channel/components/MessageInput/index.tsx',
   'Channel/components/MessageList': 'src/modules/Channel/components/MessageList/index.tsx',
   'Channel/components/RemoveMessageModal': 'src/modules/Channel/components/RemoveMessageModal.tsx',
-  'Channel/components/MessageFeedbackModal': 'src/modules/Channel/components/MessageFeedbackModal.tsx',
+  'Channel/components/MessageFeedbackModal': 'src/modules/Channel/components/MessageFeedbackModal/index.tsx',
   'Channel/components/TypingIndicator': 'src/modules/Channel/components/TypingIndicator.tsx',
   'Channel/components/UnreadCount': 'src/modules/Channel/components/UnreadCount/index.tsx',
   'Channel/components/SuggestedMentionList': 'src/modules/Channel/components/SuggestedMentionList/index.tsx',
