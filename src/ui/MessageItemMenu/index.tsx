@@ -19,7 +19,6 @@ import {
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { Role } from '../../lib/types';
 import { ReplyType } from '../../types';
-import { useChannelContext } from '../../modules/Channel/context/ChannelProvider';
 
 export interface MessageMenuProps {
   className?: string | Array<string>;
