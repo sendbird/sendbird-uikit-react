@@ -2,31 +2,40 @@ import './index.scss';
 import React from 'react';
 
 import type { GroupChannelUIProps } from '.';
-import type { GroupChannelProviderInterface } from '../../context/GroupChannelProvider';
-import type { ChannelProviderInterface } from '../../../Channel/context/ChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
-import GroupChannelHeader from '../GroupChannelHeader';
+import GroupChannelHeader, { GroupChannelHeaderProps } from '../GroupChannelHeader';
 import MessageList from '../MessageList';
 import TypingIndicator from '../TypingIndicator';
 import { TypingIndicatorType } from '../../../../types';
 import ConnectionStatus from '../../../../ui/ConnectionStatus';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
-import MessageInputWrapper from '../MessageInputWrapper';
+import MessageInputWrapper, { MessageInputWrapperProps } from '../MessageInputWrapper';
 
-export interface GroupChannelUIViewProps extends GroupChannelUIProps {
+export interface GroupChannelUIViewProps extends GroupChannelUIProps, GroupChannelHeaderProps, MessageInputWrapperProps {
   requestedChannelUrl: string;
   loading: boolean;
   isInvalid: boolean;
 }
 
-export const GroupChannelUIView = (props: GroupChannelUIViewProps & (GroupChannelProviderInterface | ChannelProviderInterface)) => {
+export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
   const {
     requestedChannelUrl,
     loading,
     isInvalid,
-    renderChannelHeader,
-    renderMessageInput,
+    renderChannelHeader = (props) => (
+      <GroupChannelHeader
+        {...props}
+        className="sendbird-conversation__channel-header"
+      />
+    ),
+    renderMessageList = (props) => (
+      <MessageList
+        {...props}
+        className="sendbird-conversation__message-list"
+      />
+    ),
+    renderMessageInput = (props) => <MessageInputWrapper {...props}/>,
     renderTypingIndicator,
     renderPlaceholderLoader,
     renderPlaceholderInvalid,
@@ -66,19 +75,13 @@ export const GroupChannelUIView = (props: GroupChannelUIViewProps & (GroupChanne
       </div>
     );
   }
+
   return (
     <div className='sendbird-conversation'>
-      {renderChannelHeader?.() || (
-        <GroupChannelHeader className="sendbird-conversation__channel-header" />
-      )}
-      <MessageList
-        {...props}
-        className="sendbird-conversation__message-list"
-      />
+      {renderChannelHeader?.(props)}
+      {renderMessageList?.(props)}
       <div className="sendbird-conversation__footer">
-        {renderMessageInput?.() || (
-          <MessageInputWrapper {...props} />
-        )}
+        {renderMessageInput?.(props)}
         <div className="sendbird-conversation__footer__typing-indicator">
           {renderTypingIndicator?.()
             || (

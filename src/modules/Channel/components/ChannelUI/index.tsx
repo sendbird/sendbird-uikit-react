@@ -3,6 +3,7 @@ import React from 'react';
 import { useChannelContext } from '../../context/ChannelProvider';
 import { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { GroupChannelUIView } from '../../../GroupChannel/components/GroupChannelUI/GroupChannelUIView';
+import MessageList from '../MessageList';
 
 export interface ChannelUIProps {
   isLoading?: boolean;
@@ -20,12 +21,14 @@ export interface ChannelUIProps {
   renderFrozenNotification?: () => React.ReactElement;
 }
 
-const ChannelUI: React.FC<ChannelUIProps> = (props: ChannelUIProps) => {
+const ChannelUI = (props: ChannelUIProps) => {
   const context = useChannelContext();
   const {
+    currentGroupChannel,
     channelUrl,
     isInvalid,
     initialized,
+    sendMessage,
   } = context;
 
   return (
@@ -33,8 +36,11 @@ const ChannelUI: React.FC<ChannelUIProps> = (props: ChannelUIProps) => {
       {...props}
       {...context}
       requestedChannelUrl={channelUrl}
-      isInvalid={isInvalid}
       loading={props?.isLoading ?? !initialized}
+      isInvalid={isInvalid}
+      currentChannel={currentGroupChannel}
+      sendUserMessage={sendMessage}
+      renderMessageList={(props) => (<MessageList {...props} />)}
     />
   );
 };
