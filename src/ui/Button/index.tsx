@@ -4,6 +4,8 @@ import './index.scss';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { changeTypeToClassName, changeSizeToClassName } from './utils';
 import { ButtonTypes, ButtonSizes } from './types';
+import { ObjectValues } from '../../utils/typeHelpers/objectValues';
+import { Typography } from '../Label/types';
 
 export interface ButtonProps {
   className?: string | Array<string>;
@@ -12,6 +14,8 @@ export interface ButtonProps {
   children: string | ReactElement;
   disabled?: boolean;
   onClick?: () => void;
+  labelType?: ObjectValues<typeof Typography>;
+  labelColor?: ObjectValues<typeof LabelColors>;
 }
 
 export default function Button({
@@ -21,6 +25,8 @@ export default function Button({
   children = 'Button',
   disabled = false,
   onClick = () => { /* noop */ },
+  labelType = LabelTypography.BUTTON_1,
+  labelColor = LabelColors.ONCONTENT_1,
 }: ButtonProps): ReactElement {
   const injectingClassNames = [
     ...((Array.isArray(className)) ? className : [className]),
@@ -39,8 +45,8 @@ export default function Button({
     >
       <Label
         className="sendbird-button__text"
-        type={LabelTypography.BUTTON_1}
-        color={LabelColors.ONCONTENT_1}
+        type={labelType}
+        color={labelColor}
       >
         {children}
       </Label>

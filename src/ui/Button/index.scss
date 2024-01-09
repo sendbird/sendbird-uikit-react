@@ -194,32 +194,40 @@
 
   .sendbird-button__text {
     @include themed() {
-      color: t(on-content-1);
+      color: t(error--3-2);
     }
   }
 
   &:hover {
     @include themed() {
-      border-color: t(error-4);
+      border-color: t(error--4-1);
+    }
+    .sendbird-button__text {
+      @include themed() {
+        color: t(error--4-1);
+      }
     }
   }
 
   &:focus {
     @include themed() {
-      border-color: var(--sendbird-button-border-focus);
-      box-shadow: 0 0 0 2px t(error-3);
+      border-color: t(primary-3);
+      .sendbird-button__text {
+        @include themed() {
+          color: t(error--3-2);
+        }
+      }
     }
   }
 
   &:hover &:focus {
     @include themed() {
-      box-shadow: 0 0 0 2px t(error-4);
-    }
-  }
-
-  &:active &:focus {
-    @include themed() {
-      box-shadow: 0 0 0 2px t(error-5);
+      border-color: t(primary-3);
+      .sendbird-button__text {
+        @include themed() {
+          color: t(error--4-1);
+        }
+      }
     }
   }
 }

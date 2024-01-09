@@ -62,10 +62,12 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
           <div className='sendbird-message-feedback-modal-footer__root'>
             {
               !isMobile && message?.myFeedback && selectedFeedback === message.myFeedback.rating
-                ? <Button type={ButtonTypes.WARNING} onClick={onRemove}>
-                  <Label type={LabelTypography.BUTTON_3} color={LabelColors.ERROR}>
-                    {stringSet.BUTTON__REMOVE_FEEDBACK}
-                  </Label>
+                ? <Button
+                  type={ButtonTypes.WARNING}
+                  onClick={onRemove}
+                  labelType={LabelTypography.BUTTON_3}
+                >
+                  {stringSet.BUTTON__REMOVE_FEEDBACK}
                 </Button>
                 : <div/>
             }
