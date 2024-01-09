@@ -50,7 +50,7 @@ export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
 
   if (!requestedChannelUrl) {
     return (
-      <div className="sendbird-conversation">{renderPlaceholderInvalid?.() || <PlaceHolder type={PlaceHolderTypes.NO_CHANNELS} />}</div>
+        <div className="sendbird-conversation">{renderPlaceholderInvalid?.() || <PlaceHolder type={PlaceHolderTypes.NO_CHANNELS} />}</div>
     );
   }
 

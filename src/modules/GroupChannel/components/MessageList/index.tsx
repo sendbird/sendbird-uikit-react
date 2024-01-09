@@ -19,6 +19,7 @@ import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { useScrollBehavior } from './hooks/useScrollBehavior';
 import TypingIndicatorBubble, { type TypingIndicatorBubbleProps } from '../../../../ui/TypingIndicatorBubble';
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
+import { getComponentKeyFromMessage } from '../../context/utils';
 
 export interface GroupChannelMessageListProps {
   className?: string;
@@ -98,9 +99,8 @@ export const MessageList = ({
       );
     },
     scrollToBottomButton() {
-      // TODO: should we add `scrollDistanceFromBottomRef.current <= SCROLL_BOTTOM_PADDING` here?
-      //  if so scrollDistanceFromBottom should be changed to state
-      if (hasNext() || isScrollBottomReached) return null;
+      if (!hasNext() && isScrollBottomReached) return null;
+
       return (
         <div
           className="sendbird-conversation__scroll-bottom-button"
@@ -144,7 +144,7 @@ export const MessageList = ({
               });
               const isOutgoingMessage = message.isUserMessage() && message.sender.userId === store.config.userId;
               return (
-                <MessageProvider message={message} key={message.messageId} isByMe={isOutgoingMessage}>
+                <MessageProvider message={message} key={getComponentKeyFromMessage(message)} isByMe={isOutgoingMessage}>
                   <Message
                     handleScroll={onMessageContentSizeChanged}
                     renderMessage={renderMessage}
