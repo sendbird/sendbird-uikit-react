@@ -293,7 +293,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     setIsScrollBottomReached(true);
 
     if (messageCollectionHook.hasNext()) {
-      messageCollectionHook.resetWithStartingPoint(Number.MAX_SAFE_INTEGER, () => {
+      messageCollectionHook.resetWithStartingPoint(Number.MAX_SAFE_INTEGER).then(() => {
         scrollRef.current.scrollTop = Number.MAX_SAFE_INTEGER;
         scrollDistanceFromBottomRef.current = 0;
       });
@@ -335,7 +335,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
       scrollDistanceFromBottomRef.current = getDistanceFromBottom(scrollRef.current);
       if (animated) setAnimatedMessageId(messageId);
     } else {
-      messageCollectionHook.resetWithStartingPoint(createdAt, () => {
+      messageCollectionHook.resetWithStartingPoint(createdAt).then(() => {
         scrollToRenderedMessage(scrollRef, message.createdAt);
         scrollDistanceFromBottomRef.current = getDistanceFromBottom(scrollRef.current);
         if (animated) setAnimatedMessageId(messageId);
@@ -417,7 +417,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
   );
 };
 
-const pass = <T, >(value: T) => value;
+const pass = <T,>(value: T) => value;
 
 function useCustomMessageActions(
   params: GroupChannelContextProps &

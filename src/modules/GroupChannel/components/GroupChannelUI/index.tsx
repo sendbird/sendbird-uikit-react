@@ -1,5 +1,9 @@
 import React from 'react';
 
+import type { GroupChannelHeaderProps } from '../GroupChannelHeader';
+import type { MessageListProps } from '../../../Channel/components/MessageList';
+import type { GroupChannelMessageListProps } from '../MessageList';
+import type { MessageInputWrapperProps } from '../MessageInputWrapper';
 import type { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { GroupChannelUIView } from './GroupChannelUIView';
@@ -8,9 +12,10 @@ export interface GroupChannelUIProps {
   renderPlaceholderLoader?: () => React.ReactElement;
   renderPlaceholderInvalid?: () => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
-  renderChannelHeader?: () => React.ReactElement;
+  renderChannelHeader?: (props: GroupChannelHeaderProps) => React.ReactElement;
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
-  renderMessageInput?: () => React.ReactElement;
+  renderMessageList?: (props: MessageListProps | GroupChannelMessageListProps) => React.ReactElement;
+  renderMessageInput?: (props: MessageInputWrapperProps) => React.ReactElement;
   renderFileUploadIcon?: () => React.ReactElement;
   renderVoiceMessageIcon?: () => React.ReactElement;
   renderSendMessageIcon?: () => React.ReactElement;
@@ -19,7 +24,7 @@ export interface GroupChannelUIProps {
   renderFrozenNotification?: () => React.ReactElement;
 }
 
-const GroupChannelUI: React.FC<GroupChannelUIProps> = (props: GroupChannelUIProps) => {
+const GroupChannelUI = (props: GroupChannelUIProps) => {
   const context = useGroupChannelContext();
   const {
     currentChannel,
