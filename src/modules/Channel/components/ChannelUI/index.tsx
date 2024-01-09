@@ -1,5 +1,8 @@
 import React from 'react';
 
+import type { FileMessageCreateParams } from '@sendbird/chat/message';
+
+import type { SendableMessageType } from '../../../../utils';
 import { useChannelContext } from '../../context/ChannelProvider';
 import { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { GroupChannelUIView } from '../../../GroupChannel/components/GroupChannelUI/GroupChannelUIView';
@@ -29,6 +32,9 @@ const ChannelUI = (props: ChannelUIProps) => {
     isInvalid,
     initialized,
     sendMessage,
+    sendFileMessage,
+    sendVoiceMessage,
+    sendMultipleFilesMessage,
   } = context;
 
   return (
@@ -40,6 +46,15 @@ const ChannelUI = (props: ChannelUIProps) => {
       isInvalid={isInvalid}
       currentChannel={currentGroupChannel}
       sendUserMessage={sendMessage}
+      sendFileMessage={(params: FileMessageCreateParams) => (
+        sendFileMessage(params.file as File, { messageId: params.parentMessageId } as SendableMessageType)
+      )}
+      sendVoiceMessage={({ file, parentMessageId }: FileMessageCreateParams, duration: number) => (
+        sendVoiceMessage(file as File, duration, { parentMessageId } as SendableMessageType)
+      )}
+      sendMultipleFilesMessage={({ fileInfoList, parentMessageId }) => (
+        sendMultipleFilesMessage(fileInfoList.map((fileInfo) => fileInfo.file) as File[], { parentMessageId } as SendableMessageType)
+      )}
       renderMessageList={(props) => (<MessageList {...props} />)}
     />
   );

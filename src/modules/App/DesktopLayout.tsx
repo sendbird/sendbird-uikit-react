@@ -61,6 +61,48 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
           sendbird-app__conversation-wrap
         `}
       >
+        {/* <GroupChannel
+          channelUrl={currentChannel?.url || ''}
+          onChatHeaderActionClick={() => {
+            setShowSearch(false);
+            setShowThread(false);
+            setShowSettings(!showSettings);
+          }}
+          onSearchClick={() => {
+            setShowSettings(false);
+            setShowThread(false);
+            setShowSearch(!showSearch);
+          }}
+          onReplyInThreadClick={({ message }) => { // parent message
+            setShowSettings(false);
+            setShowSearch(false);
+            if (replyType === 'THREAD') {
+              setThreadTargetMessage(message);
+              setShowThread(true);
+            }
+          }}
+          onQuoteMessageClick={({ message }) => { // thread message
+            setShowSettings(false);
+            setShowSearch(false);
+            if (replyType === 'THREAD') {
+              setThreadTargetMessage(message);
+              setShowThread(true);
+            }
+          }}
+          onMessageAnimated={() => {
+            setHighlightedMessage(null);
+          }}
+          // onMessageHighlighted={() => {
+          //   setHighlightedMessage?.(null);
+          // }}
+          showSearchIcon={showSearchIcon}
+          startingPoint={startingPoint}
+          animatedMessageId={highlightedMessage}
+          isReactionEnabled={isReactionEnabled}
+          replyType={replyType}
+          isMessageGroupingEnabled={isMessageGroupingEnabled}
+          isMultipleFilesMessageEnabled={isMultipleFilesMessageEnabled}
+        /> */}
         <Channel
           channelUrl={currentChannel?.url || ''}
           onChatHeaderActionClick={() => {

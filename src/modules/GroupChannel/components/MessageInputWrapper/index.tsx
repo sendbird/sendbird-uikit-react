@@ -27,14 +27,6 @@ import MessageInput from '../../../../ui/MessageInput';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import { useHandleUploadFiles } from './useHandleUploadFiles';
-import { useHandleUploadFiles as useHandleUploadFilesLegacy } from '../../../Channel/context/hooks/useHandleUploadFiles';
-
-type SendFileMessageType = (params: FileMessageCreateParams) => Promise<FileMessage>;
-type SendFileMessageTypeLegacy = (file: File, quoteMessage?: SendableMessageType) => Promise<FileMessage>;
-type SendVoiceMessageType = (params: FileMessageCreateParams, duration: number) => Promise<FileMessage>;
-type SendVoiceMessageTypeLegacy = (file: File, duration: number, quoteMessage?: SendableMessageType) => void;
-type SendMultipleFilesMessageType = (params: MultipleFilesMessageCreateParams) => Promise<MultipleFilesMessage>;
-type SendMultipleFilesMessageTypeLegacy = (files: Array<File>, quoteMessage?: SendableMessageType) => Promise<MultipleFilesMessage>;
 
 export interface MessageInputWrapperProps {
   currentChannel: GroupChannel;
@@ -44,9 +36,9 @@ export interface MessageInputWrapperProps {
   setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
   messageInputRef: React.MutableRefObject<HTMLDivElement>;
   sendUserMessage: (params: UserMessageCreateParams) => Promise<UserMessage> | void;
-  sendFileMessage: SendFileMessageType | SendFileMessageTypeLegacy;
-  sendVoiceMessage: SendVoiceMessageType | SendVoiceMessageTypeLegacy;
-  sendMultipleFilesMessage: SendMultipleFilesMessageType | SendMultipleFilesMessageTypeLegacy;
+  sendFileMessage: (params: FileMessageCreateParams) => Promise<FileMessage>;
+  sendVoiceMessage: (params: FileMessageCreateParams, duration: number) => Promise<FileMessage>;
+  sendMultipleFilesMessage: (params: MultipleFilesMessageCreateParams) => Promise<MultipleFilesMessage>;
   // render
   renderUserMentionItem?: (props: { user: User }) => React.ReactElement;
   renderFileUploadIcon?: () => React.ReactElement;
@@ -76,7 +68,6 @@ export const MessageInputWrapper = React.forwardRef((
     renderVoiceMessageIcon,
     renderSendMessageIcon,
   } = props;
-  const isLegacyChannel = Object.hasOwn(props, 'currentGroupChannel');
   const { stringSet } = useLocalization();
   const { isMobile } = useMediaQueryContext();
   const { config } = useSendbirdStateContext();
@@ -141,16 +132,11 @@ export const MessageInputWrapper = React.forwardRef((
   }, [mentionedUserIds]);
 
   // Callbacks
-  const handleUploadFiles = isLegacyChannel
-    ? useHandleUploadFilesLegacy({
-      sendFileMessage: sendFileMessage as SendFileMessageTypeLegacy,
-      sendMultipleFilesMessage: sendMultipleFilesMessage as SendMultipleFilesMessageTypeLegacy,
-      quoteMessage,
-    }, { logger })
-    : useHandleUploadFiles({
-      sendFileMessage: sendFileMessage as SendFileMessageType,
-      sendMultipleFilesMessage: sendMultipleFilesMessage as SendMultipleFilesMessageType,
-    }, { logger });
+  const handleUploadFiles = useHandleUploadFiles({
+    sendFileMessage: sendFileMessage,
+    sendMultipleFilesMessage: sendMultipleFilesMessage,
+    quoteMessage: quoteMessage,
+  }, { logger });
 
   if (isBroadcast && !isOperator) {
     /* Only `Operator` can send messages in the Broadcast channel */
@@ -194,11 +180,7 @@ export const MessageInputWrapper = React.forwardRef((
         <VoiceMessageInputWrapper
           channel={currentChannel}
           onSubmitClick={(recordedFile, duration) => {
-            if (isLegacyChannel) {
-              (sendVoiceMessage as SendVoiceMessageTypeLegacy)(recordedFile, duration, quoteMessage);
-            } else {
-              (sendVoiceMessage as SendVoiceMessageType)({ file: recordedFile }, duration);
-            }
+            sendVoiceMessage({ file: recordedFile, parentMessageId: quoteMessage.messageId }, duration);
             setQuoteMessage(null);
             setShowVoiceMessageInput(false);
           }}

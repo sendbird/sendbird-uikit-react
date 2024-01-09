@@ -25,7 +25,7 @@ interface useHandleUploadFilesStaticProps {
 }
 
 export const useHandleUploadFiles = (
-  { sendFileMessage, sendMultipleFilesMessage }: useHandleUploadFilesDynamicProps,
+  { sendFileMessage, sendMultipleFilesMessage, quoteMessage }: useHandleUploadFilesDynamicProps,
   { logger }: useHandleUploadFilesStaticProps,
 ) => {
   const { stringSet } = useLocalization();
@@ -96,7 +96,7 @@ export const useHandleUploadFiles = (
       if (sendingFiles.length === 1) {
         logger.info('Channel|useHandleUploadFiles: sending one file.');
         const [file] = sendingFiles;
-        return sendFileMessage({ file });
+        return sendFileMessage({ file, parentMessageId: quoteMessage.messageId });
       } else if (sendingFiles.length > 1) {
         logger.info('Channel|useHandleUploadFiles: sending multiple files.');
 
@@ -130,6 +130,7 @@ export const useHandleUploadFiles = (
                   fileSize: file.size,
                   mimeType: file.type,
                 })),
+                parentMessageId: quoteMessage.messageId,
               });
             }
           })(),

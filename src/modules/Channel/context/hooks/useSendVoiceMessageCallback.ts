@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
-import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { FileMessage, FileMessageCreateParams, MessageMetaArray } from '@sendbird/chat/message';
+import type { FileMessage, FileMessageCreateParams } from '@sendbird/chat/message';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import { MessageMetaArray } from '@sendbird/chat/message';
 
 import type { Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
@@ -28,7 +29,7 @@ interface StaticParams {
   scrollRef: React.RefObject<HTMLDivElement>;
   messagesDispatcher: React.Dispatch<ChannelActionTypes>;
 }
-type FuncType = (file: File, duration: number, quoteMessage: SendableMessageType) => void;
+type FuncType = (file: File, duration: number, quoteMessage: SendableMessageType) => Promise<FileMessage>;
 
 export const useSendVoiceMessageCallback = ({
   currentGroupChannel,
@@ -40,7 +41,7 @@ export const useSendVoiceMessageCallback = ({
   scrollRef,
   messagesDispatcher,
 }: StaticParams): Array<FuncType> => {
-  const sendMessage = useCallback((file: File, duration: number, quoteMessage: SendableMessageType) => {
+  const sendMessage = useCallback((file: File, duration: number, quoteMessage: SendableMessageType): Promise<FileMessage> => new Promise((resolve, reject) => {
     if (!currentGroupChannel) {
       return;
     }
@@ -86,15 +87,17 @@ export const useSendVoiceMessageCallback = ({
           type: messageActionTypes.SEND_MESSAGE_FAILURE,
           payload: failedMessage as SendableMessageType,
         });
+        reject(err);
       })
-      .onSucceeded((succeededMessage) => {
+      .onSucceeded((succeededMessage: FileMessage) => {
         logger.info('Channel: Sending voice message success!', succeededMessage);
         messagesDispatcher({
           type: messageActionTypes.SEND_MESSAGE_SUCCESS,
           payload: succeededMessage as SendableMessageType,
         });
+        resolve(succeededMessage);
       });
-  }, [
+  }), [
     currentGroupChannel,
     onBeforeSendVoiceMessage,
   ]);
