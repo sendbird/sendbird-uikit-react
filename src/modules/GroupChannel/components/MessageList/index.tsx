@@ -42,6 +42,7 @@ export const MessageList = ({
     hasNext,
     loading,
     messages,
+    newMessages,
     scrollToBottom,
     isScrollBottomReached,
     isMessageGroupingEnabled,
@@ -92,7 +93,7 @@ export const MessageList = ({
       return (
         <UnreadCount
           className="sendbird-conversation__messages__notification"
-          count={currentChannel?.unreadMessageCount}
+          count={newMessages.length}
           lastReadAt={unreadSinceDate}
           onClick={scrollToBottom}
         />

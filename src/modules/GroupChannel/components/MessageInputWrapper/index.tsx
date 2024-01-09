@@ -140,7 +140,6 @@ export const MessageInputWrapper = React.forwardRef((
 
   if (isBroadcast && !isOperator) {
     /* Only `Operator` can send messages in the Broadcast channel */
-    // TODO: But why do we hide this? why not disabling it?
     return null;
   }
   // other conditions
