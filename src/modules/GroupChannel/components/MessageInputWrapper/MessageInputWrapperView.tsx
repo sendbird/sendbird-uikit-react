@@ -1,56 +1,95 @@
 import './index.scss';
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import type { User } from '@sendbird/chat';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import type {
+  FileMessage,
+  FileMessageCreateParams,
+  MultipleFilesMessage,
+  MultipleFilesMessageCreateParams,
+  UserMessage,
+  UserMessageCreateParams,
+} from '@sendbird/chat/message';
 
-import * as utils from '../../context/utils';
-
-import type { Nullable } from '../../../../types';
-import MessageInput from '../../../../ui/MessageInput';
-import QuoteMessageInput from '../../../../ui/QuoteMessageInput';
-import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { useGroupChannelContext } from '../../context/GroupChannelProvider';
+import {
+  isOperator as isChannelOperator,
+  isDisabledBecauseFrozen,
+  isDisabledBecauseMuted,
+} from '../../context/utils';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { useLocalization } from '../../../../lib/LocalizationContext';
 import SuggestedMentionList from '../SuggestedMentionList';
-import { MessageInputKeys } from '../../../../ui/MessageInput/const';
-import VoiceMessageInputWrapper from './VoiceMessageInputWrapper';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
+import { SendableMessageType } from '../../../../utils';
+import QuoteMessageInput from '../../../../ui/QuoteMessageInput';
+import VoiceMessageInputWrapper from './VoiceMessageInputWrapper';
+import MessageInput from '../../../../ui/MessageInput';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
+import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import { useHandleUploadFiles } from './useHandleUploadFiles';
 
-export type MessageInputWrapperProps = {
+export interface MessageInputWrapperViewProps {
+  // Basic
   value?: string;
   disabled?: boolean;
+  // ChannelContext
+  currentChannel: GroupChannel;
+  isMultipleFilesMessageEnabled?: boolean;
+  loading: boolean;
+  quoteMessage: SendableMessageType | null;
+  setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
+  messageInputRef: React.MutableRefObject<HTMLDivElement>;
+  sendUserMessage: (params: UserMessageCreateParams) => Promise<UserMessage> | void;
+  sendFileMessage: (params: FileMessageCreateParams) => Promise<FileMessage>;
+  sendVoiceMessage: (params: FileMessageCreateParams, duration: number) => Promise<FileMessage>;
+  sendMultipleFilesMessage: (params: MultipleFilesMessageCreateParams) => Promise<MultipleFilesMessage>;
+  // render
+  renderUserMentionItem?: (props: { user: User }) => React.ReactElement;
   renderFileUploadIcon?: () => React.ReactElement;
   renderVoiceMessageIcon?: () => React.ReactElement;
   renderSendMessageIcon?: () => React.ReactElement;
-};
+}
 
-const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.MutableRefObject<any>): Nullable<JSX.Element> => {
-  const { value, renderFileUploadIcon, renderVoiceMessageIcon, renderSendMessageIcon } = props;
-  const propDisabled = props.disabled;
+export const MessageInputWrapperView = React.forwardRef((
+  props: MessageInputWrapperViewProps,
+  ref: React.MutableRefObject<any>,
+) => {
+  // Props
   const {
     currentChannel,
+    isMultipleFilesMessageEnabled: localIsMFMEnabled,
     loading,
+    quoteMessage,
+    setQuoteMessage,
+    messageInputRef,
     sendUserMessage,
     sendFileMessage,
     sendVoiceMessage,
     sendMultipleFilesMessage,
-    quoteMessage,
-    setQuoteMessage,
-    messageInputRef,
+    // render
     renderUserMentionItem,
-    isMultipleFilesMessageEnabled: moduleMultipleFilesEnabled,
-  } = useGroupChannelContext();
-  const globalStore = useSendbirdStateContext();
+    renderFileUploadIcon,
+    renderVoiceMessageIcon,
+    renderSendMessageIcon,
+  } = props;
+  const { stringSet } = useLocalization();
   const { isMobile } = useMediaQueryContext();
+  const { config } = useSendbirdStateContext();
+  const {
+    isOnline,
+    isMentionEnabled,
+    isVoiceMessageEnabled,
+    isMultipleFilesMessageEnabled: globalIsMFMenabled,
+    userMention,
+    logger,
+  } = config;
+  const { maxMentionCount, maxSuggestionCount } = userMention;
 
-  const { isOnline, isMentionEnabled, userMention, isVoiceMessageEnabled, logger } = globalStore.config;
-  const isMultipleFilesMessageEnabled = moduleMultipleFilesEnabled ?? globalStore.config.isMultipleFilesMessageEnabled;
-  const maxUserMentionCount = userMention?.maxMentionCount || 10;
-  const maxUserSuggestionCount = userMention?.maxSuggestionCount || 15;
+  const { isBroadcast } = currentChannel;
+  const isOperator = isChannelOperator(currentChannel);
 
-  const { stringSet } = useContext(LocalizationContext);
+  // States
   const [mentionNickname, setMentionNickname] = useState('');
-  // todo: set type
   const [mentionedUsers, setMentionedUsers] = useState([]);
   const [mentionedUserIds, setMentionedUserIds] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -58,24 +97,21 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.Mutable
   const [messageInputEvent, setMessageInputEvent] = useState(null);
   const [showVoiceMessageInput, setShowVoiceMessageInput] = useState(false);
 
-  const initialized = !loading && Boolean(currentChannel);
-  const disabled = propDisabled
-    || !initialized
-    || utils.isDisabledBecauseFrozen(currentChannel)
-    || utils.isDisabledBecauseMuted(currentChannel)
+  // Conditions
+  const isMessageInputDisabled = loading
+    || !currentChannel
+    || isDisabledBecauseFrozen(currentChannel)
+    || isDisabledBecauseMuted(currentChannel)
     || !isOnline;
-
-  const isOperator = utils.isOperator(currentChannel);
-  const isBroadcast = currentChannel?.isBroadcast;
-
-  const displaySuggestedMentionList = isOnline
+  const showSuggestedMentionList = !isMessageInputDisabled
     && isMentionEnabled
     && mentionNickname.length > 0
-    && !utils.isDisabledBecauseFrozen(currentChannel)
-    && !utils.isDisabledBecauseMuted(currentChannel)
     && !isBroadcast;
+  const isMultipleFilesMessageEnabled = localIsMFMEnabled ?? globalIsMFMenabled;
+  const mentionNodes = useDirtyGetMentions({ ref: ref || messageInputRef }, { logger });
+  const ableMention = mentionNodes?.length < maxMentionCount;
 
-  // Reset when currentChannel changes
+  // Operate states
   useEffect(() => {
     setMentionNickname('');
     setMentionedUsers([]);
@@ -85,10 +121,6 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.Mutable
     setMessageInputEvent(null);
     setShowVoiceMessageInput(false);
   }, [currentChannel?.url]);
-
-  const mentionNodes = useDirtyGetMentions({ ref: ref || messageInputRef }, { logger });
-  const ableMention = mentionNodes?.length < maxUserMentionCount;
-
   useEffect(() => {
     setMentionedUsers(
       mentionedUsers.filter(({ userId }) => {
@@ -103,18 +135,23 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.Mutable
     );
   }, [mentionedUserIds]);
 
-  // MFM
-  const handleUploadFiles = useHandleUploadFiles({ sendFileMessage, sendMultipleFilesMessage }, { logger });
+  // Callbacks
+  const handleUploadFiles = useHandleUploadFiles({
+    sendFileMessage: sendFileMessage,
+    sendMultipleFilesMessage: sendMultipleFilesMessage,
+    quoteMessage: quoteMessage,
+  }, { logger });
 
-  // broadcast currentChannel + not operator
   if (isBroadcast && !isOperator) {
+    /* Only `Operator` can send messages in the Broadcast channel */
     return null;
   }
   // other conditions
   return (
     <div className={`sendbird-message-input-wrapper${showVoiceMessageInput ? '--voice-message' : ''}`}>
-      {displaySuggestedMentionList && (
+      {showSuggestedMentionList && (
         <SuggestedMentionList
+          currentChannel={currentChannel}
           targetNickname={mentionNickname}
           inputEvent={messageInputEvent}
           renderUserMentionItem={renderUserMentionItem}
@@ -133,8 +170,8 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.Mutable
             setMentionSuggestedUsers(users);
           }}
           ableAddMention={ableMention}
-          maxMentionCount={maxUserMentionCount}
-          maxSuggestionCount={maxUserSuggestionCount}
+          maxMentionCount={maxMentionCount}
+          maxSuggestionCount={maxSuggestionCount}
         />
       )}
       {quoteMessage && (
@@ -146,7 +183,7 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.Mutable
         <VoiceMessageInputWrapper
           channel={currentChannel}
           onSubmitClick={(recordedFile, duration) => {
-            sendVoiceMessage({ file: recordedFile }, duration);
+            sendVoiceMessage({ file: recordedFile, parentMessageId: quoteMessage?.messageId }, duration);
             setQuoteMessage(null);
             setShowVoiceMessageInput(false);
           }}
@@ -157,7 +194,6 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.Mutable
       ) : (
         <MessageInput
           className="sendbird-message-input-wrapper__message-input"
-          value={value}
           channel={currentChannel}
           channelUrl={currentChannel?.url}
           mentionSelectedUser={selectedUser}
@@ -170,12 +206,12 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.Mutable
           setMentionedUsers={setMentionedUsers}
           placeholder={
             (quoteMessage && stringSet.MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER)
-            || (utils.isDisabledBecauseFrozen(currentChannel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
-            || (utils.isDisabledBecauseMuted(currentChannel)
+            || (isDisabledBecauseFrozen(currentChannel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
+            || (isDisabledBecauseMuted(currentChannel)
               && (isMobile ? stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT : stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED))
           }
           ref={ref || messageInputRef}
-          disabled={disabled}
+          disabled={isMessageInputDisabled}
           renderFileUploadIcon={renderFileUploadIcon}
           renderSendMessageIcon={renderSendMessageIcon}
           renderVoiceMessageIcon={renderVoiceMessageIcon}
@@ -187,6 +223,7 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.Mutable
               message,
               mentionedUsers,
               mentionedMessageTemplate: mentionTemplate,
+              parentMessageId: quoteMessage?.messageId,
             });
             setMentionNickname('');
             setMentionedUsers([]);
@@ -211,7 +248,7 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.Mutable
           }}
           onKeyDown={(e) => {
             if (
-              displaySuggestedMentionList
+              showSuggestedMentionList
               && mentionSuggestedUsers?.length > 0
               && ((e.key === MessageInputKeys.Enter && ableMention)
                 || e.key === MessageInputKeys.ArrowUp
@@ -226,8 +263,8 @@ const MessageInputWrapper = (props: MessageInputWrapperProps, ref: React.Mutable
       )}
     </div>
   );
-};
+});
 
 export { VoiceMessageInputWrapper, VoiceMessageInputWrapperProps } from './VoiceMessageInputWrapper';
 
-export default React.forwardRef(MessageInputWrapper);
+export default MessageInputWrapperView;

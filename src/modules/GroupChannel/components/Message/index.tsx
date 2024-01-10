@@ -1,15 +1,15 @@
 import React, { useRef, useMemo, useState, useEffect, useLayoutEffect } from 'react';
-import type { FileMessage } from '@sendbird/chat/message';
 import format from 'date-fns/format';
+import type { FileMessage } from '@sendbird/chat/message';
 
 import useDidMountEffect from '../../../../utils/useDidMountEffect';
 import SuggestedMentionList from '../SuggestedMentionList';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { getClassName, getSuggestedReplies, isSendableMessage } from '../../../../utils';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../context/utils';
 import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT } from '../../context/const';
 
+import type { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import DateSeparator from '../../../../ui/DateSeparator';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import MessageInput from '../../../../ui/MessageInput';
@@ -17,13 +17,13 @@ import MessageContent from '../../../../ui/MessageContent';
 import FileViewer from '../FileViewer';
 import RemoveMessageModal from '../RemoveMessageModal';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
-import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import SuggestedReplies from '../SuggestedReplies';
 import { useIIFE } from '@sendbird/uikit-tools';
+import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 
-type MessageUIProps = {
+export interface MessageProps {
   message: EveryMessage;
   hasSeparator?: boolean;
   chainTop?: boolean;
@@ -34,10 +34,10 @@ type MessageUIProps = {
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
   renderEditInput?: () => React.ReactElement;
   renderMessageContent?: () => React.ReactElement;
-};
+}
 
-// todo: Refactor this component, is too complex now
-const Message = ({
+// TODO: Refactor this component, is too complex now
+export const Message = ({
   message,
   hasSeparator,
   chainTop,
@@ -47,14 +47,9 @@ const Message = ({
   renderEditInput,
   renderMessage,
   renderMessageContent,
-}: MessageUIProps): React.ReactElement => {
+}: MessageProps): React.ReactElement => {
   const { dateLocale, stringSet } = useLocalization();
   const globalStore = useSendbirdStateContext();
-
-  const { userId, isOnline, isMentionEnabled, userMention, logger } = globalStore.config;
-  const maxUserMentionCount = userMention?.maxMentionCount || MAX_USER_MENTION_COUNT;
-  const maxUserSuggestionCount = userMention?.maxSuggestionCount || MAX_USER_SUGGESTION_COUNT;
-
   const {
     loading,
     currentChannel,
@@ -67,8 +62,6 @@ const Message = ({
     toggleReaction,
     nicknamesMap,
     setQuoteMessage,
-    resendMessage,
-    deleteMessage,
     renderUserMentionItem,
     onQuoteMessageClick,
     onReplyInThreadClick,
@@ -76,7 +69,13 @@ const Message = ({
     messages,
     updateUserMessage,
     sendUserMessage,
+    resendMessage,
+    deleteMessage,
   } = useGroupChannelContext();
+
+  const { userId, isOnline, isMentionEnabled, userMention, logger } = globalStore.config;
+  const maxUserMentionCount = userMention?.maxMentionCount || MAX_USER_MENTION_COUNT;
+  const maxUserSuggestionCount = userMention?.maxSuggestionCount || MAX_USER_SUGGESTION_COUNT;
 
   const { emojiManager } = useSendbirdStateContext();
 
@@ -177,15 +176,15 @@ const Message = ({
         {
           // TODO: Add message instance as a function parameter
           hasSeparator
-            && (renderedCustomSeparator || (
-              <DateSeparator>
-                <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
-                  {format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, {
-                    locale: dateLocale,
-                  })}
-                </Label>
-              </DateSeparator>
-            ))
+          && (renderedCustomSeparator || (
+            <DateSeparator>
+              <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
+                {format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, {
+                  locale: dateLocale,
+                })}
+              </Label>
+            </DateSeparator>
+          ))
         }
         {renderedMessage}
       </div>
@@ -198,6 +197,7 @@ const Message = ({
         <>
           {displaySuggestedMentionList && (
             <SuggestedMentionList
+              currentChannel={currentChannel}
               targetNickname={mentionNickname}
               inputEvent={messageInputEvent}
               renderUserMentionItem={renderUserMentionItem}

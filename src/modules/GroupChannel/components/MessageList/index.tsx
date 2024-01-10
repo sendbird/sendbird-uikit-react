@@ -1,11 +1,15 @@
 import './index.scss';
 import React, { useEffect, useState } from 'react';
+import type { Member } from '@sendbird/chat/groupChannel';
+import { useGroupChannelHandler } from '@sendbird/uikit-tools';
 
-import { useGroupChannelContext } from '../../context/GroupChannelProvider';
+import type { CoreMessageType } from '../../../../utils';
+import type { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
+import { TypingIndicatorType } from '../../../../types';
+
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
 import Message from '../Message';
-import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps, TypingIndicatorType } from '../../../../types';
 import { getMessagePartsInfo } from './getMessagePartsInfo';
 import UnreadCount from '../UnreadCount';
 import FrozenNotification from '../FrozenNotification';
@@ -13,14 +17,11 @@ import { SCROLL_BUFFER } from '../../../../utils/consts';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { useScrollBehavior } from './hooks/useScrollBehavior';
-import TypingIndicatorBubble, { TypingIndicatorBubbleProps } from '../../../../ui/TypingIndicatorBubble';
-import { CoreMessageType } from '../../../../utils';
-import { Member } from '@sendbird/chat/groupChannel';
-import { useGroupChannelHandler } from '@sendbird/uikit-tools';
+import TypingIndicatorBubble, { type TypingIndicatorBubbleProps } from '../../../../ui/TypingIndicatorBubble';
+import { useGroupChannelContext } from '../../context/GroupChannelProvider';
+import { getComponentKeyFromMessage } from '../../context/utils';
 
-// const SCROLL_BOTTOM_PADDING = 50;
-
-export interface MessageListProps {
+export interface GroupChannelMessageListProps {
   className?: string;
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
@@ -29,21 +30,20 @@ export interface MessageListProps {
   renderFrozenNotification?: () => React.ReactElement;
 }
 
-const MessageList: React.FC<MessageListProps> = ({
+export const MessageList = ({
   className = '',
   renderMessage,
   renderPlaceholderEmpty,
   renderCustomSeparator,
   renderPlaceholderLoader,
   renderFrozenNotification,
-}) => {
+}: GroupChannelMessageListProps) => {
   const {
     hasNext,
     loading,
     messages,
     newMessages,
     scrollToBottom,
-
     isScrollBottomReached,
     isMessageGroupingEnabled,
     scrollRef,
@@ -100,9 +100,8 @@ const MessageList: React.FC<MessageListProps> = ({
       );
     },
     scrollToBottomButton() {
-      // TODO: should we add `scrollDistanceFromBottomRef.current <= SCROLL_BOTTOM_PADDING` here?
-      //  if so scrollDistanceFromBottom should be changed to state
-      if (hasNext() || isScrollBottomReached) return null;
+      if (!hasNext() && isScrollBottomReached) return null;
+
       return (
         <div
           className="sendbird-conversation__scroll-bottom-button"
@@ -146,7 +145,7 @@ const MessageList: React.FC<MessageListProps> = ({
               });
               const isOutgoingMessage = message.isUserMessage() && message.sender.userId === store.config.userId;
               return (
-                <MessageProvider message={message} key={message.messageId} isByMe={isOutgoingMessage}>
+                <MessageProvider message={message} key={getComponentKeyFromMessage(message)} isByMe={isOutgoingMessage}>
                   <Message
                     handleScroll={onMessageContentSizeChanged}
                     renderMessage={renderMessage}

@@ -1,20 +1,19 @@
 import React from 'react';
 
-import type { GroupChannelHeaderProps } from '../../../GroupChannel/components/GroupChannelHeader';
+import type { GroupChannelHeaderProps } from '../GroupChannelHeader';
+import type { MessageListProps } from '../../../Channel/components/MessageList';
+import type { GroupChannelMessageListProps } from '../MessageList';
 import type { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
-import { useChannelContext } from '../../context/ChannelProvider';
-import { GroupChannelUIView } from '../../../GroupChannel/components/GroupChannelUI/GroupChannelUIView';
-import ChannelHeader from '../ChannelHeader';
-import MessageList from '../MessageList';
-import MessageInputWrapper from '../MessageInputWrapper';
+import { useGroupChannelContext } from '../../context/GroupChannelProvider';
+import { GroupChannelUIView } from './GroupChannelUIView';
 
-export interface ChannelUIProps {
-  isLoading?: boolean;
+export interface GroupChannelUIProps {
   renderPlaceholderLoader?: () => React.ReactElement;
   renderPlaceholderInvalid?: () => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
   renderChannelHeader?: (props: GroupChannelHeaderProps) => React.ReactElement;
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+  renderMessageList?: (props: MessageListProps | GroupChannelMessageListProps) => React.ReactElement;
   renderMessageInput?: () => React.ReactElement;
   renderFileUploadIcon?: () => React.ReactElement;
   renderVoiceMessageIcon?: () => React.ReactElement;
@@ -24,12 +23,12 @@ export interface ChannelUIProps {
   renderFrozenNotification?: () => React.ReactElement;
 }
 
-const ChannelUI = (props: ChannelUIProps) => {
-  const context = useChannelContext();
+const GroupChannelUI = (props: GroupChannelUIProps) => {
+  const context = useGroupChannelContext();
   const {
+    currentChannel,
     channelUrl,
-    isInvalid,
-    initialized,
+    loading,
   } = context;
 
   return (
@@ -37,13 +36,10 @@ const ChannelUI = (props: ChannelUIProps) => {
       {...props}
       {...context}
       requestedChannelUrl={channelUrl}
-      loading={props?.isLoading ?? !initialized}
-      isInvalid={isInvalid}
-      renderChannelHeader={(props) => (<ChannelHeader {...props} />)}
-      renderMessageList={(props) => (<MessageList {...props} />)}
-      renderMessageInput={() => (<MessageInputWrapper {...props} />)}
+      loading={loading}
+      isInvalid={channelUrl && !currentChannel}
     />
   );
 };
 
-export default ChannelUI;
+export default GroupChannelUI;

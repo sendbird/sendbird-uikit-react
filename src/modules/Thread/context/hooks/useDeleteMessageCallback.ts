@@ -17,8 +17,8 @@ export default function useDeleteMessageCallback({
   threadDispatcher,
 }: DynamicProps, {
   logger,
-}: StaticProps): (message: SendableMessageType) => Promise<SendableMessageType> {
-  return useCallback((message: SendableMessageType): Promise<SendableMessageType> => {
+}: StaticProps): (message: SendableMessageType) => Promise<void> {
+  return useCallback((message: SendableMessageType): Promise<void> => {
     logger.info('Thread | useDeleteMessageCallback: Deleting message.', message);
     const { sendingStatus } = message;
     return new Promise((resolve, reject) => {
@@ -30,7 +30,7 @@ export default function useDeleteMessageCallback({
           type: ThreadContextActionTypes.ON_MESSAGE_DELETED_BY_REQ_ID,
           payload: message.reqId,
         });
-        resolve(message);
+        resolve();
       }
 
       logger.info('Thread | useDeleteMessageCallback: Deleting message from remote:', sendingStatus);
@@ -41,7 +41,7 @@ export default function useDeleteMessageCallback({
             type: ThreadContextActionTypes.ON_MESSAGE_DELETED,
             payload: { message, channel: currentChannel },
           });
-          resolve(message);
+          resolve();
         })
         .catch((err) => {
           logger.warning('Thread | useDeleteMessageCallback: Deleting message failed!', err);

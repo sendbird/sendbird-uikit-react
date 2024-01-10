@@ -1,14 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react';
-import {
-  GroupChannelHandler,
-  Member,
-} from '@sendbird/chat/groupChannel';
+import type { Member } from '@sendbird/chat/groupChannel';
+import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
 
-import { LocalizationContext } from '../../../lib/LocalizationContext';
-import { uuidv4 } from '../../../utils/uuid';
 import Label, { LabelTypography, LabelColors } from '../../../ui/Label';
-import { useGroupChannelContext } from '../context/GroupChannelProvider';
+import { LocalizationContext } from '../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
+import { uuidv4 } from '../../../utils/uuid';
 
 export interface TypingIndicatorTextProps {
   members: Member[];
@@ -35,8 +32,11 @@ export const TypingIndicatorText = ({ members }: TypingIndicatorTextProps) => {
   return <>{getText()}</>;
 };
 
-const TypingIndicator: React.FC = () => {
-  const { channelUrl } = useGroupChannelContext();
+export interface TypingIndicatorProps {
+  channelUrl: string;
+}
+
+export const TypingIndicator = ({ channelUrl }: TypingIndicatorProps) => {
   const globalStore = useSendbirdStateContext();
   const sb = globalStore?.stores?.sdkStore?.sdk;
   const logger = globalStore?.config?.logger;

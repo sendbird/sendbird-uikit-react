@@ -13,7 +13,7 @@ export interface RemoveMessageProps {
   message: EveryMessage;
 }
 
-const RemoveMessage: React.FC<RemoveMessageProps> = (props: RemoveMessageProps) => {
+const RemoveMessageModal: React.FC<RemoveMessageProps> = (props: RemoveMessageProps) => {
   const {
     onSubmit = () => {
       /* noop */
@@ -44,4 +44,4 @@ const RemoveMessage: React.FC<RemoveMessageProps> = (props: RemoveMessageProps) 
   );
 };
 
-export default RemoveMessage;
+export default RemoveMessageModal;
