@@ -3,10 +3,10 @@ import React from 'react';
 import type { DesktopLayoutProps } from './types';
 
 import ChannelList from '../ChannelList';
+import Channel from '../Channel';
 import ChannelSettings from '../ChannelSettings';
 import MessageSearchPannel from '../MessageSearch';
 import Thread from '../Thread';
-import GroupChannel from '../GroupChannel';
 
 export const DesktopLayout: React.FC<DesktopLayoutProps> = (
   props: DesktopLayoutProps,
@@ -61,7 +61,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
           sendbird-app__conversation-wrap
         `}
       >
-        <GroupChannel
+        <Channel
           channelUrl={currentChannel?.url || ''}
           onChatHeaderActionClick={() => {
             setShowSearch(false);
@@ -73,7 +73,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
             setShowThread(false);
             setShowSearch(!showSearch);
           }}
-          onReplyInThreadClick={({ message }) => { // parent message
+          onReplyInThread={({ message }) => { // parent message
             setShowSettings(false);
             setShowSearch(false);
             if (replyType === 'THREAD') {
@@ -92,9 +92,12 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
           onMessageAnimated={() => {
             setHighlightedMessage(null);
           }}
+          onMessageHighlighted={() => {
+            setHighlightedMessage?.(null);
+          }}
           showSearchIcon={showSearchIcon}
           startingPoint={startingPoint}
-          animatedMessageId={highlightedMessage}
+          animatedMessage={highlightedMessage}
           isReactionEnabled={isReactionEnabled}
           replyType={replyType}
           isMessageGroupingEnabled={isMessageGroupingEnabled}
