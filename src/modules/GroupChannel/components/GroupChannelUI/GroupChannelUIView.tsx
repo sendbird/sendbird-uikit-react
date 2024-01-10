@@ -4,15 +4,15 @@ import React from 'react';
 import type { GroupChannelUIProps } from '.';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
-import GroupChannelHeader, { GroupChannelHeaderProps } from '../GroupChannelHeader';
+import GroupChannelHeader, { type GroupChannelHeaderProps } from '../GroupChannelHeader';
 import MessageList from '../MessageList';
 import TypingIndicator from '../TypingIndicator';
 import { TypingIndicatorType } from '../../../../types';
 import ConnectionStatus from '../../../../ui/ConnectionStatus';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
-import MessageInputWrapper, { MessageInputWrapperProps } from '../MessageInputWrapper';
+import MessageInputWrapper from '../MessageInputWrapper';
 
-export interface GroupChannelUIViewProps extends GroupChannelUIProps, GroupChannelHeaderProps, MessageInputWrapperProps {
+export interface GroupChannelUIViewProps extends GroupChannelUIProps, GroupChannelHeaderProps {
   requestedChannelUrl: string;
   loading: boolean;
   isInvalid: boolean;
@@ -32,7 +32,7 @@ export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
         className="sendbird-conversation__message-list"
       />
     ),
-    renderMessageInput = (props) => <MessageInputWrapper {...props}/>,
+    renderMessageInput = () => <MessageInputWrapper />,
     renderTypingIndicator,
     renderPlaceholderLoader,
     renderPlaceholderInvalid,
@@ -78,7 +78,7 @@ export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
       {renderChannelHeader?.({ className: 'sendbird-conversation__channel-header' })}
       {renderMessageList?.(props)}
       <div className="sendbird-conversation__footer">
-        {renderMessageInput?.(props)}
+        {renderMessageInput?.()}
         <div className="sendbird-conversation__footer__typing-indicator">
           {renderTypingIndicator?.()
             || (

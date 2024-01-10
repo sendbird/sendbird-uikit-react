@@ -96,7 +96,7 @@ export const useHandleUploadFiles = (
       if (sendingFiles.length === 1) {
         logger.info('Channel|useHandleUploadFiles: sending one file.');
         const [file] = sendingFiles;
-        return sendFileMessage({ file, parentMessageId: quoteMessage.messageId });
+        return sendFileMessage({ file, parentMessageId: quoteMessage?.messageId });
       } else if (sendingFiles.length > 1) {
         logger.info('Channel|useHandleUploadFiles: sending multiple files.');
 
@@ -130,7 +130,7 @@ export const useHandleUploadFiles = (
                   fileSize: file.size,
                   mimeType: file.type,
                 })),
-                parentMessageId: quoteMessage.messageId,
+                parentMessageId: quoteMessage?.messageId,
               });
             }
           })(),

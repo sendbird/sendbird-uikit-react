@@ -68,7 +68,7 @@ export default {
   'Channel/components/FileViewer': 'src/modules/Channel/components/FileViewer/index.tsx',
   'Channel/components/FrozenNotification': 'src/modules/GroupChannel/components/FrozenNotification/index.tsx', // FIXME: leave for legacy
   'Channel/components/Message': 'src/modules/Channel/components/Message/index.tsx',
-  'Channel/components/MessageInput': 'src/modules/GroupChannel/components/MessageInputWrapper/index.tsx', // FIXME: leave for legacy
+  'Channel/components/MessageInput': 'src/modules/Channel/components/MessageInputWrapper/index.tsx',
   'Channel/components/MessageList': 'src/modules/Channel/components/MessageList/index.tsx',
   'Channel/components/RemoveMessageModal': 'src/modules/GroupChannel/components/RemoveMessageModal.tsx', // FIXME: leave for legacy
   'Channel/components/TypingIndicator': 'src/modules/GroupChannel/components/TypingIndicator.tsx', // FIXME: leave for legacy
