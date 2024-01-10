@@ -26,11 +26,11 @@ export function useOnScrollPositionChangeDetector(
         distanceFromBottom: scrollHeight - scrollTop - clientHeight,
       };
 
-      if (isAboutSame(scrollTop, 0, SCROLL_BUFFER)) {
+      if (onReachedTop && isAboutSame(scrollTop, 0, SCROLL_BUFFER)) {
         onReachedTop(positionEvent);
-      } else if (isAboutSame(scrollHeight, clientHeight + scrollTop, SCROLL_BUFFER)) {
+      } else if (onReachedBottom && isAboutSame(scrollHeight, clientHeight + scrollTop, SCROLL_BUFFER)) {
         onReachedBottom(positionEvent);
-      } else {
+      } else if (onInBetween) {
         onInBetween(positionEvent);
       }
     }
