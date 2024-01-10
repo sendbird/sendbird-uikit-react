@@ -77,8 +77,7 @@ export const GroupChannelHeaderView = ({
       </div>
       <div className="sendbird-chat-header__right">
         {
-          ((typeof isMuted === 'string' && isMuted === 'true') || (typeof isMuted === 'boolean' && isMuted))
-          && (
+          isMuted && (
             <Icon
               className="sendbird-chat-header__right__mute"
               type={IconTypes.NOTIFICATIONS_OFF_FILLED}
