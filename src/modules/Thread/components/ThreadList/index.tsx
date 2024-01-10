@@ -1,14 +1,15 @@
 import React, { RefObject, useMemo } from 'react';
-import { UserMessage } from '@sendbird/chat/message';
+import type { UserMessage } from '@sendbird/chat/message';
 
 import './index.scss';
+
+import type { SendableMessageType } from '../../../../utils';
 import ThreadListItem from './ThreadListItem';
 import { useThreadContext } from '../../context/ThreadProvider';
-import { compareMessagesForGrouping } from '../../context/utils';
+import { compareMessagesForGrouping } from '../../../../utils/messages';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { isSameDay } from 'date-fns';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
-import { SendableMessageType } from '../../../../utils';
 
 export interface ThreadListProps {
   className?: string;

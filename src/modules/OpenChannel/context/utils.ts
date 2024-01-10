@@ -1,11 +1,10 @@
 import type React from 'react';
 import type { User } from '@sendbird/chat';
-import type { UserMessage } from '@sendbird/chat/message';
 import type { OpenChannel, ParticipantListQuery } from '@sendbird/chat/openChannel';
 import format from 'date-fns/format';
 
 import { Logger } from '../../../lib/SendbirdState';
-import { CoreMessageType, SendableMessageType } from '../../../utils';
+import { SendableMessageType } from '../../../utils';
 
 export const getMessageCreatedAt = (message: SendableMessageType): string => format(message.createdAt, 'p');
 
@@ -39,49 +38,6 @@ export const scrollIntoLast = (initialTry = 0, scrollRef: React.RefObject<HTMLEl
     }, 500 * currentTry);
   }
 };
-
-export const isSameGroup = (
-  message: CoreMessageType,
-  comparingMessage: CoreMessageType,
-): boolean => {
-  if (!(
-    message
-    && comparingMessage
-    && message?.messageType
-    && message.messageType !== 'admin'
-    && comparingMessage?.messageType
-    && comparingMessage.messageType !== 'admin'
-    && (message as SendableMessageType)?.sender
-    && (comparingMessage as SendableMessageType)?.sender
-    && message?.createdAt
-    && comparingMessage?.createdAt
-    && (message as SendableMessageType)?.sender?.userId
-    && (comparingMessage as SendableMessageType)?.sender?.userId
-  )) {
-    return false;
-  }
-  // to fix typecasting
-  const message_ = message as UserMessage;
-  const comparingMessage_ = comparingMessage as UserMessage;
-  return (
-    message_?.sendingStatus === comparingMessage_?.sendingStatus
-    && message_?.sender?.userId === comparingMessage_?.sender?.userId
-    && (
-      getMessageCreatedAt(message as SendableMessageType) === getMessageCreatedAt(comparingMessage as SendableMessageType)
-    )
-  );
-};
-
-export const compareMessagesForGrouping = (
-  prevMessage: CoreMessageType,
-  currMessage: CoreMessageType,
-  nextMessage: CoreMessageType,
-): [boolean, boolean] => (
-  [
-    isSameGroup(prevMessage, currMessage),
-    isSameGroup(currMessage, nextMessage),
-  ]
-);
 
 export const kFormatter = (num: number): string => {
   if (Math.abs(num) > 999999) {

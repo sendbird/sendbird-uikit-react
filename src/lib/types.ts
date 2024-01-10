@@ -35,6 +35,7 @@ import { UserActionTypes } from './dux/user/actionTypes';
 import { SdkActionTypes } from './dux/sdk/actionTypes';
 import { ReconnectType } from './hooks/useConnect/types';
 import { SBUGlobalPubSub } from './pubSub/topics';
+import { EmojiManager } from './emojiManager';
 
 // note to SDK team:
 // using enum inside .d.ts won’t work for jest, but const enum will work.
@@ -99,6 +100,8 @@ export interface SendBirdStateConfig {
     enableOgtag: SBUConfig['groupChannel']['channel']['enableOgtag'];
     enableTypingIndicator: SBUConfig['groupChannel']['channel']['enableTypingIndicator'];
     enableDocument: SBUConfig['groupChannel']['channel']['input']['enableDocument'];
+    enableReactions: SBUConfig['groupChannel']['channel']['enableReactions'];
+    replyType: SBUConfig['groupChannel']['channel']['replyType'];
     threadReplySelectType: SBUConfig['groupChannel']['channel']['threadReplySelectType'];
     typingIndicatorTypes: SBUConfig['groupChannel']['channel']['typingIndicatorTypes'];
   },
@@ -107,11 +110,13 @@ export interface SendBirdStateConfig {
     enableDocument: SBUConfig['openChannel']['channel']['input']['enableDocument'];
   },
 }
+
+export type SendbirdChatType = SendbirdChat & ModuleNamespaces<[GroupChannelModule, OpenChannelModule]>;
 export interface SdkStore {
   error: boolean;
   initialized: boolean;
   loading: boolean;
-  sdk: SendbirdChat & ModuleNamespaces<[GroupChannelModule, OpenChannelModule]>;
+  sdk: SendbirdChatType;
 }
 
 export interface UserStore {
@@ -134,6 +139,7 @@ export type SendBirdState = {
   },
   // Customer provided callbacks
   eventHandlers?: SBUEventHandlers;
+  emojiManager?: EmojiManager;
 };
 
 type GetSdk = SendbirdChat | undefined;

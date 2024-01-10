@@ -6,10 +6,11 @@ import React, {
   useMemo,
 } from 'react';
 
-import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import type {
   BaseMessage, FileMessage,
   FileMessageCreateParams,
+  MultipleFilesMessage,
   MultipleFilesMessageCreateParams,
   UserMessage,
   UserMessageCreateParams,
@@ -41,7 +42,7 @@ import useUpdateMessageCallback from './hooks/useUpdateMessageCallback';
 import useResendMessageCallback from './hooks/useResendMessageCallback';
 import useSendMessageCallback from './hooks/useSendMessageCallback';
 import useSendFileMessageCallback from './hooks/useSendFileMessageCallback';
-import useToggleReactionCallback from './hooks/useToggleReactionCallback';
+import useToggleReactionCallback from '../../GroupChannel/context/hooks/useToggleReactionCallback';
 import useScrollToMessage from './hooks/useScrollToMessage';
 import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 import { getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
@@ -49,8 +50,6 @@ import { useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage
 import { useHandleChannelPubsubEvents } from './hooks/useHandleChannelPubsubEvents';
 import { PublishingModuleType } from '../../internalInterfaces';
 import { ChannelActionTypes } from './dux/actionTypes';
-import { MultipleFilesMessage } from '@sendbird/chat/message';
-import { Member } from '@sendbird/chat/groupChannel';
 
 export type MessageListParams = {
   // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
@@ -132,15 +131,16 @@ interface SendMessageParams {
   mentionedUsers?: User[];
   mentionTemplate?: string;
 }
-
 interface UpdateMessageParams {
   messageId: number;
   message: string;
   mentionedUsers?: User[];
   mentionTemplate?: string;
 }
+export type SendMessageType = (params: SendMessageParams) => void;
+export type UpdateMessageType = (props: UpdateMessageParams, callback?: (err: SendbirdError, message: UserMessage) => void) => void;
 
-interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInterface {
+export interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInterface {
   scrollToMessage?(createdAt: number, messageId: number): void;
   isScrolled?: boolean;
   setIsScrolled?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -160,13 +160,13 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
   setHighLightedMessageId: React.Dispatch<React.SetStateAction<number>>;
   messageInputRef: React.MutableRefObject<HTMLInputElement>,
-  deleteMessage(message: CoreMessageType): Promise<CoreMessageType>,
-  updateMessage(props: UpdateMessageParams, callback?: (err: SendbirdError, message: UserMessage) => void): void,
+  deleteMessage(message: CoreMessageType): Promise<void>,
+  updateMessage: UpdateMessageType,
   resendMessage(failedMessage: SendableMessageType): void,
   // TODO: Good to change interface to using params / This part need refactoring
-  sendMessage: (params: SendMessageParams) => void,
+  sendMessage: SendMessageType,
   sendFileMessage: (file: File, quoteMessage?: SendableMessageType) => Promise<FileMessage>,
-  sendVoiceMessage: (file: File, duration: number, quoteMessage?: SendableMessageType) => void,
+  sendVoiceMessage: (file: File, duration: number, quoteMessage?: SendableMessageType) => Promise<FileMessage>,
   sendMultipleFilesMessage: (files: Array<File>, quoteMessage?: SendableMessageType) => Promise<MultipleFilesMessage>,
   toggleReaction(message: SendableMessageType, emojiKey: string, isReacted: boolean): void,
   renderUserMentionItem?: (props: { user: User }) => JSX.Element;
@@ -320,7 +320,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     sdk,
   });
 
-  const toggleReaction = useToggleReactionCallback({ currentGroupChannel }, { logger });
+  const toggleReaction = useToggleReactionCallback(currentGroupChannel, logger);
 
   // to create message-datasource
   // this hook sets currentGroupChannel asynchronously
@@ -388,8 +388,10 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   });
 
   // callbacks for Message CURD actions
-  const deleteMessage = useDeleteMessageCallback({ currentGroupChannel, messagesDispatcher },
-    { logger });
+  const deleteMessage = useDeleteMessageCallback(
+    { currentGroupChannel, messagesDispatcher },
+    { logger },
+  );
   const updateMessage = useUpdateMessageCallback(
     { currentGroupChannel, messagesDispatcher, onBeforeUpdateUserMessage, isMentionEnabled },
     { logger, pubSub },

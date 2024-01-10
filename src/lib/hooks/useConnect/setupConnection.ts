@@ -38,6 +38,7 @@ export function setUpParams({
     appId,
     modules: [new GroupChannelModule(), new OpenChannelModule()],
     newInstance: true,
+    localCacheEnabled: true,
   });
   if (customApiHost) params.customApiHost = customApiHost;
   if (customWebSocketHost) params.customWebSocketHost = customWebSocketHost;
