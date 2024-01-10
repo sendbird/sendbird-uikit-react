@@ -6,7 +6,12 @@ import { uuidv4 } from '../../utils/uuid';
 import { LoggerInterface } from '../Logger';
 
 function useOnlineStatus(sdk: SendbirdChat, logger: LoggerInterface) {
-  const [isOnline, setIsOnline] = useState(window?.navigator?.onLine ?? true);
+  const [isOnline, setIsOnline] = useState(
+    // window is undefined in SSR env
+    typeof window !== 'undefined'
+      ? (window?.navigator?.onLine ?? true)
+      : true,
+  );
 
   useEffect(() => {
     const uniqueHandlerId = uuidv4();
@@ -20,7 +25,6 @@ function useOnlineStatus(sdk: SendbirdChat, logger: LoggerInterface) {
         onReconnectStarted() {
           setIsOnline(false);
           logger.warning('onReconnectStarted', { isOnline });
-
         },
         onReconnectSucceeded() {
           setIsOnline(true);

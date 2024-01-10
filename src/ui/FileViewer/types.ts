@@ -1,6 +1,8 @@
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 
 // TODO: refactor this to -> as const pattern
+import { KeyboardEvent } from 'react';
+
 export type SupportedImageMimesType = 'image/jpeg' | 'image/jpg' | 'image/png' | 'image/gif' | 'image/svg+xml' | 'image/webp';
 export type SupportedVideoMimesType = 'video/mpeg' | 'video/ogg' | 'video/webm' | 'video/mp4';
 export type SupportedMimesType = SupportedImageMimesType | SupportedVideoMimesType;
@@ -52,7 +54,7 @@ export interface FileInfo {
 }
 
 export interface BaseViewer {
-  onClose: (e: React.MouseEvent) => void;
+  onClose: (e: React.MouseEvent | React.KeyboardEvent) => void;
 }
 
 export interface SingleFileViewer extends SenderInfo, FileInfo, BaseViewer {

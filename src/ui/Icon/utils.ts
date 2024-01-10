@@ -82,6 +82,8 @@ export function changeTypeToIconClassName(type: Types): string {
     case Types.TOGGLE_OFF: return 'sendbird-icon-toggle-off';
     case Types.TOGGLE_ON: return 'sendbird-icon-toggle-on';
     case Types.USER: return 'sendbird-icon-user';
+    case Types.FEEDBACK_LIKE: return 'sendbird-icon-feedback-like';
+    case Types.FEEDBACK_DISLIKE: return 'sendbird-icon-feedback-dislike';
     default: return 'sendbird-icon-unknown'; // If you see this text 'icon' replace icon for it
   }
 }

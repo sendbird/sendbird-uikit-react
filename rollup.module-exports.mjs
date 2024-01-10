@@ -71,6 +71,7 @@ export default {
   'Channel/components/MessageInput': 'src/modules/Channel/components/MessageInputWrapper/index.tsx',
   'Channel/components/MessageList': 'src/modules/Channel/components/MessageList/index.tsx',
   'Channel/components/RemoveMessageModal': 'src/modules/GroupChannel/components/RemoveMessageModal.tsx', // FIXME: leave for legacy
+  'Channel/components/MessageFeedbackModal': 'src/modules/Channel/components/MessageFeedbackModal/index.tsx',
   'Channel/components/TypingIndicator': 'src/modules/GroupChannel/components/TypingIndicator.tsx', // FIXME: leave for legacy
   'Channel/components/UnreadCount': 'src/modules/GroupChannel/components/UnreadCount/index.tsx', // FIXME: leave for legacy
   'Channel/components/SuggestedMentionList': 'src/modules/Channel/components/SuggestedMentionList/index.tsx',
@@ -207,4 +208,6 @@ export default {
   'ui/VoiceMessageInput': 'src/ui/VoiceMessageInput/index.tsx',
   'ui/VoiceMessageItemBody': 'src/ui/VoiceMessageItemBody/index.tsx',
   'ui/Word': 'src/ui/Word/index.tsx',
+  'ui/FeedbackIconButton': 'src/ui/FeedbackIconButton/index.tsx',
+  'ui/MobileFeedbackMenu': 'src/ui/MobileFeedbackMenu/index.tsx',
 };

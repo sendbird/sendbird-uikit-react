@@ -1,0 +1,30 @@
+@import '../../../../styles/variables';
+
+.sendbird-message-feedback-modal-content__mobile {
+  @include mobile() {
+    max-width: 280px;
+    padding: 16px;
+  }
+}
+
+.sendbird-message-feedback-modal-footer__root {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sendbird-message-feedback-modal-footer__right-content {
+  display: flex;
+  gap: 8px;
+}
+
+.sendbird-message-feedback-modal-body__root {
+  margin: 21px 0;
+}
+
+.sendbird-message-feedback-modal-header {
+  @include mobile() {
+    font-size: 18px;
+    line-height: 1.33;
+  }
+}

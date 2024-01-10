@@ -6,6 +6,8 @@ export function changeTypeToClassName(type: ButtonTypes): string {
     case ButtonTypes.SECONDARY: return 'sendbird-button--secondary';
     case ButtonTypes.DANGER: return 'sendbird-button--danger';
     case ButtonTypes.DISABLED: return 'sendbird-button--disabled';
+    case ButtonTypes.WARNING: return 'sendbird-button--warning';
+
     default: return null;
   }
 }

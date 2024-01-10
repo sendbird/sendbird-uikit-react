@@ -66,6 +66,9 @@ import IconThumbnailNone from '../../svgs/icon-thumbnail-none.svg';
 import IconToggleOff from '../../svgs/icon-toggleoff.svg';
 import IconToggleOn from '../../svgs/icon-toggleon.svg';
 import IconUser from '../../svgs/icon-user.svg';
+import IconFeedbackLike from '../../svgs/icon-feedback-like.svg';
+import IconFeedbackDislike from '../../svgs/icon-feedback-dislike.svg';
+
 import { noop } from '../../utils/utils';
 
 function changeTypeToIconComponent(type: Types) {
@@ -128,6 +131,8 @@ function changeTypeToIconComponent(type: Types) {
     case Types.TOGGLE_OFF: return <IconToggleOff />;
     case Types.TOGGLE_ON: return <IconToggleOn />;
     case Types.USER: return <IconUser />;
+    case Types.FEEDBACK_LIKE: return <IconFeedbackLike />;
+    case Types.FEEDBACK_DISLIKE: return <IconFeedbackDislike />;
     default: return 'icon'; // If you see this text 'icon' replace icon for it
   }
 }

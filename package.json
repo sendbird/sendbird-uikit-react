@@ -1,6 +1,6 @@
 {
   "name": "@sendbird/uikit-react",
-  "version": "3.9.1",
+  "version": "3.9.3",
   "description": "Sendbird UIKit for React: A feature-rich and customizable chat UI kit with messaging, channel management, and user authentication.",
   "keywords": [
     "sendbird",
@@ -67,7 +67,7 @@
     "react-dom": "^16.8.6 || ^17.0.0 || ^18.0.0"
   },
   "dependencies": {
-    "@sendbird/chat": "^4.10.1",
+    "@sendbird/chat": "^4.10.6",
     "@sendbird/uikit-tools": "0.0.1-alpha.51",
     "css-vars-ponyfill": "^2.3.2",
     "date-fns": "^2.16.1",
@@ -82,6 +82,7 @@
     "@babel/eslint-parser": "^7.22.15",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@babel/plugin-proposal-export-default-from": "^7.22.17",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.23.2",
     "@babel/preset-react": "^7.22.15",
     "@babel/preset-typescript": "^7.23.2",
@@ -103,8 +104,8 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
-    "@typescript-eslint/eslint-plugin": "^5.59.2",
-    "@typescript-eslint/parser": "^5.59.2",
+    "@typescript-eslint/eslint-plugin": "^6.17.0",
+    "@typescript-eslint/parser": "^6.17.0",
     "autoprefixer": "^9.7.4",
     "babel-jest": "^29.0.1",
     "babel-loader": "^8.0.6",
@@ -131,10 +132,10 @@
     "postcss": "^8.3.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "rollup": "^4.1.4",
+    "rollup": "^4.9.2",
     "rollup-plugin-analyzer": "^4.0.0",
     "rollup-plugin-copy": "^3.5.0",
-    "rollup-plugin-polyfill-node": "^0.12.0",
+    "rollup-plugin-polyfill-node": "^0.13.0",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-scss": "^4.0.0",
     "rollup-plugin-typescript2": "^0.36.0",

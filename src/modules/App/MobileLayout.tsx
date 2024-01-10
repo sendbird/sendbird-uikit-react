@@ -40,7 +40,8 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
     setStartingPoint,
     threadTargetMessage,
     setThreadTargetMessage,
-    highlightedMessage, setHighlightedMessage,
+    highlightedMessage,
+    setHighlightedMessage,
   } = props;
   const [panel, setPanel] = useState(PANELS.CHANNEL_LIST);
 

@@ -1,5 +1,51 @@
 # Changelog - v3
 
+## [v3.9.3] (Jan 5, 2024)
+
+### Fixes:
+* **Refactor `--sendbird-vh` CSS Variable Logic in InviteUsers Component**
+  - Improved code readability by moving logic to the `InviteUsers` component.
+  - [GitHub PR #899](https://github.com/sendbird/sendbird-uikit-react/pull/899) (CLNP-1806)
+* **Prevent Access to `window` in SSR Environments**
+  - Fixed server-side rendering issues in NextJS by preventing access to the `window` object. (Original Author: [Aaron James King](https://github.com/AaronJamesKing))
+  - [GitHub PR #900](https://github.com/sendbird/sendbird-uikit-react/pull/900) (SBISSUE-14287)
+* **Update Channel View to Show `NO_CHANNEL` Placeholder**
+  - Channel view now displays `NO_CHANNEL` placeholder after leaving all channels. (Original Author: [Alden Quimby](https://github.com/aldenquimby))
+  - [GitHub PR #901](https://github.com/sendbird/sendbird-uikit-react/pull/901)
+* **Fix Replay of Voice Memos**
+  - Resolved the issue preventing the replay of voice memos. (Original Author: [Alden Quimby](https://github.com/aldenquimby))
+  - [GitHub PR #902](https://github.com/sendbird/sendbird-uikit-react/pull/902)
+* **Resolve Image Upsizing Issue in ImageCompression**
+  - Fixed the issue with image upsizing in ImageCompression. (Original Author: [GitHub User](https://github.com/GitHubUser)) (CLNP-1832)
+  - [GitHub PR #903](https://github.com/sendbird/sendbird-uikit-react/pull/903)
+* **Update Peer Dependencies for npm Install**
+  - Addressed peer dependencies issues in npm install. (Original Author: [GitHub User](https://github.com/GitHubUser))
+  - [GitHub PR #905](https://github.com/sendbird/sendbird-uikit-react/pull/905)
+* **Fix Scroll Behavior in Open Channel**
+  - Fixed scroll behavior when sending a message in an open channel. (Original Author: [GitHub User](https://github.com/GitHubUser))
+  - [GitHub PR #906](https://github.com/sendbird/sendbird-uikit-react/pull/906)
+* **Fix Cross-Site Scripting Vulnerability in OGTag**
+  - Fixed cross-site scripting vulnerability in OGTag. (Original Author: [GitHub User](https://github.com/GitHubUser))
+  - [GitHub PR #907](https://github.com/sendbird/sendbird-uikit-react/pull/907)
+
+## [v3.9.2] (Dec 15 2023)
+
+### Fixes:
+  * Fixed scroll issues
+    * Maintain scroll position when loading previous messages.
+    * Maintain scroll position when loading next messages.
+    * Move the logic that delays rendering mmf to the correct location.
+    * Resolve an issue where scroll position wasn't adjusting correctly when the message content size was updated (caused by debouncing scroll events).
+    * Use message animation instead of highlighting when moving to a message with message search
+  * Reset text display issue
+    * Fix the appearance of incomplete text compositions from the previous input in the next input.
+  * Fixed type errors
+    * Resolve the type error related to `PropsWithChildren`.
+    * Address the issue of not being assignable to type error, where the property 'children' doesn't exist on type `PropsWithChildren`.
+    * Use `PropsWithChildren<unknown> `instead of `PropsWithChildren`.
+  * Fixed a voice message length parsing issue
+    * Include metaArray to the message list when fetching messages again by connecting
+
 ## [v3.9.1] (Dec 8 2023)
 
 ### Features:

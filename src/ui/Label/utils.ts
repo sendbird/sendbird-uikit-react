@@ -11,6 +11,7 @@ export function changeTypographyToClassName(type?: ObjectValues<typeof Typograph
     case Typography.BODY_2: return 'sendbird-label--body-2';
     case Typography.BUTTON_1: return 'sendbird-label--button-1';
     case Typography.BUTTON_2: return 'sendbird-label--button-2';
+    case Typography.BUTTON_3: return 'sendbird-label--button-3';
     case Typography.CAPTION_1: return 'sendbird-label--caption-1';
     case Typography.CAPTION_2: return 'sendbird-label--caption-2';
     case Typography.CAPTION_3: return 'sendbird-label--caption-3';
