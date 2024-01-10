@@ -51,9 +51,7 @@ export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
     );
   }
 
-  // TODO: only show when getChannel fails with an error
   if (isInvalid) {
-    // && getCurrentChannelError
     return <div className="sendbird-conversation">{renderPlaceholderInvalid?.() || <PlaceHolder type={PlaceHolderTypes.WRONG} />}</div>;
   }
 
