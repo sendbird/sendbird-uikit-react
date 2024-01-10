@@ -1,0 +1,34 @@
+/*
+  We are sharing the same CSS file
+  * the same components
+    1. `~/modules/GroupChannelList/components/GroupChannelListUI`
+    2. `~/modules/ChannelList/components/ChannelListUI`
+  So must to keep the same structure with the component when you make a change on the one component of them
+*/
+@import '../../../../styles/variables';
+
+.sendbird-channel-list {
+  width: 320px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  @include themed() {
+    background-color: t(bg-0);
+  }
+  @include mobile() {
+    width: 100%;
+  }
+}
+
+.sendbird-channel-list__header {
+  height: 64px;
+  min-height: 64px;
+}
+
+.sendbird-channel-list__body {
+  flex: 1 1 0;
+  -ms-flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
