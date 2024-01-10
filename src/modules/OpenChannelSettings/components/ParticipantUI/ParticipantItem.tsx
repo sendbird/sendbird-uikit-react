@@ -65,32 +65,31 @@ export const UserListItem: React.FC<UserListItemProps> = ({
             </>
           )}
           menuItems={(closeDropdown) => (
-            <MenuItems
-              openLeft
-              parentRef={avatarRef}
-              // for catching location(x, y) of MenuItems
-              parentContainRef={avatarRef}
-              // for toggling more options(menus & reactions)
-              closeDropdown={closeDropdown}
-              style={{ paddingTop: '0px', paddingBottom: '0px' }}
-            >
-              {
-                renderUserProfile
-                  ? renderUserProfile({
-                    user: user,
-                    currentUserId: currentUser,
-                    close: closeDropdown,
-                  })
-                  : (
-                    <UserProfile
-                      disableMessaging
-                      user={user}
-                      currentUserId={currentUser}
-                      onSuccess={closeDropdown}
-                    />
-                  )
-              }
-            </MenuItems>
+            renderUserProfile
+              ? renderUserProfile({
+                user: user,
+                currentUserId: currentUser,
+                close: closeDropdown,
+                avatarRef,
+              })
+              : (
+                <MenuItems
+                  openLeft
+                  parentRef={avatarRef}
+                  // for catching location(x, y) of MenuItems
+                  parentContainRef={avatarRef}
+                  // for toggling more options(menus & reactions)
+                  closeDropdown={closeDropdown}
+                  style={{ paddingTop: '0px', paddingBottom: '0px' }}
+                >
+                  <UserProfile
+                    disableMessaging
+                    user={user}
+                    currentUserId={currentUser}
+                    onSuccess={closeDropdown}
+                  />
+                </MenuItems>
+              )
           )}
         />
       </div>

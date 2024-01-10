@@ -13,7 +13,7 @@ import VoiceMessageInputWrapper from '../../../Channel/components/MessageInput/V
 import { Role } from '../../../../lib/types';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../../Channel/context/utils';
-import { useHandleUploadFiles } from '../../../Channel/components/MessageInput/useHandleUploadFiles';
+import { useHandleUploadFiles } from '../../../Channel/context/hooks/useHandleUploadFiles';
 
 export interface ThreadMessageInputProps {
   className?: string;

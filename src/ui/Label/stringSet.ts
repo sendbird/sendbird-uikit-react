@@ -2,6 +2,8 @@
  * NOTE:
  * Do not forget to update the string set table on Docs
  * When you update this string set
+ *
+ * `%d` will be replaced by a proper number
  */
 
 // TODO: Make StringSet as a interface
@@ -139,6 +141,7 @@ const stringSet = {
     MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT: 'You\'re muted',
     MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER: 'Reply to message',
     // Common UI
+    BUTTON__SUBMIT: 'Submit',
     BUTTON__CANCEL: 'Cancel',
     BUTTON__DELETE: 'Delete',
     BUTTON__SAVE: 'Save',
@@ -206,6 +209,19 @@ const stringSet = {
     DATE_FORMAT__MESSAGE_LIST__NOTIFICATION__UNREAD_SINCE: 'p \'on\' MMM dd',
     DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR: 'MMMM dd, yyyy',
     DATE_FORMAT__THREAD_LIST__DATE_SEPARATOR: 'MMM dd, yyyy',
+    // File upload
+    FILE_UPLOAD_NOTIFICATION__COUNT_LIMIT: 'Up to %d files can be attached.',
+    FILE_UPLOAD_NOTIFICATION__SIZE_LIMIT: 'The maximum size per file is %d MB.',
+    // Feedback button text
+    FEEDBACK_LIKE: 'Like',
+    FEEDBACK_DISLIKE: 'Dislike',
+    // Mobile feedback options menu items
+    EDIT_COMMENT: 'Edit Comment',
+    REMOVE_FEEDBACK: 'Remove Feedback',
+    // Feedback modal title
+    FEEDBACK_MODAL_TITLE: 'Please write a comment about your rating (optional)',
+    FEEDBACK_CONTENT_PLACEHOLDER: 'Feedback text',
+    BUTTON__REMOVE_FEEDBACK: 'Remove feedback',
   },
 };
 

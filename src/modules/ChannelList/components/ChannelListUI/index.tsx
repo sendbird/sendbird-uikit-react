@@ -12,10 +12,7 @@ import { GroupChannelListUIView } from '../../../GroupChannelList/components/Gro
 
 interface RenderChannelPreviewProps {
   channel: GroupChannel;
-  onLeaveChannel(
-    channel: GroupChannel,
-    onLeaveChannelCb?: (channel: GroupChannel, error?: null) => void
-  ): void;
+  onLeaveChannel(channel: GroupChannel, onLeaveChannelCb?: (channel: GroupChannel, error?: null) => void): void;
 }
 
 export interface ChannelListUIProps {

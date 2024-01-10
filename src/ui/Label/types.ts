@@ -7,6 +7,7 @@ export const Typography = {
   BODY_2: 'BODY_2',
   BUTTON_1: 'BUTTON_1',
   BUTTON_2: 'BUTTON_2',
+  BUTTON_3: 'BUTTON_3',
   CAPTION_1: 'CAPTION_1',
   CAPTION_2: 'CAPTION_2',
   CAPTION_3: 'CAPTION_3',

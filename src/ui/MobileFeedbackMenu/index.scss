@@ -1,0 +1,21 @@
+@import '../../styles/variables';
+
+.sendbird-message__bottomsheet--feedback-options-menu {
+  width: 100vw;
+  border-radius: 8px 8px 0 0;
+  @include themed() {
+    background-color: t(bg--0-5);
+  }
+
+  :first-child {
+    border-radius: 8px 8px 0 0;
+  }
+}
+
+.sendbird-message__bottomsheet--feedback-option {
+  cursor: pointer;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+}

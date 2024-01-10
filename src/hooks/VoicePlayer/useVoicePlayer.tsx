@@ -70,9 +70,12 @@ export const useVoicePlayer = ({
     play: playVoicePlayer,
     pause: pauseVoicePlayer,
     stop: stopVoicePlayer,
-    playbackTime: currentAudioUnit.playbackTime * 1000,
-    duration: currentAudioUnit.duration * 1000,
-    // the unit of playbackTime and duration should be millisecond
+    /**
+     * The reason why we multiply this by *1000 is,
+     * The unit of playbackTime and duration should be millisecond
+     */
+    playbackTime: (currentAudioUnit?.playbackTime || 0) * 1000,
+    duration: (currentAudioUnit?.duration || 0) * 1000,
     playingStatus: currentAudioUnit.playingStatus,
   });
 };

@@ -60,7 +60,7 @@ export default {
   Channel: 'src/modules/Channel/index.tsx',
   'Channel/context': 'src/modules/Channel/context/ChannelProvider.tsx',
   'Channel/hooks/useInitialMessagesFetch': 'src/modules/Channel/context/hooks/useInitialMessagesFetch.ts',
-  'Channel/hooks/useHandleUploadFiles': 'src/modules/Channel/components/MessageInput/useHandleUploadFiles.tsx',
+  'Channel/hooks/useHandleUploadFiles': 'src/modules/Channel/context/hooks/useHandleUploadFiles.tsx',
   'Channel/utils/getMessagePartsInfo': 'src/modules/Channel/components/MessageList/getMessagePartsInfo.ts',
   'Channel/utils/compareMessagesForGrouping': 'src/modules/Channel/context/compareMessagesForGrouping.ts',
   'Channel/components/ChannelHeader': 'src/modules/Channel/components/ChannelHeader/index.tsx',
@@ -71,6 +71,7 @@ export default {
   'Channel/components/MessageInput': 'src/modules/Channel/components/MessageInput/index.tsx',
   'Channel/components/MessageList': 'src/modules/Channel/components/MessageList/index.tsx',
   'Channel/components/RemoveMessageModal': 'src/modules/Channel/components/RemoveMessageModal.tsx',
+  'Channel/components/MessageFeedbackModal': 'src/modules/Channel/components/MessageFeedbackModal/index.tsx',
   'Channel/components/TypingIndicator': 'src/modules/Channel/components/TypingIndicator.tsx',
   'Channel/components/UnreadCount': 'src/modules/Channel/components/UnreadCount/index.tsx',
   'Channel/components/SuggestedMentionList': 'src/modules/Channel/components/SuggestedMentionList/index.tsx',
@@ -205,4 +206,6 @@ export default {
   'ui/VoiceMessageInput': 'src/ui/VoiceMessageInput/index.tsx',
   'ui/VoiceMessageItemBody': 'src/ui/VoiceMessageItemBody/index.tsx',
   'ui/Word': 'src/ui/Word/index.tsx',
+  'ui/FeedbackIconButton': 'src/ui/FeedbackIconButton/index.tsx',
+  'ui/MobileFeedbackMenu': 'src/ui/MobileFeedbackMenu/index.tsx',
 };

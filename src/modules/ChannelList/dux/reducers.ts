@@ -11,7 +11,11 @@ export default function channelListReducer(
 ): ChannelListInitialStateType {
   return (
     match(action)
-      .with({ type: channelListActions.INIT_CHANNELS_START }, () => ({ ...state, loading: true }))
+      .with({ type: channelListActions.INIT_CHANNELS_START }, ({ payload }) => ({
+        ...state,
+        loading: true,
+        currentUserId: payload.currentUserId,
+      }))
       .with({ type: channelListActions.RESET_CHANNEL_LIST }, () => initialState)
       .with({ type: channelListActions.INIT_CHANNELS_SUCCESS }, (action) => {
         const { channelList, disableAutoSelect } = action.payload;
@@ -93,10 +97,11 @@ export default function channelListReducer(
         { type: P.union(channelListActions.LEAVE_CHANNEL_SUCCESS, channelListActions.ON_CHANNEL_DELETED) },
         (action) => {
           const channelUrl = action.payload;
+          const allChannels = state.allChannels.filter(({ url }) => url !== channelUrl);
           return {
             ...state,
-            currentChannel: channelUrl === state.currentChannel?.url ? state.allChannels[0] : state.currentChannel,
-            allChannels: state.allChannels.filter(({ url }) => url !== channelUrl),
+            currentChannel: channelUrl === state.currentChannel?.url ? allChannels[0] : state.currentChannel,
+            allChannels,
           };
         },
       )
@@ -289,13 +294,11 @@ export default function channelListReducer(
           allChannels: [action.payload, ...state.allChannels.filter((channel) => channel?.url !== action.payload.url)],
         };
       })
-      .with({ type: channelListActions.CHANNEL_LIST_PARAMS_UPDATED }, (action) => {
-        return {
-          ...state,
-          currentUserId: action.payload.currentUserId,
-          channelListQuery: action.payload.channelListQuery,
-        };
-      })
+      .with({ type: channelListActions.CHANNEL_LIST_PARAMS_UPDATED }, (action) => ({
+        ...state,
+        channelListQuery: action.payload.channelListQuery,
+        currentUserId: action.payload.currentUserId,
+      }))
       .otherwise(() => state)
   );
 }

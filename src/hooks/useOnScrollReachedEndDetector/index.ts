@@ -1,10 +1,10 @@
 import React from 'react';
 import { SCROLL_BUFFER } from '../../utils/consts';
 import { isAboutSame } from '../../modules/Channel/context/utils';
-import { useDebounce } from '../useDebounce';
 import { usePreservedCallback } from '@sendbird/uikit-tools';
+import { useThrottleCallback } from '../useThrottleCallback';
 
-const BUFFER_DELAY = 500;
+const BUFFER_DELAY = 100;
 
 export interface UseOnScrollReachedEndDetectorProps {
   onReachedTop?: () => void;
@@ -38,5 +38,5 @@ export function useOnScrollPositionChangeDetector(
     }
   });
 
-  return useDebounce(cb, BUFFER_DELAY);
+  return useThrottleCallback(cb, BUFFER_DELAY, { trailing: true });
 }

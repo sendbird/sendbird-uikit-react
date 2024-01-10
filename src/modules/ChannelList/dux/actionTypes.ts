@@ -45,7 +45,9 @@ type CHANNEL_LIST_PAYLOAD_TYPES = {
 
   [FETCH_CHANNELS_SUCCESS]: GroupChannel[];
   [FETCH_CHANNELS_FAILURE]: null;
-  [INIT_CHANNELS_START]: null;
+  [INIT_CHANNELS_START]: {
+    currentUserId: string;
+  };
   [INIT_CHANNELS_SUCCESS]: {
     channelList: GroupChannel[];
     disableAutoSelect: boolean;
@@ -68,7 +70,7 @@ type CHANNEL_LIST_PAYLOAD_TYPES = {
   [CHANNEL_REPLACED_TO_TOP]: GroupChannel;
   [CHANNEL_LIST_PARAMS_UPDATED]: {
     channelListQuery: GroupChannelListQuery;
-    currentUserId: string | undefined;
+    currentUserId?: string,
   };
 };
 

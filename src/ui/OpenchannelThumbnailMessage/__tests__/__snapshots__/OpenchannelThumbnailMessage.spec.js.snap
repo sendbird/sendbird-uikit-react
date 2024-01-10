@@ -15,7 +15,7 @@ exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the Opencha
         <div
           class="sendbird-openchannel-thumbnail-message__left__avatar sendbird-avatar"
           role="button"
-          style="height: 28px; width: 28px; z-index: 0; left: 0px;"
+          style="height: 28px; width: 28px; z-index: 0;"
           tabindex="0"
         >
           <div

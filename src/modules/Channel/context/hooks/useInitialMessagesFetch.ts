@@ -104,8 +104,7 @@ function useInitialMessagesFetch(
               messages: messages as CoreMessageType[],
             },
           });
-          multipleFilesMessageCount = messages.filter((message) => isMultipleFilesMessage(message as CoreMessageType),
-          ).length;
+          multipleFilesMessageCount = messages.filter((message) => isMultipleFilesMessage(message as CoreMessageType)).length;
         })
         .catch((error) => {
           logger.error('Channel: Fetching messages failed', error);

@@ -36,15 +36,14 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
     onProfileEditSuccess,
     currentChannel,
     setCurrentChannel,
-    highlightedMessage,
-    setHighlightedMessage,
     startingPoint,
     setStartingPoint,
     threadTargetMessage,
     setThreadTargetMessage,
+    highlightedMessage,
+    setHighlightedMessage,
   } = props;
   const [panel, setPanel] = useState(PANELS.CHANNEL_LIST);
-  const [animatedMessageId, setAnimatedMessageId] = useState<number | null>(null);
 
   const store = useSendbirdStateContext();
   const sdk = store?.stores?.sdkStore?.sdk;
@@ -61,7 +60,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
 
   useEffect(() => {
     if (panel !== PANELS.CHANNEL) {
-      goToMessage(null, () => setAnimatedMessageId(null));
+      goToMessage(null, () => setHighlightedMessage(null));
     }
   }, [panel]);
 
@@ -136,8 +135,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
               isMessageGroupingEnabled={isMessageGroupingEnabled}
               isMultipleFilesMessageEnabled={isMultipleFilesMessageEnabled}
               startingPoint={startingPoint}
-              animatedMessage={animatedMessageId}
-              highlightedMessage={highlightedMessage}
+              animatedMessage={highlightedMessage}
               onChatHeaderActionClick={() => {
                 setPanel(PANELS.CHANNEL_SETTINGS);
               }}
@@ -204,7 +202,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
                 setCurrentChannel(channel);
                 goToMessage(message, (messageId) => {
                   setPanel(PANELS.CHANNEL);
-                  setAnimatedMessageId(messageId);
+                  setHighlightedMessage(messageId);
                 });
               }}
             />

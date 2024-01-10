@@ -154,8 +154,8 @@ interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInte
   highLightedMessageId: number;
   nicknamesMap: Map<string, string>;
   emojiAllMap: any;
-  onScrollCallback: () => void;
-  onScrollDownCallback: any;
+  onScrollCallback: (callback: () => void) => void;
+  onScrollDownCallback: (callback: (param: [BaseMessage[], null] | [null, unknown]) => void) => void;
   scrollRef: React.MutableRefObject<HTMLDivElement>;
   setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
   setHighLightedMessageId: React.Dispatch<React.SetStateAction<number>>;
@@ -396,7 +396,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   );
   const resendMessage = useResendMessageCallback(
     { currentGroupChannel, messagesDispatcher },
-    { logger },
+    { logger, pubSub },
   );
   const [messageInputRef, sendMessage] = useSendMessageCallback(
     {

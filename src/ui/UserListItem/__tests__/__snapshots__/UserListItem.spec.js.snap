@@ -12,7 +12,7 @@ exports[`ui/UserListItem should do a snapshot test of the UserListItem DOM 1`] =
       <div
         class="sendbird-user-list-item__avatar sendbird-avatar"
         role="button"
-        style="height: 40px; width: 40px; z-index: 0; left: 0px;"
+        style="height: 40px; width: 40px; z-index: 0;"
         tabindex="0"
       >
         <div

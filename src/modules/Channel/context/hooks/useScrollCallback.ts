@@ -29,7 +29,7 @@ function useScrollCallback(
   { currentGroupChannel, oldestMessageTimeStamp, userFilledMessageListQuery, replyType }: UseScrollCallbackOptions,
   { hasMorePrev, logger, messagesDispatcher, sdk }: UseScrollCallbackParams,
 ) {
-  return useCallback(() => {
+  return useCallback((callback: () => void) => {
     if (!hasMorePrev) {
       return;
     }
@@ -65,6 +65,7 @@ function useScrollCallback(
           type: messageActionTypes.FETCH_PREV_MESSAGES_SUCCESS,
           payload: { currentGroupChannel, messages: messages as CoreMessageType[] },
         });
+        if (callback) setTimeout(() => callback());
       })
       .catch(() => {
         messagesDispatcher({

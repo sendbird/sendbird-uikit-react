@@ -19,6 +19,8 @@ import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
 import { USER_MENTION_PREFIX } from '../../modules/Message/consts';
 import { TOKEN_TYPES } from '../../modules/Message/utils/tokens/types';
 import { checkIfFileUploadEnabled } from './messageInputUtils';
+import { isMobileIOS } from '../../utils/utils';
+
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { User } from '@sendbird/chat';
 import { OpenChannel } from '@sendbird/chat/openChannel';
@@ -460,7 +462,16 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
                 && internalRef?.current?.textContent?.trim().length > 0
                 && e?.nativeEvent?.isComposing !== true
               ) {
-                e.preventDefault();
+                /**
+                 * NOTE: contentEditable does not work as expected in mobile WebKit(Safari).
+                 * Events and properties related to composing, necessary for combining characters like Hangul, also seem to be not handled properly.
+                 * When calling e.preventDefault(), it appears that string composition-related behaviors, in addition to the default actions, are also prevented. (maybe)
+                 *
+                 * Due to this issue, even though reset the input with innerHTML, incomplete text compositions from the previous input are displayed in the next input.
+                 * */
+                if (!isMobileIOS(navigator.userAgent)) {
+                  e.preventDefault();
+                }
                 sendMessage();
               }
               if (

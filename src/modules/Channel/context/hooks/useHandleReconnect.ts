@@ -9,7 +9,7 @@ import { Logger } from '../../../../lib/SendbirdState';
 import { MarkAsReadSchedulerType } from '../../../../lib/hooks/useMarkAsReadScheduler';
 import useReconnectOnIdle from './useReconnectOnIdle';
 import { ChannelActionTypes } from '../dux/actionTypes';
-import { CoreMessageType } from '../../../../utils';
+import { CoreMessageType, isMultipleFilesMessage } from '../../../../utils';
 import { SdkStore } from '../../../../lib/types';
 
 interface DynamicParams {
@@ -54,6 +54,7 @@ function useHandleReconnect(
           prevResultSize: PREV_RESULT_SIZE,
           isInclusive: true,
           includeReactions: isReactionEnabled,
+          includeMetaArray: true,
           nextResultSize: NEXT_RESULT_SIZE,
         };
         if (replyType && replyType === 'QUOTE_REPLY') {
@@ -72,6 +73,7 @@ function useHandleReconnect(
           payload: null,
         });
 
+        let multipleFilesMessageCount = 0;
         sdk?.groupChannel?.getChannel(currentGroupChannel?.url)
           .then((groupChannel) => {
             const lastMessageTime = new Date().getTime();
@@ -88,7 +90,15 @@ function useHandleReconnect(
                     messages: messages as CoreMessageType[],
                   },
                 });
-                setTimeout(() => utils.scrollIntoLast(0, scrollRef));
+                multipleFilesMessageCount = messages.filter((message) => isMultipleFilesMessage(message as CoreMessageType)).length;
+                setTimeout(
+                  () => utils.scrollIntoLast(0, scrollRef),
+                  /**
+                   * Rendering MFM takes long time so we need this.
+                   * But later we should find better solution.
+                   */
+                  Math.min(multipleFilesMessageCount * 100, 1000),
+                );
               })
               .catch((error) => {
                 logger.error('Channel: Fetching messages failed', error);

@@ -1,5 +1,12 @@
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { FileMessage, MessageType, MultipleFilesMessage, SendingStatus, UserMessage } from '@sendbird/chat/message';
+import {
+  FileMessage,
+  MessageType,
+  MultipleFilesMessage,
+  SendingStatus,
+  UploadableFileInfo,
+  UserMessage,
+} from '@sendbird/chat/message';
 import { useCallback } from 'react';
 import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
@@ -25,16 +32,17 @@ export default function useResendMessageCallback({
 }: StaticProps): (failedMessage: SendableMessageType) => void {
   return useCallback((failedMessage: SendableMessageType) => {
     if ((failedMessage as SendableMessageType)?.isResendable) {
-      failedMessage.sendingStatus = SendingStatus.PENDING;
       logger.info('Thread | useResendMessageCallback: Resending failedMessage start.', failedMessage);
-      threadDispatcher({
-        type: ThreadContextActionTypes.RESEND_MESSAGE_START,
-        payload: failedMessage,
-      });
-
       if (failedMessage?.isUserMessage?.() || failedMessage?.messageType === MessageType.USER) {
         try {
           currentChannel?.resendMessage(failedMessage as UserMessage)
+            .onPending((message) => {
+              logger.info('Thread | useResendMessageCallback: Resending user message started.', message);
+              threadDispatcher({
+                type: ThreadContextActionTypes.RESEND_MESSAGE_START,
+                payload: { message },
+              });
+            })
             .onSucceeded((message) => {
               logger.info('Thread | useResendMessageCallback: Resending user message succeeded.', message);
               threadDispatcher({
@@ -63,9 +71,16 @@ export default function useResendMessageCallback({
             payload: { message: failedMessage },
           });
         }
-      } else if (failedMessage?.isFileMessage?.() || failedMessage?.messageType === MessageType.FILE) {
+      } else if (failedMessage?.isFileMessage?.()) {
         try {
           currentChannel?.resendMessage?.(failedMessage as FileMessage)
+            .onPending((message) => {
+              logger.info('Thread | useResendMessageCallback: Resending file message started.', message);
+              threadDispatcher({
+                type: ThreadContextActionTypes.RESEND_MESSAGE_START,
+                payload: { message },
+              });
+            })
             .onSucceeded((message) => {
               logger.info('Thread | useResendMessageCallback: Resending file message succeeded.', message);
               threadDispatcher({
@@ -97,8 +112,31 @@ export default function useResendMessageCallback({
       } else if (failedMessage?.isMultipleFilesMessage?.()) {
         try {
           currentChannel?.resendMessage?.(failedMessage as MultipleFilesMessage)
-            // TODO: Handle on pending event (Same goes for the other message types).
-            // TODO: Handle on file info upload event.
+            .onPending((message) => {
+              logger.info('Thread | useResendMessageCallback: Resending multiple files message started.', message);
+              threadDispatcher({
+                type: ThreadContextActionTypes.RESEND_MESSAGE_START,
+                payload: { message },
+              });
+            })
+            .onFileUploaded((requestId, index, uploadableFileInfo: UploadableFileInfo, error) => {
+              logger.info('Thread | useResendMessageCallback: onFileUploaded during resending multiple files message.', {
+                requestId,
+                index,
+                error,
+                uploadableFileInfo,
+              });
+              pubSub.publish(topics.ON_FILE_INFO_UPLOADED, {
+                response: {
+                  channelUrl: currentChannel.url,
+                  requestId,
+                  index,
+                  uploadableFileInfo,
+                  error,
+                },
+                publishingModules: [PublishingModuleType.THREAD],
+              });
+            })
             .onSucceeded((message: MultipleFilesMessage) => {
               logger.info('Thread | useResendMessageCallback: Resending MFM succeeded.', message);
               threadDispatcher({

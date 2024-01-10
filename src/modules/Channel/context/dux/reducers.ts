@@ -168,9 +168,14 @@ export default function channelReducer(
     })
     .with({ type: channelActions.SEND_MESSAGE_SUCCESS }, (action) => {
       const message = action.payload;
+
+      /**
+       * Admin messages do not have reqId. We need to include them.
+       */
       const filteredMessages = state.allMessages.filter(
-        (m) => hasReqId(m) && m?.reqId !== message?.reqId,
+        (m) => !hasReqId(m) || m?.reqId !== message?.reqId,
       );
+
       // [Policy] Pending messages and failed messages
       // must always be at the end of the message list
       return {
@@ -324,7 +329,7 @@ export default function channelReducer(
     .with({ type: channelActions.RESEND_MESSAGE_START }, (action) => {
       return {
         ...state,
-        allMessages: state.allMessages.map((m) => compareIds(hasReqId(m) && m.reqId, action.payload.reqId)
+        localMessages: state.localMessages.map((m) => compareIds(hasReqId(m) && m.reqId, action.payload.reqId)
           ? action.payload
           : m,
         ),

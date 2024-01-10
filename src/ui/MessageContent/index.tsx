@@ -27,7 +27,7 @@ import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { EmojiContainer } from '@sendbird/chat';
-import { AdminMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
+import { AdminMessage, Feedback, FeedbackRating, FileMessage, UserMessage } from '@sendbird/chat/message';
 import useLongPress from '../../hooks/useLongPress';
 import MobileMenu from '../MobileMenu';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
@@ -38,6 +38,11 @@ import { noop } from '../../utils/utils';
 import MessageProfile, { MessageProfileProps } from './MessageProfile';
 import MessageBody, { MessageBodyProps } from './MessageBody';
 import MessageHeader, { MessageHeaderProps } from './MessageHeader';
+import Icon, { IconTypes } from '../Icon';
+import FeedbackIconButton from '../FeedbackIconButton';
+import MobileFeedbackMenu from '../MobileFeedbackMenu';
+import MessageFeedbackModal from '../../modules/Channel/components/MessageFeedbackModal';
+import { SbFeedbackStatus } from './types';
 
 export interface MessageContentProps {
   className?: string | Array<string>;
@@ -129,8 +134,13 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const contentRef = useRef(null);
   const { isMobile } = useMediaQueryContext();
   const [showMenu, setShowMenu] = useState(false);
+
   const [mouseHover, setMouseHover] = useState(false);
   const [supposedHover, setSupposedHover] = useState(false);
+  // Feedback states
+  const [selectedFeedback, setSelectedFeedback] = useState<FeedbackRating>(null);
+  const [showFeedbackOptionsMenu, setShowFeedbackOptionsMenu] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
   const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
     || ((message as SendableMessageType)?.sendingStatus === 'pending')
@@ -148,6 +158,12 @@ export default function MessageContent(props: MessageContentProps): ReactElement
 
   // Thread replies
   const displayThreadReplies = message?.threadInfo?.replyCount > 0 && replyType === 'THREAD';
+
+  // Feedback buttons
+  const isFeedbackMessage = !isByMe
+    && message?.myFeedbackStatus
+    && message.myFeedbackStatus !== SbFeedbackStatus.NOT_APPLICABLE;
+  const feedbackMessageClassName = isFeedbackMessage ? 'sendbird-message-content__feedback' : '';
 
   // onMouseDown: (e: React.MouseEvent<T>) => void;
   // onTouchStart: (e: React.TouchEvent<T>) => void;
@@ -172,7 +188,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
 
   return (
     <div
-      className={getClassName([className, 'sendbird-message-content', isByMeClassName])}
+      className={getClassName([className, 'sendbird-message-content', isByMeClassName, feedbackMessageClassName])}
       onMouseOver={() => setMouseHover(true)}
       onMouseLeave={() => setMouseHover(false)}
     >
@@ -301,6 +317,47 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               }
             </div>
           )}
+          {/* Feedback buttons */}
+          {
+            isFeedbackMessage && <div
+              className='sendbird-message-content__middle__body-container__feedback-buttons-container'
+            >
+              <FeedbackIconButton
+                isSelected={message?.myFeedback?.rating === FeedbackRating.GOOD}
+                onClick={() => {
+                  setSelectedFeedback(FeedbackRating.GOOD);
+                  if (isMobile && message?.myFeedback?.rating === FeedbackRating.GOOD) {
+                    setShowFeedbackOptionsMenu(true);
+                  } else {
+                    setShowFeedbackModal(true);
+                  }
+                }}
+              >
+                <Icon
+                  type={IconTypes.FEEDBACK_LIKE}
+                  width='24px'
+                  height='24px'
+                />
+              </FeedbackIconButton>
+              <FeedbackIconButton
+                isSelected={message?.myFeedback?.rating === FeedbackRating.BAD}
+                onClick={() => {
+                  setSelectedFeedback(FeedbackRating.BAD);
+                  if (isMobile && message?.myFeedback?.rating === FeedbackRating.BAD) {
+                    setShowFeedbackOptionsMenu(true);
+                  } else {
+                    setShowFeedbackModal(true);
+                  }
+                }}
+              >
+                <Icon
+                  type={IconTypes.FEEDBACK_DISLIKE}
+                  width='24px'
+                  height='24px'
+                />
+              </FeedbackIconButton>
+            </div>
+          }
           {/* message timestamp when sent by others */}
           {(!isByMe && !chainBottom) && (
             <Label
@@ -386,6 +443,62 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               } else if (threadReplySelectType === ThreadReplySelectType.PARENT) {
                 scrollToMessage?.(message?.parentMessage?.createdAt || 0, message?.parentMessageId || 0);
               }
+            }}
+          />
+        )
+      }
+      {
+        showFeedbackOptionsMenu && (
+          <MobileFeedbackMenu
+            hideMenu={() => {
+              setShowFeedbackOptionsMenu(false);
+            }}
+            onEditFeedback={() => {
+              setShowFeedbackOptionsMenu(false);
+              setShowFeedbackModal(true);
+            }}
+            onRemoveFeedback={async () => {
+              await message.deleteFeedback(message.myFeedback.id);
+              setSelectedFeedback(null);
+              setShowFeedbackOptionsMenu(false);
+            }}
+          />
+        )
+      }
+      {/* Feedback Modal */}
+      {
+        showFeedbackModal && (
+          <MessageFeedbackModal
+            selectedFeedback={selectedFeedback}
+            message={message}
+            onSubmit={async (comment: string) => {
+              if (!selectedFeedback) {
+                return;
+              }
+              if (!message.myFeedback) {
+                await message.submitFeedback({
+                  rating: selectedFeedback,
+                  comment,
+                });
+              } else if (comment !== message.myFeedback.comment) {
+                const newFeedback: Feedback = new Feedback({
+                  id: message.myFeedback.id,
+                  rating: selectedFeedback,
+                  comment,
+                });
+                await message.updateFeedback(newFeedback);
+              }
+              setSelectedFeedback(null);
+              setShowFeedbackModal(false);
+            }}
+            onCancel={() => {
+              setSelectedFeedback(null);
+              setShowFeedbackModal(false);
+            }}
+            onRemove={async () => {
+              await message.deleteFeedback(message.myFeedback.id);
+              setSelectedFeedback(null);
+              setShowFeedbackModal(false);
             }}
           />
         )
