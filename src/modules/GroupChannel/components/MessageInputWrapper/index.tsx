@@ -20,4 +20,9 @@ export const MessageInputWrapper = (props: MessageInputWrapperProps) => {
   );
 };
 
+export {
+  VoiceMessageInputWrapper,
+  VoiceMessageInputWrapperProps,
+} from './VoiceMessageInputWrapper';
+
 export default MessageInputWrapper;
