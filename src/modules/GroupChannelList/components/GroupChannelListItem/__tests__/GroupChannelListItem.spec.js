@@ -10,7 +10,7 @@ import { LabelStringSet } from '../../../../../ui/Label'
 jest.useFakeTimers();
 jest.setSystemTime(new Date('March 2, 2022 08:15:52'));
 
-describe('ChannelPreview', () => {
+describe('GroupChannelListItem', () => {
   test('utils/getLastMessage returns lastMessage', function () {
     const text = 'example-text';
     const channel = {

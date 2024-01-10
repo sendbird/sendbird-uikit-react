@@ -29,11 +29,11 @@ export function useOnScrollPositionChangeDetector(
         clientHeight,
       } = event.target as HTMLDivElement;
       if (isAboutSame(scrollTop, 0, SCROLL_BUFFER)) {
-        onReachedTop();
+        onReachedTop?.();
       } else if (isAboutSame(scrollHeight, clientHeight + scrollTop, SCROLL_BUFFER)) {
-        onReachedBottom();
+        onReachedBottom?.();
       } else {
-        onInBetween();
+        onInBetween?.();
       }
     }
   });

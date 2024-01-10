@@ -53,6 +53,7 @@
     "@typescript-eslint/no-unused-expressions": "error",
     "react/display-name": "off",
     "react/function-component-definition": "off",
+    "react/prop-types": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
