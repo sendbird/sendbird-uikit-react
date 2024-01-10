@@ -1,0 +1,33 @@
+/**
+ * We operate the CSS files for Channel&GroupChannel modules in the GroupChannel.
+ * So keep in mind that you should consider both components when you make changes in this file.
+ */
+@import '../../../../styles/variables';
+
+.sendbird-message-input-wrapper--voice-message,
+.sendbird-message-input-wrapper {
+  position: relative;
+  width: 100%;
+
+  .sendbird-message-input-wrapper__quote-message-input {
+    position: relative;
+    width: 100%;
+    @include themed() {
+      border-top: solid 1px t(on-bg-4);
+    }
+  }
+
+  .sendbird-message-input-wrapper__message-input {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+.sendbird-message-input-wrapper--voice-message {
+  @include themed() {
+    border-top: 1px solid t(on-bg-4);
+  }
+}

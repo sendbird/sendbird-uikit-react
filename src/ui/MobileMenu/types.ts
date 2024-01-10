@@ -21,7 +21,7 @@ export interface BaseMenuProps {
   showEdit?: (bool: boolean) => void;
   showRemove?: (bool: boolean) => void;
   resendMessage?: (message: SendableMessageType) => void;
-  deleteMessage?: (message: CoreMessageType) => Promise<CoreMessageType>;
+  deleteMessage?: (message: CoreMessageType) => Promise<void>;
   setQuoteMessage?: (message: SendableMessageType) => void;
   isReactionEnabled?: boolean;
   parentRef?: React.RefObject<HTMLElement>;

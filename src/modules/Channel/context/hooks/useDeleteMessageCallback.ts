@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import { SendingStatus } from '@sendbird/chat/message';
 
 import * as messageActionTypes from '../dux/actionTypes';
 import { ChannelActionTypes } from '../dux/actionTypes';
 import { LoggerInterface } from '../../../../lib/Logger';
-import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { CoreMessageType, isSendableMessage } from '../../../../utils';
-import { SendingStatus } from '@sendbird/chat/message';
 
 type UseDeleteMessageCallbackOptions = {
   currentGroupChannel: null | GroupChannel;
@@ -19,7 +19,7 @@ function useDeleteMessageCallback(
   { logger }: UseDeleteMessageCallbackParams,
 ) {
   return useCallback(
-    (message: CoreMessageType): Promise<CoreMessageType> => {
+    (message: CoreMessageType): Promise<void> => {
       logger.info('Channel | useDeleteMessageCallback: Deleting message', message);
 
       const sendingStatus = isSendableMessage(message) ? message.sendingStatus : undefined;
@@ -32,7 +32,7 @@ function useDeleteMessageCallback(
             type: messageActionTypes.ON_MESSAGE_DELETED_BY_REQ_ID,
             payload: message.reqId,
           });
-          resolve(message);
+          resolve();
         } else {
           logger.info('Channel | useDeleteMessageCallback: Deleting message from remote:', sendingStatus);
           currentGroupChannel
@@ -43,7 +43,7 @@ function useDeleteMessageCallback(
                 type: messageActionTypes.ON_MESSAGE_DELETED,
                 payload: message.messageId,
               });
-              resolve(message);
+              resolve();
             })
             .catch((err) => {
               logger.warning('Channel | useDeleteMessageCallback: Deleting message failed!', err);

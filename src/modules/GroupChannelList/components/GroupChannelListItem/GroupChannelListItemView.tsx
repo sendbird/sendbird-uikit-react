@@ -16,7 +16,7 @@ import {
   getTotalMembers,
 } from './utils';
 
-import { TypingIndicatorText } from '../../../Channel/components/TypingIndicator';
+import { TypingIndicatorText } from '../../../GroupChannel/components/TypingIndicator';
 
 import Badge from '../../../../ui/Badge';
 import ChannelAvatar from '../../../../ui/ChannelAvatar';

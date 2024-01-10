@@ -19,7 +19,6 @@ import {
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { Role } from '../../lib/types';
 import { ReplyType } from '../../types';
-import { useChannelContext } from '../../modules/Channel/context/ChannelProvider';
 
 export interface MessageMenuProps {
   className?: string | Array<string>;
@@ -31,6 +30,7 @@ export interface MessageMenuProps {
   disableDeleteMessage?: boolean;
   showEdit?: (bool: boolean) => void;
   showRemove?: (bool: boolean) => void;
+  deleteMessage?: (message: SendableMessageType) => void;
   resendMessage?: (message: SendableMessageType) => void;
   setQuoteMessage?: (message: SendableMessageType) => void;
   setSupposedHover?: (bool: boolean) => void;
@@ -48,6 +48,7 @@ export function MessageMenu({
   disableDeleteMessage = null,
   showEdit,
   showRemove,
+  deleteMessage,
   resendMessage,
   setQuoteMessage,
   setSupposedHover,
@@ -57,7 +58,6 @@ export function MessageMenu({
   const { stringSet } = useContext(LocalizationContext);
   const triggerRef = useRef(null);
   const containerRef = useRef(null);
-  const channelStore = useChannelContext();
 
   const showMenuItemCopy: boolean = isUserMessage(message as UserMessage);
   const showMenuItemEdit: boolean = (!channel?.isEphemeral && isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe);
@@ -213,7 +213,7 @@ export function MessageMenu({
                   className="sendbird-message-item-menu__list__menu-item menu-item-delete"
                   onClick={() => {
                     if (isFailedMessage(message)) {
-                      channelStore?.deleteMessage?.(message);
+                      deleteMessage?.(message);
                     } else if (!disabled) {
                       showRemove(true);
                       closeDropdown();

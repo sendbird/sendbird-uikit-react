@@ -1,0 +1,68 @@
+/**
+ * We operate the CSS files for Channel&GroupChannel modules in the GroupChannel.
+ * So keep in mind that you should consider both components when you make changes in this file.
+ */
+@import '../../../../styles/variables';
+
+.sendbird-chat-header {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 64px;
+  min-height: 64px;
+  padding-left: 20px;
+  padding-right: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  @include themed() {
+    border-bottom: 1px solid t(on-bg-4);
+    background-color: t(bg-0);
+  }
+
+  &__left {
+    margin-right: 24px;
+  }
+  &__left, &__right {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .sendbird-chat-header__left__title {
+    margin-left: 8px;
+    margin-right: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 780px;
+    @include mobile() {
+      max-width: calc(100vw - 240px);
+    }
+  }
+
+  .sendbird-chat-header__left__subtitle {
+    max-width: 240px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sendbird-chat-header__right__mute {
+    margin-right: 18px;
+  }
+
+  .sendbird-iconbutton--pressed {
+    background-color: inherit;
+  }
+
+  .sendbird-chat-header__right__info {
+    margin-left: 16px;
+  }
+}
+
+.sendbird-chat-header__icon_back {
+  margin-right: 8px;
+}

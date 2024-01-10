@@ -24,13 +24,13 @@ import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import MessageInput from '../../../../ui/MessageInput';
 import MessageContent, { type MessageContentProps } from '../../../../ui/MessageContent';
 import FileViewer from '../FileViewer';
-import RemoveMessageModal from '../RemoveMessageModal';
+import RemoveMessageModal from '../../../GroupChannel/components/RemoveMessageModal';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import { EveryMessage, RenderCustomSeparatorProps, RenderMessageParamsType } from '../../../../types';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
-import SuggestedReplies from '../SuggestedReplies';
 import { omitObjectProperties } from '../../../../utils/omitObjectProperty';
+import SuggestedReplies from '../../../GroupChannel/components/SuggestedReplies';
 
 export interface MessageUIProps {
   message: EveryMessage;

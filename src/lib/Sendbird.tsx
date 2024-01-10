@@ -49,6 +49,7 @@ import {
 import { GlobalModalProvider } from '../hooks/useModal';
 import { RenderUserProfileProps } from '../types';
 import PUBSUB_TOPICS, { SBUGlobalPubSub, SBUGlobalPubSubTopicPayloadUnion } from './pubSub/topics';
+import { EmojiManager } from './emojiManager';
 
 export { useSendbirdStateContext } from '../hooks/useSendbirdStateContext';
 
@@ -303,6 +304,14 @@ const SendbirdSDK = ({
     return uploadSizeLimit;
   }, [uploadSizeLimit]);
 
+  // Emoji Manager
+  const emojiManager = useMemo(() => {
+    return new EmojiManager({
+      sdk,
+      logger,
+    });
+  }, [sdkStore.initialized]);
+
   return (
     <SendbirdSdkContext.Provider
       value={{
@@ -366,10 +375,11 @@ const SendbirdSDK = ({
             sdkInitialized && configsWithAppAttr(sdk).groupChannel.setting.enableMessageSearch,
           // Remote configs set from dashboard by UIKit feature configuration
           groupChannel: {
-            enableOgtag:
-              sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableOgtag,
+            enableOgtag: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableOgtag,
             enableTypingIndicator: configs.groupChannel.channel.enableTypingIndicator,
             enableDocument: configs.groupChannel.channel.input.enableDocument,
+            enableReactions: configs.groupChannel.channel.enableReactions,
+            replyType: configs.groupChannel.channel.replyType,
             threadReplySelectType: getCaseResolvedThreadReplySelectType(configs.groupChannel.channel.threadReplySelectType).lowerCase,
             typingIndicatorTypes: configs.groupChannel.channel.typingIndicatorTypes,
             enableFeedback: configs.groupChannel.channel.enableFeedback,
@@ -381,6 +391,7 @@ const SendbirdSDK = ({
           },
         },
         eventHandlers,
+        emojiManager,
       }}
     >
       <MediaQueryProvider logger={logger} breakpoint={breakpoint}>
