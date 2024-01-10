@@ -24,10 +24,7 @@ export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
     loading,
     isInvalid,
     renderChannelHeader = (props) => (
-      <GroupChannelHeader
-        {...props}
-        className="sendbird-conversation__channel-header"
-      />
+      <GroupChannelHeader {...props} />
     ),
     renderMessageList = (props) => (
       <MessageList
@@ -78,7 +75,7 @@ export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
 
   return (
     <div className='sendbird-conversation'>
-      {renderChannelHeader?.(props)}
+      {renderChannelHeader?.({ className: 'sendbird-conversation__channel-header' })}
       {renderMessageList?.(props)}
       <div className="sendbird-conversation__footer">
         {renderMessageInput?.(props)}

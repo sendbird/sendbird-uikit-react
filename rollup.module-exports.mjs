@@ -63,7 +63,7 @@ export default {
   'Channel/hooks/useHandleUploadFiles': 'src/modules/Channel/context/hooks/useHandleUploadFiles.tsx',
   'Channel/utils/getMessagePartsInfo': 'src/modules/GroupChannel/components/MessageList/getMessagePartsInfo.ts', // FIXME: leave for legacy
   'Channel/utils/compareMessagesForGrouping': 'src/utils/messages.ts',  // TODO: export from global utils path
-  'Channel/components/ChannelHeader': 'src/modules/GroupChannel/components/GroupChannelHeader/index.tsx', // FIXME: leave for legacy
+  'Channel/components/ChannelHeader': 'src/modules/Channel/components/ChannelHeader/index.tsx',
   'Channel/components/ChannelUI': 'src/modules/Channel/components/ChannelUI/index.tsx',
   'Channel/components/FileViewer': 'src/modules/Channel/components/FileViewer/index.tsx',
   'Channel/components/FrozenNotification': 'src/modules/GroupChannel/components/FrozenNotification/index.tsx', // FIXME: leave for legacy

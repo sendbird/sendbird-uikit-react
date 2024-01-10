@@ -3,9 +3,11 @@ import React from 'react';
 import type { FileMessageCreateParams } from '@sendbird/chat/message';
 
 import type { SendableMessageType } from '../../../../utils';
+import type { GroupChannelHeaderProps } from '../../../GroupChannel/components/GroupChannelHeader';
 import { useChannelContext } from '../../context/ChannelProvider';
 import { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
 import { GroupChannelUIView } from '../../../GroupChannel/components/GroupChannelUI/GroupChannelUIView';
+import ChannelHeader from '../ChannelHeader';
 import MessageList from '../MessageList';
 
 export interface ChannelUIProps {
@@ -13,7 +15,7 @@ export interface ChannelUIProps {
   renderPlaceholderLoader?: () => React.ReactElement;
   renderPlaceholderInvalid?: () => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
-  renderChannelHeader?: () => React.ReactElement;
+  renderChannelHeader?: (props: GroupChannelHeaderProps) => React.ReactElement;
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderMessageInput?: () => React.ReactElement;
   renderFileUploadIcon?: () => React.ReactElement;
@@ -57,6 +59,7 @@ const ChannelUI = (props: ChannelUIProps) => {
       sendMultipleFilesMessage={({ fileInfoList, parentMessageId }) => (
         sendMultipleFilesMessage(fileInfoList.map((fileInfo) => fileInfo.file) as File[], { parentMessageId } as SendableMessageType)
       )}
+      renderChannelHeader={(props) => (<ChannelHeader {...props} />)}
       renderMessageList={(props) => (<MessageList {...props} />)}
     />
   );
