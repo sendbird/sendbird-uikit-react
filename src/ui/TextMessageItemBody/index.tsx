@@ -40,7 +40,7 @@ export default function TextMessageItemBody({
     return tokenizeMessage({
       messageText: message?.message,
     });
-  }, [message?.updatedAt]);
+  }, [message]);
   return (
     <Label
       type={LabelTypography.BODY_1}
