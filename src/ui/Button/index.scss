@@ -4,9 +4,11 @@
   border-radius: 4px;
   box-shadow: none;
   cursor: pointer;
-  display: inline-block;
   font-family: var(--sendbird-font-family-default);
   padding: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     box-shadow: none;
