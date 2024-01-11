@@ -315,8 +315,8 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
   // SideEffect: Reset MessageCollection with startingPoint prop.
   useEffect(() => {
     if (typeof startingPoint === 'number') {
-      // We are not handle animation for message search here.
-      // Please update animatedMessageId prop to trigger animation.
+      // We do not handle animation for message search here.
+      // Please update the animatedMessageId prop to trigger the animation.
       scrollToMessage(startingPoint, 0, false);
     }
   }, [startingPoint]);
