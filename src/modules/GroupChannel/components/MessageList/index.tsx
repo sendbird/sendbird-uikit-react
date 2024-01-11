@@ -128,8 +128,6 @@ export const MessageList = ({
 
   return (
     <>
-      {/* TODO: Display the loading indicator while adjusting the scroll position */}
-      {/* {!isScrolled && <PlaceHolder type={PlaceHolderTypes.LOADING} />} */}
       <div className={`sendbird-conversation__messages ${className}`}>
         <div className="sendbird-conversation__scroll-container">
           <div className="sendbird-conversation__padding" />
