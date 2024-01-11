@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext, useRef } from 'react';
+import React, {ReactElement, useContext, useRef, useState} from 'react';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Modal from '../../../../ui/Modal';
 import Button, { ButtonTypes } from '../../../../ui/Button';
@@ -29,6 +29,11 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
 
   const { stringSet } = useContext(LocalizationContext);
   const { isMobile } = useMediaQueryContext();
+
+  const [isEdit] = useState<boolean>(
+    message?.myFeedback
+    && selectedFeedback === message.myFeedback.rating
+  );
 
   const modalRef = useRef(null);
   const inputRef = useRef(null);
@@ -79,7 +84,7 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
               </Button>
               <Button onClick={() => onSubmit?.(inputRef.current.value ?? '')}>
                 <Label type={LabelTypography.BUTTON_3} color={LabelColors.ONCONTENT_1}>
-                  {stringSet.BUTTON__SUBMIT}
+                  { isEdit ? stringSet.BUTTON__SAVE : stringSet.BUTTON__SUBMIT }
                 </Label>
               </Button>
             </div>
@@ -90,10 +95,7 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
           <Input
             name='sendbird-message-feedback-modal-body__root'
             ref={inputRef}
-            value={(message?.myFeedback && selectedFeedback === message.myFeedback.rating)
-              ? message.myFeedback?.comment
-              : undefined
-            }
+            value={isEdit ? message.myFeedback?.comment : undefined}
             placeHolder={stringSet.FEEDBACK_CONTENT_PLACEHOLDER}
             autoFocus={true}
           />
