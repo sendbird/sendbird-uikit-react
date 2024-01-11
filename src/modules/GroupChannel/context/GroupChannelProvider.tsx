@@ -83,6 +83,7 @@ export interface GroupChannelContextProps {
 
 type MessageCollectionHookValues = Pick<
   ReturnType<typeof useGroupChannelMessages>,
+  | 'initialized'
   | 'loading'
   | 'refreshing'
   | 'messages'
@@ -298,16 +299,11 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
   }, [messageDataSource.initialized, channelUrl]);
 
   // SideEffect: Reset MessageCollection with startingPoint prop.
-  useAsyncEffect(async () => {
-    const element = scrollRef.current;
-    if (!element) return;
-
+  useEffect(() => {
     if (typeof startingPoint === 'number') {
-      await messageDataSource.resetWithStartingPoint(startingPoint);
-      setTimeout(() => {
-        const offset = getMessageTopOffset(startingPoint);
-        if (offset) scrollPubSub.publish('scroll', { top: offset, lazy: false });
-      });
+      // We are not handle animation for message search here.
+      // Please update animatedMessageId prop to trigger animation.
+      scrollToMessage(startingPoint, 0, false);
     }
   }, [startingPoint]);
 
@@ -317,8 +313,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
   }, [_animatedMessageId]);
 
   const scrollToBottom = usePreservedCallback(async () => {
-    const element = scrollRef.current;
-    if (!element) return;
+    if (!scrollRef.current) return;
 
     setAnimatedMessageId(0);
     setIsScrollBottomReached(true);
@@ -357,7 +352,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     clickHandler.deactivate();
 
     setAnimatedMessageId(0);
-    const message = messageDataSource.messages.find((it) => it.messageId === messageId);
+    const message = messageDataSource.messages.find((it) => it.messageId === messageId || it.createdAt === createdAt);
     if (message) {
       const topOffset = getMessageTopOffset(message.createdAt);
       if (topOffset) scrollPubSub.publish('scroll', { top: topOffset });
