@@ -1,4 +1,4 @@
-import React, {ReactElement, useContext, useRef, useState} from 'react';
+import React, { ReactElement, useContext, useRef, useState } from 'react';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Modal from '../../../../ui/Modal';
 import Button, { ButtonTypes } from '../../../../ui/Button';
@@ -32,7 +32,7 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
 
   const [isEdit] = useState<boolean>(
     message?.myFeedback
-    && selectedFeedback === message.myFeedback.rating
+    && selectedFeedback === message.myFeedback.rating,
   );
 
   const modalRef = useRef(null);
