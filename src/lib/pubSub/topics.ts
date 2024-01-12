@@ -23,7 +23,7 @@ export enum PUBSUB_TOPICS {
   UPDATE_OPEN_CHANNEL = 'UPDATE_OPEN_CHANNEL',
 }
 
-type SendMessagePayload = {
+export type PubSubSendMessagePayload = {
   message: SendableMessageType;
   channel: GroupChannel | OpenChannel;
   publishingModules: PublishingModuleType[];
@@ -32,7 +32,7 @@ type SendMessagePayload = {
 export type SBUGlobalPubSubTopicPayloadUnion =
   | {
       topic: PUBSUB_TOPICS.SEND_MESSAGE_START;
-      payload: SendMessagePayload & {
+      payload: PubSubSendMessagePayload & {
         message: SendableMessageType & {
           // TODO: remove data pollution
           url?: string; // custom local file url
@@ -42,17 +42,17 @@ export type SBUGlobalPubSubTopicPayloadUnion =
     }
   | {
       topic: PUBSUB_TOPICS.SEND_MESSAGE_FAILED;
-      payload: SendMessagePayload & {
+      payload: PubSubSendMessagePayload & {
         error: Error;
       };
     }
   | {
       topic: PUBSUB_TOPICS.SEND_USER_MESSAGE;
-      payload: SendMessagePayload;
+      payload: PubSubSendMessagePayload;
     }
   | {
       topic: PUBSUB_TOPICS.SEND_FILE_MESSAGE;
-      payload: SendMessagePayload;
+      payload: PubSubSendMessagePayload;
     }
   | {
       topic: PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED;
