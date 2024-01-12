@@ -207,11 +207,9 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
   );
 
   const messageDataSource = useGroupChannelMessages(sdk, currentChannel, {
-    collectionCreator: getCollectionCreator(currentChannel, {
-      startingPoint,
-      replyType: chatReplyType,
-      ...messageListQueryParams,
-    }),
+    startingPoint,
+    replyType: chatReplyType,
+    collectionCreator: getCollectionCreator(currentChannel, messageListQueryParams),
     shouldCountNewMessages: () => !isScrollBottomReached,
     markAsRead: (channels) => {
       if (!disableMarkAsRead && isScrollBottomReached) {
@@ -579,10 +577,8 @@ const usePreventDuplicateRequest = () => {
 };
 
 function getCollectionCreator(groupChannel: GroupChannel, messageListQueryParams?: MessageListQueryParamsType) {
-  if (!messageListQueryParams) return undefined;
-
-  return (defaultParams: MessageCollectionParams) => {
-    const params = { ...defaultParams, ...messageListQueryParams };
+  return (defaultParams: MessageListQueryParamsType) => {
+    const params = { ...defaultParams, prevResultLimit: 30, nextResultLimit: 30, ...messageListQueryParams };
     return groupChannel.createMessageCollection({
       ...params,
       filter: new MessageFilter(params),

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { PropsWithChildren, useContext, useEffect, useState } from 'react';
 
 import type { User } from '@sendbird/chat';
 import type { GroupChannel, GroupChannelCreateParams, GroupChannelFilterParams } from '@sendbird/chat/groupChannel';
@@ -46,7 +46,7 @@ interface GroupChannelListContextType {
   onUpdatedUserProfile?(user: User): void;
 }
 
-export interface GroupChannelListProviderProps extends Partial<GroupChannelListContextType>, UserProfileProviderProps, React.PropsWithChildren { }
+export interface GroupChannelListProviderProps extends PropsWithChildren<Partial<GroupChannelListContextType> & UserProfileProviderProps> {}
 
 export interface GroupChannelListProviderInterface extends GroupChannelListContextType, ReturnType<typeof useGroupChannelList> {
   typingChannelUrls: Array<string>;
@@ -111,29 +111,23 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
   const globalStore = useSendbirdStateContext();
   const { config, stores } = globalStore;
   const { sdkStore } = stores;
-  const {
-    isTypingIndicatorEnabledOnChannelList = false,
-    isMessageReceiptStatusEnabledOnChannelList = false,
-  } = config;
+  const { isTypingIndicatorEnabledOnChannelList = false, isMessageReceiptStatusEnabledOnChannelList = false } = config;
 
   const sdk = sdkStore.sdk;
   const isConnected = useOnlineStatus(sdk, config.logger);
   const scheduler = useMarkAsDeliveredScheduler({ isConnected }, config);
 
-  const channelListStore = useGroupChannelList(
-    sdk,
-    {
-      collectionCreator: getCollectionCreator(sdk, channelListQueryParams),
-      markAsDelivered: (channels) => channels.forEach(scheduler.push),
-      onChannelsDeleted: (channelUrls) => {
-        channelUrls.forEach((url) => {
-          if (url === selectedChannelUrl) onChannelSelect(null);
-        });
-      },
+  const channelListDataSource = useGroupChannelList(sdk, {
+    collectionCreator: getCollectionCreator(sdk, channelListQueryParams),
+    markAsDelivered: (channels) => channels.forEach(scheduler.push),
+    onChannelsDeleted: (channelUrls) => {
+      channelUrls.forEach((url) => {
+        if (url === selectedChannelUrl) onChannelSelect(null);
+      });
     },
-  );
+  });
 
-  const { refreshing, initialized, groupChannels, refresh, loadMore } = channelListStore;
+  const { refreshing, initialized, groupChannels, refresh, loadMore } = channelListDataSource;
 
   // Auto select channel
   useEffect(() => {
@@ -201,9 +195,7 @@ export function useGroupChannelListContext(): GroupChannelListProviderInterface 
 }
 
 function getCollectionCreator(sdk: SdkStore['sdk'], channelListQueryParams?: ChannelListQueryParamsType) {
-  if (!channelListQueryParams) return undefined;
-
-  return (defaultParams) => {
+  return (defaultParams: ChannelListQueryParamsType) => {
     const params = { ...defaultParams, ...channelListQueryParams };
     return sdk.groupChannel.createGroupChannelCollection({
       ...params,
