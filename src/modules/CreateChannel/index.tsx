@@ -12,25 +12,9 @@ export interface CreateChannelProps extends CreateChannelProviderProps, CreateCh
 }
 
 const CreateChannel: React.FC<CreateChannelProps> = (props: CreateChannelProps) => {
-  const {
-    onBeforeCreateChannel,
-    userListQuery,
-    onCreateChannel,
-    onClickCreateChannel,
-    onCancel,
-    renderStepOne,
-  } = props;
   return (
-    <CreateChannelProvider
-      onBeforeCreateChannel={onBeforeCreateChannel}
-      userListQuery={userListQuery}
-      onCreateChannel={onCreateChannel}
-      onClickCreateChannel={onClickCreateChannel}
-    >
-      <CreateChannelUI
-        renderStepOne={renderStepOne}
-        onCancel={onCancel}
-      />
+    <CreateChannelProvider {...props}>
+      <CreateChannelUI {...props}/>
     </CreateChannelProvider>
   );
 };

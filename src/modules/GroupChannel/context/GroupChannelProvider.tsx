@@ -15,6 +15,7 @@ import {
   MessageTypeFilter,
 } from '@sendbird/chat/message';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import type { MessageFilterParams, MessageCollectionParams } from '@sendbird/chat/groupChannel';
 import { MessageFilter } from '@sendbird/chat/groupChannel';
 import { useAsyncEffect, useGroupChannelMessages, useIIFE, usePreservedCallback } from '@sendbird/uikit-tools';
 
@@ -38,18 +39,7 @@ import { useMessageListScroll } from './hooks/useMessageListScroll';
 import { MessageListParams } from '../../Channel/context/ChannelProvider';
 
 type OnBeforeHandler<T> = (params: T) => T | Promise<T>;
-/**
- * Because we depend on the Collection's default option (ChatSDK),
- * we don't set following options in UIKit
- */
-type GroupChannelMessageListParams = Omit<MessageListParams,
-  | 'reverse'
-  | 'includeMetaArray'
-  | 'includeReactions'
-  | 'includeThreadInfo'
-  | 'includeParentMessageInfo'
-  | 'showSubchannelMessagesOnly'
->;
+type MessageListQueryParamsType = Omit<MessageCollectionParams, 'filter'> & MessageFilterParams;
 
 export interface GroupChannelContextProps {
   // Default
@@ -75,7 +65,7 @@ export interface GroupChannelContextProps {
   onMessageAnimated?: () => void;
 
   // Custom
-  messageListQueryParams: GroupChannelMessageListParams;
+  messageListQueryParams?: MessageListQueryParamsType;
   filterMessageList?(messages: CoreMessageType): boolean;
 
   // Handlers
@@ -581,7 +571,7 @@ const usePreventDuplicateRequest = () => {
   };
 };
 
-function getCollectionCreator(groupChannel: GroupChannel, messageListQueryParams: GroupChannelMessageListParams) {
+function getCollectionCreator(groupChannel: GroupChannel, messageListQueryParams: MessageListQueryParamsType) {
   if (!messageListQueryParams) return undefined;
 
   return () => {

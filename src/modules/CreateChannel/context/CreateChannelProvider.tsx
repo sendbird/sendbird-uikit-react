@@ -44,6 +44,11 @@ export interface CreateChannelContextInterface {
   createChannel: CreateChannel;
   sdk: SendbirdGroupChat;
   userListQuery?(): UserListQuery;
+  // /**
+  //  * @deprecated
+  //  * Use the onClickCreateChannel instead
+  //  */
+  overrideInviteUser?(params: OverrideInviteUserType): void;
   onClickCreateChannel?(params: OverrideInviteUserType): void;
   onCreateChannel?(channel: GroupChannel): void;
   step: number,
@@ -75,7 +80,12 @@ const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: Crea
       onBeforeCreateChannel,
       createChannel,
       onCreateChannel,
-      onClickCreateChannel: onClickCreateChannel ?? overrideInviteUser,
+      /**
+       * @deprecated
+       * Use the onClickCreateChannel instead
+       */
+      overrideInviteUser,
+      onClickCreateChannel,
       userListQuery: userListQuery || userListQuery_,
       step,
       setStep,
