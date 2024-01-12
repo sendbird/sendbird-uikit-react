@@ -1,16 +1,19 @@
 import React from 'react';
+import { GroupChannel as GroupChannelClass } from '@sendbird/chat/groupChannel';
 
 import type { DesktopLayoutProps } from './types';
 
-import ChannelList from '../ChannelList';
+import GroupChannel from '../GroupChannel';
+import GroupChannelList from '../GroupChannelList';
+
 import Channel from '../Channel';
+import ChannelList from '../ChannelList';
 import ChannelSettings from '../ChannelSettings';
 import MessageSearchPannel from '../MessageSearch';
 import Thread from '../Thread';
+import { SendableMessageType } from '../../utils';
 
-export const DesktopLayout: React.FC<DesktopLayoutProps> = (
-  props: DesktopLayoutProps,
-) => {
+export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayoutProps) => {
   const {
     isReactionEnabled,
     replyType,
@@ -34,25 +37,80 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
     setShowThread,
     threadTargetMessage,
     setThreadTargetMessage,
+    enableLegacyChannelModules,
   } = props;
+
+  const updateFocusedChannel = (channel: GroupChannelClass) => {
+    setStartingPoint?.(null);
+    setHighlightedMessage?.(null);
+    if (channel) {
+      setCurrentChannel(channel);
+    } else {
+      setCurrentChannel(null);
+    }
+  };
+
+  const onClickThreadReply = ({ message }: { message: SendableMessageType }) => {
+    // parent message
+    setShowSettings(false);
+    setShowSearch(false);
+    if (replyType === 'THREAD') {
+      setThreadTargetMessage(message);
+      setShowThread(true);
+    }
+  };
+
+  const channelListProps = {
+    allowProfileEdit,
+    activeChannelUrl: currentChannel?.url,
+    onProfileEditSuccess: onProfileEditSuccess,
+    disableAutoSelect: disableAutoSelect,
+    onChannelSelect: updateFocusedChannel,
+    // for GroupChannelList
+    selectedChannelUrl: currentChannel?.url,
+    onCreateChannel: updateFocusedChannel,
+    onUpdatedUserProfile: onProfileEditSuccess,
+  };
+
+  const channelProps = {
+    channelUrl: currentChannel?.url || '',
+    onChatHeaderActionClick: () => {
+      setShowSearch(false);
+      setShowThread(false);
+      setShowSettings(!showSettings);
+    },
+    onSearchClick: () => {
+      setShowSettings(false);
+      setShowThread(false);
+      setShowSearch(!showSearch);
+    },
+    onReplyInThread: onClickThreadReply,
+    onQuoteMessageClick: ({ message }) => {
+      // thread message
+      setShowSettings(false);
+      setShowSearch(false);
+      if (replyType === 'THREAD') {
+        setThreadTargetMessage(message);
+        setShowThread(true);
+      }
+    },
+    animatedMessage: highlightedMessage,
+    onMessageAnimated: () => setHighlightedMessage?.(null),
+    showSearchIcon: showSearchIcon,
+    startingPoint: startingPoint,
+    isReactionEnabled: isReactionEnabled,
+    replyType: replyType,
+    isMessageGroupingEnabled: isMessageGroupingEnabled,
+    isMultipleFilesMessageEnabled: isMultipleFilesMessageEnabled,
+    // for GroupChannel
+    animatedMessageId: highlightedMessage,
+    onReplyInThreadClick: onClickThreadReply,
+  };
+
   return (
     <div className="sendbird-app__wrap">
       <div className="sendbird-app__channellist-wrap">
-        <ChannelList
-          allowProfileEdit={allowProfileEdit}
-          activeChannelUrl={currentChannel?.url}
-          onProfileEditSuccess={onProfileEditSuccess}
-          disableAutoSelect={disableAutoSelect}
-          onChannelSelect={(channel) => {
-            setStartingPoint?.(null);
-            setHighlightedMessage?.(null);
-            if (channel) {
-              setCurrentChannel(channel);
-            } else {
-              setCurrentChannel(null);
-            }
-          }}
-        />
+        {enableLegacyChannelModules ? <ChannelList {...channelListProps} /> : <GroupChannelList {...channelListProps} />}
       </div>
       <div
         className={`
@@ -61,48 +119,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (
           sendbird-app__conversation-wrap
         `}
       >
-        <Channel
-          channelUrl={currentChannel?.url || ''}
-          onChatHeaderActionClick={() => {
-            setShowSearch(false);
-            setShowThread(false);
-            setShowSettings(!showSettings);
-          }}
-          onSearchClick={() => {
-            setShowSettings(false);
-            setShowThread(false);
-            setShowSearch(!showSearch);
-          }}
-          onReplyInThread={({ message }) => { // parent message
-            setShowSettings(false);
-            setShowSearch(false);
-            if (replyType === 'THREAD') {
-              setThreadTargetMessage(message);
-              setShowThread(true);
-            }
-          }}
-          onQuoteMessageClick={({ message }) => { // thread message
-            setShowSettings(false);
-            setShowSearch(false);
-            if (replyType === 'THREAD') {
-              setThreadTargetMessage(message);
-              setShowThread(true);
-            }
-          }}
-          onMessageAnimated={() => {
-            setHighlightedMessage(null);
-          }}
-          onMessageHighlighted={() => {
-            setHighlightedMessage?.(null);
-          }}
-          showSearchIcon={showSearchIcon}
-          startingPoint={startingPoint}
-          animatedMessage={highlightedMessage}
-          isReactionEnabled={isReactionEnabled}
-          replyType={replyType}
-          isMessageGroupingEnabled={isMessageGroupingEnabled}
-          isMultipleFilesMessageEnabled={isMultipleFilesMessageEnabled}
-        />
+        {enableLegacyChannelModules ? <Channel {...channelProps} /> : <GroupChannel {...channelProps} />}
       </div>
       {showSettings && (
         <div className="sendbird-app__settingspanel-wrap">

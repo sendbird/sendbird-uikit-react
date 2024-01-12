@@ -21,6 +21,7 @@ export interface AppLayoutProps {
   disableAutoSelect?: boolean;
   currentChannel?: GroupChannel;
   setCurrentChannel: React.Dispatch<GroupChannel | null>;
+  enableLegacyChannelModules: boolean;
 }
 
 interface SubLayoutCommonProps {

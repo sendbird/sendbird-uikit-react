@@ -19,6 +19,7 @@ export const AppLayout: React.FC<AppLayoutProps> = (
     disableAutoSelect,
     currentChannel,
     setCurrentChannel,
+    enableLegacyChannelModules,
   } = props;
 
   const globalStore = useSendbirdStateContext();
@@ -60,6 +61,7 @@ export const AppLayout: React.FC<AppLayoutProps> = (
               setStartingPoint={setStartingPoint}
               threadTargetMessage={threadTargetMessage}
               setThreadTargetMessage={setThreadTargetMessage}
+              enableLegacyChannelModules={enableLegacyChannelModules}
             />
           )
           : (
@@ -85,6 +87,7 @@ export const AppLayout: React.FC<AppLayoutProps> = (
               setHighlightedMessage={setHighlightedMessage}
               startingPoint={startingPoint}
               setStartingPoint={setStartingPoint}
+              enableLegacyChannelModules={enableLegacyChannelModules}
             />
           )
       }

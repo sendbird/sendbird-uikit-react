@@ -51,6 +51,12 @@ interface AppProps {
   isMessageGroupingEnabled?: AppLayoutProps['isMessageGroupingEnabled'];
   disableAutoSelect?: AppLayoutProps['disableAutoSelect'];
   onProfileEditSuccess?: AppLayoutProps['onProfileEditSuccess'];
+
+  /**
+   * The default value is false.
+   * If this option is enabled, it uses legacy modules (Channel, ChannelList) that are not applied local caching.
+   * */
+  enableLegacyChannelModules?: boolean;
 }
 
 export default function App(props: AppProps) {
@@ -94,6 +100,7 @@ export default function App(props: AppProps) {
     isTypingIndicatorEnabledOnChannelList,
     isMessageReceiptStatusEnabledOnChannelList,
     isUserIdUsedForNickname = true,
+    enableLegacyChannelModules = false,
   } = props;
   const [currentChannel, setCurrentChannel] = useState(null);
   return (
@@ -148,6 +155,7 @@ export default function App(props: AppProps) {
         disableAutoSelect={disableAutoSelect}
         currentChannel={currentChannel}
         setCurrentChannel={setCurrentChannel}
+        enableLegacyChannelModules={enableLegacyChannelModules}
       />
     </Sendbird>
   );
