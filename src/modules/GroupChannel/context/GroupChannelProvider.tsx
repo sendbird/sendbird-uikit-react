@@ -1,5 +1,4 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { match } from 'ts-pattern';
 import type { User } from '@sendbird/chat';
 import {
   BaseMessageCreateParams,
@@ -12,10 +11,8 @@ import {
   UserMessage,
   UserMessageCreateParams,
   UserMessageUpdateParams,
-  MessageTypeFilter,
 } from '@sendbird/chat/message';
-import type { GroupChannel } from '@sendbird/chat/groupChannel';
-import type { MessageFilterParams, MessageCollectionParams } from '@sendbird/chat/groupChannel';
+import type { GroupChannel, MessageFilterParams, MessageCollectionParams } from '@sendbird/chat/groupChannel';
 import { MessageFilter } from '@sendbird/chat/groupChannel';
 import { useAsyncEffect, useGroupChannelMessages, useIIFE, usePreservedCallback } from '@sendbird/uikit-tools';
 
@@ -36,10 +33,10 @@ import {
 } from '../../../utils/consts';
 import { useOnScrollPositionChangeDetectorWithRef } from '../../../hooks/useOnScrollReachedEndDetector';
 import { useMessageListScroll } from './hooks/useMessageListScroll';
-import { MessageListParams } from '../../Channel/context/ChannelProvider';
 
 type OnBeforeHandler<T> = (params: T) => T | Promise<T>;
-type MessageListQueryParamsType = Omit<MessageCollectionParams, 'filter'> & MessageFilterParams;
+type MessageListQueryParamsType = Omit<MessageCollectionParams, 'filter'> & MessageFilterParams
+  & { prevResultSize: number, nextResultSize: number }; // TODO: Remove me after SDK support
 
 export interface GroupChannelContextProps {
   // Default
@@ -580,13 +577,9 @@ function getCollectionCreator(groupChannel: GroupChannel, messageListQueryParams
     limit.nextResultLimit = messageListQueryParams.nextResultSize ?? limit.nextResultLimit;
 
     const filter = new MessageFilter();
-    filter.messageTypeFilter = match(messageListQueryParams.messageType)
-      .when((text) => text.toUpperCase() === MessageTypeFilter.ADMIN, () => MessageTypeFilter.ADMIN)
-      .when((text) => text.toUpperCase() === MessageTypeFilter.FILE, () => MessageTypeFilter.FILE)
-      .when((text) => text.toUpperCase() === MessageTypeFilter.USER, () => MessageTypeFilter.USER)
-      .otherwise(() => MessageTypeFilter.ALL);
-    filter.customTypesFilter = messageListQueryParams.customTypes ?? filter.customTypesFilter;
-    filter.senderUserIdsFilter = messageListQueryParams.senderUserIds ?? filter.senderUserIdsFilter;
+    filter.messageTypeFilter = messageListQueryParams.messageTypeFilter ?? filter.messageTypeFilter;
+    filter.customTypesFilter = messageListQueryParams.customTypesFilter ?? filter.customTypesFilter;
+    filter.senderUserIdsFilter = messageListQueryParams.senderUserIdsFilter ?? filter.senderUserIdsFilter;
 
     return groupChannel.createMessageCollection({
       filter,
