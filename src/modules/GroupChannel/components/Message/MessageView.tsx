@@ -62,11 +62,11 @@ export interface MessageViewProps extends MessageProps {
   animatedMessageId: number;
   setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
   onMessageAnimated?: () => void;
-  /** @deprecated **/
+  /** @deprecated * */
   highLightedMessageId?: number;
-  /** @deprecated **/
+  /** @deprecated * */
   setHighLightedMessageId?: React.Dispatch<React.SetStateAction<number>>;
-  /** @deprecated **/
+  /** @deprecated * */
   onMessageHighlighted?: () => void;
 }
 
@@ -133,8 +133,7 @@ const MessageView = ({
   const editMessageInputRef = useRef(null);
   const messageScrollRef = useRef(null);
 
-  const displaySuggestedMentionList =
-    isOnline && isMentionEnabled && mentionNickname.length > 0 && !isDisabledBecauseFrozen(channel) && !isDisabledBecauseMuted(channel);
+  const displaySuggestedMentionList = isOnline && isMentionEnabled && mentionNickname.length > 0 && !isDisabledBecauseFrozen(channel) && !isDisabledBecauseMuted(channel);
 
   const mentionNodes = useDirtyGetMentions({ ref: editMessageInputRef }, { logger });
   const ableMention = mentionNodes?.length < maxUserMentionCount;
@@ -149,7 +148,7 @@ const MessageView = ({
           mentionedUserIds.splice(i, 1);
           return true;
         }
-      })
+      }),
     );
   }, [mentionedUserIds]);
 
@@ -179,13 +178,13 @@ const MessageView = ({
       timeouts.push(
         setTimeout(() => {
           setIsHighlighted(true);
-        }, 500)
+        }, 500),
       );
       timeouts.push(
         setTimeout(() => {
           setHighLightedMessageId(0);
           onMessageHighlighted?.();
-        }, 1600)
+        }, 1600),
       );
     } else {
       setIsHighlighted(false);
@@ -205,14 +204,14 @@ const MessageView = ({
       timeouts.push(
         setTimeout(() => {
           setIsAnimated(true);
-        }, 500)
+        }, 500),
       );
 
       timeouts.push(
         setTimeout(() => {
           setAnimatedMessageId(0);
           onMessageAnimated?.();
-        }, 1600)
+        }, 1600),
       );
     } else {
       setIsAnimated(false);
@@ -253,8 +252,8 @@ const MessageView = ({
         {/* date-separator */}
         {
           // TODO: Add message instance as a function parameter
-          hasSeparator &&
-            (renderedCustomSeparator || (
+          hasSeparator
+            && (renderedCustomSeparator || (
               <DateSeparator>
                 <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
                   {format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, {
@@ -340,11 +339,11 @@ const MessageView = ({
             }}
             onKeyDown={(e) => {
               if (
-                displaySuggestedMentionList &&
-                mentionSuggestedUsers?.length > 0 &&
-                ((e.key === MessageInputKeys.Enter && ableMention) ||
-                  e.key === MessageInputKeys.ArrowUp ||
-                  e.key === MessageInputKeys.ArrowDown)
+                displaySuggestedMentionList
+                && mentionSuggestedUsers?.length > 0
+                && ((e.key === MessageInputKeys.Enter && ableMention)
+                  || e.key === MessageInputKeys.ArrowUp
+                  || e.key === MessageInputKeys.ArrowDown)
               ) {
                 setMessageInputEvent(e);
                 return true;
@@ -370,8 +369,8 @@ const MessageView = ({
       ref={messageScrollRef}
     >
       {/* date-separator */}
-      {hasSeparator &&
-        (renderedCustomSeparator || (
+      {hasSeparator
+        && (renderedCustomSeparator || (
           <DateSeparator>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
               {format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, {
