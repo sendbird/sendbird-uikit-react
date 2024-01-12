@@ -27,6 +27,11 @@ type OverrideInviteUserType = {
 export interface CreateChannelProviderProps {
   children?: React.ReactElement;
   onCreateChannel(channel: GroupChannel): void;
+  // /**
+  //  * @deprecated
+  //  * Use the onClickCreateChannel instead
+  //  */
+  overrideInviteUser?(params: OverrideInviteUserType): void;
   onClickCreateChannel?(params: OverrideInviteUserType): void;
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
   userListQuery?(): UserListQuery;
@@ -54,6 +59,7 @@ const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: Crea
     onBeforeCreateChannel,
     onClickCreateChannel,
     userListQuery,
+    overrideInviteUser,
   } = props;
 
   const store = useSendbirdStateContext();
@@ -69,7 +75,7 @@ const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: Crea
       onBeforeCreateChannel,
       createChannel,
       onCreateChannel,
-      onClickCreateChannel,
+      onClickCreateChannel: onClickCreateChannel ?? overrideInviteUser,
       userListQuery: userListQuery || userListQuery_,
       step,
       setStep,
