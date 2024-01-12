@@ -297,6 +297,7 @@ export default function ParentMessageInfo({
           onMoveToParentMessage={() => {
             onMoveToParentMessage({ message: parentMessage, channel: currentChannel });
           }}
+          deleteMessage={deleteMessage}
         />
       )}
       {(usingReaction && !isMobile) && (

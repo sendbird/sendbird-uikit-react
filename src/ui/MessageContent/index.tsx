@@ -225,6 +225,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                   scrollToMessage(message.parentMessage?.createdAt, message.parentMessageId);
                 }
               },
+              deleteMessage,
             })}
             {isReactionEnabledInChannel && (
               renderEmojiMenu({
@@ -417,6 +418,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                   scrollToMessage(message.parentMessage?.createdAt, message.parentMessageId);
                 }
               },
+              deleteMessage,
             })}
           </div>
         )}

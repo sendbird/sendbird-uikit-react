@@ -192,6 +192,7 @@ export default function ThreadListItemContent({
               resendMessage={resendMessage}
               setSupposedHover={setSupposedHover}
               onReplyInThread={onReplyInThread}
+              deleteMessage={deleteMessage}
             />
             {isReactionEnabledInChannel && (
               <MessageItemReactionMenu
@@ -367,6 +368,7 @@ export default function ThreadListItemContent({
               resendMessage={resendMessage}
               setSupposedHover={setSupposedHover}
               onReplyInThread={onReplyInThread}
+              deleteMessage={deleteMessage}
             />
           </div>
         )}
