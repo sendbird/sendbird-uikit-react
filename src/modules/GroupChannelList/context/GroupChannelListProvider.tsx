@@ -204,9 +204,9 @@ function getCollectionCreator(sdk: SdkStore['sdk'], channelListQueryParams?: Cha
   if (!channelListQueryParams) return undefined;
 
   return (defaultParams) => {
+    const params = { ...defaultParams, ...channelListQueryParams };
     return sdk.groupChannel.createGroupChannelCollection({
-      ...defaultParams,
-      ...channelListQueryParams,
+      ...params,
       filter: new GroupChannelFilter({ ...defaultParams, ...channelListQueryParams }),
     });
   };

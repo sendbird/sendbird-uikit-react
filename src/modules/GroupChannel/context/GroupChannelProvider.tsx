@@ -573,10 +573,10 @@ function getCollectionCreator(groupChannel: GroupChannel, messageListQueryParams
   if (!messageListQueryParams) return undefined;
 
   return (defaultParams: MessageCollectionParams) => {
+    const params = { ...defaultParams, ...messageListQueryParams };
     return groupChannel.createMessageCollection({
-      ...defaultParams,
-      ...messageListQueryParams,
-      filter: new MessageFilter(messageListQueryParams),
+      ...params,
+      filter: new MessageFilter(params),
     });
   };
 }
