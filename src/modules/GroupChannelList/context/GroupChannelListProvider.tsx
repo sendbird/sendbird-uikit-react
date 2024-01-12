@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 import type { User } from '@sendbird/chat';
-import type { GroupChannel, GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
-import { GroupChannelFilter } from '@sendbird/chat/groupChannel';
-import { useGroupChannelList, useGroupChannelHandler, sbuConstants } from '@sendbird/uikit-tools';
+import type { GroupChannel, GroupChannelCreateParams, GroupChannelFilterParams } from '@sendbird/chat/groupChannel';
+import { GroupChannelCollectionParams, GroupChannelFilter } from '@sendbird/chat/groupChannel';
+import { useGroupChannelList, useGroupChannelHandler } from '@sendbird/uikit-tools';
 
-import type { GroupChannelListQueryParamsInternal } from '../../ChannelList/context/ChannelListProvider';
 import type { CHANNEL_TYPE } from '../../CreateChannel/types';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
@@ -20,6 +19,8 @@ type OverrideInviteUserType = {
   onClose: () => void;
   channelType: CHANNEL_TYPE;
 };
+
+type ChannelListQueryParamsType = Omit<GroupChannelCollectionParams, 'filter'> & GroupChannelFilterParams;
 
 interface GroupChannelListContextType {
   // Default
@@ -38,12 +39,7 @@ interface GroupChannelListContextType {
 
   // Custom
   // Partial props - because we are doing null check before calling these functions
-  /**
-   * TODO: - channelListQuery
-   * Make a separated Params type for GroupChannelListProps.
-   * Because we don't need to keep the same exact input with ChannelList module.
-   */
-  channelListQuery?: GroupChannelListQueryParamsInternal;
+  channelListQueryParams?: ChannelListQueryParamsType;
   onThemeChange?(theme: string): void;
   onClickCreateChannel?(params: OverrideInviteUserType): void;
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
@@ -99,7 +95,7 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
     isMessageReceiptStatusEnabled = null,
 
     // Custom
-    channelListQuery,
+    channelListQueryParams,
     onThemeChange,
     onChannelSelect = noop,
     onCreateChannel,
@@ -127,7 +123,7 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
   const channelListStore = useGroupChannelList(
     sdk,
     {
-      collectionCreator: getCollectionCreator(sdk, channelListQuery),
+      collectionCreator: getCollectionCreator(sdk, channelListQueryParams),
       markAsDelivered: (channels) => channels.forEach(scheduler.push),
       onChannelsDeleted: (channelUrls) => {
         channelUrls.forEach((url) => {
@@ -204,35 +200,14 @@ export function useGroupChannelListContext(): GroupChannelListProviderInterface 
   return context;
 }
 
-function getCollectionCreator(sdk: SdkStore['sdk'], channelListQuery?: GroupChannelListQueryParamsInternal) {
-  if (!channelListQuery) return undefined;
+function getCollectionCreator(sdk: SdkStore['sdk'], channelListQueryParams?: ChannelListQueryParamsType) {
+  if (!channelListQueryParams) return undefined;
 
-  return () => {
-    const filter = new GroupChannelFilter();
-
-    filter.includeEmpty = channelListQuery.includeEmpty ?? sbuConstants.collection.groupChannel.defaultIncludeEmpty;
-    filter.includeFrozen = channelListQuery.includeFrozen ?? filter.includeFrozen;
-    filter.nicknameContainsFilter = channelListQuery.nicknameContainsFilter ?? filter.nicknameContainsFilter;
-    filter.channelNameContainsFilter = channelListQuery.channelNameContainsFilter ?? filter.channelNameContainsFilter;
-    filter.customTypesFilter = channelListQuery.customTypesFilter ?? filter.customTypesFilter;
-    filter.customTypeStartsWithFilter = channelListQuery.customTypeStartsWithFilter ?? filter.customTypeStartsWithFilter;
-    filter.channelUrlsFilter = channelListQuery.channelUrlsFilter ?? filter.channelUrlsFilter;
-    filter.superChannelFilter = channelListQuery.superChannelFilter ?? filter.superChannelFilter;
-    filter.publicChannelFilter = channelListQuery.publicChannelFilter ?? filter.publicChannelFilter;
-    filter.myMemberStateFilter = channelListQuery.memberStateFilter ?? filter.myMemberStateFilter;
-    filter.hiddenChannelFilter = channelListQuery.hiddenChannelFilter ?? filter.hiddenChannelFilter;
-    filter.unreadChannelFilter = channelListQuery.unreadChannelFilter ?? filter.unreadChannelFilter;
-
-    if (Array.isArray(channelListQuery.userIdsExactFilter)) {
-      filter.setUserIdsFilter(channelListQuery.userIdsExactFilter, false);
-    } else if (Array.isArray(channelListQuery.userIdsIncludeFilter)) {
-      filter.setUserIdsFilter(channelListQuery.userIdsIncludeFilter, true, channelListQuery.userIdsIncludeFilterQueryType);
-    }
-
+  return (defaultParams) => {
+    const params = { ...defaultParams, ...channelListQueryParams };
     return sdk.groupChannel.createGroupChannelCollection({
-      filter,
-      limit: channelListQuery.limit ?? sbuConstants.collection.groupChannel.defaultLimit,
-      order: channelListQuery.order ?? sbuConstants.collection.groupChannel.defaultOrder,
+      ...params,
+      filter: new GroupChannelFilter(params),
     });
   };
 }

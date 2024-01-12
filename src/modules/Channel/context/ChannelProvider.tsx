@@ -57,7 +57,7 @@ export type MessageListParams = {
   messageType?: string,
   prevResultSize?: number,
   nextResultSize?: number,
-  reverse?: boolean,
+  reverse?: boolean, // TODO: Deprecate this props, because it might not work
   isInclusive?: boolean,
   includeMetaArray?: boolean,
   includeReactions?: boolean,

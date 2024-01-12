@@ -12,7 +12,8 @@ import {
   UserMessageCreateParams,
   UserMessageUpdateParams,
 } from '@sendbird/chat/message';
-import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import type { GroupChannel, MessageFilterParams, MessageCollectionParams } from '@sendbird/chat/groupChannel';
+import { MessageFilter } from '@sendbird/chat/groupChannel';
 import { useAsyncEffect, useGroupChannelMessages, useIIFE, usePreservedCallback } from '@sendbird/uikit-tools';
 
 import type { CoreMessageType, SendableMessageType } from '../../../utils';
@@ -35,6 +36,7 @@ import { useMessageListScroll } from './hooks/useMessageListScroll';
 import PUBSUB_TOPICS, { PubSubSendMessagePayload } from '../../../lib/pubSub/topics';
 
 type OnBeforeHandler<T> = (params: T) => T | Promise<T>;
+type MessageListQueryParamsType = Omit<MessageCollectionParams, 'filter'> & MessageFilterParams;
 
 export interface GroupChannelContextProps {
   // Default
@@ -60,7 +62,7 @@ export interface GroupChannelContextProps {
   onMessageAnimated?: () => void;
 
   // Custom
-  // TODO: queries?: ChannelQueries; -> MessageCollectionFilter
+  messageListQueryParams?: MessageListQueryParamsType;
   filterMessageList?(messages: CoreMessageType): boolean;
 
   // Handlers
@@ -150,7 +152,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     animatedMessageId: _animatedMessageId,
 
     // Custom
-    // queries -> TODO: message collection filter
+    messageListQueryParams,
     filterMessageList,
     // #Message
     onBeforeSendUserMessage,
@@ -174,6 +176,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
   const { config, stores } = useSendbirdStateContext();
 
   const { sdkStore } = stores;
+  const { sdk } = sdkStore;
   const { logger, onUserProfileMessage, markAsReadScheduler } = config;
 
   // State
@@ -203,9 +206,12 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     [currentChannel?.members],
   );
 
-  const messageDataSource = useGroupChannelMessages(sdkStore.sdk, currentChannel, {
-    replyType: chatReplyType,
-    startingPoint,
+  const messageDataSource = useGroupChannelMessages(sdk, currentChannel, {
+    collectionCreator: getCollectionCreator(currentChannel, {
+      startingPoint,
+      replyType: chatReplyType,
+      ...messageListQueryParams,
+    }),
     shouldCountNewMessages: () => !isScrollBottomReached,
     markAsRead: (channels) => {
       if (!disableMarkAsRead && isScrollBottomReached) {
@@ -221,7 +227,6 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     onCurrentUserBanned: () => setCurrentChannel(null),
     onChannelUpdated: (channel) => setCurrentChannel(channel),
     logger,
-    // collectionCreator?: (collectionParams?: DefaultCollectionParams) => MessageCollection,
   });
 
   const preventDuplicateRequest = usePreventDuplicateRequest();
@@ -404,7 +409,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
         reconnectOnIdle,
 
         // # Custom Props
-        // queries,
+        messageListQueryParams,
         filterMessageList,
         // ## Message
         onBeforeSendUserMessage,
@@ -572,6 +577,18 @@ const usePreventDuplicateRequest = () => {
     },
   };
 };
+
+function getCollectionCreator(groupChannel: GroupChannel, messageListQueryParams?: MessageListQueryParamsType) {
+  if (!messageListQueryParams) return undefined;
+
+  return (defaultParams: MessageCollectionParams) => {
+    const params = { ...defaultParams, ...messageListQueryParams };
+    return groupChannel.createMessageCollection({
+      ...params,
+      filter: new MessageFilter(params),
+    });
+  };
+}
 
 export type UseGroupContextChannelType = () => GroupChannelProviderInterface;
 const useGroupChannelContext: UseGroupContextChannelType = () => React.useContext(GroupChannelContext);
