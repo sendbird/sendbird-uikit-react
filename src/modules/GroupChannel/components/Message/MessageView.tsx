@@ -173,7 +173,6 @@ const MessageView = ({
     const timeouts = [];
 
     if (highLightedMessageId === message.messageId && messageScrollRef?.current) {
-      messageScrollRef.current.scrollIntoView({ block: 'center', inline: 'center' });
       setIsAnimated(false);
       timeouts.push(
         setTimeout(() => {
@@ -198,7 +197,6 @@ const MessageView = ({
     const timeouts = [];
 
     if (animatedMessageId === message.messageId && messageScrollRef?.current) {
-      messageScrollRef.current.scrollIntoView({ block: 'center', inline: 'center' });
       setIsHighlighted(false);
 
       timeouts.push(
