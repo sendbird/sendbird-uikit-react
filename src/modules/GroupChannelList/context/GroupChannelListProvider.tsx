@@ -43,7 +43,7 @@ interface GroupChannelListContextType {
    * Make a separated Params type for GroupChannelListProps.
    * Because we don't need to keep the same exact input with ChannelList module.
    */
-  channelListQuery?: GroupChannelListQueryParamsInternal;
+  channelListQueryParams?: GroupChannelListQueryParamsInternal;
   onThemeChange?(theme: string): void;
   onClickCreateChannel?(params: OverrideInviteUserType): void;
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
@@ -99,7 +99,7 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
     isMessageReceiptStatusEnabled = null,
 
     // Custom
-    channelListQuery,
+    channelListQueryParams,
     onThemeChange,
     onChannelSelect = noop,
     onCreateChannel,
@@ -127,7 +127,7 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
   const channelListStore = useGroupChannelList(
     sdk,
     {
-      collectionCreator: getCollectionCreator(sdk, channelListQuery),
+      collectionCreator: getCollectionCreator(sdk, channelListQueryParams),
       markAsDelivered: (channels) => channels.forEach(scheduler.push),
       onChannelsDeleted: (channelUrls) => {
         channelUrls.forEach((url) => {
@@ -204,35 +204,35 @@ export function useGroupChannelListContext(): GroupChannelListProviderInterface 
   return context;
 }
 
-function getCollectionCreator(sdk: SdkStore['sdk'], channelListQuery?: GroupChannelListQueryParamsInternal) {
-  if (!channelListQuery) return undefined;
+function getCollectionCreator(sdk: SdkStore['sdk'], channelListQueryParams?: GroupChannelListQueryParamsInternal) {
+  if (!channelListQueryParams) return undefined;
 
   return () => {
     const filter = new GroupChannelFilter();
 
-    filter.includeEmpty = channelListQuery.includeEmpty ?? sbuConstants.collection.groupChannel.defaultIncludeEmpty;
-    filter.includeFrozen = channelListQuery.includeFrozen ?? filter.includeFrozen;
-    filter.nicknameContainsFilter = channelListQuery.nicknameContainsFilter ?? filter.nicknameContainsFilter;
-    filter.channelNameContainsFilter = channelListQuery.channelNameContainsFilter ?? filter.channelNameContainsFilter;
-    filter.customTypesFilter = channelListQuery.customTypesFilter ?? filter.customTypesFilter;
-    filter.customTypeStartsWithFilter = channelListQuery.customTypeStartsWithFilter ?? filter.customTypeStartsWithFilter;
-    filter.channelUrlsFilter = channelListQuery.channelUrlsFilter ?? filter.channelUrlsFilter;
-    filter.superChannelFilter = channelListQuery.superChannelFilter ?? filter.superChannelFilter;
-    filter.publicChannelFilter = channelListQuery.publicChannelFilter ?? filter.publicChannelFilter;
-    filter.myMemberStateFilter = channelListQuery.memberStateFilter ?? filter.myMemberStateFilter;
-    filter.hiddenChannelFilter = channelListQuery.hiddenChannelFilter ?? filter.hiddenChannelFilter;
-    filter.unreadChannelFilter = channelListQuery.unreadChannelFilter ?? filter.unreadChannelFilter;
+    filter.includeEmpty = channelListQueryParams.includeEmpty ?? sbuConstants.collection.groupChannel.defaultIncludeEmpty;
+    filter.includeFrozen = channelListQueryParams.includeFrozen ?? filter.includeFrozen;
+    filter.nicknameContainsFilter = channelListQueryParams.nicknameContainsFilter ?? filter.nicknameContainsFilter;
+    filter.channelNameContainsFilter = channelListQueryParams.channelNameContainsFilter ?? filter.channelNameContainsFilter;
+    filter.customTypesFilter = channelListQueryParams.customTypesFilter ?? filter.customTypesFilter;
+    filter.customTypeStartsWithFilter = channelListQueryParams.customTypeStartsWithFilter ?? filter.customTypeStartsWithFilter;
+    filter.channelUrlsFilter = channelListQueryParams.channelUrlsFilter ?? filter.channelUrlsFilter;
+    filter.superChannelFilter = channelListQueryParams.superChannelFilter ?? filter.superChannelFilter;
+    filter.publicChannelFilter = channelListQueryParams.publicChannelFilter ?? filter.publicChannelFilter;
+    filter.myMemberStateFilter = channelListQueryParams.memberStateFilter ?? filter.myMemberStateFilter;
+    filter.hiddenChannelFilter = channelListQueryParams.hiddenChannelFilter ?? filter.hiddenChannelFilter;
+    filter.unreadChannelFilter = channelListQueryParams.unreadChannelFilter ?? filter.unreadChannelFilter;
 
-    if (Array.isArray(channelListQuery.userIdsExactFilter)) {
-      filter.setUserIdsFilter(channelListQuery.userIdsExactFilter, false);
-    } else if (Array.isArray(channelListQuery.userIdsIncludeFilter)) {
-      filter.setUserIdsFilter(channelListQuery.userIdsIncludeFilter, true, channelListQuery.userIdsIncludeFilterQueryType);
+    if (Array.isArray(channelListQueryParams.userIdsExactFilter)) {
+      filter.setUserIdsFilter(channelListQueryParams.userIdsExactFilter, false);
+    } else if (Array.isArray(channelListQueryParams.userIdsIncludeFilter)) {
+      filter.setUserIdsFilter(channelListQueryParams.userIdsIncludeFilter, true, channelListQueryParams.userIdsIncludeFilterQueryType);
     }
 
     return sdk.groupChannel.createGroupChannelCollection({
       filter,
-      limit: channelListQuery.limit ?? sbuConstants.collection.groupChannel.defaultLimit,
-      order: channelListQuery.order ?? sbuConstants.collection.groupChannel.defaultOrder,
+      limit: channelListQueryParams.limit ?? sbuConstants.collection.groupChannel.defaultLimit,
+      order: channelListQueryParams.order ?? sbuConstants.collection.groupChannel.defaultOrder,
     });
   };
 }
