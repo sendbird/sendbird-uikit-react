@@ -372,6 +372,7 @@ const SendbirdSDK = ({
             enableDocument: configs.groupChannel.channel.input.enableDocument,
             threadReplySelectType: getCaseResolvedThreadReplySelectType(configs.groupChannel.channel.threadReplySelectType).lowerCase,
             typingIndicatorTypes: configs.groupChannel.channel.typingIndicatorTypes,
+            enableFeedback: configs.groupChannel.channel.enableFeedback,
           },
           openChannel: {
             enableOgtag:

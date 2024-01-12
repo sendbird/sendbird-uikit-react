@@ -163,7 +163,8 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const isFeedbackMessage = !isByMe
     && message?.myFeedbackStatus
     && message.myFeedbackStatus !== SbFeedbackStatus.NOT_APPLICABLE;
-  const feedbackMessageClassName = isFeedbackMessage ? 'sendbird-message-content__feedback' : '';
+  const isFeedbackEnabled = config?.groupChannel?.enableFeedback && isFeedbackMessage;
+  const feedbackMessageClassName = isFeedbackEnabled ? 'sendbird-message-content__feedback' : '';
 
   // onMouseDown: (e: React.MouseEvent<T>) => void;
   // onTouchStart: (e: React.TouchEvent<T>) => void;
@@ -319,7 +320,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           )}
           {/* Feedback buttons */}
           {
-            isFeedbackMessage && <div
+            isFeedbackEnabled && <div
               className='sendbird-message-content__middle__body-container__feedback-buttons-container'
             >
               <FeedbackIconButton
