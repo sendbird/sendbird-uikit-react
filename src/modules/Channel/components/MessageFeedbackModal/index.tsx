@@ -30,10 +30,7 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
   const { stringSet } = useContext(LocalizationContext);
   const { isMobile } = useMediaQueryContext();
 
-  const [isEdit] = useState<boolean>(
-    message?.myFeedback
-    && selectedFeedback === message.myFeedback.rating,
-  );
+  const isEdit = message?.myFeedback && selectedFeedback === message.myFeedback.rating;
 
   const modalRef = useRef(null);
   const inputRef = useRef(null);
