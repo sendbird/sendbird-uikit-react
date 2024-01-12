@@ -35,8 +35,7 @@ import { useOnScrollPositionChangeDetectorWithRef } from '../../../hooks/useOnSc
 import { useMessageListScroll } from './hooks/useMessageListScroll';
 
 type OnBeforeHandler<T> = (params: T) => T | Promise<T>;
-type MessageListQueryParamsType = Omit<MessageCollectionParams, 'filter'> & MessageFilterParams
-  & { prevResultSize: number, nextResultSize: number }; // TODO: Remove me after SDK support
+type MessageListQueryParamsType = Omit<MessageCollectionParams, 'filter'> & MessageFilterParams;
 
 export interface GroupChannelContextProps {
   // Default
@@ -206,8 +205,11 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
   );
 
   const messageDataSource = useGroupChannelMessages(sdk, currentChannel, {
-    replyType: chatReplyType,
-    startingPoint,
+    collectionCreator: getCollectionCreator(currentChannel, {
+      startingPoint,
+      replyType: chatReplyType,
+      ...messageListQueryParams,
+    }),
     shouldCountNewMessages: () => !isScrollBottomReached,
     markAsRead: (channels) => {
       if (!disableMarkAsRead && isScrollBottomReached) {
@@ -223,7 +225,6 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     onCurrentUserBanned: () => setCurrentChannel(null),
     onChannelUpdated: (channel) => setCurrentChannel(channel),
     logger,
-    collectionCreator: getCollectionCreator(currentChannel, messageListQueryParams),
   });
 
   const preventDuplicateRequest = usePreventDuplicateRequest();
@@ -568,24 +569,14 @@ const usePreventDuplicateRequest = () => {
   };
 };
 
-function getCollectionCreator(groupChannel: GroupChannel, messageListQueryParams: MessageListQueryParamsType) {
+function getCollectionCreator(groupChannel: GroupChannel, messageListQueryParams?: MessageListQueryParamsType) {
   if (!messageListQueryParams) return undefined;
 
-  return () => {
-    const limit: { prevResultLimit?: number, nextResultLimit?: number } = {};
-    limit.prevResultLimit = messageListQueryParams.prevResultSize ?? limit.prevResultLimit;
-    limit.nextResultLimit = messageListQueryParams.nextResultSize ?? limit.nextResultLimit;
-
-    const filter = new MessageFilter();
-    filter.messageTypeFilter = messageListQueryParams.messageTypeFilter ?? filter.messageTypeFilter;
-    filter.customTypesFilter = messageListQueryParams.customTypesFilter ?? filter.customTypesFilter;
-    filter.senderUserIdsFilter = messageListQueryParams.senderUserIdsFilter ?? filter.senderUserIdsFilter;
-
+  return (defaultParams: MessageCollectionParams) => {
     return groupChannel.createMessageCollection({
-      filter,
-      limit: limit.prevResultLimit ?? limit.nextResultLimit ?? 30, // TODO: Replace to limit
-      // limit,
-      // Don't need to put startingPoint and replyType here, it's already applied above
+      ...defaultParams,
+      ...messageListQueryParams,
+      filter: new MessageFilter(messageListQueryParams),
     });
   };
 }

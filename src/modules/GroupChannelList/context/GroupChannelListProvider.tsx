@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 import type { User } from '@sendbird/chat';
-import type { GroupChannel, GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
-import { GroupChannelFilter } from '@sendbird/chat/groupChannel';
-import { useGroupChannelList, useGroupChannelHandler, sbuConstants } from '@sendbird/uikit-tools';
+import type { GroupChannel, GroupChannelCreateParams, GroupChannelFilterParams } from '@sendbird/chat/groupChannel';
+import { GroupChannelCollectionParams, GroupChannelFilter } from '@sendbird/chat/groupChannel';
+import { useGroupChannelList, useGroupChannelHandler } from '@sendbird/uikit-tools';
 
-import type { GroupChannelListQueryParamsInternal } from '../../ChannelList/context/ChannelListProvider';
 import type { CHANNEL_TYPE } from '../../CreateChannel/types';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
@@ -20,6 +19,8 @@ type OverrideInviteUserType = {
   onClose: () => void;
   channelType: CHANNEL_TYPE;
 };
+
+type ChannelListQueryParamsType = Omit<GroupChannelCollectionParams, 'filter'> & GroupChannelFilterParams;
 
 interface GroupChannelListContextType {
   // Default
@@ -38,12 +39,7 @@ interface GroupChannelListContextType {
 
   // Custom
   // Partial props - because we are doing null check before calling these functions
-  /**
-   * TODO: - channelListQuery
-   * Make a separated Params type for GroupChannelListProps.
-   * Because we don't need to keep the same exact input with ChannelList module.
-   */
-  channelListQueryParams?: GroupChannelListQueryParamsInternal;
+  channelListQueryParams?: ChannelListQueryParamsType;
   onThemeChange?(theme: string): void;
   onClickCreateChannel?(params: OverrideInviteUserType): void;
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
@@ -204,35 +200,14 @@ export function useGroupChannelListContext(): GroupChannelListProviderInterface 
   return context;
 }
 
-function getCollectionCreator(sdk: SdkStore['sdk'], channelListQueryParams?: GroupChannelListQueryParamsInternal) {
+function getCollectionCreator(sdk: SdkStore['sdk'], channelListQueryParams?: ChannelListQueryParamsType) {
   if (!channelListQueryParams) return undefined;
 
-  return () => {
-    const filter = new GroupChannelFilter();
-
-    filter.includeEmpty = channelListQueryParams.includeEmpty ?? sbuConstants.collection.groupChannel.defaultIncludeEmpty;
-    filter.includeFrozen = channelListQueryParams.includeFrozen ?? filter.includeFrozen;
-    filter.nicknameContainsFilter = channelListQueryParams.nicknameContainsFilter ?? filter.nicknameContainsFilter;
-    filter.channelNameContainsFilter = channelListQueryParams.channelNameContainsFilter ?? filter.channelNameContainsFilter;
-    filter.customTypesFilter = channelListQueryParams.customTypesFilter ?? filter.customTypesFilter;
-    filter.customTypeStartsWithFilter = channelListQueryParams.customTypeStartsWithFilter ?? filter.customTypeStartsWithFilter;
-    filter.channelUrlsFilter = channelListQueryParams.channelUrlsFilter ?? filter.channelUrlsFilter;
-    filter.superChannelFilter = channelListQueryParams.superChannelFilter ?? filter.superChannelFilter;
-    filter.publicChannelFilter = channelListQueryParams.publicChannelFilter ?? filter.publicChannelFilter;
-    filter.myMemberStateFilter = channelListQueryParams.memberStateFilter ?? filter.myMemberStateFilter;
-    filter.hiddenChannelFilter = channelListQueryParams.hiddenChannelFilter ?? filter.hiddenChannelFilter;
-    filter.unreadChannelFilter = channelListQueryParams.unreadChannelFilter ?? filter.unreadChannelFilter;
-
-    if (Array.isArray(channelListQueryParams.userIdsExactFilter)) {
-      filter.setUserIdsFilter(channelListQueryParams.userIdsExactFilter, false);
-    } else if (Array.isArray(channelListQueryParams.userIdsIncludeFilter)) {
-      filter.setUserIdsFilter(channelListQueryParams.userIdsIncludeFilter, true, channelListQueryParams.userIdsIncludeFilterQueryType);
-    }
-
+  return (defaultParams) => {
     return sdk.groupChannel.createGroupChannelCollection({
-      filter,
-      limit: channelListQueryParams.limit ?? sbuConstants.collection.groupChannel.defaultLimit,
-      order: channelListQueryParams.order ?? sbuConstants.collection.groupChannel.defaultOrder,
+      ...defaultParams,
+      ...channelListQueryParams,
+      filter: new GroupChannelFilter({ ...defaultParams, ...channelListQueryParams }),
     });
   };
 }
