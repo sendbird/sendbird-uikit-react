@@ -17,7 +17,7 @@ import { SCROLL_BUFFER } from '../../../../utils/consts';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { useScrollBehavior } from './hooks/useScrollBehavior';
-import TypingIndicatorBubble, { type TypingIndicatorBubbleProps } from '../../../../ui/TypingIndicatorBubble';
+import TypingIndicatorBubble from '../../../../ui/TypingIndicatorBubble';
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { getComponentKeyFromMessage } from '../../context/utils';
 
@@ -39,6 +39,7 @@ export const MessageList = ({
   renderFrozenNotification,
 }: GroupChannelMessageListProps) => {
   const {
+    channelUrl,
     hasNext,
     loading,
     messages,
@@ -128,8 +129,6 @@ export const MessageList = ({
 
   return (
     <>
-      {/* TODO: Display the loading indicator while adjusting the scroll position */}
-      {/* {!isScrolled && <PlaceHolder type={PlaceHolderTypes.LOADING} />} */}
       <div className={`sendbird-conversation__messages ${className}`}>
         <div className="sendbird-conversation__scroll-container">
           <div className="sendbird-conversation__padding" />
@@ -161,7 +160,7 @@ export const MessageList = ({
             {!hasNext()
               && store?.config?.groupChannel?.enableTypingIndicator
               && store?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Bubble) && (
-                <TypingIndicatorBubbleWrapper handleScroll={onMessageContentSizeChanged} />
+                <TypingIndicatorBubbleWrapper channelUrl={channelUrl} handleScroll={onMessageContentSizeChanged} />
             )}
           </div>
         </div>
@@ -174,13 +173,15 @@ export const MessageList = ({
   );
 };
 
-const TypingIndicatorBubbleWrapper = (props: Pick<TypingIndicatorBubbleProps, 'handleScroll'>) => {
+const TypingIndicatorBubbleWrapper = (props: { handleScroll: () => void, channelUrl: string }) => {
   const { stores } = useSendbirdStateContext();
   const [typingMembers, setTypingMembers] = useState<Member[]>([]);
 
   useGroupChannelHandler(stores.sdkStore.sdk, {
     onTypingStatusUpdated(channel) {
-      setTypingMembers(channel.getTypingUsers());
+      if (channel.url === props.channelUrl) {
+        setTypingMembers(channel.getTypingUsers());
+      }
     },
   });
 

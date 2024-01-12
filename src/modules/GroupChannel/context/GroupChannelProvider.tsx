@@ -32,6 +32,7 @@ import {
 } from '../../../utils/consts';
 import { useOnScrollPositionChangeDetectorWithRef } from '../../../hooks/useOnScrollReachedEndDetector';
 import { useMessageListScroll } from './hooks/useMessageListScroll';
+import PUBSUB_TOPICS, { PubSubSendMessagePayload } from '../../../lib/pubSub/topics';
 
 type OnBeforeHandler<T> = (params: T) => T | Promise<T>;
 
@@ -83,6 +84,7 @@ export interface GroupChannelContextProps {
 
 type MessageCollectionHookValues = Pick<
   ReturnType<typeof useGroupChannelMessages>,
+  | 'initialized'
   | 'loading'
   | 'refreshing'
   | 'messages'
@@ -290,24 +292,32 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     }
   }, [sdkStore.initialized, sdkStore.sdk, channelUrl]);
 
-  // SideEffect: Scroll to bottom when initialized.
+  // SideEffect: Scroll to the bottom
+  //  - On the initialized message list
+  //  - On messages sent from the thread
   useLayoutEffect(() => {
     if (messageDataSource.initialized) {
       scrollPubSub.publish('scrollToBottom', null);
     }
+
+    const onSentMessageFromOtherModule = (data: PubSubSendMessagePayload) => {
+      if (data.channel.url === channelUrl) scrollPubSub.publish('scrollToBottom', null);
+    };
+    const subscribes = [
+      config.pubSub.subscribe(PUBSUB_TOPICS.SEND_USER_MESSAGE, onSentMessageFromOtherModule),
+      config.pubSub.subscribe(PUBSUB_TOPICS.SEND_FILE_MESSAGE, onSentMessageFromOtherModule),
+    ];
+    return () => {
+      subscribes.forEach((subscribe) => subscribe.remove());
+    };
   }, [messageDataSource.initialized, channelUrl]);
 
   // SideEffect: Reset MessageCollection with startingPoint prop.
-  useAsyncEffect(async () => {
-    const element = scrollRef.current;
-    if (!element) return;
-
+  useEffect(() => {
     if (typeof startingPoint === 'number') {
-      await messageDataSource.resetWithStartingPoint(startingPoint);
-      setTimeout(() => {
-        const offset = getMessageTopOffset(startingPoint);
-        if (offset) scrollPubSub.publish('scroll', { top: offset, lazy: false });
-      });
+      // We do not handle animation for message search here.
+      // Please update the animatedMessageId prop to trigger the animation.
+      scrollToMessage(startingPoint, 0, false);
     }
   }, [startingPoint]);
 
@@ -317,8 +327,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
   }, [_animatedMessageId]);
 
   const scrollToBottom = usePreservedCallback(async () => {
-    const element = scrollRef.current;
-    if (!element) return;
+    if (!scrollRef.current) return;
 
     setAnimatedMessageId(0);
     setIsScrollBottomReached(true);
@@ -357,7 +366,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     clickHandler.deactivate();
 
     setAnimatedMessageId(0);
-    const message = messageDataSource.messages.find((it) => it.messageId === messageId);
+    const message = messageDataSource.messages.find((it) => it.messageId === messageId || it.createdAt === createdAt);
     if (message) {
       const topOffset = getMessageTopOffset(message.createdAt);
       if (topOffset) scrollPubSub.publish('scroll', { top: topOffset });
