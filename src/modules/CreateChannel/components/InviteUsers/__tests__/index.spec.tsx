@@ -11,7 +11,7 @@ jest.mock('../../../context/CreateChannelProvider', () => ({
   useCreateChannelContext: jest.fn(() => ({
     onBeforeCreateChannel: jest.fn(),
     onCreateChannel: jest.fn(),
-    overrideInviteUser: jest.fn(),
+    onClickCreateChannel: jest.fn(),
     createChannel: jest.fn().mockResolvedValue({}),
     type: 'group',
   })),
