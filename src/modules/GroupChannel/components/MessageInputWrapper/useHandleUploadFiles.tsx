@@ -137,6 +137,6 @@ export const useHandleUploadFiles = (
         );
       }
     },
-    [sendFileMessage, sendMultipleFilesMessage],
+    [sendFileMessage, sendMultipleFilesMessage, quoteMessage],
   );
 };

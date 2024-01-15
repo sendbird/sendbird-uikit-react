@@ -137,9 +137,9 @@ export const MessageInputWrapperView = React.forwardRef((
 
   // Callbacks
   const handleUploadFiles = useHandleUploadFiles({
-    sendFileMessage: sendFileMessage,
-    sendMultipleFilesMessage: sendMultipleFilesMessage,
-    quoteMessage: quoteMessage,
+    sendFileMessage,
+    sendMultipleFilesMessage,
+    quoteMessage,
   }, { logger });
 
   if (isBroadcast && !isOperator) {
