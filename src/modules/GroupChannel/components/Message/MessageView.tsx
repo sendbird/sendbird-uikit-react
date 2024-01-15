@@ -8,7 +8,7 @@ import format from 'date-fns/format';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT, ThreadReplySelectType } from '../../context/const';
-import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../../Channel/context/utils';
+import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../../GroupChannel/context/utils';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import useDidMountEffect from '../../../../utils/useDidMountEffect';
 import { CoreMessageType, getClassName, getSuggestedReplies, SendableMessageType } from '../../../../utils';
@@ -19,7 +19,7 @@ import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import MessageContent from '../../../../ui/MessageContent';
 import SuggestedReplies from '../SuggestedReplies';
 import RemoveMessageModal from '../RemoveMessageModal';
-import FileViewer from '../../../Channel/components/FileViewer';
+import FileViewer from '../../../GroupChannel/components/FileViewer';
 import SuggestedMentionListView from '../SuggestedMentionList/SuggestedMentionListView';
 
 export interface MessageProps {
