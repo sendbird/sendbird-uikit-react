@@ -333,6 +333,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                     setShowFeedbackModal(true);
                   }
                 }}
+                disabled={message?.myFeedback && message.myFeedback.rating !== FeedbackRating.GOOD}
               >
                 <Icon
                   type={IconTypes.FEEDBACK_LIKE}
@@ -350,6 +351,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                     setShowFeedbackModal(true);
                   }
                 }}
+                disabled={message?.myFeedback && message.myFeedback.rating !== FeedbackRating.BAD}
               >
                 <Icon
                   type={IconTypes.FEEDBACK_DISLIKE}

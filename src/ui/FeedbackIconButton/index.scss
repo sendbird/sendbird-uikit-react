@@ -14,6 +14,10 @@
   @include themed() {
     border-color: t(on-bg-4);
   }
+
+  &.sendbird-iconbutton__feedback__disabled {
+    cursor: not-allowed;
+  }
 }
 
 .sendbird-iconbutton__feedback__pressed {
@@ -31,6 +35,14 @@
   svg path {
     @include themed() {
       fill: t(on-bg-2);
+    }
+  }
+
+  &.sendbird-iconbutton__feedback__inner__disabled {
+    svg path {
+      @include themed() {
+        fill: t(on-bg-4);
+      }
     }
   }
 }
