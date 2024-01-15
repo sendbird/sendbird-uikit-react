@@ -350,6 +350,7 @@ export const GroupChannel = () => {
                   groupChannel: {
                     // enableTypingIndicator: false,
                     typingIndicatorTypes: new Set([TypingIndicatorType.Bubble, TypingIndicatorType.Text]),
+                    // enableFeedback: false, // This disables feedback message feature.
                   }
                 }}
                 imageCompression={{ compressionRate: sampleOptions.imageCompression ? 0.7 : 1 }}
