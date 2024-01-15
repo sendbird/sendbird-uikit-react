@@ -114,7 +114,7 @@ export const useHandleUploadFiles = (
         return otherFiles.reduce(
           (previousPromise: Promise<MultipleFilesMessage | FileMessage | void>, item: File) => {
             return previousPromise.then(() => {
-              return sendFileMessage({ file: item });
+              return sendFileMessage({ file: item, parentMessageId: quoteMessage?.messageId });
             });
           },
           (() => {

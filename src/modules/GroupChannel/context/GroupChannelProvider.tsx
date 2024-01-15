@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { User } from '@sendbird/chat';
 import {
   BaseMessageCreateParams,
@@ -389,7 +389,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     clickHandler.activate();
   });
 
-  const messageActions = useCustomMessageActions({ ...props, ...messageDataSource, scrollToBottom, quoteMessage });
+  const messageActions = useCustomMessageActions({ ...props, ...messageDataSource, scrollToBottom, quoteMessage, replyType });
 
   return (
     <GroupChannelContext.Provider
@@ -464,11 +464,8 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
 const pass = <T, >(value: T) => value;
 
 function useCustomMessageActions(
-  params: GroupChannelContextProps &
-    ReturnType<typeof useGroupChannelMessages> & {
-      scrollToBottom(): void;
-      quoteMessage?: SendableMessageType;
-    },
+  parameters: GroupChannelContextProps &
+    ReturnType<typeof useGroupChannelMessages> & { scrollToBottom(): void; quoteMessage?: SendableMessageType; replyType: ReplyType },
 ) {
   const {
     onBeforeSendUserMessage = pass,
@@ -482,73 +479,91 @@ function useCustomMessageActions(
     sendUserMessage,
     updateUserMessage,
 
-    quoteMessage,
     scrollToBottom,
-  } = params;
+    quoteMessage,
+    replyType,
+  } = parameters;
 
-  function buildInternalMessageParams<T extends BaseMessageCreateParams>(basicParams: T): T {
-    const messageParams = { ...basicParams } as T;
+  const buildInternalMessageParams = useCallback(
+    <T extends BaseMessageCreateParams>(basicParams: T): T => {
+      const messageParams = { ...basicParams } as T;
 
-    if (params.quoteMessage) {
-      messageParams.isReplyToChannel = true;
-      messageParams.parentMessageId = quoteMessage.messageId;
-    }
+      if (parameters.quoteMessage && replyType !== 'NONE') {
+        messageParams.isReplyToChannel = true;
+        messageParams.parentMessageId = quoteMessage.messageId;
+      }
 
-    // TODO: check isMentionEnabled should be handled here.
-    //  if (!isMentionEnabled) {
-    //    delete internalParams['mentionedUserIds'];
-    //    delete internalParams['mentionedUsers'];
-    //    delete internalParams['mentionedMessageTemplate'];
-    //  }
-
-    return messageParams;
-  }
+      // TODO: check isMentionEnabled should be handled here.
+      //  if (!isMentionEnabled) {
+      //    delete internalParams['mentionedUserIds'];
+      //    delete internalParams['mentionedUsers'];
+      //    delete internalParams['mentionedMessageTemplate'];
+      //  }
+      return messageParams;
+    },
+    [replyType, quoteMessage],
+  );
 
   return {
-    sendUserMessage: usePreservedCallback(async (params: UserMessageCreateParams) => {
-      const internalParams = buildInternalMessageParams<UserMessageCreateParams>(params);
-      const processedParams = await onBeforeSendUserMessage(internalParams);
+    sendUserMessage: useCallback(
+      async (params: UserMessageCreateParams) => {
+        const internalParams = buildInternalMessageParams<UserMessageCreateParams>(params);
+        const processedParams = await onBeforeSendUserMessage(internalParams);
 
-      return sendUserMessage(processedParams, () => scrollToBottom());
-    }),
-    sendFileMessage: usePreservedCallback(async (params: FileMessageCreateParams) => {
-      const internalParams = buildInternalMessageParams<FileMessageCreateParams>(params);
-      const processedParams = await onBeforeSendFileMessage(internalParams);
+        return sendUserMessage(processedParams, () => scrollToBottom());
+      },
+      [buildInternalMessageParams, sendUserMessage, scrollToBottom],
+    ),
+    sendFileMessage: useCallback(
+      async (params: FileMessageCreateParams) => {
+        const internalParams = buildInternalMessageParams<FileMessageCreateParams>(params);
+        const processedParams = await onBeforeSendFileMessage(internalParams);
 
-      return sendFileMessage(processedParams, () => scrollToBottom());
-    }),
-    sendMultipleFilesMessage: usePreservedCallback(async (params: MultipleFilesMessageCreateParams) => {
-      const internalParams = buildInternalMessageParams<MultipleFilesMessageCreateParams>(params);
-      const processedParams = await onBeforeSendMultipleFilesMessage(internalParams);
+        return sendFileMessage(processedParams, () => scrollToBottom());
+      },
+      [buildInternalMessageParams, sendFileMessage, scrollToBottom],
+    ),
+    sendMultipleFilesMessage: useCallback(
+      async (params: MultipleFilesMessageCreateParams) => {
+        const internalParams = buildInternalMessageParams<MultipleFilesMessageCreateParams>(params);
+        const processedParams = await onBeforeSendMultipleFilesMessage(internalParams);
 
-      return sendMultipleFilesMessage(processedParams, () => scrollToBottom());
-    }),
-    sendVoiceMessage: usePreservedCallback(async (params: FileMessageCreateParams, duration: number) => {
-      const internalParams = buildInternalMessageParams<FileMessageCreateParams>({
-        ...params,
-        fileName: VOICE_MESSAGE_FILE_NAME,
-        mimeType: VOICE_MESSAGE_MIME_TYPE,
-        metaArrays: [
-          new MessageMetaArray({
-            key: META_ARRAY_VOICE_DURATION_KEY,
-            value: [`${duration}`],
-          }),
-          new MessageMetaArray({
-            key: META_ARRAY_MESSAGE_TYPE_KEY,
-            value: [META_ARRAY_MESSAGE_TYPE_VALUE__VOICE],
-          }),
-        ],
-      });
-      const processedParams = await onBeforeSendVoiceMessage(internalParams);
+        return sendMultipleFilesMessage(processedParams, () => scrollToBottom());
+      },
+      [buildInternalMessageParams, sendMultipleFilesMessage, scrollToBottom],
+    ),
+    sendVoiceMessage: useCallback(
+      async (params: FileMessageCreateParams, duration: number) => {
+        const internalParams = buildInternalMessageParams<FileMessageCreateParams>({
+          ...params,
+          fileName: VOICE_MESSAGE_FILE_NAME,
+          mimeType: VOICE_MESSAGE_MIME_TYPE,
+          metaArrays: [
+            new MessageMetaArray({
+              key: META_ARRAY_VOICE_DURATION_KEY,
+              value: [`${duration}`],
+            }),
+            new MessageMetaArray({
+              key: META_ARRAY_MESSAGE_TYPE_KEY,
+              value: [META_ARRAY_MESSAGE_TYPE_VALUE__VOICE],
+            }),
+          ],
+        });
+        const processedParams = await onBeforeSendVoiceMessage(internalParams);
 
-      return sendFileMessage(processedParams, () => scrollToBottom());
-    }),
-    updateUserMessage: usePreservedCallback(async (messageId: number, params: UserMessageUpdateParams) => {
-      const internalParams = buildInternalMessageParams<UserMessageUpdateParams>(params);
-      const processedParams = await onBeforeUpdateUserMessage(internalParams);
+        return sendFileMessage(processedParams, () => scrollToBottom());
+      },
+      [buildInternalMessageParams, sendFileMessage, scrollToBottom],
+    ),
+    updateUserMessage: useCallback(
+      async (messageId: number, params: UserMessageUpdateParams) => {
+        const internalParams = buildInternalMessageParams<UserMessageUpdateParams>(params);
+        const processedParams = await onBeforeUpdateUserMessage(internalParams);
 
-      return updateUserMessage(messageId, processedParams);
-    }),
+        return updateUserMessage(messageId, processedParams);
+      },
+      [buildInternalMessageParams, updateUserMessage],
+    ),
   };
 }
 
