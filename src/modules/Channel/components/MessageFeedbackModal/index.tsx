@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext, useRef, useState } from 'react';
+import React, { ReactElement, useContext, useRef } from 'react';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Modal from '../../../../ui/Modal';
 import Button, { ButtonTypes } from '../../../../ui/Button';
