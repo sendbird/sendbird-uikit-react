@@ -219,8 +219,8 @@ const stringSet = {
     EDIT_COMMENT: 'Edit Comment',
     REMOVE_FEEDBACK: 'Remove Feedback',
     // Feedback modal title
-    FEEDBACK_MODAL_TITLE: 'Please write a comment about your rating (optional)',
-    FEEDBACK_CONTENT_PLACEHOLDER: 'Feedback text',
+    FEEDBACK_MODAL_TITLE: 'Provide additional feedback (optional)',
+    FEEDBACK_CONTENT_PLACEHOLDER: 'Leave a comment',
     BUTTON__REMOVE_FEEDBACK: 'Remove feedback',
   },
 };
