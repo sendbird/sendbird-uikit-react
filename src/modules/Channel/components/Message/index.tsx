@@ -22,40 +22,42 @@ import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT } from '../../context
 import DateSeparator from '../../../../ui/DateSeparator';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import MessageInput from '../../../../ui/MessageInput';
-import MessageContent from '../../../../ui/MessageContent';
+import MessageContent, { type MessageContentProps } from '../../../../ui/MessageContent';
 import FileViewer from '../FileViewer';
 import RemoveMessageModal from '../RemoveMessageModal';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
-import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
+import { EveryMessage, RenderCustomSeparatorProps, RenderMessageParamsType } from '../../../../types';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import SuggestedReplies from '../SuggestedReplies';
+import { omitObjectProperties } from '../../../../utils/omitObjectProperty';
 
-type MessageUIProps = {
+export interface MessageUIProps {
   message: EveryMessage;
   hasSeparator?: boolean;
   chainTop?: boolean;
   chainBottom?: boolean;
   handleScroll?: (isBottomMessageAffected?: boolean) => void;
   // for extending
-  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+  renderMessage?: (props: RenderMessageParamsType) => React.ReactElement;
+  renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
   renderEditInput?: () => React.ReactElement;
-  renderMessageContent?: () => React.ReactElement;
-};
+}
 
 // todo: Refactor this component, is too complex now
-const Message = ({
-  message,
-  hasSeparator,
-  chainTop,
-  chainBottom,
-  handleScroll,
-  renderCustomSeparator,
-  renderEditInput,
-  renderMessage,
-  renderMessageContent,
-}: MessageUIProps): React.ReactElement => {
+const Message = (props: MessageUIProps): React.ReactElement => {
+  const {
+    message,
+    hasSeparator,
+    chainTop,
+    chainBottom,
+    handleScroll,
+    renderCustomSeparator,
+    renderEditInput,
+    renderMessage,
+    renderMessageContent = (props) => (<MessageContent {...props} />),
+  } = props;
   const { dateLocale, stringSet } = useLocalization();
   const globalStore = useSendbirdStateContext();
 
@@ -69,6 +71,7 @@ const Message = ({
   const maxUserMentionCount = userMention?.maxMentionCount || MAX_USER_MENTION_COUNT;
   const maxUserSuggestionCount = userMention?.maxSuggestionCount || MAX_USER_SUGGESTION_COUNT;
 
+  const context = useChannelContext();
   const {
     initialized,
     currentGroupChannel,
@@ -94,7 +97,7 @@ const Message = ({
     onMessageHighlighted,
     sendMessage,
     localMessages,
-  } = useChannelContext();
+  } = context;
   const [showEdit, setShowEdit] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
   const [showFileViewer, setShowFileViewer] = useState(false);
@@ -191,20 +194,10 @@ const Message = ({
       clearTimeout(messageAnimatedTimeout);
     };
   }, [animatedMessageId, messageScrollRef.current, message.messageId, onMessageAnimated]);
-  const renderedMessage = useMemo(() => {
-    return renderMessage?.({
-      message,
-      chainTop,
-      chainBottom,
-    });
-  }, [message, renderMessage]);
-  const renderedCustomSeparator = useMemo(() => {
-    if (renderCustomSeparator) {
-      return renderCustomSeparator?.({ message: message });
-    }
-    return null;
-  }, [message, renderCustomSeparator]);
 
+  // Operate `renderMessage` props
+  const renderedCustomSeparator = useMemo(() => renderCustomSeparator?.({ message: message }) ?? null, [message, renderCustomSeparator]);
+  const renderedMessage = useMemo(() => renderMessage?.(omitObjectProperties(props, ['renderMessage'])), [message, renderMessage]);
   if (renderedMessage) {
     return (
       <div
@@ -346,35 +339,31 @@ const Message = ({
         ))
       }
       {/* Message */}
-      {
-        renderMessageContent?.() || (
-          <MessageContent
-            className="sendbird-message-hoc__message-content"
-            userId={userId}
-            scrollToMessage={scrollToMessage}
-            channel={currentGroupChannel}
-            message={message}
-            disabled={!isOnline}
-            chainTop={chainTop}
-            chainBottom={chainBottom}
-            isReactionEnabled={isReactionEnabled}
-            replyType={replyType}
-            threadReplySelectType={threadReplySelectType}
-            nicknamesMap={nicknamesMap}
-            emojiContainer={emojiContainer}
-            showEdit={setShowEdit}
-            showRemove={setShowRemove}
-            showFileViewer={setShowFileViewer}
-            resendMessage={resendMessage}
-            deleteMessage={deleteMessage}
-            toggleReaction={toggleReaction}
-            setQuoteMessage={setQuoteMessage}
-            onReplyInThread={onReplyInThread}
-            onQuoteMessageClick={onQuoteMessageClick}
-            onMessageHeightChange={handleScroll}
-          />
-        )
-      }
+      {renderMessageContent({
+        className: 'sendbird-message-hoc__message-content',
+        userId,
+        scrollToMessage,
+        channel: currentGroupChannel,
+        message,
+        disabled: !isOnline,
+        chainTop,
+        chainBottom,
+        isReactionEnabled,
+        replyType,
+        threadReplySelectType,
+        nicknamesMap,
+        emojiContainer,
+        showEdit: setShowEdit,
+        showRemove: setShowRemove,
+        showFileViewer: setShowFileViewer,
+        resendMessage,
+        deleteMessage,
+        toggleReaction,
+        setQuoteMessage,
+        onReplyInThread,
+        onQuoteMessageClick: onQuoteMessageClick,
+        onMessageHeightChange: handleScroll,
+      })}
       {/** Suggested Replies */}
       {message.messageId === currentGroupChannel?.lastMessage?.messageId
         // the options should appear only when there's no failed or pending messages

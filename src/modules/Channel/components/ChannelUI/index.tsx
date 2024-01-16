@@ -1,8 +1,9 @@
 import './channel-ui.scss';
 
 import React from 'react';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
+import type { MessageContentProps } from '../../../../ui/MessageContent';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import ConnectionStatus from '../../../../ui/ConnectionStatus';
@@ -10,7 +11,7 @@ import ChannelHeader from '../ChannelHeader';
 import MessageList from '../MessageList';
 import TypingIndicator from '../TypingIndicator';
 import MessageInputWrapper from '../MessageInput';
-import { RenderCustomSeparatorProps, RenderMessageProps, TypingIndicatorType } from '../../../../types';
+import { RenderCustomSeparatorProps, RenderMessageParamsType, TypingIndicatorType } from '../../../../types';
 
 export interface ChannelUIProps {
   isLoading?: boolean;
@@ -18,7 +19,8 @@ export interface ChannelUIProps {
   renderPlaceholderInvalid?: () => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
   renderChannelHeader?: () => React.ReactElement;
-  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+  renderMessage?: (props: RenderMessageParamsType) => React.ReactElement;
+  renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
   renderMessageInput?: () => React.ReactElement;
   renderFileUploadIcon?: () => React.ReactElement;
   renderVoiceMessageIcon?: () => React.ReactElement;
@@ -35,6 +37,7 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
   renderPlaceholderEmpty,
   renderChannelHeader,
   renderMessage,
+  renderMessageContent,
   renderMessageInput,
   renderTypingIndicator,
   renderCustomSeparator,
@@ -108,6 +111,7 @@ const ChannelUI: React.FC<ChannelUIProps> = ({
       <MessageList
         className="sendbird-conversation__message-list"
         renderMessage={renderMessage}
+        renderMessageContent={renderMessageContent}
         renderPlaceholderEmpty={renderPlaceholderEmpty}
         renderCustomSeparator={renderCustomSeparator}
         renderPlaceholderLoader={renderPlaceholderLoader}
