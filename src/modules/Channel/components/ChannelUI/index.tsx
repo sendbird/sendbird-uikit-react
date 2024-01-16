@@ -11,7 +11,7 @@ import ChannelHeader from '../ChannelHeader';
 import MessageList from '../MessageList';
 import TypingIndicator from '../TypingIndicator';
 import MessageInputWrapper from '../MessageInput';
-import { RenderCustomSeparatorProps, RenderMessageProps, TypingIndicatorType } from '../../../../types';
+import { RenderCustomSeparatorProps, RenderMessageParamsType, TypingIndicatorType } from '../../../../types';
 
 export interface ChannelUIProps {
   isLoading?: boolean;
@@ -19,7 +19,7 @@ export interface ChannelUIProps {
   renderPlaceholderInvalid?: () => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
   renderChannelHeader?: () => React.ReactElement;
-  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+  renderMessage?: (props: RenderMessageParamsType) => React.ReactElement;
   renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
   renderMessageInput?: () => React.ReactElement;
   renderFileUploadIcon?: () => React.ReactElement;

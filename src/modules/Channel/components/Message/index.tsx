@@ -26,19 +26,20 @@ import MessageContent, { type MessageContentProps } from '../../../../ui/Message
 import FileViewer from '../FileViewer';
 import RemoveMessageModal from '../RemoveMessageModal';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
-import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
+import { EveryMessage, RenderCustomSeparatorProps, RenderMessageParamsType } from '../../../../types';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import SuggestedReplies from '../SuggestedReplies';
+import { omitObjectProperties } from '../../../../utils/omitObjectProperty';
 
-type MessageUIProps = {
+export interface MessageUIProps {
   message: EveryMessage;
   hasSeparator?: boolean;
   chainTop?: boolean;
   chainBottom?: boolean;
   handleScroll?: (isBottomMessageAffected?: boolean) => void;
   // for extending
-  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+  renderMessage?: (props: RenderMessageParamsType) => React.ReactElement;
   renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
   renderEditInput?: () => React.ReactElement;
@@ -193,20 +194,10 @@ const Message = (props: MessageUIProps): React.ReactElement => {
       clearTimeout(messageAnimatedTimeout);
     };
   }, [animatedMessageId, messageScrollRef.current, message.messageId, onMessageAnimated]);
-  const renderedMessage = useMemo(() => {
-    return renderMessage?.({
-      message,
-      chainTop,
-      chainBottom,
-    });
-  }, [message, renderMessage]);
-  const renderedCustomSeparator = useMemo(() => {
-    if (renderCustomSeparator) {
-      return renderCustomSeparator?.({ message: message });
-    }
-    return null;
-  }, [message, renderCustomSeparator]);
-
+  
+  // Operate `renderMessage` props
+  const renderedCustomSeparator = useMemo(() => renderCustomSeparator?.({ message: message }) ?? null, [message, renderCustomSeparator]);
+  const renderedMessage = useMemo(() => renderMessage?.(omitObjectProperties(props, ['renderMessage'])), [message, renderMessage]);
   if (renderedMessage) {
     return (
       <div

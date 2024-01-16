@@ -8,7 +8,7 @@ import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
 import Message from '../Message';
-import { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps, TypingIndicatorType } from '../../../../types';
+import { EveryMessage, RenderCustomSeparatorProps, RenderMessageParamsType, TypingIndicatorType } from '../../../../types';
 import { isAboutSame } from '../../context/utils';
 import { getMessagePartsInfo } from './getMessagePartsInfo';
 import UnreadCount from '../UnreadCount';
@@ -26,7 +26,7 @@ const SCROLL_BOTTOM_PADDING = 50;
 
 export interface MessageListProps {
   className?: string;
-  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+  renderMessage?: (props: RenderMessageParamsType) => React.ReactElement;
   renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;

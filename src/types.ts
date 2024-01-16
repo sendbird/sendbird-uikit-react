@@ -8,6 +8,7 @@ import type {
   UserMessage,
 } from '@sendbird/chat/message';
 import { CoreMessageType } from './utils';
+import { MessageUIProps } from './modules/Channel/components/Message';
 
 export type ReplyType = 'NONE' | 'QUOTE_REPLY' | 'THREAD';
 export type Nullable<T> = T | null;
@@ -54,11 +55,14 @@ export interface ClientMessage {
   _sender: User;
 }
 
+// This is used for OpenChannel.renderMessage
 export interface RenderMessageProps {
   message: CoreMessageType;
   chainTop: boolean;
   chainBottom: boolean;
 }
+// This is used for GroupChannel.renderMessage
+export type RenderMessageParamsType = Omit<MessageUIProps, 'renderMessage'>;
 
 export interface RenderCustomSeparatorProps {
   message: CoreMessageType;
