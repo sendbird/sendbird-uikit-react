@@ -49,6 +49,7 @@ const Channel: React.FC<ChannelProps> = (props: ChannelProps) => {
         renderPlaceholderEmpty={props?.renderPlaceholderEmpty}
         renderChannelHeader={props?.renderChannelHeader}
         renderMessage={props?.renderMessage}
+        renderMessageContent={props?.renderMessageContent}
         renderMessageInput={props?.renderMessageInput}
         renderTypingIndicator={props?.renderTypingIndicator}
         renderCustomSeparator={props?.renderCustomSeparator}

@@ -22,7 +22,7 @@ import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT } from '../../context
 import DateSeparator from '../../../../ui/DateSeparator';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import MessageInput from '../../../../ui/MessageInput';
-import MessageContent from '../../../../ui/MessageContent';
+import MessageContent, { type MessageContentProps } from '../../../../ui/MessageContent';
 import FileViewer from '../FileViewer';
 import RemoveMessageModal from '../RemoveMessageModal';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
@@ -39,9 +39,9 @@ type MessageUIProps = {
   handleScroll?: (isBottomMessageAffected?: boolean) => void;
   // for extending
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+  renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
   renderEditInput?: () => React.ReactElement;
-  renderMessageContent?: () => React.ReactElement;
 };
 
 // todo: Refactor this component, is too complex now

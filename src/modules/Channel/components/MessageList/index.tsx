@@ -1,7 +1,9 @@
 import './message-list.scss';
 
 import React, { useState } from 'react';
+import type { UserMessage } from '@sendbird/chat/message';
 
+import type { MessageContentProps } from '../../../../ui/MessageContent';
 import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
@@ -13,7 +15,6 @@ import UnreadCount from '../UnreadCount';
 import FrozenNotification from '../FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { UserMessage } from '@sendbird/chat/message';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 import { useSetScrollToBottom } from './hooks/useSetScrollToBottom';
@@ -26,6 +27,7 @@ const SCROLL_BOTTOM_PADDING = 50;
 export interface MessageListProps {
   className?: string;
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+  renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
   renderPlaceholderLoader?: () => React.ReactElement;
@@ -35,6 +37,7 @@ export interface MessageListProps {
 const MessageList: React.FC<MessageListProps> = ({
   className = '',
   renderMessage,
+  renderMessageContent,
   renderPlaceholderEmpty,
   renderCustomSeparator,
   renderPlaceholderLoader,
@@ -217,6 +220,7 @@ const MessageList: React.FC<MessageListProps> = ({
                     <Message
                       handleScroll={moveScroll}
                       renderMessage={renderMessage}
+                      renderMessageContent={renderMessageContent}
                       message={m as EveryMessage}
                       hasSeparator={hasSeparator}
                       chainTop={chainTop}
