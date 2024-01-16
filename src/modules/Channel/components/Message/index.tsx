@@ -349,7 +349,7 @@ const Message = (props: MessageUIProps): React.ReactElement => {
       }
       {/* Message */}
       {renderMessageContent({
-        className: "sendbird-message-hoc__message-content",
+        className: 'sendbird-message-hoc__message-content',
         userId,
         scrollToMessage,
         channel: currentGroupChannel,
@@ -379,7 +379,7 @@ const Message = (props: MessageUIProps): React.ReactElement => {
         && localMessages.every(message => (message as UserMessage).sendingStatus === 'succeeded')
         && getSuggestedReplies(message).length > 0 && (
           <SuggestedReplies replyOptions={getSuggestedReplies(message)} onSendMessage={sendMessage} />
-        )}
+      )}
       {/* Modal */}
       {
         showRemove && (
