@@ -250,6 +250,7 @@ const MessageList: React.FC<MessageListProps> = ({
                     <Message
                       handleScroll={moveScroll}
                       renderMessage={renderMessage}
+                      renderMessageContent={renderMessageContent}
                       message={m as EveryMessage}
                       chainTop={chainTop}
                       chainBottom={chainBottom}

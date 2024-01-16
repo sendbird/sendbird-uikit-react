@@ -45,17 +45,18 @@ type MessageUIProps = {
 };
 
 // todo: Refactor this component, is too complex now
-const Message = ({
-  message,
-  hasSeparator,
-  chainTop,
-  chainBottom,
-  handleScroll,
-  renderCustomSeparator,
-  renderEditInput,
-  renderMessage,
-  renderMessageContent,
-}: MessageUIProps): React.ReactElement => {
+const Message = (props: MessageUIProps): React.ReactElement => {
+  const {
+    message,
+    hasSeparator,
+    chainTop,
+    chainBottom,
+    handleScroll,
+    renderCustomSeparator,
+    renderEditInput,
+    renderMessage,
+    renderMessageContent = (props) => (<MessageContent {...props} />),
+  } = props;
   const { dateLocale, stringSet } = useLocalization();
   const globalStore = useSendbirdStateContext();
 
@@ -69,6 +70,7 @@ const Message = ({
   const maxUserMentionCount = userMention?.maxMentionCount || MAX_USER_MENTION_COUNT;
   const maxUserSuggestionCount = userMention?.maxSuggestionCount || MAX_USER_SUGGESTION_COUNT;
 
+  const context = useChannelContext();
   const {
     initialized,
     currentGroupChannel,
@@ -94,7 +96,7 @@ const Message = ({
     onMessageHighlighted,
     sendMessage,
     localMessages,
-  } = useChannelContext();
+  } = context;
   const [showEdit, setShowEdit] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
   const [showFileViewer, setShowFileViewer] = useState(false);
@@ -346,42 +348,38 @@ const Message = ({
         ))
       }
       {/* Message */}
-      {
-        renderMessageContent?.() || (
-          <MessageContent
-            className="sendbird-message-hoc__message-content"
-            userId={userId}
-            scrollToMessage={scrollToMessage}
-            channel={currentGroupChannel}
-            message={message}
-            disabled={!isOnline}
-            chainTop={chainTop}
-            chainBottom={chainBottom}
-            isReactionEnabled={isReactionEnabled}
-            replyType={replyType}
-            threadReplySelectType={threadReplySelectType}
-            nicknamesMap={nicknamesMap}
-            emojiContainer={emojiContainer}
-            showEdit={setShowEdit}
-            showRemove={setShowRemove}
-            showFileViewer={setShowFileViewer}
-            resendMessage={resendMessage}
-            deleteMessage={deleteMessage}
-            toggleReaction={toggleReaction}
-            setQuoteMessage={setQuoteMessage}
-            onReplyInThread={onReplyInThread}
-            onQuoteMessageClick={onQuoteMessageClick}
-            onMessageHeightChange={handleScroll}
-          />
-        )
-      }
+      {renderMessageContent({
+        className: "sendbird-message-hoc__message-content",
+        userId,
+        scrollToMessage,
+        channel: currentGroupChannel,
+        message,
+        disabled: !isOnline,
+        chainTop,
+        chainBottom,
+        isReactionEnabled,
+        replyType,
+        threadReplySelectType,
+        nicknamesMap,
+        emojiContainer,
+        showEdit: setShowEdit,
+        showRemove: setShowRemove,
+        showFileViewer: setShowFileViewer,
+        resendMessage,
+        deleteMessage,
+        toggleReaction,
+        setQuoteMessage,
+        onReplyInThread,
+        onQuoteMessageClick: onQuoteMessageClick,
+        onMessageHeightChange: handleScroll,
+      })}
       {/** Suggested Replies */}
       {message.messageId === currentGroupChannel?.lastMessage?.messageId
         // the options should appear only when there's no failed or pending messages
         && localMessages.every(message => (message as UserMessage).sendingStatus === 'succeeded')
         && getSuggestedReplies(message).length > 0 && (
           <SuggestedReplies replyOptions={getSuggestedReplies(message)} onSendMessage={sendMessage} />
-      )}
+        )}
       {/* Modal */}
       {
         showRemove && (
