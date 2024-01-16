@@ -1,4 +1,4 @@
-import { omitObjectProperties } from "../omitObjectProperty";
+import { omitObjectProperties } from '../omitObjectProperty';
 
 const mockObject = {
   a: 'a',

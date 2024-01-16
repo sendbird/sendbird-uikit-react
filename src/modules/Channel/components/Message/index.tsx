@@ -43,7 +43,7 @@ export interface MessageUIProps {
   renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
   renderEditInput?: () => React.ReactElement;
-};
+}
 
 // todo: Refactor this component, is too complex now
 const Message = (props: MessageUIProps): React.ReactElement => {
@@ -194,7 +194,7 @@ const Message = (props: MessageUIProps): React.ReactElement => {
       clearTimeout(messageAnimatedTimeout);
     };
   }, [animatedMessageId, messageScrollRef.current, message.messageId, onMessageAnimated]);
-  
+
   // Operate `renderMessage` props
   const renderedCustomSeparator = useMemo(() => renderCustomSeparator?.({ message: message }) ?? null, [message, renderCustomSeparator]);
   const renderedMessage = useMemo(() => renderMessage?.(omitObjectProperties(props, ['renderMessage'])), [message, renderMessage]);
