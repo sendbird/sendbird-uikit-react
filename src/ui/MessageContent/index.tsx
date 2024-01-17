@@ -325,7 +325,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                 'sendbird-message-content__middle__body-container__feedback-buttons-container',
                 displayThreadReplies
                   ? 'sendbird-message-content__middle__body-container__feedback-buttons-container_with-thread-replies'
-                  : ''
+                  : '',
               ])}
             >
               <FeedbackIconButton
