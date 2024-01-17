@@ -43,6 +43,7 @@ import FeedbackIconButton from '../FeedbackIconButton';
 import MobileFeedbackMenu from '../MobileFeedbackMenu';
 import MessageFeedbackModal from '../../modules/Channel/components/MessageFeedbackModal';
 import { SbFeedbackStatus } from './types';
+import MessageFeedbackFailedModal from '../../modules/Channel/components/MessageFeedbackFailedModal';
 
 export interface MessageContentProps {
   className?: string | Array<string>;
@@ -141,6 +142,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const [selectedFeedback, setSelectedFeedback] = useState<FeedbackRating>(null);
   const [showFeedbackOptionsMenu, setShowFeedbackOptionsMenu] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [showFeedbackFailedModal, setShowFeedbackFailedModal] = useState(false);
 
   const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
     || ((message as SendableMessageType)?.sendingStatus === 'pending')
@@ -473,7 +475,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           />
         )
       }
-      {/* Feedback Modal */}
+      {/* Feedback modal */}
       {
         showFeedbackModal && (
           <MessageFeedbackModal
@@ -484,17 +486,27 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                 return;
               }
               if (!message.myFeedback) {
-                await message.submitFeedback({
-                  rating: selectedFeedback,
-                  comment,
-                });
+                try {
+                  await message.submitFeedback({
+                    rating: selectedFeedback,
+                    comment,
+                  });
+                } catch (error) {
+                  config?.logger?.error?.('Channel: Submit feedback failed.', error);
+                  setShowFeedbackFailedModal(true);
+                }
               } else if (comment !== message.myFeedback.comment) {
                 const newFeedback: Feedback = new Feedback({
                   id: message.myFeedback.id,
                   rating: selectedFeedback,
                   comment,
                 });
-                await message.updateFeedback(newFeedback);
+                try {
+                  await message.updateFeedback(newFeedback);
+                } catch (error) {
+                  config?.logger?.error?.('Channel: Update feedback failed.', error);
+                  setShowFeedbackFailedModal(true);
+                }
               }
               setSelectedFeedback(null);
               setShowFeedbackModal(false);
@@ -507,6 +519,16 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               await message.deleteFeedback(message.myFeedback.id);
               setSelectedFeedback(null);
               setShowFeedbackModal(false);
+            }}
+          />
+        )
+      }
+      {/* Feedback failed modal */}
+      {
+        showFeedbackFailedModal && (
+          <MessageFeedbackFailedModal
+            onCancel={() => {
+              setShowFeedbackFailedModal(false);
             }}
           />
         )

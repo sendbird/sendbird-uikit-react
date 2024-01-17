@@ -222,6 +222,8 @@ const stringSet = {
     FEEDBACK_MODAL_TITLE: 'Provide additional feedback (optional)',
     FEEDBACK_CONTENT_PLACEHOLDER: 'Leave a comment',
     BUTTON__REMOVE_FEEDBACK: 'Remove feedback',
+    // Feedback failed modal title
+    FEEDBACK_FAILED_TITLE: 'submit failed',
   },
 };
 

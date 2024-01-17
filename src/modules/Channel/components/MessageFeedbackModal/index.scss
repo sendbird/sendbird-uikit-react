@@ -13,6 +13,13 @@
   align-items: center;
 }
 
+.sendbird-message-feedback-modal-footer__root_failed {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 48px;
+}
+
 .sendbird-message-feedback-modal-footer__right-content {
   display: flex;
   gap: 8px;
