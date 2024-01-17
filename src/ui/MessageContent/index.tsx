@@ -321,7 +321,12 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           {/* Feedback buttons */}
           {
             isFeedbackEnabled && <div
-              className='sendbird-message-content__middle__body-container__feedback-buttons-container'
+              className={getClassName([
+                'sendbird-message-content__middle__body-container__feedback-buttons-container',
+                displayThreadReplies
+                  ? 'sendbird-message-content__middle__body-container__feedback-buttons-container_with-thread-replies'
+                  : ''
+              ])}
             >
               <FeedbackIconButton
                 isSelected={message?.myFeedback?.rating === FeedbackRating.GOOD}

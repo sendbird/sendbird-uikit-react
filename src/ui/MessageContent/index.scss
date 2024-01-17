@@ -1,8 +1,11 @@
 @import '../../styles/variables';
 
 :root {
-  --sendbird-feedback-buttons-container-height: -40px;
-  --sendbird-feedback-buttons-container-height-margin-bottom: 4px;
+  --sendbird-feedback-buttons-container-height: 36px;
+  --sendbird-feedback-buttons-container-margin-top: 4px;
+  --sendbird-thread-replies-height: 28px;
+  --sendbird-thread-replies-margin-top: 4px;
+  --sendbird-feedback-buttons-container-margin-bottom: 4px;
 }
 
 .sendbird-message-content {
@@ -35,7 +38,11 @@
 }
 
 .sendbird-message-content__feedback {
-  margin-bottom: calc(-1 * var(--sendbird-feedback-buttons-container-height) + var(--sendbird-feedback-buttons-container-height-margin-bottom));
+  margin-bottom: calc(
+    var(--sendbird-feedback-buttons-container-height)
+    + var(--sendbird-feedback-buttons-container-margin-top)
+    + var(--sendbird-feedback-buttons-container-margin-bottom)
+  );
 }
 
 .sendbird-message-content__middle__quote-message__quote {
@@ -315,7 +322,11 @@
 
 .sendbird-message-content__middle__body-container__feedback-buttons-container {
   position: absolute;
-  bottom: var(--sendbird-feedback-buttons-container-height);
+  bottom: calc(-1 * (var(--sendbird-feedback-buttons-container-height) + var(--sendbird-feedback-buttons-container-margin-top)));
   display: flex;
   gap: 4px;
+}
+
+.sendbird-message-content__middle__body-container__feedback-buttons-container_with-thread-replies {
+  bottom: calc(-1 * (var(--sendbird-feedback-buttons-container-height) + var(--sendbird-feedback-buttons-container-margin-top) + var(--sendbird-thread-replies-height) + var(--sendbird-thread-replies-margin-top)));
 }
