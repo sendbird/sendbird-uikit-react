@@ -3,16 +3,18 @@ import React from 'react';
 import type { GroupChannelHeaderProps } from '../GroupChannelHeader';
 import type { MessageListProps } from '../../../Channel/components/MessageList';
 import type { GroupChannelMessageListProps } from '../MessageList';
-import type { RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
+import { RenderCustomSeparatorProps, RenderMessageParamsType } from '../../../../types';
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { GroupChannelUIView } from './GroupChannelUIView';
+import type { MessageContentProps } from '../../../../ui/MessageContent';
 
 export interface GroupChannelUIProps {
   renderPlaceholderLoader?: () => React.ReactElement;
   renderPlaceholderInvalid?: () => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
   renderChannelHeader?: (props: GroupChannelHeaderProps) => React.ReactElement;
-  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+  renderMessage?: (props: RenderMessageParamsType) => React.ReactElement;
+  renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
   renderMessageList?: (props: MessageListProps | GroupChannelMessageListProps) => React.ReactElement;
   renderMessageInput?: () => React.ReactElement;
   renderFileUploadIcon?: () => React.ReactElement;

@@ -1,4 +1,4 @@
-import type { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps, ReplyType } from '../../../../types';
+import type { EveryMessage, RenderCustomSeparatorProps, RenderMessageParamsType, ReplyType } from '../../../../types';
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { EmojiContainer, User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
@@ -16,11 +16,12 @@ import DateSeparator from '../../../../ui/DateSeparator';
 import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 import MessageInput from '../../../../ui/MessageInput';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
-import MessageContent from '../../../../ui/MessageContent';
+import MessageContent, { MessageContentProps } from '../../../../ui/MessageContent';
 import SuggestedReplies from '../SuggestedReplies';
 import RemoveMessageModal from '../RemoveMessageModal';
 import FileViewer from '../../../GroupChannel/components/FileViewer';
 import SuggestedMentionListView from '../SuggestedMentionList/SuggestedMentionListView';
+import { omitObjectProperties } from '../../../../utils/omitObjectProperty';
 
 export interface MessageProps {
   message: EveryMessage;
@@ -30,10 +31,10 @@ export interface MessageProps {
   handleScroll?: (isBottomMessageAffected?: boolean) => void;
 
   // for extending
-  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+  renderMessage?: (props: RenderMessageParamsType) => React.ReactElement;
+  renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
   renderEditInput?: () => React.ReactElement;
-  renderMessageContent?: () => React.ReactElement;
 }
 
 export interface MessageViewProps extends MessageProps {
@@ -71,47 +72,49 @@ export interface MessageViewProps extends MessageProps {
 }
 
 // TODO: Refactor this component, is too complex now
-const MessageView = ({
-  // MessageProps
-  message,
-  renderMessage,
-  renderMessageContent,
-  renderCustomSeparator,
-  renderEditInput,
-  hasSeparator,
-  chainTop,
-  chainBottom,
-  handleScroll,
+const MessageView = (props: MessageViewProps) => {
+  const {
+    // MessageProps
+    message,
+    renderMessage,
+    renderMessageContent = (props) => <MessageContent {...props} />,
+    renderCustomSeparator,
+    renderEditInput,
+    hasSeparator,
+    chainTop,
+    chainBottom,
+    handleScroll,
 
-  // MessageViewProps
-  channel,
-  emojiContainer,
-  editInputDisabled,
-  shouldRenderSuggestedReplies,
-  isReactionEnabled,
-  replyType,
-  threadReplySelectType,
-  nicknamesMap,
+    // MessageViewProps
+    channel,
+    emojiContainer,
+    editInputDisabled,
+    shouldRenderSuggestedReplies,
+    isReactionEnabled,
+    replyType,
+    threadReplySelectType,
+    nicknamesMap,
 
-  renderUserMentionItem,
-  scrollToMessage,
-  toggleReaction,
-  setQuoteMessage,
-  onQuoteMessageClick,
-  onReplyInThreadClick,
+    renderUserMentionItem,
+    scrollToMessage,
+    toggleReaction,
+    setQuoteMessage,
+    onQuoteMessageClick,
+    onReplyInThreadClick,
 
-  sendUserMessage,
-  updateUserMessage,
-  resendMessage,
-  deleteMessage,
+    sendUserMessage,
+    updateUserMessage,
+    resendMessage,
+    deleteMessage,
 
-  setAnimatedMessageId,
-  animatedMessageId,
-  onMessageAnimated,
-  highLightedMessageId,
-  setHighLightedMessageId,
-  onMessageHighlighted,
-}: MessageViewProps) => {
+    setAnimatedMessageId,
+    animatedMessageId,
+    onMessageAnimated,
+    highLightedMessageId,
+    setHighLightedMessageId,
+    onMessageHighlighted,
+  } = props;
+
   const { dateLocale, stringSet } = useLocalization();
   const globalStore = useSendbirdStateContext();
 
@@ -219,19 +222,8 @@ const MessageView = ({
     };
   }, [animatedMessageId, messageScrollRef.current, message.messageId]);
 
-  const renderedMessage = useMemo(() => {
-    return renderMessage?.({
-      message,
-      chainTop,
-      chainBottom,
-    });
-  }, [message, renderMessage]);
-  const renderedCustomSeparator = useMemo(() => {
-    if (renderCustomSeparator) {
-      return renderCustomSeparator?.({ message: message });
-    }
-    return null;
-  }, [message, renderCustomSeparator]);
+  const renderedCustomSeparator = useMemo(() => renderCustomSeparator?.({ message }) ?? null, [message, renderCustomSeparator]);
+  const renderedMessage = useMemo(() => renderMessage?.(omitObjectProperties(props, ['renderMessage'])), [message, renderMessage]);
 
   if (renderedMessage) {
     return (
@@ -378,33 +370,31 @@ const MessageView = ({
           </DateSeparator>
         ))}
       {/* Message */}
-      {renderMessageContent?.() || (
-        <MessageContent
-          className="sendbird-message-hoc__message-content"
-          userId={userId}
-          scrollToMessage={scrollToMessage}
-          channel={channel}
-          message={message}
-          disabled={!isOnline}
-          chainTop={chainTop}
-          chainBottom={chainBottom}
-          isReactionEnabled={isReactionEnabled}
-          replyType={replyType}
-          threadReplySelectType={threadReplySelectType}
-          nicknamesMap={nicknamesMap}
-          emojiContainer={emojiContainer}
-          showEdit={setShowEdit}
-          showRemove={setShowRemove}
-          showFileViewer={setShowFileViewer}
-          resendMessage={resendMessage}
-          deleteMessage={deleteMessage}
-          toggleReaction={toggleReaction}
-          setQuoteMessage={setQuoteMessage}
-          onReplyInThread={onReplyInThreadClick}
-          onQuoteMessageClick={onQuoteMessageClick}
-          onMessageHeightChange={handleScroll}
-        />
-      )}
+      {renderMessageContent({
+        className: 'sendbird-message-hoc__message-content',
+        userId,
+        scrollToMessage,
+        channel,
+        message,
+        disabled: !isOnline,
+        chainTop,
+        chainBottom,
+        isReactionEnabled,
+        replyType,
+        threadReplySelectType,
+        nicknamesMap,
+        emojiContainer,
+        showEdit: setShowEdit,
+        showRemove: setShowRemove,
+        showFileViewer: setShowFileViewer,
+        resendMessage,
+        deleteMessage,
+        toggleReaction,
+        setQuoteMessage,
+        onReplyInThread: onReplyInThreadClick,
+        onQuoteMessageClick: onQuoteMessageClick,
+        onMessageHeightChange: handleScroll,
+      })}
       {
         /** Suggested Replies */
         shouldRenderSuggestedReplies && <SuggestedReplies replyOptions={getSuggestedReplies(message)} onSendMessage={sendUserMessage} />

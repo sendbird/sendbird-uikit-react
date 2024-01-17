@@ -4,8 +4,7 @@ import type { Member } from '@sendbird/chat/groupChannel';
 import { useGroupChannelHandler } from '@sendbird/uikit-tools';
 
 import type { CoreMessageType } from '../../../../utils';
-import type { EveryMessage, RenderCustomSeparatorProps, RenderMessageProps } from '../../../../types';
-import { TypingIndicatorType } from '../../../../types';
+import { EveryMessage, RenderCustomSeparatorProps, RenderMessageParamsType, TypingIndicatorType } from '../../../../types';
 
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
@@ -20,10 +19,12 @@ import { useScrollBehavior } from './hooks/useScrollBehavior';
 import TypingIndicatorBubble from '../../../../ui/TypingIndicatorBubble';
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { getComponentKeyFromMessage } from '../../context/utils';
+import type { MessageContentProps } from '../../../../ui/MessageContent';
 
 export interface GroupChannelMessageListProps {
   className?: string;
-  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
+  renderMessage?: (props: RenderMessageParamsType) => React.ReactElement;
+  renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
   renderPlaceholderLoader?: () => React.ReactElement;
