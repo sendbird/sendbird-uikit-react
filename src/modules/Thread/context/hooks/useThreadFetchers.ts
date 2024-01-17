@@ -19,6 +19,15 @@ type Params = {
   latestMessageTimeStamp: number;
 };
 
+function getThreadMessageListParams(params?: Partial<ThreadedMessageListParams>): ThreadedMessageListParams {
+  return {
+    prevResultSize: PREV_THREADS_FETCH_SIZE,
+    nextResultSize: NEXT_THREADS_FETCH_SIZE,
+    includeMetaArray: true,
+    ...params,
+  };
+}
+
 export const useThreadFetchers = ({
   isReactionEnabled,
   anchorMessage,
@@ -32,16 +41,6 @@ export const useThreadFetchers = ({
   const { stores } = useSendbirdStateContext();
   const timestamp = anchorMessage?.createdAt || 0;
 
-  function getThreadMessageListParams(params?: Partial<ThreadedMessageListParams>): ThreadedMessageListParams {
-    return {
-      prevResultSize: PREV_THREADS_FETCH_SIZE,
-      nextResultSize: NEXT_THREADS_FETCH_SIZE,
-      includeReactions: isReactionEnabled,
-      includeMetaArray: true,
-      ...params,
-    };
-  }
-
   const initialize = useCallback(
     async (callback?: (messages: BaseMessage[]) => void) => {
       if (!stores.sdkStore.initialized || !staleParentMessage) return;
@@ -52,7 +51,7 @@ export const useThreadFetchers = ({
       });
 
       try {
-        const params = getThreadMessageListParams();
+        const params = getThreadMessageListParams({ includeReactions: isReactionEnabled });
         logger.info('Thread | useGetThreadList: Initialize thread list start.', { timestamp, params });
 
         const { threadedMessages, parentMessage } = await staleParentMessage.getThreadedMessagesByTimestamp(timestamp, params);
@@ -83,7 +82,7 @@ export const useThreadFetchers = ({
       });
 
       try {
-        const params = getThreadMessageListParams({ nextResultSize: 0 });
+        const params = getThreadMessageListParams({ nextResultSize: 0, includeReactions: isReactionEnabled });
 
         const { threadedMessages, parentMessage } = await staleParentMessage.getThreadedMessagesByTimestamp(oldestMessageTimeStamp, params);
 
@@ -114,7 +113,7 @@ export const useThreadFetchers = ({
       });
 
       try {
-        const params = getThreadMessageListParams({ prevResultSize: 0 });
+        const params = getThreadMessageListParams({ prevResultSize: 0, includeReactions: isReactionEnabled });
 
         const { threadedMessages, parentMessage } = await staleParentMessage.getThreadedMessagesByTimestamp(latestMessageTimeStamp, params);
         logger.info('Thread | useGetNextThreadsCallback: Fetch next threads succeeded.', { parentMessage, threadedMessages });
