@@ -10,7 +10,7 @@ export interface ThreadProps extends ThreadProviderProps, ThreadUIProps {
   className?: string;
 }
 
-const Thread: React.FC<ThreadProps> = (props: ThreadProps) => {
+const Thread = (props: ThreadProps) => {
   const {
     // props
     className,

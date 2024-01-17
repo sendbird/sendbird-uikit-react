@@ -33,7 +33,7 @@ const ThreadMessageInput = (
     renderVoiceMessageIcon,
     renderSendMessageIcon,
   } = props;
-  const propsDisabled = props.disabled;
+
   const { config } = useSendbirdStateContext();
   const { stringSet } = useLocalization();
   const {
@@ -56,12 +56,14 @@ const ThreadMessageInput = (
     allThreadMessages,
   } = threadContext;
   const messageInputRef = useRef();
+
   const isMultipleFilesMessageEnabled = (
     threadContext.isMultipleFilesMessageEnabled
     ?? config.isMultipleFilesMessageEnabled
   );
 
-  const disabled = propsDisabled
+  const threadInputDisabled = props.disabled
+    || !isOnline
     || isMuted
     || (!(currentChannel?.myRole === Role.OPERATOR) && isChannelFrozen) || parentMessage === null;
 
@@ -159,7 +161,7 @@ const ThreadMessageInput = (
             <MessageInput
               className="sendbird-thread-message-input__message-input"
               messageFieldId="sendbird-message-input-text-field--thread"
-              disabled={disabled}
+              disabled={threadInputDisabled}
               channel={currentChannel}
               setMentionedUsers={setMentionedUsers}
               channelUrl={currentChannel?.url}
