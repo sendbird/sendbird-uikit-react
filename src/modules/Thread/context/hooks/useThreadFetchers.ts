@@ -31,7 +31,7 @@ export const useThreadFetchers = ({
 }: Params) => {
   const { stores } = useSendbirdStateContext();
   const timestamp = anchorMessage?.createdAt || 0;
-  
+
   function getThreadMessageListParams(params?: Partial<ThreadedMessageListParams>): ThreadedMessageListParams {
     return {
       prevResultSize: PREV_THREADS_FETCH_SIZE,
