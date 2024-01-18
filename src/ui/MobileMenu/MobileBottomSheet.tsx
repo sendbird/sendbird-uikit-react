@@ -122,7 +122,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                           url={emoji?.url || ''}
                           width="28px"
                           height="28px"
-                          placeHolder={(style: Record<string, unknown>): ReactElement => (
+                          placeHolder={({ style }): ReactElement => (
                             <div style={style}>
                               <Icon
                                 type={IconTypes.QUESTION}
@@ -151,7 +151,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                           url={''}
                           width="28px"
                           height="28px"
-                          placeHolder={(style: Record<string, unknown>): React.ReactElement => (
+                          placeHolder={({ style }): React.ReactElement => (
                             <div style={style}>
                               <Icon
                                 type={IconTypes.EMOJI_MORE}

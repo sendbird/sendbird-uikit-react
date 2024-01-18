@@ -248,10 +248,10 @@ export default function ParentMessageInfoItem({
             width="200px"
             height="148px"
             onLoad={() => { setImageRendered(true); }}
-            placeHolder={(style_: Record<string, any>) => (
+            placeHolder={({ style }) => (
               <div
                 className="sendbird-parent-message-info-item__thumbnail-message__placeholder"
-                style={style_}
+                style={style}
               >
                 <div className="sendbird-parent-message-info-item__thumbnail-message__placeholder__icon">
                   <Icon
