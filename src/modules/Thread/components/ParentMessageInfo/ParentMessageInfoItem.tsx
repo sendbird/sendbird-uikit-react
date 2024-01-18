@@ -34,7 +34,7 @@ import { tokenizeMessage } from '../../../Message/utils/tokens/tokenize';
 import MultipleFilesMessageItemBody, { ThreadMessageKind } from '../../../../ui/MultipleFilesMessageItemBody';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import { useThreadMessageKindKeySelector } from '../../../Channel/context/hooks/useThreadMessageKindKeySelector';
-import { useStatefulFileInfoList } from '../../../Channel/context/hooks/useStatefulFileInfoList';
+import { useFileInfoListWithUploaded } from '../../../Channel/context/hooks/useFileInfoListWithUploaded';
 import { Colors } from '../../../../utils/color';
 
 export interface ParentMessageInfoItemProps {
@@ -69,7 +69,7 @@ export default function ParentMessageInfoItem({
     isMobile,
   });
   // For MultipleFilesMessage only.
-  const statefulFileInfoList = useStatefulFileInfoList(message);
+  const statefulFileInfoList = useFileInfoListWithUploaded(message);
   const isMentionedMessage = isMentionEnabled
     && message?.mentionedMessageTemplate?.length > 0
     && message?.mentionedUsers?.length > 0;
