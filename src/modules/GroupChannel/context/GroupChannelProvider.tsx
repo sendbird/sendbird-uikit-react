@@ -291,6 +291,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
         // Reset states when channel changes
         setQuoteMessage(null);
         setAnimatedMessageId(0);
+        scrollPubSub.publish('scrollToBottom', null);
       }
     }
   }, [sdkStore.initialized, sdkStore.sdk, channelUrl]);
