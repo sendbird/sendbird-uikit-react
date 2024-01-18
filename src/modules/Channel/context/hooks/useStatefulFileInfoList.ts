@@ -4,7 +4,13 @@ import { createStatefulFileInfoList, StatefulFileInfo } from '../../../../utils/
 import { CoreMessageType, isMultipleFilesMessage } from '../../../../utils';
 
 export const useStatefulFileInfoList = (message: CoreMessageType): StatefulFileInfo[] => {
-  const [statefulFileInfoList, setStatefulFileInfoList] = useState<StatefulFileInfo[]>([]);
+  const [statefulFileInfoList, setStatefulFileInfoList] = useState<StatefulFileInfo[]>(() => {
+    if(message.isMultipleFilesMessage()) {
+      return createStatefulFileInfoList(message, [])
+    } else {
+      return [];
+    }
+  });
 
   useEffect(() => {
     if (isMultipleFilesMessage(message)) {
