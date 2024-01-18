@@ -32,8 +32,9 @@ import {
   VOICE_MESSAGE_MIME_TYPE,
 } from '../../../utils/consts';
 import { useOnScrollPositionChangeDetectorWithRef } from '../../../hooks/useOnScrollReachedEndDetector';
-import { useMessageListScroll } from './hooks/useMessageListScroll';
+import { ScrollTopics, ScrollTopicUnion, useMessageListScroll } from './hooks/useMessageListScroll';
 import PUBSUB_TOPICS, { PubSubSendMessagePayload } from '../../../lib/pubSub/topics';
+import { PubSubTypes } from '../../../lib/pubSub';
 
 type OnBeforeHandler<T> = (params: T) => T | Promise<T>;
 type MessageListQueryParamsType = Omit<MessageCollectionParams, 'filter'> & MessageFilterParams;
@@ -115,6 +116,7 @@ export interface GroupChannelProviderInterface extends GroupChannelContextProps,
 
   scrollRef: React.MutableRefObject<HTMLDivElement>;
   scrollDistanceFromBottomRef: React.MutableRefObject<number>;
+  scrollPubSub: PubSubTypes<ScrollTopics, ScrollTopicUnion>
   messageInputRef: React.MutableRefObject<HTMLDivElement>;
 
   quoteMessage: SendableMessageType | null;
@@ -433,6 +435,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
 
         scrollRef,
         scrollDistanceFromBottomRef,
+        scrollPubSub,
         messageInputRef,
 
         quoteMessage,
