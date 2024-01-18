@@ -19,21 +19,19 @@ import threadInitialState, { ThreadContextInitialState } from './dux/initialStat
 
 import useGetChannel from './hooks/useGetChannel';
 import useGetAllEmoji from './hooks/useGetAllEmoji';
-import useGetThreadList from './hooks/useGetThreadList';
 import useGetParentMessage from './hooks/useGetParentMessage';
 import useHandleThreadPubsubEvents from './hooks/useHandleThreadPubsubEvents';
 import useHandleChannelEvents from './hooks/useHandleChannelEvents';
 import useSendFileMessageCallback from './hooks/useSendFileMessage';
 import useUpdateMessageCallback from './hooks/useUpdateMessageCallback';
 import useDeleteMessageCallback from './hooks/useDeleteMessageCallback';
-import useGetPrevThreadsCallback from './hooks/useGetPrevThreadsCallback';
-import useGetNextThreadsCallback from './hooks/useGetNextThreadsCallback';
 import useToggleReactionCallback from './hooks/useToggleReactionsCallback';
 import useSendUserMessageCallback, { SendMessageParams } from './hooks/useSendUserMessageCallback';
 import useResendMessageCallback from './hooks/useResendMessageCallback';
 import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 import { PublishingModuleType, useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
 import { SendableMessageType } from '../../../utils';
+import { useThreadFetchers } from './hooks/useThreadFetchers';
 
 export type ThreadProviderProps = {
   children?: React.ReactElement;
@@ -66,7 +64,7 @@ export interface ThreadProviderInterface extends ThreadProviderProps, ThreadCont
 }
 const ThreadContext = React.createContext<ThreadProviderInterface | null>(null);
 
-export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProviderProps) => {
+export const ThreadProvider = (props: ThreadProviderProps) => {
   const {
     children,
     channelUrl,
@@ -140,13 +138,6 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
     sdkInit,
     parentMessage: propsParentMessage,
   }, { sdk, logger, threadDispatcher });
-  useGetThreadList({
-    sdkInit,
-    parentMessage,
-    isReactionEnabled,
-    anchorMessage: propsMessage?.messageId !== propsParentMessage?.messageId ? propsMessage : null,
-    // anchorMessage should be null when parentMessage doesn't exist
-  }, { logger, threadDispatcher });
   useGetAllEmoji({ sdk }, { logger, threadDispatcher });
   // Handle channel events
   useHandleChannelEvents({
@@ -159,21 +150,24 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
     parentMessage,
   }, { logger, pubSub, threadDispatcher });
 
-  // callbacks
-  const fetchPrevThreads = useGetPrevThreadsCallback({
-    hasMorePrev,
+  const { initialize, loadPrevious, loadNext } = useThreadFetchers({
     parentMessage,
-    threadListState,
+    // anchorMessage should be null when parentMessage doesn't exist
+    anchorMessage: propsMessage?.messageId !== propsParentMessage?.messageId ? propsMessage : undefined,
+    logger,
     isReactionEnabled,
+    threadDispatcher,
+    threadListState,
     oldestMessageTimeStamp: allThreadMessages[0]?.createdAt || 0,
-  }, { logger, threadDispatcher });
-  const fetchNextThreads = useGetNextThreadsCallback({
-    hasMoreNext,
-    parentMessage,
-    threadListState,
-    isReactionEnabled,
     latestMessageTimeStamp: allThreadMessages[allThreadMessages.length - 1]?.createdAt || 0,
-  }, { logger, threadDispatcher });
+  });
+
+  useEffect(() => {
+    if (stores.sdkStore.initialized && config.isOnline) {
+      initialize();
+    }
+  }, [stores.sdkStore.initialized, config.isOnline, initialize]);
+
   const toggleReaction = useToggleReactionCallback({ currentChannel }, { logger });
 
   // Send Message Hooks
@@ -251,8 +245,8 @@ export const ThreadProvider: React.FC<ThreadProviderProps> = (props: ThreadProvi
         hasMoreNext,
         emojiContainer,
         // hooks
-        fetchPrevThreads,
-        fetchNextThreads,
+        fetchPrevThreads: loadPrevious,
+        fetchNextThreads: loadNext,
         toggleReaction,
         sendMessage,
         sendFileMessage,
