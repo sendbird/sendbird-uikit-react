@@ -163,16 +163,43 @@ const ImageRenderer = ({
   );
 };
 
-// When an auth key is included in the file URL and there is an automatic reconnection, the image is refreshed (onLoadStart, onLoad, onError will be re-triggered).
-// This occurs because the auth key changes, leading to a change in the URL.
+// Image is loaded as a background-image, but this component serves as a hidden component to receive events indicating whether the image has actually been loaded.
 const HiddenImageLoader = (props: { src: string; alt: string; onLoadStart?: () => void; onLoad?: () => void; onError?: () => void }) => {
   const { src, alt, onLoadStart, onLoad, onError } = props;
 
-  useLayoutEffect(() => {
-    if (src) onLoadStart?.();
-  }, [src]);
+  const reloadCtx = useRef({
+    currSrc: src,
+    prevSrc: src,
+    loadFailure: false,
+  });
 
-  return <img className="sendbird-image-renderer__hidden-image-loader" src={src} alt={alt} onLoad={onLoad} onError={onError} />;
+  if (reloadCtx.current.currSrc !== src) {
+    reloadCtx.current.prevSrc = reloadCtx.current.currSrc;
+    reloadCtx.current.currSrc = src;
+  }
+
+  // SideEffect: If the image URL has changed or loading has failed, please try again
+  useLayoutEffect(() => {
+    if (src && (reloadCtx.current.prevSrc !== reloadCtx.current.currSrc || reloadCtx.current.loadFailure)) {
+      onLoadStart?.();
+    }
+  }, [src, navigator.onLine]);
+
+  return (
+    <img
+      className="sendbird-image-renderer__hidden-image-loader"
+      src={src}
+      alt={alt}
+      onLoad={() => {
+        reloadCtx.current.loadFailure = false;
+        onLoad?.();
+      }}
+      onError={() => {
+        reloadCtx.current.loadFailure = true;
+        onError?.();
+      }}
+    />
+  );
 };
 
 export default ImageRenderer;
