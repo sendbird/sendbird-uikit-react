@@ -98,9 +98,6 @@ const ImageRenderer = ({
   };
 
   const renderImage = () => {
-    if (placeholderVisible) return renderPlaceholder();
-    if (defaultComponentVisible) return renderDefault();
-
     return (
       <div
         className="sendbird-image-renderer__image"
@@ -133,7 +130,8 @@ const ImageRenderer = ({
           height: dynamicMinHeight,
         }}
       >
-        {renderImage()}
+        {placeholderVisible && renderPlaceholder()}
+        {defaultComponentVisible ? renderDefault() : renderImage()}
         {shadeOnHover && (
           <div
             className="sendbird-multiple-files-image-renderer__image-cover"

@@ -3,7 +3,7 @@ import { CoreMessageType } from '../../../../utils';
 import { UploadedFileInfoWithUpload } from '../../../../types';
 
 export const useFileInfoListWithUploaded = (message: CoreMessageType): UploadedFileInfoWithUpload[] => {
-  if (!message.isMultipleFilesMessage()) return [];
+  if (!message || !message.isMultipleFilesMessage || !message.isMultipleFilesMessage()) return [];
   else if (message.sendingStatus === SendingStatus.SUCCEEDED) {
     return message.fileInfoList.map((it) => ({
       ...it,
