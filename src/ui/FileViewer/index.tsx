@@ -14,8 +14,8 @@ import { FileInfo, FileViewerComponentProps, MultiFilesViewer, ViewerTypes } fro
 import { mapFileViewerComponentProps } from './utils';
 import { DeleteButton } from './DeleteButton';
 import { Slider } from './Slider';
-import { StatefulFileInfo } from '../../utils/createStatefulFileInfoList';
 import { useKeyDown } from '../../hooks/useKeyDown/useKeyDown';
+import { UploadedFileInfoWithUpload } from '../../types';
 
 export const FileViewerComponent = (props: FileViewerComponentProps): ReactElement => {
   const ref = useRef<HTMLDivElement>(null);
@@ -133,7 +133,7 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
 
 export interface FileViewerProps {
   message?: FileMessage | MultipleFilesMessage;
-  statefulFileInfoList?: StatefulFileInfo[]
+  statefulFileInfoList?: UploadedFileInfoWithUpload[]
   isByMe?: boolean;
   currentIndex?: number;
   onClose: (e: MouseEvent) => void;
@@ -160,9 +160,9 @@ export default function FileViewer({
         nickname={castedMessage.sender.nickname}
         viewerType={ViewerTypes.MULTI}
         fileInfoList={
-          statefulFileInfoList.filter((fileInfo: StatefulFileInfo) => {
+          statefulFileInfoList.filter((fileInfo) => {
             return fileInfo.url; // Caution: This assumes that defined url means file upload has completed.
-          }).map((fileInfo: StatefulFileInfo): FileInfo => {
+          }).map((fileInfo): FileInfo => {
             return {
               name: fileInfo.fileName || '',
               type: fileInfo.mimeType || '',

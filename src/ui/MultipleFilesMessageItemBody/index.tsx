@@ -8,7 +8,7 @@ import FileViewer from '../FileViewer';
 import './index.scss';
 import { MULTIPLE_FILES_IMAGE_BORDER_RADIUS, MULTIPLE_FILES_IMAGE_SIDE_LENGTH, MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH } from './const';
 import { isGif } from '../../utils';
-import { StatefulFileInfo } from '../../utils/createStatefulFileInfoList';
+import { UploadedFileInfoWithUpload } from '../../types';
 
 export const ThreadMessageKind = {
   PARENT: 'parent',
@@ -25,7 +25,7 @@ interface Props {
   isReactionEnabled?: boolean;
   truncateLimit?: number;
   threadMessageKindKey?: string;
-  statefulFileInfoList?: StatefulFileInfo[];
+  statefulFileInfoList?: UploadedFileInfoWithUpload[];
 }
 
 export default function MultipleFilesMessageItemBody({
@@ -63,7 +63,7 @@ export default function MultipleFilesMessageItemBody({
           />
         )}
         <ImageGrid className={className} message={message} isReactionEnabled={isReactionEnabled}>
-          {statefulFileInfoList.map((fileInfo: StatefulFileInfo, index: number) => {
+          {statefulFileInfoList.map((fileInfo, index: number) => {
             return (
               <div
                 className="sendbird-multiple-files-image-renderer-wrapper"

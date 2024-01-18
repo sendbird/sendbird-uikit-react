@@ -1,17 +1,8 @@
 import { SendingStatus } from '@sendbird/chat/message';
 import { CoreMessageType } from '../../../../utils';
-import { Thumbnail } from '@sendbird/chat/lib/__definition';
+import { UploadedFileInfoWithUpload } from '../../../../types';
 
-type StatefulFileInfo = {
-  fileName?: string;
-  fileSize?: number;
-  mimeType?: string;
-  thumbnails?: Thumbnail[];
-  url?: string;
-  isUploaded?: boolean;
-};
-
-export const useFileInfoListWithUploaded = (message: CoreMessageType): StatefulFileInfo[] => {
+export const useFileInfoListWithUploaded = (message: CoreMessageType): UploadedFileInfoWithUpload[] => {
   if (!message.isMultipleFilesMessage()) return [];
   else if (message.sendingStatus === SendingStatus.SUCCEEDED) {
     return message.fileInfoList.map((it) => ({

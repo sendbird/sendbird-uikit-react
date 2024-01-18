@@ -6,6 +6,7 @@ import type {
   FileMessage,
   MultipleFilesMessage,
   UserMessage,
+  Thumbnail,
 } from '@sendbird/chat/message';
 import { CoreMessageType } from './utils';
 import { MessageProps } from './modules/GroupChannel/components/Message/MessageView';
@@ -74,3 +75,12 @@ export interface ClientAdminMessage extends AdminMessage, ClientMessage { }
 export interface ClientMultipleFilesMessage extends MultipleFilesMessage, ClientMessage { }
 export type EveryMessage = ClientUserMessage | ClientFileMessage | ClientMultipleFilesMessage | ClientAdminMessage;
 export type ClientSentMessages = ClientUserMessage | ClientFileMessage | ClientMultipleFilesMessage;
+
+export interface UploadedFileInfoWithUpload {
+  fileName?: string;
+  fileSize?: number;
+  mimeType?: string;
+  thumbnails?: Thumbnail[];
+  url?: string;
+  isUploaded?: boolean;
+}
