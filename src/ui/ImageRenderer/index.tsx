@@ -154,6 +154,7 @@ const ImageRenderer = ({
             onLoad();
           }}
           onError={() => {
+            setPlaceholderVisible(false);
             setDefaultComponentVisible(true);
             onError();
           }}
@@ -165,7 +166,7 @@ const ImageRenderer = ({
 
 // Image is loaded as a background-image, but this component serves as a hidden component to receive events indicating whether the image has actually been loaded.
 const HiddenImageLoader = (props: { src: string; alt: string; onLoadStart?: () => void; onLoad?: () => void; onError?: () => void }) => {
-  const { src, alt, onLoadStart, onLoad, onError } = props;
+  const { src, alt, onLoadStart = noop, onLoad = noop, onError = noop } = props;
 
   const reloadCtx = useRef({
     currSrc: src,
@@ -180,8 +181,13 @@ const HiddenImageLoader = (props: { src: string; alt: string; onLoadStart?: () =
 
   // SideEffect: If the image URL has changed or loading has failed, please try again
   useLayoutEffect(() => {
-    if (src && (reloadCtx.current.prevSrc !== reloadCtx.current.currSrc || reloadCtx.current.loadFailure)) {
-      onLoadStart?.();
+    if (src) {
+      const sourceChanged = reloadCtx.current.prevSrc !== reloadCtx.current.currSrc;
+      const loadFailure = reloadCtx.current.loadFailure;
+
+      if (sourceChanged || loadFailure) {
+        onLoadStart();
+      }
     }
   }, [src, navigator.onLine]);
 
@@ -192,11 +198,11 @@ const HiddenImageLoader = (props: { src: string; alt: string; onLoadStart?: () =
       alt={alt}
       onLoad={() => {
         reloadCtx.current.loadFailure = false;
-        onLoad?.();
+        onLoad();
       }}
       onError={() => {
         reloadCtx.current.loadFailure = true;
-        onError?.();
+        onError();
       }}
     />
   );
