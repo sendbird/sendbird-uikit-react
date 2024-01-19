@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 
 export const useIsElementInViewport = (elementRef: React.MutableRefObject<any>) => {
   const [isVisible, setIsVisible] = useState(false);
 
-  const callback = (entries: IntersectionObserverEntry[]) => {
-    const [entry] = entries;
-    setIsVisible(entry.isIntersecting);
-  };
+  useLayoutEffect(() => {
+    const observer = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
+      const [entry] = entries;
+      if (entry) setIsVisible(entry.isIntersecting);
+    });
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(callback);
-    if (elementRef.current) {
-      observer.observe(elementRef.current);
-    }
+    if (elementRef.current) observer.observe(elementRef.current);
     return () => observer.disconnect();
-  }, [elementRef]);
+  }, [elementRef.current]);
 
   return isVisible;
 };
