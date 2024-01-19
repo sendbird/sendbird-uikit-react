@@ -96,7 +96,7 @@ export default function OpenchannelOGMessage({
     return tokenizeMessage({
       messageText: message.message,
     });
-  }, [message?.updatedAt]);
+  }, [message?.updatedAt, message?.message]);
 
   // place conxt menu top depending clientHeight of message component
   useEffect(() => {

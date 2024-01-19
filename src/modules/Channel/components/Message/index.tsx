@@ -149,7 +149,7 @@ const Message = (props: MessageUIProps): React.ReactElement => {
   }, [showEdit, message?.reactions?.length]);
   useDidMountEffect(() => {
     handleScroll?.(true);
-  }, [message?.updatedAt]);
+  }, [message?.updatedAt, (message as UserMessage)?.message]);
 
   useLayoutEffect(() => {
     let animationTimeout = null;
