@@ -91,7 +91,7 @@ export default function ParentMessageInfoItem({
     return tokenizeMessage({
       messageText: (message as UserMessage)?.message,
     });
-  }, [message?.updatedAt]);
+  }, [message?.updatedAt, (message as UserMessage)?.message]);
 
   // Thumbnail mesage
   const [isImageRendered, setImageRendered] = useState(false);

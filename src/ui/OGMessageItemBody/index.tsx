@@ -58,7 +58,7 @@ export default function OGMessageItemBody({
     return tokenizeMessage({
       messageText: message?.message,
     });
-  }, [message?.updatedAt]);
+  }, [message?.updatedAt, message?.message]);
   return (
     <div className={getClassName([
       className,
