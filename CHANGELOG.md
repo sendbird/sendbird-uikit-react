@@ -56,7 +56,7 @@ Feedback message feature can be turned on through `enableFeedback` option. When 
 * Fixed a bug in mobile view where channel view is displaying a default channel when there is no channel in channel list
 * Added missing props renderMessageContent in Channel
 * Fixed a bug where center alignment of `Badge` and `Button` components breaking in FireFox browser
-* Fixed a bug where messages sent by bot member in group channel are not triggering the expected hooks
+* Fixed a bug where messages sent by bot member in group channel are not triggering the expected hooks (Original Author: [ishubham21](https://github.com/ishubham21))
 
 ## [v3.9.3] (Jan 5, 2024)
 
