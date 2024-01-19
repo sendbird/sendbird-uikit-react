@@ -13,7 +13,7 @@ import { useKeyDown } from '../../../../hooks/useKeyDown/useKeyDown';
 export interface MessageFeedbackModalProps {
   selectedFeedback: FeedbackRating;
   message: CoreMessageType;
-  onCancel?: () => void;
+  onClose?: () => void;
   onSubmit?: (comment: string) => void;
   onUpdate?: (comment: string) => void;
   onRemove?: () => void;
@@ -23,7 +23,7 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
   const {
     selectedFeedback,
     message,
-    onCancel,
+    onClose,
     onSubmit,
     onUpdate,
     onRemove,
@@ -33,14 +33,26 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
   const { isMobile } = useMediaQueryContext();
 
   const isEdit = message?.myFeedback && selectedFeedback === message.myFeedback.rating;
-  const onSubmitWrapper = isEdit ? onUpdate : onSubmit;
+  const onSubmitWrapper = () => {
+    if (!selectedFeedback) return;
+    const comment = inputRef.current.value ?? '';
+    if (isEdit) {
+      if (comment !== message.myFeedback.comment) {
+        onUpdate?.(comment);
+      } else {
+        onClose?.();
+      }
+    } else if (!message.myFeedback) {
+      onSubmit?.(comment);
+    }
+  };
 
   const modalRef = useRef(null);
   const inputRef = useRef(null);
 
   const onKeyDown = useKeyDown(modalRef, {
-    Enter: () => onSubmitWrapper?.(inputRef.current.value ?? ''),
-    Escape: () => onCancel?.(),
+    Enter: () => onSubmitWrapper(),
+    Escape: () => onClose?.(),
   });
 
   return (
@@ -48,9 +60,9 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
       <Modal
         contentClassName='sendbird-message-feedback-modal-content__mobile'
         type={ButtonTypes.PRIMARY}
-        onCancel={onCancel}
+        onCancel={onClose}
         onSubmit={() => {
-          onSubmitWrapper?.(inputRef.current.value ?? '');
+          onSubmitWrapper();
         }}
         submitText={stringSet.BUTTON__SUBMIT}
         renderHeader={() => (
@@ -78,12 +90,12 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
                 : <div/>
             }
             <div className='sendbird-message-feedback-modal-footer__right-content'>
-              <Button type={ButtonTypes.SECONDARY} onClick={onCancel}>
+              <Button type={ButtonTypes.SECONDARY} onClick={onClose}>
                 <Label type={LabelTypography.BUTTON_3} color={LabelColors.ONBACKGROUND_1}>
                   {stringSet.BUTTON__CANCEL}
                 </Label>
               </Button>
-              <Button onClick={() => onSubmitWrapper?.(inputRef.current.value ?? '')}>
+              <Button onClick={() => onSubmitWrapper()}>
                 <Label type={LabelTypography.BUTTON_3} color={LabelColors.ONCONTENT_1}>
                   { isEdit ? stringSet.BUTTON__SAVE : stringSet.BUTTON__SUBMIT }
                 </Label>
