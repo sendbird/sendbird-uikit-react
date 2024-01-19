@@ -7,11 +7,13 @@ import '../MessageFeedbackModal/index.scss';
 import { useKeyDown } from '../../../../hooks/useKeyDown/useKeyDown';
 
 export interface MessageFeedbackFailedModalProps {
+  text: string;
   onCancel?: () => void;
 }
 
 export default function MessageFeedbackFailedModal(props: MessageFeedbackFailedModalProps): ReactElement {
   const {
+    text,
     onCancel,
   } = props;
 
@@ -29,6 +31,7 @@ export default function MessageFeedbackFailedModal(props: MessageFeedbackFailedM
         contentClassName='sendbird-message-feedback-modal-content__mobile'
         type={ButtonTypes.PRIMARY}
         onSubmit={onCancel}
+        onClose={onCancel}
         submitText={stringSet.BUTTON__OK}
         renderHeader={() => (
           <div className='sendbird-modal__header'>
@@ -37,7 +40,7 @@ export default function MessageFeedbackFailedModal(props: MessageFeedbackFailedM
               color={LabelColors.ONBACKGROUND_1}
               className='sendbird-message-feedback-modal-header'
             >
-              {stringSet.FEEDBACK_FAILED_TITLE}
+              { text }
             </Label>
           </div>
         )}

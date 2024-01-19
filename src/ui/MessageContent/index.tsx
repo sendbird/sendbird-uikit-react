@@ -1,5 +1,5 @@
 import React, {
-  ReactElement, ReactNode,
+  ReactElement, ReactNode, useContext,
   useRef,
   useState,
 } from 'react';
@@ -23,7 +23,7 @@ import {
   CoreMessageType,
   isMultipleFilesMessage,
 } from '../../utils';
-import { useLocalization } from '../../lib/LocalizationContext';
+import {LocalizationContext, useLocalization} from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { EmojiContainer } from '@sendbird/chat';
@@ -142,7 +142,9 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const [selectedFeedback, setSelectedFeedback] = useState<FeedbackRating>(null);
   const [showFeedbackOptionsMenu, setShowFeedbackOptionsMenu] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
-  const [showFeedbackFailedModal, setShowFeedbackFailedModal] = useState(false);
+  const [feedbackFailedText, setFeedbackFailedText] = useState('');
+
+  const { stringSet } = useContext(LocalizationContext);
 
   const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
     || ((message as SendableMessageType)?.sendingStatus === 'pending')
@@ -493,7 +495,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                   });
                 } catch (error) {
                   config?.logger?.error?.('Channel: Submit feedback failed.', error);
-                  setShowFeedbackFailedModal(true);
+                  setFeedbackFailedText(stringSet.FEEDBACK_FAILED_SUBMIT);
                 }
               } else if (comment !== message.myFeedback.comment) {
                 const newFeedback: Feedback = new Feedback({
@@ -505,7 +507,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                   await message.updateFeedback(newFeedback);
                 } catch (error) {
                   config?.logger?.error?.('Channel: Update feedback failed.', error);
-                  setShowFeedbackFailedModal(true);
+                  setFeedbackFailedText(stringSet.FEEDBACK_FAILED_SAVE);
                 }
               }
               setSelectedFeedback(null);
@@ -516,7 +518,12 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               setShowFeedbackModal(false);
             }}
             onRemove={async () => {
-              await message.deleteFeedback(message.myFeedback.id);
+              try {
+                await message.deleteFeedback(message.myFeedback.id);
+              } catch (error) {
+                config?.logger?.error?.('Channel: Delete feedback failed.', error);
+                setFeedbackFailedText(stringSet.FEEDBACK_FAILED_DELETE);
+              }
               setSelectedFeedback(null);
               setShowFeedbackModal(false);
             }}
@@ -525,10 +532,11 @@ export default function MessageContent(props: MessageContentProps): ReactElement
       }
       {/* Feedback failed modal */}
       {
-        showFeedbackFailedModal && (
+        feedbackFailedText && (
           <MessageFeedbackFailedModal
+            text={feedbackFailedText}
             onCancel={() => {
-              setShowFeedbackFailedModal(false);
+              setFeedbackFailedText('');
             }}
           />
         )
