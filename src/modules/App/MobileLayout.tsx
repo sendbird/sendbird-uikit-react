@@ -108,7 +108,11 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (
               onProfileEditSuccess={onProfileEditSuccess}
               onChannelSelect={(channel) => {
                 setCurrentChannel(channel);
-                setPanel(PANELS.CHANNEL);
+                if (channel) {
+                  setPanel(PANELS.CHANNEL);
+                } else {
+                  setPanel(PANELS.CHANNEL_LIST);
+                }
               }}
               allowProfileEdit={allowProfileEdit}
               // this condition must be true for mobile
