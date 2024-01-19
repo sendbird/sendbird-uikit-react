@@ -161,6 +161,13 @@ export const VoicePlayerProvider = ({
             payload: { groupKey },
           });
         };
+        audioPlayer.onerror = (error) => {
+          logger.error('VoicePlayer: Failed to load the audioFile on the audio player.', error);
+          voicePlayerDispatcher({
+            type: RESET_AUDIO_UNIT,
+            payload: { groupKey },
+          });
+        };
         audioPlayer.dataset.sbGroupId = groupKey;
         // clean up the previous audio player
         try {
