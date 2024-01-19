@@ -15,6 +15,7 @@ export interface MessageFeedbackModalProps {
   message: CoreMessageType;
   onCancel?: () => void;
   onSubmit?: (comment: string) => void;
+  onUpdate?:  (comment: string) => void;
   onRemove?: () => void;
 }
 
@@ -24,6 +25,7 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
     message,
     onCancel,
     onSubmit,
+    onUpdate,
     onRemove,
   } = props;
 
@@ -31,11 +33,13 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
   const { isMobile } = useMediaQueryContext();
 
   const isEdit = message?.myFeedback && selectedFeedback === message.myFeedback.rating;
+  const onSubmitWrapper = isEdit ? onUpdate : onSubmit;
 
   const modalRef = useRef(null);
   const inputRef = useRef(null);
+
   const onKeyDown = useKeyDown(modalRef, {
-    Enter: () => onSubmit?.(inputRef.current.value ?? ''),
+    Enter: () => onSubmitWrapper?.(inputRef.current.value ?? ''),
     Escape: () => onCancel?.(),
   });
 
@@ -46,7 +50,7 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
         type={ButtonTypes.PRIMARY}
         onCancel={onCancel}
         onSubmit={() => {
-          onSubmit?.(inputRef.current.value ?? '');
+          onSubmitWrapper?.(inputRef.current.value ?? '');
         }}
         submitText={stringSet.BUTTON__SUBMIT}
         renderHeader={() => (
@@ -79,7 +83,7 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
                   {stringSet.BUTTON__CANCEL}
                 </Label>
               </Button>
-              <Button onClick={() => onSubmit?.(inputRef.current.value ?? '')}>
+              <Button onClick={() => onSubmitWrapper?.(inputRef.current.value ?? '')}>
                 <Label type={LabelTypography.BUTTON_3} color={LabelColors.ONCONTENT_1}>
                   { isEdit ? stringSet.BUTTON__SAVE : stringSet.BUTTON__SUBMIT }
                 </Label>

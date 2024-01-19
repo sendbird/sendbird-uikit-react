@@ -497,7 +497,15 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                   config?.logger?.error?.('Channel: Submit feedback failed.', error);
                   setFeedbackFailedText(stringSet.FEEDBACK_FAILED_SUBMIT);
                 }
-              } else if (comment !== message.myFeedback.comment) {
+              }
+              setSelectedFeedback(null);
+              setShowFeedbackModal(false);
+            }}
+            onUpdate={async (comment: string) => {
+              if (!selectedFeedback) {
+                return;
+              }
+              if (message.myFeedback && comment !== message.myFeedback.comment) {
                 const newFeedback: Feedback = new Feedback({
                   id: message.myFeedback.id,
                   rating: selectedFeedback,
