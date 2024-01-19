@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { User } from '@sendbird/chat';
 import {
   BaseMessageCreateParams,
@@ -14,7 +14,7 @@ import {
 } from '@sendbird/chat/message';
 import type { GroupChannel, MessageFilterParams, MessageCollectionParams } from '@sendbird/chat/groupChannel';
 import { MessageFilter } from '@sendbird/chat/groupChannel';
-import { useAsyncEffect, useGroupChannelMessages, useIIFE, usePreservedCallback } from '@sendbird/uikit-tools';
+import { useAsyncEffect, useAsyncLayoutEffect, useGroupChannelMessages, useIIFE, usePreservedCallback } from '@sendbird/uikit-tools';
 
 import type { CoreMessageType, SendableMessageType } from '../../../utils';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
@@ -116,7 +116,7 @@ export interface GroupChannelProviderInterface extends GroupChannelContextProps,
 
   scrollRef: React.MutableRefObject<HTMLDivElement>;
   scrollDistanceFromBottomRef: React.MutableRefObject<number>;
-  scrollPubSub: PubSubTypes<ScrollTopics, ScrollTopicUnion>
+  scrollPubSub: PubSubTypes<ScrollTopics, ScrollTopicUnion>;
   messageInputRef: React.MutableRefObject<HTMLDivElement>;
 
   quoteMessage: SendableMessageType | null;
@@ -300,9 +300,16 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
   // SideEffect: Scroll to the bottom
   //  - On the initialized message list
   //  - On messages sent from the thread
-  useLayoutEffect(() => {
+  useAsyncLayoutEffect(async () => {
     if (messageDataSource.initialized) {
-      scrollPubSub.publish('scrollToBottom', null);
+      // it prevents message load from previous/next before scroll to bottom finished.
+      preventDuplicateRequest.lock();
+      await preventDuplicateRequest.run(() => {
+        return new Promise<void>((resolve) => {
+          scrollPubSub.publish('scrollToBottom', resolve);
+        });
+      });
+      preventDuplicateRequest.release();
     }
 
     const onSentMessageFromOtherModule = (data: PubSubSendMessagePayload) => {
