@@ -15,15 +15,29 @@
     border-color: t(on-bg-4);
   }
 
+  &:hover {
+    @include themed() {
+      background-color: t(bg-1);
+    }
+  }
+
   &.sendbird-iconbutton__feedback__disabled {
     cursor: not-allowed;
-  }
-}
 
-.sendbird-iconbutton__feedback__pressed {
-  @include themed() {
-    border-color: t(primary-3);
-    background-color: t(primary-3);
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  &.sendbird-iconbutton__feedback__pressed {
+    &:hover {
+      background-color: transparent;
+    }
+
+    @include themed() {
+      border-color: t(primary-3);
+      background-color: t(primary-3);
+    }
   }
 }
 

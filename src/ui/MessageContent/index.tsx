@@ -1,5 +1,5 @@
 import React, {
-  ReactElement, ReactNode,
+  ReactElement, ReactNode, useContext,
   useRef,
   useState,
 } from 'react';
@@ -23,7 +23,7 @@ import {
   CoreMessageType,
   isMultipleFilesMessage,
 } from '../../utils';
-import { useLocalization } from '../../lib/LocalizationContext';
+import { LocalizationContext, useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { EmojiContainer } from '@sendbird/chat';
@@ -43,6 +43,7 @@ import FeedbackIconButton from '../FeedbackIconButton';
 import MobileFeedbackMenu from '../MobileFeedbackMenu';
 import MessageFeedbackModal from '../../modules/Channel/components/MessageFeedbackModal';
 import { SbFeedbackStatus } from './types';
+import MessageFeedbackFailedModal from '../../modules/Channel/components/MessageFeedbackFailedModal';
 
 export interface MessageContentProps {
   className?: string | Array<string>;
@@ -141,6 +142,9 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const [selectedFeedback, setSelectedFeedback] = useState<FeedbackRating>(null);
   const [showFeedbackOptionsMenu, setShowFeedbackOptionsMenu] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [feedbackFailedText, setFeedbackFailedText] = useState('');
+
+  const { stringSet } = useContext(LocalizationContext);
 
   const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
     || ((message as SendableMessageType)?.sendingStatus === 'pending')
@@ -165,6 +169,11 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     && message.myFeedbackStatus !== SbFeedbackStatus.NOT_APPLICABLE;
   const isFeedbackEnabled = config?.groupChannel?.enableFeedback && isFeedbackMessage;
   const feedbackMessageClassName = isFeedbackEnabled ? 'sendbird-message-content__feedback' : '';
+
+  const onCloseFeedbackForm = () => {
+    setSelectedFeedback(null);
+    setShowFeedbackModal(false);
+  };
 
   // onMouseDown: (e: React.MouseEvent<T>) => void;
   // onTouchStart: (e: React.TouchEvent<T>) => void;
@@ -473,40 +482,58 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           />
         )
       }
-      {/* Feedback Modal */}
+      {/* Feedback modal */}
       {
         showFeedbackModal && (
           <MessageFeedbackModal
             selectedFeedback={selectedFeedback}
             message={message}
             onSubmit={async (comment: string) => {
-              if (!selectedFeedback) {
-                return;
-              }
-              if (!message.myFeedback) {
+              try {
                 await message.submitFeedback({
                   rating: selectedFeedback,
                   comment,
                 });
-              } else if (comment !== message.myFeedback.comment) {
-                const newFeedback: Feedback = new Feedback({
-                  id: message.myFeedback.id,
-                  rating: selectedFeedback,
-                  comment,
-                });
-                await message.updateFeedback(newFeedback);
+              } catch (error) {
+                config?.logger?.error?.('Channel: Submit feedback failed.', error);
+                setFeedbackFailedText(stringSet.FEEDBACK_FAILED_SUBMIT);
               }
-              setSelectedFeedback(null);
-              setShowFeedbackModal(false);
+              onCloseFeedbackForm();
             }}
-            onCancel={() => {
-              setSelectedFeedback(null);
-              setShowFeedbackModal(false);
+            onUpdate={async (comment: string) => {
+              const newFeedback: Feedback = new Feedback({
+                id: message.myFeedback.id,
+                rating: selectedFeedback,
+                comment,
+              });
+              try {
+                await message.updateFeedback(newFeedback);
+              } catch (error) {
+                config?.logger?.error?.('Channel: Update feedback failed.', error);
+                setFeedbackFailedText(stringSet.FEEDBACK_FAILED_SAVE);
+              }
+              onCloseFeedbackForm();
             }}
+            onClose={onCloseFeedbackForm}
             onRemove={async () => {
-              await message.deleteFeedback(message.myFeedback.id);
-              setSelectedFeedback(null);
-              setShowFeedbackModal(false);
+              try {
+                await message.deleteFeedback(message.myFeedback.id);
+              } catch (error) {
+                config?.logger?.error?.('Channel: Delete feedback failed.', error);
+                setFeedbackFailedText(stringSet.FEEDBACK_FAILED_DELETE);
+              }
+              onCloseFeedbackForm();
+            }}
+          />
+        )
+      }
+      {/* Feedback failed modal */}
+      {
+        feedbackFailedText && (
+          <MessageFeedbackFailedModal
+            text={feedbackFailedText}
+            onCancel={() => {
+              setFeedbackFailedText('');
             }}
           />
         )
