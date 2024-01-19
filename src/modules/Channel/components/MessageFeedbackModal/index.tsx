@@ -15,7 +15,7 @@ export interface MessageFeedbackModalProps {
   message: CoreMessageType;
   onCancel?: () => void;
   onSubmit?: (comment: string) => void;
-  onUpdate?:  (comment: string) => void;
+  onUpdate?: (comment: string) => void;
   onRemove?: () => void;
 }
 
