@@ -1,5 +1,63 @@
 # Changelog - v3
 
+## [v3.10.0] (Jan 19, 2024)
+
+### Features:
+#### Feedback message feature
+Now we are supporting Feedback Message feature!
+Feedback message feature can be turned on through `enableFeedback` option. When turned on, feedback feature is applied to messages with non default `myFeedbackStatus` values.
+
+
+
+* Added `enableFeedback` global option
+  * How to use?
+  ```tsx
+  <App
+    appId={appId}
+    userId={userId}
+    uikitOptions={{
+      groupChannel: {
+        // Below turns on the feedback message feature. Default value is false.
+        enableFeedback: true,
+      }
+    }}
+  />
+  ```
+
+#### Others
+
+* Added `labelType`, and `labelColor` props to `ButtonProps`
+* Added `renderMessageContent` in `ChannelUIProps`
+  * Now you can customize `MessageContent` through `Channel` in two ways:
+    1. Customize with `renderMessage`
+      ```tsx
+      <Channel
+        renderMessage={(props) => (
+          <Message
+            {...props}
+            renderMessageContent={(props) => (
+              <MessageContent {...props} />
+            )}
+          />
+        )}
+      />
+      ```
+    2. **[Simpler]** Customize with `renderMessageContent`
+      ```tsx
+      <Channel
+        renderMessageContent={(props) => (
+          <MessageContent {...props} />
+        )}
+      />
+      ```
+  
+### Fixes:
+
+* Fixed a bug in mobile view where channel view is displaying a default channel when there is no channel in channel list
+* Added missing props renderMessageContent in Channel
+* Fixed a bug where center alignment of `Badge` and `Button` components breaking in FireFox browser
+* Fixed a bug where messages sent by bot member in group channel are not triggering the expected hooks (Original Author: [ishubham21](https://github.com/ishubham21))
+
 ## [v3.9.3] (Jan 5, 2024)
 
 ### Fixes:
