@@ -2,7 +2,7 @@ import type { EveryMessage, RenderCustomSeparatorProps, RenderMessageParamsType,
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { EmojiContainer, User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import type { FileMessage, UserMessageCreateParams, UserMessageUpdateParams } from '@sendbird/chat/message';
+import type { FileMessage, UserMessage, UserMessageCreateParams, UserMessageUpdateParams } from '@sendbird/chat/message';
 import format from 'date-fns/format';
 
 import { useLocalization } from '../../../../lib/LocalizationContext';
@@ -165,7 +165,7 @@ const MessageView = (props: MessageViewProps) => {
 
   useDidMountEffect(() => {
     handleScroll?.(true);
-  }, [message?.updatedAt]);
+  }, [message?.updatedAt, (message as UserMessage)?.message]);
 
   useLayoutEffect(() => {
     // Keep the scrollBottom value after fetching new message list

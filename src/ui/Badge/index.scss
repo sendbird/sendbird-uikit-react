@@ -4,7 +4,9 @@
   height: 20px;
   min-width: 20px;
   border-radius: 10px;
-  display: inline-block;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   @include themed() {
     background-color: t(primary-3);
   }
