@@ -54,7 +54,7 @@ export default function voicePlayerReducer(
         audioStorage: {
           ...state.audioStorage,
           [groupKey]: AudioUnitDefaultValue(),
-        }
+        },
       };
     }
     case SET_CURRENT_PLAYER: {
