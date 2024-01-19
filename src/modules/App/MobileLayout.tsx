@@ -105,9 +105,13 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
     allowProfileEdit,
     onProfileEditSuccess: onProfileEditSuccess,
     disableAutoSelect: true,
-    onChannelSelect: (channel: GroupChannelClass) => {
+    onChannelSelect: (channel: GroupChannelClass | null) => {
       setCurrentChannel(channel);
-      setPanel(PANELS.CHANNEL);
+      if (channel) {
+        setPanel(PANELS.CHANNEL);
+      } else {
+        setPanel(PANELS.CHANNEL_LIST);
+      }
     },
     // for GroupChannelList
     onCreateChannel: (channel: GroupChannelClass) => {
