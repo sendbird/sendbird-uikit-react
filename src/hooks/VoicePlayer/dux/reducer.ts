@@ -1,5 +1,6 @@
 import {
   INITIALIZE_AUDIO_UNIT,
+  RESET_AUDIO_UNIT,
   ON_CURRENT_TIME_UPDATE,
   ON_VOICE_PLAYER_PAUSE,
   ON_VOICE_PLAYER_PLAY,
@@ -43,6 +44,16 @@ export default function voicePlayerReducer(
         audioStorage: {
           ...state.audioStorage,
           [groupKey]: audioUnit,
+        },
+      };
+    }
+    case RESET_AUDIO_UNIT: {
+      const { groupKey } = action.payload;
+      return {
+        ...state,
+        audioStorage: {
+          ...state.audioStorage,
+          [groupKey]: AudioUnitDefaultValue(),
         },
       };
     }
