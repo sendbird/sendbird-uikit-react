@@ -23,7 +23,7 @@ import {
   CoreMessageType,
   isMultipleFilesMessage,
 } from '../../utils';
-import {LocalizationContext, useLocalization} from '../../lib/LocalizationContext';
+import { LocalizationContext, useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { EmojiContainer } from '@sendbird/chat';
