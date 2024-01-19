@@ -121,7 +121,7 @@ const EmojiReactions = ({
                       url={emoji?.url || ''}
                       width="28px"
                       height="28px"
-                      placeHolder={(style: Record<string, unknown>): ReactElement => (
+                      placeHolder={({ style }): ReactElement => (
                         <div style={style}>
                           <Icon
                             type={IconTypes.QUESTION}

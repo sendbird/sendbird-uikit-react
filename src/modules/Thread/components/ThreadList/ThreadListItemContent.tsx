@@ -41,7 +41,7 @@ import MobileMenu from '../../../../ui/MobileMenu';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import MultipleFilesMessageItemBody, { ThreadMessageKind } from '../../../../ui/MultipleFilesMessageItemBody';
 import { useThreadMessageKindKeySelector } from '../../../Channel/context/hooks/useThreadMessageKindKeySelector';
-import { useStatefulFileInfoList } from '../../../Channel/context/hooks/useStatefulFileInfoList';
+import { useFileInfoListWithUploaded } from '../../../Channel/context/hooks/useFileInfoListWithUploaded';
 import { useThreadContext } from '../../context/ThreadProvider';
 
 export interface ThreadListItemContentProps {
@@ -126,7 +126,7 @@ export default function ThreadListItemContent({
     isMobile,
   });
   // For MultipleFilesMessage only.
-  const statefulFileInfoList = useStatefulFileInfoList(message);
+  const statefulFileInfoList = useFileInfoListWithUploaded(message);
 
   return (
     <div

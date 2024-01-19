@@ -15,7 +15,7 @@ import VoiceMessageItemBody from '../../VoiceMessageItemBody';
 import ThumbnailMessageItemBody from '../../ThumbnailMessageItemBody';
 import UnknownMessageItemBody from '../../UnknownMessageItemBody';
 import { useThreadMessageKindKeySelector } from '../../../modules/Channel/context/hooks/useThreadMessageKindKeySelector';
-import { useStatefulFileInfoList } from '../../../modules/Channel/context/hooks/useStatefulFileInfoList';
+import { useFileInfoListWithUploaded } from '../../../modules/Channel/context/hooks/useFileInfoListWithUploaded';
 import { SendBirdStateConfig } from '../../../lib/types';
 import { Nullable } from '../../../types';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
@@ -53,7 +53,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
   const threadMessageKindKey = useThreadMessageKindKeySelector({
     isMobile,
   });
-  const statefulFileInfoList = useStatefulFileInfoList(message); // For MultipleFilesMessage.
+  const statefulFileInfoList = useFileInfoListWithUploaded(message); // For MultipleFilesMessage.
 
   const messageTypes = getUIKitMessageTypes();
   const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableOgtag;

@@ -99,8 +99,8 @@ export function MessageEmojiMenu({
                       url={emoji.url}
                       width="28px"
                       height="28px"
-                      placeHolder={(style) => (
-                        <div style={style as any}>
+                      placeHolder={({ style }) => (
+                        <div style={style}>
                           <Icon
                             type={IconTypes.QUESTION}
                             fillColor={IconColors.ON_BACKGROUND_3}

@@ -52,6 +52,7 @@ export const MessageList = ({
     scrollDistanceFromBottomRef,
     currentChannel,
     replyType,
+    scrollPubSub,
   } = useGroupChannelContext();
   const store = useSendbirdStateContext();
 
@@ -77,8 +78,9 @@ export const MessageList = ({
       const latestDistance = scrollDistanceFromBottomRef.current;
       const currentDistance = elem.scrollHeight - elem.scrollTop - elem.offsetHeight;
       if (latestDistance < currentDistance && (!isBottomMessageAffected || latestDistance < SCROLL_BUFFER)) {
+        const diff = currentDistance - latestDistance;
         // Move the scroll as much as the height of the message has changed
-        elem.scrollTop += currentDistance - latestDistance;
+        scrollPubSub.publish('scroll', { top: elem.scrollTop + diff, lazy: false });
       }
     }
   };
@@ -174,7 +176,7 @@ export const MessageList = ({
   );
 };
 
-const TypingIndicatorBubbleWrapper = (props: { handleScroll: () => void, channelUrl: string }) => {
+const TypingIndicatorBubbleWrapper = (props: { handleScroll: () => void; channelUrl: string }) => {
   const { stores } = useSendbirdStateContext();
   const [typingMembers, setTypingMembers] = useState<Member[]>([]);
 

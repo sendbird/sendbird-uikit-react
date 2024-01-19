@@ -2,8 +2,8 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import pubSubFactory from '../../../../lib/pubSub';
 import { useOnScrollPositionChangeDetectorWithRef } from '../../../../hooks/useOnScrollReachedEndDetector';
 
-type ScrollTopics = 'scrollToBottom' | 'scroll';
-type ScrollTopicUnion =
+export type ScrollTopics = 'scrollToBottom' | 'scroll';
+export type ScrollTopicUnion =
   | {
       topic: 'scrollToBottom';
       payload: undefined | null;
