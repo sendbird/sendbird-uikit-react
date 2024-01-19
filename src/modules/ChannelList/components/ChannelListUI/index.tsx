@@ -48,8 +48,9 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (
     onProfileEditSuccess,
   } = useChannelListContext();
 
-  const { config } = useSendbirdStateContext();
+  const { stores, config } = useSendbirdStateContext();
   const { logger, isOnline = false } = config;
+  const sdk = stores.sdkStore.sdk;
 
   const renderListItem = (props: { item: GroupChannel; index: number }) => {
     const { item: channel, index } = props;
@@ -74,7 +75,8 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (
     };
 
     const onClickChannel = () => {
-      if (!isOnline) {
+      if (!isOnline && !sdk?.isCacheEnabled) {
+        logger.warning('ChannelList: Inactivated clicking channel item during offline.');
         return;
       }
       logger.info('ChannelList: Clicked on channel:', channel);

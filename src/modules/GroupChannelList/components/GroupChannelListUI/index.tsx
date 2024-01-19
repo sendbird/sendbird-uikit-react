@@ -45,8 +45,9 @@ const GroupChannelListUI = (props: GroupChannelListUIProps) => {
     onUpdatedUserProfile,
   } = useGroupChannelListContext();
 
-  const { config } = useSendbirdStateContext();
+  const { stores, config } = useSendbirdStateContext();
   const { logger, isOnline } = config;
+  const sdk = stores.sdkStore.sdk;
 
   const renderListItem = (renderProps: { item: GroupChannel; index: number }) => {
     const { item: channel, index } = renderProps;
@@ -63,9 +64,11 @@ const GroupChannelListUI = (props: GroupChannelListUIProps) => {
     };
 
     const onClick = () => {
-      if (isOnline) {
+      if (isOnline || sdk?.isCacheEnabled) {
         logger.info('ChannelList: Clicked on channel:', channel);
         onChannelSelect(channel);
+      } else {
+        logger.warning('ChannelList: Inactivated clicking channel item during offline.');
       }
     };
 

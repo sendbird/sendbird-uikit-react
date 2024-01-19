@@ -74,7 +74,7 @@ export const MessageInputWrapperView = React.forwardRef((
   } = props;
   const { stringSet } = useLocalization();
   const { isMobile } = useMediaQueryContext();
-  const { config } = useSendbirdStateContext();
+  const { stores, config } = useSendbirdStateContext();
   const {
     isOnline,
     isMentionEnabled,
@@ -83,6 +83,7 @@ export const MessageInputWrapperView = React.forwardRef((
     userMention,
     logger,
   } = config;
+  const sdk = stores.sdkStore.sdk;
   const { maxMentionCount, maxSuggestionCount } = userMention;
 
   const { isBroadcast } = currentChannel;
@@ -102,7 +103,7 @@ export const MessageInputWrapperView = React.forwardRef((
     || !currentChannel
     || isDisabledBecauseFrozen(currentChannel)
     || isDisabledBecauseMuted(currentChannel)
-    || !isOnline;
+    || (!isOnline && !sdk?.isCacheEnabled);
   const showSuggestedMentionList = !isMessageInputDisabled
     && isMentionEnabled
     && mentionNickname.length > 0

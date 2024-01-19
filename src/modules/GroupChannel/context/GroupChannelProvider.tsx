@@ -335,7 +335,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
     setAnimatedMessageId(0);
     setIsScrollBottomReached(true);
 
-    if (messageDataSource.hasNext()) {
+    if (config.isOnline && messageDataSource.hasNext()) {
       await messageDataSource.resetWithStartingPoint(Number.MAX_SAFE_INTEGER);
       scrollPubSub.publish('scrollToBottom', null);
     } else {
