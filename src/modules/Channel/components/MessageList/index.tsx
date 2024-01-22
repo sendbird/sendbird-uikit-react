@@ -291,7 +291,7 @@ const MessageList: React.FC<MessageListProps> = ({
               time={unreadSince}
               lastReadAt={unreadSinceDate}
               onClick={() => {
-                if (scrollRef?.current) scrollRef.current.scrollTop = Number.MAX_SAFE_INTEGER;
+                if (scrollRef?.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
                 if (!disableMarkAsRead && !!currentGroupChannel) {
                   markAsReadScheduler.push(currentGroupChannel);
                   messagesDispatcher({
