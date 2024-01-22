@@ -33,6 +33,8 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
   const { isMobile } = useMediaQueryContext();
 
   const isEdit = message?.myFeedback && selectedFeedback === message.myFeedback.rating;
+  const hasComment = message?.myFeedback?.comment;
+
   const onSubmitWrapper = () => {
     if (!selectedFeedback) return;
     const comment = inputRef.current.value ?? '';
@@ -97,7 +99,7 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
               </Button>
               <Button onClick={() => onSubmitWrapper()}>
                 <Label type={LabelTypography.BUTTON_3} color={LabelColors.ONCONTENT_1}>
-                  { isEdit ? stringSet.BUTTON__SAVE : stringSet.BUTTON__SUBMIT }
+                  { hasComment ? stringSet.BUTTON__SAVE : stringSet.BUTTON__SUBMIT }
                 </Label>
               </Button>
             </div>
