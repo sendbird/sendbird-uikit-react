@@ -501,7 +501,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
       }
       {/* Feedback modal */}
       {
-        message.myFeedback.rating && showFeedbackModal && (
+        message?.myFeedback?.rating && showFeedbackModal && (
           <MessageFeedbackModal
             selectedFeedback={message.myFeedback.rating}
             message={message}
