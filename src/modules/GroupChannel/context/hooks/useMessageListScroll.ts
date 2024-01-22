@@ -47,7 +47,7 @@ export function useMessageListScroll() {
         runCallback(() => {
           if (!scrollRef.current) return;
 
-          scrollRef.current.scrollTop = Number.MAX_SAFE_INTEGER;
+          scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
 
           // Update data by manual update
           scrollDistanceFromBottomRef.current = 0;
