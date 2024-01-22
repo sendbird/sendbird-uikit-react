@@ -108,28 +108,36 @@ export default function channelListReducer(
       .with({ type: channelListActions.ON_USER_LEFT }, (action) => {
         const { channel, isMe } = action.payload;
         const { allChannels, currentUserId, currentChannel, channelListQuery, disableAutoSelect } = state;
-        let nextChannels = allChannels.filter((ch) => ch.url !== channel.url);
-        if (!channelListQuery || filterChannelListParams(channelListQuery, channel, currentUserId)) {
-          // Good to [add to/keep in] the ChannelList
-          nextChannels = getChannelsWithUpsertedChannel(allChannels, channel);
-        }
 
-        let nextChannel = currentChannel;
-        // Replace the currentChannel if I left the currentChannel
+        // If I left: remove from allChannels and replace the currentChannel if needed
         if (isMe) {
-          nextChannel = getNextChannel({
+          const nextChannels = allChannels.filter((ch) => ch.url !== channel.url);
+          const nextChannel = getNextChannel({
             channel,
             currentChannel,
             allChannels,
             disableAutoSelect,
           });
-        }
 
-        return {
-          ...state,
-          currentChannel: nextChannel,
-          allChannels: nextChannels,
-        };
+          return {
+            ...state,
+            currentChannel: nextChannel,
+            allChannels: nextChannels,
+          };
+        }
+        // If someone else left: update allChannels if needed (don't touch currentChannel)
+        else {
+          let nextChannels = allChannels.filter((ch) => ch.url !== channel.url);
+          if (!channelListQuery || filterChannelListParams(channelListQuery, channel, currentUserId)) {
+            // Good to [add to/keep in] the ChannelList
+            nextChannels = getChannelsWithUpsertedChannel(allChannels, channel);
+          }
+
+          return {
+            ...state,
+            allChannels: nextChannels,
+          }
+        }
       })
       .with(
         {
