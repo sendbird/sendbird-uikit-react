@@ -66,7 +66,7 @@ function ChannelAvatar({
           alt={channel?.name}
         />
       )
-  ), [channel?.members, channel?.coverUrl, theme]);
+  ), [utils.getChannelAvatarSource(channel, userId), theme]);
   return (
     <>{ memoizedAvatar }</>
   );
