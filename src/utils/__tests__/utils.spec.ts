@@ -175,6 +175,10 @@ describe('isURL', () => {
       // with the hash property
       'https://example.com/path/to/page.html?query=string#hash',
       'https://docs.google.com/document/d/19IccwdTIwNPJ_rGtsbi2Ft8dshaH4WiCXD5pder97VE/edit#heading=h.pve9ikkfqqzz',
+      // A subdomain has a hyphen
+      'https://send-bird.slack.com/archives/C065N4UQ77W/p1699931368643169?thread_ts=1699925671l395019&cid-Co65N4UQ77W',
+      // with long top-level domain
+      'https://send.bird.business/archives/C065N4UQ77W/p1699931368643169?thread_ts=1699925671l395019&cid-Co65N4UQ77W',
     ];
     validURLs.forEach((url) => {
       expect(isUrl(url)).toBe(true);
