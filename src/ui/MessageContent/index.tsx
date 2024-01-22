@@ -354,6 +354,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                       openFeedbackFormOrMenu();
                     } catch (error) {
                       config?.logger?.error?.('Channel: Submit feedback failed.', error);
+                      setFeedbackFailedText(stringSet.FEEDBACK_FAILED_SUBMIT);
                     }
                   } else {
                     openFeedbackFormOrMenu();
@@ -378,6 +379,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                       openFeedbackFormOrMenu();
                     } catch (error) {
                       config?.logger?.error?.('Channel: Submit feedback failed.', error);
+                      setFeedbackFailedText(stringSet.FEEDBACK_FAILED_SUBMIT);
                     }
                   } else {
                     openFeedbackFormOrMenu();
@@ -493,7 +495,12 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               setShowFeedbackModal(true);
             }}
             onRemoveFeedback={async () => {
-              await message.deleteFeedback(message.myFeedback.id);
+              try {
+                await message.deleteFeedback(message.myFeedback.id);
+              } catch (error) {
+                config?.logger?.error?.('Channel: Delete feedback failed.', error);
+                setFeedbackFailedText(stringSet.FEEDBACK_FAILED_DELETE);
+              }
               setShowFeedbackOptionsMenu(false);
             }}
           />
@@ -505,18 +512,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           <MessageFeedbackModal
             selectedFeedback={message.myFeedback.rating}
             message={message}
-            onSubmit={async (selectedFeedback: FeedbackRating, comment: string) => {
-              try {
-                await message.submitFeedback({
-                  rating: selectedFeedback,
-                  comment,
-                });
-              } catch (error) {
-                config?.logger?.error?.('Channel: Submit feedback failed.', error);
-                setFeedbackFailedText(stringSet.FEEDBACK_FAILED_SUBMIT);
-              }
-              onCloseFeedbackForm();
-            }}
             onUpdate={async (selectedFeedback: FeedbackRating, comment: string) => {
               const newFeedback: Feedback = new Feedback({
                 id: message.myFeedback.id,
