@@ -109,13 +109,12 @@ export default function channelListReducer(
         const { channel, isMe } = action.payload;
         const { allChannels, currentUserId, currentChannel, channelListQuery, disableAutoSelect } = state;
         let nextChannels = allChannels.filter((ch) => ch.url !== channel.url);
-        let nextChannel = null;
-        if (channelListQuery) {
-          if (filterChannelListParams(channelListQuery, channel, currentUserId)) {
-            // Good to [add to/keep in] the ChannelList
-            nextChannels = getChannelsWithUpsertedChannel(allChannels, channel);
-          }
+        if (!channelListQuery || filterChannelListParams(channelListQuery, channel, currentUserId)) {
+          // Good to [add to/keep in] the ChannelList
+          nextChannels = getChannelsWithUpsertedChannel(allChannels, channel);
         }
+
+        let nextChannel = currentChannel;
         // Replace the currentChannel if I left the currentChannel
         if (isMe) {
           nextChannel = getNextChannel({
@@ -125,6 +124,7 @@ export default function channelListReducer(
             disableAutoSelect,
           });
         }
+
         return {
           ...state,
           currentChannel: nextChannel,
