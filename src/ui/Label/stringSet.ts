@@ -216,12 +216,17 @@ const stringSet = {
     FEEDBACK_LIKE: 'Like',
     FEEDBACK_DISLIKE: 'Dislike',
     // Mobile feedback options menu items
-    EDIT_COMMENT: 'Edit Comment',
+    EDIT_COMMENT: 'Edit comment',
     REMOVE_FEEDBACK: 'Remove Feedback',
     // Feedback modal title
     FEEDBACK_MODAL_TITLE: 'Provide additional feedback (optional)',
     FEEDBACK_CONTENT_PLACEHOLDER: 'Leave a comment',
     BUTTON__REMOVE_FEEDBACK: 'Remove feedback',
+    // Feedback failed modal title
+    FEEDBACK_FAILED_SUBMIT: 'Couldn’t submit. Try again.',
+    FEEDBACK_FAILED_SAVE: 'Couldn’t save. Try again.',
+    FEEDBACK_FAILED_DELETE: 'Couldn’t delete. Try again.',
+
   },
 };
 

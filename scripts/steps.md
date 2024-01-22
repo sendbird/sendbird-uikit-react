@@ -2,7 +2,7 @@
 
 ## Step 0 - Setup
 1. Create a new branch for the release: `git checkout -b release/{X.X.X}` (before it was `release/v{X.X.X}`) 
-2. Write/Generate changelog in CHANGELOG.md
+2. Write/Generate changelog in CHANGELOG.md and bump package version in package.json
 3. Commit all changes, push to remote
 4. Comment `/bot create ticket` on github PR to make release ticket automatically
 
