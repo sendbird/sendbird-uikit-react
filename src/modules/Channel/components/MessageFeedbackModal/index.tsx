@@ -11,11 +11,11 @@ import { FeedbackRating } from '@sendbird/chat/message';
 import { useKeyDown } from '../../../../hooks/useKeyDown/useKeyDown';
 
 export interface MessageFeedbackModalProps {
-  selectedFeedback: FeedbackRating;
+  selectedFeedback: FeedbackRating | undefined;
   message: CoreMessageType;
   onClose?: () => void;
-  onSubmit?: (comment: string) => void;
-  onUpdate?: (comment: string) => void;
+  onSubmit?: (selectedFeedback: FeedbackRating, comment: string) => void;
+  onUpdate?: (selectedFeedback: FeedbackRating, comment: string) => void;
   onRemove?: () => void;
 }
 
@@ -38,12 +38,12 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
     const comment = inputRef.current.value ?? '';
     if (isEdit) {
       if (comment !== message.myFeedback.comment) {
-        onUpdate?.(comment);
+        onUpdate?.(selectedFeedback, comment);
       } else {
         onClose?.();
       }
     } else if (!message.myFeedback) {
-      onSubmit?.(comment);
+      onSubmit?.(selectedFeedback, comment);
     }
   };
 
