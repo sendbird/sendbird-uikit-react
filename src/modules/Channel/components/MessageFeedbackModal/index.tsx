@@ -11,11 +11,11 @@ import { FeedbackRating } from '@sendbird/chat/message';
 import { useKeyDown } from '../../../../hooks/useKeyDown/useKeyDown';
 
 export interface MessageFeedbackModalProps {
-  selectedFeedback: FeedbackRating;
+  selectedFeedback: FeedbackRating | undefined;
   message: CoreMessageType;
   onClose?: () => void;
-  onSubmit?: (comment: string) => void;
-  onUpdate?: (comment: string) => void;
+  onSubmit?: (selectedFeedback: FeedbackRating, comment: string) => void;
+  onUpdate?: (selectedFeedback: FeedbackRating, comment: string) => void;
   onRemove?: () => void;
 }
 
@@ -33,17 +33,19 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
   const { isMobile } = useMediaQueryContext();
 
   const isEdit = message?.myFeedback && selectedFeedback === message.myFeedback.rating;
+  const hasComment = message?.myFeedback?.comment;
+
   const onSubmitWrapper = () => {
     if (!selectedFeedback) return;
     const comment = inputRef.current.value ?? '';
     if (isEdit) {
       if (comment !== message.myFeedback.comment) {
-        onUpdate?.(comment);
+        onUpdate?.(selectedFeedback, comment);
       } else {
         onClose?.();
       }
     } else if (!message.myFeedback) {
-      onSubmit?.(comment);
+      onSubmit?.(selectedFeedback, comment);
     }
   };
 
@@ -97,7 +99,7 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
               </Button>
               <Button onClick={() => onSubmitWrapper()}>
                 <Label type={LabelTypography.BUTTON_3} color={LabelColors.ONCONTENT_1}>
-                  { isEdit ? stringSet.BUTTON__SAVE : stringSet.BUTTON__SUBMIT }
+                  { hasComment ? stringSet.BUTTON__SAVE : stringSet.BUTTON__SUBMIT }
                 </Label>
               </Button>
             </div>

@@ -139,7 +139,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const [mouseHover, setMouseHover] = useState(false);
   const [supposedHover, setSupposedHover] = useState(false);
   // Feedback states
-  const [selectedFeedback, setSelectedFeedback] = useState<FeedbackRating>(null);
   const [showFeedbackOptionsMenu, setShowFeedbackOptionsMenu] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [feedbackFailedText, setFeedbackFailedText] = useState('');
@@ -171,8 +170,15 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const feedbackMessageClassName = isFeedbackEnabled ? 'sendbird-message-content__feedback' : '';
 
   const onCloseFeedbackForm = () => {
-    setSelectedFeedback(null);
     setShowFeedbackModal(false);
+  };
+
+  const openFeedbackFormOrMenu = () => {
+    if (isMobile) {
+      setShowFeedbackOptionsMenu(true);
+    } else {
+      setShowFeedbackModal(true);
+    }
   };
 
   // onMouseDown: (e: React.MouseEvent<T>) => void;
@@ -339,12 +345,19 @@ export default function MessageContent(props: MessageContentProps): ReactElement
             >
               <FeedbackIconButton
                 isSelected={message?.myFeedback?.rating === FeedbackRating.GOOD}
-                onClick={() => {
-                  setSelectedFeedback(FeedbackRating.GOOD);
-                  if (isMobile && message?.myFeedback?.rating === FeedbackRating.GOOD) {
-                    setShowFeedbackOptionsMenu(true);
+                onClick={async () => {
+                  if (!message?.myFeedback?.rating) {
+                    try {
+                      await message.submitFeedback({
+                        rating: FeedbackRating.GOOD,
+                      });
+                      openFeedbackFormOrMenu();
+                    } catch (error) {
+                      config?.logger?.error?.('Channel: Submit feedback failed.', error);
+                      setFeedbackFailedText(stringSet.FEEDBACK_FAILED_SUBMIT);
+                    }
                   } else {
-                    setShowFeedbackModal(true);
+                    openFeedbackFormOrMenu();
                   }
                 }}
                 disabled={message?.myFeedback && message.myFeedback.rating !== FeedbackRating.GOOD}
@@ -357,12 +370,19 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               </FeedbackIconButton>
               <FeedbackIconButton
                 isSelected={message?.myFeedback?.rating === FeedbackRating.BAD}
-                onClick={() => {
-                  setSelectedFeedback(FeedbackRating.BAD);
-                  if (isMobile && message?.myFeedback?.rating === FeedbackRating.BAD) {
-                    setShowFeedbackOptionsMenu(true);
+                onClick={async () => {
+                  if (!message?.myFeedback?.rating) {
+                    try {
+                      await message.submitFeedback({
+                        rating: FeedbackRating.BAD,
+                      });
+                      openFeedbackFormOrMenu();
+                    } catch (error) {
+                      config?.logger?.error?.('Channel: Submit feedback failed.', error);
+                      setFeedbackFailedText(stringSet.FEEDBACK_FAILED_SUBMIT);
+                    }
                   } else {
-                    setShowFeedbackModal(true);
+                    openFeedbackFormOrMenu();
                   }
                 }}
                 disabled={message?.myFeedback && message.myFeedback.rating !== FeedbackRating.BAD}
@@ -465,7 +485,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
         )
       }
       {
-        showFeedbackOptionsMenu && (
+        message?.myFeedback?.rating && showFeedbackOptionsMenu && (
           <MobileFeedbackMenu
             hideMenu={() => {
               setShowFeedbackOptionsMenu(false);
@@ -475,8 +495,12 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               setShowFeedbackModal(true);
             }}
             onRemoveFeedback={async () => {
-              await message.deleteFeedback(message.myFeedback.id);
-              setSelectedFeedback(null);
+              try {
+                await message.deleteFeedback(message.myFeedback.id);
+              } catch (error) {
+                config?.logger?.error?.('Channel: Delete feedback failed.', error);
+                setFeedbackFailedText(stringSet.FEEDBACK_FAILED_DELETE);
+              }
               setShowFeedbackOptionsMenu(false);
             }}
           />
@@ -484,23 +508,11 @@ export default function MessageContent(props: MessageContentProps): ReactElement
       }
       {/* Feedback modal */}
       {
-        showFeedbackModal && (
+        message?.myFeedback?.rating && showFeedbackModal && (
           <MessageFeedbackModal
-            selectedFeedback={selectedFeedback}
+            selectedFeedback={message.myFeedback.rating}
             message={message}
-            onSubmit={async (comment: string) => {
-              try {
-                await message.submitFeedback({
-                  rating: selectedFeedback,
-                  comment,
-                });
-              } catch (error) {
-                config?.logger?.error?.('Channel: Submit feedback failed.', error);
-                setFeedbackFailedText(stringSet.FEEDBACK_FAILED_SUBMIT);
-              }
-              onCloseFeedbackForm();
-            }}
-            onUpdate={async (comment: string) => {
+            onUpdate={async (selectedFeedback: FeedbackRating, comment: string) => {
               const newFeedback: Feedback = new Feedback({
                 id: message.myFeedback.id,
                 rating: selectedFeedback,
