@@ -25,7 +25,7 @@ export default function InviteUsers({ onCancel, onSubmit }: Props) {
   const sdk = state?.stores?.sdkStore?.sdk;
   const globalUserListQuery = state?.config?.userListQuery;
 
-  const { channel, overrideInviteUser, queries, forceUpdateUI } = useChannelSettingsContext();
+  const { channel, overrideInviteUser, queries } = useChannelSettingsContext();
   const { stringSet } = useLocalization();
 
   const onScroll = useOnScrollPositionChangeDetector({
@@ -70,7 +70,7 @@ export default function InviteUsers({ onCancel, onSubmit }: Props) {
 
   useEffect(() => {
     const fetchUsersAndSetQuery = async () => {
-      let query: UserListQuery = globalUserListQuery?.() ?? sdk?.createApplicationUserListQuery(queries?.applicationUserListQuery);
+      const query: UserListQuery = globalUserListQuery?.() ?? sdk?.createApplicationUserListQuery(queries?.applicationUserListQuery);
       if (query) {
         const users = await query.next();
         setUserListQuery(query);
