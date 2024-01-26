@@ -781,7 +781,7 @@ export const getChannelsWithUpsertedChannel = (
   } else {
     channels.push(channel);
   }
-  return channels.sort(compareFunc)
+  return channels.sort(compareFunc);
 };
 
 export const getMatchedUserIds = (word: string, users: Array<User>, _template?: string): boolean => {
