@@ -99,7 +99,12 @@ export const MutedMemberList = (): ReactElement => {
                       <MenuItem
                         onClick={() => {
                           channel?.unmuteUser(member).then(() => {
-                            refreshList();
+                            /**
+                             * Limitation to server-side table update delay.
+                             */
+                            setTimeout(() => {
+                              refreshList();
+                            }, 500);
                             closeDropdown();
                           });
                         }}
