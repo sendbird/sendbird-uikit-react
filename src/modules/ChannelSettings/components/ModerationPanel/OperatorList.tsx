@@ -100,7 +100,12 @@ export const OperatorList = (): ReactElement => {
                       <MenuItem
                         onClick={() => {
                           channel?.removeOperators([operator.userId]).then(() => {
-                            refreshList();
+                            /**
+                             * Limitation to server-side table update delay.
+                             */
+                            setTimeout(() => {
+                              refreshList();
+                            }, 500);
                           });
                           closeDropdown();
                         }}
