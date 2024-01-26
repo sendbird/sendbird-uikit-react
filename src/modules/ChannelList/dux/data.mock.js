@@ -412,4 +412,5 @@ export const creatingChannel = {
   members: users,
   lastMessage: { createdAt: 1004 },
   customType: '',
+  createdAt: 0,
 };
