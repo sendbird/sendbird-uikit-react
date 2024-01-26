@@ -21,6 +21,7 @@ export interface ThreadMessageInputProps {
   renderFileUploadIcon?: () => React.ReactElement;
   renderVoiceMessageIcon?: () => React.ReactElement;
   renderSendMessageIcon?: () => React.ReactElement;
+  acceptableMimeTypes?: string[];
 }
 
 const ThreadMessageInput = (
@@ -32,6 +33,7 @@ const ThreadMessageInput = (
     renderFileUploadIcon,
     renderVoiceMessageIcon,
     renderSendMessageIcon,
+    acceptableMimeTypes,
   } = props;
   const propsDisabled = props.disabled;
   const { config } = useSendbirdStateContext();
@@ -161,6 +163,7 @@ const ThreadMessageInput = (
               messageFieldId="sendbird-message-input-text-field--thread"
               disabled={disabled}
               channel={currentChannel}
+              acceptableMimeTypes={acceptableMimeTypes}
               setMentionedUsers={setMentionedUsers}
               channelUrl={currentChannel?.url}
               mentionSelectedUser={selectedUser}

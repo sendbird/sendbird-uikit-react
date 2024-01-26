@@ -22,6 +22,7 @@ export type MessageInputWrapperProps = {
   renderFileUploadIcon?: () => React.ReactElement;
   renderVoiceMessageIcon?: () => React.ReactElement;
   renderSendMessageIcon?: () => React.ReactElement;
+  acceptableMimeTypes?: string[];
 };
 
 const MessageInputWrapper = (
@@ -33,6 +34,7 @@ const MessageInputWrapper = (
     renderFileUploadIcon,
     renderVoiceMessageIcon,
     renderSendMessageIcon,
+    acceptableMimeTypes,
   } = props;
   const propDisabled = props.disabled;
   const channelContext = useChannelContext();
@@ -186,6 +188,7 @@ const MessageInputWrapper = (
               className="sendbird-message-input-wrapper__message-input"
               value={value}
               channelUrl={channel?.url}
+              acceptableMimeTypes={acceptableMimeTypes}
               mentionSelectedUser={selectedUser}
               isMentionEnabled={isMentionEnabled}
               isVoiceMessageEnabled={isVoiceMessageEnabled}
