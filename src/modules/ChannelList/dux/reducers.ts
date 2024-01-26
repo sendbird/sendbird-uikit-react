@@ -46,7 +46,7 @@ export default function channelListReducer(
             return {
               ...state,
               currentChannel: channel,
-              allChannels: getChannelsWithUpsertedChannel(allChannels, channel),
+              allChannels: getChannelsWithUpsertedChannel(allChannels, channel, state.channelListQuery?.order),
             };
           }
           // Do not add to the ChannelList
@@ -72,7 +72,7 @@ export default function channelListReducer(
             // Good to [add to/keep in] the ChannelList
             return {
               ...state,
-              allChannels: getChannelsWithUpsertedChannel(allChannels, channel),
+              allChannels: getChannelsWithUpsertedChannel(allChannels, channel, state.channelListQuery?.order),
             };
           }
           // * Remove the channel from the ChannelList: because the channel is filtered
@@ -113,7 +113,7 @@ export default function channelListReducer(
         if (channelListQuery) {
           if (filterChannelListParams(channelListQuery, channel, currentUserId)) {
             // Good to [add to/keep in] the ChannelList
-            nextChannels = getChannelsWithUpsertedChannel(allChannels, channel);
+            nextChannels = getChannelsWithUpsertedChannel(allChannels, channel, state.channelListQuery?.order);
           }
         }
         // Replace the currentChannel if I left the currentChannel
@@ -150,7 +150,7 @@ export default function channelListReducer(
               // Good to [add to/keep in] the ChannelList
               return {
                 ...state,
-                allChannels: getChannelsWithUpsertedChannel(allChannels, channel),
+                allChannels: getChannelsWithUpsertedChannel(allChannels, channel, state.channelListQuery?.order),
               };
             }
             // Filter the channel from the ChannelList
@@ -208,7 +208,7 @@ export default function channelListReducer(
             // Good to [add to/keep in] the ChannelList
             return {
               ...state,
-              allChannels: getChannelsWithUpsertedChannel(allChannels, channel),
+              allChannels: getChannelsWithUpsertedChannel(allChannels, channel, state.channelListQuery?.order),
             };
           }
           // Filter the channel from the ChannelList
@@ -245,7 +245,7 @@ export default function channelListReducer(
             // Good to [add to/keep in] the ChannelList
             return {
               ...state,
-              allChannels: getChannelsWithUpsertedChannel(allChannels, channel),
+              allChannels: getChannelsWithUpsertedChannel(allChannels, channel, state.channelListQuery?.order),
             };
           }
           // Filter the channel from the ChannelList
@@ -274,24 +274,6 @@ export default function channelListReducer(
             }
             return ch;
           }),
-        };
-      })
-      .with({ type: channelListActions.CHANNEL_REPLACED_TO_TOP }, (action) => {
-        if (state.channelListQuery) {
-          if (filterChannelListParams(state.channelListQuery, action.payload, state.currentUserId)) {
-            return {
-              ...state,
-              allChannels: [
-                action.payload,
-                ...state.allChannels.filter((channel) => channel?.url !== action.payload.url),
-              ],
-            };
-          }
-          return state;
-        }
-        return {
-          ...state,
-          allChannels: [action.payload, ...state.allChannels.filter((channel) => channel?.url !== action.payload.url)],
         };
       })
       .with({ type: channelListActions.CHANNEL_LIST_PARAMS_UPDATED }, (action) => ({

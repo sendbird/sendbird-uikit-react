@@ -1,5 +1,5 @@
 import SendbirdChat, { Emoji, EmojiCategory, EmojiContainer, User } from '@sendbird/chat';
-import { GroupChannel, Member, SendbirdGroupChat, GroupChannelListQuery } from '@sendbird/chat/groupChannel';
+import { GroupChannel, Member, SendbirdGroupChat, GroupChannelListQuery, GroupChannelListOrder } from '@sendbird/chat/groupChannel';
 import {
   AdminMessage,
   BaseMessage,
@@ -757,29 +757,26 @@ export const filterChannelListParams = (params: GroupChannelListQuery, channel: 
   return true;
 };
 
-export const binarySearch = (list: Array<number>, number: number): number => { // [100, 99, 98, 97, ...]
-  const pivot = Math.floor(list.length / 2);
-  if (list[pivot] === number) {
-    return pivot;
-  }
-  const leftList = list.slice(0, pivot);
-  const rightList = list.slice(pivot + 1, list.length);
-  if (list[pivot] > number) {
-    return pivot + 1 + (rightList.length === 0 ? 0 : binarySearch(rightList, number));
-  } else {
-    return (leftList.length === 0) ? pivot : binarySearch(leftList, number);
-  }
-};
 // This is required when channel is displayed on channel list by filter
-export const getChannelsWithUpsertedChannel = (channels: Array<GroupChannel>, channel: GroupChannel): Array<GroupChannel> => {
-  if (channels.some((ch: GroupChannel) => ch.url === channel?.url)) {
-    return channels.map((ch: GroupChannel) => (ch.url === channel?.url ? channel : ch));
-  }
-  const targetIndex = binarySearch(
-    channels.map((channel: GroupChannel) => channel?.lastMessage?.createdAt || channel?.createdAt),
-    channel?.lastMessage?.createdAt || channel?.createdAt,
-  );
-  return [...channels.slice(0, targetIndex), channel, ...channels.slice(targetIndex, channels.length)];
+export const getChannelsWithUpsertedChannel = (
+  channels: Array<GroupChannel>,
+  channel: GroupChannel,
+  order?: GroupChannelListOrder,
+): Array<GroupChannel> => {
+  const compareFunc = match(order)
+    .with(GroupChannelListOrder.CHANNEL_NAME_ALPHABETICAL, () => (
+      (a: GroupChannel, b: GroupChannel) => a.name.localeCompare(b.name)
+    ))
+    .with(GroupChannelListOrder.CHRONOLOGICAL, () => (
+      (a: GroupChannel, b: GroupChannel) => b.createdAt - a.createdAt
+    ))
+    .otherwise(() => (
+      (a: GroupChannel, b: GroupChannel) => (b.lastMessage?.createdAt ?? Number.MIN_SAFE_INTEGER) - (a.lastMessage?.createdAt ?? Number.MIN_SAFE_INTEGER)
+    ));
+
+  return channels
+    .map((ch: GroupChannel) => (ch.url === channel?.url ? channel : ch))
+    .sort(compareFunc);
 };
 
 export const getMatchedUserIds = (word: string, users: Array<User>, _template?: string): boolean => {
