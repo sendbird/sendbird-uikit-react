@@ -120,7 +120,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     renderVoiceMessageIcon = noop,
     renderSendMessageIcon = noop,
     setMentionedUsers = noop,
-    acceptableMimeTypes = null,
+    acceptableMimeTypes,
   } = props;
 
   const internalRef = (externalRef && 'current' in externalRef) ? externalRef : null;

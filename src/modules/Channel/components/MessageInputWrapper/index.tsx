@@ -11,6 +11,7 @@ export interface MessageInputWrapperProps {
   renderFileUploadIcon?: () => React.ReactElement;
   renderVoiceMessageIcon?: () => React.ReactElement;
   renderSendMessageIcon?: () => React.ReactElement;
+  acceptableMimeTypes?: string[];
 }
 
 export const MessageInputWrapper = (props: MessageInputWrapperProps) => {

@@ -48,6 +48,7 @@ export interface MessageInputWrapperViewProps {
   renderFileUploadIcon?: () => React.ReactElement;
   renderVoiceMessageIcon?: () => React.ReactElement;
   renderSendMessageIcon?: () => React.ReactElement;
+  acceptableMimeTypes?: string[];
 }
 
 export const MessageInputWrapperView = React.forwardRef((
@@ -71,6 +72,7 @@ export const MessageInputWrapperView = React.forwardRef((
     renderFileUploadIcon,
     renderVoiceMessageIcon,
     renderSendMessageIcon,
+    acceptableMimeTypes,
   } = props;
   const { stringSet } = useLocalization();
   const { isMobile } = useMediaQueryContext();
@@ -197,6 +199,7 @@ export const MessageInputWrapperView = React.forwardRef((
           className="sendbird-message-input-wrapper__message-input"
           channel={currentChannel}
           channelUrl={currentChannel?.url}
+          acceptableMimeTypes={acceptableMimeTypes}
           mentionSelectedUser={selectedUser}
           isMentionEnabled={isMentionEnabled}
           isVoiceMessageEnabled={isVoiceMessageEnabled}
