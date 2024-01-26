@@ -100,9 +100,7 @@ export const OperatorList = (): ReactElement => {
                       <MenuItem
                         onClick={() => {
                           channel?.removeOperators([operator.userId]).then(() => {
-                            setOperators(operators.filter(({ userId }) => (
-                              userId !== operator.userId
-                            )));
+                            refreshList();
                           });
                           closeDropdown();
                         }}
@@ -157,7 +155,12 @@ export const OperatorList = (): ReactElement => {
           <AddOperatorsModal
             onCancel={() => setShowAdd(false)}
             onSubmit={() => {
-              refreshList();
+              /**
+               * Limitation to server-side table update delay.
+               */
+              setTimeout(() => {
+                refreshList();
+              }, 500);
               setShowAdd(false);
             }}
           />
