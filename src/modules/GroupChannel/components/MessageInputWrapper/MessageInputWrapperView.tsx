@@ -36,6 +36,7 @@ export interface MessageInputWrapperViewProps {
   currentChannel: GroupChannel;
   isMultipleFilesMessageEnabled?: boolean;
   loading: boolean;
+  acceptableMimeTypes?: string[];
   quoteMessage: SendableMessageType | null;
   setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
   messageInputRef: React.MutableRefObject<HTMLDivElement>;
@@ -59,6 +60,7 @@ export const MessageInputWrapperView = React.forwardRef((
     currentChannel,
     isMultipleFilesMessageEnabled: localIsMFMEnabled,
     loading,
+    acceptableMimeTypes,
     quoteMessage,
     setQuoteMessage,
     messageInputRef,
@@ -197,6 +199,7 @@ export const MessageInputWrapperView = React.forwardRef((
           className="sendbird-message-input-wrapper__message-input"
           channel={currentChannel}
           channelUrl={currentChannel?.url}
+          acceptableMimeTypes={acceptableMimeTypes}
           mentionSelectedUser={selectedUser}
           isMentionEnabled={isMentionEnabled}
           isVoiceMessageEnabled={isVoiceMessageEnabled}
