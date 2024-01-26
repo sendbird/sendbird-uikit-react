@@ -759,7 +759,7 @@ export const filterChannelListParams = (params: GroupChannelListQuery, channel: 
 
 // This is required when channel is displayed on channel list by filter
 export const getChannelsWithUpsertedChannel = (
-  channels: Array<GroupChannel>,
+  _channels: Array<GroupChannel>,
   channel: GroupChannel,
   order?: GroupChannelListOrder,
 ): Array<GroupChannel> => {
@@ -774,9 +774,14 @@ export const getChannelsWithUpsertedChannel = (
       (a: GroupChannel, b: GroupChannel) => (b.lastMessage?.createdAt ?? Number.MIN_SAFE_INTEGER) - (a.lastMessage?.createdAt ?? Number.MIN_SAFE_INTEGER)
     ));
 
-  return channels
-    .map((ch: GroupChannel) => (ch.url === channel?.url ? channel : ch))
-    .sort(compareFunc);
+  const channels = [..._channels];
+  const findingIndex = channels.findIndex((ch) => ch.url === channel.url);
+  if (findingIndex !== -1) {
+    channels[findingIndex] = channel;
+  } else {
+    channels.push(channel);
+  }
+  return channels.sort(compareFunc)
 };
 
 export const getMatchedUserIds = (word: string, users: Array<User>, _template?: string): boolean => {
