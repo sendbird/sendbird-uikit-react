@@ -126,40 +126,25 @@ export default function channelListReducer(
          *   2-2. If query is not given,
          *     - Same as step 2-1-2
          */
-        if (isMe) {
-          const channelAt = allChannels.findIndex((ch: GroupChannel) => ch.url === channel.url);
-          if (channelAt > -1) {
-            nextChannels.splice(channelAt, 1);
-            nextChannel = getNextChannel({
-              channel,
-              currentChannel,
-              allChannels,
-              disableAutoSelect,
-            });
-          }
-        } else if (channelListQuery) {
-          if (!filterChannelListParams(channelListQuery, channel, currentUserId)) {
-            const channelAt = allChannels.findIndex((ch: GroupChannel) => ch.url === channel.url);
-            if (channelAt > -1) {
-              nextChannels.splice(channelAt, 1);
-              nextChannel = getNextChannel({
-                channel,
-                currentChannel,
-                allChannels,
-                disableAutoSelect,
-              });
-            }
-          } else {
-            nextChannels = getChannelsWithUpsertedChannel(allChannels, channel, state.channelListQuery?.order);
-            if (currentChannel?.url === channel.url) {
-              nextChannel = channel;
-            }
-          }
-        } else {
-          nextChannels = getChannelsWithUpsertedChannel(allChannels, channel, state.channelListQuery?.order);
-          if (currentChannel?.url === channel.url) {
-            nextChannel = channel;
-          }
+/* `1` and `2-1-1` */
+if (isMe || (channelListFilter && !filterChannelListParams(channelListQuery, channel, currentUserId))) {
+  const channelAt = allChannels.findIndex((ch: GroupChannel) => ch.url === channel.url);
+  if (channelAt > -1) {
+    nextChannels.splice(channelAt, 1);
+    nextChannel = getNextChannel({
+      channel,
+      currentChannel,
+      allChannels,
+      disableAutoSelect,
+    });
+  }
+} else {
+/* `2-1-2` and `2-2` */
+  nextChannels = getChannelsWithUpsertedChannel(allChannels, channel, state.channelListQuery?.order);
+  if (currentChannel?.url === channel.url) {
+    nextChannel = channel;
+  }
+}
         }
         return {
           ...state,
