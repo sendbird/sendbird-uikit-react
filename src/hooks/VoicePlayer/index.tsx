@@ -176,10 +176,6 @@ export const VoicePlayerProvider = ({
             const thisGroupKey = element.dataset?.sbGroupKey;
             if (thisGroupKey !== groupKey) {
               element?.pause?.();
-              voicePlayerDispatcher({
-                type: ON_VOICE_PLAYER_PAUSE,
-                payload: { groupKey },
-              });
               voicePlayerRoot.removeChild(element);
               logger.info('VoicePlayer: Removed other player.', { element });
             }
