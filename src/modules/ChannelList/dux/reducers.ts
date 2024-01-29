@@ -112,7 +112,7 @@ export default function channelListReducer(
         let nextChannels = [...allChannels];
         let nextChannel: GroupChannel = channel;
 
-        /***
+        /**
          * 1. If I left channel:
          *   - Remove the channel from channel list
          *   - Replace currentChannel with the next ordered channel
