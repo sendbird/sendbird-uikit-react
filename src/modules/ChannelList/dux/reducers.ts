@@ -121,14 +121,12 @@ export default function channelListReducer(
          * 2. If other member left channel:
          *   2-1. If query is given:
          *     2-1-1. If channel no longer matches the query
-         *       - Remove the channel from channel list
-         *       - Replace currentChannel with the next ordered channel
+         *       - Same as step 1
          *     2-1-2. If channel matches the query:
          *       - Upsert channel list with the channel
          *       - Replace currentChannel IFF url is same
          *   2-2. If query is not given,
-         *     - Upsert channel list with the channel
-         *     - Replace currentChannel IFF url is same
+         *     - Same as step 2-1-2
          */
         if (isMe) {
           const channelAt = allChannels.findIndex((ch: GroupChannel) => ch.url === channel.url);
