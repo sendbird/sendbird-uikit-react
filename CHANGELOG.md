@@ -1,5 +1,19 @@
 # Changelog - v3
 
+## [v3.10.1] (Jan 26, 2024)
+
+### Fixes:
+
+* Fixed a bug where `MessageList` is not scrolled to bottom upon entering a channel
+* Changed behaviour of the feedback process:
+  * old: On feedback icon button click -> open feedback form/menu
+  * new: On feedback icon button click -> submit feedback -> open feedback form/menu
+* Supported accepting `mimeTypes` to the `MessageInput`
+* Applied the `channelListQuery.order` to the `ChannelList`
+* Fixed a bug where muted member list is not being updated after a member had been unmuted
+* Fixed a bug where operator list is not being updated after an operator had been removed
+* Fixed a bug where a link subdomain has a hyphen or long top-level domain is not recognized as link text
+
 ## [v3.10.0] (Jan 19, 2024)
 
 ### Features:
