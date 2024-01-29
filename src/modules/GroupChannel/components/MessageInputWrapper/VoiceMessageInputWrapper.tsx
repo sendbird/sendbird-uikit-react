@@ -81,6 +81,7 @@ export const VoiceMessageInputWrapper = ({
       setAudioFile(null);
     }
   }, [isSubmitted, audioFile, recordingTime]);
+
   // operate which control button should be displayed
   useEffect(() => {
     if (audioFile) {
