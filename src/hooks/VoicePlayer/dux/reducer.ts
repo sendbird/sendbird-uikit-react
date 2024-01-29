@@ -1,10 +1,10 @@
 import {
   INITIALIZE_AUDIO_UNIT,
   RESET_AUDIO_UNIT,
+  SET_CURRENT_PLAYER,
   ON_CURRENT_TIME_UPDATE,
   ON_VOICE_PLAYER_PAUSE,
   ON_VOICE_PLAYER_PLAY,
-  SET_CURRENT_PLAYER,
 } from './actionTypes';
 import {
   AudioStorageUnit,
@@ -16,7 +16,7 @@ import {
 type InitializeAudioUnitPayload = { groupKey: string };
 type SetCurrentPlayerPayload = { audioPlayer: HTMLAudioElement, groupKey: string };
 type OnVoicePlayerPlayPayload = { groupKey: string, audioFile: File };
-type OnVoicePlayerPausePayload = { groupKey: string };
+type OnVoicePlayerPausePayload = { groupKey: string, duration?: number, currentTime?: number };
 type OnCurrentTimeUpdatePayload = { groupKey: string };
 type PayloadType = (
   InitializeAudioUnitPayload
@@ -79,11 +79,10 @@ export default function voicePlayerReducer(
       };
     }
     case ON_VOICE_PLAYER_PAUSE: {
-      const { groupKey } = action.payload as OnVoicePlayerPausePayload;
+      const { groupKey, duration = state.currentPlayer.duration, currentTime = state.currentPlayer.currentTime } = action.payload as OnVoicePlayerPausePayload;
       const audioUnit = (state.audioStorage?.[groupKey] ? state.audioStorage[groupKey] : AudioUnitDefaultValue()) as AudioStorageUnit;
       audioUnit.playingStatus = VOICE_PLAYER_STATUS.PAUSED;
-      const { currentTime, duration } = state.currentPlayer as HTMLAudioElement;
-      if (audioUnit.playbackTime === audioUnit.duration) {
+      if (duration === currentTime) {
         audioUnit.playbackTime = 0;
       } else if (currentTime > 0 && duration > 0) {
         audioUnit.playbackTime = currentTime;

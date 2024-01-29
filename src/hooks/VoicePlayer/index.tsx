@@ -152,7 +152,7 @@ export const VoicePlayerProvider = ({
           logger.info('VoicePlayer: OnPause event is called from audioPlayer', { groupKey, audioPlayer });
           voicePlayerDispatcher({
             type: ON_VOICE_PLAYER_PAUSE,
-            payload: { groupKey },
+            payload: { groupKey, duration: audioPlayer.duration, currentTime: audioPlayer.currentTime },
           });
         };
         audioPlayer.ontimeupdate = () => {

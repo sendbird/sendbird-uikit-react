@@ -112,9 +112,9 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
           stream?.getAudioTracks?.().forEach?.(track => track?.stop());
           setIsRecordable(false);
         };
+        mediaRecorder.onstart = eventHandler?.onRecordingStarted ?? noop;
         mediaRecorder?.start();
         setMediaRecorder(mediaRecorder);
-        eventHandler?.onRecordingStarted();
       })
       .catch((err) => {
         logger.error('VoiceRecorder: Failed getting media stream.', err);
