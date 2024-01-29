@@ -303,18 +303,6 @@ export const pubSubHandler = (pubSub: SBUGlobalPubSub, channelListDispatcher: Re
     }),
   );
 
-  subscriber.set(
-    topics.SEND_MESSAGE_START,
-    pubSub.subscribe(topics.SEND_MESSAGE_START, ({ channel }) => {
-      if (channel.isGroupChannel()) {
-        channelListDispatcher({
-          type: channelActions.CHANNEL_REPLACED_TO_TOP,
-          payload: channel,
-        });
-      }
-    }),
-  );
-
   return subscriber;
 };
 
