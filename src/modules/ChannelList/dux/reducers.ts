@@ -4,6 +4,7 @@ import * as channelListActions from './actionTypes';
 import { ChannelListActionTypes } from './actionTypes';
 import { getNextChannel } from './getNextChannel';
 import initialState, { ChannelListInitialStateType } from './initialState';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 export default function channelListReducer(
   state: ChannelListInitialStateType,
@@ -108,22 +109,61 @@ export default function channelListReducer(
       .with({ type: channelListActions.ON_USER_LEFT }, (action) => {
         const { channel, isMe } = action.payload;
         const { allChannels, currentUserId, currentChannel, channelListQuery, disableAutoSelect } = state;
-        let nextChannels = allChannels.filter((ch) => ch.url !== channel.url);
-        let nextChannel = null;
-        if (channelListQuery) {
-          if (filterChannelListParams(channelListQuery, channel, currentUserId)) {
-            // Good to [add to/keep in] the ChannelList
-            nextChannels = getChannelsWithUpsertedChannel(allChannels, channel, state.channelListQuery?.order);
-          }
-        }
-        // Replace the currentChannel if I left the currentChannel
+        let nextChannels = [...allChannels];
+        let nextChannel: GroupChannel = channel;
+
+        /**
+         * If current channel list includes the channel, update the channel list.
+         *
+         * 1. If I left channel:
+         *   - Remove the channel from channel list
+         *   - Replace currentChannel with the next ordered channel
+         * 2. If other member left channel:
+         *   2-1. If query is given:
+         *     2-1-1. If channel no longer matches the query
+         *       - Remove the channel from channel list
+         *       - Replace currentChannel with the next ordered channel
+         *     2-1-2. If channel matches the query:
+         *       - Upsert channel list with the channel
+         *       - Replace currentChannel IFF url is same
+         *   2-2. If query is not given,
+         *     - Upsert channel list with the channel
+         *     - Replace currentChannel IFF url is same
+         */
         if (isMe) {
-          nextChannel = getNextChannel({
-            channel,
-            currentChannel,
-            allChannels,
-            disableAutoSelect,
-          });
+          const channelAt = allChannels.findIndex((ch: GroupChannel) => ch.url === channel.url);
+          if (channelAt > -1) {
+            nextChannels.splice(channelAt, 1);
+            nextChannel = getNextChannel({
+              channel,
+              currentChannel,
+              allChannels,
+              disableAutoSelect,
+            });
+          }
+        } else if (channelListQuery) {
+          if (!filterChannelListParams(channelListQuery, channel, currentUserId)) {
+            const channelAt = allChannels.findIndex((ch: GroupChannel) => ch.url === channel.url);
+            if (channelAt > -1) {
+              nextChannels.splice(channelAt, 1);
+              nextChannel = getNextChannel({
+                channel,
+                currentChannel,
+                allChannels,
+                disableAutoSelect,
+              });
+            }
+          } else {
+            nextChannels = getChannelsWithUpsertedChannel(allChannels, channel, state.channelListQuery?.order);
+            if (currentChannel?.url === channel.url) {
+              nextChannel = channel;
+            }
+          }
+        } else {
+          nextChannels = getChannelsWithUpsertedChannel(allChannels, channel, state.channelListQuery?.order);
+          if (currentChannel?.url === channel.url) {
+            nextChannel = channel;
+          }
         }
         return {
           ...state,

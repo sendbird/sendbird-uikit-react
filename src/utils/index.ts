@@ -757,12 +757,7 @@ export const filterChannelListParams = (params: GroupChannelListQuery, channel: 
   return true;
 };
 
-// This is required when channel is displayed on channel list by filter
-export const getChannelsWithUpsertedChannel = (
-  _channels: Array<GroupChannel>,
-  channel: GroupChannel,
-  order?: GroupChannelListOrder,
-): Array<GroupChannel> => {
+export const sortChannelList = (channels: GroupChannel[], order: GroupChannelListOrder) => {
   const compareFunc = match(order)
     .with(GroupChannelListOrder.CHANNEL_NAME_ALPHABETICAL, () => (
       (a: GroupChannel, b: GroupChannel) => a.name.localeCompare(b.name)
@@ -773,7 +768,17 @@ export const getChannelsWithUpsertedChannel = (
     .otherwise(() => (
       (a: GroupChannel, b: GroupChannel) => (b.lastMessage?.createdAt ?? Number.MIN_SAFE_INTEGER) - (a.lastMessage?.createdAt ?? Number.MIN_SAFE_INTEGER)
     ));
+  return channels.sort(compareFunc);
+};
 
+/**
+ * Upserts given channel to the channel list and then returns the sorted channel list.
+ */
+export const getChannelsWithUpsertedChannel = (
+  _channels: Array<GroupChannel>,
+  channel: GroupChannel,
+  order?: GroupChannelListOrder,
+): Array<GroupChannel> => {
   const channels = [..._channels];
   const findingIndex = channels.findIndex((ch) => ch.url === channel.url);
   if (findingIndex !== -1) {
@@ -781,7 +786,7 @@ export const getChannelsWithUpsertedChannel = (
   } else {
     channels.push(channel);
   }
-  return channels.sort(compareFunc);
+  return sortChannelList(channels, order);
 };
 
 export const getMatchedUserIds = (word: string, users: Array<User>, _template?: string): boolean => {
