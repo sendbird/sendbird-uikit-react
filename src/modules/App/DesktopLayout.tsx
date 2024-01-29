@@ -169,7 +169,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
               setStartingPoint?.(message?.createdAt);
             }
             setTimeout(() => {
-              setHighlightedMessage(message?.messageId);
+              setStartingPoint?.(null);
+              setHighlightedMessage?.(message?.messageId);
             }, 500);
           }}
         />

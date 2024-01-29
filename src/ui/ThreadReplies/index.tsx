@@ -6,7 +6,6 @@ import Avatar from '../Avatar';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../../ui/Label';
 import { useLocalization } from '../../lib/LocalizationContext';
-import uuidv4 from '../../utils/uuid';
 
 export interface ThreadRepliesProps {
   className?: string;
@@ -41,7 +40,7 @@ export default function ThreadReplies({
         {mostRepliedUsers.slice(0, 4).map((user) => {
           return (
             <Avatar
-              key={uuidv4()}
+              key={user.userId}
               className="sendbird-ui-thread-replies__user-profiles__avatar"
               src={user?.profileUrl}
               alt="user profile"
