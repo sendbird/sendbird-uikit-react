@@ -378,7 +378,7 @@ const SendbirdSDK = ({
             enableOgtag: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableOgtag,
             enableTypingIndicator: configs.groupChannel.channel.enableTypingIndicator,
             enableDocument: configs.groupChannel.channel.input.enableDocument,
-            enableReactions: configs.groupChannel.channel.enableReactions,
+            enableReactions: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableReactions,
             replyType: configs.groupChannel.channel.replyType,
             threadReplySelectType: getCaseResolvedThreadReplySelectType(configs.groupChannel.channel.threadReplySelectType).lowerCase,
             typingIndicatorTypes: configs.groupChannel.channel.typingIndicatorTypes,
