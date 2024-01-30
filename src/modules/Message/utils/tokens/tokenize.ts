@@ -1,14 +1,7 @@
-import { User } from "@sendbird/chat";
-import { USER_MENTION_PREFIX } from "../../consts";
-import {
-  IdentifyMentionsType,
-  MentionToken,
-  Token,
-  TOKEN_TYPES,
-  TokenParams,
-  UndeterminedToken,
-} from "./types";
-import { extractUrl, isUrl } from "../../../../utils";
+import { User } from '@sendbird/chat';
+import { USER_MENTION_PREFIX } from '../../consts';
+import { IdentifyMentionsType, MentionToken, Token, TOKEN_TYPES, TokenParams, UndeterminedToken } from './types';
+import { extractUrl, isUrl } from '../../../../utils';
 
 export function getUserMentionRegex(
   mentionedUsers: User[],
@@ -156,14 +149,14 @@ export function tokenizeMessage({
  * to preserve the leading & trailing white spaces
  */
 export function getWhiteSpacePreservedText(text: string): string {
-  const NON_BREAKING_SPACE = "\u00A0";
+  const NON_BREAKING_SPACE = '\u00A0';
   // Split the input string into lines
-  const lines = text.split("\n");
+  const lines = text.split('\n');
 
   // Process each line and convert leading and trailing white spaces to "\u00A0"
   const processedLines = lines.map((line) => {
-    const leadingWhitespace = line.match(/^\s*/)?.[0] || "";
-    const trailingWhitespace = line.match(/\s*$/)?.[0] || "";
+    const leadingWhitespace = line.match(/^\s*/)?.[0] || '';
+    const trailingWhitespace = line.match(/\s*$/)?.[0] || '';
 
     const convertedLeadingWhitespace = leadingWhitespace.replace(
       / /g,
@@ -180,7 +173,7 @@ export function getWhiteSpacePreservedText(text: string): string {
   });
 
   // Combine the processed lines into a new string with "\n"
-  const result = processedLines.join("\n");
+  const result = processedLines.join('\n');
 
   return result;
 }

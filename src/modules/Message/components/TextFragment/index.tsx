@@ -1,15 +1,15 @@
-import React from "react";
-import { UserMessage } from "@sendbird/chat/message";
-import { match } from "ts-pattern";
+import React from 'react';
+import { UserMessage } from '@sendbird/chat/message';
+import { match } from 'ts-pattern';
 
-import { TOKEN_TYPES, Token, UrlToken } from "../../utils/tokens/types";
-import { useMessageContext } from "../../context/MessageProvider";
-import { keyGenerator } from "../../utils/tokens/keyGenerator";
-import MentionLabel from "../../../../ui/MentionLabel";
-import { USER_MENTION_PREFIX } from "../../consts";
-import LinkLabel from "../../../../ui/LinkLabel";
-import { LabelTypography } from "../../../../ui/Label";
-import { getWhiteSpacePreservedText } from "../../utils/tokens/tokenize";
+import { TOKEN_TYPES, Token, UrlToken } from '../../utils/tokens/types';
+import { useMessageContext } from '../../context/MessageProvider';
+import { keyGenerator } from '../../utils/tokens/keyGenerator';
+import MentionLabel from '../../../../ui/MentionLabel';
+import { USER_MENTION_PREFIX } from '../../consts';
+import LinkLabel from '../../../../ui/LinkLabel';
+import { LabelTypography } from '../../../../ui/Label';
+import { getWhiteSpacePreservedText } from '../../utils/tokens/tokenize';
 
 export type TextFragmentProps = {
   tokens: Token[];

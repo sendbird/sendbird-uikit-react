@@ -1,9 +1,9 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode } from 'react';
 
-import Label, { LabelColors, LabelTypography } from "../Label";
-import { changeColorToClassName } from "../Label/utils";
-import "./index.scss";
-import { ObjectValues } from "../../utils/typeHelpers/objectValues";
+import Label, { LabelColors, LabelTypography } from '../Label';
+import { changeColorToClassName } from '../Label/utils';
+import './index.scss';
+import { ObjectValues } from '../../utils/typeHelpers/objectValues';
 
 const http = /https?:\/\//;
 
@@ -26,14 +26,14 @@ export default function LinkLabel({
   const handleMobileTouchEnd = (e: React.TouchEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     e.nativeEvent.stopImmediatePropagation();
-    window.open(url, "_blank", "noopener,noreferrer");
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   return (
     <a
       className={[
         ...(Array.isArray(className) ? className : [className]),
-        "sendbird-link-label",
+        'sendbird-link-label',
         changeColorToClassName(color),
       ].join(" ")}
       href={url}
