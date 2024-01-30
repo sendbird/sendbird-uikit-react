@@ -10,25 +10,27 @@ export const TOKEN_TYPES = {
 
 export type TokenType = ObjectValues<typeof TOKEN_TYPES>;
 
-export type StringToken = {
-  type: typeof TOKEN_TYPES.string;
+export type BaseToken = {
+  type: TokenType;
   value: string;
 };
 
-export type MentionToken = {
-  type: TokenType;
-  value: string;
+export type StringToken = BaseToken & {
+  type: typeof TOKEN_TYPES.string;
+};
+
+export type MentionToken = BaseToken & {
+  type: Exclude<TokenType, typeof TOKEN_TYPES.url>;
   userId: string;
 };
 
-export type UrlToken = {
+export type UrlToken = BaseToken & {
   type: typeof TOKEN_TYPES.url;
-  value: string;
+  url: string;
 };
 
-export type UndeterminedToken = {
+export type UndeterminedToken = BaseToken & {
   type: typeof TOKEN_TYPES.undetermined;
-  value: string;
 };
 
 export type Token = StringToken | MentionToken | UrlToken | UndeterminedToken;

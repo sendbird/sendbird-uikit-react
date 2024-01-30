@@ -424,8 +424,23 @@ export const isMessageSentByMe = (
   !!(userId && message?.sender?.userId && userId === message.sender.userId)
 );
 
-const URL_REG = /^((http|https):\/\/)?([a-z\d-]+\.)+[a-z]{2,}(\:[0-9]{1,5})?(\/[-a-zA-Z\d%_.~+&=]*)*(\?[;&a-zA-Z\d%_.~+=-]*)?(#\S*)?$/;
+const URL_REG = /(((http|https):\/\/)?([a-z\d-]+\.)+[a-z]{2,}(\:[0-9]{1,5})?(\/[-a-zA-Z\d%_.~+&=]*)*(\?[;&a-zA-Z\d%_.~+=-]*)?(#\S*)?)|(\[.*\]\(https?:\/\/[^\s]*\))/;
 export const isUrl = (text: string): boolean => URL_REG.test(text);
+
+/**
+ * 
+ * @param text string containing any url
+ * @returns If there is a match, extract and return the URL value
+ */
+export const extractUrl = (text: string) => {
+  const match = text.match(URL_REG);  
+  if (match && match[0]) {   
+      const urlMatch = match[0].match(/(https?:\/\/[^\s]*)/);
+      return urlMatch ? urlMatch[0] : null;
+  } else {
+      return null;
+  }
+};
 
 const MENTION_TAG_REG = /\@\{.*?\}/i;
 export const isMentionedText = (text: string): boolean => MENTION_TAG_REG.test(text);
