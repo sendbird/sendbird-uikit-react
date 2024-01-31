@@ -240,6 +240,7 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
         const prevViewInfo = { scrollTop: scrollRef.current.scrollTop, scrollHeight: scrollRef.current.scrollHeight };
         await messageDataSource.loadPrevious();
 
+        // FIXME: We need a good way to detect right after the rendering of the screen instead of using setTimeout.
         setTimeout(() => {
           const nextViewInfo = { scrollHeight: scrollRef.current.scrollHeight };
           const viewUpdated = prevViewInfo.scrollHeight < nextViewInfo.scrollHeight;
