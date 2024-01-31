@@ -7,12 +7,12 @@ import {
 import { Logger } from '../../../../lib/SendbirdState';
 import useReconnectOnIdle from './useReconnectOnIdle';
 import { SdkStore } from '../../../../lib/types';
-import {ChannelListActionTypes} from '../../../ChannelList/dux/actionTypes';
-import {GroupChannelListQueryParamsInternal} from '../../../ChannelList/context/ChannelListProvider';
-import {MarkAsDeliveredSchedulerType} from '../../../../lib/hooks/useMarkAsDeliveredScheduler';
+import { ChannelListActionTypes } from '../../../ChannelList/dux/actionTypes';
+import { GroupChannelListQueryParamsInternal } from '../../../ChannelList/context/ChannelListProvider';
+import { MarkAsDeliveredSchedulerType } from '../../../../lib/hooks/useMarkAsDeliveredScheduler';
 import * as channelActions from '../../../ChannelList/dux/actionTypes';
-import {createChannelListQuery} from '../../../ChannelList/utils';
-import {DELIVERY_RECEIPT} from '../../../../utils/consts';
+import { createChannelListQuery } from '../../../ChannelList/utils';
+import { DELIVERY_RECEIPT } from '../../../../utils/consts';
 
 interface UseHandleReconnectForChannelListProps {
   // Dynamic props
