@@ -96,6 +96,7 @@ export default function App(props: AppProps) {
     isUserIdUsedForNickname = true,
   } = props;
   const [currentChannel, setCurrentChannel] = useState(null);
+
   return (
     <Sendbird
       stringSet={stringSet}
