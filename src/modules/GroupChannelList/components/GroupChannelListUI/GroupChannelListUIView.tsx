@@ -17,7 +17,7 @@ export interface Props {
   renderPlaceHolderEmptyList?: (props: void) => React.ReactElement;
 
   onChangeTheme: (theme: string) => void;
-  onUpdatedUserProfile: (user:User)=>void;
+  onUserProfileUpdated: (user:User)=>void;
   allowProfileEdit: boolean;
 
   channels: GroupChannel[];
@@ -36,7 +36,7 @@ export const GroupChannelListUIView = ({
   renderPlaceHolderEmptyList,
 
   onChangeTheme,
-  onUpdatedUserProfile,
+  onUserProfileUpdated,
   allowProfileEdit,
 
   channels,
@@ -88,7 +88,7 @@ export const GroupChannelListUIView = ({
           onCancel={() => setShowProfileEdit(false)}
           onEditProfile={(user) => {
             setShowProfileEdit(false);
-            onUpdatedUserProfile(user);
+            onUserProfileUpdated(user);
           }}
         />
       )}

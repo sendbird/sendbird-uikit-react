@@ -41,9 +41,9 @@ interface GroupChannelListContextType {
   // Partial props - because we are doing null check before calling these functions
   channelListQueryParams?: ChannelListQueryParamsType;
   onThemeChange?(theme: string): void;
-  onClickCreateChannel?(params: OverrideInviteUserType): void;
+  onCreateChannelClick?(params: OverrideInviteUserType): void;
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
-  onUpdatedUserProfile?(user: User): void;
+  onUserProfileUpdated?(user: User): void;
 }
 
 export interface GroupChannelListProviderProps extends PropsWithChildren<Partial<GroupChannelListContextType> & UserProfileProviderProps> {}
@@ -66,9 +66,9 @@ export const GroupChannelListContext = React.createContext<GroupChannelListProvi
   onChannelCreated: noop,
   // Props - Custom
   onThemeChange: undefined,
-  onClickCreateChannel: undefined,
+  onCreateChannelClick: undefined,
   onBeforeCreateChannel: undefined,
-  onUpdatedUserProfile: undefined,
+  onUserProfileUpdated: undefined,
 
   // Internal Interface
   typingChannelUrls: [],
@@ -99,9 +99,9 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
     onThemeChange,
     onChannelSelect = noop,
     onChannelCreated = noop,
-    onClickCreateChannel,
+    onCreateChannelClick,
     onBeforeCreateChannel,
-    onUpdatedUserProfile,
+    onUserProfileUpdated,
 
     // UserProfile
     disableUserProfile,
@@ -165,9 +165,9 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
         onChannelCreated,
         // Partial props
         onThemeChange,
-        onClickCreateChannel,
+        onCreateChannelClick,
         onBeforeCreateChannel,
-        onUpdatedUserProfile,
+        onUserProfileUpdated,
         // Internal
         typingChannelUrls,
         // ReturnType<UseGroupChannelList>

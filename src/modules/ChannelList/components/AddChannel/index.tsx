@@ -4,14 +4,15 @@ import AddGroupChannelView from '../../../GroupChannelList/components/AddGroupCh
 
 export const AddChannel = () => {
   const [showModal, setShowModal] = useState(false);
-  const { overrideInviteUser, onBeforeCreateChannel } = useChannelListContext();
+  const { overrideInviteUser, onBeforeCreateChannel, onChannelSelect } = useChannelListContext();
 
   return (
     <AddGroupChannelView
       createChannelVisible={showModal}
       onChangeCreateChannelVisible={setShowModal}
+      onCreateChannelClick={overrideInviteUser}
       onBeforeCreateChannel={onBeforeCreateChannel}
-      onClickCreateChannel={overrideInviteUser}
+      onChannelCreated={onChannelSelect}
     />
   );
 };

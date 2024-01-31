@@ -10,17 +10,17 @@ import { CreateChannelProviderProps } from '../../../CreateChannel/context/Creat
 type Props = {
   createChannelVisible: boolean;
   onChangeCreateChannelVisible: (value: boolean) => void;
-  onBeforeCreateChannel?: CreateChannelProviderProps['onBeforeCreateChannel'];
-  onClickCreateChannel?: CreateChannelProviderProps['onClickCreateChannel'];
-  onCreateChannel?: CreateChannelProviderProps['onCreateChannel'];
+  onBeforeCreateChannel: CreateChannelProviderProps['onBeforeCreateChannel'];
+  onCreateChannelClick: CreateChannelProviderProps['onCreateChannelClick'];
+  onChannelCreated: CreateChannelProviderProps['onChannelCreated'];
 };
 
 export const AddGroupChannelView = ({
   createChannelVisible,
   onChangeCreateChannelVisible,
   onBeforeCreateChannel,
-  onClickCreateChannel,
-  onCreateChannel,
+  onCreateChannelClick,
+  onChannelCreated,
 }: Props) => {
   const { config } = useSendbirdStateContext();
 
@@ -42,12 +42,12 @@ export const AddGroupChannelView = ({
       {createChannelVisible && (
         <CreateChannel
           onCancel={() => onChangeCreateChannelVisible(false)}
-          onCreateChannel={(channel) => {
-            onCreateChannel?.(channel);
+          onChannelCreated={(channel) => {
+            onChannelCreated?.(channel);
             onChangeCreateChannelVisible(false);
           }}
           onBeforeCreateChannel={onBeforeCreateChannel}
-          onClickCreateChannel={onClickCreateChannel}
+          onCreateChannelClick={onCreateChannelClick}
         />
       )}
     </>
