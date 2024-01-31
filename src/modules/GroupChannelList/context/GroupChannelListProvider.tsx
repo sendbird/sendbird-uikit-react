@@ -35,7 +35,7 @@ interface GroupChannelListContextType {
 
   // Essential
   onChannelSelect(channel: GroupChannel | null): void;
-  onCreateChannel(channel: GroupChannel): void;
+  onChannelCreated(channel: GroupChannel): void;
 
   // Custom
   // Partial props - because we are doing null check before calling these functions
@@ -63,7 +63,7 @@ export const GroupChannelListContext = React.createContext<GroupChannelListProvi
   isMessageReceiptStatusEnabled: false,
   // Props - Essential
   onChannelSelect: noop,
-  onCreateChannel: noop,
+  onChannelCreated: noop,
   // Props - Custom
   onThemeChange: undefined,
   onClickCreateChannel: undefined,
@@ -98,7 +98,7 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
     channelListQueryParams,
     onThemeChange,
     onChannelSelect = noop,
-    onCreateChannel,
+    onChannelCreated = noop,
     onClickCreateChannel,
     onBeforeCreateChannel,
     onUpdatedUserProfile,
@@ -162,7 +162,7 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
         isMessageReceiptStatusEnabled: isMessageReceiptStatusEnabled ?? isMessageReceiptStatusEnabledOnChannelList,
         // Essential
         onChannelSelect,
-        onCreateChannel,
+        onChannelCreated,
         // Partial props
         onThemeChange,
         onClickCreateChannel,
