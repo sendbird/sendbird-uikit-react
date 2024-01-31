@@ -52,9 +52,9 @@ function useHandleReconnectForChannelList({
     return () => {
       // state changed from offline to online AND tab is visible
       if (shouldReconnect) {
-        logger.info('ChannelList - creating query', { userFilledChannelListQuery });
+        logger.info('ChannelList refresh - creating query', { userFilledChannelListQuery });
         const channelListQuery = createChannelListQuery({ sdk, userFilledChannelListQuery });
-        logger.info('ChannelList - created query', channelListQuery);
+        logger.info('ChannelList refresh - created query', channelListQuery);
         setChannelSource(channelListQuery);
 
         channelListDispatcher({
@@ -65,7 +65,7 @@ function useHandleReconnectForChannelList({
         });
 
         if (userFilledChannelListQuery) {
-          logger.info('ChannelList - setting up channelListQuery', channelListQuery);
+          logger.info('ChannelList refresh - setting up channelListQuery', channelListQuery);
           channelListDispatcher({
             type: channelActions.CHANNEL_LIST_PARAMS_UPDATED,
             payload: {
@@ -75,16 +75,16 @@ function useHandleReconnectForChannelList({
           });
         }
 
-        logger.info('ChannelList - fetching channels');
+        logger.info('ChannelList refresh - fetching channels');
         if (channelListQuery.hasNext) {
           channelListQuery
             .next()
             .then((channelList) => {
-              logger.info('ChannelList - fetched channels', channelList);
+              logger.info('ChannelList refresh - fetched channels', channelList);
               let sortedChannelList = channelList;
               if (sortChannelList && typeof sortChannelList === 'function') {
                 sortedChannelList = sortChannelList(channelList);
-                logger.info('ChannelList - channel list sorted', sortedChannelList);
+                logger.info('ChannelList refresh - channel list sorted', sortedChannelList);
               }
               // select first channel
               let newCurrentChannel: GroupChannel = !disableAutoSelect ? sortedChannelList[0] : null;
@@ -114,14 +114,14 @@ function useHandleReconnectForChannelList({
             })
             .catch((err) => {
               if (err) {
-                logger.error('ChannelList - could not fetch channels', err);
+                logger.error('ChannelList refresh - could not fetch channels', err);
                 channelListDispatcher({
                   type: channelActions.INIT_CHANNELS_FAILURE,
                 });
               }
             });
         } else {
-          logger.info('ChannelList - there are no more channels');
+          logger.info('ChannelList refresh - there are no more channels');
         }
       }
     };
