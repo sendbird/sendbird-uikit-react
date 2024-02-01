@@ -26,71 +26,101 @@ type OverrideInviteUserType = {
 
 export interface CreateChannelProviderProps {
   children?: React.ReactElement;
-  onCreateChannel(channel: GroupChannel): void;
+  userListQuery?(): UserListQuery;
+
+  /**
+   * Overrides the action of the channel creation button.
+   * */
+  onCreateChannelClick?(params: OverrideInviteUserType): void;
+
+  /**
+   * Called when the channel is created. (Should not have onCreateChannelClick for this to invoke.)
+   * */
+  onChannelCreated(channel: GroupChannel): void;
+  /**
+   * Called just before the channel is created. (Should not have onCreateChannelClick for this to invoke.)
+   * */
+  onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
+
   /**
    * @deprecated
-   * Use the onClickCreateChannel instead
+   * Use the onChannelCreated instead
+   */
+  onCreateChannel?(channel: GroupChannel): void;
+  /**
+   * @deprecated
+   * Use the onCreateChannelClick instead
    */
   overrideInviteUser?(params: OverrideInviteUserType): void;
-  onClickCreateChannel?(params: OverrideInviteUserType): void;
-  onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
-  userListQuery?(): UserListQuery;
 }
 
 type CreateChannel = (channelParams: GroupChannelCreateParams) => Promise<GroupChannel>;
 
 export interface CreateChannelContextInterface {
-  onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
-  createChannel: CreateChannel;
   sdk: SendbirdGroupChat;
+  createChannel: CreateChannel;
   userListQuery?(): UserListQuery;
+
   /**
-   * @deprecated
-   * Use the onClickCreateChannel instead
-   */
-  overrideInviteUser?(params: OverrideInviteUserType): void;
-  onClickCreateChannel?(params: OverrideInviteUserType): void;
-  onCreateChannel?(channel: GroupChannel): void;
+   * Overrides the action of the channel creation button.
+   * */
+  onCreateChannelClick?(params: OverrideInviteUserType): void;
+
+  /**
+   * Called when the channel is created. (Should not have onCreateChannelClick for this to invoke.)
+   * */
+  onChannelCreated?(channel: GroupChannel): void;
+  /**
+   * Called just before the channel is created. (Should not have onCreateChannelClick for this to invoke.)
+   * */
+  onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
+
   step: number,
   setStep: React.Dispatch<React.SetStateAction<number>>,
   type: CHANNEL_TYPE,
   setType: React.Dispatch<React.SetStateAction<CHANNEL_TYPE>>,
+  /**
+   * @deprecated
+   * Use the onChannelCreated instead
+   */
+  onCreateChannel?(channel: GroupChannel): void;
+  /**
+   * @deprecated
+   * Use the onCreateChannelClick instead
+   */
+  overrideInviteUser?(params: OverrideInviteUserType): void;
 }
 
 const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: CreateChannelProviderProps) => {
   const {
     children,
-    onCreateChannel,
+    onCreateChannelClick,
     onBeforeCreateChannel,
-    onClickCreateChannel,
+    onChannelCreated,
     userListQuery,
+    onCreateChannel,
     overrideInviteUser,
   } = props;
 
   const store = useSendbirdStateContext();
-  const userListQuery_ = store?.config?.userListQuery;
-  const createChannel: (channelParams: GroupChannelCreateParams)
-    => Promise<GroupChannel> = getCreateGroupChannel(store);
+  const _userListQuery = userListQuery ?? store?.config?.userListQuery;
 
   const [step, setStep] = useState(0);
   const [type, setType] = useState(CHANNEL_TYPE.GROUP);
 
   return (
     <CreateChannelContext.Provider value={{
+      createChannel: getCreateGroupChannel(store),
+      onCreateChannelClick,
       onBeforeCreateChannel,
-      createChannel,
-      onCreateChannel,
-      /**
-       * @deprecated
-       * Use the onClickCreateChannel instead
-       */
-      overrideInviteUser,
-      onClickCreateChannel,
-      userListQuery: userListQuery || userListQuery_,
+      onChannelCreated,
+      userListQuery: _userListQuery,
       step,
       setStep,
       type,
       setType,
+      onCreateChannel,
+      overrideInviteUser,
     }}>
       {children}
     </CreateChannelContext.Provider>

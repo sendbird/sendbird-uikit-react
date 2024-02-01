@@ -68,8 +68,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
     onChannelSelect: updateFocusedChannel,
     // for GroupChannelList
     selectedChannelUrl: currentChannel?.url,
-    onCreateChannel: updateFocusedChannel,
-    onUpdatedUserProfile: onProfileEditSuccess,
+    onChannelCreated: updateFocusedChannel,
+    onUserProfileUpdated: onProfileEditSuccess,
   };
 
   const channelProps = {

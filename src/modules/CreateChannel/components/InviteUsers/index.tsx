@@ -35,11 +35,12 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
   userListQuery,
 }: InviteUsersProps) => {
   const {
+    onCreateChannelClick,
     onBeforeCreateChannel,
+    onChannelCreated,
+    createChannel,
     onCreateChannel,
     overrideInviteUser,
-    onClickCreateChannel,
-    createChannel,
     type,
   } = useCreateChannelContext();
 
@@ -96,9 +97,11 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
         const selectedUserList = Object.keys(selectedUsers).length > 0
           ? Object.keys(selectedUsers)
           : [userId];
-        const _onClickCreateChannel = onClickCreateChannel ?? overrideInviteUser;
-        if (typeof _onClickCreateChannel === 'function') {
-          _onClickCreateChannel({
+        const _onChannelCreated = onChannelCreated ?? onCreateChannel;
+        const _onCreateChannelClick = onCreateChannelClick ?? overrideInviteUser;
+
+        if (typeof _onCreateChannelClick === 'function') {
+          _onCreateChannelClick({
             users: selectedUserList,
             onClose: onCancel ?? noop,
             channelType: type,
@@ -109,9 +112,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
         if (onBeforeCreateChannel) {
           const params = onBeforeCreateChannel(selectedUserList);
           setChannelType(params, type);
-          createChannel(params).then((channel) => {
-            onCreateChannel?.(channel);
-          });
+          createChannel(params).then((channel) => _onChannelCreated?.(channel));
         } else {
           const params: GroupChannelCreateParams = {};
           params.invitedUserIds = selectedUserList;
@@ -121,9 +122,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
           }
           setChannelType(params, type);
           // do not have custom params
-          createChannel(params).then((channel) => {
-            onCreateChannel?.(channel);
-          });
+          createChannel(params).then((channel) => _onChannelCreated?.(channel));
         }
         onCancel?.();
       }}

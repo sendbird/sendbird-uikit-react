@@ -114,11 +114,11 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
       }
     },
     // for GroupChannelList
-    onCreateChannel: (channel: GroupChannelClass) => {
+    onChannelCreated: (channel: GroupChannelClass) => {
       setCurrentChannel(channel);
       setPanel(PANELS.CHANNEL);
     },
-    onUpdatedUserProfile: onProfileEditSuccess,
+    onUserProfileUpdated: onProfileEditSuccess,
   };
 
   const channelProps = {

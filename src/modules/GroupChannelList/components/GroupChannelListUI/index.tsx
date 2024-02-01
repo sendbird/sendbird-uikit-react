@@ -42,7 +42,7 @@ const GroupChannelListUI = (props: GroupChannelListUIProps) => {
     groupChannels,
     initialized,
     loadMore,
-    onUpdatedUserProfile,
+    onUserProfileUpdated,
   } = useGroupChannelListContext();
 
   const { stores, config } = useSendbirdStateContext();
@@ -107,7 +107,7 @@ const GroupChannelListUI = (props: GroupChannelListUIProps) => {
       renderPlaceHolderEmptyList={renderPlaceHolderEmptyList}
       onChangeTheme={onThemeChange}
       allowProfileEdit={allowProfileEdit}
-      onUpdatedUserProfile={onUpdatedUserProfile}
+      onUserProfileUpdated={onUserProfileUpdated}
       channels={groupChannels}
       onLoadMore={loadMore}
       initialized={initialized}

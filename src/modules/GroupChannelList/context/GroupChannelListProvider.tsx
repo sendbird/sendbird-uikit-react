@@ -35,15 +35,15 @@ interface GroupChannelListContextType {
 
   // Essential
   onChannelSelect(channel: GroupChannel | null): void;
-  onCreateChannel(channel: GroupChannel): void;
+  onChannelCreated(channel: GroupChannel): void;
 
   // Custom
   // Partial props - because we are doing null check before calling these functions
   channelListQueryParams?: ChannelListQueryParamsType;
   onThemeChange?(theme: string): void;
-  onClickCreateChannel?(params: OverrideInviteUserType): void;
+  onCreateChannelClick?(params: OverrideInviteUserType): void;
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
-  onUpdatedUserProfile?(user: User): void;
+  onUserProfileUpdated?(user: User): void;
 }
 
 export interface GroupChannelListProviderProps extends PropsWithChildren<Partial<GroupChannelListContextType> & UserProfileProviderProps> {}
@@ -63,12 +63,12 @@ export const GroupChannelListContext = React.createContext<GroupChannelListProvi
   isMessageReceiptStatusEnabled: false,
   // Props - Essential
   onChannelSelect: noop,
-  onCreateChannel: noop,
+  onChannelCreated: noop,
   // Props - Custom
   onThemeChange: undefined,
-  onClickCreateChannel: undefined,
+  onCreateChannelClick: undefined,
   onBeforeCreateChannel: undefined,
-  onUpdatedUserProfile: undefined,
+  onUserProfileUpdated: undefined,
 
   // Internal Interface
   typingChannelUrls: [],
@@ -98,10 +98,10 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
     channelListQueryParams,
     onThemeChange,
     onChannelSelect = noop,
-    onCreateChannel,
-    onClickCreateChannel,
+    onChannelCreated = noop,
+    onCreateChannelClick,
     onBeforeCreateChannel,
-    onUpdatedUserProfile,
+    onUserProfileUpdated,
 
     // UserProfile
     disableUserProfile,
@@ -162,12 +162,12 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
         isMessageReceiptStatusEnabled: isMessageReceiptStatusEnabled ?? isMessageReceiptStatusEnabledOnChannelList,
         // Essential
         onChannelSelect,
-        onCreateChannel,
+        onChannelCreated,
         // Partial props
         onThemeChange,
-        onClickCreateChannel,
+        onCreateChannelClick,
         onBeforeCreateChannel,
-        onUpdatedUserProfile,
+        onUserProfileUpdated,
         // Internal
         typingChannelUrls,
         // ReturnType<UseGroupChannelList>
