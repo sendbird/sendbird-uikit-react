@@ -10,13 +10,7 @@ export interface FileViewerProps {
 
 export const FileViewer = (props: FileViewerProps) => {
   const { deleteMessage } = useChannelContext();
-
-  return (
-    <FileViewerView
-      {...props}
-      deleteMessage={deleteMessage}
-    />
-  );
+  return <FileViewerView {...props} deleteMessage={deleteMessage} />;
 };
 
 export default FileViewer;

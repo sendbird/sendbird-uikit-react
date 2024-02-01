@@ -6,6 +6,8 @@ import { getSuggestedReplies, isSendableMessage } from '../../../../utils';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../context/utils';
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import MessageView, { MessageProps } from './MessageView';
+import FileViewer from '../FileViewer';
+import RemoveMessageModal from '../RemoveMessageModal';
 
 export const Message = (props: MessageProps): React.ReactElement => {
   const { config, emojiManager } = useSendbirdStateContext();
@@ -70,6 +72,8 @@ export const Message = (props: MessageProps): React.ReactElement => {
       animatedMessageId={animatedMessageId}
       setAnimatedMessageId={setAnimatedMessageId}
       onMessageAnimated={onMessageAnimated}
+      renderFileViewer={(props) => <FileViewer {...props} />}
+      renderRemoveMessageModal={(props) => <RemoveMessageModal {...props} />}
     />
   );
 };

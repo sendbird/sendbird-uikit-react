@@ -1,19 +1,23 @@
 import React, { useContext } from 'react';
 
-import Modal from '../../../ui/Modal';
-import { ButtonTypes } from '../../../ui/Button';
-import { LocalizationContext } from '../../../lib/LocalizationContext';
-import { EveryMessage } from '../../../types';
-import { getModalDeleteMessageTitle } from '../../../ui/Label/stringFormatterUtils';
+import Modal from '../../../../ui/Modal';
+import { ButtonTypes } from '../../../../ui/Button';
+import { LocalizationContext } from '../../../../lib/LocalizationContext';
+import { EveryMessage } from '../../../../types';
+import { getModalDeleteMessageTitle } from '../../../../ui/Label/stringFormatterUtils';
+import { SendableMessageType } from '../../../../utils';
 
-export interface RemoveMessageProps {
+export interface RemoveMessageModalProps {
   onSubmit?: () => void;
   onCancel: () => void;
   message: EveryMessage;
-  deleteMessage: (message: EveryMessage) => Promise<void>;
 }
 
-const RemoveMessageModal: React.FC<RemoveMessageProps> = (props: RemoveMessageProps) => {
+interface RemoveMessageModalViewProps extends RemoveMessageModalProps {
+  deleteMessage: (message: SendableMessageType) => Promise<void>;
+}
+
+const RemoveMessageModalView = (props: RemoveMessageModalViewProps) => {
   const {
     onSubmit = () => {
       /* noop */
@@ -44,4 +48,4 @@ const RemoveMessageModal: React.FC<RemoveMessageProps> = (props: RemoveMessagePr
   );
 };
 
-export default RemoveMessageModal;
+export default RemoveMessageModalView;

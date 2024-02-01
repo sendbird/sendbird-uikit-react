@@ -6,6 +6,8 @@ import { useChannelContext } from '../../context/ChannelProvider';
 import { getSuggestedReplies } from '../../../../utils';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../context/utils';
 import MessageView, { MessageProps } from '../../../GroupChannel/components/Message/MessageView';
+import FileViewer from '../FileViewer';
+import RemoveMessageModal from '../RemoveMessageModal';
 
 const Message = (props: MessageProps): React.ReactElement => {
   const { config } = useSendbirdStateContext();
@@ -85,6 +87,8 @@ const Message = (props: MessageProps): React.ReactElement => {
       highLightedMessageId={highLightedMessageId}
       setHighLightedMessageId={setHighLightedMessageId}
       onMessageHighlighted={onMessageHighlighted}
+      renderFileViewer={(props) => <FileViewer {...props} />}
+      renderRemoveMessageModal={(props) => <RemoveMessageModal {...props} />}
     />
   );
 };

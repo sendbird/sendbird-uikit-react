@@ -8,7 +8,7 @@ import format from 'date-fns/format';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT, ThreadReplySelectType } from '../../context/const';
-import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../../GroupChannel/context/utils';
+import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../context/utils';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import useDidMountEffect from '../../../../utils/useDidMountEffect';
 import { CoreMessageType, getClassName, getSuggestedReplies, SendableMessageType } from '../../../../utils';
@@ -17,11 +17,10 @@ import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 import MessageInput from '../../../../ui/MessageInput';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import MessageContent, { MessageContentProps } from '../../../../ui/MessageContent';
-import SuggestedReplies from '../SuggestedReplies';
-import RemoveMessageModal from '../RemoveMessageModal';
-import FileViewer from '../../../GroupChannel/components/FileViewer';
-import SuggestedMentionListView from '../SuggestedMentionList/SuggestedMentionListView';
 import { omitObjectProperties } from '../../../../utils/omitObjectProperty';
+
+import SuggestedReplies from '../SuggestedReplies';
+import SuggestedMentionListView from '../SuggestedMentionList/SuggestedMentionListView';
 
 export interface MessageProps {
   message: EveryMessage;
@@ -59,6 +58,9 @@ export interface MessageViewProps extends MessageProps {
   updateUserMessage: (messageId: number, params: UserMessageUpdateParams) => void;
   resendMessage: (failedMessage: SendableMessageType) => void;
   deleteMessage: (message: CoreMessageType) => Promise<void>;
+
+  renderFileViewer: (props: { message: FileMessage; onCancel: () => void }) => React.ReactElement;
+  renderRemoveMessageModal?: (props: { message: EveryMessage; onCancel: () => void }) => React.ReactElement;
 
   animatedMessageId: number;
   setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
@@ -106,6 +108,9 @@ const MessageView = (props: MessageViewProps) => {
     updateUserMessage,
     resendMessage,
     deleteMessage,
+
+    renderFileViewer,
+    renderRemoveMessageModal,
 
     setAnimatedMessageId,
     animatedMessageId,
@@ -400,8 +405,8 @@ const MessageView = (props: MessageViewProps) => {
         shouldRenderSuggestedReplies && <SuggestedReplies replyOptions={getSuggestedReplies(message)} onSendMessage={sendUserMessage} />
       }
       {/* Modal */}
-      {showRemove && <RemoveMessageModal message={message} onCancel={() => setShowRemove(false)} deleteMessage={deleteMessage} />}
-      {showFileViewer && <FileViewer message={message as FileMessage} onCancel={() => setShowFileViewer(false)} deleteMessage={deleteMessage} />}
+      {showRemove && renderRemoveMessageModal({ message, onCancel: () => setShowRemove(false) })}
+      {showFileViewer && renderFileViewer({ message: message as FileMessage, onCancel: () => setShowFileViewer(false) })}
     </div>
   );
 };
