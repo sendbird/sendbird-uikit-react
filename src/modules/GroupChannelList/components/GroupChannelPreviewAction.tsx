@@ -11,7 +11,7 @@ export interface ChannelPreviewActionProps {
   channel?: GroupChannel;
   disabled: boolean;
   onLeaveChannel(): void;
-};
+}
 
 export function GroupChannelPreviewAction({ channel, disabled = false, onLeaveChannel }: ChannelPreviewActionProps) {
   const parentRef = useRef(null);
