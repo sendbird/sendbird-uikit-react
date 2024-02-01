@@ -25,7 +25,7 @@ export interface GroupChannelUIProps {
   renderFrozenNotification?: () => React.ReactElement;
 }
 
-const GroupChannelUI = (props: GroupChannelUIProps) => {
+export const GroupChannelUI = (props: GroupChannelUIProps) => {
   const context = useGroupChannelContext();
   const {
     currentChannel,

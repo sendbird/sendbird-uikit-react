@@ -4,11 +4,11 @@ import React, { useContext } from 'react';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Label, { LabelTypography } from '../../../../ui/Label';
 
-interface FrozenNotificationProps {
+export interface FrozenNotificationProps {
   className?: string;
 }
 
-const FrozenNotification = ({
+export const FrozenNotification = ({
   className = '',
 }: FrozenNotificationProps): React.ReactElement => {
   const { stringSet } = useContext(LocalizationContext);

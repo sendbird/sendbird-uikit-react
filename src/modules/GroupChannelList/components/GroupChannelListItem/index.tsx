@@ -11,7 +11,7 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useGroupChannelListContext } from '../../context/GroupChannelListProvider';
 import { GroupChannelListItemView } from './GroupChannelListItemView';
 
-interface GroupChannelListItemProps extends React.PropsWithChildren {
+export interface GroupChannelListItemProps extends React.PropsWithChildren {
   channel: GroupChannel;
   isSelected?: boolean;
   isTyping?: boolean;

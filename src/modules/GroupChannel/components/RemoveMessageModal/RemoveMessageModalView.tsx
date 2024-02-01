@@ -13,11 +13,11 @@ export interface RemoveMessageModalProps {
   message: EveryMessage;
 }
 
-interface RemoveMessageModalViewProps extends RemoveMessageModalProps {
+export interface RemoveMessageModalViewProps extends RemoveMessageModalProps {
   deleteMessage: (message: SendableMessageType) => Promise<void>;
 }
 
-const RemoveMessageModalView = (props: RemoveMessageModalViewProps) => {
+export const RemoveMessageModalView = (props: RemoveMessageModalViewProps) => {
   const {
     onSubmit = () => {
       /* noop */
