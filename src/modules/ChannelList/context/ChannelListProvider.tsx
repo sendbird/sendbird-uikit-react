@@ -5,8 +5,15 @@ import {
   GroupChannel,
   GroupChannelCreateParams,
   GroupChannelHandler,
+  GroupChannelListOrder,
   GroupChannelListQuery as GroupChannelListQuerySb,
   GroupChannelUserIdsFilter,
+  HiddenChannelFilter,
+  MyMemberStateFilter,
+  PublicChannelFilter,
+  QueryType,
+  SuperChannelFilter,
+  UnreadChannelFilter,
 } from '@sendbird/chat/groupChannel';
 
 import { RenderUserProfileProps } from '../../../types';
@@ -38,26 +45,21 @@ export interface ApplicationUserListQueryInternal {
 export interface GroupChannelListQueryParamsInternal {
   limit?: number;
   includeEmpty?: boolean;
-  order?: 'latest_last_message' | 'chronological' | 'channel_name_alphabetical' | 'metadata_value_alphabetical';
+  order?: GroupChannelListOrder;
   userIdsExactFilter?: Array<string>;
   userIdsIncludeFilter?: Array<string>;
-  userIdsIncludeFilterQueryType?: 'AND' | 'OR';
+  userIdsIncludeFilterQueryType?: QueryType;
   nicknameContainsFilter?: string;
   channelNameContainsFilter?: string;
   customTypesFilter?: Array<string>;
   customTypeStartsWithFilter?: string;
   channelUrlsFilter?: Array<string>;
-  superChannelFilter?: 'all' | 'super' | 'nonsuper' | 'broadcast_only' | 'exclusive_only';
-  publicChannelFilter?: 'all' | 'public' | 'private';
+  superChannelFilter?: SuperChannelFilter;
+  publicChannelFilter?: PublicChannelFilter;
   metadataOrderKeyFilter?: string;
-  memberStateFilter?: 'all' | 'joined_only' | 'invited_only' | 'invited_by_friend' | 'invited_by_non_friend';
-  hiddenChannelFilter?:
-    | 'all'
-    | 'unhidden_only'
-    | 'hidden_only'
-    | 'hidden_allow_auto_unhide'
-    | 'hidden_prevent_auto_unhide';
-  unreadChannelFilter?: 'all' | 'unread_message';
+  memberStateFilter?: MyMemberStateFilter;
+  hiddenChannelFilter?: HiddenChannelFilter;
+  unreadChannelFilter?: UnreadChannelFilter;
   includeFrozen?: boolean;
   userIdsFilter?: GroupChannelUserIdsFilter;
 }

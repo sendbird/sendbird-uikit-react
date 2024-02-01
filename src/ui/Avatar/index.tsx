@@ -1,7 +1,6 @@
 import React, { ReactElement, RefObject } from 'react';
 import ImageRenderer from '../ImageRenderer';
 import './index.scss';
-import { uuidv4 } from '../../utils/uuid';
 import AvatarDefault from './AvatarDefault';
 
 const imageRendererClassName = 'sendbird-avatar-img';
@@ -114,14 +113,14 @@ export const AvatarInner = ({
       <div className="sendbird-avatar--inner__four-child">
         {
           src.slice(0, 4)
-            .map((i) => (
+            .map((url, index) => (
               <ImageRenderer
                 className={imageRendererClassName}
-                url={i}
+                url={url}
                 height={height}
                 width={width}
                 alt={alt}
-                key={uuidv4()}
+                key={`${url}-${index}`}
                 defaultComponent={defaultComponent}
               />
             ))

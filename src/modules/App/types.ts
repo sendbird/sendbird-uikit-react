@@ -17,10 +17,11 @@ export interface AppLayoutProps {
   isMultipleFilesMessageEnabled?: boolean;
   allowProfileEdit?: boolean;
   showSearchIcon?: boolean;
-  onProfileEditSuccess?(user: User): void;
+  onProfileEditSuccess?(user: User): void; // TODO: Unused props, deprecate it
   disableAutoSelect?: boolean;
   currentChannel?: GroupChannel;
   setCurrentChannel: React.Dispatch<GroupChannel | null>;
+  enableLegacyChannelModules: boolean;
 }
 
 interface SubLayoutCommonProps {

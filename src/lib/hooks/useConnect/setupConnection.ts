@@ -38,6 +38,8 @@ export function setUpParams({
     appId,
     modules: [new GroupChannelModule(), new OpenChannelModule()],
     newInstance: true,
+    // FIXME: Flag change is required when deploying the collection module.
+    localCacheEnabled: false,
   });
   if (customApiHost) params.customApiHost = customApiHost;
   if (customWebSocketHost) params.customWebSocketHost = customWebSocketHost;

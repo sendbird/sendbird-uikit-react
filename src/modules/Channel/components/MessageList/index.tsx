@@ -1,4 +1,5 @@
-import './message-list.scss';
+/* We operate the CSS files for Channel&GroupChannel modules in the GroupChannel */
+import '../../../GroupChannel/components/MessageList/index.scss';
 
 import React, { useState } from 'react';
 import type { UserMessage } from '@sendbird/chat/message';
@@ -10,7 +11,7 @@ import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
 import Message from '../Message';
 import { EveryMessage, RenderCustomSeparatorProps, RenderMessageParamsType, TypingIndicatorType } from '../../../../types';
 import { isAboutSame } from '../../context/utils';
-import { getMessagePartsInfo } from './getMessagePartsInfo';
+import { getMessagePartsInfo } from '../../../GroupChannel/components/MessageList/getMessagePartsInfo';
 import UnreadCount from '../UnreadCount';
 import FrozenNotification from '../FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
@@ -34,7 +35,7 @@ export interface MessageListProps {
   renderFrozenNotification?: () => React.ReactElement;
 }
 
-const MessageList: React.FC<MessageListProps> = ({
+export const MessageList = ({
   className = '',
   renderMessage,
   renderMessageContent,
@@ -42,7 +43,7 @@ const MessageList: React.FC<MessageListProps> = ({
   renderCustomSeparator,
   renderPlaceholderLoader,
   renderFrozenNotification,
-}) => {
+}: MessageListProps) => {
   const {
     allMessages,
     localMessages,

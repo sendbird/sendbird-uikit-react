@@ -6,9 +6,10 @@ import type {
   FileMessage,
   MultipleFilesMessage,
   UserMessage,
+  Thumbnail,
 } from '@sendbird/chat/message';
 import { CoreMessageType } from './utils';
-import { MessageUIProps } from './modules/Channel/components/Message';
+import { MessageProps } from './modules/GroupChannel/components/Message/MessageView';
 
 export type ReplyType = 'NONE' | 'QUOTE_REPLY' | 'THREAD';
 export type Nullable<T> = T | null;
@@ -62,7 +63,7 @@ export interface RenderMessageProps {
   chainBottom: boolean;
 }
 // This is used for GroupChannel.renderMessage
-export type RenderMessageParamsType = Omit<MessageUIProps, 'renderMessage'>;
+export type RenderMessageParamsType = Omit<MessageProps, 'renderMessage'>;
 
 export interface RenderCustomSeparatorProps {
   message: CoreMessageType;
@@ -74,3 +75,12 @@ export interface ClientAdminMessage extends AdminMessage, ClientMessage { }
 export interface ClientMultipleFilesMessage extends MultipleFilesMessage, ClientMessage { }
 export type EveryMessage = ClientUserMessage | ClientFileMessage | ClientMultipleFilesMessage | ClientAdminMessage;
 export type ClientSentMessages = ClientUserMessage | ClientFileMessage | ClientMultipleFilesMessage;
+
+export interface UploadedFileInfoWithUpload {
+  fileName?: string;
+  fileSize?: number;
+  mimeType?: string;
+  thumbnails?: Thumbnail[];
+  url?: string;
+  isUploaded?: boolean;
+}

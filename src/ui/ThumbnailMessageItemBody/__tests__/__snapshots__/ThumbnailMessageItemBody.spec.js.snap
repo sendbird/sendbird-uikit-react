@@ -11,6 +11,7 @@ exports[`ui/ThumbnailMessageItemBody should do a snapshot test of the ThumbnailM
     >
       <div
         class="sendbird-thumbnail-message-item-body__placeholder"
+        style="width: 100%; min-width: min(400px, 360px); max-width: 400px; position: absolute; display: flex; justify-content: center; align-items: center;"
       />
       <div
         class="sendbird-image-renderer__image"

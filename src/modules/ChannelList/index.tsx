@@ -29,7 +29,6 @@ const ChannelList: React.FC<ChannelListProps> = (props: ChannelListProps) => {
     >
       <ChannelListUI
         renderChannelPreview={props?.renderChannelPreview}
-        renderUserProfile={props?.renderUserProfile}
         renderHeader={props?.renderHeader}
         renderPlaceHolderEmptyList={props?.renderPlaceHolderEmptyList}
         renderPlaceHolderError={props?.renderPlaceHolderError}

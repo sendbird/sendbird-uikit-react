@@ -1,24 +1,21 @@
-import './channel-ui.scss';
-
 import React from 'react';
 
 import type { MessageContentProps } from '../../../../ui/MessageContent';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import type { GroupChannelHeaderProps } from '../../../GroupChannel/components/GroupChannelHeader';
+import type { RenderCustomSeparatorProps } from '../../../../types';
+import { RenderMessageParamsType } from '../../../../types';
 import { useChannelContext } from '../../context/ChannelProvider';
-import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
-import ConnectionStatus from '../../../../ui/ConnectionStatus';
+import { GroupChannelUIView } from '../../../GroupChannel/components/GroupChannelUI/GroupChannelUIView';
 import ChannelHeader from '../ChannelHeader';
 import MessageList from '../MessageList';
-import TypingIndicator from '../TypingIndicator';
-import MessageInputWrapper from '../MessageInput';
-import { RenderCustomSeparatorProps, RenderMessageParamsType, TypingIndicatorType } from '../../../../types';
+import MessageInputWrapper from '../MessageInputWrapper';
 
 export interface ChannelUIProps {
   isLoading?: boolean;
   renderPlaceholderLoader?: () => React.ReactElement;
   renderPlaceholderInvalid?: () => React.ReactElement;
   renderPlaceholderEmpty?: () => React.ReactElement;
-  renderChannelHeader?: () => React.ReactElement;
+  renderChannelHeader?: (props: GroupChannelHeaderProps) => React.ReactElement;
   renderMessage?: (props: RenderMessageParamsType) => React.ReactElement;
   renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
   renderMessageInput?: () => React.ReactElement;
@@ -30,122 +27,25 @@ export interface ChannelUIProps {
   renderFrozenNotification?: () => React.ReactElement;
 }
 
-const ChannelUI: React.FC<ChannelUIProps> = ({
-  isLoading,
-  renderPlaceholderLoader,
-  renderPlaceholderInvalid,
-  renderPlaceholderEmpty,
-  renderChannelHeader,
-  renderMessage,
-  renderMessageContent,
-  renderMessageInput,
-  renderTypingIndicator,
-  renderCustomSeparator,
-  renderFileUploadIcon,
-  renderVoiceMessageIcon,
-  renderSendMessageIcon,
-  renderFrozenNotification,
-}: ChannelUIProps) => {
+const ChannelUI = (props: ChannelUIProps) => {
+  const context = useChannelContext();
   const {
     channelUrl,
     isInvalid,
-  } = useChannelContext();
+    loading,
+  } = context;
 
-  const globalStore = useSendbirdStateContext();
-  const sdkError = globalStore?.stores?.sdkStore?.error;
-  const logger = globalStore?.config?.logger;
-  const isOnline = globalStore?.config?.isOnline;
-
-  if (isLoading) {
-    return (<div className="sendbird-conversation">
-      {
-        renderPlaceholderLoader?.() || (
-          <PlaceHolder type={PlaceHolderTypes.LOADING} />
-        )
-      }
-    </div>);
-  }
-
-  if (!channelUrl) {
-    return (<div className="sendbird-conversation">
-      {
-        renderPlaceholderInvalid?.() || (
-          <PlaceHolder type={PlaceHolderTypes.NO_CHANNELS} />
-        )
-      }
-    </div>);
-  }
-  if (isInvalid) {
-    return (
-      <div className="sendbird-conversation">
-        {
-          renderPlaceholderInvalid?.() || (
-            <PlaceHolder type={PlaceHolderTypes.WRONG} />
-          )
-        }
-      </div>
-    );
-  }
-  if (sdkError) {
-    return (
-      <div className="sendbird-conversation">
-        {
-          renderPlaceholderInvalid?.() || (
-            <PlaceHolder
-              type={PlaceHolderTypes.WRONG}
-              retryToConnect={() => {
-                logger.info('Channel: reconnecting');
-                // reconnect();
-              }}
-            />
-          )
-        }
-      </div>
-    );
-  }
   return (
-    <div className='sendbird-conversation'>
-      {renderChannelHeader?.() || (
-        <ChannelHeader className="sendbird-conversation__channel-header" />
-      )}
-      <MessageList
-        className="sendbird-conversation__message-list"
-        renderMessage={renderMessage}
-        renderMessageContent={renderMessageContent}
-        renderPlaceholderEmpty={renderPlaceholderEmpty}
-        renderCustomSeparator={renderCustomSeparator}
-        renderPlaceholderLoader={renderPlaceholderLoader}
-        renderFrozenNotification={renderFrozenNotification}
-      />
-      <div className="sendbird-conversation__footer">
-        {
-          renderMessageInput?.() || (
-            <MessageInputWrapper
-              renderFileUploadIcon={renderFileUploadIcon}
-              renderVoiceMessageIcon={renderVoiceMessageIcon}
-              renderSendMessageIcon={renderSendMessageIcon}
-            />
-          )
-        }
-        <div className="sendbird-conversation__footer__typing-indicator">
-          {
-            renderTypingIndicator?.()
-            || (
-              globalStore?.config?.groupChannel?.enableTypingIndicator
-              && globalStore?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Text)
-              && (
-                <TypingIndicator />
-              )
-            )
-          }
-          {
-            !isOnline && (
-              <ConnectionStatus />
-            )
-          }
-        </div>
-      </div>
-    </div>
+    <GroupChannelUIView
+      {...props}
+      {...context}
+      requestedChannelUrl={channelUrl}
+      loading={props?.isLoading ?? loading}
+      isInvalid={isInvalid}
+      renderChannelHeader={(props) => (<ChannelHeader {...props} />)}
+      renderMessageList={(props) => (<MessageList {...props} />)}
+      renderMessageInput={() => (<MessageInputWrapper {...props} />)}
+    />
   );
 };
 

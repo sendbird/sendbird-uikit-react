@@ -76,7 +76,7 @@ function useOnlineStatus(sdk: SendbirdChat, logger: LoggerInterface) {
   // add offline-class to body
   useEffect(() => {
     const body = document.querySelector('body');
-    if (!isOnline) {
+    if (!isOnline && !sdk?.isCacheEnabled) {
       try {
         body.classList.add('sendbird__offline');
         logger.info('Added class sendbird__offline to body');
@@ -91,7 +91,7 @@ function useOnlineStatus(sdk: SendbirdChat, logger: LoggerInterface) {
         //
       }
     }
-  }, [isOnline]);
+  }, [isOnline, sdk?.isCacheEnabled]);
 
   return isOnline;
 }

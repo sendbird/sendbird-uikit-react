@@ -11,6 +11,7 @@ import {
   ON_CURRENT_TIME_UPDATE,
   ON_VOICE_PLAYER_PAUSE,
   ON_VOICE_PLAYER_PLAY,
+  RESET_AUDIO_UNIT,
   SET_CURRENT_PLAYER,
 } from './dux/actionTypes';
 import {
@@ -72,7 +73,7 @@ export const VoicePlayerProvider = ({
     }
   };
 
-  const pause = (groupKey: string|null) => {
+  const pause = (groupKey: string | null) => {
     if (currentGroupKey === groupKey && currentPlayer !== null) {
       logger.info('VoicePlayer: Pause playing(by group key).');
       currentPlayer?.pause();
@@ -100,7 +101,7 @@ export const VoicePlayerProvider = ({
     }
 
     logger.info('VoicePlayer: Start getting audio file.');
-    new Promise<File>((resolve) => {
+    new Promise<File>((resolve, reject) => {
       voicePlayerDispatcher({
         type: INITIALIZE_AUDIO_UNIT,
         payload: { groupKey },
@@ -128,62 +129,74 @@ export const VoicePlayerProvider = ({
           });
           resolve(audioFile);
           logger.info('VoicePlayer: Get the audioFile from URL.');
-        });
-    }).then((audioFile: File) => {
-      const voicePlayerRoot = document.getElementById(VOICE_PLAYER_ROOT_ID);
-      logger.info('VoicePlayer: Succeeded getting audio file.', { audioFile });
-      const currentAudioUnit = audioStorage[groupKey] || AudioUnitDefaultValue() as AudioStorageUnit;
-      const audioPlayer = new Audio(URL?.createObjectURL?.(audioFile));
-      audioPlayer.id = VOICE_PLAYER_AUDIO_ID;
-      audioPlayer.currentTime = currentAudioUnit.playbackTime;
-      audioPlayer.volume = 1;
-      audioPlayer.loop = false;
-      audioPlayer.onplaying = () => {
-        logger.info('VoicePlayer: OnPlaying event is called from audioPlayer', { groupKey, audioPlayer });
+        })
+        .catch(reject);
+    })
+      .then((audioFile: File) => {
+        const voicePlayerRoot = document.getElementById(VOICE_PLAYER_ROOT_ID);
+        logger.info('VoicePlayer: Succeeded getting audio file.', { audioFile });
+        const currentAudioUnit = audioStorage[groupKey] || AudioUnitDefaultValue() as AudioStorageUnit;
+        const audioPlayer = new Audio(URL?.createObjectURL?.(audioFile));
+        audioPlayer.id = VOICE_PLAYER_AUDIO_ID;
+        audioPlayer.currentTime = currentAudioUnit.playbackTime;
+        audioPlayer.volume = 1;
+        audioPlayer.loop = false;
+        audioPlayer.onplaying = () => {
+          logger.info('VoicePlayer: OnPlaying event is called from audioPlayer', { groupKey, audioPlayer });
+          voicePlayerDispatcher({
+            type: ON_VOICE_PLAYER_PLAY,
+            payload: { groupKey, audioFile },
+          });
+        };
+        audioPlayer.onpause = () => {
+          logger.info('VoicePlayer: OnPause event is called from audioPlayer', { groupKey, audioPlayer });
+          voicePlayerDispatcher({
+            type: ON_VOICE_PLAYER_PAUSE,
+            payload: { groupKey, duration: audioPlayer.duration, currentTime: audioPlayer.currentTime },
+          });
+        };
+        audioPlayer.ontimeupdate = () => {
+          voicePlayerDispatcher({
+            type: ON_CURRENT_TIME_UPDATE,
+            payload: { groupKey },
+          });
+        };
+        audioPlayer.onerror = (error) => {
+          logger.error('VoicePlayer: Failed to load the audioFile on the audio player.', error);
+          voicePlayerDispatcher({
+            type: RESET_AUDIO_UNIT,
+            payload: { groupKey },
+          });
+        };
+        audioPlayer.dataset.sbGroupId = groupKey;
+        // clean up the previous audio player
+        try {
+          voicePlayerRoot?.childNodes.forEach((node) => {
+            const element = node as HTMLAudioElement;
+            const thisGroupKey = element.dataset?.sbGroupKey;
+            if (thisGroupKey !== groupKey) {
+              element?.pause?.();
+              voicePlayerRoot.removeChild(element);
+              logger.info('VoicePlayer: Removed other player.', { element });
+            }
+          });
+        } finally {
+          audioPlayer?.play();
+          voicePlayerRoot?.appendChild(audioPlayer);
+          voicePlayerDispatcher({
+            type: SET_CURRENT_PLAYER,
+            payload: { groupKey, audioPlayer },
+          });
+          logger.info('VoicePlayer: Succeeded playing audio player.', { groupKey, audioPlayer });
+        }
+      })
+      .catch((error) => {
+        logger.warning('VoicePlayer: Failed loading audio file with URL.', error);
         voicePlayerDispatcher({
-          type: ON_VOICE_PLAYER_PLAY,
-          payload: { groupKey, audioFile },
-        });
-      };
-      audioPlayer.onpause = () => {
-        logger.info('VoicePlayer: OnPause event is called from audioPlayer', { groupKey, audioPlayer });
-        voicePlayerDispatcher({
-          type: ON_VOICE_PLAYER_PAUSE,
+          type: RESET_AUDIO_UNIT,
           payload: { groupKey },
         });
-      };
-      audioPlayer.ontimeupdate = () => {
-        voicePlayerDispatcher({
-          type: ON_CURRENT_TIME_UPDATE,
-          payload: { groupKey },
-        });
-      };
-      audioPlayer.dataset.sbGroupId = groupKey;
-      // clean up the previous audio player
-      try {
-        voicePlayerRoot?.childNodes.forEach((node) => {
-          const element = node as HTMLAudioElement;
-          const thisGroupKey = element.dataset?.sbGroupKey;
-          if (thisGroupKey !== groupKey) {
-            element?.pause?.();
-            voicePlayerDispatcher({
-              type: ON_VOICE_PLAYER_PAUSE,
-              payload: { groupKey },
-            });
-            voicePlayerRoot.removeChild(element);
-            logger.info('VoicePlayer: Removed other player.', { element });
-          }
-        });
-      } finally {
-        audioPlayer?.play();
-        voicePlayerRoot?.appendChild(audioPlayer);
-        voicePlayerDispatcher({
-          type: SET_CURRENT_PLAYER,
-          payload: { groupKey, audioPlayer },
-        });
-        logger.info('VoicePlayer: Succeeded playing audio player.', { groupKey, audioPlayer });
-      }
-    });
+      });
   };
 
   return (

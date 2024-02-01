@@ -143,12 +143,14 @@ export default function channelReducer(
       },
       (action) => {
         const { currentGroupChannel } = action.payload;
-        if (currentGroupChannel?.url !== state?.currentGroupChannel?.url) {
-          return state;
-        }
+        if (currentGroupChannel?.url !== state?.currentGroupChannel?.url) return state;
+
+        // It shows something went wrong screen when fetching initial messages failed.
+        const shouldInvalid = [channelActions.FETCH_INITIAL_MESSAGES_FAILURE].includes(action.type);
         return {
           ...state,
           loading: false,
+          isInvalid: shouldInvalid,
           initialized: false,
           allMessages: [],
           hasMorePrev: false,

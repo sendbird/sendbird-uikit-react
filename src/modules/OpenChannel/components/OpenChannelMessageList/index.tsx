@@ -7,13 +7,13 @@ import isSameDay from 'date-fns/isSameDay';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
-import { compareMessagesForGrouping } from '../../context/utils';
 import { useOpenChannelContext } from '../../context/OpenChannelProvider';
 import OpenChannelMessage from '../OpenChannelMessage';
 import { RenderMessageProps } from '../../../../types';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
+import { compareMessagesForGrouping } from '../../../../utils/messages';
 
 export type OpenchannelMessageListProps = {
   renderMessage?: (props: RenderMessageProps) => React.ElementType<RenderMessageProps>;

@@ -12,7 +12,7 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useThreadContext } from '../../context/ThreadProvider';
 import { UserProfileContext } from '../../../../lib/UserProfileContext';
-import SuggestedMentionList from '../../../Channel/components/SuggestedMentionList';
+import SuggestedMentionList from '../SuggestedMentionList';
 
 import Avatar from '../../../../ui/Avatar';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
@@ -297,6 +297,7 @@ export default function ParentMessageInfo({
           onMoveToParentMessage={() => {
             onMoveToParentMessage({ message: parentMessage, channel: currentChannel });
           }}
+          deleteMessage={deleteMessage}
         />
       )}
       {(usingReaction && !isMobile) && (

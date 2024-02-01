@@ -1,40 +1,33 @@
 import './channel-list-ui.scss';
 
-import React, { useState } from 'react';
+import React from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
-import type { User } from '@sendbird/chat';
-
-import ChannelListHeader from '../ChannelListHeader';
-import AddChannel from '../AddChannel';
 import ChannelPreview from '../ChannelPreview';
 import ChannelPreviewAction from '../ChannelPreviewAction';
 import { useChannelListContext } from '../../context/ChannelListProvider';
 import * as channelListActions from '../../dux/actionTypes';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import EditUserProfile from '../../../EditUserProfile';
-import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
-import { isAboutSame } from '../../../../utils/utils';
-import type { RenderUserProfileProps } from '../../../../types';
+import { GroupChannelListUIView } from '../../../GroupChannelList/components/GroupChannelListUI/GroupChannelListUIView';
 
 interface RenderChannelPreviewProps {
   channel: GroupChannel;
-  onLeaveChannel(
-    channel: GroupChannel,
-    onLeaveChannelCb?: (c: GroupChannel) => void,
-  ): void;
+  onLeaveChannel(channel: GroupChannel, onLeaveChannelCb?: (channel: GroupChannel, error?: null) => void): void;
 }
 
 export interface ChannelListUIProps {
-  renderChannelPreview?: (props: RenderChannelPreviewProps) => React.ReactElement;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
+  renderChannelPreview?: (
+    props: RenderChannelPreviewProps
+  ) => React.ReactElement;
   renderHeader?: (props: void) => React.ReactElement;
   renderPlaceHolderError?: (props: void) => React.ReactElement;
   renderPlaceHolderLoading?: (props: void) => React.ReactElement;
   renderPlaceHolderEmptyList?: (props: void) => React.ReactElement;
 }
 
-const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) => {
+const ChannelListUI: React.FC<ChannelListUIProps> = (
+  props: ChannelListUIProps,
+) => {
   const {
     renderHeader,
     renderChannelPreview,
@@ -43,13 +36,10 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
     renderPlaceHolderEmptyList,
   } = props;
 
-  const [showProfileEdit, setShowProfileEdit] = useState(false);
-
   const {
     onThemeChange,
     allowProfileEdit,
     allChannels,
-    loading,
     currentChannel,
     channelListDispatcher,
     typingChannels,
@@ -58,155 +48,86 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
     onProfileEditSuccess,
   } = useChannelListContext();
 
-  const state = useSendbirdStateContext();
-  const sdkStore = state?.stores?.sdkStore;
-  const config = state?.config;
-  const {
-    logger,
-    isOnline = false,
-  } = config;
-  const sdkError = sdkStore?.error;
+  const { stores, config } = useSendbirdStateContext();
+  const { logger, isOnline = false } = config;
+  const sdk = stores.sdkStore.sdk;
+
+  const renderListItem = (props: { item: GroupChannel; index: number }) => {
+    const { item: channel, index } = props;
+
+    const onLeaveChannel: RenderChannelPreviewProps['onLeaveChannel'] = (channel, cb) => {
+      logger.info('ChannelList: Leaving channel', channel);
+      channel
+        .leave()
+        .then((res) => {
+          logger.info('ChannelList: Leaving channel success', res);
+          if (cb && typeof cb === 'function') cb(channel, null);
+
+          channelListDispatcher({
+            type: channelListActions.LEAVE_CHANNEL_SUCCESS,
+            payload: channel.url,
+          });
+        })
+        .catch((err) => {
+          logger.error('ChannelList: Leaving channel failed', err);
+          if (cb && typeof cb === 'function') cb(channel, err);
+        });
+    };
+
+    const onClickChannel = () => {
+      if (!isOnline && !sdk?.isCacheEnabled) {
+        logger.warning('ChannelList: Inactivated clicking channel item during offline.');
+        return;
+      }
+      logger.info('ChannelList: Clicked on channel:', channel);
+      channelListDispatcher({
+        type: channelListActions.SET_CURRENT_CHANNEL,
+        payload: channel,
+      });
+    };
+
+    if (renderChannelPreview) {
+      return (
+        <div key={channel?.url} onClick={onClickChannel}>
+          {renderChannelPreview({ channel, onLeaveChannel })}
+        </div>
+      );
+    }
+
+    return (
+      <ChannelPreview
+        key={channel?.url}
+        tabIndex={index}
+        onClick={onClickChannel}
+        channel={channel}
+        onLeaveChannel={() => onLeaveChannel(channel, null)}
+        isActive={channel?.url === currentChannel?.url}
+        isTyping={typingChannels?.some(({ url }) => url === channel?.url)}
+        renderChannelAction={() => (
+          <ChannelPreviewAction
+            channel={channel}
+            disabled={!isOnline}
+            onLeaveChannel={() => onLeaveChannel(channel, null)}
+          />
+        )}
+      />
+    );
+  };
 
   return (
-    <>
-      <div className="sendbird-channel-list__header">
-        {
-          renderHeader?.() || (
-            <ChannelListHeader
-              onEdit={() => {
-                if (allowProfileEdit) {
-                  setShowProfileEdit(true);
-                }
-              }}
-              allowProfileEdit={allowProfileEdit}
-              renderIconButton={() => (
-                <AddChannel />
-              )}
-            />
-          )
-        }
-      </div>
-      {
-        showProfileEdit && (
-          <EditUserProfile
-            onThemeChange={onThemeChange}
-            onCancel={() => { setShowProfileEdit(false); }}
-            onEditProfile={(user: User) => {
-              setShowProfileEdit(false);
-              onProfileEditSuccess(user);
-            }}
-          />
-        )
-      }
-      <div
-        className="sendbird-channel-list__body"
-        onScroll={(e) => {
-          const target = e?.target as HTMLDivElement;
-          if (isAboutSame(target.clientHeight + target.scrollTop, target.scrollHeight, 10)) {
-            fetchChannelList();
-          }
-        }}
-      >
-        {
-          (sdkError && !loading) && (
-            (renderPlaceHolderError && typeof renderPlaceHolderError === 'function') ? (
-              renderPlaceHolderError?.()
-            ) : (
-              <PlaceHolder type={PlaceHolderTypes.WRONG} />
-            )
-          )
-        }
-        {/*
-          To do: Implement windowing
-          Implement windowing if you are dealing with large number of messages/channels
-          https://github.com/bvaughn/react-window -> recommendation
-          We hesitate to bring one more dependency to our library,
-          we are planning to implement it inside the library
-        */}
-        <div>
-          {
-            allChannels && allChannels.map((channel, idx) => {
-              // todo: Refactor and move this inside channel - preview
-              const onLeaveChannel = (c, cb) => {
-                logger.info('ChannelList: Leaving channel', c);
-                c.leave()
-                  .then((res) => {
-                    logger.info('ChannelList: Leaving channel success', res);
-                    if (cb && typeof cb === 'function') {
-                      cb(res, null);
-                    }
-                    channelListDispatcher({
-                      type: channelListActions.LEAVE_CHANNEL_SUCCESS,
-                      payload: channel?.url,
-                    });
-                  })
-                  .catch((err) => {
-                    logger.error('ChannelList: Leaving channel failed', err);
-                    if (cb && typeof cb === 'function') {
-                      cb(null, err);
-                    }
-                  });
-              };
-
-              const onClick = () => {
-                if (!isOnline) { return; }
-                logger.info('ChannelList: Clicked on channel:', channel);
-                channelListDispatcher({
-                  type: channelListActions.SET_CURRENT_CHANNEL,
-                  payload: channel,
-                });
-              };
-
-              return (
-                (renderChannelPreview)
-                  ? (
-                    // eslint-disable-next-line
-                    <div key={channel?.url} onClick={onClick}>
-                      {renderChannelPreview({ channel, onLeaveChannel })}
-                    </div>
-                  )
-                  : (
-                    <ChannelPreview
-                      key={channel?.url}
-                      tabIndex={idx}
-                      onClick={onClick}
-                      channel={channel}
-                      onLeaveChannel={() => onLeaveChannel(channel, null)}
-                      isActive={channel?.url === currentChannel?.url}
-                      isTyping={typingChannels?.some(({ url }) => url === channel?.url)}
-                      renderChannelAction={(() => (
-                        <ChannelPreviewAction
-                          channel={channel}
-                          disabled={!isOnline}
-                          onLeaveChannel={() => onLeaveChannel(channel, null)}
-                        />
-                      ))}
-                    />
-                  )
-              );
-            })
-          }
-        </div>
-        {
-          (!initialized && loading) && (
-            (renderPlaceHolderLoading && typeof renderPlaceHolderLoading === 'function') ? (
-              renderPlaceHolderLoading?.()
-            ) : (
-              <PlaceHolder type={PlaceHolderTypes.LOADING} />
-            )
-          )
-        }
-        {
-          (initialized && allChannels?.length === 0) && (
-            (renderPlaceHolderEmptyList && typeof renderPlaceHolderEmptyList === 'function') ? (
-              renderPlaceHolderEmptyList?.()
-            ) : (
-              <PlaceHolder type={PlaceHolderTypes.NO_CHANNELS} />
-            )
-          )
-        }
-      </div>
-    </>
+    <GroupChannelListUIView
+      renderHeader={renderHeader}
+      renderChannel={renderListItem}
+      renderPlaceHolderError={renderPlaceHolderError}
+      renderPlaceHolderLoading={renderPlaceHolderLoading}
+      renderPlaceHolderEmptyList={renderPlaceHolderEmptyList}
+      onChangeTheme={onThemeChange}
+      allowProfileEdit={allowProfileEdit}
+      onUserProfileUpdated={onProfileEditSuccess}
+      channels={allChannels}
+      onLoadMore={fetchChannelList}
+      initialized={initialized}
+    />
   );
 };
 

@@ -50,13 +50,13 @@ export function useDirtyGetMentions({
     if (targetNode) {
       // Start observing the target node for configured mutations
       observer.observe(targetNode, config);
-      logger.info('useDirtyGetMentions: observer started', { observer, config });
+      // logger.info('useDirtyGetMentions: observer started', { observer, config });
     }
 
     return () => {
       try {
         observer.disconnect();
-        logger.info('useDirtyGetMentions: observer disconnected', { observer });
+        // logger.info('useDirtyGetMentions: observer disconnected', { observer });
       } catch (error) {
         logger.error('useDirtyGetMentions: observer disconnect failed', { observer });
       }

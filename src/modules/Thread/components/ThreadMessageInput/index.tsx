@@ -6,10 +6,10 @@ import './index.scss';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import MessageInput from '../../../../ui/MessageInput';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
-import SuggestedMentionList from '../../../Channel/components/SuggestedMentionList';
+import { SuggestedMentionList } from '../SuggestedMentionList';
 import { useThreadContext } from '../../context/ThreadProvider';
 import { useLocalization } from '../../../../lib/LocalizationContext';
-import VoiceMessageInputWrapper from '../../../Channel/components/MessageInput/VoiceMessageInputWrapper';
+import { VoiceMessageInputWrapper } from '../../../GroupChannel/components/MessageInputWrapper';
 import { Role } from '../../../../lib/types';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../../Channel/context/utils';
@@ -35,7 +35,7 @@ const ThreadMessageInput = (
     renderSendMessageIcon,
     acceptableMimeTypes,
   } = props;
-  const propsDisabled = props.disabled;
+
   const { config } = useSendbirdStateContext();
   const { stringSet } = useLocalization();
   const {
@@ -58,12 +58,14 @@ const ThreadMessageInput = (
     allThreadMessages,
   } = threadContext;
   const messageInputRef = useRef();
+
   const isMultipleFilesMessageEnabled = (
     threadContext.isMultipleFilesMessageEnabled
     ?? config.isMultipleFilesMessageEnabled
   );
 
-  const disabled = propsDisabled
+  const threadInputDisabled = props.disabled
+    || !isOnline
     || isMuted
     || (!(currentChannel?.myRole === Role.OPERATOR) && isChannelFrozen) || parentMessage === null;
 
@@ -161,7 +163,7 @@ const ThreadMessageInput = (
             <MessageInput
               className="sendbird-thread-message-input__message-input"
               messageFieldId="sendbird-message-input-text-field--thread"
-              disabled={disabled}
+              disabled={threadInputDisabled}
               channel={currentChannel}
               acceptableMimeTypes={acceptableMimeTypes}
               setMentionedUsers={setMentionedUsers}

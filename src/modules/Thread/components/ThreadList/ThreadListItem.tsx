@@ -9,7 +9,7 @@ import RemoveMessage from '../RemoveMessageModal';
 import FileViewer from '../../../../ui/FileViewer';
 import { useThreadContext } from '../../context/ThreadProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import SuggestedMentionList from '../../../Channel/components/SuggestedMentionList';
+import SuggestedMentionList from '../SuggestedMentionList';
 import MessageInput from '../../../../ui/MessageInput';
 import { ThreadListStateTypes } from '../../types';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
