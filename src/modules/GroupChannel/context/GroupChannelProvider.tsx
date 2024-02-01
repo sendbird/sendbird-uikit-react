@@ -64,7 +64,6 @@ export interface GroupChannelContextProps {
 
   // Custom
   messageListQueryParams?: MessageListQueryParamsType;
-  filterMessageList?(messages: CoreMessageType): boolean;
 
   // Handlers
   onBeforeSendUserMessage?: OnBeforeHandler<UserMessageCreateParams>;
@@ -155,7 +154,6 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
 
     // Custom
     messageListQueryParams,
-    filterMessageList,
     // #Message
     onBeforeSendUserMessage,
     onBeforeSendFileMessage,
@@ -419,7 +417,6 @@ const GroupChannelProvider = (props: GroupChannelContextProps) => {
 
         // # Custom Props
         messageListQueryParams,
-        filterMessageList,
         // ## Message
         onBeforeSendUserMessage,
         onBeforeSendFileMessage,
