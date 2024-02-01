@@ -191,7 +191,7 @@ describe('useConnect/setupConnection/setUpParams', () => {
     expect(require('@sendbird/chat').init).toBeCalledWith({
       appId,
       newInstance: true,
-      localCacheEnabled: true,
+      localCacheEnabled: false,
       modules: [
         // @ts-ignore
         new (require('@sendbird/chat/groupChannel').GroupChannelModule)(),
@@ -210,7 +210,7 @@ describe('useConnect/setupConnection/setUpParams', () => {
     expect(require('@sendbird/chat').init).toBeCalledWith({
       appId,
       newInstance: true,
-      localCacheEnabled: true,
+      localCacheEnabled: false,
       modules: [
         // @ts-ignore
         new (require('@sendbird/chat/groupChannel').GroupChannelModule)(),
@@ -231,7 +231,7 @@ describe('useConnect/setupConnection/setUpParams', () => {
     expect(require('@sendbird/chat').init).toBeCalledWith({
       appId,
       newInstance: true,
-      localCacheEnabled: true,
+      localCacheEnabled: false,
       modules: [
         // @ts-ignore
         new (require('@sendbird/chat/groupChannel').GroupChannelModule)(),
@@ -251,7 +251,7 @@ describe('useConnect/setupConnection/setUpParams', () => {
     expect(require('@sendbird/chat').init).toBeCalledWith({
       appId,
       newInstance: true,
-      localCacheEnabled: true,
+      localCacheEnabled: false,
       modules: [
         // @ts-ignore
         new (require('@sendbird/chat/groupChannel').GroupChannelModule)(),

@@ -100,7 +100,8 @@ export default function App(props: AppProps) {
     isTypingIndicatorEnabledOnChannelList,
     isMessageReceiptStatusEnabledOnChannelList,
     isUserIdUsedForNickname = true,
-    enableLegacyChannelModules = false,
+    // FIXME: Flag change is required when deploying the collection module.
+    enableLegacyChannelModules = true,
   } = props;
   const [currentChannel, setCurrentChannel] = useState(null);
   return (
