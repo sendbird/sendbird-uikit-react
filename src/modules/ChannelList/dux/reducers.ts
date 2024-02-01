@@ -29,7 +29,7 @@ export default function channelListReducer(
           allChannels: channelList,
           disableAutoSelect,
           currentChannel:
-            !disableAutoSelect && channelList && channelList.length && channelList.length > 0 ? channelList[0] : null,
+            !disableAutoSelect && channelList && channelList.length && channelList.length > 0 ? channelList[0] : state.currentChannel,
         };
       })
       .with({ type: channelListActions.REFRESH_CHANNELS_SUCCESS }, (action) => {

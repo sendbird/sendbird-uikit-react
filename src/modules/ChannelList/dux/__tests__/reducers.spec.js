@@ -16,10 +16,23 @@ describe('Channels-Reducers', () => {
     expect(nextState.currentChannel.url).toEqual(mockData.allChannels[0].url);
   });
 
-    // https://sendbird.atlassian.net/browse/UIKIT-2158
-    it('should check if ITNITAL_LOADING state is true', () => {
-      expect(initialState.loading).toEqual(true);
+  // if INIT_CHANNELS_SUCCESS comes back _after_ SET_CURRENT_CHANNEL via activeChannelUrl, don't wipe active channel
+  it('should not override current channel if disableAutoSelect channels on INIT_CHANNELS_SUCCESS', () => {
+    const nextState = reducers({
+      ...initialState,
+      currentChannel: mockData.allChannels[0],
+    }, {
+      type: actionTypes.INIT_CHANNELS_SUCCESS,
+      payload: { channelList: mockData.allChannels, disableAutoSelect: true },
     });
+
+    expect(nextState.currentChannel.url).toEqual(mockData.allChannels[0].url);
+  });
+
+  // https://sendbird.atlassian.net/browse/UIKIT-2158
+  it('should check if ITNITAL_LOADING state is true', () => {
+    expect(initialState.loading).toEqual(true);
+  });
 
   it('should handle create new channel using CREATE_CHANNEL', () => {
     const newChannel = mockData.allChannels[1];
