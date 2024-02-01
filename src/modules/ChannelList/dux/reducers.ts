@@ -4,6 +4,7 @@ import * as channelListActions from './actionTypes';
 import { ChannelListActionTypes } from './actionTypes';
 import { getNextChannel } from './getNextChannel';
 import initialState, { ChannelListInitialStateType } from './initialState';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 export default function channelListReducer(
   state: ChannelListInitialStateType,
@@ -16,7 +17,9 @@ export default function channelListReducer(
         loading: true,
         currentUserId: payload.currentUserId,
       }))
-      .with({ type: channelListActions.RESET_CHANNEL_LIST }, () => initialState)
+      .with({ type: channelListActions.RESET_CHANNEL_LIST }, () => {
+        return initialState;
+      })
       .with({ type: channelListActions.INIT_CHANNELS_SUCCESS }, (action) => {
         const { channelList, disableAutoSelect } = action.payload;
         return {
@@ -27,6 +30,15 @@ export default function channelListReducer(
           disableAutoSelect,
           currentChannel:
             !disableAutoSelect && channelList && channelList.length && channelList.length > 0 ? channelList[0] : null,
+        };
+      })
+      .with({ type: channelListActions.REFRESH_CHANNELS_SUCCESS }, (action) => {
+        const { channelList, currentChannel } = action.payload;
+        return {
+          ...state,
+          loading: false,
+          allChannels: channelList,
+          currentChannel,
         };
       })
       .with({ type: channelListActions.FETCH_CHANNELS_SUCCESS }, (action) => {
@@ -108,22 +120,41 @@ export default function channelListReducer(
       .with({ type: channelListActions.ON_USER_LEFT }, (action) => {
         const { channel, isMe } = action.payload;
         const { allChannels, currentUserId, currentChannel, channelListQuery, disableAutoSelect } = state;
-        let nextChannels = allChannels.filter((ch) => ch.url !== channel.url);
-        let nextChannel = null;
-        if (channelListQuery) {
-          if (filterChannelListParams(channelListQuery, channel, currentUserId)) {
-            // Good to [add to/keep in] the ChannelList
-            nextChannels = getChannelsWithUpsertedChannel(allChannels, channel, state.channelListQuery?.order);
+        let nextChannels = [...allChannels];
+        let nextChannel: GroupChannel = channel;
+
+        /**
+         * 1. If I left channel:
+         *   - Remove the channel from channel list
+         *   - Replace currentChannel with the next ordered channel
+         * 2. If other member left channel:
+         *   2-1. If query is given:
+         *     2-1-1. If channel no longer matches the query
+         *       - Same as step 1
+         *     2-1-2. If channel matches the query:
+         *       - Upsert channel list with the channel
+         *       - Replace currentChannel IFF url is same
+         *   2-2. If query is not given,
+         *     - Same as step 2-1-2
+         */
+        /* `1` and `2-1-1` */
+        if (isMe || (channelListQuery && !filterChannelListParams(channelListQuery, channel, currentUserId))) {
+          const channelAt = allChannels.findIndex((ch: GroupChannel) => ch.url === channel.url);
+          if (channelAt > -1) {
+            nextChannels.splice(channelAt, 1);
+            nextChannel = getNextChannel({
+              channel,
+              currentChannel,
+              allChannels,
+              disableAutoSelect,
+            });
           }
-        }
-        // Replace the currentChannel if I left the currentChannel
-        if (isMe) {
-          nextChannel = getNextChannel({
-            channel,
-            currentChannel,
-            allChannels,
-            disableAutoSelect,
-          });
+        } else {
+          /* `2-1-2` and `2-2` */
+          nextChannels = getChannelsWithUpsertedChannel(allChannels, channel, state.channelListQuery?.order);
+          if (currentChannel?.url === channel.url) {
+            nextChannel = channel;
+          }
         }
         return {
           ...state,

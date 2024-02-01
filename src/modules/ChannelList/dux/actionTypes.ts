@@ -15,6 +15,7 @@ export const FETCH_CHANNELS_FAILURE = 'FETCH_CHANNELS_FAILURE';
 
 export const INIT_CHANNELS_START = 'INIT_CHANNELS_START';
 export const INIT_CHANNELS_SUCCESS = 'INIT_CHANNELS_SUCCESS';
+export const REFRESH_CHANNELS_SUCCESS = 'REFRESH_CHANNELS_SUCCESS';
 export const INIT_CHANNELS_FAILURE = 'INIT_CHANNELS_FAILURE';
 
 export const INVITE_MEMBERS_SUCESS = 'INVITE_MEMBERS_SUCESS';
@@ -50,6 +51,10 @@ type CHANNEL_LIST_PAYLOAD_TYPES = {
   [INIT_CHANNELS_SUCCESS]: {
     channelList: GroupChannel[];
     disableAutoSelect: boolean;
+  };
+  [REFRESH_CHANNELS_SUCCESS]: {
+    channelList: GroupChannel[];
+    currentChannel: GroupChannel | null;
   };
   [INIT_CHANNELS_FAILURE]: null;
   [INVITE_MEMBERS_SUCESS]: null;

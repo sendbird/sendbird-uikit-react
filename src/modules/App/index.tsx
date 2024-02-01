@@ -104,6 +104,7 @@ export default function App(props: AppProps) {
     enableLegacyChannelModules = true,
   } = props;
   const [currentChannel, setCurrentChannel] = useState(null);
+
   return (
     <Sendbird
       stringSet={stringSet}

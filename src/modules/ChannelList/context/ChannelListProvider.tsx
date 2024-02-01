@@ -33,6 +33,7 @@ import channelListInitialState from '../dux/initialState';
 import { CHANNEL_TYPE } from '../../CreateChannel/types';
 import useActiveChannelUrl from './hooks/useActiveChannelUrl';
 import { useFetchChannelList } from './hooks/useFetchChannelList';
+import useHandleReconnectForChannelList from '../../Channel/context/hooks/useHandleReconnectForChannelList';
 
 export interface ApplicationUserListQueryInternal {
   limit?: number;
@@ -92,6 +93,7 @@ export interface ChannelListProviderProps {
   typingChannels?: Array<GroupChannel>;
   isTypingIndicatorEnabled?: boolean;
   isMessageReceiptStatusEnabled?: boolean;
+  reconnectOnIdle?: boolean;
 }
 
 export interface ChannelListProviderInterface extends ChannelListProviderProps {
@@ -125,6 +127,7 @@ const ChannelListContext = React.createContext<ChannelListProviderInterface | nu
   channelSource: null,
   typingChannels: [],
   fetchChannelList: noop,
+  reconnectOnIdle: true,
 });
 
 const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelListProviderProps) => {
@@ -143,6 +146,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     activeChannelUrl,
     isTypingIndicatorEnabled = null,
     isMessageReceiptStatusEnabled = null,
+    reconnectOnIdle,
   } = props;
   // disable autoselect, if activeChannelUrl is provided
   // useActiveChannelUrl should be executed when activeChannelUrl is present
@@ -158,6 +162,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     disableMarkAsDelivered = false,
     isTypingIndicatorEnabledOnChannelList = false,
     isMessageReceiptStatusEnabledOnChannelList = false,
+    isOnline,
   } = config;
   const sdk = sdkStore?.sdk;
   const { premiumFeatureList = [] } = sdk?.appInfo ?? {};
@@ -343,6 +348,21 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
       channelListDispatcher,
     },
   );
+
+  useHandleReconnectForChannelList({
+    isOnline,
+    reconnectOnIdle,
+    logger,
+    sdk,
+    currentGroupChannel: currentChannel,
+    channelListDispatcher,
+    setChannelSource,
+    userFilledChannelListQuery,
+    sortChannelList,
+    disableAutoSelect,
+    markAsDeliveredScheduler,
+    disableMarkAsDelivered,
+  });
 
   const fetchChannelList = useFetchChannelList(
     {

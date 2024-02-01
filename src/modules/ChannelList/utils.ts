@@ -127,7 +127,7 @@ type CreateChannelListQueryParams = {
   userFilledChannelListQuery: GroupChannelListQueryParamsInternal;
 };
 
-const createChannelListQuery = ({
+export const createChannelListQuery = ({
   sdk,
   userFilledChannelListQuery = {},
 }: CreateChannelListQueryParams): GroupChannelListQuery => {
