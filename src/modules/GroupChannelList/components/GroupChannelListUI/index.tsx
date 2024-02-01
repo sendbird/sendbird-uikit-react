@@ -26,7 +26,7 @@ export interface GroupChannelListUIProps {
   renderPlaceHolderEmptyList?: (props: void) => React.ReactElement;
 }
 
-const GroupChannelListUI = (props: GroupChannelListUIProps) => {
+export const GroupChannelListUI = (props: GroupChannelListUIProps) => {
   const {
     renderHeader,
     renderChannelPreview,

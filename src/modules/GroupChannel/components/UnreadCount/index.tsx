@@ -15,7 +15,7 @@ export interface UnreadCountProps {
   time?: string;
 }
 
-const UnreadCount: React.FC<UnreadCountProps> = ({
+export const UnreadCount: React.FC<UnreadCountProps> = ({
   className = '',
   count = 0,
   time = '',
