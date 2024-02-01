@@ -16,7 +16,7 @@ import type { GroupChannel, MessageFilterParams, MessageCollectionParams } from 
 import { MessageFilter } from '@sendbird/chat/groupChannel';
 import { useAsyncEffect, useAsyncLayoutEffect, useGroupChannelMessages, useIIFE, usePreservedCallback } from '@sendbird/uikit-tools';
 
-import type { CoreMessageType, SendableMessageType } from '../../../utils';
+import type { SendableMessageType } from '../../../utils';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { ThreadReplySelectType } from './const';
