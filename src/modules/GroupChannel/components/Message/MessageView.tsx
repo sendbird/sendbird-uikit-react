@@ -400,8 +400,8 @@ const MessageView = (props: MessageViewProps) => {
         shouldRenderSuggestedReplies && <SuggestedReplies replyOptions={getSuggestedReplies(message)} onSendMessage={sendUserMessage} />
       }
       {/* Modal */}
-      {showRemove && <RemoveMessageModal message={message} onCancel={() => setShowRemove(false)} />}
-      {showFileViewer && <FileViewer message={message as FileMessage} onCancel={() => setShowFileViewer(false)} />}
+      {showRemove && <RemoveMessageModal message={message} onCancel={() => setShowRemove(false)} deleteMessage={deleteMessage} />}
+      {showFileViewer && <FileViewer message={message as FileMessage} onCancel={() => setShowFileViewer(false)} deleteMessage={deleteMessage} />}
     </div>
   );
 };

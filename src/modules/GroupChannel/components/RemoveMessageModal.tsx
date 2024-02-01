@@ -3,7 +3,6 @@ import React, { useContext } from 'react';
 import Modal from '../../../ui/Modal';
 import { ButtonTypes } from '../../../ui/Button';
 import { LocalizationContext } from '../../../lib/LocalizationContext';
-import { useGroupChannelContext } from '../context/GroupChannelProvider';
 import { EveryMessage } from '../../../types';
 import { getModalDeleteMessageTitle } from '../../../ui/Label/stringFormatterUtils';
 
@@ -11,6 +10,7 @@ export interface RemoveMessageProps {
   onSubmit?: () => void;
   onCancel: () => void;
   message: EveryMessage;
+  deleteMessage: (message: EveryMessage) => Promise<void>;
 }
 
 const RemoveMessageModal: React.FC<RemoveMessageProps> = (props: RemoveMessageProps) => {
@@ -20,9 +20,9 @@ const RemoveMessageModal: React.FC<RemoveMessageProps> = (props: RemoveMessagePr
     },
     onCancel,
     message,
+    deleteMessage,
   } = props;
   const { stringSet } = useContext(LocalizationContext);
-  const { deleteMessage } = useGroupChannelContext();
   return (
     <Modal
       type={ButtonTypes.DANGER}

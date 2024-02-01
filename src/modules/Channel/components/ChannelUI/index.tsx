@@ -32,7 +32,7 @@ const ChannelUI = (props: ChannelUIProps) => {
   const {
     channelUrl,
     isInvalid,
-    initialized,
+    loading,
   } = context;
 
   return (
@@ -40,7 +40,7 @@ const ChannelUI = (props: ChannelUIProps) => {
       {...props}
       {...context}
       requestedChannelUrl={channelUrl}
-      loading={props?.isLoading ?? !initialized}
+      loading={props?.isLoading ?? loading}
       isInvalid={isInvalid}
       renderChannelHeader={(props) => (<ChannelHeader {...props} />)}
       renderMessageList={(props) => (<MessageList {...props} />)}

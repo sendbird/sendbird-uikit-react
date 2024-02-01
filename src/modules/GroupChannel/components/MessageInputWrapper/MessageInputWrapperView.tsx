@@ -33,7 +33,7 @@ export interface MessageInputWrapperViewProps {
   value?: string;
   disabled?: boolean;
   // ChannelContext
-  currentChannel: GroupChannel;
+  currentChannel: GroupChannel | null;
   isMultipleFilesMessageEnabled?: boolean;
   loading: boolean;
   quoteMessage: SendableMessageType | null;
@@ -88,7 +88,7 @@ export const MessageInputWrapperView = React.forwardRef((
   const sdk = stores.sdkStore.sdk;
   const { maxMentionCount, maxSuggestionCount } = userMention;
 
-  const { isBroadcast } = currentChannel;
+  const isBroadcast = currentChannel?.isBroadcast;
   const isOperator = isChannelOperator(currentChannel);
 
   // States
