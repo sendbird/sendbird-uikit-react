@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import type { User } from '@sendbird/chat';
 import type { GroupChannel, GroupChannelCreateParams, GroupChannelFilterParams } from '@sendbird/chat/groupChannel';
@@ -13,16 +13,17 @@ import { useMarkAsDeliveredScheduler } from '../../../lib/hooks/useMarkAsDeliver
 import useOnlineStatus from '../../../lib/hooks/useOnlineStatus';
 import { noop } from '../../../utils/utils';
 import type { SdkStore } from '../../../lib/types';
+import { PartialRequired } from '../../../utils/typeHelpers/partialRequired';
 
-type OverrideInviteUserType = {
-  users: Array<string>;
-  onClose: () => void;
-  channelType: CHANNEL_TYPE;
-};
-
+type onCreateChannelClickParams = { users: Array<string>; onClose: () => void; channelType: CHANNEL_TYPE };
+type ChannelListDataSource = ReturnType<typeof useGroupChannelList>;
 type ChannelListQueryParamsType = Omit<GroupChannelCollectionParams, 'filter'> & GroupChannelFilterParams;
 
-interface GroupChannelListContextType {
+interface ContextBaseType {
+  // Required
+  onChannelSelect(channel: GroupChannel | null): void;
+  onChannelCreated(channel: GroupChannel): void;
+
   // Default
   className: string | string[];
   selectedChannelUrl?: string;
@@ -33,66 +34,37 @@ interface GroupChannelListContextType {
   isTypingIndicatorEnabled: boolean;
   isMessageReceiptStatusEnabled: boolean;
 
-  // Essential
-  onChannelSelect(channel: GroupChannel | null): void;
-  onChannelCreated(channel: GroupChannel): void;
-
   // Custom
   // Partial props - because we are doing null check before calling these functions
   channelListQueryParams?: ChannelListQueryParamsType;
   onThemeChange?(theme: string): void;
-  onCreateChannelClick?(params: OverrideInviteUserType): void;
-  onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
+  onCreateChannelClick?(params: onCreateChannelClickParams): void;
+  onBeforeCreateChannel?(users: string[]): GroupChannelCreateParams;
   onUserProfileUpdated?(user: User): void;
 }
 
-export interface GroupChannelListProviderProps extends PropsWithChildren<Partial<GroupChannelListContextType> & UserProfileProviderProps> {}
-
-export interface GroupChannelListProviderInterface extends GroupChannelListContextType, ReturnType<typeof useGroupChannelList> {
-  typingChannelUrls: Array<string>;
+export interface GroupChannelListContextType extends ContextBaseType, ChannelListDataSource {
+  typingChannelUrls: string[];
+}
+export interface GroupChannelListProviderProps
+  extends PartialRequired<ContextBaseType, 'onChannelSelect' | 'onChannelCreated'>,
+    Pick<UserProfileProviderProps, 'onUserProfileMessage' | 'renderUserProfile' | 'disableUserProfile'> {
+  children?: React.ReactNode;
 }
 
-export const GroupChannelListContext = React.createContext<GroupChannelListProviderInterface>({
-  // Props - Default
-  className: null,
-  selectedChannelUrl: undefined,
-  // Props - Flags
-  allowProfileEdit: true,
-  disableAutoSelect: false,
-  isTypingIndicatorEnabled: false,
-  isMessageReceiptStatusEnabled: false,
-  // Props - Essential
-  onChannelSelect: noop,
-  onChannelCreated: noop,
-  // Props - Custom
-  onThemeChange: undefined,
-  onCreateChannelClick: undefined,
-  onBeforeCreateChannel: undefined,
-  onUserProfileUpdated: undefined,
-
-  // Internal Interface
-  typingChannelUrls: [],
-
-  // UseGroupChannelList
-  initialized: false,
-  refreshing: false,
-  groupChannels: [],
-  refresh: () => new Promise(noop),
-  loadMore: () => new Promise(noop),
-});
-
+export const GroupChannelListContext = React.createContext<GroupChannelListContextType>(null);
 export const GroupChannelListProvider = (props: GroupChannelListProviderProps) => {
   const {
     // Default
     children,
-    className,
+    className = '',
     selectedChannelUrl,
 
     // Flags
-    allowProfileEdit,
-    disableAutoSelect,
-    isTypingIndicatorEnabled = null,
-    isMessageReceiptStatusEnabled = null,
+    allowProfileEdit = true,
+    disableAutoSelect = false,
+    isTypingIndicatorEnabled = false,
+    isMessageReceiptStatusEnabled = false,
 
     // Custom
     channelListQueryParams,
@@ -129,14 +101,13 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
 
   const { refreshing, initialized, groupChannels, refresh, loadMore } = channelListDataSource;
 
-  // Auto select channel
+  // SideEffect: Auto select channel
   useEffect(() => {
     if (!disableAutoSelect && stores.sdkStore.initialized && initialized) {
       if (!selectedChannelUrl) onChannelSelect(groupChannels[0] ?? null);
     }
   }, [disableAutoSelect, stores.sdkStore.initialized, initialized, selectedChannelUrl]);
 
-  // TypingChannels
   const [typingChannelUrls, setTypingChannelUrls] = useState<string[]>([]);
   useGroupChannelHandler(sdk, {
     onTypingStatusUpdated: (channel) => {
@@ -189,10 +160,11 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
   );
 };
 
-export function useGroupChannelListContext(): GroupChannelListProviderInterface {
-  const context: GroupChannelListProviderInterface = useContext(GroupChannelListContext);
+export const useGroupChannelListContext = () => {
+  const context = useContext(GroupChannelListContext);
+  if (!context) throw new Error('GroupChannelListContext not found. Use within the GroupChannelList module.');
   return context;
-}
+};
 
 function getCollectionCreator(sdk: SdkStore['sdk'], channelListQueryParams?: ChannelListQueryParamsType) {
   return (defaultParams: ChannelListQueryParamsType) => {
