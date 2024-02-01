@@ -17,7 +17,9 @@ export default function channelListReducer(
         loading: true,
         currentUserId: payload.currentUserId,
       }))
-      .with({ type: channelListActions.RESET_CHANNEL_LIST }, () => initialState)
+      .with({ type: channelListActions.RESET_CHANNEL_LIST }, () => {
+        return initialState;
+      })
       .with({ type: channelListActions.INIT_CHANNELS_SUCCESS }, (action) => {
         const { channelList, disableAutoSelect } = action.payload;
         return {
@@ -28,6 +30,15 @@ export default function channelListReducer(
           disableAutoSelect,
           currentChannel:
             !disableAutoSelect && channelList && channelList.length && channelList.length > 0 ? channelList[0] : null,
+        };
+      })
+      .with({ type: channelListActions.REFRESH_CHANNELS_SUCCESS }, (action) => {
+        const { channelList, currentChannel } = action.payload;
+        return {
+          ...state,
+          loading: false,
+          allChannels: channelList,
+          currentChannel,
         };
       })
       .with({ type: channelListActions.FETCH_CHANNELS_SUCCESS }, (action) => {
