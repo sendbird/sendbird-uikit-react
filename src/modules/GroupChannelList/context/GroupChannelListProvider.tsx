@@ -15,7 +15,7 @@ import { noop } from '../../../utils/utils';
 import type { SdkStore } from '../../../lib/types';
 import { PartialRequired } from '../../../utils/typeHelpers/partialRequired';
 
-type onCreateChannelClickParams = { users: Array<string>; onClose: () => void; channelType: CHANNEL_TYPE };
+type OnCreateChannelClickParams = { users: Array<string>; onClose: () => void; channelType: CHANNEL_TYPE };
 type ChannelListDataSource = ReturnType<typeof useGroupChannelList>;
 type ChannelListQueryParamsType = Omit<GroupChannelCollectionParams, 'filter'> & GroupChannelFilterParams;
 
@@ -38,7 +38,7 @@ interface ContextBaseType {
   // Partial props - because we are doing null check before calling these functions
   channelListQueryParams?: ChannelListQueryParamsType;
   onThemeChange?(theme: string): void;
-  onCreateChannelClick?(params: onCreateChannelClickParams): void;
+  onCreateChannelClick?(params: OnCreateChannelClickParams): void;
   onBeforeCreateChannel?(users: string[]): GroupChannelCreateParams;
   onUserProfileUpdated?(user: User): void;
 }
