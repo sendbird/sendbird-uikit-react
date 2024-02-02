@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import GroupChannelListHeader from '../GroupChannelListHeader';
-import AddChannel from '../AddGroupChannel';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import EditUserProfile from '../../../EditUserProfile';
@@ -17,16 +16,15 @@ export interface Props {
   renderPlaceHolderEmptyList?: (props: void) => React.ReactElement;
 
   onChangeTheme: (theme: string) => void;
-  onUserProfileUpdated: (user:User)=>void;
+  onUserProfileUpdated: (user: User) => void;
   allowProfileEdit: boolean;
 
   channels: GroupChannel[];
   onLoadMore: () => void;
   initialized: boolean;
-  renderChannel: (props: {
-    item: GroupChannel;
-    index: number;
-  }) => React.ReactElement;
+  renderChannel: (props: { item: GroupChannel; index: number }) => React.ReactElement;
+
+  renderAddChannel(): React.ReactElement;
 }
 
 export const GroupChannelListUIView = ({
@@ -43,11 +41,14 @@ export const GroupChannelListUIView = ({
   onLoadMore,
   initialized,
   renderChannel,
+
+  renderAddChannel,
 }: Props) => {
   const [showProfileEdit, setShowProfileEdit] = useState(false);
   const { stores } = useSendbirdStateContext();
 
   const renderer = {
+    addChannel: renderAddChannel,
     channel: renderChannel,
     placeholder: {
       loading() {
@@ -78,7 +79,7 @@ export const GroupChannelListUIView = ({
           <GroupChannelListHeader
             onEdit={() => allowProfileEdit && setShowProfileEdit(true)}
             allowProfileEdit={allowProfileEdit}
-            renderIconButton={() => <AddChannel />}
+            renderIconButton={() => renderer.addChannel()}
           />
         )}
       </div>
@@ -120,14 +121,7 @@ const ChannelListComponent = <T, >(props: {
   placeholderEmpty?: React.ReactNode;
   placeholderError?: React.ReactNode;
 }) => {
-  const {
-    data,
-    renderItem,
-    onLoadMore,
-    placeholderLoading,
-    placeholderError,
-    placeholderEmpty,
-  } = props;
+  const { data, renderItem, onLoadMore, placeholderLoading, placeholderError, placeholderEmpty } = props;
 
   const onScroll = useOnScrollPositionChangeDetector({
     onReachedBottom: () => onLoadMore(),

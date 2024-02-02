@@ -9,6 +9,7 @@ import * as channelListActions from '../../dux/actionTypes';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { GroupChannelListUIView } from '../../../GroupChannelList/components/GroupChannelListUI/GroupChannelListUIView';
+import AddChannel from '../AddChannel';
 
 interface RenderChannelPreviewProps {
   channel: GroupChannel;
@@ -127,6 +128,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (
       channels={allChannels}
       onLoadMore={fetchChannelList}
       initialized={initialized}
+      renderAddChannel={() => <AddChannel />}
     />
   );
 };

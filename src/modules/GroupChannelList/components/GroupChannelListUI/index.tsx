@@ -7,6 +7,7 @@ import { GroupChannelListUIView } from './GroupChannelListUIView';
 import GroupChannelPreviewAction from '../GroupChannelPreviewAction';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { GroupChannelListItem } from '../GroupChannelListItem';
+import AddGroupChannel from '../AddGroupChannel';
 
 interface RenderChannelPreviewProps {
   channel: GroupChannel;
@@ -111,6 +112,7 @@ export const GroupChannelListUI = (props: GroupChannelListUIProps) => {
       channels={groupChannels}
       onLoadMore={loadMore}
       initialized={initialized}
+      renderAddChannel={() => <AddGroupChannel />}
     />
   );
 };
