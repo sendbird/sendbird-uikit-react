@@ -383,6 +383,7 @@ const SendbirdSDK = ({
             threadReplySelectType: getCaseResolvedThreadReplySelectType(configs.groupChannel.channel.threadReplySelectType).lowerCase,
             typingIndicatorTypes: configs.groupChannel.channel.typingIndicatorTypes,
             enableFeedback: configs.groupChannel.channel.enableFeedback,
+            enableSuggestedReplies: configs.groupChannel.channel.enableSuggestedReplies,
           },
           openChannel: {
             enableOgtag:

@@ -38,6 +38,7 @@ export const Message = (props: MessageProps): React.ReactElement => {
   const initialized = !loading && Boolean(currentChannel);
 
   const shouldRenderSuggestedReplies = useIIFE(() => {
+    if (!config?.groupChannel?.enableSuggestedReplies) return false;
     if (message.messageId !== currentChannel?.lastMessage?.messageId) return false;
     if (getSuggestedReplies(message).length === 0) return false;
     const lastMessage = messages[messages.length - 1];
