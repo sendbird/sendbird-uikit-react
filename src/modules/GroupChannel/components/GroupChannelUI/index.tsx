@@ -7,11 +7,10 @@ import { RenderCustomSeparatorProps, RenderMessageParamsType } from '../../../..
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { GroupChannelUIView } from './GroupChannelUIView';
 import type { MessageContentProps } from '../../../../ui/MessageContent';
-import { MessageInputWrapperProps } from '../MessageInputWrapper';
+import MessageInputWrapper from '../MessageInputWrapper';
 import {useIIFE} from '@sendbird/uikit-tools';
 import {getSuggestedReplies, isSendableMessage} from '../../../../utils';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import MessageInputWrapper from '../../../Channel/components/MessageInputWrapper';
 
 export interface GroupChannelUIProps {
   renderPlaceholderLoader?: () => React.ReactElement;
