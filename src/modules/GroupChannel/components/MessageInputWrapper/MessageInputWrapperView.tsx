@@ -12,7 +12,6 @@ import type {
 } from '@sendbird/chat/message';
 
 import {
-  isOperator as isChannelOperator,
   isDisabledBecauseFrozen,
   isDisabledBecauseMuted,
 } from '../../context/utils';
@@ -89,7 +88,7 @@ export const MessageInputWrapperView = React.forwardRef((
   const { maxMentionCount, maxSuggestionCount } = userMention;
 
   const isBroadcast = currentChannel?.isBroadcast;
-  const isOperator = isChannelOperator(currentChannel);
+  const isOperator = currentChannel?.myRole === 'operator';
 
   // States
   const [mentionNickname, setMentionNickname] = useState('');
