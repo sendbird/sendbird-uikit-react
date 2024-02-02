@@ -9,6 +9,10 @@ import { GroupChannelUIView } from '../../../GroupChannel/components/GroupChanne
 import ChannelHeader from '../ChannelHeader';
 import MessageList from '../MessageList';
 import MessageInputWrapper from '../MessageInputWrapper';
+import { getSuggestedReplies } from '../../../../utils';
+import type { UserMessage } from '@sendbird/chat/message';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import {MessageInputWrapperProps} from '../../../GroupChannel/components/MessageInputWrapper';
 
 export interface ChannelUIProps {
   isLoading?: boolean;
@@ -28,12 +32,27 @@ export interface ChannelUIProps {
 }
 
 const ChannelUI = (props: ChannelUIProps) => {
+  const { config } = useSendbirdStateContext();
   const context = useChannelContext();
   const {
     channelUrl,
     isInvalid,
     loading,
+    localMessages,
+    currentGroupChannel,
   } = context;
+
+  const lastMessage = currentGroupChannel?.lastMessage;
+  const isLastMessageSuggestedRepliesEnabled = config?.groupChannel?.enableSuggestedReplies
+    && lastMessage
+    && getSuggestedReplies(lastMessage).length > 0
+    && (
+      !localMessages
+      || localMessages.length === 0
+      || localMessages.every((message) => (message as UserMessage).sendingStatus === 'succeeded')
+    );
+  const disableMessageInput = isLastMessageSuggestedRepliesEnabled
+    && !!lastMessage.extendedMessagePayload?.['disable_chat_input'];
 
   return (
     <GroupChannelUIView
@@ -44,7 +63,10 @@ const ChannelUI = (props: ChannelUIProps) => {
       isInvalid={isInvalid}
       renderChannelHeader={(props) => (<ChannelHeader {...props} />)}
       renderMessageList={(props) => (<MessageList {...props} />)}
-      renderMessageInput={() => (<MessageInputWrapper {...props} />)}
+      renderMessageInput={() => (
+        props.renderMessageInput?.()
+        ?? <MessageInputWrapper {...props} disabled={disableMessageInput} />
+      )}
     />
   );
 };

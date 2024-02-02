@@ -13,7 +13,7 @@ import {
 import { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
 import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOutgoingMessageState';
-import { Nullable, EveryMessage } from '../types';
+import { Nullable } from '../types';
 import { match } from 'ts-pattern';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
@@ -409,7 +409,7 @@ export const getUseReaction = (store: UIKitStore, channel: GroupChannel | OpenCh
   return store?.config?.isReactionEnabled;
 };
 
-export function getSuggestedReplies(message?: EveryMessage): string[] {
+export function getSuggestedReplies(message?: BaseMessage): string[] {
   if (Array.isArray(message?.extendedMessagePayload?.suggested_replies)) {
     return message.extendedMessagePayload.suggested_replies;
   } else {
