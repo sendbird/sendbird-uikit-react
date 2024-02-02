@@ -1,18 +1,17 @@
-import { useGroupChannelMessages } from '@sendbird/uikit-tools';
-import type { SendableMessageType } from '../../../../utils';
-import { ReplyType } from '../../../../types';
 import { useCallback } from 'react';
-import {
+import { useGroupChannelMessages } from '@sendbird/uikit-tools';
+import { MessageMetaArray } from '@sendbird/chat/message';
+import type {
   BaseMessageCreateParams,
   FileMessage,
   FileMessageCreateParams,
-  MessageMetaArray,
   MultipleFilesMessage,
   MultipleFilesMessageCreateParams,
   UserMessage,
   UserMessageCreateParams,
   UserMessageUpdateParams,
 } from '@sendbird/chat/message';
+
 import {
   META_ARRAY_MESSAGE_TYPE_KEY,
   META_ARRAY_MESSAGE_TYPE_VALUE__VOICE,
@@ -20,7 +19,9 @@ import {
   VOICE_MESSAGE_FILE_NAME,
   VOICE_MESSAGE_MIME_TYPE,
 } from '../../../../utils/consts';
-import { GroupChannelProviderProps } from '../GroupChannelProvider';
+import type { SendableMessageType } from '../../../../utils';
+import type { ReplyType } from '../../../../types';
+import type { GroupChannelProviderProps } from '../GroupChannelProvider';
 
 type MessageListDataSource = ReturnType<typeof useGroupChannelMessages>;
 type MessageActions = {
@@ -69,15 +70,9 @@ export function useMessageActions(params: Params): MessageActions {
         messageParams.parentMessageId = quoteMessage.messageId;
       }
 
-      // TODO: check isMentionEnabled should be handled here.
-      //  if (!isMentionEnabled) {
-      //    delete internalParams['mentionedUserIds'];
-      //    delete internalParams['mentionedUsers'];
-      //    delete internalParams['mentionedMessageTemplate'];
-      //  }
       return messageParams;
     },
-    [replyType, quoteMessage],
+    [replyType, quoteMessage]
   );
 
   return {
@@ -88,7 +83,7 @@ export function useMessageActions(params: Params): MessageActions {
 
         return sendUserMessage(processedParams, () => scrollToBottom());
       },
-      [buildInternalMessageParams, sendUserMessage, scrollToBottom],
+      [buildInternalMessageParams, sendUserMessage, scrollToBottom]
     ),
     sendFileMessage: useCallback(
       async (params) => {
@@ -97,7 +92,7 @@ export function useMessageActions(params: Params): MessageActions {
 
         return sendFileMessage(processedParams, () => scrollToBottom());
       },
-      [buildInternalMessageParams, sendFileMessage, scrollToBottom],
+      [buildInternalMessageParams, sendFileMessage, scrollToBottom]
     ),
     sendMultipleFilesMessage: useCallback(
       async (params) => {
@@ -106,7 +101,7 @@ export function useMessageActions(params: Params): MessageActions {
 
         return sendMultipleFilesMessage(processedParams, () => scrollToBottom());
       },
-      [buildInternalMessageParams, sendMultipleFilesMessage, scrollToBottom],
+      [buildInternalMessageParams, sendMultipleFilesMessage, scrollToBottom]
     ),
     sendVoiceMessage: useCallback(
       async (params: FileMessageCreateParams, duration: number) => {
@@ -129,7 +124,7 @@ export function useMessageActions(params: Params): MessageActions {
 
         return sendFileMessage(processedParams, () => scrollToBottom());
       },
-      [buildInternalMessageParams, sendFileMessage, scrollToBottom],
+      [buildInternalMessageParams, sendFileMessage, scrollToBottom]
     ),
     updateUserMessage: useCallback(
       async (messageId: number, params: UserMessageUpdateParams) => {
@@ -138,7 +133,7 @@ export function useMessageActions(params: Params): MessageActions {
 
         return updateUserMessage(messageId, processedParams);
       },
-      [buildInternalMessageParams, updateUserMessage],
+      [buildInternalMessageParams, updateUserMessage]
     ),
   };
 }
