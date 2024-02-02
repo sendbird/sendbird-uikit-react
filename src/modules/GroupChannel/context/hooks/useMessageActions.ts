@@ -72,7 +72,7 @@ export function useMessageActions(params: Params): MessageActions {
 
       return messageParams;
     },
-    [replyType, quoteMessage]
+    [replyType, quoteMessage],
   );
 
   return {
@@ -83,7 +83,7 @@ export function useMessageActions(params: Params): MessageActions {
 
         return sendUserMessage(processedParams, () => scrollToBottom());
       },
-      [buildInternalMessageParams, sendUserMessage, scrollToBottom]
+      [buildInternalMessageParams, sendUserMessage, scrollToBottom],
     ),
     sendFileMessage: useCallback(
       async (params) => {
@@ -92,7 +92,7 @@ export function useMessageActions(params: Params): MessageActions {
 
         return sendFileMessage(processedParams, () => scrollToBottom());
       },
-      [buildInternalMessageParams, sendFileMessage, scrollToBottom]
+      [buildInternalMessageParams, sendFileMessage, scrollToBottom],
     ),
     sendMultipleFilesMessage: useCallback(
       async (params) => {
@@ -101,7 +101,7 @@ export function useMessageActions(params: Params): MessageActions {
 
         return sendMultipleFilesMessage(processedParams, () => scrollToBottom());
       },
-      [buildInternalMessageParams, sendMultipleFilesMessage, scrollToBottom]
+      [buildInternalMessageParams, sendMultipleFilesMessage, scrollToBottom],
     ),
     sendVoiceMessage: useCallback(
       async (params: FileMessageCreateParams, duration: number) => {
@@ -124,7 +124,7 @@ export function useMessageActions(params: Params): MessageActions {
 
         return sendFileMessage(processedParams, () => scrollToBottom());
       },
-      [buildInternalMessageParams, sendFileMessage, scrollToBottom]
+      [buildInternalMessageParams, sendFileMessage, scrollToBottom],
     ),
     updateUserMessage: useCallback(
       async (messageId: number, params: UserMessageUpdateParams) => {
@@ -133,7 +133,7 @@ export function useMessageActions(params: Params): MessageActions {
 
         return updateUserMessage(messageId, processedParams);
       },
-      [buildInternalMessageParams, updateUserMessage]
+      [buildInternalMessageParams, updateUserMessage],
     ),
   };
 }
