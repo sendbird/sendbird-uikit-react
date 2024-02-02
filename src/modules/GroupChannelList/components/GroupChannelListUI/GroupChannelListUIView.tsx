@@ -81,7 +81,7 @@ export const GroupChannelListUIView = ({
             renderIconButton={() => <AddGroupChannel />}
           />
         )}
-      </div>f
+      </div>
       {showProfileEdit && (
         <EditUserProfile
           onThemeChange={onChangeTheme}
