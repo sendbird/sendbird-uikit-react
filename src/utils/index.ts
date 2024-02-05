@@ -425,6 +425,9 @@ export const isMessageSentByMe = (
 );
 
 const URL_REG = /^((http|https):\/\/)?([a-z\d-]+\.)+[a-z]{2,}(\:[0-9]{1,5})?(\/[-a-zA-Z\d%_.~+&=]*)*(\?[;&a-zA-Z\d%_.~+=-]*)?(#\S*)?$/;
+/** @deprecated
+ * URL detection in a message text will be handled in utils/tokens/tokenize.ts
+ */
 export const isUrl = (text: string): boolean => URL_REG.test(text);
 
 const MENTION_TAG_REG = /\@\{.*?\}/i;

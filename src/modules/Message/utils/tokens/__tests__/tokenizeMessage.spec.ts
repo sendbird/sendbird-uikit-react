@@ -16,7 +16,7 @@ describe('tokenizeMessage', () => {
       messageText: 'Hello world https://example.com',
     });
     expect(tokens).toEqual([
-      { type: 'string', value: 'Hello world' },
+      { type: 'string', value: 'Hello world ' },
       { type: 'url', value: 'https://example.com' },
     ]);
   });
@@ -26,9 +26,9 @@ describe('tokenizeMessage', () => {
       messageText: 'Hello world https://example.com and more',
     });
     expect(tokens).toEqual([
-      { type: 'string', value: 'Hello world' },
+      { type: 'string', value: 'Hello world ' },
       { type: 'url', value: 'https://example.com' },
-      { type: 'string', value: 'and more' },
+      { type: 'string', value: ' and more' },
     ]);
   });
 
@@ -48,7 +48,7 @@ describe('tokenizeMessage', () => {
       type: 'mention',
       userId: 'userA',
     }, {
-      value: ' and more',
+      value: ' and more ',
       type: 'string',
     }, {
       value: 'https://example.com',
