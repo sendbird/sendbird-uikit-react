@@ -68,6 +68,8 @@
   },
   "dependencies": {
     "@sendbird/chat": "^4.10.9",
+    "@sendbird/react-uikit-message-template-view": "^0.0.1-alpha.62",
+    "@sendbird/uikit-message-template": "^0.0.1-alpha.62",
     "@sendbird/uikit-tools": "0.0.1-alpha.62",
     "css-vars-ponyfill": "^2.3.2",
     "date-fns": "^2.16.1",

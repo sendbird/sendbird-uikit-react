@@ -84,3 +84,5 @@ export interface UploadedFileInfoWithUpload {
   url?: string;
   isUploaded?: boolean;
 }
+
+export type SendbirdTheme = 'light' | 'dark';

@@ -2660,6 +2660,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sendbird/react-uikit-message-template-view@npm:^0.0.1-alpha.62":
+  version: 0.0.1-alpha.62
+  resolution: "@sendbird/react-uikit-message-template-view@npm:0.0.1-alpha.62"
+  dependencies:
+    "@sendbird/uikit-message-template": ^0.0.1-alpha.62
+  peerDependencies:
+    "@sendbird/chat": ">=4.3.0 <5"
+    react: ">=16.8.6"
+    react-dom: ">=16.8.6"
+  checksum: 5493c1b8a65ad8ddb114283f6aafc755306e224790e549f5d454d0bede2672c4823b66825477aeb77ab559ba6adb857a3e0756469d1feb782d43898cc468e691
+  languageName: node
+  linkType: hard
+
+"@sendbird/uikit-message-template@npm:^0.0.1-alpha.62":
+  version: 0.0.1-alpha.62
+  resolution: "@sendbird/uikit-message-template@npm:0.0.1-alpha.62"
+  peerDependencies:
+    react: ">=16.8.6"
+  checksum: b4cf60ea0dd27bd4c1adc397cbd03b061e097c2d937bfebc7716833b509d60068be76837f710127e457ad4c1b544413fc19e2bb98da378a105e7fa3098547ad2
+  languageName: node
+  linkType: hard
+
 "@sendbird/uikit-react@workspace:.":
   version: 0.0.0-use.local
   resolution: "@sendbird/uikit-react@workspace:."
@@ -2679,6 +2701,8 @@ __metadata:
     "@rollup/plugin-replace": ^5.0.4
     "@rollup/plugin-typescript": ^11.1.5
     "@sendbird/chat": ^4.10.9
+    "@sendbird/react-uikit-message-template-view": ^0.0.1-alpha.62
+    "@sendbird/uikit-message-template": ^0.0.1-alpha.62
     "@sendbird/uikit-tools": 0.0.1-alpha.62
     "@storybook/addon-actions": ^6.5.10
     "@storybook/addon-docs": ^6.5.10

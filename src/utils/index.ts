@@ -271,6 +271,12 @@ export const isParentMessage = (message: CoreMessageType): boolean => (
 export const isThreadMessage = (message: CoreMessageType): boolean => (
   !!message.parentMessageId && !!message.parentMessage
 );
+
+export const isMessageTemplateMessage = (message: SendableMessageType): boolean => !!(
+  // FIXME: This is temporary so need to be touched later.
+  message && message.extendedMessagePayload?.['template']
+);
+
 export const isOGMessage = (message: SendableMessageType): boolean => !!(
   message && isUserMessage(message) && message?.ogMetaData && (
     message.ogMetaData?.url
