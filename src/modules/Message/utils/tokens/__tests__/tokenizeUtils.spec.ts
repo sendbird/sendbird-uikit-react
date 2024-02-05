@@ -97,6 +97,58 @@ describe('identifyUrlsAndStrings', () => {
       value: ')',
     }]);
   });
+
+  it('should parse valid URLs correctly', () => {
+    const validURLs = [
+      // with protocol
+      'http://www.example.com',
+      'https://www.example.com',
+      'http://example.com',
+      'https://example.com',
+      // without protocol
+      'www.example.com',
+      'example.com',
+      // with sub paths
+      'http://www.example.com/path/to/page.html',
+      'https://www.example.com/path/to/page.html',
+      'http://example.com/path/to/page.html',
+      'https://example.com/path/to/page.html',
+      'www.example.com/path/to/page.html',
+      'example.com/path/to/page.html',
+      // with query strings
+      'http://www.example.com/path/to/page.html?query=string',
+      'https://www.example.com/path/to/page.html?query=string',
+      'http://example.com/path/to/page.html?query=string',
+      'https://example.com/path/to/page.html?query=string',
+      'www.example.com/path/to/page.html?query=string',
+      'example.com/path/to/page.html?query=string',
+      'https://www.amazon.com/Hacker-Playbook-Practical-Penetration-Testing/dp/1494932636/ref=sr_1_5?crid=1IKVPDXYF5NQG&keywords=hacker+guide&qid=1681333238&sprefix=hacker+guid%2Caps%2C148&sr=8-5',
+      // with the hash property
+      'https://example.com/path/to/page.html?query=string#hash',
+      'https://docs.google.com/document/d/19IccwdTIwNPJ_rGtsbi2Ft8dshaH4WiCXD5pder97VE/edit#heading=h.pve9ikkfqqzz',
+      // A subdomain has a hyphen
+      'https://send-bird.slack.com/archives/C065N4UQ77W/p1699931368643169?thread_ts=1699925671l395019&cid-Co65N4UQ77W',
+      // with long top-level domain
+      'https://send.bird.business/archives/C065N4UQ77W/p1699931368643169?thread_ts=1699925671l395019&cid-Co65N4UQ77W',
+    ];
+    validURLs.forEach((url) => {
+      const result = identifyUrlsAndStrings([
+        {
+          type: 'undetermined',
+          value: url,
+        },
+      ]);
+      expect(result).toEqual([
+        {
+          type: 'string',
+          value: '',
+        }, {
+          type: 'url',
+          value: url,
+        },
+      ]);
+    });
+  });
 });
 
 describe('combineNearbyStrings', () => {
