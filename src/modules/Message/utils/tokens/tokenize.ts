@@ -1,7 +1,6 @@
 import { User } from '@sendbird/chat';
 import { USER_MENTION_PREFIX } from '../../consts';
 import { IdentifyMentionsType, MentionToken, Token, TOKEN_TYPES, TokenParams, UndeterminedToken } from './types';
-import { isUrl } from '../../../../utils';
 
 export function getUserMentionRegex(mentionedUsers: User[], templatePrefix_: string): RegExp {
   const templatePrefix = templatePrefix_ || USER_MENTION_PREFIX;
@@ -52,20 +51,34 @@ export function identifyMentions({
 }
 
 export function identifyUrlsAndStrings(token: Token[]): Token[] {
+  const URL_REG = /(https?:\/\/|www\.)[-a-zA-Z0-9@:%._+~#=]{1,256}\.(xn--)?[a-z0-9-]{2,20}\b([-a-zA-Z0-9@:%_+[\],.~#?&/=]*[-a-zA-Z0-9@:%_+~#?&/=])*/g;
   const results: Token[] = token.map((token) => {
     if (token.type !== TOKEN_TYPES.undetermined) {
       return token;
     }
     const { value = '' } = token;
-    const parts = value.split(' ');
-    const tokens = parts.map((part) => {
-      if (isUrl(part)) {
-        return { value: part, type: TOKEN_TYPES.url };
-      } else {
-        return { value: part, type: TOKEN_TYPES.string };
-      }
+
+    const matches = Array.from(value.matchAll(URL_REG));
+    const founds = matches.map((value) => {
+      const text = value[0];
+      const start = value.index ?? 0;
+      const end = start + text.length;
+      return { text, start, end };
     });
-    return tokens;
+
+    const items: Token[] = [{ value, type: TOKEN_TYPES.string }];
+    let cursor = 0;
+    founds.forEach(({ text, start, end }) => {
+      const restText = items.pop().value as string;
+      const head = restText.slice(0, start - cursor);
+      const mid = text;
+      const tail = restText.slice(end - cursor);
+      items.push({ value: head, type: TOKEN_TYPES.string }, { value: mid, type: TOKEN_TYPES.url });
+      if (tail.length > 0) items.push({ value: tail, type: TOKEN_TYPES.string });
+      cursor = end;
+    });
+
+    return items;
   }).flat();
 
   return results;
@@ -75,7 +88,7 @@ export function combineNearbyStrings(tokens: Token[]): Token[] {
   const results: Token[] = tokens.reduce((acc, token) => {
     const lastToken = acc[acc.length - 1];
     if (lastToken?.type === TOKEN_TYPES.string && token.type === TOKEN_TYPES.string) {
-      lastToken.value = `${lastToken.value} ${token.value}`;
+      lastToken.value = `${lastToken.value}${token.value}`;
       return acc;
     }
     return [...acc, token];

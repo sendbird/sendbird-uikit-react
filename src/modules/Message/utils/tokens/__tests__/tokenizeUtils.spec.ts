@@ -64,13 +64,37 @@ describe('identifyUrlsAndStrings', () => {
     const result = identifyUrlsAndStrings(tokens);
     expect(result).toEqual([{
       type: 'string',
-      value: 'abc',
+      value: 'abc ',
     }, {
       type: 'url',
       value: 'https://www.google.com',
     }, {
       type: 'string',
-      value: '123',
+      value: ' 123',
+    }]);
+  });
+
+  it('should parse multiple urls with special charactors', () => {
+    const tokens = [{
+      type: 'undetermined',
+      value: '[https://www.google.com](https://www.google.com)',
+    }] as UndeterminedToken[];
+    const result = identifyUrlsAndStrings(tokens);
+    expect(result).toEqual([{
+      type: 'string',
+      value: '[',
+    }, {
+      type: 'url',
+      value: 'https://www.google.com',
+    }, {
+      type: 'string',
+      value: '](',
+    }, {
+      type: 'url',
+      value: 'https://www.google.com',
+    }, {
+      type: 'string',
+      value: ')',
     }]);
   });
 });
@@ -96,7 +120,7 @@ describe('combineNearbyStrings', () => {
     }] as Token[];
     const expected = [{
       type: 'string',
-      value: 'abc   pqr',
+      value: 'abc  pqr',
     }, {
       type: 'url',
       value: 'https://www.google.com',
