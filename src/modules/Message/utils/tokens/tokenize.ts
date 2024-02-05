@@ -78,6 +78,10 @@ export function identifyUrlsAndStrings(token: Token[]): Token[] {
       cursor = end;
     });
 
+    // Remove the first empty string
+    if (items[0].value === '' && items[0].type === TOKEN_TYPES.string) {
+      items.shift();
+    }
     return items;
   }).flat();
 

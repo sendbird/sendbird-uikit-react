@@ -140,9 +140,6 @@ describe('identifyUrlsAndStrings', () => {
       ]);
       expect(result).toEqual([
         {
-          type: 'string',
-          value: '',
-        }, {
           type: 'url',
           value: url,
         },
