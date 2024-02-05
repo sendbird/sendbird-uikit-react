@@ -85,25 +85,17 @@ export type MessageTemplateDataSchemaProperty = {
   type: 'string' | 'image' | 'action';
 };
 
-export type MessageTemplateCategory = {
-  id: number;
-  name: string;
-  is_default: boolean;
-};
-
 export type MessageTemplateItem = ComponentsUnion['properties'];
 
 export type MessageTemplateData = {
   key: string;
-  variables: Record<string, any>;
+  variables?: Record<string, any>;
 };
 
 export type SendbirdMessageTemplate = {
   key: string;
-  name: string;
-  category?: MessageTemplateCategory | string;
-  label?: string;
-  status: 'active' | 'archived';
+  created_at: number;
+  updated_at: number;
   data_schema: { properties: MessageTemplateDataSchemaProperty[] };
   ui_template: {
     version: number;
@@ -112,13 +104,6 @@ export type SendbirdMessageTemplate = {
     };
   };
   color_variables: Record<string, string>;
-  enable_push: boolean;
-  fallback_message: string | null;
-  push_template: {
-    title: string;
-    body: string;
-  };
-  // channel: GroupChannel;
-  created_at: number;
-  updated_at: number;
+
+  name?: string;
 };

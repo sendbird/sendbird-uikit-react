@@ -8,13 +8,13 @@ import restoreNumbersFromMessageTemplateObject from './utils/restoreNumbersFromM
 import mapData from './utils/mapData';
 import selectColorVariablesByTheme from './utils/selectColorVariablesByTheme';
 import { SendbirdTheme } from '../../types';
+import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
+import { MessageTemplatesInfo } from '../../lib/dux/appInfo/initialState';
 
 interface Props {
   className?: string | Array<string>;
   message: BaseMessage;
   isByMe?: boolean;
-  mouseHover?: boolean;
-  isReactionEnabled?: boolean;
   theme?: SendbirdTheme;
 }
 
@@ -42,19 +42,21 @@ export default function TemplateMessageItemBody({
   className = '',
   message,
   isByMe = false,
-  mouseHover = false,
-  isReactionEnabled = false,
   theme = 'light',
 }: Props): ReactElement {
-  // FIXME: Is there more efficient way than below? Below parses the whole large messsage templates.
-  const allMessageTemplates: SendbirdMessageTemplate[] = JSON.parse(localStorage.getItem('message_templates')); // sb.getAllMessageTemplates();
+  // FIXME: Can we use useSendbirdStateContext in this ui component?
+  const store = useSendbirdStateContext();
+  const messageTemplatesInfo: MessageTemplatesInfo | undefined = store?.stores?.appInfoStore?.messageTemplatesInfo;
+  const allMessageTemplates: Record<string, SendbirdMessageTemplate> | undefined = messageTemplatesInfo?.templates;
   if (!allMessageTemplates) return;
 
   const templateData: MessageTemplateData = message.extendedMessagePayload?.['template'] as MessageTemplateData;
   const template: SendbirdMessageTemplate = allMessageTemplates[templateData.key];
+
+  // TODO: What is data schema? do we have to use this?
   const filledMessageTemplateItems: MessageTemplateItem[] = getFilledMessageTemplateWithData(
     template.ui_template.body.items,
-    templateData.variables,
+    templateData.variables ?? {},
     template.color_variables,
     theme,
   );
@@ -64,8 +66,6 @@ export default function TemplateMessageItemBody({
       className,
       'sendbird-template-message-item-body',
       isByMe ? 'outgoing' : 'incoming',
-      mouseHover ? 'mouse-hover' : '',
-      (isReactionEnabled && message?.reactions?.length > 0) ? 'reactions' : '',
     ])}>
       <MessageTemplateProvider templateItems={filledMessageTemplateItems} />
     </div>

@@ -12,9 +12,11 @@ import useTheme from './hooks/useTheme';
 
 import sdkReducers from './dux/sdk/reducers';
 import userReducers from './dux/user/reducers';
+import appInfoReducers from './dux/appInfo/reducers';
 
 import sdkInitialState from './dux/sdk/initialState';
 import userInitialState from './dux/user/initialState';
+import appInfoInitialState from './dux/appInfo/initialState';
 
 import useOnlineStatus from './hooks/useOnlineStatus';
 import useConnect from './hooks/useConnect';
@@ -189,6 +191,7 @@ const SendbirdSDK = ({
   const [pubSub] = useState(() => customPubSub ?? pubSubFactory<PUBSUB_TOPICS, SBUGlobalPubSubTopicPayloadUnion>());
   const [sdkStore, sdkDispatcher] = useReducer(sdkReducers, sdkInitialState);
   const [userStore, userDispatcher] = useReducer(userReducers, userInitialState);
+  const [appInfoStore, appInfoDispatcher] = useReducer(appInfoReducers, appInfoInitialState);
 
   const { configs, configsWithAppAttr, initDashboardConfigs } = useUIKitConfig();
   const sdkInitialized = sdkStore.initialized;
@@ -218,6 +221,7 @@ const SendbirdSDK = ({
     sdk,
     sdkDispatcher,
     userDispatcher,
+    appInfoDispatcher,
     initDashboardConfigs,
     eventHandlers,
   });
@@ -320,6 +324,7 @@ const SendbirdSDK = ({
         stores: {
           sdkStore,
           userStore,
+          appInfoStore,
         },
         dispatchers: {
           sdkDispatcher,

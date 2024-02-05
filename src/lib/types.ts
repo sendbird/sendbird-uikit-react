@@ -36,6 +36,7 @@ import { SdkActionTypes } from './dux/sdk/actionTypes';
 import { ReconnectType } from './hooks/useConnect/types';
 import { SBUGlobalPubSub } from './pubSub/topics';
 import { EmojiManager } from './emojiManager';
+import { MessageTemplatesInfo } from './dux/appInfo/initialState';
 
 // note to SDK team:
 // using enum inside .d.ts won’t work for jest, but const enum will work.
@@ -126,9 +127,15 @@ export interface UserStore {
   loading: boolean;
   user: User;
 }
+
+export interface AppInfoStore {
+  messageTemplatesInfo?: MessageTemplatesInfo;
+}
+
 export interface SendBirdStateStore {
   sdkStore: SdkStore;
   userStore: UserStore;
+  appInfoStore: AppInfoStore;
 }
 
 export type SendBirdState = {

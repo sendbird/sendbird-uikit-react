@@ -269,11 +269,16 @@ export const Korean = () => fitPageSize(
   />
 );
 
+const customApiHost = 'https://api-preprod.sendbird.com';
+const customWebSocketHost = 'wss://ws-preprod.sendbird.com';
+
 export const user1 = () => fitPageSize(
   <App
-    appId={appId}
-    userId={array[0]}
-    nickname={array[0]}
+    customApiHost={customApiHost}
+    customWebSocketHost={customWebSocketHost}
+    appId={'DEB98489-DCE5-4EAD-92B2-FDA684A68799'}
+    userId={'12888648-9fd4-43'}
+    accessToken={'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1IjoxMzEzOTAxMDQsInYiOjEsImUiOjE3MDg0NDE4ODh9.-tfdjgzP58BzAwS9jOBaTfpXNXrRYuTZyN7GzC3TCKI'}
     profileUrl={addProfile}
     breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
     showSearchIcon
