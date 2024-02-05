@@ -48,41 +48,45 @@ export function useMessageActions(params: Params): MessageActions {
   const {
     onBeforeSendUserMessage = (params) => {
       // 1
-      // const data = {
-      //   template: {
-      //     key: 'low-balance-alert',
-      //     variables: {
-      //       'account.image': {
-      //         url: 'https://ddtyj01cn62am.cloudfront.net/notifications/chat-example-balance-reminder-account.png',
-      //         width: 120,
-      //         height: 120,
-      //       },
-      //       'account.name': 'Salary account',
-      //       'account.balance': '$12',
-      //     },
-      //   } as MessageTemplateData,
-      // };
-
-      // 2
       const data = {
         template: {
-          key: 'fitness-promo',
+          key: 'low-balance-alert',
           variables: {
-            image: {
-              url: 'https://ddtyj01cn62am.cloudfront.net/notifications/chat-example-promotion-fitness.jpg',
-              width: 984,
-              height: 543,
+            'account.image': {
+              url: 'https://ddtyj01cn62am.cloudfront.net/notifications/chat-example-balance-reminder-account.png',
+              width: 120,
+              height: 120,
             },
-            productName: 'Sendbird Fitness',
-            'button1.title': 'Lean more',
+            'account.name': 'Salary account',
+            'account.balance': '$12',
           },
         } as MessageTemplateData,
       };
+
+      // 2
+      // const data = {
+      //   template: {
+      //     key: 'fitness-promo',
+      //     variables: {
+      //       image: {
+      //         url: 'https://ddtyj01cn62am.cloudfront.net/notifications/chat-example-promotion-fitness.jpg',
+      //         width: 984,
+      //         height: 543,
+      //       },
+      //       productName: 'Sendbird Fitness',
+      //       'button1.title': 'Lean more',
+      //     },
+      //   } as MessageTemplateData,
+      // };
 
       // 3
       // const data = {
       //   template: {
       //     key: 'march-promo',
+      //     variables: {
+      //       customer_name: 'John',
+      //       discount_percentage: '50%',
+      //     },
       //   } as MessageTemplateData,
       // };
       params.extendedMessagePayload = data;

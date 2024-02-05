@@ -3,13 +3,13 @@ import React, { ReactElement } from 'react';
 import type { BaseMessage } from '@sendbird/chat/message';
 import { getClassName } from '../../utils';
 import MessageTemplateProvider from '../../modules/GroupChannel/components/MessageTemplateProvider';
-import { MessageTemplateData, MessageTemplateItem, SendbirdMessageTemplate } from './types';
+import { MessageTemplateData, MessageTemplateItem } from './types';
 import restoreNumbersFromMessageTemplateObject from './utils/restoreNumbersFromMessageTemplateObject';
 import mapData from './utils/mapData';
 import selectColorVariablesByTheme from './utils/selectColorVariablesByTheme';
 import { SendbirdTheme } from '../../types';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
-import { MessageTemplatesInfo } from '../../lib/dux/appInfo/initialState';
+import { ProcessedMessageTemplate, MessageTemplatesInfo } from '../../lib/dux/appInfo/initialState';
 
 interface Props {
   className?: string | Array<string>;
@@ -38,6 +38,27 @@ const getFilledMessageTemplateWithData = (
   return parsedTemplate;
 };
 
+const parseTemplateWithReplaceReplacer = (
+  templateString: string,
+  templateVariables: Record<string, string>,
+  colorVariables: Record<string, unknown>,
+  theme: SendbirdTheme,
+): MessageTemplateItem[] => {
+  const selectedThemeColorVariables = selectColorVariablesByTheme({
+    colorVariables,
+    theme,
+  });
+  let string = templateString.replace(/{([^"{}]+)}/g, (_, placeholder) => {
+    const value = selectedThemeColorVariables[placeholder];
+    return value || `{${placeholder}}`;
+  });
+  string = string.replace(/{([^"{}]+)}/g, (_, placeholder) => {
+    const value = templateVariables[placeholder];
+    return value || `{${placeholder}}`;
+  });
+  return JSON.parse(string);
+};
+
 export default function TemplateMessageItemBody({
   className = '',
   message,
@@ -47,17 +68,23 @@ export default function TemplateMessageItemBody({
   // FIXME: Can we use useSendbirdStateContext in this ui component?
   const store = useSendbirdStateContext();
   const messageTemplatesInfo: MessageTemplatesInfo | undefined = store?.stores?.appInfoStore?.messageTemplatesInfo;
-  const allMessageTemplates: Record<string, SendbirdMessageTemplate> | undefined = messageTemplatesInfo?.templates;
-  if (!allMessageTemplates) return;
+  const processedMessageTemplates: Record<string, ProcessedMessageTemplate> | undefined = messageTemplatesInfo?.templatesMap;
+  if (!processedMessageTemplates) return;
 
   const templateData: MessageTemplateData = message.extendedMessagePayload?.['template'] as MessageTemplateData;
-  const template: SendbirdMessageTemplate = allMessageTemplates[templateData.key];
+  const processedTemplate: ProcessedMessageTemplate = processedMessageTemplates[templateData.key];
 
-  // TODO: What is data schema? do we have to use this?
+  // FIXME: Replace logic is not working properly. Fix and use this than below
+  // const filledMessageTemplateItems: MessageTemplateItem[] = parseTemplateWithReplaceReplacer(
+  //   processedTemplate.uiTemplate,
+  //   templateData.variables ?? {},
+  //   processedTemplate.colorVariables,
+  //   theme,
+  // );
   const filledMessageTemplateItems: MessageTemplateItem[] = getFilledMessageTemplateWithData(
-    template.ui_template.body.items,
+    JSON.parse(processedTemplate.uiTemplate),
     templateData.variables ?? {},
-    template.color_variables,
+    processedTemplate.colorVariables,
     theme,
   );
 

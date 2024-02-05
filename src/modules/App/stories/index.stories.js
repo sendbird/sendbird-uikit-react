@@ -276,9 +276,9 @@ export const user1 = () => fitPageSize(
   <App
     customApiHost={customApiHost}
     customWebSocketHost={customWebSocketHost}
-    appId={'DEB98489-DCE5-4EAD-92B2-FDA684A68799'}
-    userId={'12888648-9fd4-43'}
-    accessToken={'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1IjoxMzEzOTAxMDQsInYiOjEsImUiOjE3MDg0NDE4ODh9.-tfdjgzP58BzAwS9jOBaTfpXNXrRYuTZyN7GzC3TCKI'}
+    appId={'65C96071-4CDD-4365-8BDD-DAC1B7575F7D'}
+    userId={'ed3b43be-6d0b-4f'}
+    accessToken={'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1IjoxMzE0MDUxNzEsInYiOjEsImUiOjE3MDg1Nzg2MTd9.Ypo4r87dWXIBOOAMbVfjZmpvdC6mqtOf5Ki0pEt2vJY'}
     profileUrl={addProfile}
     breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
     showSearchIcon

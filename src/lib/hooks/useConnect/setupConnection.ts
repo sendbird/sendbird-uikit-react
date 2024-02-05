@@ -12,10 +12,10 @@ import { SetupConnectionTypes } from './types';
 import { CustomExtensionParams, SendbirdChatInitParams } from '../../types';
 import { SendbirdMessageTemplate } from '../../../ui/TemplateMessageItemBody/types';
 import { MessageTemplateListResult } from '@sendbird/chat/lib/__definition';
-import { MessageTemplatesInfo } from '../../dux/appInfo/initialState';
+import { ProcessedMessageTemplate, MessageTemplatesInfo } from '../../dux/appInfo/initialState';
+import { CACHED_MESSAGE_TEMPLATES_KEY, CACHED_MESSAGE_TEMPLATES_TOKEN_KEY } from '../../../modules/App/types';
 
 const APP_VERSION_STRING = '__react_dev_mode__';
-const MESSAGE_TEMPLATES_INFO_KEY = 'sendbird_message_templates_info_key';
 const MESSAGE_TEMPLATES_FETCH_LIMIT = 20;
 
 const { INIT_SDK, SET_SDK_LOADING, RESET_SDK, SDK_ERROR } = SDK_ACTIONS;
@@ -131,9 +131,21 @@ export async function setUpConnection({
          * no sdkMessageTemplateToken => no templates => clear cached
          */
         if (!sdkMessageTemplateToken) {
-          localStorage.removeItem(MESSAGE_TEMPLATES_INFO_KEY);
+          localStorage.removeItem(CACHED_MESSAGE_TEMPLATES_TOKEN_KEY);
+          localStorage.removeItem(CACHED_MESSAGE_TEMPLATES_KEY);
           return;
         }
+        const getProcessedTemplates = (parsedTemplates: SendbirdMessageTemplate[]): Record<string, ProcessedMessageTemplate> => {
+          const processedTemplates = {};
+          parsedTemplates.forEach((template) => {
+            processedTemplates[template.key] = {
+              uiTemplate: JSON.stringify(template.ui_template.body.items),
+              colorVariables: template.color_variables,
+              dataSchema: template.data_schema,
+            };
+          });
+          return processedTemplates;
+        };
         /**
          * Given the following cases:
          * 1. non-null sdkMessageTemplateToken => templates exist
@@ -142,18 +154,17 @@ export async function setUpConnection({
          * If both 1 and 2, fetch all templates and upsert to cache.
          * If cached token is not outdated, use cached templates.
          */
-        const cachedMessageTemplatesInfo: MessageTemplatesInfo | null = JSON.parse(
-          localStorage.getItem(MESSAGE_TEMPLATES_INFO_KEY),
-        );
-        const cachedMessageTemplateToken: string | null = cachedMessageTemplatesInfo?.token;
+        const cachedMessageTemplatesToken: string | null = localStorage.getItem(CACHED_MESSAGE_TEMPLATES_TOKEN_KEY);
+        const cachedMessageTemplates: string | null = localStorage.getItem(CACHED_MESSAGE_TEMPLATES_KEY);
         if (
-          !cachedMessageTemplateToken
-          || cachedMessageTemplateToken !== sdkMessageTemplateToken
+          !cachedMessageTemplatesToken
+          || cachedMessageTemplatesToken !== sdkMessageTemplateToken!
         ) {
-          const fetchAllMessageTemplates = async (): Promise<Record<string, SendbirdMessageTemplate>> => {
+          const fetchAllMessageTemplates = async (): Promise<SendbirdMessageTemplate[]> => {
             let hasMore = true;
             let paginationToken = null;
-            const fetchedTemplates: Record<string, SendbirdMessageTemplate> = {};
+            const fetchedTemplates: SendbirdMessageTemplate[] = [];
+
             while (hasMore) {
               /**
                * RFC doc:
@@ -165,35 +176,36 @@ export async function setUpConnection({
               );
               hasMore = res.hasMore;
               paginationToken = res.token;
-              /**
-               * FIXME: Change below code block after SDK updates to
-               * res.templates.map((template: string) => JSON.parse(template));
-               */
-              const parsedTemplates: SendbirdMessageTemplate[] = JSON.parse(
-                res.messageTemplateList.jsonString,
-              ).templates;
-              parsedTemplates.forEach((template) => {
-                fetchedTemplates[template.key] = template;
+              res.templates.forEach((messageTemplate) => {
+                fetchedTemplates.push(JSON.parse(messageTemplate.template));
               });
             }
             return fetchedTemplates;
           };
+          const parsedTemplates: SendbirdMessageTemplate[] = await fetchAllMessageTemplates();
           const newMessageTemplatesInfo: MessageTemplatesInfo = {
             token: sdkMessageTemplateToken,
-            templates: await fetchAllMessageTemplates(),
+            templatesMap: getProcessedTemplates(parsedTemplates),
           };
           appInfoDispatcher({ type: UPSERT_MESSAGE_TEMPLATES_INFO, payload: newMessageTemplatesInfo });
-          localStorage.setItem(MESSAGE_TEMPLATES_INFO_KEY, JSON.stringify(newMessageTemplatesInfo));
+          localStorage.setItem(CACHED_MESSAGE_TEMPLATES_TOKEN_KEY, JSON.stringify(sdkMessageTemplateToken));
+          localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify(parsedTemplates));
         } else if (
-          cachedMessageTemplateToken
-          && cachedMessageTemplateToken === sdkMessageTemplateToken
+          cachedMessageTemplatesToken
+          && cachedMessageTemplatesToken === sdkMessageTemplateToken
+          && cachedMessageTemplates
         ) {
-          appInfoDispatcher({ type: UPSERT_MESSAGE_TEMPLATES_INFO, payload: cachedMessageTemplatesInfo });
+          const parsedTemplates: SendbirdMessageTemplate[] = JSON.parse(cachedMessageTemplates);
+          const newMessageTemplatesInfo: MessageTemplatesInfo = {
+            token: sdkMessageTemplateToken,
+            templatesMap: getProcessedTemplates(parsedTemplates),
+          };
+          appInfoDispatcher({ type: UPSERT_MESSAGE_TEMPLATES_INFO, payload: newMessageTemplatesInfo });
         }
       };
 
-      const connectCbSucess = async (user: User) => {
-        logger?.info?.('SendbirdProvider | useConnect/setupConnection/connectCbSucess', user);
+      const connectCbSuccess = async (user: User) => {
+        logger?.info?.('SendbirdProvider | useConnect/setupConnection/connectCbSuccess', user);
         sdkDispatcher({ type: INIT_SDK, payload: newSdk });
         userDispatcher({ type: INIT_USER, payload: user });
 
@@ -261,7 +273,7 @@ export async function setUpConnection({
 
       logger?.info?.(`SendbirdProvider | useConnect/setupConnection/connect connecting using ${accessToken ?? userId}`);
       newSdk.connect(userId, accessToken)
-        .then((res) => connectCbSucess(res))
+        .then((res) => connectCbSuccess(res))
         .catch((err) => connectCbError(err));
     } else {
       const errorMessage = getMissingParamError({ userId, appId });

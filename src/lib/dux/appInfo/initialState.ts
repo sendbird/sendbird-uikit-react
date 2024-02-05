@@ -1,8 +1,14 @@
-import { SendbirdMessageTemplate } from '../../../ui/TemplateMessageItemBody/types';
+import { MessageTemplateDataSchemaProperty } from '../../../ui/TemplateMessageItemBody/types';
+
+export type ProcessedMessageTemplate = {
+  uiTemplate?: string; // This is stringified ui_template.
+  colorVariables?: Record<string, string>;
+  dataSchema?: { properties: MessageTemplateDataSchemaProperty[] };
+};
 
 export interface MessageTemplatesInfo {
   token?: string; // This server-side token gets updated on every POST/PUT on message template table.
-  templates?: Record<string, SendbirdMessageTemplate>;
+  templatesMap?: Record<string, ProcessedMessageTemplate>;
 }
 
 export interface AppInfoStateType {
