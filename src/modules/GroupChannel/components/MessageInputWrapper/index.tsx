@@ -23,7 +23,7 @@ export const MessageInputWrapper = (props: MessageInputWrapperProps) => {
   const isLastMessageSuggestedRepliesEnabled = useIIFE(() => {
     if (!config?.groupChannel?.enableSuggestedReplies) return false;
     if (getSuggestedReplies(lastMessage).length === 0) return false;
-    if (lastMessage && isSendableMessage(lastMessage) && lastMessage.sendingStatus !== 'succeeded') return false;
+    if (isSendableMessage(lastMessage) && lastMessage.sendingStatus !== 'succeeded') return false;
 
     return true;
   });
