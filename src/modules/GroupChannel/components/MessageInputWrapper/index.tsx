@@ -18,15 +18,17 @@ export const MessageInputWrapper = (props: MessageInputWrapperProps) => {
   const context = useGroupChannelContext();
   const {
     messages,
+    currentChannel,
   } = context;
-  const lastMessage = messages[messages.length - 1];
   const isLastMessageSuggestedRepliesEnabled = useIIFE(() => {
     if (!config?.groupChannel?.enableSuggestedReplies) return false;
     if (getSuggestedReplies(lastMessage).length === 0) return false;
-    if (isSendableMessage(lastMessage) && lastMessage.sendingStatus !== 'succeeded') return false;
+    const lastMessageInContext = messages[messages.length - 1];
+    if (isSendableMessage(lastMessageInContext) && lastMessageInContext.sendingStatus !== 'succeeded') return false;
 
     return true;
   });
+  const lastMessage = currentChannel?.lastMessage;
   const disableMessageInput = props.disabled
     || isLastMessageSuggestedRepliesEnabled && !!lastMessage.extendedMessagePayload?.['disable_chat_input'];
 
