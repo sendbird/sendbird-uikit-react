@@ -29,12 +29,8 @@ export const MessageInputWrapper = (props: MessageInputWrapperProps) => {
 
   const lastMessage = currentGroupChannel?.lastMessage;
   const isLastMessageSuggestedRepliesEnabled = config?.groupChannel?.enableSuggestedReplies
-    && lastMessage
     && getSuggestedReplies(lastMessage).length > 0
-    && (
-      !localMessages
-      || localMessages.length === 0
-    );
+    && localMessages?.length === 0;
   const disableMessageInput = props.disabled
     || isLastMessageSuggestedRepliesEnabled && !!lastMessage.extendedMessagePayload?.['disable_chat_input'];
 
