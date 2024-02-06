@@ -1,5 +1,5 @@
 import React from 'react';
-import type { FileMessageCreateParams, UserMessage } from '@sendbird/chat/message';
+import type { FileMessageCreateParams } from '@sendbird/chat/message';
 
 import { getSuggestedReplies, SendableMessageType } from '../../../../utils';
 import MessageInputWrapperView from '../../../GroupChannel/components/MessageInputWrapper/MessageInputWrapperView';

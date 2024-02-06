@@ -1,5 +1,4 @@
 import React from 'react';
-import type { UserMessage } from '@sendbird/chat/message';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelContext } from '../../context/ChannelProvider';
