@@ -7,6 +7,7 @@ import { RenderCustomSeparatorProps, RenderMessageParamsType } from '../../../..
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { GroupChannelUIView } from './GroupChannelUIView';
 import type { MessageContentProps } from '../../../../ui/MessageContent';
+import MessageInputWrapper from '../MessageInputWrapper';
 
 export interface GroupChannelUIProps {
   renderPlaceholderLoader?: () => React.ReactElement;
@@ -40,6 +41,10 @@ export const GroupChannelUI = (props: GroupChannelUIProps) => {
       requestedChannelUrl={channelUrl}
       loading={loading}
       isInvalid={channelUrl && !currentChannel}
+      renderMessageInput={() => (
+        props.renderMessageInput?.()
+        ?? <MessageInputWrapper {...props} />
+      )}
     />
   );
 };

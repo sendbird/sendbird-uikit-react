@@ -36,6 +36,7 @@ export function uikitConfigMapper({
       },
       typingIndicatorTypes: uikitOptions.groupChannel?.typingIndicatorTypes,
       enableFeedback: uikitOptions.groupChannel?.enableFeedback,
+      enableSuggestedReplies: uikitOptions.groupChannel?.enableSuggestedReplies,
     },
     groupChannelList: {
       enableTypingIndicator: uikitOptions.groupChannelList?.enableTypingIndicator ?? isTypingIndicatorEnabledOnChannelList,

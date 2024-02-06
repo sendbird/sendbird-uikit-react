@@ -1,5 +1,4 @@
 import React from 'react';
-import type { UserMessage } from '@sendbird/chat/message';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelContext } from '../../context/ChannelProvider';
@@ -49,9 +48,10 @@ const Message = (props: MessageProps): React.ReactElement => {
         !initialized || isDisabledBecauseFrozen(currentGroupChannel) || isDisabledBecauseMuted(currentGroupChannel) || !config.isOnline
       }
       shouldRenderSuggestedReplies={
-        message.messageId === currentGroupChannel?.lastMessage?.messageId
+        config?.groupChannel?.enableSuggestedReplies
+        && message.messageId === currentGroupChannel?.lastMessage?.messageId
         // the options should appear only when there's no failed or pending messages
-        && localMessages.every((message) => (message as UserMessage).sendingStatus === 'succeeded')
+        && localMessages?.length === 0
         && getSuggestedReplies(message).length > 0
       }
       isReactionEnabled={isReactionEnabled}

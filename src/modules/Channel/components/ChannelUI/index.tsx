@@ -44,7 +44,10 @@ const ChannelUI = (props: ChannelUIProps) => {
       isInvalid={isInvalid}
       renderChannelHeader={(props) => (<ChannelHeader {...props} />)}
       renderMessageList={(props) => (<MessageList {...props} />)}
-      renderMessageInput={() => (<MessageInputWrapper {...props} />)}
+      renderMessageInput={() => (
+        props.renderMessageInput?.()
+        ?? <MessageInputWrapper {...props} />
+      )}
     />
   );
 };

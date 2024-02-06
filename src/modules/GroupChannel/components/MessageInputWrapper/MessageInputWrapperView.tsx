@@ -72,6 +72,7 @@ export const MessageInputWrapperView = React.forwardRef((
     renderVoiceMessageIcon,
     renderSendMessageIcon,
     acceptableMimeTypes,
+    disabled,
   } = props;
   const { stringSet } = useLocalization();
   const { isMobile } = useMediaQueryContext();
@@ -104,7 +105,8 @@ export const MessageInputWrapperView = React.forwardRef((
     || !currentChannel
     || isDisabledBecauseFrozen(currentChannel)
     || isDisabledBecauseMuted(currentChannel)
-    || (!isOnline && !sdk?.isCacheEnabled);
+    || (!isOnline && !sdk?.isCacheEnabled)
+    || disabled;
   const showSuggestedMentionList = !isMessageInputDisabled
     && isMentionEnabled
     && mentionNickname.length > 0
@@ -209,7 +211,7 @@ export const MessageInputWrapperView = React.forwardRef((
           setMentionedUsers={setMentionedUsers}
           placeholder={
             (quoteMessage && stringSet.MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER)
-            || (isDisabledBecauseFrozen(currentChannel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
+            || ((disabled || isDisabledBecauseFrozen(currentChannel)) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
             || (isDisabledBecauseMuted(currentChannel)
               && (isMobile ? stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT : stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED))
           }
