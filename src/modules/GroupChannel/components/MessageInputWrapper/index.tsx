@@ -20,6 +20,7 @@ export const MessageInputWrapper = (props: MessageInputWrapperProps) => {
     messages,
     currentChannel,
   } = context;
+  const lastMessage = currentChannel?.lastMessage;
   const isLastMessageSuggestedRepliesEnabled = useIIFE(() => {
     if (!config?.groupChannel?.enableSuggestedReplies) return false;
     if (getSuggestedReplies(lastMessage).length === 0) return false;
@@ -28,7 +29,6 @@ export const MessageInputWrapper = (props: MessageInputWrapperProps) => {
 
     return true;
   });
-  const lastMessage = currentChannel?.lastMessage;
   const disableMessageInput = props.disabled
     || isLastMessageSuggestedRepliesEnabled && !!lastMessage.extendedMessagePayload?.['disable_chat_input'];
 
