@@ -29,9 +29,7 @@ export const createDefaultUserListQuery = (
   { sdk, userFilledApplicationUserListQuery }: CreateDefaultUserListQueryType,
 ): ApplicationUserListQuery => {
   if (sdk?.createApplicationUserListQuery) {
-    const params = sdk?.createApplicationUserListQuery({
-      userIdsFilter: ['bot_test_0a780'],
-    });
+    const params = sdk?.createApplicationUserListQuery();
     if (userFilledApplicationUserListQuery) {
       Object.keys(userFilledApplicationUserListQuery).forEach((key) => {
         params[key] = userFilledApplicationUserListQuery[key];

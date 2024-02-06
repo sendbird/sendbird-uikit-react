@@ -34,7 +34,6 @@ export const MessageInputWrapper = (props: MessageInputWrapperProps) => {
     && (
       !localMessages
       || localMessages.length === 0
-      || localMessages.every((message) => (message as UserMessage).sendingStatus === 'succeeded')
     );
   const disableMessageInput = props.disabled
     || isLastMessageSuggestedRepliesEnabled && !!lastMessage.extendedMessagePayload?.['disable_chat_input'];

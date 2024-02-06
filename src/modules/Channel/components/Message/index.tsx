@@ -55,7 +55,6 @@ const Message = (props: MessageProps): React.ReactElement => {
         && (
           !localMessages
           || localMessages.length === 0
-          || localMessages.every((message) => (message as UserMessage).sendingStatus === 'succeeded')
         )
         && getSuggestedReplies(message).length > 0
       }
