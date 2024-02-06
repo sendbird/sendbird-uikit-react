@@ -1,6 +1,7 @@
-export function omitObjectProperties<O extends Record<string, any>>(obj: O, properties: string[]) {
+export function omitObjectProperties<O extends Record<string, any>>(obj: O, properties: string[]): O {
+  const newObj = { ...obj };
   properties.forEach((propertyName) => {
-    if (Object.hasOwn(obj, propertyName)) delete obj[propertyName];
+    if (Object.hasOwn(newObj, propertyName)) delete newObj[propertyName];
   });
-  return obj;
+  return newObj;
 }
