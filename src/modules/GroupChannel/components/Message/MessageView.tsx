@@ -17,7 +17,6 @@ import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 import MessageInput from '../../../../ui/MessageInput';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import MessageContent, { MessageContentProps } from '../../../../ui/MessageContent';
-import { omitObjectProperties } from '../../../../utils/omitObjectProperty';
 
 import SuggestedReplies from '../SuggestedReplies';
 import SuggestedMentionListView from '../SuggestedMentionList/SuggestedMentionListView';
@@ -228,7 +227,7 @@ const MessageView = (props: MessageViewProps) => {
   }, [animatedMessageId, messageScrollRef.current, message.messageId]);
 
   const renderedCustomSeparator = useMemo(() => renderCustomSeparator?.({ message }) ?? null, [message, renderCustomSeparator]);
-  const renderedMessage = useMemo(() => renderMessage?.(omitObjectProperties(props, ['renderMessage'])), [message, renderMessage]);
+  const renderedMessage = useMemo(() => renderMessage?.(props), [message, renderMessage]);
 
   if (renderedMessage) {
     return (
