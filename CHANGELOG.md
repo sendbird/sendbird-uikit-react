@@ -1,5 +1,34 @@
 # Changelog - v3
 
+## [v3.11.0] (Feb 07, 2024)
+
+### Features:
+* Added `enableSuggestedReplies` global option
+  * How to use?
+  ```tsx
+  <App
+    appId={appId}
+    userId={userId}
+    uikitOptions={{
+      groupChannel: {
+        // Below turns on the `SuggestedReplies` feature (see v3.8.0 release changelog). Default value is false.
+        enableSuggestedReplies: true,
+      }
+    }}
+  />
+  ```
+* `MessageInput` is now being disabled if `channel.lastMessage.extendedMessagePayload['disable_chat_input']` is true
+
+### Fixes:
+
+* Fixed a bug where channel is being removed from my channel list when other member leaves the channel
+* Fixed a bug where channel avatar image is not updated when a member leaves, or joins, or `profileUrl` changes
+* Fixed a bug where `ChannelListUI` is not updated when network is reconnected
+* Fixed a bug in `ChannelList` where `activeChannelUrl` is set but `onChannelSelect` fires with null after loading `ChannelList`
+* Fixed a bug where url text wrapped around special characters not parsed as link
+* Fixed a bug where space character before url text is removed in sent message
+* Fixed a runtime error occurring when using `renderMessage` of `Channel` module
+
 ## [v3.10.1] (Jan 26, 2024)
 
 ### Fixes:
@@ -20,8 +49,6 @@
 #### Feedback message feature
 Now we are supporting Feedback Message feature!
 Feedback message feature can be turned on through `enableFeedback` option. When turned on, feedback feature is applied to messages with non default `myFeedbackStatus` values.
-
-
 
 * Added `enableFeedback` global option
   * How to use?
