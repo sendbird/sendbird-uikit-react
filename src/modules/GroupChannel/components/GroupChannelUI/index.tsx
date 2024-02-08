@@ -1,50 +1,35 @@
 import React from 'react';
 
-import type { GroupChannelHeaderProps } from '../GroupChannelHeader';
-import type { MessageListProps } from '../../../Channel/components/MessageList';
-import type { GroupChannelMessageListProps } from '../MessageList';
-import { RenderCustomSeparatorProps, RenderMessageParamsType } from '../../../../types';
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
-import { GroupChannelUIView } from './GroupChannelUIView';
-import type { MessageContentProps } from '../../../../ui/MessageContent';
+import { GroupChannelUIBasicProps, GroupChannelUIView } from './GroupChannelUIView';
+
+import GroupChannelHeader from '../GroupChannelHeader';
+import MessageList from '../MessageList';
 import MessageInputWrapper from '../MessageInputWrapper';
 
-export interface GroupChannelUIProps {
-  renderPlaceholderLoader?: () => React.ReactElement;
-  renderPlaceholderInvalid?: () => React.ReactElement;
-  renderPlaceholderEmpty?: () => React.ReactElement;
-  renderChannelHeader?: (props: GroupChannelHeaderProps) => React.ReactElement;
-  renderMessage?: (props: RenderMessageParamsType) => React.ReactElement;
-  renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
-  renderMessageList?: (props: MessageListProps | GroupChannelMessageListProps) => React.ReactElement;
-  renderMessageInput?: () => React.ReactElement;
-  renderFileUploadIcon?: () => React.ReactElement;
-  renderVoiceMessageIcon?: () => React.ReactElement;
-  renderSendMessageIcon?: () => React.ReactElement;
-  renderTypingIndicator?: () => React.ReactElement;
-  renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
-  renderFrozenNotification?: () => React.ReactElement;
-}
+export interface GroupChannelUIProps extends GroupChannelUIBasicProps {}
 
 export const GroupChannelUI = (props: GroupChannelUIProps) => {
   const context = useGroupChannelContext();
+  const { currentChannel, channelUrl, loading } = context;
+
+  // Inject components to presentation layer
   const {
-    currentChannel,
-    channelUrl,
-    loading,
-  } = context;
+    renderChannelHeader = (props) => <GroupChannelHeader {...props} />,
+    renderMessageList = (props) => <MessageList {...props} className="sendbird-conversation__message-list" />,
+    renderMessageInput = () => <MessageInputWrapper {...props} />,
+  } = props;
 
   return (
     <GroupChannelUIView
       {...props}
       {...context}
-      requestedChannelUrl={channelUrl}
       loading={loading}
       isInvalid={channelUrl && !currentChannel}
-      renderMessageInput={() => (
-        props.renderMessageInput?.()
-        ?? <MessageInputWrapper {...props} />
-      )}
+      channelUrl={channelUrl}
+      renderChannelHeader={renderChannelHeader}
+      renderMessageList={renderMessageList}
+      renderMessageInput={renderMessageInput}
     />
   );
 };

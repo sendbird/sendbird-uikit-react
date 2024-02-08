@@ -4,14 +4,12 @@ import '../../../GroupChannel/components/MessageList/index.scss';
 import React, { useState } from 'react';
 import type { UserMessage } from '@sendbird/chat/message';
 
-import type { MessageContentProps } from '../../../../ui/MessageContent';
 import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
 import Message from '../Message';
-import { EveryMessage, RenderCustomSeparatorProps, RenderMessageParamsType, TypingIndicatorType } from '../../../../types';
+import { EveryMessage, TypingIndicatorType } from '../../../../types';
 import { isAboutSame } from '../../context/utils';
-import { getMessagePartsInfo } from '../../../GroupChannel/components/MessageList/getMessagePartsInfo';
 import UnreadCount from '../UnreadCount';
 import FrozenNotification from '../FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
@@ -23,18 +21,12 @@ import { useScrollBehavior } from './hooks/useScrollBehavior';
 import TypingIndicatorBubble from '../../../../ui/TypingIndicatorBubble';
 import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 
+import { getMessagePartsInfo } from '../../../GroupChannel/components/MessageList/getMessagePartsInfo';
+import { GroupChannelMessageListProps } from '../../../GroupChannel/components/MessageList';
+
 const SCROLL_BOTTOM_PADDING = 50;
 
-export interface MessageListProps {
-  className?: string;
-  renderMessage?: (props: RenderMessageParamsType) => React.ReactElement;
-  renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
-  renderPlaceholderEmpty?: () => React.ReactElement;
-  renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
-  renderPlaceholderLoader?: () => React.ReactElement;
-  renderFrozenNotification?: () => React.ReactElement;
-}
-
+export type MessageListProps = GroupChannelMessageListProps;
 export const MessageList = ({
   className = '',
   renderMessage,
