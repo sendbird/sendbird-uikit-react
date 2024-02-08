@@ -97,36 +97,34 @@ export const SUPPORTED_MIMES = {
 };
 
 export const getMimeTypesUIKitAccepts = (acceptableMimeTypes?: string[]): string => {
-  if (acceptableMimeTypes && acceptableMimeTypes.length === 0) return '';
-
-  if (Array.isArray(acceptableMimeTypes)) {
+  if (Array.isArray(acceptableMimeTypes) && acceptableMimeTypes.length > 0) {
     return acceptableMimeTypes
-        .reduce((prev, curr) => {
-          switch (curr) {
-            case 'image': {
-              prev.push(...SUPPORTED_MIMES.IMAGE);
-              break;
-            }
-            case 'video': {
-              prev.push(...SUPPORTED_MIMES.VIDEO);
-              break;
-            }
-            case 'audio': {
-              prev.push(...SUPPORTED_MIMES.AUDIO);
-              break;
-            }
-            default: {
-              prev.push(curr);
-              break;
-            }
+      .reduce((prev, curr) => {
+        switch (curr) {
+          case 'image': {
+            prev.push(...SUPPORTED_MIMES.IMAGE);
+            break;
           }
+          case 'video': {
+            prev.push(...SUPPORTED_MIMES.VIDEO);
+            break;
+          }
+          case 'audio': {
+            prev.push(...SUPPORTED_MIMES.AUDIO);
+            break;
+          }
+          default: {
+            prev.push(curr);
+            break;
+          }
+        }
 
-          return prev;
-        }, [] as string[])
-        .join();
+        return prev;
+      }, [] as string[])
+      .join();
   }
 
-  return Object.values(SUPPORTED_MIMES).flat().join();
+  return Object.values(SUPPORTED_MIMES).reduce((prev, curr) => (prev.concat(curr)), []).join();
 };
 
 /* eslint-disable no-redeclare */

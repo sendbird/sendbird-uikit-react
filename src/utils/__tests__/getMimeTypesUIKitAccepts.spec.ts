@@ -22,4 +22,9 @@ describe('Global-utils/getMimeTypesUIKitAccepts', () => {
       });
     expect(getMimeTypesUIKitAccepts([])).toBe(allMimeTypes.join());
   });
+  it('when given mime types, should return mime types string.', () => {
+    const accept = getMimeTypesUIKitAccepts(['image/png', 'image/heic']);
+    const expected = 'image/png,image/heic';
+    expect(accept).toBe(expected);
+  });
 });
