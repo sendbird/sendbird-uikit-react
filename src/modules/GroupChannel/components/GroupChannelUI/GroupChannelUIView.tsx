@@ -1,42 +1,63 @@
 import './index.scss';
 import React from 'react';
 
-import type { GroupChannelUIProps } from '.';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
-import GroupChannelHeader, { type GroupChannelHeaderProps } from '../GroupChannelHeader';
-import MessageList from '../MessageList';
 import TypingIndicator from '../TypingIndicator';
 import { TypingIndicatorType } from '../../../../types';
 import ConnectionStatus from '../../../../ui/ConnectionStatus';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
-import MessageInputWrapper from '../MessageInputWrapper';
 
-export interface GroupChannelUIViewProps extends GroupChannelUIProps, GroupChannelHeaderProps {
-  requestedChannelUrl: string;
+import type { RenderCustomSeparatorProps, RenderMessageParamsType } from '../../../../types';
+import type { GroupChannelHeaderProps } from '../GroupChannelHeader';
+import type { GroupChannelMessageListProps } from '../MessageList';
+import type { MessageContentProps } from '../../../../ui/MessageContent';
+
+export interface GroupChannelUIBasicProps {
+  // Components
+  renderPlaceholderLoader?: () => React.ReactElement;
+  renderPlaceholderInvalid?: () => React.ReactElement;
+  renderPlaceholderEmpty?: () => React.ReactElement;
+  renderChannelHeader?: (props: GroupChannelHeaderProps) => React.ReactElement;
+  renderMessageList?: (props: GroupChannelMessageListProps) => React.ReactElement;
+  renderMessageInput?: () => React.ReactElement;
+
+  // Sub components
+  //  MessageList
+  renderMessage?: (props: RenderMessageParamsType) => React.ReactElement;
+  renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
+  renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
+  renderFrozenNotification?: () => React.ReactElement;
+
+  //  MessageInput
+  renderFileUploadIcon?: () => React.ReactElement;
+  renderVoiceMessageIcon?: () => React.ReactElement;
+  renderSendMessageIcon?: () => React.ReactElement;
+  renderTypingIndicator?: () => React.ReactElement;
+}
+
+export interface GroupChannelUIViewProps extends GroupChannelUIBasicProps {
   loading: boolean;
   isInvalid: boolean;
+  channelUrl: string;
+  renderChannelHeader: GroupChannelUIBasicProps['renderChannelHeader'];
+  renderMessageList: GroupChannelUIBasicProps['renderMessageList'];
+  renderMessageInput: GroupChannelUIBasicProps['renderMessageInput'];
 }
 
 export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
   const {
-    requestedChannelUrl,
     loading,
     isInvalid,
-    renderChannelHeader = (props) => (
-      <GroupChannelHeader {...props} />
-    ),
-    renderMessageList = (props) => (
-      <MessageList
-        {...props}
-        className="sendbird-conversation__message-list"
-      />
-    ),
-    renderMessageInput = () => <MessageInputWrapper />,
+    channelUrl,
+    renderChannelHeader,
+    renderMessageList,
+    renderMessageInput,
     renderTypingIndicator,
     renderPlaceholderLoader,
     renderPlaceholderInvalid,
   } = props;
+
   const { stores, config } = useSendbirdStateContext();
   const sdkError = stores?.sdkStore?.error;
   const { logger, isOnline } = config;
@@ -45,9 +66,9 @@ export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
     return <div className="sendbird-conversation">{renderPlaceholderLoader?.() || <PlaceHolder type={PlaceHolderTypes.LOADING} />}</div>;
   }
 
-  if (!requestedChannelUrl) {
+  if (!channelUrl) {
     return (
-        <div className="sendbird-conversation">{renderPlaceholderInvalid?.() || <PlaceHolder type={PlaceHolderTypes.NO_CHANNELS} />}</div>
+      <div className="sendbird-conversation">{renderPlaceholderInvalid?.() || <PlaceHolder type={PlaceHolderTypes.NO_CHANNELS} />}</div>
     );
   }
 
@@ -72,21 +93,16 @@ export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
   }
 
   return (
-    <div className='sendbird-conversation'>
+    <div className="sendbird-conversation">
       {renderChannelHeader?.({ className: 'sendbird-conversation__channel-header' })}
       {renderMessageList?.(props)}
       <div className="sendbird-conversation__footer">
         {renderMessageInput?.()}
         <div className="sendbird-conversation__footer__typing-indicator">
           {renderTypingIndicator?.()
-            || (
-              config?.groupChannel?.enableTypingIndicator
-              && config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Text)
-              && (
-                <TypingIndicator channelUrl={requestedChannelUrl} />
-              )
-            )
-          }
+            || (config?.groupChannel?.enableTypingIndicator && config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Text) && (
+              <TypingIndicator channelUrl={channelUrl} />
+            ))}
           {!isOnline && <ConnectionStatus />}
         </div>
       </div>
