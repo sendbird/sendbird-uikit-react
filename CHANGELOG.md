@@ -1,5 +1,12 @@
 # Changelog - v3
 
+## [v3.11.1] (Feb 08, 2024)
+
+### Fixes:
+
+* Fixed `acceptableMimeTypes` to support web standard format
+* Fixed a bug where `renderChannelHeader` is not passed properly
+
 ## [v3.11.0] (Feb 07, 2024)
 
 ### Features:
