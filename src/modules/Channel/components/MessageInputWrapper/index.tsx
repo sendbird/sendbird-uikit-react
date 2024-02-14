@@ -18,8 +18,9 @@ export const MessageInputWrapper = (props: MessageInputWrapperProps) => {
   const { config } = useSendbirdStateContext();
   const context = useChannelContext();
   const {
-    currentGroupChannel,
+    quoteMessage,
     localMessages,
+    currentGroupChannel,
     sendMessage,
     sendFileMessage,
     sendVoiceMessage,
@@ -39,23 +40,22 @@ export const MessageInputWrapper = (props: MessageInputWrapperProps) => {
       {...context}
       disabled={disableMessageInput}
       currentChannel={currentGroupChannel}
-      quoteMessage={context.quoteMessage}
       sendUserMessage={(params) => {
         return sendMessage({
           message: params.message,
           mentionTemplate: params.mentionedMessageTemplate,
           mentionedUsers: params.mentionedUsers,
-          quoteMessage: context.quoteMessage,
+          quoteMessage,
         });
       }}
       sendFileMessage={(params) => {
-        return sendFileMessage(params.file as File, context.quoteMessage);
+        return sendFileMessage(params.file as File, quoteMessage);
       }}
       sendVoiceMessage={({ file }, duration) => {
-        return sendVoiceMessage(file as File, duration, context.quoteMessage);
+        return sendVoiceMessage(file as File, duration, quoteMessage);
       }}
       sendMultipleFilesMessage={({ fileInfoList }) => {
-        return sendMultipleFilesMessage(fileInfoList.map((fileInfo) => fileInfo.file) as File[], context.quoteMessage);
+        return sendMultipleFilesMessage(fileInfoList.map((fileInfo) => fileInfo.file) as File[], quoteMessage);
       }}
     />
   );
