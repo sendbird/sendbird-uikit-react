@@ -1,7 +1,6 @@
 import React from 'react';
-import type { FileMessageCreateParams } from '@sendbird/chat/message';
 
-import { getSuggestedReplies, SendableMessageType } from '../../../../utils';
+import { getSuggestedReplies } from '../../../../utils';
 import MessageInputWrapperView from '../../../GroupChannel/components/MessageInputWrapper/MessageInputWrapperView';
 import { useChannelContext } from '../../context/ChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
@@ -37,22 +36,27 @@ export const MessageInputWrapper = (props: MessageInputWrapperProps) => {
   return (
     <MessageInputWrapperView
       {...props}
-      disabled={disableMessageInput}
       {...context}
+      disabled={disableMessageInput}
       currentChannel={currentGroupChannel}
       quoteMessage={context.quoteMessage}
-      sendUserMessage={(params) => (
-        sendMessage({ ...params, quoteMessage: { messageId: params.parentMessageId } as SendableMessageType })
-      )}
-      sendFileMessage={(params: FileMessageCreateParams) => (
-        sendFileMessage(params.file as File, { messageId: params.parentMessageId } as SendableMessageType)
-      )}
-      sendVoiceMessage={({ file, parentMessageId }: FileMessageCreateParams, duration: number) => (
-        sendVoiceMessage(file as File, duration, { parentMessageId } as SendableMessageType)
-      )}
-      sendMultipleFilesMessage={({ fileInfoList, parentMessageId }) => (
-        sendMultipleFilesMessage(fileInfoList.map((fileInfo) => fileInfo.file) as File[], { parentMessageId } as SendableMessageType)
-      )}
+      sendUserMessage={(params) => {
+        return sendMessage({
+          message: params.message,
+          mentionTemplate: params.mentionedMessageTemplate,
+          mentionedUsers: params.mentionedUsers,
+          quoteMessage: context.quoteMessage,
+        });
+      }}
+      sendFileMessage={(params) => {
+        return sendFileMessage(params.file as File, context.quoteMessage);
+      }}
+      sendVoiceMessage={({ file }, duration) => {
+        return sendVoiceMessage(file as File, duration, context.quoteMessage);
+      }}
+      sendMultipleFilesMessage={({ fileInfoList }) => {
+        return sendMultipleFilesMessage(fileInfoList.map((fileInfo) => fileInfo.file) as File[], context.quoteMessage);
+      }}
     />
   );
 };
