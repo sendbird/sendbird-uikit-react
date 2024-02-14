@@ -23,7 +23,7 @@ Find out more about Sendbird UIKit for React at [UIKit for React doc](https://se
 
 ## UIKit components and ways to customize
 
-These samples are here to help you better understand UIKit for React by going over the core components and ways to customize. On each core component sample, there is an attached [StackBlitz](https://stackblitz.com/) link in which you can see the sample codes and alter them to see how the changes are rendered.
+These samples are here to help you better understand UIKit for React by going over the core components and ways to customize. On each core component sample, there is an attached [StackBlitz](https://stackblitz.com/edit/sendbird-react-uikit-base-app?file=src%2FApp.jsx) link in which you can see the sample codes and alter them to see how the changes are rendered.
 
 <br />
 
@@ -43,7 +43,7 @@ The minimum requirements for UIKit for React are:
 
 ### Implement Chat with App component
 
-The `App` component is a collection of all UIKit components you need to implement chat. This is included in all core component samples, so be sure to set your own APP_ID, USER_ID, and NICKNAME in `const.js` in each to customize your sample. On the [StackBlitz](https://stackblitz.com/edit/sendbird-react-uikit-base-app) link, you will see that the props of the `App` component refer to use the values of the correspondings of `const.js` for initialization.
+The `App` component is a collection of all UIKit components you need to implement chat. This is included in all core component samples, so be sure to set your own APP_ID, USER_ID, and NICKNAME in `const.js` in each to customize your sample. On the [StackBlitz](https://stackblitz.com/edit/sendbird-react-uikit-base-app?file=src%2FApp.jsx) link, you will see that the props of the `App` component refer to use the values of the correspondings of `const.js` for initialization.
 
 Try setting your own by downloading the Sendbird sample.
 
