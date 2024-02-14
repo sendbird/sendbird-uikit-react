@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import type { User } from '@sendbird/chat';
+import type { SendbirdError, User } from '@sendbird/chat';
 import {
   FileMessageCreateParams,
   MultipleFilesMessageCreateParams,
@@ -76,6 +76,7 @@ interface ContextBaseType {
 
 export interface GroupChannelContextType extends ContextBaseType, MessageListDataSourceWithoutActions, MessageActions {
   currentChannel: GroupChannel | null;
+  fetchChannelError: SendbirdError | null;
   nicknamesMap: Map<string, string>;
 
   scrollRef: React.MutableRefObject<HTMLDivElement>;
@@ -141,6 +142,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   const [quoteMessage, setQuoteMessage] = useState<SendableMessageType>(null);
   const [animatedMessageId, setAnimatedMessageId] = useState(0);
   const [currentChannel, setCurrentChannel] = useState<GroupChannel | null>(null);
+  const [fetchChannelError, setFetchChannelError] = useState<SendbirdError>(null);
 
   // Ref
   const { scrollRef, scrollPubSub, scrollDistanceFromBottomRef, isScrollBottomReached, setIsScrollBottomReached } = useMessageListScroll();
@@ -180,8 +182,14 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
         scrollPubSub.publish('scrollToBottom', null);
       }
     },
-    onChannelDeleted: () => setCurrentChannel(null),
-    onCurrentUserBanned: () => setCurrentChannel(null),
+    onChannelDeleted: () => {
+      setCurrentChannel(null);
+      setFetchChannelError(null);
+    },
+    onCurrentUserBanned: () => {
+      setCurrentChannel(null);
+      setFetchChannelError(null);
+    },
     onChannelUpdated: (channel) => setCurrentChannel(channel),
     logger: config.logger,
   });
@@ -244,8 +252,10 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
       try {
         const channel = await sdkStore.sdk.groupChannel.getChannel(channelUrl);
         setCurrentChannel(channel);
-      } catch {
+        setFetchChannelError(null);
+      } catch (error) {
         setCurrentChannel(null);
+        setFetchChannelError(error);
       } finally {
         // Reset states when channel changes
         setQuoteMessage(null);
@@ -390,6 +400,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
 
         // Internal Interface
         currentChannel,
+        fetchChannelError,
         nicknamesMap,
 
         scrollRef,

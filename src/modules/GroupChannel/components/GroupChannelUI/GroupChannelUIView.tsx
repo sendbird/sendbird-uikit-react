@@ -37,7 +37,7 @@ export interface GroupChannelUIBasicProps {
 }
 
 export interface GroupChannelUIViewProps extends GroupChannelUIBasicProps {
-  loading: boolean;
+  isLoading?: boolean;
   isInvalid: boolean;
   channelUrl: string;
   renderChannelHeader: GroupChannelUIBasicProps['renderChannelHeader'];
@@ -47,7 +47,7 @@ export interface GroupChannelUIViewProps extends GroupChannelUIBasicProps {
 
 export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
   const {
-    loading,
+    isLoading,
     isInvalid,
     channelUrl,
     renderChannelHeader,
@@ -62,7 +62,9 @@ export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
   const sdkError = stores?.sdkStore?.error;
   const { logger, isOnline } = config;
 
-  if (loading) {
+  // Note: This is not a loading status of the message list.
+  //  It is just for custom props from the Channel module and is not used in the GroupChannel module. (We should remove this in v4)
+  if (isLoading) {
     return <div className="sendbird-conversation">{renderPlaceholderLoader?.() || <PlaceHolder type={PlaceHolderTypes.LOADING} />}</div>;
   }
 

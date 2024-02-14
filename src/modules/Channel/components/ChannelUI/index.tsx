@@ -13,7 +13,7 @@ export interface ChannelUIProps extends GroupChannelUIBasicProps {
 
 const ChannelUI = (props: ChannelUIProps) => {
   const context = useChannelContext();
-  const { channelUrl, isInvalid, loading } = context;
+  const { channelUrl, isInvalid } = context;
 
   // Inject components to presentation layer
   const {
@@ -26,7 +26,7 @@ const ChannelUI = (props: ChannelUIProps) => {
     <GroupChannelUIView
       {...props}
       {...context}
-      loading={props?.isLoading ?? loading}
+      isLoading={props?.isLoading}
       isInvalid={isInvalid}
       channelUrl={channelUrl}
       renderChannelHeader={renderChannelHeader}
