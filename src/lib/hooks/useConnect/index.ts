@@ -46,7 +46,7 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
     }).catch(error => {
       logger?.error?.('SendbirdProvider | useConnect/useEffect', error);
     });
-  }, [userId, appId, accessToken]);
+  }, [userId, appId]);
   const reconnect = useCallback(async () => {
     logger?.info?.('SendbirdProvider | useConnect/reconnect/useCallback', { sdk });
 
