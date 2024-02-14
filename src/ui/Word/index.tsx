@@ -8,7 +8,6 @@ import type { UserMessage } from '@sendbird/chat/message';
 
 import { LabelTypography } from '../Label';
 import LinkLabel from '../LinkLabel';
-import uuidv4 from '../../utils/uuid';
 import { convertWordToStringObj, StringObjType, StringObj } from '../../utils';
 import MentionLabel from '../MentionLabel';
 
@@ -35,57 +34,29 @@ export default function Word(props: WordProps): JSX.Element {
   return (
     <span className="sendbird-word">
       {
-        convertWordToStringObj(word, message?.mentionedUsers).map((stringObj) => {
+        convertWordToStringObj(word, message?.mentionedUsers).map((stringObj, index) => {
           const type = stringObj?.type || '';
           const value = stringObj?.value || '';
           const userId = stringObj?.userId || '';
+          const key = `${value}-${index}`;
           if (renderString && typeof renderString === 'function') {
             return renderString(stringObj);
           }
           if (type === StringObjType.mention) {
             return (
               <MentionLabel
+                key={key}
                 mentionTemplate={mentionTemplate}
                 mentionedUserId={userId}
                 mentionedUserNickname={value}
-                key={uuidv4()}
                 isByMe={isByMe}
               />
             );
           } else if (type === StringObjType.url) {
-            const urlRegex = /([a-zA-Z0-9]+:\/\/)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\.[A-Za-z]{2,4})(:[0-9]+)?(\/.*)?/;
-            const targetUrl = value.match(urlRegex)?.[0];
-            const stringUrl = { front: '', url: '', back: '' };
-            if (targetUrl) {
-              const targetUrlIndex = value.indexOf(targetUrl);
-              if (targetUrlIndex > 0) {
-                stringUrl.front = value.slice(0, targetUrlIndex);
-              }
-              stringUrl.url = value.slice(targetUrlIndex, targetUrlIndex + targetUrl.length);
-              if (targetUrlIndex + targetUrl.length < value.length) {
-                stringUrl.back = value.slice(targetUrlIndex + targetUrl.length);
-              }
-            }
-            if (targetUrl) {
-              return [
-                stringUrl.front ? stringUrl.front : '',
-                stringUrl.url ? (
-                  <LinkLabel
-                    className="sendbird-word__url"
-                    key={uuidv4()}
-                    src={stringUrl.url}
-                    type={LabelTypography.BODY_1}
-                  >
-                    {stringUrl.url}
-                  </LinkLabel>
-                ) : null,
-                stringUrl.back ? stringUrl.back : '',
-              ];
-            }
             return (
               <LinkLabel
+                key={key}
                 className="sendbird-word__url"
-                key={uuidv4()}
                 src={word}
                 type={LabelTypography.BODY_1}
               >

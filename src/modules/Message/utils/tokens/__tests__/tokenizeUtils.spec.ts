@@ -146,6 +146,26 @@ describe('identifyUrlsAndStrings', () => {
       ]);
     });
   });
+
+  it('should not parse invalid URLs', () => {
+    const invalidURLs = [
+      // with number top-level domain
+      'abcd.1234',
+    ];
+
+    invalidURLs.forEach((url) => {
+      const result = identifyUrlsAndStrings([
+        { type: 'undetermined', value: url },
+      ]);
+
+      expect(result).toEqual([
+        {
+          type: 'string',
+          value: url,
+        },
+      ]);
+    });
+  });
 });
 
 describe('combineNearbyStrings', () => {
