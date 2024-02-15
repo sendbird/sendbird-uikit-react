@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import ChannelSettings from '../../../ChannelSettings';
-import {CustomSampleAppId, CustomSampleUserNames} from './const';
+import { CustomSampleAppId, CustomSampleUserNames } from './const';
 import GroupChannelList from '../../../GroupChannelList';
 import Channel from '../../../Channel';
 import SendbirdProvider from '../../../../lib/Sendbird';
@@ -25,7 +25,7 @@ const MessageContentLongPress = () => {
       allowProfileEdit
       breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
     >
-      <div style={{height: '100%', width: '100%', display: 'flex'}}>
+      <div style={{ height: '100%', width: '100%', display: 'flex' }}>
         <div className="sendbird-app__channellist-wrap">
           <GroupChannelList
             selectedChannelUrl={channelUrl}
@@ -46,8 +46,8 @@ const MessageContentLongPress = () => {
                   console.log('## here: ', contentRef);
                   if (contentRef?.current) {
                     const belowContainer = document.createElement('div');
-                    belowContainer.style.cssText = "background-color: white;";
-                    belowContainer.innerText = "This post is appended!";
+                    belowContainer.style.cssText = 'background-color: white;';
+                    belowContainer.innerText = 'This post is appended!';
                     contentRef.current.appendChild(belowContainer);
                   }
                 }}

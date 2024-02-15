@@ -44,7 +44,7 @@ import MobileFeedbackMenu from '../MobileFeedbackMenu';
 import MessageFeedbackModal from '../../modules/Channel/components/MessageFeedbackModal';
 import { SbFeedbackStatus } from './types';
 import MessageFeedbackFailedModal from '../../modules/Channel/components/MessageFeedbackFailedModal';
-import {MobileBottomSheetProps} from '../MobileMenu/types';
+import { MobileBottomSheetProps } from '../MobileMenu/types';
 
 export interface MessageContentProps {
   className?: string | Array<string>;
@@ -133,7 +133,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     ),
     renderMobileMenuOnLongPress = (props: MobileBottomSheetProps) => (
       <MobileMenu {...props} />
-    )
+    ),
   } = props;
 
   const { dateLocale } = useLocalization();
@@ -484,11 +484,11 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           showEdit,
           onReplyInThread: ({ message }) => {
             if (threadReplySelectType === ThreadReplySelectType.THREAD) {
-              onReplyInThread?.({ message })
+              onReplyInThread?.({ message });
             } else if (threadReplySelectType === ThreadReplySelectType.PARENT) {
               scrollToMessage?.(message?.parentMessage?.createdAt || 0, message?.parentMessageId || 0);
             }
-          }
+          },
         })
       }
       {
