@@ -44,6 +44,7 @@ import MobileFeedbackMenu from '../MobileFeedbackMenu';
 import MessageFeedbackModal from '../../modules/Channel/components/MessageFeedbackModal';
 import { SbFeedbackStatus } from './types';
 import MessageFeedbackFailedModal from '../../modules/Channel/components/MessageFeedbackFailedModal';
+import {MobileBottomSheetProps} from '../MobileMenu/types';
 
 export interface MessageContentProps {
   className?: string | Array<string>;
@@ -80,6 +81,7 @@ export interface MessageContentProps {
   renderMessageMenu?: (props: MessageMenuProps) => ReactNode;
   renderEmojiMenu?: (props: MessageEmojiMenuProps) => ReactNode;
   renderEmojiReactions?: (props: EmojiReactionsProps) => ReactNode;
+  renderMobileMenuOnLongPress?: (props: MobileBottomSheetProps) => React.ReactElement;
 }
 
 export default function MessageContent(props: MessageContentProps): ReactElement {
@@ -129,6 +131,9 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     renderEmojiReactions = (props: EmojiReactionsProps) => (
       <EmojiReactions {...props} />
     ),
+    renderMobileMenuOnLongPress = (props: MobileBottomSheetProps) => (
+      <MobileMenu {...props} />
+    )
   } = props;
 
   const { dateLocale } = useLocalization();
@@ -189,7 +194,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   // onMouseLeave: (e: React.MouseEvent<T>) => void;
   // onTouchEnd: (e: React.TouchEvent<T>) => void;
   const longPress = useLongPress({
-    onLongPress: () => {
+    onLongPress: (e) => {
       if (isMobile) {
         setShowMenu(true);
       }
@@ -460,33 +465,31 @@ export default function MessageContent(props: MessageContentProps): ReactElement
       {
         showMenu && (
           message?.isUserMessage?.() || message?.isFileMessage?.() || message?.isMultipleFilesMessage?.()
-        ) && (
-          <MobileMenu
-            parentRef={contentRef}
-            channel={channel}
-            hideMenu={() => { setShowMenu(false); }}
-            message={message}
-            isReactionEnabled={isReactionEnabledInChannel}
-            isByMe={isByMe}
-            userId={userId}
-            replyType={replyType}
-            disabled={disabled}
-            showRemove={showRemove}
-            emojiContainer={emojiContainer}
-            resendMessage={resendMessage}
-            deleteMessage={deleteMessage}
-            setQuoteMessage={setQuoteMessage}
-            toggleReaction={toggleReaction}
-            showEdit={showEdit}
-            onReplyInThread={({ message }) => {
-              if (threadReplySelectType === ThreadReplySelectType.THREAD) {
-                onReplyInThread?.({ message });
-              } else if (threadReplySelectType === ThreadReplySelectType.PARENT) {
-                scrollToMessage?.(message?.parentMessage?.createdAt || 0, message?.parentMessageId || 0);
-              }
-            }}
-          />
-        )
+        ) && renderMobileMenuOnLongPress({
+          parentRef: contentRef,
+          channel,
+          hideMenu: () => { setShowMenu(false); },
+          message,
+          isReactionEnabled: isReactionEnabledInChannel,
+          isByMe,
+          userId,
+          replyType,
+          disabled,
+          showRemove,
+          emojiContainer,
+          resendMessage,
+          deleteMessage,
+          setQuoteMessage,
+          toggleReaction,
+          showEdit,
+          onReplyInThread: ({ message }) => {
+            if (threadReplySelectType === ThreadReplySelectType.THREAD) {
+              onReplyInThread?.({ message })
+            } else if (threadReplySelectType === ThreadReplySelectType.PARENT) {
+              scrollToMessage?.(message?.parentMessage?.createdAt || 0, message?.parentMessageId || 0);
+            }
+          }
+        })
       }
       {
         message?.myFeedback?.rating && showFeedbackOptionsMenu && (
