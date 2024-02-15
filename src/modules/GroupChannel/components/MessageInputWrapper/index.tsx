@@ -35,8 +35,8 @@ export const MessageInputWrapper = (props: MessageInputWrapperProps) => {
   return (
     <MessageInputWrapperView
       {...props}
-      disabled={disableMessageInput}
       {...context}
+      disabled={disableMessageInput}
     />
   );
 };
