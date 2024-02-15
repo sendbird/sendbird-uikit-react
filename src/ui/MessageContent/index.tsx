@@ -194,7 +194,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   // onMouseLeave: (e: React.MouseEvent<T>) => void;
   // onTouchEnd: (e: React.TouchEvent<T>) => void;
   const longPress = useLongPress({
-    onLongPress: (e) => {
+    onLongPress: () => {
       if (isMobile) {
         setShowMenu(true);
       }
