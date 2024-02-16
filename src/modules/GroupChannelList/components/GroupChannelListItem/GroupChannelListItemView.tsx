@@ -1,3 +1,5 @@
+import './index.scss';
+
 import React, { useState } from 'react';
 
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
@@ -9,14 +11,10 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import { noop } from '../../../../utils/utils';
 import { CoreMessageType, isVoiceMessage } from '../../../../utils';
-import {
-  getChannelUnreadMessageCount,
-  getLastMessage,
-  getLastMessageCreatedAt,
-  getTotalMembers,
-} from './utils';
+import { getChannelUnreadMessageCount, getLastMessage, getLastMessageCreatedAt, getTotalMembers } from './utils';
 
 import { TypingIndicatorText } from '../../../GroupChannel/components/TypingIndicator';
+import { GroupChannelPreviewActionProps } from '../GroupChannelPreviewAction';
 
 import Badge from '../../../../ui/Badge';
 import ChannelAvatar from '../../../../ui/ChannelAvatar';
@@ -27,17 +25,21 @@ import MessageStatus from '../../../../ui/MessageStatus';
 import Modal from '../../../../ui/Modal';
 import TextButton from '../../../../ui/TextButton';
 
-export interface GroupChannelListItemViewProps {
-  channel: GroupChannel;
+export interface GroupChannelListItemBasicProps {
   tabIndex: number;
-  isTyping: boolean;
-  isSelected: boolean;
+  channel: GroupChannel;
+  onClick: () => void;
+  renderChannelAction: (props: GroupChannelPreviewActionProps) => React.ReactElement;
+  isSelected?: boolean;
+  isTyping?: boolean;
+  onLeaveChannel?: () => Promise<void>;
+}
+
+export interface GroupChannelListItemViewProps extends GroupChannelListItemBasicProps {
   channelName: string;
   isMessageStatusEnabled?: boolean;
-  onClick?: () => void;
-  onLeaveChannel?: () => void;
-  renderChannelAction: (props: { channel: GroupChannel }) => React.ReactElement;
 }
+
 export const GroupChannelListItemView = ({
   channel,
   tabIndex,
@@ -46,7 +48,7 @@ export const GroupChannelListItemView = ({
   channelName,
   isMessageStatusEnabled = true,
   onClick = noop,
-  onLeaveChannel = noop,
+  onLeaveChannel = () => Promise.resolve(),
   renderChannelAction,
 }: GroupChannelListItemViewProps) => {
   const { config } = useSendbirdStateContext();

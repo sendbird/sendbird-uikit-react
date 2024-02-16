@@ -1,5 +1,3 @@
-import './channel-list-ui.scss';
-
 import React from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import ChannelPreview from '../ChannelPreview';
@@ -10,32 +8,22 @@ import * as channelListActions from '../../dux/actionTypes';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { GroupChannelListUIView } from '../../../GroupChannelList/components/GroupChannelListUI/GroupChannelListUIView';
 import AddChannel from '../AddChannel';
+import { GroupChannelListItemBasicProps } from '../../../GroupChannelList/components/GroupChannelListItem/GroupChannelListItemView';
 
-interface RenderChannelPreviewProps {
-  channel: GroupChannel;
-  onLeaveChannel(channel: GroupChannel, onLeaveChannelCb?: (channel: GroupChannel, error?: null) => void): void;
+interface ChannelPreviewProps extends Omit<GroupChannelListItemBasicProps, 'onLeaveChannel'> {
+  onLeaveChannel(channel?: GroupChannel, onLeaveChannelCb?: (channel: GroupChannel, error?: null) => void): Promise<void>;
 }
 
 export interface ChannelListUIProps {
-  renderChannelPreview?: (
-    props: RenderChannelPreviewProps
-  ) => React.ReactElement;
+  renderChannelPreview?: (props: ChannelPreviewProps) => React.ReactElement;
   renderHeader?: (props: void) => React.ReactElement;
   renderPlaceHolderError?: (props: void) => React.ReactElement;
   renderPlaceHolderLoading?: (props: void) => React.ReactElement;
   renderPlaceHolderEmptyList?: (props: void) => React.ReactElement;
 }
 
-const ChannelListUI: React.FC<ChannelListUIProps> = (
-  props: ChannelListUIProps,
-) => {
-  const {
-    renderHeader,
-    renderChannelPreview,
-    renderPlaceHolderError,
-    renderPlaceHolderLoading,
-    renderPlaceHolderEmptyList,
-  } = props;
+const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) => {
+  const { renderHeader, renderChannelPreview, renderPlaceHolderError, renderPlaceHolderLoading, renderPlaceHolderEmptyList } = props;
 
   const {
     onThemeChange,
@@ -56,63 +44,53 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (
   const renderListItem = (props: { item: GroupChannel; index: number }) => {
     const { item: channel, index } = props;
 
-    const onLeaveChannel: RenderChannelPreviewProps['onLeaveChannel'] = (channel, cb) => {
-      logger.info('ChannelList: Leaving channel', channel);
-      channel
-        .leave()
-        .then((res) => {
-          logger.info('ChannelList: Leaving channel success', res);
-          if (cb && typeof cb === 'function') cb(channel, null);
-
-          channelListDispatcher({
-            type: channelListActions.LEAVE_CHANNEL_SUCCESS,
-            payload: channel.url,
-          });
-        })
-        .catch((err) => {
-          logger.error('ChannelList: Leaving channel failed', err);
-          if (cb && typeof cb === 'function') cb(channel, err);
+    const previewProps: ChannelPreviewProps = {
+      channel,
+      tabIndex: index,
+      isSelected: channel?.url === currentChannel?.url,
+      isTyping: typingChannels?.some(({ url }) => url === channel?.url),
+      renderChannelAction: (props) => <ChannelPreviewAction {...props} />,
+      onClick() {
+        if (!isOnline && !sdk?.isCacheEnabled) {
+          logger.warning('ChannelList: Inactivated clicking channel item during offline.');
+          return;
+        }
+        logger.info('ChannelList: Clicked on channel:', channel);
+        channelListDispatcher({
+          type: channelListActions.SET_CURRENT_CHANNEL,
+          payload: channel,
         });
-    };
+      },
+      async onLeaveChannel(channel?: GroupChannel, cb?: (channel: GroupChannel, error?: null) => void) {
+        logger.info('ChannelList: Leaving channel', channel);
+        if (channel) {
+          try {
+            const response = await channel.leave();
 
-    const onClickChannel = () => {
-      if (!isOnline && !sdk?.isCacheEnabled) {
-        logger.warning('ChannelList: Inactivated clicking channel item during offline.');
-        return;
-      }
-      logger.info('ChannelList: Clicked on channel:', channel);
-      channelListDispatcher({
-        type: channelListActions.SET_CURRENT_CHANNEL,
-        payload: channel,
-      });
+            logger.info('ChannelList: Leaving channel success', response);
+            if (cb && typeof cb === 'function') cb(channel, null);
+
+            channelListDispatcher({
+              type: channelListActions.LEAVE_CHANNEL_SUCCESS,
+              payload: channel.url,
+            });
+          } catch (err) {
+            logger.error('ChannelList: Leaving channel failed', err);
+            if (cb && typeof cb === 'function') cb(channel, err);
+          }
+        }
+      },
     };
 
     if (renderChannelPreview) {
       return (
-        <div key={channel?.url} onClick={onClickChannel}>
-          {renderChannelPreview({ channel, onLeaveChannel })}
+        <div key={channel?.url} onClick={previewProps.onClick}>
+          {renderChannelPreview(previewProps)}
         </div>
       );
     }
 
-    return (
-      <ChannelPreview
-        key={channel?.url}
-        tabIndex={index}
-        onClick={onClickChannel}
-        channel={channel}
-        onLeaveChannel={() => onLeaveChannel(channel, null)}
-        isActive={channel?.url === currentChannel?.url}
-        isTyping={typingChannels?.some(({ url }) => url === channel?.url)}
-        renderChannelAction={() => (
-          <ChannelPreviewAction
-            channel={channel}
-            disabled={!isOnline}
-            onLeaveChannel={() => onLeaveChannel(channel, null)}
-          />
-        )}
-      />
-    );
+    return <ChannelPreview key={channel?.url} {...previewProps} />;
   };
 
   return (

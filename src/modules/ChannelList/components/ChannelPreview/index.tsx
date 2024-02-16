@@ -1,54 +1,43 @@
-import './channel-preview.scss';
-
 import React from 'react';
-import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import { SendableMessageType } from '../../../../utils';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useChannelListContext } from '../../context/ChannelListProvider';
-import { GroupChannelListItemView } from '../../../GroupChannelList/components/GroupChannelListItem';
 import { getChannelTitle } from './utils';
+import { GroupChannelListItemBasicProps, GroupChannelListItemView } from '../../../GroupChannelList/components/GroupChannelListItem/GroupChannelListItemView';
 
-interface ChannelPreviewInterface {
-  channel: GroupChannel;
+interface ChannelPreviewInterface extends GroupChannelListItemBasicProps {
+  /** @deprecated Please use `isSelected` instead */
   isActive?: boolean;
-  isTyping?: boolean;
-  onClick: () => void;
-  onLeaveChannel?: () => void;
-  renderChannelAction: (props: { channel: GroupChannel }) => React.ReactElement;
-  tabIndex: number;
 }
 
-const ChannelPreview: React.FC<ChannelPreviewInterface> = ({
+const ChannelPreview = ({
   channel,
   isActive = false,
+  isSelected = false,
   isTyping = false,
   renderChannelAction,
   onLeaveChannel,
   onClick,
   tabIndex,
 }: ChannelPreviewInterface) => {
-  const sbState = useSendbirdStateContext();
-  const {
-    isTypingIndicatorEnabled = false,
-    isMessageReceiptStatusEnabled = false,
-  } = useChannelListContext();
+  const { config } = useSendbirdStateContext();
   const { stringSet } = useLocalization();
+  const { isTypingIndicatorEnabled = false, isMessageReceiptStatusEnabled = false } = useChannelListContext();
 
-  const userId = sbState?.stores?.userStore?.user?.userId;
+  const userId = config.userId;
   const isMessageStatusEnabled = isMessageReceiptStatusEnabled
-    && (channel?.lastMessage?.messageType === 'user' || channel?.lastMessage?.messageType === 'file')
-    && (channel?.lastMessage as SendableMessageType)?.sender?.userId === userId;
+      && (channel?.lastMessage?.messageType === 'user' || channel?.lastMessage?.messageType === 'file')
+      && (channel?.lastMessage as SendableMessageType)?.sender?.userId === userId;
 
-  const channelName = getChannelTitle(channel, userId, stringSet);
   return (
     <GroupChannelListItemView
       channel={channel}
       tabIndex={tabIndex}
       isTyping={isTypingIndicatorEnabled && isTyping}
-      isSelected={isActive}
-      channelName={channelName}
+      isSelected={isSelected ?? isActive}
+      channelName={getChannelTitle(channel, userId, stringSet)}
       isMessageStatusEnabled={isMessageStatusEnabled}
       onClick={onClick}
       onLeaveChannel={onLeaveChannel}
