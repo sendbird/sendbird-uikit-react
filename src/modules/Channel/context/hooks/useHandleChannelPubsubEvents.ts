@@ -5,6 +5,7 @@ import * as channelActions from '../dux/actionTypes';
 import { PUBSUB_TOPICS, SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { shouldPubSubPublishToChannel } from '../../../internalInterfaces';
 import { ChannelActionTypes } from '../dux/actionTypes';
+import { SCROLL_BOTTOM_DELAY_FOR_SEND } from '../../../../utils/consts';
 
 export interface UseHandlePubsubEventsParams {
   channelUrl: string;
@@ -26,12 +27,12 @@ export const useHandleChannelPubsubEvents = ({
     if (pubSub?.subscribe) {
       subscriber.set(PUBSUB_TOPICS.SEND_USER_MESSAGE, pubSub.subscribe(PUBSUB_TOPICS.SEND_USER_MESSAGE, (props) => {
         const { channel, message } = props;
-        scrollIntoLast(0, scrollRef);
         if (channelUrl === channel?.url) {
           dispatcher({
             type: channelActions.SEND_MESSAGE_SUCCESS,
             payload: message,
           });
+          setTimeout(() => scrollIntoLast(0, scrollRef), SCROLL_BOTTOM_DELAY_FOR_SEND);
         }
       }));
       subscriber.set(PUBSUB_TOPICS.SEND_MESSAGE_START, pubSub.subscribe(PUBSUB_TOPICS.SEND_MESSAGE_START, (props) => {
@@ -63,12 +64,12 @@ export const useHandleChannelPubsubEvents = ({
       }));
       subscriber.set(PUBSUB_TOPICS.SEND_FILE_MESSAGE, pubSub.subscribe(PUBSUB_TOPICS.SEND_FILE_MESSAGE, (props) => {
         const { channel, message } = props;
-        scrollIntoLast(0, scrollRef);
         if (channelUrl === channel?.url) {
           dispatcher({
             type: channelActions.SEND_MESSAGE_SUCCESS,
             payload: message,
           });
+          setTimeout(() => scrollIntoLast(0, scrollRef), SCROLL_BOTTOM_DELAY_FOR_SEND);
         }
       }));
       subscriber.set(PUBSUB_TOPICS.UPDATE_USER_MESSAGE, pubSub.subscribe(PUBSUB_TOPICS.UPDATE_USER_MESSAGE, (props) => {

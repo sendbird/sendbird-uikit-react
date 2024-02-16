@@ -10,6 +10,7 @@ import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { PublishingModuleType } from '../../../internalInterfaces';
 import { SendableMessageType } from '../../../../utils';
 import { LoggerInterface } from '../../../../lib/Logger';
+import { SCROLL_BOTTOM_DELAY_FOR_SEND } from '../../../../utils/consts';
 
 type UseSendMessageCallbackOptions = {
   isMentionEnabled: boolean;
@@ -82,7 +83,7 @@ export default function useSendMessageCallback(
             channel: currentGroupChannel,
             publishingModules: [PublishingModuleType.CHANNEL],
           });
-          setTimeout(() => utils.scrollIntoLast(0, scrollRef));
+          setTimeout(() => utils.scrollIntoLast(0, scrollRef), SCROLL_BOTTOM_DELAY_FOR_SEND);
         })
         .onFailed((err, msg) => {
           logger.warning('Channel: Sending message failed!', { message: msg, error: err });

@@ -4,12 +4,13 @@ import { MessageListParams, ReplyType } from '@sendbird/chat/message';
 import * as utils from '../utils';
 import * as messageActionTypes from '../dux/actionTypes';
 import { PREV_RESULT_SIZE, NEXT_RESULT_SIZE } from '../const';
-import { CoreMessageType, isMultipleFilesMessage } from '../../../../utils';
+import { CoreMessageType } from '../../../../utils';
 import { MessageListParams as MessageListParamsInternal } from '../ChannelProvider';
 import { ReplyType as ReplyTypeInternal } from '../../../../types';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { LoggerInterface } from '../../../../lib/Logger';
 import { ChannelActionTypes } from '../dux/actionTypes';
+import { SCROLL_BOTTOM_DELAY_FOR_FETCH } from '../../../../utils/consts';
 
 type UseInitialMessagesFetchOptions = {
   currentGroupChannel: GroupChannel;
@@ -90,7 +91,6 @@ function useInitialMessagesFetch(
         payload: null,
       });
 
-      let multipleFilesMessageCount = 0;
       currentGroupChannel
         .getMessagesByTimestamp(
           initialTimeStamp || new Date().getTime(),
@@ -104,7 +104,6 @@ function useInitialMessagesFetch(
               messages: messages as CoreMessageType[],
             },
           });
-          multipleFilesMessageCount = messages.filter((message) => isMultipleFilesMessage(message as CoreMessageType)).length;
         })
         .catch((error) => {
           logger.error('Channel: Fetching messages failed', error);
@@ -115,14 +114,7 @@ function useInitialMessagesFetch(
         })
         .finally(() => {
           if (!initialTimeStamp) {
-            setTimeout(
-              () => utils.scrollIntoLast(0, scrollRef, setIsScrolled),
-              /**
-               * Rendering MFM takes long time so we need this.
-               * But later we should find better solution.
-               */
-              Math.min(multipleFilesMessageCount * 100, 1000),
-            );
+            setTimeout(() => utils.scrollIntoLast(0, scrollRef, setIsScrolled), SCROLL_BOTTOM_DELAY_FOR_FETCH);
           } else {
             setTimeout(() => {
               utils.scrollToRenderedMessage(

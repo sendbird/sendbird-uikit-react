@@ -8,6 +8,7 @@ import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from '../utils';
 import { SendableMessageType } from '../../../../utils';
 import { PublishingModuleType } from './useSendMultipleFilesMessage';
+import { SCROLL_BOTTOM_DELAY_FOR_SEND } from '../../../../utils/consts';
 
 interface DynamicProps {
   currentChannel: GroupChannel;
@@ -63,7 +64,7 @@ export default function useSendFileMessageCallback({
               },
             },
           });
-          setTimeout(() => scrollIntoLast(), 1000);
+          setTimeout(() => scrollIntoLast(), SCROLL_BOTTOM_DELAY_FOR_SEND);
         })
         .onFailed((error, message) => {
           (message as LocalFileMessage).localUrl = URL.createObjectURL(file);

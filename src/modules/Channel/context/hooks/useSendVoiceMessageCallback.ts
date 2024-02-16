@@ -11,6 +11,7 @@ import {
   META_ARRAY_MESSAGE_TYPE_KEY,
   META_ARRAY_MESSAGE_TYPE_VALUE__VOICE,
   META_ARRAY_VOICE_DURATION_KEY,
+  SCROLL_BOTTOM_DELAY_FOR_SEND,
   VOICE_MESSAGE_FILE_NAME,
   VOICE_MESSAGE_MIME_TYPE,
 } from '../../../../utils/consts';
@@ -79,7 +80,7 @@ export const useSendVoiceMessageCallback = ({
           channel: currentGroupChannel,
           publishingModules: [PublishingModuleType.CHANNEL],
         });
-        setTimeout(() => utils.scrollIntoLast(0, scrollRef), 1000);
+        setTimeout(() => utils.scrollIntoLast(0, scrollRef), SCROLL_BOTTOM_DELAY_FOR_SEND);
       })
       .onFailed((err, failedMessage) => {
         logger.error('Channel: Sending voice message failed!', { failedMessage, err });
