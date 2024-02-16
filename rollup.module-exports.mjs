@@ -36,7 +36,7 @@ export default {
   'utils/message/getOutgoingMessageState': 'src/utils/exports/getOutgoingMessageState.ts',
   'utils/message/isVoiceMessage': 'src/utils/isVoiceMessage.ts',
 
-  // ChannelList
+  // ChannelList - legacy
   ChannelList: 'src/modules/ChannelList/index.tsx',
   'ChannelList/context': 'src/modules/ChannelList/context/ChannelListProvider.tsx',
   'ChannelList/components/AddChannel': 'src/modules/ChannelList/components/AddChannel/index.tsx',
@@ -44,6 +44,15 @@ export default {
   'ChannelList/components/ChannelListHeader': 'src/modules/ChannelList/components/ChannelListHeader/index.tsx',
   'ChannelList/components/ChannelPreview': 'src/modules/ChannelList/components/ChannelPreview/index.tsx',
   'ChannelList/components/ChannelPreviewAction': 'src/modules/ChannelList/components/ChannelPreviewAction.tsx',
+
+  // GroupChannelList
+  GroupChannelList: 'src/modules/GroupChannelList/index.tsx',
+  'GroupChannelList/context': 'src/modules/GroupChannelList/context/GroupChannelListProvider.tsx',
+  'GroupChannelList/components/AddGroupChannel': 'src/modules/GroupChannelList/components/AddGroupChannel/index.tsx',
+  'GroupChannelList/components/GroupChannelListUI': 'src/modules/GroupChannelList/components/GroupChannelListUI/index.tsx',
+  'GroupChannelList/components/GroupChannelListHeader': 'src/modules/GroupChannelList/components/GroupChannelListHeader/index.tsx',
+  'GroupChannelList/components/GroupChannelListItem': 'src/modules/GroupChannelList/components/GroupChannelListItem/index.tsx',
+  'GroupChannelList/components/GroupChannelPreviewAction': 'src/modules/GroupChannelList/components/GroupChannelPreviewAction.tsx',
 
   // ChannelSettings
   ChannelSettings: 'src/modules/ChannelSettings/index.tsx',
@@ -56,7 +65,7 @@ export default {
   'ChannelSettings/components/UserListItem': 'src/modules/ChannelSettings/components/UserListItem/index.tsx',
   'ChannelSettings/components/UserPanel': 'src/modules/ChannelSettings/components/UserPanel/index.tsx',
 
-  // Channel
+  // Channel - legacy
   Channel: 'src/modules/Channel/index.tsx',
   'Channel/context': 'src/modules/Channel/context/ChannelProvider.tsx',
   'Channel/hooks/useInitialMessagesFetch': 'src/modules/Channel/context/hooks/useInitialMessagesFetch.ts',
@@ -69,6 +78,7 @@ export default {
   'Channel/components/FrozenNotification': 'src/modules/Channel/components/FrozenNotification/index.tsx',
   'Channel/components/Message': 'src/modules/Channel/components/Message/index.tsx',
   'Channel/components/MessageInput': 'src/modules/Channel/components/MessageInputWrapper/index.tsx',
+  'Channel/components/MessageInputWrapper': 'src/modules/Channel/components/MessageInputWrapper/index.tsx',
   'Channel/components/MessageList': 'src/modules/Channel/components/MessageList/index.tsx',
   'Channel/components/RemoveMessageModal': 'src/modules/Channel/components/RemoveMessageModal/index.tsx',
   'Channel/components/MessageFeedbackModal': 'src/modules/Channel/components/MessageFeedbackModal/index.tsx',
@@ -76,7 +86,21 @@ export default {
   'Channel/components/UnreadCount': 'src/modules/Channel/components/UnreadCount/index.tsx',
   'Channel/components/SuggestedMentionList': 'src/modules/Channel/components/SuggestedMentionList/index.tsx',
 
-  // TODO: Export components for GroupChannel
+  GroupChannel: 'src/modules/GroupChannel/index.tsx',
+  'GroupChannel/context': 'src/modules/GroupChannel/context/GroupChannelProvider.tsx',
+  'GroupChannel/components/GroupChannelHeader': 'src/modules/GroupChannel/components/GroupChannelHeader/index.tsx',
+  'GroupChannel/components/GroupChannelUI': 'src/modules/GroupChannel/components/GroupChannelUI/index.tsx',
+  'GroupChannel/components/FileViewer': 'src/modules/GroupChannel/components/FileViewer/index.tsx',
+  'GroupChannel/components/FrozenNotification': 'src/modules/GroupChannel/components/FrozenNotification/index.tsx',
+  'GroupChannel/components/Message': 'src/modules/GroupChannel/components/Message/index.tsx',
+  'GroupChannel/components/MessageInputWrapper': 'src/modules/GroupChannel/components/MessageInputWrapper/index.tsx',
+  'GroupChannel/components/MessageList': 'src/modules/GroupChannel/components/MessageList/index.tsx',
+  'GroupChannel/components/RemoveMessageModal': 'src/modules/GroupChannel/components/RemoveMessageModal/index.tsx',
+  'GroupChannel/components/TypingIndicator': 'src/modules/GroupChannel/components/TypingIndicator.tsx',
+  'GroupChannel/components/UnreadCount': 'src/modules/GroupChannel/components/UnreadCount/index.tsx',
+  'GroupChannel/components/SuggestedMentionList': 'src/modules/GroupChannel/components/SuggestedMentionList/index.tsx',
+  'GroupChannel/components/SuggestedReplies': 'src/modules/GroupChannel/components/SuggestedReplies/index.tsx',
+  // 'GroupChannel/components/MessageFeedbackModal': 'src/modules/GroupChannel/components/MessageFeedbackModal/index.tsx', // TODO: move to UI
 
   // OpenChannel
   OpenChannel: 'src/modules/OpenChannel/index.tsx',

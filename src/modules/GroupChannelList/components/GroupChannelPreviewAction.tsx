@@ -7,13 +7,13 @@ import Icon, { IconTypes, IconColors } from '../../../ui/Icon';
 import LeaveChannelModal from './LeaveGroupChannel';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 
-export interface ChannelPreviewActionProps {
+export interface GroupChannelPreviewActionProps {
   channel?: GroupChannel;
-  disabled: boolean;
-  onLeaveChannel(): void;
+  disabled?: boolean;
+  onLeaveChannel?: () => Promise<void>;
 }
 
-export function GroupChannelPreviewAction({ channel, disabled = false, onLeaveChannel }: ChannelPreviewActionProps) {
+export function GroupChannelPreviewAction({ channel, disabled = false, onLeaveChannel }: GroupChannelPreviewActionProps) {
   const parentRef = useRef(null);
   const parentContainerRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
@@ -38,9 +38,8 @@ export function GroupChannelPreviewAction({ channel, disabled = false, onLeaveCh
           <MenuItems parentRef={parentRef} parentContainRef={parentContainerRef} closeDropdown={closeDropdown}>
             <MenuItem
               onClick={() => {
-                if (disabled) {
-                  return;
-                }
+                if (disabled) return;
+
                 setShowModal(true);
                 closeDropdown();
               }}
@@ -56,7 +55,7 @@ export function GroupChannelPreviewAction({ channel, disabled = false, onLeaveCh
           channel={channel}
           onSubmit={() => {
             setShowModal(false);
-            onLeaveChannel();
+            onLeaveChannel?.();
           }}
           onCancel={() => setShowModal(false)}
         />

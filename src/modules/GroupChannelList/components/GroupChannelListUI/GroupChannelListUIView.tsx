@@ -1,3 +1,5 @@
+import './index.scss';
+
 import React, { useState } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 

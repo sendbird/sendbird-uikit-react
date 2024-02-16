@@ -8,19 +8,12 @@ import GroupChannelPreviewAction from '../GroupChannelPreviewAction';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { GroupChannelListItem } from '../GroupChannelListItem';
 import AddGroupChannel from '../AddGroupChannel';
+import { GroupChannelListItemBasicProps } from '../GroupChannelListItem/GroupChannelListItemView';
 
-interface RenderChannelPreviewProps {
-  channel: GroupChannel;
-  onLeaveChannel(
-    channel: GroupChannel,
-    onLeaveChannelCb?: (c: GroupChannel) => void
-  ): void;
-}
+interface GroupChannelItemProps extends GroupChannelListItemBasicProps {}
 
 export interface GroupChannelListUIProps {
-  renderChannelPreview?: (
-    props: RenderChannelPreviewProps
-  ) => React.ReactElement;
+  renderChannelPreview?: (props: GroupChannelItemProps) => React.ReactElement;
   renderHeader?: (props: void) => React.ReactElement;
   renderPlaceHolderError?: (props: void) => React.ReactElement;
   renderPlaceHolderLoading?: (props: void) => React.ReactElement;
@@ -28,20 +21,16 @@ export interface GroupChannelListUIProps {
 }
 
 export const GroupChannelListUI = (props: GroupChannelListUIProps) => {
-  const {
-    renderHeader,
-    renderChannelPreview,
-    renderPlaceHolderError,
-    renderPlaceHolderLoading,
-    renderPlaceHolderEmptyList,
-  } = props;
+  const { renderHeader, renderChannelPreview, renderPlaceHolderError, renderPlaceHolderLoading, renderPlaceHolderEmptyList } = props;
 
   const {
     onChannelSelect,
     onThemeChange,
     allowProfileEdit,
+    typingChannelUrls,
     groupChannels,
     initialized,
+    selectedChannelUrl,
     loadMore,
     onUserProfileUpdated,
   } = useGroupChannelListContext();
@@ -53,50 +42,36 @@ export const GroupChannelListUI = (props: GroupChannelListUIProps) => {
   const renderListItem = (renderProps: { item: GroupChannel; index: number }) => {
     const { item: channel, index } = renderProps;
 
-    const onLeaveChannel: RenderChannelPreviewProps['onLeaveChannel'] = async (
-      targetChannel,
-      cb,
-    ) => {
-      logger.info('ChannelList: Leaving channel', targetChannel);
-      await targetChannel.leave();
-
-      logger.info('ChannelList: Leaving channel success');
-      if (cb && typeof cb === 'function') cb(targetChannel);
-    };
-
-    const onClick = () => {
-      if (isOnline || sdk?.isCacheEnabled) {
-        logger.info('ChannelList: Clicked on channel:', channel);
-        onChannelSelect(channel);
-      } else {
-        logger.warning('ChannelList: Inactivated clicking channel item during offline.');
-      }
+    const itemProps: GroupChannelItemProps = {
+      channel,
+      tabIndex: index,
+      isSelected: channel.url === selectedChannelUrl,
+      isTyping: typingChannelUrls.includes(channel.url),
+      renderChannelAction: (props) => <GroupChannelPreviewAction {...props} />,
+      onClick() {
+        if (isOnline || sdk?.isCacheEnabled) {
+          logger.info('ChannelList: Clicked on channel:', channel);
+          onChannelSelect(channel);
+        } else {
+          logger.warning('ChannelList: Inactivated clicking channel item during offline.');
+        }
+      },
+      async onLeaveChannel() {
+        logger.info('ChannelList: Leaving channel', channel);
+        await channel.leave();
+        logger.info('ChannelList: Leaving channel success');
+      },
     };
 
     if (renderChannelPreview) {
       return (
-        <div key={channel.url} onClick={onClick}>
-          {renderChannelPreview({ channel, onLeaveChannel })}
+        <div key={channel.url} onClick={itemProps.onClick}>
+          {renderChannelPreview(itemProps)}
         </div>
       );
     }
 
-    return (
-      <GroupChannelListItem
-        key={channel.url}
-        tabIndex={index}
-        onClick={onClick}
-        channel={channel}
-        onLeaveChannel={() => onLeaveChannel(channel, null)}
-        renderChannelAction={() => (
-          <GroupChannelPreviewAction
-            channel={channel}
-            disabled={!isOnline}
-            onLeaveChannel={() => onLeaveChannel(channel, null)}
-          />
-        )}
-      />
-    );
+    return <GroupChannelListItem key={channel.url} {...itemProps} />;
   };
 
   return (
