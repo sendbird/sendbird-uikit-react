@@ -18,7 +18,7 @@ import MessageInput from '../../../../ui/MessageInput';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import MessageContent, { MessageContentProps } from '../../../../ui/MessageContent';
 
-import SuggestedReplies from '../SuggestedReplies';
+import SuggestedReplies, { SuggestedRepliesProps } from '../SuggestedReplies';
 import SuggestedMentionListView from '../SuggestedMentionList/SuggestedMentionListView';
 
 export interface MessageProps {
@@ -49,6 +49,7 @@ export interface MessageProps {
    * @description Customizes all child components of the message.
    * */
   renderMessage?: (props: RenderMessageParamsType) => React.ReactElement;
+  renderSuggestedReplies?: (props: SuggestedRepliesProps) => React.ReactElement;
 }
 
 export interface MessageViewProps extends MessageProps {
@@ -98,6 +99,9 @@ const MessageView = (props: MessageViewProps) => {
     renderMessageContent = (props) => <MessageContent {...props} />,
     renderCustomSeparator,
     renderEditInput,
+    renderSuggestedReplies = (props) => (
+      <SuggestedReplies {...props} />
+    ),
     hasSeparator,
     chainTop,
     chainBottom,
@@ -283,9 +287,12 @@ const MessageView = (props: MessageViewProps) => {
           onQuoteMessageClick: onQuoteMessageClick,
           onMessageHeightChange: handleScroll,
         })}
+        { /* Suggested Replies */ }
         {
-          /** Suggested Replies */
-          shouldRenderSuggestedReplies && <SuggestedReplies replyOptions={getSuggestedReplies(message)} onSendMessage={sendUserMessage} />
+          shouldRenderSuggestedReplies && renderSuggestedReplies({
+            replyOptions: getSuggestedReplies(message),
+            onSendMessage: sendUserMessage,
+          })
         }
         {/* Modal */}
         {showRemove && renderRemoveMessageModal({ message, onCancel: () => setShowRemove(false) })}

@@ -1,12 +1,12 @@
 import './index.scss';
 import React, { useState } from 'react';
 
-interface Props {
+export interface SuggestedRepliesProps {
   replyOptions: string[];
   onSendMessage: ({ message }: { message: string }) => void;
 }
 
-export const SuggestedReplies = ({ replyOptions, onSendMessage }: Props) => {
+const SuggestedReplies = ({ replyOptions, onSendMessage }: SuggestedRepliesProps) => {
   const [replied, setReplied] = useState<boolean>(false);
 
   const onClickReply = (

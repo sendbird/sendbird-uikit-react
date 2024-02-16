@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "@sendbird/chat": "^4.10.10",
-    "@sendbird/uikit-tools": "0.0.1-alpha.62",
+    "@sendbird/uikit-tools": "0.0.1-alpha.63",
     "css-vars-ponyfill": "^2.3.2",
     "date-fns": "^2.16.1",
     "dompurify": "^3.0.1"
