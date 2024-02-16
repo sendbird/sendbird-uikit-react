@@ -50,6 +50,7 @@ import { GlobalModalProvider } from '../hooks/useModal';
 import { RenderUserProfileProps } from '../types';
 import PUBSUB_TOPICS, { SBUGlobalPubSub, SBUGlobalPubSubTopicPayloadUnion } from './pubSub/topics';
 import { EmojiManager } from './emojiManager';
+import { uikitConfigStorage } from './utils/uikitConfigStorage';
 
 export { useSendbirdStateContext } from '../hooks/useSendbirdStateContext';
 
@@ -131,6 +132,7 @@ export function SendbirdProvider(props: SendbirdProviderProps) {
 
   return (
     <UIKitConfigProvider
+      storage={uikitConfigStorage}
       localConfigs={{
         common: localConfigs?.common,
         groupChannel: {
@@ -397,7 +399,7 @@ const SendbirdSDK = ({
     >
       <MediaQueryProvider logger={logger} breakpoint={breakpoint}>
         <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
-          <VoiceMessageProvider isVoiceMessageEnabled={configs.groupChannel.channel.enableVoiceMessage}>
+          <VoiceMessageProvider>
             <GlobalModalProvider>
               {children}
             </GlobalModalProvider>

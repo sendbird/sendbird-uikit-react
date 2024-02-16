@@ -1,5 +1,5 @@
-import SbChannel from '@sendbird/uikit-react/Channel'
-import SbChannelList from '@sendbird/uikit-react/ChannelList'
+import SbChannel from '@sendbird/uikit-react/GroupChannel'
+import SbChannelList from '@sendbird/uikit-react/GroupChannelList'
 import {
   Outlet,
   useNavigate,
@@ -19,8 +19,13 @@ export default function ChannelList() {
       <div className='sendbird-chat-desktop__channel-list'>
         <SbChannelList
           disableAutoSelect
-          onChannelSelect={(channel) => {
+          selectedChannelUrl={channelUrl}
+          onChannelCreated={(channel) => {
             navigate(`/channels/${channel.url}`)
+          }}
+          onChannelSelect={(channel) => {
+            if (channel) navigate(`/channels/${channel.url}`)
+            else navigate('/')
           }}
         />
       </div>

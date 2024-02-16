@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import { ReconnectType, StaticTypes, TriggerTypes } from './types';
 import { connect } from './connect';
@@ -22,8 +22,21 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
   } = staticTypes;
   logger?.info?.('SendbirdProvider | useConnect', { ...triggerTypes, ...staticTypes });
 
+  // Note: This is a workaround to prevent the creation of multiple SDK instances when React strict mode is enabled.
+  const connectDeps = useRef<{ appId: string, userId: string }>({
+    appId: '',
+    userId: '',
+  });
+
   useEffect(() => {
     logger?.info?.('SendbirdProvider | useConnect/useEffect', { userId, appId, accessToken });
+
+    if (connectDeps.current.appId === appId && connectDeps.current.userId === userId) {
+      return;
+    } else {
+      connectDeps.current = { appId, userId };
+    }
+
     connect({
       userId,
       appId,
@@ -47,6 +60,7 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
       logger?.error?.('SendbirdProvider | useConnect/useEffect', error);
     });
   }, [userId, appId]);
+
   const reconnect = useCallback(async () => {
     logger?.info?.('SendbirdProvider | useConnect/reconnect/useCallback', { sdk });
 

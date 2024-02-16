@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
-import SBConversation from '@sendbird/uikit-react/Channel'
-import SBChannelList from '@sendbird/uikit-react/ChannelList'
+import SBConversation from '@sendbird/uikit-react/GroupChannel'
+import SBChannelList from '@sendbird/uikit-react/GroupChannelList'
 import SBChannelSettings from '@sendbird/uikit-react/ChannelSettings'
 
 export default function CustomizedApp() {
@@ -14,10 +14,12 @@ export default function CustomizedApp() {
       <div className="sendbird-app__wrap">
         <div className="sendbird-app__channellist-wrap">
           <SBChannelList
+            selectedChannelUrl={currentChannelUrl}
+            onChannelCreated={(channel) => {
+              setCurrentChannelUrl(channel.url)
+            }}
             onChannelSelect={(channel) => {
-              if (channel && channel.url) {
-                setCurrentChannelUrl(channel.url)
-              }
+              setCurrentChannelUrl(channel?.url)
             }}
           />
         </div>

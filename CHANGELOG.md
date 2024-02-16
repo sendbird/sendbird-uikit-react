@@ -1,5 +1,47 @@
 # Changelog - v3
 
+## [v3.12.0] (Feb 16, 2024)
+
+### Features:
+* Local cache is enabled by default
+  * If desired, it can be disabled using sdkInitParams
+  ```tsx
+  import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';
+  
+  const App = () => (
+    <SendbirdProvider
+      // ...
+      sdkInitParams={{ localCacheEnabled: false }}
+    />
+  )
+  ```
+* Added `GroupChannel` and `GroupChannelList` modules.
+  * With the introduction of `GroupChannel` and `GroupChannelList`, a new local caching feature has been added, allowing you to experience a more efficient chat environment.
+    We provide a massive component called `App` that combines all the features. From now on, this component will use `GroupChannel` and `GroupChannelList` instead of `Channel` and `ChannelList`.
+    If you wish to continue using `Channel` and `ChannelList`, you can use `enableLegacyChannelModules` to ensure the previous components are still available for use.
+    ```tsx
+    import SendbirdApp from '@sendbird/uikit-react/App';
+      
+    const App = () => (
+      <SendbirdApp
+        // ...
+        enableLegacyChannelModules
+      />
+    );
+    ```
+  * You can find detailed changes, usage instructions, and migration methods in the document here: [Migration Guide](https://github.com/sendbird/sendbird-uikit-react/blob/main/MIGRATION_COLLECTION.md)
+
+### Fixes:
+
+* Fixed a bug where the session refresh failed when the `accessToken` was changed [#969](https://github.com/sendbird/sendbird-uikit-react/pull/969)
+* Fixed a bug causing infinite loading when the channel is not selected in the Channel module [#970](https://github.com/sendbird/sendbird-uikit-react/pull/970)
+* Fixed a bug where the mention feature was not functioning properly [#971](https://github.com/sendbird/sendbird-uikit-react/pull/971)
+* Fixed a bug where URLs with numbered top-level domains were treated as links [#972](https://github.com/sendbird/sendbird-uikit-react/pull/972)
+* Fixed a bug where message scroll delays were inconsistently applied [#975](https://github.com/sendbird/sendbird-uikit-react/pull/975)
+* Fixed a bug where `isUserIdUsedForNickname` was not functioning properly [#976](https://github.com/sendbird/sendbird-uikit-react/pull/976)
+* Optimized the rendering of `SendbirdProvider`
+* Optimized the SDK initialization logic for StrictMode
+
 ## [v3.11.1] (Feb 08, 2024)
 
 ### Fixes:

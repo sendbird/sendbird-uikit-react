@@ -152,6 +152,7 @@ const stringSet = {
     NO_TITLE: 'No title',
     NO_NAME: '(No name)',
     NO_MEMBERS: '(No members)',
+    LABEL__OPERATOR: 'Operator',
     // Context Menu
     MESSAGE_MENU__COPY: 'Copy',
     MESSAGE_MENU__REPLY: 'Reply',
@@ -226,7 +227,6 @@ const stringSet = {
     FEEDBACK_FAILED_SUBMIT: 'Couldn’t submit. Try again.',
     FEEDBACK_FAILED_SAVE: 'Couldn’t save. Try again.',
     FEEDBACK_FAILED_DELETE: 'Couldn’t delete. Try again.',
-
   },
 };
 

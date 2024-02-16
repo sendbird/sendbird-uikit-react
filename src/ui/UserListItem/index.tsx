@@ -155,7 +155,7 @@ export default function UserListItem({
             type={LabelTypography.SUBTITLE_2}
             color={LabelColors.ONBACKGROUND_2}
           >
-            Operator
+            {stringSet.LABEL__OPERATOR}
           </Label>
         )
       }
