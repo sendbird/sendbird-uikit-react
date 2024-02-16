@@ -6,7 +6,7 @@ interface Props {
   onSendMessage: ({ message }: { message: string }) => void;
 }
 
-const SuggestedReplies = ({ replyOptions, onSendMessage }: Props) => {
+export const SuggestedReplies = ({ replyOptions, onSendMessage }: Props) => {
   const [replied, setReplied] = useState<boolean>(false);
 
   const onClickReply = (

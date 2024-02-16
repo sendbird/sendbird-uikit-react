@@ -99,6 +99,7 @@ export default {
   'GroupChannel/components/TypingIndicator': 'src/modules/GroupChannel/components/TypingIndicator.tsx',
   'GroupChannel/components/UnreadCount': 'src/modules/GroupChannel/components/UnreadCount/index.tsx',
   'GroupChannel/components/SuggestedMentionList': 'src/modules/GroupChannel/components/SuggestedMentionList/index.tsx',
+  'GroupChannel/components/SuggestedReplies': 'src/modules/GroupChannel/components/SuggestedReplies/index.tsx',
   // 'GroupChannel/components/MessageFeedbackModal': 'src/modules/GroupChannel/components/MessageFeedbackModal/index.tsx', // TODO: move to UI
 
   // OpenChannel
