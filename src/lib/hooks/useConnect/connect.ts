@@ -20,6 +20,7 @@ export async function connect({
   customExtensionParams,
   isMobile,
   eventHandlers,
+  isUserIdUsedForNickname,
 }: ConnectTypes): Promise<void> {
   await disconnectSdk({
     logger,
@@ -44,5 +45,6 @@ export async function connect({
     customExtensionParams,
     isMobile,
     eventHandlers,
+    isUserIdUsedForNickname,
   });
 }
