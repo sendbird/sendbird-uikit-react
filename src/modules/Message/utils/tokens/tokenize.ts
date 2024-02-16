@@ -51,7 +51,7 @@ export function identifyMentions({
 }
 
 export function identifyUrlsAndStrings(token: Token[]): Token[] {
-  const URL_REG = /(?:https?:\/\/|www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.(xn--)?[a-z0-9-]{2,20}\b([-a-zA-Z0-9@:%_+[\],.~#?&/=]*[-a-zA-Z0-9@:%_+~#?&/=])*/g;
+  const URL_REG = /(?:https?:\/\/|www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.(xn--)?[a-z]{2,20}\b([-a-zA-Z0-9@:%_+[\],.~#?&/=]*[-a-zA-Z0-9@:%_+~#?&/=])*/g;
   const results: Token[] = token.map((token) => {
     if (token.type !== TOKEN_TYPES.undetermined) {
       return token;
@@ -73,15 +73,13 @@ export function identifyUrlsAndStrings(token: Token[]): Token[] {
       const head = restText.slice(0, start - cursor);
       const mid = text;
       const tail = restText.slice(end - cursor);
-      items.push({ value: head, type: TOKEN_TYPES.string }, { value: mid, type: TOKEN_TYPES.url });
+
+      if (head.length > 0) items.push({ value: head, type: TOKEN_TYPES.string });
+      items.push({ value: mid, type: TOKEN_TYPES.url });
       if (tail.length > 0) items.push({ value: tail, type: TOKEN_TYPES.string });
       cursor = end;
     });
 
-    // Remove the first empty string
-    if (items[0].value === '' && items[0].type === TOKEN_TYPES.string) {
-      items.shift();
-    }
     return items;
   }).flat();
 
