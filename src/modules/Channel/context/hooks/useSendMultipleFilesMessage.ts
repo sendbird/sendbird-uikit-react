@@ -14,6 +14,7 @@ import {
   shouldPubSubPublishToThread,
 } from '../../../internalInterfaces';
 import { scrollIntoLast as scrollIntoLastForThread } from '../../../Thread/context/utils';
+import { SCROLL_BOTTOM_DELAY_FOR_SEND } from '../../../../utils/consts';
 
 export type OnBeforeSendMFMType = (
   files: Array<File>,
@@ -108,7 +109,6 @@ export const useSendMultipleFilesMessage = ({
               channel: currentChannel,
               publishingModules,
             });
-            // We need this delay because rendering MFM takes time due to large image files.
             setTimeout(() => {
               if (scrollRef && shouldPubSubPublishToChannel(publishingModules)) {
                 scrollIntoLastForChannel(0, scrollRef);
@@ -116,7 +116,7 @@ export const useSendMultipleFilesMessage = ({
               if (shouldPubSubPublishToThread(publishingModules)) {
                 scrollIntoLastForThread(0);
               }
-            }, 100);
+            }, SCROLL_BOTTOM_DELAY_FOR_SEND);
           })
           .onFailed((error, failedMessage: MultipleFilesMessage) => {
             logger.error('Channel: Sending MFM failed.', { error, failedMessage });
@@ -134,15 +134,6 @@ export const useSendMultipleFilesMessage = ({
               message: succeededMessage,
               publishingModules,
             });
-            // We need this delay because rendering MFM takes time due to large image files.
-            setTimeout(() => {
-              if (scrollRef && shouldPubSubPublishToChannel(publishingModules)) {
-                scrollIntoLastForChannel(0, scrollRef);
-              }
-              if (shouldPubSubPublishToThread(publishingModules)) {
-                scrollIntoLastForThread(0);
-              }
-            }, 100);
             resolve(succeededMessage);
           });
       } catch (error) {

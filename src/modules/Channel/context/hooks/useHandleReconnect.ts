@@ -9,8 +9,9 @@ import { Logger } from '../../../../lib/SendbirdState';
 import { MarkAsReadSchedulerType } from '../../../../lib/hooks/useMarkAsReadScheduler';
 import useReconnectOnIdle from './useReconnectOnIdle';
 import { ChannelActionTypes } from '../dux/actionTypes';
-import { CoreMessageType, isMultipleFilesMessage } from '../../../../utils';
+import { CoreMessageType } from '../../../../utils';
 import { SdkStore } from '../../../../lib/types';
+import { SCROLL_BOTTOM_DELAY_FOR_FETCH } from '../../../../utils/consts';
 
 interface DynamicParams {
   isOnline: boolean;
@@ -73,7 +74,6 @@ function useHandleReconnect(
           payload: null,
         });
 
-        let multipleFilesMessageCount = 0;
         sdk?.groupChannel?.getChannel(currentGroupChannel?.url)
           .then((groupChannel) => {
             const lastMessageTime = new Date().getTime();
@@ -90,15 +90,7 @@ function useHandleReconnect(
                     messages: messages as CoreMessageType[],
                   },
                 });
-                multipleFilesMessageCount = messages.filter((message) => isMultipleFilesMessage(message as CoreMessageType)).length;
-                setTimeout(
-                  () => utils.scrollIntoLast(0, scrollRef),
-                  /**
-                   * Rendering MFM takes long time so we need this.
-                   * But later we should find better solution.
-                   */
-                  Math.min(multipleFilesMessageCount * 100, 1000),
-                );
+                setTimeout(() => utils.scrollIntoLast(0, scrollRef), SCROLL_BOTTOM_DELAY_FOR_FETCH);
               })
               .catch((error) => {
                 logger.error('Channel: Fetching messages failed', error);

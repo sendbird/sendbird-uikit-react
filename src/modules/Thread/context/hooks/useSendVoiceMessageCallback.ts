@@ -11,6 +11,7 @@ import {
   META_ARRAY_VOICE_DURATION_KEY,
   VOICE_MESSAGE_FILE_NAME,
   VOICE_MESSAGE_MIME_TYPE,
+  SCROLL_BOTTOM_DELAY_FOR_SEND,
 } from '../../../../utils/consts';
 import { SendableMessageType } from '../../../../utils';
 import { PublishingModuleType } from '../../../internalInterfaces';
@@ -80,7 +81,7 @@ export const useSendVoiceMessageCallback = ({
             },
           },
         });
-        setTimeout(() => scrollIntoLast(), 1000);
+        setTimeout(() => scrollIntoLast(), SCROLL_BOTTOM_DELAY_FOR_SEND);
       })
       .onFailed((error, message) => {
         (message as LocalFileMessage).localUrl = URL.createObjectURL(file);

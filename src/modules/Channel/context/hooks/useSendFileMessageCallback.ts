@@ -10,6 +10,7 @@ import { PublishingModuleType } from '../../../internalInterfaces';
 import { LoggerInterface } from '../../../../lib/Logger';
 import { SendableMessageType } from '../../../../utils';
 import { SendBirdState } from '../../../../lib/types';
+import { SCROLL_BOTTOM_DELAY_FOR_SEND } from '../../../../utils/consts';
 
 type UseSendFileMessageCallbackOptions = {
   currentGroupChannel: null | GroupChannel;
@@ -55,7 +56,7 @@ export default function useSendFileMessageCallback(
             channel: currentGroupChannel,
             publishingModules: [PublishingModuleType.CHANNEL],
           });
-          setTimeout(() => utils.scrollIntoLast(0, scrollRef), 1000);
+          setTimeout(() => utils.scrollIntoLast(0, scrollRef), SCROLL_BOTTOM_DELAY_FOR_SEND);
         })
         .onFailed((err, failedMessage) => {
           logger.error('Channel: Sending file message failed!', { failedMessage, err });

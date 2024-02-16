@@ -40,7 +40,7 @@ export const scrollIntoLast = (
   }
   try {
     const scrollDOM = scrollRef?.current || document.querySelector('.sendbird-conversation__messages-padding');
-    scrollDOM.scrollTop = scrollRef.current.scrollHeight;
+    scrollDOM.scrollTop = scrollDOM.scrollHeight;
     setIsScrolled?.(true);
   } catch (error) {
     setTimeout(() => {
