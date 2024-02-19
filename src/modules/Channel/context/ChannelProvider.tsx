@@ -52,9 +52,9 @@ import { PublishingModuleType } from '../../internalInterfaces';
 import { ChannelActionTypes } from './dux/actionTypes';
 
 export type MessageListParams = {
-  // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
+  // https://sendbird.com/docs/chat/sdk/v4/javascript/ref/interfaces/_sendbird_chat_message.MessageListParams.html
   replyType?: string,
-  messageType?: string,
+  messageTypeFilter?: string,
   prevResultSize?: number,
   nextResultSize?: number,
   reverse?: boolean, // TODO: Deprecate this props, because it might not work
@@ -64,8 +64,8 @@ export type MessageListParams = {
   includeThreadInfo?: boolean,
   includeParentMessageInfo?: boolean,
   showSubchannelMessagesOnly?: boolean,
-  customTypes?: Array<string>,
-  senderUserIds?: Array<string>,
+  customTypesFilter?: Array<string>,
+  senderUserIdsFilter?: Array<string>,
 };
 
 export type ChannelQueries = {
