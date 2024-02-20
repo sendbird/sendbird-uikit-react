@@ -1,16 +1,11 @@
-import React, {
-  useEffect,
-  useState,
-} from 'react';
-import {
-  GroupChannel,
-  GroupChannelUpdateParams,
-} from '@sendbird/chat/groupChannel';
+import React, { useEffect, useState } from 'react';
+import { GroupChannel, GroupChannelUpdateParams } from '@sendbird/chat/groupChannel';
 
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { RenderUserProfileProps } from '../../../types';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import uuidv4 from '../../../utils/uuid';
+import { useAsyncRequest } from '../../../hooks/useAsyncRequest';
 
 interface ApplicationUserListQuery {
   limit?: number;
@@ -54,10 +49,11 @@ interface ChannelSettingsProviderInterface {
   setChannelUpdateId(uniqId: string): void;
   forceUpdateUI(): void;
   channel: GroupChannel;
+  loading: boolean;
   invalidChannel: boolean;
 }
 
-const ChannelSettingsContext = React.createContext<ChannelSettingsProviderInterface|null>(undefined);
+const ChannelSettingsContext = React.createContext<ChannelSettingsProviderInterface | null>(undefined);
 
 const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: ChannelSettingsContextProps) => {
   const {
@@ -78,63 +74,66 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
   const { sdkStore } = stores;
   const { logger, onUserProfileMessage } = config;
 
-  const { initialized } = sdkStore;
-  const sdk = sdkStore?.sdk;
-
   // hack to keep track of channel updates by triggering useEffect
   const [channelUpdateId, setChannelUpdateId] = useState(uuidv4());
-  const [channel, setChannel] = useState(null);
-  const [invalidChannel, setInvalidChannel] = useState(false);
+  const forceUpdateUI = () => setChannelUpdateId(uuidv4());
 
-  const forceUpdateUI = () => {
-    setChannelUpdateId(uuidv4());
-  };
+  const {
+    response = null,
+    loading,
+    error,
+    refresh,
+  } = useAsyncRequest(
+    async () => {
+      logger.info('ChannelSettings: fetching channel');
+
+      let errorMessage: string | undefined;
+
+      if (!channelUrl) {
+        errorMessage = 'channel url is required';
+      } else if (!sdkStore.initialized || !sdkStore.sdk) {
+        errorMessage = 'SDK is not initialized';
+      } else if (!sdkStore.sdk.groupChannel) {
+        errorMessage = 'GroupChannelModule is not specified in the SDK';
+      }
+
+      if (errorMessage) {
+        logger.warning(`ChannelSettings: ${errorMessage}`);
+        throw new Error(errorMessage);
+      }
+
+      return sdkStore.sdk.groupChannel.getChannel(channelUrl);
+    },
+    { resetResponseOnRefresh: true },
+  );
 
   useEffect(() => {
-    logger.info('ChannelSettings: Setting up');
-    if (!channelUrl || !initialized || !sdk) {
-      logger.warning('ChannelSettings: Setting up failed', 'No channelUrl or sdk uninitialized');
-      setInvalidChannel(false);
-    } else {
-      if (!sdk || !sdk.groupChannel) {
-        logger.warning('ChannelSettings: No GroupChannel');
-        return;
-      }
-      sdk.groupChannel.getChannel(channelUrl).then((groupChannel) => {
-        if (!groupChannel) {
-          logger.warning('ChannelSettings: Channel not found');
-          setInvalidChannel(true);
-        } else {
-          logger.info('ChannelSettings: Fetched group channel', groupChannel);
-          setInvalidChannel(false);
-          setChannel(groupChannel);
-        }
-      });
-    }
-  }, [channelUrl, initialized, channelUpdateId]);
+    refresh();
+  }, [channelUrl, sdkStore.initialized, channelUpdateId]);
 
   return (
-    <ChannelSettingsContext.Provider value={{
-      channelUrl,
-      onCloseClick,
-      onLeaveChannel,
-      onChannelModified,
-      onBeforeUpdateChannel,
-      queries,
-      overrideInviteUser,
-      setChannelUpdateId,
-      forceUpdateUI,
-      channel,
-      invalidChannel,
-    }}>
+    <ChannelSettingsContext.Provider
+      value={{
+        channelUrl,
+        onCloseClick,
+        onLeaveChannel,
+        onChannelModified,
+        onBeforeUpdateChannel,
+        queries,
+        overrideInviteUser,
+        setChannelUpdateId,
+        forceUpdateUI,
+        channel: response,
+        loading,
+        invalidChannel: Boolean(error),
+      }}
+    >
       <UserProfileProvider
         renderUserProfile={props?.renderUserProfile}
         disableUserProfile={props?.disableUserProfile ?? config?.disableUserProfile}
         onUserProfileMessage={onUserProfileMessage}
       >
-        <div className={`sendbird-channel-settings ${className}`}>
-          {children}
-        </div>
+        <div className={`sendbird-channel-settings ${className}`}>{children}</div>
       </UserProfileProvider>
     </ChannelSettingsContext.Provider>
   );
@@ -143,7 +142,4 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
 export type UseChannelSettingsType = () => ChannelSettingsProviderInterface;
 const useChannelSettingsContext: UseChannelSettingsType = () => React.useContext(ChannelSettingsContext);
 
-export {
-  ChannelSettingsProvider,
-  useChannelSettingsContext,
-};
+export { ChannelSettingsProvider, useChannelSettingsContext };
