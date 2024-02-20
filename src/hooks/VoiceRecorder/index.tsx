@@ -42,42 +42,43 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
   const [permissionWarning, setPermissionWarning] = useState<boolean>(false);
   const { stringSet } = useLocalization();
 
-  const checkPermission = () => {
-    try {
-      // Type '"microphone"' is not assignable to type 'PermissionName'.ts(2322)
-      // this is typescript issue
-      // https://github.com/microsoft/TypeScript/issues/33923
-      // @ts-expect-error
-      navigator.permissions.query({ name: 'microphone' }).then((result) => {
-        if (result.state === 'denied') {
-          logger.warning('VoiceRecorder: Permission denied.');
-          setPermissionWarning(true);
-        }
-      });
-    } catch (error) {
-      logger.warning('VoiceRecorder: Failed to check permission.', error);
-    }
-  };
+  const [webAudioUtils, setWebAudioUtils] = useState(null);
 
   const browserSupportMimeType = BROWSER_SUPPORT_MIME_TYPE_LIST.find((mimeType) => MediaRecorder.isTypeSupported(mimeType)) ?? '';
-  if (!browserSupportMimeType) {
+  if (isVoiceMessageEnabled && !browserSupportMimeType) {
     logger.error('VoiceRecorder: Browser does not support mimeType', { mimmeTypes: BROWSER_SUPPORT_MIME_TYPE_LIST });
   }
 
-  const [webAudioUtils, setWebAudioUtils] = useState(null);
   useEffect(() => {
     if (isVoiceMessageEnabled && !webAudioUtils) {
       import('./WebAudioUtils').then((data) => {
         setWebAudioUtils(data);
       });
     }
-  }, []);
+  }, [isVoiceMessageEnabled, webAudioUtils]);
 
   const start = useCallback((eventHandler: VoiceRecorderEventHandler): void => {
     if (isVoiceMessageEnabled && !webAudioUtils) {
       logger.error('VoiceRecorder: Recording audio processor is being loaded.');
       return;
     }
+
+    const checkPermission = () => {
+      try {
+        // Type '"microphone"' is not assignable to type 'PermissionName'.ts(2322)
+        // this is typescript issue
+        // https://github.com/microsoft/TypeScript/issues/33923
+        // @ts-expect-error
+        navigator.permissions.query({ name: 'microphone' }).then((result) => {
+          if (result.state === 'denied') {
+            logger.warning('VoiceRecorder: Permission denied.');
+            setPermissionWarning(true);
+          }
+        });
+      } catch (error) {
+        logger.warning('VoiceRecorder: Failed to check permission.', error);
+      }
+    };
 
     logger.info('VoiceRecorder: Start recording.');
     if (mediaRecorder) {
