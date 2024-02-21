@@ -4,16 +4,19 @@ import { MutedState } from '@sendbird/chat/groupChannel';
 import './index.scss';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
+import { useThreadContext } from '../../context/ThreadProvider';
+import { useLocalization } from '../../../../lib/LocalizationContext';
+
 import MessageInput from '../../../../ui/MessageInput';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import { SuggestedMentionList } from '../SuggestedMentionList';
-import { useThreadContext } from '../../context/ThreadProvider';
-import { useLocalization } from '../../../../lib/LocalizationContext';
 import { VoiceMessageInputWrapper } from '../../../GroupChannel/components/MessageInputWrapper';
 import { Role } from '../../../../lib/types';
+
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
-import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../../Channel/context/utils';
 import { useHandleUploadFiles } from '../../../Channel/context/hooks/useHandleUploadFiles';
+import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../../Channel/context/utils';
 
 export interface ThreadMessageInputProps {
   className?: string;
@@ -37,6 +40,7 @@ const ThreadMessageInput = (
   } = props;
 
   const { config } = useSendbirdStateContext();
+  const { isMobile } = useMediaQueryContext();
   const { stringSet } = useLocalization();
   const {
     isMentionEnabled,
@@ -163,11 +167,12 @@ const ThreadMessageInput = (
             <MessageInput
               className="sendbird-thread-message-input__message-input"
               messageFieldId="sendbird-message-input-text-field--thread"
-              disabled={threadInputDisabled}
               channel={currentChannel}
+              channelUrl={currentChannel?.url}
+              isMobile={isMobile}
+              disabled={threadInputDisabled}
               acceptableMimeTypes={acceptableMimeTypes}
               setMentionedUsers={setMentionedUsers}
-              channelUrl={currentChannel?.url}
               mentionSelectedUser={selectedUser}
               isMentionEnabled={isMentionEnabled}
               isVoiceMessageEnabled={isVoiceMessageEnabled}

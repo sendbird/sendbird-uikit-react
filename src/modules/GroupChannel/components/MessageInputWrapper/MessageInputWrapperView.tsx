@@ -200,6 +200,7 @@ export const MessageInputWrapperView = React.forwardRef((
           className="sendbird-message-input-wrapper__message-input"
           channel={currentChannel}
           channelUrl={currentChannel?.url}
+          isMobile={isMobile}
           acceptableMimeTypes={acceptableMimeTypes}
           mentionSelectedUser={selectedUser}
           isMentionEnabled={isMentionEnabled}

@@ -65,6 +65,7 @@ type MessageInputProps = {
   className?: string | string[];
   messageFieldId?: string;
   isEdit?: boolean;
+  isMobile?: boolean;
   isMentionEnabled?: boolean;
   isVoiceMessageEnabled?: boolean;
   isSelectingMultipleFilesEnabled?: boolean;
@@ -96,6 +97,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     className = '',
     messageFieldId = '',
     isEdit = false,
+    isMobile = false,
     isMentionEnabled = false,
     isVoiceMessageEnabled = true,
     isSelectingMultipleFilesEnabled = false,
@@ -410,8 +412,13 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
           const { userid = '' } = dataset;
           messageText += innerText;
           mentionTemplate += `${USER_MENTION_TEMP_CHAR}{${userid}}`;
+        } else if (node.nodeType === NodeTypes.ElementNode && node.nodeName === NodeNames.Br) {
           messageText += '\n';
           mentionTemplate += '\n';
+        } else if (node?.nodeType === NodeTypes.ElementNode && node?.nodeName === NodeNames.Div) {
+          const { textContent = '' } = node;
+          messageText += `\n${textContent}`;
+          mentionTemplate += `\n${textContent}`;
         } else {
           // other nodes including text node
           const { textContent = '' } = node;
@@ -459,8 +466,15 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
               if (
                 !e.shiftKey
                 && e.key === MessageInputKeys.Enter
+                && !isMobile
                 && internalRef?.current?.textContent?.trim().length > 0
                 && e?.nativeEvent?.isComposing !== true
+                /**
+                 * NOTE: What isComposing does?
+                 * Check if the user has finished composing characters
+                 * (e.g., for languages like Korean, Japanese, where characters are composed from multiple keystrokes)
+                 * Prevents executing the code while the user is still composing characters.
+                 */
               ) {
                 /**
                  * NOTE: contentEditable does not work as expected in mobile WebKit(Safari).
