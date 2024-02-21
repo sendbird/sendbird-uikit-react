@@ -1,11 +1,11 @@
+import type { EmojiContainer } from '@sendbird/chat';
+import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
+import type { ReactionEvent } from '@sendbird/chat/message';
+
+import type { MessageListParams } from '../ChannelProvider';
+import type { CoreMessageType, SendableMessageType } from '../../../../utils';
+import type { FileUploadedPayload } from '../hooks/useSendMultipleFilesMessage';
 import { CreateAction } from '../../../../utils/typeHelpers/reducers/createAction';
-import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { CoreMessageType, SendableMessageType } from '../../../../utils';
-import { EmojiContainer } from '@sendbird/chat';
-import { ReactionEvent } from '@sendbird/chat/message';
-import { MessageListParams } from '../ChannelProvider';
-import { FileUploadedPayload } from '../hooks/useSendMultipleFilesMessage';
-import { Member } from '@sendbird/chat/lib/__definition';
 
 export const RESET_MESSAGES = 'RESET_MESSAGES';
 export const FETCH_INITIAL_MESSAGES_START = 'FETCH_INITIAL_MESSAGES_START';
