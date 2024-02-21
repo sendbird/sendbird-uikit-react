@@ -24,12 +24,7 @@ export function useAsyncRequest<T>(request: Request<T>, options?: Options): Retu
 
   const updateWithRequest = async () => {
     try {
-      setState(({ ...draft }) => {
-        if (options.resetResponseOnRefresh) draft.response = undefined;
-        draft.error = undefined;
-        return draft;
-      });
-
+      setState((prev) => ({ loading: true, error: undefined, response: options?.resetResponseOnRefresh ? undefined : prev.response }));
       const response = await request();
       setState((prev) => ({ ...prev, response, loading: false }));
     } catch (error) {
