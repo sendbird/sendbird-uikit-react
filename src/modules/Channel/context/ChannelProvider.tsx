@@ -15,6 +15,7 @@ import type {
   UserMessage,
   UserMessageCreateParams,
   UserMessageUpdateParams,
+  MessageListParams as SDKMessageListParams,
 } from '@sendbird/chat/message';
 import type { EmojiContainer, SendbirdError, User } from '@sendbird/chat';
 
@@ -51,23 +52,13 @@ import { useHandleChannelPubsubEvents } from './hooks/useHandleChannelPubsubEven
 import { PublishingModuleType } from '../../internalInterfaces';
 import { ChannelActionTypes } from './dux/actionTypes';
 
-export type MessageListParams = {
-  // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
-  replyType?: string,
-  messageType?: string,
-  prevResultSize?: number,
-  nextResultSize?: number,
-  reverse?: boolean, // TODO: Deprecate this props, because it might not work
-  isInclusive?: boolean,
-  includeMetaArray?: boolean,
-  includeReactions?: boolean,
-  includeThreadInfo?: boolean,
-  includeParentMessageInfo?: boolean,
-  showSubchannelMessagesOnly?: boolean,
-  customTypes?: Array<string>,
-  senderUserIds?: Array<string>,
-};
-
+export interface MessageListParams extends Partial<SDKMessageListParams> { // make `prevResultSize` and `nextResultSize` to optional
+  /**
+   * @deprecated
+   * It won't work even if you activate this props
+   */
+  reverse?: boolean; // TODO: Deprecate this props, because it might not work
+}
 export type ChannelQueries = {
   messageListParams?: MessageListParams;
 };
