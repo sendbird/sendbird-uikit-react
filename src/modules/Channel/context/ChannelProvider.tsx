@@ -57,7 +57,7 @@ export interface MessageListParams extends Partial<SDKMessageListParams> { // ma
    * @deprecated
    * It won't work even if you activate this props
    */
-  reverse?: boolean;  // TODO: Deprecate this props, because it might not work
+  reverse?: boolean; // TODO: Deprecate this props, because it might not work
 }
 export type ChannelQueries = {
   messageListParams?: MessageListParams;
