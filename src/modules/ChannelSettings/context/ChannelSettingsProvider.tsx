@@ -48,34 +48,32 @@ interface ChannelSettingsProviderInterface {
   queries?: ChannelSettingsQueries;
   setChannelUpdateId(uniqId: string): void;
   forceUpdateUI(): void;
-  channel: GroupChannel;
+  channel: GroupChannel | null;
   loading: boolean;
   invalidChannel: boolean;
 }
 
-const ChannelSettingsContext = React.createContext<ChannelSettingsProviderInterface | null>(undefined);
+const ChannelSettingsContext = React.createContext<ChannelSettingsProviderInterface | null>(null);
 
-const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: ChannelSettingsContextProps) => {
-  const {
-    children,
-    className,
-    channelUrl,
-    onCloseClick,
-    onLeaveChannel,
-    onChannelModified,
-    overrideInviteUser,
-    onBeforeUpdateChannel,
-    queries,
-  } = props;
-
-  // fetch store from <SendbirdProvider />
-  const globalStore = useSendbirdStateContext();
-  const { config, stores } = globalStore;
+const ChannelSettingsProvider = ({
+  children,
+  className,
+  channelUrl,
+  onCloseClick,
+  onLeaveChannel,
+  onChannelModified,
+  overrideInviteUser,
+  onBeforeUpdateChannel,
+  queries,
+  renderUserProfile,
+  disableUserProfile,
+}: ChannelSettingsContextProps) => {
+  const { config, stores } = useSendbirdStateContext();
   const { sdkStore } = stores;
   const { logger, onUserProfileMessage } = config;
 
   // hack to keep track of channel updates by triggering useEffect
-  const [channelUpdateId, setChannelUpdateId] = useState(uuidv4());
+  const [channelUpdateId, setChannelUpdateId] = useState(() => uuidv4());
   const forceUpdateUI = () => setChannelUpdateId(uuidv4());
 
   const {
@@ -109,7 +107,7 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
 
   useEffect(() => {
     refresh();
-  }, [channelUrl, sdkStore.initialized, channelUpdateId]);
+  }, [channelUrl, channelUpdateId]);
 
   return (
     <ChannelSettingsContext.Provider
@@ -129,8 +127,8 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
       }}
     >
       <UserProfileProvider
-        renderUserProfile={props?.renderUserProfile}
-        disableUserProfile={props?.disableUserProfile ?? config?.disableUserProfile}
+        renderUserProfile={renderUserProfile}
+        disableUserProfile={disableUserProfile ?? config?.disableUserProfile}
         onUserProfileMessage={onUserProfileMessage}
       >
         <div className={`sendbird-channel-settings ${className}`}>{children}</div>
@@ -139,7 +137,5 @@ const ChannelSettingsProvider: React.FC<ChannelSettingsContextProps> = (props: C
   );
 };
 
-export type UseChannelSettingsType = () => ChannelSettingsProviderInterface;
-const useChannelSettingsContext: UseChannelSettingsType = () => React.useContext(ChannelSettingsContext);
-
+const useChannelSettingsContext = () => React.useContext(ChannelSettingsContext);
 export { ChannelSettingsProvider, useChannelSettingsContext };
