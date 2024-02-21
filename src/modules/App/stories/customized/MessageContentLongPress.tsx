@@ -43,7 +43,6 @@ const MessageContentLongPress = () => {
               <MessageContent
                 {...props}
                 onLongPress={(e, contentRef) => {
-                  console.log('## here: ', contentRef);
                   if (contentRef?.current) {
                     const belowContainer = document.createElement('div');
                     belowContainer.style.cssText = 'background-color: white;';
