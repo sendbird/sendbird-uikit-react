@@ -79,12 +79,6 @@ export type MessageTemplateTheme = {
   };
 };
 
-export type MessageTemplateDataSchemaProperty = {
-  key: string;
-  name: string;
-  type: 'string' | 'image' | 'action';
-};
-
 export type MessageTemplateItem = ComponentsUnion['properties'];
 
 export type MessageTemplateData = {
@@ -96,14 +90,13 @@ export type SendbirdMessageTemplate = {
   key: string;
   created_at: number;
   updated_at: number;
-  data_schema: { properties: MessageTemplateDataSchemaProperty[] };
   ui_template: {
     version: number;
     body: {
       items: MessageTemplateItem[];
     };
   };
-  color_variables: Record<string, string>;
+  color_variables?: Record<string, string>;
 
   name?: string;
 };

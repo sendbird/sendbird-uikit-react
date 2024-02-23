@@ -2,7 +2,7 @@ import './index.scss';
 import './__experimental__typography.scss';
 
 import React, { useEffect, useMemo, useReducer, useState } from 'react';
-import { User } from '@sendbird/chat';
+import SendbirdChat, { User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { UIKitConfigProvider, useUIKitConfig } from '@sendbird/uikit-tools';
 
@@ -16,7 +16,7 @@ import appInfoReducers from './dux/appInfo/reducers';
 
 import sdkInitialState from './dux/sdk/initialState';
 import userInitialState from './dux/user/initialState';
-import appInfoInitialState from './dux/appInfo/initialState';
+import appInfoInitialState, { MessageTemplatesInfo, ProcessedMessageTemplate } from './dux/appInfo/initialState';
 
 import useOnlineStatus from './hooks/useOnlineStatus';
 import useConnect from './hooks/useConnect';
@@ -46,13 +46,25 @@ import {
   CommonUIKitConfigProps,
   SendbirdChatInitParams,
   CustomExtensionParams,
-  SBUEventHandlers,
+  SBUEventHandlers, SendbirdProviderUtils,
 } from './types';
 import { GlobalModalProvider } from '../hooks/useModal';
 import { RenderUserProfileProps } from '../types';
 import PUBSUB_TOPICS, { SBUGlobalPubSub, SBUGlobalPubSubTopicPayloadUnion } from './pubSub/topics';
 import { EmojiManager } from './emojiManager';
 import { uikitConfigStorage } from './utils/uikitConfigStorage';
+import { APP_INFO_ACTIONS } from './dux/appInfo/actionTypes';
+import { SendbirdMessageTemplate } from '../ui/TemplateMessageItemBody/types';
+import {
+  getProcessedTemplate,
+  getProcessedTemplates,
+} from './dux/appInfo/utils';
+import { CACHED_MESSAGE_TEMPLATES_KEY, CACHED_MESSAGE_TEMPLATES_TOKEN_KEY } from '../modules/App/types';
+
+import { MessageTemplate, MessageTemplateListResult } from '@sendbird/chat/lib/__definition';
+
+const MESSAGE_TEMPLATES_FETCH_LIMIT = 20;
+const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 150;
 
 export { useSendbirdStateContext } from '../hooks/useSendbirdStateContext';
 
@@ -201,7 +213,150 @@ const SendbirdSDK = ({
     multipleFilesMessageFileCountLimit,
   } = sdk?.appInfo ?? {};
 
+  const messageTemplatesInfo: MessageTemplatesInfo | undefined = appInfoStore?.messageTemplatesInfo;
+  const {
+    INITIALIZE_MESSAGE_TEMPLATES_INFO,
+    UPSERT_MESSAGE_TEMPLATE,
+    UPSERT_WAITING_TEMPLATE_KEY,
+  } = APP_INFO_ACTIONS;
+
   useTheme(colorSet);
+
+  const getCachedTemplate = (key: string): ProcessedMessageTemplate | null => {
+    if (!messageTemplatesInfo) return null;
+
+    let cachedTemplate: ProcessedMessageTemplate | null = null;
+    const cachedMessageTemplates: Record<string, ProcessedMessageTemplate> | null = messageTemplatesInfo?.templatesMap ?? null;
+    if (cachedMessageTemplates) {
+      cachedTemplate = cachedMessageTemplates[key] ?? null;
+    }
+    return cachedTemplate;
+  };
+
+  /**
+   * Fetches a single message template by given key and then
+   * returns processed template for updating templates info in global state.
+   * WARNING: If no such templates exists or any error occurs in response, return null.
+   */
+  const fetchProcessedMessageTemplate = async (
+    key: string,
+  ): Promise<ProcessedMessageTemplate | null> => {
+    try {
+      const newTemplate: MessageTemplate = await sdk.message.getMessageTemplate(key);
+      const parsedTemplate: SendbirdMessageTemplate = JSON.parse(newTemplate.template);
+      return getProcessedTemplate(parsedTemplate);
+    } catch (e) {
+      logger?.error?.('Sendbird | fetchProcessedMessageTemplate failed', e);
+      return null;
+    }
+  };
+
+  const fetchAllMessageTemplates = async (readySdk: SendbirdChat): Promise<SendbirdMessageTemplate[]> => {
+    let hasMore = true;
+    let paginationToken = null;
+    const fetchedTemplates: SendbirdMessageTemplate[] = [];
+
+    while (hasMore) {
+      /**
+       * RFC doc:
+       * https://sendbird.atlassian.net/wiki/spaces/PLAT/pages/2254405651/RFC+Message+Template#%5BAPI%5D-List-message-templates
+       */
+      const res: MessageTemplateListResult = await readySdk!.message.getMessageTemplatesByToken(
+        paginationToken,
+        { limit: MESSAGE_TEMPLATES_FETCH_LIMIT },
+      );
+      hasMore = res.hasMore;
+      paginationToken = res.token;
+      res.templates.forEach((messageTemplate) => {
+        fetchedTemplates.push(JSON.parse(messageTemplate.template));
+      });
+    }
+    return fetchedTemplates;
+  };
+
+  const initializeMessageTemplatesInfo = async (readySdk: SendbirdChat): Promise<void> => {
+    const sdkMessageTemplateToken = readySdk!.appInfo?.messageTemplateInfo.token;
+
+    /**
+     * no sdkMessageTemplateToken => no templates => clear cached
+     */
+    if (!sdkMessageTemplateToken) {
+      localStorage.removeItem(CACHED_MESSAGE_TEMPLATES_TOKEN_KEY);
+      localStorage.removeItem(CACHED_MESSAGE_TEMPLATES_KEY);
+      return;
+    }
+    /**
+     * Given the following cases:
+     * 1. non-null sdkMessageTemplateToken => templates exist
+     * 2. no cached token or cached token is outdated => first fetch or outdated cache
+     *
+     * If both 1 and 2, fetch all templates and upsert to cache.
+     * If cached token is not outdated, use cached templates.
+     */
+    const cachedMessageTemplatesToken: string | null = localStorage.getItem(CACHED_MESSAGE_TEMPLATES_TOKEN_KEY);
+    const cachedMessageTemplates: string | null = localStorage.getItem(CACHED_MESSAGE_TEMPLATES_KEY);
+    if (
+      !cachedMessageTemplatesToken
+      || cachedMessageTemplatesToken !== sdkMessageTemplateToken!
+    ) {
+      const parsedTemplates: SendbirdMessageTemplate[] = await fetchAllMessageTemplates(readySdk);
+      const newMessageTemplatesInfo: MessageTemplatesInfo = {
+        token: sdkMessageTemplateToken,
+        templatesMap: getProcessedTemplates(parsedTemplates),
+      };
+      appInfoDispatcher({ type: INITIALIZE_MESSAGE_TEMPLATES_INFO, payload: newMessageTemplatesInfo });
+      localStorage.setItem(CACHED_MESSAGE_TEMPLATES_TOKEN_KEY, JSON.stringify(sdkMessageTemplateToken));
+      localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify(parsedTemplates));
+    } else if (
+      cachedMessageTemplatesToken
+      && cachedMessageTemplatesToken === sdkMessageTemplateToken
+      && cachedMessageTemplates
+    ) {
+      const parsedTemplates: SendbirdMessageTemplate[] = JSON.parse(cachedMessageTemplates);
+      const newMessageTemplatesInfo: MessageTemplatesInfo = {
+        token: sdkMessageTemplateToken,
+        templatesMap: getProcessedTemplates(parsedTemplates),
+      };
+      appInfoDispatcher({ type: INITIALIZE_MESSAGE_TEMPLATES_INFO, payload: newMessageTemplatesInfo });
+    }
+  };
+
+  /**
+   * If given message is a template message with template key and if the key does not exist in the cache,
+   * update the cache by fetching the template.
+   */
+  const updateMessageTemplatesInfo = async (templateKey: string, requestedAt: number): Promise<void> => {
+    const keyPreviouslyWaitedTimestamp: number | undefined = appInfoStore!.waitingTemplateKeysMap[templateKey];
+    if (
+      (
+        !keyPreviouslyWaitedTimestamp
+        || requestedAt > keyPreviouslyWaitedTimestamp + TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES
+      ) && appInfoDispatcher
+    ) {
+      appInfoDispatcher({
+        type: UPSERT_WAITING_TEMPLATE_KEY,
+        payload: {
+          key: templateKey,
+          requestedAt,
+        },
+      });
+      const processedTemplate: ProcessedMessageTemplate | null = await fetchProcessedMessageTemplate(templateKey);
+      if (processedTemplate) {
+        appInfoDispatcher({
+          type: UPSERT_MESSAGE_TEMPLATE,
+          payload: {
+            key: templateKey,
+            template: processedTemplate,
+          },
+        });
+      }
+    }
+  };
+
+  const utils: SendbirdProviderUtils = {
+    updateMessageTemplatesInfo,
+    getCachedTemplate,
+  };
 
   const reconnect = useConnect({
     appId,
@@ -224,6 +379,7 @@ const SendbirdSDK = ({
     appInfoDispatcher,
     initDashboardConfigs,
     eventHandlers,
+    initializeMessageTemplatesInfo,
   });
 
   useUnmount(() => {
@@ -329,6 +485,7 @@ const SendbirdSDK = ({
         dispatchers: {
           sdkDispatcher,
           userDispatcher,
+          appInfoDispatcher,
           reconnect,
         },
         config: {
@@ -400,6 +557,7 @@ const SendbirdSDK = ({
         },
         eventHandlers,
         emojiManager,
+        utils,
       }}
     >
       <MediaQueryProvider logger={logger} breakpoint={breakpoint}>

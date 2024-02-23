@@ -40,6 +40,7 @@ export type StaticTypes = {
   sdkInitParams?: SendbirdChatInitParams;
   customExtensionParams?: CustomExtensionParams;
   eventHandlers?: SBUEventHandlers;
+  initializeMessageTemplatesInfo: (sdk: SendbirdChat) => Promise<void>;
 };
 
 export type ConnectTypes = TriggerTypes & StaticTypes;

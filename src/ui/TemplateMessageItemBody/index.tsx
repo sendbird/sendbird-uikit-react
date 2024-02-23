@@ -1,7 +1,7 @@
 import './index.scss';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import type { BaseMessage } from '@sendbird/chat/message';
-import { getClassName } from '../../utils';
+import { CoreMessageType, getClassName } from '../../utils';
 import MessageTemplateProvider from '../../modules/GroupChannel/components/MessageTemplateProvider';
 import { MessageTemplateData, MessageTemplateItem } from './types';
 import restoreNumbersFromMessageTemplateObject from './utils/restoreNumbersFromMessageTemplateObject';
@@ -9,7 +9,7 @@ import mapData from './utils/mapData';
 import selectColorVariablesByTheme from './utils/selectColorVariablesByTheme';
 import { SendbirdTheme } from '../../types';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
-import { ProcessedMessageTemplate, MessageTemplatesInfo } from '../../lib/dux/appInfo/initialState';
+import { ProcessedMessageTemplate } from '../../lib/dux/appInfo/initialState';
 
 interface Props {
   className?: string | Array<string>;
@@ -66,33 +66,60 @@ export default function TemplateMessageItemBody({
   theme = 'light',
 }: Props): ReactElement {
   // FIXME: Can we use useSendbirdStateContext in this ui component?
-  const store = useSendbirdStateContext();
-  const messageTemplatesInfo: MessageTemplatesInfo | undefined = store?.stores?.appInfoStore?.messageTemplatesInfo;
-  const processedMessageTemplates: Record<string, ProcessedMessageTemplate> | undefined = messageTemplatesInfo?.templatesMap;
-  if (!processedMessageTemplates) return;
+  const templateData: MessageTemplateData | undefined = message.extendedMessagePayload?.['template'] as MessageTemplateData;
+  if (!templateData?.key) {
+    return null;
+  }
 
-  const templateData: MessageTemplateData = message.extendedMessagePayload?.['template'] as MessageTemplateData;
-  const processedTemplate: ProcessedMessageTemplate = processedMessageTemplates[templateData.key];
+  const globalState = useSendbirdStateContext();
+  if (!globalState) {
+    return null;
+  }
 
-  // FIXME: Replace logic is not working properly. Fix and use this than below
-  // const filledMessageTemplateItems: MessageTemplateItem[] = parseTemplateWithReplaceReplacer(
-  //   processedTemplate.uiTemplate,
-  //   templateData.variables ?? {},
-  //   processedTemplate.colorVariables,
-  //   theme,
-  // );
-  const filledMessageTemplateItems: MessageTemplateItem[] = getFilledMessageTemplateWithData(
-    JSON.parse(processedTemplate.uiTemplate),
-    templateData.variables ?? {},
-    processedTemplate.colorVariables,
-    theme,
-  );
+  const {
+    getCachedTemplate,
+    updateMessageTemplatesInfo,
+  } = globalState.utils;
 
+  const waitingTemplateKeysMap = globalState.stores.appInfoStore.waitingTemplateKeysMap;
+
+  const [
+    filledMessageTemplateItems,
+    setFilledMessageTemplateItems,
+  ] = useState<MessageTemplateItem[]>([]);
+
+  useEffect(() => {
+    if (filledMessageTemplateItems.length === 0) {
+      const cachedTemplate: ProcessedMessageTemplate | null = getCachedTemplate(templateData.key);
+      if (cachedTemplate) {
+        // TODO: Replace logic is not working properly. Fix and use this than below
+        // const filledMessageTemplateItems: MessageTemplateItem[] = parseTemplateWithReplaceReplacer(
+        //   processedTemplate.uiTemplate,
+        //   templateData.variables ?? {},
+        //   processedTemplate.colorVariables,
+        //   theme,
+        // );
+
+        const filledMessageTemplateItems: MessageTemplateItem[] = getFilledMessageTemplateWithData(
+          JSON.parse(cachedTemplate.uiTemplate),
+          templateData.variables ?? {},
+          cachedTemplate.colorVariables,
+          theme,
+        );
+        setFilledMessageTemplateItems(filledMessageTemplateItems);
+      } else {
+        updateMessageTemplatesInfo(templateData.key, Date.now());
+      }
+    }
+  }, [templateData.key, Object.keys(waitingTemplateKeysMap)]); // FIXME: Need to add waitingTemplateKeysMap.join(',') as dependency but it is causing infinite loop!!!
+
+  // loadPrev => keys => getMessagesTemplates({ keys })
+  // if (loading) return null; getSingleTempalte()
   return (
-    filledMessageTemplateItems && <div className={getClassName([
+    filledMessageTemplateItems.length > 0 && <div className={getClassName([
       className,
-      'sendbird-template-message-item-body',
       isByMe ? 'outgoing' : 'incoming',
+      'sendbird-template-message-item-body',
     ])}>
       <MessageTemplateProvider templateItems={filledMessageTemplateItems} />
     </div>
