@@ -12,7 +12,7 @@ import Label, { LabelColors, LabelTypography } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
-import { isChannelTypeSupportsMultipleFilesMessage, nodeListToArray, sanitizeString } from './utils';
+import { extractTextAndMentions, isChannelTypeSupportsMultipleFilesMessage, nodeListToArray, sanitizeString } from './utils';
 import { arrayEqual, getClassName, getMimeTypesUIKitAccepts } from '../../utils';
 import usePaste from './hooks/usePaste';
 import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
@@ -365,30 +365,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   const sendMessage = () => {
     const textField = internalRef?.current;
     if (!isEdit && textField?.textContent) {
-      let messageText = '';
-      let mentionTemplate = '';
-      textField.childNodes.forEach((node) => {
-        if (node.nodeType === NodeTypes.ElementNode && node.nodeName === NodeNames.Span) {
-          // @ts-ignore
-          const { innerText, dataset = {} } = node;
-          const { userid = '' } = dataset;
-          messageText += innerText;
-          mentionTemplate += `${USER_MENTION_TEMP_CHAR}{${userid}}`;
-        } else if (node.nodeType === NodeTypes.ElementNode && node.nodeName === NodeNames.Br) {
-          messageText += '\n';
-          mentionTemplate += '\n';
-        } else if (node?.nodeType === NodeTypes.ElementNode && node?.nodeName === NodeNames.Div) {
-          // handles newline in safari
-          const { textContent = '' } = node;
-          messageText += `\n${textContent}`;
-          mentionTemplate += `\n${textContent}`;
-        } else {
-          // other nodes including text node
-          const { textContent = '' } = node;
-          messageText += textContent;
-          mentionTemplate += textContent;
-        }
-      });
+      const { messageText, mentionTemplate } = extractTextAndMentions(textField.childNodes);
       const params = { message: messageText, mentionTemplate };
       onSendMessage(params);
       resetInput(internalRef);
@@ -403,29 +380,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     const textField = internalRef?.current;
     const messageId = message?.messageId;
     if (isEdit && messageId) {
-      let messageText = '';
-      let mentionTemplate = '';
-      textField.childNodes.forEach((node) => {
-        if (node.nodeType === NodeTypes.ElementNode && node.nodeName === NodeNames.Span) {
-          // @ts-ignore
-          const { innerText, dataset = {} } = node;
-          const { userid = '' } = dataset;
-          messageText += innerText;
-          mentionTemplate += `${USER_MENTION_TEMP_CHAR}{${userid}}`;
-        } else if (node.nodeType === NodeTypes.ElementNode && node.nodeName === NodeNames.Br) {
-          messageText += '\n';
-          mentionTemplate += '\n';
-        } else if (node?.nodeType === NodeTypes.ElementNode && node?.nodeName === NodeNames.Div) {
-          const { textContent = '' } = node;
-          messageText += `\n${textContent}`;
-          mentionTemplate += `\n${textContent}`;
-        } else {
-          // other nodes including text node
-          const { textContent = '' } = node;
-          messageText += textContent;
-          mentionTemplate += textContent;
-        }
-      });
+      const { messageText, mentionTemplate } = extractTextAndMentions(textField.childNodes);
       const params = { messageId, message: messageText, mentionTemplate };
       onUpdateMessage(params);
       resetInput(internalRef);
