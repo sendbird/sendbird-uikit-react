@@ -301,7 +301,13 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           </div>
         ) : null}
         {/* container: message item body + emoji reactions */}
-        <div className={getClassName(['sendbird-message-content__middle__body-container'])}>
+
+        <div
+          className={getClassName([
+            'sendbird-message-content__middle__body-container',
+            isTemplateMessage(message) ? 'sendbird-message-content__middle__for_template_message' : '',
+          ])}
+        >
           {/* message status component when sent by me */}
           {(isByMe && !chainBottom) && (
             <div

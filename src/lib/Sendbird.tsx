@@ -54,7 +54,7 @@ import PUBSUB_TOPICS, { SBUGlobalPubSub, SBUGlobalPubSubTopicPayloadUnion } from
 import { EmojiManager } from './emojiManager';
 import { uikitConfigStorage } from './utils/uikitConfigStorage';
 import { APP_INFO_ACTIONS } from './dux/appInfo/actionTypes';
-import { SendbirdMessageTemplate } from '../ui/TemplateMessageItemBody/types';
+import {MessageTemplateItem, SendbirdMessageTemplate} from '../ui/TemplateMessageItemBody/types';
 import {
   getProcessedTemplate,
   getProcessedTemplates,
@@ -64,7 +64,6 @@ import { CACHED_MESSAGE_TEMPLATES_KEY, CACHED_MESSAGE_TEMPLATES_TOKEN_KEY } from
 import { MessageTemplate, MessageTemplateListResult } from '@sendbird/chat/lib/__definition';
 
 const MESSAGE_TEMPLATES_FETCH_LIMIT = 20;
-const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 150;
 
 export { useSendbirdStateContext } from '../hooks/useSendbirdStateContext';
 
@@ -218,6 +217,7 @@ const SendbirdSDK = ({
     INITIALIZE_MESSAGE_TEMPLATES_INFO,
     UPSERT_MESSAGE_TEMPLATE,
     UPSERT_WAITING_TEMPLATE_KEY,
+    MARK_ERROR_WAITING_TEMPLATE_KEY,
   } = APP_INFO_ACTIONS;
 
   useTheme(colorSet);
@@ -270,6 +270,58 @@ const SendbirdSDK = ({
       res.templates.forEach((messageTemplate) => {
         fetchedTemplates.push(JSON.parse(messageTemplate.template));
       });
+      const data: SendbirdMessageTemplate = {
+        key: 't3',
+        created_at: 12341234,
+        updated_at: 0,
+        ui_template: {
+          "version": 1,
+          "body": {
+            "items": [
+              {
+                "type": "box",
+                "viewStyle": {
+                  "padding": { "top": 10, "bottom": 10, "left": 10, "right": 10 }
+                },
+                "layout": "column",
+                "items": [
+                  {
+                    "type": "text", "text": "항목을 선택해주세요",
+                    "textStyle": { "weight": "bold" },
+                    "viewStyle": {
+                      "margin": { "top": 10, "bottom": 10, "left": 10, "right": 10 }
+                    }
+                  },
+                  {
+                    "type": "textButton", "text": "쏘카존 정보조회",
+                    "width": { "type":"flex", "value":0 },
+                    "textStyle": { "color": "#222222" },
+                    "viewStyle": {
+                      "margin": { "top": 4, "bottom": 4, "left": 0, "right": 0 }
+                    }
+                  },
+                  {
+                    "type": "textButton", "text": "이용내역 조회",
+                    "width": { "type":"flex", "value":0 },
+                    "textStyle": { "color": "#222222" },
+                    "viewStyle": {
+                      "paddimarginng": { "top": 4, "bottom": 4, "left": 0, "right": 0 }
+                    }
+                  },
+                  {
+                    "type": "textButton", "text": "상담원 연결하기",
+                    "width": { "type":"flex", "value":0 },
+                    "viewStyle": {
+                      "margin": { "top": 4, "bottom": 4, "left": 0, "right": 0 }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+      } as SendbirdMessageTemplate;
+      fetchedTemplates.push(data);
     }
     return fetchedTemplates;
   };
@@ -326,13 +378,7 @@ const SendbirdSDK = ({
    * update the cache by fetching the template.
    */
   const updateMessageTemplatesInfo = async (templateKey: string, requestedAt: number): Promise<void> => {
-    const keyPreviouslyWaitedTimestamp: number | undefined = appInfoStore!.waitingTemplateKeysMap[templateKey];
-    if (
-      (
-        !keyPreviouslyWaitedTimestamp
-        || requestedAt > keyPreviouslyWaitedTimestamp + TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES
-      ) && appInfoDispatcher
-    ) {
+    if (appInfoDispatcher) {
       appInfoDispatcher({
         type: UPSERT_WAITING_TEMPLATE_KEY,
         payload: {
@@ -347,6 +393,13 @@ const SendbirdSDK = ({
           payload: {
             key: templateKey,
             template: processedTemplate,
+          },
+        });
+      } else {
+        appInfoDispatcher({
+          type: MARK_ERROR_WAITING_TEMPLATE_KEY,
+          payload: {
+            key: templateKey,
           },
         });
       }

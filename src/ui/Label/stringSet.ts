@@ -101,6 +101,8 @@ const stringSet = {
     TOOLTIP__UNKNOWN_USER: '(no name)',
     UNKNOWN__UNKNOWN_MESSAGE_TYPE: '(Unknown message type)',
     UNKNOWN__CANNOT_READ_MESSAGE: 'Cannot read this message.',
+    UNKNOWN__TEMPLATE_ERROR: '(Template error)',
+    UNKNOWN__CANNOT_READ_TEMPLATE: 'Cannot read this template.',
     MESSAGE_EDITED: '(edited)',
     // Channel - Modal
     MODAL__DELETE_MESSAGE__TITLE: 'Delete this message?',

@@ -36,7 +36,7 @@ import { SdkActionTypes } from './dux/sdk/actionTypes';
 import { ReconnectType } from './hooks/useConnect/types';
 import { SBUGlobalPubSub } from './pubSub/topics';
 import { EmojiManager } from './emojiManager';
-import { MessageTemplatesInfo, ProcessedMessageTemplate } from './dux/appInfo/initialState';
+import {MessageTemplatesInfo, ProcessedMessageTemplate, WaitingTemplateKeyData} from './dux/appInfo/initialState';
 import { AppInfoActionTypes } from './dux/appInfo/actionTypes';
 
 // note to SDK team:
@@ -131,7 +131,7 @@ export interface UserStore {
 
 export interface AppInfoStore {
   messageTemplatesInfo?: MessageTemplatesInfo;
-  waitingTemplateKeysMap: Record<string, number>;
+  waitingTemplateKeysMap: Record<string, WaitingTemplateKeyData>;
 }
 
 export interface SendBirdStateStore {

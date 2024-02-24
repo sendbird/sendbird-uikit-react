@@ -44,6 +44,12 @@
   }
 }
 
+.sendbird-icon-color--content-inverse-5 [class*='fill'] {
+  @include themed() {
+    fill: t(inverse-on-content-5);
+  }
+}
+
 .sendbird-icon-color--white [class*='fill'] {
   fill: #ffffff;
 }

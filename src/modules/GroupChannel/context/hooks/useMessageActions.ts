@@ -47,13 +47,14 @@ const pass = <T>(value: T) => value;
 export function useMessageActions(params: Params): MessageActions {
   const {
     // FIXME: Put this back to pass before merging.
-    onBeforeSendUserMessage = (params) => {
-      params.extendedMessagePayload = {
-        template: PersonalTemplatesDataForTesting[0],
-      };
-      return params;
-    },
-    // onBeforeSendUserMessage = pass,
+    // onBeforeSendUserMessage = (params) => {
+    //   params.extendedMessagePayload = {
+    //     // template: PersonalTemplatesDataForTesting[0],
+    //     template: { key: 't0' },
+    //   };
+    //   return params;
+    // },
+    onBeforeSendUserMessage = pass,
     onBeforeSendFileMessage = pass,
     onBeforeUpdateUserMessage = pass,
     onBeforeSendVoiceMessage = pass,

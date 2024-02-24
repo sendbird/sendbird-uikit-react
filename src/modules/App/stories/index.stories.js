@@ -270,17 +270,17 @@ export const Korean = () => fitPageSize(
 );
 
 const PersonalTestConfig = {
-  appId: '410CD601-E5D5-467F-841B-A8CBD4423D4C',
+  appId: '03624819-106B-46D8-B174-3C36D246FAE6',
   apiHost: 'https://api-preprod.sendbird.com',
   wsHost: 'wss://ws-preprod.sendbird.com',
   userInfo: [
     {
-      userId: 'd781c46e-0f58-4d',
-      accessCode: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1IjoxMzE0NjM5MTgsInYiOjEsImUiOjE3MDg3NzUwODd9.f0RTSYL_l3sj4eiEpo1ywpJpKVwXj4Lbj-qzs6MFeRU',
+      userId: '6c5689aa-953a-4d',
+      accessCode: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1IjoxMzE0NzU5MDcsInYiOjEsImUiOjE3MDg4NjM5NjR9.gdT3wrt7XWPWbAb08Ecif9Jv5LTueH2yl6SDSf5ohTQ',
     },
     {
-      userId: '96f6903b-966c-43',
-      accessCode: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1IjoxMzE0NjM5MTksInYiOjEsImUiOjE3MDg3NzUwODd9.nN5jxMDXMD2SuF12K-CAAgGZYe9a9tOLIFx0D1CoXkk',
+      userId: '894fc023-127f-49',
+      accessCode: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1IjoxMzE0NzU5MTAsInYiOjEsImUiOjE3MDg4NjM5NjR9.ye_yDZJTe3I8stFE0b_lGuaxJi6UC6dK3UBOhJf05AM',
     }
   ],
 }
@@ -298,8 +298,8 @@ export const user1 = () => fitPageSize(
     customApiHost={PersonalTestConfig.apiHost}
     customWebSocketHost={PersonalTestConfig.wsHost}
     appId={PersonalTestConfig.appId}
-    userId={PersonalTestConfig.userInfo[0].userId} // PersonalTestConfig.userInfo[0].userId
-    accessToken={PersonalTestConfig.userInfo[0].accessCode}
+    userId={PersonalTestConfig.userInfo[1].userId} // PersonalTestConfig.userInfo[0].userId
+    accessToken={PersonalTestConfig.userInfo[1].accessCode}
     profileUrl={addProfile}
     breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
     showSearchIcon

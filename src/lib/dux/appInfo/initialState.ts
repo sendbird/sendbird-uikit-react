@@ -8,13 +8,18 @@ export interface MessageTemplatesInfo {
   templatesMap: Record<string, ProcessedMessageTemplate>;
 }
 
+export interface WaitingTemplateKeyData {
+  requestedAt: number;
+  isError: boolean;
+}
+
 export interface AppInfoStateType {
   messageTemplatesInfo?: MessageTemplatesInfo;
   /**
    * This represents template keys that are currently waiting for its fetch response.
    * Whenever initialized, request succeeds or fails, it needs to be updated.
    */
-  waitingTemplateKeysMap: Record<string, number>;
+  waitingTemplateKeysMap: Record<string, WaitingTemplateKeyData>;
 }
 
 const initialState: AppInfoStateType = {

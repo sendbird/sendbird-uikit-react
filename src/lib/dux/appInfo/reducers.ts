@@ -1,5 +1,5 @@
 import { match } from 'ts-pattern';
-import { AppInfoStateType } from './initialState';
+import {AppInfoStateType, WaitingTemplateKeyData} from './initialState';
 import { APP_INFO_ACTIONS, AppInfoActionTypes } from './actionTypes';
 
 export default function reducer(state: AppInfoStateType, action: AppInfoActionTypes): AppInfoStateType {
@@ -32,7 +32,20 @@ export default function reducer(state: AppInfoStateType, action: AppInfoActionTy
       { type: APP_INFO_ACTIONS.UPSERT_WAITING_TEMPLATE_KEY },
       ({ payload }) => {
         const { key, requestedAt } = payload;
-        state.waitingTemplateKeysMap[key] = requestedAt;
+        state.waitingTemplateKeysMap[key] = {
+          requestedAt,
+          isError: false,
+        };
+        return state;
+      })
+    .with(
+      { type: APP_INFO_ACTIONS.MARK_ERROR_WAITING_TEMPLATE_KEY },
+      ({ payload }) => {
+        const { key } = payload;
+        const waitingTemplateKeyData: WaitingTemplateKeyData | undefined = state.waitingTemplateKeysMap[key];
+        if (waitingTemplateKeyData) {
+          waitingTemplateKeyData.isError = true;
+        }
         return state;
       })
     .otherwise(() => {
