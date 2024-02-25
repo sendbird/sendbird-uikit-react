@@ -23,13 +23,19 @@ import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScroll
 
 import { getMessagePartsInfo } from '../../../GroupChannel/components/MessageList/getMessagePartsInfo';
 import { GroupChannelMessageListProps } from '../../../GroupChannel/components/MessageList';
+import { GroupChannelUIBasicProps } from '../../../GroupChannel/components/GroupChannelUI/GroupChannelUIView';
 
 const SCROLL_BOTTOM_PADDING = 50;
 
-export type MessageListProps = GroupChannelMessageListProps;
+export interface MessageListProps extends GroupChannelMessageListProps {
+  /**
+   * Customizes all child components of the message component.
+   * */
+  renderMessage?: GroupChannelUIBasicProps['renderMessage'];
+}
 export const MessageList = ({
   className = '',
-  renderMessage = (props) => <Message {...props} />,
+  renderMessage,
   renderMessageContent,
   renderCustomSeparator,
   renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
@@ -189,15 +195,17 @@ export const MessageList = ({
               const isByMe = (m as UserMessage)?.sender?.userId === store?.config?.userId;
               return (
                 <MessageProvider message={m} key={m?.messageId} isByMe={isByMe}>
-                  {renderMessage({
-                    handleScroll: moveScroll,
-                    message: m as EveryMessage,
-                    hasSeparator,
-                    chainTop,
-                    chainBottom,
-                    renderMessageContent,
-                    renderCustomSeparator,
-                  })}
+                  <Message
+                    handleScroll={moveScroll}
+                    message={m as EveryMessage}
+                    hasSeparator={hasSeparator}
+                    chainTop={chainTop}
+                    chainBottom={chainBottom}
+                    renderMessageContent={renderMessageContent}
+                    renderCustomSeparator={renderCustomSeparator}
+                    // backward compatibility
+                    renderMessage={renderMessage}
+                  />
                 </MessageProvider>
               );
             })}
@@ -213,14 +221,16 @@ export const MessageList = ({
               const isByMe = (m as UserMessage)?.sender?.userId === store?.config?.userId;
               return (
                 <MessageProvider message={m} key={m?.messageId} isByMe={isByMe}>
-                  {renderMessage({
-                    handleScroll: moveScroll,
-                    message: m as EveryMessage,
-                    chainTop,
-                    chainBottom,
-                    renderMessageContent,
-                    renderCustomSeparator,
-                  })}
+                  <Message
+                    handleScroll={moveScroll}
+                    message={m as EveryMessage}
+                    chainTop={chainTop}
+                    chainBottom={chainBottom}
+                    renderMessageContent={renderMessageContent}
+                    renderCustomSeparator={renderCustomSeparator}
+                    // backward compatibility
+                    renderMessage={renderMessage}
+                  />
                 </MessageProvider>
               );
             })}

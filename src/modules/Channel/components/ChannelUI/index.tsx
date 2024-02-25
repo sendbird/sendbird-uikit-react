@@ -9,6 +9,10 @@ import MessageInputWrapper from '../MessageInputWrapper';
 
 export interface ChannelUIProps extends GroupChannelUIBasicProps {
   isLoading?: boolean;
+  /**
+   * Customizes all child components of the message component.
+   * */
+  renderMessage?: GroupChannelUIBasicProps['renderMessage'];
 }
 
 const ChannelUI = (props: ChannelUIProps) => {
