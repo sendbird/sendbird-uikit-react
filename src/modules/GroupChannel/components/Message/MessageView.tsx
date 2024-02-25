@@ -251,7 +251,8 @@ const MessageView = (props: MessageViewProps) => {
     }
 
     if (renderMessage) {
-      return renderMessage({ ...props, renderMessage: undefined });
+      const messageProps = { ...props, renderMessage: undefined };
+      return renderMessage(messageProps);
     }
 
     return (
