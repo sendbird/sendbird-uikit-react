@@ -37,6 +37,10 @@ export interface MessageProps {
    */
   renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
   /**
+   * A function that customizes the rendering of suggested replies component of messages.
+   */
+  renderSuggestedReplies?: (props: SuggestedRepliesProps) => React.ReactElement;
+  /**
    * A function that customizes the rendering of a separator between messages.
    */
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
@@ -49,7 +53,6 @@ export interface MessageProps {
    * @description Customizes all child components of the message.
    * */
   renderMessage?: (props: RenderMessageParamsType) => React.ReactElement;
-  renderSuggestedReplies?: (props: SuggestedRepliesProps) => React.ReactElement;
 }
 
 export interface MessageViewProps extends MessageProps {
@@ -97,11 +100,11 @@ const MessageView = (props: MessageViewProps) => {
     renderMessage,
     children,
     renderMessageContent = (props) => <MessageContent {...props} />,
-    renderCustomSeparator,
-    renderEditInput,
     renderSuggestedReplies = (props) => (
       <SuggestedReplies {...props} />
     ),
+    renderCustomSeparator,
+    renderEditInput,
     hasSeparator,
     chainTop,
     chainBottom,
