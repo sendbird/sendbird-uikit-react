@@ -1,5 +1,44 @@
 # Changelog - v3
 
+## [v3.12.1] (Feb 26, 2024)
+
+### Fixes:
+- Added loading status to the `ChannelSettings` module and addressed some layout issues
+- Added support for multiple lines in the `MessageInput` on mobile devices
+- Fixed hard-coded text to localization text for uploading file size and count limits
+- Fixed the `MessageListParams` type in the `ChannelProvider`
+- Fixed requests for empty image paths during the image optimization process
+- Fixed an infinite loop issue occurring when using the `GroupChannel/components/Message` and `Channel/components/Message` components in the `renderMessage` method of the `GroupChannel` and `Channel` modules
+- The `renderMessage` method of the `GroupChannel` module no longer nests messages under the `Message` component. If a container element for the `Message` component is needed, use it as follows:
+  ```tsx
+  import { GroupChannel } from '@sendbird/uikit-react/GroupChannel';
+  import { Message } from '@sendbird/uikit-react/GroupChannel/components/Message';
+  
+  const GroupChannelPage = () => {
+    return (
+      <GroupChannel
+        renderMessage={(props) => {
+          return (
+            <Message message={props.message}>
+              <div>{props.message.messageId}</div>
+            </Message>
+          )
+        }}
+      />
+    )
+  }
+  ```
+
+- The `renderMessage` prop of the `Channel/components/Message` and `GroupChannel/components/Message` components has been deprecated. Instead, use the `children` prop to customize message sub-elements
+  ```tsx
+  <Message message={props.message}>
+    <div>{props.message.messageId}</div>
+  </Message>
+  ```
+
+- Added detailed comments for customizing-related props in the `GroupChannel` module
+
+
 ## [v3.12.0] (Feb 16, 2024)
 
 ### Features:
