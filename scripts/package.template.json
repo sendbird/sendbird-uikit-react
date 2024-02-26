@@ -19,13 +19,11 @@
     "API"
   ],
   "type": "module",
-  "module": "index.js",
-  "main": "cjs/index.js",
-  "types": "types/index.d.ts",
-  "style": "dist/index.css",
-  "files": [
-    "**/*"
-  ],
+  "module": "dist/index.js",
+  "main": "dist/cjs/index.js",
+  "types": "dist/types/index.d.ts",
+  "style": "dist/dist/index.css",
+  "files": ["**/*"],
   "repository": {
     "type": "git",
     "url": "git+git@github.com:sendbird/sendbird-uikit-react-sources.git"
