@@ -20,20 +20,20 @@ async function createPackageJSON(json) {
   const typesVersions = { '*': {} };
   const exports = {
     './package.json': './package.json',
-    './dist/index.css': './dist/index.css',
+    './dist/dist/index.css': './dist/dist/index.css',
   };
 
   Object.entries(exportList).forEach(([module, filePath]) => {
-    const dtsPath = `./${filePath
+    const dtsPath = `./dist/${filePath
       .replace('src', 'types')
       .replace(/\.tsx?$/, '.d.ts')}`;
 
     typesVersions['*'][module === 'index' ? '.' : module] = [dtsPath];
     exports[module === 'index' ? '.' : `./${module}`] = {
       types: dtsPath,
-      require: `./cjs/${module}.js`,
-      import: `./${module}.js`,
-      default: `./${module}.js`,
+      require: `./dist/cjs/${module}.js`,
+      import: `./dist/${module}.js`,
+      default: `./dist/${module}.js`,
     };
   });
   return {
