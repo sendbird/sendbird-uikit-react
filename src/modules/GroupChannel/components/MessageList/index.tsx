@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import type { Member } from '@sendbird/chat/groupChannel';
 import { useGroupChannelHandler } from '@sendbird/uikit-tools';
 
-import type { CoreMessageType } from '../../../../utils';
+import { CoreMessageType, isSendableMessage } from '../../../../utils';
 import { EveryMessage, TypingIndicatorType } from '../../../../types';
 
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
@@ -160,7 +160,7 @@ export const MessageList = ({
                 currentMessage: message as CoreMessageType,
                 currentChannel,
               });
-              const isOutgoingMessage = message.isUserMessage() && message.sender.userId === store.config.userId;
+              const isOutgoingMessage = isSendableMessage(message) && message.sender.userId === store.config.userId;
               return (
                 <MessageProvider message={message} key={getComponentKeyFromMessage(message)} isByMe={isOutgoingMessage}>
                   {renderMessage({
