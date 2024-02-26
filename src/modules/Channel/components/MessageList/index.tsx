@@ -203,6 +203,7 @@ export const MessageList = ({
                     chainTop={chainTop}
                     chainBottom={chainBottom}
                     renderMessageContent={renderMessageContent}
+                    renderSuggestedReplies={renderSuggestedReplies}
                     renderCustomSeparator={renderCustomSeparator}
                     // backward compatibility
                     renderMessage={renderMessage}

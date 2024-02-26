@@ -413,6 +413,7 @@ export const GroupChannel = () => {
                     typingIndicatorTypes: new Set([TypingIndicatorType.Bubble, TypingIndicatorType.Text]),
                     enableFeedback: true, // This enables feedback message feature.
                     enableSuggestedReplies: true, // This enables suggested replies feature.
+                    showSuggestedRepliesFor: 'all_messages', // This enables suggested replies should be displayed for all messages but not just the last message.
                   }
                 }}
                 imageCompression={{compressionRate: sampleOptions.imageCompression ? 0.7 : 1}}
@@ -451,7 +452,7 @@ export const GroupChannel = () => {
                       <Channel
                         channelUrl={channelUrl}
                         renderSuggestedReplies={(suggestedRepliesProps) => {
-                          const { replyOptions, onSendMessage } = suggestedRepliesProps;
+                          const { replyOptions, onSendMessage, message } = suggestedRepliesProps;
                           return <DraggableSuggestedReplies options={replyOptions} />;
                         }}
                       />
@@ -480,6 +481,7 @@ export const GroupChannel = () => {
               //       typingIndicatorTypes: new Set([TypingIndicatorType.Bubble, TypingIndicatorType.Text]),
               //       enableFeedback: true, // This enables feedback message feature.
               //       enableSuggestedReplies: true, // This enables suggested replies feature.
+              //       showSuggestedRepliesFor: 'all_messages', // This enables suggested replies should be displayed for all messages but not just the last message.
               //     }
               //   }}
               //   imageCompression={{ compressionRate: sampleOptions.imageCompression ? 0.7 : 1 }}

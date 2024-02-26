@@ -386,6 +386,7 @@ const SendbirdSDK = ({
             typingIndicatorTypes: configs.groupChannel.channel.typingIndicatorTypes,
             enableFeedback: configs.groupChannel.channel.enableFeedback,
             enableSuggestedReplies: configs.groupChannel.channel.enableSuggestedReplies,
+            showSuggestedRepliesFor: configs.groupChannel.channel.showSuggestedRepliesFor,
           },
           openChannel: {
             enableOgtag:

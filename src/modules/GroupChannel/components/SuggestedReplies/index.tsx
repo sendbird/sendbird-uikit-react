@@ -1,9 +1,11 @@
 import './index.scss';
 import React, { useState } from 'react';
+import {BaseMessage} from '@sendbird/chat/message';
 
 export interface SuggestedRepliesProps {
   replyOptions: string[];
   onSendMessage: ({ message }: { message: string }) => void;
+  message: BaseMessage;
 }
 
 const SuggestedReplies = ({ replyOptions, onSendMessage }: SuggestedRepliesProps) => {
