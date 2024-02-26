@@ -12,7 +12,7 @@ import type { RenderCustomSeparatorProps, RenderMessageParamsType } from '../../
 import type { GroupChannelHeaderProps } from '../GroupChannelHeader';
 import type { GroupChannelMessageListProps } from '../MessageList';
 import type { MessageContentProps } from '../../../../ui/MessageContent';
-import {SuggestedRepliesProps} from '../SuggestedReplies';
+import { SuggestedRepliesProps } from '../SuggestedReplies';
 
 export interface GroupChannelUIBasicProps {
   // Components

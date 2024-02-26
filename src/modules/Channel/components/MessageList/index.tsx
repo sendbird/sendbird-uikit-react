@@ -37,11 +37,7 @@ export const MessageList = ({
   className = '',
   renderMessage,
   renderMessageContent,
-<<<<<<< HEAD
-=======
   renderSuggestedReplies,
-  renderPlaceholderEmpty,
->>>>>>> 2224ef26 (Fix and temporary sample change for testing)
   renderCustomSeparator,
   renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
   renderPlaceholderEmpty = () => <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />,
@@ -188,7 +184,6 @@ export const MessageList = ({
               onScrollReachedEndDetector(e);
             }}
           >
-<<<<<<< HEAD
             {allMessagesFiltered.map((m, idx) => {
               const { chainTop, chainBottom, hasSeparator } = getMessagePartsInfo({
                 allMessages: allMessagesFiltered,
@@ -233,6 +228,7 @@ export const MessageList = ({
                     chainTop={chainTop}
                     chainBottom={chainBottom}
                     renderMessageContent={renderMessageContent}
+                    renderSuggestedReplies={renderSuggestedReplies}
                     renderCustomSeparator={renderCustomSeparator}
                     // backward compatibility
                     renderMessage={renderMessage}
@@ -241,71 +237,6 @@ export const MessageList = ({
               );
             })}
             {!hasMoreNext
-=======
-            {
-              allMessagesFiltered.map((m, idx) => {
-                const {
-                  chainTop,
-                  chainBottom,
-                  hasSeparator,
-                } = getMessagePartsInfo({
-                  allMessages: allMessagesFiltered,
-                  replyType,
-                  isMessageGroupingEnabled,
-                  currentIndex: idx,
-                  currentMessage: m,
-                  currentChannel: currentGroupChannel,
-                });
-                const isByMe = (m as UserMessage)?.sender?.userId === store?.config?.userId;
-                return (
-                  <MessageProvider message={m} key={m?.messageId} isByMe={isByMe}>
-                    <Message
-                      handleScroll={moveScroll}
-                      renderMessage={renderMessage}
-                      renderMessageContent={renderMessageContent}
-                      renderSuggestedReplies={renderSuggestedReplies}
-                      message={m as EveryMessage}
-                      hasSeparator={hasSeparator}
-                      chainTop={chainTop}
-                      chainBottom={chainBottom}
-                      renderCustomSeparator={renderCustomSeparator}
-                    />
-                  </MessageProvider>
-                );
-              })
-            }
-            {
-              localMessages.map((m, idx) => {
-                const {
-                  chainTop,
-                  chainBottom,
-                } = getMessagePartsInfo({
-                  allMessages: allMessagesFiltered,
-                  replyType,
-                  isMessageGroupingEnabled,
-                  currentIndex: idx,
-                  currentMessage: m,
-                  currentChannel: currentGroupChannel,
-                });
-                const isByMe = (m as UserMessage)?.sender?.userId === store?.config?.userId;
-                return (
-                  <MessageProvider message={m} key={m?.messageId} isByMe={isByMe}>
-                    <Message
-                      handleScroll={moveScroll}
-                      renderMessage={renderMessage}
-                      renderMessageContent={renderMessageContent}
-                      message={m as EveryMessage}
-                      chainTop={chainTop}
-                      chainBottom={chainBottom}
-                      renderCustomSeparator={renderCustomSeparator}
-                    />
-                  </MessageProvider>
-                );
-              })
-            }
-            {
-              !hasMoreNext
->>>>>>> 2224ef26 (Fix and temporary sample change for testing)
               && store?.config?.groupChannel?.enableTypingIndicator
               && store?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Bubble) && (
                 <TypingIndicatorBubble typingMembers={typingMembers} handleScroll={moveScroll} />
