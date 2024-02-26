@@ -1,7 +1,7 @@
 import React, { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import './index.scss';
-import { MessageInputKeys, NodeNames, NodeTypes } from './const';
+import { MessageInputKeys, NodeTypes } from './const';
 
 import { USER_MENTION_TEMP_CHAR } from '../../modules/Channel/context/const';
 import IconButton from '../IconButton';

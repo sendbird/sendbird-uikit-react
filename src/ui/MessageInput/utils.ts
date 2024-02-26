@@ -29,6 +29,7 @@ function isHTMLElement(node: ChildNode): node is HTMLElement {
   return node.nodeType === NodeTypes.ElementNode;
 }
 
+// eslint-disable-next-line no-undef
 export function extractTextAndMentions(childNodes: NodeListOf<ChildNode>) {
   let messageText = '';
   let mentionTemplate = '';
