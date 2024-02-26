@@ -28,11 +28,27 @@ export interface MessageProps {
   chainBottom?: boolean;
   handleScroll?: (isBottomMessageAffected?: boolean) => void;
 
-  // for extending
-  renderMessage?: (props: RenderMessageParamsType) => React.ReactElement;
+  /**
+   * Customizes all child components of the message.
+   * */
+  children?: React.ReactNode;
+  /**
+   * A function that customizes the rendering of the content portion of message component.
+   */
   renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
+  /**
+   * A function that customizes the rendering of a separator between messages.
+   */
   renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
+  /**
+   * A function that customizes the rendering of the edit input portion of the message component.
+   * */
   renderEditInput?: () => React.ReactElement;
+  /**
+   * @deprecated Please use `children` instead
+   * @description Customizes all child components of the message.
+   * */
+  renderMessage?: (props: RenderMessageParamsType) => React.ReactElement;
 }
 
 export interface MessageViewProps extends MessageProps {
@@ -78,6 +94,7 @@ const MessageView = (props: MessageViewProps) => {
     // MessageProps
     message,
     renderMessage,
+    children,
     renderMessageContent = (props) => <MessageContent {...props} />,
     renderCustomSeparator,
     renderEditInput,
@@ -227,40 +244,55 @@ const MessageView = (props: MessageViewProps) => {
   }, [animatedMessageId, messageScrollRef.current, message.messageId]);
 
   const renderedCustomSeparator = useMemo(() => renderCustomSeparator?.({ message }) ?? null, [message, renderCustomSeparator]);
-  const renderedMessage = useMemo(() => renderMessage?.(props), [message, renderMessage]);
 
-  if (renderedMessage) {
+  const renderChildren = () => {
+    if (children) {
+      return children;
+    }
+
+    if (renderMessage) {
+      const messageProps = { ...props, renderMessage: undefined };
+      return renderMessage(messageProps);
+    }
+
     return (
-      <div
-        // do not delete this data attribute, used for scroll to given message
-        // and also for testing
-        data-sb-message-id={message.messageId}
-        data-sb-created-at={message.createdAt}
-        ref={messageScrollRef}
-        className={getClassName([
-          'sendbird-msg-hoc sendbird-msg--scroll-ref',
-          isAnimated ? 'sendbird-msg-hoc__animated' : '',
-          isHighlighted ? 'sendbird-msg-hoc__highlighted' : '',
-        ])}
-      >
-        {/* date-separator */}
+      <>
+        {/* Message */}
+        {renderMessageContent({
+          className: 'sendbird-message-hoc__message-content',
+          userId,
+          scrollToMessage,
+          channel,
+          message,
+          disabled: !isOnline,
+          chainTop,
+          chainBottom,
+          isReactionEnabled,
+          replyType,
+          threadReplySelectType,
+          nicknamesMap,
+          emojiContainer,
+          showEdit: setShowEdit,
+          showRemove: setShowRemove,
+          showFileViewer: setShowFileViewer,
+          resendMessage,
+          deleteMessage,
+          toggleReaction,
+          setQuoteMessage,
+          onReplyInThread: onReplyInThreadClick,
+          onQuoteMessageClick: onQuoteMessageClick,
+          onMessageHeightChange: handleScroll,
+        })}
         {
-          // TODO: Add message instance as a function parameter
-          hasSeparator
-            && (renderedCustomSeparator || (
-              <DateSeparator>
-                <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
-                  {format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, {
-                    locale: dateLocale,
-                  })}
-                </Label>
-              </DateSeparator>
-            ))
+          /** Suggested Replies */
+          shouldRenderSuggestedReplies && <SuggestedReplies replyOptions={getSuggestedReplies(message)} onSendMessage={sendUserMessage} />
         }
-        {renderedMessage}
-      </div>
+        {/* Modal */}
+        {showRemove && renderRemoveMessageModal({ message, onCancel: () => setShowRemove(false) })}
+        {showFileViewer && renderFileViewer({ message: message as FileMessage, onCancel: () => setShowFileViewer(false) })}
+      </>
     );
-  }
+  };
 
   if (showEdit && message?.isUserMessage?.()) {
     return (
@@ -357,7 +389,7 @@ const MessageView = (props: MessageViewProps) => {
         isAnimated ? 'sendbird-msg-hoc__animated' : '',
         isHighlighted ? 'sendbird-msg-hoc__highlighted' : '',
       ])}
-      style={{ marginBottom: '2px' }}
+      style={children || renderMessage ? undefined : { marginBottom: '2px' }}
       data-sb-message-id={message.messageId}
       data-sb-created-at={message.createdAt}
       ref={messageScrollRef}
@@ -373,39 +405,7 @@ const MessageView = (props: MessageViewProps) => {
             </Label>
           </DateSeparator>
         ))}
-      {/* Message */}
-      {renderMessageContent({
-        className: 'sendbird-message-hoc__message-content',
-        userId,
-        scrollToMessage,
-        channel,
-        message,
-        disabled: !isOnline,
-        chainTop,
-        chainBottom,
-        isReactionEnabled,
-        replyType,
-        threadReplySelectType,
-        nicknamesMap,
-        emojiContainer,
-        showEdit: setShowEdit,
-        showRemove: setShowRemove,
-        showFileViewer: setShowFileViewer,
-        resendMessage,
-        deleteMessage,
-        toggleReaction,
-        setQuoteMessage,
-        onReplyInThread: onReplyInThreadClick,
-        onQuoteMessageClick: onQuoteMessageClick,
-        onMessageHeightChange: handleScroll,
-      })}
-      {
-        /** Suggested Replies */
-        shouldRenderSuggestedReplies && <SuggestedReplies replyOptions={getSuggestedReplies(message)} onSendMessage={sendUserMessage} />
-      }
-      {/* Modal */}
-      {showRemove && renderRemoveMessageModal({ message, onCancel: () => setShowRemove(false) })}
-      {showFileViewer && renderFileViewer({ message: message as FileMessage, onCancel: () => setShowFileViewer(false) })}
+      {renderChildren()}
     </div>
   );
 };

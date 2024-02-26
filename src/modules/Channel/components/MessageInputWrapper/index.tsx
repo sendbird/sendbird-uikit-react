@@ -4,14 +4,15 @@ import { getSuggestedReplies } from '../../../../utils';
 import MessageInputWrapperView from '../../../GroupChannel/components/MessageInputWrapper/MessageInputWrapperView';
 import { useChannelContext } from '../../context/ChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { GroupChannelUIBasicProps } from '../../../GroupChannel/components/GroupChannelUI/GroupChannelUIView';
 
 export interface MessageInputWrapperProps {
   value?: string;
   disabled?: boolean;
-  renderFileUploadIcon?: () => React.ReactElement;
-  renderVoiceMessageIcon?: () => React.ReactElement;
-  renderSendMessageIcon?: () => React.ReactElement;
   acceptableMimeTypes?: string[];
+  renderFileUploadIcon?: GroupChannelUIBasicProps['renderFileUploadIcon'];
+  renderVoiceMessageIcon?: GroupChannelUIBasicProps['renderVoiceMessageIcon'];
+  renderSendMessageIcon?: GroupChannelUIBasicProps['renderSendMessageIcon'];
 }
 
 export const MessageInputWrapper = (props: MessageInputWrapperProps) => {
