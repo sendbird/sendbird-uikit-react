@@ -270,58 +270,6 @@ const SendbirdSDK = ({
       res.templates.forEach((messageTemplate) => {
         fetchedTemplates.push(JSON.parse(messageTemplate.template));
       });
-      const data: SendbirdMessageTemplate = {
-        key: 't3',
-        created_at: 12341234,
-        updated_at: 0,
-        ui_template: {
-          "version": 1,
-          "body": {
-            "items": [
-              {
-                "type": "box",
-                "viewStyle": {
-                  "padding": { "top": 10, "bottom": 10, "left": 10, "right": 10 }
-                },
-                "layout": "column",
-                "items": [
-                  {
-                    "type": "text", "text": "항목을 선택해주세요",
-                    "textStyle": { "weight": "bold" },
-                    "viewStyle": {
-                      "margin": { "top": 10, "bottom": 10, "left": 10, "right": 10 }
-                    }
-                  },
-                  {
-                    "type": "textButton", "text": "쏘카존 정보조회",
-                    "width": { "type":"flex", "value":0 },
-                    "textStyle": { "color": "#222222" },
-                    "viewStyle": {
-                      "margin": { "top": 4, "bottom": 4, "left": 0, "right": 0 }
-                    }
-                  },
-                  {
-                    "type": "textButton", "text": "이용내역 조회",
-                    "width": { "type":"flex", "value":0 },
-                    "textStyle": { "color": "#222222" },
-                    "viewStyle": {
-                      "paddimarginng": { "top": 4, "bottom": 4, "left": 0, "right": 0 }
-                    }
-                  },
-                  {
-                    "type": "textButton", "text": "상담원 연결하기",
-                    "width": { "type":"flex", "value":0 },
-                    "viewStyle": {
-                      "margin": { "top": 4, "bottom": 4, "left": 0, "right": 0 }
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        },
-      } as SendbirdMessageTemplate;
-      fetchedTemplates.push(data);
     }
     return fetchedTemplates;
   };
