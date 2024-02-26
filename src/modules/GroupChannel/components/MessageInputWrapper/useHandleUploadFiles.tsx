@@ -46,7 +46,7 @@ export const useHandleUploadFiles = (
         logger.info(`Channel|useHandleUploadFiles: Cannot upload files more than ${uikitMultipleFilesMessageLimit}`);
         openModal({
           modalProps: {
-            titleText: `Up to ${uikitMultipleFilesMessageLimit} files can be attached.`,
+            titleText: stringSet.FILE_UPLOAD_NOTIFICATION__COUNT_LIMIT.replace('%d', `${uikitUploadSizeLimit}`),
             hideFooter: true,
           },
           childElement: ({ closeModal }) => (
@@ -68,7 +68,7 @@ export const useHandleUploadFiles = (
         const ONE_MiB = 1024 * 1024;
         openModal({
           modalProps: {
-            titleText: `The maximum size per file is ${Math.floor(uikitUploadSizeLimit / ONE_MiB)} MB.`,
+            titleText: stringSet.FILE_UPLOAD_NOTIFICATION__SIZE_LIMIT.replace('%d', `${Math.floor(uikitUploadSizeLimit / ONE_MiB)}`),
             hideFooter: true,
           },
           childElement: ({ closeModal }) => (
