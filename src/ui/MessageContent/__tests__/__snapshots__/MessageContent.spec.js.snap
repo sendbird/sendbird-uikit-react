@@ -24,12 +24,7 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
           >
             <div
               class="sendbird-image-renderer__image"
-              style="width: 100%; min-width: min(400px, 28px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url();"
-            />
-            <img
-              alt=""
-              class="sendbird-image-renderer__hidden-image-loader"
-              src=""
+              style="width: 100%; min-width: min(400px, 28px); max-width: 400px; position: absolute;"
             />
           </div>
         </div>
