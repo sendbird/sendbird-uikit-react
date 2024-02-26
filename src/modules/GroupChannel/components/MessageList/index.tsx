@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import type { Member } from '@sendbird/chat/groupChannel';
 import { useGroupChannelHandler } from '@sendbird/uikit-tools';
 
-import type { CoreMessageType } from '../../../../utils';
-import { EveryMessage, RenderCustomSeparatorProps, RenderMessageParamsType, TypingIndicatorType } from '../../../../types';
+import { CoreMessageType, isSendableMessage } from '../../../../utils';
+import { EveryMessage, TypingIndicatorType } from '../../../../types';
 
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
@@ -19,25 +19,44 @@ import { useScrollBehavior } from './hooks/useScrollBehavior';
 import TypingIndicatorBubble from '../../../../ui/TypingIndicatorBubble';
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { getComponentKeyFromMessage } from '../../context/utils';
-import type { MessageContentProps } from '../../../../ui/MessageContent';
+import { GroupChannelUIBasicProps } from '../GroupChannelUI/GroupChannelUIView';
 
 export interface GroupChannelMessageListProps {
   className?: string;
-  renderMessage?: (props: RenderMessageParamsType) => React.ReactElement;
-  renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
-  renderPlaceholderEmpty?: () => React.ReactElement;
-  renderCustomSeparator?: (props: RenderCustomSeparatorProps) => React.ReactElement;
-  renderPlaceholderLoader?: () => React.ReactElement;
-  renderFrozenNotification?: () => React.ReactElement;
+  /**
+   * A function that customizes the rendering of each message component in the message list component.
+   */
+  renderMessage?: GroupChannelUIBasicProps['renderMessage'];
+  /**
+   * A function that customizes the rendering of the content portion of each message component.
+   */
+  renderMessageContent?: GroupChannelUIBasicProps['renderMessageContent'];
+  /**
+   * A function that customizes the rendering of a separator component between messages.
+   */
+  renderCustomSeparator?: GroupChannelUIBasicProps['renderCustomSeparator'];
+  /**
+   * A function that customizes the rendering of a loading placeholder component.
+   */
+  renderPlaceholderLoader?: GroupChannelUIBasicProps['renderPlaceholderLoader'];
+  /**
+   * A function that customizes the rendering of an empty placeholder component when there are no messages in the channel.
+   */
+  renderPlaceholderEmpty?: GroupChannelUIBasicProps['renderPlaceholderEmpty'];
+  /**
+   * A function that customizes the rendering of a frozen notification component when the channel is frozen.
+   */
+  renderFrozenNotification?: GroupChannelUIBasicProps['renderFrozenNotification'];
 }
 
 export const MessageList = ({
   className = '',
-  renderMessage,
-  renderPlaceholderEmpty,
+  renderMessage = (props) => <Message {...props} />,
+  renderMessageContent,
   renderCustomSeparator,
-  renderPlaceholderLoader,
-  renderFrozenNotification,
+  renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
+  renderPlaceholderEmpty = () => <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />,
+  renderFrozenNotification = () => <FrozenNotification className="sendbird-conversation__messages__notification" />,
 }: GroupChannelMessageListProps) => {
   const {
     channelUrl,
@@ -88,9 +107,7 @@ export const MessageList = ({
   const renderer = {
     frozenNotification() {
       if (!currentChannel || !currentChannel.isFrozen) return null;
-
-      if (renderFrozenNotification) return renderFrozenNotification();
-      return <FrozenNotification className="sendbird-conversation__messages__notification" />;
+      return renderFrozenNotification();
     },
     unreadMessagesNotification() {
       if (isScrollBottomReached || !unreadSinceDate) return null;
@@ -121,13 +138,11 @@ export const MessageList = ({
   };
 
   if (loading) {
-    if (renderPlaceholderLoader) return renderPlaceholderLoader();
-    return <PlaceHolder type={PlaceHolderTypes.LOADING} />;
+    return renderPlaceholderLoader();
   }
 
   if (messages.length === 0) {
-    if (renderPlaceholderEmpty) return renderPlaceholderEmpty();
-    return <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />;
+    return renderPlaceholderEmpty();
   }
 
   return (
@@ -145,18 +160,18 @@ export const MessageList = ({
                 currentMessage: message as CoreMessageType,
                 currentChannel,
               });
-              const isOutgoingMessage = message.isUserMessage() && message.sender.userId === store.config.userId;
+              const isOutgoingMessage = isSendableMessage(message) && message.sender.userId === store.config.userId;
               return (
                 <MessageProvider message={message} key={getComponentKeyFromMessage(message)} isByMe={isOutgoingMessage}>
-                  <Message
-                    handleScroll={onMessageContentSizeChanged}
-                    renderMessage={renderMessage}
-                    message={message as EveryMessage}
-                    hasSeparator={hasSeparator}
-                    chainTop={chainTop}
-                    chainBottom={chainBottom}
-                    renderCustomSeparator={renderCustomSeparator}
-                  />
+                  {renderMessage({
+                    handleScroll: onMessageContentSizeChanged,
+                    message: message as EveryMessage,
+                    hasSeparator,
+                    chainTop,
+                    chainBottom,
+                    renderMessageContent,
+                    renderCustomSeparator,
+                  })}
                 </MessageProvider>
               );
             })}

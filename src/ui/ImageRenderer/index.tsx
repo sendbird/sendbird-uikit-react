@@ -98,6 +98,13 @@ const ImageRenderer = ({
   };
 
   const renderImage = () => {
+    const backgroundStyle = internalUrl ? {
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center',
+      backgroundSize: 'cover',
+      backgroundImage: `url(${internalUrl})`,
+    } : {};
+
     return (
       <div
         className="sendbird-image-renderer__image"
@@ -107,11 +114,8 @@ const ImageRenderer = ({
           maxWidth: fixedSize ? dynamicMinWidth : '400px',
           height: dynamicMinHeight,
           position: 'absolute',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center',
-          backgroundSize: 'cover',
-          backgroundImage: `url(${internalUrl})`,
           borderRadius: getBorderRadiusForImageRenderer(circle, borderRadius),
+          ...backgroundStyle,
         }}
       />
     );
@@ -141,7 +145,7 @@ const ImageRenderer = ({
             }}
           />
         )}
-        <HiddenImageLoader
+        {internalUrl && <HiddenImageLoader
           src={internalUrl}
           alt={alt}
           onLoadStart={() => {
@@ -158,7 +162,7 @@ const ImageRenderer = ({
             setDefaultComponentVisible(true);
             onError();
           }}
-        />
+        />}
       </div>
     )
   );

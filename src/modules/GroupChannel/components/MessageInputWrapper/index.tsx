@@ -4,13 +4,15 @@ import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { useIIFE } from '@sendbird/uikit-tools';
 import { getSuggestedReplies, isSendableMessage } from '../../../../utils';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { GroupChannelUIBasicProps } from '../GroupChannelUI/GroupChannelUIView';
 
 export interface MessageInputWrapperProps {
   value?: string;
   disabled?: boolean;
-  renderFileUploadIcon?: () => React.ReactElement;
-  renderVoiceMessageIcon?: () => React.ReactElement;
-  renderSendMessageIcon?: () => React.ReactElement;
+  acceptableMimeTypes?: string[];
+  renderFileUploadIcon?: GroupChannelUIBasicProps['renderFileUploadIcon'];
+  renderVoiceMessageIcon?: GroupChannelUIBasicProps['renderVoiceMessageIcon'];
+  renderSendMessageIcon?: GroupChannelUIBasicProps['renderSendMessageIcon'];
 }
 
 export const MessageInputWrapper = (props: MessageInputWrapperProps) => {
