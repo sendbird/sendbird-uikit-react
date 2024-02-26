@@ -35,35 +35,6 @@
   padding: 0px 0px 24px 0px;
 }
 
-@keyframes sbHighlight {
-  0% {
-    background-color: #FFF2B6;
-  }
-  99% {
-    background-color: #FFF2B6;
-  }
-}
-
-@keyframes sbTextHighlight {
-  0% {
-    color: var(--sendbird-dark-onlight-01);
-  }
-  99% {
-    color: var(--sendbird-dark-onlight-01);
-  }
-}
-
-@keyframes sbHighlightBlock {
-  0% {
-    opacity: 0.5;
-    background-color: #FFF2B6;
-  }
-  99% {
-    opacity: 0.5;
-    background-color: #FFF2B6;
-  }
-}
-
 .sendbird-msg-hoc__animated {
   .sendbird-message-content {
     animation: bounce 1s ease;
@@ -73,51 +44,6 @@
         90% { transform:translateY(-10px); }
         100% { transform:translateY(0); }
     }
-  }
-}
-
-.sendbird-msg-hoc__highlighted {
-  .sendbird-text-message-item-body,
-  .sendbird-file-message-item-body {
-    animation-name: sbHighlight;
-    animation-duration: 1.6s;
-    animation-fill-mode: forwards;
-  }
-
-  .sendbird-text-message-item-body__message,
-  .sendbird-file-message-item-body__file-name__text {
-    animation-name: sbTextHighlight;
-    animation-duration: 1.6s;
-    animation-fill-mode: forwards;
-  }
-
-  .sendbird-voice-message-item-body {
-    display: block;
-    animation-name: sbHighlightBlock;
-    animation-duration: 1.6s;
-    animation-fill-mode: forwards;
-  }
-
-  .sendbird-thumbnail-message-item-body
-  .sendbird-thumbnail-message-item-body__image-cover {
-    display: block;
-    animation-name: sbHighlightBlock;
-    animation-duration: 1.6s;
-    animation-fill-mode: forwards;
-  }
-
-  .sendbird-og-message-item-body
-  .sendbird-og-message-item-body__cover {
-    display: block;
-    animation-name: sbHighlightBlock;
-    animation-duration: 1.6s;
-    animation-fill-mode: forwards;
-  }
-
-  .sendbird-message-content-reactions {
-    animation-name: sbHighlight;
-    animation-duration: 1.6s;
-    animation-fill-mode: forwards;
   }
 }
 

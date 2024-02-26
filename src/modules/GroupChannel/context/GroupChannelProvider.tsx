@@ -140,7 +140,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
 
   // State
   const [quoteMessage, setQuoteMessage] = useState<SendableMessageType>(null);
-  const [animatedMessageId, setAnimatedMessageId] = useState(0);
+  const [animatedMessageId, setAnimatedMessageId] = useState<number | null>(null);
   const [currentChannel, setCurrentChannel] = useState<GroupChannel | null>(null);
   const [fetchChannelError, setFetchChannelError] = useState<SendbirdError>(null);
 
@@ -259,7 +259,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
       } finally {
         // Reset states when channel changes
         setQuoteMessage(null);
-        setAnimatedMessageId(0);
+        setAnimatedMessageId(null);
       }
     }
   }, [sdkStore.initialized, sdkStore.sdk, channelUrl]);
@@ -309,7 +309,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   const scrollToBottom = usePreservedCallback(async () => {
     if (!scrollRef.current) return;
 
-    setAnimatedMessageId(0);
+    setAnimatedMessageId(null);
     setIsScrollBottomReached(true);
 
     if (config.isOnline && messageDataSource.hasNext()) {
@@ -345,7 +345,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
 
     clickHandler.deactivate();
 
-    setAnimatedMessageId(0);
+    setAnimatedMessageId(null);
     const message = messageDataSource.messages.find((it) => it.messageId === messageId || it.createdAt === createdAt);
     if (message) {
       const topOffset = getMessageTopOffset(message.createdAt);
