@@ -1,7 +1,7 @@
 import React, { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import './index.scss';
-import { MessageInputKeys, NodeNames, NodeTypes } from './const';
+import { MessageInputKeys, NodeTypes } from './const';
 
 import { USER_MENTION_TEMP_CHAR } from '../../modules/Channel/context/const';
 import IconButton from '../IconButton';
@@ -12,7 +12,7 @@ import Label, { LabelColors, LabelTypography } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
-import { isChannelTypeSupportsMultipleFilesMessage, nodeListToArray, sanitizeString } from './utils';
+import { extractTextAndMentions, isChannelTypeSupportsMultipleFilesMessage, nodeListToArray, sanitizeString } from './utils';
 import { arrayEqual, getClassName, getMimeTypesUIKitAccepts } from '../../utils';
 import usePaste from './hooks/usePaste';
 import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
@@ -65,6 +65,7 @@ type MessageInputProps = {
   className?: string | string[];
   messageFieldId?: string;
   isEdit?: boolean;
+  isMobile?: boolean;
   isMentionEnabled?: boolean;
   isVoiceMessageEnabled?: boolean;
   isSelectingMultipleFilesEnabled?: boolean;
@@ -96,6 +97,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     className = '',
     messageFieldId = '',
     isEdit = false,
+    isMobile = false,
     isMentionEnabled = false,
     isVoiceMessageEnabled = true,
     isSelectingMultipleFilesEnabled = false,
@@ -363,30 +365,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   const sendMessage = () => {
     const textField = internalRef?.current;
     if (!isEdit && textField?.textContent) {
-      let messageText = '';
-      let mentionTemplate = '';
-      textField.childNodes.forEach((node) => {
-        if (node.nodeType === NodeTypes.ElementNode && node.nodeName === NodeNames.Span) {
-          // @ts-ignore
-          const { innerText, dataset = {} } = node;
-          const { userid = '' } = dataset;
-          messageText += innerText;
-          mentionTemplate += `${USER_MENTION_TEMP_CHAR}{${userid}}`;
-        } else if (node.nodeType === NodeTypes.ElementNode && node.nodeName === NodeNames.Br) {
-          messageText += '\n';
-          mentionTemplate += '\n';
-        } else if (node?.nodeType === NodeTypes.ElementNode && node?.nodeName === NodeNames.Div) {
-          // handles newline in safari
-          const { textContent = '' } = node;
-          messageText += `\n${textContent}`;
-          mentionTemplate += `\n${textContent}`;
-        } else {
-          // other nodes including text node
-          const { textContent = '' } = node;
-          messageText += textContent;
-          mentionTemplate += textContent;
-        }
-      });
+      const { messageText, mentionTemplate } = extractTextAndMentions(textField.childNodes);
       const params = { message: messageText, mentionTemplate };
       onSendMessage(params);
       resetInput(internalRef);
@@ -401,24 +380,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     const textField = internalRef?.current;
     const messageId = message?.messageId;
     if (isEdit && messageId) {
-      let messageText = '';
-      let mentionTemplate = '';
-      textField.childNodes.forEach((node) => {
-        if (node.nodeType === NodeTypes.ElementNode && node.nodeName === NodeNames.Span) {
-          // @ts-ignore
-          const { innerText, dataset = {} } = node;
-          const { userid = '' } = dataset;
-          messageText += innerText;
-          mentionTemplate += `${USER_MENTION_TEMP_CHAR}{${userid}}`;
-          messageText += '\n';
-          mentionTemplate += '\n';
-        } else {
-          // other nodes including text node
-          const { textContent = '' } = node;
-          messageText += textContent;
-          mentionTemplate += textContent;
-        }
-      });
+      const { messageText, mentionTemplate } = extractTextAndMentions(textField.childNodes);
       const params = { messageId, message: messageText, mentionTemplate };
       onUpdateMessage(params);
       resetInput(internalRef);
@@ -459,8 +421,15 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
               if (
                 !e.shiftKey
                 && e.key === MessageInputKeys.Enter
+                && !isMobile
                 && internalRef?.current?.textContent?.trim().length > 0
                 && e?.nativeEvent?.isComposing !== true
+                /**
+                 * NOTE: What isComposing does?
+                 * Check if the user has finished composing characters
+                 * (e.g., for languages like Korean, Japanese, where characters are composed from multiple keystrokes)
+                 * Prevents executing the code while the user is still composing characters.
+                 */
               ) {
                 /**
                  * NOTE: contentEditable does not work as expected in mobile WebKit(Safari).
