@@ -1,5 +1,5 @@
 import { match } from 'ts-pattern';
-import {AppInfoStateType, WaitingTemplateKeyData} from './initialState';
+import { AppInfoStateType, WaitingTemplateKeyData } from './initialState';
 import { APP_INFO_ACTIONS, AppInfoActionTypes } from './actionTypes';
 
 export default function reducer(state: AppInfoStateType, action: AppInfoActionTypes): AppInfoStateType {

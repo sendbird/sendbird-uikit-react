@@ -22,7 +22,7 @@ import {
 import type { SendableMessageType } from '../../../../utils';
 import type { ReplyType } from '../../../../types';
 import type { GroupChannelProviderProps } from '../GroupChannelProvider';
-import {PersonalTemplatesDataForTesting} from './temp';
+import { PersonalTemplatesDataForTesting } from './temp';
 
 type MessageListDataSource = ReturnType<typeof useGroupChannelMessages>;
 type MessageActions = {

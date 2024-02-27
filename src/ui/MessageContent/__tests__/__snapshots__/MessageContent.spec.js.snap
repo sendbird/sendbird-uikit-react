@@ -44,7 +44,7 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
         Mathew
       </span>
       <div
-        class="sendbird-message-content__middle__body-container"
+        class="sendbird-message-content__middle__body-container "
       >
         <span
           class="sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"

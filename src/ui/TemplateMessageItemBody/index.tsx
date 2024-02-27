@@ -1,5 +1,5 @@
 import './index.scss';
-import React, {ReactElement, useContext, useEffect, useState} from 'react';
+import React, { ReactElement, useContext, useEffect, useState } from 'react';
 import type { BaseMessage } from '@sendbird/chat/message';
 import { getClassName } from '../../utils';
 import MessageTemplateProvider from '../../modules/GroupChannel/components/MessageTemplateProvider';
@@ -9,16 +9,16 @@ import mapData from './utils/mapData';
 import selectColorVariablesByTheme from './utils/selectColorVariablesByTheme';
 import { SendbirdTheme } from '../../types';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
-import {ProcessedMessageTemplate, WaitingTemplateKeyData} from '../../lib/dux/appInfo/initialState';
-import Label, {LabelColors, LabelTypography} from '../Label';
-import {LocalizationContext} from '../../lib/LocalizationContext';
-import Icon, {IconColors, IconTypes} from '../Icon';
+import { ProcessedMessageTemplate, WaitingTemplateKeyData } from '../../lib/dux/appInfo/initialState';
+import Label, { LabelColors, LabelTypography } from '../Label';
+import { LocalizationContext } from '../../lib/LocalizationContext';
+import Icon, { IconColors, IconTypes } from '../Icon';
 import Loader from '../Loader';
 
 const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 500; // It takes about 450ms for isError update
 const TEMPLATE_LOADING_SPINNER_SIZE = '40px';
 
-interface TemplateMessageItemBody {
+interface TemplateMessageItemBodyProps {
   className?: string | Array<string>;
   message: BaseMessage;
   isByMe?: boolean;
@@ -45,27 +45,6 @@ const getFilledMessageTemplateWithData = (
   return parsedTemplate;
 };
 
-const parseTemplateWithReplaceReplacer = (
-  templateString: string,
-  templateVariables: Record<string, string>,
-  colorVariables: Record<string, unknown>,
-  theme: SendbirdTheme,
-): MessageTemplateItem[] => {
-  const selectedThemeColorVariables = selectColorVariablesByTheme({
-    colorVariables,
-    theme,
-  });
-  let string = templateString.replace(/{([^"{}]+)}/g, (_, placeholder) => {
-    const value = selectedThemeColorVariables[placeholder];
-    return value || `{${placeholder}}`;
-  });
-  string = string.replace(/{([^"{}]+)}/g, (_, placeholder) => {
-    const value = templateVariables[placeholder];
-    return value || `{${placeholder}}`;
-  });
-  return JSON.parse(string);
-};
-
 interface FallbackMessageItemBodyProps {
   className?: string | Array<string>;
   message: BaseMessage;
@@ -84,7 +63,7 @@ function FallbackMessageItemBody({
       className={getClassName([
         className,
         isByMe ? 'outgoing' : 'incoming',
-        'sendbird-template-message-item-body__fallback_message'
+        'sendbird-template-message-item-body__fallback_message',
       ])}
     >
       {
@@ -131,7 +110,7 @@ function TemplateLoadingMessageItemBody({
       className={getClassName([
         className,
         isByMe ? 'outgoing' : 'incoming',
-        'sendbird-template-loading-message-item-body'
+        'sendbird-template-loading-message-item-body',
       ])}
     >
       <Loader
@@ -155,7 +134,7 @@ export default function TemplateMessageItemBody({
   message,
   isByMe = false,
   theme = 'light',
-}: TemplateMessageItemBody): ReactElement {
+}: TemplateMessageItemBodyProps): ReactElement {
   // FIXME: Can we use useSendbirdStateContext in this ui component?
   const templateData: MessageTemplateData | undefined = message.extendedMessagePayload?.['template'] as MessageTemplateData;
   if (!templateData?.key) {
@@ -185,7 +164,7 @@ export default function TemplateMessageItemBody({
 
   const waitingTemplateKeysMapString = Object.entries(waitingTemplateKeysMap)
     .map(([key, value]) => {
-      return [key,value.requestedAt, value.isError].join('-');
+      return [key, value.requestedAt, value.isError].join('-');
     }).join(',');
 
   useEffect(() => {
@@ -242,7 +221,7 @@ export default function TemplateMessageItemBody({
     <div className={getClassName([
       className,
       isByMe ? 'outgoing' : 'incoming',
-      'sendbird-template-message-item-body'
+      'sendbird-template-message-item-body',
     ])}>
       <MessageTemplateProvider message={message} templateItems={filledMessageTemplateItems} />
     </div>
