@@ -2,7 +2,7 @@ import './index.scss';
 import React, { ReactElement, useContext, useEffect, useState } from 'react';
 import type { BaseMessage } from '@sendbird/chat/message';
 import { getClassName } from '../../utils';
-import MessageTemplateProvider from '../../modules/GroupChannel/components/MessageTemplateProvider';
+import MessageTemplateWrapper from '../../modules/GroupChannel/components/MessageTemplateProvider';
 import { MessageTemplateData, MessageTemplateItem } from './types';
 import restoreNumbersFromMessageTemplateObject from './utils/restoreNumbersFromMessageTemplateObject';
 import mapData from './utils/mapData';
@@ -223,7 +223,7 @@ export default function TemplateMessageItemBody({
       isByMe ? 'outgoing' : 'incoming',
       'sendbird-template-message-item-body',
     ])}>
-      <MessageTemplateProvider message={message} templateItems={filledMessageTemplateItems} />
+      <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItems} />
     </div>
   );
 }
