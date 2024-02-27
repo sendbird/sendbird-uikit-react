@@ -244,7 +244,7 @@ export default function TemplateMessageItemBody({
       isByMe ? 'outgoing' : 'incoming',
       'sendbird-template-message-item-body'
     ])}>
-      <MessageTemplateProvider templateItems={filledMessageTemplateItems} />
+      <MessageTemplateProvider message={message} templateItems={filledMessageTemplateItems} />
     </div>
   );
 }
