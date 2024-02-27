@@ -18,7 +18,7 @@ import Loader from '../Loader';
 const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 500; // It takes about 450ms for isError update
 const TEMPLATE_LOADING_SPINNER_SIZE = '40px';
 
-interface Props {
+interface TemplateMessageItemBody {
   className?: string | Array<string>;
   message: BaseMessage;
   isByMe?: boolean;
@@ -155,7 +155,7 @@ export default function TemplateMessageItemBody({
   message,
   isByMe = false,
   theme = 'light',
-}: Props): ReactElement {
+}: TemplateMessageItemBody): ReactElement {
   // FIXME: Can we use useSendbirdStateContext in this ui component?
   const templateData: MessageTemplateData | undefined = message.extendedMessagePayload?.['template'] as MessageTemplateData;
   if (!templateData?.key) {
