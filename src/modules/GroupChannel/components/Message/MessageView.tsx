@@ -18,7 +18,7 @@ import MessageInput from '../../../../ui/MessageInput';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import MessageContent, { MessageContentProps } from '../../../../ui/MessageContent';
 
-import SuggestedReplies from '../SuggestedReplies';
+import SuggestedReplies, { SuggestedRepliesProps } from '../SuggestedReplies';
 import SuggestedMentionListView from '../SuggestedMentionList/SuggestedMentionListView';
 
 export interface MessageProps {
@@ -36,6 +36,10 @@ export interface MessageProps {
    * A function that customizes the rendering of the content portion of message component.
    */
   renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
+  /**
+   * A function that customizes the rendering of suggested replies component of messages.
+   */
+  renderSuggestedReplies?: (props: SuggestedRepliesProps) => React.ReactElement;
   /**
    * A function that customizes the rendering of a separator between messages.
    */
@@ -96,6 +100,9 @@ const MessageView = (props: MessageViewProps) => {
     renderMessage,
     children,
     renderMessageContent = (props) => <MessageContent {...props} />,
+    renderSuggestedReplies = (props) => (
+      <SuggestedReplies {...props} />
+    ),
     renderCustomSeparator,
     renderEditInput,
     hasSeparator,
@@ -283,9 +290,13 @@ const MessageView = (props: MessageViewProps) => {
           onQuoteMessageClick: onQuoteMessageClick,
           onMessageHeightChange: handleScroll,
         })}
+        { /* Suggested Replies */ }
         {
-          /** Suggested Replies */
-          shouldRenderSuggestedReplies && <SuggestedReplies replyOptions={getSuggestedReplies(message)} onSendMessage={sendUserMessage} />
+          shouldRenderSuggestedReplies && renderSuggestedReplies({
+            replyOptions: getSuggestedReplies(message),
+            onSendMessage: sendUserMessage,
+            message,
+          })
         }
         {/* Modal */}
         {showRemove && renderRemoveMessageModal({ message, onCancel: () => setShowRemove(false) })}

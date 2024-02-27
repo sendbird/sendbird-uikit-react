@@ -2750,7 +2750,7 @@ __metadata:
   peerDependencies:
     "@sendbird/chat": ">=4.10.5 <5"
     react: ">=16.8.6"
-  checksum: d4a049548b837b8a7a364905bce17d0aba8f09be0c82be8ea87e6c8c40e69da6454f11e05ea9348fcd12ad9a4ad61fa98e16c15d62c37ac3640866f8e4cb9f44
+  checksum: a682e6ca925ec5cf9b062d162628a7be6ad6fefdca4c09c08f716edfecdfec05d5d8112cfbbf06450721b8754598cb6af027e3ad163819acb566007f37206ef9
   languageName: node
   linkType: hard
 

@@ -1,12 +1,14 @@
 import './index.scss';
 import React, { useState } from 'react';
+import { BaseMessage } from '@sendbird/chat/message';
 
-interface Props {
+export interface SuggestedRepliesProps {
   replyOptions: string[];
   onSendMessage: ({ message }: { message: string }) => void;
+  message: BaseMessage;
 }
 
-export const SuggestedReplies = ({ replyOptions, onSendMessage }: Props) => {
+const SuggestedReplies = ({ replyOptions, onSendMessage }: SuggestedRepliesProps) => {
   const [replied, setReplied] = useState<boolean>(false);
 
   const onClickReply = (

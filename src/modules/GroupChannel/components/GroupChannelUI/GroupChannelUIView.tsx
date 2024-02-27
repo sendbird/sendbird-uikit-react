@@ -12,6 +12,7 @@ import type { RenderCustomSeparatorProps, RenderMessageParamsType } from '../../
 import type { GroupChannelHeaderProps } from '../GroupChannelHeader';
 import type { GroupChannelMessageListProps } from '../MessageList';
 import type { MessageContentProps } from '../../../../ui/MessageContent';
+import { SuggestedRepliesProps } from '../SuggestedReplies';
 
 export interface GroupChannelUIBasicProps {
   // Components
@@ -50,6 +51,10 @@ export interface GroupChannelUIBasicProps {
    * A function that customizes the rendering of the content portion of each message component.
    */
   renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
+  /**
+   * A function that customizes the rendering of the suggested replies of each message component.
+   */
+  renderSuggestedReplies?: (props: SuggestedRepliesProps) => React.ReactElement;
   /**
    * A function that customizes the rendering of a separator component between messages.
    */
