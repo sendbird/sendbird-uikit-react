@@ -49,7 +49,11 @@ const Message = (props: MessageProps): React.ReactElement => {
       }
       shouldRenderSuggestedReplies={
         config?.groupChannel?.enableSuggestedReplies
-        && message.messageId === currentGroupChannel?.lastMessage?.messageId
+        && (
+          config?.groupChannel?.showSuggestedRepliesFor === 'all_messages'
+            ? true
+            : message.messageId === currentGroupChannel?.lastMessage?.messageId
+        )
         // the options should appear only when there's no failed or pending messages
         && localMessages?.length === 0
         && getSuggestedReplies(message).length > 0

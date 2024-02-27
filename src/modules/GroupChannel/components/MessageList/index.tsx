@@ -47,12 +47,17 @@ export interface GroupChannelMessageListProps {
    * A function that customizes the rendering of a frozen notification component when the channel is frozen.
    */
   renderFrozenNotification?: GroupChannelUIBasicProps['renderFrozenNotification'];
+  /**
+   * A function that customizes the rendering of a suggested replies component.
+   */
+  renderSuggestedReplies?: GroupChannelUIBasicProps['renderSuggestedReplies'];
 }
 
 export const MessageList = ({
   className = '',
   renderMessage = (props) => <Message {...props} />,
   renderMessageContent,
+  renderSuggestedReplies,
   renderCustomSeparator,
   renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
   renderPlaceholderEmpty = () => <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />,
@@ -170,6 +175,7 @@ export const MessageList = ({
                     chainTop,
                     chainBottom,
                     renderMessageContent,
+                    renderSuggestedReplies,
                     renderCustomSeparator,
                   })}
                 </MessageProvider>

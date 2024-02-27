@@ -37,6 +37,7 @@ export const MessageList = ({
   className = '',
   renderMessage,
   renderMessageContent,
+  renderSuggestedReplies,
   renderCustomSeparator,
   renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
   renderPlaceholderEmpty = () => <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />,
@@ -202,6 +203,7 @@ export const MessageList = ({
                     chainTop={chainTop}
                     chainBottom={chainBottom}
                     renderMessageContent={renderMessageContent}
+                    renderSuggestedReplies={renderSuggestedReplies}
                     renderCustomSeparator={renderCustomSeparator}
                     // backward compatibility
                     renderMessage={renderMessage}
@@ -227,6 +229,7 @@ export const MessageList = ({
                     chainTop={chainTop}
                     chainBottom={chainBottom}
                     renderMessageContent={renderMessageContent}
+                    renderSuggestedReplies={renderSuggestedReplies}
                     renderCustomSeparator={renderCustomSeparator}
                     // backward compatibility
                     renderMessage={renderMessage}
