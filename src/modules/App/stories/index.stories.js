@@ -270,13 +270,13 @@ export const Korean = () => fitPageSize(
 );
 
 const PersonalTestConfig = {
-  appId: '03624819-106B-46D8-B174-3C36D246FAE6',
+  appId: '7D5A6D2D-F967-4515-81E8-5AB157923F9E',
   apiHost: 'https://api-preprod.sendbird.com',
   wsHost: 'wss://ws-preprod.sendbird.com',
   userInfo: [
     {
-      userId: '6c5689aa-953a-4d',
-      accessCode: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1IjoxMzE0NzU5MDcsInYiOjEsImUiOjE3MDg4NjM5NjR9.gdT3wrt7XWPWbAb08Ecif9Jv5LTueH2yl6SDSf5ohTQ',
+      userId: '0755a174-dcf1-48',
+      accessCode: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1IjoxMzE1MTkzNjQsInYiOjEsImUiOjE3MDkwOTI5MTB9.z8sR6xXlfuj1yhWaE3jwY5tod-fWF5_RioLubgHAQTk',
     },
     {
       userId: '894fc023-127f-49',
@@ -298,8 +298,8 @@ export const user1 = () => fitPageSize(
     customApiHost={PersonalTestConfig.apiHost}
     customWebSocketHost={PersonalTestConfig.wsHost}
     appId={PersonalTestConfig.appId}
-    userId={PersonalTestConfig.userInfo[1].userId} // PersonalTestConfig.userInfo[0].userId
-    accessToken={PersonalTestConfig.userInfo[1].accessCode}
+    userId={PersonalTestConfig.userInfo[0].userId} // PersonalTestConfig.userInfo[0].userId
+    accessToken={PersonalTestConfig.userInfo[0].accessCode}
     profileUrl={addProfile}
     breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
     showSearchIcon
