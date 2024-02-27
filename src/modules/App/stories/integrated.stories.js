@@ -11,9 +11,6 @@ import Checkbox from '../../../ui/Checkbox';
 import Button, { ButtonSizes, ButtonTypes } from '../../../ui/Button';
 import { MediaQueryProvider } from '../../../lib/MediaQueryContext';
 import { TypingIndicatorType } from '../../../types';
-import SendbirdProvider from '../../../lib/Sendbird';
-import GroupChannelList from '../../ChannelList';
-import Channel from '../../Channel';
 
 const STORAGE_KEY = 'sendbird-integrated-app-v1-groupchannel';
 
@@ -248,63 +245,6 @@ const MultipleButtons = ({
   return null;
 };
 
-const MAX_DEXTA_X = 0;
-const DraggableSuggestedReplies = ({ options }) => {
-  const [dragStartX, setDragStartX] = useState(null);
-  const [scrollLeft, setScrollLeft] = useState(0);
-
-  const handleMouseDown = (event) => {
-    setDragStartX(event.clientX - scrollLeft);
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-  };
-
-  const handleMouseMove = (event) => {
-    if (dragStartX !== null) {
-      let deltaX = event.clientX - dragStartX;
-      deltaX = Math.min(MAX_DEXTA_X, deltaX);
-      setScrollLeft(deltaX);
-    }
-  };
-
-  const handleMouseUp = () => {
-    setDragStartX(null);
-    document.removeEventListener('mousemove', handleMouseMove);
-    document.removeEventListener('mouseup', handleMouseUp);
-  };
-
-  return (
-    <div
-      style={{
-        position: 'relative',
-        width: '100%',
-      }}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-    >
-      <div
-        style={{
-          display: 'flex',
-          gap: '16px',
-          transform: `translateX(${scrollLeft}px)`
-        }}
-      >
-        {
-          options.map((option, index) => (
-            <button
-              key={index}
-              style={{ borderRadius: '8px', padding: '0 48px' }}
-            >
-              {option}
-            </button>
-          ))
-        }
-      </div>
-    </div>
-  );
-};
-
 export const GroupChannel = () => {
   const store = useRef(storePolyfill());
   let globalEnvironments;
@@ -336,7 +276,6 @@ export const GroupChannel = () => {
         [path]: item.defaultValue,
       }), {})
   });
-  const [channelUrl, setChannelUrl] = useState();
 
   useEffect(() => {
     if (isLoggedin) {
@@ -392,7 +331,7 @@ export const GroupChannel = () => {
         <div style={{ height: 'calc(100% - 12px)' }}>
           {
             sampleOptions.channelType === ChannelType.GROUP && (
-              <SendbirdProvider
+              <App
                 appId={sampleOptions.appId}
                 userId={sampleOptions.userId}
                 nickname={sampleOptions.nickname}
@@ -416,9 +355,9 @@ export const GroupChannel = () => {
                     showSuggestedRepliesFor: 'all_messages', // This enables suggested replies should be displayed for all messages but not just the last message.
                   }
                 }}
-                imageCompression={{compressionRate: sampleOptions.imageCompression ? 0.7 : 1}}
+                imageCompression={{ compressionRate: sampleOptions.imageCompression ? 0.7 : 1 }}
                 replyType={sampleOptions.replyType}
-                config={{logLevel: 'all'}}
+                config={{ logLevel: 'all' }}
                 breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
                 onProfileEditSuccess={(user) => {
                   const nextOptions = {
@@ -426,7 +365,7 @@ export const GroupChannel = () => {
                     nickname: user.nickname,
                   };
                   setSampleOptions(nextOptions);
-                  storeCurrentSampleOptions({store, sampleOptions: nextOptions, globalEnvironments});
+                  storeCurrentSampleOptions({ store, sampleOptions: nextOptions, globalEnvironments });
                 }}
                 stringSet={{
                   // CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR: '오퍼레이터 등록',
@@ -440,75 +379,7 @@ export const GroupChannel = () => {
                   // CHANNEL_SETTING__MODERATION__EMPTY_BAN: '차단된 된 유저가 아무도 없습니다',
                   // CHANNEL_SETTING__MODERATION__ALL_BAN: '차단된 유저 모두보기'
                 }}
-              >
-                <div style={{height: '100%', width: '100%', display: 'flex', flexDirection: 'row'}}>
-                  <GroupChannelList
-                    selectedChannelUrl={channelUrl}
-                    onChannelSelect={(channel) => setChannelUrl(channel?.url ?? '')}
-                    onCreateChannel={(channel) => setChannelUrl(channel.url)}
-                  />
-                  <div style={{height: '100%', width: '100%', display: 'inline-flex', flexDirection: 'row'}}>
-                    <div style={{width: '100%'}}>
-                      <Channel
-                        channelUrl={channelUrl}
-                        renderSuggestedReplies={(suggestedRepliesProps) => {
-                          const { replyOptions, onSendMessage, message } = suggestedRepliesProps;
-                          return <DraggableSuggestedReplies options={replyOptions} />;
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </SendbirdProvider>
-              // <App
-              //   appId={sampleOptions.appId}
-              //   userId={sampleOptions.userId}
-              //   nickname={sampleOptions.nickname}
-              //   theme={sampleOptions.theme}
-              //   allowProfileEdit
-              //   showSearchIcon={sampleOptions.messageSearch}
-            //   disableUserProfile={typeof sampleOptions.editUserProfile === 'boolean' ? !sampleOptions.editUserProfile : undefined}
-            //   isMessageGroupingEnabled={sampleOptions.messageGrouping}
-            //   isReactionEnabled={sampleOptions.emojiReaction}
-            //   isMentionEnabled={sampleOptions.mention}
-            //   isTypingIndicatorEnabledOnChannelList={sampleOptions.typingIndicator}
-              //   isMessageReceiptStatusEnabledOnChannelList={sampleOptions.messageStatus}
-              //   isVoiceMessageEnabled={sampleOptions.isVoiceMessageEnabled}
-              //   isMultipleFilesMessageEnabled={sampleOptions.multipleFiles}
-              //   uikitOptions={{
-              //     groupChannel: {
-              //       // enableTypingIndicator: false,
-              //       typingIndicatorTypes: new Set([TypingIndicatorType.Bubble, TypingIndicatorType.Text]),
-              //       enableFeedback: true, // This enables feedback message feature.
-              //       enableSuggestedReplies: true, // This enables suggested replies feature.
-              //       showSuggestedRepliesFor: 'all_messages', // This enables suggested replies should be displayed for all messages but not just the last message.
-              //     }
-              //   }}
-              //   imageCompression={{ compressionRate: sampleOptions.imageCompression ? 0.7 : 1 }}
-              //   replyType={sampleOptions.replyType}
-              //   config={{ logLevel: 'all' }}
-              //   breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
-              //   onProfileEditSuccess={(user) => {
-              //     const nextOptions = {
-              //       ...sampleOptions,
-              //       nickname: user.nickname,
-              //     };
-              //     setSampleOptions(nextOptions);
-              //     storeCurrentSampleOptions({ store, sampleOptions: nextOptions, globalEnvironments });
-              //   }}
-              //   stringSet={{
-              //     // CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR: '오퍼레이터 등록',
-              //     // CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR: '오퍼레이터 해제',
-              //     // CHANNEL_SETTING__MODERATION__MUTE: '유저 음소거',
-              //     // CHANNEL_SETTING__MODERATION__UNMUTE: '유저 음소거 해제',
-              //     // CHANNEL_SETTING__MODERATION__BAN: '유저 밴',
-              //     // CHANNEL_SETTING__MODERATION__UNBAN: '유저 언밴',
-              //     // BUTTON__CREATE: '만들다',
-              //     // BUTTON__INVITE: '초대하다',
-              //     // CHANNEL_SETTING__MODERATION__EMPTY_BAN: '차단된 된 유저가 아무도 없습니다',
-              //     // CHANNEL_SETTING__MODERATION__ALL_BAN: '차단된 유저 모두보기'
-              //   }}
-              // />
+              />
             )
           }
           {

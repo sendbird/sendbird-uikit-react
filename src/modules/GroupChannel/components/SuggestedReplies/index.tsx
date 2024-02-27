@@ -1,6 +1,6 @@
 import './index.scss';
 import React, { useState } from 'react';
-import {BaseMessage} from '@sendbird/chat/message';
+import { BaseMessage } from '@sendbird/chat/message';
 
 export interface SuggestedRepliesProps {
   replyOptions: string[];

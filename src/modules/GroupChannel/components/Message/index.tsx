@@ -43,7 +43,7 @@ export const Message = (props: MessageProps): React.ReactElement => {
     const { enableSuggestedReplies, showSuggestedRepliesFor } = groupChannelConfig;
     if (!enableSuggestedReplies) return false;
     if (
-      (!showSuggestedRepliesFor || showSuggestedRepliesFor == 'last_message_only')
+      (!showSuggestedRepliesFor || showSuggestedRepliesFor === 'last_message_only')
       && message.messageId === currentChannel?.lastMessage?.messageId
     ) return false;
     if (getSuggestedReplies(message).length === 0) return false;
