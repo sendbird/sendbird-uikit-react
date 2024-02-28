@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { DependencyList, useEffect, useState } from 'react';
 
 interface Request<Response> {
   (): Promise<Response>;
@@ -7,6 +7,8 @@ interface Request<Response> {
 
 interface Options {
   resetResponseOnRefresh?: boolean;
+  persistLoadingIfNoResponse?: boolean;
+  deps?: DependencyList;
 }
 
 interface State<T, E = unknown> {
@@ -26,7 +28,11 @@ export function useAsyncRequest<T>(request: Request<T>, options?: Options): Retu
     try {
       setState((prev) => ({ loading: true, error: undefined, response: options?.resetResponseOnRefresh ? undefined : prev.response }));
       const response = await request();
-      setState((prev) => ({ ...prev, response, loading: false }));
+      if (response) {
+        setState((prev) => ({ ...prev, response, loading: false }));
+      } else {
+        setState((prev) => ({ ...prev, loading: Boolean(options?.persistLoadingIfNoResponse) }));
+      }
     } catch (error) {
       setState((prev) => ({ ...prev, error, loading: false }));
     }
@@ -39,7 +45,7 @@ export function useAsyncRequest<T>(request: Request<T>, options?: Options): Retu
         request.cancel();
       }
     };
-  }, []);
+  }, options?.deps ?? []);
 
   return { ...state, refresh: updateWithRequest };
 }
