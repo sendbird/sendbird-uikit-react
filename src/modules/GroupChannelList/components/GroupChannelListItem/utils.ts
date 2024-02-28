@@ -3,7 +3,7 @@ import isToday from 'date-fns/isToday';
 import format from 'date-fns/format';
 import isThisYear from 'date-fns/isThisYear';
 import isYesterday from 'date-fns/isYesterday';
-import { isAudio, isGif, isImage, isVideo, isVoiceMessageMimeType } from '../../../../utils';
+import {isAudio, isGif, isImage, isTemplateMessage, isVideo, isVoiceMessageMimeType} from '../../../../utils';
 import { LabelStringSet } from '../../../../ui/Label';
 
 export const getChannelTitle = (channel?: GroupChannel, currentUserId?: string, stringSet = LabelStringSet) => {
@@ -63,6 +63,9 @@ const getChannelPreviewFileDisplayString = (mimeType: string, stringSet = LabelS
 
 const getPrettyLastMessage = (message = null, stringSet = LabelStringSet) => {
   if (!message) return '';
+  if (isTemplateMessage(message)) {
+    return stringSet.CHANNEL_PREVIEW_LAST_MESSAGE_TEMPLATE_MESSAGE;
+  }
   if (message.isFileMessage()) {
     return getChannelPreviewFileDisplayString(message.type, stringSet);
   }
