@@ -269,6 +269,31 @@ export const Korean = () => fitPageSize(
   />
 );
 
+export const mobile = () => fitPageSize(
+  <App
+    appId={appId}
+    userId={array[0]}
+    nickname={array[0]}
+    profileUrl={addProfile}
+    breakpoint
+    showSearchIcon
+    allowProfileEdit
+    config={{ logLevel: 'all' }}
+    replyType="THREAD"
+    isReactionEnabled
+    isMentionEnabled
+    isVoiceMessageEnabled
+    isMultipleFilesMessageEnabled
+    isMessageReceiptStatusEnabledOnChannelList
+    uikitOptions={{
+      groupChannel: {
+        // enableTypingIndicator: false,
+        typingIndicatorTypes: new Set([TypingIndicatorType.Bubble, TypingIndicatorType.Text]),
+      }
+    }}
+  />
+);
+
 export const user1 = () => fitPageSize(
   <App
     appId={appId}
