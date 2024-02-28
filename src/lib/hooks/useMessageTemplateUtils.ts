@@ -45,18 +45,6 @@ export default function useMessageTemplateUtils({
    * returns processed template for updating templates info in global state.
    * If no such templates exists (error) or any error occurs in response, return null.
    */
-  const fetchProcessedMessageTemplate = async (
-    key: string,
-  ): Promise<ProcessedMessageTemplate | null> => {
-    try {
-      const newTemplate: MessageTemplate = await sdk.message.getMessageTemplate(key);
-      const parsedTemplate: SendbirdMessageTemplate = JSON.parse(newTemplate.template);
-      return getProcessedTemplate(parsedTemplate);
-    } catch (e) {
-      logger?.error?.('Sendbird | fetchProcessedMessageTemplate failed', e);
-      return null;
-    }
-  };
 
   const fetchAllMessageTemplates = async (readySdk: SendbirdChat): Promise<SendbirdMessageTemplate[]> => {
     let hasMore = true;
@@ -141,8 +129,27 @@ export default function useMessageTemplateUtils({
           requestedAt,
         },
       });
-      const processedTemplate: ProcessedMessageTemplate | null = await fetchProcessedMessageTemplate(templateKey);
-      if (processedTemplate) {
+
+      let parsedTemplate: SendbirdMessageTemplate | null = null;
+      try {
+        const newTemplate: MessageTemplate = await sdk.message.getMessageTemplate(templateKey);
+        parsedTemplate = JSON.parse(newTemplate.template);
+      } catch (e) {
+        logger?.error?.('Sendbird | fetchProcessedMessageTemplate failed', e);
+      }
+
+      if (parsedTemplate) {
+        // Update cache
+        const cachedMessageTemplates: string | null = localStorage.getItem(CACHED_MESSAGE_TEMPLATES_KEY);
+        if (cachedMessageTemplates) {
+          const parsedTemplates: SendbirdMessageTemplate[] = JSON.parse(cachedMessageTemplates);
+          parsedTemplates.push(parsedTemplate);
+          localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify(parsedTemplates));
+        } else {
+          localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify([parsedTemplate]));
+        }
+        // Update memory
+        const processedTemplate: ProcessedMessageTemplate = getProcessedTemplate(parsedTemplate);
         appInfoDispatcher({
           type: UPSERT_MESSAGE_TEMPLATE,
           payload: {
