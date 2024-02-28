@@ -2679,7 +2679,7 @@ __metadata:
     "@rollup/plugin-replace": ^5.0.4
     "@rollup/plugin-typescript": ^11.1.5
     "@sendbird/chat": ^4.10.10
-    "@sendbird/uikit-tools": 0.0.1-alpha.64
+    "@sendbird/uikit-tools": 0.0.1-alpha.65
     "@storybook/addon-actions": ^6.5.10
     "@storybook/addon-docs": ^6.5.10
     "@storybook/addon-links": ^6.5.10
@@ -2844,7 +2844,7 @@ __metadata:
   peerDependencies:
     "@sendbird/chat": ">=4.10.5 <5"
     react: ">=16.8.6"
-  checksum: a682e6ca925ec5cf9b062d162628a7be6ad6fefdca4c09c08f716edfecdfec05d5d8112cfbbf06450721b8754598cb6af027e3ad163819acb566007f37206ef9
+  checksum: c6a7fecc7dbae40901e3f42988db85ca8c53a01e40522a3165fce780888e56b95bd858c233b23cf3368615593edf7691ce8ae62898695d28214b06e14268a653
   languageName: node
   linkType: hard
 
