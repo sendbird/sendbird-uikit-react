@@ -66,12 +66,6 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         message={message as BaseMessage}
         isByMe={isByMe}
         theme={config?.theme as SendbirdTheme}
-      /> ?? <UnknownMessageItemBody
-        className={MESSAGE_ITEM_BODY_CLASSNAME}
-        message={message}
-        isByMe={isByMe}
-        mouseHover={mouseHover}
-        isReactionEnabled={isReactionEnabledInChannel}
       />
     ))
     .when((message) => isOgMessageEnabledInGroupChannel

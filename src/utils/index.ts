@@ -273,7 +273,6 @@ export const isThreadMessage = (message: CoreMessageType): boolean => (
 );
 
 export const isTemplateMessage = (message: CoreMessageType): boolean => !!(
-  // FIXME: This is temporary so need to be touched later.
   message && message.extendedMessagePayload?.['template']
 );
 

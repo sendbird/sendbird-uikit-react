@@ -135,7 +135,6 @@ export default function TemplateMessageItemBody({
   isByMe = false,
   theme = 'light',
 }: TemplateMessageItemBodyProps): ReactElement {
-  // FIXME: Can we use useSendbirdStateContext in this ui component?
   const templateData: MessageTemplateData | undefined = message.extendedMessagePayload?.['template'] as MessageTemplateData;
   if (!templateData?.key) {
     return <FallbackMessageItemBody className={className} message={message} isByMe={isByMe} />;
