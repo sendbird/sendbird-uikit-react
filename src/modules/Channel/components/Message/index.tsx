@@ -13,8 +13,6 @@ const Message = (props: MessageProps): React.ReactElement => {
   const {
     initialized,
     currentGroupChannel,
-    highLightedMessageId,
-    setHighLightedMessageId,
     animatedMessageId,
     setAnimatedMessageId,
     updateMessage,
@@ -32,7 +30,6 @@ const Message = (props: MessageProps): React.ReactElement => {
     onReplyInThread,
     onQuoteMessageClick,
     onMessageAnimated,
-    onMessageHighlighted,
     sendMessage,
     localMessages,
   } = useChannelContext();
@@ -88,9 +85,6 @@ const Message = (props: MessageProps): React.ReactElement => {
       animatedMessageId={animatedMessageId}
       setAnimatedMessageId={setAnimatedMessageId}
       onMessageAnimated={onMessageAnimated}
-      highLightedMessageId={highLightedMessageId}
-      setHighLightedMessageId={setHighLightedMessageId}
-      onMessageHighlighted={onMessageHighlighted}
       renderFileViewer={(props) => <FileViewer {...props} />}
       renderRemoveMessageModal={(props) => <RemoveMessageModal {...props} />}
     />

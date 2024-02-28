@@ -219,7 +219,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   useEffect(() => {
     setInitialTimeStamp(startingPoint);
   }, [startingPoint, channelUrl]);
-  const [animatedMessageId, setAnimatedMessageId] = useState(0);
+  const [animatedMessageId, setAnimatedMessageId] = useState<number | null>(null);
   const [highLightedMessageId, setHighLightedMessageId] = useState(highlightedMessage);
   useEffect(() => {
     setHighLightedMessageId(highlightedMessage);

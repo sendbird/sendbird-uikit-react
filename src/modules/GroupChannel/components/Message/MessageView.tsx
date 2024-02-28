@@ -138,9 +138,6 @@ const MessageView = (props: MessageViewProps) => {
     setAnimatedMessageId,
     animatedMessageId,
     onMessageAnimated,
-    highLightedMessageId,
-    setHighLightedMessageId,
-    onMessageHighlighted,
   } = props;
 
   const { dateLocale, stringSet } = useLocalization();
@@ -154,7 +151,6 @@ const MessageView = (props: MessageViewProps) => {
   const [showRemove, setShowRemove] = useState(false);
   const [showFileViewer, setShowFileViewer] = useState(false);
   const [isAnimated, setIsAnimated] = useState(false);
-  const [isHighlighted, setIsHighlighted] = useState(false);
   const [mentionNickname, setMentionNickname] = useState('');
   const [mentionedUsers, setMentionedUsers] = useState([]);
   const [mentionedUserIds, setMentionedUserIds] = useState([]);
@@ -203,33 +199,7 @@ const MessageView = (props: MessageViewProps) => {
   useLayoutEffect(() => {
     const timeouts = [];
 
-    if (highLightedMessageId === message.messageId && messageScrollRef?.current) {
-      setIsAnimated(false);
-      timeouts.push(
-        setTimeout(() => {
-          setIsHighlighted(true);
-        }, 500),
-      );
-      timeouts.push(
-        setTimeout(() => {
-          setHighLightedMessageId(0);
-          onMessageHighlighted?.();
-        }, 1600),
-      );
-    } else {
-      setIsHighlighted(false);
-    }
-    return () => {
-      timeouts.forEach((it) => clearTimeout(it));
-    };
-  }, [highLightedMessageId, messageScrollRef.current, message.messageId]);
-
-  useLayoutEffect(() => {
-    const timeouts = [];
-
     if (animatedMessageId === message.messageId && messageScrollRef?.current) {
-      setIsHighlighted(false);
-
       timeouts.push(
         setTimeout(() => {
           setIsAnimated(true);
@@ -238,7 +208,7 @@ const MessageView = (props: MessageViewProps) => {
 
       timeouts.push(
         setTimeout(() => {
-          setAnimatedMessageId(0);
+          setAnimatedMessageId(null);
           onMessageAnimated?.();
         }, 1600),
       );
@@ -398,7 +368,6 @@ const MessageView = (props: MessageViewProps) => {
       className={getClassName([
         'sendbird-msg-hoc sendbird-msg--scroll-ref',
         isAnimated ? 'sendbird-msg-hoc__animated' : '',
-        isHighlighted ? 'sendbird-msg-hoc__highlighted' : '',
       ])}
       style={children || renderMessage ? undefined : { marginBottom: '2px' }}
       data-sb-message-id={message.messageId}
