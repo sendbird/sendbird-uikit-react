@@ -1,4 +1,4 @@
-import {MessageTemplateData} from '../../../../ui/TemplateMessageItemBody/types';
+import { MessageTemplateData } from '../../../../ui/TemplateMessageItemBody/types';
 
 export const PersonalTemplatesDataForTesting: MessageTemplateData[] = [
   {
@@ -34,20 +34,5 @@ export const PersonalTemplatesDataForTesting: MessageTemplateData[] = [
   },
   {
     key: 'socar-car-item',
-  },
-];
-
-export const SocarWarRoomTemplatesData: MessageTemplateData[] = [] = [
-  {
-    key: 't0',
-  },
-  {
-    key: 't1',
-  },
-  {
-    key: 't2',
-  },
-  {
-    key: 't3',
   },
 ];

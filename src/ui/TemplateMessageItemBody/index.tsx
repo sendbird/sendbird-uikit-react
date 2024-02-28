@@ -1,17 +1,24 @@
 import './index.scss';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useContext, useEffect, useState } from 'react';
 import type { BaseMessage } from '@sendbird/chat/message';
 import { getClassName } from '../../utils';
-import MessageTemplateProvider from '../../modules/GroupChannel/components/MessageTemplateProvider';
+import MessageTemplateWrapper from '../../modules/GroupChannel/components/MessageTemplateProvider';
 import { MessageTemplateData, MessageTemplateItem } from './types';
 import restoreNumbersFromMessageTemplateObject from './utils/restoreNumbersFromMessageTemplateObject';
 import mapData from './utils/mapData';
 import selectColorVariablesByTheme from './utils/selectColorVariablesByTheme';
 import { SendbirdTheme } from '../../types';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
-import { ProcessedMessageTemplate, MessageTemplatesInfo } from '../../lib/dux/appInfo/initialState';
+import { ProcessedMessageTemplate, WaitingTemplateKeyData } from '../../lib/dux/appInfo/initialState';
+import Label, { LabelColors, LabelTypography } from '../Label';
+import { LocalizationContext } from '../../lib/LocalizationContext';
+import Icon, { IconColors, IconTypes } from '../Icon';
+import Loader from '../Loader';
 
-interface Props {
+const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 500; // It takes about 450ms for isError update
+const TEMPLATE_LOADING_SPINNER_SIZE = '40px';
+
+interface TemplateMessageItemBodyProps {
   className?: string | Array<string>;
   message: BaseMessage;
   isByMe?: boolean;
@@ -38,63 +45,185 @@ const getFilledMessageTemplateWithData = (
   return parsedTemplate;
 };
 
-const parseTemplateWithReplaceReplacer = (
-  templateString: string,
-  templateVariables: Record<string, string>,
-  colorVariables: Record<string, unknown>,
-  theme: SendbirdTheme,
-): MessageTemplateItem[] => {
-  const selectedThemeColorVariables = selectColorVariablesByTheme({
-    colorVariables,
-    theme,
-  });
-  let string = templateString.replace(/{([^"{}]+)}/g, (_, placeholder) => {
-    const value = selectedThemeColorVariables[placeholder];
-    return value || `{${placeholder}}`;
-  });
-  string = string.replace(/{([^"{}]+)}/g, (_, placeholder) => {
-    const value = templateVariables[placeholder];
-    return value || `{${placeholder}}`;
-  });
-  return JSON.parse(string);
-};
+interface FallbackMessageItemBodyProps {
+  className?: string | Array<string>;
+  message: BaseMessage;
+  isByMe?: boolean;
+}
+function FallbackMessageItemBody({
+  className,
+  message,
+  isByMe,
+}: FallbackMessageItemBodyProps): ReactElement {
+  const { stringSet } = useContext(LocalizationContext);
+  const text = message['message'];
+
+  return (
+    <div
+      className={getClassName([
+        className,
+        isByMe ? 'outgoing' : 'incoming',
+        'sendbird-template-message-item-body__fallback_message',
+      ])}
+    >
+      {
+        text
+          ? <>
+            <Label
+              type={LabelTypography.BODY_1}
+              color={LabelColors.ONCONTENT_INVERSE_1}
+            >
+              {text}
+            </Label>
+          </>
+          : <>
+            <Label
+              className='sendbird-template-message-item-body__fallback_message__header'
+              type={LabelTypography.BODY_1}
+              color={LabelColors.ONCONTENT_INVERSE_1}
+            >
+              {stringSet.UNKNOWN__TEMPLATE_ERROR}
+            </Label>
+            <Label
+              className='sendbird-template-message-item-body__fallback_message__description'
+              type={LabelTypography.BODY_1}
+              color={LabelColors.ONCONTENT_INVERSE_5}
+            >
+              {stringSet.UNKNOWN__CANNOT_READ_TEMPLATE}
+            </Label>
+          </>
+      }
+    </div>
+  );
+}
+
+interface TemplateLoadingMessageItemBodyProps {
+  className?: string | Array<string>;
+  isByMe?: boolean;
+}
+function TemplateLoadingMessageItemBody({
+  className,
+  isByMe,
+}: TemplateLoadingMessageItemBodyProps): ReactElement {
+  return (
+    <div
+      className={getClassName([
+        className,
+        isByMe ? 'outgoing' : 'incoming',
+        'sendbird-template-loading-message-item-body',
+      ])}
+    >
+      <Loader
+        className="sendbird-message-status__icon"
+        width={TEMPLATE_LOADING_SPINNER_SIZE}
+        height={TEMPLATE_LOADING_SPINNER_SIZE}
+      >
+        <Icon
+          type={IconTypes.SPINNER}
+          fillColor={IconColors.CONTENT_INVERSE_5}
+          width={TEMPLATE_LOADING_SPINNER_SIZE}
+          height={TEMPLATE_LOADING_SPINNER_SIZE}
+        />
+      </Loader>
+    </div>
+  );
+}
 
 export default function TemplateMessageItemBody({
   className = '',
   message,
   isByMe = false,
   theme = 'light',
-}: Props): ReactElement {
+}: TemplateMessageItemBodyProps): ReactElement {
   // FIXME: Can we use useSendbirdStateContext in this ui component?
-  const store = useSendbirdStateContext();
-  const messageTemplatesInfo: MessageTemplatesInfo | undefined = store?.stores?.appInfoStore?.messageTemplatesInfo;
-  const processedMessageTemplates: Record<string, ProcessedMessageTemplate> | undefined = messageTemplatesInfo?.templatesMap;
-  if (!processedMessageTemplates) return;
+  const templateData: MessageTemplateData | undefined = message.extendedMessagePayload?.['template'] as MessageTemplateData;
+  if (!templateData?.key) {
+    return <FallbackMessageItemBody className={className} message={message} isByMe={isByMe} />;
+  }
 
-  const templateData: MessageTemplateData = message.extendedMessagePayload?.['template'] as MessageTemplateData;
-  const processedTemplate: ProcessedMessageTemplate = processedMessageTemplates[templateData.key];
+  const globalState = useSendbirdStateContext();
+  if (!globalState) {
+    return <FallbackMessageItemBody className={className} message={message} isByMe={isByMe} />;
+  }
 
-  // FIXME: Replace logic is not working properly. Fix and use this than below
-  // const filledMessageTemplateItems: MessageTemplateItem[] = parseTemplateWithReplaceReplacer(
-  //   processedTemplate.uiTemplate,
-  //   templateData.variables ?? {},
-  //   processedTemplate.colorVariables,
-  //   theme,
-  // );
-  const filledMessageTemplateItems: MessageTemplateItem[] = getFilledMessageTemplateWithData(
-    JSON.parse(processedTemplate.uiTemplate),
-    templateData.variables ?? {},
-    processedTemplate.colorVariables,
-    theme,
-  );
+  const {
+    getCachedTemplate,
+    updateMessageTemplatesInfo,
+  } = globalState.utils;
+
+  const waitingTemplateKeysMap = globalState.stores.appInfoStore.waitingTemplateKeysMap;
+
+  const [
+    filledMessageTemplateItems,
+    setFilledMessageTemplateItems,
+  ] = useState<MessageTemplateItem[]>([]);
+  const [
+    isErrored,
+    setIsErrored,
+  ] = useState(false);
+
+  const waitingTemplateKeysMapString = Object.entries(waitingTemplateKeysMap)
+    .map(([key, value]) => {
+      return [key, value.requestedAt, value.isError].join('-');
+    }).join(',');
+
+  useEffect(() => {
+    // Do not put && !isErrored here in case where errored key is fetched in the future by future message
+    if (filledMessageTemplateItems.length === 0) {
+      const templateKey = templateData.key;
+      const cachedTemplate: ProcessedMessageTemplate | null = getCachedTemplate(templateKey);
+      if (cachedTemplate) {
+        // TODO: Replace logic is not working properly. Fix and use this than below
+        // const filledMessageTemplateItems: MessageTemplateItem[] = parseTemplateWithReplaceReplacer(
+        //   processedTemplate.uiTemplate,
+        //   templateData.variables ?? {},
+        //   processedTemplate.colorVariables,
+        //   theme,
+        // );
+
+        const filledMessageTemplateItems: MessageTemplateItem[] = getFilledMessageTemplateWithData(
+          JSON.parse(cachedTemplate.uiTemplate),
+          templateData.variables ?? {},
+          cachedTemplate.colorVariables,
+          theme,
+        );
+        setFilledMessageTemplateItems(filledMessageTemplateItems);
+      } else if (!isErrored) { // This prevents duplicate GET calls by already errored message when a new message with same key is calling GET
+        /**
+         * Attempt GET template by key IFF one of below cases is met:
+         * 1. This is the first GET call for the template key.
+         * 2. Minimum buffer time has passed since the previous GET error.
+         */
+        const waitingTemplateKeyData: WaitingTemplateKeyData | undefined = waitingTemplateKeysMap[templateKey];
+        const requestedAt = Date.now();
+        if (
+          !waitingTemplateKeyData
+          || (
+            requestedAt > waitingTemplateKeyData.requestedAt + TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES
+          )
+        ) {
+          updateMessageTemplatesInfo(templateData.key, Date.now());
+        } else if (waitingTemplateKeyData && waitingTemplateKeyData.isError) {
+          setIsErrored(true);
+        }
+      }
+    }
+  }, [templateData.key, waitingTemplateKeysMapString]);
+
+  if (filledMessageTemplateItems.length === 0) {
+    if (isErrored) {
+      return <FallbackMessageItemBody className={className} message={message} isByMe={isByMe} />;
+    }
+    return <TemplateLoadingMessageItemBody className={className} isByMe={isByMe} />;
+  }
 
   return (
-    filledMessageTemplateItems && <div className={getClassName([
+    <div className={getClassName([
       className,
-      'sendbird-template-message-item-body',
       isByMe ? 'outgoing' : 'incoming',
+      'sendbird-template-message-item-body',
     ])}>
-      <MessageTemplateProvider templateItems={filledMessageTemplateItems} />
+      <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItems} />
     </div>
   );
 }
