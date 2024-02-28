@@ -85,24 +85,29 @@ const ChannelSettingsProvider = ({
     async () => {
       logger.info('ChannelSettings: fetching channel');
 
-      let errorMessage: string | undefined;
-
       if (!channelUrl) {
-        errorMessage = 'channel url is required';
+        logger.warning('ChannelSettings: channel url is required');
+        return;
       } else if (!sdkStore.initialized || !sdkStore.sdk) {
-        errorMessage = 'SDK is not initialized';
+        logger.warning('ChannelSettings: SDK is not initialized');
+        return;
       } else if (!sdkStore.sdk.groupChannel) {
-        errorMessage = 'GroupChannelModule is not specified in the SDK';
+        logger.warning('ChannelSettings: GroupChannelModule is not specified in the SDK');
+        return;
       }
 
-      if (errorMessage) {
-        logger.warning(`ChannelSettings: ${errorMessage}`);
-        throw new Error(errorMessage);
+      try {
+        return await sdkStore.sdk.groupChannel.getChannel(channelUrl);
+      } catch (error) {
+        logger.error('ChannelSettings: fetching channel error:', error.message);
+        throw error;
       }
-
-      return sdkStore.sdk.groupChannel.getChannel(channelUrl);
     },
-    { resetResponseOnRefresh: true },
+    {
+      resetResponseOnRefresh: true,
+      persistLoadingIfNoResponse: true,
+      deps: [sdkStore.initialized, sdkStore.sdk.groupChannel],
+    },
   );
 
   useEffect(() => {
