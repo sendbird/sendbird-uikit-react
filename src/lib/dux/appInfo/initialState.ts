@@ -4,7 +4,7 @@ export type ProcessedMessageTemplate = {
 };
 
 export interface MessageTemplatesInfo {
-  token: string; // This server-side token gets updated on every POST/PUT on message template table.
+  token: string; // This server-side token gets updated on every CRUD operation on message template table.
   templatesMap: Record<string, ProcessedMessageTemplate>;
 }
 

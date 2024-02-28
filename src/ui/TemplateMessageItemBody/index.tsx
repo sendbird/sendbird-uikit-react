@@ -1,8 +1,8 @@
 import './index.scss';
-import React, { ReactElement, useContext, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import type { BaseMessage } from '@sendbird/chat/message';
 import { getClassName } from '../../utils';
-import MessageTemplateWrapper from '../../modules/GroupChannel/components/MessageTemplateProvider';
+import MessageTemplateWrapper from '../../modules/GroupChannel/components/MessageTemplateWrapper';
 import { MessageTemplateData, MessageTemplateItem } from './types';
 import restoreNumbersFromMessageTemplateObject from './utils/restoreNumbersFromMessageTemplateObject';
 import mapData from './utils/mapData';
@@ -10,13 +10,10 @@ import selectColorVariablesByTheme from './utils/selectColorVariablesByTheme';
 import { SendbirdTheme } from '../../types';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { ProcessedMessageTemplate, WaitingTemplateKeyData } from '../../lib/dux/appInfo/initialState';
-import Label, { LabelColors, LabelTypography } from '../Label';
-import { LocalizationContext } from '../../lib/LocalizationContext';
-import Icon, { IconColors, IconTypes } from '../Icon';
-import Loader from '../Loader';
+import FallbackTemplateMessageItemBody from './FallbackTemplateMessageItemBody';
+import LoadingTemplateMessageItemBody from './LoadingTemplateMessageItemBody';
 
 const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 500; // It takes about 450ms for isError update
-const TEMPLATE_LOADING_SPINNER_SIZE = '40px';
 
 interface TemplateMessageItemBodyProps {
   className?: string | Array<string>;
@@ -45,91 +42,7 @@ const getFilledMessageTemplateWithData = (
   return parsedTemplate;
 };
 
-interface FallbackMessageItemBodyProps {
-  className?: string | Array<string>;
-  message: BaseMessage;
-  isByMe?: boolean;
-}
-function FallbackMessageItemBody({
-  className,
-  message,
-  isByMe,
-}: FallbackMessageItemBodyProps): ReactElement {
-  const { stringSet } = useContext(LocalizationContext);
-  const text = message['message'];
-
-  return (
-    <div
-      className={getClassName([
-        className,
-        isByMe ? 'outgoing' : 'incoming',
-        'sendbird-template-message-item-body__fallback_message',
-      ])}
-    >
-      {
-        text
-          ? <>
-            <Label
-              type={LabelTypography.BODY_1}
-              color={LabelColors.ONCONTENT_INVERSE_1}
-            >
-              {text}
-            </Label>
-          </>
-          : <>
-            <Label
-              className='sendbird-template-message-item-body__fallback_message__header'
-              type={LabelTypography.BODY_1}
-              color={LabelColors.ONCONTENT_INVERSE_1}
-            >
-              {stringSet.UNKNOWN__TEMPLATE_ERROR}
-            </Label>
-            <Label
-              className='sendbird-template-message-item-body__fallback_message__description'
-              type={LabelTypography.BODY_1}
-              color={LabelColors.ONCONTENT_INVERSE_5}
-            >
-              {stringSet.UNKNOWN__CANNOT_READ_TEMPLATE}
-            </Label>
-          </>
-      }
-    </div>
-  );
-}
-
-interface TemplateLoadingMessageItemBodyProps {
-  className?: string | Array<string>;
-  isByMe?: boolean;
-}
-function TemplateLoadingMessageItemBody({
-  className,
-  isByMe,
-}: TemplateLoadingMessageItemBodyProps): ReactElement {
-  return (
-    <div
-      className={getClassName([
-        className,
-        isByMe ? 'outgoing' : 'incoming',
-        'sendbird-template-loading-message-item-body',
-      ])}
-    >
-      <Loader
-        className="sendbird-message-status__icon"
-        width={TEMPLATE_LOADING_SPINNER_SIZE}
-        height={TEMPLATE_LOADING_SPINNER_SIZE}
-      >
-        <Icon
-          type={IconTypes.SPINNER}
-          fillColor={IconColors.CONTENT_INVERSE_5}
-          width={TEMPLATE_LOADING_SPINNER_SIZE}
-          height={TEMPLATE_LOADING_SPINNER_SIZE}
-        />
-      </Loader>
-    </div>
-  );
-}
-
-export default function TemplateMessageItemBody({
+export function TemplateMessageItemBody({
   className = '',
   message,
   isByMe = false,
@@ -137,12 +50,12 @@ export default function TemplateMessageItemBody({
 }: TemplateMessageItemBodyProps): ReactElement {
   const templateData: MessageTemplateData | undefined = message.extendedMessagePayload?.['template'] as MessageTemplateData;
   if (!templateData?.key) {
-    return <FallbackMessageItemBody className={className} message={message} isByMe={isByMe} />;
+    return <FallbackTemplateMessageItemBody className={className} message={message} isByMe={isByMe} />;
   }
 
   const globalState = useSendbirdStateContext();
   if (!globalState) {
-    return <FallbackMessageItemBody className={className} message={message} isByMe={isByMe} />;
+    return <FallbackTemplateMessageItemBody className={className} message={message} isByMe={isByMe} />;
   }
 
   const {
@@ -172,14 +85,6 @@ export default function TemplateMessageItemBody({
       const templateKey = templateData.key;
       const cachedTemplate: ProcessedMessageTemplate | null = getCachedTemplate(templateKey);
       if (cachedTemplate) {
-        // TODO: Replace logic is not working properly. Fix and use this than below
-        // const filledMessageTemplateItems: MessageTemplateItem[] = parseTemplateWithReplaceReplacer(
-        //   processedTemplate.uiTemplate,
-        //   templateData.variables ?? {},
-        //   processedTemplate.colorVariables,
-        //   theme,
-        // );
-
         const filledMessageTemplateItems: MessageTemplateItem[] = getFilledMessageTemplateWithData(
           JSON.parse(cachedTemplate.uiTemplate),
           templateData.variables ?? {},
@@ -211,9 +116,9 @@ export default function TemplateMessageItemBody({
 
   if (filledMessageTemplateItems.length === 0) {
     if (isErrored) {
-      return <FallbackMessageItemBody className={className} message={message} isByMe={isByMe} />;
+      return <FallbackTemplateMessageItemBody className={className} message={message} isByMe={isByMe} />;
     }
-    return <TemplateLoadingMessageItemBody className={className} isByMe={isByMe} />;
+    return <LoadingTemplateMessageItemBody className={className} isByMe={isByMe} />;
   }
 
   return (
@@ -226,3 +131,5 @@ export default function TemplateMessageItemBody({
     </div>
   );
 }
+
+export default TemplateMessageItemBody;

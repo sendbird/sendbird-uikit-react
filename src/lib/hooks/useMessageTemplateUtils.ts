@@ -43,7 +43,7 @@ export default function useMessageTemplateUtils({
   /**
    * Fetches a single message template by given key and then
    * returns processed template for updating templates info in global state.
-   * WARNING: If no such templates exists or any error occurs in response, return null.
+   * If no such templates exists (error) or any error occurs in response, return null.
    */
   const fetchProcessedMessageTemplate = async (
     key: string,

@@ -24,6 +24,8 @@ const { MessageTemplate: CustomTemplate } = createMessageTemplate({
   },
 });
 
-export default function MessageTemplate({ templateItems }: MessageTemplateProps) {
+export function MessageTemplate({ templateItems }: MessageTemplateProps) {
   return <CustomTemplate templateItems={templateItems} />;
 }
+
+export default MessageTemplate;
