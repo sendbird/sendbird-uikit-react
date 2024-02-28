@@ -2,6 +2,7 @@ import React from 'react';
 import { parser, renderer } from '@sendbird/react-uikit-message-template-view';
 import { createMessageTemplate } from '@sendbird/uikit-message-template';
 import { MessageTemplateItem } from '../TemplateMessageItemBody/types';
+import './index.scss';
 
 export interface MessageTemplateProps {
   templateItems: MessageTemplateItem[];
