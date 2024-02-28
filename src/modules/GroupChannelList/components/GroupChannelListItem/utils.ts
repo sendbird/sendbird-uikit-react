@@ -3,7 +3,7 @@ import isToday from 'date-fns/isToday';
 import format from 'date-fns/format';
 import isThisYear from 'date-fns/isThisYear';
 import isYesterday from 'date-fns/isYesterday';
-import {isAudio, isGif, isImage, isTemplateMessage, isVideo, isVoiceMessageMimeType} from '../../../../utils';
+import { isAudio, isGif, isImage, isTemplateMessage, isVideo, isVoiceMessageMimeType } from '../../../../utils';
 import { LabelStringSet } from '../../../../ui/Label';
 
 export const getChannelTitle = (channel?: GroupChannel, currentUserId?: string, stringSet = LabelStringSet) => {

@@ -1,7 +1,7 @@
-import React, {ReactElement} from 'react';
-import {getClassName} from '../../utils';
+import React, { ReactElement } from 'react';
+import { getClassName } from '../../utils';
 import Loader from '../Loader';
-import Icon, {IconColors, IconTypes} from '../Icon';
+import Icon, { IconColors, IconTypes } from '../Icon';
 
 const TEMPLATE_LOADING_SPINNER_SIZE = '40px';
 

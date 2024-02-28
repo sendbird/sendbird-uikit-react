@@ -1,8 +1,8 @@
-import type {BaseMessage} from '@sendbird/chat/message';
-import React, {ReactElement, useContext} from 'react';
-import {LocalizationContext} from '../../lib/LocalizationContext';
-import {getClassName} from '../../utils';
-import Label, {LabelColors, LabelTypography} from '../Label';
+import type { BaseMessage } from '@sendbird/chat/message';
+import React, { ReactElement, useContext } from 'react';
+import { LocalizationContext } from '../../lib/LocalizationContext';
+import { getClassName } from '../../utils';
+import Label, { LabelColors, LabelTypography } from '../Label';
 
 export interface FallbackTemplateMessageItemBodyProps {
   className?: string | Array<string>;
