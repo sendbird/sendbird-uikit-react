@@ -29,7 +29,7 @@ import { usePreventDuplicateRequest } from './hooks/usePreventDuplicateRequest';
 type OnBeforeHandler<T> = (params: T) => T | Promise<T>;
 type MessageListQueryParamsType = Omit<MessageCollectionParams, 'filter'> & MessageFilterParams;
 type MessageActions = ReturnType<typeof useMessageActions>;
-type MessageListDataSourceWithoutActions = Omit<ReturnType<typeof useGroupChannelMessages>, keyof MessageActions>;
+type MessageListDataSourceWithoutActions = Omit<ReturnType<typeof useGroupChannelMessages>, keyof MessageActions | `_dangerous_${string}`>;
 
 interface ContextBaseType {
   // Required
