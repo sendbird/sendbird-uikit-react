@@ -8,6 +8,7 @@ export function changeColorToClassName(color: Colors): string {
     case Colors.SECONDARY: return 'sendbird-icon-color--secondary';
     case Colors.CONTENT: return 'sendbird-icon-color--content';
     case Colors.CONTENT_INVERSE: return 'sendbird-icon-color--content-inverse';
+    case Colors.CONTENT_INVERSE_5: return 'sendbird-icon-color--content-inverse-5';
     case Colors.WHITE: return 'sendbird-icon-color--white';
     case Colors.GRAY: return 'sendbird-icon-color--gray';
     case Colors.THUMBNAIL_ICON: return 'sendbird-icon-color--thumbnail-icon';

@@ -4,15 +4,55 @@
   position: relative;
   display: inline-block;
   box-sizing: content-box;
+  background-color: transparent;
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+.sendbird-template-message-item-body__fallback_message {
+  position: relative;
+  display: inline-block;
+  box-sizing: content-box;
   padding: 8px 12px;
   border-radius: 16px;
 
   white-space: pre-line;
   word-break: break-word;
 
-  &.reactions {
-    border-radius: 16px 16px 0px 0px;
+  &.incoming {
+    @include themed() { background-color: t(bg-1) }
   }
+  &.outgoing {
+    @include themed() { background-color: t(primary-3) }
+  }
+
+  &.mouse-hover, &:hover {
+    &.incoming {
+      @include themed() { background-color: t(bg-2) }
+    }
+    &.outgoing {
+      @include themed() { background-color: t(primary-4) }
+    }
+  }
+
+  .sendbird-template-message-item-body__fallback_message__header {
+    display: block;
+  }
+  .sendbird-template-message-item-body__fallback_message__description {
+    display: block;
+  }
+}
+
+.sendbird-template-loading-message-item-body {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: content-box;
+  border-radius: 16px;
+  height: 274px;
+  width: 100%;
+
   &.incoming {
     @include themed() { background-color: t(bg-1) }
   }

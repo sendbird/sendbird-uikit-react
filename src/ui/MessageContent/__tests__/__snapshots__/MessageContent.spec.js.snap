@@ -31,7 +31,7 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
       </div>
     </div>
     <div
-      class="sendbird-message-content__middle"
+      class="sendbird-message-content__middle "
     >
       <span
         class="sendbird-message-content__middle__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
@@ -39,7 +39,7 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
         Mathew
       </span>
       <div
-        class="sendbird-message-content__middle__body-container"
+        class="sendbird-message-content__middle__body-container "
       >
         <span
           class="sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"

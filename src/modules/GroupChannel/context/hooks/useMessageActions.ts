@@ -22,6 +22,7 @@ import {
 import type { SendableMessageType } from '../../../../utils';
 import type { ReplyType } from '../../../../types';
 import type { GroupChannelProviderProps } from '../GroupChannelProvider';
+import { PersonalTemplatesDataForTesting } from './temp';
 
 type MessageListDataSource = ReturnType<typeof useGroupChannelMessages>;
 type MessageActions = {
@@ -45,7 +46,16 @@ const pass = <T>(value: T) => value;
  * */
 export function useMessageActions(params: Params): MessageActions {
   const {
-    onBeforeSendUserMessage = pass,
+    // FIXME: Put this back to pass before merging.
+    onBeforeSendUserMessage = (params) => {
+      // params.message = '';
+      params.extendedMessagePayload = {
+        template: PersonalTemplatesDataForTesting[2],
+        // template: { key: 't1' },
+      };
+      return params;
+    },
+    // onBeforeSendUserMessage = pass,
     onBeforeSendFileMessage = pass,
     onBeforeUpdateUserMessage = pass,
     onBeforeSendVoiceMessage = pass,

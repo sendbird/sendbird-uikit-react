@@ -154,6 +154,18 @@
   }
 }
 
+.sendbird-label--color-oncontent-inverse-1 {
+  @include themed() {
+    color: t(inverse-on-content-1);
+  }
+}
+
+.sendbird-label--color-oncontent-inverse-5 {
+  @include themed() {
+    color: t(inverse-on-content-5);
+  }
+}
+
 .sendbird-label--color-primary {
   @include themed() {
     color: t(primary-3);

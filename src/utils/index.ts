@@ -272,7 +272,7 @@ export const isThreadMessage = (message: CoreMessageType): boolean => (
   !!message.parentMessageId && !!message.parentMessage
 );
 
-export const isMessageTemplateMessage = (message: SendableMessageType): boolean => !!(
+export const isTemplateMessage = (message: CoreMessageType): boolean => !!(
   // FIXME: This is temporary so need to be touched later.
   message && message.extendedMessagePayload?.['template']
 );

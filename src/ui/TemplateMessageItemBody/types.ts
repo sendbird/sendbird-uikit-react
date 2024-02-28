@@ -79,46 +79,24 @@ export type MessageTemplateTheme = {
   };
 };
 
-export type MessageTemplateDataSchemaProperty = {
-  key: string;
-  name: string;
-  type: 'string' | 'image' | 'action';
-};
-
-export type MessageTemplateCategory = {
-  id: number;
-  name: string;
-  is_default: boolean;
-};
-
 export type MessageTemplateItem = ComponentsUnion['properties'];
 
 export type MessageTemplateData = {
   key: string;
-  variables: Record<string, any>;
+  variables?: Record<string, any>;
 };
 
 export type SendbirdMessageTemplate = {
   key: string;
-  name: string;
-  category?: MessageTemplateCategory | string;
-  label?: string;
-  status: 'active' | 'archived';
-  data_schema: { properties: MessageTemplateDataSchemaProperty[] };
+  created_at: number;
+  updated_at: number;
   ui_template: {
     version: number;
     body: {
       items: MessageTemplateItem[];
     };
   };
-  color_variables: Record<string, string>;
-  enable_push: boolean;
-  fallback_message: string | null;
-  push_template: {
-    title: string;
-    body: string;
-  };
-  // channel: GroupChannel;
-  created_at: number;
-  updated_at: number;
+  color_variables?: Record<string, string>;
+
+  name?: string;
 };

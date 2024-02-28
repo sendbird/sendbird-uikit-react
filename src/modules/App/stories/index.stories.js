@@ -269,11 +269,37 @@ export const Korean = () => fitPageSize(
   />
 );
 
+const PersonalTestConfig = {
+  appId: '7D5A6D2D-F967-4515-81E8-5AB157923F9E',
+  apiHost: 'https://api-preprod.sendbird.com',
+  wsHost: 'wss://ws-preprod.sendbird.com',
+  userInfo: [
+    {
+      userId: '0755a174-dcf1-48',
+      accessCode: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1IjoxMzE1MTkzNjQsInYiOjEsImUiOjE3MDkwOTI5MTB9.z8sR6xXlfuj1yhWaE3jwY5tod-fWF5_RioLubgHAQTk',
+    },
+    {
+      userId: '894fc023-127f-49',
+      accessCode: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1IjoxMzE0NzU5MTAsInYiOjEsImUiOjE3MDg4NjM5NjR9.ye_yDZJTe3I8stFE0b_lGuaxJi6UC6dK3UBOhJf05AM',
+    }
+  ],
+}
+
+const SocarWarRoomConfig = {
+  apiHost: 'https://api-no1.sendbirdtest.com',
+  wsHost: 'wss://ws-no1.sendbirdtest.com',
+  appId: 'A0E81FF2-C657-47E8-AD11-FBBFB114F9F5',
+  userId: 'liam000',
+  botUserId: 'client_bot',
+}
+
 export const user1 = () => fitPageSize(
   <App
-    appId={appId}
-    userId={array[0]}
-    nickname={array[0]}
+    customApiHost={PersonalTestConfig.apiHost}
+    customWebSocketHost={PersonalTestConfig.wsHost}
+    appId={PersonalTestConfig.appId}
+    userId={PersonalTestConfig.userInfo[0].userId} // PersonalTestConfig.userInfo[0].userId
+    accessToken={PersonalTestConfig.userInfo[0].accessCode}
     profileUrl={addProfile}
     breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
     showSearchIcon

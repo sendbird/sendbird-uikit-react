@@ -12,9 +12,11 @@ import useTheme from './hooks/useTheme';
 
 import sdkReducers from './dux/sdk/reducers';
 import userReducers from './dux/user/reducers';
+import appInfoReducers from './dux/appInfo/reducers';
 
 import sdkInitialState from './dux/sdk/initialState';
 import userInitialState from './dux/user/initialState';
+import appInfoInitialState from './dux/appInfo/initialState';
 
 import useOnlineStatus from './hooks/useOnlineStatus';
 import useConnect from './hooks/useConnect';
@@ -44,13 +46,14 @@ import {
   CommonUIKitConfigProps,
   SendbirdChatInitParams,
   CustomExtensionParams,
-  SBUEventHandlers,
+  SBUEventHandlers, SendbirdProviderUtils,
 } from './types';
 import { GlobalModalProvider } from '../hooks/useModal';
 import { RenderUserProfileProps } from '../types';
 import PUBSUB_TOPICS, { SBUGlobalPubSub, SBUGlobalPubSubTopicPayloadUnion } from './pubSub/topics';
 import { EmojiManager } from './emojiManager';
 import { uikitConfigStorage } from './utils/uikitConfigStorage';
+import useMessageTemplateUtils from './hooks/useMessageTemplateUtils';
 
 export { useSendbirdStateContext } from '../hooks/useSendbirdStateContext';
 
@@ -189,6 +192,7 @@ const SendbirdSDK = ({
   const [pubSub] = useState(() => customPubSub ?? pubSubFactory<PUBSUB_TOPICS, SBUGlobalPubSubTopicPayloadUnion>());
   const [sdkStore, sdkDispatcher] = useReducer(sdkReducers, sdkInitialState);
   const [userStore, userDispatcher] = useReducer(userReducers, userInitialState);
+  const [appInfoStore, appInfoDispatcher] = useReducer(appInfoReducers, appInfoInitialState);
 
   const { configs, configsWithAppAttr, initDashboardConfigs } = useUIKitConfig();
   const sdkInitialized = sdkStore.initialized;
@@ -199,6 +203,19 @@ const SendbirdSDK = ({
   } = sdk?.appInfo ?? {};
 
   useTheme(colorSet);
+
+  const {
+    getCachedTemplate,
+    updateMessageTemplatesInfo,
+    initializeMessageTemplatesInfo,
+  } = useMessageTemplateUtils({
+    sdk, logger, appInfoStore, appInfoDispatcher,
+  });
+
+  const utils: SendbirdProviderUtils = {
+    updateMessageTemplatesInfo,
+    getCachedTemplate,
+  };
 
   const reconnect = useConnect({
     appId,
@@ -218,8 +235,10 @@ const SendbirdSDK = ({
     sdk,
     sdkDispatcher,
     userDispatcher,
+    appInfoDispatcher,
     initDashboardConfigs,
     eventHandlers,
+    initializeMessageTemplatesInfo,
   });
 
   useUnmount(() => {
@@ -320,10 +339,12 @@ const SendbirdSDK = ({
         stores: {
           sdkStore,
           userStore,
+          appInfoStore,
         },
         dispatchers: {
           sdkDispatcher,
           userDispatcher,
+          appInfoDispatcher,
           reconnect,
         },
         config: {
@@ -396,6 +417,7 @@ const SendbirdSDK = ({
         },
         eventHandlers,
         emojiManager,
+        utils,
       }}
     >
       <MediaQueryProvider logger={logger} breakpoint={breakpoint}>

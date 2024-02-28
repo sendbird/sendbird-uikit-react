@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 import '../index.scss';
 import {
   CoreMessageType,
-  getUIKitMessageType, getUIKitMessageTypes, isMessageTemplateMessage, isMultipleFilesMessage,
+  getUIKitMessageType, getUIKitMessageTypes, isTemplateMessage, isMultipleFilesMessage,
   isOGMessage, isSendableMessage,
   isTextMessage, isThumbnailMessage, isVoiceMessage,
 } from '../../../utils';
@@ -60,14 +60,18 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
   const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableOgtag;
 
   return match(message)
-    .when(isMessageTemplateMessage, () => (
+    .when(isTemplateMessage, () => (
       <TemplateMessageItemBody
         className={MESSAGE_ITEM_BODY_CLASSNAME}
         message={message as BaseMessage}
         isByMe={isByMe}
+        theme={config?.theme as SendbirdTheme}
+      /> ?? <UnknownMessageItemBody
+        className={MESSAGE_ITEM_BODY_CLASSNAME}
+        message={message}
+        isByMe={isByMe}
         mouseHover={mouseHover}
         isReactionEnabled={isReactionEnabledInChannel}
-        theme={config?.theme as SendbirdTheme}
       />
     ))
     .when((message) => isOgMessageEnabledInGroupChannel
