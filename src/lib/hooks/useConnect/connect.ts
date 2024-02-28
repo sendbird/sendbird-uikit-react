@@ -22,6 +22,7 @@ export async function connect({
   isMobile,
   eventHandlers,
   isUserIdUsedForNickname,
+  initializeMessageTemplatesInfo,
 }: ConnectTypes): Promise<void> {
   await disconnectSdk({
     logger,
@@ -48,5 +49,6 @@ export async function connect({
     isMobile,
     eventHandlers,
     isUserIdUsedForNickname,
+    initializeMessageTemplatesInfo,
   });
 }

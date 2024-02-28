@@ -22,7 +22,7 @@ import {
 import type { SendableMessageType } from '../../../../utils';
 import type { ReplyType } from '../../../../types';
 import type { GroupChannelProviderProps } from '../GroupChannelProvider';
-import { MessageTemplateData } from '../../../../ui/TemplateMessageItemBody/types';
+import { PersonalTemplatesDataForTesting } from './temp';
 
 type MessageListDataSource = ReturnType<typeof useGroupChannelMessages>;
 type MessageActions = {
@@ -46,48 +46,16 @@ const pass = <T>(value: T) => value;
  * */
 export function useMessageActions(params: Params): MessageActions {
   const {
+    // FIXME: Put this back to pass before merging.
     onBeforeSendUserMessage = (params) => {
-      // 1
-      // const data = {
-      //   template: {
-      //     key: 'low-balance-alert',
-      //     variables: {
-      //       'account.image': {
-      //         url: 'https://ddtyj01cn62am.cloudfront.net/notifications/chat-example-balance-reminder-account.png',
-      //         width: 120,
-      //         height: 120,
-      //       },
-      //       'account.name': 'Salary account',
-      //       'account.balance': '$12',
-      //     },
-      //   } as MessageTemplateData,
-      // };
-
-      // 2
-      const data = {
-        template: {
-          key: 'fitness-promo',
-          variables: {
-            image: {
-              url: 'https://ddtyj01cn62am.cloudfront.net/notifications/chat-example-promotion-fitness.jpg',
-              width: 984,
-              height: 543,
-            },
-            productName: 'Sendbird Fitness',
-            'button1.title': 'Lean more',
-          },
-        } as MessageTemplateData,
+      // params.message = '';
+      params.extendedMessagePayload = {
+        template: PersonalTemplatesDataForTesting[2],
+        // template: { key: 't1' },
       };
-
-      // 3
-      // const data = {
-      //   template: {
-      //     key: 'march-promo',
-      //   } as MessageTemplateData,
-      // };
-      params.extendedMessagePayload = data;
       return params;
     },
+    // onBeforeSendUserMessage = pass,
     onBeforeSendFileMessage = pass,
     onBeforeUpdateUserMessage = pass,
     onBeforeSendVoiceMessage = pass,

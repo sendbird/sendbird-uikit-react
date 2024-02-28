@@ -46,13 +46,14 @@ import {
   CommonUIKitConfigProps,
   SendbirdChatInitParams,
   CustomExtensionParams,
-  SBUEventHandlers,
+  SBUEventHandlers, SendbirdProviderUtils,
 } from './types';
 import { GlobalModalProvider } from '../hooks/useModal';
 import { RenderUserProfileProps } from '../types';
 import PUBSUB_TOPICS, { SBUGlobalPubSub, SBUGlobalPubSubTopicPayloadUnion } from './pubSub/topics';
 import { EmojiManager } from './emojiManager';
 import { uikitConfigStorage } from './utils/uikitConfigStorage';
+import useMessageTemplateUtils from './hooks/useMessageTemplateUtils';
 
 export { useSendbirdStateContext } from '../hooks/useSendbirdStateContext';
 
@@ -203,6 +204,19 @@ const SendbirdSDK = ({
 
   useTheme(colorSet);
 
+  const {
+    getCachedTemplate,
+    updateMessageTemplatesInfo,
+    initializeMessageTemplatesInfo,
+  } = useMessageTemplateUtils({
+    sdk, logger, appInfoStore, appInfoDispatcher,
+  });
+
+  const utils: SendbirdProviderUtils = {
+    updateMessageTemplatesInfo,
+    getCachedTemplate,
+  };
+
   const reconnect = useConnect({
     appId,
     userId,
@@ -224,6 +238,7 @@ const SendbirdSDK = ({
     appInfoDispatcher,
     initDashboardConfigs,
     eventHandlers,
+    initializeMessageTemplatesInfo,
   });
 
   useUnmount(() => {
@@ -329,6 +344,7 @@ const SendbirdSDK = ({
         dispatchers: {
           sdkDispatcher,
           userDispatcher,
+          appInfoDispatcher,
           reconnect,
         },
         config: {
@@ -400,6 +416,7 @@ const SendbirdSDK = ({
         },
         eventHandlers,
         emojiManager,
+        utils,
       }}
     >
       <MediaQueryProvider logger={logger} breakpoint={breakpoint}>
