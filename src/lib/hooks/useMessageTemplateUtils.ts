@@ -94,7 +94,7 @@ export default function useMessageTemplateUtils({
       !cachedMessageTemplatesToken
       || cachedMessageTemplatesToken !== sdkMessageTemplateToken!
     ) {
-      const parsedTemplates: SendbirdMessageTemplate[] = await fetchAllMessageTemplates(readySdk);
+      const parsedTemplates = await fetchAllMessageTemplates(readySdk);
       const newMessageTemplatesInfo: MessageTemplatesInfo = {
         token: sdkMessageTemplateToken,
         templatesMap: getProcessedTemplates(parsedTemplates),
