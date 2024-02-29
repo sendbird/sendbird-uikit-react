@@ -92,7 +92,7 @@ export default function useMessageTemplateUtils({
     const cachedMessageTemplates: string | null = localStorage.getItem(CACHED_MESSAGE_TEMPLATES_KEY);
     if (
       !cachedMessageTemplatesToken
-      || cachedMessageTemplatesToken !== sdkMessageTemplateToken!
+      || cachedMessageTemplatesToken !== sdkMessageTemplateToken
     ) {
       const parsedTemplates = await fetchAllMessageTemplates(readySdk);
       const newMessageTemplatesInfo: MessageTemplatesInfo = {
