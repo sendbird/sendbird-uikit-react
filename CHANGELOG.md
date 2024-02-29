@@ -1,5 +1,61 @@
 # Changelog - v3
 
+## [v3.13.0] (Feb 29, 2024)
+#### Template message feature
+Now we are supporting template message feature!
+
+A message with valid `extendedMessagePayload.template` value will be displayed with `TemplateMessageItemBody`.
+
+* Added new ui components:
+  * `MessageTemplate`
+  * `TemplateMessageItemBody`
+  * `FallbackTemplateMessageItemBody`
+  * `LoadingTemplateMessageItemBody`
+
+#### Others
+* Added `showSuggestedRepliesFor` global option
+  * How to use?
+  ```tsx
+  <App
+    appId={appId}
+    userId={userId}
+    uikitOptions={{
+      groupChannel: {
+        // Below setting always shows `SuggestedReplies` component of a message. Default value is 'last_message_only'.
+        showSuggestedRepliesFor: 'always',
+      }
+    }}
+  />
+  ```
+* Added `renderSuggestedReplies` in `Message` module
+  * How to use?
+  ```tsx
+  <Channel
+    renderSuggestedReplies={(suggestedRepliesProps) => {
+      const { replyOptions, onSendMessage, message } = suggestedRepliesProps;
+      return <CustomSuggestedReplies options={replyOptions} />;
+    }}
+  />
+  ```
+* Added `renderMobileMenuOnLongPress` in `MessageContentProps`
+  * How to use?
+  ```tsx
+  <Channel
+    renderMessageContent={(props) => (
+      <MessageContent
+        {...props}
+        renderMobileMenuOnLongPress={(mobileMenuProps: MobileBottomSheetProps) => (
+          <CustomMobileMenu {...mobileMenuProps} />
+        )}
+      />
+    )}
+  />
+  ```
+
+### Fixes
+- Fixed a bug where bouncing animation is applied to pending message
+- Fixed a bug `useChannelSettingsContext` not returning channel on initial mount due to channel requests being made before the SDK connection success
+
 ## [v3.12.1] (Feb 26, 2024)
 
 ### Fixes:
