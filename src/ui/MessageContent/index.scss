@@ -330,3 +330,8 @@
 .sendbird-message-content__middle__body-container__feedback-buttons-container_with-thread-replies {
   bottom: calc(-1 * (var(--sendbird-feedback-buttons-container-height) + var(--sendbird-feedback-buttons-container-margin-top) + var(--sendbird-thread-replies-height) + var(--sendbird-thread-replies-margin-top)));
 }
+
+// Template message's default width should be 100% (fills empty space as much as possible)
+.sendbird-message-content__middle__for_template_message {
+  width: 100%;
+}

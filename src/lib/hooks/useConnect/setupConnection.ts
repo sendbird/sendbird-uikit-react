@@ -75,6 +75,7 @@ export async function setUpConnection({
   customExtensionParams,
   isMobile = false,
   eventHandlers,
+  initializeMessageTemplatesInfo,
 }: SetupConnectionTypes): Promise<void> {
   return new Promise((resolve, reject) => {
     logger?.info?.('SendbirdProvider | useConnect/setupConnection/init', { userId, appId });
@@ -115,12 +116,21 @@ export async function setUpConnection({
         },
         customExtensionParams,
       );
+
       newSdk.addExtension('sb_uikit', APP_VERSION_STRING);
 
-      const connectCbSucess = async (user: User) => {
-        logger?.info?.('SendbirdProvider | useConnect/setupConnection/connectCbSucess', user);
+      const connectCbSuccess = async (user: User) => {
+        logger?.info?.('SendbirdProvider | useConnect/setupConnection/connectCbSuccess', user);
         sdkDispatcher({ type: INIT_SDK, payload: newSdk });
         userDispatcher({ type: INIT_USER, payload: user });
+
+        try {
+          await initializeMessageTemplatesInfo(newSdk);
+        } catch (error) {
+          logger?.error?.('SendbirdProvider | useConnect/setupConnection/upsertMessageTemplateListInLocalStorage failed', {
+            error,
+          });
+        }
 
         initDashboardConfigs(newSdk)
           .then(config => {
@@ -178,7 +188,7 @@ export async function setUpConnection({
 
       logger?.info?.(`SendbirdProvider | useConnect/setupConnection/connect connecting using ${accessToken ?? userId}`);
       newSdk.connect(userId, accessToken)
-        .then((res) => connectCbSucess(res))
+        .then((res) => connectCbSuccess(res))
         .catch((err) => connectCbError(err));
     } else {
       const errorMessage = getMissingParamError({ userId, appId });

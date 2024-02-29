@@ -5,13 +5,11 @@ import pkg from '../../../../package.json'
 
 import App from '../index';
 import Sendbird from '../../../lib/Sendbird';
-import ChannelList from '../../ChannelList';
 import GroupChannelList from '../../GroupChannelList';
 import Channel from '../../Channel';
 import ChannelSettings from '../../ChannelSettings';
 import MessageSearch from '../../MessageSearch';
 import { withSendBird } from '../../..';
-import { sendbirdSelectors } from '../../..';
 import { fitPageSize } from './utils';
 import { TypingIndicatorType } from '../../../types';
 
@@ -273,7 +271,7 @@ export const user1 = () => fitPageSize(
   <App
     appId={appId}
     userId={array[0]}
-    nickname={array[0]}
+    accessToken={array[0]}
     profileUrl={addProfile}
     breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
     showSearchIcon

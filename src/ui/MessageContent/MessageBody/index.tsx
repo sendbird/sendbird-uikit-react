@@ -2,11 +2,11 @@ import React, { ReactElement } from 'react';
 import '../index.scss';
 import {
   CoreMessageType,
-  getUIKitMessageType, getUIKitMessageTypes, isMultipleFilesMessage,
+  getUIKitMessageType, getUIKitMessageTypes, isTemplateMessage, isMultipleFilesMessage,
   isOGMessage, isSendableMessage,
   isTextMessage, isThumbnailMessage, isVoiceMessage,
 } from '../../../utils';
-import { FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
+import { BaseMessage, FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
 import OGMessageItemBody from '../../OGMessageItemBody';
 import TextMessageItemBody from '../../TextMessageItemBody';
 import FileMessageItemBody from '../../FileMessageItemBody';
@@ -17,9 +17,10 @@ import UnknownMessageItemBody from '../../UnknownMessageItemBody';
 import { useThreadMessageKindKeySelector } from '../../../modules/Channel/context/hooks/useThreadMessageKindKeySelector';
 import { useFileInfoListWithUploaded } from '../../../modules/Channel/context/hooks/useFileInfoListWithUploaded';
 import { SendBirdStateConfig } from '../../../lib/types';
-import { Nullable } from '../../../types';
+import { Nullable, SendbirdTheme } from '../../../types';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { match } from 'ts-pattern';
+import TemplateMessageItemBody from '../../TemplateMessageItemBody';
 
 const MESSAGE_ITEM_BODY_CLASSNAME = 'sendbird-message-content__middle__message-item-body';
 
@@ -59,6 +60,14 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
   const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableOgtag;
 
   return match(message)
+    .when(isTemplateMessage, () => (
+      <TemplateMessageItemBody
+        className={MESSAGE_ITEM_BODY_CLASSNAME}
+        message={message as BaseMessage}
+        isByMe={isByMe}
+        theme={config?.theme as SendbirdTheme}
+      />
+    ))
     .when((message) => isOgMessageEnabledInGroupChannel
       && isSendableMessage(message)
       && isOGMessage(message), () => (
