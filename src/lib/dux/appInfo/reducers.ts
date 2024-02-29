@@ -46,7 +46,7 @@ export default function reducer(state: AppInfoStateType, action: AppInfoActionTy
         if (waitingTemplateKeyData) {
           waitingTemplateKeyData.isError = true;
         }
-        return state;
+        return { ...state };
       })
     .otherwise(() => {
       return state;
