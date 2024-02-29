@@ -24,7 +24,9 @@ export interface EmojiManagerParams {
 
 export class EmojiManager {
   private sdk: SendbirdChatType;
-  private logger: Logger;;
+
+  private logger: Logger;
+
   private _emojiContainer: EmojiContainer;
 
   /**
