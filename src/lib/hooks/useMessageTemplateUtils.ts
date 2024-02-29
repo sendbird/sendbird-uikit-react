@@ -141,7 +141,7 @@ export default function useMessageTemplateUtils({
 
       let parsedTemplate: SendbirdMessageTemplate | null = null;
       try {
-        const newTemplate: MessageTemplate = await sdk.message.getMessageTemplate(templateKey);
+        const newTemplate = await sdk.message.getMessageTemplate(templateKey);
         parsedTemplate = JSON.parse(newTemplate.template);
       } catch (e) {
         logger?.error?.('Sendbird | fetchProcessedMessageTemplate failed', e);
