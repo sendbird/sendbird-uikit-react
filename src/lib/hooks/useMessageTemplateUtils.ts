@@ -56,7 +56,7 @@ export default function useMessageTemplateUtils({
        * RFC doc:
        * https://sendbird.atlassian.net/wiki/spaces/PLAT/pages/2254405651/RFC+Message+Template#%5BAPI%5D-List-message-templates
        */
-      const res: MessageTemplateListResult = await readySdk!.message.getMessageTemplatesByToken(
+      const res = await readySdk.message.getMessageTemplatesByToken(
         paginationToken,
         { limit: MESSAGE_TEMPLATES_FETCH_LIMIT },
       );
