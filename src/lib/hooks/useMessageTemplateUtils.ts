@@ -109,7 +109,7 @@ export default function useMessageTemplateUtils({
         templatesMap: getProcessedTemplates(parsedTemplates),
       };
       appInfoDispatcher({ type: INITIALIZE_MESSAGE_TEMPLATES_INFO, payload: newMessageTemplatesInfo });
-      localStorage.setItem(CACHED_MESSAGE_TEMPLATES_TOKEN_KEY, JSON.stringify(sdkMessageTemplateToken));
+      localStorage.setItem(CACHED_MESSAGE_TEMPLATES_TOKEN_KEY, sdkMessageTemplateToken);
       localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify(parsedTemplates));
     } else if (
       cachedMessageTemplatesToken
