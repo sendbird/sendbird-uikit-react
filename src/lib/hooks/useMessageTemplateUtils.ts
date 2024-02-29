@@ -70,7 +70,7 @@ export default function useMessageTemplateUtils({
   };
 
   const initializeMessageTemplatesInfo = async (readySdk: SendbirdChat): Promise<void> => {
-    const sdkMessageTemplateToken = readySdk!.appInfo?.messageTemplateInfo.token;
+    const sdkMessageTemplateToken = readySdk.appInfo?.messageTemplateInfo.token;
 
     /**
      * no sdkMessageTemplateToken => no templates => clear cached
