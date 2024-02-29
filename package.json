@@ -55,7 +55,7 @@
     "generate-component": "plop",
     "deploy-storybook": "storybook-to-ghpages",
     "inspect": "yarn test; yarn lint;",
-    "prepack": "yarn build && cp -f dist/package.json package.json"
+    "prepack": "yarn build"
   },
   "repository": {
     "type": "git",
