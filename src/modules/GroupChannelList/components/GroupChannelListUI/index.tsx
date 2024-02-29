@@ -1,6 +1,6 @@
 import './index.scss';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import { useGroupChannelListContext } from '../../context/GroupChannelListProvider';
 import { GroupChannelListUIView } from './GroupChannelListUIView';
@@ -18,6 +18,7 @@ export interface GroupChannelListUIProps {
   renderPlaceHolderError?: (props: void) => React.ReactElement;
   renderPlaceHolderLoading?: (props: void) => React.ReactElement;
   renderPlaceHolderEmptyList?: (props: void) => React.ReactElement;
+  sortChannelList?: (channels: GroupChannel[]) => GroupChannel[];
 }
 
 export const GroupChannelListUI = (props: GroupChannelListUIProps) => {
@@ -34,6 +35,10 @@ export const GroupChannelListUI = (props: GroupChannelListUIProps) => {
     loadMore,
     onUserProfileUpdated,
   } = useGroupChannelListContext();
+
+  const sortedGroupChannels = useMemo(() => {
+    return props.sortChannelList?.(groupChannels) ?? groupChannels;
+  }, [groupChannels, props.sortChannelList]);
 
   const { stores, config } = useSendbirdStateContext();
   const { logger, isOnline } = config;
@@ -84,7 +89,7 @@ export const GroupChannelListUI = (props: GroupChannelListUIProps) => {
       onChangeTheme={onThemeChange}
       allowProfileEdit={allowProfileEdit}
       onUserProfileUpdated={onUserProfileUpdated}
-      channels={groupChannels}
+      channels={sortedGroupChannels}
       onLoadMore={loadMore}
       initialized={initialized}
       renderAddChannel={() => <AddGroupChannel />}
