@@ -1,6 +1,5 @@
 import React from 'react';
 import { AppInfoStateType, MessageTemplatesInfo, ProcessedMessageTemplate } from '../dux/appInfo/initialState';
-import { MessageTemplate } from '@sendbird/chat/lib/__definition';
 import { SendbirdMessageTemplate } from '../../ui/TemplateMessageItemBody/types';
 import { getProcessedTemplate, getProcessedTemplates } from '../dux/appInfo/utils';
 import SendbirdChat from '@sendbird/chat';
