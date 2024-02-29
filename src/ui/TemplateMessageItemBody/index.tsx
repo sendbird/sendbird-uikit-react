@@ -69,7 +69,7 @@ export function TemplateMessageItemBody({
     filledMessageTemplateItems,
     setFilledMessageTemplateItems,
   ] = useState<MessageTemplateItem[]>(() => {
-    const cachedTemplate = getCachedTemplate(templateKey);
+    const cachedTemplate = getCachedTemplate(templateData.key);
     if (cachedTemplate) {
       return getFilledMessageTemplateWithData(
           JSON.parse(cachedTemplate.uiTemplate),
