@@ -68,7 +68,19 @@ export function TemplateMessageItemBody({
   const [
     filledMessageTemplateItems,
     setFilledMessageTemplateItems,
-  ] = useState<MessageTemplateItem[]>([]);
+  ] = useState<MessageTemplateItem[]>(() => {
+    const cachedTemplate = getCachedTemplate(templateKey);
+    if (cachedTemplate) {
+      return getFilledMessageTemplateWithData(
+          JSON.parse(cachedTemplate.uiTemplate),
+          templateData.variables ?? {},
+          cachedTemplate.colorVariables,
+          theme,
+        )
+    } else {
+      return [];
+    }
+  });
   const [
     isErrored,
     setIsErrored,
