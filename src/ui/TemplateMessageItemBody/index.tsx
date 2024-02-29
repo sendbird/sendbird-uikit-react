@@ -73,11 +73,11 @@ export function TemplateMessageItemBody({
     const cachedTemplate = getCachedTemplate(templateData.key);
     if (cachedTemplate) {
       return getFilledMessageTemplateWithData(
-          JSON.parse(cachedTemplate.uiTemplate),
-          templateData.variables ?? {},
-          cachedTemplate.colorVariables,
-          theme,
-        )
+        JSON.parse(cachedTemplate.uiTemplate),
+        templateData.variables ?? {},
+        cachedTemplate.colorVariables,
+        theme,
+      );
     } else {
       return [];
     }
