@@ -36,7 +36,7 @@ export default function reducer(state: AppInfoStateType, action: AppInfoActionTy
           requestedAt,
           isError: false,
         };
-        return state;
+        return { ...state };
       })
     .with(
       { type: APP_INFO_ACTIONS.MARK_ERROR_WAITING_TEMPLATE_KEY },
