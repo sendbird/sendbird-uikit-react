@@ -52,6 +52,7 @@ export function TemplateMessageItemBody({
   if (!templateData?.key) {
     return <FallbackTemplateMessageItemBody className={className} message={message} isByMe={isByMe} />;
   }
+  const templateKey = templateData.key;
 
   const globalState = useSendbirdStateContext();
   if (!globalState) {
@@ -94,7 +95,6 @@ export function TemplateMessageItemBody({
   useEffect(() => {
     // Do not put && !isErrored here in case where errored key is fetched in the future by future message
     if (filledMessageTemplateItems.length === 0) {
-      const templateKey = templateData.key;
       const cachedTemplate: ProcessedMessageTemplate | null = getCachedTemplate(templateKey);
       if (cachedTemplate) {
         const filledMessageTemplateItems: MessageTemplateItem[] = getFilledMessageTemplateWithData(
