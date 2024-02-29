@@ -1,12 +1,21 @@
-import { MessageTemplatesInfo, ProcessedMessageTemplate } from '../dux/appInfo/initialState';
+import { AppInfoStateType, MessageTemplatesInfo, ProcessedMessageTemplate } from '../dux/appInfo/initialState';
 import { MessageTemplate, MessageTemplateListResult } from '@sendbird/chat/lib/__definition';
 import { SendbirdMessageTemplate } from '../../ui/TemplateMessageItemBody/types';
 import { getProcessedTemplate, getProcessedTemplates } from '../dux/appInfo/utils';
 import SendbirdChat from '@sendbird/chat';
-import { CACHED_MESSAGE_TEMPLATES_KEY, CACHED_MESSAGE_TEMPLATES_TOKEN_KEY } from '../../modules/App/types';
-import { APP_INFO_ACTIONS } from '../dux/appInfo/actionTypes';
+import { APP_INFO_ACTIONS, AppInfoActionTypes } from '../dux/appInfo/actionTypes';
+import { CACHED_MESSAGE_TEMPLATES_KEY, CACHED_MESSAGE_TEMPLATES_TOKEN_KEY } from '../../utils/consts';
+import React from 'react';
+import { LoggerInterface } from '../Logger';
 
 const MESSAGE_TEMPLATES_FETCH_LIMIT = 20;
+
+interface UseMessageTemplateUtilsProps {
+  sdk: SendbirdChat,
+  logger: LoggerInterface,
+  appInfoStore: AppInfoStateType,
+  appInfoDispatcher: React.Dispatch<AppInfoActionTypes>,
+}
 
 export interface UseMessageTemplateUtilsWrapper {
   getCachedTemplate: (key: string) => ProcessedMessageTemplate | null;
@@ -26,7 +35,7 @@ export default function useMessageTemplateUtils({
   logger,
   appInfoStore,
   appInfoDispatcher,
-}): UseMessageTemplateUtilsWrapper {
+}: UseMessageTemplateUtilsProps): UseMessageTemplateUtilsWrapper {
   const messageTemplatesInfo: MessageTemplatesInfo | undefined = appInfoStore?.messageTemplatesInfo;
 
   const getCachedTemplate = (key: string): ProcessedMessageTemplate | null => {

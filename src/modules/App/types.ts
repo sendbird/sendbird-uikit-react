@@ -82,6 +82,3 @@ export default interface AppProps {
   // Customer provided callbacks
   eventHandlers?: SBUEventHandlers;
 }
-
-export const CACHED_MESSAGE_TEMPLATES_TOKEN_KEY = 'sendbird_message_templates_token_key';
-export const CACHED_MESSAGE_TEMPLATES_KEY = 'sendbird_message_templates_key';
