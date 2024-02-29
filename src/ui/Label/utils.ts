@@ -27,6 +27,8 @@ export function changeColorToClassName(color?: ObjectValues<typeof Colors>) {
     case Colors.ONBACKGROUND_4: return 'sendbird-label--color-onbackground-4';
     case Colors.ONCONTENT_1: return 'sendbird-label--color-oncontent-1';
     case Colors.ONCONTENT_2: return 'sendbird-label--color-oncontent-2';
+    case Colors.ONCONTENT_INVERSE_1: return 'sendbird-label--color-oncontent-inverse-1';
+    case Colors.ONCONTENT_INVERSE_5: return 'sendbird-label--color-oncontent-inverse-5';
     case Colors.PRIMARY: return 'sendbird-label--color-primary'; // should be Primary-3 fix me
     case Colors.ERROR: return 'sendbird-label--color-error';
     case Colors.SECONDARY_3: return 'sendbird-label--color-secondary-3';

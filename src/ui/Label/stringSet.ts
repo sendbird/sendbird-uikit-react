@@ -101,6 +101,8 @@ const stringSet = {
     TOOLTIP__UNKNOWN_USER: '(no name)',
     UNKNOWN__UNKNOWN_MESSAGE_TYPE: '(Unknown message type)',
     UNKNOWN__CANNOT_READ_MESSAGE: 'Cannot read this message.',
+    UNKNOWN__TEMPLATE_ERROR: '(Template error)',
+    UNKNOWN__CANNOT_READ_TEMPLATE: 'Cannot read this template.',
     MESSAGE_EDITED: '(edited)',
     // Channel - Modal
     MODAL__DELETE_MESSAGE__TITLE: 'Delete this message?',
@@ -206,6 +208,7 @@ const stringSet = {
     CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_AUDIO: 'Audio',
     CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_VOICE_MESSAGE: 'Voice message',
     CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GENERAL: 'File',
+    CHANNEL_PREVIEW_LAST_MESSAGE_TEMPLATE_MESSAGE: 'Message',
     // Date format
     DATE_FORMAT__MESSAGE_LIST__NOTIFICATION__UNREAD_SINCE: 'p \'on\' MMM dd',
     DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR: 'MMMM dd, yyyy',

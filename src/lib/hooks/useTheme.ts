@@ -103,11 +103,13 @@ const useTheme = (overrides: Record<string, string>): void => {
             '--sendbird-light-onlight-02': 'rgba(0, 0, 0, 0.50)',
             '--sendbird-light-onlight-03': 'rgba(0, 0, 0, 0.38)',
             '--sendbird-light-onlight-04': 'rgba(0, 0, 0, 0.12)',
+            '--sendbird-light-onlight-05': 'rgba(0, 0, 0, 0.44)',
 
             '--sendbird-light-ondark-01': 'rgba(255, 255, 255, 0.88)',
             '--sendbird-light-ondark-02': 'rgba(255, 255, 255, 0.50)',
             '--sendbird-light-ondark-03': 'rgba(255, 255, 255, 0.38)',
             '--sendbird-light-ondark-04': 'rgba(255, 255, 255, 0.12)',
+            '--sendbird-light-ondark-05': 'rgba(255, 255, 255, 0.44)',
 
             '--sendbird-light-shadow-01': '0 1px 5px 0 rgba(33, 34, 66, 0.04), 0 0 3px 0 rgba(0, 0, 0, 0.08), 0 2px 1px 0 rgba(0, 0, 0, 0.12)',
             '--sendbird-light-shadow-02': '0 3px 5px -3px rgba(33, 34, 66, 0.04), 0 3px 14px 2px rgba(0, 0, 0, 0.08), 0 8px 10px 1px rgba(0, 0, 0, 0.12)',
