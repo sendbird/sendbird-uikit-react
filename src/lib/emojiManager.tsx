@@ -23,25 +23,40 @@ export interface EmojiManagerParams {
 }
 
 export class EmojiManager {
+  private sdk: SendbirdChatType;
+  private logger: Logger;;
   private _emojiContainer: EmojiContainer;
+
+  /**
+   * Fetching the entire list of emojis at initialization delays the app startup.
+   * Use this function to fetch emoji lists only when actually needed.
+   */
+  private _fetchAllEmojis() {
+    if (!this._emojiContainer) {
+      this.sdk?.getAllEmoji?.()
+        .then((emojiContainer) => {
+          this._emojiContainer = emojiContainer;
+          this.logger?.info('EmojiManager | Succeeded getting all emojis. ', emojiContainer);
+        })
+        .catch(() => {
+          this.logger?.warning('EmojiManager | Failed getting all emojis.');
+        });
+    }
+  }
 
   constructor(props: EmojiManagerParams) {
     const { sdk, logger } = props;
-    sdk?.getAllEmoji?.()
-      .then((emojiContainer) => {
-        this._emojiContainer = emojiContainer;
-        logger?.info('EmojiManager | Succeeded getting all emojis. ', emojiContainer);
-      })
-      .catch(() => {
-        logger?.warning('EmojiManager | Failed getting all emojis.');
-      });
+    this.sdk = sdk;
+    this.logger = logger;
   }
 
   private get AllEmojisAsArray() {
+    this._fetchAllEmojis();
     return this._emojiContainer.emojiCategories.flatMap((category: EmojiCategory) => category.emojis);
   }
 
   private get AllEmojisAsMap() {
+    this._fetchAllEmojis();
     return this._emojiContainer.emojiCategories
       .flatMap((category: EmojiCategory) => category.emojis)
       .reduce((map: Map<string, string>, emoji: Emoji) => {
@@ -51,6 +66,7 @@ export class EmojiManager {
   }
 
   public getAllEmojis(type: string) {
+    this._fetchAllEmojis();
     return match(type)
       .when((type) => ['array', 'arr'].includes(type), () => this.AllEmojisAsArray)
       .when((type) => ['map'].includes(type), () => this.AllEmojisAsMap)
@@ -58,10 +74,12 @@ export class EmojiManager {
   }
 
   public getEmojiUrl(reactionKey: Reaction['key']) {
+    this._fetchAllEmojis();
     return this.AllEmojisAsArray.find((emoji) => emoji.key === reactionKey).url ?? '';
   }
 
   public get emojiContainer() {
+    this._fetchAllEmojis();
     return this._emojiContainer;
   }
 }
