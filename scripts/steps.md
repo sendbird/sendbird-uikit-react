@@ -23,7 +23,7 @@
 # Manual release steps (Updated on 2024-02-08)
 1. At main branch, make sure everything is ready to deployment.
 2. Checkout release branch `git checkout -b release/{X.X.X}`.
-3. In the branche update two files:
+3. In the branch update two files:
   - In `package.json`, update new version. 
   - In `CHANGELOG.md`, add a new changelog.
 5. Commit and push to the branch.
@@ -33,10 +33,10 @@
   - Update changelog link to the correct path: `CHANGELOG.md`.
   - Add all merged [SBISSUES tickets](https://sendbird.atlassian.net/jira/dashboards/11202?maximized=25045) in the `Linked issues` as `blocks` (When the ticket status changes to `Released`, Atlassan automatically adds a comment to each linked issues).
 8. Ask EM to review the release ticket and await for `Release approved`.
-9. In the release branch, create a new tag `v{X.X.X}` and the push the tag `git push v{X.X.X} origin`
-10. In the root, `yarn build` to create new build files. Once created, make sure files in `dist` is newly created/updated.
-11. Change directory to `./dist` and then publish `npm publish`
+9. In the root, `yarn build` to create new build files. Once created, make sure files in `dist` is newly created/updated.
+10. Change directory to `./dist` and then publish `npm publish`
+11. In the release branch, create a new tag `v{X.X.X}` and the push the tag `git push v{X.X.X} origin`.
 12. After release do the followings:
   - Update release ticket to `Released`
   - In the [releases](https://github.com/sendbird/sendbird-uikit-react/releases) draft a new release note with the new tag (write changelog in the description) and then publish release.
-  - In the `sdk-release`, post a release message. 
+  - In the `sdk-release`, post a release message.
