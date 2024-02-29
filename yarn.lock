@@ -2660,7 +2660,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sendbird/react-uikit-message-template-view@npm:^0.0.1-alpha.65":
+"@sendbird/react-uikit-message-template-view@npm:0.0.1-alpha.65":
   version: 0.0.1-alpha.65
   resolution: "@sendbird/react-uikit-message-template-view@npm:0.0.1-alpha.65"
   dependencies:
@@ -2701,8 +2701,7 @@ __metadata:
     "@rollup/plugin-replace": ^5.0.4
     "@rollup/plugin-typescript": ^11.1.5
     "@sendbird/chat": ^4.11.0
-    "@sendbird/react-uikit-message-template-view": ^0.0.1-alpha.65
-    "@sendbird/uikit-message-template": ^0.0.1-alpha.65
+    "@sendbird/react-uikit-message-template-view": 0.0.1-alpha.65
     "@sendbird/uikit-tools": 0.0.1-alpha.65
     "@storybook/addon-actions": ^6.5.10
     "@storybook/addon-docs": ^6.5.10
