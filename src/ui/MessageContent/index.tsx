@@ -185,6 +185,10 @@ export default function MessageContent(props: MessageContentProps): ReactElement
    *     - bottom sheet on long click
    */
   const isNotTemplateMessage = !isTemplateMessage(message);
+  const showLongPressMenu = isNotTemplateMessage && isMobile;
+  const showOutgoingMenu = isNotTemplateMessage && isByMe && !isMobile;
+  const showThreadReplies = isNotTemplateMessage && displayThreadReplies;
+  const showRightContent = isNotTemplateMessage && !isByMe && !isMobile;
 
   const onCloseFeedbackForm = () => {
     setShowFeedbackModal(false);
@@ -205,7 +209,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   // onTouchEnd: (e: React.TouchEvent<T>) => void;
   const longPress = useLongPress({
     onLongPress: () => {
-      if (isMobile && isNotTemplateMessage) {
+      if (showLongPressMenu) {
         setShowMenu(true);
       }
     },
@@ -235,7 +239,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           })
         }
         {/* outgoing menu */}
-        {isByMe && !isMobile && isNotTemplateMessage && (
+        {showOutgoingMenu && (
           <div className={getClassName(['sendbird-message-content-menu', isReactionEnabledClassName, supposedHoverClassName, isByMeClassName])}>
             {renderMessageMenu({
               channel: channel,
@@ -438,7 +442,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           )}
         </div>
         {/* thread replies */}
-        {displayThreadReplies && isNotTemplateMessage && (
+        {showThreadReplies && (
           <ThreadReplies
             className="sendbird-message-content__middle__thread-replies"
             threadInfo={message?.threadInfo}
@@ -449,7 +453,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
       {/* right */}
       <div
         className={getClassName(['sendbird-message-content__right', chainTopClassName, isReactionEnabledClassName, useReplyingClassName])}>
-        {!isByMe && !isMobile && isNotTemplateMessage && (
+        {showRightContent && (
           <div className={getClassName(['sendbird-message-content-menu', chainTopClassName, supposedHoverClassName, isByMeClassName])}>
             {isReactionEnabledInChannel && (
               renderEmojiMenu({
