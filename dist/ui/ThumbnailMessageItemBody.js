@@ -1,15 +1,15 @@
-import { _ as __assign } from '../chunks/bundle-xhjHZ041.js';
+import { _ as __assign } from '../chunks/bundle-KMsJXUN2.js';
 import React__default, { useState } from 'react';
 import Icon, { IconTypes, IconColors } from './Icon.js';
 import ImageRenderer from './ImageRenderer.js';
-import { q as isSentMessage, w as getClassName, r as isVideoMessage, s as isGifMessage } from '../chunks/bundle-Jwc7mleJ.js';
-import { n as noop } from '../chunks/bundle-IDH-OOHE.js';
-import { u as useLongPress } from '../chunks/bundle-FgXHPuhY.js';
-import { c as getMessageFirstFileThumbnailUrl, g as getMessageFirstFileUrl, a as getMessageFirstFileType } from '../chunks/bundle-NGtuBFFS.js';
+import { q as isSentMessage, w as getClassName, r as isVideoMessage, s as isGifMessage } from '../chunks/bundle-ZnLsMTHr.js';
+import { n as noop } from '../chunks/bundle-7YRb7CRq.js';
+import { u as useLongPress } from '../chunks/bundle-3iFqiLDd.js';
+import { c as getMessageFirstFileThumbnailUrl, g as getMessageFirstFileUrl, a as getMessageFirstFileType } from '../chunks/bundle--jWawO0i.js';
 import '@sendbird/chat/groupChannel';
 import '../utils/message/getOutgoingMessageState.js';
-import '../chunks/bundle-AN6QCsUL.js';
-import '../chunks/bundle-pjLq9qJd.js';
+import '../chunks/bundle-LZemF1A7.js';
+import '../chunks/bundle-ZTmwWu_-.js';
 
 function ThumbnailMessageItemBody(_a) {
     var _b, _c;

@@ -1,17 +1,17 @@
 'use strict';
 
-var _tslib = require('../chunks/bundle-zYqQA3cT.js');
+var _tslib = require('../chunks/bundle-2dG9SU7T.js');
 var React = require('react');
 var ui_Icon = require('./Icon.js');
 var ui_ImageRenderer = require('./ImageRenderer.js');
-var index = require('../chunks/bundle-bjSez2lv.js');
-var utils$1 = require('../chunks/bundle-Xwl4gw4D.js');
-var useLongPress = require('../chunks/bundle-l768-Ldg.js');
-var utils = require('../chunks/bundle-Oijs10ng.js');
+var index = require('../chunks/bundle-wzulmlgb.js');
+var utils$1 = require('../chunks/bundle-QStqvuCY.js');
+var useLongPress = require('../chunks/bundle-Kz-b8WGm.js');
+var utils = require('../chunks/bundle-38g4arE5.js');
 require('@sendbird/chat/groupChannel');
 require('../utils/message/getOutgoingMessageState.js');
-require('../chunks/bundle-8G36Z6Or.js');
-require('../chunks/bundle-37dz9yoi.js');
+require('../chunks/bundle-3fb9w4KI.js');
+require('../chunks/bundle-MZHOyRuu.js');
 
 function ThumbnailMessageItemBody(_a) {
     var _b, _c;

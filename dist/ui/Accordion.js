@@ -1,9 +1,9 @@
-import { c as __spreadArray } from '../chunks/bundle-xhjHZ041.js';
+import { c as __spreadArray } from '../chunks/bundle-KMsJXUN2.js';
 import React__default, { useState } from 'react';
 import Icon, { IconTypes } from './Icon.js';
 import AccordionGroup$1 from './AccordionGroup.js';
-import { C as Consumer } from '../chunks/bundle-jaRNBP5f.js';
-import '../chunks/bundle-IDH-OOHE.js';
+import { C as Consumer } from '../chunks/bundle-JjzC7gJ9.js';
+import '../chunks/bundle-7YRb7CRq.js';
 
 function Accordion(_a) {
     var className = _a.className, id = _a.id, renderTitle = _a.renderTitle, renderContent = _a.renderContent, renderFooter = _a.renderFooter;

@@ -1,18 +1,18 @@
 import React__default, { useEffect, useCallback, useReducer, useMemo } from 'react';
-import { c as compareIds, s as scrollIntoLast, g as getParentMessageFrom, u as useSendMultipleFilesMessage, a as getNicknamesMapFromMembers } from '../chunks/bundle-sZUcD6H6.js';
-import { U as UserProfileProvider } from '../chunks/bundle-9GBao6H-.js';
+import { c as compareIds, s as scrollIntoLast, g as getParentMessageFrom, u as useSendMultipleFilesMessage, a as getNicknamesMapFromMembers } from '../chunks/bundle-DJdbc2nP.js';
+import { U as UserProfileProvider } from '../chunks/bundle-x78eEPy7.js';
 import { useSendbirdStateContext } from '../useSendbirdStateContext.js';
-import { _ as __assign, c as __spreadArray, a as __awaiter, b as __generator } from '../chunks/bundle-xhjHZ041.js';
+import { _ as __assign, c as __spreadArray, a as __awaiter, b as __generator } from '../chunks/bundle-KMsJXUN2.js';
 import { ChannelStateTypes, ThreadListStateTypes, ParentMessageStateTypes } from './context/types.js';
 import { ChannelType } from '@sendbird/chat';
-import { p as pubSubTopics, a as shouldPubSubPublishToThread, b as PUBSUB_TOPICS, P as PublishingModuleType } from '../chunks/bundle-yarrTY_z.js';
-import { s as ON_FILE_INFO_UPLOADED, t as ON_TYPING_STATUS_UPDATED } from '../chunks/bundle-4isra95J.js';
+import { p as pubSubTopics, a as shouldPubSubPublishToThread, b as PUBSUB_TOPICS, P as PublishingModuleType } from '../chunks/bundle-THTV9S18.js';
+import { s as ON_FILE_INFO_UPLOADED, t as ON_TYPING_STATUS_UPDATED } from '../chunks/bundle-Vkdvpta0.js';
 import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
-import { u as uuidv4 } from '../chunks/bundle-BZ3hPsJ8.js';
-import { c as compareIds$1 } from '../chunks/bundle-qPq2iACJ.js';
+import { u as uuidv4 } from '../chunks/bundle-4_6x-RiC.js';
+import { c as compareIds$1 } from '../chunks/bundle-xlx3bBW8.js';
 import { MessageType, SendingStatus, MessageMetaArray } from '@sendbird/chat/message';
-import { e as SCROLL_BOTTOM_DELAY_FOR_SEND, a as VOICE_MESSAGE_FILE_NAME, b as VOICE_MESSAGE_MIME_TYPE, M as META_ARRAY_VOICE_DURATION_KEY, j as META_ARRAY_MESSAGE_TYPE_KEY, k as META_ARRAY_MESSAGE_TYPE_VALUE__VOICE } from '../chunks/bundle-UKdN0Ihw.js';
-import '../chunks/bundle-LgR-0X7v.js';
+import { e as SCROLL_BOTTOM_DELAY_FOR_SEND, a as VOICE_MESSAGE_FILE_NAME, b as VOICE_MESSAGE_MIME_TYPE, M as META_ARRAY_VOICE_DURATION_KEY, j as META_ARRAY_MESSAGE_TYPE_KEY, k as META_ARRAY_MESSAGE_TYPE_VALUE__VOICE } from '../chunks/bundle-AFXr5NmI.js';
+import '../chunks/bundle-fO5XIU5Y.js';
 import '../utils/message/getOutgoingMessageState.js';
 import '../withSendbird.js';
 
