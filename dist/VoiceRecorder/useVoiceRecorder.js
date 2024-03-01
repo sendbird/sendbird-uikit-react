@@ -1,19 +1,19 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useVoiceRecorderContext } from './context.js';
 import { useSendbirdStateContext } from '../useSendbirdStateContext.js';
-import '../chunks/bundle-1inZXcUV.js';
-import '../chunks/bundle--MbN9aKT.js';
-import '../chunks/bundle-V_fO-GlK.js';
-import '../chunks/bundle-ixiL_3Ds.js';
-import '../chunks/bundle-xhjHZ041.js';
+import '../chunks/bundle-msnuMA4R.js';
+import '../chunks/bundle-Tg3CrpQU.js';
+import '../chunks/bundle-CsWYoRVd.js';
+import '../chunks/bundle-O8mkJ7az.js';
+import '../chunks/bundle-KMsJXUN2.js';
 import 'react-dom';
-import '../chunks/bundle-IDH-OOHE.js';
-import '../chunks/bundle-pjLq9qJd.js';
+import '../chunks/bundle-7YRb7CRq.js';
+import '../chunks/bundle-ZTmwWu_-.js';
 import '../ui/IconButton.js';
 import '../ui/Button.js';
-import '../chunks/bundle-sR62lMVk.js';
+import '../chunks/bundle-kMMCn6GE.js';
 import '../ui/Icon.js';
-import '../chunks/bundle-UKdN0Ihw.js';
+import '../chunks/bundle-AFXr5NmI.js';
 import '../withSendbird.js';
 
 // export interface UseVoiceRecorderProps extends VoiceRecorderEventHandler {

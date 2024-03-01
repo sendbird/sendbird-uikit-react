@@ -3,23 +3,23 @@
 var React = require('react');
 var useSendbirdStateContext = require('../../useSendbirdStateContext.js');
 var ChannelSettings_context = require('../context.js');
-var utils = require('../../chunks/bundle-Xwl4gw4D.js');
-var ui_Modal = require('../../chunks/bundle-NeYvE4zX.js');
-var LocalizationContext = require('../../chunks/bundle-Nz6fSUye.js');
-var MediaQueryContext = require('../../chunks/bundle-37dz9yoi.js');
+var utils = require('../../chunks/bundle-QStqvuCY.js');
+var ui_Modal = require('../../chunks/bundle-CfdtYkhL.js');
+var LocalizationContext = require('../../chunks/bundle-60kIt9Rq.js');
+var MediaQueryContext = require('../../chunks/bundle-MZHOyRuu.js');
 var ui_TextButton = require('../../ui/TextButton.js');
-var ui_Label = require('../../chunks/bundle-2Pq38lvD.js');
+var ui_Label = require('../../chunks/bundle-26QzFMMl.js');
 require('../../withSendbird.js');
-require('../../chunks/bundle-zYqQA3cT.js');
-require('../../chunks/bundle-HnlcCy36.js');
-require('../../chunks/bundle-NNEanMqk.js');
+require('../../chunks/bundle-2dG9SU7T.js');
+require('../../chunks/bundle-DKcL-93i.js');
+require('../../chunks/bundle-Gzug-R-w.js');
 require('react-dom');
 require('../../ui/IconButton.js');
 require('../../ui/Button.js');
 require('../../ui/Icon.js');
-require('../../chunks/bundle-xYV6cL9E.js');
-require('../../chunks/bundle-eyiJykZ-.js');
-require('../../chunks/bundle-oaDSLq17.js');
+require('../../chunks/bundle-eH49AisR.js');
+require('../../chunks/bundle-gDA5XZ0C.js');
+require('../../chunks/bundle-KNt569rP.js');
 
 var LeaveChannel = function (props) {
     var _a, _b;

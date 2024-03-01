@@ -1,16 +1,16 @@
 import React__default from 'react';
-import { L as Label, a as LabelTypography, b as LabelColors } from '../chunks/bundle-sR62lMVk.js';
+import { L as Label, a as LabelTypography, b as LabelColors } from '../chunks/bundle-kMMCn6GE.js';
 import Icon, { IconTypes, IconColors } from './Icon.js';
 import TextButton from './TextButton.js';
-import { w as getClassName, o as getUIKitFileType, t as truncateString } from '../chunks/bundle-Jwc7mleJ.js';
-import { C as Colors } from '../chunks/bundle-nMxV4WMS.js';
-import { u as useMediaQueryContext } from '../chunks/bundle-pjLq9qJd.js';
-import '../chunks/bundle-xhjHZ041.js';
-import '../chunks/bundle--MbN9aKT.js';
-import '../chunks/bundle-IDH-OOHE.js';
+import { w as getClassName, o as getUIKitFileType, t as truncateString } from '../chunks/bundle-ZnLsMTHr.js';
+import { C as Colors } from '../chunks/bundle-nGuCRoDK.js';
+import { u as useMediaQueryContext } from '../chunks/bundle-ZTmwWu_-.js';
+import '../chunks/bundle-KMsJXUN2.js';
+import '../chunks/bundle-Tg3CrpQU.js';
+import '../chunks/bundle-7YRb7CRq.js';
 import '@sendbird/chat/groupChannel';
 import '../utils/message/getOutgoingMessageState.js';
-import '../chunks/bundle-AN6QCsUL.js';
+import '../chunks/bundle-LZemF1A7.js';
 
 function FileMessageItemBody(_a) {
     var _b;

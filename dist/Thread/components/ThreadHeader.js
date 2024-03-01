@@ -1,14 +1,14 @@
 import React__default, { useMemo } from 'react';
 import IconButton from '../../ui/IconButton.js';
 import Icon, { IconTypes, IconColors } from '../../ui/Icon.js';
-import { L as Label, a as LabelTypography, b as LabelColors } from '../../chunks/bundle-sR62lMVk.js';
+import { L as Label, a as LabelTypography, b as LabelColors } from '../../chunks/bundle-kMMCn6GE.js';
 import TextButton from '../../ui/TextButton.js';
-import { u as useLocalization } from '../../chunks/bundle-1inZXcUV.js';
-import '../../chunks/bundle-xhjHZ041.js';
-import '../../chunks/bundle-IDH-OOHE.js';
-import '../../chunks/bundle--MbN9aKT.js';
-import '../../chunks/bundle-nMxV4WMS.js';
-import '../../chunks/bundle-V_fO-GlK.js';
+import { u as useLocalization } from '../../chunks/bundle-msnuMA4R.js';
+import '../../chunks/bundle-KMsJXUN2.js';
+import '../../chunks/bundle-7YRb7CRq.js';
+import '../../chunks/bundle-Tg3CrpQU.js';
+import '../../chunks/bundle-nGuCRoDK.js';
+import '../../chunks/bundle-CsWYoRVd.js';
 
 function ThreadHeader(_a) {
     var className = _a.className, channelName = _a.channelName, renderActionIcon = _a.renderActionIcon, onActionIconClick = _a.onActionIconClick, onChannelNameClick = _a.onChannelNameClick;

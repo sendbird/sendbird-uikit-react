@@ -1,10 +1,10 @@
 'use strict';
 
-var index = require('../../chunks/bundle-bjSez2lv.js');
-require('../../chunks/bundle-zYqQA3cT.js');
+var index = require('../../chunks/bundle-wzulmlgb.js');
+require('../../chunks/bundle-2dG9SU7T.js');
 require('@sendbird/chat/groupChannel');
 require('./getOutgoingMessageState.js');
-require('../../chunks/bundle-8G36Z6Or.js');
+require('../../chunks/bundle-3fb9w4KI.js');
 
 var isVoiceMessage = index.isVoiceMessage;
 

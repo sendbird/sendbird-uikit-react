@@ -1,12 +1,12 @@
-import { i as isSameDay } from '../../chunks/bundle-RfBkMeJ1.js';
+import { i as isSameDay } from '../../chunks/bundle-SpfAN5pr.js';
 import { compareMessagesForGrouping } from './compareMessagesForGrouping.js';
-import '../../chunks/bundle-o-FVZr_e.js';
-import '../../chunks/bundle-V_fO-GlK.js';
-import '../../chunks/bundle-Jwc7mleJ.js';
-import '../../chunks/bundle-xhjHZ041.js';
+import '../../chunks/bundle-vbGNKQpe.js';
+import '../../chunks/bundle-CsWYoRVd.js';
+import '../../chunks/bundle-ZnLsMTHr.js';
+import '../../chunks/bundle-KMsJXUN2.js';
 import '@sendbird/chat/groupChannel';
 import '../../utils/message/getOutgoingMessageState.js';
-import '../../chunks/bundle-AN6QCsUL.js';
+import '../../chunks/bundle-LZemF1A7.js';
 
 /**
  * exported, should be backward compatible

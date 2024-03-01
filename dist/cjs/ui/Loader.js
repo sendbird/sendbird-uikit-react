@@ -1,9 +1,9 @@
 'use strict';
 
-var _tslib = require('../chunks/bundle-zYqQA3cT.js');
+var _tslib = require('../chunks/bundle-2dG9SU7T.js');
 var React = require('react');
 var ui_Icon = require('./Icon.js');
-require('../chunks/bundle-Xwl4gw4D.js');
+require('../chunks/bundle-QStqvuCY.js');
 
 function Loader(_a) {
     var _b = _a.className, className = _b === void 0 ? '' : _b, _c = _a.width, width = _c === void 0 ? '26px' : _c, _d = _a.height, height = _d === void 0 ? '26px' : _d, children = _a.children;

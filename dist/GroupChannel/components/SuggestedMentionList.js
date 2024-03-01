@@ -1,20 +1,20 @@
-import { _ as __assign } from '../../chunks/bundle-xhjHZ041.js';
+import { _ as __assign } from '../../chunks/bundle-KMsJXUN2.js';
 import React__default from 'react';
-import { S as SuggestedMentionListView } from '../../chunks/bundle-Xqf5M3Yn.js';
-import '../../chunks/bundle-sR62lMVk.js';
-import '../../chunks/bundle--MbN9aKT.js';
+import { S as SuggestedMentionListView } from '../../chunks/bundle-CLnDoxQc.js';
+import '../../chunks/bundle-kMMCn6GE.js';
+import '../../chunks/bundle-Tg3CrpQU.js';
 import '../../ui/Icon.js';
-import '../../chunks/bundle-IDH-OOHE.js';
-import '../../chunks/bundle-VE0ige0C.js';
+import '../../chunks/bundle-7YRb7CRq.js';
+import '../../chunks/bundle-OJq071GK.js';
 import '../../ui/ImageRenderer.js';
-import '../../chunks/bundle-3a5xXUZv.js';
-import '../../chunks/bundle-1inZXcUV.js';
-import '../../chunks/bundle-V_fO-GlK.js';
-import '../../chunks/bundle-BZ3hPsJ8.js';
+import '../../chunks/bundle-DhS-f2ZT.js';
+import '../../chunks/bundle-msnuMA4R.js';
+import '../../chunks/bundle-CsWYoRVd.js';
+import '../../chunks/bundle-4_6x-RiC.js';
 import '../../useSendbirdStateContext.js';
 import '../../withSendbird.js';
-import '../../chunks/bundle-tIdypo_v.js';
-import '../../chunks/bundle-8RTviqdm.js';
+import '../../chunks/bundle-hKmRj7Ck.js';
+import '../../chunks/bundle-NOh3ukH6.js';
 
 var SuggestedMentionList = function (props) {
     return (React__default.createElement(SuggestedMentionListView, __assign({}, props)));

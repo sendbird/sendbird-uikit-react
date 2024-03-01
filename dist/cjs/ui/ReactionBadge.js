@@ -1,9 +1,9 @@
 'use strict';
 
-var _tslib = require('../chunks/bundle-zYqQA3cT.js');
+var _tslib = require('../chunks/bundle-2dG9SU7T.js');
 var React = require('react');
-var ui_Label = require('../chunks/bundle-2Pq38lvD.js');
-require('../chunks/bundle-xYV6cL9E.js');
+var ui_Label = require('../chunks/bundle-26QzFMMl.js');
+require('../chunks/bundle-eH49AisR.js');
 
 var ReactionBadge = React.forwardRef(function (props, ref) {
     var _a = props.className, className = _a === void 0 ? '' : _a, children = props.children, _b = props.count, count = _b === void 0 ? '' : _b, _c = props.isAdd, isAdd = _c === void 0 ? false : _c, _d = props.selected, selected = _d === void 0 ? false : _d, _e = props.onClick, onClick = _e === void 0 ? function () { } : _e;

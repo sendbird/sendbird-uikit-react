@@ -1,19 +1,19 @@
 'use strict';
 
 var React = require('react');
-var index = require('../chunks/bundle-bjSez2lv.js');
+var index = require('../chunks/bundle-wzulmlgb.js');
 var ui_Icon = require('./Icon.js');
-var ui_Label = require('../chunks/bundle-2Pq38lvD.js');
-var LocalizationContext = require('../chunks/bundle-Nz6fSUye.js');
+var ui_Label = require('../chunks/bundle-26QzFMMl.js');
+var LocalizationContext = require('../chunks/bundle-60kIt9Rq.js');
 var ui_ImageRenderer = require('./ImageRenderer.js');
-var utils = require('../chunks/bundle-Oijs10ng.js');
-require('../chunks/bundle-zYqQA3cT.js');
+var utils = require('../chunks/bundle-38g4arE5.js');
+require('../chunks/bundle-2dG9SU7T.js');
 require('@sendbird/chat/groupChannel');
 require('../utils/message/getOutgoingMessageState.js');
-require('../chunks/bundle-8G36Z6Or.js');
-require('../chunks/bundle-Xwl4gw4D.js');
-require('../chunks/bundle-xYV6cL9E.js');
-require('../chunks/bundle-eyiJykZ-.js');
+require('../chunks/bundle-3fb9w4KI.js');
+require('../chunks/bundle-QStqvuCY.js');
+require('../chunks/bundle-eH49AisR.js');
+require('../chunks/bundle-gDA5XZ0C.js');
 
 var componentClassname = 'sendbird-quote_message_input__avatar';
 function QuoteMessageThumbnail(_a) {

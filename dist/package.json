@@ -54,7 +54,7 @@
   ],
   "exports": {
     "./package.json": "./package.json",
-    "./dist/dist/index.css": "./dist/dist/index.css",
+    "./dist/index.css": "./dist/index.css",
     ".": {
       "types": "./types/index.d.ts",
       "require": "./cjs/index.js",

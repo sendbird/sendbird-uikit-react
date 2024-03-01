@@ -1,17 +1,17 @@
 import React__default, { createContext, useState, useEffect, useCallback, useContext } from 'react';
-import { u as useLocalization } from '../chunks/bundle-1inZXcUV.js';
-import { M as Modal } from '../chunks/bundle-ixiL_3Ds.js';
-import { B as BROWSER_SUPPORT_MIME_TYPE_LIST, V as VOICE_RECORDER_AUDIO_BIT_RATE, a as VOICE_MESSAGE_FILE_NAME, b as VOICE_MESSAGE_MIME_TYPE } from '../chunks/bundle-UKdN0Ihw.js';
+import { u as useLocalization } from '../chunks/bundle-msnuMA4R.js';
+import { M as Modal } from '../chunks/bundle-O8mkJ7az.js';
+import { B as BROWSER_SUPPORT_MIME_TYPE_LIST, V as VOICE_RECORDER_AUDIO_BIT_RATE, a as VOICE_MESSAGE_FILE_NAME, b as VOICE_MESSAGE_MIME_TYPE } from '../chunks/bundle-AFXr5NmI.js';
 import { useSendbirdStateContext } from '../useSendbirdStateContext.js';
-import '../chunks/bundle--MbN9aKT.js';
-import '../chunks/bundle-V_fO-GlK.js';
-import '../chunks/bundle-xhjHZ041.js';
+import '../chunks/bundle-Tg3CrpQU.js';
+import '../chunks/bundle-CsWYoRVd.js';
+import '../chunks/bundle-KMsJXUN2.js';
 import 'react-dom';
-import '../chunks/bundle-IDH-OOHE.js';
-import '../chunks/bundle-pjLq9qJd.js';
+import '../chunks/bundle-7YRb7CRq.js';
+import '../chunks/bundle-ZTmwWu_-.js';
 import '../ui/IconButton.js';
 import '../ui/Button.js';
-import '../chunks/bundle-sR62lMVk.js';
+import '../chunks/bundle-kMMCn6GE.js';
 import '../ui/Icon.js';
 import '../withSendbird.js';
 
@@ -37,7 +37,7 @@ var VoiceRecorderProvider = function (props) {
     }
     useEffect(function () {
         if (isVoiceMessageEnabled && !webAudioUtils) {
-            import('../chunks/bundle-vgjdmNj2.js').then(function (data) {
+            import('../chunks/bundle-UtEizJG6.js').then(function (data) {
                 setWebAudioUtils(data);
             });
         }
