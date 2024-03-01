@@ -1,10 +1,10 @@
 import { FrozenNotification } from '../../GroupChannel/components/FrozenNotification.js';
 import 'react';
-import '../../chunks/bundle-hS8Jw8F1.js';
-import '../../chunks/bundle-PIrj5Rm1.js';
-import '../../chunks/bundle-8u3PnqsX.js';
-import '../../chunks/bundle-ljRDDTki.js';
-import '../../chunks/bundle-UnAcr6wX.js';
+import '../../chunks/bundle-1inZXcUV.js';
+import '../../chunks/bundle--MbN9aKT.js';
+import '../../chunks/bundle-V_fO-GlK.js';
+import '../../chunks/bundle-sR62lMVk.js';
+import '../../chunks/bundle-xhjHZ041.js';
 
 
 

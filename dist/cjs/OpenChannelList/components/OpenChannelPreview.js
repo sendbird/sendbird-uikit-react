@@ -1,14 +1,14 @@
 'use strict';
 
 var React = require('react');
-var ui_Avatar = require('../../chunks/bundle--jUKLwRX.js');
+var ui_Avatar = require('../../chunks/bundle-PoiZwjvJ.js');
 var ui_Icon = require('../../ui/Icon.js');
-var ui_Label = require('../../chunks/bundle-KkCwxjVN.js');
-require('../../chunks/bundle-xbdnJE9-.js');
+var ui_Label = require('../../chunks/bundle-2Pq38lvD.js');
+require('../../chunks/bundle-zYqQA3cT.js');
 require('../../ui/ImageRenderer.js');
-require('../../chunks/bundle-jCTpndN0.js');
-require('../../chunks/bundle-kftX5Dbs.js');
-require('../../chunks/bundle-Yzhiyr0t.js');
+require('../../chunks/bundle-Xwl4gw4D.js');
+require('../../chunks/bundle-5mXB6h1C.js');
+require('../../chunks/bundle-xYV6cL9E.js');
 
 function OpenChannelPreview(_a) {
     var className = _a.className, isSelected = _a.isSelected, channel = _a.channel, onClick = _a.onClick;

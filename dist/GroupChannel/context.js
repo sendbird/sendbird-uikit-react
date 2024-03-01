@@ -1,20 +1,20 @@
-import { _ as __assign, a as __awaiter, b as __generator } from '../chunks/bundle-UnAcr6wX.js';
+import { _ as __assign, a as __awaiter, b as __generator } from '../chunks/bundle-xhjHZ041.js';
 import React__default, { useRef, useState, useLayoutEffect, useCallback, useMemo, useEffect, useContext } from 'react';
 import { MessageMetaArray, ReplyType } from '@sendbird/chat/message';
 import { MessageFilter } from '@sendbird/chat/groupChannel';
 import { useIIFE, useGroupChannelMessages, useAsyncEffect, useAsyncLayoutEffect, usePreservedCallback } from '@sendbird/uikit-tools';
-import { U as UserProfileProvider } from '../chunks/bundle-jDtVwIPR.js';
+import { U as UserProfileProvider } from '../chunks/bundle-9GBao6H-.js';
 import { useSendbirdStateContext } from '../useSendbirdStateContext.js';
-import { u as useToggleReactionCallback } from '../chunks/bundle-XFxecIn0.js';
-import { g as getCaseResolvedReplyType, a as getCaseResolvedThreadReplySelectType } from '../chunks/bundle-iU7PXFos.js';
-import { b as isContextMenuClosed, c as getMessageTopOffset } from '../chunks/bundle-7nLQi_YH.js';
-import { a as useOnScrollPositionChangeDetectorWithRef } from '../chunks/bundle-WFlcI9AO.js';
-import { p as pubSubFactory } from '../chunks/bundle-_6EZcp4H.js';
-import { p as pubSubTopics } from '../chunks/bundle-7BSf_PUT.js';
-import { a as VOICE_MESSAGE_FILE_NAME, b as VOICE_MESSAGE_MIME_TYPE, M as META_ARRAY_VOICE_DURATION_KEY, j as META_ARRAY_MESSAGE_TYPE_KEY, k as META_ARRAY_MESSAGE_TYPE_VALUE__VOICE } from '../chunks/bundle-1CfFFBx9.js';
+import { u as useToggleReactionCallback } from '../chunks/bundle-jbaxtoFd.js';
+import { g as getCaseResolvedReplyType, a as getCaseResolvedThreadReplySelectType } from '../chunks/bundle-2FjmmgQK.js';
+import { b as isContextMenuClosed, c as getMessageTopOffset } from '../chunks/bundle-QzNkWqn-.js';
+import { a as useOnScrollPositionChangeDetectorWithRef } from '../chunks/bundle-WP5dHmdm.js';
+import { p as pubSubFactory } from '../chunks/bundle-ycx-QBOb.js';
+import { p as pubSubTopics } from '../chunks/bundle-yarrTY_z.js';
+import { a as VOICE_MESSAGE_FILE_NAME, b as VOICE_MESSAGE_MIME_TYPE, M as META_ARRAY_VOICE_DURATION_KEY, j as META_ARRAY_MESSAGE_TYPE_KEY, k as META_ARRAY_MESSAGE_TYPE_VALUE__VOICE } from '../chunks/bundle-UKdN0Ihw.js';
 import '../withSendbird.js';
-import '../chunks/bundle-H77M-_wK.js';
-import '../chunks/bundle-6aMfjTWv.js';
+import '../chunks/bundle-LgR-0X7v.js';
+import '../chunks/bundle-p0z4OS-3.js';
 
 function runCallback(callback, lazy) {
     if (lazy === void 0) { lazy = true; }

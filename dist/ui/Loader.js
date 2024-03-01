@@ -1,7 +1,7 @@
-import { c as __spreadArray } from '../chunks/bundle-UnAcr6wX.js';
+import { c as __spreadArray } from '../chunks/bundle-xhjHZ041.js';
 import React__default from 'react';
 import Icon, { IconTypes } from './Icon.js';
-import '../chunks/bundle-CRwhglru.js';
+import '../chunks/bundle-IDH-OOHE.js';
 
 function Loader(_a) {
     var _b = _a.className, className = _b === void 0 ? '' : _b, _c = _a.width, width = _c === void 0 ? '26px' : _c, _d = _a.height, height = _d === void 0 ? '26px' : _d, children = _a.children;

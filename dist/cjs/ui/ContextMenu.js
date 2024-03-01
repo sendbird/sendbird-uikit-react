@@ -3,16 +3,16 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var React = require('react');
-var _tslib = require('../chunks/bundle-xbdnJE9-.js');
+var _tslib = require('../chunks/bundle-zYqQA3cT.js');
 var reactDom = require('react-dom');
 var ui_SortByRow = require('./SortByRow.js');
-var index = require('../chunks/bundle-Uw6P-cM9.js');
-var ui_Label = require('../chunks/bundle-KkCwxjVN.js');
-require('../chunks/bundle-SOIkTCep.js');
+var index = require('../chunks/bundle-bjSez2lv.js');
+var ui_Label = require('../chunks/bundle-2Pq38lvD.js');
+require('../chunks/bundle-NNEanMqk.js');
 require('@sendbird/chat/groupChannel');
 require('../utils/message/getOutgoingMessageState.js');
-require('../chunks/bundle-tNuJSOqI.js');
-require('../chunks/bundle-Yzhiyr0t.js');
+require('../chunks/bundle-8G36Z6Or.js');
+require('../chunks/bundle-xYV6cL9E.js');
 
 // padding to handle height of last item in message-list
 var HEIGHT_PADDING = 60;

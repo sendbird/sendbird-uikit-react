@@ -3,19 +3,19 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var React = require('react');
-var LocalizationContext = require('../chunks/bundle-WKa05h0_.js');
-var ui_Modal = require('../chunks/bundle-6hGNMML2.js');
-var consts = require('../chunks/bundle-Atn5EZwu.js');
+var LocalizationContext = require('../chunks/bundle-Nz6fSUye.js');
+var ui_Modal = require('../chunks/bundle-NeYvE4zX.js');
+var consts = require('../chunks/bundle-4jVvOUfV.js');
 var useSendbirdStateContext = require('../useSendbirdStateContext.js');
-require('../chunks/bundle-Yzhiyr0t.js');
-require('../chunks/bundle-HY8cubCp.js');
-require('../chunks/bundle-xbdnJE9-.js');
+require('../chunks/bundle-xYV6cL9E.js');
+require('../chunks/bundle-eyiJykZ-.js');
+require('../chunks/bundle-zYqQA3cT.js');
 require('react-dom');
-require('../chunks/bundle-jCTpndN0.js');
-require('../chunks/bundle-4WvE40Un.js');
+require('../chunks/bundle-Xwl4gw4D.js');
+require('../chunks/bundle-37dz9yoi.js');
 require('../ui/IconButton.js');
 require('../ui/Button.js');
-require('../chunks/bundle-KkCwxjVN.js');
+require('../chunks/bundle-2Pq38lvD.js');
 require('../ui/Icon.js');
 require('../withSendbird.js');
 
@@ -41,7 +41,7 @@ var VoiceRecorderProvider = function (props) {
     }
     React.useEffect(function () {
         if (isVoiceMessageEnabled && !webAudioUtils) {
-            Promise.resolve().then(function () { return require('../chunks/bundle-nOP49yLz.js'); }).then(function (data) {
+            Promise.resolve().then(function () { return require('../chunks/bundle-2H-SVVLr.js'); }).then(function (data) {
                 setWebAudioUtils(data);
             });
         }

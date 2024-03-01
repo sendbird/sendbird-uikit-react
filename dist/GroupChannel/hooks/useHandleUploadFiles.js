@@ -1,25 +1,25 @@
-import { a as __awaiter, b as __generator } from '../../chunks/bundle-UnAcr6wX.js';
+import { a as __awaiter, b as __generator } from '../../chunks/bundle-xhjHZ041.js';
 import React__default, { useCallback } from 'react';
 import { useSendbirdStateContext } from '../../useSendbirdStateContext.js';
-import { d as isImage } from '../../chunks/bundle-WrTlYypL.js';
+import { d as isImage } from '../../chunks/bundle-Jwc7mleJ.js';
 import { useGlobalModalContext } from '../../hooks/useModal.js';
-import '../../chunks/bundle-ljRDDTki.js';
+import '../../chunks/bundle-sR62lMVk.js';
 import { ButtonTypes } from '../../ui/Button.js';
-import { u as useLocalization } from '../../chunks/bundle-hS8Jw8F1.js';
-import { c as ModalFooter } from '../../chunks/bundle--BlhOpUS.js';
-import { c as compressImages } from '../../chunks/bundle-QJa2lTJw.js';
+import { u as useLocalization } from '../../chunks/bundle-1inZXcUV.js';
+import { c as ModalFooter } from '../../chunks/bundle-ixiL_3Ds.js';
+import { c as compressImages } from '../../chunks/bundle-FmRroF-I.js';
 import '../../withSendbird.js';
 import '@sendbird/chat/groupChannel';
 import '../../utils/message/getOutgoingMessageState.js';
-import '../../chunks/bundle-UuydkZ4A.js';
-import '../../chunks/bundle-CRwhglru.js';
+import '../../chunks/bundle-AN6QCsUL.js';
+import '../../chunks/bundle-IDH-OOHE.js';
 import 'react-dom';
-import '../../chunks/bundle-PIrj5Rm1.js';
-import '../../chunks/bundle-8u3PnqsX.js';
-import '../../chunks/bundle-qlkGlvyT.js';
+import '../../chunks/bundle--MbN9aKT.js';
+import '../../chunks/bundle-V_fO-GlK.js';
+import '../../chunks/bundle-pjLq9qJd.js';
 import '../../ui/IconButton.js';
 import '../../ui/Icon.js';
-import '../../chunks/bundle-fNigAmmf.js';
+import '../../chunks/bundle-3a5xXUZv.js';
 
 var useHandleUploadFiles = function (_a, _b) {
     var sendFileMessage = _a.sendFileMessage, sendMultipleFilesMessage = _a.sendMultipleFilesMessage, quoteMessage = _a.quoteMessage;

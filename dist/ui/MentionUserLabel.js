@@ -1,5 +1,5 @@
 import React__default from 'react';
-import { M as MENTION_USER_LABEL_CLASSNAME } from '../chunks/bundle-v7DbCTsH.js';
+import { M as MENTION_USER_LABEL_CLASSNAME } from '../chunks/bundle-zp72gyE3.js';
 
 function MentionUserLabel(_a) {
     var _b = _a.className, className = _b === void 0 ? '' : _b, children = _a.children, _c = _a.isReverse, isReverse = _c === void 0 ? false : _c, color = _a.color, userId = _a.userId;

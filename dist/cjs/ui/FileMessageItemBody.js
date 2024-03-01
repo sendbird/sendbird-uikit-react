@@ -1,18 +1,18 @@
 'use strict';
 
 var React = require('react');
-var ui_Label = require('../chunks/bundle-KkCwxjVN.js');
+var ui_Label = require('../chunks/bundle-2Pq38lvD.js');
 var ui_Icon = require('./Icon.js');
 var ui_TextButton = require('./TextButton.js');
-var index = require('../chunks/bundle-Uw6P-cM9.js');
-var color = require('../chunks/bundle-0uk8Bfy0.js');
-var MediaQueryContext = require('../chunks/bundle-4WvE40Un.js');
-require('../chunks/bundle-xbdnJE9-.js');
-require('../chunks/bundle-Yzhiyr0t.js');
-require('../chunks/bundle-jCTpndN0.js');
+var index = require('../chunks/bundle-bjSez2lv.js');
+var color = require('../chunks/bundle-oaDSLq17.js');
+var MediaQueryContext = require('../chunks/bundle-37dz9yoi.js');
+require('../chunks/bundle-zYqQA3cT.js');
+require('../chunks/bundle-xYV6cL9E.js');
+require('../chunks/bundle-Xwl4gw4D.js');
 require('@sendbird/chat/groupChannel');
 require('../utils/message/getOutgoingMessageState.js');
-require('../chunks/bundle-tNuJSOqI.js');
+require('../chunks/bundle-8G36Z6Or.js');
 
 function FileMessageItemBody(_a) {
     var _b;

@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var _tslib = require('./chunks/bundle-xbdnJE9-.js');
+var _tslib = require('./chunks/bundle-zYqQA3cT.js');
 var React = require('react');
 
 var SendbirdSdkContext = React.createContext(null);
