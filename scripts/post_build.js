@@ -20,7 +20,7 @@ async function createPackageJSON(json) {
   const typesVersions = { '*': {} };
   const exports = {
     './package.json': './package.json',
-    './dist/dist/index.css': './dist/dist/index.css',
+    './dist/index.css': './dist/index.css',
   };
 
   Object.entries(exportList).forEach(([module, filePath]) => {
