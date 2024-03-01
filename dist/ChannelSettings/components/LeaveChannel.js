@@ -1,23 +1,23 @@
 import React__default from 'react';
 import { useSendbirdStateContext } from '../../useSendbirdStateContext.js';
 import { useChannelSettingsContext } from '../context.js';
-import { n as noop } from '../../chunks/bundle-CRwhglru.js';
-import { M as Modal } from '../../chunks/bundle--BlhOpUS.js';
-import { u as useLocalization } from '../../chunks/bundle-hS8Jw8F1.js';
-import { u as useMediaQueryContext } from '../../chunks/bundle-qlkGlvyT.js';
+import { n as noop } from '../../chunks/bundle-IDH-OOHE.js';
+import { M as Modal } from '../../chunks/bundle-ixiL_3Ds.js';
+import { u as useLocalization } from '../../chunks/bundle-1inZXcUV.js';
+import { u as useMediaQueryContext } from '../../chunks/bundle-pjLq9qJd.js';
 import TextButton from '../../ui/TextButton.js';
-import { L as Label, a as LabelTypography, b as LabelColors } from '../../chunks/bundle-ljRDDTki.js';
+import { L as Label, a as LabelTypography, b as LabelColors } from '../../chunks/bundle-sR62lMVk.js';
 import '../../withSendbird.js';
-import '../../chunks/bundle-UnAcr6wX.js';
-import '../../chunks/bundle-jDtVwIPR.js';
-import '../../chunks/bundle-0Kp88b8b.js';
+import '../../chunks/bundle-xhjHZ041.js';
+import '../../chunks/bundle-9GBao6H-.js';
+import '../../chunks/bundle-BZ3hPsJ8.js';
 import 'react-dom';
 import '../../ui/IconButton.js';
 import '../../ui/Button.js';
 import '../../ui/Icon.js';
-import '../../chunks/bundle-PIrj5Rm1.js';
-import '../../chunks/bundle-8u3PnqsX.js';
-import '../../chunks/bundle-02rQraFs.js';
+import '../../chunks/bundle--MbN9aKT.js';
+import '../../chunks/bundle-V_fO-GlK.js';
+import '../../chunks/bundle-nMxV4WMS.js';
 
 var LeaveChannel = function (props) {
     var _a, _b;

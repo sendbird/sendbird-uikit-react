@@ -2,38 +2,38 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var _tslib = require('./chunks/bundle-xbdnJE9-.js');
+var _tslib = require('./chunks/bundle-zYqQA3cT.js');
 var React = require('react');
 var uikitTools = require('@sendbird/uikit-tools');
 var withSendbird = require('./withSendbird.js');
 var cssVars = require('css-vars-ponyfill');
-var index = require('./chunks/bundle-tNuJSOqI.js');
-var actionTypes = require('./chunks/bundle-BWsz2Xk-.js');
-var useMarkAsDeliveredScheduler = require('./chunks/bundle-Fj06oDBD.js');
+var index = require('./chunks/bundle-8G36Z6Or.js');
+var actionTypes = require('./chunks/bundle-sHU9iRBT.js');
+var useMarkAsDeliveredScheduler = require('./chunks/bundle-lPuw7NHh.js');
 var SendbirdChat = require('@sendbird/chat');
 var openChannel = require('@sendbird/chat/openChannel');
 var groupChannel = require('@sendbird/chat/groupChannel');
-var index$1 = require('./chunks/bundle-Uw6P-cM9.js');
-var utils = require('./chunks/bundle-jCTpndN0.js');
-var index$2 = require('./chunks/bundle-2xXFQXmk.js');
-var VoicePlayer_context = require('./chunks/bundle-jXnX-7jH.js');
+var index$1 = require('./chunks/bundle-bjSez2lv.js');
+var utils = require('./chunks/bundle-Xwl4gw4D.js');
+var index$2 = require('./chunks/bundle-6zBpI6FB.js');
+var VoicePlayer_context = require('./chunks/bundle-RZEbRa4M.js');
 var VoiceRecorder_context = require('./VoiceRecorder/context.js');
-var LocalizationContext = require('./chunks/bundle-WKa05h0_.js');
-var MediaQueryContext = require('./chunks/bundle-4WvE40Un.js');
-var stringSet = require('./chunks/bundle-Yzhiyr0t.js');
-var consts = require('./chunks/bundle-Atn5EZwu.js');
-var resolvedReplyType = require('./chunks/bundle-MK0CJsqZ.js');
+var LocalizationContext = require('./chunks/bundle-Nz6fSUye.js');
+var MediaQueryContext = require('./chunks/bundle-37dz9yoi.js');
+var stringSet = require('./chunks/bundle-xYV6cL9E.js');
+var consts = require('./chunks/bundle-4jVvOUfV.js');
+var resolvedReplyType = require('./chunks/bundle-5ucHJjT6.js');
 var hooks_useModal = require('./hooks/useModal.js');
 var useSendbirdStateContext = require('./useSendbirdStateContext.js');
-require('./chunks/bundle-SOIkTCep.js');
+require('./chunks/bundle-NNEanMqk.js');
 require('./utils/message/getOutgoingMessageState.js');
-require('./chunks/bundle-6hGNMML2.js');
+require('./chunks/bundle-NeYvE4zX.js');
 require('react-dom');
 require('./ui/IconButton.js');
 require('./ui/Button.js');
-require('./chunks/bundle-KkCwxjVN.js');
+require('./chunks/bundle-2Pq38lvD.js');
 require('./ui/Icon.js');
-require('./chunks/bundle-HY8cubCp.js');
+require('./chunks/bundle-eyiJykZ-.js');
 
 var isEmpty = function (obj) {
     if (obj === null || obj === undefined) {

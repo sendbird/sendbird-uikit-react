@@ -1,26 +1,26 @@
 import React__default, { useState, useRef, useContext } from 'react';
 import { useSendbirdStateContext } from '../../useSendbirdStateContext.js';
 import { useEditUserProfileContext } from '../context.js';
-import { u as useLocalization, L as LocalizationContext } from '../../chunks/bundle-hS8Jw8F1.js';
-import { U as USER_ACTIONS } from '../../chunks/bundle-cjOTjxeU.js';
-import { M as Modal } from '../../chunks/bundle--BlhOpUS.js';
-import '../../chunks/bundle-UnAcr6wX.js';
-import { L as Label, a as LabelTypography, b as LabelColors } from '../../chunks/bundle-ljRDDTki.js';
+import { u as useLocalization, L as LocalizationContext } from '../../chunks/bundle-1inZXcUV.js';
+import { U as USER_ACTIONS } from '../../chunks/bundle-OGlqvU-C.js';
+import { M as Modal } from '../../chunks/bundle-ixiL_3Ds.js';
+import '../../chunks/bundle-xhjHZ041.js';
+import { L as Label, a as LabelTypography, b as LabelColors } from '../../chunks/bundle-sR62lMVk.js';
 import { ButtonTypes } from '../../ui/Button.js';
 import Input, { InputLabel } from '../../ui/Input.js';
-import { A as Avatar } from '../../chunks/bundle-LbQw2cVx.js';
+import { A as Avatar } from '../../chunks/bundle-VE0ige0C.js';
 import TextButton from '../../ui/TextButton.js';
 import Icon, { IconTypes } from '../../ui/Icon.js';
 import '../../withSendbird.js';
-import '../../chunks/bundle-PIrj5Rm1.js';
-import '../../chunks/bundle-8u3PnqsX.js';
+import '../../chunks/bundle--MbN9aKT.js';
+import '../../chunks/bundle-V_fO-GlK.js';
 import 'react-dom';
-import '../../chunks/bundle-CRwhglru.js';
-import '../../chunks/bundle-qlkGlvyT.js';
+import '../../chunks/bundle-IDH-OOHE.js';
+import '../../chunks/bundle-pjLq9qJd.js';
 import '../../ui/IconButton.js';
 import '../../ui/ImageRenderer.js';
-import '../../chunks/bundle-fNigAmmf.js';
-import '../../chunks/bundle-02rQraFs.js';
+import '../../chunks/bundle-3a5xXUZv.js';
+import '../../chunks/bundle-nMxV4WMS.js';
 
 var EditUserProfileUIView = function (_a) {
     var _b;

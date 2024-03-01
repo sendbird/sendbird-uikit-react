@@ -24,7 +24,7 @@ async function createPackageJSON(json) {
   };
 
   Object.entries(exportList).forEach(([module, filePath]) => {
-    const dtsPath = `${filePath
+    const dtsPath = `./${filePath
       .replace('src', 'types')
       .replace(/\.tsx?$/, '.d.ts')}`;
 

@@ -2,7 +2,7 @@
 
 var React = require('react');
 var useSendbirdStateContext = require('../useSendbirdStateContext.js');
-var _tslib = require('../chunks/bundle-xbdnJE9-.js');
+var _tslib = require('../chunks/bundle-zYqQA3cT.js');
 require('../withSendbird.js');
 
 var GET_SEARCHED_MESSAGES = 'GET_SEARCHED_MESSAGES';

@@ -1,17 +1,17 @@
 import React__default, { useContext } from 'react';
-import { b as isFileMessage, c as isMultipleFilesMessage, i as isVoiceMessage, H as isImageMessage, r as isVideoMessage, I as isImageFileInfo, p as isThumbnailMessage, J as isAudioMessage, w as getClassName, s as isGifMessage, l as isUserMessage, m as getUIKitMessageType, U as UIKitMessageTypes } from '../chunks/bundle-WrTlYypL.js';
+import { b as isFileMessage, c as isMultipleFilesMessage, i as isVoiceMessage, H as isImageMessage, r as isVideoMessage, I as isImageFileInfo, p as isThumbnailMessage, J as isAudioMessage, w as getClassName, s as isGifMessage, l as isUserMessage, m as getUIKitMessageType, U as UIKitMessageTypes } from '../chunks/bundle-Jwc7mleJ.js';
 import Icon, { IconTypes, IconColors } from './Icon.js';
-import { L as Label, a as LabelTypography, b as LabelColors } from '../chunks/bundle-ljRDDTki.js';
-import { L as LocalizationContext } from '../chunks/bundle-hS8Jw8F1.js';
+import { L as Label, a as LabelTypography, b as LabelColors } from '../chunks/bundle-sR62lMVk.js';
+import { L as LocalizationContext } from '../chunks/bundle-1inZXcUV.js';
 import ImageRenderer from './ImageRenderer.js';
-import { c as getMessageFirstFileThumbnailUrl, g as getMessageFirstFileUrl, a as getMessageFirstFileType, b as getMessageFirstFileName } from '../chunks/bundle-S6OaNh10.js';
-import '../chunks/bundle-UnAcr6wX.js';
+import { c as getMessageFirstFileThumbnailUrl, g as getMessageFirstFileUrl, a as getMessageFirstFileType, b as getMessageFirstFileName } from '../chunks/bundle-NGtuBFFS.js';
+import '../chunks/bundle-xhjHZ041.js';
 import '@sendbird/chat/groupChannel';
 import '../utils/message/getOutgoingMessageState.js';
-import '../chunks/bundle-UuydkZ4A.js';
-import '../chunks/bundle-CRwhglru.js';
-import '../chunks/bundle-PIrj5Rm1.js';
-import '../chunks/bundle-8u3PnqsX.js';
+import '../chunks/bundle-AN6QCsUL.js';
+import '../chunks/bundle-IDH-OOHE.js';
+import '../chunks/bundle--MbN9aKT.js';
+import '../chunks/bundle-V_fO-GlK.js';
 
 var componentClassname = 'sendbird-quote_message_input__avatar';
 function QuoteMessageThumbnail(_a) {

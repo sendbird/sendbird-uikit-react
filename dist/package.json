@@ -19,10 +19,10 @@
     "API"
   ],
   "type": "module",
-  "module": "dist/index.js",
-  "main": "dist/cjs/index.js",
-  "types": "dist/types/index.d.ts",
-  "style": "dist/dist/index.css",
+  "module": "index.js",
+  "main": "cjs/index.js",
+  "types": "types/index.d.ts",
+  "style": "dist/index.css",
   "files": [
     "**/*"
   ],
@@ -56,1699 +56,1699 @@
     "./package.json": "./package.json",
     "./dist/dist/index.css": "./dist/dist/index.css",
     ".": {
-      "types": "./dist/types/index.d.ts",
-      "require": "./dist/cjs/index.js",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "types": "./types/index.d.ts",
+      "require": "./cjs/index.js",
+      "import": "./index.js",
+      "default": "./index.js"
     },
     "./lame.all": {
-      "types": "./dist/types/_externals/lamejs/lame.all.js",
-      "require": "./dist/cjs/lame.all.js",
-      "import": "./dist/lame.all.js",
-      "default": "./dist/lame.all.js"
+      "types": "./types/_externals/lamejs/lame.all.js",
+      "require": "./cjs/lame.all.js",
+      "import": "./lame.all.js",
+      "default": "./lame.all.js"
     },
     "./App": {
-      "types": "./dist/types/modules/App/index.d.ts",
-      "require": "./dist/cjs/App.js",
-      "import": "./dist/App.js",
-      "default": "./dist/App.js"
+      "types": "./types/modules/App/index.d.ts",
+      "require": "./cjs/App.js",
+      "import": "./App.js",
+      "default": "./App.js"
     },
     "./SendbirdProvider": {
-      "types": "./dist/types/lib/Sendbird.d.ts",
-      "require": "./dist/cjs/SendbirdProvider.js",
-      "import": "./dist/SendbirdProvider.js",
-      "default": "./dist/SendbirdProvider.js"
+      "types": "./types/lib/Sendbird.d.ts",
+      "require": "./cjs/SendbirdProvider.js",
+      "import": "./SendbirdProvider.js",
+      "default": "./SendbirdProvider.js"
     },
     "./sendbirdSelectors": {
-      "types": "./dist/types/lib/selectors.d.ts",
-      "require": "./dist/cjs/sendbirdSelectors.js",
-      "import": "./dist/sendbirdSelectors.js",
-      "default": "./dist/sendbirdSelectors.js"
+      "types": "./types/lib/selectors.d.ts",
+      "require": "./cjs/sendbirdSelectors.js",
+      "import": "./sendbirdSelectors.js",
+      "default": "./sendbirdSelectors.js"
     },
     "./useSendbirdStateContext": {
-      "types": "./dist/types/hooks/useSendbirdStateContext.d.ts",
-      "require": "./dist/cjs/useSendbirdStateContext.js",
-      "import": "./dist/useSendbirdStateContext.js",
-      "default": "./dist/useSendbirdStateContext.js"
+      "types": "./types/hooks/useSendbirdStateContext.d.ts",
+      "require": "./cjs/useSendbirdStateContext.js",
+      "import": "./useSendbirdStateContext.js",
+      "default": "./useSendbirdStateContext.js"
     },
     "./withSendbird": {
-      "types": "./dist/types/lib/SendbirdSdkContext.d.ts",
-      "require": "./dist/cjs/withSendbird.js",
-      "import": "./dist/withSendbird.js",
-      "default": "./dist/withSendbird.js"
+      "types": "./types/lib/SendbirdSdkContext.d.ts",
+      "require": "./cjs/withSendbird.js",
+      "import": "./withSendbird.js",
+      "default": "./withSendbird.js"
     },
     "./VoiceRecorder/context": {
-      "types": "./dist/types/hooks/VoiceRecorder/index.d.ts",
-      "require": "./dist/cjs/VoiceRecorder/context.js",
-      "import": "./dist/VoiceRecorder/context.js",
-      "default": "./dist/VoiceRecorder/context.js"
+      "types": "./types/hooks/VoiceRecorder/index.d.ts",
+      "require": "./cjs/VoiceRecorder/context.js",
+      "import": "./VoiceRecorder/context.js",
+      "default": "./VoiceRecorder/context.js"
     },
     "./VoiceRecorder/useVoiceRecorder": {
-      "types": "./dist/types/hooks/VoiceRecorder/useVoiceRecorder.d.ts",
-      "require": "./dist/cjs/VoiceRecorder/useVoiceRecorder.js",
-      "import": "./dist/VoiceRecorder/useVoiceRecorder.js",
-      "default": "./dist/VoiceRecorder/useVoiceRecorder.js"
+      "types": "./types/hooks/VoiceRecorder/useVoiceRecorder.d.ts",
+      "require": "./cjs/VoiceRecorder/useVoiceRecorder.js",
+      "import": "./VoiceRecorder/useVoiceRecorder.js",
+      "default": "./VoiceRecorder/useVoiceRecorder.js"
     },
     "./VoicePlayer/context": {
-      "types": "./dist/types/hooks/VoicePlayer/index.d.ts",
-      "require": "./dist/cjs/VoicePlayer/context.js",
-      "import": "./dist/VoicePlayer/context.js",
-      "default": "./dist/VoicePlayer/context.js"
+      "types": "./types/hooks/VoicePlayer/index.d.ts",
+      "require": "./cjs/VoicePlayer/context.js",
+      "import": "./VoicePlayer/context.js",
+      "default": "./VoicePlayer/context.js"
     },
     "./VoicePlayer/useVoicePlayer": {
-      "types": "./dist/types/hooks/VoicePlayer/useVoicePlayer.d.ts",
-      "require": "./dist/cjs/VoicePlayer/useVoicePlayer.js",
-      "import": "./dist/VoicePlayer/useVoicePlayer.js",
-      "default": "./dist/VoicePlayer/useVoicePlayer.js"
+      "types": "./types/hooks/VoicePlayer/useVoicePlayer.d.ts",
+      "require": "./cjs/VoicePlayer/useVoicePlayer.js",
+      "import": "./VoicePlayer/useVoicePlayer.js",
+      "default": "./VoicePlayer/useVoicePlayer.js"
     },
     "./handlers/ConnectionHandler": {
-      "types": "./dist/types/lib/handlers/ConnectionHandler.d.ts",
-      "require": "./dist/cjs/handlers/ConnectionHandler.js",
-      "import": "./dist/handlers/ConnectionHandler.js",
-      "default": "./dist/handlers/ConnectionHandler.js"
+      "types": "./types/lib/handlers/ConnectionHandler.d.ts",
+      "require": "./cjs/handlers/ConnectionHandler.js",
+      "import": "./handlers/ConnectionHandler.js",
+      "default": "./handlers/ConnectionHandler.js"
     },
     "./handlers/GroupChannelHandler": {
-      "types": "./dist/types/lib/handlers/GroupChannelHandler.d.ts",
-      "require": "./dist/cjs/handlers/GroupChannelHandler.js",
-      "import": "./dist/handlers/GroupChannelHandler.js",
-      "default": "./dist/handlers/GroupChannelHandler.js"
+      "types": "./types/lib/handlers/GroupChannelHandler.d.ts",
+      "require": "./cjs/handlers/GroupChannelHandler.js",
+      "import": "./handlers/GroupChannelHandler.js",
+      "default": "./handlers/GroupChannelHandler.js"
     },
     "./handlers/OpenChannelHandler": {
-      "types": "./dist/types/lib/handlers/OpenChannelHandler.d.ts",
-      "require": "./dist/cjs/handlers/OpenChannelHandler.js",
-      "import": "./dist/handlers/OpenChannelHandler.js",
-      "default": "./dist/handlers/OpenChannelHandler.js"
+      "types": "./types/lib/handlers/OpenChannelHandler.d.ts",
+      "require": "./cjs/handlers/OpenChannelHandler.js",
+      "import": "./handlers/OpenChannelHandler.js",
+      "default": "./handlers/OpenChannelHandler.js"
     },
     "./handlers/UserEventHandler": {
-      "types": "./dist/types/lib/handlers/UserEventHandler.d.ts",
-      "require": "./dist/cjs/handlers/UserEventHandler.js",
-      "import": "./dist/handlers/UserEventHandler.js",
-      "default": "./dist/handlers/UserEventHandler.js"
+      "types": "./types/lib/handlers/UserEventHandler.d.ts",
+      "require": "./cjs/handlers/UserEventHandler.js",
+      "import": "./handlers/UserEventHandler.js",
+      "default": "./handlers/UserEventHandler.js"
     },
     "./handlers/SessionHandler": {
-      "types": "./dist/types/lib/handlers/SessionHandler.d.ts",
-      "require": "./dist/cjs/handlers/SessionHandler.js",
-      "import": "./dist/handlers/SessionHandler.js",
-      "default": "./dist/handlers/SessionHandler.js"
+      "types": "./types/lib/handlers/SessionHandler.d.ts",
+      "require": "./cjs/handlers/SessionHandler.js",
+      "import": "./handlers/SessionHandler.js",
+      "default": "./handlers/SessionHandler.js"
     },
     "./pubSub/topics": {
-      "types": "./dist/types/lib/pubSub/topics.d.ts",
-      "require": "./dist/cjs/pubSub/topics.js",
-      "import": "./dist/pubSub/topics.js",
-      "default": "./dist/pubSub/topics.js"
+      "types": "./types/lib/pubSub/topics.d.ts",
+      "require": "./cjs/pubSub/topics.js",
+      "import": "./pubSub/topics.js",
+      "default": "./pubSub/topics.js"
     },
     "./hooks/useModal": {
-      "types": "./dist/types/hooks/useModal/index.d.ts",
-      "require": "./dist/cjs/hooks/useModal.js",
-      "import": "./dist/hooks/useModal.js",
-      "default": "./dist/hooks/useModal.js"
+      "types": "./types/hooks/useModal/index.d.ts",
+      "require": "./cjs/hooks/useModal.js",
+      "import": "./hooks/useModal.js",
+      "default": "./hooks/useModal.js"
     },
     "./utils/message/getOutgoingMessageState": {
-      "types": "./dist/types/utils/exports/getOutgoingMessageState.d.ts",
-      "require": "./dist/cjs/utils/message/getOutgoingMessageState.js",
-      "import": "./dist/utils/message/getOutgoingMessageState.js",
-      "default": "./dist/utils/message/getOutgoingMessageState.js"
+      "types": "./types/utils/exports/getOutgoingMessageState.d.ts",
+      "require": "./cjs/utils/message/getOutgoingMessageState.js",
+      "import": "./utils/message/getOutgoingMessageState.js",
+      "default": "./utils/message/getOutgoingMessageState.js"
     },
     "./utils/message/isVoiceMessage": {
-      "types": "./dist/types/utils/isVoiceMessage.d.ts",
-      "require": "./dist/cjs/utils/message/isVoiceMessage.js",
-      "import": "./dist/utils/message/isVoiceMessage.js",
-      "default": "./dist/utils/message/isVoiceMessage.js"
+      "types": "./types/utils/isVoiceMessage.d.ts",
+      "require": "./cjs/utils/message/isVoiceMessage.js",
+      "import": "./utils/message/isVoiceMessage.js",
+      "default": "./utils/message/isVoiceMessage.js"
     },
     "./ChannelList": {
-      "types": "./dist/types/modules/ChannelList/index.d.ts",
-      "require": "./dist/cjs/ChannelList.js",
-      "import": "./dist/ChannelList.js",
-      "default": "./dist/ChannelList.js"
+      "types": "./types/modules/ChannelList/index.d.ts",
+      "require": "./cjs/ChannelList.js",
+      "import": "./ChannelList.js",
+      "default": "./ChannelList.js"
     },
     "./ChannelList/context": {
-      "types": "./dist/types/modules/ChannelList/context/ChannelListProvider.d.ts",
-      "require": "./dist/cjs/ChannelList/context.js",
-      "import": "./dist/ChannelList/context.js",
-      "default": "./dist/ChannelList/context.js"
+      "types": "./types/modules/ChannelList/context/ChannelListProvider.d.ts",
+      "require": "./cjs/ChannelList/context.js",
+      "import": "./ChannelList/context.js",
+      "default": "./ChannelList/context.js"
     },
     "./ChannelList/components/AddChannel": {
-      "types": "./dist/types/modules/ChannelList/components/AddChannel/index.d.ts",
-      "require": "./dist/cjs/ChannelList/components/AddChannel.js",
-      "import": "./dist/ChannelList/components/AddChannel.js",
-      "default": "./dist/ChannelList/components/AddChannel.js"
+      "types": "./types/modules/ChannelList/components/AddChannel/index.d.ts",
+      "require": "./cjs/ChannelList/components/AddChannel.js",
+      "import": "./ChannelList/components/AddChannel.js",
+      "default": "./ChannelList/components/AddChannel.js"
     },
     "./ChannelList/components/ChannelListUI": {
-      "types": "./dist/types/modules/ChannelList/components/ChannelListUI/index.d.ts",
-      "require": "./dist/cjs/ChannelList/components/ChannelListUI.js",
-      "import": "./dist/ChannelList/components/ChannelListUI.js",
-      "default": "./dist/ChannelList/components/ChannelListUI.js"
+      "types": "./types/modules/ChannelList/components/ChannelListUI/index.d.ts",
+      "require": "./cjs/ChannelList/components/ChannelListUI.js",
+      "import": "./ChannelList/components/ChannelListUI.js",
+      "default": "./ChannelList/components/ChannelListUI.js"
     },
     "./ChannelList/components/ChannelListHeader": {
-      "types": "./dist/types/modules/ChannelList/components/ChannelListHeader/index.d.ts",
-      "require": "./dist/cjs/ChannelList/components/ChannelListHeader.js",
-      "import": "./dist/ChannelList/components/ChannelListHeader.js",
-      "default": "./dist/ChannelList/components/ChannelListHeader.js"
+      "types": "./types/modules/ChannelList/components/ChannelListHeader/index.d.ts",
+      "require": "./cjs/ChannelList/components/ChannelListHeader.js",
+      "import": "./ChannelList/components/ChannelListHeader.js",
+      "default": "./ChannelList/components/ChannelListHeader.js"
     },
     "./ChannelList/components/ChannelPreview": {
-      "types": "./dist/types/modules/ChannelList/components/ChannelPreview/index.d.ts",
-      "require": "./dist/cjs/ChannelList/components/ChannelPreview.js",
-      "import": "./dist/ChannelList/components/ChannelPreview.js",
-      "default": "./dist/ChannelList/components/ChannelPreview.js"
+      "types": "./types/modules/ChannelList/components/ChannelPreview/index.d.ts",
+      "require": "./cjs/ChannelList/components/ChannelPreview.js",
+      "import": "./ChannelList/components/ChannelPreview.js",
+      "default": "./ChannelList/components/ChannelPreview.js"
     },
     "./ChannelList/components/ChannelPreviewAction": {
-      "types": "./dist/types/modules/ChannelList/components/ChannelPreviewAction.d.ts",
-      "require": "./dist/cjs/ChannelList/components/ChannelPreviewAction.js",
-      "import": "./dist/ChannelList/components/ChannelPreviewAction.js",
-      "default": "./dist/ChannelList/components/ChannelPreviewAction.js"
+      "types": "./types/modules/ChannelList/components/ChannelPreviewAction.d.ts",
+      "require": "./cjs/ChannelList/components/ChannelPreviewAction.js",
+      "import": "./ChannelList/components/ChannelPreviewAction.js",
+      "default": "./ChannelList/components/ChannelPreviewAction.js"
     },
     "./GroupChannelList": {
-      "types": "./dist/types/modules/GroupChannelList/index.d.ts",
-      "require": "./dist/cjs/GroupChannelList.js",
-      "import": "./dist/GroupChannelList.js",
-      "default": "./dist/GroupChannelList.js"
+      "types": "./types/modules/GroupChannelList/index.d.ts",
+      "require": "./cjs/GroupChannelList.js",
+      "import": "./GroupChannelList.js",
+      "default": "./GroupChannelList.js"
     },
     "./GroupChannelList/context": {
-      "types": "./dist/types/modules/GroupChannelList/context/GroupChannelListProvider.d.ts",
-      "require": "./dist/cjs/GroupChannelList/context.js",
-      "import": "./dist/GroupChannelList/context.js",
-      "default": "./dist/GroupChannelList/context.js"
+      "types": "./types/modules/GroupChannelList/context/GroupChannelListProvider.d.ts",
+      "require": "./cjs/GroupChannelList/context.js",
+      "import": "./GroupChannelList/context.js",
+      "default": "./GroupChannelList/context.js"
     },
     "./GroupChannelList/components/AddGroupChannel": {
-      "types": "./dist/types/modules/GroupChannelList/components/AddGroupChannel/index.d.ts",
-      "require": "./dist/cjs/GroupChannelList/components/AddGroupChannel.js",
-      "import": "./dist/GroupChannelList/components/AddGroupChannel.js",
-      "default": "./dist/GroupChannelList/components/AddGroupChannel.js"
+      "types": "./types/modules/GroupChannelList/components/AddGroupChannel/index.d.ts",
+      "require": "./cjs/GroupChannelList/components/AddGroupChannel.js",
+      "import": "./GroupChannelList/components/AddGroupChannel.js",
+      "default": "./GroupChannelList/components/AddGroupChannel.js"
     },
     "./GroupChannelList/components/GroupChannelListUI": {
-      "types": "./dist/types/modules/GroupChannelList/components/GroupChannelListUI/index.d.ts",
-      "require": "./dist/cjs/GroupChannelList/components/GroupChannelListUI.js",
-      "import": "./dist/GroupChannelList/components/GroupChannelListUI.js",
-      "default": "./dist/GroupChannelList/components/GroupChannelListUI.js"
+      "types": "./types/modules/GroupChannelList/components/GroupChannelListUI/index.d.ts",
+      "require": "./cjs/GroupChannelList/components/GroupChannelListUI.js",
+      "import": "./GroupChannelList/components/GroupChannelListUI.js",
+      "default": "./GroupChannelList/components/GroupChannelListUI.js"
     },
     "./GroupChannelList/components/GroupChannelListHeader": {
-      "types": "./dist/types/modules/GroupChannelList/components/GroupChannelListHeader/index.d.ts",
-      "require": "./dist/cjs/GroupChannelList/components/GroupChannelListHeader.js",
-      "import": "./dist/GroupChannelList/components/GroupChannelListHeader.js",
-      "default": "./dist/GroupChannelList/components/GroupChannelListHeader.js"
+      "types": "./types/modules/GroupChannelList/components/GroupChannelListHeader/index.d.ts",
+      "require": "./cjs/GroupChannelList/components/GroupChannelListHeader.js",
+      "import": "./GroupChannelList/components/GroupChannelListHeader.js",
+      "default": "./GroupChannelList/components/GroupChannelListHeader.js"
     },
     "./GroupChannelList/components/GroupChannelListItem": {
-      "types": "./dist/types/modules/GroupChannelList/components/GroupChannelListItem/index.d.ts",
-      "require": "./dist/cjs/GroupChannelList/components/GroupChannelListItem.js",
-      "import": "./dist/GroupChannelList/components/GroupChannelListItem.js",
-      "default": "./dist/GroupChannelList/components/GroupChannelListItem.js"
+      "types": "./types/modules/GroupChannelList/components/GroupChannelListItem/index.d.ts",
+      "require": "./cjs/GroupChannelList/components/GroupChannelListItem.js",
+      "import": "./GroupChannelList/components/GroupChannelListItem.js",
+      "default": "./GroupChannelList/components/GroupChannelListItem.js"
     },
     "./GroupChannelList/components/GroupChannelPreviewAction": {
-      "types": "./dist/types/modules/GroupChannelList/components/GroupChannelPreviewAction.d.ts",
-      "require": "./dist/cjs/GroupChannelList/components/GroupChannelPreviewAction.js",
-      "import": "./dist/GroupChannelList/components/GroupChannelPreviewAction.js",
-      "default": "./dist/GroupChannelList/components/GroupChannelPreviewAction.js"
+      "types": "./types/modules/GroupChannelList/components/GroupChannelPreviewAction.d.ts",
+      "require": "./cjs/GroupChannelList/components/GroupChannelPreviewAction.js",
+      "import": "./GroupChannelList/components/GroupChannelPreviewAction.js",
+      "default": "./GroupChannelList/components/GroupChannelPreviewAction.js"
     },
     "./ChannelSettings": {
-      "types": "./dist/types/modules/ChannelSettings/index.d.ts",
-      "require": "./dist/cjs/ChannelSettings.js",
-      "import": "./dist/ChannelSettings.js",
-      "default": "./dist/ChannelSettings.js"
+      "types": "./types/modules/ChannelSettings/index.d.ts",
+      "require": "./cjs/ChannelSettings.js",
+      "import": "./ChannelSettings.js",
+      "default": "./ChannelSettings.js"
     },
     "./ChannelSettings/context": {
-      "types": "./dist/types/modules/ChannelSettings/context/ChannelSettingsProvider.d.ts",
-      "require": "./dist/cjs/ChannelSettings/context.js",
-      "import": "./dist/ChannelSettings/context.js",
-      "default": "./dist/ChannelSettings/context.js"
+      "types": "./types/modules/ChannelSettings/context/ChannelSettingsProvider.d.ts",
+      "require": "./cjs/ChannelSettings/context.js",
+      "import": "./ChannelSettings/context.js",
+      "default": "./ChannelSettings/context.js"
     },
     "./ChannelSettings/components/ModerationPanel": {
-      "types": "./dist/types/modules/ChannelSettings/components/ModerationPanel/index.d.ts",
-      "require": "./dist/cjs/ChannelSettings/components/ModerationPanel.js",
-      "import": "./dist/ChannelSettings/components/ModerationPanel.js",
-      "default": "./dist/ChannelSettings/components/ModerationPanel.js"
+      "types": "./types/modules/ChannelSettings/components/ModerationPanel/index.d.ts",
+      "require": "./cjs/ChannelSettings/components/ModerationPanel.js",
+      "import": "./ChannelSettings/components/ModerationPanel.js",
+      "default": "./ChannelSettings/components/ModerationPanel.js"
     },
     "./ChannelSettings/components/ChannelProfile": {
-      "types": "./dist/types/modules/ChannelSettings/components/ChannelProfile/index.d.ts",
-      "require": "./dist/cjs/ChannelSettings/components/ChannelProfile.js",
-      "import": "./dist/ChannelSettings/components/ChannelProfile.js",
-      "default": "./dist/ChannelSettings/components/ChannelProfile.js"
+      "types": "./types/modules/ChannelSettings/components/ChannelProfile/index.d.ts",
+      "require": "./cjs/ChannelSettings/components/ChannelProfile.js",
+      "import": "./ChannelSettings/components/ChannelProfile.js",
+      "default": "./ChannelSettings/components/ChannelProfile.js"
     },
     "./ChannelSettings/components/ChannelSettingsUI": {
-      "types": "./dist/types/modules/ChannelSettings/components/ChannelSettingsUI/index.d.ts",
-      "require": "./dist/cjs/ChannelSettings/components/ChannelSettingsUI.js",
-      "import": "./dist/ChannelSettings/components/ChannelSettingsUI.js",
-      "default": "./dist/ChannelSettings/components/ChannelSettingsUI.js"
+      "types": "./types/modules/ChannelSettings/components/ChannelSettingsUI/index.d.ts",
+      "require": "./cjs/ChannelSettings/components/ChannelSettingsUI.js",
+      "import": "./ChannelSettings/components/ChannelSettingsUI.js",
+      "default": "./ChannelSettings/components/ChannelSettingsUI.js"
     },
     "./ChannelSettings/components/EditDetailsModal": {
-      "types": "./dist/types/modules/ChannelSettings/components/EditDetailsModal/index.d.ts",
-      "require": "./dist/cjs/ChannelSettings/components/EditDetailsModal.js",
-      "import": "./dist/ChannelSettings/components/EditDetailsModal.js",
-      "default": "./dist/ChannelSettings/components/EditDetailsModal.js"
+      "types": "./types/modules/ChannelSettings/components/EditDetailsModal/index.d.ts",
+      "require": "./cjs/ChannelSettings/components/EditDetailsModal.js",
+      "import": "./ChannelSettings/components/EditDetailsModal.js",
+      "default": "./ChannelSettings/components/EditDetailsModal.js"
     },
     "./ChannelSettings/components/LeaveChannel": {
-      "types": "./dist/types/modules/ChannelSettings/components/LeaveChannel/index.d.ts",
-      "require": "./dist/cjs/ChannelSettings/components/LeaveChannel.js",
-      "import": "./dist/ChannelSettings/components/LeaveChannel.js",
-      "default": "./dist/ChannelSettings/components/LeaveChannel.js"
+      "types": "./types/modules/ChannelSettings/components/LeaveChannel/index.d.ts",
+      "require": "./cjs/ChannelSettings/components/LeaveChannel.js",
+      "import": "./ChannelSettings/components/LeaveChannel.js",
+      "default": "./ChannelSettings/components/LeaveChannel.js"
     },
     "./ChannelSettings/components/UserListItem": {
-      "types": "./dist/types/modules/ChannelSettings/components/UserListItem/index.d.ts",
-      "require": "./dist/cjs/ChannelSettings/components/UserListItem.js",
-      "import": "./dist/ChannelSettings/components/UserListItem.js",
-      "default": "./dist/ChannelSettings/components/UserListItem.js"
+      "types": "./types/modules/ChannelSettings/components/UserListItem/index.d.ts",
+      "require": "./cjs/ChannelSettings/components/UserListItem.js",
+      "import": "./ChannelSettings/components/UserListItem.js",
+      "default": "./ChannelSettings/components/UserListItem.js"
     },
     "./ChannelSettings/components/UserPanel": {
-      "types": "./dist/types/modules/ChannelSettings/components/UserPanel/index.d.ts",
-      "require": "./dist/cjs/ChannelSettings/components/UserPanel.js",
-      "import": "./dist/ChannelSettings/components/UserPanel.js",
-      "default": "./dist/ChannelSettings/components/UserPanel.js"
+      "types": "./types/modules/ChannelSettings/components/UserPanel/index.d.ts",
+      "require": "./cjs/ChannelSettings/components/UserPanel.js",
+      "import": "./ChannelSettings/components/UserPanel.js",
+      "default": "./ChannelSettings/components/UserPanel.js"
     },
     "./Channel": {
-      "types": "./dist/types/modules/Channel/index.d.ts",
-      "require": "./dist/cjs/Channel.js",
-      "import": "./dist/Channel.js",
-      "default": "./dist/Channel.js"
+      "types": "./types/modules/Channel/index.d.ts",
+      "require": "./cjs/Channel.js",
+      "import": "./Channel.js",
+      "default": "./Channel.js"
     },
     "./Channel/context": {
-      "types": "./dist/types/modules/Channel/context/ChannelProvider.d.ts",
-      "require": "./dist/cjs/Channel/context.js",
-      "import": "./dist/Channel/context.js",
-      "default": "./dist/Channel/context.js"
+      "types": "./types/modules/Channel/context/ChannelProvider.d.ts",
+      "require": "./cjs/Channel/context.js",
+      "import": "./Channel/context.js",
+      "default": "./Channel/context.js"
     },
     "./Channel/hooks/useInitialMessagesFetch": {
-      "types": "./dist/types/modules/Channel/context/hooks/useInitialMessagesFetch.d.ts",
-      "require": "./dist/cjs/Channel/hooks/useInitialMessagesFetch.js",
-      "import": "./dist/Channel/hooks/useInitialMessagesFetch.js",
-      "default": "./dist/Channel/hooks/useInitialMessagesFetch.js"
+      "types": "./types/modules/Channel/context/hooks/useInitialMessagesFetch.d.ts",
+      "require": "./cjs/Channel/hooks/useInitialMessagesFetch.js",
+      "import": "./Channel/hooks/useInitialMessagesFetch.js",
+      "default": "./Channel/hooks/useInitialMessagesFetch.js"
     },
     "./Channel/hooks/useHandleUploadFiles": {
-      "types": "./dist/types/modules/Channel/context/hooks/useHandleUploadFiles.d.ts",
-      "require": "./dist/cjs/Channel/hooks/useHandleUploadFiles.js",
-      "import": "./dist/Channel/hooks/useHandleUploadFiles.js",
-      "default": "./dist/Channel/hooks/useHandleUploadFiles.js"
+      "types": "./types/modules/Channel/context/hooks/useHandleUploadFiles.d.ts",
+      "require": "./cjs/Channel/hooks/useHandleUploadFiles.js",
+      "import": "./Channel/hooks/useHandleUploadFiles.js",
+      "default": "./Channel/hooks/useHandleUploadFiles.js"
     },
     "./Channel/utils/getMessagePartsInfo": {
-      "types": "./dist/types/modules/GroupChannel/components/MessageList/getMessagePartsInfo.d.ts",
-      "require": "./dist/cjs/Channel/utils/getMessagePartsInfo.js",
-      "import": "./dist/Channel/utils/getMessagePartsInfo.js",
-      "default": "./dist/Channel/utils/getMessagePartsInfo.js"
+      "types": "./types/modules/GroupChannel/components/MessageList/getMessagePartsInfo.d.ts",
+      "require": "./cjs/Channel/utils/getMessagePartsInfo.js",
+      "import": "./Channel/utils/getMessagePartsInfo.js",
+      "default": "./Channel/utils/getMessagePartsInfo.js"
     },
     "./Channel/utils/compareMessagesForGrouping": {
-      "types": "./dist/types/utils/messages.d.ts",
-      "require": "./dist/cjs/Channel/utils/compareMessagesForGrouping.js",
-      "import": "./dist/Channel/utils/compareMessagesForGrouping.js",
-      "default": "./dist/Channel/utils/compareMessagesForGrouping.js"
+      "types": "./types/utils/messages.d.ts",
+      "require": "./cjs/Channel/utils/compareMessagesForGrouping.js",
+      "import": "./Channel/utils/compareMessagesForGrouping.js",
+      "default": "./Channel/utils/compareMessagesForGrouping.js"
     },
     "./Channel/components/ChannelHeader": {
-      "types": "./dist/types/modules/Channel/components/ChannelHeader/index.d.ts",
-      "require": "./dist/cjs/Channel/components/ChannelHeader.js",
-      "import": "./dist/Channel/components/ChannelHeader.js",
-      "default": "./dist/Channel/components/ChannelHeader.js"
+      "types": "./types/modules/Channel/components/ChannelHeader/index.d.ts",
+      "require": "./cjs/Channel/components/ChannelHeader.js",
+      "import": "./Channel/components/ChannelHeader.js",
+      "default": "./Channel/components/ChannelHeader.js"
     },
     "./Channel/components/ChannelUI": {
-      "types": "./dist/types/modules/Channel/components/ChannelUI/index.d.ts",
-      "require": "./dist/cjs/Channel/components/ChannelUI.js",
-      "import": "./dist/Channel/components/ChannelUI.js",
-      "default": "./dist/Channel/components/ChannelUI.js"
+      "types": "./types/modules/Channel/components/ChannelUI/index.d.ts",
+      "require": "./cjs/Channel/components/ChannelUI.js",
+      "import": "./Channel/components/ChannelUI.js",
+      "default": "./Channel/components/ChannelUI.js"
     },
     "./Channel/components/FileViewer": {
-      "types": "./dist/types/modules/Channel/components/FileViewer/index.d.ts",
-      "require": "./dist/cjs/Channel/components/FileViewer.js",
-      "import": "./dist/Channel/components/FileViewer.js",
-      "default": "./dist/Channel/components/FileViewer.js"
+      "types": "./types/modules/Channel/components/FileViewer/index.d.ts",
+      "require": "./cjs/Channel/components/FileViewer.js",
+      "import": "./Channel/components/FileViewer.js",
+      "default": "./Channel/components/FileViewer.js"
     },
     "./Channel/components/FrozenNotification": {
-      "types": "./dist/types/modules/Channel/components/FrozenNotification/index.d.ts",
-      "require": "./dist/cjs/Channel/components/FrozenNotification.js",
-      "import": "./dist/Channel/components/FrozenNotification.js",
-      "default": "./dist/Channel/components/FrozenNotification.js"
+      "types": "./types/modules/Channel/components/FrozenNotification/index.d.ts",
+      "require": "./cjs/Channel/components/FrozenNotification.js",
+      "import": "./Channel/components/FrozenNotification.js",
+      "default": "./Channel/components/FrozenNotification.js"
     },
     "./Channel/components/Message": {
-      "types": "./dist/types/modules/Channel/components/Message/index.d.ts",
-      "require": "./dist/cjs/Channel/components/Message.js",
-      "import": "./dist/Channel/components/Message.js",
-      "default": "./dist/Channel/components/Message.js"
+      "types": "./types/modules/Channel/components/Message/index.d.ts",
+      "require": "./cjs/Channel/components/Message.js",
+      "import": "./Channel/components/Message.js",
+      "default": "./Channel/components/Message.js"
     },
     "./Channel/components/MessageInput": {
-      "types": "./dist/types/modules/Channel/components/MessageInputWrapper/index.d.ts",
-      "require": "./dist/cjs/Channel/components/MessageInput.js",
-      "import": "./dist/Channel/components/MessageInput.js",
-      "default": "./dist/Channel/components/MessageInput.js"
+      "types": "./types/modules/Channel/components/MessageInputWrapper/index.d.ts",
+      "require": "./cjs/Channel/components/MessageInput.js",
+      "import": "./Channel/components/MessageInput.js",
+      "default": "./Channel/components/MessageInput.js"
     },
     "./Channel/components/MessageInputWrapper": {
-      "types": "./dist/types/modules/Channel/components/MessageInputWrapper/index.d.ts",
-      "require": "./dist/cjs/Channel/components/MessageInputWrapper.js",
-      "import": "./dist/Channel/components/MessageInputWrapper.js",
-      "default": "./dist/Channel/components/MessageInputWrapper.js"
+      "types": "./types/modules/Channel/components/MessageInputWrapper/index.d.ts",
+      "require": "./cjs/Channel/components/MessageInputWrapper.js",
+      "import": "./Channel/components/MessageInputWrapper.js",
+      "default": "./Channel/components/MessageInputWrapper.js"
     },
     "./Channel/components/MessageList": {
-      "types": "./dist/types/modules/Channel/components/MessageList/index.d.ts",
-      "require": "./dist/cjs/Channel/components/MessageList.js",
-      "import": "./dist/Channel/components/MessageList.js",
-      "default": "./dist/Channel/components/MessageList.js"
+      "types": "./types/modules/Channel/components/MessageList/index.d.ts",
+      "require": "./cjs/Channel/components/MessageList.js",
+      "import": "./Channel/components/MessageList.js",
+      "default": "./Channel/components/MessageList.js"
     },
     "./Channel/components/RemoveMessageModal": {
-      "types": "./dist/types/modules/Channel/components/RemoveMessageModal/index.d.ts",
-      "require": "./dist/cjs/Channel/components/RemoveMessageModal.js",
-      "import": "./dist/Channel/components/RemoveMessageModal.js",
-      "default": "./dist/Channel/components/RemoveMessageModal.js"
+      "types": "./types/modules/Channel/components/RemoveMessageModal/index.d.ts",
+      "require": "./cjs/Channel/components/RemoveMessageModal.js",
+      "import": "./Channel/components/RemoveMessageModal.js",
+      "default": "./Channel/components/RemoveMessageModal.js"
     },
     "./Channel/components/MessageFeedbackModal": {
-      "types": "./dist/types/modules/Channel/components/MessageFeedbackModal/index.d.ts",
-      "require": "./dist/cjs/Channel/components/MessageFeedbackModal.js",
-      "import": "./dist/Channel/components/MessageFeedbackModal.js",
-      "default": "./dist/Channel/components/MessageFeedbackModal.js"
+      "types": "./types/modules/Channel/components/MessageFeedbackModal/index.d.ts",
+      "require": "./cjs/Channel/components/MessageFeedbackModal.js",
+      "import": "./Channel/components/MessageFeedbackModal.js",
+      "default": "./Channel/components/MessageFeedbackModal.js"
     },
     "./Channel/components/TypingIndicator": {
-      "types": "./dist/types/modules/Channel/components/TypingIndicator.d.ts",
-      "require": "./dist/cjs/Channel/components/TypingIndicator.js",
-      "import": "./dist/Channel/components/TypingIndicator.js",
-      "default": "./dist/Channel/components/TypingIndicator.js"
+      "types": "./types/modules/Channel/components/TypingIndicator.d.ts",
+      "require": "./cjs/Channel/components/TypingIndicator.js",
+      "import": "./Channel/components/TypingIndicator.js",
+      "default": "./Channel/components/TypingIndicator.js"
     },
     "./Channel/components/UnreadCount": {
-      "types": "./dist/types/modules/Channel/components/UnreadCount/index.d.ts",
-      "require": "./dist/cjs/Channel/components/UnreadCount.js",
-      "import": "./dist/Channel/components/UnreadCount.js",
-      "default": "./dist/Channel/components/UnreadCount.js"
+      "types": "./types/modules/Channel/components/UnreadCount/index.d.ts",
+      "require": "./cjs/Channel/components/UnreadCount.js",
+      "import": "./Channel/components/UnreadCount.js",
+      "default": "./Channel/components/UnreadCount.js"
     },
     "./Channel/components/SuggestedMentionList": {
-      "types": "./dist/types/modules/Channel/components/SuggestedMentionList/index.d.ts",
-      "require": "./dist/cjs/Channel/components/SuggestedMentionList.js",
-      "import": "./dist/Channel/components/SuggestedMentionList.js",
-      "default": "./dist/Channel/components/SuggestedMentionList.js"
+      "types": "./types/modules/Channel/components/SuggestedMentionList/index.d.ts",
+      "require": "./cjs/Channel/components/SuggestedMentionList.js",
+      "import": "./Channel/components/SuggestedMentionList.js",
+      "default": "./Channel/components/SuggestedMentionList.js"
     },
     "./GroupChannel": {
-      "types": "./dist/types/modules/GroupChannel/index.d.ts",
-      "require": "./dist/cjs/GroupChannel.js",
-      "import": "./dist/GroupChannel.js",
-      "default": "./dist/GroupChannel.js"
+      "types": "./types/modules/GroupChannel/index.d.ts",
+      "require": "./cjs/GroupChannel.js",
+      "import": "./GroupChannel.js",
+      "default": "./GroupChannel.js"
     },
     "./GroupChannel/context": {
-      "types": "./dist/types/modules/GroupChannel/context/GroupChannelProvider.d.ts",
-      "require": "./dist/cjs/GroupChannel/context.js",
-      "import": "./dist/GroupChannel/context.js",
-      "default": "./dist/GroupChannel/context.js"
+      "types": "./types/modules/GroupChannel/context/GroupChannelProvider.d.ts",
+      "require": "./cjs/GroupChannel/context.js",
+      "import": "./GroupChannel/context.js",
+      "default": "./GroupChannel/context.js"
     },
     "./GroupChannel/components/GroupChannelHeader": {
-      "types": "./dist/types/modules/GroupChannel/components/GroupChannelHeader/index.d.ts",
-      "require": "./dist/cjs/GroupChannel/components/GroupChannelHeader.js",
-      "import": "./dist/GroupChannel/components/GroupChannelHeader.js",
-      "default": "./dist/GroupChannel/components/GroupChannelHeader.js"
+      "types": "./types/modules/GroupChannel/components/GroupChannelHeader/index.d.ts",
+      "require": "./cjs/GroupChannel/components/GroupChannelHeader.js",
+      "import": "./GroupChannel/components/GroupChannelHeader.js",
+      "default": "./GroupChannel/components/GroupChannelHeader.js"
     },
     "./GroupChannel/components/GroupChannelUI": {
-      "types": "./dist/types/modules/GroupChannel/components/GroupChannelUI/index.d.ts",
-      "require": "./dist/cjs/GroupChannel/components/GroupChannelUI.js",
-      "import": "./dist/GroupChannel/components/GroupChannelUI.js",
-      "default": "./dist/GroupChannel/components/GroupChannelUI.js"
+      "types": "./types/modules/GroupChannel/components/GroupChannelUI/index.d.ts",
+      "require": "./cjs/GroupChannel/components/GroupChannelUI.js",
+      "import": "./GroupChannel/components/GroupChannelUI.js",
+      "default": "./GroupChannel/components/GroupChannelUI.js"
     },
     "./GroupChannel/components/FileViewer": {
-      "types": "./dist/types/modules/GroupChannel/components/FileViewer/index.d.ts",
-      "require": "./dist/cjs/GroupChannel/components/FileViewer.js",
-      "import": "./dist/GroupChannel/components/FileViewer.js",
-      "default": "./dist/GroupChannel/components/FileViewer.js"
+      "types": "./types/modules/GroupChannel/components/FileViewer/index.d.ts",
+      "require": "./cjs/GroupChannel/components/FileViewer.js",
+      "import": "./GroupChannel/components/FileViewer.js",
+      "default": "./GroupChannel/components/FileViewer.js"
     },
     "./GroupChannel/components/FrozenNotification": {
-      "types": "./dist/types/modules/GroupChannel/components/FrozenNotification/index.d.ts",
-      "require": "./dist/cjs/GroupChannel/components/FrozenNotification.js",
-      "import": "./dist/GroupChannel/components/FrozenNotification.js",
-      "default": "./dist/GroupChannel/components/FrozenNotification.js"
+      "types": "./types/modules/GroupChannel/components/FrozenNotification/index.d.ts",
+      "require": "./cjs/GroupChannel/components/FrozenNotification.js",
+      "import": "./GroupChannel/components/FrozenNotification.js",
+      "default": "./GroupChannel/components/FrozenNotification.js"
     },
     "./GroupChannel/components/Message": {
-      "types": "./dist/types/modules/GroupChannel/components/Message/index.d.ts",
-      "require": "./dist/cjs/GroupChannel/components/Message.js",
-      "import": "./dist/GroupChannel/components/Message.js",
-      "default": "./dist/GroupChannel/components/Message.js"
+      "types": "./types/modules/GroupChannel/components/Message/index.d.ts",
+      "require": "./cjs/GroupChannel/components/Message.js",
+      "import": "./GroupChannel/components/Message.js",
+      "default": "./GroupChannel/components/Message.js"
     },
     "./GroupChannel/components/MessageInputWrapper": {
-      "types": "./dist/types/modules/GroupChannel/components/MessageInputWrapper/index.d.ts",
-      "require": "./dist/cjs/GroupChannel/components/MessageInputWrapper.js",
-      "import": "./dist/GroupChannel/components/MessageInputWrapper.js",
-      "default": "./dist/GroupChannel/components/MessageInputWrapper.js"
+      "types": "./types/modules/GroupChannel/components/MessageInputWrapper/index.d.ts",
+      "require": "./cjs/GroupChannel/components/MessageInputWrapper.js",
+      "import": "./GroupChannel/components/MessageInputWrapper.js",
+      "default": "./GroupChannel/components/MessageInputWrapper.js"
     },
     "./GroupChannel/components/MessageList": {
-      "types": "./dist/types/modules/GroupChannel/components/MessageList/index.d.ts",
-      "require": "./dist/cjs/GroupChannel/components/MessageList.js",
-      "import": "./dist/GroupChannel/components/MessageList.js",
-      "default": "./dist/GroupChannel/components/MessageList.js"
+      "types": "./types/modules/GroupChannel/components/MessageList/index.d.ts",
+      "require": "./cjs/GroupChannel/components/MessageList.js",
+      "import": "./GroupChannel/components/MessageList.js",
+      "default": "./GroupChannel/components/MessageList.js"
     },
     "./GroupChannel/components/RemoveMessageModal": {
-      "types": "./dist/types/modules/GroupChannel/components/RemoveMessageModal/index.d.ts",
-      "require": "./dist/cjs/GroupChannel/components/RemoveMessageModal.js",
-      "import": "./dist/GroupChannel/components/RemoveMessageModal.js",
-      "default": "./dist/GroupChannel/components/RemoveMessageModal.js"
+      "types": "./types/modules/GroupChannel/components/RemoveMessageModal/index.d.ts",
+      "require": "./cjs/GroupChannel/components/RemoveMessageModal.js",
+      "import": "./GroupChannel/components/RemoveMessageModal.js",
+      "default": "./GroupChannel/components/RemoveMessageModal.js"
     },
     "./GroupChannel/components/TypingIndicator": {
-      "types": "./dist/types/modules/GroupChannel/components/TypingIndicator.d.ts",
-      "require": "./dist/cjs/GroupChannel/components/TypingIndicator.js",
-      "import": "./dist/GroupChannel/components/TypingIndicator.js",
-      "default": "./dist/GroupChannel/components/TypingIndicator.js"
+      "types": "./types/modules/GroupChannel/components/TypingIndicator.d.ts",
+      "require": "./cjs/GroupChannel/components/TypingIndicator.js",
+      "import": "./GroupChannel/components/TypingIndicator.js",
+      "default": "./GroupChannel/components/TypingIndicator.js"
     },
     "./GroupChannel/components/UnreadCount": {
-      "types": "./dist/types/modules/GroupChannel/components/UnreadCount/index.d.ts",
-      "require": "./dist/cjs/GroupChannel/components/UnreadCount.js",
-      "import": "./dist/GroupChannel/components/UnreadCount.js",
-      "default": "./dist/GroupChannel/components/UnreadCount.js"
+      "types": "./types/modules/GroupChannel/components/UnreadCount/index.d.ts",
+      "require": "./cjs/GroupChannel/components/UnreadCount.js",
+      "import": "./GroupChannel/components/UnreadCount.js",
+      "default": "./GroupChannel/components/UnreadCount.js"
     },
     "./GroupChannel/components/SuggestedMentionList": {
-      "types": "./dist/types/modules/GroupChannel/components/SuggestedMentionList/index.d.ts",
-      "require": "./dist/cjs/GroupChannel/components/SuggestedMentionList.js",
-      "import": "./dist/GroupChannel/components/SuggestedMentionList.js",
-      "default": "./dist/GroupChannel/components/SuggestedMentionList.js"
+      "types": "./types/modules/GroupChannel/components/SuggestedMentionList/index.d.ts",
+      "require": "./cjs/GroupChannel/components/SuggestedMentionList.js",
+      "import": "./GroupChannel/components/SuggestedMentionList.js",
+      "default": "./GroupChannel/components/SuggestedMentionList.js"
     },
     "./GroupChannel/components/SuggestedReplies": {
-      "types": "./dist/types/modules/GroupChannel/components/SuggestedReplies/index.d.ts",
-      "require": "./dist/cjs/GroupChannel/components/SuggestedReplies.js",
-      "import": "./dist/GroupChannel/components/SuggestedReplies.js",
-      "default": "./dist/GroupChannel/components/SuggestedReplies.js"
+      "types": "./types/modules/GroupChannel/components/SuggestedReplies/index.d.ts",
+      "require": "./cjs/GroupChannel/components/SuggestedReplies.js",
+      "import": "./GroupChannel/components/SuggestedReplies.js",
+      "default": "./GroupChannel/components/SuggestedReplies.js"
     },
     "./GroupChannel/hooks/useHandleUploadFiles": {
-      "types": "./dist/types/modules/GroupChannel/components/MessageInputWrapper/useHandleUploadFiles.d.ts",
-      "require": "./dist/cjs/GroupChannel/hooks/useHandleUploadFiles.js",
-      "import": "./dist/GroupChannel/hooks/useHandleUploadFiles.js",
-      "default": "./dist/GroupChannel/hooks/useHandleUploadFiles.js"
+      "types": "./types/modules/GroupChannel/components/MessageInputWrapper/useHandleUploadFiles.d.ts",
+      "require": "./cjs/GroupChannel/hooks/useHandleUploadFiles.js",
+      "import": "./GroupChannel/hooks/useHandleUploadFiles.js",
+      "default": "./GroupChannel/hooks/useHandleUploadFiles.js"
     },
     "./OpenChannel": {
-      "types": "./dist/types/modules/OpenChannel/index.d.ts",
-      "require": "./dist/cjs/OpenChannel.js",
-      "import": "./dist/OpenChannel.js",
-      "default": "./dist/OpenChannel.js"
+      "types": "./types/modules/OpenChannel/index.d.ts",
+      "require": "./cjs/OpenChannel.js",
+      "import": "./OpenChannel.js",
+      "default": "./OpenChannel.js"
     },
     "./OpenChannel/context": {
-      "types": "./dist/types/modules/OpenChannel/context/OpenChannelProvider.d.ts",
-      "require": "./dist/cjs/OpenChannel/context.js",
-      "import": "./dist/OpenChannel/context.js",
-      "default": "./dist/OpenChannel/context.js"
+      "types": "./types/modules/OpenChannel/context/OpenChannelProvider.d.ts",
+      "require": "./cjs/OpenChannel/context.js",
+      "import": "./OpenChannel/context.js",
+      "default": "./OpenChannel/context.js"
     },
     "./OpenChannel/components/FrozenChannelNotification": {
-      "types": "./dist/types/modules/OpenChannel/components/FrozenChannelNotification/index.d.ts",
-      "require": "./dist/cjs/OpenChannel/components/FrozenChannelNotification.js",
-      "import": "./dist/OpenChannel/components/FrozenChannelNotification.js",
-      "default": "./dist/OpenChannel/components/FrozenChannelNotification.js"
+      "types": "./types/modules/OpenChannel/components/FrozenChannelNotification/index.d.ts",
+      "require": "./cjs/OpenChannel/components/FrozenChannelNotification.js",
+      "import": "./OpenChannel/components/FrozenChannelNotification.js",
+      "default": "./OpenChannel/components/FrozenChannelNotification.js"
     },
     "./OpenChannel/components/OpenChannelHeader": {
-      "types": "./dist/types/modules/OpenChannel/components/OpenChannelHeader/index.d.ts",
-      "require": "./dist/cjs/OpenChannel/components/OpenChannelHeader.js",
-      "import": "./dist/OpenChannel/components/OpenChannelHeader.js",
-      "default": "./dist/OpenChannel/components/OpenChannelHeader.js"
+      "types": "./types/modules/OpenChannel/components/OpenChannelHeader/index.d.ts",
+      "require": "./cjs/OpenChannel/components/OpenChannelHeader.js",
+      "import": "./OpenChannel/components/OpenChannelHeader.js",
+      "default": "./OpenChannel/components/OpenChannelHeader.js"
     },
     "./OpenChannel/components/OpenChannelInput": {
-      "types": "./dist/types/modules/OpenChannel/components/OpenChannelInput/index.d.ts",
-      "require": "./dist/cjs/OpenChannel/components/OpenChannelInput.js",
-      "import": "./dist/OpenChannel/components/OpenChannelInput.js",
-      "default": "./dist/OpenChannel/components/OpenChannelInput.js"
+      "types": "./types/modules/OpenChannel/components/OpenChannelInput/index.d.ts",
+      "require": "./cjs/OpenChannel/components/OpenChannelInput.js",
+      "import": "./OpenChannel/components/OpenChannelInput.js",
+      "default": "./OpenChannel/components/OpenChannelInput.js"
     },
     "./OpenChannel/components/OpenChannelMessage": {
-      "types": "./dist/types/modules/OpenChannel/components/OpenChannelMessage/index.d.ts",
-      "require": "./dist/cjs/OpenChannel/components/OpenChannelMessage.js",
-      "import": "./dist/OpenChannel/components/OpenChannelMessage.js",
-      "default": "./dist/OpenChannel/components/OpenChannelMessage.js"
+      "types": "./types/modules/OpenChannel/components/OpenChannelMessage/index.d.ts",
+      "require": "./cjs/OpenChannel/components/OpenChannelMessage.js",
+      "import": "./OpenChannel/components/OpenChannelMessage.js",
+      "default": "./OpenChannel/components/OpenChannelMessage.js"
     },
     "./OpenChannel/components/OpenChannelMessageList": {
-      "types": "./dist/types/modules/OpenChannel/components/OpenChannelMessageList/index.d.ts",
-      "require": "./dist/cjs/OpenChannel/components/OpenChannelMessageList.js",
-      "import": "./dist/OpenChannel/components/OpenChannelMessageList.js",
-      "default": "./dist/OpenChannel/components/OpenChannelMessageList.js"
+      "types": "./types/modules/OpenChannel/components/OpenChannelMessageList/index.d.ts",
+      "require": "./cjs/OpenChannel/components/OpenChannelMessageList.js",
+      "import": "./OpenChannel/components/OpenChannelMessageList.js",
+      "default": "./OpenChannel/components/OpenChannelMessageList.js"
     },
     "./OpenChannel/components/OpenChannelUI": {
-      "types": "./dist/types/modules/OpenChannel/components/OpenChannelUI/index.d.ts",
-      "require": "./dist/cjs/OpenChannel/components/OpenChannelUI.js",
-      "import": "./dist/OpenChannel/components/OpenChannelUI.js",
-      "default": "./dist/OpenChannel/components/OpenChannelUI.js"
+      "types": "./types/modules/OpenChannel/components/OpenChannelUI/index.d.ts",
+      "require": "./cjs/OpenChannel/components/OpenChannelUI.js",
+      "import": "./OpenChannel/components/OpenChannelUI.js",
+      "default": "./OpenChannel/components/OpenChannelUI.js"
     },
     "./OpenChannelList": {
-      "types": "./dist/types/modules/OpenChannelList/index.d.ts",
-      "require": "./dist/cjs/OpenChannelList.js",
-      "import": "./dist/OpenChannelList.js",
-      "default": "./dist/OpenChannelList.js"
+      "types": "./types/modules/OpenChannelList/index.d.ts",
+      "require": "./cjs/OpenChannelList.js",
+      "import": "./OpenChannelList.js",
+      "default": "./OpenChannelList.js"
     },
     "./OpenChannelList/context": {
-      "types": "./dist/types/modules/OpenChannelList/context/OpenChannelListProvider.d.ts",
-      "require": "./dist/cjs/OpenChannelList/context.js",
-      "import": "./dist/OpenChannelList/context.js",
-      "default": "./dist/OpenChannelList/context.js"
+      "types": "./types/modules/OpenChannelList/context/OpenChannelListProvider.d.ts",
+      "require": "./cjs/OpenChannelList/context.js",
+      "import": "./OpenChannelList/context.js",
+      "default": "./OpenChannelList/context.js"
     },
     "./OpenChannelList/components/OpenChannelListUI": {
-      "types": "./dist/types/modules/OpenChannelList/components/OpenChannelListUI/index.d.ts",
-      "require": "./dist/cjs/OpenChannelList/components/OpenChannelListUI.js",
-      "import": "./dist/OpenChannelList/components/OpenChannelListUI.js",
-      "default": "./dist/OpenChannelList/components/OpenChannelListUI.js"
+      "types": "./types/modules/OpenChannelList/components/OpenChannelListUI/index.d.ts",
+      "require": "./cjs/OpenChannelList/components/OpenChannelListUI.js",
+      "import": "./OpenChannelList/components/OpenChannelListUI.js",
+      "default": "./OpenChannelList/components/OpenChannelListUI.js"
     },
     "./OpenChannelList/components/OpenChannelPreview": {
-      "types": "./dist/types/modules/OpenChannelList/components/OpenChannelPreview/index.d.ts",
-      "require": "./dist/cjs/OpenChannelList/components/OpenChannelPreview.js",
-      "import": "./dist/OpenChannelList/components/OpenChannelPreview.js",
-      "default": "./dist/OpenChannelList/components/OpenChannelPreview.js"
+      "types": "./types/modules/OpenChannelList/components/OpenChannelPreview/index.d.ts",
+      "require": "./cjs/OpenChannelList/components/OpenChannelPreview.js",
+      "import": "./OpenChannelList/components/OpenChannelPreview.js",
+      "default": "./OpenChannelList/components/OpenChannelPreview.js"
     },
     "./CreateOpenChannel": {
-      "types": "./dist/types/modules/CreateOpenChannel/index.d.ts",
-      "require": "./dist/cjs/CreateOpenChannel.js",
-      "import": "./dist/CreateOpenChannel.js",
-      "default": "./dist/CreateOpenChannel.js"
+      "types": "./types/modules/CreateOpenChannel/index.d.ts",
+      "require": "./cjs/CreateOpenChannel.js",
+      "import": "./CreateOpenChannel.js",
+      "default": "./CreateOpenChannel.js"
     },
     "./CreateOpenChannel/context": {
-      "types": "./dist/types/modules/CreateOpenChannel/context/CreateOpenChannelProvider.d.ts",
-      "require": "./dist/cjs/CreateOpenChannel/context.js",
-      "import": "./dist/CreateOpenChannel/context.js",
-      "default": "./dist/CreateOpenChannel/context.js"
+      "types": "./types/modules/CreateOpenChannel/context/CreateOpenChannelProvider.d.ts",
+      "require": "./cjs/CreateOpenChannel/context.js",
+      "import": "./CreateOpenChannel/context.js",
+      "default": "./CreateOpenChannel/context.js"
     },
     "./CreateOpenChannel/components/CreateOpenChannelUI": {
-      "types": "./dist/types/modules/CreateOpenChannel/components/CreateOpenChannelUI/index.d.ts",
-      "require": "./dist/cjs/CreateOpenChannel/components/CreateOpenChannelUI.js",
-      "import": "./dist/CreateOpenChannel/components/CreateOpenChannelUI.js",
-      "default": "./dist/CreateOpenChannel/components/CreateOpenChannelUI.js"
+      "types": "./types/modules/CreateOpenChannel/components/CreateOpenChannelUI/index.d.ts",
+      "require": "./cjs/CreateOpenChannel/components/CreateOpenChannelUI.js",
+      "import": "./CreateOpenChannel/components/CreateOpenChannelUI.js",
+      "default": "./CreateOpenChannel/components/CreateOpenChannelUI.js"
     },
     "./OpenChannelSettings": {
-      "types": "./dist/types/modules/OpenChannelSettings/index.d.ts",
-      "require": "./dist/cjs/OpenChannelSettings.js",
-      "import": "./dist/OpenChannelSettings.js",
-      "default": "./dist/OpenChannelSettings.js"
+      "types": "./types/modules/OpenChannelSettings/index.d.ts",
+      "require": "./cjs/OpenChannelSettings.js",
+      "import": "./OpenChannelSettings.js",
+      "default": "./OpenChannelSettings.js"
     },
     "./OpenChannelSettings/context": {
-      "types": "./dist/types/modules/OpenChannelSettings/context/OpenChannelSettingsProvider.d.ts",
-      "require": "./dist/cjs/OpenChannelSettings/context.js",
-      "import": "./dist/OpenChannelSettings/context.js",
-      "default": "./dist/OpenChannelSettings/context.js"
+      "types": "./types/modules/OpenChannelSettings/context/OpenChannelSettingsProvider.d.ts",
+      "require": "./cjs/OpenChannelSettings/context.js",
+      "import": "./OpenChannelSettings/context.js",
+      "default": "./OpenChannelSettings/context.js"
     },
     "./OpenChannelSettings/components/EditDetailsModal": {
-      "types": "./dist/types/modules/OpenChannelSettings/components/EditDetailsModal.d.ts",
-      "require": "./dist/cjs/OpenChannelSettings/components/EditDetailsModal.js",
-      "import": "./dist/OpenChannelSettings/components/EditDetailsModal.js",
-      "default": "./dist/OpenChannelSettings/components/EditDetailsModal.js"
+      "types": "./types/modules/OpenChannelSettings/components/EditDetailsModal.d.ts",
+      "require": "./cjs/OpenChannelSettings/components/EditDetailsModal.js",
+      "import": "./OpenChannelSettings/components/EditDetailsModal.js",
+      "default": "./OpenChannelSettings/components/EditDetailsModal.js"
     },
     "./OpenChannelSettings/components/OpenChannelProfile": {
-      "types": "./dist/types/modules/OpenChannelSettings/components/OpenChannelProfile/index.d.ts",
-      "require": "./dist/cjs/OpenChannelSettings/components/OpenChannelProfile.js",
-      "import": "./dist/OpenChannelSettings/components/OpenChannelProfile.js",
-      "default": "./dist/OpenChannelSettings/components/OpenChannelProfile.js"
+      "types": "./types/modules/OpenChannelSettings/components/OpenChannelProfile/index.d.ts",
+      "require": "./cjs/OpenChannelSettings/components/OpenChannelProfile.js",
+      "import": "./OpenChannelSettings/components/OpenChannelProfile.js",
+      "default": "./OpenChannelSettings/components/OpenChannelProfile.js"
     },
     "./OpenChannelSettings/components/OpenChannelSettingsUI": {
-      "types": "./dist/types/modules/OpenChannelSettings/components/OpenChannelSettingsUI/index.d.ts",
-      "require": "./dist/cjs/OpenChannelSettings/components/OpenChannelSettingsUI.js",
-      "import": "./dist/OpenChannelSettings/components/OpenChannelSettingsUI.js",
-      "default": "./dist/OpenChannelSettings/components/OpenChannelSettingsUI.js"
+      "types": "./types/modules/OpenChannelSettings/components/OpenChannelSettingsUI/index.d.ts",
+      "require": "./cjs/OpenChannelSettings/components/OpenChannelSettingsUI.js",
+      "import": "./OpenChannelSettings/components/OpenChannelSettingsUI.js",
+      "default": "./OpenChannelSettings/components/OpenChannelSettingsUI.js"
     },
     "./OpenChannelSettings/components/OperatorUI": {
-      "types": "./dist/types/modules/OpenChannelSettings/components/OperatorUI/index.d.ts",
-      "require": "./dist/cjs/OpenChannelSettings/components/OperatorUI.js",
-      "import": "./dist/OpenChannelSettings/components/OperatorUI.js",
-      "default": "./dist/OpenChannelSettings/components/OperatorUI.js"
+      "types": "./types/modules/OpenChannelSettings/components/OperatorUI/index.d.ts",
+      "require": "./cjs/OpenChannelSettings/components/OperatorUI.js",
+      "import": "./OpenChannelSettings/components/OperatorUI.js",
+      "default": "./OpenChannelSettings/components/OperatorUI.js"
     },
     "./OpenChannelSettings/components/ParticipantUI": {
-      "types": "./dist/types/modules/OpenChannelSettings/components/ParticipantUI/index.d.ts",
-      "require": "./dist/cjs/OpenChannelSettings/components/ParticipantUI.js",
-      "import": "./dist/OpenChannelSettings/components/ParticipantUI.js",
-      "default": "./dist/OpenChannelSettings/components/ParticipantUI.js"
+      "types": "./types/modules/OpenChannelSettings/components/ParticipantUI/index.d.ts",
+      "require": "./cjs/OpenChannelSettings/components/ParticipantUI.js",
+      "import": "./OpenChannelSettings/components/ParticipantUI.js",
+      "default": "./OpenChannelSettings/components/ParticipantUI.js"
     },
     "./MessageSearch": {
-      "types": "./dist/types/modules/MessageSearch/index.d.ts",
-      "require": "./dist/cjs/MessageSearch.js",
-      "import": "./dist/MessageSearch.js",
-      "default": "./dist/MessageSearch.js"
+      "types": "./types/modules/MessageSearch/index.d.ts",
+      "require": "./cjs/MessageSearch.js",
+      "import": "./MessageSearch.js",
+      "default": "./MessageSearch.js"
     },
     "./MessageSearch/context": {
-      "types": "./dist/types/modules/MessageSearch/context/MessageSearchProvider.d.ts",
-      "require": "./dist/cjs/MessageSearch/context.js",
-      "import": "./dist/MessageSearch/context.js",
-      "default": "./dist/MessageSearch/context.js"
+      "types": "./types/modules/MessageSearch/context/MessageSearchProvider.d.ts",
+      "require": "./cjs/MessageSearch/context.js",
+      "import": "./MessageSearch/context.js",
+      "default": "./MessageSearch/context.js"
     },
     "./MessageSearch/components/MessageSearchUI": {
-      "types": "./dist/types/modules/MessageSearch/components/MessageSearchUI/index.d.ts",
-      "require": "./dist/cjs/MessageSearch/components/MessageSearchUI.js",
-      "import": "./dist/MessageSearch/components/MessageSearchUI.js",
-      "default": "./dist/MessageSearch/components/MessageSearchUI.js"
+      "types": "./types/modules/MessageSearch/components/MessageSearchUI/index.d.ts",
+      "require": "./cjs/MessageSearch/components/MessageSearchUI.js",
+      "import": "./MessageSearch/components/MessageSearchUI.js",
+      "default": "./MessageSearch/components/MessageSearchUI.js"
     },
     "./Message/context": {
-      "types": "./dist/types/modules/Message/context/MessageProvider.d.ts",
-      "require": "./dist/cjs/Message/context.js",
-      "import": "./dist/Message/context.js",
-      "default": "./dist/Message/context.js"
+      "types": "./types/modules/Message/context/MessageProvider.d.ts",
+      "require": "./cjs/Message/context.js",
+      "import": "./Message/context.js",
+      "default": "./Message/context.js"
     },
     "./Message/hooks/useDirtyGetMentions": {
-      "types": "./dist/types/modules/Message/hooks/useDirtyGetMentions.d.ts",
-      "require": "./dist/cjs/Message/hooks/useDirtyGetMentions.js",
-      "import": "./dist/Message/hooks/useDirtyGetMentions.js",
-      "default": "./dist/Message/hooks/useDirtyGetMentions.js"
+      "types": "./types/modules/Message/hooks/useDirtyGetMentions.d.ts",
+      "require": "./cjs/Message/hooks/useDirtyGetMentions.js",
+      "import": "./Message/hooks/useDirtyGetMentions.js",
+      "default": "./Message/hooks/useDirtyGetMentions.js"
     },
     "./Thread": {
-      "types": "./dist/types/modules/Thread/index.d.ts",
-      "require": "./dist/cjs/Thread.js",
-      "import": "./dist/Thread.js",
-      "default": "./dist/Thread.js"
+      "types": "./types/modules/Thread/index.d.ts",
+      "require": "./cjs/Thread.js",
+      "import": "./Thread.js",
+      "default": "./Thread.js"
     },
     "./Thread/context": {
-      "types": "./dist/types/modules/Thread/context/ThreadProvider.d.ts",
-      "require": "./dist/cjs/Thread/context.js",
-      "import": "./dist/Thread/context.js",
-      "default": "./dist/Thread/context.js"
+      "types": "./types/modules/Thread/context/ThreadProvider.d.ts",
+      "require": "./cjs/Thread/context.js",
+      "import": "./Thread/context.js",
+      "default": "./Thread/context.js"
     },
     "./Thread/context/types": {
-      "types": "./dist/types/modules/Thread/types.d.ts",
-      "require": "./dist/cjs/Thread/context/types.js",
-      "import": "./dist/Thread/context/types.js",
-      "default": "./dist/Thread/context/types.js"
+      "types": "./types/modules/Thread/types.d.ts",
+      "require": "./cjs/Thread/context/types.js",
+      "import": "./Thread/context/types.js",
+      "default": "./Thread/context/types.js"
     },
     "./Thread/components/ThreadUI": {
-      "types": "./dist/types/modules/Thread/components/ThreadUI/index.d.ts",
-      "require": "./dist/cjs/Thread/components/ThreadUI.js",
-      "import": "./dist/Thread/components/ThreadUI.js",
-      "default": "./dist/Thread/components/ThreadUI.js"
+      "types": "./types/modules/Thread/components/ThreadUI/index.d.ts",
+      "require": "./cjs/Thread/components/ThreadUI.js",
+      "import": "./Thread/components/ThreadUI.js",
+      "default": "./Thread/components/ThreadUI.js"
     },
     "./Thread/components/ThreadHeader": {
-      "types": "./dist/types/modules/Thread/components/ThreadHeader/index.d.ts",
-      "require": "./dist/cjs/Thread/components/ThreadHeader.js",
-      "import": "./dist/Thread/components/ThreadHeader.js",
-      "default": "./dist/Thread/components/ThreadHeader.js"
+      "types": "./types/modules/Thread/components/ThreadHeader/index.d.ts",
+      "require": "./cjs/Thread/components/ThreadHeader.js",
+      "import": "./Thread/components/ThreadHeader.js",
+      "default": "./Thread/components/ThreadHeader.js"
     },
     "./Thread/components/ParentMessageInfo": {
-      "types": "./dist/types/modules/Thread/components/ParentMessageInfo/index.d.ts",
-      "require": "./dist/cjs/Thread/components/ParentMessageInfo.js",
-      "import": "./dist/Thread/components/ParentMessageInfo.js",
-      "default": "./dist/Thread/components/ParentMessageInfo.js"
+      "types": "./types/modules/Thread/components/ParentMessageInfo/index.d.ts",
+      "require": "./cjs/Thread/components/ParentMessageInfo.js",
+      "import": "./Thread/components/ParentMessageInfo.js",
+      "default": "./Thread/components/ParentMessageInfo.js"
     },
     "./Thread/components/ParentMessageInfoItem": {
-      "types": "./dist/types/modules/Thread/components/ParentMessageInfo/ParentMessageInfoItem.d.ts",
-      "require": "./dist/cjs/Thread/components/ParentMessageInfoItem.js",
-      "import": "./dist/Thread/components/ParentMessageInfoItem.js",
-      "default": "./dist/Thread/components/ParentMessageInfoItem.js"
+      "types": "./types/modules/Thread/components/ParentMessageInfo/ParentMessageInfoItem.d.ts",
+      "require": "./cjs/Thread/components/ParentMessageInfoItem.js",
+      "import": "./Thread/components/ParentMessageInfoItem.js",
+      "default": "./Thread/components/ParentMessageInfoItem.js"
     },
     "./Thread/components/ThreadList": {
-      "types": "./dist/types/modules/Thread/components/ThreadList/index.d.ts",
-      "require": "./dist/cjs/Thread/components/ThreadList.js",
-      "import": "./dist/Thread/components/ThreadList.js",
-      "default": "./dist/Thread/components/ThreadList.js"
+      "types": "./types/modules/Thread/components/ThreadList/index.d.ts",
+      "require": "./cjs/Thread/components/ThreadList.js",
+      "import": "./Thread/components/ThreadList.js",
+      "default": "./Thread/components/ThreadList.js"
     },
     "./Thread/components/ThreadListItem": {
-      "types": "./dist/types/modules/Thread/components/ThreadList/ThreadListItem.d.ts",
-      "require": "./dist/cjs/Thread/components/ThreadListItem.js",
-      "import": "./dist/Thread/components/ThreadListItem.js",
-      "default": "./dist/Thread/components/ThreadListItem.js"
+      "types": "./types/modules/Thread/components/ThreadList/ThreadListItem.d.ts",
+      "require": "./cjs/Thread/components/ThreadListItem.js",
+      "import": "./Thread/components/ThreadListItem.js",
+      "default": "./Thread/components/ThreadListItem.js"
     },
     "./Thread/components/ThreadMessageInput": {
-      "types": "./dist/types/modules/Thread/components/ThreadMessageInput/index.d.ts",
-      "require": "./dist/cjs/Thread/components/ThreadMessageInput.js",
-      "import": "./dist/Thread/components/ThreadMessageInput.js",
-      "default": "./dist/Thread/components/ThreadMessageInput.js"
+      "types": "./types/modules/Thread/components/ThreadMessageInput/index.d.ts",
+      "require": "./cjs/Thread/components/ThreadMessageInput.js",
+      "import": "./Thread/components/ThreadMessageInput.js",
+      "default": "./Thread/components/ThreadMessageInput.js"
     },
     "./CreateChannel": {
-      "types": "./dist/types/modules/CreateChannel/index.d.ts",
-      "require": "./dist/cjs/CreateChannel.js",
-      "import": "./dist/CreateChannel.js",
-      "default": "./dist/CreateChannel.js"
+      "types": "./types/modules/CreateChannel/index.d.ts",
+      "require": "./cjs/CreateChannel.js",
+      "import": "./CreateChannel.js",
+      "default": "./CreateChannel.js"
     },
     "./CreateChannel/context": {
-      "types": "./dist/types/modules/CreateChannel/context/CreateChannelProvider.d.ts",
-      "require": "./dist/cjs/CreateChannel/context.js",
-      "import": "./dist/CreateChannel/context.js",
-      "default": "./dist/CreateChannel/context.js"
+      "types": "./types/modules/CreateChannel/context/CreateChannelProvider.d.ts",
+      "require": "./cjs/CreateChannel/context.js",
+      "import": "./CreateChannel/context.js",
+      "default": "./CreateChannel/context.js"
     },
     "./CreateChannel/components/CreateChannelUI": {
-      "types": "./dist/types/modules/CreateChannel/components/CreateChannelUI/index.d.ts",
-      "require": "./dist/cjs/CreateChannel/components/CreateChannelUI.js",
-      "import": "./dist/CreateChannel/components/CreateChannelUI.js",
-      "default": "./dist/CreateChannel/components/CreateChannelUI.js"
+      "types": "./types/modules/CreateChannel/components/CreateChannelUI/index.d.ts",
+      "require": "./cjs/CreateChannel/components/CreateChannelUI.js",
+      "import": "./CreateChannel/components/CreateChannelUI.js",
+      "default": "./CreateChannel/components/CreateChannelUI.js"
     },
     "./CreateChannel/components/InviteUsers": {
-      "types": "./dist/types/modules/CreateChannel/components/InviteUsers/index.d.ts",
-      "require": "./dist/cjs/CreateChannel/components/InviteUsers.js",
-      "import": "./dist/CreateChannel/components/InviteUsers.js",
-      "default": "./dist/CreateChannel/components/InviteUsers.js"
+      "types": "./types/modules/CreateChannel/components/InviteUsers/index.d.ts",
+      "require": "./cjs/CreateChannel/components/InviteUsers.js",
+      "import": "./CreateChannel/components/InviteUsers.js",
+      "default": "./CreateChannel/components/InviteUsers.js"
     },
     "./CreateChannel/components/SelectChannelType": {
-      "types": "./dist/types/modules/CreateChannel/components/SelectChannelType.d.ts",
-      "require": "./dist/cjs/CreateChannel/components/SelectChannelType.js",
-      "import": "./dist/CreateChannel/components/SelectChannelType.js",
-      "default": "./dist/CreateChannel/components/SelectChannelType.js"
+      "types": "./types/modules/CreateChannel/components/SelectChannelType.d.ts",
+      "require": "./cjs/CreateChannel/components/SelectChannelType.js",
+      "import": "./CreateChannel/components/SelectChannelType.js",
+      "default": "./CreateChannel/components/SelectChannelType.js"
     },
     "./EditUserProfile": {
-      "types": "./dist/types/modules/EditUserProfile/index.d.ts",
-      "require": "./dist/cjs/EditUserProfile.js",
-      "import": "./dist/EditUserProfile.js",
-      "default": "./dist/EditUserProfile.js"
+      "types": "./types/modules/EditUserProfile/index.d.ts",
+      "require": "./cjs/EditUserProfile.js",
+      "import": "./EditUserProfile.js",
+      "default": "./EditUserProfile.js"
     },
     "./EditUserProfile/context": {
-      "types": "./dist/types/modules/EditUserProfile/context/EditUserProfileProvider.d.ts",
-      "require": "./dist/cjs/EditUserProfile/context.js",
-      "import": "./dist/EditUserProfile/context.js",
-      "default": "./dist/EditUserProfile/context.js"
+      "types": "./types/modules/EditUserProfile/context/EditUserProfileProvider.d.ts",
+      "require": "./cjs/EditUserProfile/context.js",
+      "import": "./EditUserProfile/context.js",
+      "default": "./EditUserProfile/context.js"
     },
     "./EditUserProfile/components/EditUserProfileUI": {
-      "types": "./dist/types/modules/EditUserProfile/components/EditUserProfileUI/index.d.ts",
-      "require": "./dist/cjs/EditUserProfile/components/EditUserProfileUI.js",
-      "import": "./dist/EditUserProfile/components/EditUserProfileUI.js",
-      "default": "./dist/EditUserProfile/components/EditUserProfileUI.js"
+      "types": "./types/modules/EditUserProfile/components/EditUserProfileUI/index.d.ts",
+      "require": "./cjs/EditUserProfile/components/EditUserProfileUI.js",
+      "import": "./EditUserProfile/components/EditUserProfileUI.js",
+      "default": "./EditUserProfile/components/EditUserProfileUI.js"
     },
     "./ui/Accordion": {
-      "types": "./dist/types/ui/Accordion/index.d.ts",
-      "require": "./dist/cjs/ui/Accordion.js",
-      "import": "./dist/ui/Accordion.js",
-      "default": "./dist/ui/Accordion.js"
+      "types": "./types/ui/Accordion/index.d.ts",
+      "require": "./cjs/ui/Accordion.js",
+      "import": "./ui/Accordion.js",
+      "default": "./ui/Accordion.js"
     },
     "./ui/AccordionGroup": {
-      "types": "./dist/types/ui/Accordion/AccordionGroup.d.ts",
-      "require": "./dist/cjs/ui/AccordionGroup.js",
-      "import": "./dist/ui/AccordionGroup.js",
-      "default": "./dist/ui/AccordionGroup.js"
+      "types": "./types/ui/Accordion/AccordionGroup.d.ts",
+      "require": "./cjs/ui/AccordionGroup.js",
+      "import": "./ui/AccordionGroup.js",
+      "default": "./ui/AccordionGroup.js"
     },
     "./ui/AdminMessage": {
-      "types": "./dist/types/ui/AdminMessage/index.d.ts",
-      "require": "./dist/cjs/ui/AdminMessage.js",
-      "import": "./dist/ui/AdminMessage.js",
-      "default": "./dist/ui/AdminMessage.js"
+      "types": "./types/ui/AdminMessage/index.d.ts",
+      "require": "./cjs/ui/AdminMessage.js",
+      "import": "./ui/AdminMessage.js",
+      "default": "./ui/AdminMessage.js"
     },
     "./ui/Avatar": {
-      "types": "./dist/types/ui/Avatar/index.d.ts",
-      "require": "./dist/cjs/ui/Avatar.js",
-      "import": "./dist/ui/Avatar.js",
-      "default": "./dist/ui/Avatar.js"
+      "types": "./types/ui/Avatar/index.d.ts",
+      "require": "./cjs/ui/Avatar.js",
+      "import": "./ui/Avatar.js",
+      "default": "./ui/Avatar.js"
     },
     "./ui/MutedAvatarOverlay": {
-      "types": "./dist/types/ui/Avatar/MutedAvatarOverlay.d.ts",
-      "require": "./dist/cjs/ui/MutedAvatarOverlay.js",
-      "import": "./dist/ui/MutedAvatarOverlay.js",
-      "default": "./dist/ui/MutedAvatarOverlay.js"
+      "types": "./types/ui/Avatar/MutedAvatarOverlay.d.ts",
+      "require": "./cjs/ui/MutedAvatarOverlay.js",
+      "import": "./ui/MutedAvatarOverlay.js",
+      "default": "./ui/MutedAvatarOverlay.js"
     },
     "./ui/Button": {
-      "types": "./dist/types/ui/Button/index.d.ts",
-      "require": "./dist/cjs/ui/Button.js",
-      "import": "./dist/ui/Button.js",
-      "default": "./dist/ui/Button.js"
+      "types": "./types/ui/Button/index.d.ts",
+      "require": "./cjs/ui/Button.js",
+      "import": "./ui/Button.js",
+      "default": "./ui/Button.js"
     },
     "./ui/Badge": {
-      "types": "./dist/types/ui/Badge/index.d.ts",
-      "require": "./dist/cjs/ui/Badge.js",
-      "import": "./dist/ui/Badge.js",
-      "default": "./dist/ui/Badge.js"
+      "types": "./types/ui/Badge/index.d.ts",
+      "require": "./cjs/ui/Badge.js",
+      "import": "./ui/Badge.js",
+      "default": "./ui/Badge.js"
     },
     "./ui/BottomSheet": {
-      "types": "./dist/types/ui/BottomSheet/index.d.ts",
-      "require": "./dist/cjs/ui/BottomSheet.js",
-      "import": "./dist/ui/BottomSheet.js",
-      "default": "./dist/ui/BottomSheet.js"
+      "types": "./types/ui/BottomSheet/index.d.ts",
+      "require": "./cjs/ui/BottomSheet.js",
+      "import": "./ui/BottomSheet.js",
+      "default": "./ui/BottomSheet.js"
     },
     "./ui/ChannelAvatar": {
-      "types": "./dist/types/ui/ChannelAvatar/index.d.ts",
-      "require": "./dist/cjs/ui/ChannelAvatar.js",
-      "import": "./dist/ui/ChannelAvatar.js",
-      "default": "./dist/ui/ChannelAvatar.js"
+      "types": "./types/ui/ChannelAvatar/index.d.ts",
+      "require": "./cjs/ui/ChannelAvatar.js",
+      "import": "./ui/ChannelAvatar.js",
+      "default": "./ui/ChannelAvatar.js"
     },
     "./ui/OpenChannelAvatar": {
-      "types": "./dist/types/ui/ChannelAvatar/OpenChannelAvatar.d.ts",
-      "require": "./dist/cjs/ui/OpenChannelAvatar.js",
-      "import": "./dist/ui/OpenChannelAvatar.js",
-      "default": "./dist/ui/OpenChannelAvatar.js"
+      "types": "./types/ui/ChannelAvatar/OpenChannelAvatar.d.ts",
+      "require": "./cjs/ui/OpenChannelAvatar.js",
+      "import": "./ui/OpenChannelAvatar.js",
+      "default": "./ui/OpenChannelAvatar.js"
     },
     "./ui/Checkbox": {
-      "types": "./dist/types/ui/Checkbox/index.d.ts",
-      "require": "./dist/cjs/ui/Checkbox.js",
-      "import": "./dist/ui/Checkbox.js",
-      "default": "./dist/ui/Checkbox.js"
+      "types": "./types/ui/Checkbox/index.d.ts",
+      "require": "./cjs/ui/Checkbox.js",
+      "import": "./ui/Checkbox.js",
+      "default": "./ui/Checkbox.js"
     },
     "./ui/ConnectionStatus": {
-      "types": "./dist/types/ui/ConnectionStatus/index.d.ts",
-      "require": "./dist/cjs/ui/ConnectionStatus.js",
-      "import": "./dist/ui/ConnectionStatus.js",
-      "default": "./dist/ui/ConnectionStatus.js"
+      "types": "./types/ui/ConnectionStatus/index.d.ts",
+      "require": "./cjs/ui/ConnectionStatus.js",
+      "import": "./ui/ConnectionStatus.js",
+      "default": "./ui/ConnectionStatus.js"
     },
     "./ui/ContextMenu": {
-      "types": "./dist/types/ui/ContextMenu/index.d.ts",
-      "require": "./dist/cjs/ui/ContextMenu.js",
-      "import": "./dist/ui/ContextMenu.js",
-      "default": "./dist/ui/ContextMenu.js"
+      "types": "./types/ui/ContextMenu/index.d.ts",
+      "require": "./cjs/ui/ContextMenu.js",
+      "import": "./ui/ContextMenu.js",
+      "default": "./ui/ContextMenu.js"
     },
     "./ui/DateSeparator": {
-      "types": "./dist/types/ui/DateSeparator/index.d.ts",
-      "require": "./dist/cjs/ui/DateSeparator.js",
-      "import": "./dist/ui/DateSeparator.js",
-      "default": "./dist/ui/DateSeparator.js"
+      "types": "./types/ui/DateSeparator/index.d.ts",
+      "require": "./cjs/ui/DateSeparator.js",
+      "import": "./ui/DateSeparator.js",
+      "default": "./ui/DateSeparator.js"
     },
     "./ui/EmojiReactions": {
-      "types": "./dist/types/ui/EmojiReactions/index.d.ts",
-      "require": "./dist/cjs/ui/EmojiReactions.js",
-      "import": "./dist/ui/EmojiReactions.js",
-      "default": "./dist/ui/EmojiReactions.js"
+      "types": "./types/ui/EmojiReactions/index.d.ts",
+      "require": "./cjs/ui/EmojiReactions.js",
+      "import": "./ui/EmojiReactions.js",
+      "default": "./ui/EmojiReactions.js"
     },
     "./ui/FileMessageItemBody": {
-      "types": "./dist/types/ui/FileMessageItemBody/index.d.ts",
-      "require": "./dist/cjs/ui/FileMessageItemBody.js",
-      "import": "./dist/ui/FileMessageItemBody.js",
-      "default": "./dist/ui/FileMessageItemBody.js"
+      "types": "./types/ui/FileMessageItemBody/index.d.ts",
+      "require": "./cjs/ui/FileMessageItemBody.js",
+      "import": "./ui/FileMessageItemBody.js",
+      "default": "./ui/FileMessageItemBody.js"
     },
     "./ui/FileViewer": {
-      "types": "./dist/types/ui/FileViewer/index.d.ts",
-      "require": "./dist/cjs/ui/FileViewer.js",
-      "import": "./dist/ui/FileViewer.js",
-      "default": "./dist/ui/FileViewer.js"
+      "types": "./types/ui/FileViewer/index.d.ts",
+      "require": "./cjs/ui/FileViewer.js",
+      "import": "./ui/FileViewer.js",
+      "default": "./ui/FileViewer.js"
     },
     "./ui/Icon": {
-      "types": "./dist/types/ui/Icon/index.d.ts",
-      "require": "./dist/cjs/ui/Icon.js",
-      "import": "./dist/ui/Icon.js",
-      "default": "./dist/ui/Icon.js"
+      "types": "./types/ui/Icon/index.d.ts",
+      "require": "./cjs/ui/Icon.js",
+      "import": "./ui/Icon.js",
+      "default": "./ui/Icon.js"
     },
     "./ui/IconButton": {
-      "types": "./dist/types/ui/IconButton/index.d.ts",
-      "require": "./dist/cjs/ui/IconButton.js",
-      "import": "./dist/ui/IconButton.js",
-      "default": "./dist/ui/IconButton.js"
+      "types": "./types/ui/IconButton/index.d.ts",
+      "require": "./cjs/ui/IconButton.js",
+      "import": "./ui/IconButton.js",
+      "default": "./ui/IconButton.js"
     },
     "./ui/ImageRenderer": {
-      "types": "./dist/types/ui/ImageRenderer/index.d.ts",
-      "require": "./dist/cjs/ui/ImageRenderer.js",
-      "import": "./dist/ui/ImageRenderer.js",
-      "default": "./dist/ui/ImageRenderer.js"
+      "types": "./types/ui/ImageRenderer/index.d.ts",
+      "require": "./cjs/ui/ImageRenderer.js",
+      "import": "./ui/ImageRenderer.js",
+      "default": "./ui/ImageRenderer.js"
     },
     "./ui/Input": {
-      "types": "./dist/types/ui/Input/index.d.ts",
-      "require": "./dist/cjs/ui/Input.js",
-      "import": "./dist/ui/Input.js",
-      "default": "./dist/ui/Input.js"
+      "types": "./types/ui/Input/index.d.ts",
+      "require": "./cjs/ui/Input.js",
+      "import": "./ui/Input.js",
+      "default": "./ui/Input.js"
     },
     "./ui/Label": {
-      "types": "./dist/types/ui/Label/index.d.ts",
-      "require": "./dist/cjs/ui/Label.js",
-      "import": "./dist/ui/Label.js",
-      "default": "./dist/ui/Label.js"
+      "types": "./types/ui/Label/index.d.ts",
+      "require": "./cjs/ui/Label.js",
+      "import": "./ui/Label.js",
+      "default": "./ui/Label.js"
     },
     "./ui/LinkLabel": {
-      "types": "./dist/types/ui/LinkLabel/index.d.ts",
-      "require": "./dist/cjs/ui/LinkLabel.js",
-      "import": "./dist/ui/LinkLabel.js",
-      "default": "./dist/ui/LinkLabel.js"
+      "types": "./types/ui/LinkLabel/index.d.ts",
+      "require": "./cjs/ui/LinkLabel.js",
+      "import": "./ui/LinkLabel.js",
+      "default": "./ui/LinkLabel.js"
     },
     "./ui/Loader": {
-      "types": "./dist/types/ui/Loader/index.d.ts",
-      "require": "./dist/cjs/ui/Loader.js",
-      "import": "./dist/ui/Loader.js",
-      "default": "./dist/ui/Loader.js"
+      "types": "./types/ui/Loader/index.d.ts",
+      "require": "./cjs/ui/Loader.js",
+      "import": "./ui/Loader.js",
+      "default": "./ui/Loader.js"
     },
     "./ui/MentionUserLabel": {
-      "types": "./dist/types/ui/MentionUserLabel/index.d.ts",
-      "require": "./dist/cjs/ui/MentionUserLabel.js",
-      "import": "./dist/ui/MentionUserLabel.js",
-      "default": "./dist/ui/MentionUserLabel.js"
+      "types": "./types/ui/MentionUserLabel/index.d.ts",
+      "require": "./cjs/ui/MentionUserLabel.js",
+      "import": "./ui/MentionUserLabel.js",
+      "default": "./ui/MentionUserLabel.js"
     },
     "./ui/MentionLabel": {
-      "types": "./dist/types/ui/MentionLabel/index.d.ts",
-      "require": "./dist/cjs/ui/MentionLabel.js",
-      "import": "./dist/ui/MentionLabel.js",
-      "default": "./dist/ui/MentionLabel.js"
+      "types": "./types/ui/MentionLabel/index.d.ts",
+      "require": "./cjs/ui/MentionLabel.js",
+      "import": "./ui/MentionLabel.js",
+      "default": "./ui/MentionLabel.js"
     },
     "./ui/MessageContent": {
-      "types": "./dist/types/ui/MessageContent/index.d.ts",
-      "require": "./dist/cjs/ui/MessageContent.js",
-      "import": "./dist/ui/MessageContent.js",
-      "default": "./dist/ui/MessageContent.js"
+      "types": "./types/ui/MessageContent/index.d.ts",
+      "require": "./cjs/ui/MessageContent.js",
+      "import": "./ui/MessageContent.js",
+      "default": "./ui/MessageContent.js"
     },
     "./ui/MessageInput": {
-      "types": "./dist/types/ui/MessageInput/index.d.ts",
-      "require": "./dist/cjs/ui/MessageInput.js",
-      "import": "./dist/ui/MessageInput.js",
-      "default": "./dist/ui/MessageInput.js"
+      "types": "./types/ui/MessageInput/index.d.ts",
+      "require": "./cjs/ui/MessageInput.js",
+      "import": "./ui/MessageInput.js",
+      "default": "./ui/MessageInput.js"
     },
     "./ui/MessageInput/hooks/usePaste": {
-      "types": "./dist/types/ui/MessageInput/hooks/usePaste/index.d.ts",
-      "require": "./dist/cjs/ui/MessageInput/hooks/usePaste.js",
-      "import": "./dist/ui/MessageInput/hooks/usePaste.js",
-      "default": "./dist/ui/MessageInput/hooks/usePaste.js"
+      "types": "./types/ui/MessageInput/hooks/usePaste/index.d.ts",
+      "require": "./cjs/ui/MessageInput/hooks/usePaste.js",
+      "import": "./ui/MessageInput/hooks/usePaste.js",
+      "default": "./ui/MessageInput/hooks/usePaste.js"
     },
     "./ui/MessageItemMenu": {
-      "types": "./dist/types/ui/MessageItemMenu/index.d.ts",
-      "require": "./dist/cjs/ui/MessageItemMenu.js",
-      "import": "./dist/ui/MessageItemMenu.js",
-      "default": "./dist/ui/MessageItemMenu.js"
+      "types": "./types/ui/MessageItemMenu/index.d.ts",
+      "require": "./cjs/ui/MessageItemMenu.js",
+      "import": "./ui/MessageItemMenu.js",
+      "default": "./ui/MessageItemMenu.js"
     },
     "./ui/MessageItemReactionMenu": {
-      "types": "./dist/types/ui/MessageItemReactionMenu/index.d.ts",
-      "require": "./dist/cjs/ui/MessageItemReactionMenu.js",
-      "import": "./dist/ui/MessageItemReactionMenu.js",
-      "default": "./dist/ui/MessageItemReactionMenu.js"
+      "types": "./types/ui/MessageItemReactionMenu/index.d.ts",
+      "require": "./cjs/ui/MessageItemReactionMenu.js",
+      "import": "./ui/MessageItemReactionMenu.js",
+      "default": "./ui/MessageItemReactionMenu.js"
     },
     "./ui/MessageSearchFileItem": {
-      "types": "./dist/types/ui/MessageSearchFileItem/index.d.ts",
-      "require": "./dist/cjs/ui/MessageSearchFileItem.js",
-      "import": "./dist/ui/MessageSearchFileItem.js",
-      "default": "./dist/ui/MessageSearchFileItem.js"
+      "types": "./types/ui/MessageSearchFileItem/index.d.ts",
+      "require": "./cjs/ui/MessageSearchFileItem.js",
+      "import": "./ui/MessageSearchFileItem.js",
+      "default": "./ui/MessageSearchFileItem.js"
     },
     "./ui/MessageSearchItem": {
-      "types": "./dist/types/ui/MessageSearchItem/index.d.ts",
-      "require": "./dist/cjs/ui/MessageSearchItem.js",
-      "import": "./dist/ui/MessageSearchItem.js",
-      "default": "./dist/ui/MessageSearchItem.js"
+      "types": "./types/ui/MessageSearchItem/index.d.ts",
+      "require": "./cjs/ui/MessageSearchItem.js",
+      "import": "./ui/MessageSearchItem.js",
+      "default": "./ui/MessageSearchItem.js"
     },
     "./ui/MessageStatus": {
-      "types": "./dist/types/ui/MessageStatus/index.d.ts",
-      "require": "./dist/cjs/ui/MessageStatus.js",
-      "import": "./dist/ui/MessageStatus.js",
-      "default": "./dist/ui/MessageStatus.js"
+      "types": "./types/ui/MessageStatus/index.d.ts",
+      "require": "./cjs/ui/MessageStatus.js",
+      "import": "./ui/MessageStatus.js",
+      "default": "./ui/MessageStatus.js"
     },
     "./ui/Modal": {
-      "types": "./dist/types/ui/Modal/index.d.ts",
-      "require": "./dist/cjs/ui/Modal.js",
-      "import": "./dist/ui/Modal.js",
-      "default": "./dist/ui/Modal.js"
+      "types": "./types/ui/Modal/index.d.ts",
+      "require": "./cjs/ui/Modal.js",
+      "import": "./ui/Modal.js",
+      "default": "./ui/Modal.js"
     },
     "./ui/OGMessageItemBody": {
-      "types": "./dist/types/ui/OGMessageItemBody/index.d.ts",
-      "require": "./dist/cjs/ui/OGMessageItemBody.js",
-      "import": "./dist/ui/OGMessageItemBody.js",
-      "default": "./dist/ui/OGMessageItemBody.js"
+      "types": "./types/ui/OGMessageItemBody/index.d.ts",
+      "require": "./cjs/ui/OGMessageItemBody.js",
+      "import": "./ui/OGMessageItemBody.js",
+      "default": "./ui/OGMessageItemBody.js"
     },
     "./ui/OpenChannelAdminMessage": {
-      "types": "./dist/types/ui/OpenChannelAdminMessage/index.d.ts",
-      "require": "./dist/cjs/ui/OpenChannelAdminMessage.js",
-      "import": "./dist/ui/OpenChannelAdminMessage.js",
-      "default": "./dist/ui/OpenChannelAdminMessage.js"
+      "types": "./types/ui/OpenChannelAdminMessage/index.d.ts",
+      "require": "./cjs/ui/OpenChannelAdminMessage.js",
+      "import": "./ui/OpenChannelAdminMessage.js",
+      "default": "./ui/OpenChannelAdminMessage.js"
     },
     "./ui/OpenchannelConversationHeader": {
-      "types": "./dist/types/ui/OpenchannelConversationHeader/index.d.ts",
-      "require": "./dist/cjs/ui/OpenchannelConversationHeader.js",
-      "import": "./dist/ui/OpenchannelConversationHeader.js",
-      "default": "./dist/ui/OpenchannelConversationHeader.js"
+      "types": "./types/ui/OpenchannelConversationHeader/index.d.ts",
+      "require": "./cjs/ui/OpenchannelConversationHeader.js",
+      "import": "./ui/OpenchannelConversationHeader.js",
+      "default": "./ui/OpenchannelConversationHeader.js"
     },
     "./ui/OpenchannelFileMessage": {
-      "types": "./dist/types/ui/OpenchannelFileMessage/index.d.ts",
-      "require": "./dist/cjs/ui/OpenchannelFileMessage.js",
-      "import": "./dist/ui/OpenchannelFileMessage.js",
-      "default": "./dist/ui/OpenchannelFileMessage.js"
+      "types": "./types/ui/OpenchannelFileMessage/index.d.ts",
+      "require": "./cjs/ui/OpenchannelFileMessage.js",
+      "import": "./ui/OpenchannelFileMessage.js",
+      "default": "./ui/OpenchannelFileMessage.js"
     },
     "./ui/OpenchannelOGMessage": {
-      "types": "./dist/types/ui/OpenchannelOGMessage/index.d.ts",
-      "require": "./dist/cjs/ui/OpenchannelOGMessage.js",
-      "import": "./dist/ui/OpenchannelOGMessage.js",
-      "default": "./dist/ui/OpenchannelOGMessage.js"
+      "types": "./types/ui/OpenchannelOGMessage/index.d.ts",
+      "require": "./cjs/ui/OpenchannelOGMessage.js",
+      "import": "./ui/OpenchannelOGMessage.js",
+      "default": "./ui/OpenchannelOGMessage.js"
     },
     "./ui/OpenchannelThumbnailMessage": {
-      "types": "./dist/types/ui/OpenchannelThumbnailMessage/index.d.ts",
-      "require": "./dist/cjs/ui/OpenchannelThumbnailMessage.js",
-      "import": "./dist/ui/OpenchannelThumbnailMessage.js",
-      "default": "./dist/ui/OpenchannelThumbnailMessage.js"
+      "types": "./types/ui/OpenchannelThumbnailMessage/index.d.ts",
+      "require": "./cjs/ui/OpenchannelThumbnailMessage.js",
+      "import": "./ui/OpenchannelThumbnailMessage.js",
+      "default": "./ui/OpenchannelThumbnailMessage.js"
     },
     "./ui/OpenchannelUserMessage": {
-      "types": "./dist/types/ui/OpenchannelUserMessage/index.d.ts",
-      "require": "./dist/cjs/ui/OpenchannelUserMessage.js",
-      "import": "./dist/ui/OpenchannelUserMessage.js",
-      "default": "./dist/ui/OpenchannelUserMessage.js"
+      "types": "./types/ui/OpenchannelUserMessage/index.d.ts",
+      "require": "./cjs/ui/OpenchannelUserMessage.js",
+      "import": "./ui/OpenchannelUserMessage.js",
+      "default": "./ui/OpenchannelUserMessage.js"
     },
     "./ui/PlaceHolder": {
-      "types": "./dist/types/ui/PlaceHolder/index.d.ts",
-      "require": "./dist/cjs/ui/PlaceHolder.js",
-      "import": "./dist/ui/PlaceHolder.js",
-      "default": "./dist/ui/PlaceHolder.js"
+      "types": "./types/ui/PlaceHolder/index.d.ts",
+      "require": "./cjs/ui/PlaceHolder.js",
+      "import": "./ui/PlaceHolder.js",
+      "default": "./ui/PlaceHolder.js"
     },
     "./ui/PlaybackTime": {
-      "types": "./dist/types/ui/PlaybackTime/index.d.ts",
-      "require": "./dist/cjs/ui/PlaybackTime.js",
-      "import": "./dist/ui/PlaybackTime.js",
-      "default": "./dist/ui/PlaybackTime.js"
+      "types": "./types/ui/PlaybackTime/index.d.ts",
+      "require": "./cjs/ui/PlaybackTime.js",
+      "import": "./ui/PlaybackTime.js",
+      "default": "./ui/PlaybackTime.js"
     },
     "./ui/ProgressBar": {
-      "types": "./dist/types/ui/ProgressBar/index.d.ts",
-      "require": "./dist/cjs/ui/ProgressBar.js",
-      "import": "./dist/ui/ProgressBar.js",
-      "default": "./dist/ui/ProgressBar.js"
+      "types": "./types/ui/ProgressBar/index.d.ts",
+      "require": "./cjs/ui/ProgressBar.js",
+      "import": "./ui/ProgressBar.js",
+      "default": "./ui/ProgressBar.js"
     },
     "./ui/QuoteMessage": {
-      "types": "./dist/types/ui/QuoteMessage/index.d.ts",
-      "require": "./dist/cjs/ui/QuoteMessage.js",
-      "import": "./dist/ui/QuoteMessage.js",
-      "default": "./dist/ui/QuoteMessage.js"
+      "types": "./types/ui/QuoteMessage/index.d.ts",
+      "require": "./cjs/ui/QuoteMessage.js",
+      "import": "./ui/QuoteMessage.js",
+      "default": "./ui/QuoteMessage.js"
     },
     "./ui/QuoteMessageInput": {
-      "types": "./dist/types/ui/QuoteMessageInput/index.d.ts",
-      "require": "./dist/cjs/ui/QuoteMessageInput.js",
-      "import": "./dist/ui/QuoteMessageInput.js",
-      "default": "./dist/ui/QuoteMessageInput.js"
+      "types": "./types/ui/QuoteMessageInput/index.d.ts",
+      "require": "./cjs/ui/QuoteMessageInput.js",
+      "import": "./ui/QuoteMessageInput.js",
+      "default": "./ui/QuoteMessageInput.js"
     },
     "./ui/ReactionBadge": {
-      "types": "./dist/types/ui/ReactionBadge/index.d.ts",
-      "require": "./dist/cjs/ui/ReactionBadge.js",
-      "import": "./dist/ui/ReactionBadge.js",
-      "default": "./dist/ui/ReactionBadge.js"
+      "types": "./types/ui/ReactionBadge/index.d.ts",
+      "require": "./cjs/ui/ReactionBadge.js",
+      "import": "./ui/ReactionBadge.js",
+      "default": "./ui/ReactionBadge.js"
     },
     "./ui/ReactionButton": {
-      "types": "./dist/types/ui/ReactionButton/index.d.ts",
-      "require": "./dist/cjs/ui/ReactionButton.js",
-      "import": "./dist/ui/ReactionButton.js",
-      "default": "./dist/ui/ReactionButton.js"
+      "types": "./types/ui/ReactionButton/index.d.ts",
+      "require": "./cjs/ui/ReactionButton.js",
+      "import": "./ui/ReactionButton.js",
+      "default": "./ui/ReactionButton.js"
     },
     "./ui/SortByRow": {
-      "types": "./dist/types/ui/SortByRow/index.d.ts",
-      "require": "./dist/cjs/ui/SortByRow.js",
-      "import": "./dist/ui/SortByRow.js",
-      "default": "./dist/ui/SortByRow.js"
+      "types": "./types/ui/SortByRow/index.d.ts",
+      "require": "./cjs/ui/SortByRow.js",
+      "import": "./ui/SortByRow.js",
+      "default": "./ui/SortByRow.js"
     },
     "./ui/TextButton": {
-      "types": "./dist/types/ui/TextButton/index.d.ts",
-      "require": "./dist/cjs/ui/TextButton.js",
-      "import": "./dist/ui/TextButton.js",
-      "default": "./dist/ui/TextButton.js"
+      "types": "./types/ui/TextButton/index.d.ts",
+      "require": "./cjs/ui/TextButton.js",
+      "import": "./ui/TextButton.js",
+      "default": "./ui/TextButton.js"
     },
     "./ui/TextMessageItemBody": {
-      "types": "./dist/types/ui/TextMessageItemBody/index.d.ts",
-      "require": "./dist/cjs/ui/TextMessageItemBody.js",
-      "import": "./dist/ui/TextMessageItemBody.js",
-      "default": "./dist/ui/TextMessageItemBody.js"
+      "types": "./types/ui/TextMessageItemBody/index.d.ts",
+      "require": "./cjs/ui/TextMessageItemBody.js",
+      "import": "./ui/TextMessageItemBody.js",
+      "default": "./ui/TextMessageItemBody.js"
     },
     "./ui/ThreadReplies": {
-      "types": "./dist/types/ui/ThreadReplies/index.d.ts",
-      "require": "./dist/cjs/ui/ThreadReplies.js",
-      "import": "./dist/ui/ThreadReplies.js",
-      "default": "./dist/ui/ThreadReplies.js"
+      "types": "./types/ui/ThreadReplies/index.d.ts",
+      "require": "./cjs/ui/ThreadReplies.js",
+      "import": "./ui/ThreadReplies.js",
+      "default": "./ui/ThreadReplies.js"
     },
     "./ui/ThumbnailMessageItemBody": {
-      "types": "./dist/types/ui/ThumbnailMessageItemBody/index.d.ts",
-      "require": "./dist/cjs/ui/ThumbnailMessageItemBody.js",
-      "import": "./dist/ui/ThumbnailMessageItemBody.js",
-      "default": "./dist/ui/ThumbnailMessageItemBody.js"
+      "types": "./types/ui/ThumbnailMessageItemBody/index.d.ts",
+      "require": "./cjs/ui/ThumbnailMessageItemBody.js",
+      "import": "./ui/ThumbnailMessageItemBody.js",
+      "default": "./ui/ThumbnailMessageItemBody.js"
     },
     "./ui/Toggle": {
-      "types": "./dist/types/ui/Toggle/index.d.ts",
-      "require": "./dist/cjs/ui/Toggle.js",
-      "import": "./dist/ui/Toggle.js",
-      "default": "./dist/ui/Toggle.js"
+      "types": "./types/ui/Toggle/index.d.ts",
+      "require": "./cjs/ui/Toggle.js",
+      "import": "./ui/Toggle.js",
+      "default": "./ui/Toggle.js"
     },
     "./ui/Tooltip": {
-      "types": "./dist/types/ui/Tooltip/index.d.ts",
-      "require": "./dist/cjs/ui/Tooltip.js",
-      "import": "./dist/ui/Tooltip.js",
-      "default": "./dist/ui/Tooltip.js"
+      "types": "./types/ui/Tooltip/index.d.ts",
+      "require": "./cjs/ui/Tooltip.js",
+      "import": "./ui/Tooltip.js",
+      "default": "./ui/Tooltip.js"
     },
     "./ui/TooltipWrapper": {
-      "types": "./dist/types/ui/TooltipWrapper/index.d.ts",
-      "require": "./dist/cjs/ui/TooltipWrapper.js",
-      "import": "./dist/ui/TooltipWrapper.js",
-      "default": "./dist/ui/TooltipWrapper.js"
+      "types": "./types/ui/TooltipWrapper/index.d.ts",
+      "require": "./cjs/ui/TooltipWrapper.js",
+      "import": "./ui/TooltipWrapper.js",
+      "default": "./ui/TooltipWrapper.js"
     },
     "./ui/TypingIndicatorBubble": {
-      "types": "./dist/types/ui/TypingIndicatorBubble/index.d.ts",
-      "require": "./dist/cjs/ui/TypingIndicatorBubble.js",
-      "import": "./dist/ui/TypingIndicatorBubble.js",
-      "default": "./dist/ui/TypingIndicatorBubble.js"
+      "types": "./types/ui/TypingIndicatorBubble/index.d.ts",
+      "require": "./cjs/ui/TypingIndicatorBubble.js",
+      "import": "./ui/TypingIndicatorBubble.js",
+      "default": "./ui/TypingIndicatorBubble.js"
     },
     "./ui/UnknownMessageItemBody": {
-      "types": "./dist/types/ui/UnknownMessageItemBody/index.d.ts",
-      "require": "./dist/cjs/ui/UnknownMessageItemBody.js",
-      "import": "./dist/ui/UnknownMessageItemBody.js",
-      "default": "./dist/ui/UnknownMessageItemBody.js"
+      "types": "./types/ui/UnknownMessageItemBody/index.d.ts",
+      "require": "./cjs/ui/UnknownMessageItemBody.js",
+      "import": "./ui/UnknownMessageItemBody.js",
+      "default": "./ui/UnknownMessageItemBody.js"
     },
     "./ui/UserListItem": {
-      "types": "./dist/types/ui/UserListItem/index.d.ts",
-      "require": "./dist/cjs/ui/UserListItem.js",
-      "import": "./dist/ui/UserListItem.js",
-      "default": "./dist/ui/UserListItem.js"
+      "types": "./types/ui/UserListItem/index.d.ts",
+      "require": "./cjs/ui/UserListItem.js",
+      "import": "./ui/UserListItem.js",
+      "default": "./ui/UserListItem.js"
     },
     "./ui/UserProfile": {
-      "types": "./dist/types/ui/UserProfile/index.d.ts",
-      "require": "./dist/cjs/ui/UserProfile.js",
-      "import": "./dist/ui/UserProfile.js",
-      "default": "./dist/ui/UserProfile.js"
+      "types": "./types/ui/UserProfile/index.d.ts",
+      "require": "./cjs/ui/UserProfile.js",
+      "import": "./ui/UserProfile.js",
+      "default": "./ui/UserProfile.js"
     },
     "./ui/VoiceMessageInput": {
-      "types": "./dist/types/ui/VoiceMessageInput/index.d.ts",
-      "require": "./dist/cjs/ui/VoiceMessageInput.js",
-      "import": "./dist/ui/VoiceMessageInput.js",
-      "default": "./dist/ui/VoiceMessageInput.js"
+      "types": "./types/ui/VoiceMessageInput/index.d.ts",
+      "require": "./cjs/ui/VoiceMessageInput.js",
+      "import": "./ui/VoiceMessageInput.js",
+      "default": "./ui/VoiceMessageInput.js"
     },
     "./ui/VoiceMessageItemBody": {
-      "types": "./dist/types/ui/VoiceMessageItemBody/index.d.ts",
-      "require": "./dist/cjs/ui/VoiceMessageItemBody.js",
-      "import": "./dist/ui/VoiceMessageItemBody.js",
-      "default": "./dist/ui/VoiceMessageItemBody.js"
+      "types": "./types/ui/VoiceMessageItemBody/index.d.ts",
+      "require": "./cjs/ui/VoiceMessageItemBody.js",
+      "import": "./ui/VoiceMessageItemBody.js",
+      "default": "./ui/VoiceMessageItemBody.js"
     },
     "./ui/Word": {
-      "types": "./dist/types/ui/Word/index.d.ts",
-      "require": "./dist/cjs/ui/Word.js",
-      "import": "./dist/ui/Word.js",
-      "default": "./dist/ui/Word.js"
+      "types": "./types/ui/Word/index.d.ts",
+      "require": "./cjs/ui/Word.js",
+      "import": "./ui/Word.js",
+      "default": "./ui/Word.js"
     },
     "./ui/FeedbackIconButton": {
-      "types": "./dist/types/ui/FeedbackIconButton/index.d.ts",
-      "require": "./dist/cjs/ui/FeedbackIconButton.js",
-      "import": "./dist/ui/FeedbackIconButton.js",
-      "default": "./dist/ui/FeedbackIconButton.js"
+      "types": "./types/ui/FeedbackIconButton/index.d.ts",
+      "require": "./cjs/ui/FeedbackIconButton.js",
+      "import": "./ui/FeedbackIconButton.js",
+      "default": "./ui/FeedbackIconButton.js"
     },
     "./ui/MobileFeedbackMenu": {
-      "types": "./dist/types/ui/MobileFeedbackMenu/index.d.ts",
-      "require": "./dist/cjs/ui/MobileFeedbackMenu.js",
-      "import": "./dist/ui/MobileFeedbackMenu.js",
-      "default": "./dist/ui/MobileFeedbackMenu.js"
+      "types": "./types/ui/MobileFeedbackMenu/index.d.ts",
+      "require": "./cjs/ui/MobileFeedbackMenu.js",
+      "import": "./ui/MobileFeedbackMenu.js",
+      "default": "./ui/MobileFeedbackMenu.js"
     }
   },
   "typesVersions": {
     "*": {
       ".": [
-        "./dist/types/index.d.ts"
+        "./types/index.d.ts"
       ],
       "lame.all": [
-        "./dist/types/_externals/lamejs/lame.all.js"
+        "./types/_externals/lamejs/lame.all.js"
       ],
       "App": [
-        "./dist/types/modules/App/index.d.ts"
+        "./types/modules/App/index.d.ts"
       ],
       "SendbirdProvider": [
-        "./dist/types/lib/Sendbird.d.ts"
+        "./types/lib/Sendbird.d.ts"
       ],
       "sendbirdSelectors": [
-        "./dist/types/lib/selectors.d.ts"
+        "./types/lib/selectors.d.ts"
       ],
       "useSendbirdStateContext": [
-        "./dist/types/hooks/useSendbirdStateContext.d.ts"
+        "./types/hooks/useSendbirdStateContext.d.ts"
       ],
       "withSendbird": [
-        "./dist/types/lib/SendbirdSdkContext.d.ts"
+        "./types/lib/SendbirdSdkContext.d.ts"
       ],
       "VoiceRecorder/context": [
-        "./dist/types/hooks/VoiceRecorder/index.d.ts"
+        "./types/hooks/VoiceRecorder/index.d.ts"
       ],
       "VoiceRecorder/useVoiceRecorder": [
-        "./dist/types/hooks/VoiceRecorder/useVoiceRecorder.d.ts"
+        "./types/hooks/VoiceRecorder/useVoiceRecorder.d.ts"
       ],
       "VoicePlayer/context": [
-        "./dist/types/hooks/VoicePlayer/index.d.ts"
+        "./types/hooks/VoicePlayer/index.d.ts"
       ],
       "VoicePlayer/useVoicePlayer": [
-        "./dist/types/hooks/VoicePlayer/useVoicePlayer.d.ts"
+        "./types/hooks/VoicePlayer/useVoicePlayer.d.ts"
       ],
       "handlers/ConnectionHandler": [
-        "./dist/types/lib/handlers/ConnectionHandler.d.ts"
+        "./types/lib/handlers/ConnectionHandler.d.ts"
       ],
       "handlers/GroupChannelHandler": [
-        "./dist/types/lib/handlers/GroupChannelHandler.d.ts"
+        "./types/lib/handlers/GroupChannelHandler.d.ts"
       ],
       "handlers/OpenChannelHandler": [
-        "./dist/types/lib/handlers/OpenChannelHandler.d.ts"
+        "./types/lib/handlers/OpenChannelHandler.d.ts"
       ],
       "handlers/UserEventHandler": [
-        "./dist/types/lib/handlers/UserEventHandler.d.ts"
+        "./types/lib/handlers/UserEventHandler.d.ts"
       ],
       "handlers/SessionHandler": [
-        "./dist/types/lib/handlers/SessionHandler.d.ts"
+        "./types/lib/handlers/SessionHandler.d.ts"
       ],
       "pubSub/topics": [
-        "./dist/types/lib/pubSub/topics.d.ts"
+        "./types/lib/pubSub/topics.d.ts"
       ],
       "hooks/useModal": [
-        "./dist/types/hooks/useModal/index.d.ts"
+        "./types/hooks/useModal/index.d.ts"
       ],
       "utils/message/getOutgoingMessageState": [
-        "./dist/types/utils/exports/getOutgoingMessageState.d.ts"
+        "./types/utils/exports/getOutgoingMessageState.d.ts"
       ],
       "utils/message/isVoiceMessage": [
-        "./dist/types/utils/isVoiceMessage.d.ts"
+        "./types/utils/isVoiceMessage.d.ts"
       ],
       "ChannelList": [
-        "./dist/types/modules/ChannelList/index.d.ts"
+        "./types/modules/ChannelList/index.d.ts"
       ],
       "ChannelList/context": [
-        "./dist/types/modules/ChannelList/context/ChannelListProvider.d.ts"
+        "./types/modules/ChannelList/context/ChannelListProvider.d.ts"
       ],
       "ChannelList/components/AddChannel": [
-        "./dist/types/modules/ChannelList/components/AddChannel/index.d.ts"
+        "./types/modules/ChannelList/components/AddChannel/index.d.ts"
       ],
       "ChannelList/components/ChannelListUI": [
-        "./dist/types/modules/ChannelList/components/ChannelListUI/index.d.ts"
+        "./types/modules/ChannelList/components/ChannelListUI/index.d.ts"
       ],
       "ChannelList/components/ChannelListHeader": [
-        "./dist/types/modules/ChannelList/components/ChannelListHeader/index.d.ts"
+        "./types/modules/ChannelList/components/ChannelListHeader/index.d.ts"
       ],
       "ChannelList/components/ChannelPreview": [
-        "./dist/types/modules/ChannelList/components/ChannelPreview/index.d.ts"
+        "./types/modules/ChannelList/components/ChannelPreview/index.d.ts"
       ],
       "ChannelList/components/ChannelPreviewAction": [
-        "./dist/types/modules/ChannelList/components/ChannelPreviewAction.d.ts"
+        "./types/modules/ChannelList/components/ChannelPreviewAction.d.ts"
       ],
       "GroupChannelList": [
-        "./dist/types/modules/GroupChannelList/index.d.ts"
+        "./types/modules/GroupChannelList/index.d.ts"
       ],
       "GroupChannelList/context": [
-        "./dist/types/modules/GroupChannelList/context/GroupChannelListProvider.d.ts"
+        "./types/modules/GroupChannelList/context/GroupChannelListProvider.d.ts"
       ],
       "GroupChannelList/components/AddGroupChannel": [
-        "./dist/types/modules/GroupChannelList/components/AddGroupChannel/index.d.ts"
+        "./types/modules/GroupChannelList/components/AddGroupChannel/index.d.ts"
       ],
       "GroupChannelList/components/GroupChannelListUI": [
-        "./dist/types/modules/GroupChannelList/components/GroupChannelListUI/index.d.ts"
+        "./types/modules/GroupChannelList/components/GroupChannelListUI/index.d.ts"
       ],
       "GroupChannelList/components/GroupChannelListHeader": [
-        "./dist/types/modules/GroupChannelList/components/GroupChannelListHeader/index.d.ts"
+        "./types/modules/GroupChannelList/components/GroupChannelListHeader/index.d.ts"
       ],
       "GroupChannelList/components/GroupChannelListItem": [
-        "./dist/types/modules/GroupChannelList/components/GroupChannelListItem/index.d.ts"
+        "./types/modules/GroupChannelList/components/GroupChannelListItem/index.d.ts"
       ],
       "GroupChannelList/components/GroupChannelPreviewAction": [
-        "./dist/types/modules/GroupChannelList/components/GroupChannelPreviewAction.d.ts"
+        "./types/modules/GroupChannelList/components/GroupChannelPreviewAction.d.ts"
       ],
       "ChannelSettings": [
-        "./dist/types/modules/ChannelSettings/index.d.ts"
+        "./types/modules/ChannelSettings/index.d.ts"
       ],
       "ChannelSettings/context": [
-        "./dist/types/modules/ChannelSettings/context/ChannelSettingsProvider.d.ts"
+        "./types/modules/ChannelSettings/context/ChannelSettingsProvider.d.ts"
       ],
       "ChannelSettings/components/ModerationPanel": [
-        "./dist/types/modules/ChannelSettings/components/ModerationPanel/index.d.ts"
+        "./types/modules/ChannelSettings/components/ModerationPanel/index.d.ts"
       ],
       "ChannelSettings/components/ChannelProfile": [
-        "./dist/types/modules/ChannelSettings/components/ChannelProfile/index.d.ts"
+        "./types/modules/ChannelSettings/components/ChannelProfile/index.d.ts"
       ],
       "ChannelSettings/components/ChannelSettingsUI": [
-        "./dist/types/modules/ChannelSettings/components/ChannelSettingsUI/index.d.ts"
+        "./types/modules/ChannelSettings/components/ChannelSettingsUI/index.d.ts"
       ],
       "ChannelSettings/components/EditDetailsModal": [
-        "./dist/types/modules/ChannelSettings/components/EditDetailsModal/index.d.ts"
+        "./types/modules/ChannelSettings/components/EditDetailsModal/index.d.ts"
       ],
       "ChannelSettings/components/LeaveChannel": [
-        "./dist/types/modules/ChannelSettings/components/LeaveChannel/index.d.ts"
+        "./types/modules/ChannelSettings/components/LeaveChannel/index.d.ts"
       ],
       "ChannelSettings/components/UserListItem": [
-        "./dist/types/modules/ChannelSettings/components/UserListItem/index.d.ts"
+        "./types/modules/ChannelSettings/components/UserListItem/index.d.ts"
       ],
       "ChannelSettings/components/UserPanel": [
-        "./dist/types/modules/ChannelSettings/components/UserPanel/index.d.ts"
+        "./types/modules/ChannelSettings/components/UserPanel/index.d.ts"
       ],
       "Channel": [
-        "./dist/types/modules/Channel/index.d.ts"
+        "./types/modules/Channel/index.d.ts"
       ],
       "Channel/context": [
-        "./dist/types/modules/Channel/context/ChannelProvider.d.ts"
+        "./types/modules/Channel/context/ChannelProvider.d.ts"
       ],
       "Channel/hooks/useInitialMessagesFetch": [
-        "./dist/types/modules/Channel/context/hooks/useInitialMessagesFetch.d.ts"
+        "./types/modules/Channel/context/hooks/useInitialMessagesFetch.d.ts"
       ],
       "Channel/hooks/useHandleUploadFiles": [
-        "./dist/types/modules/Channel/context/hooks/useHandleUploadFiles.d.ts"
+        "./types/modules/Channel/context/hooks/useHandleUploadFiles.d.ts"
       ],
       "Channel/utils/getMessagePartsInfo": [
-        "./dist/types/modules/GroupChannel/components/MessageList/getMessagePartsInfo.d.ts"
+        "./types/modules/GroupChannel/components/MessageList/getMessagePartsInfo.d.ts"
       ],
       "Channel/utils/compareMessagesForGrouping": [
-        "./dist/types/utils/messages.d.ts"
+        "./types/utils/messages.d.ts"
       ],
       "Channel/components/ChannelHeader": [
-        "./dist/types/modules/Channel/components/ChannelHeader/index.d.ts"
+        "./types/modules/Channel/components/ChannelHeader/index.d.ts"
       ],
       "Channel/components/ChannelUI": [
-        "./dist/types/modules/Channel/components/ChannelUI/index.d.ts"
+        "./types/modules/Channel/components/ChannelUI/index.d.ts"
       ],
       "Channel/components/FileViewer": [
-        "./dist/types/modules/Channel/components/FileViewer/index.d.ts"
+        "./types/modules/Channel/components/FileViewer/index.d.ts"
       ],
       "Channel/components/FrozenNotification": [
-        "./dist/types/modules/Channel/components/FrozenNotification/index.d.ts"
+        "./types/modules/Channel/components/FrozenNotification/index.d.ts"
       ],
       "Channel/components/Message": [
-        "./dist/types/modules/Channel/components/Message/index.d.ts"
+        "./types/modules/Channel/components/Message/index.d.ts"
       ],
       "Channel/components/MessageInput": [
-        "./dist/types/modules/Channel/components/MessageInputWrapper/index.d.ts"
+        "./types/modules/Channel/components/MessageInputWrapper/index.d.ts"
       ],
       "Channel/components/MessageInputWrapper": [
-        "./dist/types/modules/Channel/components/MessageInputWrapper/index.d.ts"
+        "./types/modules/Channel/components/MessageInputWrapper/index.d.ts"
       ],
       "Channel/components/MessageList": [
-        "./dist/types/modules/Channel/components/MessageList/index.d.ts"
+        "./types/modules/Channel/components/MessageList/index.d.ts"
       ],
       "Channel/components/RemoveMessageModal": [
-        "./dist/types/modules/Channel/components/RemoveMessageModal/index.d.ts"
+        "./types/modules/Channel/components/RemoveMessageModal/index.d.ts"
       ],
       "Channel/components/MessageFeedbackModal": [
-        "./dist/types/modules/Channel/components/MessageFeedbackModal/index.d.ts"
+        "./types/modules/Channel/components/MessageFeedbackModal/index.d.ts"
       ],
       "Channel/components/TypingIndicator": [
-        "./dist/types/modules/Channel/components/TypingIndicator.d.ts"
+        "./types/modules/Channel/components/TypingIndicator.d.ts"
       ],
       "Channel/components/UnreadCount": [
-        "./dist/types/modules/Channel/components/UnreadCount/index.d.ts"
+        "./types/modules/Channel/components/UnreadCount/index.d.ts"
       ],
       "Channel/components/SuggestedMentionList": [
-        "./dist/types/modules/Channel/components/SuggestedMentionList/index.d.ts"
+        "./types/modules/Channel/components/SuggestedMentionList/index.d.ts"
       ],
       "GroupChannel": [
-        "./dist/types/modules/GroupChannel/index.d.ts"
+        "./types/modules/GroupChannel/index.d.ts"
       ],
       "GroupChannel/context": [
-        "./dist/types/modules/GroupChannel/context/GroupChannelProvider.d.ts"
+        "./types/modules/GroupChannel/context/GroupChannelProvider.d.ts"
       ],
       "GroupChannel/components/GroupChannelHeader": [
-        "./dist/types/modules/GroupChannel/components/GroupChannelHeader/index.d.ts"
+        "./types/modules/GroupChannel/components/GroupChannelHeader/index.d.ts"
       ],
       "GroupChannel/components/GroupChannelUI": [
-        "./dist/types/modules/GroupChannel/components/GroupChannelUI/index.d.ts"
+        "./types/modules/GroupChannel/components/GroupChannelUI/index.d.ts"
       ],
       "GroupChannel/components/FileViewer": [
-        "./dist/types/modules/GroupChannel/components/FileViewer/index.d.ts"
+        "./types/modules/GroupChannel/components/FileViewer/index.d.ts"
       ],
       "GroupChannel/components/FrozenNotification": [
-        "./dist/types/modules/GroupChannel/components/FrozenNotification/index.d.ts"
+        "./types/modules/GroupChannel/components/FrozenNotification/index.d.ts"
       ],
       "GroupChannel/components/Message": [
-        "./dist/types/modules/GroupChannel/components/Message/index.d.ts"
+        "./types/modules/GroupChannel/components/Message/index.d.ts"
       ],
       "GroupChannel/components/MessageInputWrapper": [
-        "./dist/types/modules/GroupChannel/components/MessageInputWrapper/index.d.ts"
+        "./types/modules/GroupChannel/components/MessageInputWrapper/index.d.ts"
       ],
       "GroupChannel/components/MessageList": [
-        "./dist/types/modules/GroupChannel/components/MessageList/index.d.ts"
+        "./types/modules/GroupChannel/components/MessageList/index.d.ts"
       ],
       "GroupChannel/components/RemoveMessageModal": [
-        "./dist/types/modules/GroupChannel/components/RemoveMessageModal/index.d.ts"
+        "./types/modules/GroupChannel/components/RemoveMessageModal/index.d.ts"
       ],
       "GroupChannel/components/TypingIndicator": [
-        "./dist/types/modules/GroupChannel/components/TypingIndicator.d.ts"
+        "./types/modules/GroupChannel/components/TypingIndicator.d.ts"
       ],
       "GroupChannel/components/UnreadCount": [
-        "./dist/types/modules/GroupChannel/components/UnreadCount/index.d.ts"
+        "./types/modules/GroupChannel/components/UnreadCount/index.d.ts"
       ],
       "GroupChannel/components/SuggestedMentionList": [
-        "./dist/types/modules/GroupChannel/components/SuggestedMentionList/index.d.ts"
+        "./types/modules/GroupChannel/components/SuggestedMentionList/index.d.ts"
       ],
       "GroupChannel/components/SuggestedReplies": [
-        "./dist/types/modules/GroupChannel/components/SuggestedReplies/index.d.ts"
+        "./types/modules/GroupChannel/components/SuggestedReplies/index.d.ts"
       ],
       "GroupChannel/hooks/useHandleUploadFiles": [
-        "./dist/types/modules/GroupChannel/components/MessageInputWrapper/useHandleUploadFiles.d.ts"
+        "./types/modules/GroupChannel/components/MessageInputWrapper/useHandleUploadFiles.d.ts"
       ],
       "OpenChannel": [
-        "./dist/types/modules/OpenChannel/index.d.ts"
+        "./types/modules/OpenChannel/index.d.ts"
       ],
       "OpenChannel/context": [
-        "./dist/types/modules/OpenChannel/context/OpenChannelProvider.d.ts"
+        "./types/modules/OpenChannel/context/OpenChannelProvider.d.ts"
       ],
       "OpenChannel/components/FrozenChannelNotification": [
-        "./dist/types/modules/OpenChannel/components/FrozenChannelNotification/index.d.ts"
+        "./types/modules/OpenChannel/components/FrozenChannelNotification/index.d.ts"
       ],
       "OpenChannel/components/OpenChannelHeader": [
-        "./dist/types/modules/OpenChannel/components/OpenChannelHeader/index.d.ts"
+        "./types/modules/OpenChannel/components/OpenChannelHeader/index.d.ts"
       ],
       "OpenChannel/components/OpenChannelInput": [
-        "./dist/types/modules/OpenChannel/components/OpenChannelInput/index.d.ts"
+        "./types/modules/OpenChannel/components/OpenChannelInput/index.d.ts"
       ],
       "OpenChannel/components/OpenChannelMessage": [
-        "./dist/types/modules/OpenChannel/components/OpenChannelMessage/index.d.ts"
+        "./types/modules/OpenChannel/components/OpenChannelMessage/index.d.ts"
       ],
       "OpenChannel/components/OpenChannelMessageList": [
-        "./dist/types/modules/OpenChannel/components/OpenChannelMessageList/index.d.ts"
+        "./types/modules/OpenChannel/components/OpenChannelMessageList/index.d.ts"
       ],
       "OpenChannel/components/OpenChannelUI": [
-        "./dist/types/modules/OpenChannel/components/OpenChannelUI/index.d.ts"
+        "./types/modules/OpenChannel/components/OpenChannelUI/index.d.ts"
       ],
       "OpenChannelList": [
-        "./dist/types/modules/OpenChannelList/index.d.ts"
+        "./types/modules/OpenChannelList/index.d.ts"
       ],
       "OpenChannelList/context": [
-        "./dist/types/modules/OpenChannelList/context/OpenChannelListProvider.d.ts"
+        "./types/modules/OpenChannelList/context/OpenChannelListProvider.d.ts"
       ],
       "OpenChannelList/components/OpenChannelListUI": [
-        "./dist/types/modules/OpenChannelList/components/OpenChannelListUI/index.d.ts"
+        "./types/modules/OpenChannelList/components/OpenChannelListUI/index.d.ts"
       ],
       "OpenChannelList/components/OpenChannelPreview": [
-        "./dist/types/modules/OpenChannelList/components/OpenChannelPreview/index.d.ts"
+        "./types/modules/OpenChannelList/components/OpenChannelPreview/index.d.ts"
       ],
       "CreateOpenChannel": [
-        "./dist/types/modules/CreateOpenChannel/index.d.ts"
+        "./types/modules/CreateOpenChannel/index.d.ts"
       ],
       "CreateOpenChannel/context": [
-        "./dist/types/modules/CreateOpenChannel/context/CreateOpenChannelProvider.d.ts"
+        "./types/modules/CreateOpenChannel/context/CreateOpenChannelProvider.d.ts"
       ],
       "CreateOpenChannel/components/CreateOpenChannelUI": [
-        "./dist/types/modules/CreateOpenChannel/components/CreateOpenChannelUI/index.d.ts"
+        "./types/modules/CreateOpenChannel/components/CreateOpenChannelUI/index.d.ts"
       ],
       "OpenChannelSettings": [
-        "./dist/types/modules/OpenChannelSettings/index.d.ts"
+        "./types/modules/OpenChannelSettings/index.d.ts"
       ],
       "OpenChannelSettings/context": [
-        "./dist/types/modules/OpenChannelSettings/context/OpenChannelSettingsProvider.d.ts"
+        "./types/modules/OpenChannelSettings/context/OpenChannelSettingsProvider.d.ts"
       ],
       "OpenChannelSettings/components/EditDetailsModal": [
-        "./dist/types/modules/OpenChannelSettings/components/EditDetailsModal.d.ts"
+        "./types/modules/OpenChannelSettings/components/EditDetailsModal.d.ts"
       ],
       "OpenChannelSettings/components/OpenChannelProfile": [
-        "./dist/types/modules/OpenChannelSettings/components/OpenChannelProfile/index.d.ts"
+        "./types/modules/OpenChannelSettings/components/OpenChannelProfile/index.d.ts"
       ],
       "OpenChannelSettings/components/OpenChannelSettingsUI": [
-        "./dist/types/modules/OpenChannelSettings/components/OpenChannelSettingsUI/index.d.ts"
+        "./types/modules/OpenChannelSettings/components/OpenChannelSettingsUI/index.d.ts"
       ],
       "OpenChannelSettings/components/OperatorUI": [
-        "./dist/types/modules/OpenChannelSettings/components/OperatorUI/index.d.ts"
+        "./types/modules/OpenChannelSettings/components/OperatorUI/index.d.ts"
       ],
       "OpenChannelSettings/components/ParticipantUI": [
-        "./dist/types/modules/OpenChannelSettings/components/ParticipantUI/index.d.ts"
+        "./types/modules/OpenChannelSettings/components/ParticipantUI/index.d.ts"
       ],
       "MessageSearch": [
-        "./dist/types/modules/MessageSearch/index.d.ts"
+        "./types/modules/MessageSearch/index.d.ts"
       ],
       "MessageSearch/context": [
-        "./dist/types/modules/MessageSearch/context/MessageSearchProvider.d.ts"
+        "./types/modules/MessageSearch/context/MessageSearchProvider.d.ts"
       ],
       "MessageSearch/components/MessageSearchUI": [
-        "./dist/types/modules/MessageSearch/components/MessageSearchUI/index.d.ts"
+        "./types/modules/MessageSearch/components/MessageSearchUI/index.d.ts"
       ],
       "Message/context": [
-        "./dist/types/modules/Message/context/MessageProvider.d.ts"
+        "./types/modules/Message/context/MessageProvider.d.ts"
       ],
       "Message/hooks/useDirtyGetMentions": [
-        "./dist/types/modules/Message/hooks/useDirtyGetMentions.d.ts"
+        "./types/modules/Message/hooks/useDirtyGetMentions.d.ts"
       ],
       "Thread": [
-        "./dist/types/modules/Thread/index.d.ts"
+        "./types/modules/Thread/index.d.ts"
       ],
       "Thread/context": [
-        "./dist/types/modules/Thread/context/ThreadProvider.d.ts"
+        "./types/modules/Thread/context/ThreadProvider.d.ts"
       ],
       "Thread/context/types": [
-        "./dist/types/modules/Thread/types.d.ts"
+        "./types/modules/Thread/types.d.ts"
       ],
       "Thread/components/ThreadUI": [
-        "./dist/types/modules/Thread/components/ThreadUI/index.d.ts"
+        "./types/modules/Thread/components/ThreadUI/index.d.ts"
       ],
       "Thread/components/ThreadHeader": [
-        "./dist/types/modules/Thread/components/ThreadHeader/index.d.ts"
+        "./types/modules/Thread/components/ThreadHeader/index.d.ts"
       ],
       "Thread/components/ParentMessageInfo": [
-        "./dist/types/modules/Thread/components/ParentMessageInfo/index.d.ts"
+        "./types/modules/Thread/components/ParentMessageInfo/index.d.ts"
       ],
       "Thread/components/ParentMessageInfoItem": [
-        "./dist/types/modules/Thread/components/ParentMessageInfo/ParentMessageInfoItem.d.ts"
+        "./types/modules/Thread/components/ParentMessageInfo/ParentMessageInfoItem.d.ts"
       ],
       "Thread/components/ThreadList": [
-        "./dist/types/modules/Thread/components/ThreadList/index.d.ts"
+        "./types/modules/Thread/components/ThreadList/index.d.ts"
       ],
       "Thread/components/ThreadListItem": [
-        "./dist/types/modules/Thread/components/ThreadList/ThreadListItem.d.ts"
+        "./types/modules/Thread/components/ThreadList/ThreadListItem.d.ts"
       ],
       "Thread/components/ThreadMessageInput": [
-        "./dist/types/modules/Thread/components/ThreadMessageInput/index.d.ts"
+        "./types/modules/Thread/components/ThreadMessageInput/index.d.ts"
       ],
       "CreateChannel": [
-        "./dist/types/modules/CreateChannel/index.d.ts"
+        "./types/modules/CreateChannel/index.d.ts"
       ],
       "CreateChannel/context": [
-        "./dist/types/modules/CreateChannel/context/CreateChannelProvider.d.ts"
+        "./types/modules/CreateChannel/context/CreateChannelProvider.d.ts"
       ],
       "CreateChannel/components/CreateChannelUI": [
-        "./dist/types/modules/CreateChannel/components/CreateChannelUI/index.d.ts"
+        "./types/modules/CreateChannel/components/CreateChannelUI/index.d.ts"
       ],
       "CreateChannel/components/InviteUsers": [
-        "./dist/types/modules/CreateChannel/components/InviteUsers/index.d.ts"
+        "./types/modules/CreateChannel/components/InviteUsers/index.d.ts"
       ],
       "CreateChannel/components/SelectChannelType": [
-        "./dist/types/modules/CreateChannel/components/SelectChannelType.d.ts"
+        "./types/modules/CreateChannel/components/SelectChannelType.d.ts"
       ],
       "EditUserProfile": [
-        "./dist/types/modules/EditUserProfile/index.d.ts"
+        "./types/modules/EditUserProfile/index.d.ts"
       ],
       "EditUserProfile/context": [
-        "./dist/types/modules/EditUserProfile/context/EditUserProfileProvider.d.ts"
+        "./types/modules/EditUserProfile/context/EditUserProfileProvider.d.ts"
       ],
       "EditUserProfile/components/EditUserProfileUI": [
-        "./dist/types/modules/EditUserProfile/components/EditUserProfileUI/index.d.ts"
+        "./types/modules/EditUserProfile/components/EditUserProfileUI/index.d.ts"
       ],
       "ui/Accordion": [
-        "./dist/types/ui/Accordion/index.d.ts"
+        "./types/ui/Accordion/index.d.ts"
       ],
       "ui/AccordionGroup": [
-        "./dist/types/ui/Accordion/AccordionGroup.d.ts"
+        "./types/ui/Accordion/AccordionGroup.d.ts"
       ],
       "ui/AdminMessage": [
-        "./dist/types/ui/AdminMessage/index.d.ts"
+        "./types/ui/AdminMessage/index.d.ts"
       ],
       "ui/Avatar": [
-        "./dist/types/ui/Avatar/index.d.ts"
+        "./types/ui/Avatar/index.d.ts"
       ],
       "ui/MutedAvatarOverlay": [
-        "./dist/types/ui/Avatar/MutedAvatarOverlay.d.ts"
+        "./types/ui/Avatar/MutedAvatarOverlay.d.ts"
       ],
       "ui/Button": [
-        "./dist/types/ui/Button/index.d.ts"
+        "./types/ui/Button/index.d.ts"
       ],
       "ui/Badge": [
-        "./dist/types/ui/Badge/index.d.ts"
+        "./types/ui/Badge/index.d.ts"
       ],
       "ui/BottomSheet": [
-        "./dist/types/ui/BottomSheet/index.d.ts"
+        "./types/ui/BottomSheet/index.d.ts"
       ],
       "ui/ChannelAvatar": [
-        "./dist/types/ui/ChannelAvatar/index.d.ts"
+        "./types/ui/ChannelAvatar/index.d.ts"
       ],
       "ui/OpenChannelAvatar": [
-        "./dist/types/ui/ChannelAvatar/OpenChannelAvatar.d.ts"
+        "./types/ui/ChannelAvatar/OpenChannelAvatar.d.ts"
       ],
       "ui/Checkbox": [
-        "./dist/types/ui/Checkbox/index.d.ts"
+        "./types/ui/Checkbox/index.d.ts"
       ],
       "ui/ConnectionStatus": [
-        "./dist/types/ui/ConnectionStatus/index.d.ts"
+        "./types/ui/ConnectionStatus/index.d.ts"
       ],
       "ui/ContextMenu": [
-        "./dist/types/ui/ContextMenu/index.d.ts"
+        "./types/ui/ContextMenu/index.d.ts"
       ],
       "ui/DateSeparator": [
-        "./dist/types/ui/DateSeparator/index.d.ts"
+        "./types/ui/DateSeparator/index.d.ts"
       ],
       "ui/EmojiReactions": [
-        "./dist/types/ui/EmojiReactions/index.d.ts"
+        "./types/ui/EmojiReactions/index.d.ts"
       ],
       "ui/FileMessageItemBody": [
-        "./dist/types/ui/FileMessageItemBody/index.d.ts"
+        "./types/ui/FileMessageItemBody/index.d.ts"
       ],
       "ui/FileViewer": [
-        "./dist/types/ui/FileViewer/index.d.ts"
+        "./types/ui/FileViewer/index.d.ts"
       ],
       "ui/Icon": [
-        "./dist/types/ui/Icon/index.d.ts"
+        "./types/ui/Icon/index.d.ts"
       ],
       "ui/IconButton": [
-        "./dist/types/ui/IconButton/index.d.ts"
+        "./types/ui/IconButton/index.d.ts"
       ],
       "ui/ImageRenderer": [
-        "./dist/types/ui/ImageRenderer/index.d.ts"
+        "./types/ui/ImageRenderer/index.d.ts"
       ],
       "ui/Input": [
-        "./dist/types/ui/Input/index.d.ts"
+        "./types/ui/Input/index.d.ts"
       ],
       "ui/Label": [
-        "./dist/types/ui/Label/index.d.ts"
+        "./types/ui/Label/index.d.ts"
       ],
       "ui/LinkLabel": [
-        "./dist/types/ui/LinkLabel/index.d.ts"
+        "./types/ui/LinkLabel/index.d.ts"
       ],
       "ui/Loader": [
-        "./dist/types/ui/Loader/index.d.ts"
+        "./types/ui/Loader/index.d.ts"
       ],
       "ui/MentionUserLabel": [
-        "./dist/types/ui/MentionUserLabel/index.d.ts"
+        "./types/ui/MentionUserLabel/index.d.ts"
       ],
       "ui/MentionLabel": [
-        "./dist/types/ui/MentionLabel/index.d.ts"
+        "./types/ui/MentionLabel/index.d.ts"
       ],
       "ui/MessageContent": [
-        "./dist/types/ui/MessageContent/index.d.ts"
+        "./types/ui/MessageContent/index.d.ts"
       ],
       "ui/MessageInput": [
-        "./dist/types/ui/MessageInput/index.d.ts"
+        "./types/ui/MessageInput/index.d.ts"
       ],
       "ui/MessageInput/hooks/usePaste": [
-        "./dist/types/ui/MessageInput/hooks/usePaste/index.d.ts"
+        "./types/ui/MessageInput/hooks/usePaste/index.d.ts"
       ],
       "ui/MessageItemMenu": [
-        "./dist/types/ui/MessageItemMenu/index.d.ts"
+        "./types/ui/MessageItemMenu/index.d.ts"
       ],
       "ui/MessageItemReactionMenu": [
-        "./dist/types/ui/MessageItemReactionMenu/index.d.ts"
+        "./types/ui/MessageItemReactionMenu/index.d.ts"
       ],
       "ui/MessageSearchFileItem": [
-        "./dist/types/ui/MessageSearchFileItem/index.d.ts"
+        "./types/ui/MessageSearchFileItem/index.d.ts"
       ],
       "ui/MessageSearchItem": [
-        "./dist/types/ui/MessageSearchItem/index.d.ts"
+        "./types/ui/MessageSearchItem/index.d.ts"
       ],
       "ui/MessageStatus": [
-        "./dist/types/ui/MessageStatus/index.d.ts"
+        "./types/ui/MessageStatus/index.d.ts"
       ],
       "ui/Modal": [
-        "./dist/types/ui/Modal/index.d.ts"
+        "./types/ui/Modal/index.d.ts"
       ],
       "ui/OGMessageItemBody": [
-        "./dist/types/ui/OGMessageItemBody/index.d.ts"
+        "./types/ui/OGMessageItemBody/index.d.ts"
       ],
       "ui/OpenChannelAdminMessage": [
-        "./dist/types/ui/OpenChannelAdminMessage/index.d.ts"
+        "./types/ui/OpenChannelAdminMessage/index.d.ts"
       ],
       "ui/OpenchannelConversationHeader": [
-        "./dist/types/ui/OpenchannelConversationHeader/index.d.ts"
+        "./types/ui/OpenchannelConversationHeader/index.d.ts"
       ],
       "ui/OpenchannelFileMessage": [
-        "./dist/types/ui/OpenchannelFileMessage/index.d.ts"
+        "./types/ui/OpenchannelFileMessage/index.d.ts"
       ],
       "ui/OpenchannelOGMessage": [
-        "./dist/types/ui/OpenchannelOGMessage/index.d.ts"
+        "./types/ui/OpenchannelOGMessage/index.d.ts"
       ],
       "ui/OpenchannelThumbnailMessage": [
-        "./dist/types/ui/OpenchannelThumbnailMessage/index.d.ts"
+        "./types/ui/OpenchannelThumbnailMessage/index.d.ts"
       ],
       "ui/OpenchannelUserMessage": [
-        "./dist/types/ui/OpenchannelUserMessage/index.d.ts"
+        "./types/ui/OpenchannelUserMessage/index.d.ts"
       ],
       "ui/PlaceHolder": [
-        "./dist/types/ui/PlaceHolder/index.d.ts"
+        "./types/ui/PlaceHolder/index.d.ts"
       ],
       "ui/PlaybackTime": [
-        "./dist/types/ui/PlaybackTime/index.d.ts"
+        "./types/ui/PlaybackTime/index.d.ts"
       ],
       "ui/ProgressBar": [
-        "./dist/types/ui/ProgressBar/index.d.ts"
+        "./types/ui/ProgressBar/index.d.ts"
       ],
       "ui/QuoteMessage": [
-        "./dist/types/ui/QuoteMessage/index.d.ts"
+        "./types/ui/QuoteMessage/index.d.ts"
       ],
       "ui/QuoteMessageInput": [
-        "./dist/types/ui/QuoteMessageInput/index.d.ts"
+        "./types/ui/QuoteMessageInput/index.d.ts"
       ],
       "ui/ReactionBadge": [
-        "./dist/types/ui/ReactionBadge/index.d.ts"
+        "./types/ui/ReactionBadge/index.d.ts"
       ],
       "ui/ReactionButton": [
-        "./dist/types/ui/ReactionButton/index.d.ts"
+        "./types/ui/ReactionButton/index.d.ts"
       ],
       "ui/SortByRow": [
-        "./dist/types/ui/SortByRow/index.d.ts"
+        "./types/ui/SortByRow/index.d.ts"
       ],
       "ui/TextButton": [
-        "./dist/types/ui/TextButton/index.d.ts"
+        "./types/ui/TextButton/index.d.ts"
       ],
       "ui/TextMessageItemBody": [
-        "./dist/types/ui/TextMessageItemBody/index.d.ts"
+        "./types/ui/TextMessageItemBody/index.d.ts"
       ],
       "ui/ThreadReplies": [
-        "./dist/types/ui/ThreadReplies/index.d.ts"
+        "./types/ui/ThreadReplies/index.d.ts"
       ],
       "ui/ThumbnailMessageItemBody": [
-        "./dist/types/ui/ThumbnailMessageItemBody/index.d.ts"
+        "./types/ui/ThumbnailMessageItemBody/index.d.ts"
       ],
       "ui/Toggle": [
-        "./dist/types/ui/Toggle/index.d.ts"
+        "./types/ui/Toggle/index.d.ts"
       ],
       "ui/Tooltip": [
-        "./dist/types/ui/Tooltip/index.d.ts"
+        "./types/ui/Tooltip/index.d.ts"
       ],
       "ui/TooltipWrapper": [
-        "./dist/types/ui/TooltipWrapper/index.d.ts"
+        "./types/ui/TooltipWrapper/index.d.ts"
       ],
       "ui/TypingIndicatorBubble": [
-        "./dist/types/ui/TypingIndicatorBubble/index.d.ts"
+        "./types/ui/TypingIndicatorBubble/index.d.ts"
       ],
       "ui/UnknownMessageItemBody": [
-        "./dist/types/ui/UnknownMessageItemBody/index.d.ts"
+        "./types/ui/UnknownMessageItemBody/index.d.ts"
       ],
       "ui/UserListItem": [
-        "./dist/types/ui/UserListItem/index.d.ts"
+        "./types/ui/UserListItem/index.d.ts"
       ],
       "ui/UserProfile": [
-        "./dist/types/ui/UserProfile/index.d.ts"
+        "./types/ui/UserProfile/index.d.ts"
       ],
       "ui/VoiceMessageInput": [
-        "./dist/types/ui/VoiceMessageInput/index.d.ts"
+        "./types/ui/VoiceMessageInput/index.d.ts"
       ],
       "ui/VoiceMessageItemBody": [
-        "./dist/types/ui/VoiceMessageItemBody/index.d.ts"
+        "./types/ui/VoiceMessageItemBody/index.d.ts"
       ],
       "ui/Word": [
-        "./dist/types/ui/Word/index.d.ts"
+        "./types/ui/Word/index.d.ts"
       ],
       "ui/FeedbackIconButton": [
-        "./dist/types/ui/FeedbackIconButton/index.d.ts"
+        "./types/ui/FeedbackIconButton/index.d.ts"
       ],
       "ui/MobileFeedbackMenu": [
-        "./dist/types/ui/MobileFeedbackMenu/index.d.ts"
+        "./types/ui/MobileFeedbackMenu/index.d.ts"
       ]
     }
   }

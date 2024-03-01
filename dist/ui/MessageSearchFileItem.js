@@ -1,22 +1,22 @@
-import { c as __spreadArray } from '../chunks/bundle-UnAcr6wX.js';
+import { c as __spreadArray } from '../chunks/bundle-xhjHZ041.js';
 import React__default from 'react';
-import { A as Avatar } from '../chunks/bundle-LbQw2cVx.js';
+import { A as Avatar } from '../chunks/bundle-VE0ige0C.js';
 import Icon, { IconTypes, IconColors } from './Icon.js';
-import { L as Label, a as LabelTypography, b as LabelColors } from '../chunks/bundle-ljRDDTki.js';
-import { u as useLocalization } from '../chunks/bundle-hS8Jw8F1.js';
-import { f as format } from '../chunks/bundle-ePTRDi6d.js';
-import { i as isToday, a as isYesterday, b as isThisYear } from '../chunks/bundle-uq2crLI0.js';
-import { i as isVoiceMessage } from '../chunks/bundle-WrTlYypL.js';
-import { g as getMessageFirstFileUrl, b as getMessageFirstFileName } from '../chunks/bundle-S6OaNh10.js';
+import { L as Label, a as LabelTypography, b as LabelColors } from '../chunks/bundle-sR62lMVk.js';
+import { u as useLocalization } from '../chunks/bundle-1inZXcUV.js';
+import { f as format } from '../chunks/bundle-o-FVZr_e.js';
+import { i as isToday, a as isYesterday, b as isThisYear } from '../chunks/bundle--WYMGSfi.js';
+import { i as isVoiceMessage } from '../chunks/bundle-Jwc7mleJ.js';
+import { g as getMessageFirstFileUrl, b as getMessageFirstFileName } from '../chunks/bundle-NGtuBFFS.js';
 import './ImageRenderer.js';
-import '../chunks/bundle-CRwhglru.js';
-import '../chunks/bundle-fNigAmmf.js';
-import '../chunks/bundle-PIrj5Rm1.js';
-import '../chunks/bundle-8u3PnqsX.js';
-import '../chunks/bundle-6_aRz_Ld.js';
+import '../chunks/bundle-IDH-OOHE.js';
+import '../chunks/bundle-3a5xXUZv.js';
+import '../chunks/bundle--MbN9aKT.js';
+import '../chunks/bundle-V_fO-GlK.js';
+import '../chunks/bundle-RfBkMeJ1.js';
 import '@sendbird/chat/groupChannel';
 import '../utils/message/getOutgoingMessageState.js';
-import '../chunks/bundle-UuydkZ4A.js';
+import '../chunks/bundle-AN6QCsUL.js';
 
 function getCreatedAt(_a) {
     var createdAt = _a.createdAt, locale = _a.locale, stringSet = _a.stringSet;

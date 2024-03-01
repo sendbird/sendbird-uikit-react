@@ -1,8 +1,8 @@
 'use strict';
 
-var _tslib = require('../chunks/bundle-xbdnJE9-.js');
+var _tslib = require('../chunks/bundle-zYqQA3cT.js');
 var React = require('react');
-var uuid = require('../chunks/bundle-SOIkTCep.js');
+var uuid = require('../chunks/bundle-NNEanMqk.js');
 
 var componentClassName = 'sendbird-sort-by-row';
 function SortByRow(_a) {

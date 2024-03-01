@@ -1,7 +1,7 @@
-import { c as __spreadArray } from '../chunks/bundle-UnAcr6wX.js';
+import { c as __spreadArray } from '../chunks/bundle-xhjHZ041.js';
 import React__default from 'react';
-import { L as Label, d as changeColorToClassName, a as LabelTypography, b as LabelColors } from '../chunks/bundle-ljRDDTki.js';
-import '../chunks/bundle-PIrj5Rm1.js';
+import { L as Label, d as changeColorToClassName, a as LabelTypography, b as LabelColors } from '../chunks/bundle-sR62lMVk.js';
+import '../chunks/bundle--MbN9aKT.js';
 
 var http = /https?:\/\//;
 function LinkLabel(_a) {

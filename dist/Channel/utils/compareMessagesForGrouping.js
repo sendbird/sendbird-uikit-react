@@ -1,10 +1,10 @@
-import { f as format } from '../../chunks/bundle-ePTRDi6d.js';
-import { a as isReadMessage } from '../../chunks/bundle-WrTlYypL.js';
-import '../../chunks/bundle-8u3PnqsX.js';
-import '../../chunks/bundle-UnAcr6wX.js';
+import { f as format } from '../../chunks/bundle-o-FVZr_e.js';
+import { a as isReadMessage } from '../../chunks/bundle-Jwc7mleJ.js';
+import '../../chunks/bundle-V_fO-GlK.js';
+import '../../chunks/bundle-xhjHZ041.js';
 import '@sendbird/chat/groupChannel';
 import '../../utils/message/getOutgoingMessageState.js';
-import '../../chunks/bundle-UuydkZ4A.js';
+import '../../chunks/bundle-AN6QCsUL.js';
 
 /**
  * exported, should be backward compatible
