@@ -1,0 +1,87 @@
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+var _tslib = require('./chunks/bundle-xbdnJE9-.js');
+var React = require('react');
+var GroupChannelList_context = require('./GroupChannelList/context.js');
+var GroupChannelList_components_GroupChannelListUI = require('./GroupChannelList/components/GroupChannelListUI.js');
+require('@sendbird/chat/groupChannel');
+require('@sendbird/uikit-tools');
+require('./useSendbirdStateContext.js');
+require('./withSendbird.js');
+require('./chunks/bundle-uzKywAVp.js');
+require('./chunks/bundle-Fj06oDBD.js');
+require('@sendbird/chat');
+require('./chunks/bundle-SOIkTCep.js');
+require('./chunks/bundle-jCTpndN0.js');
+require('./chunks/bundle-dV4ZEGW6.js');
+require('./GroupChannelList/components/GroupChannelListHeader.js');
+require('./chunks/bundle-WKa05h0_.js');
+require('./chunks/bundle-Yzhiyr0t.js');
+require('./chunks/bundle-HY8cubCp.js');
+require('./chunks/bundle--jUKLwRX.js');
+require('./ui/ImageRenderer.js');
+require('./chunks/bundle-kftX5Dbs.js');
+require('./ui/Icon.js');
+require('./chunks/bundle-KkCwxjVN.js');
+require('./EditUserProfile.js');
+require('./EditUserProfile/context.js');
+require('./EditUserProfile/components/EditUserProfileUI.js');
+require('./chunks/bundle-BWsz2Xk-.js');
+require('./chunks/bundle-6hGNMML2.js');
+require('react-dom');
+require('./chunks/bundle-4WvE40Un.js');
+require('./ui/IconButton.js');
+require('./ui/Button.js');
+require('./ui/Input.js');
+require('./ui/TextButton.js');
+require('./chunks/bundle-0uk8Bfy0.js');
+require('./ui/PlaceHolder.js');
+require('./ui/Loader.js');
+require('./chunks/bundle-48AiK3oz.js');
+require('./chunks/bundle-Atn5EZwu.js');
+require('./chunks/bundle-6xWNZugu.js');
+require('@sendbird/chat/message');
+require('./chunks/bundle-Zw2P8RwZ.js');
+require('./GroupChannelList/components/GroupChannelPreviewAction.js');
+require('./ui/ContextMenu.js');
+require('./ui/SortByRow.js');
+require('./chunks/bundle-Uw6P-cM9.js');
+require('./utils/message/getOutgoingMessageState.js');
+require('./chunks/bundle-tNuJSOqI.js');
+require('./GroupChannelList/components/GroupChannelListItem.js');
+require('./chunks/bundle-VehpyAT7.js');
+require('./chunks/bundle-KOig1nUx.js');
+require('./chunks/bundle-_wF3sJvp.js');
+require('./chunks/bundle-iPt3h7ba.js');
+require('./chunks/bundle-blsUz0A6.js');
+require('./chunks/bundle-pOf7PZ4G.js');
+require('./GroupChannel/components/TypingIndicator.js');
+require('./ui/Badge.js');
+require('./ui/ChannelAvatar.js');
+require('./chunks/bundle-aadmp473.js');
+require('./ui/MentionUserLabel.js');
+require('./chunks/bundle-h9YDQxpQ.js');
+require('./GroupChannelList/components/AddGroupChannel.js');
+require('./chunks/bundle-pO3WtufJ.js');
+require('./CreateChannel.js');
+require('./CreateChannel/components/CreateChannelUI.js');
+require('./chunks/bundle-chizstU7.js');
+require('./sendbirdSelectors.js');
+require('./chunks/bundle-VqRllkVd.js');
+require('./CreateChannel/components/InviteUsers.js');
+require('./ui/UserListItem.js');
+require('./ui/MutedAvatarOverlay.js');
+require('./ui/Checkbox.js');
+require('./ui/UserProfile.js');
+require('./CreateChannel/components/SelectChannelType.js');
+
+var GroupChannelList = function (props) {
+    return (React.createElement(GroupChannelList_context.GroupChannelListProvider, _tslib.__assign({}, props),
+        React.createElement(GroupChannelList_components_GroupChannelListUI.GroupChannelListUI, _tslib.__assign({}, props))));
+};
+
+exports.GroupChannelList = GroupChannelList;
+exports.default = GroupChannelList;
+//# sourceMappingURL=GroupChannelList.js.map

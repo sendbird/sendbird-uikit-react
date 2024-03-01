@@ -1,0 +1,14 @@
+import type React from 'react';
+import type { User } from '@sendbird/chat';
+import type { OpenChannel, ParticipantListQuery } from '@sendbird/chat/openChannel';
+import { Logger } from '../../../lib/SendbirdState';
+import { SendableMessageType } from '../../../utils';
+export declare const getMessageCreatedAt: (message: SendableMessageType) => string;
+export declare const shouldFetchMore: (messageLength: number, maxMessages: number) => boolean;
+export declare const scrollIntoLast: (initialTry: number, scrollRef: React.RefObject<HTMLElement>) => void;
+export declare const kFormatter: (num: number) => string;
+export declare const isOperator: (openChannel: OpenChannel, userId: string) => boolean;
+export declare const isDisabledBecauseFrozen: (openChannel: OpenChannel, userId: string) => boolean;
+export declare const isDisabledBecauseMuted: (mutedParticipantIds: Array<string>, userId: string) => boolean;
+export declare const fetchWithListQuery: (listQuery: ParticipantListQuery, logger: Logger, eachQueryNextCallback: (users: Array<User>) => void) => void;
+export declare const pxToNumber: (px: string | number) => number | void;

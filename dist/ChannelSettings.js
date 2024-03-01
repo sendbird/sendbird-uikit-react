@@ -1,0 +1,67 @@
+import React__default from 'react';
+import ChannelSettingsUI from './ChannelSettings/components/ChannelSettingsUI.js';
+import { ChannelSettingsProvider } from './ChannelSettings/context.js';
+import './useSendbirdStateContext.js';
+import './withSendbird.js';
+import './chunks/bundle-UnAcr6wX.js';
+import './ui/PlaceHolder.js';
+import './chunks/bundle-hS8Jw8F1.js';
+import './chunks/bundle-PIrj5Rm1.js';
+import './chunks/bundle-8u3PnqsX.js';
+import './ui/Icon.js';
+import './chunks/bundle-CRwhglru.js';
+import './chunks/bundle-ljRDDTki.js';
+import './ui/Loader.js';
+import './ui/IconButton.js';
+import './ChannelSettings/components/ChannelProfile.js';
+import './ui/ChannelAvatar.js';
+import './chunks/bundle-LbQw2cVx.js';
+import './ui/ImageRenderer.js';
+import './chunks/bundle-fNigAmmf.js';
+import './chunks/bundle-k8wZLjPN.js';
+import './ui/TextButton.js';
+import './chunks/bundle-02rQraFs.js';
+import './ChannelSettings/components/EditDetailsModal.js';
+import './chunks/bundle--BlhOpUS.js';
+import 'react-dom';
+import './chunks/bundle-qlkGlvyT.js';
+import './ui/Button.js';
+import './ui/Input.js';
+import './chunks/bundle-0Kp88b8b.js';
+import './ChannelSettings/components/ModerationPanel.js';
+import './ui/Accordion.js';
+import './ui/AccordionGroup.js';
+import './chunks/bundle-0AnE5qN8.js';
+import './ui/Badge.js';
+import './ui/Toggle.js';
+import './ui/ContextMenu.js';
+import './ui/SortByRow.js';
+import './chunks/bundle-WrTlYypL.js';
+import '@sendbird/chat/groupChannel';
+import './utils/message/getOutgoingMessageState.js';
+import './chunks/bundle-UuydkZ4A.js';
+import './ChannelSettings/components/UserListItem.js';
+import './chunks/bundle-jDtVwIPR.js';
+import './ui/MutedAvatarOverlay.js';
+import './ui/UserProfile.js';
+import './sendbirdSelectors.js';
+import './chunks/bundle-7BSf_PUT.js';
+import './ui/UserListItem.js';
+import './ui/Checkbox.js';
+import './chunks/bundle-3E8xSyj7.js';
+import './chunks/bundle-WFlcI9AO.js';
+import './chunks/bundle-1CfFFBx9.js';
+import './chunks/bundle-H77M-_wK.js';
+import '@sendbird/chat/message';
+import '@sendbird/uikit-tools';
+import './chunks/bundle-6aMfjTWv.js';
+import './ChannelSettings/components/LeaveChannel.js';
+import './ChannelSettings/components/UserPanel.js';
+
+var ChannelSettings = function (props) {
+    return (React__default.createElement(ChannelSettingsProvider, { overrideInviteUser: props === null || props === void 0 ? void 0 : props.overrideInviteUser, channelUrl: props.channelUrl, onCloseClick: props === null || props === void 0 ? void 0 : props.onCloseClick, onLeaveChannel: props === null || props === void 0 ? void 0 : props.onLeaveChannel, onChannelModified: props === null || props === void 0 ? void 0 : props.onChannelModified, onBeforeUpdateChannel: props === null || props === void 0 ? void 0 : props.onBeforeUpdateChannel, queries: props === null || props === void 0 ? void 0 : props.queries, className: props === null || props === void 0 ? void 0 : props.className, disableUserProfile: props === null || props === void 0 ? void 0 : props.disableUserProfile, renderUserProfile: props === null || props === void 0 ? void 0 : props.renderUserProfile },
+        React__default.createElement(ChannelSettingsUI, { renderPlaceholderError: props === null || props === void 0 ? void 0 : props.renderPlaceholderError, renderChannelProfile: props === null || props === void 0 ? void 0 : props.renderChannelProfile, renderModerationPanel: props === null || props === void 0 ? void 0 : props.renderModerationPanel, renderLeaveChannel: props === null || props === void 0 ? void 0 : props.renderLeaveChannel })));
+};
+
+export { ChannelSettings as default };
+//# sourceMappingURL=ChannelSettings.js.map

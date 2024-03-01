@@ -1,0 +1,17 @@
+import React from 'react';
+import { EmojiContainer } from '@sendbird/chat';
+import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
+import { CoreMessageType, SendableMessageType } from '../../../utils';
+import { BaseMessage } from '@sendbird/chat/message';
+export declare const scrollToRenderedMessage: (scrollRef: React.MutableRefObject<HTMLElement>, initialTimeStamp: number, setIsScrolled?: (val: boolean) => void) => void;
+export declare const scrollIntoLast: (initialTry: number, scrollRef: React.MutableRefObject<HTMLElement>, setIsScrolled?: (val: boolean) => void) => void;
+export declare const isOperator: (groupChannel?: GroupChannel) => boolean;
+export declare const isDisabledBecauseFrozen: (groupChannel?: GroupChannel) => boolean;
+export declare const isDisabledBecauseMuted: (groupChannel?: GroupChannel) => boolean;
+export declare const getAllEmojisMapFromEmojiContainer: (emojiContainer: EmojiContainer) => Map<any, any>;
+export declare const getNicknamesMapFromMembers: (members?: Member[]) => Map<string, string>;
+export declare const mergeAndSortMessages: (oldMessages: BaseMessage[], newMessages: BaseMessage[]) => BaseMessage[];
+export declare const getMessageCreatedAt: (message: BaseMessage) => string;
+export declare const passUnsuccessfullMessages: (allMessages: (CoreMessageType | SendableMessageType)[], newMessage: CoreMessageType | SendableMessageType) => (import("@sendbird/chat/message").AdminMessage | import("@sendbird/chat/message").UserMessage | import("@sendbird/chat/message").FileMessage | import("@sendbird/chat/message").MultipleFilesMessage)[];
+export declare const pxToNumber: (px: string | number) => number;
+export declare const isAboutSame: (a: number, b: number, px: number) => boolean;
