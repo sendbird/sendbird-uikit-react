@@ -19,10 +19,10 @@
     "API"
   ],
   "type": "module",
-  "module": "dist/index.js",
-  "main": "dist/cjs/index.js",
-  "types": "dist/types/index.d.ts",
-  "style": "dist/dist/index.css",
+  "module": "index.js",
+  "main": "cjs/index.js",
+  "types": "types/index.d.ts",
+  "style": "dist/index.css",
   "files": ["**/*"],
   "repository": {
     "type": "git",

@@ -1,0 +1,50 @@
+import React__default, { useState } from 'react';
+import { u as useChannelListContext } from '../../chunks/bundle-fD7gUgus.js';
+import { A as AddGroupChannelView } from '../../chunks/bundle-RAzr6why.js';
+import '../../chunks/bundle-UnAcr6wX.js';
+import '@sendbird/chat/groupChannel';
+import '../../chunks/bundle-7BSf_PUT.js';
+import '../../chunks/bundle-0Kp88b8b.js';
+import '../../chunks/bundle-CRwhglru.js';
+import '../../chunks/bundle-1CfFFBx9.js';
+import '../../chunks/bundle-jDtVwIPR.js';
+import '../../useSendbirdStateContext.js';
+import '../../withSendbird.js';
+import '../../chunks/bundle-UuydkZ4A.js';
+import '../../chunks/bundle-WrTlYypL.js';
+import '../../utils/message/getOutgoingMessageState.js';
+import '../../chunks/bundle-5c9A2KLX.js';
+import '../../ui/IconButton.js';
+import '../../ui/Icon.js';
+import '../../CreateChannel.js';
+import '../../CreateChannel/components/CreateChannelUI.js';
+import '../../chunks/bundle-rpehLlJe.js';
+import '../../sendbirdSelectors.js';
+import '../../CreateChannel/components/InviteUsers.js';
+import '../../chunks/bundle-hS8Jw8F1.js';
+import '../../chunks/bundle-PIrj5Rm1.js';
+import '../../chunks/bundle-8u3PnqsX.js';
+import '../../chunks/bundle-qlkGlvyT.js';
+import '../../chunks/bundle--BlhOpUS.js';
+import 'react-dom';
+import '../../ui/Button.js';
+import '../../chunks/bundle-ljRDDTki.js';
+import '../../ui/UserListItem.js';
+import '../../chunks/bundle-LbQw2cVx.js';
+import '../../ui/ImageRenderer.js';
+import '../../chunks/bundle-fNigAmmf.js';
+import '../../ui/MutedAvatarOverlay.js';
+import '../../ui/Checkbox.js';
+import '../../ui/UserProfile.js';
+import '../../ui/ContextMenu.js';
+import '../../ui/SortByRow.js';
+import '../../CreateChannel/components/SelectChannelType.js';
+
+var AddChannel = function () {
+    var _a = useState(false), showModal = _a[0], setShowModal = _a[1];
+    var _b = useChannelListContext(), overrideInviteUser = _b.overrideInviteUser, onBeforeCreateChannel = _b.onBeforeCreateChannel, onChannelSelect = _b.onChannelSelect;
+    return (React__default.createElement(AddGroupChannelView, { createChannelVisible: showModal, onChangeCreateChannelVisible: setShowModal, onCreateChannelClick: overrideInviteUser, onBeforeCreateChannel: onBeforeCreateChannel, onChannelCreated: onChannelSelect }));
+};
+
+export { AddChannel, AddChannel as default };
+//# sourceMappingURL=AddChannel.js.map

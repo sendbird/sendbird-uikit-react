@@ -54,8 +54,7 @@
     "stylelint": "stylelint 'src/**'",
     "generate-component": "plop",
     "deploy-storybook": "storybook-to-ghpages",
-    "inspect": "yarn test; yarn lint;",
-    "prepack": "yarn build"
+    "inspect": "yarn test; yarn lint;"
   },
   "repository": {
     "type": "git",

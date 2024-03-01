@@ -1,0 +1,77 @@
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+require('../../chunks/bundle-xbdnJE9-.js');
+require('react');
+require('../../chunks/bundle-Uw6P-cM9.js');
+require('../../chunks/bundle-Xa3hXyhu.js');
+require('../context.js');
+require('../../useSendbirdStateContext.js');
+var Channel_components_MessageInput = require('./MessageInput.js');
+require('@sendbird/chat/groupChannel');
+require('../../utils/message/getOutgoingMessageState.js');
+require('../../chunks/bundle-tNuJSOqI.js');
+require('../../chunks/bundle-U2YYVRfT.js');
+require('../../chunks/bundle-WKa05h0_.js');
+require('../../chunks/bundle-Yzhiyr0t.js');
+require('../../chunks/bundle-HY8cubCp.js');
+require('../../GroupChannel/components/SuggestedMentionList.js');
+require('../../chunks/bundle-rYFzQpzQ.js');
+require('../../chunks/bundle-KkCwxjVN.js');
+require('../../ui/Icon.js');
+require('../../chunks/bundle-jCTpndN0.js');
+require('../../chunks/bundle--jUKLwRX.js');
+require('../../ui/ImageRenderer.js');
+require('../../chunks/bundle-kftX5Dbs.js');
+require('../../chunks/bundle-SOIkTCep.js');
+require('../../chunks/bundle-pi-jk3re.js');
+require('../../chunks/bundle-ZK5PhDxY.js');
+require('../../withSendbird.js');
+require('../../Message/hooks/useDirtyGetMentions.js');
+require('../../ui/QuoteMessageInput.js');
+require('../../chunks/bundle--4Ob_RGQ.js');
+require('../../VoicePlayer/useVoicePlayer.js');
+require('../../chunks/bundle-jXnX-7jH.js');
+require('../../chunks/bundle-Atn5EZwu.js');
+require('../../VoiceRecorder/context.js');
+require('../../chunks/bundle-6hGNMML2.js');
+require('react-dom');
+require('../../chunks/bundle-4WvE40Un.js');
+require('../../ui/IconButton.js');
+require('../../ui/Button.js');
+require('../../VoiceRecorder/useVoiceRecorder.js');
+require('../../chunks/bundle-pKCe2hVu.js');
+require('../../ui/PlaybackTime.js');
+require('../../ui/ProgressBar.js');
+require('../../ui/TextButton.js');
+require('../../chunks/bundle-0uk8Bfy0.js');
+require('../../ui/MessageInput.js');
+require('../../chunks/bundle-d6SaHkg0.js');
+require('dompurify');
+require('../../chunks/bundle-h9YDQxpQ.js');
+require('../../chunks/bundle-fqNhuMna.js');
+require('../../chunks/bundle-yk__vyz_.js');
+require('../../chunks/bundle-2_j4r1Cc.js');
+require('../../GroupChannel/hooks/useHandleUploadFiles.js');
+require('../../hooks/useModal.js');
+require('../../chunks/bundle-a5LHhP6m.js');
+require('../../chunks/bundle-uzKywAVp.js');
+require('../../chunks/bundle-6xWNZugu.js');
+require('@sendbird/chat/message');
+require('../../chunks/bundle-JLP3WF2h.js');
+require('../../chunks/bundle-KOig1nUx.js');
+require('../../chunks/bundle-a7LVpeCR.js');
+require('../../chunks/bundle-kLoWlyQs.js');
+require('../../chunks/bundle-40zdhNFy.js');
+require('../../chunks/bundle-W24S10k5.js');
+require('../../chunks/bundle-VqRllkVd.js');
+require('../../chunks/bundle-H29alxvs.js');
+require('../../chunks/bundle-MK0CJsqZ.js');
+require('../../chunks/bundle-Q5GNNUqM.js');
+
+
+
+exports.MessageInputWrapper = Channel_components_MessageInput.MessageInputWrapper;
+exports.default = Channel_components_MessageInput.MessageInputWrapper;
+//# sourceMappingURL=MessageInputWrapper.js.map

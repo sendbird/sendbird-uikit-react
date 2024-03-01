@@ -6,10 +6,10 @@ const path = require('path');
 const { execSync } = require('child_process');
 const packageJson = require('../package.json');
 const packageTemplate = require('./package.template.json');
+
 const moduleExports = import('../rollup.module-exports.mjs');
 
-const getDistPath = (subPath) =>
-  path.resolve(__dirname, subPath != null ? `../dist${subPath}` : '../dist');
+const getDistPath = (subPath) => path.resolve(__dirname, subPath != null ? `../dist${subPath}` : '../dist');
 
 /**
  * Remove all the unnecessary fields from package.json in root of the project
@@ -24,16 +24,16 @@ async function createPackageJSON(json) {
   };
 
   Object.entries(exportList).forEach(([module, filePath]) => {
-    const dtsPath = `./dist/${filePath
+    const dtsPath = `${filePath
       .replace('src', 'types')
       .replace(/\.tsx?$/, '.d.ts')}`;
 
     typesVersions['*'][module === 'index' ? '.' : module] = [dtsPath];
     exports[module === 'index' ? '.' : `./${module}`] = {
       types: dtsPath,
-      require: `./dist/cjs/${module}.js`,
-      import: `./dist/${module}.js`,
-      default: `./dist/${module}.js`,
+      require: `./cjs/${module}.js`,
+      import: `./${module}.js`,
+      default: `./${module}.js`,
     };
   });
   return {
@@ -53,7 +53,7 @@ async function movePackageJSON() {
   fs.writeFileSync(
     packageJSONDistPath,
     JSON.stringify(cleanedUpPackageJSON, null, 2),
-    { flag: 'w' }
+    { flag: 'w' },
   );
 }
 
@@ -62,7 +62,7 @@ function copyCJSPackageJSON() {
   fs.writeFileSync(
     packageJSONDistPath,
     JSON.stringify({ type: 'commonjs' }, null, 2),
-    { flag: 'w' }
+    { flag: 'w' },
   );
 }
 
