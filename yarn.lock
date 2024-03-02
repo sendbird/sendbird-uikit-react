@@ -1834,6 +1834,90 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gathertown/uikit-react@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@gathertown/uikit-react@workspace:."
+  dependencies:
+    "@babel/core": ^7.23.2
+    "@babel/eslint-parser": ^7.22.15
+    "@babel/plugin-proposal-class-properties": ^7.18.6
+    "@babel/plugin-proposal-export-default-from": ^7.22.17
+    "@babel/plugin-proposal-private-property-in-object": ^7.21.11
+    "@babel/preset-env": ^7.23.2
+    "@babel/preset-react": ^7.22.15
+    "@babel/preset-typescript": ^7.23.2
+    "@rollup/plugin-babel": ^6.0.4
+    "@rollup/plugin-commonjs": ^25.0.7
+    "@rollup/plugin-eslint": ^9.0.5
+    "@rollup/plugin-node-resolve": ^15.2.3
+    "@rollup/plugin-replace": ^5.0.4
+    "@rollup/plugin-typescript": ^11.1.5
+    "@sendbird/chat": ^4.10.10
+    "@sendbird/uikit-tools": 0.0.1-alpha.62
+    "@storybook/addon-actions": ^6.5.10
+    "@storybook/addon-docs": ^6.5.10
+    "@storybook/addon-links": ^6.5.10
+    "@storybook/addons": ^6.5.10
+    "@storybook/preset-scss": ^1.0.3
+    "@storybook/react": ^6.5.10
+    "@storybook/storybook-deployer": ^2.8.12
+    "@svgr/rollup": ^8.1.0
+    "@svgr/webpack": ^5.1.0
+    "@testing-library/jest-dom": ^5.16.5
+    "@testing-library/react": ^13.4.0
+    "@testing-library/user-event": ^14.4.3
+    "@typescript-eslint/eslint-plugin": ^6.17.0
+    "@typescript-eslint/parser": ^6.17.0
+    autoprefixer: ^9.7.4
+    babel-jest: ^29.0.1
+    babel-loader: ^8.0.6
+    browserslist: ^4.14.5
+    caniuse-lite: ^1.0.30001148
+    css-loader: ^3.4.2
+    css-vars-ponyfill: ^2.3.2
+    date-fns: ^2.16.1
+    dompurify: ^3.0.1
+    eslint: ^8.40.0
+    eslint-config-airbnb: ^19.0.4
+    eslint-config-airbnb-base: ^15.0.0
+    eslint-plugin-babel: ^5.3.1
+    eslint-plugin-import: ^2.27.5
+    eslint-plugin-jsx-a11y: ^6.7.1
+    eslint-plugin-react: ^7.32.2
+    eslint-plugin-react-hooks: ^4.6.0
+    eslint-plugin-unused-imports: ^3.0.0
+    global-jsdom: ^8.5.0
+    husky: ^8.0.0
+    jest: 29.5.0
+    jest-environment-jsdom: 29.5.0
+    jest-extended: ^3.2.4
+    jsdom: ^20.0.0
+    np: ^7.5.0
+    plop: ^2.5.3
+    postcss: ^8.3.5
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    rollup: ^4.9.2
+    rollup-plugin-analyzer: ^4.0.0
+    rollup-plugin-copy: ^3.5.0
+    rollup-plugin-polyfill-node: ^0.13.0
+    rollup-plugin-postcss: ^4.0.2
+    rollup-plugin-scss: ^4.0.0
+    rollup-plugin-typescript2: ^0.36.0
+    rollup-plugin-visualizer: ^5.9.2
+    sass: ^1.55.0
+    sass-loader: ^10.2.0
+    stylelint: ^13.0.0
+    stylelint-config-sass-guidelines: ^7.0.0
+    ts-pattern: ^4.2.2
+    tslib: ^2.0.0
+    typescript: ^4.7.4
+  peerDependencies:
+    react: ^16.8.6 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.6 || ^17.0.0 || ^18.0.0
+  languageName: unknown
+  linkType: soft
+
 "@humanwhocodes/config-array@npm:^0.11.13":
   version: 0.11.13
   resolution: "@humanwhocodes/config-array@npm:0.11.13"
@@ -2659,90 +2743,6 @@ __metadata:
   checksum: aa84479f4706b6b06befc9ea8121ebd9f456bc1fec57a3fceae5fe713e0a3015224211d2a40c5f0fa9a3b7474987b753f1dcbc151daa39933efb59c685f22824
   languageName: node
   linkType: hard
-
-"@sendbird/uikit-react@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "@sendbird/uikit-react@workspace:."
-  dependencies:
-    "@babel/core": ^7.23.2
-    "@babel/eslint-parser": ^7.22.15
-    "@babel/plugin-proposal-class-properties": ^7.18.6
-    "@babel/plugin-proposal-export-default-from": ^7.22.17
-    "@babel/plugin-proposal-private-property-in-object": ^7.21.11
-    "@babel/preset-env": ^7.23.2
-    "@babel/preset-react": ^7.22.15
-    "@babel/preset-typescript": ^7.23.2
-    "@rollup/plugin-babel": ^6.0.4
-    "@rollup/plugin-commonjs": ^25.0.7
-    "@rollup/plugin-eslint": ^9.0.5
-    "@rollup/plugin-node-resolve": ^15.2.3
-    "@rollup/plugin-replace": ^5.0.4
-    "@rollup/plugin-typescript": ^11.1.5
-    "@sendbird/chat": ^4.10.10
-    "@sendbird/uikit-tools": 0.0.1-alpha.62
-    "@storybook/addon-actions": ^6.5.10
-    "@storybook/addon-docs": ^6.5.10
-    "@storybook/addon-links": ^6.5.10
-    "@storybook/addons": ^6.5.10
-    "@storybook/preset-scss": ^1.0.3
-    "@storybook/react": ^6.5.10
-    "@storybook/storybook-deployer": ^2.8.12
-    "@svgr/rollup": ^8.1.0
-    "@svgr/webpack": ^5.1.0
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": ^13.4.0
-    "@testing-library/user-event": ^14.4.3
-    "@typescript-eslint/eslint-plugin": ^6.17.0
-    "@typescript-eslint/parser": ^6.17.0
-    autoprefixer: ^9.7.4
-    babel-jest: ^29.0.1
-    babel-loader: ^8.0.6
-    browserslist: ^4.14.5
-    caniuse-lite: ^1.0.30001148
-    css-loader: ^3.4.2
-    css-vars-ponyfill: ^2.3.2
-    date-fns: ^2.16.1
-    dompurify: ^3.0.1
-    eslint: ^8.40.0
-    eslint-config-airbnb: ^19.0.4
-    eslint-config-airbnb-base: ^15.0.0
-    eslint-plugin-babel: ^5.3.1
-    eslint-plugin-import: ^2.27.5
-    eslint-plugin-jsx-a11y: ^6.7.1
-    eslint-plugin-react: ^7.32.2
-    eslint-plugin-react-hooks: ^4.6.0
-    eslint-plugin-unused-imports: ^3.0.0
-    global-jsdom: ^8.5.0
-    husky: ^8.0.0
-    jest: 29.5.0
-    jest-environment-jsdom: 29.5.0
-    jest-extended: ^3.2.4
-    jsdom: ^20.0.0
-    np: ^7.5.0
-    plop: ^2.5.3
-    postcss: ^8.3.5
-    react: ^18.2.0
-    react-dom: ^18.2.0
-    rollup: ^4.9.2
-    rollup-plugin-analyzer: ^4.0.0
-    rollup-plugin-copy: ^3.5.0
-    rollup-plugin-polyfill-node: ^0.13.0
-    rollup-plugin-postcss: ^4.0.2
-    rollup-plugin-scss: ^4.0.0
-    rollup-plugin-typescript2: ^0.36.0
-    rollup-plugin-visualizer: ^5.9.2
-    sass: ^1.55.0
-    sass-loader: ^10.2.0
-    stylelint: ^13.0.0
-    stylelint-config-sass-guidelines: ^7.0.0
-    ts-pattern: ^4.2.2
-    tslib: ^2.0.0
-    typescript: ^4.7.4
-  peerDependencies:
-    react: ^16.8.6 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.8.6 || ^17.0.0 || ^18.0.0
-  languageName: unknown
-  linkType: soft
 
 "@sendbird/uikit-tools@npm:0.0.1-alpha.62":
   version: 0.0.1-alpha.62

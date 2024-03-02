@@ -13,7 +13,7 @@ node_modules/
 
 # builds
 build
-# dist // Check in build to fix checksum issue
+dist
 .rpt2_cache
 release
 bundle-analysis.json
