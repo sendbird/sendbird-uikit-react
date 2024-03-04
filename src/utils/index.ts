@@ -13,7 +13,7 @@ import {
 import { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
 import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOutgoingMessageState';
-import { Nullable } from '../types';
+import {MessageContentMiddleContainerType, Nullable} from '../types';
 import { match } from 'ts-pattern';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
@@ -276,6 +276,24 @@ export const isThreadMessage = (message: CoreMessageType): boolean => (
 export const isTemplateMessage = (message: CoreMessageType): boolean => !!(
   message && message.extendedMessagePayload?.['template']
 );
+
+export const getMessageContentMiddleClassNameByContainerType = ({
+  message,
+  isMobile,
+  isMiddleFullWidth = true,
+}: {
+  message: CoreMessageType,
+  isMobile: boolean,
+  isMiddleFullWidth?: boolean,
+}): string => {
+  if (!isMobile || !isMiddleFullWidth) return '';
+
+  const containerType: string | undefined = message.extendedMessagePayload?.['ui']?.['container_type'];
+  return match(MessageContentMiddleContainerType.WIDE)
+    .with(MessageContentMiddleContainerType.WIDE, () => 'ui_container_type__wide')
+    .with(MessageContentMiddleContainerType.FULL, () => 'ui_container_type__wide')
+    .otherwise(() => '');
+}
 
 export const isOGMessage = (message: SendableMessageType): boolean => !!(
   message && isUserMessage(message) && message?.ogMetaData && (

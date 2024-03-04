@@ -1,13 +1,5 @@
 @import '../../styles/variables';
 
-:root {
-  --sendbird-feedback-buttons-container-height: 36px;
-  --sendbird-feedback-buttons-container-margin-top: 4px;
-  --sendbird-thread-replies-height: 28px;
-  --sendbird-thread-replies-margin-top: 4px;
-  --sendbird-feedback-buttons-container-margin-bottom: 4px;
-}
-
 .sendbird-message-content {
   display: inline-flex;
   flex-direction: row;
@@ -29,20 +21,19 @@
     }
   }
 
+  // Below is for both wide and full because this class only affects middle and right parts of message content.
+  .ui_container_type__wide {
+    @include mobile() {
+      max-width: 100%;
+    }
+  }
+
   .sendbird-message-content__middle {
     .sendbird-message-content__middle__quote-message.use-quote {
       bottom: -8px;
       margin-top: -8px;
     }
   }
-}
-
-.sendbird-message-content__feedback {
-  margin-bottom: calc(
-    var(--sendbird-feedback-buttons-container-height)
-    + var(--sendbird-feedback-buttons-container-margin-top)
-    + var(--sendbird-feedback-buttons-container-margin-bottom)
-  );
 }
 
 .sendbird-message-content__middle__quote-message__quote {
@@ -92,6 +83,11 @@
         &.sendbird-mouse-hover {
           display: none;
         }
+      }
+      .ui_container_type__wide {
+        min-width: fit-content;
+        bottom: -16px;
+        right: 0px;
       }
     }
 
@@ -239,6 +235,11 @@
           position: relative;
         }
       }
+      .ui_container_type__wide {
+        min-width: fit-content;
+        bottom: -16px;
+        left: 0px;
+      }
     }
   }
 
@@ -315,20 +316,21 @@
   margin-top: 4px;
 }
 
+// feedback buttons
+.sendbird-message-content__middle__feedback-buttons {
+  margin-top: 4px;
+}
+
 .sendbird-voice-message-item-body.sendbird-message-content__middle__message-item-body {
   height: 50px;
   min-width: 136px;
 }
 
 .sendbird-message-content__middle__body-container__feedback-buttons-container {
-  position: absolute;
-  bottom: calc(-1 * (var(--sendbird-feedback-buttons-container-height) + var(--sendbird-feedback-buttons-container-margin-top)));
+  margin-top: 4px;
+  position: relative;
   display: flex;
   gap: 4px;
-}
-
-.sendbird-message-content__middle__body-container__feedback-buttons-container_with-thread-replies {
-  bottom: calc(-1 * (var(--sendbird-feedback-buttons-container-height) + var(--sendbird-feedback-buttons-container-margin-top) + var(--sendbird-thread-replies-height) + var(--sendbird-thread-replies-margin-top)));
 }
 
 // Template message's default width should be 100% (fills empty space as much as possible)
