@@ -35,7 +35,7 @@ import MobileMenu from '../MobileMenu';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import ThreadReplies from '../ThreadReplies';
 import { ThreadReplySelectType } from '../../modules/Channel/context/const';
-import { Nullable, ReplyType } from '../../types';
+import { MessageContentMiddleContainerType, Nullable, ReplyType } from '../../types';
 import { noop } from '../../utils/utils';
 import MessageProfile, { MessageProfileProps } from './MessageProfile';
 import MessageBody, { MessageBodyProps } from './MessageBody';
@@ -47,6 +47,9 @@ import MessageFeedbackModal from '../../modules/Channel/components/MessageFeedba
 import { SbFeedbackStatus } from './types';
 import MessageFeedbackFailedModal from '../../modules/Channel/components/MessageFeedbackFailedModal';
 import { MobileBottomSheetProps } from '../MobileMenu/types';
+
+const TIMESTAMP_WIDTH = 71;
+const LEFT_WIDTH = 40;
 
 export interface MessageContentProps {
   className?: string | Array<string>;
@@ -76,7 +79,7 @@ export interface MessageContentProps {
   onQuoteMessageClick?: (props: { message: SendableMessageType }) => void;
   onMessageHeightChange?: () => void;
 
-  // For injecting customizable sub-components
+  // For injecting customizable subcomponents
   renderSenderProfile?: (props: MessageProfileProps) => ReactNode;
   renderMessageBody?: (props: MessageBodyProps) => ReactNode;
   renderMessageHeader?: (props: MessageHeaderProps) => ReactNode;
@@ -202,6 +205,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     isMobile,
     isMiddleFullWidth,
   });
+  const isFullType = message.extendedMessagePayload?.['ui']?.['container_type'] === MessageContentMiddleContainerType.FULL;
   const isTimestampBottom = !!messageContentMiddleClassNameByType;
 
   const onCloseFeedbackForm = () => {
@@ -256,7 +260,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
       if (contentRef.current) {
         const parentWidth = contentRef.current.parentNode.clientWidth;
         const elementWidth = contentRef.current.clientWidth;
-        setIsMiddleFullWidth(elementWidth + 80 > parentWidth);
+        setIsMiddleFullWidth(elementWidth + TIMESTAMP_WIDTH + LEFT_WIDTH > parentWidth);
       }
     };
     processMiddleWidth();
@@ -272,12 +276,14 @@ export default function MessageContent(props: MessageContentProps): ReactElement
         className,
         'sendbird-message-content',
         isByMeClassName,
+        messageContentMiddleClassNameByType,
       ])}
       onMouseOver={() => setMouseHover(true)}
       onMouseLeave={() => setMouseHover(false)}
     >
       {/* left */}
-      <div className={getClassName(['sendbird-message-content__left', isReactionEnabledClassName, isByMeClassName, useReplyingClassName])}>
+      {!isFullType
+        && <div className={getClassName(['sendbird-message-content__left', isReactionEnabledClassName, isByMeClassName, useReplyingClassName])}>
         {
           renderSenderProfile({
             ...props,
@@ -320,7 +326,8 @@ export default function MessageContent(props: MessageContentProps): ReactElement
             )}
           </div>
         )}
-      </div>
+      </div>}
+
       {/* middle */}
       <div
         className={getClassName([
@@ -448,7 +455,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
         {isTimestampBottom && <div
           style={{
             width: '100%',
-            height: timestampRef.current.clientHeight + 'px',
+            height: (timestampRef.current?.clientHeight ?? 0) + 'px',
             marginTop: '4px',
           }}
         />}
@@ -520,6 +527,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           </div>
         }
       </div>
+
       {/* right */}
       {showRightContent && (
       <div
@@ -558,6 +566,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           </div>
       </div>
       )}
+
       {
         showMenu && (
           message?.isUserMessage?.() || message?.isFileMessage?.() || message?.isMultipleFilesMessage?.()

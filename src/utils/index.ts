@@ -288,11 +288,17 @@ export const getMessageContentMiddleClassNameByContainerType = ({
 }): string => {
   if (!isMobile || !isMiddleFullWidth) return '';
 
+  /**
+   * FULL: template message only.
+   * WIDE: all message types.
+   */
   const containerType: string | undefined = message.extendedMessagePayload?.['ui']?.['container_type'];
-  return match(MessageContentMiddleContainerType.WIDE)
-    .with(MessageContentMiddleContainerType.WIDE, () => 'ui_container_type__wide')
-    .with(MessageContentMiddleContainerType.FULL, () => 'ui_container_type__wide')
-    .otherwise(() => '');
+  if (isTemplateMessage(message) && containerType === MessageContentMiddleContainerType.FULL) {
+    return 'ui_container_type__full';
+  } else if (containerType === MessageContentMiddleContainerType.WIDE) {
+    return 'ui_container_type__wide';
+  }
+  return '';
 };
 
 export const isOGMessage = (message: SendableMessageType): boolean => !!(
