@@ -97,6 +97,10 @@ export default {
           src: "./CHANGELOG.md",
           dest: "dist",
         },
+        {
+          src: "./yarn.lock", // Allows us to go yarn link path/to/package while doing local dev
+          dest: "dist",
+        },
       ],
     }),
     visualizer({
