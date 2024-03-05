@@ -241,13 +241,13 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     const getTotalBottom = (): number => {
       let sum = 2;
       if (timestampRef.current && isTimestampBottom) {
-        sum += 4 + (timestampRef.current?.clientHeight ?? 0);
+        sum += 4 + timestampRef.current.clientHeight;
       }
       if (threadRepliesRef.current) {
-        sum += 4 + (threadRepliesRef.current?.clientHeight ?? 0);
+        sum += 4 + threadRepliesRef.current.clientHeight;
       }
       if (feedbackButtonsRef.current) {
-        sum += 4 + (feedbackButtonsRef.current?.clientHeight ?? 0);
+        sum += 4 + feedbackButtonsRef.current.clientHeight;
       }
       return sum;
     };
@@ -264,7 +264,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     return () => {
       window.removeEventListener('resize', processMiddleWidth);
     };
-  }, []);
+  }, [isTimestampBottom]);
 
   return (
     <div
@@ -444,6 +444,14 @@ export default function MessageContent(props: MessageContentProps): ReactElement
             </Label>
           )}
         </div>
+        {/* bottom timestamp empty container */}
+        {isTimestampBottom && <div
+          style={{
+            width: '100%',
+            height: timestampRef.current.clientHeight + 'px',
+            marginTop: '4px',
+          }}
+        />}
         {/* thread replies */}
         {showThreadReplies && (
           <ThreadReplies
