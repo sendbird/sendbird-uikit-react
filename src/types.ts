@@ -91,4 +91,4 @@ export enum MessageContentMiddleContainerType {
   DEFAULT = 'default',
   WIDE = 'wide',
   FULL = 'full',
-};
+}

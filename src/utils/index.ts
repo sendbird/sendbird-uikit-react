@@ -13,7 +13,7 @@ import {
 import { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
 import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOutgoingMessageState';
-import {MessageContentMiddleContainerType, Nullable} from '../types';
+import { MessageContentMiddleContainerType, Nullable } from '../types';
 import { match } from 'ts-pattern';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
@@ -293,7 +293,7 @@ export const getMessageContentMiddleClassNameByContainerType = ({
     .with(MessageContentMiddleContainerType.WIDE, () => 'ui_container_type__wide')
     .with(MessageContentMiddleContainerType.FULL, () => 'ui_container_type__wide')
     .otherwise(() => '');
-}
+};
 
 export const isOGMessage = (message: SendableMessageType): boolean => !!(
   message && isUserMessage(message) && message?.ogMetaData && (

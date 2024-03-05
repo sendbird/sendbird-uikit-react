@@ -1,11 +1,10 @@
-import React, {RefObject} from 'react';
+import React, { RefObject } from 'react';
 
 import './index.scss';
 import { Typography, Colors } from './types';
 import { changeTypographyToClassName, changeColorToClassName } from './utils';
 import getStringSet from './stringSet';
 import { ObjectValues } from '../../utils/typeHelpers/objectValues';
-import {ThreadReplies} from '../ThreadReplies';
 
 type LabelProps = {
   className?: string | string[];

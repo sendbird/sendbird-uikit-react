@@ -1,4 +1,4 @@
-import React, {RefObject} from 'react';
+import React, { RefObject } from 'react';
 import { ThreadInfo } from '@sendbird/chat/message';
 
 import './index.scss';

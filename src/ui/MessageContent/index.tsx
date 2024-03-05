@@ -197,12 +197,11 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const showThreadReplies = isNotTemplateMessage && displayThreadReplies;
   const showRightContent = isNotTemplateMessage && !isByMe && !isMobile;
 
-  const messageContentMiddleClassNameByType=
-    getMessageContentMiddleClassNameByContainerType({
-      message,
-      isMobile,
-      isMiddleFullWidth
-    });
+  const messageContentMiddleClassNameByType = getMessageContentMiddleClassNameByContainerType({
+    message,
+    isMobile,
+    isMiddleFullWidth,
+  });
   const isTimestampBottom = !!messageContentMiddleClassNameByType;
 
   const onCloseFeedbackForm = () => {
@@ -242,13 +241,13 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     const getTotalBottom = (): number => {
       let sum = 2;
       if (timestampRef.current && isTimestampBottom) {
-        sum +=  4 + (timestampRef.current?.clientHeight ?? 0);
+        sum += 4 + (timestampRef.current?.clientHeight ?? 0);
       }
       if (threadRepliesRef.current) {
-        sum +=  4 + (threadRepliesRef.current?.clientHeight ?? 0);
+        sum += 4 + (threadRepliesRef.current?.clientHeight ?? 0);
       }
       if (feedbackButtonsRef.current) {
-        sum +=  4 + (feedbackButtonsRef.current?.clientHeight ?? 0);
+        sum += 4 + (feedbackButtonsRef.current?.clientHeight ?? 0);
       }
       return sum;
     };
@@ -330,7 +329,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           getMessageContentMiddleClassNameByContainerType({
             message,
             isMobile,
-          })
+          }),
         ])}
         {...(isMobile ? { ...longPress } : {})}
         ref={contentRef}
@@ -377,7 +376,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                 'sendbird-message-content__middle__body-container__created-at',
                 'left',
                 supposedHoverClassName,
-                messageContentMiddleClassNameByType
+                messageContentMiddleClassNameByType,
               ])}
               ref={timestampRef}
             >
