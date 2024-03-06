@@ -12,6 +12,7 @@ import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { ProcessedMessageTemplate, WaitingTemplateKeyData } from '../../lib/dux/appInfo/initialState';
 import FallbackTemplateMessageItemBody from './FallbackTemplateMessageItemBody';
 import LoadingTemplateMessageItemBody from './LoadingTemplateMessageItemBody';
+import Carousel from '../Carousel';
 import MessageTemplateErrorBoundary from '../MessageTemplate/messageTemplateErrorBoundary';
 
 const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 500; // It takes about 450ms for isError update
@@ -147,7 +148,13 @@ export function TemplateMessageItemBody({
         fallbackMessage={<FallbackTemplateMessageItemBody className={className} message={message} isByMe={isByMe}/>}
         logger={logger}
       >
-        <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItems}/>
+        <Carousel items={[
+          <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItems} />,
+          <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItems} />,
+          <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItems} />,
+          <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItems} />,
+          <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItems} />
+        ]} />
       </MessageTemplateErrorBoundary>
     </div>
   );
