@@ -38,7 +38,6 @@ function useToggle(
       clearTimeout(timer);
     }
     setTimer(setTimeout(() => {
-      setTimer(null);
       if (isFinallyOn !== isOn) {
         toggleHandler(isOn);
         setIsFinallyOn(isFinallyOn);
