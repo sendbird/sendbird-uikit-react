@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import pubSubFactory from '../../../../lib/pubSub';
 import { useOnScrollPositionChangeDetectorWithRef } from '../../../../hooks/useOnScrollReachedEndDetector';
 
@@ -46,6 +46,7 @@ export function useMessageListScroll(behavior: 'smooth' | 'auto') {
 
   const [scrollPubSub] = useState(() => pubSubFactory<ScrollTopics, ScrollTopicUnion>());
   const [isScrollBottomReached, setIsScrollBottomReached] = useState(false);
+  const [isScrollable, setIsScrollable] = useState<boolean | null>(null);
 
   useLayoutEffect(() => {
     const unsubscribes: { remove(): void }[] = [];
@@ -112,11 +113,18 @@ export function useMessageListScroll(behavior: 'smooth' | 'auto') {
     },
   });
 
+  useEffect(() => {
+    if (!scrollRef.current) return;
+    const { scrollHeight, clientHeight } = scrollRef.current;
+    setIsScrollable(scrollHeight > clientHeight);
+  }, [scrollRef.current]);
+
   return {
     scrollRef,
     scrollPubSub,
     isScrollBottomReached,
     setIsScrollBottomReached,
     scrollDistanceFromBottomRef,
+    isScrollable,
   };
 }
