@@ -5,6 +5,7 @@
     "module": "es2020",
     "esModuleInterop": true,
     "moduleResolution": "node",
+    "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@types", "./types"]
