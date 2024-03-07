@@ -17,6 +17,21 @@ describe('useToggle', () => {
     });
     expect(fn).toBeCalledTimes(1);
   });
+  it('toggle() with argument', async () => {
+    const fn = jest.fn((toggled: boolean, value: number) => {
+      expect(toggled).toBeTruthy();
+      expect(value).toBe(14);
+    });
+    const { result } = renderHook(() => useToggle(fn));
+    const toggle = result.current;
+    
+    act(() => { toggle(14); });
+
+    await new Promise<void>(resolve => {
+      setTimeout(() => resolve(), 600);
+    });
+    expect(fn).toBeCalledTimes(1);
+  });
   it('toggle() even times', async () => {
     const fn = jest.fn();
     const { result } = renderHook(() => useToggle(fn));

@@ -25,11 +25,12 @@ const DEFAULT_TOGGLE_THROTTLING_TIME = 500;
  *  toggle(); // this 2x calls do not call toggle handler because the value does not change eventually.
  */
 function useToggle(
-  toggleHandler: (isOn: boolean) => any,
+  toggleHandler: (isOn: boolean, arg?: any) => any,
   options: ToggleOptions = {},
 ) {
   const initialValue = options.initialValue ?? DEFAULT_TOGGLE_INITIAL_VALUE;
   const [isOn, setIsOn] = useState(initialValue);
+  const [argument, setArgument] = useState<any>(undefined);
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
   const [isFinallyOn, setIsFinallyOn] = useState(initialValue);
 
@@ -39,13 +40,14 @@ function useToggle(
     }
     setTimer(setTimeout(() => {
       if (isFinallyOn !== isOn) {
-        toggleHandler(isOn);
+        toggleHandler(isOn, argument);
         setIsFinallyOn(isFinallyOn);
       }
     }, options.throttlingTime ?? DEFAULT_TOGGLE_THROTTLING_TIME));
   }, [isOn]);
 
-  return () => {
+  return (arg?: any) => {
+    setArgument(arg);
     setIsOn((prev: boolean) => !prev);
   };
 }
