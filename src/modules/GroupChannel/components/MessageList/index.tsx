@@ -15,7 +15,6 @@ import FrozenNotification from '../FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
-import { useScrollBehavior } from './hooks/useScrollBehavior';
 import TypingIndicatorBubble from '../../../../ui/TypingIndicatorBubble';
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { getComponentKeyFromMessage } from '../../context/utils';
@@ -82,7 +81,6 @@ export const MessageList = ({
 
   const [unreadSinceDate, setUnreadSinceDate] = useState<Date>();
 
-  useScrollBehavior();
   useEffect(() => {
     if (isScrollBottomReached) {
       setUnreadSinceDate(undefined);
@@ -104,7 +102,7 @@ export const MessageList = ({
       if (latestDistance < currentDistance && (!isBottomMessageAffected || latestDistance < SCROLL_BUFFER)) {
         const diff = currentDistance - latestDistance;
         // Move the scroll as much as the height of the message has changed
-        scrollPubSub.publish('scroll', { top: elem.scrollTop + diff, lazy: false });
+        scrollPubSub.publish('scroll', { top: elem.scrollTop + diff, lazy: false, animated: false });
       }
     }
   };
@@ -121,7 +119,7 @@ export const MessageList = ({
           className="sendbird-conversation__messages__notification"
           count={newMessages.length}
           lastReadAt={unreadSinceDate}
-          onClick={scrollToBottom}
+          onClick={() => scrollToBottom()}
         />
       );
     },
@@ -131,8 +129,8 @@ export const MessageList = ({
       return (
         <div
           className="sendbird-conversation__scroll-bottom-button"
-          onClick={scrollToBottom}
-          onKeyDown={scrollToBottom}
+          onClick={() => scrollToBottom()}
+          onKeyDown={() => scrollToBottom()}
           tabIndex={0}
           role="button"
         >

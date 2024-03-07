@@ -33,7 +33,7 @@ type MessageActions = {
 };
 
 interface Params extends GroupChannelProviderProps, MessageListDataSource {
-  scrollToBottom(): Promise<void>;
+  scrollToBottom(animated?: boolean): Promise<void>;
   quoteMessage?: SendableMessageType;
   replyType: ReplyType;
 }
