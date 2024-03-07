@@ -90,6 +90,7 @@ export interface MessageViewProps extends MessageProps {
   setHighLightedMessageId?: React.Dispatch<React.SetStateAction<number>>;
   /** @deprecated * */
   onMessageHighlighted?: () => void;
+  usedInLegacy?: boolean;
 }
 
 // TODO: Refactor this component, is too complex now
@@ -138,6 +139,7 @@ const MessageView = (props: MessageViewProps) => {
     setAnimatedMessageId,
     animatedMessageId,
     onMessageAnimated,
+    usedInLegacy = true,
   } = props;
 
   const { dateLocale, stringSet } = useLocalization();
@@ -192,8 +194,8 @@ const MessageView = (props: MessageViewProps) => {
   }, [message?.updatedAt, (message as UserMessage)?.message]);
 
   useLayoutEffect(() => {
-    // Keep the scrollBottom value after fetching new message list
-    handleScroll?.(true);
+    // Keep the scrollBottom value after fetching new message list (but GroupChannel module is not needed.)
+    if (usedInLegacy) handleScroll?.(true);
   }, []);
 
   useLayoutEffect(() => {

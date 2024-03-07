@@ -81,6 +81,7 @@ export const Message = (props: MessageProps): React.ReactElement => {
       onMessageAnimated={onMessageAnimated}
       renderFileViewer={(props) => <FileViewer {...props} />}
       renderRemoveMessageModal={(props) => <RemoveMessageModal {...props} />}
+      usedInLegacy={false}
     />
   );
 };

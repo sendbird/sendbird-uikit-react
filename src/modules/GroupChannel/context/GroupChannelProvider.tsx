@@ -91,7 +91,7 @@ export interface GroupChannelContextType extends ContextBaseType, MessageListDat
   isScrollBottomReached: boolean;
   setIsScrollBottomReached: React.Dispatch<React.SetStateAction<boolean>>;
 
-  scrollToBottom: () => void;
+  scrollToBottom: (animated?: boolean) => void;
   scrollToMessage: (createdAt: number, messageId: number) => void;
   toggleReaction(message: SendableMessageType, emojiKey: string, isReacted: boolean): void;
 }
@@ -145,7 +145,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   const [fetchChannelError, setFetchChannelError] = useState<SendbirdError>(null);
 
   // Ref
-  const { scrollRef, scrollPubSub, scrollDistanceFromBottomRef, isScrollBottomReached, setIsScrollBottomReached } = useMessageListScroll();
+  const { scrollRef, scrollPubSub, scrollDistanceFromBottomRef, isScrollBottomReached, setIsScrollBottomReached } = useMessageListScroll(scrollBehavior);
   const messageInputRef = useRef(null);
 
   const toggleReaction = useToggleReactionCallback(currentChannel, config.logger);
@@ -179,7 +179,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
     },
     onMessagesReceived: () => {
       if (isScrollBottomReached && isContextMenuClosed()) {
-        scrollPubSub.publish('scrollToBottom', null);
+        scrollPubSub.publish('scrollToBottom', {});
       }
     },
     onChannelDeleted: () => {
@@ -211,7 +211,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
 
           if (viewUpdated) {
             const bottomOffset = prevViewInfo.scrollHeight - prevViewInfo.scrollTop;
-            scrollPubSub.publish('scroll', { top: nextViewInfo.scrollHeight - bottomOffset, lazy: false });
+            scrollPubSub.publish('scroll', { top: nextViewInfo.scrollHeight - bottomOffset, lazy: false, animated: false });
           }
         });
       });
@@ -232,7 +232,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
           const viewUpdated = prevViewInfo.scrollHeight < nextViewInfo.scrollHeight;
 
           if (viewUpdated) {
-            scrollPubSub.publish('scroll', { top: prevViewInfo.scrollTop, lazy: false });
+            scrollPubSub.publish('scroll', { top: prevViewInfo.scrollTop, lazy: false, animated: false });
           }
         });
       });
@@ -273,14 +273,14 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
       preventDuplicateRequest.lock();
       await preventDuplicateRequest.run(() => {
         return new Promise<void>((resolve) => {
-          scrollPubSub.publish('scrollToBottom', resolve);
+          scrollPubSub.publish('scrollToBottom', { resolve, animated: false });
         });
       });
       preventDuplicateRequest.release();
     }
 
     const onSentMessageFromOtherModule = (data: PubSubSendMessagePayload) => {
-      if (data.channel.url === channelUrl) scrollPubSub.publish('scrollToBottom', null);
+      if (data.channel.url === channelUrl) scrollPubSub.publish('scrollToBottom', {});
     };
     const subscribes = [
       config.pubSub.subscribe(PUBSUB_TOPICS.SEND_USER_MESSAGE, onSentMessageFromOtherModule),
@@ -288,7 +288,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
     ];
     return () => {
       subscribes.forEach((subscribe) => subscribe.remove());
-      scrollPubSub.publish('scrollToBottom', null);
+      scrollPubSub.publish('scrollToBottom', { animated: false });
     };
   }, [messageDataSource.initialized, channelUrl]);
 
@@ -297,7 +297,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
     if (typeof startingPoint === 'number') {
       // We do not handle animation for message search here.
       // Please update the animatedMessageId prop to trigger the animation.
-      scrollToMessage(startingPoint, 0, false);
+      scrollToMessage(startingPoint, 0, false, false);
     }
   }, [startingPoint]);
 
@@ -306,7 +306,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
     if (_animatedMessageId) setAnimatedMessageId(_animatedMessageId);
   }, [_animatedMessageId]);
 
-  const scrollToBottom = usePreservedCallback(async () => {
+  const scrollToBottom = usePreservedCallback(async (animated?: boolean) => {
     if (!scrollRef.current) return;
 
     setAnimatedMessageId(null);
@@ -314,9 +314,9 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
 
     if (config.isOnline && messageDataSource.hasNext()) {
       await messageDataSource.resetWithStartingPoint(Number.MAX_SAFE_INTEGER);
-      scrollPubSub.publish('scrollToBottom', null);
+      scrollPubSub.publish('scrollToBottom', { animated });
     } else {
-      scrollPubSub.publish('scrollToBottom', null);
+      scrollPubSub.publish('scrollToBottom', { animated });
     }
 
     if (currentChannel && !messageDataSource.hasNext()) {
@@ -325,43 +325,45 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
     }
   });
 
-  const scrollToMessage = usePreservedCallback(async (createdAt: number, messageId: number, animated = true) => {
-    // NOTE: To prevent multiple clicks on the message in the channel while scrolling
-    //  Check if it can be replaced with event.stopPropagation()
-    const element = scrollRef.current;
-    const parentNode = element?.parentNode as HTMLDivElement;
-    const clickHandler = {
-      activate() {
-        if (!element || !parentNode) return;
-        element.style.pointerEvents = 'auto';
-        parentNode.style.cursor = 'auto';
-      },
-      deactivate() {
-        if (!element || !parentNode) return;
-        element.style.pointerEvents = 'none';
-        parentNode.style.cursor = 'wait';
-      },
-    };
+  const scrollToMessage = usePreservedCallback(
+    async (createdAt: number, messageId: number, messageFocusAnimated?: boolean, scrollAnimated?: boolean) => {
+      // NOTE: To prevent multiple clicks on the message in the channel while scrolling
+      //  Check if it can be replaced with event.stopPropagation()
+      const element = scrollRef.current;
+      const parentNode = element?.parentNode as HTMLDivElement;
+      const clickHandler = {
+        activate() {
+          if (!element || !parentNode) return;
+          element.style.pointerEvents = 'auto';
+          parentNode.style.cursor = 'auto';
+        },
+        deactivate() {
+          if (!element || !parentNode) return;
+          element.style.pointerEvents = 'none';
+          parentNode.style.cursor = 'wait';
+        },
+      };
 
-    clickHandler.deactivate();
+      clickHandler.deactivate();
 
-    setAnimatedMessageId(null);
-    const message = messageDataSource.messages.find((it) => it.messageId === messageId || it.createdAt === createdAt);
-    if (message) {
-      const topOffset = getMessageTopOffset(message.createdAt);
-      if (topOffset) scrollPubSub.publish('scroll', { top: topOffset });
-      if (animated) setAnimatedMessageId(messageId);
-    } else {
-      await messageDataSource.resetWithStartingPoint(createdAt);
-      setTimeout(() => {
-        const topOffset = getMessageTopOffset(createdAt);
-        if (topOffset) scrollPubSub.publish('scroll', { top: topOffset, lazy: false });
-        if (animated) setAnimatedMessageId(messageId);
-      });
-    }
+      setAnimatedMessageId(null);
+      const message = messageDataSource.messages.find((it) => it.messageId === messageId || it.createdAt === createdAt);
+      if (message) {
+        const topOffset = getMessageTopOffset(message.createdAt);
+        if (topOffset) scrollPubSub.publish('scroll', { top: topOffset, animated: scrollAnimated });
+        if (messageFocusAnimated ?? true) setAnimatedMessageId(messageId);
+      } else {
+        await messageDataSource.resetWithStartingPoint(createdAt);
+        setTimeout(() => {
+          const topOffset = getMessageTopOffset(createdAt);
+          if (topOffset) scrollPubSub.publish('scroll', { top: topOffset, lazy: false, animated: scrollAnimated });
+          if (messageFocusAnimated ?? true) setAnimatedMessageId(messageId);
+        });
+      }
 
-    clickHandler.activate();
-  });
+      clickHandler.activate();
+    },
+  );
 
   const messageActions = useMessageActions({ ...props, ...messageDataSource, scrollToBottom, quoteMessage, replyType });
 
