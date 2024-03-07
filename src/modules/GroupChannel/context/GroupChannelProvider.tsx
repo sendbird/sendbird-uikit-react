@@ -326,7 +326,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   });
 
   const scrollToMessage = usePreservedCallback(
-    async (createdAt: number, messageId: number, messageFocusAnimated = true, scrollAnimated?: boolean) => {
+    async (createdAt: number, messageId: number, messageFocusAnimated?: boolean, scrollAnimated?: boolean) => {
       // NOTE: To prevent multiple clicks on the message in the channel while scrolling
       //  Check if it can be replaced with event.stopPropagation()
       const element = scrollRef.current;
@@ -351,13 +351,13 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
       if (message) {
         const topOffset = getMessageTopOffset(message.createdAt);
         if (topOffset) scrollPubSub.publish('scroll', { top: topOffset, animated: scrollAnimated });
-        if (messageFocusAnimated) setAnimatedMessageId(messageId);
+        if (messageFocusAnimated ?? true) setAnimatedMessageId(messageId);
       } else {
         await messageDataSource.resetWithStartingPoint(createdAt);
         setTimeout(() => {
           const topOffset = getMessageTopOffset(createdAt);
           if (topOffset) scrollPubSub.publish('scroll', { top: topOffset, lazy: false, animated: scrollAnimated });
-          if (messageFocusAnimated) setAnimatedMessageId(messageId);
+          if (messageFocusAnimated ?? true) setAnimatedMessageId(messageId);
         });
       }
 
