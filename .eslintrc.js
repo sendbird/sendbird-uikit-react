@@ -4,10 +4,7 @@ module.exports = {
     es6: true,
   },
   ignorePatterns: ['**/*.ts', '**/*.tsx', 'node_modules', 'src/legacy'],
-  extends: [
-    'plugin:react/recommended',
-    'airbnb',
-  ],
+  extends: ['plugin:react/recommended', 'airbnb', 'plugin:storybook/recommended'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',

@@ -1,0 +1,37 @@
+import { Meta, Story, Canvas, Controls, ArgsTable } from '@storybook/addon-docs';
+import Badge from '../ui/Badge';
+import * as BadgeStories from './Badge.stories';
+
+<Meta title="UI/Badge" component={Badge} of={BadgeStories} />
+
+# Badge
+
+The `Badge` component is designed to display numerical values or indicators, such as unread message counts. It can be customized to show different levels of counts and can adapt to various UI themes with custom class names.
+Utilize the Badge component to effectively represent numerical values or indicators within your user interface, enhancing the informational clarity of your application.
+
+<Canvas of={BadgeStories.Default} />
+<Controls />
+
+### Importing Badge
+
+To use the `Badge` component in your project, import it as follows:
+
+```tsx
+import Badge from '@sendbird/uikit-react/ui/Badge';
+```
+
+### Usage
+Here's how to use the Badge component in your application:
+
+<Canvas of={BadgeStories.Default} />
+
+
+With String Count
+Demonstrates the Badge component with a string count, typically used for displaying counts beyond a certain number, like '99+'.
+
+<Canvas of={BadgeStories.StringCount} />
+
+With Maximum Level
+Shows how to use the maxLevel prop to limit the maximum number of digits before showing an overflow indicator.
+
+<Canvas of={BadgeStories.MaxLevelThree} />

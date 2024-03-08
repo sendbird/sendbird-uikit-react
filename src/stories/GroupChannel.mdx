@@ -1,0 +1,22 @@
+import { Meta, Story, ArgsTable, Canvas, Controls } from '@storybook/addon-docs';
+import GroupChannel from '../modules/GroupChannel/index';
+import { GroupChannelProvider } from '../modules/GroupChannel/context/GroupChannelProvider';
+import * as GroupChannelStories from './GroupChannel.stories';
+
+<Meta title="Channel/GroupChannel" component={GroupChannel} of={GroupChannelStories}/>
+
+# GroupChannel Component
+
+The `GroupChannel` component implements the UI for a group channel. This component allows you to display messages in a chat group, send messages, and interact with the channel in various ways.
+
+<Canvas>
+  <Story name="Default">
+    {() => (
+      <GroupChannelProvider channelUrl="your_channel_url">
+        <GroupChannel />
+      </GroupChannelProvider>
+    )}
+  </Story>
+</Canvas>
+
+<Controls />

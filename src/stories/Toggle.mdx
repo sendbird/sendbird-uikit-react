@@ -1,0 +1,39 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs';
+import { Toggle } from '../ui/Toggle';
+import * as ToggleStories from './Toggle.stories';
+
+<Meta title="UI/Toggle" component={Toggle} of={ToggleStories} />
+
+# Toggle
+
+The `Toggle` component provides a user interface for switching between states, such as on/off. It combines both `ToggleContainer` and `ToggleUI` functionalities to offer a complete toggle experience.
+
+<Canvas of={ToggleStories.Default} />
+<Controls />
+
+### Importing Toggle
+
+To use the `Toggle` component in your application, import it as follows:
+
+```tsx
+import { Toggle, ToggleContainer, ToggleUI, useToggleContext } from '@sendbird/uikit-react/ui/Toggle';
+```
+
+### Usage
+
+The `Toggle` component can be customized using the following props:
+
+- `checked`: Boolean to control the toggle state.
+- `defaultChecked`: Sets the initial state.
+- `disabled`: Disables the toggle.
+- `reversed`: Reverses the toggle direction.
+- `width`: Sets the width of the toggle.
+- `animationDuration`: Controls the animation speed.
+- Additional props like `name`, `id`, `ariaLabel`, and `ariaLabelledby` for accessibility.
+
+### Examples
+Below are examples showcasing different states and configurations of the `Toggle` component.
+* Multiple ToggleUI within One ToggleContainer
+You can use multiple ToggleUI components within a single ToggleContainer to create interconnected toggle buttons. This allows for a complex toggle setup where multiple toggle states can be controlled and visualized together.
+
+<Canvas of={ToggleStories.MultipleUI}/>

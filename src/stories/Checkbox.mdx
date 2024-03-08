@@ -1,0 +1,43 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs';
+import Checkbox from '../ui/Checkbox';
+import * as CheckboxStories from './Checkbox.stories';
+
+<Meta title="UI/Checkbox" component={Checkbox} of={CheckboxStories} />
+
+# Checkbox
+
+The `Checkbox` component allows users to select one or more items from a set. It is commonly used for selections, toggles, and to present users with multiple choices. The `checked` property determines the initial value to be set.
+
+<Canvas of={CheckboxStories.Unchecked} />
+<Controls />
+
+### Importing Checkbox
+
+To integrate the Checkbox component into your application, use the following import statement:
+
+```tsx
+import Checkbox from '@sendbird/uikit-react/ui/Checkbox';
+```
+
+### Examples
+The Checkbox component can be used in various states, as demonstrated below:
+
+#### Unchecked
+Represents a Checkbox in its default state, not selected.
+
+<Canvas of={CheckboxStories.Unchecked} />
+
+#### Checked
+Shows the Checkbox in a selected state.
+
+<Canvas of={CheckboxStories.Checked} />
+
+#### Disabled Unchecked
+Illustrates a Checkbox that is disabled and not selected, indicating that the user cannot interact with it.
+
+<Canvas of={CheckboxStories.DisabledUnchecked} />
+
+#### Disabled Checked
+Displays a Checkbox that is both selected and disabled, showing that the selection is permanent or cannot be changed by the user interaction.
+
+<Canvas of={CheckboxStories.DisabledChecked} />

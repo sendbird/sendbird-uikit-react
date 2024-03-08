@@ -2,7 +2,7 @@ import './index.scss';
 import React, { MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
 
-import { FileViewerProps } from '.';
+import type { FileViewerProps } from '.';
 
 import type { CoreMessageType, SendableMessageType } from '../../../../utils';
 import Avatar from '../../../../ui/Avatar';
@@ -18,7 +18,7 @@ export interface FileViewerViewProps extends FileViewerProps {
   onDownloadClick?: (e: MouseEvent) => Promise<void>;
 }
 
-export const FileViewerView = ({
+export const FileViewerView: React.FC<FileViewerViewProps> = ({
   message,
   onCancel,
   deleteMessage,

@@ -9,8 +9,8 @@
 }
 
 .sendbird-bottomsheet__content {
-  z-index: 10001;
   position: fixed;
+  z-index: 10001;
   bottom: 0;
   left: 0;
 }
@@ -26,4 +26,3 @@
     background-color: t(overlay-2);
   }
 }
-

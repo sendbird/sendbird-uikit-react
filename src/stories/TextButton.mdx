@@ -1,0 +1,38 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs';
+import TextButton from '../ui/TextButton';
+import * as TextButtonStories from './TextButton.stories';
+
+<Meta title="UI/TextButton" component={TextButton} of={TextButtonStories} />
+
+# TextButton
+
+The `TextButton` component is a simple UI element that allows for clickable text elements. It supports customization such as color, disabled state, and the option to disable the underline.
+
+<Canvas of={TextButtonStories.Default} />
+<Controls />
+
+### Importing TextButton
+
+To integrate the `TextButton` component into your application, use the following import statement:
+
+```tsx
+import TextButton from '@sendbird/uikit-react/ui/TextButton';
+```
+
+### Examples
+Below are examples showcasing the TextButton component in its default state, disabled, and without underline.
+
+#### Default
+Displays a text button in its default style.
+
+<Canvas of={TextButtonStories.Default} />
+
+#### Disabled
+Illustrates the text button in a disabled state.
+
+<Canvas of={TextButtonStories.Disabled} />
+
+#### Without Underline
+Shows the text button with the underline disabled.
+
+<Canvas of={TextButtonStories.WithoutUnderline} />

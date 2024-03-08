@@ -1,0 +1,27 @@
+import { Meta, Story, ArgsTable, Canvas, Controls } from '@storybook/addon-docs';
+import GroupChannelList from '../modules/GroupChannelList/index';
+import SendbirdProvider from '../lib/Sendbird';
+import * as GroupChannelListStories from './GroupChannelList.stories';
+
+<Meta title="Module/GroupChannelList" component={GroupChannelList} of={GroupChannelListStories}/>
+
+# GroupChannelList Component
+
+The `GroupChannelList` component implements the UI for a list of group channels. Users can utilize this component to view the list of channels and interact with a specific channel by selecting it.
+
+<Canvas>
+  <Story name="Default" args={GroupChannelListStories.Default.args}>
+    {(args) => (
+      <div style={{ height: 500 }}>
+        <SendbirdProvider
+          appId="FEA2129A-EA73-4EB9-9E0B-EC738E7EB768"
+          userId="hoon20230802"
+        >
+          <GroupChannelList {...args} />
+        </SendbirdProvider>
+      </div>
+    )}
+  </Story>
+</Canvas>
+
+<Controls />
