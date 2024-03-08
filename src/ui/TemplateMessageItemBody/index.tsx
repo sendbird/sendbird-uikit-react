@@ -148,13 +148,15 @@ export function TemplateMessageItemBody({
         fallbackMessage={<FallbackTemplateMessageItemBody className={className} message={message} isByMe={isByMe}/>}
         logger={logger}
       >
-        <Carousel items={[
-          <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItems} />,
-          <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItems} />,
-          <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItems} />,
-          <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItems} />,
-          <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItems} />
-        ]} />
+        <Carousel
+          id={message.messageId + ''}
+          items={[
+            <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItems} />,
+            <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItems} />,
+            <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItems} />,
+            <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItems} />,
+            <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItems} />,
+          ]} />
       </MessageTemplateErrorBoundary>
     </div>
   );

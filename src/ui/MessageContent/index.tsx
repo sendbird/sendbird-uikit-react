@@ -157,7 +157,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const [showFeedbackOptionsMenu, setShowFeedbackOptionsMenu] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [feedbackFailedText, setFeedbackFailedText] = useState('');
-  const [isMiddleFullWidth, setIsMiddleFullWidth] = useState(false);
   const [totalBottom, setTotalBottom] = useState<number>(0);
 
   const { stringSet } = useContext(LocalizationContext);
@@ -203,7 +202,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const messageContentMiddleClassNameByType = getMessageContentMiddleClassNameByContainerType({
     message,
     isMobile,
-    isMiddleFullWidth,
   });
   const isFullType = message.extendedMessagePayload?.['ui']?.['container_type'] === MessageContentMiddleContainerType.FULL;
   const isTimestampBottom = !!messageContentMiddleClassNameByType;
@@ -256,18 +254,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
       return sum;
     };
     setTotalBottom(getTotalBottom());
-    const processMiddleWidth = () => {
-      if (contentRef.current) {
-        const parentWidth = contentRef.current.parentNode.clientWidth;
-        const elementWidth = contentRef.current.clientWidth;
-        setIsMiddleFullWidth(elementWidth + TIMESTAMP_WIDTH + LEFT_WIDTH > parentWidth);
-      }
-    };
-    processMiddleWidth();
-    window.addEventListener('resize', processMiddleWidth);
-    return () => {
-      window.removeEventListener('resize', processMiddleWidth);
-    };
   }, [isTimestampBottom]);
 
   return (

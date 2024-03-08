@@ -1,31 +1,33 @@
 import './index.scss';
-import React, {ReactElement, useRef, useState} from 'react';
-
-interface CarouselProps {
-  items: ReactElement[];
-}
+import React, { ReactElement, useRef, useState } from 'react';
 
 interface CarouselItemProps {
+  key: string;
   item: ReactElement;
   width: string;
 }
 
 function CarouselItem({
+  key,
   item,
-  width
+  width,
 }: CarouselItemProps): ReactElement {
-  return <div style={{ width: width }}>{
-    item
-  }</div>;
+  return <div key={key} style={{ maxWidth: '100%' }}>
+    <div style={{ width: width }}>{
+      item
+    }</div>
+  </div>
+
 }
 
-
 interface CarouselProps {
+  id: string;
   items: ReactElement[];
   gap?: number;
 }
 
 export function Carousel({
+  id,
   items,
   gap = 8,
 }: CarouselProps): ReactElement {
@@ -94,43 +96,30 @@ export function Carousel({
 
   return (
     <div
+      id={id}
+      ref={carouselRef}
       style={{
-        display: 'flex',
-        justifyContent: 'center',
-        position: 'relative',
-        width: '100%',
+        cursor: dragging ? 'grabbing' : 'grab',
       }}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       <div
-        ref={carouselRef}
+        className='sendbird-carousel-items-wrapper'
         style={{
-          width: '100%',
-          cursor: dragging ? 'grabbing' : 'grab',
+          transition: dragging ? 'none' : 'transform 0.3s ease',
+          transform: `translateX(${translateX}px)`,
+          gap: gap,
         }}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
       >
-        <div
-          style={{
-            display: 'flex',
-            transition: dragging ? 'none' : 'transform 0.3s ease',
-            transform: `translateX(${translateX}px)`,
-            boxSizing: 'border-box',
-            width: '100%',
-            gap: gap,
-          }}
-        >
-          {items.map((item, index) => (
-            <div key={index} style={{ flex: '0 0 100%', maxWidth: '100%' }}>
-              <CarouselItem item={item} width={itemWidth + 'px'}/>
-            </div>
-          ))}
-        </div>
+        {items.map((item, index) => (
+          <CarouselItem key={`${id}-${index}`} item={item} width={itemWidth + 'px'}/>
+        ))}
       </div>
     </div>
   );

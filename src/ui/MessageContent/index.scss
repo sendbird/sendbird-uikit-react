@@ -1,6 +1,6 @@
 @import '../../styles/variables';
 
-.sendbird-msg-hoc > .ui_container_type__full{
+.sendbird-msg-hoc > .ui_container_type__full {
   @include mobile() {
     padding: 0;
     width: 100%;
@@ -96,6 +96,11 @@
         &.sendbird-mouse-hover {
           display: none;
         }
+      }
+      .ui_container_type__default-carousel {
+        min-width: fit-content;
+        bottom: -16px;
+        right: 0px;
       }
       .ui_container_type__wide {
         min-width: fit-content;
@@ -252,6 +257,11 @@
           display: inline-flex;
           position: relative;
         }
+      }
+      .ui_container_type__default-carousel {
+        min-width: fit-content;
+        bottom: -20px;
+        left: 0px;
       }
       .ui_container_type__wide {
         min-width: fit-content;

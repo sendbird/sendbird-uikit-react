@@ -1,4 +1,4 @@
-import React, {ReactElement} from 'react';
+import React, { ReactElement } from 'react';
 import { BaseMessage } from '@sendbird/chat/message';
 import MessageTemplate, { MessageTemplateProps } from '../../../../ui/MessageTemplate';
 import { MessageProvider as MessageTemplateProvider } from '@sendbird/react-uikit-message-template-view';

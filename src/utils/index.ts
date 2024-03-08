@@ -277,16 +277,25 @@ export const isTemplateMessage = (message: CoreMessageType): boolean => !!(
   message && message.extendedMessagePayload?.['template']
 );
 
+export const isCarouselTemplateMessage = (message: CoreMessageType): boolean => (
+  // true
+  message && message.extendedMessagePayload?.['template']?.['type'] === 'carouselView'
+);
+
+export const UI_CONTAINER_TYPES = {
+  WIDE: 'ui_container_type__wide',
+  FULL: 'ui_container_type__full',
+  DEFAULT_CAROUSEL: 'ui_container_type__default-carousel',
+};
+
 export const getMessageContentMiddleClassNameByContainerType = ({
   message,
   isMobile,
-  isMiddleFullWidth = true,
 }: {
   message: CoreMessageType,
   isMobile: boolean,
-  isMiddleFullWidth?: boolean,
 }): string => {
-  if (!isMobile || !isMiddleFullWidth) return '';
+  if (!isMobile) return '';
 
   /**
    * FULL: template message only.
@@ -294,9 +303,14 @@ export const getMessageContentMiddleClassNameByContainerType = ({
    */
   const containerType: string | undefined = message.extendedMessagePayload?.['ui']?.['container_type'];
   if (isTemplateMessage(message) && containerType === MessageContentMiddleContainerType.FULL) {
-    return 'ui_container_type__full';
+    return UI_CONTAINER_TYPES.FULL;
   } else if (containerType === MessageContentMiddleContainerType.WIDE) {
-    return 'ui_container_type__wide';
+    return UI_CONTAINER_TYPES.WIDE;
+  } else if (
+    isCarouselTemplateMessage(message)
+    && (!containerType || containerType === MessageContentMiddleContainerType.DEFAULT)
+  ) {
+    return UI_CONTAINER_TYPES.DEFAULT_CAROUSEL;
   }
   return '';
 };
