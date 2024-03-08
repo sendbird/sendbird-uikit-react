@@ -16,8 +16,7 @@ function CarouselItem({
     <div style={{ width: width }}>{
       item
     }</div>
-  </div>
-
+  </div>;
 }
 
 interface CarouselProps {

@@ -48,9 +48,6 @@ import { SbFeedbackStatus } from './types';
 import MessageFeedbackFailedModal from '../../modules/Channel/components/MessageFeedbackFailedModal';
 import { MobileBottomSheetProps } from '../MobileMenu/types';
 
-const TIMESTAMP_WIDTH = 71;
-const LEFT_WIDTH = 40;
-
 export interface MessageContentProps {
   className?: string | Array<string>;
   userId: string;
