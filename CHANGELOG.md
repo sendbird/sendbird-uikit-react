@@ -1,5 +1,11 @@
 # Changelog - v3
 
+## [v3.13.1] (Mar 08, 2024)
+
+### Fixes
+- Fixed a GroupChannel scroll issue on Safari when scrollBehavior is set to smooth
+- Fixed the case where the calculation of the input height in the chat window was not functioning properly
+
 ## [v3.13.0] (Feb 29, 2024)
 #### Template message feature
 Now we are supporting template message feature!
