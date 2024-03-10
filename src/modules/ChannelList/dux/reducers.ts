@@ -8,13 +8,14 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 export default function channelListReducer(
   state: ChannelListInitialStateType,
-  action: ChannelListActionTypes,
+  action: ChannelListActionTypes
 ): ChannelListInitialStateType {
   return (
     match(action)
       .with({ type: channelListActions.INIT_CHANNELS_START }, ({ payload }) => ({
         ...state,
         loading: true,
+        error: null,
         currentUserId: payload.currentUserId,
       }))
       .with({ type: channelListActions.RESET_CHANNEL_LIST }, () => {
@@ -26,6 +27,7 @@ export default function channelListReducer(
           ...state,
           initialized: true,
           loading: false,
+          error: null,
           allChannels: channelList,
           disableAutoSelect,
           currentChannel:
@@ -37,8 +39,16 @@ export default function channelListReducer(
         return {
           ...state,
           loading: false,
+          error: null,
           allChannels: channelList,
           currentChannel,
+        };
+      })
+      .with({ type: channelListActions.FETCH_CHANNELS_START }, (action) => {
+        return {
+          ...state,
+          loading: true,
+          error: null,
         };
       })
       .with({ type: channelListActions.FETCH_CHANNELS_SUCCESS }, (action) => {
@@ -47,6 +57,13 @@ export default function channelListReducer(
         return {
           ...state,
           allChannels: [...state.allChannels, ...filteredChannels],
+        };
+      })
+      .with({ type: P.union(channelListActions.FETCH_CHANNELS_FAILURE, channelListActions.INIT_CHANNELS_FAILURE) }, (action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.payload ?? new Error('Failed to fetch channels'),
         };
       })
       .with({ type: channelListActions.CREATE_CHANNEL }, (action) => {
@@ -105,18 +122,15 @@ export default function channelListReducer(
           allChannels: allChannels.filter(({ url }) => url !== channel?.url),
         };
       })
-      .with(
-        { type: P.union(channelListActions.LEAVE_CHANNEL_SUCCESS, channelListActions.ON_CHANNEL_DELETED) },
-        (action) => {
-          const channelUrl = action.payload;
-          const allChannels = state.allChannels.filter(({ url }) => url !== channelUrl);
-          return {
-            ...state,
-            currentChannel: channelUrl === state.currentChannel?.url ? allChannels[0] : state.currentChannel,
-            allChannels,
-          };
-        },
-      )
+      .with({ type: P.union(channelListActions.LEAVE_CHANNEL_SUCCESS, channelListActions.ON_CHANNEL_DELETED) }, (action) => {
+        const channelUrl = action.payload;
+        const allChannels = state.allChannels.filter(({ url }) => url !== channelUrl);
+        return {
+          ...state,
+          currentChannel: channelUrl === state.currentChannel?.url ? allChannels[0] : state.currentChannel,
+          allChannels,
+        };
+      })
       .with({ type: channelListActions.ON_USER_LEFT }, (action) => {
         const { channel, isMe } = action.payload;
         const { allChannels, currentUserId, currentChannel, channelListQuery, disableAutoSelect } = state;
@@ -168,7 +182,7 @@ export default function channelListReducer(
             channelListActions.ON_USER_JOINED,
             channelListActions.ON_CHANNEL_CHANGED,
             channelListActions.ON_READ_RECEIPT_UPDATED,
-            channelListActions.ON_DELIVERY_RECEIPT_UPDATED,
+            channelListActions.ON_DELIVERY_RECEIPT_UPDATED
           ),
         },
         (action) => {
@@ -201,9 +215,9 @@ export default function channelListReducer(
 
           if (
             // When marking as read the channel
-            unreadMessageCount === 0
+            unreadMessageCount === 0 &&
             // @ts-ignore - When sending a message by the current peer
-            && channel?.lastMessage?.sender?.userId !== currentUserId
+            channel?.lastMessage?.sender?.userId !== currentUserId
           ) {
             // Don't move to the top
             return {
@@ -216,7 +230,7 @@ export default function channelListReducer(
             ...state,
             allChannels: [channel, ...allChannels.filter(({ url }) => url !== channel.url)],
           };
-        },
+        }
       )
       .with({ type: channelListActions.SET_CURRENT_CHANNEL }, (action) => {
         return {
@@ -227,8 +241,7 @@ export default function channelListReducer(
       .with({ type: channelListActions.ON_LAST_MESSAGE_UPDATED }, (action) => {
         return {
           ...state,
-          allChannels: state.allChannels.map((channel) => channel?.url === action.payload.url ? action.payload : channel,
-          ),
+          allChannels: state.allChannels.map((channel) => (channel?.url === action.payload.url ? action.payload : channel)),
         };
       })
       .with({ type: channelListActions.ON_CHANNEL_FROZEN }, (action) => {

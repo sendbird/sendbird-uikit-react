@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react';
 
-import {
-  GroupChannel,
-  GroupChannelListQuery,
-} from '@sendbird/chat/groupChannel';
+import { GroupChannel, GroupChannelListQuery } from '@sendbird/chat/groupChannel';
 import { Logger } from '../../../../lib/SendbirdState';
 import useReconnectOnIdle from './useReconnectOnIdle';
 import { SdkStore } from '../../../../lib/types';
@@ -23,7 +20,7 @@ interface UseHandleReconnectForChannelListProps {
   logger: Logger;
   sdk: SdkStore['sdk'];
   currentGroupChannel: GroupChannel;
-  channelListDispatcher: React.Dispatch<ChannelListActionTypes>
+  channelListDispatcher: React.Dispatch<ChannelListActionTypes>;
   setChannelSource: (query: GroupChannelListQuery) => void;
   userFilledChannelListQuery: GroupChannelListQueryParamsInternal;
   sortChannelList: (channels: GroupChannel[]) => GroupChannel[];
@@ -89,9 +86,7 @@ function useHandleReconnectForChannelList({
               // select first channel
               let newCurrentChannel: GroupChannel = !disableAutoSelect ? sortedChannelList[0] : null;
               if (currentGroupChannel?.url) {
-                const foundChannel = sortedChannelList.find((channel) => (
-                  channel.url === currentGroupChannel.url
-                ));
+                const foundChannel = sortedChannelList.find((channel) => channel.url === currentGroupChannel.url);
                 if (foundChannel) {
                   newCurrentChannel = foundChannel;
                 }
@@ -113,12 +108,11 @@ function useHandleReconnectForChannelList({
               }
             })
             .catch((err) => {
-              if (err) {
-                logger.error('ChannelList refresh - could not fetch channels', err);
-                channelListDispatcher({
-                  type: channelActions.INIT_CHANNELS_FAILURE,
-                });
-              }
+              logger.error('ChannelList refresh - could not fetch channels', err);
+              channelListDispatcher({
+                type: channelActions.INIT_CHANNELS_FAILURE,
+                payload: err,
+              });
             });
         } else {
           logger.info('ChannelList refresh - there are no more channels');

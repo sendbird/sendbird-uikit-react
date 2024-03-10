@@ -1,3 +1,4 @@
+import { SendbirdError } from '@sendbird/chat';
 import type { GroupChannel, GroupChannelListQuery } from '@sendbird/chat/groupChannel';
 import { CreateAction } from '../../../utils/typeHelpers/reducers/createAction';
 
@@ -44,7 +45,7 @@ type CHANNEL_LIST_PAYLOAD_TYPES = {
   [FETCH_CHANNELS_START]: null;
 
   [FETCH_CHANNELS_SUCCESS]: GroupChannel[];
-  [FETCH_CHANNELS_FAILURE]: null;
+  [FETCH_CHANNELS_FAILURE]: SendbirdError | null;
   [INIT_CHANNELS_START]: {
     currentUserId: string;
   };
@@ -56,7 +57,7 @@ type CHANNEL_LIST_PAYLOAD_TYPES = {
     channelList: GroupChannel[];
     currentChannel: GroupChannel | null;
   };
-  [INIT_CHANNELS_FAILURE]: null;
+  [INIT_CHANNELS_FAILURE]: SendbirdError | null;
   [INVITE_MEMBERS_SUCESS]: null;
   [ON_USER_JOINED]: GroupChannel;
   [ON_CHANNEL_DELETED]: ChannelURL;
@@ -73,7 +74,7 @@ type CHANNEL_LIST_PAYLOAD_TYPES = {
   [ON_DELIVERY_RECEIPT_UPDATED]: GroupChannel;
   [CHANNEL_LIST_PARAMS_UPDATED]: {
     channelListQuery: GroupChannelListQuery;
-    currentUserId?: string,
+    currentUserId?: string;
   };
 };
 

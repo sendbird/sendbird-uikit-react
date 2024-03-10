@@ -127,10 +127,7 @@ type CreateChannelListQueryParams = {
   userFilledChannelListQuery: GroupChannelListQueryParamsInternal;
 };
 
-export const createChannelListQuery = ({
-  sdk,
-  userFilledChannelListQuery = {},
-}: CreateChannelListQueryParams): GroupChannelListQuery => {
+export const createChannelListQuery = ({ sdk, userFilledChannelListQuery = {} }: CreateChannelListQueryParams): GroupChannelListQuery => {
   const params: GroupChannelListQueryParamsInternal = {
     includeEmpty: false,
     limit: 20, // The value of pagination limit could be set up to 100.
@@ -243,12 +240,16 @@ function setupChannelList({
         }
       })
       .catch((err) => {
-        if (err) {
-          logger.error('ChannelList - couldnt fetch channels', err);
-          channelListDispatcher({
-            type: channelActions.INIT_CHANNELS_FAILURE,
-          });
+        if (sdk.groupChannel.removeGroupChannelHandler) {
+          logger.error('ChannelList - removing group channel handlers', err);
+          sdk.groupChannel.removeGroupChannelHandler(sdkChannelHandlerId);
         }
+
+        logger.error('ChannelList - couldnt fetch channels', err);
+        channelListDispatcher({
+          type: channelActions.INIT_CHANNELS_FAILURE,
+          payload: err,
+        });
       });
   } else {
     logger.info('ChannelList - there are no more channels');
