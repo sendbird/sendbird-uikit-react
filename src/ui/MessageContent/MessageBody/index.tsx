@@ -4,7 +4,7 @@ import {
   CoreMessageType,
   getUIKitMessageType, getUIKitMessageTypes, isTemplateMessage, isMultipleFilesMessage,
   isOGMessage, isSendableMessage,
-  isTextMessage, isThumbnailMessage, isVoiceMessage,
+  isTextMessage, isThumbnailMessage, isVoiceMessage, UI_CONTAINER_TYPES,
 } from '../../../utils';
 import { BaseMessage, FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
 import OGMessageItemBody from '../../OGMessageItemBody';
@@ -35,6 +35,8 @@ export interface MessageBodyProps {
   config: SendBirdStateConfig;
   isReactionEnabledInChannel: boolean;
   isByMe: boolean;
+
+  conditionalSetUiContainerType?: (newUiContainerType: UI_CONTAINER_TYPES) => void;
 }
 
 export default function MessageBody(props: MessageBodyProps): ReactElement {
@@ -49,6 +51,8 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
     config,
     isReactionEnabledInChannel,
     isByMe,
+
+    conditionalSetUiContainerType,
   } = props;
 
   const threadMessageKindKey = useThreadMessageKindKeySelector({
@@ -66,6 +70,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         message={message as BaseMessage}
         isByMe={isByMe}
         theme={config?.theme as SendbirdTheme}
+        conditionalSetUiContainerType={conditionalSetUiContainerType}
       />
     ))
     .when((message) => isOgMessageEnabledInGroupChannel

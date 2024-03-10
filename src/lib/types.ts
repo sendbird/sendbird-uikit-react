@@ -257,6 +257,6 @@ export type SendbirdChatInitParams = Omit<SendbirdChatParams<Module[]>, 'appId'>
 export type CustomExtensionParams = Record<string, string>;
 
 export type SendbirdProviderUtils = {
-  updateMessageTemplatesInfo: (templateKey: string, createdAt: number) => Promise<void>;
+  updateMessageTemplatesInfo: (templateKeys: string[], createdAt: number) => Promise<void>;
   getCachedTemplate: (key: string) => ProcessedMessageTemplate | null;
 };

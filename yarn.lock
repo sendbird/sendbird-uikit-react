@@ -2647,15 +2647,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sendbird/chat@npm:^4.11.0":
-  version: 4.11.0
-  resolution: "@sendbird/chat@npm:4.11.0"
+"@sendbird/chat@file:/Users/liamcho/GitHub/messaging-js/dist::locator=%40sendbird%2Fuikit-react%40workspace%3A.":
+  version: 4.11.3
+  resolution: "@sendbird/chat@file:/Users/liamcho/GitHub/messaging-js/dist#/Users/liamcho/GitHub/messaging-js/dist::hash=348316&locator=%40sendbird%2Fuikit-react%40workspace%3A."
   peerDependencies:
     "@react-native-async-storage/async-storage": ^1.17.6
   peerDependenciesMeta:
     "@react-native-async-storage/async-storage":
       optional: true
-  checksum: 6caa0cbde6407a4b71862374ec0e6cb37ec900551303a95f43982e909e2e68883b688d6595a6c8097a3901f5da990679b08a9c18312cbb69e1815eaaa865c525
+  checksum: 9ca566b859dbdfa85546541ca0ad46650072c3c13ebc44b3fa8b350b8e5ef56708119793f86dd9ea5239fd639856c4efa4d3631c73dece2c92dd98c6b2784455
   languageName: node
   linkType: hard
 
@@ -2699,7 +2699,7 @@ __metadata:
     "@rollup/plugin-node-resolve": ^15.2.3
     "@rollup/plugin-replace": ^5.0.4
     "@rollup/plugin-typescript": ^11.1.5
-    "@sendbird/chat": ^4.11.0
+    "@sendbird/chat": "file:/Users/liamcho/GitHub/messaging-js/dist"
     "@sendbird/react-uikit-message-template-view": 0.0.1-alpha.65
     "@sendbird/uikit-tools": 0.0.1-alpha.65
     "@storybook/addon-actions": ^6.5.10

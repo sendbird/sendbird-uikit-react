@@ -1,4 +1,5 @@
 import type { ComponentsUnion } from '@sendbird/uikit-message-template';
+import type {ViewStyle} from '@sendbird/uikit-message-template/src/types/styles';
 
 type SendbirdFontWeight = 'bold' | 'normal';
 
@@ -79,12 +80,23 @@ export type MessageTemplateTheme = {
   };
 };
 
-export type MessageTemplateItem = ComponentsUnion['properties'];
+export type MessageTemplateItem = ComponentsUnion['properties'] | CarouselItem;
+export interface CarouselItem {
+  type: string;
+  viewStyle?: ViewStyle;
+  spacing: number;
+  items: string; // Reservation key. ex. "@some_key"
+}
 
-export type MessageTemplateData = {
+// FIXME: This needs to be updated in the future.
+export type MessageTemplateData = SimpleTemplateData & {
+  view_variables?: Record<string, SimpleTemplateData[]>; // Reference: https://sendbird.atlassian.net/wiki/spaces/UK/pages/2265484095/UIKit+message+template+syntax+extension+proposal#View-variables-in-message-payload
+};
+
+export type SimpleTemplateData = {
   key: string;
   variables?: Record<string, any>;
-};
+}
 
 export type SendbirdMessageTemplate = {
   key: string;
@@ -96,7 +108,6 @@ export type SendbirdMessageTemplate = {
       items: MessageTemplateItem[];
     };
   };
-  color_variables?: Record<string, string>;
-
   name?: string;
+  color_variables?: Record<string, string>;
 };

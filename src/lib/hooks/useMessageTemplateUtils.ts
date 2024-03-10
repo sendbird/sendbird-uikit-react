@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppInfoStateType, MessageTemplatesInfo, ProcessedMessageTemplate } from '../dux/appInfo/initialState';
 import { SendbirdMessageTemplate } from '../../ui/TemplateMessageItemBody/types';
-import { getProcessedTemplate, getProcessedTemplates } from '../dux/appInfo/utils';
+import {getProcessedTemplate, getProcessedTemplatesMap} from '../dux/appInfo/utils';
 import SendbirdChat from '@sendbird/chat';
 import { APP_INFO_ACTIONS, AppInfoActionTypes } from '../dux/appInfo/actionTypes';
 import { CACHED_MESSAGE_TEMPLATES_KEY, CACHED_MESSAGE_TEMPLATES_TOKEN_KEY } from '../../utils/consts';
@@ -18,15 +18,15 @@ interface UseMessageTemplateUtilsProps {
 
 export interface UseMessageTemplateUtilsWrapper {
   getCachedTemplate: (key: string) => ProcessedMessageTemplate | null;
-  updateMessageTemplatesInfo: (templateKey: string, requestedAt: number) => Promise<void>;
+  updateMessageTemplatesInfo: (templateKeys: string[], requestedAt: number) => Promise<void>;
   initializeMessageTemplatesInfo: (readySdk: SendbirdChat) => Promise<void>;
 }
 
 const {
   INITIALIZE_MESSAGE_TEMPLATES_INFO,
-  UPSERT_MESSAGE_TEMPLATE,
-  UPSERT_WAITING_TEMPLATE_KEY,
-  MARK_ERROR_WAITING_TEMPLATE_KEY,
+  UPSERT_MESSAGE_TEMPLATES,
+  UPSERT_WAITING_TEMPLATE_KEYS,
+  MARK_ERROR_WAITING_TEMPLATE_KEYS,
 } = APP_INFO_ACTIONS;
 
 export default function useMessageTemplateUtils({
@@ -105,7 +105,7 @@ export default function useMessageTemplateUtils({
       const parsedTemplates = await fetchAllMessageTemplates(readySdk);
       const newMessageTemplatesInfo: MessageTemplatesInfo = {
         token: sdkMessageTemplateToken,
-        templatesMap: getProcessedTemplates(parsedTemplates),
+        templatesMap: getProcessedTemplatesMap(parsedTemplates),
       };
       appInfoDispatcher({ type: INITIALIZE_MESSAGE_TEMPLATES_INFO, payload: newMessageTemplatesInfo });
       localStorage.setItem(CACHED_MESSAGE_TEMPLATES_TOKEN_KEY, sdkMessageTemplateToken);
@@ -118,7 +118,7 @@ export default function useMessageTemplateUtils({
       const parsedTemplates: SendbirdMessageTemplate[] = JSON.parse(cachedMessageTemplates);
       const newMessageTemplatesInfo: MessageTemplatesInfo = {
         token: sdkMessageTemplateToken,
-        templatesMap: getProcessedTemplates(parsedTemplates),
+        templatesMap: getProcessedTemplatesMap(parsedTemplates),
       };
       appInfoDispatcher({ type: INITIALIZE_MESSAGE_TEMPLATES_INFO, payload: newMessageTemplatesInfo });
     }
@@ -128,48 +128,59 @@ export default function useMessageTemplateUtils({
    * If given message is a template message with template key and if the key does not exist in the cache,
    * update the cache by fetching the template.
    */
-  const updateMessageTemplatesInfo = async (templateKey: string, requestedAt: number): Promise<void> => {
+  const updateMessageTemplatesInfo = async (templateKeys: string[], requestedAt: number): Promise<void> => {
     if (appInfoDispatcher) {
       appInfoDispatcher({
-        type: UPSERT_WAITING_TEMPLATE_KEY,
+        type: UPSERT_WAITING_TEMPLATE_KEYS,
         payload: {
-          key: templateKey,
+          keys: templateKeys,
           requestedAt,
         },
       });
 
-      let parsedTemplate: SendbirdMessageTemplate | null = null;
+      let newParsedTemplates: SendbirdMessageTemplate[] | null = [];
       try {
-        const newTemplate = await sdk.message.getMessageTemplate(templateKey);
-        parsedTemplate = JSON.parse(newTemplate.template);
+        let hasMore = true;
+        let token = null;
+        while (hasMore) {
+          const result = await sdk.message.getMessageTemplatesByToken(token, {
+            keys: templateKeys,
+          });
+          result.templates.forEach((newTemplate) => {
+            newParsedTemplates.push(JSON.parse(newTemplate.template));
+          });
+          hasMore = result.hasMore;
+          token = result.token;
+        }
       } catch (e) {
-        logger?.error?.('Sendbird | fetchProcessedMessageTemplate failed', e);
+        logger?.error?.('Sendbird | fetchProcessedMessageTemplates failed', e);
       }
 
-      if (parsedTemplate) {
+      if (newParsedTemplates.length > 0) {
         // Update cache
         const cachedMessageTemplates: string | null = localStorage.getItem(CACHED_MESSAGE_TEMPLATES_KEY);
         if (cachedMessageTemplates) {
           const parsedTemplates: SendbirdMessageTemplate[] = JSON.parse(cachedMessageTemplates);
-          parsedTemplates.push(parsedTemplate);
+          parsedTemplates.concat(newParsedTemplates);
           localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify(parsedTemplates));
         } else {
-          localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify([parsedTemplate]));
+          localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify([newParsedTemplates]));
         }
         // Update memory
-        const processedTemplate: ProcessedMessageTemplate = getProcessedTemplate(parsedTemplate);
         appInfoDispatcher({
-          type: UPSERT_MESSAGE_TEMPLATE,
-          payload: {
-            key: templateKey,
-            template: processedTemplate,
-          },
+          type: UPSERT_MESSAGE_TEMPLATES,
+          payload: newParsedTemplates.map((newParsedTemplate) => {
+            return {
+              key: newParsedTemplate.key,
+              template: getProcessedTemplate(newParsedTemplate),
+            };
+          }),
         });
       } else {
         appInfoDispatcher({
-          type: MARK_ERROR_WAITING_TEMPLATE_KEY,
+          type: MARK_ERROR_WAITING_TEMPLATE_KEYS,
           payload: {
-            key: templateKey,
+            keys: templateKeys,
           },
         });
       }

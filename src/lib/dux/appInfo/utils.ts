@@ -11,7 +11,7 @@ export const getProcessedTemplate = (parsedTemplate: SendbirdMessageTemplate): P
   };
 };
 
-export const getProcessedTemplates = (
+export const getProcessedTemplatesMap = (
   parsedTemplates: SendbirdMessageTemplate[],
 ): Record<string, ProcessedMessageTemplate> => {
   const processedTemplates = {};
