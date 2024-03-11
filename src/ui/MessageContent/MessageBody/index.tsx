@@ -4,7 +4,7 @@ import {
   CoreMessageType,
   getUIKitMessageType, getUIKitMessageTypes, isTemplateMessage, isMultipleFilesMessage,
   isOGMessage, isSendableMessage,
-  isTextMessage, isThumbnailMessage, isVoiceMessage, UI_CONTAINER_TYPES,
+  isTextMessage, isThumbnailMessage, isVoiceMessage,
 } from '../../../utils';
 import { BaseMessage, FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
 import OGMessageItemBody from '../../OGMessageItemBody';
@@ -66,6 +66,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         message={message as BaseMessage}
         isByMe={isByMe}
         theme={config?.theme as SendbirdTheme}
+        onMessageHeightChange={onMessageHeightChange}
       />
     ))
     .when((message) => isOgMessageEnabledInGroupChannel

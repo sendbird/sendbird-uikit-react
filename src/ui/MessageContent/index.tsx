@@ -1,12 +1,12 @@
-import React, {ReactElement, ReactNode, useContext, useEffect, useRef, useState,} from 'react';
+import React, { ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import format from 'date-fns/format';
 import './index.scss';
 
 import MessageStatus from '../MessageStatus';
-import {MessageMenu, MessageMenuProps} from '../MessageItemMenu';
-import {MessageEmojiMenu, MessageEmojiMenuProps} from '../MessageItemReactionMenu';
-import Label, {LabelColors, LabelTypography} from '../Label';
-import EmojiReactions, {EmojiReactionsProps} from '../EmojiReactions';
+import { MessageMenu, MessageMenuProps } from '../MessageItemMenu';
+import { MessageEmojiMenu, MessageEmojiMenuProps } from '../MessageItemReactionMenu';
+import Label, { LabelColors, LabelTypography } from '../Label';
+import EmojiReactions, { EmojiReactionsProps } from '../EmojiReactions';
 
 import ClientAdminMessage from '../AdminMessage';
 import QuoteMessage from '../QuoteMessage';
@@ -22,28 +22,28 @@ import {
   SendableMessageType,
   UI_CONTAINER_TYPES,
 } from '../../utils';
-import {LocalizationContext, useLocalization} from '../../lib/LocalizationContext';
+import { LocalizationContext, useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
-import {GroupChannel} from '@sendbird/chat/groupChannel';
-import {EmojiContainer} from '@sendbird/chat';
-import {AdminMessage, Feedback, FeedbackRating, FileMessage, UserMessage} from '@sendbird/chat/message';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { EmojiContainer } from '@sendbird/chat';
+import { AdminMessage, Feedback, FeedbackRating, FileMessage, UserMessage } from '@sendbird/chat/message';
 import useLongPress from '../../hooks/useLongPress';
 import MobileMenu from '../MobileMenu';
-import {useMediaQueryContext} from '../../lib/MediaQueryContext';
+import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import ThreadReplies from '../ThreadReplies';
-import {ThreadReplySelectType} from '../../modules/Channel/context/const';
-import {Nullable, ReplyType} from '../../types';
-import {noop} from '../../utils/utils';
-import MessageProfile, {MessageProfileProps} from './MessageProfile';
-import MessageBody, {MessageBodyProps} from './MessageBody';
-import MessageHeader, {MessageHeaderProps} from './MessageHeader';
-import Icon, {IconTypes} from '../Icon';
+import { ThreadReplySelectType } from '../../modules/Channel/context/const';
+import { Nullable, ReplyType } from '../../types';
+import { noop } from '../../utils/utils';
+import MessageProfile, { MessageProfileProps } from './MessageProfile';
+import MessageBody, { MessageBodyProps } from './MessageBody';
+import MessageHeader, { MessageHeaderProps } from './MessageHeader';
+import Icon, { IconTypes } from '../Icon';
 import FeedbackIconButton from '../FeedbackIconButton';
 import MobileFeedbackMenu from '../MobileFeedbackMenu';
 import MessageFeedbackModal from '../../modules/Channel/components/MessageFeedbackModal';
-import {SbFeedbackStatus} from './types';
+import { SbFeedbackStatus } from './types';
 import MessageFeedbackFailedModal from '../../modules/Channel/components/MessageFeedbackFailedModal';
-import {MobileBottomSheetProps} from '../MobileMenu/types';
+import { MobileBottomSheetProps } from '../MobileMenu/types';
 
 export interface MessageContentProps {
   className?: string | Array<string>;
@@ -152,13 +152,11 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [feedbackFailedText, setFeedbackFailedText] = useState('');
   const [totalBottom, setTotalBottom] = useState<number>(0);
-  const [
-    uiContainerType,
-    setUiContainerType
-  ] = useState<UI_CONTAINER_TYPES>(getMessageContentMiddleClassNameByContainerType({
+
+  const uiContainerType:UI_CONTAINER_TYPES = getMessageContentMiddleClassNameByContainerType({
     message,
     isMobile,
-  }));
+  });
 
   const { stringSet } = useContext(LocalizationContext);
 
@@ -315,7 +313,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
         className={getClassName([
           'sendbird-message-content__middle',
           isTemplateMessage(message) ? 'sendbird-message-content__middle__for_template_message' : '',
-          uiContainerType
+          uiContainerType,
         ])}
         {...(isMobile ? { ...longPress } : {})}
         ref={contentRef}

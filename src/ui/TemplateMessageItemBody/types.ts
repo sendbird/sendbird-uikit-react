@@ -1,5 +1,5 @@
 import type { ComponentsUnion } from '@sendbird/uikit-message-template';
-import type {ViewStyle} from '@sendbird/uikit-message-template/src/types/styles';
+import type { ViewStyle } from '@sendbird/uikit-message-template/src/types/styles';
 
 type SendbirdFontWeight = 'bold' | 'normal';
 
@@ -96,7 +96,7 @@ export type MessageTemplateData = SimpleTemplateData & {
 export type SimpleTemplateData = {
   key: string;
   variables?: Record<string, any>;
-}
+};
 
 export type SendbirdMessageTemplate = {
   key: string;

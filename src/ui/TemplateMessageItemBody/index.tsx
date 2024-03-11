@@ -1,15 +1,15 @@
 import './index.scss';
-import React, {ReactElement, useEffect, useState} from 'react';
-import type {BaseMessage} from '@sendbird/chat/message';
-import {getClassName, removeAtAndBraces, startsWithAtAndEndsWithBraces} from '../../utils';
+import React, { ReactElement, useEffect, useState } from 'react';
+import type { BaseMessage } from '@sendbird/chat/message';
+import { getClassName, removeAtAndBraces, startsWithAtAndEndsWithBraces } from '../../utils';
 import MessageTemplateWrapper from '../../modules/GroupChannel/components/MessageTemplateWrapper';
-import {CarouselItem, MessageTemplateData, MessageTemplateItem, SimpleTemplateData} from './types';
+import { CarouselItem, MessageTemplateData, MessageTemplateItem, SimpleTemplateData } from './types';
 import restoreNumbersFromMessageTemplateObject from './utils/restoreNumbersFromMessageTemplateObject';
 import mapData from './utils/mapData';
 import selectColorVariablesByTheme from './utils/selectColorVariablesByTheme';
-import {SendbirdTheme} from '../../types';
+import { SendbirdTheme } from '../../types';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
-import {ProcessedMessageTemplate, WaitingTemplateKeyData} from '../../lib/dux/appInfo/initialState';
+import { ProcessedMessageTemplate, WaitingTemplateKeyData } from '../../lib/dux/appInfo/initialState';
 import FallbackTemplateMessageItemBody from './FallbackTemplateMessageItemBody';
 import LoadingTemplateMessageItemBody from './LoadingTemplateMessageItemBody';
 import Carousel from '../Carousel';
@@ -22,6 +22,8 @@ interface TemplateMessageItemBodyProps {
   message: BaseMessage;
   isByMe?: boolean;
   theme?: SendbirdTheme;
+  onMessageHeightChange?: () => void;
+  onLoad?: () => void;
 }
 
 /**
@@ -49,10 +51,8 @@ export function TemplateMessageItemBody({
   message,
   isByMe = false,
   theme = 'light',
+  onMessageHeightChange = () => { /* noop */ },
 }: TemplateMessageItemBodyProps): ReactElement {
-  const store = useSendbirdStateContext();
-  const logger = store?.config?.logger;
-
   const templateData: MessageTemplateData | undefined = message.extendedMessagePayload?.['template'] as MessageTemplateData;
   if (!templateData?.key) {
     return <FallbackTemplateMessageItemBody className={className} message={message} isByMe={isByMe} />;
@@ -72,6 +72,10 @@ export function TemplateMessageItemBody({
     compositeTemplate,
     setCompositeTemplate,
   ] = useState<CarouselItem | null>(null);
+  const [
+    showLoading,
+    setShowLoading,
+  ] = useState(false);
 
   const {
     getCachedTemplate,
@@ -147,6 +151,7 @@ export function TemplateMessageItemBody({
             simpleTemplatesVariables.push(templateData.variables);
           }
         } catch (e) {
+          setShowLoading(false);
           setIsErrored(true);
           return;
         }
@@ -158,6 +163,7 @@ export function TemplateMessageItemBody({
        * a new message with same key is calling GET
        */
       if (nonCachedTemplateKeys.length > 0 && !isErrored) {
+        setShowLoading(true);
         tryFetchTemplateByKey(nonCachedTemplateKeys);
         return;
       }
@@ -175,9 +181,14 @@ export function TemplateMessageItemBody({
           );
           return filledMessageTemplateItems;
         });
+      setShowLoading(false);
       setFilledMessageTemplateItemsList(filledMessageTemplateItemsList);
     }
   }, [templateData.key, waitingTemplateKeysMapString]);
+
+  useEffect(() => {
+    onMessageHeightChange();
+  }, []);
 
   /**
    * Attempt GET template by key IFF one of below cases is met:
@@ -200,8 +211,9 @@ export function TemplateMessageItemBody({
         ) {
           keysToUpdate.push(templateKey);
         } else if (waitingTemplateKeyData && waitingTemplateKeyData.isError) {
+          setShowLoading(false);
           setIsErrored(true);
-          return;
+
         }
       });
       updateMessageTemplatesInfo(keysToUpdate, requestedAt);
@@ -212,7 +224,7 @@ export function TemplateMessageItemBody({
     if (isErrored) {
       return <FallbackTemplateMessageItemBody className={className} message={message} isByMe={isByMe} />;
     }
-    return <LoadingTemplateMessageItemBody className={className} isByMe={isByMe} />;
+    return showLoading && <LoadingTemplateMessageItemBody className={className} isByMe={isByMe} />;
   }
 
   return (
@@ -230,12 +242,17 @@ export function TemplateMessageItemBody({
             ? <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItemsList[0]}/>
             : <Carousel
               id={message.messageId + ''}
-              items={filledMessageTemplateItemsList.map((filledMessageTemplateItems) => (
-                <MessageTemplateWrapper message={message} templateItems={filledMessageTemplateItems}/>
+              items={filledMessageTemplateItemsList.map((filledMessageTemplateItems, i) => (
+                <MessageTemplateWrapper
+                  key={`${message.messageId}-${i}`}
+                  message={message}
+                  templateItems={filledMessageTemplateItems}
+                />
               ))}
               gap={compositeTemplate.spacing}
             />
-        }</MessageTemplateErrorBoundary>
+        }
+      </MessageTemplateErrorBoundary>
     </div>
   );
 }

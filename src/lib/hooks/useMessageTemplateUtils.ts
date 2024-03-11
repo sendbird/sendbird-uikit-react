@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppInfoStateType, MessageTemplatesInfo, ProcessedMessageTemplate } from '../dux/appInfo/initialState';
 import { SendbirdMessageTemplate } from '../../ui/TemplateMessageItemBody/types';
-import {getProcessedTemplate, getProcessedTemplatesMap} from '../dux/appInfo/utils';
+import { getProcessedTemplate, getProcessedTemplatesMap } from '../dux/appInfo/utils';
 import SendbirdChat from '@sendbird/chat';
 import { APP_INFO_ACTIONS, AppInfoActionTypes } from '../dux/appInfo/actionTypes';
 import { CACHED_MESSAGE_TEMPLATES_KEY, CACHED_MESSAGE_TEMPLATES_TOKEN_KEY } from '../../utils/consts';
@@ -138,7 +138,7 @@ export default function useMessageTemplateUtils({
         },
       });
 
-      let newParsedTemplates: SendbirdMessageTemplate[] | null = [];
+      const newParsedTemplates: SendbirdMessageTemplate[] | null = [];
       try {
         let hasMore = true;
         let token = null;
@@ -166,7 +166,7 @@ export default function useMessageTemplateUtils({
             if (existingKeys.indexOf(newParsedTemplate.key) === -1) {
               parsedTemplates.push(newParsedTemplate);
             }
-          })
+          });
           localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify(parsedTemplates));
         } else {
           localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify([newParsedTemplates]));

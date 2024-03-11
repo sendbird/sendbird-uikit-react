@@ -281,13 +281,12 @@ export const isCompositeTemplateMessage = (message: CoreMessageType): boolean =>
   message && message.extendedMessagePayload?.['template']?.['view_variables']
 );
 
-
 export enum UI_CONTAINER_TYPES {
   DEFAULT = '',
   WIDE = 'ui_container_type__wide',
   FULL = 'ui_container_type__full',
   DEFAULT_CAROUSEL = 'ui_container_type__default-carousel',
-};
+}
 
 export const getMessageContentMiddleClassNameByContainerType = ({
   message,
@@ -418,11 +417,11 @@ export const getClassName = (classNames: string | Array<string | Array<string>>)
 export const startsWithAtAndEndsWithBraces = (str: string) => {
   const regex = /^\{@.*\}$/;
   return regex.test(str);
-}
+};
 
 export const removeAtAndBraces = (str: string) => {
   return str.replace(/^\{@|}$/g, '');
-}
+};
 
 export const isReactedBy = (userId: string, reaction: Reaction): boolean => (
   reaction.userIds.some((reactorUserId: string): boolean => reactorUserId === userId)
