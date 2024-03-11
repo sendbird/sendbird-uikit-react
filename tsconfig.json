@@ -9,7 +9,7 @@
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@types", "./types"]
   },
-  "include": ["src", "src/stories/Button.stories.tsx"],
+  "include": ["src"],
   "exclude": [
     "**/__tests__/**",
     "**/__tests__/**",
