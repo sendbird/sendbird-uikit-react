@@ -137,6 +137,10 @@ export function TemplateMessageItemBody({
             }
             simpleTemplateDataList.forEach((simpleTemplateData: SimpleTemplateData) => {
               const simpleTemplateKey = simpleTemplateData.key;
+              if (!simpleTemplateKey) {
+                logger.error('TemplateMessageItemBody | simple template keys are not found in view_variables: ', simpleTemplateDataList);
+                throw new Error();
+              }
               const simpleCachedTemplate = getCachedTemplate(simpleTemplateKey);
               if (simpleCachedTemplate) {
                 cachedSimpleTemplates.push(simpleCachedTemplate);
@@ -213,7 +217,6 @@ export function TemplateMessageItemBody({
         } else if (waitingTemplateKeyData && waitingTemplateKeyData.isError) {
           setShowLoading(false);
           setIsErrored(true);
-
         }
       });
       updateMessageTemplatesInfo(keysToUpdate, requestedAt);

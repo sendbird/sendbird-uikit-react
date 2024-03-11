@@ -153,7 +153,7 @@ export default function useMessageTemplateUtils({
           token = result.token;
         }
       } catch (e) {
-        logger?.error?.('Sendbird | fetchProcessedMessageTemplates failed', e);
+        logger?.error?.('Sendbird | fetchProcessedMessageTemplates failed', e, templateKeys);
       }
 
       if (newParsedTemplates.length > 0) {
