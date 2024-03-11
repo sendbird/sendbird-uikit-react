@@ -161,7 +161,12 @@ export default function useMessageTemplateUtils({
         const cachedMessageTemplates: string | null = localStorage.getItem(CACHED_MESSAGE_TEMPLATES_KEY);
         if (cachedMessageTemplates) {
           const parsedTemplates: SendbirdMessageTemplate[] = JSON.parse(cachedMessageTemplates);
-          parsedTemplates.concat(newParsedTemplates);
+          const existingKeys = parsedTemplates.map((parsedTemplate) => parsedTemplate.key);
+          newParsedTemplates.forEach((newParsedTemplate) => {
+            if (existingKeys.indexOf(newParsedTemplate.key) === -1) {
+              parsedTemplates.push(newParsedTemplate);
+            }
+          })
           localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify(parsedTemplates));
         } else {
           localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify([newParsedTemplates]));
