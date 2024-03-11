@@ -202,12 +202,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
 
   const isTimestampBottom = !!uiContainerType;
 
-  const conditionalSetUiContainerType = (newUiContainerType: UI_CONTAINER_TYPES) => {
-    if (uiContainerType === UI_CONTAINER_TYPES.DEFAULT) {
-      setUiContainerType(newUiContainerType);
-    }
-  }
-
   const onCloseFeedbackForm = () => {
     setShowFeedbackModal(false);
   };
@@ -391,7 +385,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               config,
               isReactionEnabledInChannel,
               isByMe,
-              conditionalSetUiContainerType,
             })
           }
           {/* reactions */}

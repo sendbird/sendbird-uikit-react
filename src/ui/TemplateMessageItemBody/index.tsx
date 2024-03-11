@@ -1,7 +1,7 @@
 import './index.scss';
 import React, {ReactElement, useEffect, useState} from 'react';
 import type {BaseMessage} from '@sendbird/chat/message';
-import {getClassName, UI_CONTAINER_TYPES} from '../../utils';
+import {getClassName, removeAtAndBraces, startsWithAtAndEndsWithBraces} from '../../utils';
 import MessageTemplateWrapper from '../../modules/GroupChannel/components/MessageTemplateWrapper';
 import {CarouselItem, MessageTemplateData, MessageTemplateItem, SimpleTemplateData} from './types';
 import restoreNumbersFromMessageTemplateObject from './utils/restoreNumbersFromMessageTemplateObject';
@@ -22,7 +22,6 @@ interface TemplateMessageItemBodyProps {
   message: BaseMessage;
   isByMe?: boolean;
   theme?: SendbirdTheme;
-  conditionalSetUiContainerType?: (newUiContainerType: UI_CONTAINER_TYPES) => void;
 }
 
 /**
@@ -50,7 +49,6 @@ export function TemplateMessageItemBody({
   message,
   isByMe = false,
   theme = 'light',
-  conditionalSetUiContainerType,
 }: TemplateMessageItemBodyProps): ReactElement {
   const store = useSendbirdStateContext();
   const logger = store?.config?.logger;
@@ -80,21 +78,6 @@ export function TemplateMessageItemBody({
     updateMessageTemplatesInfo,
   } = globalState.utils;
 
-  // const cachedTemplate = getCachedTemplate(templateData.key);
-  // if (cachedTemplate) {
-  //   const parsedUiTemplate: MessageTemplateItem[] = JSON.parse(cachedTemplate.uiTemplate);
-  //   if (parsedUiTemplate.length === 0) {
-  //     return <FallbackTemplateMessageItemBody className={className} message={message} isByMe={isByMe} />;
-  //   }
-  //     const templateItems: MessageTemplateItem[] = getFilledMessageTemplateWithData(
-  //       parsedUiTemplate,
-  //       templateData.variables ?? {},
-  //       cachedTemplate.colorVariables,
-  //       theme,
-  //     );
-  //     setFilledMessageTemplateItems(templateItems);
-  // }
-
   const waitingTemplateKeysMap = globalState.stores.appInfoStore.waitingTemplateKeysMap;
 
   const [
@@ -106,6 +89,8 @@ export function TemplateMessageItemBody({
     .map(([key, value]) => {
       return [key, value.requestedAt, value.isError].join('-');
     }).join(',');
+
+  const logger = globalState.config.logger;
 
   useEffect(() => {
     // Do not put && !isErrored here in case where errored key is fetched in the future by future message
@@ -120,38 +105,38 @@ export function TemplateMessageItemBody({
         try {
           const parsedUiTemplate: MessageTemplateItem[] = JSON.parse(cachedTemplate.uiTemplate);
           if (parsedUiTemplate.length === 0) {
+            logger.error('TemplateMessageItemBody | cached template does not have any items: ', templateKey);
             throw new Error();
           }
-          // template is carousel
           if (parsedUiTemplate[0].type === 'carouselView') {
-            // first validation
-            if (
-              parsedUiTemplate.length > 1 // TODO: in future, support multiple templates
-              || typeof parsedUiTemplate[0].items !== 'string'
-              || !templateData.view_variables
-            ) {
-              throw new Error();
-            }
             const carouselItem: CarouselItem = parsedUiTemplate[0];
-            const entries = Object.entries(templateData.view_variables);
-            // second validation // TODO: in future, support multiple entries
-            if (entries.length !== 1) {
+            if (parsedUiTemplate.length > 1) { // TODO: in future, support multiple templates
+              logger.error('TemplateMessageItemBody | composite template currently does not support multiple items: ', parsedUiTemplate);
               throw new Error();
             }
-            const [reservationKey, simpleTemplateDataList] = entries[0];
-            // third validation
-            if (`{@${reservationKey}}` !== carouselItem.items) {
+            if (
+              typeof carouselItem.items !== 'string'
+              || !startsWithAtAndEndsWithBraces(carouselItem.items)
+            ) {
+              logger.error('TemplateMessageItemBody | composite template is malformed: ', carouselItem);
               throw new Error();
             }
-            simpleTemplateDataList.forEach((simpleTemplateData: SimpleTemplateData, i) => {
+            if (!templateData.view_variables) {
+              logger.error('TemplateMessageItemBody | view_variables is missing in template data: ', templateData);
+              throw new Error();
+            }
+            const reservationKey = removeAtAndBraces(carouselItem.items);
+            const simpleTemplateDataList: SimpleTemplateData[] | undefined = templateData.view_variables[reservationKey];
+            if (!simpleTemplateDataList) {
+              logger.error('TemplateMessageItemBody | no reservation key found in view_variables: ', reservationKey, templateData.view_variables);
+              throw new Error();
+            }
+            simpleTemplateDataList.forEach((simpleTemplateData: SimpleTemplateData) => {
               const simpleTemplateKey = simpleTemplateData.key;
-              if (!simpleTemplateKey) {
-                throw new Error();
-              }
               const simpleCachedTemplate = getCachedTemplate(simpleTemplateKey);
               if (simpleCachedTemplate) {
                 cachedSimpleTemplates.push(simpleCachedTemplate);
-                simpleTemplatesVariables.push(simpleTemplateData.variables)
+                simpleTemplatesVariables.push(simpleTemplateData.variables);
               } else {
                 nonCachedTemplateKeys.push(simpleTemplateKey);
               }
@@ -228,10 +213,6 @@ export function TemplateMessageItemBody({
       return <FallbackTemplateMessageItemBody className={className} message={message} isByMe={isByMe} />;
     }
     return <LoadingTemplateMessageItemBody className={className} isByMe={isByMe} />;
-  }
-
-  if (compositeTemplate) {
-    conditionalSetUiContainerType?.(UI_CONTAINER_TYPES.DEFAULT_CAROUSEL);
   }
 
   return (

@@ -35,8 +35,6 @@ export interface MessageBodyProps {
   config: SendBirdStateConfig;
   isReactionEnabledInChannel: boolean;
   isByMe: boolean;
-
-  conditionalSetUiContainerType?: (newUiContainerType: UI_CONTAINER_TYPES) => void;
 }
 
 export default function MessageBody(props: MessageBodyProps): ReactElement {
@@ -51,8 +49,6 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
     config,
     isReactionEnabledInChannel,
     isByMe,
-
-    conditionalSetUiContainerType,
   } = props;
 
   const threadMessageKindKey = useThreadMessageKindKeySelector({
@@ -70,7 +66,6 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         message={message as BaseMessage}
         isByMe={isByMe}
         theme={config?.theme as SendbirdTheme}
-        conditionalSetUiContainerType={conditionalSetUiContainerType}
       />
     ))
     .when((message) => isOgMessageEnabledInGroupChannel

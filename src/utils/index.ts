@@ -277,9 +277,10 @@ export const isTemplateMessage = (message: CoreMessageType): boolean => !!(
   message && message.extendedMessagePayload?.['template']
 );
 
-export const isCarouselTemplateMessage = (message: CoreMessageType): boolean => (
-  message && message.extendedMessagePayload?.['template']?.['type'] === 'carouselView'
+export const isCompositeTemplateMessage = (message: CoreMessageType): boolean => !!(
+  message && message.extendedMessagePayload?.['template']?.['view_variables']
 );
+
 
 export enum UI_CONTAINER_TYPES {
   DEFAULT = '',
@@ -302,15 +303,16 @@ export const getMessageContentMiddleClassNameByContainerType = ({
    * WIDE: all message types.
    */
   const containerType: string | undefined = message.extendedMessagePayload?.['ui']?.['container_type'];
+  if (isCompositeTemplateMessage(message)) {
+    /**
+     * Composite templates must have default carousel view irregardless of given containerType.
+     */
+    return UI_CONTAINER_TYPES.DEFAULT_CAROUSEL;
+  }
   if (isTemplateMessage(message) && containerType === MessageContentMiddleContainerType.FULL) {
     return UI_CONTAINER_TYPES.FULL;
   } else if (containerType === MessageContentMiddleContainerType.WIDE) {
     return UI_CONTAINER_TYPES.WIDE;
-  // } else if (
-  //   isCarouselTemplateMessage(message)
-  //   && (!containerType || containerType === MessageContentMiddleContainerType.DEFAULT)
-  // ) {
-  //   return UI_CONTAINER_TYPES.DEFAULT_CAROUSEL;
   }
   return UI_CONTAINER_TYPES.DEFAULT;
 };
@@ -412,6 +414,16 @@ export const getClassName = (classNames: string | Array<string | Array<string>>)
     ? classNames.reduce(reducer, []).join(' ')
     : classNames
 );
+
+export const startsWithAtAndEndsWithBraces = (str: string) => {
+  const regex = /^\{@.*\}$/;
+  return regex.test(str);
+}
+
+export const removeAtAndBraces = (str: string) => {
+  return str.replace(/^\{@|}$/g, '');
+}
+
 export const isReactedBy = (userId: string, reaction: Reaction): boolean => (
   reaction.userIds.some((reactorUserId: string): boolean => reactorUserId === userId)
 );
