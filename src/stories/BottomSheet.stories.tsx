@@ -1,6 +1,5 @@
 import React from 'react';
 import BottomSheet from '../ui/BottomSheet';
-import './index.css';
 
 export default {
   title: 'UI/BottomSheet',

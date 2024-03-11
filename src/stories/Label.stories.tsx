@@ -1,7 +1,6 @@
 // Label.stories.js
 import React from 'react';
 import Label, { LabelTypography, LabelColors } from '../ui/Label';
-import './index.css';
 
 export default {
   title: 'UI/Label',

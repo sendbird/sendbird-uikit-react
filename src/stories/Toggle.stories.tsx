@@ -1,7 +1,6 @@
 // Toggle.stories.js
 import React from 'react';
 import { Toggle, ToggleContainer, ToggleUI } from '../ui/Toggle';
-import './index.css';
 
 export default {
   title: 'UI/Toggle',

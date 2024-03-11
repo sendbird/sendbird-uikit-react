@@ -2,7 +2,6 @@ import React from 'react';
 import Badge from '../ui/Badge';
 import { LocalizationContext } from '../lib/LocalizationContext';
 import type { StringSet } from '../ui/Label/stringSet';
-import './index.css';
 
 const FakeLocalizationContext = ({ children }) => (
   <LocalizationContext.Provider value={{ stringSet: { BADGE__OVER: '+' } as StringSet, dateLocale: null as unknown as Locale }}>

@@ -2,7 +2,6 @@
 import React from 'react';
 import Tooltip from '../ui/Tooltip';
 import TooltipWrapper from '../ui/TooltipWrapper';
-import './index.css';
 
 export default {
   title: 'UI/Tooltip',

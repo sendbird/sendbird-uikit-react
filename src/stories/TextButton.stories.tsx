@@ -2,7 +2,6 @@
 import React from 'react';
 import TextButton from '../ui/TextButton';
 import { Colors } from '../utils/color';
-import './index.css';
 
 export default {
   title: 'UI/TextButton',

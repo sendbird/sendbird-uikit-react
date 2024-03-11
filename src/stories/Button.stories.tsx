@@ -2,7 +2,6 @@ import React from 'react';
 import Button from '../ui/Button';
 import { ButtonTypes, ButtonSizes } from '../ui/Button/types';
 import { LabelTypography, LabelColors } from '../ui/Label';
-import './index.css';
 
 export default {
   title: 'UI/Button',

@@ -1,7 +1,6 @@
 import React from 'react';
 import DateSeparator from '../ui/DateSeparator';
 import { Colors } from '../utils/color';
-import './index.css';
 
 export default {
   title: 'UI/DateSeparator',

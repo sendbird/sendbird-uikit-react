@@ -1,6 +1,5 @@
 import React, { RefObject, useRef } from 'react';
 import ContextMenu, { MenuItems as MenuItemsComponent, MenuItem as MenuItemComponent } from '../ui/ContextMenu';
-import './index.css';
 
 export default {
   title: 'ui/ContextMenu',

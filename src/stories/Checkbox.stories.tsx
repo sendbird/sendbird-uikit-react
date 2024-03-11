@@ -1,6 +1,5 @@
 import React from 'react';
 import Checkbox from '../ui/Checkbox';
-import './index.css';
 
 export default {
   title: 'UI/Checkbox',

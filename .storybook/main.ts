@@ -1,5 +1,6 @@
 import { mergeConfig } from 'vite';
 import svgr from 'vite-plugin-svgr';
+import path from 'path';
 
 export default {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
@@ -17,6 +18,14 @@ export default {
   },
   viteFinal: async (config) => {
     return mergeConfig(config, {
+      css: {
+        preprocessorOptions: {
+          scss: {
+            quietDeps: true,
+            additionalData: `@import '${path.resolve(__dirname, '../src')}/styles/variables';`,
+          }
+        },
+      },
       plugins: [
         svgr({
           include: "**/*.svg",

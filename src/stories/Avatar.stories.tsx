@@ -1,6 +1,5 @@
 import React from 'react';
 import Avatar from '../ui/Avatar';
-import './index.css';
 
 const imageUrlOptions = {
   None: '',
