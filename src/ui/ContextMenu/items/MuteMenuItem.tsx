@@ -34,6 +34,10 @@ export const MuteMenuItem = ({
             setIsMuted(false);
             onChange(channel, user, false);
             setIsProcessing(false);
+          })
+          .catch(() => {
+            // TODO: error handling?
+            setIsProcessing(false);
           });
       } else {
         channel.muteUser(user)
@@ -41,10 +45,14 @@ export const MuteMenuItem = ({
             setIsMuted(true);
             onChange(channel, user, true);
             setIsProcessing(false);
+          })
+          .catch(() => {
+            // TODO: error handling?
+            setIsProcessing(false);
           });
       }
     }
-  }, [isMuted]);
+  }, [isProcessing]);
 
   return <MenuItem
     className={className}

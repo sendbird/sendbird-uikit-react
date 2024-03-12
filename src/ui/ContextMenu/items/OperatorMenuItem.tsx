@@ -38,6 +38,10 @@ export const OperatorMenuItem = ({
             setIsOperator(false);
             onChange(channel, user, false);
             setIsProcessing(false);
+          })
+          .catch(() => {
+            // TODO: error handling?
+            setIsProcessing(false);
           });
       } else {
         channel.addOperators([user.userId])
@@ -45,10 +49,14 @@ export const OperatorMenuItem = ({
             setIsOperator(true);
             onChange(channel, user, true);
             setIsProcessing(false);
+          })
+          .catch(() => {
+            // TODO: error handling?
+            setIsProcessing(false);
           });
       }
     }
-  }, [isOperator]);
+  }, [isProcessing]);
 
   return <MenuItem
     className={className}
