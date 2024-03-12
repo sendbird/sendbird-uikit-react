@@ -44,7 +44,7 @@ export const MuteMenuItem = ({
           });
       }
     }
-  }, [isProcessing]);
+  }, [isMuted]);
 
   return <MenuItem
     className={className}
