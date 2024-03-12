@@ -208,6 +208,9 @@ export function TemplateMessageItemBody({
     } catch (e) {
       result.isErrored = true;
     }
+    setTimeout(()=>{
+      onMessageHeightChange();
+    }, 50);
     return result;
   }
 
@@ -215,9 +218,6 @@ export function TemplateMessageItemBody({
     if (!renderData.isErrored && renderData.filledMessageTemplateItemsList.length === 0) {
       const newRenderData: RenderData = getFilledMessageTemplateItems();
       setRenderData(newRenderData);
-      setTimeout(()=>{
-        onMessageHeightChange();
-      }, 50);
     }
   }, [templateData.key, waitingTemplateKeysMapString]);
 
