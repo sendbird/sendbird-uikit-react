@@ -103,6 +103,10 @@ export const MemberList = (): ReactElement => {
                             refreshList();
                             closeDropdown();
                           }}
+                          onError={() => {
+                            // FIXME: handle error later
+                            closeDropdown();
+                          }}
                           dataSbId={`channel_setting_member_context_menu_${(
                             member.role !== 'operator'
                           ) ? 'register_as_operator' : 'unregister_operator'}`}
@@ -121,6 +125,10 @@ export const MemberList = (): ReactElement => {
                               user={member}
                               onChange={() => {
                                 refreshList();
+                                closeDropdown();
+                              }}
+                              onError={() => {
+                                // FIXME: handle error later
                                 closeDropdown();
                               }}
                               dataSbId={`channel_setting_member_context_menu_${member.isMuted ? 'unmute' : 'mute'}`}

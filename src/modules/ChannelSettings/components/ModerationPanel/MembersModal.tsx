@@ -118,6 +118,10 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                 }));
                                 closeDropdown();
                               }}
+                              onError={() => {
+                                // FIXME: handle error later
+                                closeDropdown();
+                              }}
                               dataSbId={`channel_setting_member_context_menu_${(
                                 member.role !== 'operator'
                               ) ? 'register_as_operator' : 'unregister_operator'}`}
@@ -144,6 +148,10 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                       }
                                       return m;
                                     }));
+                                    closeDropdown();
+                                  }}
+                                  onError={() => {
+                                    // FIXME: handle error later
                                     closeDropdown();
                                   }}
                                   dataSbId={`channel_setting_member_context_menu_${(

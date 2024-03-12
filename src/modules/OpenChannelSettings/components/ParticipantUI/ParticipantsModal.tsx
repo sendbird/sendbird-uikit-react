@@ -108,6 +108,10 @@ export default function ParticipantsModal({
                                 channel={channel}
                                 user={p}
                                 onChange={() => closeDropdown()}
+                                onError={() => {
+                                  // FIXME: handle error later
+                                  closeDropdown();
+                                }}
                                 dataSbId={`open_channel_setting_participant_context_menu_${(
                                   isOperator) ? 'unregister_operator' : 'register_as_operator'}`
                                 }
@@ -122,6 +126,10 @@ export default function ParticipantsModal({
                                 channel={channel}
                                 user={p}
                                 onChange={() => closeDropdown()}
+                                onError={() => {
+                                  // FIXME: handle error later
+                                  closeDropdown();
+                                }}
                                 dataSbId={`open_channel_setting_participant_context_menu_${p.isMuted ? 'unmute' : 'mute'}`
                                 }
                               >

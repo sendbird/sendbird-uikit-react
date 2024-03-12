@@ -116,6 +116,10 @@ export default function ParticipantList({
                                 closeDropdown();
                                 refreshList();
                               }}
+                              onError={() => {
+                                // FIXME: handle error later
+                                closeDropdown();
+                              }}
                               dataSbId={`open_channel_setting_partitipant_conext_menu_${(
                                 isOperator) ? 'unregister_operator' : 'register_as_operator'}`
                               }
@@ -132,6 +136,10 @@ export default function ParticipantList({
                               onChange={() => {
                                 closeDropdown();
                                 refreshList();
+                              }}
+                              onError={() => {
+                                // FIXME: handle error later
+                                closeDropdown();
                               }}
                               dataSbId={`open_channel_setting_partitipant_conext_menu_${p.isMuted ? 'unmute' : 'mute'}`}
                             >

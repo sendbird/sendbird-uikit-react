@@ -11,6 +11,7 @@ export interface MuteMenuItemProps {
   disable?: boolean;
   dataSbId?: string;
   onChange?: (channel: BaseChannel, user: User, isMuted: boolean) => void;
+  onError?: (reason: any) => void;
 }
 
 export const MuteMenuItem = ({
@@ -21,6 +22,7 @@ export const MuteMenuItem = ({
   disable = false,
   dataSbId = '',
   onChange = () => {},
+  onError = () => {},
 }: MuteMenuItemProps): ReactElement => {
   const [isMuted, setIsMuted] = useState(user.isMuted);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -35,8 +37,8 @@ export const MuteMenuItem = ({
             onChange(channel, user, false);
             setIsProcessing(false);
           })
-          .catch(() => {
-            // TODO: error handling?
+          .catch(err => {
+            onError(err);
             setIsProcessing(false);
           });
       } else {
@@ -46,8 +48,8 @@ export const MuteMenuItem = ({
             onChange(channel, user, true);
             setIsProcessing(false);
           })
-          .catch(() => {
-            // TODO: error handling?
+          .catch(err => {
+            onError(err);
             setIsProcessing(false);
           });
       }

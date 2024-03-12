@@ -13,6 +13,7 @@ export interface OperatorMenuItemProps {
   disable?: boolean;
   dataSbId?: string;
   onChange?: (channel: BaseChannel, user: User, isOperator: boolean) => void;
+  onError?: (reason: any) => void;
 }
 
 export const OperatorMenuItem = ({
@@ -23,6 +24,7 @@ export const OperatorMenuItem = ({
   disable = false,
   dataSbId = '',
   onChange = () => {},
+  onError = () => {},
 }: OperatorMenuItemProps): ReactElement => {
   const [isOperator, setIsOperator] = useState(channel instanceof OpenChannel ?
     channel.isOperator(user) :
@@ -39,8 +41,8 @@ export const OperatorMenuItem = ({
             onChange(channel, user, false);
             setIsProcessing(false);
           })
-          .catch(() => {
-            // TODO: error handling?
+          .catch(err => {
+            onError(err);
             setIsProcessing(false);
           });
       } else {
@@ -50,8 +52,8 @@ export const OperatorMenuItem = ({
             onChange(channel, user, true);
             setIsProcessing(false);
           })
-          .catch(() => {
-            // TODO: error handling?
+          .catch(err => {
+            onError(err);
             setIsProcessing(false);
           });
       }

@@ -68,6 +68,10 @@ const OperatorList = (): ReactElement => {
                           channel={channel}
                           user={operator}
                           onChange={() => closeDropdown()}
+                          onError={() => {
+                            // FIXME: handle error later
+                            closeDropdown();
+                          }}
                           dataSbId={`open_channel_setting_operator_context_menu_${operator.isMuted ? 'unmute' : 'mute'}`}
                         >
                           {
