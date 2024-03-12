@@ -10,7 +10,7 @@ export interface MessageTemplatesInfo {
 
 export interface WaitingTemplateKeyData {
   requestedAt: number;
-  isError: boolean;
+  erroredMessageIds: number[];
 }
 
 export interface AppInfoStateType {

@@ -71,7 +71,7 @@ export interface MessageContentProps {
   onReplyInThread?: (props: { message: SendableMessageType }) => void;
   // onClick listener for thread quote message view (for open thread module)
   onQuoteMessageClick?: (props: { message: SendableMessageType }) => void;
-  onMessageHeightChange?: () => void;
+  onMessageHeightChange?: (isBottomMessageAffected?: boolean) => void;
 
   // For injecting customizable subcomponents
   renderSenderProfile?: (props: MessageProfileProps) => ReactNode;

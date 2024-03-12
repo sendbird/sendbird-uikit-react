@@ -18,7 +18,7 @@ interface UseMessageTemplateUtilsProps {
 
 export interface UseMessageTemplateUtilsWrapper {
   getCachedTemplate: (key: string) => ProcessedMessageTemplate | null;
-  updateMessageTemplatesInfo: (templateKeys: string[], requestedAt: number) => Promise<void>;
+  updateMessageTemplatesInfo: (templateKeys: string[], messageId: number, requestedAt: number) => Promise<void>;
   initializeMessageTemplatesInfo: (readySdk: SendbirdChat) => Promise<void>;
 }
 
@@ -128,7 +128,11 @@ export default function useMessageTemplateUtils({
    * If given message is a template message with template key and if the key does not exist in the cache,
    * update the cache by fetching the template.
    */
-  const updateMessageTemplatesInfo = async (templateKeys: string[], requestedAt: number): Promise<void> => {
+  const updateMessageTemplatesInfo = async (
+    templateKeys: string[],
+    messageId: number,
+    requestedAt: number
+  ): Promise<void> => {
     if (appInfoDispatcher) {
       appInfoDispatcher({
         type: UPSERT_WAITING_TEMPLATE_KEYS,
@@ -137,7 +141,6 @@ export default function useMessageTemplateUtils({
           requestedAt,
         },
       });
-
       const newParsedTemplates: SendbirdMessageTemplate[] | null = [];
       try {
         let hasMore = true;
@@ -155,7 +158,6 @@ export default function useMessageTemplateUtils({
       } catch (e) {
         logger?.error?.('Sendbird | fetchProcessedMessageTemplates failed', e, templateKeys);
       }
-
       if (newParsedTemplates.length > 0) {
         // Update cache
         const cachedMessageTemplates: string | null = localStorage.getItem(CACHED_MESSAGE_TEMPLATES_KEY);
@@ -186,12 +188,12 @@ export default function useMessageTemplateUtils({
           type: MARK_ERROR_WAITING_TEMPLATE_KEYS,
           payload: {
             keys: templateKeys,
+            messageId,
           },
         });
       }
     }
   };
-
   return {
     getCachedTemplate,
     updateMessageTemplatesInfo,

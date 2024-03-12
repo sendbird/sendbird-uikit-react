@@ -35,8 +35,8 @@ export default function reducer(state: AppInfoStateType, action: AppInfoActionTy
         const { keys, requestedAt } = payload;
         keys.forEach((key) => {
           state.waitingTemplateKeysMap[key] = {
+            erroredMessageIds: state.waitingTemplateKeysMap[key]?.erroredMessageIds ?? [],
             requestedAt,
-            isError: false,
           };
         });
         return { ...state };
@@ -44,11 +44,11 @@ export default function reducer(state: AppInfoStateType, action: AppInfoActionTy
     .with(
       { type: APP_INFO_ACTIONS.MARK_ERROR_WAITING_TEMPLATE_KEYS },
       ({ payload }) => {
-        const { keys } = payload;
+        const { keys, messageId } = payload;
         keys.forEach((key) => {
           const waitingTemplateKeyData: WaitingTemplateKeyData | undefined = state.waitingTemplateKeysMap[key];
-          if (waitingTemplateKeyData) {
-            waitingTemplateKeyData.isError = true;
+          if (waitingTemplateKeyData && waitingTemplateKeyData.erroredMessageIds.indexOf(messageId) === -1) {
+            waitingTemplateKeyData.erroredMessageIds.push(messageId);
           }
         });
         return { ...state };

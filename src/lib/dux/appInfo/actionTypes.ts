@@ -17,7 +17,7 @@ type APP_INFO_PAYLOAD_TYPES = {
   [APP_INFO_ACTIONS.INITIALIZE_MESSAGE_TEMPLATES_INFO]: MessageTemplatesInfo,
   [APP_INFO_ACTIONS.UPSERT_MESSAGE_TEMPLATES]: TemplatesMapData[],
   [APP_INFO_ACTIONS.UPSERT_WAITING_TEMPLATE_KEYS]: { keys: string[], requestedAt: number },
-  [APP_INFO_ACTIONS.MARK_ERROR_WAITING_TEMPLATE_KEYS]: { keys: string[] },
+  [APP_INFO_ACTIONS.MARK_ERROR_WAITING_TEMPLATE_KEYS]: { keys: string[], messageId: number },
 };
 
 export type AppInfoActionTypes = CreateAction<APP_INFO_PAYLOAD_TYPES>;
