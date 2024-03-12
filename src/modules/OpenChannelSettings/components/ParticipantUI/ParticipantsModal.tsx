@@ -7,7 +7,7 @@ import React, {
 import type { Participant, User } from '@sendbird/chat';
 import type { ParticipantListQuery } from '@sendbird/chat/openChannel';
 
-import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
+import ContextMenu, { MenuItem, MenuItems, MuteMenuItem } from '../../../../ui/ContextMenu';
 import Modal from '../../../../ui/Modal';
 import UserListItem from '../../../../ui/UserListItem';
 import IconButton from '../../../../ui/IconButton';
@@ -126,18 +126,10 @@ export default function ParticipantsModal({
                                     : stringSet.OPEN_CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR
                                 }
                               </MenuItem>
-                              <MenuItem
-                                onClick={() => {
-                                  if (p.isMuted) {
-                                    channel?.unmuteUser(p).then(() => {
-                                      closeDropdown();
-                                    });
-                                  } else {
-                                    channel?.muteUser(p).then(() => {
-                                      closeDropdown();
-                                    });
-                                  }
-                                }}
+                              <MuteMenuItem
+                                channel={channel}
+                                user={p}
+                                onChange={() => closeDropdown()}
                                 dataSbId={`open_channel_setting_participant_context_menu_${p.isMuted ? 'unmute' : 'mute'}`
                                 }
                               >
@@ -146,7 +138,7 @@ export default function ParticipantsModal({
                                     ? stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNMUTE
                                     : stringSet.OPEN_CHANNEL_SETTING__MODERATION__MUTE
                                 }
-                              </MenuItem>
+                              </MuteMenuItem>
                               <MenuItem
                                 onClick={() => {
                                   channel?.banUser(p).then(() => {

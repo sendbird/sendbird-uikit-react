@@ -9,7 +9,7 @@ import Modal from '../../../../ui/Modal';
 import UserListItem from '../../../../ui/UserListItem';
 import IconButton from '../../../../ui/IconButton';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
-import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
+import ContextMenu, { MenuItem, MenuItems, MuteMenuItem } from '../../../../ui/ContextMenu';
 import { noop } from '../../../../utils/utils';
 
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
@@ -145,35 +145,20 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                             {
                               // No muted members in broadcast channel
                               !channel?.isBroadcast && (
-                                <MenuItem
-                                  onClick={() => {
-                                    if (member.isMuted) {
-                                      channel?.unmuteUser(member).then(() => {
-                                        setMembers(members.map(m => {
-                                          if (m.userId === member.userId) {
-                                            return {
-                                              ...member,
-                                              isMuted: false,
-                                            };
-                                          }
-                                          return m;
-                                        }));
-                                        closeDropdown();
-                                      });
-                                    } else {
-                                      channel?.muteUser(member).then(() => {
-                                        setMembers(members.map(m => {
-                                          if (m.userId === member.userId) {
-                                            return {
-                                              ...member,
-                                              isMuted: true,
-                                            };
-                                          }
-                                          return m;
-                                        }));
-                                        closeDropdown();
-                                      });
-                                    }
+                                <MuteMenuItem
+                                  channel={channel}
+                                  user={member}
+                                  onChange={(_, member, isMuted) => {
+                                    setMembers(members.map(m => {
+                                      if (m.userId === member.userId) {
+                                        return {
+                                          ...member,
+                                          isMuted,
+                                        };
+                                      }
+                                      return m;
+                                    }));
+                                    closeDropdown();
                                   }}
                                   dataSbId={`channel_setting_member_context_menu_${(
                                     member.isMuted) ? 'unmute' : 'mute'}`
@@ -184,7 +169,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                       ? stringSet.CHANNEL_SETTING__MODERATION__UNMUTE
                                       : stringSet.CHANNEL_SETTING__MODERATION__MUTE
                                   }
-                                </MenuItem>
+                                </MuteMenuItem>
                               )
                             }
                             <MenuItem

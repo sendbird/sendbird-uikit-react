@@ -10,7 +10,7 @@ import type { Member } from '@sendbird/chat/groupChannel';
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import IconButton from '../../../../ui/IconButton';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
-import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
+import ContextMenu, { MenuItem, MenuItems, MuteMenuItem } from '../../../../ui/ContextMenu';
 
 import UserListItem from '../UserListItem';
 import MembersModal from './MembersModal';
@@ -123,30 +123,21 @@ export const MemberList = (): ReactElement => {
                         {
                           // No muted members in broadcast channel
                           !channel?.isBroadcast && (
-                            <MenuItem
-                              onClick={() => {
-                                if (member.isMuted) {
-                                  channel?.unmuteUser(member).then(() => {
-                                    refreshList();
-                                    closeDropdown();
-                                  });
-                                } else {
-                                  channel?.muteUser(member).then(() => {
-                                    refreshList();
-                                    closeDropdown();
-                                  });
-                                }
+                            <MuteMenuItem
+                              channel={channel}
+                              user={member}
+                              onChange={() => {
+                                refreshList();
+                                closeDropdown();
                               }}
-                              dataSbId={`channel_setting_member_context_menu_${(
-                                member.isMuted) ? 'unmute' : 'mute'}`
-                              }
+                              dataSbId={`channel_setting_member_context_menu_${member.isMuted ? 'unmute' : 'mute'}`}
                             >
                               {
                                 member.isMuted
                                   ? stringSet.CHANNEL_SETTING__MODERATION__UNMUTE
                                   : stringSet.CHANNEL_SETTING__MODERATION__MUTE
                               }
-                            </MenuItem>
+                            </MuteMenuItem>
                           )
                         }
                         <MenuItem

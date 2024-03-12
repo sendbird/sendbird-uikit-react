@@ -9,7 +9,7 @@ import type { Participant, User } from '@sendbird/chat';
 import type { ParticipantListQuery } from '@sendbird/chat/openChannel';
 
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
-import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
+import ContextMenu, { MenuItem, MenuItems, MuteMenuItem } from '../../../../ui/ContextMenu';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import IconButton from '../../../../ui/IconButton';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
@@ -133,19 +133,12 @@ export default function ParticipantList({
                                   : stringSet.OPEN_CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR
                               }
                             </MenuItem>
-                            <MenuItem
-                              onClick={() => {
-                                if (p.isMuted) {
-                                  channel?.unmuteUser(p).then(() => {
-                                    closeDropdown();
-                                    refreshList();
-                                  });
-                                } else {
-                                  channel?.muteUser(p).then(() => {
-                                    closeDropdown();
-                                    refreshList();
-                                  });
-                                }
+                            <MuteMenuItem
+                              channel={channel}
+                              user={p}
+                              onChange={() => {
+                                closeDropdown();
+                                refreshList();
                               }}
                               dataSbId={`open_channel_setting_partitipant_conext_menu_${p.isMuted ? 'unmute' : 'mute'}`}
                             >
@@ -154,7 +147,7 @@ export default function ParticipantList({
                                   ? stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNMUTE
                                   : stringSet.OPEN_CHANNEL_SETTING__MODERATION__MUTE
                               }
-                            </MenuItem>
+                            </MuteMenuItem>
                             <MenuItem
                               onClick={() => {
                                 channel?.banUser(p).then(() => {
