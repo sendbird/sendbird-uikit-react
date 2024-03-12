@@ -1,4 +1,3 @@
-
 import React, { ReactElement, ReactNode, useCallback, useState } from 'react';
 import { BaseChannel, User } from '@sendbird/chat';
 import { MenuItem } from '..';
@@ -62,4 +61,4 @@ export const MuteMenuItem = ({
     dataSbId={dataSbId}
     onClick={onClickHandler}
   >{children}</MenuItem>;
-}
+};

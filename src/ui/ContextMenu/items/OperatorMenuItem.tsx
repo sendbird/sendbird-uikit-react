@@ -1,8 +1,7 @@
-
 import React, { ReactElement, ReactNode, useCallback, useState } from 'react';
 import { BaseChannel, Role, User } from '@sendbird/chat';
 import { MenuItem } from '..';
-import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
+import { Member } from '@sendbird/chat/groupChannel';
 import { OpenChannel } from '@sendbird/chat/openChannel';
 
 export interface OperatorMenuItemProps {
@@ -26,9 +25,9 @@ export const OperatorMenuItem = ({
   onChange = () => {},
   onError = () => {},
 }: OperatorMenuItemProps): ReactElement => {
-  const [isOperator, setIsOperator] = useState(channel instanceof OpenChannel ?
-    channel.isOperator(user) :
-    (user as Member).role === Role.OPERATOR);
+  const [isOperator, setIsOperator] = useState(channel instanceof OpenChannel
+    ? channel.isOperator(user)
+    : (user as Member).role === Role.OPERATOR);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const onClickHandler = useCallback(() => {
@@ -66,4 +65,4 @@ export const OperatorMenuItem = ({
     dataSbId={dataSbId}
     onClick={onClickHandler}
   >{children}</MenuItem>;
-}
+};
