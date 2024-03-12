@@ -295,8 +295,6 @@ export const getMessageContentMiddleClassNameByContainerType = ({
   message: CoreMessageType,
   isMobile: boolean,
 }): UI_CONTAINER_TYPES => {
-  if (!isMobile) return UI_CONTAINER_TYPES.DEFAULT;
-
   /**
    * FULL: template message only.
    * WIDE: all message types.
@@ -308,6 +306,7 @@ export const getMessageContentMiddleClassNameByContainerType = ({
      */
     return UI_CONTAINER_TYPES.DEFAULT_CAROUSEL;
   }
+  if (!isMobile) return UI_CONTAINER_TYPES.DEFAULT;
   if (isTemplateMessage(message) && containerType === MessageContentMiddleContainerType.FULL) {
     return UI_CONTAINER_TYPES.FULL;
   } else if (containerType === MessageContentMiddleContainerType.WIDE) {
