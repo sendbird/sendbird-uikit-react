@@ -3,6 +3,7 @@ import './index.scss';
 
 import _MenuItems from './MenuItems';
 import { MuteMenuItem } from './items/MuteMenuItem';
+import { OperatorMenuItem } from './items/OperatorMenuItem';
 import _EmojiListItems from './EmojiListItems';
 
 import { getClassName } from '../../utils';
@@ -89,5 +90,6 @@ export default function ContextMenu({
   );
 }
 export {
-  MuteMenuItem
+  MuteMenuItem,
+  OperatorMenuItem,
 };

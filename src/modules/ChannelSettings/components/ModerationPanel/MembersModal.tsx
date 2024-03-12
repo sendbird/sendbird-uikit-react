@@ -9,13 +9,14 @@ import Modal from '../../../../ui/Modal';
 import UserListItem from '../../../../ui/UserListItem';
 import IconButton from '../../../../ui/IconButton';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
-import ContextMenu, { MenuItem, MenuItems, MuteMenuItem } from '../../../../ui/ContextMenu';
+import ContextMenu, { MenuItem, MenuItems, MuteMenuItem, OperatorMenuItem } from '../../../../ui/ContextMenu';
 import { noop } from '../../../../utils/utils';
 
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { Member } from '@sendbird/chat/groupChannel';
+import { Role } from '@sendbird/chat';
 
 interface Props {
   onCancel(): void;
@@ -101,36 +102,21 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                             closeDropdown={closeDropdown}
                             openLeft
                           >
-                            <MenuItem
+                            <OperatorMenuItem
+                              channel={channel}
+                              user={member}
                               disable={currentUser === member.userId}
-                              onClick={() => {
-                                if ((member.role !== 'operator')) {
-                                  channel?.addOperators([member.userId]).then(() => {
-                                    setMembers(members.map(m => {
-                                      if (m.userId === member.userId) {
-                                        return {
-                                          ...member,
-                                          role: 'operator',
-                                        };
-                                      }
-                                      return m;
-                                    }));
-                                    closeDropdown();
-                                  });
-                                } else {
-                                  channel?.removeOperators([member.userId]).then(() => {
-                                    setMembers(members.map(m => {
-                                      if (m.userId === member.userId) {
-                                        return {
-                                          ...member,
-                                          role: '',
-                                        };
-                                      }
-                                      return m;
-                                    }));
-                                    closeDropdown();
-                                  });
-                                }
+                              onChange={(_, member, isOperator) => {
+                                setMembers(members.map(m => {
+                                  if (m.userId === member.userId) {
+                                    return {
+                                      ...member,
+                                      role: isOperator ? Role.OPERATOR : Role.NONE,
+                                    };
+                                  }
+                                  return m;
+                                }));
+                                closeDropdown();
                               }}
                               dataSbId={`channel_setting_member_context_menu_${(
                                 member.role !== 'operator'
@@ -141,7 +127,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                   ? stringSet.CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR
                                   : stringSet.CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR
                               }
-                            </MenuItem>
+                            </OperatorMenuItem>
                             {
                               // No muted members in broadcast channel
                               !channel?.isBroadcast && (

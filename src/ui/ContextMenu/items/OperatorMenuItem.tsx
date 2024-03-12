@@ -1,19 +1,21 @@
 
 import React, { ReactElement, ReactNode, useCallback, useState } from 'react';
-import { BaseChannel, User } from '@sendbird/chat';
+import { BaseChannel, Role, User } from '@sendbird/chat';
 import { MenuItem } from '..';
+import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
+import { OpenChannel } from '@sendbird/chat/openChannel';
 
-export interface MuteMenuItemProps {
+export interface OperatorMenuItemProps {
   channel: BaseChannel;
   user: User & { isMuted: boolean };
   className?: string | Array<string>;
   children: ReactElement | ReactElement[] | ReactNode;
   disable?: boolean;
   dataSbId?: string;
-  onChange?: (channel: BaseChannel, user: User, isMuted: boolean) => void;
+  onChange?: (channel: BaseChannel, user: User, isOperator: boolean) => void;
 }
 
-export const MuteMenuItem = ({
+export const OperatorMenuItem = ({
   channel,
   user,
   className = '',
@@ -21,30 +23,32 @@ export const MuteMenuItem = ({
   disable = false,
   dataSbId = '',
   onChange = () => {},
-}: MuteMenuItemProps): ReactElement => {
-  const [isMuted, setIsMuted] = useState(user.isMuted);
+}: OperatorMenuItemProps): ReactElement => {
+  const [isOperator, setIsOperator] = useState(channel instanceof OpenChannel ?
+    channel.isOperator(user) :
+    (user as Member).role === Role.OPERATOR);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const onClickHandler = useCallback(() => {
     if (!isProcessing) {
       setIsProcessing(true);
-      if (isMuted) {
-        channel.unmuteUser(user)
+      if (isOperator) {
+        channel.removeOperators([user.userId])
           .then(() => {
-            setIsMuted(false);
+            setIsOperator(false);
             onChange(channel, user, false);
             setIsProcessing(false);
           });
       } else {
-        channel.muteUser(user)
+        channel.addOperators([user.userId])
           .then(() => {
-            setIsMuted(true);
+            setIsOperator(true);
             onChange(channel, user, true);
             setIsProcessing(false);
           });
       }
     }
-  }, [isMuted]);
+  }, [isOperator]);
 
   return <MenuItem
     className={className}

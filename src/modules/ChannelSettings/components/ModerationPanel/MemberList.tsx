@@ -10,7 +10,7 @@ import type { Member } from '@sendbird/chat/groupChannel';
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import IconButton from '../../../../ui/IconButton';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
-import ContextMenu, { MenuItem, MenuItems, MuteMenuItem } from '../../../../ui/ContextMenu';
+import ContextMenu, { MenuItem, MenuItems, MuteMenuItem, OperatorMenuItem } from '../../../../ui/ContextMenu';
 
 import UserListItem from '../UserListItem';
 import MembersModal from './MembersModal';
@@ -96,19 +96,12 @@ export const MemberList = (): ReactElement => {
                         closeDropdown={closeDropdown}
                         openLeft
                       >
-                        <MenuItem
-                          onClick={() => {
-                            if ((member.role !== 'operator')) {
-                              channel?.addOperators([member.userId]).then(() => {
-                                refreshList();
-                                closeDropdown();
-                              });
-                            } else {
-                              channel?.removeOperators([member.userId]).then(() => {
-                                refreshList();
-                                closeDropdown();
-                              });
-                            }
+                        <OperatorMenuItem
+                          channel={channel}
+                          user={member}
+                          onChange={() => {
+                            refreshList();
+                            closeDropdown();
                           }}
                           dataSbId={`channel_setting_member_context_menu_${(
                             member.role !== 'operator'
@@ -119,7 +112,7 @@ export const MemberList = (): ReactElement => {
                               ? stringSet.CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR
                               : stringSet.CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR
                           }
-                        </MenuItem>
+                        </OperatorMenuItem>
                         {
                           // No muted members in broadcast channel
                           !channel?.isBroadcast && (

@@ -7,7 +7,7 @@ import React, {
 import type { Participant, User } from '@sendbird/chat';
 import type { ParticipantListQuery } from '@sendbird/chat/openChannel';
 
-import ContextMenu, { MenuItem, MenuItems, MuteMenuItem } from '../../../../ui/ContextMenu';
+import ContextMenu, { MenuItem, MenuItems, MuteMenuItem, OperatorMenuItem } from '../../../../ui/ContextMenu';
 import Modal from '../../../../ui/Modal';
 import UserListItem from '../../../../ui/UserListItem';
 import IconButton from '../../../../ui/IconButton';
@@ -104,18 +104,10 @@ export default function ParticipantsModal({
                               closeDropdown={closeDropdown}
                               openLeft
                             >
-                              <MenuItem
-                                onClick={() => {
-                                  if (isOperator) {
-                                    channel?.removeOperators([p.userId]).then(() => {
-                                      closeDropdown();
-                                    });
-                                  } else {
-                                    channel?.addOperators([p.userId]).then(() => {
-                                      closeDropdown();
-                                    });
-                                  }
-                                }}
+                              <OperatorMenuItem
+                                channel={channel}
+                                user={p}
+                                onChange={() => closeDropdown()}
                                 dataSbId={`open_channel_setting_participant_context_menu_${(
                                   isOperator) ? 'unregister_operator' : 'register_as_operator'}`
                                 }
@@ -125,7 +117,7 @@ export default function ParticipantsModal({
                                     ? stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR
                                     : stringSet.OPEN_CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR
                                 }
-                              </MenuItem>
+                              </OperatorMenuItem>
                               <MuteMenuItem
                                 channel={channel}
                                 user={p}
