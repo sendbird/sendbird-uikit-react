@@ -131,7 +131,7 @@ export default function useMessageTemplateUtils({
   const updateMessageTemplatesInfo = async (
     templateKeys: string[],
     messageId: number,
-    requestedAt: number
+    requestedAt: number,
   ): Promise<void> => {
     if (appInfoDispatcher) {
       appInfoDispatcher({

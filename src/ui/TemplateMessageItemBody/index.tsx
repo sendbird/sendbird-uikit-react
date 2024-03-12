@@ -77,7 +77,6 @@ export function TemplateMessageItemBody({
 
   const logger = globalState.config.logger;
 
-
   const waitingTemplateKeysMap = globalState.stores.appInfoStore.waitingTemplateKeysMap;
 
   const waitingTemplateKeysMapString = Object.entries(waitingTemplateKeysMap)
@@ -119,7 +118,7 @@ export function TemplateMessageItemBody({
 
   function getFilledMessageTemplateItemsForSimpleTemplate(
     templateItems: MessageTemplateItem[],
-    colorVariables: Record<string, string>
+    colorVariables: Record<string, string>,
   ) {
     const filledMessageTemplateItems: MessageTemplateItem[] = getFilledMessageTemplateWithData(
       templateItems,
@@ -143,6 +142,7 @@ export function TemplateMessageItemBody({
       nonCachedTemplateKeys.push(templateKey);
     }
     if (templateData.view_variables) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       Object.entries(templateData.view_variables).forEach(([_, simpleTemplateDataList]) => {
         simpleTemplateDataList.forEach((simpleTemplateData: SimpleTemplateData) => {
           const simpleTemplateKey = simpleTemplateData?.key;
@@ -195,20 +195,20 @@ export function TemplateMessageItemBody({
             throw new Error();
           }
           result.filledMessageTemplateItemsList = getFilledMessageTemplateItemsForCarouselTemplate(
-            simpleTemplateDataList
+            simpleTemplateDataList,
           );
           result.carouselItem = carouselItem;
         } else {
           result.filledMessageTemplateItemsList = getFilledMessageTemplateItemsForSimpleTemplate(
             parsedUiTemplate,
-            cachedTemplate.colorVariables
+            cachedTemplate.colorVariables,
           );
         }
       }
     } catch (e) {
       result.isErrored = true;
     }
-    setTimeout(()=>{
+    setTimeout(() => {
       onMessageHeightChange();
     }, 50);
     return result;
