@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useCallback, useState } from 'react';
+import React, { ReactElement, ReactNode, useCallback, useRef, useState } from 'react';
 import { BaseChannel, User } from '@sendbird/chat';
 import { MenuItem } from '..';
 
@@ -24,32 +24,32 @@ export const MuteMenuItem = ({
   onError = () => {},
 }: MuteMenuItemProps): ReactElement => {
   const [isMuted, setIsMuted] = useState(user.isMuted);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const isProcessing = useRef(false);
 
   const onClickHandler = useCallback(() => {
     if (!isProcessing) {
-      setIsProcessing(true);
+      isProcessing.current = true;
       if (isMuted) {
         channel.unmuteUser(user)
           .then(() => {
             setIsMuted(false);
             onChange(channel, user, false);
-            setIsProcessing(false);
+            isProcessing.current = false;
           })
           .catch(err => {
             onError(err);
-            setIsProcessing(false);
+            isProcessing.current = false;
           });
       } else {
         channel.muteUser(user)
           .then(() => {
             setIsMuted(true);
             onChange(channel, user, true);
-            setIsProcessing(false);
+            isProcessing.current = false;
           })
           .catch(err => {
             onError(err);
-            setIsProcessing(false);
+            isProcessing.current = false;
           });
       }
     }

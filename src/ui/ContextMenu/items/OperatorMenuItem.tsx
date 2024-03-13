@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useCallback, useState } from 'react';
+import React, { ReactElement, ReactNode, useCallback, useRef, useState } from 'react';
 import { BaseChannel, Role, User } from '@sendbird/chat';
 import { MenuItem } from '..';
 import { Member } from '@sendbird/chat/groupChannel';
@@ -28,32 +28,32 @@ export const OperatorMenuItem = ({
   const [isOperator, setIsOperator] = useState(channel instanceof OpenChannel
     ? channel.isOperator(user)
     : (user as Member).role === Role.OPERATOR);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const isProcessing = useRef(false);
 
   const onClickHandler = useCallback(() => {
     if (!isProcessing) {
-      setIsProcessing(true);
+      isProcessing.current = true;
       if (isOperator) {
         channel.removeOperators([user.userId])
           .then(() => {
             setIsOperator(false);
             onChange(channel, user, false);
-            setIsProcessing(false);
+            isProcessing.current = false;
           })
           .catch(err => {
             onError(err);
-            setIsProcessing(false);
+            isProcessing.current = false;
           });
       } else {
         channel.addOperators([user.userId])
           .then(() => {
             setIsOperator(true);
             onChange(channel, user, true);
-            setIsProcessing(false);
+            isProcessing.current = false;
           })
           .catch(err => {
             onError(err);
-            setIsProcessing(false);
+            isProcessing.current = false;
           });
       }
     }
