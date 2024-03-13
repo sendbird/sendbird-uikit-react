@@ -37,7 +37,6 @@ export function setUpParams({
   const params = Object.assign(sdkInitParams, {
     appId,
     modules: [new GroupChannelModule(), new OpenChannelModule()],
-    newInstance: true,
     localCacheEnabled: true,
   });
   if (customApiHost) params.customApiHost = customApiHost;
