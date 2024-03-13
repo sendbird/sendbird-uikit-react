@@ -53,7 +53,7 @@ export const MuteMenuItem = ({
           });
       }
     }
-  }, [isProcessing]);
+  }, [isProcessing, isMuted]);
 
   return <MenuItem
     className={className}

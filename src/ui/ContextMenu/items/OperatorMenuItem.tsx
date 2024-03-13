@@ -57,7 +57,7 @@ export const OperatorMenuItem = ({
           });
       }
     }
-  }, [isProcessing]);
+  }, [isProcessing, isOperator]);
 
   return <MenuItem
     className={className}
