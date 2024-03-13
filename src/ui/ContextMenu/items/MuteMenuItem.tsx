@@ -27,7 +27,7 @@ export const MuteMenuItem = ({
   const isProcessing = useRef(false);
 
   const onClickHandler = useCallback(() => {
-    if (!isProcessing) {
+    if (!isProcessing.current) {
       isProcessing.current = true;
       if (isMuted) {
         channel.unmuteUser(user)
@@ -53,7 +53,7 @@ export const MuteMenuItem = ({
           });
       }
     }
-  }, [isProcessing]);
+  }, [isProcessing.current]);
 
   return <MenuItem
     className={className}

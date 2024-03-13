@@ -31,7 +31,7 @@ export const OperatorMenuItem = ({
   const isProcessing = useRef(false);
 
   const onClickHandler = useCallback(() => {
-    if (!isProcessing) {
+    if (!isProcessing.current) {
       isProcessing.current = true;
       if (isOperator) {
         channel.removeOperators([user.userId])
@@ -57,7 +57,7 @@ export const OperatorMenuItem = ({
           });
       }
     }
-  }, [isProcessing]);
+  }, [isProcessing.current]);
 
   return <MenuItem
     className={className}
