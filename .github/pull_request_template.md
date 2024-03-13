@@ -1,41 +1,25 @@
-## For Internal Contributors
+## Description
 
-* Follow the Scaled Trunk-Based Development workflow(https://trunkbaseddevelopment.com/)
-* Branch naming format -> `{type}/TICKET_ID/description`
-  * Where type = `feat` / `feature` / `fix` / `chore` / `doc` / `release`
-* Always receive PR review approvals
-* Rebase your branch with the main branch, and wait for CI to pass
-* Squash merge your commit
-  * Follow the provided template for both the PR description and squashing to the main branch
-  * Use imperative language in the title and description
-  * The template is very similar to conventional commits. [Read More](https://www.conventionalcommits.org/en/v1.0.0/)
+Linear: https://linear.app/gather-town/issue/ENG-XXXX
 
-Template
-```
-// PR title (Required)
-[type]: A short description of the changes in imperative language.
+[Description of changes]
 
-// Section: PR description (Optional)
-Add a brief description of the changes that you have involved in this PR.
-Bullet points are also fine.
+## Release Safety (remove me once you review this section)
 
-// Section: Footer (Recommended)
-// Recommended if you are dealing with SB_ISSUES (Customer issues) or release tickets.
-Fixes: [<TICKET_ID>](https://sendbird.atlassian.net/browse/<TICKET_ID>)
+Review release safety documentation in Gather's Notion.
 
-// Section: Changelogs (Recommended)
-// Add (internal) at the end of each changelog if internal. 
-### Changelogs
-- 
+Address relevant safety mechanisms in the Test Plan.
 
-// If you want to add coauthors - for example, if you pair programmed or they made significant contributions to the ideas in the code and you want to thank them.
-Co-authored-by: Name <name@example.com>, Name2 <name@example.com>
-```
+## Test Plan
 
-## External Contributions
+- [ ] Mark this box if automated tests would suffice for the test plan
 
-This project is not yet set up to accept pull requests from external contributors.
+Or, if you can't be 100% confident through automated checks, delete ☝️the line above and write out a manual test plan:
 
-If you have a pull request that you believe should be accepted, please contact
-the Developer Relations team <developer-advocates@sendbird.com> with details
-and we'll evaluate if we can setup a [CLA](https://en.wikipedia.org/wiki/Contributor_License_Agreement) to allow for the contribution.
+- [x] Step that is already finished
+- [ ] Step that still needs to be done
+- [ ] ...
+
+### CC
+
+Tag people here who you want to keep in the loop but whose review isn't required for merging.
