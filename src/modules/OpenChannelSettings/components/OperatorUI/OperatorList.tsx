@@ -4,7 +4,7 @@ import { UserListItem } from '../ParticipantUI/ParticipantItem';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
-import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
+import ContextMenu, { MenuItem, MenuItems, MuteMenuItem } from '../../../../ui/ContextMenu';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import IconButton from '../../../../ui/IconButton';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
@@ -64,17 +64,13 @@ const OperatorList = (): ReactElement => {
                         >
                           {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
                         </MenuItem>
-                        <MenuItem
-                          onClick={() => {
-                            if (operator.isMuted) {
-                              channel?.unmuteUser(operator).then(() => {
-                                closeDropdown();
-                              });
-                            } else {
-                              channel?.muteUser(operator).then(() => {
-                                closeDropdown();
-                              });
-                            }
+                        <MuteMenuItem
+                          channel={channel}
+                          user={operator}
+                          onChange={() => closeDropdown()}
+                          onError={() => {
+                            // FIXME: handle error later
+                            closeDropdown();
                           }}
                           dataSbId={`open_channel_setting_operator_context_menu_${operator.isMuted ? 'unmute' : 'mute'}`}
                         >
@@ -83,7 +79,7 @@ const OperatorList = (): ReactElement => {
                               ? stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNMUTE
                               : stringSet.OPEN_CHANNEL_SETTING__MODERATION__MUTE
                           }
-                        </MenuItem>
+                        </MuteMenuItem>
                         <MenuItem
                           onClick={() => {
                             channel?.banUser(operator).then(() => {

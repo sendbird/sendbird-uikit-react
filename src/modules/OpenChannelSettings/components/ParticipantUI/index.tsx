@@ -9,7 +9,7 @@ import type { Participant, User } from '@sendbird/chat';
 import type { ParticipantListQuery } from '@sendbird/chat/openChannel';
 
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
-import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
+import ContextMenu, { MenuItem, MenuItems, MuteMenuItem, OperatorMenuItem } from '../../../../ui/ContextMenu';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import IconButton from '../../../../ui/IconButton';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
@@ -109,19 +109,16 @@ export default function ParticipantList({
                             closeDropdown={closeDropdown}
                             openLeft
                           >
-                            <MenuItem
-                              onClick={() => {
-                                if (isOperator) {
-                                  channel?.removeOperators([p.userId]).then(() => {
-                                    closeDropdown();
-                                    refreshList();
-                                  });
-                                } else {
-                                  channel?.addOperators([p.userId]).then(() => {
-                                    closeDropdown();
-                                    refreshList();
-                                  });
-                                }
+                            <OperatorMenuItem
+                              channel={channel}
+                              user={p}
+                              onChange={() => {
+                                closeDropdown();
+                                refreshList();
+                              }}
+                              onError={() => {
+                                // FIXME: handle error later
+                                closeDropdown();
                               }}
                               dataSbId={`open_channel_setting_partitipant_conext_menu_${(
                                 isOperator) ? 'unregister_operator' : 'register_as_operator'}`
@@ -132,20 +129,17 @@ export default function ParticipantList({
                                   ? stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR
                                   : stringSet.OPEN_CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR
                               }
-                            </MenuItem>
-                            <MenuItem
-                              onClick={() => {
-                                if (p.isMuted) {
-                                  channel?.unmuteUser(p).then(() => {
-                                    closeDropdown();
-                                    refreshList();
-                                  });
-                                } else {
-                                  channel?.muteUser(p).then(() => {
-                                    closeDropdown();
-                                    refreshList();
-                                  });
-                                }
+                            </OperatorMenuItem>
+                            <MuteMenuItem
+                              channel={channel}
+                              user={p}
+                              onChange={() => {
+                                closeDropdown();
+                                refreshList();
+                              }}
+                              onError={() => {
+                                // FIXME: handle error later
+                                closeDropdown();
                               }}
                               dataSbId={`open_channel_setting_partitipant_conext_menu_${p.isMuted ? 'unmute' : 'mute'}`}
                             >
@@ -154,7 +148,7 @@ export default function ParticipantList({
                                   ? stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNMUTE
                                   : stringSet.OPEN_CHANNEL_SETTING__MODERATION__MUTE
                               }
-                            </MenuItem>
+                            </MuteMenuItem>
                             <MenuItem
                               onClick={() => {
                                 channel?.banUser(p).then(() => {
