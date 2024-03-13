@@ -190,6 +190,7 @@ describe('useConnect/setupConnection/setUpParams', () => {
     // @ts-ignore
     expect(require('@sendbird/chat').init).toBeCalledWith({
       appId,
+      newInstance: false,
       localCacheEnabled: true,
       modules: [
         // @ts-ignore
@@ -208,6 +209,7 @@ describe('useConnect/setupConnection/setUpParams', () => {
     // @ts-ignore
     expect(require('@sendbird/chat').init).toBeCalledWith({
       appId,
+      newInstance: false,
       localCacheEnabled: true,
       modules: [
         // @ts-ignore
@@ -228,6 +230,7 @@ describe('useConnect/setupConnection/setUpParams', () => {
     // @ts-ignore
     expect(require('@sendbird/chat').init).toBeCalledWith({
       appId,
+      newInstance: false,
       localCacheEnabled: true,
       modules: [
         // @ts-ignore
@@ -247,6 +250,7 @@ describe('useConnect/setupConnection/setUpParams', () => {
     // @ts-ignore
     expect(require('@sendbird/chat').init).toBeCalledWith({
       appId,
+      newInstance: false,
       localCacheEnabled: true,
       modules: [
         // @ts-ignore
