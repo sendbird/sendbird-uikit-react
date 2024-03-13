@@ -40,7 +40,7 @@ export default function BannedUsersModal({
         hideFooter
         onCancel={() => onCancel()}
         onSubmit={noop}
-        titleText={stringSet.CHANNEL_SETTING__MUTED_MEMBERS__TITLE}
+        titleText={stringSet.CHANNEL_SETTING__BANNED_MEMBERS__TITLE}
       >
         <div
           className="sendbird-more-members__popup-scroll"
@@ -98,9 +98,9 @@ export default function BannedUsersModal({
                             }));
                           });
                         }}
-                        dataSbId="channel_setting_banned_user_context_menu_ban"
+                        dataSbId="channel_setting_banned_user_context_menu_unban"
                       >
-                        {stringSet.CHANNEL_SETTING__MODERATION__BAN}
+                        {stringSet.CHANNEL_SETTING__MODERATION__UNBAN}
                       </MenuItem>
                     </MenuItems>
                   )}
