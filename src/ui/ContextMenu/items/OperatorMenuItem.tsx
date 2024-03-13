@@ -59,10 +59,14 @@ export const OperatorMenuItem = ({
     }
   }, [isProcessing, isOperator]);
 
-  return <MenuItem
-    className={className}
-    disable={disable}
-    dataSbId={dataSbId}
-    onClick={onClickHandler}
-  >{children}</MenuItem>;
+  return (
+    <MenuItem
+      className={className}
+      disable={disable}
+      dataSbId={dataSbId}
+      onClick={onClickHandler}
+    >
+      {children}
+    </MenuItem>
+  );
 };

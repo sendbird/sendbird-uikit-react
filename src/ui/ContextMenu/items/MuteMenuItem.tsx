@@ -55,10 +55,14 @@ export const MuteMenuItem = ({
     }
   }, [isProcessing, isMuted]);
 
-  return <MenuItem
-    className={className}
-    disable={disable}
-    dataSbId={dataSbId}
-    onClick={onClickHandler}
-  >{children}</MenuItem>;
+   return (
+    <MenuItem
+      className={className}
+      disable={disable}
+      dataSbId={dataSbId}
+      onClick={onClickHandler}
+    >
+      {children}
+    </MenuItem>
+  );
 };
