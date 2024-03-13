@@ -5,6 +5,7 @@ import GroupChannelUI, { GroupChannelUIProps } from './components/GroupChannelUI
 
 export interface GroupChannelProps extends GroupChannelProviderProps, GroupChannelUIProps {}
 export const GroupChannel = (props: GroupChannelProps) => {
+  console.log('## channelurl: ', props.channelUrl);
   return (
     <GroupChannelProvider {...props}>
       <GroupChannelUI {...props} />

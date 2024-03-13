@@ -153,7 +153,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const [feedbackFailedText, setFeedbackFailedText] = useState('');
   const [totalBottom, setTotalBottom] = useState<number>(0);
 
-  const uiContainerType:UI_CONTAINER_TYPES = getMessageContentMiddleClassNameByContainerType({
+  const uiContainerType: UI_CONTAINER_TYPES = getMessageContentMiddleClassNameByContainerType({
     message,
     isMobile,
   });

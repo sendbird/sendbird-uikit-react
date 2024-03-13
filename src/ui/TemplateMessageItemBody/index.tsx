@@ -57,7 +57,7 @@ export function TemplateMessageItemBody({
   message,
   isByMe = false,
   theme = 'light',
-  onMessageHeightChange = () => { /* noop */ },
+  // onMessageHeightChange = () => { /* noop */ },
 }: TemplateMessageItemBodyProps): ReactElement {
   const templateData: MessageTemplateData | undefined = message.extendedMessagePayload?.['template'] as MessageTemplateData;
   if (!templateData?.key) {
@@ -208,9 +208,6 @@ export function TemplateMessageItemBody({
     } catch (e) {
       result.isErrored = true;
     }
-    setTimeout(() => {
-      onMessageHeightChange();
-    }, 50);
     return result;
   }
 

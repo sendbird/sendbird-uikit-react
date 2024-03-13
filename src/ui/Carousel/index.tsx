@@ -7,15 +7,17 @@ interface CarouselItemProps {
   width: string;
 }
 
+function shouldRenderAsFixed(item: ReactElement) {
+  return item.props.templateItems[0].width?.type === 'fixed';
+}
+
 function CarouselItem({
   key,
   item,
   width,
 }: CarouselItemProps): ReactElement {
-  return <div key={key} style={{ maxWidth: '100%' }}>
-    <div style={{ width: width }}>{
-      item
-    }</div>
+  return <div key={key} style={shouldRenderAsFixed(item) ? { width: 'fit-content' } : { minWidth: width }}>
+    {item}
   </div>;
 }
 
@@ -91,7 +93,22 @@ export function Carousel({
     setOffset(0);
   };
 
-  const translateX = currentIndex * (itemWidth + gap) * -1 + offset;
+  function getCurrentTranslateX() {
+    const widthVals = items.map((item) => {
+      if (shouldRenderAsFixed(item)) {
+        return item.props.templateItems[0].width?.value;
+      }
+      return itemWidth;
+    });
+    let sum = 0;
+    for (let i = 1; i <= currentIndex; i++) {
+      sum += widthVals[i - 1] + gap;
+    }
+    const translateX = sum * -1 + offset;
+    return translateX;
+  }
+
+  const translateX = getCurrentTranslateX();
 
   return (
     <div
