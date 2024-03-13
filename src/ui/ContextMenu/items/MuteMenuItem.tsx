@@ -55,7 +55,7 @@ export const MuteMenuItem = ({
     }
   }, [isProcessing, isMuted]);
 
-   return (
+  return (
     <MenuItem
       className={className}
       disable={disable}
