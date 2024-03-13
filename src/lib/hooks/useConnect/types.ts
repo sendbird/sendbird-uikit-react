@@ -20,6 +20,7 @@ export type TriggerTypes = {
   // todo: doulbe check this type before merge
   accessToken?: string;
   isUserIdUsedForNickname?: boolean;
+  isNewApp?: boolean;
   isMobile?: boolean;
 };
 
