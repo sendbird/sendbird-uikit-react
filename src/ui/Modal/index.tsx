@@ -141,24 +141,20 @@ export function Modal(props: ModalProps): ReactElement {
             />
           ))
         }
-        {
-          !isMobile && (
-            <div className="sendbird-modal__close">
-              <IconButton
-                width="32px"
-                height="32px"
-                onClick={handleClose}
-              >
-                <Icon
-                  type={IconTypes.CLOSE}
-                  fillColor={IconColors.DEFAULT}
-                  width="24px"
-                  height="24px"
-                />
-              </IconButton>
-            </div>
-          )
-        }
+        <div className="sendbird-modal__close">
+          <IconButton
+            width="32px"
+            height="32px"
+            onClick={handleClose}
+          >
+            <Icon
+              type={IconTypes.CLOSE}
+              fillColor={IconColors.DEFAULT}
+              width="24px"
+              height="24px"
+            />
+          </IconButton>
+        </div>
       </div>
       <div
         className={`
