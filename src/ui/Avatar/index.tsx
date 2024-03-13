@@ -153,47 +153,46 @@ interface AvatarProps {
   customDefaultComponent?({ width, height }: { width: number | string, height: number | string }): ReactElement;
 }
 
-function Avatar(
-  {
-    className = '',
-    src = '',
-    alt = '',
-    width = '56px',
-    height = '56px',
-    zIndex = 0,
-    left = '',
-    onClick,
-    customDefaultComponent,
-  }: AvatarProps,
-  ref?: RefObject<HTMLDivElement>,
-): ReactElement {
-  return (
-    <div
-      className={[
-        ...(Array.isArray(className) ? className : [className]),
-        'sendbird-avatar',
-      ].join(' ')}
-      role="button"
-      ref={ref}
-      style={{
-        height,
-        width,
-        zIndex,
-        left,
-      }}
-      onClick={onClick}
-      onKeyDown={onClick}
-      tabIndex={0}
-    >
-      <AvatarInner
-        src={src}
-        width={width}
-        height={height}
-        alt={alt}
-        customDefaultComponent={customDefaultComponent}
-      />
-    </div>
-  );
-}
-
-export default React.forwardRef(Avatar);
+const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
+  (
+    {
+      className = '',
+      src = '',
+      alt = '',
+      width = '56px',
+      height = '56px',
+      zIndex = 0,
+      left = '',
+      onClick,
+      customDefaultComponent,
+    }: AvatarProps,
+    ref: RefObject<HTMLDivElement>) => {
+    return (
+      <div
+        className={[
+          ...(Array.isArray(className) ? className : [className]),
+          'sendbird-avatar',
+        ].join(' ')}
+        role="button"
+        ref={ref}
+        style={{
+          height,
+          width,
+          zIndex,
+          left,
+        }}
+        onClick={onClick}
+        onKeyDown={onClick}
+        tabIndex={0}
+      >
+        <AvatarInner
+          src={src}
+          width={width}
+          height={height}
+          alt={alt}
+          customDefaultComponent={customDefaultComponent}
+        />
+      </div>
+    );
+  });
+export default Avatar;

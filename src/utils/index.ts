@@ -15,6 +15,7 @@ import { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOutgoingMessageState';
 import { Nullable } from '../types';
 import { match } from 'ts-pattern';
+import { SendableMessage } from '@sendbird/chat/lib/__definition';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 export const SUPPORTED_MIMES = {
@@ -246,7 +247,7 @@ export const isUserMessage = (message: CoreMessageType): boolean => (
       : message?.messageType === 'user'
   )
 );
-export const isFileMessage = (message: CoreMessageType): boolean => (
+export const isFileMessage = (message: CoreMessageType | undefined): boolean => <boolean>(
   message && (
     message['isFileMessage'] && typeof message.isFileMessage === 'function'
       ? message.isFileMessage()
@@ -254,7 +255,7 @@ export const isFileMessage = (message: CoreMessageType): boolean => (
   )
 );
 export const isMultipleFilesMessage = (
-  message: CoreMessageType,
+  message: CoreMessageType | undefined,
 ): boolean => (
   message && (
     message['isMultipleFilesMessage'] && typeof message.isMultipleFilesMessage === 'function'
@@ -292,7 +293,7 @@ export const isThumbnailMessage = (message: SendableMessageType): boolean => (
 );
 export const isImageMessage = (message: SendableMessageType): boolean => message && message.isFileMessage() && isThumbnailMessage(message) && isImage(message.type);
 export const isImageFileInfo = (fileInfo: UploadedFileInfo): boolean => fileInfo
-  && (isImage(fileInfo.mimeType) || isGif(fileInfo.mimeType));
+  && (isImage(fileInfo.mimeType ?? '') || isGif(fileInfo.mimeType ?? ''));
 export const isVideoMessage = (message: SendableMessageType): boolean => (
   message && isThumbnailMessage(message) && isVideo((message as FileMessage).type)
 );
@@ -418,7 +419,7 @@ export const getUseReaction = (store: UIKitStore, channel: GroupChannel | OpenCh
 };
 
 export function getSuggestedReplies(message?: BaseMessage): string[] {
-  if (Array.isArray(message?.extendedMessagePayload?.suggested_replies)) {
+  if (Array.isArray(message?.extendedMessagePayload?.suggested_replies) && message?.extendedMessagePayload) {
     return message.extendedMessagePayload.suggested_replies;
   } else {
     return [];
@@ -797,7 +798,7 @@ export const getChannelsWithUpsertedChannel = (
   } else {
     channels.push(channel);
   }
-  return sortChannelList(channels, order);
+  return sortChannelList(channels, order ?? GroupChannelListOrder.LATEST_LAST_MESSAGE);
 };
 
 export const getMatchedUserIds = (word: string, users: Array<User>, _template?: string): boolean => {
@@ -884,5 +885,5 @@ export const arrayEqual = (array1: Array<unknown>, array2: Array<unknown>): bool
 };
 
 export const isSendableMessage = (message?: BaseMessage | null): message is SendableMessageType => {
-  return Boolean(message) && 'sender' in message;
+  return Boolean(message) && 'sender' in (message as SendableMessage);
 };

@@ -11,7 +11,7 @@ interface MenuItemsProps {
   closeDropdown: () => void;
 }
 
-type MenuStyleType = { top?: number, left?: number };
+type MenuStyleType = { top: number, left: number };
 interface MenuItemsState {
   menuStyle: MenuStyleType;
   handleClickOutside: (e: MouseEvent) => void;
@@ -24,7 +24,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
   constructor(props: MenuItemsProps) {
     super(props);
     this.state = {
-      menuStyle: {},
+      menuStyle: {top: 0, left: 0},
       handleClickOutside: () => { /* noop */ },
     };
   }
@@ -123,7 +123,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
             </ul>
           </div>
         ),
-        document.getElementById('sendbird-dropdown-portal'),
+        document.getElementById('sendbird-dropdown-portal') ?? document.body
       )
     );
   }
