@@ -32,7 +32,7 @@ export default function MutedMembersModal({
 
   useEffect(() => {
     const memberUserListQuery = channel?.createMemberListQuery({
-      limit: 10,
+      limit: 20,
       // @ts-ignore
       mutedMemberFilter: 'muted',
     });
