@@ -28,8 +28,6 @@ interface TemplateMessageItemBodyProps {
   message: BaseMessage;
   isByMe?: boolean;
   theme?: SendbirdTheme;
-  onMessageHeightChange?: (isBottomMessageAffected?: boolean) => void;
-  onCarouselDraggingChange?: (isDragging: boolean) => void;
   onLoad?: () => void;
 }
 
@@ -58,10 +56,7 @@ export function TemplateMessageItemBody({
   message,
   isByMe = false,
   theme = 'light',
-  // onMessageHeightChange = () => { /* noop */ },
-  onCarouselDraggingChange = () => { /* noop */ },
 }: TemplateMessageItemBodyProps): ReactElement {
-  // console.log('## message: ', message.extendedMessagePayload);
   const templateData: MessageTemplateData | undefined = message.extendedMessagePayload?.['template'] as MessageTemplateData;
   if (!templateData?.key) {
     return <FallbackTemplateMessageItemBody className={className} message={message} isByMe={isByMe} />;
@@ -286,7 +281,6 @@ export function TemplateMessageItemBody({
                 />
               ))}
               gap={renderData.carouselItem.spacing}
-              onCarouselDraggingChange={onCarouselDraggingChange}
             />
         }
       </MessageTemplateErrorBoundary>

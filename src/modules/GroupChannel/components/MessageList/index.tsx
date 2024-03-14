@@ -80,7 +80,6 @@ export const MessageList = ({
   const store = useSendbirdStateContext();
 
   const [unreadSinceDate, setUnreadSinceDate] = useState<Date>();
-  const [isCarouselDragging, setIsCarouselDragging] = useState(false);
 
   useEffect(() => {
     if (isScrollBottomReached) {
@@ -149,10 +148,6 @@ export const MessageList = ({
     return renderPlaceholderEmpty();
   }
 
-  function handleCarouselDrag(isDragging: boolean) {
-    setIsCarouselDragging(isDragging);
-  }
-
   return (
     <>
       <div className={`sendbird-conversation__messages ${className}`}>
@@ -160,10 +155,7 @@ export const MessageList = ({
           <div className="sendbird-conversation__padding" />
           <div
             ref={scrollRef}
-            className={[
-              'sendbird-conversation__messages-padding',
-              isCarouselDragging ? 'sendbird-on-carousel-drag' : '',
-            ].join(' ')}
+            className="sendbird-conversation__messages-padding"
           >
             {messages.map((message, idx) => {
               const { chainTop, chainBottom, hasSeparator } = getMessagePartsInfo({
@@ -186,7 +178,6 @@ export const MessageList = ({
                     renderMessageContent,
                     renderSuggestedReplies,
                     renderCustomSeparator,
-                    handleCarouselDrag,
                   })}
                 </MessageProvider>
               );

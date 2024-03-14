@@ -72,7 +72,6 @@ export interface MessageContentProps {
   // onClick listener for thread quote message view (for open thread module)
   onQuoteMessageClick?: (props: { message: SendableMessageType }) => void;
   onMessageHeightChange?: (isBottomMessageAffected?: boolean) => void;
-  onCarouselDraggingChange?: (isDragging: boolean) => void;
 
   // For injecting customizable subcomponents
   renderSenderProfile?: (props: MessageProfileProps) => ReactNode;
@@ -111,7 +110,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     onReplyInThread,
     onQuoteMessageClick,
     onMessageHeightChange,
-    onCarouselDraggingChange,
 
     // Public props for customization
     renderSenderProfile = (props: MessageProfileProps) => (
@@ -380,7 +378,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               channel,
               showFileViewer,
               onMessageHeightChange,
-              onCarouselDraggingChange,
               mouseHover,
               isMobile,
               config,

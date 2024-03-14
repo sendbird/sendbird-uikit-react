@@ -29,7 +29,6 @@ export interface MessageBodyProps {
   message: CoreMessageType;
   showFileViewer?: (bool: boolean) => void;
   onMessageHeightChange?: (isBottomMessageAffected?: boolean) => void;
-  onCarouselDraggingChange?: (isDragging: boolean) => void;
 
   mouseHover: boolean;
   isMobile: boolean;
@@ -44,7 +43,6 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
     channel,
     showFileViewer,
     onMessageHeightChange,
-    onCarouselDraggingChange,
 
     mouseHover,
     isMobile,
@@ -68,8 +66,6 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         message={message as BaseMessage}
         isByMe={isByMe}
         theme={config?.theme as SendbirdTheme}
-        onMessageHeightChange={onMessageHeightChange}
-        onCarouselDraggingChange={onCarouselDraggingChange}
       />
     ))
     .when((message) => isOgMessageEnabledInGroupChannel

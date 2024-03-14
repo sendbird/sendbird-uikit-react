@@ -1,10 +1,20 @@
 import './index.scss';
-import React, {ReactElement, useEffect, useRef, useState} from 'react';
+import React, { ReactElement, useRef, useState } from 'react';
+
+const PADDING_WIDTH = 24;
+const CONTENT_LEFT_WIDTH = 40;
+const SWIPE_THRESHOLD = 30;
+const LAST_ITEM_RIGHT_SNAP_THRESHOLD = 100;
+
+interface ItemPosition {
+  start: number;
+  end: number;
+}
 
 interface CarouselItemProps {
   key: string;
   item: ReactElement;
-  width: string;
+  defaultWidth: string;
 }
 
 function shouldRenderAsFixed(item: ReactElement) {
@@ -14,9 +24,9 @@ function shouldRenderAsFixed(item: ReactElement) {
 function CarouselItem({
   key,
   item,
-  width,
+  defaultWidth,
 }: CarouselItemProps): ReactElement {
-  return <div key={key} style={shouldRenderAsFixed(item) ? { width: 'fit-content' } : { minWidth: width }}>
+  return <div key={key} style={shouldRenderAsFixed(item) ? { width: 'fit-content' } : { minWidth: defaultWidth }}>
     {item}
   </div>;
 }
@@ -25,32 +35,32 @@ interface CarouselProps {
   id: string;
   items: ReactElement[];
   gap?: number;
-  onCarouselDraggingChange?: (isDragging: boolean) => void;
 }
 
 export function Carousel({
   id,
   items,
   gap = 8,
-  onCarouselDraggingChange = () => { /* noop */ }
 }: CarouselProps): ReactElement {
   const carouselRef = useRef<HTMLDivElement>(null);
-  const itemWidth = carouselRef.current?.clientWidth ?? 0;
+  const screenWidth = window.innerWidth;
+  const defaultItemWidth = carouselRef.current?.clientWidth ?? 0;
   const itemWidths = items.map((item) => {
     if (shouldRenderAsFixed(item)) {
       return item.props.templateItems[0].width?.value;
     }
-    return itemWidth;
+    return defaultItemWidth;
   });
-  // const viewCenterWidth = window.innerWidth / 2;
-  // console.log('## viewCenterWidth: ', viewCenterWidth);
-
+  const allItemsWidth = itemWidths.reduce((prev, curr) => prev + gap + curr);
+  const lastItemWidth = itemWidths[itemWidths.length - 1];
+  const isLastItemNarrow = lastItemWidth <= LAST_ITEM_RIGHT_SNAP_THRESHOLD;
+  const isLastTwoItemsFitScreen = getIsLastTwoItemsFitScreen();
+  const itemPositions: ItemPosition[] = getEachItemPositions();
   const [currentIndex, setCurrentIndex] = useState(0);
-  // const [currX, setCurrX] = useState(0);
   const [dragging, setDragging] = useState<'vertical' | 'horizontal' | null>(null);
   const [startX, setStartX] = useState(0);
   const [offset, setOffset] = useState(0);
-  // const [eachItemPositions] = useState(getEachItemPositions());
+  const [translateX, setTranslateX] = useState(0);
 
   const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -77,152 +87,99 @@ export function Carousel({
     setStartX(event.touches[0].clientX);
   };
 
-
-  // useEffect(() => {
-  //   const handler = (e) => {
-  //     handleTouchMove(e)
-  //   }
-  //   if (carouselRef && carouselRef.current) {
-  //     carouselRef.current.addEventListener('touchmove', handler, {passive: false});
-  //     return function cleanup() {
-  //       carouselRef.current.removeEventListener("touchmove", handler);
-  //     };
-  //   }
-  // }, []);
-
   const handleTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
     if (!startX) return;
-
     const touchMoveX = event.touches[0].clientX;
-    const deltaX = touchMoveX - startX;
-
+    const deltaX = Math.abs(touchMoveX - startX);
+    const deltaY = Math.abs(event.touches[0].clientY - event.touches[event.touches.length - 1].clientY);
     const threshold = 5;
-    // Check if swipe is more horizontal than vertical
-    if (dragging === 'horizontal' || (dragging !== 'vertical' && Math.abs(deltaX) > Math.abs(event.touches[0].clientY - event.touches[event.touches.length-1].clientY) + threshold)) {
-        setDragging('horizontal');
-        // event.preventDefault();
-        // event.stopPropagation();
-        const parentElement = document.getElementsByClassName('sendbird-conversation__messages-padding');
-        (parentElement[0] as HTMLElement).style.overflowY = 'hidden';
-        // onCarouselDraggingChange(true);
+
+    if (dragging === 'horizontal' || (dragging !== 'vertical' && deltaX > deltaY + threshold)) {
+      const parentElement = document.getElementsByClassName('sendbird-conversation__messages-padding');
+      (parentElement[0] as HTMLElement).style.overflowY = 'hidden';
+      setDragging('horizontal');
     } else {
       setDragging('vertical');
       return;
     }
-
     const newOffset = event.touches[0].clientX - startX;
     setOffset(newOffset);
   };
 
   const handleTouchEnd = () => {
-    if (!dragging) return;
+    if (dragging !== 'horizontal') return;
     setDragging(null);
     handleDragEnd();
   };
 
-  // This is for both web and mobile
   const handleDragEnd = () => {
-    // const threshold = carouselRef.current.offsetWidth / 2;
-    const threshold = 50; // itemWidths[currentIndex] / 2;
     const absOffset = Math.abs(offset);
-    if (absOffset >= threshold) {
-      // If dragged to left, swipe left
+    if (absOffset >= SWIPE_THRESHOLD) {
+      // If dragged to left, next index should be to the right
       if (offset < 0 && currentIndex < items.length - 1) {
         const nextIndex = currentIndex + 1;
-        const lastIndex = items.length - 1;
-        setCurrentIndex(isAlmostEnd(nextIndex) ? lastIndex : nextIndex);
-        // If dragged to right, swipe right
+        /**
+         * This is special logic for "더 보기" button for Socar use-case.
+         * The button will have a small width (less than 50px).
+         * We want to include this button in the view and snap to right padding wall IFF !isLastTwoItemsFitScreen.
+         */
+        if (isLastItemNarrow) {
+          if (isLastTwoItemsFitScreen) {
+            if (nextIndex !== items.length - 1) {
+              setTranslateX(itemPositions[nextIndex].start);
+              setCurrentIndex(nextIndex);
+            }
+          } else if (nextIndex !== items.length - 1) {
+            setTranslateX(itemPositions[nextIndex].start);
+            setCurrentIndex(nextIndex);
+          } else {
+            const translateWidth = itemPositions[nextIndex].start - lastItemWidth;
+            const rightEmptyWidth = screenWidth - (allItemsWidth + translateWidth + PADDING_WIDTH + CONTENT_LEFT_WIDTH);
+            setTranslateX(translateWidth + rightEmptyWidth);
+            setCurrentIndex(nextIndex);
+          }
+        } else {
+          setTranslateX(itemPositions[nextIndex].start);
+          setCurrentIndex(nextIndex);
+        }
+      // If dragged to right, next index should be to the left
       } else if (offset > 0 && currentIndex > 0) {
-        setCurrentIndex(currentIndex - 1);
+        const nextIndex = currentIndex - 1;
+        setTranslateX(itemPositions[nextIndex].start);
+        setCurrentIndex(nextIndex);
       }
     }
-
-    // setCurrX(currX + offset);
     setOffset(0);
-    // onCarouselDraggingChange(false);
     const parentElement = document.getElementsByClassName('sendbird-conversation__messages-padding');
     (parentElement[0] as HTMLElement).style.overflowY = 'scroll';
   };
 
   function getCurrentTranslateX() {
-    let sum = 0;
-    for (let i = 1; i <= currentIndex; i++) {
-      if (i < items.length - 1) {
-        sum += itemWidths[i - 1] + gap;
-      } else {
-        const PADDING_WIDTH = 24;
-        const CONTENT_LEFT_WIDTH = 40;
-        const currentItemWidth = itemWidths[i - 1];
-        const nextItemWidth = itemWidths[i];
-        const cutOffWidth = (PADDING_WIDTH + CONTENT_LEFT_WIDTH + currentItemWidth + gap + nextItemWidth) - window.innerWidth;
-        sum += (cutOffWidth + PADDING_WIDTH);
-      }
-    }
-    const translateX = sum * -1 + offset;
-    return translateX;
+    return translateX + offset;
   }
 
-  function isAlmostEnd(index: number) {
-    const PADDING_WIDTH = 24;
-    const CONTENT_LEFT_WIDTH = 40;
-    let sum = 0;
-    const screenWidth = window.innerWidth;
-    const restItemsWidth = itemWidths.slice(index).reduce((prev, curr) => prev + gap + curr);
-    const threshold = 50;
+  function getIsLastTwoItemsFitScreen() {
+    const restItemsWidth = itemWidths.slice(-2).reduce((prev, curr) => prev + gap + curr);
     const restTotalWidth = PADDING_WIDTH + CONTENT_LEFT_WIDTH + restItemsWidth;
-    return restTotalWidth < screenWidth || restTotalWidth < screenWidth + threshold
+    return restTotalWidth <= screenWidth;
   }
 
-  interface ItemPosition {
-    start: number;
-    end: number;
-  }
+  const currentTranslateX = getCurrentTranslateX();
 
   function getEachItemPositions(): ItemPosition[] {
-    const fullWidth = itemWidths.reduce((prev, curr) => prev + gap + curr) * -1;
-    console.log('## fullWidth: ', fullWidth);
-    const itemCenterPositions = [];
     let accumulator = 0;
-    itemWidths.map((itemWidth, i) => {
+    return itemWidths.map((itemWidth, i): ItemPosition => {
       if (i > 0) {
         accumulator -= gap;
       }
-      itemCenterPositions[i] = [accumulator, accumulator - itemWidth];
+      const itemPosition = {
+        start: accumulator,
+        end: accumulator - itemWidth,
+      };
       accumulator -= itemWidth;
+      return itemPosition;
     });
-    console.log('## itemCenterPositions: ', itemCenterPositions);
-    return itemCenterPositions;
   }
-
-  // function getClosestItemIndex() {
-  //
-  //   const fullWidth = itemWidths.reduce((prev, curr) => prev + gap + curr);
-  //   const PADDING_WIDTH = 24;
-  //   const CONTENT_LEFT_WIDTH = 40;
-  //   const currentItemWidth = itemWidths[i - 1];
-  //   const nextItemWidth = itemWidths[i];
-  //   const cutOffWidth = (PADDING_WIDTH + CONTENT_LEFT_WIDTH + currentItemWidth + gap + nextItemWidth) - window.innerWidth;
-  //
-  // }
-
-
-  // function getSnappingPoint() {
-  //   if (eachItemPositions.length < 2) return 0;
-  //   for (let i = 0; i < eachItemPositions.length - 1; i++) {
-  //     const curr = eachItemPositions[i];
-  //     const next = eachItemPositions[i + 1];
-  //     const currCenterPosition = translateX - viewCenterWidth;
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   if (offset > 0) {
-  //     setCurrX(currX + offset);
-  //   }
-  // }, [offset])
-
-  const translateX = getCurrentTranslateX();
-  // console.log('## translateX: ', translateX);
 
   return (
     <div
@@ -243,12 +200,12 @@ export function Carousel({
         className='sendbird-carousel-items-wrapper'
         style={{
           transition: dragging ? 'none' : 'transform 0.3s ease',
-          transform: `translateX(${translateX}px)`,
+          transform: `translateX(${currentTranslateX}px)`,
           gap: gap,
         }}
       >
         {items.map((item, index) => (
-          <CarouselItem key={`${id}-${index}`} item={item} width={itemWidth + 'px'}/>
+          <CarouselItem key={`${id}-${index}`} item={item} defaultWidth={defaultItemWidth + 'px'}/>
         ))}
       </div>
     </div>
