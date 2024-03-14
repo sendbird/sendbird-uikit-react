@@ -116,11 +116,9 @@ export default function UserListItem({
         color={LabelColors.ONBACKGROUND_1}
       >
         {user.nickname || stringSet.NO_NAME}
-        {
-          (currentUser === user.userId) && (
-            ' (You)'
-          )
-        }
+        {(currentUser === user.userId) && (
+          stringSet.CHANNEL_SETTING__MEMBERS__YOU
+        )}
       </Label>
       { // if there is now nickname, display userId
         !user.nickname && (
