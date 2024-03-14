@@ -165,7 +165,7 @@ export default function useMessageTemplateUtils({
           const parsedTemplates: SendbirdMessageTemplate[] = JSON.parse(cachedMessageTemplates);
           const existingKeys = parsedTemplates.map((parsedTemplate) => parsedTemplate.key);
           newParsedTemplates.forEach((newParsedTemplate) => {
-            if (existingKeys.indexOf(newParsedTemplate.key) === -1) {
+            if (!existingKeys.includes(newParsedTemplate.key)) {
               parsedTemplates.push(newParsedTemplate);
             }
           });

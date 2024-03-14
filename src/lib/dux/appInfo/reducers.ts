@@ -18,7 +18,7 @@ export default function reducer(state: AppInfoStateType, action: AppInfoActionTy
         const templatesInfo = state.messageTemplatesInfo;
         if (!templatesInfo) return state; // Not initialized. Ignore.
 
-        const waitingTemplateKeysMap = state.waitingTemplateKeysMap;
+        const waitingTemplateKeysMap = { ...state.waitingTemplateKeysMap };
         payload.forEach((templatesMapData) => {
           const { key, template } = templatesMapData;
           templatesInfo.templatesMap[key] = template;
@@ -26,6 +26,7 @@ export default function reducer(state: AppInfoStateType, action: AppInfoActionTy
         });
         return {
           ...state,
+          waitingTemplateKeysMap,
           messageTemplatesInfo: templatesInfo,
         };
       })
@@ -33,25 +34,33 @@ export default function reducer(state: AppInfoStateType, action: AppInfoActionTy
       { type: APP_INFO_ACTIONS.UPSERT_WAITING_TEMPLATE_KEYS },
       ({ payload }) => {
         const { keys, requestedAt } = payload;
+        const waitingTemplateKeysMap = { ...state.waitingTemplateKeysMap };
         keys.forEach((key) => {
-          state.waitingTemplateKeysMap[key] = {
-            erroredMessageIds: state.waitingTemplateKeysMap[key]?.erroredMessageIds ?? [],
+          waitingTemplateKeysMap[key] = {
+            erroredMessageIds: waitingTemplateKeysMap[key]?.erroredMessageIds ?? [],
             requestedAt,
           };
         });
-        return { ...state };
+        return {
+          ...state,
+          waitingTemplateKeysMap,
+        };
       })
     .with(
       { type: APP_INFO_ACTIONS.MARK_ERROR_WAITING_TEMPLATE_KEYS },
       ({ payload }) => {
         const { keys, messageId } = payload;
+        const waitingTemplateKeysMap = { ...state.waitingTemplateKeysMap };
         keys.forEach((key) => {
-          const waitingTemplateKeyData: WaitingTemplateKeyData | undefined = state.waitingTemplateKeysMap[key];
+          const waitingTemplateKeyData: WaitingTemplateKeyData | undefined = waitingTemplateKeysMap[key];
           if (waitingTemplateKeyData && waitingTemplateKeyData.erroredMessageIds.indexOf(messageId) === -1) {
             waitingTemplateKeyData.erroredMessageIds.push(messageId);
           }
         });
-        return { ...state };
+        return {
+          ...state,
+          waitingTemplateKeysMap,
+        };
       })
     .otherwise(() => {
       return state;
