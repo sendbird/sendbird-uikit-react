@@ -47,6 +47,7 @@ export default function channelReducer(
         hasMoreNext: false,
         allMessages: [],
         localMessages: [],
+        fetchChannelError: null,
       };
     })
     .with({ type: channelActions.FETCH_INITIAL_MESSAGES_START }, () => {
@@ -58,6 +59,7 @@ export default function channelReducer(
           : true,
         ),
         localMessages: [],
+        fetchChannelError: null,
       };
     })
     .with({ type: channelActions.FETCH_INITIAL_MESSAGES_SUCCESS }, (action) => {
@@ -75,6 +77,7 @@ export default function channelReducer(
         hasMoreNext: true,
         oldestMessageTimeStamp,
         latestMessageTimeStamp,
+        fetchChannelError: null,
         allMessages: [...messages],
       };
     })
@@ -100,12 +103,10 @@ export default function channelReducer(
           ? duplicatedMessage
           : msg;
       });
-      const filteredNewMessages = duplicatedMessageIds.length > 0
-        ? messages.filter(
-          (msg) => !duplicatedMessageIds.find((messageId) => compareIds(messageId, msg.messageId),
-          ),
-        )
-        : messages;
+      const filteredNewMessages =
+        duplicatedMessageIds.length > 0
+          ? messages.filter((msg) => !duplicatedMessageIds.find((messageId) => compareIds(messageId, msg.messageId)))
+          : messages;
 
       return {
         ...state,
@@ -151,6 +152,7 @@ export default function channelReducer(
           ...state,
           loading: false,
           isInvalid: shouldInvalid,
+          fetchChannelError: action.type === channelActions.FETCH_INITIAL_MESSAGES_FAILURE && action.payload.fetchChannelError,
           initialized: false,
           allMessages: [],
           hasMorePrev: false,

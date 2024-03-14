@@ -109,7 +109,7 @@ function useInitialMessagesFetch(
           logger.error('Channel: Fetching messages failed', error);
           messagesDispatcher({
             type: messageActionTypes.FETCH_INITIAL_MESSAGES_FAILURE,
-            payload: { currentGroupChannel },
+            payload: { currentGroupChannel, fetchChannelError: error },
           });
         })
         .finally(() => {

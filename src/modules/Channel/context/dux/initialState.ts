@@ -1,6 +1,6 @@
 import { CoreMessageType, SendableMessageType } from '../../../../utils';
 import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
-import { EmojiContainer } from '@sendbird/chat';
+import { EmojiContainer, SendbirdError } from '@sendbird/chat';
 import type { MessageListParams as MessageListParamsInternal } from '../ChannelProvider';
 
 export interface ChannelInitialStateType {
@@ -12,6 +12,7 @@ export interface ChannelInitialStateType {
   unreadSince: string;
   unreadSinceDate: Date | null;
   isInvalid: boolean;
+  fetchChannelError: SendbirdError | null;
   currentGroupChannel: GroupChannel | null;
   hasMorePrev: boolean;
   oldestMessageTimeStamp: number;
@@ -50,6 +51,7 @@ const initialState: ChannelInitialStateType = {
    */
   unreadSinceDate: null,
   isInvalid: false,
+  fetchChannelError: null,
   readStatus: null,
   messageListParams: null,
   typingMembers: [],

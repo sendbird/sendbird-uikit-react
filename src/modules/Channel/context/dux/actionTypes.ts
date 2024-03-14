@@ -1,4 +1,4 @@
-import type { EmojiContainer } from '@sendbird/chat';
+import { SendbirdError, type EmojiContainer } from '@sendbird/chat';
 import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import type { ReactionEvent } from '@sendbird/chat/message';
 
@@ -50,6 +50,7 @@ type CHANNEL_PAYLOAD_TYPES = {
   };
   [FETCH_INITIAL_MESSAGES_FAILURE]: {
     currentGroupChannel: null | GroupChannel;
+    fetchChannelError: SendbirdError;
   };
   [FETCH_PREV_MESSAGES_FAILURE]: {
     currentGroupChannel: null | GroupChannel;
