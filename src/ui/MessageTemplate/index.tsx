@@ -1,6 +1,6 @@
 import React from 'react';
 import { parser, renderer } from '@sendbird/react-uikit-message-template-view';
-import {type ComponentsUnion, createMessageTemplate} from '@sendbird/uikit-message-template';
+import { type ComponentsUnion, createMessageTemplate } from '@sendbird/uikit-message-template';
 import { MessageTemplateItem } from '../TemplateMessageItemBody/types';
 import './index.scss';
 
