@@ -31,7 +31,7 @@ export const SUPPORTED_MIMES = {
     'video/ogg',
     'video/webm',
     'video/mp4',
-    'video/quicktime', // .mov
+    // 'video/quicktime', // NOTE: Do not support ThumbnailMessage for the .mov video
   ],
   AUDIO: [
     'audio/aac',
@@ -54,6 +54,7 @@ export const SUPPORTED_MIMES = {
     'text/calendar',
     'text/javascript',
     'text/xml',
+    'video/quicktime', // NOTE: Assume this video is a normal file, not video
   ],
   APPLICATION: [
     'application/x-abiword',
