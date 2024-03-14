@@ -1,5 +1,29 @@
 # Changelog - v3
 
+## [v3.13.2] (Mar 14, 2024)
+
+### Features
+* Add a `renderHeader` props to the ChannelSettingsUIProps
+  ```
+  <ChannelSettingsUI
+    renderHeader={() => ...}
+  />
+  ```
+
+### Fixes
+* Deprecated the `onClick` prop in `UserListItem` and added `onUserAvatarClick`. The deprecated prop will be removed in the next major version
+* Added throttling in `mute/unmute` operation
+* Added throttling in `add/remove` operator operation
+* Fixed that the Chat SDK is not initialized more than once
+* Display the normal `FileMessage` for the `.mov` video
+* Show `X` button on the ModalHeader of mobile mode
+* Modify the incorrect stringSet on the BannedUsersModal
+  * `CHANNEL_SETTING__MUTED_MEMBERS__TITLE` to `CHANNEL_SETTING__BANNED_MEMBERS__TITLE`
+  * `CHANNEL_SETTING__MODERATION__BAN` to `CHANNEL_SETTING__MODERATION__UNBAN`
+  * also modified the dataSbId, `channel_setting_banned_user_context_menu_ban` to `channel_setting_banned_user_context_menu_unban`
+* Fixed a specific environment issue (Android emulator) - Resolved an issue in modals used in ChannelSettings such as MembersModal, MutedMembersModal, AddOperatorsModal, OperatorsModal, BannedUsersModal, where even when scrolling to the end, additional members were not fetched
+* Fixed a specific environment issue (Safari) - Similarly addressed an issue within lists inside modals, where overflow occurred instead of scrolling
+
 ## [v3.13.1] (Mar 08, 2024)
 
 ### Fixes

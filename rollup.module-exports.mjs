@@ -60,6 +60,7 @@ export default {
   'ChannelSettings/components/ModerationPanel': 'src/modules/ChannelSettings/components/ModerationPanel/index.tsx',
   'ChannelSettings/components/ChannelProfile': 'src/modules/ChannelSettings/components/ChannelProfile/index.tsx',
   'ChannelSettings/components/ChannelSettingsUI': 'src/modules/ChannelSettings/components/ChannelSettingsUI/index.tsx',
+  'ChannelSettings/components/ChannelSettingsHeader': 'src/modules/ChannelSettings/components/ChannelSettingsUI/ChannelSettingsHeader.tsx',
   'ChannelSettings/components/EditDetailsModal': 'src/modules/ChannelSettings/components/EditDetailsModal/index.tsx',
   'ChannelSettings/components/LeaveChannel': 'src/modules/ChannelSettings/components/LeaveChannel/index.tsx',
   'ChannelSettings/components/UserListItem': 'src/modules/ChannelSettings/components/UserListItem/index.tsx',
