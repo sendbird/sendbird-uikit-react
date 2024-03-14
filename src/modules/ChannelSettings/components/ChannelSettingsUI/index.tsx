@@ -5,17 +5,19 @@ import React, { useContext, useState } from 'react';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 
+import { ChannelSettingsHeader, type ChannelSettingsHeaderProps } from './ChannelSettingsHeader';
+
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
-import IconButton from '../../../../ui/IconButton';
 import ChannelProfile from '../ChannelProfile';
 import ModerationPanel from '../ModerationPanel';
 import LeaveChannelModal from '../LeaveChannel';
 import UserPanel from '../UserPanel';
 
 export interface ChannelSettingsUIProps {
+  renderHeader?: (props: ChannelSettingsHeaderProps) => React.ReactElement;
   renderChannelProfile?: () => React.ReactElement;
   renderModerationPanel?: () => React.ReactElement;
   renderLeaveChannel?: () => React.ReactElement;
@@ -24,53 +26,30 @@ export interface ChannelSettingsUIProps {
 }
 
 const ChannelSettingsUI: React.FC<ChannelSettingsUIProps> = ({
+  renderHeader = (props) => <ChannelSettingsHeader {...props}/>,
   renderLeaveChannel,
   renderChannelProfile,
   renderModerationPanel,
   renderPlaceholderError,
   renderPlaceholderLoading,
 }: ChannelSettingsUIProps) => {
-  const { stringSet } = useContext(LocalizationContext);
-
   const state = useSendbirdStateContext();
-  const { channel, invalidChannel, onCloseClick, loading } = useChannelSettingsContext();
-
-  const [showLeaveChannelModal, setShowLeaveChannelModal] = useState(false);
-
   const isOnline = state?.config?.isOnline;
-  const logger = state?.config?.logger;
-
-  const renderHeaderArea = () => {
-    return (
-      <div className="sendbird-channel-settings__header">
-        <Label type={LabelTypography.H_2} color={LabelColors.ONBACKGROUND_1}>
-          {stringSet.CHANNEL_SETTING__HEADER__TITLE}
-        </Label>
-        <div className="sendbird-channel-settings__header-icon">
-          <IconButton
-            width="32px"
-            height="32px"
-            onClick={() => {
-              logger.info('ChannelSettings: Click close');
-              onCloseClick?.();
-            }}
-          >
-            <Icon className="sendbird-channel-settings__close-icon" type={IconTypes.CLOSE} height="22px" width="22px" />
-          </IconButton>
-        </div>
-      </div>
-    );
-  };
+  const { stringSet } = useContext(LocalizationContext);
+  const { channel, invalidChannel, onCloseClick, loading } = useChannelSettingsContext();
+  const [showLeaveChannelModal, setShowLeaveChannelModal] = useState(false);
 
   if (loading) {
     if (renderPlaceholderLoading) return renderPlaceholderLoading();
     return <PlaceHolder type={PlaceHolderTypes.LOADING} />;
   }
 
+  const headerProps: ChannelSettingsHeaderProps = { onCloseClick };
+
   if (invalidChannel || !channel) {
     return (
       <div>
-        {renderHeaderArea()}
+        {renderHeader(headerProps)}
         <div>{renderPlaceholderError ? renderPlaceholderError() : <PlaceHolder type={PlaceHolderTypes.WRONG} />}</div>
       </div>
     );
@@ -78,7 +57,7 @@ const ChannelSettingsUI: React.FC<ChannelSettingsUIProps> = ({
 
   return (
     <>
-      {renderHeaderArea()}
+      {renderHeader(headerProps)}
       <div className="sendbird-channel-settings__scroll-area">
         {renderChannelProfile?.() || <ChannelProfile />}
         {renderModerationPanel?.() || (channel?.myRole === 'operator' ? <ModerationPanel /> : <UserPanel />)}
