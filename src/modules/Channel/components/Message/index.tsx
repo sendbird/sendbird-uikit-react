@@ -34,7 +34,7 @@ const Message = (props: MessageProps): React.ReactElement => {
     localMessages,
   } = useChannelContext();
 
-  const { message } = props;
+  const { message, renderRemoveMessageModal = (props) => <RemoveMessageModal {...props} /> } = props;
 
   return (
     <MessageView
@@ -45,15 +45,13 @@ const Message = (props: MessageProps): React.ReactElement => {
         !initialized || isDisabledBecauseFrozen(currentGroupChannel) || isDisabledBecauseMuted(currentGroupChannel) || !config.isOnline
       }
       shouldRenderSuggestedReplies={
-        config?.groupChannel?.enableSuggestedReplies
-        && (
-          config?.groupChannel?.showSuggestedRepliesFor === 'all_messages'
-            ? true
-            : message.messageId === currentGroupChannel?.lastMessage?.messageId
-        )
+        config?.groupChannel?.enableSuggestedReplies &&
+        (config?.groupChannel?.showSuggestedRepliesFor === 'all_messages'
+          ? true
+          : message.messageId === currentGroupChannel?.lastMessage?.messageId) &&
         // the options should appear only when there's no failed or pending messages
-        && localMessages?.length === 0
-        && getSuggestedReplies(message).length > 0
+        localMessages?.length === 0 &&
+        getSuggestedReplies(message).length > 0
       }
       isReactionEnabled={isReactionEnabled}
       replyType={replyType}
@@ -86,7 +84,7 @@ const Message = (props: MessageProps): React.ReactElement => {
       setAnimatedMessageId={setAnimatedMessageId}
       onMessageAnimated={onMessageAnimated}
       renderFileViewer={(props) => <FileViewer {...props} />}
-      renderRemoveMessageModal={(props) => <RemoveMessageModal {...props} />}
+      renderRemoveMessageModal={renderRemoveMessageModal}
     />
   );
 };

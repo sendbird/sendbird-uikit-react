@@ -51,6 +51,8 @@ export interface GroupChannelMessageListProps {
    * A function that customizes the rendering of a suggested replies component.
    */
   renderSuggestedReplies?: GroupChannelUIBasicProps['renderSuggestedReplies'];
+
+  renderRemoveMessageModal?: GroupChannelUIBasicProps['renderRemoveMessageModal'];
 }
 
 export const MessageList = (props: GroupChannelMessageListProps) => {
@@ -59,6 +61,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     renderMessage = (props) => <Message {...props} />,
     renderMessageContent,
     renderSuggestedReplies,
+    renderRemoveMessageModal,
     renderCustomSeparator,
     renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
     renderPlaceholderEmpty = () => <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />,
@@ -156,10 +159,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       <div className={`sendbird-conversation__messages ${className}`}>
         <div className="sendbird-conversation__scroll-container">
           <div className="sendbird-conversation__padding" />
-          <div
-            ref={scrollRef}
-            className="sendbird-conversation__messages-padding"
-          >
+          <div ref={scrollRef} className="sendbird-conversation__messages-padding">
             {messages.map((message, idx) => {
               const { chainTop, chainBottom, hasSeparator } = getMessagePartsInfo({
                 allMessages: messages as CoreMessageType[],
@@ -181,15 +181,16 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
                     renderMessageContent,
                     renderSuggestedReplies,
                     renderCustomSeparator,
+                    renderRemoveMessageModal,
                   })}
                 </MessageProvider>
               );
             })}
-            {!hasNext()
-              && store?.config?.groupChannel?.enableTypingIndicator
-              && store?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Bubble) && (
+            {!hasNext() &&
+              store?.config?.groupChannel?.enableTypingIndicator &&
+              store?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Bubble) && (
                 <TypingIndicatorBubbleWrapper channelUrl={channelUrl} handleScroll={onMessageContentSizeChanged} />
-            )}
+              )}
           </div>
         </div>
 

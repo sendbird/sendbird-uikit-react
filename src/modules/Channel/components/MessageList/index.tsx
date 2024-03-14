@@ -41,6 +41,7 @@ export const MessageList = (props: MessageListProps) => {
     renderMessageContent,
     renderSuggestedReplies,
     renderCustomSeparator,
+    renderRemoveMessageModal,
     renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
     renderPlaceholderEmpty = () => <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />,
     renderFrozenNotification = () => <FrozenNotification className="sendbird-conversation__messages__notification" />,
@@ -72,7 +73,8 @@ export const MessageList = (props: MessageListProps) => {
   } = useChannelContext();
 
   const store = useSendbirdStateContext();
-  const allMessagesFiltered = typeof filterMessageList === 'function' ? allMessages.filter(filterMessageList as (message: EveryMessage) => boolean) : allMessages;
+  const allMessagesFiltered =
+    typeof filterMessageList === 'function' ? allMessages.filter(filterMessageList as (message: EveryMessage) => boolean) : allMessages;
   const markAsReadScheduler = store.config.markAsReadScheduler;
 
   const [isScrollBottom, setIsScrollBottom] = useState(false);
@@ -208,6 +210,7 @@ export const MessageList = (props: MessageListProps) => {
                     renderMessageContent={renderMessageContent}
                     renderSuggestedReplies={renderSuggestedReplies}
                     renderCustomSeparator={renderCustomSeparator}
+                    renderRemoveMessageModal={renderRemoveMessageModal}
                     // backward compatibility
                     renderMessage={renderMessage}
                   />
@@ -240,11 +243,11 @@ export const MessageList = (props: MessageListProps) => {
                 </MessageProvider>
               );
             })}
-            {!hasMoreNext
-              && store?.config?.groupChannel?.enableTypingIndicator
-              && store?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Bubble) && (
+            {!hasMoreNext &&
+              store?.config?.groupChannel?.enableTypingIndicator &&
+              store?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Bubble) && (
                 <TypingIndicatorBubble typingMembers={typingMembers} handleScroll={moveScroll} />
-            )}
+              )}
             {/* show frozen notifications, */}
             {/* show new message notifications, */}
           </div>
