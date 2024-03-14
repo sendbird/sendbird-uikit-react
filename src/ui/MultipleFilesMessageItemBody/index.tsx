@@ -34,7 +34,7 @@ export default function MultipleFilesMessageItemBody({
   isReactionEnabled = false,
   threadMessageKindKey,
   statefulFileInfoList = [],
-}: Props): ReactElement {
+}: Props): ReactElement | undefined | string{
   const [currentFileViewerIndex, setCurrentFileViewerIndex] = useState(-1);
 
   function onClose() {
@@ -71,7 +71,7 @@ export default function MultipleFilesMessageItemBody({
                 key={`sendbird-multiple-files-image-renderer-${index}-${fileInfo.url}`}
               >
                 <ImageRenderer
-                  url={fileInfo.thumbnails?.[0]?.url ?? fileInfo.url}
+                  url={fileInfo.thumbnails?.[0]?.url ?? fileInfo.url ?? ''}
                   fixedSize={false}
                   width={MULTIPLE_FILES_IMAGE_SIDE_LENGTH[threadMessageKindKey]}
                   maxSideLength={MULTIPLE_FILES_IMAGE_SIDE_LENGTH.CHAT_WEB}
@@ -84,7 +84,7 @@ export default function MultipleFilesMessageItemBody({
                   shadeOnHover={true}
                   isUploaded={!!fileInfo.isUploaded}
                   placeHolder={({ style }) => {
-                    if (isGif(fileInfo.mimeType)) return <ImagePlaceholder.GIF style={style} />;
+                    if (fileInfo.mimeType && isGif(fileInfo.mimeType)) return <ImagePlaceholder.GIF style={style} />;
                     return <ImagePlaceholder.Default style={style} />;
                   }}
                   defaultComponent={<ImagePlaceholder.LoadError />}

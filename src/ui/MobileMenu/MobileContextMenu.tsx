@@ -102,7 +102,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               className="sendbird-message__mobile-context-menu-item menu-item-reply"
               onClick={() => {
                 hideMenu();
-                setQuoteMessage(message);
+                setQuoteMessage?.(message);
               }}
               disable={(message?.parentMessageId ?? 0) > 0}
               dataSbId="ui_mobile_message_item_menu_reply"
@@ -157,7 +157,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               className="sendbird-message__mobile-context-menu-item menu-item-edit"
               onClick={() => {
                 hideMenu();
-                showEdit(true);
+                showEdit?.(true);
               }}
               dataSbId="ui_mobile_message_item_menu_edit"
             >
@@ -180,7 +180,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               className="sendbird-message__mobile-context-menu-item menu-item-resend"
               onClick={() => {
                 hideMenu();
-                resendMessage(message);
+                resendMessage?.(message);
               }}
               dataSbId="ui_mobile_message_item_menu_resend"
             >

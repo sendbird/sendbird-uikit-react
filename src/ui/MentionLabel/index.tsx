@@ -28,7 +28,7 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
     isByMe,
   } = props;
 
-  const mentionRef = useRef();
+  const mentionRef = useRef(null);
 
   const sendbirdState = useSendbirdStateContext();
   const userId = sendbirdState?.config?.userId;

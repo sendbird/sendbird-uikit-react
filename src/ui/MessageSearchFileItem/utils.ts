@@ -17,7 +17,7 @@ export interface GetCreatedAtProps {
 }
 
 export function getCreatedAt({ createdAt, locale, stringSet }: GetCreatedAtProps): string {
-  const optionalParam = locale ? { locale } : null;
+  const optionalParam = locale ? { locale } : {};
   if (!createdAt) {
     return '';
   }

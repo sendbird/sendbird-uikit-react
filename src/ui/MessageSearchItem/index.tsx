@@ -36,7 +36,7 @@ export default function MessageSearchItem({
       ].join(' ')}
       onClick={(e) => {
         e.stopPropagation();
-        onClick(message);
+        onClick?.(message);
       }}
     >
       <div className="sendbird-message-search-item__left">
