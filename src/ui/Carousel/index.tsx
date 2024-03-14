@@ -47,14 +47,14 @@ export function Carousel({
 
   const [currentIndex, setCurrentIndex] = useState(0);
   // const [currX, setCurrX] = useState(0);
-  const [dragging, setDragging] = useState(false);
+  const [dragging, setDragging] = useState<'vertical' | 'horizontal' | null>(null);
   const [startX, setStartX] = useState(0);
   const [offset, setOffset] = useState(0);
   // const [eachItemPositions] = useState(getEachItemPositions());
 
   const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
-    setDragging(true);
+    setDragging('horizontal');
     setStartX(event.clientX);
   };
 
@@ -68,7 +68,7 @@ export function Carousel({
 
   const handleMouseUp = () => {
     if (!dragging) return;
-    setDragging(false);
+    setDragging(null);
     handleDragEnd();
   };
 
@@ -77,18 +77,36 @@ export function Carousel({
     setStartX(event.touches[0].clientX);
   };
 
+
+  // useEffect(() => {
+  //   const handler = (e) => {
+  //     handleTouchMove(e)
+  //   }
+  //   if (carouselRef && carouselRef.current) {
+  //     carouselRef.current.addEventListener('touchmove', handler, {passive: false});
+  //     return function cleanup() {
+  //       carouselRef.current.removeEventListener("touchmove", handler);
+  //     };
+  //   }
+  // }, []);
+
   const handleTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
     if (!startX) return;
+
     const touchMoveX = event.touches[0].clientX;
     const deltaX = touchMoveX - startX;
 
+    const threshold = 5;
     // Check if swipe is more horizontal than vertical
-    if (Math.abs(deltaX) > Math.abs(event.touches[0].clientY - event.touches[event.touches.length-1].clientY) + 150) {
-      if (!dragging) {
-        setDragging(true);
-        onCarouselDraggingChange(true);
-      }
+    if (dragging === 'horizontal' || (dragging !== 'vertical' && Math.abs(deltaX) > Math.abs(event.touches[0].clientY - event.touches[event.touches.length-1].clientY) + threshold)) {
+        setDragging('horizontal');
+        // event.preventDefault();
+        // event.stopPropagation();
+        const parentElement = document.getElementsByClassName('sendbird-conversation__messages-padding');
+        (parentElement[0] as HTMLElement).style.overflowY = 'hidden';
+        // onCarouselDraggingChange(true);
     } else {
+      setDragging('vertical');
       return;
     }
 
@@ -98,14 +116,14 @@ export function Carousel({
 
   const handleTouchEnd = () => {
     if (!dragging) return;
-    setDragging(false);
+    setDragging(null);
     handleDragEnd();
   };
 
   // This is for both web and mobile
   const handleDragEnd = () => {
     // const threshold = carouselRef.current.offsetWidth / 2;
-    const threshold = 150; // itemWidths[currentIndex] / 2;
+    const threshold = 50; // itemWidths[currentIndex] / 2;
     const absOffset = Math.abs(offset);
     if (absOffset >= threshold) {
       // If dragged to left, swipe left
@@ -121,7 +139,9 @@ export function Carousel({
 
     // setCurrX(currX + offset);
     setOffset(0);
-    onCarouselDraggingChange(false);
+    // onCarouselDraggingChange(false);
+    const parentElement = document.getElementsByClassName('sendbird-conversation__messages-padding');
+    (parentElement[0] as HTMLElement).style.overflowY = 'scroll';
   };
 
   function getCurrentTranslateX() {
