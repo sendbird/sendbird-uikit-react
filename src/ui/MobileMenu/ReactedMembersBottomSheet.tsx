@@ -94,7 +94,7 @@ export const ReactedMembersBottomSheet = ({
                   className="sendbird-message__bottomsheet__reactor-list__item"
                   user={member}
                   avatarSize="36px"
-                  onClick={onPressUserProfileCallBack}
+                  onUserAvatarClick={onPressUserProfileCallBack}
                 />
               ))
           }
