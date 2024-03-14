@@ -13,6 +13,7 @@ import { noop } from '../../../../utils/utils';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
+import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 
 interface Props {
   onCancel(): void;
@@ -51,24 +52,21 @@ export default function MutedMembersModal({
       >
         <div
           className="sendbird-more-members__popup-scroll"
-          onScroll={(e) => {
-            const { hasNext } = memberQuery;
-            const target = e.target as HTMLTextAreaElement;
-            const fetchMore = (
-              target.clientHeight + target.scrollTop === target.scrollHeight
-            );
-
-            if (hasNext && fetchMore) {
-              memberQuery.next().then((o) => {
-                setMembers([
-                  ...members,
-                  ...o,
-                ]);
-              });
-            }
-          }}
+          onScroll={useOnScrollPositionChangeDetector({
+            onReachedBottom: async () => {
+              const { hasNext } = memberQuery;
+              if (hasNext) {
+                memberQuery.next().then((o) => {
+                  setMembers([
+                    ...members,
+                    ...o,
+                  ]);
+                });
+              }
+            },
+          })}
         >
-          { members.map((member) => (
+          {members.map((member) => (
             <UserListItem
               currentUser={currentUser}
               user={member}
