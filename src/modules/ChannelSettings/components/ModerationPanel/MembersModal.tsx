@@ -4,6 +4,8 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import type { Member } from '@sendbird/chat/groupChannel';
+import { Role } from '@sendbird/chat';
 
 import Modal from '../../../../ui/Modal';
 import UserListItem from '../../../../ui/UserListItem';
@@ -15,8 +17,7 @@ import { noop } from '../../../../utils/utils';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { Member } from '@sendbird/chat/groupChannel';
-import { Role } from '@sendbird/chat';
+import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 
 interface Props {
   onCancel(): void;
@@ -51,22 +52,19 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
       >
         <div
           className="sendbird-more-members__popup-scroll"
-          onScroll={(e) => {
-            const { hasNext } = memberQuery;
-            const target = e.target as HTMLTextAreaElement;
-            const fetchMore = (
-              target.clientHeight + target.scrollTop === target.scrollHeight
-            );
-
-            if (hasNext && fetchMore) {
-              memberQuery.next().then((o) => {
-                setMembers([
-                  ...members,
-                  ...o,
-                ]);
-              });
-            }
-          }}
+          onScroll={useOnScrollPositionChangeDetector({
+            onReachedBottom: async () => {
+              const { hasNext } = memberQuery;
+              if (hasNext) {
+                memberQuery.next().then((o) => {
+                  setMembers([
+                    ...members,
+                    ...o,
+                  ]);
+                });
+              }
+            },
+          })}
         >
           {
             members.map((member: Member) => (

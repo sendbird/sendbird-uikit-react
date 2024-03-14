@@ -14,6 +14,7 @@ import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
+import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 
 interface Props { onCancel?(): void }
 
@@ -45,22 +46,19 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
       >
         <div
           className="sendbird-more-members__popup-scroll"
-          onScroll={(e) => {
-            const { hasNext } = operatorQuery;
-            const target = e.target as HTMLTextAreaElement;
-            const fetchMore = (
-              target.clientHeight + target.scrollTop === target.scrollHeight
-            );
-
-            if (hasNext && fetchMore) {
-              operatorQuery.next().then((o) => {
-                setOperators([
-                  ...operators,
-                  ...o,
-                ]);
-              });
-            }
-          }}
+          onScroll={useOnScrollPositionChangeDetector({
+            onReachedBottom: async () => {
+              const { hasNext } = operatorQuery;
+              if (hasNext) {
+                operatorQuery.next().then((o) => {
+                  setOperators([
+                    ...operators,
+                    ...o,
+                  ]);
+                });
+              }
+            },
+          })}
         >
           {operators.map((member) => (
             <UserListItem
