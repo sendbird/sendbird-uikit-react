@@ -1,5 +1,6 @@
 import './index.scss';
 import React, { ReactElement, useRef, useState } from 'react';
+import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 
 const PADDING_WIDTH = 24;
 const CONTENT_LEFT_WIDTH = 40;
@@ -42,6 +43,7 @@ export function Carousel({
   items,
   gap = 8,
 }: CarouselProps): ReactElement {
+  const { isMobile } = useMediaQueryContext();
   const carouselRef = useRef<HTMLDivElement>(null);
   const screenWidth = window.innerWidth;
   const defaultItemWidth = carouselRef.current?.clientWidth ?? 0;
@@ -61,7 +63,6 @@ export function Carousel({
   const [startX, setStartX] = useState(0);
   const [offset, setOffset] = useState(0);
   const [translateX, setTranslateX] = useState(0);
-
   const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
     setDragging('horizontal');
@@ -79,7 +80,7 @@ export function Carousel({
   const handleMouseUp = () => {
     if (!dragging) return;
     setDragging(null);
-    handleDragEnd();
+    onDragEnd();
   };
 
   // Belows are for mobile
@@ -109,10 +110,28 @@ export function Carousel({
   const handleTouchEnd = () => {
     if (dragging !== 'horizontal') return;
     setDragging(null);
-    handleDragEnd();
+    onDragEnd();
   };
 
   const handleDragEnd = () => {
+    const absOffset = Math.abs(offset);
+    if (absOffset >= SWIPE_THRESHOLD) {
+      // If dragged to left, next index should be to the right
+      if (offset < 0 && currentIndex < items.length - 1) {
+        const nextIndex = currentIndex + 1;
+        setTranslateX(itemPositions[nextIndex].start);
+        setCurrentIndex(nextIndex);
+      // If dragged to right, next index should be to the left
+      } else if (offset > 0 && currentIndex > 0) {
+        const nextIndex = currentIndex - 1;
+        setTranslateX(itemPositions[nextIndex].start);
+        setCurrentIndex(nextIndex);
+      }
+    }
+    setOffset(0);
+  };
+
+  const handleDragEndForMobile = () => {
     const absOffset = Math.abs(offset);
     if (absOffset >= SWIPE_THRESHOLD) {
       // If dragged to left, next index should be to the right
@@ -164,6 +183,7 @@ export function Carousel({
     return restTotalWidth <= screenWidth;
   }
 
+  const onDragEnd = isMobile ? handleDragEndForMobile : handleDragEnd;
   const currentTranslateX = getCurrentTranslateX();
 
   function getEachItemPositions(): ItemPosition[] {
