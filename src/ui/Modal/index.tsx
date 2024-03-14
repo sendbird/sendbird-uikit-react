@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useContext } from 'react';
+import React, { ReactElement, ReactNode, useContext, MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
 
 import './index.scss';
@@ -15,12 +15,27 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 
 export interface ModalHeaderProps {
   titleText: string;
+  onCloseClick?: (e: MouseEvent<HTMLButtonElement>) => void;
 }
-export const ModalHeader = ({ titleText }: ModalHeaderProps): ReactElement => (
+export const ModalHeader = ({ titleText, onCloseClick }: ModalHeaderProps): ReactElement => (
   <div className="sendbird-modal__header">
     <Label type={LabelTypography.H_1} color={LabelColors.ONBACKGROUND_1}>
       {titleText}
     </Label>
+    <div className="sendbird-modal__close">
+      <IconButton
+        width="32px"
+        height="32px"
+        onClick={onCloseClick}
+      >
+        <Icon
+          type={IconTypes.CLOSE}
+          fillColor={IconColors.DEFAULT}
+          width="24px"
+          height="24px"
+        />
+      </IconButton>
+    </div>
   </div>
 );
 
@@ -127,7 +142,7 @@ export function Modal(props: ModalProps): ReactElement {
         ].join(' ')}
       >
         {renderHeader?.() || (
-          <ModalHeader titleText={titleText ?? ''} />
+          <ModalHeader titleText={titleText ?? ''} onCloseClick={handleClose} />
         )}
         <ModalBody>{children}</ModalBody>
         {
@@ -140,24 +155,6 @@ export function Modal(props: ModalProps): ReactElement {
               type={type}
             />
           ))
-        }
-        {
-          !isMobile && (
-            <div className="sendbird-modal__close">
-              <IconButton
-                width="32px"
-                height="32px"
-                onClick={handleClose}
-              >
-                <Icon
-                  type={IconTypes.CLOSE}
-                  fillColor={IconColors.DEFAULT}
-                  width="24px"
-                  height="24px"
-                />
-              </IconButton>
-            </div>
-          )
         }
       </div>
       <div
