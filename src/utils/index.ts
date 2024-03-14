@@ -247,7 +247,7 @@ export const isUserMessage = (message: CoreMessageType): boolean => (
       : message?.messageType === 'user'
   )
 );
-export const isFileMessage = (message: CoreMessageType | undefined): boolean => <boolean>(
+export const isFileMessage = (message?: CoreMessageType): boolean => <boolean>(
   message && (
     message['isFileMessage'] && typeof message.isFileMessage === 'function'
       ? message.isFileMessage()
@@ -255,7 +255,7 @@ export const isFileMessage = (message: CoreMessageType | undefined): boolean => 
   )
 );
 export const isMultipleFilesMessage = (
-  message: CoreMessageType | undefined,
+  message?: CoreMessageType,
 ): boolean => (
   message && (
     message['isMultipleFilesMessage'] && typeof message.isMultipleFilesMessage === 'function'
@@ -419,7 +419,7 @@ export const getUseReaction = (store: UIKitStore, channel: GroupChannel | OpenCh
 };
 
 export function getSuggestedReplies(message?: BaseMessage): string[] {
-  if (Array.isArray(message?.extendedMessagePayload?.suggested_replies) && message?.extendedMessagePayload) {
+  if (message?.extendedMessagePayload && Array.isArray(message?.extendedMessagePayload?.suggested_replies)) {
     return message.extendedMessagePayload.suggested_replies;
   } else {
     return [];
