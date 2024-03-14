@@ -27,6 +27,7 @@ export interface MessageProps {
   chainTop?: boolean;
   chainBottom?: boolean;
   handleScroll?: (isBottomMessageAffected?: boolean) => void;
+  handleCarouselDrag?: (isDragging: boolean) => void;
 
   /**
    * Customizes all child components of the message.
@@ -110,6 +111,7 @@ const MessageView = (props: MessageViewProps) => {
     chainTop,
     chainBottom,
     handleScroll,
+    handleCarouselDrag,
 
     // MessageViewProps
     channel,
@@ -261,6 +263,7 @@ const MessageView = (props: MessageViewProps) => {
           onReplyInThread: onReplyInThreadClick,
           onQuoteMessageClick: onQuoteMessageClick,
           onMessageHeightChange: (a?: boolean) => handleScroll(a),
+          onCarouselDraggingChange: (isDragging: boolean) => handleCarouselDrag(isDragging),
         })}
         { /* Suggested Replies */ }
         {

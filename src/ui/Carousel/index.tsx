@@ -1,5 +1,5 @@
 import './index.scss';
-import React, { ReactElement, useRef, useState } from 'react';
+import React, {ReactElement, useEffect, useRef, useState} from 'react';
 
 interface CarouselItemProps {
   key: string;
@@ -25,19 +25,32 @@ interface CarouselProps {
   id: string;
   items: ReactElement[];
   gap?: number;
+  onCarouselDraggingChange?: (isDragging: boolean) => void;
 }
 
 export function Carousel({
   id,
   items,
   gap = 8,
+  onCarouselDraggingChange = () => { /* noop */ }
 }: CarouselProps): ReactElement {
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const itemWidth = carouselRef.current?.clientWidth ?? 0;
+  const itemWidths = items.map((item) => {
+    if (shouldRenderAsFixed(item)) {
+      return item.props.templateItems[0].width?.value;
+    }
+    return itemWidth;
+  });
+  // const viewCenterWidth = window.innerWidth / 2;
+  // console.log('## viewCenterWidth: ', viewCenterWidth);
+
   const [currentIndex, setCurrentIndex] = useState(0);
+  // const [currX, setCurrX] = useState(0);
   const [dragging, setDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [offset, setOffset] = useState(0);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const itemWidth = carouselRef.current?.clientWidth ?? 0;
+  // const [eachItemPositions] = useState(getEachItemPositions());
 
   const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -61,12 +74,24 @@ export function Carousel({
 
   // Belows are for mobile
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
-    setDragging(true);
     setStartX(event.touches[0].clientX);
   };
 
   const handleTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
-    if (!dragging) return;
+    if (!startX) return;
+    const touchMoveX = event.touches[0].clientX;
+    const deltaX = touchMoveX - startX;
+
+    // Check if swipe is more horizontal than vertical
+    if (Math.abs(deltaX) > Math.abs(event.touches[0].clientY - event.touches[event.touches.length-1].clientY) + 150) {
+      if (!dragging) {
+        setDragging(true);
+        onCarouselDraggingChange(true);
+      }
+    } else {
+      return;
+    }
+
     const newOffset = event.touches[0].clientX - startX;
     setOffset(newOffset);
   };
@@ -79,36 +104,105 @@ export function Carousel({
 
   // This is for both web and mobile
   const handleDragEnd = () => {
-    const threshold = carouselRef.current.offsetWidth / 2;
+    // const threshold = carouselRef.current.offsetWidth / 2;
+    const threshold = 150; // itemWidths[currentIndex] / 2;
     const absOffset = Math.abs(offset);
     if (absOffset >= threshold) {
       // If dragged to left, swipe left
       if (offset < 0 && currentIndex < items.length - 1) {
-        setCurrentIndex(currentIndex + 1);
+        const nextIndex = currentIndex + 1;
+        const lastIndex = items.length - 1;
+        setCurrentIndex(isAlmostEnd(nextIndex) ? lastIndex : nextIndex);
         // If dragged to right, swipe right
       } else if (offset > 0 && currentIndex > 0) {
         setCurrentIndex(currentIndex - 1);
       }
     }
+
+    // setCurrX(currX + offset);
     setOffset(0);
+    onCarouselDraggingChange(false);
   };
 
   function getCurrentTranslateX() {
-    const widthVals = items.map((item) => {
-      if (shouldRenderAsFixed(item)) {
-        return item.props.templateItems[0].width?.value;
-      }
-      return itemWidth;
-    });
     let sum = 0;
     for (let i = 1; i <= currentIndex; i++) {
-      sum += widthVals[i - 1] + gap;
+      if (i < items.length - 1) {
+        sum += itemWidths[i - 1] + gap;
+      } else {
+        const PADDING_WIDTH = 24;
+        const CONTENT_LEFT_WIDTH = 40;
+        const currentItemWidth = itemWidths[i - 1];
+        const nextItemWidth = itemWidths[i];
+        const cutOffWidth = (PADDING_WIDTH + CONTENT_LEFT_WIDTH + currentItemWidth + gap + nextItemWidth) - window.innerWidth;
+        sum += (cutOffWidth + PADDING_WIDTH);
+      }
     }
     const translateX = sum * -1 + offset;
     return translateX;
   }
 
+  function isAlmostEnd(index: number) {
+    const PADDING_WIDTH = 24;
+    const CONTENT_LEFT_WIDTH = 40;
+    let sum = 0;
+    const screenWidth = window.innerWidth;
+    const restItemsWidth = itemWidths.slice(index).reduce((prev, curr) => prev + gap + curr);
+    const threshold = 50;
+    const restTotalWidth = PADDING_WIDTH + CONTENT_LEFT_WIDTH + restItemsWidth;
+    return restTotalWidth < screenWidth || restTotalWidth < screenWidth + threshold
+  }
+
+  interface ItemPosition {
+    start: number;
+    end: number;
+  }
+
+  function getEachItemPositions(): ItemPosition[] {
+    const fullWidth = itemWidths.reduce((prev, curr) => prev + gap + curr) * -1;
+    console.log('## fullWidth: ', fullWidth);
+    const itemCenterPositions = [];
+    let accumulator = 0;
+    itemWidths.map((itemWidth, i) => {
+      if (i > 0) {
+        accumulator -= gap;
+      }
+      itemCenterPositions[i] = [accumulator, accumulator - itemWidth];
+      accumulator -= itemWidth;
+    });
+    console.log('## itemCenterPositions: ', itemCenterPositions);
+    return itemCenterPositions;
+  }
+
+  // function getClosestItemIndex() {
+  //
+  //   const fullWidth = itemWidths.reduce((prev, curr) => prev + gap + curr);
+  //   const PADDING_WIDTH = 24;
+  //   const CONTENT_LEFT_WIDTH = 40;
+  //   const currentItemWidth = itemWidths[i - 1];
+  //   const nextItemWidth = itemWidths[i];
+  //   const cutOffWidth = (PADDING_WIDTH + CONTENT_LEFT_WIDTH + currentItemWidth + gap + nextItemWidth) - window.innerWidth;
+  //
+  // }
+
+
+  // function getSnappingPoint() {
+  //   if (eachItemPositions.length < 2) return 0;
+  //   for (let i = 0; i < eachItemPositions.length - 1; i++) {
+  //     const curr = eachItemPositions[i];
+  //     const next = eachItemPositions[i + 1];
+  //     const currCenterPosition = translateX - viewCenterWidth;
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   if (offset > 0) {
+  //     setCurrX(currX + offset);
+  //   }
+  // }, [offset])
+
   const translateX = getCurrentTranslateX();
+  // console.log('## translateX: ', translateX);
 
   return (
     <div
