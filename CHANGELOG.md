@@ -1,5 +1,13 @@
 # Changelog - v3
 
+## [v3.14.0] (Mar 15, 2024)
+
+### Features
+* Added 'wide' and 'full' width support for `MessageContent` when value exists in `message.extendedMessagePayload['ui']['container_type']`
+* Added `Carousel` ui component
+* `MessageTemplate` now supports composite templates
+
+
 ## [v3.13.2] (Mar 14, 2024)
 
 ### Features
