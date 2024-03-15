@@ -69,7 +69,6 @@ export function Carousel({
     setStartX(event.clientX);
   };
 
-  // Belows are for web
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!dragging) return;
     const currentX = event.clientX;
@@ -83,7 +82,6 @@ export function Carousel({
     onDragEnd();
   };
 
-  // Belows are for mobile
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
     setStartX(event.touches[0].clientX);
   };
@@ -98,17 +96,18 @@ export function Carousel({
     if (dragging === 'horizontal' || (dragging !== 'vertical' && deltaX > deltaY + threshold)) {
       const parentElement = document.getElementsByClassName('sendbird-conversation__messages-padding');
       (parentElement[0] as HTMLElement).style.overflowY = 'hidden';
-      setDragging('horizontal');
+      if (dragging !== 'horizontal') setDragging('horizontal');
+      const newOffset = event.touches[0].clientX - startX;
+      if (newOffset !== offset) setOffset(newOffset);
     } else {
-      setDragging('vertical');
-      return;
+      if (dragging !== 'vertical') setDragging('vertical');
     }
-    const newOffset = event.touches[0].clientX - startX;
-    setOffset(newOffset);
   };
 
   const handleTouchEnd = () => {
-    setDragging(null);
+    if (dragging !== null) {
+      setDragging(null);
+    }
     onDragEnd();
   };
 
