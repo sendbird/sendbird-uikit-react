@@ -18,6 +18,11 @@ interface CarouselItemProps {
   defaultWidth: string;
 }
 
+/**
+ * fixed sized template items should use its child width.
+ * Whereas flex sized template items should use its parent's width.
+ * @param item
+ */
 function shouldRenderAsFixed(item: ReactElement) {
   return item.props.templateItems[0].width?.type === 'fixed';
 }
