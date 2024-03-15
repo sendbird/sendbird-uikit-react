@@ -260,7 +260,7 @@ const MessageView = (props: MessageViewProps) => {
           setQuoteMessage,
           onReplyInThread: onReplyInThreadClick,
           onQuoteMessageClick: onQuoteMessageClick,
-          onMessageHeightChange: handleScroll,
+          onMessageHeightChange: (a?: boolean) => handleScroll(a),
         })}
         { /* Suggested Replies */ }
         {

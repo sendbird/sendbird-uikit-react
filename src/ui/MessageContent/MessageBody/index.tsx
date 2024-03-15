@@ -28,7 +28,7 @@ export interface MessageBodyProps {
   channel: Nullable<GroupChannel>;
   message: CoreMessageType;
   showFileViewer?: (bool: boolean) => void;
-  onMessageHeightChange?: () => void;
+  onMessageHeightChange?: (isBottomMessageAffected?: boolean) => void;
 
   mouseHover: boolean;
   isMobile: boolean;

@@ -1,4 +1,12 @@
 import flattenObject from './flattenObject';
+import { convertArgbToRgba } from './selectColorVariablesByTheme';
+
+const COLOR_KEYS: Record<string, boolean> = {
+  color: true,
+  tintColor: true,
+  backgroundColor: true,
+  borderColor: true,
+};
 
 type SourceData = Record<string, unknown>;
 type MappedData = Record<string, unknown> | Array<unknown>;
@@ -38,7 +46,11 @@ export default function mapData<T extends Record<string, unknown> | Array<unknow
   for (const key in template) {
     if (Object.prototype.hasOwnProperty.call(template, key)) {
       const value = template[key];
-      result[key] = replaceVariablePlaceholder(value);
+      let replacedVal = replaceVariablePlaceholder(value);
+      if (COLOR_KEYS[key] && typeof replacedVal === 'string') {
+        replacedVal = convertArgbToRgba(replacedVal);
+      }
+      result[key] = replacedVal;
     }
   }
 

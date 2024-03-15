@@ -1,6 +1,6 @@
 import React from 'react';
 import { parser, renderer } from '@sendbird/react-uikit-message-template-view';
-import { createMessageTemplate } from '@sendbird/uikit-message-template';
+import { type ComponentsUnion, createMessageTemplate } from '@sendbird/uikit-message-template';
 import { MessageTemplateItem } from '../TemplateMessageItemBody/types';
 import './index.scss';
 
@@ -26,7 +26,7 @@ const { MessageTemplate: CustomTemplate } = createMessageTemplate({
 });
 
 export function MessageTemplate({ templateItems }: MessageTemplateProps) {
-  return <CustomTemplate templateItems={templateItems} />;
+  return <CustomTemplate templateItems={templateItems as ComponentsUnion['properties'][]}/>;
 }
 
 export default MessageTemplate;
