@@ -1,5 +1,5 @@
 export type ProcessedMessageTemplate = {
-  uiTemplate: string; // This is stringified ui_template.
+  uiTemplate: string; // This is stringified ui_template.body.items
   colorVariables?: Record<string, string>;
 };
 
@@ -10,7 +10,7 @@ export interface MessageTemplatesInfo {
 
 export interface WaitingTemplateKeyData {
   requestedAt: number;
-  isError: boolean;
+  erroredMessageIds: number[];
 }
 
 export interface AppInfoStateType {

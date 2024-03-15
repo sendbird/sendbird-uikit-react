@@ -1,7 +1,6 @@
 import { SendbirdTheme } from '../../../types';
-import { MessageTemplateTheme } from '../types';
 
-function convertArgbToRgba(string: string) {
+export function convertArgbToRgba(string: string) {
   if (!string.startsWith('#')) {
     return string;
   }
@@ -14,8 +13,7 @@ function convertArgbToRgba(string: string) {
   return string;
 }
 
-const splitColorVariables = (colorVariables: Record<string, any>): [MessageTemplateTheme, MessageTemplateTheme] => {
-  const light = {};
+const splitColorVariables = (colorVariables: Record<string, any>): [Record<string, unknown>, Record<string, unknown>] => { const light = {};
   const dark = {};
 
   for (const key in colorVariables) {
@@ -27,21 +25,21 @@ const splitColorVariables = (colorVariables: Record<string, any>): [MessageTempl
         dark[key] = nestedDark;
       } else if (typeof value === 'string') {
         const [lightColor, darkColor] = value.split(',');
-        light[key] = convertArgbToRgba(lightColor);
-        dark[key] = convertArgbToRgba(darkColor || lightColor); // when dark color is not provided, use light color
+        light[key] = lightColor;
+        dark[key] = darkColor || lightColor; // when dark color is not provided, use light color
       } else {
         light[key] = value;
         dark[key] = value;
       }
     }
   }
-  return [light, dark] as [MessageTemplateTheme, MessageTemplateTheme];
+  return [light, dark];
 };
 
 export default function selectColorVariablesByTheme({ colorVariables, theme }: {
   colorVariables: Record<string, unknown>;
   theme: SendbirdTheme;
-}): MessageTemplateTheme {
+}): Record<string, unknown> {
   const [light, dark] = splitColorVariables(colorVariables);
   return theme === 'light' ? light : dark;
 }
