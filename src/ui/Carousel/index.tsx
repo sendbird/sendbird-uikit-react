@@ -108,7 +108,6 @@ export function Carousel({
   };
 
   const handleTouchEnd = () => {
-    if (dragging !== 'horizontal') return;
     setDragging(null);
     onDragEnd();
   };
