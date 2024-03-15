@@ -1,6 +1,6 @@
 # Changelog - v3
 
-## [v3.14.0] (Mar 15, 2024)
+## [v3.14.0-beta] (Mar 15, 2024)
 
 ### Features
 * Added 'wide' and 'full' width support for `MessageContent` when value exists in `message.extendedMessagePayload['ui']['container_type']`
