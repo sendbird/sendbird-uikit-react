@@ -99,9 +99,7 @@ export function Carousel({
       if (dragging !== 'horizontal') setDragging('horizontal');
       const newOffset = event.touches[0].clientX - startX;
       if (newOffset !== offset) setOffset(newOffset);
-    } else {
-      if (dragging !== 'vertical') setDragging('vertical');
-    }
+    } else if (dragging !== 'vertical') setDragging('vertical');
   };
 
   const handleTouchEnd = () => {
