@@ -1,5 +1,5 @@
-import {Component, ErrorInfo, ReactNode} from 'react';
-import {LoggerInterface} from '../../lib/Logger';
+import { Component, ErrorInfo, ReactNode } from 'react';
+import { LoggerInterface } from '../../lib/Logger';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -17,7 +17,7 @@ export class MessageTemplateErrorBoundary extends Component<ErrorBoundaryProps, 
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error: Error) {
+  static getDerivedStateFromError() {
     return { hasError: true };
   }
 
