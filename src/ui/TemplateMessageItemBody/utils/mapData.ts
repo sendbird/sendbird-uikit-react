@@ -47,7 +47,7 @@ export default function mapData<T extends Record<string, unknown> | Array<unknow
     if (Object.prototype.hasOwnProperty.call(template, key)) {
       const value = template[key];
       let replacedVal = replaceVariablePlaceholder(value);
-      if (typeof replacedVal === 'string' && COLOR_KEYS[key]) {
+      if (COLOR_KEYS[key] && typeof replacedVal === 'string') {
         replacedVal = convertArgbToRgba(replacedVal);
       }
       result[key] = replacedVal;
