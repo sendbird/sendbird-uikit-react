@@ -23,7 +23,7 @@ interface Props {
   user: User;
   theme?: string;
   onCancel(): void;
-  onSubmit(newFile: File, newNickname: string): void;
+  onSubmit(newFile: File | null, newNickname: string): void;
   changeTheme?(theme: string): void;
   onThemeChange?(theme: string): void;
 }
@@ -34,14 +34,14 @@ export function EditUserProfile({
   onCancel,
   onSubmit,
   changeTheme = noop,
-  onThemeChange = null,
+  onThemeChange,
 }: Props): ReactElement {
-  const hiddenInputRef = useRef(null);
-  const inputRef = useRef(null);
-  const formRef = useRef(null);
+  const hiddenInputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const { stringSet } = useContext(LocalizationContext);
-  const [currentImg, setCurrentImg] = useState(null);
-  const [newFile, setNewFile] = useState(null);
+  const [currentImg, setCurrentImg] = useState<string | null>(null);
+  const [newFile, setNewFile] = useState<File | null>(null);
 
   return (
     <Modal
@@ -50,13 +50,13 @@ export function EditUserProfile({
       type={ButtonTypes.PRIMARY}
       onCancel={onCancel}
       onSubmit={() => {
-        if (user.nickname !== '' && !inputRef.current.value) {
-          if (formRef.current.reportValidity) { // might not work in explorer
+        if (user.nickname !== '' && inputRef.current && !inputRef.current.value) {
+          if (formRef.current?.reportValidity) { // might not work in explorer
             formRef.current.reportValidity();
           }
           return;
         }
-        onSubmit(inputRef.current.value, newFile);
+        onSubmit(newFile, inputRef.current?.value || '');
         onCancel();
       }}
     >
@@ -82,15 +82,17 @@ export function EditUserProfile({
             accept="image/gif, image/jpeg, image/png"
             style={{ display: 'none' }}
             onChange={(e) => {
-              setCurrentImg(URL.createObjectURL(e.target.files[0]));
-              setNewFile(e.target.files[0]);
-              hiddenInputRef.current.value = '';
+              if (e.target.files && 0 < e.target.files?.length) {
+                setCurrentImg(URL.createObjectURL(e.target.files[0]));
+                setNewFile(e.target.files[0]);
+                if (hiddenInputRef.current) {hiddenInputRef.current.value = '';}
+              }
             }}
           />
           <TextButton
             className="sendbird-edit-user-profile__img__avatar-button"
             disableUnderline
-            onClick={() => hiddenInputRef.current.click()}
+            onClick={() => hiddenInputRef.current?.click()}
           >
             <Label type={LabelTypography.BUTTON_1} color={LabelColors.PRIMARY}>
               {stringSet.EDIT_PROFILE__IMAGE_UPLOAD}

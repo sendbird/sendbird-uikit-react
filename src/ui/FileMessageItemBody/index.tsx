@@ -19,15 +19,15 @@ interface Props {
 }
 
 export default function FileMessageItemBody({
-  className,
+  className = '',
   message,
   isByMe = false,
   mouseHover = false,
   isReactionEnabled = false,
-  truncateLimit = null,
+  truncateLimit = undefined,
 }: Props): ReactElement {
   const { isMobile } = useMediaQueryContext();
-  const truncateMaxNum = truncateLimit || (isMobile ? 20 : null);
+  const truncateMaxNum = truncateLimit || (isMobile ? 20 : undefined);
   return (
     <div className={getClassName([
       className,

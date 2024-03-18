@@ -61,4 +61,4 @@ export const Types = {
   FEEDBACK_LIKE: 'FEEDBACK_LIKE',
   FEEDBACK_DISLIKE: 'FEEDBACK_DISLIKE',
 } as const;
-export type Types = typeof Types[keyof typeof Types];
+export type Types = typeof Types[keyof typeof Types] | undefined;

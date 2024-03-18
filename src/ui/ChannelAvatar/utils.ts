@@ -3,10 +3,11 @@ import type { OpenChannel } from '@sendbird/chat/openChannel';
 
 export const DEFAULT_URL_PREFIX = 'https://static.sendbird.com/sample/cover/cover_';
 
-export const getOpenChannelAvatar = (channel: OpenChannel): string => {
+export const getOpenChannelAvatar = (channel: OpenChannel): string | undefined => {
   if (channel?.coverUrl) {
     return channel.coverUrl;
   }
+  return undefined;
 };
 
 export const getChannelAvatarSource = (channel: GroupChannel, currentUserId: string): string | Array<string> => {

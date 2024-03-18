@@ -15,7 +15,7 @@ export interface DateSeparatorProps {
   separatorColor?: Colors;
 }
 const DateSeparator = ({
-  children = null,
+  children = undefined,
   className = '',
   separatorColor = Colors.ONBACKGROUND_4,
 }: DateSeparatorProps): ReactElement => {
