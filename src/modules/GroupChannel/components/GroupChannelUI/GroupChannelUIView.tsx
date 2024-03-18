@@ -8,7 +8,7 @@ import { TypingIndicatorType } from '../../../../types';
 import ConnectionStatus from '../../../../ui/ConnectionStatus';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 
-import type { EveryMessage, RenderCustomSeparatorProps, RenderMessageParamsType } from '../../../../types';
+import type { ClientUserMessage, EveryMessage, RenderCustomSeparatorProps, RenderMessageParamsType } from '../../../../types';
 import type { GroupChannelHeaderProps } from '../GroupChannelHeader';
 import type { GroupChannelMessageListProps } from '../MessageList';
 import type { MessageContentProps } from '../../../../ui/MessageContent';
@@ -84,6 +84,8 @@ export interface GroupChannelUIBasicProps {
   renderTypingIndicator?: () => React.ReactElement;
 
   renderRemoveMessageModal?: (props: { message: EveryMessage; onCancel: () => void; onSubmit: () => void }) => React.ReactElement;
+
+  renderEditInput?: ({ onCancelEdit, message }: { onCancelEdit: VoidFunction; message: ClientUserMessage }) => React.ReactElement;
 }
 
 export interface GroupChannelUIViewProps extends GroupChannelUIBasicProps {

@@ -1,4 +1,4 @@
-import type { EveryMessage, RenderCustomSeparatorProps, RenderMessageParamsType, ReplyType } from '../../../../types';
+import type { ClientUserMessage, EveryMessage, RenderCustomSeparatorProps, RenderMessageParamsType, ReplyType } from '../../../../types';
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { EmojiContainer, User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
@@ -48,7 +48,7 @@ export interface MessageProps {
   /**
    * A function that customizes the rendering of the edit input portion of the message component.
    * */
-  renderEditInput?: () => React.ReactElement;
+  renderEditInput?: ({ onCancelEdit, message }: { onCancelEdit: VoidFunction; message: ClientUserMessage }) => React.ReactElement;
   /**
    * @deprecated Please use `children` instead
    * @description Customizes all child components of the message.
@@ -176,6 +176,15 @@ const MessageView = (props: MessageViewProps) => {
   const mentionNodes = useDirtyGetMentions({ ref: editMessageInputRef }, { logger });
   const ableMention = mentionNodes?.length < maxUserMentionCount;
 
+  const handleCancelEdit = () => {
+    setMentionNickname('');
+    setMentionedUsers([]);
+    setMentionedUserIds([]);
+    setMentionSuggestedUsers([]);
+    setShowEdit(false);
+    channel?.endTyping?.();
+  };
+
   useEffect(() => {
     setMentionedUsers(
       mentionedUsers.filter(({ userId }) => {
@@ -288,7 +297,7 @@ const MessageView = (props: MessageViewProps) => {
 
   if (showEdit && message?.isUserMessage?.()) {
     return (
-      renderEditInput?.() || (
+      renderEditInput?.({ onCancelEdit: handleCancelEdit, message }) || (
         <>
           {displaySuggestedMentionList && (
             <SuggestedMentionListView
@@ -335,14 +344,7 @@ const MessageView = (props: MessageViewProps) => {
               setShowEdit(false);
               channel?.endTyping?.();
             }}
-            onCancelEdit={() => {
-              setMentionNickname('');
-              setMentionedUsers([]);
-              setMentionedUserIds([]);
-              setMentionSuggestedUsers([]);
-              setShowEdit(false);
-              channel?.endTyping?.();
-            }}
+            onCancelEdit={handleCancelEdit}
             onUserMentioned={(user) => {
               if (selectedUser?.userId === user?.userId) {
                 setSelectedUser(null);
