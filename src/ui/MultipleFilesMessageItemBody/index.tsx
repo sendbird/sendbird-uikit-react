@@ -34,7 +34,7 @@ export default function MultipleFilesMessageItemBody({
   isReactionEnabled = false,
   threadMessageKindKey,
   statefulFileInfoList = [],
-}: Props): ReactElement | undefined | string{
+}: Props): ReactElement{
   const [currentFileViewerIndex, setCurrentFileViewerIndex] = useState(-1);
 
   function onClose() {
@@ -50,7 +50,7 @@ export default function MultipleFilesMessageItemBody({
   }
 
   return (
-    threadMessageKindKey && (
+    threadMessageKindKey ? (
       <>
         {currentFileViewerIndex > -1 && (
           <FileViewer
@@ -94,7 +94,7 @@ export default function MultipleFilesMessageItemBody({
           })}
         </ImageGrid>
       </>
-    )
+    ) : <></>
   );
 }
 

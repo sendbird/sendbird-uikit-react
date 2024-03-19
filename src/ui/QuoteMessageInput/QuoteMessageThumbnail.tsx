@@ -21,9 +21,9 @@ interface Props {
 
 const componentClassname = 'sendbird-quote_message_input__avatar';
 
-export default function QuoteMessageThumbnail({ message }: Props): ReactElement {
+export default function QuoteMessageThumbnail({ message }: Props): ReactElement{
   if (!isFileMessage(message) && !isMultipleFilesMessage(message) || isVoiceMessage(message as FileMessage)) {
-    return null;
+    return <></>;
   }
   let thumbnailUrl = getMessageFirstFileThumbnailUrl(message);
   if (!thumbnailUrl) {

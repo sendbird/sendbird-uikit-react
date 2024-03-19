@@ -83,7 +83,7 @@ export default function OpenchannelOGMessage({
     delay: 300,
   });
 
-  const messageComponentRef = useRef(null);
+  const messageComponentRef = useRef<HTMLDivElement>(null);
   const contextMenuRef = useRef(null);
   const mobileMenuRef = useRef(null);
   const avatarRef = useRef(null);
@@ -100,7 +100,7 @@ export default function OpenchannelOGMessage({
 
   // place conxt menu top depending clientHeight of message component
   useEffect(() => {
-    if (messageComponentRef?.current?.clientHeight > 36) {
+    if (messageComponentRef?.current?.clientHeight && messageComponentRef?.current?.clientHeight > 36) {
       setContextStyle({ top: '8px ' });
     } else {
       setContextStyle({ top: '2px' });
@@ -332,7 +332,7 @@ export default function OpenchannelOGMessage({
         <div className="sendbird-openchannel-og-message__bottom">
           <div className="sendbird-openchannel-og-message__bottom__og-tag" ref={mobileMenuRef}>
             {
-              ogMetaData.url && (
+              ogMetaData && ogMetaData.url && (
                 <Label
                   className="sendbird-openchannel-og-message__bottom__og-tag__url"
                   type={LabelTypography.CAPTION_3}
@@ -343,10 +343,10 @@ export default function OpenchannelOGMessage({
               )
             }
             {
-              ogMetaData.title && (
+              ogMetaData && ogMetaData.title && (
                 <LinkLabel
                   className="sendbird-openchannel-og-message__bottom__og-tag__title"
-                  src={ogMetaData.url}
+                  src={ogMetaData.url ?? ''}
                   type={LabelTypography.SUBTITLE_2}
                   color={LabelColors.PRIMARY}
                 >
@@ -357,7 +357,7 @@ export default function OpenchannelOGMessage({
               )
             }
             {
-              ogMetaData.description && (
+              ogMetaData && ogMetaData.description && (
                 <Label
                   className="sendbird-openchannel-og-message__bottom__og-tag__description"
                   type={LabelTypography.BODY_2}
@@ -368,7 +368,7 @@ export default function OpenchannelOGMessage({
               )
             }
             {
-              ogMetaData.url && (
+              ogMetaData && ogMetaData.url && (
                 <div
                   className="sendbird-openchannel-og-message__bottom__og-tag__thumbnail"
                   role="button"

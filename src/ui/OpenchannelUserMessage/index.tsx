@@ -65,7 +65,7 @@ export default function OpenchannelUserMessage({
   // hooks
   const { stringSet, dateLocale } = useLocalization();
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
-  const messageRef = useRef(null);
+  const messageRef = useRef<HTMLDivElement>(null);
   const avatarRef = useRef(null);
   const contextMenuRef = useRef(null);
   const mobileMenuRef = useRef(null);
@@ -80,7 +80,7 @@ export default function OpenchannelUserMessage({
 
   // place context menu top depending clientHeight of message component
   useEffect(() => {
-    if (messageRef?.current?.clientHeight > 36) {
+    if (messageRef?.current?.clientHeight && messageRef?.current?.clientHeight > 36) {
       setContextStyle({ top: '8px ' });
     } else {
       setContextStyle({ top: '2px' });

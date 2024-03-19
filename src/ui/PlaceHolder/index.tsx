@@ -30,7 +30,7 @@ export default function PlaceHolder({
   type,
   iconSize,
   searchInString = '',
-  retryToConnect = null,
+  retryToConnect,
 }: PlaceHolderProps): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   return (

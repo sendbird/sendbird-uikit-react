@@ -20,6 +20,6 @@ export const changeColorToClassName = (color: Colors): string => {
     case Colors.ONCONTENT_1: return 'sendbird-color--oncontent-1';
     case Colors.PRIMARY: return 'sendbird-color--primary';
     case Colors.ERROR: return 'sendbird-color--error';
-    default: return null;
+    default: return '';
   }
 };
