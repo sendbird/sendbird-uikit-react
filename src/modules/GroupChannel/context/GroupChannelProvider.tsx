@@ -152,7 +152,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
 
   // Ref
   const { scrollRef, scrollPubSub, scrollDistanceFromBottomRef, isScrollBottomReached, setIsScrollBottomReached, isScrollable } =
-    useMessageListScroll();
+    useMessageListScroll(scrollBehavior);
   const messageInputRef = useRef(null);
 
   const toggleReaction = useToggleReactionCallback(currentChannel, logger);
