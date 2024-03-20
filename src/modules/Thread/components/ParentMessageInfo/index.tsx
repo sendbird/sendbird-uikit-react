@@ -59,6 +59,7 @@ export default function ParentMessageInfo({
     onHeaderActionClick,
     isMuted,
     isChannelFrozen,
+    onBeforeDownloadFileMessage,
   } = useThreadContext();
   const { isMobile } = useMediaQueryContext();
 
@@ -280,6 +281,7 @@ export default function ParentMessageInfo({
         <ParentMessageInfoItem
           message={parentMessage}
           showFileViewer={setShowFileViewer}
+          onBeforeDownloadFileMessage={onBeforeDownloadFileMessage}
         />
       </div>
       {/* context menu */}
