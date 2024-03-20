@@ -15,6 +15,7 @@ import EmojiReactions, { EmojiReactionsProps } from '../EmojiReactions';
 import ClientAdminMessage from '../AdminMessage';
 import QuoteMessage from '../QuoteMessage';
 
+import type { OnBeforeDownloadFileMessageType } from '../../modules/GroupChannel/context/GroupChannelProvider';
 import {
   getClassName,
   isOGMessage,
@@ -73,6 +74,7 @@ export interface MessageContentProps {
   // onClick listener for thread quote message view (for open thread module)
   onQuoteMessageClick?: (props: { message: SendableMessageType }) => void;
   onMessageHeightChange?: () => void;
+  onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
 
   // For injecting customizable sub-components
   renderSenderProfile?: (props: MessageProfileProps) => ReactNode;
@@ -111,6 +113,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     onReplyInThread,
     onQuoteMessageClick,
     onMessageHeightChange,
+    onBeforeDownloadFileMessage,
 
     // Public props for customization
     renderSenderProfile = (props: MessageProfileProps) => (
@@ -340,6 +343,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               config,
               isReactionEnabledInChannel,
               isByMe,
+              onBeforeDownloadFileMessage,
             })
           }
           {/* reactions */}

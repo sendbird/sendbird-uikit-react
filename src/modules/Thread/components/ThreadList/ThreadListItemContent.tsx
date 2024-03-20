@@ -94,7 +94,7 @@ export default function ThreadListItemContent({
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const [supposedHover, setSupposedHover] = useState(false);
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
-  const { deleteMessage } = useThreadContext();
+  const { deleteMessage, onBeforeDownloadFileMessage } = useThreadContext();
   const avatarRef = useRef(null);
 
   const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
@@ -270,6 +270,7 @@ export default function ThreadListItemContent({
               isByMe={isByMe}
               isReactionEnabled={isReactionEnabledInChannel}
               truncateLimit={isByMe ? 18 : 14}
+              onBeforeDownloadFileMessage={onBeforeDownloadFileMessage}
             />
           )}
           {

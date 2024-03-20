@@ -21,6 +21,7 @@ import { Nullable, SendbirdTheme } from '../../../types';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { match } from 'ts-pattern';
 import TemplateMessageItemBody from '../../TemplateMessageItemBody';
+import type { OnBeforeDownloadFileMessageType } from '../../../modules/GroupChannel/context/GroupChannelProvider';
 
 const MESSAGE_ITEM_BODY_CLASSNAME = 'sendbird-message-content__middle__message-item-body';
 
@@ -29,6 +30,7 @@ export interface MessageBodyProps {
   message: CoreMessageType;
   showFileViewer?: (bool: boolean) => void;
   onMessageHeightChange?: () => void;
+  onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
 
   mouseHover: boolean;
   isMobile: boolean;
@@ -43,6 +45,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
     channel,
     showFileViewer,
     onMessageHeightChange,
+    onBeforeDownloadFileMessage,
 
     mouseHover,
     isMobile,
@@ -98,6 +101,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         isByMe={isByMe}
         mouseHover={mouseHover}
         isReactionEnabled={isReactionEnabledInChannel}
+        onBeforeDownloadFileMessage={onBeforeDownloadFileMessage}
       />
     ))
     .when(isMultipleFilesMessage, () => (
