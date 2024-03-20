@@ -144,78 +144,78 @@ export function MessageMenu({
             >
               {showMenuItemCopy && (
                 renderMenuItem({
-                  className: "sendbird-message-item-menu__list__menu-item menu-item-copy",
+                  className: 'sendbird-message-item-menu__list__menu-item menu-item-copy',
                   onClick: () => {
                     copyToClipboard((message as UserMessage)?.message);
                     closeDropdown();
                   },
-                  dataSbId: "ui_message_item_menu_copy",
+                  dataSbId: 'ui_message_item_menu_copy',
                   text: stringSet.MESSAGE_MENU__COPY,
                 })
               )}
               {showMenuItemReply && (
                 renderMenuItem({
-                  className: "sendbird-message-item-menu__list__menu-item menu-item-reply",
+                  className: 'sendbird-message-item-menu__list__menu-item menu-item-reply',
                   onClick: () => {
                     setQuoteMessage(message);
                     closeDropdown();
                   },
                   disable: message?.parentMessageId > 0,
-                  dataSbId: "ui_message_item_menu_reply",
+                  dataSbId: 'ui_message_item_menu_reply',
                   text: stringSet.MESSAGE_MENU__REPLY,
                 })
               )}
               {showMenuItemThread && (
                 renderMenuItem({
-                  className: "sendbird-message-item-menu__list__menu-item menu-item-thread",
+                  className: 'sendbird-message-item-menu__list__menu-item menu-item-thread',
                   onClick: () => {
                     onReplyInThread?.({ message });
                     closeDropdown();
                   },
-                  dataSbId: "ui_message_item_menu_thread",
+                  dataSbId: 'ui_message_item_menu_thread',
                   text: stringSet.MESSAGE_MENU__THREAD,
                 })
               )}
               {showMenuItemOpenInChannel && (
                 renderMenuItem({
-                  className: "sendbird-message-item-menu__list__menu-item menu-item-open-channel",
+                  className: 'sendbird-message-item-menu__list__menu-item menu-item-open-channel',
                   onClick: () => {
                     onMoveToParentMessage?.();
                     closeDropdown();
                   },
-                  dataSbId: "ui_message_item_menu_open_in_channel",
+                  dataSbId: 'ui_message_item_menu_open_in_channel',
                   text: stringSet.MESSAGE_MENU__OPEN_IN_CHANNEL,
                 })
               )}
               {showMenuItemEdit && (
                 renderMenuItem({
-                  className: "sendbird-message-item-menu__list__menu-item menu-item-edit",
+                  className: 'sendbird-message-item-menu__list__menu-item menu-item-edit',
                   onClick: () => {
                     if (!disabled) {
                       showEdit(true);
                       closeDropdown();
                     }
                   },
-                  dataSbId: "ui_message_item_menu_edit",
+                  dataSbId: 'ui_message_item_menu_edit',
                   text: stringSet.MESSAGE_MENU__EDIT,
                 })
               )}
               {showMenuItemResend && (
                 renderMenuItem({
-                  className: "sendbird-message-item-menu__list__menu-item menu-item-resend",
+                  className: 'sendbird-message-item-menu__list__menu-item menu-item-resend',
                   onClick: () => {
                     if (!disabled) {
                       resendMessage(message);
                       closeDropdown();
                     }
                   },
-                  dataSbId: "ui_message_item_menu_resend",
+                  dataSbId: 'ui_message_item_menu_resend',
                   text: stringSet.MESSAGE_MENU__RESEND,
                 })
               )}
               {showMenuItemDelete && (
                 renderMenuItem({
-                  className: "sendbird-message-item-menu__list__menu-item menu-item-delete",
+                  className: 'sendbird-message-item-menu__list__menu-item menu-item-delete',
                   onClick: () => {
                     if (isFailedMessage(message)) {
                       deleteMessage?.(message);
@@ -229,7 +229,7 @@ export function MessageMenu({
                       ? disableDeleteMessage
                       : message?.threadInfo?.replyCount > 0
                   ),
-                  dataSbId: "ui_message_item_menu_delete",
+                  dataSbId: 'ui_message_item_menu_delete',
                   text: stringSet.MESSAGE_MENU__DELETE,
                 })
               )}
