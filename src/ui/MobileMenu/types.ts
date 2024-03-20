@@ -1,7 +1,7 @@
+import React, { MouseEvent } from 'react';
 import type { EmojiContainer } from '@sendbird/chat';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
-import React from 'react';
 import { CoreMessageType, SendableMessageType } from '../../utils';
 import { ReplyType } from '../../types';
 
@@ -27,6 +27,7 @@ export interface BaseMenuProps {
   parentRef?: React.RefObject<HTMLElement>;
   onReplyInThread?: (props: { message: SendableMessageType }) => void;
   isOpenedFromThread?: boolean;
+  onDownloadClick?: (e: MouseEvent) => Promise<void>;
 }
 
 export interface MobileBottomSheetProps extends BaseMenuProps {

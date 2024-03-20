@@ -119,6 +119,21 @@ export default function ParentMessageInfo({
     }));
   }, [mentionedUserIds]);
 
+  const handleOnDownloadClick = async (e) => {
+    if (!onBeforeDownloadFileMessage) {
+      return null;
+    }
+    try {
+      const allowDownload = await onBeforeDownloadFileMessage({ message: parentMessage as FileMessage });
+      if (!allowDownload) {
+        e.preventDefault();
+        logger?.info?.('ParentMessageInfo: Not allowed to download.');
+      }
+    } catch (err) {
+      logger?.error?.('ParentMessageInfo: Error occurred while determining download continuation:', err);
+    }
+  };
+
   // User Profile
   const avatarRef = useRef(null);
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
@@ -331,6 +346,7 @@ export default function ParentMessageInfo({
                 setShowFileViewer(false);
               });
           }}
+          onDownloadClick={handleOnDownloadClick}
         />
       )}
       {showMobileMenu && (
@@ -356,6 +372,7 @@ export default function ParentMessageInfo({
           showRemove={setShowRemove}
           toggleReaction={toggleReaction}
           isOpenedFromThread
+          onDownloadClick={handleOnDownloadClick}
         />
       )}
     </div>

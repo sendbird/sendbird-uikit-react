@@ -141,6 +141,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
 
   const { dateLocale } = useLocalization();
   const { config, eventHandlers } = useSendbirdStateContext?.() || {};
+  const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const contentRef = useRef(null);
   const { isMobile } = useMediaQueryContext();
@@ -517,6 +518,20 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               onReplyInThread?.({ message });
             } else if (threadReplySelectType === ThreadReplySelectType.PARENT) {
               scrollToMessage?.(message?.parentMessage?.createdAt || 0, message?.parentMessageId || 0);
+            }
+          },
+          onDownloadClick: async (e) => {
+            if (!onBeforeDownloadFileMessage) {
+              return null;
+            }
+            try {
+              const allowDownload = await onBeforeDownloadFileMessage({ message: message as FileMessage });
+              if (!allowDownload) {
+                e.preventDefault();
+                logger?.info?.('MessageContent: Not allowed to download.');
+              }
+            } catch (err) {
+              logger?.error?.('MessageContent: Error occurred while determining download continuation:', err);
             }
           },
         })

@@ -7,6 +7,7 @@ import {
   UserMessageCreateParams,
   UserMessageUpdateParams,
   type FileMessage,
+  type MultipleFilesMessage,
 } from '@sendbird/chat/message';
 import type { GroupChannel, MessageCollectionParams, MessageFilterParams } from '@sendbird/chat/groupChannel';
 import { MessageFilter } from '@sendbird/chat/groupChannel';
@@ -31,7 +32,7 @@ type OnBeforeHandler<T> = (params: T) => T | Promise<T>;
 type MessageListQueryParamsType = Omit<MessageCollectionParams, 'filter'> & MessageFilterParams;
 type MessageActions = ReturnType<typeof useMessageActions>;
 type MessageListDataSourceWithoutActions = Omit<ReturnType<typeof useGroupChannelMessages>, keyof MessageActions | `_dangerous_${string}`>;
-export type OnBeforeDownloadFileMessageType = (params: { message: FileMessage }) => Promise<boolean>;
+export type OnBeforeDownloadFileMessageType = (params: { message: FileMessage | MultipleFilesMessage, index?: number }) => Promise<boolean>;
 
 interface ContextBaseType {
   // Required

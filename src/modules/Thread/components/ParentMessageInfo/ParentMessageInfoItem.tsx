@@ -49,7 +49,7 @@ export default function ParentMessageInfoItem({
   className,
   message,
   showFileViewer,
-  onBeforeDownloadFileMessage,
+  onBeforeDownloadFileMessage = null,
 }: ParentMessageInfoItemProps): ReactElement {
   const { stores, config, eventHandlers } = useSendbirdStateContext?.() || {};
   const { logger } = config;
@@ -97,6 +97,7 @@ export default function ParentMessageInfoItem({
     });
   }, [message?.updatedAt, (message as UserMessage)?.message]);
 
+  // Only for the FileMessageItemBody
   const downloadFileWithUrl = () => {
     if (message.messageType === 'file') {
       window.open((message as FileMessage)?.url);
@@ -200,6 +201,7 @@ export default function ParentMessageInfoItem({
         </div>
       )} */}
       {
+        // Instead of the FileMessageItemBody component
         (getUIKitMessageType((message as FileMessage)) === getUIKitMessageTypes().FILE) && (
           <div className="sendbird-parent-message-info-item__file-message">
             <div className="sendbird-parent-message-info-item__file-message__file-icon">
@@ -242,6 +244,7 @@ export default function ParentMessageInfoItem({
             isReactionEnabled={isReactionEnabled}
             threadMessageKindKey={threadMessageKindKey}
             statefulFileInfoList={statefulFileInfoList}
+            onBeforeDownloadFileMessage={onBeforeDownloadFileMessage}
           />
         )
       }

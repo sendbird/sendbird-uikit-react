@@ -113,6 +113,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         isReactionEnabled={isReactionEnabledInChannel}
         threadMessageKindKey={threadMessageKindKey}
         statefulFileInfoList={statefulFileInfoList}
+        onBeforeDownloadFileMessage={onBeforeDownloadFileMessage}
       />
     ))
     .when(isVoiceMessage, () => (
