@@ -30,8 +30,12 @@ export default function FileMessageItemBody({
   truncateLimit = null,
   onBeforeDownloadFileMessage = null,
 }: Props): ReactElement {
-  const { config } = useSendbirdStateContext();
-  const { logger } = config;
+  let logger = null;
+  try {
+    logger = useSendbirdStateContext()?.config?.logger;
+  } catch (err) {
+    // TODO: Handle error
+  }
   const { isMobile } = useMediaQueryContext();
   const truncateMaxNum = truncateLimit || (isMobile ? 20 : null);
 
