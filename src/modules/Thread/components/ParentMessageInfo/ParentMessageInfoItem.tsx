@@ -111,10 +111,10 @@ export default function ParentMessageInfoItem({
           if (allowDownload) {
             downloadFileWithUrl();
           } else {
-            logger?.info?.('FileMessageItemBody: Not allowed to download.');
+            logger?.info?.('ParentMessageInfoItem: Not allowed to download.');
           }
         } catch (err) {
-          logger?.error?.('FileMessageItemBody: Error occurred while determining download continuation:', err);
+          logger?.error?.('ParentMessageInfoItem: Error occurred while determining download continuation:', err);
         }
       }
     }
