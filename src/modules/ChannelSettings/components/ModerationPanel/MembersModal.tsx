@@ -184,7 +184,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                     </>
                   )}
                 />
-              )
+              );
             })
           }
         </div>
