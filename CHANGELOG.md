@@ -1,9 +1,83 @@
 # Changelog - v3
 
+## [v3.13.3] (Mar 22, 2024)
+
+### Features
+* Added a `renderMenuItem` to the `MessageMenu` component
+  * How to use?
+  ```tsx
+  <GroupChannel
+    renderMessageContent={(props) => (
+      <MessageContent
+        {...props}
+        renderMessageMenu={(props) => (
+          <MessageMenu
+            {...props}
+            renderMenuItem={(props) => {
+              const {
+                className,
+                onClick,
+                dataSbId,
+                disable,
+                text,
+              } = props;
+              return <MenuItem /> // Render Custom Menu Item
+            }}
+          />
+        )}
+      />
+    )}
+  />
+  ```
+* Added `onBeforeDownloadFileMessage` to the `<GroupChannel />` and `<Thread />` modules
+  * How to use?
+  ```tsx
+  const ONE_MB = 1024 * 1024;
+  /**
+    * Use this list to check if it's displayed as a ThumbnailMessage.
+    * (https://github.com/sendbird/sendbird-uikit-react/blob/main/src/utils/index.ts)
+  */
+  const ThumbnailMessageTypes = [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/gif',
+    'image/svg+xml',
+    'image/webp', // not supported in IE
+    'video/mpeg',
+    'video/ogg',
+    'video/webm',
+    'video/mp4',
+  ];
+
+  <GroupChannel // or Thread
+    onBeforeDownloadFileMessage={async ({ message, index = null }) => {
+      if (message.isFileMessage()) {
+        const confirmed = window.confirm(`The file size is ${(message.size / ONE_MB).toFixed(2)}MB. Would you like to continue downloading?`);
+        return confirmed;
+      }
+      if (message.isMultipleFilesMessage()) {
+        const confirmed = window.confirm(`The file size is ${(message.fileInfoList[index].fileSize / ONE_MB).toFixed(2)}MB. Would you like to continue downloading?`);
+        return confirmed;
+      }
+      return true;
+    }}
+  />
+  ```
+* Added `onDownloadClick` to the `FileViewer`, `FileViewerView`, `MobileBottomSheet`, `MobileContextMenu`, and `MobileMenu`
+
+### Fixes
+* Improved the stability of the ChannelSettings Modals
+  * Support menu on the `MembersModal`, `MutedMembersModal`, and `OperatorsModal`
+  * Display `Operator` description on the `MembersModal`
+* Fixed the `width` size of the `OGMessageItemBody` component
+* Added fallback logic on template rendering error
+* Replaced the hardcoded text ` (You)` with the StringSet `CHANNEL_SETTING__MEMBERS__YOU` in the `UserListItem`
+
 ## [v3.13.2] (Mar 14, 2024)
 
 ### Features
-* Add a `renderHeader` props to the ChannelSettingsUIProps
+* Added a `renderHeader` props to the ChannelSettingsUIProps
   ```
   <ChannelSettingsUI
     renderHeader={() => ...}
