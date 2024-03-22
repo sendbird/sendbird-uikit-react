@@ -81,7 +81,7 @@ export interface MessageViewProps extends MessageProps {
   renderFileViewer: (props: { message: FileMessage; onCancel: () => void }) => React.ReactElement;
   renderRemoveMessageModal?: (props: { message: EveryMessage; onCancel: () => void }) => React.ReactElement;
   /**
-   * You can't use this prop in the (legacy) Channel component.
+   * You can't use this prop in the Channel component (legacy).
    * Accepting this prop only for the GroupChannel.
   */
   onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
