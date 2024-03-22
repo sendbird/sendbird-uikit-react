@@ -1,6 +1,6 @@
 import { ButtonTypes, ButtonSizes } from './types';
 
-export function changeTypeToClassName(type: ButtonTypes): string | null {
+export function changeTypeToClassName(type: ButtonTypes): string {
   switch (type) {
     case ButtonTypes.PRIMARY: return 'sendbird-button--primary';
     case ButtonTypes.SECONDARY: return 'sendbird-button--secondary';
@@ -12,7 +12,7 @@ export function changeTypeToClassName(type: ButtonTypes): string | null {
   }
 }
 
-export function changeSizeToClassName(size: ButtonSizes): string | null {
+export function changeSizeToClassName(size: ButtonSizes): string {
   switch (size) {
     case ButtonSizes.BIG: return 'sendbird-button--big';
     case ButtonSizes.SMALL: return 'sendbird-button--small';
