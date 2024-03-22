@@ -6,6 +6,8 @@ import {
   ReplyType as ChatReplyType,
   UserMessageCreateParams,
   UserMessageUpdateParams,
+  type FileMessage,
+  type MultipleFilesMessage,
 } from '@sendbird/chat/message';
 import type { GroupChannel, MessageCollectionParams, MessageFilterParams } from '@sendbird/chat/groupChannel';
 import { MessageFilter } from '@sendbird/chat/groupChannel';
@@ -30,6 +32,7 @@ type OnBeforeHandler<T> = (params: T) => T | Promise<T>;
 type MessageListQueryParamsType = Omit<MessageCollectionParams, 'filter'> & MessageFilterParams;
 type MessageActions = ReturnType<typeof useMessageActions>;
 type MessageListDataSourceWithoutActions = Omit<ReturnType<typeof useGroupChannelMessages>, keyof MessageActions | `_dangerous_${string}`>;
+export type OnBeforeDownloadFileMessageType = (params: { message: FileMessage | MultipleFilesMessage, index?: number }) => Promise<boolean>;
 
 interface ContextBaseType {
   // Required
@@ -61,6 +64,7 @@ interface ContextBaseType {
   onBeforeSendVoiceMessage?: OnBeforeHandler<FileMessageCreateParams>;
   onBeforeSendMultipleFilesMessage?: OnBeforeHandler<MultipleFilesMessageCreateParams>;
   onBeforeUpdateUserMessage?: OnBeforeHandler<UserMessageUpdateParams>;
+  onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
 
   // Click
   onBackClick?(): void;
@@ -123,6 +127,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
     onBeforeSendVoiceMessage,
     onBeforeSendMultipleFilesMessage,
     onBeforeUpdateUserMessage,
+    onBeforeDownloadFileMessage,
     onMessageAnimated,
     onBackClick,
     onChatHeaderActionClick,
@@ -389,6 +394,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
         onBeforeSendVoiceMessage,
         onBeforeSendMultipleFilesMessage,
         onBeforeUpdateUserMessage,
+        onBeforeDownloadFileMessage,
         // ## Focusing
         onMessageAnimated,
         // ## Click

@@ -20,6 +20,7 @@ import MessageContent, { MessageContentProps } from '../../../../ui/MessageConte
 
 import SuggestedReplies, { SuggestedRepliesProps } from '../SuggestedReplies';
 import SuggestedMentionListView from '../SuggestedMentionList/SuggestedMentionListView';
+import type { OnBeforeDownloadFileMessageType } from '../../context/GroupChannelProvider';
 
 export interface MessageProps {
   message: EveryMessage;
@@ -27,7 +28,6 @@ export interface MessageProps {
   chainTop?: boolean;
   chainBottom?: boolean;
   handleScroll?: (isBottomMessageAffected?: boolean) => void;
-
   /**
    * Customizes all child components of the message.
    * */
@@ -80,6 +80,11 @@ export interface MessageViewProps extends MessageProps {
 
   renderFileViewer: (props: { message: FileMessage; onCancel: () => void }) => React.ReactElement;
   renderRemoveMessageModal?: (props: { message: EveryMessage; onCancel: () => void }) => React.ReactElement;
+  /**
+   * You can't use this prop in the Channel component (legacy).
+   * Accepting this prop only for the GroupChannel.
+  */
+  onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
 
   animatedMessageId: number;
   setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
@@ -127,6 +132,7 @@ const MessageView = (props: MessageViewProps) => {
     setQuoteMessage,
     onQuoteMessageClick,
     onReplyInThreadClick,
+    onBeforeDownloadFileMessage,
 
     sendUserMessage,
     updateUserMessage,
@@ -261,6 +267,7 @@ const MessageView = (props: MessageViewProps) => {
           onReplyInThread: onReplyInThreadClick,
           onQuoteMessageClick: onQuoteMessageClick,
           onMessageHeightChange: handleScroll,
+          onBeforeDownloadFileMessage,
         })}
         { /* Suggested Replies */ }
         {

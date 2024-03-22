@@ -15,6 +15,7 @@ import EmojiReactions, { EmojiReactionsProps } from '../EmojiReactions';
 import ClientAdminMessage from '../AdminMessage';
 import QuoteMessage from '../QuoteMessage';
 
+import type { OnBeforeDownloadFileMessageType } from '../../modules/GroupChannel/context/GroupChannelProvider';
 import {
   getClassName,
   isOGMessage,
@@ -73,6 +74,7 @@ export interface MessageContentProps {
   // onClick listener for thread quote message view (for open thread module)
   onQuoteMessageClick?: (props: { message: SendableMessageType }) => void;
   onMessageHeightChange?: () => void;
+  onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
 
   // For injecting customizable sub-components
   renderSenderProfile?: (props: MessageProfileProps) => ReactNode;
@@ -111,6 +113,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     onReplyInThread,
     onQuoteMessageClick,
     onMessageHeightChange,
+    onBeforeDownloadFileMessage,
 
     // Public props for customization
     renderSenderProfile = (props: MessageProfileProps) => (
@@ -138,6 +141,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
 
   const { dateLocale } = useLocalization();
   const { config, eventHandlers } = useSendbirdStateContext?.() || {};
+  const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const contentRef = useRef(null);
   const { isMobile } = useMediaQueryContext();
@@ -340,6 +344,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               config,
               isReactionEnabledInChannel,
               isByMe,
+              onBeforeDownloadFileMessage,
             })
           }
           {/* reactions */}
@@ -513,6 +518,20 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               onReplyInThread?.({ message });
             } else if (threadReplySelectType === ThreadReplySelectType.PARENT) {
               scrollToMessage?.(message?.parentMessage?.createdAt || 0, message?.parentMessageId || 0);
+            }
+          },
+          onDownloadClick: async (e) => {
+            if (!onBeforeDownloadFileMessage) {
+              return null;
+            }
+            try {
+              const allowDownload = await onBeforeDownloadFileMessage({ message: message as FileMessage });
+              if (!allowDownload) {
+                e.preventDefault();
+                logger?.info?.('MessageContent: Not allowed to download.');
+              }
+            } catch (err) {
+              logger?.error?.('MessageContent: Error occurred while determining download continuation:', err);
             }
           },
         })

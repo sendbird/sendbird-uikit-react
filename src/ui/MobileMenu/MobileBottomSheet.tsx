@@ -44,6 +44,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     setQuoteMessage,
     onReplyInThread,
     isOpenedFromThread = false,
+    onDownloadClick,
   } = props;
   const isByMe = message?.sender?.userId === userId;
   const { stringSet } = useLocalization();
@@ -336,6 +337,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                       rel="noopener noreferrer"
                       href={fileMessage?.url}
                       target="_blank"
+                      onClick={onDownloadClick}
                     >
                       <Icon
                         type={IconTypes.DOWNLOAD}

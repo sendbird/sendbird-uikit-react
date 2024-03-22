@@ -91,10 +91,11 @@ export default function ThreadListItemContent({
   const { isMobile } = useMediaQueryContext();
   const { dateLocale } = useLocalization();
   const { config, eventHandlers } = useSendbirdStateContext?.() || {};
+  const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const [supposedHover, setSupposedHover] = useState(false);
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
-  const { deleteMessage } = useThreadContext();
+  const { deleteMessage, onBeforeDownloadFileMessage } = useThreadContext();
   const avatarRef = useRef(null);
 
   const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
@@ -270,6 +271,7 @@ export default function ThreadListItemContent({
               isByMe={isByMe}
               isReactionEnabled={isReactionEnabledInChannel}
               truncateLimit={isByMe ? 18 : 14}
+              onBeforeDownloadFileMessage={onBeforeDownloadFileMessage}
             />
           )}
           {
@@ -391,6 +393,20 @@ export default function ThreadListItemContent({
           toggleReaction={toggleReaction}
           isOpenedFromThread
           deleteMessage={deleteMessage}
+          onDownloadClick={async (e) => {
+            if (!onBeforeDownloadFileMessage) {
+              return null;
+            }
+            try {
+              const allowDownload = await onBeforeDownloadFileMessage({ message: message as FileMessage });
+              if (!allowDownload) {
+                e.preventDefault();
+                logger?.info?.('ThreadListItemContent: Not allowed to download.');
+              }
+            } catch (err) {
+              logger?.error?.('ThreadListItemContent: Error occurred while determining download continuation:', err);
+            }
+          }}
         />
       )}
     </div>

@@ -26,6 +26,7 @@ const MobileMenu: React.FC<MobileBottomSheetProps> = (props: MobileBottomSheetPr
     parentRef,
     onReplyInThread,
     isOpenedFromThread,
+    onDownloadClick,
   } = props;
   return (
     <>
@@ -51,6 +52,7 @@ const MobileMenu: React.FC<MobileBottomSheetProps> = (props: MobileBottomSheetPr
               isReactionEnabled={isReactionEnabled}
               onReplyInThread={onReplyInThread}
               isOpenedFromThread={isOpenedFromThread}
+              onDownloadClick={onDownloadClick}
             />
           ) : (
             <MobileContextMenu
@@ -70,6 +72,7 @@ const MobileMenu: React.FC<MobileBottomSheetProps> = (props: MobileBottomSheetPr
               parentRef={parentRef}
               onReplyInThread={onReplyInThread}
               isOpenedFromThread={isOpenedFromThread}
+              onDownloadClick={onDownloadClick}
             />
           )
       }
