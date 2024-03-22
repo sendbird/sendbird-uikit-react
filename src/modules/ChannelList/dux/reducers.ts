@@ -135,7 +135,7 @@ export default function channelListReducer(
         const { channel, isMe } = action.payload;
         const { allChannels, currentUserId, currentChannel, channelListQuery, disableAutoSelect } = state;
         let nextChannels = [...allChannels];
-        let nextChannel: GroupChannel = channel;
+        let nextChannel: GroupChannel = currentChannel;
 
         /**
          * 1. If I left channel:
@@ -156,6 +156,9 @@ export default function channelListReducer(
           const channelAt = allChannels.findIndex((ch: GroupChannel) => ch.url === channel.url);
           if (channelAt > -1) {
             nextChannels.splice(channelAt, 1);
+          }
+
+          if (currentChannel) {
             nextChannel = getNextChannel({
               channel,
               currentChannel,
