@@ -4,9 +4,9 @@
   position: relative;
   display: inline-block;
   // TODO: Change fixing width and height lengths
-  width: 100%;
+  width: 320px;
   min-width: 320px;
-  max-width: 400px;
+  max-width: 320px;
   @include mobile() {
     min-width: 160px;
   }

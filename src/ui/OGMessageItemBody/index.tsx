@@ -98,6 +98,7 @@ export default function OGMessageItemBody({
           url={message?.ogMetaData?.defaultImage?.url || ''}
           alt={message?.ogMetaData?.defaultImage?.alt}
           width="100%"
+          height="280px" // FIXME: Find out better to calculate the size of OG Message
           onLoad={onMessageHeightChange}
           onError={() => {
             try {

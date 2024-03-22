@@ -13,7 +13,7 @@ import ContextMenu, { MenuItems } from '../ContextMenu';
 import Label, { LabelTypography, LabelColors } from '../Label';
 
 export interface UserListItemProps {
-  user: User;
+  user: User | Member;
   className?: string;
   checked?: boolean;
   checkBox?: boolean;
@@ -47,6 +47,7 @@ export default function UserListItem({
   onClick,
   onUserAvatarClick,
 }: UserListItemProps): ReactElement {
+  const operator = isOperator ?? (user as Member)?.role === 'operator';
   const uniqueKey = user.userId;
   const actionRef = React.useRef(null);
   const parentRef = React.useRef(null);
@@ -147,7 +148,7 @@ export default function UserListItem({
         )
       }
       {
-        isOperator && (
+        operator && (
           <Label
             className={[
               'sendbird-user-list-item__operator',
