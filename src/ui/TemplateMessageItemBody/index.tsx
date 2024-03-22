@@ -75,7 +75,7 @@ export function TemplateMessageItemBody({
       return getFilledMessageTemplateWithData(
         JSON.parse(cachedTemplate.uiTemplate),
         templateData.variables ?? {},
-        cachedTemplate.colorVariables,
+        cachedTemplate.colorVariables ?? {},
         theme,
       );
     } else {
@@ -100,7 +100,7 @@ export function TemplateMessageItemBody({
         const filledMessageTemplateItems: MessageTemplateItem[] = getFilledMessageTemplateWithData(
           JSON.parse(cachedTemplate.uiTemplate),
           templateData.variables ?? {},
-          cachedTemplate.colorVariables,
+          cachedTemplate.colorVariables ?? {},
           theme,
         );
         setFilledMessageTemplateItems(filledMessageTemplateItems);

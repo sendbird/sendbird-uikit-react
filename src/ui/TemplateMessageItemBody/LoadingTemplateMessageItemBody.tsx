@@ -16,7 +16,7 @@ export function LoadingTemplateMessageItemBody({
   return (
     <div
       className={getClassName([
-        className,
+        className ?? '',
         isByMe ? 'outgoing' : 'incoming',
         'sendbird-template-loading-message-item-body',
       ])}

@@ -20,7 +20,7 @@ export function FallbackTemplateMessageItemBody({
   return (
     <div
       className={getClassName([
-        className,
+        className ?? '',
         isByMe ? 'outgoing' : 'incoming',
         'sendbird-template-message-item-body__fallback_message',
       ])}

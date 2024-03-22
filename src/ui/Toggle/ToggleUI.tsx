@@ -75,10 +75,10 @@ export function ToggleUI(props: ToggleUIProps): React.ReactElement {
         aria-labelledby={ariaLabelledby}
         name={name}
         id={id}
-        checked={checked}
+        checked={checked ?? undefined}
         disabled={disabled}
         onChange={(e) => {
-          onChange(e);
+          onChange?.(e);
           setAnimatedClassName(e.currentTarget.checked ? 'sendbird-input-toggle-button--turned-on' : 'sendbird-input-toggle-button--turned-off');
         }}
         onFocus={onFocus}

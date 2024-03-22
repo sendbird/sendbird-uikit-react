@@ -83,7 +83,7 @@ export default function UserListItem({
           renderUserProfile
             ? renderUserProfile({
               user,
-              currentUserId: currentUser,
+              currentUserId: currentUser ?? '',
               close: closeDropdown,
               avatarRef,
             })
@@ -140,7 +140,7 @@ export default function UserListItem({
               id={uniqueKey}
               checked={checked}
               disabled={disabled}
-              onChange={(event) => onChange(event)}
+              onChange={(event) => onChange?.(event)}
             />
           </label>
         )

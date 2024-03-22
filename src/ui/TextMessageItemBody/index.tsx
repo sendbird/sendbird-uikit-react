@@ -29,11 +29,12 @@ export default function TextMessageItemBody({
   const { stringSet } = useContext(LocalizationContext);
   const isMessageMentioned = isMentionEnabled
     && message?.mentionedMessageTemplate?.length > 0
+    && message?.mentionedUsers
     && message?.mentionedUsers?.length > 0;
   const tokens = useMemo(() => {
     if (isMessageMentioned) {
       return tokenizeMessage({
-        mentionedUsers: message?.mentionedUsers,
+        mentionedUsers: message?.mentionedUsers ?? undefined,
         messageText: message?.mentionedMessageTemplate,
       });
     }
