@@ -1,12 +1,17 @@
 # Changelog - v3
 
+## [v3.14.0-beta.2] (Mar 22, 2024)
+
+### Fixes
+* Fixed a bug where swiping `Carousel` in mobile view displaying flickering effect
+* Added missing default `font-family` value to `sendbird-message-template__root`
+
 ## [v3.14.0-beta] (Mar 15, 2024)
 
 ### Features
 * Added 'wide' and 'full' width support for `MessageContent` when value exists in `message.extendedMessagePayload['ui']['container_type']`
 * Added `Carousel` ui component
 * `MessageTemplate` now supports composite templates
-
 
 ## [v3.13.2] (Mar 14, 2024)
 
