@@ -22,7 +22,6 @@ import useOnlineStatus from './hooks/useOnlineStatus';
 import useConnect from './hooks/useConnect';
 import { LoggerFactory, LogLevel } from './Logger';
 import pubSubFactory from './pubSub/index';
-import useAppendDomNode from '../hooks/useAppendDomNode';
 
 import { VoiceMessageProvider } from './VoiceMessageProvider';
 import { LocalizationProvider } from './LocalizationContext';
