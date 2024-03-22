@@ -39,7 +39,6 @@ interface CarouselProps {
   id: string;
   items: ReactElement[];
   gap?: number;
-  classNameWithTouchAction?: string;
 }
 
 interface Position {
@@ -60,7 +59,6 @@ export const Carousel = React.memo(({
   id,
   items,
   gap = 8,
-  classNameWithTouchAction = 'sendbird-conversation__messages-padding',
 }: CarouselProps): ReactElement => {
   const carouselRef = useRef<HTMLDivElement>(null);
   const screenWidth = window.innerWidth;
@@ -99,7 +97,7 @@ export const Carousel = React.memo(({
   };
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!draggingInfo.dragging) return;
+    if (!draggingInfo.dragging || !draggingInfo.startPos) return;
     const currentX = event.clientX;
     const newOffset = currentX - draggingInfo.startPos.x;
     setDraggingInfo({
@@ -114,11 +112,15 @@ export const Carousel = React.memo(({
   };
 
   const blockScroll = () => {
-    carouselRef.current.style.touchAction = 'pan-x';
+    if (carouselRef.current) {
+      carouselRef.current.style.touchAction = 'pan-x';
+    }
   };
 
   const unblockScroll = () => {
-    carouselRef.current.style.touchAction = 'pan-y';
+    if (carouselRef.current) {
+      carouselRef.current.style.touchAction = 'pan-y';
+    }
   };
 
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
