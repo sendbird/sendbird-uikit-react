@@ -22,7 +22,6 @@ import useOnlineStatus from './hooks/useOnlineStatus';
 import useConnect from './hooks/useConnect';
 import { LoggerFactory, LogLevel } from './Logger';
 import pubSubFactory from './pubSub/index';
-import useAppendDomNode from '../hooks/useAppendDomNode';
 
 import { VoiceMessageProvider } from './VoiceMessageProvider';
 import { LocalizationProvider } from './LocalizationContext';
@@ -48,12 +47,13 @@ import {
   CustomExtensionParams,
   SBUEventHandlers, SendbirdProviderUtils,
 } from './types';
-import { GlobalModalProvider } from '../hooks/useModal';
+import { GlobalModalProvider, ModalRoot } from '../hooks/useModal';
 import { RenderUserProfileProps } from '../types';
 import PUBSUB_TOPICS, { SBUGlobalPubSub, SBUGlobalPubSubTopicPayloadUnion } from './pubSub/topics';
 import { EmojiManager } from './emojiManager';
 import { uikitConfigStorage } from './utils/uikitConfigStorage';
 import useMessageTemplateUtils from './hooks/useMessageTemplateUtils';
+import { EmojiReactionListRoot, MenuRoot } from '../ui/ContextMenu';
 
 export { useSendbirdStateContext } from '../hooks/useSendbirdStateContext';
 
@@ -257,12 +257,6 @@ const SendbirdSDK = ({
     setLogger(LoggerFactory(logLevel as LogLevel));
   }, [logLevel]);
 
-  useAppendDomNode([
-    'sendbird-modal-root',
-    'sendbird-dropdown-portal',
-    'sendbird-emoji-list-portal',
-  ], 'body');
-
   // should move to reducer
   const [currentTheme, setCurrentTheme] = useState(theme);
   useEffect(() => {
@@ -429,6 +423,10 @@ const SendbirdSDK = ({
           </VoiceMessageProvider>
         </LocalizationProvider>
       </MediaQueryProvider>
+      {/* Roots */}
+      <EmojiReactionListRoot />
+      <ModalRoot />
+      <MenuRoot />
     </SendbirdSdkContext.Provider>
   );
 };
