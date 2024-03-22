@@ -114,19 +114,11 @@ export const Carousel = React.memo(({
   };
 
   const blockScroll = () => {
-    const parentElements = document.getElementsByClassName(classNameWithTouchAction);
-    const parentElement: HTMLElement = parentElements[0] as HTMLElement;
-    if (parentElement) {
-      parentElement.style.touchAction = 'pan-x';
-    }
+    carouselRef.current.style.touchAction = 'pan-x';
   };
 
   const unblockScroll = () => {
-    const parentElements = document.getElementsByClassName(classNameWithTouchAction);
-    const parentElement: HTMLElement = parentElements[0] as HTMLElement;
-    if (parentElement) {
-      parentElement.style.touchAction = 'pan-y';
-    }
+    carouselRef.current.style.touchAction = 'pan-y';
   };
 
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
@@ -318,6 +310,7 @@ export const Carousel = React.memo(({
       onTouchEnd={handleTouchEnd}
       className='sendbird-carousel-items-wrapper'
       style={{
+        touchAction: 'pan-y',
         cursor: draggingInfo.dragging ? 'grabbing' : 'grab',
         transition: draggingInfo.dragging ? 'none' : 'transform 0.5s ease',
         transform: `translateX(${getCurrentTranslateX()}px)`,
