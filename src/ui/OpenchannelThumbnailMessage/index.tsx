@@ -260,7 +260,7 @@ export default function OpenchannelThumbnailMessage({
                       ? (
                         <ImageRenderer
                           className="sendbird-openchannel-thumbnail-message__right__body__wrap__image"
-                          url={thumbnailUrl || url || localUrl}
+                          url={thumbnailUrl || url || localUrl || ''}
                           alt="image"
                           width={messageWidth}
                           height="270px"

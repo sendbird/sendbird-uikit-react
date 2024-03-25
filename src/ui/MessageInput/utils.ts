@@ -13,6 +13,9 @@ export const sanitizeString = (str?: string) => {
  * @returns Array of child nodes
  */
 export const nodeListToArray = (childNodes?: Node['childNodes'] | null) => {
+  if (!childNodes) {
+    return [];
+  }
   try {
     return Array.from(childNodes);
   } catch (error) {

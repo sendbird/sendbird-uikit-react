@@ -23,7 +23,7 @@ import { ReplyType } from '../../types';
 export interface MessageMenuProps {
   className?: string | Array<string>;
   message: SendableMessageType;
-  channel: GroupChannel | OpenChannel;
+  channel: GroupChannel | OpenChannel | null;
   isByMe?: boolean;
   disabled?: boolean;
   replyType?: ReplyType;
@@ -45,7 +45,7 @@ export function MessageMenu({
   isByMe = false,
   disabled = false,
   replyType,
-  disableDeleteMessage = null,
+  disableDeleteMessage,
   showEdit,
   showRemove,
   deleteMessage,
@@ -53,8 +53,8 @@ export function MessageMenu({
   setQuoteMessage,
   setSupposedHover,
   onReplyInThread,
-  onMoveToParentMessage = null,
-}: MessageMenuProps): ReactElement {
+  onMoveToParentMessage,
+}: MessageMenuProps): ReactElement | null {
   const { stringSet } = useContext(LocalizationContext);
   const triggerRef = useRef(null);
   const containerRef = useRef(null);
@@ -91,7 +91,7 @@ export function MessageMenu({
   }
   return (
     <div
-      className={getClassName([className, 'sendbird-message-item-menu'])}
+      className={getClassName([className ?? '', 'sendbird-message-item-menu'])}
       ref={containerRef}
     >
       <ContextMenu
@@ -103,10 +103,10 @@ export function MessageMenu({
             height="32px"
             onClick={(): void => {
               toggleDropdown();
-              setSupposedHover(true);
+              setSupposedHover?.(true);
             }}
             onBlur={(): void => {
-              setSupposedHover(false);
+              setSupposedHover?.(false);
             }}
           >
             <Icon
@@ -121,7 +121,7 @@ export function MessageMenu({
         menuItems={(close: () => void): ReactElement => {
           const closeDropdown = (): void => {
             close();
-            setSupposedHover(false);
+            setSupposedHover?.(false);
           };
           return (
             <MenuItems
@@ -147,7 +147,7 @@ export function MessageMenu({
                 <MenuItem
                   className="sendbird-message-item-menu__list__menu-item menu-item-reply"
                   onClick={() => {
-                    setQuoteMessage(message);
+                    setQuoteMessage?.(message);
                     closeDropdown();
                   }}
                   disable={message?.parentMessageId > 0}
@@ -185,7 +185,7 @@ export function MessageMenu({
                   className="sendbird-message-item-menu__list__menu-item menu-item-edit"
                   onClick={() => {
                     if (!disabled) {
-                      showEdit(true);
+                      showEdit?.(true);
                       closeDropdown();
                     }
                   }}
@@ -199,7 +199,7 @@ export function MessageMenu({
                   className="sendbird-message-item-menu__list__menu-item menu-item-resend"
                   onClick={() => {
                     if (!disabled) {
-                      resendMessage(message);
+                      resendMessage?.(message);
                       closeDropdown();
                     }
                   }}
@@ -215,14 +215,14 @@ export function MessageMenu({
                     if (isFailedMessage(message)) {
                       deleteMessage?.(message);
                     } else if (!disabled) {
-                      showRemove(true);
+                      showRemove?.(true);
                       closeDropdown();
                     }
                   }}
                   disable={
                     typeof disableDeleteMessage === 'boolean'
                       ? disableDeleteMessage
-                      : message?.threadInfo?.replyCount > 0
+                      : message?.threadInfo?.replyCount ? message?.threadInfo?.replyCount > 0 : false
                   }
                   dataSbId="ui_message_item_menu_delete"
                 >

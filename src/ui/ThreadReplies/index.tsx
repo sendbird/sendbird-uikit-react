@@ -28,11 +28,11 @@ export default function ThreadReplies({
       className={`sendbird-ui-thread-replies ${className}`}
       role="button"
       onClick={(e) => {
-        onClick(e);
+        onClick?.(e);
         e?.stopPropagation();
       }}
       onKeyDown={(e) => {
-        onClick(e);
+        onClick?.(e);
         e?.stopPropagation();
       }}
     >

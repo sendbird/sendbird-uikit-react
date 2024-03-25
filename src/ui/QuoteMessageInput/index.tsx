@@ -42,7 +42,7 @@ export default function QuoteMessageInput({
     && !isVoiceMessage(replyingMessage as FileMessage);
 
   return (
-    <div className={getClassName(['sendbird-quote_message_input', className])}>
+    <div className={getClassName(['sendbird-quote_message_input', className ?? ''])}>
       {
         displayFileIcon && (
           <QuoteMessageThumbnail message={fileMessage} />
@@ -84,7 +84,7 @@ export default function QuoteMessageInput({
         fillColor={IconColors.ON_BACKGROUND_2}
         width="24px"
         height="24px"
-        onClick={() => onClose(replyingMessage)}
+        onClick={() => onClose?.(replyingMessage)}
       />
     </div>
   );

@@ -25,7 +25,7 @@ export interface EmojiReactionsProps {
   message: SendableMessageType;
   channel: Nullable<GroupChannel>;
   emojiContainer: EmojiContainer;
-  memberNicknamesMap: Map<string, string>;
+  memberNicknamesMap: Map<string, string> ;
   spaceFromTrigger?: SpaceFromTriggerType;
   isByMe?: boolean;
   toggleReaction?: (message: SendableMessageType, key: string, byMe: boolean) => void;

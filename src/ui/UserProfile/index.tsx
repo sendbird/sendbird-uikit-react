@@ -16,7 +16,7 @@ interface Logger {
 }
 
 interface Props {
-  user: User;
+  user: User | undefined | null;
   currentUserId?: string;
   logger?: Logger;
   disableMessaging?: boolean;
@@ -62,10 +62,10 @@ function UserProfile({
                 // Create 1:1 channel
                 const params: GroupChannelCreateParams = {
                   isDistinct: false,
-                  invitedUserIds: [user?.userId],
+                  invitedUserIds: user?.userId ? [user?.userId] : [],
                   operatorUserIds: [currentUserId_],
                 };
-                onSuccess();
+                onSuccess?.();
                 createChannel(params)
                   .then((groupChannel) => {
                     logger.info('UserProfile, channel create', groupChannel);

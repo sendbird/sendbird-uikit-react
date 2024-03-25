@@ -56,7 +56,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
               <MenuItem
                 className="sendbird-openchannel-og-message__top__context-menu__copy"
                 onClick={() => {
-                  copyToClipboard();
+                  copyToClipboard?.();
                 }}
                 dataSbId="open_channel_mobile_context_menu_copy"
               >
@@ -69,7 +69,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
               <MenuItem
                 className="sendbird-openchannel-og-message__top__context-menu__edit"
                 onClick={() => {
-                  showEdit();
+                  showEdit?.();
                 }}
                 dataSbId="open_channel_mobile_context_menu_edit"
               >
@@ -81,7 +81,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
             isFineResend({ message, userId, status }) && (
               <MenuItem
                 onClick={() => {
-                  resendMessage();
+                  resendMessage?.();
                 }}
                 dataSbId="open_channel_mobile_context_menu_resend"
               >
@@ -93,7 +93,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
             (!isEphemeral && isFineDelete({ message, userId, status })) && (
               <MenuItem
                 onClick={() => {
-                  showRemove();
+                  showRemove?.();
                 }}
                 dataSbId="open_channel_mobile_context_menu_delete"
               >

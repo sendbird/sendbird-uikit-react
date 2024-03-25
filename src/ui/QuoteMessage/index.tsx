@@ -1,6 +1,6 @@
 import './index.scss';
 import React, { ReactElement, useContext, useState } from 'react';
-import type { FileMessage, UserMessage } from '@sendbird/chat/message';
+import type { BaseMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
@@ -42,8 +42,8 @@ export default function QuoteMessage({
   onClick,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
-
-  const { parentMessage } = message;
+  
+  const { parentMessage } = message as BaseMessage;
   const parentMessageSender = (parentMessage as SendableMessageType)?.sender;
   const parentMessageSenderNickname = (userId === parentMessageSender?.userId) ? stringSet.QUOTED_MESSAGE__CURRENT_USER : parentMessageSender?.nickname;
   const parentMessageUrl = getMessageFirstFileUrl(parentMessage as CoreMessageType);

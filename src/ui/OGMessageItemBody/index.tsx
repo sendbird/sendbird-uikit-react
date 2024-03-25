@@ -47,11 +47,11 @@ export default function OGMessageItemBody({
       window.open(url);
     }
   };
-  const isMessageMentioned = isMentionEnabled && message?.mentionedMessageTemplate?.length > 0 && message?.mentionedUsers?.length > 0;
+  const isMessageMentioned = isMentionEnabled && message?.mentionedMessageTemplate?.length > 0 && message?.mentionedUsers && message?.mentionedUsers?.length > 0;
   const tokens = useMemo(() => {
     if (isMessageMentioned) {
       return tokenizeMessage({
-        mentionedUsers: message?.mentionedUsers,
+        mentionedUsers: message?.mentionedUsers ?? undefined,
         messageText: message?.mentionedMessageTemplate,
       });
     }
@@ -61,7 +61,7 @@ export default function OGMessageItemBody({
   }, [message?.updatedAt, message?.message]);
   return (
     <div className={getClassName([
-      className,
+      className ?? '',
       'sendbird-og-message-item-body',
       isByMe ? 'outgoing' : 'incoming',
       mouseHover ? 'mouse-hover' : '',
@@ -96,7 +96,7 @@ export default function OGMessageItemBody({
         <ImageRenderer
           className="sendbird-og-message-item-body__og-thumbnail__image"
           url={message?.ogMetaData?.defaultImage?.url || ''}
-          alt={message?.ogMetaData?.defaultImage?.alt}
+          alt={message?.ogMetaData?.defaultImage?.alt ?? undefined}
           width="100%"
           onLoad={onMessageHeightChange}
           onError={() => {

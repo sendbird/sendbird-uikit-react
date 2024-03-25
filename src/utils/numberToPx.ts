@@ -1,6 +1,6 @@
-export default (value: string | number | null): string => {
+export default (value: string | number | null): string | undefined => {
   if (value === null)
-    value = 0;
+    return undefined;
   
   return typeof value === 'number' ? `${value}px` : value;
 };

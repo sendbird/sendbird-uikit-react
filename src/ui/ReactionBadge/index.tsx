@@ -58,7 +58,7 @@ const ReactionBadge = React.forwardRef((props: ReactionBadgeProps, ref: RefObjec
           {children}
         </div>
         <Label
-          className={(children && count) && 'sendbird-reaction-badge__inner__count'}
+          className={(children && count) ? 'sendbird-reaction-badge__inner__count' : ''}
           type={LabelTypography.CAPTION_3}
           color={LabelColors.ONBACKGROUND_1}
         >

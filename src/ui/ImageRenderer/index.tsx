@@ -6,7 +6,7 @@ import { useDynamicSideLength } from './useDynamicSideLength';
 import { useLazyImageLoader } from '../../modules/Channel/components/Message/hooks/useLazyImageLoader';
 import { noop } from '../../utils/utils';
 
-export function getBorderRadiusForImageRenderer(circle = false, borderRadius: string | number | null = null): string {
+export function getBorderRadiusForImageRenderer(circle = false, borderRadius: string | number | null = null): string | undefined {
   return circle ? '50%' : numberToPx(borderRadius);
 }
 
