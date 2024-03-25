@@ -190,7 +190,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
       //
     }
     setMentionedUserIds([]);
-    setIsInput(textField?.textContent ? textField?.textContent?.trim().length > 0 : false);
+    setIsInput(textField?.textContent ? textField.textContent.trim().length > 0 : false);
     setHeight();
   }, [initialValue]);
 

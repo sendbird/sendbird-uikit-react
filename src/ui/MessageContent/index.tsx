@@ -27,7 +27,7 @@ import { LocalizationContext, useLocalization } from '../../lib/LocalizationCont
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { EmojiContainer } from '@sendbird/chat';
-import { AdminMessage, Feedback, FeedbackRating, FileMessage, UserMessage } from '@sendbird/chat/message';
+import { AdminMessage, Feedback, FeedbackRating, FileMessage, ThreadInfo, UserMessage } from '@sendbird/chat/message';
 import useLongPress from '../../hooks/useLongPress';
 import MobileMenu from '../MobileMenu';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
@@ -45,7 +45,6 @@ import MessageFeedbackModal from '../../modules/Channel/components/MessageFeedba
 import { SbFeedbackStatus } from './types';
 import MessageFeedbackFailedModal from '../../modules/Channel/components/MessageFeedbackFailedModal';
 import { MobileBottomSheetProps } from '../MobileMenu/types';
-import { ThreadInfo } from '@sendbird/chat/lib/__definition';
 
 export interface MessageContentProps {
   className?: string | Array<string>;
@@ -443,10 +442,10 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           )}
         </div>
         {/* thread replies */}
-        {showThreadReplies && (
+        {showThreadReplies && message?.threadInfo && (
           <ThreadReplies
             className="sendbird-message-content__middle__thread-replies"
-            threadInfo={message?.threadInfo ?? new ThreadInfo()}
+            threadInfo={message?.threadInfo}
             onClick={() => onReplyInThread?.({ message: message as SendableMessageType })}
           />
         )}

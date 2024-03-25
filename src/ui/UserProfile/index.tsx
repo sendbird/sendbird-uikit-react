@@ -62,7 +62,7 @@ function UserProfile({
                 // Create 1:1 channel
                 const params: GroupChannelCreateParams = {
                   isDistinct: false,
-                  invitedUserIds: [user?.userId ?? ''],
+                  invitedUserIds: user?.userId ? [user?.userId] : [],
                   operatorUserIds: [currentUserId_],
                 };
                 onSuccess?.();
