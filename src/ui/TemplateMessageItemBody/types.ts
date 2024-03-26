@@ -1,5 +1,4 @@
 import type { ComponentsUnion } from '@sendbird/uikit-message-template';
-import type { ViewStyle } from '@sendbird/uikit-message-template/src/types/styles';
 
 type SendbirdFontWeight = 'bold' | 'normal';
 
@@ -83,9 +82,8 @@ export type MessageTemplateTheme = {
 export type MessageTemplateItem = ComponentsUnion['properties'] | CarouselItem;
 export interface CarouselItem {
   type: string;
-  viewStyle?: ViewStyle;
   spacing: number;
-  items: string; // Reservation key. ex. "@some_key"
+  items: string; // Reservation key. ex. "{@some_key}"
 }
 
 // FIXME: This needs to be updated in the future.

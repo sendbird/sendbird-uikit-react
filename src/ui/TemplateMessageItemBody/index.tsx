@@ -12,8 +12,8 @@ import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { ProcessedMessageTemplate, WaitingTemplateKeyData } from '../../lib/dux/appInfo/initialState';
 import FallbackTemplateMessageItemBody from './FallbackTemplateMessageItemBody';
 import LoadingTemplateMessageItemBody from './LoadingTemplateMessageItemBody';
-import Carousel from '../Carousel';
 import MessageTemplateErrorBoundary from '../MessageTemplate/messageTemplateErrorBoundary';
+import { ComponentsUnion } from '@sendbird/uikit-message-template/src/types/components';
 
 const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 500; // It takes about 450ms for isError update
 
@@ -270,17 +270,20 @@ export function TemplateMessageItemBody({
       >
         {
           !renderData.carouselItem
-            ? <MessageTemplateWrapper message={message} templateItems={renderData.filledMessageTemplateItemsList[0]}/>
-            : <Carousel
-              id={message.messageId + ''}
-              items={renderData.filledMessageTemplateItemsList.map((filledMessageTemplateItems, i) => (
-                <MessageTemplateWrapper
-                  key={`${message.messageId}-${i}`}
-                  message={message}
-                  templateItems={filledMessageTemplateItems}
-                />
-              ))}
-              gap={renderData.carouselItem.spacing}
+            ? <MessageTemplateWrapper
+              message={message}
+              templateItems={
+                renderData.filledMessageTemplateItemsList[0] as ComponentsUnion['properties'][]
+              }
+            />
+            : <MessageTemplateWrapper
+              message={message}
+              templateItems={
+                [{
+                  ...renderData.carouselItem,
+                  items: renderData.filledMessageTemplateItemsList,
+                }] as ComponentsUnion['properties'][]
+              }
             />
         }
       </MessageTemplateErrorBoundary>
