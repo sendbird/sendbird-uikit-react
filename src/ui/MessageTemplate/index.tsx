@@ -1,11 +1,10 @@
 import React from 'react';
 import { parser, renderer } from '@sendbird/react-uikit-message-template-view';
 import { type ComponentsUnion, createMessageTemplate } from '@sendbird/uikit-message-template';
-import { MessageTemplateItem } from '../TemplateMessageItemBody/types';
 import './index.scss';
 
 export interface MessageTemplateProps {
-  templateItems: MessageTemplateItem[];
+  templateItems: ComponentsUnion['properties'][];
 }
 
 const { MessageTemplate: CustomTemplate } = createMessageTemplate({
@@ -26,7 +25,7 @@ const { MessageTemplate: CustomTemplate } = createMessageTemplate({
 });
 
 export function MessageTemplate({ templateItems }: MessageTemplateProps) {
-  return <CustomTemplate templateItems={templateItems as ComponentsUnion['properties'][]}/>;
+  return <CustomTemplate templateItems={templateItems}/>;
 }
 
 export default MessageTemplate;
