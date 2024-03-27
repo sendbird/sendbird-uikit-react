@@ -4,6 +4,7 @@ import { type ComponentsUnion, createMessageTemplate } from '@sendbird/uikit-mes
 import './index.scss';
 
 export interface MessageTemplateProps {
+  templateVersion: number;
   templateItems: ComponentsUnion['properties'][];
 }
 
@@ -24,8 +25,8 @@ const { MessageTemplate: CustomTemplate } = createMessageTemplate({
   },
 });
 
-export function MessageTemplate({ templateItems }: MessageTemplateProps) {
-  return <CustomTemplate templateItems={templateItems}/>;
+export function MessageTemplate({ templateItems, templateVersion }: MessageTemplateProps) {
+  return <CustomTemplate templateItems={templateItems} templateVersion={templateVersion} />;
 }
 
 export default MessageTemplate;
