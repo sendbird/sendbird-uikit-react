@@ -284,7 +284,6 @@ export const isCompositeTemplateMessage = (message: CoreMessageType): boolean =>
 export enum UI_CONTAINER_TYPES {
   DEFAULT = '',
   WIDE = 'ui_container_type__wide',
-  FULL = 'ui_container_type__full',
   DEFAULT_CAROUSEL = 'ui_container_type__default-carousel',
 }
 
@@ -307,9 +306,7 @@ export const getMessageContentMiddleClassNameByContainerType = ({
     return UI_CONTAINER_TYPES.DEFAULT_CAROUSEL;
   }
   if (!isMobile) return UI_CONTAINER_TYPES.DEFAULT;
-  if (isTemplateMessage(message) && containerType === MessageContentMiddleContainerType.FULL) {
-    return UI_CONTAINER_TYPES.FULL;
-  } else if (containerType === MessageContentMiddleContainerType.WIDE) {
+  if (containerType === MessageContentMiddleContainerType.WIDE) {
     return UI_CONTAINER_TYPES.WIDE;
   }
   return UI_CONTAINER_TYPES.DEFAULT;
