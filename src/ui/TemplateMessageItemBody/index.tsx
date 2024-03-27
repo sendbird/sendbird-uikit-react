@@ -170,7 +170,7 @@ export function TemplateMessageItemBody({
             logger.error('TemplateMessageItemBody | template key suggests composite template but template data is missing view_variables: ', templateKey, templateData);
             throw new Error();
           }
-          const carouselItem: CarouselItem = parsedUiTemplate[0] as unknown as CarouselItem;
+          const carouselItem = parsedUiTemplate[0] as unknown as CarouselItem;
           if (carouselItem.type !== CarouselType
             || typeof carouselItem.items !== 'string'
             || !startsWithAtAndEndsWithBraces(carouselItem.items)
