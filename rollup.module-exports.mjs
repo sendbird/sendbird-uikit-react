@@ -82,8 +82,6 @@ export default {
   'Channel/components/MessageInputWrapper': 'src/modules/Channel/components/MessageInputWrapper/index.tsx',
   'Channel/components/MessageList': 'src/modules/Channel/components/MessageList/index.tsx',
   'Channel/components/RemoveMessageModal': 'src/modules/Channel/components/RemoveMessageModal/index.tsx',
-  'Channel/components/MessageFeedbackModal': 'src/modules/Channel/components/MessageFeedbackModal/index.tsx',
-  'Channel/components/MessageFeedbackFailedModal': 'src/modules/Channel/components/MessageFeedbackFailedModal/index.tsx',
   'Channel/components/TypingIndicator': 'src/modules/Channel/components/TypingIndicator.tsx',
   'Channel/components/UnreadCount': 'src/modules/Channel/components/UnreadCount/index.tsx',
   'Channel/components/SuggestedMentionList': 'src/modules/Channel/components/SuggestedMentionList/index.tsx',
@@ -102,7 +100,6 @@ export default {
   'GroupChannel/components/UnreadCount': 'src/modules/GroupChannel/components/UnreadCount/index.tsx',
   'GroupChannel/components/SuggestedMentionList': 'src/modules/GroupChannel/components/SuggestedMentionList/index.tsx',
   'GroupChannel/components/SuggestedReplies': 'src/modules/GroupChannel/components/SuggestedReplies/index.tsx',
-  // 'GroupChannel/components/MessageFeedbackModal': 'src/modules/GroupChannel/components/MessageFeedbackModal/index.tsx', // TODO: move to UI
 
   // OpenChannel
   OpenChannel: 'src/modules/OpenChannel/index.tsx',
@@ -240,4 +237,6 @@ export default {
   'ui/Word': 'src/ui/Word/index.tsx',
   'ui/FeedbackIconButton': 'src/ui/FeedbackIconButton/index.tsx',
   'ui/MobileFeedbackMenu': 'src/ui/MobileFeedbackMenu/index.tsx',
+  'ui/MessageFeedbackModal': 'src/ui/MessageFeedbackModal/index.tsx',
+  'ui/MessageFeedbackFailedModal': 'src/ui/MessageFeedbackFailedModal/index.tsx',
 };
