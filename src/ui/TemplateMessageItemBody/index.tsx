@@ -3,7 +3,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import type { BaseMessage } from '@sendbird/chat/message';
 import { getClassName, removeAtAndBraces, startsWithAtAndEndsWithBraces } from '../../utils';
 import MessageTemplateWrapper from '../../modules/GroupChannel/components/MessageTemplateWrapper';
-import {CarouselItem, CarouselType, MessageTemplateData, MessageTemplateItem, SimpleTemplateData} from './types';
+import { CarouselItem, CarouselType, MessageTemplateData, MessageTemplateItem, SimpleTemplateData } from './types';
 import restoreNumbersFromMessageTemplateObject from './utils/restoreNumbersFromMessageTemplateObject';
 import mapData from './utils/mapData';
 import selectColorVariablesByTheme from './utils/selectColorVariablesByTheme';
