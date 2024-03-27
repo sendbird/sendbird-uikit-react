@@ -79,7 +79,10 @@ export type MessageTemplateTheme = {
   };
 };
 
-export type MessageTemplateItem = ComponentsUnion['properties'] | CarouselItem;
+export type MessageTemplateItem = ComponentsUnion['properties'];
+
+export const CarouselType = 'carouselView';
+
 export interface CarouselItem {
   type: string;
   spacing: number;

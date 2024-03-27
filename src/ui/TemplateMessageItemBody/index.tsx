@@ -3,7 +3,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import type { BaseMessage } from '@sendbird/chat/message';
 import { getClassName, removeAtAndBraces, startsWithAtAndEndsWithBraces } from '../../utils';
 import MessageTemplateWrapper from '../../modules/GroupChannel/components/MessageTemplateWrapper';
-import { CarouselItem, MessageTemplateData, MessageTemplateItem, SimpleTemplateData } from './types';
+import {CarouselItem, CarouselType, MessageTemplateData, MessageTemplateItem, SimpleTemplateData} from './types';
 import restoreNumbersFromMessageTemplateObject from './utils/restoreNumbersFromMessageTemplateObject';
 import mapData from './utils/mapData';
 import selectColorVariablesByTheme from './utils/selectColorVariablesByTheme';
@@ -13,13 +13,11 @@ import { ProcessedMessageTemplate, WaitingTemplateKeyData } from '../../lib/dux/
 import FallbackTemplateMessageItemBody from './FallbackTemplateMessageItemBody';
 import LoadingTemplateMessageItemBody from './LoadingTemplateMessageItemBody';
 import MessageTemplateErrorBoundary from '../MessageTemplate/messageTemplateErrorBoundary';
-import { ComponentsUnion } from '@sendbird/uikit-message-template/src/types/components';
 
 const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 500; // It takes about 450ms for isError update
 
 interface RenderData {
-  filledMessageTemplateItemsList: MessageTemplateItem[][];
-  carouselItem: CarouselItem;
+  filledMessageTemplateItemsList: MessageTemplateItem[];
   isErrored: boolean;
 }
 
@@ -124,13 +122,12 @@ export function TemplateMessageItemBody({
       colorVariables,
       theme,
     );
-    return [filledMessageTemplateItems];
+    return filledMessageTemplateItems;
   }
 
   function getFilledMessageTemplateItems(): RenderData {
     const result = {
       filledMessageTemplateItemsList: [],
-      carouselItem: undefined,
       isErrored: false,
     };
 
@@ -165,7 +162,7 @@ export function TemplateMessageItemBody({
         }
         if (
           templateData.view_variables
-          || parsedUiTemplate[0].type === 'carouselView'
+          || parsedUiTemplate[0].type === CarouselType
           || typeof parsedUiTemplate[0]['items'] === 'string'
           || parsedUiTemplate[0]['spacing']
         ) {
@@ -173,8 +170,8 @@ export function TemplateMessageItemBody({
             logger.error('TemplateMessageItemBody | template key suggests composite template but template data is missing view_variables: ', templateKey, templateData);
             throw new Error();
           }
-          const carouselItem: CarouselItem = parsedUiTemplate[0] as CarouselItem;
-          if (carouselItem.type !== 'carouselView'
+          const carouselItem: CarouselItem = parsedUiTemplate[0] as unknown as CarouselItem;
+          if (carouselItem.type !== CarouselType
             || typeof carouselItem.items !== 'string'
             || !startsWithAtAndEndsWithBraces(carouselItem.items)
             || !carouselItem.spacing
@@ -192,10 +189,12 @@ export function TemplateMessageItemBody({
             logger.error('TemplateMessageItemBody | no reservation key found in view_variables: ', reservationKey, templateData.view_variables);
             throw new Error();
           }
-          result.filledMessageTemplateItemsList = getFilledMessageTemplateItemsForCarouselTemplate(
-            simpleTemplateDataList,
-          );
-          result.carouselItem = carouselItem;
+          result.filledMessageTemplateItemsList = [{
+            ...carouselItem,
+            items: getFilledMessageTemplateItemsForCarouselTemplate(
+              simpleTemplateDataList,
+            ),
+          }];
         } else {
           result.filledMessageTemplateItemsList = getFilledMessageTemplateItemsForSimpleTemplate(
             parsedUiTemplate,
@@ -268,24 +267,12 @@ export function TemplateMessageItemBody({
         fallbackMessage={<FallbackTemplateMessageItemBody className={className} message={message} isByMe={isByMe}/>}
         logger={logger}
       >
-        {
-          !renderData.carouselItem
-            ? <MessageTemplateWrapper
-              message={message}
-              templateItems={
-                renderData.filledMessageTemplateItemsList[0] as ComponentsUnion['properties'][]
-              }
-            />
-            : <MessageTemplateWrapper
-              message={message}
-              templateItems={
-                [{
-                  ...renderData.carouselItem,
-                  items: renderData.filledMessageTemplateItemsList,
-                }] as ComponentsUnion['properties'][]
-              }
-            />
-        }
+        <MessageTemplateWrapper
+          message={message}
+          templateItems={
+            renderData.filledMessageTemplateItemsList as MessageTemplateItem[]
+          }
+        />
       </MessageTemplateErrorBoundary>
     </div>
   );
