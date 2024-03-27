@@ -45,7 +45,7 @@ const EmojiReactions = ({
   toggleReaction,
   onPressUserProfile,
 }: EmojiReactionsProps): ReactElement => {
-  let showTheReactedMembers = true;
+  let showTheReactedMembers = false;
   try {
     const { config } = useSendbirdStateContext();
     showTheReactedMembers = getIsReactionEnabled({
