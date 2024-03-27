@@ -42,9 +42,9 @@ import MessageHeader, { MessageHeaderProps } from './MessageHeader';
 import Icon, { IconTypes } from '../Icon';
 import FeedbackIconButton from '../FeedbackIconButton';
 import MobileFeedbackMenu from '../MobileFeedbackMenu';
-import MessageFeedbackModal from '../../modules/Channel/components/MessageFeedbackModal';
+import MessageFeedbackModal from '../MessageFeedbackModal';
 import { SbFeedbackStatus } from './types';
-import MessageFeedbackFailedModal from '../../modules/Channel/components/MessageFeedbackFailedModal';
+import MessageFeedbackFailedModal from '../MessageFeedbackFailedModal';
 import { MobileBottomSheetProps } from '../MobileMenu/types';
 
 export interface MessageContentProps {
