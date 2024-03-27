@@ -67,9 +67,9 @@ export default function ParentMessageInfo({
   const [supposedHover, setSupposedHover] = useState(false);
   const [showFileViewer, setShowFileViewer] = useState(false);
   const usingReaction = getIsReactionEnabled({
-    globalLevel: isReactionEnabled,
-    isSuper: currentChannel.isSuper,
-    isBroadcast: currentChannel.isBroadcast,
+    channel: currentChannel,
+    config,
+    moduleLevel: isReactionEnabled,
   });
   const isByMe = userId === parentMessage.sender.userId;
 
