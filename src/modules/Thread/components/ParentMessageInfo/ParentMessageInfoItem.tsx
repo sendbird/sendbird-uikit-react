@@ -81,8 +81,6 @@ export default function ParentMessageInfoItem({
   // Emoji reactions
   const isReactionActivated = isReactionEnabled
     && replyType === 'THREAD'
-    && !currentChannel?.isSuper
-    && !currentChannel?.isBroadcast
     && message?.reactions?.length > 0;
 
   const tokens = useMemo(() => {

@@ -27,6 +27,7 @@ import PUBSUB_TOPICS, { PubSubSendMessagePayload } from '../../../lib/pubSub/top
 import { PubSubTypes } from '../../../lib/pubSub';
 import { useMessageActions } from './hooks/useMessageActions';
 import { usePreventDuplicateRequest } from './hooks/usePreventDuplicateRequest';
+import { getIsReactionEnabled } from '../../../utils/getIsReactionEnabled';
 
 type OnBeforeHandler<T> = (params: T) => T | Promise<T>;
 type MessageListQueryParamsType = Omit<MessageCollectionParams, 'filter'> & MessageFilterParams;
@@ -162,9 +163,10 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
     if (replyType === 'NONE') return ChatReplyType.NONE;
     return ChatReplyType.ONLY_REPLY_TO_CHANNEL;
   });
-  const isReactionEnabled = useIIFE(() => {
-    if (!currentChannel || currentChannel.isSuper || currentChannel.isBroadcast || currentChannel.isEphemeral) return false;
-    return moduleReactionEnabled ?? config.groupChannel.enableReactions;
+  const isReactionEnabled = getIsReactionEnabled({
+    channel: currentChannel,
+    config,
+    moduleLevel: moduleReactionEnabled,
   });
   const nicknamesMap = useMemo(
     () => new Map((currentChannel?.members ?? []).map(({ userId, nickname }) => [userId, nickname])),
