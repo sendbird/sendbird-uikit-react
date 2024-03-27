@@ -2659,25 +2659,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sendbird/react-uikit-message-template-view@npm:0.0.1-alpha.68":
-  version: 0.0.1-alpha.68
-  resolution: "@sendbird/react-uikit-message-template-view@npm:0.0.1-alpha.68"
+"@sendbird/react-uikit-message-template-view@npm:0.0.1-alpha.69":
+  version: 0.0.1-alpha.69
+  resolution: "@sendbird/react-uikit-message-template-view@npm:0.0.1-alpha.69"
   dependencies:
-    "@sendbird/uikit-message-template": ^0.0.1-alpha.68
+    "@sendbird/uikit-message-template": ^0.0.1-alpha.69
   peerDependencies:
     "@sendbird/chat": ">=4.3.0 <5"
     react: ">=16.8.6"
     react-dom: ">=16.8.6"
-  checksum: 4ff7f8765c4f110de0f2bddfdda402c20e0366ec70d1e3bc5e0ea152faa0c2c096afae9438cb54ba03977fbe2ace639c59365726c3cb6c80e5518e5bfac80ed4
+  checksum: f3e5c23b21fcfb751a4a93ff49e11f2c00863f621c18d6ca807f85f74ee81fe30cb686111f82ff4506677622981c86e626312a2e8092a62bb0f2ab1acd061d79
   languageName: node
   linkType: hard
 
-"@sendbird/uikit-message-template@npm:^0.0.1-alpha.68":
-  version: 0.0.1-alpha.68
-  resolution: "@sendbird/uikit-message-template@npm:0.0.1-alpha.68"
+"@sendbird/uikit-message-template@npm:^0.0.1-alpha.69":
+  version: 0.0.1-alpha.69
+  resolution: "@sendbird/uikit-message-template@npm:0.0.1-alpha.69"
   peerDependencies:
     react: ">=16.8.6"
-  checksum: c133e36d7636618a8eb2d35b1041eb683127b570df26dc3f1def040a43b46cb5588b0d4f68804ab2f20455544a3f6afbf79970c3625f3c089bb2d4ef8723fea9
+  checksum: fcea34576ee09b59b871fd9cec34eb121047925e6d0d03a2a72b9ff5b10421ae89959d1a693b001d87f47ffb781bfd7a49354e4a22f2cc99b4e637cfba8a57c5
   languageName: node
   linkType: hard
 
@@ -2700,8 +2700,8 @@ __metadata:
     "@rollup/plugin-replace": ^5.0.4
     "@rollup/plugin-typescript": ^11.1.5
     "@sendbird/chat": ^4.11.3
-    "@sendbird/react-uikit-message-template-view": 0.0.1-alpha.68
-    "@sendbird/uikit-tools": 0.0.1-alpha.68
+    "@sendbird/react-uikit-message-template-view": 0.0.1-alpha.69
+    "@sendbird/uikit-tools": 0.0.1-alpha.69
     "@storybook/addon-actions": ^6.5.10
     "@storybook/addon-docs": ^6.5.10
     "@storybook/addon-links": ^6.5.10
@@ -2766,13 +2766,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sendbird/uikit-tools@npm:0.0.1-alpha.68":
-  version: 0.0.1-alpha.68
-  resolution: "@sendbird/uikit-tools@npm:0.0.1-alpha.68"
+"@sendbird/uikit-tools@npm:0.0.1-alpha.69":
+  version: 0.0.1-alpha.69
+  resolution: "@sendbird/uikit-tools@npm:0.0.1-alpha.69"
   peerDependencies:
     "@sendbird/chat": ">=4.10.5 <5"
     react: ">=16.8.6"
-  checksum: ce1b2d183fdad6dfb6d8d2da5da9afe798e99d7a60ef4735aa708da20989dd6c2263200b1d7920e7712d429dd3f8902e27879391c1755c9de16c3dd171509ebc
+  checksum: b1eb04697cbeceae0c4bf4c971a086934429c7dd2d6b7298b94fcccea746e6fc93a168c483130bfdea583a50de7d632174cf49b8798fc2f5e7beb937d16a12b2
   languageName: node
   linkType: hard
 

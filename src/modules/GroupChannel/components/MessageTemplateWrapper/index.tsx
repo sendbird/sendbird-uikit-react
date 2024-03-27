@@ -9,10 +9,11 @@ export interface MessageTemplateWrapperProps extends MessageTemplateProps {
 
 export const MessageTemplateWrapper = ({
   message,
+  templateVersion,
   templateItems,
 }: MessageTemplateWrapperProps): ReactElement => {
   return <MessageTemplateProvider message={message}>
-    <MessageTemplate templateItems={templateItems} />
+    <MessageTemplate templateVersion={templateVersion} templateItems={templateItems} />
   </MessageTemplateProvider>;
 };
 

@@ -19,6 +19,7 @@ const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 500; // It takes about 450ms
 interface RenderData {
   filledMessageTemplateItemsList: MessageTemplateItem[];
   isErrored: boolean;
+  templateVersion?: number;
 }
 
 interface TemplateMessageItemBodyProps {
@@ -98,7 +99,7 @@ export function TemplateMessageItemBody({
       cachedSimpleTemplates.push(simpleCachedTemplate);
       simpleTemplatesVariables.push(simpleTemplateData.variables);
     });
-    const filledMessageTemplateItemsList = cachedSimpleTemplates
+    const filledMessageTemplateItemsList: MessageTemplateItem[][] = cachedSimpleTemplates
       .map((cachedSimpleTemplate, index) => {
         const templateItems: MessageTemplateItem[] = JSON.parse(cachedSimpleTemplate.uiTemplate);
         const filledMessageTemplateItems: MessageTemplateItem[] = getFilledMessageTemplateWithData(
@@ -115,7 +116,7 @@ export function TemplateMessageItemBody({
   function getFilledMessageTemplateItemsForSimpleTemplate(
     templateItems: MessageTemplateItem[],
     colorVariables: Record<string, string>,
-  ) {
+  ): MessageTemplateItem[] {
     const filledMessageTemplateItems: MessageTemplateItem[] = getFilledMessageTemplateWithData(
       templateItems,
       templateData.variables ?? {},
@@ -126,7 +127,7 @@ export function TemplateMessageItemBody({
   }
 
   function getFilledMessageTemplateItems(): RenderData {
-    const result = {
+    const result: RenderData = {
       filledMessageTemplateItemsList: [],
       isErrored: false,
     };
@@ -189,8 +190,10 @@ export function TemplateMessageItemBody({
             logger.error('TemplateMessageItemBody | no reservation key found in view_variables: ', reservationKey, templateData.view_variables);
             throw new Error();
           }
+          result.templateVersion = cachedTemplate.version;
           result.filledMessageTemplateItemsList = [{
-            ...carouselItem,
+            type: carouselItem.type as any,
+            spacing: carouselItem.spacing,
             items: getFilledMessageTemplateItemsForCarouselTemplate(
               simpleTemplateDataList,
             ),
@@ -269,6 +272,7 @@ export function TemplateMessageItemBody({
       >
         <MessageTemplateWrapper
           message={message}
+          templateVersion={renderData.templateVersion}
           templateItems={
             renderData.filledMessageTemplateItemsList as MessageTemplateItem[]
           }
