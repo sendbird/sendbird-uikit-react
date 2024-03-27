@@ -1,5 +1,12 @@
 # Changelog - v3
 
+## [v3.13.4] (Mark 27, 2024)
+
+### Feature
+* Support the `Emoji Reactions` feature in the super group channel
+  * However, the `Tooltip` displaying who reacted will only appear in the normal group channel, not in the super group channel.
+* Export the `MessageFeedbackFailedModal` component for consistency with other message feedback-related components.
+
 ## [v3.13.3] (Mar 22, 2024)
 
 ### Features
