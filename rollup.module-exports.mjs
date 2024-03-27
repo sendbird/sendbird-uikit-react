@@ -83,6 +83,7 @@ export default {
   'Channel/components/MessageList': 'src/modules/Channel/components/MessageList/index.tsx',
   'Channel/components/RemoveMessageModal': 'src/modules/Channel/components/RemoveMessageModal/index.tsx',
   'Channel/components/MessageFeedbackModal': 'src/modules/Channel/components/MessageFeedbackModal/index.tsx',
+  'Channel/components/MessageFeedbackFailedModal': 'src/modules/Channel/components/MessageFeedbackFailedModal/index.tsx',
   'Channel/components/TypingIndicator': 'src/modules/Channel/components/TypingIndicator.tsx',
   'Channel/components/UnreadCount': 'src/modules/Channel/components/UnreadCount/index.tsx',
   'Channel/components/SuggestedMentionList': 'src/modules/Channel/components/SuggestedMentionList/index.tsx',
