@@ -3,8 +3,8 @@
  * related to enabling emoji reaction feature.
  */
 
-import type { GroupChannel } from "@sendbird/chat/groupChannel";
-import type { SendBirdStateConfig } from "../lib/types";
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import type { SendBirdStateConfig } from '../lib/types';
 
 export interface IsReactionEnabledProps {
   channel: GroupChannel;

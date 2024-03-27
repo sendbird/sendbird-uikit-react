@@ -35,7 +35,7 @@ describe('Global-utils/getIsReactionEnabled', () => {
   });
 
   it('should prioritize the isSuper than moduleLevel', () => {
-    let isSuper = true;
+    const isSuper = true;
     expect(getIsReactionEnabled({
       channel: normalGroupChannel({ isSuper }),
       config: normalConfigs(),
@@ -75,7 +75,7 @@ describe('Global-utils/getIsReactionEnabled', () => {
       moduleLevel: false,
     })).toBe(false);
 
-    let isEphemeral = true;
+    const isEphemeral = true;
     expect(getIsReactionEnabled({
       channel: normalGroupChannel({ isEphemeral }),
       config: normalConfigs(),
