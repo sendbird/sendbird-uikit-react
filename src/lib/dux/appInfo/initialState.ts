@@ -1,4 +1,5 @@
 export type ProcessedMessageTemplate = {
+  version: number;
   uiTemplate: string; // This is stringified ui_template.body.items
   colorVariables?: Record<string, string>;
 };

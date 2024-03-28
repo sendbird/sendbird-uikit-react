@@ -262,8 +262,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
       onMouseLeave={() => setMouseHover(false)}
     >
       {/* left */}
-      {uiContainerType !== UI_CONTAINER_TYPES.FULL
-        && <div className={getClassName(['sendbird-message-content__left', isReactionEnabledClassName, isByMeClassName, useReplyingClassName])}>
+      {<div className={getClassName(['sendbird-message-content__left', isReactionEnabledClassName, isByMeClassName, useReplyingClassName])}>
         {
           renderSenderProfile({
             ...props,
