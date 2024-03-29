@@ -138,19 +138,25 @@ export function TemplateMessageItemBody({
       nonCachedTemplateKeys.push(templateKey);
     }
     if (templateData.view_variables) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      Object.entries(templateData.view_variables).forEach(([_, simpleTemplateDataList]) => {
-        simpleTemplateDataList.forEach((simpleTemplateData: SimpleTemplateData) => {
-          const simpleTemplateKey = simpleTemplateData?.key;
-          if (simpleTemplateKey) {
-            if (!getCachedTemplate(simpleTemplateKey)) {
-              if (simpleTemplateKey && nonCachedTemplateKeys.indexOf(simpleTemplateKey) === -1) {
-                nonCachedTemplateKeys.push(simpleTemplateKey);
-              }
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        Object.entries(templateData.view_variables).forEach(([_, simpleTemplateDataList]) => {
+          simpleTemplateDataList.forEach((simpleTemplateData: SimpleTemplateData) => {
+            const simpleTemplateKey = simpleTemplateData?.key;
+            if (
+              simpleTemplateKey
+              && !getCachedTemplate(simpleTemplateKey)
+              && !nonCachedTemplateKeys.includes(simpleTemplateKey)
+            ) {
+              nonCachedTemplateKeys.push(simpleTemplateKey);
             }
-          }
+          });
         });
-      });
+      } catch (e) {
+        logger.error('TemplateMessageItemBody | received view_variables is malformed: ', templateData);
+        result.isErrored = true;
+        return result;
+      }
     }
     try {
       if (nonCachedTemplateKeys.length > 0) {
