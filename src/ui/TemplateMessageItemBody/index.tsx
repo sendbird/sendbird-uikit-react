@@ -143,13 +143,12 @@ export function TemplateMessageItemBody({
         Object.entries(templateData.view_variables).forEach(([_, simpleTemplateDataList]) => {
           simpleTemplateDataList.forEach((simpleTemplateData: SimpleTemplateData) => {
             const simpleTemplateKey = simpleTemplateData?.key;
-
-if (simpleTemplateKey && 
-  !getCachedTemplate(simpleTemplateKey) && 
-  !nonCachedTemplateKeys.includes(simpleTemplateKey)) {
-      nonCachedTemplateKeys.push(simpleTemplateKey);
-}
-              }
+            if (
+              simpleTemplateKey
+              && !getCachedTemplate(simpleTemplateKey)
+              && !nonCachedTemplateKeys.includes(simpleTemplateKey)
+            ) {
+              nonCachedTemplateKeys.push(simpleTemplateKey);
             }
           });
         });
