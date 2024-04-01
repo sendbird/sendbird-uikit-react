@@ -77,24 +77,24 @@ export function TemplateMessageItemBody({
   onTemplateMessageRenderedCallback = () => { /* noop */ },
 }: TemplateMessageItemBodyProps): ReactElement {
   const templateData: MessageTemplateData | undefined = message.extendedMessagePayload?.['template'] as MessageTemplateData;
-  if (!templateData?.key) {
+
+  const getFailedBody = () => {
+    onTemplateMessageRenderedCallback('failed');
     return <FallbackTemplateMessageItemBody
       className={className}
       message={message}
       isByMe={isByMe}
-      onTemplateMessageRenderedCallback={onTemplateMessageRenderedCallback}
     />;
+  };
+
+  if (!templateData?.key) {
+    return getFailedBody();
   }
   const templateKey = templateData.key;
 
   const globalState = useSendbirdStateContext();
   if (!globalState) {
-    return <FallbackTemplateMessageItemBody
-      className={className}
-      message={message}
-      isByMe={isByMe}
-      onTemplateMessageRenderedCallback={onTemplateMessageRenderedCallback}
-    />;
+    return getFailedBody();
   }
 
   const {
@@ -326,20 +326,12 @@ export function TemplateMessageItemBody({
   }
 
   if (renderData.isErrored) {
-    return <FallbackTemplateMessageItemBody
-      className={className}
-      message={message}
-      isByMe={isByMe}
-      onTemplateMessageRenderedCallback={onTemplateMessageRenderedCallback}
-    />;
+    return getFailedBody();
   }
 
   if (renderData.filledMessageTemplateItemsList.length === 0) {
     return <LoadingTemplateMessageItemBody className={className} isByMe={isByMe} />;
   }
-
-  onTemplateMessageRenderedCallback(renderData.isComposite ? 'composite' : 'simple');
-
   return (
     <div className={getClassName([
       className,
@@ -352,9 +344,10 @@ export function TemplateMessageItemBody({
             className={className}
             message={message}
             isByMe={isByMe}
-            onTemplateMessageRenderedCallback={onTemplateMessageRenderedCallback}
           />
         }
+        onTemplateMessageRenderedCallback={onTemplateMessageRenderedCallback}
+        isComposite={renderData.isComposite}
         logger={logger}
       >
         <MessageTemplateWrapper
