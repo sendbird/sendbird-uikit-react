@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react';
+import React, { ReactElement, ReactNode, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import format from 'date-fns/format';
 import './index.scss';
 
@@ -151,7 +151,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const [showFeedbackOptionsMenu, setShowFeedbackOptionsMenu] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [feedbackFailedText, setFeedbackFailedText] = useState('');
-  const [totalBottom, setTotalBottom] = useState<number>(0);
   const [uiContainerType, setUiContainerType] = useState<UI_CONTAINER_TYPES>(getMessageContentMiddleClassNameByContainerType({
     message,
     isMobile,
@@ -210,6 +209,22 @@ export default function MessageContent(props: MessageContentProps): ReactElement
 
   const isTimestampBottom = !!uiContainerType;
 
+  const getTotalBottom = (): number => {
+    let sum = 2;
+    if (timestampRef.current && isTimestampBottom) {
+      sum += 4 + timestampRef.current.clientHeight;
+    }
+    if (threadRepliesRef.current) {
+      sum += 4 + threadRepliesRef.current.clientHeight;
+    }
+    if (feedbackButtonsRef.current) {
+      sum += 4 + feedbackButtonsRef.current.clientHeight;
+    }
+    return sum;
+  };
+  
+  const totalBottom = useMemo(() => getTotalBottom(), [isTimestampBottom]);
+
   const onCloseFeedbackForm = () => {
     setShowFeedbackModal(false);
   };
@@ -242,23 +257,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   if (message?.isAdminMessage?.() || message?.messageType === 'admin') {
     return (<ClientAdminMessage message={message as AdminMessage} />);
   }
-
-  useEffect(() => {
-    const getTotalBottom = (): number => {
-      let sum = 2;
-      if (timestampRef.current && isTimestampBottom) {
-        sum += 4 + timestampRef.current.clientHeight;
-      }
-      if (threadRepliesRef.current) {
-        sum += 4 + threadRepliesRef.current.clientHeight;
-      }
-      if (feedbackButtonsRef.current) {
-        sum += 4 + feedbackButtonsRef.current.clientHeight;
-      }
-      return sum;
-    };
-    setTotalBottom(getTotalBottom());
-  }, [isTimestampBottom]);
 
   return (
     <div
