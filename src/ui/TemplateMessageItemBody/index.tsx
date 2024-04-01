@@ -270,6 +270,7 @@ export function TemplateMessageItemBody({
             throw new Error();
           }
         } else {
+          result.templateVersion = cachedTemplate.version;
           result.filledMessageTemplateItemsList = getFilledMessageTemplateItemsForSimpleTemplate(
             parsedUiTemplate,
             cachedTemplate.colorVariables,
