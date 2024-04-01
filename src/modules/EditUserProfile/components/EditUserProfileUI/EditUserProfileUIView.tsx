@@ -24,9 +24,9 @@ export const EditUserProfileUIView = ({
   const { theme, setCurrentTheme } = config;
   const user = stores.userStore?.user;
   const { stringSet } = useLocalization();
-
-  const [currentImg, setCurrentImg] = useState(null);
-  const hiddenInputRef = useRef(null);
+  
+  const [currentImg, setCurrentImg] = useState<string | null>(null);
+  const hiddenInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <form
@@ -51,15 +51,19 @@ export const EditUserProfileUIView = ({
           accept="image/gif, image/jpeg, image/png"
           style={{ display: 'none' }}
           onChange={(e) => {
-            setCurrentImg(URL.createObjectURL(e.target.files[0]));
-            setProfileImage(e.target.files[0]);
-            hiddenInputRef.current.value = '';
+            if(e.target.files) {
+              setCurrentImg(URL.createObjectURL(e.target.files[0]));
+              setProfileImage(e.target.files[0]);
+            }
+            
+            if(hiddenInputRef.current)
+              hiddenInputRef.current.value = '';
           }}
         />
         <TextButton
           className="sendbird-edit-user-profile__img__avatar-button"
           disableUnderline
-          onClick={() => hiddenInputRef.current.click()}
+          onClick={() => hiddenInputRef.current?.click()}
         >
           <Label
             type={LabelTypography.BUTTON_1}
