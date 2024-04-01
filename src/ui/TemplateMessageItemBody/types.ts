@@ -1,4 +1,4 @@
-import {ComponentsUnion, CompositeComponentType} from '@sendbird/uikit-message-template';
+import { ComponentsUnion, CompositeComponentType } from '@sendbird/uikit-message-template';
 
 type SendbirdFontWeight = 'bold' | 'normal';
 
