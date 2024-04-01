@@ -1,12 +1,5 @@
 @import '../../styles/variables';
 
-.sendbird-msg-hoc > .ui_container_type__full {
-  @include mobile() {
-    padding: 0;
-    width: 100%;
-  }
-}
-
 .sendbird-message-content {
   display: inline-flex;
   flex-direction: row;
@@ -30,12 +23,6 @@
   }
 
   .ui_container_type__wide {
-    @include mobile() {
-      max-width: 100%;
-    }
-  }
-
-  .ui_container_type__full {
     @include mobile() {
       max-width: 100%;
     }
@@ -100,17 +87,12 @@
       .ui_container_type__default-carousel {
         min-width: fit-content;
         bottom: -16px;
-        left: 0px;
+        left: 2px;
       }
       .ui_container_type__wide {
         min-width: fit-content;
         bottom: -16px;
-        right: 0px;
-      }
-      .ui_container_type__full {
-        min-width: fit-content;
-        bottom: -16px;
-        right: 0px;
+        right: 2px;
       }
     }
 
@@ -264,17 +246,12 @@
       .ui_container_type__default-carousel {
         min-width: fit-content;
         bottom: -20px;
-        left: 0px;
+        left: 2px;
       }
       .ui_container_type__wide {
         min-width: fit-content;
         bottom: -20px;
-        left: 0px;
-      }
-      .ui_container_type__full {
-        min-width: fit-content;
-        bottom: -20px;
-        left: 0px;
+        left: 2px;
       }
     }
   }
