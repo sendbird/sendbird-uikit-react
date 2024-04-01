@@ -21,6 +21,7 @@ import FallbackTemplateMessageItemBody from './FallbackTemplateMessageItemBody';
 import LoadingTemplateMessageItemBody from './LoadingTemplateMessageItemBody';
 import MessageTemplateErrorBoundary from '../MessageTemplate/messageTemplateErrorBoundary';
 import { RenderedTemplateBodyType } from '../MessageContent/MessageBody';
+import { CompositeComponentType } from '@sendbird/uikit-message-template';
 
 const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 500; // It takes about 450ms for isError update
 
@@ -250,7 +251,7 @@ export function TemplateMessageItemBody({
             result.isComposite = true;
             result.templateVersion = Math.max(cachedTemplate.version, maxVersion);
             result.filledMessageTemplateItemsList = [{
-              type: carouselItem.type as any,
+              type: carouselItem.type as CompositeComponentType,
               spacing: carouselItem.spacing,
               items: filledTemplates,
             }];
@@ -261,7 +262,7 @@ export function TemplateMessageItemBody({
             result.isComposite = true;
             result.templateVersion = Math.max(cachedTemplate.version, maxVersion);
             result.filledMessageTemplateItemsList = [{
-              type: carouselItem.type as any,
+              type: carouselItem.type as CompositeComponentType,
               spacing: carouselItem.spacing,
               items: filledTemplates,
             }];

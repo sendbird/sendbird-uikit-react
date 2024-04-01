@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { ReactElement, ReactNode, useContext, useMemo, useRef, useState } from 'react';
 import format from 'date-fns/format';
 import './index.scss';
 
@@ -222,7 +222,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     }
     return sum;
   };
-  
+
   const totalBottom = useMemo(() => getTotalBottom(), [isTimestampBottom]);
 
   const onCloseFeedbackForm = () => {
