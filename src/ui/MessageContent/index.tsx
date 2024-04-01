@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react';
+import React, { ReactElement, ReactNode, useContext, useMemo, useRef, useState } from 'react';
 import format from 'date-fns/format';
 import './index.scss';
 
@@ -151,12 +151,21 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const [showFeedbackOptionsMenu, setShowFeedbackOptionsMenu] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [feedbackFailedText, setFeedbackFailedText] = useState('');
-  const [totalBottom, setTotalBottom] = useState<number>(0);
-
-  const uiContainerType: UI_CONTAINER_TYPES = getMessageContentMiddleClassNameByContainerType({
+  const [uiContainerType, setUiContainerType] = useState<UI_CONTAINER_TYPES>(getMessageContentMiddleClassNameByContainerType({
     message,
     isMobile,
-  });
+  }));
+
+  const onTemplateMessageRenderedCallback = (renderedTemplateType: 'failed' | 'composite' | 'simple') => {
+    if (renderedTemplateType === 'failed') {
+      setUiContainerType(UI_CONTAINER_TYPES.DEFAULT);
+    } else if (renderedTemplateType === 'composite') {
+      /**
+       * Composite templates must have default carousel view irregardless of given containerType.
+       */
+      setUiContainerType(UI_CONTAINER_TYPES.DEFAULT_CAROUSEL);
+    }
+  };
 
   const { stringSet } = useContext(LocalizationContext);
 
@@ -200,6 +209,22 @@ export default function MessageContent(props: MessageContentProps): ReactElement
 
   const isTimestampBottom = !!uiContainerType;
 
+  const getTotalBottom = (): number => {
+    let sum = 2;
+    if (timestampRef.current && isTimestampBottom) {
+      sum += 4 + timestampRef.current.clientHeight;
+    }
+    if (threadRepliesRef.current) {
+      sum += 4 + threadRepliesRef.current.clientHeight;
+    }
+    if (feedbackButtonsRef.current) {
+      sum += 4 + feedbackButtonsRef.current.clientHeight;
+    }
+    return sum;
+  };
+
+  const totalBottom = useMemo(() => getTotalBottom(), [isTimestampBottom]);
+
   const onCloseFeedbackForm = () => {
     setShowFeedbackModal(false);
   };
@@ -232,23 +257,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   if (message?.isAdminMessage?.() || message?.messageType === 'admin') {
     return (<ClientAdminMessage message={message as AdminMessage} />);
   }
-
-  useEffect(() => {
-    const getTotalBottom = (): number => {
-      let sum = 2;
-      if (timestampRef.current && isTimestampBottom) {
-        sum += 4 + timestampRef.current.clientHeight;
-      }
-      if (threadRepliesRef.current) {
-        sum += 4 + threadRepliesRef.current.clientHeight;
-      }
-      if (feedbackButtonsRef.current) {
-        sum += 4 + feedbackButtonsRef.current.clientHeight;
-      }
-      return sum;
-    };
-    setTotalBottom(getTotalBottom());
-  }, [isTimestampBottom]);
 
   return (
     <div
@@ -382,6 +390,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               config,
               isReactionEnabledInChannel,
               isByMe,
+              onTemplateMessageRenderedCallback,
             })
           }
           {/* reactions */}

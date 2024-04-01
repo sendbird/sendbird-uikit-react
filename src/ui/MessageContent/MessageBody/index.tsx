@@ -23,12 +23,14 @@ import { match } from 'ts-pattern';
 import TemplateMessageItemBody from '../../TemplateMessageItemBody';
 
 const MESSAGE_ITEM_BODY_CLASSNAME = 'sendbird-message-content__middle__message-item-body';
+export type RenderedTemplateBodyType = 'failed' | 'composite' | 'simple';
 
 export interface MessageBodyProps {
   channel: Nullable<GroupChannel>;
   message: CoreMessageType;
   showFileViewer?: (bool: boolean) => void;
   onMessageHeightChange?: (isBottomMessageAffected?: boolean) => void;
+  onTemplateMessageRenderedCallback?: (renderedTemplateBodyType: RenderedTemplateBodyType) => void;
 
   mouseHover: boolean;
   isMobile: boolean;
@@ -43,6 +45,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
     channel,
     showFileViewer,
     onMessageHeightChange,
+    onTemplateMessageRenderedCallback,
 
     mouseHover,
     isMobile,
@@ -66,6 +69,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         message={message as BaseMessage}
         isByMe={isByMe}
         theme={config?.theme as SendbirdTheme}
+        onTemplateMessageRenderedCallback={onTemplateMessageRenderedCallback}
       />
     ))
     .when((message) => isOgMessageEnabledInGroupChannel

@@ -276,11 +276,6 @@ export const isThreadMessage = (message: CoreMessageType): boolean => (
 export const isTemplateMessage = (message: CoreMessageType): boolean => !!(
   message && message.extendedMessagePayload?.['template']
 );
-
-export const isCompositeTemplateMessage = (message: CoreMessageType): boolean => !!(
-  message && message.extendedMessagePayload?.['template']?.['view_variables']
-);
-
 export enum UI_CONTAINER_TYPES {
   DEFAULT = '',
   WIDE = 'ui_container_type__wide',
@@ -299,12 +294,6 @@ export const getMessageContentMiddleClassNameByContainerType = ({
    * WIDE: all message types.
    */
   const containerType: string | undefined = message.extendedMessagePayload?.['ui']?.['container_type'];
-  if (isCompositeTemplateMessage(message)) {
-    /**
-     * Composite templates must have default carousel view irregardless of given containerType.
-     */
-    return UI_CONTAINER_TYPES.DEFAULT_CAROUSEL;
-  }
   if (!isMobile) return UI_CONTAINER_TYPES.DEFAULT;
   if (containerType === MessageContentMiddleContainerType.WIDE) {
     return UI_CONTAINER_TYPES.WIDE;

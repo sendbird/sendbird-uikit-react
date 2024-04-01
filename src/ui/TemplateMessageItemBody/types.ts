@@ -1,4 +1,4 @@
-import type { ComponentsUnion } from '@sendbird/uikit-message-template';
+import { ComponentsUnion, CompositeComponentType } from '@sendbird/uikit-message-template';
 
 type SendbirdFontWeight = 'bold' | 'normal';
 
@@ -81,12 +81,10 @@ export type MessageTemplateTheme = {
 
 export type MessageTemplateItem = ComponentsUnion['properties'];
 
-export const CarouselType = 'carouselView';
-
 export interface CarouselItem {
-  type: string;
+  type: CompositeComponentType.Carousel;
   spacing: number;
-  items: string; // Reservation key. ex. "{@some_key}"
+  items: string | SendbirdUiTemplate[]; // Reservation key. ex. "{@some_key}"
 }
 
 // FIXME: This needs to be updated in the future.
@@ -99,16 +97,18 @@ export type SimpleTemplateData = {
   variables?: Record<string, any>;
 };
 
+export interface SendbirdUiTemplate {
+  version: number;
+  body: {
+    items: MessageTemplateItem[];
+  };
+}
+
 export type SendbirdMessageTemplate = {
   key: string;
   created_at: number;
   updated_at: number;
-  ui_template: {
-    version: number;
-    body: {
-      items: MessageTemplateItem[];
-    };
-  };
+  ui_template: SendbirdUiTemplate;
   name?: string;
   color_variables?: Record<string, string>;
 };

@@ -6,7 +6,7 @@ import { SendbirdMessageTemplate } from '../../../ui/TemplateMessageItemBody/typ
  */
 export const getProcessedTemplate = (parsedTemplate: SendbirdMessageTemplate): ProcessedMessageTemplate => {
   return {
-    version: parsedTemplate.ui_template.version,
+    version: Number(parsedTemplate.ui_template.version),
     uiTemplate: JSON.stringify(parsedTemplate.ui_template.body.items),
     colorVariables: parsedTemplate.color_variables,
   };
