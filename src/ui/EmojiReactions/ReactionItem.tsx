@@ -27,6 +27,7 @@ type Props = {
   emojisMap: Map<string, Emoji>;
   channel: Nullable<GroupChannel | OpenChannel>;
   message?: SendableMessageType;
+  showReactionsForSuperGroups?: boolean;
 };
 
 export default function ReactionItem({
@@ -37,6 +38,7 @@ export default function ReactionItem({
   emojisMap,
   channel,
   message,
+  showReactionsForSuperGroups
 }: Props) {
   const store = useSendbirdStateContext();
   const { isMobile } = useMediaQueryContext();
@@ -46,7 +48,7 @@ export default function ReactionItem({
   const userId = store.config.userId;
   const reactedByMe = isReactedBy(userId, reaction);
   const showHoverTooltip = (reaction.userIds.length > 0)
-    && (channel?.isGroupChannel() && !channel.isSuper);
+    && (channel?.isGroupChannel() && (!channel.isSuper || showReactionsForSuperGroups));
 
   const handleOnClick = () => {
     setEmojiKey('');

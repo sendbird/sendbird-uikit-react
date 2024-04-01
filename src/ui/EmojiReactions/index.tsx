@@ -31,6 +31,7 @@ export interface EmojiReactionsProps {
   isByMe?: boolean;
   toggleReaction?: (message: SendableMessageType, key: string, byMe: boolean) => void;
   onPressUserProfile?: (member: User) => void;
+  showReactionsForSuperGroups?: boolean;
 }
 
 const EmojiReactions = ({
@@ -44,6 +45,7 @@ const EmojiReactions = ({
   isByMe = false,
   toggleReaction,
   onPressUserProfile,
+  showReactionsForSuperGroups = false
 }: EmojiReactionsProps): ReactElement => {
   let showTheReactedMembers = false;
   try {
@@ -81,6 +83,7 @@ const EmojiReactions = ({
               emojisMap={emojisMap}
               channel={channel}
               message={message}
+              showReactionsForSuperGroups={showReactionsForSuperGroups}
             />
           );
         })
