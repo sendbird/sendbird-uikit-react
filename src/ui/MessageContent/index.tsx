@@ -44,7 +44,6 @@ import MessageFeedbackModal from '../../modules/Channel/components/MessageFeedba
 import { SbFeedbackStatus } from './types';
 import MessageFeedbackFailedModal from '../../modules/Channel/components/MessageFeedbackFailedModal';
 import { MobileBottomSheetProps } from '../MobileMenu/types';
-import { CarouselType, MessageTemplateData, MessageTemplateItem } from '../TemplateMessageItemBody/types';
 
 export interface MessageContentProps {
   className?: string | Array<string>;
@@ -137,7 +136,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   } = props;
 
   const { dateLocale } = useLocalization();
-  const { config, eventHandlers, utils } = useSendbirdStateContext?.() || {};
+  const { config, eventHandlers } = useSendbirdStateContext?.() || {};
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const contentRef = useRef(null);
   const timestampRef = useRef(null);
