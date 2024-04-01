@@ -52,7 +52,12 @@ export interface SBUEventHandlers {
   },
   connection?: {
     onFailed?(error: SendbirdError): void;
-  }
+  },
+  request?: {
+    onFailed?(error: SendbirdError | Error, context?: {
+      [key: string]: string | number | boolean | undefined;
+    }): void;
+  };
 }
 
 export interface SendBirdStateConfig {

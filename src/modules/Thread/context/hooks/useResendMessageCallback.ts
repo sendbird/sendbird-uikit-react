@@ -13,6 +13,7 @@ import { ThreadContextActionTypes } from '../dux/actionTypes';
 import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { SendableMessageType } from '../../../../utils';
 import { PublishingModuleType } from '../../../internalInterfaces';
+import { SBUEventHandlers } from '../../../../lib/types';
 
 interface DynamicProps {
   currentChannel: GroupChannel;
@@ -20,6 +21,7 @@ interface DynamicProps {
 interface StaticProps {
   logger: Logger;
   pubSub: SBUGlobalPubSub;
+  eventHandlers?: SBUEventHandlers
   threadDispatcher: CustomUseReducerDispatcher;
 }
 
@@ -27,6 +29,7 @@ export default function useResendMessageCallback({
   currentChannel,
 }: DynamicProps, {
   logger,
+  eventHandlers,
   pubSub,
   threadDispatcher,
 }: StaticProps): (failedMessage: SendableMessageType) => void {
@@ -57,6 +60,7 @@ export default function useResendMessageCallback({
             })
             .onFailed((error) => {
               logger.warning('Thread | useResendMessageCallback: Resending user message failed.', error);
+              eventHandlers?.request?.onFailed?.(error);
               failedMessage.sendingStatus = SendingStatus.FAILED;
               threadDispatcher({
                 type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
@@ -65,6 +69,7 @@ export default function useResendMessageCallback({
             });
         } catch (err) {
           logger.warning('Thread | useResendMessageCallback: Resending user message failed.', err);
+          eventHandlers?.request?.onFailed?.(err);
           failedMessage.sendingStatus = SendingStatus.FAILED;
           threadDispatcher({
             type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,

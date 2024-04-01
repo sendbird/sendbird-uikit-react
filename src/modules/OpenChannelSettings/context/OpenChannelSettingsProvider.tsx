@@ -46,6 +46,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
   // fetch store from <SendbirdProvider />
   const globalStore = useSendbirdStateContext();
   const sdk = globalStore?.stores?.sdkStore?.sdk;
+  const { eventHandlers } = globalStore;
   const isSDKInitialized = globalStore?.stores?.sdkStore?.initialized;
 
   const logger = globalStore?.config?.logger;
@@ -75,6 +76,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
           });
       })
       .catch((error) => {
+        eventHandlers.request.onFailed(error);
         logger.error('open channel setting: error fetching', error);
         setChannel(null);
       });

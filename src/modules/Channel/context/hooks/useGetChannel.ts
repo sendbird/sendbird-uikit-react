@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import * as messageActionTypes from '../dux/actionTypes';
 import { ChannelActionTypes } from '../dux/actionTypes';
-import { SdkStore } from '../../../../lib/types';
+import { SBUEventHandlers, SdkStore } from '../../../../lib/types';
 import { LoggerInterface } from '../../../../lib/Logger';
 import { MarkAsReadSchedulerType } from '../../../../lib/hooks/useMarkAsReadScheduler';
 
@@ -16,10 +16,11 @@ type UseGetChannelParams = {
   sdk: SdkStore['sdk'];
   logger: LoggerInterface;
   markAsReadScheduler: MarkAsReadSchedulerType;
+  eventHandlers?: SBUEventHandlers
 };
 function useGetChannel(
   { channelUrl, sdkInit, disableMarkAsRead }: UseGetChannelOptions,
-  { messagesDispatcher, sdk, logger, markAsReadScheduler }: UseGetChannelParams,
+  { messagesDispatcher, sdk, logger, markAsReadScheduler, eventHandlers }: UseGetChannelParams,
 ) {
   useEffect(() => {
     if (channelUrl && sdkInit && sdk && sdk.groupChannel) {
@@ -40,6 +41,7 @@ function useGetChannel(
         })
         .catch((e) => {
           logger.warning('Channel | useSetChannel fetch channel failed', { channelUrl, e });
+          eventHandlers?.request?.onFailed?.(e);
           messagesDispatcher({
             type: messageActionTypes.SET_CHANNEL_INVALID,
           });
@@ -55,6 +57,7 @@ function useGetChannel(
         })
         .catch((err) => {
           logger.error('Channel: Getting emojis failed', err);
+          eventHandlers?.request?.onFailed?.(err);
         });
     }
   }, [channelUrl, sdkInit]);

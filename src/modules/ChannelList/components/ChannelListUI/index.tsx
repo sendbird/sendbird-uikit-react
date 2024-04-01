@@ -37,7 +37,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
     onProfileEditSuccess,
   } = useChannelListContext();
 
-  const { stores, config } = useSendbirdStateContext();
+  const { stores, config, eventHandlers } = useSendbirdStateContext();
   const { logger, isOnline = false } = config;
   const sdk = stores.sdkStore.sdk;
 
@@ -76,6 +76,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
             });
           } catch (err) {
             logger.error('ChannelList: Leaving channel failed', err);
+            eventHandlers?.request?.onFailed?.(err);
             if (cb && typeof cb === 'function') cb(channel, err);
           }
         }

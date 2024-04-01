@@ -9,6 +9,7 @@ import { scrollIntoLast } from '../utils';
 import { SendableMessageType } from '../../../../utils';
 import { PublishingModuleType } from './useSendMultipleFilesMessage';
 import { SCROLL_BOTTOM_DELAY_FOR_SEND } from '../../../../utils/consts';
+import { SBUEventHandlers } from '../../../../lib/types';
 
 interface DynamicProps {
   currentChannel: GroupChannel;
@@ -18,6 +19,7 @@ interface StaticProps {
   logger: Logger;
   pubSub: SBUGlobalPubSub;
   threadDispatcher: CustomUseReducerDispatcher;
+  eventHandlers?: SBUEventHandlers
 }
 
 interface LocalFileMessage extends FileMessage {
@@ -32,6 +34,7 @@ export default function useSendFileMessageCallback({
   onBeforeSendFileMessage,
 }: DynamicProps, {
   logger,
+  eventHandlers,
   pubSub,
   threadDispatcher,
 }: StaticProps): SendFileMessageFunctionType {
@@ -75,6 +78,7 @@ export default function useSendFileMessageCallback({
           (message as LocalFileMessage).localUrl = URL.createObjectURL(file);
           (message as LocalFileMessage).file = file;
           logger.info('Thread | useSendFileMessageCallback: Sending file message failed.', { message, error });
+          eventHandlers?.request?.onFailed?.(error);
           threadDispatcher({
             type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
             payload: { message, error },

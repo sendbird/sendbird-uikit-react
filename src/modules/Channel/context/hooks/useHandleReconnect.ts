@@ -10,7 +10,7 @@ import { MarkAsReadSchedulerType } from '../../../../lib/hooks/useMarkAsReadSche
 import useReconnectOnIdle from './useReconnectOnIdle';
 import { ChannelActionTypes } from '../dux/actionTypes';
 import { CoreMessageType } from '../../../../utils';
-import { SdkStore } from '../../../../lib/types';
+import { SBUEventHandlers, SdkStore } from '../../../../lib/types';
 import { SCROLL_BOTTOM_DELAY_FOR_FETCH } from '../../../../utils/consts';
 
 interface DynamicParams {
@@ -22,6 +22,7 @@ interface DynamicParams {
 
 interface StaticParams {
   logger: Logger;
+  eventHandlers?: SBUEventHandlers
   sdk: SdkStore['sdk'];
   currentGroupChannel: GroupChannel;
   scrollRef: React.RefObject<HTMLDivElement>;
@@ -34,6 +35,7 @@ function useHandleReconnect(
   { isOnline, replyType, disableMarkAsRead, reconnectOnIdle }: DynamicParams,
   {
     logger,
+    eventHandlers,
     sdk,
     scrollRef,
     currentGroupChannel,
@@ -94,6 +96,7 @@ function useHandleReconnect(
               })
               .catch((error) => {
                 logger.error('Channel: Fetching messages failed', error);
+                eventHandlers?.request?.onFailed?.(error);
                 messagesDispatcher({
                   type: messageActionTypes.FETCH_INITIAL_MESSAGES_FAILURE,
                   payload: { currentGroupChannel, fetchChannelError: error },

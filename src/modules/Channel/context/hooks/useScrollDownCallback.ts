@@ -5,7 +5,7 @@ import { ChannelActionTypes } from '../dux/actionTypes';
 import { NEXT_RESULT_SIZE } from '../const';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { LoggerInterface } from '../../../../lib/Logger';
-import { SdkStore } from '../../../../lib/types';
+import { SBUEventHandlers, SdkStore } from '../../../../lib/types';
 import { ReplyType as ReplyTypeInternal } from '../../../../types';
 import { MessageListParams as MessageListParamsInternal } from '../ChannelProvider';
 import { BaseMessage, MessageListParams, ReplyType } from '@sendbird/chat/message';
@@ -20,6 +20,7 @@ type UseScrollDownCallbackOptions = {
 };
 type UseScrollDownCallbackParams = {
   logger: LoggerInterface;
+  eventHandlers?: SBUEventHandlers
   messagesDispatcher: React.Dispatch<ChannelActionTypes>;
   sdk: SdkStore['sdk'];
 };
@@ -32,7 +33,7 @@ function useScrollDownCallback(
     hasMoreNext,
     replyType,
   }: UseScrollDownCallbackOptions,
-  { logger, messagesDispatcher, sdk }: UseScrollDownCallbackParams,
+  { logger, messagesDispatcher, sdk, eventHandlers }: UseScrollDownCallbackParams,
 ) {
   return useCallback(
     (cb: Callback) => {
@@ -69,6 +70,7 @@ function useScrollDownCallback(
         })
         .catch((error) => {
           logger.error('Channel: Fetching later messages failed', error);
+          eventHandlers?.request?.onFailed?.(error);
           messagesDispatcher({
             type: messageActionTypes.FETCH_NEXT_MESSAGES_FAILURE,
             payload: { currentGroupChannel },

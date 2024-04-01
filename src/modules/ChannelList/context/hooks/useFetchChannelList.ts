@@ -6,6 +6,7 @@ import { Logger } from '../../../../lib/SendbirdState';
 import { MarkAsDeliveredSchedulerType } from '../../../../lib/hooks/useMarkAsDeliveredScheduler';
 import * as channelListActions from '../../dux/actionTypes';
 import { ChannelListActionTypes } from '../../dux/actionTypes';
+import { SBUEventHandlers } from '../../../../lib/types';
 
 interface DynamicProps {
   channelSource: Nullable<GroupChannelListQuery>;
@@ -14,6 +15,7 @@ interface DynamicProps {
 interface StaticProps {
   channelListDispatcher: React.Dispatch<ChannelListActionTypes>;
   logger: Logger;
+  eventHandlers?: SBUEventHandlers;
   markAsDeliveredScheduler: MarkAsDeliveredSchedulerType;
 }
 
@@ -23,6 +25,7 @@ export const useFetchChannelList = ({
 }: DynamicProps, {
   channelListDispatcher,
   logger,
+  eventHandlers,
   markAsDeliveredScheduler,
 }: StaticProps) => {
   return useCallback(async () => {
@@ -53,6 +56,7 @@ export const useFetchChannelList = ({
       }
     } catch (error) {
       logger.error('ChannelList: failed fetch', { error });
+      eventHandlers?.request?.onFailed?.(error);
       channelListDispatcher({
         type: channelListActions.FETCH_CHANNELS_FAILURE,
         payload: error,

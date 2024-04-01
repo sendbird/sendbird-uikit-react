@@ -160,6 +160,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   const globalStore = useSendbirdStateContext();
   const { config, stores } = globalStore;
   const { sdkStore } = stores;
+  const { eventHandlers } = globalStore;
   const { pubSub, logger, onUserProfileMessage } = config;
   const {
     markAsDeliveredScheduler,
@@ -205,6 +206,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
         onChannelSelect,
         userFilledChannelListQuery,
         logger,
+        eventHandlers,
         sortChannelList,
         disableAutoSelect,
         markAsDeliveredScheduler,
@@ -396,6 +398,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     {
       channelListDispatcher,
       logger,
+      eventHandlers,
       markAsDeliveredScheduler,
     },
   );

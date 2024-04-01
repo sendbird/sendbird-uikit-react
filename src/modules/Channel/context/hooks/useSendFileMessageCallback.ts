@@ -9,7 +9,7 @@ import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { PublishingModuleType } from '../../../internalInterfaces';
 import { LoggerInterface } from '../../../../lib/Logger';
 import { SendableMessageType } from '../../../../utils';
-import { SendBirdState } from '../../../../lib/types';
+import { SBUEventHandlers, SendBirdState } from '../../../../lib/types';
 import { SCROLL_BOTTOM_DELAY_FOR_SEND } from '../../../../utils/consts';
 
 type UseSendFileMessageCallbackOptions = {
@@ -19,13 +19,14 @@ type UseSendFileMessageCallbackOptions = {
 };
 type UseSendFileMessageCallbackParams = {
   logger: LoggerInterface;
+  eventHandlers?: SBUEventHandlers
   pubSub: SBUGlobalPubSub;
   scrollRef: React.MutableRefObject<HTMLDivElement | null>;
   messagesDispatcher: React.Dispatch<ChannelActionTypes>;
 };
 export default function useSendFileMessageCallback(
   { currentGroupChannel, onBeforeSendFileMessage, imageCompression }: UseSendFileMessageCallbackOptions,
-  { logger, pubSub, scrollRef, messagesDispatcher }: UseSendFileMessageCallbackParams,
+  { logger,eventHandlers,  pubSub, scrollRef, messagesDispatcher }: UseSendFileMessageCallbackParams,
 ) {
   const sendMessage = useCallback(
     (compressedFile: File, quoteMessage = null) => new Promise<FileMessage>((resolve, reject) => {
@@ -65,6 +66,7 @@ export default function useSendFileMessageCallback(
         })
         .onFailed((err, failedMessage) => {
           logger.error('Channel: Sending file message failed!', { failedMessage, err });
+          eventHandlers?.request?.onFailed?.(err);
 
           // TODO: v4 - remove logic that modifies the original object.
           //  It makes the code difficult to track, likely causing unpredictable side effects.

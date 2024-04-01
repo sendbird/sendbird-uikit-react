@@ -7,6 +7,7 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { LoggerInterface } from '../../../../lib/Logger';
 import { UploadableFileInfo } from '@sendbird/chat/message';
 import topics, { PublishingModuleType, SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
+import { SBUEventHandlers } from '../../../../lib/types';
 
 type UseResendMessageCallbackOptions = {
   currentGroupChannel: null | GroupChannel;
@@ -14,12 +15,13 @@ type UseResendMessageCallbackOptions = {
 };
 type UseResendMessageCallbackParams = {
   logger: LoggerInterface;
+  eventHandlers?: SBUEventHandlers
   pubSub: SBUGlobalPubSub;
 };
 
 function useResendMessageCallback(
   { currentGroupChannel, messagesDispatcher }: UseResendMessageCallbackOptions,
-  { logger, pubSub }: UseResendMessageCallbackParams,
+  { logger, eventHandlers, pubSub }: UseResendMessageCallbackParams,
 ) {
   return useCallback(
     (failedMessage: SendableMessageType): void => {
@@ -119,6 +121,7 @@ function useResendMessageCallback(
         }
       } else {
         logger.error('Message is not resendable', failedMessage);
+        eventHandlers?.request?.onFailed?.(new Error('Message is not resendable'));
       }
     },
     [currentGroupChannel, messagesDispatcher],
