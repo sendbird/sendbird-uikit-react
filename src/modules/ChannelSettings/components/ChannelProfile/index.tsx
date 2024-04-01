@@ -25,10 +25,10 @@ const ChannelProfile: React.FC = () => {
   const isOnline = state?.config?.isOnline;
   const disabled = !isOnline;
 
-  const { channel } = channelSettingStore;
+  const channel = channelSettingStore?.channel;
 
   const getChannelName = () => {
-    if (channel?.name && channel?.name !== 'Group Channel') {
+    if (channel?.name && channel.name !== 'Group Channel') {
       return channel.name;
     }
     if (channel?.name === 'Group Channel' || !channel?.name) {

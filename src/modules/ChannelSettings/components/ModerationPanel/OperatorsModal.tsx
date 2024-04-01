@@ -20,8 +20,8 @@ interface Props { onCancel?(): void }
 export default function OperatorsModal({ onCancel }: Props): ReactElement {
   const [operators, setOperators] = useState([]);
   const [operatorQuery, setOperatorQuery] = useState(null);
-
-  const { channel } = useChannelSettingsContext();
+  
+  const channel = useChannelSettingsContext()?.channel;
   const state = useSendbirdStateContext();
   const currentUserId = state?.config?.userId;
   const { stringSet } = useContext(LocalizationContext);

@@ -26,7 +26,7 @@ export const OperatorList = (): ReactElement => {
   const { stringSet } = useContext(LocalizationContext);
 
   const state = useSendbirdStateContext();
-  const { channel } = useChannelSettingsContext();
+  const channel = useChannelSettingsContext()?.channel;
 
   const userId = state?.config?.userId;
 

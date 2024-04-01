@@ -119,7 +119,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
           sendbird-app__conversation-wrap
         `}
       >
-        {enableLegacyChannelModules ? <Channel {...channelProps} /> : <GroupChannel {...channelProps} />}
+        {enableLegacyChannelModules ? <Channel {...channelProps} /> : <GroupChannel {...channelProps} startingPoint={channelProps.startingPoint ?? undefined}/>}
       </div>
       {showSettings && (
         <div className="sendbird-app__settingspanel-wrap">

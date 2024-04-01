@@ -14,6 +14,8 @@ import Label, {
 import { ButtonTypes } from '../../../../ui/Button';
 import UserListItem from '../../../../ui/UserListItem';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
+import { User } from '@sendbird/chat';
+import { ParticipantListQuery } from '@sendbird/chat/openChannel';
 
 interface Props {
   onCancel(): void;
@@ -24,9 +26,9 @@ export default function AddOperatorsModal({
   onCancel,
   onSubmit,
 }: Props): ReactElement {
-  const [participants, setParticipants] = useState([]);
+  const [participants, setParticipants] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState({});
-  const [participantQuery, setParticipantQuery] = useState(null);
+  const [participantQuery, setParticipantQuery] = useState<ParticipantListQuery | null>(null);
   const { stringSet } = useContext(LocalizationContext);
 
   const { channel } = useOpenChannelSettingsContext();
@@ -35,10 +37,10 @@ export default function AddOperatorsModal({
     const participantListQuery = channel?.createParticipantListQuery({
       limit: 20,
     });
-    participantListQuery.next().then((users) => {
+    participantListQuery?.next().then((users) => {
       setParticipants(users);
     });
-    setParticipantQuery(participantListQuery);
+    if (participantListQuery) {setParticipantQuery(participantListQuery);}
   }, []);
 
   const selectedCount = Object.keys(selectedUsers).filter((m) => selectedUsers[m]).length;
@@ -66,12 +68,12 @@ export default function AddOperatorsModal({
         <div
           className="sendbird-more-users__popup-scroll"
           onScroll={(e) => {
-            const { hasNext } = participantQuery;
+            const hasNext = participantQuery ? participantQuery.hasNext : false;
             const target = e.target as HTMLTextAreaElement;
             const fetchMore = (
               target.clientHeight + target.scrollTop === target.scrollHeight
             );
-            if (hasNext && fetchMore) {
+            if (hasNext && fetchMore && participantQuery) {
               participantQuery.next().then((o) => {
                 setParticipants([
                   ...participants,

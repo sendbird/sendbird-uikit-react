@@ -163,7 +163,7 @@ export interface ChannelProviderInterface extends ChannelContextProps, MessageSt
   renderUserMentionItem?: (props: { user: User }) => JSX.Element;
 }
 
-const ChannelContext = React.createContext<ChannelProviderInterface | null>(undefined);
+const ChannelContext = React.createContext<ChannelProviderInterface | null>(null);
 
 const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextProps) => {
   const {
@@ -225,7 +225,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     setHighLightedMessageId(highlightedMessage);
   }, [highlightedMessage]);
   const userFilledMessageListQuery = queries?.messageListParams;
-  const [quoteMessage, setQuoteMessage] = useState<SendableMessageType>(null);
+  const [quoteMessage, setQuoteMessage] = useState<SendableMessageType | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
   const [messagesStore, messagesDispatcher] = useReducer(messagesReducer, messagesInitialState);

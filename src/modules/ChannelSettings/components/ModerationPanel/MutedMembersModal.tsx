@@ -23,8 +23,8 @@ export default function MutedMembersModal({
 }: Props): ReactElement {
   const [members, setMembers] = useState([]);
   const [memberQuery, setMemberQuery] = useState(null);
-
-  const { channel } = useChannelSettingsContext();
+  
+  const channel = useChannelSettingsContext()?.channel;
   const state = useSendbirdStateContext();
   const currentUser = state?.config?.userId;
   const { stringSet } = useLocalization();

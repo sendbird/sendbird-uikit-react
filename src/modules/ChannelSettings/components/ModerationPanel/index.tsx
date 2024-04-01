@@ -34,7 +34,7 @@ export default function AdminPannel(): ReactElement {
   const [frozen, setFrozen] = useState(false);
 
   const { stringSet } = useContext(LocalizationContext);
-  const { channel } = useChannelSettingsContext();
+  const channel = useChannelSettingsContext()?.channel;
 
   // work around for
   // https://sendbird.slack.com/archives/G01290GCDCN/p1595922832000900

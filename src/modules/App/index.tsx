@@ -12,6 +12,7 @@ import { AppLayout } from './AppLayout';
 import './index.scss';
 
 import { AppLayoutProps } from './types';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 interface AppProps {
   appId: SendbirdProviderProps['appId'];
@@ -102,27 +103,27 @@ export default function App(props: AppProps) {
     isUserIdUsedForNickname = true,
     enableLegacyChannelModules = false,
   } = props;
-  const [currentChannel, setCurrentChannel] = useState(null);
+  const [currentChannel, setCurrentChannel] = useState<GroupChannel | null>(null);
 
   return (
     <Sendbird
-      stringSet={stringSet}
+      stringSet={stringSet ?? undefined}
       appId={appId}
       userId={userId}
       accessToken={accessToken}
       customApiHost={customApiHost}
       customWebSocketHost={customWebSocketHost}
-      breakpoint={breakpoint}
+      breakpoint={breakpoint ?? undefined}
       theme={theme}
       nickname={nickname}
       profileUrl={profileUrl}
-      dateLocale={dateLocale}
-      userListQuery={userListQuery}
+      dateLocale={dateLocale ?? undefined}
+      userListQuery={userListQuery ?? undefined}
       config={config}
-      colorSet={colorSet}
+      colorSet={colorSet ?? undefined}
       disableUserProfile={disableUserProfile}
       disableMarkAsDelivered={disableMarkAsDelivered}
-      renderUserProfile={renderUserProfile}
+      renderUserProfile={renderUserProfile ?? undefined}
       imageCompression={imageCompression}
       isReactionEnabled={isReactionEnabled}
       isMentionEnabled={isMentionEnabled}
@@ -152,9 +153,9 @@ export default function App(props: AppProps) {
         showSearchIcon={showSearchIcon}
         isMessageGroupingEnabled={isMessageGroupingEnabled}
         allowProfileEdit={allowProfileEdit}
-        onProfileEditSuccess={onProfileEditSuccess}
+        onProfileEditSuccess={onProfileEditSuccess ?? undefined}
         disableAutoSelect={disableAutoSelect}
-        currentChannel={currentChannel}
+        currentChannel={currentChannel ?? undefined}
         setCurrentChannel={setCurrentChannel}
         enableLegacyChannelModules={enableLegacyChannelModules}
       />

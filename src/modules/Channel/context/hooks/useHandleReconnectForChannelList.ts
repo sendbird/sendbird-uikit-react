@@ -87,7 +87,7 @@ function useHandleReconnectForChannelList({
                 logger.info('ChannelList refresh - channel list sorted', sortedChannelList);
               }
               // select first channel
-              let newCurrentChannel: GroupChannel = !disableAutoSelect ? sortedChannelList[0] : null;
+              let newCurrentChannel: GroupChannel | null = !disableAutoSelect ? sortedChannelList[0] : null;
               if (currentGroupChannel?.url) {
                 const foundChannel = sortedChannelList.find((channel) => (
                   channel.url === currentGroupChannel.url

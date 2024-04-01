@@ -46,7 +46,7 @@ function CommunityChannelList({
   channels,
   setChannels,
 }: Props): ReactElement {
-  const [channelSource, setChannelSource] = useState<OpenChannelListQuery>(null);
+  const [channelSource, setChannelSource] = useState<OpenChannelListQuery | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [currentImage, setCurrentImage] = useState(null);
   const [currentFile, setCurrentFile] = useState(null);

@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useContext,
 } from 'react';
-import { BannedUserListQueryParams } from '@sendbird/chat';
+import { BannedUserListQueryParams, RestrictedUser, User } from '@sendbird/chat';
 
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import
@@ -23,12 +23,12 @@ import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 
 export const BannedMemberList = (): ReactElement => {
-  const [members, setMembers] = useState([]);
+  const [members, setMembers] = useState<RestrictedUser[]>([]);
   const [hasNext, setHasNext] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   const { stringSet } = useContext(LocalizationContext);
-  const { channel } = useChannelSettingsContext();
+  const channel = useChannelSettingsContext()?.channel;
 
   const bannedUserListQueryParams: BannedUserListQueryParams = { limit: 10 };
   useEffect(() => {
@@ -54,6 +54,12 @@ export const BannedMemberList = (): ReactElement => {
       setHasNext(bannedUserListQuery.hasNext);
     });
   }, [channel]);
+  
+  type UserWithAdditionalProps = User & {
+    isMuted: boolean;
+    role: string;
+  };
+  
   return (
     <>
       {

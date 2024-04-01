@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import type { Participant } from '@sendbird/chat';
+import type { Participant, User } from '@sendbird/chat';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 
 import { UserProfileContext } from '../../../../lib/UserProfileContext';
@@ -68,7 +68,7 @@ export const UserListItem: React.FC<UserListItemProps> = ({
             renderUserProfile
               ? renderUserProfile({
                 user: user,
-                currentUserId: currentUser,
+                currentUserId: currentUser ?? '',
                 close: closeDropdown,
                 avatarRef,
               })
@@ -155,7 +155,7 @@ export default function ParticipantsAccordion(props: ParticipantsAccordionProps)
   const { channel } = useOpenChannelSettingsContext();
   const globalState = useSendbirdStateContext();
   const currentUserId = globalState?.config?.userId;
-  const [participants, setParticipants] = useState([]);
+  const [participants, setParticipants] = useState<User[]>([]);
   const [showMoreModal, setShowMoreModal] = useState(false);
   const { stringSet } = useContext(LocalizationContext);
 
@@ -196,7 +196,7 @@ export default function ParticipantsAccordion(props: ParticipantsAccordionProps)
             {
               participants.slice(0, maxMembers).map((p) => (
                 <UserListItem
-                  user={p}
+                  user={p as Participant}
                   currentUser={currentUserId}
                   key={p.userId}
                 />

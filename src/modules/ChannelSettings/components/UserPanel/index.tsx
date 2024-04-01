@@ -23,7 +23,7 @@ const kFormatter = (num: number): string|number => {
 const UserPanel: React.FC = () => {
   const { stringSet } = useContext(LocalizationContext);
   const [showAccordion, setShowAccordion] = useState(false);
-  const { channel } = useChannelSettingsContext();
+  const channel = useChannelSettingsContext()?.channel;
   return (
     <div className='sendbird-channel-settings__user-panel'>
       <div
@@ -51,7 +51,7 @@ const UserPanel: React.FC = () => {
           {stringSet.CHANNEL_SETTING__MEMBERS__TITLE}
           <Badge
             className={'sendbird-channel-settings__badge'}
-            count={kFormatter(channel?.memberCount)}
+            count={channel ? kFormatter(channel?.memberCount) : ''}
           />
         </Label>
         <Icon
