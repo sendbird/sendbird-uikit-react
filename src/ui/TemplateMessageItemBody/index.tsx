@@ -125,8 +125,8 @@ export function TemplateMessageItemBody({
     simpleTemplateDataList.forEach((simpleTemplateData: SimpleTemplateData) => {
       const simpleTemplateKey = simpleTemplateData.key;
       if (!simpleTemplateKey) {
-        logger.error('TemplateMessageItemBody | simple template keys are not found in view_variables: ', simpleTemplateDataList, message);
-        throw new Error();
+        logger.error('TemplateMessageItemBody | simple template keys are not found in view_variables: ', simpleTemplateDataList);
+        throw new Error('TemplateMessageItemBody | simple template keys are not found in view_variables.');
       }
       const simpleCachedTemplate = getCachedTemplate(simpleTemplateKey);
       cachedSimpleTemplates.push(simpleCachedTemplate);
@@ -206,7 +206,7 @@ export function TemplateMessageItemBody({
           });
         });
       } catch (e) {
-        logger.error('TemplateMessageItemBody | received view_variables is malformed: ', templateData, message);
+        logger.error('TemplateMessageItemBody | received view_variables is malformed: ', templateData);
         result.isErrored = true;
         return result;
       }
@@ -217,8 +217,8 @@ export function TemplateMessageItemBody({
       } else {
         const parsedUiTemplate: MessageTemplateItem[] = JSON.parse(cachedTemplate.uiTemplate);
         if (!Array.isArray(parsedUiTemplate) || parsedUiTemplate.length === 0) {
-          logger.error('TemplateMessageItemBody | parsed template is missing ui_template: ', parsedUiTemplate, message);
-          throw new Error();
+          logger.error('TemplateMessageItemBody | parsed template is missing ui_template: ', parsedUiTemplate);
+          throw new Error('TemplateMessageItemBody | parsed template is missing ui_template. See error log in console for details');
         }
         /**
          * Composite template validation
@@ -226,23 +226,23 @@ export function TemplateMessageItemBody({
         if (parsedUiTemplate[0].type === CarouselType) {
           const carouselItem = parsedUiTemplate[0] as unknown as CarouselItem;
           if (parsedUiTemplate.length > 1) { // TODO: in future, support multiple templates
-            logger.error('TemplateMessageItemBody | composite template currently does not support multiple items: ', parsedUiTemplate, message);
-            throw new Error();
+            logger.error('TemplateMessageItemBody | composite template currently does not support multiple items: ', parsedUiTemplate);
+            throw new Error('TemplateMessageItemBody | composite template currently does not support multiple items. See error log in console for details');
           }
           if (typeof carouselItem.items === 'string') {
             if (!startsWithAtAndEndsWithBraces(carouselItem.items)) {
-              logger.error('TemplateMessageItemBody | composite template with reservation key must follow the following string format "{@your-reservation-key}": ', templateKey, carouselItem, message);
-              throw new Error();
+              logger.error('TemplateMessageItemBody | composite template with reservation key must follow the following string format "{@your-reservation-key}": ', templateKey, carouselItem);
+              throw new Error('TemplateMessageItemBody | composite template with reservation key must follow the following string format "{@your-reservation-key}". See error log in console for details');
             }
             if (!templateData.view_variables) {
-              logger.error('TemplateMessageItemBody | template key suggests composite template but template data is missing view_variables: ', templateKey, templateData, message);
-              throw new Error();
+              logger.error('TemplateMessageItemBody | template key suggests composite template but template data is missing view_variables: ', templateKey, templateData);
+              throw new Error('TemplateMessageItemBody | template key suggests composite template but template data is missing view_variables. See error log in console for details');
             }
             const reservationKey = removeAtAndBraces(carouselItem.items);
             const simpleTemplateDataList: SimpleTemplateData[] | undefined = templateData.view_variables[reservationKey];
             if (!simpleTemplateDataList) {
-              logger.error('TemplateMessageItemBody | no reservation key found in view_variables: ', reservationKey, templateData.view_variables, message);
-              throw new Error();
+              logger.error('TemplateMessageItemBody | no reservation key found in view_variables: ', reservationKey, templateData.view_variables);
+              throw new Error('TemplateMessageItemBody | no reservation key found in view_variables. See error log in console for details');
             }
             const { maxVersion, filledTemplates } = getFilledMessageTemplateItemsForCarouselTemplateByMessagePayload(
               simpleTemplateDataList,
@@ -266,8 +266,8 @@ export function TemplateMessageItemBody({
               items: filledTemplates,
             }];
           } else {
-            logger.error('TemplateMessageItemBody | composite template is malformed: ', templateKey, carouselItem, message);
-            throw new Error();
+            logger.error('TemplateMessageItemBody | composite template is malformed: ', templateKey, carouselItem);
+            throw new Error('TemplateMessageItemBody | composite template is malformed. See error log in console for details');
           }
         } else {
           result.templateVersion = cachedTemplate.version;
@@ -315,7 +315,7 @@ export function TemplateMessageItemBody({
         ) {
           keysToUpdate.push(templateKey);
         } else if (waitingTemplateKeyData.erroredMessageIds.indexOf(message.messageId) > -1) {
-          throw new Error();
+          throw new Error(`TemplateMessageItemBody | fetching template key ${templateKey} for messageId: ${message.messageId} has failed.`);
         }
       });
       if (keysToUpdate.length > 0) {
