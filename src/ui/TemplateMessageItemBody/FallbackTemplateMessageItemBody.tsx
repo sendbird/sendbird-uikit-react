@@ -3,19 +3,24 @@ import React, { ReactElement, useContext } from 'react';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { getClassName } from '../../utils';
 import Label, { LabelColors, LabelTypography } from '../Label';
+import { RenderedTemplateBodyType } from '../MessageContent/MessageBody';
 
 export interface FallbackTemplateMessageItemBodyProps {
   className?: string | Array<string>;
   message: BaseMessage;
   isByMe?: boolean;
+  onTemplateMessageRenderedCallback?: (renderedTemplateBodyType: RenderedTemplateBodyType) => void;
 }
 export function FallbackTemplateMessageItemBody({
   className,
   message,
   isByMe,
+  onTemplateMessageRenderedCallback = () => { /* noop */ },
 }: FallbackTemplateMessageItemBodyProps): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   const text = message['message'];
+
+  onTemplateMessageRenderedCallback('failed');
 
   return (
     <div

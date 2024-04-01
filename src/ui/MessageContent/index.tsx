@@ -44,6 +44,7 @@ import MessageFeedbackModal from '../../modules/Channel/components/MessageFeedba
 import { SbFeedbackStatus } from './types';
 import MessageFeedbackFailedModal from '../../modules/Channel/components/MessageFeedbackFailedModal';
 import { MobileBottomSheetProps } from '../MobileMenu/types';
+import { CarouselType, MessageTemplateData, MessageTemplateItem } from '../TemplateMessageItemBody/types';
 
 export interface MessageContentProps {
   className?: string | Array<string>;
@@ -136,7 +137,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   } = props;
 
   const { dateLocale } = useLocalization();
-  const { config, eventHandlers } = useSendbirdStateContext?.() || {};
+  const { config, eventHandlers, utils } = useSendbirdStateContext?.() || {};
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const contentRef = useRef(null);
   const timestampRef = useRef(null);
@@ -152,11 +153,21 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [feedbackFailedText, setFeedbackFailedText] = useState('');
   const [totalBottom, setTotalBottom] = useState<number>(0);
-
-  const uiContainerType: UI_CONTAINER_TYPES = getMessageContentMiddleClassNameByContainerType({
+  const [uiContainerType, setUiContainerType] = useState<UI_CONTAINER_TYPES>(getMessageContentMiddleClassNameByContainerType({
     message,
     isMobile,
-  });
+  }));
+
+  const onTemplateMessageRenderedCallback = (renderedTemplateType: 'failed' | 'composite' | 'simple') => {
+    if (renderedTemplateType === 'failed') {
+      setUiContainerType(UI_CONTAINER_TYPES.DEFAULT);
+    } else if (renderedTemplateType === 'composite') {
+      /**
+       * Composite templates must have default carousel view irregardless of given containerType.
+       */
+      setUiContainerType(UI_CONTAINER_TYPES.DEFAULT_CAROUSEL);
+    }
+  };
 
   const { stringSet } = useContext(LocalizationContext);
 
@@ -382,6 +393,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               config,
               isReactionEnabledInChannel,
               isByMe,
+              onTemplateMessageRenderedCallback,
             })
           }
           {/* reactions */}

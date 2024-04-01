@@ -9,7 +9,7 @@ import {
   MessageTemplateData,
   MessageTemplateItem,
   SendbirdUiTemplate,
-  SimpleTemplateData
+  SimpleTemplateData,
 } from './types';
 import restoreNumbersFromMessageTemplateObject from './utils/restoreNumbersFromMessageTemplateObject';
 import mapData from './utils/mapData';
@@ -20,12 +20,14 @@ import { ProcessedMessageTemplate, WaitingTemplateKeyData } from '../../lib/dux/
 import FallbackTemplateMessageItemBody from './FallbackTemplateMessageItemBody';
 import LoadingTemplateMessageItemBody from './LoadingTemplateMessageItemBody';
 import MessageTemplateErrorBoundary from '../MessageTemplate/messageTemplateErrorBoundary';
+import { RenderedTemplateBodyType } from '../MessageContent/MessageBody';
 
 const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 500; // It takes about 450ms for isError update
 
 interface RenderData {
   filledMessageTemplateItemsList: MessageTemplateItem[];
   isErrored: boolean;
+  isComposite?: boolean;
   templateVersion?: number;
 }
 
@@ -34,7 +36,7 @@ interface TemplateMessageItemBodyProps {
   message: BaseMessage;
   isByMe?: boolean;
   theme?: SendbirdTheme;
-  onLoad?: () => void;
+  onTemplateMessageRenderedCallback?: (renderedTemplateBodyType: RenderedTemplateBodyType) => void;
 }
 
 /**
@@ -71,16 +73,27 @@ export function TemplateMessageItemBody({
   message,
   isByMe = false,
   theme = 'light',
+  onTemplateMessageRenderedCallback = () => { /* noop */ },
 }: TemplateMessageItemBodyProps): ReactElement {
   const templateData: MessageTemplateData | undefined = message.extendedMessagePayload?.['template'] as MessageTemplateData;
   if (!templateData?.key) {
-    return <FallbackTemplateMessageItemBody className={className} message={message} isByMe={isByMe} />;
+    return <FallbackTemplateMessageItemBody
+      className={className}
+      message={message}
+      isByMe={isByMe}
+      onTemplateMessageRenderedCallback={onTemplateMessageRenderedCallback}
+    />;
   }
   const templateKey = templateData.key;
 
   const globalState = useSendbirdStateContext();
   if (!globalState) {
-    return <FallbackTemplateMessageItemBody className={className} message={message} isByMe={isByMe} />;
+    return <FallbackTemplateMessageItemBody
+      className={className}
+      message={message}
+      isByMe={isByMe}
+      onTemplateMessageRenderedCallback={onTemplateMessageRenderedCallback}
+    />;
   }
 
   const {
@@ -155,7 +168,7 @@ export function TemplateMessageItemBody({
 
   function getFilledMessageTemplateItemsForSimpleTemplate(
     templateItems: MessageTemplateItem[],
-    colorVariables?: Record<string, string>
+    colorVariables?: Record<string, string>,
   ): MessageTemplateItem[] {
     const filledMessageTemplateItems: MessageTemplateItem[] = getFilledMessageTemplateWithData({
       template: templateItems,
@@ -211,10 +224,6 @@ export function TemplateMessageItemBody({
          * Composite template validation
          */
         if (parsedUiTemplate[0].type === CarouselType) {
-          if (!templateData.view_variables) {
-            logger.error('TemplateMessageItemBody | template key suggests composite template but template data is missing view_variables: ', templateKey, templateData);
-            throw new Error();
-          }
           const carouselItem = parsedUiTemplate[0] as unknown as CarouselItem;
           if (parsedUiTemplate.length > 1) { // TODO: in future, support multiple templates
             logger.error('TemplateMessageItemBody | composite template currently does not support multiple items: ', parsedUiTemplate);
@@ -225,16 +234,20 @@ export function TemplateMessageItemBody({
               logger.error('TemplateMessageItemBody | composite template with reservation key must follow the following string format "{@your-reservation-key}": ', templateKey, carouselItem);
               throw new Error();
             }
+            if (!templateData.view_variables) {
+              logger.error('TemplateMessageItemBody | template key suggests composite template but template data is missing view_variables: ', templateKey, templateData);
+              throw new Error();
+            }
             const reservationKey = removeAtAndBraces(carouselItem.items);
             const simpleTemplateDataList: SimpleTemplateData[] | undefined = templateData.view_variables[reservationKey];
             if (!simpleTemplateDataList) {
               logger.error('TemplateMessageItemBody | no reservation key found in view_variables: ', reservationKey, templateData.view_variables);
               throw new Error();
             }
-            const { maxVersion, filledTemplates } =
-              getFilledMessageTemplateItemsForCarouselTemplateByMessagePayload(
-                simpleTemplateDataList
-              );
+            const { maxVersion, filledTemplates } = getFilledMessageTemplateItemsForCarouselTemplateByMessagePayload(
+              simpleTemplateDataList,
+            );
+            result.isComposite = true;
             result.templateVersion = Math.max(cachedTemplate.version, maxVersion);
             result.filledMessageTemplateItemsList = [{
               type: carouselItem.type as any,
@@ -242,10 +255,10 @@ export function TemplateMessageItemBody({
               items: filledTemplates,
             }];
           } else if (Array.isArray(carouselItem.items)) {
-            const { maxVersion, filledTemplates } =
-              getFilledMessageTemplateItemsForCarouselTemplate(
-                carouselItem.items
-              );
+            const { maxVersion, filledTemplates } = getFilledMessageTemplateItemsForCarouselTemplate(
+              carouselItem.items,
+            );
+            result.isComposite = true;
             result.templateVersion = Math.max(cachedTemplate.version, maxVersion);
             result.filledMessageTemplateItemsList = [{
               type: carouselItem.type as any,
@@ -259,7 +272,7 @@ export function TemplateMessageItemBody({
         } else {
           result.filledMessageTemplateItemsList = getFilledMessageTemplateItemsForSimpleTemplate(
             parsedUiTemplate,
-            cachedTemplate.colorVariables
+            cachedTemplate.colorVariables,
           );
         }
       }
@@ -311,12 +324,19 @@ export function TemplateMessageItemBody({
   }
 
   if (renderData.isErrored) {
-    return <FallbackTemplateMessageItemBody className={className} message={message} isByMe={isByMe} />;
+    return <FallbackTemplateMessageItemBody
+      className={className}
+      message={message}
+      isByMe={isByMe}
+      onTemplateMessageRenderedCallback={onTemplateMessageRenderedCallback}
+    />;
   }
 
   if (renderData.filledMessageTemplateItemsList.length === 0) {
     return <LoadingTemplateMessageItemBody className={className} isByMe={isByMe} />;
   }
+
+  onTemplateMessageRenderedCallback(renderData.isComposite ? 'composite' : 'simple');
 
   return (
     <div className={getClassName([
@@ -325,7 +345,14 @@ export function TemplateMessageItemBody({
       'sendbird-template-message-item-body',
     ])}>
       <MessageTemplateErrorBoundary
-        fallbackMessage={<FallbackTemplateMessageItemBody className={className} message={message} isByMe={isByMe}/>}
+        fallbackMessage={
+          <FallbackTemplateMessageItemBody
+            className={className}
+            message={message}
+            isByMe={isByMe}
+            onTemplateMessageRenderedCallback={onTemplateMessageRenderedCallback}
+          />
+        }
         logger={logger}
       >
         <MessageTemplateWrapper
