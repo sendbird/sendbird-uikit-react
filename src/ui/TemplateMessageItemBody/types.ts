@@ -1,4 +1,4 @@
-import type { ComponentsUnion } from '@sendbird/uikit-message-template';
+import {ComponentsUnion, CompositeComponentType} from '@sendbird/uikit-message-template';
 
 type SendbirdFontWeight = 'bold' | 'normal';
 
@@ -81,10 +81,8 @@ export type MessageTemplateTheme = {
 
 export type MessageTemplateItem = ComponentsUnion['properties'];
 
-export const CarouselType = 'carouselView';
-
 export interface CarouselItem {
-  type: string;
+  type: CompositeComponentType.Carousel;
   spacing: number;
   items: string | SendbirdUiTemplate[]; // Reservation key. ex. "{@some_key}"
 }

@@ -5,7 +5,6 @@ import { getClassName, removeAtAndBraces, startsWithAtAndEndsWithBraces } from '
 import MessageTemplateWrapper from '../../modules/GroupChannel/components/MessageTemplateWrapper';
 import {
   CarouselItem,
-  CarouselType,
   MessageTemplateData,
   MessageTemplateItem,
   SendbirdUiTemplate,
@@ -224,7 +223,7 @@ export function TemplateMessageItemBody({
         /**
          * Composite template validation
          */
-        if (parsedUiTemplate[0].type === CarouselType) {
+        if (parsedUiTemplate[0].type === CompositeComponentType.Carousel) {
           const carouselItem = parsedUiTemplate[0] as unknown as CarouselItem;
           if (parsedUiTemplate.length > 1) { // TODO: in future, support multiple templates
             logger.error('TemplateMessageItemBody | composite template currently does not support multiple items: ', parsedUiTemplate);
