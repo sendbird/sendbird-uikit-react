@@ -86,6 +86,15 @@ export interface GroupChannelUIBasicProps {
   renderRemoveMessageModal?: (props: { message: EveryMessage; onCancel: () => void; onSubmit: () => void }) => React.ReactElement;
 
   renderEditInput?: ({ onCancelEdit, message }: { onCancelEdit: VoidFunction; message: ClientUserMessage }) => React.ReactElement;
+
+  renderScrollToBottom?: (props: {
+    onScrollToBottom: () => void;
+    onScrollToUnread: () => void;
+    unreadCount: number;
+    lastReadAt: Date;
+    shouldDisplayScrollToBottom: boolean;
+    shouldDisplayUnreadNotifications: boolean;
+  }) => React.ReactElement;
 }
 
 export interface GroupChannelUIViewProps extends GroupChannelUIBasicProps {
