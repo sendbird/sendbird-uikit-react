@@ -37,9 +37,9 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
 
   const onSubmitWrapper = () => {
     if (!selectedFeedback) return;
-    const comment = inputRef.current.value ?? '';
+    const comment = inputRef.current?.value ?? '';
     if (isEdit) {
-      if (comment !== message.myFeedback.comment) {
+      if (comment !== message.myFeedback?.comment) {
         onUpdate?.(selectedFeedback, comment);
       } else {
         onClose?.();
@@ -50,7 +50,7 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
   };
 
   const modalRef = useRef(null);
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const onKeyDown = useKeyDown(modalRef, {
     Enter: () => onSubmitWrapper(),

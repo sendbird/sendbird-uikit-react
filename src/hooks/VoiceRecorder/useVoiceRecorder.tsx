@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { VoiceRecorderEventHandler, useVoiceRecorderContext } from '.';
 import useSendbirdStateContext from '../useSendbirdStateContext';
+import { VOICE_RECORDER_DEFAULT_MAX } from '../../utils/consts';
 
 // export interface UseVoiceRecorderProps extends VoiceRecorderEventHandler {
 //   /**
@@ -34,11 +35,11 @@ export const useVoiceRecorder = ({
 }: VoiceRecorderEventHandler): UseVoiceRecorderContext => {
   const { config } = useSendbirdStateContext();
   const { voiceRecord } = config;
-  const { maxRecordingTime } = voiceRecord;
+  const maxRecordingTime = voiceRecord?.maxRecordingTime ?? VOICE_RECORDER_DEFAULT_MAX;
   const voiceRecorder = useVoiceRecorderContext();
   const { isRecordable } = voiceRecorder;
 
-  const [recordedFile, setRecordedFile] = useState<File>(null);
+  const [recordedFile, setRecordedFile] = useState<File | null>(null);
   const [recordingStatus, setRecordingStatus] = useState<VoiceRecorderStatus>(VoiceRecorderStatus.PREPARING);
   useEffect(() => {
     if (isRecordable && recordingStatus === VoiceRecorderStatus.PREPARING) {

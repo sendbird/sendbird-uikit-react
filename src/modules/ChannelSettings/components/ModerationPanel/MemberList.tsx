@@ -30,7 +30,7 @@ export const MemberList = (): ReactElement => {
   const {
     channel,
     setChannelUpdateId,
-  } = useChannelSettingsContext();
+  } = useChannelSettingsContext() || {};
   const { stringSet } = useContext(LocalizationContext);
 
   const sdk = state?.stores?.sdkStore?.sdk;
@@ -58,7 +58,7 @@ export const MemberList = (): ReactElement => {
     memberUserListQuery.next().then((members) => {
       setMembers(members);
       setHasNext(memberUserListQuery.hasNext);
-      setChannelUpdateId(uuidv4());
+      setChannelUpdateId?.(uuidv4());
     });
   }, [channel]);
 
@@ -69,7 +69,7 @@ export const MemberList = (): ReactElement => {
           <UserListItem
             key={member.userId}
             user={member}
-            currentUser={sdk.currentUser.userId}
+            currentUser={sdk?.currentUser?.userId}
             action={
               (channel?.myRole === 'operator' && userId !== member.userId)
                 ? ({ actionRef, parentRef }) => (

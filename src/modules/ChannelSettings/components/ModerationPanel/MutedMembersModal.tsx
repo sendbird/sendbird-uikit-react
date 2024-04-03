@@ -13,6 +13,7 @@ import { noop } from '../../../../utils/utils';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
+import { Member, MemberListQuery } from '@sendbird/chat/groupChannel';
 
 interface Props {
   onCancel(): void;
@@ -21,8 +22,8 @@ interface Props {
 export default function MutedMembersModal({
   onCancel,
 }: Props): ReactElement {
-  const [members, setMembers] = useState([]);
-  const [memberQuery, setMemberQuery] = useState(null);
+  const [members, setMembers] = useState<Member[]>([]);
+  const [memberQuery, setMemberQuery] = useState<MemberListQuery | null>(null);
   
   const channel = useChannelSettingsContext()?.channel;
   const state = useSendbirdStateContext();
@@ -35,10 +36,10 @@ export default function MutedMembersModal({
       // @ts-ignore
       mutedMemberFilter: 'muted',
     });
-    memberUserListQuery.next().then((members) => {
+    memberUserListQuery?.next().then((members) => {
       setMembers(members);
     });
-    setMemberQuery(memberUserListQuery);
+    setMemberQuery(memberUserListQuery ?? null);
   }, []);
   return (
     <div>
@@ -52,7 +53,7 @@ export default function MutedMembersModal({
         <div
           className="sendbird-more-members__popup-scroll"
           onScroll={(e) => {
-            const { hasNext } = memberQuery;
+            const hasNext = memberQuery?.hasNext;
             const target = e.target as HTMLTextAreaElement;
             const fetchMore = (
               target.clientHeight + target.scrollTop === target.scrollHeight

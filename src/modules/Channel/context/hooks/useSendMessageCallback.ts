@@ -49,12 +49,12 @@ export default function useSendMessageCallback(
           message,
         };
         // if (isMentionEnabled && mentionedUserIds?.length > 0) {
-        if (isMentionEnabled && mentionedUsers?.length > 0) {
+        if (isMentionEnabled && mentionedUsers && mentionedUsers.length > 0) {
           // params.mentionedUserIds = mentionedUserIds;
           params.mentionedUsers = mentionedUsers;
         }
         // if (isMentionEnabled && mentionTemplate && mentionedUserIds?.length > 0) {
-        if (isMentionEnabled && mentionTemplate && mentionedUsers?.length > 0) {
+        if (isMentionEnabled && mentionTemplate && mentionedUsers && mentionedUsers.length > 0) {
           params.mentionedMessageTemplate = mentionTemplate;
         }
         if (quoteMessage) {
@@ -74,7 +74,7 @@ export default function useSendMessageCallback(
 
       logger.info('Channel: Sending message has started', params);
       currentGroupChannel
-        .sendUserMessage(params)
+        ?.sendUserMessage(params)
         .onPending((pendingMsg) => {
           pubSub.publish(topics.SEND_MESSAGE_START, {
             /* pubSub is used instead of messagesDispatcher

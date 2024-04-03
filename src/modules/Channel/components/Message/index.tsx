@@ -75,7 +75,7 @@ const Message = (props: MessageProps): React.ReactElement => {
       updateUserMessage={(messageId, params) => {
         updateMessage({
           messageId,
-          message: params.message,
+          message: params.message ?? '',
           mentionedUsers: params.mentionedUsers,
           mentionTemplate: params.mentionedMessageTemplate,
         });

@@ -40,7 +40,7 @@ export default function AdminPannel(): ReactElement {
   // https://sendbird.slack.com/archives/G01290GCDCN/p1595922832000900
   // SDK bug - after frozen/unfrozen myRole becomes "none"
   useEffect(() => {
-    setFrozen(channel?.isFrozen);
+    setFrozen(channel?.isFrozen ?? false);
   }, [channel]);
 
   return (
@@ -89,7 +89,7 @@ export default function AdminPannel(): ReactElement {
             >
               {stringSet.CHANNEL_SETTING__MEMBERS__TITLE}
             </Label>
-            <Badge count={kFormatter(channel?.memberCount)} />
+            <Badge count={channel?.memberCount ? kFormatter(channel.memberCount) : ''}/>
           </>
         )}
         renderContent={() => (

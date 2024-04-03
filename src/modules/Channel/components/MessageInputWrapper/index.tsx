@@ -30,10 +30,10 @@ export const MessageInputWrapper = (props: MessageInputWrapperProps) => {
 
   const lastMessage = currentGroupChannel?.lastMessage;
   const isLastMessageSuggestedRepliesEnabled = config?.groupChannel?.enableSuggestedReplies
-    && getSuggestedReplies(lastMessage).length > 0
+    && getSuggestedReplies(lastMessage ?? undefined).length > 0
     && localMessages?.length === 0;
   const disableMessageInput = props.disabled
-    || isLastMessageSuggestedRepliesEnabled && !!lastMessage.extendedMessagePayload?.['disable_chat_input'];
+    || isLastMessageSuggestedRepliesEnabled && !!lastMessage?.extendedMessagePayload?.['disable_chat_input'];
 
   return (
     <MessageInputWrapperView
@@ -46,17 +46,17 @@ export const MessageInputWrapper = (props: MessageInputWrapperProps) => {
           message: params.message,
           mentionTemplate: params.mentionedMessageTemplate,
           mentionedUsers: params.mentionedUsers,
-          quoteMessage,
+          quoteMessage: quoteMessage ?? undefined,
         });
       }}
       sendFileMessage={(params) => {
-        return sendFileMessage(params.file as File, quoteMessage);
+        return sendFileMessage(params.file as File, quoteMessage ?? undefined);
       }}
       sendVoiceMessage={({ file }, duration) => {
-        return sendVoiceMessage(file as File, duration, quoteMessage);
+        return sendVoiceMessage(file as File, duration, quoteMessage ?? undefined);
       }}
       sendMultipleFilesMessage={({ fileInfoList }) => {
-        return sendMultipleFilesMessage(fileInfoList.map((fileInfo) => fileInfo.file) as File[], quoteMessage);
+        return sendMultipleFilesMessage(fileInfoList.map((fileInfo) => fileInfo.file) as File[], quoteMessage ?? undefined);
       }}
     />
   );
