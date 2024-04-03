@@ -25,7 +25,7 @@ export interface UseVoicePlayerContext {
 export const useVoicePlayer = ({
   key = '',
   channelUrl = '',
-  audioFile = null,
+  audioFile,
   audioFileUrl = '',
 }: UseVoicePlayerProps): UseVoicePlayerContext => {
   const [groupKey] = useState<string>(generateGroupKey(channelUrl, key));

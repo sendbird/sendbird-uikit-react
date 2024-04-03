@@ -14,11 +14,11 @@ function encodeMp3(arrayBuffer: ArrayBuffer): WavHeader {
   if (wav.channels > 1) {
     for (let j = 0; j < samplesLeft.length; j++) {
       samplesLeft[j] = dataView[j * 2];
-      samplesRight[j] = dataView[j * 2 + 1];
+      if (samplesRight) {samplesRight[j] = dataView[j * 2 + 1];}
     }
   }
 
-  const dataBuffer = [];
+  const dataBuffer: Int8Array[] = [];
   let remaining = samplesLeft.length;
   for (let i = 0; remaining >= maxSamples; i += maxSamples) {
     const left = samplesLeft.subarray(i, i + maxSamples);
@@ -44,7 +44,7 @@ function downsampleToWav(file: File, callback: (buffer: ArrayBuffer) => void): v
   const fileReader = new FileReader();
   fileReader.onload = function (ev) {
     // Decode audio
-    audioCtx.decodeAudioData(ev.target.result as ArrayBuffer, (buffer) => {
+    audioCtx.decodeAudioData(ev.target?.result as ArrayBuffer, (buffer) => {
       // this is where you down sample the audio, usually is 44100 samples per second
       const usingWebkit = !window.OfflineAudioContext;
       const offlineAudioCtx = new OfflineAudioContext(1, 16000 * buffer.duration, 16000);

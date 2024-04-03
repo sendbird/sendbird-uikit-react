@@ -30,7 +30,7 @@ export const LeaveGroupChannel = ({
               'LeaveGroupChannel: Leaving channel successful!',
               channel,
             );
-            onSubmit();
+            onSubmit?.();
           });
         }}
         submitText={stringSet.MODAL__LEAVE_CHANNEL__FOOTER}

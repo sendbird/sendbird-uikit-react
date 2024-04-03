@@ -116,7 +116,7 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
         if (messages) {
           try {
             element.scrollTop = scrollTop_;
-            scrollRef.current.scrollTop = scrollTop_;
+            if (scrollRef.current) { scrollRef.current.scrollTop = scrollTop_;}
           } catch (error) {
             //
           }
@@ -137,7 +137,7 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
         MemorizedHeader || (
           <ThreadHeader
             className="sendbird-thread-ui__header"
-            channelName={getChannelTitle(currentChannel, currentUserId, stringSet)}
+            channelName={getChannelTitle(currentChannel, currentUserId ?? '', stringSet)}
             onActionIconClick={onHeaderActionClick}
             onChannelNameClick={() => {
               onMoveToParentMessage?.({ message: parentMessage, channel: currentChannel });

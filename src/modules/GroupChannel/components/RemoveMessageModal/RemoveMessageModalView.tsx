@@ -30,7 +30,7 @@ export const RemoveMessageModalView = (props: RemoveMessageModalViewProps) => {
   return (
     <Modal
       type={ButtonTypes.DANGER}
-      disabled={message?.threadInfo?.replyCount > 0}
+      disabled={message?.threadInfo?.replyCount ? message.threadInfo.replyCount > 0 : undefined}
       onCancel={onCancel}
       onSubmit={() => {
         if (message.isUserMessage() || message.isFileMessage() || message.isMultipleFilesMessage()) {

@@ -472,7 +472,7 @@ export const getSendUserMessage = (state: SendBirdState, publishingModules: Publ
           topics.SEND_MESSAGE_FAILED,
           { error, message: message as UserMessage, channel, publishingModules },
         );
-        handler.triggerFailed(error, message);
+        handler.triggerFailed(error, message as SendableMessage);
       })
       .onPending((message) => {
         pubSub.publish(

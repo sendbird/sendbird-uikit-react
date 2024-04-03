@@ -79,7 +79,7 @@ export default function ThreadList({
 
         const handleScroll = () => {
           const current = scrollRef?.current;
-          if (current) {
+          if (current && scrollBottom) {
             const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
             if (scrollBottom < bottom) {
               current.scrollTop += bottom - scrollBottom;

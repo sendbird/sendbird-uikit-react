@@ -70,12 +70,12 @@ const EditDetails = (props: Props): ReactElement => {
           .then((updatedChannel) => {
             logger.info('ChannelSettings: Channel information update succeeded', updatedChannel);
             onChannelModified?.(updatedChannel);
-            setChannel(updatedChannel);
+            setChannel?.(updatedChannel);
             pubSub?.publish(pubSubTopics.UPDATE_OPEN_CHANNEL, updatedChannel);
           })
           .catch((error) => {
             logger.error('ChannelSettings: Channel infomation update failed', error);
-            setChannel(null);
+            setChannel?.(null);
           });
         onCancel();
       }}

@@ -37,7 +37,7 @@ export default function useHandleThreadPubsubEvents({
           // TODO: const clonedMessage = cloneMessage(message);
           const pendingMessage: Record<string, any> = { ...message };
           if (message.isMultipleFilesMessage()) {
-            pendingMessage.fileInfoList = message.messageParams.fileInfoList.map((fileInfo) => ({
+            pendingMessage.fileInfoList = message?.messageParams?.fileInfoList.map((fileInfo) => ({
               ...fileInfo,
               url: URL.createObjectURL(fileInfo.file as File),
             }));

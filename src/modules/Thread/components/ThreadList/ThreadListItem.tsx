@@ -18,6 +18,7 @@ import { Role } from '../../../../lib/types';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import { getIsReactionEnabled } from '../../../../utils/getIsReactionEnabled';
 import { SendableMessageType } from '../../../../utils';
+import { User } from '@sendbird/chat';
 
 export interface ThreadListItemProps {
   className?: string;
@@ -74,7 +75,7 @@ export default function ThreadListItem({
   });
 
   // Move to message
-  const messageScrollRef = useRef(null);
+  const messageScrollRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     if (openingMessage?.messageId === message?.messageId && messageScrollRef?.current) {
       messageScrollRef.current?.scrollIntoView({ block: 'center', inline: 'center' });
@@ -89,11 +90,11 @@ export default function ThreadListItem({
   // mention
   const editMessageInputRef = useRef(null);
   const [mentionNickname, setMentionNickname] = useState('');
-  const [mentionedUsers, setMentionedUsers] = useState([]);
-  const [mentionedUserIds, setMentionedUserIds] = useState([]);
-  const [messageInputEvent, setMessageInputEvent] = useState(null);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState([]);
+  const [mentionedUsers, setMentionedUsers] = useState<User[]>([]);
+  const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
+  const [messageInputEvent, setMessageInputEvent] = useState<React.KeyboardEvent<HTMLDivElement> | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState<User[]>([]);
   const displaySuggestedMentionList = isOnline
     && isMentionEnabled
     && mentionNickname.length > 0
@@ -136,7 +137,7 @@ export default function ThreadListItem({
           displaySuggestedMentionList && (
             <SuggestedMentionList
               targetNickname={mentionNickname}
-              inputEvent={messageInputEvent}
+              inputEvent={messageInputEvent ?? undefined}
               // renderUserMentionItem={renderUserMentionItem}
               onUserItemClick={(user) => {
                 if (user) {
