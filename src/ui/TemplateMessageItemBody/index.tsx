@@ -158,7 +158,10 @@ export function TemplateMessageItemBody({
     const filledTemplates: MessageTemplateItem[][] = [];
     uiTemplates.forEach((uiTemplate: SendbirdUiTemplate) => {
       maxVersion = Math.max(maxVersion, uiTemplate.version);
-      filledTemplates.push(uiTemplate.body.items);
+      const filledMessageTemplateItems: MessageTemplateItem[] = getFilledMessageTemplateWithData({
+        template: uiTemplate.body.items,
+      });
+      filledTemplates.push(filledMessageTemplateItems);
     });
     return {
       maxVersion,
