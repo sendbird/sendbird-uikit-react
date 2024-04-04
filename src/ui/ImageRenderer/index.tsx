@@ -135,7 +135,7 @@ const ImageRenderer = ({
         }}
       >
         {placeholderVisible && renderPlaceholder()}
-        {defaultComponentVisible ? renderDefault() : renderImage()}
+        {(!internalUrl || defaultComponentVisible) ? renderDefault() : renderImage()}
         {shadeOnHover && (
           <div
             className="sendbird-multiple-files-image-renderer__image-cover"

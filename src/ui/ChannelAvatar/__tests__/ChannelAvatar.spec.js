@@ -8,7 +8,7 @@ describe('ui/ChannelAvatar', () => {
   it('should render a normal default channel avatar', function() {
     const targetClassName = "sendbird-chat-header--avatar--group-channel";
     render(<ChannelAvatar channel={{}} />);
-    expect(screen.getByRole('button').className).toContain(targetClassName);
+    expect(screen.getAllByRole('button')[0].className).toContain(targetClassName);
   });
 
   it('should render a default avatar of broadcastChannel', function() {

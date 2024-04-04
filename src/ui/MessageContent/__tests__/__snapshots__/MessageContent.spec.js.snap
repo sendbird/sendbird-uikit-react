@@ -23,9 +23,18 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
             style="width: 100%; min-width: min(400px, 28px); max-width: 400px;"
           >
             <div
-              class="sendbird-image-renderer__image"
-              style="width: 100%; min-width: min(400px, 28px); max-width: 400px; position: absolute;"
-            />
+              class="sendbird-avatar-img--default "
+              style="width: 28px; height: 28px;"
+            >
+              <div
+                class=" sendbird-icon sendbird-icon-user sendbird-icon-color--content"
+                role="button"
+                style="width: 16.099999999999998px; min-width: 16.099999999999998px; height: 16.099999999999998px; min-height: 16.099999999999998px;"
+                tabindex="0"
+              >
+                <test-file-stub />
+              </div>
+            </div>
           </div>
         </div>
       </div>
