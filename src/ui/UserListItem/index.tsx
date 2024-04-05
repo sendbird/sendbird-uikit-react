@@ -72,7 +72,7 @@ export default function UserListItem({
           <Avatar
             className="sendbird-user-list-item__avatar"
             ref={avatarRef}
-            src={user.profileUrl}
+            src={user?.profileUrl || user?.plainProfileUrl || ''}
             width={avatarSize}
             height={avatarSize}
             onClick={() => {
