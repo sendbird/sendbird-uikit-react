@@ -159,7 +159,7 @@ export const MessageList = ({
             {messages.map((message, idx) => {
               const { chainTop, chainBottom, hasSeparator } = getMessagePartsInfo({
                 allMessages: messages as CoreMessageType[],
-                replyType: replyType ?? '',
+                replyType: replyType ?? 'NONE',
                 isMessageGroupingEnabled: isMessageGroupingEnabled ?? false,
                 currentIndex: idx,
                 currentMessage: message as CoreMessageType,

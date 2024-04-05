@@ -96,8 +96,9 @@ function CreateOpenChannelUI({
                       setNewFile(e.target.files[0]);
                     }
                     
-                    if(inputFileRef.current)
+                    if (inputFileRef.current) {
                       inputFileRef.current.value = '';
+                    }
                   }}
                 />
                 <TextButton

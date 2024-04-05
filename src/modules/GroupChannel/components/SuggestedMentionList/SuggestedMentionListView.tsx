@@ -50,7 +50,7 @@ export const SuggestedMentionListView = (props: SuggestedMentionListViewProps) =
   const currentUserId = stores?.sdkStore?.sdk?.currentUser?.userId || '';
   const scrollRef = useRef(null);
   const { stringSet } = useLocalization();
-  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+  const [timer, setTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
   const [searchString, setSearchString] = useState<string>('');
   const [lastSearchString, setLastSearchString] = useState('');
   const [currentFocusedMember, setCurrentFocusedMember] = useState<User | null>(null);

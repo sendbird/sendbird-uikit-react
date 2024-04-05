@@ -31,7 +31,9 @@ export const scrollIntoLast = (initialTry = 0, scrollRef: React.RefObject<HTMLEl
   try {
     const scrollDOM = scrollRef?.current || document.querySelector('.sendbird-openchannel-conversation-scroll__container__item-container');
     // eslint-disable-next-line no-multi-assign
-    if (scrollDOM) {scrollDOM.scrollTop = scrollDOM.scrollHeight;}
+    if (scrollDOM) {
+      scrollDOM.scrollTop = scrollDOM.scrollHeight;
+    }
   } catch (error) {
     setTimeout(() => {
       scrollIntoLast(currentTry + 1, scrollRef);
