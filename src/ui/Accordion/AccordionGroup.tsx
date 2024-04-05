@@ -61,7 +61,7 @@ export const AccordionGroupProvider = ({
         {children}
       </AccordionGroupContext.Provider>
     </div>
-  )
+  );
 };
 export const useAccordionGroupContext = () => {
   const context = useContext(AccordionGroupContext);

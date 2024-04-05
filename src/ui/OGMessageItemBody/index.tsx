@@ -100,7 +100,7 @@ export default function OGMessageItemBody({
           url={message?.ogMetaData?.defaultImage?.url || ''}
           alt={message?.ogMetaData?.defaultImage?.alt}
           width="100%"
-          height={isMobile ? "136px" : "240px"}
+          height={isMobile ? '136px' : '240px'}
           onLoad={onMessageHeightChange}
           onError={() => {
             try {
