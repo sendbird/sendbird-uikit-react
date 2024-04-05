@@ -14,7 +14,9 @@ function encodeMp3(arrayBuffer: ArrayBuffer): WavHeader {
   if (wav.channels > 1) {
     for (let j = 0; j < samplesLeft.length; j++) {
       samplesLeft[j] = dataView[j * 2];
-      if (samplesRight) {samplesRight[j] = dataView[j * 2 + 1];}
+      if (samplesRight) {
+        samplesRight[j] = dataView[j * 2 + 1];
+      }
     }
   }
 
