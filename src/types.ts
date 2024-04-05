@@ -90,5 +90,4 @@ export type SendbirdTheme = 'light' | 'dark';
 export enum MessageContentMiddleContainerType {
   DEFAULT = 'default',
   WIDE = 'wide',
-  FULL = 'full',
 }
