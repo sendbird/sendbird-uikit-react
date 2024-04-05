@@ -5,11 +5,11 @@
 - `TemplateMessageItemBody` now supports `CarouselView` type template
 - Added 'wide' width support for `MessageContent` when value exists in `message.extendedMessagePayload['ui']['container_type']`
 - Added template version validation for `TemplateMessageItemBody`
-- Removed default values of `borderRadius`, `backgroundColor`, and `color` for message template items
 
-### Message template fixes
+### Message template fixes/updates
 - Fixed a bug where argb color values are not converted to rgba
 - Fixed a bug where style properties expecting numeric values are set with string values
+- Removed default values of `borderRadius`, `backgroundColor`, and `color` for message template items
 
 ### Other fixes
 - Fixed a bug where scroll bar is displayed in message sender name container
