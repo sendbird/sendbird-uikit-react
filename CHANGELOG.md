@@ -1,6 +1,15 @@
 # Changelog - v3
 
-## [v3.13.4] (Mark 27, 2024)
+## [v3.13.5] (Apr 5, 2024)
+
+### Fixes
+* Add a logger to the GroupChannelProvider for failing get channel
+* Reduce the OGTag height in the mobile layout
+* Prevent force refreshing of the ChannelSettings
+* Keep context menu when failing the member operations (register/unregister operator, mute/unmute)
+* Keep profile image during member operations on the MembersModal
+
+## [v3.13.4] (Mar 27, 2024)
 
 ### Feature
 * Support the `Emoji Reactions` feature in the super group channel
