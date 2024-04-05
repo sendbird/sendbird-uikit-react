@@ -58,7 +58,6 @@ export const MemberList = (): ReactElement => {
     memberUserListQuery.next().then((members) => {
       setMembers(members);
       setHasNext(memberUserListQuery.hasNext);
-      setChannelUpdateId(uuidv4());
     });
   }, [channel]);
 
