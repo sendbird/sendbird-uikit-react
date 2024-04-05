@@ -13,7 +13,7 @@ import {
 import { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
 import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOutgoingMessageState';
-import { Nullable } from '../types';
+import { MessageContentMiddleContainerType, Nullable } from '../types';
 import { match } from 'ts-pattern';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
@@ -276,6 +276,30 @@ export const isThreadMessage = (message: CoreMessageType): boolean => (
 export const isTemplateMessage = (message: CoreMessageType): boolean => !!(
   message && message.extendedMessagePayload?.['template']
 );
+export enum UI_CONTAINER_TYPES {
+  DEFAULT = '',
+  WIDE = 'ui_container_type__wide',
+  DEFAULT_CAROUSEL = 'ui_container_type__default-carousel',
+}
+
+export const getMessageContentMiddleClassNameByContainerType = ({
+  message,
+  isMobile,
+}: {
+  message: CoreMessageType,
+  isMobile: boolean,
+}): UI_CONTAINER_TYPES => {
+  /**
+   * FULL: template message only.
+   * WIDE: all message types.
+   */
+  const containerType: string | undefined = message.extendedMessagePayload?.['ui']?.['container_type'];
+  if (!isMobile) return UI_CONTAINER_TYPES.DEFAULT;
+  if (containerType === MessageContentMiddleContainerType.WIDE) {
+    return UI_CONTAINER_TYPES.WIDE;
+  }
+  return UI_CONTAINER_TYPES.DEFAULT;
+};
 
 export const isOGMessage = (message: SendableMessageType): boolean => !!(
   message && isUserMessage(message) && message?.ogMetaData && (
@@ -374,6 +398,16 @@ export const getClassName = (classNames: string | Array<string | Array<string>>)
     ? classNames.reduce(reducer, []).join(' ')
     : classNames
 );
+
+export const startsWithAtAndEndsWithBraces = (str: string) => {
+  const regex = /^\{@.*\}$/;
+  return regex.test(str);
+};
+
+export const removeAtAndBraces = (str: string) => {
+  return str.replace(/^\{@|}$/g, '');
+};
+
 export const isReactedBy = (userId: string, reaction: Reaction): boolean => (
   reaction.userIds.some((reactorUserId: string): boolean => reactorUserId === userId)
 );

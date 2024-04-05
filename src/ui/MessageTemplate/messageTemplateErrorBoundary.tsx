@@ -1,9 +1,12 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
 import { LoggerInterface } from '../../lib/Logger';
+import { RenderedTemplateBodyType } from '../MessageContent/MessageBody';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
   fallbackMessage: ReactNode;
+  onTemplateMessageRenderedCallback: (renderedTemplateBodyType: RenderedTemplateBodyType) => void;
+  isComposite?: boolean;
   logger?: LoggerInterface;
 }
 
@@ -27,8 +30,10 @@ export class MessageTemplateErrorBoundary extends Component<ErrorBoundaryProps, 
 
   render() {
     if (this.state.hasError) {
+      this.props.onTemplateMessageRenderedCallback('failed');
       return this.props.fallbackMessage;
     }
+    this.props.onTemplateMessageRenderedCallback(this.props.isComposite ? 'composite' : 'simple');
     return this.props.children;
   }
 }

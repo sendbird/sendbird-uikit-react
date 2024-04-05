@@ -1,21 +1,21 @@
 import React from 'react';
 import { parser, renderer } from '@sendbird/react-uikit-message-template-view';
-import { createMessageTemplate } from '@sendbird/uikit-message-template';
-import { MessageTemplateItem } from '../TemplateMessageItemBody/types';
+import { type ComponentsUnion, createMessageTemplate } from '@sendbird/uikit-message-template';
 import './index.scss';
 
 export interface MessageTemplateProps {
-  templateItems: MessageTemplateItem[];
+  templateVersion: number;
+  templateItems: ComponentsUnion['properties'][];
 }
 
 const { MessageTemplate: CustomTemplate } = createMessageTemplate({
   parser,
   renderer,
-  Container: ({ children }) => {
+  Container: ({ children, className }) => {
     return (
       <div
         className={[
-          'sb-message-template__parent',
+          `sb-message-template__parent ${className}`,
           'sendbird-message-template__root',
         ].join(' ')}
       >
@@ -25,8 +25,8 @@ const { MessageTemplate: CustomTemplate } = createMessageTemplate({
   },
 });
 
-export function MessageTemplate({ templateItems }: MessageTemplateProps) {
-  return <CustomTemplate templateItems={templateItems} />;
+export function MessageTemplate({ templateItems, templateVersion }: MessageTemplateProps) {
+  return <CustomTemplate templateItems={templateItems} templateVersion={templateVersion} />;
 }
 
 export default MessageTemplate;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { RefObject } from 'react';
 import { ThreadInfo } from '@sendbird/chat/message';
 
 import './index.scss';
@@ -13,11 +13,14 @@ export interface ThreadRepliesProps {
   onClick?: (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => void;
 }
 
-export default function ThreadReplies({
-  className,
-  threadInfo,
-  onClick,
-}: ThreadRepliesProps): React.ReactElement {
+export function ThreadReplies(
+  {
+    className,
+    threadInfo,
+    onClick,
+  }: ThreadRepliesProps,
+  ref?: RefObject<HTMLDivElement>,
+): React.ReactElement {
   const {
     mostRepliedUsers = [],
     replyCount,
@@ -35,6 +38,7 @@ export default function ThreadReplies({
         onClick(e);
         e?.stopPropagation();
       }}
+      ref={ref}
     >
       <div className="sendbird-ui-thread-replies__user-profiles">
         {mostRepliedUsers.slice(0, 4).map((user) => {
@@ -91,3 +95,5 @@ export default function ThreadReplies({
     </div>
   );
 }
+
+export default React.forwardRef(ThreadReplies);
