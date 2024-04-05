@@ -63,7 +63,7 @@ export const MemberList = (): ReactElement => {
   }, [channel]);
 
   return (
-    <div className="sendbird-channel-settings-member-list sendbird-accordion">
+    <div className="sendbird-channel-settings-member-list">
       {
         members.map((member) => (
           <UserListItem

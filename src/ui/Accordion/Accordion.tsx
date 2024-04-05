@@ -2,7 +2,7 @@ import React, { type ReactElement, useMemo } from 'react';
 import './index.scss';
 
 import Icon, { IconTypes } from '../Icon';
-import { useAccordionGroupContext } from './_AccordionGroupContext';
+import { useAccordionGroupContext } from './AccordionGroup';
 
 export interface AccordionProps {
   className?: string;
@@ -34,7 +34,7 @@ export const Accordion = ({
   };
 
   return (
-    <div className={`sendbird-accordion ${className}`}>
+    <div className={`sendbird-accordion ${className} ${isOpened ? 'sendbird-accordion--opened' : 'sendbird-accordion--closed'}`}>
       <div
         className="sendbird-accordion__panel-header"
         id={id}
@@ -58,7 +58,7 @@ export const Accordion = ({
       </div>
       {
         isOpened && (
-          <div className="sendbird-accordion">
+          <div className="sendbird-accordion-opened-list">
             <div className="sendbird-accordion__list">
               {renderContent()}
             </div>
