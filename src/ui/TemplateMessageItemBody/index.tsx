@@ -248,7 +248,7 @@ export function TemplateMessageItemBody({
               throw new Error('TemplateMessageItemBody | no reservation key found in view_variables. See error log in console for details');
             }
             if (simpleTemplateDataList.length > 10) {
-              logger.warning('TemplateMessageItemBody | composite template with more than ten simple templates will only render the first ten items: ', reservationKey, templateData.view_variables);
+              logger.warning('TemplateMessageItemBody | composite template with more than 10 simple templates will only render the first 10 items: ', reservationKey, templateData.view_variables);
               simpleTemplateDataList = simpleTemplateDataList.slice(0, 10);
             }
             const { maxVersion, filledTemplates } = getFilledMessageTemplateItemsForCarouselTemplateByMessagePayload(
