@@ -11,11 +11,11 @@ export interface MessageTemplateProps {
 const { MessageTemplate: CustomTemplate } = createMessageTemplate({
   parser,
   renderer,
-  Container: ({ children }) => {
+  Container: ({ children, className }) => {
     return (
       <div
         className={[
-          'sb-message-template__parent',
+          `sb-message-template__parent ${className}`,
           'sendbird-message-template__root',
         ].join(' ')}
       >
