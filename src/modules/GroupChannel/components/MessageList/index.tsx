@@ -151,56 +151,58 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       );
     },
   };
+  const isMessageListEmpty = messages.length === 0;
+  const isMessageListRendered = !loading && !isMessageListEmpty;
 
-  if (loading) {
-    return renderPlaceholderLoader();
+  const renderMessageBody = () => {
+    if (loading) {
+      return renderPlaceholderLoader();
+    } else if (isMessageListEmpty) {
+      return renderPlaceholderEmpty();
+    }
+    return (
+      <>
+        {messages.map((message, idx) => {
+          const { chainTop, chainBottom, hasSeparator } = getMessagePartsInfo({
+            allMessages: messages as CoreMessageType[],
+            replyType,
+            isMessageGroupingEnabled,
+            currentIndex: idx,
+            currentMessage: message as CoreMessageType,
+            currentChannel,
+          });
+          const isOutgoingMessage = isSendableMessage(message) && message.sender.userId === store.config.userId;
+          return (
+            <MessageProvider message={message} key={getComponentKeyFromMessage(message)} isByMe={isOutgoingMessage}>
+              {renderMessage({
+                handleScroll: onMessageContentSizeChanged,
+                message: message as EveryMessage,
+                hasSeparator,
+                chainTop,
+                chainBottom,
+                renderMessageContent,
+                renderSuggestedReplies,
+                renderCustomSeparator,
+                renderRemoveMessageModal,
+                renderEditInput
+              })}
+            </MessageProvider>
+          );
+        })}
+        {!hasNext() &&
+          store?.config?.groupChannel?.enableTypingIndicator &&
+          store?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Bubble) && (
+          <TypingIndicatorBubbleWrapper channelUrl={channelUrl} handleScroll={onMessageContentSizeChanged} />
+        )} 
+      </> 
+    )
   }
 
-  if (messages.length === 0) {
-    return renderPlaceholderEmpty();
-  }
-
-  return (
-    <>
-      <div className={`sendbird-conversation__messages ${className}`}>
-        <div className="sendbird-conversation__scroll-container">
-          <div className="sendbird-conversation__padding" />
-          <div ref={scrollRef} className="sendbird-conversation__messages-padding">
-            {messages.map((message, idx) => {
-              const { chainTop, chainBottom, hasSeparator } = getMessagePartsInfo({
-                allMessages: messages as CoreMessageType[],
-                replyType,
-                isMessageGroupingEnabled,
-                currentIndex: idx,
-                currentMessage: message as CoreMessageType,
-                currentChannel,
-              });
-              const isOutgoingMessage = isSendableMessage(message) && message.sender.userId === store.config.userId;
-              return (
-                <MessageProvider message={message} key={getComponentKeyFromMessage(message)} isByMe={isOutgoingMessage}>
-                  {renderMessage({
-                    handleScroll: onMessageContentSizeChanged,
-                    message: message as EveryMessage,
-                    hasSeparator,
-                    chainTop,
-                    chainBottom,
-                    renderMessageContent,
-                    renderSuggestedReplies,
-                    renderCustomSeparator,
-                    renderRemoveMessageModal,
-                    renderEditInput
-                  })}
-                </MessageProvider>
-              );
-            })}
-            {!hasNext() &&
-              store?.config?.groupChannel?.enableTypingIndicator &&
-              store?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Bubble) && (
-                <TypingIndicatorBubbleWrapper channelUrl={channelUrl} handleScroll={onMessageContentSizeChanged} />
-              )}
-          </div>
-        </div>
-
+  const renderMessageListAuxillaryComponents = () => {
+    const shouldDisplayScrollToBottom = hasNext() || !isScrollBottomReached;
+    const shouldDisplayUnreadNotifications = !!(!isScrollBottomReached && unreadSinceDate);
+    return (
+      <>
         <>{renderer.frozenNotification()}</>
         {
           renderScrollToBottomOrUnread ? renderScrollToBottomOrUnread({
@@ -208,8 +210,8 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
             onScrollToUnread: scrollToBottom,
             unreadCount: newMessages.length,
             lastReadAt: unreadSinceDate,
-            shouldDisplayScrollToBottom: hasNext() || !isScrollBottomReached,
-            shouldDisplayUnreadNotifications: !!(!isScrollBottomReached && unreadSinceDate),
+            shouldDisplayScrollToBottom,
+            shouldDisplayUnreadNotifications,
           }) : (
             <>
               <>{renderer.unreadMessagesNotification()}</>
@@ -217,6 +219,22 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
             </>
           )
         }
+      </>
+    )
+    
+  }
+
+  return (
+    <>
+      <div className={`sendbird-conversation__messages ${className}`}>
+        <div className="sendbird-conversation__scroll-container">
+          <div className="sendbird-conversation__padding" />
+          <div className="sendbird-conversation__messages-padding" ref={scrollRef}>
+            {renderMessageBody()}
+          </div>
+        </div>
+
+        {isMessageListRendered && renderMessageListAuxillaryComponents()}
       </div>
     </>
   );
