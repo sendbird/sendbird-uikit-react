@@ -1,6 +1,7 @@
 import React, { type ReactElement, createContext, useState, useContext } from 'react';
 import { noop } from '../../utils/utils';
 
+// # Context
 export interface AccordionGroupContextType {
   openedListKeys: Array<string>;
   addOpenedListKey: (key: string) => void;
@@ -17,6 +18,7 @@ export const AccordionGroupContext = createContext<AccordionGroupContextType>({
   allowMultipleOpen: false,
 });
 
+// # Provider Component
 export interface AccordionGroupProps {
   className?: string;
   children: ReactElement | Array<ReactElement>;
