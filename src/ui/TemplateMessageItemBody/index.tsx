@@ -262,13 +262,13 @@ export function TemplateMessageItemBody({
               items: filledTemplates,
             }];
           } else if (Array.isArray(carouselItem.items)) {
-            let simpleTemplateDataList: SendbirdUiTemplate[] = carouselItem.items;
+            let simpleTemplates: SendbirdUiTemplate[] = carouselItem.items;
             if (carouselItem.items.length > 10) {
               logger.warning('TemplateMessageItemBody | composite template with more than ten simple templates will only render the first ten items: ', carouselItem);
-              simpleTemplateDataList = carouselItem.items.slice(0, 10);
+              simpleTemplates = carouselItem.items.slice(0, 10);
             }
             const { maxVersion, filledTemplates } = getFilledMessageTemplateItemsForCarouselTemplate(
-              simpleTemplateDataList,
+              simpleTemplates,
             );
             result.isComposite = true;
             result.templateVersion = Math.max(cachedTemplate.version, maxVersion);
