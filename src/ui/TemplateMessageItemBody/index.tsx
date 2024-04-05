@@ -264,7 +264,7 @@ export function TemplateMessageItemBody({
           } else if (Array.isArray(carouselItem.items)) {
             let simpleTemplates: SendbirdUiTemplate[] = carouselItem.items;
             if (carouselItem.items.length > 10) {
-              logger.warning('TemplateMessageItemBody | composite template with more than ten simple templates will only render the first ten items: ', carouselItem);
+              logger.warning('TemplateMessageItemBody | composite template with more than 10 simple templates will only render the first 10 items: ', carouselItem);
               simpleTemplates = carouselItem.items.slice(0, 10);
             }
             const { maxVersion, filledTemplates } = getFilledMessageTemplateItemsForCarouselTemplate(
