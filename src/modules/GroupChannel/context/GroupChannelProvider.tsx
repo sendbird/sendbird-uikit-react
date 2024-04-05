@@ -141,7 +141,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   const { config, stores } = useSendbirdStateContext();
 
   const { sdkStore } = stores;
-  const { markAsReadScheduler } = config;
+  const { markAsReadScheduler, logger } = config;
 
   // State
   const [quoteMessage, setQuoteMessage] = useState<SendableMessageType>(null);
@@ -153,7 +153,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   const { scrollRef, scrollPubSub, scrollDistanceFromBottomRef, isScrollBottomReached, setIsScrollBottomReached } = useMessageListScroll(scrollBehavior);
   const messageInputRef = useRef(null);
 
-  const toggleReaction = useToggleReactionCallback(currentChannel, config.logger);
+  const toggleReaction = useToggleReactionCallback(currentChannel, logger);
   const replyType = getCaseResolvedReplyType(moduleReplyType ?? config.groupChannel.replyType).upperCase;
   const threadReplySelectType = getCaseResolvedThreadReplySelectType(
     moduleThreadReplySelectType ?? config.groupChannel.threadReplySelectType,
@@ -196,7 +196,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
       setFetchChannelError(null);
     },
     onChannelUpdated: (channel) => setCurrentChannel(channel),
-    logger: config.logger,
+    logger,
   });
 
   useOnScrollPositionChangeDetectorWithRef(scrollRef, {
@@ -261,6 +261,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
       } catch (error) {
         setCurrentChannel(null);
         setFetchChannelError(error);
+        logger?.error?.('GroupChannelProvider: error when fetching channel', error);
       } finally {
         // Reset states when channel changes
         setQuoteMessage(null);
