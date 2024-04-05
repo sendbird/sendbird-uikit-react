@@ -18,7 +18,7 @@ import InviteUsers from './InviteUsersModal';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import uuidv4 from '../../../../utils/uuid';
+import { noop } from '../../../../utils/utils';
 
 export const MemberList = (): ReactElement => {
   const [members, setMembers] = useState<Array<Member>>([]);
@@ -29,7 +29,6 @@ export const MemberList = (): ReactElement => {
   const state = useSendbirdStateContext();
   const {
     channel,
-    setChannelUpdateId,
   } = useChannelSettingsContext();
   const { stringSet } = useContext(LocalizationContext);
 
@@ -58,12 +57,11 @@ export const MemberList = (): ReactElement => {
     memberUserListQuery.next().then((members) => {
       setMembers(members);
       setHasNext(memberUserListQuery.hasNext);
-      setChannelUpdateId(uuidv4());
     });
   }, [channel]);
 
   return (
-    <div className="sendbird-channel-settings-member-list sendbird-accordion">
+    <div className="sendbird-channel-settings-member-list">
       {
         members.map((member) => (
           <UserListItem
@@ -103,10 +101,7 @@ export const MemberList = (): ReactElement => {
                             refreshList();
                             closeDropdown();
                           }}
-                          onError={() => {
-                            // FIXME: handle error later
-                            closeDropdown();
-                          }}
+                          onError={noop} // TODO: We will handle error
                           dataSbId={`channel_setting_member_context_menu_${(
                             member.role !== 'operator'
                           ) ? 'register_as_operator' : 'unregister_operator'}`}
@@ -127,10 +122,7 @@ export const MemberList = (): ReactElement => {
                                 refreshList();
                                 closeDropdown();
                               }}
-                              onError={() => {
-                                // FIXME: handle error later
-                                closeDropdown();
-                              }}
+                              onError={noop} // TODO: We will handle error
                               dataSbId={`channel_setting_member_context_menu_${member.isMuted ? 'unmute' : 'mute'}`}
                             >
                               {

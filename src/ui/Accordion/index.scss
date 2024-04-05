@@ -1,7 +1,11 @@
 @import '../../styles/variables';
 
+.sendbird-accordion.sendbird-accordion--closed {
+  @include themed() {
+    border-bottom: 0px;
+  }
+}
 .sendbird-accordion {
-  padding: 8px 0px 16px 0px;
   position: relative;
   box-sizing: border-box;
   @include themed() {
@@ -21,6 +25,11 @@
     justify-content: flex-start;
     margin-top: 8px;
   }
+}
+
+.sendbird-accordion__list {
+  padding-top: 8px;
+  padding-bottom: 16px;
 }
 
 .sendbird-accordion__panel-header {
