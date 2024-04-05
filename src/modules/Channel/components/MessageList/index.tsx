@@ -36,7 +36,7 @@ export interface MessageListProps extends GroupChannelMessageListProps {
 
   renderEditInput?: GroupChannelUIBasicProps['renderEditInput'];
 
-  renderScrollToBottom?: GroupChannelUIBasicProps['renderScrollToBottom'];
+  renderScrollToBottomOrUnread?: GroupChannelUIBasicProps['renderScrollToBottomOrUnread'];
 }
 export const MessageList = (props: MessageListProps) => {
   const { className = '' } = props;
@@ -46,7 +46,7 @@ export const MessageList = (props: MessageListProps) => {
     renderSuggestedReplies,
     renderCustomSeparator,
     renderRemoveMessageModal,
-    renderScrollToBottom,
+    renderScrollToBottomOrUnread,
     renderEditInput,
     renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
     renderPlaceholderEmpty = () => <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />,
@@ -280,7 +280,7 @@ export const MessageList = (props: MessageListProps) => {
           /**
            * Show unread count IFF scroll is not bottom or is bottom but hasNext is true.
            */
-          !renderScrollToBottom && (!isScrollBottom || hasMoreNext) && (unreadSince || unreadSinceDate) && (
+          !renderScrollToBottomOrUnread && (!isScrollBottom || hasMoreNext) && (unreadSince || unreadSinceDate) && (
             <UnreadCount
               className="sendbird-conversation__messages__notification"
               count={currentGroupChannel?.unreadMessageCount}
@@ -292,7 +292,7 @@ export const MessageList = (props: MessageListProps) => {
         }
         {
           // This flag is an unmatched variable
-          !renderScrollToBottom && isScrollToBottomButtonDisplayed && (
+          !renderScrollToBottomOrUnread && isScrollToBottomButtonDisplayed && (
             <div
               className="sendbird-conversation__scroll-bottom-button"
               onClick={onClickScrollBot}
@@ -304,7 +304,7 @@ export const MessageList = (props: MessageListProps) => {
             </div>
           )
         }
-        {renderScrollToBottom?.({
+        {renderScrollToBottomOrUnread?.({
           onScrollToBottom: onClickScrollBot,
           onScrollToUnread: handleUnreadCountClick,
           unreadCount: currentGroupChannel?.unreadMessageCount ?? 0,
