@@ -11,6 +11,7 @@ import EmojiReactions, { EmojiReactionsProps } from '../EmojiReactions';
 import ClientAdminMessage from '../AdminMessage';
 import QuoteMessage from '../QuoteMessage';
 
+import type { OnBeforeDownloadFileMessageType } from '../../modules/GroupChannel/context/GroupChannelProvider';
 import {
   CoreMessageType,
   getClassName,
@@ -40,9 +41,9 @@ import MessageHeader, { MessageHeaderProps } from './MessageHeader';
 import Icon, { IconTypes } from '../Icon';
 import FeedbackIconButton from '../FeedbackIconButton';
 import MobileFeedbackMenu from '../MobileFeedbackMenu';
-import MessageFeedbackModal from '../../modules/Channel/components/MessageFeedbackModal';
+import MessageFeedbackModal from '../MessageFeedbackModal';
 import { SbFeedbackStatus } from './types';
-import MessageFeedbackFailedModal from '../../modules/Channel/components/MessageFeedbackFailedModal';
+import MessageFeedbackFailedModal from '../MessageFeedbackFailedModal';
 import { MobileBottomSheetProps } from '../MobileMenu/types';
 
 export interface MessageContentProps {
@@ -71,7 +72,8 @@ export interface MessageContentProps {
   onReplyInThread?: (props: { message: SendableMessageType }) => void;
   // onClick listener for thread quote message view (for open thread module)
   onQuoteMessageClick?: (props: { message: SendableMessageType }) => void;
-  onMessageHeightChange?: (isBottomMessageAffected?: boolean) => void;
+  onMessageHeightChange?: () => void;
+  onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
 
   // For injecting customizable subcomponents
   renderSenderProfile?: (props: MessageProfileProps) => ReactNode;
@@ -110,6 +112,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     onReplyInThread,
     onQuoteMessageClick,
     onMessageHeightChange,
+    onBeforeDownloadFileMessage,
 
     // Public props for customization
     renderSenderProfile = (props: MessageProfileProps) => (
@@ -137,6 +140,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
 
   const { dateLocale } = useLocalization();
   const { config, eventHandlers } = useSendbirdStateContext?.() || {};
+  const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const contentRef = useRef(null);
   const timestampRef = useRef(null);
@@ -391,6 +395,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               isReactionEnabledInChannel,
               isByMe,
               onTemplateMessageRenderedCallback,
+              onBeforeDownloadFileMessage,
             })
           }
           {/* reactions */}
@@ -577,6 +582,20 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               onReplyInThread?.({ message });
             } else if (threadReplySelectType === ThreadReplySelectType.PARENT) {
               scrollToMessage?.(message?.parentMessage?.createdAt || 0, message?.parentMessageId || 0);
+            }
+          },
+          onDownloadClick: async (e) => {
+            if (!onBeforeDownloadFileMessage) {
+              return null;
+            }
+            try {
+              const allowDownload = await onBeforeDownloadFileMessage({ message: message as FileMessage });
+              if (!allowDownload) {
+                e.preventDefault();
+                logger?.info?.('MessageContent: Not allowed to download.');
+              }
+            } catch (err) {
+              logger?.error?.('MessageContent: Error occurred while determining download continuation:', err);
             }
           },
         })

@@ -6,6 +6,8 @@ import {
   ReplyType as ChatReplyType,
   UserMessageCreateParams,
   UserMessageUpdateParams,
+  type FileMessage,
+  type MultipleFilesMessage,
 } from '@sendbird/chat/message';
 import type { GroupChannel, MessageCollectionParams, MessageFilterParams } from '@sendbird/chat/groupChannel';
 import { MessageFilter } from '@sendbird/chat/groupChannel';
@@ -25,11 +27,13 @@ import PUBSUB_TOPICS, { PubSubSendMessagePayload } from '../../../lib/pubSub/top
 import { PubSubTypes } from '../../../lib/pubSub';
 import { useMessageActions } from './hooks/useMessageActions';
 import { usePreventDuplicateRequest } from './hooks/usePreventDuplicateRequest';
+import { getIsReactionEnabled } from '../../../utils/getIsReactionEnabled';
 
 type OnBeforeHandler<T> = (params: T) => T | Promise<T>;
 type MessageListQueryParamsType = Omit<MessageCollectionParams, 'filter'> & MessageFilterParams;
 type MessageActions = ReturnType<typeof useMessageActions>;
 type MessageListDataSourceWithoutActions = Omit<ReturnType<typeof useGroupChannelMessages>, keyof MessageActions | `_dangerous_${string}`>;
+export type OnBeforeDownloadFileMessageType = (params: { message: FileMessage | MultipleFilesMessage, index?: number }) => Promise<boolean>;
 
 interface ContextBaseType {
   // Required
@@ -61,6 +65,7 @@ interface ContextBaseType {
   onBeforeSendVoiceMessage?: OnBeforeHandler<FileMessageCreateParams>;
   onBeforeSendMultipleFilesMessage?: OnBeforeHandler<MultipleFilesMessageCreateParams>;
   onBeforeUpdateUserMessage?: OnBeforeHandler<UserMessageUpdateParams>;
+  onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
 
   // Click
   onBackClick?(): void;
@@ -123,6 +128,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
     onBeforeSendVoiceMessage,
     onBeforeSendMultipleFilesMessage,
     onBeforeUpdateUserMessage,
+    onBeforeDownloadFileMessage,
     onMessageAnimated,
     onBackClick,
     onChatHeaderActionClick,
@@ -136,7 +142,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   const { config, stores } = useSendbirdStateContext();
 
   const { sdkStore } = stores;
-  const { markAsReadScheduler } = config;
+  const { markAsReadScheduler, logger } = config;
 
   // State
   const [quoteMessage, setQuoteMessage] = useState<SendableMessageType>(null);
@@ -148,7 +154,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   const { scrollRef, scrollPubSub, scrollDistanceFromBottomRef, isScrollBottomReached, setIsScrollBottomReached } = useMessageListScroll(scrollBehavior);
   const messageInputRef = useRef(null);
 
-  const toggleReaction = useToggleReactionCallback(currentChannel, config.logger);
+  const toggleReaction = useToggleReactionCallback(currentChannel, logger);
   const replyType = getCaseResolvedReplyType(moduleReplyType ?? config.groupChannel.replyType).upperCase;
   const threadReplySelectType = getCaseResolvedThreadReplySelectType(
     moduleThreadReplySelectType ?? config.groupChannel.threadReplySelectType,
@@ -157,9 +163,10 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
     if (replyType === 'NONE') return ChatReplyType.NONE;
     return ChatReplyType.ONLY_REPLY_TO_CHANNEL;
   });
-  const isReactionEnabled = useIIFE(() => {
-    if (!currentChannel || currentChannel.isSuper || currentChannel.isBroadcast || currentChannel.isEphemeral) return false;
-    return moduleReactionEnabled ?? config.groupChannel.enableReactions;
+  const isReactionEnabled = getIsReactionEnabled({
+    channel: currentChannel,
+    config,
+    moduleLevel: moduleReactionEnabled,
   });
   const nicknamesMap = useMemo(
     () => new Map((currentChannel?.members ?? []).map(({ userId, nickname }) => [userId, nickname])),
@@ -191,7 +198,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
       setFetchChannelError(null);
     },
     onChannelUpdated: (channel) => setCurrentChannel(channel),
-    logger: config.logger,
+    logger,
   });
 
   useOnScrollPositionChangeDetectorWithRef(scrollRef, {
@@ -256,6 +263,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
       } catch (error) {
         setCurrentChannel(null);
         setFetchChannelError(error);
+        logger?.error?.('GroupChannelProvider: error when fetching channel', error);
       } finally {
         // Reset states when channel changes
         setQuoteMessage(null);
@@ -389,6 +397,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
         onBeforeSendVoiceMessage,
         onBeforeSendMultipleFilesMessage,
         onBeforeUpdateUserMessage,
+        onBeforeDownloadFileMessage,
         // ## Focusing
         onMessageAnimated,
         // ## Click

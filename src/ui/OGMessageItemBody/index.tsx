@@ -15,6 +15,7 @@ import { LocalizationContext } from '../../lib/LocalizationContext';
 import TextFragment from '../../modules/Message/components/TextFragment';
 import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
 import { OG_MESSAGE_BODY_CLASSNAME } from './consts';
+import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 
 interface Props {
   className?: string | Array<string>;
@@ -37,6 +38,7 @@ export default function OGMessageItemBody({
 }: Props): ReactElement {
   const imageRef = useRef<HTMLDivElement>(null);
   const { stringSet } = useContext(LocalizationContext);
+  const { isMobile } = useMediaQueryContext();
 
   const openOGUrl = (): void => {
     let url = message?.ogMetaData?.url;
@@ -98,6 +100,7 @@ export default function OGMessageItemBody({
           url={message?.ogMetaData?.defaultImage?.url || ''}
           alt={message?.ogMetaData?.defaultImage?.alt}
           width="100%"
+          height={isMobile ? '136px' : '240px'}
           onLoad={onMessageHeightChange}
           onError={() => {
             try {

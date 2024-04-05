@@ -18,9 +18,17 @@ import { useKeyDown } from '../../hooks/useKeyDown/useKeyDown';
 import { UploadedFileInfoWithUpload } from '../../types';
 
 export const FileViewerComponent = (props: FileViewerComponentProps): ReactElement => {
+  const {
+    profileUrl,
+    nickname,
+    onClose,
+    onDownloadClick,
+  } = props;
+  const {
+    onClickLeft,
+    onClickRight,
+  } = props as MultiFilesViewer;
   const ref = useRef<HTMLDivElement>(null);
-  const { profileUrl, nickname, onClose } = props;
-  const { onClickLeft, onClickRight } = props as MultiFilesViewer;
   const onKeyDown = useKeyDown(ref, {
     Escape: (e) => onClose?.(e),
     ArrowLeft: () => onClickLeft?.(),
@@ -68,6 +76,7 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
                   rel="noopener noreferrer"
                   href={url}
                   target="_blank"
+                  onClick={onDownloadClick}
                 >
                   <Icon
                     type={IconTypes.DOWNLOAD}
@@ -140,6 +149,7 @@ export interface FileViewerProps {
   onDelete?: (e: MouseEvent) => void;
   onClickLeft?: () => void;
   onClickRight?: () => void;
+  onDownloadClick?: (e: MouseEvent) => Promise<void>;
 }
 
 export default function FileViewer({
@@ -151,6 +161,7 @@ export default function FileViewer({
   currentIndex,
   onClickLeft,
   onClickRight,
+  onDownloadClick,
 }: FileViewerProps): ReactElement {
   if (isMultipleFilesMessage(message)) {
     const castedMessage = message as MultipleFilesMessage;
@@ -174,6 +185,7 @@ export default function FileViewer({
         onClickLeft={onClickLeft || noop}
         onClickRight={onClickRight || noop}
         onClose={onClose}
+        onDownloadClick={onDownloadClick}
       />
     );
   } else if (isFileMessage(message)) {
@@ -190,6 +202,7 @@ export default function FileViewer({
           disableDelete={(castedMessage.threadInfo?.replyCount || 0) > 0}
           onClose={onClose}
           onDelete={onDelete || noop}
+          onDownloadClick={onDownloadClick}
         />
       ),
       (document.getElementById(MODAL_ROOT) as HTMLElement),

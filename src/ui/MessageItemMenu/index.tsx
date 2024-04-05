@@ -1,5 +1,5 @@
 import './index.scss';
-import React, { ReactElement, useContext, useRef } from 'react';
+import React, { MouseEvent, ReactElement, useContext, useRef } from 'react';
 import type { UserMessage } from '@sendbird/chat/message';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
@@ -20,6 +20,13 @@ import { LocalizationContext } from '../../lib/LocalizationContext';
 import { Role } from '../../lib/types';
 import { ReplyType } from '../../types';
 
+export interface MessageMenuRenderMenuItemProps {
+  className?: string;
+  onClick?: (e: MouseEvent) => void;
+  dataSbId?: string;
+  disable?: boolean;
+  text: string;
+}
 export interface MessageMenuProps {
   className?: string | Array<string>;
   message: SendableMessageType;
@@ -36,6 +43,7 @@ export interface MessageMenuProps {
   setSupposedHover?: (bool: boolean) => void;
   onReplyInThread?: (props: { message: SendableMessageType }) => void;
   onMoveToParentMessage?: () => void;
+  renderMenuItem?: (props: MessageMenuRenderMenuItemProps) => ReactElement;
 }
 
 export function MessageMenu({
@@ -54,6 +62,9 @@ export function MessageMenu({
   setSupposedHover,
   onReplyInThread,
   onMoveToParentMessage = null,
+  renderMenuItem = (props: MessageMenuRenderMenuItemProps) => (
+    <MenuItem {...props}>{props.text}</MenuItem>
+  ),
 }: MessageMenuProps): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   const triggerRef = useRef(null);
@@ -71,11 +82,11 @@ export function MessageMenu({
   const isReplyTypeEnabled = !isFailedMessage(message)
     && !isPendingMessage(message)
     && (channel?.isGroupChannel?.()
-    && !channel?.isEphemeral
-    && (
-      ((channel as GroupChannel)?.isBroadcast && channel?.myRole === Role.OPERATOR)
-      || !(channel as GroupChannel)?.isBroadcast
-    ));
+      && !channel?.isEphemeral
+      && (
+        ((channel as GroupChannel)?.isBroadcast && channel?.myRole === Role.OPERATOR)
+        || !(channel as GroupChannel)?.isBroadcast
+      ));
   const showMenuItemReply = isReplyTypeEnabled && replyType === 'QUOTE_REPLY';
   const showMenuItemThread = isReplyTypeEnabled && replyType === 'THREAD' && !message?.parentMessageId && onReplyInThread;
 
@@ -132,102 +143,95 @@ export function MessageMenu({
               openLeft={isByMe}
             >
               {showMenuItemCopy && (
-                <MenuItem
-                  className="sendbird-message-item-menu__list__menu-item menu-item-copy"
-                  onClick={() => {
+                renderMenuItem({
+                  className: 'sendbird-message-item-menu__list__menu-item menu-item-copy',
+                  onClick: () => {
                     copyToClipboard((message as UserMessage)?.message);
                     closeDropdown();
-                  }}
-                  dataSbId="ui_message_item_menu_copy"
-                >
-                  {stringSet.MESSAGE_MENU__COPY}
-                </MenuItem>
+                  },
+                  dataSbId: 'ui_message_item_menu_copy',
+                  text: stringSet.MESSAGE_MENU__COPY,
+                })
               )}
               {showMenuItemReply && (
-                <MenuItem
-                  className="sendbird-message-item-menu__list__menu-item menu-item-reply"
-                  onClick={() => {
+                renderMenuItem({
+                  className: 'sendbird-message-item-menu__list__menu-item menu-item-reply',
+                  onClick: () => {
                     setQuoteMessage(message);
                     closeDropdown();
-                  }}
-                  disable={message?.parentMessageId > 0}
-                  dataSbId="ui_message_item_menu_reply"
-                >
-                  {stringSet.MESSAGE_MENU__REPLY}
-                </MenuItem>
+                  },
+                  disable: message?.parentMessageId > 0,
+                  dataSbId: 'ui_message_item_menu_reply',
+                  text: stringSet.MESSAGE_MENU__REPLY,
+                })
               )}
               {showMenuItemThread && (
-                <MenuItem
-                  className="sendbird-message-item-menu__list__menu-item menu-item-thread"
-                  onClick={() => {
+                renderMenuItem({
+                  className: 'sendbird-message-item-menu__list__menu-item menu-item-thread',
+                  onClick: () => {
                     onReplyInThread?.({ message });
                     closeDropdown();
-                  }}
-                  dataSbId="ui_message_item_menu_thread"
-                >
-                  {stringSet.MESSAGE_MENU__THREAD}
-                </MenuItem>
+                  },
+                  dataSbId: 'ui_message_item_menu_thread',
+                  text: stringSet.MESSAGE_MENU__THREAD,
+                })
               )}
               {showMenuItemOpenInChannel && (
-                <MenuItem
-                  className="sendbird-message-item-menu__list__menu-item menu-item-open-channel"
-                  onClick={() => {
+                renderMenuItem({
+                  className: 'sendbird-message-item-menu__list__menu-item menu-item-open-channel',
+                  onClick: () => {
                     onMoveToParentMessage?.();
                     closeDropdown();
-                  }}
-                  dataSbId="ui_message_item_menu_open_in_channel"
-                >
-                  {stringSet.MESSAGE_MENU__OPEN_IN_CHANNEL}
-                </MenuItem>
+                  },
+                  dataSbId: 'ui_message_item_menu_open_in_channel',
+                  text: stringSet.MESSAGE_MENU__OPEN_IN_CHANNEL,
+                })
               )}
               {showMenuItemEdit && (
-                <MenuItem
-                  className="sendbird-message-item-menu__list__menu-item menu-item-edit"
-                  onClick={() => {
+                renderMenuItem({
+                  className: 'sendbird-message-item-menu__list__menu-item menu-item-edit',
+                  onClick: () => {
                     if (!disabled) {
                       showEdit(true);
                       closeDropdown();
                     }
-                  }}
-                  dataSbId="ui_message_item_menu_edit"
-                >
-                  {stringSet.MESSAGE_MENU__EDIT}
-                </MenuItem>
+                  },
+                  dataSbId: 'ui_message_item_menu_edit',
+                  text: stringSet.MESSAGE_MENU__EDIT,
+                })
               )}
               {showMenuItemResend && (
-                <MenuItem
-                  className="sendbird-message-item-menu__list__menu-item menu-item-resend"
-                  onClick={() => {
+                renderMenuItem({
+                  className: 'sendbird-message-item-menu__list__menu-item menu-item-resend',
+                  onClick: () => {
                     if (!disabled) {
                       resendMessage(message);
                       closeDropdown();
                     }
-                  }}
-                  dataSbId="ui_message_item_menu_resend"
-                >
-                  {stringSet.MESSAGE_MENU__RESEND}
-                </MenuItem>
+                  },
+                  dataSbId: 'ui_message_item_menu_resend',
+                  text: stringSet.MESSAGE_MENU__RESEND,
+                })
               )}
               {showMenuItemDelete && (
-                <MenuItem
-                  className="sendbird-message-item-menu__list__menu-item menu-item-delete"
-                  onClick={() => {
+                renderMenuItem({
+                  className: 'sendbird-message-item-menu__list__menu-item menu-item-delete',
+                  onClick: () => {
                     if (isFailedMessage(message)) {
                       deleteMessage?.(message);
                     } else if (!disabled) {
                       showRemove(true);
                       closeDropdown();
                     }
-                  }}
-                  disable={
+                  },
+                  disable: (
                     typeof disableDeleteMessage === 'boolean'
                       ? disableDeleteMessage
                       : message?.threadInfo?.replyCount > 0
-                  }
-                  dataSbId="ui_message_item_menu_delete"
-                >
-                  {stringSet.MESSAGE_MENU__DELETE}
-                </MenuItem>
+                  ),
+                  dataSbId: 'ui_message_item_menu_delete',
+                  text: stringSet.MESSAGE_MENU__DELETE,
+                })
               )}
             </MenuItems>
           );

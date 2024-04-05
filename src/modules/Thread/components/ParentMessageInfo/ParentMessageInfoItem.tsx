@@ -36,19 +36,23 @@ import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import { useThreadMessageKindKeySelector } from '../../../Channel/context/hooks/useThreadMessageKindKeySelector';
 import { useFileInfoListWithUploaded } from '../../../Channel/context/hooks/useFileInfoListWithUploaded';
 import { Colors } from '../../../../utils/color';
+import type { OnBeforeDownloadFileMessageType } from '../../../GroupChannel/context/GroupChannelProvider';
 
 export interface ParentMessageInfoItemProps {
   className?: string;
   message: SendableMessageType;
   showFileViewer?: (bool: boolean) => void;
+  onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
 }
 
 export default function ParentMessageInfoItem({
   className,
   message,
   showFileViewer,
+  onBeforeDownloadFileMessage = null,
 }: ParentMessageInfoItemProps): ReactElement {
   const { stores, config, eventHandlers } = useSendbirdStateContext?.() || {};
+  const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const {
     replyType,
@@ -77,8 +81,6 @@ export default function ParentMessageInfoItem({
   // Emoji reactions
   const isReactionActivated = isReactionEnabled
     && replyType === 'THREAD'
-    && !currentChannel?.isSuper
-    && !currentChannel?.isBroadcast
     && message?.reactions?.length > 0;
 
   const tokens = useMemo(() => {
@@ -92,6 +94,29 @@ export default function ParentMessageInfoItem({
       messageText: (message as UserMessage)?.message,
     });
   }, [message?.updatedAt, (message as UserMessage)?.message]);
+
+  // Only for the FileMessageItemBody
+  const downloadFileWithUrl = () => {
+    if (message.messageType === 'file') {
+      window.open((message as FileMessage)?.url);
+    }
+  };
+  const handleOnClickTextButton = onBeforeDownloadFileMessage
+    ? async () => {
+      if (message.messageType === 'file') {
+        try {
+          const allowDownload = await onBeforeDownloadFileMessage({ message: message as FileMessage });
+          if (allowDownload) {
+            downloadFileWithUrl();
+          } else {
+            logger?.info?.('ParentMessageInfoItem: Not allowed to download.');
+          }
+        } catch (err) {
+          logger?.error?.('ParentMessageInfoItem: Error occurred while determining download continuation:', err);
+        }
+      }
+    }
+    : downloadFileWithUrl;
 
   // Thumbnail mesage
   const [isImageRendered, setImageRendered] = useState(false);
@@ -174,6 +199,7 @@ export default function ParentMessageInfoItem({
         </div>
       )} */}
       {
+        // Instead of the FileMessageItemBody component
         (getUIKitMessageType((message as FileMessage)) === getUIKitMessageTypes().FILE) && (
           <div className="sendbird-parent-message-info-item__file-message">
             <div className="sendbird-parent-message-info-item__file-message__file-icon">
@@ -193,7 +219,7 @@ export default function ParentMessageInfoItem({
             </div>
             <TextButton
               className="sendbird-parent-message-info-item__file-message__file-name"
-              onClick={() => { window.open((message as FileMessage)?.url); }}
+              onClick={handleOnClickTextButton}
               color={Colors.ONBACKGROUND_1}
             >
               <Label
@@ -216,6 +242,7 @@ export default function ParentMessageInfoItem({
             isReactionEnabled={isReactionEnabled}
             threadMessageKindKey={threadMessageKindKey}
             statefulFileInfoList={statefulFileInfoList}
+            onBeforeDownloadFileMessage={onBeforeDownloadFileMessage}
           />
         )
       }

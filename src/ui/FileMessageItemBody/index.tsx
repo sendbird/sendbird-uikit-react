@@ -8,6 +8,8 @@ import TextButton from '../TextButton';
 import { getClassName, getUIKitFileType, truncateString } from '../../utils';
 import { Colors } from '../../utils/color';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
+import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
+import type { OnBeforeDownloadFileMessageType } from '../../modules/GroupChannel/context/GroupChannelProvider';
 
 interface Props {
   className?: string | Array<string>;
@@ -16,6 +18,7 @@ interface Props {
   mouseHover?: boolean;
   isReactionEnabled?: boolean;
   truncateLimit?: number;
+  onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
 }
 
 export default function FileMessageItemBody({
@@ -25,9 +28,33 @@ export default function FileMessageItemBody({
   mouseHover = false,
   isReactionEnabled = false,
   truncateLimit = null,
+  onBeforeDownloadFileMessage = null,
 }: Props): ReactElement {
+  let logger = null;
+  try {
+    logger = useSendbirdStateContext()?.config?.logger;
+  } catch (err) {
+    // TODO: Handle error
+  }
   const { isMobile } = useMediaQueryContext();
   const truncateMaxNum = truncateLimit || (isMobile ? 20 : null);
+
+  const downloadFileWithUrl = () => window.open(message?.url);
+  const handleOnClickTextButton = onBeforeDownloadFileMessage
+    ? async () => {
+      try {
+        const allowDownload = await onBeforeDownloadFileMessage({ message });
+        if (allowDownload) {
+          downloadFileWithUrl();
+        } else {
+          logger?.info?.('FileMessageItemBody: Not allowed to download.');
+        }
+      } catch (err) {
+        logger?.error?.('FileMessageItemBody: Error occurred while determining download continuation:', err);
+      }
+    }
+    : downloadFileWithUrl;
+
   return (
     <div className={getClassName([
       className,
@@ -53,7 +80,7 @@ export default function FileMessageItemBody({
       </div>
       <TextButton
         className="sendbird-file-message-item-body__file-name"
-        onClick={() => { window.open(message?.url); }}
+        onClick={handleOnClickTextButton}
         color={isByMe ? Colors.ONCONTENT_1 : Colors.ONBACKGROUND_1}
       >
         <Label

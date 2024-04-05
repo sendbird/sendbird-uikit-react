@@ -1,14 +1,14 @@
 import React, { ReactElement, useContext, useRef } from 'react';
-import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import Modal from '../../../../ui/Modal';
-import Button, { ButtonTypes } from '../../../../ui/Button';
-import Input from '../../../../ui/Input';
-import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
+import { LocalizationContext } from '../../lib/LocalizationContext';
+import Modal from '../Modal';
+import Button, { ButtonTypes } from '../Button';
+import Input from '../Input';
+import Label, { LabelColors, LabelTypography } from '../Label';
 import './index.scss';
-import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
-import { CoreMessageType } from '../../../../utils';
+import { useMediaQueryContext } from '../../lib/MediaQueryContext';
+import { CoreMessageType } from '../../utils';
 import { FeedbackRating } from '@sendbird/chat/message';
-import { useKeyDown } from '../../../../hooks/useKeyDown/useKeyDown';
+import { useKeyDown } from '../../hooks/useKeyDown/useKeyDown';
 
 export interface MessageFeedbackModalProps {
   selectedFeedback: FeedbackRating | undefined;
