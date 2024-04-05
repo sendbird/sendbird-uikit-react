@@ -55,11 +55,6 @@ export const BannedMemberList = (): ReactElement => {
     });
   }, [channel]);
   
-  type UserWithAdditionalProps = User & {
-    isMuted: boolean;
-    role: string;
-  };
-  
   return (
     <>
       {

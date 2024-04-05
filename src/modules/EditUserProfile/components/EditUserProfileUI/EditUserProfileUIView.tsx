@@ -56,8 +56,9 @@ export const EditUserProfileUIView = ({
               setProfileImage(e.target.files[0]);
             }
             
-            if(hiddenInputRef.current)
+            if (hiddenInputRef.current) {
               hiddenInputRef.current.value = '';
+            }
           }}
         />
         <TextButton

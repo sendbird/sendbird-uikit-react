@@ -12,7 +12,7 @@ export function useThrottleCallback<T extends(...args: any[]) => void>(
     trailing: false,
   },
 ) {
-  const timer = useRef<NodeJS.Timeout>(null);
+  const timer = useRef<typeof setTimeout>(null);
   const trailingArgs = useRef<any[] | null>(null);
 
   useEffect(() => {

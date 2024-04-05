@@ -116,7 +116,9 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
         if (messages) {
           try {
             element.scrollTop = scrollTop_;
-            if (scrollRef.current) { scrollRef.current.scrollTop = scrollTop_;}
+            if (scrollRef.current) {
+              scrollRef.current.scrollTop = scrollTop_;
+            }
           } catch (error) {
             //
           }
