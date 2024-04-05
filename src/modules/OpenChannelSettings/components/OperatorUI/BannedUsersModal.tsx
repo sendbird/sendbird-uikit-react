@@ -112,7 +112,7 @@ export default function BannedUsersModal({
                           </MenuItems>
                         )}
                       />
-                    ) : null
+                    ) : <></>
                 )
                 }
               />

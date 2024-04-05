@@ -3,6 +3,7 @@ import * as actionTypes from './actionTypes';
 
 import compareIds from '../../../../utils/compareIds';
 import { SendableMessageType } from '../../../../utils';
+import { OpenChannel } from '@sendbird/chat/openChannel';
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 // @ts-ignore: Unreachable code error

@@ -48,8 +48,8 @@ function CommunityChannelList({
 }: Props): ReactElement {
   const [channelSource, setChannelSource] = useState<OpenChannelListQuery | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [currentImage, setCurrentImage] = useState(null);
-  const [currentFile, setCurrentFile] = useState(null);
+  const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [currentFile, setCurrentFile] = useState<File | null>(null);
   const [currentChannelName, setCurrentChannelName] = useState('');
   const hiddenInputRef = useRef<HTMLInputElement>(null);
   const { stringSet } = useContext(LocalizationContext);
@@ -101,7 +101,7 @@ function CommunityChannelList({
             onSubmit={() => {
               const params: OpenChannelCreateParams = {
                 name: currentChannelName,
-                coverUrlOrImage: currentFile,
+                coverUrlOrImage: currentFile ?? undefined,
                 customType: SB_COMMUNITY_TYPE,
                 operatorUserIds: [user.userId],
               };
@@ -143,15 +143,18 @@ function CommunityChannelList({
                   Channel image
                 </Label>
                 <div className="community-channel__add-channel__image-box__body">
-                  <Avatar src={currentImage} width="80px" height="80px" />
+                  <Avatar src={currentImage ?? undefined} width="80px" height="80px" />
                   <input
                     ref={hiddenInputRef}
                     type="file"
                     accept="image/gif, image/jpeg, image/png"
                     style={{ display: 'none' }}
                     onChange={(e) => {
-                      setCurrentImage(URL.createObjectURL(e.target.files[0]));
-                      setCurrentFile(e.target.files[0]);
+                      if(e.target.files) {
+                        setCurrentImage(URL.createObjectURL(e.target.files[0]));
+                        setCurrentFile(e.target.files[0]);
+                      }
+                     
                       if (hiddenInputRef.current) {
                         hiddenInputRef.current.value = '';
                       }

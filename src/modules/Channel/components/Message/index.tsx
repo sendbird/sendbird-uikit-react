@@ -42,7 +42,7 @@ const Message = (props: MessageProps): React.ReactElement => {
       channel={currentGroupChannel}
       emojiContainer={emojiContainer}
       editInputDisabled={
-        !initialized || isDisabledBecauseFrozen(currentGroupChannel) || isDisabledBecauseMuted(currentGroupChannel) || !config.isOnline
+        !initialized || isDisabledBecauseFrozen(currentGroupChannel ?? undefined) || isDisabledBecauseMuted(currentGroupChannel ?? undefined) || !config.isOnline
       }
       shouldRenderSuggestedReplies={
         config?.groupChannel?.enableSuggestedReplies
@@ -55,8 +55,8 @@ const Message = (props: MessageProps): React.ReactElement => {
         && localMessages?.length === 0
         && getSuggestedReplies(message).length > 0
       }
-      isReactionEnabled={isReactionEnabled}
-      replyType={replyType}
+      isReactionEnabled={isReactionEnabled ?? false}
+      replyType={replyType ?? 'NONE'}
       threadReplySelectType={threadReplySelectType}
       nicknamesMap={nicknamesMap}
       renderUserMentionItem={renderUserMentionItem}

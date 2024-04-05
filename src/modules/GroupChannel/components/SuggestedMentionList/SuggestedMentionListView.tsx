@@ -50,14 +50,14 @@ export const SuggestedMentionListView = (props: SuggestedMentionListViewProps) =
   const currentUserId = stores?.sdkStore?.sdk?.currentUser?.userId || '';
   const scrollRef = useRef(null);
   const { stringSet } = useLocalization();
-  const [timer, setTimer] = useState(null);
-  const [searchString, setSearchString] = useState('');
+  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+  const [searchString, setSearchString] = useState<string>('');
   const [lastSearchString, setLastSearchString] = useState('');
   const [currentFocusedMember, setCurrentFocusedMember] = useState<User | null>(null);
   const [currentMemberList, setCurrentMemberList] = useState<Member[]>([]);
 
   useEffect(() => {
-    clearTimeout(timer);
+    clearTimeout(timer ?? undefined);
     setTimer(
       setTimeout(() => {
         setSearchString(targetNickname);
@@ -67,7 +67,7 @@ export const SuggestedMentionListView = (props: SuggestedMentionListViewProps) =
 
   useEffect(() => {
     if (inputEvent?.key === MessageInputKeys.Enter) {
-      if (currentMemberList.length > 0) {
+      if (currentFocusedMember && currentMemberList.length > 0) {
         onUserItemClick?.(currentFocusedMember);
       }
     }

@@ -94,7 +94,8 @@ export const EditUserProfileUI = () => {
     inputRef,
     updateUserInfo,
     setProfileImage,
-  } = useEditUserProfileUISates({ onEditProfile });
+  } = useEditUserProfileUISates({ onEditProfile: onEditProfile ?? (() => {}) })
+  ;
 
   return (
     <Modal
@@ -109,7 +110,7 @@ export const EditUserProfileUI = () => {
         formRef={formRef}
         inputRef={inputRef}
         setProfileImage={setProfileImage}
-        onThemeChange={onThemeChange}
+        onThemeChange={onThemeChange ?? (() => {})}
       />
     </Modal>
   );

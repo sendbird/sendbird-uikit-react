@@ -115,7 +115,7 @@ export default function MutedParticipantsModal({
                           </MenuItems>
                         )}
                       />
-                    ) : null
+                    ) : <></>
                 )}
               />
             ))}

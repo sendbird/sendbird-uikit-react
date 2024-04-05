@@ -73,7 +73,7 @@ const UserListItem = ({
           renderUserProfile
             ? renderUserProfile({
               user,
-              currentUserId: currentUser,
+              currentUserId: currentUser ?? '',
               close: closeDropdown,
               avatarRef,
             })

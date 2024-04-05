@@ -30,7 +30,7 @@ export default function OpenChannelPreview({
   isStreaming = false,
 }: Props): ReactElement {
   const streamInfo = useMemo(() => {
-    let channelMeta: ChannelMeta;
+    let channelMeta: ChannelMeta | null = null;
     if (isStreaming) {
       try {
         channelMeta = JSON.parse(channel?.data);

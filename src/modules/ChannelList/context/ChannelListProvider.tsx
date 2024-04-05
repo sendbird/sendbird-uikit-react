@@ -108,7 +108,7 @@ export interface ChannelListProviderInterface extends ChannelListProviderProps {
   fetchChannelList: () => void;
 }
 
-const ChannelListContext = React.createContext<ChannelListProviderInterface | null>({
+const ChannelListContext = React.createContext<ChannelListProviderInterface>({
   disableUserProfile: true,
   allowProfileEdit: true,
   onBeforeCreateChannel: null,

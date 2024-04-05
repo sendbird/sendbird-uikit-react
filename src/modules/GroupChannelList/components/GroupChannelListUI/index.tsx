@@ -81,9 +81,9 @@ export const GroupChannelListUI = (props: GroupChannelListUIProps) => {
       renderPlaceHolderError={renderPlaceHolderError}
       renderPlaceHolderLoading={renderPlaceHolderLoading}
       renderPlaceHolderEmptyList={renderPlaceHolderEmptyList}
-      onChangeTheme={onThemeChange}
+      onChangeTheme={onThemeChange ?? (()=>{})}
       allowProfileEdit={allowProfileEdit}
-      onUserProfileUpdated={onUserProfileUpdated}
+      onUserProfileUpdated={onUserProfileUpdated ?? (() => {})}
       channels={groupChannels}
       onLoadMore={loadMore}
       initialized={initialized}

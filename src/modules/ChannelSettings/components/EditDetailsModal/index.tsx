@@ -29,7 +29,7 @@ const EditDetails: React.FC<EditDetailsProps> = (props: EditDetailsProps) => {
     onChannelModified,
     onBeforeUpdateChannel,
     setChannelUpdateId,
-  } = useChannelSettingsContext();
+  } = useChannelSettingsContext() ?? {};
   const title = channel?.name;
 
   const state = useSendbirdStateContext();
@@ -37,11 +37,11 @@ const EditDetails: React.FC<EditDetailsProps> = (props: EditDetailsProps) => {
   const theme = state?.config?.theme;
   const logger = state?.config?.logger;
 
-  const inputRef = useRef(null);
-  const formRef = useRef(null);
-  const hiddenInputRef = useRef(null);
-  const [currentImg, setCurrentImg] = useState(null);
-  const [newFile, setNewFile] = useState(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const hiddenInputRef = useRef<HTMLInputElement>(null);
+  const [currentImg, setCurrentImg] = useState<string | null>(null);
+  const [newFile, setNewFile] = useState<File | null>(null);
   const { stringSet } = useContext(LocalizationContext);
 
   return (
@@ -51,14 +51,14 @@ const EditDetails: React.FC<EditDetailsProps> = (props: EditDetailsProps) => {
       submitText={stringSet.BUTTON__SAVE}
       onCancel={onCancel}
       onSubmit={() => {
-        if (title !== '' && !inputRef.current.value) {
-          if (formRef.current.reportValidity) { // might not work in explorer
+        if (title !== '' && !inputRef.current?.value) {
+          if (formRef.current?.reportValidity) { // might not work in explorer
             formRef.current.reportValidity();
           }
           return;
         }
 
-        const currentTitle = inputRef.current.value;
+        const currentTitle = inputRef.current?.value;
         const currentImg = newFile;
         logger.info('ChannelSettings: Channel information being updated', {
           currentTitle,
@@ -66,7 +66,7 @@ const EditDetails: React.FC<EditDetailsProps> = (props: EditDetailsProps) => {
         });
         if (onBeforeUpdateChannel) {
           logger.info('ChannelSettings: onBeforeUpdateChannel');
-          const params = onBeforeUpdateChannel(currentTitle, currentImg, channel?.data);
+          const params = onBeforeUpdateChannel(currentTitle ?? '', currentImg, channel?.data);
           channel?.updateChannel(params).then((groupChannel) => {
             onChannelModified?.(groupChannel);
             setChannelUpdateId(uuidv4());
@@ -81,7 +81,7 @@ const EditDetails: React.FC<EditDetailsProps> = (props: EditDetailsProps) => {
           }).then((groupChannel) => {
             logger.info('ChannelSettings: Channel information updated', groupChannel);
             onChannelModified?.(groupChannel);
-            setChannelUpdateId(uuidv4());
+            setChannelUpdateId?.(uuidv4());
             onSubmit();
           });
         }
@@ -123,14 +123,16 @@ const EditDetails: React.FC<EditDetailsProps> = (props: EditDetailsProps) => {
             accept="image/gif, image/jpeg, image/png"
             style={{ display: 'none' }}
             onChange={(e) => {
-              setCurrentImg(URL.createObjectURL(e.target.files[0]));
-              setNewFile(e.target.files[0]);
-              hiddenInputRef.current.value = '';
+              if(e.target.files) {
+                setCurrentImg(URL.createObjectURL(e.target.files[0]));
+                setNewFile(e.target.files[0]);
+              }
+              if (hiddenInputRef.current) {hiddenInputRef.current.value = '';}
             }}
           />
           <TextButton
             className="channel-profile-form__avatar-button"
-            onClick={() => hiddenInputRef.current.click()}
+            onClick={() => hiddenInputRef.current?.click()}
             disableUnderline
           >
             <Label type={LabelTypography.BUTTON_1} color={LabelColors.PRIMARY}>

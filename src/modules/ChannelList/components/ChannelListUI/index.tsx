@@ -100,9 +100,9 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
       renderPlaceHolderError={renderPlaceHolderError}
       renderPlaceHolderLoading={renderPlaceHolderLoading}
       renderPlaceHolderEmptyList={renderPlaceHolderEmptyList}
-      onChangeTheme={onThemeChange}
-      allowProfileEdit={allowProfileEdit}
-      onUserProfileUpdated={onProfileEditSuccess}
+      onChangeTheme={onThemeChange ?? (() => {})}
+      allowProfileEdit={allowProfileEdit ?? false}
+      onUserProfileUpdated={onProfileEditSuccess ?? (() => {})}
       channels={allChannels}
       onLoadMore={fetchChannelList}
       initialized={initialized}

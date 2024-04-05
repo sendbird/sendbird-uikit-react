@@ -23,10 +23,10 @@ function CreateOpenChannelUI({
   renderProfileInput,
 }: CreateOpenChannelUIProps): React.ReactElement {
   const [newFile, setNewFile] = useState(null);
-  const [currentImage, setCurrentImg] = useState(null);
+  const [currentImage, setCurrentImg] = useState<string | null>(null);
   const inputFormRef = useRef(null);
-  const inputFileRef = useRef(null);
-  const inputTextRef = useRef(null);
+  const inputFileRef = useRef<string | null>(null);
+  const inputTextRef = useRef<HTMLInputElement>(null);
   const { stringSet } = useContext(LocalizationContext);
   const {
     logger,
@@ -49,9 +49,9 @@ function CreateOpenChannelUI({
           }
           createNewOpenChannel({
             name: channelName,
-            coverUrlOrImage: newFile,
+            coverUrlOrImage: newFile ?? undefined,
           });
-          closeModal();
+          closeModal?.();
         }}
       >
         <>
@@ -91,14 +91,18 @@ function CreateOpenChannelUI({
                   accept="image/gif, image/jpeg, image/png"
                   style={{ display: 'none' }}
                   onChange={(e) => {
-                    setCurrentImg(URL.createObjectURL(e.target.files[0]));
-                    setNewFile(e.target.files[0]);
-                    inputFileRef.current.value = '';
+                    if(e.target.files) {
+                      setCurrentImg(URL.createObjectURL(e.target.files[0]));
+                      setNewFile(e.target.files[0]);
+                    }
+                    
+                    if(inputFileRef.current)
+                      inputFileRef.current.value = '';
                   }}
                 />
                 <TextButton
                   className="sendbird-create-open-channel-ui__profile-input__img-section__button"
-                  onClick={() => inputFileRef.current.click()}
+                  onClick={() => inputFileRef.current?.click()}
                   disableUnderline
                 >
                   <Label

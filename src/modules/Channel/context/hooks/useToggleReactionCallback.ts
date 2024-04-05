@@ -17,7 +17,7 @@ export default function useToggleReactionCallback(
     (message: BaseMessage, key: string, isReacted: boolean) => {
       if (isReacted) {
         currentGroupChannel
-          .deleteReaction(message, key)
+          ?.deleteReaction(message, key)
           .then((res) => {
             logger.info('Delete reaction success', res);
           })
@@ -26,7 +26,7 @@ export default function useToggleReactionCallback(
           });
       } else {
         currentGroupChannel
-          .addReaction(message, key)
+          ?.addReaction(message, key)
           .then((res) => {
             logger.info('Add reaction success', res);
           })

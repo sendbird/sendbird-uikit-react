@@ -30,7 +30,6 @@ function useSetupOpenChannelList(
   useEffect(() => {
     if (sdkInitialized) {
       if (sdk?.openChannel) {
-        if (sdk?.openChannel?.createOpenChannelListQuery) {
           logger.info('OpenChannelList|useSetupOpenChannelList: Setup OpenChannelList', { sdkInitialized });
           const channelListQuery = createChannelListQuery({
             sdk,
@@ -64,9 +63,6 @@ function useSetupOpenChannelList(
           } else {
             logger.info('OpenChannelList|useSetupOpenChannelList: There is no more channels');
           }
-        } else {
-          logger.warning('OpenChannelList|useSetupOpenChannelList: createOpenChannelListQuery is not included in the openChannel', sdk.openChannel);
-        }
       } else {
         logger.warning('OpenChannelList|useSetupOpenChannelList: openChannel is not included in the Chat SDK', sdk);
       }

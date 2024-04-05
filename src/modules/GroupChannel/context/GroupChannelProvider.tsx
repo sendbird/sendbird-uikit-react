@@ -139,10 +139,10 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   const { markAsReadScheduler } = config;
 
   // State
-  const [quoteMessage, setQuoteMessage] = useState<SendableMessageType>(null);
+  const [quoteMessage, setQuoteMessage] = useState<SendableMessageType | null>(null);
   const [animatedMessageId, setAnimatedMessageId] = useState<number | null>(null);
   const [currentChannel, setCurrentChannel] = useState<GroupChannel | null>(null);
-  const [fetchChannelError, setFetchChannelError] = useState<SendbirdError>(null);
+  const [fetchChannelError, setFetchChannelError] = useState<SendbirdError | null>(null);
 
   // Ref
   const { scrollRef, scrollPubSub, scrollDistanceFromBottomRef, isScrollBottomReached, setIsScrollBottomReached } = useMessageListScroll();
@@ -201,17 +201,19 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
       await preventDuplicateRequest.run(async () => {
         if (!messageDataSource.hasPrevious()) return;
 
-        const prevViewInfo = { scrollTop: scrollRef.current.scrollTop, scrollHeight: scrollRef.current.scrollHeight };
+        const prevViewInfo = { scrollTop: scrollRef.current?.scrollTop, scrollHeight: scrollRef.current?.scrollHeight };
         await messageDataSource.loadPrevious();
 
         // FIXME: We need a good way to detect right after the rendering of the screen instead of using setTimeout.
         setTimeout(() => {
-          const nextViewInfo = { scrollHeight: scrollRef.current.scrollHeight };
-          const viewUpdated = prevViewInfo.scrollHeight < nextViewInfo.scrollHeight;
-
-          if (viewUpdated) {
-            const bottomOffset = prevViewInfo.scrollHeight - prevViewInfo.scrollTop;
-            scrollPubSub.publish('scroll', { top: nextViewInfo.scrollHeight - bottomOffset, lazy: false });
+          const nextViewInfo = { scrollHeight: scrollRef.current?.scrollHeight };
+          if (prevViewInfo.scrollHeight && nextViewInfo.scrollHeight) {
+            const viewUpdated = prevViewInfo.scrollHeight < nextViewInfo.scrollHeight;
+            
+            if (viewUpdated) {
+              const bottomOffset = prevViewInfo.scrollHeight - (prevViewInfo.scrollTop ?? 0);
+              scrollPubSub.publish('scroll', { top: nextViewInfo.scrollHeight - bottomOffset, lazy: false });
+            }
           }
         });
       });
@@ -224,15 +226,17 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
       await preventDuplicateRequest.run(async () => {
         if (!messageDataSource.hasNext()) return;
 
-        const prevViewInfo = { scrollTop: scrollRef.current.scrollTop, scrollHeight: scrollRef.current.scrollHeight };
+        const prevViewInfo = { scrollTop: scrollRef.current?.scrollTop, scrollHeight: scrollRef.current?.scrollHeight };
         await messageDataSource.loadNext();
 
         setTimeout(() => {
-          const nextViewInfo = { scrollHeight: scrollRef.current.scrollHeight };
-          const viewUpdated = prevViewInfo.scrollHeight < nextViewInfo.scrollHeight;
-
-          if (viewUpdated) {
-            scrollPubSub.publish('scroll', { top: prevViewInfo.scrollTop, lazy: false });
+          const nextViewInfo = { scrollHeight: scrollRef.current?.scrollHeight };
+          if (prevViewInfo.scrollHeight && nextViewInfo.scrollHeight) {
+            const viewUpdated = prevViewInfo.scrollHeight < nextViewInfo.scrollHeight;
+            
+            if (viewUpdated) {
+              scrollPubSub.publish('scroll', { top: prevViewInfo.scrollTop, lazy: false });
+            }
           }
         });
       });

@@ -72,7 +72,8 @@ export default function ParentMessageInfoItem({
   const statefulFileInfoList = useFileInfoListWithUploaded(message);
   const isMentionedMessage = isMentionEnabled
     && message?.mentionedMessageTemplate?.length > 0
-    && message?.mentionedUsers?.length > 0;
+    && message?.mentionedUsers
+    && message.mentionedUsers.length > 0;
 
   // Emoji reactions
   const isReactionActivated = isReactionEnabled
@@ -84,7 +85,7 @@ export default function ParentMessageInfoItem({
   const tokens = useMemo(() => {
     if (isMentionedMessage) {
       return tokenizeMessage({
-        mentionedUsers: message?.mentionedUsers,
+        mentionedUsers: message?.mentionedUsers ?? undefined,
         messageText: message?.mentionedMessageTemplate,
       });
     }
@@ -237,7 +238,7 @@ export default function ParentMessageInfoItem({
           className="sendbird-parent-message-info-item__thumbnail-message"
           onClick={() => {
             if (isSentMessage(message)) {
-              showFileViewer(true);
+              showFileViewer?.(true);
             }
           }}
         >
