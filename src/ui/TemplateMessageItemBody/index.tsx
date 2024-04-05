@@ -242,10 +242,14 @@ export function TemplateMessageItemBody({
               throw new Error('TemplateMessageItemBody | template key suggests composite template but template data is missing view_variables. See error log in console for details');
             }
             const reservationKey = removeAtAndBraces(carouselItem.items);
-            const simpleTemplateDataList: SimpleTemplateData[] | undefined = templateData.view_variables[reservationKey];
+            let simpleTemplateDataList: SimpleTemplateData[] | undefined = templateData.view_variables[reservationKey];
             if (!simpleTemplateDataList) {
               logger.error('TemplateMessageItemBody | no reservation key found in view_variables: ', reservationKey, templateData.view_variables);
               throw new Error('TemplateMessageItemBody | no reservation key found in view_variables. See error log in console for details');
+            }
+            if (simpleTemplateDataList.length > 10) {
+              logger.warning('TemplateMessageItemBody | composite template with more than ten simple templates will only render the first ten items: ', reservationKey, templateData.view_variables);
+              simpleTemplateDataList = simpleTemplateDataList.slice(0, 10);
             }
             const { maxVersion, filledTemplates } = getFilledMessageTemplateItemsForCarouselTemplateByMessagePayload(
               simpleTemplateDataList,
@@ -258,8 +262,13 @@ export function TemplateMessageItemBody({
               items: filledTemplates,
             }];
           } else if (Array.isArray(carouselItem.items)) {
+            let simpleTemplateDataList: SendbirdUiTemplate[] = carouselItem.items;
+            if (carouselItem.items.length > 10) {
+              logger.warning('TemplateMessageItemBody | composite template with more than ten simple templates will only render the first ten items: ', carouselItem);
+              simpleTemplateDataList = carouselItem.items.slice(0, 10);
+            }
             const { maxVersion, filledTemplates } = getFilledMessageTemplateItemsForCarouselTemplate(
-              carouselItem.items,
+              simpleTemplateDataList,
             );
             result.isComposite = true;
             result.templateVersion = Math.max(cachedTemplate.version, maxVersion);
