@@ -17,15 +17,15 @@ interface Props {
 }
 
 export default function InviteUsers({ onCancel, onSubmit }: Props) {
-  const [users, setUsers] = useState([]);
-  const [userListQuery, setUserListQuery] = useState(null);
+  const [users, setUsers] = useState<User[]>([]);
+  const [userListQuery, setUserListQuery] = useState<UserListQuery | null>(null);
   const [selectedUsers, setSelectedUsers] = useState<Record<UserId, User>>({});
 
   const state = useSendbirdStateContext();
   const sdk = state?.stores?.sdkStore?.sdk;
   const globalUserListQuery = state?.config?.userListQuery;
-
-  const { channel, overrideInviteUser, queries } = useChannelSettingsContext();
+  
+  const { channel, overrideInviteUser, queries } = useChannelSettingsContext() || {};
   const { stringSet } = useLocalization();
 
   const onScroll = useOnScrollPositionChangeDetector({
@@ -39,7 +39,7 @@ export default function InviteUsers({ onCancel, onSubmit }: Props) {
 
   const onInviteUsers = async () => {
     const userIdsToInvite = Object.keys(selectedUsers);
-    if (typeof overrideInviteUser === 'function') {
+    if (channel && typeof overrideInviteUser === 'function') {
       overrideInviteUser({ users: userIdsToInvite, onClose: onCancel, channel });
     } else {
       await channel?.inviteWithUserIds(userIdsToInvite);
@@ -95,7 +95,7 @@ export default function InviteUsers({ onCancel, onSubmit }: Props) {
         <div className="sendbird-more-members__popup-scroll" onScroll={onScroll}>
           <div className="sendbird-more-members__popup-scroll__inner">
             {users.map((user) => {
-              const isMember = Boolean(membersMap[user.userId]);
+              const isMember = Boolean(membersMap ? membersMap[user.userId] : false);
               const isSelected = Boolean(selectedUsers[user.userId]);
               return (
                 <UserListItem

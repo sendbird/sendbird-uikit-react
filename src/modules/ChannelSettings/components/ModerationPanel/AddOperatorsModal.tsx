@@ -14,7 +14,7 @@ import Label, {
 import { ButtonTypes } from '../../../../ui/Button';
 import UserListItem from '../../../../ui/UserListItem';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
-import { OperatorFilter } from '@sendbird/chat/groupChannel';
+import { Member, MemberListQuery, OperatorFilter } from '@sendbird/chat/groupChannel';
 
 interface Props {
   onCancel(): void;
@@ -25,22 +25,22 @@ export default function AddOperatorsModal({
   onCancel,
   onSubmit,
 }: Props): ReactElement {
-  const [members, setMembers] = useState([]);
+  const [members, setMembers] = useState<Member[]>([]);
   const [selectedMembers, setSelectedMembers] = useState({});
-  const [memberQuery, setMemberQuery] = useState(null);
+  const [memberQuery, setMemberQuery] = useState<MemberListQuery | null>(null);
   const { stringSet } = useContext(LocalizationContext);
 
-  const { channel } = useChannelSettingsContext();
+  const channel = useChannelSettingsContext()?.channel;
 
   useEffect(() => {
     const memberListQuery = channel?.createMemberListQuery({
       operatorFilter: OperatorFilter.NONOPERATOR,
       limit: 20,
     });
-    memberListQuery.next().then((members) => {
+    memberListQuery?.next().then((members) => {
       setMembers(members);
     });
-    setMemberQuery(memberListQuery);
+    setMemberQuery(memberListQuery ?? null);
   }, []);
 
   const selectedCount = Object.keys(selectedMembers).filter((m) => selectedMembers[m]).length;
@@ -68,12 +68,12 @@ export default function AddOperatorsModal({
         <div
           className="sendbird-more-members__popup-scroll"
           onScroll={(e) => {
-            const { hasNext } = memberQuery;
+            const hasNext = memberQuery ? memberQuery.hasNext : false;
             const target = e.target as HTMLTextAreaElement;
             const fetchMore = (
               target.clientHeight + target.scrollTop === target.scrollHeight
             );
-            if (hasNext && fetchMore) {
+            if (hasNext && fetchMore && memberQuery) {
               memberQuery.next().then((o) => {
                 setMembers([
                   ...members,

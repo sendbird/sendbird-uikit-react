@@ -66,7 +66,9 @@ function useHandleChannelEvents({
             let scrollToEnd = false;
             try {
               const { current } = scrollRef;
-              scrollToEnd = current.offsetHeight + current.scrollTop >= current.scrollHeight - 10;
+              if (current) {
+                scrollToEnd = current.offsetHeight + current.scrollTop >= current.scrollHeight - 10;
+              }
               // 10 is a buffer
             } catch (error) {
               //

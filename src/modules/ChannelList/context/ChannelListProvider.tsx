@@ -201,7 +201,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
         channelListDispatcher,
         setChannelSource,
         onChannelSelect,
-        userFilledChannelListQuery,
+        userFilledChannelListQuery: { ...userFilledChannelListQuery },
         logger,
         sortChannelList,
         disableAutoSelect,

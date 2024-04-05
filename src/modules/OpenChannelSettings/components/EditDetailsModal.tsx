@@ -35,9 +35,9 @@ const EditDetails = (props: Props): ReactElement => {
     setChannel,
   } = useOpenChannelSettingsContext();
 
-  const inputRef = useRef(null);
-  const formRef = useRef(null);
-  const hiddenInputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const hiddenInputRef = useRef<HTMLInputElement>(null);
   const [currentImg, setCurrentImg] = useState(null);
   const [newFile, setNewFile] = useState(null);
   const { stringSet } = useContext(LocalizationContext);
@@ -49,13 +49,13 @@ const EditDetails = (props: Props): ReactElement => {
       submitText={stringSet.BUTTON__SAVE}
       onCancel={onCancel}
       onSubmit={() => {
-        if (title !== '' && !inputRef.current.value) {
-          if (formRef.current.reportValidity) { // might not work in explorer
+        if (title !== '' && !inputRef.current?.value) {
+          if (formRef.current?.reportValidity) { // might not work in explorer
             formRef.current.reportValidity();
           }
           return;
         }
-        const currentTitle = inputRef.current.value;
+        const currentTitle = inputRef.current?.value ?? '';
         const currentImg = newFile;
         logger.info('ChannelSettings: Channel information being updated');
         const params: OpenChannelUpdateParams = onBeforeUpdateChannel
@@ -70,12 +70,12 @@ const EditDetails = (props: Props): ReactElement => {
           .then((updatedChannel) => {
             logger.info('ChannelSettings: Channel information update succeeded', updatedChannel);
             onChannelModified?.(updatedChannel);
-            setChannel(updatedChannel);
+            setChannel?.(updatedChannel);
             pubSub?.publish(pubSubTopics.UPDATE_OPEN_CHANNEL, updatedChannel);
           })
           .catch((error) => {
             logger.error('ChannelSettings: Channel infomation update failed', error);
-            setChannel(null);
+            setChannel?.(null);
           });
         onCancel();
       }}
@@ -117,12 +117,13 @@ const EditDetails = (props: Props): ReactElement => {
             onChange={(e) => {
               setCurrentImg(URL.createObjectURL(e.target.files[0]));
               setNewFile(e.target.files[0]);
-              hiddenInputRef.current.value = '';
+              if (hiddenInputRef.current)
+                hiddenInputRef.current.value = '';
             }}
           />
           <TextButton
             className="channel-profile-form__avatar-button"
-            onClick={() => hiddenInputRef.current.click()}
+            onClick={() => hiddenInputRef.current?.click()}
             disableUnderline
           >
             <Label type={LabelTypography.BUTTON_1} color={LabelColors.PRIMARY}>

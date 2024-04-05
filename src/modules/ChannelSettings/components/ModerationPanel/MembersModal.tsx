@@ -15,17 +15,17 @@ import { noop } from '../../../../utils/utils';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { Member } from '@sendbird/chat/groupChannel';
+import { Member, MemberListQuery } from '@sendbird/chat/groupChannel';
 
 interface Props {
   onCancel(): void;
 }
 
 export default function MembersModal({ onCancel }: Props): ReactElement {
-  const [members, setMembers] = useState([]);
-  const [memberQuery, setMemberQuery] = useState(null);
-
-  const { channel } = useChannelSettingsContext();
+  const [members, setMembers] = useState<Member[]>([]);
+  const [memberQuery, setMemberQuery] = useState<MemberListQuery | null>(null);
+  
+  const channel = useChannelSettingsContext()?.channel;
   const state = useSendbirdStateContext();
   const currentUser = state?.config?.userId;
   const { stringSet } = useContext(LocalizationContext);
@@ -34,10 +34,10 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
     const memberListQuery = channel?.createMemberListQuery({
       limit: 20,
     });
-    memberListQuery.next().then((members) => {
+    memberListQuery?.next().then((members) => {
       setMembers(members);
     });
-    setMemberQuery(memberListQuery);
+    setMemberQuery(memberListQuery ?? null);
   }, []);
   return (
     <div>
@@ -51,7 +51,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
         <div
           className="sendbird-more-members__popup-scroll"
           onScroll={(e) => {
-            const { hasNext } = memberQuery;
+            const hasNext = memberQuery?.hasNext;
             const target = e.target as HTMLTextAreaElement;
             const fetchMore = (
               target.clientHeight + target.scrollTop === target.scrollHeight

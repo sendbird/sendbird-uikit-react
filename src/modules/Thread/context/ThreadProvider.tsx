@@ -153,7 +153,7 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
   const { initialize, loadPrevious, loadNext } = useThreadFetchers({
     parentMessage,
     // anchorMessage should be null when parentMessage doesn't exist
-    anchorMessage: propsMessage?.messageId !== propsParentMessage?.messageId ? propsMessage : undefined,
+    anchorMessage: propsMessage?.messageId !== propsParentMessage?.messageId ? propsMessage || undefined : undefined,
     logger,
     isReactionEnabled,
     threadDispatcher,

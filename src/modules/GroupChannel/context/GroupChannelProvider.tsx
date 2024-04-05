@@ -102,7 +102,7 @@ export interface GroupChannelProviderProps
   children?: React.ReactNode;
 }
 
-export const GroupChannelContext = React.createContext<GroupChannelContextType>(null);
+export const GroupChannelContext = React.createContext<GroupChannelContextType | null>(null);
 export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   const {
     channelUrl,

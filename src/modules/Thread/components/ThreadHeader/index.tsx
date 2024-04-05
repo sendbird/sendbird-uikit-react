@@ -61,7 +61,7 @@ export default function ThreadHeader({
             <IconButton
               width="32px"
               height="32px"
-              onClick={(e) => onActionIconClick(e)}
+              onClick={(e) => onActionIconClick?.(e)}
             >
               <Icon
                 type={IconTypes.CLOSE}

@@ -93,11 +93,11 @@ export const MessageInputWrapperView = React.forwardRef((
 
   // States
   const [mentionNickname, setMentionNickname] = useState('');
-  const [mentionedUsers, setMentionedUsers] = useState([]);
-  const [mentionedUserIds, setMentionedUserIds] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState([]);
-  const [messageInputEvent, setMessageInputEvent] = useState(null);
+  const [mentionedUsers, setMentionedUsers]= useState<User[]>([]);
+  const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState<User[]>([]);
+  const [messageInputEvent, setMessageInputEvent] = useState<React.KeyboardEvent<HTMLDivElement> | null>(null);
   const [showVoiceMessageInput, setShowVoiceMessageInput] = useState(false);
 
   // Conditions
@@ -143,7 +143,7 @@ export const MessageInputWrapperView = React.forwardRef((
   const handleUploadFiles = useHandleUploadFiles({
     sendFileMessage,
     sendMultipleFilesMessage,
-    quoteMessage,
+    quoteMessage: quoteMessage ?? undefined,
   }, { logger });
 
   if (isBroadcast && !isOperator) {
@@ -157,7 +157,7 @@ export const MessageInputWrapperView = React.forwardRef((
         <SuggestedMentionList
           currentChannel={currentChannel}
           targetNickname={mentionNickname}
-          inputEvent={messageInputEvent}
+          inputEvent={messageInputEvent ?? undefined}
           renderUserMentionItem={renderUserMentionItem}
           onUserItemClick={(user) => {
             if (user) {
@@ -185,7 +185,7 @@ export const MessageInputWrapperView = React.forwardRef((
       )}
       {showVoiceMessageInput ? (
         <VoiceMessageInputWrapper
-          channel={currentChannel}
+          channel={currentChannel ?? undefined}
           onSubmitClick={(recordedFile, duration) => {
             sendVoiceMessage({ file: recordedFile, parentMessageId: quoteMessage?.messageId }, duration);
             setQuoteMessage(null);
@@ -212,8 +212,8 @@ export const MessageInputWrapperView = React.forwardRef((
           setMentionedUsers={setMentionedUsers}
           placeholder={
             (quoteMessage && stringSet.MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER)
-            || ((disabled || isDisabledBecauseFrozen(currentChannel)) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
-            || (isDisabledBecauseMuted(currentChannel)
+            || ((disabled || isDisabledBecauseFrozen(currentChannel ?? undefined)) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
+            || (isDisabledBecauseMuted(currentChannel ?? undefined)
               && (isMobile ? stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT : stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED))
           }
           ref={ref || messageInputRef}

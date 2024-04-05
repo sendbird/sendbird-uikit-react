@@ -53,7 +53,7 @@ export const SuggestedMentionListView = (props: SuggestedMentionListViewProps) =
   const [timer, setTimer] = useState(null);
   const [searchString, setSearchString] = useState('');
   const [lastSearchString, setLastSearchString] = useState('');
-  const [currentFocusedMember, setCurrentFocusedMember] = useState<User>(null);
+  const [currentFocusedMember, setCurrentFocusedMember] = useState<User | null>(null);
   const [currentMemberList, setCurrentMemberList] = useState<Member[]>([]);
 
   useEffect(() => {
@@ -68,21 +68,21 @@ export const SuggestedMentionListView = (props: SuggestedMentionListViewProps) =
   useEffect(() => {
     if (inputEvent?.key === MessageInputKeys.Enter) {
       if (currentMemberList.length > 0) {
-        onUserItemClick(currentFocusedMember);
+        onUserItemClick?.(currentFocusedMember);
       }
     }
     if (inputEvent?.key === MessageInputKeys.ArrowUp) {
       const currentUserIndex = currentMemberList.findIndex((member) => member?.userId === currentFocusedMember?.userId);
       if (0 < currentUserIndex) {
         setCurrentFocusedMember(currentMemberList[currentUserIndex - 1]);
-        onFocusItemChange(currentMemberList[currentUserIndex - 1]);
+        onFocusItemChange?.(currentMemberList[currentUserIndex - 1]);
       }
     }
     if (inputEvent?.key === MessageInputKeys.ArrowDown) {
       const currentUserIndex = currentMemberList.findIndex((member) => member?.userId === currentFocusedMember?.userId);
       if (currentUserIndex < currentMemberList.length - 1) {
         setCurrentFocusedMember(currentMemberList[currentUserIndex + 1]);
-        onFocusItemChange(currentMemberList[currentUserIndex + 1]);
+        onFocusItemChange?.(currentMemberList[currentUserIndex + 1]);
       }
     }
   }, [inputEvent]);
@@ -108,7 +108,7 @@ export const SuggestedMentionListView = (props: SuggestedMentionListViewProps) =
           setCurrentFocusedMember(suggestingMembers[0]);
         }
         setLastSearchString(searchString);
-        onFetchUsers(suggestingMembers);
+        onFetchUsers?.(suggestingMembers);
         setCurrentMemberList(suggestingMembers);
       })
       .catch((error) => {
@@ -142,7 +142,7 @@ export const SuggestedMentionListView = (props: SuggestedMentionListViewProps) =
             isFocused={member?.userId === currentFocusedMember?.userId}
             parentScrollRef={scrollRef}
             onClick={({ member }) => {
-              onUserItemClick(member);
+              onUserItemClick?.(member);
             }}
             onMouseOver={({ member }) => {
               setCurrentFocusedMember(member);

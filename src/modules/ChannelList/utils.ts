@@ -83,7 +83,7 @@ const createEventHandler = ({ sdk, sdkChannelHandlerId, channelListDispatcher, l
       }
     },
     onMessageUpdated: (channel, message) => {
-      if (channel.isGroupChannel() && channel.lastMessage.isEqual(message)) {
+      if (channel.isGroupChannel() && channel.lastMessage?.isEqual(message)) {
         logger.info('ChannelList: onMessageUpdated', channel);
         channelListDispatcher({
           type: channelActions.ON_LAST_MESSAGE_UPDATED,

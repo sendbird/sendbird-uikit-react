@@ -28,7 +28,7 @@ export const VoiceMessageInputWrapper = ({
   onSubmitClick,
 }: VoiceMessageInputWrapperProps): React.ReactElement => {
   const uuid = useRef<string>(uuidv4()).current;
-  const [audioFile, setAudioFile] = useState<File>(null);
+  const [audioFile, setAudioFile] = useState<File | null>(null);
   const [voiceInputState, setVoiceInputState] = useState<VoiceMessageInputStatus>(VoiceMessageInputStatus.READY_TO_RECORD);
   const [isSubmitted, setSubmit] = useState(false);
   const [isDisabled, setDisabled] = useState(false);
@@ -76,7 +76,7 @@ export const VoiceMessageInputWrapper = ({
   // call onSubmitClick when submit button is clicked and recorded audio file is created
   useEffect(() => {
     if (isSubmitted && audioFile) {
-      onSubmitClick(audioFile, recordingTime);
+      onSubmitClick?.(audioFile, recordingTime);
       setSubmit(false);
       setAudioFile(null);
     }
@@ -103,7 +103,7 @@ export const VoiceMessageInputWrapper = ({
         maximumValue={recordingStatus === VoiceRecorderStatus.COMPLETED ? recordingTime : recordingLimit}
         currentType={voiceInputState}
         onCancelClick={() => {
-          onCancelClick();
+          onCancelClick?.();
           cancel();
           stopVoicePlayer();
         }}
@@ -160,7 +160,7 @@ export const VoiceMessageInputWrapper = ({
             isCloseOnClickOutside
             onCancel={() => {
               setShowModal(false);
-              onCancelClick();
+              onCancelClick?.();
             }}
           >
             <div className="sendbird-voice-message-input-wrapper-alert__body">
@@ -170,7 +170,7 @@ export const VoiceMessageInputWrapper = ({
                 size={ButtonSizes.BIG}
                 onClick={() => {
                   setShowModal(false);
-                  onCancelClick();
+                  onCancelClick?.();
                 }}
               >
                 {stringSet.BUTTON__OK}

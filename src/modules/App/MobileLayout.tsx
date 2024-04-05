@@ -62,7 +62,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
 
   useEffect(() => {
     if (panel !== PANELS.CHANNEL) {
-      goToMessage(null, () => setHighlightedMessage(null));
+      goToMessage(null, () => setHighlightedMessage?.(null));
     }
   }, [panel]);
 
@@ -173,7 +173,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
       )}
       {panel === PANELS.CHANNEL && (
         <div className="sb_mobile__panelwrap">
-          {enableLegacyChannelModules ? <Channel {...channelProps} /> : <GroupChannel {...channelProps} />}
+          {enableLegacyChannelModules ? <Channel {...channelProps} /> : <GroupChannel {...channelProps} startingPoint={channelProps.startingPoint ?? undefined}/>}
         </div>
       )}
       {panel === PANELS.CHANNEL_SETTINGS && (
@@ -218,7 +218,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
               setCurrentChannel(channel);
               goToMessage(message, (messageId) => {
                 setPanel(PANELS.CHANNEL);
-                setHighlightedMessage(messageId);
+                setHighlightedMessage?.(messageId);
               });
             }}
           />

@@ -17,16 +17,17 @@ import OperatorsModal from './OperatorsModal';
 import AddOperatorsModal from './AddOperatorsModal';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
+import { User } from '@sendbird/chat';
 
 export const OperatorList = (): ReactElement => {
-  const [operators, setOperators] = useState([]);
+  const [operators, setOperators] = useState<User[]>([]);
   const [showMore, setShowMore] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [hasNext, setHasNext] = useState(false);
   const { stringSet } = useContext(LocalizationContext);
 
   const state = useSendbirdStateContext();
-  const { channel } = useChannelSettingsContext();
+  const channel = useChannelSettingsContext()?.channel;
 
   const userId = state?.config?.userId;
 

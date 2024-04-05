@@ -271,9 +271,9 @@ const SendbirdSDK = ({
 
   useEffect(() => {
     const body = document.querySelector('body');
-    body.classList.remove('sendbird-experimental__rem__units');
+    body?.classList.remove('sendbird-experimental__rem__units');
     if (isREMUnitEnabled) {
-      body.classList.add('sendbird-experimental__rem__units');
+      body?.classList.add('sendbird-experimental__rem__units');
     }
   }, [isREMUnitEnabled]);
   // add-remove theme from body
@@ -281,9 +281,9 @@ const SendbirdSDK = ({
     logger.info('Setup theme', `Theme: ${currentTheme}`);
     try {
       const body = document.querySelector('body');
-      body.classList.remove('sendbird-theme--light');
-      body.classList.remove('sendbird-theme--dark');
-      body.classList.add(`sendbird-theme--${currentTheme || 'light'}`);
+      body?.classList.remove('sendbird-theme--light');
+      body?.classList.remove('sendbird-theme--dark');
+      body?.classList.add(`sendbird-theme--${currentTheme || 'light'}`);
       logger.info('Finish setup theme');
       // eslint-disable-next-line no-empty
     } catch (e) {
@@ -292,8 +292,8 @@ const SendbirdSDK = ({
     return () => {
       try {
         const body = document.querySelector('body');
-        body.classList.remove('sendbird-theme--light');
-        body.classList.remove('sendbird-theme--dark');
+        body?.classList.remove('sendbird-theme--light');
+        body?.classList.remove('sendbird-theme--dark');
         // eslint-disable-next-line no-empty
       } catch { }
     };

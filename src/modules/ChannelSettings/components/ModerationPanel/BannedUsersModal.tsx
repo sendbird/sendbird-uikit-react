@@ -13,6 +13,7 @@ import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 import { noop } from '../../../../utils/utils';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { useLocalization } from '../../../../lib/LocalizationContext';
+import { BannedUserListQuery, RestrictedUser } from '@sendbird/chat';
 
 interface Props {
   onCancel(): void;
@@ -21,17 +22,17 @@ interface Props {
 export default function BannedUsersModal({
   onCancel,
 }: Props): ReactElement {
-  const [members, setMembers] = useState([]);
-  const [memberQuery, setMemberQuery] = useState(null);
-  const { channel } = useChannelSettingsContext();
+  const [members, setMembers] = useState<RestrictedUser[]>([]);
+  const [memberQuery, setMemberQuery] = useState<BannedUserListQuery | null>(null);
+  const channel = useChannelSettingsContext()?.channel;
   const { stringSet } = useLocalization();
 
   useEffect(() => {
     const bannedUserListQuery = channel?.createBannedUserListQuery();
-    bannedUserListQuery.next().then((users) => {
+    bannedUserListQuery?.next().then((users) => {
       setMembers(users);
     });
-    setMemberQuery(bannedUserListQuery);
+    setMemberQuery(bannedUserListQuery ?? null);
   }, []);
   return (
     <div>
@@ -45,7 +46,7 @@ export default function BannedUsersModal({
         <div
           className="sendbird-more-members__popup-scroll"
           onScroll={(e) => {
-            const { hasNext } = memberQuery;
+            const hasNext = memberQuery?.hasNext;
             const target = e.target as HTMLTextAreaElement;
             const fetchMore = (
               target.clientHeight + target.scrollTop === target.scrollHeight

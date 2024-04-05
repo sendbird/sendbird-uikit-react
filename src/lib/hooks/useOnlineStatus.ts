@@ -78,14 +78,14 @@ function useOnlineStatus(sdk: SendbirdChat, logger: LoggerInterface) {
     const body = document.querySelector('body');
     if (!isOnline && !sdk?.isCacheEnabled) {
       try {
-        body.classList.add('sendbird__offline');
+        body?.classList.add('sendbird__offline');
         logger.info('Added class sendbird__offline to body');
       } catch (e) {
         //
       }
     } else {
       try {
-        body.classList.remove('sendbird__offline');
+        body?.classList.remove('sendbird__offline');
         logger.info('Removed class sendbird__offline from body');
       } catch (e) {
         //

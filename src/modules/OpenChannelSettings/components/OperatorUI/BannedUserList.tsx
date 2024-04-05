@@ -17,9 +17,10 @@ import { UserListItem } from '../ParticipantUI/ParticipantItem';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { RestrictedUser } from '@sendbird/chat';
 
 export const BannedUserList = (): ReactElement => {
-  const [bannedUsers, setBannedUsers] = useState([]);
+  const [bannedUsers, setBannedUsers] = useState<RestrictedUser[]>([]);
   const [hasNext, setHasNext] = useState(false);
   const [showModal, setShowModal] = useState(false);
 

@@ -36,7 +36,7 @@ function useDeleteMessageCallback(
         } else {
           logger.info('Channel | useDeleteMessageCallback: Deleting message from remote:', sendingStatus);
           currentGroupChannel
-            .deleteMessage(message)
+            ?.deleteMessage(message)
             .then(() => {
               logger.info('Channel | useDeleteMessageCallback: Deleting message success!', message);
               messagesDispatcher({

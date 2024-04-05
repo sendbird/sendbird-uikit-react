@@ -107,7 +107,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
               lastModified: new Date().getTime(),
               type: VOICE_MESSAGE_MIME_TYPE,
             });
-            eventHandler?.onRecordingEnded(convertedAudioFile);
+            eventHandler?.onRecordingEnded?.(convertedAudioFile);
             logger.info('VoiceRecorder: Succeeded converting audio file.', convertedAudioFile);
           });
           stream?.getAudioTracks?.().forEach?.(track => track?.stop());

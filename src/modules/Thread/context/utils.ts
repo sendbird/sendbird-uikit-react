@@ -1,10 +1,10 @@
 import format from 'date-fns/format';
-import { GroupChannel } from '@sendbird/chat/groupChannel';
+import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import { BaseMessage } from '@sendbird/chat/message';
 import { getOutgoingMessageState, OutgoingMessageStates } from '../../../utils/exports/getOutgoingMessageState';
 import { SendableMessageType } from '../../../utils';
 
-export const getNicknamesMapFromMembers = (members = []): Map<string, string> => {
+export const getNicknamesMapFromMembers = (members: Member[] = []): Map<string, string> => {
   const nicknamesMap = new Map();
   for (let memberIndex = 0; memberIndex < members.length; memberIndex += 1) {
     const { userId, nickname } = members[memberIndex];
@@ -72,7 +72,7 @@ export const scrollIntoLast = (intialTry = 0): void => {
   try {
     const scrollDOM = document.querySelector('.sendbird-thread-ui--scroll');
     // eslint-disable-next-line no-multi-assign
-    scrollDOM.scrollTop = scrollDOM.scrollHeight;
+    if (scrollDOM) {scrollDOM.scrollTop = scrollDOM.scrollHeight;}
   } catch (error) {
     setTimeout(() => {
       scrollIntoLast(currentTry + 1);

@@ -152,11 +152,11 @@ const MessageView = (props: MessageViewProps) => {
   const [showFileViewer, setShowFileViewer] = useState(false);
   const [isAnimated, setIsAnimated] = useState(false);
   const [mentionNickname, setMentionNickname] = useState('');
-  const [mentionedUsers, setMentionedUsers] = useState([]);
-  const [mentionedUserIds, setMentionedUserIds] = useState([]);
-  const [messageInputEvent, setMessageInputEvent] = useState(null);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState([]);
+  const [mentionedUsers, setMentionedUsers] = useState<User[]>([]);
+  const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
+  const [messageInputEvent, setMessageInputEvent] = useState<React.KeyboardEvent<HTMLDivElement> | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState<User[]>([]);
   const editMessageInputRef = useRef(null);
   const messageScrollRef = useRef(null);
 
@@ -269,7 +269,7 @@ const MessageView = (props: MessageViewProps) => {
           })
         }
         {/* Modal */}
-        {showRemove && renderRemoveMessageModal({ message, onCancel: () => setShowRemove(false) })}
+        {showRemove && renderRemoveMessageModal?.({ message, onCancel: () => setShowRemove(false) })}
         {showFileViewer && renderFileViewer({ message: message as FileMessage, onCancel: () => setShowFileViewer(false) })}
       </>
     );
@@ -283,7 +283,7 @@ const MessageView = (props: MessageViewProps) => {
             <SuggestedMentionListView
               currentChannel={channel}
               targetNickname={mentionNickname}
-              inputEvent={messageInputEvent}
+              inputEvent={messageInputEvent ?? undefined}
               renderUserMentionItem={renderUserMentionItem}
               onUserItemClick={(user) => {
                 if (user) {

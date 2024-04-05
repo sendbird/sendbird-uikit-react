@@ -44,13 +44,13 @@ export const CreateOpenChannelProvider: React.FC<CreateOpenChannelProviderProps>
     const { name, coverUrlOrImage } = params;
     if (sdkInitialized) {
       const params = {} as OpenChannelCreateParams;
-      params.operatorUserIds = [sdk?.currentUser?.userId];
+      params.operatorUserIds = sdk?.currentUser?.userId ? [sdk.currentUser.userId] : [];
       params.name = name;
       params.coverUrlOrImage = coverUrlOrImage;
       sdk.openChannel.createChannel(onBeforeCreateChannel?.(params) || params)
         .then((openChannel) => {
           logger.info('CreateOpenChannel: Succeeded creating openChannel', openChannel);
-          onCreateChannel(openChannel);
+          onCreateChannel?.(openChannel);
         })
         .catch((err) => {
           logger.warning('CreateOpenChannel: Failed creating openChannel', err);
