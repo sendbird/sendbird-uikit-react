@@ -9,6 +9,7 @@ import { noop } from '../../utils/utils';
 import useLongPress from '../../hooks/useLongPress';
 import { MultipleFilesMessage } from '@sendbird/chat/message';
 import { getMessageFirstFileType, getMessageFirstFileUrl, getMessageFirstFileThumbnailUrl } from '../QuoteMessage/utils';
+import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 interface Props {
   className?: string | Array<string>;
@@ -41,6 +42,9 @@ export default function ThumbnailMessageItemBody({
     },
   });
 
+  const globalStore = useSendbirdStateContext();
+  const { eventHandlers } = globalStore;
+
   return (
     <div
       className={getClassName([
@@ -59,6 +63,9 @@ export default function ThumbnailMessageItemBody({
         width={style?.width || '360px'}
         height={style?.height || '270px'}
         onLoad={() => { setImageRendered(true); }}
+        onError={() => { 
+          eventHandlers?.request?.onFailed?.(new Error(`Image load failed - ${thumbnailUrl || getMessageFirstFileUrl(message)}`));
+        }}
         placeHolder={({ style }) => (
           <div
             className="sendbird-thumbnail-message-item-body__placeholder"
