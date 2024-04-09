@@ -33,7 +33,7 @@ const ChannelSettingsUI: React.FC<ChannelSettingsUIProps> = ({
   const { stringSet } = useContext(LocalizationContext);
 
   const state = useSendbirdStateContext();
-  const { channel, invalidChannel, onCloseClick, loading } = useChannelSettingsContext();
+  const { channel, invalidChannel, onCloseClick, loading } = useChannelSettingsContext() ?? {};
 
   const [showLeaveChannelModal, setShowLeaveChannelModal] = useState(false);
 

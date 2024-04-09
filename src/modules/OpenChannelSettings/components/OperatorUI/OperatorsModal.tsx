@@ -111,7 +111,7 @@ export default function OperatorListModal({ onCancel }: Props): ReactElement {
                           </MenuItems>
                         )}
                       />
-                    ) : null
+                    ) : <></>
                 )}
               />
             ))

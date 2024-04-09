@@ -38,7 +38,7 @@ export default function MutedParticipantsModal({
     mutedUserListQuery?.next().then((users) => {
       setMutedUsers(users);
     });
-    if (mutedUserListQuery) {setUserListQuery(mutedUserListQuery);}
+    if (mutedUserListQuery) { setUserListQuery(mutedUserListQuery); }
   }, []);
   return (
     <div>
@@ -115,7 +115,7 @@ export default function MutedParticipantsModal({
                           </MenuItems>
                         )}
                       />
-                    ) : null
+                    ) : <></>
                 )}
               />
             ))}

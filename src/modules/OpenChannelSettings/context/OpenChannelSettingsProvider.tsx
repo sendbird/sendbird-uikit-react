@@ -31,7 +31,7 @@ interface OpenChannelSettingsContextType {
   onDeleteChannel?(channel: OpenChannel): void;
 }
 
-const OpenChannelSettingsContext = React.createContext<OpenChannelSettingsContextType | null>(undefined);
+const OpenChannelSettingsContext = React.createContext<OpenChannelSettingsContextType | null>(null);
 
 const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (props: OpenChannelSettingsContextProps) => {
   const {

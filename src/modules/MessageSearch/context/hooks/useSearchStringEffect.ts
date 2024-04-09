@@ -15,10 +15,10 @@ function useSearchStringEffect(
   { searchString }: DynamicParams,
   { messageSearchDispatcher }: StaticParams,
 ): string {
-  const [requestString, setRequestString] = useState('');
-  const [debouncingTimer, setDebouncingTimer] = useState(null);
+  const [requestString, setRequestString] = useState<string>('');
+  const [debouncingTimer, setDebouncingTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
-    clearTimeout(debouncingTimer);
+    clearTimeout(debouncingTimer ?? undefined);
     if (searchString) {
       setDebouncingTimer(
         setTimeout(() => {

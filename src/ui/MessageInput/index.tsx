@@ -292,10 +292,12 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
           backTextNode,
           ...childNodes.slice(endNodeIndex + 1),
         ];
-        if(textField){
+        if (textField) {
           textField.innerHTML = '';
           newNodes.forEach((newNode) => {
-            newNode && textField.appendChild(newNode);
+            if (newNode) {
+              textField.appendChild(newNode);
+            }
           });
         }
         onUserMentioned(mentionSelectedUser);

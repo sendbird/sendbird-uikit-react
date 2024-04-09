@@ -72,7 +72,7 @@ export const scrollIntoLast = (intialTry = 0): void => {
   try {
     const scrollDOM = document.querySelector('.sendbird-thread-ui--scroll');
     // eslint-disable-next-line no-multi-assign
-    if (scrollDOM) {scrollDOM.scrollTop = scrollDOM.scrollHeight;}
+    if (scrollDOM) { scrollDOM.scrollTop = scrollDOM.scrollHeight; }
   } catch (error) {
     setTimeout(() => {
       scrollIntoLast(currentTry + 1);

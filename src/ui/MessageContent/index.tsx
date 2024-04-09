@@ -27,7 +27,7 @@ import { LocalizationContext, useLocalization } from '../../lib/LocalizationCont
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { EmojiContainer } from '@sendbird/chat';
-import { AdminMessage, Feedback, FeedbackRating, FileMessage, ThreadInfo, UserMessage } from '@sendbird/chat/message';
+import { AdminMessage, Feedback, FeedbackRating, FileMessage, UserMessage } from '@sendbird/chat/message';
 import useLongPress from '../../hooks/useLongPress';
 import MobileMenu from '../MobileMenu';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';

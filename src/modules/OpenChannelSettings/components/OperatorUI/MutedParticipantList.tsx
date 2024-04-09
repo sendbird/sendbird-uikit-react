@@ -104,7 +104,7 @@ export const MutedParticipantList = (): ReactElement => {
                       </MenuItems>
                     )}
                   />
-                ) : null
+                ) : <></>
             )}
           />
         ))

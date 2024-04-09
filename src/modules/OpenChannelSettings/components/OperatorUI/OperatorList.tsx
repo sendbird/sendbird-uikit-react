@@ -97,7 +97,7 @@ const OperatorList = (): ReactElement => {
                       </MenuItems>
                     )}
                   />
-                ) : null
+                ) : <></>
             )}
           />
         ))
@@ -113,7 +113,7 @@ const OperatorList = (): ReactElement => {
           {stringSet.OPEN_CHANNEL_SETTINGS__OPERATORS__TITLE_ADD}
         </Button>
         {
-          channel?.operators?.length > 10 && (
+          channel?.operators && channel.operators.length > 10 && (
             <Button
               type={ButtonTypes.SECONDARY}
               size={ButtonSizes.SMALL}

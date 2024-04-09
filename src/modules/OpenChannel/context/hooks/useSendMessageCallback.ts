@@ -26,7 +26,7 @@ function useSendMessageCallback(
 ): () => void {
   return useCallback(() => {
     if (sdk) {
-      const text = messageInputRef.current.innerText;
+      const text = messageInputRef.current?.innerText;
       const createParamsDefault = (txt: string | number): UserMessageCreateParams => {
         const message = txt as string;
         const params: UserMessageCreateParams = {
@@ -38,7 +38,7 @@ function useSendMessageCallback(
       if (createCustomParams) {
         logger.info('OpenChannel | useSendMessageCallback: Creating params using onBeforeSendUserMessage', onBeforeSendUserMessage);
       }
-      const params = onBeforeSendUserMessage ? onBeforeSendUserMessage(text) : createParamsDefault(text);
+      const params = onBeforeSendUserMessage ? onBeforeSendUserMessage(text ?? '') : createParamsDefault(text ?? '');
       logger.info('OpenChannel | useSendMessageCallback: Sending message has started', params);
 
       let pendingMsg = null;

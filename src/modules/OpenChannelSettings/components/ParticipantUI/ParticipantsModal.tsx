@@ -161,7 +161,7 @@ export default function ParticipantsModal({
                           )}
                         />
                       )
-                      : null
+                      : <></>
                   }
                 />
               );

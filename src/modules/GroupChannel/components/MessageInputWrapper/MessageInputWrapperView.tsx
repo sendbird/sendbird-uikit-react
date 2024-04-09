@@ -93,7 +93,7 @@ export const MessageInputWrapperView = React.forwardRef((
 
   // States
   const [mentionNickname, setMentionNickname] = useState('');
-  const [mentionedUsers, setMentionedUsers]= useState<User[]>([]);
+  const [mentionedUsers, setMentionedUsers] = useState<User[]>([]);
   const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState<User[]>([]);

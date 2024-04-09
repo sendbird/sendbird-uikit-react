@@ -20,7 +20,7 @@ interface WordProps {
 }
 
 // Word and StringObj will include types: normal, mention, url
-export default function Word(props: WordProps): JSX.Element | null{
+export default function Word(props: WordProps): JSX.Element | null {
   const {
     word,
     message,

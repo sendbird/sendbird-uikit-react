@@ -74,10 +74,10 @@ function OpenChannelListUI({
     setShowCreateChannel(true);
   };
 
-  const MemoizedHeader: React.ReactElement = useMemo(() => {
+  const MemoizedHeader: React.ReactElement | null = useMemo(() => {
     return renderHeader?.() || null;
   }, [renderHeader]);
-  const MemoizedPlaceHolder: React.ReactElement = useMemo(() => {
+  const MemoizedPlaceHolder: React.ReactElement | null = useMemo(() => {
     if (fetchingStatus === OpenChannelListFetchingStatus.EMPTY) {
       return renderPlaceHolderEmpty?.() || (
         <PlaceHolder

@@ -24,7 +24,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
   constructor(props: MenuItemsProps) {
     super(props);
     this.state = {
-      menuStyle: {top: 0, left: 0},
+      menuStyle: { top: 0, left: 0 },
       handleClickOutside: () => { /* noop */ },
     };
   }
@@ -99,15 +99,15 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
     this.setState({ menuStyle });
     return menuStyle;
   };
-  
+
   render(): ReactElement {
     const portalElement = document.getElementById('sendbird-dropdown-portal');
     if (!portalElement)
       return <></>;
-    
+
     const { menuStyle } = this.state;
     const { children, style, className = '' } = this.props;
-    
+
     return (
       createPortal(
         (
@@ -128,7 +128,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
             </ul>
           </div>
         ),
-        portalElement
+        portalElement,
       )
     );
   }

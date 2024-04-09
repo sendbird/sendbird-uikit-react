@@ -42,7 +42,7 @@ function useUpdateMessageCallback(
         const params: UserMessageUpdateParams = {
           message,
         };
-        if (isMentionEnabled && mentionedUsers&& mentionedUsers.length > 0) {
+        if (isMentionEnabled && mentionedUsers && mentionedUsers.length > 0) {
           params.mentionedUsers = mentionedUsers;
         }
         if (isMentionEnabled && mentionTemplate) {

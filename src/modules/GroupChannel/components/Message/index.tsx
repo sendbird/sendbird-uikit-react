@@ -59,11 +59,11 @@ export const Message = (props: MessageProps): React.ReactElement => {
       channel={currentChannel}
       emojiContainer={emojiManager.emojiContainer}
       editInputDisabled={
-        !initialized || isDisabledBecauseFrozen(currentChannel) || isDisabledBecauseMuted(currentChannel) || !config.isOnline
+        !initialized || isDisabledBecauseFrozen(currentChannel ?? undefined) || isDisabledBecauseMuted(currentChannel ?? undefined) || !config.isOnline
       }
       shouldRenderSuggestedReplies={shouldRenderSuggestedReplies}
-      isReactionEnabled={isReactionEnabled}
-      replyType={replyType}
+      isReactionEnabled={isReactionEnabled ?? false}
+      replyType={replyType ?? 'NONE'}
       threadReplySelectType={threadReplySelectType}
       nicknamesMap={nicknamesMap}
       renderUserMentionItem={renderUserMentionItem}

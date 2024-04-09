@@ -27,7 +27,7 @@ const LeaveChannel: React.FC<LeaveChannelProps> = (props: LeaveChannelProps) => 
     onCancel = noop,
   } = props;
 
-  const { channel, onLeaveChannel } = useChannelSettingsContext();
+  const { channel, onLeaveChannel } = useChannelSettingsContext() ?? {};
   const { stringSet } = useLocalization();
   const state = useSendbirdStateContext();
   const logger = state?.config?.logger;
@@ -58,7 +58,7 @@ const LeaveChannel: React.FC<LeaveChannelProps> = (props: LeaveChannelProps) => 
             channel?.leave()
               .then(() => {
                 logger.info('ChannelSettings: Leaving channel successful!', channel);
-                onLeaveChannel();
+                onLeaveChannel?.();
               });
           }}
           className="sendbird-channel-settings__leave-label--mobile"

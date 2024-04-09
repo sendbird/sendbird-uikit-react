@@ -99,7 +99,7 @@ export const BannedUserList = (): ReactElement => {
                       </MenuItems>
                     )}
                   />
-                ) : null
+                ) : <></>
             )}
           />
         ))

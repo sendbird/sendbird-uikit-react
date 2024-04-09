@@ -29,7 +29,7 @@ export function MessageEmojiMenu({
   emojiContainer,
   toggleReaction,
   setSupposedHover,
-}: MessageEmojiMenuProps): ReactElement | null{
+}: MessageEmojiMenuProps): ReactElement | null {
   const triggerRef = useRef(null);
   const containerRef = useRef(null);
 

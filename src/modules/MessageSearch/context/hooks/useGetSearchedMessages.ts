@@ -63,7 +63,7 @@ function useGetSearchedMessages(
                 },
               });
               if (onResultLoaded && typeof onResultLoaded === 'function') {
-                onResultLoaded(messages as CoreMessageType[], null);
+                onResultLoaded(messages as CoreMessageType[], undefined);
               }
             }).catch((error) => {
               logger.warning('MessageSearch | useGetSearchedMessages: failed getting search messages.', error);
@@ -72,7 +72,7 @@ function useGetSearchedMessages(
                 payload: null,
               });
               if (onResultLoaded && typeof onResultLoaded === 'function') {
-                onResultLoaded(null, error);
+                onResultLoaded(undefined, error);
               }
             });
             messageSearchDispatcher({
@@ -87,7 +87,7 @@ function useGetSearchedMessages(
               payload: null,
             });
             if (onResultLoaded && typeof onResultLoaded === 'function') {
-              onResultLoaded(null, error);
+              onResultLoaded(undefined, error);
             }
           });
       } else {

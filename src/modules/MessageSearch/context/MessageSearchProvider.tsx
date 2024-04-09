@@ -49,7 +49,7 @@ interface MessageSearchProviderInterface extends MessageSearchProviderProps {
   handleOnScroll: (e: React.BaseSyntheticEvent) => void;
 }
 
-const MessageSearchContext = React.createContext<MessageSearchProviderInterface | null>(undefined);
+const MessageSearchContext = React.createContext<MessageSearchProviderInterface | null>(null);
 
 const MessageSearchProvider: React.FC<MessageSearchProviderProps> = (props: MessageSearchProviderProps) => {
   const {
@@ -103,7 +103,7 @@ const MessageSearchProvider: React.FC<MessageSearchProviderProps> = (props: Mess
     { sdk, logger, messageSearchDispatcher },
   );
 
-  const requestString = useSearchStringEffect({ searchString }, { messageSearchDispatcher });
+  const requestString = useSearchStringEffect({ searchString: searchString ?? '' }, { messageSearchDispatcher });
 
   useGetSearchMessages(
     { currentChannel, channelUrl, requestString, messageSearchQuery, onResultLoaded, retryCount },

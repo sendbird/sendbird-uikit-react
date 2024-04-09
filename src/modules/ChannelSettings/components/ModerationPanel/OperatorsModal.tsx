@@ -21,7 +21,7 @@ interface Props { onCancel?(): void }
 export default function OperatorsModal({ onCancel }: Props): ReactElement {
   const [operators, setOperators] = useState<User[]>([]);
   const [operatorQuery, setOperatorQuery] = useState<OperatorListQuery | null>(null);
-  
+
   const channel = useChannelSettingsContext()?.channel;
   const state = useSendbirdStateContext();
   const currentUserId = state?.config?.userId;
@@ -69,7 +69,7 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
               user={member}
               key={member.userId}
               action={({ parentRef, actionRef }) => (
-                member?.userId !== currentUserId && (
+                member?.userId !== currentUserId ? (
                   <ContextMenu
                     menuTrigger={(toggleDropdown) => (
                       <IconButton
@@ -109,7 +109,7 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
                       </MenuItems>
                     )}
                   />
-                )
+                ) : <></>
               )}
             />
           ))}
