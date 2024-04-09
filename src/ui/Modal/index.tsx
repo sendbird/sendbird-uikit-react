@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 
 import './index.scss';
 
-import { noop } from '../../utils/utils';
+import { deleteNullish, noop } from '../../utils/utils';
 import { MODAL_ROOT } from '../../hooks/useModal/ModalRoot';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
@@ -126,7 +126,7 @@ export function Modal(props: ModalProps): ReactElement {
     onSubmit = noop,
     renderHeader,
     customFooter,
-  } = props;
+  } = deleteNullish(props);
   const handleClose = onClose ?? onCancel;
 
   const { isMobile } = useMediaQueryContext();

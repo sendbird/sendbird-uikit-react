@@ -4,7 +4,7 @@ import './index.scss';
 import numberToPx from '../../utils/numberToPx';
 import { useDynamicSideLength } from './useDynamicSideLength';
 import { useLazyImageLoader } from '../../modules/Channel/components/Message/hooks/useLazyImageLoader';
-import { noop } from '../../utils/utils';
+import { deleteNullish, noop } from '../../utils/utils';
 
 export function getBorderRadiusForImageRenderer(circle = false, borderRadius: string | number = null): string {
   return circle ? '50%' : numberToPx(borderRadius);
@@ -170,7 +170,7 @@ const ImageRenderer = ({
 
 // Image is loaded as a background-image, but this component serves as a hidden component to receive events indicating whether the image has actually been loaded.
 const HiddenImageLoader = (props: { src: string; alt: string; onLoadStart?: () => void; onLoad?: () => void; onError?: () => void }) => {
-  const { src, alt, onLoadStart = noop, onLoad = noop, onError = noop } = props;
+  const { src, alt, onLoadStart = noop, onLoad = noop, onError = noop } = deleteNullish(props);
 
   const reloadCtx = useRef({
     currSrc: src,

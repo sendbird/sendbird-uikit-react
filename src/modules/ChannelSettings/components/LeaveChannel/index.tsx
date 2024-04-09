@@ -5,7 +5,7 @@ import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
-import { noop } from '../../../../utils/utils';
+import { deleteNullish, noop } from '../../../../utils/utils';
 
 import Modal from '../../../../ui/Modal';
 import { useLocalization } from '../../../../lib/LocalizationContext';
@@ -25,7 +25,7 @@ const LeaveChannel: React.FC<LeaveChannelProps> = (props: LeaveChannelProps) => 
   const {
     onSubmit = noop,
     onCancel = noop,
-  } = props;
+  } = deleteNullish(props);
 
   const { channel, onLeaveChannel } = useChannelSettingsContext();
   const { stringSet } = useLocalization();

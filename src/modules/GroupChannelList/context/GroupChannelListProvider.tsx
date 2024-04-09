@@ -11,7 +11,7 @@ import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import type { UserProfileProviderProps } from '../../../lib/UserProfileContext';
 import { useMarkAsDeliveredScheduler } from '../../../lib/hooks/useMarkAsDeliveredScheduler';
 import useOnlineStatus from '../../../lib/hooks/useOnlineStatus';
-import { noop } from '../../../utils/utils';
+import { deleteNullish, noop } from '../../../utils/utils';
 import type { SdkStore } from '../../../lib/types';
 import { PartialRequired } from '../../../utils/typeHelpers/partialRequired';
 
@@ -79,7 +79,7 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
     disableUserProfile,
     renderUserProfile,
     onUserProfileMessage,
-  } = props;
+  } = deleteNullish(props);
   const globalStore = useSendbirdStateContext();
   const { config, stores } = globalStore;
   const { sdkStore } = stores;
