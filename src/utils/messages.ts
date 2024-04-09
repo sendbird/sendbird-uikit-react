@@ -1,4 +1,4 @@
-import { type BaseMessage, type UserMessage } from '@sendbird/chat/message';
+import { SendingStatus, type BaseMessage, type UserMessage } from '@sendbird/chat/message';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import format from 'date-fns/format';
 
@@ -28,7 +28,7 @@ export const compareMessagesForGrouping = (
     return [false, false];
   }
   const sendingStatus = (currMessage as UserMessage)?.sendingStatus || '';
-  const isAcceptable = sendingStatus !== 'pending' && sendingStatus !== 'failed';
+  const isAcceptable = sendingStatus !== 'failed';
   return [
     isSameGroup(prevMessage, currMessage, currentChannel) && isAcceptable,
     isSameGroup(currMessage, nextMessage, currentChannel) && isAcceptable,
@@ -60,6 +60,17 @@ export const isSameGroup = (
   ) {
     return false;
   }
+
+  // group pending messages with any message type other than failed
+  // Given the above is true, group by timestamp and sender id
+  if ([message.sendingStatus, comparingMessage.sendingStatus].includes(SendingStatus.PENDING) &&
+      ![message.sendingStatus, comparingMessage.sendingStatus].includes(SendingStatus.FAILED)) {
+    return (
+      message?.sender?.userId === comparingMessage?.sender?.userId
+      && getMessageCreatedAt(message) === getMessageCreatedAt(comparingMessage)
+    );
+  }
+
   return (
     message?.sendingStatus === comparingMessage?.sendingStatus
     && message?.sender?.userId === comparingMessage?.sender?.userId
