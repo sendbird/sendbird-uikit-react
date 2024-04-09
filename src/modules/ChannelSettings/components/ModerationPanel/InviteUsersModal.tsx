@@ -24,7 +24,7 @@ export default function InviteUsers({ onCancel, onSubmit }: Props) {
   const state = useSendbirdStateContext();
   const sdk = state?.stores?.sdkStore?.sdk;
   const globalUserListQuery = state?.config?.userListQuery;
-  
+
   const { channel, overrideInviteUser, queries } = useChannelSettingsContext() || {};
   const { stringSet } = useLocalization();
 

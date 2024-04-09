@@ -44,7 +44,7 @@ export default function TooltipWrapper({
             <div className="sendbird-tooltip-wrapper__hover-tooltip__inner">
               <div
                 className="sendbird-tooltip-wrapper__hover-tooltip__inner__tooltip-container"
-                style={{ left: childrenRef.current ? `calc(${childrenRef.current.offsetWidth / 2}px - 50%)` : undefined}}
+                style={{ left: childrenRef.current ? `calc(${childrenRef.current.offsetWidth / 2}px - 50%)` : undefined }}
               >
                 {hoverTooltip}
               </div>

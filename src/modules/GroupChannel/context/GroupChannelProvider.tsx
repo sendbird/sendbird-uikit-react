@@ -209,7 +209,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
           const nextViewInfo = { scrollHeight: scrollRef.current?.scrollHeight };
           if (prevViewInfo.scrollHeight && nextViewInfo.scrollHeight) {
             const viewUpdated = prevViewInfo.scrollHeight < nextViewInfo.scrollHeight;
-            
+
             if (viewUpdated) {
               const bottomOffset = prevViewInfo.scrollHeight - (prevViewInfo.scrollTop ?? 0);
               scrollPubSub.publish('scroll', { top: nextViewInfo.scrollHeight - bottomOffset, lazy: false });
@@ -233,7 +233,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
           const nextViewInfo = { scrollHeight: scrollRef.current?.scrollHeight };
           if (prevViewInfo.scrollHeight && nextViewInfo.scrollHeight) {
             const viewUpdated = prevViewInfo.scrollHeight < nextViewInfo.scrollHeight;
-            
+
             if (viewUpdated) {
               scrollPubSub.publish('scroll', { top: prevViewInfo.scrollTop, lazy: false });
             }

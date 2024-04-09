@@ -42,7 +42,7 @@ export default function QuoteMessage({
   onClick,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
-  
+
   const { parentMessage } = message as BaseMessage;
   const parentMessageSender = (parentMessage as SendableMessageType)?.sender;
   const parentMessageSenderNickname = (userId === parentMessageSender?.userId) ? stringSet.QUOTED_MESSAGE__CURRENT_USER : parentMessageSender?.nickname;

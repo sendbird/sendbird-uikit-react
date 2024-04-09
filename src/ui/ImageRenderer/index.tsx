@@ -64,7 +64,7 @@ const ImageRenderer = ({
   const ref = useRef(null);
   const isLoaded = useLazyImageLoader(ref);
   const internalUrl = isLoaded ? url : null;
-  
+
   const [defaultComponentVisible, setDefaultComponentVisible] = useState(false);
   const [placeholderVisible, setPlaceholderVisible] = useState(true);
   const [dynamicMinWidth, dynamicMinHeight] = useDynamicSideLength({
@@ -73,7 +73,7 @@ const ImageRenderer = ({
     maxSideLength,
     defaultMinLength: '400px',
   });
-  
+
   const renderPlaceholder = () => {
     if (typeof placeHolder === 'function') {
       return placeHolder({
@@ -91,12 +91,12 @@ const ImageRenderer = ({
     }
     return placeHolder;
   };
-  
+
   const renderDefault = () => {
     if (typeof defaultComponent === 'function') return defaultComponent();
     return defaultComponent;
   };
-  
+
   const renderImage = () => {
     const backgroundStyle = internalUrl ? {
       backgroundRepeat: 'no-repeat',
@@ -104,7 +104,7 @@ const ImageRenderer = ({
       backgroundSize: 'cover',
       backgroundImage: `url(${internalUrl})`,
     } : {};
-    
+
     return (
       <div
         className="sendbird-image-renderer__image"
@@ -120,7 +120,7 @@ const ImageRenderer = ({
       />
     );
   };
-  
+
   return (
     dynamicMinWidth
     && dynamicMinHeight && (

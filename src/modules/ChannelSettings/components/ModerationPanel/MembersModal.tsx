@@ -24,7 +24,7 @@ interface Props {
 export default function MembersModal({ onCancel }: Props): ReactElement {
   const [members, setMembers] = useState<Member[]>([]);
   const [memberQuery, setMemberQuery] = useState<MemberListQuery | null>(null);
-  
+
   const channel = useChannelSettingsContext()?.channel;
   const state = useSendbirdStateContext();
   const currentUser = state?.config?.userId;

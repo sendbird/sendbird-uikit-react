@@ -115,7 +115,7 @@ const EditDetails = (props: Props): ReactElement => {
             accept="image/gif, image/jpeg, image/png"
             style={{ display: 'none' }}
             onChange={(e) => {
-              if(e.target.files){
+              if (e.target.files) {
                 setCurrentImg(URL.createObjectURL(e.target.files[0]));
                 setNewFile(e.target.files[0]);
               }

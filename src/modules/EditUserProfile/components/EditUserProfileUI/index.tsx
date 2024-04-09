@@ -94,9 +94,7 @@ export const EditUserProfileUI = () => {
     inputRef,
     updateUserInfo,
     setProfileImage,
-  } = useEditUserProfileUISates({ onEditProfile: onEditProfile ?? (() => {}) })
-  ;
-
+  } = useEditUserProfileUISates({ onEditProfile: onEditProfile ?? (() => {}) });
   return (
     <Modal
       titleText={stringSet.EDIT_PROFILE__TITLE}

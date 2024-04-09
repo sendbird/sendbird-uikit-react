@@ -26,7 +26,7 @@ const LeaveChannel: React.FC<LeaveChannelProps> = (props: LeaveChannelProps) => 
     onSubmit = noop,
     onCancel = noop,
   } = props;
-  
+
   const { channel, onLeaveChannel } = useChannelSettingsContext() ?? {};
   const { stringSet } = useLocalization();
   const state = useSendbirdStateContext();

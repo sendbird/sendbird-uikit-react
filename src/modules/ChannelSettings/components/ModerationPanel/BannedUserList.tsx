@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useContext,
 } from 'react';
-import { BannedUserListQueryParams, RestrictedUser, User } from '@sendbird/chat';
+import { BannedUserListQueryParams, RestrictedUser } from '@sendbird/chat';
 
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import
@@ -54,7 +54,7 @@ export const BannedMemberList = (): ReactElement => {
       setHasNext(bannedUserListQuery.hasNext);
     });
   }, [channel]);
-  
+
   return (
     <>
       {

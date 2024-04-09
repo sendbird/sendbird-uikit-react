@@ -21,7 +21,7 @@ interface Props { onCancel?(): void }
 export default function OperatorsModal({ onCancel }: Props): ReactElement {
   const [operators, setOperators] = useState<User[]>([]);
   const [operatorQuery, setOperatorQuery] = useState<OperatorListQuery | null>(null);
-  
+
   const channel = useChannelSettingsContext()?.channel;
   const state = useSendbirdStateContext();
   const currentUserId = state?.config?.userId;

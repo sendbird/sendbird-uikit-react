@@ -150,11 +150,11 @@ function CommunityChannelList({
                     accept="image/gif, image/jpeg, image/png"
                     style={{ display: 'none' }}
                     onChange={(e) => {
-                      if(e.target.files) {
+                      if (e.target.files) {
                         setCurrentImage(URL.createObjectURL(e.target.files[0]));
                         setCurrentFile(e.target.files[0]);
                       }
-                     
+
                       if (hiddenInputRef.current) {
                         hiddenInputRef.current.value = '';
                       }

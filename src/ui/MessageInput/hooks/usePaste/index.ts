@@ -56,18 +56,18 @@ export function usePaste({
         setHeight();
         return;
       }
-      
+
       // has mention, collect leaf nodes and parse words
       const leafNodes = getLeafNodes(pasteNode);
       const words = domToMessageTemplate(leafNodes);
       const mentionedUsers = channel.isGroupChannel() ? getUsersFromWords(words, channel) : [];
-      
+
       // side effects
       setMentionedUsers(mentionedUsers);
       inserTemplateToDOM(words);
       pasteNode.remove();
     }
-    
+
     setIsInput(true);
     setHeight();
   }, [ref, setIsInput, setHeight, channel, setMentionedUsers]);

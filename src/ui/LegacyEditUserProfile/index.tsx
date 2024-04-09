@@ -85,7 +85,7 @@ export function EditUserProfile({
               if (e.target.files && 0 < e.target.files?.length) {
                 setCurrentImg(URL.createObjectURL(e.target.files[0]));
                 setNewFile(e.target.files[0]);
-                if (hiddenInputRef.current) {hiddenInputRef.current.value = '';}
+                if (hiddenInputRef.current) { hiddenInputRef.current.value = ''; }
               }
             }}
           />

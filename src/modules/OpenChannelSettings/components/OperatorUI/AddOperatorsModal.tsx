@@ -40,7 +40,7 @@ export default function AddOperatorsModal({
     participantListQuery?.next().then((users) => {
       setParticipants(users);
     });
-    if (participantListQuery) {setParticipantQuery(participantListQuery);}
+    if (participantListQuery) { setParticipantQuery(participantListQuery); }
   }, []);
 
   const selectedCount = Object.keys(selectedUsers).filter((m) => selectedUsers[m]).length;

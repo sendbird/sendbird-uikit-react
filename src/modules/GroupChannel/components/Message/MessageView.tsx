@@ -197,7 +197,7 @@ const MessageView = (props: MessageViewProps) => {
   }, []);
 
   useLayoutEffect(() => {
-    const timeouts: ReturnType<typeof setTimeout>[]  = [];
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
 
     if (animatedMessageId === message.messageId && messageScrollRef?.current) {
       timeouts.push(

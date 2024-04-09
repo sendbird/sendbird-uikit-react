@@ -10,7 +10,6 @@ import Loader from '../Loader';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import { LabelTypography, LabelColors } from '../Label';
 import { VOICE_PLAYER_STATUS } from '../../hooks/VoicePlayer/dux/initialState';
-import { string } from 'ts-pattern/dist/patterns';
 
 export interface VoiceMessageItemBodyProps {
   className?: string;
@@ -58,7 +57,7 @@ export const VoiceMessageItemBody = ({
     }
     return DEFAULT_MAX_SIZE;
   }, [message?.metaArrays]);
-  
+
   return (
     <div className={`sendbird-voice-message-item-body ${className} ${usingReaction ? 'is-reactions-contained' : ''}`}>
       <ProgressBar

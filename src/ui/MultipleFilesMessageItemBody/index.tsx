@@ -34,7 +34,7 @@ export default function MultipleFilesMessageItemBody({
   isReactionEnabled = false,
   threadMessageKindKey,
   statefulFileInfoList = [],
-}: Props): ReactElement{
+}: Props): ReactElement {
   const [currentFileViewerIndex, setCurrentFileViewerIndex] = useState(-1);
 
   function onClose() {
