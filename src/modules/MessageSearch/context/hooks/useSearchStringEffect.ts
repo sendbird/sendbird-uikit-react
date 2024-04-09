@@ -16,7 +16,7 @@ function useSearchStringEffect(
   { messageSearchDispatcher }: StaticParams,
 ): string {
   const [requestString, setRequestString] = useState<string>('');
-  const [debouncingTimer, setDebouncingTimer] = useState<NodeJS.Timeout | null>(null);
+  const [debouncingTimer, setDebouncingTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     clearTimeout(debouncingTimer ?? undefined);
     if (searchString) {
