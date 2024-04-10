@@ -45,7 +45,9 @@ export function useMessageListScroll(behavior: 'smooth' | 'auto') {
   const scrollDistanceFromBottomRef = useRef(0);
 
   const [scrollPubSub] = useState(() => pubSubFactory<ScrollTopics, ScrollTopicUnion>());
-  const [isScrollBottomReached, setIsScrollBottomReached] = useState(false);
+
+  // lists are rendered scrolled to the bottom by default
+  const [isScrollBottomReached, setIsScrollBottomReached] = useState(true);
   const [isScrollable, setIsScrollable] = useState<boolean | null>(null);
 
   useLayoutEffect(() => {
@@ -54,7 +56,14 @@ export function useMessageListScroll(behavior: 'smooth' | 'auto') {
     unsubscribes.push(
       scrollPubSub.subscribe('scrollToBottom', ({ resolve, animated }) => {
         runCallback(() => {
-          if (!scrollRef.current) return;
+          if (!scrollRef.current) {
+
+            // if the scrollRef doesn't exist yet, just resolve the promise
+            // to release any dependent coroutine locks. These locks are meant to synchronize
+            // scrolls, which is unnecessary if the list isn't rendered yet.
+            resolve?.();
+            return;
+          };
 
           if (scrollRef.current.scroll) {
             scrollRef.current.scroll({ top: scrollRef.current.scrollHeight, behavior: getScrollBehavior(behavior, animated) });
