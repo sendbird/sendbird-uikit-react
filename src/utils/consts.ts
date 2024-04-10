@@ -1,5 +1,5 @@
 export const ONE_MiB = 1024 * 1024;
-export const SCROLL_BUFFER = 10;
+export const SCROLL_BUFFER = 30;
 export const SCROLL_BOTTOM_DELAY_FOR_SEND = 100;
 export const SCROLL_BOTTOM_DELAY_FOR_FETCH = 100;
 

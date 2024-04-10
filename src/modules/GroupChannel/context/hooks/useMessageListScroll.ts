@@ -94,7 +94,11 @@ export function useMessageListScroll(behavior: 'smooth' | 'auto') {
 
           // Update data by manual update
           scrollDistanceFromBottomRef.current = Math.max(0, scrollHeight - scrollTop - clientHeight);
-          setIsScrollBottomReached(scrollDistanceFromBottomRef.current === 0);
+
+          // This is commented out because we don't want the bottom reached 
+          // computation to trigger on content size change. useOnScrollPositionChangeDetectorWithRef will
+          // trigger the computation on true scrolling.
+          // setIsScrollBottomReached(scrollDistanceFromBottomRef.current === 0);
 
           if (resolve) resolve();
         }, lazy);
