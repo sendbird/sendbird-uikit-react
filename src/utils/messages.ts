@@ -75,8 +75,6 @@ export const isSameGroup = (
     message?.sendingStatus === comparingMessage?.sendingStatus
     && message?.sender?.userId === comparingMessage?.sender?.userId
     && getMessageCreatedAt(message) === getMessageCreatedAt(comparingMessage)
-  ) && (
-    currentChannel ? isReadMessage(currentChannel, message) === isReadMessage(currentChannel, comparingMessage) : true
   );
 };
 
