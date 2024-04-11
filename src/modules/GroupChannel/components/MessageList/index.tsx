@@ -78,10 +78,27 @@ const MessageListContainer = ({ scrollRef, renderList, messages }: {
   // This fixes a flicker that happens when old messages get rendered in.
   useLayoutEffect(() => {
     if (messages.length > prevMessagesLengthRef.current && scrollRef.current.scrollTop === 0) {
+      scrollRef.current.style.overflowY = 'hidden';
       scrollRef.current.scrollTop = 1;
     }
     prevMessagesLengthRef.current = messages.length;
-  }, [messages])
+  }, [messages]);
+
+  useLayoutEffect(() => {
+    // The above useLayoutEffect is not sufficient because of scroll inertia and bounce.
+    // To deal with inertia and bounce, the list is temporarily rendered a non-scrollable list.
+    // This cancels the inertia and, as a result, bounce.
+    const cb = () => {
+      if (scrollRef.current.scrollTop === 0) {
+        scrollRef.current.scrollTop = 1;
+        scrollRef.current.style.overflowY = 'hidden';
+      } else {
+        scrollRef.current.style.overflowY = 'scroll';
+      }
+    };
+    scrollRef.current.addEventListener('scroll', cb)
+    return () => scrollRef.current.removeEventListener('scroll', cb)
+  }, [])
 
   return (
     <div className="sendbird-conversation__messages-padding" ref={scrollRef}>
