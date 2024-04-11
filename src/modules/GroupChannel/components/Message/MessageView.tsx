@@ -188,7 +188,7 @@ const MessageView = (props: MessageViewProps) => {
   }, [mentionedUserIds]);
 
   /**
-   * Move the messsage list scroll
+   * Move the message list scroll
    * when the message's height is changed by `showEdit` OR `message.reactions`
    */
   useDidMountEffect(() => {
