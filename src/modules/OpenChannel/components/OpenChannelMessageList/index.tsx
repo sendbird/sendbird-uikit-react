@@ -15,14 +15,13 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 import { compareMessagesForGrouping } from '../../../../utils/messages';
 
-
 export type OpenChannelMessageListProps = {
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderPlaceHolderEmptyList?: () => React.ReactElement;
 };
 
-/** @deprecated **/
-export type OpenchannelMessageListProps = OpenChannelMessageListProps
+/** @deprecated * */
+export type OpenchannelMessageListProps = OpenChannelMessageListProps;
 
 function OpenChannelMessageList(props: OpenChannelMessageListProps, ref: React.RefObject<HTMLDivElement>): ReactElement {
   const {

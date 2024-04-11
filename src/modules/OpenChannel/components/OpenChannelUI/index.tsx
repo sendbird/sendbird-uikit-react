@@ -19,7 +19,7 @@ export interface OpenChannelUIProps {
   renderPlaceHolderError?: () => React.ReactElement;
   renderPlaceHolderLoading?: () => React.ReactElement;
 
-  /** @deprecated Please use renderMessageInput instead **/
+  /** @deprecated Please use renderMessageInput instead * */
   renderInput?: () => React.ReactElement;
 }
 

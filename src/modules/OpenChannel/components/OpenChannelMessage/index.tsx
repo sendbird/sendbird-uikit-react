@@ -1,4 +1,4 @@
-import React, { useState, useRef, ReactElement, useMemo } from 'react';
+import React, { useState, useRef, ReactElement } from 'react';
 import { AdminMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
 import { User } from '@sendbird/chat';
 import format from 'date-fns/format';
