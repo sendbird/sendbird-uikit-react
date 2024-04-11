@@ -16,7 +16,7 @@ import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCa
 import { compareMessagesForGrouping } from '../../../../utils/messages';
 
 export type OpenchannelMessageListProps = {
-  renderMessage?: (props: RenderMessageProps) => React.ElementType<RenderMessageProps>;
+  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderPlaceHolderEmptyList?: () => React.ReactElement;
 };
 

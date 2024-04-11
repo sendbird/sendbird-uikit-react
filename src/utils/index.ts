@@ -233,21 +233,21 @@ export const isSentStatus = (state: string): boolean => (
   || state === OutgoingMessageStates.READ
 );
 
-export const isAdminMessage = (message: CoreMessageType): boolean => (
+export const isAdminMessage = (message: CoreMessageType): message is AdminMessage => (
   message && (
     message['isAdminMessage'] && typeof message.isAdminMessage === 'function'
       ? message.isAdminMessage()
       : message?.messageType === 'admin'
   )
 );
-export const isUserMessage = (message: CoreMessageType): boolean => (
+export const isUserMessage = (message: CoreMessageType): message is UserMessage => (
   message && (
     message['isUserMessage'] && typeof message.isUserMessage === 'function'
       ? message.isUserMessage()
       : message?.messageType === 'user'
   )
 );
-export const isFileMessage = (message: CoreMessageType): boolean => (
+export const isFileMessage = (message: CoreMessageType): message is FileMessage => (
   message && (
     message['isFileMessage'] && typeof message.isFileMessage === 'function'
       ? message.isFileMessage()
@@ -256,7 +256,7 @@ export const isFileMessage = (message: CoreMessageType): boolean => (
 );
 export const isMultipleFilesMessage = (
   message: CoreMessageType,
-): boolean => (
+): message is MultipleFilesMessage => (
   message && (
     message['isMultipleFilesMessage'] && typeof message.isMultipleFilesMessage === 'function'
       ? message.isMultipleFilesMessage()

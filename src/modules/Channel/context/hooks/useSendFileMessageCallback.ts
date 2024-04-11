@@ -47,11 +47,16 @@ export default function useSendFileMessageCallback(
           pubSub.publish(topics.SEND_MESSAGE_START, {
             /* pubSub is used instead of messagesDispatcher
               to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
+            // TODO: remove data pollution
             message: {
               ...pendingMessage,
               url: URL.createObjectURL(compressedFile),
               // pending thumbnail message seems to be failed
               requestState: 'pending',
+              isUserMessage: pendingMessage.isUserMessage,
+              isFileMessage: pendingMessage.isFileMessage,
+              isAdminMessage: pendingMessage.isAdminMessage,
+              isMultipleFilesMessage: pendingMessage.isMultipleFilesMessage,
             } as unknown as FileMessage,
             channel: currentGroupChannel,
             publishingModules: [PublishingModuleType.CHANNEL],
