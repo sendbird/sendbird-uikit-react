@@ -34,7 +34,7 @@ import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import ThreadReplies from '../ThreadReplies';
 import { ThreadReplySelectType } from '../../modules/Channel/context/const';
 import { Nullable, ReplyType } from '../../types';
-import { noop } from '../../utils/utils';
+import { deleteNullish, noop } from '../../utils/utils';
 import MessageProfile, { MessageProfileProps } from './MessageProfile';
 import MessageBody, { MessageBodyProps } from './MessageBody';
 import MessageHeader, { MessageHeaderProps } from './MessageHeader';
@@ -113,30 +113,18 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     onQuoteMessageClick,
     onMessageHeightChange,
     onBeforeDownloadFileMessage,
-
-    // Public props for customization
-    renderSenderProfile = (props: MessageProfileProps) => (
-      <MessageProfile {...props}/>
-    ),
-    renderMessageBody = (props: MessageBodyProps) => (
-      <MessageBody {...props}/>
-    ),
-    renderMessageHeader = (props: MessageHeaderProps) => (
-      <MessageHeader {...props}/>
-    ),
-    renderMessageMenu = (props: MessageMenuProps) => (
-      <MessageMenu {...props} />
-    ),
-    renderEmojiMenu = (props: MessageEmojiMenuProps) => (
-      <MessageEmojiMenu {...props} />
-    ),
-    renderEmojiReactions = (props: EmojiReactionsProps) => (
-      <EmojiReactions {...props} />
-    ),
-    renderMobileMenuOnLongPress = (props: MobileBottomSheetProps) => (
-      <MobileMenu {...props} />
-    ),
   } = props;
+
+  // Public props for customization
+  const {
+    renderSenderProfile = (props: MessageProfileProps) => <MessageProfile {...props} />,
+    renderMessageBody = (props: MessageBodyProps) => <MessageBody {...props} />,
+    renderMessageHeader = (props: MessageHeaderProps) => <MessageHeader {...props} />,
+    renderMessageMenu = (props: MessageMenuProps) => <MessageMenu {...props} />,
+    renderEmojiMenu = (props: MessageEmojiMenuProps) => <MessageEmojiMenu {...props} />,
+    renderEmojiReactions = (props: EmojiReactionsProps) => <EmojiReactions {...props} />,
+    renderMobileMenuOnLongPress = (props: MobileBottomSheetProps) => <MobileMenu {...props} />,
+  } = deleteNullish(props);
 
   const { dateLocale } = useLocalization();
   const { config, eventHandlers } = useSendbirdStateContext?.() || {};

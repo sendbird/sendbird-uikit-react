@@ -5,7 +5,7 @@ import React, { useContext, useState } from 'react';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 
-import { ChannelSettingsHeader, type ChannelSettingsHeaderProps } from './ChannelSettingsHeader';
+import { ChannelSettingsHeader, ChannelSettingsHeaderProps } from './ChannelSettingsHeader';
 
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
@@ -15,6 +15,7 @@ import ChannelProfile from '../ChannelProfile';
 import ModerationPanel from '../ModerationPanel';
 import LeaveChannelModal from '../LeaveChannel';
 import UserPanel from '../UserPanel';
+import { deleteNullish } from '../../../../utils/utils';
 
 export interface ChannelSettingsUIProps {
   renderHeader?: (props: ChannelSettingsHeaderProps) => React.ReactElement;
@@ -25,14 +26,16 @@ export interface ChannelSettingsUIProps {
   renderPlaceholderLoading?: () => React.ReactElement;
 }
 
-const ChannelSettingsUI: React.FC<ChannelSettingsUIProps> = ({
-  renderHeader = (props) => <ChannelSettingsHeader {...props}/>,
-  renderLeaveChannel,
-  renderChannelProfile,
-  renderModerationPanel,
-  renderPlaceholderError,
-  renderPlaceholderLoading,
-}: ChannelSettingsUIProps) => {
+const ChannelSettingsUI = (props: ChannelSettingsUIProps) => {
+  const {
+    renderHeader = (p) => <ChannelSettingsHeader {...p} />,
+    renderLeaveChannel,
+    renderChannelProfile,
+    renderModerationPanel,
+    renderPlaceholderError,
+    renderPlaceholderLoading,
+  } = deleteNullish(props);
+
   const state = useSendbirdStateContext();
   const isOnline = state?.config?.isOnline;
   const { stringSet } = useContext(LocalizationContext);

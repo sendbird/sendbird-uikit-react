@@ -19,6 +19,7 @@ import TypingIndicatorBubble from '../../../../ui/TypingIndicatorBubble';
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { getComponentKeyFromMessage } from '../../context/utils';
 import { GroupChannelUIBasicProps } from '../GroupChannelUI/GroupChannelUIView';
+import { deleteNullish } from '../../../../utils/utils';
 
 export interface GroupChannelMessageListProps {
   className?: string;
@@ -52,16 +53,18 @@ export interface GroupChannelMessageListProps {
   renderSuggestedReplies?: GroupChannelUIBasicProps['renderSuggestedReplies'];
 }
 
-export const MessageList = ({
-  className = '',
-  renderMessage = (props) => <Message {...props} />,
-  renderMessageContent,
-  renderSuggestedReplies,
-  renderCustomSeparator,
-  renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
-  renderPlaceholderEmpty = () => <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />,
-  renderFrozenNotification = () => <FrozenNotification className="sendbird-conversation__messages__notification" />,
-}: GroupChannelMessageListProps) => {
+export const MessageList = (props: GroupChannelMessageListProps) => {
+  const { className = '' } = props;
+  const {
+    renderMessage = (props) => <Message {...props} />,
+    renderMessageContent,
+    renderSuggestedReplies,
+    renderCustomSeparator,
+    renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
+    renderPlaceholderEmpty = () => <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />,
+    renderFrozenNotification = () => <FrozenNotification className="sendbird-conversation__messages__notification" />,
+  } = deleteNullish(props);
+
   const {
     channelUrl,
     hasNext,

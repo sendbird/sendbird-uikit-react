@@ -13,6 +13,7 @@ import type { GroupChannelHeaderProps } from '../GroupChannelHeader';
 import type { GroupChannelMessageListProps } from '../MessageList';
 import type { MessageContentProps } from '../../../../ui/MessageContent';
 import { SuggestedRepliesProps } from '../SuggestedReplies';
+import { deleteNullish } from '../../../../utils/utils';
 
 export interface GroupChannelUIBasicProps {
   // Components
@@ -93,17 +94,15 @@ export interface GroupChannelUIViewProps extends GroupChannelUIBasicProps {
 }
 
 export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
+  const { isLoading, isInvalid, channelUrl } = props;
   const {
-    isLoading,
-    isInvalid,
-    channelUrl,
     renderChannelHeader,
     renderMessageList,
     renderMessageInput,
     renderTypingIndicator,
     renderPlaceholderLoader,
     renderPlaceholderInvalid,
-  } = props;
+  } = deleteNullish(props);
 
   const { stores, config } = useSendbirdStateContext();
   const sdkError = stores?.sdkStore?.error;

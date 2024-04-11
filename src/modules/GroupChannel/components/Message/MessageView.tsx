@@ -21,6 +21,7 @@ import MessageContent, { MessageContentProps } from '../../../../ui/MessageConte
 import SuggestedReplies, { SuggestedRepliesProps } from '../SuggestedReplies';
 import SuggestedMentionListView from '../SuggestedMentionList/SuggestedMentionListView';
 import type { OnBeforeDownloadFileMessageType } from '../../context/GroupChannelProvider';
+import { deleteNullish } from '../../../../utils/utils';
 
 export interface MessageProps {
   message: EveryMessage;
@@ -83,7 +84,7 @@ export interface MessageViewProps extends MessageProps {
   /**
    * You can't use this prop in the Channel component (legacy).
    * Accepting this prop only for the GroupChannel.
-  */
+   */
   onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
 
   animatedMessageId: number;
@@ -103,14 +104,7 @@ const MessageView = (props: MessageViewProps) => {
   const {
     // MessageProps
     message,
-    renderMessage,
     children,
-    renderMessageContent = (props) => <MessageContent {...props} />,
-    renderSuggestedReplies = (props) => (
-      <SuggestedReplies {...props} />
-    ),
-    renderCustomSeparator,
-    renderEditInput,
     hasSeparator,
     chainTop,
     chainBottom,
@@ -126,7 +120,6 @@ const MessageView = (props: MessageViewProps) => {
     threadReplySelectType,
     nicknamesMap,
 
-    renderUserMentionItem,
     scrollToMessage,
     toggleReaction,
     setQuoteMessage,
@@ -139,14 +132,22 @@ const MessageView = (props: MessageViewProps) => {
     resendMessage,
     deleteMessage,
 
-    renderFileViewer,
-    renderRemoveMessageModal,
-
     setAnimatedMessageId,
     animatedMessageId,
     onMessageAnimated,
     usedInLegacy = true,
   } = props;
+
+  const {
+    renderUserMentionItem,
+    renderMessage,
+    renderMessageContent = (props) => <MessageContent {...props} />,
+    renderSuggestedReplies = (props) => <SuggestedReplies {...props} />,
+    renderCustomSeparator,
+    renderEditInput,
+    renderFileViewer,
+    renderRemoveMessageModal,
+  } = deleteNullish(props);
 
   const { dateLocale, stringSet } = useLocalization();
   const globalStore = useSendbirdStateContext();
