@@ -19,6 +19,7 @@ import {
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { Role } from '../../lib/types';
 import { ReplyType } from '../../types';
+import { deleteNullish } from '../../utils/utils';
 
 export interface MessageMenuRenderMenuItemProps {
   className?: string;
@@ -46,26 +47,27 @@ export interface MessageMenuProps {
   renderMenuItem?: (props: MessageMenuRenderMenuItemProps) => ReactElement;
 }
 
-export function MessageMenu({
-  className,
-  message,
-  channel,
-  isByMe = false,
-  disabled = false,
-  replyType,
-  disableDeleteMessage = null,
-  showEdit,
-  showRemove,
-  deleteMessage,
-  resendMessage,
-  setQuoteMessage,
-  setSupposedHover,
-  onReplyInThread,
-  onMoveToParentMessage = null,
-  renderMenuItem = (props: MessageMenuRenderMenuItemProps) => (
-    <MenuItem {...props}>{props.text}</MenuItem>
-  ),
-}: MessageMenuProps): ReactElement {
+export function MessageMenu(props: MessageMenuProps): ReactElement {
+  const {
+    className,
+    message,
+    channel,
+    isByMe = false,
+    disabled = false,
+    replyType,
+    disableDeleteMessage = null,
+    showEdit,
+    showRemove,
+    deleteMessage,
+    resendMessage,
+    setQuoteMessage,
+    setSupposedHover,
+    onReplyInThread,
+    onMoveToParentMessage = null,
+  } = props;
+
+  const { renderMenuItem = (props: MessageMenuRenderMenuItemProps) => <MenuItem {...props}>{props.text}</MenuItem> } = deleteNullish(props);
+
   const { stringSet } = useContext(LocalizationContext);
   const triggerRef = useRef(null);
   const containerRef = useRef(null);

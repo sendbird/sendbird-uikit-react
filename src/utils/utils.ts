@@ -18,6 +18,16 @@ export const isMobileIOS = (userAgent: string) => {
   return isIOS && (isWebkit || isSafari);
 };
 
+export const deleteNullish = <T>(obj: T): T => {
+  const cleaned = {} as T;
+  Object.entries(obj).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      cleaned[key as keyof T] = value as T[keyof T];
+    }
+  });
+  return cleaned;
+};
+
 export default {
   getSenderName,
   getSenderProfileUrl,
