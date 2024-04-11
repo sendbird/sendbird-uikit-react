@@ -18,16 +18,6 @@ export const isMobileIOS = (userAgent: string) => {
   return isIOS && (isWebkit || isSafari);
 };
 
-export const deleteNullish = <T extends Record<string, any>>(props: T): Partial<T> => {
-  const copied = { ...props };
-  Object.entries(copied).forEach(([key, value]) => {
-    if (value === null || value === undefined) {
-      delete copied[key as keyof T];
-    }
-  });
-  return copied;
-};
-
 export default {
   getSenderName,
   getSenderProfileUrl,

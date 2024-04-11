@@ -34,7 +34,7 @@ import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import ThreadReplies from '../ThreadReplies';
 import { ThreadReplySelectType } from '../../modules/Channel/context/const';
 import { Nullable, ReplyType } from '../../types';
-import { deleteNullish, noop } from '../../utils/utils';
+import { noop } from '../../utils/utils';
 import MessageProfile, { MessageProfileProps } from './MessageProfile';
 import MessageBody, { MessageBodyProps } from './MessageBody';
 import MessageHeader, { MessageHeaderProps } from './MessageHeader';
@@ -136,7 +136,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     renderMobileMenuOnLongPress = (props: MobileBottomSheetProps) => (
       <MobileMenu {...props} />
     ),
-  } = deleteNullish(props);
+  } = props;
 
   const { dateLocale } = useLocalization();
   const { config, eventHandlers } = useSendbirdStateContext?.() || {};

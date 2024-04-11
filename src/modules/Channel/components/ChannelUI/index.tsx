@@ -6,7 +6,6 @@ import { GroupChannelUIBasicProps, GroupChannelUIView } from '../../../GroupChan
 import ChannelHeader from '../ChannelHeader';
 import MessageList from '../MessageList';
 import MessageInputWrapper from '../MessageInputWrapper';
-import { deleteNullish } from '../../../../utils/utils';
 
 export interface ChannelUIProps extends GroupChannelUIBasicProps {
   isLoading?: boolean;
@@ -25,7 +24,7 @@ const ChannelUI = (props: ChannelUIProps) => {
     renderChannelHeader = (p) => <ChannelHeader {...p} />,
     renderMessageList = (p) => <MessageList {...p} className="sendbird-conversation__message-list" />,
     renderMessageInput = () => <MessageInputWrapper {...props} />,
-  } = deleteNullish(props);
+  } = props;
 
   return (
     <GroupChannelUIView

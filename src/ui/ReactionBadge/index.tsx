@@ -9,7 +9,6 @@ import React, {
 import './index.scss';
 
 import Label, { LabelTypography, LabelColors } from '../Label';
-import { deleteNullish } from '../../utils/utils';
 
 export interface ReactionBadgeProps {
   className?: string | Array<string>;
@@ -29,7 +28,7 @@ const ReactionBadge = React.forwardRef((props: ReactionBadgeProps, ref: RefObjec
     isAdd = false,
     selected = false,
     onClick = () => { /* noop */ },
-  } = deleteNullish(props);
+  } = props;
 
   const getClassNameTail = (): string => {
     if (selected && !isAdd) {

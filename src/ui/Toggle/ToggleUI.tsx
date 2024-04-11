@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useToggleContext } from './ToggleContext';
 import { filterNumber } from './utils';
-import { deleteNullish } from '../../utils/utils';
 
 export interface ToggleUIProps {
   reversed?: boolean;
@@ -24,7 +23,7 @@ export function ToggleUI(props: ToggleUIProps): React.ReactElement {
     id = '',
     ariaLabel = '',
     ariaLabelledby = '',
-  } = deleteNullish(props);
+  } = props;
   const {
     checked,
     disabled,

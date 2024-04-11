@@ -5,7 +5,6 @@ import React, {
   RefObject,
 } from 'react';
 import './index.scss';
-import { deleteNullish } from '../../utils/utils';
 
 export interface FeedbackIconButtonProps {
   children: ReactNode;
@@ -23,7 +22,7 @@ const FeedbackIconButton = React.forwardRef((
     isSelected,
     onClick = () => { /* noop */ },
     disabled = false,
-  } = deleteNullish(props);
+  } = props;
   return (
     <button
       className={[

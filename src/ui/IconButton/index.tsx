@@ -8,7 +8,6 @@ import React, {
 } from 'react';
 
 import './index.scss';
-import { deleteNullish } from '../../utils/utils';
 
 export interface IconButtonProps {
   className?: string | Array<string>;
@@ -36,7 +35,7 @@ const IconButton = React.forwardRef((
     style = {},
     onBlur = () => { /* noop */ },
     onClick = () => { /* noop */ },
-  } = deleteNullish(props);
+  } = props;
   const [isPressed, setIsPressed] = useState(false);
   return (
     <button

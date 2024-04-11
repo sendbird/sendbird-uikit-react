@@ -19,7 +19,7 @@ import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
 import { USER_MENTION_PREFIX } from '../../modules/Message/consts';
 import { TOKEN_TYPES } from '../../modules/Message/utils/tokens/types';
 import { checkIfFileUploadEnabled } from './messageInputUtils';
-import { deleteNullish, isMobileIOS } from '../../utils/utils';
+import { isMobileIOS } from '../../utils/utils';
 
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { User } from '@sendbird/chat';
@@ -124,7 +124,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     renderSendMessageIcon = noop,
     setMentionedUsers = noop,
     acceptableMimeTypes,
-  } = deleteNullish(props);
+  } = props;
 
   const internalRef = (externalRef && 'current' in externalRef) ? externalRef : null;
 

@@ -21,7 +21,6 @@ import MessageContent, { MessageContentProps } from '../../../../ui/MessageConte
 import SuggestedReplies, { SuggestedRepliesProps } from '../SuggestedReplies';
 import SuggestedMentionListView from '../SuggestedMentionList/SuggestedMentionListView';
 import type { OnBeforeDownloadFileMessageType } from '../../context/GroupChannelProvider';
-import { deleteNullish } from '../../../../utils/utils';
 
 export interface MessageProps {
   message: EveryMessage;
@@ -147,7 +146,7 @@ const MessageView = (props: MessageViewProps) => {
     animatedMessageId,
     onMessageAnimated,
     usedInLegacy = true,
-  } = deleteNullish(props);
+  } = props;
 
   const { dateLocale, stringSet } = useLocalization();
   const globalStore = useSendbirdStateContext();
