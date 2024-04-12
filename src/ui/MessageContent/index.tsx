@@ -127,7 +127,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   } = deleteNullish(props);
 
   const { dateLocale } = useLocalization();
-  const { config, eventHandlers } = useSendbirdStateContext?.() || {};
+  const { config, eventHandlers } = useSendbirdStateContext();
   const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const contentRef = useRef(null);

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import MessageInput from '../index';
+import SendbirdProvider from '../../../lib/Sendbird';
 
 const description = `
   \`import MessageInput from "@sendbird/uikit-react/ui/MessageInput";\`
@@ -21,20 +22,26 @@ export default {
 export const WithControl = (arg) => {
   const ref = React.useRef();
   return (
-    <MessageInput {...arg} ref={ref} />
+    <SendbirdProvider>
+      <MessageInput {...arg} ref={ref} />
+    </SendbirdProvider>
   )
 };
 
 export const messageInputEdit = () => {
   const ref = React.useRef();
   return (
-    <MessageInput isEdit name="example" ref={ref} />
+    <SendbirdProvider>
+      <MessageInput isEdit name="example" ref={ref} />
+    </SendbirdProvider>
   )
 };
 
 export const disabledMessageInput = () => {
   const ref = React.useRef();
   return (
-    <MessageInput disabled name="example" ref={ref} />
+    <SendbirdProvider>
+      <MessageInput disabled name="example" ref={ref} />
+    </SendbirdProvider>
   )
 };

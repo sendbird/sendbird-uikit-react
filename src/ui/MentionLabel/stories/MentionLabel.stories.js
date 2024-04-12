@@ -1,5 +1,6 @@
 import React from 'react';
 import MentionLabel from '../index.tsx';
+import SendbirdProvider from '../../../lib/Sendbird';
 
 const description = `
   \`import MentionLabel from "@sendbird/uikit-react/ui/MentionLabel";\`
@@ -17,4 +18,4 @@ export default {
   },
 };
 
-export const WithControl = (arg) => <MentionLabel {...arg} />;
+export const WithControl = (arg) => <SendbirdProvider><MentionLabel {...arg} /></SendbirdProvider>;
