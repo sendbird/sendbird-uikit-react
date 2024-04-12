@@ -12,12 +12,15 @@ import OpenChannelMessageList from '../OpenChannelMessageList';
 import { RenderMessageProps } from '../../../../types';
 
 export interface OpenChannelUIProps {
-  renderMessage?: (props: RenderMessageProps) => React.ElementType<RenderMessageProps>;
+  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   renderHeader?: () => React.ReactElement;
-  renderInput?: () => React.ReactElement;
+  renderMessageInput?: () => React.ReactElement;
   renderPlaceHolderEmptyList?: () => React.ReactElement;
   renderPlaceHolderError?: () => React.ReactElement;
   renderPlaceHolderLoading?: () => React.ReactElement;
+
+  /** @deprecated Please use renderMessageInput instead * */
+  renderInput?: () => React.ReactElement;
 }
 
 const COMPONENT_CLASS_NAME = 'sendbird-openchannel-conversation';
@@ -25,10 +28,11 @@ const COMPONENT_CLASS_NAME = 'sendbird-openchannel-conversation';
 const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
   renderMessage,
   renderHeader,
-  renderInput,
   renderPlaceHolderEmptyList,
   renderPlaceHolderError,
   renderPlaceHolderLoading,
+  renderMessageInput,
+  renderInput,
 }: OpenChannelUIProps) => {
   const {
     currentOpenChannel,
@@ -58,28 +62,18 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
     );
   }
 
+  const renderInputComponent = renderMessageInput || renderInput;
+
   return (
     <div className={COMPONENT_CLASS_NAME}>
-      {
-        renderHeader?.() || (
-          <OpenChannelHeader />
-        )
-      }
-      {
-        currentOpenChannel?.isFrozen && (
-          <FrozenChannelNotification />
-        )
-      }
+      {renderHeader?.() || <OpenChannelHeader />}
+      {currentOpenChannel?.isFrozen && <FrozenChannelNotification />}
       <OpenChannelMessageList
         ref={conversationScrollRef}
         renderMessage={renderMessage}
         renderPlaceHolderEmptyList={renderPlaceHolderEmptyList}
       />
-      {
-        renderInput?.() || (
-          <OpenChannelInput ref={messageInputRef} />
-        )
-      }
+      {renderInputComponent?.() || <OpenChannelInput ref={messageInputRef} />}
     </div>
   );
 };

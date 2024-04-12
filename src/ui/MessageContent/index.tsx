@@ -8,7 +8,7 @@ import { MessageEmojiMenu, MessageEmojiMenuProps } from '../MessageItemReactionM
 import Label, { LabelColors, LabelTypography } from '../Label';
 import EmojiReactions, { EmojiReactionsProps } from '../EmojiReactions';
 
-import ClientAdminMessage from '../AdminMessage';
+import AdminMessage from '../AdminMessage';
 import QuoteMessage from '../QuoteMessage';
 
 import type { OnBeforeDownloadFileMessageType } from '../../modules/GroupChannel/context/GroupChannelProvider';
@@ -16,8 +16,9 @@ import {
   CoreMessageType,
   getClassName,
   getMessageContentMiddleClassNameByContainerType,
+  isAdminMessage,
   isMultipleFilesMessage,
-  isOGMessage,
+  isOGMessage, isSendableMessage,
   isTemplateMessage,
   isThumbnailMessage,
   SendableMessageType,
@@ -27,7 +28,7 @@ import { LocalizationContext, useLocalization } from '../../lib/LocalizationCont
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { EmojiContainer } from '@sendbird/chat';
-import { AdminMessage, Feedback, FeedbackRating, FileMessage, UserMessage } from '@sendbird/chat/message';
+import { Feedback, FeedbackRating } from '@sendbird/chat/message';
 import useLongPress from '../../hooks/useLongPress';
 import MobileMenu from '../MobileMenu';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
@@ -246,8 +247,8 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     shouldPreventDefault: false,
   });
 
-  if (message?.isAdminMessage?.() || message?.messageType === 'admin') {
-    return (<ClientAdminMessage message={message as AdminMessage} />);
+  if (isAdminMessage(message)) {
+    return (<AdminMessage message={message} />);
   }
 
   return (
@@ -275,16 +276,16 @@ export default function MessageContent(props: MessageContentProps): ReactElement
         {showOutgoingMenu && (
           <div className={getClassName(['sendbird-message-content-menu', isReactionEnabledClassName, supposedHoverClassName, isByMeClassName])}>
             {renderMessageMenu({
-              channel: channel,
-              message: message as SendableMessageType,
-              isByMe: isByMe,
-              replyType: replyType,
-              disabled: disabled,
-              showEdit: showEdit,
-              showRemove: showRemove,
-              resendMessage: resendMessage,
-              setQuoteMessage: setQuoteMessage,
-              setSupposedHover: setSupposedHover,
+              channel,
+              message,
+              isByMe,
+              replyType,
+              disabled,
+              showEdit,
+              showRemove,
+              resendMessage,
+              setQuoteMessage,
+              setSupposedHover,
               onReplyInThread: ({ message }) => {
                 if (threadReplySelectType === ThreadReplySelectType.THREAD) {
                   onReplyInThread({ message });
@@ -296,11 +297,11 @@ export default function MessageContent(props: MessageContentProps): ReactElement
             })}
             {isReactionEnabledInChannel && (
               renderEmojiMenu({
-                message: message as SendableMessageType,
-                userId: userId,
-                emojiContainer: emojiContainer,
-                toggleReaction: toggleReaction,
-                setSupposedHover: setSupposedHover,
+                message,
+                userId,
+                emojiContainer,
+                toggleReaction,
+                setSupposedHover,
               })
             )}
           </div>
@@ -326,13 +327,13 @@ export default function MessageContent(props: MessageContentProps): ReactElement
             className={getClassName(['sendbird-message-content__middle__quote-message', isByMe ? 'outgoing' : 'incoming', useReplyingClassName])}>
             <QuoteMessage
               className="sendbird-message-content__middle__quote-message__quote"
-              message={message as SendableMessageType}
+              message={message}
               userId={userId}
               isByMe={isByMe}
               isUnavailable={(channel?.messageOffsetTimestamp ?? 0) > (message.parentMessage?.createdAt ?? 0)}
               onClick={() => {
                 if (replyType === 'THREAD' && threadReplySelectType === ThreadReplySelectType.THREAD) {
-                  onQuoteMessageClick?.({ message: message as SendableMessageType });
+                  onQuoteMessageClick?.({ message });
                 }
                 if (
                   (replyType === 'QUOTE_REPLY' || (replyType === 'THREAD' && threadReplySelectType === ThreadReplySelectType.PARENT))
@@ -365,7 +366,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
             >
               <div className="sendbird-message-content__middle__body-container__created-at__component-container">
                 <MessageStatus
-                  message={message as SendableMessageType}
+                  message={message}
                   channel={channel}
                 />
               </div>
@@ -390,16 +391,16 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           {(isReactionEnabledInChannel && message?.reactions?.length > 0) && (
             <div className={getClassName([
               'sendbird-message-content-reactions',
-              isMultipleFilesMessage(message as CoreMessageType)
+              isMultipleFilesMessage(message)
                 ? 'image-grid'
-                : (!isByMe || isThumbnailMessage(message as FileMessage) || isOGMessage(message as UserMessage))
+                : (!isByMe || isThumbnailMessage(message) || isOGMessage(message))
                   ? '' : 'primary',
               mouseHover ? 'mouse-hover' : '',
             ])}>
               {
                 renderEmojiReactions({
                   userId,
-                  message: message as SendableMessageType,
+                  message,
                   channel,
                   isByMe,
                   emojiContainer,
@@ -442,7 +443,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           <ThreadReplies
             className="sendbird-message-content__middle__thread-replies"
             threadInfo={message?.threadInfo}
-            onClick={() => onReplyInThread?.({ message: message as SendableMessageType })}
+            onClick={() => onReplyInThread?.({ message })}
             ref={threadRepliesRef}
           />
         )}
@@ -514,17 +515,17 @@ export default function MessageContent(props: MessageContentProps): ReactElement
             {isReactionEnabledInChannel && (
               renderEmojiMenu({
                 className: 'sendbird-message-content-menu__reaction-menu',
-                message: message as SendableMessageType,
-                userId: userId,
-                emojiContainer: emojiContainer,
-                toggleReaction: toggleReaction,
-                setSupposedHover: setSupposedHover,
+                message,
+                userId,
+                emojiContainer,
+                toggleReaction,
+                setSupposedHover,
               })
             )}
             {renderMessageMenu({
               className: 'sendbird-message-content-menu__normal-menu',
               channel,
-              message: message as SendableMessageType,
+              message,
               isByMe,
               replyType,
               disabled,
@@ -546,9 +547,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
       )}
 
       {
-        showMenu && (
-          message?.isUserMessage?.() || message?.isFileMessage?.() || message?.isMultipleFilesMessage?.()
-        ) && renderMobileMenuOnLongPress({
+        showMenu && isSendableMessage(message) && renderMobileMenuOnLongPress({
           parentRef: contentRef,
           channel,
           hideMenu: () => { setShowMenu(false); },
@@ -577,7 +576,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               return null;
             }
             try {
-              const allowDownload = await onBeforeDownloadFileMessage({ message: message as FileMessage });
+              const allowDownload = await onBeforeDownloadFileMessage({ message });
               if (!allowDownload) {
                 e.preventDefault();
                 logger?.info?.('MessageContent: Not allowed to download.');

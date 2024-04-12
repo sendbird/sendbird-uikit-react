@@ -104,11 +104,16 @@ function useFileUploadCallback({
           messagesDispatcher({
             type: messageActionTypes.SENDING_MESSAGE_START,
             payload: {
+              // TODO: remove data pollution
               message: {
                 ...pendingMessage,
                 url: URL.createObjectURL(file),
                 // pending thumbnail message seems to be failed
                 requestState: 'pending',
+                isUserMessage: pendingMessage.isUserMessage,
+                isFileMessage: pendingMessage.isFileMessage,
+                isAdminMessage: pendingMessage.isAdminMessage,
+                isMultipleFilesMessage: pendingMessage.isMultipleFilesMessage,
               },
               channel: currentOpenChannel,
             },

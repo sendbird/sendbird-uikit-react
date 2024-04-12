@@ -233,21 +233,21 @@ export const isSentStatus = (state: string): boolean => (
   || state === OutgoingMessageStates.READ
 );
 
-export const isAdminMessage = (message: CoreMessageType): boolean => (
+export const isAdminMessage = (message: CoreMessageType): message is AdminMessage => (
   message && (
     message['isAdminMessage'] && typeof message.isAdminMessage === 'function'
       ? message.isAdminMessage()
       : message?.messageType === 'admin'
   )
 );
-export const isUserMessage = (message: CoreMessageType): boolean => (
+export const isUserMessage = (message: CoreMessageType): message is UserMessage => (
   message && (
     message['isUserMessage'] && typeof message.isUserMessage === 'function'
       ? message.isUserMessage()
       : message?.messageType === 'user'
   )
 );
-export const isFileMessage = (message: CoreMessageType): boolean => (
+export const isFileMessage = (message: CoreMessageType): message is FileMessage => (
   message && (
     message['isFileMessage'] && typeof message.isFileMessage === 'function'
       ? message.isFileMessage()
@@ -256,7 +256,7 @@ export const isFileMessage = (message: CoreMessageType): boolean => (
 );
 export const isMultipleFilesMessage = (
   message: CoreMessageType,
-): boolean => (
+): message is MultipleFilesMessage => (
   message && (
     message['isMultipleFilesMessage'] && typeof message.isMultipleFilesMessage === 'function'
       ? message.isMultipleFilesMessage()
@@ -301,37 +301,54 @@ export const getMessageContentMiddleClassNameByContainerType = ({
   return UI_CONTAINER_TYPES.DEFAULT;
 };
 
-export const isOGMessage = (message: SendableMessageType): boolean => !!(
-  message && isUserMessage(message) && message?.ogMetaData && (
-    message.ogMetaData?.url
-    || message.ogMetaData?.title
-    || message.ogMetaData?.description
-    || message.ogMetaData?.defaultImage
-  )
-);
-export const isTextMessage = (message: SendableMessageType): boolean => (
-  isUserMessage(message)
-);
-export const isThumbnailMessage = (message: SendableMessageType): boolean => (
-  message && isFileMessage(message) && isSupportedFileView((message as FileMessage).type)
-);
-export const isImageMessage = (message: SendableMessageType): boolean => message && message.isFileMessage() && isThumbnailMessage(message) && isImage(message.type);
-export const isImageFileInfo = (fileInfo: UploadedFileInfo): boolean => fileInfo
-  && (isImage(fileInfo.mimeType) || isGif(fileInfo.mimeType));
-export const isVideoMessage = (message: SendableMessageType): boolean => (
-  message && isThumbnailMessage(message) && isVideo((message as FileMessage).type)
-);
-export const isGifMessage = (message: SendableMessageType): boolean => (
-  message && isThumbnailMessage(message) && isGif((message as FileMessage).type)
-);
-export const isAudioMessage = (message: FileMessage): boolean => message && isFileMessage(message) && isAudio(message.type);
+export const isOGMessage = (message: CoreMessageType): message is UserMessage => {
+  if (!message || !isUserMessage(message)) return false;
+  return (
+    message.ogMetaData
+      && !!(message.ogMetaData.url || message.ogMetaData.title || message.ogMetaData.description || message.ogMetaData.defaultImage)
+  );
+};
+
+export const isTextMessage = (message: CoreMessageType): message is UserMessage => {
+  return isUserMessage(message);
+};
+
+export const isThumbnailMessage = (message: CoreMessageType): message is FileMessage => {
+  if (!message || !isFileMessage(message)) return false;
+  return isSupportedFileView(message.type);
+};
+
+export const isImageMessage = (message: SendableMessageType): message is FileMessage => {
+  if (!message || !isFileMessage(message)) return false;
+  return isThumbnailMessage(message) && isImage(message.type);
+};
+
+export const isVideoMessage = (message: SendableMessageType): message is FileMessage => {
+  if (!message || !isFileMessage(message)) return false;
+  return isThumbnailMessage(message) && isVideo(message.type);
+};
+
+export const isGifMessage = (message: SendableMessageType): message is FileMessage => {
+  if (!message || !isFileMessage(message)) return false;
+  return isThumbnailMessage(message) && isGif(message.type);
+};
+
+export const isAudioMessage = (message: CoreMessageType): message is FileMessage => {
+  if (!message || !isFileMessage(message)) return false;
+  return isAudio(message.type);
+};
+
+export const isImageFileInfo = (fileInfo: UploadedFileInfo): boolean => {
+  if (!fileInfo) return false;
+  return (isImage(fileInfo.mimeType) || isGif(fileInfo.mimeType));
+};
+
 export const isAudioMessageMimeType = (type: string): boolean => (/^audio\//.test(type));
 export const isVoiceMessageMimeType = (type: string): boolean => (/^voice\//.test(type));
-export const isVoiceMessage = (message: Nullable<SendableMessageType>): boolean => {
+export const isVoiceMessage = (message: Nullable<CoreMessageType>): boolean => {
+  if (!message || !isFileMessage(message) || !message.type) return false;
+
   // ex) audio/m4a OR audio/m4a;sbu_type=voice
-  if (!(message && isFileMessage(message)) || !(message as FileMessage).type) {
-    return false;
-  }
   const [mimeType, typeParameter] = (message as FileMessage).type.split(';');
 
   if (!isAudioMessageMimeType(mimeType)) {

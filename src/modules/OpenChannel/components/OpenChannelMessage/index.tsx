@@ -1,4 +1,4 @@
-import React, { useState, useRef, ReactElement, useMemo } from 'react';
+import React, { useState, useRef, ReactElement } from 'react';
 import { AdminMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
 import { User } from '@sendbird/chat';
 import format from 'date-fns/format';
@@ -24,9 +24,7 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import { CoreMessageType, SendableMessageType } from '../../../../utils';
 
 export type OpenChannelMessageProps = {
-  renderMessage?: (
-    props: RenderMessageProps
-  ) => React.ElementType<RenderMessageProps>;
+  renderMessage?: (props: RenderMessageProps) => React.ReactElement;
   message: CoreMessageType;
   chainTop?: boolean;
   chainBottom?: boolean;
@@ -34,7 +32,7 @@ export type OpenChannelMessageProps = {
   editDisabled?: boolean;
 };
 
-export default function MessagOpenChannelMessageeHoc(
+export default function OpenChannelMessage(
   props: OpenChannelMessageProps,
 ): ReactElement {
   const { message, chainTop, chainBottom, hasSeparator, renderMessage } = props;
@@ -57,13 +55,6 @@ export default function MessagOpenChannelMessageeHoc(
     sender = (message as SendableMessageType)?.sender;
   }
 
-  const RenderedMessage = useMemo(
-    () => (props: RenderMessageProps) => {
-      return <>{renderMessage ? renderMessage(props) : null}</>;
-    },
-    [message, renderMessage],
-  );
-
   const [showEdit, setShowEdit] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
   const [showFileViewer, setShowFileViewer] = useState(false);
@@ -80,14 +71,10 @@ export default function MessagOpenChannelMessageeHoc(
         === SendingMessageStatus.FAILED;
   }
 
-  if (renderMessage && RenderedMessage) {
+  if (renderMessage) {
     return (
       <div className="sendbird-msg-hoc sendbird-msg--scroll-ref">
-        <RenderedMessage
-          message={message}
-          chainTop={chainTop}
-          chainBottom={chainBottom}
-        />
+        {renderMessage({ message, chainTop, chainBottom })}
       </div>
     );
   }
