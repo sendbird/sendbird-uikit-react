@@ -3,9 +3,9 @@
 ## [v3.14.1] (Apr 12, 2024)
 
 ### Fixes
-* Fix a bug where injecting an optional property with null value not rendering the expected default component
-* Update the type of renderMessage in the OpenChannel module
-* Deprecate the renderInput prop and add a new `renderMessageInput` prop
+* Fixed a bug where injecting an optional property with null value not rendering the expected default component
+* Updated the type of renderMessage in the OpenChannel module
+* Deprecated the renderInput prop and add a new `renderMessageInput` prop
 
 ## [v3.14.0] (Apr 5, 2024)
 ### Feature
