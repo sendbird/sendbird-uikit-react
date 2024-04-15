@@ -73,8 +73,8 @@ export const VoicePlayerProvider = ({
     }
   };
 
-  const pause = (groupKey: string | null) => {
-    if (currentGroupKey === groupKey && currentPlayer !== null) {
+  const pause = (groupKey?: string) => {
+    if (currentGroupKey === groupKey && currentPlayer) {
       logger.info('VoicePlayer: Pause playing(by group key).');
       currentPlayer?.pause();
     }
@@ -86,7 +86,7 @@ export const VoicePlayerProvider = ({
 
   const play = ({
     groupKey,
-    audioFile = null,
+    audioFile,
     audioFileUrl = '',
   }: VoicePlayerPlayProps): void => {
     if (groupKey !== currentGroupKey) {
@@ -96,7 +96,7 @@ export const VoicePlayerProvider = ({
     // Clear the previous AudioPlayer element
     const voicePlayerRoot = document.getElementById(VOICE_PLAYER_ROOT_ID);
     const voicePlayerAudioElement = document.getElementById(VOICE_PLAYER_AUDIO_ID);
-    if (voicePlayerAudioElement) {
+    if (voicePlayerRoot && voicePlayerAudioElement) {
       voicePlayerRoot.removeChild(voicePlayerAudioElement);
     }
 

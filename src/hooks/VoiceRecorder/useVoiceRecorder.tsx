@@ -23,7 +23,7 @@ export interface UseVoiceRecorderContext {
   cancel: () => void;
   recordingLimit: number;
   recordingTime: number;
-  recordedFile: File;
+  recordedFile: File | null;
   recordingStatus: VoiceRecorderStatus;
 }
 
@@ -73,7 +73,7 @@ export const useVoiceRecorder = ({
 
   // Timer
   const [recordingTime, setRecordingTime] = useState<number>(0);
-  let timer: ReturnType<typeof setInterval> = null;
+  let timer: ReturnType<typeof setInterval> | null = null;
   function startTimer() {
     stopTimer();
     setRecordingTime(0);
@@ -89,8 +89,10 @@ export const useVoiceRecorder = ({
     timer = interval;
   }
   function stopTimer() {
-    clearInterval(timer);
-    timer = null;
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
   }
   useEffect(() => {
     if (recordingTime > maxRecordingTime) {

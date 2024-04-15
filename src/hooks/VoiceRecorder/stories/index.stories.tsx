@@ -9,7 +9,7 @@ import { LoggerFactory } from '../../../lib/Logger';
 export default { title: 'globalcontext/voice-recorder' };
 const logger = LoggerFactory('all');
 const Tester = () => {
-  const [currentAudio, setAudioFile] = useState(null);
+  const [currentAudio, setAudioFile] = useState<File | null>(null);
 
   const { start, stop, recordingTime, recordingStatus } = useVoiceRecorder({
     onRecordingStarted: () => {
@@ -24,7 +24,7 @@ const Tester = () => {
     {
       key: 'unique-key',
       channelUrl: 'channel-url',
-      audioFile: currentAudio,
+      audioFile: currentAudio ?? undefined,
     },
   );
 

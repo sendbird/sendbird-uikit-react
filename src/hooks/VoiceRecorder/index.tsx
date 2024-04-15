@@ -9,6 +9,7 @@ import {
   VOICE_RECORDER_AUDIO_BIT_RATE,
 } from '../../utils/consts';
 import useSendbirdStateContext from '../useSendbirdStateContext';
+import { type WebAudioUtils } from './WebAudioUtils';
 
 // Input props of VoiceRecorder
 export interface VoiceRecorderProps {
@@ -42,7 +43,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
   const [permissionWarning, setPermissionWarning] = useState<boolean>(false);
   const { stringSet } = useLocalization();
 
-  const [webAudioUtils, setWebAudioUtils] = useState(null);
+  const [webAudioUtils, setWebAudioUtils] = useState<WebAudioUtils | null>(null);
 
   const browserSupportMimeType = BROWSER_SUPPORT_MIME_TYPE_LIST.find((mimeType) => MediaRecorder.isTypeSupported(mimeType)) ?? '';
   if (isVoiceMessageEnabled && !browserSupportMimeType) {

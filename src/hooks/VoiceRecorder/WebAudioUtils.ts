@@ -87,7 +87,7 @@ function bufferToWav(abuffer, len) {
   const length = len * numOfChan * 2 + 44;
   const buffer = new ArrayBuffer(length);
   const view = new DataView(buffer);
-  const channels = [];
+  const channels: any[] = [];
   let i = 0;
   let sample;
   let offset = 0;
@@ -107,9 +107,11 @@ function bufferToWav(abuffer, len) {
   setUint16(16); // 16-bit (hardcoded in this demo)
   setUint32(0x61746164); // "data" - chunk
   setUint32(length - pos - 4); // chunk length
+
   // write interleaved data
-  for (i = 0; i < abuffer.numberOfChannels; i++)
+  for (i = 0; i < abuffer.numberOfChannels; i++) {
     channels.push(abuffer.getChannelData(i));
+  }
 
   while (pos < length) {
     for (i = 0; i < numOfChan; i++) {
@@ -135,4 +137,8 @@ function bufferToWav(abuffer, len) {
   }
 }
 
+export interface WebAudioUtils {
+  downsampleToWav,
+  encodeMp3,
+}
 export { downsampleToWav, encodeMp3 };
