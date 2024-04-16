@@ -1,8 +1,9 @@
 import React from 'react';
 import Checkbox from '../ui/Checkbox';
+import type { Meta, StoryObj } from '@storybook/react';
 
-export default {
-  title: 'UI/Checkbox',
+const meta: Meta<typeof Checkbox> = {
+  title: '2.UI/Checkbox',
   component: Checkbox,
   argTypes: {
     id: { control: 'text' },
@@ -11,31 +12,29 @@ export default {
     onChange: { action: 'onChange' },
   },
 };
+export default meta;
 
+type StoryOfCheckbox = StoryObj<typeof Checkbox>;
 const Template = (args) => <Checkbox {...args} />;
-
-export const Unchecked = Template.bind({});
+export const Unchecked: StoryOfCheckbox = Template.bind({});
 Unchecked.args = {
   id: 'unchecked-checkbox',
   checked: false,
   disabled: false,
 };
-
-export const Checked = Template.bind({});
+export const Checked: StoryOfCheckbox = Template.bind({});
 Checked.args = {
   id: 'checked-checkbox',
   checked: true,
   disabled: false,
 };
-
-export const DisabledUnchecked = Template.bind({});
+export const DisabledUnchecked: StoryOfCheckbox = Template.bind({});
 DisabledUnchecked.args = {
   id: 'disabled-unchecked-checkbox',
   checked: false,
   disabled: true,
 };
-
-export const DisabledChecked = Template.bind({});
+export const DisabledChecked: StoryOfCheckbox = Template.bind({});
 DisabledChecked.args = {
   id: 'disabled-checked-checkbox',
   checked: true,

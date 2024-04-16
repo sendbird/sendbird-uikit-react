@@ -24,6 +24,7 @@ const BottomSheet: React.FunctionComponent<BottomSheetProps> = (props: BottomShe
     portalRoot.current = document.createElement('div');
     portalRoot.current.setAttribute('id', MODAL_ROOT);
     document.body.appendChild(portalRoot.current);
+    console.warn('@sendbird/uikit-react/ui/BottomSheet | Should put a ModalRoot to use the BottomSheet.');
   }
   return createPortal(
     <div

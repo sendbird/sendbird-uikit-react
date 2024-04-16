@@ -1,10 +1,12 @@
 import React, { RefObject, useRef } from 'react';
 import ContextMenu, { MenuItems as MenuItemsComponent, MenuItem as MenuItemComponent } from '../ui/ContextMenu';
+import type { Meta } from '@storybook/react';
 
-export default {
-  title: 'ui/ContextMenu',
+const meta: Meta<typeof ContextMenu> = {
+  title: '2.UI/ContextMenu',
   component: ContextMenu,
 };
+export default meta;
 
 export const Default = (args) => {
   const ref = useRef() as RefObject<HTMLDivElement>;

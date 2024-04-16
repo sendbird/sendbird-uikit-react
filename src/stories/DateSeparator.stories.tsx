@@ -1,9 +1,10 @@
 import React from 'react';
 import DateSeparator from '../ui/DateSeparator';
 import { Colors } from '../utils/color';
+import type { Meta, StoryObj } from '@storybook/react';
 
-export default {
-  title: 'UI/DateSeparator',
+const meta: Meta<typeof DateSeparator> = {
+  title: '2.UI/DateSeparator',
   component: DateSeparator,
   argTypes: {
     separatorColor: {
@@ -13,22 +14,21 @@ export default {
     children: { control: 'text' },
   },
 };
+export default meta;
 
+type StoryOfDateSeparator = StoryObj<typeof DateSeparator>;
 const Template = (args) => <DateSeparator {...args} />;
-
-export const Default = Template.bind({});
+export const Default: StoryOfDateSeparator = Template.bind({});
 Default.args = {
   children: 'Date Separator',
   separatorColor: Colors.ONBACKGROUND_4,
 };
-
-export const CustomColor = Template.bind({});
+export const CustomColor: StoryOfDateSeparator = Template.bind({});
 CustomColor.args = {
   ...Default.args,
   separatorColor: Colors.PRIMARY,
 };
-
-export const WithCustomText = Template.bind({});
+export const WithCustomText: StoryOfDateSeparator = Template.bind({});
 WithCustomText.args = {
   ...Default.args,
   children: 'Custom Date Text',

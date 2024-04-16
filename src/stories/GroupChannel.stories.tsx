@@ -1,10 +1,11 @@
-// Channel.stories.js
 import React from 'react';
+import type { Meta } from '@storybook/react';
+
 import SendbirdProvider from '../lib/Sendbird';
 import GroupChannel from '../modules/GroupChannel';
 
-export default { 
-  title: 'Module/GroupChannel',
+const meta: Meta<typeof GroupChannel> = { 
+  title: '1.Module/GroupChannel',
   component: GroupChannel,
   argTypes: {
     channelUrl: {
@@ -59,6 +60,7 @@ export default {
     // renderUserMentionItem: { table: { disable: true } },
   },
 };
+export default meta;
 
 export const Default = (args): React.ReactElement => {
   return (
@@ -67,6 +69,7 @@ export const Default = (args): React.ReactElement => {
         appId="FEA2129A-EA73-4EB9-9E0B-EC738E7EB768"
         // appId="2D7B4CDB-932F-4082-9B09-A1153792DC8D"
         userId="hoon20230802"
+        breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
       >
         <GroupChannel
           {...args}

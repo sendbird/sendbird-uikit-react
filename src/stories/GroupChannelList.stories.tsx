@@ -1,11 +1,17 @@
 import React from 'react';
+import type { Meta } from '@storybook/react';
+
 import SendbirdProvider from '../lib/Sendbird';
 import GroupChannelList from '../modules/GroupChannelList';
 
-export default {
-  title: 'Module/GroupChannelList',
+const meta: Meta<typeof GroupChannelList> = {
+  title: '1.Module/GroupChannelList',
   component: GroupChannelList,
   argTypes: {
+    onChannelSelect: {
+      type: 'function',
+      description: 'This callback function is triggered when a channel is selected by the user interaction or automatic selection.',
+    },
     className: {
       control: 'text',
       description: 'CSS class name(s) for custom styling.',
@@ -42,15 +48,23 @@ export default {
     onUserProfileUpdated: { table: { disable: true } },
   }
 };
+export default meta;
 
 export const Default = (args): React.ReactElement => {
   return (
-    <div style={{ height: 500 }}>
+    <div style={{ height: 520 }}>
       <SendbirdProvider
         appId="FEA2129A-EA73-4EB9-9E0B-EC738E7EB768"
         userId="hoon20230802"
+        breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
       >
-        <GroupChannelList {...args} />
+        <GroupChannelList
+          {...args}
+          onChannelSelect={(channel) => {
+            alert(`The channel ${channel?.name} is selected.`);
+            console.log(`The channel ${channel?.name} is selected.`);
+          }}
+        />
       </SendbirdProvider>
     </div>
   );

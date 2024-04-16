@@ -34,6 +34,6 @@ export default {
     });
   },
   docs: {
-    autodocs: true
+    toc: true,
   },
 };

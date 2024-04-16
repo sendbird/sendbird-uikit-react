@@ -1,5 +1,6 @@
 import React from 'react';
 import Avatar from '../ui/Avatar';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const imageUrlOptions = {
   None: '',
@@ -8,8 +9,8 @@ const imageUrlOptions = {
   Image3: 'https://avatars3.githubusercontent.com/u/46333979?s=460&v=4',
 };
 
-export default {
-  title: 'UI/Avatar',
+const meta: Meta<typeof Avatar> = {
+  title: '2.UI/Avatar',
   component: Avatar,
   argTypes: {
     height: { control: 'number' },
@@ -23,18 +24,18 @@ export default {
     customDefaultComponent: { action: 'customDefaultComponent' },
   },
 };
+export default meta;
 
+type StoryOfAvatar = StoryObj<typeof Avatar>;
 const Template = (args) => <Avatar {...args} />;
-
-export const DefaultAvatar = Template.bind({});
+export const DefaultAvatar: StoryOfAvatar = Template.bind({});
 DefaultAvatar.args = {
   alt: 'Default Avatar',
   width: 56,
   height: 56,
   src: imageUrlOptions.None,
 };
-
-export const WithImage = Template.bind({});
+export const WithImage: StoryOfAvatar = Template.bind({});
 WithImage.args = {
   ...DefaultAvatar.args,
   src: imageUrlOptions.Image3,

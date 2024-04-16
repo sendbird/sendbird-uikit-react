@@ -1,9 +1,11 @@
 // Toggle.stories.js
 import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+
 import { Toggle, ToggleContainer, ToggleUI } from '../ui/Toggle';
 
-export default {
-  title: 'UI/Toggle',
+const meta: Meta<typeof Toggle> = {
+  title: '2.UI/Toggle',
   component: Toggle,
   argTypes: {
     checked: { control: 'boolean' },
@@ -20,10 +22,11 @@ export default {
     className: { control: 'text' },
   },
 };
+export default meta;
 
+type StoryOfToggle = StoryObj<typeof Toggle>;
 const Template = (args) => <Toggle {...args} />;
-
-export const Default = Template.bind({});
+export const Default: StoryOfToggle = Template.bind({});
 Default.args = {
   defaultChecked: false,
   disabled: false,
@@ -31,7 +34,6 @@ Default.args = {
   width: '40px',
   animationDuration: '0.3s',
 };
-
 export const MultipleUI = () => {
   return (
     <ToggleContainer>

@@ -11,6 +11,15 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+    options: {
+      storySort: (a, b) => {
+        if (a.type === b.type) {
+          return a.id === b.id ? 0 : a.id.localeCompare(b.id, undefined, { numeric: true });
+        } else {
+          return a.type === 'docs' ? -1 : 0;
+        }
+      },
+    },
   },
   decorators: [
     (Story) => (
