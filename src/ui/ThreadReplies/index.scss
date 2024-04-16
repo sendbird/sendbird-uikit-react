@@ -18,11 +18,6 @@
     background-color: t(bg-0);
   }
 
-  // inside layout
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-
   &:hover {
     @include themed() {
       background-color: t(bg-1);

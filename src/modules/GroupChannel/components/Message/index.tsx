@@ -27,6 +27,7 @@ export const Message = (props: MessageProps): React.ReactElement => {
     onQuoteMessageClick,
     onReplyInThreadClick,
     onMessageAnimated,
+    onBeforeDownloadFileMessage,
     messages,
     updateUserMessage,
     sendUserMessage,
@@ -81,6 +82,8 @@ export const Message = (props: MessageProps): React.ReactElement => {
       onMessageAnimated={onMessageAnimated}
       renderFileViewer={(props) => <FileViewer {...props} />}
       renderRemoveMessageModal={(props) => <RemoveMessageModal {...props} />}
+      usedInLegacy={false}
+      onBeforeDownloadFileMessage={onBeforeDownloadFileMessage}
     />
   );
 };

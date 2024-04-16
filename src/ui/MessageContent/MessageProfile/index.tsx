@@ -14,6 +14,7 @@ import { UserProfileContext } from '../../../lib/UserProfileContext';
 export interface MessageProfileProps extends MessageContentProps {
   isByMe?: boolean;
   displayThreadReplies?: boolean;
+  bottom?: string
 }
 
 export default function MessageProfile(
@@ -26,6 +27,7 @@ export default function MessageProfile(
     chainBottom = false,
     isByMe,
     displayThreadReplies,
+    bottom,
   } = props;
   const avatarRef = useRef(null);
 
@@ -52,6 +54,7 @@ export default function MessageProfile(
           ref={avatarRef}
           width="28px"
           height="28px"
+          bottom={bottom}
           onClick={(): void => {
             if (!disableUserProfile) toggleDropdown();
           }}

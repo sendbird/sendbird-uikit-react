@@ -33,6 +33,7 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
   useEffect(() => {
     logger?.info?.('SendbirdProvider | useConnect/useEffect', { userId, appId, accessToken });
 
+    const isNewApp = connectDeps.current.appId !== appId;
     if (connectDeps.current.appId === appId && connectDeps.current.userId === userId) {
       return;
     } else {
@@ -42,6 +43,7 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
     connect({
       userId,
       appId,
+      isNewApp,
       accessToken,
       logger,
       nickname,

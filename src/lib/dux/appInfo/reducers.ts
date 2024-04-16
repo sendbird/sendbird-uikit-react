@@ -13,40 +13,54 @@ export default function reducer(state: AppInfoStateType, action: AppInfoActionTy
         };
       })
     .with(
-      { type: APP_INFO_ACTIONS.UPSERT_MESSAGE_TEMPLATE },
+      { type: APP_INFO_ACTIONS.UPSERT_MESSAGE_TEMPLATES },
       ({ payload }) => {
         const templatesInfo = state.messageTemplatesInfo;
         if (!templatesInfo) return state; // Not initialized. Ignore.
 
-        const { key, template } = payload;
-        templatesInfo.templatesMap[key] = template;
-
-        delete state.waitingTemplateKeysMap[key];
-
+        const waitingTemplateKeysMap = { ...state.waitingTemplateKeysMap };
+        payload.forEach((templatesMapData) => {
+          const { key, template } = templatesMapData;
+          templatesInfo.templatesMap[key] = template;
+          delete waitingTemplateKeysMap[key];
+        });
         return {
           ...state,
+          waitingTemplateKeysMap,
           messageTemplatesInfo: templatesInfo,
         };
       })
     .with(
-      { type: APP_INFO_ACTIONS.UPSERT_WAITING_TEMPLATE_KEY },
+      { type: APP_INFO_ACTIONS.UPSERT_WAITING_TEMPLATE_KEYS },
       ({ payload }) => {
-        const { key, requestedAt } = payload;
-        state.waitingTemplateKeysMap[key] = {
-          requestedAt,
-          isError: false,
+        const { keys, requestedAt } = payload;
+        const waitingTemplateKeysMap = { ...state.waitingTemplateKeysMap };
+        keys.forEach((key) => {
+          waitingTemplateKeysMap[key] = {
+            erroredMessageIds: waitingTemplateKeysMap[key]?.erroredMessageIds ?? [],
+            requestedAt,
+          };
+        });
+        return {
+          ...state,
+          waitingTemplateKeysMap,
         };
-        return { ...state };
       })
     .with(
-      { type: APP_INFO_ACTIONS.MARK_ERROR_WAITING_TEMPLATE_KEY },
+      { type: APP_INFO_ACTIONS.MARK_ERROR_WAITING_TEMPLATE_KEYS },
       ({ payload }) => {
-        const { key } = payload;
-        const waitingTemplateKeyData: WaitingTemplateKeyData | undefined = state.waitingTemplateKeysMap[key];
-        if (waitingTemplateKeyData) {
-          waitingTemplateKeyData.isError = true;
-        }
-        return { ...state };
+        const { keys, messageId } = payload;
+        const waitingTemplateKeysMap = { ...state.waitingTemplateKeysMap };
+        keys.forEach((key) => {
+          const waitingTemplateKeyData: WaitingTemplateKeyData | undefined = waitingTemplateKeysMap[key];
+          if (waitingTemplateKeyData && waitingTemplateKeyData.erroredMessageIds.indexOf(messageId) === -1) {
+            waitingTemplateKeyData.erroredMessageIds.push(messageId);
+          }
+        });
+        return {
+          ...state,
+          waitingTemplateKeysMap,
+        };
       })
     .otherwise(() => {
       return state;

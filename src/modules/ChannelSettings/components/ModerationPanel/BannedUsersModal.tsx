@@ -14,6 +14,7 @@ import { noop } from '../../../../utils/utils';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { BannedUserListQuery, RestrictedUser } from '@sendbird/chat';
+import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 
 interface Props {
   onCancel(): void;
@@ -41,28 +42,25 @@ export default function BannedUsersModal({
         hideFooter
         onCancel={() => onCancel()}
         onSubmit={noop}
-        titleText={stringSet.CHANNEL_SETTING__MUTED_MEMBERS__TITLE}
+        titleText={stringSet.CHANNEL_SETTING__BANNED_MEMBERS__TITLE}
       >
         <div
           className="sendbird-more-members__popup-scroll"
-          onScroll={(e) => {
-            const hasNext = memberQuery?.hasNext;
-            const target = e.target as HTMLTextAreaElement;
-            const fetchMore = (
-              target.clientHeight + target.scrollTop === target.scrollHeight
-            );
-
-            if (hasNext && fetchMore) {
-              memberQuery.next().then((o) => {
-                setMembers([
-                  ...members,
-                  ...o,
-                ]);
-              });
-            }
-          }}
+          onScroll={useOnScrollPositionChangeDetector({
+            onReachedBottom: async () => {
+              const { hasNext } = memberQuery;
+              if (hasNext) {
+                memberQuery.next().then((o) => {
+                  setMembers([
+                    ...members,
+                    ...o,
+                  ]);
+                });
+              }
+            },
+          })}
         >
-          { members.map((member) => (
+          {members.map((member) => (
             <UserListItem
               user={member}
               key={member.userId}
@@ -99,9 +97,9 @@ export default function BannedUsersModal({
                             }));
                           });
                         }}
-                        dataSbId="channel_setting_banned_user_context_menu_ban"
+                        dataSbId="channel_setting_banned_user_context_menu_unban"
                       >
-                        {stringSet.CHANNEL_SETTING__MODERATION__BAN}
+                        {stringSet.CHANNEL_SETTING__MODERATION__UNBAN}
                       </MenuItem>
                     </MenuItems>
                   )}

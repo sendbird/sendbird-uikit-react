@@ -15,6 +15,7 @@ import { ButtonTypes } from '../../../../ui/Button';
 import UserListItem from '../../../../ui/UserListItem';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { Member, MemberListQuery, OperatorFilter } from '@sendbird/chat/groupChannel';
+import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 
 interface Props {
   onCancel(): void;
@@ -67,21 +68,19 @@ export default function AddOperatorsModal({
         </Label>
         <div
           className="sendbird-more-members__popup-scroll"
-          onScroll={(e) => {
-            const hasNext = memberQuery ? memberQuery.hasNext : false;
-            const target = e.target as HTMLTextAreaElement;
-            const fetchMore = (
-              target.clientHeight + target.scrollTop === target.scrollHeight
-            );
-            if (hasNext && fetchMore && memberQuery) {
-              memberQuery.next().then((o) => {
-                setMembers([
-                  ...members,
-                  ...o,
-                ]);
-              });
-            }
-          }}
+          onScroll={useOnScrollPositionChangeDetector({
+            onReachedBottom: async () => {
+              const { hasNext } = memberQuery;
+              if (hasNext) {
+                memberQuery.next().then((o) => {
+                  setMembers([
+                    ...members,
+                    ...o,
+                  ]);
+                });
+              }
+            },
+          })}
         >
           {
             members.map((member) => (

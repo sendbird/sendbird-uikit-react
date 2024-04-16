@@ -24,13 +24,13 @@ import MutedMemberList from './MutedMemberList';
 
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 
-const kFormatter = (num: number): string|number => {
+const kFormatter = (num: number): string | number => {
   return Math.abs(num) > 999
     ? `${(Math.abs(num) / 1000).toFixed(1)}K`
     : num;
 };
 
-export default function AdminPannel(): ReactElement {
+export default function ModerationPanel(): ReactElement {
   const [frozen, setFrozen] = useState(false);
 
   const { stringSet } = useContext(LocalizationContext);
@@ -65,11 +65,7 @@ export default function AdminPannel(): ReactElement {
             </Label>
           </>
         )}
-        renderContent={() => (
-          <>
-            <OperatorList />
-          </>
-        )}
+        renderContent={() => <OperatorList />}
       />
       <Accordion
         className="sendbird-channel-settings__members-list"
@@ -92,11 +88,7 @@ export default function AdminPannel(): ReactElement {
             <Badge count={channel?.memberCount ? kFormatter(channel.memberCount) : ''}/>
           </>
         )}
-        renderContent={() => (
-          <>
-            <MemberList />
-          </>
-        )}
+        renderContent={() => <MemberList />}
       />
       {
         // No muted members in broadcast channel
@@ -121,11 +113,7 @@ export default function AdminPannel(): ReactElement {
                 </Label>
               </>
             )}
-            renderContent={() => (
-              <>
-                <MutedMemberList />
-              </>
-            )}
+            renderContent={() => <MutedMemberList />}
           />
         )
       }
@@ -149,11 +137,7 @@ export default function AdminPannel(): ReactElement {
             </Label>
           </>
         )}
-        renderContent={() => (
-          <>
-            <BannedUserList />
-          </>
-        )}
+        renderContent={() => <BannedUserList />}
       />
       {
         // cannot freeze broadcast channel

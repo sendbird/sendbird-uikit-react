@@ -13,7 +13,7 @@ import ContextMenu, { MenuItems } from '../ContextMenu';
 import Label, { LabelTypography, LabelColors } from '../Label';
 
 export interface UserListItemProps {
-  user: User;
+  user: User | Member;
   className?: string;
   checked?: boolean;
   checkBox?: boolean;
@@ -27,7 +27,9 @@ export interface UserListItemProps {
   }): ReactElement;
   onChange?(e: ChangeEvent<HTMLInputElement>): void;
   avatarSize?: string;
+  /** @deprecated Please use the onUserAvatarClick instead */
   onClick?(): void,
+  onUserAvatarClick?(): void,
 }
 
 export default function UserListItem({
@@ -43,7 +45,9 @@ export default function UserListItem({
   onChange,
   avatarSize = '40px',
   onClick,
+  onUserAvatarClick,
 }: UserListItemProps): ReactElement {
+  const operator = isOperator ?? (user as Member)?.role === 'operator';
   const uniqueKey = user.userId;
   const actionRef = React.useRef(null);
   const parentRef = React.useRef(null);
@@ -68,13 +72,13 @@ export default function UserListItem({
           <Avatar
             className="sendbird-user-list-item__avatar"
             ref={avatarRef}
-            src={user.profileUrl}
+            src={user?.profileUrl || user?.plainProfileUrl || ''}
             width={avatarSize}
             height={avatarSize}
             onClick={() => {
               if (!disableUserProfile) {
                 toggleDropdown();
-                onClick?.();
+                (onUserAvatarClick ?? onClick)?.();
               }
             }}
           />
@@ -113,11 +117,9 @@ export default function UserListItem({
         color={LabelColors.ONBACKGROUND_1}
       >
         {user.nickname || stringSet.NO_NAME}
-        {
-          (currentUser === user.userId) && (
-            ' (You)'
-          )
-        }
+        {(currentUser === user.userId) && (
+          stringSet.CHANNEL_SETTING__MEMBERS__YOU
+        )}
       </Label>
       { // if there is now nickname, display userId
         !user.nickname && (
@@ -146,7 +148,7 @@ export default function UserListItem({
         )
       }
       {
-        isOperator && (
+        operator && (
           <Label
             className={[
               'sendbird-user-list-item__operator',

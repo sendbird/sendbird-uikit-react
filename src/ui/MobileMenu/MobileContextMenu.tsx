@@ -35,6 +35,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
     parentRef,
     onReplyInThread,
     isOpenedFromThread = false,
+    onDownloadClick = null,
   } = props;
   const isByMe = message?.sender?.userId === userId;
   const { stringSet } = useLocalization();
@@ -248,6 +249,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
                 rel="noopener noreferrer"
                 href={fileMessage?.url}
                 target="_blank"
+                onClick={onDownloadClick}
               >
                 <Label
                   type={LabelTypography.SUBTITLE_1}

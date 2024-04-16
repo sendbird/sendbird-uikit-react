@@ -24,6 +24,7 @@ import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScroll
 import { getMessagePartsInfo } from '../../../GroupChannel/components/MessageList/getMessagePartsInfo';
 import { GroupChannelMessageListProps } from '../../../GroupChannel/components/MessageList';
 import { GroupChannelUIBasicProps } from '../../../GroupChannel/components/GroupChannelUI/GroupChannelUIView';
+import { deleteNullish } from '../../../../utils/utils';
 
 const SCROLL_BOTTOM_PADDING = 50;
 
@@ -33,16 +34,18 @@ export interface MessageListProps extends GroupChannelMessageListProps {
    * */
   renderMessage?: GroupChannelUIBasicProps['renderMessage'];
 }
-export const MessageList = ({
-  className = '',
-  renderMessage,
-  renderMessageContent,
-  renderSuggestedReplies,
-  renderCustomSeparator,
-  renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
-  renderPlaceholderEmpty = () => <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />,
-  renderFrozenNotification = () => <FrozenNotification className="sendbird-conversation__messages__notification" />,
-}: MessageListProps) => {
+export const MessageList = (props: MessageListProps) => {
+  const { className = '' } = props;
+  const {
+    renderMessage,
+    renderMessageContent,
+    renderSuggestedReplies,
+    renderCustomSeparator,
+    renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
+    renderPlaceholderEmpty = () => <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />,
+    renderFrozenNotification = () => <FrozenNotification className="sendbird-conversation__messages__notification" />,
+  } = deleteNullish(props);
+
   const {
     allMessages,
     localMessages,

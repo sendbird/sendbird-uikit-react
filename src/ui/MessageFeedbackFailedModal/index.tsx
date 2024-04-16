@@ -1,10 +1,10 @@
 import React, { ReactElement, useContext, useRef } from 'react';
-import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import Modal from '../../../../ui/Modal';
-import Button, { ButtonTypes } from '../../../../ui/Button';
-import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
+import { LocalizationContext } from '../../lib/LocalizationContext';
+import Modal from '../Modal';
+import Button, { ButtonTypes } from '../Button';
+import Label, { LabelColors, LabelTypography } from '../Label';
 import '../MessageFeedbackModal/index.scss';
-import { useKeyDown } from '../../../../hooks/useKeyDown/useKeyDown';
+import { useKeyDown } from '../../hooks/useKeyDown/useKeyDown';
 
 export interface MessageFeedbackFailedModalProps {
   text: string;

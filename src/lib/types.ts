@@ -103,6 +103,7 @@ export interface SendBirdStateConfig {
     enableTypingIndicator: SBUConfig['groupChannel']['channel']['enableTypingIndicator'];
     enableDocument: SBUConfig['groupChannel']['channel']['input']['enableDocument'];
     enableReactions: SBUConfig['groupChannel']['channel']['enableReactions'];
+    enableReactionsSupergroup: SBUConfig['groupChannel']['channel']['enableReactionsSupergroup'];
     replyType: SBUConfig['groupChannel']['channel']['replyType'];
     threadReplySelectType: SBUConfig['groupChannel']['channel']['threadReplySelectType'];
     typingIndicatorTypes: SBUConfig['groupChannel']['channel']['typingIndicatorTypes'];
@@ -257,6 +258,6 @@ export type SendbirdChatInitParams = Omit<SendbirdChatParams<Module[]>, 'appId'>
 export type CustomExtensionParams = Record<string, string>;
 
 export type SendbirdProviderUtils = {
-  updateMessageTemplatesInfo: (templateKey: string, createdAt: number) => Promise<void>;
+  updateMessageTemplatesInfo: (templateKeys: string[], messageId: number, createdAt: number) => Promise<void>;
   getCachedTemplate: (key: string) => ProcessedMessageTemplate | null;
 };

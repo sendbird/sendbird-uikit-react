@@ -1,5 +1,146 @@
 # Changelog - v3
 
+## [v3.14.1] (Apr 12, 2024)
+
+### Fixes
+* Fixed a bug where injecting an optional property with null value not rendering the expected default component
+* Updated the type of `renderMessage` in the `OpenChannel` module
+* Deprecated the renderInput prop and add a new `renderMessageInput` prop
+
+## [v3.14.0] (Apr 5, 2024)
+### Feature
+- `TemplateMessageItemBody` now supports `CarouselView` type template
+- Added 'wide' width support for `MessageContent` when value exists in `message.extendedMessagePayload['ui']['container_type']`
+- Added template version validation for `TemplateMessageItemBody`
+
+### Message template fixes/updates
+- Fixed a bug where argb color values are not converted to rgba
+- Fixed a bug where style properties expecting numeric values are set with string values
+- Removed default values of `borderRadius`, `backgroundColor`, and `color` for message template items
+
+### Other fixes
+- Fixed a bug where scroll bar is displayed in message sender name container
+
+## [v3.13.5] (Apr 5, 2024)
+
+### Fixes
+* Add a logger to the GroupChannelProvider for failing get channel
+* Reduce the OGTag height in the mobile layout
+* Prevent force refreshing of the ChannelSettings
+* Keep context menu when failing the member operations (register/unregister operator, mute/unmute)
+* Keep profile image during member operations on the MembersModal
+
+## [v3.13.4] (Mar 27, 2024)
+
+### Feature
+* Support the `Emoji Reactions` feature in the super group channel
+  * However, the `Tooltip` displaying who reacted will only appear in the normal group channel, not in the super group channel.
+* Export the `MessageFeedbackFailedModal` component for consistency with other message feedback-related components.
+
+## [v3.13.3] (Mar 22, 2024)
+
+### Features
+* Added a `renderMenuItem` to the `MessageMenu` component
+  * How to use?
+  ```tsx
+  <GroupChannel
+    renderMessageContent={(props) => (
+      <MessageContent
+        {...props}
+        renderMessageMenu={(props) => (
+          <MessageMenu
+            {...props}
+            renderMenuItem={(props) => {
+              const {
+                className,
+                onClick,
+                dataSbId,
+                disable,
+                text,
+              } = props;
+              return <MenuItem /> // Render Custom Menu Item
+            }}
+          />
+        )}
+      />
+    )}
+  />
+  ```
+* Added `onBeforeDownloadFileMessage` to the `<GroupChannel />` and `<Thread />` modules
+  * How to use?
+  ```tsx
+  const ONE_MB = 1024 * 1024;
+  /**
+    * Use this list to check if it's displayed as a ThumbnailMessage.
+    * (https://github.com/sendbird/sendbird-uikit-react/blob/main/src/utils/index.ts)
+  */
+  const ThumbnailMessageTypes = [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/gif',
+    'image/svg+xml',
+    'image/webp', // not supported in IE
+    'video/mpeg',
+    'video/ogg',
+    'video/webm',
+    'video/mp4',
+  ];
+
+  <GroupChannel // or Thread
+    onBeforeDownloadFileMessage={async ({ message, index = null }) => {
+      if (message.isFileMessage()) {
+        const confirmed = window.confirm(`The file size is ${(message.size / ONE_MB).toFixed(2)}MB. Would you like to continue downloading?`);
+        return confirmed;
+      }
+      if (message.isMultipleFilesMessage()) {
+        const confirmed = window.confirm(`The file size is ${(message.fileInfoList[index].fileSize / ONE_MB).toFixed(2)}MB. Would you like to continue downloading?`);
+        return confirmed;
+      }
+      return true;
+    }}
+  />
+  ```
+* Added `onDownloadClick` to the `FileViewer`, `FileViewerView`, `MobileBottomSheet`, `MobileContextMenu`, and `MobileMenu`
+
+### Fixes
+* Improved the stability of the ChannelSettings Modals
+  * Support menu on the `MembersModal`, `MutedMembersModal`, and `OperatorsModal`
+  * Display `Operator` description on the `MembersModal`
+* Fixed the `width` size of the `OGMessageItemBody` component
+* Added fallback logic on template rendering error
+* Replaced the hardcoded text ` (You)` with the StringSet `CHANNEL_SETTING__MEMBERS__YOU` in the `UserListItem`
+
+## [v3.13.2] (Mar 14, 2024)
+
+### Features
+* Added a `renderHeader` props to the ChannelSettingsUIProps
+  ```
+  <ChannelSettingsUI
+    renderHeader={() => ...}
+  />
+  ```
+
+### Fixes
+* Deprecated the `onClick` prop in `UserListItem` and added `onUserAvatarClick`. The deprecated prop will be removed in the next major version
+* Added throttling in `mute/unmute` operation
+* Added throttling in `add/remove` operator operation
+* Fixed that the Chat SDK is not initialized more than once
+* Display the normal `FileMessage` for the `.mov` video
+* Show `X` button on the ModalHeader of mobile mode
+* Modify the incorrect stringSet on the BannedUsersModal
+  * `CHANNEL_SETTING__MUTED_MEMBERS__TITLE` to `CHANNEL_SETTING__BANNED_MEMBERS__TITLE`
+  * `CHANNEL_SETTING__MODERATION__BAN` to `CHANNEL_SETTING__MODERATION__UNBAN`
+  * also modified the dataSbId, `channel_setting_banned_user_context_menu_ban` to `channel_setting_banned_user_context_menu_unban`
+* Fixed a specific environment issue (Android emulator) - Resolved an issue in modals used in ChannelSettings such as MembersModal, MutedMembersModal, AddOperatorsModal, OperatorsModal, BannedUsersModal, where even when scrolling to the end, additional members were not fetched
+* Fixed a specific environment issue (Safari) - Similarly addressed an issue within lists inside modals, where overflow occurred instead of scrolling
+
+## [v3.13.1] (Mar 08, 2024)
+
+### Fixes
+- Fixed a GroupChannel scroll issue on Safari when scrollBehavior is set to smooth
+- Fixed the case where the calculation of the input height in the chat window was not functioning properly
+
 ## [v3.13.0] (Feb 29, 2024)
 #### Template message feature
 Now we are supporting template message feature!

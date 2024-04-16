@@ -60,6 +60,7 @@ export default function ParentMessageInfo({
     onHeaderActionClick,
     isMuted,
     isChannelFrozen,
+    onBeforeDownloadFileMessage,
   } = useThreadContext();
   const { isMobile } = useMediaQueryContext();
 
@@ -67,9 +68,9 @@ export default function ParentMessageInfo({
   const [supposedHover, setSupposedHover] = useState(false);
   const [showFileViewer, setShowFileViewer] = useState(false);
   const usingReaction = getIsReactionEnabled({
-    globalLevel: isReactionEnabled,
-    isSuper: currentChannel.isSuper,
-    isBroadcast: currentChannel.isBroadcast,
+    channel: currentChannel,
+    config,
+    moduleLevel: isReactionEnabled,
   });
   const isByMe = userId === parentMessage.sender.userId;
 
@@ -118,6 +119,21 @@ export default function ParentMessageInfo({
       }
     }));
   }, [mentionedUserIds]);
+
+  const handleOnDownloadClick = async (e) => {
+    if (!onBeforeDownloadFileMessage) {
+      return null;
+    }
+    try {
+      const allowDownload = await onBeforeDownloadFileMessage({ message: parentMessage as FileMessage });
+      if (!allowDownload) {
+        e.preventDefault();
+        logger?.info?.('ParentMessageInfo: Not allowed to download.');
+      }
+    } catch (err) {
+      logger?.error?.('ParentMessageInfo: Error occurred while determining download continuation:', err);
+    }
+  };
 
   // User Profile
   const avatarRef = useRef(null);
@@ -281,6 +297,7 @@ export default function ParentMessageInfo({
         <ParentMessageInfoItem
           message={parentMessage}
           showFileViewer={setShowFileViewer}
+          onBeforeDownloadFileMessage={onBeforeDownloadFileMessage}
         />
       </div>
       {/* context menu */}
@@ -330,6 +347,7 @@ export default function ParentMessageInfo({
                 setShowFileViewer(false);
               });
           }}
+          onDownloadClick={handleOnDownloadClick}
         />
       )}
       {showMobileMenu && (
@@ -355,6 +373,7 @@ export default function ParentMessageInfo({
           showRemove={setShowRemove}
           toggleReaction={toggleReaction}
           isOpenedFromThread
+          onDownloadClick={handleOnDownloadClick}
         />
       )}
     </div>

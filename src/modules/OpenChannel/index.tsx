@@ -23,6 +23,7 @@ const OpenChannel: React.FC<OpenChannelProps> = (props: OpenChannelProps) => {
         renderMessage={props?.renderMessage}
         renderHeader={props?.renderHeader}
         renderInput={props?.renderInput}
+        renderMessageInput={props?.renderMessageInput}
         renderPlaceHolderEmptyList={props?.renderPlaceHolderEmptyList}
         renderPlaceHolderError={props?.renderPlaceHolderError}
         renderPlaceHolderLoading={props?.renderPlaceHolderLoading}

@@ -13,7 +13,7 @@ import {
 import { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 
 import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOutgoingMessageState';
-import { Nullable } from '../types';
+import { MessageContentMiddleContainerType, Nullable } from '../types';
 import { match } from 'ts-pattern';
 import { SendableMessage } from '@sendbird/chat/lib/__definition';
 
@@ -32,7 +32,7 @@ export const SUPPORTED_MIMES = {
     'video/ogg',
     'video/webm',
     'video/mp4',
-    'video/quicktime', // .mov
+    // 'video/quicktime', // NOTE: Do not support ThumbnailMessage for the .mov video
   ],
   AUDIO: [
     'audio/aac',
@@ -55,6 +55,7 @@ export const SUPPORTED_MIMES = {
     'text/calendar',
     'text/javascript',
     'text/xml',
+    'video/quicktime', // NOTE: Assume this video is a normal file, not video
   ],
   APPLICATION: [
     'application/x-abiword',
@@ -233,30 +234,30 @@ export const isSentStatus = (state: string): boolean => (
   || state === OutgoingMessageStates.READ
 );
 
-export const isAdminMessage = (message: CoreMessageType): boolean => (
+export const isAdminMessage = (message: CoreMessageType): message is AdminMessage => (
   message && (
     message['isAdminMessage'] && typeof message.isAdminMessage === 'function'
       ? message.isAdminMessage()
       : message?.messageType === 'admin'
   )
 );
-export const isUserMessage = (message: CoreMessageType): boolean => (
+export const isUserMessage = (message: CoreMessageType): message is UserMessage => (
   message && (
     message['isUserMessage'] && typeof message.isUserMessage === 'function'
       ? message.isUserMessage()
       : message?.messageType === 'user'
   )
 );
-export const isFileMessage = (message?: CoreMessageType): boolean => <boolean>(
-  message && (
-    message['isFileMessage'] && typeof message.isFileMessage === 'function'
+export const isFileMessage = (message?: CoreMessageType): message is FileMessage => (
+  !!message && (
+    message['isFileMessage'] && !!(typeof message.isFileMessage === 'function'
       ? message.isFileMessage()
-      : message?.messageType === 'file'
+      : message?.messageType === 'file')
   )
 );
 export const isMultipleFilesMessage = (
   message?: CoreMessageType,
-): boolean => (
+): message is MultipleFilesMessage => (
   message && (
     message['isMultipleFilesMessage'] && typeof message.isMultipleFilesMessage === 'function'
       ? message.isMultipleFilesMessage()
@@ -276,38 +277,79 @@ export const isThreadMessage = (message: CoreMessageType): boolean => (
 export const isTemplateMessage = (message: CoreMessageType): boolean => !!(
   message && message.extendedMessagePayload?.['template']
 );
+export enum UI_CONTAINER_TYPES {
+  DEFAULT = '',
+  WIDE = 'ui_container_type__wide',
+  DEFAULT_CAROUSEL = 'ui_container_type__default-carousel',
+}
 
-export const isOGMessage = (message: SendableMessageType): boolean => !!(
-  message && isUserMessage(message) && message?.ogMetaData && (
-    message.ogMetaData?.url
-    || message.ogMetaData?.title
-    || message.ogMetaData?.description
-    || message.ogMetaData?.defaultImage
-  )
-);
-export const isTextMessage = (message: SendableMessageType): boolean => (
-  isUserMessage(message)
-);
-export const isThumbnailMessage = (message: SendableMessageType): boolean => (
-  message && isFileMessage(message) && isSupportedFileView((message as FileMessage).type)
-);
-export const isImageMessage = (message: SendableMessageType): boolean => message && message.isFileMessage() && isThumbnailMessage(message) && isImage(message.type);
-export const isImageFileInfo = (fileInfo: UploadedFileInfo): boolean => fileInfo
-  && (isImage(fileInfo.mimeType ?? '') || isGif(fileInfo.mimeType ?? ''));
-export const isVideoMessage = (message: SendableMessageType): boolean => (
-  message && isThumbnailMessage(message) && isVideo((message as FileMessage).type)
-);
-export const isGifMessage = (message: SendableMessageType): boolean => (
-  message && isThumbnailMessage(message) && isGif((message as FileMessage).type)
-);
-export const isAudioMessage = (message: FileMessage): boolean => message && isFileMessage(message) && isAudio(message.type);
+export const getMessageContentMiddleClassNameByContainerType = ({
+  message,
+  isMobile,
+}: {
+  message: CoreMessageType,
+  isMobile: boolean,
+}): UI_CONTAINER_TYPES => {
+  /**
+   * FULL: template message only.
+   * WIDE: all message types.
+   */
+  const containerType: string | undefined = message.extendedMessagePayload?.['ui']?.['container_type'];
+  if (!isMobile) return UI_CONTAINER_TYPES.DEFAULT;
+  if (containerType === MessageContentMiddleContainerType.WIDE) {
+    return UI_CONTAINER_TYPES.WIDE;
+  }
+  return UI_CONTAINER_TYPES.DEFAULT;
+};
+
+export const isOGMessage = (message: CoreMessageType): message is UserMessage => {
+  if (!message || !isUserMessage(message)) return false;
+  return (
+    !!message.ogMetaData
+      && !!(message.ogMetaData.url || message.ogMetaData.title || message.ogMetaData.description || message.ogMetaData.defaultImage)
+  );
+};
+
+export const isTextMessage = (message: CoreMessageType): message is UserMessage => {
+  return isUserMessage(message);
+};
+
+export const isThumbnailMessage = (message: CoreMessageType): message is FileMessage => {
+  if (!message || !isFileMessage(message)) return false;
+  return isSupportedFileView(message.type);
+};
+
+export const isImageMessage = (message: SendableMessageType): message is FileMessage => {
+  if (!message || !isFileMessage(message)) return false;
+  return isThumbnailMessage(message) && isImage(message.type);
+};
+
+export const isVideoMessage = (message: SendableMessageType): message is FileMessage => {
+  if (!message || !isFileMessage(message)) return false;
+  return isThumbnailMessage(message) && isVideo(message.type);
+};
+
+export const isGifMessage = (message: SendableMessageType): message is FileMessage => {
+  if (!message || !isFileMessage(message)) return false;
+  return isThumbnailMessage(message) && isGif(message.type);
+};
+
+export const isAudioMessage = (message: CoreMessageType): message is FileMessage => {
+  if (!message || !isFileMessage(message)) return false;
+  return isAudio(message.type);
+};
+
+export const isImageFileInfo = (fileInfo: UploadedFileInfo): boolean => {
+  if (!fileInfo) return false;
+  return !!fileInfo.mimeType && (isImage(fileInfo.mimeType) || isGif(fileInfo.mimeType));
+};
+
 export const isAudioMessageMimeType = (type: string): boolean => (/^audio\//.test(type));
 export const isVoiceMessageMimeType = (type: string): boolean => (/^voice\//.test(type));
 export const isVoiceMessage = (message: Nullable<CoreMessageType>): boolean => {
+  if (!message || !isFileMessage(message) || !message.type) return false;
+
   // ex) audio/m4a OR audio/m4a;sbu_type=voice
-  if (!(message && isFileMessage(message)) || !(message as FileMessage).type) {
-    return false;
-  }
   const [mimeType, typeParameter] = (message as FileMessage).type.split(';');
 
   if (!isAudioMessageMimeType(mimeType)) {
@@ -374,6 +416,16 @@ export const getClassName = (classNames: string | Array<string | Array<string>>)
     ? classNames.reduce(reducer, []).join(' ')
     : classNames
 );
+
+export const startsWithAtAndEndsWithBraces = (str: string) => {
+  const regex = /^\{@.*\}$/;
+  return regex.test(str);
+};
+
+export const removeAtAndBraces = (str: string) => {
+  return str.replace(/^\{@|}$/g, '');
+};
+
 export const isReactedBy = (userId: string, reaction: Reaction): boolean => (
   reaction.userIds.some((reactorUserId: string): boolean => reactorUserId === userId)
 );

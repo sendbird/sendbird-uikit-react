@@ -10,7 +10,10 @@ export type ScrollTopics = 'scrollToBottom' | 'scroll';
 export type ScrollTopicUnion =
   | {
       topic: 'scrollToBottom';
-      payload: undefined | null | PromiseResolver;
+      payload: {
+        animated?: boolean;
+        resolve?: PromiseResolver;
+      };
     }
   | {
       topic: 'scroll';
@@ -32,7 +35,12 @@ function runCallback(callback: () => void, lazy = true) {
   }
 }
 
-export function useMessageListScroll() {
+function getScrollBehavior(behavior: 'smooth' | 'auto', animated?: boolean) {
+  if (typeof animated === 'boolean') return animated ? 'smooth' : 'auto';
+  return behavior;
+}
+
+export function useMessageListScroll(behavior: 'smooth' | 'auto') {
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollDistanceFromBottomRef = useRef(0);
 
@@ -43,11 +51,15 @@ export function useMessageListScroll() {
     const unsubscribes: { remove(): void }[] = [];
 
     unsubscribes.push(
-      scrollPubSub.subscribe('scrollToBottom', (resolve) => {
+      scrollPubSub.subscribe('scrollToBottom', ({ resolve, animated }) => {
         runCallback(() => {
           if (!scrollRef.current) return;
 
-          scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+          if (scrollRef.current.scroll) {
+            scrollRef.current.scroll({ top: scrollRef.current.scrollHeight, behavior: getScrollBehavior(behavior, animated) });
+          } else {
+            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+          }
 
           // Update data by manual update
           scrollDistanceFromBottomRef.current = 0;
@@ -59,12 +71,16 @@ export function useMessageListScroll() {
     );
 
     unsubscribes.push(
-      scrollPubSub.subscribe('scroll', ({ top, animated = false, lazy, resolve }) => {
+      scrollPubSub.subscribe('scroll', ({ top, animated, lazy, resolve }) => {
         runCallback(() => {
           if (!scrollRef.current) return;
           const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
 
-          scrollRef.current.scroll({ top, behavior: animated ? 'smooth' : 'auto' });
+          if (scrollRef.current.scroll) {
+            scrollRef.current.scroll({ top, behavior: getScrollBehavior(behavior, animated) });
+          } else {
+            scrollRef.current.scrollTop = top;
+          }
 
           // Update data by manual update
           scrollDistanceFromBottomRef.current = Math.max(0, scrollHeight - scrollTop - clientHeight);
@@ -78,7 +94,7 @@ export function useMessageListScroll() {
     return () => {
       unsubscribes.forEach(({ remove }) => remove());
     };
-  }, []);
+  }, [behavior]);
 
   // Update data by scroll events
   useOnScrollPositionChangeDetectorWithRef(scrollRef, {

@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useRef, useEffect, useLayoutEffect } from 'react';
 import format from 'date-fns/format';
-import { FileMessage } from '@sendbird/chat/message';
+import type { FileMessage, MultipleFilesMessage } from '@sendbird/chat/message';
 
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import DateSeparator from '../../../../ui/DateSeparator';
@@ -62,6 +62,7 @@ export default function ThreadListItem({
     deleteMessage,
     isMuted,
     isChannelFrozen,
+    onBeforeDownloadFileMessage,
   } = threadContext;
   const openingMessage = threadContext?.message;
 
@@ -69,9 +70,9 @@ export default function ThreadListItem({
   const [showRemove, setShowRemove] = useState(false);
   const [showFileViewer, setShowFileViewer] = useState(false);
   const usingReaction = getIsReactionEnabled({
-    globalLevel: isReactionEnabled,
-    isSuper: currentChannel.isSuper,
-    isBroadcast: currentChannel.isBroadcast,
+    channel: currentChannel,
+    config,
+    moduleLevel: isReactionEnabled,
   });
 
   // Move to message
@@ -259,12 +260,26 @@ export default function ThreadListItem({
       )}
       {showFileViewer && (
         <FileViewer
-          message={message as FileMessage}
+          message={message as FileMessage | MultipleFilesMessage}
           isByMe={message?.sender?.userId === userId}
           onClose={() => setShowFileViewer(false)}
           onDelete={() => {
             deleteMessage(message);
             setShowFileViewer(false);
+          }}
+          onDownloadClick={async (e) => {
+            if (!onBeforeDownloadFileMessage) {
+              return null;
+            }
+            try {
+              const allowDownload = await onBeforeDownloadFileMessage({ message: message as FileMessage | MultipleFilesMessage });
+              if (!allowDownload) {
+                e.preventDefault();
+                logger.info?.('ThreadListItem: Not allowed to download.');
+              }
+            } catch (err) {
+              logger.error?.('ThreadListItem: Error occurred while determining download continuation:', err);
+            }
           }}
         />
       )}

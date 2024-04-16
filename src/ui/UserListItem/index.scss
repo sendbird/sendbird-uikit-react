@@ -19,6 +19,7 @@
     top: 8px;
     left: 0px;
     cursor: pointer;
+    z-index: 0;
   }
 
   .sendbird-muted-avatar {
@@ -26,6 +27,7 @@
     top: 8px;
     left: 0px;
     pointer-events: none;
+    z-index: 1;
   }
 
   .sendbird-user-list-item__title {

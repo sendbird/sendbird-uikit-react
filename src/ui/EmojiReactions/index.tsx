@@ -1,6 +1,6 @@
 import './index.scss';
 import React, { ReactElement, useRef, useState } from 'react';
-import type { Emoji, EmojiContainer } from '@sendbird/chat';
+import type { Emoji, EmojiContainer, User } from '@sendbird/chat';
 import type { Reaction } from '@sendbird/chat/message';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
@@ -17,7 +17,8 @@ import ReactionItem from './ReactionItem';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import { AddReactionBadgeItem } from './AddReactionBadgeItem';
 import { MobileEmojisBottomSheet } from '../MobileMenu/MobileEmojisBottomSheet';
-import { User } from '@sendbird/chat';
+import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
+import { getIsReactionEnabled } from '../../utils/getIsReactionEnabled';
 
 export interface EmojiReactionsProps {
   className?: string | Array<string>;
@@ -44,6 +45,17 @@ const EmojiReactions = ({
   toggleReaction,
   onPressUserProfile,
 }: EmojiReactionsProps): ReactElement => {
+  let showTheReactedMembers = false;
+  try {
+    const { config } = useSendbirdStateContext();
+    showTheReactedMembers = getIsReactionEnabled({
+      channel,
+      config,
+    });
+  } catch (err) {
+    // TODO: Handle error
+  }
+
   const { isMobile } = useMediaQueryContext();
   const addReactionRef = useRef(null);
   const [showEmojiList, setShowEmojiList] = useState(false);
@@ -157,18 +169,20 @@ const EmojiReactions = ({
           toggleReaction={toggleReaction}
         />
       )}
-      {(isMobile && selectedEmojiKey && channel !== null) && (
-        <ReactedMembersBottomSheet
-          message={message}
-          channel={channel}
-          emojiKey={selectedEmojiKey}
-          hideMenu={() => {
-            setSelectedEmojiKey('');
-          }}
-          emojiContainer={emojiContainer}
-          onPressUserProfileHandler={onPressUserProfile}
-        />
-      )}
+      {
+        (isMobile && selectedEmojiKey && channel !== null && showTheReactedMembers) && (
+          <ReactedMembersBottomSheet
+            message={message}
+            channel={channel}
+            emojiKey={selectedEmojiKey}
+            hideMenu={() => {
+              setSelectedEmojiKey('');
+            }}
+            emojiContainer={emojiContainer}
+            onPressUserProfileHandler={onPressUserProfile}
+          />
+        )
+      }
     </div>
   );
 };

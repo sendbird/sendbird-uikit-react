@@ -24,11 +24,13 @@ export function getConnectSbError(error?: SendbirdError): string {
 
 export function setUpParams({
   appId,
+  isNewApp = false,
   customApiHost,
   customWebSocketHost,
   sdkInitParams = {},
 }: {
   appId: string;
+  isNewApp?: boolean;
   customApiHost?: string;
   customWebSocketHost?: string;
   sdkInitParams?: SendbirdChatInitParams;
@@ -37,9 +39,10 @@ export function setUpParams({
   const params = Object.assign(sdkInitParams, {
     appId,
     modules: [new GroupChannelModule(), new OpenChannelModule()],
-    newInstance: true,
+    newInstance: isNewApp,
     localCacheEnabled: true,
   });
+
   if (customApiHost) params.customApiHost = customApiHost;
   if (customWebSocketHost) params.customWebSocketHost = customWebSocketHost;
   return SendbirdChat.init(params);
@@ -64,6 +67,7 @@ export async function setUpConnection({
   initDashboardConfigs,
   userId,
   appId,
+  isNewApp,
   customApiHost,
   customWebSocketHost,
   configureSession,
@@ -87,6 +91,7 @@ export async function setUpConnection({
         appId,
         customApiHost,
         customWebSocketHost,
+        isNewApp,
         sdkInitParams,
       });
 

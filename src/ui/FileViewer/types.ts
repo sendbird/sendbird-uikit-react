@@ -1,7 +1,7 @@
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 
 // TODO: refactor this to -> as const pattern
-import { KeyboardEvent } from 'react';
+import { KeyboardEvent, MouseEvent } from 'react';
 
 export type SupportedImageMimesType = 'image/jpeg' | 'image/jpg' | 'image/png' | 'image/gif' | 'image/svg+xml' | 'image/webp';
 export type SupportedVideoMimesType = 'video/mpeg' | 'video/ogg' | 'video/webm' | 'video/mp4';
@@ -61,7 +61,8 @@ export interface SingleFileViewer extends SenderInfo, FileInfo, BaseViewer {
   viewerType?: typeof ViewerTypes.SINGLE;
   isByMe?: boolean;
   disableDelete?: boolean;
-  onDelete: (e: React.MouseEvent) => void;
+  onDelete: (e: MouseEvent) => void;
+  onDownloadClick?: (e: MouseEvent) => Promise<void>;
 }
 
 export interface MultiFilesViewer extends SenderInfo, BaseViewer {
@@ -70,6 +71,7 @@ export interface MultiFilesViewer extends SenderInfo, BaseViewer {
   currentIndex: number;
   onClickLeft: () => void;
   onClickRight: () => void;
+  onDownloadClick?: (e: MouseEvent) => Promise<void>;
 }
 
 export type FileViewerComponentProps = SingleFileViewer | MultiFilesViewer;

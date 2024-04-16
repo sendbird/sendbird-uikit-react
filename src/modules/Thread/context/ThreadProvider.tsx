@@ -32,6 +32,7 @@ import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 import { PublishingModuleType, useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
 import { SendableMessageType } from '../../../utils';
 import { useThreadFetchers } from './hooks/useThreadFetchers';
+import type { OnBeforeDownloadFileMessageType } from '../../GroupChannel/context/GroupChannelProvider';
 
 export type ThreadProviderProps = {
   children?: React.ReactElement;
@@ -43,6 +44,7 @@ export type ThreadProviderProps = {
   onBeforeSendFileMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
   onBeforeSendVoiceMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
   onBeforeSendMultipleFilesMessage?: (files: Array<File>, quotedMessage?: SendableMessageType) => MultipleFilesMessageCreateParams;
+  onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
   // User Profile
   disableUserProfile?: boolean;
   renderUserProfile?: (props: { user: User, close: () => void }) => ReactElement;
@@ -74,6 +76,7 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
     onBeforeSendFileMessage,
     onBeforeSendVoiceMessage,
     onBeforeSendMultipleFilesMessage,
+    onBeforeDownloadFileMessage,
     isMultipleFilesMessageEnabled,
     // User Profile
     disableUserProfile,
@@ -233,6 +236,7 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
         onHeaderActionClick,
         onMoveToParentMessage,
         isMultipleFilesMessageEnabled,
+        onBeforeDownloadFileMessage,
         // ThreadContextInitialState
         currentChannel,
         allThreadMessages,

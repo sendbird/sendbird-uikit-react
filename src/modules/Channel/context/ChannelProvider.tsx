@@ -249,12 +249,9 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     typingMembers,
   } = messagesStore;
 
-  const isSuper = currentGroupChannel?.isSuper || false;
-  const isBroadcast = currentGroupChannel?.isBroadcast || false;
   const usingReaction = getIsReactionEnabled({
-    isBroadcast,
-    isSuper,
-    globalLevel: config?.isReactionEnabled,
+    channel: currentGroupChannel,
+    config,
     moduleLevel: isReactionEnabled,
   });
 

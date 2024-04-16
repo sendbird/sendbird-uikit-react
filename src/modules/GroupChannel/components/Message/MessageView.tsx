@@ -20,6 +20,8 @@ import MessageContent, { MessageContentProps } from '../../../../ui/MessageConte
 
 import SuggestedReplies, { SuggestedRepliesProps } from '../SuggestedReplies';
 import SuggestedMentionListView from '../SuggestedMentionList/SuggestedMentionListView';
+import type { OnBeforeDownloadFileMessageType } from '../../context/GroupChannelProvider';
+import { deleteNullish } from '../../../../utils/utils';
 
 export interface MessageProps {
   message: EveryMessage;
@@ -27,7 +29,6 @@ export interface MessageProps {
   chainTop?: boolean;
   chainBottom?: boolean;
   handleScroll?: (isBottomMessageAffected?: boolean) => void;
-
   /**
    * Customizes all child components of the message.
    * */
@@ -80,6 +81,11 @@ export interface MessageViewProps extends MessageProps {
 
   renderFileViewer: (props: { message: FileMessage; onCancel: () => void }) => React.ReactElement;
   renderRemoveMessageModal?: (props: { message: EveryMessage; onCancel: () => void }) => React.ReactElement;
+  /**
+   * You can't use this prop in the Channel component (legacy).
+   * Accepting this prop only for the GroupChannel.
+   */
+  onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
 
   animatedMessageId: number;
   setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
@@ -90,6 +96,7 @@ export interface MessageViewProps extends MessageProps {
   setHighLightedMessageId?: React.Dispatch<React.SetStateAction<number>>;
   /** @deprecated * */
   onMessageHighlighted?: () => void;
+  usedInLegacy?: boolean;
 }
 
 // TODO: Refactor this component, is too complex now
@@ -97,14 +104,7 @@ const MessageView = (props: MessageViewProps) => {
   const {
     // MessageProps
     message,
-    renderMessage,
     children,
-    renderMessageContent = (props) => <MessageContent {...props} />,
-    renderSuggestedReplies = (props) => (
-      <SuggestedReplies {...props} />
-    ),
-    renderCustomSeparator,
-    renderEditInput,
     hasSeparator,
     chainTop,
     chainBottom,
@@ -120,25 +120,34 @@ const MessageView = (props: MessageViewProps) => {
     threadReplySelectType,
     nicknamesMap,
 
-    renderUserMentionItem,
     scrollToMessage,
     toggleReaction,
     setQuoteMessage,
     onQuoteMessageClick,
     onReplyInThreadClick,
+    onBeforeDownloadFileMessage,
 
     sendUserMessage,
     updateUserMessage,
     resendMessage,
     deleteMessage,
 
-    renderFileViewer,
-    renderRemoveMessageModal,
-
     setAnimatedMessageId,
     animatedMessageId,
     onMessageAnimated,
+    usedInLegacy = true,
   } = props;
+
+  const {
+    renderUserMentionItem,
+    renderMessage,
+    renderMessageContent = (props) => <MessageContent {...props} />,
+    renderSuggestedReplies = (props) => <SuggestedReplies {...props} />,
+    renderCustomSeparator,
+    renderEditInput,
+    renderFileViewer,
+    renderRemoveMessageModal,
+  } = deleteNullish(props);
 
   const { dateLocale, stringSet } = useLocalization();
   const globalStore = useSendbirdStateContext();
@@ -180,7 +189,7 @@ const MessageView = (props: MessageViewProps) => {
   }, [mentionedUserIds]);
 
   /**
-   * Move the messsage list scroll
+   * Move the message list scroll
    * when the message's height is changed by `showEdit` OR `message.reactions`
    */
   useDidMountEffect(() => {
@@ -192,8 +201,8 @@ const MessageView = (props: MessageViewProps) => {
   }, [message?.updatedAt, (message as UserMessage)?.message]);
 
   useLayoutEffect(() => {
-    // Keep the scrollBottom value after fetching new message list
-    handleScroll?.(true);
+    // Keep the scrollBottom value after fetching new message list (but GroupChannel module is not needed.)
+    if (usedInLegacy) handleScroll?.(true);
   }, []);
 
   useLayoutEffect(() => {
@@ -259,6 +268,7 @@ const MessageView = (props: MessageViewProps) => {
           onReplyInThread: onReplyInThreadClick,
           onQuoteMessageClick: onQuoteMessageClick,
           onMessageHeightChange: handleScroll,
+          onBeforeDownloadFileMessage,
         })}
         { /* Suggested Replies */ }
         {

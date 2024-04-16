@@ -5,7 +5,8 @@ import Icon, { IconTypes, IconColors } from '../Icon';
 import ImageRenderer from '../ImageRenderer';
 import {
   isAudioMessage,
-  isFileMessage, isImageFileInfo,
+  isFileMessage,
+  isImageFileInfo,
   isImageMessage,
   isMultipleFilesMessage,
   isThumbnailMessage,
@@ -27,25 +28,14 @@ export default function QuoteMessageThumbnail({ message }: Props): ReactElement 
   }
   let thumbnailUrl = getMessageFirstFileThumbnailUrl(message);
   if (!thumbnailUrl) {
-    if (
-      message.isFileMessage?.()
-      && (
-        isImageMessage(message)
-        || isVideoMessage(message)
-      )
-    ) {
+    if (isImageMessage(message) || isVideoMessage(message)) {
       thumbnailUrl = getMessageFirstFileUrl(message);
-    } else if (
-      message.isMultipleFilesMessage?.()
-      && (
-        message.fileInfoList.length > 0
-        && isImageFileInfo((message).fileInfoList[0])
-      )
-    ) {
+    } else if (isMultipleFilesMessage(message) && isImageFileInfo(message.fileInfoList?.[0])) {
       thumbnailUrl = message.fileInfoList[0].url;
     }
   }
-  if (isVideoMessage(message as FileMessage) && thumbnailUrl) {
+
+  if (isVideoMessage(message) && thumbnailUrl) {
     return (
       <div className={componentClassname}>
         <video
@@ -68,7 +58,7 @@ export default function QuoteMessageThumbnail({ message }: Props): ReactElement 
         fixedSize
       />
     );
-  } else if (isAudioMessage(message as FileMessage)) {
+  } else if (isAudioMessage(message)) {
     return (
       <div className={componentClassname}>
         <Icon

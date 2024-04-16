@@ -60,6 +60,7 @@ export default {
   'ChannelSettings/components/ModerationPanel': 'src/modules/ChannelSettings/components/ModerationPanel/index.tsx',
   'ChannelSettings/components/ChannelProfile': 'src/modules/ChannelSettings/components/ChannelProfile/index.tsx',
   'ChannelSettings/components/ChannelSettingsUI': 'src/modules/ChannelSettings/components/ChannelSettingsUI/index.tsx',
+  'ChannelSettings/components/ChannelSettingsHeader': 'src/modules/ChannelSettings/components/ChannelSettingsUI/ChannelSettingsHeader.tsx',
   'ChannelSettings/components/EditDetailsModal': 'src/modules/ChannelSettings/components/EditDetailsModal/index.tsx',
   'ChannelSettings/components/LeaveChannel': 'src/modules/ChannelSettings/components/LeaveChannel/index.tsx',
   'ChannelSettings/components/UserListItem': 'src/modules/ChannelSettings/components/UserListItem/index.tsx',
@@ -81,7 +82,6 @@ export default {
   'Channel/components/MessageInputWrapper': 'src/modules/Channel/components/MessageInputWrapper/index.tsx',
   'Channel/components/MessageList': 'src/modules/Channel/components/MessageList/index.tsx',
   'Channel/components/RemoveMessageModal': 'src/modules/Channel/components/RemoveMessageModal/index.tsx',
-  'Channel/components/MessageFeedbackModal': 'src/modules/Channel/components/MessageFeedbackModal/index.tsx',
   'Channel/components/TypingIndicator': 'src/modules/Channel/components/TypingIndicator.tsx',
   'Channel/components/UnreadCount': 'src/modules/Channel/components/UnreadCount/index.tsx',
   'Channel/components/SuggestedMentionList': 'src/modules/Channel/components/SuggestedMentionList/index.tsx',
@@ -100,7 +100,6 @@ export default {
   'GroupChannel/components/UnreadCount': 'src/modules/GroupChannel/components/UnreadCount/index.tsx',
   'GroupChannel/components/SuggestedMentionList': 'src/modules/GroupChannel/components/SuggestedMentionList/index.tsx',
   'GroupChannel/components/SuggestedReplies': 'src/modules/GroupChannel/components/SuggestedReplies/index.tsx',
-  // 'GroupChannel/components/MessageFeedbackModal': 'src/modules/GroupChannel/components/MessageFeedbackModal/index.tsx', // TODO: move to UI
 
   // OpenChannel
   OpenChannel: 'src/modules/OpenChannel/index.tsx',
@@ -238,4 +237,6 @@ export default {
   'ui/Word': 'src/ui/Word/index.tsx',
   'ui/FeedbackIconButton': 'src/ui/FeedbackIconButton/index.tsx',
   'ui/MobileFeedbackMenu': 'src/ui/MobileFeedbackMenu/index.tsx',
+  'ui/MessageFeedbackModal': 'src/ui/MessageFeedbackModal/index.tsx',
+  'ui/MessageFeedbackFailedModal': 'src/ui/MessageFeedbackFailedModal/index.tsx',
 };

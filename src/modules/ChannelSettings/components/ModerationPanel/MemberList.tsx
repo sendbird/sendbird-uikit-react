@@ -10,7 +10,7 @@ import type { Member } from '@sendbird/chat/groupChannel';
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import IconButton from '../../../../ui/IconButton';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
-import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
+import ContextMenu, { MenuItem, MenuItems, MuteMenuItem, OperatorMenuItem } from '../../../../ui/ContextMenu';
 
 import UserListItem from '../UserListItem';
 import MembersModal from './MembersModal';
@@ -18,6 +18,7 @@ import InviteUsers from './InviteUsersModal';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
+import { noop } from '../../../../utils/utils';
 import uuidv4 from '../../../../utils/uuid';
 
 export const MemberList = (): ReactElement => {
@@ -63,7 +64,7 @@ export const MemberList = (): ReactElement => {
   }, [channel]);
 
   return (
-    <div className="sendbird-channel-settings-member-list sendbird-accordion">
+    <div className="sendbird-channel-settings-member-list">
       {
         members.map((member) => (
           <UserListItem
@@ -96,20 +97,14 @@ export const MemberList = (): ReactElement => {
                         closeDropdown={closeDropdown}
                         openLeft
                       >
-                        <MenuItem
-                          onClick={() => {
-                            if ((member.role !== 'operator')) {
-                              channel?.addOperators([member.userId]).then(() => {
-                                refreshList();
-                                closeDropdown();
-                              });
-                            } else {
-                              channel?.removeOperators([member.userId]).then(() => {
-                                refreshList();
-                                closeDropdown();
-                              });
-                            }
+                        <OperatorMenuItem
+                          channel={channel}
+                          user={member}
+                          onChange={() => {
+                            refreshList();
+                            closeDropdown();
                           }}
+                          onError={noop} // TODO: We will handle error
                           dataSbId={`channel_setting_member_context_menu_${(
                             member.role !== 'operator'
                           ) ? 'register_as_operator' : 'unregister_operator'}`}
@@ -119,34 +114,26 @@ export const MemberList = (): ReactElement => {
                               ? stringSet.CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR
                               : stringSet.CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR
                           }
-                        </MenuItem>
+                        </OperatorMenuItem>
                         {
                           // No muted members in broadcast channel
                           !channel?.isBroadcast && (
-                            <MenuItem
-                              onClick={() => {
-                                if (member.isMuted) {
-                                  channel?.unmuteUser(member).then(() => {
-                                    refreshList();
-                                    closeDropdown();
-                                  });
-                                } else {
-                                  channel?.muteUser(member).then(() => {
-                                    refreshList();
-                                    closeDropdown();
-                                  });
-                                }
+                            <MuteMenuItem
+                              channel={channel}
+                              user={member}
+                              onChange={() => {
+                                refreshList();
+                                closeDropdown();
                               }}
-                              dataSbId={`channel_setting_member_context_menu_${(
-                                member.isMuted) ? 'unmute' : 'mute'}`
-                              }
+                              onError={noop} // TODO: We will handle error
+                              dataSbId={`channel_setting_member_context_menu_${member.isMuted ? 'unmute' : 'mute'}`}
                             >
                               {
                                 member.isMuted
                                   ? stringSet.CHANNEL_SETTING__MODERATION__UNMUTE
                                   : stringSet.CHANNEL_SETTING__MODERATION__MUTE
                               }
-                            </MenuItem>
+                            </MuteMenuItem>
                           )
                         }
                         <MenuItem

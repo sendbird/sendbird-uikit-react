@@ -4,18 +4,20 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { Role } from '@sendbird/chat';
+import { type Member, MemberListQuery } from '@sendbird/chat/groupChannel';
 
 import Modal from '../../../../ui/Modal';
 import UserListItem from '../../../../ui/UserListItem';
 import IconButton from '../../../../ui/IconButton';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
-import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
+import ContextMenu, { MenuItem, MenuItems, MuteMenuItem, OperatorMenuItem } from '../../../../ui/ContextMenu';
 import { noop } from '../../../../utils/utils';
 
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { Member, MemberListQuery } from '@sendbird/chat/groupChannel';
+import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 
 interface Props {
   onCancel(): void;
@@ -27,7 +29,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
 
   const channel = useChannelSettingsContext()?.channel;
   const state = useSendbirdStateContext();
-  const currentUser = state?.config?.userId;
+  const currentUserId = state?.config?.userId;
   const { stringSet } = useContext(LocalizationContext);
 
   useEffect(() => {
@@ -50,163 +52,136 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
       >
         <div
           className="sendbird-more-members__popup-scroll"
-          onScroll={(e) => {
-            const hasNext = memberQuery?.hasNext;
-            const target = e.target as HTMLTextAreaElement;
-            const fetchMore = (
-              target.clientHeight + target.scrollTop === target.scrollHeight
-            );
-
-            if (hasNext && fetchMore) {
-              memberQuery.next().then((o) => {
-                setMembers([
-                  ...members,
-                  ...o,
-                ]);
-              });
-            }
-          }}
+          onScroll={useOnScrollPositionChangeDetector({
+            onReachedBottom: async () => {
+              const { hasNext } = memberQuery;
+              if (hasNext) {
+                memberQuery.next().then((o) => {
+                  setMembers([
+                    ...members,
+                    ...o,
+                  ]);
+                });
+              }
+            },
+          })}
         >
           {
-            members.map((member: Member) => (
-              <UserListItem
-                user={member}
-                key={member.userId}
-                currentUser={currentUser}
-                action={({ parentRef, actionRef }) => (
-                  <>
-                    {channel?.myRole === 'operator' && (
-                      <ContextMenu
-                        menuTrigger={(toggleDropdown) => (
-                          <IconButton
-                            className="sendbird-user-message__more__menu"
-                            width="32px"
-                            height="32px"
-                            onClick={() => {
-                              toggleDropdown();
-                            }}
-                          >
-                            <Icon
-                              width="24px"
-                              height="24px"
-                              type={IconTypes.MORE}
-                              fillColor={IconColors.CONTENT_INVERSE}
-                            />
-                          </IconButton>
-                        )}
-                        menuItems={(closeDropdown) => (
-                          <MenuItems
-                            parentContainRef={parentRef}
-                            parentRef={actionRef} // for catching location(x, y) of MenuItems
-                            closeDropdown={closeDropdown}
-                            openLeft
-                          >
-                            <MenuItem
-                              disable={currentUser === member.userId}
+            members.map((member: Member) => {
+              return (
+                <UserListItem
+                  user={member}
+                  key={member.userId}
+                  currentUser={currentUserId}
+                  action={({ parentRef, actionRef }) => (
+                    <>
+                      {channel?.myRole === 'operator' && currentUserId !== member.userId && (
+                        <ContextMenu
+                          menuTrigger={(toggleDropdown) => (
+                            <IconButton
+                              className="sendbird-user-message__more__menu"
+                              width="32px"
+                              height="32px"
                               onClick={() => {
-                                if ((member.role !== 'operator')) {
-                                  channel?.addOperators([member.userId]).then(() => {
-                                    setMembers(members.map(m => {
-                                      if (m.userId === member.userId) {
-                                        return {
-                                          ...member,
-                                          role: 'operator',
-                                        };
-                                      }
-                                      return m;
-                                    }));
-                                    closeDropdown();
-                                  });
-                                } else {
-                                  channel?.removeOperators([member.userId]).then(() => {
-                                    setMembers(members.map(m => {
-                                      if (m.userId === member.userId) {
-                                        return {
-                                          ...member,
-                                          role: '',
-                                        };
-                                      }
-                                      return m;
-                                    }));
-                                    closeDropdown();
-                                  });
-                                }
+                                toggleDropdown();
                               }}
-                              dataSbId={`channel_setting_member_context_menu_${(
-                                member.role !== 'operator'
-                              ) ? 'register_as_operator' : 'unregister_operator'}`}
                             >
-                              {
-                                member.role !== 'operator'
-                                  ? stringSet.CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR
-                                  : stringSet.CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR
-                              }
-                            </MenuItem>
-                            {
-                              // No muted members in broadcast channel
-                              !channel?.isBroadcast && (
-                                <MenuItem
-                                  onClick={() => {
-                                    if (member.isMuted) {
-                                      channel?.unmuteUser(member).then(() => {
-                                        setMembers(members.map(m => {
-                                          if (m.userId === member.userId) {
-                                            return {
-                                              ...member,
-                                              isMuted: false,
-                                            };
-                                          }
-                                          return m;
-                                        }));
-                                        closeDropdown();
-                                      });
-                                    } else {
-                                      channel?.muteUser(member).then(() => {
-                                        setMembers(members.map(m => {
-                                          if (m.userId === member.userId) {
-                                            return {
-                                              ...member,
-                                              isMuted: true,
-                                            };
-                                          }
-                                          return m;
-                                        }));
-                                        closeDropdown();
-                                      });
+                              <Icon
+                                width="24px"
+                                height="24px"
+                                type={IconTypes.MORE}
+                                fillColor={IconColors.CONTENT_INVERSE}
+                              />
+                            </IconButton>
+                          )}
+                          menuItems={(closeDropdown) => (
+                            <MenuItems
+                              parentContainRef={parentRef}
+                              parentRef={actionRef} // for catching location(x, y) of MenuItems
+                              closeDropdown={closeDropdown}
+                              openLeft
+                            >
+                              <OperatorMenuItem
+                                channel={channel}
+                                user={member}
+                                disable={currentUserId === member.userId}
+                                onChange={(_, member, isOperator) => {
+                                  const newMembers = [ ...members ];
+                                  for (const newMember of newMembers) {
+                                    if (newMember.userId === member.userId) {
+                                      newMember.role = isOperator ? Role.OPERATOR : Role.NONE;
                                     }
-                                  }}
-                                  dataSbId={`channel_setting_member_context_menu_${(
-                                    member.isMuted) ? 'unmute' : 'mute'}`
                                   }
-                                >
-                                  {
-                                    member.isMuted
-                                      ? stringSet.CHANNEL_SETTING__MODERATION__UNMUTE
-                                      : stringSet.CHANNEL_SETTING__MODERATION__MUTE
-                                  }
-                                </MenuItem>
-                              )
-                            }
-                            <MenuItem
-                              onClick={() => {
-                                channel?.banUser(member, -1, '').then(() => {
-                                  setMembers(members.filter(({ userId }) => {
-                                    return userId !== member.userId;
-                                  }));
-                                });
-                              }}
-                              dataSbId="channel_setting_member_context_menu_ban"
-                            >
-                              {stringSet.CHANNEL_SETTING__MODERATION__BAN}
-                            </MenuItem>
-                          </MenuItems>
-                        )}
-                      />
-                    )}
-                  </>
-                )}
-              />
-            ))
+                                  setMembers(newMembers);
+                                  closeDropdown();
+                                }}
+                                onError={() => {
+                                  // FIXME: handle error later
+                                  closeDropdown();
+                                }}
+                                dataSbId={`channel_setting_member_context_menu_${(
+                                  member.role !== 'operator'
+                                ) ? 'register_as_operator' : 'unregister_operator'}`}
+                              >
+                                {
+                                  member.role !== 'operator'
+                                    ? stringSet.CHANNEL_SETTING__MODERATION__REGISTER_AS_OPERATOR
+                                    : stringSet.CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR
+                                }
+                              </OperatorMenuItem>
+                              {
+                                // No muted members in broadcast channel
+                                !channel?.isBroadcast && (
+                                  <MuteMenuItem
+                                    channel={channel}
+                                    user={member}
+                                    onChange={(_, member, isMuted) => {
+                                      const newMembers = [ ...members ];
+                                      for (const newMember of newMembers) {
+                                        if (newMember.userId === member.userId) {
+                                          newMember.isMuted = isMuted;
+                                        }
+                                      }
+                                      setMembers(newMembers);
+                                      closeDropdown();
+                                    }}
+                                    onError={() => {
+                                      // FIXME: handle error later
+                                      closeDropdown();
+                                    }}
+                                    dataSbId={`channel_setting_member_context_menu_${(
+                                      member.isMuted) ? 'unmute' : 'mute'}`
+                                    }
+                                  >
+                                    {
+                                      member.isMuted
+                                        ? stringSet.CHANNEL_SETTING__MODERATION__UNMUTE
+                                        : stringSet.CHANNEL_SETTING__MODERATION__MUTE
+                                    }
+                                  </MuteMenuItem>
+                                )
+                              }
+                              <MenuItem
+                                onClick={() => {
+                                  channel?.banUser(member, -1, '').then(() => {
+                                    setMembers(members.filter(({ userId }) => {
+                                      return userId !== member.userId;
+                                    }));
+                                  });
+                                }}
+                                dataSbId="channel_setting_member_context_menu_ban"
+                              >
+                                {stringSet.CHANNEL_SETTING__MODERATION__BAN}
+                              </MenuItem>
+                            </MenuItems>
+                          )}
+                        />
+                      )}
+                    </>
+                  )}
+                />
+              );
+            })
           }
         </div>
       </Modal>

@@ -1,5 +1,5 @@
 import './index.scss';
-import React from 'react';
+import React, { MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
 
 import { FileViewerProps } from '.';
@@ -15,12 +15,14 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 type DeleteMessageTypeLegacy = (message: CoreMessageType) => Promise<void>;
 export interface FileViewerViewProps extends FileViewerProps {
   deleteMessage: ((message: SendableMessageType) => Promise<void>) | DeleteMessageTypeLegacy;
+  onDownloadClick?: (e: MouseEvent) => Promise<void>;
 }
 
 export const FileViewerView = ({
   message,
   onCancel,
   deleteMessage,
+  onDownloadClick,
 }: FileViewerViewProps) => {
   const { sender, type, url, name = '', threadInfo } = message;
   const { profileUrl, nickname, userId } = sender;
@@ -38,6 +40,7 @@ export const FileViewerView = ({
       onDelete={() => deleteMessage(message).then(() => onCancel())}
       isByMe={config.userId === userId}
       disableDelete={threadInfo?.replyCount ? threadInfo.replyCount > 0 : false}
+      onDownloadClick={onDownloadClick}
     />,
     document.getElementById(MODAL_ROOT) as Element,
   );
@@ -56,6 +59,7 @@ export interface FileViewerUIProps {
   onCancel: () => void;
   onDelete: () => void;
   disableDelete: boolean;
+  onDownloadClick?: (e: MouseEvent) => Promise<void>;
 }
 
 export const FileViewerComponent = ({
@@ -71,6 +75,7 @@ export const FileViewerComponent = ({
   onCancel,
   onDelete,
   disableDelete,
+  onDownloadClick,
 }: FileViewerUIProps) => (
   <div className="sendbird-fileviewer">
     <div className="sendbird-fileviewer__header">
@@ -88,7 +93,13 @@ export const FileViewerComponent = ({
       <div className="sendbird-fileviewer__header__right">
         {isSupportedFileView(type) && (
           <div className="sendbird-fileviewer__header__right__actions">
-            <a className="sendbird-fileviewer__header__right__actions__download" rel="noopener noreferrer" href={url} target="_blank">
+            <a
+              className="sendbird-fileviewer__header__right__actions__download"
+              rel="noopener noreferrer"
+              href={url}
+              target="_blank"
+              onClick={onDownloadClick}
+            >
               <Icon type={IconTypes.DOWNLOAD} fillColor={IconColors.ON_BACKGROUND_1} height="24px" width="24px" />
             </a>
             {onDelete && isByMe && (

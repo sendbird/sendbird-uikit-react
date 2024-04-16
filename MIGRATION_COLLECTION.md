@@ -119,6 +119,32 @@ We no longer manage context using the dux pattern internally and rely on the log
 
 If you're a user looking to use `GroupChannel` or `GroupChannelProvider`, you need to understand how the previously used props have changed and how to adapt these changed props to the new format. Please review the following contents and make necessary changes to the prop names or modify functions to align with the updated types. If you were using any props that have been removed, you should remove them accordingly.
 
+#### Some props behavior has been changed
+
+|      Props      |                             Before                             | After                                                                                             |
+| :-------------: | :------------------------------------------------------------: | :------------------------------------------------------------------------------------------------ |
+| `renderMessage` | Customizes all child components of the each message component. | A function that customizes the rendering of each message component in the message list component. |
+
+For example, if you want to customize the children of the message component, you must use the `Message` component.
+
+```tsx
+// Before
+<Channel
+  renderMessage={(props) => {
+    return <div>{'my custom message child'}</div>;
+  }}
+/>;
+
+// After
+import { Message } from '@sendbird/uikit-react/GroupChannel/components/Message';
+
+<GroupChannel
+  renderMessage={(props) => {
+    return <Message {...props}>{'my custom message child'}</Message>;
+  }}
+/>;
+```
+
 #### Some props has been renamed
 
 |        Previous prop        |         New prop         | Description                                                                                                                    |

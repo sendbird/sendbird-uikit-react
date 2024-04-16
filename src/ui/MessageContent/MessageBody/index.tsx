@@ -21,14 +21,18 @@ import { Nullable, SendbirdTheme } from '../../../types';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { match } from 'ts-pattern';
 import TemplateMessageItemBody from '../../TemplateMessageItemBody';
+import type { OnBeforeDownloadFileMessageType } from '../../../modules/GroupChannel/context/GroupChannelProvider';
 
 const MESSAGE_ITEM_BODY_CLASSNAME = 'sendbird-message-content__middle__message-item-body';
+export type RenderedTemplateBodyType = 'failed' | 'composite' | 'simple';
 
 export interface MessageBodyProps {
   channel: Nullable<GroupChannel>;
   message: CoreMessageType;
   showFileViewer?: (bool: boolean) => void;
+  onTemplateMessageRenderedCallback?: (renderedTemplateBodyType: RenderedTemplateBodyType) => void;
   onMessageHeightChange?: () => void;
+  onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
 
   mouseHover: boolean;
   isMobile: boolean;
@@ -43,6 +47,8 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
     channel,
     showFileViewer,
     onMessageHeightChange,
+    onTemplateMessageRenderedCallback,
+    onBeforeDownloadFileMessage,
 
     mouseHover,
     isMobile,
@@ -66,6 +72,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         message={message as BaseMessage}
         isByMe={isByMe}
         theme={config?.theme as SendbirdTheme}
+        onTemplateMessageRenderedCallback={onTemplateMessageRenderedCallback}
       />
     ))
     .when((message) => isOgMessageEnabledInGroupChannel
@@ -98,6 +105,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         isByMe={isByMe}
         mouseHover={mouseHover}
         isReactionEnabled={isReactionEnabledInChannel}
+        onBeforeDownloadFileMessage={onBeforeDownloadFileMessage}
       />
     ))
     .when(isMultipleFilesMessage, () => (
@@ -109,6 +117,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         isReactionEnabled={isReactionEnabledInChannel}
         threadMessageKindKey={threadMessageKindKey}
         statefulFileInfoList={statefulFileInfoList}
+        onBeforeDownloadFileMessage={onBeforeDownloadFileMessage}
       />
     ))
     .when(isVoiceMessage, () => (

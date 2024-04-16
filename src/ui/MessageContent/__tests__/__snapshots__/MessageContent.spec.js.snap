@@ -15,7 +15,7 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
         <div
           class="sendbird-message-content__left__avatar  sendbird-avatar"
           role="button"
-          style="height: 28px; width: 28px; z-index: 0;"
+          style="height: 28px; width: 28px; z-index: 0; bottom: 2px;"
           tabindex="0"
         >
           <div
@@ -23,15 +23,24 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
             style="width: 100%; min-width: min(400px, 28px); max-width: 400px;"
           >
             <div
-              class="sendbird-image-renderer__image"
-              style="width: 100%; min-width: min(400px, 28px); max-width: 400px; position: absolute;"
-            />
+              class="sendbird-avatar-img--default "
+              style="width: 28px; height: 28px;"
+            >
+              <div
+                class=" sendbird-icon sendbird-icon-user sendbird-icon-color--content"
+                role="button"
+                style="width: 16.099999999999998px; min-width: 16.099999999999998px; height: 16.099999999999998px; min-height: 16.099999999999998px;"
+                tabindex="0"
+              >
+                <test-file-stub />
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <div
-      class="sendbird-message-content__middle "
+      class="sendbird-message-content__middle  "
     >
       <span
         class="sendbird-message-content__middle__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
@@ -51,7 +60,7 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
           </div>
         </span>
         <span
-          class="sendbird-message-content__middle__body-container__created-at right  sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
+          class="sendbird-message-content__middle__body-container__created-at right   sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
         >
           mock-date
         </span>

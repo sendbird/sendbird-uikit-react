@@ -15,11 +15,11 @@ import FrozenNotification from '../FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
-import { useScrollBehavior } from './hooks/useScrollBehavior';
 import TypingIndicatorBubble from '../../../../ui/TypingIndicatorBubble';
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { getComponentKeyFromMessage } from '../../context/utils';
 import { GroupChannelUIBasicProps } from '../GroupChannelUI/GroupChannelUIView';
+import { deleteNullish } from '../../../../utils/utils';
 
 export interface GroupChannelMessageListProps {
   className?: string;
@@ -53,16 +53,18 @@ export interface GroupChannelMessageListProps {
   renderSuggestedReplies?: GroupChannelUIBasicProps['renderSuggestedReplies'];
 }
 
-export const MessageList = ({
-  className = '',
-  renderMessage = (props) => <Message {...props} />,
-  renderMessageContent,
-  renderSuggestedReplies,
-  renderCustomSeparator,
-  renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
-  renderPlaceholderEmpty = () => <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />,
-  renderFrozenNotification = () => <FrozenNotification className="sendbird-conversation__messages__notification" />,
-}: GroupChannelMessageListProps) => {
+export const MessageList = (props: GroupChannelMessageListProps) => {
+  const { className = '' } = props;
+  const {
+    renderMessage = (props) => <Message {...props} />,
+    renderMessageContent,
+    renderSuggestedReplies,
+    renderCustomSeparator,
+    renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
+    renderPlaceholderEmpty = () => <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />,
+    renderFrozenNotification = () => <FrozenNotification className="sendbird-conversation__messages__notification" />,
+  } = deleteNullish(props);
+
   const {
     channelUrl,
     hasNext,
@@ -82,7 +84,6 @@ export const MessageList = ({
 
   const [unreadSinceDate, setUnreadSinceDate] = useState<Date>();
 
-  useScrollBehavior();
   useEffect(() => {
     if (isScrollBottomReached) {
       setUnreadSinceDate(undefined);
@@ -104,7 +105,7 @@ export const MessageList = ({
       if (latestDistance < currentDistance && (!isBottomMessageAffected || latestDistance < SCROLL_BUFFER)) {
         const diff = currentDistance - latestDistance;
         // Move the scroll as much as the height of the message has changed
-        scrollPubSub.publish('scroll', { top: elem.scrollTop + diff, lazy: false });
+        scrollPubSub.publish('scroll', { top: elem.scrollTop + diff, lazy: false, animated: false });
       }
     }
   };
@@ -121,7 +122,7 @@ export const MessageList = ({
           className="sendbird-conversation__messages__notification"
           count={newMessages.length}
           lastReadAt={unreadSinceDate}
-          onClick={scrollToBottom}
+          onClick={() => scrollToBottom()}
         />
       );
     },
@@ -131,8 +132,8 @@ export const MessageList = ({
       return (
         <div
           className="sendbird-conversation__scroll-bottom-button"
-          onClick={scrollToBottom}
-          onKeyDown={scrollToBottom}
+          onClick={() => scrollToBottom()}
+          onKeyDown={() => scrollToBottom()}
           tabIndex={0}
           role="button"
         >
@@ -155,7 +156,10 @@ export const MessageList = ({
       <div className={`sendbird-conversation__messages ${className}`}>
         <div className="sendbird-conversation__scroll-container">
           <div className="sendbird-conversation__padding" />
-          <div className="sendbird-conversation__messages-padding" ref={scrollRef}>
+          <div
+            ref={scrollRef}
+            className="sendbird-conversation__messages-padding"
+          >
             {messages.map((message, idx) => {
               const { chainTop, chainBottom, hasSeparator } = getMessagePartsInfo({
                 allMessages: messages as CoreMessageType[],

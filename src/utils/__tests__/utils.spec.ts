@@ -6,7 +6,7 @@ import {
   isMultipleFilesMessage,
 } from '../index';
 import { AdminMessage, FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
-import { isMobileIOS } from '../utils';
+import { deleteNullish, isMobileIOS } from '../utils';
 
 describe('Global-utils: verify message type util functions', () => {
   it('should return true for each message', () => {
@@ -196,5 +196,40 @@ describe('isMobileIOS', () => {
   it('should return false for android mobile chrome', () => {
     const chromeAndroid = 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36';
     expect(isMobileIOS(chromeAndroid)).toBe(false);
+  });
+});
+
+describe('deleteNullish', () => {
+  it('should delete nullish properties', () => {
+    const actual = deleteNullish({
+      a: 1,
+      b: '2',
+      c: null,
+      d: undefined,
+      e: [],
+      f: {},
+      g: NaN,
+    });
+
+    const expected = {
+      a: 1,
+      b: '2',
+      e: [],
+      f: {},
+      g: NaN,
+    };
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should assign default values when null values are provided', () => {
+    function component(props: any) {
+      const { a = 1, b = '2', c = 3 } = deleteNullish(props);
+      return { a, b, c };
+    }
+
+    expect(component({ a: null, b: undefined })).toEqual({ a: 1, b: '2', c: 3 });
+    expect(component({ a: null, c: 4 })).toEqual({ a: 1, b: '2', c: 4 });
+    expect(component({ a: null, b: '3', c: 4 })).toEqual({ a: 1, b: '3', c: 4 });
   });
 });

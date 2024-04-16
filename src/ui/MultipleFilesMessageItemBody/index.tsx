@@ -1,7 +1,9 @@
 import React, { ReactElement, useState } from 'react';
-
-import Icon, { IconColors, IconTypes } from '../Icon';
 import { MultipleFilesMessage, SendingStatus } from '@sendbird/chat/message';
+
+import type { OnBeforeDownloadFileMessageType } from '../../modules/GroupChannel/context/GroupChannelProvider';
+import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
+import Icon, { IconColors, IconTypes } from '../Icon';
 import ImageRenderer, { getBorderRadiusForMultipleImageRenderer } from '../ImageRenderer';
 import ImageGrid from '../ImageGrid';
 import FileViewer from '../FileViewer';
@@ -26,6 +28,7 @@ interface Props {
   truncateLimit?: number;
   threadMessageKindKey?: string;
   statefulFileInfoList?: UploadedFileInfoWithUpload[];
+  onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
 }
 
 export default function MultipleFilesMessageItemBody({
@@ -34,7 +37,9 @@ export default function MultipleFilesMessageItemBody({
   isReactionEnabled = false,
   threadMessageKindKey,
   statefulFileInfoList = [],
+  onBeforeDownloadFileMessage = null,
 }: Props): ReactElement {
+  const logger = useSendbirdStateContext?.()?.config?.logger;
   const [currentFileViewerIndex, setCurrentFileViewerIndex] = useState(-1);
 
   function onClose() {
@@ -60,6 +65,20 @@ export default function MultipleFilesMessageItemBody({
             onClickLeft={onClickLeft}
             onClickRight={onClickRight}
             onClose={onClose}
+            onDownloadClick={async (e) => {
+              if (!onBeforeDownloadFileMessage) {
+                return null;
+              }
+              try {
+                const allowDownload = await onBeforeDownloadFileMessage({ message, index: currentFileViewerIndex });
+                if (!allowDownload) {
+                  e.preventDefault();
+                  logger?.info?.('MultipleFilesMessageItemBody: Not allowed to download.');
+                }
+              } catch (err) {
+                logger?.error?.('MultipleFilesMessageItemBody: Error occurred while determining download continuation:', err);
+              }
+            }}
           />
         )}
         <ImageGrid className={className} message={message} isReactionEnabled={isReactionEnabled}>

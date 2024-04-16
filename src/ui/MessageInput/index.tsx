@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 import './index.scss';
 import { MessageInputKeys, NodeTypes } from './const';
@@ -28,6 +28,7 @@ import { UserMessage } from '@sendbird/chat/message';
 
 const TEXT_FIELD_ID = 'sendbird-message-input-text-field';
 const LINE_HEIGHT = 76;
+const DEFAULT_CHAT_VIEW_HEIGHT = 600;
 const noop = () => {
   return null;
 };
@@ -150,20 +151,18 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   const [isInput, setIsInput] = useState(false);
   const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
   const [targetStringInfo, setTargetStringInfo] = useState({ ...initialTargetStringInfo });
-  const setHeight = useMemo(
-    () => () => {
+  const setHeight = useCallback(
+    () => {
+      const elem = internalRef?.current;
+      if (!elem) return;
+
       try {
-        const elem = internalRef?.current;
-        const MAX_HEIGHT = window.document.body.offsetHeight * 0.6;
-        if (elem) {
-          if (elem.scrollHeight >= LINE_HEIGHT) {
-            if (MAX_HEIGHT < elem.scrollHeight) {
-              elem.style.height = 'auto';
-              elem.style.height = `${MAX_HEIGHT}px`;
-            } else {
-              elem.style.height = 'auto';
-              elem.style.height = `${elem.scrollHeight}px`;
-            }
+        const estimatedChatViewHeight = window.document.body.offsetHeight || DEFAULT_CHAT_VIEW_HEIGHT;
+        const MAX_HEIGHT = estimatedChatViewHeight * 0.6;
+        if (elem.scrollHeight >= LINE_HEIGHT) {
+          if (MAX_HEIGHT < elem.scrollHeight) {
+            elem.style.height = 'auto';
+            elem.style.height = `${MAX_HEIGHT}px`;
           } else {
             elem.style.height = '';
           }
