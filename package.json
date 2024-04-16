@@ -152,7 +152,11 @@
     "printWidth": 140,
     "tabWidth": 2
   },
+<<<<<<< HEAD
   "workspaces": [
     "apps/*"
   ]
+=======
+  "sideEffects": false
+>>>>>>> 7164c675 (chore: remove unused code)
 }

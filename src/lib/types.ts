@@ -176,7 +176,7 @@ export type SendBirdState = {
   },
   // Customer provided callbacks
   eventHandlers?: SBUEventHandlers;
-  emojiManager: EmojiManager;
+  // emojiManager: EmojiManager;
   utils: SendbirdProviderUtils;
 };
 

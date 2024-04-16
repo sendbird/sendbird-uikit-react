@@ -16,7 +16,7 @@ import DateSeparator from '../../../../ui/DateSeparator';
 import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 import MessageInput from '../../../../ui/MessageInput';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
-import MessageContent, { MessageContentProps } from '../../../../ui/MessageContent';
+// import MessageContent, { MessageContentProps } from '../../../../ui/MessageContent';
 
 import SuggestedReplies, { SuggestedRepliesProps } from '../SuggestedReplies';
 import SuggestedMentionListView from '../SuggestedMentionList/SuggestedMentionListView';
@@ -36,7 +36,7 @@ export interface MessageProps {
   /**
    * A function that customizes the rendering of the content portion of message component.
    */
-  renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
+  // renderMessageContent?: (props: MessageContentProps) => React.ReactElement;
   /**
    * A function that customizes the rendering of suggested replies component of messages.
    */
@@ -112,7 +112,7 @@ const MessageView = (props: MessageViewProps) => {
 
     // MessageViewProps
     channel,
-    emojiContainer,
+    // emojiContainer,
     editInputDisabled,
     shouldRenderSuggestedReplies,
     isReactionEnabled,
@@ -141,7 +141,7 @@ const MessageView = (props: MessageViewProps) => {
   const {
     renderUserMentionItem,
     renderMessage,
-    renderMessageContent = (props: MessageContentProps) => <MessageContent {...props} />,
+    // renderMessageContent = (props: MessageContentProps) => <MessageContent {...props} />,
     renderSuggestedReplies = (props: SuggestedRepliesProps) => <SuggestedReplies {...props} />,
     renderCustomSeparator,
     renderEditInput,
@@ -260,7 +260,7 @@ const MessageView = (props: MessageViewProps) => {
     return (
       <>
         {/* Message */}
-        {renderMessageContent({
+        {/* {renderMessageContent({
           className: 'sendbird-message-hoc__message-content',
           userId,
           scrollToMessage,
@@ -285,7 +285,7 @@ const MessageView = (props: MessageViewProps) => {
           onQuoteMessageClick: onQuoteMessageClick,
           onMessageHeightChange: handleScroll,
           onBeforeDownloadFileMessage,
-        })}
+        })} */}
         { /* Suggested Replies */ }
         {
           shouldRenderSuggestedReplies && renderSuggestedReplies({

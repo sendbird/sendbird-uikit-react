@@ -51,7 +51,7 @@ import {
 import { GlobalModalProvider, ModalRoot } from '../hooks/useModal';
 import { RenderUserProfileProps, UserListQuery } from '../types';
 import PUBSUB_TOPICS, { SBUGlobalPubSub, SBUGlobalPubSubTopicPayloadUnion } from './pubSub/topics';
-import { EmojiManager } from './emojiManager';
+// import { EmojiManager } from './emojiManager';
 import { uikitConfigStorage } from './utils/uikitConfigStorage';
 import useMessageTemplateUtils from './hooks/useMessageTemplateUtils';
 // import { EmojiReactionListRoot, MenuRoot } from '../ui/ContextMenu';
@@ -299,12 +299,12 @@ const SendbirdSDK = ({
   }, [multipleFilesMessageFileCountLimit]);
 
   // Emoji Manager
-  const emojiManager = useMemo(() => {
-    return new EmojiManager({
-      sdk,
-      logger,
-    });
-  }, [sdkStore.initialized]);
+  // const emojiManager = useMemo(() => {
+  //   return new EmojiManager({
+  //     sdk,
+  //     logger,
+  //   });
+  // }, [sdkStore.initialized]);
 
   return (
     <SendbirdSdkContext.Provider
@@ -393,7 +393,7 @@ const SendbirdSDK = ({
           showSearchIcon: sdkInitialized && configsWithAppAttr(sdk).groupChannel.setting.enableMessageSearch,
         },
         eventHandlers,
-        emojiManager,
+        // emojiManager,
         utils,
       }}
     >

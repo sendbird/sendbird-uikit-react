@@ -36,7 +36,7 @@ interface TemplateMessageItemBodyProps {
   message: BaseMessage;
   isByMe?: boolean;
   theme?: SendbirdTheme;
-  onTemplateMessageRenderedCallback?: (renderedTemplateBodyType: RenderedTemplateBodyType) => void;
+  // onTemplateMessageRenderedCallback?: (renderedTemplateBodyType: RenderedTemplateBodyType) => void;
 }
 
 /**
@@ -73,12 +73,12 @@ export function TemplateMessageItemBody({
   message,
   isByMe = false,
   theme = 'light',
-  onTemplateMessageRenderedCallback = () => { /* noop */ },
+  // onTemplateMessageRenderedCallback = () => { /* noop */ },
 }: TemplateMessageItemBodyProps): ReactElement {
   const templateData: MessageTemplateData | undefined = message.extendedMessagePayload?.['template'] as MessageTemplateData;
 
   const getFailedBody = () => {
-    onTemplateMessageRenderedCallback('failed');
+    // onTemplateMessageRenderedCallback('failed');
     return <FallbackTemplateMessageItemBody
       className={className}
       message={message}
@@ -359,7 +359,7 @@ export function TemplateMessageItemBody({
             isByMe={isByMe}
           />
         }
-        onTemplateMessageRenderedCallback={onTemplateMessageRenderedCallback}
+        // onTemplateMessageRenderedCallback={onTemplateMessageRenderedCallback}
         isComposite={renderData.isComposite}
         logger={logger}
       >

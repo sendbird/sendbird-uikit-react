@@ -20,8 +20,8 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import SuggestedMentionList from '../SuggestedMentionList';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import { SendableMessageType } from '../../../../utils';
-import QuoteMessageInput from '../../../../ui/QuoteMessageInput';
-import VoiceMessageInputWrapper from './VoiceMessageInputWrapper';
+// import QuoteMessageInput from '../../../../ui/QuoteMessageInput';
+// import VoiceMessageInputWrapper from './VoiceMessageInputWrapper';
 import MessageInput from '../../../../ui/MessageInput';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
@@ -172,7 +172,7 @@ export const MessageInputWrapperView = React.forwardRef((
           maxSuggestionCount={maxSuggestionCount}
         />
       )}
-      {quoteMessage && (
+      {/* {quoteMessage && (
         <div className="sendbird-message-input-wrapper__quote-message-input">
           <QuoteMessageInput replyingMessage={quoteMessage} onClose={() => setQuoteMessage(null)} />
         </div>
@@ -189,7 +189,7 @@ export const MessageInputWrapperView = React.forwardRef((
             setShowVoiceMessageInput(false);
           }}
         />
-      ) : (
+      ) : ( */}
         <MessageInput
           className="sendbird-message-input-wrapper__message-input"
           channel={currentChannel as GroupChannel}
@@ -260,11 +260,11 @@ export const MessageInputWrapperView = React.forwardRef((
             return false;
           }}
         />
-      )}
+      {/* )} */}
     </div>
   );
 });
 
-export { VoiceMessageInputWrapper, type VoiceMessageInputWrapperProps } from './VoiceMessageInputWrapper';
+// export { VoiceMessageInputWrapper, type VoiceMessageInputWrapperProps } from './VoiceMessageInputWrapper';
 
 export default MessageInputWrapperView;

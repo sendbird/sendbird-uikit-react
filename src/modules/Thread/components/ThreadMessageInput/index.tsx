@@ -144,88 +144,71 @@ const ThreadMessageInput = (
           />
         )
       }
-      {
-        showVoiceMessageInput
-          ? (
-            <VoiceMessageInputWrapper
-              channel={currentChannel}
-              onSubmitClick={(recordedFile, duration) => {
-                sendVoiceMessage(recordedFile, duration, parentMessage);
-                setShowVoiceMessageInput(false);
-              }}
-              onCancelClick={() => {
-                setShowVoiceMessageInput(false);
-              }}
-            />
+      <MessageInput
+        className="sendbird-thread-message-input__message-input"
+        messageFieldId="sendbird-message-input-text-field--thread"
+        channel={currentChannel}
+        channelUrl={currentChannel?.url}
+        isMobile={isMobile}
+        disabled={threadInputDisabled}
+        acceptableMimeTypes={acceptableMimeTypes}
+        setMentionedUsers={setMentionedUsers}
+        mentionSelectedUser={selectedUser}
+        isMentionEnabled={isMentionEnabled}
+        isVoiceMessageEnabled={isVoiceMessageEnabled}
+        isSelectingMultipleFilesEnabled={isMultipleFilesMessageEnabled}
+        onVoiceMessageIconClick={() => {
+          setShowVoiceMessageInput(true);
+        }}
+        renderFileUploadIcon={renderFileUploadIcon}
+        renderVoiceMessageIcon={renderVoiceMessageIcon}
+        renderSendMessageIcon={renderSendMessageIcon}
+        ref={ref || messageInputRef}
+        placeholder={
+          (currentChannel?.isFrozen && !(currentChannel?.myRole === Role.OPERATOR) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
+          || (currentChannel?.myMutedState === MutedState.MUTED && stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT)
+          || (allThreadMessages.length > 0
+            ? stringSet.THREAD__INPUT__REPLY_TO_THREAD
+            : stringSet.THREAD__INPUT__REPLY_IN_THREAD
           )
-          : (
-            <MessageInput
-              className="sendbird-thread-message-input__message-input"
-              messageFieldId="sendbird-message-input-text-field--thread"
-              channel={currentChannel}
-              channelUrl={currentChannel?.url}
-              isMobile={isMobile}
-              disabled={threadInputDisabled}
-              acceptableMimeTypes={acceptableMimeTypes}
-              setMentionedUsers={setMentionedUsers}
-              mentionSelectedUser={selectedUser}
-              isMentionEnabled={isMentionEnabled}
-              isVoiceMessageEnabled={isVoiceMessageEnabled}
-              isSelectingMultipleFilesEnabled={isMultipleFilesMessageEnabled}
-              onVoiceMessageIconClick={() => {
-                setShowVoiceMessageInput(true);
-              }}
-              renderFileUploadIcon={renderFileUploadIcon}
-              renderVoiceMessageIcon={renderVoiceMessageIcon}
-              renderSendMessageIcon={renderSendMessageIcon}
-              ref={ref || messageInputRef}
-              placeholder={
-                (currentChannel?.isFrozen && !(currentChannel?.myRole === Role.OPERATOR) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
-                || (currentChannel?.myMutedState === MutedState.MUTED && stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT)
-                || (allThreadMessages.length > 0
-                  ? stringSet.THREAD__INPUT__REPLY_TO_THREAD
-                  : stringSet.THREAD__INPUT__REPLY_IN_THREAD
-                )
-              }
-              onStartTyping={() => {
-                currentChannel?.startTyping?.();
-              }}
-              onSendMessage={({ message, mentionTemplate }) => {
-                sendMessage({
-                  message: message,
-                  mentionedUsers,
-                  mentionTemplate: mentionTemplate,
-                  quoteMessage: parentMessage,
-                });
-                setMentionNickname('');
-                setMentionedUsers([]);
-                currentChannel?.endTyping?.();
-              }}
-              onFileUpload={handleUploadFiles}
-              onUserMentioned={(user) => {
-                if (selectedUser?.userId === user?.userId) {
-                  setSelectedUser(null);
-                  setMentionNickname('');
-                }
-              }}
-              onMentionStringChange={(mentionText) => {
-                setMentionNickname(mentionText);
-              }}
-              onMentionedUserIdsUpdated={(userIds) => {
-                setMentionedUserIds(userIds);
-              }}
-              onKeyDown={(e) => {
-                if (displaySuggestedMentionList && mentionSuggestedUsers?.length > 0
-                  && ((e.key === MessageInputKeys.Enter && ableMention) || e.key === MessageInputKeys.ArrowUp || e.key === MessageInputKeys.ArrowDown)
-                ) {
-                  setMessageInputEvent(e);
-                  return true;
-                }
-                return false;
-              }}
-            />
-          )
-      }
+        }
+        onStartTyping={() => {
+          currentChannel?.startTyping?.();
+        }}
+        onSendMessage={({ message, mentionTemplate }) => {
+          sendMessage({
+            message: message,
+            mentionedUsers,
+            mentionTemplate: mentionTemplate,
+            quoteMessage: parentMessage,
+          });
+          setMentionNickname('');
+          setMentionedUsers([]);
+          currentChannel?.endTyping?.();
+        }}
+        onFileUpload={handleUploadFiles}
+        onUserMentioned={(user) => {
+          if (selectedUser?.userId === user?.userId) {
+            setSelectedUser(null);
+            setMentionNickname('');
+          }
+        }}
+        onMentionStringChange={(mentionText) => {
+          setMentionNickname(mentionText);
+        }}
+        onMentionedUserIdsUpdated={(userIds) => {
+          setMentionedUserIds(userIds);
+        }}
+        onKeyDown={(e) => {
+          if (displaySuggestedMentionList && mentionSuggestedUsers?.length > 0
+            && ((e.key === MessageInputKeys.Enter && ableMention) || e.key === MessageInputKeys.ArrowUp || e.key === MessageInputKeys.ArrowDown)
+          ) {
+            setMessageInputEvent(e);
+            return true;
+          }
+          return false;
+        }}
+      />
     </div>
   );
 };
