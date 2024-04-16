@@ -38,7 +38,7 @@ export function setUpParams({
 }) {
   const params = Object.assign(sdkInitParams, {
     appId,
-    modules: [new GroupChannelModule(), new OpenChannelModule()],
+    modules: [new GroupChannelModule()],
     newInstance: isNewApp,
     localCacheEnabled: true,
   });

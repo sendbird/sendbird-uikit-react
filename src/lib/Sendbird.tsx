@@ -22,7 +22,7 @@ import useConnect from './hooks/useConnect';
 import { LoggerFactory, LogLevel } from './Logger';
 import pubSubFactory from './pubSub/index';
 
-import { VoiceMessageProvider } from './VoiceMessageProvider';
+// import { VoiceMessageProvider } from './VoiceMessageProvider';
 import { LocalizationProvider } from './LocalizationContext';
 import { MediaQueryProvider, useMediaQueryContext } from './MediaQueryContext';
 import getStringSet, { StringSet } from '../ui/Label/stringSet';
@@ -54,7 +54,7 @@ import PUBSUB_TOPICS, { SBUGlobalPubSub, SBUGlobalPubSubTopicPayloadUnion } from
 import { EmojiManager } from './emojiManager';
 import { uikitConfigStorage } from './utils/uikitConfigStorage';
 import useMessageTemplateUtils from './hooks/useMessageTemplateUtils';
-import { EmojiReactionListRoot, MenuRoot } from '../ui/ContextMenu';
+// import { EmojiReactionListRoot, MenuRoot } from '../ui/ContextMenu';
 
 export { useSendbirdStateContext } from '../hooks/useSendbirdStateContext';
 
@@ -399,15 +399,17 @@ const SendbirdSDK = ({
     >
       <MediaQueryProvider logger={logger} breakpoint={breakpoint}>
         <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
-          <VoiceMessageProvider>
-            <GlobalModalProvider>{children}</GlobalModalProvider>
-          </VoiceMessageProvider>
+          {/* <VoiceMessageProvider> */}
+            <GlobalModalProvider>
+              {children}
+            </GlobalModalProvider>
+          {/* </VoiceMessageProvider> */}
         </LocalizationProvider>
       </MediaQueryProvider>
       {/* Roots */}
-      <EmojiReactionListRoot />
+      {/* <EmojiReactionListRoot /> */}
       <ModalRoot />
-      <MenuRoot />
+      {/* <MenuRoot /> */}
     </SendbirdSdkContext.Provider>
   );
 };
