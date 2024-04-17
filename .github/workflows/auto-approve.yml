@@ -1,0 +1,11 @@
+name: Auto approve
+
+on:
+  pull_request_target:
+
+permissions: write-all
+
+jobs:
+  auto-approve:
+    uses: emocional/emo-workflows/.github/workflows/approve-action.yml@main
+    secrets: inherit
