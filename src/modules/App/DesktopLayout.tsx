@@ -12,6 +12,7 @@ import ChannelSettings from '../ChannelSettings';
 import MessageSearchPannel from '../MessageSearch';
 import Thread from '../Thread';
 import { SendableMessageType } from '../../utils';
+import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayoutProps) => {
   const {
@@ -39,6 +40,11 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
     setThreadTargetMessage,
     enableLegacyChannelModules,
   } = props;
+  const { config } = useSendbirdStateContext();
+  const {
+    isTypingIndicatorEnabledOnChannelList,
+    isMessageReceiptStatusEnabledOnChannelList,
+  } = config;
 
   const updateFocusedChannel = (channel: GroupChannelClass) => {
     setStartingPoint?.(null);
@@ -70,6 +76,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
     selectedChannelUrl: currentChannel?.url,
     onChannelCreated: updateFocusedChannel,
     onUserProfileUpdated: onProfileEditSuccess,
+    isTypingIndicatorEnabled: isTypingIndicatorEnabledOnChannelList,
+    isMessageReceiptStatusEnabled: isMessageReceiptStatusEnabledOnChannelList,
   };
 
   const channelProps = {
