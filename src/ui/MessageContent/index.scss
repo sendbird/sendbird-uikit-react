@@ -4,8 +4,7 @@
   display: inline-flex;
   flex-direction: row;
   position: relative;
-  width: calc(100% - 48px);
-  padding: 0 24px;
+  width: 100%;
 
   &.incoming {
     justify-content: flex-start;
