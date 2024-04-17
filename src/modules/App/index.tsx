@@ -12,6 +12,7 @@ import { AppLayout } from './AppLayout';
 import './index.scss';
 
 import { AppLayoutProps } from './types';
+import { UserListQuery } from '../../types';
 
 interface AppProps {
   appId: SendbirdProviderProps['appId'];
@@ -57,6 +58,8 @@ interface AppProps {
    * If this option is enabled, it uses legacy modules (Channel, ChannelList) that are not applied local caching.
    * */
   enableLegacyChannelModules?: boolean;
+
+  userQuery?(): UserListQuery;
 }
 
 export default function App(props: AppProps) {
@@ -101,6 +104,7 @@ export default function App(props: AppProps) {
     isMessageReceiptStatusEnabledOnChannelList,
     isUserIdUsedForNickname = true,
     enableLegacyChannelModules = false,
+    userQuery,
   } = props;
   const [currentChannel, setCurrentChannel] = useState(null);
 
@@ -157,6 +161,7 @@ export default function App(props: AppProps) {
         currentChannel={currentChannel}
         setCurrentChannel={setCurrentChannel}
         enableLegacyChannelModules={enableLegacyChannelModules}
+        userQuery={userQuery}
       />
     </Sendbird>
   );

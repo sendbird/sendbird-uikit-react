@@ -2,47 +2,30 @@ import './create-channel-ui.scss';
 
 import React from 'react';
 
-import { useCreateChannelContext } from '../../context/CreateChannelProvider';
+import { UserListQuery, useCreateChannelContext } from '../../context/CreateChannelProvider';
 import InviteUsers from '../InviteUsers';
-
-import SelectChannelType from '../SelectChannelType';
 
 export interface CreateChannelUIProps {
   onCancel?(): void;
   renderStepOne?:(props: void) => React.ReactElement;
+  userQuery?(): UserListQuery
 }
 
 const CreateChannel: React.FC<CreateChannelUIProps> = (props: CreateChannelUIProps) => {
-  const { onCancel, renderStepOne } = props;
+  const { onCancel, userQuery } = props;
 
   const {
-    step,
-    setStep,
     userListQuery,
   } = useCreateChannelContext();
 
   return (
     <>
-      {
-        step === 0 && (
-          renderStepOne?.() || (
-            <SelectChannelType
-              onCancel={onCancel}
-            />
-          )
-        )
-      }
-      {
-        step === 1 && (
           <InviteUsers
-            userListQuery={userListQuery}
+            userListQuery={userQuery || userListQuery}
             onCancel={() => {
-              setStep(0);
               onCancel();
             }}
           />
-        )
-      }
     </>
   );
 };

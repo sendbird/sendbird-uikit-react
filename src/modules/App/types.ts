@@ -22,6 +22,7 @@ export interface AppLayoutProps {
   currentChannel?: GroupChannel;
   setCurrentChannel: React.Dispatch<GroupChannel | null>;
   enableLegacyChannelModules: boolean;
+  userQuery?(): UserListQuery;
 }
 
 interface SubLayoutCommonProps {

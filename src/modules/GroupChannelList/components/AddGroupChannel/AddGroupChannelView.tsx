@@ -6,6 +6,7 @@ import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
 import CreateChannel from '../../../CreateChannel';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { CreateChannelProviderProps } from '../../../CreateChannel/context/CreateChannelProvider';
+import { UserListQuery } from '../../../../types';
 
 type Props = {
   createChannelVisible: boolean;
@@ -13,6 +14,7 @@ type Props = {
   onBeforeCreateChannel: CreateChannelProviderProps['onBeforeCreateChannel'];
   onCreateChannelClick: CreateChannelProviderProps['onCreateChannelClick'];
   onChannelCreated: CreateChannelProviderProps['onChannelCreated'];
+  userQuery?(): UserListQuery
 };
 
 export const AddGroupChannelView = ({
@@ -21,6 +23,7 @@ export const AddGroupChannelView = ({
   onBeforeCreateChannel,
   onCreateChannelClick,
   onChannelCreated,
+  userQuery,
 }: Props) => {
   const { config } = useSendbirdStateContext();
 
@@ -48,6 +51,7 @@ export const AddGroupChannelView = ({
           }}
           onBeforeCreateChannel={onBeforeCreateChannel}
           onCreateChannelClick={onCreateChannelClick}
+          userQuery={userQuery}
         />
       )}
     </>

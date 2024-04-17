@@ -9,6 +9,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { GroupChannelListUIView } from '../../../GroupChannelList/components/GroupChannelListUI/GroupChannelListUIView';
 import AddChannel from '../AddChannel';
 import { GroupChannelListItemBasicProps } from '../../../GroupChannelList/components/GroupChannelListItem/GroupChannelListItemView';
+import { UserListQuery } from '../../../CreateChannel/context/CreateChannelProvider';
 
 interface ChannelPreviewProps extends Omit<GroupChannelListItemBasicProps, 'onLeaveChannel'> {
   onLeaveChannel(channel?: GroupChannel, onLeaveChannelCb?: (channel: GroupChannel, error?: null) => void): Promise<void>;
@@ -20,10 +21,11 @@ export interface ChannelListUIProps {
   renderPlaceHolderError?: (props: void) => React.ReactElement;
   renderPlaceHolderLoading?: (props: void) => React.ReactElement;
   renderPlaceHolderEmptyList?: (props: void) => React.ReactElement;
+  userQuery?(): UserListQuery;
 }
 
 const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) => {
-  const { renderHeader, renderChannelPreview, renderPlaceHolderError, renderPlaceHolderLoading, renderPlaceHolderEmptyList } = props;
+  const { renderHeader, renderChannelPreview, renderPlaceHolderError, renderPlaceHolderLoading, renderPlaceHolderEmptyList, userQuery } = props;
 
   const {
     onThemeChange,
@@ -106,7 +108,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
       channels={allChannels}
       onLoadMore={fetchChannelList}
       initialized={initialized}
-      renderAddChannel={() => <AddChannel />}
+      renderAddChannel={() => <AddChannel userQuery={userQuery}/>}
     />
   );
 };

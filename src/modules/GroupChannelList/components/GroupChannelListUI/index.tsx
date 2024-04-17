@@ -9,6 +9,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { GroupChannelListItem } from '../GroupChannelListItem';
 import AddGroupChannel from '../AddGroupChannel';
 import { GroupChannelListItemBasicProps } from '../GroupChannelListItem/GroupChannelListItemView';
+import { UserListQuery } from '../../../../types';
 
 interface GroupChannelItemProps extends GroupChannelListItemBasicProps {}
 
@@ -18,10 +19,11 @@ export interface GroupChannelListUIProps {
   renderPlaceHolderError?: (props: void) => React.ReactElement;
   renderPlaceHolderLoading?: (props: void) => React.ReactElement;
   renderPlaceHolderEmptyList?: (props: void) => React.ReactElement;
+  userQuery?(): UserListQuery
 }
 
 export const GroupChannelListUI = (props: GroupChannelListUIProps) => {
-  const { renderHeader, renderChannelPreview, renderPlaceHolderError, renderPlaceHolderLoading, renderPlaceHolderEmptyList } = props;
+  const { renderHeader, renderChannelPreview, renderPlaceHolderError, renderPlaceHolderLoading, renderPlaceHolderEmptyList, userQuery } = props;
 
   const {
     onChannelSelect,
@@ -87,7 +89,7 @@ export const GroupChannelListUI = (props: GroupChannelListUIProps) => {
       channels={groupChannels}
       onLoadMore={loadMore}
       initialized={initialized}
-      renderAddChannel={() => <AddGroupChannel />}
+      renderAddChannel={() => <AddGroupChannel userQuery={userQuery}  />}
     />
   );
 };
