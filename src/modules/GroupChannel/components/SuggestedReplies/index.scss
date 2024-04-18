@@ -5,25 +5,35 @@
 @import '../../../../styles/variables';
 
 .sendbird-suggested-replies {
+  position: relative;
+  display: flex;
+  margin-top: 8px;
+  &.vertical {
+    justify-content: flex-end;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    flex-direction: column;
+    .sendbird-suggested-replies__option:not(:first-child) {
+      margin-top: 8px;
+    }
+  }
+  &.horizontal {
+    width: fit-content;
+    margin-left: 64px;
+    .sendbird-suggested-replies__option:not(:last-child) {
+      margin-right: 8px;
+    }
+  }
   @include themed() {
     font-family: var(--sendbird-font-family-default);
   }
-  position: relative;
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  column-gap: 10px;
-  row-gap: 8px;
-  margin-top: 16px;
-  flex-direction: column;
 }
 
 .sendbird-suggested-replies__option {
   white-space: nowrap;
   height: 32px;
   font-size: 12px;
-  padding: 0 14px;
+  padding: 0 70px;
   display: flex;
   align-items: center;
   border-radius: 18px;

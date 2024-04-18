@@ -107,6 +107,7 @@ export interface SendBirdStateConfig {
     enableFeedback: SBUConfig['groupChannel']['channel']['enableFeedback'];
     enableSuggestedReplies: SBUConfig['groupChannel']['channel']['enableSuggestedReplies'];
     showSuggestedRepliesFor: SBUConfig['groupChannel']['channel']['showSuggestedRepliesFor'];
+    suggestedRepliesDirection: SBUConfig['groupChannel']['channel']['suggestedRepliesDirection'];
   },
   openChannel: {
     enableOgtag: SBUConfig['openChannel']['channel']['enableOgtag'];

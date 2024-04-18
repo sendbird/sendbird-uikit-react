@@ -11,6 +11,7 @@ import Checkbox from '../../../ui/Checkbox';
 import Button, { ButtonSizes, ButtonTypes } from '../../../ui/Button';
 import { MediaQueryProvider } from '../../../lib/MediaQueryContext';
 import { TypingIndicatorType } from '../../../types';
+import {SBUConfig} from '@sendbird/uikit-tools';
 
 const STORAGE_KEY = 'sendbird-integrated-app-v1-groupchannel';
 
@@ -353,6 +354,7 @@ export const GroupChannel = () => {
                     enableFeedback: true, // This enables feedback message feature.
                     enableSuggestedReplies: true, // This enables suggested replies feature.
                     showSuggestedRepliesFor: 'all_messages', // This enables suggested replies should be displayed for all messages but not just the last message.
+                    suggestedRepliesDirection: 'horizontal', // default is vertial.
                   }
                 }}
                 imageCompression={{ compressionRate: sampleOptions.imageCompression ? 0.7 : 1 }}
