@@ -1,5 +1,25 @@
 # Changelog - v3
 
+## [v3.14.2] (Apr 18, 2024)
+
+### Features
+* Added `outputFormat` to the image compression options
+  ```tsx
+  <SendbirdProvider
+    ...
+    imageCompression={{
+      outputFormat: 'preserve' | 'png' | 'jpeg',
+    }}
+  >
+  </SendbirdProvider>
+  ```
+
+### Fixes
+* Removed image section in the OGMessageItemBody if there is no og image
+* Fixed that safely opens URL to prevent XSS
+* Fixed that copying URI-list issue in the iOS device/Safari
+* Fixed that channel badge count is not updated on iOS Webview
+
 ## [v3.14.1] (Apr 12, 2024)
 
 ### Fixes
