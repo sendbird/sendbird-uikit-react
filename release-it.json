@@ -1,0 +1,20 @@
+{
+  "npm": {
+    "publish": true
+  },
+  "git": {
+    "commitMessage": "chore(release): openapi ${version}",
+    "requireBranch": "main",
+    "requireCommits": true,
+    "tagName": "sendbird-uikit-react@${version}"
+  },
+  "github": {
+    "release": true,
+    "releaseName": "Release sendbird-uikit-react@${version}"
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "preset": "angular"
+    }
+  }
+}
