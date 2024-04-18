@@ -1,5 +1,14 @@
 # Changelog - v3
 
+## [v3.14.2] (Apr 18, 2024)
+
+### Fixes
+* Fixed a bug where right padding is added to messages sent by me in mobile devices
+* Removed image section in the OGMessageItemBody if there is no og image
+* Fixed that safely opens URL to prevent XSS
+* Fixed that copying URI-list issue in the iOS device/Safari
+* Fixed that channel badge count is not updated on iOS Webview
+
 ## [v3.14.1] (Apr 12, 2024)
 
 ### Fixes
