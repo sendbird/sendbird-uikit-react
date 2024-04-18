@@ -15,26 +15,21 @@ exports[`ui/OGMessageItemBody should do a snapshot test of the OGMessageItemBody
       </div>
     </span>
     <div
-      class="sendbird-og-message-item-body__og-thumbnail
-          sendbird-og-message-item-body__og-thumbnail__empty
-        "
+      class="sendbird-og-message-item-body__og-thumbnail "
     >
       <div
         class="sendbird-og-message-item-body__og-thumbnail__image sendbird-image-renderer"
         style="width: 100%; min-width: min(400px, 100%); max-width: 400px;"
       >
         <div
-          class="sendbird-og-message-item-body__og-thumbnail__place-holder"
-        >
-          <div
-            class="sendbird-og-message-item-body__og-thumbnail__place-holder__icon sendbird-icon sendbird-icon-thumbnail-none "
-            role="button"
-            style="width: 56px; min-width: 56px; height: 56px; min-height: 56px;"
-            tabindex="0"
-          >
-            <test-file-stub />
-          </div>
-        </div>
+          class="sendbird-image-renderer__image"
+          style="width: 100%; min-width: min(400px, 100%); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://image-url.com);"
+        />
+        <img
+          alt=""
+          class="sendbird-image-renderer__hidden-image-loader"
+          src="https://image-url.com"
+        />
       </div>
     </div>
     <div
