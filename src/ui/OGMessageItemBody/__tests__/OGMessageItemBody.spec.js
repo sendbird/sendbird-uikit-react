@@ -12,7 +12,9 @@ describe('ui/OGMessageItemBody', () => {
         title: text,
         description: text,
         url: text,
-        image: text,
+        defaultImage: {
+          url: 'https://image-url.com'
+        },
       },
       message: text,
     };
@@ -25,10 +27,13 @@ describe('ui/OGMessageItemBody', () => {
   });
 
   it('should add .sendbird-og-message-item-body__og-thumbnail__image-empty classname when image is empty', () => {
-    const message = { message: 'example-text' };
+    const message = {
+      message: 'example-text',
+      ogMetaData: { defaultImage: { url: undefined } },
+    };
     const { container } = render(
       <MessageProvider message={message}>
-        <OGMessageItemBody message={{ message: 'example-text' }} />
+        <OGMessageItemBody message={message} />
       </MessageProvider>
     );
     expect(container.getElementsByClassName('sendbird-og-message-item-body__og-thumbnail__empty').length).toBe(1);
