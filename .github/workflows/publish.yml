@@ -29,7 +29,7 @@ jobs:
             all:
               - "${{ inputs.dir }}**"
 
-  publish-pnpm:
+  publish:
     runs-on: ubuntu-latest
     needs: [check-changes]
     if: needs.check-changes.outputs.call == 'true'
@@ -53,23 +53,36 @@ jobs:
         with:
           token: ${{ steps.get_token.outputs.token }}
 
+      - name: Setup Node.js and Yarn
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'yarn'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@emocional'
+
+      - name: Create .npmrc
+        run: |
+          echo "strict-peer-dependencies=false" > .npmrc
+          echo "auto-install-peers=true" >> .npmrc
+          echo "@emocional:registry=https://npm.pkg.github.com/" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
+
       - name: Read no secret config
         run: |
           if [[ -f .env.github ]]; then
             cat .env.github >> $GITHUB_ENV
           fi
 
-      - uses: emocional/action-pnpm-install@main
-
       - name: Install
-        run: pnpm install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: Build
-        run: pnpm build
+        run: yarn build
 
       - name: Release
-        run: pnpm release-it --ci
+        run: yarn release-it --ci
         working-directory: ./${{ inputs.dir }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.get_token.outputs.token }}
+          NODE_AUTH_TOKEN: ${{ steps.get_token.outputs.token }}

@@ -55,7 +55,7 @@
     "generate-component": "plop",
     "deploy-storybook": "storybook-to-ghpages",
     "inspect": "yarn test; yarn lint;",
-    "release": "pnpm test && dotenv release-it"
+    "release": "yarn test && dotenv release-it"
   },
   "repository": {
     "type": "git",

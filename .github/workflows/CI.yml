@@ -20,14 +20,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: emocional/action-pnpm-install@main
-
       - name: Install
-        run: pnpm install
-        working-directory: . 
+        run: yarn install
 
   publish:
     needs: [test]
-    uses: ./.github/workflows/publish-pnpm.yml
+    uses: ./.github/workflows/publish.yml
     if: github.ref == 'refs/heads/main'
     secrets: inherit
