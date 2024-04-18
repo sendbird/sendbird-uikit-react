@@ -24,6 +24,8 @@ export interface EmojiManagerParams {
 
 export class EmojiManager {
   private _emojiContainer: EmojiContainer;
+
+
   constructor(props: EmojiManagerParams) {
     const { sdk, logger } = props;
     sdk?.getAllEmoji?.()
