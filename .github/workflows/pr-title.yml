@@ -1,0 +1,14 @@
+name: 'PR title'
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+
+permissions: write-all
+
+jobs:
+  pr-title:
+    uses: emocional/emo-workflows/.github/workflows/pr-title.yml@main

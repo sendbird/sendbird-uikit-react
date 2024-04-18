@@ -1,0 +1,32 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+
+permissions: write-all
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: emocional/action-pnpm-install@main
+
+      - name: Install
+        run: pnpm install
+
+  publish:
+    needs: [test]
+    uses: emocional/emo-workflows/.github/workflows/publish-pnpm.yml@main
+    if: github.ref == 'refs/heads/main'
+    secrets: inherit
