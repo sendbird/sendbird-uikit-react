@@ -53,27 +53,6 @@ jobs:
         with:
           token: ${{ steps.get_token.outputs.token }}
 
-      - name: Setup Node.js and Yarn
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-          cache: 'yarn'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@emocional'
-
-      - name: Create .npmrc
-        run: |
-          echo "strict-peer-dependencies=false" > .npmrc
-          echo "auto-install-peers=true" >> .npmrc
-          echo "@emocional:registry=https://npm.pkg.github.com/" >> .npmrc
-          echo "//npm.pkg.github.com/:_authToken=${{ steps.get_token.outputs.GITHUB_TOKEN }}" >> .npmrc
-
-      - name: Read no secret config
-        run: |
-          if [[ -f .env.github ]]; then
-            cat .env.github >> $GITHUB_ENV
-          fi
-
       - name: Install
         run: yarn install --immutable
 
