@@ -17,7 +17,6 @@ import { UserProfileContext } from '../../lib/UserProfileContext';
 import uuidv4 from '../../utils/uuid';
 import { copyToClipboard } from '../OpenchannelUserMessage/utils';
 import { useLocalization } from '../../lib/LocalizationContext';
-import { checkOGIsEnalbed } from './utils';
 import {
   checkIsPending,
   checkIsFailed,
@@ -33,6 +32,7 @@ import useLongPress from '../../hooks/useLongPress';
 import OpenChannelMobileMenu from '../OpenChannelMobileMenu';
 import TextFragment from '../../modules/Message/components/TextFragment';
 import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
+import { openURL } from '../../utils/utils';
 
 interface OpenChannelOGMessageProps {
   message: UserMessage;
@@ -48,7 +48,7 @@ interface OpenChannelOGMessageProps {
   userId: string;
 }
 
-export default function OpenchannelOGMessage({
+export default function OpenChannelOGMessage({
   message,
   isOperator,
   isEphemeral = false,
@@ -70,11 +70,7 @@ export default function OpenchannelOGMessage({
   const [contextStyle, setContextStyle] = useState({});
   const [showContextMenu, setShowContextMenu] = useState(false);
 
-  const openLink = () => {
-    if (checkOGIsEnalbed(message) && ogMetaData?.url) {
-      window.open(ogMetaData.url, '_blank', 'noopener,noreferrer');
-    }
-  };
+  const openLink = () => openURL(ogMetaData?.url);
 
   const onLongPress = useLongPress({
     onLongPress: () => setShowContextMenu(true),

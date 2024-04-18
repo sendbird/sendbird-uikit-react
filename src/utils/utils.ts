@@ -30,7 +30,7 @@ export function openURL(url?: string | null) {
     if (!safeURL.startsWith('http://') && !safeURL.startsWith('https://')) {
       safeURL = 'https://' + safeURL;
     }
-    window.open(safeURL);
+    window.open(safeURL, '_blank', 'noopener,noreferrer');
   }
 }
 
