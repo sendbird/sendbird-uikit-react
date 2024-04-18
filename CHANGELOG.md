@@ -2,18 +2,6 @@
 
 ## [v3.14.2] (Apr 18, 2024)
 
-### Features
-* Added `outputFormat` to the image compression options
-  ```tsx
-  <SendbirdProvider
-    ...
-    imageCompression={{
-      outputFormat: 'preserve' | 'png' | 'jpeg',
-    }}
-  >
-  </SendbirdProvider>
-  ```
-
 ### Fixes
 * Fixed a bug where right padding is added to messages sent by me in mobile devices
 * Removed image section in the OGMessageItemBody if there is no og image
