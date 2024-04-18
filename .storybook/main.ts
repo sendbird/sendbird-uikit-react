@@ -3,7 +3,10 @@ import svgr from 'vite-plugin-svgr';
 import path from 'path';
 
 export default {
-  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  stories: [
+    '../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../src/**/**/*.mdx', '../src/**/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+  ],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',

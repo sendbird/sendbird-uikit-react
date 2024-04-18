@@ -13,7 +13,7 @@ import './index.scss';
 
 import { AppLayoutProps } from './types';
 
-interface AppProps {
+export interface AppProps {
   appId: SendbirdProviderProps['appId'];
   userId: SendbirdProviderProps['userId'];
   accessToken?: SendbirdProviderProps['accessToken'];

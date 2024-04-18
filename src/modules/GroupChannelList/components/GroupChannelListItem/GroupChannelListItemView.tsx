@@ -128,7 +128,7 @@ export const GroupChannelListItemView = ({
             </div>
             {!channel.isEphemeral && isMessageStatusEnabled && (
               <MessageStatus
-                className="sendbird-channel-preview__content__upper__last-message-at"
+                className="sendbird-channel-preview__content__upper__last-message-at sendbird-channel-preview__content__upper__last-message-at--message-status"
                 channel={channel}
                 message={channel.lastMessage as CoreMessageType}
                 isDateSeparatorConsidered={false}

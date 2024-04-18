@@ -1,0 +1,18 @@
+import { Meta, Story, ArgsTable, Canvas, Controls } from '@storybook/addon-docs';
+import MessageSearch from '../../modules/MessageSearch/index';
+import * as MessageSearchStories from './MessageSearch.stories';
+
+<Meta title="Module/MessageSearch" component={MessageSearch} of={MessageSearchStories}/>
+
+# MessageSearch Component
+The `MessageSearch` component supports searching for desired messages within the channel.
+<br/>It enables searching for plain text messages or file names.
+
+<Canvas of={MessageSearchStories.Default} />
+<Controls />
+
+To integrate the Avatar component into your project, use the following import statement:
+```tsx
+import { MessageSearch } from '@sendbird/uikit-react/MessageSearch';
+import { MessageSearchProvider, useMessageSearchContext } from '@sendbird/uikit-react/MessageSearch/context';
+```

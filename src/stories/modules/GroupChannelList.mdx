@@ -1,0 +1,20 @@
+import { Meta, Story, ArgsTable, Canvas, Controls } from '@storybook/addon-docs';
+import GroupChannelList from '../../modules/GroupChannelList/index';
+import * as GroupChannelListStories from './GroupChannelList.stories';
+
+<Meta title="Module/GroupChannelList" component={GroupChannelList} of={GroupChannelListStories}/>
+
+# GroupChannelList Component
+
+The `GroupChannelList` component implements the UI for a list of group channels.
+<br/> Users can utilize this component to view the list of channels and interact with a specific channel by selecting it.
+<br/> You can see and control the major props of the GroupChannelList in below table.
+
+<Canvas of={GroupChannelListStories.Default} />
+<Controls />
+
+To integrate the Avatar component into your project, use the following import statement:
+```tsx
+import { GroupChannelList } from '@sendbird/uikit-react/GroupChannelList';
+import { GroupChannelListProvider, useGroupChannelListContext } from '@sendbird/uikit-react/GroupChannelList/context';
+```

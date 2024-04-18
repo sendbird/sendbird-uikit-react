@@ -1,0 +1,15 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs';
+import App from '../../modules/App';
+import * as GroupChannelAppStories from './GroupChannelApp.stories';
+
+<Meta title="GroupChannelApp" component={App} of={GroupChannelAppStories} />
+
+# App component (Group Channel)
+
+The `App` component contains entire Sendbird UIKit modules and features of group channel.
+<br />
+
+<Canvas of={GroupChannelAppStories.Default} >
+</Canvas>
+
+<Controls />

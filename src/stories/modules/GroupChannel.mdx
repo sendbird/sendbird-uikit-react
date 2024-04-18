@@ -1,0 +1,20 @@
+import { Meta, Story, ArgsTable, Canvas, Controls } from '@storybook/addon-docs';
+import GroupChannel from '../../modules/GroupChannel';
+
+import * as GroupChannelStories from './GroupChannel.stories';
+
+<Meta title="Channel/GroupChannel" component={GroupChannel} of={GroupChannelStories}/>
+
+# GroupChannel Component
+
+The `GroupChannel` component implements the UI for a group channel.
+<br/> This component allows you to display messages in a chat group, send messages, and interact with the channel in various ways.
+
+<Canvas of={GroupChannelStories.Default} />
+<Controls />
+
+To integrate the Avatar component into your project, use the following import statement:
+```tsx
+import { GroupChannel } from '@sendbird/uikit-react/GroupChannel';
+import { GroupChannelProvider, useGroupChannelContext } from '@sendbird/uikit-react/GroupChannel/context';
+```
