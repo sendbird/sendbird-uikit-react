@@ -4,6 +4,7 @@ import Label, { LabelColors, LabelTypography } from '../Label';
 import { changeColorToClassName } from '../Label/utils';
 import './index.scss';
 import { ObjectValues } from '../../utils/typeHelpers/objectValues';
+import { openURL } from '../../utils/utils';
 
 const http = /https?:\/\//;
 
@@ -32,7 +33,7 @@ export default function LinkLabel({ className = '', src, type, color, children }
       onTouchEnd={(e) => {
         e.preventDefault();
         e.nativeEvent.stopImmediatePropagation();
-        window.open(url, '_blank', 'noopener,noreferrer');
+        openURL(url);
       }}
     >
       <Label className="sendbird-link-label__label" type={type} color={color}>

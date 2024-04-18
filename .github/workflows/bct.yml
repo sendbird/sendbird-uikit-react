@@ -1,0 +1,46 @@
+name: BCT trigger
+on:
+  issue_comment:
+    types: [created, edited]
+jobs:
+  pr-comment:
+    runs-on: ubuntu-latest
+    if: github.event.issue.pull_request && contains(github.event.comment.body, 'Deploy Preview for') && contains(github.event.comment.body, 'ready!')
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract Netlify URL
+        run: |
+          repo_name=$(echo ${{ github.repository }} | cut -d'/' -f2)
+          echo "NETLIFY_URL=https://deploy-preview-${{ github.event.issue.number }}--${repo_name}.netlify.app" >> $GITHUB_ENV
+      - name: Check PR author's privileges
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr_details = await github.pulls.get({
+              ...context.repo,
+              pull_number: context.issue.number,
+            });
+            const response = await github.repos.getCollaboratorPermissionLevel({
+              ...context.repo,
+              username: pr_details.data.user.login,
+            });
+            const permission = response.data.permission;
+            if (permission !== 'admin' && permission !== 'write') {
+              core.setFailed("The PR author does not have 'admin' or 'write' privileges.");
+            }
+      - name: Trigger Browser Compatibility Tests
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.SDK_DEPLOYMENT_BOT_TOKEN }}
+          script: |
+            github.repos.createDispatchEvent({
+              owner: 'sendbird',
+              repo: 'qe-browser-compatibility',
+              event_type: 'bct-test-trigger',
+              client_payload: {
+                prNumber: ${{ github.event.issue.number }},
+                repoName: '${{ github.repository }}',
+                uikit_url: '${{ env.NETLIFY_URL }}'
+              }
+            })

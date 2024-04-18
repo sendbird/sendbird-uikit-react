@@ -26,6 +26,7 @@ import {
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import OpenChannelMobileMenu from '../OpenChannelMobileMenu';
 import useLongPress from '../../hooks/useLongPress';
+import { openURL } from '../../utils/utils';
 
 interface OpenChannelFileMessageProps {
   className?: string | Array<string>;
@@ -40,7 +41,7 @@ interface OpenChannelFileMessageProps {
   resendMessage(message: FileMessage): void;
 }
 
-export default function OpenchannelFileMessage({
+export default function OpenChannelFileMessage({
   className,
   message,
   isOperator,
@@ -59,7 +60,7 @@ export default function OpenchannelFileMessage({
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
 
   const { isMobile } = useMediaQueryContext();
-  const openFileUrl = () => { window.open(message.url); };
+  const openFileUrl = () => openURL(message.url);
 
   const isPending = checkIsPending(status);
   const isFailed = checkIsFailed(status);
