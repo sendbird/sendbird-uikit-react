@@ -32,7 +32,7 @@ jobs:
       - name: Trigger Browser Compatibility Tests
         uses: actions/github-script@v4
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.SDK_DEPLOYMENT_BOT_TOKEN }}
           script: |
             github.repos.createDispatchEvent({
               owner: 'sendbird',
