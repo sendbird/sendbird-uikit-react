@@ -7,11 +7,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.issue.pull_request && contains(github.event.comment.body, 'Deploy Preview for') && contains(github.event.comment.body, 'ready!')
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Extract repository name
         id: repo_name
         run: echo "::set-output name=repo::$(echo ${{ github.repository }} | cut -d'/' -f2)"
-      - run: echo "https://deploy-preview-${{ github.event.issue.number }}--${{ steps.repo_name.outputs.repo }}.netlify.app"
+      - run: echo "https://deploy-preview-${{ github.event.pull_request.number }}--${{ steps.repo_name.outputs.repo }}.netlify.app"
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
@@ -20,3 +20,18 @@ jobs:
         env:
           JOB_CONTEXT: ${{ toJson(job) }}
         run: echo "$JOB_CONTEXT"
+      - name: Trigger Browser Compatibility Tests
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.repos.createDispatchEvent({
+              owner: 'sendbird',
+              repo: 'qe-browser-compatibility',
+              event_type: 'bct-test-trigger',
+              client_payload: { 
+                prNumber: ${{ github.event.pull_request.number }},
+                repoName: '${{ github.repository }}'
+                uikit_url: "https://deploy-preview-${{ github.event.pull_request.number }}--${{ steps.repo_name.outputs.repo }}.netlify.app"
+              }
+            })
