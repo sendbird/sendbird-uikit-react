@@ -1,0 +1,75 @@
+name: Publish internal npm package
+on:
+  workflow_call:
+    inputs:
+      dir:
+        required: false
+        type: string
+        description: "working dir"
+      ref:
+        required: false
+        type: string
+        description: "github ref"
+        default: ${{ github.ref }}
+
+jobs:
+  check-changes:
+    runs-on: ubuntu-latest
+    if: github.ref == inputs.ref && startsWith(github.event_name, 'push') && !startsWith(github.event.head_commit.message, 'chore')
+    outputs:
+      call: ${{ steps.call.outputs.all }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v3
+        id: call
+        with:
+          filters: |
+            all:
+              - "${{ inputs.dir }}**"
+
+  publish-pnpm:
+    runs-on: ubuntu-latest
+    needs: [check-changes]
+    if: needs.check-changes.outputs.call == 'true'
+    permissions:
+      contents: write
+      packages: write
+    defaults:
+      run:
+        working-directory: ./${{ inputs.dir }}
+    steps:       
+      - uses: emocional/action-git-config@main
+        with:
+          app: ${{ secrets.ACTION_APP }}
+          app-id: ${{ secrets.ACTION_APP_ID }}
+          app-email: ${{ secrets.ACTION_EMAIL }}
+          app-key: ${{ secrets.ACTION_APP_KEY }}
+        id: get_token
+        
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.get_token.outputs.token }}
+
+      - name: Read no secret config
+        run: |
+          if [[ -f .env.github ]]; then
+            cat .env.github >> $GITHUB_ENV
+          fi
+
+      - uses: emocional/action-pnpm-install@main
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Release
+        run: pnpm release-it --ci
+        working-directory: ./${{ inputs.dir }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

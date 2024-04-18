@@ -54,7 +54,8 @@
     "stylelint": "stylelint 'src/**'",
     "generate-component": "plop",
     "deploy-storybook": "storybook-to-ghpages",
-    "inspect": "yarn test; yarn lint;"
+    "inspect": "yarn test; yarn lint;",
+    "release": "pnpm test && dotenv release-it"
   },
   "repository": {
     "type": "git",
@@ -87,6 +88,7 @@
     "@babel/preset-env": "^7.23.2",
     "@babel/preset-react": "^7.22.15",
     "@babel/preset-typescript": "^7.23.2",
+    "@release-it/conventional-changelog": "^8.0.1",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-eslint": "^9.0.5",
@@ -133,6 +135,7 @@
     "postcss": "^8.3.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "release-it": "^17.2.0",
     "rollup": "^4.9.2",
     "rollup-plugin-analyzer": "^4.0.0",
     "rollup-plugin-copy": "^3.5.0",

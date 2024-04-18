@@ -24,9 +24,10 @@ jobs:
 
       - name: Install
         run: pnpm install
+        working-directory: . 
 
   publish:
     needs: [test]
-    uses: emocional/emo-workflows/.github/workflows/publish-pnpm.yml@main
+    uses: ./.github/workflows/publish-pnpm.yml
     if: github.ref == 'refs/heads/main'
     secrets: inherit
