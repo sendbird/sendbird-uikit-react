@@ -6,7 +6,7 @@ jobs:
   pr-comment:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       # see list of commands: https://github.com/sendbird/release-automation-action#commands
       - uses: sendbird/release-automation-action@latest
         with:

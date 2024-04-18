@@ -11,15 +11,7 @@ jobs:
       - name: Extract repository name
         id: repo_name
         run: echo "::set-output name=repo::$(echo ${{ github.repository }} | cut -d'/' -f2)"
-      - run: echo "https://deploy-preview-${{ github.event.pull_request.number }}--${{ steps.repo_name.outputs.repo }}.netlify.app"
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Dump job context
-        env:
-          JOB_CONTEXT: ${{ toJson(job) }}
-        run: echo "$JOB_CONTEXT"
+      - run: echo "https://deploy-preview-${{ github.event.issue.number }}--${{ steps.repo_name.outputs.repo }}.netlify.app"
       - name: Trigger Browser Compatibility Tests
         uses: actions/github-script@v4
         with:
@@ -30,8 +22,8 @@ jobs:
               repo: 'qe-browser-compatibility',
               event_type: 'bct-test-trigger',
               client_payload: { 
-                prNumber: ${{ github.event.pull_request.number }},
+                prNumber: ${{ github.event.issue.number }},
                 repoName: '${{ github.repository }}'
-                uikit_url: "https://deploy-preview-${{ github.event.pull_request.number }}--${{ steps.repo_name.outputs.repo }}.netlify.app"
+                uikit_url: "https://deploy-preview-${{ github.event.issue.number }}--${{ steps.repo_name.outputs.repo }}.netlify.app"
               }
             })
