@@ -15,6 +15,7 @@
   ```
 
 ### Fixes
+* Fixed a bug where right padding is added to messages sent by me in mobile devices
 * Removed image section in the OGMessageItemBody if there is no og image
 * Fixed that safely opens URL to prevent XSS
 * Fixed that copying URI-list issue in the iOS device/Safari
