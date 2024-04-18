@@ -25,6 +25,7 @@ import type {
   ReplyType,
   UserListQuery,
 } from '../types';
+import type { ImageCompressionOptions } from './Sendbird';
 import { UikitMessageHandler } from './selectors';
 import { Logger } from './SendbirdState';
 import { MarkAsReadSchedulerType } from './hooks/useMarkAsReadScheduler';
@@ -86,11 +87,7 @@ export interface SendBirdStateConfig {
     maxMentionCount: number,
     maxSuggestionCount: number,
   };
-  imageCompression?: {
-    compressionRate?: number,
-    resizingWidth?: number | string,
-    resizingHeight?: number | string,
-  };
+  imageCompression?: ImageCompressionOptions;
   markAsReadScheduler: MarkAsReadSchedulerType;
   markAsDeliveredScheduler: MarkAsDeliveredSchedulerType;
   isTypingIndicatorEnabledOnChannelList?: boolean;
