@@ -47,6 +47,12 @@ export function useMessageListScroll(behavior: 'smooth' | 'auto') {
   const [scrollPubSub] = useState(() => pubSubFactory<ScrollTopics, ScrollTopicUnion>());
   const [isScrollBottomReached, setIsScrollBottomReached] = useState(false);
 
+  // If there is no area to scroll, it is considered as scroll bottom reached.
+  if (isScrollBottomReached === false && scrollRef.current && scrollRef.current.scrollHeight <= scrollRef.current.clientHeight) {
+    scrollDistanceFromBottomRef.current = 0;
+    setIsScrollBottomReached(true);
+  }
+
   useLayoutEffect(() => {
     const unsubscribes: { remove(): void }[] = [];
 

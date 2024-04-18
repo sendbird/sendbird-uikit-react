@@ -28,6 +28,7 @@ import { PubSubTypes } from '../../../lib/pubSub';
 import { useMessageActions } from './hooks/useMessageActions';
 import { usePreventDuplicateRequest } from './hooks/usePreventDuplicateRequest';
 import { getIsReactionEnabled } from '../../../utils/getIsReactionEnabled';
+import { SCROLL_BUFFER } from '../../../utils/consts';
 
 type OnBeforeHandler<T> = (params: T) => T | Promise<T>;
 type MessageListQueryParamsType = Omit<MessageCollectionParams, 'filter'> & MessageFilterParams;
@@ -180,7 +181,9 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
     collectionCreator: getCollectionCreator(currentChannel, messageListQueryParams),
     shouldCountNewMessages: () => !isScrollBottomReached,
     markAsRead: (channels) => {
-      if (!disableMarkAsRead && isScrollBottomReached) {
+      // isScrollBottomReached is a state that is updated after the render is completed.
+      // So, we use scrollDistanceFromBottomRef to check quickly if the scroll is at the bottom.
+      if (!disableMarkAsRead && scrollDistanceFromBottomRef.current <= SCROLL_BUFFER) {
         channels.forEach((it) => markAsReadScheduler.push(it));
       }
     },
