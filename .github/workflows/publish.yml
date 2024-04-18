@@ -66,7 +66,7 @@ jobs:
           echo "strict-peer-dependencies=false" > .npmrc
           echo "auto-install-peers=true" >> .npmrc
           echo "@emocional:registry=https://npm.pkg.github.com/" >> .npmrc
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ steps.get_token.outputs.GITHUB_TOKEN }}" >> .npmrc
 
       - name: Read no secret config
         run: |
