@@ -8,10 +8,21 @@ jobs:
     if: github.event.issue.pull_request && contains(github.event.comment.body, 'Deploy Preview for') && contains(github.event.comment.body, 'ready!')
     steps:
       - uses: actions/checkout@v4
-      - name: Extract repository name
-        id: repo_name
-        run: echo "::set-output name=repo::$(echo ${{ github.repository }} | cut -d'/' -f2)"
-      - run: echo "https://deploy-preview-${{ github.event.issue.number }}--${{ steps.repo_name.outputs.repo }}.netlify.app"
+      - name: Extract Netlify URL
+        id: netlify_url
+        run: |
+          repo_name=$(echo ${{ github.repository }} | cut -d'/' -f2)
+          echo "::set-output name=url::https://deploy-preview-${{ github.event.issue.number }}--${repo_name}.netlify.app"
+      - name: Check PR author's privileges
+        run: |
+          response=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -s "https://api.github.com/repos/${{ github.repository }}/collaborators/${{ github.event.pull_request.user.login }}/permission")
+          permission=$(echo $response | jq -r '.permission')
+          if [[ "$permission" != "admin" && "$permission" != "write" ]]; then
+            echo "::error::The PR author does not have 'admin' or 'write' privileges."
+            exit 1
+          else
+            echo "The PR author has 'admin' or 'write' privileges."
+          fi
       - name: Trigger Browser Compatibility Tests
         uses: actions/github-script@v4
         with:
@@ -23,7 +34,7 @@ jobs:
               event_type: 'bct-test-trigger',
               client_payload: { 
                 prNumber: ${{ github.event.issue.number }},
-                repoName: '${{ github.repository }}'
-                uikit_url: "https://deploy-preview-${{ github.event.issue.number }}--${{ steps.repo_name.outputs.repo }}.netlify.app"
+                repoName: '${{ github.repository }}',
+                uikit_url: '${{ steps.netlify_url.outputs.url }}'
               }
             })
