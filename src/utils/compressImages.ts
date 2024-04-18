@@ -1,10 +1,11 @@
-import { ImageCompressionOptions } from '../lib/Sendbird';
+import type { ImageCompressionOptions, ImageCompressionOutputFormatType } from '../lib/Sendbird';
 import pxToNumber from './pxToNumber';
 import { Logger } from '../lib/SendbirdState';
 
 interface CompressImageParams {
   imageFile: File;
   compressionRate: number;
+  outputFormat: ImageCompressionOutputFormatType;
   resizingWidth?: number;
   resizingHeight?: number;
 }
@@ -14,6 +15,7 @@ export const compressImage = ({
   compressionRate,
   resizingWidth,
   resizingHeight,
+  outputFormat,
 }: CompressImageParams): Promise<File> => {
   const image = document.createElement('img');
   return new Promise((resolve, reject) => {
@@ -51,16 +53,21 @@ export const compressImage = ({
 
       ctx.drawImage(image, 0, 0, targetResizingWidth, targetResizingHeight);
 
+      // Change the file.name & file.type for converting file type
+      const targetFileType = outputFormat === 'preserve' ? imageFile.type : `image/${outputFormat}`;
+      const originalSubtype = imageFile.type.split('/').pop();
+      const newSubtype = targetFileType.split('/').pop();
+      const newName = imageFile.name.replace(originalSubtype, newSubtype);
       ctx.canvas.toBlob(
         (blob) => {
           if (blob) {
-            const file = new File([blob], imageFile.name, { type: imageFile.type });
+            const file = new File([blob], newName, { type: targetFileType });
             resolve(file);
           } else {
             reject(new Error('Failed to compress image'));
           }
         },
-        imageFile.type,
+        targetFileType,
         compressionRate,
       );
     };
@@ -77,7 +84,7 @@ export const compressImages = async ({
   logger,
   imageCompression,
 }: CompressImagesParams) => {
-  const { compressionRate } = imageCompression;
+  const { compressionRate, outputFormat = 'preserve' } = imageCompression;
   const resizingWidth = pxToNumber(imageCompression.resizingWidth);
   const resizingHeight = pxToNumber(imageCompression.resizingHeight);
 
@@ -111,6 +118,7 @@ export const compressImages = async ({
             compressionRate,
             resizingWidth,
             resizingHeight,
+            outputFormat,
           });
           result.compressedFiles.push(compressedImage);
         } catch (err) {
