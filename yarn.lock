@@ -2635,20 +2635,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sendbird/react-uikit-message-template-view@npm:0.0.1-alpha.72":
-  version: 0.0.1-alpha.72
-  resolution: "@sendbird/react-uikit-message-template-view@npm:0.0.1-alpha.72"
+"@sendbird/react-uikit-message-template-view@npm:0.0.1-alpha.73":
+  version: 0.0.1-alpha.73
+  resolution: "@sendbird/react-uikit-message-template-view@npm:0.0.1-alpha.73"
   dependencies:
-    "@sendbird/uikit-message-template": ^0.0.1-alpha.72
+    "@sendbird/uikit-message-template": ^0.0.1-alpha.73
   peerDependencies:
     "@sendbird/chat": ">=4.3.0 <5"
     react: ">=16.8.6"
     react-dom: ">=16.8.6"
-  checksum: f08023a2f679c942fbce73288a40752e7c1a8f03b487b4dffa2e76495f1078706cab3db41e0f02468569717dc9b84f26e8d0addbdc80bd5d9ae1184d3ec33c66
+  checksum: 22cd8e83eda3e63f3463a07ae73678608087232719230fabc3ccbd5b6b9112bcd5c0ec2bd8a52e883230d91de9f2352d1e98b61afb4e400523cbd3c7f58a5f4f
   languageName: node
   linkType: hard
 
-"@sendbird/uikit-message-template@npm:^0.0.1-alpha.72":
+"@sendbird/uikit-message-template@npm:^0.0.1-alpha.73":
   version: 0.0.1-alpha.73
   resolution: "@sendbird/uikit-message-template@npm:0.0.1-alpha.73"
   peerDependencies:
@@ -2676,8 +2676,8 @@ __metadata:
     "@rollup/plugin-replace": ^5.0.4
     "@rollup/plugin-typescript": ^11.1.5
     "@sendbird/chat": ^4.12.3
-    "@sendbird/react-uikit-message-template-view": 0.0.1-alpha.72
-    "@sendbird/uikit-tools": 0.0.1-alpha.72
+    "@sendbird/react-uikit-message-template-view": 0.0.1-alpha.73
+    "@sendbird/uikit-tools": 0.0.1-alpha.73
     "@storybook/addon-essentials": ^8.0.9
     "@storybook/react-vite": ^8.0.9
     "@svgr/rollup": ^8.1.0
@@ -2734,13 +2734,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sendbird/uikit-tools@npm:0.0.1-alpha.72":
-  version: 0.0.1-alpha.72
-  resolution: "@sendbird/uikit-tools@npm:0.0.1-alpha.72"
+"@sendbird/uikit-tools@npm:0.0.1-alpha.73":
+  version: 0.0.1-alpha.73
+  resolution: "@sendbird/uikit-tools@npm:0.0.1-alpha.73"
   peerDependencies:
     "@sendbird/chat": ">=4.10.5 <5"
     react: ">=16.8.6"
-  checksum: a209342267a8ddbbdd9d310a42def22d54a20ad30a54002de893480ed0bc26c0d3ebb7614ceb39340f3e6eb0d7bf5067769a0b73aca135b9e954580a8f5b08c0
+  checksum: e75a6cde2a645d1fcc535fd65001337ba40ce68c87f30e5a0c8ab2c0ca9df69684988f9c9c0e147ceeb26efee4f157cd2e27d692de091cf320e12d9e70e9258b
   languageName: node
   linkType: hard
 
