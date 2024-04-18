@@ -1,0 +1,22 @@
+name: BCT trigger
+on:
+  issue_comment:
+    types: [created, edited]
+jobs:
+  pr-comment:
+    runs-on: ubuntu-latest
+    if: github.event.issue.pull_request && contains(github.event.comment.body, 'Deploy Preview for') && contains(github.event.comment.body, 'ready!')
+    steps:
+      - uses: actions/checkout@v3
+      - name: Extract repository name
+        id: repo_name
+        run: echo "::set-output name=repo::$(echo ${{ github.repository }} | cut -d'/' -f2)"
+      - run: echo "https://deploy-preview-${{ github.event.issue.number }}--${{ steps.repo_name.outputs.repo }}.netlify.app"
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run: echo "$JOB_CONTEXT"
