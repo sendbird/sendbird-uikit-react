@@ -2804,7 +2804,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/pluginutils@npm:^5.0.1, @rollup/pluginutils@npm:^5.0.2, @rollup/pluginutils@npm:^5.1.0":
+"@rollup/pluginutils@npm:^5.0.1, @rollup/pluginutils@npm:^5.0.2, @rollup/pluginutils@npm:^5.0.5, @rollup/pluginutils@npm:^5.1.0":
   version: 5.1.0
   resolution: "@rollup/pluginutils@npm:5.1.0"
   dependencies:
@@ -4324,7 +4324,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@svgr/core@npm:8.1.0":
+"@svgr/core@npm:8.1.0, @svgr/core@npm:^8.1.0":
   version: 8.1.0
   resolution: "@svgr/core@npm:8.1.0"
   dependencies:
@@ -4367,7 +4367,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@svgr/plugin-jsx@npm:8.1.0":
+"@svgr/plugin-jsx@npm:8.1.0, @svgr/plugin-jsx@npm:^8.1.0":
   version: 8.1.0
   resolution: "@svgr/plugin-jsx@npm:8.1.0"
   dependencies:
@@ -5353,6 +5353,26 @@ __metadata:
   checksum: 16d0b63b9d98ea1d3d20bd6f9dc3cbd2674055845ad493d98118669d54792b1c167f57ae25beaae2c1107ed07012ac3c3093cca978b2ab49833dc491bc302b33
   languageName: node
   linkType: hard
+
+"@uikit-app/testing@workspace:apps/testing":
+  version: 0.0.0-use.local
+  resolution: "@uikit-app/testing@workspace:apps/testing"
+  dependencies:
+    "@types/react": ^18.2.66
+    "@types/react-dom": ^18.2.22
+    "@typescript-eslint/eslint-plugin": ^7.2.0
+    "@typescript-eslint/parser": ^7.2.0
+    "@vitejs/plugin-react": ^4.2.1
+    eslint: ^8.57.0
+    eslint-plugin-react-hooks: ^4.6.0
+    eslint-plugin-react-refresh: ^0.4.6
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    typescript: ^5.2.2
+    vite: ^5.2.0
+    vite-plugin-svgr: ^4.2.0
+  languageName: unknown
+  linkType: soft
 
 "@ungap/structured-clone@npm:^1.2.0":
   version: 1.2.0
@@ -10174,25 +10194,6 @@ __metadata:
   checksum: ad4e1577f1a6b721c7800dcc7c733fe01f6c310732bb5bf2240245c2a5b45a38518b91d8be2c610611623160b9d1c0e91f1ce96d639f8b53e8894625cf20fa45
   languageName: node
   linkType: hard
-
-"example@workspace:apps/testing":
-  version: 0.0.0-use.local
-  resolution: "example@workspace:apps/testing"
-  dependencies:
-    "@types/react": ^18.2.66
-    "@types/react-dom": ^18.2.22
-    "@typescript-eslint/eslint-plugin": ^7.2.0
-    "@typescript-eslint/parser": ^7.2.0
-    "@vitejs/plugin-react": ^4.2.1
-    eslint: ^8.57.0
-    eslint-plugin-react-hooks: ^4.6.0
-    eslint-plugin-react-refresh: ^0.4.6
-    react: ^18.2.0
-    react-dom: ^18.2.0
-    typescript: ^5.2.2
-    vite: ^5.2.0
-  languageName: unknown
-  linkType: soft
 
 "exec-sh@npm:^0.3.2":
   version: 0.3.6
@@ -21418,6 +21419,19 @@ __metadata:
     unist-util-stringify-position: ^2.0.0
     vfile-message: ^2.0.0
   checksum: ee5726e10d170472cde778fc22e0f7499caa096eb85babea5d0ce0941455b721037ee1c9e6ae506ca2803250acd313d0f464328ead0b55cfe7cb6315f1b462d6
+  languageName: node
+  linkType: hard
+
+"vite-plugin-svgr@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "vite-plugin-svgr@npm:4.2.0"
+  dependencies:
+    "@rollup/pluginutils": ^5.0.5
+    "@svgr/core": ^8.1.0
+    "@svgr/plugin-jsx": ^8.1.0
+  peerDependencies:
+    vite: ^2.6.0 || 3 || 4 || 5
+  checksum: 8202c0b25c7aa547825c2a73c7ea3702bd13dadb12634a8c2ea4e4c701164d8718632a391deff5fdc53877a09ec3668843b521a3e7ca8083e040e5e4f7e53ecb
   languageName: node
   linkType: hard
 

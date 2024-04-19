@@ -16,7 +16,7 @@ import { VOICE_RECORDER_DEFAULT_MIN } from '../../../../utils/consts';
 import { VOICE_PLAYER_STATUS } from '../../../../hooks/VoicePlayer/dux/initialState';
 import uuidv4 from '../../../../utils/uuid';
 
-export interface VoiceMessageInputWrapperProps {
+export type VoiceMessageInputWrapperProps = {
   channel?: GroupChannel;
   onCancelClick?: () => void;
   onSubmitClick?: (file: File, duration: number) => void;

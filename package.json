@@ -54,7 +54,8 @@
     "stylelint": "stylelint 'src/**'",
     "generate-component": "plop",
     "deploy-storybook": "storybook-to-ghpages",
-    "inspect": "yarn test; yarn lint;"
+    "inspect": "yarn test; yarn lint;",
+    "dev:testing": "yarn workspace @uikit-app/testing dev"
   },
   "repository": {
     "type": "git",
