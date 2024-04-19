@@ -58,9 +58,7 @@ export const compressImage = ({
       const targetSubtype = targetFileType.split('/').pop();
       const dotIndex = imageFile.name.lastIndexOf('.');
       // targetName = `fileName.targetSubtype`
-      const targetName = `${
-        dotIndex === -1 ? imageFile.name : imageFile.name.substring(0, dotIndex)
-      }.${targetSubtype}`;
+      const targetName = `${dotIndex === -1 ? imageFile.name : imageFile.name.substring(0, dotIndex)}.${targetSubtype}`;
       ctx.canvas.toBlob(
         (blob) => {
           if (blob) {
