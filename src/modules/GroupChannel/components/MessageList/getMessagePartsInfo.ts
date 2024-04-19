@@ -40,10 +40,10 @@ export const getMessagePartsInfo = ({
   const currentCreatedAt = currentMessage.createdAt;
 
   // NOTE: for pending/failed messages
-  const isLocalMessage = 'sendingStatus' in currentMessage && (currentMessage.sendingStatus !== 'succeeded');
+  // const isLocalMessage = 'sendingStatus' in currentMessage && (currentMessage.sendingStatus !== 'succeeded');
 
   // https://stackoverflow.com/a/41855608
-  const hasSeparator = isLocalMessage ? false : !(previousMessageCreatedAt && (isSameDay(currentCreatedAt, previousMessageCreatedAt)));
+  const hasSeparator = !(previousMessageCreatedAt && (isSameDay(currentCreatedAt, previousMessageCreatedAt)));
   return {
     chainTop,
     chainBottom,
