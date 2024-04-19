@@ -5,38 +5,37 @@ import './index.scss';
 import Sendbird from '../../lib/Sendbird';
 import OpenChannel from '../OpenChannel';
 import OpenChannelSettings from '../OpenChannelSettings';
+import OpenChannelList from '../OpenChannelList';
 
 interface Props {
   appId: string;
-  channelUrl: string;
+  channelUrl?: string;
   userId: string;
   nickname: string;
   theme?: 'light' | 'dark';
   imageCompression?: {
-    compressionRate?: number,
-    resizingWidth?: number | string,
-    resizingHeight?: number | string,
-  }
+    compressionRate?: number;
+    resizingWidth?: number | string;
+    resizingHeight?: number | string;
+  };
 }
 export default function OpenChannelApp({
   appId,
-  channelUrl,
+  channelUrl: legacyChannelUrl,
   userId,
   nickname,
   theme,
   imageCompression,
-}: Props): JSX.Element {
+}: Props) {
+  const [channelUrl, setChannelUrl] = useState<string>(legacyChannelUrl);
   const [showSettings, setShowSettings] = useState(false);
 
   return (
-    <Sendbird
-      appId={appId}
-      userId={userId}
-      nickname={nickname}
-      theme={theme}
-      imageCompression={imageCompression}
-    >
+    <Sendbird appId={appId} userId={userId} nickname={nickname} theme={theme} imageCompression={imageCompression}>
       <div className="sendbird-openchannel-app">
+        <div className={'sendbird-openchannel-app__channellist'}>
+          <OpenChannelList onChannelSelected={(channel) => setChannelUrl(channel.url)} />
+        </div>
         <div className="sendbird-openchannel-app__channel">
           <OpenChannel
             channelUrl={channelUrl}
@@ -45,18 +44,16 @@ export default function OpenChannelApp({
             }}
           />
         </div>
-        {
-          showSettings && (
-            <div className="sendbird-openchannel-app__settings">
-              <OpenChannelSettings
-                channelUrl={channelUrl}
-                onCloseClick={() => {
-                  setShowSettings(false);
-                }}
-              />
-            </div>
-          )
-        }
+        {showSettings && (
+          <div className="sendbird-openchannel-app__settings">
+            <OpenChannelSettings
+              channelUrl={channelUrl}
+              onCloseClick={() => {
+                setShowSettings(false);
+              }}
+            />
+          </div>
+        )}
       </div>
     </Sendbird>
   );
