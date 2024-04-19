@@ -70,7 +70,7 @@ export default {
       tsconfig: 'tsconfig.json',
       tsconfigOverride: {
         compilerOptions:{
-          declaration: false,
+          declaration: true,
         }
       }
     }),
