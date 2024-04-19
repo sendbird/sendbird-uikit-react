@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --strict false && vite build",
+    "build": "tsc --strict false && vite build && echo '/* /index.html 200' > dist/_redirects",
     "lint": "eslint .. --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
