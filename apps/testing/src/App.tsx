@@ -1,7 +1,8 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import { App } from '../../../src';
+import GroupChannelApp from '../../../src/modules/App';
 import OpenChannelApp from '../../../src/modules/OpenChannelApp';
+
 import { useConfigParams } from './utils/paramsBuilder.ts';
 import { URLBuilder } from './URLBuilder.tsx';
 
@@ -13,7 +14,7 @@ const defaultProps = {
 
 function GroupChannelPage() {
   const props = useConfigParams(defaultProps);
-  return <App {...props} breakpoint={window.innerWidth < 400} />;
+  return <GroupChannelApp {...props} breakpoint={window.innerWidth < 400} />;
 }
 
 function OpenChannelPage() {

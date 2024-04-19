@@ -55,7 +55,8 @@
     "generate-component": "plop",
     "deploy-storybook": "storybook-to-ghpages",
     "inspect": "yarn test; yarn lint;",
-    "dev:testing": "yarn workspace @uikit-app/testing dev"
+    "start:apps:testing": "yarn workspace @uikit-app/testing dev",
+    "build:apps:testing": "yarn workspace @uikit-app/testing build"
   },
   "repository": {
     "type": "git",

@@ -1,10 +1,10 @@
 import { paramKeys } from './utils/paramsBuilder.ts';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+
+const appConfigs = ['app_id', 'user_id', 'nickname'];
+const uikitConfigs = [...paramKeys];
 
 export function URLBuilder() {
-  const appConfigs = ['app_id', 'user_id', 'nickname'];
-  const uikitConfigs = [...paramKeys];
-
   useEffect(() => {
     uikitConfigs.forEach((label) => {
       const elem = document.getElementsByName(label)[0];
@@ -13,21 +13,21 @@ export function URLBuilder() {
   }, []);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', padding: 24 }}>
-      <h1>{'URL Builder for Testing'}</h1>
+    <div style={styles.container}>
+      <h1>{'Testing App URL Builder'}</h1>
       <form
         id={'builder'}
-        style={{ display: 'flex', flexDirection: 'column', gap: 12, height: '100%', paddingBottom: 60, overflow: 'scroll' }}
+        style={styles.form}
         onSubmit={(e) => {
           e.preventDefault();
           const values = [...appConfigs, ...uikitConfigs]
             .filter((label) => {
-              if (appConfigs.includes(label)) return Boolean((e.target[label as never] as HTMLInputElement).value);
-              const target = e.target[`${label}-enabled` as never] as HTMLInputElement;
+              if (appConfigs.includes(label)) return Boolean(e.currentTarget[label].value);
+              const target = e.currentTarget[`${label}-enabled`] as HTMLInputElement;
               return target.checked;
             })
             .map((label) => {
-              const target = e.target[label as never] as unknown;
+              const target = e.currentTarget[label] as unknown;
 
               if (target instanceof HTMLInputElement) {
                 if (target.type === 'checkbox') {
@@ -37,6 +37,7 @@ export function URLBuilder() {
                   return [label, target.value];
                 }
               }
+
               if (target instanceof HTMLSelectElement) {
                 return [label, [...target.selectedOptions].map((it) => it.value).join(',')];
               }
@@ -46,19 +47,28 @@ export function URLBuilder() {
               return [label, target.value];
             });
 
-          const strings = values.map(([key, value]) => `${key}=${value}`).join('&');
-          navigator.clipboard.writeText(`?${strings}`);
+          const route = e.currentTarget['channel_type'].value;
+          const queryParams = values.map(([key, value]) => `${key}=${value}`).join('&');
+          const url = `${window.origin}/${route}?${queryParams}`;
+          navigator.clipboard.writeText(url);
         }}
       >
+        <label style={styles.label}>
+          <b>{'Channel type'}</b>
+          <select defaultValue={'group_channel'} name={'channel_type'}>
+            <option value="group_channel">{'Group Channel'}</option>
+            <option value="open_channel">{'Open Channel'}</option>
+          </select>
+        </label>
         {appConfigs.map((label) => (
-          <label key={label} style={{ gap: 8, display: 'flex' }}>
+          <label key={label} style={styles.label}>
             <b>{label}</b>
-            <input type="text" name={label} />
+            <input placeholder={'optional'} type="text" name={label} />
           </label>
         ))}
         {uikitConfigs.map((label) => (
           <div key={`${label}-enabled`}>
-            <label style={{ gap: 8, display: 'flex' }}>
+            <label style={styles.label}>
               <i>{'Enable'}</i>
               <input
                 type="checkbox"
@@ -69,7 +79,8 @@ export function URLBuilder() {
                 }}
               />
             </label>
-            <label key={label} style={{ gap: 8, display: 'flex' }}>
+
+            <label key={label} style={styles.label}>
               <b>{label}</b>
               {(() => {
                 if (label.includes('_enable')) {
@@ -130,13 +141,37 @@ export function URLBuilder() {
           </div>
         ))}
       </form>
-      <button
-        className={'sticky-bottom-button'}
-        style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: 60, fontSize: 24 }}
-        form={'builder'}
-      >
+      <button className={'sticky-bottom-button'} style={styles.stickyBottomButton} form={'builder'}>
         {'Copy'}
       </button>
     </div>
   );
 }
+
+const styles: Record<string, React.CSSProperties> = {
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    padding: 24,
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 12,
+    height: '100%',
+    paddingBottom: 60,
+    overflow: 'scroll',
+  },
+  label: {
+    display: 'flex',
+    gap: 8,
+  },
+  stickyBottomButton: {
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 60,
+    fontSize: 24,
+  },
+};
