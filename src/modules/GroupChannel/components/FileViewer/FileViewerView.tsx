@@ -23,7 +23,7 @@ export const FileViewerView = ({
   onCancel,
   deleteMessage,
   onDownloadClick,
-}: FileViewerViewProps) => {
+}: FileViewerViewProps): React.ReactNode => {
   const { sender, type, url, name = '', threadInfo } = message;
   const { profileUrl, nickname, userId } = sender;
 
