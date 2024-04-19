@@ -55,13 +55,20 @@ export const compressImage = ({
 
       // Change the file.name & file.type for converting file type
       const targetFileType = outputFormat === 'preserve' ? imageFile.type : `image/${outputFormat}`;
-      const originalSubtype = imageFile.type.split('/').pop();
-      const newSubtype = targetFileType.split('/').pop();
-      const newName = imageFile.name.replace(originalSubtype, newSubtype);
+      const targetSubtype = targetFileType.split('/').pop();
+      let targetName = '';
+      const dotIndex = imageFile.name.lastIndexOf('.');
+      if (dotIndex === -1) {
+        // No extension found, use the original filename
+        targetName = imageFile.name;
+      } else {
+        // Replace the old extension with the new one
+        targetName = imageFile.name.substring(0, dotIndex) + '.' + targetSubtype;
+      }
       ctx.canvas.toBlob(
         (blob) => {
           if (blob) {
-            const file = new File([blob], newName, { type: targetFileType });
+            const file = new File([blob], targetName, { type: targetFileType });
             resolve(file);
           } else {
             reject(new Error('Failed to compress image'));
