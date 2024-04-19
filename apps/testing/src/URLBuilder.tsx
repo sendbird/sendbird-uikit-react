@@ -1,8 +1,16 @@
 import { paramKeys } from './utils/paramsBuilder.ts';
+import { useEffect } from 'react';
 
 export function URLBuilder() {
   const appConfigs = ['app_id', 'user_id', 'nickname'];
   const uikitConfigs = [...paramKeys];
+
+  useEffect(() => {
+    uikitConfigs.forEach((label) => {
+      const elem = document.getElementsByName(label)[0];
+      if (elem && (elem instanceof HTMLInputElement || elem instanceof HTMLSelectElement)) elem.disabled = true;
+    });
+  }, []);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', padding: 24 }}>
@@ -44,18 +52,25 @@ export function URLBuilder() {
       >
         {appConfigs.map((label) => (
           <label key={label} style={{ gap: 8, display: 'flex' }}>
-            <span>{label}</span>
+            <b>{label}</b>
             <input type="text" name={label} />
           </label>
         ))}
         {uikitConfigs.map((label) => (
-          <div>
-            <label key={`${label}-enabled`} style={{ gap: 8, display: 'flex' }}>
-              <span>{'Enable'}</span>
-              <input type="checkbox" name={`${label}-enabled`} />
+          <div key={`${label}-enabled`}>
+            <label style={{ gap: 8, display: 'flex' }}>
+              <i>{'Enable'}</i>
+              <input
+                type="checkbox"
+                name={`${label}-enabled`}
+                onChange={(e) => {
+                  const elem = document.getElementsByName(label)[0];
+                  if (elem && (elem instanceof HTMLInputElement || elem instanceof HTMLSelectElement)) elem.disabled = !e.target.checked;
+                }}
+              />
             </label>
             <label key={label} style={{ gap: 8, display: 'flex' }}>
-              <span>{label}</span>
+              <b>{label}</b>
               {(() => {
                 if (label.includes('_enable')) {
                   return <input type="checkbox" name={label} />;
@@ -65,7 +80,9 @@ export function URLBuilder() {
                   return (
                     <select name={label}>
                       {['none', 'quote_reply', 'thread'].map((value) => (
-                        <option value={value}>{value}</option>
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
                       ))}
                     </select>
                   );
@@ -75,7 +92,9 @@ export function URLBuilder() {
                   return (
                     <select name={label}>
                       {['thread', 'parent'].map((value) => (
-                        <option value={value}>{value}</option>
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
                       ))}
                     </select>
                   );
@@ -85,7 +104,9 @@ export function URLBuilder() {
                   return (
                     <select name={label} multiple>
                       {['text', 'bubble'].map((value) => (
-                        <option value={value}>{value}</option>
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
                       ))}
                     </select>
                   );
@@ -95,7 +116,9 @@ export function URLBuilder() {
                   return (
                     <select name={label}>
                       {['all_messages', 'last_message_only'].map((value) => (
-                        <option value={value}>{value}</option>
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
                       ))}
                     </select>
                   );

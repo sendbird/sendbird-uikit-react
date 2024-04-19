@@ -13,7 +13,7 @@ const defaultProps = {
 
 function GroupChannelPage() {
   const props = useConfigParams(defaultProps);
-  return <App {...props} />;
+  return <App {...props} breakpoint={window.innerWidth < 400} />;
 }
 
 function OpenChannelPage() {
