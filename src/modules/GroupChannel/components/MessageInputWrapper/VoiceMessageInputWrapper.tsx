@@ -20,7 +20,7 @@ export type VoiceMessageInputWrapperProps = {
   channel?: GroupChannel;
   onCancelClick?: () => void;
   onSubmitClick?: (file: File, duration: number) => void;
-}
+};
 
 export const VoiceMessageInputWrapper = ({
   channel,
