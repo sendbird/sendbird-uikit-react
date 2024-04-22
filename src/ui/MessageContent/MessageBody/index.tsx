@@ -63,7 +63,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
   const statefulFileInfoList = useFileInfoListWithUploaded(message); // For MultipleFilesMessage.
 
   const messageTypes = getUIKitMessageTypes();
-  const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableOgtag;
+  const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config?.groupChannel.enableOgtag;
 
   return match(message)
     .when(isTemplateMessage, () => (
@@ -83,7 +83,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         message={message as UserMessage}
         isByMe={isByMe}
         mouseHover={mouseHover}
-        isMentionEnabled={config?.isMentionEnabled || false}
+        isMentionEnabled={config?.groupChannel.enableMention ?? false}
         isReactionEnabled={isReactionEnabledInChannel}
         onMessageHeightChange={onMessageHeightChange}
       />
@@ -94,7 +94,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         message={message as UserMessage}
         isByMe={isByMe}
         mouseHover={mouseHover}
-        isMentionEnabled={config?.isMentionEnabled || false}
+        isMentionEnabled={config?.groupChannel.enableMention ?? false}
         isReactionEnabled={isReactionEnabledInChannel}
       />
     ))

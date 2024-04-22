@@ -57,7 +57,6 @@ export const MessageInputWrapperView = React.forwardRef((
   // Props
   const {
     currentChannel,
-    isMultipleFilesMessageEnabled: localIsMFMEnabled,
     loading,
     quoteMessage,
     setQuoteMessage,
@@ -77,19 +76,15 @@ export const MessageInputWrapperView = React.forwardRef((
   const { stringSet } = useLocalization();
   const { isMobile } = useMediaQueryContext();
   const { stores, config } = useSendbirdStateContext();
-  const {
-    isOnline,
-    isMentionEnabled,
-    isVoiceMessageEnabled,
-    isMultipleFilesMessageEnabled: globalIsMFMenabled,
-    userMention,
-    logger,
-  } = config;
+  const { isOnline, userMention, logger, groupChannel } = config;
   const sdk = stores.sdkStore.sdk;
   const { maxMentionCount, maxSuggestionCount } = userMention;
 
   const isBroadcast = currentChannel?.isBroadcast;
   const isOperator = currentChannel?.myRole === 'operator';
+  const isMultipleFilesMessageEnabled = props.isMultipleFilesMessageEnabled ?? config.isMultipleFilesMessageEnabled;
+  const isMentionEnabled = groupChannel.enableMention;
+  const isVoiceMessageEnabled = groupChannel.enableVoiceMessage;
 
   // States
   const [mentionNickname, setMentionNickname] = useState('');
@@ -111,7 +106,6 @@ export const MessageInputWrapperView = React.forwardRef((
     && isMentionEnabled
     && mentionNickname.length > 0
     && !isBroadcast;
-  const isMultipleFilesMessageEnabled = localIsMFMEnabled ?? globalIsMFMenabled;
   const mentionNodes = useDirtyGetMentions({ ref: ref || messageInputRef }, { logger });
   const ableMention = mentionNodes?.length < maxMentionCount;
 

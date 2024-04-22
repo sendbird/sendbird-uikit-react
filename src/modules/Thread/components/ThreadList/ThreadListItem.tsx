@@ -18,6 +18,7 @@ import { Role } from '../../../../lib/types';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import { getIsReactionEnabled } from '../../../../utils/getIsReactionEnabled';
 import { SendableMessageType } from '../../../../utils';
+import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyType';
 
 export interface ThreadListItemProps {
   className?: string;
@@ -39,14 +40,7 @@ export default function ThreadListItem({
   handleScroll,
 }: ThreadListItemProps): React.ReactElement {
   const { stores, config } = useSendbirdStateContext();
-  const {
-    isReactionEnabled,
-    isMentionEnabled,
-    isOnline,
-    replyType,
-    userMention,
-    logger,
-  } = config;
+  const { isOnline, userMention, logger, groupChannel } = config;
   const userId = stores?.userStore?.user?.userId;
   const { dateLocale, stringSet } = useLocalization();
   const threadContext = useThreadContext?.();
@@ -68,11 +62,12 @@ export default function ThreadListItem({
   const [showEdit, setShowEdit] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
   const [showFileViewer, setShowFileViewer] = useState(false);
-  const usingReaction = getIsReactionEnabled({
+  const isReactionEnabled = getIsReactionEnabled({
     channel: currentChannel,
     config,
-    moduleLevel: isReactionEnabled,
   });
+  const isMentionEnabled = groupChannel.enableMention;
+  const replyType = getCaseResolvedReplyType(groupChannel.replyType).upperCase;
 
   // Move to message
   const messageScrollRef = useRef(null);
@@ -238,7 +233,7 @@ export default function ThreadListItem({
         message={message}
         chainTop={chainTop}
         chainBottom={chainBottom}
-        isReactionEnabled={usingReaction}
+        isReactionEnabled={isReactionEnabled}
         isMentionEnabled={isMentionEnabled}
         disableQuoteMessage
         replyType={replyType}

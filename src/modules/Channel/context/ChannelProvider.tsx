@@ -46,18 +46,15 @@ import useSendFileMessageCallback from './hooks/useSendFileMessageCallback';
 import useToggleReactionCallback from '../../GroupChannel/context/hooks/useToggleReactionCallback';
 import useScrollToMessage from './hooks/useScrollToMessage';
 import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
-import { getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
+import { getCaseResolvedReplyType, getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
 import { useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
 import { useHandleChannelPubsubEvents } from './hooks/useHandleChannelPubsubEvents';
 import { PublishingModuleType } from '../../internalInterfaces';
 import { ChannelActionTypes } from './dux/actionTypes';
 
 export interface MessageListParams extends Partial<SDKMessageListParams> { // make `prevResultSize` and `nextResultSize` to optional
-  /**
-   * @deprecated
-   * It won't work even if you activate this props
-   */
-  reverse?: boolean; // TODO: Deprecate this props, because it might not work
+  /** @deprecated It won't work even if you activate this props */
+  reverse?: boolean;
 }
 export type ChannelQueries = {
   messageListParams?: MessageListParams;
@@ -184,7 +181,6 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     onChatHeaderActionClick,
     onSearchClick,
     onBackClick,
-    replyType: channelReplyType,
     threadReplySelectType,
     queries,
     filterMessageList,
@@ -199,14 +195,13 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
 
   const globalStore = useSendbirdStateContext();
   const { config } = globalStore;
-  const replyType = channelReplyType ?? config.replyType;
+  const replyType = props.replyType ?? getCaseResolvedReplyType(config.groupChannel.replyType).upperCase;
   const {
     pubSub,
     logger,
     userId,
     isOnline,
     imageCompression,
-    isMentionEnabled,
     onUserProfileMessage,
     markAsReadScheduler,
     groupChannel,
@@ -230,6 +225,8 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
 
   const [messagesStore, messagesDispatcher] = useReducer(messagesReducer, messagesInitialState);
   const scrollRef = useRef(null);
+
+  const isMentionEnabled = groupChannel.enableMention;
 
   const {
     allMessages,
@@ -443,7 +440,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       isReactionEnabled: usingReaction,
       isMessageGroupingEnabled,
       isMultipleFilesMessageEnabled,
-      showSearchIcon: showSearchIcon ?? globalConfigs.showSearchIcon,
+      showSearchIcon: showSearchIcon ?? globalConfigs.groupChannelSettings.enableMessageSearch,
       highlightedMessage,
       startingPoint,
       onBeforeSendUserMessage,
@@ -512,7 +509,7 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
       setIsScrolled,
     }}>
       <UserProfileProvider
-        disableUserProfile={props?.disableUserProfile ?? config?.disableUserProfile}
+        disableUserProfile={props?.disableUserProfile ?? !config.common.enableUsingDefaultUserProfile}
         renderUserProfile={props?.renderUserProfile}
         onUserProfileMessage={onUserProfileMessage}
       >

@@ -8,6 +8,7 @@ import { MobileLayout } from './MobileLayout';
 
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { SendableMessageType } from '../../utils';
+import { getCaseResolvedReplyType } from '../../lib/utils/resolvedReplyType';
 
 export const AppLayout: React.FC<AppLayoutProps> = (
   props: AppLayoutProps,
@@ -23,7 +24,7 @@ export const AppLayout: React.FC<AppLayoutProps> = (
   } = props;
 
   const globalStore = useSendbirdStateContext();
-  const globalConfigs = globalStore?.config;
+  const globalConfigs = globalStore.config;
 
   const [showThread, setShowThread] = useState(false);
   const [threadTargetMessage, setThreadTargetMessage] = useState<SendableMessageType | null>(null);
@@ -37,9 +38,9 @@ export const AppLayout: React.FC<AppLayoutProps> = (
    * Below configs can be set via Dashboard UIKit config setting but as a lower priority than App props.
    * So need to be have fallback value \w global configs even though each prop values are undefined
    */
-  const replyType = props.replyType ?? globalConfigs?.replyType;
-  const isReactionEnabled = props.isReactionEnabled ?? globalConfigs?.isReactionEnabled;
-  const showSearchIcon = props.showSearchIcon ?? globalConfigs?.showSearchIcon;
+  const replyType = props.replyType ?? getCaseResolvedReplyType(globalConfigs.groupChannel.replyType).upperCase;
+  const isReactionEnabled = props.isReactionEnabled ?? globalConfigs.groupChannel.enableReactions;
+  const showSearchIcon = props.showSearchIcon ?? globalConfigs.groupChannelSettings.enableMessageSearch;
 
   return (
     <>
