@@ -12,4 +12,6 @@ or change once
 and run
 `./build.sh`
 
-## TODO:
+## Pack:
+
+yarn pack

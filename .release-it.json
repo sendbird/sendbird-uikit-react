@@ -1,15 +1,13 @@
 {
   "npm": {
-    "publish": true
+    "publish": true,
+    "publishPath": "dist"
   },
   "git": {
-    "commitMessage": "chore(release): openapi ${version}",
+    "commitMessage": "chore(release): emo sendbird uikit react ${version}",
     "requireBranch": "main",
     "requireCommits": true,
     "tagName": "sendbird-uikit-react@${version}"
-  },
-  "dist": {
-    "baseDir": "dist/dist"
   },
   "github": {
     "release": true,
