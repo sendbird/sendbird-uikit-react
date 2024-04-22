@@ -11,6 +11,8 @@ interface ParamsAsProps {
   appId: string;
   userId: string;
   nickname: string;
+  allowProfileEdit: boolean;
+  isMultipleFilesMessageEnabled: boolean;
   uikitOptions: UIKitOptions;
 }
 
@@ -21,6 +23,8 @@ export const useConfigParams = (initParams: InitialParams): ParamsAsProps => {
     appId: searchParams.get('appId') || initParams.appId,
     userId: searchParams.get('userId') || initParams.userId,
     nickname: searchParams.get('nickname') || initParams.nickname,
+    allowProfileEdit: parseValue(searchParams.get('enableProfileEdit')) ?? true,
+    isMultipleFilesMessageEnabled: parseValue(searchParams.get('enableMultipleFilesMessage')) ?? true,
     uikitOptions: {},
   } as ParamsAsProps;
 
@@ -53,7 +57,8 @@ export const useConfigParams = (initParams: InitialParams): ParamsAsProps => {
   return response;
 };
 
-function parseValue(value: string) {
+function parseValue(value?: string | null) {
+  if (!value) return value;
   if (value.toLowerCase().match(/true/)) {
     return true;
   }

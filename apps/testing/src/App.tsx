@@ -14,7 +14,7 @@ const defaultProps = {
 
 function GroupChannelPage() {
   const props = useConfigParams(defaultProps);
-  return <GroupChannelApp {...props} breakpoint={window.innerWidth < 400} />;
+  return <GroupChannelApp {...props} breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}  />;
 }
 
 function OpenChannelPage() {

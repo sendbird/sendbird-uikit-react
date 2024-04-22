@@ -1,7 +1,7 @@
 import { paramKeys } from './utils/paramsBuilder.ts';
 import React, { useEffect } from 'react';
 
-const appConfigs = ['app_id', 'user_id', 'nickname'];
+const appConfigs = ['appId', 'userId', 'nickname', 'enableProfileEdit', 'enableMultipleFilesMessage'];
 const uikitConfigs = [...paramKeys];
 
 export function URLBuilder() {
@@ -11,6 +11,8 @@ export function URLBuilder() {
       if (elem && (elem instanceof HTMLInputElement || elem instanceof HTMLSelectElement)) elem.disabled = true;
     });
   }, []);
+
+  const isOptionalConfig = (label: string) => ['appId', 'userId', 'nickname'].includes(label);
 
   return (
     <div style={styles.container}>
@@ -22,7 +24,8 @@ export function URLBuilder() {
           e.preventDefault();
           const values = [...appConfigs, ...uikitConfigs]
             .filter((label) => {
-              if (appConfigs.includes(label)) return Boolean(e.currentTarget[label].value);
+              if (isOptionalConfig(label)) return Boolean(e.currentTarget[label].value);
+
               const target = e.currentTarget[`${label}-enabled`] as HTMLInputElement;
               return target.checked;
             })
@@ -61,13 +64,33 @@ export function URLBuilder() {
           </select>
         </label>
         {appConfigs.map((label) => (
-          <label key={label} style={styles.label}>
-            <b>{label}</b>
-            <input placeholder={'optional'} type="text" name={label} />
-          </label>
+          <div key={`appConfigs-${label}`}>
+            {!isOptionalConfig(label) && (
+              <label style={styles.label}>
+                <i>{'Enable'}</i>
+                <input
+                  type="checkbox"
+                  name={`${label}-enabled`}
+                  onChange={(e) => {
+                    const elem = document.getElementsByName(label)[0];
+                    if (elem && (elem instanceof HTMLInputElement || elem instanceof HTMLSelectElement)) elem.disabled = !e.target.checked;
+                  }}
+                />
+              </label>
+            )}
+            <label key={label} style={styles.label}>
+              <b>{label}</b>
+              {(() => {
+                if (label.startsWith('enable')) {
+                  return <input type="checkbox" name={label} />;
+                }
+                return <input placeholder={'optional'} type="text" name={label} />;
+              })()}
+            </label>
+          </div>
         ))}
         {uikitConfigs.map((label) => (
-          <div key={`${label}-enabled`}>
+          <div key={`uikitConfigs-${label}`}>
             <label style={styles.label}>
               <i>{'Enable'}</i>
               <input
