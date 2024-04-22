@@ -8,6 +8,9 @@
     "requireCommits": true,
     "tagName": "sendbird-uikit-react@${version}"
   },
+  "dist": {
+    "baseDir": "dist/dist"
+  },
   "github": {
     "release": true,
     "releaseName": "Release sendbird-uikit-react@${version}"
