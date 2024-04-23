@@ -11,7 +11,3 @@ or change once
 `chmod +x build.sh`
 and run
 `./build.sh`
-
-## Pack:
-
-yarn pack
