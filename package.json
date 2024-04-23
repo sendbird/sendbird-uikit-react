@@ -54,7 +54,9 @@
     "stylelint": "stylelint 'src/**'",
     "generate-component": "plop",
     "deploy-storybook": "storybook-to-ghpages",
-    "inspect": "yarn test; yarn lint;"
+    "inspect": "yarn test; yarn lint;",
+    "start:apps:testing": "yarn workspace @uikit-app/testing dev",
+    "build:apps:testing": "yarn workspace @uikit-app/testing build"
   },
   "repository": {
     "type": "git",
@@ -147,7 +149,7 @@
     "stylelint-config-sass-guidelines": "^7.0.0",
     "ts-pattern": "^4.2.2",
     "tslib": "^2.0.0",
-    "typescript": "^4.7.4"
+    "typescript": "^5.4.5"
   },
   "browserslist": [
     "defaults",
@@ -158,5 +160,8 @@
     "singleQuote": true,
     "printWidth": 140,
     "tabWidth": 2
-  }
+  },
+  "workspaces": [
+    "apps/*"
+  ]
 }
