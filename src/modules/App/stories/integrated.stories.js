@@ -11,7 +11,6 @@ import Checkbox from '../../../ui/Checkbox';
 import Button, { ButtonSizes, ButtonTypes } from '../../../ui/Button';
 import { MediaQueryProvider } from '../../../lib/MediaQueryContext';
 import { TypingIndicatorType } from '../../../types';
-import {SBUConfig} from '@sendbird/uikit-tools';
 
 const STORAGE_KEY = 'sendbird-integrated-app-v1-groupchannel';
 
