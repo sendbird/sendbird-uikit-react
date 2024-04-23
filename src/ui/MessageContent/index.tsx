@@ -3,9 +3,8 @@ import format from 'date-fns/format';
 import './index.scss';
 
 import MessageStatus from '../MessageStatus';
-import { MessageMenu, MessageMenuProps } from '../MessageItemMenu';
+import { MessageMenu, MessageMenuProps, ReplyButton } from '../MessageItemMenu';
 import { MessageEmojiMenu, MessageEmojiMenuProps } from '../MessageItemReactionMenu';
-import Label, { LabelColors, LabelTypography } from '../Label';
 import EmojiReactions, { EmojiReactionsProps } from '../EmojiReactions';
 
 import AdminMessage from '../AdminMessage';
@@ -502,6 +501,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                 toggleReaction,
                 setSupposedHover,
               })}
+            <ReplyButton channel={channel} message={message} replyType={replyType} setQuoteMessage={setQuoteMessage} />
             {renderMessageMenu({
               className: 'sendbird-message-content-menu__normal-menu',
               channel,

@@ -48,6 +48,39 @@ export interface MessageMenuProps {
   renderMenuItem?: (props: MessageMenuRenderMenuItemProps) => ReactElement;
 }
 
+export interface IReplyMessage {
+  message: SendableMessageType;
+  channel: GroupChannel | OpenChannel;
+  replyType?: ReplyType;
+  setQuoteMessage?: (message: SendableMessageType) => void;
+}
+
+export function ReplyButton(props: IReplyMessage): ReactElement {
+  const { message, channel, replyType, setQuoteMessage } = props;
+
+  const isReplyTypeEnabled =
+    !isFailedMessage(message) &&
+    !isPendingMessage(message) &&
+    channel?.isGroupChannel?.() &&
+    !channel?.isEphemeral &&
+    (((channel as GroupChannel)?.isBroadcast && channel?.myRole === Role.OPERATOR) || !(channel as GroupChannel)?.isBroadcast);
+  const showMenuItemReply = isReplyTypeEnabled && replyType === 'QUOTE_REPLY';
+
+  if (!showMenuItemReply) return null;
+
+  return (
+    <IconButton className="sendbird-message-item-menu__trigger" width="24px" height="24px" onClick={(): void => setQuoteMessage(message)}>
+      <Icon
+        className="sendbird-message-item-menu__trigger__icon"
+        type={IconTypes.CHAT}
+        fillColor={IconColors.CONTENT_INVERSE}
+        width="16px"
+        height="16px"
+      />
+    </IconButton>
+  );
+}
+
 export function MessageMenu(props: MessageMenuProps): ReactElement {
   const {
     className,
@@ -60,7 +93,6 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
     showRemove,
     deleteMessage,
     resendMessage,
-    setQuoteMessage,
     setSupposedHover,
     onReplyInThread,
     onMoveToParentMessage = null,
@@ -95,19 +127,10 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
     channel?.isGroupChannel?.() &&
     !channel?.isEphemeral &&
     (((channel as GroupChannel)?.isBroadcast && channel?.myRole === Role.OPERATOR) || !(channel as GroupChannel)?.isBroadcast);
-  const showMenuItemReply = isReplyTypeEnabled && replyType === 'QUOTE_REPLY';
   const showMenuItemThread = isReplyTypeEnabled && replyType === 'THREAD' && !message?.parentMessageId && onReplyInThread;
 
   if (
-    !(
-      showMenuItemCopy ||
-      showMenuItemReply ||
-      showMenuItemThread ||
-      showMenuItemOpenInChannel ||
-      showMenuItemEdit ||
-      showMenuItemResend ||
-      showMenuItemDelete
-    )
+    !(showMenuItemCopy || showMenuItemThread || showMenuItemOpenInChannel || showMenuItemEdit || showMenuItemResend || showMenuItemDelete)
   ) {
     return null;
   }
@@ -159,17 +182,6 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
                   },
                   dataSbId: 'ui_message_item_menu_copy',
                   text: stringSet.MESSAGE_MENU__COPY,
-                })}
-              {showMenuItemReply &&
-                renderMenuItem({
-                  className: 'sendbird-message-item-menu__list__menu-item menu-item-reply',
-                  onClick: () => {
-                    setQuoteMessage(message);
-                    closeDropdown();
-                  },
-                  disable: message?.parentMessageId > 0,
-                  dataSbId: 'ui_message_item_menu_reply',
-                  text: stringSet.MESSAGE_MENU__REPLY,
                 })}
               {showMenuItemThread &&
                 renderMenuItem({
