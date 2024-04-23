@@ -118,8 +118,8 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
           <IconButton
             className="sendbird-message-item-menu__trigger"
             ref={triggerRef}
-            width="32px"
-            height="32px"
+            width="24px"
+            height="24px"
             onClick={(): void => {
               toggleDropdown();
               setSupposedHover(true);
@@ -132,8 +132,8 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
               className="sendbird-message-item-menu__trigger__icon"
               type={IconTypes.MORE}
               fillColor={IconColors.CONTENT_INVERSE}
-              width="24px"
-              height="24px"
+              width="16px"
+              height="16px"
             />
           </IconButton>
         )}

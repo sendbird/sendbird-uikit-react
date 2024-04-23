@@ -65,11 +65,8 @@ const EmojiReactions = ({
   const showAddReactionBadge = (message.reactions?.length ?? 0) < emojisMap.size;
 
   return (
-    <div className={getClassName([
-      className, 'sendbird-emoji-reactions',
-      isByMe ? 'outgoing' : 'incoming',
-    ])}>
-      {((message.reactions?.length ?? 0) > 0) && (
+    <div className={getClassName([className, 'sendbird-emoji-reactions', isByMe ? 'outgoing' : 'incoming'])}>
+      {(message.reactions?.length ?? 0) > 0 &&
         message.reactions?.map((reaction: Reaction): ReactElement => {
           return (
             <ReactionItem
@@ -83,9 +80,8 @@ const EmojiReactions = ({
               message={message}
             />
           );
-        })
-      )}
-      {(!isMobile && showAddReactionBadge) && (
+        })}
+      {!isMobile && showAddReactionBadge && (
         <ContextMenu
           menuTrigger={(toggleDropdown: () => void): ReactElement => (
             <ReactionBadge
@@ -97,12 +93,7 @@ const EmojiReactions = ({
                 e?.stopPropagation?.();
               }}
             >
-              <Icon
-                type={IconTypes.EMOJI_MORE}
-                fillColor={IconColors.ON_BACKGROUND_3}
-                width="20px"
-                height="20px"
-              />
+              <Icon type={IconTypes.EMOJI_MORE} fillColor={IconColors.ON_BACKGROUND_3} width="20px" height="20px" />
             </ReactionBadge>
           )}
           menuItems={(closeDropdown: () => void): ReactElement => (
@@ -113,14 +104,15 @@ const EmojiReactions = ({
               spaceFromTrigger={spaceFromTrigger}
             >
               {getEmojiListAll(emojiContainer).map((emoji: Emoji): ReactElement => {
-                const isReacted: boolean = (message?.reactions
-                  ?.find((reaction: Reaction): boolean => reaction.key === emoji.key)?.userIds
-                  ?.some((reactorId: string): boolean => reactorId === userId)) || false;
+                const isReacted: boolean =
+                  message?.reactions
+                    ?.find((reaction: Reaction): boolean => reaction.key === emoji.key)
+                    ?.userIds?.some((reactorId: string): boolean => reactorId === userId) || false;
                 return (
                   <ReactionButton
                     key={emoji.key}
-                    width="36px"
-                    height="36px"
+                    width="28px"
+                    height="28px"
                     selected={isReacted}
                     onClick={(e): void => {
                       closeDropdown();
@@ -131,16 +123,11 @@ const EmojiReactions = ({
                   >
                     <ImageRenderer
                       url={emoji?.url || ''}
-                      width="28px"
-                      height="28px"
+                      width="20px"
+                      height="20px"
                       placeHolder={({ style }): ReactElement => (
                         <div style={style}>
-                          <Icon
-                            type={IconTypes.QUESTION}
-                            fillColor={IconColors.ON_BACKGROUND_3}
-                            width="28px"
-                            height="28px"
-                          />
+                          <Icon type={IconTypes.QUESTION} fillColor={IconColors.ON_BACKGROUND_3} width="20px" height="20px" />
                         </div>
                       )}
                     />
@@ -151,14 +138,14 @@ const EmojiReactions = ({
           )}
         />
       )}
-      {(isMobile && showAddReactionBadge) && (
+      {isMobile && showAddReactionBadge && (
         <AddReactionBadgeItem
           onClick={() => {
             setShowEmojiList(true);
           }}
         />
       )}
-      {(isMobile && showEmojiList) && (
+      {isMobile && showEmojiList && (
         <MobileEmojisBottomSheet
           userId={userId}
           message={message}
@@ -169,20 +156,18 @@ const EmojiReactions = ({
           toggleReaction={toggleReaction}
         />
       )}
-      {
-        (isMobile && selectedEmojiKey && channel !== null && showTheReactedMembers) && (
-          <ReactedMembersBottomSheet
-            message={message}
-            channel={channel}
-            emojiKey={selectedEmojiKey}
-            hideMenu={() => {
-              setSelectedEmojiKey('');
-            }}
-            emojiContainer={emojiContainer}
-            onPressUserProfileHandler={onPressUserProfile}
-          />
-        )
-      }
+      {isMobile && selectedEmojiKey && channel !== null && showTheReactedMembers && (
+        <ReactedMembersBottomSheet
+          message={message}
+          channel={channel}
+          emojiKey={selectedEmojiKey}
+          hideMenu={() => {
+            setSelectedEmojiKey('');
+          }}
+          emojiContainer={emojiContainer}
+          onPressUserProfileHandler={onPressUserProfile}
+        />
+      )}
     </div>
   );
 };

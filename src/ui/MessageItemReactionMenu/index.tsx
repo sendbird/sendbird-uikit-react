@@ -38,17 +38,14 @@ export function MessageEmojiMenu({
   }
 
   return (
-    <div
-      className={getClassName([className, 'sendbird-message-item-reaction-menu'])}
-      ref={containerRef}
-    >
+    <div className={getClassName([className, 'sendbird-message-item-reaction-menu'])} ref={containerRef}>
       <ContextMenu
         menuTrigger={(toggleDropdown: () => void): ReactElement => (
           <IconButton
             className="sendbird-message-item-reaction-menu__trigger"
             ref={triggerRef}
-            width="32px"
-            height="32px"
+            width="24px"
+            height="24px"
             onClick={(): void => {
               toggleDropdown();
               setSupposedHover(true);
@@ -61,8 +58,8 @@ export function MessageEmojiMenu({
               className="sendbird-message-item-reaction-menu__trigger__icon"
               type={IconTypes.EMOJI_MORE}
               fillColor={IconColors.CONTENT_INVERSE}
-              width="24px"
-              height="24px"
+              width="16px"
+              height="16px"
             />
           </IconButton>
         )}
@@ -79,15 +76,15 @@ export function MessageEmojiMenu({
               spaceFromTrigger={spaceFromTrigger}
             >
               {getEmojiListAll(emojiContainer).map((emoji: Emoji): ReactElement => {
-                const isReacted: boolean = message?.reactions
-                  ?.find((reaction: Reaction) => reaction.key === emoji.key)
-                  ?.userIds
-                  ?.some((reactorId: string) => reactorId === userId) || false;
+                const isReacted: boolean =
+                  message?.reactions
+                    ?.find((reaction: Reaction) => reaction.key === emoji.key)
+                    ?.userIds?.some((reactorId: string) => reactorId === userId) || false;
                 return (
                   <ReactionButton
                     key={emoji.key}
-                    width="36px"
-                    height="36px"
+                    width="28px"
+                    height="28px"
                     selected={isReacted}
                     onClick={() => {
                       closeDropdown();
@@ -97,16 +94,11 @@ export function MessageEmojiMenu({
                   >
                     <ImageRenderer
                       url={emoji.url}
-                      width="28px"
-                      height="28px"
+                      width="20px"
+                      height="20px"
                       placeHolder={({ style }) => (
                         <div style={style}>
-                          <Icon
-                            type={IconTypes.QUESTION}
-                            fillColor={IconColors.ON_BACKGROUND_3}
-                            width="28px"
-                            height="28px"
-                          />
+                          <Icon type={IconTypes.QUESTION} fillColor={IconColors.ON_BACKGROUND_3} width="20px" height="20px" />
                         </div>
                       )}
                     />
