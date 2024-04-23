@@ -418,24 +418,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               })}
             </div>
           )}
-          {/* message timestamp when sent by others */}
-          {!isByMe && !chainBottom && (
-            <Label
-              className={getClassName([
-                'sendbird-message-content__middle__body-container__created-at',
-                'right',
-                supposedHoverClassName,
-                uiContainerType,
-              ])}
-              type={LabelTypography.CAPTION_3}
-              color={LabelColors.ONBACKGROUND_2}
-              ref={timestampRef}
-            >
-              {format(message?.createdAt || 0, 'p', {
-                locale: dateLocale,
-              })}
-            </Label>
-          )}
         </div>
         {/* bottom timestamp empty container */}
         {isTimestampBottom && (
