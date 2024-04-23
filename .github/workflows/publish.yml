@@ -36,9 +36,6 @@ jobs:
     permissions:
       contents: write
       packages: write
-    defaults:
-      run:
-        working-directory: ./${{ inputs.dir }}
     steps:
       - uses: emocional/action-git-config@main
         with:
