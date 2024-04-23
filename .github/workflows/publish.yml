@@ -50,11 +50,6 @@ jobs:
         with:
           token: ${{ steps.get_token.outputs.token }}
 
-      - name: Setup .npmrc
-        run: |
-          echo "registry \"https://npm.pkg.github.com/\"" >> .npmrc
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
-
       - name: Install
         run: yarn install --immutable
 
