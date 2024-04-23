@@ -20,6 +20,7 @@ import { LocalizationContext } from '../../lib/LocalizationContext';
 import { Role } from '../../lib/types';
 import { ReplyType } from '../../types';
 import { deleteNullish } from '../../utils/utils';
+import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 export interface MessageMenuRenderMenuItemProps {
   className?: string;
@@ -52,7 +53,6 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
     className,
     message,
     channel,
-    isByMe = false,
     disabled = false,
     replyType,
     disableDeleteMessage = null,
@@ -72,41 +72,47 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
   const triggerRef = useRef(null);
   const containerRef = useRef(null);
 
+  const globalStore = useSendbirdStateContext();
+
+  const { userId } = globalStore.config;
+  const isByMe =
+    userId === (message as SendableMessageType)?.sender?.userId ||
+    (message as SendableMessageType)?.sendingStatus === 'pending' ||
+    (message as SendableMessageType)?.sendingStatus === 'failed';
+
   const showMenuItemCopy: boolean = isUserMessage(message as UserMessage);
-  const showMenuItemEdit: boolean = (!channel?.isEphemeral && isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe);
-  const showMenuItemResend: boolean = (isFailedMessage(message) && message?.isResendable && isByMe);
+  const showMenuItemEdit: boolean = !channel?.isEphemeral && isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe;
+  const showMenuItemResend: boolean = isFailedMessage(message) && message?.isResendable && isByMe;
   const showMenuItemDelete: boolean = !channel?.isEphemeral && !isPendingMessage(message) && isByMe;
   const showMenuItemOpenInChannel: boolean = onMoveToParentMessage !== null;
   /**
    * TODO: Manage timing issue
    * User delete pending message -> Sending message success
    */
-  const isReplyTypeEnabled = !isFailedMessage(message)
-    && !isPendingMessage(message)
-    && (channel?.isGroupChannel?.()
-      && !channel?.isEphemeral
-      && (
-        ((channel as GroupChannel)?.isBroadcast && channel?.myRole === Role.OPERATOR)
-        || !(channel as GroupChannel)?.isBroadcast
-      ));
+  const isReplyTypeEnabled =
+    !isFailedMessage(message) &&
+    !isPendingMessage(message) &&
+    channel?.isGroupChannel?.() &&
+    !channel?.isEphemeral &&
+    (((channel as GroupChannel)?.isBroadcast && channel?.myRole === Role.OPERATOR) || !(channel as GroupChannel)?.isBroadcast);
   const showMenuItemReply = isReplyTypeEnabled && replyType === 'QUOTE_REPLY';
   const showMenuItemThread = isReplyTypeEnabled && replyType === 'THREAD' && !message?.parentMessageId && onReplyInThread;
 
-  if (!(showMenuItemCopy
-    || showMenuItemReply
-    || showMenuItemThread
-    || showMenuItemOpenInChannel
-    || showMenuItemEdit
-    || showMenuItemResend
-    || showMenuItemDelete
-  )) {
+  if (
+    !(
+      showMenuItemCopy ||
+      showMenuItemReply ||
+      showMenuItemThread ||
+      showMenuItemOpenInChannel ||
+      showMenuItemEdit ||
+      showMenuItemResend ||
+      showMenuItemDelete
+    )
+  ) {
     return null;
   }
   return (
-    <div
-      className={getClassName([className, 'sendbird-message-item-menu'])}
-      ref={containerRef}
-    >
+    <div className={getClassName([className, 'sendbird-message-item-menu'])} ref={containerRef}>
       <ContextMenu
         menuTrigger={(toggleDropdown: () => void): ReactElement => (
           <IconButton
@@ -144,7 +150,7 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
               closeDropdown={closeDropdown}
               openLeft={isByMe}
             >
-              {showMenuItemCopy && (
+              {showMenuItemCopy &&
                 renderMenuItem({
                   className: 'sendbird-message-item-menu__list__menu-item menu-item-copy',
                   onClick: () => {
@@ -153,9 +159,8 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
                   },
                   dataSbId: 'ui_message_item_menu_copy',
                   text: stringSet.MESSAGE_MENU__COPY,
-                })
-              )}
-              {showMenuItemReply && (
+                })}
+              {showMenuItemReply &&
                 renderMenuItem({
                   className: 'sendbird-message-item-menu__list__menu-item menu-item-reply',
                   onClick: () => {
@@ -165,9 +170,8 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
                   disable: message?.parentMessageId > 0,
                   dataSbId: 'ui_message_item_menu_reply',
                   text: stringSet.MESSAGE_MENU__REPLY,
-                })
-              )}
-              {showMenuItemThread && (
+                })}
+              {showMenuItemThread &&
                 renderMenuItem({
                   className: 'sendbird-message-item-menu__list__menu-item menu-item-thread',
                   onClick: () => {
@@ -176,9 +180,8 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
                   },
                   dataSbId: 'ui_message_item_menu_thread',
                   text: stringSet.MESSAGE_MENU__THREAD,
-                })
-              )}
-              {showMenuItemOpenInChannel && (
+                })}
+              {showMenuItemOpenInChannel &&
                 renderMenuItem({
                   className: 'sendbird-message-item-menu__list__menu-item menu-item-open-channel',
                   onClick: () => {
@@ -187,9 +190,8 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
                   },
                   dataSbId: 'ui_message_item_menu_open_in_channel',
                   text: stringSet.MESSAGE_MENU__OPEN_IN_CHANNEL,
-                })
-              )}
-              {showMenuItemEdit && (
+                })}
+              {showMenuItemEdit &&
                 renderMenuItem({
                   className: 'sendbird-message-item-menu__list__menu-item menu-item-edit',
                   onClick: () => {
@@ -200,9 +202,8 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
                   },
                   dataSbId: 'ui_message_item_menu_edit',
                   text: stringSet.MESSAGE_MENU__EDIT,
-                })
-              )}
-              {showMenuItemResend && (
+                })}
+              {showMenuItemResend &&
                 renderMenuItem({
                   className: 'sendbird-message-item-menu__list__menu-item menu-item-resend',
                   onClick: () => {
@@ -213,9 +214,8 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
                   },
                   dataSbId: 'ui_message_item_menu_resend',
                   text: stringSet.MESSAGE_MENU__RESEND,
-                })
-              )}
-              {showMenuItemDelete && (
+                })}
+              {showMenuItemDelete &&
                 renderMenuItem({
                   className: 'sendbird-message-item-menu__list__menu-item menu-item-delete',
                   onClick: () => {
@@ -226,15 +226,10 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
                       closeDropdown();
                     }
                   },
-                  disable: (
-                    typeof disableDeleteMessage === 'boolean'
-                      ? disableDeleteMessage
-                      : message?.threadInfo?.replyCount > 0
-                  ),
+                  disable: typeof disableDeleteMessage === 'boolean' ? disableDeleteMessage : message?.threadInfo?.replyCount > 0,
                   dataSbId: 'ui_message_item_menu_delete',
                   text: stringSet.MESSAGE_MENU__DELETE,
-                })
-              )}
+                })}
             </MenuItems>
           );
         }}

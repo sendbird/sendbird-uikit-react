@@ -1,8 +1,4 @@
-import React, {
-  ReactElement,
-  useContext,
-  useRef,
-} from 'react';
+import React, { ReactElement, useContext, useRef } from 'react';
 import '../index.scss';
 import { isSendableMessage } from '../../../utils';
 import ContextMenu, { MenuItems } from '../../ContextMenu';
@@ -14,26 +10,16 @@ import { UserProfileContext } from '../../../lib/UserProfileContext';
 export interface MessageProfileProps extends MessageContentProps {
   isByMe?: boolean;
   displayThreadReplies?: boolean;
-  bottom?: string
+  bottom?: string;
 }
 
-export default function MessageProfile(
-  props: MessageProfileProps,
-): ReactElement {
-  const {
-    message,
-    channel,
-    userId,
-    chainBottom = false,
-    isByMe,
-    displayThreadReplies,
-    bottom,
-  } = props;
+export default function MessageProfile(props: MessageProfileProps): ReactElement {
+  const { message, channel, userId, chainTop, isByMe, displayThreadReplies, bottom } = props;
   const avatarRef = useRef(null);
 
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
 
-  if (isByMe || chainBottom || !isSendableMessage(message)) {
+  if (isByMe || chainTop || !isSendableMessage(message)) {
     return null;
   }
 
@@ -41,15 +27,8 @@ export default function MessageProfile(
     <ContextMenu
       menuTrigger={(toggleDropdown: () => void): ReactElement => (
         <Avatar
-          className={`sendbird-message-content__left__avatar ${displayThreadReplies ? 'use-thread-replies' : ''
-          }`} // @ts-ignore
-          src={
-            channel?.members?.find(
-              (member) => member?.userId === message.sender.userId,
-            )?.profileUrl
-            || message.sender.profileUrl
-            || ''
-          }
+          className={`sendbird-message-content__left__avatar ${displayThreadReplies ? 'use-thread-replies' : ''}`} // @ts-ignore
+          src={channel?.members?.find((member) => member?.userId === message.sender.userId)?.profileUrl || message.sender.profileUrl || ''}
           // TODO: Divide getting profileUrl logic to utils
           ref={avatarRef}
           width="28px"
@@ -60,7 +39,7 @@ export default function MessageProfile(
           }}
         />
       )}
-      menuItems={(closeDropdown) => (
+      menuItems={(closeDropdown) =>
         renderUserProfile ? (
           renderUserProfile({
             user: message.sender,
@@ -73,7 +52,7 @@ export default function MessageProfile(
             /**
              * parentRef: For catching location(x, y) of MenuItems
              * parentContainRef: For toggling more options(menus & reactions)
-            */
+             */
             parentRef={avatarRef}
             parentContainRef={avatarRef}
             closeDropdown={closeDropdown}
@@ -82,7 +61,7 @@ export default function MessageProfile(
             <UserProfile user={message.sender} onSuccess={closeDropdown} />
           </MenuItems>
         )
-      )}
+      }
     />
   );
 }

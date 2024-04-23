@@ -14,13 +14,6 @@
     justify-content: flex-end;
   }
 
-  .sendbird-message-content__middle {
-    max-width: 400px;
-    @include mobile() {
-      max-width: calc(100vw - 140px);
-    }
-  }
-
   .ui_container_type__wide {
     @include mobile() {
       max-width: 100%;
@@ -102,14 +95,19 @@
       position: relative;
       text-overflow: ellipsis;
       width: 100%;
+      font-weight: bold;
     }
 
     .sendbird-message-content__middle__quote-message {
       display: inline-flex;
       position: relative;
       width: 100%;
-      &.outgoing { justify-content: flex-end; }
-      &.incoming { justify-content: flex-start; }
+      &.outgoing {
+        justify-content: flex-end;
+      }
+      &.incoming {
+        justify-content: flex-start;
+      }
 
       &:hover {
         cursor: pointer;
@@ -123,7 +121,9 @@
     padding-top: 18px;
     position: relative;
     width: 50px;
-    &.use-reactions { width: 70px; }
+    &.use-reactions {
+      width: 70px;
+    }
 
     &.chain-top {
       padding-top: 2px;
@@ -183,7 +183,9 @@
     justify-content: flex-end;
     position: relative;
     width: 50px;
-    &.use-reactions { width: 70px; }
+    &.use-reactions {
+      width: 70px;
+    }
 
     &.use-quote {
       .sendbird-message-content-menu {
@@ -214,8 +216,12 @@
       display: inline-flex;
       position: relative;
       width: 100%;
-      &.outgoing { justify-content: flex-end; }
-      &.incoming { justify-content: flex-start; }
+      &.outgoing {
+        justify-content: flex-end;
+      }
+      &.incoming {
+        justify-content: flex-start;
+      }
     }
 
     .sendbird-message-content__middle__body-container {
@@ -303,23 +309,33 @@
   max-width: 400px;
   position: relative;
   width: 100%;
-  @include themed() { background-color: t(bg-1); }
+  @include themed() {
+    background-color: t(bg-1);
+  }
 
   &.primary {
-    @include themed() { background-color: t(primary-3); }
+    @include themed() {
+      background-color: t(primary-3);
+    }
   }
 
   &.mouse-hover,
   &:hover {
-    @include themed() { background-color: t(bg-2); }
+    @include themed() {
+      background-color: t(bg-2);
+    }
 
     &.primary {
-      @include themed() { background-color: t(primary-4); }
+      @include themed() {
+        background-color: t(primary-4);
+      }
     }
   }
 
   &.image-grid {
-    @include themed() { background-color: t(bg-1); }
+    @include themed() {
+      background-color: t(bg-1);
+    }
   }
 }
 

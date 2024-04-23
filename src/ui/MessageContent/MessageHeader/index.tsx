@@ -11,17 +11,10 @@ export interface MessageHeaderProps {
 }
 
 export default function MessageHeader(props: MessageHeaderProps): ReactElement {
-  const {
-    channel,
-    message,
-  } = props;
+  const { channel, message } = props;
 
   return (
-    <Label
-      className="sendbird-message-content__middle__sender-name"
-      type={LabelTypography.CAPTION_2}
-      color={LabelColors.ONBACKGROUND_2}
-    >
+    <Label className="sendbird-message-content__middle__sender-name" type={LabelTypography.CAPTION_2}>
       {
         /**
          * To use the latest member profile information, message.sender might be outdated
