@@ -1,5 +1,5 @@
 {
-  "name": "@sendbird/uikit-react",
+  "name": "@emocional/sendbird-uikit-react",
   "description": "Sendbird UIKit for React: A feature-rich and customizable chat UI kit with messaging, channel management, and user authentication.",
   "keywords": [
     "sendbird",
@@ -23,17 +23,18 @@
   "main": "cjs/index.js",
   "types": "types/index.d.ts",
   "style": "dist/index.css",
-  "files": [
-    "**/*"
-  ],
+  "files": ["**/*"],
   "repository": {
     "type": "git",
-    "url": "git+git@github.com:sendbird/sendbird-uikit-react-sources.git"
+    "url": "git+ssh://git@github.com/emocional/sendbird-uikit-react.git"
   },
   "author": "SendBird <support@sendbird.com>",
   "license": "SEE LICENSE IN LICENSE.md",
   "bugs": {
     "url": "https://community.sendbird.com"
   },
-  "homepage": "https://sendbird.com"
+  "homepage": "https://sendbird.com",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  }
 }
