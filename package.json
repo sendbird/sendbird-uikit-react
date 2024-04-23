@@ -44,7 +44,7 @@
     "reset": "yarn cache clean; yarn install",
     "prepublishOnly": "yarn build",
     "predeploy": "yarn clean-release; yarn install; yarn build",
-    "storybook": "storybook dev -p 6006 -s public",
+    "storybook": "storybook dev -p 6006",
     "storybook:stable": "NODE_OPTIONS=--openssl-legacy-provider && storybook dev -p 6006",
     "build-storybook": "storybook build",
     "lint": "yarn eslint; yarn eslint-ts",

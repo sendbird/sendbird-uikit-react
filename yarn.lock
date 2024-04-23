@@ -57,7 +57,11 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@babel/core@npm:^7.11.6, @babel/core@npm:^7.12.3, @babel/core@npm:^7.17.9, @babel/core@npm:^7.18.9, @babel/core@npm:^7.21.3, @babel/core@npm:^7.23.0, @babel/core@npm:^7.23.2, @babel/core@npm:^7.23.5, @babel/core@npm:^7.23.9":
+=======
+"@babel/core@npm:^7.11.6, @babel/core@npm:^7.12.3, @babel/core@npm:^7.17.9, @babel/core@npm:^7.18.9, @babel/core@npm:^7.21.3, @babel/core@npm:^7.23.0, @babel/core@npm:^7.23.2, @babel/core@npm:^7.23.9":
+>>>>>>> 15714677 (Use des in controls & Decrease version of addons)
   version: 7.24.4
   resolution: "@babel/core@npm:7.24.4"
   dependencies:
@@ -1223,6 +1227,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@babel/plugin-transform-react-jsx-self@npm:^7.23.3":
   version: 7.24.1
   resolution: "@babel/plugin-transform-react-jsx-self@npm:7.24.1"
@@ -1245,6 +1250,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> 15714677 (Use des in controls & Decrease version of addons)
 "@babel/plugin-transform-react-jsx@npm:^7.22.5, @babel/plugin-transform-react-jsx@npm:^7.23.4":
   version: 7.23.4
   resolution: "@babel/plugin-transform-react-jsx@npm:7.23.4"
@@ -2366,6 +2373,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@remix-run/router@npm:1.15.3":
   version: 1.15.3
   resolution: "@remix-run/router@npm:1.15.3"
@@ -2373,6 +2381,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> 15714677 (Use des in controls & Decrease version of addons)
 "@rollup/plugin-babel@npm:^6.0.4":
   version: 6.0.4
   resolution: "@rollup/plugin-babel@npm:6.0.4"
@@ -4588,7 +4598,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@types/react@npm:*, @types/react@npm:^16.8.0 || ^17.0.0 || ^18.0.0, @types/react@npm:^18.2.66":
+  version: 18.2.79
+  resolution: "@types/react@npm:18.2.79"
+=======
+"@types/react@npm:*":
+  version: 18.2.78
+  resolution: "@types/react@npm:18.2.78"
+>>>>>>> 15714677 (Use des in controls & Decrease version of addons)
+  dependencies:
+    "@types/prop-types": "*"
+    csstype: ^3.0.2
+  checksum: 85aa96e0e88725c84d8fc5f04f10a4da6a1f507dde33557ac9cc211414756867721264bfefd9e02bae1288ce2905351d949b652b931e734ea24519ee5c625138
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:^16.8.0 || ^17.0.0 || ^18.0.0":
   version: 18.2.79
   resolution: "@types/react@npm:18.2.79"
   dependencies:
@@ -4954,6 +4980,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@typescript-eslint/visitor-keys@npm:7.7.1":
   version: 7.7.1
   resolution: "@typescript-eslint/visitor-keys@npm:7.7.1"
@@ -4985,6 +5012,8 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+=======
+>>>>>>> 15714677 (Use des in controls & Decrease version of addons)
 "@ungap/structured-clone@npm:^1.0.0, @ungap/structured-clone@npm:^1.2.0":
   version: 1.2.0
   resolution: "@ungap/structured-clone@npm:1.2.0"
@@ -4992,6 +5021,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@vitejs/plugin-react@npm:^4.2.1":
   version: 4.2.1
   resolution: "@vitejs/plugin-react@npm:4.2.1"
@@ -5007,6 +5037,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> 15714677 (Use des in controls & Decrease version of addons)
 "@webassemblyjs/ast@npm:1.12.1, @webassemblyjs/ast@npm:^1.12.1":
   version: 1.12.1
   resolution: "@webassemblyjs/ast@npm:1.12.1"
@@ -7027,9 +7059,15 @@ __metadata:
   linkType: hard
 
 "core-js-pure@npm:^3.30.2":
+<<<<<<< HEAD
   version: 3.37.0
   resolution: "core-js-pure@npm:3.37.0"
   checksum: 206797d88046f4f5a62ecb9a7158bc6ba38127db2239bcbd1e85b2c8cf3cfb9bb3bbc6a312ecf0f87702f87659959d10625aeac74de6336a9303866f7010d364
+=======
+  version: 3.36.1
+  resolution: "core-js-pure@npm:3.36.1"
+  checksum: 5318607e4bca7cc25f4de0a1bbb9f25a0f4d2e6c14963ccc1c7b4fe8a245bdf7ff1453b61e2b36b1eb486c9259399862b9a1f2d6bda2b0dcbc74a7e334628e20
+>>>>>>> 15714677 (Use des in controls & Decrease version of addons)
   languageName: node
   linkType: hard
 
@@ -15609,6 +15647,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "react-refresh@npm:^0.14.0":
   version: 0.14.0
   resolution: "react-refresh@npm:0.14.0"
@@ -15640,6 +15679,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> 15714677 (Use des in controls & Decrease version of addons)
 "react@npm:^16.8.0 || ^17.0.0 || ^18.0.0, react@npm:^18.2.0":
   version: 18.2.0
   resolution: "react@npm:18.2.0"
@@ -18078,9 +18119,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "typescript@npm:^5.2.2, typescript@npm:^5.4.5":
   version: 5.4.5
   resolution: "typescript@npm:5.4.5"
+=======
+"typescript@npm:^4.7.4":
+  version: 4.9.5
+  resolution: "typescript@npm:4.9.5"
+>>>>>>> 15714677 (Use des in controls & Decrease version of addons)
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
