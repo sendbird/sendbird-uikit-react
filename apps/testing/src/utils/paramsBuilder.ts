@@ -41,12 +41,14 @@ export const useConfigParams = (initParams: InitialParams): ParamsAsProps => {
       for (let i = 0; i < keys.length; i++) {
         const isTargetKey = i === keys.length - 1;
         if (isTargetKey) {
+          // Handle the multiple select props
           if (key === 'groupChannel_typingIndicatorTypes') {
             target[keys[i]] = new Set(value.split(','));
           } else {
             target[keys[i]] = parseValue(value);
           }
         } else {
+          // Make object which is separated by `_`
           if (!target[keys[i]]) target[keys[i]] = {};
           target = target[keys[i]];
         }
