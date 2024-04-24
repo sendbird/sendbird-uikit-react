@@ -31,8 +31,8 @@ export default function MessageProfile(props: MessageProfileProps): ReactElement
           src={channel?.members?.find((member) => member?.userId === message.sender.userId)?.profileUrl || message.sender.profileUrl || ''}
           // TODO: Divide getting profileUrl logic to utils
           ref={avatarRef}
-          width="28px"
-          height="28px"
+          width="36px"
+          height="36px"
           bottom={bottom}
           onClick={(): void => {
             if (!disableUserProfile) toggleDropdown();

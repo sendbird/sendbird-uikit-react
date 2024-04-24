@@ -26,6 +26,7 @@ export const AvatarInner = ({ src = '', alt = '', height, width, customDefaultCo
         width={width}
         alt={alt}
         defaultComponent={defaultComponent}
+        borderRadius={'6px'}
       />
     );
   }
@@ -40,6 +41,7 @@ export const AvatarInner = ({ src = '', alt = '', height, width, customDefaultCo
           width={width}
           alt={alt}
           defaultComponent={defaultComponent}
+          borderRadius={'6px'}
         />
       );
     }
@@ -131,7 +133,6 @@ interface AvatarProps {
   zIndex?: string | number;
   left?: string;
   bottom?: string;
-  top?: string;
   src?: string | Array<string>;
   alt?: string;
   onClick?(): void;
@@ -148,7 +149,6 @@ function Avatar(
     zIndex = 0,
     left = '',
     bottom = '',
-    top = '',
     onClick,
     customDefaultComponent,
   }: AvatarProps,
@@ -165,7 +165,6 @@ function Avatar(
         zIndex,
         left,
         bottom,
-        top,
       }}
       onClick={onClick}
       onKeyDown={onClick}

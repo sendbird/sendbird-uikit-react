@@ -27,9 +27,7 @@ export default function TextMessageItemBody({
   isReactionEnabled = false,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
-  const isMessageMentioned = isMentionEnabled
-    && message?.mentionedMessageTemplate?.length > 0
-    && message?.mentionedUsers?.length > 0;
+  const isMessageMentioned = isMentionEnabled && message?.mentionedMessageTemplate?.length > 0 && message?.mentionedUsers?.length > 0;
   const tokens = useMemo(() => {
     if (isMessageMentioned) {
       return tokenizeMessage({
@@ -42,29 +40,24 @@ export default function TextMessageItemBody({
     });
   }, [message?.updatedAt, message?.message]);
   return (
-    <Label
-      type={LabelTypography.BODY_1}
-      color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
-    >
-      <div className={getClassName([
-        className,
-        TEXT_MESSAGE_BODY_CLASSNAME,
-        isByMe ? 'outgoing' : 'incoming',
-        mouseHover ? 'mouse-hover' : '',
-        (isReactionEnabled && message?.reactions?.length > 0) ? 'reactions' : '',
-      ])}>
+    <Label type={LabelTypography.BODY_1} color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}>
+      <div
+        className={getClassName([
+          className,
+          TEXT_MESSAGE_BODY_CLASSNAME,
+          isReactionEnabled && message?.reactions?.length > 0 ? 'reactions' : '',
+        ])}
+      >
         <TextFragment tokens={tokens} />
-        {
-          isEditedMessage(message) && (
-            <Label
-              className="sendbird-text-message-item-body__message edited"
-              type={LabelTypography.BODY_1}
-              color={isByMe ? LabelColors.ONCONTENT_2 : LabelColors.ONBACKGROUND_2}
-            >
-              {` ${stringSet.MESSAGE_EDITED} `}
-            </Label>
-          )
-        }
+        {isEditedMessage(message) && (
+          <Label
+            className="sendbird-text-message-item-body__message edited"
+            type={LabelTypography.BODY_1}
+            color={isByMe ? LabelColors.ONCONTENT_2 : LabelColors.ONBACKGROUND_2}
+          >
+            {` ${stringSet.MESSAGE_EDITED} `}
+          </Label>
+        )}
       </div>
     </Label>
   );

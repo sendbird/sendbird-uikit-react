@@ -1,7 +1,7 @@
 @import '../../styles/variables';
 
 .sendbird-avatar {
-  border-radius: 50%;
+  border-radius: 6px;
   display: inline-block;
   overflow: hidden;
   position: relative;
@@ -88,7 +88,7 @@
       }
     }
   }
-  
+
   .sendbird-avatar-text {
     font-family: Roboto;
     font-size: 8px;

@@ -4,29 +4,13 @@
   position: relative;
   display: inline-block;
   box-sizing: content-box;
-  padding: 8px 12px;
-  border-radius: 16px;
+  padding-left: 12px;
 
   white-space: pre-line;
   word-break: break-word;
 
   &.reactions {
     border-radius: 16px 16px 0px 0px;
-  }
-  &.incoming {
-    @include themed() { background-color: t(bg-1) }
-  }
-  &.outgoing {
-    @include themed() { background-color: t(primary-3) }
-  }
-
-  &.mouse-hover, &:hover {
-    &.incoming {
-      @include themed() { background-color: t(bg-2) }
-    }
-    &.outgoing {
-      @include themed() { background-color: t(primary-4) }
-    }
   }
 
   .sendbird-text-message-item-body__text-bubble__message {
