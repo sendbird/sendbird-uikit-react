@@ -127,7 +127,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     renderMobileMenuOnLongPress = (props: MobileBottomSheetProps) => <MobileMenu {...props} />,
   } = deleteNullish(props);
 
-  const { dateLocale } = useLocalization();
   const { config, eventHandlers } = useSendbirdStateContext();
   const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;

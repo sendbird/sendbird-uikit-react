@@ -19,11 +19,11 @@ export const TypingIndicatorText = ({ members }: TypingIndicatorTextProps) => {
     }
 
     if (members && members.length === 1) {
-      return `${members[0].nickname} ${stringSet.TYPING_INDICATOR__IS_TYPING}`;
-    }
-
-    if (members && members.length === 2) {
-      return `${members[0].nickname} ${stringSet.TYPING_INDICATOR__AND} ${members[1].nickname} ${stringSet.TYPING_INDICATOR__ARE_TYPING}`;
+      return (
+        <>
+          <span style={{ color: '#4a1ca6ff', fontWeight: 600 }}>{members[0].nickname}</span> {stringSet.TYPING_INDICATOR__IS_TYPING}
+        </>
+      );
     }
 
     return stringSet.TYPING_INDICATOR__MULTIPLE_TYPING;
