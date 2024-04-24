@@ -5,6 +5,8 @@
   flex-direction: row;
   position: relative;
   width: 100%;
+  padding-right: 16px;
+  padding-left: 16px;
 
   &.incoming {
     justify-content: flex-start;
@@ -49,7 +51,7 @@
     position: relative;
 
     .sendbird-message-content__left__avatar {
-      margin-top: 6px;
+      margin-top: 10px;
       &.multiple {
         border: 2px solid;
         @include themed() {
@@ -124,14 +126,10 @@
   }
 
   .sendbird-message-content__right {
-    display: inline-flex;
-    margin-left: 4px;
-    padding-top: 18px;
-    position: relative;
-    width: 50px;
-    &.use-reactions {
-      width: 70px;
-    }
+    position: absolute;
+    z-index: 10;
+    right: 8px;
+    top: -10px;
 
     &.chain-top {
       padding-top: 2px;
@@ -144,8 +142,14 @@
     .sendbird-message-content-menu {
       display: none;
       flex-direction: row;
-      height: 32px;
-      position: relative;
+      background-color: white;
+      border: 1px solid #fafafaff;
+      border-radius: 8px;
+      height: min-content;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      flex-direction: row;
+      justify-content: space-between;
+      min-width: 80px;
 
       &.sendbird-mouse-hover {
         display: inline-flex;
