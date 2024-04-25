@@ -21,15 +21,13 @@ export interface UserListItemProps {
   disabled?: boolean;
   disableMessaging?: boolean;
   currentUser?: string;
-  action?({ actionRef, parentRef }: {
-    actionRef: MutableRefObject<any>,
-    parentRef?: MutableRefObject<any>,
-  }): ReactElement;
+  action?({ actionRef, parentRef }: { actionRef: MutableRefObject<any>; parentRef?: MutableRefObject<any> }): ReactElement;
   onChange?(e: ChangeEvent<HTMLInputElement>): void;
   avatarSize?: string;
   /** @deprecated Please use the onUserAvatarClick instead */
-  onClick?(): void,
-  onUserAvatarClick?(): void,
+  onClick?(): void;
+  onUserAvatarClick?(): void;
+  onSubmit?: (item: string) => void;
 }
 
 export default function UserListItem({
@@ -46,6 +44,7 @@ export default function UserListItem({
   avatarSize = '40px',
   onClick,
   onUserAvatarClick,
+  onSubmit,
 }: UserListItemProps): ReactElement {
   const operator = isOperator ?? (user as Member)?.role === 'operator';
   const uniqueKey = user.userId;
@@ -56,17 +55,12 @@ export default function UserListItem({
   const { stringSet } = useContext(LocalizationContext);
   return (
     <div
-      className={[
-        ...(Array.isArray(className) ? className : [className]),
-        'sendbird-user-list-item',
-      ].join(' ')}
+      className={[...(Array.isArray(className) ? className : [className]), 'sendbird-user-list-item'].join(' ')}
       ref={parentRef}
+      style={{ cursor: 'pointer' }}
+      onClick={() => onSubmit(user.userId)}
     >
-      {
-        (user as Member)?.isMuted && (
-          <MutedAvatarOverlay height={40} width={40} />
-        )
-      }
+      {(user as Member)?.isMuted && <MutedAvatarOverlay height={40} width={40} />}
       <ContextMenu
         menuTrigger={(toggleDropdown) => (
           <Avatar
@@ -83,94 +77,60 @@ export default function UserListItem({
             }}
           />
         )}
-        menuItems={(closeDropdown) => (
-          renderUserProfile
-            ? renderUserProfile({
+        menuItems={(closeDropdown) =>
+          renderUserProfile ? (
+            renderUserProfile({
               user,
               currentUserId: currentUser,
               close: closeDropdown,
               avatarRef,
             })
-            : (
-              <MenuItems
-                openLeft
-                parentRef={avatarRef}
-                // for catching location(x, y) of MenuItems
-                parentContainRef={avatarRef}
-                // for toggling more options(menus & reactions)
-                closeDropdown={closeDropdown}
-                style={{ paddingTop: '0px', paddingBottom: '0px' }}
-              >
-                <UserProfile
-                  disableMessaging={disableMessaging}
-                  user={user}
-                  currentUserId={currentUser}
-                  onSuccess={closeDropdown}
-                />
-              </MenuItems>
-            )
-        )}
+          ) : (
+            <MenuItems
+              openLeft
+              parentRef={avatarRef}
+              // for catching location(x, y) of MenuItems
+              parentContainRef={avatarRef}
+              // for toggling more options(menus & reactions)
+              closeDropdown={closeDropdown}
+              style={{ paddingTop: '0px', paddingBottom: '0px' }}
+            >
+              <UserProfile disableMessaging={disableMessaging} user={user} currentUserId={currentUser} onSuccess={closeDropdown} />
+            </MenuItems>
+          )
+        }
       />
-      <Label
-        className="sendbird-user-list-item__title"
-        type={LabelTypography.SUBTITLE_1}
-        color={LabelColors.ONBACKGROUND_1}
-      >
+      <Label className="sendbird-user-list-item__title" type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
         {user.nickname || stringSet.NO_NAME}
-        {(currentUser === user.userId) && (
-          stringSet.CHANNEL_SETTING__MEMBERS__YOU
-        )}
+        {currentUser === user.userId && stringSet.CHANNEL_SETTING__MEMBERS__YOU}
       </Label>
-      { // if there is now nickname, display userId
+      {
+        // if there is now nickname, display userId
         !user.nickname && (
-          <Label
-            className="sendbird-user-list-item__subtitle"
-            type={LabelTypography.CAPTION_3}
-            color={LabelColors.ONBACKGROUND_2}
-          >
+          <Label className="sendbird-user-list-item__subtitle" type={LabelTypography.CAPTION_3} color={LabelColors.ONBACKGROUND_2}>
             {user.userId}
           </Label>
         )
       }
-      {
-        checkBox && (
-          <label
-            className="sendbird-user-list-item__checkbox"
-            htmlFor={uniqueKey}
-          >
-            <Checkbox
-              id={uniqueKey}
-              checked={checked}
-              disabled={disabled}
-              onChange={(event) => onChange(event)}
-            />
-          </label>
-        )
-      }
-      {
-        operator && (
-          <Label
-            className={[
-              'sendbird-user-list-item__operator',
-              checkBox ? 'checkbox' : '',
-            ].join(' ')}
-            type={LabelTypography.SUBTITLE_2}
-            color={LabelColors.ONBACKGROUND_2}
-          >
-            {stringSet.LABEL__OPERATOR}
-          </Label>
-        )
-      }
-      {
-        action && (
-          <div
-            className="sendbird-user-list-item__action"
-            ref={actionRef}
-          >
-            {action({ actionRef, parentRef })}
-          </div>
-        )
-      }
+      {checkBox && (
+        <label className="sendbird-user-list-item__checkbox" htmlFor={uniqueKey}>
+          <Checkbox id={uniqueKey} checked={checked} disabled={disabled} onChange={(event) => onChange(event)} />
+        </label>
+      )}
+      {operator && (
+        <Label
+          className={['sendbird-user-list-item__operator', checkBox ? 'checkbox' : ''].join(' ')}
+          type={LabelTypography.SUBTITLE_2}
+          color={LabelColors.ONBACKGROUND_2}
+        >
+          {stringSet.LABEL__OPERATOR}
+        </Label>
+      )}
+      {action && (
+        <div className="sendbird-user-list-item__action" ref={actionRef}>
+          {action({ actionRef, parentRef })}
+        </div>
+      )}
     </div>
   );
 }
