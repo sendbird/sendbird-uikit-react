@@ -74,6 +74,13 @@ function buildTypeDefinitions() {
   execSync('tsc --project tsconfig.json --emitDeclarationOnly --declarationDir dist/types --declaration', { stdio: 'inherit' });
 }
 
+// TODO [APP-7035] We should be able to do this in Rollup or Postcss.
+function removeGoogleFontImports() {
+  const data = fs.readFileSync('dist/dist/index.css', 'utf-8');
+  const newValue = data.replaceAll("@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,600,700&display=swap');", '');
+  fs.writeFileSync('dist/dist/index.css', newValue, 'utf-8');
+}
+
 /** Copy content of package.json to dist, but remove unnecessary fields */
 movePackageJSON();
 /** Copy content of package.json to dist/cjs, to support cjs module separately */
@@ -81,3 +88,5 @@ copyCJSPackageJSON();
 
 removeUnusedCSS();
 buildTypeDefinitions();
+
+removeGoogleFontImports();
