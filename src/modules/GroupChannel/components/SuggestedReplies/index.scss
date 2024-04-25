@@ -17,11 +17,22 @@
       margin-top: 8px;
     }
   }
+
   &.horizontal {
     display: flex;
     flex-direction: row;
     overflow-x: scroll;
-    padding-left: 64px;
+
+    margin-left: -$messages-padding;
+    margin-right: -$messages-padding;
+    padding-left: $messages-padding;
+    padding-right: $messages-padding;
+    @include mobile() {
+      margin-left: -$messages-padding-mobile;
+      margin-right: -$messages-padding-mobile;
+      padding-left: calc(40px + $messages-padding-mobile);
+      padding-right: $messages-padding-mobile;
+    }
     .sendbird-suggested-replies__option:not(:last-child) {
       margin-right: 8px;
     }
