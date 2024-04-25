@@ -68,16 +68,13 @@ export const GroupChannelListItemView = ({
     },
     {
       delay: 1000,
-    },
+    }
   );
 
   return (
     <>
       <div
-        className={[
-          'sendbird-channel-preview',
-          isSelected ? 'sendbird-channel-preview--active' : '',
-        ].join(' ')}
+        className={['sendbird-channel-preview', isSelected ? 'sendbird-channel-preview--active' : ''].join(' ')}
         role="link"
         tabIndex={tabIndex}
         {...(isMobile ? { ...onLongPress } : { onClick })}
@@ -90,12 +87,7 @@ export const GroupChannelListItemView = ({
             <div className="sendbird-channel-preview__content__upper__header">
               {(channel.isBroadcast || false) && (
                 <div className="sendbird-channel-preview__content__upper__header__broadcast-icon">
-                  <Icon
-                    type={IconTypes.BROADCAST}
-                    fillColor={IconColors.SECONDARY}
-                    height="16px"
-                    width="16px"
-                  />
+                  <Icon type={IconTypes.BROADCAST} fillColor={IconColors.SECONDARY} height="16px" width="16px" />
                 </div>
               )}
               <Label
@@ -105,24 +97,9 @@ export const GroupChannelListItemView = ({
               >
                 {channelName}
               </Label>
-              <Label
-                className="sendbird-channel-preview__content__upper__header__total-members"
-                type={LabelTypography.CAPTION_2}
-                color={LabelColors.ONBACKGROUND_2}
-              >
-                {getTotalMembers(channel)}
-              </Label>
-              {(channel.isFrozen) && (
-                <div
-                  title="Frozen"
-                  className="sendbird-channel-preview__content__upper__header__frozen-icon"
-                >
-                  <Icon
-                    type={IconTypes.FREEZE}
-                    fillColor={IconColors.PRIMARY}
-                    height={12}
-                    width={12}
-                  />
+              {channel.isFrozen && (
+                <div title="Frozen" className="sendbird-channel-preview__content__upper__header__frozen-icon">
+                  <Icon type={IconTypes.FREEZE} fillColor={IconColors.PRIMARY} height={12} width={12} />
                 </div>
               )}
             </div>
@@ -154,15 +131,9 @@ export const GroupChannelListItemView = ({
               type={LabelTypography.BODY_2}
               color={LabelColors.ONBACKGROUND_3}
             >
-              {isTyping && (
-                <TypingIndicatorText members={channel.getTypingUsers()} />
-              )}
-              {!isTyping
-                && !isVoiceMessage(channel.lastMessage as FileMessage | null)
-                && getLastMessage(channel, stringSet)}
-              {!isTyping
-                && isVoiceMessage(channel.lastMessage as FileMessage | null)
-                && stringSet.VOICE_MESSAGE}
+              {isTyping && <TypingIndicatorText members={channel.getTypingUsers()} />}
+              {!isTyping && !isVoiceMessage(channel.lastMessage as FileMessage | null) && getLastMessage(channel, stringSet)}
+              {!isTyping && isVoiceMessage(channel.lastMessage as FileMessage | null) && stringSet.VOICE_MESSAGE}
             </Label>
             {
               /**
@@ -173,10 +144,7 @@ export const GroupChannelListItemView = ({
               !isSelected && !channel.isEphemeral && (
                 <div className="sendbird-channel-preview__content__lower__unread-message-count">
                   {isMentionEnabled && channel.unreadMentionCount > 0 ? (
-                    <MentionUserLabel
-                      className="sendbird-channel-preview__content__lower__unread-message-count__mention"
-                      color="purple"
-                    >
+                    <MentionUserLabel className="sendbird-channel-preview__content__lower__unread-message-count__mention" color="purple">
                       {'@'}
                     </MentionUserLabel>
                   ) : null}
@@ -188,11 +156,7 @@ export const GroupChannelListItemView = ({
             }
           </div>
         </div>
-        {!isMobile && (
-          <div className="sendbird-channel-preview__action">
-            {renderChannelAction({ channel })}
-          </div>
-        )}
+        {!isMobile && <div className="sendbird-channel-preview__action">{renderChannelAction({ channel })}</div>}
       </div>
       {/*
         Event from portal is transferred to parent
@@ -215,10 +179,7 @@ export const GroupChannelListItemView = ({
             }}
             className="sendbird-channel-preview__leave-label--mobile"
           >
-            <Label
-              type={LabelTypography.SUBTITLE_1}
-              color={LabelColors.ONBACKGROUND_1}
-            >
+            <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
               {stringSet.CHANNEL_PREVIEW_MOBILE_LEAVE}
             </Label>
           </TextButton>

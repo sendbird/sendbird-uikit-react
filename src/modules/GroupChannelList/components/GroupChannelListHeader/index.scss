@@ -11,7 +11,7 @@
   position: relative;
   height: 64px;
   min-height: 64px;
-  width: 320px;
+  width: 100%;
   padding: 8px 64px 8px 8px;
   box-sizing: border-box;
   @include themed() {
