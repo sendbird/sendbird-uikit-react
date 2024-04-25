@@ -4,6 +4,7 @@ import { EmojiContainer, User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { FileMessage, UserMessage, UserMessageCreateParams, UserMessageUpdateParams } from '@sendbird/chat/message';
 import format from 'date-fns/format';
+import es from 'date-fns/locale/es';
 
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
@@ -169,7 +170,8 @@ const MessageView = (props: MessageViewProps) => {
   const editMessageInputRef = useRef(null);
   const messageScrollRef = useRef(null);
 
-  const displaySuggestedMentionList = isOnline && isMentionEnabled && mentionNickname.length > 0 && !isDisabledBecauseFrozen(channel) && !isDisabledBecauseMuted(channel);
+  const displaySuggestedMentionList =
+    isOnline && isMentionEnabled && mentionNickname.length > 0 && !isDisabledBecauseFrozen(channel) && !isDisabledBecauseMuted(channel);
 
   const mentionNodes = useDirtyGetMentions({ ref: editMessageInputRef }, { logger });
   const ableMention = mentionNodes?.length < maxUserMentionCount;
@@ -184,7 +186,7 @@ const MessageView = (props: MessageViewProps) => {
           mentionedUserIds.splice(i, 1);
           return true;
         }
-      }),
+      })
     );
   }, [mentionedUserIds]);
 
@@ -212,14 +214,14 @@ const MessageView = (props: MessageViewProps) => {
       timeouts.push(
         setTimeout(() => {
           setIsAnimated(true);
-        }, 500),
+        }, 500)
       );
 
       timeouts.push(
         setTimeout(() => {
           setAnimatedMessageId(null);
           onMessageAnimated?.();
-        }, 1600),
+        }, 1600)
       );
     } else {
       setIsAnimated(false);
@@ -270,14 +272,13 @@ const MessageView = (props: MessageViewProps) => {
           onMessageHeightChange: handleScroll,
           onBeforeDownloadFileMessage,
         })}
-        { /* Suggested Replies */ }
-        {
-          shouldRenderSuggestedReplies && renderSuggestedReplies({
+        {/* Suggested Replies */}
+        {shouldRenderSuggestedReplies &&
+          renderSuggestedReplies({
             replyOptions: getSuggestedReplies(message),
             onSendMessage: sendUserMessage,
             message,
-          })
-        }
+          })}
         {/* Modal */}
         {showRemove && renderRemoveMessageModal({ message, onCancel: () => setShowRemove(false) })}
         {showFileViewer && renderFileViewer({ message: message as FileMessage, onCancel: () => setShowFileViewer(false) })}
@@ -356,11 +357,11 @@ const MessageView = (props: MessageViewProps) => {
             }}
             onKeyDown={(e) => {
               if (
-                displaySuggestedMentionList
-                && mentionSuggestedUsers?.length > 0
-                && ((e.key === MessageInputKeys.Enter && ableMention)
-                  || e.key === MessageInputKeys.ArrowUp
-                  || e.key === MessageInputKeys.ArrowDown)
+                displaySuggestedMentionList &&
+                mentionSuggestedUsers?.length > 0 &&
+                ((e.key === MessageInputKeys.Enter && ableMention) ||
+                  e.key === MessageInputKeys.ArrowUp ||
+                  e.key === MessageInputKeys.ArrowDown)
               ) {
                 setMessageInputEvent(e);
                 return true;
@@ -375,22 +376,19 @@ const MessageView = (props: MessageViewProps) => {
 
   return (
     <div
-      className={getClassName([
-        'sendbird-msg-hoc sendbird-msg--scroll-ref',
-        isAnimated ? 'sendbird-msg-hoc__animated' : '',
-      ])}
+      className={getClassName(['sendbird-msg-hoc sendbird-msg--scroll-ref', isAnimated ? 'sendbird-msg-hoc__animated' : ''])}
       style={children || renderMessage ? undefined : { marginBottom: '2px' }}
       data-sb-message-id={message.messageId}
       data-sb-created-at={message.createdAt}
       ref={messageScrollRef}
     >
       {/* date-separator */}
-      {hasSeparator
-        && (renderedCustomSeparator || (
+      {hasSeparator &&
+        (renderedCustomSeparator || (
           <DateSeparator>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
               {format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, {
-                locale: dateLocale,
+                locale: es,
               })}
             </Label>
           </DateSeparator>

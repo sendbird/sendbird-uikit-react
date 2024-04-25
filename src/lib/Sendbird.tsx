@@ -300,10 +300,10 @@ const SendbirdSDK = ({
 
   const localeStringSet = React.useMemo(() => {
     if (!stringSet) {
-      return getStringSet('en');
+      return getStringSet('es');
     }
     return {
-      ...getStringSet('en'),
+      ...getStringSet('es'),
       ...stringSet,
     };
   }, [stringSet]);

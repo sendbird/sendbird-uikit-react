@@ -12,15 +12,7 @@ type LabelProps = {
   color?: ObjectValues<typeof Colors>;
   children?: React.ReactNode;
 };
-export function Label(
-  {
-    className = [],
-    type,
-    color,
-    children = null,
-  }: LabelProps,
-  ref?: RefObject<HTMLDivElement>,
-) {
+export function Label({ className = [], type, color, children = null }: LabelProps, ref?: RefObject<HTMLDivElement>) {
   return (
     // Donot make this into div
     // Mention uses Label. If we use div, it would break the mention detection on Paste
@@ -41,7 +33,7 @@ export function Label(
 
 const LabelTypography = Typography;
 const LabelColors = Colors;
-const LabelStringSet = getStringSet('en');
+const LabelStringSet = getStringSet('es');
 export { LabelTypography, LabelColors, LabelStringSet };
 
 export default React.forwardRef(Label);
