@@ -18,11 +18,16 @@
     }
   }
   &.horizontal {
-    width: fit-content;
-    margin-left: 64px;
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+    padding-left: 64px;
     .sendbird-suggested-replies__option:not(:last-child) {
       margin-right: 8px;
     }
+  }
+  &::-webkit-scrollbar {
+    display: none;
   }
   @include themed() {
     font-family: var(--sendbird-font-family-default);
