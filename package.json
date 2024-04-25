@@ -1,6 +1,6 @@
 {
   "name": "@gathertown/sendbird-uikit-react",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Sendbird UIKit for React: A feature-rich and customizable chat UI kit with messaging, channel management, and user authentication.",
   "keywords": [
     "sendbird",
