@@ -24,14 +24,21 @@
   }
 }
 
+.sendbird-ui-header--is-desktop {
+  max-width: 176px;
+}
+.sendbird-ui-header--is-mobile {
+  max-width: 80px;
+}
+
 .sendbird-ui-header__left {
   position: relative;
   left: 0px;
 
   flex: 0 0 auto;
   display: inline-flex;
+  align-items: center;
 
-  max-width: 80px;
   margin-right: 8px;
 }
 
@@ -58,7 +65,7 @@
 
   flex: 0 0 auto;
   display: inline-flex;
+  align-items: center;
 
-  max-width: 80px;
   margin-left: 8px;
 }

@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 import './index.scss';
 import Label, { LabelColors, LabelTypography } from '../Label';
+import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 
 export interface HeaderCustomProps {
   renderLeft?: () => ReactElement;
@@ -20,11 +21,18 @@ export const Header = ({
   renderRight,
   renderMiddle,
 }: HeaderProps) => {
+  let isMobile = false;
+  try {
+    isMobile = useMediaQueryContext?.()?.isMobile;
+  } catch (err) {
+    // TODO: handle it
+  }
+
   return (
     <div className={`sendbird-ui-header ${className}`}>
       {
         renderLeft ? (
-          <div className="sendbird-ui-header__left">
+          <div className={`sendbird-ui-header__left sendbird-ui-header--is-${isMobile ? 'mobile' : 'desktop'}`}>
             {renderLeft?.()}
           </div>
         ) : null
@@ -55,7 +63,7 @@ export const Header = ({
       </div>
       {
         renderRight ? (
-          <div className="sendbird-ui-header__right">
+          <div className={`sendbird-ui-header__right sendbird-ui-header--is-${isMobile ? 'mobile' : 'desktop'}`}>
             {renderRight?.()}
           </div>
         ) : null
