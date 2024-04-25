@@ -103,10 +103,8 @@
     "@typescript-eslint/parser": "^6.17.0",
     "autoprefixer": "^9.7.4",
     "babel-jest": "^29.0.1",
-    "babel-loader": "^8.0.6",
     "browserslist": "^4.14.5",
     "caniuse-lite": "^1.0.30001148",
-    "css-loader": "^3.4.2",
     "eslint": "^8.40.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -122,10 +120,8 @@
     "jest-environment-jsdom": "29.5.0",
     "jest-extended": "^3.2.4",
     "jsdom": "^20.0.0",
-    "np": "^7.5.0",
     "plop": "^2.5.3",
     "postcss": "^8.3.5",
-    "postcss-loader": "^8.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rollup": "^4.9.2",
@@ -141,15 +137,11 @@
     "stylelint": "^13.0.0",
     "stylelint-config-sass-guidelines": "^7.0.0",
     "ts-pattern": "^4.2.2",
-    "tslib": "^2.0.0",
     "typescript": "^5.4.5",
     "vite": "^5.1.5",
     "vite-plugin-svgr": "^4.2.0"
   },
-  "browserslist": [
-    "defaults",
-    "IE 11"
-  ],
+  "browserslist": ["defaults"],
   "packageManager": "yarn@3.5.0",
   "prettier": {
     "singleQuote": true,
