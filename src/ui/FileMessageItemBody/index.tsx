@@ -43,37 +43,42 @@ export default function FileMessageItemBody({
   const downloadFileWithUrl = () => openURL(message?.url);
   const handleOnClickTextButton = onBeforeDownloadFileMessage
     ? async () => {
-      try {
-        const allowDownload = await onBeforeDownloadFileMessage({ message });
-        if (allowDownload) {
-          downloadFileWithUrl();
-        } else {
-          logger?.info?.('FileMessageItemBody: Not allowed to download.');
+        try {
+          const allowDownload = await onBeforeDownloadFileMessage({ message });
+          if (allowDownload) {
+            downloadFileWithUrl();
+          } else {
+            logger?.info?.('FileMessageItemBody: Not allowed to download.');
+          }
+        } catch (err) {
+          logger?.error?.('FileMessageItemBody: Error occurred while determining download continuation:', err);
         }
-      } catch (err) {
-        logger?.error?.('FileMessageItemBody: Error occurred while determining download continuation:', err);
       }
-    }
     : downloadFileWithUrl;
 
   return (
-    <div className={getClassName([
-      className,
-      'sendbird-file-message-item-body',
-      isByMe ? 'outgoing' : 'incoming',
-      mouseHover ? 'mouse-hover' : '',
-      (isReactionEnabled && message?.reactions?.length > 0) ? 'reactions' : '',
-    ])}>
+    <div
+      className={getClassName([
+        className,
+        'sendbird-file-message-item-body',
+        isByMe ? 'outgoing' : 'incoming',
+        mouseHover ? 'mouse-hover' : '',
+        isReactionEnabled && message?.reactions?.length > 0 ? 'reactions' : '',
+      ])}
+      style={{ marginLeft: 10 }}
+    >
       <div className="sendbird-file-message-item-body__file-icon">
         <Icon
           className="sendbird-file-message-item-body__file-icon__icon"
-          type={{
-            IMAGE: IconTypes.PHOTO,
-            VIDEO: IconTypes.PLAY,
-            AUDIO: IconTypes.FILE_AUDIO,
-            GIF: IconTypes.GIF,
-            OTHERS: IconTypes.FILE_DOCUMENT,
-          }[getUIKitFileType(message?.type)]}
+          type={
+            {
+              IMAGE: IconTypes.PHOTO,
+              VIDEO: IconTypes.PLAY,
+              AUDIO: IconTypes.FILE_AUDIO,
+              GIF: IconTypes.GIF,
+              OTHERS: IconTypes.FILE_DOCUMENT,
+            }[getUIKitFileType(message?.type)]
+          }
           fillColor={IconColors.PRIMARY}
           width="24px"
           height="24px"
