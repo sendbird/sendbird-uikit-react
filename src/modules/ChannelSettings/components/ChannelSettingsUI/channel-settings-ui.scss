@@ -15,9 +15,6 @@
 
   .sendbird-channel-settings__header-icon {
     cursor: pointer;
-    position: absolute;
-    top: 16px;
-    right: 16px;
     .sendbird-channel-settings__close-icon {
       path {
         @include themed() {
@@ -37,7 +34,8 @@
     height: 64px;
     min-height: 64px;
     position: relative;
-    padding: 20px 24px;
+    padding-left: 24px;
+    padding-right: 20px;
     box-sizing: border-box;
     @include themed() {
       border-bottom: solid 1px t(on-bg-4);
