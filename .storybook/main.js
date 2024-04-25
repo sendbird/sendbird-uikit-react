@@ -5,7 +5,7 @@ module.exports = {
     // '../docs/**/*.@(js|mdx)',
   ],
   addons: [
-    '@storybook/addon-docs',
+    // '@storybook/addon-docs',
     '@storybook/addon-actions',
     '@storybook/addon-links',
     '@storybook/preset-scss',
