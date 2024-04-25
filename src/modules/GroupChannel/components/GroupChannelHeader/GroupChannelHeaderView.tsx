@@ -4,14 +4,14 @@ import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import IconButton from '../../../../ui/IconButton';
 import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
-import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 import ChannelAvatar from '../../../../ui/ChannelAvatar';
 import { getChannelTitle } from './utils';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
+import Header, { type HeaderCustomProps } from '../../../../ui/Header';
 
-export interface GroupChannelHeaderViewProps {
+export interface GroupChannelHeaderViewProps extends HeaderCustomProps {
   className?: string;
   currentChannel: GroupChannel;
   showSearchIcon?: boolean;
@@ -27,6 +27,10 @@ export const GroupChannelHeaderView = ({
   onBackClick,
   onSearchClick,
   onChatHeaderActionClick,
+  // Header custom props
+  renderLeft,
+  renderMiddle,
+  renderRight,
 }: GroupChannelHeaderViewProps) => {
   const { config } = useSendbirdStateContext();
   const { userId, theme } = config;
@@ -35,14 +39,15 @@ export const GroupChannelHeaderView = ({
   const { stringSet } = useLocalization();
 
   const isMuted = currentChannel?.myMutedState === 'muted';
-  const subTitle = (currentChannel?.members
-    && currentChannel?.members?.length !== 2);
+  const channelTitle = getChannelTitle(currentChannel, userId, stringSet);
 
   return (
-    <div className={`sendbird-chat-header ${className}`}>
-      <div className="sendbird-chat-header__left">
-        {
-          isMobile && (
+    <Header
+      className={`sendbird-chat-header ${className}`}
+      title={channelTitle}
+      renderLeft={renderLeft ?? (() => (
+        <>
+          {isMobile && (
             <Icon
               className="sendbird-chat-header__icon_back"
               onClick={onBackClick}
@@ -51,33 +56,20 @@ export const GroupChannelHeaderView = ({
               height="24px"
               type={IconTypes.ARROW_LEFT}
             />
-          )
-        }
-        <ChannelAvatar
-          theme={theme}
-          channel={currentChannel}
-          userId={userId}
-          height={32}
-          width={32}
-        />
-        <Label
-          className="sendbird-chat-header__left__title"
-          type={LabelTypography.H_2}
-          color={LabelColors.ONBACKGROUND_1}
-        >
-          {getChannelTitle(currentChannel, userId, stringSet)}
-        </Label>
-        <Label
-          className="sendbird-chat-header__left__subtitle"
-          type={LabelTypography.BODY_1}
-          color={LabelColors.ONBACKGROUND_2}
-        >
-          {subTitle}
-        </Label>
-      </div>
-      <div className="sendbird-chat-header__right">
-        {
-          isMuted && (
+          )}
+          <ChannelAvatar
+            theme={theme}
+            channel={currentChannel}
+            userId={userId}
+            height={32}
+            width={32}
+          />
+        </>
+      ))}
+      renderMiddle={renderMiddle}
+      renderRight={renderRight ?? (() => (
+        <>
+          {isMuted && (
             <Icon
               className="sendbird-chat-header__right__mute"
               type={IconTypes.NOTIFICATIONS_OFF_FILLED}
@@ -85,10 +77,8 @@ export const GroupChannelHeaderView = ({
               width="24px"
               height="24px"
             />
-          )
-        }
-        {
-          (showSearchIcon && !currentChannel?.isEphemeral) && (
+          )}
+          {(showSearchIcon && !currentChannel?.isEphemeral) && (
             <IconButton
               className="sendbird-chat-header__right__search"
               width="32px"
@@ -102,23 +92,23 @@ export const GroupChannelHeaderView = ({
                 height="24px"
               />
             </IconButton>
-          )
-        }
-        <IconButton
-          className="sendbird-chat-header__right__info"
-          width="32px"
-          height="32px"
-          onClick={onChatHeaderActionClick}
-        >
-          <Icon
-            type={IconTypes.INFO}
-            fillColor={IconColors.PRIMARY}
-            width="24px"
-            height="24px"
-          />
-        </IconButton>
-      </div>
-    </div>
+          )}
+          <IconButton
+            className="sendbird-chat-header__right__info"
+            width="32px"
+            height="32px"
+            onClick={onChatHeaderActionClick}
+          >
+            <Icon
+              type={IconTypes.INFO}
+              fillColor={IconColors.PRIMARY}
+              width="24px"
+              height="24px"
+            />
+          </IconButton>
+        </>
+      ))}
+    />
   );
 };
 
