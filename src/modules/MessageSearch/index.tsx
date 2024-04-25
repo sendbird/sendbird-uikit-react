@@ -5,9 +5,9 @@ import MessageSearch, { MessageSearchUIProps } from './components/MessageSearchU
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import Icon, { IconTypes, IconColors } from '../../ui/Icon';
 import IconButton from '../../ui/IconButton';
-import Label, { LabelTypography, LabelColors } from '../../ui/Label';
 import Loader from '../../ui/Loader';
 import { MessageSearchProvider, MessageSearchProviderProps } from './context/MessageSearchProvider';
+import Header from '../../ui/Header';
 
 export interface MessageSearchPannelProps extends
   MessageSearchUIProps, MessageSearchProviderProps {
@@ -63,71 +63,68 @@ function MessageSearchPannel(props: MessageSearchPannelProps): JSX.Element {
 
   return (
     <div className={COMPONENT_CLASS_NAME}>
-      <div className={`${COMPONENT_CLASS_NAME}__header`}>
-        <Label
-          className={`${COMPONENT_CLASS_NAME}__header__title`}
-          type={LabelTypography.H_2}
-          color={LabelColors.ONBACKGROUND_1}
-        >
-          {stringSet.SEARCH_IN_CHANNEL}
-        </Label>
-        <IconButton
-          className={`${COMPONENT_CLASS_NAME}__header__close-button`}
-          width="32px"
-          height="32px"
-          onClick={onCloseClick}
-        >
-          <Icon
-            type={IconTypes.CLOSE}
-            fillColor={IconColors.ON_BACKGROUND_1}
-            width="22px"
-            height="22px"
-          />
-        </IconButton>
-      </div>
+      <Header
+        className={`${COMPONENT_CLASS_NAME}__header`}
+        title={stringSet.SEARCH_IN_CHANNEL}
+        renderRight={() => (
+          <IconButton
+            className={`${COMPONENT_CLASS_NAME}__header__close-button`}
+            width="32px"
+            height="32px"
+            onClick={onCloseClick}
+          >
+            <Icon
+              type={IconTypes.CLOSE}
+              fillColor={IconColors.ON_BACKGROUND_1}
+              width="22px"
+              height="22px"
+            />
+          </IconButton>
+        )}
+      />
       <div className={`${COMPONENT_CLASS_NAME}__input`}>
         <div className={`${COMPONENT_CLASS_NAME}__input__container`}>
-            <Icon
-              className={`${COMPONENT_CLASS_NAME}__input__container__search-icon`}
-              type={IconTypes.SEARCH}
-              fillColor={IconColors.ON_BACKGROUND_3}
-              width="24px"
-              height="24px"
-            />
-            <input
-              className={`${COMPONENT_CLASS_NAME}__input__container__input-area`}
-              placeholder={stringSet.SEARCH}
-              value={inputString}
-              onChange={handleOnChangeInputString}
-            />
-            {
-              inputString && loading && (
-                <Loader
-                  className={`${COMPONENT_CLASS_NAME}__input__container__spinner`}
-                  width="20px"
-                  height="20px"
-                >
-                  <Icon
-                    type={IconTypes.SPINNER}
-                    fillColor={IconColors.PRIMARY}
-                    width="20px"
-                    height="20px"
-                  />
-                </Loader>
-              )
-            }
-            {
-              !loading && inputString && (
+          <Icon
+            className={`${COMPONENT_CLASS_NAME}__input__container__search-icon`}
+            type={IconTypes.SEARCH}
+            fillColor={IconColors.ON_BACKGROUND_3}
+            width="24px"
+            height="24px"
+          />
+          <input
+            className={`${COMPONENT_CLASS_NAME}__input__container__input-area`}
+            placeholder={stringSet.SEARCH}
+            value={inputString}
+            onChange={handleOnChangeInputString}
+          />
+          {
+            inputString && loading && (
+              <Loader
+                className={`${COMPONENT_CLASS_NAME}__input__container__spinner`}
+                width="20px"
+                height="20px"
+              >
                 <Icon
-                  className={`${COMPONENT_CLASS_NAME}__input__container__reset-input-button`}
-                  type={IconTypes.REMOVE}
-                  fillColor={IconColors.ON_BACKGROUND_3}
+                  type={IconTypes.SPINNER}
+                  fillColor={IconColors.PRIMARY}
                   width="20px"
                   height="20px"
-                  onClick={handleOnClickResetStringButton}
                 />
-              )
-            }
+              </Loader>
+            )
+          }
+          {
+            !loading && inputString && (
+              <Icon
+                className={`${COMPONENT_CLASS_NAME}__input__container__reset-input-button`}
+                type={IconTypes.REMOVE}
+                fillColor={IconColors.ON_BACKGROUND_3}
+                width="20px"
+                height="20px"
+                onClick={handleOnClickResetStringButton}
+              />
+            )
+          }
         </div>
       </div>
       <div className={`${COMPONENT_CLASS_NAME}__message-search`}>
