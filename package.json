@@ -29,8 +29,8 @@
     "LICENSE",
     "CHANGELOG.md"
   ],
-  "devEngines": {
-    "node": "16.x"
+  "engines": {
+    "node": ">=18"
   },
   "scripts": {
     "test": "jest",
@@ -45,8 +45,6 @@
     "prepublishOnly": "yarn build",
     "predeploy": "yarn clean-release; yarn install; yarn build",
     "storybook": "storybook dev -p 6006",
-    "storybook:stable": "NODE_OPTIONS=--openssl-legacy-provider && storybook dev -p 6006",
-    "build-storybook": "storybook build",
     "lint": "yarn eslint; yarn eslint-ts",
     "lint:fix": "yarn eslint --fix; yarn eslint-ts --fix",
     "eslint": "eslint --no-eslintrc -c .eslintrc.js 'src/**'",
@@ -55,7 +53,9 @@
     "generate-component": "plop",
     "deploy-storybook": "storybook-to-ghpages",
     "inspect": "yarn test; yarn lint;",
+    "start:storybook": "yarn storybook",
     "start:apps:testing": "yarn workspace @uikit-app/testing dev",
+    "build:storybook": "storybook build",
     "build:apps:testing": "yarn workspace @uikit-app/testing build"
   },
   "repository": {
