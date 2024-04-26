@@ -36,9 +36,13 @@ export default function ThreadHeader({
   return (
     <Header
       className={`sendbird-thread-header ${className}`}
-      title={stringSet.THREAD__HEADER_TITLE}
-      subtitle={channelName}
-      onClickSubtitle={onChannelNameClick}
+      renderMiddle={() => (
+        <Header.Title
+          title={stringSet.THREAD__HEADER_TITLE}
+          subtitle={channelName}
+          onClickSubtitle={onChannelNameClick}
+        />
+      )}
       renderRight={() => (
         MemoizedActionIcon || (
           <div className="sendbird-thread-header__action">

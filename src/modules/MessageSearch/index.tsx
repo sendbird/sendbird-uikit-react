@@ -65,7 +65,9 @@ function MessageSearchPannel(props: MessageSearchPannelProps): JSX.Element {
     <div className={COMPONENT_CLASS_NAME}>
       <Header
         className={`${COMPONENT_CLASS_NAME}__header`}
-        title={stringSet.SEARCH_IN_CHANNEL}
+        renderMiddle={() => (
+          <Header.Title title={stringSet.SEARCH_IN_CHANNEL} />
+        )}
         renderRight={() => (
           <IconButton
             className={`${COMPONENT_CLASS_NAME}__header__close-button`}

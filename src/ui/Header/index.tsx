@@ -9,20 +9,17 @@ import UIIcon, { type IconProps } from '../Icon';
 export interface HeaderCustomProps {
   renderLeft?: () => ReactNode;
   renderRight?: () => ReactNode;
-  renderMiddle?: (props: HeaderTitleProps) => ReactNode;
+  renderMiddle?: () => ReactNode;
 }
-export interface HeaderProps extends HeaderCustomProps, HeaderTitleProps {
+export interface HeaderProps extends HeaderCustomProps {
   className?: string;
 }
 
 export const Header = ({
   className,
-  title,
-  subtitle,
-  onClickSubtitle,
   renderLeft,
   renderRight,
-  renderMiddle = (props) => <Title {...props} />,
+  renderMiddle,
 }: HeaderProps) => {
   let isMobile = false;
   try {
@@ -41,7 +38,7 @@ export const Header = ({
         ) : null
       }
       <div className="sendbird-ui-header__middle">
-        {renderMiddle({ title, subtitle, onClickSubtitle })}
+        {renderMiddle?.()}
       </div>
       {
         renderRight ? (

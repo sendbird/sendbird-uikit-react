@@ -44,7 +44,6 @@ export const GroupChannelHeaderView = ({
   return (
     <Header
       className={`sendbird-chat-header ${className}`}
-      title={channelTitle}
       renderLeft={renderLeft ?? (() => (
         <>
           {isMobile && (
@@ -66,7 +65,9 @@ export const GroupChannelHeaderView = ({
           />
         </>
       ))}
-      renderMiddle={renderMiddle}
+      renderMiddle={renderMiddle ?? (() => (
+        <Header.Title title={channelTitle} />
+      ))}
       renderRight={renderRight ?? (() => (
         <>
           {isMuted && (

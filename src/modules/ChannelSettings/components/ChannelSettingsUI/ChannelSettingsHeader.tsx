@@ -24,9 +24,10 @@ export const ChannelSettingsHeader = ({
   return (
     <Header
       className="sendbird-channel-settings__header"
-      title={stringSet.CHANNEL_SETTING__HEADER__TITLE}
       renderLeft={renderLeft}
-      renderMiddle={renderMiddle}
+      renderMiddle={renderMiddle ?? (() => (
+        <Header.Title title={stringSet.CHANNEL_SETTING__HEADER__TITLE} />
+      ))}
       renderRight={renderRight ?? (() => (
         <div className="sendbird-channel-settings__header-icon">
           <IconButton
