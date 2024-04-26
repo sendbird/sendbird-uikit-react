@@ -207,15 +207,7 @@ const SuggestedReplies = ({ replyOptions, onSendMessage, type = 'vertical' }: Su
     );
   });
 
-  return (
-    type === 'vertical'
-      ? <div className="sendbird-suggested-replies vertical">
-        {children}
-      </div>
-      : <DraggableSuggestedReplies>
-        {children}
-      </DraggableSuggestedReplies>
-  );
+  return <div className={`sendbird-suggested-replies ${type}`}>{children}</div>;
 };
 
 export default SuggestedReplies;

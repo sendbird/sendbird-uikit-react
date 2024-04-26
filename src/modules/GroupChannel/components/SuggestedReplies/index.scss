@@ -17,12 +17,28 @@
       margin-top: 8px;
     }
   }
+
   &.horizontal {
-    width: fit-content;
-    margin-left: 64px;
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+
+    margin-left: -$messages-padding;
+    margin-right: -$messages-padding;
+    padding-left: $messages-padding;
+    padding-right: $messages-padding;
+    @include mobile() {
+      margin-left: -$messages-padding-mobile;
+      margin-right: -$messages-padding-mobile;
+      padding-left: calc(40px + $messages-padding-mobile);
+      padding-right: $messages-padding-mobile;
+    }
     .sendbird-suggested-replies__option:not(:last-child) {
       margin-right: 8px;
     }
+  }
+  &::-webkit-scrollbar {
+    display: none;
   }
   @include themed() {
     font-family: var(--sendbird-font-family-default);
