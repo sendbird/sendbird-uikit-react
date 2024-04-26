@@ -1,4 +1,5 @@
-import React, { ChangeEvent, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
+import type { ChangeEvent, ReactNode } from 'react';
 
 import {
   ToggleContext,
@@ -7,7 +8,7 @@ import {
 } from './ToggleContext';
 
 export interface ToggleContainerProps extends ToggleContextInterface {
-  children?: React.ReactElement | Array<React.ReactElement>;
+  children?: ReactNode;
 }
 
 // Props Explanation https://github.com/aaronshaf/react-toggle#props
