@@ -52,11 +52,16 @@
   text-overflow: ellipsis;
 }
 
+.sendbird-ui-header__middle__subtitle__container {
+  display: flex;
+  width: 100%;
+}
 .sendbird-ui-header__middle__title,
 .sendbird-ui-header__middle__subtitle {
   overflow: hidden;
   text-wrap: nowrap;
   text-overflow: ellipsis;
+  width: 100%;
 }
 
 .sendbird-ui-header__right {

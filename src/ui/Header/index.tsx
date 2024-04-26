@@ -1,25 +1,28 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
+import type { MouseEvent, KeyboardEvent, TouchEvent, ReactNode } from 'react';
 import './index.scss';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
+import TextButton from '../TextButton';
+import UIIcon, { type IconProps } from '../Icon';
 
 export interface HeaderCustomProps {
-  renderLeft?: () => ReactElement;
-  renderRight?: () => ReactElement;
-  renderMiddle?: () => ReactElement;
+  renderLeft?: () => ReactNode;
+  renderRight?: () => ReactNode;
+  renderMiddle?: (props: HeaderTitleProps) => ReactNode;
 }
-export interface HeaderProps extends HeaderCustomProps {
+export interface HeaderProps extends HeaderCustomProps, HeaderTitleProps {
   className?: string;
-  title?: string;
-  subtitle?: string;
 }
+
 export const Header = ({
   className,
   title,
   subtitle,
+  onClickSubtitle,
   renderLeft,
   renderRight,
-  renderMiddle,
+  renderMiddle = (props) => <Title {...props} />,
 }: HeaderProps) => {
   let isMobile = false;
   try {
@@ -38,28 +41,7 @@ export const Header = ({
         ) : null
       }
       <div className="sendbird-ui-header__middle">
-        {renderMiddle?.() ?? (
-          <div className="sendbird-ui-header__middle">
-            {title && (
-              <Label
-                className="sendbird-ui-header__middle__title"
-                type={LabelTypography.H_2}
-                color={LabelColors.ONBACKGROUND_1}
-              >
-                {title}
-              </Label>
-            )}
-            {subtitle && (
-              <Label
-                className="sendbird-ui-header__middle__subtitle"
-                type={LabelTypography.BODY_1}
-                color={LabelColors.ONBACKGROUND_2}
-              >
-                {subtitle}
-              </Label>
-            )}
-          </div>
-        )}
+        {renderMiddle({ title, subtitle, onClickSubtitle })}
       </div>
       {
         renderRight ? (
@@ -70,6 +52,58 @@ export const Header = ({
       }
     </div>
   );
-}
+};
 
-export default Header;
+export interface HeaderTitleProps {
+  title?: string;
+  subtitle?: string;
+  onClickSubtitle?: (e: MouseEvent | TouchEvent | KeyboardEvent) => void;
+}
+const Title = ({
+  title,
+  subtitle,
+  onClickSubtitle,
+}: HeaderTitleProps) => {
+  return (
+    <div className="sendbird-ui-header__middle">
+      {title && (
+        <Label
+          className="sendbird-ui-header__middle__title"
+          type={LabelTypography.H_2}
+          color={LabelColors.ONBACKGROUND_1}
+        >
+          {title}
+        </Label>
+      )}
+      {subtitle && (
+        onClickSubtitle ? (
+          <TextButton
+            className="sendbird-ui-header__middle__subtitle__container"
+            onClick={onClickSubtitle}
+            disableUnderline
+          >
+            <Label
+              className="sendbird-ui-header__middle__subtitle"
+              type={LabelTypography.CAPTION_3}
+              color={LabelColors.ONBACKGROUND_2}
+            >
+              {subtitle}
+            </Label>
+          </TextButton>
+        ) : (
+          <Label
+            className="sendbird-ui-header__middle__subtitle"
+            type={LabelTypography.BODY_1}
+            color={LabelColors.ONBACKGROUND_2}
+          >
+            {subtitle}
+          </Label>
+        )
+      )}
+    </div>
+  );
+};
+
+const Icon = (props: IconProps) => <UIIcon {...props} />;
+
+export default Object.assign(Header, { Title, Icon });

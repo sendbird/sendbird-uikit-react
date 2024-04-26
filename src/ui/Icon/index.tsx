@@ -137,7 +137,7 @@ function changeTypeToIconComponent(type: Types) {
   }
 }
 
-type IconProps = {
+export interface IconProps {
   className?: string | string[];
   /** Type: Use strings from below list */
   type: Types;

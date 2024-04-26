@@ -37,7 +37,12 @@ export const ChannelSettingsHeader = ({
               onCloseClick(e);
             }}
           >
-            <Icon className="sendbird-channel-settings__close-icon" type={IconTypes.CLOSE} height="22px" width="22px" />
+            <Icon
+              className="sendbird-channel-settings__close-icon"
+              type={IconTypes.CLOSE}
+              height="22px"
+              width="22px"
+            />
           </IconButton>
         </div>
       ))}
