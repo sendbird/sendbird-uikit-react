@@ -18,7 +18,7 @@ export interface FileViewerViewProps extends FileViewerProps {
   onDownloadClick?: (e: MouseEvent) => Promise<void>;
 }
 
-export const FileViewerView: React.FC<FileViewerViewProps> = ({
+export const FileViewerView = ({
   message,
   onCancel,
   deleteMessage,
