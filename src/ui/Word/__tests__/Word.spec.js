@@ -6,7 +6,6 @@ import { SendbirdSdkContext } from "../../../lib/SendbirdSdkContext";
 
 describe("ui/Word", () => {
   it("should do a snapshot test of the Word DOM", function () {
-    const text = "example-text";
     const { asFragment } = render(
       <SendbirdSdkContext.Provider value={{}}>
         <Word

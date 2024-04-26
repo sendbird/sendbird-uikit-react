@@ -1,5 +1,6 @@
 import React, { ReactElement, RefObject } from 'react';
 import ImageRenderer from '../ImageRenderer';
+import './index.scss';
 import AvatarDefault from './AvatarDefault';
 
 const imageRendererClassName = 'sendbird-avatar-img';
