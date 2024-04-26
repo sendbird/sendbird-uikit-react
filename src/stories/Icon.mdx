@@ -1,0 +1,20 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs';
+import Icon, { IconTypes, IconColors } from '../ui/Icon';
+import * as IconStories from './Icon.stories';
+
+<Meta title="UI/Icon" component={Icon} of={IconStories} />
+
+# Icon
+
+The `Icon` component displays SVG icons. It supports various types and colors, making it versatile for use across the UI.
+
+<Canvas of={IconStories.Default} />
+<Controls of={IconStories.Default} />
+
+### Importing Icon
+
+To use the `Icon` component in your project, add the following import statement:
+
+```tsx
+import Icon, { IconTypes, IconColors } from '@sendbird/uikit-react/ui/Icon';
+```

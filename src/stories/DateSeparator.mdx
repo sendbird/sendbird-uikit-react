@@ -1,0 +1,30 @@
+import { Meta, Story, Canvas, Controls } from '@storybook/addon-docs';
+import DateSeparator from '../ui/DateSeparator';
+import * as DateSeparatorStories from './DateSeparator.stories';
+
+<Meta title="UI/DateSeparator" component={DateSeparator} of={DateSeparatorStories} />
+
+# DateSeparator
+
+The `DateSeparator` component is used to visually separate content by dates. It can display a custom text or use a default text label.
+
+<Canvas of={DateSeparatorStories.Default} />
+<Controls of={DateSeparatorStories.Default} />
+
+### Importing DateSeparator
+
+To integrate the DateSeparator component into your application, use the following import statement:
+
+```tsx
+import DateSeparator from '@sendbird/uikit-react/ui/DateSeparator';
+```
+
+### Examples
+
+#### Default
+Displays the default DateSeparator with predefined styles.
+<Canvas of={DateSeparatorStories.Default} />
+
+#### Custom Color
+Illustrates the DateSeparator with a custom color applied.
+<Canvas of={DateSeparatorStories.CustomColor} />

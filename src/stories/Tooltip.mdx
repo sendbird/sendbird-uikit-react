@@ -1,0 +1,27 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs';
+import Tooltip from '../ui/Tooltip';
+import TooltipWrapper from '../ui/TooltipWrapper';
+import * as TooltipStories from './Tooltip.stories';
+
+<Meta title="UI/Tooltip" component={Tooltip} of={TooltipStories} />
+
+# Tooltip and TooltipWrapper
+
+`Tooltip` and `TooltipWrapper` components provide text labels that help explain the function of a button or other user interface action.
+
+<Canvas of={TooltipStories.Default} />
+<Controls of={TooltipStories.Default} />
+
+### Importing Tooltip and TooltipWrapper
+
+To use these components in your application, import them as follows:
+
+```tsx
+import Tooltip from '@sendbird/uikit-react/ui/Tooltip';
+import TooltipWrapper from '@sendbird/uikit-react/ui/TooltipWrapper';
+```
+
+### TooltipWrapper Examples
+#### Hover Tooltip
+A tooltip that appears when the user hovers over the element.
+<Canvas of={TooltipStories.HoverTooltip} />

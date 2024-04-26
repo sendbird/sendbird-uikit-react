@@ -38,8 +38,8 @@ And many more...
 ### Prerequisites
 
 You need to install:
-* nodejs 16 LTS https://nodejs.org/en/download/
-* npm 8>= or yarn 3>=
+* [nodejs](https://nodejs.org/en/download/) 18>=
+* npm 9>= or yarn 3>=
 
 ### Development
  
@@ -63,13 +63,6 @@ npm run storybook
 * Smart Components such as ChannelList, Channel, ChannelSetting, App can be found under `OTHERS`
 * Dumb components such as inputs, buttons etc can be found under `OTHERS/UI Components` in storybook sidebar
 * Overridden storybook configs can be found in: `./storybook`
-
-> If you face the error during running storybook<br />
-> `Error: error: 0308010C:digital envelope rountines::unsupported` <br />
-> try to run below in termial, and run storybook again
-```
-export NODE_OPTIONS=--openssl-legacy-provider
-```
 
 ### Husky
 
@@ -160,10 +153,6 @@ To read more: https://webpack.js.org/configuration/resolve/#resolvefallback
 1. Use `yarn run generate-component` to generate a UI component in `src/ui`. It uses [Plop.js](https://plopjs.com/) to generate the component.
 2. It can also be used to generate [reducers](/src/utils/typeHelpers/reducers/README.md).
 3. Plop templates are found in [here](/plop-templates).
-
-## Troubleshooting Guide
-- If you use node.js >= 17 and see `ERR_OSSL_EVP_UNSUPPORTED` error on any run cmd, try to run `yarn storybook:stable` instead.
-
 
 ## Acknowledgments
 ### LameJS

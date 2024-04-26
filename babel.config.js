@@ -7,7 +7,6 @@ module.exports = {
   plugins: [
     '@babel/plugin-proposal-class-properties',
     '@babel/plugin-syntax-export-default-from',
-    '@babel/plugin-proposal-private-methods',
     '@babel/plugin-proposal-private-property-in-object',
   ],
 };

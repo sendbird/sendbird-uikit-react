@@ -29,8 +29,8 @@
     "LICENSE",
     "CHANGELOG.md"
   ],
-  "devEngines": {
-    "node": "16.x"
+  "engines": {
+    "node": ">=18"
   },
   "scripts": {
     "test": "jest",
@@ -44,18 +44,16 @@
     "reset": "yarn cache clean; yarn install",
     "prepublishOnly": "yarn build",
     "predeploy": "yarn clean-release; yarn install; yarn build",
-    "storybook": "start-storybook -p 6006",
-    "storybook:stable": "NODE_OPTIONS=--openssl-legacy-provider && start-storybook -p 6006",
-    "build-storybook": "build-storybook",
-    "lint": "yarn eslint; yarn eslint-ts",
-    "lint:fix": "yarn eslint --fix; yarn eslint-ts --fix",
-    "eslint": "eslint --no-eslintrc -c .eslintrc.js 'src/**'",
-    "eslint-ts": "eslint --no-eslintrc -c .eslintrc.json 'src/**/*.ts*'",
+    "lint": "yarn eslint",
+    "lint:fix": "yarn eslint --fix",
+    "eslint": "eslint 'src/**/*.ts*'",
     "stylelint": "stylelint 'src/**'",
     "generate-component": "plop",
-    "deploy-storybook": "storybook-to-ghpages",
     "inspect": "yarn test; yarn lint;",
+    "storybook": "storybook dev -p 6006",
+    "start:storybook": "yarn storybook",
     "start:apps:testing": "yarn workspace @uikit-app/testing dev",
+    "build:storybook": "storybook build",
     "build:apps:testing": "yarn workspace @uikit-app/testing build"
   },
   "repository": {
@@ -95,15 +93,9 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.4",
     "@rollup/plugin-typescript": "^11.1.5",
-    "@storybook/addon-actions": "^6.5.10",
-    "@storybook/addon-docs": "^6.5.10",
-    "@storybook/addon-links": "^6.5.10",
-    "@storybook/addons": "^6.5.10",
-    "@storybook/preset-scss": "^1.0.3",
-    "@storybook/react": "^6.5.10",
-    "@storybook/storybook-deployer": "^2.8.12",
+    "@storybook/addon-essentials": "^8.0.9",
+    "@storybook/react-vite": "^8.0.9",
     "@svgr/rollup": "^8.1.0",
-    "@svgr/webpack": "^5.1.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
@@ -111,10 +103,8 @@
     "@typescript-eslint/parser": "^6.17.0",
     "autoprefixer": "^9.7.4",
     "babel-jest": "^29.0.1",
-    "babel-loader": "^8.0.6",
     "browserslist": "^4.14.5",
     "caniuse-lite": "^1.0.30001148",
-    "css-loader": "^3.4.2",
     "eslint": "^8.40.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -130,7 +120,6 @@
     "jest-environment-jsdom": "29.5.0",
     "jest-extended": "^3.2.4",
     "jsdom": "^20.0.0",
-    "np": "^7.5.0",
     "plop": "^2.5.3",
     "postcss": "^8.3.5",
     "react": "^18.2.0",
@@ -144,16 +133,16 @@
     "rollup-plugin-typescript2": "^0.36.0",
     "rollup-plugin-visualizer": "^5.9.2",
     "sass": "^1.55.0",
-    "sass-loader": "^10.2.0",
+    "storybook": "^8.0.9",
     "stylelint": "^13.0.0",
     "stylelint-config-sass-guidelines": "^7.0.0",
     "ts-pattern": "^4.2.2",
-    "tslib": "^2.0.0",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "vite": "^5.1.5",
+    "vite-plugin-svgr": "^4.2.0"
   },
   "browserslist": [
-    "defaults",
-    "IE 11"
+    "defaults"
   ],
   "packageManager": "yarn@3.5.0",
   "prettier": {

@@ -2,7 +2,7 @@ import './index.scss';
 import React, { MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
 
-import { FileViewerProps } from '.';
+import type { FileViewerProps } from '.';
 
 import type { CoreMessageType, SendableMessageType } from '../../../../utils';
 import Avatar from '../../../../ui/Avatar';

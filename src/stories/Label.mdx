@@ -1,0 +1,36 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs';
+import Label, { LabelTypography, LabelColors } from '../ui/Label';
+import * as LabelStories from './Label.stories';
+
+<Meta title="UI/Label" component={Label} of={LabelStories} />
+
+# Label
+
+The `Label` component is utilized to render text within the application, supporting various typography styles and color schemes.
+
+<Canvas of={LabelStories.Default} />
+<Controls of={LabelStories.Default} />
+
+### Importing Label
+
+To use the `Label` component in your project, add the following import statement:
+
+```tsx
+import Label, { LabelTypography, LabelColors } from '@sendbird/uikit-react/ui/Label';
+```
+
+### Example Usage
+
+The following examples demonstrate the `Label` component's versatility in displaying text with different typography and colors.
+
+#### Default
+
+Renders text with default typography and color.
+
+<Canvas of={LabelStories.Default} />
+
+#### Custom Typography And Color
+
+Shows how to use the `Label` component with custom typography and color.
+
+<Canvas of={LabelStories.CustomTypographyAndColor} />

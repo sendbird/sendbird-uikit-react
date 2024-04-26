@@ -1,0 +1,20 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs';
+import Avatar from '../ui/Avatar';
+import * as AvatarStories from './Avatar.stories';
+
+<Meta title="UI/Avatar" component={Avatar} of={AvatarStories} />
+
+# Avatar
+
+The `Avatar` component displays images or initials for user profiles. It supports custom dimensions and can display default avatars when no image source is provided. Utilize the Avatar component to enhance user identity representation in your application, providing a more personalized user experience.
+
+<Canvas of={AvatarStories.DefaultAvatar} />
+<Controls />
+
+### Importing Avatar
+
+To integrate the Avatar component into your project, use the following import statement:
+
+```tsx
+import Avatar from '@sendbird/uikit-react/ui/Avatar';
+```

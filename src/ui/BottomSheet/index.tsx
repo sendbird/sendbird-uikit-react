@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 import { MODAL_ROOT } from '../../hooks/useModal';
+import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 interface BottomSheetProps {
   className?: string;
@@ -16,6 +17,7 @@ const BottomSheet: React.FunctionComponent<BottomSheetProps> = (props: BottomShe
     children,
     onBackdropClick,
   } = props;
+  const logger = useSendbirdStateContext()?.config?.logger;
 
   // https://github.com/testing-library/react-testing-library/issues/62#issuecomment-438653348
   const portalRoot = useRef<HTMLElement>();
@@ -24,6 +26,7 @@ const BottomSheet: React.FunctionComponent<BottomSheetProps> = (props: BottomShe
     portalRoot.current = document.createElement('div');
     portalRoot.current.setAttribute('id', MODAL_ROOT);
     document.body.appendChild(portalRoot.current);
+    logger?.warning?.('@sendbird/uikit-react/ui/BottomSheet | Should put a ModalRoot to use the BottomSheet.');
   }
   return createPortal(
     <div

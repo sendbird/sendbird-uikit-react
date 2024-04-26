@@ -1,0 +1,37 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs';
+import Button from '../ui/Button';
+import * as ButtonStories from './Button.stories';
+
+<Meta title="UI/Button" component={Button} of={ButtonStories} />
+
+# Button
+
+The `Button` component is a versatile element for triggering actions. It supports various sizes, types, disabled states, and can include custom labels. This component is fundamental for creating interactive and accessible user interfaces.
+
+<Canvas of={ButtonStories.Primary} />
+<Controls of={ButtonStories.Primary} />
+
+### Importing Button
+
+To use the Button component in your project, add the following import statement:
+
+```tsx
+import Button from '@sendbird/uikit-react/ui/Button';
+```
+
+### Examples
+Below are examples showcasing the different configurations of the Button component:
+
+#### Button Types
+Shows the Button with different types, indicating various levels of importance or actions.
+<Canvas of={ButtonStories.Secondary} />
+<Canvas of={ButtonStories.Danger} />
+
+#### Button Sizes
+Illustrates the Button in different sizes for fitting into various UI spaces.
+<Canvas of={ButtonStories.Big} />
+<Canvas of={ButtonStories.Small} />
+
+#### Disabled Button
+Demonstrates the Button in a disabled state, showing how it can be used to indicate unavailable actions.
+<Canvas of={ButtonStories.Disabled} />
