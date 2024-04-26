@@ -59,7 +59,7 @@ export interface HeaderTitleProps {
   subtitle?: string;
   onClickSubtitle?: (e: MouseEvent | TouchEvent | KeyboardEvent) => void;
 }
-const Title = ({
+export const Title = ({
   title,
   subtitle,
   onClickSubtitle,
@@ -104,6 +104,6 @@ const Title = ({
   );
 };
 
-const Icon = (props: IconProps) => <UIIcon {...props} />;
+export const Icon = (props: IconProps) => <UIIcon {...props} />;
 
 export default Object.assign(Header, { Title, Icon });
