@@ -141,7 +141,9 @@
     "vite": "^5.1.5",
     "vite-plugin-svgr": "^4.2.0"
   },
-  "browserslist": ["defaults"],
+  "browserslist": [
+    "defaults"
+  ],
   "packageManager": "yarn@3.5.0",
   "prettier": {
     "singleQuote": true,
