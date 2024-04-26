@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Preview } from '@storybook/react';
 import '../src/lib/index.scss';
+import { SendbirdSdkContext } from '../src/lib/SendbirdSdkContext';
 
 const preview: Preview = {
   parameters: {
@@ -19,14 +20,15 @@ const preview: Preview = {
         } else {
           return a.type === 'docs' ? -1 : 0;
         }
-      },
+      }
     },
   },
   decorators: [
     (Story) => (
       <div className="sendbird-theme--light">
-        {Story()}
-        <></>
+        <SendbirdSdkContext.Provider value={{} as any}>
+          {Story()}
+        </SendbirdSdkContext.Provider>
       </div>
     ),
   ],
