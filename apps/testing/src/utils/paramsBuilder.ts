@@ -1,16 +1,18 @@
 import { UIKitOptions } from '../../../../src/lib/types.ts';
 import { useSearchParams } from 'react-router-dom';
 
-interface InitialParams {
+export interface InitialParams {
   appId?: string;
   userId?: string;
   nickname?: string;
+  accessToken?: string;
 }
 
 interface ParamsAsProps {
   appId: string;
   userId: string;
   nickname: string;
+  accessToken?: string;
   allowProfileEdit: boolean;
   isMultipleFilesMessageEnabled: boolean;
   uikitOptions: UIKitOptions;
@@ -22,7 +24,8 @@ export const useConfigParams = (initParams: InitialParams): ParamsAsProps => {
   const response = {
     appId: searchParams.get('appId') || initParams.appId,
     userId: searchParams.get('userId') || initParams.userId,
-    nickname: searchParams.get('nickname') || initParams.nickname,
+    nickname: searchParams.get('nickname') || initParams.nickname || initParams.userId,
+    accessToken: searchParams.get('accessToken') || initParams.accessToken,
     allowProfileEdit: parseValue(searchParams.get('enableProfileEdit')) ?? true,
     isMultipleFilesMessageEnabled: parseValue(searchParams.get('enableMultipleFilesMessage')) ?? true,
     uikitOptions: {},
@@ -30,6 +33,7 @@ export const useConfigParams = (initParams: InitialParams): ParamsAsProps => {
 
   if (!response.appId) throw new Error(`Invalid app id: ${response.appId}`);
   if (!response.userId) throw new Error(`Invalid user id: ${response.userId}`);
+  if (!response.accessToken) delete response.accessToken;
 
   paramKeys.forEach((key) => {
     const value = searchParams.get(key);
