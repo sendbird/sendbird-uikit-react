@@ -1,17 +1,10 @@
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import DOMPurify from 'dompurify';
 
 import { inserTemplateToDOM } from './insertTemplate';
 import { sanitizeString } from '../../utils';
 import { DynamicProps } from './types';
-import {
-  createPasteNode,
-  hasMention,
-  domToMessageTemplate,
-  getUsersFromWords,
-  extractTextFromNodes,
-  getLeafNodes,
-} from './utils';
+import { createPasteNode, domToMessageTemplate, extractTextFromNodes, getLeafNodes, getUsersFromWords, hasMention } from './utils';
 
 // exported, should be backward compatible
 // conditions to test:
@@ -30,10 +23,10 @@ export function usePaste({
 }: DynamicProps): (e: React.ClipboardEvent<HTMLDivElement>) => void {
   return useCallback((e) => {
     e.preventDefault();
-    const html = e?.clipboardData.getData('text/html');
+    const html = e.clipboardData.getData('text/html');
     // simple text, continue as normal
     if (!html) {
-      const text = e?.clipboardData.getData('text');
+      const text = e.clipboardData.getData('text') || getURIListText(e);
       document.execCommand('insertHTML', false, sanitizeString(text));
       setIsInput(true);
       setHeight();
@@ -71,6 +64,22 @@ export function usePaste({
     setIsInput(true);
     setHeight();
   }, [ref, setIsInput, setHeight, channel, setMentionedUsers]);
+}
+
+// https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Recommended_drag_types#dragging_links
+function getURIListText(e: React.ClipboardEvent<HTMLDivElement>) {
+  const pasteData = e.clipboardData.getData('text/uri-list');
+  if (pasteData.length === 0) return '';
+
+  return pasteData
+    .split('\n')
+    .reduce((accumulator, line) => {
+      const txt = line.trim();
+      if (txt !== '' && !txt.startsWith('#')) {
+        accumulator += txt + '\n';
+      }
+      return accumulator;
+    }, '');
 }
 
 // to do -> In the future donot export default

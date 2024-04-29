@@ -9,7 +9,7 @@ __snapshots__/**/*
 *.spec.js.snap
 *.spec.tsx.snap
 
-*.stories.js
+src/stories/**
 
 *.css
 *.scss

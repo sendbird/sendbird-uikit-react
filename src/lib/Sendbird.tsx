@@ -68,10 +68,12 @@ interface VoiceRecordOptions {
   minRecordingTime?: number;
 }
 
+export type ImageCompressionOutputFormatType = 'preserve' | 'png' | 'jpeg';
 export interface ImageCompressionOptions {
   compressionRate?: number;
   resizingWidth?: number | string;
   resizingHeight?: number | string;
+  outputFormat?: ImageCompressionOutputFormatType;
 }
 
 export interface SendbirdConfig {
@@ -361,6 +363,7 @@ const SendbirdSDK = ({
           pubSub,
           imageCompression: {
             compressionRate: 0.7,
+            outputFormat: 'preserve',
             ...imageCompression,
           },
           voiceRecord: {

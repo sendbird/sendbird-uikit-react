@@ -19,6 +19,7 @@ import {
   truncateString,
   SendableMessageType,
   isMultipleFilesMessage,
+  isFileMessage,
 } from '../../../../utils';
 
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
@@ -37,6 +38,7 @@ import { useThreadMessageKindKeySelector } from '../../../Channel/context/hooks/
 import { useFileInfoListWithUploaded } from '../../../Channel/context/hooks/useFileInfoListWithUploaded';
 import { Colors } from '../../../../utils/color';
 import type { OnBeforeDownloadFileMessageType } from '../../../GroupChannel/context/GroupChannelProvider';
+import { openURL } from '../../../../utils/utils';
 
 export interface ParentMessageInfoItemProps {
   className?: string;
@@ -98,9 +100,7 @@ export default function ParentMessageInfoItem({
 
   // Only for the FileMessageItemBody
   const downloadFileWithUrl = () => {
-    if (message.messageType === 'file') {
-      window.open((message as FileMessage)?.url);
-    }
+    if (isFileMessage(message)) openURL(message.url);
   };
   const handleOnClickTextButton = onBeforeDownloadFileMessage
     ? async () => {

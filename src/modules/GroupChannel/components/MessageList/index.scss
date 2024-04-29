@@ -10,6 +10,10 @@
     position: relative;
     height: 100%;
     overflow-x: hidden;
+    padding: 0px 24px;
+    @include mobile() {
+      padding: 0px 12px;
+    }
   }
   .sendbird-separator,
   .sendbird-admin-message {

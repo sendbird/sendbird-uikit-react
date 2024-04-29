@@ -1,0 +1,19 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs';
+import ChannelSettings from '../../modules/ChannelSettings/index';
+import * as ChannelSettingsStories from './ChannelSettings.stories';
+
+<Meta title="Module/ChannelSettings" component={ChannelSettings} of={ChannelSettingsStories}/>
+
+# ChannelSettings Component
+The `ChannelSettings` component is responsible for managing and viewing information about the channel as well as its participating members.
+<br/>It allows updating channel information, freezing the channel chat window as a channel operator, and muting or banning members.
+<br/>Additionally, it allows making other members operators or revoking their operator status.
+
+<Canvas of={ChannelSettingsStories.Default} />
+<Controls />
+
+To integrate the Avatar component into your project, use the following import statement:
+```tsx
+import { ChannelSettings } from '@sendbird/uikit-react/ChannelSettings';
+import { ChannelSettingsProvider, useChannelSettingsContext } from '@sendbird/uikit-react/ChannelSettings/context';
+```

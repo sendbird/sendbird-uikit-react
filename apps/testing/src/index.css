@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+}
+
+.sticky-bottom-button {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #843eee;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  z-index: 999;
+}
+
+.sticky-bottom-button:hover {
+  background-color: #652ec7;
+}
+.sticky-bottom-button:active {
+  background-color: #4c1b99;
+}

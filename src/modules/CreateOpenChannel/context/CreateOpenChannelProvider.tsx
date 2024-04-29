@@ -68,7 +68,7 @@ export const CreateOpenChannelProvider: React.FC<CreateOpenChannelProviderProps>
         createNewOpenChannel: createNewOpenChannel,
       }}
     >
-      <div className={`sendbird-create-open-channel ${className}`}>
+      <div className={`sendbird-create-open-channel ${className}`} style={{ height: 0 }}>
         {children}
       </div>
     </CreateOpenChannelContext.Provider>

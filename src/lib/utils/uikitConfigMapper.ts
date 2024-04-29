@@ -26,6 +26,7 @@ export function uikitConfigMapper({
       enableOgtag: uikitOptions.groupChannel?.enableOgtag,
       enableMention: uikitOptions.groupChannel?.enableMention ?? isMentionEnabled,
       enableReactions: uikitOptions.groupChannel?.enableReactions ?? isReactionEnabled,
+      enableReactionsSupergroup: uikitOptions.groupChannel?.enableReactionsSupergroup,
       enableTypingIndicator: uikitOptions.groupChannel?.enableTypingIndicator,
       enableVoiceMessage: uikitOptions.groupChannel?.enableVoiceMessage ?? isVoiceMessageEnabled,
       replyType: uikitOptions.groupChannel?.replyType

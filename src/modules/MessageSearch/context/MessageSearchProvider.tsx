@@ -25,13 +25,13 @@ export interface MessageSearchProviderProps {
   channelUrl: string;
   children?: React.ReactElement;
   searchString?: string;
-  requestString?: string;
   messageSearchQuery?: MessageSearchQueryParams;
   onResultLoaded?(messages?: Array<ClientSentMessages>, error?: SendbirdError): void;
   onResultClick?(message: ClientSentMessages): void;
 }
 
 interface MessageSearchProviderInterface extends MessageSearchProviderProps {
+  requestString?: string;
   retryCount: number;
   setRetryCount: React.Dispatch<React.SetStateAction<number>>;
   selectedMessageId: number;

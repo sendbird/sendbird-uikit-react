@@ -3,6 +3,7 @@ import type { OpenChannel } from '@sendbird/chat/openChannel';
 import type { FileMessageCreateParams } from '@sendbird/chat/message';
 
 import type { Logger } from '../../../../lib/SendbirdState';
+import type { ImageCompressionOptions } from '../../../../lib/Sendbird';
 import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';
 import { SdkStore } from '../../../../lib/types';
@@ -18,11 +19,7 @@ interface DynamicParams {
   currentOpenChannel: OpenChannel;
   onBeforeSendFileMessage: (file: File) => FileMessageCreateParams;
   checkScrollBottom: () => boolean;
-  imageCompression?: {
-    compressionRate?: number,
-    resizingWidth?: number | string,
-    resizingHeight?: number | string,
-  };
+  imageCompression?: ImageCompressionOptions;
 }
 interface StaticParams {
   sdk: SdkStore['sdk'];

@@ -1,3 +1,3 @@
-import ChannelPreviewAction from '../../GroupChannelList/components/GroupChannelPreviewAction';
+import GroupChannelPreviewAction from '../../GroupChannelList/components/GroupChannelPreviewAction';
 
-export default ChannelPreviewAction;
+export default GroupChannelPreviewAction;

@@ -11,6 +11,7 @@ import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import type { OnBeforeDownloadFileMessageType } from '../../modules/GroupChannel/context/GroupChannelProvider';
 import { LoggerInterface } from '../../lib/Logger';
+import { openURL } from '../../utils/utils';
 
 interface Props {
   className?: string | Array<string>;
@@ -40,7 +41,7 @@ export default function FileMessageItemBody({
   const { isMobile } = useMediaQueryContext();
   const truncateMaxNum = truncateLimit ?? (isMobile ? 20 : undefined);
 
-  const downloadFileWithUrl = () => window.open(message?.url);
+  const downloadFileWithUrl = () => openURL(message?.url);
   const handleOnClickTextButton = onBeforeDownloadFileMessage
     ? async () => {
       try {

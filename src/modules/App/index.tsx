@@ -14,7 +14,7 @@ import './index.scss';
 import { AppLayoutProps } from './types';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 
-interface AppProps {
+export interface AppProps {
   appId: SendbirdProviderProps['appId'];
   userId: SendbirdProviderProps['userId'];
   accessToken?: SendbirdProviderProps['accessToken'];

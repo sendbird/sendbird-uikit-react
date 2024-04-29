@@ -1,30 +1,59 @@
 module.exports = {
+  root: true,
+  globals: {
+    JSX: true,
+    React: true,
+    ChildNode: true,
+    ReactElement: true,
+    globalThis: true,
+    Locale: true,
+    SendBird: true,
+  },
   env: {
     browser: true,
     es6: true,
+    jest: true,
   },
-  ignorePatterns: ['**/*.ts', '**/*.tsx', 'node_modules', 'src/legacy'],
-  extends: [
-    'plugin:react/recommended',
-    'airbnb',
-  ],
-  globals: {
-    Atomics: 'readonly',
-    SharedArrayBuffer: 'readonly',
-  },
-  parser: '@babel/eslint-parser',
+  parser: '@typescript-eslint/parser',
   parserOptions: {
+    ecmaVersion: 2020,
+    sourceType: 'module',
     ecmaFeatures: {
       jsx: true,
     },
-    ecmaVersion: 2018,
-    sourceType: 'module',
   },
-  plugins: ['react', 'babel', '@typescript-eslint'],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx', '.d.ts'],
+      },
+    },
+  },
   rules: {
-    // uncomment 'linebreak-style' to build in windows - its not adviced to commit from windows
-    // read more - https://community.perforce.com/s/article/3096
-    // ['linebreak-style']: 0,
+    'no-unused-expressions': 'off',
+    'no-await-in-loop': 'off',
+    // Not to make ESLint complains a type is only being used as type but recognized as a unused variable
+    // https://stackoverflow.com/questions/57802057/eslint-configuring-no-unused-vars-for-typescript
+    'no-unused-vars': 'off', // or '@typescript-eslint/no-unused-vars': 'off',
+    'unused-imports/no-unused-imports': 'error',
+    'unused-imports/no-unused-vars': [
+      'warn',
+      {
+        vars: 'all',
+        varsIgnorePattern: '^_',
+        args: 'after-used',
+        argsIgnorePattern: '^_',
+      },
+    ],
+    '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-unused-expressions': 'error',
+    'react/display-name': 'off',
+    'react/function-component-definition': 'off',
+    'react/prop-types': 'off',
     'import/extensions': [
       'error',
       'ignorePackages',
@@ -35,16 +64,55 @@ module.exports = {
         tsx: 'never',
       },
     ],
-    // we don't want to force to define function component only
-    'react/function-component-definition': 'off',
-    'no-unused-expressions': 'off',
-    '@typescript-eslint/no-unused-expressions': ['error'],
+    // TODO(Ahyoung): fix and remove one by one
+    'no-shadow': 'off',
+    'no-else-return': 'off',
+    'no-param-reassign': 'off',
+    'no-useless-escape': 'off',
+    'no-underscore-dangle': 'off',
+    'no-confusing-arrow': 'off',
+    'no-mixed-operators': 'off',
+    'no-nested-ternary': 'off',
+    'no-unneeded-ternary': 'off',
+    'no-use-before-define': 'off',
+    'no-cond-assign': 'off',
+    'no-plusplus': 'off',
+    'no-bitwise': 'off',
+    'no-restricted-syntax': 'off',
+    'no-prototype-builtins': 'off',
+    'import/no-unresolved': 'off',
+    'import/no-extraneous-dependencies': 'off',
+    'import/no-useless-path-segments': 'off',
+    'import/prefer-default-export': 'off',
+    'import/order': 'off',
+    'import/no-named-as-default-member': 'off',
+    'object-curly-newline': 'off',
+    'object-shorthand': 'off',
+    'consistent-return': 'off',
+    'max-len': 'off',
+    'arrow-body-style': 'off',
+    'function-paren-newline': 'off',
+    'prefer-template': 'off',
+    'padded-blocks': 'off',
+    'arrow-parens': 'off',
+    'dot-notation': 'off',
+    camelcase: 'off',
+    radix: 'off',
+    'prefer-destructuring': 'off',
+    'default-case': 'off',
+    curly: 'off',
+    yoda: 'off',
+    'brace-style': 'off',
+    'nonblock-statement-body-position': 'off',
+    'func-names': 'off',
+    // In some cases, eslint requires semicolon and wants it removed at the same time
+    // https://stackoverflow.com/questions/58474874/eslint-demands-semicolon-and-wants-it-removed-at-the-same-time
+    semi: 'off',
+    '@typescript-eslint/semi': ['error'],
+    'object-curly-spacing': ['error', 'always'],
+    quotes: ['error', 'single'],
   },
-  settings: {
-    'import/resolver': {
-      node: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
-      },
-    },
-  },
+  extends: ['plugin:react/recommended', 'plugin:@typescript-eslint/recommended', 'airbnb-base'],
+  plugins: ['react', '@typescript-eslint', 'unused-imports'],
+  ignorePatterns: ['node_modules', 'ui/QuoteMessageInput/mockMessage.ts'],
 };
