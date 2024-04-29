@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { VoiceRecorderEventHandler, useVoiceRecorderContext } from '.';
 import useSendbirdStateContext from '../useSendbirdStateContext';
 import { VOICE_RECORDER_DEFAULT_MAX } from '../../utils/consts';
@@ -73,11 +73,12 @@ export const useVoiceRecorder = ({
 
   // Timer
   const [recordingTime, setRecordingTime] = useState<number>(0);
-  let timer: ReturnType<typeof setInterval> | null = null;
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
   function startTimer() {
     stopTimer();
     setRecordingTime(0);
-    const interval = setInterval(() => {
+
+    timer.current = setInterval(() => {
       setRecordingTime(prevTime => {
         const newTime = prevTime + 100;
         if (newTime > maxRecordingTime) {
@@ -86,12 +87,11 @@ export const useVoiceRecorder = ({
         return newTime;
       });
     }, 100);
-    timer = interval;
   }
   function stopTimer() {
-    if (timer) {
-      clearInterval(timer);
-      timer = null;
+    if (timer.current) {
+      clearInterval(timer.current);
+      timer.current = null;
     }
   }
   useEffect(() => {
