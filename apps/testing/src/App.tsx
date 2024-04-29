@@ -3,18 +3,18 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import GroupChannelApp from '../../../src/modules/App';
 import OpenChannelApp from '../../../src/modules/OpenChannelApp';
 
-import { useConfigParams } from './utils/paramsBuilder.ts';
+import { InitialParams, useConfigParams } from './utils/paramsBuilder.ts';
 import { URLBuilder } from './URLBuilder.tsx';
 
-const defaultProps = {
+const defaultProps: InitialParams = {
   appId: import.meta.env.VITE_APP_ID,
-  userId: 'test',
-  nickname: 'User',
+  userId: import.meta.env.VITE_USER_ID ?? 'test',
+  accessToken: import.meta.env.VITE_ACCESS_TOKEN,
 };
 
 function GroupChannelPage() {
   const props = useConfigParams(defaultProps);
-  return <GroupChannelApp {...props} breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}  />;
+  return <GroupChannelApp {...props} breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)} />;
 }
 
 function OpenChannelPage() {
