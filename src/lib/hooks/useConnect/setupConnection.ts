@@ -126,6 +126,7 @@ export async function setUpConnection({
 
       const connectCbSuccess = async (user: User) => {
         logger?.info?.('SendbirdProvider | useConnect/setupConnection/connectCbSuccess', user);
+        // @ts-ignore
         sdkDispatcher({ type: INIT_SDK, payload: newSdk });
         userDispatcher({ type: INIT_USER, payload: user });
 

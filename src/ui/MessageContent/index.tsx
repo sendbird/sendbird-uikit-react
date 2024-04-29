@@ -259,7 +259,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
         className ?? '',
         'sendbird-message-content',
         isByMeClassName,
-        uiContainerType,
+        // uiContainerType,
       ])}
       onMouseOver={() => setMouseHover(true)}
       onMouseLeave={() => setMouseHover(false)}
@@ -420,7 +420,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                 'sendbird-message-content__middle__body-container__created-at',
                 'right',
                 supposedHoverClassName,
-                uiContainerType,
+                // uiContainerType,
               ])}
               type={LabelTypography.CAPTION_3}
               color={LabelColors.ONBACKGROUND_2}
