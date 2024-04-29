@@ -5,8 +5,8 @@ import type { RenderUserProfileProps } from '../types';
 interface UserProfileContextInterface {
   disableUserProfile: boolean;
   isOpenChannel: boolean;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
-  onUserProfileMessage?: (channel: GroupChannel) => void;
+  renderUserProfile?: ((props: RenderUserProfileProps) => React.ReactElement) | null;
+  onUserProfileMessage?: ((channel: GroupChannel) => void) | null;
 }
 
 /**
@@ -23,8 +23,8 @@ const UserProfileContext = React.createContext<UserProfileContextInterface>({
 export type UserProfileProviderProps = React.PropsWithChildren<{
   disableUserProfile?: boolean;
   isOpenChannel?: boolean;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
-  onUserProfileMessage?: (channel: GroupChannel) => void;
+  renderUserProfile?: ((props: RenderUserProfileProps) => React.ReactElement) | null;
+  onUserProfileMessage?: ((channel: GroupChannel) => void) | null;
 }>;
 
 const UserProfileProvider = ({

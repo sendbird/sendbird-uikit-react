@@ -11,7 +11,7 @@ const LocalizationContext = React.createContext({
 
 interface LocalizationProviderProps {
   stringSet: StringSet;
-  dateLocale: Locale;
+  dateLocale?: Locale;
   children: React.ReactElement;
 }
 

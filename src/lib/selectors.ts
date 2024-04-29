@@ -421,8 +421,8 @@ export class UikitMessageHandler<T extends SendableMessage = SendableMessage> {
     this._onPending(message);
   }
 
-  public triggerFailed(error: Error, message: T): void {
-    this._onFailed(error, message.isResendable ? message : null);
+  public triggerFailed(error: Error, message: T | null): void {
+    this._onFailed(error, message?.isResendable ? message : null);
   }
 
   public triggerSucceeded(message: T): void {

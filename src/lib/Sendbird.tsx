@@ -92,22 +92,22 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
   accessToken?: string;
   customApiHost?: string;
   customWebSocketHost?: string;
-  configureSession?: ConfigureSessionTypes;
+  configureSession?: ConfigureSessionTypes | null;
   theme?: 'light' | 'dark';
   config?: SendbirdConfig;
   nickname?: string;
-  colorSet?: Record<string, string>;
-  stringSet?: Partial<StringSet>;
-  dateLocale?: Locale;
+  colorSet?: Record<string, string> | null;
+  stringSet?: Partial<StringSet> | null;
+  dateLocale?: Locale | null;
   profileUrl?: string;
   voiceRecord?: VoiceRecordOptions;
-  userListQuery?(): UserListQueryType;
+  userListQuery?: UserListQueryType | null;
   imageCompression?: ImageCompressionOptions;
   allowProfileEdit?: boolean;
   disableMarkAsDelivered?: boolean;
   breakpoint?: string | boolean;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
-  onUserProfileMessage?: (channel: GroupChannel) => void;
+  renderUserProfile?: ((props: RenderUserProfileProps) => React.ReactElement) | null;
+  onUserProfileMessage?: ((channel: GroupChannel) => void) | null;
   uikitOptions?: UIKitOptions;
   isUserIdUsedForNickname?: boolean;
   sdkInitParams?: SendbirdChatInitParams;
@@ -229,7 +229,7 @@ const SendbirdSDK = ({
     logger,
     nickname,
     profileUrl,
-    configureSession,
+    configureSession: configureSession ?? undefined,
     customApiHost,
     customWebSocketHost,
     sdkInitParams,
