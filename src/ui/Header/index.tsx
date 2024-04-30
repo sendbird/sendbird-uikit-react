@@ -1,11 +1,14 @@
 import React from 'react';
 import type { MouseEvent, KeyboardEvent, TouchEvent, ReactNode } from 'react';
 import './index.scss';
+
 import Label, { LabelColors, LabelTypography } from '../Label';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import TextButton from '../TextButton';
-import UIIcon, { type IconProps } from '../Icon';
-import UIIconButton, { IconButtonProps } from '../IconButton';
+import UIIcon from '../Icon';
+import type { Types as IconTypes } from '../Icon/type';
+import type { Colors as IconColors } from '../Icon/colors';
+import UIIconButton from '../IconButton';
 
 export interface HeaderCustomProps {
   renderLeft?: () => ReactNode;
@@ -102,7 +105,31 @@ export const Title = ({
   );
 };
 
-export const Icon = (props: IconProps) => <UIIcon {...props} />;
-export const IconButton = (props: IconButtonProps) => <UIIconButton {...props} />;
+export interface HeaderIconProps {
+  className?: string;
+  onClick?: (e: MouseEvent) => void;
+  type: IconTypes;
+  color?: IconColors;
+}
+export const Icon = ({
+  className,
+  onClick,
+  type,
+  color,
+}: HeaderIconProps) => (
+  <UIIconButton
+    className={className}
+    width="32px"
+    height="32px"
+    onClick={onClick}
+  >
+    <UIIcon
+      type={type}
+      fillColor={color}
+      width="22px"
+      height="22px"
+    />
+  </UIIconButton>
+);
 
-export default Object.assign(Header, { Title, Icon, IconButton });
+export default Object.assign(Header, { Title, Icon });

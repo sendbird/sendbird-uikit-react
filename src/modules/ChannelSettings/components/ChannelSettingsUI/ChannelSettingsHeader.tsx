@@ -7,7 +7,7 @@ import { IconTypes } from '../../../../ui/Icon';
 import Header, { type HeaderCustomProps } from '../../../../ui/Header';
 
 export interface ChannelSettingsHeaderProps extends HeaderCustomProps {
-  onCloseClick?: (e: MouseEvent<HTMLButtonElement>) => void;
+  onCloseClick?: (e: MouseEvent) => void;
 }
 export const ChannelSettingsHeader = ({
   onCloseClick,
@@ -29,21 +29,13 @@ export const ChannelSettingsHeader = ({
       ))}
       renderRight={renderRight ?? (() => (
         <div className="sendbird-channel-settings__header-icon">
-          <Header.IconButton
-            width="32px"
-            height="32px"
+          <Header.Icon
+            type={IconTypes.CLOSE}
             onClick={(e) => {
               logger.info('ChannelSettings: Click close');
               onCloseClick(e);
             }}
-          >
-            <Header.Icon
-              className="sendbird-channel-settings__close-icon"
-              type={IconTypes.CLOSE}
-              height="22px"
-              width="22px"
-            />
-          </Header.IconButton>
+          />
         </div>
       ))}
     />
