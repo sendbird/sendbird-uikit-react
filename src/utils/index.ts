@@ -250,9 +250,9 @@ export const isUserMessage = (message: CoreMessageType): message is UserMessage 
 );
 export const isFileMessage = (message?: CoreMessageType): message is FileMessage => (
   !!message && (
-    message['isFileMessage'] && !!(typeof message.isFileMessage === 'function'
+    message['isFileMessage'] && typeof message.isFileMessage === 'function'
       ? message.isFileMessage()
-      : message?.messageType === 'file')
+      : message?.messageType === 'file'
   )
 );
 export const isMultipleFilesMessage = (
