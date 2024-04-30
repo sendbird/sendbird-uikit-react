@@ -19,6 +19,7 @@ import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 // import MessageContent, { MessageContentProps } from '../../../../ui/MessageContent';
 
 // import SuggestedReplies, { SuggestedRepliesProps } from '../SuggestedReplies';
+// import SuggestedMentionListView from '../SuggestedMentionList/SuggestedMentionListView';
 import type { OnBeforeDownloadFileMessageType } from '../../context/GroupChannelProvider';
 import { classnames, deleteNullish } from '../../../../utils/utils';
 
