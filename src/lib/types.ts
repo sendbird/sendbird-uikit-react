@@ -65,7 +65,7 @@ export interface SendBirdStateConfig {
   isOnline: boolean;
   userId: string;
   appId: string;
-  accessToken: string;
+  accessToken?: string;
   theme: string;
   pubSub: SBUGlobalPubSub;
   logger: Logger;

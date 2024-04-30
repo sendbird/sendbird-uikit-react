@@ -345,8 +345,8 @@ const SendbirdSDK = ({
         },
         config: {
           disableMarkAsDelivered,
-          renderUserProfile,
-          onUserProfileMessage,
+          renderUserProfile: renderUserProfile ?? undefined,
+          onUserProfileMessage: onUserProfileMessage ?? undefined,
           allowProfileEdit,
           isOnline,
           userId,
@@ -419,7 +419,7 @@ const SendbirdSDK = ({
       }}
     >
       <MediaQueryProvider logger={logger} breakpoint={breakpoint}>
-        <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
+        <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale ?? undefined}>
           <VoiceMessageProvider>
             <GlobalModalProvider>
               {children}

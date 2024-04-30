@@ -4,10 +4,11 @@ import getStringSet, { StringSet } from '../ui/Label/stringSet';
 import type { Locale } from 'date-fns';
 import en from 'date-fns/locale/en-US';
 
-const LocalizationContext = React.createContext({
+const LocalizationContextDefault = {
   stringSet: getStringSet('en'),
   dateLocale: en,
-});
+};
+const LocalizationContext = React.createContext(LocalizationContextDefault);
 
 interface LocalizationProviderProps {
   stringSet: StringSet;
@@ -18,7 +19,10 @@ interface LocalizationProviderProps {
 const LocalizationProvider = (props: LocalizationProviderProps): React.ReactElement => {
   const { children } = props;
   return (
-    <LocalizationContext.Provider value={props}>
+    <LocalizationContext.Provider value={{
+      ...LocalizationContextDefault,
+      ...props,
+    }}>
       {children}
     </LocalizationContext.Provider>
   );
