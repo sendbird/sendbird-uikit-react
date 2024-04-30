@@ -63,7 +63,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
   const statefulFileInfoList = useFileInfoListWithUploaded(message); // For MultipleFilesMessage.
 
   const messageTypes = getUIKitMessageTypes();
-  const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config?.groupChannel.enableOgtag;
+  const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableOgtag;
 
   return match(message)
     .when(isTemplateMessage, () => (
