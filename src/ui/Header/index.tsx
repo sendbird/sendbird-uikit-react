@@ -5,6 +5,7 @@ import Label, { LabelColors, LabelTypography } from '../Label';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import TextButton from '../TextButton';
 import UIIcon, { type IconProps } from '../Icon';
+import UIIconButton, { IconButtonProps } from '../IconButton';
 
 export interface HeaderCustomProps {
   renderLeft?: () => ReactNode;
@@ -102,5 +103,6 @@ export const Title = ({
 };
 
 export const Icon = (props: IconProps) => <UIIcon {...props} />;
+export const IconButton = (props: IconButtonProps) => <UIIconButton {...props} />;
 
-export default Object.assign(Header, { Title, Icon });
+export default Object.assign(Header, { Title, Icon, IconButton });

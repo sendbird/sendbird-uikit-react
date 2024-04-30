@@ -3,8 +3,7 @@ import React, { MouseEvent } from 'react';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
-import IconButton from '../../../../ui/IconButton';
-import Icon, { IconTypes } from '../../../../ui/Icon';
+import { IconTypes } from '../../../../ui/Icon';
 import Header, { type HeaderCustomProps } from '../../../../ui/Header';
 
 export interface ChannelSettingsHeaderProps extends HeaderCustomProps {
@@ -30,7 +29,7 @@ export const ChannelSettingsHeader = ({
       ))}
       renderRight={renderRight ?? (() => (
         <div className="sendbird-channel-settings__header-icon">
-          <IconButton
+          <Header.IconButton
             width="32px"
             height="32px"
             onClick={(e) => {
@@ -38,13 +37,13 @@ export const ChannelSettingsHeader = ({
               onCloseClick(e);
             }}
           >
-            <Icon
+            <Header.Icon
               className="sendbird-channel-settings__close-icon"
               type={IconTypes.CLOSE}
               height="22px"
               width="22px"
             />
-          </IconButton>
+          </Header.IconButton>
         </div>
       ))}
     />
