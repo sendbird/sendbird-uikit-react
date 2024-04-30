@@ -91,7 +91,7 @@ export const paramKeys = [
   'groupChannel_showSuggestedRepliesFor',
   'groupChannelList_enableTypingIndicator',
   'groupChannelList_enableMessageReceiptStatus',
-  'groupChannelSetting_enableMessageSearch',
+  'groupChannelSettings_enableMessageSearch',
   'openChannel_enableOgtag',
   'openChannel_input_camera_enablePhoto',
   'openChannel_input_camera_enableVideo',
